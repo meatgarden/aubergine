@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { NO_ATTENTION, NO_STATUS, newId, type Session } from '@aubergine/shared';
-import { UsageError, formatSessions, parseCommand, resolveSession } from './commands';
+import { UsageError, formatSessions, insideAubergine, nameForFolder, parseCommand, resolveSession } from './commands';
 
 function session(name: string, extra: Partial<Session> = {}): Session {
   return {
@@ -41,6 +41,46 @@ describe('parseCommand', () => {
     expect(() => parseCommand(['service'])).toThrow(UsageError);
     expect(() => parseCommand(['service', 'start'])).toThrow(UsageError);
     expect(() => parseCommand(['explode'])).toThrow(/Unknown command/);
+  });
+});
+
+describe('here', () => {
+  it('parses its name, flags and command', () => {
+    expect(parseCommand(['here'])).toEqual({
+      name: 'here',
+      sessionName: null,
+      attach: true,
+      claude: false,
+      command: [],
+      fromShellHook: false,
+    });
+    expect(parseCommand(['here', 'api', 'server', '--no-attach', '--', 'npm', 'run', 'dev'])).toMatchObject({
+      sessionName: 'api server',
+      attach: false,
+      command: ['npm', 'run', 'dev'],
+    });
+    expect(parseCommand(['here', '--claude'])).toMatchObject({ claude: true, attach: true });
+    // Flags after "--" belong to the command.
+    expect(parseCommand(['here', '--', 'ls', '--no-attach'])).toMatchObject({ attach: true, command: ['ls', '--no-attach'] });
+  });
+
+  it('rejects unknown flags and an empty command', () => {
+    expect(() => parseCommand(['here', '--detach'])).toThrow(/does not know --detach/);
+    expect(() => parseCommand(['here', '--'])).toThrow(UsageError);
+  });
+
+  it('knows when it is already inside Aubergine', () => {
+    expect(insideAubergine({ AUBERGINE_SESSION_ID: 'x' }, 'aubergine')).toBe(true);
+    expect(insideAubergine({ TMUX: '/private/tmp/tmux-501/aubergine,123,0' }, 'aubergine')).toBe(true);
+    // The user's own tmux is not Aubergine.
+    expect(insideAubergine({ TMUX: '/private/tmp/tmux-501/default,123,0' }, 'aubergine')).toBe(false);
+    expect(insideAubergine({}, 'aubergine')).toBe(false);
+  });
+
+  it('names a session after its folder', () => {
+    expect(nameForFolder('/Users/me/work/api')).toBe('api');
+    expect(nameForFolder('/Users/me/work/api/')).toBe('api');
+    expect(nameForFolder('/')).toBe('Terminal');
   });
 });
 

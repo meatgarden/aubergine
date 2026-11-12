@@ -35,7 +35,7 @@ async function main(): Promise<void> {
       [SESSION_ENV.token]: sessionToken(token, sessionId),
     }),
     logPrompts: () => settings.value.agents.logPrompts,
-    agentLaunchLine: async () => claudeLaunchLine(await writeClaudeSettings(config.dataDir)),
+    agentLaunchLine: async (_agent, options) => claudeLaunchLine(await writeClaudeSettings(config.dataDir), options),
     defaultFolder: () => (settings.value.defaultFolder ? expandHome(settings.value.defaultFolder) : null),
     shell: () => settings.value.shell,
   });

@@ -2,16 +2,24 @@ import { spawnSync } from 'node:child_process';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { CreateSessionResponse, StateResponse, paths } from '@aubergine/shared';
-import { claudeHooksSettings, hookActions, type HookEvent } from './agents/claude-code';
+import { claudeHooksSettings, hookActions, shellJoin, type HookEvent } from './agents/claude-code';
 import { agentClient } from './cli/agent';
-import { USAGE, UsageError, formatSessions, parseCommand, resolveSession } from './cli/commands';
+import {
+  USAGE,
+  UsageError,
+  formatSessions,
+  insideAubergine,
+  nameForFolder,
+  parseCommand,
+  resolveSession,
+} from './cli/commands';
 import { loadConfig, type Config } from './config';
 import { TmuxRuntime } from './runtime/tmux-runtime';
 import { cookieName } from './server';
 import { daemonServiceSpec, installService, uninstallService } from './service/launchd';
 
 /** Talks to the running daemon the same way the web app does: through the wire protocol. */
-async function call(config: Config, method: string, urlPath: string, body?: unknown): Promise<unknown> {
+async function call(config: Config, method: string, urlPath: string, body?: unknown, timeoutMs = 15_000): Promise<unknown> {
   const origin = `http://127.0.0.1:${config.port}`;
   let token: string;
   try {
@@ -29,12 +37,21 @@ async function call(config: Config, method: string, urlPath: string, body?: unkn
         ...(body === undefined ? {} : { 'content-type': 'application/json' }),
       },
       ...(body === undefined ? {} : { body: JSON.stringify(body) }),
+      signal: AbortSignal.timeout(timeoutMs),
     });
   } catch {
     throw new UsageError(`The Aubergine server is not answering on ${origin}. Is it running?`);
   }
   if (!response.ok) throw new Error(`The server answered HTTP ${response.status}: ${await response.text()}`);
   return response.json();
+}
+
+/** Turns this terminal into a view of the session. Returns when the view ends. */
+function attachTo(config: Config, sessionId: string): number {
+  const runtime = new TmuxRuntime({ socket: config.tmuxSocket, tmuxBin: config.tmuxBin });
+  const { bin, args, env } = runtime.attachCommand(sessionId);
+  // The same session the canvas shows: both views stay in step.
+  return spawnSync(bin, args, { stdio: 'inherit', env: { ...env, TERM: process.env.TERM ?? 'xterm-256color' } }).status ?? 1;
 }
 
 /**
@@ -90,13 +107,34 @@ async function main(): Promise<number> {
       return 0;
     }
 
+    case 'here': {
+      if (insideAubergine(process.env, config.tmuxSocket)) {
+        throw new UsageError(
+          'This terminal is already an Aubergine session. Run "aubergine here" in a terminal outside the canvas, or use "aubergine new" to add another session.',
+        );
+      }
+      const folder = process.cwd();
+      const body = {
+        name: command.sessionName ?? nameForFolder(folder),
+        uniqueName: true,
+        cwd: folder,
+        ...(command.command.length > 0 ? { command: shellJoin(command.command) } : {}),
+        ...(command.claude ? { agent: 'claude-code', agentContinue: true } : {}),
+      };
+      // From the shell snippet a new tab is waiting on this, so give up quickly.
+      const timeout = command.fromShellHook ? 1500 : 15_000;
+      const { session } = CreateSessionResponse.parse(await call(config, 'POST', paths.sessions, body, timeout));
+      if (!command.attach) {
+        console.log(`Started "${session.name}" in ${folder}. Attach with: aubergine attach "${session.name}"`);
+        return 0;
+      }
+      return attachTo(config, session.id);
+    }
+
     case 'attach': {
       const { state } = StateResponse.parse(await call(config, 'GET', paths.state));
       const session = resolveSession(state.sessions, command.query);
-      const runtime = new TmuxRuntime({ socket: config.tmuxSocket, tmuxBin: config.tmuxBin });
-      const { bin, args, env } = runtime.attachCommand(session.id);
-      // The same session the canvas shows: both views stay in step.
-      return spawnSync(bin, args, { stdio: 'inherit', env }).status ?? 1;
+      return attachTo(config, session.id);
     }
 
     case 'note': {

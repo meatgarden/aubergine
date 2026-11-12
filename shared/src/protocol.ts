@@ -94,6 +94,14 @@ export const CreateSessionRequest = z.object({
   rect: NodeRect.optional(),
   /** Start an agent in the new session, wired up to report to the canvas. */
   agent: AgentKind.optional(),
+  /** With `agent`: carry on the most recent conversation for the folder instead of starting a new one. */
+  agentContinue: z.boolean().optional(),
+  /** Folder to start in (absolute path). The default folder is used when omitted. */
+  cwd: z.string().startsWith('/').max(4096).optional(),
+  /** A line to type into the new session once its shell is ready. */
+  command: z.string().trim().min(1).max(4000).optional(),
+  /** Make `name` unique by adding a number when a session already has it. */
+  uniqueName: z.boolean().optional(),
 });
 export type CreateSessionRequest = z.infer<typeof CreateSessionRequest>;
 

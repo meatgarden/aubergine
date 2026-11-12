@@ -93,7 +93,15 @@ export async function writeClaudeSettings(dataDir: string): Promise<string> {
   return file;
 }
 
-/** What to type into a new session to start Claude Code with the hooks. */
-export function claudeLaunchLine(settingsFile: string): string {
-  return `claude --settings ${shellQuote(settingsFile)}`;
+/**
+ * What to type into a new session to start Claude Code with the hooks.
+ * With `continue`, it carries on the most recent conversation in that folder.
+ */
+export function claudeLaunchLine(settingsFile: string, options: { continue?: boolean } = {}): string {
+  return `claude${options.continue ? ' --continue' : ''} --settings ${shellQuote(settingsFile)}`;
+}
+
+/** Quotes words for a shell command line, leaving plain words as they are. */
+export function shellJoin(words: readonly string[]): string {
+  return words.map((word) => (/^[A-Za-z0-9_@%+=:,./-]+$/.test(word) ? word : shellQuote(word))).join(' ');
 }

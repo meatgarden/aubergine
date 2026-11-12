@@ -5,6 +5,16 @@ export type Command =
   | { name: 'list' }
   | { name: 'new'; sessionName: string | null }
   | { name: 'attach'; query: string }
+  | {
+      name: 'here';
+      sessionName: string | null;
+      attach: boolean;
+      claude: boolean;
+      /** Words of a command to type into the new session. */
+      command: string[];
+      /** Called from the shell snippet: be quick, be quiet, and report failure by exit code. */
+      fromShellHook: boolean;
+    }
   | { name: 'note'; text: string }
   | { name: 'hook'; event: HookEvent }
   | { name: 'hooks-print' }
@@ -16,6 +26,9 @@ export const USAGE = `Usage: aubergine <command>
   list                       List sessions with their state, command and folder
   new [name]                 Start a new terminal on the canvas
   attach <name>              Open a session in this terminal (detach by closing the window)
+  here [name] [-- command]   Start a session in this folder and turn this terminal into a view of it
+                             --no-attach   only create it
+                             --claude      start Claude Code in it, continuing this folder's last conversation
   note <text>                Inside a session: add an entry to that session's note log
   hook <event>               For agent hooks: reads the hook's JSON on stdin (prompt, notification, stop)
   hooks print                Print the Claude Code hook settings, to add to your own config by hand
@@ -44,6 +57,24 @@ export function parseCommand(argv: readonly string[]): Command {
     case 'attach':
       if (rest.length === 0) throw new UsageError('attach needs a session name');
       return { name: 'attach', query: rest.join(' ') };
+    case 'here': {
+      const split = rest.indexOf('--');
+      const options = split < 0 ? rest : rest.slice(0, split);
+      const command = split < 0 ? [] : rest.slice(split + 1);
+      const flags = options.filter((word) => word.startsWith('--'));
+      const unknown = flags.find((flag) => !['--no-attach', '--claude', '--from-shell-hook'].includes(flag));
+      if (unknown) throw new UsageError(`here does not know ${unknown}`);
+      if (split >= 0 && command.length === 0) throw new UsageError('here: nothing after "--"');
+      const words = options.filter((word) => !word.startsWith('--'));
+      return {
+        name: 'here',
+        sessionName: words.length > 0 ? words.join(' ') : null,
+        attach: !flags.includes('--no-attach'),
+        claude: flags.includes('--claude'),
+        command,
+        fromShellHook: flags.includes('--from-shell-hook'),
+      };
+    }
     case 'note':
       if (rest.join(' ').trim() === '') throw new UsageError('note needs some text');
       return { name: 'note', text: rest.join(' ') };
@@ -98,4 +129,21 @@ export function formatSessions(sessions: readonly Session[]): string {
   return rows
     .map((row) => row.map((cell, column) => (column < 3 ? cell.padEnd(widths[column] ?? 0) : cell)).join('  ').trimEnd())
     .join('\n');
+}
+
+/**
+ * Whether this process is running inside an Aubergine session (or a view of
+ * one). `tmuxSocket` is the name of our tmux socket.
+ */
+export function insideAubergine(env: NodeJS.ProcessEnv, tmuxSocket: string): boolean {
+  if (env.AUBERGINE_SESSION_ID) return true;
+  // $TMUX is "<socket path>,<pid>,<n>"; ours ends in "/<socket name>".
+  const socketPath = (env.TMUX ?? '').split(',')[0] ?? '';
+  return socketPath !== '' && socketPath.split('/').pop() === tmuxSocket;
+}
+
+/** A session name for a folder: its last part. */
+export function nameForFolder(folder: string): string {
+  const base = folder.split('/').filter(Boolean).pop() ?? '';
+  return base.trim().slice(0, 80) || 'Terminal';
 }
