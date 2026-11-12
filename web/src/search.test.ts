@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { newId, type Session } from '@aubergine/shared';
+import { NO_ATTENTION, NO_STATUS, newId, type Session } from '@aubergine/shared';
 import { searchSessions, shortFolder } from './search';
 
 function session(name: string, extra: Partial<Session> = {}): Session {
@@ -12,6 +12,9 @@ function session(name: string, extra: Partial<Session> = {}): Session {
     cwd: null,
     command: null,
     note: '',
+    status: NO_STATUS,
+    attention: NO_ATTENTION,
+    noteLog: [],
     ...extra,
   };
 }
@@ -43,6 +46,15 @@ describe('searchSessions', () => {
     expect(match?.session.name).toBe('Terminal 3');
     expect(match?.field).toBe('note');
     expect(match?.excerpt).toBe('retry logic in invoices');
+  });
+
+  it('searches the note log too', () => {
+    const logged = session('agent run', {
+      noteLog: [{ id: newId(), at: '2026-01-01T00:00:00.000Z', author: 'agent', kind: 'prompt', text: 'migrate the invoices table' }],
+    });
+    const [match] = searchSessions([...sessions, logged], 'invoices table');
+    expect(match?.session.name).toBe('agent run');
+    expect(match?.excerpt).toBe('migrate the invoices table');
   });
 
   it('requires every word, in any field', () => {

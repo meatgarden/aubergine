@@ -8,6 +8,7 @@ import {
   type Settings,
 } from '@aubergine/shared';
 import { ApiError, api, subscribeToEvents } from './api';
+import { announcement, notificationsWanted } from './attention';
 
 export type Phase =
   | 'loading'
@@ -65,6 +66,16 @@ export const useApp = create<AppState>((set, get) => ({
   apply: (event) => {
     const canvas = get().canvas;
     if (!canvas) return;
+    // A session has just started waiting: say so on the desktop, if the user asked for that
+    // and is not already looking at it.
+    const news = announcement(event, canvas.sessions);
+    if (news && notificationsWanted() && (document.hidden || get().focus?.sessionId !== news.sessionId)) {
+      try {
+        new Notification(news.title, { body: news.body, tag: news.sessionId });
+      } catch {
+        // Notifications are a nicety; never let one break an update.
+      }
+    }
     const next: Partial<AppState> = { canvas: applyEvent(canvas, event) };
     if (event.type === 'session.closed') {
       if (get().closing === event.sessionId) next.closing = null;

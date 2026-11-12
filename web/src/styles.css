@@ -369,9 +369,50 @@ code {
 
 /* ---------- Node activity, minimap, picker ---------- */
 
-.node-activity {
+.node-status {
   flex: none;
-  max-width: 55%;
+  max-width: 60%;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+}
+.badge-unread,
+.badge-busy {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+.badge-unread {
+  background: #6a9fd9;
+}
+.badge-busy {
+  background: #d9bf63;
+  animation: busy-pulse 1.2s ease-in-out infinite;
+}
+@keyframes busy-pulse {
+  50% {
+    opacity: 0.35;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .badge-busy {
+    animation: none;
+  }
+}
+.badge-exit {
+  flex: none;
+  padding: 0 6px;
+  font-size: 11px;
+  line-height: 16px;
+  color: #fff;
+  background: var(--danger);
+  border-radius: 8px;
+  font-variant-numeric: tabular-nums;
+}
+.node-activity {
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -549,8 +590,9 @@ code {
   text-align: right;
 }
 .note-panel textarea {
-  flex: 1;
-  min-height: 0;
+  flex: 0 0 34%;
+  min-height: 60px;
+  border-bottom: 1px solid var(--border) !important;
   resize: none;
   padding: 10px;
   font: 13px/1.5 Menlo, Monaco, Consolas, monospace;
@@ -612,4 +654,107 @@ code {
   font: 13px/1.154 Menlo, Monaco, 'DejaVu Sans Mono', Consolas, monospace;
   color: var(--text);
   white-space: pre;
+}
+
+.note-log {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 6px 10px;
+}
+.note-empty {
+  margin: 4px 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+.note-entry {
+  margin: 0 0 8px;
+}
+.note-entry header {
+  display: flex;
+  gap: 8px;
+  padding: 0;
+  border: none;
+  font-size: 11px;
+  color: var(--muted);
+}
+.note-entry p {
+  margin: 1px 0 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 12.5px;
+  color: var(--text);
+}
+.note-author {
+  font-weight: 600;
+}
+.note-entry.kind-prompt .note-author {
+  color: var(--accent-strong);
+}
+.note-add {
+  flex: none;
+  margin: 0;
+  padding: 7px 10px;
+  font: inherit;
+  color: var(--text);
+  background: var(--terminal-bg);
+  border: none;
+  border-top: 1px solid var(--border);
+  outline: none;
+}
+
+/* ---------- Attention ---------- */
+
+.terminal-node[data-attention='waiting'] {
+  border-color: #d98e56;
+  box-shadow:
+    0 0 0 2px #d98e56,
+    0 6px 20px rgb(0 0 0 / 0.4);
+}
+.terminal-node[data-attention='done'] {
+  border-color: #7fb37a;
+  box-shadow:
+    0 0 0 1px #7fb37a,
+    0 6px 20px rgb(0 0 0 / 0.4);
+}
+.badge-attention {
+  flex: none;
+  padding: 0 7px;
+  font-size: 11px;
+  line-height: 17px;
+  border-radius: 9px;
+  color: #17181c;
+  white-space: nowrap;
+}
+.badge-attention.is-waiting {
+  background: #d98e56;
+  font-weight: 600;
+}
+.badge-attention.is-done {
+  background: #7fb37a;
+}
+.badge-attention.is-working {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--border);
+}
+.attention-button {
+  background: #d98e56;
+  border-color: #d98e56;
+  color: #17181c;
+  font-weight: 600;
+}
+
+.picker-section {
+  margin-top: 6px;
+  padding: 6px 8px 4px;
+  color: var(--muted);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-top: 1px solid var(--border);
+}
+.picker-line {
+  font-family: Menlo, Monaco, Consolas, monospace;
+  color: var(--text);
 }

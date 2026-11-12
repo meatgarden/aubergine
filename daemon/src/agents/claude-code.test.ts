@@ -1,0 +1,77 @@
+import { mkdtemp, readFile, rm } from 'node:fs/promises';
+import os from 'node:os';
+import path from 'node:path';
+import { describe, expect, it } from 'vitest';
+import { claudeHooksSettings, claudeLaunchLine, hookActions, writeClaudeSettings } from './claude-code';
+
+describe('hookActions', () => {
+  it('logs the prompt and marks the session as working', () => {
+    const input = { hook_event_name: 'UserPromptSubmit', session_id: 'abc', prompt: '  fix the failing test  ' };
+    expect(hookActions('prompt', input)).toEqual([
+      { do: 'attention', state: 'working' },
+      { do: 'note', kind: 'prompt', text: 'fix the failing test' },
+    ]);
+  });
+
+  it('marks the session as waiting when the agent needs a person', () => {
+    const input = { hook_event_name: 'Notification', notification_type: 'permission_prompt', message: 'Claude needs your permission to use Bash' };
+    expect(hookActions('notification', input)).toEqual([
+      { do: 'attention', state: 'waiting', message: 'Claude needs your permission to use Bash' },
+    ]);
+    expect(hookActions('notification', { notification_type: 'idle_prompt', message: 'Waiting for your input' })).toHaveLength(1);
+    // Older versions send no type; treat any notification as a request for attention.
+    expect(hookActions('notification', { message: 'hello' })).toEqual([{ do: 'attention', state: 'waiting', message: 'hello' }]);
+  });
+
+  it('ignores notifications that do not need a person', () => {
+    expect(hookActions('notification', { notification_type: 'auth_success', message: 'Signed in' })).toEqual([]);
+  });
+
+  it('marks the session as done and logs a short line when the agent stops', () => {
+    const actions = hookActions('stop', { last_assistant_message: 'All 12 tests pass now.\nI changed two files.' });
+    expect(actions).toEqual([
+      { do: 'attention', state: 'done' },
+      { do: 'note', kind: 'event', text: 'Finished: All 12 tests pass now.' },
+    ]);
+    expect(hookActions('stop', {})).toEqual([
+      { do: 'attention', state: 'done' },
+      { do: 'note', kind: 'event', text: 'Finished.' },
+    ]);
+  });
+
+  it('never throws on input it does not understand', () => {
+    for (const input of [null, undefined, 'text', 42, [], { prompt: 7 }]) {
+      expect(() => hookActions('prompt', input)).not.toThrow();
+      expect(hookActions('prompt', input)).toEqual([{ do: 'attention', state: 'working' }]);
+    }
+  });
+});
+
+describe('generated settings', () => {
+  it('attaches one command hook to each of the three events', () => {
+    const settings = claudeHooksSettings('aubergine');
+    expect(Object.keys(settings.hooks).sort()).toEqual(['Notification', 'Stop', 'UserPromptSubmit']);
+    expect(settings.hooks.UserPromptSubmit).toEqual([
+      { hooks: [{ type: 'command', command: 'aubergine hook prompt', timeout: 10 }] },
+    ]);
+  });
+
+  it("is written to the data folder, never to the user's own configuration", async () => {
+    const dir = await mkdtemp(path.join(os.tmpdir(), 'aubergine-agents-'));
+    try {
+      const file = await writeClaudeSettings(dir);
+      expect(file.startsWith(dir)).toBe(true);
+      const written = JSON.parse(await readFile(file, 'utf8'));
+      expect(written.hooks.Stop[0].hooks[0].command).toMatch(/aubergine\.mjs' hook stop$/);
+      expect(claudeLaunchLine(file)).toBe(`claude --settings '${file}'`);
+    } finally {
+      await rm(dir, { recursive: true, force: true });
+    }
+  });
+
+  it('quotes a settings path that contains spaces or quotes', () => {
+    expect(claudeLaunchLine("/Users/me/Application Support/it's/settings.json")).toBe(
+      `claude --settings '/Users/me/Application Support/it'\\''s/settings.json'`,
+    );
+  });
+});

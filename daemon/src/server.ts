@@ -6,27 +6,34 @@ import websocket from '@fastify/websocket';
 import Fastify, { type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify';
 import type { ZodType } from 'zod';
 import {
+  AppendNoteRequest,
   CLOSE_BAD_MESSAGE,
   CLOSE_SESSION_ENDED,
   CreateFrameRequest,
   CreateSessionRequest,
   Id,
   PROTOCOL_VERSION,
+  RevealRequest,
+  SearchQuery,
+  SetAttentionRequest,
   UpdateSessionRequest,
   TerminalClientMessage,
   TerminalSize,
   UpdateFrameRequest,
   UpdateNodeRequest,
   paths,
+  type AppendNoteResponse,
   type CreateSessionResponse,
   type ErrorCode,
   type ErrorResponse,
   type EventsServerMessage,
+  type SearchResponse,
   type Settings,
   type SnapshotResponse,
   type StateResponse,
   type TerminalServerMessage,
 } from '@aubergine/shared';
+import { authorize, principalFromBearer, type Action, type Principal } from './auth';
 import type { Canvas } from './canvas';
 import { SessionNotFoundError, type Attachment, type SessionRuntime } from './runtime/runtime';
 import { ConflictError, NotFoundError, RuntimeUnavailableError, type Sessions } from './sessions';
@@ -87,6 +94,17 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     return { hosts, origins: new Set([...hosts].map((h) => `http://${h}`)) };
   };
 
+  const principals = new WeakMap<FastifyRequest, Principal>();
+
+  /** Refuses the request unless its principal may do `action` on the session. */
+  const allow = (request: FastifyRequest, action: Action, sessionId: string): Principal => {
+    const principal = principals.get(request);
+    if (!principal || !authorize(principal, action, { sessionId })) {
+      throw new HttpError(403, 'forbidden', 'This token may not do that');
+    }
+    return principal;
+  };
+
   await app.register(cookie);
   await app.register(websocket, { options: { maxPayload: 2 * 1024 * 1024 } });
 
@@ -103,13 +121,24 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     if (origin !== undefined && !origins.has(origin)) {
       return reply.code(403).send(errorBody('forbidden', 'Origin not allowed'));
     }
+    const pathname = request.url.split('?')[0] ?? '';
+
+    // Routes for programs inside a session. They are not called by a browser,
+    // so there is no Origin to require; a bearer token says who is calling,
+    // and the cookie is not accepted here.
+    if (pathname.startsWith('/v1/')) {
+      const principal = principalFromBearer(token, request.headers.authorization);
+      if (!principal) return reply.code(401).send(errorBody('unauthorized', 'Missing or wrong bearer token'));
+      principals.set(request, principal);
+      return;
+    }
+
     const isUpgrade = request.headers.upgrade?.toLowerCase() === 'websocket';
     const isSafeMethod = request.method === 'GET' || request.method === 'HEAD';
     if (origin === undefined && (isUpgrade || !isSafeMethod)) {
       return reply.code(403).send(errorBody('forbidden', 'Origin header required'));
     }
 
-    const pathname = request.url.split('?')[0] ?? '';
     if (pathname.startsWith('/api/') || pathname.startsWith('/ws/')) {
       if (!tokensMatch(token, request.cookies[cookieName(port())])) {
         return reply.code(401).send(errorBody('unauthorized', 'Missing or wrong access token'));
@@ -182,6 +211,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
 
   app.post(paths.parkSession(':sessionId'), async (request) => sessions.park(idParam(request, 'sessionId')));
   app.post(paths.restoreSession(':sessionId'), async (request) => sessions.restore(idParam(request, 'sessionId')));
+  app.post(paths.seenSession(':sessionId'), async (request) => sessions.seen(idParam(request, 'sessionId')));
   app.post(paths.restartSession(':sessionId'), async (request) => sessions.restart(idParam(request, 'sessionId')));
 
   app.delete(paths.session(':sessionId'), async (request, reply: FastifyReply) => {
@@ -212,6 +242,46 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   app.delete(paths.frame(':frameId'), async (request, reply: FastifyReply) => {
     sessions.removeFrame(idParam(request, 'frameId'));
     return reply.code(204).send();
+  });
+
+  app.get(paths.search, async (request): Promise<SearchResponse> => {
+    const { q } = parse(SearchQuery, request.query);
+    return sessions.searchHistory(q);
+  });
+
+  app.post(paths.revealInSession(':sessionId'), async (request, reply: FastifyReply) => {
+    const body = parse(RevealRequest, request.body);
+    await sessions.reveal(idParam(request, 'sessionId'), body.text);
+    return reply.code(204).send();
+  });
+
+  app.post(paths.sessionNotes(':sessionId'), async (request, reply): Promise<AppendNoteResponse> => {
+    const body = parse(AppendNoteRequest, request.body);
+    reply.code(201);
+    return { entry: sessions.appendNote(idParam(request, 'sessionId'), { author: 'user', text: body.text }) };
+  });
+
+  /* ---------- Agent API: bearer token, checked by authorize() ---------- */
+
+  app.put(paths.agent.attention(':sessionId'), async (request) => {
+    const sessionId = idParam(request, 'sessionId');
+    allow(request, 'attention.set', sessionId);
+    const body = parse(SetAttentionRequest, request.body);
+    return sessions.setAttention(sessionId, body.state, body.message);
+  });
+
+  app.post(paths.agent.notes(':sessionId'), async (request, reply): Promise<AppendNoteResponse> => {
+    const sessionId = idParam(request, 'sessionId');
+    const principal = allow(request, 'note.append', sessionId);
+    const body = parse(AppendNoteRequest, request.body);
+    reply.code(201);
+    return {
+      entry: sessions.appendNote(sessionId, {
+        author: principal.kind === 'session' ? 'agent' : 'user',
+        kind: body.kind,
+        text: body.text,
+      }),
+    };
   });
 
   /* ---------- WebSocket: change events ---------- */

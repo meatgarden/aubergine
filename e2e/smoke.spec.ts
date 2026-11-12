@@ -3,6 +3,8 @@ import path from 'node:path';
 import { expect, test, type Page } from '@playwright/test';
 import { e2e } from '../playwright.config';
 
+const repoRoot = path.resolve(e2e.dataDir, '..');
+
 /** A terminal row whose whole text is `text`: command output, not the typed command. */
 function outputLine(page: Page, text: string) {
   return page.locator('.xterm-rows > div').filter({ hasText: new RegExp(`^\\s*${text}\\s*$`) });
@@ -30,6 +32,18 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await page.keyboard.type('echo hello');
   await page.keyboard.press('Enter');
   await expect(outputLine(page, 'hello')).toHaveCount(1);
+
+  // A failing command shows its exit code on the node; a long one shows busy, then idle.
+  if ((process.env.SHELL ?? '').endsWith('/zsh')) {
+    await page.keyboard.type('sleep 2; (exit 3)');
+    await page.keyboard.press('Enter');
+    await expect(page.getByTestId('badge-busy')).toHaveCount(1);
+    await expect(page.getByTestId('badge-exit')).toHaveText('exit 3', { timeout: 8000 });
+    await expect(page.getByTestId('badge-busy')).toHaveCount(0);
+    await page.keyboard.type('clear; echo hello');
+    await page.keyboard.press('Enter');
+    await expect(page.getByTestId('badge-exit')).toHaveCount(0);
+  }
 
   // After a reload the screen comes back by itself, promptly and without a click.
   await page.reload();
@@ -62,6 +76,27 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await page.getByRole('button', { name: /^Note for/ }).click();
   await page.getByRole('textbox', { name: 'Session note' }).fill('# Fixing the invoice rounding bug');
   await expect(page.getByTestId('note-panel')).toContainText('Saved');
+
+  // A program inside the session adds to the note log, and the entry appears live.
+  await page.getByTestId('node-body').click();
+  await page.keyboard.type(`${path.join(repoRoot, 'bin', 'aubergine.mjs')} note "deploy finished at step 4"`);
+  await page.keyboard.press('Enter');
+  await expect(page.getByTestId('note-entry')).toContainText('deploy finished at step 4', { timeout: 15_000 });
+  await expect(page.getByTestId('note-entry')).toContainText('agent');
+
+  // An agent's hook raises attention; the queue jumps to the node, and looking at it clears it.
+  await page.getByRole('button', { name: 'Hide note' }).click();
+  await page.getByTestId('node-body').click();
+  const aubergine = path.join(repoRoot, 'bin', 'aubergine.mjs');
+  await page.keyboard.type(`echo '{"notification_type":"permission_prompt","message":"Allow the edit?"}' | ${aubergine} hook notification`);
+  await page.keyboard.press('Enter');
+  await page.locator('.react-flow__pane').click({ position: { x: 5, y: 300 } }); // look away
+  await expect(page.getByTestId('badge-attention')).toHaveText('waiting for you', { timeout: 15_000 });
+  await expect(page.getByTestId('attention-queue')).toHaveText('1 waiting');
+  await page.getByTestId('attention-queue').click();
+  await expect(page.getByTestId('attention-queue')).toHaveCount(0);
+  await expect(page.getByTestId('badge-attention')).toHaveCount(0);
+
   await page.reload();
   await page.getByRole('button', { name: 'Go to…' }).click();
   await page.getByRole('textbox', { name: 'Search sessions' }).fill('rounding');
@@ -86,6 +121,17 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await page.getByRole('button', { name: 'Restore' }).click();
   await expect(node).toHaveCount(1);
   await expect(outputLine(page, 'picked-44')).toHaveCount(1);
+
+  // The picker also searches what terminals have printed, including in a parked session.
+  await page.getByRole('button', { name: /^Park / }).click();
+  await expect(node).toHaveCount(0);
+  await page.getByRole('button', { name: 'Go to…' }).click();
+  await page.getByRole('textbox', { name: 'Search sessions' }).fill('picked-44');
+  await expect(page.getByTestId('picker-output-row').first()).toContainText('picked-44');
+  await page.getByTestId('picker-output-row').first().click();
+  await expect(node).toHaveCount(1);
+  await expect(page.getByTestId('node-shield')).toHaveCount(0);
+  await page.keyboard.press('q'); // leave the scroll-back view the match opened
 
   // When the shell exits, the node says so and offers a restart.
   await page.getByTestId('node-body').click();

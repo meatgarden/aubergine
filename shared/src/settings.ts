@@ -20,6 +20,15 @@ export const Settings = z.object({
   shell: z.string().startsWith('/').nullable().default(null),
   /** Folder new terminals start in (`~` is allowed). `null` means the home folder. */
   defaultFolder: z.string().min(1).nullable().default(null),
+  agents: z
+    .object({
+      /**
+       * Keep the prompts given to agents in the session's note log. Turn this
+       * off if prompts may contain secrets.
+       */
+      logPrompts: z.boolean().default(true),
+    })
+    .prefault({}),
 });
 export type Settings = z.infer<typeof Settings>;
 

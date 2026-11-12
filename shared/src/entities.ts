@@ -25,6 +25,70 @@ export type SessionState = z.infer<typeof SessionState>;
 
 export const SessionNote = z.string().max(200_000);
 
+/**
+ * What the session's shell reports about itself, plus whether it has printed
+ * anything since the user last looked. Shells without integration report
+ * nothing, and `state` stays null.
+ */
+export const ShellStatus = z.object({
+  /** `busy` while a command runs, `idle` at a prompt. */
+  state: z.enum(['busy', 'idle']).nullable().default(null),
+  /** The command line being run, while busy. */
+  commandLine: z.string().max(400).nullable().default(null),
+  /** When the running command started. */
+  startedAt: Timestamp.nullable().default(null),
+  /** Exit code of the last finished command. */
+  lastExit: z.number().int().nullable().default(null),
+  lastFinishedAt: Timestamp.nullable().default(null),
+  /** Output has appeared since the node was last focused. */
+  unread: z.boolean().default(false),
+});
+export type ShellStatus = z.infer<typeof ShellStatus>;
+
+export const NO_STATUS: ShellStatus = ShellStatus.parse({});
+
+/**
+ * Whether a session wants the user. Set by the agent running in it:
+ * `working` while it is busy, `waiting` when it needs an answer, `done` when
+ * it has finished its turn. `none` when nothing was reported or the user has
+ * looked.
+ */
+export const AttentionState = z.enum(['none', 'working', 'waiting', 'done']);
+export type AttentionState = z.infer<typeof AttentionState>;
+
+export const Attention = z.object({
+  state: AttentionState.default('none'),
+  /** A short reason, for example what the agent is asking. */
+  message: z.string().max(500).nullable().default(null),
+  at: Timestamp.nullable().default(null),
+});
+export type Attention = z.infer<typeof Attention>;
+
+export const NO_ATTENTION: Attention = Attention.parse({});
+
+/** Whether a session with this attention state belongs in the "waiting for you" queue. */
+export function needsUser(attention: Attention): boolean {
+  return attention.state === 'waiting' || attention.state === 'done';
+}
+
+export const NOTE_LOG_LIMIT = 1000;
+export const NoteText = z.string().trim().min(1).max(20_000);
+
+/**
+ * One entry in a session's note log. The log only grows; the pinned note
+ * (`Session.note`) is the part the user edits freely.
+ */
+export const NoteEntry = z.object({
+  id: Id,
+  at: Timestamp,
+  /** Who wrote it: the user, or the agent running in the session. */
+  author: z.enum(['user', 'agent']),
+  /** `prompt`: what the user asked an agent. `event`: something that happened. `note`: anything else. */
+  kind: z.enum(['note', 'prompt', 'event']).default('note'),
+  text: NoteText,
+});
+export type NoteEntry = z.infer<typeof NoteEntry>;
+
 /** A terminal session. The running shell itself is owned by the session runtime. */
 export const Session = z.object({
   id: Id,
@@ -38,6 +102,10 @@ export const Session = z.object({
   command: z.string().nullable().default(null),
   /** A Markdown note kept with the session. */
   note: SessionNote.default(''),
+  status: ShellStatus.prefault({}),
+  attention: Attention.prefault({}),
+  /** Append-only log of notes, oldest first. */
+  noteLog: z.array(NoteEntry).default([]),
 });
 export type Session = z.infer<typeof Session>;
 

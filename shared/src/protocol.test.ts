@@ -4,6 +4,8 @@ import {
   ChangeEvent,
   CreateSessionRequest,
   DEFAULT_SETTINGS,
+  NO_ATTENTION,
+  NO_STATUS,
   EventsServerMessage,
   NODE_MIN_WIDTH,
   PROTOCOL_VERSION,
@@ -15,10 +17,12 @@ import {
   UpdateNodeRequest,
   applyEvent,
   createInitialState,
+  needsUser,
   newId,
   nodesInside,
   type Frame,
   type LayoutNode,
+  type NoteEntry,
   type Session,
 } from './index';
 
@@ -33,6 +37,9 @@ function fixture(): { state: CanvasState; session: Session; node: LayoutNode } {
     cwd: null,
     command: null,
     note: '',
+    status: NO_STATUS,
+    attention: NO_ATTENTION,
+    noteLog: [],
   };
   const node: LayoutNode = {
     id: newId(),
@@ -169,11 +176,45 @@ describe('applyEvent', () => {
     expect(current.sessions[0]?.note).toBe('# billing bug');
   });
 
+  it('records what the shell reports', () => {
+    const { state, session, node } = fixture();
+    let current = applyEvent(state, { type: 'session.created', session, node });
+    const busy = { ...NO_STATUS, state: 'busy' as const, commandLine: 'make test', startedAt: '2026-01-01T00:00:05.000Z' };
+    current = applyEvent(current, { type: 'session.status', sessionId: session.id, status: busy });
+    expect(current.sessions[0]?.status).toEqual(busy);
+    current = applyEvent(current, { type: 'session.exited', sessionId: session.id });
+    expect(current.sessions[0]?.status.state).toBeNull();
+  });
+
+  it('appends note entries in order, once each, and records attention', () => {
+    const { state, session, node } = fixture();
+    const id = session.id;
+    let current = applyEvent(state, { type: 'session.created', session, node });
+    const entry: NoteEntry = { id: newId(), at: '2026-01-01T00:00:00.000Z', author: 'agent', kind: 'prompt', text: 'fix the build' };
+    current = applyEvent(current, { type: 'session.note.appended', sessionId: id, entry });
+    current = applyEvent(current, { type: 'session.note.appended', sessionId: id, entry });
+    expect(current.sessions[0]?.noteLog).toEqual([entry]);
+    expect(current.sessions[0]?.note).toBe('');
+
+    const waiting = { state: 'waiting' as const, message: 'Allow the edit?', at: '2026-01-01T00:00:01.000Z' };
+    current = applyEvent(current, { type: 'session.attention', sessionId: id, attention: waiting });
+    expect(needsUser(current.sessions[0]!.attention)).toBe(true);
+    expect(needsUser({ ...waiting, state: 'working' })).toBe(false);
+  });
+
   it('reads sessions saved before these fields existed', () => {
     const { state, session } = fixture();
-    const { state: _s, cwd: _c, command: _m, note: _n, ...old } = session;
+    const { state: _s, cwd: _c, command: _m, note: _n, status: _t, attention: _a, noteLog: _l, ...old } = session;
     const parsed = CanvasState.parse({ ...state, sessions: [old] });
-    expect(parsed.sessions[0]).toMatchObject({ state: 'open', cwd: null, command: null, note: '' });
+    expect(parsed.sessions[0]).toMatchObject({
+      state: 'open',
+      cwd: null,
+      command: null,
+      note: '',
+      status: NO_STATUS,
+      attention: NO_ATTENTION,
+      noteLog: [],
+    });
   });
 
   it('creates, updates and removes frames, leaving nodes alone', () => {

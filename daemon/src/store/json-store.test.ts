@@ -2,7 +2,7 @@ import { mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { applyEvent, newId, type CanvasState, type ChangeEvent } from '@aubergine/shared';
+import { NO_ATTENTION, NO_STATUS, applyEvent, newId, type CanvasState, type ChangeEvent } from '@aubergine/shared';
 import { JsonStore } from './json-store';
 
 let dir: string;
@@ -28,6 +28,9 @@ function withSession(state: CanvasState, name: string): CanvasState {
       cwd: null,
       command: null,
       note: '',
+      status: NO_STATUS,
+      attention: NO_ATTENTION,
+      noteLog: [],
     },
     node: { id: newId(), sessionId, x: 0, y: 0, width: 720, height: 440, color: 'none' },
   };

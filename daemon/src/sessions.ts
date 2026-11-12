@@ -2,23 +2,32 @@ import { existsSync } from 'node:fs';
 import os from 'node:os';
 import {
   Id,
+  NO_ATTENTION,
+  NO_STATUS,
   NODE_DEFAULT_HEIGHT,
   NODE_DEFAULT_WIDTH,
   findFreeRect,
+  needsUser,
   newId,
   nodesInside,
+  type AgentKind,
+  type Attention,
+  type AttentionState,
   type CreateFrameRequest,
   type Frame,
   type LayoutNode,
   type NodeRect,
+  type NoteEntry,
   type RuntimeStatus,
   type Session,
+  type ShellStatus,
   type UpdateFrameRequest,
   type UpdateNodeRequest,
   type UpdateSessionRequest,
 } from '@aubergine/shared';
 import type { Canvas } from './canvas';
-import type { SessionRuntime } from './runtime/runtime';
+import type { HistorySearch, RuntimeSession, SessionRuntime } from './runtime/runtime';
+import { noIntegration, type ShellIntegration, type ShellReport } from './shell/integration';
 
 export class NotFoundError extends Error {}
 export class ConflictError extends Error {}
@@ -29,6 +38,14 @@ export interface SessionsOptions {
   defaultFolder?: () => string | null;
   /** Shell to start; `null` for the user's own. */
   shell?: () => string | null;
+  /** Makes shells report command status. */
+  integration?: ShellIntegration;
+  /** Variables every session's shell is given, such as its address and token for the agent API. */
+  sessionEnv?: (sessionId: string) => Record<string, string>;
+  /** Whether prompts given to agents may be kept in the note log. */
+  logPrompts?: () => boolean;
+  /** The line that starts an agent in a new session, with its reporting set up. */
+  agentLaunchLine?: (agent: AgentKind) => Promise<string>;
 }
 
 /**
@@ -39,12 +56,18 @@ export class Sessions {
   private runtimeStatus: RuntimeStatus | null = null;
   private refreshing: Promise<void> | null = null;
   private refreshQueued: Promise<void> | null = null;
+  private readonly integration: ShellIntegration;
+  /** When the user last looked at each session; not saved. */
+  private readonly seenAt = new Map<string, number>();
+  private readonly startedAt = Date.now();
 
   constructor(
     private readonly canvas: Canvas,
     private readonly runtime: SessionRuntime,
     private readonly options: SessionsOptions = {},
-  ) {}
+  ) {
+    this.integration = options.integration ?? noIntegration;
+  }
 
   async status(): Promise<RuntimeStatus> {
     // A usable runtime stays usable; keep asking while it is not, so the
@@ -66,7 +89,7 @@ export class Sessions {
 
     for (const session of this.canvas.state.sessions) {
       if (session.state === 'exited' || running.has(session.id)) continue;
-      await this.runtime.create({ id: session.id, cwd: this.startFolder(session.cwd), shell: this.shell() });
+      await this.startShell(session.id, session.cwd);
     }
 
     const known = new Set(this.canvas.state.sessions.map((s) => s.id));
@@ -77,12 +100,24 @@ export class Sessions {
     await this.refresh();
   }
 
-  async create(input: { name?: string | undefined; rect?: NodeRect | undefined }): Promise<{ session: Session; node: LayoutNode }> {
+  async create(input: {
+    name?: string | undefined;
+    rect?: NodeRect | undefined;
+    agent?: AgentKind | undefined;
+  }): Promise<{ session: Session; node: LayoutNode }> {
     const status = await this.status();
     if (status.status !== 'ok') throw new RuntimeUnavailableError(`tmux is ${status.status}`);
     const id = newId();
-    const started = await this.runtime.create({ id, cwd: this.startFolder(null), shell: this.shell() });
-    return this.record(id, input.name, input.rect, started.cwd);
+    const started = await this.startShell(id, null);
+    // What a new shell prints while starting up is not news.
+    this.seenAt.set(id, Date.now() + 5000);
+    const launch = input.agent ? await this.options.agentLaunchLine?.(input.agent) : undefined;
+    const created = this.record(id, input.name ?? (launch ? this.nextName('Claude Code') : undefined), input.rect, started.cwd);
+    if (launch) {
+      // Typed once the shell is ready; the new node does not wait for that.
+      void this.runtime.typeLine(id, launch).catch(() => {});
+    }
+    return created;
   }
 
   update(sessionId: string, changes: UpdateSessionRequest): Session {
@@ -110,7 +145,7 @@ export class Sessions {
     const session = this.find(sessionId);
     if (session.state !== 'exited') throw new ConflictError('This shell is still running');
     if (!(await this.runtime.has(sessionId))) {
-      await this.runtime.create({ id: sessionId, cwd: this.startFolder(session.cwd), shell: this.shell() });
+      await this.startShell(sessionId, session.cwd);
     }
     this.canvas.emit({ type: 'session.restarted', sessionId });
     return this.find(sessionId);
@@ -121,6 +156,8 @@ export class Sessions {
     this.find(sessionId);
     await this.runtime.kill(sessionId);
     if (this.has(sessionId)) this.canvas.emit({ type: 'session.closed', sessionId });
+    this.seenAt.delete(sessionId);
+    await this.integration.forget(sessionId);
   }
 
   /**
@@ -168,8 +205,14 @@ export class Sessions {
       const live = running.get(session.id);
       if (!live) {
         this.shellEnded(session.id);
-      } else if (live.cwd !== session.cwd || live.command !== session.command) {
+        continue;
+      }
+      if (live.cwd !== session.cwd || live.command !== session.command) {
         this.canvas.emit({ type: 'session.activity', sessionId: session.id, cwd: live.cwd, command: live.command });
+      }
+      const status = this.nextStatus(session, await this.integration.read(session.id), live.activityAt);
+      if (!sameStatus(status, session.status)) {
+        this.canvas.emit({ type: 'session.status', sessionId: session.id, status });
       }
     }
   }
@@ -233,6 +276,92 @@ export class Sessions {
     return session;
   }
 
+  private async startShell(sessionId: string, folder: string | null): Promise<RuntimeSession> {
+    const shell = this.shell();
+    const env = await this.integration.environment(sessionId, shell ?? process.env.SHELL ?? '');
+    return this.runtime.create({
+      id: sessionId,
+      cwd: this.startFolder(folder),
+      shell,
+      env: { ...env, ...this.options.sessionEnv?.(sessionId) },
+    });
+  }
+
+  /** Searches the terminal history of every running session, parked ones included. */
+  searchHistory(query: string): Promise<HistorySearch> {
+    const ids = this.canvas.state.sessions.filter((s) => s.state !== 'exited').map((s) => s.id);
+    return this.runtime.search(ids, query);
+  }
+
+  /** Scrolls a session's terminal back to where `text` appears. */
+  async reveal(sessionId: string, text: string): Promise<void> {
+    this.find(sessionId);
+    if (this.isRunning(sessionId)) await this.runtime.reveal(sessionId, text);
+  }
+
+  /** Says whether the session wants the user. Reported by the agent running in it. */
+  setAttention(sessionId: string, state: AttentionState, message?: string): Attention {
+    this.find(sessionId);
+    const attention: Attention = {
+      state,
+      message: message || null,
+      at: state === 'none' ? null : new Date().toISOString(),
+    };
+    this.canvas.emit({ type: 'session.attention', sessionId, attention });
+    return attention;
+  }
+
+  /**
+   * Appends to the session's note log. Returns null when the entry is not
+   * kept: prompts are dropped when the user has turned prompt logging off.
+   */
+  appendNote(sessionId: string, input: { author: NoteEntry['author']; kind?: NoteEntry['kind'] | undefined; text: string }): NoteEntry | null {
+    this.find(sessionId);
+    const kind = input.kind ?? 'note';
+    if (kind === 'prompt' && this.options.logPrompts?.() === false) return null;
+    const entry: NoteEntry = { id: newId(), at: new Date().toISOString(), author: input.author, kind, text: input.text };
+    this.canvas.emit({ type: 'session.note.appended', sessionId, entry });
+    return entry;
+  }
+
+  /** The user is looking at this session: nothing in it is unread, and it no longer waits for them. */
+  seen(sessionId: string): Session {
+    const session = this.find(sessionId);
+    this.seenAt.set(sessionId, Date.now());
+    if (needsUser(session.attention)) {
+      this.canvas.emit({ type: 'session.attention', sessionId, attention: NO_ATTENTION });
+    }
+    if (session.status.unread) {
+      this.canvas.emit({ type: 'session.status', sessionId, status: { ...session.status, unread: false } });
+    }
+    return this.find(sessionId);
+  }
+
+  private nextStatus(session: Session, report: ShellReport | null, activityAt: Date | null): ShellStatus {
+    // tmux reports activity in whole seconds, so allow for that before calling something new.
+    const seen = this.seenAt.get(session.id) ?? this.startedAt;
+    const unread = activityAt !== null && activityAt.getTime() > seen + 1000;
+    if (!report) return { ...session.status, unread };
+    const iso = (date: Date | null): string | null => date?.toISOString() ?? null;
+    return report.state === 'busy'
+      ? {
+          ...session.status,
+          state: 'busy',
+          commandLine: report.commandLine,
+          startedAt: iso(report.startedAt),
+          unread,
+        }
+      : {
+          state: 'idle',
+          commandLine: null,
+          startedAt: null,
+          // Before the first command there is no exit code; keep what was known.
+          lastExit: report.lastExit ?? session.status.lastExit,
+          lastFinishedAt: iso(report.lastFinishedAt) ?? session.status.lastFinishedAt,
+          unread,
+        };
+  }
+
   private shell(): string | null {
     const shell = this.options.shell?.() ?? null;
     return shell && existsSync(shell) ? shell : null;
@@ -262,16 +391,20 @@ export class Sessions {
       cwd,
       command: null,
       note: '',
+      status: NO_STATUS,
+      attention: NO_ATTENTION,
+      noteLog: [],
     };
     const node: LayoutNode = { id: newId(), sessionId: id, color: 'none', ...(rect ?? this.freeSpot()) };
     this.canvas.emit({ type: 'session.created', session, node });
     return { session, node };
   }
 
-  private nextName(): string {
+  private nextName(base = 'Terminal'): string {
     const names = new Set(this.canvas.state.sessions.map((s) => s.name));
-    for (let n = names.size + 1; ; n++) {
-      if (!names.has(`Terminal ${n}`)) return `Terminal ${n}`;
+    const first = base === 'Terminal' ? names.size + 1 : 1;
+    for (let n = first; ; n++) {
+      if (!names.has(`${base} ${n}`)) return `${base} ${n}`;
     }
   }
 
@@ -285,4 +418,15 @@ export class Sessions {
       : { x: size.width / 2, y: size.height / 2 };
     return findFreeRect(nodes, center, size);
   }
+}
+
+function sameStatus(a: ShellStatus, b: ShellStatus): boolean {
+  return (
+    a.state === b.state &&
+    a.commandLine === b.commandLine &&
+    a.startedAt === b.startedAt &&
+    a.lastExit === b.lastExit &&
+    a.lastFinishedAt === b.lastFinishedAt &&
+    a.unread === b.unread
+  );
 }

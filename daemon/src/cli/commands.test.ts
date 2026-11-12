@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { newId, type Session } from '@aubergine/shared';
+import { NO_ATTENTION, NO_STATUS, newId, type Session } from '@aubergine/shared';
 import { UsageError, formatSessions, parseCommand, resolveSession } from './commands';
 
 function session(name: string, extra: Partial<Session> = {}): Session {
@@ -12,6 +12,9 @@ function session(name: string, extra: Partial<Session> = {}): Session {
     cwd: null,
     command: null,
     note: '',
+    status: NO_STATUS,
+    attention: NO_ATTENTION,
+    noteLog: [],
     ...extra,
   };
 }
@@ -23,12 +26,18 @@ describe('parseCommand', () => {
     expect(parseCommand(['new'])).toEqual({ name: 'new', sessionName: null });
     expect(parseCommand(['new', 'api', 'server'])).toEqual({ name: 'new', sessionName: 'api server' });
     expect(parseCommand(['attach', 'api'])).toEqual({ name: 'attach', query: 'api' });
+    expect(parseCommand(['note', 'tests', 'pass'])).toEqual({ name: 'note', text: 'tests pass' });
+    expect(parseCommand(['hook', 'stop'])).toEqual({ name: 'hook', event: 'stop' });
+    expect(parseCommand(['hooks', 'print'])).toEqual({ name: 'hooks-print' });
     expect(parseCommand(['service', 'install'])).toEqual({ name: 'service', action: 'install' });
     expect(parseCommand(['service', 'uninstall'])).toEqual({ name: 'service', action: 'uninstall' });
   });
 
   it('rejects what it does not understand', () => {
     expect(() => parseCommand(['attach'])).toThrow(UsageError);
+    expect(() => parseCommand(['note'])).toThrow(UsageError);
+    expect(() => parseCommand(['hook', 'explode'])).toThrow(UsageError);
+    expect(() => parseCommand(['hooks'])).toThrow(UsageError);
     expect(() => parseCommand(['service'])).toThrow(UsageError);
     expect(() => parseCommand(['service', 'start'])).toThrow(UsageError);
     expect(() => parseCommand(['explode'])).toThrow(/Unknown command/);

@@ -2,6 +2,8 @@ import { spawnSync } from 'node:child_process';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { CreateSessionResponse, StateResponse, paths } from '@aubergine/shared';
+import { claudeHooksSettings, hookActions, type HookEvent } from './agents/claude-code';
+import { agentClient } from './cli/agent';
 import { USAGE, UsageError, formatSessions, parseCommand, resolveSession } from './cli/commands';
 import { loadConfig, type Config } from './config';
 import { TmuxRuntime } from './runtime/tmux-runtime';
@@ -35,8 +37,39 @@ async function call(config: Config, method: string, urlPath: string, body?: unkn
   return response.json();
 }
 
+/**
+ * Runs for an agent's hook. It must never disturb the agent: it prints
+ * nothing (some hooks feed their output back to the agent), gives up quickly,
+ * and always succeeds, including outside an Aubergine session.
+ */
+async function runHook(event: HookEvent): Promise<number> {
+  try {
+    const client = agentClient(process.env, 3000);
+    let raw = '';
+    for await (const chunk of process.stdin) raw += chunk;
+    let input: unknown = null;
+    try {
+      input = JSON.parse(raw);
+    } catch {
+      // No usable input: the event itself is still worth reporting.
+    }
+    for (const action of hookActions(event, input)) {
+      if (action.do === 'attention') await client.setAttention(action.state, action.message);
+      else await client.appendNote(action.text, action.kind);
+    }
+  } catch {
+    // Not in a session, or the server is away. Nothing to report to.
+  }
+  return 0;
+}
+
 async function main(): Promise<number> {
   const command = parseCommand(process.argv.slice(2));
+  if (command.name === 'hook') return runHook(command.event);
+  if (command.name === 'hooks-print') {
+    console.log(JSON.stringify(claudeHooksSettings(), null, 2));
+    return 0;
+  }
   const config = loadConfig();
 
   switch (command.name) {
@@ -64,6 +97,12 @@ async function main(): Promise<number> {
       const { bin, args, env } = runtime.attachCommand(session.id);
       // The same session the canvas shows: both views stay in step.
       return spawnSync(bin, args, { stdio: 'inherit', env }).status ?? 1;
+    }
+
+    case 'note': {
+      const entry = await agentClient().appendNote(command.text);
+      console.log(entry ? 'Noted.' : 'Not kept.');
+      return 0;
     }
 
     case 'service': {

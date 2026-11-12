@@ -11,17 +11,21 @@ import {
   CreateSessionResponse,
   EventsServerMessage,
   Frame,
+  SESSION_ENV,
+  SearchResponse,
   SnapshotResponse,
   StateResponse,
   newId,
   paths,
   type ChangeEvent,
 } from '@aubergine/shared';
+import { sessionToken } from './auth';
 import { Canvas } from './canvas';
 import { TmuxRuntime } from './runtime/tmux-runtime';
 import { buildServer, cookieName } from './server';
 import { Sessions } from './sessions';
 import { SETTINGS_FILE, SettingsFile, expandHome } from './settings';
+import { ZshIntegration } from './shell/integration';
 import { JsonStore } from './store/json-store';
 import { loadOrCreateToken } from './token';
 
@@ -42,10 +46,18 @@ async function start(): Promise<void> {
   settingsFile = new SettingsFile(dir);
   await settingsFile.reload();
   sessions = new Sessions(canvas, runtime, {
+    integration: new ZshIntegration(path.join(dir, 'shell')),
+    sessionEnv: (sessionId) => ({
+      [SESSION_ENV.url]: `http://127.0.0.1:${port}`,
+      [SESSION_ENV.sessionId]: sessionId,
+      [SESSION_ENV.token]: sessionToken(token, sessionId),
+    }),
+    logPrompts: () => settingsFile.value.agents.logPrompts,
+    // A stand-in for starting an agent: any line will do to check that it is typed.
+    agentLaunchLine: async () => 'echo "agent-""launched"',
     defaultFolder: () => (settingsFile.value.defaultFolder ? expandHome(settingsFile.value.defaultFolder) : null),
     shell: () => settingsFile.value.shell,
   });
-  await sessions.reconcile();
   app = await buildServer({
     canvas,
     sessions,
@@ -58,6 +70,8 @@ async function start(): Promise<void> {
   await app.listen({ host: '127.0.0.1', port: 0 });
   port = (app.server.address() as AddressInfo).port;
   origin = `http://127.0.0.1:${port}`;
+  // After listening, so that shells started now are given the right address.
+  await sessions.reconcile();
 }
 
 async function stop(): Promise<void> {
@@ -484,6 +498,188 @@ describe('session activity', () => {
   });
 });
 
+describe('agent API', () => {
+  const bearer = (value: string) => ({ authorization: `Bearer ${value}` });
+  /** A call the way a program inside a session makes it: bearer token, no cookie, no Origin. */
+  const agent = (method: string, url: string, tokenValue: string | null, body?: unknown) =>
+    request(method, url, {
+      cookie: false,
+      origin: null,
+      ...(tokenValue === null ? {} : { headers: bearer(tokenValue) }),
+      ...(body === undefined ? {} : { body }),
+    });
+
+  it('lets a session set its own attention and append to its own note log', async () => {
+    const { session } = await createSession();
+    const mine = sessionToken(token, session.id);
+
+    const attention = await agent('PUT', paths.agent.attention(session.id), mine, { state: 'waiting', message: 'Allow the edit?' });
+    expect(attention.statusCode).toBe(200);
+    expect(canvas.state.sessions[0]?.attention).toMatchObject({ state: 'waiting', message: 'Allow the edit?' });
+
+    const noted = await agent('POST', paths.agent.notes(session.id), mine, { text: 'Tests pass.' });
+    expect(noted.statusCode).toBe(201);
+    expect(canvas.state.sessions[0]?.noteLog).toMatchObject([{ author: 'agent', kind: 'note', text: 'Tests pass.' }]);
+    // The pinned note is untouched.
+    expect(canvas.state.sessions[0]?.note).toBe('');
+  });
+
+  it('refuses a session token everything else', async () => {
+    const mine = await createSession();
+    const other = await createSession();
+    const tokenValue = sessionToken(token, mine.session.id);
+
+    // Another session's attention and notes.
+    expect((await agent('PUT', paths.agent.attention(other.session.id), tokenValue, { state: 'waiting' })).statusCode).toBe(403);
+    expect((await agent('POST', paths.agent.notes(other.session.id), tokenValue, { text: 'x' })).statusCode).toBe(403);
+    // The rest of the API does not take bearer tokens at all.
+    expect((await agent('GET', paths.state, tokenValue)).statusCode).toBe(401);
+    expect((await agent('DELETE', paths.session(mine.session.id), tokenValue)).statusCode).toBe(403);
+    expect((await agent('POST', paths.sessions, tokenValue, {})).statusCode).toBe(403);
+    expect((await agent('PATCH', paths.session(mine.session.id), tokenValue, { note: 'x' })).statusCode).toBe(403);
+    expect(canvas.state.sessions.map((s) => s.attention.state)).toEqual(['none', 'none']);
+    expect(canvas.state.sessions).toHaveLength(2);
+  });
+
+  it('refuses missing, wrong and cookie-only credentials, and still checks Host and Origin', async () => {
+    const { session } = await createSession();
+    const url = paths.agent.attention(session.id);
+    const body = { state: 'waiting' };
+    expect((await agent('PUT', url, null, body)).statusCode).toBe(401);
+    expect((await agent('PUT', url, 'aub1.x.y', body)).statusCode).toBe(401);
+    expect((await agent('PUT', url, sessionToken('wrong-secret', session.id), body)).statusCode).toBe(401);
+    // The browser cookie is not a credential here.
+    expect((await request('PUT', url, { body, origin: null })).statusCode).toBe(401);
+
+    const mine = sessionToken(token, session.id);
+    const badHost = await request('PUT', url, { body, cookie: false, origin: null, headers: { ...bearer(mine), host: 'evil.example' } });
+    expect(badHost.statusCode).toBe(403);
+    const badOrigin = await request('PUT', url, { body, cookie: false, origin: 'http://evil.example', headers: bearer(mine) });
+    expect(badOrigin.statusCode).toBe(403);
+    expect(canvas.state.sessions[0]?.attention.state).toBe('none');
+  });
+
+  it('validates what it is sent', async () => {
+    const { session } = await createSession();
+    const mine = sessionToken(token, session.id);
+    expect((await agent('PUT', paths.agent.attention(session.id), mine, { state: 'panicking' })).statusCode).toBe(400);
+    expect((await agent('POST', paths.agent.notes(session.id), mine, { text: '   ' })).statusCode).toBe(400);
+    expect((await agent('POST', paths.agent.notes(newId()), sessionToken(token, newId()), { text: 'x' })).statusCode).toBe(403);
+  });
+
+  it('gives each session its address, ID and token in its environment', async () => {
+    const { session } = await createSession();
+    const view = terminal(session.id);
+    await waitFor(() => view.socket.readyState === WebSocket.OPEN, 'open');
+    view.socket.send(
+      JSON.stringify({ t: 'input', data: 'echo "env=[$AUBERGINE_URL] [$AUBERGINE_SESSION_ID] [$AUBERGINE_TOKEN]"\r' }),
+    );
+    const expected = `env=[http://127.0.0.1:${port}] [${session.id}] [${sessionToken(token, session.id)}]`;
+    await waitFor(() => view.text.replace(/\s+/g, '').includes(expected.replace(/\s+/g, '')), 'environment');
+  });
+
+  it('starts an agent in a new session by typing its launch line once the shell is ready', async () => {
+    const response = await request('POST', paths.sessions, { body: { agent: 'claude-code' } });
+    const { session } = CreateSessionResponse.parse(response.json());
+    expect(session.name).toBe('Claude Code 1');
+    const started = Date.now();
+    while (!(await runtime.snapshot(session.id)).includes('agent-launched')) {
+      if (Date.now() - started > 15_000) throw new Error('The launch line was never run');
+      await sleep(40);
+    }
+    expect((await request('POST', paths.sessions, { body: { agent: 'something-else' } })).statusCode).toBe(400);
+  });
+
+  it("clears attention when the user looks, and keeps it while the agent works", async () => {
+    const { session } = await createSession();
+    const mine = sessionToken(token, session.id);
+    await agent('PUT', paths.agent.attention(session.id), mine, { state: 'working' });
+    await request('POST', paths.seenSession(session.id), { body: {} });
+    expect(canvas.state.sessions[0]?.attention.state).toBe('working');
+
+    await agent('PUT', paths.agent.attention(session.id), mine, { state: 'done' });
+    await request('POST', paths.seenSession(session.id), { body: {} });
+    expect(canvas.state.sessions[0]?.attention).toEqual({ state: 'none', message: null, at: null });
+  });
+
+  it('keeps prompts out of the log when prompt logging is turned off', async () => {
+    const { session } = await createSession();
+    const mine = sessionToken(token, session.id);
+    await agent('POST', paths.agent.notes(session.id), mine, { text: 'fix the build', kind: 'prompt' });
+    expect(canvas.state.sessions[0]?.noteLog).toHaveLength(1);
+
+    await writeFile(path.join(dir, SETTINGS_FILE), JSON.stringify({ agents: { logPrompts: false } }));
+    await settingsFile.reload();
+    const dropped = await agent('POST', paths.agent.notes(session.id), mine, { text: 'the password is hunter2', kind: 'prompt' });
+    expect(dropped.statusCode).toBe(201);
+    expect(dropped.json()).toEqual({ entry: null });
+    // Other entries are still kept.
+    await agent('POST', paths.agent.notes(session.id), mine, { text: 'Finished.', kind: 'event' });
+    expect(canvas.state.sessions[0]?.noteLog.map((e) => e.text)).toEqual(['fix the build', 'Finished.']);
+  });
+
+  it('lets the user append entries from the browser, and saves the log', async () => {
+    const { session } = await createSession();
+    const added = await request('POST', paths.sessionNotes(session.id), { body: { text: 'Remember to rebase.' } });
+    expect(added.statusCode).toBe(201);
+    await stop();
+    await start();
+    expect(canvas.state.sessions[0]?.noteLog).toMatchObject([{ author: 'user', text: 'Remember to rebase.' }]);
+  });
+});
+
+const usesZsh = (process.env.SHELL ?? '').endsWith('/zsh');
+
+describe.runIf(usesZsh)('shell status', () => {
+  it('shows a running command as busy, then idle with its exit code', async () => {
+    const { session } = await createSession();
+    const view = terminal(session.id);
+    await waitFor(() => view.socket.readyState === WebSocket.OPEN, 'open');
+    await waitForRefreshed(() => canvas.state.sessions[0]?.status.state === 'idle', 'idle at the prompt');
+    expect(canvas.state.sessions[0]?.status.lastExit).toBeNull();
+
+    view.socket.send(JSON.stringify({ t: 'input', data: 'sleep 2; (exit 3)\r' }));
+    await waitForRefreshed(() => canvas.state.sessions[0]?.status.state === 'busy', 'busy');
+    expect(canvas.state.sessions[0]?.status).toMatchObject({ commandLine: 'sleep 2; (exit 3)', lastExit: null });
+
+    await waitForRefreshed(() => canvas.state.sessions[0]?.status.state === 'idle', 'idle again');
+    const status = canvas.state.sessions[0]!.status;
+    expect(status).toMatchObject({ commandLine: null, lastExit: 3 });
+    expect(Date.parse(status.lastFinishedAt!)).toBeGreaterThan(Date.now() - 60_000);
+  });
+
+  it('reports status for a parked session, which nobody is viewing', async () => {
+    const { session } = await createSession();
+    const view = terminal(session.id);
+    await waitFor(() => view.socket.readyState === WebSocket.OPEN, 'open');
+    view.socket.send(JSON.stringify({ t: 'input', data: 'sleep 2; (exit 7)\r' }));
+    await waitForRefreshed(() => canvas.state.sessions[0]?.status.state === 'busy', 'busy');
+    view.socket.close();
+    await request('POST', paths.parkSession(session.id), { body: {} });
+    await waitForRefreshed(() => canvas.state.sessions[0]?.status.lastExit === 7, 'exit code while parked');
+  });
+});
+
+describe('unread output', () => {
+  it('marks a session that printed since it was last looked at, until it is looked at again', async () => {
+    const { session } = await createSession();
+    await request('POST', paths.seenSession(session.id), { body: {} });
+    await sessions.refresh();
+    expect(canvas.state.sessions[0]?.status.unread).toBe(false);
+
+    await sleep(1200); // tmux keeps activity times in whole seconds
+    const view = terminal(session.id);
+    await waitFor(() => view.socket.readyState === WebSocket.OPEN, 'open');
+    view.socket.send(JSON.stringify({ t: 'input', data: 'sleep 1.2; echo "something ""new"\r' }));
+    await waitForRefreshed(() => canvas.state.sessions[0]?.status.unread === true, 'unread');
+
+    const seen = await request('POST', paths.seenSession(session.id), { body: {} });
+    expect(seen.json().status.unread).toBe(false);
+    await sessions.refresh();
+    expect(canvas.state.sessions[0]?.status.unread).toBe(false);
+  });
+});
+
 describe('settings', () => {
   it('serves the settings file with the state and applies shell and folder to new sessions', async () => {
     const initial = StateResponse.parse((await request('GET', paths.state)).json());
@@ -504,6 +700,33 @@ describe('settings', () => {
       // Not the user's own shell: `sh` (which some systems run as bash or dash).
       return current?.cwd === folder && ['sh', 'bash', 'dash'].includes(current.command ?? '');
     }, 'configured shell in the configured folder');
+  });
+});
+
+describe('history search', () => {
+  it('finds text printed in a parked session and leaves out sessions that ended', async () => {
+    const parked = await createSession('quiet one');
+    const ended = await createSession();
+    for (const { session } of [parked, ended]) {
+      const view = terminal(session.id);
+      await waitFor(() => view.socket.readyState === WebSocket.OPEN, 'open');
+      view.socket.send(JSON.stringify({ t: 'input', data: 'echo "find-""me-later"\r' }));
+      await waitFor(() => view.text.includes('find-me-later'), 'output');
+      view.socket.close();
+    }
+    await request('POST', paths.parkSession(parked.session.id), { body: {} });
+    await runtime.kill(ended.session.id);
+    await sessions.refresh();
+
+    const response = await request('GET', `${paths.search}?q=find-me-later`);
+    expect(response.statusCode).toBe(200);
+    const { hits } = SearchResponse.parse(response.json());
+    expect(hits.map((h) => [h.sessionId, h.text])).toEqual([[parked.session.id, 'find-me-later']]);
+
+    expect((await request('GET', `${paths.search}?q=x`)).statusCode).toBe(400);
+    expect((await request('GET', `${paths.search}?q=find-me-later`, { cookie: false })).statusCode).toBe(401);
+    expect((await request('POST', paths.revealInSession(parked.session.id), { body: { text: 'find-me-later' } })).statusCode).toBe(204);
+    expect((await request('POST', paths.revealInSession(newId()), { body: { text: 'x' } })).statusCode).toBe(404);
   });
 });
 

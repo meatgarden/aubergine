@@ -1,5 +1,7 @@
 import { z } from 'zod';
 import {
+  Attention,
+  AttentionState,
   CanvasState,
   Frame,
   FrameLabel,
@@ -7,11 +9,14 @@ import {
   LayoutNode,
   NodeColor,
   NodeRect,
+  NoteEntry,
+  NoteText,
   Session,
   SessionName,
   SessionNote,
 } from './entities';
 import { ChangeEvent } from './events';
+import { Id } from './ids';
 import { Settings } from './settings';
 
 /**
@@ -32,11 +37,29 @@ export const paths = {
   restoreSession: (sessionId: string) => `/api/v1/sessions/${sessionId}/restore`,
   /** POST: start a new shell for a session whose shell exited. */
   restartSession: (sessionId: string) => `/api/v1/sessions/${sessionId}/restart`,
+  /** POST: the user is looking at this session now. */
+  seenSession: (sessionId: string) => `/api/v1/sessions/${sessionId}/seen`,
   /** GET: the session's visible screen as plain text. */
   snapshot: (sessionId: string) => `/api/v1/sessions/${sessionId}/snapshot`,
   node: (nodeId: string) => `/api/v1/nodes/${nodeId}`,
   frames: '/api/v1/frames',
   frame: (frameId: string) => `/api/v1/frames/${frameId}`,
+  /** GET `?q=`: lines in the terminal history of running sessions that contain the text. */
+  search: '/api/v1/search',
+  /** POST: scroll the session's terminal back to where a piece of text appears. */
+  revealInSession: (sessionId: string) => `/api/v1/sessions/${sessionId}/reveal`,
+  /** POST: append an entry to the session's note log, as the user. */
+  sessionNotes: (sessionId: string) => `/api/v1/sessions/${sessionId}/notes`,
+  /**
+   * Routes for programs running inside a session. They authenticate with a
+   * bearer token and may only act on what that token allows.
+   */
+  agent: {
+    /** PUT: say whether the session wants the user. */
+    attention: (sessionId: string) => `/v1/sessions/${sessionId}/attention`,
+    /** POST: append an entry to the session's note log. */
+    notes: (sessionId: string) => `/v1/sessions/${sessionId}/notes`,
+  },
   /** WebSocket: stream of change events. */
   events: '/ws/v1/events',
   /** WebSocket: one terminal viewer. Query: `cols`, `rows`. */
@@ -61,10 +84,16 @@ export const StateResponse = z.object({
 });
 export type StateResponse = z.infer<typeof StateResponse>;
 
+/** Agents the canvas knows how to start. */
+export const AgentKind = z.enum(['claude-code']);
+export type AgentKind = z.infer<typeof AgentKind>;
+
 export const CreateSessionRequest = z.object({
   name: SessionName.optional(),
   /** Where to put the new node. The daemon picks a spot when omitted. */
   rect: NodeRect.optional(),
+  /** Start an agent in the new session, wired up to report to the canvas. */
+  agent: AgentKind.optional(),
 });
 export type CreateSessionRequest = z.infer<typeof CreateSessionRequest>;
 
@@ -94,6 +123,52 @@ export const UpdateFrameRequest = FrameRect.extend({
 export type UpdateFrameRequest = z.infer<typeof UpdateFrameRequest>;
 
 export const FrameResponse = Frame;
+
+export const SetAttentionRequest = z.object({
+  state: AttentionState,
+  message: z.string().trim().max(500).optional(),
+});
+export type SetAttentionRequest = z.infer<typeof SetAttentionRequest>;
+
+export const AppendNoteRequest = z.object({
+  text: NoteText,
+  kind: NoteEntry.shape.kind.optional(),
+});
+export type AppendNoteRequest = z.infer<typeof AppendNoteRequest>;
+
+/** Answer to appending a note. `entry` is null when the daemon chose not to keep it. */
+export const AppendNoteResponse = z.object({ entry: NoteEntry.nullable() });
+export type AppendNoteResponse = z.infer<typeof AppendNoteResponse>;
+
+export const AttentionResponse = Attention;
+
+/** Environment variables every session's shell is given, for programs that talk to the daemon. */
+export const SESSION_ENV = {
+  url: 'AUBERGINE_URL',
+  sessionId: 'AUBERGINE_SESSION_ID',
+  token: 'AUBERGINE_TOKEN',
+} as const;
+
+export const SearchQuery = z.object({ q: z.string().trim().min(2).max(200) });
+
+/** One matching line of terminal history, with the lines around it. */
+export const SearchHit = z.object({
+  sessionId: Id,
+  text: z.string(),
+  before: z.array(z.string()),
+  after: z.array(z.string()),
+});
+export type SearchHit = z.infer<typeof SearchHit>;
+
+export const SearchResponse = z.object({
+  hits: z.array(SearchHit),
+  /** True when there were more matches than are returned. */
+  truncated: z.boolean(),
+});
+export type SearchResponse = z.infer<typeof SearchResponse>;
+
+export const RevealRequest = z.object({ text: z.string().min(1).max(200) });
+export type RevealRequest = z.infer<typeof RevealRequest>;
 
 export const SnapshotResponse = z.object({ text: z.string() });
 export type SnapshotResponse = z.infer<typeof SnapshotResponse>;

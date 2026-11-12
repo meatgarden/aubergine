@@ -56,9 +56,51 @@ In a Chromium-based browser you can install the page as an app window (address b
 - × on a node **parks** the session: the node leaves the canvas but the shell keeps running. **Parked (n)** in the toolbar lists parked sessions; restore one, or end it for good (this asks first).
 - When a shell exits by itself, its node stays and offers **Restart here** (a new shell in the same folder) and **Remove**.
 
+### Status at a glance
+
+With zsh, each node's title bar shows what its shell is doing:
+
+- a pulsing dot and the full command line while a command runs;
+- a red `exit N` badge when the last command failed (hover for when it finished);
+- a blue dot when the session has printed something since you last looked at it.
+
+These work for parked and off-screen sessions too. Other shells run normally but report no command status yet.
+
+How it works: a session starts zsh with `ZDOTDIR` pointing at a small folder inside the data folder. The files there load your own `.zshenv`, `.zprofile`, `.zshrc` and `.zlogin` exactly as usual and then add two hooks. Your dotfiles are never edited, and `ZDOTDIR` is back to your own value once the shell has started.
+
+### Agents: who is waiting for you?
+
+**+ Claude Code** starts `claude` in a new session with a settings file that Aubergine generates in its data folder. Your own Claude Code configuration is not touched. The hooks in that file tell the canvas what the agent is doing:
+
+- when you submit a prompt, the prompt is added to the session's note log and the node shows **working**;
+- when the agent needs you (a permission question, or it is idle waiting for input), the node turns orange and shows **waiting for you**;
+- when the agent stops, the node shows **finished** and a line is added to the log.
+
+The toolbar shows **N waiting**; click it to go to the next waiting session. Looking at a node clears its state, and so does the agent starting to work again. **Notify** turns on desktop notifications for sessions that start waiting.
+
+To use the hooks in sessions you start yourself, print them and add them to your own Claude Code settings by hand:
+
+```sh
+aubergine hooks print
+```
+
+They do nothing outside an Aubergine session.
+
+Prompts can contain secrets. To keep them out of the note log, set `"agents": { "logPrompts": false }` in `config.json`.
+
 ### Notes
 
-**Note** in a title bar opens a Markdown note for that session. It is saved as you type and is searched by the picker.
+**Note** in a title bar opens the session's notes: a pinned Markdown summary that you edit freely and that is saved as you type, above a log that only grows. Each log entry has an author (you, or the agent in that session) and a time. Add an entry in the panel, or from inside the session:
+
+```sh
+aubergine note "migrations done, starting the backfill"
+```
+
+The picker searches both the summary and the log.
+
+### Searching terminal output
+
+The picker (⌘K) also searches what terminals have printed, in a **Terminal output** section below the session matches. Choosing a result opens that session scrolled back to the match; press `q` to return to the bottom. It reads each running session's history when you search, parked sessions included. Nothing is indexed or recorded, so it only reaches as far back as the history tmux keeps (50,000 lines) and does not cover sessions that have ended.
 
 ### Many sessions
 
@@ -77,13 +119,15 @@ Create `config.json` in the data folder (the server prints its location at start
   "font": { "family": "Menlo, monospace", "size": 13 },
   "theme": "dark",
   "shell": null,
-  "defaultFolder": "~/work"
+  "defaultFolder": "~/work",
+  "agents": { "logPrompts": true }
 }
 ```
 
 - `theme`: `"dark"` or `"light"`.
 - `shell`: absolute path of the shell to start; `null` uses your own `$SHELL`.
 - `defaultFolder`: where new terminals start; `null` means your home folder.
+- `agents.logPrompts`: `false` keeps prompts given to agents out of the note log. Default `true`.
 
 Font and theme apply when you reload the page; shell and folder apply to the next new terminal.
 
@@ -105,6 +149,8 @@ ln -s "$PWD/bin/aubergine.mjs" /usr/local/bin/aubergine
 aubergine list                 sessions with their state, command and folder
 aubergine new [name]           start a new terminal on the canvas
 aubergine attach <name>        open a session in this terminal
+aubergine note <text>          inside a session: add an entry to its note log
+aubergine hooks print          print the Claude Code hook settings
 aubergine service install      start the Aubergine server at login (macOS)
 aubergine service uninstall    stop starting it at login
 ```
@@ -112,6 +158,25 @@ aubergine service uninstall    stop starting it at login
 `attach` shows the very same session as the canvas, so both views stay in step. Close the terminal window to detach; the session keeps running.
 
 `service install` writes a per-user launchd agent that runs the server from this checkout, with the port and data folder in effect when you ran it. Run `pnpm build` first.
+
+## For programs inside a session
+
+Every session's shell has three variables:
+
+| Variable | Meaning |
+|---|---|
+| `AUBERGINE_URL` | Address of the server |
+| `AUBERGINE_SESSION_ID` | This session's ID |
+| `AUBERGINE_TOKEN` | A token that is valid for this session only |
+
+With the token as a bearer credential, a program may do exactly two things, both for its own session:
+
+```
+PUT  /v1/sessions/<id>/attention   {"state": "working" | "waiting" | "done" | "none", "message": "..."}
+POST /v1/sessions/<id>/notes       {"text": "..."}
+```
+
+Everything else is refused. `aubergine note` and `aubergine hook` are thin wrappers around these two calls.
 
 ## Develop
 

@@ -7,6 +7,8 @@ export interface RuntimeSession {
   cwd: string | null;
   /** Name of the foreground command, when known. */
   command: string | null;
+  /** When the session last printed anything, when known. */
+  activityAt: Date | null;
 }
 
 export interface TerminalDimensions {
@@ -20,6 +22,8 @@ export interface CreateOptions extends Partial<TerminalDimensions> {
   cwd?: string;
   /** Absolute path of the shell to start, as a login shell. Defaults to the user's own shell. */
   shell?: string | null;
+  /** Extra environment variables for the session's shell. */
+  env?: Record<string, string>;
 }
 
 export interface ExitInfo {
@@ -60,8 +64,36 @@ export interface SessionRuntime {
   kill(id: string): Promise<void>;
   /** Connects a viewer. Rejects with SessionNotFoundError when the session is gone. */
   attach(id: string, viewer: TerminalDimensions): Promise<Attachment>;
+  /**
+   * Types a line into the session and presses Enter, as the user would,
+   * once its shell is ready to take input. Resolves when it has been typed.
+   */
+  typeLine(id: string, line: string): Promise<void>;
+  /**
+   * Looks through the history of the given sessions for lines containing
+   * `query` (case does not matter), newest first within a session. Read on
+   * demand: nothing is indexed or recorded. No viewer is needed.
+   */
+  search(ids: readonly string[], query: string, options?: { limit?: number; perSession?: number }): Promise<HistorySearch>;
+  /** Scrolls the session back to the most recent place `text` appears, for everyone viewing it. */
+  reveal(id: string, text: string): Promise<void>;
   /** The visible screen as plain text. */
   snapshot(id: string): Promise<string>;
+}
+
+export interface HistoryHit {
+  sessionId: string;
+  /** The matching line. */
+  text: string;
+  /** Lines just before and after it, for context. */
+  before: string[];
+  after: string[];
+}
+
+export interface HistorySearch {
+  hits: HistoryHit[];
+  /** True when there were more matches than `limit`. */
+  truncated: boolean;
 }
 
 export class SessionNotFoundError extends Error {
