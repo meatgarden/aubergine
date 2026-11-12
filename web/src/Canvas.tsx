@@ -11,7 +11,7 @@ import {
   type NodeChange,
   type Viewport,
 } from '@xyflow/react';
-import { NODE_DEFAULT_HEIGHT, NODE_DEFAULT_WIDTH, type LayoutNode } from '@aubergine/shared';
+import { NODE_DEFAULT_HEIGHT, NODE_DEFAULT_WIDTH, findFreeRect, type LayoutNode } from '@aubergine/shared';
 import { api } from './api';
 import { useApp } from './store';
 import { TerminalNode, type TerminalFlowNode } from './TerminalNode';
@@ -97,25 +97,24 @@ export function Canvas() {
     try {
       const pane = document.querySelector('.react-flow')?.getBoundingClientRect();
       const view = flow.getViewport();
-      // Where the node would sit centered in the window once the view is at 100%.
-      const centerX = ((pane?.width ?? 1200) / 2 - view.x) / view.zoom;
-      const centerY = ((pane?.height ?? 800) / 2 - view.y) / view.zoom;
-      let x = Math.round(centerX - NODE_DEFAULT_WIDTH / 2);
-      let y = Math.round(centerY - NODE_DEFAULT_HEIGHT / 2);
-      const taken = (): boolean =>
-        flow.getNodes().some((n) => Math.abs(n.position.x - x) < 16 && Math.abs(n.position.y - y) < 16);
-      while (taken()) {
-        x += 32;
-        y += 32;
-      }
-      const created = await api.createSession({
-        rect: { x, y, width: NODE_DEFAULT_WIDTH, height: NODE_DEFAULT_HEIGHT },
-      });
+      // Free space as close as possible to the middle of what is on screen.
+      const center = {
+        x: ((pane?.width ?? 1200) / 2 - view.x) / view.zoom,
+        y: ((pane?.height ?? 800) / 2 - view.y) / view.zoom,
+      };
+      const taken = flow.getNodes().map((n) => ({
+        x: n.position.x,
+        y: n.position.y,
+        width: n.width ?? n.measured?.width ?? NODE_DEFAULT_WIDTH,
+        height: n.height ?? n.measured?.height ?? NODE_DEFAULT_HEIGHT,
+      }));
+      const rect = findFreeRect(taken, center, { width: NODE_DEFAULT_WIDTH, height: NODE_DEFAULT_HEIGHT });
+      const created = await api.createSession({ rect });
       useApp.getState().apply({ type: 'session.created', ...created });
       // Wait for React Flow to know the node before moving to it.
       requestAnimationFrame(() =>
         requestAnimationFrame(() => {
-          zoomToNode(created.node.id);
+          zoomToNode(created.node.id, { reveal: true });
           focusSession(created.session.id);
         }),
       );

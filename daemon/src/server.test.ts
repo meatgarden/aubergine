@@ -222,7 +222,10 @@ describe('API', () => {
     expect(await runtime.has(session.id)).toBe(true);
 
     const second = await createSession('logs');
-    expect(second.node.x).toBeGreaterThanOrEqual(node.x + node.width);
+    const a = node;
+    const b = second.node;
+    const overlap = a.x < b.x + b.width && b.x < a.x + a.width && a.y < b.y + b.height && b.y < a.y + a.height;
+    expect(overlap).toBe(false);
 
     const renamed = await request('PATCH', paths.session(session.id), { body: { name: 'build' } });
     expect(renamed.statusCode).toBe(200);

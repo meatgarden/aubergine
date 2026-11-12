@@ -7,6 +7,7 @@ import {
   type TerminalClientMessage,
 } from '@aubergine/shared';
 import { socketUrl } from './api';
+import { Outbox } from './outbox';
 import { useApp } from './store';
 
 interface Props {
@@ -53,9 +54,9 @@ export function TerminalView({ sessionId, interactive }: Props) {
     let disposed = false;
     let ended = false;
 
-    const send = (message: TerminalClientMessage): void => {
-      if (socket?.readyState === WebSocket.OPEN) socket.send(JSON.stringify(message));
-    };
+    const outbox = new Outbox((message) => socket?.send(JSON.stringify(message)));
+    const send = (message: TerminalClientMessage): void =>
+      outbox.send(message, socket?.readyState === WebSocket.OPEN);
 
     const fitNow = (): void => {
       // Measuring only works while the element is laid out.
@@ -80,6 +81,7 @@ export function TerminalView({ sessionId, interactive }: Props) {
         term.reset();
         setLink('open');
         send({ t: 'resize', cols: term.cols, rows: term.rows });
+        outbox.opened();
       };
       ws.onmessage = (message) => {
         if (typeof message.data !== 'string') {

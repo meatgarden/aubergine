@@ -3,6 +3,7 @@ import {
   Id,
   NODE_DEFAULT_HEIGHT,
   NODE_DEFAULT_WIDTH,
+  findFreeRect,
   newId,
   type LayoutNode,
   type NodeRect,
@@ -14,8 +15,6 @@ import type { SessionRuntime } from './runtime/runtime';
 
 export class NotFoundError extends Error {}
 export class RuntimeUnavailableError extends Error {}
-
-const GAP = 40;
 
 /**
  * The operations behind the API. Each one talks to the runtime where a shell
@@ -123,12 +122,14 @@ export class Sessions {
     }
   }
 
-  /** To the right of everything already on the canvas. */
+  /** Free space next to the newest node. */
   private freeSpot(): NodeRect {
     const nodes = this.canvas.state.layout.nodes;
     const size = { width: NODE_DEFAULT_WIDTH, height: NODE_DEFAULT_HEIGHT };
-    if (nodes.length === 0) return { x: 0, y: 0, ...size };
-    const rightmost = nodes.reduce((a, b) => (a.x + a.width >= b.x + b.width ? a : b));
-    return { x: rightmost.x + rightmost.width + GAP, y: rightmost.y, ...size };
+    const last = nodes.at(-1);
+    const center = last
+      ? { x: last.x + last.width / 2, y: last.y + last.height / 2 }
+      : { x: size.width / 2, y: size.height / 2 };
+    return findFreeRect(nodes, center, size);
   }
 }

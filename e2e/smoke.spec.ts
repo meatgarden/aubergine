@@ -29,10 +29,11 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await page.keyboard.press('Enter');
   await expect(outputLine(page, 'hello')).toHaveCount(1);
 
+  // After a reload the screen comes back by itself, promptly and without a click.
   await page.reload();
   await expect(node).toHaveCount(1);
+  await expect(outputLine(page, 'hello')).toHaveCount(1, { timeout: 3000 });
   await expect(terminal).toHaveAttribute('data-link', 'open');
-  await expect(outputLine(page, 'hello')).toHaveCount(1);
 
   // Still the same shell, not a new one: it remembers what ran before.
   await terminal.click();
