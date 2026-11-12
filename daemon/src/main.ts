@@ -17,7 +17,7 @@ async function main(): Promise<void> {
   const canvas = new Canvas(await store.load(), store, (error) =>
     console.error('Could not save state:', error),
   );
-  const runtime = new TmuxRuntime({ socket: config.tmuxSocket });
+  const runtime = new TmuxRuntime({ socket: config.tmuxSocket, tmuxBin: config.tmuxBin });
   const sessions = new Sessions(canvas, runtime);
 
   const status = await sessions.status();

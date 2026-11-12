@@ -8,6 +8,8 @@ export interface Config {
   dataDir: string;
   /** Name of the dedicated tmux socket (`tmux -L <name>`). */
   tmuxSocket: string;
+  /** tmux binary to run. */
+  tmuxBin: string;
   /**
    * Origin of a development front-end server that proxies to this daemon.
    * Its host and origin are accepted in addition to the daemon's own.
@@ -32,6 +34,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
     port,
     dataDir: dataDir(env),
     tmuxSocket,
+    tmuxBin: env.AUBERGINE_TMUX_BIN || 'tmux',
     devOrigin,
     webDist: path.resolve(here, '..', '..', 'web', 'dist'),
   };

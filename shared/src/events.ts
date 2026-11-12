@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { CanvasState, LayoutNode, Session, SessionName } from './entities';
+import { type CanvasState, LayoutNode, Session, SessionName } from './entities';
 import { Id } from './ids';
 
 /**
