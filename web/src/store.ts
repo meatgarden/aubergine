@@ -20,11 +20,14 @@ interface AppState {
   focus: { sessionId: string; tick: number } | null;
   /** Session waiting for the user to confirm closing it. */
   closing: string | null;
+  /** Whether the session picker is open. */
+  picker: boolean;
 
   load: () => Promise<void>;
   apply: (event: ChangeEvent) => void;
   focusSession: (sessionId: string | null) => void;
   askToClose: (sessionId: string | null) => void;
+  setPicker: (open: boolean) => void;
 }
 
 export const useApp = create<AppState>((set, get) => ({
@@ -34,6 +37,7 @@ export const useApp = create<AppState>((set, get) => ({
   live: true,
   focus: null,
   closing: null,
+  picker: false,
 
   load: async () => {
     try {
@@ -65,6 +69,7 @@ export const useApp = create<AppState>((set, get) => ({
     })),
 
   askToClose: (sessionId) => set({ closing: sessionId }),
+  setPicker: (open) => set({ picker: open }),
 }));
 
 /** Loads state, keeps it live, and keeps retrying while the daemon is away. */

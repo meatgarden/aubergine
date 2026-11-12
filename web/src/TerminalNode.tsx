@@ -2,6 +2,7 @@ import { memo, useState } from 'react';
 import { NodeResizer, type Node, type NodeProps } from '@xyflow/react';
 import { NODE_MIN_HEIGHT, NODE_MIN_WIDTH } from '@aubergine/shared';
 import { api } from './api';
+import { shortFolder } from './search';
 import { useApp } from './store';
 import { TerminalView } from './TerminalView';
 import { useIsFullZoom } from './viewport';
@@ -53,6 +54,11 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
               if (e.key === 'Escape') setDraft(null);
             }}
           />
+        )}
+        {draft === null && !exited && (
+          <span className="node-activity" title={session?.cwd ?? undefined} data-testid="node-activity">
+            {[session?.command, shortFolder(session?.cwd ?? null)].filter(Boolean).join(' · ')}
+          </span>
         )}
         <button
           type="button"

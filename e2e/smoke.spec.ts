@@ -41,13 +41,28 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await page.keyboard.press('Enter');
   await expect(outputLine(page, 'again-23')).toHaveCount(1);
 
+  // The folder and command shown on the node come from the runtime.
+  await page.keyboard.type('cd /tmp');
+  await page.keyboard.press('Enter');
+  await expect(page.getByTestId('node-activity')).toContainText('tmp', { timeout: 8000 });
+
+  // The picker finds the session by its folder and focuses it.
+  await page.keyboard.press(process.platform === 'darwin' ? 'Meta+k' : 'Control+Shift+K');
+  await page.getByRole('textbox', { name: 'Search sessions' }).fill('tmp');
+  await expect(page.getByTestId('picker-row')).toHaveCount(1);
+  await page.keyboard.press('Enter');
+  await expect(page.getByTestId('node-shield')).toHaveCount(0);
+  await page.keyboard.type('echo "picked-$((40 + 4))"');
+  await page.keyboard.press('Enter');
+  await expect(outputLine(page, 'picked-44')).toHaveCount(1);
+
   // Parking takes the node off the canvas but keeps the shell.
   await page.getByRole('button', { name: /^Park Terminal/ }).click();
   await expect(node).toHaveCount(0);
   await page.getByRole('button', { name: 'Parked (1)' }).click();
   await page.getByRole('button', { name: 'Restore' }).click();
   await expect(node).toHaveCount(1);
-  await expect(outputLine(page, 'again-23')).toHaveCount(1);
+  await expect(outputLine(page, 'picked-44')).toHaveCount(1);
 
   // When the shell exits, the node says so and offers a restart.
   await page.getByTestId('node-body').click();

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Background,
   BackgroundVariant,
+  MiniMap,
   Panel,
   ReactFlow,
   applyNodeChanges,
@@ -14,6 +15,7 @@ import {
 import { NODE_DEFAULT_HEIGHT, NODE_DEFAULT_WIDTH, findFreeRect, type LayoutNode, type Session } from '@aubergine/shared';
 import { api } from './api';
 import { ParkedList } from './ParkedList';
+import { Picker } from './Picker';
 import { useApp } from './store';
 import { canvasShortcut, isCanvasChord, isMac, isTypingTarget } from './keys';
 import { TerminalNode, type TerminalFlowNode } from './TerminalNode';
@@ -162,10 +164,13 @@ export function Canvas() {
     const onKeyDown = (event: KeyboardEvent): void => {
       if (isCanvasChord(event, mac)) {
         event.preventDefault();
+        const { picker, setPicker } = useApp.getState();
         releaseFocus();
+        setPicker(!picker);
         return;
       }
-      if (isTypingTarget(event.target) || useApp.getState().closing) return;
+      const { closing, picker } = useApp.getState();
+      if (isTypingTarget(event.target) || closing || picker) return;
       const action = canvasShortcut(event);
       if (!action) return;
       event.preventDefault();
@@ -177,6 +182,20 @@ export function Canvas() {
     window.addEventListener('keydown', onKeyDown, true);
     return () => window.removeEventListener('keydown', onKeyDown, true);
   }, [addTerminal, resetZoom, zoomToFit, releaseFocus]);
+
+  /** Moves the view to a node at 100% and gives its terminal the keyboard. */
+  const goToNode = useCallback(
+    (nodeId: string, sessionId: string) => {
+      // A node that was just restored needs a moment to reach React Flow.
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() => {
+          zoomToNode(nodeId, { reveal: true });
+          focusSession(sessionId);
+        }),
+      );
+    },
+    [zoomToNode, focusSession],
+  );
 
   const percent = useMemo(() => `${Math.round(zoom * 100)}%`, [zoom]);
 
@@ -203,10 +222,19 @@ export function Canvas() {
         nodeDragThreshold={2}
       >
         <Background variant={BackgroundVariant.Dots} gap={24} size={1} />
+        <MiniMap pannable zoomable position="bottom-right" className="minimap" />
         <Panel position="top-left" className="toolbar">
           <span className="brand">Aubergine</span>
           <button type="button" onClick={() => void addTerminal()} disabled={adding} title="New terminal (N)">
             + New terminal
+          </button>
+          <button
+            type="button"
+            className="quiet"
+            onClick={() => useApp.getState().setPicker(true)}
+            title={isMac() ? 'Go to session (⌘K)' : 'Go to session (Ctrl+Shift+K)'}
+          >
+            Go to…
           </button>
           <button type="button" className="quiet" onClick={zoomToFit} title="Zoom to fit everything (F)">
             Fit
@@ -230,6 +258,7 @@ export function Canvas() {
           </Panel>
         )}
       </ReactFlow>
+      <Picker onGo={goToNode} />
     </div>
   );
 }
