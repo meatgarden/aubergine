@@ -54,7 +54,7 @@ async function start(): Promise<void> {
     }),
     logPrompts: () => settingsFile.value.agents.logPrompts,
     // A stand-in for starting an agent: any line will do to check that it is typed.
-    agentLaunchLine: async () => 'echo "agent-""launched"',
+    agentLaunchLine: async (_agent, options) => `echo "agent-""launched${options.continue ? '-continued' : ''}"`,
     defaultFolder: () => (settingsFile.value.defaultFolder ? expandHome(settingsFile.value.defaultFolder) : null),
     shell: () => settingsFile.value.shell,
   });
@@ -700,6 +700,42 @@ describe('settings', () => {
       // Not the user's own shell: `sh` (which some systems run as bash or dash).
       return current?.cwd === folder && ['sh', 'bash', 'dash'].includes(current.command ?? '');
     }, 'configured shell in the configured folder');
+  });
+});
+
+describe('sessions started from another terminal', () => {
+  it('starts in the given folder, with a unique name taken from it, and types a command', async () => {
+    const folder = await realpath(dir);
+    const body = { name: 'api', uniqueName: true, cwd: folder, command: 'echo "typed-""for-you"' };
+    const first = CreateSessionResponse.parse((await request('POST', paths.sessions, { body })).json());
+    const second = CreateSessionResponse.parse((await request('POST', paths.sessions, { body })).json());
+    expect([first.session.name, second.session.name]).toEqual(['api', 'api 2']);
+    expect(first.session.cwd).toBe(folder);
+
+    const started = Date.now();
+    while (!(await runtime.snapshot(first.session.id)).includes('typed-for-you')) {
+      if (Date.now() - started > 15_000) throw new Error('The command was never typed');
+      await sleep(40);
+    }
+  });
+
+  it('refuses a folder that does not exist, and creates nothing', async () => {
+    const response = await request('POST', paths.sessions, { body: { cwd: path.join(dir, 'missing') } });
+    expect(response.statusCode).toBe(400);
+    expect((await request('POST', paths.sessions, { body: { cwd: 'relative/path' } })).statusCode).toBe(400);
+    expect(canvas.state.sessions).toEqual([]);
+    expect(await runtime.list()).toEqual([]);
+  });
+
+  it('can continue an agent conversation in the new session', async () => {
+    const body = { agent: 'claude-code', agentContinue: true, name: 'api', uniqueName: true };
+    const { session } = CreateSessionResponse.parse((await request('POST', paths.sessions, { body })).json());
+    expect(session.name).toBe('api');
+    const started = Date.now();
+    while (!(await runtime.snapshot(session.id)).includes('agent-launched-continued')) {
+      if (Date.now() - started > 15_000) throw new Error('The launch line was never run');
+      await sleep(40);
+    }
   });
 });
 

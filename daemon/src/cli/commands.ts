@@ -5,9 +5,22 @@ export type Command =
   | { name: 'list' }
   | { name: 'new'; sessionName: string | null }
   | { name: 'attach'; query: string }
+  | {
+      name: 'here';
+      sessionName: string | null;
+      attach: boolean;
+      claude: boolean;
+      /** Words of a command to type into the new session. */
+      command: string[];
+      /** Called from the shell snippet: be quick, be quiet, and report failure by exit code. */
+      fromShellHook: boolean;
+    }
+  | { name: 'scan' }
+  | { name: 'import'; all: boolean; dryRun: boolean }
   | { name: 'note'; text: string }
   | { name: 'hook'; event: HookEvent }
   | { name: 'hooks-print' }
+  | { name: 'shell-hook-print' }
   | { name: 'service'; action: 'install' | 'uninstall' }
   | { name: 'help' };
 
@@ -16,9 +29,15 @@ export const USAGE = `Usage: aubergine <command>
   list                       List sessions with their state, command and folder
   new [name]                 Start a new terminal on the canvas
   attach <name>              Open a session in this terminal (detach by closing the window)
+  here [name] [-- command]   Start a session in this folder and turn this terminal into a view of it
+                             --no-attach   only create it
+                             --claude      start Claude Code in it, continuing this folder's last conversation
+  scan                       List your open shells that are not on the canvas yet (read-only)
+  import [--all] [--dry-run] Give each of those shells a canvas session in the same folder
   note <text>                Inside a session: add an entry to that session's note log
   hook <event>               For agent hooks: reads the hook's JSON on stdin (prompt, notification, stop)
   hooks print                Print the Claude Code hook settings, to add to your own config by hand
+  shell-hook print           Print a zsh snippet that makes new terminal tabs start on the canvas
   service install            Start the Aubergine server at login
   service uninstall          Stop starting it at login
   help                       Show this text
@@ -44,6 +63,32 @@ export function parseCommand(argv: readonly string[]): Command {
     case 'attach':
       if (rest.length === 0) throw new UsageError('attach needs a session name');
       return { name: 'attach', query: rest.join(' ') };
+    case 'here': {
+      const split = rest.indexOf('--');
+      const options = split < 0 ? rest : rest.slice(0, split);
+      const command = split < 0 ? [] : rest.slice(split + 1);
+      const flags = options.filter((word) => word.startsWith('--'));
+      const unknown = flags.find((flag) => !['--no-attach', '--claude', '--from-shell-hook'].includes(flag));
+      if (unknown) throw new UsageError(`here does not know ${unknown}`);
+      if (split >= 0 && command.length === 0) throw new UsageError('here: nothing after "--"');
+      const words = options.filter((word) => !word.startsWith('--'));
+      return {
+        name: 'here',
+        sessionName: words.length > 0 ? words.join(' ') : null,
+        attach: !flags.includes('--no-attach'),
+        claude: flags.includes('--claude'),
+        command,
+        fromShellHook: flags.includes('--from-shell-hook'),
+      };
+    }
+    case 'scan':
+      if (rest.length > 0) throw new UsageError('scan takes no arguments');
+      return { name: 'scan' };
+    case 'import': {
+      const unknown = rest.find((word) => word !== '--all' && word !== '--dry-run');
+      if (unknown) throw new UsageError(`import does not know ${unknown}`);
+      return { name: 'import', all: rest.includes('--all'), dryRun: rest.includes('--dry-run') };
+    }
     case 'note':
       if (rest.join(' ').trim() === '') throw new UsageError('note needs some text');
       return { name: 'note', text: rest.join(' ') };
@@ -55,6 +100,9 @@ export function parseCommand(argv: readonly string[]): Command {
     case 'hooks':
       if (rest.length === 1 && rest[0] === 'print') return { name: 'hooks-print' };
       throw new UsageError('hooks needs "print"');
+    case 'shell-hook':
+      if (rest.length === 1 && rest[0] === 'print') return { name: 'shell-hook-print' };
+      throw new UsageError('shell-hook needs "print"');
     case 'service':
       if (rest.length === 1 && (rest[0] === 'install' || rest[0] === 'uninstall')) {
         return { name: 'service', action: rest[0] };
@@ -98,4 +146,21 @@ export function formatSessions(sessions: readonly Session[]): string {
   return rows
     .map((row) => row.map((cell, column) => (column < 3 ? cell.padEnd(widths[column] ?? 0) : cell)).join('  ').trimEnd())
     .join('\n');
+}
+
+/**
+ * Whether this process is running inside an Aubergine session (or a view of
+ * one). `tmuxSocket` is the name of our tmux socket.
+ */
+export function insideAubergine(env: NodeJS.ProcessEnv, tmuxSocket: string): boolean {
+  if (env.AUBERGINE_SESSION_ID) return true;
+  // $TMUX is "<socket path>,<pid>,<n>"; ours ends in "/<socket name>".
+  const socketPath = (env.TMUX ?? '').split(',')[0] ?? '';
+  return socketPath !== '' && socketPath.split('/').pop() === tmuxSocket;
+}
+
+/** A session name for a folder: its last part. */
+export function nameForFolder(folder: string): string {
+  const base = folder.split('/').filter(Boolean).pop() ?? '';
+  return base.trim().slice(0, 80) || 'Terminal';
 }

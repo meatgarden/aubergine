@@ -2,7 +2,7 @@ import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { claudeHooksSettings, claudeLaunchLine, hookActions, writeClaudeSettings } from './claude-code';
+import { claudeHooksSettings, claudeLaunchLine, hookActions, shellJoin, writeClaudeSettings } from './claude-code';
 
 describe('hookActions', () => {
   it('logs the prompt and marks the session as working', () => {
@@ -67,6 +67,15 @@ describe('generated settings', () => {
     } finally {
       await rm(dir, { recursive: true, force: true });
     }
+  });
+
+  it('can carry on the most recent conversation', () => {
+    expect(claudeLaunchLine('/d/s.json', { continue: true })).toBe("claude --continue --settings '/d/s.json'");
+  });
+
+  it('joins words into a command line, quoting only where needed', () => {
+    expect(shellJoin(['npm', 'run', 'dev'])).toBe('npm run dev');
+    expect(shellJoin(['echo', 'two words', "it's"])).toBe(`echo 'two words' 'it'\\''s'`);
   });
 
   it('quotes a settings path that contains spaces or quotes', () => {

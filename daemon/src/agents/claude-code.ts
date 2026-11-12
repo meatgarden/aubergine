@@ -2,6 +2,7 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { AttentionState, NoteEntry } from '@aubergine/shared';
+import { stableNodePath } from '../node-path';
 
 /**
  * Claude Code support: hooks that tell the canvas when an agent starts
@@ -69,7 +70,7 @@ function shellQuote(value: string): string {
 /** The command line that runs the `aubergine` command from this checkout. */
 export function aubergineCommand(): string {
   const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
-  return `${shellQuote(process.execPath)} ${shellQuote(path.join(root, 'bin', 'aubergine.mjs'))}`;
+  return `${shellQuote(stableNodePath())} ${shellQuote(path.join(root, 'bin', 'aubergine.mjs'))}`;
 }
 
 /**
@@ -93,7 +94,15 @@ export async function writeClaudeSettings(dataDir: string): Promise<string> {
   return file;
 }
 
-/** What to type into a new session to start Claude Code with the hooks. */
-export function claudeLaunchLine(settingsFile: string): string {
-  return `claude --settings ${shellQuote(settingsFile)}`;
+/**
+ * What to type into a new session to start Claude Code with the hooks.
+ * With `continue`, it carries on the most recent conversation in that folder.
+ */
+export function claudeLaunchLine(settingsFile: string, options: { continue?: boolean } = {}): string {
+  return `claude${options.continue ? ' --continue' : ''} --settings ${shellQuote(settingsFile)}`;
+}
+
+/** Quotes words for a shell command line, leaving plain words as they are. */
+export function shellJoin(words: readonly string[]): string {
+  return words.map((word) => (/^[A-Za-z0-9_@%+=:,./-]+$/.test(word) ? word : shellQuote(word))).join(' ');
 }

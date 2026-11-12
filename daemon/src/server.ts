@@ -36,7 +36,7 @@ import {
 import { authorize, principalFromBearer, type Action, type Principal } from './auth';
 import type { Canvas } from './canvas';
 import { SessionNotFoundError, type Attachment, type SessionRuntime } from './runtime/runtime';
-import { ConflictError, NotFoundError, RuntimeUnavailableError, type Sessions } from './sessions';
+import { BadInputError, ConflictError, NotFoundError, RuntimeUnavailableError, type Sessions } from './sessions';
 import { tokensMatch } from './token';
 
 export interface ServerOptions {
@@ -152,6 +152,9 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     }
     if (error instanceof NotFoundError || error instanceof SessionNotFoundError) {
       return reply.code(404).send(errorBody('not_found', error.message));
+    }
+    if (error instanceof BadInputError) {
+      return reply.code(400).send(errorBody('bad_request', error.message));
     }
     if (error instanceof ConflictError) {
       return reply.code(409).send(errorBody('conflict', error.message));

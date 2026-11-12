@@ -1,4 +1,4 @@
-import { existsSync } from 'node:fs';
+import { existsSync, statSync } from 'node:fs';
 import os from 'node:os';
 import {
   Id,
@@ -14,6 +14,7 @@ import {
   type Attention,
   type AttentionState,
   type CreateFrameRequest,
+  type CreateSessionRequest,
   type Frame,
   type LayoutNode,
   type NodeRect,
@@ -31,6 +32,7 @@ import { noIntegration, type ShellIntegration, type ShellReport } from './shell/
 
 export class NotFoundError extends Error {}
 export class ConflictError extends Error {}
+export class BadInputError extends Error {}
 export class RuntimeUnavailableError extends Error {}
 
 export interface SessionsOptions {
@@ -45,7 +47,7 @@ export interface SessionsOptions {
   /** Whether prompts given to agents may be kept in the note log. */
   logPrompts?: () => boolean;
   /** The line that starts an agent in a new session, with its reporting set up. */
-  agentLaunchLine?: (agent: AgentKind) => Promise<string>;
+  agentLaunchLine?: (agent: AgentKind, options: { continue: boolean }) => Promise<string>;
 }
 
 /**
@@ -100,24 +102,40 @@ export class Sessions {
     await this.refresh();
   }
 
-  async create(input: {
-    name?: string | undefined;
-    rect?: NodeRect | undefined;
-    agent?: AgentKind | undefined;
-  }): Promise<{ session: Session; node: LayoutNode }> {
+  async create(input: CreateSessionRequest): Promise<{ session: Session; node: LayoutNode }> {
     const status = await this.status();
     if (status.status !== 'ok') throw new RuntimeUnavailableError(`tmux is ${status.status}`);
+    if (input.cwd !== undefined && !isFolder(input.cwd)) throw new BadInputError(`Not a folder: ${input.cwd}`);
+
     const id = newId();
-    const started = await this.startShell(id, null);
+    const started = await this.startShell(id, input.cwd ?? null);
     // What a new shell prints while starting up is not news.
     this.seenAt.set(id, Date.now() + 5000);
-    const launch = input.agent ? await this.options.agentLaunchLine?.(input.agent) : undefined;
-    const created = this.record(id, input.name ?? (launch ? this.nextName('Claude Code') : undefined), input.rect, started.cwd);
-    if (launch) {
-      // Typed once the shell is ready; the new node does not wait for that.
-      void this.runtime.typeLine(id, launch).catch(() => {});
+    const launch = input.agent
+      ? await this.options.agentLaunchLine?.(input.agent, { continue: input.agentContinue === true })
+      : undefined;
+    const fallback = launch ? this.nextName('Claude Code') : undefined;
+    const name = input.name && input.uniqueName ? this.uniqueName(input.name) : (input.name ?? fallback);
+    const created = this.record(id, name, input.rect, started.cwd);
+
+    // Typed once the shell is ready; the new node does not wait for that.
+    const lines = [input.command, launch].filter((line): line is string => Boolean(line));
+    if (lines.length > 0) {
+      void (async () => {
+        for (const line of lines) await this.runtime.typeLine(id, line);
+      })().catch(() => {});
     }
     return created;
+  }
+
+  /** `name`, or `name 2`, `name 3`… when sessions already use it. */
+  private uniqueName(name: string): string {
+    const names = new Set(this.canvas.state.sessions.map((s) => s.name));
+    if (!names.has(name)) return name;
+    for (let n = 2; ; n++) {
+      const candidate = `${name.slice(0, 74)} ${n}`;
+      if (!names.has(candidate)) return candidate;
+    }
   }
 
   update(sessionId: string, changes: UpdateSessionRequest): Session {
@@ -429,4 +447,12 @@ function sameStatus(a: ShellStatus, b: ShellStatus): boolean {
     a.lastFinishedAt === b.lastFinishedAt &&
     a.unread === b.unread
   );
+}
+
+function isFolder(candidate: string): boolean {
+  try {
+    return statSync(candidate).isDirectory();
+  } catch {
+    return false;
+  }
 }
