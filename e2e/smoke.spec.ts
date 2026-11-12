@@ -56,6 +56,27 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await page.keyboard.press('Enter');
   await expect(outputLine(page, 'picked-44')).toHaveCount(1);
 
+  // A note is saved with the session, and the picker finds the session by its text.
+  await page.getByRole('button', { name: /^Note for/ }).click();
+  await page.getByRole('textbox', { name: 'Session note' }).fill('# Fixing the invoice rounding bug');
+  await expect(page.getByTestId('note-panel')).toContainText('Saved');
+  await page.reload();
+  await page.getByRole('button', { name: 'Go to…' }).click();
+  await page.getByRole('textbox', { name: 'Search sessions' }).fill('rounding');
+  await expect(page.getByTestId('picker-row')).toContainText('Fixing the invoice rounding bug');
+  await page.keyboard.press('Enter');
+  await expect(page.getByTestId('node-shield')).toHaveCount(0);
+
+  // A frame can be added, labeled and removed.
+  await page.getByRole('button', { name: '+ Frame' }).click();
+  await expect(page.getByTestId('frame')).toHaveCount(1);
+  await page.getByTestId('frame-label').dblclick();
+  await page.getByRole('textbox', { name: 'Frame label' }).fill('Billing');
+  await page.keyboard.press('Enter');
+  await expect(page.getByTestId('frame-label')).toHaveText('Billing');
+  await page.getByRole('button', { name: 'Remove frame Billing' }).click();
+  await expect(page.getByTestId('frame')).toHaveCount(0);
+
   // Parking takes the node off the canvas but keeps the shell.
   await page.getByRole('button', { name: /^Park Terminal/ }).click();
   await expect(node).toHaveCount(0);

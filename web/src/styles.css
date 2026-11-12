@@ -438,3 +438,146 @@ code {
   padding: 10px 8px;
   color: var(--muted);
 }
+
+/* ---------- Colors ---------- */
+
+.swatch-none { --swatch: #5a5e6b; }
+.swatch-red, .color-red { --swatch: #d2636b; }
+.swatch-orange, .color-orange { --swatch: #d98e56; }
+.swatch-yellow, .color-yellow { --swatch: #d9bf63; }
+.swatch-green, .color-green { --swatch: #7fb37a; }
+.swatch-blue, .color-blue { --swatch: #6a9fd9; }
+.swatch-purple, .color-purple { --swatch: #b48ead; }
+
+.terminal-node:not(.color-none) .node-title {
+  box-shadow: inset 0 3px 0 var(--swatch);
+  background: color-mix(in srgb, var(--swatch) 16%, var(--panel));
+}
+
+.color-button {
+  position: relative;
+  flex: none;
+  display: inline-flex;
+}
+.color-dot {
+  width: 14px;
+  height: 14px;
+  padding: 0;
+  border-radius: 50%;
+  background: var(--swatch);
+  border: 1px solid rgb(0 0 0 / 0.4);
+}
+.color-dot.swatch-none {
+  background: transparent;
+  border: 1px dashed var(--muted);
+}
+.color-palette {
+  position: absolute;
+  top: 22px;
+  right: -6px;
+  z-index: 10;
+  display: flex;
+  gap: 6px;
+  padding: 7px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgb(0 0 0 / 0.45);
+}
+
+.node-tool {
+  flex: none;
+  padding: 1px 7px;
+  font-size: 12px;
+  color: var(--muted);
+  background: transparent;
+  border-color: transparent;
+}
+.node-tool.has-note {
+  color: var(--accent-strong);
+}
+.node-tool[aria-pressed='true'] {
+  border-color: var(--border);
+  background: var(--panel-hover);
+}
+
+/* ---------- Note panel ---------- */
+
+.note-panel {
+  position: absolute;
+  top: 31px;
+  right: 0;
+  bottom: 0;
+  width: min(46%, 380px);
+  display: flex;
+  flex-direction: column;
+  background: var(--panel);
+  border-left: 1px solid var(--border);
+  cursor: default;
+}
+.note-panel header {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 4px 2px 10px;
+  color: var(--muted);
+  font-size: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.note-status {
+  flex: 1;
+  text-align: right;
+}
+.note-panel textarea {
+  flex: 1;
+  min-height: 0;
+  resize: none;
+  padding: 10px;
+  font: 13px/1.5 Menlo, Monaco, Consolas, monospace;
+  color: var(--text);
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+/* ---------- Frames ---------- */
+
+.frame {
+  --swatch: #5a5e6b;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  border: 1.5px dashed color-mix(in srgb, var(--swatch) 70%, transparent);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--swatch) 7%, transparent);
+  /* The inside of a frame lets the pointer through to the canvas. */
+  pointer-events: none;
+}
+.frame-title {
+  pointer-events: auto;
+  position: absolute;
+  left: 10px;
+  bottom: calc(100% + 4px);
+  max-width: calc(100% - 20px);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 26px;
+  padding: 0 4px 0 10px;
+  color: var(--text);
+  background: color-mix(in srgb, var(--swatch) 22%, var(--panel));
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  cursor: grab;
+  user-select: none;
+}
+.frame-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+}
+.react-flow__node-frame .react-flow__resize-control {
+  pointer-events: auto;
+}

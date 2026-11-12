@@ -1,5 +1,16 @@
 import { z } from 'zod';
-import { CanvasState, LayoutNode, NodeRect, Session, SessionName, SessionNote } from './entities';
+import {
+  CanvasState,
+  Frame,
+  FrameLabel,
+  FrameRect,
+  LayoutNode,
+  NodeColor,
+  NodeRect,
+  Session,
+  SessionName,
+  SessionNote,
+} from './entities';
 import { ChangeEvent } from './events';
 
 /**
@@ -21,6 +32,8 @@ export const paths = {
   /** POST: start a new shell for a session whose shell exited. */
   restartSession: (sessionId: string) => `/api/v1/sessions/${sessionId}/restart`,
   node: (nodeId: string) => `/api/v1/nodes/${nodeId}`,
+  frames: '/api/v1/frames',
+  frame: (frameId: string) => `/api/v1/frames/${frameId}`,
   /** WebSocket: stream of change events. */
   events: '/ws/v1/events',
   /** WebSocket: one terminal viewer. Query: `cols`, `rows`. */
@@ -61,8 +74,22 @@ export const UpdateSessionRequest = z
   .refine((body) => body.name !== undefined || body.note !== undefined, 'Nothing to update');
 export type UpdateSessionRequest = z.infer<typeof UpdateSessionRequest>;
 
-export const UpdateNodeRequest = NodeRect;
+/** PUT body for a node: where it is, and optionally its color. */
+export const UpdateNodeRequest = NodeRect.extend({ color: NodeColor.optional() });
 export type UpdateNodeRequest = z.infer<typeof UpdateNodeRequest>;
+
+export const CreateFrameRequest = z.object({ label: FrameLabel.optional(), rect: FrameRect });
+export type CreateFrameRequest = z.infer<typeof CreateFrameRequest>;
+
+/** PUT body for a frame. With `carry`, nodes lying inside the frame move with it. */
+export const UpdateFrameRequest = FrameRect.extend({
+  label: FrameLabel.optional(),
+  color: NodeColor.optional(),
+  carry: z.boolean().optional(),
+});
+export type UpdateFrameRequest = z.infer<typeof UpdateFrameRequest>;
+
+export const FrameResponse = Frame;
 
 export const ErrorCode = z.enum([
   'bad_request',

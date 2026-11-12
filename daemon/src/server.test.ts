@@ -10,6 +10,7 @@ import {
   CLOSE_SESSION_ENDED,
   CreateSessionResponse,
   EventsServerMessage,
+  Frame,
   StateResponse,
   newId,
   paths,
@@ -440,6 +441,56 @@ describe('session activity', () => {
     await stop();
     await start();
     expect(canvas.state.sessions[0]?.note).toBe('# billing bug\nretry logic');
+  });
+});
+
+describe('frames and colors', () => {
+  it('creates, edits and removes a frame, and saves it', async () => {
+    const created = await request('POST', paths.frames, {
+      body: { label: 'API', rect: { x: -40, y: -60, width: 1000, height: 700 } },
+    });
+    expect(created.statusCode).toBe(201);
+    const frame = Frame.parse(created.json());
+    const edited = await request('PUT', paths.frame(frame.id), {
+      body: { x: -40, y: -60, width: 1200, height: 700, label: 'Backend', color: 'blue' },
+    });
+    expect(Frame.parse(edited.json())).toMatchObject({ label: 'Backend', color: 'blue', width: 1200 });
+
+    await stop();
+    await start();
+    expect(canvas.state.layout.frames).toMatchObject([{ id: frame.id, label: 'Backend' }]);
+
+    expect((await request('PUT', paths.frame(frame.id), { body: { x: 0, y: 0, width: 10, height: 10 } })).statusCode).toBe(400);
+    expect((await request('DELETE', paths.frame(frame.id))).statusCode).toBe(204);
+    expect((await request('DELETE', paths.frame(frame.id))).statusCode).toBe(404);
+    expect(canvas.state.layout.frames).toEqual([]);
+  });
+
+  it('carries the nodes inside a frame when the frame moves', async () => {
+    const inside = await createSession();
+    await request('PUT', paths.node(inside.node.id), { body: { x: 0, y: 0, width: 720, height: 440 } });
+    const outside = await createSession();
+    await request('PUT', paths.node(outside.node.id), { body: { x: 3000, y: 0, width: 720, height: 440 } });
+    const frame = Frame.parse(
+      (await request('POST', paths.frames, { body: { rect: { x: -50, y: -50, width: 900, height: 600 } } })).json(),
+    );
+
+    await request('PUT', paths.frame(frame.id), { body: { x: 150, y: 50, width: 900, height: 600, carry: true } });
+    const nodes = canvas.state.layout.nodes;
+    expect(nodes.find((n) => n.id === inside.node.id)).toMatchObject({ x: 200, y: 100 });
+    expect(nodes.find((n) => n.id === outside.node.id)).toMatchObject({ x: 3000, y: 0 });
+
+    // Without `carry` (a resize, say) nothing else moves.
+    await request('PUT', paths.frame(frame.id), { body: { x: 0, y: 0, width: 2000, height: 900 } });
+    expect(canvas.state.layout.nodes.find((n) => n.id === inside.node.id)).toMatchObject({ x: 200, y: 100 });
+  });
+
+  it('colors a node and keeps the color when the node moves', async () => {
+    const { node } = await createSession();
+    await request('PUT', paths.node(node.id), { body: { x: 5, y: 5, width: 720, height: 440, color: 'green' } });
+    await request('PUT', paths.node(node.id), { body: { x: 50, y: 5, width: 720, height: 440 } });
+    expect(canvas.state.layout.nodes[0]).toMatchObject({ x: 50, color: 'green' });
+    expect((await request('PUT', paths.node(node.id), { body: { x: 5, y: 5, width: 720, height: 440, color: 'pink' } })).statusCode).toBe(400);
   });
 });
 

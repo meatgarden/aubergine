@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { type CanvasState, LayoutNode, Session, SessionName, SessionNote } from './entities';
+import { type CanvasState, Frame, LayoutNode, Session, SessionName, SessionNote } from './entities';
 import { Id } from './ids';
 
 /**
@@ -28,6 +28,9 @@ export const ChangeEvent = z.discriminatedUnion('type', [
   /** Ended for good and removed. */
   z.object({ type: z.literal('session.closed'), sessionId: Id }),
   z.object({ type: z.literal('node.updated'), node: LayoutNode }),
+  z.object({ type: z.literal('frame.created'), frame: Frame }),
+  z.object({ type: z.literal('frame.updated'), frame: Frame }),
+  z.object({ type: z.literal('frame.removed'), frameId: Id }),
 ]);
 export type ChangeEvent = z.infer<typeof ChangeEvent>;
 
@@ -46,6 +49,7 @@ export function applyEvent(state: CanvasState, event: ChangeEvent): CanvasState 
         ...state,
         sessions: [...state.sessions.filter((s) => s.id !== event.session.id), event.session],
         layout: {
+          ...state.layout,
           nodes: [...state.layout.nodes.filter((n) => n.id !== event.node.id), event.node],
         },
       };
@@ -66,14 +70,27 @@ export function applyEvent(state: CanvasState, event: ChangeEvent): CanvasState 
       return {
         ...state,
         sessions: state.sessions.filter((s) => s.id !== event.sessionId),
-        layout: { nodes: state.layout.nodes.filter((n) => n.sessionId !== event.sessionId) },
+        layout: { ...state.layout, nodes: state.layout.nodes.filter((n) => n.sessionId !== event.sessionId) },
       };
     case 'node.updated':
       return {
         ...state,
-        layout: {
-          nodes: state.layout.nodes.map((n) => (n.id === event.node.id ? event.node : n)),
-        },
+        layout: { ...state.layout, nodes: state.layout.nodes.map((n) => (n.id === event.node.id ? event.node : n)) },
+      };
+    case 'frame.created':
+      return {
+        ...state,
+        layout: { ...state.layout, frames: [...state.layout.frames.filter((f) => f.id !== event.frame.id), event.frame] },
+      };
+    case 'frame.updated':
+      return {
+        ...state,
+        layout: { ...state.layout, frames: state.layout.frames.map((f) => (f.id === event.frame.id ? event.frame : f)) },
+      };
+    case 'frame.removed':
+      return {
+        ...state,
+        layout: { ...state.layout, frames: state.layout.frames.filter((f) => f.id !== event.frameId) },
       };
   }
 }

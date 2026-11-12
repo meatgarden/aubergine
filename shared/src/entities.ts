@@ -57,15 +57,47 @@ export const NodeRect = z.object({
 });
 export type NodeRect = z.infer<typeof NodeRect>;
 
+/** Colors a node or frame can be given. `none` is the default look. */
+export const NodeColor = z.enum(['none', 'red', 'orange', 'yellow', 'green', 'blue', 'purple']);
+export type NodeColor = z.infer<typeof NodeColor>;
+
 /**
  * A node on the canvas. Layout is kept apart from sessions and points at a
  * session by ID, so either side can change without rewriting the other.
  */
-export const LayoutNode = NodeRect.extend({ id: Id, sessionId: Id });
+export const LayoutNode = NodeRect.extend({ id: Id, sessionId: Id, color: NodeColor.default('none') });
 export type LayoutNode = z.infer<typeof LayoutNode>;
 
-export const Layout = z.object({ nodes: z.array(LayoutNode) });
+export const FRAME_MIN_WIDTH = 200;
+export const FRAME_MIN_HEIGHT = 120;
+
+export const FrameRect = z.object({
+  x: Coordinate,
+  y: Coordinate,
+  width: z.number().finite().min(FRAME_MIN_WIDTH).max(100000),
+  height: z.number().finite().min(FRAME_MIN_HEIGHT).max(100000),
+});
+export type FrameRect = z.infer<typeof FrameRect>;
+
+export const FrameLabel = z.string().trim().max(80);
+
+/** A labeled rectangle behind the nodes, used to group them. */
+export const Frame = FrameRect.extend({ id: Id, label: FrameLabel, color: NodeColor.default('none') });
+export type Frame = z.infer<typeof Frame>;
+
+export const Layout = z.object({ nodes: z.array(LayoutNode), frames: z.array(Frame).default([]) });
 export type Layout = z.infer<typeof Layout>;
+
+/** The nodes a frame carries with it when it moves: those lying entirely inside it. */
+export function nodesInside<T extends NodeRect>(frame: FrameRect, nodes: readonly T[]): T[] {
+  return nodes.filter(
+    (n) =>
+      n.x >= frame.x &&
+      n.y >= frame.y &&
+      n.x + n.width <= frame.x + frame.width &&
+      n.y + n.height <= frame.y + frame.height,
+  );
+}
 
 /** Everything the canvas shows: the default hierarchy, the sessions and their layout. */
 export const CanvasState = z.object({
@@ -88,5 +120,5 @@ export function createInitialState(now: Date = new Date()): CanvasState {
     createdAt,
   };
   const project: Project = { id: newId(), workspaceId: workspace.id, name: 'Default', createdAt };
-  return { organization, workspace, project, sessions: [], layout: { nodes: [] } };
+  return { organization, workspace, project, sessions: [], layout: { nodes: [], frames: [] } };
 }

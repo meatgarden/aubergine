@@ -29,7 +29,7 @@ function withSession(state: CanvasState, name: string): CanvasState {
       command: null,
       note: '',
     },
-    node: { id: newId(), sessionId, x: 0, y: 0, width: 720, height: 440 },
+    node: { id: newId(), sessionId, x: 0, y: 0, width: 720, height: 440, color: 'none' },
   };
   return applyEvent(state, event);
 }

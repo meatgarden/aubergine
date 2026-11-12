@@ -8,12 +8,14 @@ import type { ZodType } from 'zod';
 import {
   CLOSE_BAD_MESSAGE,
   CLOSE_SESSION_ENDED,
+  CreateFrameRequest,
   CreateSessionRequest,
   Id,
   PROTOCOL_VERSION,
   UpdateSessionRequest,
   TerminalClientMessage,
   TerminalSize,
+  UpdateFrameRequest,
   UpdateNodeRequest,
   paths,
   type CreateSessionResponse,
@@ -185,6 +187,20 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   app.put(paths.node(':nodeId'), async (request) => {
     const body = parse(UpdateNodeRequest, request.body);
     return sessions.updateNode(idParam(request, 'nodeId'), body);
+  });
+
+  app.post(paths.frames, async (request, reply) => {
+    reply.code(201);
+    return sessions.createFrame(parse(CreateFrameRequest, request.body));
+  });
+
+  app.put(paths.frame(':frameId'), async (request) =>
+    sessions.updateFrame(idParam(request, 'frameId'), parse(UpdateFrameRequest, request.body)),
+  );
+
+  app.delete(paths.frame(':frameId'), async (request, reply: FastifyReply) => {
+    sessions.removeFrame(idParam(request, 'frameId'));
+    return reply.code(204).send();
   });
 
   /* ---------- WebSocket: change events ---------- */

@@ -2,6 +2,8 @@ import { memo, useState } from 'react';
 import { NodeResizer, type Node, type NodeProps } from '@xyflow/react';
 import { NODE_MIN_HEIGHT, NODE_MIN_WIDTH } from '@aubergine/shared';
 import { api } from './api';
+import { ColorButton } from './ColorButton';
+import { NotePanel } from './NotePanel';
 import { shortFolder } from './search';
 import { useApp } from './store';
 import { TerminalView } from './TerminalView';
@@ -16,6 +18,10 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
   const exited = session?.state === 'exited';
   const interactive = useIsFullZoom();
   const [draft, setDraft] = useState<string | null>(null);
+  const [noteOpen, setNoteOpen] = useState(false);
+  const node = useApp((s) => s.canvas?.layout.nodes.find((n) => n.id === id));
+  const color = node?.color ?? 'none';
+  const hasNote = (session?.note ?? '') !== '';
 
   const commitName = (): void => {
     const next = draft?.trim();
@@ -24,7 +30,7 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
   };
 
   return (
-    <div className={`terminal-node${selected ? ' selected' : ''}`} data-testid="terminal-node">
+    <div className={`terminal-node color-${color}${selected ? ' selected' : ''}`} data-testid="terminal-node">
       <NodeResizer
         minWidth={NODE_MIN_WIDTH}
         minHeight={NODE_MIN_HEIGHT}
@@ -62,6 +68,24 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
         )}
         <button
           type="button"
+          className={`node-tool nodrag${hasNote ? ' has-note' : ''}`}
+          aria-label={`Note for ${name}`}
+          aria-pressed={noteOpen}
+          title={hasNote ? 'Show note' : 'Add a note'}
+          onClick={() => setNoteOpen((v) => !v)}
+        >
+          Note
+        </button>
+        {node && (
+          <ColorButton
+            value={color}
+            onChange={(next) =>
+              void api.updateNode(id, { x: node.x, y: node.y, width: node.width, height: node.height, color: next })
+            }
+          />
+        )}
+        <button
+          type="button"
           className="node-close nodrag"
           aria-label={exited ? `Remove ${name}` : `Park ${name}`}
           title={exited ? 'Remove' : 'Park: take it off the canvas, the shell keeps running'}
@@ -86,6 +110,7 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
       ) : (
         <LiveBody sessionId={sessionId} interactive={interactive} />
       )}
+      {noteOpen && <NotePanel sessionId={sessionId} onClose={() => setNoteOpen(false)} />}
     </div>
   );
 });

@@ -6,10 +6,15 @@ import {
   NODE_DEFAULT_WIDTH,
   findFreeRect,
   newId,
+  nodesInside,
+  type CreateFrameRequest,
+  type Frame,
   type LayoutNode,
   type NodeRect,
   type RuntimeStatus,
   type Session,
+  type UpdateFrameRequest,
+  type UpdateNodeRequest,
   type UpdateSessionRequest,
 } from '@aubergine/shared';
 import type { Canvas } from './canvas';
@@ -154,12 +159,48 @@ export class Sessions {
     }
   }
 
-  updateNode(nodeId: string, rect: NodeRect): LayoutNode {
+  updateNode(nodeId: string, changes: UpdateNodeRequest): LayoutNode {
     const existing = this.canvas.state.layout.nodes.find((n) => n.id === nodeId);
     if (!existing) throw new NotFoundError(`No node ${nodeId}`);
-    const node: LayoutNode = { ...existing, ...rect };
+    const { color, ...rect } = changes;
+    const node: LayoutNode = { ...existing, ...rect, color: color ?? existing.color };
     this.canvas.emit({ type: 'node.updated', node });
     return node;
+  }
+
+  createFrame(input: CreateFrameRequest): Frame {
+    const frame: Frame = { id: newId(), label: input.label ?? '', color: 'none', ...input.rect };
+    this.canvas.emit({ type: 'frame.created', frame });
+    return frame;
+  }
+
+  /** Moves, resizes, renames or recolors a frame. With `carry`, nodes inside it move along. */
+  updateFrame(frameId: string, changes: UpdateFrameRequest): Frame {
+    const existing = this.canvas.state.layout.frames.find((f) => f.id === frameId);
+    if (!existing) throw new NotFoundError(`No frame ${frameId}`);
+    const { label, color, carry, ...rect } = changes;
+    const frame: Frame = { ...existing, ...rect, label: label ?? existing.label, color: color ?? existing.color };
+
+    const dx = frame.x - existing.x;
+    const dy = frame.y - existing.y;
+    if (carry && (dx !== 0 || dy !== 0)) {
+      for (const node of nodesInside(existing, this.visibleNodes())) {
+        this.canvas.emit({ type: 'node.updated', node: { ...node, x: node.x + dx, y: node.y + dy } });
+      }
+    }
+    this.canvas.emit({ type: 'frame.updated', frame });
+    return frame;
+  }
+
+  removeFrame(frameId: string): void {
+    if (!this.canvas.state.layout.frames.some((f) => f.id === frameId)) throw new NotFoundError(`No frame ${frameId}`);
+    this.canvas.emit({ type: 'frame.removed', frameId });
+  }
+
+  /** Nodes that are on the canvas, which leaves out parked sessions. */
+  private visibleNodes(): LayoutNode[] {
+    const parked = new Set(this.canvas.state.sessions.filter((s) => s.state === 'parked').map((s) => s.id));
+    return this.canvas.state.layout.nodes.filter((n) => !parked.has(n.sessionId));
   }
 
   has(sessionId: string): boolean {
@@ -202,7 +243,7 @@ export class Sessions {
       command: null,
       note: '',
     };
-    const node: LayoutNode = { id: newId(), sessionId: id, ...(rect ?? this.freeSpot()) };
+    const node: LayoutNode = { id: newId(), sessionId: id, color: 'none', ...(rect ?? this.freeSpot()) };
     this.canvas.emit({ type: 'session.created', session, node });
     return { session, node };
   }
@@ -216,8 +257,7 @@ export class Sessions {
 
   /** Free space next to the newest node on the canvas. */
   private freeSpot(): NodeRect {
-    const parked = new Set(this.canvas.state.sessions.filter((s) => s.state === 'parked').map((s) => s.id));
-    const nodes = this.canvas.state.layout.nodes.filter((n) => !parked.has(n.sessionId));
+    const nodes = this.visibleNodes();
     const size = { width: NODE_DEFAULT_WIDTH, height: NODE_DEFAULT_HEIGHT };
     const last = nodes.at(-1);
     const center = last

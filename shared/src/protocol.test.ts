@@ -15,6 +15,8 @@ import {
   applyEvent,
   createInitialState,
   newId,
+  nodesInside,
+  type Frame,
   type LayoutNode,
   type Session,
 } from './index';
@@ -38,6 +40,7 @@ function fixture(): { state: CanvasState; session: Session; node: LayoutNode } {
     y: 20,
     width: 720,
     height: 440,
+    color: 'none',
   };
   return { state, session, node };
 }
@@ -169,6 +172,38 @@ describe('applyEvent', () => {
     const { state: _s, cwd: _c, command: _m, note: _n, ...old } = session;
     const parsed = CanvasState.parse({ ...state, sessions: [old] });
     expect(parsed.sessions[0]).toMatchObject({ state: 'open', cwd: null, command: null, note: '' });
+  });
+
+  it('creates, updates and removes frames, leaving nodes alone', () => {
+    const { state, session, node } = fixture();
+    const frame: Frame = { id: newId(), label: 'API', x: -40, y: -40, width: 900, height: 600, color: 'blue' };
+    let current = applyEvent(state, { type: 'session.created', session, node });
+    current = applyEvent(current, { type: 'frame.created', frame });
+    expect(current.layout.frames).toEqual([frame]);
+    current = applyEvent(current, { type: 'frame.updated', frame: { ...frame, label: 'Backend' } });
+    expect(current.layout.frames[0]?.label).toBe('Backend');
+    expect(current.layout.nodes).toEqual([node]);
+    current = applyEvent(current, { type: 'node.updated', node: { ...node, color: 'green' } });
+    expect(current.layout.frames).toHaveLength(1);
+    current = applyEvent(current, { type: 'frame.removed', frameId: frame.id });
+    expect(current.layout.frames).toEqual([]);
+    expect(current.layout.nodes[0]?.color).toBe('green');
+  });
+
+  it('reads layouts saved before frames and colors existed', () => {
+    const { state, node } = fixture();
+    const { color: _c, ...oldNode } = node;
+    const parsed = CanvasState.parse({ ...state, sessions: [], layout: { nodes: [oldNode] } });
+    expect(parsed.layout.frames).toEqual([]);
+    expect(parsed.layout.nodes[0]?.color).toBe('none');
+  });
+
+  it('knows which nodes lie inside a frame', () => {
+    const frame = { x: 0, y: 0, width: 1000, height: 600 };
+    const inside = { x: 10, y: 10, width: 720, height: 440 };
+    const straddling = { x: 500, y: 10, width: 720, height: 440 };
+    const outside = { x: 2000, y: 0, width: 720, height: 440 };
+    expect(nodesInside(frame, [inside, straddling, outside])).toEqual([inside]);
   });
 
   it('does not mutate the previous state', () => {

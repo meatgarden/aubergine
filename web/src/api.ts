@@ -2,6 +2,7 @@ import type { ZodType } from 'zod';
 import {
   CreateSessionResponse,
   ErrorResponse,
+  Frame,
   EventsServerMessage,
   LayoutNode,
   Session,
@@ -10,7 +11,9 @@ import {
   type ChangeEvent,
   type CreateSessionRequest,
   type ErrorCode,
-  type NodeRect,
+  type CreateFrameRequest,
+  type UpdateFrameRequest,
+  type UpdateNodeRequest,
   type UpdateSessionRequest,
 } from '@aubergine/shared';
 
@@ -59,7 +62,12 @@ export const api = {
   restoreSession: (sessionId: string) => call(Session, 'POST', paths.restoreSession(sessionId), {}),
   restartSession: (sessionId: string) => call(Session, 'POST', paths.restartSession(sessionId), {}),
   closeSession: (sessionId: string) => call<void>(null, 'DELETE', paths.session(sessionId)),
-  updateNode: (nodeId: string, rect: NodeRect) => call(LayoutNode, 'PUT', paths.node(nodeId), rect),
+  updateNode: (nodeId: string, request: UpdateNodeRequest) =>
+    call(LayoutNode, 'PUT', paths.node(nodeId), request),
+  createFrame: (request: CreateFrameRequest) => call(Frame, 'POST', paths.frames, request),
+  updateFrame: (frameId: string, request: UpdateFrameRequest) =>
+    call(Frame, 'PUT', paths.frame(frameId), request),
+  removeFrame: (frameId: string) => call<void>(null, 'DELETE', paths.frame(frameId)),
 };
 
 export function socketUrl(path: string): string {

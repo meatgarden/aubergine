@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Background,
   BackgroundVariant,
@@ -12,23 +12,34 @@ import {
   type NodeChange,
   type Viewport,
 } from '@xyflow/react';
-import { NODE_DEFAULT_HEIGHT, NODE_DEFAULT_WIDTH, findFreeRect, type LayoutNode, type Session } from '@aubergine/shared';
+import {
+  NODE_DEFAULT_HEIGHT,
+  NODE_DEFAULT_WIDTH,
+  findFreeRect,
+  nodesInside,
+  type Frame,
+  type LayoutNode,
+  type Session,
+} from '@aubergine/shared';
 import { api } from './api';
 import { ParkedList } from './ParkedList';
 import { Picker } from './Picker';
 import { useApp } from './store';
 import { canvasShortcut, isCanvasChord, isMac, isTypingTarget } from './keys';
+import { FrameNode, type FrameFlowNode } from './FrameNode';
 import { TerminalNode, type TerminalFlowNode } from './TerminalNode';
 import { isFullZoom, loadViewport, saveViewport, useZoomToNode } from './viewport';
 
-const nodeTypes = { terminal: TerminalNode };
+const nodeTypes = { terminal: TerminalNode, frame: FrameNode };
+type CanvasNode = TerminalFlowNode | FrameFlowNode;
+const noFrames: Frame[] = [];
 const initialViewport = loadViewport();
 const noNodes: LayoutNode[] = [];
 const noSessions: Session[] = [];
 
-function toFlowNode(node: LayoutNode, previous: TerminalFlowNode | undefined): TerminalFlowNode {
+function toFlowNode(node: LayoutNode, previous: CanvasNode | undefined): TerminalFlowNode {
   return {
-    ...previous,
+    ...(previous?.type === 'terminal' ? previous : {}),
     id: node.id,
     type: 'terminal',
     position: { x: node.x, y: node.y },
@@ -37,6 +48,21 @@ function toFlowNode(node: LayoutNode, previous: TerminalFlowNode | undefined): T
     data: { sessionId: node.sessionId },
     // Only the title bar moves a node; the terminal body belongs to the terminal.
     dragHandle: '.node-title',
+  };
+}
+
+function toFrameNode(frame: Frame, previous: CanvasNode | undefined): FrameFlowNode {
+  return {
+    ...(previous?.type === 'frame' ? previous : {}),
+    id: frame.id,
+    type: 'frame',
+    position: { x: frame.x, y: frame.y },
+    width: frame.width,
+    height: frame.height,
+    data: { frameId: frame.id },
+    dragHandle: '.frame-title',
+    // Frames sit behind the terminals.
+    zIndex: -1,
   };
 }
 
@@ -56,29 +82,68 @@ export function Canvas() {
 
   // React Flow owns the nodes while they are dragged or resized; the saved
   // layout replaces them whenever it changes.
-  const [nodes, setNodes] = useState<TerminalFlowNode[]>([]);
+  const frames = useApp((s) => s.canvas?.layout.frames ?? noFrames);
+  const [nodes, setNodes] = useState<CanvasNode[]>([]);
   useEffect(() => {
     setNodes((previous) => {
       const byId = new Map(previous.map((n) => [n.id, n]));
-      return layout.map((node) => toFlowNode(node, byId.get(node.id)));
+      return [
+        ...frames.map((frame) => toFrameNode(frame, byId.get(frame.id))),
+        ...layout.map((node) => toFlowNode(node, byId.get(node.id))),
+      ];
     });
-  }, [layout]);
+  }, [layout, frames]);
 
   const onNodesChange = useCallback(
-    (changes: NodeChange<TerminalFlowNode>[]) => setNodes((current) => applyNodeChanges(changes, current)),
+    (changes: NodeChange<CanvasNode>[]) => setNodes((current) => applyNodeChanges(changes, current)),
     [],
   );
+
+  // While a frame is dragged, the nodes inside it follow.
+  const carried = useRef<{ frame: { x: number; y: number }; members: Map<string, { x: number; y: number }> } | null>(null);
+
+  const onNodeDragStart = useCallback(
+    (_event: unknown, node: Node) => {
+      carried.current = null;
+      if (node.type !== 'frame') return;
+      const frame = frames.find((f) => f.id === node.id);
+      if (!frame) return;
+      const members = new Map(nodesInside(frame, layout).map((n) => [n.id, { x: n.x, y: n.y }]));
+      carried.current = { frame: { x: frame.x, y: frame.y }, members };
+    },
+    [frames, layout],
+  );
+
+  const onNodeDrag = useCallback((_event: unknown, node: Node) => {
+    const carry = carried.current;
+    if (!carry || carry.members.size === 0) return;
+    const dx = node.position.x - carry.frame.x;
+    const dy = node.position.y - carry.frame.y;
+    setNodes((current) =>
+      current.map((n) => {
+        const start = carry.members.get(n.id);
+        return start ? { ...n, position: { x: start.x + dx, y: start.y + dy } } : n;
+      }),
+    );
+  }, []);
 
   const onNodeDragStop = useCallback((_event: unknown, node: Node) => {
     const width = node.width ?? node.measured?.width;
     const height = node.height ?? node.measured?.height;
     if (width === undefined || height === undefined) return;
-    void api.updateNode(node.id, { x: node.position.x, y: node.position.y, width, height });
+    const rect = { x: node.position.x, y: node.position.y, width, height };
+    if (node.type === 'frame') {
+      carried.current = null;
+      void api.updateFrame(node.id, { ...rect, carry: true });
+    } else {
+      void api.updateNode(node.id, rect);
+    }
   }, []);
 
   const onNodeClick = useCallback(
     (event: React.MouseEvent, node: Node) => {
-      if ((event.target as HTMLElement).closest('input, button')) return;
+      if (node.type !== 'terminal') return;
+      if ((event.target as HTMLElement).closest('input, button, textarea')) return;
       zoomToNode(node.id);
       focusSession((node as TerminalFlowNode).data.sessionId);
     },
@@ -113,7 +178,10 @@ export function Canvas() {
         x: ((pane?.width ?? 1200) / 2 - view.x) / view.zoom,
         y: ((pane?.height ?? 800) / 2 - view.y) / view.zoom,
       };
-      const taken = flow.getNodes().map((n) => ({
+      const taken = flow
+        .getNodes()
+        .filter((n) => n.type === 'terminal')
+        .map((n) => ({
         x: n.position.x,
         y: n.position.y,
         width: n.width ?? n.measured?.width ?? NODE_DEFAULT_WIDTH,
@@ -147,6 +215,21 @@ export function Canvas() {
       { x: Math.round(pane.width / 2 - cx), y: Math.round(pane.height / 2 - cy), zoom: 1 },
       { duration: 200 },
     );
+  }, [flow]);
+
+  const addFrame = useCallback(async () => {
+    const pane = document.querySelector('.react-flow')?.getBoundingClientRect();
+    const view = flow.getViewport();
+    const width = 860;
+    const height = 560;
+    const x = Math.round(((pane?.width ?? 1200) / 2 - view.x) / view.zoom - width / 2);
+    const y = Math.round(((pane?.height ?? 800) / 2 - view.y) / view.zoom - height / 2);
+    try {
+      const frame = await api.createFrame({ rect: { x, y, width, height } });
+      useApp.getState().apply({ type: 'frame.created', frame });
+    } catch (e) {
+      setError(`Could not add a frame: ${(e as Error).message}`);
+    }
   }, [flow]);
 
   const zoomToFit = useCallback(() => {
@@ -201,10 +284,12 @@ export function Canvas() {
 
   return (
     <div className="canvas">
-      <ReactFlow<TerminalFlowNode>
+      <ReactFlow<CanvasNode>
         nodes={nodes}
         nodeTypes={nodeTypes}
         onNodesChange={onNodesChange}
+        onNodeDragStart={onNodeDragStart}
+        onNodeDrag={onNodeDrag}
         onNodeDragStop={onNodeDragStop}
         onNodeClick={onNodeClick}
         onMoveEnd={onMoveEnd}
@@ -227,6 +312,9 @@ export function Canvas() {
           <span className="brand">Aubergine</span>
           <button type="button" onClick={() => void addTerminal()} disabled={adding} title="New terminal (N)">
             + New terminal
+          </button>
+          <button type="button" className="quiet" onClick={() => void addFrame()} title="Add a frame to group terminals">
+            + Frame
           </button>
           <button
             type="button"
@@ -252,7 +340,7 @@ export function Canvas() {
           {!live && <span className="warning">Reconnecting…</span>}
           {error && <span className="warning">{error}</span>}
         </Panel>
-        {layout.length === 0 && (
+        {layout.length === 0 && frames.length === 0 && (
           <Panel position="top-center" className="empty">
             No terminals yet. Choose “New terminal” to start one.
           </Panel>
