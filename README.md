@@ -4,27 +4,69 @@ A local, browser-based canvas where each terminal session is a node you can arra
 
 Terminals keep running when you close the browser or restart the Aubergine server: reopen the page and every terminal is where you left it, with the same shell.
 
-## Requirements
+## Quick start
 
-- macOS or Linux
-- [tmux](https://github.com/tmux/tmux) 3.2 or newer
-- Node.js 22 or newer
-- pnpm
+You need macOS with [tmux](https://github.com/tmux/tmux) 3.2 or newer, Node.js 22 or newer, and pnpm. Linux should work the same way but has not been tested yet.
 
-## Install
+**1. Install the tools** (skip any you already have). With [Homebrew](https://brew.sh) on macOS:
 
 ```sh
+brew install tmux node pnpm
+```
+
+**2. Get the code and its dependencies:**
+
+```sh
+git clone https://github.com/meatgarden/aubergine.git
+cd aubergine
 pnpm install
 ```
 
-## Run
+**3. Build the web app and start the server:**
 
 ```sh
 pnpm build
 pnpm start
 ```
 
-The server prints its address (`http://127.0.0.1:4600`) and a sign-in link ending in `/auth?token=…`. Open that link once per browser; after that the plain address works. The server listens on `127.0.0.1` only.
+**4. Open the sign-in link.** The server prints something like this:
+
+```
+Aubergine is running at http://127.0.0.1:4600
+First visit in a browser? Open this link once:
+  http://127.0.0.1:4600/auth?token=…
+```
+
+Open the `/auth?token=…` link once per browser. After that, `http://127.0.0.1:4600` works on its own. Use `127.0.0.1` rather than `localhost`, since the sign-in is remembered per address.
+
+**5. Add a terminal.** Choose **New terminal** (or press `N`), click the terminal, and type.
+
+### Stopping, restarting and updating
+
+- **Stop the server** with Ctrl+C in the terminal where it runs. Your terminals on the canvas keep running; start the server again and reload the page to get them back.
+- **End every session for good** with `tmux -L aubergine kill-server`. The canvas layout is kept, and each session gets a fresh shell the next time the server starts.
+- **Update** to the latest version:
+
+  ```sh
+  git pull
+  pnpm install
+  pnpm build
+  pnpm start
+  ```
+
+- **Start at login** so you only ever open the browser: see `aubergine service install` under [Command line](#command-line).
+
+### If something goes wrong
+
+| What you see | What to do |
+|---|---|
+| "This browser is not signed in yet" | Open the `/auth?token=…` link that the server printed when it started. |
+| A page saying tmux is missing or too old | Install or upgrade tmux (`brew install tmux`), then restart the server. |
+| The server will not start because the port is taken | Use another port: `AUBERGINE_PORT=4700 pnpm start`. |
+| "The web app has not been built yet" | Run `pnpm build`, then `pnpm start` again; `start` serves the built web app. |
+| A terminal shows no status badges | Status needs zsh, and a session created before an update keeps its old shell. Park it and start a new one, or restart its shell. |
+
+The server listens on `127.0.0.1` only, so it is reachable from this computer and nowhere else.
 
 In a Chromium-based browser you can install the page as an app window (address bar → install), which lets more keyboard shortcuts reach the canvas.
 
