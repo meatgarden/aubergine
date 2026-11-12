@@ -17,11 +17,13 @@ import {
   NODE_DEFAULT_WIDTH,
   findFreeRect,
   nodesInside,
+  type AgentKind,
   type Frame,
   type LayoutNode,
   type Session,
 } from '@aubergine/shared';
 import { api } from './api';
+import { AttentionQueue } from './AttentionQueue';
 import { ParkedList } from './ParkedList';
 import { Picker } from './Picker';
 import { useApp } from './store';
@@ -168,7 +170,7 @@ export function Canvas() {
   const [adding, setAdding] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const addTerminal = useCallback(async () => {
+  const addTerminal = useCallback(async (agent?: AgentKind) => {
     setAdding(true);
     setError(null);
     try {
@@ -189,7 +191,7 @@ export function Canvas() {
         height: n.height ?? n.measured?.height ?? NODE_DEFAULT_HEIGHT,
       }));
       const rect = findFreeRect(taken, center, { width: NODE_DEFAULT_WIDTH, height: NODE_DEFAULT_HEIGHT });
-      const created = await api.createSession({ rect });
+      const created = await api.createSession({ rect, ...(agent ? { agent } : {}) });
       useApp.getState().apply({ type: 'session.created', ...created });
       // Wait for React Flow to know the node before moving to it.
       requestAnimationFrame(() =>
@@ -314,6 +316,15 @@ export function Canvas() {
           <button type="button" onClick={() => void addTerminal()} disabled={adding} title="New terminal (N)">
             + New terminal
           </button>
+          <button
+            type="button"
+            className="quiet"
+            onClick={() => void addTerminal('claude-code')}
+            disabled={adding}
+            title="New Claude Code session: starts claude with hooks that report to this canvas"
+          >
+            + Claude Code
+          </button>
           <button type="button" className="quiet" onClick={() => void addFrame()} title="Add a frame to group terminals">
             + Frame
           </button>
@@ -337,6 +348,7 @@ export function Canvas() {
           >
             {percent}
           </button>
+          <AttentionQueue onGo={goToNode} />
           <ParkedList onRestored={(nodeId) => requestAnimationFrame(() => requestAnimationFrame(() => zoomToNode(nodeId, { reveal: true })))} />
           {!live && <span className="warning">Reconnecting…</span>}
           {error && <span className="warning">{error}</span>}

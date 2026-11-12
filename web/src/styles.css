@@ -702,3 +702,45 @@ code {
   border-top: 1px solid var(--border);
   outline: none;
 }
+
+/* ---------- Attention ---------- */
+
+.terminal-node[data-attention='waiting'] {
+  border-color: #d98e56;
+  box-shadow:
+    0 0 0 2px #d98e56,
+    0 6px 20px rgb(0 0 0 / 0.4);
+}
+.terminal-node[data-attention='done'] {
+  border-color: #7fb37a;
+  box-shadow:
+    0 0 0 1px #7fb37a,
+    0 6px 20px rgb(0 0 0 / 0.4);
+}
+.badge-attention {
+  flex: none;
+  padding: 0 7px;
+  font-size: 11px;
+  line-height: 17px;
+  border-radius: 9px;
+  color: #17181c;
+  white-space: nowrap;
+}
+.badge-attention.is-waiting {
+  background: #d98e56;
+  font-weight: 600;
+}
+.badge-attention.is-done {
+  background: #7fb37a;
+}
+.badge-attention.is-working {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--border);
+}
+.attention-button {
+  background: #d98e56;
+  border-color: #d98e56;
+  color: #17181c;
+  font-weight: 600;
+}

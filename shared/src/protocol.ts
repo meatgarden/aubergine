@@ -79,10 +79,16 @@ export const StateResponse = z.object({
 });
 export type StateResponse = z.infer<typeof StateResponse>;
 
+/** Agents the canvas knows how to start. */
+export const AgentKind = z.enum(['claude-code']);
+export type AgentKind = z.infer<typeof AgentKind>;
+
 export const CreateSessionRequest = z.object({
   name: SessionName.optional(),
   /** Where to put the new node. The daemon picks a spot when omitted. */
   rect: NodeRect.optional(),
+  /** Start an agent in the new session, wired up to report to the canvas. */
+  agent: AgentKind.optional(),
 });
 export type CreateSessionRequest = z.infer<typeof CreateSessionRequest>;
 

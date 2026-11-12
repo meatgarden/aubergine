@@ -10,6 +10,7 @@ import {
   needsUser,
   newId,
   nodesInside,
+  type AgentKind,
   type Attention,
   type AttentionState,
   type CreateFrameRequest,
@@ -43,6 +44,8 @@ export interface SessionsOptions {
   sessionEnv?: (sessionId: string) => Record<string, string>;
   /** Whether prompts given to agents may be kept in the note log. */
   logPrompts?: () => boolean;
+  /** The line that starts an agent in a new session, with its reporting set up. */
+  agentLaunchLine?: (agent: AgentKind) => Promise<string>;
 }
 
 /**
@@ -97,14 +100,24 @@ export class Sessions {
     await this.refresh();
   }
 
-  async create(input: { name?: string | undefined; rect?: NodeRect | undefined }): Promise<{ session: Session; node: LayoutNode }> {
+  async create(input: {
+    name?: string | undefined;
+    rect?: NodeRect | undefined;
+    agent?: AgentKind | undefined;
+  }): Promise<{ session: Session; node: LayoutNode }> {
     const status = await this.status();
     if (status.status !== 'ok') throw new RuntimeUnavailableError(`tmux is ${status.status}`);
     const id = newId();
     const started = await this.startShell(id, null);
     // What a new shell prints while starting up is not news.
     this.seenAt.set(id, Date.now() + 5000);
-    return this.record(id, input.name, input.rect, started.cwd);
+    const launch = input.agent ? await this.options.agentLaunchLine?.(input.agent) : undefined;
+    const created = this.record(id, input.name ?? (launch ? this.nextName('Claude Code') : undefined), input.rect, started.cwd);
+    if (launch) {
+      // Typed once the shell is ready; the new node does not wait for that.
+      void this.runtime.typeLine(id, launch).catch(() => {});
+    }
+    return created;
   }
 
   update(sessionId: string, changes: UpdateSessionRequest): Session {
@@ -375,10 +388,11 @@ export class Sessions {
     return { session, node };
   }
 
-  private nextName(): string {
+  private nextName(base = 'Terminal'): string {
     const names = new Set(this.canvas.state.sessions.map((s) => s.name));
-    for (let n = names.size + 1; ; n++) {
-      if (!names.has(`Terminal ${n}`)) return `Terminal ${n}`;
+    const first = base === 'Terminal' ? names.size + 1 : 1;
+    for (let n = first; ; n++) {
+      if (!names.has(`${base} ${n}`)) return `${base} ${n}`;
     }
   }
 

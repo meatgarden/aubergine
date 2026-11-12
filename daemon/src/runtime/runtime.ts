@@ -64,6 +64,11 @@ export interface SessionRuntime {
   kill(id: string): Promise<void>;
   /** Connects a viewer. Rejects with SessionNotFoundError when the session is gone. */
   attach(id: string, viewer: TerminalDimensions): Promise<Attachment>;
+  /**
+   * Types a line into the session and presses Enter, as the user would,
+   * once its shell is ready to take input. Resolves when it has been typed.
+   */
+  typeLine(id: string, line: string): Promise<void>;
   /** The visible screen as plain text. */
   snapshot(id: string): Promise<string>;
 }

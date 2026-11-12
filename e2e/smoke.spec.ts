@@ -83,6 +83,20 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await page.keyboard.press('Enter');
   await expect(page.getByTestId('note-entry')).toContainText('deploy finished at step 4', { timeout: 15_000 });
   await expect(page.getByTestId('note-entry')).toContainText('agent');
+
+  // An agent's hook raises attention; the queue jumps to the node, and looking at it clears it.
+  await page.getByRole('button', { name: 'Hide note' }).click();
+  await page.getByTestId('node-body').click();
+  const aubergine = path.join(repoRoot, 'bin', 'aubergine.mjs');
+  await page.keyboard.type(`echo '{"notification_type":"permission_prompt","message":"Allow the edit?"}' | ${aubergine} hook notification`);
+  await page.keyboard.press('Enter');
+  await page.locator('.react-flow__pane').click({ position: { x: 5, y: 300 } }); // look away
+  await expect(page.getByTestId('badge-attention')).toHaveText('waiting for you', { timeout: 15_000 });
+  await expect(page.getByTestId('attention-queue')).toHaveText('1 waiting');
+  await page.getByTestId('attention-queue').click();
+  await expect(page.getByTestId('attention-queue')).toHaveCount(0);
+  await expect(page.getByTestId('badge-attention')).toHaveCount(0);
+
   await page.reload();
   await page.getByRole('button', { name: 'Go to…' }).click();
   await page.getByRole('textbox', { name: 'Search sessions' }).fill('rounding');

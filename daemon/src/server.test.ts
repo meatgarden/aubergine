@@ -52,6 +52,8 @@ async function start(): Promise<void> {
       [SESSION_ENV.token]: sessionToken(token, sessionId),
     }),
     logPrompts: () => settingsFile.value.agents.logPrompts,
+    // A stand-in for starting an agent: any line will do to check that it is typed.
+    agentLaunchLine: async () => 'echo "agent-""launched"',
     defaultFolder: () => (settingsFile.value.defaultFolder ? expandHome(settingsFile.value.defaultFolder) : null),
     shell: () => settingsFile.value.shell,
   });
@@ -575,7 +577,19 @@ describe('agent API', () => {
     await waitFor(() => view.text.replace(/\s+/g, '').includes(expected.replace(/\s+/g, '')), 'environment');
   });
 
-  it('clears attention when the user looks, and keeps it while the agent works', async () => {
+  it('starts an agent in a new session by typing its launch line once the shell is ready', async () => {
+    const response = await request('POST', paths.sessions, { body: { agent: 'claude-code' } });
+    const { session } = CreateSessionResponse.parse(response.json());
+    expect(session.name).toBe('Claude Code 1');
+    const started = Date.now();
+    while (!(await runtime.snapshot(session.id)).includes('agent-launched')) {
+      if (Date.now() - started > 15_000) throw new Error('The launch line was never run');
+      await sleep(40);
+    }
+    expect((await request('POST', paths.sessions, { body: { agent: 'something-else' } })).statusCode).toBe(400);
+  });
+
+  it("clears attention when the user looks, and keeps it while the agent works", async () => {
     const { session } = await createSession();
     const mine = sessionToken(token, session.id);
     await agent('PUT', paths.agent.attention(session.id), mine, { state: 'working' });

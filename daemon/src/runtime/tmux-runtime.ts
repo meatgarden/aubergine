@@ -248,6 +248,17 @@ export class TmuxRuntime implements SessionRuntime {
     };
   }
 
+  async typeLine(id: string, line: string): Promise<void> {
+    const name = sessionName(id);
+    // A shell discards what arrives while it is starting, so wait for its prompt.
+    for (let attempt = 0; attempt < 400; attempt++) {
+      if ((await this.snapshot(name)).trim() !== '') break;
+      await sleep(25);
+    }
+    await this.exec(['send-keys', '-t', `=${name}:`, '-l', '--', line]);
+    await this.exec(['send-keys', '-t', `=${name}:`, 'Enter']);
+  }
+
   async snapshot(id: string): Promise<string> {
     const name = sessionName(id);
     try {

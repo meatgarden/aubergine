@@ -1,6 +1,7 @@
 import { mkdir } from 'node:fs/promises';
 import path from 'node:path';
 import { SESSION_ENV, paths } from '@aubergine/shared';
+import { claudeLaunchLine, writeClaudeSettings } from './agents/claude-code';
 import { sessionToken } from './auth';
 import { Canvas } from './canvas';
 import { loadConfig } from './config';
@@ -34,6 +35,7 @@ async function main(): Promise<void> {
       [SESSION_ENV.token]: sessionToken(token, sessionId),
     }),
     logPrompts: () => settings.value.agents.logPrompts,
+    agentLaunchLine: async () => claudeLaunchLine(await writeClaudeSettings(config.dataDir)),
     defaultFolder: () => (settings.value.defaultFolder ? expandHome(settings.value.defaultFolder) : null),
     shell: () => settings.value.shell,
   });

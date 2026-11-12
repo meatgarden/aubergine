@@ -60,6 +60,7 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
       data-testid="terminal-node"
       data-mode={exited ? 'ended' : mode}
       data-busy={session?.status.state === 'busy' ? 'true' : undefined}
+      data-attention={session?.attention.state ?? 'none'}
     >
       <NodeResizer
         minWidth={NODE_MIN_WIDTH}
@@ -90,6 +91,15 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
               if (e.key === 'Escape') setDraft(null);
             }}
           />
+        )}
+        {draft === null && !exited && session && session.attention.state !== 'none' && (
+          <span
+            className={`badge-attention is-${session.attention.state}`}
+            title={session.attention.message ?? undefined}
+            data-testid="badge-attention"
+          >
+            {session.attention.state === 'waiting' ? 'waiting for you' : session.attention.state === 'done' ? 'finished' : 'working'}
+          </span>
         )}
         {draft === null && !exited && session && <StatusBadges session={session} focused={focused} />}
         <button
