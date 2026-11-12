@@ -61,6 +61,7 @@ export const api = {
     call(Session, 'PATCH', paths.session(sessionId), request),
   parkSession: (sessionId: string) => call(Session, 'POST', paths.parkSession(sessionId), {}),
   restoreSession: (sessionId: string) => call(Session, 'POST', paths.restoreSession(sessionId), {}),
+  seenSession: (sessionId: string) => call(Session, 'POST', paths.seenSession(sessionId), {}),
   restartSession: (sessionId: string) => call(Session, 'POST', paths.restartSession(sessionId), {}),
   closeSession: (sessionId: string) => call<void>(null, 'DELETE', paths.session(sessionId)),
   getSnapshot: (sessionId: string) => call(SnapshotResponse, 'GET', paths.snapshot(sessionId)),

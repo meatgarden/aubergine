@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { newId, type Session } from '@aubergine/shared';
+import { NO_STATUS, newId, type Session } from '@aubergine/shared';
 import { searchSessions, shortFolder } from './search';
 
 function session(name: string, extra: Partial<Session> = {}): Session {
@@ -12,6 +12,7 @@ function session(name: string, extra: Partial<Session> = {}): Session {
     cwd: null,
     command: null,
     note: '',
+    status: NO_STATUS,
     ...extra,
   };
 }

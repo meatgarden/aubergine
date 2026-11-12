@@ -22,6 +22,7 @@ import { TmuxRuntime } from './runtime/tmux-runtime';
 import { buildServer, cookieName } from './server';
 import { Sessions } from './sessions';
 import { SETTINGS_FILE, SettingsFile, expandHome } from './settings';
+import { ZshIntegration } from './shell/integration';
 import { JsonStore } from './store/json-store';
 import { loadOrCreateToken } from './token';
 
@@ -42,6 +43,7 @@ async function start(): Promise<void> {
   settingsFile = new SettingsFile(dir);
   await settingsFile.reload();
   sessions = new Sessions(canvas, runtime, {
+    integration: new ZshIntegration(path.join(dir, 'shell')),
     defaultFolder: () => (settingsFile.value.defaultFolder ? expandHome(settingsFile.value.defaultFolder) : null),
     shell: () => settingsFile.value.shell,
   });
@@ -481,6 +483,58 @@ describe('session activity', () => {
     await stop();
     await start();
     expect(canvas.state.sessions[0]?.note).toBe('# billing bug\nretry logic');
+  });
+});
+
+const usesZsh = (process.env.SHELL ?? '').endsWith('/zsh');
+
+describe.runIf(usesZsh)('shell status', () => {
+  it('shows a running command as busy, then idle with its exit code', async () => {
+    const { session } = await createSession();
+    const view = terminal(session.id);
+    await waitFor(() => view.socket.readyState === WebSocket.OPEN, 'open');
+    await waitForRefreshed(() => canvas.state.sessions[0]?.status.state === 'idle', 'idle at the prompt');
+    expect(canvas.state.sessions[0]?.status.lastExit).toBeNull();
+
+    view.socket.send(JSON.stringify({ t: 'input', data: 'sleep 2; (exit 3)\r' }));
+    await waitForRefreshed(() => canvas.state.sessions[0]?.status.state === 'busy', 'busy');
+    expect(canvas.state.sessions[0]?.status).toMatchObject({ commandLine: 'sleep 2; (exit 3)', lastExit: null });
+
+    await waitForRefreshed(() => canvas.state.sessions[0]?.status.state === 'idle', 'idle again');
+    const status = canvas.state.sessions[0]!.status;
+    expect(status).toMatchObject({ commandLine: null, lastExit: 3 });
+    expect(Date.parse(status.lastFinishedAt!)).toBeGreaterThan(Date.now() - 60_000);
+  });
+
+  it('reports status for a parked session, which nobody is viewing', async () => {
+    const { session } = await createSession();
+    const view = terminal(session.id);
+    await waitFor(() => view.socket.readyState === WebSocket.OPEN, 'open');
+    view.socket.send(JSON.stringify({ t: 'input', data: 'sleep 2; (exit 7)\r' }));
+    await waitForRefreshed(() => canvas.state.sessions[0]?.status.state === 'busy', 'busy');
+    view.socket.close();
+    await request('POST', paths.parkSession(session.id), { body: {} });
+    await waitForRefreshed(() => canvas.state.sessions[0]?.status.lastExit === 7, 'exit code while parked');
+  });
+});
+
+describe('unread output', () => {
+  it('marks a session that printed since it was last looked at, until it is looked at again', async () => {
+    const { session } = await createSession();
+    await request('POST', paths.seenSession(session.id), { body: {} });
+    await sessions.refresh();
+    expect(canvas.state.sessions[0]?.status.unread).toBe(false);
+
+    await sleep(1200); // tmux keeps activity times in whole seconds
+    const view = terminal(session.id);
+    await waitFor(() => view.socket.readyState === WebSocket.OPEN, 'open');
+    view.socket.send(JSON.stringify({ t: 'input', data: 'sleep 1.2; echo "something ""new"\r' }));
+    await waitForRefreshed(() => canvas.state.sessions[0]?.status.unread === true, 'unread');
+
+    const seen = await request('POST', paths.seenSession(session.id), { body: {} });
+    expect(seen.json().status.unread).toBe(false);
+    await sessions.refresh();
+    expect(canvas.state.sessions[0]?.status.unread).toBe(false);
   });
 });
 

@@ -129,6 +129,7 @@ export class TmuxRuntime implements SessionRuntime {
       // tmux starts its default shell as a login shell; say which shell that is.
       ...(shell && path.isAbsolute(shell) ? ['set-option', '-g', 'default-shell', shell, ';'] : []),
       'new-session',
+      ...Object.entries(options.env ?? {}).flatMap(([key, value]) => ['-e', `${key}=${value}`]),
       '-d',
       '-s',
       id,
@@ -140,7 +141,7 @@ export class TmuxRuntime implements SessionRuntime {
       options.cwd ?? os.homedir(),
     ]);
     const created = (await this.list()).find((s) => s.id === id);
-    return created ?? { id, cwd: null, command: null };
+    return created ?? { id, cwd: null, command: null, activityAt: null };
   }
 
   async list(): Promise<RuntimeSession[]> {
@@ -149,7 +150,7 @@ export class TmuxRuntime implements SessionRuntime {
       output = await this.exec([
         'list-sessions',
         '-F',
-        '#{session_name}\t#{pane_current_path}\t#{pane_current_command}',
+        '#{session_name}\t#{pane_current_path}\t#{pane_current_command}\t#{window_activity}',
       ]);
     } catch (error) {
       if (isNoServer(error)) return [];
@@ -159,8 +160,13 @@ export class TmuxRuntime implements SessionRuntime {
       .split('\n')
       .filter(Boolean)
       .map((line) => {
-        const [id = '', cwd = '', command = ''] = line.split('\t');
-        return { id, cwd: cwd || null, command: command || null };
+        const [id = '', cwd = '', command = '', activity = ''] = line.split('\t');
+        return {
+          id,
+          cwd: cwd || null,
+          command: command || null,
+          activityAt: /^\d+$/.test(activity) ? new Date(Number(activity) * 1000) : null,
+        };
       });
   }
 

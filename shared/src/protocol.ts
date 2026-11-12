@@ -32,6 +32,8 @@ export const paths = {
   restoreSession: (sessionId: string) => `/api/v1/sessions/${sessionId}/restore`,
   /** POST: start a new shell for a session whose shell exited. */
   restartSession: (sessionId: string) => `/api/v1/sessions/${sessionId}/restart`,
+  /** POST: the user is looking at this session now. */
+  seenSession: (sessionId: string) => `/api/v1/sessions/${sessionId}/seen`,
   /** GET: the session's visible screen as plain text. */
   snapshot: (sessionId: string) => `/api/v1/sessions/${sessionId}/snapshot`,
   node: (nodeId: string) => `/api/v1/nodes/${nodeId}`,

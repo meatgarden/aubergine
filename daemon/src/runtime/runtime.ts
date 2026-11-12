@@ -7,6 +7,8 @@ export interface RuntimeSession {
   cwd: string | null;
   /** Name of the foreground command, when known. */
   command: string | null;
+  /** When the session last printed anything, when known. */
+  activityAt: Date | null;
 }
 
 export interface TerminalDimensions {
@@ -20,6 +22,8 @@ export interface CreateOptions extends Partial<TerminalDimensions> {
   cwd?: string;
   /** Absolute path of the shell to start, as a login shell. Defaults to the user's own shell. */
   shell?: string | null;
+  /** Extra environment variables for the session's shell. */
+  env?: Record<string, string>;
 }
 
 export interface ExitInfo {

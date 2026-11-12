@@ -31,6 +31,18 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await page.keyboard.press('Enter');
   await expect(outputLine(page, 'hello')).toHaveCount(1);
 
+  // A failing command shows its exit code on the node; a long one shows busy, then idle.
+  if ((process.env.SHELL ?? '').endsWith('/zsh')) {
+    await page.keyboard.type('sleep 2; (exit 3)');
+    await page.keyboard.press('Enter');
+    await expect(page.getByTestId('badge-busy')).toHaveCount(1);
+    await expect(page.getByTestId('badge-exit')).toHaveText('exit 3', { timeout: 8000 });
+    await expect(page.getByTestId('badge-busy')).toHaveCount(0);
+    await page.keyboard.type('clear; echo hello');
+    await page.keyboard.press('Enter');
+    await expect(page.getByTestId('badge-exit')).toHaveCount(0);
+  }
+
   // After a reload the screen comes back by itself, promptly and without a click.
   await page.reload();
   await expect(node).toHaveCount(1);

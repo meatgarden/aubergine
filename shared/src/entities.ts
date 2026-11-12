@@ -25,6 +25,28 @@ export type SessionState = z.infer<typeof SessionState>;
 
 export const SessionNote = z.string().max(200_000);
 
+/**
+ * What the session's shell reports about itself, plus whether it has printed
+ * anything since the user last looked. Shells without integration report
+ * nothing, and `state` stays null.
+ */
+export const ShellStatus = z.object({
+  /** `busy` while a command runs, `idle` at a prompt. */
+  state: z.enum(['busy', 'idle']).nullable().default(null),
+  /** The command line being run, while busy. */
+  commandLine: z.string().max(400).nullable().default(null),
+  /** When the running command started. */
+  startedAt: Timestamp.nullable().default(null),
+  /** Exit code of the last finished command. */
+  lastExit: z.number().int().nullable().default(null),
+  lastFinishedAt: Timestamp.nullable().default(null),
+  /** Output has appeared since the node was last focused. */
+  unread: z.boolean().default(false),
+});
+export type ShellStatus = z.infer<typeof ShellStatus>;
+
+export const NO_STATUS: ShellStatus = ShellStatus.parse({});
+
 /** A terminal session. The running shell itself is owned by the session runtime. */
 export const Session = z.object({
   id: Id,
@@ -38,6 +60,7 @@ export const Session = z.object({
   command: z.string().nullable().default(null),
   /** A Markdown note kept with the session. */
   note: SessionNote.default(''),
+  status: ShellStatus.prefault({}),
 });
 export type Session = z.infer<typeof Session>;
 

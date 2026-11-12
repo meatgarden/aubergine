@@ -1,4 +1,4 @@
-import { memo, useRef, useState } from 'react';
+import { memo, useCallback, useRef, useState } from 'react';
 import { NodeResizer, useStore, type Node, type NodeProps } from '@xyflow/react';
 import { NODE_MIN_HEIGHT, NODE_MIN_WIDTH } from '@aubergine/shared';
 import { api } from './api';
@@ -6,7 +6,7 @@ import { ColorButton } from './ColorButton';
 import { nodeMode, type NodeMode } from './culling';
 import { NotePanel } from './NotePanel';
 import { SnapshotView } from './SnapshotView';
-import { shortFolder } from './search';
+import { StatusBadges } from './StatusBadges';
 import { useApp } from './store';
 import { TerminalView } from './TerminalView';
 import { useIsFullZoom } from './viewport';
@@ -21,6 +21,16 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
   const interactive = useIsFullZoom();
   const [draft, setDraft] = useState<string | null>(null);
   const [noteOpen, setNoteOpen] = useState(false);
+  // Whether this node's terminal holds the keyboard.
+  const [focused, setFocused] = useState(false);
+  const onFocusChange = useCallback(
+    (now: boolean) => {
+      setFocused(now);
+      // Looking at it, and looking away from it, both mark everything so far as seen.
+      void api.seenSession(sessionId).catch(() => {});
+    },
+    [sessionId],
+  );
   const node = useApp((s) => s.canvas?.layout.nodes.find((n) => n.id === id));
   const color = node?.color ?? 'none';
   const hasNote = (session?.note ?? '') !== '';
@@ -49,6 +59,7 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
       className={`terminal-node color-${color}${selected ? ' selected' : ''}`}
       data-testid="terminal-node"
       data-mode={exited ? 'ended' : mode}
+      data-busy={session?.status.state === 'busy' ? 'true' : undefined}
     >
       <NodeResizer
         minWidth={NODE_MIN_WIDTH}
@@ -80,11 +91,7 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
             }}
           />
         )}
-        {draft === null && !exited && (
-          <span className="node-activity" title={session?.cwd ?? undefined} data-testid="node-activity">
-            {[session?.command, shortFolder(session?.cwd ?? null)].filter(Boolean).join(' · ')}
-          </span>
-        )}
+        {draft === null && !exited && session && <StatusBadges session={session} focused={focused} />}
         <button
           type="button"
           className={`node-tool nodrag${hasNote ? ' has-note' : ''}`}
@@ -127,7 +134,7 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
           {session?.cwd && <p className="node-ended-folder">{session.cwd}</p>}
         </div>
       ) : mode === 'live' ? (
-        <LiveBody sessionId={sessionId} interactive={interactive} />
+        <LiveBody sessionId={sessionId} interactive={interactive} onFocusChange={onFocusChange} />
       ) : (
         <div className="node-body nodrag nopan" data-testid="node-body" data-mode={mode}>
           <SnapshotView sessionId={sessionId} refreshing={mode === 'snapshot'} />
@@ -144,14 +151,26 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
  * whenever the view is zoomed out) a shield covers it: the wheel then belongs
  * to the canvas, and a click focuses the terminal.
  */
-function LiveBody({ sessionId, interactive }: { sessionId: string; interactive: boolean }) {
+function LiveBody({
+  sessionId,
+  interactive,
+  onFocusChange,
+}: {
+  sessionId: string;
+  interactive: boolean;
+  onFocusChange: (focused: boolean) => void;
+}) {
   const [focused, setFocused] = useState(false);
   const live = interactive && focused;
+  const change = (now: boolean): void => {
+    setFocused(now);
+    onFocusChange(now);
+  };
   return (
     <div
       className={`node-body nodrag nopan${live ? ' nowheel' : ''}`}
-      onFocus={() => setFocused(true)}
-      onBlur={() => setFocused(false)}
+      onFocus={() => change(true)}
+      onBlur={() => change(false)}
       data-testid="node-body"
     >
       <TerminalView sessionId={sessionId} interactive={interactive} />

@@ -182,6 +182,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
 
   app.post(paths.parkSession(':sessionId'), async (request) => sessions.park(idParam(request, 'sessionId')));
   app.post(paths.restoreSession(':sessionId'), async (request) => sessions.restore(idParam(request, 'sessionId')));
+  app.post(paths.seenSession(':sessionId'), async (request) => sessions.seen(idParam(request, 'sessionId')));
   app.post(paths.restartSession(':sessionId'), async (request) => sessions.restart(idParam(request, 'sessionId')));
 
   app.delete(paths.session(':sessionId'), async (request, reply: FastifyReply) => {

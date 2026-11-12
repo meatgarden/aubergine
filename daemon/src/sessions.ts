@@ -2,6 +2,7 @@ import { existsSync } from 'node:fs';
 import os from 'node:os';
 import {
   Id,
+  NO_STATUS,
   NODE_DEFAULT_HEIGHT,
   NODE_DEFAULT_WIDTH,
   findFreeRect,
@@ -13,12 +14,14 @@ import {
   type NodeRect,
   type RuntimeStatus,
   type Session,
+  type ShellStatus,
   type UpdateFrameRequest,
   type UpdateNodeRequest,
   type UpdateSessionRequest,
 } from '@aubergine/shared';
 import type { Canvas } from './canvas';
-import type { SessionRuntime } from './runtime/runtime';
+import type { RuntimeSession, SessionRuntime } from './runtime/runtime';
+import { noIntegration, type ShellIntegration, type ShellReport } from './shell/integration';
 
 export class NotFoundError extends Error {}
 export class ConflictError extends Error {}
@@ -29,6 +32,8 @@ export interface SessionsOptions {
   defaultFolder?: () => string | null;
   /** Shell to start; `null` for the user's own. */
   shell?: () => string | null;
+  /** Makes shells report command status. */
+  integration?: ShellIntegration;
 }
 
 /**
@@ -39,12 +44,18 @@ export class Sessions {
   private runtimeStatus: RuntimeStatus | null = null;
   private refreshing: Promise<void> | null = null;
   private refreshQueued: Promise<void> | null = null;
+  private readonly integration: ShellIntegration;
+  /** When the user last looked at each session; not saved. */
+  private readonly seenAt = new Map<string, number>();
+  private readonly startedAt = Date.now();
 
   constructor(
     private readonly canvas: Canvas,
     private readonly runtime: SessionRuntime,
     private readonly options: SessionsOptions = {},
-  ) {}
+  ) {
+    this.integration = options.integration ?? noIntegration;
+  }
 
   async status(): Promise<RuntimeStatus> {
     // A usable runtime stays usable; keep asking while it is not, so the
@@ -66,7 +77,7 @@ export class Sessions {
 
     for (const session of this.canvas.state.sessions) {
       if (session.state === 'exited' || running.has(session.id)) continue;
-      await this.runtime.create({ id: session.id, cwd: this.startFolder(session.cwd), shell: this.shell() });
+      await this.startShell(session.id, session.cwd);
     }
 
     const known = new Set(this.canvas.state.sessions.map((s) => s.id));
@@ -81,7 +92,9 @@ export class Sessions {
     const status = await this.status();
     if (status.status !== 'ok') throw new RuntimeUnavailableError(`tmux is ${status.status}`);
     const id = newId();
-    const started = await this.runtime.create({ id, cwd: this.startFolder(null), shell: this.shell() });
+    const started = await this.startShell(id, null);
+    // What a new shell prints while starting up is not news.
+    this.seenAt.set(id, Date.now() + 5000);
     return this.record(id, input.name, input.rect, started.cwd);
   }
 
@@ -110,7 +123,7 @@ export class Sessions {
     const session = this.find(sessionId);
     if (session.state !== 'exited') throw new ConflictError('This shell is still running');
     if (!(await this.runtime.has(sessionId))) {
-      await this.runtime.create({ id: sessionId, cwd: this.startFolder(session.cwd), shell: this.shell() });
+      await this.startShell(sessionId, session.cwd);
     }
     this.canvas.emit({ type: 'session.restarted', sessionId });
     return this.find(sessionId);
@@ -121,6 +134,8 @@ export class Sessions {
     this.find(sessionId);
     await this.runtime.kill(sessionId);
     if (this.has(sessionId)) this.canvas.emit({ type: 'session.closed', sessionId });
+    this.seenAt.delete(sessionId);
+    await this.integration.forget(sessionId);
   }
 
   /**
@@ -168,8 +183,14 @@ export class Sessions {
       const live = running.get(session.id);
       if (!live) {
         this.shellEnded(session.id);
-      } else if (live.cwd !== session.cwd || live.command !== session.command) {
+        continue;
+      }
+      if (live.cwd !== session.cwd || live.command !== session.command) {
         this.canvas.emit({ type: 'session.activity', sessionId: session.id, cwd: live.cwd, command: live.command });
+      }
+      const status = this.nextStatus(session, await this.integration.read(session.id), live.activityAt);
+      if (!sameStatus(status, session.status)) {
+        this.canvas.emit({ type: 'session.status', sessionId: session.id, status });
       }
     }
   }
@@ -233,6 +254,47 @@ export class Sessions {
     return session;
   }
 
+  private async startShell(sessionId: string, folder: string | null): Promise<RuntimeSession> {
+    const shell = this.shell();
+    const env = await this.integration.environment(sessionId, shell ?? process.env.SHELL ?? '');
+    return this.runtime.create({ id: sessionId, cwd: this.startFolder(folder), shell, env });
+  }
+
+  /** The user is looking at this session: nothing in it is unread any more. */
+  seen(sessionId: string): Session {
+    const session = this.find(sessionId);
+    this.seenAt.set(sessionId, Date.now());
+    if (session.status.unread) {
+      this.canvas.emit({ type: 'session.status', sessionId, status: { ...session.status, unread: false } });
+    }
+    return this.find(sessionId);
+  }
+
+  private nextStatus(session: Session, report: ShellReport | null, activityAt: Date | null): ShellStatus {
+    // tmux reports activity in whole seconds, so allow for that before calling something new.
+    const seen = this.seenAt.get(session.id) ?? this.startedAt;
+    const unread = activityAt !== null && activityAt.getTime() > seen + 1000;
+    if (!report) return { ...session.status, unread };
+    const iso = (date: Date | null): string | null => date?.toISOString() ?? null;
+    return report.state === 'busy'
+      ? {
+          ...session.status,
+          state: 'busy',
+          commandLine: report.commandLine,
+          startedAt: iso(report.startedAt),
+          unread,
+        }
+      : {
+          state: 'idle',
+          commandLine: null,
+          startedAt: null,
+          // Before the first command there is no exit code; keep what was known.
+          lastExit: report.lastExit ?? session.status.lastExit,
+          lastFinishedAt: iso(report.lastFinishedAt) ?? session.status.lastFinishedAt,
+          unread,
+        };
+  }
+
   private shell(): string | null {
     const shell = this.options.shell?.() ?? null;
     return shell && existsSync(shell) ? shell : null;
@@ -262,6 +324,7 @@ export class Sessions {
       cwd,
       command: null,
       note: '',
+      status: NO_STATUS,
     };
     const node: LayoutNode = { id: newId(), sessionId: id, color: 'none', ...(rect ?? this.freeSpot()) };
     this.canvas.emit({ type: 'session.created', session, node });
@@ -285,4 +348,15 @@ export class Sessions {
       : { x: size.width / 2, y: size.height / 2 };
     return findFreeRect(nodes, center, size);
   }
+}
+
+function sameStatus(a: ShellStatus, b: ShellStatus): boolean {
+  return (
+    a.state === b.state &&
+    a.commandLine === b.commandLine &&
+    a.startedAt === b.startedAt &&
+    a.lastExit === b.lastExit &&
+    a.lastFinishedAt === b.lastFinishedAt &&
+    a.unread === b.unread
+  );
 }

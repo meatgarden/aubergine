@@ -369,9 +369,50 @@ code {
 
 /* ---------- Node activity, minimap, picker ---------- */
 
-.node-activity {
+.node-status {
   flex: none;
-  max-width: 55%;
+  max-width: 60%;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+}
+.badge-unread,
+.badge-busy {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+.badge-unread {
+  background: #6a9fd9;
+}
+.badge-busy {
+  background: #d9bf63;
+  animation: busy-pulse 1.2s ease-in-out infinite;
+}
+@keyframes busy-pulse {
+  50% {
+    opacity: 0.35;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .badge-busy {
+    animation: none;
+  }
+}
+.badge-exit {
+  flex: none;
+  padding: 0 6px;
+  font-size: 11px;
+  line-height: 16px;
+  color: #fff;
+  background: var(--danger);
+  border-radius: 8px;
+  font-variant-numeric: tabular-nums;
+}
+.node-activity {
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
