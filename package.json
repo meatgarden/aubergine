@@ -1,0 +1,30 @@
+{
+  "name": "aubergine",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@12.18.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "postinstall": "node scripts/fix-node-pty.mjs",
+    "dev": "pnpm --parallel --filter @aubergine/daemon --filter @aubergine/web dev",
+    "build": "pnpm --filter @aubergine/web build",
+    "start": "pnpm --filter @aubergine/daemon start",
+    "typecheck": "pnpm -r typecheck",
+    "lint": "eslint .",
+    "test": "pnpm -r test",
+    "e2e": "playwright test",
+    "check": "pnpm typecheck && pnpm lint && pnpm test && pnpm e2e"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.65.0",
+    "@types/node": "^26.6.6",
+    "eslint": "^10.14.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.14.0",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.72.2"
+  }
+}

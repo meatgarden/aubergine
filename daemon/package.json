@@ -1,0 +1,28 @@
+{
+  "name": "@aubergine/daemon",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "AUBERGINE_DEV_ORIGIN=http://127.0.0.1:5173 tsx watch src/main.ts",
+    "start": "tsx src/main.ts",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@aubergine/shared": "workspace:*",
+    "@fastify/cookie": "^11.1.5",
+    "@fastify/static": "^10.1.10",
+    "@fastify/websocket": "^11.3.7",
+    "fastify": "^5.12.8",
+    "node-pty": "^1.1.0",
+    "tsx": "^4.23.15",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "@types/ws": "^8.18.2",
+    "vitest": "^5.1.0",
+    "ws": "^8.22.2"
+  }
+}

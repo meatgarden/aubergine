@@ -1,0 +1,8 @@
+packages:
+  - shared
+  - daemon
+  - web
+
+allowBuilds:
+  esbuild: true
+  node-pty: true
