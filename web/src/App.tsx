@@ -10,6 +10,11 @@ export function App() {
 
   useEffect(() => startSync(), []);
 
+  const theme = useApp((s) => s.settings.theme);
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+  }, [theme]);
+
   if (phase === 'loading') return <Message title="Loading…" />;
 
   if (phase === 'unreachable') {

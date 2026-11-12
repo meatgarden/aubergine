@@ -13,6 +13,21 @@
   color: var(--text);
 }
 
+:root[data-theme='light'] {
+  --bg: #eceef2;
+  --panel: #ffffff;
+  --panel-hover: #eef0f4;
+  --border: #c9cdd6;
+  --text: #24262b;
+  --muted: #6b7080;
+  --accent: #8a5a84;
+  --accent-strong: #7a4a74;
+  --terminal-bg: #fbfbfc;
+}
+:root[data-theme='light'] .react-flow {
+  --xy-background-pattern-dots-color-default: #c5c9d2;
+}
+
 html,
 body,
 #root {

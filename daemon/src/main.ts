@@ -5,6 +5,7 @@ import { loadConfig } from './config';
 import { TmuxRuntime } from './runtime/tmux-runtime';
 import { buildServer } from './server';
 import { Sessions } from './sessions';
+import { SettingsFile, expandHome } from './settings';
 import { JsonStore } from './store/json-store';
 import { loadOrCreateToken } from './token';
 
@@ -17,8 +18,13 @@ async function main(): Promise<void> {
   const canvas = new Canvas(await store.load(), store, (error) =>
     console.error('Could not save state:', error),
   );
+  const settings = new SettingsFile(config.dataDir, (message) => console.warn(message));
+  await settings.reload();
   const runtime = new TmuxRuntime({ socket: config.tmuxSocket, tmuxBin: config.tmuxBin });
-  const sessions = new Sessions(canvas, runtime);
+  const sessions = new Sessions(canvas, runtime, {
+    defaultFolder: () => (settings.value.defaultFolder ? expandHome(settings.value.defaultFolder) : null),
+    shell: () => settings.value.shell,
+  });
 
   const status = await sessions.status();
   if (status.status === 'ok') {
@@ -35,6 +41,7 @@ async function main(): Promise<void> {
     canvas,
     sessions,
     runtime,
+    settings: () => settings.reload(),
     token,
     devOrigin: config.devOrigin,
     webDist: config.webDist,

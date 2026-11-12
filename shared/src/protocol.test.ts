@@ -3,6 +3,7 @@ import {
   CanvasState,
   ChangeEvent,
   CreateSessionRequest,
+  DEFAULT_SETTINGS,
   EventsServerMessage,
   NODE_MIN_WIDTH,
   PROTOCOL_VERSION,
@@ -67,6 +68,7 @@ describe('HTTP schemas', () => {
     const body = {
       protocolVersion: PROTOCOL_VERSION,
       runtime: { status: 'ok', version: '3.8', minVersion: '3.2' },
+      settings: DEFAULT_SETTINGS,
       state,
     };
     expect(StateResponse.safeParse(body).success).toBe(true);

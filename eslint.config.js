@@ -17,7 +17,7 @@ export default tseslint.config(
     },
   },
   {
-    files: ['daemon/**/*.ts', 'e2e/**/*.ts', 'scripts/**', '*.config.{js,ts}', 'web/vite.config.ts'],
+    files: ['daemon/**/*.ts', 'e2e/**/*.ts', 'scripts/**', 'bin/**', '*.config.{js,ts}', 'web/vite.config.ts'],
     languageOptions: { globals: globals.node },
   },
   {

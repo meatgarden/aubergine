@@ -1,4 +1,4 @@
-import { mkdtemp, realpath, rm, stat } from 'node:fs/promises';
+import { mkdtemp, realpath, rm, stat, writeFile } from 'node:fs/promises';
 import type { AddressInfo } from 'node:net';
 import os from 'node:os';
 import path from 'node:path';
@@ -21,6 +21,7 @@ import { Canvas } from './canvas';
 import { TmuxRuntime } from './runtime/tmux-runtime';
 import { buildServer, cookieName } from './server';
 import { Sessions } from './sessions';
+import { SETTINGS_FILE, SettingsFile, expandHome } from './settings';
 import { JsonStore } from './store/json-store';
 import { loadOrCreateToken } from './token';
 
@@ -30,6 +31,7 @@ let token: string;
 let app: FastifyInstance;
 let canvas: Canvas;
 let sessions: Sessions;
+let settingsFile: SettingsFile;
 let port: number;
 let origin: string;
 let restartedCwd: string | null = null;
@@ -38,12 +40,18 @@ const sockets: WebSocket[] = [];
 async function start(): Promise<void> {
   const store = new JsonStore(dir);
   canvas = new Canvas(await store.load(), store);
-  sessions = new Sessions(canvas, runtime);
+  settingsFile = new SettingsFile(dir);
+  await settingsFile.reload();
+  sessions = new Sessions(canvas, runtime, {
+    defaultFolder: () => (settingsFile.value.defaultFolder ? expandHome(settingsFile.value.defaultFolder) : null),
+    shell: () => settingsFile.value.shell,
+  });
   await sessions.reconcile();
   app = await buildServer({
     canvas,
     sessions,
     runtime,
+    settings: () => settingsFile.reload(),
     token,
     devOrigin: null,
     webDist: path.join(dir, 'no-web-build'),
@@ -442,6 +450,30 @@ describe('session activity', () => {
     await stop();
     await start();
     expect(canvas.state.sessions[0]?.note).toBe('# billing bug\nretry logic');
+  });
+});
+
+describe('settings', () => {
+  it('serves the settings file with the state and applies shell and folder to new sessions', async () => {
+    const initial = StateResponse.parse((await request('GET', paths.state)).json());
+    expect(initial.settings.theme).toBe('dark');
+
+    const folder = await realpath(dir);
+    await writeFile(
+      path.join(dir, SETTINGS_FILE),
+      JSON.stringify({ theme: 'light', font: { size: 15 }, shell: '/bin/sh', defaultFolder: folder }),
+    );
+    const edited = StateResponse.parse((await request('GET', paths.state)).json());
+    expect(edited.settings).toMatchObject({ theme: 'light', shell: '/bin/sh', defaultFolder: folder });
+    expect(edited.settings.font.size).toBe(15);
+
+    const { session } = await createSession();
+    await waitFor(() => {
+      void sessions.refresh();
+      const current = canvas.state.sessions.find((s) => s.id === session.id);
+      // Not the user's own shell: `sh` (which some systems run as bash or dash).
+      return current?.cwd === folder && ['sh', 'bash', 'dash'].includes(current.command ?? '');
+    }, 'configured shell in the configured folder');
   });
 });
 

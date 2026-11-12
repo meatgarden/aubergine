@@ -22,6 +22,7 @@ import {
   type ErrorCode,
   type ErrorResponse,
   type EventsServerMessage,
+  type Settings,
   type SnapshotResponse,
   type StateResponse,
   type TerminalServerMessage,
@@ -35,6 +36,8 @@ export interface ServerOptions {
   canvas: Canvas;
   sessions: Sessions;
   runtime: SessionRuntime;
+  /** Returns the current settings, re-reading the settings file. */
+  settings: () => Promise<Settings>;
   token: string;
   devOrigin: string | null;
   webDist: string;
@@ -162,6 +165,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   app.get(paths.state, async (): Promise<StateResponse> => ({
     protocolVersion: PROTOCOL_VERSION,
     runtime: await sessions.status(),
+    settings: await options.settings(),
     state: canvas.state,
   }));
 

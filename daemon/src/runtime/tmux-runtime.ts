@@ -1,5 +1,6 @@
 import { execFile } from 'node:child_process';
 import os from 'node:os';
+import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { setTimeout as sleep } from 'node:timers/promises';
 import pty from 'node-pty';
@@ -31,9 +32,15 @@ export function isSupportedTmux(version: { major: number; minor: number }): bool
 }
 
 /**
- * The environment the tmux server (and so every shell) starts from. It drops
- * what belongs to this process rather than to the user: variables set by the
- * package manager that launched the daemon, and any outer tmux.
+ * The environment the tmux server (and so every shell) starts from.
+ *
+ * Shells are started as login shells, so the user's own profile files build
+ * the real environment (PATH and so on) no matter how the daemon itself was
+ * started. This function only supplies a sane base for that: it drops what
+ * belongs to the daemon process rather than to the user (variables set by
+ * the package manager that launched it, any outer tmux), and fills in the
+ * basics that a process started outside a terminal, for example at login,
+ * does not have.
  */
 export function shellEnvironment(source: NodeJS.ProcessEnv): Record<string, string> {
   const env: Record<string, string> = {};
@@ -43,11 +50,24 @@ export function shellEnvironment(source: NodeJS.ProcessEnv): Record<string, stri
     if (['TMUX', 'TMUX_PANE', 'NODE_ENV', 'INIT_CWD', 'NODE', 'NODE_OPTIONS', 'NODE_PATH'].includes(key)) continue;
     env[key] = value;
   }
-  const inherited = (env.PATH ?? '/usr/bin:/bin').split(':').filter((p) => p && !p.includes('/node_modules/'));
+  const inherited = (env.PATH ?? '/usr/bin:/bin:/usr/sbin:/sbin').split(':').filter((p) => p && !p.includes('/node_modules/'));
   // tmux is often installed where a non-interactive process does not look.
   const extra = ['/opt/homebrew/bin', '/usr/local/bin'].filter((p) => !inherited.includes(p));
   env.PATH = [...inherited, ...extra].join(':');
   env.LANG ??= 'en_US.UTF-8';
+
+  let user: { username: string; homedir: string; shell: string | null } | null = null;
+  try {
+    user = os.userInfo();
+  } catch {
+    // No password-database entry (some containers); leave these unset.
+  }
+  if (user) {
+    env.HOME ??= user.homedir;
+    env.USER ??= user.username;
+    env.LOGNAME ??= user.username;
+    if (user.shell) env.SHELL ??= user.shell;
+  }
   return env;
 }
 
@@ -104,7 +124,10 @@ export class TmuxRuntime implements SessionRuntime {
 
   async create(options: CreateOptions): Promise<RuntimeSession> {
     const id = sessionName(options.id);
+    const shell = options.shell ?? this.env.SHELL;
     await this.exec([
+      // tmux starts its default shell as a login shell; say which shell that is.
+      ...(shell && path.isAbsolute(shell) ? ['set-option', '-g', 'default-shell', shell, ';'] : []),
       'new-session',
       '-d',
       '-s',
@@ -164,7 +187,7 @@ export class TmuxRuntime implements SessionRuntime {
     const name = sessionName(id);
     if (!(await this.has(name))) throw new SessionNotFoundError(name);
 
-    const child = pty.spawn(this.bin, [...this.baseArgs, 'attach-session', '-t', `=${name}`], {
+    const child = pty.spawn(this.bin, this.attachCommand(name).args, {
       name: 'xterm-256color',
       cols: viewer.cols,
       rows: viewer.rows,
@@ -227,6 +250,18 @@ export class TmuxRuntime implements SessionRuntime {
       if (isNoServer(error) || isNoSession(error)) throw new SessionNotFoundError(name);
       throw error;
     }
+  }
+
+  /**
+   * The command a native terminal runs to view a session, with the same
+   * socket and config the daemon uses.
+   */
+  attachCommand(id: string): { bin: string; args: string[]; env: Record<string, string> } {
+    return {
+      bin: this.bin,
+      args: [...this.baseArgs, 'attach-session', '-t', `=${sessionName(id)}`],
+      env: this.env,
+    };
   }
 
   /** Stops the tmux server and every session on this socket. Used by tests. */

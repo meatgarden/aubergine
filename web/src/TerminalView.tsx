@@ -4,6 +4,7 @@ import { Terminal } from '@xterm/xterm';
 import {
   TerminalServerMessage,
   paths,
+  type Settings,
   type TerminalClientMessage,
 } from '@aubergine/shared';
 import { socketUrl } from './api';
@@ -16,6 +17,12 @@ interface Props {
   sessionId: string;
   /** False when the canvas is not at 100% zoom: the terminal shows output but takes no input. */
   interactive: boolean;
+}
+
+function terminalTheme(theme: Settings['theme']) {
+  return theme === 'light'
+    ? { background: '#fbfbfc', foreground: '#24262b', cursor: '#24262b', selectionBackground: '#c9d3e6' }
+    : { background: '#101114', foreground: '#d7dae0', cursor: '#d7dae0' };
 }
 
 type Link = 'connecting' | 'open' | 'reconnecting' | 'ended';
@@ -35,15 +42,16 @@ export function TerminalView({ sessionId, interactive }: Props) {
     const element = host.current;
     if (!element) return;
 
+    const settings = useApp.getState().settings;
     const term = new Terminal({
-      fontFamily: 'Menlo, Monaco, "DejaVu Sans Mono", Consolas, monospace',
-      fontSize: 13,
+      fontFamily: settings.font.family,
+      fontSize: settings.font.size,
       cursorBlink: true,
       // History lives in the session runtime, not in the browser.
       scrollback: 0,
       macOptionClickForcesSelection: true,
       disableStdin: !interactiveRef.current,
-      theme: { background: '#101114', foreground: '#d7dae0', cursor: '#d7dae0' },
+      theme: terminalTheme(settings.theme),
     });
     const fit = new FitAddon();
     term.loadAddon(fit);
@@ -140,6 +148,17 @@ export function TerminalView({ sessionId, interactive }: Props) {
       terminal.current = null;
     };
   }, [sessionId]);
+
+  // Follow changes to the settings file.
+  const font = useApp((s) => s.settings.font);
+  const theme = useApp((s) => s.settings.theme);
+  useEffect(() => {
+    const term = terminal.current;
+    if (!term) return;
+    term.options.fontFamily = font.family;
+    term.options.fontSize = font.size;
+    term.options.theme = terminalTheme(theme);
+  }, [font, theme]);
 
   // Input is accepted only at 100% zoom.
   useEffect(() => {

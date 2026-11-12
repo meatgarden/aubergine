@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { api } from './api';
+import { useApp } from './store';
 
 const REFRESH_MS = 1000;
 
@@ -10,6 +11,7 @@ const REFRESH_MS = 1000;
  */
 export function SnapshotView({ sessionId, refreshing }: { sessionId: string; refreshing: boolean }) {
   const [text, setText] = useState('');
+  const font = useApp((s) => s.settings.font);
 
   useEffect(() => {
     if (!refreshing) return;
@@ -37,7 +39,11 @@ export function SnapshotView({ sessionId, refreshing }: { sessionId: string; ref
   }, [sessionId, refreshing]);
 
   return (
-    <pre className="snapshot" data-testid="snapshot">
+    <pre
+      className="snapshot"
+      data-testid="snapshot"
+      style={{ fontFamily: font.family, fontSize: font.size }}
+    >
       {text}
     </pre>
   );

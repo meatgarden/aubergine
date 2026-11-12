@@ -75,6 +75,7 @@ export function Canvas() {
     return parked.size === 0 ? allNodes : allNodes.filter((n) => !parked.has(n.sessionId));
   }, [allNodes, sessions]);
   const live = useApp((s) => s.live);
+  const theme = useApp((s) => s.settings.theme);
   const focusSession = useApp((s) => s.focusSession);
   const flow = useReactFlow();
   const zoomToNode = useZoomToNode();
@@ -297,7 +298,7 @@ export function Canvas() {
         defaultViewport={initialViewport}
         minZoom={0.1}
         maxZoom={1}
-        colorMode="dark"
+        colorMode={theme}
         nodesConnectable={false}
         zoomOnDoubleClick={false}
         deleteKeyCode={null}

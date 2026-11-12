@@ -1,0 +1,13 @@
+{
+  "name": "Aubergine",
+  "short_name": "Aubergine",
+  "description": "A canvas of terminal sessions.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#17181c",
+  "theme_color": "#17181c",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

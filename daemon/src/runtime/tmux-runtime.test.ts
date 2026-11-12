@@ -106,8 +106,38 @@ describe('shellEnvironment', () => {
       PATH: '/repo/node_modules/.bin:/usr/bin:/bin',
     });
     expect(env.HOME).toBe('/home/u');
-    expect(Object.keys(env).sort()).toEqual(['HOME', 'LANG', 'PATH']);
+    expect(Object.keys(env).sort()).toEqual(['HOME', 'LANG', 'LOGNAME', 'PATH', 'SHELL', 'USER']);
     expect(env.PATH?.split(':')).toEqual(['/usr/bin', '/bin', '/opt/homebrew/bin', '/usr/local/bin']);
+  });
+});
+
+describe('shell environment when the daemon starts outside a terminal', () => {
+  const bare = new TmuxRuntime({ socket: `${SOCKET}-bare`, env: { PATH: '/usr/bin:/bin' } });
+  afterAll(async () => {
+    await bare.killServer();
+  });
+
+  it('still gives sessions a normal login environment', async () => {
+    const id = newId();
+    await bare.create({ id });
+    const attachment = await bare.attach(id, { cols: 200, rows: 24 });
+    const viewer = collect(attachment);
+    attachment.write('echo "home=[$HOME] user=[$USER] shell=[$SHELL] lang=[$LANG] term=[$TERM]"\r');
+    await viewer.waitFor(/home=\[\/[^\]]+\] user=\[[^\]]+\] shell=\[\/[^\]]+\] lang=\[[^\]]+\] term=\[tmux-256color\]/);
+    // The login shell builds PATH from the user's profile, so it has more than the two folders above.
+    attachment.write('echo "paths=$(echo "$PATH" | tr ":" "\\n" | wc -l | tr -d " ")"\r');
+    await viewer.waitFor(/paths=([3-9]|\d\d)/);
+    await bare.kill(id);
+  });
+
+  it('starts the configured shell instead of the default, as a login shell', async () => {
+    const id = newId();
+    await bare.create({ id, shell: '/bin/sh' });
+    const pid = execFileSync('tmux', ['-L', `${SOCKET}-bare`, 'display-message', '-p', '-t', `=${id}:`, '#{pane_pid}'], {
+      encoding: 'utf8',
+    }).trim();
+    expect(execFileSync('ps', ['-o', 'command=', '-p', pid], { encoding: 'utf8' }).trim()).toBe('-sh');
+    await bare.kill(id);
   });
 });
 

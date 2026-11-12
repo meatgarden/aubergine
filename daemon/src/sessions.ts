@@ -27,6 +27,8 @@ export class RuntimeUnavailableError extends Error {}
 export interface SessionsOptions {
   /** Folder new shells start in when nothing better is known. */
   defaultFolder?: () => string | null;
+  /** Shell to start; `null` for the user's own. */
+  shell?: () => string | null;
 }
 
 /**
@@ -63,7 +65,7 @@ export class Sessions {
 
     for (const session of this.canvas.state.sessions) {
       if (session.state === 'exited' || running.has(session.id)) continue;
-      await this.runtime.create({ id: session.id, cwd: this.startFolder(session.cwd) });
+      await this.runtime.create({ id: session.id, cwd: this.startFolder(session.cwd), shell: this.shell() });
     }
 
     const known = new Set(this.canvas.state.sessions.map((s) => s.id));
@@ -78,7 +80,7 @@ export class Sessions {
     const status = await this.status();
     if (status.status !== 'ok') throw new RuntimeUnavailableError(`tmux is ${status.status}`);
     const id = newId();
-    const started = await this.runtime.create({ id, cwd: this.startFolder(null) });
+    const started = await this.runtime.create({ id, cwd: this.startFolder(null), shell: this.shell() });
     return this.record(id, input.name, input.rect, started.cwd);
   }
 
@@ -107,7 +109,7 @@ export class Sessions {
     const session = this.find(sessionId);
     if (session.state !== 'exited') throw new ConflictError('This shell is still running');
     if (!(await this.runtime.has(sessionId))) {
-      await this.runtime.create({ id: sessionId, cwd: this.startFolder(session.cwd) });
+      await this.runtime.create({ id: sessionId, cwd: this.startFolder(session.cwd), shell: this.shell() });
     }
     this.canvas.emit({ type: 'session.restarted', sessionId });
     return this.find(sessionId);
@@ -216,6 +218,11 @@ export class Sessions {
     const session = this.canvas.state.sessions.find((s) => s.id === sessionId);
     if (!session) throw new NotFoundError(`No session ${sessionId}`);
     return session;
+  }
+
+  private shell(): string | null {
+    const shell = this.options.shell?.() ?? null;
+    return shell && existsSync(shell) ? shell : null;
   }
 
   /** The folder to start a shell in: the one asked for if it still exists, else the default, else home. */

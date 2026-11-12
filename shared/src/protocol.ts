@@ -12,6 +12,7 @@ import {
   SessionNote,
 } from './entities';
 import { ChangeEvent } from './events';
+import { Settings } from './settings';
 
 /**
  * The wire protocol between the browser and the daemon. Bump the version and
@@ -55,6 +56,7 @@ export type RuntimeStatus = z.infer<typeof RuntimeStatus>;
 export const StateResponse = z.object({
   protocolVersion: z.literal(PROTOCOL_VERSION),
   runtime: RuntimeStatus,
+  settings: Settings,
   state: CanvasState,
 });
 export type StateResponse = z.infer<typeof StateResponse>;
