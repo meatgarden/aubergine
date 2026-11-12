@@ -744,3 +744,17 @@ code {
   color: #17181c;
   font-weight: 600;
 }
+
+.picker-section {
+  margin-top: 6px;
+  padding: 6px 8px 4px;
+  color: var(--muted);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-top: 1px solid var(--border);
+}
+.picker-line {
+  font-family: Menlo, Monaco, Consolas, monospace;
+  color: var(--text);
+}

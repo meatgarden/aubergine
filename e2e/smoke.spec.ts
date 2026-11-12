@@ -122,6 +122,17 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await expect(node).toHaveCount(1);
   await expect(outputLine(page, 'picked-44')).toHaveCount(1);
 
+  // The picker also searches what terminals have printed, including in a parked session.
+  await page.getByRole('button', { name: /^Park / }).click();
+  await expect(node).toHaveCount(0);
+  await page.getByRole('button', { name: 'Go to…' }).click();
+  await page.getByRole('textbox', { name: 'Search sessions' }).fill('picked-44');
+  await expect(page.getByTestId('picker-output-row').first()).toContainText('picked-44');
+  await page.getByTestId('picker-output-row').first().click();
+  await expect(node).toHaveCount(1);
+  await expect(page.getByTestId('node-shield')).toHaveCount(0);
+  await page.keyboard.press('q'); // leave the scroll-back view the match opened
+
   // When the shell exits, the node says so and offers a restart.
   await page.getByTestId('node-body').click();
   await page.keyboard.type('exit');

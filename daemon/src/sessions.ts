@@ -26,7 +26,7 @@ import {
   type UpdateSessionRequest,
 } from '@aubergine/shared';
 import type { Canvas } from './canvas';
-import type { RuntimeSession, SessionRuntime } from './runtime/runtime';
+import type { HistorySearch, RuntimeSession, SessionRuntime } from './runtime/runtime';
 import { noIntegration, type ShellIntegration, type ShellReport } from './shell/integration';
 
 export class NotFoundError extends Error {}
@@ -285,6 +285,18 @@ export class Sessions {
       shell,
       env: { ...env, ...this.options.sessionEnv?.(sessionId) },
     });
+  }
+
+  /** Searches the terminal history of every running session, parked ones included. */
+  searchHistory(query: string): Promise<HistorySearch> {
+    const ids = this.canvas.state.sessions.filter((s) => s.state !== 'exited').map((s) => s.id);
+    return this.runtime.search(ids, query);
+  }
+
+  /** Scrolls a session's terminal back to where `text` appears. */
+  async reveal(sessionId: string, text: string): Promise<void> {
+    this.find(sessionId);
+    if (this.isRunning(sessionId)) await this.runtime.reveal(sessionId, text);
   }
 
   /** Says whether the session wants the user. Reported by the agent running in it. */

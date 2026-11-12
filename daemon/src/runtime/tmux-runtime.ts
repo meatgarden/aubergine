@@ -10,6 +10,8 @@ import {
   type Attachment,
   type CreateOptions,
   type ExitInfo,
+  type HistoryHit,
+  type HistorySearch,
   type RuntimeSession,
   type SessionRuntime,
   type TerminalDimensions,
@@ -257,6 +259,66 @@ export class TmuxRuntime implements SessionRuntime {
     }
     await this.exec(['send-keys', '-t', `=${name}:`, '-l', '--', line]);
     await this.exec(['send-keys', '-t', `=${name}:`, 'Enter']);
+  }
+
+  async search(
+    ids: readonly string[],
+    query: string,
+    options: { limit?: number; perSession?: number } = {},
+  ): Promise<HistorySearch> {
+    const limit = options.limit ?? 50;
+    const perSession = options.perSession ?? 5;
+    const needle = query.toLowerCase();
+    const hits: HistoryHit[] = [];
+    let truncated = false;
+
+    // A few sessions at a time: each one is a tmux call that returns its whole history.
+    const queue = [...ids];
+    const worker = async (): Promise<void> => {
+      for (let id = queue.shift(); id !== undefined; id = queue.shift()) {
+        let history: string;
+        try {
+          history = await this.exec(['capture-pane', '-p', '-J', '-S', '-', '-t', `=${sessionName(id)}:`]);
+        } catch {
+          continue; // The session ended meanwhile.
+        }
+        const lines = history.split('\n');
+        let found = 0;
+        for (let i = lines.length - 1; i >= 0; i--) {
+          if (!(lines[i] ?? '').toLowerCase().includes(needle)) continue;
+          if (found === perSession) {
+            truncated = true;
+            break;
+          }
+          found += 1;
+          hits.push({
+            sessionId: id,
+            text: lines[i] ?? '',
+            before: lines.slice(Math.max(0, i - 1), i),
+            after: lines.slice(i + 1, i + 2),
+          });
+        }
+      }
+    };
+    await Promise.all(Array.from({ length: Math.min(6, queue.length) }, worker));
+
+    // Keep the order the sessions were given in.
+    const order = new Map(ids.map((id, index) => [id, index]));
+    hits.sort((a, b) => (order.get(a.sessionId) ?? 0) - (order.get(b.sessionId) ?? 0));
+    if (hits.length > limit) truncated = true;
+    return { hits: hits.slice(0, limit), truncated };
+  }
+
+  async reveal(id: string, text: string): Promise<void> {
+    const target = `=${sessionName(id)}:`;
+    try {
+      // tmux's own scroll-back view, searching backwards from the bottom for the text.
+      await this.exec(['copy-mode', '-t', target]);
+      await this.exec(['send-keys', '-X', '-t', target, 'search-backward-text', text]);
+    } catch (error) {
+      if (isNoServer(error) || isNoSession(error)) throw new SessionNotFoundError(id);
+      // Scrolling to the match is a convenience; the session is still shown.
+    }
   }
 
   async snapshot(id: string): Promise<string> {

@@ -16,6 +16,7 @@ import {
   SessionNote,
 } from './entities';
 import { ChangeEvent } from './events';
+import { Id } from './ids';
 import { Settings } from './settings';
 
 /**
@@ -43,6 +44,10 @@ export const paths = {
   node: (nodeId: string) => `/api/v1/nodes/${nodeId}`,
   frames: '/api/v1/frames',
   frame: (frameId: string) => `/api/v1/frames/${frameId}`,
+  /** GET `?q=`: lines in the terminal history of running sessions that contain the text. */
+  search: '/api/v1/search',
+  /** POST: scroll the session's terminal back to where a piece of text appears. */
+  revealInSession: (sessionId: string) => `/api/v1/sessions/${sessionId}/reveal`,
   /** POST: append an entry to the session's note log, as the user. */
   sessionNotes: (sessionId: string) => `/api/v1/sessions/${sessionId}/notes`,
   /**
@@ -143,6 +148,27 @@ export const SESSION_ENV = {
   sessionId: 'AUBERGINE_SESSION_ID',
   token: 'AUBERGINE_TOKEN',
 } as const;
+
+export const SearchQuery = z.object({ q: z.string().trim().min(2).max(200) });
+
+/** One matching line of terminal history, with the lines around it. */
+export const SearchHit = z.object({
+  sessionId: Id,
+  text: z.string(),
+  before: z.array(z.string()),
+  after: z.array(z.string()),
+});
+export type SearchHit = z.infer<typeof SearchHit>;
+
+export const SearchResponse = z.object({
+  hits: z.array(SearchHit),
+  /** True when there were more matches than are returned. */
+  truncated: z.boolean(),
+});
+export type SearchResponse = z.infer<typeof SearchResponse>;
+
+export const RevealRequest = z.object({ text: z.string().min(1).max(200) });
+export type RevealRequest = z.infer<typeof RevealRequest>;
 
 export const SnapshotResponse = z.object({ text: z.string() });
 export type SnapshotResponse = z.infer<typeof SnapshotResponse>;

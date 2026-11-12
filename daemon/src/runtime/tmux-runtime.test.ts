@@ -335,7 +335,52 @@ describe('TmuxRuntime', () => {
     await waitUntil(async () => !(await runtime.has(exiting)));
   });
 
-  it('rejects attaching to or capturing a session that is not running', async () => {
+  it('searches the history of sessions, with nobody viewing them', async () => {
+    const one = newId();
+    const two = newId();
+    await createReady(runtime, one);
+    await createReady(runtime, two);
+    const send = (id: string, text: string): void => {
+      execFileSync('tmux', ['-L', SOCKET, 'send-keys', '-t', `=${id}:`, '-l', text]);
+      execFileSync('tmux', ['-L', SOCKET, 'send-keys', '-t', `=${id}:`, 'Enter']);
+    };
+    // Enough output to push the interesting line off the visible screen and into the history.
+    send(one, 'echo "needle-""in-history"; seq 1 200');
+    send(two, 'echo "nothing to see"; seq 1 5');
+    await waitUntil(async () => (await runtime.snapshot(one)).includes('200'));
+    expect(await runtime.snapshot(one)).not.toContain('needle-in-history');
+
+    const found = await runtime.search([two, one], 'NEEDLE-IN-HISTORY');
+    expect(found.truncated).toBe(false);
+    expect(found.hits).toHaveLength(1);
+    expect(found.hits[0]).toMatchObject({ sessionId: one, text: 'needle-in-history', after: ['1'] });
+
+    // Newest first, capped per session and overall.
+    const many = await runtime.search([one, two], '1', { perSession: 3, limit: 4 });
+    expect(many.truncated).toBe(true);
+    expect(many.hits.filter((h) => h.sessionId === one)).toHaveLength(3);
+    expect(many.hits.find((h) => h.sessionId === one)?.text).toBe('199');
+    expect(many.hits).toHaveLength(4);
+
+    expect((await runtime.search([one, newId()], 'needle-in-history')).hits).toHaveLength(1);
+
+    // Scroll back to the match: tmux's scroll-back view opens, moved up from the bottom.
+    await runtime.reveal(one, 'needle-in-history');
+    await waitUntil(async () => {
+      const [inMode, position] = execFileSync(
+        'tmux',
+        ['-L', SOCKET, 'display-message', '-p', '-t', `=${one}:`, '#{pane_in_mode} #{scroll_position}'],
+        { encoding: 'utf8' },
+      )
+        .trim()
+        .split(' ');
+      return inMode === '1' && Number(position) > 100;
+    });
+    await runtime.kill(one);
+    await runtime.kill(two);
+  });
+
+  it("rejects attaching to or capturing a session that is not running", async () => {
     const id = newId();
     await expect(runtime.attach(id, { cols: 80, rows: 24 })).rejects.toBeInstanceOf(SessionNotFoundError);
     await expect(runtime.snapshot(id)).rejects.toBeInstanceOf(SessionNotFoundError);

@@ -13,6 +13,8 @@ import {
   CreateSessionRequest,
   Id,
   PROTOCOL_VERSION,
+  RevealRequest,
+  SearchQuery,
   SetAttentionRequest,
   UpdateSessionRequest,
   TerminalClientMessage,
@@ -25,6 +27,7 @@ import {
   type ErrorCode,
   type ErrorResponse,
   type EventsServerMessage,
+  type SearchResponse,
   type Settings,
   type SnapshotResponse,
   type StateResponse,
@@ -238,6 +241,17 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
 
   app.delete(paths.frame(':frameId'), async (request, reply: FastifyReply) => {
     sessions.removeFrame(idParam(request, 'frameId'));
+    return reply.code(204).send();
+  });
+
+  app.get(paths.search, async (request): Promise<SearchResponse> => {
+    const { q } = parse(SearchQuery, request.query);
+    return sessions.searchHistory(q);
+  });
+
+  app.post(paths.revealInSession(':sessionId'), async (request, reply: FastifyReply) => {
+    const body = parse(RevealRequest, request.body);
+    await sessions.reveal(idParam(request, 'sessionId'), body.text);
     return reply.code(204).send();
   });
 

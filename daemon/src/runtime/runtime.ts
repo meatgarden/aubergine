@@ -69,8 +69,31 @@ export interface SessionRuntime {
    * once its shell is ready to take input. Resolves when it has been typed.
    */
   typeLine(id: string, line: string): Promise<void>;
+  /**
+   * Looks through the history of the given sessions for lines containing
+   * `query` (case does not matter), newest first within a session. Read on
+   * demand: nothing is indexed or recorded. No viewer is needed.
+   */
+  search(ids: readonly string[], query: string, options?: { limit?: number; perSession?: number }): Promise<HistorySearch>;
+  /** Scrolls the session back to the most recent place `text` appears, for everyone viewing it. */
+  reveal(id: string, text: string): Promise<void>;
   /** The visible screen as plain text. */
   snapshot(id: string): Promise<string>;
+}
+
+export interface HistoryHit {
+  sessionId: string;
+  /** The matching line. */
+  text: string;
+  /** Lines just before and after it, for context. */
+  before: string[];
+  after: string[];
+}
+
+export interface HistorySearch {
+  hits: HistoryHit[];
+  /** True when there were more matches than `limit`. */
+  truncated: boolean;
 }
 
 export class SessionNotFoundError extends Error {

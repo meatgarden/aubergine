@@ -12,6 +12,7 @@ import {
   EventsServerMessage,
   Frame,
   SESSION_ENV,
+  SearchResponse,
   SnapshotResponse,
   StateResponse,
   newId,
@@ -699,6 +700,33 @@ describe('settings', () => {
       // Not the user's own shell: `sh` (which some systems run as bash or dash).
       return current?.cwd === folder && ['sh', 'bash', 'dash'].includes(current.command ?? '');
     }, 'configured shell in the configured folder');
+  });
+});
+
+describe('history search', () => {
+  it('finds text printed in a parked session and leaves out sessions that ended', async () => {
+    const parked = await createSession('quiet one');
+    const ended = await createSession();
+    for (const { session } of [parked, ended]) {
+      const view = terminal(session.id);
+      await waitFor(() => view.socket.readyState === WebSocket.OPEN, 'open');
+      view.socket.send(JSON.stringify({ t: 'input', data: 'echo "find-""me-later"\r' }));
+      await waitFor(() => view.text.includes('find-me-later'), 'output');
+      view.socket.close();
+    }
+    await request('POST', paths.parkSession(parked.session.id), { body: {} });
+    await runtime.kill(ended.session.id);
+    await sessions.refresh();
+
+    const response = await request('GET', `${paths.search}?q=find-me-later`);
+    expect(response.statusCode).toBe(200);
+    const { hits } = SearchResponse.parse(response.json());
+    expect(hits.map((h) => [h.sessionId, h.text])).toEqual([[parked.session.id, 'find-me-later']]);
+
+    expect((await request('GET', `${paths.search}?q=x`)).statusCode).toBe(400);
+    expect((await request('GET', `${paths.search}?q=find-me-later`, { cookie: false })).statusCode).toBe(401);
+    expect((await request('POST', paths.revealInSession(parked.session.id), { body: { text: 'find-me-later' } })).statusCode).toBe(204);
+    expect((await request('POST', paths.revealInSession(newId()), { body: { text: 'x' } })).statusCode).toBe(404);
   });
 });
 
