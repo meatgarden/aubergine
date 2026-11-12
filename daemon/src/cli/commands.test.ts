@@ -27,6 +27,9 @@ describe('parseCommand', () => {
     expect(parseCommand(['new', 'api', 'server'])).toEqual({ name: 'new', sessionName: 'api server' });
     expect(parseCommand(['attach', 'api'])).toEqual({ name: 'attach', query: 'api' });
     expect(parseCommand(['note', 'tests', 'pass'])).toEqual({ name: 'note', text: 'tests pass' });
+    expect(parseCommand(['scan'])).toEqual({ name: 'scan' });
+    expect(parseCommand(['import'])).toEqual({ name: 'import', all: false, dryRun: false });
+    expect(parseCommand(['import', '--dry-run', '--all'])).toEqual({ name: 'import', all: true, dryRun: true });
     expect(parseCommand(['hook', 'stop'])).toEqual({ name: 'hook', event: 'stop' });
     expect(parseCommand(['hooks', 'print'])).toEqual({ name: 'hooks-print' });
     expect(parseCommand(['service', 'install'])).toEqual({ name: 'service', action: 'install' });
@@ -38,6 +41,7 @@ describe('parseCommand', () => {
     expect(() => parseCommand(['note'])).toThrow(UsageError);
     expect(() => parseCommand(['hook', 'explode'])).toThrow(UsageError);
     expect(() => parseCommand(['hooks'])).toThrow(UsageError);
+    expect(() => parseCommand(['import', '--force'])).toThrow(/does not know --force/);
     expect(() => parseCommand(['service'])).toThrow(UsageError);
     expect(() => parseCommand(['service', 'start'])).toThrow(UsageError);
     expect(() => parseCommand(['explode'])).toThrow(/Unknown command/);

@@ -15,6 +15,8 @@ export type Command =
       /** Called from the shell snippet: be quick, be quiet, and report failure by exit code. */
       fromShellHook: boolean;
     }
+  | { name: 'scan' }
+  | { name: 'import'; all: boolean; dryRun: boolean }
   | { name: 'note'; text: string }
   | { name: 'hook'; event: HookEvent }
   | { name: 'hooks-print' }
@@ -29,6 +31,8 @@ export const USAGE = `Usage: aubergine <command>
   here [name] [-- command]   Start a session in this folder and turn this terminal into a view of it
                              --no-attach   only create it
                              --claude      start Claude Code in it, continuing this folder's last conversation
+  scan                       List your open shells that are not on the canvas yet (read-only)
+  import [--all] [--dry-run] Give each of those shells a canvas session in the same folder
   note <text>                Inside a session: add an entry to that session's note log
   hook <event>               For agent hooks: reads the hook's JSON on stdin (prompt, notification, stop)
   hooks print                Print the Claude Code hook settings, to add to your own config by hand
@@ -74,6 +78,14 @@ export function parseCommand(argv: readonly string[]): Command {
         command,
         fromShellHook: flags.includes('--from-shell-hook'),
       };
+    }
+    case 'scan':
+      if (rest.length > 0) throw new UsageError('scan takes no arguments');
+      return { name: 'scan' };
+    case 'import': {
+      const unknown = rest.find((word) => word !== '--all' && word !== '--dry-run');
+      if (unknown) throw new UsageError(`import does not know ${unknown}`);
+      return { name: 'import', all: rest.includes('--all'), dryRun: rest.includes('--dry-run') };
     }
     case 'note':
       if (rest.join(' ').trim() === '') throw new UsageError('note needs some text');

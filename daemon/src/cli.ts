@@ -2,7 +2,14 @@ import { spawnSync } from 'node:child_process';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { CreateSessionResponse, StateResponse, paths } from '@aubergine/shared';
-import { claudeHooksSettings, hookActions, shellJoin, type HookEvent } from './agents/claude-code';
+import {
+  claudeHooksSettings,
+  claudeLaunchLine,
+  hookActions,
+  shellJoin,
+  writeClaudeSettings,
+  type HookEvent,
+} from './agents/claude-code';
 import { agentClient } from './cli/agent';
 import {
   USAGE,
@@ -14,6 +21,7 @@ import {
   resolveSession,
 } from './cli/commands';
 import { loadConfig, type Config } from './config';
+import { formatScan, importLayout, nextStep, planImport, scanShells } from './migrate/shells';
 import { TmuxRuntime } from './runtime/tmux-runtime';
 import { cookieName } from './server';
 import { daemonServiceSpec, installService, uninstallService } from './service/launchd';
@@ -135,6 +143,49 @@ async function main(): Promise<number> {
       const { state } = StateResponse.parse(await call(config, 'GET', paths.state));
       const session = resolveSession(state.sessions, command.query);
       return attachTo(config, session.id);
+    }
+
+    case 'scan': {
+      console.log(formatScan(await scanShells(config)));
+      return 0;
+    }
+
+    case 'import': {
+      const shells = await scanShells(config);
+      const { state } = StateResponse.parse(await call(config, 'GET', paths.state));
+      const plan = planImport(shells, state.sessions, { all: command.all });
+      for (const { shell, reason } of plan.skipped) console.log(`Skipping ${shell.tty}: ${reason}.`);
+      if (plan.create.length === 0) {
+        console.log('Nothing to import.');
+        return 0;
+      }
+
+      const claudeLine = claudeLaunchLine(
+        command.dryRun ? '<settings file>' : await writeClaudeSettings(config.dataDir),
+        { continue: true },
+      );
+      if (command.dryRun) {
+        console.log(`Would create ${plan.create.length} session(s) in a frame named "Imported":`);
+        for (const item of plan.create) {
+          console.log(`\n  ${item.shell.tty}  →  "${item.name}" in ${item.cwd}`);
+          console.log(`      ${nextStep({ shell: item.shell, sessionName: item.name }, claudeLine)}`);
+        }
+        console.log('\nNothing was changed. Your tabs are never touched; run without --dry-run to create the sessions.');
+        return 0;
+      }
+
+      const parked = new Set(state.sessions.filter((s) => s.state === 'parked').map((s) => s.id));
+      const onCanvas = [...state.layout.nodes.filter((n) => !parked.has(n.sessionId)), ...state.layout.frames];
+      const layout = importLayout(plan.create.length, onCanvas);
+      await call(config, 'POST', paths.frames, { label: 'Imported', rect: layout.frame });
+      console.log(`Created ${plan.create.length} session(s) in a frame named "Imported". Your tabs are untouched.`);
+      for (const [index, item] of plan.create.entries()) {
+        const body = { name: item.name, uniqueName: true, cwd: item.cwd, rect: layout.nodes[index] };
+        const { session } = CreateSessionResponse.parse(await call(config, 'POST', paths.sessions, body));
+        console.log(`\n  ${item.shell.tty}  →  "${session.name}" in ${item.cwd}`);
+        console.log(`      ${nextStep({ shell: item.shell, sessionName: session.name }, claudeLine)}`);
+      }
+      return 0;
     }
 
     case 'note': {
