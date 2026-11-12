@@ -11,7 +11,7 @@ import {
   CreateSessionRequest,
   Id,
   PROTOCOL_VERSION,
-  RenameSessionRequest,
+  UpdateSessionRequest,
   TerminalClientMessage,
   TerminalSize,
   UpdateNodeRequest,
@@ -25,7 +25,7 @@ import {
 } from '@aubergine/shared';
 import type { Canvas } from './canvas';
 import { SessionNotFoundError, type Attachment, type SessionRuntime } from './runtime/runtime';
-import { NotFoundError, RuntimeUnavailableError, type Sessions } from './sessions';
+import { ConflictError, NotFoundError, RuntimeUnavailableError, type Sessions } from './sessions';
 import { tokensMatch } from './token';
 
 export interface ServerOptions {
@@ -118,6 +118,9 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     if (error instanceof NotFoundError || error instanceof SessionNotFoundError) {
       return reply.code(404).send(errorBody('not_found', error.message));
     }
+    if (error instanceof ConflictError) {
+      return reply.code(409).send(errorBody('conflict', error.message));
+    }
     if (error instanceof RuntimeUnavailableError) {
       return reply.code(503).send(errorBody('runtime_unavailable', error.message));
     }
@@ -166,9 +169,13 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   });
 
   app.patch(paths.session(':sessionId'), async (request) => {
-    const body = parse(RenameSessionRequest, request.body);
-    return sessions.rename(idParam(request, 'sessionId'), body.name);
+    const body = parse(UpdateSessionRequest, request.body);
+    return sessions.update(idParam(request, 'sessionId'), body);
   });
+
+  app.post(paths.parkSession(':sessionId'), async (request) => sessions.park(idParam(request, 'sessionId')));
+  app.post(paths.restoreSession(':sessionId'), async (request) => sessions.restore(idParam(request, 'sessionId')));
+  app.post(paths.restartSession(':sessionId'), async (request) => sessions.restart(idParam(request, 'sessionId')));
 
   app.delete(paths.session(':sessionId'), async (request, reply: FastifyReply) => {
     await sessions.close(idParam(request, 'sessionId'));
@@ -242,13 +249,13 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     socket.on('error', cleanup);
 
     const sessionEnded = (): void => {
-      sessions.forget(sessionId);
+      sessions.shellEnded(sessionId);
       control({ t: 'exit', reason: 'session_ended' });
       socket.close(CLOSE_SESSION_ENDED, 'Session ended');
     };
 
     void (async () => {
-      if (!sessions.has(sessionId)) return sessionEnded();
+      if (!sessions.isRunning(sessionId)) return sessionEnded();
       let attached: Attachment;
       try {
         attached = await runtime.attach(sessionId, size.data);

@@ -15,12 +15,29 @@ export type Project = z.infer<typeof Project>;
 
 export const SessionName = Name;
 
+/**
+ * `open`: on the canvas with a running shell. `parked`: off the canvas, shell
+ * still running. `exited`: the shell ended by itself; the node stays until
+ * the user restarts or removes it.
+ */
+export const SessionState = z.enum(['open', 'parked', 'exited']);
+export type SessionState = z.infer<typeof SessionState>;
+
+export const SessionNote = z.string().max(200_000);
+
 /** A terminal session. The running shell itself is owned by the session runtime. */
 export const Session = z.object({
   id: Id,
   projectId: Id,
   name: SessionName,
   createdAt: Timestamp,
+  state: SessionState.default('open'),
+  /** Last known working folder of the foreground process. */
+  cwd: z.string().nullable().default(null),
+  /** Name of the foreground command, when known. */
+  command: z.string().nullable().default(null),
+  /** A Markdown note kept with the session. */
+  note: SessionNote.default(''),
 });
 export type Session = z.infer<typeof Session>;
 

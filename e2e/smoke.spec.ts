@@ -41,12 +41,31 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await page.keyboard.press('Enter');
   await expect(outputLine(page, 'again-23')).toHaveCount(1);
 
-  // Closing asks first, then removes the node.
-  await page.getByRole('button', { name: /^Close Terminal/ }).click();
+  // Parking takes the node off the canvas but keeps the shell.
+  await page.getByRole('button', { name: /^Park Terminal/ }).click();
+  await expect(node).toHaveCount(0);
+  await page.getByRole('button', { name: 'Parked (1)' }).click();
+  await page.getByRole('button', { name: 'Restore' }).click();
+  await expect(node).toHaveCount(1);
+  await expect(outputLine(page, 'again-23')).toHaveCount(1);
+
+  // When the shell exits, the node says so and offers a restart.
+  await page.getByTestId('node-body').click();
+  await page.keyboard.type('exit');
+  await page.keyboard.press('Enter');
+  await expect(page.getByTestId('node-ended')).toContainText('This shell has ended');
+  await page.getByRole('button', { name: 'Restart here' }).click();
+  await expect(terminal).toHaveAttribute('data-link', 'open');
+
+  // Ending a parked session for good asks first.
+  await page.getByRole('button', { name: /^Park Terminal/ }).click();
+  await page.getByRole('button', { name: 'Parked (1)' }).click();
+  await page.getByRole('button', { name: 'End', exact: true }).click();
   await expect(page.getByRole('alertdialog')).toContainText('ends the shell');
   await page.getByRole('button', { name: 'Cancel' }).click();
-  await expect(node).toHaveCount(1);
-  await page.getByRole('button', { name: /^Close Terminal/ }).click();
-  await page.getByRole('button', { name: 'Close terminal', exact: true }).click();
+  await page.getByRole('button', { name: 'Parked (1)' }).click();
+  await page.getByRole('button', { name: 'End', exact: true }).click();
+  await page.getByRole('button', { name: 'End session' }).click();
+  await expect(page.getByRole('button', { name: /Parked/ })).toHaveCount(0);
   await expect(node).toHaveCount(0);
 });

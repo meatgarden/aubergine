@@ -6,7 +6,7 @@ import {
   EventsServerMessage,
   NODE_MIN_WIDTH,
   PROTOCOL_VERSION,
-  RenameSessionRequest,
+  UpdateSessionRequest,
   StateResponse,
   TerminalClientMessage,
   TerminalServerMessage,
@@ -26,6 +26,10 @@ function fixture(): { state: CanvasState; session: Session; node: LayoutNode } {
     projectId: state.project.id,
     name: 'build',
     createdAt: '2026-01-01T00:00:00.000Z',
+    state: 'open',
+    cwd: null,
+    command: null,
+    note: '',
   };
   const node: LayoutNode = {
     id: newId(),
@@ -69,8 +73,10 @@ describe('HTTP schemas', () => {
   it('validates create, rename and node update requests', () => {
     expect(CreateSessionRequest.safeParse({}).success).toBe(true);
     expect(CreateSessionRequest.parse({ name: '  logs  ' }).name).toBe('logs');
-    expect(RenameSessionRequest.safeParse({ name: '   ' }).success).toBe(false);
-    expect(RenameSessionRequest.safeParse({ name: 'x'.repeat(81) }).success).toBe(false);
+    expect(UpdateSessionRequest.safeParse({ name: '   ' }).success).toBe(false);
+    expect(UpdateSessionRequest.safeParse({}).success).toBe(false);
+    expect(UpdateSessionRequest.safeParse({ note: 'text' }).success).toBe(true);
+    expect(UpdateSessionRequest.safeParse({ name: 'x'.repeat(81) }).success).toBe(false);
     expect(UpdateNodeRequest.safeParse({ x: 0, y: 0, width: 800, height: 500 }).success).toBe(true);
     expect(
       UpdateNodeRequest.safeParse({ x: 0, y: 0, width: NODE_MIN_WIDTH - 1, height: 500 }).success,
@@ -134,6 +140,35 @@ describe('applyEvent', () => {
     expect(closed.sessions).toEqual([]);
     expect(closed.layout.nodes).toEqual([]);
     expect(CanvasState.safeParse(closed).success).toBe(true);
+  });
+
+  it('parks, restores, exits and restarts a session without touching its node', () => {
+    const { state, session, node } = fixture();
+    const id = session.id;
+    let current = applyEvent(state, { type: 'session.created', session, node });
+    current = applyEvent(current, { type: 'session.activity', sessionId: id, cwd: '/tmp', command: 'vim' });
+    expect(current.sessions[0]).toMatchObject({ cwd: '/tmp', command: 'vim' });
+
+    current = applyEvent(current, { type: 'session.parked', sessionId: id });
+    expect(current.sessions[0]?.state).toBe('parked');
+    expect(current.layout.nodes).toEqual([node]);
+    current = applyEvent(current, { type: 'session.restored', sessionId: id });
+    expect(current.sessions[0]?.state).toBe('open');
+
+    current = applyEvent(current, { type: 'session.exited', sessionId: id });
+    expect(current.sessions[0]).toMatchObject({ state: 'exited', cwd: '/tmp', command: null });
+    current = applyEvent(current, { type: 'session.restarted', sessionId: id });
+    expect(current.sessions[0]?.state).toBe('open');
+
+    current = applyEvent(current, { type: 'session.noted', sessionId: id, note: '# billing bug' });
+    expect(current.sessions[0]?.note).toBe('# billing bug');
+  });
+
+  it('reads sessions saved before these fields existed', () => {
+    const { state, session } = fixture();
+    const { state: _s, cwd: _c, command: _m, note: _n, ...old } = session;
+    const parsed = CanvasState.parse({ ...state, sessions: [old] });
+    expect(parsed.sessions[0]).toMatchObject({ state: 'open', cwd: null, command: null, note: '' });
   });
 
   it('does not mutate the previous state', () => {

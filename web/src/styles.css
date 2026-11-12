@@ -282,3 +282,68 @@ code {
 .message-card p:last-child {
   margin-bottom: 0;
 }
+
+/* ---------- Ended shell ---------- */
+
+.node-ended {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: var(--muted);
+  cursor: default;
+}
+.node-ended p {
+  margin: 0;
+}
+.node-ended-actions {
+  display: flex;
+  gap: 8px;
+}
+.node-ended-folder {
+  font-family: Menlo, Monaco, Consolas, monospace;
+  font-size: 12px;
+}
+
+/* ---------- Parked list ---------- */
+
+.parked {
+  position: relative;
+}
+.parked-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  width: 340px;
+  max-height: 60vh;
+  overflow: auto;
+  padding: 6px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.45);
+}
+.parked-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px;
+  border-radius: 6px;
+}
+.parked-row:hover {
+  background: var(--panel-hover);
+}
+.parked-info {
+  flex: 1;
+  min-width: 0;
+}
+.parked-info div {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.parked-detail {
+  color: var(--muted);
+  font-size: 12px;
+}

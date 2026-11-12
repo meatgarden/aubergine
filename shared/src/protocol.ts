@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { CanvasState, LayoutNode, NodeRect, Session, SessionName } from './entities';
+import { CanvasState, LayoutNode, NodeRect, Session, SessionName, SessionNote } from './entities';
 import { ChangeEvent } from './events';
 
 /**
@@ -14,6 +14,12 @@ export const paths = {
   state: '/api/v1/state',
   sessions: '/api/v1/sessions',
   session: (sessionId: string) => `/api/v1/sessions/${sessionId}`,
+  /** POST: take the session off the canvas, keeping its shell. */
+  parkSession: (sessionId: string) => `/api/v1/sessions/${sessionId}/park`,
+  /** POST: put a parked session back on the canvas. */
+  restoreSession: (sessionId: string) => `/api/v1/sessions/${sessionId}/restore`,
+  /** POST: start a new shell for a session whose shell exited. */
+  restartSession: (sessionId: string) => `/api/v1/sessions/${sessionId}/restart`,
   node: (nodeId: string) => `/api/v1/nodes/${nodeId}`,
   /** WebSocket: stream of change events. */
   events: '/ws/v1/events',
@@ -48,8 +54,12 @@ export type CreateSessionRequest = z.infer<typeof CreateSessionRequest>;
 export const CreateSessionResponse = z.object({ session: Session, node: LayoutNode });
 export type CreateSessionResponse = z.infer<typeof CreateSessionResponse>;
 
-export const RenameSessionRequest = z.object({ name: SessionName });
-export type RenameSessionRequest = z.infer<typeof RenameSessionRequest>;
+/** PATCH body: any of the fields the user can edit. */
+export const UpdateSessionRequest = z
+  .object({ name: SessionName, note: SessionNote })
+  .partial()
+  .refine((body) => body.name !== undefined || body.note !== undefined, 'Nothing to update');
+export type UpdateSessionRequest = z.infer<typeof UpdateSessionRequest>;
 
 export const UpdateNodeRequest = NodeRect;
 export type UpdateNodeRequest = z.infer<typeof UpdateNodeRequest>;
@@ -59,6 +69,7 @@ export const ErrorCode = z.enum([
   'unauthorized',
   'forbidden',
   'not_found',
+  'conflict',
   'runtime_unavailable',
   'internal',
 ]);

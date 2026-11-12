@@ -11,8 +11,9 @@ import {
   type NodeChange,
   type Viewport,
 } from '@xyflow/react';
-import { NODE_DEFAULT_HEIGHT, NODE_DEFAULT_WIDTH, findFreeRect, type LayoutNode } from '@aubergine/shared';
+import { NODE_DEFAULT_HEIGHT, NODE_DEFAULT_WIDTH, findFreeRect, type LayoutNode, type Session } from '@aubergine/shared';
 import { api } from './api';
+import { ParkedList } from './ParkedList';
 import { useApp } from './store';
 import { canvasShortcut, isCanvasChord, isMac, isTypingTarget } from './keys';
 import { TerminalNode, type TerminalFlowNode } from './TerminalNode';
@@ -21,6 +22,7 @@ import { isFullZoom, loadViewport, saveViewport, useZoomToNode } from './viewpor
 const nodeTypes = { terminal: TerminalNode };
 const initialViewport = loadViewport();
 const noNodes: LayoutNode[] = [];
+const noSessions: Session[] = [];
 
 function toFlowNode(node: LayoutNode, previous: TerminalFlowNode | undefined): TerminalFlowNode {
   return {
@@ -37,7 +39,13 @@ function toFlowNode(node: LayoutNode, previous: TerminalFlowNode | undefined): T
 }
 
 export function Canvas() {
-  const layout = useApp((s) => s.canvas?.layout.nodes ?? noNodes);
+  const allNodes = useApp((s) => s.canvas?.layout.nodes ?? noNodes);
+  const sessions = useApp((s) => s.canvas?.sessions ?? noSessions);
+  // Parked sessions keep their place in the layout but are not on the canvas.
+  const layout = useMemo(() => {
+    const parked = new Set(sessions.filter((x) => x.state === 'parked').map((x) => x.id));
+    return parked.size === 0 ? allNodes : allNodes.filter((n) => !parked.has(n.sessionId));
+  }, [allNodes, sessions]);
   const live = useApp((s) => s.live);
   const focusSession = useApp((s) => s.focusSession);
   const flow = useReactFlow();
@@ -212,6 +220,7 @@ export function Canvas() {
           >
             {percent}
           </button>
+          <ParkedList onRestored={(nodeId) => requestAnimationFrame(() => requestAnimationFrame(() => zoomToNode(nodeId, { reveal: true })))} />
           {!live && <span className="warning">Reconnecting…</span>}
           {error && <span className="warning">{error}</span>}
         </Panel>

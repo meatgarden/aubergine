@@ -10,18 +10,16 @@ export type TerminalFlowNode = Node<{ sessionId: string }, 'terminal'>;
 
 export const TerminalNode = memo(function TerminalNode({ id, data, selected }: NodeProps<TerminalFlowNode>) {
   const { sessionId } = data;
-  const name = useApp((s) => s.canvas?.sessions.find((x) => x.id === sessionId)?.name ?? '');
-  const askToClose = useApp((s) => s.askToClose);
+  const session = useApp((s) => s.canvas?.sessions.find((x) => x.id === sessionId));
+  const name = session?.name ?? '';
+  const exited = session?.state === 'exited';
   const interactive = useIsFullZoom();
   const [draft, setDraft] = useState<string | null>(null);
-  // Whether this node's terminal holds keyboard focus.
-  const [focused, setFocused] = useState(false);
-  const live = interactive && focused;
 
   const commitName = (): void => {
     const next = draft?.trim();
     setDraft(null);
-    if (next && next !== name) void api.renameSession(sessionId, { name: next });
+    if (next && next !== name) void api.updateSession(sessionId, { name: next });
   };
 
   return (
@@ -59,33 +57,56 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
         <button
           type="button"
           className="node-close nodrag"
-          aria-label={`Close ${name}`}
-          title="Close terminal"
-          onClick={() => askToClose(sessionId)}
+          aria-label={exited ? `Remove ${name}` : `Park ${name}`}
+          title={exited ? 'Remove' : 'Park: take it off the canvas, the shell keeps running'}
+          onClick={() => void (exited ? api.closeSession(sessionId) : api.parkSession(sessionId))}
         >
           ×
         </button>
       </header>
-      {/*
-        The body never drags or pans the canvas. Until its terminal has focus
-        (and whenever the view is zoomed out) a shield covers it: the wheel
-        then belongs to the canvas, and a click focuses the terminal.
-      */}
-      <div
-        className={`node-body nodrag nopan${live ? ' nowheel' : ''}`}
-        onFocus={() => setFocused(true)}
-        onBlur={() => setFocused(false)}
-        data-testid="node-body"
-      >
-        <TerminalView sessionId={sessionId} interactive={interactive} />
-        {!live && (
-          <div
-            className={`node-shield${interactive ? '' : ' zoomed-out'}`}
-            title={interactive ? 'Click to use this terminal' : 'Click to zoom in and use this terminal'}
-            data-testid="node-shield"
-          />
-        )}
-      </div>
+      {exited ? (
+        <div className="node-body node-ended nodrag" data-testid="node-ended">
+          <p>This shell has ended.</p>
+          <div className="node-ended-actions">
+            <button type="button" onClick={() => void api.restartSession(sessionId)}>
+              Restart here
+            </button>
+            <button type="button" className="quiet" onClick={() => void api.closeSession(sessionId)}>
+              Remove
+            </button>
+          </div>
+          {session?.cwd && <p className="node-ended-folder">{session.cwd}</p>}
+        </div>
+      ) : (
+        <LiveBody sessionId={sessionId} interactive={interactive} />
+      )}
     </div>
   );
 });
+
+/**
+ * The body never drags or pans the canvas. Until its terminal has focus (and
+ * whenever the view is zoomed out) a shield covers it: the wheel then belongs
+ * to the canvas, and a click focuses the terminal.
+ */
+function LiveBody({ sessionId, interactive }: { sessionId: string; interactive: boolean }) {
+  const [focused, setFocused] = useState(false);
+  const live = interactive && focused;
+  return (
+    <div
+      className={`node-body nodrag nopan${live ? ' nowheel' : ''}`}
+      onFocus={() => setFocused(true)}
+      onBlur={() => setFocused(false)}
+      data-testid="node-body"
+    >
+      <TerminalView sessionId={sessionId} interactive={interactive} />
+      {!live && (
+        <div
+          className={`node-shield${interactive ? '' : ' zoomed-out'}`}
+          title={interactive ? 'Click to use this terminal' : 'Click to zoom in and use this terminal'}
+          data-testid="node-shield"
+        />
+      )}
+    </div>
+  );
+}

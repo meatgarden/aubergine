@@ -24,6 +24,10 @@ function withSession(state: CanvasState, name: string): CanvasState {
       projectId: state.project.id,
       name,
       createdAt: new Date().toISOString(),
+      state: 'open',
+      cwd: null,
+      command: null,
+      note: '',
     },
     node: { id: newId(), sessionId, x: 0, y: 0, width: 720, height: 440 },
   };
@@ -52,7 +56,8 @@ describe('JsonStore', () => {
     await store.save(state);
     const raw = JSON.parse(await readFile(store.file, 'utf8'));
     expect(raw.version).toBe(1);
-    expect(Object.keys(raw.sessions[0]).sort()).toEqual(['createdAt', 'id', 'name', 'projectId']);
+    expect(raw.sessions[0]).not.toHaveProperty('x');
+    expect(raw.sessions[0]).not.toHaveProperty('width');
     expect(raw.layout.nodes[0].sessionId).toBe(raw.sessions[0].id);
   });
 
@@ -109,6 +114,16 @@ describe('JsonStore', () => {
     await writeFile(store.file, JSON.stringify({ version: 1, sessions: [{ id: 'nope' }] }));
     expect((await store.load()).sessions).toEqual([]);
     expect((await readdir(dir))[0]).toMatch(/unreadable/);
+  });
+
+  it('reads a state file written before sessions had a state, folder or note', async () => {
+    const store = new JsonStore(dir);
+    const state = withSession(await store.load(), 'old');
+    await store.save(state);
+    const raw = JSON.parse(await readFile(store.file, 'utf8'));
+    for (const key of ['state', 'cwd', 'command', 'note']) delete raw.sessions[0][key];
+    await writeFile(store.file, JSON.stringify(raw));
+    expect((await new JsonStore(dir).load()).sessions[0]).toMatchObject({ name: 'old', state: 'open', cwd: null, note: '' });
   });
 
   it('drops layout nodes whose session no longer exists', async () => {

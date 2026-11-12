@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { api } from './api';
 import { useApp } from './store';
 
-/** Closing a terminal ends its shell, so it always asks first. */
+/** Ending a session kills its shell, so it always asks first. */
 export function CloseDialog() {
   const sessionId = useApp((s) => s.closing);
   const session = useApp((s) => s.canvas?.sessions.find((x) => x.id === sessionId));
@@ -42,7 +42,7 @@ export function CloseDialog() {
       }}
     >
       <div className="dialog" role="alertdialog" aria-modal="true" aria-labelledby="close-title">
-        <h2 id="close-title">Close “{session.name}”?</h2>
+        <h2 id="close-title">End “{session.name}”?</h2>
         <p>This ends the shell and anything still running in it. It cannot be undone.</p>
         {error && <p className="dialog-error">{error}</p>}
         <div className="dialog-actions">
@@ -50,7 +50,7 @@ export function CloseDialog() {
             Cancel
           </button>
           <button type="button" className="danger" disabled={busy} onClick={() => void confirm()}>
-            Close terminal
+            End session
           </button>
         </div>
       </div>
