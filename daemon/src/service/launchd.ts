@@ -6,6 +6,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { Config } from '../config';
 import { shellEnvironment } from '../runtime/tmux-runtime';
+import { stableNodePath } from '../node-path';
 
 /**
  * Start at login, for macOS: a per-user launchd agent that runs the daemon.
@@ -84,7 +85,7 @@ export function daemonServiceSpec(config: Config, env: NodeJS.ProcessEnv = proce
   return {
     label: SERVICE_LABEL,
     // An absolute Node path, because launchd does not search the user's PATH.
-    programArguments: [process.execPath, require.resolve('tsx/cli'), path.join(daemonDir, 'src', 'main.ts')],
+    programArguments: [stableNodePath(), require.resolve('tsx/cli'), path.join(daemonDir, 'src', 'main.ts')],
     workingDirectory: daemonDir,
     environment,
     logFile: path.join(config.dataDir, 'daemon.log'),

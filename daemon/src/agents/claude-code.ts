@@ -2,6 +2,7 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { AttentionState, NoteEntry } from '@aubergine/shared';
+import { stableNodePath } from '../node-path';
 
 /**
  * Claude Code support: hooks that tell the canvas when an agent starts
@@ -69,7 +70,7 @@ function shellQuote(value: string): string {
 /** The command line that runs the `aubergine` command from this checkout. */
 export function aubergineCommand(): string {
   const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
-  return `${shellQuote(process.execPath)} ${shellQuote(path.join(root, 'bin', 'aubergine.mjs'))}`;
+  return `${shellQuote(stableNodePath())} ${shellQuote(path.join(root, 'bin', 'aubergine.mjs'))}`;
 }
 
 /**
