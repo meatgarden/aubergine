@@ -1,6 +1,18 @@
 import { z } from 'zod';
-import { CanvasState, LayoutNode, NodeRect, Session, SessionName } from './entities';
+import {
+  CanvasState,
+  Frame,
+  FrameLabel,
+  FrameRect,
+  LayoutNode,
+  NodeColor,
+  NodeRect,
+  Session,
+  SessionName,
+  SessionNote,
+} from './entities';
 import { ChangeEvent } from './events';
+import { Settings } from './settings';
 
 /**
  * The wire protocol between the browser and the daemon. Bump the version and
@@ -14,7 +26,17 @@ export const paths = {
   state: '/api/v1/state',
   sessions: '/api/v1/sessions',
   session: (sessionId: string) => `/api/v1/sessions/${sessionId}`,
+  /** POST: take the session off the canvas, keeping its shell. */
+  parkSession: (sessionId: string) => `/api/v1/sessions/${sessionId}/park`,
+  /** POST: put a parked session back on the canvas. */
+  restoreSession: (sessionId: string) => `/api/v1/sessions/${sessionId}/restore`,
+  /** POST: start a new shell for a session whose shell exited. */
+  restartSession: (sessionId: string) => `/api/v1/sessions/${sessionId}/restart`,
+  /** GET: the session's visible screen as plain text. */
+  snapshot: (sessionId: string) => `/api/v1/sessions/${sessionId}/snapshot`,
   node: (nodeId: string) => `/api/v1/nodes/${nodeId}`,
+  frames: '/api/v1/frames',
+  frame: (frameId: string) => `/api/v1/frames/${frameId}`,
   /** WebSocket: stream of change events. */
   events: '/ws/v1/events',
   /** WebSocket: one terminal viewer. Query: `cols`, `rows`. */
@@ -34,6 +56,7 @@ export type RuntimeStatus = z.infer<typeof RuntimeStatus>;
 export const StateResponse = z.object({
   protocolVersion: z.literal(PROTOCOL_VERSION),
   runtime: RuntimeStatus,
+  settings: Settings,
   state: CanvasState,
 });
 export type StateResponse = z.infer<typeof StateResponse>;
@@ -48,17 +71,39 @@ export type CreateSessionRequest = z.infer<typeof CreateSessionRequest>;
 export const CreateSessionResponse = z.object({ session: Session, node: LayoutNode });
 export type CreateSessionResponse = z.infer<typeof CreateSessionResponse>;
 
-export const RenameSessionRequest = z.object({ name: SessionName });
-export type RenameSessionRequest = z.infer<typeof RenameSessionRequest>;
+/** PATCH body: any of the fields the user can edit. */
+export const UpdateSessionRequest = z
+  .object({ name: SessionName, note: SessionNote })
+  .partial()
+  .refine((body) => body.name !== undefined || body.note !== undefined, 'Nothing to update');
+export type UpdateSessionRequest = z.infer<typeof UpdateSessionRequest>;
 
-export const UpdateNodeRequest = NodeRect;
+/** PUT body for a node: where it is, and optionally its color. */
+export const UpdateNodeRequest = NodeRect.extend({ color: NodeColor.optional() });
 export type UpdateNodeRequest = z.infer<typeof UpdateNodeRequest>;
+
+export const CreateFrameRequest = z.object({ label: FrameLabel.optional(), rect: FrameRect });
+export type CreateFrameRequest = z.infer<typeof CreateFrameRequest>;
+
+/** PUT body for a frame. With `carry`, nodes lying inside the frame move with it. */
+export const UpdateFrameRequest = FrameRect.extend({
+  label: FrameLabel.optional(),
+  color: NodeColor.optional(),
+  carry: z.boolean().optional(),
+});
+export type UpdateFrameRequest = z.infer<typeof UpdateFrameRequest>;
+
+export const FrameResponse = Frame;
+
+export const SnapshotResponse = z.object({ text: z.string() });
+export type SnapshotResponse = z.infer<typeof SnapshotResponse>;
 
 export const ErrorCode = z.enum([
   'bad_request',
   'unauthorized',
   'forbidden',
   'not_found',
+  'conflict',
   'runtime_unavailable',
   'internal',
 ]);

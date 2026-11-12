@@ -13,7 +13,7 @@ export const e2e = {
 
 export default defineConfig({
   testDir: 'e2e',
-  timeout: 60_000,
+  timeout: 30_000,
   workers: 1,
   reporter: [['list']],
   globalTeardown: './e2e/teardown.ts',

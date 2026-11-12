@@ -3,10 +3,11 @@ import {
   CanvasState,
   ChangeEvent,
   CreateSessionRequest,
+  DEFAULT_SETTINGS,
   EventsServerMessage,
   NODE_MIN_WIDTH,
   PROTOCOL_VERSION,
-  RenameSessionRequest,
+  UpdateSessionRequest,
   StateResponse,
   TerminalClientMessage,
   TerminalServerMessage,
@@ -15,6 +16,8 @@ import {
   applyEvent,
   createInitialState,
   newId,
+  nodesInside,
+  type Frame,
   type LayoutNode,
   type Session,
 } from './index';
@@ -26,6 +29,10 @@ function fixture(): { state: CanvasState; session: Session; node: LayoutNode } {
     projectId: state.project.id,
     name: 'build',
     createdAt: '2026-01-01T00:00:00.000Z',
+    state: 'open',
+    cwd: null,
+    command: null,
+    note: '',
   };
   const node: LayoutNode = {
     id: newId(),
@@ -34,6 +41,7 @@ function fixture(): { state: CanvasState; session: Session; node: LayoutNode } {
     y: 20,
     width: 720,
     height: 440,
+    color: 'none',
   };
   return { state, session, node };
 }
@@ -60,6 +68,7 @@ describe('HTTP schemas', () => {
     const body = {
       protocolVersion: PROTOCOL_VERSION,
       runtime: { status: 'ok', version: '3.8', minVersion: '3.2' },
+      settings: DEFAULT_SETTINGS,
       state,
     };
     expect(StateResponse.safeParse(body).success).toBe(true);
@@ -69,8 +78,10 @@ describe('HTTP schemas', () => {
   it('validates create, rename and node update requests', () => {
     expect(CreateSessionRequest.safeParse({}).success).toBe(true);
     expect(CreateSessionRequest.parse({ name: '  logs  ' }).name).toBe('logs');
-    expect(RenameSessionRequest.safeParse({ name: '   ' }).success).toBe(false);
-    expect(RenameSessionRequest.safeParse({ name: 'x'.repeat(81) }).success).toBe(false);
+    expect(UpdateSessionRequest.safeParse({ name: '   ' }).success).toBe(false);
+    expect(UpdateSessionRequest.safeParse({}).success).toBe(false);
+    expect(UpdateSessionRequest.safeParse({ note: 'text' }).success).toBe(true);
+    expect(UpdateSessionRequest.safeParse({ name: 'x'.repeat(81) }).success).toBe(false);
     expect(UpdateNodeRequest.safeParse({ x: 0, y: 0, width: 800, height: 500 }).success).toBe(true);
     expect(
       UpdateNodeRequest.safeParse({ x: 0, y: 0, width: NODE_MIN_WIDTH - 1, height: 500 }).success,
@@ -134,6 +145,67 @@ describe('applyEvent', () => {
     expect(closed.sessions).toEqual([]);
     expect(closed.layout.nodes).toEqual([]);
     expect(CanvasState.safeParse(closed).success).toBe(true);
+  });
+
+  it('parks, restores, exits and restarts a session without touching its node', () => {
+    const { state, session, node } = fixture();
+    const id = session.id;
+    let current = applyEvent(state, { type: 'session.created', session, node });
+    current = applyEvent(current, { type: 'session.activity', sessionId: id, cwd: '/tmp', command: 'vim' });
+    expect(current.sessions[0]).toMatchObject({ cwd: '/tmp', command: 'vim' });
+
+    current = applyEvent(current, { type: 'session.parked', sessionId: id });
+    expect(current.sessions[0]?.state).toBe('parked');
+    expect(current.layout.nodes).toEqual([node]);
+    current = applyEvent(current, { type: 'session.restored', sessionId: id });
+    expect(current.sessions[0]?.state).toBe('open');
+
+    current = applyEvent(current, { type: 'session.exited', sessionId: id });
+    expect(current.sessions[0]).toMatchObject({ state: 'exited', cwd: '/tmp', command: null });
+    current = applyEvent(current, { type: 'session.restarted', sessionId: id });
+    expect(current.sessions[0]?.state).toBe('open');
+
+    current = applyEvent(current, { type: 'session.noted', sessionId: id, note: '# billing bug' });
+    expect(current.sessions[0]?.note).toBe('# billing bug');
+  });
+
+  it('reads sessions saved before these fields existed', () => {
+    const { state, session } = fixture();
+    const { state: _s, cwd: _c, command: _m, note: _n, ...old } = session;
+    const parsed = CanvasState.parse({ ...state, sessions: [old] });
+    expect(parsed.sessions[0]).toMatchObject({ state: 'open', cwd: null, command: null, note: '' });
+  });
+
+  it('creates, updates and removes frames, leaving nodes alone', () => {
+    const { state, session, node } = fixture();
+    const frame: Frame = { id: newId(), label: 'API', x: -40, y: -40, width: 900, height: 600, color: 'blue' };
+    let current = applyEvent(state, { type: 'session.created', session, node });
+    current = applyEvent(current, { type: 'frame.created', frame });
+    expect(current.layout.frames).toEqual([frame]);
+    current = applyEvent(current, { type: 'frame.updated', frame: { ...frame, label: 'Backend' } });
+    expect(current.layout.frames[0]?.label).toBe('Backend');
+    expect(current.layout.nodes).toEqual([node]);
+    current = applyEvent(current, { type: 'node.updated', node: { ...node, color: 'green' } });
+    expect(current.layout.frames).toHaveLength(1);
+    current = applyEvent(current, { type: 'frame.removed', frameId: frame.id });
+    expect(current.layout.frames).toEqual([]);
+    expect(current.layout.nodes[0]?.color).toBe('green');
+  });
+
+  it('reads layouts saved before frames and colors existed', () => {
+    const { state, node } = fixture();
+    const { color: _c, ...oldNode } = node;
+    const parsed = CanvasState.parse({ ...state, sessions: [], layout: { nodes: [oldNode] } });
+    expect(parsed.layout.frames).toEqual([]);
+    expect(parsed.layout.nodes[0]?.color).toBe('none');
+  });
+
+  it('knows which nodes lie inside a frame', () => {
+    const frame = { x: 0, y: 0, width: 1000, height: 600 };
+    const inside = { x: 10, y: 10, width: 720, height: 440 };
+    const straddling = { x: 500, y: 10, width: 720, height: 440 };
+    const outside = { x: 2000, y: 0, width: 720, height: 440 };
+    expect(nodesInside(frame, [inside, straddling, outside])).toEqual([inside]);
   });
 
   it('does not mutate the previous state', () => {

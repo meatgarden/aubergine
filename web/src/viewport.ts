@@ -46,18 +46,29 @@ const TOP_MARGIN = 72; // leaves room for the toolbar
  * Returns a function that brings a zoomed-out view to 100% on a node:
  * centered when it fits in the window, otherwise with its top-left corner in
  * view. At 100% it leaves the view alone, so a click never shifts the canvas
- * under the pointer.
+ * under the pointer; pass `reveal` to also move a 100% view when the node is
+ * not fully on screen.
  */
-export function useZoomToNode(): (nodeId: string) => void {
+export function useZoomToNode(): (nodeId: string, options?: { reveal?: boolean }) => void {
   const flow = useReactFlow();
   return useCallback(
-    (nodeId: string) => {
+    (nodeId: string, options?: { reveal?: boolean }) => {
       const node = flow.getNode(nodeId);
       const pane = document.querySelector('.react-flow');
-      if (!node || !pane || isFullZoom(flow.getViewport().zoom)) return;
+      if (!node || !pane) return;
       const view = pane.getBoundingClientRect();
       const width = node.measured?.width ?? node.width ?? 0;
       const height = node.measured?.height ?? node.height ?? 0;
+
+      const current = flow.getViewport();
+      if (isFullZoom(current.zoom)) {
+        if (!options?.reveal) return;
+        const left = node.position.x + current.x;
+        const top = node.position.y + current.y;
+        const onScreen =
+          left >= 0 && top >= TOP_MARGIN - MARGIN && left + width <= view.width && top + height <= view.height;
+        if (onScreen) return;
+      }
 
       const x = width + 2 * MARGIN <= view.width ? (view.width - width) / 2 : MARGIN;
       const y =

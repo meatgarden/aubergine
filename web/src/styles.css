@@ -13,6 +13,25 @@
   color: var(--text);
 }
 
+:root[data-theme='light'] {
+  --bg: #eceef2;
+  --panel: #ffffff;
+  --panel-hover: #eef0f4;
+  --border: #c9cdd6;
+  --text: #24262b;
+  --muted: #6b7080;
+  --accent: #8a5a84;
+  --accent-strong: #7a4a74;
+  --terminal-bg: #fbfbfc;
+}
+:root[data-theme='light'] .react-flow {
+  --xy-background-pattern-dots-color-default: #c5c9d2;
+}
+:root[data-theme='light'] .react-flow .minimap {
+  --xy-minimap-mask-background-color: rgb(200 204 214 / 0.6);
+  --xy-minimap-node-background-color: #a9aebb;
+}
+
 html,
 body,
 #root {
@@ -179,6 +198,9 @@ code {
 .node-shield {
   position: absolute;
   inset: 0;
+  cursor: default;
+}
+.node-shield.zoomed-out {
   cursor: zoom-in;
 }
 
@@ -278,4 +300,316 @@ code {
 }
 .message-card p:last-child {
   margin-bottom: 0;
+}
+
+/* ---------- Ended shell ---------- */
+
+.node-ended {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: var(--muted);
+  cursor: default;
+}
+.node-ended p {
+  margin: 0;
+}
+.node-ended-actions {
+  display: flex;
+  gap: 8px;
+}
+.node-ended-folder {
+  font-family: Menlo, Monaco, Consolas, monospace;
+  font-size: 12px;
+}
+
+/* ---------- Parked list ---------- */
+
+.parked {
+  position: relative;
+}
+.parked-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  width: 340px;
+  max-height: 60vh;
+  overflow: auto;
+  padding: 6px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.45);
+}
+.parked-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px;
+  border-radius: 6px;
+}
+.parked-row:hover {
+  background: var(--panel-hover);
+}
+.parked-info {
+  flex: 1;
+  min-width: 0;
+}
+.parked-info div {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.parked-detail {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* ---------- Node activity, minimap, picker ---------- */
+
+.node-activity {
+  flex: none;
+  max-width: 55%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--muted);
+  font-size: 12px;
+  font-family: Menlo, Monaco, Consolas, monospace;
+}
+
+.react-flow .minimap {
+  --xy-minimap-background-color: var(--panel);
+  --xy-minimap-mask-background-color: rgb(10 10 12 / 0.6);
+  --xy-minimap-node-background-color: #4a4e5a;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.picker-backdrop {
+  place-items: start center;
+  padding-top: 14vh;
+}
+.picker {
+  width: min(560px, calc(100vw - 32px));
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 12px 40px rgb(0 0 0 / 0.5);
+  overflow: hidden;
+}
+.picker-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  font: inherit;
+  font-size: 15px;
+  color: var(--text);
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  outline: none;
+}
+.picker-results {
+  max-height: 50vh;
+  overflow: auto;
+  padding: 6px;
+}
+.picker-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 7px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.picker-row.selected {
+  background: var(--panel-hover);
+}
+.picker-name {
+  flex: none;
+  max-width: 50%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.picker-detail {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--muted);
+  font-size: 12px;
+}
+.picker-tag {
+  flex: none;
+  padding: 0 6px;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 11px;
+}
+.picker-empty {
+  padding: 10px 8px;
+  color: var(--muted);
+}
+
+/* ---------- Colors ---------- */
+
+.swatch-none { --swatch: #5a5e6b; }
+.swatch-red, .color-red { --swatch: #d2636b; }
+.swatch-orange, .color-orange { --swatch: #d98e56; }
+.swatch-yellow, .color-yellow { --swatch: #d9bf63; }
+.swatch-green, .color-green { --swatch: #7fb37a; }
+.swatch-blue, .color-blue { --swatch: #6a9fd9; }
+.swatch-purple, .color-purple { --swatch: #b48ead; }
+
+.terminal-node:not(.color-none) .node-title {
+  box-shadow: inset 0 3px 0 var(--swatch);
+  background: color-mix(in srgb, var(--swatch) 16%, var(--panel));
+}
+
+.color-button {
+  position: relative;
+  flex: none;
+  display: inline-flex;
+}
+.color-dot {
+  width: 14px;
+  height: 14px;
+  padding: 0;
+  border-radius: 50%;
+  background: var(--swatch);
+  border: 1px solid rgb(0 0 0 / 0.4);
+}
+.color-dot.swatch-none {
+  background: transparent;
+  border: 1px dashed var(--muted);
+}
+.color-palette {
+  position: absolute;
+  top: 22px;
+  right: -6px;
+  z-index: 10;
+  display: flex;
+  gap: 6px;
+  padding: 7px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgb(0 0 0 / 0.45);
+}
+
+.node-tool {
+  flex: none;
+  padding: 1px 7px;
+  font-size: 12px;
+  color: var(--muted);
+  background: transparent;
+  border-color: transparent;
+}
+.node-tool.has-note {
+  color: var(--accent-strong);
+}
+.node-tool[aria-pressed='true'] {
+  border-color: var(--border);
+  background: var(--panel-hover);
+}
+
+/* ---------- Note panel ---------- */
+
+.note-panel {
+  position: absolute;
+  top: 31px;
+  right: 0;
+  bottom: 0;
+  width: min(46%, 380px);
+  display: flex;
+  flex-direction: column;
+  background: var(--panel);
+  border-left: 1px solid var(--border);
+  cursor: default;
+}
+.note-panel header {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 4px 2px 10px;
+  color: var(--muted);
+  font-size: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.note-status {
+  flex: 1;
+  text-align: right;
+}
+.note-panel textarea {
+  flex: 1;
+  min-height: 0;
+  resize: none;
+  padding: 10px;
+  font: 13px/1.5 Menlo, Monaco, Consolas, monospace;
+  color: var(--text);
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+/* ---------- Frames ---------- */
+
+.frame {
+  --swatch: #5a5e6b;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  border: 1.5px dashed color-mix(in srgb, var(--swatch) 70%, transparent);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--swatch) 7%, transparent);
+  /* The inside of a frame lets the pointer through to the canvas. */
+  pointer-events: none;
+}
+.frame-title {
+  pointer-events: auto;
+  position: absolute;
+  left: 10px;
+  bottom: calc(100% + 4px);
+  max-width: calc(100% - 20px);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 26px;
+  padding: 0 4px 0 10px;
+  color: var(--text);
+  background: color-mix(in srgb, var(--swatch) 22%, var(--panel));
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  cursor: grab;
+  user-select: none;
+}
+.frame-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+}
+.react-flow__node-frame .react-flow__resize-control {
+  pointer-events: auto;
+}
+
+/* ---------- Snapshot in place of a live terminal ---------- */
+
+.snapshot {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 6px 4px 4px 8px;
+  overflow: hidden;
+  font: 13px/1.154 Menlo, Monaco, 'DejaVu Sans Mono', Consolas, monospace;
+  color: var(--text);
+  white-space: pre;
 }

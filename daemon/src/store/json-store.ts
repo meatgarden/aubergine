@@ -64,7 +64,7 @@ export class JsonStore implements Store {
     const sessionIds = new Set(state.sessions.map((s) => s.id));
     return {
       ...state,
-      layout: { nodes: state.layout.nodes.filter((n) => sessionIds.has(n.sessionId)) },
+      layout: { ...state.layout, nodes: state.layout.nodes.filter((n) => sessionIds.has(n.sessionId)) },
     };
   }
 

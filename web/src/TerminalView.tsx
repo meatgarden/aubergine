@@ -4,15 +4,25 @@ import { Terminal } from '@xterm/xterm';
 import {
   TerminalServerMessage,
   paths,
+  type Settings,
   type TerminalClientMessage,
 } from '@aubergine/shared';
 import { socketUrl } from './api';
+import { decodeOsc52 } from './clipboard';
+import { isCanvasChord, isMac, isPasteChord } from './keys';
+import { Outbox } from './outbox';
 import { useApp } from './store';
 
 interface Props {
   sessionId: string;
   /** False when the canvas is not at 100% zoom: the terminal shows output but takes no input. */
   interactive: boolean;
+}
+
+function terminalTheme(theme: Settings['theme']) {
+  return theme === 'light'
+    ? { background: '#fbfbfc', foreground: '#24262b', cursor: '#24262b', selectionBackground: '#c9d3e6' }
+    : { background: '#101114', foreground: '#d7dae0', cursor: '#d7dae0' };
 }
 
 type Link = 'connecting' | 'open' | 'reconnecting' | 'ended';
@@ -32,20 +42,35 @@ export function TerminalView({ sessionId, interactive }: Props) {
     const element = host.current;
     if (!element) return;
 
+    const settings = useApp.getState().settings;
     const term = new Terminal({
-      fontFamily: 'Menlo, Monaco, "DejaVu Sans Mono", Consolas, monospace',
-      fontSize: 13,
+      fontFamily: settings.font.family,
+      fontSize: settings.font.size,
       cursorBlink: true,
       // History lives in the session runtime, not in the browser.
       scrollback: 0,
       macOptionClickForcesSelection: true,
       disableStdin: !interactiveRef.current,
-      theme: { background: '#101114', foreground: '#d7dae0', cursor: '#d7dae0' },
+      theme: terminalTheme(settings.theme),
     });
     const fit = new FitAddon();
     term.loadAddon(fit);
     term.open(element);
     terminal.current = term;
+
+    const mac = isMac();
+    // Returning false hands the key back to the browser and the canvas.
+    term.attachCustomKeyEventHandler((event) => !isCanvasChord(event, mac) && !isPasteChord(event, mac));
+    // The wheel scrolls this terminal's history only while it has focus;
+    // otherwise it belongs to the canvas.
+    term.attachCustomWheelEventHandler(() => element.contains(document.activeElement));
+    // Text selected in the terminal is handed over by the runtime as an
+    // OSC 52 sequence; put it on the system clipboard.
+    const onClipboard = term.parser.registerOscHandler(52, (payload) => {
+      const text = decodeOsc52(payload);
+      if (text !== null) void navigator.clipboard?.writeText(text).catch(() => {});
+      return true;
+    });
 
     let socket: WebSocket | null = null;
     let retry: number | undefined;
@@ -53,9 +78,9 @@ export function TerminalView({ sessionId, interactive }: Props) {
     let disposed = false;
     let ended = false;
 
-    const send = (message: TerminalClientMessage): void => {
-      if (socket?.readyState === WebSocket.OPEN) socket.send(JSON.stringify(message));
-    };
+    const outbox = new Outbox((message) => socket?.send(JSON.stringify(message)));
+    const send = (message: TerminalClientMessage): void =>
+      outbox.send(message, socket?.readyState === WebSocket.OPEN);
 
     const fitNow = (): void => {
       // Measuring only works while the element is laid out.
@@ -80,6 +105,7 @@ export function TerminalView({ sessionId, interactive }: Props) {
         term.reset();
         setLink('open');
         send({ t: 'resize', cols: term.cols, rows: term.rows });
+        outbox.opened();
       };
       ws.onmessage = (message) => {
         if (typeof message.data !== 'string') {
@@ -115,12 +141,24 @@ export function TerminalView({ sessionId, interactive }: Props) {
       cancelAnimationFrame(frame);
       observer.disconnect();
       onData.dispose();
+      onClipboard.dispose();
       onResize.dispose();
       socket?.close();
       term.dispose();
       terminal.current = null;
     };
   }, [sessionId]);
+
+  // Follow changes to the settings file.
+  const font = useApp((s) => s.settings.font);
+  const theme = useApp((s) => s.settings.theme);
+  useEffect(() => {
+    const term = terminal.current;
+    if (!term) return;
+    term.options.fontFamily = font.family;
+    term.options.fontSize = font.size;
+    term.options.theme = terminalTheme(theme);
+  }, [font, theme]);
 
   // Input is accepted only at 100% zoom.
   useEffect(() => {

@@ -18,6 +18,8 @@ export interface CreateOptions extends Partial<TerminalDimensions> {
   id: string;
   /** Starting folder. Defaults to the user's home folder. */
   cwd?: string;
+  /** Absolute path of the shell to start, as a login shell. Defaults to the user's own shell. */
+  shell?: string | null;
 }
 
 export interface ExitInfo {

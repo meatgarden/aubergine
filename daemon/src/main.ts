@@ -5,6 +5,7 @@ import { loadConfig } from './config';
 import { TmuxRuntime } from './runtime/tmux-runtime';
 import { buildServer } from './server';
 import { Sessions } from './sessions';
+import { SettingsFile, expandHome } from './settings';
 import { JsonStore } from './store/json-store';
 import { loadOrCreateToken } from './token';
 
@@ -17,8 +18,13 @@ async function main(): Promise<void> {
   const canvas = new Canvas(await store.load(), store, (error) =>
     console.error('Could not save state:', error),
   );
+  const settings = new SettingsFile(config.dataDir, (message) => console.warn(message));
+  await settings.reload();
   const runtime = new TmuxRuntime({ socket: config.tmuxSocket, tmuxBin: config.tmuxBin });
-  const sessions = new Sessions(canvas, runtime);
+  const sessions = new Sessions(canvas, runtime, {
+    defaultFolder: () => (settings.value.defaultFolder ? expandHome(settings.value.defaultFolder) : null),
+    shell: () => settings.value.shell,
+  });
 
   const status = await sessions.status();
   if (status.status === 'ok') {
@@ -35,6 +41,7 @@ async function main(): Promise<void> {
     canvas,
     sessions,
     runtime,
+    settings: () => settings.reload(),
     token,
     devOrigin: config.devOrigin,
     webDist: config.webDist,
@@ -49,10 +56,16 @@ async function main(): Promise<void> {
   console.log(`Data folder: ${config.dataDir}`);
   console.log(`First visit in a browser? Open this link once:\n  ${base}${paths.auth}?token=${token}`);
 
+  // Folder and command of each session, and shells that ended unwatched.
+  const poll = setInterval(() => {
+    void sessions.refresh().catch((error) => console.error('Could not refresh sessions:', error));
+  }, 2000);
+
   let stopping = false;
   const stop = (): void => {
     if (stopping) return;
     stopping = true;
+    clearInterval(poll);
     // Shells keep running inside tmux; only the viewers go away.
     void Promise.allSettled([canvas.flush(), app.close()]).then(() => process.exit(0));
     setTimeout(() => process.exit(0), 2000).unref();

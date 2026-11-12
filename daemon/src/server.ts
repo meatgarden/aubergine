@@ -8,30 +8,36 @@ import type { ZodType } from 'zod';
 import {
   CLOSE_BAD_MESSAGE,
   CLOSE_SESSION_ENDED,
+  CreateFrameRequest,
   CreateSessionRequest,
   Id,
   PROTOCOL_VERSION,
-  RenameSessionRequest,
+  UpdateSessionRequest,
   TerminalClientMessage,
   TerminalSize,
+  UpdateFrameRequest,
   UpdateNodeRequest,
   paths,
   type CreateSessionResponse,
   type ErrorCode,
   type ErrorResponse,
   type EventsServerMessage,
+  type Settings,
+  type SnapshotResponse,
   type StateResponse,
   type TerminalServerMessage,
 } from '@aubergine/shared';
 import type { Canvas } from './canvas';
 import { SessionNotFoundError, type Attachment, type SessionRuntime } from './runtime/runtime';
-import { NotFoundError, RuntimeUnavailableError, type Sessions } from './sessions';
+import { ConflictError, NotFoundError, RuntimeUnavailableError, type Sessions } from './sessions';
 import { tokensMatch } from './token';
 
 export interface ServerOptions {
   canvas: Canvas;
   sessions: Sessions;
   runtime: SessionRuntime;
+  /** Returns the current settings, re-reading the settings file. */
+  settings: () => Promise<Settings>;
   token: string;
   devOrigin: string | null;
   webDist: string;
@@ -118,6 +124,9 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     if (error instanceof NotFoundError || error instanceof SessionNotFoundError) {
       return reply.code(404).send(errorBody('not_found', error.message));
     }
+    if (error instanceof ConflictError) {
+      return reply.code(409).send(errorBody('conflict', error.message));
+    }
     if (error instanceof RuntimeUnavailableError) {
       return reply.code(503).send(errorBody('runtime_unavailable', error.message));
     }
@@ -156,6 +165,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   app.get(paths.state, async (): Promise<StateResponse> => ({
     protocolVersion: PROTOCOL_VERSION,
     runtime: await sessions.status(),
+    settings: await options.settings(),
     state: canvas.state,
   }));
 
@@ -166,9 +176,13 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   });
 
   app.patch(paths.session(':sessionId'), async (request) => {
-    const body = parse(RenameSessionRequest, request.body);
-    return sessions.rename(idParam(request, 'sessionId'), body.name);
+    const body = parse(UpdateSessionRequest, request.body);
+    return sessions.update(idParam(request, 'sessionId'), body);
   });
+
+  app.post(paths.parkSession(':sessionId'), async (request) => sessions.park(idParam(request, 'sessionId')));
+  app.post(paths.restoreSession(':sessionId'), async (request) => sessions.restore(idParam(request, 'sessionId')));
+  app.post(paths.restartSession(':sessionId'), async (request) => sessions.restart(idParam(request, 'sessionId')));
 
   app.delete(paths.session(':sessionId'), async (request, reply: FastifyReply) => {
     await sessions.close(idParam(request, 'sessionId'));
@@ -178,6 +192,26 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   app.put(paths.node(':nodeId'), async (request) => {
     const body = parse(UpdateNodeRequest, request.body);
     return sessions.updateNode(idParam(request, 'nodeId'), body);
+  });
+
+  app.get(paths.snapshot(':sessionId'), async (request): Promise<SnapshotResponse> => {
+    const sessionId = idParam(request, 'sessionId');
+    if (!sessions.isRunning(sessionId)) throw new HttpError(404, 'not_found', 'This session is not running');
+    return { text: await runtime.snapshot(sessionId) };
+  });
+
+  app.post(paths.frames, async (request, reply) => {
+    reply.code(201);
+    return sessions.createFrame(parse(CreateFrameRequest, request.body));
+  });
+
+  app.put(paths.frame(':frameId'), async (request) =>
+    sessions.updateFrame(idParam(request, 'frameId'), parse(UpdateFrameRequest, request.body)),
+  );
+
+  app.delete(paths.frame(':frameId'), async (request, reply: FastifyReply) => {
+    sessions.removeFrame(idParam(request, 'frameId'));
+    return reply.code(204).send();
   });
 
   /* ---------- WebSocket: change events ---------- */
@@ -242,13 +276,13 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     socket.on('error', cleanup);
 
     const sessionEnded = (): void => {
-      sessions.forget(sessionId);
+      sessions.shellEnded(sessionId);
       control({ t: 'exit', reason: 'session_ended' });
       socket.close(CLOSE_SESSION_ENDED, 'Session ended');
     };
 
     void (async () => {
-      if (!sessions.has(sessionId)) return sessionEnded();
+      if (!sessions.isRunning(sessionId)) return sessionEnded();
       let attached: Attachment;
       try {
         attached = await runtime.attach(sessionId, size.data);

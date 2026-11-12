@@ -1,5 +1,12 @@
 import { create } from 'zustand';
-import { applyEvent, type CanvasState, type ChangeEvent, type RuntimeStatus } from '@aubergine/shared';
+import {
+  DEFAULT_SETTINGS,
+  applyEvent,
+  type CanvasState,
+  type ChangeEvent,
+  type RuntimeStatus,
+  type Settings,
+} from '@aubergine/shared';
 import { ApiError, api, subscribeToEvents } from './api';
 
 export type Phase =
@@ -13,32 +20,39 @@ export type Phase =
 interface AppState {
   phase: Phase;
   runtime: RuntimeStatus | null;
+  /** User settings from the daemon's settings file. */
+  settings: Settings;
   canvas: CanvasState | null;
-  /** Whether the live event stream is connected. */
+  /** False while the live event stream is down after having been up. */
   live: boolean;
   /** Session whose terminal should hold keyboard focus. The counter re-triggers focus on repeat clicks. */
   focus: { sessionId: string; tick: number } | null;
   /** Session waiting for the user to confirm closing it. */
   closing: string | null;
+  /** Whether the session picker is open. */
+  picker: boolean;
 
   load: () => Promise<void>;
   apply: (event: ChangeEvent) => void;
   focusSession: (sessionId: string | null) => void;
   askToClose: (sessionId: string | null) => void;
+  setPicker: (open: boolean) => void;
 }
 
 export const useApp = create<AppState>((set, get) => ({
   phase: 'loading',
   runtime: null,
+  settings: DEFAULT_SETTINGS,
   canvas: null,
-  live: false,
+  live: true,
   focus: null,
   closing: null,
+  picker: false,
 
   load: async () => {
     try {
       const response = await api.getState();
-      set({ phase: 'ready', runtime: response.runtime, canvas: response.state });
+      set({ phase: 'ready', runtime: response.runtime, settings: response.settings, canvas: response.state });
     } catch (error) {
       if (error instanceof ApiError && error.code === 'unauthorized') {
         set({ phase: 'unauthorized' });
@@ -65,6 +79,7 @@ export const useApp = create<AppState>((set, get) => ({
     })),
 
   askToClose: (sessionId) => set({ closing: sessionId }),
+  setPicker: (open) => set({ picker: open }),
 }));
 
 /** Loads state, keeps it live, and keeps retrying while the daemon is away. */

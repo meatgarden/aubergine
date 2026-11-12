@@ -2,16 +2,20 @@ import type { ZodType } from 'zod';
 import {
   CreateSessionResponse,
   ErrorResponse,
+  Frame,
   EventsServerMessage,
   LayoutNode,
   Session,
+  SnapshotResponse,
   StateResponse,
   paths,
   type ChangeEvent,
   type CreateSessionRequest,
   type ErrorCode,
-  type NodeRect,
-  type RenameSessionRequest,
+  type CreateFrameRequest,
+  type UpdateFrameRequest,
+  type UpdateNodeRequest,
+  type UpdateSessionRequest,
 } from '@aubergine/shared';
 
 /** Everything the web app says to the daemon goes through this module. */
@@ -53,10 +57,19 @@ export const api = {
   getState: () => call(StateResponse, 'GET', paths.state),
   createSession: (request: CreateSessionRequest) =>
     call(CreateSessionResponse, 'POST', paths.sessions, request),
-  renameSession: (sessionId: string, request: RenameSessionRequest) =>
+  updateSession: (sessionId: string, request: UpdateSessionRequest) =>
     call(Session, 'PATCH', paths.session(sessionId), request),
+  parkSession: (sessionId: string) => call(Session, 'POST', paths.parkSession(sessionId), {}),
+  restoreSession: (sessionId: string) => call(Session, 'POST', paths.restoreSession(sessionId), {}),
+  restartSession: (sessionId: string) => call(Session, 'POST', paths.restartSession(sessionId), {}),
   closeSession: (sessionId: string) => call<void>(null, 'DELETE', paths.session(sessionId)),
-  updateNode: (nodeId: string, rect: NodeRect) => call(LayoutNode, 'PUT', paths.node(nodeId), rect),
+  getSnapshot: (sessionId: string) => call(SnapshotResponse, 'GET', paths.snapshot(sessionId)),
+  updateNode: (nodeId: string, request: UpdateNodeRequest) =>
+    call(LayoutNode, 'PUT', paths.node(nodeId), request),
+  createFrame: (request: CreateFrameRequest) => call(Frame, 'POST', paths.frames, request),
+  updateFrame: (frameId: string, request: UpdateFrameRequest) =>
+    call(Frame, 'PUT', paths.frame(frameId), request),
+  removeFrame: (frameId: string) => call<void>(null, 'DELETE', paths.frame(frameId)),
 };
 
 export function socketUrl(path: string): string {
