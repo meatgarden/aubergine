@@ -31,6 +31,8 @@ export const paths = {
   restoreSession: (sessionId: string) => `/api/v1/sessions/${sessionId}/restore`,
   /** POST: start a new shell for a session whose shell exited. */
   restartSession: (sessionId: string) => `/api/v1/sessions/${sessionId}/restart`,
+  /** GET: the session's visible screen as plain text. */
+  snapshot: (sessionId: string) => `/api/v1/sessions/${sessionId}/snapshot`,
   node: (nodeId: string) => `/api/v1/nodes/${nodeId}`,
   frames: '/api/v1/frames',
   frame: (frameId: string) => `/api/v1/frames/${frameId}`,
@@ -90,6 +92,9 @@ export const UpdateFrameRequest = FrameRect.extend({
 export type UpdateFrameRequest = z.infer<typeof UpdateFrameRequest>;
 
 export const FrameResponse = Frame;
+
+export const SnapshotResponse = z.object({ text: z.string() });
+export type SnapshotResponse = z.infer<typeof SnapshotResponse>;
 
 export const ErrorCode = z.enum([
   'bad_request',

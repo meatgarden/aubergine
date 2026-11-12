@@ -6,6 +6,7 @@ import {
   EventsServerMessage,
   LayoutNode,
   Session,
+  SnapshotResponse,
   StateResponse,
   paths,
   type ChangeEvent,
@@ -62,6 +63,7 @@ export const api = {
   restoreSession: (sessionId: string) => call(Session, 'POST', paths.restoreSession(sessionId), {}),
   restartSession: (sessionId: string) => call(Session, 'POST', paths.restartSession(sessionId), {}),
   closeSession: (sessionId: string) => call<void>(null, 'DELETE', paths.session(sessionId)),
+  getSnapshot: (sessionId: string) => call(SnapshotResponse, 'GET', paths.snapshot(sessionId)),
   updateNode: (nodeId: string, request: UpdateNodeRequest) =>
     call(LayoutNode, 'PUT', paths.node(nodeId), request),
   createFrame: (request: CreateFrameRequest) => call(Frame, 'POST', paths.frames, request),

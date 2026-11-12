@@ -11,6 +11,7 @@ import {
   CreateSessionResponse,
   EventsServerMessage,
   Frame,
+  SnapshotResponse,
   StateResponse,
   newId,
   paths,
@@ -441,6 +442,27 @@ describe('session activity', () => {
     await stop();
     await start();
     expect(canvas.state.sessions[0]?.note).toBe('# billing bug\nretry logic');
+  });
+});
+
+describe('snapshots', () => {
+  it('returns the visible screen as plain text', async () => {
+    const { session } = await createSession();
+    const view = terminal(session.id);
+    await waitFor(() => view.socket.readyState === WebSocket.OPEN, 'open');
+    view.socket.send(JSON.stringify({ t: 'input', data: 'echo "snap""shot-$((3 * 3))"\r' }));
+    await waitFor(() => view.text.includes('snapshot-9'), 'output');
+    view.socket.close();
+
+    // No viewer is needed to take one.
+    const response = await request('GET', paths.snapshot(session.id));
+    expect(response.statusCode).toBe(200);
+    const text = SnapshotResponse.parse(response.json()).text;
+    expect(text).toContain('snapshot-9');
+    expect(text).not.toContain('\u001b');
+
+    expect((await request('GET', paths.snapshot(newId()))).statusCode).toBe(404);
+    expect((await request('GET', paths.snapshot(session.id), { cookie: false })).statusCode).toBe(401);
   });
 });
 

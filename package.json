@@ -15,6 +15,7 @@
     "lint": "eslint .",
     "test": "pnpm -r test",
     "e2e": "playwright test",
+    "load-canvas": "pnpm --filter @aubergine/daemon exec tsx scripts/load-canvas.ts",
     "check": "pnpm typecheck && pnpm lint && pnpm test && pnpm e2e"
   },
   "devDependencies": {

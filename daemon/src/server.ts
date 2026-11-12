@@ -22,6 +22,7 @@ import {
   type ErrorCode,
   type ErrorResponse,
   type EventsServerMessage,
+  type SnapshotResponse,
   type StateResponse,
   type TerminalServerMessage,
 } from '@aubergine/shared';
@@ -187,6 +188,12 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   app.put(paths.node(':nodeId'), async (request) => {
     const body = parse(UpdateNodeRequest, request.body);
     return sessions.updateNode(idParam(request, 'nodeId'), body);
+  });
+
+  app.get(paths.snapshot(':sessionId'), async (request): Promise<SnapshotResponse> => {
+    const sessionId = idParam(request, 'sessionId');
+    if (!sessions.isRunning(sessionId)) throw new HttpError(404, 'not_found', 'This session is not running');
+    return { text: await runtime.snapshot(sessionId) };
   });
 
   app.post(paths.frames, async (request, reply) => {

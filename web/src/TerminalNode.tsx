@@ -1,9 +1,11 @@
-import { memo, useState } from 'react';
-import { NodeResizer, type Node, type NodeProps } from '@xyflow/react';
+import { memo, useRef, useState } from 'react';
+import { NodeResizer, useStore, type Node, type NodeProps } from '@xyflow/react';
 import { NODE_MIN_HEIGHT, NODE_MIN_WIDTH } from '@aubergine/shared';
 import { api } from './api';
 import { ColorButton } from './ColorButton';
+import { nodeMode, type NodeMode } from './culling';
 import { NotePanel } from './NotePanel';
+import { SnapshotView } from './SnapshotView';
 import { shortFolder } from './search';
 import { useApp } from './store';
 import { TerminalView } from './TerminalView';
@@ -23,6 +25,19 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
   const color = node?.color ?? 'none';
   const hasNote = (session?.note ?? '') !== '';
 
+  // Live only while on screen and large enough to read; see culling.ts.
+  const modeRef = useRef<NodeMode>('live');
+  const mode = useStore((s) => {
+    if (!node) return modeRef.current;
+    return nodeMode({
+      rect: node,
+      view: { x: s.transform[0], y: s.transform[1], zoom: s.transform[2] },
+      pane: { width: s.width, height: s.height },
+      current: modeRef.current,
+    });
+  });
+  modeRef.current = mode;
+
   const commitName = (): void => {
     const next = draft?.trim();
     setDraft(null);
@@ -30,7 +45,11 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
   };
 
   return (
-    <div className={`terminal-node color-${color}${selected ? ' selected' : ''}`} data-testid="terminal-node">
+    <div
+      className={`terminal-node color-${color}${selected ? ' selected' : ''}`}
+      data-testid="terminal-node"
+      data-mode={exited ? 'ended' : mode}
+    >
       <NodeResizer
         minWidth={NODE_MIN_WIDTH}
         minHeight={NODE_MIN_HEIGHT}
@@ -107,8 +126,13 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
           </div>
           {session?.cwd && <p className="node-ended-folder">{session.cwd}</p>}
         </div>
-      ) : (
+      ) : mode === 'live' ? (
         <LiveBody sessionId={sessionId} interactive={interactive} />
+      ) : (
+        <div className="node-body nodrag nopan" data-testid="node-body" data-mode={mode}>
+          <SnapshotView sessionId={sessionId} refreshing={mode === 'snapshot'} />
+          <div className="node-shield zoomed-out" title="Click to zoom in and use this terminal" />
+        </div>
       )}
       {noteOpen && <NotePanel sessionId={sessionId} onClose={() => setNoteOpen(false)} />}
     </div>

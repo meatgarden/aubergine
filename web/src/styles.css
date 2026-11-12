@@ -581,3 +581,16 @@ code {
 .react-flow__node-frame .react-flow__resize-control {
   pointer-events: auto;
 }
+
+/* ---------- Snapshot in place of a live terminal ---------- */
+
+.snapshot {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 6px 4px 4px 8px;
+  overflow: hidden;
+  font: 13px/1.154 Menlo, Monaco, 'DejaVu Sans Mono', Consolas, monospace;
+  color: var(--text);
+  white-space: pre;
+}
