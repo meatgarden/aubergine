@@ -27,6 +27,10 @@
 :root[data-theme='light'] .react-flow {
   --xy-background-pattern-dots-color-default: #c5c9d2;
 }
+:root[data-theme='light'] .react-flow .minimap {
+  --xy-minimap-mask-background-color: rgb(200 204 214 / 0.6);
+  --xy-minimap-node-background-color: #a9aebb;
+}
 
 html,
 body,
