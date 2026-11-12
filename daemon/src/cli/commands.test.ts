@@ -32,6 +32,7 @@ describe('parseCommand', () => {
     expect(parseCommand(['import', '--dry-run', '--all'])).toEqual({ name: 'import', all: true, dryRun: true });
     expect(parseCommand(['hook', 'stop'])).toEqual({ name: 'hook', event: 'stop' });
     expect(parseCommand(['hooks', 'print'])).toEqual({ name: 'hooks-print' });
+    expect(parseCommand(['shell-hook', 'print'])).toEqual({ name: 'shell-hook-print' });
     expect(parseCommand(['service', 'install'])).toEqual({ name: 'service', action: 'install' });
     expect(parseCommand(['service', 'uninstall'])).toEqual({ name: 'service', action: 'uninstall' });
   });

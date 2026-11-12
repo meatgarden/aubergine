@@ -20,6 +20,7 @@ export type Command =
   | { name: 'note'; text: string }
   | { name: 'hook'; event: HookEvent }
   | { name: 'hooks-print' }
+  | { name: 'shell-hook-print' }
   | { name: 'service'; action: 'install' | 'uninstall' }
   | { name: 'help' };
 
@@ -36,6 +37,7 @@ export const USAGE = `Usage: aubergine <command>
   note <text>                Inside a session: add an entry to that session's note log
   hook <event>               For agent hooks: reads the hook's JSON on stdin (prompt, notification, stop)
   hooks print                Print the Claude Code hook settings, to add to your own config by hand
+  shell-hook print           Print a zsh snippet that makes new terminal tabs start on the canvas
   service install            Start the Aubergine server at login
   service uninstall          Stop starting it at login
   help                       Show this text
@@ -98,6 +100,9 @@ export function parseCommand(argv: readonly string[]): Command {
     case 'hooks':
       if (rest.length === 1 && rest[0] === 'print') return { name: 'hooks-print' };
       throw new UsageError('hooks needs "print"');
+    case 'shell-hook':
+      if (rest.length === 1 && rest[0] === 'print') return { name: 'shell-hook-print' };
+      throw new UsageError('shell-hook needs "print"');
     case 'service':
       if (rest.length === 1 && (rest[0] === 'install' || rest[0] === 'uninstall')) {
         return { name: 'service', action: rest[0] };

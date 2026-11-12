@@ -21,6 +21,7 @@ import {
   resolveSession,
 } from './cli/commands';
 import { loadConfig, type Config } from './config';
+import { zshHookSnippet } from './migrate/shell-hook';
 import { formatScan, importLayout, nextStep, planImport, scanShells } from './migrate/shells';
 import { TmuxRuntime } from './runtime/tmux-runtime';
 import { cookieName } from './server';
@@ -91,6 +92,10 @@ async function runHook(event: HookEvent): Promise<number> {
 async function main(): Promise<number> {
   const command = parseCommand(process.argv.slice(2));
   if (command.name === 'hook') return runHook(command.event);
+  if (command.name === 'shell-hook-print') {
+    console.log(zshHookSnippet());
+    return 0;
+  }
   if (command.name === 'hooks-print') {
     console.log(JSON.stringify(claudeHooksSettings(), null, 2));
     return 0;
@@ -210,6 +215,8 @@ async function main(): Promise<number> {
 main().then(
   (code) => process.exit(code),
   (error: unknown) => {
+    // Started by the shell snippet: a new tab is waiting. Say nothing and let the normal shell start.
+    if (process.argv.includes('--from-shell-hook')) process.exit(1);
     if (error instanceof UsageError) {
       console.error(`${error.message}\n`);
       console.error(USAGE);
