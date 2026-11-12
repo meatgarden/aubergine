@@ -6,6 +6,7 @@ describe('Settings', () => {
     expect(Settings.parse({})).toEqual(DEFAULT_SETTINGS);
     expect(DEFAULT_SETTINGS).toMatchObject({ theme: 'dark', shell: null, defaultFolder: null });
     expect(DEFAULT_SETTINGS.font.size).toBe(13);
+    expect(DEFAULT_SETTINGS.agents.logPrompts).toBe(true);
     expect(Settings.parse({ font: { size: 15 } }).font).toEqual({ ...DEFAULT_SETTINGS.font, size: 15 });
   });
 
@@ -15,6 +16,7 @@ describe('Settings', () => {
       theme: 'light',
       shell: '/bin/bash',
       defaultFolder: '~/work',
+      agents: { logPrompts: false },
     };
     expect(Settings.parse(full)).toEqual(full);
   });

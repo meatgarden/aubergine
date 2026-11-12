@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { NO_STATUS, type CanvasState, Frame, LayoutNode, Session, SessionName, SessionNote, ShellStatus } from './entities';
+import { Attention, NOTE_LOG_LIMIT, NO_ATTENTION, NO_STATUS, NoteEntry, type CanvasState, Frame, LayoutNode, Session, SessionName, SessionNote, ShellStatus } from './entities';
 import { Id } from './ids';
 
 /**
@@ -25,6 +25,8 @@ export const ChangeEvent = z.discriminatedUnion('type', [
     command: z.string().nullable(),
   }),
   z.object({ type: z.literal('session.noted'), sessionId: Id, note: SessionNote }),
+  z.object({ type: z.literal('session.attention'), sessionId: Id, attention: Attention }),
+  z.object({ type: z.literal('session.note.appended'), sessionId: Id, entry: NoteEntry }),
   /** What the shell reports changed: busy or idle, exit code, unread output. */
   z.object({ type: z.literal('session.status'), sessionId: Id, status: ShellStatus }),
   /** Ended for good and removed. */
@@ -67,9 +69,19 @@ export function applyEvent(state: CanvasState, event: ChangeEvent): CanvasState 
         state: 'exited',
         command: null,
         status: { ...NO_STATUS, lastExit: null },
+        attention: NO_ATTENTION,
       });
     case 'session.activity':
       return patchSession(state, event.sessionId, { cwd: event.cwd, command: event.command });
+    case 'session.attention':
+      return patchSession(state, event.sessionId, { attention: event.attention });
+    case 'session.note.appended': {
+      const session = state.sessions.find((s) => s.id === event.sessionId);
+      if (!session || session.noteLog.some((e) => e.id === event.entry.id)) return state;
+      return patchSession(state, event.sessionId, {
+        noteLog: [...session.noteLog, event.entry].slice(-NOTE_LOG_LIMIT),
+      });
+    }
     case 'session.status':
       return patchSession(state, event.sessionId, { status: event.status });
     case 'session.noted':

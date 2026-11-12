@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { NO_STATUS, newId, type Session } from '@aubergine/shared';
+import { NO_ATTENTION, NO_STATUS, newId, type Session } from '@aubergine/shared';
 import { describeStatus, timeAgo } from './StatusBadges';
 
 const base: Session = {
@@ -12,6 +12,8 @@ const base: Session = {
   command: 'zsh',
   note: '',
   status: NO_STATUS,
+  attention: NO_ATTENTION,
+  noteLog: [],
 };
 
 describe('timeAgo', () => {

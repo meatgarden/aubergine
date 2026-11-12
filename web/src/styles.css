@@ -590,8 +590,9 @@ code {
   text-align: right;
 }
 .note-panel textarea {
-  flex: 1;
-  min-height: 0;
+  flex: 0 0 34%;
+  min-height: 60px;
+  border-bottom: 1px solid var(--border) !important;
   resize: none;
   padding: 10px;
   font: 13px/1.5 Menlo, Monaco, Consolas, monospace;
@@ -653,4 +654,51 @@ code {
   font: 13px/1.154 Menlo, Monaco, 'DejaVu Sans Mono', Consolas, monospace;
   color: var(--text);
   white-space: pre;
+}
+
+.note-log {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 6px 10px;
+}
+.note-empty {
+  margin: 4px 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+.note-entry {
+  margin: 0 0 8px;
+}
+.note-entry header {
+  display: flex;
+  gap: 8px;
+  padding: 0;
+  border: none;
+  font-size: 11px;
+  color: var(--muted);
+}
+.note-entry p {
+  margin: 1px 0 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 12.5px;
+  color: var(--text);
+}
+.note-author {
+  font-weight: 600;
+}
+.note-entry.kind-prompt .note-author {
+  color: var(--accent-strong);
+}
+.note-add {
+  flex: none;
+  margin: 0;
+  padding: 7px 10px;
+  font: inherit;
+  color: var(--text);
+  background: var(--terminal-bg);
+  border: none;
+  border-top: 1px solid var(--border);
+  outline: none;
 }

@@ -3,6 +3,8 @@ import path from 'node:path';
 import { expect, test, type Page } from '@playwright/test';
 import { e2e } from '../playwright.config';
 
+const repoRoot = path.resolve(e2e.dataDir, '..');
+
 /** A terminal row whose whole text is `text`: command output, not the typed command. */
 function outputLine(page: Page, text: string) {
   return page.locator('.xterm-rows > div').filter({ hasText: new RegExp(`^\\s*${text}\\s*$`) });
@@ -74,6 +76,13 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await page.getByRole('button', { name: /^Note for/ }).click();
   await page.getByRole('textbox', { name: 'Session note' }).fill('# Fixing the invoice rounding bug');
   await expect(page.getByTestId('note-panel')).toContainText('Saved');
+
+  // A program inside the session adds to the note log, and the entry appears live.
+  await page.getByTestId('node-body').click();
+  await page.keyboard.type(`${path.join(repoRoot, 'bin', 'aubergine.mjs')} note "deploy finished at step 4"`);
+  await page.keyboard.press('Enter');
+  await expect(page.getByTestId('note-entry')).toContainText('deploy finished at step 4', { timeout: 15_000 });
+  await expect(page.getByTestId('note-entry')).toContainText('agent');
   await page.reload();
   await page.getByRole('button', { name: 'Go to…' }).click();
   await page.getByRole('textbox', { name: 'Search sessions' }).fill('rounding');

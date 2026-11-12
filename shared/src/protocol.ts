@@ -1,5 +1,7 @@
 import { z } from 'zod';
 import {
+  Attention,
+  AttentionState,
   CanvasState,
   Frame,
   FrameLabel,
@@ -7,6 +9,8 @@ import {
   LayoutNode,
   NodeColor,
   NodeRect,
+  NoteEntry,
+  NoteText,
   Session,
   SessionName,
   SessionNote,
@@ -39,6 +43,18 @@ export const paths = {
   node: (nodeId: string) => `/api/v1/nodes/${nodeId}`,
   frames: '/api/v1/frames',
   frame: (frameId: string) => `/api/v1/frames/${frameId}`,
+  /** POST: append an entry to the session's note log, as the user. */
+  sessionNotes: (sessionId: string) => `/api/v1/sessions/${sessionId}/notes`,
+  /**
+   * Routes for programs running inside a session. They authenticate with a
+   * bearer token and may only act on what that token allows.
+   */
+  agent: {
+    /** PUT: say whether the session wants the user. */
+    attention: (sessionId: string) => `/v1/sessions/${sessionId}/attention`,
+    /** POST: append an entry to the session's note log. */
+    notes: (sessionId: string) => `/v1/sessions/${sessionId}/notes`,
+  },
   /** WebSocket: stream of change events. */
   events: '/ws/v1/events',
   /** WebSocket: one terminal viewer. Query: `cols`, `rows`. */
@@ -96,6 +112,31 @@ export const UpdateFrameRequest = FrameRect.extend({
 export type UpdateFrameRequest = z.infer<typeof UpdateFrameRequest>;
 
 export const FrameResponse = Frame;
+
+export const SetAttentionRequest = z.object({
+  state: AttentionState,
+  message: z.string().trim().max(500).optional(),
+});
+export type SetAttentionRequest = z.infer<typeof SetAttentionRequest>;
+
+export const AppendNoteRequest = z.object({
+  text: NoteText,
+  kind: NoteEntry.shape.kind.optional(),
+});
+export type AppendNoteRequest = z.infer<typeof AppendNoteRequest>;
+
+/** Answer to appending a note. `entry` is null when the daemon chose not to keep it. */
+export const AppendNoteResponse = z.object({ entry: NoteEntry.nullable() });
+export type AppendNoteResponse = z.infer<typeof AppendNoteResponse>;
+
+export const AttentionResponse = Attention;
+
+/** Environment variables every session's shell is given, for programs that talk to the daemon. */
+export const SESSION_ENV = {
+  url: 'AUBERGINE_URL',
+  sessionId: 'AUBERGINE_SESSION_ID',
+  token: 'AUBERGINE_TOKEN',
+} as const;
 
 export const SnapshotResponse = z.object({ text: z.string() });
 export type SnapshotResponse = z.infer<typeof SnapshotResponse>;

@@ -2,6 +2,7 @@ import { spawnSync } from 'node:child_process';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { CreateSessionResponse, StateResponse, paths } from '@aubergine/shared';
+import { agentClient } from './cli/agent';
 import { USAGE, UsageError, formatSessions, parseCommand, resolveSession } from './cli/commands';
 import { loadConfig, type Config } from './config';
 import { TmuxRuntime } from './runtime/tmux-runtime';
@@ -64,6 +65,12 @@ async function main(): Promise<number> {
       const { bin, args, env } = runtime.attachCommand(session.id);
       // The same session the canvas shows: both views stay in step.
       return spawnSync(bin, args, { stdio: 'inherit', env }).status ?? 1;
+    }
+
+    case 'note': {
+      const entry = await agentClient().appendNote(command.text);
+      console.log(entry ? 'Noted.' : 'Not kept.');
+      return 0;
     }
 
     case 'service': {

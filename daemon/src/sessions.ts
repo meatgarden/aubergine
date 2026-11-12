@@ -2,16 +2,21 @@ import { existsSync } from 'node:fs';
 import os from 'node:os';
 import {
   Id,
+  NO_ATTENTION,
   NO_STATUS,
   NODE_DEFAULT_HEIGHT,
   NODE_DEFAULT_WIDTH,
   findFreeRect,
+  needsUser,
   newId,
   nodesInside,
+  type Attention,
+  type AttentionState,
   type CreateFrameRequest,
   type Frame,
   type LayoutNode,
   type NodeRect,
+  type NoteEntry,
   type RuntimeStatus,
   type Session,
   type ShellStatus,
@@ -34,6 +39,10 @@ export interface SessionsOptions {
   shell?: () => string | null;
   /** Makes shells report command status. */
   integration?: ShellIntegration;
+  /** Variables every session's shell is given, such as its address and token for the agent API. */
+  sessionEnv?: (sessionId: string) => Record<string, string>;
+  /** Whether prompts given to agents may be kept in the note log. */
+  logPrompts?: () => boolean;
 }
 
 /**
@@ -257,13 +266,46 @@ export class Sessions {
   private async startShell(sessionId: string, folder: string | null): Promise<RuntimeSession> {
     const shell = this.shell();
     const env = await this.integration.environment(sessionId, shell ?? process.env.SHELL ?? '');
-    return this.runtime.create({ id: sessionId, cwd: this.startFolder(folder), shell, env });
+    return this.runtime.create({
+      id: sessionId,
+      cwd: this.startFolder(folder),
+      shell,
+      env: { ...env, ...this.options.sessionEnv?.(sessionId) },
+    });
   }
 
-  /** The user is looking at this session: nothing in it is unread any more. */
+  /** Says whether the session wants the user. Reported by the agent running in it. */
+  setAttention(sessionId: string, state: AttentionState, message?: string): Attention {
+    this.find(sessionId);
+    const attention: Attention = {
+      state,
+      message: message || null,
+      at: state === 'none' ? null : new Date().toISOString(),
+    };
+    this.canvas.emit({ type: 'session.attention', sessionId, attention });
+    return attention;
+  }
+
+  /**
+   * Appends to the session's note log. Returns null when the entry is not
+   * kept: prompts are dropped when the user has turned prompt logging off.
+   */
+  appendNote(sessionId: string, input: { author: NoteEntry['author']; kind?: NoteEntry['kind'] | undefined; text: string }): NoteEntry | null {
+    this.find(sessionId);
+    const kind = input.kind ?? 'note';
+    if (kind === 'prompt' && this.options.logPrompts?.() === false) return null;
+    const entry: NoteEntry = { id: newId(), at: new Date().toISOString(), author: input.author, kind, text: input.text };
+    this.canvas.emit({ type: 'session.note.appended', sessionId, entry });
+    return entry;
+  }
+
+  /** The user is looking at this session: nothing in it is unread, and it no longer waits for them. */
   seen(sessionId: string): Session {
     const session = this.find(sessionId);
     this.seenAt.set(sessionId, Date.now());
+    if (needsUser(session.attention)) {
+      this.canvas.emit({ type: 'session.attention', sessionId, attention: NO_ATTENTION });
+    }
     if (session.status.unread) {
       this.canvas.emit({ type: 'session.status', sessionId, status: { ...session.status, unread: false } });
     }
@@ -325,6 +367,8 @@ export class Sessions {
       command: null,
       note: '',
       status: NO_STATUS,
+      attention: NO_ATTENTION,
+      noteLog: [],
     };
     const node: LayoutNode = { id: newId(), sessionId: id, color: 'none', ...(rect ?? this.freeSpot()) };
     this.canvas.emit({ type: 'session.created', session, node });

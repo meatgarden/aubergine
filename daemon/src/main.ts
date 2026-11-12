@@ -1,6 +1,7 @@
 import { mkdir } from 'node:fs/promises';
 import path from 'node:path';
-import { paths } from '@aubergine/shared';
+import { SESSION_ENV, paths } from '@aubergine/shared';
+import { sessionToken } from './auth';
 import { Canvas } from './canvas';
 import { loadConfig } from './config';
 import { TmuxRuntime } from './runtime/tmux-runtime';
@@ -23,23 +24,19 @@ async function main(): Promise<void> {
   const settings = new SettingsFile(config.dataDir, (message) => console.warn(message));
   await settings.reload();
   const runtime = new TmuxRuntime({ socket: config.tmuxSocket, tmuxBin: config.tmuxBin });
+  let listeningPort = config.port;
   const integration = new ZshIntegration(path.join(config.dataDir, 'shell'));
   const sessions = new Sessions(canvas, runtime, {
     integration,
+    sessionEnv: (sessionId) => ({
+      [SESSION_ENV.url]: `http://127.0.0.1:${listeningPort}`,
+      [SESSION_ENV.sessionId]: sessionId,
+      [SESSION_ENV.token]: sessionToken(token, sessionId),
+    }),
+    logPrompts: () => settings.value.agents.logPrompts,
     defaultFolder: () => (settings.value.defaultFolder ? expandHome(settings.value.defaultFolder) : null),
     shell: () => settings.value.shell,
   });
-
-  const status = await sessions.status();
-  if (status.status === 'ok') {
-    await sessions.reconcile();
-  } else {
-    console.warn(
-      status.status === 'missing'
-        ? 'tmux was not found. Install tmux 3.2 or newer; the canvas shows an error page until then.'
-        : `tmux ${status.version} is too old; ${status.minVersion} or newer is needed.`,
-    );
-  }
 
   const app = await buildServer({
     canvas,
@@ -55,6 +52,20 @@ async function main(): Promise<void> {
 
   const address = app.server.address();
   const port = typeof address === 'object' && address ? address.port : config.port;
+  listeningPort = port;
+
+  // After listening, so that shells started now are given the right address.
+  const status = await sessions.status();
+  if (status.status === 'ok') {
+    await sessions.reconcile();
+  } else {
+    console.warn(
+      status.status === 'missing'
+        ? 'tmux was not found. Install tmux 3.2 or newer; the canvas shows an error page until then.'
+        : `tmux ${status.version} is too old; ${status.minVersion} or newer is needed.`,
+    );
+  }
+
   const base = config.devOrigin ?? `http://127.0.0.1:${port}`;
   console.log(`Aubergine is running at ${base}`);
   console.log(`Data folder: ${config.dataDir}`);

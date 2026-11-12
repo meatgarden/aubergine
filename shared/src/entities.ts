@@ -47,6 +47,48 @@ export type ShellStatus = z.infer<typeof ShellStatus>;
 
 export const NO_STATUS: ShellStatus = ShellStatus.parse({});
 
+/**
+ * Whether a session wants the user. Set by the agent running in it:
+ * `working` while it is busy, `waiting` when it needs an answer, `done` when
+ * it has finished its turn. `none` when nothing was reported or the user has
+ * looked.
+ */
+export const AttentionState = z.enum(['none', 'working', 'waiting', 'done']);
+export type AttentionState = z.infer<typeof AttentionState>;
+
+export const Attention = z.object({
+  state: AttentionState.default('none'),
+  /** A short reason, for example what the agent is asking. */
+  message: z.string().max(500).nullable().default(null),
+  at: Timestamp.nullable().default(null),
+});
+export type Attention = z.infer<typeof Attention>;
+
+export const NO_ATTENTION: Attention = Attention.parse({});
+
+/** Whether a session with this attention state belongs in the "waiting for you" queue. */
+export function needsUser(attention: Attention): boolean {
+  return attention.state === 'waiting' || attention.state === 'done';
+}
+
+export const NOTE_LOG_LIMIT = 1000;
+export const NoteText = z.string().trim().min(1).max(20_000);
+
+/**
+ * One entry in a session's note log. The log only grows; the pinned note
+ * (`Session.note`) is the part the user edits freely.
+ */
+export const NoteEntry = z.object({
+  id: Id,
+  at: Timestamp,
+  /** Who wrote it: the user, or the agent running in the session. */
+  author: z.enum(['user', 'agent']),
+  /** `prompt`: what the user asked an agent. `event`: something that happened. `note`: anything else. */
+  kind: z.enum(['note', 'prompt', 'event']).default('note'),
+  text: NoteText,
+});
+export type NoteEntry = z.infer<typeof NoteEntry>;
+
 /** A terminal session. The running shell itself is owned by the session runtime. */
 export const Session = z.object({
   id: Id,
@@ -61,6 +103,9 @@ export const Session = z.object({
   /** A Markdown note kept with the session. */
   note: SessionNote.default(''),
   status: ShellStatus.prefault({}),
+  attention: Attention.prefault({}),
+  /** Append-only log of notes, oldest first. */
+  noteLog: z.array(NoteEntry).default([]),
 });
 export type Session = z.infer<typeof Session>;
 

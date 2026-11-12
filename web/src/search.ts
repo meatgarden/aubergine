@@ -29,7 +29,7 @@ export function searchSessions(sessions: readonly Session[], query: string): Ses
       ['name', session.name.toLowerCase()],
       ['folder', (session.cwd ?? '').toLowerCase()],
       ['command', (session.command ?? '').toLowerCase()],
-      ['note', session.note.toLowerCase()],
+      ['note', noteText(session).toLowerCase()],
     ];
     if (!words.every((word) => fields.some(([, text]) => text.includes(word)))) continue;
 
@@ -37,7 +37,7 @@ export function searchSessions(sessions: readonly Session[], query: string): Ses
     const field = fields.find(([, text]) => text.includes(first))?.[0] ?? 'name';
     let excerpt: string | null = null;
     if (field === 'note') {
-      const line = session.note.split('\n').find((l) => l.toLowerCase().includes(first)) ?? '';
+      const line = noteText(session).split('\n').find((l) => l.toLowerCase().includes(first)) ?? '';
       excerpt = line.trim().slice(0, 120);
     }
     matches.push({ session, field, excerpt });
@@ -46,6 +46,11 @@ export function searchSessions(sessions: readonly Session[], query: string): Ses
     .map((match, index) => ({ match, index }))
     .sort((a, b) => WEIGHT[a.match.field] - WEIGHT[b.match.field] || a.index - b.index)
     .map(({ match }) => match);
+}
+
+/** Everything written about a session: its pinned note and its log. */
+function noteText(session: Session): string {
+  return [session.note, ...session.noteLog.map((entry) => entry.text)].join('\n');
 }
 
 /** A short form of a folder path for tight spaces: its last two parts. */

@@ -1,5 +1,6 @@
 import type { ZodType } from 'zod';
 import {
+  AppendNoteResponse,
   CreateSessionResponse,
   ErrorResponse,
   Frame,
@@ -61,6 +62,8 @@ export const api = {
     call(Session, 'PATCH', paths.session(sessionId), request),
   parkSession: (sessionId: string) => call(Session, 'POST', paths.parkSession(sessionId), {}),
   restoreSession: (sessionId: string) => call(Session, 'POST', paths.restoreSession(sessionId), {}),
+  appendNote: (sessionId: string, text: string) =>
+    call(AppendNoteResponse, 'POST', paths.sessionNotes(sessionId), { text }),
   seenSession: (sessionId: string) => call(Session, 'POST', paths.seenSession(sessionId), {}),
   restartSession: (sessionId: string) => call(Session, 'POST', paths.restartSession(sessionId), {}),
   closeSession: (sessionId: string) => call<void>(null, 'DELETE', paths.session(sessionId)),
