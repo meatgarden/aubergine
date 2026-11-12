@@ -14,6 +14,9 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
   const askToClose = useApp((s) => s.askToClose);
   const interactive = useIsFullZoom();
   const [draft, setDraft] = useState<string | null>(null);
+  // Whether this node's terminal holds keyboard focus.
+  const [focused, setFocused] = useState(false);
+  const live = interactive && focused;
 
   const commitName = (): void => {
     const next = draft?.trim();
@@ -63,11 +66,24 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
           ×
         </button>
       </header>
-      {/* The body never drags, pans or zooms the canvas. */}
-      <div className="node-body nodrag nopan nowheel">
+      {/*
+        The body never drags or pans the canvas. Until its terminal has focus
+        (and whenever the view is zoomed out) a shield covers it: the wheel
+        then belongs to the canvas, and a click focuses the terminal.
+      */}
+      <div
+        className={`node-body nodrag nopan${live ? ' nowheel' : ''}`}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        data-testid="node-body"
+      >
         <TerminalView sessionId={sessionId} interactive={interactive} />
-        {!interactive && (
-          <div className="node-shield" title="Click to zoom in and use this terminal" data-testid="node-shield" />
+        {!live && (
+          <div
+            className={`node-shield${interactive ? '' : ' zoomed-out'}`}
+            title={interactive ? 'Click to use this terminal' : 'Click to zoom in and use this terminal'}
+            data-testid="node-shield"
+          />
         )}
       </div>
     </div>

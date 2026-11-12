@@ -89,11 +89,17 @@ export class TmuxRuntime implements SessionRuntime {
     }
     const version = parseTmuxVersion(output);
     if (!version) return { status: 'missing', version: null, minVersion: MIN_TMUX_VERSION };
-    return {
-      status: isSupportedTmux(version) ? 'ok' : 'too_old',
-      version: version.text,
-      minVersion: MIN_TMUX_VERSION,
-    };
+    if (!isSupportedTmux(version)) {
+      return { status: 'too_old', version: version.text, minVersion: MIN_TMUX_VERSION };
+    }
+    // A tmux server left running by an earlier version of the daemon still
+    // has that version's settings; give it the current config.
+    try {
+      await this.exec(['source-file', CONFIG_FILE]);
+    } catch (error) {
+      if (!isNoServer(error)) throw error;
+    }
+    return { status: 'ok', version: version.text, minVersion: MIN_TMUX_VERSION };
   }
 
   async create(options: CreateOptions): Promise<RuntimeSession> {

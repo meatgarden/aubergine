@@ -14,6 +14,7 @@ import {
 import { NODE_DEFAULT_HEIGHT, NODE_DEFAULT_WIDTH, findFreeRect, type LayoutNode } from '@aubergine/shared';
 import { api } from './api';
 import { useApp } from './store';
+import { canvasShortcut, isCanvasChord, isMac, isTypingTarget } from './keys';
 import { TerminalNode, type TerminalFlowNode } from './TerminalNode';
 import { isFullZoom, loadViewport, saveViewport, useZoomToNode } from './viewport';
 
@@ -138,6 +139,37 @@ export function Canvas() {
     );
   }, [flow]);
 
+  const zoomToFit = useCallback(() => {
+    void flow.fitView({ padding: 0.08, maxZoom: 1, duration: 200 });
+  }, [flow]);
+
+  /** Takes keyboard focus away from any terminal, back to the canvas. */
+  const releaseFocus = useCallback(() => {
+    focusSession(null);
+    if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
+  }, [focusSession]);
+
+  useEffect(() => {
+    const mac = isMac();
+    const onKeyDown = (event: KeyboardEvent): void => {
+      if (isCanvasChord(event, mac)) {
+        event.preventDefault();
+        releaseFocus();
+        return;
+      }
+      if (isTypingTarget(event.target) || useApp.getState().closing) return;
+      const action = canvasShortcut(event);
+      if (!action) return;
+      event.preventDefault();
+      if (action === 'new-terminal') void addTerminal();
+      else if (action === 'zoom-100') resetZoom();
+      else zoomToFit();
+    };
+    // Capture phase, so the reserved chord is seen before a focused terminal gets it.
+    window.addEventListener('keydown', onKeyDown, true);
+    return () => window.removeEventListener('keydown', onKeyDown, true);
+  }, [addTerminal, resetZoom, zoomToFit, releaseFocus]);
+
   const percent = useMemo(() => `${Math.round(zoom * 100)}%`, [zoom]);
 
   return (
@@ -149,6 +181,7 @@ export function Canvas() {
         onNodeDragStop={onNodeDragStop}
         onNodeClick={onNodeClick}
         onMoveEnd={onMoveEnd}
+        onPaneClick={releaseFocus}
         defaultViewport={initialViewport}
         minZoom={0.1}
         maxZoom={1}
@@ -164,14 +197,17 @@ export function Canvas() {
         <Background variant={BackgroundVariant.Dots} gap={24} size={1} />
         <Panel position="top-left" className="toolbar">
           <span className="brand">Aubergine</span>
-          <button type="button" onClick={() => void addTerminal()} disabled={adding}>
+          <button type="button" onClick={() => void addTerminal()} disabled={adding} title="New terminal (N)">
             + New terminal
+          </button>
+          <button type="button" className="quiet" onClick={zoomToFit} title="Zoom to fit everything (F)">
+            Fit
           </button>
           <button
             type="button"
             className="quiet"
             onClick={resetZoom}
-            title="Zoom to 100%. Terminals take input only at 100%."
+            title="Zoom to 100% (0). Terminals take input only at 100%."
             data-testid="zoom-level"
           >
             {percent}

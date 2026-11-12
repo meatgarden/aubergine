@@ -14,7 +14,7 @@ interface AppState {
   phase: Phase;
   runtime: RuntimeStatus | null;
   canvas: CanvasState | null;
-  /** Whether the live event stream is connected. */
+  /** False while the live event stream is down after having been up. */
   live: boolean;
   /** Session whose terminal should hold keyboard focus. The counter re-triggers focus on repeat clicks. */
   focus: { sessionId: string; tick: number } | null;
@@ -31,7 +31,7 @@ export const useApp = create<AppState>((set, get) => ({
   phase: 'loading',
   runtime: null,
   canvas: null,
-  live: false,
+  live: true,
   focus: null,
   closing: null,
 

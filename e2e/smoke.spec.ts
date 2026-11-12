@@ -24,7 +24,7 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   const terminal = page.getByTestId('terminal');
   await expect(terminal).toHaveAttribute('data-link', 'open');
 
-  await terminal.click();
+  await page.getByTestId('node-body').click();
   await page.keyboard.type('echo hello');
   await page.keyboard.press('Enter');
   await expect(outputLine(page, 'hello')).toHaveCount(1);
@@ -36,7 +36,7 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await expect(terminal).toHaveAttribute('data-link', 'open');
 
   // Still the same shell, not a new one: it remembers what ran before.
-  await terminal.click();
+  await page.getByTestId('node-body').click();
   await page.keyboard.type('echo "again-$((20 + 3))"');
   await page.keyboard.press('Enter');
   await expect(outputLine(page, 'again-23')).toHaveCount(1);

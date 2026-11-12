@@ -179,6 +179,9 @@ code {
 .node-shield {
   position: absolute;
   inset: 0;
+  cursor: default;
+}
+.node-shield.zoomed-out {
   cursor: zoom-in;
 }
 

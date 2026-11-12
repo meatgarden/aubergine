@@ -211,6 +211,33 @@ describe('TmuxRuntime', () => {
     await runtime.kill(id);
   });
 
+  it('hands copied text to the viewer as an OSC 52 sequence', async () => {
+    const id = newId();
+    await runtime.create({ id });
+    const viewer = collect(await runtime.attach(id, { cols: 80, rows: 24 }));
+    await viewer.waitFor(() => viewer.text.length > 0);
+    await sleep(200);
+    // What tmux does when a mouse selection ends: set a buffer and forward it.
+    execFileSync('tmux', ['-L', SOCKET, 'set-buffer', '-w', 'copied text']);
+    const encoded = Buffer.from('copied text').toString('base64');
+    await viewer.waitFor(() => viewer.text.includes(`\u001b]52;`) && viewer.text.includes(encoded));
+    await runtime.kill(id);
+  });
+
+  it('turns on bracketed paste for the viewer when the program asks for it', async () => {
+    const id = newId();
+    await runtime.create({ id });
+    const attachment = await runtime.attach(id, { cols: 80, rows: 24 });
+    const viewer = collect(attachment);
+    await viewer.waitFor(() => viewer.text.length > 0);
+    attachment.write("printf '\\033[?2004h'; cat\r");
+    await viewer.waitFor(() => viewer.text.includes("\u001b[?2004h"));
+    // A bracketed paste reaches the program with its markers intact.
+    attachment.write('\u001b[200~pasted line\u001b[201~');
+    await waitUntil(async () => (await runtime.snapshot(id)).includes('pasted line'));
+    await runtime.kill(id);
+  });
+
   it('resizes the session to the viewer', async () => {
     const id = newId();
     await runtime.create({ id });

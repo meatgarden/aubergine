@@ -7,6 +7,8 @@ import {
   type TerminalClientMessage,
 } from '@aubergine/shared';
 import { socketUrl } from './api';
+import { decodeOsc52 } from './clipboard';
+import { isCanvasChord, isMac, isPasteChord } from './keys';
 import { Outbox } from './outbox';
 import { useApp } from './store';
 
@@ -47,6 +49,20 @@ export function TerminalView({ sessionId, interactive }: Props) {
     term.loadAddon(fit);
     term.open(element);
     terminal.current = term;
+
+    const mac = isMac();
+    // Returning false hands the key back to the browser and the canvas.
+    term.attachCustomKeyEventHandler((event) => !isCanvasChord(event, mac) && !isPasteChord(event, mac));
+    // The wheel scrolls this terminal's history only while it has focus;
+    // otherwise it belongs to the canvas.
+    term.attachCustomWheelEventHandler(() => element.contains(document.activeElement));
+    // Text selected in the terminal is handed over by the runtime as an
+    // OSC 52 sequence; put it on the system clipboard.
+    const onClipboard = term.parser.registerOscHandler(52, (payload) => {
+      const text = decodeOsc52(payload);
+      if (text !== null) void navigator.clipboard?.writeText(text).catch(() => {});
+      return true;
+    });
 
     let socket: WebSocket | null = null;
     let retry: number | undefined;
@@ -117,6 +133,7 @@ export function TerminalView({ sessionId, interactive }: Props) {
       cancelAnimationFrame(frame);
       observer.disconnect();
       onData.dispose();
+      onClipboard.dispose();
       onResize.dispose();
       socket?.close();
       term.dispose();
