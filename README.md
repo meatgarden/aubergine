@@ -70,6 +70,88 @@ The server listens on `127.0.0.1` only, so it is reachable from this computer an
 
 In a Chromium-based browser you can install the page as an app window (address bar → install), which lets more keyboard shortcuts reach the canvas.
 
+## Moving your existing terminals over
+
+You probably have terminal tabs open already, some of them running agents. One thing cannot be done, by this or any tool: **a program that is already running in another terminal cannot be moved into an Aubergine session.** So moving over means three things: give each tab a canvas session in the same folder, carry agent conversations on inside those sessions, and make new tabs land on the canvas from now on.
+
+Nothing here stops, signals or changes a program you have running, and nothing edits your dotfiles.
+
+These steps use the `aubergine` command; see [Command line](#command-line) for putting it on your `PATH`. The server must be running.
+
+### A tab that is sitting at its prompt
+
+In that tab:
+
+```sh
+aubergine here
+```
+
+This creates a session in the tab's current folder, named after the folder, puts it on the canvas, and turns the tab into a view of that session. The tab and the canvas now show the same shell. Close the tab whenever you like; the session stays on the canvas.
+
+Give it a name, or a command to start with, if you want:
+
+```sh
+aubergine here "api server" -- npm run dev
+```
+
+`aubergine here` starts a new shell; variables and shell history that only existed in the old shell's memory do not come along. The old shell is still underneath the view: if the session ends while the tab is open, you are back in it. Use `exec aubergine here` to replace the old shell completely.
+
+### A tab with a command still running
+
+Leave it alone until the command finishes, or stop it yourself when it suits you. Then run `aubergine here` in that tab, adding the command after `--` if you want it started again in the new session.
+
+A running server or watcher cannot be carried over; it has to be started again inside the session.
+
+### A tab running Claude Code
+
+1. Let the agent finish its current turn.
+2. Exit it (`/exit`).
+3. In the same tab, in the same folder:
+
+   ```sh
+   aubergine here --claude
+   ```
+
+This starts Claude Code in a new canvas session with `--continue`, so the conversation carries on where it stopped, now with its status on the canvas (working, waiting for you, finished).
+
+The limit: `--continue` picks the **most recent** conversation for that folder. If two agents were working in the same folder, only the first `aubergine here --claude` gets the right one by itself. For the other, run `aubergine here`, then `claude --resume` in the session and choose the conversation from the list.
+
+### All tabs at once
+
+```sh
+aubergine scan
+```
+
+lists your open shells that are not on the canvas yet: the terminal, what is running in it, and its folder. It only reads.
+
+```sh
+aubergine import --dry-run
+aubergine import
+```
+
+creates one canvas session per folder, grouped in a frame named "Imported", and prints what to do in each original tab: attach it if it is idle, or wait for its command or agent first. `--dry-run` shows the plan and changes nothing. Folders that already have a session are skipped; `--all` gives every tab its own session anyway. Your tabs are left exactly as they are.
+
+### New tabs from now on
+
+```sh
+aubergine shell-hook print
+```
+
+prints a few lines for your `.zshrc`. Add them yourself, at the end of the file. From then on a new terminal tab starts inside a new canvas session, and closing the tab only detaches from it.
+
+The lines cannot leave you without a shell. They do nothing inside Aubergine or tmux or in a non-interactive shell, and if the server is stopped, slow to answer, or anything else fails, the normal shell starts as usual (after a moment's wait, at most a few seconds).
+
+For one plain tab on purpose, run `AUBERGINE_DISABLE=1 zsh`, or set `AUBERGINE_DISABLE=1` in the environment of a terminal profile.
+
+Each new tab makes a new session, so park or end the ones you no longer need.
+
+### Going back
+
+- Remove the lines between the two `aubergine` markers from your `.zshrc`; new tabs are plain again.
+- `AUBERGINE_DISABLE=1` switches the lines off without removing them.
+- Sessions are ordinary tmux sessions on their own socket. With the server stopped you can still reach every one: `tmux -L aubergine ls`, then `tmux -L aubergine attach -t <id>` with an ID from that list.
+- Ending the sessions (from the canvas, or `tmux -L aubergine kill-server`) leaves nothing running.
+
 ## Use
 
 ### Canvas
@@ -191,13 +273,19 @@ ln -s "$PWD/bin/aubergine.mjs" /usr/local/bin/aubergine
 aubergine list                 sessions with their state, command and folder
 aubergine new [name]           start a new terminal on the canvas
 aubergine attach <name>        open a session in this terminal
+aubergine here [name] [-- cmd] start a session in this folder and turn this terminal into a view of it
+                               --no-attach  only create it
+                               --claude     start Claude Code in it, continuing this folder's last conversation
+aubergine scan                 list open shells that are not on the canvas yet (read-only)
+aubergine import               give each of those a canvas session (--dry-run, --all)
+aubergine shell-hook print     print the zsh lines that make new tabs start on the canvas
 aubergine note <text>          inside a session: add an entry to its note log
 aubergine hooks print          print the Claude Code hook settings
 aubergine service install      start the Aubergine server at login (macOS)
 aubergine service uninstall    stop starting it at login
 ```
 
-`attach` shows the very same session as the canvas, so both views stay in step. Close the terminal window to detach; the session keeps running.
+`attach` and `here` show the very same session as the canvas, so both views stay in step. Close the terminal window to detach; the session keeps running. See [Moving your existing terminals over](#moving-your-existing-terminals-over) for `here`, `scan`, `import` and `shell-hook`.
 
 `service install` writes a per-user launchd agent that runs the server from this checkout, with the port and data folder in effect when you ran it. Run `pnpm build` first.
 
