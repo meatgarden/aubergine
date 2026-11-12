@@ -24,6 +24,8 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   const terminal = page.getByTestId('terminal');
   await expect(terminal).toHaveAttribute('data-link', 'open');
 
+  // A shell discards what is typed while it is still starting, so wait for its prompt.
+  await expect(page.locator('.xterm-rows')).toHaveText(/\S/);
   await page.getByTestId('node-body').click();
   await page.keyboard.type('echo hello');
   await page.keyboard.press('Enter');

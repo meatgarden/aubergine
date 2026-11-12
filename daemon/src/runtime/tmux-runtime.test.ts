@@ -59,6 +59,16 @@ async function waitUntil(check: () => Promise<boolean>, timeoutMs = 8000): Promi
   }
 }
 
+/**
+ * Starts a session and waits until its shell has drawn its prompt. A shell
+ * throws away anything typed while it is still starting up, so tests must
+ * not type sooner.
+ */
+async function createReady(target: TmuxRuntime, id: string, options: { shell?: string } = {}): Promise<void> {
+  await target.create({ id, ...options });
+  await waitUntil(async () => (await target.snapshot(id)).trim() !== '', 15_000);
+}
+
 afterEach(() => {
   for (const attachment of open.splice(0)) attachment.close();
 });
@@ -119,7 +129,7 @@ describe('shell environment when the daemon starts outside a terminal', () => {
 
   it('still gives sessions a normal login environment', async () => {
     const id = newId();
-    await bare.create({ id });
+    await createReady(bare, id);
     const attachment = await bare.attach(id, { cols: 200, rows: 24 });
     const viewer = collect(attachment);
     attachment.write('echo "home=[$HOME] user=[$USER] shell=[$SHELL] lang=[$LANG] term=[$TERM]"\r');
@@ -173,6 +183,20 @@ describe('TmuxRuntime', () => {
     await runtime.kill(b);
   });
 
+  it('can start a session in the moment the server is shutting down after its last one ended', async () => {
+    const lonely = new TmuxRuntime({ socket: `${SOCKET}-lonely` });
+    try {
+      for (let round = 0; round < 25; round++) {
+        const id = newId();
+        await lonely.create({ id });
+        expect(await lonely.has(id)).toBe(true);
+        await lonely.kill(id); // the only session: tmux now stops its server
+      }
+    } finally {
+      await lonely.killServer();
+    }
+  });
+
   it('refuses IDs that are not UUIDv7, so nothing else reaches the command line', async () => {
     await expect(runtime.create({ id: 'main; rm -rf /' })).rejects.toThrow(/Not a session ID/);
     await expect(runtime.has('0')).rejects.toThrow(/Not a session ID/);
@@ -209,7 +233,7 @@ describe('TmuxRuntime', () => {
 
   it('streams output to a viewer and takes its input', async () => {
     const id = newId();
-    await runtime.create({ id });
+    await createReady(runtime, id);
     const viewer = collect(await runtime.attach(id, { cols: 80, rows: 24 }));
     const attachment = open.at(-1)!;
 
@@ -221,7 +245,7 @@ describe('TmuxRuntime', () => {
 
   it('keeps the session and its shell state when a viewer detaches and another attaches', async () => {
     const id = newId();
-    await runtime.create({ id });
+    await createReady(runtime, id);
 
     const first = await runtime.attach(id, { cols: 80, rows: 24 });
     const firstView = collect(first);
@@ -243,7 +267,7 @@ describe('TmuxRuntime', () => {
 
   it('hands copied text to the viewer as an OSC 52 sequence', async () => {
     const id = newId();
-    await runtime.create({ id });
+    await createReady(runtime, id);
     const viewer = collect(await runtime.attach(id, { cols: 80, rows: 24 }));
     await viewer.waitFor(() => viewer.text.length > 0);
     await sleep(200);
@@ -256,7 +280,7 @@ describe('TmuxRuntime', () => {
 
   it('turns on bracketed paste for the viewer when the program asks for it', async () => {
     const id = newId();
-    await runtime.create({ id });
+    await createReady(runtime, id);
     const attachment = await runtime.attach(id, { cols: 80, rows: 24 });
     const viewer = collect(attachment);
     await viewer.waitFor(() => viewer.text.length > 0);
@@ -270,7 +294,7 @@ describe('TmuxRuntime', () => {
 
   it('resizes the session to the viewer', async () => {
     const id = newId();
-    await runtime.create({ id });
+    await createReady(runtime, id);
     const windowSize = () =>
       execFileSync(
         'tmux',
@@ -303,7 +327,7 @@ describe('TmuxRuntime', () => {
     await killedView.waitFor(() => killedView.exited);
 
     const exiting = newId();
-    await runtime.create({ id: exiting });
+    await createReady(runtime, exiting);
     const attachment = await runtime.attach(exiting, { cols: 80, rows: 24 });
     const exitingView = collect(attachment);
     attachment.write('exit\r');
@@ -319,7 +343,7 @@ describe('TmuxRuntime', () => {
 
   it('finds sessions that were started by an earlier runtime instance', async () => {
     const id = newId();
-    await runtime.create({ id });
+    await createReady(runtime, id);
     const later = new TmuxRuntime({ socket: SOCKET });
     expect((await later.list()).map((s) => s.id)).toContain(id);
     const viewer = collect(await later.attach(id, { cols: 80, rows: 24 }));

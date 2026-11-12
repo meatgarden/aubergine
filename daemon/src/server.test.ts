@@ -34,7 +34,6 @@ let sessions: Sessions;
 let settingsFile: SettingsFile;
 let port: number;
 let origin: string;
-let restartedCwd: string | null = null;
 const sockets: WebSocket[] = [];
 
 async function start(): Promise<void> {
@@ -117,6 +116,17 @@ async function waitFor(check: () => boolean, what: string, timeoutMs = 8000): Pr
   }
 }
 
+/** Like waitFor, for conditions on what the runtime reports: asks it afresh before each check. */
+async function waitForRefreshed(check: () => boolean, what: string, timeoutMs = 8000): Promise<void> {
+  const started = Date.now();
+  for (;;) {
+    await sessions.refresh();
+    if (check()) return;
+    if (Date.now() - started > timeoutMs) throw new Error(`Timed out waiting for ${what}`);
+    await sleep(40);
+  }
+}
+
 function terminal(sessionId: string, options: Parameters<typeof openSocket>[1] = {}) {
   const socket = openSocket(`${paths.terminal(sessionId)}?cols=80&rows=24`, options);
   const decoder = new TextDecoder();
@@ -131,10 +141,24 @@ function terminal(sessionId: string, options: Parameters<typeof openSocket>[1] =
   return view;
 }
 
+/**
+ * Waits until the session's shell has drawn its prompt. A shell throws away
+ * anything typed while it is still starting up, so tests must not type sooner.
+ */
+async function shellReady(sessionId: string): Promise<void> {
+  const started = Date.now();
+  while ((await runtime.snapshot(sessionId)).trim() === '') {
+    if (Date.now() - started > 15_000) throw new Error('The shell never showed a prompt');
+    await sleep(25);
+  }
+}
+
 async function createSession(name?: string): Promise<CreateSessionResponse> {
   const response = await request('POST', paths.sessions, { body: name ? { name } : {} });
   expect(response.statusCode).toBe(201);
-  return CreateSessionResponse.parse(response.json());
+  const created = CreateSessionResponse.parse(response.json());
+  await shellReady(created.session.id);
+  return created;
 }
 
 beforeAll(async () => {
@@ -150,7 +174,7 @@ beforeEach(async () => {
 afterEach(async () => {
   await stop();
   await runtime.killServer();
-  await rm(dir, { recursive: true, force: true });
+  await rm(dir, { recursive: true, force: true, maxRetries: 5, retryDelay: 50 });
 });
 
 afterAll(async () => {
@@ -335,8 +359,7 @@ describe('terminal WebSocket', () => {
     await waitFor(() => view.socket.readyState === WebSocket.OPEN, 'open');
     const folder = await realpath(dir);
     view.socket.send(JSON.stringify({ t: 'input', data: `cd ${folder}\r` }));
-    await waitFor(() => {
-      void sessions.refresh();
+    await waitForRefreshed(() => {
       return canvas.state.sessions[0]?.cwd === folder;
     }, 'folder noticed');
 
@@ -358,12 +381,12 @@ describe('terminal WebSocket', () => {
     expect(restarted.statusCode).toBe(200);
     expect(canvas.state.sessions[0]?.state).toBe('open');
     expect(await runtime.has(session.id)).toBe(true);
-    await waitFor(() => {
-      void runtime.list().then((list) => {
-        restartedCwd = list.find((x) => x.id === session.id)?.cwd ?? null;
-      });
-      return restartedCwd === folder;
-    }, 'new shell in the same folder');
+    // Ask the runtime itself: the saved folder was already this one before the restart.
+    const started = Date.now();
+    while ((await runtime.list()).find((x) => x.id === session.id)?.cwd !== folder) {
+      if (Date.now() - started > 8000) throw new Error('The new shell did not start in the same folder');
+      await sleep(40);
+    }
     expect((await request('POST', paths.restartSession(session.id), { body: {} })).statusCode).toBe(409);
   });
 
@@ -417,6 +440,15 @@ describe('parked sessions', () => {
     expect(canvas.state.sessions).toEqual([]);
   });
 
+  it('never answers a refresh with a picture taken before it was asked', async () => {
+    const { session } = await createSession();
+    const earlier = sessions.refresh(); // under way while the shell is ended
+    await runtime.kill(session.id);
+    await sessions.refresh();
+    expect(canvas.state.sessions[0]?.state).toBe('exited');
+    await earlier;
+  });
+
   it('removes a parked session whose shell ended unwatched, and marks an open one as ended', async () => {
     const parked = await createSession();
     const open = await createSession();
@@ -436,8 +468,7 @@ describe('session activity', () => {
     await waitFor(() => view.socket.readyState === WebSocket.OPEN, 'open');
     const folder = await realpath(dir);
     view.socket.send(JSON.stringify({ t: 'input', data: `cd ${folder} && sleep 30\r` }));
-    await waitFor(() => {
-      void sessions.refresh();
+    await waitForRefreshed(() => {
       const current = canvas.state.sessions[0];
       return current?.cwd === folder && current.command === 'sleep';
     }, 'folder and command');
@@ -468,8 +499,7 @@ describe('settings', () => {
     expect(edited.settings.font.size).toBe(15);
 
     const { session } = await createSession();
-    await waitFor(() => {
-      void sessions.refresh();
+    await waitForRefreshed(() => {
       const current = canvas.state.sessions.find((s) => s.id === session.id);
       // Not the user's own shell: `sh` (which some systems run as bash or dash).
       return current?.cwd === folder && ['sh', 'bash', 'dash'].includes(current.command ?? '');
@@ -579,8 +609,7 @@ describe('restart', () => {
     const view = terminal(session.id);
     await waitFor(() => view.socket.readyState === WebSocket.OPEN, 'open');
     view.socket.send(JSON.stringify({ t: 'input', data: `cd ${folder}\r` }));
-    await waitFor(() => {
-      void sessions.refresh();
+    await waitForRefreshed(() => {
       return canvas.state.sessions[0]?.cwd === folder;
     }, 'folder noticed');
     await runtime.kill(ended.session.id);
@@ -597,8 +626,7 @@ describe('restart', () => {
     expect(canvas.state.layout.nodes.map((n) => n.id)).toContain(node.id);
     const running = await runtime.list();
     expect(running.map((s) => s.id)).toEqual([session.id]); // the ended one stays ended
-    await waitFor(() => {
-      void sessions.refresh();
+    await waitForRefreshed(() => {
       return canvas.state.sessions[0]?.cwd === folder;
     }, 'fresh shell in the last folder');
     expect((await runtime.list())[0]?.command).toMatch(/sh$/); // just a shell, nothing re-run

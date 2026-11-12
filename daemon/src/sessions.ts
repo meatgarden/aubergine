@@ -38,6 +38,7 @@ export interface SessionsOptions {
 export class Sessions {
   private runtimeStatus: RuntimeStatus | null = null;
   private refreshing: Promise<void> | null = null;
+  private refreshQueued: Promise<void> | null = null;
 
   constructor(
     private readonly canvas: Canvas,
@@ -138,13 +139,25 @@ export class Sessions {
   /**
    * Asks the runtime what every session is doing: notices shells that ended
    * with nobody watching, and records changes of folder or command.
-   * Overlapping calls share one run.
+   *
+   * Calls never run side by side. A call made while a run is under way waits
+   * for one more run after it, so what it resolves with always reflects the
+   * runtime as it was after the call, never an older picture.
    */
   refresh(): Promise<void> {
-    this.refreshing ??= this.refreshOnce().finally(() => {
-      this.refreshing = null;
-    });
-    return this.refreshing;
+    if (!this.refreshing) {
+      this.refreshing = this.refreshOnce().finally(() => {
+        this.refreshing = null;
+      });
+      return this.refreshing;
+    }
+    this.refreshQueued ??= this.refreshing
+      .catch(() => {})
+      .then(() => {
+        this.refreshQueued = null;
+        return this.refresh();
+      });
+    return this.refreshQueued;
   }
 
   private async refreshOnce(): Promise<void> {

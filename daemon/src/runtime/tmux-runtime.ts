@@ -125,7 +125,7 @@ export class TmuxRuntime implements SessionRuntime {
   async create(options: CreateOptions): Promise<RuntimeSession> {
     const id = sessionName(options.id);
     const shell = options.shell ?? this.env.SHELL;
-    await this.exec([
+    await this.execWhenServerSettles([
       // tmux starts its default shell as a login shell; say which shell that is.
       ...(shell && path.isAbsolute(shell) ? ['set-option', '-g', 'default-shell', shell, ';'] : []),
       'new-session',
@@ -287,6 +287,23 @@ export class TmuxRuntime implements SessionRuntime {
     }
   }
 
+  /**
+   * tmux shuts its server down when the last session ends. A command sent in
+   * that moment reaches a server that is on its way out and fails; sent again
+   * a moment later, it starts a fresh server. Only for commands that are safe
+   * to repeat.
+   */
+  private async execWhenServerSettles(args: string[]): Promise<string> {
+    for (let attempt = 1; ; attempt++) {
+      try {
+        return await this.exec(args);
+      } catch (error) {
+        if (attempt >= 8 || !isServerGoingAway(error)) throw error;
+        await sleep(40 * attempt);
+      }
+    }
+  }
+
   private exec(args: string[], withSocket = true): Promise<string> {
     const fullArgs = withSocket ? [...this.baseArgs, ...args] : args;
     return new Promise((resolve, reject) => {
@@ -315,9 +332,14 @@ function sessionName(id: string): string {
 }
 
 function isNoServer(error: unknown): boolean {
-  return /no server running|error connecting to|No such file or directory/i.test(
+  // The last two appear when the server goes away while a command is under way.
+  return /no server running|error connecting to|No such file or directory|server exited unexpectedly|lost server/i.test(
     (error as ExecError).stderr ?? '',
   );
+}
+
+function isServerGoingAway(error: unknown): boolean {
+  return /server exited unexpectedly|lost server|error connecting to/i.test((error as ExecError).stderr ?? '');
 }
 
 function isNoSession(error: unknown): boolean {
