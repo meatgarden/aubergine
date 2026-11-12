@@ -63,7 +63,7 @@ Open the `/auth?token=…` link once per browser. After that, `http://127.0.0.1:
 | "This browser is not signed in yet" | Open the `/auth?token=…` link that the server printed when it started. |
 | A page saying tmux is missing or too old | Install or upgrade tmux (`brew install tmux`), then restart the server. |
 | The server will not start because the port is taken | Use another port: `AUBERGINE_PORT=4700 pnpm start`. |
-| A blank page after `pnpm start` | Run `pnpm build` first; `start` serves the built web app. |
+| "The web app has not been built yet" | Run `pnpm build`, then `pnpm start` again; `start` serves the built web app. |
 | A terminal shows no status badges | Status needs zsh, and a session created before an update keeps its old shell. Park it and start a new one, or restart its shell. |
 
 The server listens on `127.0.0.1` only, so it is reachable from this computer and nowhere else.
