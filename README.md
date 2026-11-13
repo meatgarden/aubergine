@@ -41,6 +41,23 @@ Open the `/auth?token=…` link once per browser. After that, `http://127.0.0.1:
 
 **5. Add a terminal.** Choose **New terminal** (or press `N`), click the terminal, and type.
 
+**6. Install the `aubergine` command** (optional, but the sections below on moving terminals over, notes and start at login use it). Nothing installs it for you: it is the file `bin/aubergine.mjs` in this folder, and you make it available everywhere by linking it into a folder on your `PATH`. From the `aubergine` folder, with Homebrew:
+
+```sh
+ln -s "$PWD/bin/aubergine.mjs" "$(brew --prefix)/bin/aubergine"
+```
+
+Without Homebrew, link it into any folder that is on your `PATH`, for example:
+
+```sh
+mkdir -p ~/.local/bin
+ln -s "$PWD/bin/aubergine.mjs" ~/.local/bin/aubergine
+```
+
+Check it with `aubergine list`. The link points back at this folder, so the command always runs the code you have here: keep the folder where it is, and after `git pull` there is nothing to reinstall. To remove the command, delete the link.
+
+You can also skip the link and run it by path: `node bin/aubergine.mjs list`.
+
 ### Stopping, restarting and updating
 
 - **Stop the server** with Ctrl+C in the terminal where it runs. Your terminals on the canvas keep running; start the server again and reload the page to get them back.
@@ -63,6 +80,7 @@ Open the `/auth?token=…` link once per browser. After that, `http://127.0.0.1:
 | "This browser is not signed in yet" | Open the `/auth?token=…` link that the server printed when it started. |
 | A page saying tmux is missing or too old | Install or upgrade tmux (`brew install tmux`), then restart the server. |
 | The server will not start because the port is taken | Use another port: `AUBERGINE_PORT=4700 pnpm start`. |
+| `aubergine: command not found` | The command is not linked onto your `PATH` yet: do step 6 above, or run `node bin/aubergine.mjs` from this folder. |
 | "The web app has not been built yet" | Run `pnpm build`, then `pnpm start` again; `start` serves the built web app. |
 | A terminal shows no status badges | Status needs zsh, and a session created before an update keeps its old shell. Park it and start a new one, or restart its shell. |
 
@@ -76,7 +94,7 @@ You probably have terminal tabs open already, some of them running agents. One t
 
 Nothing here stops, signals or changes a program you have running, and nothing edits your dotfiles.
 
-These steps use the `aubergine` command; see [Command line](#command-line) for putting it on your `PATH`. The server must be running.
+These steps use the `aubergine` command; install it first with step 6 of the [quick start](#quick-start). The server must be running.
 
 ### A tab that is sitting at its prompt
 
@@ -263,11 +281,7 @@ One thing to know: tmux fixes that base environment when its server first starts
 
 ## Command line
 
-`bin/aubergine.mjs` is the `aubergine` command; link it onto your `PATH` if you like:
-
-```sh
-ln -s "$PWD/bin/aubergine.mjs" /usr/local/bin/aubergine
-```
+`bin/aubergine.mjs` is the `aubergine` command. It is not installed automatically; step 6 of the [quick start](#quick-start) links it onto your `PATH`.
 
 ```
 aubergine list                 sessions with their state, command and folder
