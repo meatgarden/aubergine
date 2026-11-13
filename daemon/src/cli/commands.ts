@@ -63,7 +63,7 @@ export const USAGE = `Usage: aubergine <command>
   service uninstall          Stop starting it at login
   help                       Show this text
 
-The server must be running for list, new and attach.`;
+The server must be running for list, new, attach, here, scan, import, move and note.`;
 
 export class UsageError extends Error {}
 
