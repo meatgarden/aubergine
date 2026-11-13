@@ -29,7 +29,7 @@ export type Command =
       dryRun: boolean;
       open: boolean;
     }
-  | { name: 'import'; all: boolean; dryRun: boolean }
+  | { name: 'import'; terminals: string[]; all: boolean; dryRun: boolean }
   | { name: 'note'; text: string }
   | { name: 'hook'; event: HookEvent }
   | { name: 'hooks-print' }
@@ -48,8 +48,9 @@ export const USAGE = `Usage: aubergine <command>
                              --claude      start Claude Code in it, continuing this folder's last conversation
                              --claude -- <args>   start it with these arguments instead, for example
                                                   --claude -- --resume <id> --fork-session
-  scan                       List your open shells that are not on the canvas yet (read-only)
-  import [--all] [--dry-run] Give each of those shells a canvas session in the same folder
+  scan                       List your open terminals that are not on the canvas yet (read-only)
+  import [terminal…]         Give those terminals a canvas session in the same folder; with none named,
+                             every one, one per folder (--all: one per terminal). --dry-run shows the plan
   move [terminal…|--all]     Move running Claude Code tabs onto the canvas; with nothing named, list them
                              (default)     start a copy of the conversation; the original keeps running
                              --stop        ask an idle original to exit, then resume the same conversation
@@ -126,9 +127,14 @@ export function parseCommand(argv: readonly string[]): Command {
       };
     }
     case 'import': {
-      const unknown = rest.find((word) => word !== '--all' && word !== '--dry-run');
+      const unknown = rest.find((word) => word.startsWith('--') && word !== '--all' && word !== '--dry-run');
       if (unknown) throw new UsageError(`import does not know ${unknown}`);
-      return { name: 'import', all: rest.includes('--all'), dryRun: rest.includes('--dry-run') };
+      return {
+        name: 'import',
+        terminals: rest.filter((word) => !word.startsWith('--')),
+        all: rest.includes('--all'),
+        dryRun: rest.includes('--dry-run'),
+      };
     }
     case 'note':
       if (rest.join(' ').trim() === '') throw new UsageError('note needs some text');

@@ -68,6 +68,12 @@ export const paths = {
     /** PUT: say which agent is running here and in which conversation. */
     report: (sessionId: string) => `/v1/sessions/${sessionId}/agent`,
   },
+  /** GET: the user's open terminals that are not on the canvas. Read-only. */
+  outside: '/api/v1/outside',
+  /** POST: give one of those terminals a canvas session in its folder. */
+  outsideAdd: '/api/v1/outside/add',
+  /** POST: move the agent conversation of one of those terminals onto the canvas. */
+  outsideMove: '/api/v1/outside/move',
   /** WebSocket: stream of change events. */
   events: '/ws/v1/events',
   /** WebSocket: one terminal viewer. Query: `cols`, `rows`. */
@@ -168,6 +174,73 @@ export const SESSION_ENV = {
   sessionId: 'AUBERGINE_SESSION_ID',
   token: 'AUBERGINE_TOKEN',
 } as const;
+
+/**
+ * A terminal the user has open outside the canvas, as the daemon found it.
+ * `tty` and the process IDs are what a client sends back to act on it; the
+ * daemon looks everything else up again itself.
+ */
+export const OutsideTerminal = z.object({
+  /** Terminal device, for example `ttys004`. This is the word the command line takes. */
+  tty: z.string(),
+  /** The terminal's shell. */
+  pid: z.number().int(),
+  cwd: z.string().nullable(),
+  /**
+   * `shell`: sitting at its prompt. `command`: something is running.
+   * `agent`: Claude Code is running. `view`: already showing a canvas session.
+   */
+  kind: z.enum(['shell', 'command', 'agent', 'view']),
+  /** What is in the foreground, when something is. */
+  running: z.string().nullable(),
+  runningPid: z.number().int().nullable(),
+  /** For `agent`: what is known about its conversation. */
+  agent: z
+    .object({
+      /** False when the agent's own record could not be read. */
+      known: z.boolean(),
+      name: z.string().nullable(),
+      /** `idle`, `busy`, or null when unknown. */
+      status: z.string().nullable(),
+    })
+    .nullable(),
+});
+export type OutsideTerminal = z.infer<typeof OutsideTerminal>;
+
+export const OutsideResponse = z.object({ terminals: z.array(OutsideTerminal) });
+export type OutsideResponse = z.infer<typeof OutsideResponse>;
+
+/** Which terminal to act on: both values exactly as the listing gave them. */
+const OutsideTarget = z.object({
+  tty: z.string().regex(/^[A-Za-z0-9/]{1,32}$/),
+  pid: z.number().int().positive(),
+});
+
+export const OutsideAddRequest = OutsideTarget.extend({
+  /** Where to put the node; the daemon picks a spot when omitted. */
+  rect: NodeRect.optional(),
+});
+export type OutsideAddRequest = z.infer<typeof OutsideAddRequest>;
+
+export const OutsideMoveRequest = OutsideTarget.extend({
+  /** `fork`: start a copy, the original keeps running. `stop`: ask the original to exit, then resume. */
+  mode: z.enum(['fork', 'stop']),
+  /** With `stop`: also stop an agent that is not idle. */
+  force: z.boolean().optional(),
+  /** Only say what would happen. */
+  dryRun: z.boolean().optional(),
+});
+export type OutsideMoveRequest = z.infer<typeof OutsideMoveRequest>;
+
+/** What was done (or with `dryRun`, would be done) for one terminal. */
+export const OutsideResult = z.object({
+  /** The new session, when one was created. */
+  session: Session.nullable(),
+  node: LayoutNode.nullable(),
+  /** One or two sentences for the user: what happened and what to do with the old tab. */
+  message: z.string(),
+});
+export type OutsideResult = z.infer<typeof OutsideResult>;
 
 export const ShowResponse = z.object({
   /** How many canvases are open and were told. Zero means nobody saw it. */

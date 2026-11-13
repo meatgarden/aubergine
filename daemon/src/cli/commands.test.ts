@@ -29,8 +29,9 @@ describe('parseCommand', () => {
     expect(parseCommand(['attach', 'api'])).toEqual({ name: 'attach', query: 'api' });
     expect(parseCommand(['note', 'tests', 'pass'])).toEqual({ name: 'note', text: 'tests pass' });
     expect(parseCommand(['scan'])).toEqual({ name: 'scan' });
-    expect(parseCommand(['import'])).toEqual({ name: 'import', all: false, dryRun: false });
-    expect(parseCommand(['import', '--dry-run', '--all'])).toEqual({ name: 'import', all: true, dryRun: true });
+    expect(parseCommand(['import'])).toEqual({ name: 'import', terminals: [], all: false, dryRun: false });
+    expect(parseCommand(['import', '--dry-run', '--all'])).toEqual({ name: 'import', terminals: [], all: true, dryRun: true });
+    expect(parseCommand(['import', 'ttys004', 'ttys007'])).toMatchObject({ terminals: ['ttys004', 'ttys007'] });
     expect(parseCommand(['hook', 'stop'])).toEqual({ name: 'hook', event: 'stop' });
     expect(parseCommand(['hooks', 'print'])).toEqual({ name: 'hooks-print' });
     expect(parseCommand(['shell-hook', 'print'])).toEqual({ name: 'shell-hook-print' });
@@ -137,7 +138,8 @@ describe('resolveSession', () => {
   it('accepts a unique start of a name or of an ID', () => {
     expect(resolveSession(sessions, 'lo').name).toBe('logs');
     const target = sessions[1]!;
-    expect(resolveSession(sessions, target.id.slice(0, 20)).id).toBe(target.id);
+    // Long enough to tell apart IDs made in the same millisecond, which share their first part.
+    expect(resolveSession(sessions, target.id.slice(0, 32)).id).toBe(target.id);
   });
 
   it('refuses ambiguous and unknown names, and sessions whose shell ended', () => {

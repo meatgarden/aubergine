@@ -41,21 +41,6 @@ export function findCandidates(shells: readonly ScannedShell[], sessions: Readon
   return candidates;
 }
 
-export function formatCandidates(candidates: readonly Candidate[]): string {
-  if (candidates.length === 0) return 'No Claude Code tabs found outside Aubergine.';
-  const rows = [
-    ['TERMINAL', 'STATE', 'CONVERSATION', 'FOLDER'],
-    ...candidates.map((c) => [
-      c.shell.tty,
-      c.session?.status ?? 'unknown',
-      c.session ? (c.session.name ?? c.session.conversationId.slice(0, 8)) : '(not readable)',
-      c.session?.cwd ?? c.shell.cwd ?? '(unknown)',
-    ]),
-  ];
-  const widths = [0, 1, 2].map((column) => Math.max(...rows.map((row) => (row[column] ?? '').length)));
-  return rows.map((row) => row.map((cell, column) => (column < 3 ? cell.padEnd(widths[column] ?? 0) : cell)).join('  ').trimEnd()).join('\n');
-}
-
 export type MoveMode = 'fork' | 'stop';
 
 export type MoveItem =

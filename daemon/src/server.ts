@@ -12,6 +12,8 @@ import {
   CreateFrameRequest,
   CreateSessionRequest,
   Id,
+  OutsideAddRequest,
+  OutsideMoveRequest,
   PROTOCOL_VERSION,
   ReportAgentRequest,
   RevealRequest,
@@ -28,6 +30,8 @@ import {
   type ErrorCode,
   type ErrorResponse,
   type EventsServerMessage,
+  type OutsideResponse,
+  type OutsideResult,
   type SearchResponse,
   type ShowResponse,
   type Settings,
@@ -37,6 +41,7 @@ import {
 } from '@aubergine/shared';
 import { authorize, principalFromBearer, type Action, type Principal } from './auth';
 import type { Canvas } from './canvas';
+import type { Outside } from './migrate/outside';
 import { SessionNotFoundError, type Attachment, type SessionRuntime } from './runtime/runtime';
 import { BadInputError, ConflictError, NotFoundError, RuntimeUnavailableError, type Sessions } from './sessions';
 import { tokensMatch } from './token';
@@ -45,6 +50,8 @@ export interface ServerOptions {
   canvas: Canvas;
   sessions: Sessions;
   runtime: SessionRuntime;
+  /** Terminals outside the canvas. Left out, those routes answer that the feature is not available. */
+  outside?: Outside;
   /** Returns the current settings, re-reading the settings file. */
   settings: () => Promise<Settings>;
   token: string;
@@ -218,6 +225,23 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
 
   app.post(paths.parkSession(':sessionId'), async (request) => sessions.park(idParam(request, 'sessionId')));
   app.post(paths.restoreSession(':sessionId'), async (request) => sessions.restore(idParam(request, 'sessionId')));
+  /* ---------- Terminals outside the canvas (cookie only, like everything under /api) ---------- */
+
+  const outside = (): Outside => {
+    if (!options.outside) throw new HttpError(503, 'runtime_unavailable', 'Looking at outside terminals is not available');
+    return options.outside;
+  };
+
+  app.get(paths.outside, async (): Promise<OutsideResponse> => ({ terminals: await outside().list() }));
+
+  app.post(paths.outsideAdd, async (request, reply): Promise<OutsideResult> => {
+    const body = parse(OutsideAddRequest, request.body);
+    reply.code(201);
+    return outside().add(body);
+  });
+
+  app.post(paths.outsideMove, async (request): Promise<OutsideResult> => outside().move(parse(OutsideMoveRequest, request.body)));
+
   app.post(paths.resumeAgent(':sessionId'), async (request) => sessions.resumeAgent(idParam(request, 'sessionId')));
 
   app.post(paths.showSession(':sessionId'), async (request): Promise<ShowResponse> => {

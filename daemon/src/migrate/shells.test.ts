@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { NO_ATTENTION, NO_STATUS, newId, type Session } from '@aubergine/shared';
-import { findShells, formatScan, importLayout, looksLikeClaude, nextStep, parseLsofCwd, parsePs, planImport, programName } from './shells';
+import { findShells, importLayout, looksLikeClaude, parseLsofCwd, parsePs, planImport, programName } from './shells';
 
 // What `ps -axo pid=,ppid=,pgid=,tpgid=,tty=,args=` prints, including processes with no terminal.
 const PS = `
@@ -94,13 +94,6 @@ describe('findShells', () => {
     expect(byTty('ttys004')?.cwd).toBeNull();
   });
 
-  it('prints a table', () => {
-    const lines = formatScan(shells).split('\n');
-    expect(lines[0]).toMatch(/^TERMINAL\s+RUNNING\s+FOLDER$/);
-    expect(lines[1]).toMatch(/^ttys000 \(this one\)\s+-\s+\/Users\/me$/);
-    expect(lines[2]).toContain('Claude Code');
-    expect(formatScan([])).toBe('No open shells found outside Aubergine.');
-  });
 });
 
 function session(cwd: string, state: Session['state'] = 'open'): Session {
@@ -147,19 +140,6 @@ describe('planImport', () => {
     const plan = planImport([idle, ...shells], [], { all: false });
     expect(plan.create.find((i) => i.cwd === '/Users/me/work/api')?.shell.tty).toBe('ttys001');
     expect(plan.skipped.map((s) => s.shell.tty)).toContain('ttys010');
-  });
-});
-
-describe('nextStep', () => {
-  const line = "claude --continue --settings '/d/s.json'";
-  it('says what to do in each kind of tab', () => {
-    expect(nextStep({ shell: byTty('ttys000')!, sessionName: 'me' }, line)).toContain('Idle. In that tab run: aubergine attach "me"');
-    const busy = nextStep({ shell: byTty('ttys003')!, sessionName: 'web site' }, line);
-    expect(busy).toContain('"npm run dev --port 3000" is running there');
-    expect(busy).toContain('aubergine attach "web site"');
-    const agent = nextStep({ shell: byTty('ttys001')!, sessionName: 'api' }, line);
-    expect(agent).toContain('exit it (/exit)');
-    expect(agent).toContain(line);
   });
 });
 

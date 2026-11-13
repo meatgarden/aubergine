@@ -24,6 +24,7 @@ import {
 } from '@aubergine/shared';
 import { api } from './api';
 import { AttentionQueue } from './AttentionQueue';
+import { OutsidePanel } from './OutsidePanel';
 import { ParkedList } from './ParkedList';
 import { Picker } from './Picker';
 import { useApp } from './store';
@@ -167,6 +168,29 @@ export function Canvas() {
     [flow],
   );
 
+  /** Moves the view to a node at 100% and gives its terminal the keyboard. */
+  const goToNode = useCallback(
+    (nodeId: string, sessionId: string) => {
+      // A node that was just created or restored takes a moment to reach the canvas:
+      // wait until it is there, or the view would not move at all.
+      let attempts = 0;
+      const tryNow = (): void => {
+        if (!flow.getNode(nodeId) && attempts++ < 60) {
+          window.setTimeout(tryNow, 50);
+          return;
+        }
+        // A timer, not an animation frame: frames stop in a tab that is not showing,
+        // and the view should be in place when the user comes back to it.
+        window.setTimeout(() => {
+          zoomToNode(nodeId, { reveal: true });
+          focusSession(sessionId);
+        }, 30);
+      };
+      tryNow();
+    },
+    [flow, zoomToNode, focusSession],
+  );
+
   const [adding, setAdding] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -193,19 +217,13 @@ export function Canvas() {
       const rect = findFreeRect(taken, center, { width: NODE_DEFAULT_WIDTH, height: NODE_DEFAULT_HEIGHT });
       const created = await api.createSession({ rect, ...(agent ? { agent } : {}) });
       useApp.getState().apply({ type: 'session.created', ...created });
-      // Wait for React Flow to know the node before moving to it.
-      requestAnimationFrame(() =>
-        requestAnimationFrame(() => {
-          zoomToNode(created.node.id, { reveal: true });
-          focusSession(created.session.id);
-        }),
-      );
+      goToNode(created.node.id, created.session.id);
     } catch (e) {
       setError(`Could not start a terminal: ${(e as Error).message}`);
     } finally {
       setAdding(false);
     }
-  }, [flow, zoomToNode, focusSession]);
+  }, [flow, goToNode]);
 
   const resetZoom = useCallback(() => {
     const pane = document.querySelector('.react-flow')?.getBoundingClientRect();
@@ -269,20 +287,6 @@ export function Canvas() {
     return () => window.removeEventListener('keydown', onKeyDown, true);
   }, [addTerminal, resetZoom, zoomToFit, releaseFocus]);
 
-  /** Moves the view to a node at 100% and gives its terminal the keyboard. */
-  const goToNode = useCallback(
-    (nodeId: string, sessionId: string) => {
-      // A node that was just restored needs a moment to reach React Flow.
-      requestAnimationFrame(() =>
-        requestAnimationFrame(() => {
-          zoomToNode(nodeId, { reveal: true });
-          focusSession(sessionId);
-        }),
-      );
-    },
-    [zoomToNode, focusSession],
-  );
-
   // Asked to bring a session into view (by `aubergine here`, or by the address this page was opened on).
   const show = useApp((s) => s.show);
   useEffect(() => {
@@ -294,16 +298,12 @@ export function Canvas() {
       const node = canvas?.layout.nodes.find((n) => n.sessionId === show.sessionId);
       if (!session || !node) return;
       if (session.state === 'parked') await api.restoreSession(session.id).catch(() => {});
-      // The node may be brand new: wait until the canvas knows it.
-      for (let attempt = 0; attempt < 40 && !cancelled && !flow.getNode(node.id); attempt++) {
-        await new Promise((resolve) => setTimeout(resolve, 50));
-      }
       if (!cancelled) goToNode(node.id, session.id);
     })();
     return () => {
       cancelled = true;
     };
-  }, [show, flow, goToNode]);
+  }, [show, goToNode]);
 
   const percent = useMemo(() => `${Math.round(zoom * 100)}%`, [zoom]);
 
@@ -370,6 +370,7 @@ export function Canvas() {
           >
             {percent}
           </button>
+          <OutsidePanel onGo={goToNode} />
           <AttentionQueue onGo={goToNode} />
           <ParkedList onRestored={(nodeId) => requestAnimationFrame(() => requestAnimationFrame(() => zoomToNode(nodeId, { reveal: true })))} />
           {!live && <span className="warning">Reconnecting…</span>}

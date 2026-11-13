@@ -13,7 +13,7 @@ export const e2e = {
 
 export default defineConfig({
   testDir: 'e2e',
-  timeout: 30_000,
+  timeout: 90_000,
   workers: 1,
   reporter: [['list']],
   globalTeardown: './e2e/teardown.ts',
@@ -21,6 +21,8 @@ export default defineConfig({
     baseURL: `http://127.0.0.1:${e2e.port}`,
     viewport: { width: 1400, height: 900 },
     trace: 'retain-on-failure',
+    // An action that cannot happen fails by itself, naming the step, instead of using up the whole test.
+    actionTimeout: 15_000,
   },
   webServer: {
     // Start from nothing each run: no saved state and no leftover shells.

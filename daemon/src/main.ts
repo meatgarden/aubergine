@@ -7,6 +7,10 @@ import { Canvas } from './canvas';
 import { loadConfig } from './config';
 import { TmuxRuntime } from './runtime/tmux-runtime';
 import { buildServer } from './server';
+import { readClaudeSession } from './migrate/claude-sessions';
+import { systemProcesses } from './migrate/move';
+import { Outside } from './migrate/outside';
+import { scanShells } from './migrate/shells';
 import { Sessions } from './sessions';
 import { ZshIntegration } from './shell/integration';
 import { SettingsFile, expandHome } from './settings';
@@ -44,7 +48,15 @@ async function main(): Promise<void> {
     shell: () => settings.value.shell,
   });
 
+  const outside = new Outside({
+    scan: () => scanShells(config),
+    readAgentRecord: (pid) => readClaudeSession(pid),
+    processes: systemProcesses,
+    createSession: (input) => sessions.create(input),
+  });
+
   const app = await buildServer({
+    outside,
     canvas,
     sessions,
     runtime,

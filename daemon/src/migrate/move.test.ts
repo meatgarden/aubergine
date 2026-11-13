@@ -5,7 +5,7 @@ import path from 'node:path';
 import { setTimeout as sleep } from 'node:timers/promises';
 import { afterEach, describe, expect, it } from 'vitest';
 import type { ClaudeSession } from './claude-sessions';
-import { describeItem, findCandidates, formatCandidates, planMove, stopAgent, systemProcesses, type ProcessControl } from './move';
+import { describeItem, findCandidates, planMove, stopAgent, systemProcesses, type ProcessControl } from './move';
 import type { ScannedShell } from './shells';
 
 const ID_A = '0190aaaa-bbbb-7ccc-8ddd-eeeeeeeeeeee';
@@ -64,14 +64,6 @@ describe('findCandidates', () => {
     ]);
   });
 
-  it('lists them with state, conversation and folder', () => {
-    const lines = formatCandidates(candidates).split('\n');
-    expect(lines[0]).toMatch(/^TERMINAL\s+STATE\s+CONVERSATION\s+FOLDER$/);
-    expect(lines[1]).toMatch(/^ttys001\s+idle\s+fix the build\s+\/Users\/me\/work\/api$/);
-    expect(lines[2]).toMatch(/^ttys002\s+busy\s+0190bbbb\s+\/Users\/me\/work\/web$/);
-    expect(lines[3]).toMatch(/^ttys004\s+unknown\s+\(not readable\)/);
-    expect(formatCandidates([])).toBe('No Claude Code tabs found outside Aubergine.');
-  });
 });
 
 describe('planMove', () => {

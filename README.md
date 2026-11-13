@@ -118,7 +118,19 @@ You probably have terminal tabs open already, some of them running agents. One t
 
 Nothing here stops, signals or changes a program you have running, and nothing edits your dotfiles.
 
-These steps use the `aubergine` command; install it first with step 6 of the [quick start](#quick-start). The server must be running.
+### From the canvas
+
+The quickest way is the **Outside terminals** button in the canvas toolbar. It lists every terminal you have open outside the canvas: the terminal's name, its folder, what is running in it, and for a Claude Code tab the conversation's name and whether the agent is idle or busy. **Refresh** looks again; nothing is looked up while the panel is closed.
+
+Each row has its own action, so you bring terminals over one at a time:
+
+- **Add to canvas**, for a shell at its prompt or one running a command: a canvas session in the same folder. A command that is running stays where it is; start it again in the new session if you need it there.
+- **Fork to canvas**, for a Claude Code tab: a copy of the conversation starts on the canvas, and the original keeps running until you exit it.
+- **Stop and resume here**, for a Claude Code tab whose agent is idle: the original is asked to exit and the same conversation carries on on the canvas. It asks you first, and it is switched off, with the reason shown, while the agent is busy.
+
+After an action the canvas goes to the new terminal, and the row tells you what to do with the old tab.
+
+The same things can be done from the command line, described next. These steps use the `aubergine` command; install it first with step 6 of the [quick start](#quick-start). The server must be running.
 
 If you have not linked the command, every `aubergine …` below still works when you write it as `node` followed by the full path to `bin/aubergine.mjs`. Most of these commands are run from your other tabs, in their own folders, so a relative path will not do. For example, if you cloned into `~/code`:
 
@@ -161,7 +173,7 @@ The running agent itself cannot be moved, but its conversation can. Start with a
 aubergine move
 ```
 
-lists your Claude Code tabs: terminal, whether the agent is idle or busy, the conversation's name and its folder. It only reads. Then move the ones you want by terminal name, or all of them:
+lists your Claude Code tabs: terminal, whether the agent is idle or busy, the conversation's name and its folder, followed by a ready-to-copy command for each one. It only reads. Then move the ones you want by terminal name, one at a time or several, or all of them:
 
 ```sh
 aubergine move ttys004 --dry-run     # show the plan, change nothing
@@ -213,7 +225,15 @@ aubergine here --claude -- --resume <conversation id> --fork-session
 aubergine scan
 ```
 
-lists your open shells that are not on the canvas yet: the terminal, what is running in it, and its folder. It only reads.
+lists your open terminals that are not on the canvas yet: the terminal's name, what is running in it, and its folder, followed by a ready-to-copy command for each one. It only reads.
+
+To bring over just one or a few, name them:
+
+```sh
+aubergine import ttys004
+```
+
+Or take all of them:
 
 ```sh
 aubergine import --dry-run
@@ -378,8 +398,9 @@ aubergine move                 list running Claude Code tabs that can be moved (
 aubergine move <terminal>…     start a copy of each one's conversation on the canvas (or --all)
                                --stop       ask an idle original to exit, then resume the same conversation
                                --dry-run, --yes, --force, --no-open
-aubergine scan                 list open shells that are not on the canvas yet (read-only)
-aubergine import               give each of those a canvas session (--dry-run, --all)
+aubergine scan                 list open terminals that are not on the canvas yet (read-only)
+aubergine import <terminal>…   give those terminals a canvas session in the same folder
+aubergine import               the same for every one, one per folder (--all, --dry-run)
 aubergine shell-hook print     print the zsh lines that make new tabs start on the canvas
 aubergine note <text>          inside a session: add an entry to its note log
 aubergine hooks print          print the Claude Code hook settings
