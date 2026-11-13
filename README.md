@@ -56,7 +56,7 @@ ln -s "$PWD/bin/aubergine.mjs" ~/.local/bin/aubergine
 
 Check it with `aubergine list`. The link points back at this folder, so the command always runs the code you have here: keep the folder where it is, and after `git pull` there is nothing to reinstall. To remove the command, delete the link.
 
-You can also skip the link and run it by path: `node bin/aubergine.mjs list`.
+You can also skip the link and run it by path. From this folder that is `node bin/aubergine.mjs list`; from anywhere else, give the full path to the file, for example `node ~/code/aubergine/bin/aubergine.mjs list` if you cloned into `~/code`.
 
 ### Stopping, restarting and updating
 
@@ -95,6 +95,13 @@ You probably have terminal tabs open already, some of them running agents. One t
 Nothing here stops, signals or changes a program you have running, and nothing edits your dotfiles.
 
 These steps use the `aubergine` command; install it first with step 6 of the [quick start](#quick-start). The server must be running.
+
+If you have not linked the command, every `aubergine …` below still works when you write it as `node` followed by the full path to `bin/aubergine.mjs`. Most of these commands are run from your other tabs, in their own folders, so a relative path will not do. For example, if you cloned into `~/code`:
+
+```sh
+node ~/code/aubergine/bin/aubergine.mjs scan
+node ~/code/aubergine/bin/aubergine.mjs here
+```
 
 ### A tab that is sitting at its prompt
 
