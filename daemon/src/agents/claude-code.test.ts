@@ -7,6 +7,7 @@ import { claudeHooksSettings, claudeLaunchLine, hookActions, shellJoin, writeCla
 describe('hookActions', () => {
   it('logs the prompt and marks the session as working', () => {
     const input = { hook_event_name: 'UserPromptSubmit', session_id: 'abc', prompt: '  fix the failing test  ' };
+    // 'abc' is too short to be a conversation ID, so nothing is reported about the agent.
     expect(hookActions('prompt', input)).toEqual([
       { do: 'attention', state: 'working' },
       { do: 'note', kind: 'prompt', text: 'fix the failing test' },
@@ -37,6 +38,17 @@ describe('hookActions', () => {
       { do: 'attention', state: 'done' },
       { do: 'note', kind: 'event', text: 'Finished.' },
     ]);
+  });
+
+  it('reports the conversation ID first, when the input carries a plain one', () => {
+    const id = '0190aaaa-bbbb-7ccc-8ddd-eeeeeeeeeeee';
+    expect(hookActions('stop', { session_id: id })[0]).toEqual({ do: 'agent', conversationId: id });
+    expect(hookActions('notification', { session_id: id, notification_type: 'auth_success' })).toEqual([
+      { do: 'agent', conversationId: id },
+    ]);
+    for (const bad of ['x; rm -rf ~', '$(whoami)aaaaaaaa', 42, null]) {
+      expect(hookActions('stop', { session_id: bad }).some((a) => a.do === 'agent')).toBe(false);
+    }
   });
 
   it('never throws on input it does not understand', () => {

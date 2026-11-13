@@ -602,7 +602,38 @@ describe('agent API', () => {
     expect(canvas.state.sessions[0]?.attention).toEqual({ state: 'none', message: null, at: null });
   });
 
-  it('keeps prompts out of the log when prompt logging is turned off', async () => {
+  it('remembers the agent conversation a session reports, and can resume it', async () => {
+    const { session } = await createSession();
+    const mine = sessionToken(token, session.id);
+    const id = '0190aaaa-bbbb-7ccc-8ddd-eeeeeeeeeeee';
+    expect((await request('POST', paths.resumeAgent(session.id), { body: {} })).statusCode).toBe(409);
+
+    const reported = await agent('PUT', paths.agent.report(session.id), mine, { kind: 'claude-code', conversationId: id });
+    expect(reported.statusCode).toBe(200);
+    expect(canvas.state.sessions[0]?.agent).toEqual({ kind: 'claude-code', conversationId: id });
+
+    // Not something another session may set, and not with an ID that is unsafe to type.
+    const other = await createSession();
+    expect((await agent('PUT', paths.agent.report(other.session.id), mine, { kind: 'claude-code', conversationId: id })).statusCode).toBe(403);
+    const unsafe = await agent('PUT', paths.agent.report(session.id), mine, { kind: 'claude-code', conversationId: 'aaaaaaaa; touch /tmp/x' });
+    expect(unsafe.statusCode).toBe(400);
+    expect(canvas.state.sessions[0]?.agent?.conversationId).toBe(id);
+
+    const resumed = await request('POST', paths.resumeAgent(session.id), { body: {} });
+    expect(resumed.statusCode).toBe(200);
+    const started = Date.now();
+    while (!(await runtime.snapshot(session.id)).includes(`agent-launched:--resume:${id}`)) {
+      if (Date.now() - started > 15_000) throw new Error('The agent was never started again');
+      await sleep(40);
+    }
+
+    // Still known after a restart of the daemon.
+    await stop();
+    await start();
+    expect(canvas.state.sessions[0]?.agent).toEqual({ kind: 'claude-code', conversationId: id });
+  });
+
+  it("keeps prompts out of the log when prompt logging is turned off", async () => {
     const { session } = await createSession();
     const mine = sessionToken(token, session.id);
     await agent('POST', paths.agent.notes(session.id), mine, { text: 'fix the build', kind: 'prompt' });

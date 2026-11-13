@@ -96,7 +96,8 @@ async function runHook(event: HookEvent): Promise<number> {
       // No usable input: the event itself is still worth reporting.
     }
     for (const action of hookActions(event, input)) {
-      if (action.do === 'attention') await client.setAttention(action.state, action.message);
+      if (action.do === 'agent') await client.reportAgent('claude-code', action.conversationId).catch(() => {});
+      else if (action.do === 'attention') await client.setAttention(action.state, action.message);
       else await client.appendNote(action.text, action.kind);
     }
   } catch {

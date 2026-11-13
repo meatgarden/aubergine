@@ -115,6 +115,7 @@ function session(cwd: string, state: Session['state'] = 'open'): Session {
     status: NO_STATUS,
     attention: NO_ATTENTION,
     noteLog: [],
+    agent: null,
   };
 }
 

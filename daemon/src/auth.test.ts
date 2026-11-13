@@ -41,6 +41,8 @@ describe('authorize', () => {
     expect(authorize(session, 'note.append', { sessionId: mine })).toBe(true);
     expect(authorize(session, 'attention.set', { sessionId: theirs })).toBe(false);
     expect(authorize(session, 'note.append', { sessionId: theirs })).toBe(false);
+    expect(authorize(session, 'agent.report', { sessionId: mine })).toBe(true);
+    expect(authorize(session, 'agent.report', { sessionId: theirs })).toBe(false);
   });
 
   it('refuses actions it does not know', () => {

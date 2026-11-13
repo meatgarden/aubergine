@@ -1,4 +1,4 @@
-import { AppendNoteResponse, SESSION_ENV, paths, type AttentionState, type NoteEntry } from '@aubergine/shared';
+import { AppendNoteResponse, SESSION_ENV, paths, type AgentKind, type AttentionState, type NoteEntry } from '@aubergine/shared';
 import { UsageError } from './commands';
 
 /**
@@ -9,6 +9,7 @@ export interface AgentClient {
   sessionId: string;
   appendNote(text: string, kind?: NoteEntry['kind']): Promise<NoteEntry | null>;
   setAttention(state: AttentionState, message?: string): Promise<void>;
+  reportAgent(kind: AgentKind, conversationId: string): Promise<void>;
 }
 
 export function agentClient(env: NodeJS.ProcessEnv = process.env, timeoutMs = 5000): AgentClient {
@@ -39,6 +40,9 @@ export function agentClient(env: NodeJS.ProcessEnv = process.env, timeoutMs = 50
     sessionId,
     appendNote: async (text, kind) =>
       AppendNoteResponse.parse(await send('POST', paths.agent.notes(sessionId), { text, ...(kind ? { kind } : {}) })).entry,
+    reportAgent: async (kind, conversationId) => {
+      await send('PUT', paths.agent.report(sessionId), { kind, conversationId });
+    },
     setAttention: async (state, message) => {
       await send('PUT', paths.agent.attention(sessionId), { state, ...(message ? { message } : {}) });
     },

@@ -69,6 +69,7 @@ export const api = {
     call<void>(null, 'POST', paths.revealInSession(sessionId), { text }),
   appendNote: (sessionId: string, text: string) =>
     call(AppendNoteResponse, 'POST', paths.sessionNotes(sessionId), { text }),
+  resumeAgent: (sessionId: string) => call(Session, 'POST', paths.resumeAgent(sessionId), {}),
   seenSession: (sessionId: string) => call(Session, 'POST', paths.seenSession(sessionId), {}),
   restartSession: (sessionId: string) => call(Session, 'POST', paths.restartSession(sessionId), {}),
   closeSession: (sessionId: string) => call<void>(null, 'DELETE', paths.session(sessionId)),

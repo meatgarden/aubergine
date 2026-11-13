@@ -1,5 +1,7 @@
 import { z } from 'zod';
 import {
+  AgentInfo,
+  AgentKind,
   Attention,
   AttentionState,
   CanvasState,
@@ -37,6 +39,8 @@ export const paths = {
   restoreSession: (sessionId: string) => `/api/v1/sessions/${sessionId}/restore`,
   /** POST: start a new shell for a session whose shell exited. */
   restartSession: (sessionId: string) => `/api/v1/sessions/${sessionId}/restart`,
+  /** POST: start the session's agent again in the conversation it was last in. */
+  resumeAgent: (sessionId: string) => `/api/v1/sessions/${sessionId}/resume-agent`,
   /** POST: ask every open canvas to bring this session into view. Answers with how many are open. */
   showSession: (sessionId: string) => `/api/v1/sessions/${sessionId}/show`,
   /** POST: the user is looking at this session now. */
@@ -61,6 +65,8 @@ export const paths = {
     attention: (sessionId: string) => `/v1/sessions/${sessionId}/attention`,
     /** POST: append an entry to the session's note log. */
     notes: (sessionId: string) => `/v1/sessions/${sessionId}/notes`,
+    /** PUT: say which agent is running here and in which conversation. */
+    report: (sessionId: string) => `/v1/sessions/${sessionId}/agent`,
   },
   /** WebSocket: stream of change events. */
   events: '/ws/v1/events',
@@ -85,10 +91,6 @@ export const StateResponse = z.object({
   state: CanvasState,
 });
 export type StateResponse = z.infer<typeof StateResponse>;
-
-/** Agents the canvas knows how to start. */
-export const AgentKind = z.enum(['claude-code']);
-export type AgentKind = z.infer<typeof AgentKind>;
 
 export const CreateSessionRequest = z.object({
   name: SessionName.optional(),
@@ -156,6 +158,9 @@ export const AppendNoteResponse = z.object({ entry: NoteEntry.nullable() });
 export type AppendNoteResponse = z.infer<typeof AppendNoteResponse>;
 
 export const AttentionResponse = Attention;
+
+export const ReportAgentRequest = AgentInfo;
+export type ReportAgentRequest = z.infer<typeof ReportAgentRequest>;
 
 /** Environment variables every session's shell is given, for programs that talk to the daemon. */
 export const SESSION_ENV = {

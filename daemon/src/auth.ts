@@ -8,7 +8,7 @@ export type Principal =
   /** A program running inside one session, holding that session's token. */
   | { kind: 'session'; sessionId: string };
 
-export type Action = 'attention.set' | 'note.append';
+export type Action = 'attention.set' | 'note.append' | 'agent.report';
 
 export interface Resource {
   sessionId: string;
@@ -19,14 +19,16 @@ export interface Resource {
  * for a principal asks here, so when scopes grow, this function changes and
  * its callers do not.
  *
- * Today: the user may do anything; a session may set its own attention state
- * and append to its own note log, and nothing else.
+ * Today: the user may do anything; a session may set its own attention state,
+ * append to its own note log and say which agent conversation it is in, and
+ * nothing else.
  */
 export function authorize(principal: Principal, action: Action, resource: Resource): boolean {
   if (principal.kind === 'user') return true;
   switch (action) {
     case 'attention.set':
     case 'note.append':
+    case 'agent.report':
       return principal.sessionId === resource.sessionId;
     default:
       return false;

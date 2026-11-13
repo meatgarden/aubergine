@@ -15,6 +15,7 @@ function session(name: string, extra: Partial<Session> = {}): Session {
     status: NO_STATUS,
     attention: NO_ATTENTION,
     noteLog: [],
+    agent: null,
     ...extra,
   };
 }

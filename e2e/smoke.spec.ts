@@ -97,6 +97,13 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await expect(page.getByTestId('attention-queue')).toHaveCount(0);
   await expect(page.getByTestId('badge-attention')).toHaveCount(0);
 
+
+  // A hook's input names the agent's conversation; once the shell is back at its prompt the node offers to resume it.
+  await page.getByTestId('node-body').click();
+  await page.keyboard.type(`echo '{"session_id":"0190aaaa-bbbb-7ccc-8ddd-eeeeeeeeeeee"}' | ${aubergine} hook stop`);
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('button', { name: 'Resume agent' })).toHaveCount(1, { timeout: 15_000 });
+
   await page.reload();
   await page.getByRole('button', { name: 'Go to…' }).click();
   await page.getByRole('textbox', { name: 'Search sessions' }).fill('rounding');

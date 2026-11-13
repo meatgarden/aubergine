@@ -89,6 +89,23 @@ export const NoteEntry = z.object({
 });
 export type NoteEntry = z.infer<typeof NoteEntry>;
 
+/** Agents the canvas knows how to start. */
+export const AgentKind = z.enum(['claude-code']);
+export type AgentKind = z.infer<typeof AgentKind>;
+
+/**
+ * An agent's own ID for a conversation. It ends up on a command line, so
+ * only plain ID characters are accepted.
+ */
+export const ConversationId = z.string().regex(/^[A-Za-z0-9][A-Za-z0-9-]{7,63}$/);
+
+/** The agent last seen running in a session, and the conversation it was in. */
+export const AgentInfo = z.object({
+  kind: AgentKind,
+  conversationId: ConversationId.nullable().default(null),
+});
+export type AgentInfo = z.infer<typeof AgentInfo>;
+
 /** A terminal session. The running shell itself is owned by the session runtime. */
 export const Session = z.object({
   id: Id,
@@ -106,6 +123,7 @@ export const Session = z.object({
   attention: Attention.prefault({}),
   /** Append-only log of notes, oldest first. */
   noteLog: z.array(NoteEntry).default([]),
+  agent: AgentInfo.nullable().default(null),
 });
 export type Session = z.infer<typeof Session>;
 

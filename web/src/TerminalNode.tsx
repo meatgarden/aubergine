@@ -2,6 +2,7 @@ import { memo, useCallback, useRef, useState } from 'react';
 import { NodeResizer, useStore, type Node, type NodeProps } from '@xyflow/react';
 import { NODE_MIN_HEIGHT, NODE_MIN_WIDTH } from '@aubergine/shared';
 import { api } from './api';
+import { canResumeAgent } from './attention';
 import { ColorButton } from './ColorButton';
 import { nodeMode, type NodeMode } from './culling';
 import { NotePanel } from './NotePanel';
@@ -100,6 +101,16 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
           >
             {session.attention.state === 'waiting' ? 'waiting for you' : session.attention.state === 'done' ? 'finished' : 'working'}
           </span>
+        )}
+        {draft === null && session && canResumeAgent(session) && (
+          <button
+            type="button"
+            className="node-tool resume-agent nodrag"
+            title="Start the agent again in the conversation it was last in"
+            onClick={() => void api.resumeAgent(sessionId).catch(() => {})}
+          >
+            Resume agent
+          </button>
         )}
         {draft === null && !exited && session && <StatusBadges session={session} focused={focused} />}
         <button

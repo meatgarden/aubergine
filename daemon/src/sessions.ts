@@ -10,6 +10,7 @@ import {
   needsUser,
   newId,
   nodesInside,
+  type AgentInfo,
   type AgentKind,
   type Attention,
   type AttentionState,
@@ -117,6 +118,9 @@ export class Sessions {
     const fallback = launch ? this.nextName('Claude Code') : undefined;
     const name = input.name && input.uniqueName ? this.uniqueName(input.name) : (input.name ?? fallback);
     const created = this.record(id, name, input.rect, started.cwd);
+    if (input.agent && launch) {
+      this.canvas.emit({ type: 'session.agent', sessionId: id, agent: { kind: input.agent, conversationId: null } });
+    }
 
     // Typed once the shell is ready; the new node does not wait for that.
     const lines = [launch ?? input.command].filter((line): line is string => Boolean(line));
@@ -305,6 +309,29 @@ export class Sessions {
     });
   }
 
+  /** Records which agent is running in the session and in which conversation. */
+  reportAgent(sessionId: string, agent: AgentInfo): AgentInfo {
+    const session = this.find(sessionId);
+    // An agent that reports without a conversation does not erase the one we know.
+    const next: AgentInfo = { kind: agent.kind, conversationId: agent.conversationId ?? session.agent?.conversationId ?? null };
+    if (session.agent?.kind !== next.kind || session.agent.conversationId !== next.conversationId) {
+      this.canvas.emit({ type: 'session.agent', sessionId, agent: next });
+    }
+    return next;
+  }
+
+  /** Starts the session's agent again, in the conversation it was last in. */
+  async resumeAgent(sessionId: string): Promise<Session> {
+    const session = this.find(sessionId);
+    if (session.state === 'exited') throw new ConflictError('This shell has ended; restart it first');
+    if (!session.agent?.conversationId) throw new ConflictError('No agent conversation is known for this session');
+    // The ID was validated when it was recorded, and is quoted again when the line is built.
+    const line = await this.options.agentLaunchLine?.(session.agent.kind, ['--resume', session.agent.conversationId]);
+    if (!line) throw new ConflictError('Starting agents is not set up');
+    await this.runtime.typeLine(sessionId, line);
+    return this.find(sessionId);
+  }
+
   /** Searches the terminal history of every running session, parked ones included. */
   searchHistory(query: string): Promise<HistorySearch> {
     const ids = this.canvas.state.sessions.filter((s) => s.state !== 'exited').map((s) => s.id);
@@ -412,6 +439,7 @@ export class Sessions {
       status: NO_STATUS,
       attention: NO_ATTENTION,
       noteLog: [],
+      agent: null,
     };
     const node: LayoutNode = { id: newId(), sessionId: id, color: 'none', ...(rect ?? this.freeSpot()) };
     this.canvas.emit({ type: 'session.created', session, node });

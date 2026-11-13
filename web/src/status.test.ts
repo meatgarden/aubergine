@@ -14,6 +14,7 @@ const base: Session = {
   status: NO_STATUS,
   attention: NO_ATTENTION,
   noteLog: [],
+  agent: null,
 };
 
 describe('timeAgo', () => {

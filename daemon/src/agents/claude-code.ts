@@ -1,7 +1,7 @@
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import type { AttentionState, NoteEntry } from '@aubergine/shared';
+import { ConversationId, type AttentionState, type NoteEntry } from '@aubergine/shared';
 import { stableNodePath } from '../node-path';
 
 /**
@@ -28,6 +28,8 @@ const CLAUDE_EVENT: Record<HookEvent, string> = {
 const NEEDS_USER = new Set(['permission_prompt', 'idle_prompt', 'elicitation_dialog', 'elicitation_url_dialog', 'agent_needs_input']);
 
 export type HookAction =
+  /** Which conversation the agent is in; sent first, so it is known even if the rest fails. */
+  | { do: 'agent'; conversationId: string }
   | { do: 'attention'; state: AttentionState; message?: string }
   | { do: 'note'; kind: NoteEntry['kind']; text: string };
 
@@ -42,6 +44,13 @@ function text(value: unknown, limit: number): string {
  */
 export function hookActions(event: HookEvent, input: unknown): HookAction[] {
   const data = (typeof input === 'object' && input !== null ? input : {}) as Record<string, unknown>;
+  // Every hook's input names the conversation. Anything that is not a plain ID is ignored.
+  const conversation = ConversationId.safeParse(data.session_id);
+  const agent: HookAction[] = conversation.success ? [{ do: 'agent', conversationId: conversation.data }] : [];
+  return [...agent, ...eventActions(event, data)];
+}
+
+function eventActions(event: HookEvent, data: Record<string, unknown>): HookAction[] {
   switch (event) {
     case 'prompt': {
       const prompt = text(data.prompt, 20_000);

@@ -13,6 +13,7 @@ import {
   CreateSessionRequest,
   Id,
   PROTOCOL_VERSION,
+  ReportAgentRequest,
   RevealRequest,
   SearchQuery,
   SetAttentionRequest,
@@ -217,6 +218,8 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
 
   app.post(paths.parkSession(':sessionId'), async (request) => sessions.park(idParam(request, 'sessionId')));
   app.post(paths.restoreSession(':sessionId'), async (request) => sessions.restore(idParam(request, 'sessionId')));
+  app.post(paths.resumeAgent(':sessionId'), async (request) => sessions.resumeAgent(idParam(request, 'sessionId')));
+
   app.post(paths.showSession(':sessionId'), async (request): Promise<ShowResponse> => {
     const sessionId = idParam(request, 'sessionId');
     if (!sessions.has(sessionId)) throw new HttpError(404, 'not_found', `No session ${sessionId}`);
@@ -295,6 +298,12 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
         text: body.text,
       }),
     };
+  });
+
+  app.put(paths.agent.report(':sessionId'), async (request) => {
+    const sessionId = idParam(request, 'sessionId');
+    allow(request, 'agent.report', sessionId);
+    return sessions.reportAgent(sessionId, parse(ReportAgentRequest, request.body));
   });
 
   /* ---------- WebSocket: change events ---------- */
