@@ -116,7 +116,7 @@ In a Chromium-based browser you can install the page as an app window (address b
 
 You probably have terminal tabs open already, some of them running agents. One thing cannot be done, by this or any tool: **a program that is already running in another terminal cannot be moved into an Aubergine session.** So moving over means three things: give each tab a canvas session in the same folder, carry agent conversations on inside those sessions, and make new tabs land on the canvas from now on.
 
-Nothing here stops, signals or changes a program you have running, and nothing edits your dotfiles.
+Nothing here edits your dotfiles, and with one exception nothing stops, signals or changes a program you have running. The exception is **Stop and resume**, which asks one Claude Code agent to exit, only when you choose it for that agent and only after you confirm.
 
 ### From the canvas
 
@@ -219,7 +219,7 @@ aubergine here --claude -- --resume <conversation id>
 aubergine here --claude -- --resume <conversation id> --fork-session
 ```
 
-### All tabs at once
+### Other tabs: one, a few, or all at once
 
 ```sh
 aubergine scan
