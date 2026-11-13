@@ -98,6 +98,29 @@ describe('here', () => {
   });
 });
 
+describe('move', () => {
+  it('lists when nothing is named, and parses what to move and how', () => {
+    expect(parseCommand(['move'])).toEqual({
+      name: 'move',
+      terminals: [],
+      all: false,
+      stop: false,
+      force: false,
+      yes: false,
+      dryRun: false,
+      open: true,
+    });
+    expect(parseCommand(['move', 'ttys001', 'ttys004', '--dry-run'])).toMatchObject({ terminals: ['ttys001', 'ttys004'], dryRun: true, stop: false });
+    expect(parseCommand(['move', '--all', '--stop', '--yes', '--no-open'])).toMatchObject({ all: true, stop: true, yes: true, open: false });
+  });
+
+  it('rejects combinations that make no sense', () => {
+    expect(() => parseCommand(['move', '--all', 'ttys001'])).toThrow(UsageError);
+    expect(() => parseCommand(['move', 'ttys001', '--force'])).toThrow(/only applies with --stop/);
+    expect(() => parseCommand(['move', '--kill'])).toThrow(/does not know --kill/);
+  });
+});
+
 describe('resolveSession', () => {
   const sessions = [
     session('api server'),

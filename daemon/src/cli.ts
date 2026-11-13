@@ -1,4 +1,5 @@
 import { spawnSync } from 'node:child_process';
+import { createInterface } from 'node:readline';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { CreateSessionResponse, SHOW_PARAM, ShowResponse, StateResponse, paths } from '@aubergine/shared';
@@ -23,6 +24,8 @@ import {
 } from './cli/commands';
 import { loadConfig, type Config } from './config';
 import { loadSettings } from './settings';
+import { claudeSessionsDir, readClaudeSession, type ClaudeSession } from './migrate/claude-sessions';
+import { describeItem, findCandidates, formatCandidates, planMove, stopAgent, systemProcesses } from './migrate/move';
 import { zshHookSnippet } from './migrate/shell-hook';
 import { formatScan, importLayout, nextStep, planImport, scanShells } from './migrate/shells';
 import { TmuxRuntime } from './runtime/tmux-runtime';
@@ -55,6 +58,16 @@ async function call(config: Config, method: string, urlPath: string, body?: unkn
   }
   if (!response.ok) throw new Error(`The server answered HTTP ${response.status}: ${await response.text()}`);
   return response.json();
+}
+
+function ask(question: string): Promise<string> {
+  const prompt = createInterface({ input: process.stdin, output: process.stdout });
+  return new Promise((resolve) => {
+    prompt.question(question, (answer) => {
+      prompt.close();
+      resolve(answer);
+    });
+  });
 }
 
 /**
@@ -175,6 +188,103 @@ async function main(): Promise<number> {
     case 'scan': {
       console.log(formatScan(await scanShells(config)));
       return 0;
+    }
+
+    case 'move': {
+      const sessionsDir = claudeSessionsDir();
+      const shells = await scanShells(config);
+      const records = new Map<number, ClaudeSession>();
+      for (const shell of shells) {
+        if (!shell.looksLikeClaude || shell.runningPid === null) continue;
+        const record = await readClaudeSession(shell.runningPid, sessionsDir);
+        if (record) records.set(record.pid, record);
+      }
+      const candidates = findCandidates(shells, records);
+
+      if (!command.all && command.terminals.length === 0) {
+        console.log(formatCandidates(candidates));
+        if (candidates.length > 0) {
+          console.log('\nMove some with: aubergine move <terminal>…   or all with: aubergine move --all   (add --dry-run to see the plan first)');
+        }
+        return 0;
+      }
+
+      const mode = command.stop ? 'stop' : 'fork';
+      const plan = planMove(candidates, { select: command.all ? 'all' : command.terminals, mode, force: command.force });
+      for (const tty of plan.unknown) console.log(`${tty}: no Claude Code tab was found on that terminal.`);
+      for (const item of plan.items) console.log(describeItem(item));
+      const todo = plan.items.filter((item) => item.action !== 'refuse');
+      if (todo.length === 0) {
+        console.log('\nNothing to move.');
+        return plan.items.length > 0 || plan.unknown.length > 0 ? 1 : 0;
+      }
+      if (command.dryRun) {
+        console.log('\nNothing was changed. Run without --dry-run to do this.');
+        return 0;
+      }
+
+      if (mode === 'stop' && !command.yes) {
+        if (!process.stdin.isTTY) throw new UsageError('move --stop asks before stopping anything; run it in a terminal, or add --yes.');
+        const answer = await ask(`\nAsk ${todo.length} agent process(es) to exit and resume them on the canvas? [y/N] `);
+        if (!/^y(es)?$/i.test(answer.trim())) {
+          console.log('Nothing was changed.');
+          return 0;
+        }
+      }
+
+      let last: string | null = null;
+      let failed = false;
+      console.log('');
+      for (const item of todo) {
+        const { shell, pid } = item.candidate;
+        if (item.action === 'resume') {
+          // Look again right before acting: it may have started working since the plan was made.
+          const fresh = await readClaudeSession(pid, sessionsDir);
+          if (!fresh || fresh.conversationId !== item.candidate.session?.conversationId) {
+            console.log(`${shell.tty}: left alone; its record changed or disappeared.`);
+            failed = true;
+            continue;
+          }
+          if (fresh.status !== 'idle' && !command.force) {
+            console.log(`${shell.tty}: left alone; it is ${fresh.status ?? 'in an unknown state'} now, not idle.`);
+            failed = true;
+            continue;
+          }
+          const result = await stopAgent(fresh, systemProcesses);
+          if (result === 'not-the-same-process') {
+            console.log(`${shell.tty}: left alone; process ${pid} is no longer the same Claude Code process.`);
+            failed = true;
+            continue;
+          }
+          if (result === 'still-running') {
+            console.log(`${shell.tty}: the original (process ${pid}) did not exit when asked. Nothing was started on the canvas for it; exit it yourself (/exit), then run: aubergine here --claude`);
+            failed = true;
+            continue;
+          }
+        }
+        const body = {
+          name: nameForFolder(item.cwd),
+          uniqueName: true,
+          cwd: item.cwd,
+          agent: 'claude-code',
+          agentArgs: item.agentArgs,
+        };
+        const { session } = CreateSessionResponse.parse(await call(config, 'POST', paths.sessions, body));
+        last = session.id;
+        if (item.action === 'resume') {
+          console.log(`${shell.tty}: the original has exited and its conversation carries on in "${session.name}" on the canvas.`);
+          console.log(`      That tab is at its shell prompt now. To use it as a view of the session, run there: aubergine attach "${session.name}"`);
+        } else {
+          console.log(`${shell.tty}: "${session.name}" on the canvas now has ${item.action === 'fork' ? 'a copy of its conversation' : 'the most recent conversation in that folder'}.`);
+          console.log(`      The original is still running in ${shell.tty}. Exit it there (/exit) when you are ready;`);
+          console.log('      until then, two agents with the same history are working in the same folder.');
+        }
+      }
+      if (last) {
+        console.log('\nA tab that is already open cannot be turned into a view from here; that can only be done from inside the tab.');
+        if (command.open) await showOnCanvas(config, last);
+      }
+      return failed ? 1 : 0;
     }
 
     case 'import': {

@@ -32,6 +32,8 @@ export interface ScannedShell {
   cwd: string | null;
   /** The command in the foreground, or null when the shell sits at its prompt. */
   running: string | null;
+  /** Process ID of that foreground command. */
+  runningPid: number | null;
   looksLikeClaude: boolean;
   /** This tab is already showing an Aubergine session. */
   viewingAubergine: boolean;
@@ -119,6 +121,7 @@ export function findShells(processes: readonly Process[], folders: ReadonlyMap<n
       pid: shell.pid,
       cwd: folders.get(shell.pid) ?? null,
       running,
+      runningPid: running !== null && leader ? leader.pid : null,
       looksLikeClaude: running !== null && looksLikeClaude(running),
       viewingAubergine:
         running !== null && programName(running) === 'tmux' && running.includes(`-L ${options.tmuxSocket} `) && /\battach/.test(running),

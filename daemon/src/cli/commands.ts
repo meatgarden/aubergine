@@ -18,6 +18,17 @@ export type Command =
       fromShellHook: boolean;
     }
   | { name: 'scan' }
+  | {
+      name: 'move';
+      /** Terminals to move; empty with `all` false means: just list. */
+      terminals: string[];
+      all: boolean;
+      stop: boolean;
+      force: boolean;
+      yes: boolean;
+      dryRun: boolean;
+      open: boolean;
+    }
   | { name: 'import'; all: boolean; dryRun: boolean }
   | { name: 'note'; text: string }
   | { name: 'hook'; event: HookEvent }
@@ -39,6 +50,10 @@ export const USAGE = `Usage: aubergine <command>
                                                   --claude -- --resume <id> --fork-session
   scan                       List your open shells that are not on the canvas yet (read-only)
   import [--all] [--dry-run] Give each of those shells a canvas session in the same folder
+  move [terminal…|--all]     Move running Claude Code tabs onto the canvas; with nothing named, list them
+                             (default)     start a copy of the conversation; the original keeps running
+                             --stop        ask an idle original to exit, then resume the same conversation
+                             --dry-run, --yes, --force, --no-open
   note <text>                Inside a session: add an entry to that session's note log
   hook <event>               For agent hooks: reads the hook's JSON on stdin (prompt, notification, stop)
   hooks print                Print the Claude Code hook settings, to add to your own config by hand
@@ -91,6 +106,25 @@ export function parseCommand(argv: readonly string[]): Command {
     case 'scan':
       if (rest.length > 0) throw new UsageError('scan takes no arguments');
       return { name: 'scan' };
+    case 'move': {
+      const known = ['--all', '--stop', '--force', '--yes', '--dry-run', '--no-open'];
+      const unknown = rest.find((word) => word.startsWith('--') && !known.includes(word));
+      if (unknown) throw new UsageError(`move does not know ${unknown}`);
+      const terminals = rest.filter((word) => !word.startsWith('--'));
+      const all = rest.includes('--all');
+      if (all && terminals.length > 0) throw new UsageError('move: name terminals or use --all, not both');
+      if (rest.includes('--force') && !rest.includes('--stop')) throw new UsageError('move: --force only applies with --stop');
+      return {
+        name: 'move',
+        terminals,
+        all,
+        stop: rest.includes('--stop'),
+        force: rest.includes('--force'),
+        yes: rest.includes('--yes'),
+        dryRun: rest.includes('--dry-run'),
+        open: !rest.includes('--no-open'),
+      };
+    }
     case 'import': {
       const unknown = rest.find((word) => word !== '--all' && word !== '--dry-run');
       if (unknown) throw new UsageError(`import does not know ${unknown}`);

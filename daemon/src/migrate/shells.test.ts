@@ -79,7 +79,8 @@ describe('findShells', () => {
   it('tells an idle shell from one running something', () => {
     expect(byTty('ttys000')).toMatchObject({ running: null, current: true });
     expect(byTty('ttys003')).toMatchObject({ running: 'npm run dev --port 3000', looksLikeClaude: false });
-    expect(byTty('ttys001')).toMatchObject({ running: 'claude', looksLikeClaude: true });
+    expect(byTty('ttys001')).toMatchObject({ running: 'claude', runningPid: 3747, looksLikeClaude: true });
+    expect(byTty('ttys000')?.runningPid).toBeNull();
   });
 
   it("leaves out Aubergine's own sessions and terminals with no shell, and marks views of a session", () => {
