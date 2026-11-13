@@ -11,6 +11,8 @@ import {
   CreateSessionResponse,
   EventsServerMessage,
   Frame,
+  OutsideResponse,
+  OutsideResult,
   SESSION_ENV,
   SearchResponse,
   SnapshotResponse,
@@ -23,19 +25,45 @@ import { sessionToken } from './auth';
 import { Canvas } from './canvas';
 import { TmuxRuntime } from './runtime/tmux-runtime';
 import { buildServer, cookieName } from './server';
+import type { ClaudeSession } from './migrate/claude-sessions';
+import { Outside } from './migrate/outside';
+import type { ScannedShell } from './migrate/shells';
 import { Sessions } from './sessions';
 import { SETTINGS_FILE, SettingsFile, expandHome } from './settings';
 import { ZshIntegration } from './shell/integration';
 import { JsonStore } from './store/json-store';
+import { destroyTmuxServer, testSocketName } from './test-support';
 import { loadOrCreateToken } from './token';
 
-const runtime = new TmuxRuntime({ socket: 'aubergine-test-server' });
+const SOCKET = testSocketName('server');
+const runtime = new TmuxRuntime({ socket: SOCKET });
 let dir: string;
 let token: string;
 let app: FastifyInstance;
 let canvas: Canvas;
 let sessions: Sessions;
 let settingsFile: SettingsFile;
+
+/** A pretend set of terminals outside the canvas, so that these tests never look at or touch real ones. */
+const outsideWorld = {
+  shells: [] as ScannedShell[],
+  records: new Map<number, ClaudeSession>(),
+  /** Process IDs that were sent a termination request. */
+  terminated: [] as number[],
+  /** Whether a process exits when asked. */
+  exits: true,
+  processes: {
+    startOf: async (pid: number) => {
+      const record = outsideWorld.records.get(pid);
+      if (!record || (outsideWorld.exits && outsideWorld.terminated.includes(pid))) return null;
+      return { started: record.processStart, args: 'claude' };
+    },
+    terminate: (pid: number) => {
+      outsideWorld.terminated.push(pid);
+    },
+    wait: () => sleep(5),
+  },
+};
 let port: number;
 let origin: string;
 const sockets: WebSocket[] = [];
@@ -54,7 +82,7 @@ async function start(): Promise<void> {
     }),
     logPrompts: () => settingsFile.value.agents.logPrompts,
     // A stand-in for starting an agent: any line will do to check that it is typed.
-    agentLaunchLine: async (_agent, options) => `echo "agent-""launched${options.continue ? '-continued' : ''}"`,
+    agentLaunchLine: async (_agent, args) => `echo "agent-""launched${args.map((a) => `:${a}`).join('')}"`,
     defaultFolder: () => (settingsFile.value.defaultFolder ? expandHome(settingsFile.value.defaultFolder) : null),
     shell: () => settingsFile.value.shell,
   });
@@ -62,6 +90,13 @@ async function start(): Promise<void> {
     canvas,
     sessions,
     runtime,
+    outside: new Outside({
+      scan: async () => outsideWorld.shells,
+      readAgentRecord: async (pid) => outsideWorld.records.get(pid) ?? null,
+      processes: outsideWorld.processes,
+      stopWaitMs: 300,
+      createSession: (input) => sessions.create(input),
+    }),
     settings: () => settingsFile.reload(),
     token,
     devOrigin: null,
@@ -192,7 +227,7 @@ afterEach(async () => {
 });
 
 afterAll(async () => {
-  await runtime.killServer();
+  await destroyTmuxServer(runtime, SOCKET);
 });
 
 describe('access token', () => {
@@ -602,7 +637,38 @@ describe('agent API', () => {
     expect(canvas.state.sessions[0]?.attention).toEqual({ state: 'none', message: null, at: null });
   });
 
-  it('keeps prompts out of the log when prompt logging is turned off', async () => {
+  it('remembers the agent conversation a session reports, and can resume it', async () => {
+    const { session } = await createSession();
+    const mine = sessionToken(token, session.id);
+    const id = '0190aaaa-bbbb-7ccc-8ddd-eeeeeeeeeeee';
+    expect((await request('POST', paths.resumeAgent(session.id), { body: {} })).statusCode).toBe(409);
+
+    const reported = await agent('PUT', paths.agent.report(session.id), mine, { kind: 'claude-code', conversationId: id });
+    expect(reported.statusCode).toBe(200);
+    expect(canvas.state.sessions[0]?.agent).toEqual({ kind: 'claude-code', conversationId: id });
+
+    // Not something another session may set, and not with an ID that is unsafe to type.
+    const other = await createSession();
+    expect((await agent('PUT', paths.agent.report(other.session.id), mine, { kind: 'claude-code', conversationId: id })).statusCode).toBe(403);
+    const unsafe = await agent('PUT', paths.agent.report(session.id), mine, { kind: 'claude-code', conversationId: 'aaaaaaaa; touch /tmp/x' });
+    expect(unsafe.statusCode).toBe(400);
+    expect(canvas.state.sessions[0]?.agent?.conversationId).toBe(id);
+
+    const resumed = await request('POST', paths.resumeAgent(session.id), { body: {} });
+    expect(resumed.statusCode).toBe(200);
+    const started = Date.now();
+    while (!(await runtime.snapshot(session.id)).includes(`agent-launched:--resume:${id}`)) {
+      if (Date.now() - started > 15_000) throw new Error('The agent was never started again');
+      await sleep(40);
+    }
+
+    // Still known after a restart of the daemon.
+    await stop();
+    await start();
+    expect(canvas.state.sessions[0]?.agent).toEqual({ kind: 'claude-code', conversationId: id });
+  });
+
+  it("keeps prompts out of the log when prompt logging is turned off", async () => {
     const { session } = await createSession();
     const mine = sessionToken(token, session.id);
     await agent('POST', paths.agent.notes(session.id), mine, { text: 'fix the build', kind: 'prompt' });
@@ -727,15 +793,210 @@ describe('sessions started from another terminal', () => {
     expect(await runtime.list()).toEqual([]);
   });
 
+  it('passes arguments for the agent through, in place of the default, and types no separate command', async () => {
+    const body = { agent: 'claude-code', agentArgs: ['--resume', 'abc-123', '--fork-session'], command: 'echo "should-not-""run"' };
+    const { session } = CreateSessionResponse.parse((await request('POST', paths.sessions, { body })).json());
+    const started = Date.now();
+    while (!(await runtime.snapshot(session.id)).includes('agent-launched:--resume:abc-123:--fork-session')) {
+      if (Date.now() - started > 15_000) throw new Error('The launch line was never run');
+      await sleep(40);
+    }
+    expect(await runtime.snapshot(session.id)).not.toContain('should-not-run');
+  });
+
   it('can continue an agent conversation in the new session', async () => {
     const body = { agent: 'claude-code', agentContinue: true, name: 'api', uniqueName: true };
     const { session } = CreateSessionResponse.parse((await request('POST', paths.sessions, { body })).json());
     expect(session.name).toBe('api');
     const started = Date.now();
-    while (!(await runtime.snapshot(session.id)).includes('agent-launched-continued')) {
+    while (!(await runtime.snapshot(session.id)).includes('agent-launched:--continue')) {
       if (Date.now() - started > 15_000) throw new Error('The launch line was never run');
       await sleep(40);
     }
+  });
+});
+
+describe('terminals outside the canvas', () => {
+  const CONVERSATION = '0190aaaa-bbbb-7ccc-8ddd-eeeeeeeeeeee';
+  let folder: string;
+
+  const shell = (tty: string, extra: Partial<ScannedShell> = {}): ScannedShell => ({
+    tty,
+    pid: 100,
+    cwd: folder,
+    running: null,
+    runningPid: null,
+    looksLikeClaude: false,
+    viewingAubergine: false,
+    current: false,
+    ...extra,
+  });
+  const record = (pid: number, extra: Partial<ClaudeSession> = {}): ClaudeSession => ({
+    pid,
+    conversationId: CONVERSATION,
+    cwd: folder,
+    status: 'idle',
+    entrypoint: 'cli',
+    name: 'fix the build',
+    processStart: new Date('2026-11-10T17:41:56Z'),
+    ...extra,
+  });
+
+  beforeEach(async () => {
+    folder = await realpath(dir);
+    outsideWorld.terminated = [];
+    outsideWorld.exits = true;
+    outsideWorld.shells = [
+      shell('ttys001', { pid: 101 }),
+      shell('ttys002', { pid: 102, running: 'npm run dev', runningPid: 202 }),
+      shell('ttys003', { pid: 103, running: 'claude', runningPid: 203, looksLikeClaude: true }),
+      shell('ttys004', { pid: 104, running: 'claude', runningPid: 204, looksLikeClaude: true }),
+      shell('ttys005', { pid: 105, running: 'tmux -L x attach', runningPid: 205, viewingAubergine: true }),
+    ];
+    outsideWorld.records = new Map([
+      [203, record(203)],
+      [204, record(204, { status: 'busy', name: null })],
+    ]);
+  });
+
+  const launched = async (sessionId: string, text: string): Promise<void> => {
+    const started = Date.now();
+    while (!(await runtime.snapshot(sessionId)).includes(text)) {
+      if (Date.now() - started > 15_000) throw new Error(`Never typed: ${text}`);
+      await sleep(40);
+    }
+  };
+
+  it('lists them with what is running and, for agents, the conversation and state', async () => {
+    const { terminals } = OutsideResponse.parse((await request('GET', paths.outside)).json());
+    expect(terminals.map((t) => [t.tty, t.kind, t.agent?.status ?? null, t.agent?.name ?? null])).toEqual([
+      ['ttys001', 'shell', null, null],
+      ['ttys002', 'command', null, null],
+      ['ttys003', 'agent', 'idle', 'fix the build'],
+      ['ttys004', 'agent', 'busy', null],
+      ['ttys005', 'view', null, null],
+    ]);
+    // The conversation's ID is not part of the listing.
+    expect(JSON.stringify(terminals)).not.toContain(CONVERSATION);
+  });
+
+  it('adds one terminal to the canvas, in the folder the daemon itself found', async () => {
+    const elsewhere = os.tmpdir();
+    const response = await request('POST', paths.outsideAdd, {
+      // The extra fields are a client trying to choose the folder and command itself.
+      body: { tty: 'ttys001', pid: 101, cwd: elsewhere, command: 'echo "should-not-""run"', agentArgs: ['--x'] },
+    });
+    expect(response.statusCode).toBe(201);
+    const result = OutsideResult.parse(response.json());
+    expect(result.session?.cwd).toBe(folder);
+    expect(result.session?.name).toBe(path.basename(folder));
+    expect(result.message).toContain('aubergine attach');
+    await shellReady(result.session!.id);
+    await sleep(300);
+    expect(await runtime.snapshot(result.session!.id)).not.toContain('should-not-run');
+
+    const running = OutsideResult.parse((await request('POST', paths.outsideAdd, { body: { tty: 'ttys002', pid: 102 } })).json());
+    expect(running.message).toContain('a running command cannot be moved');
+  });
+
+  it('refuses a terminal that is gone, changed, or already a view', async () => {
+    expect((await request('POST', paths.outsideAdd, { body: { tty: 'ttys099', pid: 101 } })).statusCode).toBe(404);
+    expect((await request('POST', paths.outsideAdd, { body: { tty: 'ttys001', pid: 999 } })).statusCode).toBe(404);
+    expect((await request('POST', paths.outsideAdd, { body: { tty: 'ttys005', pid: 105 } })).statusCode).toBe(409);
+    expect((await request('POST', paths.outsideAdd, { body: { tty: 'tty; rm -rf', pid: 101 } })).statusCode).toBe(400);
+    expect(canvas.state.sessions).toEqual([]);
+  });
+
+  it('forks an agent conversation, using the ID from the record and leaving the original alone', async () => {
+    const response = await request('POST', paths.outsideMove, {
+      body: { tty: 'ttys003', pid: 203, mode: 'fork', conversationId: 'attacker-chosen-id', cwd: '/' },
+    });
+    expect(response.statusCode).toBe(200);
+    const result = OutsideResult.parse(response.json());
+    expect(result.session?.cwd).toBe(folder);
+    expect(result.message).toContain('two agents with the same history');
+    await launched(result.session!.id, `agent-launched:--resume:${CONVERSATION}:--fork-session`);
+    expect(outsideWorld.terminated).toEqual([]);
+  });
+
+  it('only says what it would do for a dry run', async () => {
+    const response = await request('POST', paths.outsideMove, { body: { tty: 'ttys003', pid: 203, mode: 'stop', dryRun: true } });
+    expect(OutsideResult.parse(response.json())).toMatchObject({ session: null, node: null });
+    expect(response.json().message).toContain('ask the original (process 203) to exit');
+    expect(outsideWorld.terminated).toEqual([]);
+    expect(canvas.state.sessions).toEqual([]);
+  });
+
+  it('stops an idle agent and resumes its conversation', async () => {
+    const response = await request('POST', paths.outsideMove, { body: { tty: 'ttys003', pid: 203, mode: 'stop' } });
+    expect(response.statusCode).toBe(200);
+    const result = OutsideResult.parse(response.json());
+    expect(outsideWorld.terminated).toEqual([203]);
+    expect(result.message).toContain('The original has exited');
+    await launched(result.session!.id, `agent-launched:--resume:${CONVERSATION}`);
+    expect(await runtime.snapshot(result.session!.id)).not.toContain('fork-session');
+  });
+
+  it('refuses to stop a busy agent, one whose process changed, and one that will not exit', async () => {
+    const busy = await request('POST', paths.outsideMove, { body: { tty: 'ttys004', pid: 204, mode: 'stop' } });
+    expect(busy.statusCode).toBe(409);
+    expect(busy.json().error.message).toContain('busy, not idle');
+
+    // The pid in the request must be the agent the daemon sees on that terminal.
+    expect((await request('POST', paths.outsideMove, { body: { tty: 'ttys003', pid: 204, mode: 'stop' } })).statusCode).toBe(404);
+    expect((await request('POST', paths.outsideMove, { body: { tty: 'ttys001', pid: 101, mode: 'fork' } })).statusCode).toBe(404);
+
+    outsideWorld.exits = false;
+    const stubborn = await request('POST', paths.outsideMove, { body: { tty: 'ttys003', pid: 203, mode: 'stop' } });
+    expect(stubborn.statusCode).toBe(409);
+    expect(stubborn.json().error.message).toContain('did not exit when asked');
+    expect(outsideWorld.terminated).toEqual([203]); // asked once, nothing stronger
+    expect(canvas.state.sessions).toEqual([]);
+  });
+
+  it('never accepts a session token: these routes take the cookie only', async () => {
+    const { session } = await createSession();
+    const headers = { authorization: `Bearer ${sessionToken(token, session.id)}` };
+    for (const [method, url, body] of [
+      ['GET', paths.outside, undefined],
+      ['POST', paths.outsideAdd, { tty: 'ttys001', pid: 101 }],
+      ['POST', paths.outsideMove, { tty: 'ttys003', pid: 203, mode: 'stop' }],
+    ] as const) {
+      const response = await request(method, url, { cookie: false, origin: null, headers, ...(body ? { body } : {}) });
+      expect([401, 403], `${method} ${url}`).toContain(response.statusCode);
+      // Nor with the same token on the agent prefix.
+      const viaAgentPrefix = await request(method, url.replace('/api/v1', '/v1'), { cookie: false, origin: null, headers, ...(body ? { body } : {}) });
+      expect(viaAgentPrefix.statusCode, `${method} /v1…`).toBe(404);
+    }
+    expect(outsideWorld.terminated).toEqual([]);
+    expect(canvas.state.sessions).toHaveLength(1);
+  });
+});
+
+describe('showing a session', () => {
+  it('tells every open canvas, and says how many there are', async () => {
+    const { session } = await createSession();
+    const none = await request('POST', paths.showSession(session.id), { body: {} });
+    expect(none.json()).toEqual({ viewers: 0 });
+
+    const socket = openSocket(paths.events);
+    const messages: EventsServerMessage[] = [];
+    socket.on('message', (data) => messages.push(EventsServerMessage.parse(JSON.parse(data.toString()))));
+    await waitFor(() => messages.length === 1, 'hello');
+
+    const one = await request('POST', paths.showSession(session.id), { body: {} });
+    expect(one.json()).toEqual({ viewers: 1 });
+    await waitFor(() => messages.length === 2, 'show');
+    expect(messages[1]).toEqual({ type: 'show', sessionId: session.id });
+    // Nothing about the session changed.
+    expect(canvas.state.sessions[0]?.attention.state).toBe('none');
+
+    socket.close();
+    await waitFor(() => socket.readyState === WebSocket.CLOSED, 'closed');
+    await sleep(50);
+    expect((await request('POST', paths.showSession(session.id), { body: {} })).json()).toEqual({ viewers: 0 });
+    expect((await request('POST', paths.showSession(newId()), { body: {} })).statusCode).toBe(404);
+    expect((await request('POST', paths.showSession(session.id), { body: {}, cookie: false })).statusCode).toBe(401);
   });
 });
 

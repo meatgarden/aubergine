@@ -15,6 +15,7 @@ function session(name: string, extra: Partial<Session> = {}): Session {
     status: NO_STATUS,
     attention: NO_ATTENTION,
     noteLog: [],
+    agent: null,
     ...extra,
   };
 }
@@ -28,8 +29,9 @@ describe('parseCommand', () => {
     expect(parseCommand(['attach', 'api'])).toEqual({ name: 'attach', query: 'api' });
     expect(parseCommand(['note', 'tests', 'pass'])).toEqual({ name: 'note', text: 'tests pass' });
     expect(parseCommand(['scan'])).toEqual({ name: 'scan' });
-    expect(parseCommand(['import'])).toEqual({ name: 'import', all: false, dryRun: false });
-    expect(parseCommand(['import', '--dry-run', '--all'])).toEqual({ name: 'import', all: true, dryRun: true });
+    expect(parseCommand(['import'])).toEqual({ name: 'import', terminals: [], all: false, dryRun: false });
+    expect(parseCommand(['import', '--dry-run', '--all'])).toEqual({ name: 'import', terminals: [], all: true, dryRun: true });
+    expect(parseCommand(['import', 'ttys004', 'ttys007'])).toMatchObject({ terminals: ['ttys004', 'ttys007'] });
     expect(parseCommand(['hook', 'stop'])).toEqual({ name: 'hook', event: 'stop' });
     expect(parseCommand(['hooks', 'print'])).toEqual({ name: 'hooks-print' });
     expect(parseCommand(['shell-hook', 'print'])).toEqual({ name: 'shell-hook-print' });
@@ -55,6 +57,7 @@ describe('here', () => {
       name: 'here',
       sessionName: null,
       attach: true,
+      open: true,
       claude: false,
       command: [],
       fromShellHook: false,
@@ -67,6 +70,13 @@ describe('here', () => {
     expect(parseCommand(['here', '--claude'])).toMatchObject({ claude: true, attach: true });
     // Flags after "--" belong to the command.
     expect(parseCommand(['here', '--', 'ls', '--no-attach'])).toMatchObject({ attach: true, command: ['ls', '--no-attach'] });
+  });
+
+  it('only brings the session up in the browser for a plain interactive run', () => {
+    expect(parseCommand(['here'])).toMatchObject({ open: true });
+    expect(parseCommand(['here', '--no-open'])).toMatchObject({ open: false, attach: true });
+    expect(parseCommand(['here', '--no-attach'])).toMatchObject({ open: false });
+    expect(parseCommand(['here', '--from-shell-hook'])).toMatchObject({ open: false });
   });
 
   it('rejects unknown flags and an empty command', () => {
@@ -89,6 +99,29 @@ describe('here', () => {
   });
 });
 
+describe('move', () => {
+  it('lists when nothing is named, and parses what to move and how', () => {
+    expect(parseCommand(['move'])).toEqual({
+      name: 'move',
+      terminals: [],
+      all: false,
+      stop: false,
+      force: false,
+      yes: false,
+      dryRun: false,
+      open: true,
+    });
+    expect(parseCommand(['move', 'ttys001', 'ttys004', '--dry-run'])).toMatchObject({ terminals: ['ttys001', 'ttys004'], dryRun: true, stop: false });
+    expect(parseCommand(['move', '--all', '--stop', '--yes', '--no-open'])).toMatchObject({ all: true, stop: true, yes: true, open: false });
+  });
+
+  it('rejects combinations that make no sense', () => {
+    expect(() => parseCommand(['move', '--all', 'ttys001'])).toThrow(UsageError);
+    expect(() => parseCommand(['move', 'ttys001', '--force'])).toThrow(/only applies with --stop/);
+    expect(() => parseCommand(['move', '--kill'])).toThrow(/does not know --kill/);
+  });
+});
+
 describe('resolveSession', () => {
   const sessions = [
     session('api server'),
@@ -105,7 +138,8 @@ describe('resolveSession', () => {
   it('accepts a unique start of a name or of an ID', () => {
     expect(resolveSession(sessions, 'lo').name).toBe('logs');
     const target = sessions[1]!;
-    expect(resolveSession(sessions, target.id.slice(0, 20)).id).toBe(target.id);
+    // Long enough to tell apart IDs made in the same millisecond, which share their first part.
+    expect(resolveSession(sessions, target.id.slice(0, 32)).id).toBe(target.id);
   });
 
   it('refuses ambiguous and unknown names, and sessions whose shell ended', () => {

@@ -6,6 +6,8 @@ import {
   Frame,
   EventsServerMessage,
   LayoutNode,
+  OutsideResponse,
+  OutsideResult,
   SearchResponse,
   Session,
   SnapshotResponse,
@@ -15,6 +17,8 @@ import {
   type CreateSessionRequest,
   type ErrorCode,
   type CreateFrameRequest,
+  type OutsideAddRequest,
+  type OutsideMoveRequest,
   type UpdateFrameRequest,
   type UpdateNodeRequest,
   type UpdateSessionRequest,
@@ -69,6 +73,10 @@ export const api = {
     call<void>(null, 'POST', paths.revealInSession(sessionId), { text }),
   appendNote: (sessionId: string, text: string) =>
     call(AppendNoteResponse, 'POST', paths.sessionNotes(sessionId), { text }),
+  getOutside: () => call(OutsideResponse, 'GET', paths.outside),
+  outsideAdd: (request: OutsideAddRequest) => call(OutsideResult, 'POST', paths.outsideAdd, request),
+  outsideMove: (request: OutsideMoveRequest) => call(OutsideResult, 'POST', paths.outsideMove, request),
+  resumeAgent: (sessionId: string) => call(Session, 'POST', paths.resumeAgent(sessionId), {}),
   seenSession: (sessionId: string) => call(Session, 'POST', paths.seenSession(sessionId), {}),
   restartSession: (sessionId: string) => call(Session, 'POST', paths.restartSession(sessionId), {}),
   closeSession: (sessionId: string) => call<void>(null, 'DELETE', paths.session(sessionId)),
@@ -94,6 +102,8 @@ export function socketUrl(path: string): string {
 export function subscribeToEvents(handlers: {
   onReady: () => void;
   onEvent: (event: ChangeEvent) => void;
+  /** The daemon asks this canvas to bring a session into view. */
+  onShow: (sessionId: string) => void;
   onDown: () => void;
 }): () => void {
   let socket: WebSocket | null = null;
@@ -106,6 +116,7 @@ export function subscribeToEvents(handlers: {
       const parsed = EventsServerMessage.safeParse(JSON.parse(String(message.data)));
       if (!parsed.success) return;
       if (parsed.data.type === 'hello') handlers.onReady();
+      else if (parsed.data.type === 'show') handlers.onShow(parsed.data.sessionId);
       else handlers.onEvent(parsed.data.event);
     };
     socket.onclose = () => {

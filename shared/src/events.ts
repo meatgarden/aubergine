@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Attention, NOTE_LOG_LIMIT, NO_ATTENTION, NO_STATUS, NoteEntry, type CanvasState, Frame, LayoutNode, Session, SessionName, SessionNote, ShellStatus } from './entities';
+import { AgentInfo, Attention, NOTE_LOG_LIMIT, NO_ATTENTION, NO_STATUS, NoteEntry, type CanvasState, Frame, LayoutNode, Session, SessionName, SessionNote, ShellStatus } from './entities';
 import { Id } from './ids';
 
 /**
@@ -27,6 +27,8 @@ export const ChangeEvent = z.discriminatedUnion('type', [
   z.object({ type: z.literal('session.noted'), sessionId: Id, note: SessionNote }),
   z.object({ type: z.literal('session.attention'), sessionId: Id, attention: Attention }),
   z.object({ type: z.literal('session.note.appended'), sessionId: Id, entry: NoteEntry }),
+  /** Which agent runs in the session, and in which conversation. */
+  z.object({ type: z.literal('session.agent'), sessionId: Id, agent: AgentInfo.nullable() }),
   /** What the shell reports changed: busy or idle, exit code, unread output. */
   z.object({ type: z.literal('session.status'), sessionId: Id, status: ShellStatus }),
   /** Ended for good and removed. */
@@ -82,6 +84,8 @@ export function applyEvent(state: CanvasState, event: ChangeEvent): CanvasState 
         noteLog: [...session.noteLog, event.entry].slice(-NOTE_LOG_LIMIT),
       });
     }
+    case 'session.agent':
+      return patchSession(state, event.sessionId, { agent: event.agent });
     case 'session.status':
       return patchSession(state, event.sessionId, { status: event.status });
     case 'session.noted':

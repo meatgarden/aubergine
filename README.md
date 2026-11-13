@@ -118,7 +118,19 @@ You probably have terminal tabs open already, some of them running agents. One t
 
 Nothing here stops, signals or changes a program you have running, and nothing edits your dotfiles.
 
-These steps use the `aubergine` command; install it first with step 6 of the [quick start](#quick-start). The server must be running.
+### From the canvas
+
+The quickest way is the **Outside terminals** button in the canvas toolbar. It lists every terminal you have open outside the canvas: the terminal's name, its folder, what is running in it, and for a Claude Code tab the conversation's name and whether the agent is idle or busy. **Refresh** looks again; nothing is looked up while the panel is closed.
+
+Each row has its own action, so you bring terminals over one at a time:
+
+- **Add to canvas**, for a shell at its prompt or one running a command: a canvas session in the same folder. A command that is running stays where it is; start it again in the new session if you need it there.
+- **Fork to canvas**, for a Claude Code tab: a copy of the conversation starts on the canvas, and the original keeps running until you exit it.
+- **Stop and resume here**, for a Claude Code tab whose agent is idle: the original is asked to exit and the same conversation carries on on the canvas. It asks you first, and it is switched off, with the reason shown, while the agent is busy.
+
+After an action the canvas goes to the new terminal, and the row tells you what to do with the old tab.
+
+The same things can be done from the command line, described next. These steps use the `aubergine` command; install it first with step 6 of the [quick start](#quick-start). The server must be running.
 
 If you have not linked the command, every `aubergine …` below still works when you write it as `node` followed by the full path to `bin/aubergine.mjs`. Most of these commands are run from your other tabs, in their own folders, so a relative path will not do. For example, if you cloned into `~/code`:
 
@@ -137,6 +149,8 @@ aubergine here
 
 This creates a session in the tab's current folder, named after the folder, puts it on the canvas, and turns the tab into a view of that session. The tab and the canvas now show the same shell. Close the tab whenever you like; the session stays on the canvas.
 
+If the canvas is open in a browser, it pans to the new terminal and focuses it. If it is not open anywhere, your default browser opens on it. `--no-open` skips that.
+
 Give it a name, or a command to start with, if you want:
 
 ```sh
@@ -153,6 +167,41 @@ A running server or watcher cannot be carried over; it has to be started again i
 
 ### A tab running Claude Code
 
+The running agent itself cannot be moved, but its conversation can. Start with a look:
+
+```sh
+aubergine move
+```
+
+lists your Claude Code tabs: terminal, whether the agent is idle or busy, the conversation's name and its folder, followed by a ready-to-copy command for each one. It only reads. Then move the ones you want by terminal name, one at a time or several, or all of them:
+
+```sh
+aubergine move ttys004 --dry-run     # show the plan, change nothing
+aubergine move ttys004
+aubergine move --all
+```
+
+There are two ways to move, and the default is the careful one.
+
+**Copy (the default).** A new canvas session starts in the same folder with a copy of the conversation. The original tab is not touched and keeps running. Exit the original (`/exit`) when you are ready; until you do, two agents with the same history are working in the same folder, so do not give both of them work.
+
+**Stop and resume (`--stop`).** The original agent is asked to exit, and the same conversation carries on in a new canvas session:
+
+```sh
+aubergine move ttys004 --stop
+```
+
+- It only does this for an agent that is **idle**, checked again at the last moment. A busy one is refused; wait for its turn to end. (`--force` overrides this and interrupts the agent's work.)
+- It asks you to confirm first (`--yes` skips the question).
+- It asks the original process to exit once, politely, waits, and checks that it has gone. It is never forced. If it does not exit, nothing is started on the canvas for it and you are told.
+- It only ever signals the exact processes you chose, each checked to still be the same Claude Code process.
+
+Either way, the old tab cannot be turned into a view of the new session from outside. After `--stop` the tab is back at its shell prompt; run `aubergine attach "<name>"` there if you want it to show the session, or just close it.
+
+`aubergine move` finds each conversation in the records Claude Code keeps for its running processes. That is an internal detail of Claude Code that may change; if a record cannot be read, the copy falls back to the most recent conversation in the folder and says so, and `--stop` is refused for that tab.
+
+#### By hand
+
 1. Let the agent finish its current turn.
 2. Exit it (`/exit`).
 3. In the same tab, in the same folder:
@@ -163,7 +212,12 @@ A running server or watcher cannot be carried over; it has to be started again i
 
 This starts Claude Code in a new canvas session with `--continue`, so the conversation carries on where it stopped, now with its status on the canvas (working, waiting for you, finished).
 
-The limit: `--continue` picks the **most recent** conversation for that folder. If two agents were working in the same folder, only the first `aubergine here --claude` gets the right one by itself. For the other, run `aubergine here`, then `claude --resume` in the session and choose the conversation from the list.
+The limit: `--continue` picks the **most recent** conversation for that folder. If two agents were working in the same folder, only the first `aubergine here --claude` gets the right one by itself. For the other, name the conversation yourself. Anything after `--` goes to the agent in place of `--continue`:
+
+```sh
+aubergine here --claude -- --resume <conversation id>
+aubergine here --claude -- --resume <conversation id> --fork-session
+```
 
 ### All tabs at once
 
@@ -171,7 +225,15 @@ The limit: `--continue` picks the **most recent** conversation for that folder. 
 aubergine scan
 ```
 
-lists your open shells that are not on the canvas yet: the terminal, what is running in it, and its folder. It only reads.
+lists your open terminals that are not on the canvas yet: the terminal's name, what is running in it, and its folder, followed by a ready-to-copy command for each one. It only reads.
+
+To bring over just one or a few, name them:
+
+```sh
+aubergine import ttys004
+```
+
+Or take all of them:
 
 ```sh
 aubergine import --dry-run
@@ -251,6 +313,8 @@ How it works: a session starts zsh with `ZDOTDIR` pointing at a small folder ins
 
 The toolbar shows **N waiting**; click it to go to the next waiting session. Looking at a node clears its state, and so does the agent starting to work again. **Notify** turns on desktop notifications for sessions that start waiting.
 
+Aubergine remembers which conversation an agent session was in. When its shell is back at a prompt (you exited the agent, or the computer was restarted), the node's title bar offers **Resume agent**, which starts the agent again in that conversation.
+
 To use the hooks in sessions you start yourself, print them and add them to your own Claude Code settings by hand:
 
 ```sh
@@ -293,7 +357,7 @@ Create `config.json` in the data folder (the server prints its location at start
   "theme": "dark",
   "shell": null,
   "defaultFolder": "~/work",
-  "agents": { "logPrompts": true }
+  "agents": { "logPrompts": true, "claudeCommand": "claude" }
 }
 ```
 
@@ -301,6 +365,13 @@ Create `config.json` in the data folder (the server prints its location at start
 - `shell`: absolute path of the shell to start; `null` uses your own `$SHELL`.
 - `defaultFolder`: where new terminals start; `null` means your home folder.
 - `agents.logPrompts`: `false` keeps prompts given to agents out of the note log. Default `true`.
+- `agents.claudeCommand`: the command line that starts Claude Code, used by **+ Claude Code**, `aubergine here --claude`, `aubergine move` and **Resume agent**. Default `claude`. It can be a whole launcher:
+
+  ```json
+  { "agents": { "claudeCommand": "mytool launch -- claude" } }
+  ```
+
+  Aubergine adds its own flags (`--settings <file>`, and `--continue` or `--resume <id>`) at the end. If your launcher needs them somewhere else, mark the place with `{flags}`, for example `"mytool run claude {flags} --then-something"`. The line is typed into your shell exactly as you wrote it, so quote it as you would on the command line.
 
 Font and theme apply when you reload the page; shell and folder apply to the next new terminal.
 
@@ -320,9 +391,16 @@ aubergine new [name]           start a new terminal on the canvas
 aubergine attach <name>        open a session in this terminal
 aubergine here [name] [-- cmd] start a session in this folder and turn this terminal into a view of it
                                --no-attach  only create it
+                               --no-open    do not bring it up in the browser
                                --claude     start Claude Code in it, continuing this folder's last conversation
-aubergine scan                 list open shells that are not on the canvas yet (read-only)
-aubergine import               give each of those a canvas session (--dry-run, --all)
+                               --claude -- <args>   start it with these arguments instead of --continue
+aubergine move                 list running Claude Code tabs that can be moved (read-only)
+aubergine move <terminal>…     start a copy of each one's conversation on the canvas (or --all)
+                               --stop       ask an idle original to exit, then resume the same conversation
+                               --dry-run, --yes, --force, --no-open
+aubergine scan                 list open terminals that are not on the canvas yet (read-only)
+aubergine import <terminal>…   give those terminals a canvas session in the same folder
+aubergine import               the same for every one, one per folder (--all, --dry-run)
 aubergine shell-hook print     print the zsh lines that make new tabs start on the canvas
 aubergine note <text>          inside a session: add an entry to its note log
 aubergine hooks print          print the Claude Code hook settings
@@ -330,7 +408,7 @@ aubergine service install      start the Aubergine server at login (macOS)
 aubergine service uninstall    stop starting it at login
 ```
 
-`attach` and `here` show the very same session as the canvas, so both views stay in step. Close the terminal window to detach; the session keeps running. See [Moving your existing terminals over](#moving-your-existing-terminals-over) for `here`, `scan`, `import` and `shell-hook`.
+`attach` and `here` show the very same session as the canvas, so both views stay in step. Close the terminal window to detach; the session keeps running. See [Moving your existing terminals over](#moving-your-existing-terminals-over) for `here`, `move`, `scan`, `import` and `shell-hook`.
 
 `service install` writes a per-user launchd agent that runs the server from this checkout, with the port and data folder in effect when you ran it. Run `pnpm build` first.
 

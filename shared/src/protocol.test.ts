@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   CanvasState,
   ChangeEvent,
+  ConversationId,
   CreateSessionRequest,
   DEFAULT_SETTINGS,
   NO_ATTENTION,
@@ -40,6 +41,7 @@ function fixture(): { state: CanvasState; session: Session; node: LayoutNode } {
     status: NO_STATUS,
     attention: NO_ATTENTION,
     noteLog: [],
+    agent: null,
   };
   const node: LayoutNode = {
     id: newId(),
@@ -202,9 +204,25 @@ describe('applyEvent', () => {
     expect(needsUser({ ...waiting, state: 'working' })).toBe(false);
   });
 
+  it('remembers the agent and its conversation, also after the shell has ended', () => {
+    const { state, session, node } = fixture();
+    let current = applyEvent(state, { type: 'session.created', session, node });
+    const agent = { kind: 'claude-code' as const, conversationId: '0190aaaa-bbbb-7ccc-8ddd-eeeeeeeeeeee' };
+    current = applyEvent(current, { type: 'session.agent', sessionId: session.id, agent });
+    current = applyEvent(current, { type: 'session.exited', sessionId: session.id });
+    expect(current.sessions[0]?.agent).toEqual(agent);
+  });
+
+  it('only accepts conversation IDs that are safe on a command line', () => {
+    expect(ConversationId.safeParse('0190aaaa-bbbb-7ccc-8ddd-eeeeeeeeeeee').success).toBe(true);
+    for (const bad of ['', 'short', 'abc; rm -rf ~', '$(whoami)-aaaaaaaa', "aaaaaaaa'bbbb", '-leading-dash-id', 'a'.repeat(80)]) {
+      expect(ConversationId.safeParse(bad).success, bad).toBe(false);
+    }
+  });
+
   it('reads sessions saved before these fields existed', () => {
     const { state, session } = fixture();
-    const { state: _s, cwd: _c, command: _m, note: _n, status: _t, attention: _a, noteLog: _l, ...old } = session;
+    const { state: _s, cwd: _c, command: _m, note: _n, status: _t, attention: _a, noteLog: _l, agent: _g, ...old } = session;
     const parsed = CanvasState.parse({ ...state, sessions: [old] });
     expect(parsed.sessions[0]).toMatchObject({
       state: 'open',
@@ -214,6 +232,7 @@ describe('applyEvent', () => {
       status: NO_STATUS,
       attention: NO_ATTENTION,
       noteLog: [],
+      agent: null,
     });
   });
 

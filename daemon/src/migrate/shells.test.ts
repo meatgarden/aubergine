@@ -1,18 +1,18 @@
 import { describe, expect, it } from 'vitest';
 import { NO_ATTENTION, NO_STATUS, newId, type Session } from '@aubergine/shared';
-import { findShells, formatScan, importLayout, looksLikeClaude, nextStep, parseLsofCwd, parsePs, planImport, programName } from './shells';
+import { findShells, importLayout, looksLikeClaude, parseLsofCwd, parsePs, planImport, programName } from './shells';
 
 // What `ps -axo pid=,ppid=,pgid=,tpgid=,tty=,args=` prints, including processes with no terminal.
 const PS = `
     1     0     1     0 ??       /sbin/launchd
- 2067  2054  2067  2068 ttys000  login -pf me
- 2068  2067  2068  2068 ttys000  -zsh
- 3741  2054  3741  3747 ttys001  login -pf me
- 3742  3741  3742  3747 ttys001  -zsh
- 3747  3742  3747  3747 ttys001  claude
- 3790  3747  3747  3747 ttys001  node /opt/tools/helper.js
- 5738  5737  5738  5800 ttys003  /bin/zsh
- 5800  5738  5800  5800 ttys003  npm run dev --port 3000
+ 1101  1100  1101  1102 ttys000  login -pf me
+ 1102  1101  1102  1102 ttys000  -zsh
+ 1201  1100  1201  1203 ttys001  login -pf me
+ 1202  1201  1202  1203 ttys001  -zsh
+ 1203  1202  1203  1203 ttys001  claude
+ 1204  1203  1203  1203 ttys001  node /opt/tools/helper.js
+ 1301  1300  1301  1302 ttys003  /bin/zsh
+ 1302  1301  1302  1302 ttys003  npm run dev --port 3000
  6001  6000  6001  6001 ttys004  -zsh
  7001  7000  7001  7050 ttys005  -zsh
  7050  7001  7050  7050 ttys005  tmux -L aubergine -f /repo/daemon/src/runtime/tmux.conf attach-session -t =0190-abc
@@ -20,13 +20,13 @@ const PS = `
  9001  9000  9001  9001 ttys023  -zsh
 `;
 
-const LSOF = `p2068
+const LSOF = `p1102
 fcwd
 n/Users/me
-p3742
+p1202
 fcwd
 n/Users/me/work/api
-p5738
+p1301
 fcwd
 n/Users/me/work/web site
 p7001
@@ -45,18 +45,18 @@ describe('parsing', () => {
   it('reads processes that have a terminal, with their full command line', () => {
     const processes = parsePs(PS);
     expect(processes).toHaveLength(13);
-    expect(processes.find((p) => p.pid === 5800)).toEqual({
-      pid: 5800,
-      ppid: 5738,
-      pgid: 5800,
-      tpgid: 5800,
+    expect(processes.find((p) => p.pid === 1302)).toEqual({
+      pid: 1302,
+      ppid: 1301,
+      pgid: 1302,
+      tpgid: 1302,
       tty: 'ttys003',
       args: 'npm run dev --port 3000',
     });
   });
 
   it('reads working folders, including ones with spaces', () => {
-    expect(parseLsofCwd(LSOF).get(5738)).toBe('/Users/me/work/web site');
+    expect(parseLsofCwd(LSOF).get(1301)).toBe('/Users/me/work/web site');
     expect(parseLsofCwd('').size).toBe(0);
   });
 
@@ -79,7 +79,8 @@ describe('findShells', () => {
   it('tells an idle shell from one running something', () => {
     expect(byTty('ttys000')).toMatchObject({ running: null, current: true });
     expect(byTty('ttys003')).toMatchObject({ running: 'npm run dev --port 3000', looksLikeClaude: false });
-    expect(byTty('ttys001')).toMatchObject({ running: 'claude', looksLikeClaude: true });
+    expect(byTty('ttys001')).toMatchObject({ running: 'claude', runningPid: 1203, looksLikeClaude: true });
+    expect(byTty('ttys000')?.runningPid).toBeNull();
   });
 
   it("leaves out Aubergine's own sessions and terminals with no shell, and marks views of a session", () => {
@@ -93,13 +94,6 @@ describe('findShells', () => {
     expect(byTty('ttys004')?.cwd).toBeNull();
   });
 
-  it('prints a table', () => {
-    const lines = formatScan(shells).split('\n');
-    expect(lines[0]).toMatch(/^TERMINAL\s+RUNNING\s+FOLDER$/);
-    expect(lines[1]).toMatch(/^ttys000 \(this one\)\s+-\s+\/Users\/me$/);
-    expect(lines[2]).toContain('Claude Code');
-    expect(formatScan([])).toBe('No open shells found outside Aubergine.');
-  });
 });
 
 function session(cwd: string, state: Session['state'] = 'open'): Session {
@@ -115,6 +109,7 @@ function session(cwd: string, state: Session['state'] = 'open'): Session {
     status: NO_STATUS,
     attention: NO_ATTENTION,
     noteLog: [],
+    agent: null,
   };
 }
 
@@ -145,19 +140,6 @@ describe('planImport', () => {
     const plan = planImport([idle, ...shells], [], { all: false });
     expect(plan.create.find((i) => i.cwd === '/Users/me/work/api')?.shell.tty).toBe('ttys001');
     expect(plan.skipped.map((s) => s.shell.tty)).toContain('ttys010');
-  });
-});
-
-describe('nextStep', () => {
-  const line = "claude --continue --settings '/d/s.json'";
-  it('says what to do in each kind of tab', () => {
-    expect(nextStep({ shell: byTty('ttys000')!, sessionName: 'me' }, line)).toContain('Idle. In that tab run: aubergine attach "me"');
-    const busy = nextStep({ shell: byTty('ttys003')!, sessionName: 'web site' }, line);
-    expect(busy).toContain('"npm run dev --port 3000" is running there');
-    expect(busy).toContain('aubergine attach "web site"');
-    const agent = nextStep({ shell: byTty('ttys001')!, sessionName: 'api' }, line);
-    expect(agent).toContain('exit it (/exit)');
-    expect(agent).toContain(line);
   });
 });
 

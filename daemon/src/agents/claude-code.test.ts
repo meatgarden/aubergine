@@ -7,6 +7,7 @@ import { claudeHooksSettings, claudeLaunchLine, hookActions, shellJoin, writeCla
 describe('hookActions', () => {
   it('logs the prompt and marks the session as working', () => {
     const input = { hook_event_name: 'UserPromptSubmit', session_id: 'abc', prompt: '  fix the failing test  ' };
+    // 'abc' is too short to be a conversation ID, so nothing is reported about the agent.
     expect(hookActions('prompt', input)).toEqual([
       { do: 'attention', state: 'working' },
       { do: 'note', kind: 'prompt', text: 'fix the failing test' },
@@ -39,6 +40,17 @@ describe('hookActions', () => {
     ]);
   });
 
+  it('reports the conversation ID first, when the input carries a plain one', () => {
+    const id = '0190aaaa-bbbb-7ccc-8ddd-eeeeeeeeeeee';
+    expect(hookActions('stop', { session_id: id })[0]).toEqual({ do: 'agent', conversationId: id });
+    expect(hookActions('notification', { session_id: id, notification_type: 'auth_success' })).toEqual([
+      { do: 'agent', conversationId: id },
+    ]);
+    for (const bad of ['x; rm -rf ~', '$(whoami)aaaaaaaa', 42, null]) {
+      expect(hookActions('stop', { session_id: bad }).some((a) => a.do === 'agent')).toBe(false);
+    }
+  });
+
   it('never throws on input it does not understand', () => {
     for (const input of [null, undefined, 'text', 42, [], { prompt: 7 }]) {
       expect(() => hookActions('prompt', input)).not.toThrow();
@@ -69,8 +81,34 @@ describe('generated settings', () => {
     }
   });
 
-  it('can carry on the most recent conversation', () => {
-    expect(claudeLaunchLine('/d/s.json', { continue: true })).toBe("claude --continue --settings '/d/s.json'");
+  it('builds the plain launch line, with the agent\u2019s arguments before the settings', () => {
+    expect(claudeLaunchLine('/d/s.json')).toBe("claude --settings '/d/s.json'");
+    expect(claudeLaunchLine('/d/s.json', { args: ['--continue'] })).toBe("claude --continue --settings '/d/s.json'");
+    expect(claudeLaunchLine('/d/s.json', { args: ['--resume', 'abc-123', '--fork-session'] })).toBe(
+      "claude --resume abc-123 --fork-session --settings '/d/s.json'",
+    );
+  });
+
+  it('uses a launcher command line as it is, spaces and its own -- included', () => {
+    expect(claudeLaunchLine('/d/s.json', { command: 'mytool launch -- claude', args: ['--continue'] })).toBe(
+      "mytool launch -- claude --continue --settings '/d/s.json'",
+    );
+    expect(claudeLaunchLine('/d/s.json', { command: "'/opt/my tools/run' --profile work claude" })).toBe(
+      "'/opt/my tools/run' --profile work claude --settings '/d/s.json'",
+    );
+    expect(claudeLaunchLine('/d/s.json', { command: '   ' })).toBe("claude --settings '/d/s.json'");
+  });
+
+  it('puts the flags where a {flags} placeholder says', () => {
+    expect(claudeLaunchLine('/d/s.json', { command: 'mytool run claude {flags} --then-something', args: ['--continue'] })).toBe(
+      "mytool run claude --continue --settings '/d/s.json' --then-something",
+    );
+  });
+
+  it('quotes pass-through arguments so they stay one word each', () => {
+    expect(claudeLaunchLine('/d/s.json', { args: ['--append-system-prompt', 'be brief; no tables', '$(whoami)'] })).toBe(
+      "claude --append-system-prompt 'be brief; no tables' '$(whoami)' --settings '/d/s.json'",
+    );
   });
 
   it('joins words into a command line, quoting only where needed', () => {

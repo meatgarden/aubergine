@@ -7,6 +7,8 @@ describe('Settings', () => {
     expect(DEFAULT_SETTINGS).toMatchObject({ theme: 'dark', shell: null, defaultFolder: null });
     expect(DEFAULT_SETTINGS.font.size).toBe(13);
     expect(DEFAULT_SETTINGS.agents.logPrompts).toBe(true);
+    expect(DEFAULT_SETTINGS.agents.claudeCommand).toBe('claude');
+    expect(Settings.safeParse({ agents: { claudeCommand: '   ' } }).success).toBe(false);
     expect(Settings.parse({ font: { size: 15 } }).font).toEqual({ ...DEFAULT_SETTINGS.font, size: 15 });
   });
 
@@ -16,7 +18,7 @@ describe('Settings', () => {
       theme: 'light',
       shell: '/bin/bash',
       defaultFolder: '~/work',
-      agents: { logPrompts: false },
+      agents: { logPrompts: false, claudeCommand: 'mytool launch -- claude' },
     };
     expect(Settings.parse(full)).toEqual(full);
   });

@@ -1,7 +1,7 @@
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import type { AttentionState, NoteEntry } from '@aubergine/shared';
+import { ConversationId, type AttentionState, type NoteEntry } from '@aubergine/shared';
 import { stableNodePath } from '../node-path';
 
 /**
@@ -28,6 +28,8 @@ const CLAUDE_EVENT: Record<HookEvent, string> = {
 const NEEDS_USER = new Set(['permission_prompt', 'idle_prompt', 'elicitation_dialog', 'elicitation_url_dialog', 'agent_needs_input']);
 
 export type HookAction =
+  /** Which conversation the agent is in; sent first, so it is known even if the rest fails. */
+  | { do: 'agent'; conversationId: string }
   | { do: 'attention'; state: AttentionState; message?: string }
   | { do: 'note'; kind: NoteEntry['kind']; text: string };
 
@@ -42,6 +44,13 @@ function text(value: unknown, limit: number): string {
  */
 export function hookActions(event: HookEvent, input: unknown): HookAction[] {
   const data = (typeof input === 'object' && input !== null ? input : {}) as Record<string, unknown>;
+  // Every hook's input names the conversation. Anything that is not a plain ID is ignored.
+  const conversation = ConversationId.safeParse(data.session_id);
+  const agent: HookAction[] = conversation.success ? [{ do: 'agent', conversationId: conversation.data }] : [];
+  return [...agent, ...eventActions(event, data)];
+}
+
+function eventActions(event: HookEvent, data: Record<string, unknown>): HookAction[] {
   switch (event) {
     case 'prompt': {
       const prompt = text(data.prompt, 20_000);
@@ -94,12 +103,29 @@ export async function writeClaudeSettings(dataDir: string): Promise<string> {
   return file;
 }
 
+export const FLAGS_PLACEHOLDER = '{flags}';
+
+export interface LaunchOptions {
+  /**
+   * The user's launch command, from settings. A whole command line that is
+   * typed into their shell as it is: trusted configuration, never built from
+   * anything a session could send.
+   */
+  command?: string;
+  /** Arguments for the agent itself, such as `--continue` or `--resume <id>`. Each is quoted. */
+  args?: readonly string[];
+}
+
 /**
- * What to type into a new session to start Claude Code with the hooks.
- * With `continue`, it carries on the most recent conversation in that folder.
+ * What to type into a session to start Claude Code with the hooks:
+ * the launch command, then the agent's arguments and `--settings <file>`.
+ * A launcher that needs those somewhere other than the end marks the place
+ * with `{flags}`.
  */
-export function claudeLaunchLine(settingsFile: string, options: { continue?: boolean } = {}): string {
-  return `claude${options.continue ? ' --continue' : ''} --settings ${shellQuote(settingsFile)}`;
+export function claudeLaunchLine(settingsFile: string, options: LaunchOptions = {}): string {
+  const command = (options.command ?? 'claude').trim() || 'claude';
+  const flags = [shellJoin(options.args ?? []), `--settings ${shellQuote(settingsFile)}`].filter(Boolean).join(' ');
+  return command.includes(FLAGS_PLACEHOLDER) ? command.replaceAll(FLAGS_PLACEHOLDER, flags) : `${command} ${flags}`;
 }
 
 /** Quotes words for a shell command line, leaving plain words as they are. */

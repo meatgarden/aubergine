@@ -57,3 +57,18 @@ export function announcement(
     body: event.attention.message ?? '',
   };
 }
+
+const SHELLS = new Set(['zsh', 'bash', 'fish', 'sh', 'dash', 'ksh', 'tcsh', 'csh']);
+
+/**
+ * Whether to offer "Resume agent" on a session: an agent conversation is
+ * known for it, and its shell is sitting at a prompt (so the agent is not
+ * running there now).
+ */
+export function canResumeAgent(session: Session): boolean {
+  if (session.state !== 'open' || !session.agent?.conversationId) return false;
+  if (session.status.state === 'busy') return false;
+  if (session.status.state === 'idle') return true;
+  // No report from the shell: go by what is in the foreground.
+  return session.command !== null && SHELLS.has(session.command.replace(/^-/, ''));
+}

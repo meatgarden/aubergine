@@ -1,4 +1,6 @@
-import { readFileSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { createRequire } from 'node:module';
+import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { expect, test, type Page } from '@playwright/test';
 import { e2e } from '../playwright.config';
@@ -97,6 +99,13 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await expect(page.getByTestId('attention-queue')).toHaveCount(0);
   await expect(page.getByTestId('badge-attention')).toHaveCount(0);
 
+
+  // A hook's input names the agent's conversation; once the shell is back at its prompt the node offers to resume it.
+  await page.getByTestId('node-body').click();
+  await page.keyboard.type(`echo '{"session_id":"0190aaaa-bbbb-7ccc-8ddd-eeeeeeeeeeee"}' | ${aubergine} hook stop`);
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('button', { name: 'Resume agent' })).toHaveCount(1, { timeout: 15_000 });
+
   await page.reload();
   await page.getByRole('button', { name: 'Go to…' }).click();
   await page.getByRole('textbox', { name: 'Search sessions' }).fill('rounding');
@@ -122,6 +131,18 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await expect(node).toHaveCount(1);
   await expect(outputLine(page, 'picked-44')).toHaveCount(1);
 
+  // "aubergine here" asks an open canvas to bring a session into view: it gets the keyboard.
+  await page.locator('.react-flow__pane').click({ position: { x: 5, y: 300 } });
+  await expect(page.getByTestId('node-shield')).toHaveCount(1);
+  const viewers = await page.evaluate(async () => {
+    const state = await (await fetch('/api/v1/state')).json();
+    const id = state.state.sessions[0].id;
+    const shown = await fetch(`/api/v1/sessions/${id}/show`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: '{}' });
+    return (await shown.json()).viewers;
+  });
+  expect(viewers).toBe(1);
+  await expect(page.getByTestId('node-shield')).toHaveCount(0);
+
   // The picker also searches what terminals have printed, including in a parked session.
   await page.getByRole('button', { name: /^Park / }).click();
   await expect(node).toHaveCount(0);
@@ -132,6 +153,38 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await expect(node).toHaveCount(1);
   await expect(page.getByTestId('node-shield')).toHaveCount(0);
   await page.keyboard.press('q'); // leave the scroll-back view the match opened
+
+  // A terminal that is open outside the canvas can be brought over from the panel, one at a time.
+  // The stand-in is a plain shell this test starts in its own folder.
+  const outsideFolder = mkdtempSync(path.join(tmpdir(), 'aubergine-outside-'));
+  // The daemon package already has a pseudo-terminal library; borrow it instead of adding a dependency here.
+  const nodePty = createRequire(path.join(repoRoot, 'daemon', 'package.json'))('node-pty') as {
+    spawn(file: string, args: string[], options: Record<string, unknown>): { kill(): void };
+  };
+  const standIn = nodePty.spawn('/bin/sh', [], { name: 'xterm-256color', cols: 80, rows: 24, cwd: outsideFolder, env: { PATH: process.env.PATH ?? '/usr/bin:/bin', HOME: process.env.HOME ?? '/' } });
+  try {
+    await page.getByRole('button', { name: /^Outside terminals/ }).click();
+    const row = page.getByTestId('outside-row').filter({ hasText: path.basename(outsideFolder) });
+    await expect(row).toHaveCount(1, { timeout: 15_000 });
+    await row.getByRole('button', { name: 'Add to canvas' }).click();
+    await expect(page.getByTestId('node-name').filter({ hasText: path.basename(outsideFolder) })).toHaveCount(1);
+    await expect(row).toContainText('aubergine attach');
+    // The new node has the keyboard: it is the only one without a shield.
+    await expect(page.getByTestId('node-shield')).toHaveCount(1);
+    // The canvas glides to the new node; wait for that before touching anything, since a click interrupts it.
+    const parkNew = page.getByRole('button', { name: new RegExp(`^Park ${path.basename(outsideFolder)}`) });
+    await expect(parkNew).toBeInViewport({ ratio: 1 });
+    await page.getByRole('button', { name: /^Outside terminals/ }).click(); // close the panel, which lies over the node
+    await expect(page.getByTestId('outside-panel')).toHaveCount(0);
+    await parkNew.click();
+    await page.getByRole('button', { name: 'Parked (1)' }).click();
+    await page.getByRole('button', { name: 'End', exact: true }).click();
+    await page.getByRole('button', { name: 'End session' }).click();
+    await expect(page.getByRole('button', { name: /Parked/ })).toHaveCount(0);
+  } finally {
+    standIn.kill();
+    rmSync(outsideFolder, { recursive: true, force: true });
+  }
 
   // When the shell exits, the node says so and offers a restart.
   await page.getByTestId('node-body').click();

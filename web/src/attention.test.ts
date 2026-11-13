@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { NO_ATTENTION, NO_STATUS, newId, type AttentionState, type Session } from '@aubergine/shared';
-import { announcement, nextWaiting, waitingQueue } from './attention';
+import { announcement, canResumeAgent, nextWaiting, waitingQueue } from './attention';
 
 function session(name: string, state: AttentionState, at: string | null, extra: Partial<Session> = {}): Session {
   return {
@@ -15,6 +15,7 @@ function session(name: string, state: AttentionState, at: string | null, extra: 
     status: NO_STATUS,
     attention: { ...NO_ATTENTION, state, at },
     noteLog: [],
+    agent: null,
     ...extra,
   };
 }
@@ -62,5 +63,24 @@ describe('announcement', () => {
     expect(announcement({ type: 'session.attention', sessionId: a.id, attention: working }, all)).toBeNull();
     expect(announcement({ type: 'session.attention', sessionId: a.id, attention: a.attention }, all)).toBeNull();
     expect(announcement({ type: 'session.parked', sessionId: a.id }, all)).toBeNull();
+  });
+});
+
+describe('canResumeAgent', () => {
+  const agent = { kind: 'claude-code' as const, conversationId: '0190aaaa-bbbb-7ccc-8ddd-eeeeeeeeeeee' };
+  const idle = { ...NO_STATUS, state: 'idle' as const };
+
+  it('offers a resume when a conversation is known and the shell is at its prompt', () => {
+    expect(canResumeAgent(session('a', 'none', null, { agent, status: idle }))).toBe(true);
+    // A shell that reports nothing: go by the foreground program.
+    expect(canResumeAgent(session('a', 'none', null, { agent, command: 'bash' }))).toBe(true);
+  });
+
+  it('does not while something is running, or when there is nothing to resume', () => {
+    expect(canResumeAgent(session('a', 'none', null, { agent, status: { ...idle, state: 'busy' } }))).toBe(false);
+    expect(canResumeAgent(session('a', 'none', null, { agent, command: 'claude' }))).toBe(false);
+    expect(canResumeAgent(session('a', 'none', null, { status: idle }))).toBe(false);
+    expect(canResumeAgent(session('a', 'none', null, { agent: { kind: 'claude-code', conversationId: null }, status: idle }))).toBe(false);
+    expect(canResumeAgent(session('a', 'none', null, { agent, status: idle, state: 'parked' }))).toBe(false);
   });
 });

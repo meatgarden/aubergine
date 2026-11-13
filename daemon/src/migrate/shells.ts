@@ -32,6 +32,8 @@ export interface ScannedShell {
   cwd: string | null;
   /** The command in the foreground, or null when the shell sits at its prompt. */
   running: string | null;
+  /** Process ID of that foreground command. */
+  runningPid: number | null;
   looksLikeClaude: boolean;
   /** This tab is already showing an Aubergine session. */
   viewingAubergine: boolean;
@@ -119,6 +121,7 @@ export function findShells(processes: readonly Process[], folders: ReadonlyMap<n
       pid: shell.pid,
       cwd: folders.get(shell.pid) ?? null,
       running,
+      runningPid: running !== null && leader ? leader.pid : null,
       looksLikeClaude: running !== null && looksLikeClaude(running),
       viewingAubergine:
         running !== null && programName(running) === 'tmux' && running.includes(`-L ${options.tmuxSocket} `) && /\battach/.test(running),
@@ -126,21 +129,6 @@ export function findShells(processes: readonly Process[], folders: ReadonlyMap<n
     });
   }
   return shells.sort((a, b) => a.tty.localeCompare(b.tty, undefined, { numeric: true }));
-}
-
-/** A plain table of scanned shells. */
-export function formatScan(shells: readonly ScannedShell[]): string {
-  if (shells.length === 0) return 'No open shells found outside Aubergine.';
-  const rows = [
-    ['TERMINAL', 'RUNNING', 'FOLDER'],
-    ...shells.map((s) => [
-      s.tty + (s.current ? ' (this one)' : ''),
-      s.viewingAubergine ? 'a view of an Aubergine session' : s.looksLikeClaude ? 'Claude Code' : (s.running ?? '-').slice(0, 48),
-      s.cwd ?? '(unknown)',
-    ]),
-  ];
-  const widths = [0, 1].map((column) => Math.max(...rows.map((row) => (row[column] ?? '').length)));
-  return rows.map((row) => row.map((cell, column) => (column < 2 ? cell.padEnd(widths[column] ?? 0) : cell)).join('  ').trimEnd()).join('\n');
 }
 
 export interface ImportItem {
@@ -184,18 +172,6 @@ export function planImport(shells: readonly ScannedShell[], sessions: readonly S
   plan.create.sort(byTty);
   plan.skipped.sort(byTty);
   return plan;
-}
-
-/** What the person should do in the original tab, which is left exactly as it is. */
-export function nextStep(item: { shell: ScannedShell; sessionName: string }, claudeLine: string): string {
-  const attach = `aubergine attach "${item.sessionName}"`;
-  if (item.shell.looksLikeClaude) {
-    return `Claude Code is running there. When it has finished its turn, exit it (/exit), then run: ${attach}\n      and in the session: ${claudeLine}`;
-  }
-  if (item.shell.running) {
-    return `"${item.shell.running.slice(0, 60)}" is running there. When it has finished (or you have stopped it), run: ${attach}`;
-  }
-  return `Idle. In that tab run: ${attach}   (or just close the tab and use the canvas)`;
 }
 
 const GAP = 40;

@@ -4,6 +4,7 @@ import os from 'node:os';
 import { setTimeout as sleep } from 'node:timers/promises';
 import { afterAll, afterEach, describe, expect, it } from 'vitest';
 import { newId } from '@aubergine/shared';
+import { destroyTmuxServer, testSocketName } from '../test-support';
 import { SessionNotFoundError, type Attachment } from './runtime';
 import {
   TmuxRuntime,
@@ -12,7 +13,7 @@ import {
   shellEnvironment,
 } from './tmux-runtime';
 
-const SOCKET = 'aubergine-test';
+const SOCKET = testSocketName('runtime');
 const runtime = new TmuxRuntime({ socket: SOCKET });
 const open: Attachment[] = [];
 
@@ -74,7 +75,7 @@ afterEach(() => {
 });
 
 afterAll(async () => {
-  await runtime.killServer();
+  await destroyTmuxServer(runtime, SOCKET);
 });
 
 describe('version check', () => {
@@ -124,7 +125,7 @@ describe('shellEnvironment', () => {
 describe('shell environment when the daemon starts outside a terminal', () => {
   const bare = new TmuxRuntime({ socket: `${SOCKET}-bare`, env: { PATH: '/usr/bin:/bin' } });
   afterAll(async () => {
-    await bare.killServer();
+    await destroyTmuxServer(bare, `${SOCKET}-bare`);
   });
 
   it('still gives sessions a normal login environment', async () => {
@@ -193,7 +194,7 @@ describe('TmuxRuntime', () => {
         await lonely.kill(id); // the only session: tmux now stops its server
       }
     } finally {
-      await lonely.killServer();
+      await destroyTmuxServer(lonely, `${SOCKET}-lonely`);
     }
   });
 

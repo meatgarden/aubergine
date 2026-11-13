@@ -31,6 +31,7 @@ function withSession(state: CanvasState, name: string): CanvasState {
       status: NO_STATUS,
       attention: NO_ATTENTION,
       noteLog: [],
+      agent: null,
     },
     node: { id: newId(), sessionId, x: 0, y: 0, width: 720, height: 440, color: 'none' },
   };
