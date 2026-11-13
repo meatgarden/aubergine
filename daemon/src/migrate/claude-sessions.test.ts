@@ -6,7 +6,7 @@ import { claudeSessionsDir, isSameProcess, parseProcessStart, parseSessionFile, 
 
 const ID = '0190aaaa-bbbb-7ccc-8ddd-eeeeeeeeeeee';
 const valid = {
-  pid: 3747,
+  pid: 4321,
   sessionId: ID,
   cwd: '/Users/me/work/api',
   startedAt: 1794332553271,
@@ -22,7 +22,7 @@ const valid = {
 describe('parseSessionFile', () => {
   it('reads what is needed and ignores fields it does not know', () => {
     expect(parseSessionFile(JSON.stringify(valid))).toEqual({
-      pid: 3747,
+      pid: 4321,
       conversationId: ID,
       cwd: '/Users/me/work/api',
       status: 'idle',
@@ -83,7 +83,7 @@ describe('readClaudeSession', () => {
   let dir: string;
   beforeAll(async () => {
     dir = await mkdtemp(path.join(os.tmpdir(), 'aubergine-claude-sessions-'));
-    await writeFile(path.join(dir, '3747.json'), JSON.stringify(valid));
+    await writeFile(path.join(dir, '4321.json'), JSON.stringify(valid));
     await writeFile(path.join(dir, '11.json'), 'not json');
     await writeFile(path.join(dir, '12.json'), JSON.stringify({ ...valid, pid: 999 }));
   });
@@ -92,14 +92,14 @@ describe('readClaudeSession', () => {
   });
 
   it('reads the file for a process', async () => {
-    expect((await readClaudeSession(3747, dir))?.conversationId).toBe(ID);
+    expect((await readClaudeSession(4321, dir))?.conversationId).toBe(ID);
   });
 
   it('returns null when the file is missing, malformed, or about another process', async () => {
     expect(await readClaudeSession(4000, dir)).toBeNull();
     expect(await readClaudeSession(11, dir)).toBeNull();
     expect(await readClaudeSession(12, dir)).toBeNull();
-    expect(await readClaudeSession(3747, path.join(dir, 'missing-folder'))).toBeNull();
+    expect(await readClaudeSession(4321, path.join(dir, 'missing-folder'))).toBeNull();
   });
 
   it('looks in the folder Claude Code itself uses', () => {

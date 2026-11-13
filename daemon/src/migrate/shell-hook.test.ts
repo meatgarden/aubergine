@@ -11,6 +11,7 @@ import pty, { type IPty } from 'node-pty';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { Canvas } from '../canvas';
 import { TmuxRuntime } from '../runtime/tmux-runtime';
+import { destroyTmuxServer, testSocketName } from '../test-support';
 import { buildServer } from '../server';
 import { Sessions } from '../sessions';
 import { ZshIntegration } from '../shell/integration';
@@ -36,7 +37,7 @@ describe('the snippet text', () => {
 });
 
 const ZSH = ['/bin/zsh', '/usr/bin/zsh'].find((p) => existsSync(p));
-const SOCKET = 'aubergine-test-hook';
+const SOCKET = testSocketName('hook');
 
 // A real server, a real tmux, and real shells that read a stand-in .zshrc holding the snippet.
 // The developer's own .zshrc is not involved.
@@ -90,7 +91,7 @@ describe.runIf(ZSH)('the snippet in a new shell', () => {
   afterAll(async () => {
     await canvas.flush();
     await app.close();
-    await runtime.killServer();
+    await destroyTmuxServer(runtime, SOCKET);
     await rm(dir, { recursive: true, force: true, maxRetries: 5, retryDelay: 50 });
   });
 

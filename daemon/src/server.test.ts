@@ -32,9 +32,11 @@ import { Sessions } from './sessions';
 import { SETTINGS_FILE, SettingsFile, expandHome } from './settings';
 import { ZshIntegration } from './shell/integration';
 import { JsonStore } from './store/json-store';
+import { destroyTmuxServer, testSocketName } from './test-support';
 import { loadOrCreateToken } from './token';
 
-const runtime = new TmuxRuntime({ socket: 'aubergine-test-server' });
+const SOCKET = testSocketName('server');
+const runtime = new TmuxRuntime({ socket: SOCKET });
 let dir: string;
 let token: string;
 let app: FastifyInstance;
@@ -225,7 +227,7 @@ afterEach(async () => {
 });
 
 afterAll(async () => {
-  await runtime.killServer();
+  await destroyTmuxServer(runtime, SOCKET);
 });
 
 describe('access token', () => {

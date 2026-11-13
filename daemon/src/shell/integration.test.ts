@@ -7,6 +7,7 @@ import { setTimeout as sleep } from 'node:timers/promises';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { newId } from '@aubergine/shared';
 import { TmuxRuntime } from '../runtime/tmux-runtime';
+import { destroyTmuxServer, testSocketName } from '../test-support';
 import { ZshIntegration, parseStatusLine, type ShellReport } from './integration';
 
 describe('parseStatusLine', () => {
@@ -38,7 +39,7 @@ describe('parseStatusLine', () => {
 const ZSH = ['/bin/zsh', '/usr/bin/zsh'].find((p) => existsSync(p));
 
 describe.runIf(ZSH)('zsh integration', () => {
-  const socket = 'aubergine-test-shell';
+  const socket = testSocketName('shell');
   const runtime = new TmuxRuntime({ socket });
   let dir: string;
   let userDir: string;
@@ -57,7 +58,7 @@ describe.runIf(ZSH)('zsh integration', () => {
   });
 
   afterAll(async () => {
-    await runtime.killServer();
+    await destroyTmuxServer(runtime, socket);
     await rm(dir, { recursive: true, force: true, maxRetries: 5, retryDelay: 50 });
   });
 
