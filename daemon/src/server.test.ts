@@ -54,7 +54,7 @@ async function start(): Promise<void> {
     }),
     logPrompts: () => settingsFile.value.agents.logPrompts,
     // A stand-in for starting an agent: any line will do to check that it is typed.
-    agentLaunchLine: async (_agent, options) => `echo "agent-""launched${options.continue ? '-continued' : ''}"`,
+    agentLaunchLine: async (_agent, args) => `echo "agent-""launched${args.map((a) => `:${a}`).join('')}"`,
     defaultFolder: () => (settingsFile.value.defaultFolder ? expandHome(settingsFile.value.defaultFolder) : null),
     shell: () => settingsFile.value.shell,
   });
@@ -727,12 +727,23 @@ describe('sessions started from another terminal', () => {
     expect(await runtime.list()).toEqual([]);
   });
 
+  it('passes arguments for the agent through, in place of the default, and types no separate command', async () => {
+    const body = { agent: 'claude-code', agentArgs: ['--resume', 'abc-123', '--fork-session'], command: 'echo "should-not-""run"' };
+    const { session } = CreateSessionResponse.parse((await request('POST', paths.sessions, { body })).json());
+    const started = Date.now();
+    while (!(await runtime.snapshot(session.id)).includes('agent-launched:--resume:abc-123:--fork-session')) {
+      if (Date.now() - started > 15_000) throw new Error('The launch line was never run');
+      await sleep(40);
+    }
+    expect(await runtime.snapshot(session.id)).not.toContain('should-not-run');
+  });
+
   it('can continue an agent conversation in the new session', async () => {
     const body = { agent: 'claude-code', agentContinue: true, name: 'api', uniqueName: true };
     const { session } = CreateSessionResponse.parse((await request('POST', paths.sessions, { body })).json());
     expect(session.name).toBe('api');
     const started = Date.now();
-    while (!(await runtime.snapshot(session.id)).includes('agent-launched-continued')) {
+    while (!(await runtime.snapshot(session.id)).includes('agent-launched:--continue')) {
       if (Date.now() - started > 15_000) throw new Error('The launch line was never run');
       await sleep(40);
     }

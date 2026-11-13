@@ -69,8 +69,34 @@ describe('generated settings', () => {
     }
   });
 
-  it('can carry on the most recent conversation', () => {
-    expect(claudeLaunchLine('/d/s.json', { continue: true })).toBe("claude --continue --settings '/d/s.json'");
+  it('builds the plain launch line, with the agent\u2019s arguments before the settings', () => {
+    expect(claudeLaunchLine('/d/s.json')).toBe("claude --settings '/d/s.json'");
+    expect(claudeLaunchLine('/d/s.json', { args: ['--continue'] })).toBe("claude --continue --settings '/d/s.json'");
+    expect(claudeLaunchLine('/d/s.json', { args: ['--resume', 'abc-123', '--fork-session'] })).toBe(
+      "claude --resume abc-123 --fork-session --settings '/d/s.json'",
+    );
+  });
+
+  it('uses a launcher command line as it is, spaces and its own -- included', () => {
+    expect(claudeLaunchLine('/d/s.json', { command: 'mytool launch -- claude', args: ['--continue'] })).toBe(
+      "mytool launch -- claude --continue --settings '/d/s.json'",
+    );
+    expect(claudeLaunchLine('/d/s.json', { command: "'/opt/my tools/run' --profile work claude" })).toBe(
+      "'/opt/my tools/run' --profile work claude --settings '/d/s.json'",
+    );
+    expect(claudeLaunchLine('/d/s.json', { command: '   ' })).toBe("claude --settings '/d/s.json'");
+  });
+
+  it('puts the flags where a {flags} placeholder says', () => {
+    expect(claudeLaunchLine('/d/s.json', { command: 'mytool run claude {flags} --then-something', args: ['--continue'] })).toBe(
+      "mytool run claude --continue --settings '/d/s.json' --then-something",
+    );
+  });
+
+  it('quotes pass-through arguments so they stay one word each', () => {
+    expect(claudeLaunchLine('/d/s.json', { args: ['--append-system-prompt', 'be brief; no tables', '$(whoami)'] })).toBe(
+      "claude --append-system-prompt 'be brief; no tables' '$(whoami)' --settings '/d/s.json'",
+    );
   });
 
   it('joins words into a command line, quoting only where needed', () => {

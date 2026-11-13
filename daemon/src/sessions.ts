@@ -47,7 +47,7 @@ export interface SessionsOptions {
   /** Whether prompts given to agents may be kept in the note log. */
   logPrompts?: () => boolean;
   /** The line that starts an agent in a new session, with its reporting set up. */
-  agentLaunchLine?: (agent: AgentKind, options: { continue: boolean }) => Promise<string>;
+  agentLaunchLine?: (agent: AgentKind, args: readonly string[]) => Promise<string>;
 }
 
 /**
@@ -112,14 +112,14 @@ export class Sessions {
     // What a new shell prints while starting up is not news.
     this.seenAt.set(id, Date.now() + 5000);
     const launch = input.agent
-      ? await this.options.agentLaunchLine?.(input.agent, { continue: input.agentContinue === true })
+      ? await this.options.agentLaunchLine?.(input.agent, input.agentArgs ?? (input.agentContinue ? ['--continue'] : []))
       : undefined;
     const fallback = launch ? this.nextName('Claude Code') : undefined;
     const name = input.name && input.uniqueName ? this.uniqueName(input.name) : (input.name ?? fallback);
     const created = this.record(id, name, input.rect, started.cwd);
 
     // Typed once the shell is ready; the new node does not wait for that.
-    const lines = [input.command, launch].filter((line): line is string => Boolean(line));
+    const lines = [launch ?? input.command].filter((line): line is string => Boolean(line));
     if (lines.length > 0) {
       void (async () => {
         for (const line of lines) await this.runtime.typeLine(id, line);

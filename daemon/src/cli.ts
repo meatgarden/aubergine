@@ -21,6 +21,7 @@ import {
   resolveSession,
 } from './cli/commands';
 import { loadConfig, type Config } from './config';
+import { loadSettings } from './settings';
 import { zshHookSnippet } from './migrate/shell-hook';
 import { formatScan, importLayout, nextStep, planImport, scanShells } from './migrate/shells';
 import { TmuxRuntime } from './runtime/tmux-runtime';
@@ -131,8 +132,12 @@ async function main(): Promise<number> {
         name: command.sessionName ?? nameForFolder(folder),
         uniqueName: true,
         cwd: folder,
-        ...(command.command.length > 0 ? { command: shellJoin(command.command) } : {}),
-        ...(command.claude ? { agent: 'claude-code', agentContinue: true } : {}),
+        // With --claude, what follows "--" is for the agent; without it, it is a command to run.
+        ...(command.claude
+          ? { agent: 'claude-code', ...(command.command.length > 0 ? { agentArgs: command.command } : { agentContinue: true }) }
+          : command.command.length > 0
+            ? { command: shellJoin(command.command) }
+            : {}),
       };
       // From the shell snippet a new tab is waiting on this, so give up quickly.
       const timeout = command.fromShellHook ? 1500 : 15_000;
@@ -165,10 +170,10 @@ async function main(): Promise<number> {
         return 0;
       }
 
-      const claudeLine = claudeLaunchLine(
-        command.dryRun ? '<settings file>' : await writeClaudeSettings(config.dataDir),
-        { continue: true },
-      );
+      const claudeLine = claudeLaunchLine(command.dryRun ? '<settings file>' : await writeClaudeSettings(config.dataDir), {
+        command: (await loadSettings(config.dataDir)).agents.claudeCommand,
+        args: ['--continue'],
+      });
       if (command.dryRun) {
         console.log(`Would create ${plan.create.length} session(s) in a frame named "Imported":`);
         for (const item of plan.create) {

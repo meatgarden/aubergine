@@ -96,6 +96,11 @@ export const CreateSessionRequest = z.object({
   agent: AgentKind.optional(),
   /** With `agent`: carry on the most recent conversation for the folder instead of starting a new one. */
   agentContinue: z.boolean().optional(),
+  /**
+   * With `agent`: arguments for the agent, in place of the default. For
+   * example `["--resume", "<id>", "--fork-session"]`.
+   */
+  agentArgs: z.array(z.string().min(1).max(500)).max(40).optional(),
   /** Folder to start in (absolute path). The default folder is used when omitted. */
   cwd: z.string().startsWith('/').max(4096).optional(),
   /** A line to type into the new session once its shell is ready. */

@@ -27,6 +27,12 @@ export const Settings = z.object({
        * off if prompts may contain secrets.
        */
       logPrompts: z.boolean().default(true),
+      /**
+       * The command line that starts Claude Code. It may be a whole launcher,
+       * such as `mytool launch -- claude`. Aubergine's own flags are added at
+       * the end, or where `{flags}` appears.
+       */
+      claudeCommand: z.string().trim().min(1).max(1000).default('claude'),
     })
     .prefault({}),
 });

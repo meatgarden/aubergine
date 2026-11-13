@@ -10,7 +10,7 @@ export type Command =
       sessionName: string | null;
       attach: boolean;
       claude: boolean;
-      /** Words of a command to type into the new session. */
+      /** Words after `--`: a command to type into the new session, or with `claude`, arguments for the agent. */
       command: string[];
       /** Called from the shell snippet: be quick, be quiet, and report failure by exit code. */
       fromShellHook: boolean;
@@ -32,6 +32,8 @@ export const USAGE = `Usage: aubergine <command>
   here [name] [-- command]   Start a session in this folder and turn this terminal into a view of it
                              --no-attach   only create it
                              --claude      start Claude Code in it, continuing this folder's last conversation
+                             --claude -- <args>   start it with these arguments instead, for example
+                                                  --claude -- --resume <id> --fork-session
   scan                       List your open shells that are not on the canvas yet (read-only)
   import [--all] [--dry-run] Give each of those shells a canvas session in the same folder
   note <text>                Inside a session: add an entry to that session's note log

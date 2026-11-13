@@ -94,12 +94,29 @@ export async function writeClaudeSettings(dataDir: string): Promise<string> {
   return file;
 }
 
+export const FLAGS_PLACEHOLDER = '{flags}';
+
+export interface LaunchOptions {
+  /**
+   * The user's launch command, from settings. A whole command line that is
+   * typed into their shell as it is: trusted configuration, never built from
+   * anything a session could send.
+   */
+  command?: string;
+  /** Arguments for the agent itself, such as `--continue` or `--resume <id>`. Each is quoted. */
+  args?: readonly string[];
+}
+
 /**
- * What to type into a new session to start Claude Code with the hooks.
- * With `continue`, it carries on the most recent conversation in that folder.
+ * What to type into a session to start Claude Code with the hooks:
+ * the launch command, then the agent's arguments and `--settings <file>`.
+ * A launcher that needs those somewhere other than the end marks the place
+ * with `{flags}`.
  */
-export function claudeLaunchLine(settingsFile: string, options: { continue?: boolean } = {}): string {
-  return `claude${options.continue ? ' --continue' : ''} --settings ${shellQuote(settingsFile)}`;
+export function claudeLaunchLine(settingsFile: string, options: LaunchOptions = {}): string {
+  const command = (options.command ?? 'claude').trim() || 'claude';
+  const flags = [shellJoin(options.args ?? []), `--settings ${shellQuote(settingsFile)}`].filter(Boolean).join(' ');
+  return command.includes(FLAGS_PLACEHOLDER) ? command.replaceAll(FLAGS_PLACEHOLDER, flags) : `${command} ${flags}`;
 }
 
 /** Quotes words for a shell command line, leaving plain words as they are. */
