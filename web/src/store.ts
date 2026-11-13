@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import {
   DEFAULT_SETTINGS,
+  SHOW_PARAM,
   applyEvent,
   type CanvasState,
   type ChangeEvent,
@@ -32,12 +33,15 @@ interface AppState {
   closing: string | null;
   /** Whether the session picker is open. */
   picker: boolean;
+  /** A session the canvas was asked to bring into view. The counter makes repeats count. */
+  show: { sessionId: string; tick: number } | null;
 
   load: () => Promise<void>;
   apply: (event: ChangeEvent) => void;
   focusSession: (sessionId: string | null) => void;
   askToClose: (sessionId: string | null) => void;
   setPicker: (open: boolean) => void;
+  showSession: (sessionId: string) => void;
 }
 
 export const useApp = create<AppState>((set, get) => ({
@@ -49,6 +53,7 @@ export const useApp = create<AppState>((set, get) => ({
   focus: null,
   closing: null,
   picker: false,
+  show: null,
 
   load: async () => {
     try {
@@ -91,6 +96,7 @@ export const useApp = create<AppState>((set, get) => ({
 
   askToClose: (sessionId) => set({ closing: sessionId }),
   setPicker: (open) => set({ picker: open }),
+  showSession: (sessionId) => set((state) => ({ show: { sessionId, tick: (state.show?.tick ?? 0) + 1 } })),
 }));
 
 /** Loads state, keeps it live, and keeps retrying while the daemon is away. */
@@ -102,6 +108,12 @@ export function startSync(): () => void {
   // The event stream needs the access cookie, so it starts after the first successful load.
   const sync = async (): Promise<void> => {
     await load();
+    // Opened on an address that names a session: go there once, then forget the address.
+    const wanted = new URLSearchParams(location.search).get(SHOW_PARAM);
+    if (wanted && useApp.getState().phase === 'ready') {
+      history.replaceState(null, '', location.pathname);
+      useApp.getState().showSession(wanted);
+    }
     if (stopped || unsubscribe || useApp.getState().phase !== 'ready') return;
     unsubscribe = subscribeToEvents({
       onReady: () => {
@@ -109,6 +121,7 @@ export function startSync(): () => void {
         void load();
       },
       onEvent: apply,
+      onShow: (sessionId) => useApp.getState().showSession(sessionId),
       onDown: () => useApp.setState({ live: false }),
     });
   };

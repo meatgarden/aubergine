@@ -55,6 +55,7 @@ describe('here', () => {
       name: 'here',
       sessionName: null,
       attach: true,
+      open: true,
       claude: false,
       command: [],
       fromShellHook: false,
@@ -67,6 +68,13 @@ describe('here', () => {
     expect(parseCommand(['here', '--claude'])).toMatchObject({ claude: true, attach: true });
     // Flags after "--" belong to the command.
     expect(parseCommand(['here', '--', 'ls', '--no-attach'])).toMatchObject({ attach: true, command: ['ls', '--no-attach'] });
+  });
+
+  it('only brings the session up in the browser for a plain interactive run', () => {
+    expect(parseCommand(['here'])).toMatchObject({ open: true });
+    expect(parseCommand(['here', '--no-open'])).toMatchObject({ open: false, attach: true });
+    expect(parseCommand(['here', '--no-attach'])).toMatchObject({ open: false });
+    expect(parseCommand(['here', '--from-shell-hook'])).toMatchObject({ open: false });
   });
 
   it('rejects unknown flags and an empty command', () => {

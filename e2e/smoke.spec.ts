@@ -122,6 +122,18 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await expect(node).toHaveCount(1);
   await expect(outputLine(page, 'picked-44')).toHaveCount(1);
 
+  // "aubergine here" asks an open canvas to bring a session into view: it gets the keyboard.
+  await page.locator('.react-flow__pane').click({ position: { x: 5, y: 300 } });
+  await expect(page.getByTestId('node-shield')).toHaveCount(1);
+  const viewers = await page.evaluate(async () => {
+    const state = await (await fetch('/api/v1/state')).json();
+    const id = state.state.sessions[0].id;
+    const shown = await fetch(`/api/v1/sessions/${id}/show`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: '{}' });
+    return (await shown.json()).viewers;
+  });
+  expect(viewers).toBe(1);
+  await expect(page.getByTestId('node-shield')).toHaveCount(0);
+
   // The picker also searches what terminals have printed, including in a parked session.
   await page.getByRole('button', { name: /^Park / }).click();
   await expect(node).toHaveCount(0);

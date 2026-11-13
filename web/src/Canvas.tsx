@@ -283,6 +283,28 @@ export function Canvas() {
     [zoomToNode, focusSession],
   );
 
+  // Asked to bring a session into view (by `aubergine here`, or by the address this page was opened on).
+  const show = useApp((s) => s.show);
+  useEffect(() => {
+    if (!show) return;
+    let cancelled = false;
+    void (async () => {
+      const { canvas } = useApp.getState();
+      const session = canvas?.sessions.find((x) => x.id === show.sessionId);
+      const node = canvas?.layout.nodes.find((n) => n.sessionId === show.sessionId);
+      if (!session || !node) return;
+      if (session.state === 'parked') await api.restoreSession(session.id).catch(() => {});
+      // The node may be brand new: wait until the canvas knows it.
+      for (let attempt = 0; attempt < 40 && !cancelled && !flow.getNode(node.id); attempt++) {
+        await new Promise((resolve) => setTimeout(resolve, 50));
+      }
+      if (!cancelled) goToNode(node.id, session.id);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [show, flow, goToNode]);
+
   const percent = useMemo(() => `${Math.round(zoom * 100)}%`, [zoom]);
 
   return (

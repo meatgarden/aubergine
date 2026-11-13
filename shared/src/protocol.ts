@@ -37,6 +37,8 @@ export const paths = {
   restoreSession: (sessionId: string) => `/api/v1/sessions/${sessionId}/restore`,
   /** POST: start a new shell for a session whose shell exited. */
   restartSession: (sessionId: string) => `/api/v1/sessions/${sessionId}/restart`,
+  /** POST: ask every open canvas to bring this session into view. Answers with how many are open. */
+  showSession: (sessionId: string) => `/api/v1/sessions/${sessionId}/show`,
   /** POST: the user is looking at this session now. */
   seenSession: (sessionId: string) => `/api/v1/sessions/${sessionId}/seen`,
   /** GET: the session's visible screen as plain text. */
@@ -162,6 +164,15 @@ export const SESSION_ENV = {
   token: 'AUBERGINE_TOKEN',
 } as const;
 
+export const ShowResponse = z.object({
+  /** How many canvases are open and were told. Zero means nobody saw it. */
+  viewers: z.number().int().min(0),
+});
+export type ShowResponse = z.infer<typeof ShowResponse>;
+
+/** Query parameter that makes a freshly opened canvas go to one session: `/?session=<id>`. */
+export const SHOW_PARAM = 'session';
+
 export const SearchQuery = z.object({ q: z.string().trim().min(2).max(200) });
 
 /** One matching line of terminal history, with the lines around it. */
@@ -207,6 +218,8 @@ export type ErrorResponse = z.infer<typeof ErrorResponse>;
 export const EventsServerMessage = z.discriminatedUnion('type', [
   z.object({ type: z.literal('hello'), protocolVersion: z.literal(PROTOCOL_VERSION) }),
   z.object({ type: z.literal('event'), event: ChangeEvent }),
+  /** Not a change of state: a request to bring a session into view and focus it. */
+  z.object({ type: z.literal('show'), sessionId: Id }),
 ]);
 export type EventsServerMessage = z.infer<typeof EventsServerMessage>;
 

@@ -9,6 +9,8 @@ export type Command =
       name: 'here';
       sessionName: string | null;
       attach: boolean;
+      /** Show the new session on an open canvas, or open a browser on it. */
+      open: boolean;
       claude: boolean;
       /** Words after `--`: a command to type into the new session, or with `claude`, arguments for the agent. */
       command: string[];
@@ -31,6 +33,7 @@ export const USAGE = `Usage: aubergine <command>
   attach <name>              Open a session in this terminal (detach by closing the window)
   here [name] [-- command]   Start a session in this folder and turn this terminal into a view of it
                              --no-attach   only create it
+                             --no-open     do not bring it up in the browser
                              --claude      start Claude Code in it, continuing this folder's last conversation
                              --claude -- <args>   start it with these arguments instead, for example
                                                   --claude -- --resume <id> --fork-session
@@ -70,7 +73,7 @@ export function parseCommand(argv: readonly string[]): Command {
       const options = split < 0 ? rest : rest.slice(0, split);
       const command = split < 0 ? [] : rest.slice(split + 1);
       const flags = options.filter((word) => word.startsWith('--'));
-      const unknown = flags.find((flag) => !['--no-attach', '--claude', '--from-shell-hook'].includes(flag));
+      const unknown = flags.find((flag) => !['--no-attach', '--no-open', '--claude', '--from-shell-hook'].includes(flag));
       if (unknown) throw new UsageError(`here does not know ${unknown}`);
       if (split >= 0 && command.length === 0) throw new UsageError('here: nothing after "--"');
       const words = options.filter((word) => !word.startsWith('--'));
@@ -78,6 +81,8 @@ export function parseCommand(argv: readonly string[]): Command {
         name: 'here',
         sessionName: words.length > 0 ? words.join(' ') : null,
         attach: !flags.includes('--no-attach'),
+        // Never from the shell snippet or when only creating: those must not take the user's attention.
+        open: !flags.some((flag) => ['--no-open', '--no-attach', '--from-shell-hook'].includes(flag)),
         claude: flags.includes('--claude'),
         command,
         fromShellHook: flags.includes('--from-shell-hook'),

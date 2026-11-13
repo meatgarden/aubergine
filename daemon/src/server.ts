@@ -28,6 +28,7 @@ import {
   type ErrorResponse,
   type EventsServerMessage,
   type SearchResponse,
+  type ShowResponse,
   type Settings,
   type SnapshotResponse,
   type StateResponse,
@@ -95,6 +96,8 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   };
 
   const principals = new WeakMap<FastifyRequest, Principal>();
+  /** One entry per open canvas: how to send it a message. */
+  const viewers = new Set<(message: EventsServerMessage) => void>();
 
   /** Refuses the request unless its principal may do `action` on the session. */
   const allow = (request: FastifyRequest, action: Action, sessionId: string): Principal => {
@@ -214,6 +217,13 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
 
   app.post(paths.parkSession(':sessionId'), async (request) => sessions.park(idParam(request, 'sessionId')));
   app.post(paths.restoreSession(':sessionId'), async (request) => sessions.restore(idParam(request, 'sessionId')));
+  app.post(paths.showSession(':sessionId'), async (request): Promise<ShowResponse> => {
+    const sessionId = idParam(request, 'sessionId');
+    if (!sessions.has(sessionId)) throw new HttpError(404, 'not_found', `No session ${sessionId}`);
+    for (const send of viewers) send({ type: 'show', sessionId });
+    return { viewers: viewers.size };
+  });
+
   app.post(paths.seenSession(':sessionId'), async (request) => sessions.seen(idParam(request, 'sessionId')));
   app.post(paths.restartSession(':sessionId'), async (request) => sessions.restart(idParam(request, 'sessionId')));
 
@@ -294,8 +304,13 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
       if (socket.readyState === socket.OPEN) socket.send(JSON.stringify(message));
     };
     const unsubscribe = canvas.subscribe((event) => send({ type: 'event', event }));
-    socket.on('close', unsubscribe);
-    socket.on('error', unsubscribe);
+    viewers.add(send);
+    const leave = (): void => {
+      unsubscribe();
+      viewers.delete(send);
+    };
+    socket.on('close', leave);
+    socket.on('error', leave);
     send({ type: 'hello', protocolVersion: PROTOCOL_VERSION });
   });
 

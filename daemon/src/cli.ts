@@ -1,7 +1,7 @@
 import { spawnSync } from 'node:child_process';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
-import { CreateSessionResponse, StateResponse, paths } from '@aubergine/shared';
+import { CreateSessionResponse, SHOW_PARAM, ShowResponse, StateResponse, paths } from '@aubergine/shared';
 import {
   claudeHooksSettings,
   claudeLaunchLine,
@@ -11,6 +11,7 @@ import {
   type HookEvent,
 } from './agents/claude-code';
 import { agentClient } from './cli/agent';
+import { canvasAddress, openBrowser } from './cli/open-browser';
 import {
   USAGE,
   UsageError,
@@ -54,6 +55,20 @@ async function call(config: Config, method: string, urlPath: string, body?: unkn
   }
   if (!response.ok) throw new Error(`The server answered HTTP ${response.status}: ${await response.text()}`);
   return response.json();
+}
+
+/**
+ * Brings a session up for the user: an open canvas pans to it and focuses
+ * it; with no canvas open, the default browser is opened on it. Failing to
+ * do so is never an error for the command that asked.
+ */
+async function showOnCanvas(config: Config, sessionId: string): Promise<void> {
+  try {
+    const { viewers } = ShowResponse.parse(await call(config, 'POST', paths.showSession(sessionId), {}, 3000));
+    if (viewers === 0) await openBrowser(canvasAddress(config.port, sessionId, SHOW_PARAM));
+  } catch {
+    // The session exists either way.
+  }
 }
 
 /** Turns this terminal into a view of the session. Returns when the view ends. */
@@ -146,6 +161,7 @@ async function main(): Promise<number> {
         console.log(`Started "${session.name}" in ${folder}. Attach with: aubergine attach "${session.name}"`);
         return 0;
       }
+      if (command.open) await showOnCanvas(config, session.id);
       return attachTo(config, session.id);
     }
 

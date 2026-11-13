@@ -94,6 +94,8 @@ export function socketUrl(path: string): string {
 export function subscribeToEvents(handlers: {
   onReady: () => void;
   onEvent: (event: ChangeEvent) => void;
+  /** The daemon asks this canvas to bring a session into view. */
+  onShow: (sessionId: string) => void;
   onDown: () => void;
 }): () => void {
   let socket: WebSocket | null = null;
@@ -106,6 +108,7 @@ export function subscribeToEvents(handlers: {
       const parsed = EventsServerMessage.safeParse(JSON.parse(String(message.data)));
       if (!parsed.success) return;
       if (parsed.data.type === 'hello') handlers.onReady();
+      else if (parsed.data.type === 'show') handlers.onShow(parsed.data.sessionId);
       else handlers.onEvent(parsed.data.event);
     };
     socket.onclose = () => {

@@ -750,6 +750,33 @@ describe('sessions started from another terminal', () => {
   });
 });
 
+describe('showing a session', () => {
+  it('tells every open canvas, and says how many there are', async () => {
+    const { session } = await createSession();
+    const none = await request('POST', paths.showSession(session.id), { body: {} });
+    expect(none.json()).toEqual({ viewers: 0 });
+
+    const socket = openSocket(paths.events);
+    const messages: EventsServerMessage[] = [];
+    socket.on('message', (data) => messages.push(EventsServerMessage.parse(JSON.parse(data.toString()))));
+    await waitFor(() => messages.length === 1, 'hello');
+
+    const one = await request('POST', paths.showSession(session.id), { body: {} });
+    expect(one.json()).toEqual({ viewers: 1 });
+    await waitFor(() => messages.length === 2, 'show');
+    expect(messages[1]).toEqual({ type: 'show', sessionId: session.id });
+    // Nothing about the session changed.
+    expect(canvas.state.sessions[0]?.attention.state).toBe('none');
+
+    socket.close();
+    await waitFor(() => socket.readyState === WebSocket.CLOSED, 'closed');
+    await sleep(50);
+    expect((await request('POST', paths.showSession(session.id), { body: {} })).json()).toEqual({ viewers: 0 });
+    expect((await request('POST', paths.showSession(newId()), { body: {} })).statusCode).toBe(404);
+    expect((await request('POST', paths.showSession(session.id), { body: {}, cookie: false })).statusCode).toBe(401);
+  });
+});
+
 describe('history search', () => {
   it('finds text printed in a parked session and leaves out sessions that ended', async () => {
     const parked = await createSession('quiet one');
