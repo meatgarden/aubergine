@@ -41,20 +41,44 @@ Open the `/auth?token=…` link once per browser. After that, `http://127.0.0.1:
 
 **5. Add a terminal.** Choose **New terminal** (or press `N`), click the terminal, and type.
 
-**6. Install the `aubergine` command** (optional, but the sections below on moving terminals over, notes and start at login use it). Nothing installs it for you: it is the file `bin/aubergine.mjs` in this folder, and you make it available everywhere by linking it into a folder on your `PATH`. From the `aubergine` folder, with Homebrew:
+**6. Install the `aubergine` command** (optional, but the sections below on moving terminals over, notes and start at login use it).
+
+Nothing installs it for you. The command is the file `bin/aubergine.mjs` in this folder, and it stays here: installing means creating a **link**, a small pointer named `aubergine`, in a folder your shell already searches for commands (a folder on your `PATH`). Nothing is copied or moved. When you type `aubergine`, the shell finds the link and runs the file in this folder.
+
+From the `aubergine` folder, with Homebrew:
 
 ```sh
 ln -s "$PWD/bin/aubergine.mjs" "$(brew --prefix)/bin/aubergine"
 ```
 
-Without Homebrew, link it into any folder that is on your `PATH`, for example:
+Reading that command from left to right:
+
+| Part | Meaning |
+|---|---|
+| `ln -s` | create a link |
+| `"$PWD/bin/aubergine.mjs"` | what the link points to: the file in this folder (`$PWD` is the folder you are in) |
+| `"$(brew --prefix)/bin/aubergine"` | where the link goes and what it is called: `aubergine`, in Homebrew's command folder (`/opt/homebrew/bin` on Apple Silicon Macs), which is already on your `PATH` |
+
+Without Homebrew, put the link in any folder that is on your `PATH`, for example:
 
 ```sh
 mkdir -p ~/.local/bin
 ln -s "$PWD/bin/aubergine.mjs" ~/.local/bin/aubergine
 ```
 
-Check it with `aubergine list`. The link points back at this folder, so the command always runs the code you have here: keep the folder where it is, and after `git pull` there is nothing to reinstall. To remove the command, delete the link.
+(If `~/.local/bin` is not on your `PATH` yet, add `export PATH="$HOME/.local/bin:$PATH"` to your `.zshrc` and open a new terminal.)
+
+Check it from any folder:
+
+```sh
+aubergine list
+```
+
+Because it is a link and not a copy:
+
+- after `git pull` the command is already up to date, with nothing to reinstall;
+- if you move or delete this folder, the command stops working until you make the link again;
+- to uninstall, delete the link: `rm "$(brew --prefix)/bin/aubergine"`. That removes only the pointer, never the file in this folder.
 
 You can also skip the link and run it by path. From this folder that is `node bin/aubergine.mjs list`; from anywhere else, give the full path to the file, for example `node ~/code/aubergine/bin/aubergine.mjs list` if you cloned into `~/code`.
 
