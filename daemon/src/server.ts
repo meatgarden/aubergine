@@ -40,14 +40,14 @@ import {
   type TerminalServerMessage,
 } from '@aubergine/shared';
 import { authorize, principalFromBearer, type Action, type Principal } from './auth';
-import type { Canvas } from './canvas';
+import type { StateHub } from './state-hub';
 import type { Outside } from './migrate/outside';
 import { SessionNotFoundError, type Attachment, type SessionRuntime } from './runtime/runtime';
 import { BadInputError, ConflictError, NotFoundError, RuntimeUnavailableError, type Sessions } from './sessions';
 import { tokensMatch } from './token';
 
 export interface ServerOptions {
-  canvas: Canvas;
+  hub: StateHub;
   sessions: Sessions;
   runtime: SessionRuntime;
   /** Terminals outside the canvas. Left out, those routes answer that the feature is not available. */
@@ -91,7 +91,7 @@ export function cookieName(port: number): string {
 }
 
 export async function buildServer(options: ServerOptions): Promise<FastifyInstance> {
-  const { canvas, sessions, runtime, token } = options;
+  const { hub, sessions, runtime, token } = options;
   const app = Fastify({ logger: false, bodyLimit: 64 * 1024 });
 
   const port = (): number => (app.server.address() as AddressInfo).port;
@@ -209,7 +209,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     protocolVersion: PROTOCOL_VERSION,
     runtime: await sessions.status(),
     settings: await options.settings(),
-    state: canvas.state,
+    state: hub.state,
   }));
 
   app.post(paths.sessions, async (request, reply): Promise<CreateSessionResponse> => {
@@ -336,7 +336,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     const send = (message: EventsServerMessage): void => {
       if (socket.readyState === socket.OPEN) socket.send(JSON.stringify(message));
     };
-    const unsubscribe = canvas.subscribe((event) => send({ type: 'event', event }));
+    const unsubscribe = hub.subscribe((event) => send({ type: 'event', event }));
     viewers.add(send);
     const leave = (): void => {
       unsubscribe();

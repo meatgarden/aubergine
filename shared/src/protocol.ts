@@ -4,7 +4,7 @@ import {
   AgentKind,
   Attention,
   AttentionState,
-  CanvasState,
+  AppState,
   Frame,
   FrameLabel,
   FrameRect,
@@ -94,7 +94,7 @@ export const StateResponse = z.object({
   protocolVersion: z.literal(PROTOCOL_VERSION),
   runtime: RuntimeStatus,
   settings: Settings,
-  state: CanvasState,
+  state: AppState,
 });
 export type StateResponse = z.infer<typeof StateResponse>;
 

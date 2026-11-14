@@ -2,7 +2,7 @@ import { mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { NO_ATTENTION, NO_STATUS, applyEvent, newId, type CanvasState, type ChangeEvent } from '@aubergine/shared';
+import { NO_ATTENTION, NO_STATUS, applyEvent, newId, type AppState, type ChangeEvent } from '@aubergine/shared';
 import { JsonStore } from './json-store';
 
 let dir: string;
@@ -15,7 +15,7 @@ afterEach(async () => {
   await rm(dir, { recursive: true, force: true });
 });
 
-function withSession(state: CanvasState, name: string): CanvasState {
+function withSession(state: AppState, name: string): AppState {
   const sessionId = newId();
   const event: ChangeEvent = {
     type: 'session.created',

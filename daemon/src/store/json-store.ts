@@ -8,7 +8,7 @@ import {
   Session,
   Workspace,
   createInitialState,
-  type CanvasState,
+  type AppState,
 } from '@aubergine/shared';
 import type { Store } from './store';
 
@@ -25,7 +25,7 @@ type StateFile = z.infer<typeof StateFile>;
 
 export class JsonStore implements Store {
   readonly file: string;
-  private queued: CanvasState | null = null;
+  private queued: AppState | null = null;
   private writing: Promise<void> | null = null;
   private counter = 0;
 
@@ -36,7 +36,7 @@ export class JsonStore implements Store {
     this.file = path.join(dir, 'state.json');
   }
 
-  async load(): Promise<CanvasState> {
+  async load(): Promise<AppState> {
     let text: string;
     try {
       text = await readFile(this.file, 'utf8');
@@ -72,7 +72,7 @@ export class JsonStore implements Store {
    * Writes are serialized, and saves that arrive while a write is running
    * collapse into one: only the newest state is written next.
    */
-  save(state: CanvasState): Promise<void> {
+  save(state: AppState): Promise<void> {
     this.queued = state;
     this.writing ??= this.drain().finally(() => {
       this.writing = null;
@@ -89,7 +89,7 @@ export class JsonStore implements Store {
   }
 
   /** Write to a temporary file, flush it, then rename over the real one. */
-  private async writeAtomically(state: CanvasState): Promise<void> {
+  private async writeAtomically(state: AppState): Promise<void> {
     const body: StateFile = { version: 1, ...state };
     const dir = path.dirname(this.file);
     await mkdir(dir, { recursive: true, mode: 0o700 });

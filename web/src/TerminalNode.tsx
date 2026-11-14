@@ -16,7 +16,7 @@ export type TerminalFlowNode = Node<{ sessionId: string }, 'terminal'>;
 
 export const TerminalNode = memo(function TerminalNode({ id, data, selected }: NodeProps<TerminalFlowNode>) {
   const { sessionId } = data;
-  const session = useApp((s) => s.canvas?.sessions.find((x) => x.id === sessionId));
+  const session = useApp((s) => s.app?.sessions.find((x) => x.id === sessionId));
   const name = session?.name ?? '';
   const exited = session?.state === 'exited';
   const interactive = useIsFullZoom();
@@ -32,7 +32,7 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
     },
     [sessionId],
   );
-  const node = useApp((s) => s.canvas?.layout.nodes.find((n) => n.id === id));
+  const node = useApp((s) => s.app?.layout.nodes.find((n) => n.id === id));
   const color = node?.color ?? 'none';
   const hasNote = (session?.note ?? '') !== '';
 

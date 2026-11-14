@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { AgentInfo, Attention, NOTE_LOG_LIMIT, NO_ATTENTION, NO_STATUS, NoteEntry, type CanvasState, Frame, LayoutNode, Session, SessionName, SessionNote, ShellStatus } from './entities';
+import { AgentInfo, Attention, NOTE_LOG_LIMIT, NO_ATTENTION, NO_STATUS, NoteEntry, type AppState, Frame, LayoutNode, Session, SessionName, SessionNote, ShellStatus } from './entities';
 import { Id } from './ids';
 
 /**
@@ -40,7 +40,7 @@ export const ChangeEvent = z.discriminatedUnion('type', [
 ]);
 export type ChangeEvent = z.infer<typeof ChangeEvent>;
 
-function patchSession(state: CanvasState, sessionId: string, patch: Partial<Session>): CanvasState {
+function patchSession(state: AppState, sessionId: string, patch: Partial<Session>): AppState {
   return {
     ...state,
     sessions: state.sessions.map((s) => (s.id === sessionId ? { ...s, ...patch } : s)),
@@ -48,7 +48,7 @@ function patchSession(state: CanvasState, sessionId: string, patch: Partial<Sess
 }
 
 /** Pure reducer: returns the state after `event`. Applying an event twice is harmless. */
-export function applyEvent(state: CanvasState, event: ChangeEvent): CanvasState {
+export function applyEvent(state: AppState, event: ChangeEvent): AppState {
   switch (event.type) {
     case 'session.created':
       return {

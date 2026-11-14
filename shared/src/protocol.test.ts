@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
-  CanvasState,
+  AppState,
   ChangeEvent,
   ConversationId,
   CreateSessionRequest,
@@ -27,7 +27,7 @@ import {
   type Session,
 } from './index';
 
-function fixture(): { state: CanvasState; session: Session; node: LayoutNode } {
+function fixture(): { state: AppState; session: Session; node: LayoutNode } {
   const state = createInitialState(new Date('2026-01-01T00:00:00Z'));
   const session: Session = {
     id: newId(),
@@ -58,7 +58,7 @@ function fixture(): { state: CanvasState; session: Session; node: LayoutNode } {
 describe('entities', () => {
   it('builds a valid initial state with a default hierarchy', () => {
     const state = createInitialState();
-    expect(CanvasState.safeParse(state).success).toBe(true);
+    expect(AppState.safeParse(state).success).toBe(true);
     expect(state.workspace.organizationId).toBe(state.organization.id);
     expect(state.project.workspaceId).toBe(state.workspace.id);
   });
@@ -67,7 +67,7 @@ describe('entities', () => {
     const { state, session } = fixture();
     const { projectId: _omit, ...withoutProject } = session;
     const bad = { ...state, sessions: [withoutProject] };
-    expect(CanvasState.safeParse(bad).success).toBe(false);
+    expect(AppState.safeParse(bad).success).toBe(false);
   });
 });
 
@@ -153,7 +153,7 @@ describe('applyEvent', () => {
     const closed = applyEvent(moved, { type: 'session.closed', sessionId: session.id });
     expect(closed.sessions).toEqual([]);
     expect(closed.layout.nodes).toEqual([]);
-    expect(CanvasState.safeParse(closed).success).toBe(true);
+    expect(AppState.safeParse(closed).success).toBe(true);
   });
 
   it('parks, restores, exits and restarts a session without touching its node', () => {
@@ -223,7 +223,7 @@ describe('applyEvent', () => {
   it('reads sessions saved before these fields existed', () => {
     const { state, session } = fixture();
     const { state: _s, cwd: _c, command: _m, note: _n, status: _t, attention: _a, noteLog: _l, agent: _g, ...old } = session;
-    const parsed = CanvasState.parse({ ...state, sessions: [old] });
+    const parsed = AppState.parse({ ...state, sessions: [old] });
     expect(parsed.sessions[0]).toMatchObject({
       state: 'open',
       cwd: null,
@@ -255,7 +255,7 @@ describe('applyEvent', () => {
   it('reads layouts saved before frames and colors existed', () => {
     const { state, node } = fixture();
     const { color: _c, ...oldNode } = node;
-    const parsed = CanvasState.parse({ ...state, sessions: [], layout: { nodes: [oldNode] } });
+    const parsed = AppState.parse({ ...state, sessions: [], layout: { nodes: [oldNode] } });
     expect(parsed.layout.frames).toEqual([]);
     expect(parsed.layout.nodes[0]?.color).toBe('none');
   });

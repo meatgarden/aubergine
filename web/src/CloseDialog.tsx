@@ -5,7 +5,7 @@ import { useApp } from './store';
 /** Ending a session kills its shell, so it always asks first. */
 export function CloseDialog() {
   const sessionId = useApp((s) => s.closing);
-  const session = useApp((s) => s.canvas?.sessions.find((x) => x.id === sessionId));
+  const session = useApp((s) => s.app?.sessions.find((x) => x.id === sessionId));
   const askToClose = useApp((s) => s.askToClose);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);

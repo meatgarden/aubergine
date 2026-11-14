@@ -3,7 +3,7 @@ import {
   DEFAULT_SETTINGS,
   SHOW_PARAM,
   applyEvent,
-  type CanvasState,
+  type AppState,
   type ChangeEvent,
   type RuntimeStatus,
   type Settings,
@@ -19,12 +19,12 @@ export type Phase =
   | 'unreachable'
   | 'ready';
 
-interface AppState {
+interface AppStore {
   phase: Phase;
   runtime: RuntimeStatus | null;
   /** User settings from the daemon's settings file. */
   settings: Settings;
-  canvas: CanvasState | null;
+  app: AppState | null;
   /** False while the live event stream is down after having been up. */
   live: boolean;
   /** Session whose terminal should hold keyboard focus. The counter re-triggers focus on repeat clicks. */
@@ -44,11 +44,11 @@ interface AppState {
   showSession: (sessionId: string) => void;
 }
 
-export const useApp = create<AppState>((set, get) => ({
+export const useApp = create<AppStore>((set, get) => ({
   phase: 'loading',
   runtime: null,
   settings: DEFAULT_SETTINGS,
-  canvas: null,
+  app: null,
   live: true,
   focus: null,
   closing: null,
@@ -58,7 +58,7 @@ export const useApp = create<AppState>((set, get) => ({
   load: async () => {
     try {
       const response = await api.getState();
-      set({ phase: 'ready', runtime: response.runtime, settings: response.settings, canvas: response.state });
+      set({ phase: 'ready', runtime: response.runtime, settings: response.settings, app: response.state });
     } catch (error) {
       if (error instanceof ApiError && error.code === 'unauthorized') {
         set({ phase: 'unauthorized' });
@@ -69,11 +69,11 @@ export const useApp = create<AppState>((set, get) => ({
   },
 
   apply: (event) => {
-    const canvas = get().canvas;
-    if (!canvas) return;
+    const app = get().app;
+    if (!app) return;
     // A session has just started waiting: say so on the desktop, if the user asked for that
     // and is not already looking at it.
-    const news = announcement(event, canvas.sessions);
+    const news = announcement(event, app.sessions);
     if (news && notificationsWanted() && (document.hidden || get().focus?.sessionId !== news.sessionId)) {
       try {
         new Notification(news.title, { body: news.body, tag: news.sessionId });
@@ -81,7 +81,7 @@ export const useApp = create<AppState>((set, get) => ({
         // Notifications are a nicety; never let one break an update.
       }
     }
-    const next: Partial<AppState> = { canvas: applyEvent(canvas, event) };
+    const next: Partial<AppStore> = { app: applyEvent(app, event) };
     if (event.type === 'session.closed') {
       if (get().closing === event.sessionId) next.closing = null;
       if (get().focus?.sessionId === event.sessionId) next.focus = null;

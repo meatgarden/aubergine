@@ -4,8 +4,8 @@ import { useApp } from './store';
 
 /** Sessions taken off the canvas whose shells are still running. */
 export function ParkedList({ onRestored }: { onRestored: (nodeId: string) => void }) {
-  const sessions = useApp((s) => s.canvas?.sessions);
-  const nodes = useApp((s) => s.canvas?.layout.nodes);
+  const sessions = useApp((s) => s.app?.sessions);
+  const nodes = useApp((s) => s.app?.layout.nodes);
   const askToClose = useApp((s) => s.askToClose);
   const [open, setOpen] = useState(false);
   const root = useRef<HTMLDivElement>(null);

@@ -9,7 +9,7 @@ import { DEFAULT_SETTINGS, SESSION_ENV } from '@aubergine/shared';
 import type { FastifyInstance } from 'fastify';
 import pty, { type IPty } from 'node-pty';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
-import { Canvas } from '../canvas';
+import { StateHub } from '../state-hub';
 import { TmuxRuntime } from '../runtime/tmux-runtime';
 import { destroyTmuxServer, testSocketName } from '../test-support';
 import { buildServer } from '../server';
@@ -47,7 +47,7 @@ describe.runIf(ZSH)('the snippet in a new shell', () => {
   let zdotdir: string;
   let work: string;
   let app: FastifyInstance;
-  let canvas: Canvas;
+  let hub: StateHub;
   let port: number;
   const shells: IPty[] = [];
   let lastText: () => string = () => '';
@@ -64,14 +64,14 @@ describe.runIf(ZSH)('the snippet in a new shell', () => {
     const data = path.join(dir, 'data');
     const token = await loadOrCreateToken(data);
     const store = new JsonStore(data);
-    canvas = new Canvas(await store.load(), store);
+    hub = new StateHub(await store.load(), store);
     // Session shells read the same stand-in .zshrc, snippet included: this is the loop to guard against.
-    const sessions = new Sessions(canvas, runtime, {
+    const sessions = new Sessions(hub, runtime, {
       integration: new ZshIntegration(path.join(data, 'shell'), zdotdir),
       sessionEnv: (sessionId) => ({ [SESSION_ENV.sessionId]: sessionId }),
     });
     app = await buildServer({
-      canvas,
+      hub,
       sessions,
       runtime,
       settings: async () => DEFAULT_SETTINGS,
@@ -89,7 +89,7 @@ describe.runIf(ZSH)('the snippet in a new shell', () => {
   });
 
   afterAll(async () => {
-    await canvas.flush();
+    await hub.flush();
     await app.close();
     await destroyTmuxServer(runtime, SOCKET);
     await rm(dir, { recursive: true, force: true, maxRetries: 5, retryDelay: 50 });
@@ -142,10 +142,10 @@ describe.runIf(ZSH)('the snippet in a new shell', () => {
   };
 
   it('starts the tab inside a new canvas session in its folder, exactly one, and the session outlives the tab', async () => {
-    const before = canvas.state.sessions.length;
+    const before = hub.state.sessions.length;
     const tab = openTab();
-    await waitFor(() => canvas.state.sessions.length === before + 1, 'a session');
-    const session = canvas.state.sessions.at(-1)!;
+    await waitFor(() => hub.state.sessions.length === before + 1, 'a session');
+    const session = hub.state.sessions.at(-1)!;
     expect(session.name).toBe('my project');
     expect(session.cwd).toBe(work);
     await waitFor(async () => (await clients()) === 1, 'the tab to become a view');
@@ -157,7 +157,7 @@ describe.runIf(ZSH)('the snippet in a new shell', () => {
 
     // The session's own shell read the same .zshrc and did not start another session.
     await sleep(1500);
-    expect(canvas.state.sessions.length).toBe(before + 1);
+    expect(hub.state.sessions.length).toBe(before + 1);
 
     // Closing the tab only detaches.
     tab.shell.kill();
@@ -166,12 +166,12 @@ describe.runIf(ZSH)('the snippet in a new shell', () => {
   });
 
   it('does nothing when switched off', async () => {
-    const before = canvas.state.sessions.length;
+    const before = hub.state.sessions.length;
     const tab = openTab({ AUBERGINE_DISABLE: '1' });
     await waitFor(() => tab.text.includes('plain> '), 'a normal prompt');
     tab.shell.write('echo "works=$((6 * 7))"\r');
     await waitFor(() => tab.text.includes('works=42'), 'a working shell');
-    expect(canvas.state.sessions.length).toBe(before);
+    expect(hub.state.sessions.length).toBe(before);
   });
 
   it('falls back to a normal shell when the server is stopped', async () => {

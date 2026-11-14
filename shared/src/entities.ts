@@ -186,17 +186,17 @@ export function nodesInside<T extends NodeRect>(frame: FrameRect, nodes: readonl
 }
 
 /** Everything the canvas shows: the default hierarchy, the sessions and their layout. */
-export const CanvasState = z.object({
+export const AppState = z.object({
   organization: Organization,
   workspace: Workspace,
   project: Project,
   sessions: z.array(Session),
   layout: Layout,
 });
-export type CanvasState = z.infer<typeof CanvasState>;
+export type AppState = z.infer<typeof AppState>;
 
 /** A fresh state with one default organization, workspace and project. */
-export function createInitialState(now: Date = new Date()): CanvasState {
+export function createInitialState(now: Date = new Date()): AppState {
   const createdAt = now.toISOString();
   const organization: Organization = { id: newId(), name: 'Personal', createdAt };
   const workspace: Workspace = {

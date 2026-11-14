@@ -22,7 +22,7 @@ import {
   type ChangeEvent,
 } from '@aubergine/shared';
 import { sessionToken } from './auth';
-import { Canvas } from './canvas';
+import { StateHub } from './state-hub';
 import { TmuxRuntime } from './runtime/tmux-runtime';
 import { buildServer, cookieName } from './server';
 import type { ClaudeSession } from './migrate/claude-sessions';
@@ -40,7 +40,7 @@ const runtime = new TmuxRuntime({ socket: SOCKET });
 let dir: string;
 let token: string;
 let app: FastifyInstance;
-let canvas: Canvas;
+let hub: StateHub;
 let sessions: Sessions;
 let settingsFile: SettingsFile;
 
@@ -70,10 +70,10 @@ const sockets: WebSocket[] = [];
 
 async function start(): Promise<void> {
   const store = new JsonStore(dir);
-  canvas = new Canvas(await store.load(), store);
+  hub = new StateHub(await store.load(), store);
   settingsFile = new SettingsFile(dir);
   await settingsFile.reload();
-  sessions = new Sessions(canvas, runtime, {
+  sessions = new Sessions(hub, runtime, {
     integration: new ZshIntegration(path.join(dir, 'shell')),
     sessionEnv: (sessionId) => ({
       [SESSION_ENV.url]: `http://127.0.0.1:${port}`,
@@ -87,7 +87,7 @@ async function start(): Promise<void> {
     shell: () => settingsFile.value.shell,
   });
   app = await buildServer({
-    canvas,
+    hub,
     sessions,
     runtime,
     outside: new Outside({
@@ -111,7 +111,7 @@ async function start(): Promise<void> {
 
 async function stop(): Promise<void> {
   for (const socket of sockets.splice(0)) socket.terminate();
-  await canvas.flush();
+  await hub.flush();
   await app.close();
 }
 
@@ -267,7 +267,7 @@ describe('request checks', () => {
     expect((await request('POST', paths.sessions, { body: {}, origin: 'http://evil.example' })).statusCode).toBe(403);
     expect((await request('POST', paths.sessions, { body: {}, origin: null })).statusCode).toBe(403);
     expect((await request('DELETE', paths.session(newId()), { origin: null })).statusCode).toBe(403);
-    expect(canvas.state.sessions).toEqual([]);
+    expect(hub.state.sessions).toEqual([]);
   });
 
   it('requires the token cookie on the API', async () => {
@@ -302,7 +302,7 @@ describe('API', () => {
   it('creates, renames, moves and closes a session', async () => {
     const { session, node } = await createSession();
     expect(session.name).toBe('Terminal 1');
-    expect(session.projectId).toBe(canvas.state.project.id);
+    expect(session.projectId).toBe(hub.state.project.id);
     expect(node.sessionId).toBe(session.id);
     expect(await runtime.has(session.id)).toBe(true);
 
@@ -314,18 +314,18 @@ describe('API', () => {
 
     const renamed = await request('PATCH', paths.session(session.id), { body: { name: 'build' } });
     expect(renamed.statusCode).toBe(200);
-    expect(canvas.state.sessions.find((s) => s.id === session.id)?.name).toBe('build');
+    expect(hub.state.sessions.find((s) => s.id === session.id)?.name).toBe('build');
 
     const rect = { x: 500, y: -200, width: 900, height: 600 };
     const moved = await request('PUT', paths.node(node.id), { body: rect });
     expect(moved.statusCode).toBe(200);
-    expect(canvas.state.layout.nodes.find((n) => n.id === node.id)).toMatchObject(rect);
+    expect(hub.state.layout.nodes.find((n) => n.id === node.id)).toMatchObject(rect);
 
     const closed = await request('DELETE', paths.session(session.id));
     expect(closed.statusCode).toBe(204);
     expect(await runtime.has(session.id)).toBe(false);
-    expect(canvas.state.sessions.map((s) => s.id)).toEqual([second.session.id]);
-    expect(canvas.state.layout.nodes.map((n) => n.id)).toEqual([second.node.id]);
+    expect(hub.state.sessions.map((s) => s.id)).toEqual([second.session.id]);
+    expect(hub.state.layout.nodes.map((n) => n.id)).toEqual([second.node.id]);
   });
 
   it('answers bad input with 400 and unknown IDs with 404', async () => {
@@ -399,7 +399,7 @@ describe('terminal WebSocket', () => {
     await waitFor(() => view.closeCode !== null, 'close');
     await sleep(100);
     expect(await runtime.has(session.id)).toBe(true);
-    expect(canvas.state.sessions).toHaveLength(1);
+    expect(hub.state.sessions).toHaveLength(1);
   });
 
   it('marks the session as ended when its shell exits, and can restart it in the same folder', async () => {
@@ -409,7 +409,7 @@ describe('terminal WebSocket', () => {
     const folder = await realpath(dir);
     view.socket.send(JSON.stringify({ t: 'input', data: `cd ${folder}\r` }));
     await waitForRefreshed(() => {
-      return canvas.state.sessions[0]?.cwd === folder;
+      return hub.state.sessions[0]?.cwd === folder;
     }, 'folder noticed');
 
     view.socket.send(JSON.stringify({ t: 'input', data: 'exit\r' }));
@@ -417,8 +417,8 @@ describe('terminal WebSocket', () => {
     expect(view.closeCode).toBe(CLOSE_SESSION_ENDED);
     expect(view.control).toContainEqual({ t: 'exit', reason: 'session_ended' });
     // The node stays, marked as ended.
-    expect(canvas.state.sessions[0]).toMatchObject({ id: session.id, state: 'exited', cwd: folder });
-    expect(canvas.state.layout.nodes.map((n) => n.id)).toEqual([node.id]);
+    expect(hub.state.sessions[0]).toMatchObject({ id: session.id, state: 'exited', cwd: folder });
+    expect(hub.state.layout.nodes.map((n) => n.id)).toEqual([node.id]);
 
     // A viewer cannot attach to an ended session.
     const late = terminal(session.id);
@@ -428,7 +428,7 @@ describe('terminal WebSocket', () => {
     expect((await request('POST', paths.parkSession(session.id), { body: {} })).statusCode).toBe(409);
     const restarted = await request('POST', paths.restartSession(session.id), { body: {} });
     expect(restarted.statusCode).toBe(200);
-    expect(canvas.state.sessions[0]?.state).toBe('open');
+    expect(hub.state.sessions[0]?.state).toBe('open');
     expect(await runtime.has(session.id)).toBe(true);
     // Ask the runtime itself: the saved folder was already this one before the restart.
     const started = Date.now();
@@ -461,7 +461,7 @@ describe('parked sessions', () => {
     expect(parked.statusCode).toBe(200);
     expect(parked.json().state).toBe('parked');
     expect(await runtime.has(session.id)).toBe(true);
-    expect(canvas.state.layout.nodes).toEqual([node]);
+    expect(hub.state.layout.nodes).toEqual([node]);
 
     // New nodes may use the space a parked node left.
     const other = await createSession();
@@ -469,7 +469,7 @@ describe('parked sessions', () => {
 
     const restored = await request('POST', paths.restoreSession(session.id), { body: {} });
     expect(restored.json().state).toBe('open');
-    expect(canvas.state.layout.nodes.find((n) => n.sessionId === session.id)).toEqual(node);
+    expect(hub.state.layout.nodes.find((n) => n.sessionId === session.id)).toEqual(node);
   });
 
   it('survives a restart while parked', async () => {
@@ -477,7 +477,7 @@ describe('parked sessions', () => {
     await request('POST', paths.parkSession(session.id), { body: {} });
     await stop();
     await start();
-    expect(canvas.state.sessions[0]).toMatchObject({ id: session.id, state: 'parked' });
+    expect(hub.state.sessions[0]).toMatchObject({ id: session.id, state: 'parked' });
     expect(await runtime.has(session.id)).toBe(true);
   });
 
@@ -486,7 +486,7 @@ describe('parked sessions', () => {
     await request('POST', paths.parkSession(session.id), { body: {} });
     expect((await request('DELETE', paths.session(session.id))).statusCode).toBe(204);
     expect(await runtime.has(session.id)).toBe(false);
-    expect(canvas.state.sessions).toEqual([]);
+    expect(hub.state.sessions).toEqual([]);
   });
 
   it('never answers a refresh with a picture taken before it was asked', async () => {
@@ -494,7 +494,7 @@ describe('parked sessions', () => {
     const earlier = sessions.refresh(); // under way while the shell is ended
     await runtime.kill(session.id);
     await sessions.refresh();
-    expect(canvas.state.sessions[0]?.state).toBe('exited');
+    expect(hub.state.sessions[0]?.state).toBe('exited');
     await earlier;
   });
 
@@ -505,8 +505,8 @@ describe('parked sessions', () => {
     await runtime.kill(parked.session.id);
     await runtime.kill(open.session.id);
     await sessions.refresh();
-    expect(canvas.state.sessions).toHaveLength(1);
-    expect(canvas.state.sessions[0]).toMatchObject({ id: open.session.id, state: 'exited' });
+    expect(hub.state.sessions).toHaveLength(1);
+    expect(hub.state.sessions[0]).toMatchObject({ id: open.session.id, state: 'exited' });
   });
 });
 
@@ -518,7 +518,7 @@ describe('session activity', () => {
     const folder = await realpath(dir);
     view.socket.send(JSON.stringify({ t: 'input', data: `cd ${folder} && sleep 30\r` }));
     await waitForRefreshed(() => {
-      const current = canvas.state.sessions[0];
+      const current = hub.state.sessions[0];
       return current?.cwd === folder && current.command === 'sleep';
     }, 'folder and command');
   });
@@ -529,7 +529,7 @@ describe('session activity', () => {
     expect(noted.statusCode).toBe(200);
     await stop();
     await start();
-    expect(canvas.state.sessions[0]?.note).toBe('# billing bug\nretry logic');
+    expect(hub.state.sessions[0]?.note).toBe('# billing bug\nretry logic');
   });
 });
 
@@ -550,13 +550,13 @@ describe('agent API', () => {
 
     const attention = await agent('PUT', paths.agent.attention(session.id), mine, { state: 'waiting', message: 'Allow the edit?' });
     expect(attention.statusCode).toBe(200);
-    expect(canvas.state.sessions[0]?.attention).toMatchObject({ state: 'waiting', message: 'Allow the edit?' });
+    expect(hub.state.sessions[0]?.attention).toMatchObject({ state: 'waiting', message: 'Allow the edit?' });
 
     const noted = await agent('POST', paths.agent.notes(session.id), mine, { text: 'Tests pass.' });
     expect(noted.statusCode).toBe(201);
-    expect(canvas.state.sessions[0]?.noteLog).toMatchObject([{ author: 'agent', kind: 'note', text: 'Tests pass.' }]);
+    expect(hub.state.sessions[0]?.noteLog).toMatchObject([{ author: 'agent', kind: 'note', text: 'Tests pass.' }]);
     // The pinned note is untouched.
-    expect(canvas.state.sessions[0]?.note).toBe('');
+    expect(hub.state.sessions[0]?.note).toBe('');
   });
 
   it('refuses a session token everything else', async () => {
@@ -572,8 +572,8 @@ describe('agent API', () => {
     expect((await agent('DELETE', paths.session(mine.session.id), tokenValue)).statusCode).toBe(403);
     expect((await agent('POST', paths.sessions, tokenValue, {})).statusCode).toBe(403);
     expect((await agent('PATCH', paths.session(mine.session.id), tokenValue, { note: 'x' })).statusCode).toBe(403);
-    expect(canvas.state.sessions.map((s) => s.attention.state)).toEqual(['none', 'none']);
-    expect(canvas.state.sessions).toHaveLength(2);
+    expect(hub.state.sessions.map((s) => s.attention.state)).toEqual(['none', 'none']);
+    expect(hub.state.sessions).toHaveLength(2);
   });
 
   it('refuses missing, wrong and cookie-only credentials, and still checks Host and Origin', async () => {
@@ -591,7 +591,7 @@ describe('agent API', () => {
     expect(badHost.statusCode).toBe(403);
     const badOrigin = await request('PUT', url, { body, cookie: false, origin: 'http://evil.example', headers: bearer(mine) });
     expect(badOrigin.statusCode).toBe(403);
-    expect(canvas.state.sessions[0]?.attention.state).toBe('none');
+    expect(hub.state.sessions[0]?.attention.state).toBe('none');
   });
 
   it('validates what it is sent', async () => {
@@ -630,11 +630,11 @@ describe('agent API', () => {
     const mine = sessionToken(token, session.id);
     await agent('PUT', paths.agent.attention(session.id), mine, { state: 'working' });
     await request('POST', paths.seenSession(session.id), { body: {} });
-    expect(canvas.state.sessions[0]?.attention.state).toBe('working');
+    expect(hub.state.sessions[0]?.attention.state).toBe('working');
 
     await agent('PUT', paths.agent.attention(session.id), mine, { state: 'done' });
     await request('POST', paths.seenSession(session.id), { body: {} });
-    expect(canvas.state.sessions[0]?.attention).toEqual({ state: 'none', message: null, at: null });
+    expect(hub.state.sessions[0]?.attention).toEqual({ state: 'none', message: null, at: null });
   });
 
   it('remembers the agent conversation a session reports, and can resume it', async () => {
@@ -645,14 +645,14 @@ describe('agent API', () => {
 
     const reported = await agent('PUT', paths.agent.report(session.id), mine, { kind: 'claude-code', conversationId: id });
     expect(reported.statusCode).toBe(200);
-    expect(canvas.state.sessions[0]?.agent).toEqual({ kind: 'claude-code', conversationId: id });
+    expect(hub.state.sessions[0]?.agent).toEqual({ kind: 'claude-code', conversationId: id });
 
     // Not something another session may set, and not with an ID that is unsafe to type.
     const other = await createSession();
     expect((await agent('PUT', paths.agent.report(other.session.id), mine, { kind: 'claude-code', conversationId: id })).statusCode).toBe(403);
     const unsafe = await agent('PUT', paths.agent.report(session.id), mine, { kind: 'claude-code', conversationId: 'aaaaaaaa; touch /tmp/x' });
     expect(unsafe.statusCode).toBe(400);
-    expect(canvas.state.sessions[0]?.agent?.conversationId).toBe(id);
+    expect(hub.state.sessions[0]?.agent?.conversationId).toBe(id);
 
     const resumed = await request('POST', paths.resumeAgent(session.id), { body: {} });
     expect(resumed.statusCode).toBe(200);
@@ -665,14 +665,14 @@ describe('agent API', () => {
     // Still known after a restart of the daemon.
     await stop();
     await start();
-    expect(canvas.state.sessions[0]?.agent).toEqual({ kind: 'claude-code', conversationId: id });
+    expect(hub.state.sessions[0]?.agent).toEqual({ kind: 'claude-code', conversationId: id });
   });
 
   it("keeps prompts out of the log when prompt logging is turned off", async () => {
     const { session } = await createSession();
     const mine = sessionToken(token, session.id);
     await agent('POST', paths.agent.notes(session.id), mine, { text: 'fix the build', kind: 'prompt' });
-    expect(canvas.state.sessions[0]?.noteLog).toHaveLength(1);
+    expect(hub.state.sessions[0]?.noteLog).toHaveLength(1);
 
     await writeFile(path.join(dir, SETTINGS_FILE), JSON.stringify({ agents: { logPrompts: false } }));
     await settingsFile.reload();
@@ -681,7 +681,7 @@ describe('agent API', () => {
     expect(dropped.json()).toEqual({ entry: null });
     // Other entries are still kept.
     await agent('POST', paths.agent.notes(session.id), mine, { text: 'Finished.', kind: 'event' });
-    expect(canvas.state.sessions[0]?.noteLog.map((e) => e.text)).toEqual(['fix the build', 'Finished.']);
+    expect(hub.state.sessions[0]?.noteLog.map((e) => e.text)).toEqual(['fix the build', 'Finished.']);
   });
 
   it('lets the user append entries from the browser, and saves the log', async () => {
@@ -690,7 +690,7 @@ describe('agent API', () => {
     expect(added.statusCode).toBe(201);
     await stop();
     await start();
-    expect(canvas.state.sessions[0]?.noteLog).toMatchObject([{ author: 'user', text: 'Remember to rebase.' }]);
+    expect(hub.state.sessions[0]?.noteLog).toMatchObject([{ author: 'user', text: 'Remember to rebase.' }]);
   });
 });
 
@@ -701,15 +701,15 @@ describe.runIf(usesZsh)('shell status', () => {
     const { session } = await createSession();
     const view = terminal(session.id);
     await waitFor(() => view.socket.readyState === WebSocket.OPEN, 'open');
-    await waitForRefreshed(() => canvas.state.sessions[0]?.status.state === 'idle', 'idle at the prompt');
-    expect(canvas.state.sessions[0]?.status.lastExit).toBeNull();
+    await waitForRefreshed(() => hub.state.sessions[0]?.status.state === 'idle', 'idle at the prompt');
+    expect(hub.state.sessions[0]?.status.lastExit).toBeNull();
 
     view.socket.send(JSON.stringify({ t: 'input', data: 'sleep 2; (exit 3)\r' }));
-    await waitForRefreshed(() => canvas.state.sessions[0]?.status.state === 'busy', 'busy');
-    expect(canvas.state.sessions[0]?.status).toMatchObject({ commandLine: 'sleep 2; (exit 3)', lastExit: null });
+    await waitForRefreshed(() => hub.state.sessions[0]?.status.state === 'busy', 'busy');
+    expect(hub.state.sessions[0]?.status).toMatchObject({ commandLine: 'sleep 2; (exit 3)', lastExit: null });
 
-    await waitForRefreshed(() => canvas.state.sessions[0]?.status.state === 'idle', 'idle again');
-    const status = canvas.state.sessions[0]!.status;
+    await waitForRefreshed(() => hub.state.sessions[0]?.status.state === 'idle', 'idle again');
+    const status = hub.state.sessions[0]!.status;
     expect(status).toMatchObject({ commandLine: null, lastExit: 3 });
     expect(Date.parse(status.lastFinishedAt!)).toBeGreaterThan(Date.now() - 60_000);
   });
@@ -719,10 +719,10 @@ describe.runIf(usesZsh)('shell status', () => {
     const view = terminal(session.id);
     await waitFor(() => view.socket.readyState === WebSocket.OPEN, 'open');
     view.socket.send(JSON.stringify({ t: 'input', data: 'sleep 2; (exit 7)\r' }));
-    await waitForRefreshed(() => canvas.state.sessions[0]?.status.state === 'busy', 'busy');
+    await waitForRefreshed(() => hub.state.sessions[0]?.status.state === 'busy', 'busy');
     view.socket.close();
     await request('POST', paths.parkSession(session.id), { body: {} });
-    await waitForRefreshed(() => canvas.state.sessions[0]?.status.lastExit === 7, 'exit code while parked');
+    await waitForRefreshed(() => hub.state.sessions[0]?.status.lastExit === 7, 'exit code while parked');
   });
 });
 
@@ -731,18 +731,18 @@ describe('unread output', () => {
     const { session } = await createSession();
     await request('POST', paths.seenSession(session.id), { body: {} });
     await sessions.refresh();
-    expect(canvas.state.sessions[0]?.status.unread).toBe(false);
+    expect(hub.state.sessions[0]?.status.unread).toBe(false);
 
     await sleep(1200); // tmux keeps activity times in whole seconds
     const view = terminal(session.id);
     await waitFor(() => view.socket.readyState === WebSocket.OPEN, 'open');
     view.socket.send(JSON.stringify({ t: 'input', data: 'sleep 1.2; echo "something ""new"\r' }));
-    await waitForRefreshed(() => canvas.state.sessions[0]?.status.unread === true, 'unread');
+    await waitForRefreshed(() => hub.state.sessions[0]?.status.unread === true, 'unread');
 
     const seen = await request('POST', paths.seenSession(session.id), { body: {} });
     expect(seen.json().status.unread).toBe(false);
     await sessions.refresh();
-    expect(canvas.state.sessions[0]?.status.unread).toBe(false);
+    expect(hub.state.sessions[0]?.status.unread).toBe(false);
   });
 });
 
@@ -762,7 +762,7 @@ describe('settings', () => {
 
     const { session } = await createSession();
     await waitForRefreshed(() => {
-      const current = canvas.state.sessions.find((s) => s.id === session.id);
+      const current = hub.state.sessions.find((s) => s.id === session.id);
       // Not the user's own shell: `sh` (which some systems run as bash or dash).
       return current?.cwd === folder && ['sh', 'bash', 'dash'].includes(current.command ?? '');
     }, 'configured shell in the configured folder');
@@ -789,7 +789,7 @@ describe('sessions started from another terminal', () => {
     const response = await request('POST', paths.sessions, { body: { cwd: path.join(dir, 'missing') } });
     expect(response.statusCode).toBe(400);
     expect((await request('POST', paths.sessions, { body: { cwd: 'relative/path' } })).statusCode).toBe(400);
-    expect(canvas.state.sessions).toEqual([]);
+    expect(hub.state.sessions).toEqual([]);
     expect(await runtime.list()).toEqual([]);
   });
 
@@ -904,7 +904,7 @@ describe('terminals outside the canvas', () => {
     expect((await request('POST', paths.outsideAdd, { body: { tty: 'ttys001', pid: 999 } })).statusCode).toBe(404);
     expect((await request('POST', paths.outsideAdd, { body: { tty: 'ttys005', pid: 105 } })).statusCode).toBe(409);
     expect((await request('POST', paths.outsideAdd, { body: { tty: 'tty; rm -rf', pid: 101 } })).statusCode).toBe(400);
-    expect(canvas.state.sessions).toEqual([]);
+    expect(hub.state.sessions).toEqual([]);
   });
 
   it('forks an agent conversation, using the ID from the record and leaving the original alone', async () => {
@@ -924,7 +924,7 @@ describe('terminals outside the canvas', () => {
     expect(OutsideResult.parse(response.json())).toMatchObject({ session: null, node: null });
     expect(response.json().message).toContain('ask the original (process 203) to exit');
     expect(outsideWorld.terminated).toEqual([]);
-    expect(canvas.state.sessions).toEqual([]);
+    expect(hub.state.sessions).toEqual([]);
   });
 
   it('stops an idle agent and resumes its conversation', async () => {
@@ -951,7 +951,7 @@ describe('terminals outside the canvas', () => {
     expect(stubborn.statusCode).toBe(409);
     expect(stubborn.json().error.message).toContain('did not exit when asked');
     expect(outsideWorld.terminated).toEqual([203]); // asked once, nothing stronger
-    expect(canvas.state.sessions).toEqual([]);
+    expect(hub.state.sessions).toEqual([]);
   });
 
   it('never accepts a session token: these routes take the cookie only', async () => {
@@ -969,7 +969,7 @@ describe('terminals outside the canvas', () => {
       expect(viaAgentPrefix.statusCode, `${method} /v1…`).toBe(404);
     }
     expect(outsideWorld.terminated).toEqual([]);
-    expect(canvas.state.sessions).toHaveLength(1);
+    expect(hub.state.sessions).toHaveLength(1);
   });
 });
 
@@ -989,7 +989,7 @@ describe('showing a session', () => {
     await waitFor(() => messages.length === 2, 'show');
     expect(messages[1]).toEqual({ type: 'show', sessionId: session.id });
     // Nothing about the session changed.
-    expect(canvas.state.sessions[0]?.attention.state).toBe('none');
+    expect(hub.state.sessions[0]?.attention.state).toBe('none');
 
     socket.close();
     await waitFor(() => socket.readyState === WebSocket.CLOSED, 'closed');
@@ -1062,12 +1062,12 @@ describe('frames and colors', () => {
 
     await stop();
     await start();
-    expect(canvas.state.layout.frames).toMatchObject([{ id: frame.id, label: 'Backend' }]);
+    expect(hub.state.layout.frames).toMatchObject([{ id: frame.id, label: 'Backend' }]);
 
     expect((await request('PUT', paths.frame(frame.id), { body: { x: 0, y: 0, width: 10, height: 10 } })).statusCode).toBe(400);
     expect((await request('DELETE', paths.frame(frame.id))).statusCode).toBe(204);
     expect((await request('DELETE', paths.frame(frame.id))).statusCode).toBe(404);
-    expect(canvas.state.layout.frames).toEqual([]);
+    expect(hub.state.layout.frames).toEqual([]);
   });
 
   it('carries the nodes inside a frame when the frame moves', async () => {
@@ -1080,20 +1080,20 @@ describe('frames and colors', () => {
     );
 
     await request('PUT', paths.frame(frame.id), { body: { x: 150, y: 50, width: 900, height: 600, carry: true } });
-    const nodes = canvas.state.layout.nodes;
+    const nodes = hub.state.layout.nodes;
     expect(nodes.find((n) => n.id === inside.node.id)).toMatchObject({ x: 200, y: 100 });
     expect(nodes.find((n) => n.id === outside.node.id)).toMatchObject({ x: 3000, y: 0 });
 
     // Without `carry` (a resize, say) nothing else moves.
     await request('PUT', paths.frame(frame.id), { body: { x: 0, y: 0, width: 2000, height: 900 } });
-    expect(canvas.state.layout.nodes.find((n) => n.id === inside.node.id)).toMatchObject({ x: 200, y: 100 });
+    expect(hub.state.layout.nodes.find((n) => n.id === inside.node.id)).toMatchObject({ x: 200, y: 100 });
   });
 
   it('colors a node and keeps the color when the node moves', async () => {
     const { node } = await createSession();
     await request('PUT', paths.node(node.id), { body: { x: 5, y: 5, width: 720, height: 440, color: 'green' } });
     await request('PUT', paths.node(node.id), { body: { x: 50, y: 5, width: 720, height: 440 } });
-    expect(canvas.state.layout.nodes[0]).toMatchObject({ x: 50, color: 'green' });
+    expect(hub.state.layout.nodes[0]).toMatchObject({ x: 50, color: 'green' });
     expect((await request('PUT', paths.node(node.id), { body: { x: 5, y: 5, width: 720, height: 440, color: 'pink' } })).statusCode).toBe(400);
   });
 });
@@ -1130,7 +1130,7 @@ describe('restart', () => {
     await waitFor(() => view.socket.readyState === WebSocket.OPEN, 'open');
     view.socket.send(JSON.stringify({ t: 'input', data: `cd ${folder}\r` }));
     await waitForRefreshed(() => {
-      return canvas.state.sessions[0]?.cwd === folder;
+      return hub.state.sessions[0]?.cwd === folder;
     }, 'folder noticed');
     await runtime.kill(ended.session.id);
     await sessions.refresh();
@@ -1139,15 +1139,15 @@ describe('restart', () => {
     await runtime.killServer(); // what a reboot does
     await start();
 
-    expect(canvas.state.sessions.map((s) => [s.id, s.state])).toEqual([
+    expect(hub.state.sessions.map((s) => [s.id, s.state])).toEqual([
       [session.id, 'open'],
       [ended.session.id, 'exited'],
     ]);
-    expect(canvas.state.layout.nodes.map((n) => n.id)).toContain(node.id);
+    expect(hub.state.layout.nodes.map((n) => n.id)).toContain(node.id);
     const running = await runtime.list();
     expect(running.map((s) => s.id)).toEqual([session.id]); // the ended one stays ended
     await waitForRefreshed(() => {
-      return canvas.state.sessions[0]?.cwd === folder;
+      return hub.state.sessions[0]?.cwd === folder;
     }, 'fresh shell in the last folder');
     expect((await runtime.list())[0]?.command).toMatch(/sh$/); // just a shell, nothing re-run
   });
@@ -1157,7 +1157,7 @@ describe('restart', () => {
     await stop();
     await rm(path.join(dir, 'state.json'));
     await start();
-    expect(canvas.state.sessions.map((s) => s.id)).toEqual([session.id]);
-    expect(canvas.state.layout.nodes).toHaveLength(1);
+    expect(hub.state.sessions.map((s) => s.id)).toEqual([session.id]);
+    expect(hub.state.layout.nodes).toHaveLength(1);
   });
 });

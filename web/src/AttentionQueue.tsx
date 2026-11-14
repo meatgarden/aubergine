@@ -9,8 +9,8 @@ import { useApp } from './store';
  * daemon the user has looked.
  */
 export function AttentionQueue({ onGo }: { onGo: (nodeId: string, sessionId: string) => void }) {
-  const sessions = useApp((s) => s.canvas?.sessions);
-  const nodes = useApp((s) => s.canvas?.layout.nodes);
+  const sessions = useApp((s) => s.app?.sessions);
+  const nodes = useApp((s) => s.app?.layout.nodes);
   const current = useApp((s) => s.focus?.sessionId ?? null);
   const [notify, setNotify] = useState(notificationsWanted);
 

@@ -21,8 +21,8 @@ type Row =
 export function Picker({ onGo }: { onGo: (nodeId: string, sessionId: string) => void }) {
   const open = useApp((s) => s.picker);
   const setPicker = useApp((s) => s.setPicker);
-  const sessions = useApp((s) => s.canvas?.sessions);
-  const nodes = useApp((s) => s.canvas?.layout.nodes);
+  const sessions = useApp((s) => s.app?.sessions);
+  const nodes = useApp((s) => s.app?.layout.nodes);
   const [query, setQuery] = useState('');
   const [index, setIndex] = useState(0);
   const [history, setHistory] = useState<{ query: string; hits: SearchHit[]; truncated: boolean } | null>(null);

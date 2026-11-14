@@ -70,8 +70,8 @@ function toFrameNode(frame: Frame, previous: CanvasNode | undefined): FrameFlowN
 }
 
 export function Canvas() {
-  const allNodes = useApp((s) => s.canvas?.layout.nodes ?? noNodes);
-  const sessions = useApp((s) => s.canvas?.sessions ?? noSessions);
+  const allNodes = useApp((s) => s.app?.layout.nodes ?? noNodes);
+  const sessions = useApp((s) => s.app?.sessions ?? noSessions);
   // Parked sessions keep their place in the layout but are not on the canvas.
   const layout = useMemo(() => {
     const parked = new Set(sessions.filter((x) => x.state === 'parked').map((x) => x.id));
@@ -86,7 +86,7 @@ export function Canvas() {
 
   // React Flow owns the nodes while they are dragged or resized; the saved
   // layout replaces them whenever it changes.
-  const frames = useApp((s) => s.canvas?.layout.frames ?? noFrames);
+  const frames = useApp((s) => s.app?.layout.frames ?? noFrames);
   const [nodes, setNodes] = useState<CanvasNode[]>([]);
   useEffect(() => {
     setNodes((previous) => {
@@ -293,9 +293,9 @@ export function Canvas() {
     if (!show) return;
     let cancelled = false;
     void (async () => {
-      const { canvas } = useApp.getState();
-      const session = canvas?.sessions.find((x) => x.id === show.sessionId);
-      const node = canvas?.layout.nodes.find((n) => n.sessionId === show.sessionId);
+      const { app } = useApp.getState();
+      const session = app?.sessions.find((x) => x.id === show.sessionId);
+      const node = app?.layout.nodes.find((n) => n.sessionId === show.sessionId);
       if (!session || !node) return;
       if (session.state === 'parked') await api.restoreSession(session.id).catch(() => {});
       if (!cancelled) goToNode(node.id, session.id);

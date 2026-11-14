@@ -27,7 +27,7 @@ import {
   type UpdateNodeRequest,
   type UpdateSessionRequest,
 } from '@aubergine/shared';
-import type { Canvas } from './canvas';
+import type { StateHub } from './state-hub';
 import type { HistorySearch, RuntimeSession, SessionRuntime } from './runtime/runtime';
 import { noIntegration, type ShellIntegration, type ShellReport } from './shell/integration';
 
@@ -65,7 +65,7 @@ export class Sessions {
   private readonly startedAt = Date.now();
 
   constructor(
-    private readonly canvas: Canvas,
+    private readonly hub: StateHub,
     private readonly runtime: SessionRuntime,
     private readonly options: SessionsOptions = {},
   ) {
@@ -90,12 +90,12 @@ export class Sessions {
     if ((await this.status()).status !== 'ok') return;
     const running = new Set((await this.runtime.list()).map((s) => s.id));
 
-    for (const session of this.canvas.state.sessions) {
+    for (const session of this.hub.state.sessions) {
       if (session.state === 'exited' || running.has(session.id)) continue;
       await this.startShell(session.id, session.cwd);
     }
 
-    const known = new Set(this.canvas.state.sessions.map((s) => s.id));
+    const known = new Set(this.hub.state.sessions.map((s) => s.id));
     for (const id of running) {
       if (known.has(id) || !Id.safeParse(id).success) continue;
       this.record(id, 'Recovered terminal', undefined, null);
@@ -119,7 +119,7 @@ export class Sessions {
     const name = input.name && input.uniqueName ? this.uniqueName(input.name) : (input.name ?? fallback);
     const created = this.record(id, name, input.rect, started.cwd);
     if (input.agent && launch) {
-      this.canvas.emit({ type: 'session.agent', sessionId: id, agent: { kind: input.agent, conversationId: null } });
+      this.hub.emit({ type: 'session.agent', sessionId: id, agent: { kind: input.agent, conversationId: null } });
     }
 
     // Typed once the shell is ready; the new node does not wait for that.
@@ -134,7 +134,7 @@ export class Sessions {
 
   /** `name`, or `name 2`, `name 3`… when sessions already use it. */
   private uniqueName(name: string): string {
-    const names = new Set(this.canvas.state.sessions.map((s) => s.name));
+    const names = new Set(this.hub.state.sessions.map((s) => s.name));
     if (!names.has(name)) return name;
     for (let n = 2; ; n++) {
       const candidate = `${name.slice(0, 74)} ${n}`;
@@ -144,8 +144,8 @@ export class Sessions {
 
   update(sessionId: string, changes: UpdateSessionRequest): Session {
     this.find(sessionId);
-    if (changes.name !== undefined) this.canvas.emit({ type: 'session.renamed', sessionId, name: changes.name });
-    if (changes.note !== undefined) this.canvas.emit({ type: 'session.noted', sessionId, note: changes.note });
+    if (changes.name !== undefined) this.hub.emit({ type: 'session.renamed', sessionId, name: changes.name });
+    if (changes.note !== undefined) this.hub.emit({ type: 'session.noted', sessionId, note: changes.note });
     return this.find(sessionId);
   }
 
@@ -153,12 +153,12 @@ export class Sessions {
   park(sessionId: string): Session {
     const session = this.find(sessionId);
     if (session.state === 'exited') throw new ConflictError('This shell has ended; remove it instead');
-    if (session.state === 'open') this.canvas.emit({ type: 'session.parked', sessionId });
+    if (session.state === 'open') this.hub.emit({ type: 'session.parked', sessionId });
     return this.find(sessionId);
   }
 
   restore(sessionId: string): Session {
-    if (this.find(sessionId).state === 'parked') this.canvas.emit({ type: 'session.restored', sessionId });
+    if (this.find(sessionId).state === 'parked') this.hub.emit({ type: 'session.restored', sessionId });
     return this.find(sessionId);
   }
 
@@ -169,7 +169,7 @@ export class Sessions {
     if (!(await this.runtime.has(sessionId))) {
       await this.startShell(sessionId, session.cwd);
     }
-    this.canvas.emit({ type: 'session.restarted', sessionId });
+    this.hub.emit({ type: 'session.restarted', sessionId });
     return this.find(sessionId);
   }
 
@@ -177,7 +177,7 @@ export class Sessions {
   async close(sessionId: string): Promise<void> {
     this.find(sessionId);
     await this.runtime.kill(sessionId);
-    if (this.has(sessionId)) this.canvas.emit({ type: 'session.closed', sessionId });
+    if (this.has(sessionId)) this.hub.emit({ type: 'session.closed', sessionId });
     this.seenAt.delete(sessionId);
     await this.integration.forget(sessionId);
   }
@@ -188,9 +188,9 @@ export class Sessions {
    * has nothing left to show and is removed.
    */
   shellEnded(sessionId: string): void {
-    const session = this.canvas.state.sessions.find((s) => s.id === sessionId);
+    const session = this.hub.state.sessions.find((s) => s.id === sessionId);
     if (!session || session.state === 'exited') return;
-    this.canvas.emit(
+    this.hub.emit(
       session.state === 'parked' ? { type: 'session.closed', sessionId } : { type: 'session.exited', sessionId },
     );
   }
@@ -222,7 +222,7 @@ export class Sessions {
   private async refreshOnce(): Promise<void> {
     if (this.runtimeStatus?.status !== 'ok') return;
     const running = new Map((await this.runtime.list()).map((s) => [s.id, s]));
-    for (const session of this.canvas.state.sessions) {
+    for (const session of this.hub.state.sessions) {
       if (session.state === 'exited') continue;
       const live = running.get(session.id);
       if (!live) {
@@ -230,33 +230,33 @@ export class Sessions {
         continue;
       }
       if (live.cwd !== session.cwd || live.command !== session.command) {
-        this.canvas.emit({ type: 'session.activity', sessionId: session.id, cwd: live.cwd, command: live.command });
+        this.hub.emit({ type: 'session.activity', sessionId: session.id, cwd: live.cwd, command: live.command });
       }
       const status = this.nextStatus(session, await this.integration.read(session.id), live.activityAt);
       if (!sameStatus(status, session.status)) {
-        this.canvas.emit({ type: 'session.status', sessionId: session.id, status });
+        this.hub.emit({ type: 'session.status', sessionId: session.id, status });
       }
     }
   }
 
   updateNode(nodeId: string, changes: UpdateNodeRequest): LayoutNode {
-    const existing = this.canvas.state.layout.nodes.find((n) => n.id === nodeId);
+    const existing = this.hub.state.layout.nodes.find((n) => n.id === nodeId);
     if (!existing) throw new NotFoundError(`No node ${nodeId}`);
     const { color, ...rect } = changes;
     const node: LayoutNode = { ...existing, ...rect, color: color ?? existing.color };
-    this.canvas.emit({ type: 'node.updated', node });
+    this.hub.emit({ type: 'node.updated', node });
     return node;
   }
 
   createFrame(input: CreateFrameRequest): Frame {
     const frame: Frame = { id: newId(), label: input.label ?? '', color: 'none', ...input.rect };
-    this.canvas.emit({ type: 'frame.created', frame });
+    this.hub.emit({ type: 'frame.created', frame });
     return frame;
   }
 
   /** Moves, resizes, renames or recolors a frame. With `carry`, nodes inside it move along. */
   updateFrame(frameId: string, changes: UpdateFrameRequest): Frame {
-    const existing = this.canvas.state.layout.frames.find((f) => f.id === frameId);
+    const existing = this.hub.state.layout.frames.find((f) => f.id === frameId);
     if (!existing) throw new NotFoundError(`No frame ${frameId}`);
     const { label, color, carry, ...rect } = changes;
     const frame: Frame = { ...existing, ...rect, label: label ?? existing.label, color: color ?? existing.color };
@@ -265,35 +265,35 @@ export class Sessions {
     const dy = frame.y - existing.y;
     if (carry && (dx !== 0 || dy !== 0)) {
       for (const node of nodesInside(existing, this.visibleNodes())) {
-        this.canvas.emit({ type: 'node.updated', node: { ...node, x: node.x + dx, y: node.y + dy } });
+        this.hub.emit({ type: 'node.updated', node: { ...node, x: node.x + dx, y: node.y + dy } });
       }
     }
-    this.canvas.emit({ type: 'frame.updated', frame });
+    this.hub.emit({ type: 'frame.updated', frame });
     return frame;
   }
 
   removeFrame(frameId: string): void {
-    if (!this.canvas.state.layout.frames.some((f) => f.id === frameId)) throw new NotFoundError(`No frame ${frameId}`);
-    this.canvas.emit({ type: 'frame.removed', frameId });
+    if (!this.hub.state.layout.frames.some((f) => f.id === frameId)) throw new NotFoundError(`No frame ${frameId}`);
+    this.hub.emit({ type: 'frame.removed', frameId });
   }
 
   /** Nodes that are on the canvas, which leaves out parked sessions. */
   private visibleNodes(): LayoutNode[] {
-    const parked = new Set(this.canvas.state.sessions.filter((s) => s.state === 'parked').map((s) => s.id));
-    return this.canvas.state.layout.nodes.filter((n) => !parked.has(n.sessionId));
+    const parked = new Set(this.hub.state.sessions.filter((s) => s.state === 'parked').map((s) => s.id));
+    return this.hub.state.layout.nodes.filter((n) => !parked.has(n.sessionId));
   }
 
   has(sessionId: string): boolean {
-    return this.canvas.state.sessions.some((s) => s.id === sessionId);
+    return this.hub.state.sessions.some((s) => s.id === sessionId);
   }
 
   /** Whether the session is known and its shell has not ended. */
   isRunning(sessionId: string): boolean {
-    return this.canvas.state.sessions.some((s) => s.id === sessionId && s.state !== 'exited');
+    return this.hub.state.sessions.some((s) => s.id === sessionId && s.state !== 'exited');
   }
 
   private find(sessionId: string): Session {
-    const session = this.canvas.state.sessions.find((s) => s.id === sessionId);
+    const session = this.hub.state.sessions.find((s) => s.id === sessionId);
     if (!session) throw new NotFoundError(`No session ${sessionId}`);
     return session;
   }
@@ -315,7 +315,7 @@ export class Sessions {
     // An agent that reports without a conversation does not erase the one we know.
     const next: AgentInfo = { kind: agent.kind, conversationId: agent.conversationId ?? session.agent?.conversationId ?? null };
     if (session.agent?.kind !== next.kind || session.agent.conversationId !== next.conversationId) {
-      this.canvas.emit({ type: 'session.agent', sessionId, agent: next });
+      this.hub.emit({ type: 'session.agent', sessionId, agent: next });
     }
     return next;
   }
@@ -334,7 +334,7 @@ export class Sessions {
 
   /** Searches the terminal history of every running session, parked ones included. */
   searchHistory(query: string): Promise<HistorySearch> {
-    const ids = this.canvas.state.sessions.filter((s) => s.state !== 'exited').map((s) => s.id);
+    const ids = this.hub.state.sessions.filter((s) => s.state !== 'exited').map((s) => s.id);
     return this.runtime.search(ids, query);
   }
 
@@ -352,7 +352,7 @@ export class Sessions {
       message: message || null,
       at: state === 'none' ? null : new Date().toISOString(),
     };
-    this.canvas.emit({ type: 'session.attention', sessionId, attention });
+    this.hub.emit({ type: 'session.attention', sessionId, attention });
     return attention;
   }
 
@@ -365,7 +365,7 @@ export class Sessions {
     const kind = input.kind ?? 'note';
     if (kind === 'prompt' && this.options.logPrompts?.() === false) return null;
     const entry: NoteEntry = { id: newId(), at: new Date().toISOString(), author: input.author, kind, text: input.text };
-    this.canvas.emit({ type: 'session.note.appended', sessionId, entry });
+    this.hub.emit({ type: 'session.note.appended', sessionId, entry });
     return entry;
   }
 
@@ -374,10 +374,10 @@ export class Sessions {
     const session = this.find(sessionId);
     this.seenAt.set(sessionId, Date.now());
     if (needsUser(session.attention)) {
-      this.canvas.emit({ type: 'session.attention', sessionId, attention: NO_ATTENTION });
+      this.hub.emit({ type: 'session.attention', sessionId, attention: NO_ATTENTION });
     }
     if (session.status.unread) {
-      this.canvas.emit({ type: 'session.status', sessionId, status: { ...session.status, unread: false } });
+      this.hub.emit({ type: 'session.status', sessionId, status: { ...session.status, unread: false } });
     }
     return this.find(sessionId);
   }
@@ -426,7 +426,7 @@ export class Sessions {
     rect: NodeRect | undefined,
     cwd: string | null,
   ): { session: Session; node: LayoutNode } {
-    const state = this.canvas.state;
+    const state = this.hub.state;
     const session: Session = {
       id,
       projectId: state.project.id,
@@ -442,12 +442,12 @@ export class Sessions {
       agent: null,
     };
     const node: LayoutNode = { id: newId(), sessionId: id, color: 'none', ...(rect ?? this.freeSpot()) };
-    this.canvas.emit({ type: 'session.created', session, node });
+    this.hub.emit({ type: 'session.created', session, node });
     return { session, node };
   }
 
   private nextName(base = 'Terminal'): string {
-    const names = new Set(this.canvas.state.sessions.map((s) => s.name));
+    const names = new Set(this.hub.state.sessions.map((s) => s.name));
     const first = base === 'Terminal' ? names.size + 1 : 1;
     for (let n = first; ; n++) {
       if (!names.has(`${base} ${n}`)) return `${base} ${n}`;
