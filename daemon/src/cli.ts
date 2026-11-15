@@ -298,7 +298,8 @@ async function main(): Promise<number> {
 
     case 'import': {
       const { terminals } = OutsideResponse.parse(await call(config, 'GET', paths.outside));
-      const { state } = StateResponse.parse(await call(config, 'GET', paths.state));
+      const { state, defaultCanvasId } = StateResponse.parse(await call(config, 'GET', paths.state));
+      const canvasId = defaultCanvasId;
       const named = command.terminals.map(normaliseTty);
       const missing = named.filter((tty) => !terminals.some((t) => t.tty === tty));
       for (const tty of missing) console.log(`${tty}: no such terminal outside Aubergine. See: aubergine scan`);
@@ -321,16 +322,15 @@ async function main(): Promise<number> {
       // All of them at once go into a frame; ones picked by name land in free space.
       let rects: (NodeRect | undefined)[] = plan.create.map(() => undefined);
       if (named.length === 0) {
-        const parked = new Set(state.sessions.filter((s) => s.state === 'parked').map((s) => s.id));
-        const onCanvas = [...state.layout.nodes.filter((n) => !parked.has(n.sessionId)), ...state.layout.frames];
-        const layout = importLayout(plan.create.length, onCanvas);
-        await call(config, 'POST', paths.frames, { label: 'Imported', rect: layout.frame });
+        const canvas = state.canvases.find((c) => c.id === canvasId);
+        const layout = importLayout(plan.create.length, [...(canvas?.layout.nodes ?? []), ...(canvas?.layout.frames ?? [])]);
+        await call(config, 'POST', paths.frames, { label: 'Imported', rect: layout.frame, canvasId });
         rects = layout.nodes;
       }
       console.log(`Your tabs are untouched. Creating ${plan.create.length} session(s):`);
       for (const [index, item] of plan.create.entries()) {
         try {
-          const body = { tty: item.shell.tty, pid: item.shell.pid, ...(rects[index] ? { rect: rects[index] } : {}) };
+          const body = { tty: item.shell.tty, pid: item.shell.pid, canvasId, ...(rects[index] ? { rect: rects[index] } : {}) };
           const result = OutsideResult.parse(await call(config, 'POST', paths.outsideAdd, body));
           console.log(`\n  ${item.shell.tty}  →  "${result.session?.name}" in ${item.cwd}\n      ${result.message}`);
         } catch (error) {

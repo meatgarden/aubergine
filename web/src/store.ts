@@ -3,7 +3,10 @@ import {
   DEFAULT_SETTINGS,
   SHOW_PARAM,
   applyEvent,
+  sortedCanvases,
   type AppState,
+  type Canvas,
+  type Layout,
   type ChangeEvent,
   type RuntimeStatus,
   type Settings,
@@ -25,6 +28,8 @@ interface AppStore {
   /** User settings from the daemon's settings file. */
   settings: Settings;
   app: AppState | null;
+  /** The canvas this page is showing. */
+  canvasId: string | null;
   /** False while the live event stream is down after having been up. */
   live: boolean;
   /** Session whose terminal should hold keyboard focus. The counter re-triggers focus on repeat clicks. */
@@ -42,6 +47,7 @@ interface AppStore {
   askToClose: (sessionId: string | null) => void;
   setPicker: (open: boolean) => void;
   showSession: (sessionId: string) => void;
+  setCanvas: (canvasId: string) => void;
 }
 
 export const useApp = create<AppStore>((set, get) => ({
@@ -49,6 +55,7 @@ export const useApp = create<AppStore>((set, get) => ({
   runtime: null,
   settings: DEFAULT_SETTINGS,
   app: null,
+  canvasId: null,
   live: true,
   focus: null,
   closing: null,
@@ -58,7 +65,15 @@ export const useApp = create<AppStore>((set, get) => ({
   load: async () => {
     try {
       const response = await api.getState();
-      set({ phase: 'ready', runtime: response.runtime, settings: response.settings, app: response.state });
+      const known = response.state.canvases.some((c) => c.id === get().canvasId);
+      set({
+        phase: 'ready',
+        runtime: response.runtime,
+        settings: response.settings,
+        app: response.state,
+        // Keep looking at the same canvas; if there is none yet, or it is gone, take the default.
+        ...(known ? {} : { canvasId: response.defaultCanvasId }),
+      });
     } catch (error) {
       if (error instanceof ApiError && error.code === 'unauthorized') {
         set({ phase: 'unauthorized' });
@@ -82,6 +97,9 @@ export const useApp = create<AppStore>((set, get) => ({
       }
     }
     const next: Partial<AppStore> = { app: applyEvent(app, event) };
+    if (event.type === 'canvas.removed' && get().canvasId === event.canvasId) {
+      next.canvasId = sortedCanvases(next.app ?? app)[0]?.id ?? null;
+    }
     if (event.type === 'session.closed') {
       if (get().closing === event.sessionId) next.closing = null;
       if (get().focus?.sessionId === event.sessionId) next.focus = null;
@@ -96,8 +114,21 @@ export const useApp = create<AppStore>((set, get) => ({
 
   askToClose: (sessionId) => set({ closing: sessionId }),
   setPicker: (open) => set({ picker: open }),
+  setCanvas: (canvasId) => set({ canvasId, focus: null }),
   showSession: (sessionId) => set((state) => ({ show: { sessionId, tick: (state.show?.tick ?? 0) + 1 } })),
 }));
+
+const noLayout: Layout = { nodes: [], frames: [] };
+
+/** The canvas this page is showing. */
+export function currentCanvas(state: Pick<AppStore, 'app' | 'canvasId'>): Canvas | null {
+  return state.app?.canvases.find((c) => c.id === state.canvasId) ?? null;
+}
+
+/** The nodes and frames of the canvas this page is showing. */
+export function currentLayout(state: Pick<AppStore, 'app' | 'canvasId'>): Layout {
+  return currentCanvas(state)?.layout ?? noLayout;
+}
 
 /** Loads state, keeps it live, and keeps retrying while the daemon is away. */
 export function startSync(): () => void {

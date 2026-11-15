@@ -1,5 +1,25 @@
 import { z } from 'zod';
-import { AgentInfo, Attention, NOTE_LOG_LIMIT, NO_ATTENTION, NO_STATUS, NoteEntry, type AppState, Frame, LayoutNode, Session, SessionName, SessionNote, ShellStatus } from './entities';
+import {
+  AgentInfo,
+  Attention,
+  Canvas,
+  CanvasName,
+  Frame,
+  Labels,
+  LayoutNode,
+  NOTE_LOG_LIMIT,
+  NO_ATTENTION,
+  NO_STATUS,
+  NodeColor,
+  NoteEntry,
+  Session,
+  SessionName,
+  SessionNote,
+  ShellStatus,
+  placeOfSession,
+  type AppState,
+  type Layout,
+} from './entities';
 import { Id } from './ids';
 
 /**
@@ -7,12 +27,22 @@ import { Id } from './ids';
  * event to its own state, saves it and broadcasts it; the browser applies the
  * same event to its copy with the same reducer.
  */
+/** What can be changed about a canvas itself. */
+export const CanvasChanges = z
+  .object({ name: CanvasName, color: NodeColor, order: z.number().finite(), labels: Labels })
+  .partial();
+export type CanvasChanges = z.infer<typeof CanvasChanges>;
+
 export const ChangeEvent = z.discriminatedUnion('type', [
-  z.object({ type: z.literal('session.created'), session: Session, node: LayoutNode }),
+  /** A session started, with its node on a canvas. */
+  z.object({ type: z.literal('session.created'), session: Session, canvasId: Id, node: LayoutNode }),
   z.object({ type: z.literal('session.renamed'), sessionId: Id, name: SessionName }),
-  /** Moved off the canvas; the shell keeps running. */
+  /** Moved off its canvas; the shell keeps running. It remembers where it sat. */
   z.object({ type: z.literal('session.parked'), sessionId: Id }),
-  z.object({ type: z.literal('session.restored'), sessionId: Id }),
+  /** A parked session put back onto a canvas. */
+  z.object({ type: z.literal('session.restored'), sessionId: Id, canvasId: Id, node: LayoutNode }),
+  /** Moved from one canvas to another. The shell is untouched. */
+  z.object({ type: z.literal('session.moved'), sessionId: Id, canvasId: Id, node: LayoutNode }),
   /** The shell ended by itself. */
   z.object({ type: z.literal('session.exited'), sessionId: Id }),
   /** A new shell was started for an exited session. */
@@ -33,10 +63,15 @@ export const ChangeEvent = z.discriminatedUnion('type', [
   z.object({ type: z.literal('session.status'), sessionId: Id, status: ShellStatus }),
   /** Ended for good and removed. */
   z.object({ type: z.literal('session.closed'), sessionId: Id }),
-  z.object({ type: z.literal('node.updated'), node: LayoutNode }),
-  z.object({ type: z.literal('frame.created'), frame: Frame }),
-  z.object({ type: z.literal('frame.updated'), frame: Frame }),
-  z.object({ type: z.literal('frame.removed'), frameId: Id }),
+  z.object({ type: z.literal('node.updated'), canvasId: Id, node: LayoutNode }),
+  z.object({ type: z.literal('frame.created'), canvasId: Id, frame: Frame }),
+  z.object({ type: z.literal('frame.updated'), canvasId: Id, frame: Frame }),
+  z.object({ type: z.literal('frame.removed'), canvasId: Id, frameId: Id }),
+  z.object({ type: z.literal('canvas.created'), canvas: Canvas }),
+  /** Renamed, recolored, reordered or relabeled. */
+  z.object({ type: z.literal('canvas.updated'), canvasId: Id, changes: CanvasChanges }),
+  /** Closed. Its sessions were moved or parked first; anything still on it is parked here. */
+  z.object({ type: z.literal('canvas.removed'), canvasId: Id }),
 ]);
 export type ChangeEvent = z.infer<typeof ChangeEvent>;
 
@@ -47,23 +82,69 @@ function patchSession(state: AppState, sessionId: string, patch: Partial<Session
   };
 }
 
+/** Changes one canvas's layout. An unknown canvas leaves the state as it is. */
+function patchLayout(state: AppState, canvasId: string, change: (layout: Layout) => Layout): AppState {
+  return {
+    ...state,
+    canvases: state.canvases.map((c) => (c.id === canvasId ? { ...c, layout: change(c.layout) } : c)),
+  };
+}
+
+/** Takes a session's node off whatever canvas it is on. */
+function withoutNodeOf(state: AppState, sessionId: string): AppState {
+  return {
+    ...state,
+    canvases: state.canvases.map((c) =>
+      c.layout.nodes.some((n) => n.sessionId === sessionId)
+        ? { ...c, layout: { ...c.layout, nodes: c.layout.nodes.filter((n) => n.sessionId !== sessionId) } }
+        : c,
+    ),
+  };
+}
+
+/** Puts a session's node on a canvas, and nowhere else: a session is on at most one. */
+function placeNode(state: AppState, canvasId: string, node: LayoutNode): AppState {
+  if (!state.canvases.some((c) => c.id === canvasId)) return state;
+  return patchLayout(withoutNodeOf(state, node.sessionId), canvasId, (layout) => ({
+    ...layout,
+    nodes: [...layout.nodes.filter((n) => n.id !== node.id), node],
+  }));
+}
+
+/** Marks a session as parked, remembering where it sat. */
+function park(state: AppState, sessionId: string): AppState {
+  const place = placeOfSession(state, sessionId);
+  const parkedFrom = place
+    ? {
+        canvasId: place.canvas.id,
+        rect: { x: place.node.x, y: place.node.y, width: place.node.width, height: place.node.height },
+        color: place.node.color,
+      }
+    : null;
+  return patchSession(withoutNodeOf(state, sessionId), sessionId, {
+    state: 'parked',
+    ...(parkedFrom ? { parkedFrom } : {}),
+  });
+}
+
 /** Pure reducer: returns the state after `event`. Applying an event twice is harmless. */
 export function applyEvent(state: AppState, event: ChangeEvent): AppState {
   switch (event.type) {
-    case 'session.created':
-      return {
+    case 'session.created': {
+      const withSession = {
         ...state,
         sessions: [...state.sessions.filter((s) => s.id !== event.session.id), event.session],
-        layout: {
-          ...state.layout,
-          nodes: [...state.layout.nodes.filter((n) => n.id !== event.node.id), event.node],
-        },
       };
+      return placeNode(withSession, event.canvasId, event.node);
+    }
     case 'session.renamed':
       return patchSession(state, event.sessionId, { name: event.name });
     case 'session.parked':
-      return patchSession(state, event.sessionId, { state: 'parked' });
+      return state.sessions.some((s) => s.id === event.sessionId && s.state === 'parked') ? state : park(state, event.sessionId);
     case 'session.restored':
+      return patchSession(placeNode(state, event.canvasId, event.node), event.sessionId, { state: 'open', parkedFrom: null });
+    case 'session.moved':
+      return placeNode(state, event.canvasId, event.node);
     case 'session.restarted':
       return patchSession(state, event.sessionId, { state: 'open' });
     case 'session.exited':
@@ -91,30 +172,39 @@ export function applyEvent(state: AppState, event: ChangeEvent): AppState {
     case 'session.noted':
       return patchSession(state, event.sessionId, { note: event.note });
     case 'session.closed':
-      return {
-        ...state,
-        sessions: state.sessions.filter((s) => s.id !== event.sessionId),
-        layout: { ...state.layout, nodes: state.layout.nodes.filter((n) => n.sessionId !== event.sessionId) },
-      };
+      return { ...withoutNodeOf(state, event.sessionId), sessions: state.sessions.filter((s) => s.id !== event.sessionId) };
     case 'node.updated':
-      return {
-        ...state,
-        layout: { ...state.layout, nodes: state.layout.nodes.map((n) => (n.id === event.node.id ? event.node : n)) },
-      };
+      return patchLayout(state, event.canvasId, (layout) => ({
+        ...layout,
+        nodes: layout.nodes.map((n) => (n.id === event.node.id ? event.node : n)),
+      }));
     case 'frame.created':
-      return {
-        ...state,
-        layout: { ...state.layout, frames: [...state.layout.frames.filter((f) => f.id !== event.frame.id), event.frame] },
-      };
+      return patchLayout(state, event.canvasId, (layout) => ({
+        ...layout,
+        frames: [...layout.frames.filter((f) => f.id !== event.frame.id), event.frame],
+      }));
     case 'frame.updated':
-      return {
-        ...state,
-        layout: { ...state.layout, frames: state.layout.frames.map((f) => (f.id === event.frame.id ? event.frame : f)) },
-      };
+      return patchLayout(state, event.canvasId, (layout) => ({
+        ...layout,
+        frames: layout.frames.map((f) => (f.id === event.frame.id ? event.frame : f)),
+      }));
     case 'frame.removed':
-      return {
-        ...state,
-        layout: { ...state.layout, frames: state.layout.frames.filter((f) => f.id !== event.frameId) },
-      };
+      return patchLayout(state, event.canvasId, (layout) => ({
+        ...layout,
+        frames: layout.frames.filter((f) => f.id !== event.frameId),
+      }));
+    case 'canvas.created':
+      return state.canvases.some((c) => c.id === event.canvas.id) ? state : { ...state, canvases: [...state.canvases, event.canvas] };
+    case 'canvas.updated':
+      return { ...state, canvases: state.canvases.map((c) => (c.id === event.canvasId ? { ...c, ...event.changes } : c)) };
+    case 'canvas.removed': {
+      const canvas = state.canvases.find((c) => c.id === event.canvasId);
+      // The last canvas stays: there is always one to look at.
+      if (!canvas || state.canvases.length === 1) return state;
+      // Nothing is ever lost with a canvas: sessions still on it are parked.
+      let next = state;
+      for (const node of canvas.layout.nodes) next = park(next, node.sessionId);
+      return { ...next, canvases: next.canvases.filter((c) => c.id !== event.canvasId) };
+    }
   }
 }

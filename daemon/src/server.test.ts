@@ -19,7 +19,10 @@ import {
   StateResponse,
   newId,
   paths,
+  sortedCanvases,
+  type AppState,
   type ChangeEvent,
+  type Layout,
 } from '@aubergine/shared';
 import { sessionToken } from './auth';
 import { StateHub } from './state-hub';
@@ -34,6 +37,9 @@ import { ZshIntegration } from './shell/integration';
 import { JsonStore } from './store/json-store';
 import { destroyTmuxServer, testSocketName } from './test-support';
 import { loadOrCreateToken } from './token';
+
+/** The layout of the first canvas, which is where these tests put things unless they say otherwise. */
+const mainLayout = (state: AppState): Layout => sortedCanvases(state)[0]?.layout ?? { nodes: [], frames: [] };
 
 const SOCKET = testSocketName('server');
 const runtime = new TmuxRuntime({ socket: SOCKET });
@@ -319,13 +325,13 @@ describe('API', () => {
     const rect = { x: 500, y: -200, width: 900, height: 600 };
     const moved = await request('PUT', paths.node(node.id), { body: rect });
     expect(moved.statusCode).toBe(200);
-    expect(hub.state.layout.nodes.find((n) => n.id === node.id)).toMatchObject(rect);
+    expect(mainLayout(hub.state).nodes.find((n) => n.id === node.id)).toMatchObject(rect);
 
     const closed = await request('DELETE', paths.session(session.id));
     expect(closed.statusCode).toBe(204);
     expect(await runtime.has(session.id)).toBe(false);
     expect(hub.state.sessions.map((s) => s.id)).toEqual([second.session.id]);
-    expect(hub.state.layout.nodes.map((n) => n.id)).toEqual([second.node.id]);
+    expect(mainLayout(hub.state).nodes.map((n) => n.id)).toEqual([second.node.id]);
   });
 
   it('answers bad input with 400 and unknown IDs with 404', async () => {
@@ -418,7 +424,7 @@ describe('terminal WebSocket', () => {
     expect(view.control).toContainEqual({ t: 'exit', reason: 'session_ended' });
     // The node stays, marked as ended.
     expect(hub.state.sessions[0]).toMatchObject({ id: session.id, state: 'exited', cwd: folder });
-    expect(hub.state.layout.nodes.map((n) => n.id)).toEqual([node.id]);
+    expect(mainLayout(hub.state).nodes.map((n) => n.id)).toEqual([node.id]);
 
     // A viewer cannot attach to an ended session.
     const late = terminal(session.id);
@@ -457,19 +463,36 @@ describe('terminal WebSocket', () => {
 describe('parked sessions', () => {
   it('parks a session without ending its shell, and restores it to the same place', async () => {
     const { session, node } = await createSession('keeper');
+    await request('PUT', paths.node(node.id), { body: { x: 40, y: 80, width: 800, height: 500, color: 'green' } });
     const parked = await request('POST', paths.parkSession(session.id), { body: {} });
     expect(parked.statusCode).toBe(200);
     expect(parked.json().state).toBe('parked');
     expect(await runtime.has(session.id)).toBe(true);
-    expect(hub.state.layout.nodes).toEqual([node]);
+    // It is on no canvas now, and remembers where it sat.
+    expect(mainLayout(hub.state).nodes).toEqual([]);
+    expect(hub.state.sessions[0]?.parkedFrom).toEqual({
+      canvasId: sortedCanvases(hub.state)[0]?.id,
+      rect: { x: 40, y: 80, width: 800, height: 500 },
+      color: 'green',
+    });
 
-    // New nodes may use the space a parked node left.
-    const other = await createSession();
-    expect(other.node.id).not.toBe(node.id);
+    const restored = CreateSessionResponse.parse((await request('POST', paths.restoreSession(session.id), { body: {} })).json());
+    expect(restored.session).toMatchObject({ state: 'open', parkedFrom: null });
+    expect(restored.node).toMatchObject({ sessionId: session.id, x: 40, y: 80, width: 800, height: 500, color: 'green' });
+    expect(mainLayout(hub.state).nodes).toEqual([restored.node]);
+  });
 
-    const restored = await request('POST', paths.restoreSession(session.id), { body: {} });
-    expect(restored.json().state).toBe('open');
-    expect(hub.state.layout.nodes.find((n) => n.sessionId === session.id)).toEqual(node);
+  it('restores next to whatever has taken its old place', async () => {
+    const { session, node } = await createSession('keeper');
+    await request('POST', paths.parkSession(session.id), { body: {} });
+    const { x, y, width, height } = node;
+    const squatter = await request('POST', paths.sessions, { body: { rect: { x, y, width, height } } });
+    expect(squatter.statusCode).toBe(201);
+
+    const restored = CreateSessionResponse.parse((await request('POST', paths.restoreSession(session.id), { body: {} })).json());
+    const [a, b] = mainLayout(hub.state).nodes;
+    expect(restored.node.sessionId).toBe(session.id);
+    expect(a!.x < b!.x + b!.width && b!.x < a!.x + a!.width && a!.y < b!.y + b!.height && b!.y < a!.y + a!.height).toBe(false);
   });
 
   it('survives a restart while parked', async () => {
@@ -507,6 +530,108 @@ describe('parked sessions', () => {
     await sessions.refresh();
     expect(hub.state.sessions).toHaveLength(1);
     expect(hub.state.sessions[0]).toMatchObject({ id: open.session.id, state: 'exited' });
+  });
+});
+
+describe('canvases', () => {
+  const main = () => sortedCanvases(hub.state)[0]!;
+
+  it('starts with one canvas, and puts new things on it by default', async () => {
+    expect(hub.state.canvases.map((c) => c.name)).toEqual(['Main']);
+    const body = StateResponse.parse((await request('GET', paths.state)).json());
+    expect(body.defaultCanvasId).toBe(main().id);
+    const { node } = await createSession();
+    expect(main().layout.nodes).toEqual([node]);
+  });
+
+  it('puts sessions and frames on the canvas that was named', async () => {
+    const second = sessions.createCanvas({ name: 'Deploys' });
+    const created = CreateSessionResponse.parse((await request('POST', paths.sessions, { body: { canvasId: second.id } })).json());
+    await request('POST', paths.frames, { body: { rect: { x: 0, y: 0, width: 900, height: 600 }, canvasId: second.id } });
+    expect(main().layout.nodes).toEqual([]);
+    expect(sessions.getCanvas(second.id).layout.nodes).toEqual([created.node]);
+    expect(sessions.getCanvas(second.id).layout.frames).toHaveLength(1);
+    expect(main().layout.frames).toEqual([]);
+
+    // A canvas that does not exist starts nothing.
+    const before = (await runtime.list()).length;
+    expect((await request('POST', paths.sessions, { body: { canvasId: newId() } })).statusCode).toBe(404);
+    expect((await runtime.list()).length).toBe(before);
+  });
+
+  it('moves a session to another canvas without touching its shell', async () => {
+    const { session, node } = await createSession();
+    const view = terminal(session.id);
+    await waitFor(() => view.socket.readyState === WebSocket.OPEN, 'open');
+    view.socket.send(JSON.stringify({ t: 'input', data: 'MOVED_WITH_ME=yes-$((4 + 4))\r' }));
+
+    const second = sessions.createCanvas({ name: 'Deploys' });
+    const moved = sessions.moveToCanvas(session.id, second.id);
+    expect(moved.node).toMatchObject({ id: node.id, width: node.width, height: node.height });
+    expect(main().layout.nodes).toEqual([]);
+    expect(sessions.getCanvas(second.id).layout.nodes).toEqual([moved.node]);
+
+    view.socket.send(JSON.stringify({ t: 'input', data: 'echo "still=$MOVED_WITH_ME"\r' }));
+    await waitFor(() => view.text.includes('still=yes-8'), 'the same shell');
+
+    // Moving to where it already is changes nothing; a parked session is restored, not moved.
+    expect(sessions.moveToCanvas(session.id, second.id).node).toEqual(moved.node);
+    sessions.park(session.id);
+    expect(() => sessions.moveToCanvas(session.id, main().id)).toThrow(/parked/);
+  });
+
+  it('restores a parked session onto the canvas that was named', async () => {
+    const { session } = await createSession();
+    sessions.park(session.id);
+    const second = sessions.createCanvas({ name: 'Deploys' });
+    const restored = await request('POST', paths.restoreSession(session.id), { body: { canvasId: second.id } });
+    expect(CreateSessionResponse.parse(restored.json()).session.state).toBe('open');
+    expect(sessions.getCanvas(second.id).layout.nodes.map((n) => n.sessionId)).toEqual([session.id]);
+    expect(main().layout.nodes).toEqual([]);
+  });
+
+  it('closes a canvas by moving its sessions, or by parking them, and never ends a shell', async () => {
+    const a = sessions.createCanvas({ name: 'A' });
+    const b = sessions.createCanvas({ name: 'B' });
+    const onA = CreateSessionResponse.parse((await request('POST', paths.sessions, { body: { canvasId: a.id } })).json());
+    const onB = CreateSessionResponse.parse((await request('POST', paths.sessions, { body: { canvasId: b.id } })).json());
+
+    // It must be said what happens to the sessions.
+    expect(() => sessions.removeCanvas(a.id, null)).toThrow(/still has sessions/);
+    expect(() => sessions.removeCanvas(a.id, { sessions: 'move', to: a.id })).toThrow();
+    expect(() => sessions.removeCanvas(a.id, { sessions: 'move', to: newId() })).toThrow(/No canvas/);
+    expect(hub.state.canvases).toHaveLength(3);
+
+    sessions.removeCanvas(a.id, { sessions: 'move', to: main().id });
+    expect(hub.state.canvases.map((c) => c.name).sort()).toEqual(['B', 'Main']);
+    expect(main().layout.nodes.map((n) => n.sessionId)).toEqual([onA.session.id]);
+
+    sessions.removeCanvas(b.id, { sessions: 'park' });
+    expect(hub.state.canvases.map((c) => c.name)).toEqual(['Main']);
+    expect(hub.state.sessions.find((s) => s.id === onB.session.id)).toMatchObject({ state: 'parked', parkedFrom: { canvasId: b.id } });
+
+    // Both shells are still running, and the last canvas stays.
+    expect(await runtime.has(onA.session.id)).toBe(true);
+    expect(await runtime.has(onB.session.id)).toBe(true);
+    expect(() => sessions.removeCanvas(main().id, { sessions: 'park' })).toThrow(/last canvas/);
+
+    // A session parked from a canvas that is gone comes back on the default one.
+    const back = CreateSessionResponse.parse((await request('POST', paths.restoreSession(onB.session.id), { body: {} })).json());
+    expect(main().layout.nodes.map((n) => n.id)).toContain(back.node.id);
+  });
+
+  it('keeps canvases, their order and what is on them across a restart', async () => {
+    const second = sessions.createCanvas({ name: 'Deploys', color: 'green', labels: { ticket: '123' } });
+    sessions.updateCanvas(second.id, { order: -5 });
+    const created = CreateSessionResponse.parse((await request('POST', paths.sessions, { body: { canvasId: second.id } })).json());
+    await stop();
+    await start();
+    expect(sortedCanvases(hub.state).map((c) => [c.name, c.color, c.labels])).toEqual([
+      ['Deploys', 'green', { ticket: '123' }],
+      ['Main', 'none', {}],
+    ]);
+    expect(sessions.getCanvas(second.id).layout.nodes).toEqual([created.node]);
+    expect(await runtime.has(created.session.id)).toBe(true);
   });
 });
 
@@ -1062,12 +1187,12 @@ describe('frames and colors', () => {
 
     await stop();
     await start();
-    expect(hub.state.layout.frames).toMatchObject([{ id: frame.id, label: 'Backend' }]);
+    expect(mainLayout(hub.state).frames).toMatchObject([{ id: frame.id, label: 'Backend' }]);
 
     expect((await request('PUT', paths.frame(frame.id), { body: { x: 0, y: 0, width: 10, height: 10 } })).statusCode).toBe(400);
     expect((await request('DELETE', paths.frame(frame.id))).statusCode).toBe(204);
     expect((await request('DELETE', paths.frame(frame.id))).statusCode).toBe(404);
-    expect(hub.state.layout.frames).toEqual([]);
+    expect(mainLayout(hub.state).frames).toEqual([]);
   });
 
   it('carries the nodes inside a frame when the frame moves', async () => {
@@ -1080,20 +1205,20 @@ describe('frames and colors', () => {
     );
 
     await request('PUT', paths.frame(frame.id), { body: { x: 150, y: 50, width: 900, height: 600, carry: true } });
-    const nodes = hub.state.layout.nodes;
+    const nodes = mainLayout(hub.state).nodes;
     expect(nodes.find((n) => n.id === inside.node.id)).toMatchObject({ x: 200, y: 100 });
     expect(nodes.find((n) => n.id === outside.node.id)).toMatchObject({ x: 3000, y: 0 });
 
     // Without `carry` (a resize, say) nothing else moves.
     await request('PUT', paths.frame(frame.id), { body: { x: 0, y: 0, width: 2000, height: 900 } });
-    expect(hub.state.layout.nodes.find((n) => n.id === inside.node.id)).toMatchObject({ x: 200, y: 100 });
+    expect(mainLayout(hub.state).nodes.find((n) => n.id === inside.node.id)).toMatchObject({ x: 200, y: 100 });
   });
 
   it('colors a node and keeps the color when the node moves', async () => {
     const { node } = await createSession();
     await request('PUT', paths.node(node.id), { body: { x: 5, y: 5, width: 720, height: 440, color: 'green' } });
     await request('PUT', paths.node(node.id), { body: { x: 50, y: 5, width: 720, height: 440 } });
-    expect(hub.state.layout.nodes[0]).toMatchObject({ x: 50, color: 'green' });
+    expect(mainLayout(hub.state).nodes[0]).toMatchObject({ x: 50, color: 'green' });
     expect((await request('PUT', paths.node(node.id), { body: { x: 5, y: 5, width: 720, height: 440, color: 'pink' } })).statusCode).toBe(400);
   });
 });
@@ -1113,7 +1238,7 @@ describe('restart', () => {
 
     const body = StateResponse.parse((await request('GET', paths.state)).json());
     expect(body.state.sessions).toMatchObject([{ id: session.id, name: 'keeper', state: 'open' }]);
-    expect(body.state.layout.nodes[0]).toMatchObject({ id: node.id, x: 111, y: 222 });
+    expect(mainLayout(body.state).nodes[0]).toMatchObject({ id: node.id, x: 111, y: 222 });
 
     const after = terminal(session.id);
     // The screen from before the restart is redrawn without any input.
@@ -1143,7 +1268,7 @@ describe('restart', () => {
       [session.id, 'open'],
       [ended.session.id, 'exited'],
     ]);
-    expect(hub.state.layout.nodes.map((n) => n.id)).toContain(node.id);
+    expect(mainLayout(hub.state).nodes.map((n) => n.id)).toContain(node.id);
     const running = await runtime.list();
     expect(running.map((s) => s.id)).toEqual([session.id]); // the ended one stays ended
     await waitForRefreshed(() => {
@@ -1158,6 +1283,6 @@ describe('restart', () => {
     await rm(path.join(dir, 'state.json'));
     await start();
     expect(hub.state.sessions.map((s) => s.id)).toEqual([session.id]);
-    expect(hub.state.layout.nodes).toHaveLength(1);
+    expect(mainLayout(hub.state).nodes).toHaveLength(1);
   });
 });

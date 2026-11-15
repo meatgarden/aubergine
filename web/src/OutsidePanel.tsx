@@ -35,7 +35,8 @@ function stopBlocked(terminal: OutsideTerminal): string | null {
  * so they are brought over one at a time. Nothing is looked up while the
  * panel is closed.
  */
-export function OutsidePanel({ onGo }: { onGo: (nodeId: string, sessionId: string) => void }) {
+export function OutsidePanel() {
+  const canvasId = useApp((s) => s.canvasId);
   const [open, setOpen] = useState(false);
   const [terminals, setTerminals] = useState<OutsideTerminal[] | null>(null);
   const [loading, setLoading] = useState(false);
@@ -77,12 +78,12 @@ export function OutsidePanel({ onGo }: { onGo: (nodeId: string, sessionId: strin
     try {
       const result =
         action === 'add'
-          ? await api.outsideAdd({ tty: terminal.tty, pid: terminal.pid })
-          : await api.outsideMove({ tty: terminal.tty, pid: terminal.runningPid ?? 0, mode: action });
+          ? await api.outsideAdd({ tty: terminal.tty, pid: terminal.pid, ...(canvasId ? { canvasId } : {}) })
+          : await api.outsideMove({ tty: terminal.tty, pid: terminal.runningPid ?? 0, mode: action, ...(canvasId ? { canvasId } : {}) });
       patch(terminal.tty, { busy: false, message: result.message });
-      if (result.session && result.node) {
-        useApp.getState().apply({ type: 'session.created', session: result.session, node: result.node });
-        onGo(result.node.id, result.session.id);
+      if (result.session && result.node && canvasId) {
+        useApp.getState().apply({ type: 'session.created', canvasId, session: result.session, node: result.node });
+        useApp.getState().showSession(result.session.id);
       }
       void refresh();
     } catch (e) {

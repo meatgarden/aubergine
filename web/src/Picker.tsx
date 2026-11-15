@@ -15,14 +15,12 @@ type Row =
 
 /**
  * The session picker: type to search names, folders, commands and notes, and
- * what terminals have printed. Enter goes there. `onGo` moves the view to a
- * node and focuses it.
+ * what terminals have printed, across every canvas. Enter goes there.
  */
-export function Picker({ onGo }: { onGo: (nodeId: string, sessionId: string) => void }) {
+export function Picker() {
   const open = useApp((s) => s.picker);
   const setPicker = useApp((s) => s.setPicker);
   const sessions = useApp((s) => s.app?.sessions);
-  const nodes = useApp((s) => s.app?.layout.nodes);
   const [query, setQuery] = useState('');
   const [index, setIndex] = useState(0);
   const [history, setHistory] = useState<{ query: string; hits: SearchHit[]; truncated: boolean } | null>(null);
@@ -86,9 +84,7 @@ export function Picker({ onGo }: { onGo: (nodeId: string, sessionId: string) => 
 
   const go = async (row: Row): Promise<void> => {
     setPicker(false);
-    if (row.parked) await api.restoreSession(row.sessionId);
-    const node = nodes?.find((n) => n.sessionId === row.sessionId);
-    if (node) onGo(node.id, row.sessionId);
+    useApp.getState().showSession(row.sessionId);
     if (row.kind === 'output') {
       // Scroll the terminal back to the line that matched.
       const text = row.hit.text.trim().slice(0, REVEAL_LENGTH);

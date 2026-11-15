@@ -27,7 +27,13 @@ function overlaps(a: NodeRect, b: NodeRect, gap: number): boolean {
 export function findFreeRect(taken: readonly NodeRect[], center: Point, size: Size, gap = 24): NodeRect {
   const step = 40;
   const origin = { x: Math.round(center.x - size.width / 2), y: Math.round(center.y - size.height / 2) };
-  const at = (dx: number, dy: number): NodeRect => ({ x: origin.x + dx * step, y: origin.y + dy * step, ...size });
+  // Only the size is taken from `size`, so that passing a whole rectangle cannot pin the position.
+  const at = (dx: number, dy: number): NodeRect => ({
+    x: origin.x + dx * step,
+    y: origin.y + dy * step,
+    width: size.width,
+    height: size.height,
+  });
   const free = (rect: NodeRect): boolean => !taken.some((other) => overlaps(rect, other, gap));
 
   if (free(at(0, 0))) return at(0, 0);

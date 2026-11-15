@@ -95,6 +95,8 @@ export const StateResponse = z.object({
   runtime: RuntimeStatus,
   settings: Settings,
   state: AppState,
+  /** Where new things go when no canvas is named: the canvas most recently looked at in a browser, else the first. */
+  defaultCanvasId: Id,
 });
 export type StateResponse = z.infer<typeof StateResponse>;
 
@@ -117,6 +119,8 @@ export const CreateSessionRequest = z.object({
   command: z.string().trim().min(1).max(4000).optional(),
   /** Make `name` unique by adding a number when a session already has it. */
   uniqueName: z.boolean().optional(),
+  /** The canvas to put it on. Without one: the canvas most recently looked at in a browser, else the first. */
+  canvasId: Id.optional(),
 });
 export type CreateSessionRequest = z.infer<typeof CreateSessionRequest>;
 
@@ -134,7 +138,12 @@ export type UpdateSessionRequest = z.infer<typeof UpdateSessionRequest>;
 export const UpdateNodeRequest = NodeRect.extend({ color: NodeColor.optional() });
 export type UpdateNodeRequest = z.infer<typeof UpdateNodeRequest>;
 
-export const CreateFrameRequest = z.object({ label: FrameLabel.optional(), rect: FrameRect });
+export const CreateFrameRequest = z.object({
+  label: FrameLabel.optional(),
+  rect: FrameRect,
+  /** The canvas to put it on; the default canvas when omitted. */
+  canvasId: Id.optional(),
+});
 export type CreateFrameRequest = z.infer<typeof CreateFrameRequest>;
 
 /** PUT body for a frame. With `carry`, nodes lying inside the frame move with it. */
@@ -214,6 +223,8 @@ export type OutsideResponse = z.infer<typeof OutsideResponse>;
 const OutsideTarget = z.object({
   tty: z.string().regex(/^[A-Za-z0-9/]{1,32}$/),
   pid: z.number().int().positive(),
+  /** The canvas for the new session; the default canvas when omitted. */
+  canvasId: Id.optional(),
 });
 
 export const OutsideAddRequest = OutsideTarget.extend({
@@ -271,6 +282,10 @@ export type SearchResponse = z.infer<typeof SearchResponse>;
 
 export const RevealRequest = z.object({ text: z.string().min(1).max(200) });
 export type RevealRequest = z.infer<typeof RevealRequest>;
+
+/** Body for restoring a parked session: optionally, the canvas to put it on. */
+export const RestoreSessionRequest = z.object({ canvasId: Id.optional() });
+export type RestoreSessionRequest = z.infer<typeof RestoreSessionRequest>;
 
 export const SnapshotResponse = z.object({ text: z.string() });
 export type SnapshotResponse = z.infer<typeof SnapshotResponse>;

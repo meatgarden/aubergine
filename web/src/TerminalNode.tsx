@@ -8,7 +8,7 @@ import { nodeMode, type NodeMode } from './culling';
 import { NotePanel } from './NotePanel';
 import { SnapshotView } from './SnapshotView';
 import { StatusBadges } from './StatusBadges';
-import { useApp } from './store';
+import { currentLayout, useApp } from './store';
 import { TerminalView } from './TerminalView';
 import { useIsFullZoom } from './viewport';
 
@@ -32,7 +32,7 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
     },
     [sessionId],
   );
-  const node = useApp((s) => s.app?.layout.nodes.find((n) => n.id === id));
+  const node = useApp((s) => currentLayout(s).nodes.find((n) => n.id === id));
   const color = node?.color ?? 'none';
   const hasNote = (session?.note ?? '') !== '';
 

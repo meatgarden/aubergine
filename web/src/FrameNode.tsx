@@ -3,13 +3,13 @@ import { NodeResizer, type Node, type NodeProps } from '@xyflow/react';
 import { FRAME_MIN_HEIGHT, FRAME_MIN_WIDTH } from '@aubergine/shared';
 import { api } from './api';
 import { ColorButton } from './ColorButton';
-import { useApp } from './store';
+import { currentLayout, useApp } from './store';
 
 export type FrameFlowNode = Node<{ frameId: string }, 'frame'>;
 
 /** A labeled rectangle behind the terminals. Only its title bar reacts to the pointer. */
 export const FrameNode = memo(function FrameNode({ id, selected }: NodeProps<FrameFlowNode>) {
-  const frame = useApp((s) => s.app?.layout.frames.find((f) => f.id === id));
+  const frame = useApp((s) => currentLayout(s).frames.find((f) => f.id === id));
   const [draft, setDraft] = useState<string | null>(null);
   if (!frame) return null;
 

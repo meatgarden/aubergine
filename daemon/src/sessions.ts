@@ -6,11 +6,17 @@ import {
   NO_STATUS,
   NODE_DEFAULT_HEIGHT,
   NODE_DEFAULT_WIDTH,
+  canvasOfNode,
   findFreeRect,
   needsUser,
+  newCanvas,
   newId,
   nodesInside,
+  placeOfSession,
+  sortedCanvases,
   type AgentInfo,
+  type Canvas,
+  type CanvasChanges,
   type AgentKind,
   type Attention,
   type AttentionState,
@@ -43,6 +49,8 @@ export interface SessionsOptions {
   shell?: () => string | null;
   /** Makes shells report command status. */
   integration?: ShellIntegration;
+  /** The canvas most recently looked at in a browser, if any. New things go there when no canvas is named. */
+  currentCanvas?: () => string | null;
   /** Variables every session's shell is given, such as its address and token for the agent API. */
   sessionEnv?: (sessionId: string) => Record<string, string>;
   /** Whether prompts given to agents may be kept in the note log. */
@@ -98,7 +106,14 @@ export class Sessions {
     const known = new Set(this.hub.state.sessions.map((s) => s.id));
     for (const id of running) {
       if (known.has(id) || !Id.safeParse(id).success) continue;
-      this.record(id, 'Recovered terminal', undefined, null);
+      this.record(id, 'Recovered terminal', undefined, null, this.canvas(null));
+    }
+    // Every session that is not parked is on a canvas; put back any that lost its place.
+    for (const session of this.hub.state.sessions) {
+      if (session.state === 'parked' || placeOfSession(this.hub.state, session.id)) continue;
+      const canvas = this.canvas(null);
+      const node: LayoutNode = { id: newId(), sessionId: session.id, color: 'none', ...this.freeSpot(canvas) };
+      this.hub.emit({ type: 'session.moved', sessionId: session.id, canvasId: canvas.id, node });
     }
     await this.refresh();
   }
@@ -107,6 +122,8 @@ export class Sessions {
     const status = await this.status();
     if (status.status !== 'ok') throw new RuntimeUnavailableError(`tmux is ${status.status}`);
     if (input.cwd !== undefined && !isFolder(input.cwd)) throw new BadInputError(`Not a folder: ${input.cwd}`);
+    // Looked up before anything is started, so that a wrong canvas starts nothing.
+    const canvas = this.canvas(input.canvasId ?? null);
 
     const id = newId();
     const started = await this.startShell(id, input.cwd ?? null);
@@ -117,7 +134,7 @@ export class Sessions {
       : undefined;
     const fallback = launch ? this.nextName('Claude Code') : undefined;
     const name = input.name && input.uniqueName ? this.uniqueName(input.name) : (input.name ?? fallback);
-    const created = this.record(id, name, input.rect, started.cwd);
+    const created = this.record(id, name, input.rect, started.cwd, canvas);
     if (input.agent && launch) {
       this.hub.emit({ type: 'session.agent', sessionId: id, agent: { kind: input.agent, conversationId: null } });
     }
@@ -149,7 +166,7 @@ export class Sessions {
     return this.find(sessionId);
   }
 
-  /** Takes the node off the canvas. The shell keeps running. */
+  /** Takes the session off its canvas. The shell keeps running, and the session remembers where it sat. */
   park(sessionId: string): Session {
     const session = this.find(sessionId);
     if (session.state === 'exited') throw new ConflictError('This shell has ended; remove it instead');
@@ -157,9 +174,119 @@ export class Sessions {
     return this.find(sessionId);
   }
 
-  restore(sessionId: string): Session {
-    if (this.find(sessionId).state === 'parked') this.hub.emit({ type: 'session.restored', sessionId });
-    return this.find(sessionId);
+  /**
+   * Puts a parked session back on a canvas: the one named, else the one it
+   * came from if that still exists, else the default. It returns to its old
+   * spot when that is on the same canvas and still free.
+   */
+  restore(sessionId: string, canvasId?: string | null): { session: Session; node: LayoutNode } {
+    const session = this.find(sessionId);
+    if (session.state !== 'parked') {
+      const place = placeOfSession(this.hub.state, sessionId);
+      if (!place) throw new ConflictError('This session is not parked');
+      return { session, node: place.node };
+    }
+    const from = session.parkedFrom;
+    const fromStillThere = from !== null && this.hub.state.canvases.some((c) => c.id === from.canvasId);
+    const canvas = this.canvas(canvasId ?? (fromStillThere ? from.canvasId : null));
+    const spot = from
+      ? findFreeRect(canvas.layout.nodes, centerOf(from.rect), { width: from.rect.width, height: from.rect.height })
+      : null;
+    const oldSpotFree =
+      from !== null && spot !== null && from.canvasId === canvas.id && spot.x === from.rect.x && spot.y === from.rect.y;
+    const rect = from && oldSpotFree ? from.rect : this.freeSpot(canvas, from?.rect);
+    const node: LayoutNode = { id: newId(), sessionId, color: from?.color ?? 'none', ...rect };
+    this.hub.emit({ type: 'session.restored', sessionId, canvasId: canvas.id, node });
+    return { session: this.find(sessionId), node };
+  }
+
+  /** Moves a session to another canvas. Its shell is untouched. */
+  moveToCanvas(sessionId: string, canvasId: string, position?: { x: number; y: number }): { session: Session; node: LayoutNode } {
+    const session = this.find(sessionId);
+    const target = this.canvas(canvasId);
+    const place = placeOfSession(this.hub.state, sessionId);
+    if (!place) throw new ConflictError('This session is parked; restore it onto the canvas instead');
+    if (place.canvas.id === target.id && !position) return { session, node: place.node };
+    const size = { width: place.node.width, height: place.node.height };
+    const others = target.layout.nodes.filter((n) => n.sessionId !== sessionId);
+    const rect = position ? { ...position, ...size } : findFreeRect(others, centerOf(this.freeSpot(target, size)), size);
+    const node: LayoutNode = { ...place.node, ...rect };
+    this.hub.emit({ type: 'session.moved', sessionId, canvasId: target.id, node });
+    return { session: this.find(sessionId), node };
+  }
+
+  /* ---------- Canvases ---------- */
+
+  /** The canvas new things go to when none is named. */
+  defaultCanvasId(): string {
+    return this.canvas(null).id;
+  }
+
+  listCanvases(): Canvas[] {
+    return sortedCanvases(this.hub.state);
+  }
+
+  getCanvas(canvasId: string): Canvas {
+    return this.canvas(canvasId);
+  }
+
+  createCanvas(input: { name: string; color?: Canvas['color'] | undefined; labels?: Canvas['labels'] | undefined }): Canvas {
+    const last = this.listCanvases().at(-1);
+    const canvas: Canvas = {
+      ...newCanvas(this.hub.state.project.id, input.name, (last?.order ?? 0) + 1),
+      ...(input.color ? { color: input.color } : {}),
+      ...(input.labels ? { labels: input.labels } : {}),
+    };
+    this.hub.emit({ type: 'canvas.created', canvas });
+    return canvas;
+  }
+
+  updateCanvas(canvasId: string, changes: CanvasChanges): Canvas {
+    this.canvas(canvasId);
+    if (Object.keys(changes).length > 0) this.hub.emit({ type: 'canvas.updated', canvasId, changes });
+    return this.canvas(canvasId);
+  }
+
+  /**
+   * Closes a canvas. Its sessions are never ended: they are moved to another
+   * canvas or parked, as the caller chose. The last canvas cannot be closed.
+   */
+  removeCanvas(canvasId: string, choice: { sessions: 'park' } | { sessions: 'move'; to: string } | null): void {
+    const canvas = this.canvas(canvasId);
+    if (this.hub.state.canvases.length === 1) throw new ConflictError('The last canvas cannot be closed');
+    if (canvas.layout.nodes.length > 0 && !choice) {
+      throw new ConflictError('This canvas still has sessions: say whether to move them to another canvas or park them');
+    }
+    if (choice?.sessions === 'move') {
+      if (choice.to === canvasId) throw new BadInputError('Sessions cannot be moved to the canvas that is being closed');
+      this.canvas(choice.to);
+    }
+    for (const node of canvas.layout.nodes) {
+      const session = this.hub.state.sessions.find((s) => s.id === node.sessionId);
+      if (choice?.sessions === 'move') {
+        this.moveToCanvas(node.sessionId, choice.to);
+      } else if (session?.state === 'exited') {
+        // Its shell has already ended, so there is nothing to keep running: remove the leftover.
+        this.hub.emit({ type: 'session.closed', sessionId: node.sessionId });
+      } else {
+        this.hub.emit({ type: 'session.parked', sessionId: node.sessionId });
+      }
+    }
+    this.hub.emit({ type: 'canvas.removed', canvasId });
+  }
+
+  /** The canvas with this ID; with none given, the one most recently looked at, else the first. */
+  private canvas(canvasId: string | null): Canvas {
+    const canvases = this.listCanvases();
+    if (canvasId !== null) {
+      const found = canvases.find((c) => c.id === canvasId);
+      if (!found) throw new NotFoundError(`No canvas ${canvasId}`);
+      return found;
+    }
+    const current = this.options.currentCanvas?.() ?? null;
+    const fallback = canvases.find((c) => c.id === current) ?? canvases[0];
+    if (!fallback) throw new NotFoundError('There is no canvas');
+    return fallback;
   }
 
   /** Starts a new shell, in the same folder, for a session whose shell ended. */
@@ -239,48 +366,51 @@ export class Sessions {
     }
   }
 
-  updateNode(nodeId: string, changes: UpdateNodeRequest): LayoutNode {
-    const existing = this.hub.state.layout.nodes.find((n) => n.id === nodeId);
-    if (!existing) throw new NotFoundError(`No node ${nodeId}`);
+  updateNode(nodeId: string, changes: UpdateNodeRequest, inCanvas?: string): LayoutNode {
+    const place = canvasOfNode(this.hub.state, nodeId);
+    if (!place || (inCanvas !== undefined && place.canvas.id !== inCanvas)) throw new NotFoundError(`No node ${nodeId}`);
     const { color, ...rect } = changes;
-    const node: LayoutNode = { ...existing, ...rect, color: color ?? existing.color };
-    this.hub.emit({ type: 'node.updated', node });
+    const node: LayoutNode = { ...place.node, ...rect, color: color ?? place.node.color };
+    this.hub.emit({ type: 'node.updated', canvasId: place.canvas.id, node });
     return node;
   }
 
   createFrame(input: CreateFrameRequest): Frame {
+    const canvas = this.canvas(input.canvasId ?? null);
     const frame: Frame = { id: newId(), label: input.label ?? '', color: 'none', ...input.rect };
-    this.hub.emit({ type: 'frame.created', frame });
+    this.hub.emit({ type: 'frame.created', canvasId: canvas.id, frame });
     return frame;
   }
 
   /** Moves, resizes, renames or recolors a frame. With `carry`, nodes inside it move along. */
-  updateFrame(frameId: string, changes: UpdateFrameRequest): Frame {
-    const existing = this.hub.state.layout.frames.find((f) => f.id === frameId);
-    if (!existing) throw new NotFoundError(`No frame ${frameId}`);
+  updateFrame(frameId: string, changes: UpdateFrameRequest, inCanvas?: string): Frame {
+    const { canvas, frame: existing } = this.frame(frameId, inCanvas);
     const { label, color, carry, ...rect } = changes;
     const frame: Frame = { ...existing, ...rect, label: label ?? existing.label, color: color ?? existing.color };
 
     const dx = frame.x - existing.x;
     const dy = frame.y - existing.y;
     if (carry && (dx !== 0 || dy !== 0)) {
-      for (const node of nodesInside(existing, this.visibleNodes())) {
-        this.hub.emit({ type: 'node.updated', node: { ...node, x: node.x + dx, y: node.y + dy } });
+      for (const node of nodesInside(existing, canvas.layout.nodes)) {
+        this.hub.emit({ type: 'node.updated', canvasId: canvas.id, node: { ...node, x: node.x + dx, y: node.y + dy } });
       }
     }
-    this.hub.emit({ type: 'frame.updated', frame });
+    this.hub.emit({ type: 'frame.updated', canvasId: canvas.id, frame });
     return frame;
   }
 
-  removeFrame(frameId: string): void {
-    if (!this.hub.state.layout.frames.some((f) => f.id === frameId)) throw new NotFoundError(`No frame ${frameId}`);
-    this.hub.emit({ type: 'frame.removed', frameId });
+  removeFrame(frameId: string, inCanvas?: string): void {
+    const { canvas } = this.frame(frameId, inCanvas);
+    this.hub.emit({ type: 'frame.removed', canvasId: canvas.id, frameId });
   }
 
-  /** Nodes that are on the canvas, which leaves out parked sessions. */
-  private visibleNodes(): LayoutNode[] {
-    const parked = new Set(this.hub.state.sessions.filter((s) => s.state === 'parked').map((s) => s.id));
-    return this.hub.state.layout.nodes.filter((n) => !parked.has(n.sessionId));
+  private frame(frameId: string, inCanvas?: string): { canvas: Canvas; frame: Frame } {
+    for (const canvas of this.hub.state.canvases) {
+      if (inCanvas !== undefined && canvas.id !== inCanvas) continue;
+      const frame = canvas.layout.frames.find((f) => f.id === frameId);
+      if (frame) return { canvas, frame };
+    }
+    throw new NotFoundError(`No frame ${frameId}`);
   }
 
   has(sessionId: string): boolean {
@@ -425,6 +555,7 @@ export class Sessions {
     name: string | undefined,
     rect: NodeRect | undefined,
     cwd: string | null,
+    canvas: Canvas,
   ): { session: Session; node: LayoutNode } {
     const state = this.hub.state;
     const session: Session = {
@@ -440,9 +571,10 @@ export class Sessions {
       attention: NO_ATTENTION,
       noteLog: [],
       agent: null,
+      parkedFrom: null,
     };
-    const node: LayoutNode = { id: newId(), sessionId: id, color: 'none', ...(rect ?? this.freeSpot()) };
-    this.hub.emit({ type: 'session.created', session, node });
+    const node: LayoutNode = { id: newId(), sessionId: id, color: 'none', ...(rect ?? this.freeSpot(canvas)) };
+    this.hub.emit({ type: 'session.created', session, canvasId: canvas.id, node });
     return { session, node };
   }
 
@@ -454,16 +586,19 @@ export class Sessions {
     }
   }
 
-  /** Free space next to the newest node on the canvas. */
-  private freeSpot(): NodeRect {
-    const nodes = this.visibleNodes();
-    const size = { width: NODE_DEFAULT_WIDTH, height: NODE_DEFAULT_HEIGHT };
+  /** Free space on a canvas, next to its newest node. */
+  private freeSpot(canvas: Canvas, size: { width: number; height: number } = { width: NODE_DEFAULT_WIDTH, height: NODE_DEFAULT_HEIGHT }): NodeRect {
+    const nodes = canvas.layout.nodes;
     const last = nodes.at(-1);
     const center = last
       ? { x: last.x + last.width / 2, y: last.y + last.height / 2 }
       : { x: size.width / 2, y: size.height / 2 };
-    return findFreeRect(nodes, center, size);
+    return findFreeRect(nodes, center, { width: size.width, height: size.height });
   }
+}
+
+function centerOf(rect: NodeRect | { x: number; y: number; width: number; height: number }): { x: number; y: number } {
+  return { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 };
 }
 
 function sameStatus(a: ShellStatus, b: ShellStatus): boolean {

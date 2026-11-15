@@ -1,11 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import { api } from './api';
 import { useApp } from './store';
 
 /** Sessions taken off the canvas whose shells are still running. */
-export function ParkedList({ onRestored }: { onRestored: (nodeId: string) => void }) {
+export function ParkedList() {
   const sessions = useApp((s) => s.app?.sessions);
-  const nodes = useApp((s) => s.app?.layout.nodes);
   const askToClose = useApp((s) => s.askToClose);
   const [open, setOpen] = useState(false);
   const root = useRef<HTMLDivElement>(null);
@@ -23,10 +21,9 @@ export function ParkedList({ onRestored }: { onRestored: (nodeId: string) => voi
 
   if (parked.length === 0) return null;
 
-  const restore = async (sessionId: string): Promise<void> => {
-    await api.restoreSession(sessionId);
-    const node = nodes?.find((n) => n.sessionId === sessionId);
-    if (node) onRestored(node.id);
+  // Showing a parked session restores it onto the canvas being looked at.
+  const restore = (sessionId: string): void => {
+    useApp.getState().showSession(sessionId);
     if (parked.length === 1) setOpen(false);
   };
 
@@ -45,7 +42,7 @@ export function ParkedList({ onRestored }: { onRestored: (nodeId: string) => voi
                   {[session.command, session.cwd].filter(Boolean).join(' · ') || 'running'}
                 </div>
               </div>
-              <button type="button" onClick={() => void restore(session.id)}>
+              <button type="button" onClick={() => restore(session.id)}>
                 Restore
               </button>
               <button type="button" className="quiet" onClick={() => askToClose(session.id)}>

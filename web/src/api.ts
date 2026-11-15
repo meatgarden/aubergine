@@ -66,7 +66,8 @@ export const api = {
   updateSession: (sessionId: string, request: UpdateSessionRequest) =>
     call(Session, 'PATCH', paths.session(sessionId), request),
   parkSession: (sessionId: string) => call(Session, 'POST', paths.parkSession(sessionId), {}),
-  restoreSession: (sessionId: string) => call(Session, 'POST', paths.restoreSession(sessionId), {}),
+  restoreSession: (sessionId: string, canvasId?: string | null) =>
+    call(CreateSessionResponse, 'POST', paths.restoreSession(sessionId), canvasId ? { canvasId } : {}),
   searchHistory: (query: string) =>
     call(SearchResponse, 'GET', `${paths.search}?q=${encodeURIComponent(query)}`),
   revealInSession: (sessionId: string, text: string) =>

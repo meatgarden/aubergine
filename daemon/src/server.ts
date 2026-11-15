@@ -16,6 +16,7 @@ import {
   OutsideMoveRequest,
   PROTOCOL_VERSION,
   ReportAgentRequest,
+  RestoreSessionRequest,
   RevealRequest,
   SearchQuery,
   SetAttentionRequest,
@@ -210,6 +211,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     runtime: await sessions.status(),
     settings: await options.settings(),
     state: hub.state,
+    defaultCanvasId: sessions.defaultCanvasId(),
   }));
 
   app.post(paths.sessions, async (request, reply): Promise<CreateSessionResponse> => {
@@ -224,7 +226,10 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   });
 
   app.post(paths.parkSession(':sessionId'), async (request) => sessions.park(idParam(request, 'sessionId')));
-  app.post(paths.restoreSession(':sessionId'), async (request) => sessions.restore(idParam(request, 'sessionId')));
+  app.post(paths.restoreSession(':sessionId'), async (request): Promise<CreateSessionResponse> => {
+    const body = parse(RestoreSessionRequest, request.body ?? {});
+    return sessions.restore(idParam(request, 'sessionId'), body.canvasId ?? null);
+  });
   /* ---------- Terminals outside the canvas (cookie only, like everything under /api) ---------- */
 
   const outside = (): Outside => {
