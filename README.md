@@ -357,6 +357,10 @@ The picker (⌘K) also searches what terminals have printed, in a **Terminal out
 
 A terminal is live only while it is on screen and large enough to read. Zoomed far out, a node shows a plain-text picture of its screen, refreshed about once a second; off screen it costs nothing. Either way the shell keeps running.
 
+## Updating from an older version
+
+When a newer version changes how the canvas is saved, the server updates `state.json` in the data folder the first time it starts, and keeps the file as it was beside it (for example `state.json.v1.backup`). To go back to an older version of the code, stop the server and put that copy back as `state.json`.
+
 ## After a reboot
 
 A reboot ends the shells. The next time the server starts, every session gets a fresh shell in its last known folder, in the same place on the canvas. Nothing is re-run.
