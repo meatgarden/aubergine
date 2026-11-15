@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { ShortcutSettings } from './shortcuts';
 
 export const DEFAULT_FONT_FAMILY = 'Menlo, Monaco, "DejaVu Sans Mono", Consolas, monospace';
 
@@ -35,6 +36,13 @@ export const Settings = z.object({
       claudeCommand: z.string().trim().min(1).max(1000).default('claude'),
     })
     .prefault({}),
+  /**
+   * Keys: command name to a chord (`"Ctrl+Meta+J"`), a list of chords, or
+   * `null` for no key. Entries that are wrong are reported and skipped.
+   */
+  shortcuts: ShortcutSettings.default({}),
+  /** The same, applied on top only in a window of its own (an installed app). */
+  shortcutsInAppWindow: ShortcutSettings.default({}),
 });
 export type Settings = z.infer<typeof Settings>;
 

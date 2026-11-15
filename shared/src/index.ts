@@ -4,3 +4,5 @@ export * from './events';
 export * from './protocol';
 export * from './placement';
 export * from './settings';
+export * from './chords';
+export * from './shortcuts';
