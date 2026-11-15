@@ -22,6 +22,9 @@ web/      Vite + React + @xyflow/react + @xterm/xterm, Zustand for state; the ta
           spatial.ts, palette.ts, and the development-only key-tester.html
 docs/     keys.md: what is known about which keys reach a page
 e2e/      Playwright smoke test
+install.sh  the one-line installer; its commands are in daemon/src/cli/install.ts (start, open,
+          update, version, uninstall, doctor), its tests in daemon/src/install/*.installtest.ts,
+          and scripts/shellcheck.mjs lints it
 bin/      the `aubergine` command (a launcher for daemon/src/cli.ts)
 ```
 
@@ -56,6 +59,10 @@ These are the only abstractions in the code base. Each has exactly one implement
 - **Showing a session** never changes state and never opens a browser from `--no-attach`, the shell snippet or `import`. Addresses never carry the access token.
 - **The shell snippet must always fall through to a normal shell.** Any change to it needs the tests for server up, stopped, hanging and command missing to pass. `here --from-shell-hook` is quiet and reports failure only by exit code.
 - **Generated files that start Node** (the shell snippet, the login service, agent settings) take the path from `stableNodePath()` in `daemon/src/node-path.ts`, never `process.execPath`, so they survive a Node upgrade.
+- **The installer changes two things only**: the install folder (`~/.aubergine`, or `AUBERGINE_HOME`) and one link named `aubergine`. It never uses `sudo`, never writes a shell startup file, never installs Node, pnpm or tmux, never touches the data folder, and replaces nothing at the link's place that is not its own link. It stays POSIX `sh`, with its whole body in a function called on the last line. Every check runs before anything is changed.
+- **`uninstall` removes only what the installer made**: links that point at this copy, and the copy's folder only when `.installed-by-installer` is beside it. Never a checkout someone made, never the data folder, never a session.
+- **`open` does not print the access token** unless asked with `--print`.
+- The launcher (`bin/aubergine.mjs`) passes signals on to the command it starts; keep it that way so stopping `aubergine start` stops the server.
 - Session IDs are the only user-influenced values that reach a tmux command line, and they are validated as UUIDv7 first. Keep it that way.
 
 ### Canvas behaviour
@@ -86,6 +93,7 @@ These are the only abstractions in the code base. Each has exactly one implement
 - Tests that type into a new session must wait for the shell's prompt first (`createReady` / `shellReady` in the daemon tests): a shell discards what is typed while it is starting.
 - Tests await `sessions.refresh()`; never leave one running past teardown.
 - **Test runs must not share anything on the machine.** Every test file that starts tmux takes its socket name from `testSocketName()` in `daemon/src/test-support.ts` (unique per run) and tears down with `destroyTmuxServer`, which ends only that server. Ports are 0 or per run, data folders are temporary and per run, and the browser test's port, data folder, socket and results folder come from the run ID in `playwright.config.ts`. Two checkouts must be able to run `pnpm check` at the same time.
+- **Installer and command tests never touch the real machine**: a temporary `HOME`, a `PATH` made of links to individual tools (never a real bin folder, which may contain `brew`), a test port and a test tmux socket. Tests that keep the machine busy (`*.installtest.ts`) run as their own step, not beside the daemon tests.
 - Fixtures use made-up values: no process IDs, paths or names copied from a real machine.
 - The Playwright test includes a pass made with the keyboard only; keep it mouse-free.
 - Runs that stall for minutes inside a short wait mean the machine slept; check `pmset -g log` before changing a test.
@@ -98,7 +106,7 @@ These are the only abstractions in the code base. Each has exactly one implement
 pnpm check
 ```
 
-runs, in order: type checking, lint, unit tests (Vitest; the tmux runtime and server tests use a real tmux on test sockets) and the Playwright smoke test (builds the web app and starts a daemon with its own data folder, port and tmux socket). A task is not done until it passes.
+runs, in order: type checking, lint, shellcheck on `install.sh` where it is installed (it skips with a note where it is not), unit tests (Vitest; the tmux runtime and server tests use a real tmux on test sockets) and the Playwright smoke test (builds the web app and starts a daemon with its own data folder, port and tmux socket). A task is not done until it passes.
 
 Single steps: `pnpm typecheck`, `pnpm lint`, `pnpm test`, `pnpm e2e`.
 
@@ -126,7 +134,9 @@ Keyboard: commands, the palette, two layers of keys, the shortcut sheet, rebindi
 
 Side panel: a Terminals section over every canvas with filters, grouping and sorting, tags, last typed and last updated, a notes preview and drawer; Tab through the list; the browser's tab keys bound to canvases (expected in an app window, unmeasured).
 
-Not built yet: measured key tables for Safari, Firefox, Linux and Windows, API tokens, the activity log, an OpenAPI description and client, terminal input and output over `/v1`, SQLite, an MCP server, presets, a finder agent, recording, bash or fish integration.
+Install: `install.sh`, and `aubergine start`, `open`, `update`, `version`, `doctor`, `uninstall`.
+
+Not built yet: a packaged build without development dependencies, Linux tested, measured key tables for Safari, Firefox, Linux and Windows, API tokens, the activity log, an OpenAPI description and client, terminal input and output over `/v1`, SQLite, an MCP server, presets, a finder agent, recording, bash or fish integration.
 
 ## Working in this repo
 
