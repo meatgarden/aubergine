@@ -19,7 +19,9 @@
     "test": "pnpm -r test",
     "e2e": "playwright test",
     "load-canvas": "pnpm --filter @aubergine/daemon exec tsx scripts/load-canvas.ts",
-    "check": "pnpm typecheck && pnpm lint && pnpm test && pnpm e2e"
+    "shellcheck": "node scripts/shellcheck.mjs",
+    "test:install": "pnpm --filter @aubergine/daemon test:install",
+    "check": "pnpm typecheck && pnpm lint && pnpm shellcheck && pnpm test && pnpm test:install && pnpm e2e"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

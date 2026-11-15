@@ -39,9 +39,23 @@ export type Command =
   | { name: 'hooks-print' }
   | { name: 'shell-hook-print' }
   | { name: 'service'; action: 'install' | 'uninstall' }
+  | { name: 'start'; open: boolean }
+  | { name: 'open'; print: boolean }
+  | { name: 'update' }
+  | { name: 'version' }
+  | { name: 'uninstall'; yes: boolean }
+  | { name: 'doctor' }
   | { name: 'help' };
 
 export const USAGE = `Usage: aubergine <command>
+
+  start                      Start the server here, in the foreground (builds the web app first if needed)
+                             --open   also open the canvas in your browser, signed in
+  open                       Open the canvas in your browser, signed in (--print shows the sign-in address instead)
+  update                     Bring this copy up to date: fetch, install, build
+  version                    Version, commit, where this copy and your data are
+  doctor                     Check that everything Aubergine needs is in place
+  uninstall                  Remove the command and an installed copy. Your data and terminals are kept. (--yes: do not ask)
 
   list                       List sessions with their state, command and folder
   new [name]                 Start a new terminal on a canvas
@@ -74,7 +88,7 @@ export const USAGE = `Usage: aubergine <command>
 new, here and import take --canvas <name>. Without it they use the canvas you looked at most recently
 in a browser, or the first one when no browser is open.
 
-The server must be running for list, new, canvas, attach, here, scan, import, move and note.`;
+The server must be running for list, new, canvas, attach, here, scan, import, move, note and open.`;
 
 export class UsageError extends Error {}
 
@@ -210,6 +224,32 @@ export function parseCommand(argv: readonly string[]): Command {
     case 'shell-hook':
       if (rest.length === 1 && rest[0] === 'print') return { name: 'shell-hook-print' };
       throw new UsageError('shell-hook needs "print"');
+    case 'start': {
+      const unknown = rest.find((word) => word !== '--open');
+      if (unknown) throw new UsageError(`start does not know ${unknown}`);
+      return { name: 'start', open: rest.includes('--open') };
+    }
+    case 'open': {
+      const unknown = rest.find((word) => word !== '--print');
+      if (unknown) throw new UsageError(`open does not know ${unknown}`);
+      return { name: 'open', print: rest.includes('--print') };
+    }
+    case 'update':
+      if (rest.length > 0) throw new UsageError('update takes no arguments');
+      return { name: 'update' };
+    case 'version':
+    case '--version':
+    case '-v':
+      if (rest.length > 0) throw new UsageError('version takes no arguments');
+      return { name: 'version' };
+    case 'doctor':
+      if (rest.length > 0) throw new UsageError('doctor takes no arguments');
+      return { name: 'doctor' };
+    case 'uninstall': {
+      const unknown = rest.find((word) => word !== '--yes' && word !== '-y');
+      if (unknown) throw new UsageError(`uninstall does not know ${unknown}`);
+      return { name: 'uninstall', yes: rest.length > 0 };
+    }
     case 'service':
       if (rest.length === 1 && (rest[0] === 'install' || rest[0] === 'uninstall')) {
         return { name: 'service', action: rest[0] };

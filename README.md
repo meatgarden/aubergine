@@ -6,7 +6,53 @@ Terminals keep running when you close the browser or restart the Aubergine serve
 
 ## Quick start
 
-You need macOS with [tmux](https://github.com/tmux/tmux) 3.2 or newer, Node.js 22 or newer, and pnpm. Linux should work the same way but has not been tested yet.
+You need macOS with [tmux](https://github.com/tmux/tmux) 3.2 or newer, Node.js 22 or newer, and pnpm. Linux should work the same way but has not been tested yet. With [Homebrew](https://brew.sh) on macOS, `brew install tmux node pnpm` gets all three.
+
+**1. Install Aubergine** with one line:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/meatgarden/aubergine/main/install.sh | sh
+```
+
+Prefer to read a script before running it? The same thing in two steps:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/meatgarden/aubergine/main/install.sh -o install.sh
+less install.sh        # read it; sh install.sh --dry-run shows what it would do and changes nothing
+sh install.sh
+```
+
+What the installer does, and says before doing it:
+
+- checks that Node.js, pnpm, tmux and git (or curl and tar) are there and new enough. If one is missing it tells you how to get it and stops, having changed nothing;
+- puts the code in `~/.aubergine/app`, installs its dependencies and builds the web app there;
+- links the `aubergine` command into a folder on your `PATH` that you can write to: Homebrew's if you have it, else `~/.local/bin` or `~/bin`. If none of those is on your `PATH` it uses `~/.local/bin` and prints the one line to add to your shell's startup file.
+
+What it does not do: **it does not install Node.js, pnpm or tmux**, it never uses `sudo`, it never edits your shell's startup files, and it touches nothing outside `~/.aubergine` and that one link. Running it again updates the copy in place. `AUBERGINE_HOME` changes where it installs and `AUBERGINE_REF` which branch or tag.
+
+**2. Start the server** and leave it running:
+
+```sh
+aubergine start
+```
+
+It prints something like this:
+
+```
+Aubergine is running at http://127.0.0.1:4600
+First visit in a browser? Open this link once:
+  http://127.0.0.1:4600/auth?token=…
+```
+
+**3. Open the sign-in link** once per browser. After that, `http://127.0.0.1:4600` works on its own. Use `127.0.0.1` rather than `localhost`, since the sign-in is remembered per address. `aubergine start --open` does both steps: it starts the server and opens your browser signed in. With the server already running, `aubergine open` opens a signed-in browser.
+
+**4. Add a terminal.** Choose **New terminal** (or press `N`), click the terminal, and type.
+
+If something is not right, `aubergine doctor` checks everything Aubergine needs, one line per check.
+
+### Manual install
+
+The same result by hand, if you would rather not run the installer, or want the code somewhere of your own choosing to work on it.
 
 **1. Install the tools** (skip any you already have). With [Homebrew](https://brew.sh) on macOS:
 
@@ -43,7 +89,7 @@ Open the `/auth?token=…` link once per browser. After that, `http://127.0.0.1:
 
 **6. Install the `aubergine` command** (optional, but the sections below on moving terminals over, notes and start at login use it).
 
-Nothing installs it for you. The command is the file `bin/aubergine.mjs` in this folder, and it stays here: installing means creating a **link**, a small pointer named `aubergine`, in a folder your shell already searches for commands (a folder on your `PATH`). Nothing is copied or moved. When you type `aubergine`, the shell finds the link and runs the file in this folder.
+With a manual install nothing links it for you (the installer does this step by itself). The command is the file `bin/aubergine.mjs` in this folder, and it stays here: installing means creating a **link**, a small pointer named `aubergine`, in a folder your shell already searches for commands (a folder on your `PATH`). Nothing is copied or moved. When you type `aubergine`, the shell finds the link and runs the file in this folder.
 
 From the `aubergine` folder, with Homebrew:
 
@@ -84,7 +130,7 @@ You can also skip the link and run it by path. From this folder that is `node bi
 
 ### Questions about the `aubergine` command
 
-**What has to be true for `aubergine` to work in a terminal?** Two things. A file named `aubergine` has to exist in some folder, which is the link from step 6. And that folder has to be on your `PATH`, the list of folders your shell searches when you type a command name. With Homebrew the second part is already done, because Homebrew's command folder was put on your `PATH` when Homebrew was installed. So only the link is missing.
+**What has to be true for `aubergine` to work in a terminal?** Two things. A file named `aubergine` has to exist in some folder, which is the link the installer makes, or the one from step 6 of the manual install. And that folder has to be on your `PATH`, the list of folders your shell searches when you type a command name. With Homebrew the second part is already done, because Homebrew's command folder was put on your `PATH` when Homebrew was installed. So only the link is missing.
 
 **Do I have to be inside this folder to use it?** No. Once the link exists, `aubergine list`, `aubergine here` and the rest work from any folder. That is the point of `aubergine here`, which you run inside your other projects.
 
@@ -104,7 +150,7 @@ ln -s ~/code/aubergine/bin/aubergine.mjs "$(brew --prefix)/bin/aubergine"
 
 Nothing in Aubergine needs an administrator password. What can need one is getting its tools onto a managed computer.
 
-**The link.** Creating a link never needs admin rights; it needs a folder you are allowed to write to. The Homebrew line in step 6 fails on a computer with no Homebrew, or where someone else installed it (`permission denied`). Use a folder in your own home instead, which always works:
+**The link.** Creating a link never needs admin rights; it needs a folder you are allowed to write to. The installer picks such a folder by itself: it tries Homebrew's folder only if you can write to it, and otherwise uses `~/.local/bin` or `~/bin` in your own home. By hand, the Homebrew line in step 6 fails on a computer with no Homebrew, or where someone else installed it (`permission denied`). Use a folder in your own home instead, which always works:
 
 ```sh
 mkdir -p ~/.local/bin
@@ -125,18 +171,18 @@ and make sure that folder is on your `PATH` (add `export PATH="$HOME/.local/bin:
 
 ### Stopping, restarting and updating
 
-- **Stop the server** with Ctrl+C in the terminal where it runs. Your terminals on the canvas keep running; start the server again and reload the page to get them back.
+- **Stop the server** with Ctrl+C in the terminal where it runs. Your terminals on the canvas keep running; start the server again (`aubergine start`) and reload the page to get them back. If you start it while it is already running, it says so and gives you the address instead of failing.
 - **End every session for good** with `tmux -L aubergine kill-server`. The canvas layout is kept, and each session gets a fresh shell the next time the server starts.
-- **Update** to the latest version:
+- **Update** to the latest version, then restart the server:
 
   ```sh
-  git pull
-  pnpm install
-  pnpm build
-  pnpm start
+  aubergine update
   ```
 
+  It fetches the new code, installs dependencies and builds the web app. It refuses if you have changed the code in that folder. Running the installer again does the same, and is the way to update a copy that was installed without git. For a manual install you can equally run `git pull`, `pnpm install`, `pnpm build` yourself.
+- **See what is installed**: `aubergine version` prints the version, the commit, where the code is and where your data is.
 - **Start at login** so you only ever open the browser: see `aubergine service install` under [Command line](#command-line).
+- **Uninstall** with `aubergine uninstall`. It removes the link and, after asking, the copy the installer made (and start at login, if it starts this copy). It never removes a folder you cloned yourself, never removes your data, and never ends your terminals; it prints the two commands that do those by hand, should you want that.
 
 ### If something goes wrong
 
@@ -534,9 +580,15 @@ One thing to know: tmux fixes that base environment when its server first starts
 
 ## Command line
 
-`bin/aubergine.mjs` is the `aubergine` command. It is not installed automatically; step 6 of the [quick start](#quick-start) links it onto your `PATH`.
+`bin/aubergine.mjs` is the `aubergine` command. The installer links it onto your `PATH`; with a manual install, step 6 of the [manual install](#manual-install) does.
 
 ```
+aubergine start                start the server here, in the foreground (--open: and open the browser, signed in)
+aubergine open                 open the canvas in your browser, signed in (--print: show the sign-in address instead)
+aubergine update               fetch the latest code, install and build
+aubergine version              version, commit, where the code and your data are
+aubergine doctor               check everything Aubergine needs, one line per check
+aubergine uninstall            remove the command and an installed copy; data and terminals are kept (--yes: do not ask)
 aubergine list                 sessions with their state, command and folder
 aubergine new [name]           start a new terminal on a canvas
 aubergine canvas list          the canvases, with how many terminals are on each and how many wait for you
@@ -567,7 +619,9 @@ aubergine service uninstall    stop starting it at login
 
 `new`, `here` and `import` take `--canvas <name>`: the name, the start of it if that is unambiguous, or the canvas's ID. Capitals do not matter. Without it the session goes to the canvas you looked at most recently in a browser, or to the first canvas if the server has not seen a browser since it started. `canvas list` marks that canvas with `*`.
 
-`service install` writes a per-user launchd agent that runs the server from this checkout, with the port and data folder in effect when you ran it. Run `pnpm build` first.
+`service install` writes a per-user launchd agent that runs the server from the copy the command belongs to (an installed copy or a checkout alike), with the port and data folder in effect when you ran it. The web app must be built: the installer does that, and `aubergine start` does it on first use; for a manual install run `pnpm build` first.
+
+`open --print` prints an address that signs a browser in. Treat it like a password: anyone who can open it on this computer can use your terminals.
 
 ## For programs inside a session
 

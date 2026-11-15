@@ -37,12 +37,13 @@ import {
   resolveCanvas,
   resolveSession,
 } from './cli/commands';
+import { doctor, ensureBuilt, formatChecks, formatVersion, installRoot, linkFolders, removeCopy, serve, serverAddress, signInAddress, uninstallPlan, update, versionInfo, whoAnswers } from './cli/install';
 import { loadConfig, type Config } from './config';
 import { zshHookSnippet } from './migrate/shell-hook';
 import { importLayout, planImport } from './migrate/shells';
 import { TmuxRuntime } from './runtime/tmux-runtime';
 import { cookieName } from './server';
-import { daemonServiceSpec, installService, uninstallService } from './service/launchd';
+import { daemonServiceSpec, installService, launchAgentPath, uninstallService } from './service/launchd';
 
 /** Talks to the running daemon the same way the web app does: through the wire protocol. */
 async function call(config: Config, method: string, urlPath: string, body?: unknown, timeoutMs = 15_000): Promise<unknown> {
@@ -380,6 +381,93 @@ async function main(): Promise<number> {
     case 'note': {
       const entry = await agentClient().appendNote(command.text);
       console.log(entry ? 'Noted.' : 'Not kept.');
+      return 0;
+    }
+
+    case 'start': {
+      const root = installRoot();
+      const address = serverAddress(config);
+      const answering = await whoAnswers(config.port);
+      if (answering === 'aubergine') {
+        console.log(`Aubergine is already running at ${address}`);
+        if (command.open) await openBrowser(await signInAddress(config));
+        else console.log('Open it signed in with: aubergine open');
+        return 0;
+      }
+      if (answering === 'other') {
+        console.error(`Something else is using port ${config.port}, so the server cannot start there.\nStop it, or choose another port: AUBERGINE_PORT=4601 aubergine start`);
+        return 1;
+      }
+      if (!ensureBuilt(root, (line) => console.log(line))) {
+        console.error(`The web app could not be built in ${root}. Run "aubergine doctor" to see what is missing.`);
+        return 1;
+      }
+      return serve(root, config, command.open ? () => void signInAddress(config).then(openBrowser, () => {}) : undefined);
+    }
+
+    case 'open': {
+      if ((await whoAnswers(config.port)) !== 'aubergine') {
+        console.error(`The Aubergine server is not answering at ${serverAddress(config)}. Start it first: aubergine start`);
+        return 1;
+      }
+      const address = await signInAddress(config);
+      if (command.print) {
+        // Asked for in so many words: this address signs a browser in, so treat it like a password.
+        console.log(address);
+        return 0;
+      }
+      const opened = await openBrowser(address);
+      console.log(opened ? `Opened ${serverAddress(config)} in your browser, signed in.` : `Could not open a browser. Show the sign-in address with: aubergine open --print`);
+      return opened ? 0 : 1;
+    }
+
+    case 'update': {
+      const result = update(installRoot());
+      (result.ok ? console.log : console.error)(result.lines.join('\n'));
+      return result.ok ? 0 : 1;
+    }
+
+    case 'version':
+      console.log(formatVersion(versionInfo(installRoot(), config)));
+      return 0;
+
+    case 'doctor': {
+      const checks = await doctor(installRoot(), config);
+      console.log(formatChecks(checks));
+      const wrong = checks.filter((check) => check.ok === false).length;
+      console.log(wrong === 0 ? '\nEverything needed is in place.' : `\n${wrong} thing${wrong === 1 ? '' : 's'} to fix (marked x).`);
+      return wrong === 0 ? 0 : 1;
+    }
+
+    case 'uninstall': {
+      const root = installRoot();
+      const plan = uninstallPlan(root, linkFolders(), launchAgentPath());
+      console.log('This will remove:');
+      for (const link of plan.links) console.log(`  the command      ${link}`);
+      if (plan.links.length === 0) console.log('  (no link to this copy was found on your PATH)');
+      if (plan.service) console.log(`  start at login   ${plan.service}`);
+      if (plan.folder) console.log(`  the code         ${plan.folder}`);
+      else console.log(`  (not the code in ${root}: the installer did not put it there, so it is yours to keep or delete)`);
+      console.log(`It will not touch your data in ${config.dataDir}, and your terminals keep running.`);
+      if (!command.yes) {
+        if (!process.stdin.isTTY) throw new UsageError('uninstall asks before removing anything; run it in a terminal, or add --yes.');
+        const answer = await ask('Remove these? [y/N] ');
+        if (!/^y(es)?$/i.test(answer.trim())) {
+          console.log('Nothing was removed.');
+          return 0;
+        }
+      }
+      if (plan.service) await uninstallService();
+      removeCopy(plan);
+      console.log(
+        [
+          '',
+          'Removed. What is left, and how to remove it by hand if you want to:',
+          `  your terminals, still running:   tmux -L ${config.tmuxSocket} kill-server   (ends every one of them)`,
+          `  your canvas and notes:           rm -rf "${config.dataDir}"`,
+          'If the server is still running in another terminal, stop it there with Ctrl-C.',
+        ].join('\n'),
+      );
       return 0;
     }
 
