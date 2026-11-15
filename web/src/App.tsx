@@ -1,12 +1,15 @@
 import { useEffect } from 'react';
 import { ReactFlowProvider } from '@xyflow/react';
 import { Canvas } from './Canvas';
+import { CloseCanvasDialog } from './CloseCanvasDialog';
 import { CloseDialog } from './CloseDialog';
 import { startSync, useApp } from './store';
+import { TabBar } from './TabBar';
 
 export function App() {
   const phase = useApp((s) => s.phase);
   const runtime = useApp((s) => s.runtime);
+  const canvasId = useApp((s) => s.canvasId);
 
   useEffect(() => startSync(), []);
 
@@ -60,10 +63,15 @@ export function App() {
   }
 
   return (
-    <ReactFlowProvider>
-      <Canvas />
-      <CloseDialog />
-    </ReactFlowProvider>
+    <div className="app">
+      <TabBar />
+      {/* Keyed by canvas: each canvas gets a fresh view, with its own pan, zoom and live terminals. */}
+      <ReactFlowProvider key={canvasId ?? 'none'}>
+        <Canvas />
+        <CloseDialog />
+      </ReactFlowProvider>
+      <CloseCanvasDialog />
+    </div>
   );
 }
 

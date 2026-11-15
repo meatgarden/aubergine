@@ -12,10 +12,14 @@ export function useIsFullZoom(): boolean {
   return useStore((state) => isFullZoom(state.transform[2]));
 }
 
-/** The viewport is a per-browser preference, so it lives in the browser. */
-export function loadViewport(): Viewport {
+const key = (canvasId: string): string => `${STORAGE_KEY}.${canvasId}`;
+
+/** Pan and zoom are a per-browser preference, remembered for each canvas, so they live in the browser. */
+export function loadViewport(canvasId: string): Viewport {
   try {
-    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? 'null') as Partial<Viewport> | null;
+    // The key without a canvas is from before there were several; the first canvas inherits it.
+    const stored = localStorage.getItem(key(canvasId)) ?? localStorage.getItem(STORAGE_KEY);
+    const saved = JSON.parse(stored ?? 'null') as Partial<Viewport> | null;
     if (
       saved &&
       Number.isFinite(saved.x) &&
@@ -31,9 +35,9 @@ export function loadViewport(): Viewport {
   return { x: 40, y: 80, zoom: 1 };
 }
 
-export function saveViewport(viewport: Viewport): void {
+export function saveViewport(canvasId: string, viewport: Viewport): void {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(viewport));
+    localStorage.setItem(key(canvasId), JSON.stringify(viewport));
   } catch {
     // Not being able to remember the viewport is harmless.
   }

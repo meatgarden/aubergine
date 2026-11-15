@@ -1,6 +1,12 @@
 import type { ZodType } from 'zod';
 import {
   AppendNoteResponse,
+  CanvasDetail,
+  PlacedSession,
+  publicPaths,
+  type CreateCanvasRequest,
+  type EventsClientMessage,
+  type UpdateCanvasRequest,
   CreateSessionResponse,
   ErrorResponse,
   Frame,
@@ -77,6 +83,14 @@ export const api = {
   getOutside: () => call(OutsideResponse, 'GET', paths.outside),
   outsideAdd: (request: OutsideAddRequest) => call(OutsideResult, 'POST', paths.outsideAdd, request),
   outsideMove: (request: OutsideMoveRequest) => call(OutsideResult, 'POST', paths.outsideMove, request),
+  createCanvas: (request: CreateCanvasRequest) => call(CanvasDetail, 'POST', publicPaths.canvases, request),
+  updateCanvas: (canvasId: string, request: UpdateCanvasRequest) =>
+    call(CanvasDetail, 'PATCH', publicPaths.canvas(canvasId), request),
+  /** Closes a canvas. Its sessions are moved to `to`, or parked when `to` is null. */
+  closeCanvas: (canvasId: string, to: string | null) =>
+    call<void>(null, 'DELETE', `${publicPaths.canvas(canvasId)}?sessions=${to ? `move&to=${to}` : 'park'}`),
+  moveSession: (sessionId: string, canvasId: string) =>
+    call(PlacedSession, 'POST', publicPaths.moveSession(sessionId), { canvasId }),
   resumeAgent: (sessionId: string) => call(Session, 'POST', paths.resumeAgent(sessionId), {}),
   seenSession: (sessionId: string) => call(Session, 'POST', paths.seenSession(sessionId), {}),
   restartSession: (sessionId: string) => call(Session, 'POST', paths.restartSession(sessionId), {}),
@@ -103,21 +117,29 @@ export function socketUrl(path: string): string {
 export function subscribeToEvents(handlers: {
   onReady: () => void;
   onEvent: (event: ChangeEvent) => void;
-  /** The daemon asks this canvas to bring a session into view. */
+  /** The daemon asks this page to bring a session into view. */
   onShow: (sessionId: string) => void;
   onDown: () => void;
-}): () => void {
+}): { stop: () => void; viewing: (canvasId: string) => void } {
   let socket: WebSocket | null = null;
   let timer: number | undefined;
   let stopped = false;
+  let canvasId: string | null = null;
+
+  const say = (message: EventsClientMessage): void => {
+    if (socket?.readyState === WebSocket.OPEN) socket.send(JSON.stringify(message));
+  };
 
   const connect = (): void => {
     socket = new WebSocket(socketUrl(paths.events));
     socket.onmessage = (message) => {
       const parsed = EventsServerMessage.safeParse(JSON.parse(String(message.data)));
       if (!parsed.success) return;
-      if (parsed.data.type === 'hello') handlers.onReady();
-      else if (parsed.data.type === 'show') handlers.onShow(parsed.data.sessionId);
+      if (parsed.data.type === 'hello') {
+        // Tell a fresh connection which canvas this page is showing.
+        if (canvasId) say({ type: 'viewing', canvasId });
+        handlers.onReady();
+      } else if (parsed.data.type === 'show') handlers.onShow(parsed.data.sessionId);
       else handlers.onEvent(parsed.data.event);
     };
     socket.onclose = () => {
@@ -128,9 +150,16 @@ export function subscribeToEvents(handlers: {
   };
   connect();
 
-  return () => {
-    stopped = true;
-    window.clearTimeout(timer);
-    socket?.close();
+  return {
+    stop: () => {
+      stopped = true;
+      window.clearTimeout(timer);
+      socket?.close();
+    },
+    /** Says which canvas this page shows; call it on switching, and when the page is used again. */
+    viewing: (id) => {
+      canvasId = id;
+      say({ type: 'viewing', canvasId: id });
+    },
   };
 }

@@ -11,6 +11,7 @@ import {
   CLOSE_SESSION_ENDED,
   CreateFrameRequest,
   CreateSessionRequest,
+  EventsClientMessage,
   Id,
   OutsideAddRequest,
   OutsideMoveRequest,
@@ -25,7 +26,9 @@ import {
   TerminalSize,
   UpdateFrameRequest,
   UpdateNodeRequest,
+  canvasAddress,
   paths,
+  placeOfSession,
   type AppendNoteResponse,
   type CreateSessionResponse,
   type ErrorCode,
@@ -43,6 +46,7 @@ import {
 import { authorize, principalFromBearer, type Action, type Principal, type Resource } from './auth';
 import { BadCursorError } from './public-api';
 import { registerPublicRoutes } from './v1';
+import { Viewers } from './viewers';
 import type { StateHub } from './state-hub';
 import type { Outside } from './migrate/outside';
 import { SessionNotFoundError, type Attachment, type SessionRuntime } from './runtime/runtime';
@@ -53,6 +57,8 @@ export interface ServerOptions {
   hub: StateHub;
   sessions: Sessions;
   runtime: SessionRuntime;
+  /** Connected browser tabs. Passed in so that the rest of the daemon can ask which canvas was looked at last. */
+  viewers?: Viewers;
   /** Terminals outside the canvas. Left out, those routes answer that the feature is not available. */
   outside?: Outside;
   /** Returns the current settings, re-reading the settings file. */
@@ -107,8 +113,8 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   };
 
   const principals = new WeakMap<FastifyRequest, Principal>();
-  /** One entry per open canvas: how to send it a message. */
-  const viewers = new Set<(message: EventsServerMessage) => void>();
+  /** The browser tabs that are connected, and which canvas each is showing. */
+  const viewers = options.viewers ?? new Viewers();
 
   /** Refuses the request unless its principal may do `action` on the session. */
   const allowOn = (request: FastifyRequest, action: Action, resource: Resource): Principal => {
@@ -264,8 +270,8 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   app.post(paths.showSession(':sessionId'), async (request): Promise<ShowResponse> => {
     const sessionId = idParam(request, 'sessionId');
     if (!sessions.has(sessionId)) throw new HttpError(404, 'not_found', `No session ${sessionId}`);
-    for (const send of viewers) send({ type: 'show', sessionId });
-    return { viewers: viewers.size };
+    // A tab already on the session's canvas if there is one; otherwise the tab used most recently.
+    return { viewers: viewers.show(sessionId, placeOfSession(hub.state, sessionId)?.canvas.id ?? null) };
   });
 
   app.post(paths.seenSession(':sessionId'), async (request) => sessions.seen(idParam(request, 'sessionId')));
@@ -356,13 +362,23 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
       if (socket.readyState === socket.OPEN) socket.send(JSON.stringify(message));
     };
     const unsubscribe = hub.subscribe((event) => send({ type: 'event', event }));
-    viewers.add(send);
+    const viewer = viewers.add(send);
     const leave = (): void => {
       unsubscribe();
-      viewers.delete(send);
+      viewers.remove(viewer);
     };
     socket.on('close', leave);
     socket.on('error', leave);
+    socket.on('message', (raw, isBinary) => {
+      if (isBinary) return;
+      let message: EventsClientMessage;
+      try {
+        message = EventsClientMessage.parse(JSON.parse(raw.toString()));
+      } catch {
+        return; // Not something this version understands; a newer page may send more.
+      }
+      if (hub.state.canvases.some((c) => c.id === message.canvasId)) viewers.viewing(viewer, message.canvasId);
+    });
     send({ type: 'hello', protocolVersion: PROTOCOL_VERSION });
   });
 
@@ -469,6 +485,8 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
 
   if (existsSync(options.webDist)) {
     await app.register(fastifyStatic, { root: options.webDist });
+    // The address of a canvas is a page of the same web app.
+    app.get(canvasAddress(':canvasId'), async (_request, reply) => reply.sendFile('index.html'));
   } else {
     app.get('/', async (_request, reply) =>
       reply

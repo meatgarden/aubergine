@@ -12,6 +12,7 @@ import { systemProcesses } from './migrate/move';
 import { Outside } from './migrate/outside';
 import { scanShells } from './migrate/shells';
 import { Sessions } from './sessions';
+import { Viewers } from './viewers';
 import { ZshIntegration } from './shell/integration';
 import { SettingsFile, expandHome } from './settings';
 import { JsonStore } from './store/json-store';
@@ -31,8 +32,10 @@ async function main(): Promise<void> {
   const runtime = new TmuxRuntime({ socket: config.tmuxSocket, tmuxBin: config.tmuxBin });
   let listeningPort = config.port;
   const integration = new ZshIntegration(path.join(config.dataDir, 'shell'));
+  const viewers = new Viewers();
   const sessions = new Sessions(hub, runtime, {
     integration,
+    currentCanvas: () => viewers.lastViewedCanvasId,
     sessionEnv: (sessionId) => ({
       [SESSION_ENV.url]: `http://127.0.0.1:${listeningPort}`,
       [SESSION_ENV.sessionId]: sessionId,
@@ -57,6 +60,7 @@ async function main(): Promise<void> {
 
   const app = await buildServer({
     outside,
+    viewers,
     hub,
     sessions,
     runtime,

@@ -319,6 +319,16 @@ export const EventsServerMessage = z.discriminatedUnion('type', [
 ]);
 export type EventsServerMessage = z.infer<typeof EventsServerMessage>;
 
+/** Browser → daemon on the events WebSocket, JSON text frames. */
+export const EventsClientMessage = z.discriminatedUnion('type', [
+  /** Which canvas this browser tab is showing. Sent on connecting, on switching, and when the tab is used again. */
+  z.object({ type: z.literal('viewing'), canvasId: Id }),
+]);
+export type EventsClientMessage = z.infer<typeof EventsClientMessage>;
+
+/** The address of a canvas in the browser: `/c/<canvas id>`. */
+export const canvasAddress = (canvasId: string): string => `/c/${canvasId}`;
+
 /* ---------- Terminal WebSocket ---------- */
 
 export const TerminalSize = z.object({

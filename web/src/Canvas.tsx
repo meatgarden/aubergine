@@ -35,7 +35,6 @@ import { isFullZoom, loadViewport, saveViewport, useZoomToNode } from './viewpor
 
 const nodeTypes = { terminal: TerminalNode, frame: FrameNode };
 type CanvasNode = TerminalFlowNode | FrameFlowNode;
-const initialViewport = loadViewport();
 
 function toFlowNode(node: LayoutNode, previous: CanvasNode | undefined): TerminalFlowNode {
   return {
@@ -69,6 +68,8 @@ function toFrameNode(frame: Frame, previous: CanvasNode | undefined): FrameFlowN
 export function Canvas() {
   const canvasId = useApp((s) => s.canvasId);
   const layout = useApp((s) => currentLayout(s).nodes);
+  // This component is mounted afresh for each canvas, so this is read once per canvas.
+  const [initialViewport] = useState(() => loadViewport(canvasId ?? ''));
   const live = useApp((s) => s.live);
   const theme = useApp((s) => s.settings.theme);
   const focusSession = useApp((s) => s.focusSession);
@@ -152,12 +153,12 @@ export function Canvas() {
       if (isFullZoom(viewport.zoom) && !(Number.isInteger(viewport.x) && Number.isInteger(viewport.y))) {
         const snapped = { x: Math.round(viewport.x), y: Math.round(viewport.y), zoom: 1 };
         void flow.setViewport(snapped);
-        saveViewport(snapped);
+        if (canvasId) saveViewport(canvasId, snapped);
         return;
       }
-      saveViewport(viewport);
+      if (canvasId) saveViewport(canvasId, viewport);
     },
-    [flow],
+    [flow, canvasId],
   );
 
   /** Moves the view to a node at 100% and gives its terminal the keyboard. */

@@ -1,8 +1,8 @@
 import { create } from 'zustand';
 import {
   DEFAULT_SETTINGS,
-  SHOW_PARAM,
   applyEvent,
+  placeOfSession,
   sortedCanvases,
   type AppState,
   type Canvas,
@@ -12,6 +12,7 @@ import {
   type Settings,
 } from '@aubergine/shared';
 import { ApiError, api, subscribeToEvents } from './api';
+import { canvasIdFromPath, chooseCanvas, rememberCanvas, rememberedCanvas, sessionFromAddress, writeAddress } from './address';
 import { announcement, notificationsWanted } from './attention';
 
 export type Phase =
@@ -36,6 +37,8 @@ interface AppStore {
   focus: { sessionId: string; tick: number } | null;
   /** Session waiting for the user to confirm closing it. */
   closing: string | null;
+  /** Canvas waiting for the user to say what happens to its sessions before it is closed. */
+  closingCanvas: string | null;
   /** Whether the session picker is open. */
   picker: boolean;
   /** A session the canvas was asked to bring into view. The counter makes repeats count. */
@@ -45,9 +48,11 @@ interface AppStore {
   apply: (event: ChangeEvent) => void;
   focusSession: (sessionId: string | null) => void;
   askToClose: (sessionId: string | null) => void;
+  askToCloseCanvas: (canvasId: string | null) => void;
   setPicker: (open: boolean) => void;
   showSession: (sessionId: string) => void;
-  setCanvas: (canvasId: string) => void;
+  /** Switches this page to another canvas. `push` adds a step to the browser's history. */
+  setCanvas: (canvasId: string, options?: { push?: boolean }) => void;
 }
 
 export const useApp = create<AppStore>((set, get) => ({
@@ -59,21 +64,29 @@ export const useApp = create<AppStore>((set, get) => ({
   live: true,
   focus: null,
   closing: null,
+  closingCanvas: null,
   picker: false,
   show: null,
 
   load: async () => {
     try {
       const response = await api.getState();
-      const known = response.state.canvases.some((c) => c.id === get().canvasId);
-      set({
-        phase: 'ready',
-        runtime: response.runtime,
-        settings: response.settings,
-        app: response.state,
-        // Keep looking at the same canvas; if there is none yet, or it is gone, take the default.
-        ...(known ? {} : { canvasId: response.defaultCanvasId }),
-      });
+      const exists = (id: string): boolean => response.state.canvases.some((c) => c.id === id);
+      const current = get().canvasId;
+      set({ phase: 'ready', runtime: response.runtime, settings: response.settings, app: response.state });
+      // Keep looking at the same canvas. On opening the page, or if that canvas is gone: the one
+      // in the address, else the one this browser looked at last, else the server's default.
+      if (!current || !exists(current)) {
+        const chosen = chooseCanvas({
+          fromAddress: canvasIdFromPath(location.pathname),
+          remembered: rememberedCanvas(),
+          fallback: response.defaultCanvasId,
+          exists,
+        });
+        // An address that asks for a session is left for that to deal with.
+        if (sessionFromAddress(location.search)) set({ canvasId: chosen, focus: null });
+        else get().setCanvas(chosen, { push: false });
+      }
     } catch (error) {
       if (error instanceof ApiError && error.code === 'unauthorized') {
         set({ phase: 'unauthorized' });
@@ -97,14 +110,16 @@ export const useApp = create<AppStore>((set, get) => ({
       }
     }
     const next: Partial<AppStore> = { app: applyEvent(app, event) };
-    if (event.type === 'canvas.removed' && get().canvasId === event.canvasId) {
-      next.canvasId = sortedCanvases(next.app ?? app)[0]?.id ?? null;
-    }
     if (event.type === 'session.closed') {
       if (get().closing === event.sessionId) next.closing = null;
       if (get().focus?.sessionId === event.sessionId) next.focus = null;
     }
     set(next);
+    if (event.type === 'canvas.removed' && get().canvasId === event.canvasId) {
+      // The canvas this page was showing is gone: show the first of what is left.
+      const first = sortedCanvases(get().app ?? app)[0];
+      if (first) get().setCanvas(first.id, { push: false });
+    }
   },
 
   focusSession: (sessionId) =>
@@ -113,8 +128,14 @@ export const useApp = create<AppStore>((set, get) => ({
     })),
 
   askToClose: (sessionId) => set({ closing: sessionId }),
+  askToCloseCanvas: (canvasId) => set({ closingCanvas: canvasId }),
   setPicker: (open) => set({ picker: open }),
-  setCanvas: (canvasId) => set({ canvasId, focus: null }),
+  setCanvas: (canvasId, options) => {
+    if (get().canvasId !== canvasId) set({ canvasId, focus: null });
+    writeAddress(canvasId, options?.push !== false);
+    rememberCanvas(canvasId);
+    events?.viewing(canvasId);
+  },
   showSession: (sessionId) => set((state) => ({ show: { sessionId, tick: (state.show?.tick ?? 0) + 1 } })),
 }));
 
@@ -131,22 +152,29 @@ export function currentLayout(state: Pick<AppStore, 'app' | 'canvasId'>): Layout
 }
 
 /** Loads state, keeps it live, and keeps retrying while the daemon is away. */
+/** The live connection to the daemon, once there is one. */
+let events: ReturnType<typeof subscribeToEvents> | null = null;
+
 export function startSync(): () => void {
   const { load, apply } = useApp.getState();
-  let unsubscribe: (() => void) | null = null;
   let stopped = false;
 
   // The event stream needs the access cookie, so it starts after the first successful load.
   const sync = async (): Promise<void> => {
     await load();
-    // Opened on an address that names a session: go there once, then forget the address.
-    const wanted = new URLSearchParams(location.search).get(SHOW_PARAM);
-    if (wanted && useApp.getState().phase === 'ready') {
-      history.replaceState(null, '', location.pathname);
-      useApp.getState().showSession(wanted);
+    const store = useApp.getState();
+    if (store.phase !== 'ready') return;
+    // Opened on an address that names a session (as `aubergine here` does): go to it,
+    // on whichever canvas it is, and let that put the canvas in the address.
+    const wanted = sessionFromAddress(location.search);
+    if (wanted) {
+      const place = store.app ? placeOfSession(store.app, wanted) : null;
+      const canvasId = place?.canvas.id ?? store.canvasId;
+      if (canvasId) store.setCanvas(canvasId, { push: false });
+      store.showSession(wanted);
     }
-    if (stopped || unsubscribe || useApp.getState().phase !== 'ready') return;
-    unsubscribe = subscribeToEvents({
+    if (stopped || events) return;
+    events = subscribeToEvents({
       onReady: () => {
         useApp.setState({ live: true });
         void load();
@@ -155,8 +183,32 @@ export function startSync(): () => void {
       onShow: (sessionId) => useApp.getState().showSession(sessionId),
       onDown: () => useApp.setState({ live: false }),
     });
+    const current = useApp.getState().canvasId;
+    if (current) events.viewing(current);
   };
   void sync();
+
+  // Back and forward move between canvases.
+  const onPopState = (): void => {
+    const id = canvasIdFromPath(location.pathname);
+    const store = useApp.getState();
+    if (id && store.app?.canvases.some((c) => c.id === id) && id !== store.canvasId) {
+      useApp.setState({ canvasId: id, focus: null });
+      rememberCanvas(id);
+      events?.viewing(id);
+    }
+  };
+  window.addEventListener('popstate', onPopState);
+
+  // Coming back to this tab makes it the one most recently used.
+  const onFocus = (): void => {
+    const id = useApp.getState().canvasId;
+    if (id) {
+      rememberCanvas(id);
+      events?.viewing(id);
+    }
+  };
+  window.addEventListener('focus', onFocus);
 
   // While there is nothing to show yet, or tmux is unusable, keep asking.
   const poll = window.setInterval(() => {
@@ -166,7 +218,10 @@ export function startSync(): () => void {
 
   return () => {
     stopped = true;
-    unsubscribe?.();
+    events?.stop();
+    events = null;
+    window.removeEventListener('popstate', onPopState);
+    window.removeEventListener('focus', onFocus);
     window.clearInterval(poll);
   };
 }
