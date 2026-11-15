@@ -148,15 +148,19 @@ export function startShortcuts(): () => void {
   const onClick = (event: MouseEvent): void => {
     if (event.detail === 0 || !(event.target instanceof Element)) return;
     const button = event.target.closest('button');
-    if (!button || button !== document.activeElement) return;
-    if (button.closest('[role="dialog"], [role="alertdialog"], [role="menu"], [role="listbox"], .xterm')) return;
-    button.blur();
+    if (!button) return;
+    if (button.closest('[role="dialog"], [role="alertdialog"], [role="menu"], .xterm')) return;
+    // After the button's own handler has run, and only if it did not move the keyboard itself.
+    window.setTimeout(() => {
+      if (document.activeElement === button) button.blur();
+    }, 0);
   };
   // Capture phase, so a chord is seen before a focused terminal gets it.
   window.addEventListener('keydown', onKeyDown, true);
-  window.addEventListener('click', onClick);
+  // Capture phase too: a handler that stops the click from spreading must not hide it from here.
+  window.addEventListener('click', onClick, true);
   return () => {
     window.removeEventListener('keydown', onKeyDown, true);
-    window.removeEventListener('click', onClick);
+    window.removeEventListener('click', onClick, true);
   };
 }

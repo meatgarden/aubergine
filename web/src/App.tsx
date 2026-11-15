@@ -6,7 +6,8 @@ import { CloseDialog } from './CloseDialog';
 import { startShortcuts } from './shortcuts';
 import { startSync, useApp } from './store';
 import { TabBar } from './TabBar';
-import { TerminalList } from './TerminalList';
+import { SidePanel } from './panel/SidePanel';
+import { TagDialog } from './TagDialog';
 
 export function App() {
   const phase = useApp((s) => s.phase);
@@ -69,7 +70,7 @@ export function App() {
     <div className="app">
       <TabBar />
       <div className="workspace">
-        <TerminalList />
+        <SidePanel />
         {/* Keyed by canvas: each canvas gets a fresh view, with its own pan, zoom and live terminals. */}
         <ReactFlowProvider key={canvasId ?? 'none'}>
           <Canvas />
@@ -77,6 +78,7 @@ export function App() {
         </ReactFlowProvider>
       </div>
       <CloseCanvasDialog />
+      <TagDialog />
     </div>
   );
 }

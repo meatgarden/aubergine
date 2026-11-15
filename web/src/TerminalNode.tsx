@@ -132,6 +132,17 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
           </button>
         )}
         {draft === null && !exited && session && <StatusBadges session={session} focused={focused} />}
+        {draft === null && (
+          <button
+            type="button"
+            className={`node-tool nodrag${(session?.tags.length ?? 0) > 0 ? ' has-note' : ''}`}
+            aria-label={`Tags of ${name}`}
+            title={hint('terminal.tags', (session?.tags.length ?? 0) > 0 ? `Tags: ${session?.tags.join(', ')}` : 'Add tags')}
+            onClick={() => useApp.getState().request({ kind: 'tags', id: sessionId })}
+          >
+            #{(session?.tags.length ?? 0) > 0 ? session?.tags.length : ''}
+          </button>
+        )}
         {draft === null && <MoveToCanvas sessionId={sessionId} name={name} />}
         <button
           type="button"

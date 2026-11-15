@@ -2,7 +2,7 @@ import { COMMANDS, type Command } from './commands';
 import { activeShortcuts, keyDetailsOf, platform, windowMode } from './shortcuts';
 import { useApp } from './store';
 
-const GROUPS: Command['group'][] = ['Terminals', 'Canvases', 'View', 'Panels'];
+const GROUPS: Command['group'][] = ['Terminals', 'Canvases', 'List', 'View', 'Panels'];
 
 /**
  * Every command with the keys it has right now, on this system and in this

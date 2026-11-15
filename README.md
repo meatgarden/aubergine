@@ -313,17 +313,18 @@ Work while no terminal or text field has the keyboard:
 | Key | |
 |---|---|
 | `N`, `C`, `G` | new terminal, new Claude Code session, new frame |
-| `Tab`, `Shift+Tab` | select the next, the previous terminal, in the order of the [terminal list](#terminal-list) |
+| `Tab`, `Shift+Tab` | select the next, the previous terminal, as the [terminal list](#side-panel-and-terminal-list) shows them |
 | arrows or `H` `J` `K` `L`, `Enter` | select the terminal in that direction, go into the selected one |
 | `P`, `U`, `Shift+P` | park the selected terminal, bring back the last parked one, open the parked list |
-| `R`, `M`, `E` | rename the terminal, move it to another canvas, open or close its notes |
+| `R`, `M`, `E`, `#` | rename the terminal, move it to another canvas, open or close its notes, edit its tags |
 | `T`, `[` `]`, `1`–`9`, `Shift+R` | new canvas, previous and next canvas, go to a canvas, rename the canvas |
 | `W` | next session that is waiting for you |
 | `F`, `0` | zoom to fit, zoom to 100% |
-| `B`, `F6` | show or hide the terminal list; move the keyboard to the list, the toolbar, the tabs, and back |
+| `B`, `S`, `/` | show or hide the side panel; list this canvas or all canvases; filter the list by text |
+| `F6` | move the keyboard to the list, the toolbar, the tabs, and back |
 | `O`, `?`, `Esc` | Outside terminals, the shortcut sheet, close a panel or clear the selection |
 
-**Tab.** While the canvas has the keyboard, Tab does not walk through the buttons: it selects the next terminal, moving the view only if that terminal is off screen. Inside a terminal, Tab and Shift+Tab always go to the program, so completion works as usual. To reach the buttons from the keyboard press `F6`: it moves the keyboard to the terminal list, then the toolbar, then the canvas tabs, then back to the canvas, and inside each of those Tab moves from control to control as it does on any page. `Esc` returns to the canvas.
+**Tab.** While the canvas has the keyboard, Tab does not walk through the buttons: it selects the next terminal in the list on the left, moving the view only if that terminal is off screen. Inside a terminal, Tab and Shift+Tab always go to the program, so completion works as usual. To reach the buttons from the keyboard press `F6`: it moves the keyboard to the terminal list, then the toolbar, then the canvas tabs, then back to the canvas, and inside each of those Tab moves from control to control as it does on any page. `Esc` returns to the canvas.
 
 **The keys browsers use for their own tabs** switch canvases too: Ctrl+Tab and Ctrl+Shift+Tab, Ctrl+PageDown and Ctrl+PageUp, on macOS also ⇧⌘] ⇧⌘[, ⌥⌘→ ⌥⌘← and ⌘1–⌘9, elsewhere Ctrl+1–Ctrl+9. They are meant for Aubergine installed as an app with a window of its own, where there are no browser tabs. In an ordinary browser tab the browser usually takes these keys for itself before the page sees them, so do not count on them there; the shortcut sheet shows them with a dashed outline when they are not expected to work in the window you are in. Which of them a given browser lets through has not been measured. The route that works everywhere is ⌘K followed by `]`, `[` or a digit.
 
@@ -347,17 +348,39 @@ Reload the page to apply. If a key is set twice or cannot be read, the shortcut 
 
 **How sure are these keys?** The chords in the first table were chosen from what browsers document, not from measurement with a real keyboard, and Linux and Windows are untested. [docs/keys.md](docs/keys.md) has the details and a page to measure your own browser with. If a chord does nothing for you, rebind it; the palette always works.
 
-### Terminal list
+### Side panel and terminal list
 
-A panel down the left side lists the terminals on the canvas you are looking at, in the order they read on the canvas: each frame as a heading with its terminals under it, then the terminals outside any frame, top to bottom and left to right. Each row shows the name, the running command and folder, and the same marks as the node: new output, busy, a failed exit code, an agent, waiting for you.
+A panel down the left side holds sections. Today it has one, **Terminals**; further sections will appear here as they are added. Each section folds, and the whole panel collapses to a narrow strip that shows each section's icon and counts (`B`, or the arrow at the top). Drag its right edge to change the width. All of this is remembered by the browser.
 
-- Click a row to go to that terminal at 100% and give it the keyboard. The row of the terminal that is selected or has the keyboard is highlighted and kept in view.
-- **⋯** on a row has the node's actions: rename, notes, move to another canvas, park.
-- Below the list, closed until you open them: **Other canvases**, each with its count of waiting sessions and expandable to its terminals, and **Parked**. A row there takes you to that canvas, or restores the parked session onto this one.
-- `B` or the arrow at the top collapses the panel to a narrow strip; drag its right edge to change the width. Both are remembered by the browser.
-- With the keyboard in the list (`F6`), the arrows move through the rows, `Enter` goes into the terminal and `Esc` returns to the canvas.
+**Terminals** lists every session: the terminals on every canvas, and the parked ones.
 
-The list costs nothing to keep open: it is drawn from what the page already knows, with no terminal attached for it and nothing fetched.
+- **This canvas / All canvases** at the top chooses the scope. It starts on *This canvas*. Parked sessions are on no canvas and are listed in both.
+- **Filters** narrow the list: waiting for me, busy, unread, has an agent, parked, the text box (name, folder, command, note, tags; every word must match), and tags. They combine: a row must pass all that are on. Each one in effect shows as a chip you can remove, **Clear** removes them all, and the count beside the section title is the number of rows shown. If nothing is left, the list says which filters are hiding everything.
+- **Grouping**: by canvas, in tab order, each canvas a heading that folds and shows its waiting count, with frames as sub-headings and the terminals in the order they read on the canvas (top to bottom, then left to right); or one flat list, ordered by canvas, last updated, last typed in, or name.
+- **Compact** shows one line per terminal instead of two.
+
+Filters, grouping, order, density and what is folded are remembered by the browser.
+
+**A row** shows:
+
+- a state, as a mark and a word. One state per row, the most pressing first: `!` waiting for you, `◐` processing (a command or an agent is running), `●` unread output, `✕` failed (the last command ended with an error), `○` idle and read;
+- the name, and *agent* when an agent runs there;
+- on the second line the running command and folder, **typed … ago**, **updated … ago**, and the tags.
+
+*Typed* is when input last reached the session, *updated* when it last printed. Both are recorded at most once every five seconds, so they can lag by that much. Input is seen when it passes through Aubergine: typing in the browser, or a line Aubergine types for you. What you type in a view opened elsewhere with `aubergine attach` does not pass through the server; for that the start of each command is used, which is the best signal available, so text typed there but not yet run does not count.
+
+Click a row to go to that terminal at 100% and give it the keyboard, switching canvas if needed; a parked row has **Restore**. **⋯** on a row of the canvas you are looking at has the node's actions: rename, notes, tags, move to another canvas, park.
+
+**Tags** are short words of your own on a session (up to 12, each up to 32 characters; `Api` and `api` are the same tag). Edit them from **⋯**, from the `#` button on the node, or with `#` on the selected terminal. Click a tag on a row to show only the terminals with that tag; several chosen tags show the terminals with any of them.
+
+**Notes from the list.** A row has a pencil mark when its session has a note or log entries, with the number of entries added since you last opened them.
+
+- Rest the pointer on the mark (or reach it with the keyboard) for a glance: the first lines of the pinned note and the newest log entry. It is read-only and never takes the keyboard.
+- Click the mark, or press `E`, to open the notes in a drawer beside the panel: the pinned note, the log and the entry box, the same as on the node. The drawer lies over the edge of the canvas and moves nothing. It follows the selection, so with the keyboard in the list (`F6`, then the arrows) you can read through the notes of one terminal after another. `Esc` closes it. The note panel on the node still works; the two show the same thing.
+
+**Keyboard.** `Tab` and `Shift+Tab` move through the rows exactly as the list shows them, filters and order included. With *This canvas* they stay on the canvas; with *All canvases* they go on into the next canvas, switching as they go. That is why the list starts on *This canvas*: Tab does not jump between canvases unless you ask for it. `S` switches the scope and `/` puts the keyboard in the text box. With the keyboard in the list (`F6`), the arrows move through the rows, `Enter` goes into the terminal and `Esc` returns to the canvas. The filters, grouping and order are commands too, so they are in the palette (type `list`) and can be given keys.
+
+The list costs nothing to keep open, also with hundreds of sessions: it is drawn from what the page already knows, only the rows in view are drawn, no terminal is attached for it and nothing is fetched.
 
 ### Scrolling, copy and paste
 
@@ -535,7 +558,8 @@ GET    /v1/canvases/<id>                     one canvas with its nodes and frame
 PATCH  /v1/canvases/<id>                     any of name, color, order, labels
 DELETE /v1/canvases/<id>?sessions=park       close it; or ?sessions=move&to=<canvas id>
 GET    /v1/canvases/<id>/sessions            the sessions on it, each with its node
-POST   /v1/canvases/<id>/sessions            start a session there: {"name"?, "cwd"?, "command"?, "position"?}
+POST   /v1/canvases/<id>/sessions            start a session there: {"name"?, "cwd"?, "command"?, "position"?, "tags"?}
+PATCH  /v1/sessions/<id>                     any of name, tags (tags replaces the whole list)
 POST   /v1/sessions/<id>/move                {"canvasId": "...", "position"?}
 PATCH  /v1/canvases/<id>/nodes/<node id>     move, resize or color a node
 POST   /v1/canvases/<id>/frames              add a frame

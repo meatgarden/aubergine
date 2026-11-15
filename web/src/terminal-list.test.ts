@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Frame, LayoutNode } from '@aubergine/shared';
-import { clampListWidth, listGroups, listOrder, readingOrder, stepInList } from './terminal-list';
+import { listGroups, listOrder, readingOrder, stepInList } from './terminal-list';
 
 const node = (sessionId: string, x: number, y: number, width = 100, height = 60): LayoutNode => ({
   id: `node-${sessionId}`,
@@ -79,13 +79,5 @@ describe('stepInList', () => {
     expect(stepInList(order, 'gone', 1)).toBe('a');
     expect(stepInList([], null, 1)).toBeNull();
     expect(stepInList(['only'], 'only', 1)).toBe('only');
-  });
-});
-
-describe('clampListWidth', () => {
-  it('keeps the width within what is usable', () => {
-    expect(clampListWidth(10)).toBe(160);
-    expect(clampListWidth(5000)).toBe(520);
-    expect(clampListWidth(300.4)).toBe(300);
   });
 });

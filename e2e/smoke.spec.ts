@@ -128,7 +128,7 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await page.getByRole('button', { name: /^Park Terminal/ }).click();
   await expect(node).toHaveCount(0);
   await page.getByRole('button', { name: 'Parked (1)' }).click();
-  await page.getByRole('button', { name: 'Restore' }).click();
+  await page.getByRole('dialog', { name: 'Parked sessions' }).getByRole('button', { name: 'Restore' }).click();
   await expect(node).toHaveCount(1);
   await expect(outputLine(page, 'picked-44')).toHaveCount(1);
 
@@ -181,7 +181,7 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
     await page.getByRole('button', { name: 'Parked (1)' }).click();
     await page.getByRole('button', { name: 'End', exact: true }).click();
     await page.getByRole('button', { name: 'End session' }).click();
-    await expect(page.getByRole('button', { name: /Parked/ })).toHaveCount(0);
+    await expect(page.getByRole('button', { name: /^Parked \(/ })).toHaveCount(0);
   } finally {
     standIn.kill();
     rmSync(outsideFolder, { recursive: true, force: true });
@@ -266,7 +266,7 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await expect(page.getByTestId('parked-row')).toContainText(movedName ?? '');
   await page.getByRole('button', { name: 'End', exact: true }).click();
   await page.getByRole('button', { name: 'End session' }).click();
-  await expect(page.getByRole('button', { name: /Parked/ })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: /^Parked \(/ })).toHaveCount(0);
   await expect(node).toHaveCount(1);
 
   // When the shell exits, the node says so and offers a restart.
@@ -278,7 +278,7 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await expect(terminal).toHaveAttribute('data-link', 'open');
 
   // Ending a parked session for good asks first.
-  await page.getByRole('button', { name: /^Park Terminal/ }).click();
+  await page.getByRole('button', { name: /^Park Terminal/ }).dispatchEvent('click'); // it may sit under the minimap, so no aiming at a point
   await page.getByRole('button', { name: 'Parked (1)' }).click();
   await page.getByRole('button', { name: 'End', exact: true }).click();
   await expect(page.getByRole('alertdialog')).toContainText('ends the shell');
@@ -286,7 +286,7 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await page.getByRole('button', { name: 'Parked (1)' }).click();
   await page.getByRole('button', { name: 'End', exact: true }).click();
   await page.getByRole('button', { name: 'End session' }).click();
-  await expect(page.getByRole('button', { name: /Parked/ })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: /^Parked \(/ })).toHaveCount(0);
   await expect(node).toHaveCount(0);
 
   // A whole pass without the mouse: a canvas, two terminals, moving between them, switching
@@ -401,12 +401,58 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await expect(node).toHaveCount(1);
   await expect(page.getByRole('button', { name: 'Parked (1)' })).toBeVisible();
 
+  // The list on the left, by keyboard: scope, the text filter, tags, the collapsed strip.
+  const listRows = page.locator('.list-rows [data-testid="list-row"]');
+  await expect(listRows).toHaveCount(2); // the terminal on this canvas and the parked one
+  await expect(page.getByTestId('section-count')).toHaveText('2');
+  await expect(page.getByTestId('list-group')).toHaveCount(1); // only "Parked": one canvas is in scope
+  await page.keyboard.press('s');
+  await expect(page.getByTestId('scope-all')).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.getByTestId('list-group')).toHaveCount(2); // this canvas by name, and "Parked"
+  await page.keyboard.press('s');
+  await expect(page.getByTestId('scope-this')).toHaveAttribute('aria-pressed', 'true');
+
+  await page.keyboard.press('/');
+  await expect(page.getByTestId('list-search')).toBeFocused();
+  await page.keyboard.type('zzz-no-such');
+  await expect(page.getByTestId('list-empty')).toContainText('No terminal matches This canvas + “zzz-no-such”');
+  await expect(page.getByTestId('section-count')).toHaveText('0');
+  await page.keyboard.press('Escape'); // clears the text
+  await expect(listRows).toHaveCount(2);
+  await page.keyboard.press('Escape'); // back to the canvas
+  await expect(page.getByTestId('list-search')).not.toBeFocused();
+
+  await page.keyboard.press('ArrowRight');
+  await page.keyboard.press('#');
+  await expect(page.getByTestId('tag-dialog')).toBeVisible();
+  await page.keyboard.type('e2e-tag');
+  await page.keyboard.press('Enter');
+  await page.keyboard.press('Enter');
+  await expect(page.getByTestId('tag-dialog')).toHaveCount(0);
+  await expect(page.getByTestId('list-tag')).toHaveText('#e2e-tag');
+  await page.getByTestId('list-tag').click();
+  await expect(listRows).toHaveCount(1);
+  await expect(page.getByTestId('list-chip').last()).toContainText('#e2e-tag');
+  await page.getByTestId('list-clear').click();
+  await expect(page.getByTestId('scope-all')).toHaveAttribute('aria-pressed', 'true'); // clearing shows everything
+  await page.keyboard.press('s');
+
+  // Typing in a terminal is recorded, and the row says so.
+  await expect(listRows.first().getByTestId('list-typed')).toContainText('typed');
+  await expect(listRows.first().getByTestId('list-updated')).toContainText('updated');
+
+  await page.keyboard.press('b');
+  await expect(page.getByTestId('strip-entry')).toContainText('2');
+  await expect(listRows).toHaveCount(0);
+  await page.keyboard.press('b');
+  await expect(listRows).toHaveCount(2);
+
   // F6 takes the keyboard to the list, the toolbar, the tabs and back; there Tab is the page's own.
   const keyboardIn = (): Promise<string> =>
     page.evaluate(() => {
       const el = document.activeElement;
       if (!el || el === document.body) return 'canvas';
-      return el.closest('.terminal-list') ? 'list' : el.closest('.toolbar') ? 'toolbar' : el.closest('.tabbar') ? 'tabs' : 'other';
+      return el.closest('.side-panel') ? 'list' : el.closest('.toolbar') ? 'toolbar' : el.closest('.tabbar') ? 'tabs' : 'other';
     });
   for (const expected of ['list', 'toolbar', 'tabs', 'canvas']) {
     await page.keyboard.press('F6');
@@ -453,5 +499,5 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await expect(page.getByTestId('picker-row')).toHaveCount(0);
   await page.keyboard.press('Enter');
   await expect(node).toHaveCount(2);
-  await expect(page.getByRole('button', { name: /Parked/ })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: /^Parked \(/ })).toHaveCount(0);
 });
