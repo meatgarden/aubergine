@@ -314,6 +314,14 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await page.keyboard.press(chord('Period'));
   await expect(node.first()).toHaveAttribute('data-selected', 'true');
   await expect(node.first()).not.toHaveAttribute('data-focused', 'true');
+  // Enter goes back into the selected terminal.
+  await page.keyboard.press('Enter');
+  await expect(node.first()).toHaveAttribute('data-focused', 'true');
+  await page.keyboard.type('echo in-$((3+4))');
+  await page.keyboard.press('Enter');
+  await expect(outputLine(page, 'in-7')).toHaveCount(1);
+  await page.keyboard.press(chord('Period'));
+  await expect(node.first()).toHaveAttribute('data-selected', 'true');
   await page.keyboard.press('n');
   await expect(node).toHaveCount(2);
   await expect(node.nth(1)).toHaveAttribute('data-focused', 'true');

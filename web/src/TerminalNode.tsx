@@ -30,6 +30,7 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
   const onFocusChange = useCallback(
     (now: boolean) => {
       setFocused(now);
+      if (now) useApp.getState().settled();
       // Looking at it, and looking away from it, both mark everything so far as seen.
       void api.seenSession(sessionId).catch(() => {});
     },

@@ -34,7 +34,7 @@ export interface AppStore {
   /** False while the live event stream is down after having been up. */
   live: boolean;
   /** Session whose terminal should hold keyboard focus. The counter re-triggers focus on repeat clicks. */
-  focus: { sessionId: string; tick: number; at: number } | null;
+  focus: { sessionId: string; tick: number } | null;
   /** Session waiting for the user to confirm closing it. */
   closing: string | null;
   /** Canvas waiting for the user to say what happens to its sessions before it is closed. */
@@ -56,6 +56,11 @@ export interface AppStore {
   parkedHere: string[];
   /** A session the canvas was asked to bring into view. The counter makes repeats count. */
   show: { sessionId: string; tick: number } | null;
+  /**
+   * Until when a terminal is on its way to getting the keyboard: set when one is asked for,
+   * cleared when it has it. Keys typed in between are meant for that terminal.
+   */
+  settleUntil: number;
 
   load: () => Promise<void>;
   apply: (event: ChangeEvent) => void;
@@ -71,11 +76,16 @@ export interface AppStore {
   asked: (tick: number) => void;
   setNotice: (notice: string | null) => void;
   showSession: (sessionId: string) => void;
+  /** A terminal has the keyboard: nothing is on its way any more. */
+  settled: () => void;
   /** A request to show a session is used once: forget it, unless a newer one has replaced it. */
   shown: (tick: number) => void;
   /** Switches this page to another canvas. `push` adds a step to the browser's history. */
   setCanvas: (canvasId: string, options?: { push?: boolean }) => void;
 }
+
+/** The longest a terminal is waited for after it was asked to take the keyboard. */
+const SETTLE_MS = 700;
 
 export type Panel = 'parked' | 'outside' | 'shortcuts';
 export interface Ask {
@@ -102,6 +112,7 @@ export const useApp = create<AppStore>((set, get) => ({
   notice: null,
   parkedHere: [],
   show: null,
+  settleUntil: 0,
 
   load: async () => {
     try {
@@ -165,9 +176,11 @@ export const useApp = create<AppStore>((set, get) => ({
 
   focusSession: (sessionId) =>
     set((state) => ({
-      focus: sessionId ? { sessionId, tick: (state.focus?.tick ?? 0) + 1, at: Date.now() } : null,
+      focus: sessionId ? { sessionId, tick: (state.focus?.tick ?? 0) + 1 } : null,
       // The terminal that had the keyboard stays selected when the keyboard leaves it.
       selected: sessionId ?? state.selected,
+      // Taken away on purpose: nothing is on its way to a terminal any more.
+      settleUntil: sessionId ? Date.now() + SETTLE_MS : 0,
     })),
   select: (sessionId) => set({ selected: sessionId }),
   togglePanel: (panel) => set((state) => ({ panel: panel === null || state.panel === panel ? null : panel })),
@@ -179,12 +192,13 @@ export const useApp = create<AppStore>((set, get) => ({
   askToCloseCanvas: (canvasId) => set({ closingCanvas: canvasId }),
   setPicker: (open) => set({ picker: open }),
   setCanvas: (canvasId, options) => {
-    if (get().canvasId !== canvasId) set({ canvasId, focus: null, selected: null });
+    if (get().canvasId !== canvasId) set({ canvasId, focus: null, selected: null, settleUntil: 0 });
     writeAddress(canvasId, options?.push !== false);
     rememberCanvas(canvasId);
     events?.viewing(canvasId);
   },
-  showSession: (sessionId) => set((state) => ({ show: { sessionId, tick: (state.show?.tick ?? 0) + 1 } })),
+  showSession: (sessionId) => set((state) => ({ show: { sessionId, tick: (state.show?.tick ?? 0) + 1 }, settleUntil: Date.now() + SETTLE_MS })),
+  settled: () => set({ settleUntil: 0 }),
   shown: (tick) => set((state) => (state.show?.tick === tick ? { show: null } : {})),
 }));
 
