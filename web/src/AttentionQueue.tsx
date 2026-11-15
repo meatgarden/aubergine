@@ -1,5 +1,7 @@
 import { useState } from 'react';
-import { nextWaiting, notificationsWanted, setNotificationsWanted, waitingQueue } from './attention';
+import { notificationsWanted, setNotificationsWanted, waitingQueue } from './attention';
+import { runCommand } from './commands';
+import { keysOf } from './shortcuts';
 import { canvasLabel } from './search';
 import { useApp } from './store';
 
@@ -12,15 +14,9 @@ export function AttentionQueue() {
   const sessions = useApp((s) => s.app?.sessions);
   const app = useApp((s) => s.app);
   const canvasId = useApp((s) => s.canvasId);
-  const current = useApp((s) => s.focus?.sessionId ?? null);
   const [notify, setNotify] = useState(notificationsWanted);
 
   const queue = waitingQueue(sessions ?? []);
-
-  const goNext = (): void => {
-    const next = nextWaiting(sessions ?? [], current);
-    if (next) useApp.getState().showSession(next.id);
-  };
 
   return (
     <>
@@ -28,8 +24,8 @@ export function AttentionQueue() {
         <button
           type="button"
           className="attention-button"
-          onClick={goNext}
-          title={`Go to the next session that is waiting for you: ${queue
+          onClick={() => runCommand('attention.next')}
+          title={`Go to the next session that is waiting for you${keysOf('attention.next').length > 0 ? ` (${keysOf('attention.next').join(' or ')})` : ''}: ${queue
             .map((s) => {
               const canvas = canvasLabel(app, s.id, canvasId);
               return canvas ? `${s.name} (on ${canvas})` : s.name;

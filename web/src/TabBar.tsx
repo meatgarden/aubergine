@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { canvasCounts, sortedCanvases, type Canvas } from '@aubergine/shared';
 import { api } from './api';
 import { ColorButton } from './ColorButton';
+import { runCommand } from './commands';
+import { hint } from './shortcuts';
 import { useApp } from './store';
 
 /**
@@ -21,10 +23,20 @@ export function TabBar() {
   const app = useApp((s) => s.app);
   const current = useApp((s) => s.canvasId);
   const setCanvas = useApp((s) => s.setCanvas);
+  useApp((s) => s.settings.shortcuts);
   const askToCloseCanvas = useApp((s) => s.askToCloseCanvas);
   const [renaming, setRenaming] = useState<{ id: string; text: string } | null>(null);
   const [dragging, setDragging] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  // Asked to rename a canvas (by a key or the palette).
+  const ask = useApp((s) => (s.ask?.kind === 'rename-canvas' ? s.ask : null));
+  useEffect(() => {
+    if (!ask) return;
+    const canvas = useApp.getState().app?.canvases.find((c) => c.id === ask.id);
+    if (canvas) setRenaming({ id: canvas.id, text: canvas.name });
+    useApp.getState().asked(ask.tick);
+  }, [ask]);
 
   if (!app) return null;
   const canvases = sortedCanvases(app);
@@ -40,19 +52,6 @@ export function TabBar() {
     const canvas = canvases.find((c) => c.id === renaming.id);
     setRenaming(null);
     if (name && canvas && name !== canvas.name) run(api.updateCanvas(canvas.id, { name }));
-  };
-
-  const add = (): void => {
-    const names = new Set(canvases.map((c) => c.name));
-    let n = canvases.length + 1;
-    while (names.has(`Canvas ${n}`)) n += 1;
-    run(
-      api.createCanvas({ name: `Canvas ${n}` }).then((created) => {
-        const { nodes: _nodes, frames: _frames, counts: _counts, ...canvas } = created;
-        useApp.getState().apply({ type: 'canvas.created', canvas: { ...canvas, layout: { nodes: [], frames: [] } } });
-        setCanvas(created.id);
-      }),
-    );
   };
 
   const close = (canvas: Canvas): void => {
@@ -141,7 +140,7 @@ export function TabBar() {
           </div>
         );
       })}
-      <button type="button" className="tab-add quiet" aria-label="New canvas" title="New canvas" onClick={add}>
+      <button type="button" className="tab-add quiet" aria-label="New canvas" title={hint('canvas.new')} onClick={() => runCommand('canvas.new')}>
         +
       </button>
       {error && <span className="warning">{error}</span>}

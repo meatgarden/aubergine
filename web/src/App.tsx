@@ -3,6 +3,7 @@ import { ReactFlowProvider } from '@xyflow/react';
 import { Canvas } from './Canvas';
 import { CloseCanvasDialog } from './CloseCanvasDialog';
 import { CloseDialog } from './CloseDialog';
+import { startShortcuts } from './shortcuts';
 import { startSync, useApp } from './store';
 import { TabBar } from './TabBar';
 
@@ -12,6 +13,7 @@ export function App() {
   const canvasId = useApp((s) => s.canvasId);
 
   useEffect(() => startSync(), []);
+  useEffect(() => startShortcuts(), []);
 
   const theme = useApp((s) => s.settings.theme);
   useEffect(() => {

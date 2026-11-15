@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { OutsideTerminal } from '@aubergine/shared';
 import { api } from './api';
+import { runCommand } from './commands';
+import { hint } from './shortcuts';
 import { shortFolder } from './search';
 import { useApp } from './store';
 
@@ -37,7 +39,10 @@ function stopBlocked(terminal: OutsideTerminal): string | null {
  */
 export function OutsidePanel() {
   const canvasId = useApp((s) => s.canvasId);
-  const [open, setOpen] = useState(false);
+  const open = useApp((s) => s.panel === 'outside');
+  const setOpen = (next: boolean): void => {
+    if (next !== (useApp.getState().panel === 'outside')) useApp.getState().togglePanel('outside');
+  };
   const [terminals, setTerminals] = useState<OutsideTerminal[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [failure, setFailure] = useState<string | null>(null);
@@ -59,7 +64,7 @@ export function OutsidePanel() {
   // Look once when the page opens (for the count) and each time the panel opens. No polling.
   useEffect(() => {
     void refresh();
-  }, [refresh]);
+  }, [refresh, open]);
 
   useEffect(() => {
     if (!open) return;
@@ -99,11 +104,8 @@ export function OutsidePanel() {
         type="button"
         className="quiet"
         aria-expanded={open}
-        title="Terminals you have open outside the canvas"
-        onClick={() => {
-          if (!open) void refresh();
-          setOpen((v) => !v);
-        }}
+        title={hint('outside.open', 'Terminals you have open outside the canvas')}
+        onClick={() => runCommand('outside.open')}
       >
         Outside terminals{terminals ? ` (${actionable.length})` : ''}
       </button>

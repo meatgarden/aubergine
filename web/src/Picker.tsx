@@ -1,7 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import type { SearchHit } from '@aubergine/shared';
+import { sortedCanvases, type Canvas, type SearchHit } from '@aubergine/shared';
 import { api } from './api';
-import { canvasLabel, searchSessions, shortFolder } from './search';
+import { COMMANDS, type Command } from './commands';
+import { canvasForDigit, parseQuery, searchCanvases, searchCommands } from './palette';
+import { canvasLabel, searchSessions, shortFolder, type SessionMatch } from './search';
+import { keysOf } from './shortcuts';
 import { useApp } from './store';
 
 const HISTORY_DELAY_MS = 250;
@@ -10,12 +13,18 @@ const HISTORY_MIN_LENGTH = 2;
 const REVEAL_LENGTH = 80;
 
 type Row =
-  | { kind: 'session'; sessionId: string; parked: boolean }
-  | { kind: 'output'; sessionId: string; parked: boolean; hit: SearchHit };
+  | { kind: 'session'; match: SessionMatch }
+  | { kind: 'canvas'; canvas: Canvas; number: number }
+  | { kind: 'command'; command: Command; available: boolean }
+  | { kind: 'output'; hit: SearchHit };
+
+const SECTION: Record<Row['kind'], string> = { session: 'Sessions', canvas: 'Canvases', command: 'Commands', output: 'Terminal output' };
 
 /**
- * The session picker: type to search names, folders, commands and notes, and
- * what terminals have printed, across every canvas. Enter goes there.
+ * The palette: type to find sessions (names, folders, commands, notes, and
+ * what terminals have printed), canvases and commands, across every canvas.
+ * Enter goes there or runs it. `>` in front lists commands only; with nothing
+ * typed, a digit goes to that canvas.
  */
 export function Picker() {
   const open = useApp((s) => s.picker);
@@ -23,13 +32,17 @@ export function Picker() {
   const sessions = useApp((s) => s.app?.sessions);
   const app = useApp((s) => s.app);
   const canvasId = useApp((s) => s.canvasId);
+  const settings = useApp((s) => s.settings);
   const [query, setQuery] = useState('');
   const [index, setIndex] = useState(0);
   const [history, setHistory] = useState<{ query: string; hits: SearchHit[]; truncated: boolean } | null>(null);
   const [searching, setSearching] = useState(false);
   const input = useRef<HTMLInputElement>(null);
+  const list = useRef<HTMLDivElement>(null);
 
-  const matches = useMemo(() => searchSessions(sessions ?? [], query), [sessions, query]);
+  const { commandsOnly, text: wanted } = parseQuery(query);
+  const canvases = useMemo(() => (app ? sortedCanvases(app) : []), [app]);
+  const matches = useMemo(() => (commandsOnly ? [] : searchSessions(sessions ?? [], wanted)), [sessions, wanted, commandsOnly]);
 
   useEffect(() => {
     if (!open) return;
@@ -40,9 +53,9 @@ export function Picker() {
   }, [open]);
 
   // Terminal history is read on demand, a moment after typing stops.
-  const wanted = query.trim();
+  const searchOutput = open && !commandsOnly && wanted.length >= HISTORY_MIN_LENGTH;
   useEffect(() => {
-    if (!open || wanted.length < HISTORY_MIN_LENGTH) {
+    if (!searchOutput) {
       setHistory(null);
       setSearching(false);
       return;
@@ -66,33 +79,120 @@ export function Picker() {
       stale = true;
       window.clearTimeout(timer);
     };
-  }, [open, wanted]);
+  }, [searchOutput, wanted]);
 
   const byId = useMemo(() => new Map((sessions ?? []).map((s) => [s.id, s])), [sessions]);
-  const hits = history?.query === wanted ? history.hits.filter((hit) => byId.has(hit.sessionId)) : [];
+  const hits = searchOutput && history?.query === wanted ? history.hits.filter((hit) => byId.has(hit.sessionId)) : [];
 
-  const rows: Row[] = [
-    ...matches.map((m): Row => ({ kind: 'session', sessionId: m.session.id, parked: m.session.state === 'parked' })),
-    ...hits.map((hit): Row => ({
-      kind: 'output',
-      sessionId: hit.sessionId,
-      parked: byId.get(hit.sessionId)?.state === 'parked',
-      hit,
-    })),
-  ];
-  const selected = Math.min(index, Math.max(0, rows.length - 1));
+  // Keep the row chosen with the arrow keys in view.
+  useEffect(() => {
+    list.current?.querySelector('.selected')?.scrollIntoView({ block: 'nearest' });
+  }, [index, query]);
 
   if (!open) return null;
 
-  const go = async (row: Row): Promise<void> => {
+  const state = useApp.getState();
+  const rows: Row[] = [
+    ...matches.map((match): Row => ({ kind: 'session', match })),
+    ...(commandsOnly ? [] : searchCanvases(canvases, wanted)).map((canvas): Row => ({ kind: 'canvas', canvas, number: canvases.indexOf(canvas) + 1 })),
+    ...searchCommands(COMMANDS, wanted).map((command): Row => ({ kind: 'command', command, available: command.available(state) })),
+    ...hits.map((hit): Row => ({ kind: 'output', hit })),
+  ];
+  const selected = Math.min(index, Math.max(0, rows.length - 1));
+
+  const go = (row: Row): void => {
+    if (row.kind === 'command') {
+      if (!row.available) return;
+      setPicker(false);
+      // Run it against the page as it is once the palette has closed.
+      const now = useApp.getState();
+      if (row.command.available(now)) row.command.run(now);
+      return;
+    }
     setPicker(false);
-    useApp.getState().showSession(row.sessionId);
+    if (row.kind === 'canvas') {
+      useApp.getState().setCanvas(row.canvas.id);
+      return;
+    }
+    const sessionId = row.kind === 'session' ? row.match.session.id : row.hit.sessionId;
+    useApp.getState().showSession(sessionId);
     if (row.kind === 'output') {
       // Scroll the terminal back to the line that matched.
       const text = row.hit.text.trim().slice(0, REVEAL_LENGTH);
-      if (text) void api.revealInSession(row.sessionId, text).catch(() => {});
+      if (text) void api.revealInSession(sessionId, text).catch(() => {});
     }
   };
+
+  const renderRow = (row: Row, i: number): React.ReactNode => {
+    const common = {
+      role: 'option' as const,
+      'aria-selected': i === selected,
+      onMouseEnter: () => setIndex(i),
+      onClick: () => go(row),
+    };
+    const chosen = i === selected ? ' selected' : '';
+    if (row.kind === 'session') {
+      const { session } = row.match;
+      const detail = row.match.excerpt ?? [session.command, shortFolder(session.cwd)].filter(Boolean).join(' · ');
+      const canvas = canvasLabel(app, session.id, canvasId);
+      return (
+        <div key={`s:${session.id}`} {...common} className={`picker-row${chosen}`} data-testid="picker-row">
+          <span className="picker-name">{session.name}</span>
+          {canvas && (
+            <span className="picker-tag picker-canvas" data-testid="picker-canvas">
+              {canvas}
+            </span>
+          )}
+          <span className="picker-detail">{detail}</span>
+          {session.state !== 'open' && <span className="picker-tag">{session.state}</span>}
+        </div>
+      );
+    }
+    if (row.kind === 'canvas') {
+      return (
+        <div key={`c:${row.canvas.id}`} {...common} className={`picker-row${chosen}`} data-testid="picker-canvas-row">
+          <span className="picker-name">{row.canvas.name}</span>
+          <span className="picker-detail">
+            {row.canvas.id === canvasId ? 'this canvas' : `${row.canvas.layout.nodes.length} terminal${row.canvas.layout.nodes.length === 1 ? '' : 's'}`}
+          </span>
+          {row.number <= 9 && wanted === '' && <kbd title="With nothing typed, this digit goes there">{row.number}</kbd>}
+        </div>
+      );
+    }
+    if (row.kind === 'command') {
+      return (
+        <div
+          key={`k:${row.command.id}`}
+          {...common}
+          aria-disabled={!row.available}
+          className={`picker-row command${chosen}${row.available ? '' : ' unavailable'}`}
+          data-testid="picker-command-row"
+          data-command={row.command.id}
+          title={row.command.description}
+        >
+          <span className="picker-name">{row.command.title}</span>
+          <span className="picker-detail">{row.available ? '' : 'not available right now'}</span>
+          <span className="picker-keys">
+            {keysOf(row.command.id, settings).map((key) => (
+              <kbd key={key}>{key}</kbd>
+            ))}
+          </span>
+        </div>
+      );
+    }
+    const session = byId.get(row.hit.sessionId);
+    const canvas = canvasLabel(app, row.hit.sessionId, canvasId);
+    return (
+      <div key={`o:${row.hit.sessionId}:${i}`} {...common} className={`picker-row output${chosen}`} data-testid="picker-output-row">
+        <span className="picker-name">{session?.name}</span>
+        {canvas && <span className="picker-tag picker-canvas">{canvas}</span>}
+        <span className="picker-detail picker-line">{row.hit.text.trim()}</span>
+        {session?.state === 'parked' && <span className="picker-tag">parked</span>}
+      </div>
+    );
+  };
+
+  const outputNote = searching ? ' · searching…' : hits.length === 0 ? ' · no matches' : history?.truncated ? ' · showing the most recent' : '';
 
   return (
     <div
@@ -101,92 +201,57 @@ export function Picker() {
         if (e.target === e.currentTarget) setPicker(false);
       }}
     >
-      <div className="picker" role="dialog" aria-label="Go to session">
+      <div className="picker" role="dialog" aria-label="Go to a session or canvas, or run a command">
         <input
           ref={input}
           className="picker-input"
-          placeholder="Search sessions, notes and terminal output…"
-          aria-label="Search sessions"
+          placeholder="Search sessions, canvases and commands…   > for commands only   1–9 for a canvas"
+          aria-label="Search sessions, canvases and commands"
           value={query}
           onChange={(e) => {
             setQuery(e.target.value);
             setIndex(0);
           }}
           onKeyDown={(e) => {
-            if (e.key === 'Escape') setPicker(false);
-            if (e.key === 'ArrowDown') {
+            if (e.metaKey || e.ctrlKey || e.altKey) return;
+            const canvas = canvasForDigit(canvases, query, e.key);
+            if (canvas) {
+              e.preventDefault();
+              go({ kind: 'canvas', canvas, number: Number(e.key) });
+            } else if (e.key === 'Escape') {
+              setPicker(false);
+            } else if (e.key === 'ArrowDown') {
               e.preventDefault();
               setIndex(Math.min(selected + 1, rows.length - 1));
-            }
-            if (e.key === 'ArrowUp') {
+            } else if (e.key === 'ArrowUp') {
               e.preventDefault();
               setIndex(Math.max(selected - 1, 0));
-            }
-            if (e.key === 'Enter') {
+            } else if (e.key === 'Enter') {
               const row = rows[selected];
-              if (row) void go(row);
+              if (row) go(row);
             }
           }}
         />
-        <div className="picker-results" role="listbox">
-          {matches.length === 0 && hits.length === 0 && !searching && (
-            <div className="picker-empty">Nothing matches.</div>
-          )}
-          {matches.map((match, i) => {
-            const { session } = match;
-            const detail =
-              match.excerpt ?? [session.command, shortFolder(session.cwd)].filter(Boolean).join(' · ');
-            return (
-              <div
-                key={session.id}
-                role="option"
-                aria-selected={i === selected}
-                className={`picker-row${i === selected ? ' selected' : ''}`}
-                data-testid="picker-row"
-                onMouseEnter={() => setIndex(i)}
-                onClick={() => void go({ kind: 'session', sessionId: session.id, parked: session.state === 'parked' })}
-              >
-                <span className="picker-name">{session.name}</span>
-                {canvasLabel(app, session.id, canvasId) && (
-                  <span className="picker-tag picker-canvas" data-testid="picker-canvas">
-                    {canvasLabel(app, session.id, canvasId)}
-                  </span>
-                )}
-                <span className="picker-detail">{detail}</span>
-                {session.state !== 'open' && <span className="picker-tag">{session.state}</span>}
-              </div>
-            );
+        <div className="picker-results" role="listbox" ref={list}>
+          {rows.length === 0 && !searching && <div className="picker-empty">Nothing matches.</div>}
+          {rows.map((row, i) => {
+            const first = i === 0 || rows[i - 1]?.kind !== row.kind;
+            // The output section has its own heading below, shown even while it is empty.
+            return [
+              first && row.kind !== 'output' && (
+                <div key={`h:${row.kind}`} className="picker-section" data-testid={`picker-section-${row.kind}`}>
+                  {SECTION[row.kind]}
+                </div>
+              ),
+              row.kind !== 'output' && renderRow(row, i),
+            ];
           })}
-          {wanted.length >= HISTORY_MIN_LENGTH && (
+          {searchOutput && (
             <div className="picker-section" data-testid="picker-output-section">
-              Terminal output{searching ? ' · searching…' : hits.length === 0 ? ' · no matches' : ''}
-              {history?.truncated && !searching ? ' · showing the most recent' : ''}
+              Terminal output{outputNote}
             </div>
           )}
-          {hits.map((hit, n) => {
-            const i = matches.length + n;
-            const session = byId.get(hit.sessionId);
-            return (
-              <div
-                key={`${hit.sessionId}:${n}`}
-                role="option"
-                aria-selected={i === selected}
-                className={`picker-row output${i === selected ? ' selected' : ''}`}
-                data-testid="picker-output-row"
-                onMouseEnter={() => setIndex(i)}
-                onClick={() =>
-                  void go({ kind: 'output', sessionId: hit.sessionId, parked: session?.state === 'parked', hit })
-                }
-              >
-                <span className="picker-name">{session?.name}</span>
-                {canvasLabel(app, hit.sessionId, canvasId) && (
-                  <span className="picker-tag picker-canvas">{canvasLabel(app, hit.sessionId, canvasId)}</span>
-                )}
-                <span className="picker-detail picker-line">{hit.text.trim()}</span>
-                {session?.state === 'parked' && <span className="picker-tag">parked</span>}
-              </div>
-            );
-          })}
+          {rows.map((row, i) => row.kind === 'output' && renderRow(row, i))}
         </div>
       </div>
     </div>

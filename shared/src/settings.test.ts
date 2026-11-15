@@ -19,6 +19,8 @@ describe('Settings', () => {
       shell: '/bin/bash',
       defaultFolder: '~/work',
       agents: { logPrompts: false, claudeCommand: 'mytool launch -- claude' },
+      shortcuts: { 'terminal.park': 'X', 'view.fit': null },
+      shortcutsInAppWindow: { 'canvas.go.1': ['Meta+1'] },
     };
     expect(Settings.parse(full)).toEqual(full);
   });

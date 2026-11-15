@@ -81,7 +81,9 @@ export function useZoomToNode(): (nodeId: string, options?: { reveal?: boolean }
           : TOP_MARGIN;
       void flow.setViewport(
         { x: Math.round(x - node.position.x), y: Math.round(y - node.position.y), zoom: 1 },
-        { duration: 220 },
+        // From 100% to 100% is only a pan: go in a straight line. The default path zooms out
+        // on the way, and a terminal that had the keyboard would lose it for that moment.
+        { duration: 220, interpolate: isFullZoom(current.zoom) ? 'linear' : 'smooth' },
       );
     },
     [flow],

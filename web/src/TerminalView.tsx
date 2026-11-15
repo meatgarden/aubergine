@@ -9,7 +9,8 @@ import {
 } from '@aubergine/shared';
 import { socketUrl } from './api';
 import { decodeOsc52 } from './clipboard';
-import { isCanvasChord, isMac, isPasteChord } from './keys';
+import { isMac, isPasteChord } from './keys';
+import { activeShortcuts, pickBinding } from './shortcuts';
 import { Outbox } from './outbox';
 import { useApp } from './store';
 
@@ -60,7 +61,10 @@ export function TerminalView({ sessionId, interactive }: Props) {
 
     const mac = isMac();
     // Returning false hands the key back to the browser and the canvas.
-    term.attachCustomKeyEventHandler((event) => !isCanvasChord(event, mac) && !isPasteChord(event, mac));
+    // Chords that belong to the canvas, and the paste chord, are never passed to the program.
+    term.attachCustomKeyEventHandler(
+      (event) => !pickBinding(event, activeShortcuts().bindings, 'terminal') && !isPasteChord(event, mac),
+    );
     // The wheel scrolls this terminal's history only while it has focus;
     // otherwise it belongs to the canvas.
     term.attachCustomWheelEventHandler(() => element.contains(document.activeElement));

@@ -1,7 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import { DEFAULT_SETTINGS, Settings } from '@aubergine/shared';
+import { DEFAULT_SETTINGS, Settings, resolveShortcuts, type Platform } from '@aubergine/shared';
 
 export const SETTINGS_FILE = 'config.json';
 
@@ -20,7 +20,9 @@ export async function loadSettings(dir: string, onWarning: (message: string) => 
     throw error;
   }
   try {
-    return Settings.parse(JSON.parse(text));
+    const settings = Settings.parse(JSON.parse(text));
+    for (const problem of shortcutProblems(settings)) onWarning(`${file}: ${problem}`);
+    return settings;
   } catch (error) {
     const detail =
       error instanceof SyntaxError
@@ -33,6 +35,20 @@ export async function loadSettings(dir: string, onWarning: (message: string) => 
   }
 }
 
+/**
+ * What is wrong with the keys in the settings: unknown commands, chords that
+ * cannot be read, collisions, chords the browser keeps. The browser shows the
+ * same list in its shortcut sheet. Checked for the system this server runs
+ * on, which is where the browser is too.
+ */
+export function shortcutProblems(settings: Settings, platform: Platform = process.platform === 'darwin' ? 'mac' : 'other'): string[] {
+  const { shortcuts, shortcutsInAppWindow } = settings;
+  const inTab = resolveShortcuts({ platform, mode: 'tab', shortcuts }).problems.map((p) => p.message);
+  // The app-window keys are checked as they apply there; what is already reported is not repeated.
+  const inApp = resolveShortcuts({ platform, mode: 'app', shortcuts, shortcutsInAppWindow }).problems.map((p) => p.message);
+  return [...new Set([...inTab, ...inApp])];
+}
+
 /** Expands a leading `~` to the home folder. */
 export function expandHome(folder: string): string {
   if (folder === '~') return os.homedir();
@@ -42,7 +58,7 @@ export function expandHome(folder: string): string {
 /** Keeps the current settings at hand and re-reads the file when asked. */
 export class SettingsFile {
   private current: Settings = DEFAULT_SETTINGS;
-  private lastWarning: string | null = null;
+  private lastWarnings = new Set<string>();
 
   constructor(
     private readonly dir: string,
@@ -54,11 +70,13 @@ export class SettingsFile {
   }
 
   async reload(): Promise<Settings> {
+    const warnings = new Set<string>();
     this.current = await loadSettings(this.dir, (message) => {
       // Say it once per distinct problem, not on every reload.
-      if (message !== this.lastWarning) this.onWarning(message);
-      this.lastWarning = message;
+      if (!this.lastWarnings.has(message)) this.onWarning(message);
+      warnings.add(message);
     });
+    this.lastWarnings = warnings;
     return this.current;
   }
 }

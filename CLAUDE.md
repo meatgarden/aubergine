@@ -7,7 +7,8 @@ Aubergine is a local, browser-based set of canvases, shown as tabs, where each t
 pnpm workspace, TypeScript in strict mode.
 
 ```
-shared/   wire protocol (zod schemas), entity types, settings schema, the change-event reducer
+shared/   wire protocol (zod schemas), entity types, settings schema, the change-event reducer,
+          chords and the command names with their default keys (chords.ts, shortcuts.ts)
 daemon/   Fastify HTTP + WebSocket server, tmux session runtime, JSON store, CLI, start-at-login,
           shell integration (src/shell/), agent support (src/agents/), authorization (src/auth.ts),
           migration of existing terminals (src/migrate/), including reading agent
@@ -15,7 +16,9 @@ daemon/   Fastify HTTP + WebSocket server, tmux session runtime, JSON store, CLI
           shared implementation behind the panel and the CLI (outside.ts); the state
           holder (state-hub.ts), the public routes (v1.ts, public-api.ts) and viewers.ts
 web/      Vite + React + @xyflow/react + @xterm/xterm, Zustand for state; the tab bar (TabBar.tsx)
-          and canvas addresses (address.ts)
+          and canvas addresses (address.ts); commands.ts, shortcuts.ts, canvas-actions.ts,
+          spatial.ts, palette.ts, and the development-only key-tester.html
+docs/     keys.md: what is known about which keys reach a page
 e2e/      Playwright smoke test
 bin/      the `aubergine` command (a launcher for daemon/src/cli.ts)
 ```
@@ -57,7 +60,12 @@ These are the only abstractions in the code base. Each has exactly one implement
 
 - A terminal takes input only at 100% zoom and only while it has focus. Clicking a zoomed-out node zooms to it first. An unfocused terminal is covered by a shield: the first click focuses it.
 - Terminal bodies never drag or pan the canvas. The wheel belongs to a terminal only while it has focus; anywhere else it zooms the canvas.
-- One chord always reaches the canvas, even from a focused terminal: ⌘K on macOS, Ctrl+Shift+K elsewhere. Single-key canvas shortcuts work only when no terminal or text field has focus. The rules are in `web/src/keys.ts`.
+- **Commands.** Everything a button, a key or the palette does is a command in `web/src/commands.ts`, implemented once. A new action is a new command there and a new name in `COMMAND_IDS` in `shared/src/shortcuts.ts`; a button calls `runCommand`. Do not handle a key anywhere else: `web/src/shortcuts.ts` is the only key listener for commands.
+- **Two layers of keys.** A chord works inside a focused terminal only if `belongsToTerminal` says no program there can need it: it includes ⌘ on macOS, or is Ctrl+Shift with a key elsewhere. Everything else (plain keys, Ctrl+key, Alt/Option+key) works only while no terminal, text field, menu or list has the keyboard, whatever the settings file says. Do not weaken that function; its tests list the shell keys that must get through.
+- **Keys are data.** Defaults per platform are in `shared/src/shortcuts.ts`; `resolveShortcuts` applies `shortcuts` (and `shortcutsInAppWindow`) from the settings and returns problems, which the sheet and the server log both show. A wrong entry is reported and skipped, never a reason to drop the file. The sheet, the palette and tooltips read keys from the resolved bindings; never write a key into the interface by hand.
+- **Do not claim a chord is safe without measuring it.** `docs/keys.md` records what was measured and how; the list of chords browsers keep (`keptByBrowser`) is documented behaviour until someone runs the key tester. Automation cannot measure this: it delivers chords a real key press never would.
+- **Selected is not focused.** `selected` in the store is the terminal that commands act on while none has the keyboard; focusing selects, leaving keeps the selection. Keys typed between asking for a terminal and its having the keyboard are never canvas keys (`settleUntil`).
+- A glide that stays at 100% must pan in a straight line (`interpolate: 'linear'`): the default path zooms out on the way and a focused terminal loses the keyboard.
 - Closing a node parks its session; it does not end the shell. Ending a shell for good always asks first.
 - A node keeps a live terminal (and its WebSocket) only while it is on screen and readable; otherwise it shows a snapshot or nothing. The decision is `nodeMode` in `web/src/culling.ts`.
 - Going to a node (`goToNode`) must not depend on animation frames, which stop in a tab that is not showing.
@@ -69,6 +77,7 @@ These are the only abstractions in the code base. Each has exactly one implement
 - Tests await `sessions.refresh()`; never leave one running past teardown.
 - **Test runs must not share anything on the machine.** Every test file that starts tmux takes its socket name from `testSocketName()` in `daemon/src/test-support.ts` (unique per run) and tears down with `destroyTmuxServer`, which ends only that server. Ports are 0 or per run, data folders are temporary and per run, and the browser test's port, data folder, socket and results folder come from the run ID in `playwright.config.ts`. Two checkouts must be able to run `pnpm check` at the same time.
 - Fixtures use made-up values: no process IDs, paths or names copied from a real machine.
+- The Playwright test includes a pass made with the keyboard only; keep it mouse-free.
 - Playwright actions have a 15 s limit; wait for a node to be in view before clicking near it, since a click interrupts the glide.
 - Shell-integration tests use a stand-in `ZDOTDIR`; never assert against, or write to, the developer's own startup files. The same goes for the shell snippet tests.
 
@@ -102,7 +111,9 @@ Agents: the launch command setting, pass-through arguments, showing a new sessio
 
 Canvases, stage A: several canvases as tabs, `/v1` canvas routes for the signed-in browser, `aubergine canvas`, `--canvas`.
 
-Not built yet: API tokens, the activity log, an OpenAPI description and client, terminal input and output over `/v1`, SQLite, an MCP server, presets, a finder agent, recording, bash or fish integration.
+Keyboard: commands, the palette, two layers of keys, the shortcut sheet, rebinding through `shortcuts` and `shortcutsInAppWindow` in the settings.
+
+Not built yet: measured key tables for Safari, Firefox, Linux and Windows, API tokens, the activity log, an OpenAPI description and client, terminal input and output over `/v1`, SQLite, an MCP server, presets, a finder agent, recording, bash or fish integration.
 
 ## Working in this repo
 

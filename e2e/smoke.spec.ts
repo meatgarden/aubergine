@@ -288,4 +288,108 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await page.getByRole('button', { name: 'End session' }).click();
   await expect(page.getByRole('button', { name: /Parked/ })).toHaveCount(0);
   await expect(node).toHaveCount(0);
+
+  // A whole pass without the mouse: a canvas, two terminals, moving between them, switching
+  // canvas, parking, the shortcut sheet and the palette.
+  const mac = process.platform === 'darwin';
+  const chord = (key: string): string => `${mac ? 'Control+Meta' : 'Control+Shift'}+${key}`;
+  const firstCanvas = page.url();
+  await page.keyboard.press('t');
+  await expect(tabs).toHaveCount(2);
+  await expect(page).not.toHaveURL(firstCanvas);
+  const secondCanvas = page.url();
+
+  await page.keyboard.press('n');
+  await expect(node).toHaveCount(1);
+  await expect(node.first()).toHaveAttribute('data-focused', 'true');
+  await expect(node.first().locator('.xterm-rows')).toHaveText(/\S/);
+  // Inside a terminal the plain keys are typing: this line has n, t, p and f in it.
+  await page.keyboard.type('printf "tn-pf-%s\\n" $((40+2))');
+  await page.keyboard.press('Enter');
+  await expect(outputLine(page, 'tn-pf-42')).toHaveCount(1);
+  await expect(node).toHaveCount(1);
+  await expect(tabs).toHaveCount(2);
+
+  // Leaving the terminal keeps it selected; a plain key works again.
+  await page.keyboard.press(chord('Period'));
+  await expect(node.first()).toHaveAttribute('data-selected', 'true');
+  await expect(node.first()).not.toHaveAttribute('data-focused', 'true');
+  // Enter goes back into the selected terminal.
+  await page.keyboard.press('Enter');
+  await expect(node.first()).toHaveAttribute('data-focused', 'true');
+  await page.keyboard.type('echo in-$((3+4))');
+  await page.keyboard.press('Enter');
+  await expect(outputLine(page, 'in-7')).toHaveCount(1);
+  await page.keyboard.press(chord('Period'));
+  await expect(node.first()).toHaveAttribute('data-selected', 'true');
+  await page.keyboard.press('n');
+  await expect(node).toHaveCount(2);
+  await expect(node.nth(1)).toHaveAttribute('data-focused', 'true');
+  await expect(node.nth(1).locator('.xterm-rows')).toHaveText(/\S/);
+  await page.keyboard.type('echo second-$((1+1))');
+  await page.keyboard.press('Enter');
+  await expect(outputLine(page, 'second-2')).toHaveCount(1);
+
+  // From inside one terminal straight into its neighbour, and nothing is typed on the way.
+  const a = await node.first().boundingBox();
+  const b = await node.nth(1).boundingBox();
+  if (!a || !b) throw new Error('The terminals are not on screen');
+  const dx = a.x - b.x;
+  const dy = a.y - b.y;
+  const toFirst = Math.abs(dx) >= Math.abs(dy) ? (dx < 0 ? 'ArrowLeft' : 'ArrowRight') : dy < 0 ? 'ArrowUp' : 'ArrowDown';
+  await page.keyboard.type('echo left-');
+  await page.keyboard.press(chord(toFirst));
+  await expect(node.first()).toHaveAttribute('data-focused', 'true');
+  await page.keyboard.type('echo back-$((2+3))');
+  await page.keyboard.press('Enter');
+  await expect(outputLine(page, 'back-5')).toHaveCount(1);
+  // The line half typed in the other terminal is exactly as it was left.
+  await expect(node.nth(1).locator('.xterm-rows')).toContainText(/echo left-\s*$/);
+
+  // Switching canvas from inside a terminal, then back with a plain key.
+  await page.keyboard.press(chord('BracketLeft'));
+  await expect(page).toHaveURL(firstCanvas);
+  await expect(node).toHaveCount(0);
+  await page.keyboard.press(']');
+  await expect(page).toHaveURL(secondCanvas);
+  await expect(node).toHaveCount(2);
+
+  // Arrows select a terminal without going into it; P parks the selected one.
+  await page.keyboard.press('ArrowRight');
+  await expect(page.locator('[data-testid="terminal-node"][data-selected="true"]')).toHaveCount(1);
+  await page.keyboard.press('p');
+  await expect(node).toHaveCount(1);
+  await expect(page.getByRole('button', { name: 'Parked (1)' })).toBeVisible();
+
+  // The sheet lists every command with its keys.
+  await page.keyboard.press('?');
+  const sheet = page.getByTestId('shortcut-sheet');
+  await expect(sheet).toContainText('Park the terminal');
+  await expect(sheet.locator('[data-command="terminal.park"]')).toContainText('P');
+  await expect(sheet.locator('[data-command="canvas.next"]')).toContainText(mac ? '⌃⌘]' : 'Ctrl+Shift+]');
+  await expect(page.getByTestId('shortcut-problems')).toHaveCount(0);
+  await page.keyboard.press('Escape');
+  await expect(sheet).toHaveCount(0);
+
+  // M opens the list of canvases with the keyboard in it: there, Enter chooses, it is not a canvas key.
+  await page.keyboard.press('ArrowRight');
+  await page.keyboard.press('m');
+  await expect(page.getByRole('menuitem')).toHaveCount(1);
+  await expect(page.getByRole('menuitem')).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(node).toHaveCount(0);
+
+  // The palette: a digit goes to that canvas, and a command runs from it.
+  await page.keyboard.press(mac ? 'Meta+k' : 'Control+Shift+K');
+  await expect(page.getByTestId('picker-section-command')).toBeVisible();
+  await page.keyboard.press('1');
+  await expect(page).toHaveURL(firstCanvas);
+  await expect(node).toHaveCount(1);
+  await page.keyboard.press(mac ? 'Meta+k' : 'Control+Shift+K');
+  await page.keyboard.type('>restore');
+  await expect(page.getByTestId('picker-command-row')).toHaveCount(1);
+  await expect(page.getByTestId('picker-row')).toHaveCount(0);
+  await page.keyboard.press('Enter');
+  await expect(node).toHaveCount(2);
+  await expect(page.getByRole('button', { name: /Parked/ })).toHaveCount(0);
 });

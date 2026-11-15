@@ -958,3 +958,96 @@ code {
 .picker-canvas {
   color: var(--accent-strong);
 }
+
+/* Selected but without the keyboard: a dashed ring, unlike the solid one of focus. */
+.terminal-node.is-selected {
+  border-color: var(--accent-strong);
+  outline: 2px dashed var(--accent-strong);
+  outline-offset: 3px;
+}
+
+kbd {
+  display: inline-block;
+  min-width: 1.2em;
+  padding: 0 5px;
+  margin-right: 4px;
+  font: 12px ui-monospace, Menlo, monospace;
+  text-align: center;
+  color: var(--text);
+  background: var(--panel-hover);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+.dialog.sheet {
+  width: min(860px, calc(100vw - 32px));
+  max-height: calc(100vh - 64px);
+  overflow: auto;
+}
+.sheet-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.sheet-note {
+  font-size: 13px;
+}
+.sheet-groups {
+  columns: 2 340px;
+  column-gap: 28px;
+}
+.sheet-groups section {
+  break-inside: avoid;
+  margin-bottom: 12px;
+}
+.sheet-groups h3 {
+  margin: 0 0 4px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+.sheet-groups table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.sheet-groups td {
+  padding: 2px 0;
+  vertical-align: top;
+}
+.sheet-keys {
+  width: 132px;
+  white-space: nowrap;
+}
+.sheet-none {
+  color: var(--muted);
+  font-size: 12px;
+}
+.sheet-mark {
+  color: var(--accent-strong);
+  font-size: 10px;
+}
+.sheet-problems {
+  margin: 0 0 14px;
+  padding: 10px 12px;
+  border: 1px solid var(--danger);
+  border-radius: 8px;
+}
+.sheet-problems ul {
+  margin: 6px 0 0;
+  padding-left: 18px;
+}
+
+.picker-row.unavailable .picker-name {
+  color: var(--muted);
+}
+.picker-keys {
+  margin-left: auto;
+  white-space: nowrap;
+}
+.picker-row kbd:last-child {
+  margin-right: 0;
+}
+.move-menu kbd {
+  margin-right: 8px;
+}

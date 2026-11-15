@@ -282,17 +282,62 @@ You can have several canvases, shown as tabs along the top: one per project, say
 - Each canvas has its own address (`/c/<id>`), so you can bookmark one, or keep two browser windows on two canvases. Opening the plain address returns to the canvas you looked at last. Each canvas remembers its own pan and zoom in each browser.
 - A terminal is on one canvas at a time. **Move** in its title bar puts it on another canvas; the shell is not touched.
 - Only the canvas you are looking at keeps live terminals. Shells on the others keep running all the same.
-- A tab shows how many of its sessions are waiting for you, and a dot when one has output you have not seen. The waiting queue, the picker (⌘K) and the Parked list cover every canvas, say which canvas a session is on, and take you there.
+- A tab shows how many of its sessions are waiting for you, and a dot when one has output you have not seen. The waiting queue, the palette (⌘K) and the Parked list cover every canvas, say which canvas a session is on, and take you there.
 - **×** on a tab closes the canvas. That never ends a shell: if terminals are on it you choose between moving them to another canvas and parking them. The last canvas cannot be closed.
 - A parked session is on no canvas. Restoring it puts it on the canvas you are looking at, in its old spot if that was on this canvas and is still free.
 
 From a terminal, `aubergine canvas list` and `aubergine canvas new <name>` do the same, and `new`, `here` and `import` take `--canvas <name>`; see [Command line](#command-line).
 
-### Keyboard and focus
+### Keyboard
 
-- Click a terminal to give it the keyboard. A terminal takes input only at 100% zoom; clicking a zoomed-out terminal zooms to it first.
-- While a terminal has focus, every key goes to it. `N`, `F` and `0` work when no terminal or text field has focus; click the background to get there.
-- **⌘K** (Ctrl+Shift+K outside macOS) always reaches the canvas, even from inside a terminal. It opens the session picker: type part of a name, folder, command or note, press Enter, and the view moves to that session and focuses it.
+Everything you do often has a key, and **?** shows all of them for your system.
+
+**Focus.** Click a terminal to give it the keyboard. A terminal takes input only at 100% zoom; clicking a zoomed-out terminal zooms to it first. While a terminal has the keyboard, every key goes to the program in it, apart from the few chords in the first table below. Those are chosen so that no shell, editor or tmux can need them: Ctrl+C, Ctrl+R, Ctrl+A, Option with an arrow, Escape and the rest all reach the terminal.
+
+Leaving a terminal (⌃⌘. or a click on the background) keeps it **selected**, shown with a dashed ring. The single keys in the second table then act on the selected terminal, and Enter goes back into it.
+
+Work everywhere, inside a terminal too:
+
+| | macOS | Linux, Windows |
+|---|---|---|
+| Palette: go to a session or canvas, run any command | ⌘K | Ctrl+Shift+K |
+| Terminal to the left, right, above, below | ⌃⌘← ⌃⌘→ ⌃⌘↑ ⌃⌘↓ | Ctrl+Shift+arrows |
+| Previous, next canvas | ⌃⌘[ ⌃⌘] | Ctrl+Shift+[ Ctrl+Shift+] |
+| Leave the terminal | ⌃⌘. | Ctrl+Shift+. |
+| Next session that is waiting for you | ⌃⌘J | (palette) |
+
+Work while no terminal or text field has the keyboard:
+
+| Key | |
+|---|---|
+| `N`, `C`, `G` | new terminal, new Claude Code session, new frame |
+| arrows, `Enter` | select a terminal, go into it |
+| `P`, `U`, `Shift+P` | park the selected terminal, bring back the last parked one, open the parked list |
+| `R`, `M`, `E` | rename the terminal, move it to another canvas, open or close its notes |
+| `T`, `[` `]`, `1`–`9`, `Shift+R` | new canvas, previous and next canvas, go to a canvas, rename the canvas |
+| `W` | next session that is waiting for you |
+| `F`, `0` | zoom to fit, zoom to 100% |
+| `O`, `?`, `Esc` | Outside terminals, the shortcut sheet, close a panel or clear the selection |
+
+**The palette** (⌘K) lists sessions, canvases and every command with its key. Type part of a name, folder, command or note and press Enter. `>` in front shows commands only. With nothing typed, `1`–`9` goes to that canvas: this needs no special chord, so it works in every browser. Anything that has no key of its own can always be run from here.
+
+**Changing keys.** Add `shortcuts` to `config.json` (see [Settings](#settings)): a command name with a chord, a list of chords, or `null` for no key. The names are in the tooltip of each row of the shortcut sheet, and the palette finds a command by its name.
+
+```json
+{
+  "shortcuts": {
+    "terminal.park": "X",
+    "attention.next": ["Ctrl+Cmd+G", "W"],
+    "view.fit": null
+  }
+}
+```
+
+Reload the page to apply. If a key is set twice, cannot be read, or is one the browser keeps for itself (⌘T, ⌘W, ⌘1 and so on), the shortcut sheet says so at the top and the server prints it; the rest of the file still applies. A chord that a program in a terminal may need (a plain key, Ctrl with a key, Option with a key) is accepted but works only outside terminals.
+
+**In an installed app window** there are no browser tabs, so the browser may leave more chords to the page. None are used by default, because which ones has not been measured. `shortcutsInAppWindow` takes the same entries as `shortcuts` and applies only there, for example `{ "canvas.go.1": "Cmd+1" }`.
+
+**How sure are these keys?** The chords in the first table were chosen from what browsers document, not from measurement with a real keyboard, and Linux and Windows are untested. [docs/keys.md](docs/keys.md) has the details and a page to measure your own browser with. If a chord does nothing for you, rebind it; the palette always works.
 
 ### Scrolling, copy and paste
 
@@ -347,11 +392,11 @@ Prompts can contain secrets. To keep them out of the note log, set `"agents": { 
 aubergine note "migrations done, starting the backfill"
 ```
 
-The picker searches both the summary and the log.
+The palette searches both the summary and the log.
 
 ### Searching terminal output
 
-The picker (⌘K) also searches what terminals have printed, in a **Terminal output** section below the session matches. Choosing a result opens that session scrolled back to the match; press `q` to return to the bottom. It reads each running session's history when you search, parked sessions included. Nothing is indexed or recorded, so it only reaches as far back as the history tmux keeps (50,000 lines) and does not cover sessions that have ended.
+The palette (⌘K) also searches what terminals have printed, in a **Terminal output** section at the end of its list. Choosing a result opens that session scrolled back to the match; press `q` to return to the bottom. It reads each running session's history when you search, parked sessions included. Nothing is indexed or recorded, so it only reaches as far back as the history tmux keeps (50,000 lines) and does not cover sessions that have ended.
 
 ### Many sessions
 
@@ -375,7 +420,9 @@ Create `config.json` in the data folder (the server prints its location at start
   "theme": "dark",
   "shell": null,
   "defaultFolder": "~/work",
-  "agents": { "logPrompts": true, "claudeCommand": "claude" }
+  "agents": { "logPrompts": true, "claudeCommand": "claude" },
+  "shortcuts": {},
+  "shortcutsInAppWindow": {}
 }
 ```
 
@@ -391,7 +438,9 @@ Create `config.json` in the data folder (the server prints its location at start
 
   Aubergine adds its own flags (`--settings <file>`, and `--continue` or `--resume <id>`) at the end. If your launcher needs them somewhere else, mark the place with `{flags}`, for example `"mytool run claude {flags} --then-something"`. The line is typed into your shell exactly as you wrote it, so quote it as you would on the command line.
 
-Font and theme apply when you reload the page; shell and folder apply to the next new terminal.
+- `shortcuts`, `shortcutsInAppWindow`: your own keys; see [Keyboard](#keyboard).
+
+Font, theme and keys apply when you reload the page; shell and folder apply to the next new terminal.
 
 ## Shell environment
 

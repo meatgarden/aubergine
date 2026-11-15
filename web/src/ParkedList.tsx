@@ -1,11 +1,16 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
+import { runCommand } from './commands';
+import { hint } from './shortcuts';
 import { useApp } from './store';
 
 /** Sessions taken off the canvas whose shells are still running. */
 export function ParkedList() {
   const sessions = useApp((s) => s.app?.sessions);
   const askToClose = useApp((s) => s.askToClose);
-  const [open, setOpen] = useState(false);
+  const open = useApp((s) => s.panel === 'parked');
+  const setOpen = (next: boolean): void => {
+    if (next !== (useApp.getState().panel === 'parked')) useApp.getState().togglePanel('parked');
+  };
   const root = useRef<HTMLDivElement>(null);
 
   const parked = (sessions ?? []).filter((s) => s.state === 'parked');
@@ -35,7 +40,7 @@ export function ParkedList() {
 
   return (
     <div className="parked" ref={root}>
-      <button type="button" className="quiet" aria-expanded={open} onClick={() => setOpen((v) => !v)}>
+      <button type="button" className="quiet" aria-expanded={open} title={hint('parked.open')} onClick={() => runCommand('parked.open')}>
         Parked ({parked.length})
       </button>
       {open && (
