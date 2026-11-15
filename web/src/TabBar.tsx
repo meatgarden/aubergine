@@ -89,6 +89,14 @@ export function TabBar() {
               setDragging(null);
               if (moved && moved !== canvas.id) run(api.updateCanvas(moved, { order: orderBefore(canvases, canvas.id) }));
             }}
+            tabIndex={0}
+            onKeyDown={(e) => {
+              // With the keyboard on a tab (F6 gets here), Enter or Space shows that canvas.
+              if (e.target === e.currentTarget && (e.key === 'Enter' || e.key === ' ')) {
+                e.preventDefault();
+                if (!active) setCanvas(canvas.id);
+              }
+            }}
             onClick={() => {
               if (!active) setCanvas(canvas.id);
             }}

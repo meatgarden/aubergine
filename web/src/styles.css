@@ -1281,3 +1281,8 @@ kbd.kept {
   background: var(--accent);
   opacity: 0.4;
 }
+
+.tab:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: -2px;
+}

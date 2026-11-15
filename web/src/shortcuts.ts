@@ -64,7 +64,7 @@ export function belongsToControl(target: EventTarget | null, key: string): boole
   // goes on to the next button, as it does everywhere.
   if (key === 'Tab') return target !== document.body;
   if (target.closest('[role="dialog"], [role="alertdialog"]')) return key !== 'Escape';
-  return (key === 'Enter' || key === ' ') && target.closest('button, a[href], summary, [role="button"]') !== null;
+  return (key === 'Enter' || key === ' ') && target.closest('button, a[href], summary, [role="button"], [role="tab"]') !== null;
 }
 
 /**

@@ -401,6 +401,24 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await expect(node).toHaveCount(1);
   await expect(page.getByRole('button', { name: 'Parked (1)' })).toBeVisible();
 
+  // F6 takes the keyboard to the list, the toolbar, the tabs and back; there Tab is the page's own.
+  const keyboardIn = (): Promise<string> =>
+    page.evaluate(() => {
+      const el = document.activeElement;
+      if (!el || el === document.body) return 'canvas';
+      return el.closest('.terminal-list') ? 'list' : el.closest('.toolbar') ? 'toolbar' : el.closest('.tabbar') ? 'tabs' : 'other';
+    });
+  for (const expected of ['list', 'toolbar', 'tabs', 'canvas']) {
+    await page.keyboard.press('F6');
+    expect(await keyboardIn()).toBe(expected);
+  }
+  await page.keyboard.press('F6');
+  await page.keyboard.press('F6');
+  await page.keyboard.press('Tab');
+  expect(await keyboardIn()).toBe('toolbar');
+  await page.keyboard.press('Escape');
+  expect(await keyboardIn()).toBe('canvas');
+
   // The sheet lists every command with its keys.
   await page.keyboard.press('?');
   const sheet = page.getByTestId('shortcut-sheet');
