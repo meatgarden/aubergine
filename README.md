@@ -267,12 +267,26 @@ Each new tab makes a new session, so park or end the ones you no longer need.
 
 ### Canvas
 
-- **New terminal** (or `N`) adds a terminal in free space near the middle of the view.
+- **New terminal** (or `N`) adds a terminal in free space near the middle of the view, on the canvas you are looking at.
 - Drag a node by its title bar; resize it from its edges; double-click the title to rename it.
 - Drag the background to pan; scroll or pinch to zoom. **Fit** (or `F`) shows everything; the percentage (or `0`) returns to 100%. The minimap in the corner also pans and zooms.
 - **+ Frame** adds a labeled frame. Drag a frame by its label and the terminals inside it move along.
 - The dot in a title bar gives a node or frame a color.
 - The title bar shows the running command and current folder of each session.
+
+### Canvases
+
+You can have several canvases, shown as tabs along the top: one per project, say, or one for long-running jobs. You start with one, named Main.
+
+- **+** adds a canvas. Double-click a tab to rename it, drag it to reorder, and use its dot to give it a color.
+- Each canvas has its own address (`/c/<id>`), so you can bookmark one, or keep two browser windows on two canvases. Opening the plain address returns to the canvas you looked at last. Each canvas remembers its own pan and zoom in each browser.
+- A terminal is on one canvas at a time. **Move** in its title bar puts it on another canvas; the shell is not touched.
+- Only the canvas you are looking at keeps live terminals. Shells on the others keep running all the same.
+- A tab shows how many of its sessions are waiting for you, and a dot when one has output you have not seen. The waiting queue, the picker (⌘K) and the Parked list cover every canvas, say which canvas a session is on, and take you there.
+- **×** on a tab closes the canvas. That never ends a shell: if terminals are on it you choose between moving them to another canvas and parking them. The last canvas cannot be closed.
+- A parked session is on no canvas. Restoring it puts it on the canvas you are looking at, in its old spot if that was on this canvas and is still free.
+
+From a terminal, `aubergine canvas list` and `aubergine canvas new <name>` do the same, and `new`, `here` and `import` take `--canvas <name>`; see [Command line](#command-line).
 
 ### Keyboard and focus
 
@@ -387,9 +401,12 @@ One thing to know: tmux fixes that base environment when its server first starts
 
 ```
 aubergine list                 sessions with their state, command and folder
-aubergine new [name]           start a new terminal on the canvas
+aubergine new [name]           start a new terminal on a canvas
+aubergine canvas list          the canvases, with how many terminals are on each and how many wait for you
+aubergine canvas new <name>    add a canvas
 aubergine attach <name>        open a session in this terminal
 aubergine here [name] [-- cmd] start a session in this folder and turn this terminal into a view of it
+                               --canvas <name>  put it on this canvas
                                --no-attach  only create it
                                --no-open    do not bring it up in the browser
                                --claude     start Claude Code in it, continuing this folder's last conversation
@@ -401,6 +418,7 @@ aubergine move <terminal>…     start a copy of each one's conversation on the 
 aubergine scan                 list open terminals that are not on the canvas yet (read-only)
 aubergine import <terminal>…   give those terminals a canvas session in the same folder
 aubergine import               the same for every one, one per folder (--all, --dry-run)
+                               --canvas <name>  put them on this canvas
 aubergine shell-hook print     print the zsh lines that make new tabs start on the canvas
 aubergine note <text>          inside a session: add an entry to its note log
 aubergine hooks print          print the Claude Code hook settings
@@ -409,6 +427,8 @@ aubergine service uninstall    stop starting it at login
 ```
 
 `attach` and `here` show the very same session as the canvas, so both views stay in step. Close the terminal window to detach; the session keeps running. See [Moving your existing terminals over](#moving-your-existing-terminals-over) for `here`, `move`, `scan`, `import` and `shell-hook`.
+
+`new`, `here` and `import` take `--canvas <name>`: the name, the start of it if that is unambiguous, or the canvas's ID. Capitals do not matter. Without it the session goes to the canvas you looked at most recently in a browser, or to the first canvas if the server has not seen a browser since it started. `canvas list` marks that canvas with `*`.
 
 `service install` writes a per-user launchd agent that runs the server from this checkout, with the port and data folder in effect when you ran it. Run `pnpm build` first.
 
@@ -431,12 +451,41 @@ POST /v1/sessions/<id>/notes       {"text": "..."}
 
 Everything else is refused. `aubergine note` and `aubergine hook` are thin wrappers around these two calls.
 
+## For programs
+
+Canvases and what is on them can be read and changed over HTTP, under `/v1`:
+
+```
+GET    /v1/canvases                          list canvases, each with counts of sessions, waiting and unread
+POST   /v1/canvases                          {"name": "...", "color"?, "labels"?}
+GET    /v1/canvases/<id>                     one canvas with its nodes and frames
+PATCH  /v1/canvases/<id>                     any of name, color, order, labels
+DELETE /v1/canvases/<id>?sessions=park       close it; or ?sessions=move&to=<canvas id>
+GET    /v1/canvases/<id>/sessions            the sessions on it, each with its node
+POST   /v1/canvases/<id>/sessions            start a session there: {"name"?, "cwd"?, "command"?, "position"?}
+POST   /v1/sessions/<id>/move                {"canvasId": "...", "position"?}
+PATCH  /v1/canvases/<id>/nodes/<node id>     move, resize or color a node
+POST   /v1/canvases/<id>/frames              add a frame
+PATCH  /v1/canvases/<id>/frames/<frame id>   change a frame
+DELETE /v1/canvases/<id>/frames/<frame id>   remove a frame
+```
+
+**These routes are for the signed-in browser only for now.** They accept the access cookie the canvas page uses, with the same `Host` and `Origin` checks, and refuse a session's token: a program inside a session cannot list, create or rearrange canvases. Tokens for programs of your own are not built yet; until they are, treat this as the shape of the interface, not as something to script against from outside a browser. (The `aubergine` command uses these routes with the access token from the data folder.)
+
+The shapes are meant to last:
+
+- Errors are always `{"error": {"code": "...", "message": "..."}}` with a fitting HTTP status.
+- Lists return `{"items": [...], "nextCursor": "..." | null}`. Pass `?cursor=<nextCursor>` for the next page and `?limit=` for its size. A cursor is opaque.
+- Fields you send that the server does not know are ignored, and responses may gain fields.
+- Times are ISO 8601 in UTC.
+- A `POST` that creates something takes an optional `Idempotency-Key` header: sending the same key again returns the first answer instead of creating a second thing. Keys are remembered until the server restarts.
+
 ## Develop
 
 ```sh
 pnpm dev          # daemon on :4600 and the web dev server on http://127.0.0.1:5173
 pnpm check        # type check, lint, unit tests and the browser smoke test
-pnpm load-canvas  # a throwaway canvas with 90 sessions, for judging scale by hand
+pnpm load-canvas  # three throwaway canvases with 90 sessions between them, for judging scale by hand
 ```
 
 The smoke test needs a browser once: `pnpm exec playwright install chromium`.

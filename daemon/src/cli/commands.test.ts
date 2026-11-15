@@ -1,6 +1,16 @@
 import { describe, expect, it } from 'vitest';
 import { NO_ATTENTION, NO_STATUS, newId, type Session } from '@aubergine/shared';
-import { UsageError, formatSessions, insideAubergine, nameForFolder, parseCommand, resolveSession } from './commands';
+import {
+  UsageError,
+  formatCanvases,
+  formatSessions,
+  insideAubergine,
+  nameForFolder,
+  parseCommand,
+  resolveCanvas,
+  resolveSession,
+  takeOption,
+} from './commands';
 
 function session(name: string, extra: Partial<Session> = {}): Session {
   return {
@@ -25,13 +35,13 @@ describe('parseCommand', () => {
   it('parses each command', () => {
     expect(parseCommand([])).toEqual({ name: 'help' });
     expect(parseCommand(['list'])).toEqual({ name: 'list' });
-    expect(parseCommand(['new'])).toEqual({ name: 'new', sessionName: null });
-    expect(parseCommand(['new', 'api', 'server'])).toEqual({ name: 'new', sessionName: 'api server' });
+    expect(parseCommand(['new'])).toEqual({ name: 'new', sessionName: null, canvas: null });
+    expect(parseCommand(['new', 'api', 'server'])).toEqual({ name: 'new', sessionName: 'api server', canvas: null });
     expect(parseCommand(['attach', 'api'])).toEqual({ name: 'attach', query: 'api' });
     expect(parseCommand(['note', 'tests', 'pass'])).toEqual({ name: 'note', text: 'tests pass' });
     expect(parseCommand(['scan'])).toEqual({ name: 'scan' });
-    expect(parseCommand(['import'])).toEqual({ name: 'import', terminals: [], all: false, dryRun: false });
-    expect(parseCommand(['import', '--dry-run', '--all'])).toEqual({ name: 'import', terminals: [], all: true, dryRun: true });
+    expect(parseCommand(['import'])).toEqual({ name: 'import', terminals: [], all: false, dryRun: false, canvas: null });
+    expect(parseCommand(['import', '--dry-run', '--all'])).toEqual({ name: 'import', terminals: [], all: true, dryRun: true, canvas: null });
     expect(parseCommand(['import', 'ttys004', 'ttys007'])).toMatchObject({ terminals: ['ttys004', 'ttys007'] });
     expect(parseCommand(['hook', 'stop'])).toEqual({ name: 'hook', event: 'stop' });
     expect(parseCommand(['hooks', 'print'])).toEqual({ name: 'hooks-print' });
@@ -57,6 +67,7 @@ describe('here', () => {
     expect(parseCommand(['here'])).toEqual({
       name: 'here',
       sessionName: null,
+      canvas: null,
       attach: true,
       open: true,
       claude: false,
@@ -162,5 +173,58 @@ describe('formatSessions', () => {
       'a longer name  parked  -        -',
     ]);
     expect(formatSessions([])).toBe('No sessions.');
+  });
+});
+
+describe('canvases', () => {
+  const canvas = (name: string, sessions = 0, waiting = 0) => ({
+    id: newId(),
+    projectId: newId(),
+    name,
+    color: 'none' as const,
+    order: 0,
+    labels: {},
+    createdAt: '2026-01-01T00:00:00.000Z',
+    counts: { sessions, waiting, unread: 0 },
+  });
+
+  it("parses the canvas commands and the option that names one", () => {
+    expect(parseCommand(['canvas'])).toEqual({ name: 'canvas-list' });
+    expect(parseCommand(['canvas', 'list'])).toEqual({ name: 'canvas-list' });
+    expect(parseCommand(['canvas', 'new', 'Client', 'work'])).toEqual({ name: 'canvas-new', canvasName: 'Client work' });
+    expect(() => parseCommand(['canvas', 'new'])).toThrow(/needs a name/);
+    expect(() => parseCommand(['canvas', 'close', 'x'])).toThrow(UsageError);
+
+    expect(parseCommand(['new', 'api', '--canvas', 'Client work'])).toEqual({ name: 'new', sessionName: 'api', canvas: 'Client work' });
+    expect(parseCommand(['new', '--canvas=Deploys'])).toEqual({ name: 'new', sessionName: null, canvas: 'Deploys' });
+    expect(parseCommand(['here', '--canvas', 'Deploys', 'api', '--no-attach'])).toMatchObject({ sessionName: 'api', canvas: 'Deploys', attach: false });
+    expect(parseCommand(['import', 'ttys004', '--canvas', 'Deploys'])).toMatchObject({ terminals: ['ttys004'], canvas: 'Deploys' });
+    // After "--" it belongs to the command being started.
+    expect(parseCommand(['here', '--', 'run', '--canvas', 'x'])).toMatchObject({ canvas: null, command: ['run', '--canvas', 'x'] });
+  });
+
+  it("refuses an option without a name, or given twice", () => {
+    expect(() => takeOption(['--canvas'], '--canvas')).toThrow(/needs a name/);
+    expect(() => takeOption(['--canvas', '--all'], '--canvas')).toThrow(/needs a name/);
+    expect(() => takeOption(['--canvas='], '--canvas')).toThrow(/needs a name/);
+    expect(() => takeOption(['--canvas', 'a', '--canvas=b'], '--canvas')).toThrow(/twice/);
+    expect(takeOption(['a', '--canvas', 'b', 'c'], '--canvas')).toEqual({ value: 'b', rest: ['a', 'c'] });
+  });
+
+  it("finds a canvas by name, by the start of its name, or by ID", () => {
+    const all = [canvas('Main'), canvas('Deploys'), canvas('Design')];
+    expect(resolveCanvas(all, 'main')).toBe(all[0]);
+    expect(resolveCanvas(all, 'dep')).toBe(all[1]);
+    expect(resolveCanvas(all, all[2]!.id)).toBe(all[2]);
+    expect(() => resolveCanvas(all, 'de')).toThrow(/could be: "Deploys", "Design"/);
+    expect(() => resolveCanvas(all, 'nowhere')).toThrow(/No canvas named "nowhere"/);
+    expect(() => resolveCanvas([canvas('Twin'), canvas('twin')], 'Twin')).toThrow(/2 canvases are named/);
+  });
+
+  it("lists canvases with their counts and marks where new sessions go", () => {
+    const all = [canvas('Main', 1), canvas('Deploys', 3, 2)];
+    const text = formatCanvases(all, all[1]!.id);
+    expect(text).toContain('  Main     1 terminal\n');
+    expect(text).toContain('* Deploys  3 terminals  2 waiting for you');
   });
 });

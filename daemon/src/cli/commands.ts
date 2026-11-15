@@ -1,13 +1,17 @@
-import type { Session } from '@aubergine/shared';
+import type { CanvasSummary, Session } from '@aubergine/shared';
 import { HOOK_EVENTS, type HookEvent } from '../agents/claude-code';
 
 export type Command =
   | { name: 'list' }
-  | { name: 'new'; sessionName: string | null }
+  | { name: 'new'; sessionName: string | null; canvas: string | null }
+  | { name: 'canvas-list' }
+  | { name: 'canvas-new'; canvasName: string }
   | { name: 'attach'; query: string }
   | {
       name: 'here';
       sessionName: string | null;
+      /** The canvas to put it on, by name; null means the one most recently looked at. */
+      canvas: string | null;
       attach: boolean;
       /** Show the new session on an open canvas, or open a browser on it. */
       open: boolean;
@@ -29,7 +33,7 @@ export type Command =
       dryRun: boolean;
       open: boolean;
     }
-  | { name: 'import'; terminals: string[]; all: boolean; dryRun: boolean }
+  | { name: 'import'; terminals: string[]; all: boolean; dryRun: boolean; canvas: string | null }
   | { name: 'note'; text: string }
   | { name: 'hook'; event: HookEvent }
   | { name: 'hooks-print' }
@@ -40,9 +44,12 @@ export type Command =
 export const USAGE = `Usage: aubergine <command>
 
   list                       List sessions with their state, command and folder
-  new [name]                 Start a new terminal on the canvas
+  new [name]                 Start a new terminal on a canvas
+  canvas list                List the canvases, with how many terminals are on each and how many wait for you
+  canvas new <name>          Add a canvas
   attach <name>              Open a session in this terminal (detach by closing the window)
   here [name] [-- command]   Start a session in this folder and turn this terminal into a view of it
+                             --canvas <name>   put it on this canvas
                              --no-attach   only create it
                              --no-open     do not bring it up in the browser
                              --claude      start Claude Code in it, continuing this folder's last conversation
@@ -51,6 +58,7 @@ export const USAGE = `Usage: aubergine <command>
   scan                       List your open terminals that are not on the canvas yet (read-only)
   import [terminal…]         Give those terminals a canvas session in the same folder; with none named,
                              every one, one per folder (--all: one per terminal). --dry-run shows the plan
+                             --canvas <name>   put them on this canvas
   move [terminal…|--all]     Move running Claude Code tabs onto the canvas; with nothing named, list them
                              (default)     start a copy of the conversation; the original keeps running
                              --stop        ask an idle original to exit, then resume the same conversation
@@ -63,9 +71,39 @@ export const USAGE = `Usage: aubergine <command>
   service uninstall          Stop starting it at login
   help                       Show this text
 
-The server must be running for list, new, attach, here, scan, import, move and note.`;
+new, here and import take --canvas <name>. Without it they use the canvas you looked at most recently
+in a browser, or the first one when no browser is open.
+
+The server must be running for list, new, canvas, attach, here, scan, import, move and note.`;
 
 export class UsageError extends Error {}
+
+/**
+ * Takes one `--option value` (or `--option=value`) out of some words.
+ * Returns the value, null when the option is not there, and the other words.
+ */
+export function takeOption(words: readonly string[], option: string): { value: string | null; rest: string[] } {
+  const rest: string[] = [];
+  let value: string | null = null;
+  for (let index = 0; index < words.length; index += 1) {
+    const word = words[index] as string;
+    let found: string | undefined;
+    if (word === option) {
+      found = words[index + 1];
+      index += 1;
+      if (found === undefined || found.startsWith('--')) throw new UsageError(`${option} needs a name`);
+    } else if (word.startsWith(`${option}=`)) {
+      found = word.slice(option.length + 1);
+    } else {
+      rest.push(word);
+      continue;
+    }
+    if (found.trim() === '') throw new UsageError(`${option} needs a name`);
+    if (value !== null) throw new UsageError(`${option} was given twice`);
+    value = found;
+  }
+  return { value, rest };
+}
 
 export function parseCommand(argv: readonly string[]): Command {
   const [command, ...rest] = argv;
@@ -79,14 +117,33 @@ export function parseCommand(argv: readonly string[]): Command {
     case 'ls':
       if (rest.length > 0) throw new UsageError('list takes no arguments');
       return { name: 'list' };
-    case 'new':
-      return { name: 'new', sessionName: rest.length > 0 ? rest.join(' ') : null };
+    case 'new': {
+      const { value: canvas, rest: words } = takeOption(rest, '--canvas');
+      const unknown = words.find((word) => word.startsWith('--'));
+      if (unknown) throw new UsageError(`new does not know ${unknown}`);
+      return { name: 'new', sessionName: words.length > 0 ? words.join(' ') : null, canvas };
+    }
+    case 'canvas':
+    case 'canvases': {
+      const [action, ...words] = rest;
+      if (action === undefined || action === 'list' || action === 'ls') {
+        if (words.length > 0) throw new UsageError('canvas list takes no arguments');
+        return { name: 'canvas-list' };
+      }
+      if (action === 'new') {
+        const unknown = words.find((word) => word.startsWith('--'));
+        if (unknown) throw new UsageError(`canvas new does not know ${unknown}`);
+        if (words.join(' ').trim() === '') throw new UsageError('canvas new needs a name');
+        return { name: 'canvas-new', canvasName: words.join(' ') };
+      }
+      throw new UsageError('canvas needs "list" or "new <name>"');
+    }
     case 'attach':
       if (rest.length === 0) throw new UsageError('attach needs a session name');
       return { name: 'attach', query: rest.join(' ') };
     case 'here': {
       const split = rest.indexOf('--');
-      const options = split < 0 ? rest : rest.slice(0, split);
+      const { value: canvas, rest: options } = takeOption(split < 0 ? rest : rest.slice(0, split), '--canvas');
       const command = split < 0 ? [] : rest.slice(split + 1);
       const flags = options.filter((word) => word.startsWith('--'));
       const unknown = flags.find((flag) => !['--no-attach', '--no-open', '--claude', '--from-shell-hook'].includes(flag));
@@ -96,6 +153,7 @@ export function parseCommand(argv: readonly string[]): Command {
       return {
         name: 'here',
         sessionName: words.length > 0 ? words.join(' ') : null,
+        canvas,
         attach: !flags.includes('--no-attach'),
         // Never from the shell snippet or when only creating: those must not take the user's attention.
         open: !flags.some((flag) => ['--no-open', '--no-attach', '--from-shell-hook'].includes(flag)),
@@ -127,13 +185,15 @@ export function parseCommand(argv: readonly string[]): Command {
       };
     }
     case 'import': {
-      const unknown = rest.find((word) => word.startsWith('--') && word !== '--all' && word !== '--dry-run');
+      const { value: canvas, rest: words } = takeOption(rest, '--canvas');
+      const unknown = words.find((word) => word.startsWith('--') && word !== '--all' && word !== '--dry-run');
       if (unknown) throw new UsageError(`import does not know ${unknown}`);
       return {
         name: 'import',
-        terminals: rest.filter((word) => !word.startsWith('--')),
-        all: rest.includes('--all'),
-        dryRun: rest.includes('--dry-run'),
+        terminals: words.filter((word) => !word.startsWith('--')),
+        all: words.includes('--all'),
+        dryRun: words.includes('--dry-run'),
+        canvas,
       };
     }
     case 'note':
@@ -210,4 +270,38 @@ export function insideAubergine(env: NodeJS.ProcessEnv, tmuxSocket: string): boo
 export function nameForFolder(folder: string): string {
   const base = folder.split('/').filter(Boolean).pop() ?? '';
   return base.trim().slice(0, 80) || 'Terminal';
+}
+
+/**
+ * Finds the canvas a name refers to: an exact name (case does not matter),
+ * else a unique name starting with the text, else its ID.
+ */
+export function resolveCanvas<T extends { id: string; name: string }>(canvases: readonly T[], query: string): T {
+  const wanted = query.trim().toLowerCase();
+  const exact = canvases.filter((c) => c.name.toLowerCase() === wanted);
+  if (exact.length === 1) return exact[0] as T;
+  if (exact.length > 1) {
+    throw new UsageError(`${exact.length} canvases are named "${query}". Rename one, or give its ID (see: aubergine canvas list).`);
+  }
+  const starting = canvases.filter((c) => c.name.toLowerCase().startsWith(wanted));
+  if (starting.length === 1) return starting[0] as T;
+  if (starting.length > 1) {
+    throw new UsageError(`"${query}" could be: ${starting.map((c) => `"${c.name}"`).join(', ')}`);
+  }
+  const byId = canvases.find((c) => c.id === wanted);
+  if (byId) return byId;
+  throw new UsageError(`No canvas named "${query}". See: aubergine canvas list, or add it with: aubergine canvas new "${query}"`);
+}
+
+/** The canvases as a table. `currentId` is the one new sessions go to when none is named. */
+export function formatCanvases(canvases: readonly CanvasSummary[], currentId: string | null, ids = false): string {
+  if (canvases.length === 0) return 'No canvases.';
+  const width = Math.max(...canvases.map((c) => c.name.length), 4);
+  const lines = canvases.map((c) => {
+    const mark = c.id === currentId ? '*' : ' ';
+    const terminals = `${c.counts.sessions} terminal${c.counts.sessions === 1 ? '' : 's'}`;
+    const waiting = c.counts.waiting > 0 ? `  ${c.counts.waiting} waiting for you` : '';
+    return `${mark} ${c.name.padEnd(width)}  ${terminals}${waiting}${ids ? `  ${c.id}` : ''}`;
+  });
+  return `${lines.join('\n')}\n\n* where new sessions go when no --canvas is given`;
 }
