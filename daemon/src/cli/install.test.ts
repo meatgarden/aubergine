@@ -311,13 +311,24 @@ async function somethingElse(): Promise<{ port: number; stop: () => Promise<void
   };
 }
 
-/** A port nothing is listening on. */
+/**
+ * A port nothing is listening on, and that nothing will be given by chance:
+ * tests that ask the system for "any port" get one from its own range, above
+ * this one, so a port from here cannot be taken between choosing it and using it.
+ */
 async function freePort(): Promise<number> {
-  const server = net.createServer();
-  await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
-  const { port } = server.address() as AddressInfo;
-  await new Promise((resolve) => server.close(resolve));
-  return port;
+  for (let attempt = 0; attempt < 50; attempt++) {
+    const port = 20_000 + Math.floor(Math.random() * 8000);
+    const server = net.createServer();
+    const free = await new Promise<boolean>((resolve) => {
+      server.once('error', () => resolve(false));
+      server.listen(port, '127.0.0.1', () => resolve(true));
+    });
+    if (!free) continue;
+    await new Promise((resolve) => server.close(resolve));
+    return port;
+  }
+  throw new Error('No free port found');
 }
 
 // The real command against a real server, with a data folder, home folder, port and tmux socket of the test's own.
@@ -471,6 +482,8 @@ describe('aubergine start', () => {
     try {
       for (let i = 0; i < 150 && (await whoAnswers(port, 500)) !== 'aubergine'; i++) await new Promise((resolve) => setTimeout(resolve, 200));
       expect(await whoAnswers(port)).toBe('aubergine');
+      // The port can answer a moment before the line that announces it has come through the pipe.
+      for (let i = 0; i < 100 && !output.includes(`http://127.0.0.1:${port}`); i++) await new Promise((resolve) => setTimeout(resolve, 50));
       expect(output).toContain(`http://127.0.0.1:${port}`);
       // The sign-in address works against the server it started.
       const token = readFileSync(path.join(data, 'token'), 'utf8').trim();

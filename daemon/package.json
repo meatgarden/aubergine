@@ -7,7 +7,8 @@
     "dev": "AUBERGINE_DEV_ORIGIN=http://127.0.0.1:5173 tsx watch src/main.ts",
     "start": "tsx src/main.ts",
     "typecheck": "tsc -p tsconfig.json",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:install": "vitest run --config vitest.install.config.ts"
   },
   "dependencies": {
     "@aubergine/shared": "workspace:*",
