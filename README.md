@@ -82,6 +82,47 @@ Because it is a link and not a copy:
 
 You can also skip the link and run it by path. From this folder that is `node bin/aubergine.mjs list`; from anywhere else, give the full path to the file, for example `node ~/code/aubergine/bin/aubergine.mjs list` if you cloned into `~/code`.
 
+### Questions about the `aubergine` command
+
+**What has to be true for `aubergine` to work in a terminal?** Two things. A file named `aubergine` has to exist in some folder, which is the link from step 6. And that folder has to be on your `PATH`, the list of folders your shell searches when you type a command name. With Homebrew the second part is already done, because Homebrew's command folder was put on your `PATH` when Homebrew was installed. So only the link is missing.
+
+**Do I have to be inside this folder to use it?** No. Once the link exists, `aubergine list`, `aubergine here` and the rest work from any folder. That is the point of `aubergine here`, which you run inside your other projects.
+
+**Then why does step 6 say "from the `aubergine` folder"?** Only because that one command contains `$PWD`, which means "the folder I am in right now". Run from anywhere else, it would point the link at the wrong place. To run it from anywhere, write the path out, for example:
+
+```sh
+ln -s ~/code/aubergine/bin/aubergine.mjs "$(brew --prefix)/bin/aubergine"
+```
+
+**What is `$(brew --prefix)/bin/aubergine`?** It is not a command; it is the place the link is put and the name it is given. `brew --prefix` prints the folder Homebrew lives in, and `$( … )` pastes that in. On an Apple Silicon Mac the whole thing becomes `/opt/homebrew/bin/aubergine`; on an Intel Mac, `/usr/local/bin/aubergine`. Asking Homebrew where it lives is what lets the same line work on both.
+
+**Does this folder have to stay where it is?** Yes. The link is a pointer, so the command runs the code in this folder. It needs the folder to stay put, its dependencies installed (`pnpm install`), and, for most commands, the server running.
+
+**Is the command available inside terminals on the canvas?** Only if you made the link. Terminals on the canvas use your normal `PATH`. Status and agent hooks do not depend on it, because they record the full path to the file, but typing `aubergine note "…"` yourself does.
+
+### Without admin rights
+
+Nothing in Aubergine needs an administrator password. What can need one is getting its tools onto a managed computer.
+
+**The link.** Creating a link never needs admin rights; it needs a folder you are allowed to write to. The Homebrew line in step 6 fails on a computer with no Homebrew, or where someone else installed it (`permission denied`). Use a folder in your own home instead, which always works:
+
+```sh
+mkdir -p ~/.local/bin
+ln -s "$PWD/bin/aubergine.mjs" ~/.local/bin/aubergine
+```
+
+and make sure that folder is on your `PATH` (add `export PATH="$HOME/.local/bin:$PATH"` to your `.zshrc` and open a new terminal). Or make no link at all and run the command by its full path.
+
+**The tools.**
+
+| Tool | Without admin rights |
+|---|---|
+| Node.js | Install it into your home folder with a version manager. |
+| pnpm | Its standalone installer puts it in your home folder. |
+| tmux | The hard one: it has no per-user installer of its own. Ask your IT department for it, use a per-user package manager your company allows, or build it from source into your home folder. If `tmux` is somewhere unusual, point Aubergine at it with `AUBERGINE_TMUX_BIN`. |
+
+**Everything else stays in your account.** The server listens on `127.0.0.1` only, its data is in your own application-data folder, and start at login is a per-user launchd agent.
+
 ### Stopping, restarting and updating
 
 - **Stop the server** with Ctrl+C in the terminal where it runs. Your terminals on the canvas keep running; start the server again and reload the page to get them back.
