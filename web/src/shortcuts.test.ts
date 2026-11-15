@@ -69,6 +69,12 @@ describe('pickBinding', () => {
     expect(pickBinding(press('PageDown', 'PageDown', { ctrlKey: true }), mac, 'canvas')?.command).toBe('canvas.next');
   });
 
+  it('lets a function key through from a list or a text field, never from a terminal', () => {
+    expect(pickBinding(press('F6', 'F6'), mac, 'canvas')?.command).toBe('controls.focus');
+    expect(pickBinding(press('F6', 'F6'), mac, 'text')?.command).toBe('controls.focus');
+    expect(pickBinding(press('F6', 'F6'), mac, 'terminal')).toBeNull();
+  });
+
   it('leaves the shell every key it needs', () => {
     const shellKeys: KeyPress[] = [
       press('c', 'KeyC', { ctrlKey: true }),

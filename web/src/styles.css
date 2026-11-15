@@ -89,10 +89,15 @@ code {
   width: 100vw;
   height: 100vh;
 }
-.canvas {
+.workspace {
   flex: 1;
   min-height: 0;
-  width: 100%;
+  display: flex;
+}
+.canvas {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
 }
 
 /* ---------- Canvas tabs ---------- */
@@ -1063,4 +1068,216 @@ kbd.kept {
 }
 .sheet-keys {
   white-space: normal;
+}
+
+/* ---------- Terminal list ---------- */
+
+.terminal-list {
+  position: relative;
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: var(--panel);
+  border-right: 1px solid var(--border);
+  font-size: 13px;
+}
+.terminal-list.collapsed {
+  width: 26px;
+  align-items: center;
+  padding-top: 6px;
+}
+.terminal-list.collapsed button {
+  padding: 2px 6px;
+}
+.list-head {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 6px 6px 10px;
+  color: var(--muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.list-head button {
+  padding: 0 6px;
+}
+.list-count {
+  color: var(--muted);
+  font-size: 11px;
+  margin-left: 4px;
+}
+.list-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.list-rows:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: -1px;
+}
+.list-empty {
+  padding: 8px 10px;
+  color: var(--muted);
+}
+.list-heading {
+  padding: 8px 10px 2px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.list-row {
+  position: relative;
+  padding: 4px 28px 4px 10px;
+  border-left: 2px solid transparent;
+  cursor: pointer;
+}
+.list-row.indented {
+  padding-left: 18px;
+}
+.list-row:hover {
+  background: var(--panel-hover);
+}
+.list-row.current {
+  background: var(--panel-hover);
+  border-left-color: var(--accent-strong);
+  border-left-style: dashed;
+}
+.list-row.focused {
+  border-left-style: solid;
+  border-left-color: var(--accent);
+}
+.list-main {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.list-name {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text);
+}
+.list-marks {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+}
+.list-agent {
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 0 3px;
+  font-size: 10px;
+}
+.list-detail {
+  color: var(--muted);
+  font-size: 11px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.list-more {
+  position: absolute;
+  top: 3px;
+  right: 4px;
+  padding: 0 5px;
+  opacity: 0;
+}
+.list-row:hover .list-more,
+.list-more:focus-visible,
+.list-more[aria-expanded='true'] {
+  opacity: 1;
+}
+.list-menu {
+  position: absolute;
+  top: 24px;
+  right: 4px;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  min-width: 140px;
+  padding: 4px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.4);
+}
+.list-menu button {
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+.list-menu button:hover {
+  background: var(--panel-hover);
+}
+.list-section {
+  border-top: 1px solid var(--border);
+  padding: 2px 0;
+}
+.list-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 5px 10px;
+  background: none;
+  border: none;
+  color: var(--muted);
+  text-align: left;
+  font-size: 12px;
+}
+.list-chevron {
+  width: 10px;
+  font-size: 10px;
+}
+.list-canvas {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding-left: 8px;
+}
+.list-canvas .list-toggle {
+  width: auto;
+  padding: 3px 2px;
+}
+.list-canvas-name {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background: none;
+  border: none;
+  padding: 3px 2px;
+  color: var(--text);
+  text-align: left;
+}
+.list-resize {
+  position: absolute;
+  top: 0;
+  right: -3px;
+  width: 6px;
+  height: 100%;
+  cursor: col-resize;
+  z-index: 5;
+}
+.list-resize:hover {
+  background: var(--accent);
+  opacity: 0.4;
 }

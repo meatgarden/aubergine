@@ -14,6 +14,7 @@ import {
 import { ApiError, api, subscribeToEvents } from './api';
 import { canvasIdFromPath, chooseCanvas, rememberCanvas, rememberedCanvas, sessionFromAddress, writeAddress } from './address';
 import { announcement, notificationsWanted } from './attention';
+import { clampListWidth, loadListPrefs, saveListPrefs, type ListPrefs } from './terminal-list';
 
 export type Phase =
   | 'loading'
@@ -52,6 +53,8 @@ export interface AppStore {
   ask: Ask | null;
   /** The last thing that went wrong, shown in the toolbar. */
   notice: string | null;
+  /** The terminal list on the left: collapsed or not, and its width. Remembered by this browser. */
+  list: ListPrefs;
   /** Sessions parked from this page, oldest first, so the last one can be brought back. */
   parkedHere: string[];
   /** A session the canvas was asked to bring into view. The counter makes repeats count. */
@@ -75,6 +78,7 @@ export interface AppStore {
   /** An ask is used once: forget it, unless a newer one has replaced it. */
   asked: (tick: number) => void;
   setNotice: (notice: string | null) => void;
+  setList: (change: Partial<ListPrefs>) => void;
   showSession: (sessionId: string) => void;
   /** A terminal has the keyboard: nothing is on its way any more. */
   settled: () => void;
@@ -111,6 +115,7 @@ export const useApp = create<AppStore>((set, get) => ({
   ask: null,
   notice: null,
   parkedHere: [],
+  list: loadListPrefs(),
   show: null,
   settleUntil: 0,
 
@@ -187,6 +192,12 @@ export const useApp = create<AppStore>((set, get) => ({
   request: (ask) => set((state) => ({ ask: { ...ask, tick: (state.ask?.tick ?? 0) + 1 } })),
   asked: (tick) => set((state) => (state.ask?.tick === tick ? { ask: null } : {})),
   setNotice: (notice) => set({ notice }),
+  setList: (change) => {
+    const list = { ...get().list, ...change };
+    list.width = clampListWidth(list.width);
+    saveListPrefs(list);
+    set({ list });
+  },
 
   askToClose: (sessionId) => set({ closing: sessionId }),
   askToCloseCanvas: (canvasId) => set({ closingCanvas: canvasId }),

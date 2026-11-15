@@ -60,6 +60,9 @@ export function placeOf(target: EventTarget | null): KeyPlace {
  */
 export function belongsToControl(target: EventTarget | null, key: string): boolean {
   if (!(target instanceof Element)) return false;
+  // Tab walks through terminals only while nothing else has the keyboard; from a button it
+  // goes on to the next button, as it does everywhere.
+  if (key === 'Tab') return target !== document.body;
   if (target.closest('[role="dialog"], [role="alertdialog"]')) return key !== 'Escape';
   return (key === 'Enter' || key === ' ') && target.closest('button, a[href], summary, [role="button"]') !== null;
 }
@@ -71,7 +74,9 @@ export function belongsToControl(target: EventTarget | null, key: string): boole
  */
 export function pickBinding(press: KeyPress, bindings: readonly Binding[], place: KeyPlace): Binding | null {
   for (const binding of bindings) {
-    if (binding.layer === 'canvas' && place !== 'canvas') continue;
+    // A function key types nothing, so outside terminals it works in a text field or a list too.
+    const functionKey = /^F\d+$/.test(binding.chord.key);
+    if (binding.layer === 'canvas' && place !== 'canvas' && !(functionKey && place === 'text')) continue;
     if (matchesChord(press, binding.chord)) return binding;
   }
   return null;
@@ -138,7 +143,20 @@ export function startShortcuts(): () => void {
   const onKeyDown = (event: KeyboardEvent): void => {
     handleKey(event);
   };
+  // A button pressed with the mouse does not keep the keyboard: the canvas has it again, so
+  // Tab and the other plain keys go on working. Pressed from the keyboard, it keeps it.
+  const onClick = (event: MouseEvent): void => {
+    if (event.detail === 0 || !(event.target instanceof Element)) return;
+    const button = event.target.closest('button');
+    if (!button || button !== document.activeElement) return;
+    if (button.closest('[role="dialog"], [role="alertdialog"], [role="menu"], [role="listbox"], .xterm')) return;
+    button.blur();
+  };
   // Capture phase, so a chord is seen before a focused terminal gets it.
   window.addEventListener('keydown', onKeyDown, true);
-  return () => window.removeEventListener('keydown', onKeyDown, true);
+  window.addEventListener('click', onClick);
+  return () => {
+    window.removeEventListener('keydown', onKeyDown, true);
+    window.removeEventListener('click', onClick);
+  };
 }

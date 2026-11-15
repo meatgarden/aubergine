@@ -303,6 +303,8 @@ Work everywhere, inside a terminal too:
 | Palette: go to a session or canvas, run any command | ⌘K | Ctrl+Shift+K |
 | Terminal to the left, right, above, below | ⌃⌘← ⌃⌘→ ⌃⌘↑ ⌃⌘↓ | Ctrl+Shift+arrows |
 | Previous, next canvas | ⌃⌘[ ⌃⌘] | Ctrl+Shift+[ Ctrl+Shift+] |
+| Previous, next canvas, in an app window (see below) | ⌃⇧Tab ⌃Tab, ⇧⌘[ ⇧⌘], ⌥⌘← ⌥⌘→ | Ctrl+Shift+Tab, Ctrl+Tab |
+| Canvas by number, in an app window | ⌘1–⌘9 | |
 | Leave the terminal | ⌃⌘. | Ctrl+Shift+. |
 | Next session that is waiting for you | ⌃⌘J | (palette) |
 
@@ -311,15 +313,21 @@ Work while no terminal or text field has the keyboard:
 | Key | |
 |---|---|
 | `N`, `C`, `G` | new terminal, new Claude Code session, new frame |
-| arrows, `Enter` | select a terminal, go into it |
+| `Tab`, `Shift+Tab` | select the next, the previous terminal, in the order of the [terminal list](#terminal-list) |
+| arrows or `H` `J` `K` `L`, `Enter` | select the terminal in that direction, go into the selected one |
 | `P`, `U`, `Shift+P` | park the selected terminal, bring back the last parked one, open the parked list |
 | `R`, `M`, `E` | rename the terminal, move it to another canvas, open or close its notes |
 | `T`, `[` `]`, `1`–`9`, `Shift+R` | new canvas, previous and next canvas, go to a canvas, rename the canvas |
 | `W` | next session that is waiting for you |
 | `F`, `0` | zoom to fit, zoom to 100% |
+| `B`, `F6` | show or hide the terminal list; move the keyboard to the list, the toolbar, the tabs, and back |
 | `O`, `?`, `Esc` | Outside terminals, the shortcut sheet, close a panel or clear the selection |
 
-**The palette** (⌘K) lists sessions, canvases and every command with its key. Type part of a name, folder, command or note and press Enter. `>` in front shows commands only. With nothing typed, `1`–`9` goes to that canvas: this needs no special chord, so it works in every browser. Anything that has no key of its own can always be run from here.
+**Tab.** While the canvas has the keyboard, Tab does not walk through the buttons: it selects the next terminal, moving the view only if that terminal is off screen. Inside a terminal, Tab and Shift+Tab always go to the program, so completion works as usual. To reach the buttons from the keyboard press `F6`: it moves the keyboard to the terminal list, then the toolbar, then the canvas tabs, then back to the canvas, and inside each of those Tab moves from control to control as it does on any page. `Esc` returns to the canvas.
+
+**The keys browsers use for their own tabs** switch canvases too: Ctrl+Tab and Ctrl+Shift+Tab, Ctrl+PageDown and Ctrl+PageUp, on macOS also ⇧⌘] ⇧⌘[, ⌥⌘→ ⌥⌘← and ⌘1–⌘9, elsewhere Ctrl+1–Ctrl+9. They are meant for Aubergine installed as an app with a window of its own, where there are no browser tabs. In an ordinary browser tab the browser usually takes these keys for itself before the page sees them, so do not count on them there; the shortcut sheet shows them with a dashed outline when they are not expected to work in the window you are in. Which of them a given browser lets through has not been measured. The route that works everywhere is ⌘K followed by `]`, `[` or a digit.
+
+**The palette** (⌘K) lists sessions, canvases and every command with its key. Type part of a name, folder, command or note and press Enter. `>` in front shows commands only. With nothing typed, `1`–`9` goes to that canvas and `[` and `]` to the previous and next one: this needs no special chord, so it works in every browser. Anything that has no key of its own can always be run from here.
 
 **Changing keys.** Add `shortcuts` to `config.json` (see [Settings](#settings)): a command name with a chord, a list of chords, or `null` for no key. The names are in the tooltip of each row of the shortcut sheet, and the palette finds a command by its name.
 
@@ -333,11 +341,23 @@ Work while no terminal or text field has the keyboard:
 }
 ```
 
-Reload the page to apply. If a key is set twice, cannot be read, or is one the browser keeps for itself (⌘T, ⌘W, ⌘1 and so on), the shortcut sheet says so at the top and the server prints it; the rest of the file still applies. A chord that a program in a terminal may need (a plain key, Ctrl with a key, Option with a key) is accepted but works only outside terminals.
+Reload the page to apply. If a key is set twice or cannot be read, the shortcut sheet says so at the top and the server prints it; the rest of the file still applies. A key the browser usually keeps for itself (⌘T, ⌘W and so on) is bound all the same, with a warning that it may never arrive. A chord that a program in a terminal may need (a plain key, Ctrl with a key, Option with a key) is accepted but works only outside terminals.
 
-**In an installed app window** there are no browser tabs, so the browser may leave more chords to the page. None are used by default, because which ones has not been measured. `shortcutsInAppWindow` takes the same entries as `shortcuts` and applies only there, for example `{ "canvas.go.1": "Cmd+1" }`.
+**In an installed app window** there are no browser tabs, so the tab keys above are expected to reach the canvas. `shortcutsInAppWindow` takes the same entries as `shortcuts` and applies only there, for keys of your own that should exist only in the app window, for example `{ "canvas.new": "Cmd+T" }`.
 
 **How sure are these keys?** The chords in the first table were chosen from what browsers document, not from measurement with a real keyboard, and Linux and Windows are untested. [docs/keys.md](docs/keys.md) has the details and a page to measure your own browser with. If a chord does nothing for you, rebind it; the palette always works.
+
+### Terminal list
+
+A panel down the left side lists the terminals on the canvas you are looking at, in the order they read on the canvas: each frame as a heading with its terminals under it, then the terminals outside any frame, top to bottom and left to right. Each row shows the name, the running command and folder, and the same marks as the node: new output, busy, a failed exit code, an agent, waiting for you.
+
+- Click a row to go to that terminal at 100% and give it the keyboard. The row of the terminal that is selected or has the keyboard is highlighted and kept in view.
+- **⋯** on a row has the node's actions: rename, notes, move to another canvas, park.
+- Below the list, closed until you open them: **Other canvases**, each with its count of waiting sessions and expandable to its terminals, and **Parked**. A row there takes you to that canvas, or restores the parked session onto this one.
+- `B` or the arrow at the top collapses the panel to a narrow strip; drag its right edge to change the width. Both are remembered by the browser.
+- With the keyboard in the list (`F6`), the arrows move through the rows, `Enter` goes into the terminal and `Esc` returns to the canvas.
+
+The list costs nothing to keep open: it is drawn from what the page already knows, with no terminal attached for it and nothing fetched.
 
 ### Scrolling, copy and paste
 

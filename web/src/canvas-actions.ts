@@ -12,8 +12,10 @@ export interface CanvasActions {
   resetZoom: () => void;
   /** Takes the keyboard away from any terminal, back to the canvas. */
   releaseFocus: () => void;
-  /** Brings a session's node into view without giving it the keyboard. */
+  /** Brings a session's node into view at 100% without giving it the keyboard. */
   reveal: (sessionId: string) => void;
+  /** Moves the view to a session's node only if it is not fully on screen, keeping the zoom. */
+  bringIntoView: (sessionId: string) => void;
 }
 
 let current: CanvasActions | null = null;

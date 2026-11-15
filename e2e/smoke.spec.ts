@@ -1,4 +1,4 @@
-import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
@@ -346,6 +346,46 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   // The line half typed in the other terminal is exactly as it was left.
   await expect(node.nth(1).locator('.xterm-rows')).toContainText(/echo left-\s*$/);
 
+  // Tab walks through the terminals in the order of the list on the left, without going in.
+  await page.keyboard.press(chord('Period'));
+  await page.keyboard.press('Tab');
+  const current = page.locator('.list-row.current .list-name');
+  const tabbedTo = await current.innerText();
+  await page.keyboard.press('Tab');
+  await expect(current).not.toHaveText(tabbedTo);
+  await page.keyboard.press('Tab');
+  await expect(current).toHaveText(tabbedTo); // two terminals: it wraps
+  await expect(page.locator('[data-testid="terminal-node"][data-focused="true"]')).toHaveCount(0);
+
+  // Enter goes in. Inside a terminal Tab is the shell's: it completes a file name.
+  await page.keyboard.press('Enter');
+  const focusedName = page.locator('[data-testid="terminal-node"][data-focused="true"] [data-testid="node-name"]');
+  await expect(focusedName).toHaveText(tabbedTo);
+  const completionDir = mkdtempSync(path.join(tmpdir(), 'aubergine-tab-'));
+  writeFileSync(path.join(completionDir, 'only-file-here.txt'), 'completed-77\n');
+  await page.keyboard.press('Control+u');
+  await page.keyboard.type(`cat ${completionDir}/only-f`);
+  await page.keyboard.press('Tab');
+  await page.keyboard.press('Enter');
+  await expect(outputLine(page, 'completed-77')).toHaveCount(1);
+  await expect(focusedName).toHaveText(tabbedTo); // Tab did not move the selection
+  rmSync(completionDir, { recursive: true, force: true });
+
+  // Leave, and Shift+Tab selects the one before.
+  await page.keyboard.press(chord('Period'));
+  await page.keyboard.press('Shift+Tab');
+  await expect(current).not.toHaveText(tabbedTo);
+
+  // The palette, then a bracket: the route to the next canvas that works in every browser.
+  await page.keyboard.press(mac ? 'Meta+k' : 'Control+Shift+K');
+  await page.keyboard.press(']');
+  await expect(page).toHaveURL(firstCanvas);
+  await expect(page.getByRole('dialog')).toHaveCount(0);
+  await page.keyboard.press(mac ? 'Meta+k' : 'Control+Shift+K');
+  await page.keyboard.press('[');
+  await expect(page).toHaveURL(secondCanvas);
+  await expect(node).toHaveCount(2);
+
   // Switching canvas from inside a terminal, then back with a plain key.
   await page.keyboard.press(chord('BracketLeft'));
   await expect(page).toHaveURL(firstCanvas);
@@ -367,6 +407,10 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await expect(sheet).toContainText('Park the terminal');
   await expect(sheet.locator('[data-command="terminal.park"]')).toContainText('P');
   await expect(sheet.locator('[data-command="canvas.next"]')).toContainText(mac ? '⌃⌘]' : 'Ctrl+Shift+]');
+  // The browser's own tab keys are bound too, and marked as not expected to work in a browser tab.
+  await expect(sheet.locator('[data-command="canvas.next"] kbd[data-expected="no"]').first()).toBeVisible();
+  await expect(sheet.locator('[data-command="canvas.next"] kbd[data-expected="yes"]').first()).toBeVisible();
+  await expect(sheet.locator('[data-command="select.next"]')).toContainText(mac ? '⇥' : 'Tab');
   await expect(page.getByTestId('shortcut-problems')).toHaveCount(0);
   await page.keyboard.press('Escape');
   await expect(sheet).toHaveCount(0);

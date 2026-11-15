@@ -73,11 +73,11 @@ describe('shortcuts from the settings file', () => {
     const resolved = resolveShortcuts({
       platform: 'mac',
       mode: 'tab',
-      shortcuts: { 'terminal.park': 'X', 'attention.next': ['cmd+ctrl+g', 'J'], 'view.fit': null },
+      shortcuts: { 'terminal.park': 'X', 'attention.next': ['cmd+ctrl+g', 'Y'], 'view.fit': null },
     });
     expect(resolved.problems).toEqual([]);
     expect(keysOf(resolved, 'terminal.park')).toEqual(['X']);
-    expect(keysOf(resolved, 'attention.next')).toEqual(['Ctrl+Meta+G', 'J']);
+    expect(keysOf(resolved, 'attention.next')).toEqual(['Ctrl+Meta+G', 'Y']);
     expect(keysOf(resolved, 'view.fit')).toEqual([]);
     // Everything else keeps its default.
     expect(keysOf(resolved, 'terminal.new')).toEqual(['N']);
