@@ -51,6 +51,8 @@ interface AppStore {
   askToCloseCanvas: (canvasId: string | null) => void;
   setPicker: (open: boolean) => void;
   showSession: (sessionId: string) => void;
+  /** A request to show a session is used once: forget it, unless a newer one has replaced it. */
+  shown: (tick: number) => void;
   /** Switches this page to another canvas. `push` adds a step to the browser's history. */
   setCanvas: (canvasId: string, options?: { push?: boolean }) => void;
 }
@@ -137,6 +139,7 @@ export const useApp = create<AppStore>((set, get) => ({
     events?.viewing(canvasId);
   },
   showSession: (sessionId) => set((state) => ({ show: { sessionId, tick: (state.show?.tick ?? 0) + 1 } })),
+  shown: (tick) => set((state) => (state.show?.tick === tick ? { show: null } : {})),
 }));
 
 const noLayout: Layout = { nodes: [], frames: [] };

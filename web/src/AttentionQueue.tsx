@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { nextWaiting, notificationsWanted, setNotificationsWanted, waitingQueue } from './attention';
+import { canvasLabel } from './search';
 import { useApp } from './store';
 
 /**
@@ -9,6 +10,8 @@ import { useApp } from './store';
  */
 export function AttentionQueue() {
   const sessions = useApp((s) => s.app?.sessions);
+  const app = useApp((s) => s.app);
+  const canvasId = useApp((s) => s.canvasId);
   const current = useApp((s) => s.focus?.sessionId ?? null);
   const [notify, setNotify] = useState(notificationsWanted);
 
@@ -26,7 +29,12 @@ export function AttentionQueue() {
           type="button"
           className="attention-button"
           onClick={goNext}
-          title={`Go to the next session that is waiting for you: ${queue.map((s) => s.name).join(', ')}`}
+          title={`Go to the next session that is waiting for you: ${queue
+            .map((s) => {
+              const canvas = canvasLabel(app, s.id, canvasId);
+              return canvas ? `${s.name} (on ${canvas})` : s.name;
+            })
+            .join(', ')}`}
           data-testid="attention-queue"
         >
           {queue.length} waiting

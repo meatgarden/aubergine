@@ -9,6 +9,12 @@ export function ParkedList() {
   const root = useRef<HTMLDivElement>(null);
 
   const parked = (sessions ?? []).filter((s) => s.state === 'parked');
+  const canvases = useApp((s) => s.app?.canvases);
+  /** Where a parked session came from, if that canvas still exists. */
+  const fromCanvas = (id: string | undefined): string | null => {
+    const canvas = canvases?.find((c) => c.id === id);
+    return canvas ? `from ${canvas.name}` : null;
+  };
 
   useEffect(() => {
     if (!open) return;
@@ -39,7 +45,7 @@ export function ParkedList() {
               <div className="parked-info">
                 <div>{session.name}</div>
                 <div className="parked-detail">
-                  {[session.command, session.cwd].filter(Boolean).join(' · ') || 'running'}
+                  {[fromCanvas(session.parkedFrom?.canvasId), session.command, session.cwd].filter(Boolean).join(' · ') || 'running'}
                 </div>
               </div>
               <button type="button" onClick={() => restore(session.id)}>

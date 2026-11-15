@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { NO_ATTENTION, NO_STATUS, newId, type Session } from '@aubergine/shared';
-import { searchSessions, shortFolder } from './search';
+import { createInitialState, newCanvas, NO_ATTENTION, NO_STATUS, newId, type Session } from '@aubergine/shared';
+import { canvasLabel, searchSessions, shortFolder } from './search';
 
 function session(name: string, extra: Partial<Session> = {}): Session {
   return {
@@ -71,5 +71,29 @@ describe('shortFolder', () => {
     expect(shortFolder('/home/u/work/api')).toBe('…/work/api');
     expect(shortFolder('/tmp')).toBe('/tmp');
     expect(shortFolder(null)).toBe('');
+  });
+});
+
+describe('canvasLabel', () => {
+  it('names the canvas of a session on another canvas, and nothing for this one or a parked one', () => {
+    const state = createInitialState();
+    const other = newCanvas(state.project.id, 'Deploys', 1);
+    const here = session('here');
+    const there = session('there');
+    const parked = session('parked', { state: 'parked' });
+    const node = (s: Session) => ({ id: newId(), sessionId: s.id, x: 0, y: 0, width: 720, height: 440, color: 'none' as const });
+    const app = {
+      ...state,
+      sessions: [here, there, parked],
+      canvases: [
+        { ...state.canvases[0]!, layout: { nodes: [node(here)], frames: [] } },
+        { ...other, layout: { nodes: [node(there)], frames: [] } },
+      ],
+    };
+    const current = state.canvases[0]!.id;
+    expect(canvasLabel(app, there.id, current)).toBe('Deploys');
+    expect(canvasLabel(app, here.id, current)).toBeNull();
+    expect(canvasLabel(app, parked.id, current)).toBeNull();
+    expect(canvasLabel(null, there.id, current)).toBeNull();
   });
 });

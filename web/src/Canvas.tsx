@@ -290,23 +290,29 @@ export function Canvas() {
     let cancelled = false;
     void (async () => {
       const store = useApp.getState();
+      // A request is used once. Left in place it would be replayed on every later change of
+      // canvas, and would bring back a session the user has parked since.
+      const done = (): void => useApp.getState().shown(show.tick);
       const session = store.app?.sessions.find((x) => x.id === show.sessionId);
-      if (!session) return;
+      if (!session) return done();
       if (session.state === 'parked') {
         // A parked session comes back onto the canvas being looked at.
         const restored = await api.restoreSession(session.id, canvasId).catch(() => null);
-        if (!restored || cancelled) return;
+        if (cancelled) return;
+        if (!restored) return done();
         store.apply({ type: 'session.restored', sessionId: session.id, canvasId, node: restored.node });
       }
       const app = useApp.getState().app;
       const place = app ? placeOfSession(app, show.sessionId) : null;
-      if (!place || cancelled) return;
+      if (cancelled) return;
+      if (!place) return done();
       if (place.canvas.id !== canvasId) {
         // On another canvas: go there first. This effect runs again once that canvas is showing.
         useApp.getState().setCanvas(place.canvas.id);
         return;
       }
       goToNode(place.node.id, show.sessionId);
+      done();
     })();
     return () => {
       cancelled = true;

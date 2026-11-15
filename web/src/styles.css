@@ -926,3 +926,35 @@ code {
   align-items: stretch;
   max-width: 190px;
 }
+
+/* ---------- Move to canvas ---------- */
+
+.move-to {
+  position: relative;
+  flex: none;
+  display: inline-flex;
+}
+.move-menu {
+  position: absolute;
+  top: 24px;
+  right: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 150px;
+  padding: 5px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgb(0 0 0 / 0.45);
+}
+.move-menu button {
+  text-align: left;
+  background: transparent;
+  border-color: transparent;
+  white-space: nowrap;
+}
+.picker-canvas {
+  color: var(--accent-strong);
+}

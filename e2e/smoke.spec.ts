@@ -222,6 +222,20 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await page.keyboard.press('Enter');
   await expect(tabs.nth(1)).toContainText('Deploys');
 
+  // A session that starts waiting on a canvas nobody is looking at shows on that canvas's tab,
+  // and the queue, which covers every canvas, goes there.
+  await page.getByTestId('node-body').click();
+  await page.keyboard.type(`sleep 2; echo '{"notification_type":"permission_prompt","message":"Go on?"}' | ${aubergine} hook notification`);
+  await page.keyboard.press('Enter');
+  await tabs.first().click();
+  await expect(page).toHaveURL(mainAddress);
+  await expect(tabs.nth(1).getByTestId('tab-waiting')).toHaveText('1', { timeout: 15_000 });
+  await expect(page.getByTestId('attention-queue')).toHaveText('1 waiting');
+  await page.getByTestId('attention-queue').click();
+  await expect(page).toHaveURL(secondAddress);
+  await expect(page.getByTestId('attention-queue')).toHaveCount(0);
+  await expect(page.getByTestId('tab-waiting')).toHaveCount(0);
+
   // Closing a canvas with terminals asks what to do with them; moving brings them to the other canvas.
   await page.getByRole('button', { name: 'Close canvas Deploys' }).click();
   await expect(page.getByRole('alertdialog')).toContainText('never ends a shell');
@@ -229,10 +243,27 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await expect(tabs).toHaveCount(1);
   await expect(page).toHaveURL(mainAddress);
   await expect(node).toHaveCount(2);
-  // Still the same shell: park the moved one, end it, to leave one terminal for the steps below.
+  // "Move to canvas…" puts a terminal on another canvas, with its shell untouched.
   const movedName = await page.getByTestId('node-name').nth(1).textContent();
-  await page.getByRole('button', { name: `Park ${movedName}` }).click();
+  await page.getByRole('button', { name: 'New canvas' }).click();
+  await expect(tabs).toHaveCount(2);
+  await tabs.first().click();
+  await expect(node).toHaveCount(2);
+  await page.getByRole('button', { name: `Move ${movedName} to another canvas` }).click();
+  await page.getByRole('menuitem', { name: 'Canvas 2' }).click();
+  await expect(node).toHaveCount(1);
+  await tabs.nth(1).click();
+  await expect(node).toHaveCount(1);
+  await expect(outputLine(page, 'second-2')).toHaveCount(1);
+
+  // Closing that canvas with "park" takes the terminal off every canvas, still running.
+  await page.getByRole('button', { name: 'Close canvas Canvas 2' }).click();
+  await page.getByRole('alertdialog').getByLabel(/^Park it/).check();
+  await page.getByRole('button', { name: 'Close canvas', exact: true }).click();
+  await expect(tabs).toHaveCount(1);
+  await expect(node).toHaveCount(1);
   await page.getByRole('button', { name: 'Parked (1)' }).click();
+  await expect(page.getByTestId('parked-row')).toContainText(movedName ?? '');
   await page.getByRole('button', { name: 'End', exact: true }).click();
   await page.getByRole('button', { name: 'End session' }).click();
   await expect(page.getByRole('button', { name: /Parked/ })).toHaveCount(0);

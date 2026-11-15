@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { SearchHit } from '@aubergine/shared';
 import { api } from './api';
-import { searchSessions, shortFolder } from './search';
+import { canvasLabel, searchSessions, shortFolder } from './search';
 import { useApp } from './store';
 
 const HISTORY_DELAY_MS = 250;
@@ -21,6 +21,8 @@ export function Picker() {
   const open = useApp((s) => s.picker);
   const setPicker = useApp((s) => s.setPicker);
   const sessions = useApp((s) => s.app?.sessions);
+  const app = useApp((s) => s.app);
+  const canvasId = useApp((s) => s.canvasId);
   const [query, setQuery] = useState('');
   const [index, setIndex] = useState(0);
   const [history, setHistory] = useState<{ query: string; hits: SearchHit[]; truncated: boolean } | null>(null);
@@ -145,6 +147,11 @@ export function Picker() {
                 onClick={() => void go({ kind: 'session', sessionId: session.id, parked: session.state === 'parked' })}
               >
                 <span className="picker-name">{session.name}</span>
+                {canvasLabel(app, session.id, canvasId) && (
+                  <span className="picker-tag picker-canvas" data-testid="picker-canvas">
+                    {canvasLabel(app, session.id, canvasId)}
+                  </span>
+                )}
                 <span className="picker-detail">{detail}</span>
                 {session.state !== 'open' && <span className="picker-tag">{session.state}</span>}
               </div>
@@ -172,6 +179,9 @@ export function Picker() {
                 }
               >
                 <span className="picker-name">{session?.name}</span>
+                {canvasLabel(app, hit.sessionId, canvasId) && (
+                  <span className="picker-tag picker-canvas">{canvasLabel(app, hit.sessionId, canvasId)}</span>
+                )}
                 <span className="picker-detail picker-line">{hit.text.trim()}</span>
                 {session?.state === 'parked' && <span className="picker-tag">parked</span>}
               </div>

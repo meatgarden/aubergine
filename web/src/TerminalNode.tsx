@@ -5,6 +5,7 @@ import { api } from './api';
 import { canResumeAgent } from './attention';
 import { ColorButton } from './ColorButton';
 import { nodeMode, type NodeMode } from './culling';
+import { MoveToCanvas } from './MoveToCanvas';
 import { NotePanel } from './NotePanel';
 import { SnapshotView } from './SnapshotView';
 import { StatusBadges } from './StatusBadges';
@@ -113,6 +114,7 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
           </button>
         )}
         {draft === null && !exited && session && <StatusBadges session={session} focused={focused} />}
+        {draft === null && <MoveToCanvas sessionId={sessionId} name={name} />}
         <button
           type="button"
           className={`node-tool nodrag${hasNote ? ' has-note' : ''}`}
