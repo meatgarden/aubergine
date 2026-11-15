@@ -1,4 +1,4 @@
-import { mkdir, open, readFile, rename } from 'node:fs/promises';
+import { copyFile, constants, mkdir, open, readFile, rename } from 'node:fs/promises';
 import path from 'node:path';
 import { z } from 'zod';
 import {
@@ -30,6 +30,7 @@ const StateFileV1 = z.object({ version: z.literal(1), ...common, layout: Layout 
 const StateFileV2 = z.object({ version: z.literal(2), ...common, canvases: z.array(Canvas).min(1) });
 
 const StateFile = z.discriminatedUnion('version', [StateFileV1, StateFileV2]);
+const CURRENT_VERSION = 2;
 type StateFile = z.infer<typeof StateFile>;
 
 /**
@@ -115,7 +116,23 @@ export class JsonStore implements Store {
       return createInitialState();
     }
 
+    if (parsed.version !== CURRENT_VERSION) await this.keepCopyOfOlderFile(parsed.version);
     return migrate(parsed);
+  }
+
+  /**
+   * The next save rewrites the file in the current shape, which older code
+   * cannot read. Keep the old file beside it so a step back stays possible.
+   * An existing copy is left alone: it is the oldest one, and the one to keep.
+   */
+  private async keepCopyOfOlderFile(version: number): Promise<void> {
+    const copy = `${this.file}.v${version}.backup`;
+    try {
+      await copyFile(this.file, copy, constants.COPYFILE_EXCL);
+      this.onWarning(`${this.file} is from an older version. A copy was kept at ${copy} before updating it.`);
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== 'EEXIST') throw error;
+    }
   }
 
   /**
@@ -140,7 +157,7 @@ export class JsonStore implements Store {
 
   /** Write to a temporary file, flush it, then rename over the real one. */
   private async writeAtomically(state: AppState): Promise<void> {
-    const body: StateFile = { version: 2, ...state };
+    const body: StateFile = { version: CURRENT_VERSION, ...state };
     const dir = path.dirname(this.file);
     await mkdir(dir, { recursive: true, mode: 0o700 });
     const tmp = `${this.file}.${process.pid}.${this.counter++}.tmp`;

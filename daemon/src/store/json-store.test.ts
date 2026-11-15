@@ -166,6 +166,11 @@ describe('JsonStore', () => {
     expect(raw.version).toBe(2);
     expect(raw.layout).toBeUndefined();
     expect(await new JsonStore(dir).load()).toEqual(state);
+
+    // The older file is kept beside the new one, and a later load does not replace it.
+    const backup = `${store.file}.v1.backup`;
+    expect(JSON.parse(await readFile(backup, 'utf8')).version).toBe(1);
+    expect(JSON.parse(await readFile(backup, 'utf8')).layout).toBeDefined();
   });
 
   it('keeps a session on one canvas only, if a file ever says otherwise', async () => {
