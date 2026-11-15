@@ -110,8 +110,6 @@ how_to_get() {
       say "      Install it with your system's package manager."
       ;;
   esac
-  say "      No admin rights? See \"Without admin rights\" in the README:"
-  say "        https://github.com/meatgarden/aubergine#without-admin-rights"
 }
 
 # Stops, having changed nothing, unless everything Aubergine needs is there.
@@ -176,6 +174,9 @@ check_tools() {
   fi
 
   if [ "$problems" -gt 0 ]; then
+    say ""
+    say "No admin rights on this computer? See \"Without admin rights\" in the README:"
+    say "  https://github.com/meatgarden/aubergine#without-admin-rights"
     say ""
     fail "Nothing was installed or changed. Install what is missing above and run this again."
   fi
