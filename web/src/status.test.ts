@@ -16,6 +16,9 @@ const base: Session = {
   noteLog: [],
   agent: null,
   parkedFrom: null,
+    lastInputAt: null,
+    lastOutputAt: null,
+    tags: [],
 };
 
 describe('timeAgo', () => {

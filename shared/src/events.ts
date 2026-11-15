@@ -16,6 +16,8 @@ import {
   SessionName,
   SessionNote,
   ShellStatus,
+  Tags,
+  Timestamp,
   placeOfSession,
   type AppState,
   type Layout,
@@ -55,6 +57,14 @@ export const ChangeEvent = z.discriminatedUnion('type', [
     command: z.string().nullable(),
   }),
   z.object({ type: z.literal('session.noted'), sessionId: Id, note: SessionNote }),
+  /** When the session was last typed into, or last printed. Sent at most once every few seconds per session. */
+  z.object({
+    type: z.literal('session.times'),
+    sessionId: Id,
+    lastInputAt: Timestamp.optional(),
+    lastOutputAt: Timestamp.optional(),
+  }),
+  z.object({ type: z.literal('session.tagged'), sessionId: Id, tags: Tags }),
   z.object({ type: z.literal('session.attention'), sessionId: Id, attention: Attention }),
   z.object({ type: z.literal('session.note.appended'), sessionId: Id, entry: NoteEntry }),
   /** Which agent runs in the session, and in which conversation. */
@@ -156,6 +166,13 @@ export function applyEvent(state: AppState, event: ChangeEvent): AppState {
       });
     case 'session.activity':
       return patchSession(state, event.sessionId, { cwd: event.cwd, command: event.command });
+    case 'session.times':
+      return patchSession(state, event.sessionId, {
+        ...(event.lastInputAt !== undefined ? { lastInputAt: event.lastInputAt } : {}),
+        ...(event.lastOutputAt !== undefined ? { lastOutputAt: event.lastOutputAt } : {}),
+      });
+    case 'session.tagged':
+      return patchSession(state, event.sessionId, { tags: event.tags });
     case 'session.attention':
       return patchSession(state, event.sessionId, { attention: event.attention });
     case 'session.note.appended': {

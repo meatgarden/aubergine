@@ -59,6 +59,9 @@ export interface SessionsOptions {
   agentLaunchLine?: (agent: AgentKind, args: readonly string[]) => Promise<string>;
 }
 
+/** The two times of a session (last typed into, last printed) are recorded at most this often. */
+export const TIMES_INTERVAL_MS = 5000;
+
 /**
  * The operations behind the API. Each one talks to the runtime where a shell
  * is involved and records the result as a change event.
@@ -70,6 +73,7 @@ export class Sessions {
   private readonly integration: ShellIntegration;
   /** When the user last looked at each session; not saved. */
   private readonly seenAt = new Map<string, number>();
+  private readonly inputNotedAt = new Map<string, number>();
   private readonly startedAt = Date.now();
 
   constructor(
@@ -134,7 +138,7 @@ export class Sessions {
       : undefined;
     const fallback = launch ? this.nextName('Claude Code') : undefined;
     const name = input.name && input.uniqueName ? this.uniqueName(input.name) : (input.name ?? fallback);
-    const created = this.record(id, name, input.rect, started.cwd, canvas);
+    const created = this.record(id, name, input.rect, started.cwd, canvas, input.tags ?? []);
     if (input.agent && launch) {
       this.hub.emit({ type: 'session.agent', sessionId: id, agent: { kind: input.agent, conversationId: null } });
     }
@@ -144,6 +148,7 @@ export class Sessions {
     if (lines.length > 0) {
       void (async () => {
         for (const line of lines) await this.runtime.typeLine(id, line);
+        if (lines.length > 0) this.noteInput(id);
       })().catch(() => {});
     }
     return created;
@@ -163,7 +168,37 @@ export class Sessions {
     this.find(sessionId);
     if (changes.name !== undefined) this.hub.emit({ type: 'session.renamed', sessionId, name: changes.name });
     if (changes.note !== undefined) this.hub.emit({ type: 'session.noted', sessionId, note: changes.note });
+    if (changes.tags !== undefined) this.hub.emit({ type: 'session.tagged', sessionId, tags: changes.tags });
     return this.find(sessionId);
+  }
+
+  /**
+   * Input has reached a session through the server (a browser's terminal, or
+   * a line typed for the user). Recorded at most once every few seconds per
+   * session: typing must not flood the event stream or the state file.
+   */
+  noteInput(sessionId: string, now = Date.now()): void {
+    if (now - (this.inputNotedAt.get(sessionId) ?? 0) < TIMES_INTERVAL_MS) return;
+    if (!this.hub.state.sessions.some((s) => s.id === sessionId)) return;
+    this.inputNotedAt.set(sessionId, now);
+    this.hub.emit({ type: 'session.times', sessionId, lastInputAt: new Date(now).toISOString() });
+  }
+
+  /**
+   * Brings the two times up to date from what the runtime and the shell
+   * report: output from the runtime's activity time, and input also from the
+   * start of a command, which is the only sign of input that did not pass
+   * through the server (a view of the session opened in another terminal).
+   */
+  private noteTimes(session: Session, activityAt: Date | null, commandStartedAt: string | null): void {
+    const changes: { lastInputAt?: string; lastOutputAt?: string } = {};
+    const output = session.lastOutputAt ? Date.parse(session.lastOutputAt) : 0;
+    if (activityAt && activityAt.getTime() - output >= TIMES_INTERVAL_MS) changes.lastOutputAt = activityAt.toISOString();
+    const input = session.lastInputAt ? Date.parse(session.lastInputAt) : 0;
+    if (commandStartedAt && Date.parse(commandStartedAt) > input) changes.lastInputAt = commandStartedAt;
+    if (changes.lastInputAt !== undefined || changes.lastOutputAt !== undefined) {
+      this.hub.emit({ type: 'session.times', sessionId: session.id, ...changes });
+    }
   }
 
   /** Takes the session off its canvas. The shell keeps running, and the session remembers where it sat. */
@@ -363,6 +398,7 @@ export class Sessions {
       if (!sameStatus(status, session.status)) {
         this.hub.emit({ type: 'session.status', sessionId: session.id, status });
       }
+      this.noteTimes(session, live.activityAt, status.startedAt);
     }
   }
 
@@ -556,6 +592,7 @@ export class Sessions {
     rect: NodeRect | undefined,
     cwd: string | null,
     canvas: Canvas,
+    tags: string[] = [],
   ): { session: Session; node: LayoutNode } {
     const state = this.hub.state;
     const session: Session = {
@@ -572,6 +609,9 @@ export class Sessions {
       noteLog: [],
       agent: null,
       parkedFrom: null,
+      lastInputAt: null,
+      lastOutputAt: null,
+      tags,
     };
     const node: LayoutNode = { id: newId(), sessionId: id, color: 'none', ...(rect ?? this.freeSpot(canvas)) };
     this.hub.emit({ type: 'session.created', session, canvasId: canvas.id, node });

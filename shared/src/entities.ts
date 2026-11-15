@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { Id, newId } from './ids';
 
-const Timestamp = z.iso.datetime();
+export const Timestamp = z.iso.datetime();
 const Name = z.string().trim().min(1).max(80);
 
 export const Organization = z.object({ id: Id, name: Name, createdAt: Timestamp });
@@ -130,6 +130,28 @@ export const AgentInfo = z.object({
 });
 export type AgentInfo = z.infer<typeof AgentInfo>;
 
+export const TAG_MAX_LENGTH = 32;
+export const TAGS_MAX = 12;
+
+/** Trims tags and drops empty ones and repeats. Capitals are kept, but `Api` and `api` are the same tag. */
+export function normaliseTags(tags: readonly string[]): string[] {
+  const seen = new Set<string>();
+  const result: string[] = [];
+  for (const raw of tags) {
+    const tag = raw.trim();
+    if (tag === '' || seen.has(tag.toLowerCase())) continue;
+    seen.add(tag.toLowerCase());
+    result.push(tag);
+  }
+  return result;
+}
+
+/** A session's tags: a short list of short strings, without repeats. */
+export const Tags = z
+  .array(z.string().trim().min(1).max(TAG_MAX_LENGTH))
+  .max(TAGS_MAX)
+  .transform((tags) => normaliseTags(tags));
+
 /** A terminal session. The running shell itself is owned by the session runtime. */
 export const Session = z.object({
   id: Id,
@@ -148,6 +170,15 @@ export const Session = z.object({
   /** Append-only log of notes, oldest first. */
   noteLog: z.array(NoteEntry).default([]),
   agent: AgentInfo.nullable().default(null),
+  /**
+   * When input last reached the session. Recorded at most once every few
+   * seconds, never per keystroke. Input that does not pass through the server
+   * (a view opened in another terminal) is only seen as the start of a command.
+   */
+  lastInputAt: Timestamp.nullable().default(null),
+  /** When the session last printed something. Recorded at most once every few seconds. */
+  lastOutputAt: Timestamp.nullable().default(null),
+  tags: Tags.default([]),
   /** For a parked session: the canvas it came from and where it sat there. */
   parkedFrom: ParkedPlace.nullable().default(null),
 });

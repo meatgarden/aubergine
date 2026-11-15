@@ -407,6 +407,8 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
         early.push(message);
       } else if (message.t === 'input') {
         attachment.write(message.data);
+        // Throttled inside: this is called for every key.
+        sessions.noteInput(sessionId);
       } else {
         attachment.resize({ cols: message.cols, rows: message.rows });
       }
