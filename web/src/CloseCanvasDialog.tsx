@@ -32,8 +32,11 @@ export function CloseCanvasDialog() {
   const cancel = (): void => askToCloseCanvas(null);
   const confirm = async (): Promise<void> => {
     setBusy(true);
+    const wasLookingAtIt = useApp.getState().canvasId === canvasId;
     try {
       await api.closeCanvas(canvasId, choice === 'move' ? to : null);
+      // Follow the terminals to where they went, rather than landing on the first canvas.
+      if (wasLookingAtIt && choice === 'move') useApp.getState().setCanvas(to, { push: false });
       askToCloseCanvas(null);
     } catch (e) {
       setError((e as Error).message);
