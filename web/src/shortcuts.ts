@@ -46,8 +46,22 @@ export function activeShortcuts(settings: Settings = useApp.getState().settings)
 export type KeyPlace = 'terminal' | 'text' | 'canvas';
 
 export function placeOf(target: EventTarget | null): KeyPlace {
-  if (target instanceof Element && target.closest('.xterm')) return 'terminal';
+  if (!(target instanceof Element)) return 'canvas';
+  if (target.closest('.xterm')) return 'terminal';
+  // A menu or a list has its own keys (arrows, digits, Enter), as a text field does.
+  if (target.closest('[role="menu"], [role="listbox"]')) return 'text';
   return isTypingTarget(target) ? 'text' : 'canvas';
+}
+
+/**
+ * Whether a plain key belongs to the control that has the keyboard rather
+ * than to the canvas: Enter and Space press a focused button, and inside a
+ * panel only Escape is the canvas's (it closes the panel).
+ */
+export function belongsToControl(target: EventTarget | null, key: string): boolean {
+  if (!(target instanceof Element)) return false;
+  if (target.closest('[role="dialog"], [role="alertdialog"]')) return key !== 'Escape';
+  return (key === 'Enter' || key === ' ') && target.closest('button, a[href], summary, [role="button"]') !== null;
 }
 
 /**
@@ -90,6 +104,7 @@ export function handleKey(event: KeyboardEvent): boolean {
   if (!binding) return false;
   // With the palette open, plain keys are typing even if the field has lost the keyboard.
   if (state.picker && binding.layer === 'canvas') return false;
+  if (binding.layer === 'canvas' && belongsToControl(event.target, event.key)) return false;
   // A terminal has just been given the keyboard, or is about to be, and the view may still be
   // on its way there: what is typed in that moment is meant for the terminal, not the canvas.
   const settling = Date.now() < state.settleUntil;

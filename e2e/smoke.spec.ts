@@ -371,16 +371,25 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await page.keyboard.press('Escape');
   await expect(sheet).toHaveCount(0);
 
+  // M opens the list of canvases with the keyboard in it: there, Enter chooses, it is not a canvas key.
+  await page.keyboard.press('ArrowRight');
+  await page.keyboard.press('m');
+  await expect(page.getByRole('menuitem')).toHaveCount(1);
+  await expect(page.getByRole('menuitem')).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(node).toHaveCount(0);
+
   // The palette: a digit goes to that canvas, and a command runs from it.
   await page.keyboard.press(mac ? 'Meta+k' : 'Control+Shift+K');
   await expect(page.getByTestId('picker-section-command')).toBeVisible();
   await page.keyboard.press('1');
   await expect(page).toHaveURL(firstCanvas);
+  await expect(node).toHaveCount(1);
   await page.keyboard.press(mac ? 'Meta+k' : 'Control+Shift+K');
   await page.keyboard.type('>restore');
   await expect(page.getByTestId('picker-command-row')).toHaveCount(1);
   await expect(page.getByTestId('picker-row')).toHaveCount(0);
   await page.keyboard.press('Enter');
-  await expect(node).toHaveCount(1);
+  await expect(node).toHaveCount(2);
   await expect(page.getByRole('button', { name: /Parked/ })).toHaveCount(0);
 });
