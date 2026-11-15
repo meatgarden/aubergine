@@ -97,6 +97,28 @@ const PLAIN_DEFAULTS: Defaults = {
  * all hold Control and Command together, which no shell receives and no
  * browser is known to use, apart from ⌘K. Elsewhere they hold Ctrl and Shift.
  */
+const digits = (modifier: string): Defaults =>
+  Object.fromEntries(Array.from({ length: 9 }, (_, i) => [`canvas.go.${i + 1}`, [`${modifier}+${i + 1}`]]));
+
+/**
+ * The chords browsers use to switch their own tabs, bound to canvases. In an
+ * installed app window there are no browser tabs and these are expected to
+ * arrive; in a browser tab the browser usually takes them first, and they
+ * work only where it does not. They are bound in both: it costs nothing.
+ */
+const TAB_SWITCHING: Record<Platform, Defaults> = {
+  mac: {
+    'canvas.next': ['Ctrl+Tab', 'Meta+Shift+]', 'Meta+Alt+ArrowRight', 'Ctrl+PageDown'],
+    'canvas.previous': ['Ctrl+Shift+Tab', 'Meta+Shift+[', 'Meta+Alt+ArrowLeft', 'Ctrl+PageUp'],
+    ...digits('Meta'),
+  },
+  other: {
+    'canvas.next': ['Ctrl+Tab', 'Ctrl+PageDown'],
+    'canvas.previous': ['Ctrl+Shift+Tab', 'Ctrl+PageUp'],
+    ...digits('Ctrl'),
+  },
+};
+
 const ALWAYS_DEFAULTS: Record<Platform, Defaults> = {
   mac: {
     'palette.toggle': ['Meta+K'],
@@ -125,7 +147,10 @@ const ALWAYS_DEFAULTS: Record<Platform, Defaults> = {
 /** The keys each command has before the settings file is applied. */
 export function defaultShortcuts(platform: Platform): Record<CommandId, string[]> {
   const always = ALWAYS_DEFAULTS[platform];
-  return Object.fromEntries(COMMAND_IDS.map((id) => [id, [...(always[id] ?? []), ...(PLAIN_DEFAULTS[id] ?? [])]])) as Record<CommandId, string[]>;
+  const tabs = TAB_SWITCHING[platform];
+  return Object.fromEntries(
+    COMMAND_IDS.map((id) => [id, [...(always[id] ?? []), ...(PLAIN_DEFAULTS[id] ?? []), ...(tabs[id] ?? [])]]),
+  ) as Record<CommandId, string[]>;
 }
 
 /**
@@ -144,6 +169,12 @@ export interface Binding {
    * `canvas`: works only while no terminal or text field has focus.
    */
   layer: 'always' | 'canvas';
+  /**
+   * Set when the browser is known to keep this chord in this kind of window:
+   * what it does there instead. The chord is bound all the same and works
+   * wherever the browser lets it through.
+   */
+  kept: string | null;
 }
 
 export interface ShortcutProblem {
@@ -221,12 +252,12 @@ export function resolveShortcuts(input: {
       }
       if (other === command) continue;
       const kept = keptByBrowser(chord, platform, mode);
-      if (kept) {
+      // A default that the browser keeps is simply marked on the sheet. One the user set is worth a warning.
+      if (kept && fromFile.has(command)) {
         problems.push({
           command,
-          message: `${shown} for "${command}" will not reach this page: the browser keeps it (it ${kept})${mode === 'tab' ? ' in a browser tab' : ''}.`,
+          message: `${shown} for "${command}" may not reach this page: the browser usually keeps it (it ${kept})${mode === 'tab' ? ' in a browser tab' : ''}. It is bound all the same.`,
         });
-        continue;
       }
       const layer = belongsToTerminal(chord, platform) ? 'canvas' : 'always';
       if (layer === 'canvas' && !isPlainKey(chord) && fromFile.has(command)) {
@@ -236,7 +267,7 @@ export function resolveShortcuts(input: {
         });
       }
       taken.set(id, command);
-      bindings.push({ command, chord, layer });
+      bindings.push({ command, chord, layer, kept });
     }
   }
   return { bindings, problems };

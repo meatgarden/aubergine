@@ -17,7 +17,12 @@ This file records what is known about the first, how it was found out, and what 
 | Linux, any browser | **Untested.** |
 | Windows, any browser | **Untested.** |
 
-The default keys were therefore chosen from what browsers document, on the cautious side, and every one of them can be changed or removed in `config.json`. Anything without a safe chord is still reachable from the palette (⌘K, or Ctrl+Shift+K), which needs only keys that every browser delivers.
+The default keys were therefore chosen from what browsers document, and every one of them can be changed or removed in `config.json`. They come in two kinds:
+
+- **Keys of Aubergine's own** (⌃⌘ chords on macOS, Ctrl+Shift chords elsewhere), chosen so that no browser is known to use them.
+- **The keys browsers use for their own tabs** (Ctrl+Tab, ⌘1 and so on), bound to canvases as well. Status: *bound; delivered only where the browser allows; not measured.* In an installed app window there are no browser tabs and they are expected to arrive. In a browser tab the browser usually takes them first, and then the page never knows. Binding them costs nothing either way.
+
+Anything is also reachable from the palette (⌘K, or Ctrl+Shift+K), which needs only keys that every browser delivers: with it open and nothing typed, `1` to `9` go to a canvas and `[` and `]` to the previous and next one.
 
 ## How to measure
 
@@ -43,7 +48,7 @@ It does **not** show which chords the browser keeps. That needs key presses from
 
 ## Chords assumed to be kept (not measured here)
 
-A binding to one of these is reported in the shortcut sheet and in the server log, and is not installed.
+A chord in these lists can still be bound, and works wherever the browser does let it through. The shortcut sheet shows such a key with a dashed outline and says it is not expected to work in this kind of window. When `config.json` sets one, the sheet and the server log also say so once.
 
 macOS:
 
@@ -51,7 +56,7 @@ macOS:
 |---|---|---|
 | ⌘T, ⇧⌘T | new tab, reopen tab | assumed free, unmeasured |
 | ⌘1 to ⌘9 | switch tabs | assumed free, unmeasured |
-| ⇧⌘[ and ⇧⌘], ⌥⌘← and ⌥⌘→, ⌃Tab, ⌃⇧Tab | switch tabs | assumed free, unmeasured |
+| ⇧⌘[ and ⇧⌘], ⌥⌘← and ⌥⌘→, ⌃Tab, ⌃⇧Tab, ⌃PageUp, ⌃PageDown | switch tabs | assumed free, unmeasured |
 | ⌘N, ⇧⌘N, ⌘W, ⇧⌘W, ⌘Q | windows, quit | yes |
 | ⌘Tab, ⌘Space, ⌘H, ⌘M, ⌘` | the system | yes |
 | ⌃⌘Q, ⌃⌘F, ⌃⌘Space, ⌃⌘D | lock, full screen, characters, look up | yes |
@@ -65,7 +70,21 @@ Linux and Windows (**entirely untested**):
 | Ctrl+Shift+I, Ctrl+Shift+J | developer tools |
 | Ctrl+Shift+Escape, Alt+Tab | the system |
 
-"Assumed free in an app window" means only that the warning is not raised there. No extra default key is installed for app windows, because none has been measured; `shortcutsInAppWindow` in `config.json` is where to add them once the tester shows they arrive.
+"Assumed free in an app window" means the sheet shows the key as expected to work there. It is an expectation from how app windows are documented to behave, not a measurement.
+
+## The browser's tab keys, bound to canvases
+
+| Chord | Command | Inside a focused terminal |
+|---|---|---|
+| Ctrl+Tab, Ctrl+Shift+Tab | next, previous canvas | yes |
+| ⇧⌘] and ⇧⌘[, ⌥⌘→ and ⌥⌘← (macOS) | next, previous canvas | yes |
+| ⌘1 to ⌘9 (macOS) | canvas by number | yes |
+| Ctrl+PageDown, Ctrl+PageUp | next, previous canvas | no: Ctrl with a key may mean something to a program |
+| Ctrl+1 to Ctrl+9 (Linux, Windows) | canvas by number | no, for the same reason |
+
+Status of every row, in every browser and on every system: **bound; delivered only where the browser allows; not measured.** The key tester lists all of them, so one run in a tab and one in an app window answers it for a browser.
+
+Ctrl+Tab is the one exception to the rule about terminals in the last section. A terminal cannot pass Ctrl+Tab to its program as a key of its own (the program would get a plain Tab), so no program can be waiting for it. Plain Tab and Shift+Tab are completion and are never taken from a terminal.
 
 ## The chords the canvas takes while a terminal has focus
 
@@ -95,4 +114,4 @@ Status of every row: **untested.** Known risks to check first: desktop environme
 
 ## Chords that are never taken from a terminal
 
-Whatever `config.json` says, a chord works inside a focused terminal only if a program there cannot need it: on macOS it must include ⌘; elsewhere it must be Ctrl+Shift with a key and no Alt. Anything else (a plain key, Ctrl with a key, Alt or Option with a key) works only while no terminal or text field has focus, and the shortcut sheet says so when such a chord is set in the file. This keeps Ctrl+C, Ctrl+R, Ctrl+A, Ctrl+E, Option with an arrow, and Escape going to the shell.
+Whatever `config.json` says, a chord works inside a focused terminal only if a program there cannot need it: on macOS it must include ⌘; elsewhere it must be Ctrl+Shift with a key and no Alt; and on both, Ctrl+Tab and Ctrl+Shift+Tab, as explained above. Anything else (a plain key, Ctrl with a key, Alt or Option with a key) works only while no terminal or text field has focus, and the shortcut sheet says so when such a chord is set in the file. This keeps Ctrl+C, Ctrl+R, Ctrl+A, Ctrl+E, Option with an arrow, Tab, Shift+Tab and Escape going to the shell.

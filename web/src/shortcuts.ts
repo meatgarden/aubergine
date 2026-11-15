@@ -77,11 +77,21 @@ export function pickBinding(press: KeyPress, bindings: readonly Binding[], place
   return null;
 }
 
-/** The keys of a command as the user's keyboard shows them, for buttons, the palette and the sheet. */
+/**
+ * The keys of a command as the user's keyboard shows them, for buttons and
+ * the palette: only those expected to work in this kind of window.
+ */
 export function keysOf(id: CommandId, settings?: Settings): string[] {
+  return keyDetailsOf(id, settings)
+    .filter((key) => key.kept === null)
+    .map((key) => key.text);
+}
+
+/** Every key of a command, with what the browser does with it instead where it keeps it. For the sheet. */
+export function keyDetailsOf(id: CommandId, settings?: Settings): { text: string; kept: string | null; insideTerminals: boolean }[] {
   return activeShortcuts(settings)
     .bindings.filter((binding) => binding.command === id)
-    .map((binding) => formatChord(binding.chord, platform()));
+    .map((binding) => ({ text: formatChord(binding.chord, platform()), kept: binding.kept, insideTerminals: binding.layer === 'always' }));
 }
 
 /** A button's tooltip: what it does, and its keys if it has any. */

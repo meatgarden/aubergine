@@ -50,6 +50,25 @@ describe('pickBinding', () => {
     expect(pickBinding(press('ArrowUp', 'ArrowUp', { ctrlKey: true, shiftKey: true }), other, 'terminal')?.command).toBe('focus.up');
   });
 
+  it('takes Ctrl+Tab inside a terminal, and never Tab or Shift+Tab', () => {
+    for (const bindings of [mac, other]) {
+      expect(pickBinding(press('Tab', 'Tab', { ctrlKey: true }), bindings, 'terminal')?.command).toBe('canvas.next');
+      expect(pickBinding(press('Tab', 'Tab', { ctrlKey: true, shiftKey: true }), bindings, 'terminal')?.command).toBe('canvas.previous');
+      expect(pickBinding(press('Tab', 'Tab'), bindings, 'terminal')).toBeNull();
+      expect(pickBinding(press('Tab', 'Tab', { shiftKey: true }), bindings, 'terminal')).toBeNull();
+      expect(pickBinding(press('Tab', 'Tab'), bindings, 'text')).toBeNull();
+    }
+    // The other tab keys with Command reach the canvas from a terminal on macOS.
+    expect(pickBinding(press('}', 'BracketRight', { metaKey: true, shiftKey: true }), mac, 'terminal')?.command).toBe('canvas.next');
+    expect(pickBinding(press('ArrowLeft', 'ArrowLeft', { metaKey: true, altKey: true }), mac, 'terminal')?.command).toBe('canvas.previous');
+    expect(pickBinding(press('3', 'Digit3', { metaKey: true }), mac, 'terminal')?.command).toBe('canvas.go.3');
+    // Ctrl with a digit or with Page Down may mean something to a program: outside terminals only.
+    expect(pickBinding(press('3', 'Digit3', { ctrlKey: true }), other, 'terminal')).toBeNull();
+    expect(pickBinding(press('3', 'Digit3', { ctrlKey: true }), other, 'canvas')?.command).toBe('canvas.go.3');
+    expect(pickBinding(press('PageDown', 'PageDown', { ctrlKey: true }), mac, 'terminal')).toBeNull();
+    expect(pickBinding(press('PageDown', 'PageDown', { ctrlKey: true }), mac, 'canvas')?.command).toBe('canvas.next');
+  });
+
   it('leaves the shell every key it needs', () => {
     const shellKeys: KeyPress[] = [
       press('c', 'KeyC', { ctrlKey: true }),
@@ -65,6 +84,7 @@ describe('pickBinding', () => {
       press('Escape', 'Escape'),
       press('Enter', 'Enter'),
       press('Tab', 'Tab'),
+      press('Tab', 'Tab', { shiftKey: true }),
       press('p', 'KeyP'),
       press('ArrowUp', 'ArrowUp'),
       press('ArrowLeft', 'ArrowLeft', { ctrlKey: true }),

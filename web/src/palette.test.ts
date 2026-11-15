@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { newId, type Canvas } from '@aubergine/shared';
 import { COMMANDS } from './commands';
-import { canvasForDigit, parseQuery, searchCanvases, searchCommands } from './palette';
+import { paletteStep, parseQuery, searchCanvases, searchCommands } from './palette';
 
 const canvas = (name: string, order: number): Canvas => ({
   id: newId(),
@@ -50,12 +50,15 @@ describe('searchCanvases', () => {
   });
 });
 
-describe('canvasForDigit', () => {
-  it('goes to a canvas by number only while nothing is typed', () => {
-    expect(canvasForDigit(canvases, '', '2')?.name).toBe('Deploys');
-    expect(canvasForDigit(canvases, '', '9')).toBeNull();
-    expect(canvasForDigit(canvases, '', '0')).toBeNull();
-    expect(canvasForDigit(canvases, 'port 808', '2')).toBeNull();
-    expect(canvasForDigit(canvases, '', 'a')).toBeNull();
+describe('paletteStep', () => {
+  it('turns a digit or a bracket into a canvas command only while nothing is typed', () => {
+    expect(paletteStep('', '2')).toBe('canvas.go.2');
+    expect(paletteStep('', '9')).toBe('canvas.go.9');
+    expect(paletteStep('', '[')).toBe('canvas.previous');
+    expect(paletteStep('', ']')).toBe('canvas.next');
+    expect(paletteStep('', '0')).toBeNull();
+    expect(paletteStep('', 'a')).toBeNull();
+    expect(paletteStep('port 808', '2')).toBeNull();
+    expect(paletteStep('list[', ']')).toBeNull();
   });
 });

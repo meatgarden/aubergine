@@ -1016,7 +1016,7 @@ kbd {
   vertical-align: top;
 }
 .sheet-keys {
-  width: 132px;
+  width: 190px;
   white-space: nowrap;
 }
 .sheet-none {
@@ -1050,4 +1050,17 @@ kbd {
 }
 .move-menu kbd {
   margin-right: 8px;
+}
+
+/* A key the browser usually keeps in this kind of window. */
+kbd.kept {
+  color: var(--muted);
+  border-style: dashed;
+}
+.sheet-key {
+  display: inline-block;
+  margin-bottom: 2px;
+}
+.sheet-keys {
+  white-space: normal;
 }

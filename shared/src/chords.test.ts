@@ -98,6 +98,21 @@ describe('belongsToTerminal', () => {
     expect(belongsToTerminal(parseChord('Ctrl+Shift+Alt+K'), 'other')).toBe(true);
   });
 
+  it('makes one exception, for Ctrl+Tab, and none for Tab itself', () => {
+    for (const platform of ['mac', 'other'] as const) {
+      expect(belongsToTerminal(parseChord('Ctrl+Tab'), platform)).toBe(false);
+      expect(belongsToTerminal(parseChord('Ctrl+Shift+Tab'), platform)).toBe(false);
+      // Completion, and going back through completions, are the program's.
+      expect(belongsToTerminal(parseChord('Tab'), platform)).toBe(true);
+      expect(belongsToTerminal(parseChord('Shift+Tab'), platform)).toBe(true);
+      expect(belongsToTerminal(parseChord('Alt+Tab'), platform)).toBe(true);
+      expect(belongsToTerminal(parseChord('Ctrl+Alt+Tab'), platform)).toBe(true);
+      // The exception does not spread to other keys with Ctrl.
+      expect(belongsToTerminal(parseChord('Ctrl+I'), platform)).toBe(true);
+      expect(belongsToTerminal(parseChord('Ctrl+PageDown'), platform)).toBe(true);
+    }
+  });
+
   it('leaves Command chords to the canvas on macOS', () => {
     expect(belongsToTerminal(parseChord('Meta+K'), 'mac')).toBe(false);
     expect(belongsToTerminal(parseChord('Ctrl+Meta+ArrowLeft'), 'mac')).toBe(false);

@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { sortedCanvases, type Canvas, type SearchHit } from '@aubergine/shared';
 import { api } from './api';
-import { COMMANDS, type Command } from './commands';
-import { canvasForDigit, parseQuery, searchCanvases, searchCommands } from './palette';
+import { COMMANDS, commandById, type Command } from './commands';
+import { paletteStep, parseQuery, searchCanvases, searchCommands } from './palette';
 import { canvasLabel, searchSessions, shortFolder, type SessionMatch } from './search';
 import { keysOf } from './shortcuts';
 import { useApp } from './store';
@@ -205,7 +205,7 @@ export function Picker() {
         <input
           ref={input}
           className="picker-input"
-          placeholder="Search sessions, canvases and commands…   > for commands only   1–9 for a canvas"
+          placeholder="Search sessions, canvases and commands…   > commands only   1–9 [ ] canvases"
           aria-label="Search sessions, canvases and commands"
           value={query}
           onChange={(e) => {
@@ -214,10 +214,12 @@ export function Picker() {
           }}
           onKeyDown={(e) => {
             if (e.metaKey || e.ctrlKey || e.altKey) return;
-            const canvas = canvasForDigit(canvases, query, e.key);
-            if (canvas) {
+            const step = paletteStep(query, e.key);
+            if (step) {
+              // Never typed into the field, also when there is no such canvas.
               e.preventDefault();
-              go({ kind: 'canvas', canvas, number: Number(e.key) });
+              const command = commandById(step);
+              go({ kind: 'command', command, available: command.available(useApp.getState()) });
             } else if (e.key === 'Escape') {
               setPicker(false);
             } else if (e.key === 'ArrowDown') {
