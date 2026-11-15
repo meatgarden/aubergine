@@ -3,15 +3,27 @@ import { Id } from '@aubergine/shared';
 
 /** Who is making a request. */
 export type Principal =
-  /** The owner of this machine: the browser with its cookie, or the access token itself. */
+  /** The owner of this machine, signed in with the browser's cookie. */
   | { kind: 'user' }
   /** A program running inside one session, holding that session's token. */
   | { kind: 'session'; sessionId: string };
 
-export type Action = 'attention.set' | 'note.append' | 'agent.report';
+export type Action =
+  // What a session may do, to itself only.
+  | 'attention.set'
+  | 'note.append'
+  | 'agent.report'
+  // The public API. Today only the signed-in user; API tokens with scopes come next.
+  | 'canvases.read'
+  | 'canvases.write'
+  | 'sessions.read'
+  | 'sessions.write'
+  | 'layout.write';
 
+/** What the action is about. Either may be absent when the action is not about one. */
 export interface Resource {
-  sessionId: string;
+  sessionId?: string;
+  canvasId?: string;
 }
 
 /**
@@ -19,9 +31,10 @@ export interface Resource {
  * for a principal asks here, so when scopes grow, this function changes and
  * its callers do not.
  *
- * Today: the user may do anything; a session may set its own attention state,
- * append to its own note log and say which agent conversation it is in, and
- * nothing else.
+ * Today: the signed-in user may do anything. A session may set its own
+ * attention state, append to its own note log and say which agent
+ * conversation it is in, and nothing else: in particular it may not read or
+ * change canvases, sessions or layout.
  */
 export function authorize(principal: Principal, action: Action, resource: Resource): boolean {
   if (principal.kind === 'user') return true;
@@ -29,7 +42,7 @@ export function authorize(principal: Principal, action: Action, resource: Resour
     case 'attention.set':
     case 'note.append':
     case 'agent.report':
-      return principal.sessionId === resource.sessionId;
+      return resource.sessionId !== undefined && principal.sessionId === resource.sessionId;
     default:
       return false;
   }
@@ -55,12 +68,12 @@ function equal(a: string, b: string): boolean {
   return x.length === y.length && timingSafeEqual(x, y);
 }
 
-/** Works out who a bearer token belongs to, or null when it is not valid. */
+/** Works out which session a bearer token belongs to, or null when it is not a valid session token. */
 export function principalFromBearer(secret: string, header: string | undefined): Principal | null {
   const match = /^Bearer\s+(\S+)$/i.exec(header ?? '');
   const token = match?.[1];
   if (!token) return null;
-  if (equal(token, secret)) return { kind: 'user' };
+  // The daemon's own secret is not a bearer credential: the user signs in with the cookie.
 
   const [prefix, sessionId, given, ...extra] = token.split('.');
   if (prefix !== PREFIX || !sessionId || !given || extra.length > 0) return null;

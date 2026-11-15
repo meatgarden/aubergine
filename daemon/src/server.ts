@@ -40,7 +40,9 @@ import {
   type StateResponse,
   type TerminalServerMessage,
 } from '@aubergine/shared';
-import { authorize, principalFromBearer, type Action, type Principal } from './auth';
+import { authorize, principalFromBearer, type Action, type Principal, type Resource } from './auth';
+import { BadCursorError } from './public-api';
+import { registerPublicRoutes } from './v1';
 import type { StateHub } from './state-hub';
 import type { Outside } from './migrate/outside';
 import { SessionNotFoundError, type Attachment, type SessionRuntime } from './runtime/runtime';
@@ -109,13 +111,14 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   const viewers = new Set<(message: EventsServerMessage) => void>();
 
   /** Refuses the request unless its principal may do `action` on the session. */
-  const allow = (request: FastifyRequest, action: Action, sessionId: string): Principal => {
+  const allowOn = (request: FastifyRequest, action: Action, resource: Resource): Principal => {
     const principal = principals.get(request);
-    if (!principal || !authorize(principal, action, { sessionId })) {
-      throw new HttpError(403, 'forbidden', 'This token may not do that');
+    if (!principal || !authorize(principal, action, resource)) {
+      throw new HttpError(403, 'forbidden', 'These credentials may not do that');
     }
     return principal;
   };
+  const allow = (request: FastifyRequest, action: Action, sessionId: string): Principal => allowOn(request, action, { sessionId });
 
   await app.register(cookie);
   await app.register(websocket, { options: { maxPayload: 2 * 1024 * 1024 } });
@@ -135,26 +138,35 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     }
     const pathname = request.url.split('?')[0] ?? '';
 
-    // Routes for programs inside a session. They are not called by a browser,
-    // so there is no Origin to require; a bearer token says who is calling,
-    // and the cookie is not accepted here.
+    const isUpgrade = request.headers.upgrade?.toLowerCase() === 'websocket';
+    const isSafeMethod = request.method === 'GET' || request.method === 'HEAD';
+    const signedIn = tokensMatch(token, request.cookies[cookieName(port())]);
+
+    // The public API. Two kinds of caller: a program inside a session, with
+    // that session's bearer token (no browser, so no Origin to require); and
+    // the signed-in browser, with its cookie and the same Origin rule as /api.
+    // What each may do is decided per route, by authorize().
     if (pathname.startsWith('/v1/')) {
-      const principal = principalFromBearer(token, request.headers.authorization);
-      if (!principal) return reply.code(401).send(errorBody('unauthorized', 'Missing or wrong bearer token'));
-      principals.set(request, principal);
+      if (request.headers.authorization !== undefined) {
+        const principal = principalFromBearer(token, request.headers.authorization);
+        if (!principal) return reply.code(401).send(errorBody('unauthorized', 'Missing or wrong bearer token'));
+        principals.set(request, principal);
+        return;
+      }
+      if (!signedIn) return reply.code(401).send(errorBody('unauthorized', 'Not signed in'));
+      if (origin === undefined && !isSafeMethod) {
+        return reply.code(403).send(errorBody('forbidden', 'Origin header required'));
+      }
+      principals.set(request, { kind: 'user' });
       return;
     }
 
-    const isUpgrade = request.headers.upgrade?.toLowerCase() === 'websocket';
-    const isSafeMethod = request.method === 'GET' || request.method === 'HEAD';
     if (origin === undefined && (isUpgrade || !isSafeMethod)) {
       return reply.code(403).send(errorBody('forbidden', 'Origin header required'));
     }
 
     if (pathname.startsWith('/api/') || pathname.startsWith('/ws/')) {
-      if (!tokensMatch(token, request.cookies[cookieName(port())])) {
-        return reply.code(401).send(errorBody('unauthorized', 'Missing or wrong access token'));
-      }
+      if (!signedIn) return reply.code(401).send(errorBody('unauthorized', 'Missing or wrong access token'));
     }
   });
 
@@ -165,7 +177,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     if (error instanceof NotFoundError || error instanceof SessionNotFoundError) {
       return reply.code(404).send(errorBody('not_found', error.message));
     }
-    if (error instanceof BadInputError) {
+    if (error instanceof BadInputError || error instanceof BadCursorError) {
       return reply.code(400).send(errorBody('bad_request', error.message));
     }
     if (error instanceof ConflictError) {
@@ -334,6 +346,8 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     allow(request, 'agent.report', sessionId);
     return sessions.reportAgent(sessionId, parse(ReportAgentRequest, request.body));
   });
+
+  registerPublicRoutes(app, { hub, sessions, allow: allowOn, parse, fail: (status, code, message) => new HttpError(status, code, message) });
 
   /* ---------- WebSocket: change events ---------- */
 

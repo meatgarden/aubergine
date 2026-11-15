@@ -11,8 +11,13 @@ import {
   CreateSessionResponse,
   EventsServerMessage,
   Frame,
+  CanvasDetail,
+  CanvasList,
   OutsideResponse,
   OutsideResult,
+  PlacedSession,
+  SessionList,
+  publicPaths,
   SESSION_ENV,
   SearchResponse,
   SnapshotResponse,
@@ -635,6 +640,229 @@ describe('canvases', () => {
   });
 });
 
+describe('public API: canvases under /v1', () => {
+  const main = () => sortedCanvases(hub.state)[0]!;
+  const json = async (method: string, url: string, body?: unknown, headers: Record<string, string> = {}) => {
+    const response = await request(method, url, { ...(body === undefined ? {} : { body }), headers });
+    return { status: response.statusCode, body: response.body ? response.json() : null, headers: response.headers };
+  };
+
+  it('lists canvases with counts, a page at a time', async () => {
+    sessions.createCanvas({ name: 'Second' });
+    sessions.createCanvas({ name: 'Third' });
+    const { session } = await createSession();
+    sessions.setAttention(session.id, 'waiting');
+
+    const all = await json('GET', publicPaths.canvases);
+    expect(all.status).toBe(200);
+    const list = CanvasList.parse(all.body);
+    expect(list.items.map((c) => c.name)).toEqual(['Main', 'Second', 'Third']);
+    expect(list.items[0]?.counts).toEqual({ sessions: 1, waiting: 1, unread: 0 });
+    expect(list.items[0]).not.toHaveProperty('layout');
+    expect(list.nextCursor).toBeNull();
+    expect(Date.parse(list.items[0]!.createdAt)).not.toBeNaN();
+
+    const first = CanvasList.parse((await json('GET', `${publicPaths.canvases}?limit=2`)).body);
+    expect(first.items.map((c) => c.name)).toEqual(['Main', 'Second']);
+    const rest = CanvasList.parse((await json('GET', `${publicPaths.canvases}?limit=2&cursor=${first.nextCursor}`)).body);
+    expect(rest).toMatchObject({ items: [{ name: 'Third' }], nextCursor: null });
+
+    const bad = await json('GET', `${publicPaths.canvases}?cursor=nonsense`);
+    expect(bad.status).toBe(400);
+    expect(bad.body).toEqual({ error: { code: 'bad_request', message: expect.any(String) } });
+    expect((await json('GET', `${publicPaths.canvases}?limit=0`)).status).toBe(400);
+  });
+
+  it('creates a canvas, once per idempotency key, ignoring fields it does not know', async () => {
+    const body = { name: 'Deploys', color: 'green', labels: { ticket: '123' }, somethingFromTheFuture: true };
+    const created = await json('POST', publicPaths.canvases, body, { 'idempotency-key': 'make-deploys-1' });
+    expect(created.status).toBe(201);
+    const canvas = CanvasDetail.parse(created.body);
+    expect(canvas).toMatchObject({ name: 'Deploys', color: 'green', labels: { ticket: '123' }, nodes: [], frames: [] });
+    expect(canvas).not.toHaveProperty('somethingFromTheFuture');
+
+    // The same request again: the same canvas, and no second one.
+    const again = await json('POST', publicPaths.canvases, body, { 'idempotency-key': 'make-deploys-1' });
+    expect(again.status).toBe(201);
+    expect(again.body.id).toBe(canvas.id);
+    expect(again.headers['idempotent-replayed']).toBe('true');
+    expect(hub.state.canvases).toHaveLength(2);
+
+    // Without a key, or with another, it is a new canvas.
+    await json('POST', publicPaths.canvases, body);
+    await json('POST', publicPaths.canvases, body, { 'idempotency-key': 'make-deploys-2' });
+    expect(hub.state.canvases).toHaveLength(4);
+
+    expect((await json('POST', publicPaths.canvases, { name: '  ' })).status).toBe(400);
+    expect((await json('POST', publicPaths.canvases, { name: 'x', labels: { 'bad key': 'v' } })).status).toBe(400);
+    expect((await json('POST', publicPaths.canvases, body, { 'idempotency-key': 'has space' })).status).toBe(400);
+  });
+
+  it('reads and changes one canvas', async () => {
+    const { node } = await createSession();
+    const read = CanvasDetail.parse((await json('GET', publicPaths.canvas(main().id))).body);
+    expect(read.nodes).toEqual([node]);
+    expect(read.counts.sessions).toBe(1);
+
+    const changed = await json('PATCH', publicPaths.canvas(main().id), { name: 'Work', color: 'blue', order: 7, labels: { team: 'core' } });
+    expect(CanvasDetail.parse(changed.body)).toMatchObject({ name: 'Work', color: 'blue', order: 7, labels: { team: 'core' } });
+    expect(main()).toMatchObject({ name: 'Work', color: 'blue' });
+    // Only what is sent changes.
+    await json('PATCH', publicPaths.canvas(main().id), { name: 'Main again' });
+    expect(main()).toMatchObject({ name: 'Main again', color: 'blue', labels: { team: 'core' } });
+
+    expect((await json('PATCH', publicPaths.canvas(main().id), {})).status).toBe(400);
+    expect((await json('PATCH', publicPaths.canvas(main().id), { color: 'pink' })).status).toBe(400);
+    const missing = await json('GET', publicPaths.canvas(newId()));
+    expect(missing.status).toBe(404);
+    expect(missing.body.error.code).toBe('not_found');
+    expect((await json('GET', publicPaths.canvas('not-an-id'))).status).toBe(400);
+  });
+
+  it('closes a canvas only with a say about its sessions, never ends a shell, and keeps the last one', async () => {
+    const a = sessions.createCanvas({ name: 'A' });
+    const b = sessions.createCanvas({ name: 'B' });
+    const empty = sessions.createCanvas({ name: 'Empty' });
+    const onA = PlacedSession.parse((await json('POST', publicPaths.canvasSessions(a.id), {})).body);
+    const onB = PlacedSession.parse((await json('POST', publicPaths.canvasSessions(b.id), {})).body);
+
+    // An empty canvas needs no choice.
+    expect((await json('DELETE', publicPaths.canvas(empty.id))).status).toBe(204);
+
+    const undecided = await json('DELETE', publicPaths.canvas(a.id));
+    expect(undecided.status).toBe(409);
+    expect(undecided.body.error.code).toBe('conflict');
+    expect((await json('DELETE', `${publicPaths.canvas(a.id)}?sessions=move`)).status).toBe(400);
+    expect((await json('DELETE', `${publicPaths.canvas(a.id)}?sessions=move&to=${a.id}`)).status).toBe(400);
+    expect((await json('DELETE', `${publicPaths.canvas(a.id)}?sessions=move&to=${newId()}`)).status).toBe(404);
+    expect((await json('DELETE', `${publicPaths.canvas(a.id)}?sessions=end`)).status).toBe(400);
+    expect(hub.state.canvases).toHaveLength(3);
+
+    expect((await json('DELETE', `${publicPaths.canvas(a.id)}?sessions=move&to=${main().id}`)).status).toBe(204);
+    expect(main().layout.nodes.map((n) => n.sessionId)).toEqual([onA.session.id]);
+    expect((await json('DELETE', `${publicPaths.canvas(b.id)}?sessions=park`)).status).toBe(204);
+    expect(hub.state.sessions.find((s) => s.id === onB.session.id)?.state).toBe('parked');
+
+    expect(await runtime.has(onA.session.id)).toBe(true);
+    expect(await runtime.has(onB.session.id)).toBe(true);
+    const last = await json('DELETE', `${publicPaths.canvas(main().id)}?sessions=park`);
+    expect(last.status).toBe(409);
+    expect(hub.state.canvases).toHaveLength(1);
+  });
+
+  it('starts sessions on a canvas, lists them, and moves one to another canvas', async () => {
+    const second = sessions.createCanvas({ name: 'Second' });
+    const folder = await realpath(dir);
+    const started = await json(
+      'POST',
+      publicPaths.canvasSessions(second.id),
+      { name: 'api', cwd: folder, command: 'echo "v1-""started"', position: { x: 100, y: 200 } },
+      { 'idempotency-key': 'start-api' },
+    );
+    expect(started.status).toBe(201);
+    const placed = PlacedSession.parse(started.body);
+    expect(placed).toMatchObject({ canvasId: second.id, session: { name: 'api', cwd: folder }, node: { x: 100, y: 200, width: 720, height: 440 } });
+    await shellReady(placed.session.id);
+
+    // Sent again with the same key: no second shell.
+    const again = await json('POST', publicPaths.canvasSessions(second.id), { name: 'api' }, { 'idempotency-key': 'start-api' });
+    expect(again.body.session.id).toBe(placed.session.id);
+    expect((await runtime.list()).length).toBe(1);
+
+    const started2 = Date.now();
+    while (!(await runtime.snapshot(placed.session.id)).includes('v1-started')) {
+      if (Date.now() - started2 > 15_000) throw new Error('The command was never typed');
+      await sleep(40);
+    }
+
+    const listed = SessionList.parse((await json('GET', publicPaths.canvasSessions(second.id))).body);
+    expect(listed.items.map((s) => s.id)).toEqual([placed.session.id]);
+    expect(SessionList.parse((await json('GET', publicPaths.canvasSessions(main().id))).body).items).toEqual([]);
+
+    const moved = await json('POST', publicPaths.moveSession(placed.session.id), { canvasId: main().id, position: { x: -50, y: 60 } });
+    expect(moved.status).toBe(200);
+    expect(PlacedSession.parse(moved.body)).toMatchObject({ canvasId: main().id, node: { id: placed.node.id, x: -50, y: 60 } });
+    expect(sessions.getCanvas(second.id).layout.nodes).toEqual([]);
+    expect(await runtime.has(placed.session.id)).toBe(true);
+
+    expect((await json('POST', publicPaths.moveSession(placed.session.id), { canvasId: newId() })).status).toBe(404);
+    expect((await json('POST', publicPaths.moveSession(newId()), { canvasId: main().id })).status).toBe(404);
+    expect((await json('POST', publicPaths.canvasSessions(newId()), {})).status).toBe(404);
+    expect((await json('POST', publicPaths.canvasSessions(second.id), { cwd: path.join(dir, 'missing') })).status).toBe(400);
+    sessions.park(placed.session.id);
+    expect((await json('POST', publicPaths.moveSession(placed.session.id), { canvasId: second.id })).status).toBe(409);
+  });
+
+  it('changes nodes and frames through their canvas', async () => {
+    const second = sessions.createCanvas({ name: 'Second' });
+    const { node } = await createSession();
+    const patched = await json('PATCH', publicPaths.canvasNode(main().id, node.id), { x: 300, color: 'red' });
+    expect(patched.body).toMatchObject({ id: node.id, x: 300, y: node.y, width: node.width, color: 'red' });
+    // A node is reached only through the canvas it is on.
+    expect((await json('PATCH', publicPaths.canvasNode(second.id, node.id), { x: 1 })).status).toBe(404);
+    expect((await json('PATCH', publicPaths.canvasNode(main().id, node.id), {})).status).toBe(400);
+
+    const made = await json('POST', publicPaths.canvasFrames(second.id), { label: 'Backend', x: 0, y: 0, width: 900, height: 600, color: 'purple' });
+    expect(made.status).toBe(201);
+    const frame = Frame.parse(made.body);
+    expect(frame).toMatchObject({ label: 'Backend', color: 'purple' });
+    expect(sessions.getCanvas(second.id).layout.frames).toEqual([frame]);
+    expect(main().layout.frames).toEqual([]);
+
+    const renamed = await json('PATCH', publicPaths.canvasFrame(second.id, frame.id), { label: 'Services' });
+    expect(Frame.parse(renamed.body)).toMatchObject({ label: 'Services', width: 900, color: 'purple' });
+    expect((await json('PATCH', publicPaths.canvasFrame(main().id, frame.id), { label: 'x' })).status).toBe(404);
+    expect((await json('DELETE', publicPaths.canvasFrame(main().id, frame.id))).status).toBe(404);
+    expect((await json('DELETE', publicPaths.canvasFrame(second.id, frame.id))).status).toBe(204);
+    expect(sessions.getCanvas(second.id).layout.frames).toEqual([]);
+  });
+
+  it('is for the signed-in browser only: a session token is refused on every route', async () => {
+    const second = sessions.createCanvas({ name: 'Second' });
+    const { session, node } = await createSession();
+    const bearer = { authorization: `Bearer ${sessionToken(token, session.id)}` };
+    const routes: [string, string, unknown?][] = [
+      ['GET', publicPaths.canvases],
+      ['POST', publicPaths.canvases, { name: 'By a token' }],
+      ['GET', publicPaths.canvas(main().id)],
+      ['PATCH', publicPaths.canvas(main().id), { name: 'Renamed by a token' }],
+      ['DELETE', `${publicPaths.canvas(second.id)}?sessions=park`],
+      ['GET', publicPaths.canvasSessions(main().id)],
+      ['POST', publicPaths.canvasSessions(main().id), {}],
+      // Not even its own session.
+      ['POST', publicPaths.moveSession(session.id), { canvasId: second.id }],
+      ['PATCH', publicPaths.canvasNode(main().id, node.id), { x: 999 }],
+      ['POST', publicPaths.canvasFrames(main().id), { x: 0, y: 0, width: 900, height: 600 }],
+    ];
+    for (const [method, url, body] of routes) {
+      const response = await request(method, url, { cookie: false, origin: null, headers: bearer, ...(body === undefined ? {} : { body }) });
+      expect(response.statusCode, `${method} ${url}`).toBe(403);
+      expect(response.json(), `${method} ${url}`).toEqual({ error: { code: 'forbidden', message: expect.any(String) } });
+    }
+    expect(hub.state.canvases.map((c) => c.name)).toEqual(['Main', 'Second']);
+    expect(main().layout.nodes).toEqual([node]);
+    expect((await runtime.list()).length).toBe(1);
+
+    // What a session token is for still works.
+    const own = await request('PUT', paths.agent.attention(session.id), { cookie: false, origin: null, headers: bearer, body: { state: 'working' } });
+    expect(own.statusCode).toBe(200);
+  });
+
+  it('refuses everything else too: no credentials, the secret as a bearer, a foreign page, a wrong host', async () => {
+    const create = { name: 'Nope' };
+    expect((await request('GET', publicPaths.canvases, { cookie: false, origin: null })).statusCode).toBe(401);
+    expect((await request('POST', publicPaths.canvases, { cookie: false, body: create })).statusCode).toBe(401);
+    const secret = await request('GET', publicPaths.canvases, { cookie: false, origin: null, headers: { authorization: `Bearer ${token}` } });
+    expect(secret.statusCode).toBe(401);
+    // With the cookie, the same rules as the rest of the browser's routes.
+    expect((await request('POST', publicPaths.canvases, { body: create, origin: null })).statusCode).toBe(403);
+    expect((await request('POST', publicPaths.canvases, { body: create, origin: 'http://evil.example' })).statusCode).toBe(403);
+    expect((await request('GET', publicPaths.canvases, { headers: { host: 'evil.example' } })).statusCode).toBe(403);
+    expect((await request('GET', publicPaths.canvases, { origin: null })).statusCode).toBe(200);
+    expect(hub.state.canvases).toHaveLength(1);
+  });
+});
+
 describe('session activity', () => {
   it('records the folder and command of each session', async () => {
     const { session } = await createSession();
@@ -701,15 +929,16 @@ describe('agent API', () => {
     expect(hub.state.sessions).toHaveLength(2);
   });
 
-  it('refuses missing, wrong and cookie-only credentials, and still checks Host and Origin', async () => {
+  it('refuses missing and wrong credentials, and still checks Host and Origin', async () => {
     const { session } = await createSession();
     const url = paths.agent.attention(session.id);
     const body = { state: 'waiting' };
     expect((await agent('PUT', url, null, body)).statusCode).toBe(401);
     expect((await agent('PUT', url, 'aub1.x.y', body)).statusCode).toBe(401);
     expect((await agent('PUT', url, sessionToken('wrong-secret', session.id), body)).statusCode).toBe(401);
-    // The browser cookie is not a credential here.
-    expect((await request('PUT', url, { body, origin: null })).statusCode).toBe(401);
+    // The signed-in browser may use these routes too, under the same Origin rule as its other routes.
+    expect((await request('PUT', url, { body, origin: null })).statusCode).toBe(403);
+    expect((await request('PUT', url, { body: { state: 'none' } })).statusCode).toBe(200);
 
     const mine = sessionToken(token, session.id);
     const badHost = await request('PUT', url, { body, cookie: false, origin: null, headers: { ...bearer(mine), host: 'evil.example' } });

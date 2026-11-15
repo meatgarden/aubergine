@@ -3,6 +3,9 @@ import {
   AgentInfo,
   AgentKind,
   Attention,
+  Canvas,
+  CanvasName,
+  Labels,
   AttentionState,
   AppState,
   Frame,
@@ -17,7 +20,7 @@ import {
   SessionName,
   SessionNote,
 } from './entities';
-import { ChangeEvent } from './events';
+import { CanvasChanges, ChangeEvent } from './events';
 import { Id } from './ids';
 import { Settings } from './settings';
 
@@ -347,3 +350,128 @@ export type TerminalServerMessage = z.infer<typeof TerminalServerMessage>;
 /** WebSocket close codes used by the daemon. */
 export const CLOSE_SESSION_ENDED = 4001;
 export const CLOSE_BAD_MESSAGE = 4002;
+
+/* ====================================================================
+ * The public API, under /v1.
+ *
+ * These shapes are a promise: /v1 only gains things. Fields are added, never
+ * renamed or removed. Servers ignore request fields they do not know, and
+ * clients must ignore response fields they do not know.
+ *
+ * Everywhere: errors are `{ error: { code, message } }` with a stable code;
+ * lists are paged with a cursor; times are ISO 8601 strings; IDs are opaque
+ * strings; a create may carry an `Idempotency-Key` header so that sending it
+ * again does not create a second thing.
+ * ==================================================================== */
+
+export const publicPaths = {
+  canvases: '/v1/canvases',
+  canvas: (canvasId: string) => `/v1/canvases/${canvasId}`,
+  canvasSessions: (canvasId: string) => `/v1/canvases/${canvasId}/sessions`,
+  canvasNode: (canvasId: string, nodeId: string) => `/v1/canvases/${canvasId}/nodes/${nodeId}`,
+  canvasFrames: (canvasId: string) => `/v1/canvases/${canvasId}/frames`,
+  canvasFrame: (canvasId: string, frameId: string) => `/v1/canvases/${canvasId}/frames/${frameId}`,
+  moveSession: (sessionId: string) => `/v1/sessions/${sessionId}/move`,
+} as const;
+
+/** Header a client may send with a create, to make repeating it safe. */
+export const IDEMPOTENCY_HEADER = 'idempotency-key';
+export const IdempotencyKey = z.string().regex(/^[\x21-\x7e]{1,128}$/);
+
+export const PAGE_DEFAULT = 100;
+export const PAGE_MAX = 500;
+
+/** Query of every list: how many to return, and where to carry on from. */
+export const PageQuery = z.object({
+  limit: z.coerce.number().int().min(1).max(PAGE_MAX).default(PAGE_DEFAULT),
+  /** The `nextCursor` of the page before. Opaque: do not build or change it. */
+  cursor: z.string().min(1).max(512).optional(),
+});
+export type PageQuery = z.infer<typeof PageQuery>;
+
+/** The shape of every list: some items, and a cursor for the rest (null when there is no more). */
+export function pageOf<T extends z.ZodType>(item: T) {
+  return z.object({ items: z.array(item), nextCursor: z.string().nullable() });
+}
+
+const Counts = z.object({ sessions: z.number().int(), waiting: z.number().int(), unread: z.number().int() });
+
+/** A canvas without its layout, with how much is on it. */
+export const CanvasSummary = Canvas.omit({ layout: true }).extend({ counts: Counts });
+export type CanvasSummary = z.infer<typeof CanvasSummary>;
+
+/** A canvas with its nodes and frames. */
+export const CanvasDetail = CanvasSummary.extend({ nodes: z.array(LayoutNode), frames: z.array(Frame) });
+export type CanvasDetail = z.infer<typeof CanvasDetail>;
+
+export const CanvasList = pageOf(CanvasSummary);
+export type CanvasList = z.infer<typeof CanvasList>;
+
+export const CreateCanvasRequest = z.object({
+  name: CanvasName,
+  color: NodeColor.optional(),
+  labels: Labels.optional(),
+});
+export type CreateCanvasRequest = z.infer<typeof CreateCanvasRequest>;
+
+/** Any of: name, color, order, labels. `labels` replaces the whole set. */
+export const UpdateCanvasRequest = CanvasChanges.refine((body) => Object.keys(body).length > 0, 'Nothing to update');
+export type UpdateCanvasRequest = z.infer<typeof UpdateCanvasRequest>;
+
+/**
+ * Query of closing a canvas: what happens to the sessions on it. They are
+ * never ended. `sessions=park`, or `sessions=move&to=<canvas id>`. It may be
+ * left out only when the canvas has no sessions.
+ */
+export const CloseCanvasQuery = z
+  .object({ sessions: z.enum(['park', 'move']).optional(), to: Id.optional() })
+  .refine((query) => query.sessions !== 'move' || query.to !== undefined, 'sessions=move needs to=<canvas id>');
+export type CloseCanvasQuery = z.infer<typeof CloseCanvasQuery>;
+
+/** Where on a canvas: a point, and optionally a size. */
+export const Position = z.object({
+  x: NodeRect.shape.x,
+  y: NodeRect.shape.y,
+  width: NodeRect.shape.width.optional(),
+  height: NodeRect.shape.height.optional(),
+});
+export type Position = z.infer<typeof Position>;
+
+export const StartSessionRequest = z.object({
+  name: SessionName.optional(),
+  /** Folder to start in (absolute path). */
+  cwd: z.string().startsWith('/').max(4096).optional(),
+  /** A line to type into the new session once its shell is ready. */
+  command: z.string().trim().min(1).max(4000).optional(),
+  /** Where to put it. A free spot is found when omitted. */
+  position: Position.optional(),
+});
+export type StartSessionRequest = z.infer<typeof StartSessionRequest>;
+
+/** A session together with where it is. */
+export const PlacedSession = z.object({ session: Session, canvasId: Id, node: LayoutNode });
+export type PlacedSession = z.infer<typeof PlacedSession>;
+
+export const SessionList = pageOf(Session);
+export type SessionList = z.infer<typeof SessionList>;
+
+export const MoveSessionRequest = z.object({
+  canvasId: Id,
+  position: z.object({ x: NodeRect.shape.x, y: NodeRect.shape.y }).optional(),
+});
+export type MoveSessionRequest = z.infer<typeof MoveSessionRequest>;
+
+/** Any of: x, y, width, height, color. */
+export const PatchNodeRequest = NodeRect.extend({ color: NodeColor })
+  .partial()
+  .refine((body) => Object.keys(body).length > 0, 'Nothing to update');
+export type PatchNodeRequest = z.infer<typeof PatchNodeRequest>;
+
+export const CreateFrameBody = FrameRect.extend({ label: FrameLabel.optional(), color: NodeColor.optional() });
+export type CreateFrameBody = z.infer<typeof CreateFrameBody>;
+
+/** Any of: x, y, width, height, label, color. With `carry`, nodes inside the frame move along with it. */
+export const PatchFrameRequest = FrameRect.extend({ label: FrameLabel, color: NodeColor, carry: z.boolean() })
+  .partial()
+  .refine((body) => Object.keys(body).length > 0, 'Nothing to update');
+export type PatchFrameRequest = z.infer<typeof PatchFrameRequest>;
