@@ -34,7 +34,7 @@ export interface AppStore {
   /** False while the live event stream is down after having been up. */
   live: boolean;
   /** Session whose terminal should hold keyboard focus. The counter re-triggers focus on repeat clicks. */
-  focus: { sessionId: string; tick: number } | null;
+  focus: { sessionId: string; tick: number; at: number } | null;
   /** Session waiting for the user to confirm closing it. */
   closing: string | null;
   /** Canvas waiting for the user to say what happens to its sessions before it is closed. */
@@ -165,7 +165,7 @@ export const useApp = create<AppStore>((set, get) => ({
 
   focusSession: (sessionId) =>
     set((state) => ({
-      focus: sessionId ? { sessionId, tick: (state.focus?.tick ?? 0) + 1 } : null,
+      focus: sessionId ? { sessionId, tick: (state.focus?.tick ?? 0) + 1, at: Date.now() } : null,
       // The terminal that had the keyboard stays selected when the keyboard leaves it.
       selected: sessionId ?? state.selected,
     })),

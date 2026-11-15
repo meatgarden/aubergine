@@ -1037,3 +1037,17 @@ kbd {
   margin: 6px 0 0;
   padding-left: 18px;
 }
+
+.picker-row.unavailable .picker-name {
+  color: var(--muted);
+}
+.picker-keys {
+  margin-left: auto;
+  white-space: nowrap;
+}
+.picker-row kbd:last-child {
+  margin-right: 0;
+}
+.move-menu kbd {
+  margin-right: 8px;
+}

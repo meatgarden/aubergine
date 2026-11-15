@@ -42,6 +42,9 @@ export function activeShortcuts(settings: Settings = useApp.getState().settings)
   return cache.resolved;
 }
 
+/** How long after a terminal is given the keyboard plain keys are kept from the canvas. */
+const FOCUS_SETTLE_MS = 700;
+
 /** Where the keyboard is: in a terminal, in a text field, or on the canvas itself. */
 export type KeyPlace = 'terminal' | 'text' | 'canvas';
 
@@ -90,6 +93,12 @@ export function handleKey(event: KeyboardEvent): boolean {
   if (!binding) return false;
   // With the palette open, plain keys are typing even if the field has lost the keyboard.
   if (state.picker && binding.layer === 'canvas') return false;
+  // A terminal has just been given the keyboard and the view may still be on its way there:
+  // what is typed in that moment is meant for the terminal, not for the canvas.
+  if (binding.layer === 'canvas' && place === 'canvas' && state.focus && Date.now() - state.focus.at < FOCUS_SETTLE_MS) {
+    event.preventDefault();
+    return true;
+  }
   const command = commandById(binding.command);
   const available = command.available(state);
   // A chord that works inside terminals is always ours: it must not reach the shell even when
