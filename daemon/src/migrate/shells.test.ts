@@ -111,6 +111,9 @@ function session(cwd: string, state: Session['state'] = 'open'): Session {
     noteLog: [],
     agent: null,
     parkedFrom: null,
+    lastInputAt: null,
+    lastOutputAt: null,
+    tags: [],
   };
 }
 

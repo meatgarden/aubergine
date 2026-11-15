@@ -50,6 +50,9 @@ function fixture(): { state: AppState; session: Session; node: LayoutNode } {
     noteLog: [],
     agent: null,
     parkedFrom: null,
+    lastInputAt: null,
+    lastOutputAt: null,
+    tags: [],
   };
   const node: LayoutNode = {
     id: newId(),
@@ -258,6 +261,9 @@ describe('applyEvent', () => {
       noteLog: [],
       agent: null,
       parkedFrom: null,
+    lastInputAt: null,
+    lastOutputAt: null,
+    tags: [],
     });
   });
 

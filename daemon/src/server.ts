@@ -50,6 +50,7 @@ import { Viewers } from './viewers';
 import type { StateHub } from './state-hub';
 import type { Outside } from './migrate/outside';
 import { SessionNotFoundError, type Attachment, type SessionRuntime } from './runtime/runtime';
+import { isTerminalReply } from './terminal-replies';
 import { BadInputError, ConflictError, NotFoundError, RuntimeUnavailableError, type Sessions } from './sessions';
 import { tokensMatch } from './token';
 
@@ -407,6 +408,9 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
         early.push(message);
       } else if (message.t === 'input') {
         attachment.write(message.data);
+        // Throttled inside: this is called for every key. What the terminal sends by itself
+        // (answers to the program's queries, focus reports) is not typing.
+        if (!isTerminalReply(message.data)) sessions.noteInput(sessionId);
       } else {
         attachment.resize({ cols: message.cols, rows: message.rows });
       }

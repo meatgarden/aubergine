@@ -8,14 +8,33 @@ const keysOf = (resolved: ReturnType<typeof resolveShortcuts>, command: string):
 
 describe('default shortcuts', () => {
   for (const platform of ['mac', 'other'] as const) {
-    it(`are valid, free of collisions and deliverable on ${platform}`, () => {
+    it(`are valid and free of collisions on ${platform}`, () => {
       for (const mode of ['tab', 'app'] as const) {
         const resolved = resolveShortcuts({ platform, mode });
         expect(resolved.problems).toEqual([]);
         const ids = resolved.bindings.map((b) => chordId(b.chord));
         expect(new Set(ids).size).toBe(ids.length);
-        for (const binding of resolved.bindings) expect(keptByBrowser(binding.chord, platform, mode)).toBeNull();
+        for (const binding of resolved.bindings) expect(binding.kept).toBe(keptByBrowser(binding.chord, platform, mode));
       }
+    });
+
+    it(`bind the browser's tab keys to canvases on ${platform}, expected to arrive only in an app window`, () => {
+      const inTab = resolveShortcuts({ platform, mode: 'tab' }).bindings;
+      const inApp = resolveShortcuts({ platform, mode: 'app' }).bindings;
+      const tabKeys = platform === 'mac'
+        ? ['Ctrl+Tab', 'Ctrl+Shift+Tab', 'Meta+Shift+]', 'Meta+Shift+[', 'Meta+Alt+ArrowRight', 'Meta+Alt+ArrowLeft', 'Ctrl+PageDown', 'Ctrl+PageUp', 'Meta+1', 'Meta+9']
+        : ['Ctrl+Tab', 'Ctrl+Shift+Tab', 'Ctrl+PageDown', 'Ctrl+PageUp', 'Ctrl+1', 'Ctrl+9'];
+      for (const key of tabKeys) {
+        const tab = inTab.find((b) => chordId(b.chord) === key);
+        const app = inApp.find((b) => chordId(b.chord) === key);
+        expect(tab?.command, key).toMatch(/^canvas\.(next|previous|go\.\d)$/);
+        expect(tab?.kept, key).toMatch(/tabs/);
+        expect(app?.kept, key).toBeNull();
+      }
+      // The chords that do not depend on the browser are still there, and nothing is kept among them.
+      const own = inTab.filter((b) => b.kept === null && b.layer === 'always').map((b) => b.command);
+      expect(own).toContain('canvas.next');
+      expect(own).toContain('canvas.previous');
     });
 
     it(`never take a key a terminal program needs on ${platform}`, () => {
@@ -34,6 +53,13 @@ describe('default shortcuts', () => {
     }
     // Off macOS nothing safe is known for this one: it is left to the palette.
     expect(defaultShortcuts('other')['attention.next']).toEqual(['W']);
+    // Ctrl+Tab reaches the canvas from inside a terminal on both; plain Tab is never bound there.
+    for (const platform of ['mac', 'other'] as const) {
+      const bindings = resolveShortcuts({ platform, mode: 'app' }).bindings;
+      expect(bindings.find((b) => chordId(b.chord) === 'Ctrl+Tab')?.layer).toBe('always');
+      expect(bindings.find((b) => chordId(b.chord) === 'Ctrl+Shift+Tab')?.layer).toBe('always');
+      for (const b of bindings.filter((x) => x.chord.key === 'Tab' && !x.chord.ctrl)) expect(b.layer).toBe('canvas');
+    }
     expect(defaultShortcuts('mac')['attention.next']).toEqual(['Ctrl+Meta+J', 'W']);
   });
 
@@ -47,11 +73,11 @@ describe('shortcuts from the settings file', () => {
     const resolved = resolveShortcuts({
       platform: 'mac',
       mode: 'tab',
-      shortcuts: { 'terminal.park': 'X', 'attention.next': ['cmd+ctrl+g', 'J'], 'view.fit': null },
+      shortcuts: { 'terminal.park': 'X', 'attention.next': ['cmd+ctrl+g', 'Y'], 'view.fit': null },
     });
     expect(resolved.problems).toEqual([]);
     expect(keysOf(resolved, 'terminal.park')).toEqual(['X']);
-    expect(keysOf(resolved, 'attention.next')).toEqual(['Ctrl+Meta+G', 'J']);
+    expect(keysOf(resolved, 'attention.next')).toEqual(['Ctrl+Meta+G', 'Y']);
     expect(keysOf(resolved, 'view.fit')).toEqual([]);
     // Everything else keeps its default.
     expect(keysOf(resolved, 'terminal.new')).toEqual(['N']);
@@ -65,10 +91,11 @@ describe('shortcuts from the settings file', () => {
     expect(keysOf(resolved, 'terminal.park')).toEqual([]);
   });
 
-  it('reports a chord the browser keeps, and does not install it', () => {
+  it('warns about a chord the browser keeps, and binds it all the same', () => {
     const resolved = resolveShortcuts({ platform: 'mac', mode: 'tab', shortcuts: { 'canvas.new': 'Meta+T' } });
-    expect(resolved.problems[0]?.message).toMatch(/⌘T for "canvas.new" will not reach this page/);
-    expect(keysOf(resolved, 'canvas.new')).toEqual([]);
+    expect(resolved.problems[0]?.message).toMatch(/⌘T for "canvas.new" may not reach this page/);
+    expect(keysOf(resolved, 'canvas.new')).toEqual(['Meta+T']);
+    expect(resolved.bindings.find((b) => b.command === 'canvas.new')?.kept).toMatch(/tab/);
   });
 
   it('reports unknown commands, unreadable chords and wrong kinds of value', () => {
@@ -97,13 +124,13 @@ describe('shortcuts from the settings file', () => {
     ]);
   });
 
-  it('applies the app-window keys only in an app window, where tab chords are not refused', () => {
-    const settings = { shortcutsInAppWindow: { 'canvas.go.1': 'Meta+1' } };
-    expect(keysOf(resolveShortcuts({ platform: 'mac', mode: 'tab', ...settings }), 'canvas.go.1')).toEqual(['1']);
+  it('applies the app-window keys only in an app window, where tab chords are not warned about', () => {
+    const settings = { shortcutsInAppWindow: { 'canvas.new': 'Meta+T' } };
+    expect(keysOf(resolveShortcuts({ platform: 'mac', mode: 'tab', ...settings }), 'canvas.new')).toEqual(['T']);
     const inApp = resolveShortcuts({ platform: 'mac', mode: 'app', ...settings });
     expect(inApp.problems).toEqual([]);
-    expect(keysOf(inApp, 'canvas.go.1')).toEqual(['Meta+1']);
-    expect(inApp.bindings.find((b) => chordId(b.chord) === 'Meta+1')?.layer).toBe('always');
+    expect(keysOf(inApp, 'canvas.new')).toEqual(['Meta+T']);
+    expect(inApp.bindings.find((b) => chordId(b.chord) === 'Meta+T')?.layer).toBe('always');
   });
 });
 

@@ -34,6 +34,9 @@ function withSession(state: AppState, name: string): AppState {
       noteLog: [],
       agent: null,
       parkedFrom: null,
+    lastInputAt: null,
+    lastOutputAt: null,
+    tags: [],
     },
     node: { id: newId(), sessionId, x: 0, y: 0, width: 720, height: 440, color: 'none' },
   };

@@ -1,4 +1,4 @@
-import type { Canvas } from '@aubergine/shared';
+import type { Canvas, CommandId } from '@aubergine/shared';
 import type { Command } from './commands';
 
 /** What was typed into the palette: `>` in front means "commands only". */
@@ -37,10 +37,14 @@ export function searchCanvases(canvases: readonly Canvas[], text: string): Canva
 
 /**
  * The second step after opening the palette: with nothing typed yet, a digit
- * means "go to that canvas". Returns the canvas, or null when the key is not
- * a digit, something is typed already, or there is no such canvas.
+ * goes to that canvas, and `[` and `]` to the previous and the next one. This
+ * needs no special chord, so it works in every browser. Returns the command
+ * to run, or null when the key is something to type.
  */
-export function canvasForDigit(canvases: readonly Canvas[], query: string, key: string): Canvas | null {
-  if (query !== '' || !/^[1-9]$/.test(key)) return null;
-  return canvases[Number(key) - 1] ?? null;
+export function paletteStep(query: string, key: string): CommandId | null {
+  if (query !== '') return null;
+  if (/^[1-9]$/.test(key)) return `canvas.go.${key}` as CommandId;
+  if (key === '[') return 'canvas.previous';
+  if (key === ']') return 'canvas.next';
+  return null;
 }

@@ -11,7 +11,16 @@ const noEntries: NoteEntry[] = [];
  * you type, above a log that only grows. Agents in the session add to the
  * log; so can the user.
  */
-export function NotePanel({ sessionId, onClose }: { sessionId: string; onClose: () => void }) {
+export function NotePanel({
+  sessionId,
+  onClose,
+  embedded = false,
+}: {
+  sessionId: string;
+  onClose: () => void;
+  /** Shown inside something that has its own frame and close button (the side panel's drawer), not on a node. */
+  embedded?: boolean;
+}) {
   const saved = useApp((s) => s.app?.sessions.find((x) => x.id === sessionId)?.note ?? '');
   const [text, setText] = useState(saved);
   const [status, setStatus] = useState<'saved' | 'unsaved' | 'failed'>('saved');
@@ -64,18 +73,20 @@ export function NotePanel({ sessionId, onClose }: { sessionId: string; onClose: 
   };
 
   return (
-    <aside className="note-panel nodrag nopan nowheel" data-testid="note-panel">
+    <aside className={`note-panel nodrag nopan nowheel${embedded ? ' embedded' : ''}`} data-testid={embedded ? 'note-drawer' : 'note-panel'}>
       <header>
         <span>Note</span>
         <span className="note-status">{status === 'saved' ? 'Saved' : status === 'failed' ? 'Not saved' : 'Saving…'}</span>
-        <button type="button" className="node-close" aria-label="Hide note" title="Hide note" onClick={onClose}>
-          ×
-        </button>
+        {!embedded && (
+          <button type="button" className="node-close" aria-label="Hide note" title="Hide note" onClick={onClose}>
+            ×
+          </button>
+        )}
       </header>
       <textarea
         className="note-summary"
         aria-label="Session note"
-        autoFocus
+        autoFocus={!embedded}
         placeholder="Pinned Markdown summary for this session…"
         spellCheck={false}
         value={text}

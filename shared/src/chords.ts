@@ -207,9 +207,16 @@ export function chordOfPress(press: KeyPress): Chord | null {
  * which a terminal never passes on, and Ctrl+Shift chords elsewhere, which
  * terminals have long kept for themselves (copy and paste) because a program
  * cannot tell Ctrl+Shift+K from Ctrl+K.
+ *
+ * One exception, and it stays this narrow: Ctrl+Tab and Ctrl+Shift+Tab. A
+ * terminal has no way to pass Ctrl+Tab on as a key of its own (a program
+ * would receive a plain Tab), so no program can be waiting for it, and it is
+ * what browsers use to switch tabs. Plain Tab and Shift+Tab are completion
+ * and always belong to the program.
  */
 export function belongsToTerminal(chord: Chord, platform: Platform): boolean {
   if (isPlainKey(chord)) return true;
+  if (chord.key === 'Tab' && chord.ctrl && !chord.meta && !chord.alt) return false;
   if (platform === 'mac') return !chord.meta;
   if (chord.meta) return false;
   return !(chord.ctrl && chord.shift && !chord.alt);
@@ -245,6 +252,8 @@ const KEPT: Kept[] = [
   { chord: 'Meta+Alt+ArrowRight', platform: 'mac', modes: ['tab'], why: 'switches browser tabs' },
   { chord: 'Ctrl+Tab', platform: 'mac', modes: ['tab'], why: 'switches browser tabs' },
   { chord: 'Ctrl+Shift+Tab', platform: 'mac', modes: ['tab'], why: 'switches browser tabs' },
+  { chord: 'Ctrl+PageUp', platform: 'mac', modes: ['tab'], why: 'switches browser tabs' },
+  { chord: 'Ctrl+PageDown', platform: 'mac', modes: ['tab'], why: 'switches browser tabs' },
   { chord: 'Meta+Tab', platform: 'mac', modes: ['tab', 'app'], why: 'switches applications' },
   { chord: 'Meta+Space', platform: 'mac', modes: ['tab', 'app'], why: 'opens system search' },
   { chord: 'Meta+H', platform: 'mac', modes: ['tab', 'app'], why: 'hides the application' },
@@ -276,7 +285,12 @@ const KEPT: Kept[] = [
 
 const KEPT_INDEX = new Map(KEPT.map((entry) => [`${entry.platform}:${chordId(parseChord(entry.chord))}`, entry]));
 
-/** Why a page cannot count on this chord in this kind of window, or null when nothing is known against it. */
+/**
+ * Why a page cannot count on this chord in this kind of window, or null when
+ * nothing is known against it. A chord may be bound all the same: binding one
+ * the browser keeps costs nothing, and it works wherever the browser does
+ * let it through.
+ */
 export function keptByBrowser(chord: Chord, platform: Platform, mode: WindowMode): string | null {
   const entry = KEPT_INDEX.get(`${platform}:${chordId(chord)}`);
   return entry && entry.modes.includes(mode) ? entry.why : null;

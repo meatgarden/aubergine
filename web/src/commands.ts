@@ -4,6 +4,9 @@ import { nextWaiting } from './attention';
 import { canvasActions } from './canvas-actions';
 import { neighbour, type Box, type Direction } from './spatial';
 import { currentLayout, useApp, type AppStore } from './store';
+import { SCOPE_FILTER } from './list-filters';
+import { listModel } from './list-model';
+import { SORTS } from './terminal-rows';
 
 /**
  * The commands: everything that can be done from a button, a key, or the
@@ -14,7 +17,7 @@ export interface Command {
   title: string;
   /** One sentence for the shortcut sheet and the palette. */
   description: string;
-  group: 'Terminals' | 'Canvases' | 'View' | 'Panels';
+  group: 'Terminals' | 'Canvases' | 'View' | 'Panels' | 'List';
   /** Whether it can run right now. A command that cannot is shown greyed out and does nothing. */
   available: (state: AppStore) => boolean;
   run: (state: AppStore) => void;
@@ -81,6 +84,10 @@ const hasTerminals = (state: AppStore): boolean => currentLayout(state).nodes.le
 const hasTarget = (state: AppStore): boolean => targetSession(state) !== null;
 const parked = (state: AppStore): Session[] => (state.app?.sessions ?? []).filter((s) => s.state === 'parked');
 
+/** Whether a button, a tab or a list (not a terminal, not the page itself) has the keyboard. */
+const onControl = (): boolean =>
+  typeof document !== 'undefined' && document.activeElement instanceof HTMLElement && document.activeElement !== document.body && !document.activeElement.closest('.xterm');
+
 const DIRECTIONS: Direction[] = ['left', 'right', 'up', 'down'];
 const WORDS: Record<Direction, string> = { left: 'to the left', right: 'to the right', up: 'above', down: 'below' };
 
@@ -118,9 +125,68 @@ const selectCommands = DIRECTIONS.map((direction): Command => ({
     const id = nextTo(state, direction);
     if (!id) return;
     state.select(id);
-    canvasActions.get()?.reveal(id);
+    canvasActions.get()?.bringIntoView(id);
   },
 }));
+
+const stepCommands = ([1, -1] as const).map((by): Command => ({
+  id: by === 1 ? 'select.next' : 'select.previous',
+  title: by === 1 ? 'Select the next terminal' : 'Select the previous terminal',
+  description: `Selects the ${by === 1 ? 'next' : 'previous'} terminal in the terminal list as it is filtered and ordered, wrapping at the ends. With every canvas in scope it switches canvas on the way.`,
+  group: 'Terminals',
+  available: (state) => listModel(state.app, state.listView, state.canvasId).order.length > 0,
+  run: (state) => {
+    const { order } = listModel(state.app, state.listView, state.canvasId);
+    if (order.length === 0) return;
+    const from = state.focus?.sessionId ?? state.selected;
+    const at = order.findIndex((step) => step.sessionId === from);
+    const next = at < 0 ? (by === 1 ? order[0] : order.at(-1)) : order[(at + by + order.length) % order.length];
+    if (!next) return;
+    if (next.canvasId !== state.canvasId) {
+      // On another canvas: go there, and select once that canvas is the one on screen.
+      state.setCanvas(next.canvasId);
+      useApp.getState().select(next.sessionId);
+      window.setTimeout(() => canvasActions.get()?.bringIntoView(next.sessionId), 80);
+      return;
+    }
+    state.select(next.sessionId);
+    canvasActions.get()?.bringIntoView(next.sessionId);
+  },
+}));
+
+const FILTER_COMMANDS: [CommandId, string, string][] = [
+  ['list.filter.waiting', 'waiting', 'waiting for you'],
+  ['list.filter.busy', 'busy', 'busy'],
+  ['list.filter.unread', 'unread', 'with unread output'],
+  ['list.filter.agent', 'agent', 'with an agent'],
+  ['list.filter.parked', 'parked', 'parked'],
+];
+
+const toggleFilter = (state: AppStore, id: string): void =>
+  state.setListView({ filters: state.listView.filters.includes(id) ? state.listView.filters.filter((f) => f !== id) : [...state.listView.filters, id] });
+
+const filterCommands = FILTER_COMMANDS.map(([id, filter, words]): Command => ({
+  id,
+  title: `List: only terminals ${words}`,
+  description: `Switches the filter "${words}" of the terminal list on or off.`,
+  group: 'List',
+  available: always,
+  run: (state) => toggleFilter(state, filter),
+}));
+
+/** The parts of the page that hold controls, in the order the keyboard visits them. */
+const CONTROL_REGIONS = ['.side-panel:not(.collapsed) .list-rows', '.toolbar button', '.tabbar [role="tab"], .tabbar button'];
+
+function focusNextControls(): void {
+  const active = document.activeElement;
+  const regions = CONTROL_REGIONS.map((selector) => document.querySelector<HTMLElement>(selector)).filter((el): el is HTMLElement => el !== null);
+  const containers = ['.side-panel', '.toolbar', '.tabbar'];
+  const at = containers.findIndex((selector) => active?.closest(selector));
+  const current = at < 0 ? -1 : regions.findIndex((el) => el.closest(containers[at] as string));
+  const next = regions[current + 1];
+  if (next) next.focus();
+  else if (active instanceof HTMLElement) active.blur();
+}
 
 export const COMMANDS: readonly Command[] = [
   {
@@ -160,6 +226,7 @@ export const COMMANDS: readonly Command[] = [
   },
   ...focusCommands,
   ...selectCommands,
+  ...stepCommands,
   {
     id: 'terminal.enter',
     title: 'Go into the selected terminal',
@@ -227,12 +294,29 @@ export const COMMANDS: readonly Command[] = [
   {
     id: 'notes.toggle',
     title: 'Open or close the notes',
-    description: 'Shows or hides the notes of the terminal.',
+    description: 'Shows or hides the notes of the terminal: beside the side panel when that is open, else on the terminal itself.',
     group: 'Terminals',
     available: hasTarget,
     run: (state) => {
       const session = targetSession(state);
-      if (session) state.request({ kind: 'note', id: session.id });
+      if (!session) return;
+      if (!state.side.open) {
+        state.request({ kind: 'note', id: session.id });
+        return;
+      }
+      const open = state.drawer?.section === 'terminals' && state.drawer.kind === 'notes' && state.drawer.id === session.id;
+      state.openDrawer(open ? null : { section: 'terminals', kind: 'notes', id: session.id });
+    },
+  },
+  {
+    id: 'terminal.tags',
+    title: 'Edit the tags of the terminal…',
+    description: 'Adds or removes tags: short words of your own to find and filter terminals by.',
+    group: 'Terminals',
+    available: hasTarget,
+    run: (state) => {
+      const session = targetSession(state);
+      if (session) state.request({ kind: 'tags', id: session.id });
     },
   },
   {
@@ -314,6 +398,74 @@ export const COMMANDS: readonly Command[] = [
     run: (state) => state.togglePanel('outside'),
   },
   {
+    id: 'panel.toggle',
+    title: 'Show or hide the side panel',
+    description: 'Collapses the panel on the left to a narrow strip of icons and counts, or opens it again.',
+    group: 'Panels',
+    available: always,
+    run: (state) => state.setSide({ open: !state.side.open }),
+  },
+  {
+    id: 'list.scope.toggle',
+    title: 'List: this canvas, or all canvases',
+    description: 'Switches the terminal list between the canvas being looked at and every canvas. Tab follows the list.',
+    group: 'List',
+    available: always,
+    run: (state) => toggleFilter(state, SCOPE_FILTER),
+  },
+  {
+    id: 'list.search',
+    title: 'List: filter by text',
+    description: 'Puts the keyboard in the text box of the terminal list.',
+    group: 'List',
+    available: always,
+    run: (state) => {
+      state.setSide({ open: true, folded: state.side.folded.filter((id) => id !== 'terminals') });
+      state.request({ kind: 'list-search', id: 'terminals' });
+    },
+  },
+  {
+    id: 'list.filters.clear',
+    title: 'List: clear the filters',
+    description: 'Removes every filter of the terminal list, the scope included, so that it shows everything.',
+    group: 'List',
+    available: (state) => state.listView.filters.length > 0 || state.listView.text !== '' || state.listView.tags.length > 0,
+    run: (state) => state.setListView({ filters: [], text: '', tags: [] }),
+  },
+  ...filterCommands,
+  {
+    id: 'list.grouping.toggle',
+    title: 'List: by canvas, or one flat list',
+    description: 'Switches the terminal list between groups by canvas and one flat list.',
+    group: 'List',
+    available: always,
+    run: (state) => state.setListView({ grouping: state.listView.grouping === 'flat' ? 'canvas' : 'flat' }),
+  },
+  {
+    id: 'list.sort.cycle',
+    title: 'List: change the order of the flat list',
+    description: 'Goes to the next order of the flat list: canvas order, last updated, last typed in, name.',
+    group: 'List',
+    available: (state) => state.listView.grouping === 'flat',
+    run: (state) => state.setListView({ sort: SORTS[(SORTS.indexOf(state.listView.sort) + 1) % SORTS.length] ?? 'canvas' }),
+  },
+  {
+    id: 'list.density.toggle',
+    title: 'List: compact or two lines',
+    description: 'Switches the rows of the terminal list between one line and two.',
+    group: 'List',
+    available: always,
+    run: (state) => state.setListView({ density: state.listView.density === 'compact' ? 'comfortable' : 'compact' }),
+  },
+  {
+    id: 'controls.focus',
+    title: 'Move the keyboard to the list, the toolbar, the tabs',
+    description: 'Moves the keyboard to the terminal list, then the toolbar, then the canvas tabs, then back to the canvas. Tab moves within each.',
+    group: 'Panels',
+    available: always,
+    run: focusNextControls,
+  },
+  {
     id: 'shortcuts.show',
     title: 'Show shortcuts',
     description: 'Shows every command and its keys.',
@@ -324,12 +476,14 @@ export const COMMANDS: readonly Command[] = [
   {
     id: 'panels.close',
     title: 'Close panels',
-    description: 'Closes whatever panel is open; with none open, clears the selection.',
+    description: 'Closes whatever panel is open; else returns the keyboard from a button to the canvas; else clears the selection.',
     group: 'Panels',
-    available: (state) => state.picker || state.panel !== null || state.selected !== null,
+    available: (state) => state.picker || state.panel !== null || state.drawer !== null || state.selected !== null || onControl(),
     run: (state) => {
       if (state.picker) state.setPicker(false);
       else if (state.panel !== null) state.togglePanel(null);
+      else if (state.drawer !== null) state.openDrawer(null);
+      else if (onControl()) (document.activeElement as HTMLElement).blur();
       else state.select(null);
     },
   },

@@ -6,6 +6,8 @@ import { CloseDialog } from './CloseDialog';
 import { startShortcuts } from './shortcuts';
 import { startSync, useApp } from './store';
 import { TabBar } from './TabBar';
+import { SidePanel } from './panel/SidePanel';
+import { TagDialog } from './TagDialog';
 
 export function App() {
   const phase = useApp((s) => s.phase);
@@ -67,12 +69,16 @@ export function App() {
   return (
     <div className="app">
       <TabBar />
-      {/* Keyed by canvas: each canvas gets a fresh view, with its own pan, zoom and live terminals. */}
-      <ReactFlowProvider key={canvasId ?? 'none'}>
-        <Canvas />
-        <CloseDialog />
-      </ReactFlowProvider>
+      <div className="workspace">
+        <SidePanel />
+        {/* Keyed by canvas: each canvas gets a fresh view, with its own pan, zoom and live terminals. */}
+        <ReactFlowProvider key={canvasId ?? 'none'}>
+          <Canvas />
+          <CloseDialog />
+        </ReactFlowProvider>
+      </div>
       <CloseCanvasDialog />
+      <TagDialog />
     </div>
   );
 }

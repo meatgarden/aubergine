@@ -89,9 +89,9 @@ describe('keys in the settings file', () => {
     });
     const problems = shortcutProblems(settings, 'mac');
     // Kept in a tab, so reported; free in an app window, so Meta+1 there is not.
-    expect(problems.some((p) => /⌘T for "canvas.new" will not reach this page/.test(p))).toBe(true);
+    expect(problems.some((p) => /⌘T for "canvas.new" may not reach this page/.test(p))).toBe(true);
     expect(problems.some((p) => /⌘1/.test(p))).toBe(false);
-    expect(problems.some((p) => /⌘W for "canvas.go.2" will not reach this page/.test(p))).toBe(true);
+    expect(problems.some((p) => /⌘W for "canvas.go.2" may not reach this page/.test(p))).toBe(true);
     expect(problems.some((p) => /shortcutsInAppWindow: there is no command named "nonsense"/.test(p))).toBe(true);
     expect(shortcutProblems(DEFAULT_SETTINGS, 'mac')).toEqual([]);
     expect(shortcutProblems(DEFAULT_SETTINGS, 'other')).toEqual([]);

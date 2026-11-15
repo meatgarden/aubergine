@@ -17,6 +17,9 @@ function session(name: string, state: AttentionState, at: string | null, extra: 
     noteLog: [],
     agent: null,
     parkedFrom: null,
+    lastInputAt: null,
+    lastOutputAt: null,
+    tags: [],
     ...extra,
   };
 }

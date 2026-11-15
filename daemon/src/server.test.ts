@@ -36,7 +36,7 @@ import { buildServer, cookieName } from './server';
 import type { ClaudeSession } from './migrate/claude-sessions';
 import { Outside } from './migrate/outside';
 import type { ScannedShell } from './migrate/shells';
-import { Sessions } from './sessions';
+import { Sessions, TIMES_INTERVAL_MS } from './sessions';
 import { SETTINGS_FILE, SettingsFile, expandHome } from './settings';
 import { ZshIntegration } from './shell/integration';
 import { JsonStore } from './store/json-store';
@@ -883,6 +883,122 @@ describe('session activity', () => {
     await stop();
     await start();
     expect(hub.state.sessions[0]?.note).toBe('# billing bug\nretry logic');
+  });
+});
+
+describe('when a session was last typed into and last printed', () => {
+  it('records input once for a whole line typed key by key, not once per key', async () => {
+    const { session } = await createSession();
+    await shellReady(session.id);
+    const view = terminal(session.id);
+    await waitFor(() => view.socket.readyState === WebSocket.OPEN, 'open');
+    const events: ChangeEvent[] = [];
+    const stopListening = hub.subscribe((event) => events.push(event));
+
+    const before = Date.now();
+    const line = `echo ${'x'.repeat(94)}`;
+    expect(line).toHaveLength(99);
+    for (const key of `${line}\r`) view.socket.send(JSON.stringify({ t: 'input', data: key }));
+    await waitFor(() => view.text.includes('x'.repeat(94)), 'the line to be echoed');
+
+    const inputs = events.filter((e) => e.type === 'session.times' && e.lastInputAt !== undefined);
+    expect(inputs).toHaveLength(1);
+    const typedAt = Date.parse(hub.state.sessions[0]!.lastInputAt!);
+    expect(typedAt).toBeGreaterThanOrEqual(before - 1000);
+    expect(typedAt).toBeLessThanOrEqual(Date.now());
+
+    // Output is noticed by the poller, and that too is held to one event per interval.
+    await waitForRefreshed(() => hub.state.sessions[0]?.lastOutputAt != null, 'the output time');
+    await sessions.refresh();
+    await sessions.refresh();
+    expect(events.filter((e) => e.type === 'session.times' && e.lastOutputAt !== undefined).length).toBeLessThanOrEqual(1 + Math.ceil((Date.now() - before) / TIMES_INTERVAL_MS));
+    stopListening();
+  });
+
+  it('holds input to one record per interval per session', async () => {
+    const a = await createSession();
+    const b = await createSession();
+    const events: ChangeEvent[] = [];
+    const stopListening = hub.subscribe((event) => events.push(event));
+    const t0 = Date.parse('2026-03-01T10:00:00.000Z');
+    for (let ms = 0; ms < TIMES_INTERVAL_MS; ms += 50) sessions.noteInput(a.session.id, t0 + ms);
+    sessions.noteInput(b.session.id, t0 + 10);
+    sessions.noteInput(a.session.id, t0 + TIMES_INTERVAL_MS);
+    sessions.noteInput('01900000-0000-7000-8000-000000000000', t0);
+    stopListening();
+
+    const times = events.filter((e) => e.type === 'session.times');
+    expect(times.map((e) => e.sessionId)).toEqual([a.session.id, b.session.id, a.session.id]);
+    expect(hub.state.sessions.find((s) => s.id === a.session.id)?.lastInputAt).toBe(new Date(t0 + TIMES_INTERVAL_MS).toISOString());
+  });
+
+  it('keeps both times over a restart of the server', async () => {
+    const { session } = await createSession();
+    sessions.noteInput(session.id, Date.parse('2026-03-01T10:00:00.000Z'));
+    await stop();
+    await start();
+    expect(hub.state.sessions[0]?.lastInputAt).toBe('2026-03-01T10:00:00.000Z');
+  });
+});
+
+describe('tags', () => {
+  const json = async (method: string, url: string, body?: unknown, headers: Record<string, string> = {}) => {
+    const response = await request(method, url, { ...(body === undefined ? {} : { body }), headers });
+    return { status: response.statusCode, body: response.body ? response.json() : null };
+  };
+
+  it('sets tags when a session is started and replaces them later, tidied', async () => {
+    const canvas = sortedCanvases(hub.state)[0]!;
+    const started = await json('POST', publicPaths.canvasSessions(canvas.id), { name: 'api', tags: [' backend ', 'Urgent', 'backend', 'BACKEND'] });
+    expect(started.status).toBe(201);
+    const { session } = PlacedSession.parse(started.body);
+    // Trimmed, repeats dropped whatever their capitals, the first spelling kept.
+    expect(session.tags).toEqual(['backend', 'Urgent']);
+
+    const patched = await json('PATCH', publicPaths.session(session.id), { tags: ['client-x'], somethingFromTheFuture: 1 });
+    expect(patched.status).toBe(200);
+    expect(patched.body.tags).toEqual(['client-x']);
+    expect(hub.state.sessions[0]?.tags).toEqual(['client-x']);
+
+    const renamed = await json('PATCH', publicPaths.session(session.id), { name: 'api server' });
+    expect(renamed.body).toMatchObject({ name: 'api server', tags: ['client-x'] });
+    expect((await json('PATCH', publicPaths.session(session.id), { tags: [] })).body.tags).toEqual([]);
+
+    // The route the page itself uses takes tags too.
+    const viaPage = await json('PATCH', paths.session(session.id), { tags: ['one', 'two'] });
+    expect(viaPage.body.tags).toEqual(['one', 'two']);
+  });
+
+  it('refuses tags that are too long or too many, an empty change, and an unknown session', async () => {
+    const { session } = await createSession();
+    const url = publicPaths.session(session.id);
+    expect((await json('PATCH', url, { tags: ['x'.repeat(33)] })).status).toBe(400);
+    expect((await json('PATCH', url, { tags: Array.from({ length: 13 }, (_, i) => `t${i}`) })).status).toBe(400);
+    expect((await json('PATCH', url, { tags: 'backend' })).status).toBe(400);
+    expect((await json('PATCH', url, {})).status).toBe(400);
+    const missing = await json('PATCH', publicPaths.session('01900000-0000-7000-8000-000000000000'), { tags: ['a'] });
+    expect(missing.status).toBe(404);
+    expect(missing.body).toEqual({ error: { code: 'not_found', message: expect.any(String) } });
+  });
+
+  it('is not open to a session token, not even for its own session', async () => {
+    const { session } = await createSession();
+    const response = await request('PATCH', publicPaths.session(session.id), {
+      body: { tags: ['mine'] },
+      headers: { authorization: `Bearer ${sessionToken(token, session.id)}` },
+      cookie: false,
+      origin: null,
+    });
+    expect(response.statusCode).toBe(403);
+    expect(hub.state.sessions[0]?.tags).toEqual([]);
+  });
+
+  it('keeps tags over a restart of the server', async () => {
+    const { session } = await createSession();
+    sessions.update(session.id, { tags: ['kept'] });
+    await stop();
+    await start();
+    expect(hub.state.sessions[0]?.tags).toEqual(['kept']);
   });
 });
 

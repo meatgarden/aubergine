@@ -19,6 +19,7 @@ import {
   Session,
   SessionName,
   SessionNote,
+  Tags,
 } from './entities';
 import { CanvasChanges, ChangeEvent } from './events';
 import { Id } from './ids';
@@ -124,6 +125,7 @@ export const CreateSessionRequest = z.object({
   uniqueName: z.boolean().optional(),
   /** The canvas to put it on. Without one: the canvas most recently looked at in a browser, else the first. */
   canvasId: Id.optional(),
+  tags: Tags.optional(),
 });
 export type CreateSessionRequest = z.infer<typeof CreateSessionRequest>;
 
@@ -132,9 +134,9 @@ export type CreateSessionResponse = z.infer<typeof CreateSessionResponse>;
 
 /** PATCH body: any of the fields the user can edit. */
 export const UpdateSessionRequest = z
-  .object({ name: SessionName, note: SessionNote })
+  .object({ name: SessionName, note: SessionNote, tags: Tags })
   .partial()
-  .refine((body) => body.name !== undefined || body.note !== undefined, 'Nothing to update');
+  .refine((body) => body.name !== undefined || body.note !== undefined || body.tags !== undefined, 'Nothing to update');
 export type UpdateSessionRequest = z.infer<typeof UpdateSessionRequest>;
 
 /** PUT body for a node: where it is, and optionally its color. */
@@ -381,6 +383,7 @@ export const publicPaths = {
   canvasNode: (canvasId: string, nodeId: string) => `/v1/canvases/${canvasId}/nodes/${nodeId}`,
   canvasFrames: (canvasId: string) => `/v1/canvases/${canvasId}/frames`,
   canvasFrame: (canvasId: string, frameId: string) => `/v1/canvases/${canvasId}/frames/${frameId}`,
+  session: (sessionId: string) => `/v1/sessions/${sessionId}`,
   moveSession: (sessionId: string) => `/v1/sessions/${sessionId}/move`,
 } as const;
 
@@ -455,8 +458,17 @@ export const StartSessionRequest = z.object({
   command: z.string().trim().min(1).max(4000).optional(),
   /** Where to put it. A free spot is found when omitted. */
   position: Position.optional(),
+  /** Short words of your own to find and filter the session by. */
+  tags: Tags.optional(),
 });
 export type StartSessionRequest = z.infer<typeof StartSessionRequest>;
+
+/** Body of changing a session: any of its name and its tags. `tags` replaces the whole list. */
+export const PatchSessionRequest = z
+  .object({ name: SessionName, tags: Tags })
+  .partial()
+  .refine((body) => body.name !== undefined || body.tags !== undefined, 'Nothing to update');
+export type PatchSessionRequest = z.infer<typeof PatchSessionRequest>;
 
 /** A session together with where it is. */
 export const PlacedSession = z.object({ session: Session, canvasId: Id, node: LayoutNode });

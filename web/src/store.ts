@@ -14,6 +14,8 @@ import {
 import { ApiError, api, subscribeToEvents } from './api';
 import { canvasIdFromPath, chooseCanvas, rememberCanvas, rememberedCanvas, sessionFromAddress, writeAddress } from './address';
 import { announcement, notificationsWanted } from './attention';
+import { clampPanelWidth, loadPanelPrefs, savePanelPrefs, type PanelPrefs } from './panel/registry';
+import { loadView, saveView, type ListView } from './terminal-rows';
 
 export type Phase =
   | 'loading'
@@ -52,6 +54,12 @@ export interface AppStore {
   ask: Ask | null;
   /** The last thing that went wrong, shown in the toolbar. */
   notice: string | null;
+  /** The side panel: open or collapsed to its strip, its width, which sections are folded. Remembered by this browser. */
+  side: PanelPrefs;
+  /** The terminal list: its filters, grouping, order and density. Remembered by this browser. */
+  listView: ListView;
+  /** What is open beside the side panel: a section's drawer for one of its rows. */
+  drawer: { section: string; kind: string; id: string } | null;
   /** Sessions parked from this page, oldest first, so the last one can be brought back. */
   parkedHere: string[];
   /** A session the canvas was asked to bring into view. The counter makes repeats count. */
@@ -75,6 +83,10 @@ export interface AppStore {
   /** An ask is used once: forget it, unless a newer one has replaced it. */
   asked: (tick: number) => void;
   setNotice: (notice: string | null) => void;
+  setSide: (change: Partial<PanelPrefs>) => void;
+  setListView: (change: Partial<ListView>) => void;
+  /** Opens a section's drawer for a row; `null` closes whatever is open. */
+  openDrawer: (drawer: { section: string; kind: string; id: string } | null) => void;
   showSession: (sessionId: string) => void;
   /** A terminal has the keyboard: nothing is on its way any more. */
   settled: () => void;
@@ -89,7 +101,7 @@ const SETTLE_MS = 700;
 
 export type Panel = 'parked' | 'outside' | 'shortcuts';
 export interface Ask {
-  kind: 'rename-session' | 'rename-canvas' | 'note' | 'move';
+  kind: 'rename-session' | 'rename-canvas' | 'note' | 'move' | 'tags' | 'list-search';
   /** The session or canvas it is about. */
   id: string;
   tick: number;
@@ -111,6 +123,9 @@ export const useApp = create<AppStore>((set, get) => ({
   ask: null,
   notice: null,
   parkedHere: [],
+  side: loadPanelPrefs(),
+  listView: loadView(),
+  drawer: null,
   show: null,
   settleUntil: 0,
 
@@ -187,6 +202,19 @@ export const useApp = create<AppStore>((set, get) => ({
   request: (ask) => set((state) => ({ ask: { ...ask, tick: (state.ask?.tick ?? 0) + 1 } })),
   asked: (tick) => set((state) => (state.ask?.tick === tick ? { ask: null } : {})),
   setNotice: (notice) => set({ notice }),
+  setSide: (change) => {
+    const side = { ...get().side, ...change };
+    side.width = clampPanelWidth(side.width);
+    savePanelPrefs(side);
+    // A collapsed panel has nowhere to show a drawer.
+    set(side.open ? { side } : { side, drawer: null });
+  },
+  setListView: (change) => {
+    const listView = { ...get().listView, ...change };
+    saveView(listView);
+    set({ listView });
+  },
+  openDrawer: (drawer) => set({ drawer }),
 
   askToClose: (sessionId) => set({ closing: sessionId }),
   askToCloseCanvas: (canvasId) => set({ closingCanvas: canvasId }),

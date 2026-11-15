@@ -273,6 +273,24 @@ export function Canvas() {
     [zoomToNode],
   );
 
+  /** Pans to a session's node if part of it is off screen. The zoom stays as it is. */
+  const bringIntoView = useCallback(
+    (sessionId: string) => {
+      const node = currentLayout(useApp.getState()).nodes.find((n) => n.sessionId === sessionId);
+      const pane = document.querySelector('.react-flow')?.getBoundingClientRect();
+      if (!node || !pane) return;
+      const view = flow.getViewport();
+      const left = node.x * view.zoom + view.x;
+      const top = node.y * view.zoom + view.y;
+      const right = left + node.width * view.zoom;
+      const bottom = top + node.height * view.zoom;
+      // The toolbar covers a strip at the top.
+      if (left >= 0 && top >= 48 && right <= pane.width && bottom <= pane.height) return;
+      void flow.setCenter(node.x + node.width / 2, node.y + node.height / 2, { zoom: view.zoom, duration: 200, interpolate: 'linear' });
+    },
+    [flow],
+  );
+
   // Commands reach this canvas through here; see commands.ts.
   useEffect(
     () =>
@@ -283,8 +301,9 @@ export function Canvas() {
         resetZoom,
         releaseFocus,
         reveal,
+        bringIntoView,
       }),
-    [addTerminal, addFrame, zoomToFit, resetZoom, releaseFocus, reveal],
+    [addTerminal, addFrame, zoomToFit, resetZoom, releaseFocus, reveal, bringIntoView],
   );
 
   // Asked to bring a session into view: by the picker, the queue, the parked list, `aubergine here`,

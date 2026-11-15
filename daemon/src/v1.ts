@@ -11,6 +11,7 @@ import {
   PageQuery,
   PatchFrameRequest,
   PatchNodeRequest,
+  PatchSessionRequest,
   StartSessionRequest,
   UpdateCanvasRequest,
   canvasCounts,
@@ -29,6 +30,7 @@ import {
 } from '@aubergine/shared';
 import type { Action, Principal, Resource } from './auth';
 import { IdempotencyStore, idempotencyKey, paginate, sendRemembered } from './public-api';
+import type { Session } from '@aubergine/shared';
 import type { Sessions } from './sessions';
 import type { StateHub } from './state-hub';
 
@@ -137,6 +139,12 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
       return { status: 201, body: placed };
     });
     return sendRemembered(reply, answer);
+  });
+
+  app.patch(publicPaths.session(':sessionId'), async (request): Promise<Session> => {
+    const sessionId = param(request, 'sessionId');
+    allow(request, 'sessions.write', { sessionId });
+    return sessions.update(sessionId, parse(PatchSessionRequest, request.body));
   });
 
   app.post(publicPaths.moveSession(':sessionId'), async (request): Promise<PlacedSession> => {
