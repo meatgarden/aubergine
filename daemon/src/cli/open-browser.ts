@@ -30,7 +30,7 @@ export function openBrowser(url: string, platform: NodeJS.Platform = process.pla
   });
 }
 
-/** The address that lands a canvas on one session. It never carries the access token. */
-export function canvasAddress(port: number, sessionId: string, param: string): string {
+/** The address that opens the canvas a session is on, at that session. It never carries the access token. */
+export function sessionAddress(port: number, sessionId: string, param: string): string {
   return `http://127.0.0.1:${port}/?${param}=${encodeURIComponent(sessionId)}`;
 }

@@ -12,7 +12,7 @@ const noEntries: NoteEntry[] = [];
  * log; so can the user.
  */
 export function NotePanel({ sessionId, onClose }: { sessionId: string; onClose: () => void }) {
-  const saved = useApp((s) => s.canvas?.sessions.find((x) => x.id === sessionId)?.note ?? '');
+  const saved = useApp((s) => s.app?.sessions.find((x) => x.id === sessionId)?.note ?? '');
   const [text, setText] = useState(saved);
   const [status, setStatus] = useState<'saved' | 'unsaved' | 'failed'>('saved');
   const dirty = useRef(false);
@@ -47,7 +47,7 @@ export function NotePanel({ sessionId, onClose }: { sessionId: string; onClose: 
   // Do not lose the last edits when the panel closes.
   useEffect(() => () => saveRef.current(), []);
 
-  const log = useApp((s) => s.canvas?.sessions.find((x) => x.id === sessionId)?.noteLog ?? noEntries);
+  const log = useApp((s) => s.app?.sessions.find((x) => x.id === sessionId)?.noteLog ?? noEntries);
   const [draft, setDraft] = useState('');
   const logEnd = useRef<HTMLDivElement>(null);
 

@@ -1,27 +1,25 @@
 import { useState } from 'react';
-import { api } from './api';
 import { nextWaiting, notificationsWanted, setNotificationsWanted, waitingQueue } from './attention';
+import { canvasLabel } from './search';
 import { useApp } from './store';
 
 /**
  * "2 waiting": how many sessions want the user, and a way to go to the next
- * one. `onGo` moves the view to a node and focuses it, which also tells the
- * daemon the user has looked.
+ * one, on whichever canvas it is. Going there focuses it, which also tells
+ * the daemon the user has looked.
  */
-export function AttentionQueue({ onGo }: { onGo: (nodeId: string, sessionId: string) => void }) {
-  const sessions = useApp((s) => s.canvas?.sessions);
-  const nodes = useApp((s) => s.canvas?.layout.nodes);
+export function AttentionQueue() {
+  const sessions = useApp((s) => s.app?.sessions);
+  const app = useApp((s) => s.app);
+  const canvasId = useApp((s) => s.canvasId);
   const current = useApp((s) => s.focus?.sessionId ?? null);
   const [notify, setNotify] = useState(notificationsWanted);
 
   const queue = waitingQueue(sessions ?? []);
 
-  const goNext = async (): Promise<void> => {
+  const goNext = (): void => {
     const next = nextWaiting(sessions ?? [], current);
-    if (!next) return;
-    if (next.state === 'parked') await api.restoreSession(next.id);
-    const node = nodes?.find((n) => n.sessionId === next.id);
-    if (node) onGo(node.id, next.id);
+    if (next) useApp.getState().showSession(next.id);
   };
 
   return (
@@ -30,8 +28,13 @@ export function AttentionQueue({ onGo }: { onGo: (nodeId: string, sessionId: str
         <button
           type="button"
           className="attention-button"
-          onClick={() => void goNext()}
-          title={`Go to the next session that is waiting for you: ${queue.map((s) => s.name).join(', ')}`}
+          onClick={goNext}
+          title={`Go to the next session that is waiting for you: ${queue
+            .map((s) => {
+              const canvas = canvasLabel(app, s.id, canvasId);
+              return canvas ? `${s.name} (on ${canvas})` : s.name;
+            })
+            .join(', ')}`}
           data-testid="attention-queue"
         >
           {queue.length} waiting

@@ -1,6 +1,6 @@
 # Aubergine — project rules
 
-Aubergine is a local, browser-based canvas where each terminal session is a node you can arrange and use. It is built in small stages; each stage is usable on its own.
+Aubergine is a local, browser-based set of canvases, shown as tabs, where each terminal session is a node you can arrange and use. It is built in small stages; each stage is usable on its own.
 
 ## Layout
 
@@ -12,8 +12,10 @@ daemon/   Fastify HTTP + WebSocket server, tmux session runtime, JSON store, CLI
           shell integration (src/shell/), agent support (src/agents/), authorization (src/auth.ts),
           migration of existing terminals (src/migrate/), including reading agent
           process records (claude-sessions.ts), moving agent tabs (move.ts) and the
-          shared implementation behind the panel and the CLI (outside.ts)
-web/      Vite + React + @xyflow/react + @xterm/xterm, Zustand for state
+          shared implementation behind the panel and the CLI (outside.ts); the state
+          holder (state-hub.ts), the public routes (v1.ts, public-api.ts) and viewers.ts
+web/      Vite + React + @xyflow/react + @xterm/xterm, Zustand for state; the tab bar (TabBar.tsx)
+          and canvas addresses (address.ts)
 e2e/      Playwright smoke test
 bin/      the `aubergine` command (a launcher for daemon/src/cli.ts)
 ```
@@ -22,10 +24,10 @@ bin/      the `aubergine` command (a launcher for daemon/src/cli.ts)
 
 These are the only abstractions in the code base. Each has exactly one implementation. Do not add another interface until a feature needs it.
 
-1. **Wire protocol** — `shared/src/protocol.ts`. Every message between a client and the daemon is a versioned zod schema: HTTP bodies, change events, terminal WebSocket messages, and the URL paths themselves. The web app reaches the daemon only through `web/src/api.ts` and the terminal socket in `web/src/TerminalView.tsx`. The CLI (`daemon/src/cli.ts`) uses the same HTTP protocol; it does not reach into the daemon's state. Agent-facing routes live under `/v1`, and `SESSION_ENV` names the variables each session receives; `aubergine note` and `aubergine hook` use only those routes. `CreateSessionRequest` also takes `cwd`, `command`, `uniqueName`, `agentContinue` and `agentArgs`. `EventsServerMessage` has a `show` message, which is not a change event. `/v1` also has `PUT …/agent`. The three `/api/v1/outside` routes (list, add, move) and their schemas are part of the protocol too.
+1. **Wire protocol** — `shared/src/protocol.ts`. Every message between a client and the daemon is a versioned zod schema: HTTP bodies, change events, terminal WebSocket messages, and the URL paths themselves. The web app reaches the daemon only through `web/src/api.ts` and the terminal socket in `web/src/TerminalView.tsx`. The CLI (`daemon/src/cli.ts`) uses the same HTTP protocol; it does not reach into the daemon's state. Agent-facing routes live under `/v1`, and `SESSION_ENV` names the variables each session receives; `aubergine note` and `aubergine hook` use only those routes. `CreateSessionRequest` also takes `cwd`, `command`, `uniqueName`, `agentContinue` and `agentArgs`. `EventsServerMessage` has a `show` message, which is not a change event. `/v1` also has `PUT …/agent`. The three `/api/v1/outside` routes (list, add, move) and their schemas are part of the protocol too. So are `publicPaths` and the public schemas (`CanvasSummary`, `CanvasDetail`, `pageOf`, `PageQuery`, `IDEMPOTENCY_HEADER`), `canvasAddress`, the `viewing` message a browser sends on the events socket, `canvasId` on `CreateSessionRequest`, `CreateFrameRequest`, `OutsideTarget` and restore, and `defaultCanvasId` in the state response.
 2. **`SessionRuntime`** — `daemon/src/runtime/runtime.ts`. Owns the running shells: `check`, `create` (folder, shell and `env`), `list` (with each session's folder, command and `activityAt`), `has`, `kill`, `attach(viewer)` → byte stream, `snapshot`, `typeLine`, `search`, `reveal`. Resizing is a method of the attachment that `attach` returns, because a size belongs to a viewer. Implementation: `TmuxRuntime`, one tmux session per session ID on a dedicated socket with the config in `daemon/src/runtime/tmux.conf`; each viewer is one `tmux attach` in its own pseudo-terminal. Sessions must outlive the daemon process. Scrollback, copy (OSC 52) and paste handling live in the runtime and in `TerminalView`, nowhere else, so the runtime can be swapped.
-3. **`Store`** — `daemon/src/store/store.ts`. `load` and `save` of the whole canvas state. Implementation: `JsonStore`, one JSON file written atomically. Layout (nodes and frames) is stored apart from sessions and refers to them by ID. New fields get a zod default so older files still load.
-4. **Change events** — `Canvas.emit(event)` in `daemon/src/canvas.ts` is the only way state changes. It applies the event with `applyEvent` from `shared/`, saves, and notifies subscribers; the browser receives the same events over a WebSocket and applies them with the same reducer. Never mutate state any other way. Events cover sessions (created, renamed, parked, restored, exited, restarted, activity, noted, closed, plus `session.status`, `session.attention`, `session.note.appended` and `session.agent`), nodes and frames.
+3. **`Store`** — `daemon/src/store/store.ts`. `load` and `save` of the whole state (`AppState`). Implementation: `JsonStore`, one JSON file written atomically. Each canvas holds its own layout (nodes and frames), which refers to sessions by ID. The file has a version; an older version is migrated on load (`migrate` in `json-store.ts`), a copy of the older file is kept beside it first, and every change of shape needs a fixture of the old file under test. New fields get a zod default so older files still load.
+4. **Change events** — `StateHub.emit(event)` in `daemon/src/state-hub.ts` is the only way state changes. It applies the event with `applyEvent` from `shared/`, saves, and notifies subscribers; the browser receives the same events over a WebSocket and applies them with the same reducer. Never mutate state any other way. Events cover sessions (created, renamed, parked, restored, exited, restarted, activity, noted, closed, plus `session.status`, `session.attention`, `session.note.appended` `session.agent` and `session.moved`), canvases (`canvas.created`, `canvas.updated`, `canvas.removed`), nodes and frames; node and frame events carry a `canvasId`.
 
 ## Rules
 
@@ -37,7 +39,9 @@ These are the only abstractions in the code base. Each has exactly one implement
 - **Start at login.** Everything that knows about launchd is in `daemon/src/service/launchd.ts`. A second service manager goes in a file beside it. Tests only inspect the generated file; never install the service from a test or a script.
 - **Security.** The daemon binds `127.0.0.1` only. One `onRequest` hook in `daemon/src/server.ts` checks `Host` and `Origin` on every HTTP request and WebSocket upgrade, and requires the access-token cookie on `/api` and `/ws`. New routes must stay behind that hook.
 - **Status never depends on a viewer.** Shell state comes from `ShellIntegration` (status files written by shell hooks), not from terminal output. Never edit the user's dotfiles; another shell is another class in `daemon/src/shell/integration.ts`.
-- **Authorization.** Every route that acts for a bearer token calls `authorize(principal, action, resource)` in `daemon/src/auth.ts`. Add scopes by changing that function, not its callers. `/v1` accepts bearer tokens only; `/api` accepts the cookie only.
+- **Authorization.** Every route that acts for a bearer token calls `authorize(principal, action, resource)` in `daemon/src/auth.ts`. Add scopes by changing that function, not its callers. `/api` accepts the cookie only. `/v1` accepts a session's bearer token on the agent routes and the signed-in browser's cookie (with the Origin check on anything that changes state) on all of them. A session token must never reach a canvas, layout or other-session route: that decision stays in `authorize`.
+- **Canvases.** A session is on at most one canvas; a parked session is on none and remembers where it was (`parkedFrom`). Closing a canvas never ends a shell: the caller says move or park, and the last canvas cannot be closed. Where no canvas is named, `Sessions.canvas(null)` decides (most recently looked at, else first); do not pick a default anywhere else.
+- **Public shapes.** Routes under `/v1` use one error shape, `pageOf` for every list, ignore unknown fields, use ISO times, and take `Idempotency-Key` on creates. Do not add a `/v1` route that departs from these. This API is public: only add to it; never rename or remove.
 - **Agent hooks** print nothing and always exit 0. Agent settings are generated into the data folder and passed on the command line; never write to an agent's own configuration.
 - **Search** of terminal output reads history on demand; no index, no recording.
 - **Migration reads; it does not touch what is running, with one exception.** Scanning and listing only read. Nothing edits the user's dotfiles or writes under an agent's own folder; snippets are printed for the user to add. Per-OS process inspection lives in `daemon/src/migrate/shells.ts` only, with parsing as pure functions under test. The single exception is stop-and-resume (`aubergine move --stop` and the panel's button), which may send one termination request (SIGTERM) to an agent process. It must stay limited to the exact process IDs the user selected, verify immediately before that each still is the same Claude Code process (start time from its record against the process table), refuse agents that are not idle unless forced, ask for confirmation, never send a second or stronger signal, and start nothing on the canvas if the process does not exit. Test it only against stand-in processes the test starts itself.
@@ -57,6 +61,7 @@ These are the only abstractions in the code base. Each has exactly one implement
 - Closing a node parks its session; it does not end the shell. Ending a shell for good always asks first.
 - A node keeps a live terminal (and its WebSocket) only while it is on screen and readable; otherwise it shows a snapshot or nothing. The decision is `nodeMode` in `web/src/culling.ts`.
 - Going to a node (`goToNode`) must not depend on animation frames, which stop in a tab that is not showing.
+- Only the canvas being looked at mounts terminals or fetches snapshots. The address is `/c/<id>`; pan and zoom are kept per canvas per browser. A request to show a session (`show` in the store) is used once and then cleared. `Viewers` decides which tab is asked to show a session.
 
 ### Tests
 
@@ -79,7 +84,7 @@ Single steps: `pnpm typecheck`, `pnpm lint`, `pnpm test`, `pnpm e2e`.
 
 `pnpm dev` starts the daemon (port 4600, restarts on change) and the Vite dev server (port 5173, proxies `/api`, `/auth` and `/ws` to the daemon).
 
-`pnpm load-canvas` fills a throwaway canvas with 90 sessions for judging scale by hand. It is not part of `pnpm check`.
+`pnpm load-canvas` fills three throwaway canvases with 90 sessions between them for judging scale by hand. It is not part of `pnpm check`.
 
 Environment variables, all optional: `AUBERGINE_PORT`, `AUBERGINE_DATA_DIR`, `AUBERGINE_TMUX_SOCKET`, `AUBERGINE_TMUX_BIN`, `AUBERGINE_DEV_ORIGIN`. Use a separate data folder and socket for experiments so they do not touch real sessions.
 
@@ -95,7 +100,9 @@ Migration: `aubergine here`, `scan`, `import` and `shell-hook print`, for moving
 
 Agents: the launch command setting, pass-through arguments, showing a new session on the canvas, remembered conversations with Resume agent, `aubergine move`, and the Outside terminals panel.
 
-Not built yet: SQLite, an MCP server, presets, a finder agent, recording, bash or fish integration.
+Canvases, stage A: several canvases as tabs, `/v1` canvas routes for the signed-in browser, `aubergine canvas`, `--canvas`.
+
+Not built yet: API tokens, the activity log, an OpenAPI description and client, terminal input and output over `/v1`, SQLite, an MCP server, presets, a finder agent, recording, bash or fish integration.
 
 ## Working in this repo
 

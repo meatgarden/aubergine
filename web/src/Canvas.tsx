@@ -17,17 +17,17 @@ import {
   NODE_DEFAULT_WIDTH,
   findFreeRect,
   nodesInside,
+  placeOfSession,
   type AgentKind,
   type Frame,
   type LayoutNode,
-  type Session,
 } from '@aubergine/shared';
 import { api } from './api';
 import { AttentionQueue } from './AttentionQueue';
 import { OutsidePanel } from './OutsidePanel';
 import { ParkedList } from './ParkedList';
 import { Picker } from './Picker';
-import { useApp } from './store';
+import { currentLayout, useApp } from './store';
 import { canvasShortcut, isCanvasChord, isMac, isTypingTarget } from './keys';
 import { FrameNode, type FrameFlowNode } from './FrameNode';
 import { TerminalNode, type TerminalFlowNode } from './TerminalNode';
@@ -35,10 +35,6 @@ import { isFullZoom, loadViewport, saveViewport, useZoomToNode } from './viewpor
 
 const nodeTypes = { terminal: TerminalNode, frame: FrameNode };
 type CanvasNode = TerminalFlowNode | FrameFlowNode;
-const noFrames: Frame[] = [];
-const initialViewport = loadViewport();
-const noNodes: LayoutNode[] = [];
-const noSessions: Session[] = [];
 
 function toFlowNode(node: LayoutNode, previous: CanvasNode | undefined): TerminalFlowNode {
   return {
@@ -70,13 +66,10 @@ function toFrameNode(frame: Frame, previous: CanvasNode | undefined): FrameFlowN
 }
 
 export function Canvas() {
-  const allNodes = useApp((s) => s.canvas?.layout.nodes ?? noNodes);
-  const sessions = useApp((s) => s.canvas?.sessions ?? noSessions);
-  // Parked sessions keep their place in the layout but are not on the canvas.
-  const layout = useMemo(() => {
-    const parked = new Set(sessions.filter((x) => x.state === 'parked').map((x) => x.id));
-    return parked.size === 0 ? allNodes : allNodes.filter((n) => !parked.has(n.sessionId));
-  }, [allNodes, sessions]);
+  const canvasId = useApp((s) => s.canvasId);
+  const layout = useApp((s) => currentLayout(s).nodes);
+  // This component is mounted afresh for each canvas, so this is read once per canvas.
+  const [initialViewport] = useState(() => loadViewport(canvasId ?? ''));
   const live = useApp((s) => s.live);
   const theme = useApp((s) => s.settings.theme);
   const focusSession = useApp((s) => s.focusSession);
@@ -86,7 +79,7 @@ export function Canvas() {
 
   // React Flow owns the nodes while they are dragged or resized; the saved
   // layout replaces them whenever it changes.
-  const frames = useApp((s) => s.canvas?.layout.frames ?? noFrames);
+  const frames = useApp((s) => currentLayout(s).frames);
   const [nodes, setNodes] = useState<CanvasNode[]>([]);
   useEffect(() => {
     setNodes((previous) => {
@@ -160,12 +153,12 @@ export function Canvas() {
       if (isFullZoom(viewport.zoom) && !(Number.isInteger(viewport.x) && Number.isInteger(viewport.y))) {
         const snapped = { x: Math.round(viewport.x), y: Math.round(viewport.y), zoom: 1 };
         void flow.setViewport(snapped);
-        saveViewport(snapped);
+        if (canvasId) saveViewport(canvasId, snapped);
         return;
       }
-      saveViewport(viewport);
+      if (canvasId) saveViewport(canvasId, viewport);
     },
-    [flow],
+    [flow, canvasId],
   );
 
   /** Moves the view to a node at 100% and gives its terminal the keyboard. */
@@ -215,15 +208,16 @@ export function Canvas() {
         height: n.height ?? n.measured?.height ?? NODE_DEFAULT_HEIGHT,
       }));
       const rect = findFreeRect(taken, center, { width: NODE_DEFAULT_WIDTH, height: NODE_DEFAULT_HEIGHT });
-      const created = await api.createSession({ rect, ...(agent ? { agent } : {}) });
-      useApp.getState().apply({ type: 'session.created', ...created });
+      if (!canvasId) return;
+      const created = await api.createSession({ rect, canvasId, ...(agent ? { agent } : {}) });
+      useApp.getState().apply({ type: 'session.created', canvasId, ...created });
       goToNode(created.node.id, created.session.id);
     } catch (e) {
       setError(`Could not start a terminal: ${(e as Error).message}`);
     } finally {
       setAdding(false);
     }
-  }, [flow, goToNode]);
+  }, [flow, goToNode, canvasId]);
 
   const resetZoom = useCallback(() => {
     const pane = document.querySelector('.react-flow')?.getBoundingClientRect();
@@ -246,12 +240,13 @@ export function Canvas() {
     const x = Math.round(((pane?.width ?? 1200) / 2 - view.x) / view.zoom - width / 2);
     const y = Math.round(((pane?.height ?? 800) / 2 - view.y) / view.zoom - height / 2);
     try {
-      const frame = await api.createFrame({ rect: { x, y, width, height } });
-      useApp.getState().apply({ type: 'frame.created', frame });
+      if (!canvasId) return;
+      const frame = await api.createFrame({ rect: { x, y, width, height }, canvasId });
+      useApp.getState().apply({ type: 'frame.created', canvasId, frame });
     } catch (e) {
       setError(`Could not add a frame: ${(e as Error).message}`);
     }
-  }, [flow]);
+  }, [flow, canvasId]);
 
   const zoomToFit = useCallback(() => {
     void flow.fitView({ padding: 0.08, maxZoom: 1, duration: 200 });
@@ -287,23 +282,42 @@ export function Canvas() {
     return () => window.removeEventListener('keydown', onKeyDown, true);
   }, [addTerminal, resetZoom, zoomToFit, releaseFocus]);
 
-  // Asked to bring a session into view (by `aubergine here`, or by the address this page was opened on).
+  // Asked to bring a session into view: by the picker, the queue, the parked list, `aubergine here`,
+  // or the address this page was opened on. This is the one way to get to a session, wherever it is.
   const show = useApp((s) => s.show);
   useEffect(() => {
-    if (!show) return;
+    if (!show || !canvasId) return;
     let cancelled = false;
     void (async () => {
-      const { canvas } = useApp.getState();
-      const session = canvas?.sessions.find((x) => x.id === show.sessionId);
-      const node = canvas?.layout.nodes.find((n) => n.sessionId === show.sessionId);
-      if (!session || !node) return;
-      if (session.state === 'parked') await api.restoreSession(session.id).catch(() => {});
-      if (!cancelled) goToNode(node.id, session.id);
+      const store = useApp.getState();
+      // A request is used once. Left in place it would be replayed on every later change of
+      // canvas, and would bring back a session the user has parked since.
+      const done = (): void => useApp.getState().shown(show.tick);
+      const session = store.app?.sessions.find((x) => x.id === show.sessionId);
+      if (!session) return done();
+      if (session.state === 'parked') {
+        // A parked session comes back onto the canvas being looked at.
+        const restored = await api.restoreSession(session.id, canvasId).catch(() => null);
+        if (cancelled) return;
+        if (!restored) return done();
+        store.apply({ type: 'session.restored', sessionId: session.id, canvasId, node: restored.node });
+      }
+      const app = useApp.getState().app;
+      const place = app ? placeOfSession(app, show.sessionId) : null;
+      if (cancelled) return;
+      if (!place) return done();
+      if (place.canvas.id !== canvasId) {
+        // On another canvas: go there first. This effect runs again once that canvas is showing.
+        useApp.getState().setCanvas(place.canvas.id);
+        return;
+      }
+      goToNode(place.node.id, show.sessionId);
+      done();
     })();
     return () => {
       cancelled = true;
     };
-  }, [show, goToNode]);
+  }, [show, canvasId, goToNode]);
 
   const percent = useMemo(() => `${Math.round(zoom * 100)}%`, [zoom]);
 
@@ -370,9 +384,9 @@ export function Canvas() {
           >
             {percent}
           </button>
-          <OutsidePanel onGo={goToNode} />
-          <AttentionQueue onGo={goToNode} />
-          <ParkedList onRestored={(nodeId) => requestAnimationFrame(() => requestAnimationFrame(() => zoomToNode(nodeId, { reveal: true })))} />
+          <OutsidePanel />
+          <AttentionQueue />
+          <ParkedList />
           {!live && <span className="warning">Reconnecting…</span>}
           {error && <span className="warning">{error}</span>}
         </Panel>
@@ -382,7 +396,7 @@ export function Canvas() {
           </Panel>
         )}
       </ReactFlow>
-      <Picker onGo={goToNode} />
+      <Picker />
     </div>
   );
 }

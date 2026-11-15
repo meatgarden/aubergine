@@ -15,6 +15,30 @@ export type Project = z.infer<typeof Project>;
 
 export const SessionName = Name;
 
+export const NODE_MIN_WIDTH = 280;
+export const NODE_MIN_HEIGHT = 160;
+export const NODE_DEFAULT_WIDTH = 720;
+export const NODE_DEFAULT_HEIGHT = 440;
+
+const Coordinate = z.number().finite().min(-1e7).max(1e7);
+
+/** Where a node sits on the canvas, in canvas units (pixels at 100% zoom). */
+export const NodeRect = z.object({
+  x: Coordinate,
+  y: Coordinate,
+  width: z.number().finite().min(NODE_MIN_WIDTH).max(10000),
+  height: z.number().finite().min(NODE_MIN_HEIGHT).max(10000),
+});
+export type NodeRect = z.infer<typeof NodeRect>;
+
+/** Colors a node or frame can be given. `none` is the default look. */
+export const NodeColor = z.enum(['none', 'red', 'orange', 'yellow', 'green', 'blue', 'purple']);
+export type NodeColor = z.infer<typeof NodeColor>;
+
+/** Where a parked session sat, so that it can be put back. */
+export const ParkedPlace = z.object({ canvasId: Id, rect: NodeRect, color: NodeColor.default('none') });
+export type ParkedPlace = z.infer<typeof ParkedPlace>;
+
 /**
  * `open`: on the canvas with a running shell. `parked`: off the canvas, shell
  * still running. `exited`: the shell ended by itself; the node stays until
@@ -124,28 +148,10 @@ export const Session = z.object({
   /** Append-only log of notes, oldest first. */
   noteLog: z.array(NoteEntry).default([]),
   agent: AgentInfo.nullable().default(null),
+  /** For a parked session: the canvas it came from and where it sat there. */
+  parkedFrom: ParkedPlace.nullable().default(null),
 });
 export type Session = z.infer<typeof Session>;
-
-export const NODE_MIN_WIDTH = 280;
-export const NODE_MIN_HEIGHT = 160;
-export const NODE_DEFAULT_WIDTH = 720;
-export const NODE_DEFAULT_HEIGHT = 440;
-
-const Coordinate = z.number().finite().min(-1e7).max(1e7);
-
-/** Where a node sits on the canvas, in canvas units (pixels at 100% zoom). */
-export const NodeRect = z.object({
-  x: Coordinate,
-  y: Coordinate,
-  width: z.number().finite().min(NODE_MIN_WIDTH).max(10000),
-  height: z.number().finite().min(NODE_MIN_HEIGHT).max(10000),
-});
-export type NodeRect = z.infer<typeof NodeRect>;
-
-/** Colors a node or frame can be given. `none` is the default look. */
-export const NodeColor = z.enum(['none', 'red', 'orange', 'yellow', 'green', 'blue', 'purple']);
-export type NodeColor = z.infer<typeof NodeColor>;
 
 /**
  * A node on the canvas. Layout is kept apart from sessions and points at a
@@ -185,18 +191,63 @@ export function nodesInside<T extends NodeRect>(frame: FrameRect, nodes: readonl
   );
 }
 
-/** Everything the canvas shows: the default hierarchy, the sessions and their layout. */
-export const CanvasState = z.object({
+export const CanvasName = z.string().trim().min(1).max(80);
+
+/**
+ * Free-form key and value pairs that other tools can attach their own meaning
+ * to. Kept small: a handful of short entries.
+ */
+export const Labels = z
+  .record(z.string().regex(/^[A-Za-z0-9][A-Za-z0-9._/-]{0,62}$/), z.string().max(256))
+  .refine((labels) => Object.keys(labels).length <= 20, 'At most 20 labels');
+export type Labels = z.infer<typeof Labels>;
+
+/**
+ * A canvas: a named space with its own nodes and frames, shown as a tab.
+ * Sessions belong to the project, not to a canvas; a session is on a canvas
+ * because a node there points at it, and it is on at most one.
+ */
+export const Canvas = z.object({
+  id: Id,
+  projectId: Id,
+  name: CanvasName,
+  color: NodeColor.default('none'),
+  /** Position among the tabs; lower comes first. Any number: reordering picks one between its neighbours. */
+  order: z.number().finite(),
+  labels: Labels.default({}),
+  createdAt: Timestamp,
+  layout: Layout,
+});
+export type Canvas = z.infer<typeof Canvas>;
+
+/** Everything there is: the default hierarchy, the sessions, and the canvases with their layouts. */
+export const AppState = z.object({
   organization: Organization,
   workspace: Workspace,
   project: Project,
   sessions: z.array(Session),
-  layout: Layout,
+  canvases: z.array(Canvas).min(1),
 });
-export type CanvasState = z.infer<typeof CanvasState>;
+export type AppState = z.infer<typeof AppState>;
 
-/** A fresh state with one default organization, workspace and project. */
-export function createInitialState(now: Date = new Date()): CanvasState {
+export const FIRST_CANVAS_NAME = 'Main';
+
+/** A new, empty canvas. */
+export function newCanvas(projectId: string, name: string, order: number, now: Date = new Date()): Canvas {
+  return {
+    id: newId(),
+    projectId,
+    name,
+    color: 'none',
+    order,
+    labels: {},
+    createdAt: now.toISOString(),
+    layout: { nodes: [], frames: [] },
+  };
+}
+
+/** A fresh state with one default organization, workspace, project and canvas. */
+export function createInitialState(now: Date = new Date()): AppState {
   const createdAt = now.toISOString();
   const organization: Organization = { id: newId(), name: 'Personal', createdAt };
   const workspace: Workspace = {
@@ -206,5 +257,47 @@ export function createInitialState(now: Date = new Date()): CanvasState {
     createdAt,
   };
   const project: Project = { id: newId(), workspaceId: workspace.id, name: 'Default', createdAt };
-  return { organization, workspace, project, sessions: [], layout: { nodes: [], frames: [] } };
+  return { organization, workspace, project, sessions: [], canvases: [newCanvas(project.id, FIRST_CANVAS_NAME, 0, now)] };
+}
+
+/** Canvases in tab order. */
+export function sortedCanvases(state: AppState): Canvas[] {
+  return [...state.canvases].sort((a, b) => a.order - b.order || a.createdAt.localeCompare(b.createdAt) || a.id.localeCompare(b.id));
+}
+
+/** The canvas a session is on, with its node there. Null for a parked session. */
+export function placeOfSession(state: AppState, sessionId: string): { canvas: Canvas; node: LayoutNode } | null {
+  for (const canvas of state.canvases) {
+    const node = canvas.layout.nodes.find((n) => n.sessionId === sessionId);
+    if (node) return { canvas, node };
+  }
+  return null;
+}
+
+/** The canvas that holds a node. */
+export function canvasOfNode(state: AppState, nodeId: string): { canvas: Canvas; node: LayoutNode } | null {
+  for (const canvas of state.canvases) {
+    const node = canvas.layout.nodes.find((n) => n.id === nodeId);
+    if (node) return { canvas, node };
+  }
+  return null;
+}
+
+export interface CanvasCounts {
+  /** Sessions on the canvas. */
+  sessions: number;
+  /** Of those, how many are waiting for the user. */
+  waiting: number;
+  /** Of those, how many have printed something the user has not seen. */
+  unread: number;
+}
+
+export function canvasCounts(state: AppState, canvas: Canvas): CanvasCounts {
+  const here = new Set(canvas.layout.nodes.map((n) => n.sessionId));
+  const sessions = state.sessions.filter((s) => here.has(s.id));
+  return {
+    sessions: sessions.length,
+    waiting: sessions.filter((s) => s.state !== 'exited' && needsUser(s.attention)).length,
+    unread: sessions.filter((s) => s.status.unread).length,
+  };
 }

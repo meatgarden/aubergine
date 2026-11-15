@@ -1,4 +1,4 @@
-import type { Session } from '@aubergine/shared';
+import { placeOfSession, type AppState, type Session } from '@aubergine/shared';
 
 export type MatchField = 'name' | 'folder' | 'command' | 'note';
 
@@ -58,4 +58,11 @@ export function shortFolder(path: string | null): string {
   if (!path) return '';
   const parts = path.split('/').filter(Boolean);
   return parts.length <= 2 ? path : `…/${parts.slice(-2).join('/')}`;
+}
+
+/** The name of the canvas a session is on; null when it is parked, or on the canvas being looked at. */
+export function canvasLabel(app: AppState | null, sessionId: string, currentCanvasId: string | null): string | null {
+  if (!app) return null;
+  const place = placeOfSession(app, sessionId);
+  return place && place.canvas.id !== currentCanvasId ? place.canvas.name : null;
 }

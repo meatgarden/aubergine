@@ -3,6 +3,8 @@ import { createInterface } from 'node:readline';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import {
+  CanvasList,
+  CanvasSummary,
   CreateSessionResponse,
   ErrorResponse,
   OutsideResponse,
@@ -11,6 +13,7 @@ import {
   ShowResponse,
   StateResponse,
   paths,
+  publicPaths,
   type NodeRect,
   type OutsideTerminal,
 } from '@aubergine/shared';
@@ -21,15 +24,17 @@ import {
   type HookEvent,
 } from './agents/claude-code';
 import { agentClient } from './cli/agent';
-import { canvasAddress, openBrowser } from './cli/open-browser';
+import { openBrowser, sessionAddress } from './cli/open-browser';
 import { commandsFor, formatAgents, formatOutside, normaliseTty, toShells } from './cli/outside';
 import {
   USAGE,
   UsageError,
+  formatCanvases,
   formatSessions,
   insideAubergine,
   nameForFolder,
   parseCommand,
+  resolveCanvas,
   resolveSession,
 } from './cli/commands';
 import { loadConfig, type Config } from './config';
@@ -72,6 +77,25 @@ async function call(config: Config, method: string, urlPath: string, body?: unkn
   return response.json();
 }
 
+/** Every canvas, in tab order. The list comes in pages. */
+async function allCanvases(config: Config): Promise<CanvasSummary[]> {
+  const canvases: CanvasSummary[] = [];
+  let cursor: string | null = null;
+  do {
+    const query: string = cursor ? `?cursor=${encodeURIComponent(cursor)}` : '';
+    const page = CanvasList.parse(await call(config, 'GET', publicPaths.canvases + query));
+    canvases.push(...page.items);
+    cursor = page.nextCursor;
+  } while (cursor);
+  return canvases;
+}
+
+/** `--canvas <name>` as a request field; nothing when no canvas was named, so the server chooses. */
+async function canvasField(config: Config, name: string | null): Promise<{ canvasId?: string }> {
+  if (name === null) return {};
+  return { canvasId: resolveCanvas(await allCanvases(config), name).id };
+}
+
 /** The daemon said no, with a message meant for the user. */
 class ServerRefusal extends Error {}
 
@@ -111,7 +135,7 @@ function ask(question: string): Promise<string> {
 async function showOnCanvas(config: Config, sessionId: string): Promise<void> {
   try {
     const { viewers } = ShowResponse.parse(await call(config, 'POST', paths.showSession(sessionId), {}, 3000));
-    if (viewers === 0) await openBrowser(canvasAddress(config.port, sessionId, SHOW_PARAM));
+    if (viewers === 0) await openBrowser(sessionAddress(config.port, sessionId, SHOW_PARAM));
   } catch {
     // The session exists either way.
   }
@@ -177,9 +201,21 @@ async function main(): Promise<number> {
     }
 
     case 'new': {
-      const body = command.sessionName ? { name: command.sessionName } : {};
+      const body = { ...(command.sessionName ? { name: command.sessionName } : {}), ...(await canvasField(config, command.canvas)) };
       const { session } = CreateSessionResponse.parse(await call(config, 'POST', paths.sessions, body));
       console.log(`Started "${session.name}". Attach with: aubergine attach "${session.name}"`);
+      return 0;
+    }
+
+    case 'canvas-list': {
+      const { defaultCanvasId } = StateResponse.parse(await call(config, 'GET', paths.state));
+      console.log(formatCanvases(await allCanvases(config), defaultCanvasId));
+      return 0;
+    }
+
+    case 'canvas-new': {
+      const canvas = CanvasSummary.parse(await call(config, 'POST', publicPaths.canvases, { name: command.canvasName }));
+      console.log(`Added the canvas "${canvas.name}". Put a session on it with: aubergine here --canvas "${canvas.name}"`);
       return 0;
     }
 
@@ -191,6 +227,7 @@ async function main(): Promise<number> {
       }
       const folder = process.cwd();
       const body = {
+        ...(await canvasField(config, command.canvas)),
         name: command.sessionName ?? nameForFolder(folder),
         uniqueName: true,
         cwd: folder,
@@ -298,7 +335,8 @@ async function main(): Promise<number> {
 
     case 'import': {
       const { terminals } = OutsideResponse.parse(await call(config, 'GET', paths.outside));
-      const { state } = StateResponse.parse(await call(config, 'GET', paths.state));
+      const { state, defaultCanvasId } = StateResponse.parse(await call(config, 'GET', paths.state));
+      const canvasId = command.canvas === null ? defaultCanvasId : resolveCanvas(state.canvases, command.canvas).id;
       const named = command.terminals.map(normaliseTty);
       const missing = named.filter((tty) => !terminals.some((t) => t.tty === tty));
       for (const tty of missing) console.log(`${tty}: no such terminal outside Aubergine. See: aubergine scan`);
@@ -321,16 +359,15 @@ async function main(): Promise<number> {
       // All of them at once go into a frame; ones picked by name land in free space.
       let rects: (NodeRect | undefined)[] = plan.create.map(() => undefined);
       if (named.length === 0) {
-        const parked = new Set(state.sessions.filter((s) => s.state === 'parked').map((s) => s.id));
-        const onCanvas = [...state.layout.nodes.filter((n) => !parked.has(n.sessionId)), ...state.layout.frames];
-        const layout = importLayout(plan.create.length, onCanvas);
-        await call(config, 'POST', paths.frames, { label: 'Imported', rect: layout.frame });
+        const canvas = state.canvases.find((c) => c.id === canvasId);
+        const layout = importLayout(plan.create.length, [...(canvas?.layout.nodes ?? []), ...(canvas?.layout.frames ?? [])]);
+        await call(config, 'POST', paths.frames, { label: 'Imported', rect: layout.frame, canvasId });
         rects = layout.nodes;
       }
       console.log(`Your tabs are untouched. Creating ${plan.create.length} session(s):`);
       for (const [index, item] of plan.create.entries()) {
         try {
-          const body = { tty: item.shell.tty, pid: item.shell.pid, ...(rects[index] ? { rect: rects[index] } : {}) };
+          const body = { tty: item.shell.tty, pid: item.shell.pid, canvasId, ...(rects[index] ? { rect: rects[index] } : {}) };
           const result = OutsideResult.parse(await call(config, 'POST', paths.outsideAdd, body));
           console.log(`\n  ${item.shell.tty}  →  "${result.session?.name}" in ${item.cwd}\n      ${result.message}`);
         } catch (error) {

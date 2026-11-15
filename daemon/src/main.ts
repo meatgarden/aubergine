@@ -3,7 +3,7 @@ import path from 'node:path';
 import { SESSION_ENV, paths } from '@aubergine/shared';
 import { claudeLaunchLine, writeClaudeSettings } from './agents/claude-code';
 import { sessionToken } from './auth';
-import { Canvas } from './canvas';
+import { StateHub } from './state-hub';
 import { loadConfig } from './config';
 import { TmuxRuntime } from './runtime/tmux-runtime';
 import { buildServer } from './server';
@@ -12,6 +12,7 @@ import { systemProcesses } from './migrate/move';
 import { Outside } from './migrate/outside';
 import { scanShells } from './migrate/shells';
 import { Sessions } from './sessions';
+import { Viewers } from './viewers';
 import { ZshIntegration } from './shell/integration';
 import { SettingsFile, expandHome } from './settings';
 import { JsonStore } from './store/json-store';
@@ -23,7 +24,7 @@ async function main(): Promise<void> {
 
   const token = await loadOrCreateToken(config.dataDir);
   const store = new JsonStore(config.dataDir, (message) => console.warn(message));
-  const canvas = new Canvas(await store.load(), store, (error) =>
+  const hub = new StateHub(await store.load(), store, (error) =>
     console.error('Could not save state:', error),
   );
   const settings = new SettingsFile(config.dataDir, (message) => console.warn(message));
@@ -31,8 +32,10 @@ async function main(): Promise<void> {
   const runtime = new TmuxRuntime({ socket: config.tmuxSocket, tmuxBin: config.tmuxBin });
   let listeningPort = config.port;
   const integration = new ZshIntegration(path.join(config.dataDir, 'shell'));
-  const sessions = new Sessions(canvas, runtime, {
+  const viewers = new Viewers();
+  const sessions = new Sessions(hub, runtime, {
     integration,
+    currentCanvas: () => viewers.lastViewedCanvasId,
     sessionEnv: (sessionId) => ({
       [SESSION_ENV.url]: `http://127.0.0.1:${listeningPort}`,
       [SESSION_ENV.sessionId]: sessionId,
@@ -57,7 +60,8 @@ async function main(): Promise<void> {
 
   const app = await buildServer({
     outside,
-    canvas,
+    viewers,
+    hub,
     sessions,
     runtime,
     settings: () => settings.reload(),
@@ -106,7 +110,7 @@ async function main(): Promise<void> {
     clearInterval(poll);
     stopWatching();
     // Shells keep running inside tmux; only the viewers go away.
-    void Promise.allSettled([canvas.flush(), app.close()]).then(() => process.exit(0));
+    void Promise.allSettled([hub.flush(), app.close()]).then(() => process.exit(0));
     setTimeout(() => process.exit(0), 2000).unref();
   };
   process.on('SIGINT', stop);

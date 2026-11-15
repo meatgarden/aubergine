@@ -1,0 +1,186 @@
+{
+  "version": 1,
+  "organization": {
+    "id": "01900000-0000-7000-8000-000000000001",
+    "name": "Personal",
+    "createdAt": "2026-10-01T09:00:00.000Z"
+  },
+  "workspace": {
+    "id": "01900000-0000-7000-8000-000000000002",
+    "organizationId": "01900000-0000-7000-8000-000000000001",
+    "name": "Default",
+    "createdAt": "2026-10-01T09:00:00.000Z"
+  },
+  "project": {
+    "id": "01900000-0000-7000-8000-000000000003",
+    "workspaceId": "01900000-0000-7000-8000-000000000002",
+    "name": "Default",
+    "createdAt": "2026-10-01T09:00:00.000Z"
+  },
+  "sessions": [
+    {
+      "id": "01900000-0000-7000-8000-00000000000a",
+      "projectId": "01900000-0000-7000-8000-000000000003",
+      "name": "api",
+      "createdAt": "2026-10-01T09:00:00.000Z",
+      "state": "open",
+      "cwd": "/home/me/work/api",
+      "command": "zsh",
+      "note": "# API\nretry logic",
+      "status": {
+        "state": "idle",
+        "commandLine": null,
+        "startedAt": null,
+        "lastExit": 0,
+        "lastFinishedAt": "2026-10-01T09:00:00.000Z",
+        "unread": false
+      },
+      "attention": {
+        "state": "waiting",
+        "message": "Allow the edit?",
+        "at": "2026-10-01T09:00:00.000Z"
+      },
+      "noteLog": [
+        {
+          "id": "01900000-0000-7000-8000-000000000028",
+          "at": "2026-10-01T09:00:00.000Z",
+          "author": "agent",
+          "kind": "prompt",
+          "text": "fix the failing test"
+        }
+      ]
+    },
+    {
+      "id": "01900000-0000-7000-8000-00000000000b",
+      "projectId": "01900000-0000-7000-8000-000000000003",
+      "name": "web",
+      "createdAt": "2026-10-01T09:00:00.000Z",
+      "state": "open",
+      "cwd": "/home/me/work/web",
+      "command": "zsh",
+      "note": "",
+      "status": {
+        "state": "idle",
+        "commandLine": null,
+        "startedAt": null,
+        "lastExit": 0,
+        "lastFinishedAt": "2026-10-01T09:00:00.000Z",
+        "unread": false
+      },
+      "attention": {
+        "state": "none",
+        "message": null,
+        "at": null
+      },
+      "noteLog": []
+    },
+    {
+      "id": "01900000-0000-7000-8000-00000000000c",
+      "projectId": "01900000-0000-7000-8000-000000000003",
+      "name": "logs",
+      "createdAt": "2026-10-01T09:00:00.000Z",
+      "state": "parked",
+      "cwd": "/home/me/work/logs",
+      "command": "zsh",
+      "note": "",
+      "status": {
+        "state": "idle",
+        "commandLine": null,
+        "startedAt": null,
+        "lastExit": 0,
+        "lastFinishedAt": "2026-10-01T09:00:00.000Z",
+        "unread": false
+      },
+      "attention": {
+        "state": "none",
+        "message": null,
+        "at": null
+      },
+      "noteLog": []
+    },
+    {
+      "id": "01900000-0000-7000-8000-00000000000d",
+      "projectId": "01900000-0000-7000-8000-000000000003",
+      "name": "old build",
+      "createdAt": "2026-10-01T09:00:00.000Z",
+      "state": "exited",
+      "cwd": "/home/me/work/old-build",
+      "command": "zsh",
+      "note": "",
+      "status": {
+        "state": "idle",
+        "commandLine": null,
+        "startedAt": null,
+        "lastExit": 0,
+        "lastFinishedAt": "2026-10-01T09:00:00.000Z",
+        "unread": false
+      },
+      "attention": {
+        "state": "none",
+        "message": null,
+        "at": null
+      },
+      "noteLog": []
+    }
+  ],
+  "layout": {
+    "nodes": [
+      {
+        "id": "01900000-0000-7000-8000-000000000014",
+        "sessionId": "01900000-0000-7000-8000-00000000000a",
+        "x": 0,
+        "y": 0,
+        "width": 720,
+        "height": 440,
+        "color": "blue"
+      },
+      {
+        "id": "01900000-0000-7000-8000-000000000015",
+        "sessionId": "01900000-0000-7000-8000-00000000000b",
+        "x": 760,
+        "y": 0,
+        "width": 720,
+        "height": 440,
+        "color": "none"
+      },
+      {
+        "id": "01900000-0000-7000-8000-000000000016",
+        "sessionId": "01900000-0000-7000-8000-00000000000c",
+        "x": 0,
+        "y": 480,
+        "width": 800,
+        "height": 500,
+        "color": "green"
+      },
+      {
+        "id": "01900000-0000-7000-8000-000000000017",
+        "sessionId": "01900000-0000-7000-8000-00000000000d",
+        "x": 760,
+        "y": 480,
+        "width": 720,
+        "height": 440,
+        "color": "none"
+      },
+      {
+        "id": "01900000-0000-7000-8000-000000000018",
+        "sessionId": "01900000-0000-7000-8000-000000000063",
+        "x": 5000,
+        "y": 0,
+        "width": 720,
+        "height": 440,
+        "color": "none"
+      }
+    ],
+    "frames": [
+      {
+        "id": "01900000-0000-7000-8000-00000000001e",
+        "label": "Backend",
+        "x": -40,
+        "y": -60,
+        "width": 1560,
+        "height": 560,
+        "color": "purple"
+      }
+    ]
+  }
+}

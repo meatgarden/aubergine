@@ -12,6 +12,7 @@ export default defineConfig({
     // The browser only ever talks to one origin; the daemon sits behind it.
     proxy: {
       '/api': daemon,
+      '/v1': daemon,
       '/auth': daemon,
       '/ws': { target: daemon, ws: true },
     },

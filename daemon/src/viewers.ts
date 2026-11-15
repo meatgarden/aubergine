@@ -1,0 +1,59 @@
+import type { EventsServerMessage } from '@aubergine/shared';
+
+interface Viewer {
+  send: (message: EventsServerMessage) => void;
+  /** The canvas that browser tab is showing, once it has said. */
+  canvasId: string | null;
+  /** When it last said so: on connecting, on switching canvas, and when the tab is used again. */
+  activeAt: number;
+}
+
+/**
+ * The browser tabs that are connected, and which canvas each is showing.
+ * Used to send things to the right tab, and to know which canvas the user
+ * looked at last.
+ */
+export class Viewers {
+  private readonly viewers = new Set<Viewer>();
+  private lastCanvasId: string | null = null;
+
+  add(send: Viewer['send']): Viewer {
+    const viewer: Viewer = { send, canvasId: null, activeAt: Date.now() };
+    this.viewers.add(viewer);
+    return viewer;
+  }
+
+  remove(viewer: Viewer): void {
+    this.viewers.delete(viewer);
+  }
+
+  /** A tab says which canvas it is showing. */
+  viewing(viewer: Viewer, canvasId: string): void {
+    viewer.canvasId = canvasId;
+    viewer.activeAt = Date.now();
+    this.lastCanvasId = canvasId;
+  }
+
+  /** The canvas most recently looked at in any tab, also after that tab has gone. */
+  get lastViewedCanvasId(): string | null {
+    return this.lastCanvasId;
+  }
+
+  get count(): number {
+    return this.viewers.size;
+  }
+
+  /**
+   * Asks the right tabs to bring a session into view: every tab already
+   * showing its canvas; when there is none, the tab used most recently, which
+   * switches canvas. Returns how many tabs were asked.
+   */
+  show(sessionId: string, canvasId: string | null): number {
+    const all = [...this.viewers];
+    const onCanvas = canvasId === null ? [] : all.filter((v) => v.canvasId === canvasId);
+    const mostRecent = all.sort((a, b) => b.activeAt - a.activeAt)[0];
+    const chosen = onCanvas.length > 0 ? onCanvas : mostRecent ? [mostRecent] : [];
+    for (const viewer of chosen) viewer.send({ type: 'show', sessionId });
+    return chosen.length;
+  }
+}

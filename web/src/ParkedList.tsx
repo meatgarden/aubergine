@@ -1,16 +1,20 @@
 import { useEffect, useRef, useState } from 'react';
-import { api } from './api';
 import { useApp } from './store';
 
 /** Sessions taken off the canvas whose shells are still running. */
-export function ParkedList({ onRestored }: { onRestored: (nodeId: string) => void }) {
-  const sessions = useApp((s) => s.canvas?.sessions);
-  const nodes = useApp((s) => s.canvas?.layout.nodes);
+export function ParkedList() {
+  const sessions = useApp((s) => s.app?.sessions);
   const askToClose = useApp((s) => s.askToClose);
   const [open, setOpen] = useState(false);
   const root = useRef<HTMLDivElement>(null);
 
   const parked = (sessions ?? []).filter((s) => s.state === 'parked');
+  const canvases = useApp((s) => s.app?.canvases);
+  /** Where a parked session came from, if that canvas still exists. */
+  const fromCanvas = (id: string | undefined): string | null => {
+    const canvas = canvases?.find((c) => c.id === id);
+    return canvas ? `from ${canvas.name}` : null;
+  };
 
   useEffect(() => {
     if (!open) return;
@@ -23,10 +27,9 @@ export function ParkedList({ onRestored }: { onRestored: (nodeId: string) => voi
 
   if (parked.length === 0) return null;
 
-  const restore = async (sessionId: string): Promise<void> => {
-    await api.restoreSession(sessionId);
-    const node = nodes?.find((n) => n.sessionId === sessionId);
-    if (node) onRestored(node.id);
+  // Showing a parked session restores it onto the canvas being looked at.
+  const restore = (sessionId: string): void => {
+    useApp.getState().showSession(sessionId);
     if (parked.length === 1) setOpen(false);
   };
 
@@ -42,10 +45,10 @@ export function ParkedList({ onRestored }: { onRestored: (nodeId: string) => voi
               <div className="parked-info">
                 <div>{session.name}</div>
                 <div className="parked-detail">
-                  {[session.command, session.cwd].filter(Boolean).join(' · ') || 'running'}
+                  {[fromCanvas(session.parkedFrom?.canvasId), session.command, session.cwd].filter(Boolean).join(' · ') || 'running'}
                 </div>
               </div>
-              <button type="button" onClick={() => void restore(session.id)}>
+              <button type="button" onClick={() => restore(session.id)}>
                 Restore
               </button>
               <button type="button" className="quiet" onClick={() => askToClose(session.id)}>

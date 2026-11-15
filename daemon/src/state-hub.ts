@@ -1,4 +1,4 @@
-import { applyEvent, type CanvasState, type ChangeEvent } from '@aubergine/shared';
+import { applyEvent, type AppState, type ChangeEvent } from '@aubergine/shared';
 import type { Store } from './store/store';
 
 export type EventListener = (event: ChangeEvent) => void;
@@ -7,20 +7,20 @@ export type EventListener = (event: ChangeEvent) => void;
  * Holds the canvas state. `emit` is the only way to change it: the event is
  * applied, the new state is saved, and every listener is told.
  */
-export class Canvas {
-  private current: CanvasState;
+export class StateHub {
+  private current: AppState;
   private readonly listeners = new Set<EventListener>();
   private lastSave: Promise<void> = Promise.resolve();
 
   constructor(
-    initial: CanvasState,
+    initial: AppState,
     private readonly store: Store,
     private readonly onSaveError: (error: unknown) => void = () => {},
   ) {
     this.current = initial;
   }
 
-  get state(): CanvasState {
+  get state(): AppState {
     return this.current;
   }
 

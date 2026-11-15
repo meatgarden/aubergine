@@ -83,9 +83,115 @@ code {
 
 /* ---------- Canvas ---------- */
 
-.canvas {
+.app {
+  display: flex;
+  flex-direction: column;
   width: 100vw;
   height: 100vh;
+}
+.canvas {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+}
+
+/* ---------- Canvas tabs ---------- */
+
+.tabbar {
+  flex: none;
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 36px;
+  padding: 0 8px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+}
+.tab {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  height: 30px;
+  max-width: 260px;
+  padding: 0 10px;
+  color: var(--muted);
+  border: 1px solid transparent;
+  border-bottom: none;
+  border-radius: 7px 7px 0 0;
+  cursor: pointer;
+  user-select: none;
+}
+.tab:hover {
+  color: var(--text);
+  background: var(--panel-hover);
+}
+.tab.active {
+  color: var(--text);
+  background: var(--bg);
+  border-color: var(--border);
+  cursor: default;
+}
+.tab:not(.color-none) {
+  box-shadow: inset 0 3px 0 var(--swatch);
+}
+.tab.dragging {
+  opacity: 0.5;
+}
+.tab-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tab-input {
+  width: 140px;
+  font: inherit;
+  color: var(--text);
+  background: var(--terminal-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+}
+.tab-waiting {
+  flex: none;
+  min-width: 16px;
+  padding: 0 5px;
+  font-size: 11px;
+  line-height: 16px;
+  text-align: center;
+  font-weight: 600;
+  color: #17181c;
+  background: #d98e56;
+  border-radius: 8px;
+}
+.tab-tools {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.tab-add {
+  flex: none;
+  align-self: center;
+  min-width: 0;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  font-size: 16px;
+}
+.dialog-choice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 10px;
+}
+.dialog-choice select {
+  font: inherit;
+  color: var(--text);
+  background: var(--terminal-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 3px 6px;
 }
 .react-flow {
   --xy-background-color: var(--bg);
@@ -819,4 +925,36 @@ code {
   gap: 6px;
   align-items: stretch;
   max-width: 190px;
+}
+
+/* ---------- Move to canvas ---------- */
+
+.move-to {
+  position: relative;
+  flex: none;
+  display: inline-flex;
+}
+.move-menu {
+  position: absolute;
+  top: 24px;
+  right: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 150px;
+  padding: 5px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgb(0 0 0 / 0.45);
+}
+.move-menu button {
+  text-align: left;
+  background: transparent;
+  border-color: transparent;
+  white-space: nowrap;
+}
+.picker-canvas {
+  color: var(--accent-strong);
 }

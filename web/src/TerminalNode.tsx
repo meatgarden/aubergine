@@ -5,10 +5,11 @@ import { api } from './api';
 import { canResumeAgent } from './attention';
 import { ColorButton } from './ColorButton';
 import { nodeMode, type NodeMode } from './culling';
+import { MoveToCanvas } from './MoveToCanvas';
 import { NotePanel } from './NotePanel';
 import { SnapshotView } from './SnapshotView';
 import { StatusBadges } from './StatusBadges';
-import { useApp } from './store';
+import { currentLayout, useApp } from './store';
 import { TerminalView } from './TerminalView';
 import { useIsFullZoom } from './viewport';
 
@@ -16,7 +17,7 @@ export type TerminalFlowNode = Node<{ sessionId: string }, 'terminal'>;
 
 export const TerminalNode = memo(function TerminalNode({ id, data, selected }: NodeProps<TerminalFlowNode>) {
   const { sessionId } = data;
-  const session = useApp((s) => s.canvas?.sessions.find((x) => x.id === sessionId));
+  const session = useApp((s) => s.app?.sessions.find((x) => x.id === sessionId));
   const name = session?.name ?? '';
   const exited = session?.state === 'exited';
   const interactive = useIsFullZoom();
@@ -32,7 +33,7 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
     },
     [sessionId],
   );
-  const node = useApp((s) => s.canvas?.layout.nodes.find((n) => n.id === id));
+  const node = useApp((s) => currentLayout(s).nodes.find((n) => n.id === id));
   const color = node?.color ?? 'none';
   const hasNote = (session?.note ?? '') !== '';
 
@@ -113,6 +114,7 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
           </button>
         )}
         {draft === null && !exited && session && <StatusBadges session={session} focused={focused} />}
+        {draft === null && <MoveToCanvas sessionId={sessionId} name={name} />}
         <button
           type="button"
           className={`node-tool nodrag${hasNote ? ' has-note' : ''}`}

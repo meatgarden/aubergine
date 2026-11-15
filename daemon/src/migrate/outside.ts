@@ -13,7 +13,15 @@ export interface OutsideDeps {
   processes: ProcessControl;
   /** How long to wait for an agent to exit after asking it to. */
   stopWaitMs?: number;
-  createSession(input: { name: string; uniqueName: true; cwd: string; rect?: NodeRect; agent?: 'claude-code'; agentArgs?: string[] }): Promise<{
+  createSession(input: {
+    name: string;
+    uniqueName: true;
+    cwd: string;
+    rect?: NodeRect;
+    canvasId?: string;
+    agent?: 'claude-code';
+    agentArgs?: string[];
+  }): Promise<{
     session: Session;
     node: LayoutNode;
   }>;
@@ -67,7 +75,7 @@ export class Outside {
   }
 
   /** Gives a terminal a canvas session in its folder. `pid` is the terminal's shell, as listed. */
-  async add(target: { tty: string; pid: number; rect?: NodeRect | undefined }): Promise<OutsideResult> {
+  async add(target: { tty: string; pid: number; rect?: NodeRect | undefined; canvasId?: string | undefined }): Promise<OutsideResult> {
     const { shells } = await this.look();
     const shell = shells.find((s) => s.tty === target.tty);
     if (!shell || shell.pid !== target.pid) throw new NotFoundError(`No such terminal now: ${target.tty}. Refresh the list.`);
@@ -79,6 +87,7 @@ export class Outside {
       uniqueName: true,
       cwd: shell.cwd,
       ...(target.rect ? { rect: target.rect } : {}),
+      ...(target.canvasId ? { canvasId: target.canvasId } : {}),
     });
     const attach = `aubergine attach "${created.session.name}"`;
     const message = shell.looksLikeClaude
@@ -119,6 +128,7 @@ export class Outside {
       cwd: item.cwd,
       agent: 'claude-code',
       agentArgs: item.agentArgs,
+      ...(target.canvasId ? { canvasId: target.canvasId } : {}),
     });
     const tty = candidate.shell.tty;
     const message =

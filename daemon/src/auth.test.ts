@@ -26,8 +26,8 @@ describe('session tokens', () => {
     expect(principalFromBearer(secret, `Basic ${sessionToken(secret, id)}`)).toBeNull();
   });
 
-  it("accept the daemon's own token as the user", () => {
-    expect(principalFromBearer(secret, `Bearer ${secret}`)).toEqual({ kind: 'user' });
+  it("do not accept the daemon's own secret as a bearer credential", () => {
+    expect(principalFromBearer(secret, `Bearer ${secret}`)).toBeNull();
   });
 });
 
@@ -47,6 +47,15 @@ describe('authorize', () => {
 
   it('refuses actions it does not know', () => {
     expect(authorize(session, 'session.kill' as never, { sessionId: mine })).toBe(false);
+  });
+
+  it('refuses a session everything on the public API, even about itself', () => {
+    for (const action of ['canvases.read', 'canvases.write', 'sessions.read', 'sessions.write', 'layout.write'] as const) {
+      expect(authorize(session, action, { sessionId: mine, canvasId: mine })).toBe(false);
+      expect(authorize({ kind: 'user' }, action, {})).toBe(true);
+    }
+    // And an action about nothing in particular is not "its own".
+    expect(authorize(session, 'note.append', {})).toBe(false);
   });
 
   it('lets the user do anything', () => {

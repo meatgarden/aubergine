@@ -1,8 +1,9 @@
 /**
- * Fills a throwaway canvas with many sessions so that scale can be judged by
- * hand: 30 active sessions (10 of them printing constantly, 20 printing now
- * and then) plus 60 idle ones. It runs its own daemon on its own port, data
- * folder and tmux socket, and removes all of it again on Ctrl-C.
+ * Fills three throwaway canvases with many sessions so that scale can be judged
+ * by hand: 30 active sessions (10 of them printing constantly, 20 printing now
+ * and then) plus 60 idle ones, a third of each kind on every canvas. It runs
+ * its own daemon on its own port, data folder and tmux socket, and removes all
+ * of it again on Ctrl-C.
  *
  *   pnpm load-canvas
  *
@@ -13,7 +14,7 @@ import { existsSync, readFileSync, rmSync } from 'node:fs';
 import path from 'node:path';
 import { setTimeout as sleep } from 'node:timers/promises';
 import { fileURLToPath } from 'node:url';
-import { CreateSessionResponse, paths } from '@aubergine/shared';
+import { CanvasSummary, CreateSessionResponse, StateResponse, paths, publicPaths } from '@aubergine/shared';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const port = Number(process.env.LOAD_PORT ?? 4720);
@@ -24,7 +25,8 @@ const origin = `http://127.0.0.1:${port}`;
 const BUSY = 10;
 const OCCASIONAL = 20;
 const IDLE = 60;
-const COLUMNS = 10;
+const COLUMNS = 6;
+const CANVASES = ['Work', 'Deploys'];
 const WIDTH = 720;
 const HEIGHT = 440;
 const GAP = 40;
@@ -91,17 +93,29 @@ const kinds = [
   ...Array.from({ length: IDLE }, () => 'idle' as const),
 ];
 
+// The canvas that is there from the start, plus two more.
+const first = StateResponse.parse(await (await fetch(origin + paths.state, { headers })).json()).defaultCanvasId;
+const canvasIds = [first];
+for (const name of CANVASES) {
+  const response = await fetch(origin + publicPaths.canvases, { method: 'POST', headers, body: JSON.stringify({ name }) });
+  if (!response.ok) throw new Error(`Could not create the canvas ${name}: HTTP ${response.status}`);
+  canvasIds.push(CanvasSummary.parse(await response.json()).id);
+}
+
 for (const [index, kind] of kinds.entries()) {
+  // Dealt out in turn, so every canvas gets a third of each kind.
+  const canvasId = canvasIds[index % canvasIds.length];
+  const slot = Math.floor(index / canvasIds.length);
   const rect = {
-    x: (index % COLUMNS) * (WIDTH + GAP),
-    y: Math.floor(index / COLUMNS) * (HEIGHT + GAP),
+    x: (slot % COLUMNS) * (WIDTH + GAP),
+    y: Math.floor(slot / COLUMNS) * (HEIGHT + GAP),
     width: WIDTH,
     height: HEIGHT,
   };
   const response = await fetch(origin + paths.sessions, {
     method: 'POST',
     headers,
-    body: JSON.stringify({ name: `${kind} ${index + 1}`, rect }),
+    body: JSON.stringify({ name: `${kind} ${index + 1}`, rect, canvasId }),
   });
   if (!response.ok) throw new Error(`Could not create session ${index + 1}: HTTP ${response.status}`);
   const { session } = CreateSessionResponse.parse(await response.json());
@@ -115,6 +129,6 @@ for (const [index, kind] of kinds.entries()) {
   process.stdout.write(`\rcreated ${index + 1}/${kinds.length}`);
 }
 
-console.log(`\n\n${BUSY} busy, ${OCCASIONAL} occasional and ${IDLE} idle sessions are running.`);
+console.log(`\n\n${BUSY} busy, ${OCCASIONAL} occasional and ${IDLE} idle sessions are running, spread over ${canvasIds.length} canvases.`);
 console.log(`Open ${origin}${paths.auth}?token=${token}`);
 console.log('Press Ctrl-C to end them and remove the test data.');

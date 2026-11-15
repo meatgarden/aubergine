@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { SearchHit } from '@aubergine/shared';
 import { api } from './api';
-import { searchSessions, shortFolder } from './search';
+import { canvasLabel, searchSessions, shortFolder } from './search';
 import { useApp } from './store';
 
 const HISTORY_DELAY_MS = 250;
@@ -15,14 +15,14 @@ type Row =
 
 /**
  * The session picker: type to search names, folders, commands and notes, and
- * what terminals have printed. Enter goes there. `onGo` moves the view to a
- * node and focuses it.
+ * what terminals have printed, across every canvas. Enter goes there.
  */
-export function Picker({ onGo }: { onGo: (nodeId: string, sessionId: string) => void }) {
+export function Picker() {
   const open = useApp((s) => s.picker);
   const setPicker = useApp((s) => s.setPicker);
-  const sessions = useApp((s) => s.canvas?.sessions);
-  const nodes = useApp((s) => s.canvas?.layout.nodes);
+  const sessions = useApp((s) => s.app?.sessions);
+  const app = useApp((s) => s.app);
+  const canvasId = useApp((s) => s.canvasId);
   const [query, setQuery] = useState('');
   const [index, setIndex] = useState(0);
   const [history, setHistory] = useState<{ query: string; hits: SearchHit[]; truncated: boolean } | null>(null);
@@ -86,9 +86,7 @@ export function Picker({ onGo }: { onGo: (nodeId: string, sessionId: string) => 
 
   const go = async (row: Row): Promise<void> => {
     setPicker(false);
-    if (row.parked) await api.restoreSession(row.sessionId);
-    const node = nodes?.find((n) => n.sessionId === row.sessionId);
-    if (node) onGo(node.id, row.sessionId);
+    useApp.getState().showSession(row.sessionId);
     if (row.kind === 'output') {
       // Scroll the terminal back to the line that matched.
       const text = row.hit.text.trim().slice(0, REVEAL_LENGTH);
@@ -149,6 +147,11 @@ export function Picker({ onGo }: { onGo: (nodeId: string, sessionId: string) => 
                 onClick={() => void go({ kind: 'session', sessionId: session.id, parked: session.state === 'parked' })}
               >
                 <span className="picker-name">{session.name}</span>
+                {canvasLabel(app, session.id, canvasId) && (
+                  <span className="picker-tag picker-canvas" data-testid="picker-canvas">
+                    {canvasLabel(app, session.id, canvasId)}
+                  </span>
+                )}
                 <span className="picker-detail">{detail}</span>
                 {session.state !== 'open' && <span className="picker-tag">{session.state}</span>}
               </div>
@@ -176,6 +179,9 @@ export function Picker({ onGo }: { onGo: (nodeId: string, sessionId: string) => 
                 }
               >
                 <span className="picker-name">{session?.name}</span>
+                {canvasLabel(app, hit.sessionId, canvasId) && (
+                  <span className="picker-tag picker-canvas">{canvasLabel(app, hit.sessionId, canvasId)}</span>
+                )}
                 <span className="picker-detail picker-line">{hit.text.trim()}</span>
                 {session?.state === 'parked' && <span className="picker-tag">parked</span>}
               </div>
