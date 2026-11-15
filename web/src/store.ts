@@ -23,7 +23,7 @@ export type Phase =
   | 'unreachable'
   | 'ready';
 
-interface AppStore {
+export interface AppStore {
   phase: Phase;
   runtime: RuntimeStatus | null;
   /** User settings from the daemon's settings file. */
@@ -39,8 +39,21 @@ interface AppStore {
   closing: string | null;
   /** Canvas waiting for the user to say what happens to its sessions before it is closed. */
   closingCanvas: string | null;
-  /** Whether the session picker is open. */
+  /** Whether the palette (sessions, canvases and commands) is open. */
   picker: boolean;
+  /**
+   * The terminal that is selected: the one commands such as park and rename act on when no
+   * terminal has the keyboard. Focusing a terminal selects it; leaving it keeps it selected.
+   */
+  selected: string | null;
+  /** The one panel that is open, if any. */
+  panel: Panel | null;
+  /** Something a component was asked to start: renaming, a note, the move menu. Used once. */
+  ask: Ask | null;
+  /** The last thing that went wrong, shown in the toolbar. */
+  notice: string | null;
+  /** Sessions parked from this page, oldest first, so the last one can be brought back. */
+  parkedHere: string[];
   /** A session the canvas was asked to bring into view. The counter makes repeats count. */
   show: { sessionId: string; tick: number } | null;
 
@@ -50,11 +63,26 @@ interface AppStore {
   askToClose: (sessionId: string | null) => void;
   askToCloseCanvas: (canvasId: string | null) => void;
   setPicker: (open: boolean) => void;
+  select: (sessionId: string | null) => void;
+  /** Opens a panel, or closes it when it is the one that is open. `null` closes whatever is open. */
+  togglePanel: (panel: Panel | null) => void;
+  request: (ask: Omit<Ask, 'tick'>) => void;
+  /** An ask is used once: forget it, unless a newer one has replaced it. */
+  asked: (tick: number) => void;
+  setNotice: (notice: string | null) => void;
   showSession: (sessionId: string) => void;
   /** A request to show a session is used once: forget it, unless a newer one has replaced it. */
   shown: (tick: number) => void;
   /** Switches this page to another canvas. `push` adds a step to the browser's history. */
   setCanvas: (canvasId: string, options?: { push?: boolean }) => void;
+}
+
+export type Panel = 'parked' | 'outside' | 'shortcuts';
+export interface Ask {
+  kind: 'rename-session' | 'rename-canvas' | 'note' | 'move';
+  /** The session or canvas it is about. */
+  id: string;
+  tick: number;
 }
 
 export const useApp = create<AppStore>((set, get) => ({
@@ -68,6 +96,11 @@ export const useApp = create<AppStore>((set, get) => ({
   closing: null,
   closingCanvas: null,
   picker: false,
+  selected: null,
+  panel: null,
+  ask: null,
+  notice: null,
+  parkedHere: [],
   show: null,
 
   load: async () => {
@@ -114,8 +147,14 @@ export const useApp = create<AppStore>((set, get) => ({
     const next: Partial<AppStore> = { app: applyEvent(app, event) };
     if (event.type === 'session.closed') {
       if (get().closing === event.sessionId) next.closing = null;
-      if (get().focus?.sessionId === event.sessionId) next.focus = null;
     }
+    if (event.type === 'session.closed' || event.type === 'session.parked') {
+      if (get().focus?.sessionId === event.sessionId) next.focus = null;
+      if (get().selected === event.sessionId) next.selected = null;
+      const others = get().parkedHere.filter((id) => id !== event.sessionId);
+      next.parkedHere = event.type === 'session.parked' ? [...others, event.sessionId] : others;
+    }
+    if (event.type === 'session.restored') next.parkedHere = get().parkedHere.filter((id) => id !== event.sessionId);
     set(next);
     if (event.type === 'canvas.removed' && get().canvasId === event.canvasId) {
       // The canvas this page was showing is gone: show the first of what is left.
@@ -127,13 +166,20 @@ export const useApp = create<AppStore>((set, get) => ({
   focusSession: (sessionId) =>
     set((state) => ({
       focus: sessionId ? { sessionId, tick: (state.focus?.tick ?? 0) + 1 } : null,
+      // The terminal that had the keyboard stays selected when the keyboard leaves it.
+      selected: sessionId ?? state.selected,
     })),
+  select: (sessionId) => set({ selected: sessionId }),
+  togglePanel: (panel) => set((state) => ({ panel: panel === null || state.panel === panel ? null : panel })),
+  request: (ask) => set((state) => ({ ask: { ...ask, tick: (state.ask?.tick ?? 0) + 1 } })),
+  asked: (tick) => set((state) => (state.ask?.tick === tick ? { ask: null } : {})),
+  setNotice: (notice) => set({ notice }),
 
   askToClose: (sessionId) => set({ closing: sessionId }),
   askToCloseCanvas: (canvasId) => set({ closingCanvas: canvasId }),
   setPicker: (open) => set({ picker: open }),
   setCanvas: (canvasId, options) => {
-    if (get().canvasId !== canvasId) set({ canvasId, focus: null });
+    if (get().canvasId !== canvasId) set({ canvasId, focus: null, selected: null });
     writeAddress(canvasId, options?.push !== false);
     rememberCanvas(canvasId);
     events?.viewing(canvasId);
@@ -196,7 +242,7 @@ export function startSync(): () => void {
     const id = canvasIdFromPath(location.pathname);
     const store = useApp.getState();
     if (id && store.app?.canvases.some((c) => c.id === id) && id !== store.canvasId) {
-      useApp.setState({ canvasId: id, focus: null });
+      useApp.setState({ canvasId: id, focus: null, selected: null });
       rememberCanvas(id);
       events?.viewing(id);
     }

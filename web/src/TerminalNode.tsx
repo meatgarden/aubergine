@@ -1,9 +1,11 @@
-import { memo, useCallback, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { NodeResizer, useStore, type Node, type NodeProps } from '@xyflow/react';
 import { NODE_MIN_HEIGHT, NODE_MIN_WIDTH } from '@aubergine/shared';
 import { api } from './api';
 import { canResumeAgent } from './attention';
 import { ColorButton } from './ColorButton';
+import { parkSession } from './commands';
+import { hint } from './shortcuts';
 import { nodeMode, type NodeMode } from './culling';
 import { MoveToCanvas } from './MoveToCanvas';
 import { NotePanel } from './NotePanel';
@@ -33,6 +35,19 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
     },
     [sessionId],
   );
+  // Selected: the terminal that keys such as park and rename act on while none has the keyboard.
+  const isSelected = useApp((s) => s.selected === sessionId);
+  useApp((s) => s.settings.shortcuts);
+
+  // Asked to start renaming, or to show or hide the note (by a key or the palette).
+  const ask = useApp((s) => (s.ask?.id === sessionId && (s.ask.kind === 'rename-session' || s.ask.kind === 'note') ? s.ask : null));
+  useEffect(() => {
+    if (!ask) return;
+    if (ask.kind === 'rename-session') setDraft(useApp.getState().app?.sessions.find((x) => x.id === sessionId)?.name ?? '');
+    else setNoteOpen((open) => !open);
+    useApp.getState().asked(ask.tick);
+  }, [ask, sessionId]);
+
   const node = useApp((s) => currentLayout(s).nodes.find((n) => n.id === id));
   const color = node?.color ?? 'none';
   const hasNote = (session?.note ?? '') !== '';
@@ -58,8 +73,10 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
 
   return (
     <div
-      className={`terminal-node color-${color}${selected ? ' selected' : ''}`}
+      className={`terminal-node color-${color}${selected ? ' selected' : ''}${isSelected && !focused ? ' is-selected' : ''}`}
       data-testid="terminal-node"
+      data-selected={isSelected && !focused ? 'true' : undefined}
+      data-focused={focused ? 'true' : undefined}
       data-mode={exited ? 'ended' : mode}
       data-busy={session?.status.state === 'busy' ? 'true' : undefined}
       data-attention={session?.attention.state ?? 'none'}
@@ -75,7 +92,7 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
       />
       <header className="node-title" onDoubleClick={() => setDraft(name)}>
         {draft === null ? (
-          <span className="node-name" title="Double-click to rename" data-testid="node-name">
+          <span className="node-name" title={hint('terminal.rename', 'Double-click to rename')} data-testid="node-name">
             {name}
           </span>
         ) : (
@@ -120,7 +137,7 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
           className={`node-tool nodrag${hasNote ? ' has-note' : ''}`}
           aria-label={`Note for ${name}`}
           aria-pressed={noteOpen}
-          title={hasNote ? 'Show note' : 'Add a note'}
+          title={hint('notes.toggle', hasNote ? 'Show note' : 'Add a note')}
           onClick={() => setNoteOpen((v) => !v)}
         >
           Note
@@ -137,8 +154,8 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
           type="button"
           className="node-close nodrag"
           aria-label={exited ? `Remove ${name}` : `Park ${name}`}
-          title={exited ? 'Remove' : 'Park: take it off the canvas, the shell keeps running'}
-          onClick={() => void (exited ? api.closeSession(sessionId) : api.parkSession(sessionId))}
+          title={exited ? 'Remove' : hint('terminal.park', 'Park: take it off the canvas, the shell keeps running')}
+          onClick={() => parkSession(sessionId)}
         >
           ×
         </button>

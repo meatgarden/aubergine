@@ -28,7 +28,10 @@ import { OutsidePanel } from './OutsidePanel';
 import { ParkedList } from './ParkedList';
 import { Picker } from './Picker';
 import { currentLayout, useApp } from './store';
-import { canvasShortcut, isCanvasChord, isMac, isTypingTarget } from './keys';
+import { canvasActions } from './canvas-actions';
+import { runCommand } from './commands';
+import { hint } from './shortcuts';
+import { ShortcutSheet } from './ShortcutSheet';
 import { FrameNode, type FrameFlowNode } from './FrameNode';
 import { TerminalNode, type TerminalFlowNode } from './TerminalNode';
 import { isFullZoom, loadViewport, saveViewport, useZoomToNode } from './viewport';
@@ -73,6 +76,9 @@ export function Canvas() {
   const live = useApp((s) => s.live);
   const theme = useApp((s) => s.settings.theme);
   const focusSession = useApp((s) => s.focusSession);
+  const notice = useApp((s) => s.notice);
+  // Tooltips name the keys in effect, which follow the settings file.
+  useApp((s) => s.settings.shortcuts);
   const flow = useReactFlow();
   const zoomToNode = useZoomToNode();
   const zoom = useStore((s) => s.transform[2]);
@@ -185,7 +191,7 @@ export function Canvas() {
   );
 
   const [adding, setAdding] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const setError = useApp((s) => s.setNotice);
 
   const addTerminal = useCallback(async (agent?: AgentKind) => {
     setAdding(true);
@@ -217,7 +223,7 @@ export function Canvas() {
     } finally {
       setAdding(false);
     }
-  }, [flow, goToNode, canvasId]);
+  }, [flow, goToNode, canvasId, setError]);
 
   const resetZoom = useCallback(() => {
     const pane = document.querySelector('.react-flow')?.getBoundingClientRect();
@@ -246,7 +252,7 @@ export function Canvas() {
     } catch (e) {
       setError(`Could not add a frame: ${(e as Error).message}`);
     }
-  }, [flow, canvasId]);
+  }, [flow, canvasId, setError]);
 
   const zoomToFit = useCallback(() => {
     void flow.fitView({ padding: 0.08, maxZoom: 1, duration: 200 });
@@ -258,29 +264,28 @@ export function Canvas() {
     if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
   }, [focusSession]);
 
-  useEffect(() => {
-    const mac = isMac();
-    const onKeyDown = (event: KeyboardEvent): void => {
-      if (isCanvasChord(event, mac)) {
-        event.preventDefault();
-        const { picker, setPicker } = useApp.getState();
-        releaseFocus();
-        setPicker(!picker);
-        return;
-      }
-      const { closing, picker } = useApp.getState();
-      if (isTypingTarget(event.target) || closing || picker) return;
-      const action = canvasShortcut(event);
-      if (!action) return;
-      event.preventDefault();
-      if (action === 'new-terminal') void addTerminal();
-      else if (action === 'zoom-100') resetZoom();
-      else zoomToFit();
-    };
-    // Capture phase, so the reserved chord is seen before a focused terminal gets it.
-    window.addEventListener('keydown', onKeyDown, true);
-    return () => window.removeEventListener('keydown', onKeyDown, true);
-  }, [addTerminal, resetZoom, zoomToFit, releaseFocus]);
+  /** Brings a session's node into view at 100% without giving it the keyboard. */
+  const reveal = useCallback(
+    (sessionId: string) => {
+      const node = currentLayout(useApp.getState()).nodes.find((n) => n.sessionId === sessionId);
+      if (node) zoomToNode(node.id, { reveal: true });
+    },
+    [zoomToNode],
+  );
+
+  // Commands reach this canvas through here; see commands.ts.
+  useEffect(
+    () =>
+      canvasActions.register({
+        addTerminal: (agent) => void addTerminal(agent),
+        addFrame: () => void addFrame(),
+        zoomToFit,
+        resetZoom,
+        releaseFocus,
+        reveal,
+      }),
+    [addTerminal, addFrame, zoomToFit, resetZoom, releaseFocus, reveal],
+  );
 
   // Asked to bring a session into view: by the picker, the queue, the parked list, `aubergine here`,
   // or the address this page was opened on. This is the one way to get to a session, wherever it is.
@@ -332,7 +337,10 @@ export function Canvas() {
         onNodeDragStop={onNodeDragStop}
         onNodeClick={onNodeClick}
         onMoveEnd={onMoveEnd}
-        onPaneClick={releaseFocus}
+        onPaneClick={() => {
+          releaseFocus();
+          useApp.getState().select(null);
+        }}
         defaultViewport={initialViewport}
         minZoom={0.1}
         maxZoom={1}
@@ -349,37 +357,37 @@ export function Canvas() {
         <MiniMap pannable zoomable position="bottom-right" className="minimap" />
         <Panel position="top-left" className="toolbar">
           <span className="brand">Aubergine</span>
-          <button type="button" onClick={() => void addTerminal()} disabled={adding} title="New terminal (N)">
+          <button type="button" onClick={() => runCommand('terminal.new')} disabled={adding} title={hint('terminal.new')}>
             + New terminal
           </button>
           <button
             type="button"
             className="quiet"
-            onClick={() => void addTerminal('claude-code')}
+            onClick={() => runCommand('agent.new')}
             disabled={adding}
-            title="New Claude Code session: starts claude with hooks that report to this canvas"
+            title={hint('agent.new', 'New Claude Code session: starts claude with hooks that report to this canvas')}
           >
             + Claude Code
           </button>
-          <button type="button" className="quiet" onClick={() => void addFrame()} title="Add a frame to group terminals">
+          <button type="button" className="quiet" onClick={() => runCommand('frame.new')} title={hint('frame.new', 'Add a frame to group terminals')}>
             + Frame
           </button>
           <button
             type="button"
             className="quiet"
-            onClick={() => useApp.getState().setPicker(true)}
-            title={isMac() ? 'Go to session (⌘K)' : 'Go to session (Ctrl+Shift+K)'}
+            onClick={() => runCommand('palette.toggle')}
+            title={hint('palette.toggle', 'Go to a session or canvas, or run a command')}
           >
             Go to…
           </button>
-          <button type="button" className="quiet" onClick={zoomToFit} title="Zoom to fit everything (F)">
+          <button type="button" className="quiet" onClick={() => runCommand('view.fit')} title={hint('view.fit', 'Zoom to fit everything')}>
             Fit
           </button>
           <button
             type="button"
             className="quiet"
-            onClick={resetZoom}
-            title="Zoom to 100% (0). Terminals take input only at 100%."
+            onClick={() => runCommand('view.actualSize')}
+            title={hint('view.actualSize', 'Zoom to 100%. Terminals take input only at 100%.')}
             data-testid="zoom-level"
           >
             {percent}
@@ -388,7 +396,10 @@ export function Canvas() {
           <AttentionQueue />
           <ParkedList />
           {!live && <span className="warning">Reconnecting…</span>}
-          {error && <span className="warning">{error}</span>}
+          <button type="button" className="quiet" aria-label="Show shortcuts" onClick={() => runCommand('shortcuts.show')} title={hint('shortcuts.show')}>
+            ?
+          </button>
+          {notice && <span className="warning">{notice}</span>}
         </Panel>
         {layout.length === 0 && frames.length === 0 && (
           <Panel position="top-center" className="empty">
@@ -397,6 +408,7 @@ export function Canvas() {
         )}
       </ReactFlow>
       <Picker />
+      <ShortcutSheet />
     </div>
   );
 }
