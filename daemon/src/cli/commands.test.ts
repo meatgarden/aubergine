@@ -245,3 +245,23 @@ describe('canvases', () => {
     expect(text).toContain('* Deploys  3 terminals  2 waiting for you');
   });
 });
+
+describe('an option a command does not know', () => {
+  // Every command, with something made up after it. Free text (a note) may hold anything.
+  const lines = ['list', 'new x', 'canvas list', 'canvas new x', 'attach x', 'here', 'scan', 'move', 'import', 'hook stop', 'hooks print', 'shell-hook print', 'token list', 'token create x --scope read', 'token revoke x', 'start', 'open', 'update', 'version', 'doctor', 'uninstall', 'service install'];
+  it.each(lines)('is refused in one sentence that names it: %s', (line) => {
+    let thrown: unknown;
+    try {
+      parseCommand([...line.split(' '), '--made-up']);
+    } catch (error) {
+      thrown = error;
+    }
+    expect(thrown).toBeInstanceOf(UsageError);
+    expect((thrown as Error).message).not.toContain('\n');
+  });
+
+  it('is named where the command can tell which word it was', () => {
+    expect(() => parseCommand(['new', 'w1', '--no-attach'])).toThrow('new does not know --no-attach');
+    expect(() => parseCommand(['attach', 'api', '--now'])).toThrow('attach does not know --now');
+  });
+});

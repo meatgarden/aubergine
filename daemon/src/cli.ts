@@ -599,8 +599,8 @@ main().then(
     // Started by the shell snippet: a new tab is waiting. Say nothing and let the normal shell start.
     if (process.argv.includes('--from-shell-hook')) process.exit(1);
     if (error instanceof UsageError) {
-      console.error(`${error.message}\n`);
-      console.error(USAGE);
+      // One line saying what was wrong. The whole list of commands is one command away, not in the way.
+      console.error(`${error.message}\nFor the commands and their options: aubergine help`);
       process.exit(2);
     }
     console.error(error instanceof Error ? error.message : error);

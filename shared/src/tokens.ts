@@ -29,7 +29,7 @@ export const SCOPE_MEANING: Record<KnownScope, string> = {
   'notes:write': 'Change the pinned note of a session and add entries to its note log.',
   'terminal:read': 'Read what a terminal shows. Not available yet.',
   'terminal:input': 'Type into a terminal. Not available yet.',
-  'workflows:write': 'Create, change, copy and remove workflows.',
+  'workflows:write': 'Propose workflows and elements as drafts for you to review. With review switched off for the token: create, change, copy and remove workflows and shelf elements directly.',
   'runs:write': 'Start runs of workflows on sessions, and report on them: done, blocked, go to, pause, resume, stop. It does not type into a terminal.',
 };
 
@@ -56,6 +56,8 @@ export const ApiToken = z.object({
   lastUsedAt: Timestamp.nullable().default(null),
   expiresAt: Timestamp.nullable().default(null),
   revokedAt: Timestamp.nullable().default(null),
+  /** What this token writes about workflows needs the owner's review: it may propose drafts, and may not create or change workflows or shelf elements directly. */
+  reviewWorkflowChanges: z.boolean().default(false),
 });
 export type ApiToken = z.infer<typeof ApiToken>;
 
@@ -85,6 +87,10 @@ export const CreateTokenRequest = z
     scopes: Scopes.describe('What it may do. At least one.'),
     expiresAt: Timestamp.optional().describe('When it stops working. Never, when neither this nor `expiresInDays` is given.'),
     expiresInDays: z.number().int().min(1).max(TOKEN_MAX_DAYS).optional().describe('In how many days it stops working.'),
+    reviewWorkflowChanges: z
+      .boolean()
+      .default(true)
+      .describe('Changes to workflows need your review: with `workflows:write` the token may propose drafts, and may not create or change workflows directly. On unless you switch it off.'),
   })
   .refine((body) => body.expiresAt === undefined || body.expiresInDays === undefined, 'Give expiresAt or expiresInDays, not both');
 export type CreateTokenRequest = z.infer<typeof CreateTokenRequest>;
@@ -146,4 +152,4 @@ export const Capabilities = z.object({
 export type Capabilities = z.infer<typeof Capabilities>;
 
 /** The features a client may look for in `Capabilities.features`. */
-export const FEATURES = ['canvases', 'sessions', 'layout', 'notes', 'tags', 'events', 'show', 'tokens', 'activity', 'openapi', 'workflows', 'runs'] as const;
+export const FEATURES = ['canvases', 'sessions', 'layout', 'notes', 'tags', 'events', 'show', 'tokens', 'activity', 'openapi', 'workflows', 'runs', 'drafts', 'elements', 'outputs'] as const;

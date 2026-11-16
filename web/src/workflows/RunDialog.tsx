@@ -50,7 +50,7 @@ export function RunDialog() {
       let sessionId = starting.sessionId;
       if (sessionId === null) {
         // A new agent session is told about the run in its first prompt; nothing needs typing afterwards.
-        sessionId = (await canvasActions.get()?.addTerminal('claude-code', [kickoffLine(version.name)])) ?? null;
+        sessionId = (await canvasActions.get()?.addTerminal('claude-code', [kickoffLine()])) ?? null;
         if (sessionId === null) throw new Error('The terminal could not be started.');
       }
       const started = await api.startRun(sessionId, { workflowId: workflow.id, inputs: given, replace, kickoff: !onNewAgent });

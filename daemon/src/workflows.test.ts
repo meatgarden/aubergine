@@ -121,7 +121,7 @@ const asOwner = (method: string, url: string, body?: unknown, headers: Record<st
 const call = (secret: string, method: string, url: string, body?: unknown): Promise<Answer> => send({ authorization: `Bearer ${secret}` }, method, url, body);
 
 async function makeToken(name: string, scopes: Scope[]): Promise<string> {
-  const made = await asOwner('POST', '/v1/tokens', { name, scopes });
+  const made = await asOwner('POST', '/v1/tokens', { name, scopes, reviewWorkflowChanges: false });
   expect(made.status).toBe(201);
   return made.body.secret as string;
 }
@@ -224,8 +224,14 @@ describe('workflows', () => {
     expect((await asOwner('PATCH', `/v1/workflows/${made.id}`, { name: 'Three steps' })).body.version).toBe(2);
     const labelled = await asOwner('PATCH', `/v1/workflows/${made.id}`, { labels: { team: 'web' } });
     expect(labelled.body).toMatchObject({ version: 2, labels: { team: 'web' } });
+    // What is left out of a change stays as it was: nothing is emptied.
+    await asOwner('PATCH', `/v1/workflows/${made.id}`, { description: 'What it is for.' });
+    const partly = await asOwner('PATCH', `/v1/workflows/${made.id}`, { doneNothing: true, name: 'Three steps' });
+    expect(partly.body).toMatchObject({ description: 'What it is for.', labels: { team: 'web' } });
+    expect(partly.body.current.standing).toBe('Keep it small.');
+    const before = partly.body.version as number;
     // A new name is a new version, and the list shows it.
-    expect((await asOwner('PATCH', `/v1/workflows/${made.id}`, { name: 'Renamed' })).body).toMatchObject({ version: 3, name: 'Renamed' });
+    expect((await asOwner('PATCH', `/v1/workflows/${made.id}`, { name: 'Renamed' })).body).toMatchObject({ version: before + 1, name: 'Renamed', description: 'What it is for.', labels: { team: 'web' } });
   });
 
   it('refuses what is not a workflow, in words', async () => {
@@ -306,7 +312,7 @@ describe('runs', () => {
     const workflow = await makeWorkflow();
     const session = fakeSession('worker');
     const run = await startRun(workflow.id, session.id);
-    expect(run).toMatchObject({ position: 'Plan · 1 of 3', workflowName: 'Three steps', kickoff: kickoffLine('Three steps') });
+    expect(run).toMatchObject({ position: 'Plan · 1 of 3', workflowName: 'Three steps', kickoff: kickoffLine() });
     expect(run.run).toMatchObject({ status: 'running', currentElementId: 'plan', workflowVersion: 1, sessionId: session.id, startedBy: { kind: 'person' } });
     expect(hub.state.runs).toHaveLength(1);
 
@@ -619,7 +625,7 @@ describe('telling the agent', () => {
 
     const started = await startRun(workflow.id, withAgent.id);
     expect(started.kickoffTyped).toBe(true);
-    expect(typed).toEqual([[withAgent.id, kickoffLine('Three steps')]]);
+    expect(typed).toEqual([[withAgent.id, kickoffLine()]]);
 
     // In a plain shell the line would be run as a command: nothing is typed, and a person moves the run.
     expect((await startRun(workflow.id, plainShell.id)).kickoffTyped).toBe(false);
@@ -638,7 +644,7 @@ describe('telling the agent', () => {
     const runner = await makeToken('runner', ['runs:write', 'sessions:write', 'read']);
     const started = await call(runner, 'POST', `/v1/sessions/${withAgent.id}/runs`, { workflowId: workflow.id, inputs: { task: 'x' }, kickoff: true });
     expect(started.status).toBe(201);
-    expect(started.body).toMatchObject({ kickoffTyped: false, kickoff: kickoffLine('Three steps') });
+    expect(started.body).toMatchObject({ kickoffTyped: false, kickoff: kickoffLine() });
     expect(typed).toEqual([]);
   });
 
@@ -682,7 +688,7 @@ describe('telling the agent', () => {
 
     await startRun(workflow.id, session.id);
     expect((await asOwner('POST', paths.resumeAgent(session.id))).status).toBe(200);
-    expect(launched.at(-1)).toEqual(['--resume', conversationId, kickoffLine('Three steps')]);
+    expect(launched.at(-1)).toEqual(['--resume', conversationId, kickoffLine()]);
   });
 });
 
@@ -720,7 +726,7 @@ describe('a restart of the server', () => {
     expect((await asOwner('GET', `/v1/runs/${first.run.id}`)).body.run.status).toBe('finished');
   });
 
-  it('writes state file version 4, with live runs only', async () => {
+  it('writes the state file with live runs only', async () => {
     const workflow = await makeWorkflow();
     const session = fakeSession('one');
     const run = await startRun(workflow.id, session.id);
@@ -728,7 +734,7 @@ describe('a restart of the server', () => {
     await startRun(workflow.id, session.id);
     await hub.flush();
     const file = JSON.parse(await readFile(path.join(dir, 'state.json'), 'utf8'));
-    expect(file.version).toBe(4);
+    expect(file.version).toBe(5);
     expect(file.workflows).toHaveLength(1);
     expect(file.runs).toHaveLength(1);
     expect(file.runs[0].status).toBe('running');
@@ -763,7 +769,7 @@ describe('at scale: a thousand runs over, thirty going', () => {
     for (let n = 0; n < 1000; n += 1) {
       await archive.append({
         workflowName: version.name,
-        elements: version.elements.map((e) => ({ id: e.id, name: e.name })),
+        elements: version.elements.map((e) => ({ id: e.id, name: e.name, produces: e.produces })),
         run: {
           id: newId(),
           workflowId: workflow.id,
@@ -772,7 +778,7 @@ describe('at scale: a thousand runs over, thirty going', () => {
           inputs: { task: `old task ${n}` },
           status: n % 10 === 0 ? 'stopped' : 'finished',
           currentElementId: null,
-          elements: version.elements.map((e) => ({ elementId: e.id, state: 'done' as const, startedAt: at(n), finishedAt: at(n), note: `note ${n}`, by: { kind: 'agent' as const }, sessionId: null })),
+          elements: version.elements.map((e) => ({ elementId: e.id, state: 'done' as const, startedAt: at(n), finishedAt: at(n), note: `note ${n}`, output: null, ticks: [], by: { kind: 'agent' as const }, sessionId: null })),
           blockedReason: null,
           pausedFrom: null,
           startedBy: { kind: 'person' },

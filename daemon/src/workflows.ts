@@ -14,12 +14,14 @@ import {
   runPosition,
   runSummary,
   stepRun,
+  tickRun,
   validateContent,
   versionOf,
   workflowTemplate,
   type Actor,
   type ArchivedRun,
   type CreateWorkflowRequest,
+  type Element,
   type ElementInput,
   type Origin,
   type ReportOwnRunRequest,
@@ -92,21 +94,29 @@ export class Workflows {
       const archived = await this.archive.get(run.id);
       if (archived) this.hub.emit({ type: 'run.finished', run: archived.run });
     }
+    // A workflow that existed only to run one element goes with its run.
+    for (const workflow of this.hub.state.workflows) this.dropIfSpent(workflow.id);
   }
 
   /* ---------- Workflows ---------- */
 
+  /** The workflows there are. One made only to run an element by itself is not among them. */
   list(): Workflow[] {
-    return [...this.hub.state.workflows].sort((a, b) => a.name.localeCompare(b.name) || a.id.localeCompare(b.id));
+    return [...this.hub.state.workflows].filter((w) => w.listed).sort((a, b) => a.name.localeCompare(b.name) || a.id.localeCompare(b.id));
   }
 
-  get(workflowId: string): Workflow {
+  get(workflowId: string, unlisted = false): Workflow {
     const workflow = this.hub.state.workflows.find((w) => w.id === workflowId);
-    if (!workflow) throw new NotFoundError(`No workflow ${workflowId}`);
+    if (!workflow || (!workflow.listed && !unlisted)) throw new NotFoundError(`No workflow ${workflowId}`);
     return workflow;
   }
 
   /** Checks content against the kinds and the limits, and gives every element an ID. */
+  /** Content checked against the kinds and the limits, for a caller that keeps it as a draft. */
+  checked(input: Parameters<Workflows['content']>[0]): WorkflowContent {
+    return this.content(input);
+  }
+
   private content(input: Omit<CreateWorkflowRequest, 'elements' | 'labels' | 'origin'> & { elements: readonly ElementInput[] }): WorkflowContent {
     const taken = input.elements.flatMap((e) => (e.id !== undefined ? [e.id] : []));
     const elements = input.elements.map((element) => {
@@ -127,7 +137,18 @@ export class Workflows {
     return this.add(this.content(rest), labels ?? {}, origin ?? { kind: 'local' });
   }
 
-  private add(content: WorkflowContent, labels: Record<string, string>, origin: Origin): Workflow {
+  private dropIfSpent(workflowId: string): void {
+    const workflow = this.hub.state.workflows.find((w) => w.id === workflowId);
+    if (workflow && !workflow.listed && !this.hub.state.runs.some((r) => r.workflowId === workflowId)) this.hub.emit({ type: 'workflow.removed', workflowId });
+  }
+
+  /** Makes a workflow from content that was already read and accepted by the owner (a draft). */
+  createAccepted(content: WorkflowContent, origin: Origin): Workflow {
+    const { extra, ...rest } = content;
+    return this.add({ ...this.content(rest), extra }, {}, origin);
+  }
+
+  private add(content: WorkflowContent, labels: Record<string, string>, origin: Origin, listed = true): Workflow {
     const at = new Date().toISOString();
     const workflow: Workflow = {
       id: newId(),
@@ -138,6 +159,7 @@ export class Workflows {
       origin,
       createdAt: at,
       updatedAt: at,
+      listed,
       versions: [{ ...content, number: 1, createdAt: at }],
     };
     this.hub.emit({ type: 'workflow.changed', workflow });
@@ -228,23 +250,23 @@ export class Workflows {
 
   private detail(run: Run, kickoffTyped = false): RunDetail {
     const version = this.versionFor(run);
-    return { ...this.record(run), position: runPosition(version, run), text: renderRun(version, run), kickoff: kickoffLine(version.name), kickoffTyped };
+    return { ...this.record(run), position: runPosition(version, run), text: renderRun(version, run), kickoff: kickoffLine(), kickoffTyped };
   }
 
   private detailOfArchived(entry: ArchivedRun): RunDetail {
     const position = entry.run.status;
     const text = [`Workflow: ${entry.workflowName}`, entry.run.status === 'finished' ? `This run is finished: all ${entry.elements.length} elements are done. There is nothing more to do for it.` : 'This run was stopped. There is nothing more to do for it.'].join('\n');
-    return { ...entry, position, text, kickoff: kickoffLine(entry.workflowName), kickoffTyped: false };
+    return { ...entry, position, text, kickoff: kickoffLine(), kickoffTyped: false };
   }
 
   /** The line to give an agent that is started (again) in a session with a run still going; none otherwise. */
   kickoffFor(sessionId: string): string | null {
     const run = this.liveRunOf(sessionId);
-    return run ? kickoffLine(this.versionFor(run).name) : null;
+    return run ? kickoffLine() : null;
   }
 
-  async start(input: StartRun, by: Actor): Promise<RunDetail> {
-    const workflow = this.get(input.workflowId);
+  async start(input: StartRun, by: Actor, unlisted = false): Promise<RunDetail> {
+    const workflow = this.get(input.workflowId, unlisted);
     const version = latestVersion(workflow);
     const session = input.sessionId !== undefined ? this.sessions.get(input.sessionId) : null;
     if (session?.state === 'exited') throw new ConflictError('This shell has ended; restart it first');
@@ -264,9 +286,48 @@ export class Workflows {
     // In a plain shell it would be run as a command.
     let typed = false;
     if (session && input.typeKickoff && session.agent !== null && session.status.state !== 'idle') {
-      typed = await this.sessions.tell(session.id, kickoffLine(version.name)).catch(() => false);
+      typed = await this.sessions.tell(session.id, kickoffLine()).catch(() => false);
     }
     return this.detail(run, typed);
+  }
+
+  /**
+   * Runs one element by itself: a run of a workflow of that one element. The
+   * workflow is made for the run, is not among the workflows, and is removed
+   * when the run is over; the archive keeps the run with the element's name.
+   */
+  async startElement(element: Element, input: Omit<StartRun, 'workflowId'>, by: Actor): Promise<RunDetail> {
+    if (input.sessionId !== undefined && this.sessions.get(input.sessionId).state === 'exited') throw new ConflictError('This shell has ended; restart it first');
+    const uses = `${element.instructions}\n${element.doneWhen}`.includes('{{task}}');
+    const content = this.content({ name: element.name, inputs: [{ key: 'task', label: 'Task', description: 'What this run is about.', required: uses }], elements: [element] });
+    const problems = inputProblems({ ...content, number: 1, createdAt: '' }, input.inputs);
+    if (problems.length > 0) throw new BadInputError(problems.join(' '));
+    const workflow = this.add(content, {}, { kind: 'element' }, false);
+    try {
+      return await this.start({ ...input, workflowId: workflow.id }, by, true);
+    } catch (error) {
+      this.dropIfSpent(workflow.id);
+      throw error;
+    }
+  }
+
+  /** Ticks an item of what an element produced. Also for a run that is over: the list is read after the work. */
+  async tick(runId: string, tick: { elementId: string; item: number; ticked: boolean }, by: Actor): Promise<RunDetail> {
+    const context = { by, at: new Date().toISOString() };
+    const run = this.live(runId);
+    if (run) {
+      const result = tickRun(this.versionFor(run), run, tick, context);
+      if (!result.ok) throw new ConflictError(result.reason);
+      this.hub.emit({ type: 'run.moved', run: result.run });
+      return this.detail(result.run);
+    }
+    const archived = await this.archive.get(runId);
+    if (!archived) throw new NotFoundError(`No run ${runId}`);
+    const result = tickRun({ elements: archived.elements }, archived.run, tick, context);
+    if (!result.ok) throw new ConflictError(result.reason);
+    const entry = { ...archived, run: result.run };
+    await this.archive.amend(entry);
+    return this.detailOfArchived(entry);
   }
 
   private live(runId: string): Run | null {
@@ -323,7 +384,7 @@ export class Workflows {
       // Without a name it means the current element. A caller that may repeat itself should name it.
       const elementId = report.elementId ?? run.currentElementId;
       if (elementId === null) throw new ConflictError('This run has no current element.');
-      return this.apply(run, { type: 'done', elementId, ...(report.note !== undefined ? { note: report.note } : {}) }, by);
+      return this.apply(run, { type: 'done', elementId, ...(report.note !== undefined ? { note: report.note } : {}), ...(report.output !== undefined ? { output: report.output } : {}) }, by);
     }
     return this.apply(run, report, by);
   }
@@ -345,10 +406,11 @@ export class Workflows {
     // Over: first into the archive, then out of the state, so that it is never in neither.
     this.ending.add(run.id);
     try {
-      const entry: ArchivedRun = { run: next, workflowName: version.name, elements: version.elements.map((e) => ({ id: e.id, name: e.name })) };
+      const entry: ArchivedRun = { run: next, workflowName: version.name, elements: version.elements.map((e) => ({ id: e.id, name: e.name, produces: e.produces })) };
       await this.archive.append(entry);
       this.hub.emit({ type: 'run.finished', run: next });
       this.afterEnd(version, next);
+      this.dropIfSpent(next.workflowId);
       return this.detailOfArchived(entry);
     } finally {
       this.ending.delete(run.id);

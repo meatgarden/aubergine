@@ -19,6 +19,8 @@ export interface ArchiveQuery {
  */
 export interface RunArchive {
   append(entry: ArchivedRun): Promise<void>;
+  /** Replaces what is kept about a run that is already here (its ticks changed). The record only grows: the newer line wins. */
+  amend(entry: ArchivedRun): Promise<void>;
   /** Newest first. `cursor` is the `nextCursor` of the page before. */
   read(query: ArchiveQuery): Promise<{ items: ArchivedRun[]; nextCursor: string | null }>;
   get(runId: string): Promise<ArchivedRun | null>;
@@ -61,6 +63,18 @@ export class MemoryRunArchive implements RunArchive {
 
   async append(entry: ArchivedRun): Promise<void> {
     this.add(entry);
+  }
+
+  async amend(entry: ArchivedRun): Promise<void> {
+    this.replace(entry);
+  }
+
+  /** Puts a newer record of a run in the place of the one that is there. False when the run is not here. */
+  protected replace(entry: ArchivedRun): boolean {
+    const index = this.ids.has(entry.run.id) ? this.entries.findIndex((e) => e.run.id === entry.run.id) : -1;
+    if (index < 0) return false;
+    this.entries[index] = entry;
+    return true;
   }
 
   protected add(entry: ArchivedRun): boolean {
@@ -117,7 +131,8 @@ export class FileRunArchive extends MemoryRunArchive {
           // A line cut short by a crash: skip it, keep the rest.
         }
       }
-      for (const entry of found) this.add(entry);
+      // A run may be here more than once: a later line is a newer record of it, and takes the place of the earlier.
+      for (const entry of found) if (!this.add(entry)) this.replace(entry);
       // A line without an end would glue itself to the next one.
       if (text !== '' && !text.endsWith('\n')) await appendFile(this.file, '\n');
     })();
@@ -127,7 +142,16 @@ export class FileRunArchive extends MemoryRunArchive {
   override async append(entry: ArchivedRun): Promise<void> {
     await this.load();
     if (!this.add(entry)) return;
-    const line = `${JSON.stringify(ArchivedRun.parse(entry))}\n`;
+    return this.write(`${JSON.stringify(ArchivedRun.parse(entry))}\n`);
+  }
+
+  override async amend(entry: ArchivedRun): Promise<void> {
+    await this.load();
+    if (!this.replace(entry)) return;
+    await this.write(`${JSON.stringify(ArchivedRun.parse(entry))}\n`);
+  }
+
+  private write(line: string): Promise<void> {
     // One write at a time, in order.
     this.queue = this.queue
       .then(async () => {

@@ -134,7 +134,7 @@ export function RunViewDialog() {
                 live={live !== null}
                 now={now}
                 text={live && version ? renderRun(version, live) : (ended?.text ?? '')}
-                kickoff={live && version ? kickoffLine(version.name) : ''}
+                kickoff={live && version ? kickoffLine() : ''}
               />
             )}
             {live && (

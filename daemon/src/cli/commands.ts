@@ -181,6 +181,7 @@ export function parseCommand(argv: readonly string[]): Command {
     }
     case 'attach':
       if (rest.length === 0) throw new UsageError('attach needs a session name');
+      if (rest.some((word) => word.startsWith('--'))) throw new UsageError(`attach does not know ${rest.find((word) => word.startsWith('--'))}`);
       return { name: 'attach', query: rest.join(' ') };
     case 'here': {
       const split = rest.indexOf('--');

@@ -1,0 +1,316 @@
+import {
+  BRIEF_LINE,
+  Element,
+  elementIdFor,
+  needsOfProposal,
+  newId,
+  renderBrief,
+  reviewText,
+  validateContent,
+  type AcceptDraftRequest,
+  type Brief,
+  type Draft,
+  type DraftDetail,
+  type ElementInput,
+  type ProposeDraftRequest,
+  type Proposer,
+  type RequestDraftRequest,
+  type ShelfElement,
+  type UpdateShelfElementRequest,
+  type WorkflowContent,
+  type WorkflowLimits,
+} from '@aubergine/shared';
+import { BadInputError, ConflictError, NotFoundError, type Sessions } from './sessions';
+import type { StateHub } from './state-hub';
+import type { Workflows } from './workflows';
+
+/** How many drafts may wait at once. A proposer that fills this up is refused until the owner has read some. */
+export const DRAFTS_MAX = 200;
+export const SHELF_MAX = 500;
+
+/**
+ * Drafts and the shelf.
+ *
+ * A draft is what an agent or a program proposed. It is inert: this class
+ * never starts a run of one, never lists one among the workflows, and never
+ * hands one to an agent as instructions. The only way out of here into
+ * something that can be run is `accept`, which only the owner may call.
+ *
+ * Nothing proposed is ever typed into a terminal. The one thing typed from
+ * here is `BRIEF_LINE`, a fixed sentence.
+ */
+export class Drafts {
+  constructor(
+    private readonly hub: StateHub,
+    private readonly sessions: Sessions,
+    private readonly workflows: Workflows,
+    private readonly limits: () => WorkflowLimits,
+  ) {
+    // A session that is ended for good takes what was asked of it, and never answered, with it.
+    hub.subscribe((event) => {
+      if (event.type !== 'session.closed') return;
+      for (const draft of this.hub.state.drafts) {
+        if (draft.sessionId === event.sessionId && draft.status === 'requested') this.hub.emit({ type: 'draft.removed', draftId: draft.id });
+      }
+    });
+  }
+
+  /* ---------- Reading ---------- */
+
+  /** Oldest first: the order they should be read in. */
+  list(): Draft[] {
+    return [...this.hub.state.drafts].sort((a, b) => a.createdAt.localeCompare(b.createdAt) || a.id.localeCompare(b.id));
+  }
+
+  get(draftId: string): Draft {
+    const draft = this.hub.state.drafts.find((d) => d.id === draftId);
+    if (!draft) throw new NotFoundError(`No draft ${draftId}`);
+    return draft;
+  }
+
+  detail(draft: Draft): DraftDetail {
+    return { draft, text: reviewText(draft), previousText: draft.previous ? reviewText(draft.previous) : null, needs: needsOfProposal(draft) };
+  }
+
+  /** The drafts of one session: what it was asked for and what it proposed. */
+  ofSession(sessionId: string): Draft[] {
+    this.sessions.get(sessionId);
+    return this.list().filter((d) => d.sessionId === sessionId);
+  }
+
+  /** What a session is asked to write now: the newest request not yet answered, or draft sent back. */
+  brief(sessionId: string): Brief {
+    const open = this.ofSession(sessionId)
+      .filter((d) => d.status === 'requested' || d.status === 'returned')
+      .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))[0];
+    if (!open) throw new NotFoundError('Nothing is asked of this session');
+    return { text: renderBrief(open, this.limits()), kind: open.kind, status: open.status };
+  }
+
+  /* ---------- Proposing ---------- */
+
+  /** Checks what was handed in, against the same rules as a workflow that is saved. Nothing is kept of what fails. */
+  private proposal(body: ProposeDraftRequest): { kind: 'workflow' | 'element'; workflow: WorkflowContent | null; element: Element | null } {
+    const withIds = (elements: readonly ElementInput[]): unknown[] => {
+      const taken = elements.flatMap((e) => (e.id !== undefined ? [e.id] : []));
+      return elements.map((element) => {
+        if (element.id !== undefined) return element;
+        const id = elementIdFor(element.name, taken);
+        taken.push(id);
+        return { ...element, id };
+      });
+    };
+    if (body.element !== undefined) {
+      const element = Element.parse(withIds([body.element])[0]);
+      const problems = validateContent({ name: element.name, description: '', standing: '', inputs: [], elements: [element], extra: {} }, this.limits());
+      if (problems.length > 0) throw new BadInputError(problems.join(' '));
+      return { kind: 'element', workflow: null, element };
+    }
+    const workflow = body.workflow;
+    if (workflow === undefined) throw new BadInputError('Give a workflow or an element');
+    const content = this.workflows.checked({ ...workflow, elements: withIds(workflow.elements) as ElementInput[] });
+    return { kind: 'workflow', workflow: content, element: null };
+  }
+
+  private room(): void {
+    if (this.hub.state.drafts.length >= DRAFTS_MAX) throw new ConflictError(`${DRAFTS_MAX} drafts are waiting to be read. No more can be proposed until some are accepted or discarded.`);
+  }
+
+  private save(draft: Draft): Draft {
+    this.hub.emit({ type: 'draft.changed', draft });
+    return draft;
+  }
+
+  /** A new draft from a program with a token, or from the owner's own tools. */
+  propose(body: ProposeDraftRequest, by: Proposer): Draft {
+    const proposal = this.proposal(body);
+    if (body.revisesWorkflowId !== undefined) {
+      if (proposal.kind !== 'workflow') throw new BadInputError('Only a workflow can revise a workflow');
+      this.workflows.get(body.revisesWorkflowId);
+    }
+    this.room();
+    const at = new Date().toISOString();
+    return this.save({
+      id: newId(),
+      kind: proposal.kind,
+      status: 'waiting',
+      description: body.description ?? '',
+      proposedBy: by,
+      sessionId: null,
+      revisesWorkflowId: body.revisesWorkflowId ?? null,
+      workflow: proposal.workflow,
+      element: proposal.element,
+      previous: null,
+      revision: 1,
+      comment: null,
+      createdAt: at,
+      updatedAt: at,
+    });
+  }
+
+  /** A new version of a draft: what was there becomes "the version before", so that the reviewer sees what changed. */
+  revise(draftId: string, body: ProposeDraftRequest): Draft {
+    return this.replace(this.get(draftId), body);
+  }
+
+  private replace(draft: Draft, body: ProposeDraftRequest): Draft {
+    const proposal = this.proposal(body);
+    if (proposal.kind !== draft.kind) throw new ConflictError(`This draft is ${draft.kind === 'element' ? 'an element' : 'a workflow'}; what was handed in is not.`);
+    const had = draft.workflow !== null || draft.element !== null;
+    return this.save({
+      ...draft,
+      status: 'waiting',
+      workflow: proposal.workflow,
+      element: proposal.element,
+      previous: had ? { workflow: draft.workflow, element: draft.element } : null,
+      revision: draft.revision + 1,
+      updatedAt: new Date().toISOString(),
+    });
+  }
+
+  /**
+   * What a session hands in. It answers the request made of the session, or
+   * revises the session's draft that was sent back; when there is neither,
+   * it is a new draft of the session's own.
+   */
+  proposeFromSession(sessionId: string, body: ProposeDraftRequest): Draft {
+    const kind = body.element !== undefined ? 'element' : 'workflow';
+    const open = this.ofSession(sessionId)
+      .filter((d) => d.kind === kind && (d.status === 'requested' || d.status === 'returned'))
+      .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))[0];
+    if (open) return this.replace(open, body);
+    // A session cannot say which workflow its draft revises: it cannot read workflows.
+    const { revisesWorkflowId: _revises, ...rest } = body;
+    const draft = this.propose(rest, { kind: 'session', sessionId });
+    return this.save({ ...draft, sessionId });
+  }
+
+  /* ---------- The owner's part ---------- */
+
+  /**
+   * Asks the agent in a session for a draft. The description is kept here and
+   * read by the agent with a command. What is typed into the terminal is one
+   * fixed sentence, and only where an agent is there to read it.
+   */
+  async request(body: RequestDraftRequest): Promise<{ draft: Draft; told: boolean; line: string }> {
+    const session = this.sessions.get(body.sessionId);
+    if (session.state === 'exited') throw new ConflictError('This shell has ended; restart it first');
+    this.room();
+    const at = new Date().toISOString();
+    const draft = this.save({
+      id: newId(),
+      kind: body.kind,
+      status: 'requested',
+      description: body.description,
+      proposedBy: { kind: 'session', sessionId: session.id },
+      sessionId: session.id,
+      revisesWorkflowId: null,
+      workflow: null,
+      element: null,
+      previous: null,
+      revision: 0,
+      comment: null,
+      createdAt: at,
+      updatedAt: at,
+    });
+    return { draft, told: body.tell ? await this.tell(session.id) : false, line: BRIEF_LINE };
+  }
+
+  /** Types the fixed request line, where an agent is running. Never anything else. */
+  private async tell(sessionId: string): Promise<boolean> {
+    if (!this.sessions.has(sessionId)) return false;
+    const session = this.sessions.get(sessionId);
+    if (session.agent === null || session.status.state === 'idle') return false;
+    return this.sessions.tell(sessionId, BRIEF_LINE).catch(() => false);
+  }
+
+  private waiting(draftId: string): Draft {
+    const draft = this.get(draftId);
+    if (draft.status !== 'waiting') throw new ConflictError(draft.status === 'requested' ? 'Nothing has been handed in for this yet.' : 'This draft was sent back and has not been revised yet.');
+    return draft;
+  }
+
+  /** Sends a draft back. The comment is read by the proposer with a command or the API; only the fixed line is typed. */
+  async sendBack(draftId: string, comment: string): Promise<Draft> {
+    const draft = this.save({ ...this.waiting(draftId), status: 'returned', comment, updatedAt: new Date().toISOString() });
+    if (draft.sessionId !== null) await this.tell(draft.sessionId);
+    return draft;
+  }
+
+  discard(draftId: string): void {
+    this.get(draftId);
+    this.hub.emit({ type: 'draft.removed', draftId });
+  }
+
+  /**
+   * Accepts a draft, as it stands or as the owner edited it. A workflow draft
+   * becomes a workflow, or a new version of the one it revises; an element
+   * draft goes on the shelf. This is the only way a draft becomes something
+   * that can be run.
+   */
+  accept(draftId: string, edited: AcceptDraftRequest): { workflowId: string | null; elementId: string | null } {
+    const draft = this.waiting(draftId);
+    const origin = { kind: 'draft', by: draft.proposedBy.kind, ...(draft.proposedBy.kind === 'token' ? { name: draft.proposedBy.name } : {}) };
+    if (draft.kind === 'element') {
+      const element = edited.element !== undefined ? this.proposal({ element: edited.element }).element : draft.element;
+      if (!element) throw new ConflictError('Nothing has been handed in for this yet.');
+      const item = this.addToShelf({ ...element, origin });
+      this.hub.emit({ type: 'draft.removed', draftId });
+      return { workflowId: null, elementId: item.id };
+    }
+    const content = edited.workflow !== undefined ? this.proposal({ workflow: edited.workflow }).workflow : draft.workflow;
+    if (!content) throw new ConflictError('Nothing has been handed in for this yet.');
+    const revised = draft.revisesWorkflowId !== null ? this.hub.state.workflows.find((w) => w.id === draft.revisesWorkflowId && w.listed) : undefined;
+    const { extra: _extra, ...fields } = content;
+    const workflow = revised ? this.workflows.update(revised.id, fields) : this.workflows.createAccepted(content, origin);
+    this.hub.emit({ type: 'draft.removed', draftId });
+    return { workflowId: workflow.id, elementId: null };
+  }
+
+  /* ---------- The shelf ---------- */
+
+  shelf(): ShelfElement[] {
+    return [...this.hub.state.shelf].sort((a, b) => a.element.name.localeCompare(b.element.name) || a.id.localeCompare(b.id));
+  }
+
+  shelfElement(elementId: string): ShelfElement {
+    const item = this.hub.state.shelf.find((e) => e.id === elementId);
+    if (!item) throw new NotFoundError(`No element ${elementId} on the shelf`);
+    return item;
+  }
+
+  private addToShelf(element: Element): ShelfElement {
+    if (this.hub.state.shelf.length >= SHELF_MAX) throw new ConflictError(`The shelf holds ${SHELF_MAX} elements; take some off first.`);
+    const at = new Date().toISOString();
+    const item: ShelfElement = { id: newId(), element, createdAt: at, updatedAt: at };
+    this.hub.emit({ type: 'shelf.changed', item });
+    return item;
+  }
+
+  createOnShelf(input: ElementInput): ShelfElement {
+    const element = this.proposal({ element: input }).element as Element;
+    return this.addToShelf(element);
+  }
+
+  updateOnShelf(elementId: string, changes: UpdateShelfElementRequest): ShelfElement {
+    const item = this.shelfElement(elementId);
+    const given = Object.fromEntries(Object.entries(changes).filter(([, value]) => value !== undefined));
+    const element = this.proposal({ element: { ...item.element, ...given } }).element as Element;
+    const next = { ...item, element, updatedAt: new Date().toISOString() };
+    this.hub.emit({ type: 'shelf.changed', item: next });
+    return next;
+  }
+
+  copyOnShelf(elementId: string): ShelfElement {
+    const { element } = this.shelfElement(elementId);
+    const names = new Set(this.hub.state.shelf.map((e) => e.element.name));
+    let name = `${element.name} copy`.slice(0, 120);
+    for (let n = 2; names.has(name); n += 1) name = `${element.name} copy ${n}`.slice(0, 120);
+    return this.addToShelf({ ...element, name });
+  }
+
+  removeFromShelf(elementId: string): void {
+    this.shelfElement(elementId);
+    this.hub.emit({ type: 'shelf.removed', elementId });
+  }
+}

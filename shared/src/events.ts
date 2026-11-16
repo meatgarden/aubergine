@@ -24,6 +24,7 @@ import {
 } from './entities';
 import { ApiToken } from './tokens';
 import { Id } from './ids';
+import { Draft, ShelfElement } from './drafts';
 import { Run, Workflow } from './workflows';
 
 /**
@@ -96,6 +97,12 @@ export const ChangeEvent = z.discriminatedUnion('type', [
   z.object({ type: z.literal('run.moved'), run: Run }),
   /** A run finished or was stopped: it leaves the state for the archive. */
   z.object({ type: z.literal('run.finished'), run: Run }),
+  /** A draft was asked for, handed in, revised or sent back. */
+  z.object({ type: z.literal('draft.changed'), draft: Draft }),
+  /** Accepted or discarded: it leaves. */
+  z.object({ type: z.literal('draft.removed'), draftId: Id }),
+  z.object({ type: z.literal('shelf.changed'), item: ShelfElement }),
+  z.object({ type: z.literal('shelf.removed'), elementId: Id }),
 ]);
 export type ChangeEvent = z.infer<typeof ChangeEvent>;
 
@@ -244,6 +251,14 @@ export function applyEvent(state: AppState, event: ChangeEvent): AppState {
       return { ...state, runs: state.runs.map((r) => (r.id === event.run.id ? event.run : r)) };
     case 'run.finished':
       return { ...state, runs: state.runs.filter((r) => r.id !== event.run.id) };
+    case 'draft.changed':
+      return { ...state, drafts: [...state.drafts.filter((d) => d.id !== event.draft.id), event.draft] };
+    case 'draft.removed':
+      return { ...state, drafts: state.drafts.filter((d) => d.id !== event.draftId) };
+    case 'shelf.changed':
+      return { ...state, shelf: [...state.shelf.filter((e) => e.id !== event.item.id), event.item] };
+    case 'shelf.removed':
+      return { ...state, shelf: state.shelf.filter((e) => e.id !== event.elementId) };
     case 'canvas.removed': {
       const canvas = state.canvases.find((c) => c.id === event.canvasId);
       // The last canvas stays: there is always one to look at.

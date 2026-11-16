@@ -215,14 +215,14 @@ describe('workflow commands against a server', () => {
     // Someone with a newer version added things this one does not know.
     exported.reviewedBy = 'someone';
     exported.workflow.budget = { minutes: 20 };
-    exported.workflow.elements[0].needs = ['a failing test'];
+    exported.workflow.elements[0].expects = ['a failing test'];
     await writeFile(file, JSON.stringify(exported));
     expect((await run(['import', file, '--name', 'Hotfix 2'])).out).toContain('Made the workflow "Hotfix 2"');
 
     const again = JSON.parse((await run(['export', 'Hotfix 2'])).out);
     expect(again.reviewedBy).toBe('someone');
     expect(again.workflow.budget).toEqual({ minutes: 20 });
-    expect(again.workflow.elements[0].needs).toEqual(['a failing test']);
+    expect(again.workflow.elements[0].expects).toEqual(['a failing test']);
     expect(again.workflow.elements).toEqual(exported.workflow.elements);
     expect(again.workflow.origin).toEqual({ kind: 'import' });
 

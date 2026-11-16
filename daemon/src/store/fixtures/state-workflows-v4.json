@@ -1,0 +1,252 @@
+{
+  "version": 4,
+  "organization": {
+    "id": "01900000-0000-7000-8000-00000000a001",
+    "name": "Personal",
+    "createdAt": "2026-02-01T09:00:00.000Z"
+  },
+  "workspace": {
+    "id": "01900000-0000-7000-8000-00000000a002",
+    "organizationId": "01900000-0000-7000-8000-00000000a001",
+    "name": "Default",
+    "createdAt": "2026-02-01T09:00:00.000Z"
+  },
+  "project": {
+    "id": "01900000-0000-7000-8000-00000000a003",
+    "workspaceId": "01900000-0000-7000-8000-00000000a002",
+    "name": "Default",
+    "createdAt": "2026-02-01T09:00:00.000Z"
+  },
+  "sessions": [
+    {
+      "id": "01900000-0000-7000-8000-00000000b001",
+      "projectId": "01900000-0000-7000-8000-00000000a003",
+      "name": "api",
+      "createdAt": "2026-02-01T09:05:00.000Z",
+      "state": "open",
+      "cwd": "/work/billing",
+      "command": "zsh",
+      "note": "retry logic",
+      "tags": [
+        "backend"
+      ],
+      "lastInputAt": "2026-02-01T09:30:00.000Z",
+      "lastOutputAt": "2026-02-01T09:31:00.000Z"
+    },
+    {
+      "id": "01900000-0000-7000-8000-00000000b002",
+      "projectId": "01900000-0000-7000-8000-00000000a003",
+      "name": "deploy",
+      "createdAt": "2026-02-01T09:06:00.000Z",
+      "state": "open"
+    }
+  ],
+  "canvases": [
+    {
+      "id": "01900000-0000-7000-8000-00000000c001",
+      "projectId": "01900000-0000-7000-8000-00000000a003",
+      "name": "Main",
+      "color": "none",
+      "order": 0,
+      "labels": {},
+      "createdAt": "2026-02-01T09:00:00.000Z",
+      "layout": {
+        "nodes": [
+          {
+            "id": "01900000-0000-7000-8000-00000000d001",
+            "sessionId": "01900000-0000-7000-8000-00000000b001",
+            "x": 0,
+            "y": 0,
+            "width": 720,
+            "height": 440,
+            "color": "blue"
+          }
+        ],
+        "frames": []
+      }
+    },
+    {
+      "id": "01900000-0000-7000-8000-00000000c002",
+      "projectId": "01900000-0000-7000-8000-00000000a003",
+      "name": "Deploys",
+      "color": "green",
+      "order": 1,
+      "labels": {
+        "team": "ops"
+      },
+      "createdAt": "2026-02-01T09:10:00.000Z",
+      "layout": {
+        "nodes": [
+          {
+            "id": "01900000-0000-7000-8000-00000000d002",
+            "sessionId": "01900000-0000-7000-8000-00000000b002",
+            "x": 40,
+            "y": 40,
+            "width": 720,
+            "height": 440,
+            "color": "none"
+          }
+        ],
+        "frames": []
+      }
+    }
+  ],
+  "tokens": [
+    {
+      "id": "01900000-0000-7000-8000-00000000f001",
+      "name": "build script",
+      "scopes": [
+        "read",
+        "sessions:write"
+      ],
+      "hash": "3f1c9a7e5b2d4f60819a2b3c4d5e6f708192a3b4c5d6e7f8091a2b3c4d5e6f70",
+      "createdAt": "2026-03-01T10:00:00.000Z",
+      "lastUsedAt": "2026-03-02T08:15:00.000Z",
+      "expiresAt": null,
+      "revokedAt": null
+    }
+  ],
+  "workflows": [
+    {
+      "id": "01900000-0000-7000-8000-0000000a0001",
+      "projectId": "01900000-0000-7000-8000-00000000a003",
+      "name": "Ship a change",
+      "description": "Plan it, then build it.",
+      "labels": {
+        "team": "web"
+      },
+      "origin": {
+        "kind": "local"
+      },
+      "createdAt": "2026-04-01T09:00:00.000Z",
+      "updatedAt": "2026-04-02T09:00:00.000Z",
+      "versions": [
+        {
+          "number": 1,
+          "createdAt": "2026-04-01T09:00:00.000Z",
+          "name": "Ship a change",
+          "description": "Plan it, then build it.",
+          "standing": "",
+          "inputs": [
+            {
+              "key": "task",
+              "label": "Task",
+              "description": "What this run is about.",
+              "required": true
+            }
+          ],
+          "elements": [
+            {
+              "id": "plan",
+              "kind": "instructions",
+              "name": "Plan",
+              "instructions": "Plan {{task}}.",
+              "doneWhen": "There is a plan.",
+              "origin": {
+                "kind": "local"
+              },
+              "extra": {}
+            },
+            {
+              "id": "build",
+              "kind": "instructions",
+              "name": "Build",
+              "instructions": "Build it.",
+              "doneWhen": "It builds.",
+              "origin": {
+                "kind": "template",
+                "name": "plan-build-check"
+              },
+              "extra": {}
+            }
+          ],
+          "extra": {}
+        },
+        {
+          "number": 2,
+          "createdAt": "2026-04-02T09:00:00.000Z",
+          "name": "Ship a change",
+          "description": "Plan it, then build it.",
+          "standing": "Keep it small.",
+          "inputs": [
+            {
+              "key": "task",
+              "label": "Task",
+              "description": "What this run is about.",
+              "required": true
+            }
+          ],
+          "elements": [
+            {
+              "id": "plan",
+              "kind": "instructions",
+              "name": "Plan",
+              "instructions": "Plan {{task}}.",
+              "doneWhen": "There is a plan.",
+              "origin": {
+                "kind": "local"
+              },
+              "extra": {}
+            },
+            {
+              "id": "build",
+              "kind": "instructions",
+              "name": "Build",
+              "instructions": "Build it.",
+              "doneWhen": "It builds.",
+              "origin": {
+                "kind": "template",
+                "name": "plan-build-check"
+              },
+              "extra": {}
+            }
+          ],
+          "extra": {}
+        }
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "id": "01900000-0000-7000-8000-0000000b0001",
+      "workflowId": "01900000-0000-7000-8000-0000000a0001",
+      "workflowVersion": 2,
+      "sessionId": "01900000-0000-7000-8000-00000000b001",
+      "inputs": {
+        "task": "the retry logic"
+      },
+      "status": "running",
+      "currentElementId": "build",
+      "elements": [
+        {
+          "elementId": "plan",
+          "state": "done",
+          "startedAt": "2026-04-03T10:00:00.000Z",
+          "finishedAt": "2026-04-03T10:05:00.000Z",
+          "note": "Planned: one file changes.",
+          "by": {
+            "kind": "agent"
+          },
+          "sessionId": "01900000-0000-7000-8000-00000000b001"
+        },
+        {
+          "elementId": "build",
+          "state": "active",
+          "startedAt": "2026-04-03T10:05:00.000Z",
+          "finishedAt": null,
+          "note": "",
+          "by": null,
+          "sessionId": "01900000-0000-7000-8000-00000000b001"
+        }
+      ],
+      "blockedReason": null,
+      "pausedFrom": null,
+      "startedBy": {
+        "kind": "person"
+      },
+      "createdAt": "2026-04-03T10:00:00.000Z",
+      "updatedAt": "2026-04-03T10:05:00.000Z",
+      "finishedAt": null
+    }
+  ]
+}

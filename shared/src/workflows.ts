@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { Id } from './ids';
+import { Tick, outputKind, outputKindNames } from './outputs';
 
 /**
  * Workflows: an ordered list of elements an agent (or a person) goes through,
@@ -57,6 +58,23 @@ export const ElementId = z.string().regex(/^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$/, 'A
 /** Fields nobody here knows, kept so that a file from a newer version survives being opened and saved by this one. */
 const Extra = z.record(z.string(), z.unknown()).default({});
 
+export const NEEDS_MAX = 20;
+
+/** Something an element needs that Aubergine does not supply. */
+export const Need = z.object({
+  /** `mcp`: an MCP server. `command`: a program on the PATH. `access`: an account, a network, a permission. `other`: anything else. */
+  kind: z.enum(['mcp', 'command', 'access', 'other']),
+  name: PlainName,
+  /** A few more words, on one line. */
+  note: z
+    .string()
+    .trim()
+    .max(200)
+    .regex(/^[^\p{Cc}\u202a-\u202e\u2066-\u2069]*$/u, 'A note on a need is one line of plain text')
+    .optional(),
+});
+export type Need = z.infer<typeof Need>;
+
 export const Element = z.object({
   /** Stable inside its workflow: a run points at an element by this. */
   id: ElementId,
@@ -67,10 +85,31 @@ export const Element = z.object({
   instructions: z.string().max(ELEMENT_TEXT_HARD_MAX).default(''),
   /** One line: how to tell that the element is finished. */
   doneWhen: z.string().trim().max(500).default(''),
+  /** What whoever does it must have: tools the agent's own setup supplies. Shown before a run; nothing here is checked by the server. */
+  needs: z.array(Need).max(NEEDS_MAX).default([]),
+  /** The kind of thing it produces, from the registry of output kinds. `note` is what every element can hand over. */
+  produces: z.string().min(1).max(40).default('note'),
   origin: Origin.default(LOCAL),
   extra: Extra,
 });
 export type Element = z.infer<typeof Element>;
+
+/** The needs of every element of a workflow, each once, in the order first met. */
+export function needsOf(elements: readonly Pick<Element, 'needs'>[]): Need[] {
+  const seen = new Set<string>();
+  return elements.flatMap((element) => element.needs).filter((need) => {
+    const key = `${need.kind}\u0000${need.name.toLowerCase()}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+/** A need in a few words: `an MCP server: chat`. */
+export function needWords(need: Need): string {
+  const kind = { mcp: 'an MCP server', command: 'the command', access: 'access to', other: '' }[need.kind];
+  return `${kind}${kind ? (need.kind === 'mcp' ? ': ' : ' ') : ''}${need.name}${need.note ? ` (${need.note})` : ''}`;
+}
 
 /** A named value a run is given when it starts, such as the task. `{{key}}` in an element's text becomes the value. */
 export const WorkflowInput = z.object({
@@ -111,6 +150,8 @@ export const Workflow = z.object({
   origin: Origin.default(LOCAL),
   createdAt: Timestamp,
   updatedAt: Timestamp,
+  /** False for a workflow made only to run one element by itself: it is not among the workflows, and goes when its run is over. */
+  listed: z.boolean().default(true),
   /** Oldest first. Editing adds one; none is ever changed. Old ones no run needs are dropped past a limit. */
   versions: z.array(WorkflowVersion).min(1),
 });
@@ -186,6 +227,7 @@ export function validateContent(content: WorkflowContent, limits: WorkflowLimits
     const kind = elementKind(element.kind);
     if (!kind) problems.push(`"${element.name}" is of a kind this version does not know: ${element.kind}.`);
     else problems.push(...kind.validate(element, limits));
+    if (!outputKind(element.produces)) problems.push(`"${element.name}" produces a kind of output this version does not know: ${element.produces}.`);
   }
   const keys = new Set<string>();
   for (const input of content.inputs) {
@@ -230,6 +272,10 @@ export const RunElement = z.object({
   finishedAt: Timestamp.nullable().default(null),
   /** What was handed in when it was finished: what the next element is told about it. */
   note: z.string().max(10_000).default(''),
+  /** What it produced besides the note, as its output kind stores it. Null for a note, and until it is done. */
+  output: z.unknown().nullable().default(null),
+  /** The items of the output the owner ticked. */
+  ticks: z.array(Tick).max(1000).default([]),
   /** Who finished or skipped it. */
   by: Actor.nullable().default(null),
   /** The session that worked on it. Recorded per element: later, different sessions may do different ones. */
@@ -282,6 +328,8 @@ export function newRun(version: WorkflowVersion, input: { id: string; workflowId
       startedAt: started && index === 0 ? input.at : null,
       finishedAt: null,
       note: '',
+      output: null,
+      ticks: [],
       by: null,
       sessionId: started && index === 0 ? input.sessionId : null,
     })),
@@ -315,7 +363,13 @@ export function inputProblems(version: WorkflowVersion, inputs: Record<string, s
  */
 export const RunReport = z.discriminatedUnion('type', [
   /** The current element is finished. It names the element, so that a report sent twice cannot finish two. */
-  z.object({ type: z.literal('done'), elementId: ElementId, note: z.string().max(10_000).optional() }),
+  z.object({
+    type: z.literal('done'),
+    elementId: ElementId,
+    note: z.string().max(10_000).optional(),
+    /** What the element produced, for an element that declares an output kind other than a note. */
+    output: z.unknown().optional(),
+  }),
   /** The work cannot go on without a person. */
   z.object({ type: z.literal('blocked'), reason: z.string().trim().min(1).max(2000) }),
   /** Jump to an element: back to redo it, or forward, skipping what lies between. */
@@ -379,7 +433,19 @@ export function stepRun(version: WorkflowVersion, run: Run, report: RunReport, c
         // The usual cause: the same report sent twice. Nothing moves.
         return refuse(`"${nameOf(report.elementId)}" is not the current element (it is ${state}). The current element is "${nameOf(run.currentElementId)}".`);
       }
-      const done = patch(run.elements, report.elementId, { state: 'done', finishedAt: at, note: report.note ?? '', by });
+      // What it hands in is checked by the kind of output the element declares.
+      const declared = version.elements.find((e) => e.id === report.elementId);
+      const kind = outputKind(declared?.produces ?? 'note');
+      let output: unknown = null;
+      if (kind?.required) {
+        if (report.output === undefined || report.output === null) return refuse(`"${nameOf(report.elementId)}" produces ${kind.title.toLowerCase()}, and none was handed in. ${kind.expects}`);
+        const checked = kind.check(report.output);
+        if (!checked.ok) return refuse(`What was handed in for "${nameOf(report.elementId)}" is not right. ${checked.problems.join(' ')} ${kind.expects}`);
+        output = checked.value;
+      } else if (report.output !== undefined && report.output !== null) {
+        return refuse(`"${nameOf(report.elementId)}" produces a note only: hand it in with --note.`);
+      }
+      const done = patch(run.elements, report.elementId, { state: 'done', finishedAt: at, note: report.note ?? '', output, ticks: [], by });
       // The next element that has not been done or skipped, in the order of the version.
       const position = version.elements.findIndex((e) => e.id === report.elementId);
       const next = version.elements.slice(position + 1).find((e) => done.find((r) => r.elementId === e.id)?.state === 'pending');
@@ -408,6 +474,24 @@ export function stepRun(version: WorkflowVersion, run: Run, report: RunReport, c
   }
 }
 
+/**
+ * Ticks or unticks one item of what an element produced. Not a report: it
+ * does not move the run, and it also works on a run that is over, because
+ * the owner reads a list after the work is done.
+ */
+export function tickRun(version: { elements: readonly { id: string; produces: string }[] } | null, run: Run, tick: { elementId: string; item: number; ticked: boolean }, context: { by: Actor; at: string }): StepResult {
+  const entry = run.elements.find((e) => e.elementId === tick.elementId);
+  if (!entry) return refuse(`This run has no element "${tick.elementId}".`);
+  if (entry.state !== 'done') return refuse('Only what a finished element produced can be ticked.');
+  // The kind is the element's own where the version is still known; an archived run's output says what it is by its shape.
+  const produces = version?.elements.find((e) => e.id === tick.elementId)?.produces;
+  const count = Math.max(...(produces ? [outputKind(produces)?.items(entry.output) ?? 0] : outputKindNames().map((name) => outputKind(name)?.items(entry.output) ?? 0)), 0);
+  if (tick.item < 0 || tick.item >= count) return refuse(count === 0 ? 'There is nothing to tick here.' : `There are ${count} items; ${tick.item + 1} is not one of them.`);
+  const others = entry.ticks.filter((t) => t.item !== tick.item);
+  const ticks = tick.ticked ? [...others, { item: tick.item, by: context.by, at: context.at }].sort((a, b) => a.item - b.item) : others;
+  return { ok: true, run: { ...run, elements: run.elements.map((e) => (e.elementId === tick.elementId ? { ...e, ticks } : e)) } };
+}
+
 /* ---------- What an agent is told ---------- */
 
 /**
@@ -424,10 +508,18 @@ export function safeForTyping(text: string): string {
     .trim();
 }
 
-/** The line that sets an agent off on a run. The same whoever sends it. */
-export function kickoffLine(workflowName: string): string {
-  return `You are on the workflow "${safeForTyping(workflowName)}". Run \`aubergine workflow status\` to read your current element and follow it. When its "done when" is true, run \`aubergine workflow done --note "<what you did>"\` and follow what it prints.`;
-}
+/**
+ * The line that sets an agent off on a run. A fixed sentence: nothing stored
+ * is in it, because it is typed into a terminal and names of workflows and
+ * elements can be written by agents. What the run is called, and everything
+ * else, the agent reads with the command.
+ */
+export const KICKOFF_LINE =
+  'You are on an Aubergine workflow. Run `aubergine workflow status` to read your current element and follow it. When its "done when" is true, run `aubergine workflow done --note "<what you did>"` and follow what it prints.';
+export const kickoffLine = (): string => KICKOFF_LINE;
+
+/** The line that asks an agent to write a draft. Fixed too: the owner's description is read with the command, never typed. */
+export const BRIEF_LINE = 'You have been asked to write something for Aubergine. Run `aubergine workflow brief` to read the request, and follow what it prints.';
 
 const HOW_TO_REPORT = [
   'How to report:',
@@ -468,6 +560,9 @@ export function renderRun(version: WorkflowVersion, run: Run): string {
 
   const kind = elementKind(element.kind);
   lines.push('', kind ? kind.render(element, { inputs: run.inputs }) : `(This element is of a kind this version does not know: ${element.kind}.)`);
+  if (element.needs.length > 0) lines.push('', `This element needs: ${element.needs.map(needWords).join('; ')}. If you do not have one of these, report blocked and say which.`);
+  const produces = outputKind(element.produces);
+  if (produces?.required) lines.push('', `This element produces ${produces.title.toLowerCase()}. ${produces.expects}`);
 
   // What the element before handed over: the nearest one before this that was done (skipped ones handed over nothing).
   const before = version.elements
@@ -475,7 +570,11 @@ export function renderRun(version: WorkflowVersion, run: Run): string {
     .reverse()
     .map((e) => ({ element: e, state: run.elements.find((r) => r.elementId === e.id) }))
     .find((entry) => entry.state?.state === 'done');
-  if (before?.state && before.state.note.trim() !== '') lines.push('', `From "${before.element.name}", the element before:`, before.state.note.trim());
+  if (before?.state) {
+    const handed = outputKind(before.element.produces)?.render(before.state.output, new Set(before.state.ticks.map((t) => t.item))) ?? '';
+    const parts = [before.state.note.trim(), handed].filter((part) => part !== '');
+    if (parts.length > 0) lines.push('', `From "${before.element.name}", the element before:`, ...parts);
+  }
 
   const later = version.elements.slice(index + 1).map((e) => e.name);
   lines.push('', later.length > 0 ? `After this: ${later.join(', ')}.` : 'This is the last element.');
@@ -537,7 +636,8 @@ export function isQuiet(run: Pick<Run, 'status' | 'updatedAt'>, lastOutputAt: st
 export const ArchivedRun = z.object({
   run: Run,
   workflowName: z.string(),
-  elements: z.array(z.object({ id: ElementId, name: z.string() })),
+  /** Each element's name as it was, and the kind of thing it produced. */
+  elements: z.array(z.object({ id: ElementId, name: z.string(), produces: z.string().default('note') })),
 });
 export type ArchivedRun = z.infer<typeof ArchivedRun>;
 
@@ -565,7 +665,7 @@ export const WorkflowFile = z.looseObject({
 });
 export type WorkflowFile = z.infer<typeof WorkflowFile>;
 
-const KNOWN_ELEMENT = ['id', 'kind', 'name', 'instructions', 'doneWhen', 'origin'];
+const KNOWN_ELEMENT = ['id', 'kind', 'name', 'instructions', 'doneWhen', 'needs', 'produces', 'origin'];
 const KNOWN_WORKFLOW = ['name', 'description', 'standing', 'inputs', 'elements', 'labels', 'origin'];
 const KNOWN_FILE = ['aubergine', 'format', 'workflow'];
 

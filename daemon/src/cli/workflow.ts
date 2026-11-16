@@ -110,7 +110,7 @@ export function parseWorkflowCommand(words: readonly string[]): WorkflowCommand 
       return { action: 'blocked', reason };
     }
     case 'goto': {
-      const element = rest.join(' ').trim();
+      const element = flagsOf(rest, [], 'goto').join(' ').trim();
       if (element === '') throw new UsageError('workflow goto needs an element: its name, ID or number');
       return { action: 'goto', element };
     }
@@ -201,7 +201,7 @@ const collect = async <T>(items: AsyncIterable<T>): Promise<T[]> => {
 };
 
 /** A workflow as the export file needs it: with its one version. */
-const asWorkflow = (detail: WorkflowDetail): Workflow => ({ ...detail, projectId: detail.id, versions: [detail.current] });
+const asWorkflow = (detail: WorkflowDetail): Workflow => ({ ...detail, projectId: detail.id, listed: true, versions: [detail.current] });
 
 function parseFile(text: string): ReturnType<typeof importWorkflow> {
   let json: unknown;

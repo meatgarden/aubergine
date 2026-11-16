@@ -53,6 +53,21 @@ How to create a token, what the scopes mean, the limits and the activity log are
 | [`GET /v1/runs/{runId}`](#getrun) | Read a run | `read` |
 | [`POST /v1/runs/{runId}/report`](#reportrun) | Report on a run: done, blocked, go to, pause, resume, stop | `runs:write` |
 | [`POST /v1/sessions/{sessionId}/runs`](#startsessionrun) | Start a run on a session | `runs:write` |
+| [`GET /v1/drafts`](#listdrafts) | List drafts | `read` |
+| [`POST /v1/drafts`](#proposedraft) | Propose a workflow or an element as a draft | `workflows:write` |
+| [`GET /v1/drafts/{draftId}`](#getdraft) | Read a draft | `read` |
+| [`PUT /v1/drafts/{draftId}`](#revisedraft) | Hand in a new version of a draft | `workflows:write` |
+| [`DELETE /v1/drafts/{draftId}`](#discarddraft) | Discard a draft | browser only |
+| [`POST /v1/drafts/{draftId}/accept`](#acceptdraft) | Accept a draft | browser only |
+| [`POST /v1/drafts/{draftId}/return`](#returndraft) | Send a draft back with a comment | browser only |
+| [`POST /v1/draft-requests`](#requestdraft) | Ask the agent in a session to write a workflow or an element | browser only |
+| [`GET /v1/elements`](#listelements) | List the elements on the shelf | `read` |
+| [`POST /v1/elements`](#createelement) | Put an element on the shelf | `workflows:write` |
+| [`PATCH /v1/elements/{elementId}`](#updateelement) | Change an element on the shelf | `workflows:write` |
+| [`DELETE /v1/elements/{elementId}`](#removeelement) | Take an element off the shelf | `workflows:write` |
+| [`POST /v1/elements/{elementId}/copy`](#copyelement) | Duplicate an element on the shelf | `workflows:write` |
+| [`POST /v1/elements/{elementId}/run`](#runelement) | Run one element by itself, on a session | `runs:write` |
+| [`POST /v1/runs/{runId}/ticks`](#tickrunitem) | Tick an item of what an element produced | `runs:write` |
 | [`GET /v1/events`](#streamevents) | Follow changes as they happen | `read` |
 | [`GET /v1/tokens`](#listtokens) | List API tokens | browser only |
 | [`POST /v1/tokens`](#createtoken) | Create an API token | browser only |
@@ -61,6 +76,9 @@ How to create a token, what the scopes mean, the limits and the activity log are
 | [`PUT /v1/sessions/{sessionId}/attention`](#setattention) | Say whether the session wants the user | session's own token |
 | [`GET /v1/sessions/{sessionId}/run`](#getsessionrun) | The run a session is on | session's own token, or `read` |
 | [`POST /v1/sessions/{sessionId}/run/report`](#reportsessionrun) | Report on the run a session is on | session's own token, or `runs:write` |
+| [`GET /v1/sessions/{sessionId}/brief`](#getsessionbrief) | What a session was asked to write | session's own token |
+| [`GET /v1/sessions/{sessionId}/drafts`](#listsessiondrafts) | The drafts a session proposed or was asked for | session's own token |
+| [`POST /v1/sessions/{sessionId}/drafts`](#proposesessiondraft) | Hand in a draft from a session | session's own token |
 | [`PUT /v1/sessions/{sessionId}/agent`](#reportagent) | Say which agent runs in the session, and in which conversation | session's own token |
 
 ## Errors
@@ -1395,7 +1413,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 A workflow is an ordered list of elements, each a piece of text for whoever does the work. Nothing in it is run by the server.
 
-An API token needs the scope `workflows:write`.
+An API token needs the scope `workflows:write`. A token whose changes to workflows need review is refused here: it proposes a draft instead (`POST /v1/drafts`).
 
 | Parameter | In | Type | Required | |
 |---|---|---|---|---|
@@ -1449,6 +1467,12 @@ An API token needs the scope `workflows:write`.
       name: string;
       instructions: string;
       doneWhen: string;
+      needs: {
+        kind: "mcp" | "command" | "access" | "other";
+        name: string;
+        note?: string;
+      }[];
+      produces: string;
       origin: {
         kind: string;
         name?: string;
@@ -1522,6 +1546,12 @@ An API token needs the scope `read`.
       name: string;
       instructions: string;
       doneWhen: string;
+      needs: {
+        kind: "mcp" | "command" | "access" | "other";
+        name: string;
+        note?: string;
+      }[];
+      produces: string;
       origin: {
         kind: string;
         name?: string;
@@ -1553,7 +1583,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 A change to what it says is saved as a new version. Runs already going keep to the version they started on.
 
-An API token needs the scope `workflows:write`.
+An API token needs the scope `workflows:write`. A token whose changes to workflows need review is refused here: it proposes a draft instead (`POST /v1/drafts`).
 
 | Parameter | In | Type | Required | |
 |---|---|---|---|---|
@@ -1605,6 +1635,12 @@ An API token needs the scope `workflows:write`.
       name: string;
       instructions: string;
       doneWhen: string;
+      needs: {
+        kind: "mcp" | "command" | "access" | "other";
+        name: string;
+        note?: string;
+      }[];
+      produces: string;
       origin: {
         kind: string;
         name?: string;
@@ -1637,7 +1673,7 @@ curl -X PATCH -H "Authorization: Bearer $TOKEN" \
 
 Refused while a run of it is still going. Runs that are over stay in the archive.
 
-An API token needs the scope `workflows:write`.
+An API token needs the scope `workflows:write`. A token whose changes to workflows need review is refused here: it proposes a draft instead (`POST /v1/drafts`).
 
 | Parameter | In | Type | Required | |
 |---|---|---|---|---|
@@ -1658,7 +1694,7 @@ curl -X DELETE -H "Authorization: Bearer $TOKEN" \
 
 A new workflow with the same content, to change without touching the first.
 
-An API token needs the scope `workflows:write`.
+An API token needs the scope `workflows:write`. A token whose changes to workflows need review is refused here: it proposes a draft instead (`POST /v1/drafts`).
 
 | Parameter | In | Type | Required | |
 |---|---|---|---|---|
@@ -1706,6 +1742,12 @@ An API token needs the scope `workflows:write`.
       name: string;
       instructions: string;
       doneWhen: string;
+      needs: {
+        kind: "mcp" | "command" | "access" | "other";
+        name: string;
+        note?: string;
+      }[];
+      produces: string;
       origin: {
         kind: string;
         name?: string;
@@ -1768,6 +1810,12 @@ A list: it answers a page at a time, see `limit` and `cursor`.
       name: string;
       instructions: string;
       doneWhen: string;
+      needs: {
+        kind: "mcp" | "command" | "access" | "other";
+        name: string;
+        note?: string;
+      }[];
+      produces: string;
       origin: {
         kind: string;
         name?: string;
@@ -1831,6 +1879,12 @@ A list: it answers a page at a time, see `limit` and `cursor`.
         name: string;
         instructions: string;
         doneWhen: string;
+        needs: {
+          kind: "mcp" | "command" | "access" | "other";
+          name: string;
+          note?: string;
+        }[];
+        produces: string;
         origin: {
           kind: string;
           name?: string;
@@ -1862,7 +1916,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 The result is an ordinary workflow that can be changed like any other.
 
-An API token needs the scope `workflows:write`.
+An API token needs the scope `workflows:write`. A token whose changes to workflows need review is refused here: it proposes a draft instead (`POST /v1/drafts`).
 
 | Parameter | In | Type | Required | |
 |---|---|---|---|---|
@@ -1910,6 +1964,12 @@ An API token needs the scope `workflows:write`.
       name: string;
       instructions: string;
       doneWhen: string;
+      needs: {
+        kind: "mcp" | "command" | "access" | "other";
+        name: string;
+        note?: string;
+      }[];
+      produces: string;
       origin: {
         kind: string;
         name?: string;
@@ -1977,6 +2037,15 @@ A list: it answers a page at a time, see `limit` and `cursor`.
         startedAt: string | null;
         finishedAt: string | null;
         note: string;
+        output: unknown | null;
+        ticks: {
+          item: number;
+          by: {
+            kind: "agent" | "person" | "token";
+            name?: string;
+          };
+          at: string;
+        }[];
         by: {
           kind: "agent" | "person" | "token";
           name?: string;
@@ -1997,6 +2066,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
     elements: {
       id: string;
       name: string;
+      produces: string;
     }[];
   }[];
   nextCursor: string | null;
@@ -2052,6 +2122,15 @@ An API token needs the scope `runs:write`.
       startedAt: string | null;
       finishedAt: string | null;
       note: string;
+      output: unknown | null;
+      ticks: {
+        item: number;
+        by: {
+          kind: "agent" | "person" | "token";
+          name?: string;
+        };
+        at: string;
+      }[];
       by: {
         kind: "agent" | "person" | "token";
         name?: string;
@@ -2072,6 +2151,7 @@ An API token needs the scope `runs:write`.
   elements: {
     id: string;
     name: string;
+    produces: string;
   }[];
   position: string;
   text: string;
@@ -2120,6 +2200,15 @@ An API token needs the scope `read`.
       startedAt: string | null;
       finishedAt: string | null;
       note: string;
+      output: unknown | null;
+      ticks: {
+        item: number;
+        by: {
+          kind: "agent" | "person" | "token";
+          name?: string;
+        };
+        at: string;
+      }[];
       by: {
         kind: "agent" | "person" | "token";
         name?: string;
@@ -2140,6 +2229,7 @@ An API token needs the scope `read`.
   elements: {
     id: string;
     name: string;
+    produces: string;
   }[];
   position: string;
   text: string;
@@ -2189,6 +2279,15 @@ An API token needs the scope `runs:write`.
       startedAt: string | null;
       finishedAt: string | null;
       note: string;
+      output: unknown | null;
+      ticks: {
+        item: number;
+        by: {
+          kind: "agent" | "person" | "token";
+          name?: string;
+        };
+        at: string;
+      }[];
       by: {
         kind: "agent" | "person" | "token";
         name?: string;
@@ -2209,6 +2308,7 @@ An API token needs the scope `runs:write`.
   elements: {
     id: string;
     name: string;
+    produces: string;
   }[];
   position: string;
   text: string;
@@ -2265,6 +2365,15 @@ An API token needs the scope `runs:write`.
       startedAt: string | null;
       finishedAt: string | null;
       note: string;
+      output: unknown | null;
+      ticks: {
+        item: number;
+        by: {
+          kind: "agent" | "person" | "token";
+          name?: string;
+        };
+        at: string;
+      }[];
       by: {
         kind: "agent" | "person" | "token";
         name?: string;
@@ -2285,6 +2394,7 @@ An API token needs the scope `runs:write`.
   elements: {
     id: string;
     name: string;
+    produces: string;
   }[];
   position: string;
   text: string;
@@ -2299,6 +2409,1497 @@ An API token needs the scope `runs:write`.
 curl -X POST -H "Authorization: Bearer $TOKEN" \
      -H "Content-Type: application/json" -d '{"workflowId":"<workflowId>"}' \
      http://127.0.0.1:4600/v1/sessions/<sessionId>/runs
+```
+
+## Drafts
+
+### listDrafts
+
+`GET /v1/drafts`: List drafts.
+
+Workflows and elements that were proposed and wait for the owner, oldest first. A draft cannot be run and is not among the workflows.
+
+An API token needs the scope `read`.
+
+A list: it answers a page at a time, see `limit` and `cursor`.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `limit` | query | `number` | no | How many items to return at most. |
+| `cursor` | query | `string` | no | The `nextCursor` of the page before. Opaque: do not build or change it. |
+
+**Answer** `200`:
+
+```ts
+{
+  items: {
+    workflow: {
+      name: string;
+      description: string;
+      standing: string;
+      inputs: {
+        key: string;
+        label: string;
+        description: string;
+        required: boolean;
+      }[];
+      elements: {
+        id: string;
+        kind: string;
+        name: string;
+        instructions: string;
+        doneWhen: string;
+        needs: {
+          kind: "mcp" | "command" | "access" | "other";
+          name: string;
+          note?: string;
+        }[];
+        produces: string;
+        origin: {
+          kind: string;
+          name?: string;
+          [key: string]: unknown;
+        };
+        extra: {
+          [key: string]: unknown;
+        };
+      }[];
+      extra: {
+        [key: string]: unknown;
+      };
+    } | null;
+    element: {
+      id: string;
+      kind: string;
+      name: string;
+      instructions: string;
+      doneWhen: string;
+      needs: {
+        kind: "mcp" | "command" | "access" | "other";
+        name: string;
+        note?: string;
+      }[];
+      produces: string;
+      origin: {
+        kind: string;
+        name?: string;
+        [key: string]: unknown;
+      };
+      extra: {
+        [key: string]: unknown;
+      };
+    } | null;
+    id: string;
+    kind: "workflow" | "element";
+    status: "requested" | "waiting" | "returned";
+    description: string;
+    proposedBy: {
+      kind: "session";
+      sessionId: string;
+    } | {
+      kind: "token";
+      tokenId: string;
+      name: string;
+    } | {
+      kind: "person";
+    };
+    sessionId: string | null;
+    revisesWorkflowId: string | null;
+    previous: {
+      workflow: {
+        name: string;
+        description: string;
+        standing: string;
+        inputs: {
+          key: string;
+          label: string;
+          description: string;
+          required: boolean;
+        }[];
+        elements: {
+          id: string;
+          kind: string;
+          name: string;
+          instructions: string;
+          doneWhen: string;
+          needs: {
+            kind: "mcp" | "command" | "access" | "other";
+            name: string;
+            note?: string;
+          }[];
+          produces: string;
+          origin: {
+            kind: string;
+            name?: string;
+            [key: string]: unknown;
+          };
+          extra: {
+            [key: string]: unknown;
+          };
+        }[];
+        extra: {
+          [key: string]: unknown;
+        };
+      } | null;
+      element: {
+        id: string;
+        kind: string;
+        name: string;
+        instructions: string;
+        doneWhen: string;
+        needs: {
+          kind: "mcp" | "command" | "access" | "other";
+          name: string;
+          note?: string;
+        }[];
+        produces: string;
+        origin: {
+          kind: string;
+          name?: string;
+          [key: string]: unknown;
+        };
+        extra: {
+          [key: string]: unknown;
+        };
+      } | null;
+    } | null;
+    revision: number;
+    comment: string | null;
+    createdAt: string;
+    updatedAt: string;
+  }[];
+  nextCursor: string | null;
+}
+```
+
+**Errors:** 400, 401, 403, 413, 429.
+
+```sh
+curl -H "Authorization: Bearer $TOKEN" \
+     http://127.0.0.1:4600/v1/drafts
+```
+
+### proposeDraft
+
+`POST /v1/drafts`: Propose a workflow or an element as a draft.
+
+Nothing proposed here can be run or is told to an agent until the owner has read and accepted it in the browser.
+
+An API token needs the scope `workflows:write`.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `idempotency-key` | header | `string` | no | A key of your choosing (1 to 128 visible ASCII characters). Sending the same request again with the same key returns the first answer and creates nothing more. |
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `workflow` | `{ /** What it is called. */ name: string; /** What it is for, in a …` | no | A whole workflow. Give this or `element`, not both. |
+| `element` | `{ id?: string; kind?: string; name: string; instructions?: string; …` | no | One element, for the shelf. |
+| `revisesWorkflowId` | `string` | no | For a workflow: the workflow this is a new version of. Without it, accepting makes a new workflow. |
+| `description` | `string` | no | What it is meant to do, when nobody asked for it. |
+
+**Answer** `201`:
+
+```ts
+{
+  draft: {
+    workflow: {
+      name: string;
+      description: string;
+      standing: string;
+      inputs: {
+        key: string;
+        label: string;
+        description: string;
+        required: boolean;
+      }[];
+      elements: {
+        id: string;
+        kind: string;
+        name: string;
+        instructions: string;
+        doneWhen: string;
+        needs: {
+          kind: "mcp" | "command" | "access" | "other";
+          name: string;
+          note?: string;
+        }[];
+        produces: string;
+        origin: {
+          kind: string;
+          name?: string;
+          [key: string]: unknown;
+        };
+        extra: {
+          [key: string]: unknown;
+        };
+      }[];
+      extra: {
+        [key: string]: unknown;
+      };
+    } | null;
+    element: {
+      id: string;
+      kind: string;
+      name: string;
+      instructions: string;
+      doneWhen: string;
+      needs: {
+        kind: "mcp" | "command" | "access" | "other";
+        name: string;
+        note?: string;
+      }[];
+      produces: string;
+      origin: {
+        kind: string;
+        name?: string;
+        [key: string]: unknown;
+      };
+      extra: {
+        [key: string]: unknown;
+      };
+    } | null;
+    id: string;
+    kind: "workflow" | "element";
+    status: "requested" | "waiting" | "returned";
+    description: string;
+    proposedBy: {
+      kind: "session";
+      sessionId: string;
+    } | {
+      kind: "token";
+      tokenId: string;
+      name: string;
+    } | {
+      kind: "person";
+    };
+    sessionId: string | null;
+    revisesWorkflowId: string | null;
+    previous: {
+      workflow: {
+        name: string;
+        description: string;
+        standing: string;
+        inputs: {
+          key: string;
+          label: string;
+          description: string;
+          required: boolean;
+        }[];
+        elements: {
+          id: string;
+          kind: string;
+          name: string;
+          instructions: string;
+          doneWhen: string;
+          needs: {
+            kind: "mcp" | "command" | "access" | "other";
+            name: string;
+            note?: string;
+          }[];
+          produces: string;
+          origin: {
+            kind: string;
+            name?: string;
+            [key: string]: unknown;
+          };
+          extra: {
+            [key: string]: unknown;
+          };
+        }[];
+        extra: {
+          [key: string]: unknown;
+        };
+      } | null;
+      element: {
+        id: string;
+        kind: string;
+        name: string;
+        instructions: string;
+        doneWhen: string;
+        needs: {
+          kind: "mcp" | "command" | "access" | "other";
+          name: string;
+          note?: string;
+        }[];
+        produces: string;
+        origin: {
+          kind: string;
+          name?: string;
+          [key: string]: unknown;
+        };
+        extra: {
+          [key: string]: unknown;
+        };
+      } | null;
+    } | null;
+    revision: number;
+    comment: string | null;
+    createdAt: string;
+    updatedAt: string;
+  };
+  text: string;
+  previousText: string | null;
+  needs: {
+    kind: "mcp" | "command" | "access" | "other";
+    name: string;
+    note?: string;
+  }[];
+}
+```
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+```sh
+curl -X POST -H "Authorization: Bearer $TOKEN" \
+     -H "Content-Type: application/json" -d '{"workflow":{"name":"example","elements":[{"name":"example"}]}}' \
+     http://127.0.0.1:4600/v1/drafts
+```
+
+### getDraft
+
+`GET /v1/drafts/{draftId}`: Read a draft.
+
+With the whole text it would tell an agent, what it needs, and the text of the version before.
+
+An API token needs the scope `read`.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `draftId` | path | `string` | yes | An ID. |
+
+**Answer** `200`:
+
+```ts
+{
+  draft: {
+    workflow: {
+      name: string;
+      description: string;
+      standing: string;
+      inputs: {
+        key: string;
+        label: string;
+        description: string;
+        required: boolean;
+      }[];
+      elements: {
+        id: string;
+        kind: string;
+        name: string;
+        instructions: string;
+        doneWhen: string;
+        needs: {
+          kind: "mcp" | "command" | "access" | "other";
+          name: string;
+          note?: string;
+        }[];
+        produces: string;
+        origin: {
+          kind: string;
+          name?: string;
+          [key: string]: unknown;
+        };
+        extra: {
+          [key: string]: unknown;
+        };
+      }[];
+      extra: {
+        [key: string]: unknown;
+      };
+    } | null;
+    element: {
+      id: string;
+      kind: string;
+      name: string;
+      instructions: string;
+      doneWhen: string;
+      needs: {
+        kind: "mcp" | "command" | "access" | "other";
+        name: string;
+        note?: string;
+      }[];
+      produces: string;
+      origin: {
+        kind: string;
+        name?: string;
+        [key: string]: unknown;
+      };
+      extra: {
+        [key: string]: unknown;
+      };
+    } | null;
+    id: string;
+    kind: "workflow" | "element";
+    status: "requested" | "waiting" | "returned";
+    description: string;
+    proposedBy: {
+      kind: "session";
+      sessionId: string;
+    } | {
+      kind: "token";
+      tokenId: string;
+      name: string;
+    } | {
+      kind: "person";
+    };
+    sessionId: string | null;
+    revisesWorkflowId: string | null;
+    previous: {
+      workflow: {
+        name: string;
+        description: string;
+        standing: string;
+        inputs: {
+          key: string;
+          label: string;
+          description: string;
+          required: boolean;
+        }[];
+        elements: {
+          id: string;
+          kind: string;
+          name: string;
+          instructions: string;
+          doneWhen: string;
+          needs: {
+            kind: "mcp" | "command" | "access" | "other";
+            name: string;
+            note?: string;
+          }[];
+          produces: string;
+          origin: {
+            kind: string;
+            name?: string;
+            [key: string]: unknown;
+          };
+          extra: {
+            [key: string]: unknown;
+          };
+        }[];
+        extra: {
+          [key: string]: unknown;
+        };
+      } | null;
+      element: {
+        id: string;
+        kind: string;
+        name: string;
+        instructions: string;
+        doneWhen: string;
+        needs: {
+          kind: "mcp" | "command" | "access" | "other";
+          name: string;
+          note?: string;
+        }[];
+        produces: string;
+        origin: {
+          kind: string;
+          name?: string;
+          [key: string]: unknown;
+        };
+        extra: {
+          [key: string]: unknown;
+        };
+      } | null;
+    } | null;
+    revision: number;
+    comment: string | null;
+    createdAt: string;
+    updatedAt: string;
+  };
+  text: string;
+  previousText: string | null;
+  needs: {
+    kind: "mcp" | "command" | "access" | "other";
+    name: string;
+    note?: string;
+  }[];
+}
+```
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+```sh
+curl -H "Authorization: Bearer $TOKEN" \
+     http://127.0.0.1:4600/v1/drafts/<draftId>
+```
+
+### reviseDraft
+
+`PUT /v1/drafts/{draftId}`: Hand in a new version of a draft.
+
+For a draft that was sent back, or to replace one still waiting.
+
+An API token needs the scope `workflows:write`.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `draftId` | path | `string` | yes | An ID. |
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `workflow` | `{ /** What it is called. */ name: string; /** What it is for, in a …` | no | A whole workflow. Give this or `element`, not both. |
+| `element` | `{ id?: string; kind?: string; name: string; instructions?: string; …` | no | One element, for the shelf. |
+| `revisesWorkflowId` | `string` | no | For a workflow: the workflow this is a new version of. Without it, accepting makes a new workflow. |
+| `description` | `string` | no | What it is meant to do, when nobody asked for it. |
+
+**Answer** `200`:
+
+```ts
+{
+  draft: {
+    workflow: {
+      name: string;
+      description: string;
+      standing: string;
+      inputs: {
+        key: string;
+        label: string;
+        description: string;
+        required: boolean;
+      }[];
+      elements: {
+        id: string;
+        kind: string;
+        name: string;
+        instructions: string;
+        doneWhen: string;
+        needs: {
+          kind: "mcp" | "command" | "access" | "other";
+          name: string;
+          note?: string;
+        }[];
+        produces: string;
+        origin: {
+          kind: string;
+          name?: string;
+          [key: string]: unknown;
+        };
+        extra: {
+          [key: string]: unknown;
+        };
+      }[];
+      extra: {
+        [key: string]: unknown;
+      };
+    } | null;
+    element: {
+      id: string;
+      kind: string;
+      name: string;
+      instructions: string;
+      doneWhen: string;
+      needs: {
+        kind: "mcp" | "command" | "access" | "other";
+        name: string;
+        note?: string;
+      }[];
+      produces: string;
+      origin: {
+        kind: string;
+        name?: string;
+        [key: string]: unknown;
+      };
+      extra: {
+        [key: string]: unknown;
+      };
+    } | null;
+    id: string;
+    kind: "workflow" | "element";
+    status: "requested" | "waiting" | "returned";
+    description: string;
+    proposedBy: {
+      kind: "session";
+      sessionId: string;
+    } | {
+      kind: "token";
+      tokenId: string;
+      name: string;
+    } | {
+      kind: "person";
+    };
+    sessionId: string | null;
+    revisesWorkflowId: string | null;
+    previous: {
+      workflow: {
+        name: string;
+        description: string;
+        standing: string;
+        inputs: {
+          key: string;
+          label: string;
+          description: string;
+          required: boolean;
+        }[];
+        elements: {
+          id: string;
+          kind: string;
+          name: string;
+          instructions: string;
+          doneWhen: string;
+          needs: {
+            kind: "mcp" | "command" | "access" | "other";
+            name: string;
+            note?: string;
+          }[];
+          produces: string;
+          origin: {
+            kind: string;
+            name?: string;
+            [key: string]: unknown;
+          };
+          extra: {
+            [key: string]: unknown;
+          };
+        }[];
+        extra: {
+          [key: string]: unknown;
+        };
+      } | null;
+      element: {
+        id: string;
+        kind: string;
+        name: string;
+        instructions: string;
+        doneWhen: string;
+        needs: {
+          kind: "mcp" | "command" | "access" | "other";
+          name: string;
+          note?: string;
+        }[];
+        produces: string;
+        origin: {
+          kind: string;
+          name?: string;
+          [key: string]: unknown;
+        };
+        extra: {
+          [key: string]: unknown;
+        };
+      } | null;
+    } | null;
+    revision: number;
+    comment: string | null;
+    createdAt: string;
+    updatedAt: string;
+  };
+  text: string;
+  previousText: string | null;
+  needs: {
+    kind: "mcp" | "command" | "access" | "other";
+    name: string;
+    note?: string;
+  }[];
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+```sh
+curl -X PUT -H "Authorization: Bearer $TOKEN" \
+     -H "Content-Type: application/json" -d '{"workflow":{"name":"example","elements":[{"name":"example"}]}}' \
+     http://127.0.0.1:4600/v1/drafts/<draftId>
+```
+
+### discardDraft
+
+`DELETE /v1/drafts/{draftId}`: Discard a draft.
+
+For the owner only.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `draftId` | path | `string` | yes | An ID. |
+
+**Answer** `204`, with nothing in it.
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+### acceptDraft
+
+`POST /v1/drafts/{draftId}/accept`: Accept a draft.
+
+A workflow draft becomes a workflow, or a new version of the one it revises; an element draft goes on the shelf. For the owner only: no token may accept.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `draftId` | path | `string` | yes | An ID. |
+
+**Body** (JSON, may be left out):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `workflow` | `{ /** What it is called. */ name: string; /** What it is for, in a …` | no | The workflow as edited before accepting. |
+| `element` | `{ id?: string; kind?: string; name: string; instructions?: string; …` | no | The element as edited before accepting. |
+
+**Answer** `200`:
+
+```ts
+{
+  workflowId: string | null;
+  elementId: string | null;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+### returnDraft
+
+`POST /v1/drafts/{draftId}/return`: Send a draft back with a comment.
+
+For the owner only. Whoever proposed it reads the comment and hands in a new version.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `draftId` | path | `string` | yes | An ID. |
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `comment` | `string` | yes | What should change. |
+
+**Answer** `200`:
+
+```ts
+{
+  workflow: {
+    name: string;
+    description: string;
+    standing: string;
+    inputs: {
+      key: string;
+      label: string;
+      description: string;
+      required: boolean;
+    }[];
+    elements: {
+      id: string;
+      kind: string;
+      name: string;
+      instructions: string;
+      doneWhen: string;
+      needs: {
+        kind: "mcp" | "command" | "access" | "other";
+        name: string;
+        note?: string;
+      }[];
+      produces: string;
+      origin: {
+        kind: string;
+        name?: string;
+        [key: string]: unknown;
+      };
+      extra: {
+        [key: string]: unknown;
+      };
+    }[];
+    extra: {
+      [key: string]: unknown;
+    };
+  } | null;
+  element: {
+    id: string;
+    kind: string;
+    name: string;
+    instructions: string;
+    doneWhen: string;
+    needs: {
+      kind: "mcp" | "command" | "access" | "other";
+      name: string;
+      note?: string;
+    }[];
+    produces: string;
+    origin: {
+      kind: string;
+      name?: string;
+      [key: string]: unknown;
+    };
+    extra: {
+      [key: string]: unknown;
+    };
+  } | null;
+  id: string;
+  kind: "workflow" | "element";
+  status: "requested" | "waiting" | "returned";
+  description: string;
+  proposedBy: {
+    kind: "session";
+    sessionId: string;
+  } | {
+    kind: "token";
+    tokenId: string;
+    name: string;
+  } | {
+    kind: "person";
+  };
+  sessionId: string | null;
+  revisesWorkflowId: string | null;
+  previous: {
+    workflow: {
+      name: string;
+      description: string;
+      standing: string;
+      inputs: {
+        key: string;
+        label: string;
+        description: string;
+        required: boolean;
+      }[];
+      elements: {
+        id: string;
+        kind: string;
+        name: string;
+        instructions: string;
+        doneWhen: string;
+        needs: {
+          kind: "mcp" | "command" | "access" | "other";
+          name: string;
+          note?: string;
+        }[];
+        produces: string;
+        origin: {
+          kind: string;
+          name?: string;
+          [key: string]: unknown;
+        };
+        extra: {
+          [key: string]: unknown;
+        };
+      }[];
+      extra: {
+        [key: string]: unknown;
+      };
+    } | null;
+    element: {
+      id: string;
+      kind: string;
+      name: string;
+      instructions: string;
+      doneWhen: string;
+      needs: {
+        kind: "mcp" | "command" | "access" | "other";
+        name: string;
+        note?: string;
+      }[];
+      produces: string;
+      origin: {
+        kind: string;
+        name?: string;
+        [key: string]: unknown;
+      };
+      extra: {
+        [key: string]: unknown;
+      };
+    } | null;
+  } | null;
+  revision: number;
+  comment: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+### requestDraft
+
+`POST /v1/draft-requests`: Ask the agent in a session to write a workflow or an element.
+
+For the owner only. The description is kept with the request and read by the agent with `aubergine workflow brief`; only a fixed sentence is typed into the terminal.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `kind` | `"workflow" \| "element"` | yes |  |
+| `description` | `string` | yes | What you want, in your own words. |
+| `sessionId` | `string` | yes | The session whose agent is asked. |
+| `tell` | `boolean` | no | Type the fixed request line into the terminal, when an agent is running there. |
+
+**Answer** `201`:
+
+```ts
+{
+  draft: {
+    workflow: {
+      name: string;
+      description: string;
+      standing: string;
+      inputs: {
+        key: string;
+        label: string;
+        description: string;
+        required: boolean;
+      }[];
+      elements: {
+        id: string;
+        kind: string;
+        name: string;
+        instructions: string;
+        doneWhen: string;
+        needs: {
+          kind: "mcp" | "command" | "access" | "other";
+          name: string;
+          note?: string;
+        }[];
+        produces: string;
+        origin: {
+          kind: string;
+          name?: string;
+          [key: string]: unknown;
+        };
+        extra: {
+          [key: string]: unknown;
+        };
+      }[];
+      extra: {
+        [key: string]: unknown;
+      };
+    } | null;
+    element: {
+      id: string;
+      kind: string;
+      name: string;
+      instructions: string;
+      doneWhen: string;
+      needs: {
+        kind: "mcp" | "command" | "access" | "other";
+        name: string;
+        note?: string;
+      }[];
+      produces: string;
+      origin: {
+        kind: string;
+        name?: string;
+        [key: string]: unknown;
+      };
+      extra: {
+        [key: string]: unknown;
+      };
+    } | null;
+    id: string;
+    kind: "workflow" | "element";
+    status: "requested" | "waiting" | "returned";
+    description: string;
+    proposedBy: {
+      kind: "session";
+      sessionId: string;
+    } | {
+      kind: "token";
+      tokenId: string;
+      name: string;
+    } | {
+      kind: "person";
+    };
+    sessionId: string | null;
+    revisesWorkflowId: string | null;
+    previous: {
+      workflow: {
+        name: string;
+        description: string;
+        standing: string;
+        inputs: {
+          key: string;
+          label: string;
+          description: string;
+          required: boolean;
+        }[];
+        elements: {
+          id: string;
+          kind: string;
+          name: string;
+          instructions: string;
+          doneWhen: string;
+          needs: {
+            kind: "mcp" | "command" | "access" | "other";
+            name: string;
+            note?: string;
+          }[];
+          produces: string;
+          origin: {
+            kind: string;
+            name?: string;
+            [key: string]: unknown;
+          };
+          extra: {
+            [key: string]: unknown;
+          };
+        }[];
+        extra: {
+          [key: string]: unknown;
+        };
+      } | null;
+      element: {
+        id: string;
+        kind: string;
+        name: string;
+        instructions: string;
+        doneWhen: string;
+        needs: {
+          kind: "mcp" | "command" | "access" | "other";
+          name: string;
+          note?: string;
+        }[];
+        produces: string;
+        origin: {
+          kind: string;
+          name?: string;
+          [key: string]: unknown;
+        };
+        extra: {
+          [key: string]: unknown;
+        };
+      } | null;
+    } | null;
+    revision: number;
+    comment: string | null;
+    createdAt: string;
+    updatedAt: string;
+  };
+  told: boolean;
+  line: string;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+## Elements
+
+### listElements
+
+`GET /v1/elements`: List the elements on the shelf.
+
+An API token needs the scope `read`.
+
+A list: it answers a page at a time, see `limit` and `cursor`.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `limit` | query | `number` | no | How many items to return at most. |
+| `cursor` | query | `string` | no | The `nextCursor` of the page before. Opaque: do not build or change it. |
+
+**Answer** `200`:
+
+```ts
+{
+  items: {
+    id: string;
+    element: {
+      id: string;
+      kind: string;
+      name: string;
+      instructions: string;
+      doneWhen: string;
+      needs: {
+        kind: "mcp" | "command" | "access" | "other";
+        name: string;
+        note?: string;
+      }[];
+      produces: string;
+      origin: {
+        kind: string;
+        name?: string;
+        [key: string]: unknown;
+      };
+      extra: {
+        [key: string]: unknown;
+      };
+    };
+    createdAt: string;
+    updatedAt: string;
+  }[];
+  nextCursor: string | null;
+}
+```
+
+**Errors:** 400, 401, 403, 413, 429.
+
+```sh
+curl -H "Authorization: Bearer $TOKEN" \
+     http://127.0.0.1:4600/v1/elements
+```
+
+### createElement
+
+`POST /v1/elements`: Put an element on the shelf.
+
+An API token needs the scope `workflows:write`. A token whose changes to workflows need review is refused here: it proposes a draft instead (`POST /v1/drafts`).
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `idempotency-key` | header | `string` | no | A key of your choosing (1 to 128 visible ASCII characters). Sending the same request again with the same key returns the first answer and creates nothing more. |
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `id` | `string` | no |  |
+| `kind` | `string` | no |  |
+| `name` | `string` | yes |  |
+| `instructions` | `string` | no |  |
+| `doneWhen` | `string` | no |  |
+| `needs` | `{ kind: "mcp" \| "command" \| "access" \| "other"; name: string; note?…` | no |  |
+| `produces` | `string` | no |  |
+| `origin` | `{ kind: string; name?: string; [key: string]: unknown; }` | no |  |
+| `extra` | `{ [key: string]: unknown; }` | no |  |
+
+**Answer** `201`:
+
+```ts
+{
+  id: string;
+  element: {
+    id: string;
+    kind: string;
+    name: string;
+    instructions: string;
+    doneWhen: string;
+    needs: {
+      kind: "mcp" | "command" | "access" | "other";
+      name: string;
+      note?: string;
+    }[];
+    produces: string;
+    origin: {
+      kind: string;
+      name?: string;
+      [key: string]: unknown;
+    };
+    extra: {
+      [key: string]: unknown;
+    };
+  };
+  createdAt: string;
+  updatedAt: string;
+}
+```
+
+**Errors:** 400, 401, 403, 413, 429.
+
+```sh
+curl -X POST -H "Authorization: Bearer $TOKEN" \
+     -H "Content-Type: application/json" -d '{"name":"example"}' \
+     http://127.0.0.1:4600/v1/elements
+```
+
+### updateElement
+
+`PATCH /v1/elements/{elementId}`: Change an element on the shelf.
+
+Copies of it already in workflows are not changed.
+
+An API token needs the scope `workflows:write`. A token whose changes to workflows need review is refused here: it proposes a draft instead (`POST /v1/drafts`).
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `elementId` | path | `string` | yes | An ID. |
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `kind` | `string` | no |  |
+| `name` | `string` | no |  |
+| `instructions` | `string` | no |  |
+| `doneWhen` | `string` | no |  |
+| `needs` | `{ kind: "mcp" \| "command" \| "access" \| "other"; name: string; note?…` | no |  |
+| `produces` | `string` | no |  |
+
+**Answer** `200`:
+
+```ts
+{
+  id: string;
+  element: {
+    id: string;
+    kind: string;
+    name: string;
+    instructions: string;
+    doneWhen: string;
+    needs: {
+      kind: "mcp" | "command" | "access" | "other";
+      name: string;
+      note?: string;
+    }[];
+    produces: string;
+    origin: {
+      kind: string;
+      name?: string;
+      [key: string]: unknown;
+    };
+    extra: {
+      [key: string]: unknown;
+    };
+  };
+  createdAt: string;
+  updatedAt: string;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+```sh
+curl -X PATCH -H "Authorization: Bearer $TOKEN" \
+     -H "Content-Type: application/json" -d '{"kind":"text"}' \
+     http://127.0.0.1:4600/v1/elements/<elementId>
+```
+
+### removeElement
+
+`DELETE /v1/elements/{elementId}`: Take an element off the shelf.
+
+An API token needs the scope `workflows:write`. A token whose changes to workflows need review is refused here: it proposes a draft instead (`POST /v1/drafts`).
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `elementId` | path | `string` | yes | An ID. |
+
+**Answer** `204`, with nothing in it.
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+```sh
+curl -X DELETE -H "Authorization: Bearer $TOKEN" \
+     http://127.0.0.1:4600/v1/elements/<elementId>
+```
+
+### copyElement
+
+`POST /v1/elements/{elementId}/copy`: Duplicate an element on the shelf.
+
+An API token needs the scope `workflows:write`. A token whose changes to workflows need review is refused here: it proposes a draft instead (`POST /v1/drafts`).
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `elementId` | path | `string` | yes | An ID. |
+| `idempotency-key` | header | `string` | no | A key of your choosing (1 to 128 visible ASCII characters). Sending the same request again with the same key returns the first answer and creates nothing more. |
+
+**Answer** `201`:
+
+```ts
+{
+  id: string;
+  element: {
+    id: string;
+    kind: string;
+    name: string;
+    instructions: string;
+    doneWhen: string;
+    needs: {
+      kind: "mcp" | "command" | "access" | "other";
+      name: string;
+      note?: string;
+    }[];
+    produces: string;
+    origin: {
+      kind: string;
+      name?: string;
+      [key: string]: unknown;
+    };
+    extra: {
+      [key: string]: unknown;
+    };
+  };
+  createdAt: string;
+  updatedAt: string;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+```sh
+curl -X POST -H "Authorization: Bearer $TOKEN" \
+     http://127.0.0.1:4600/v1/elements/<elementId>/copy
+```
+
+### runElement
+
+`POST /v1/elements/{elementId}/run`: Run one element by itself, on a session.
+
+A run of that one element. It is listed among the runs, and no workflow is added for it.
+
+An API token needs the scope `runs:write`.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `elementId` | path | `string` | yes | An ID. |
+| `idempotency-key` | header | `string` | no | A key of your choosing (1 to 128 visible ASCII characters). Sending the same request again with the same key returns the first answer and creates nothing more. |
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `sessionId` | `string` | yes | The session that will do it. |
+| `inputs` | `{ [key: string]: string; }` | no | What the element asks for: `task`, when its text uses it. |
+| `replace` | `boolean` | no | Stop the run the session is on, if any, and start this. |
+| `kickoff` | `boolean` | no | Type the fixed kickoff line, for the owner, where an agent is running. |
+
+**Answer** `201`:
+
+```ts
+{
+  run: {
+    id: string;
+    workflowId: string;
+    workflowVersion: number;
+    sessionId: string | null;
+    inputs: {
+      [key: string]: string;
+    };
+    status: "queued" | "running" | "paused" | "blocked" | "finished" | "stopped";
+    currentElementId: string | null;
+    elements: {
+      elementId: string;
+      state: "pending" | "active" | "done" | "skipped";
+      startedAt: string | null;
+      finishedAt: string | null;
+      note: string;
+      output: unknown | null;
+      ticks: {
+        item: number;
+        by: {
+          kind: "agent" | "person" | "token";
+          name?: string;
+        };
+        at: string;
+      }[];
+      by: {
+        kind: "agent" | "person" | "token";
+        name?: string;
+      } | null;
+      sessionId: string | null;
+    }[];
+    blockedReason: string | null;
+    pausedFrom: ("running" | "blocked") | null;
+    startedBy: {
+      kind: "agent" | "person" | "token";
+      name?: string;
+    };
+    createdAt: string;
+    updatedAt: string;
+    finishedAt: string | null;
+  };
+  workflowName: string;
+  elements: {
+    id: string;
+    name: string;
+    produces: string;
+  }[];
+  position: string;
+  text: string;
+  kickoff: string;
+  kickoffTyped: boolean;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+```sh
+curl -X POST -H "Authorization: Bearer $TOKEN" \
+     -H "Content-Type: application/json" -d '{"sessionId":"<sessionId>"}' \
+     http://127.0.0.1:4600/v1/elements/<elementId>/run
+```
+
+## Runs
+
+### tickRunItem
+
+`POST /v1/runs/{runId}/ticks`: Tick an item of what an element produced.
+
+For a checklist. Ticks are kept with the run, also after it is over, with who ticked and when; the next element is told which items are ticked.
+
+An API token needs the scope `runs:write`.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `runId` | path | `string` | yes | An ID. |
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `elementId` | `string` | yes | The element whose output it is. |
+| `item` | `number` | yes | Which item, counting from zero. |
+| `ticked` | `boolean` | yes | True to tick it, false to take the tick away. |
+
+**Answer** `200`:
+
+```ts
+{
+  run: {
+    id: string;
+    workflowId: string;
+    workflowVersion: number;
+    sessionId: string | null;
+    inputs: {
+      [key: string]: string;
+    };
+    status: "queued" | "running" | "paused" | "blocked" | "finished" | "stopped";
+    currentElementId: string | null;
+    elements: {
+      elementId: string;
+      state: "pending" | "active" | "done" | "skipped";
+      startedAt: string | null;
+      finishedAt: string | null;
+      note: string;
+      output: unknown | null;
+      ticks: {
+        item: number;
+        by: {
+          kind: "agent" | "person" | "token";
+          name?: string;
+        };
+        at: string;
+      }[];
+      by: {
+        kind: "agent" | "person" | "token";
+        name?: string;
+      } | null;
+      sessionId: string | null;
+    }[];
+    blockedReason: string | null;
+    pausedFrom: ("running" | "blocked") | null;
+    startedBy: {
+      kind: "agent" | "person" | "token";
+      name?: string;
+    };
+    createdAt: string;
+    updatedAt: string;
+    finishedAt: string | null;
+  };
+  workflowName: string;
+  elements: {
+    id: string;
+    name: string;
+    produces: string;
+  }[];
+  position: string;
+  text: string;
+  kickoff: string;
+  kickoffTyped: boolean;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+```sh
+curl -X POST -H "Authorization: Bearer $TOKEN" \
+     -H "Content-Type: application/json" -d '{"elementId":"<elementId>","item":0,"ticked":true}' \
+     http://127.0.0.1:4600/v1/runs/<runId>/ticks
 ```
 
 ## Events
@@ -2360,6 +3961,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
     lastUsedAt: string | null;
     expiresAt: string | null;
     revokedAt: string | null;
+    reviewWorkflowChanges: boolean;
   }[];
   nextCursor: string | null;
 }
@@ -2383,6 +3985,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 | `scopes` | `("read" \| "canvases:write" \| "sessions:write" \| "notes:write" \| "wo…` | yes | What it may do. At least one. |
 | `expiresAt` | `string` | no | When it stops working. Never, when neither this nor `expiresInDays` is given. |
 | `expiresInDays` | `number` | no | In how many days it stops working. |
+| `reviewWorkflowChanges` | `boolean` | no | Changes to workflows need your review: with `workflows:write` the token may propose drafts, and may not create or change workflows directly. On unless you switch it off. |
 
 **Answer** `201`:
 
@@ -2396,6 +3999,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
     lastUsedAt: string | null;
     expiresAt: string | null;
     revokedAt: string | null;
+    reviewWorkflowChanges: boolean;
   };
   secret: string;
 }
@@ -2426,6 +4030,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
   lastUsedAt: string | null;
   expiresAt: string | null;
   revokedAt: string | null;
+  reviewWorkflowChanges: boolean;
 }
 ```
 
@@ -2542,6 +4147,15 @@ For a session's own token, about that session; or an API token with the scope `r
       startedAt: string | null;
       finishedAt: string | null;
       note: string;
+      output: unknown | null;
+      ticks: {
+        item: number;
+        by: {
+          kind: "agent" | "person" | "token";
+          name?: string;
+        };
+        at: string;
+      }[];
       by: {
         kind: "agent" | "person" | "token";
         name?: string;
@@ -2562,6 +4176,7 @@ For a session's own token, about that session; or an API token with the scope `r
   elements: {
     id: string;
     name: string;
+    produces: string;
   }[];
   position: string;
   text: string;
@@ -2611,6 +4226,15 @@ For a session's own token, about that session; or an API token with the scope `r
       startedAt: string | null;
       finishedAt: string | null;
       note: string;
+      output: unknown | null;
+      ticks: {
+        item: number;
+        by: {
+          kind: "agent" | "person" | "token";
+          name?: string;
+        };
+        at: string;
+      }[];
       by: {
         kind: "agent" | "person" | "token";
         name?: string;
@@ -2631,6 +4255,7 @@ For a session's own token, about that session; or an API token with the scope `r
   elements: {
     id: string;
     name: string;
+    produces: string;
   }[];
   position: string;
   text: string;
@@ -2645,6 +4270,372 @@ For a session's own token, about that session; or an API token with the scope `r
 curl -X POST -H "Authorization: Bearer $TOKEN" \
      -H "Content-Type: application/json" -d '{"type":"done"}' \
      http://127.0.0.1:4600/v1/sessions/<sessionId>/run/report
+```
+
+### getSessionBrief
+
+`GET /v1/sessions/{sessionId}/brief`: What a session was asked to write.
+
+For a program inside a session, with that session's own token: the owner's request for a workflow or an element, the format, and how to hand it in; after a draft was sent back, the comment too. 404 when nothing is asked of the session.
+
+For a session's own token, about that session. No API token may call this.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `sessionId` | path | `string` | yes | An ID. |
+
+**Answer** `200`:
+
+```ts
+{
+  text: string;
+  kind: "workflow" | "element";
+  status: "requested" | "waiting" | "returned";
+}
+```
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+```sh
+curl -H "Authorization: Bearer $AUBERGINE_TOKEN" \
+     $AUBERGINE_URL/v1/sessions/<sessionId>/brief
+```
+
+### listSessionDrafts
+
+`GET /v1/sessions/{sessionId}/drafts`: The drafts a session proposed or was asked for.
+
+With that session's own token: its own drafts and the comments on them, and no others.
+
+For a session's own token, about that session. No API token may call this.
+
+A list: it answers a page at a time, see `limit` and `cursor`.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `sessionId` | path | `string` | yes | An ID. |
+| `limit` | query | `number` | no | How many items to return at most. |
+| `cursor` | query | `string` | no | The `nextCursor` of the page before. Opaque: do not build or change it. |
+
+**Answer** `200`:
+
+```ts
+{
+  items: {
+    workflow: {
+      name: string;
+      description: string;
+      standing: string;
+      inputs: {
+        key: string;
+        label: string;
+        description: string;
+        required: boolean;
+      }[];
+      elements: {
+        id: string;
+        kind: string;
+        name: string;
+        instructions: string;
+        doneWhen: string;
+        needs: {
+          kind: "mcp" | "command" | "access" | "other";
+          name: string;
+          note?: string;
+        }[];
+        produces: string;
+        origin: {
+          kind: string;
+          name?: string;
+          [key: string]: unknown;
+        };
+        extra: {
+          [key: string]: unknown;
+        };
+      }[];
+      extra: {
+        [key: string]: unknown;
+      };
+    } | null;
+    element: {
+      id: string;
+      kind: string;
+      name: string;
+      instructions: string;
+      doneWhen: string;
+      needs: {
+        kind: "mcp" | "command" | "access" | "other";
+        name: string;
+        note?: string;
+      }[];
+      produces: string;
+      origin: {
+        kind: string;
+        name?: string;
+        [key: string]: unknown;
+      };
+      extra: {
+        [key: string]: unknown;
+      };
+    } | null;
+    id: string;
+    kind: "workflow" | "element";
+    status: "requested" | "waiting" | "returned";
+    description: string;
+    proposedBy: {
+      kind: "session";
+      sessionId: string;
+    } | {
+      kind: "token";
+      tokenId: string;
+      name: string;
+    } | {
+      kind: "person";
+    };
+    sessionId: string | null;
+    revisesWorkflowId: string | null;
+    previous: {
+      workflow: {
+        name: string;
+        description: string;
+        standing: string;
+        inputs: {
+          key: string;
+          label: string;
+          description: string;
+          required: boolean;
+        }[];
+        elements: {
+          id: string;
+          kind: string;
+          name: string;
+          instructions: string;
+          doneWhen: string;
+          needs: {
+            kind: "mcp" | "command" | "access" | "other";
+            name: string;
+            note?: string;
+          }[];
+          produces: string;
+          origin: {
+            kind: string;
+            name?: string;
+            [key: string]: unknown;
+          };
+          extra: {
+            [key: string]: unknown;
+          };
+        }[];
+        extra: {
+          [key: string]: unknown;
+        };
+      } | null;
+      element: {
+        id: string;
+        kind: string;
+        name: string;
+        instructions: string;
+        doneWhen: string;
+        needs: {
+          kind: "mcp" | "command" | "access" | "other";
+          name: string;
+          note?: string;
+        }[];
+        produces: string;
+        origin: {
+          kind: string;
+          name?: string;
+          [key: string]: unknown;
+        };
+        extra: {
+          [key: string]: unknown;
+        };
+      } | null;
+    } | null;
+    revision: number;
+    comment: string | null;
+    createdAt: string;
+    updatedAt: string;
+  }[];
+  nextCursor: string | null;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+```sh
+curl -H "Authorization: Bearer $AUBERGINE_TOKEN" \
+     $AUBERGINE_URL/v1/sessions/<sessionId>/drafts
+```
+
+### proposeSessionDraft
+
+`POST /v1/sessions/{sessionId}/drafts`: Hand in a draft from a session.
+
+With that session's own token. It answers a request made of the session, or revises the session's draft that was sent back; otherwise it is a new draft. A draft is never run and never told to an agent: the owner reads it first.
+
+For a session's own token, about that session. No API token may call this.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `sessionId` | path | `string` | yes | An ID. |
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `workflow` | `{ /** What it is called. */ name: string; /** What it is for, in a …` | no | A whole workflow. Give this or `element`, not both. |
+| `element` | `{ id?: string; kind?: string; name: string; instructions?: string; …` | no | One element, for the shelf. |
+| `revisesWorkflowId` | `string` | no | For a workflow: the workflow this is a new version of. Without it, accepting makes a new workflow. |
+| `description` | `string` | no | What it is meant to do, when nobody asked for it. |
+
+**Answer** `201`:
+
+```ts
+{
+  workflow: {
+    name: string;
+    description: string;
+    standing: string;
+    inputs: {
+      key: string;
+      label: string;
+      description: string;
+      required: boolean;
+    }[];
+    elements: {
+      id: string;
+      kind: string;
+      name: string;
+      instructions: string;
+      doneWhen: string;
+      needs: {
+        kind: "mcp" | "command" | "access" | "other";
+        name: string;
+        note?: string;
+      }[];
+      produces: string;
+      origin: {
+        kind: string;
+        name?: string;
+        [key: string]: unknown;
+      };
+      extra: {
+        [key: string]: unknown;
+      };
+    }[];
+    extra: {
+      [key: string]: unknown;
+    };
+  } | null;
+  element: {
+    id: string;
+    kind: string;
+    name: string;
+    instructions: string;
+    doneWhen: string;
+    needs: {
+      kind: "mcp" | "command" | "access" | "other";
+      name: string;
+      note?: string;
+    }[];
+    produces: string;
+    origin: {
+      kind: string;
+      name?: string;
+      [key: string]: unknown;
+    };
+    extra: {
+      [key: string]: unknown;
+    };
+  } | null;
+  id: string;
+  kind: "workflow" | "element";
+  status: "requested" | "waiting" | "returned";
+  description: string;
+  proposedBy: {
+    kind: "session";
+    sessionId: string;
+  } | {
+    kind: "token";
+    tokenId: string;
+    name: string;
+  } | {
+    kind: "person";
+  };
+  sessionId: string | null;
+  revisesWorkflowId: string | null;
+  previous: {
+    workflow: {
+      name: string;
+      description: string;
+      standing: string;
+      inputs: {
+        key: string;
+        label: string;
+        description: string;
+        required: boolean;
+      }[];
+      elements: {
+        id: string;
+        kind: string;
+        name: string;
+        instructions: string;
+        doneWhen: string;
+        needs: {
+          kind: "mcp" | "command" | "access" | "other";
+          name: string;
+          note?: string;
+        }[];
+        produces: string;
+        origin: {
+          kind: string;
+          name?: string;
+          [key: string]: unknown;
+        };
+        extra: {
+          [key: string]: unknown;
+        };
+      }[];
+      extra: {
+        [key: string]: unknown;
+      };
+    } | null;
+    element: {
+      id: string;
+      kind: string;
+      name: string;
+      instructions: string;
+      doneWhen: string;
+      needs: {
+        kind: "mcp" | "command" | "access" | "other";
+        name: string;
+        note?: string;
+      }[];
+      produces: string;
+      origin: {
+        kind: string;
+        name?: string;
+        [key: string]: unknown;
+      };
+      extra: {
+        [key: string]: unknown;
+      };
+    } | null;
+  } | null;
+  revision: number;
+  comment: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+```sh
+curl -X POST -H "Authorization: Bearer $AUBERGINE_TOKEN" \
+     -H "Content-Type: application/json" -d '{"workflow":{"name":"example","elements":[{"name":"example"}]}}' \
+     $AUBERGINE_URL/v1/sessions/<sessionId>/drafts
 ```
 
 ### reportAgent

@@ -49,7 +49,7 @@ function world(count: number): { app: AppState; sessions: Session[]; workflow: W
   const base = createInitialState(new Date(at));
   const sessions = Array.from({ length: count }, (_, i) => session(`s-${i}`));
   const nodes: LayoutNode[] = sessions.map((s, i) => ({ id: newId(), sessionId: s.id, x: (i % 10) * 700, y: Math.floor(i / 10) * 500, width: 640, height: 400, color: 'none' }));
-  const workflow: Workflow = { id: newId(), projectId: base.project.id, name: version.name, description: '', labels: {}, origin: { kind: 'local' }, createdAt: at, updatedAt: at, versions: [version] };
+  const workflow: Workflow = { id: newId(), projectId: base.project.id, name: version.name, description: '', labels: {}, origin: { kind: 'local' }, createdAt: at, updatedAt: at, listed: true, versions: [version] };
   return { app: { ...base, sessions, canvases: [{ ...base.canvases[0]!, layout: { nodes, frames: [] } }], workflows: [workflow] }, sessions, workflow };
 }
 

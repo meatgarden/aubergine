@@ -37,6 +37,7 @@ import type { Sessions } from './sessions';
 import type { StateHub } from './state-hub';
 import type { Tokens } from './tokens';
 import type { Viewers } from './viewers';
+import type { Drafts } from './drafts';
 import { actorOf, type Workflows } from './workflows';
 
 export interface PublicRouteDeps {
@@ -44,6 +45,7 @@ export interface PublicRouteDeps {
   sessions: Sessions;
   tokens: Tokens;
   workflows: Workflows;
+  drafts: Drafts;
   activity: ActivityLog;
   viewers: Viewers;
   limiter: RateLimiter;
@@ -75,7 +77,7 @@ type Handlers = { [I in RouteId]: (context: Context<I>) => RouteOutput<I> | Prom
  * call it, and no route exists that is not declared.
  */
 export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps): void {
-  const { hub, sessions, workflows, parse } = deps;
+  const { hub, sessions, workflows, drafts, parse } = deps;
   const remembered = new IdempotencyStore();
 
   const summary = (canvas: Canvas): CanvasSummary => {
@@ -283,6 +285,49 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
 
     reportRun: ({ params, body, principal }) => workflows.report(params.runId, body, actorOf(principal)),
 
+    /* ---------- Drafts ---------- */
+
+    listDrafts: ({ query }) => paginate(drafts.list(), (d) => d.id, query),
+
+    getDraft: ({ params }) => drafts.detail(drafts.get(params.draftId)),
+
+    // What comes in here is kept as a draft and nothing more: no run, no workflow, nothing typed.
+    proposeDraft: ({ body, principal }) =>
+      drafts.detail(drafts.propose(body, principal.kind === 'token' ? { kind: 'token', tokenId: principal.tokenId, name: principal.name } : principal.kind === 'session' ? { kind: 'session', sessionId: principal.sessionId } : { kind: 'person' })),
+
+    reviseDraft: ({ params, body }) => drafts.detail(drafts.revise(params.draftId, body)),
+
+    acceptDraft: ({ params, body }) => drafts.accept(params.draftId, body),
+
+    returnDraft: ({ params, body }) => drafts.sendBack(params.draftId, body.comment),
+
+    discardDraft: ({ params }) => {
+      drafts.discard(params.draftId);
+    },
+
+    requestDraft: ({ body }) => drafts.request(body),
+
+    /* ---------- The shelf ---------- */
+
+    listElements: ({ query }) => paginate(drafts.shelf(), (e) => e.id, query),
+
+    createElement: ({ body }) => drafts.createOnShelf(body),
+
+    updateElement: ({ params, body }) => drafts.updateOnShelf(params.elementId, body),
+
+    removeElement: ({ params }) => {
+      drafts.removeFromShelf(params.elementId);
+    },
+
+    copyElement: ({ params }) => drafts.copyOnShelf(params.elementId),
+
+    runElement: ({ params, body, principal }) => {
+      const { kickoff, ...rest } = body;
+      return workflows.startElement(drafts.shelfElement(params.elementId).element, { ...rest, typeKickoff: kickoff && principal.kind === 'user' }, actorOf(principal));
+    },
+
+    tickRunItem: ({ params, body, principal }) => workflows.tick(params.runId, body, actorOf(principal)),
+
     /* ---------- The stream of changes ---------- */
 
     // Server-sent events: one `data:` line of JSON per change. It needs nothing but an HTTP client,
@@ -339,6 +384,13 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
     // The run a session is on. The address names the session, and `authorize` has already
     // made sure a session's token is that session's own: there is no way from here to another run.
     getSessionRun: ({ params }) => workflows.ownRun(params.sessionId),
+
+    // What a session was asked to write, and what it wrote: its own, by its own address. It cannot accept anything.
+    getSessionBrief: ({ params }) => drafts.brief(params.sessionId),
+
+    listSessionDrafts: ({ params, query }) => paginate(drafts.ofSession(params.sessionId), (d) => d.id, query),
+
+    proposeSessionDraft: ({ params, body }) => drafts.proposeFromSession(params.sessionId, body),
 
     reportSessionRun: ({ params, body, principal }) => workflows.reportOwn(params.sessionId, body, actorOf(principal)),
   };

@@ -102,7 +102,7 @@ export function accessSentence(spec: RouteSpec): string {
         ? `For a session's own token, about that session; or an API token with the scope \`${access.scope}\`, about any session.`
         : "For a session's own token, about that session. No API token may call this.";
     default:
-      return `An API token needs the scope \`${access.scope}\`.${fields}`;
+      return `An API token needs the scope \`${access.scope}\`.${spec.action === 'workflows.write' ? ' A token whose changes to workflows need review is refused here: it proposes a draft instead (`POST /v1/drafts`).' : ''}${fields}`;
   }
 }
 

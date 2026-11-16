@@ -556,7 +556,7 @@ Saving makes a **new version**. A run keeps to the version it started on, so edi
 On a terminal: the **⇶** button in its title bar, or ⌘K, `Run workflow`. Choose the workflow, fill in the task, read what the agent will be told first, and start. If an agent is running in that terminal, Aubergine types one line into it:
 
 ```
-You are on the workflow "Fix a bug". Run `aubergine workflow status` to read your current element and follow it. When its "done when" is true, run `aubergine workflow done --note "<what you did>"` and follow what it prints.
+You are on an Aubergine workflow. Run `aubergine workflow status` to read your current element and follow it. When its "done when" is true, run `aubergine workflow done --note "<what you did>"` and follow what it prints.
 ```
 
 From there the agent drives itself: `status` prints the element, and `done` records it and prints the next one, with the note the element before handed over. If no agent is running there, nothing is typed (a shell would try to run the sentence); the run is shown with its buttons, and with that line to give an agent yourself.

@@ -55,6 +55,7 @@ import { isTerminalReply } from './terminal-replies';
 import { BadInputError, ConflictError, NotFoundError, RuntimeUnavailableError, type Sessions } from './sessions';
 import { tokensMatch } from './token';
 import { MemoryRunArchive, type RunArchive } from './run-archive';
+import { Drafts } from './drafts';
 import { Workflows } from './workflows';
 
 export interface ServerOptions {
@@ -138,6 +139,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     onError: (error) => console.error('Could not move a run:', error),
   });
   await workflows.reconcile();
+  const drafts = new Drafts(hub, sessions, workflows, () => ({ maxElements: workflowSettings.maxElements, maxElementChars: workflowSettings.maxElementChars }));
 
   const routes: PublicRoute[] = [];
   routeLists.set(app, routes);
@@ -248,7 +250,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
               .send(errorBody('rate_limited', `Too many calls with this token. Try again in ${turn.retryAfterSeconds} s.`));
           }
           tokens.touch(found.token.id);
-          principals.set(request, { kind: 'token', tokenId: found.token.id, name: found.token.name, scopes: found.token.scopes });
+          principals.set(request, { kind: 'token', tokenId: found.token.id, name: found.token.name, scopes: found.token.scopes, reviewWorkflows: found.token.reviewWorkflowChanges });
           return;
         }
         const principal = principalFromBearer(token, request.headers.authorization);
@@ -450,6 +452,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     sessions,
     tokens,
     workflows,
+    drafts,
     activity,
     viewers,
     limiter,
