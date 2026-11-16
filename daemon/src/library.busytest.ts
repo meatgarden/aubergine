@@ -7,6 +7,8 @@ import { GRANTABLE_SCOPES, LIBRARY_INDEX_FILE, copyStatus, registerLibraryKind, 
 import { execFileSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import { chmod, mkdir, readFile, readdir, symlink, writeFile } from 'node:fs/promises';
+import { createClient } from '@aubergine/client';
+import { parseLibraryCommand, runLibraryCommand } from './cli/library';
 import { GitFetcher, type LibraryFetcher } from './library/git';
 import { builtinFolder } from './library';
 import { publicRoutesOf } from './server';
@@ -786,6 +788,105 @@ describe('one more kind of item', () => {
       expect((await asOwner('DELETE', `/v1/library/installed/${installed.id}`)).status).toBe(204);
     } finally {
       unregisterLibraryKind('house-rule');
+    }
+  });
+});
+
+describe('the commands', () => {
+  let answers: string[] = [];
+  /** `aubergine library …` as the owner types it, in a folder. */
+  async function library(words: string[], cwd = dir): Promise<{ code: number; out: string }> {
+    const printed: string[] = [];
+    const client = createClient({ baseUrl: origin, headers: { origin, cookie: `${cookieName(port)}=${ownerToken}` } });
+    const code = await runLibraryCommand(parseLibraryCommand(words), { owner: (work) => work(client), print: (text) => printed.push(text), ask: async () => answers.shift() ?? '', cwd });
+    return { code, out: printed.join('\n') };
+  }
+  beforeEach(() => {
+    answers = [];
+  });
+
+  it('publish into a folder of one\'s own, add it as a source, read an item and install exactly what was read', async () => {
+    await asOwner('POST', '/v1/workflows', { name: 'Ship a Change!', description: 'For shipping.', elements: [{ name: 'Build', instructions: 'Build it.', doneWhen: 'It builds.' }], labels: { team: 'mine' } });
+    await asOwner('POST', '/v1/elements', { name: 'Tidy up', instructions: 'Remove what is not needed.', doneWhen: 'Nothing is left over.' });
+    const folder = path.join(dir, 'my-library');
+    await expect(library(['export', 'ship', '--to', folder])).rejects.toThrow(/is not a folder\. Make it first/);
+    await mkdir(folder);
+
+    // A workflow and an element: two files and an index, all inside the folder, and nothing else anywhere.
+    const first = await library(['export', 'ship', '--to', folder]);
+    expect(first.out).toMatch(/Wrote .*workflows\/ship-a-change\.json\nMade .*aubergine-library\.json: "ship-a-change", version 1\.\nNothing was committed or pushed/);
+    expect((await library(['export', 'tidy', '--element', '--to', 'my-library'])).out).toMatch(/Updated .*"tidy-up", version 1\./);
+    expect((await filesUnder(folder)).map((file) => path.relative(folder, file)).sort()).toEqual(['aubergine-library.json', 'elements/tidy-up.json', 'workflows/ship-a-change.json']);
+    const index = JSON.parse(await readFile(path.join(folder, LIBRARY_INDEX_FILE), 'utf8'));
+    expect(index).toMatchObject({ aubergine: 'library', format: 1 });
+    expect(index.items.map((item: { id: string; kind: string; version: string; path: string }) => [item.id, item.kind, item.version, item.path])).toEqual([
+      ['ship-a-change', 'workflow', '1', 'workflows/ship-a-change.json'],
+      ['tidy-up', 'element', '1', 'elements/tidy-up.json'],
+    ]);
+    // What is published says nothing about this computer: no labels, no origin, no IDs of this shelf.
+    const published = await readFile(path.join(folder, 'workflows/ship-a-change.json'), 'utf8');
+    expect(published).not.toMatch(/"labels"|"origin"|"source"|mine/);
+
+    // Again with nothing changed: the same version. Changed: the next one. A version taken by other content is refused.
+    index.items[0].description = 'Ships a change.';
+    index.later = { kept: true };
+    await writeFile(path.join(folder, LIBRARY_INDEX_FILE), JSON.stringify(index));
+    expect((await library(['export', 'ship', '--to', folder])).out).toMatch(/"ship-a-change", version 1\./);
+    const workflowId = hub.state.workflows[0]!.id;
+    await asOwner('PATCH', `/v1/workflows/${workflowId}`, { description: 'For shipping, carefully.' });
+    await expect(library(['export', 'ship', '--to', folder, '--version', '1'])).rejects.toThrow(/already at version 1 in that folder with other content/);
+    expect((await library(['export', 'ship', '--to', folder])).out).toMatch(/"ship-a-change", version 2\./);
+    const again = JSON.parse(await readFile(path.join(folder, LIBRARY_INDEX_FILE), 'utf8'));
+    // What the index held and this command does not know is still there.
+    expect(again.later).toEqual({ kept: true });
+    expect(again.items[0]).toMatchObject({ version: '2', description: 'Ships a change.' });
+
+    // Nothing is written through a link, or over an index that is not one.
+    const linked = path.join(dir, 'linked-library');
+    await mkdir(linked);
+    await symlink(path.join(dir, 'elsewhere.json'), path.join(linked, 'workflows'));
+    await expect(library(['export', 'ship', '--to', linked])).rejects.toThrow(/link/);
+    expect(existsSync(path.join(dir, 'elsewhere.json'))).toBe(false);
+    const notOne = path.join(dir, 'not-a-library');
+    await put(notOne, LIBRARY_INDEX_FILE, { something: 'else' });
+    await expect(library(['export', 'ship', '--to', notOne])).rejects.toThrow(/is not a library index\. Nothing was written/);
+
+    // The folder as a source, on this same computer.
+    const added = await library(['add', 'my-library', '--name', 'Mine']);
+    expect(added.code).toBe(0);
+    expect(added.out).toMatch(/^Mine {2}\(folder: .*my-library\)\n {2}2 items; last read /);
+    expect((await library(['sources'])).out).toMatch(/Comes with Aubergine {2}\(comes with Aubergine\)\n {2}6 items/);
+    const listed = (await library(['list'])).out;
+    expect(listed).toMatch(/ship-a-change +a workflow, version 2, from "Mine": Ship a Change!\. Ships a change\.\n +not installed/);
+    const shown = await library(['show', 'tidy-up']);
+    expect(shown.out).toMatch(/^An element: Tidy up\nFrom Mine \(.*my-library\), item tidy-up, version 1\nnot installed\n\n/);
+    expect(shown.out).toContain('Remove what is not needed.');
+
+    // Installing shows all of it and asks. Without a yes, nothing is installed.
+    const shelfBefore = hub.state.shelf.length;
+    const declined = await library(['install', 'tidy-up']);
+    expect(declined.out).toContain('This is what an agent will be told. Someone else wrote it; an agent will follow it. Read all of it:');
+    expect(declined.out).toContain('Remove what is not needed.');
+    expect(declined.out).toMatch(/Not installed\. It waits in Review/);
+    expect(hub.state.shelf).toHaveLength(shelfBefore);
+    answers = ['y'];
+    expect((await library(['install', 'tidy-up'])).out).toMatch(/Installed "Tidy up", version 1\.$/);
+    expect(hub.state.shelf).toHaveLength(shelfBefore + 1);
+    expect((await library(['list'])).out).toMatch(/tidy-up .*\n +installed \(version 1\)/);
+
+    expect((await library(['refresh', 'Mine'])).code).toBe(0);
+    expect((await library(['remove', 'Mine'])).out).toMatch(/Removed the source "Mine"\. What was installed from it stays/);
+    await expect(library(['remove', 'Comes with Aubergine'])).rejects.toThrow(/cannot be removed/);
+    expect(fetcher.calls).toEqual([]);
+  });
+
+  it('are parsed strictly', () => {
+    expect(parseLibraryCommand([])).toEqual({ action: 'list' });
+    expect(parseLibraryCommand(['add', 'git@example.invalid:team/library.git', '--name', 'Team'])).toEqual({ action: 'add', address: 'git@example.invalid:team/library.git', name: 'Team' });
+    expect(parseLibraryCommand(['export', 'Ship', 'it', '--to', 'out', '--element', '--version', '1.2.0', '--id', 'ship'])).toEqual({ action: 'export', query: 'Ship it', to: 'out', element: true, version: '1.2.0', id: 'ship' });
+    expect(parseLibraryCommand(['refresh'])).toEqual({ action: 'refresh', query: null });
+    for (const words of [['add'], ['add', 'a', 'b'], ['add', 'x', '--force'], ['export', 'x'], ['export', '--to', 'out'], ['export', 'x', '--to', 'out', '--version', 'one two'], ['export', 'x', '--to', 'out', '--id', 'Bad ID'], ['install'], ['show'], ['remove'], ['publish'], ['install', 'x', '--yes']]) {
+      expect(() => parseLibraryCommand(words), words.join(' ')).toThrow();
     }
   });
 });

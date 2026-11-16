@@ -43,6 +43,7 @@ import {
 } from './agents/claude-code';
 import { agentClient } from './cli/agent';
 import { guideText } from './cli/guide';
+import { parseLibraryCommand, runLibraryCommand } from './cli/library';
 import { parseElementCommand, parseWorkflowCommand, runWorkflowCommand } from './cli/workflow';
 import { openBrowser, sessionAddress } from './cli/open-browser';
 import { commandsFor, formatAgents, formatOutside, normaliseTty, toShells } from './cli/outside';
@@ -554,6 +555,9 @@ async function main(): Promise<number> {
       }
       return result.exitCode ?? 0;
     }
+
+    case 'library':
+      return runLibraryCommand(parseLibraryCommand(command.words), { owner: (work) => v1(config, work), print: (text) => console.log(text), ask, cwd: process.cwd() });
 
     case 'workflow':
     case 'element':

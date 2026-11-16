@@ -39,6 +39,8 @@ export type Command =
   /** `element …`: the shelf, running one element by itself, proposing one. */
   | { name: 'element'; words: string[] }
   | { name: 'note'; text: string }
+  /** `library …`: its own words, parsed by the library commands. */
+  | { name: 'library'; words: string[] }
   /** Inside a session: take its unread messages. */
   | { name: 'inbox' }
   /** Inside a session: answer a message it received. */
@@ -158,6 +160,18 @@ export const USAGE = `Usage: aubergine <command>
   run <session> [--timeout s] -- <command>   Run a command at its shell prompt, wait, and print the output and exit code
   protect <session>          Mark it "people only": no API token may read it or type into it
   unprotect <session>        Open it to API tokens again (those whose scopes and reach allow)
+  library list               What the library offers, from every source, and what of it is installed
+  library show <item>        One item in full: everything an agent would be told by it, and where it comes from
+  library install <item>     Shows all of it, asks, and installs exactly what was shown. Nothing installs unasked
+  library sources            The sources, each with when it was last read and why the last try failed, if it did
+  library add <folder | Git address> [--name <name>]
+                             Add a source: a folder, or https://…, ssh://…, user@host:path, file://… A Git source is
+                             fetched now and on "refresh", and at no other time. No password is taken or stored
+  library refresh [source]   Read a source again (all of them, with none named). The only thing that fetches
+  library remove <source>    Remove a source. What was installed from it stays
+  library export <workflow> --to <folder> [--element] [--version v] [--id id]
+                             Write a workflow (or, with --element, a shelf element) as a file into a folder and list
+                             it in that folder's index, so the folder can be a source. Never commits or pushes
   history [folder]           The agent's earlier conversations in a folder (this one, when none is given): name or first
                              prompt, when, how many turns, and whether a canvas terminal is on it now
   history open <id> [--copy] [--folder f]
@@ -192,7 +206,7 @@ export const USAGE = `Usage: aubergine <command>
 new, here and import take --canvas <name>. Without it they use the canvas you looked at most recently
 in a browser, or the first one when no browser is open.
 
-The server must be running for list, new, canvas, token, workflow, element, screen, output, send, run, protect, attach, here, scan, import, move, tell, inbox, reply, note, attention and open.
+The server must be running for list, new, canvas, token, workflow, element, library, screen, output, send, run, protect, attach, here, scan, import, move, tell, inbox, reply, note, attention and open.
 guide works without it, and then prints every part.`;
 
 export class UsageError extends Error {}
@@ -365,6 +379,8 @@ export function parseCommand(argv: readonly string[]): Command {
     case 'element':
     case 'elements':
       return { name: 'element', words: rest };
+    case 'library':
+      return { name: 'library', words: rest };
     case 'history': {
       const { value: folder, rest: afterFolder } = takeOption(rest, '--folder');
       if (afterFolder[0] === 'open') {
