@@ -43,7 +43,10 @@ import {
   type StateResponse,
   type TerminalServerMessage,
 } from '@aubergine/shared';
-import { authorize, principalFromBearer, type Action, type Principal, type Resource } from './auth';
+import { MemoryActivityLog, BadActivityCursorError, type ActivityLog } from './activity';
+import { authorize, bearerOf, principalFromBearer, type Action, type Principal, type Resource } from './auth';
+import { RateLimiter } from './rate-limit';
+import { TokenNotFoundError, Tokens } from './tokens';
 import { BadCursorError } from './public-api';
 import { registerPublicRoutes } from './v1';
 import { Viewers } from './viewers';
@@ -67,6 +70,23 @@ export interface ServerOptions {
   token: string;
   devOrigin: string | null;
   webDist: string;
+  /** Where calls made with API tokens are recorded. Left out, they are kept in memory only. */
+  activity?: ActivityLog;
+  /** The version this server reports about itself. */
+  version?: string;
+}
+
+/** A route of the public API, as the tests walk them. */
+export interface PublicRoute {
+  method: string;
+  url: string;
+}
+
+const routeLists = new WeakMap<FastifyInstance, PublicRoute[]>();
+
+/** Every route under /v1 that a server has, so that a test can try each one and none is forgotten. */
+export function publicRoutesOf(app: FastifyInstance): PublicRoute[] {
+  return routeLists.get(app) ?? [];
 }
 
 /** Pause reading from a terminal when this much output is waiting to be sent. */
@@ -102,7 +122,21 @@ export function cookieName(port: number): string {
 
 export async function buildServer(options: ServerOptions): Promise<FastifyInstance> {
   const { hub, sessions, runtime, token } = options;
-  const app = Fastify({ logger: false, bodyLimit: 64 * 1024 });
+  // Limits are read once, when the server starts.
+  const limits = (await options.settings()).api;
+  const app = Fastify({ logger: false, bodyLimit: limits.maxBodyBytes });
+  const tokens = new Tokens(hub);
+  const limiter = new RateLimiter(limits.rateLimitPerMinute);
+  const activity = options.activity ?? new MemoryActivityLog();
+
+  const routes: PublicRoute[] = [];
+  routeLists.set(app, routes);
+  app.addHook('onRoute', (route) => {
+    if (route.url !== '/v1' && !route.url.startsWith('/v1/')) return;
+    for (const method of [route.method].flat()) {
+      if (method !== 'HEAD' && method !== 'OPTIONS') routes.push({ method, url: route.url });
+    }
+  });
 
   const port = (): number => (app.server.address() as AddressInfo).port;
 
@@ -120,12 +154,38 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   /** Refuses the request unless its principal may do `action` on the session. */
   const allowOn = (request: FastifyRequest, action: Action, resource: Resource): Principal => {
     const principal = principals.get(request);
+    // Remembered for the activity log: what was asked for, whether or not it is allowed.
+    asked.set(request, { action, resource });
     if (!principal || !authorize(principal, action, resource)) {
       throw new HttpError(403, 'forbidden', 'These credentials may not do that');
     }
     return principal;
   };
   const allow = (request: FastifyRequest, action: Action, sessionId: string): Principal => allowOn(request, action, { sessionId });
+
+  /** What each request asked `authorize` for, and how a token call ended when that was decided before any route ran. */
+  const asked = new WeakMap<FastifyRequest, { action: Action; resource: Resource }>();
+  const tokenCalls = new WeakMap<FastifyRequest, { tokenId: string; tokenName: string; outcome?: 'refused' | 'limited'; logged?: boolean }>();
+
+  /** Records one call made with a token. Who, what and how it ended: never the secret, never what was sent. */
+  const record = (request: FastifyRequest, status: number): void => {
+    const call = tokenCalls.get(request);
+    if (!call || call.logged) return;
+    call.logged = true;
+    const what = asked.get(request);
+    void activity.append({
+      at: new Date().toISOString(),
+      tokenId: call.tokenId,
+      tokenName: call.tokenName,
+      action: what?.action ?? '',
+      resource: what?.resource ?? {},
+      method: request.method,
+      route: request.routeOptions?.url ?? '(no such route)',
+      status,
+      outcome: call.outcome ?? (status < 400 ? 'ok' : status === 403 ? 'denied' : 'error'),
+    });
+  };
+  app.addHook('onResponse', async (request, reply) => record(request, reply.statusCode));
 
   await app.register(cookie);
   await app.register(websocket, { options: { maxPayload: 2 * 1024 * 1024 } });
@@ -149,12 +209,39 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     const isSafeMethod = request.method === 'GET' || request.method === 'HEAD';
     const signedIn = tokensMatch(token, request.cookies[cookieName(port())]);
 
-    // The public API. Two kinds of caller: a program inside a session, with
-    // that session's bearer token (no browser, so no Origin to require); and
-    // the signed-in browser, with its cookie and the same Origin rule as /api.
-    // What each may do is decided per route, by authorize().
-    if (pathname.startsWith('/v1/')) {
+    // The public API. Three kinds of caller, and exactly one per request:
+    // a program with an API token the owner made; a program inside a session,
+    // with that session's token; and the signed-in browser, with its cookie
+    // and the same Origin rule as /api. What each may do is decided per
+    // route, by authorize().
+    //
+    // A bearer credential comes first and decides alone. A request that
+    // carries one is never also the browser, whatever cookie came with it:
+    // if the credential is wrong, the request is refused, not retried as the
+    // cookie's owner.
+    if (pathname === '/v1' || pathname.startsWith('/v1/')) {
       if (request.headers.authorization !== undefined) {
+        const bearer = bearerOf(request.headers.authorization);
+        const found = bearer ? tokens.authenticate(bearer) : null;
+        if (found) {
+          const call: { tokenId: string; tokenName: string; outcome?: 'refused' | 'limited' } = { tokenId: found.token.id, tokenName: found.token.name };
+          tokenCalls.set(request, call);
+          if (found.status !== 'active') {
+            call.outcome = 'refused';
+            return reply.code(401).send(errorBody('unauthorized', found.status === 'revoked' ? 'This token has been revoked' : 'This token has expired'));
+          }
+          const turn = limiter.take(found.token.id);
+          if (!turn.ok) {
+            call.outcome = 'limited';
+            return reply
+              .code(429)
+              .header('retry-after', String(turn.retryAfterSeconds))
+              .send(errorBody('rate_limited', `Too many calls with this token. Try again in ${turn.retryAfterSeconds} s.`));
+          }
+          tokens.touch(found.token.id);
+          principals.set(request, { kind: 'token', tokenId: found.token.id, name: found.token.name, scopes: found.token.scopes });
+          return;
+        }
         const principal = principalFromBearer(token, request.headers.authorization);
         if (!principal) return reply.code(401).send(errorBody('unauthorized', 'Missing or wrong bearer token'));
         principals.set(request, principal);
@@ -174,6 +261,8 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
 
     if (pathname.startsWith('/api/') || pathname.startsWith('/ws/')) {
       if (!signedIn) return reply.code(401).send(errorBody('unauthorized', 'Missing or wrong access token'));
+      // Only the cookie opens these, so the caller is the owner.
+      principals.set(request, { kind: 'user' });
     }
   });
 
@@ -181,10 +270,13 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     if (error instanceof HttpError) {
       return reply.code(error.statusCode).send(errorBody(error.code, error.message));
     }
-    if (error instanceof NotFoundError || error instanceof SessionNotFoundError) {
+    if ((error as { code?: string }).code === 'FST_ERR_CTP_BODY_TOO_LARGE' || (error as { statusCode?: number }).statusCode === 413) {
+      return reply.code(413).send(errorBody('too_large', `The request body is larger than this server accepts (${limits.maxBodyBytes} bytes).`));
+    }
+    if (error instanceof NotFoundError || error instanceof SessionNotFoundError || error instanceof TokenNotFoundError) {
       return reply.code(404).send(errorBody('not_found', error.message));
     }
-    if (error instanceof BadInputError || error instanceof BadCursorError) {
+    if (error instanceof BadInputError || error instanceof BadCursorError || error instanceof BadActivityCursorError) {
       return reply.code(400).send(errorBody('bad_request', error.message));
     }
     if (error instanceof ConflictError) {
@@ -229,7 +321,8 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     protocolVersion: PROTOCOL_VERSION,
     runtime: await sessions.status(),
     settings: await options.settings(),
-    state: hub.state,
+    // A browser has no use for the hashes of token secrets, so they stay here.
+    state: { ...hub.state, tokens: hub.state.tokens.map((t) => ({ ...t, hash: '' })) },
     defaultCanvasId: sessions.defaultCanvasId(),
   }));
 
@@ -256,15 +349,26 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     return options.outside;
   };
 
-  app.get(paths.outside, async (): Promise<OutsideResponse> => ({ terminals: await outside().list() }));
+  // Looking at, bringing in and stopping what runs outside Aubergine is the owner's alone: authorize() refuses it to every token.
+  app.get(paths.outside, async (request): Promise<OutsideResponse> => {
+    allowOn(request, 'outside.read', {});
+    return { terminals: await outside().list() };
+  });
 
   app.post(paths.outsideAdd, async (request, reply): Promise<OutsideResult> => {
+    allowOn(request, 'outside.move', {});
     const body = parse(OutsideAddRequest, request.body);
     reply.code(201);
     return outside().add(body);
   });
 
-  app.post(paths.outsideMove, async (request): Promise<OutsideResult> => outside().move(parse(OutsideMoveRequest, request.body)));
+  app.post(paths.outsideMove, async (request): Promise<OutsideResult> => {
+    allowOn(request, 'outside.move', {});
+    const body = parse(OutsideMoveRequest, request.body);
+    // Stop-and-resume sends a signal to a process the user started elsewhere.
+    if (body.mode === 'stop') allowOn(request, 'processes.signal', {});
+    return outside().move(body);
+  });
 
   app.post(paths.resumeAgent(':sessionId'), async (request) => sessions.resumeAgent(idParam(request, 'sessionId')));
 
@@ -341,7 +445,8 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     reply.code(201);
     return {
       entry: sessions.appendNote(sessionId, {
-        author: principal.kind === 'session' ? 'agent' : 'user',
+        // Anything that is not the owner in the browser is a program.
+        author: principal.kind === 'user' ? 'user' : 'agent',
         kind: body.kind,
         text: body.text,
       }),
@@ -354,7 +459,20 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     return sessions.reportAgent(sessionId, parse(ReportAgentRequest, request.body));
   });
 
-  registerPublicRoutes(app, { hub, sessions, allow: allowOn, parse, fail: (status, code, message) => new HttpError(status, code, message) });
+  registerPublicRoutes(app, {
+    hub,
+    sessions,
+    tokens,
+    activity,
+    viewers,
+    limiter,
+    version: options.version ?? 'unknown',
+    principalOf: (request) => principals.get(request) ?? null,
+    recordNow: (request) => record(request, 200),
+    allow: allowOn,
+    parse,
+    fail: (status, code, message) => new HttpError(status, code, message),
+  });
 
   /* ---------- WebSocket: change events ---------- */
 
@@ -362,7 +480,9 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     const send = (message: EventsServerMessage): void => {
       if (socket.readyState === socket.OPEN) socket.send(JSON.stringify(message));
     };
-    const unsubscribe = hub.subscribe((event) => send({ type: 'event', event }));
+    const unsubscribe = hub.subscribe((event) =>
+      send({ type: 'event', event: event.type === 'token.created' ? { ...event, token: { ...event.token, hash: '' } } : event }),
+    );
     const viewer = viewers.add(send);
     const leave = (): void => {
       unsubscribe();

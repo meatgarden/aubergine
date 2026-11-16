@@ -551,6 +551,7 @@ Create `config.json` in the data folder (the server prints its location at start
   "shell": null,
   "defaultFolder": "~/work",
   "agents": { "logPrompts": true, "claudeCommand": "claude" },
+  "api": { "rateLimitPerMinute": 600, "maxBodyBytes": 1048576, "activityLogMaxBytes": 5242880 },
   "shortcuts": {},
   "shortcutsInAppWindow": {}
 }
@@ -568,6 +569,7 @@ Create `config.json` in the data folder (the server prints its location at start
 
   Aubergine adds its own flags (`--settings <file>`, and `--continue` or `--resume <id>`) at the end. If your launcher needs them somewhere else, mark the place with `{flags}`, for example `"mytool run claude {flags} --then-something"`. The line is typed into your shell exactly as you wrote it, so quote it as you would on the command line.
 
+- `api`: limits on calls made with [API tokens](#api-tokens): calls per minute per token, the largest request body, and the size of the activity log. They apply when the server is next started.
 - `shortcuts`, `shortcutsInAppWindow`: your own keys; see [Keyboard](#keyboard).
 
 Font, theme and keys apply when you reload the page; shell and folder apply to the next new terminal.
@@ -609,6 +611,9 @@ aubergine import <terminal>…   give those terminals a canvas session in the sa
 aubergine import               the same for every one, one per folder (--all, --dry-run)
                                --canvas <name>  put them on this canvas
 aubergine shell-hook print     print the zsh lines that make new tabs start on the canvas
+aubergine token create <name> --scope <scope>…   make an API token; its secret is printed once (--expires 30d)
+aubergine token list           the API tokens, their scopes and when each was last used
+aubergine token revoke <name>  revoke a token; it stops working at once
 aubergine note <text>          inside a session: add an entry to its note log
 aubergine hooks print          print the Claude Code hook settings
 aubergine service install      start the Aubergine server at login (macOS)
@@ -640,37 +645,88 @@ PUT  /v1/sessions/<id>/attention   {"state": "working" | "waiting" | "done" | "n
 POST /v1/sessions/<id>/notes       {"text": "..."}
 ```
 
-Everything else is refused. `aubergine note` and `aubergine hook` are thin wrappers around these two calls.
+Everything else is refused. `aubergine note` and `aubergine hook` are thin wrappers around these two calls. This token is made for the session by Aubergine and is separate from the [API tokens](#api-tokens) you create yourself, which can do more.
 
-## For programs
+## API tokens
 
-Canvases and what is on them can be read and changed over HTTP, under `/v1`:
+A program of your own (a script, a build job, another tool on this computer) can read and change the canvas over HTTP with an **API token**. You create the token, choose what it may do, and can revoke it at any time.
+
+**Create one.** In the browser: ⌘K, type `API tokens`, give it a name and scopes, and copy the secret. Or from a terminal:
+
+```sh
+aubergine token create "build script" --scope read --scope sessions:write --expires 30d
+```
+
+The secret (it starts with `aubt_`) is shown **once**: in the browser with a copy button, on the command line as the only thing on standard output, so that `TOKEN=$(aubergine token create …)` captures it. Aubergine keeps only a hash of it and cannot show it again. Keep it like a password; if it gets out, revoke the token.
+
+**Call the API.** Send the secret as a bearer token, to `127.0.0.1` only:
+
+```sh
+curl -H "Authorization: Bearer $TOKEN" http://127.0.0.1:4600/v1/canvases
+
+curl -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
+     -d '{"name": "tests", "cwd": "/path/to/project", "command": "npm test"}' \
+     http://127.0.0.1:4600/v1/canvases/<canvas id>/sessions
+```
+
+`GET /v1` needs no scope: it says which features and scopes this server has and, for a token, its own name and scopes.
+
+**Scopes.**
+
+| Scope | Allows |
+|---|---|
+| `read` | see canvases, sessions, layout and notes; follow changes |
+| `canvases:write` | create, rename, reorder and close canvases; move and resize nodes; frames; show a canvas in the browser |
+| `sessions:write` | start, rename, tag, move, park, restore and end sessions; show a session in the browser. **A session can be started with a command, so a token with this scope can run any command on this computer as you** |
+| `notes:write` | change a session's pinned note and add entries to its note log |
+
+The names `terminal:read`, `terminal:input`, `workflows:write` and `runs:write` are reserved for what comes later; a token cannot be given them yet. A token cannot read what a terminal shows or type into it.
+
+**What no token can do, whatever its scopes:** create, list or revoke tokens; read the activity log; change settings; see, bring in or stop terminals outside Aubergine. Those stay with you, in the signed-in browser and the `aubergine` command.
+
+**The routes.**
 
 ```
+GET    /v1                                   what this server can do, and who is asking
 GET    /v1/canvases                          list canvases, each with counts of sessions, waiting and unread
 POST   /v1/canvases                          {"name": "...", "color"?, "labels"?}
 GET    /v1/canvases/<id>                     one canvas with its nodes and frames
 PATCH  /v1/canvases/<id>                     any of name, color, order, labels
 DELETE /v1/canvases/<id>?sessions=park       close it; or ?sessions=move&to=<canvas id>
-GET    /v1/canvases/<id>/sessions            the sessions on it, each with its node
+POST   /v1/canvases/<id>/show                switch an open browser to it
+GET    /v1/canvases/<id>/sessions            the sessions on it
 POST   /v1/canvases/<id>/sessions            start a session there: {"name"?, "cwd"?, "command"?, "position"?, "tags"?}
-PATCH  /v1/sessions/<id>                     any of name, tags (tags replaces the whole list)
+GET    /v1/sessions                          every session; ?state=open | parked | exited
+GET    /v1/sessions/<id>                     one session
+PATCH  /v1/sessions/<id>                     any of name, tags (sessions:write), note (notes:write)
+DELETE /v1/sessions/<id>                     end it
 POST   /v1/sessions/<id>/move                {"canvasId": "...", "position"?}
+POST   /v1/sessions/<id>/park                take it off its canvas; the shell keeps running
+POST   /v1/sessions/<id>/restore             {"canvasId"?} put it back
+POST   /v1/sessions/<id>/show                bring it up in an open browser
+POST   /v1/sessions/<id>/notes               {"text": "..."} add to its note log
 PATCH  /v1/canvases/<id>/nodes/<node id>     move, resize or color a node
 POST   /v1/canvases/<id>/frames              add a frame
 PATCH  /v1/canvases/<id>/frames/<frame id>   change a frame
 DELETE /v1/canvases/<id>/frames/<frame id>   remove a frame
+GET    /v1/events                            a stream of changes (server-sent events); ?canvasId= for one canvas
 ```
-
-**These routes are for the signed-in browser only for now.** They accept the access cookie the canvas page uses, with the same `Host` and `Origin` checks, and refuse a session's token: a program inside a session cannot list, create or rearrange canvases. Tokens for programs of your own are not built yet; until they are, treat this as the shape of the interface, not as something to script against from outside a browser. (The `aubergine` command uses these routes with the access token from the data folder.)
 
 The shapes are meant to last:
 
-- Errors are always `{"error": {"code": "...", "message": "..."}}` with a fitting HTTP status.
+- Errors are always `{"error": {"code": "...", "message": "..."}}` with a fitting HTTP status: `401` for a missing, wrong, revoked or expired token, `403` when its scopes do not allow the call.
 - Lists return `{"items": [...], "nextCursor": "..." | null}`. Pass `?cursor=<nextCursor>` for the next page and `?limit=` for its size. A cursor is opaque.
 - Fields you send that the server does not know are ignored, and responses may gain fields.
 - Times are ISO 8601 in UTC.
 - A `POST` that creates something takes an optional `Idempotency-Key` header: sending the same key again returns the first answer instead of creating a second thing. Keys are remembered until the server restarts.
+
+**Limits.** Each token may make 600 calls a minute; beyond that the answer is `429` with a `Retry-After` header. A request body may be at most 1 MiB; larger gets `413`. Change both under `api` in `config.json` (`rateLimitPerMinute`, `maxBodyBytes`); they apply from the next start of the server.
+
+**The activity log.** Every call made with a token is recorded: when, which token, what it asked for, and how it ended. The secret and what was sent are never recorded. See it in the browser (⌘K, `API activity`), where it can be narrowed to one token, or read the file: `activity.log` in the data folder, one JSON object per line. It is kept to 5 MiB (`api.activityLogMaxBytes`); when it is half full the older half moves to `activity.log.1`, replacing the one before.
+
+**Revoke** in the browser, or with `aubergine token revoke <name>`. A revoked or expired token is refused on its very next call. `aubergine token list` shows every token with its scopes and when it was last used.
+
+Tokens work on this computer only. The server listens on `127.0.0.1` and that does not change.
 
 ## Develop
 

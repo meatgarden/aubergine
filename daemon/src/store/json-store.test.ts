@@ -1,4 +1,4 @@
-import { copyFile, mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
+import { copyFile, mkdir, mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
@@ -64,7 +64,7 @@ describe('JsonStore', () => {
     const state = withSession(await store.load(), 'one');
     await store.save(state);
     const raw = JSON.parse(await readFile(store.file, 'utf8'));
-    expect(raw.version).toBe(2);
+    expect(raw.version).toBe(3);
     expect(raw.sessions[0]).not.toHaveProperty('x');
     expect(raw.sessions[0]).not.toHaveProperty('width');
     expect(raw.canvases[0].layout.nodes[0].sessionId).toBe(raw.sessions[0].id);
@@ -166,7 +166,7 @@ describe('JsonStore', () => {
     // Saving writes the current shape, which loads back the same.
     await store.save(state);
     const raw = JSON.parse(await readFile(store.file, 'utf8'));
-    expect(raw.version).toBe(2);
+    expect(raw.version).toBe(3);
     expect(raw.layout).toBeUndefined();
     expect(await new JsonStore(dir).load()).toEqual(state);
 
@@ -174,6 +174,30 @@ describe('JsonStore', () => {
     const backup = `${store.file}.v1.backup`;
     expect(JSON.parse(await readFile(backup, 'utf8')).version).toBe(1);
     expect(JSON.parse(await readFile(backup, 'utf8')).layout).toBeDefined();
+  });
+
+  it('loads a file from before API tokens with none, and keeps a copy of it', async () => {
+    const store = new JsonStore(dir);
+    const fixture = await readFile(new URL('./fixtures/state-canvases-v2.json', import.meta.url), 'utf8');
+    await mkdir(dir, { recursive: true });
+    await writeFile(store.file, fixture);
+
+    const state = await store.load();
+    expect(state.tokens).toEqual([]);
+    expect(state.canvases.map((c) => [c.name, c.color, c.layout.nodes.length])).toEqual([
+      ['Main', 'none', 1],
+      ['Deploys', 'green', 1],
+    ]);
+    expect(state.canvases[1]?.labels).toEqual({ team: 'ops' });
+    expect(state.sessions.find((s) => s.name === 'api')).toMatchObject({ note: 'retry logic', tags: ['backend'], lastInputAt: '2026-02-01T09:30:00.000Z' });
+
+    await store.save(state);
+    const raw = JSON.parse(await readFile(store.file, 'utf8'));
+    expect(raw.version).toBe(3);
+    expect(raw.tokens).toEqual([]);
+    expect(await new JsonStore(dir).load()).toEqual(state);
+    // The file as it was, byte for byte, is beside the new one.
+    expect(await readFile(`${store.file}.v2.backup`, 'utf8')).toBe(fixture);
   });
 
   it('keeps a session on one canvas only, if a file ever says otherwise', async () => {

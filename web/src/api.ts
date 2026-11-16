@@ -1,5 +1,9 @@
 import type { ZodType } from 'zod';
 import {
+  ActivityList,
+  CreatedToken,
+  TokenView,
+  type Scope,
   AppendNoteResponse,
   CanvasDetail,
   PlacedSession,
@@ -89,6 +93,15 @@ export const api = {
   /** Closes a canvas. Its sessions are moved to `to`, or parked when `to` is null. */
   closeCanvas: (canvasId: string, to: string | null) =>
     call<void>(null, 'DELETE', `${publicPaths.canvas(canvasId)}?sessions=${to ? `move&to=${to}` : 'park'}`),
+  createToken: (request: { name: string; scopes: Scope[]; expiresInDays?: number }) => call(CreatedToken, 'POST', publicPaths.tokens, request),
+  revokeToken: (tokenId: string) => call(TokenView, 'DELETE', publicPaths.token(tokenId)),
+  getActivity: (query: { tokenId?: string | undefined; cursor?: string | undefined; limit?: number }) => {
+    const params = new URLSearchParams();
+    if (query.tokenId) params.set('tokenId', query.tokenId);
+    if (query.cursor) params.set('cursor', query.cursor);
+    params.set('limit', String(query.limit ?? 50));
+    return call(ActivityList, 'GET', `${publicPaths.activity}?${params.toString()}`);
+  },
   moveSession: (sessionId: string, canvasId: string) =>
     call(PlacedSession, 'POST', publicPaths.moveSession(sessionId), { canvasId }),
   resumeAgent: (sessionId: string) => call(Session, 'POST', paths.resumeAgent(sessionId), {}),
@@ -119,6 +132,8 @@ export function subscribeToEvents(handlers: {
   onEvent: (event: ChangeEvent) => void;
   /** The daemon asks this page to bring a session into view. */
   onShow: (sessionId: string) => void;
+  /** Asked to switch to a canvas (by a program, through the public API). */
+  onShowCanvas: (canvasId: string) => void;
   onDown: () => void;
 }): { stop: () => void; viewing: (canvasId: string) => void } {
   let socket: WebSocket | null = null;
@@ -140,6 +155,7 @@ export function subscribeToEvents(handlers: {
         if (canvasId) say({ type: 'viewing', canvasId });
         handlers.onReady();
       } else if (parsed.data.type === 'show') handlers.onShow(parsed.data.sessionId);
+      else if (parsed.data.type === 'show-canvas') handlers.onShowCanvas(parsed.data.canvasId);
       else handlers.onEvent(parsed.data.event);
     };
     socket.onclose = () => {

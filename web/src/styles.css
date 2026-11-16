@@ -1570,3 +1570,120 @@ kbd.kept {
   outline: 1px solid var(--accent);
   outline-offset: -2px;
 }
+
+/* ---------- API tokens and activity ---------- */
+
+.token-screen h3 {
+  margin: 14px 0 6px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+.token-made {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border: 1px solid #e0a458;
+  border-radius: 8px;
+}
+.token-made p {
+  margin: 8px 0 0;
+  font-size: 13px;
+}
+.token-secret {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 8px;
+}
+.token-secret code {
+  flex: 1;
+  padding: 6px 8px;
+  font: 13px ui-monospace, Menlo, monospace;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  overflow-wrap: anywhere;
+  user-select: all;
+}
+.token-field {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.token-field > span {
+  width: 64px;
+  color: var(--muted);
+  font-size: 13px;
+}
+.token-field input,
+.token-field select {
+  flex: 1;
+  padding: 5px 8px;
+  font: inherit;
+  font-size: 13px;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+}
+.token-scopes {
+  margin: 0 0 8px;
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 13px;
+}
+.token-scopes legend {
+  color: var(--muted);
+  font-size: 12px;
+}
+.token-scopes label {
+  display: block;
+  padding: 2px 0;
+}
+.token-scopes span,
+.token-reserved {
+  color: var(--muted);
+}
+.token-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.token-table td {
+  padding: 6px 8px 6px 0;
+  border-top: 1px solid var(--border);
+  vertical-align: top;
+}
+.token-table .sheet-note {
+  margin: 0;
+  font-size: 12px;
+}
+.token-actions {
+  text-align: right;
+  white-space: nowrap;
+}
+.token-actions span {
+  margin-right: 8px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.token-off {
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+tr[data-status='revoked'] strong,
+tr[data-status='expired'] strong {
+  color: var(--muted);
+  text-decoration: line-through;
+}
+.activity-outcome.is-denied,
+.activity-outcome.is-refused,
+.activity-outcome.is-error {
+  color: var(--danger);
+}
+.activity-outcome.is-limited {
+  color: #e0a458;
+}

@@ -1,64 +1,75 @@
 import { describe, expect, it } from 'vitest';
-import { newId } from '@aubergine/shared';
-import { authorize, principalFromBearer, sessionToken } from './auth';
+import { GRANTABLE_SCOPES, type Scope } from '@aubergine/shared';
+import { ACTIONS, NEVER_BY_TOKEN, authorize, type Action, type Principal } from './auth';
 
-const secret = 'a'.repeat(64);
+const SESSION = '01900000-0000-7000-8000-0000000000a1';
+const OTHER = '01900000-0000-7000-8000-0000000000a2';
+const token = (...scopes: Scope[]): Principal => ({ kind: 'token', tokenId: '01900000-0000-7000-8000-0000000000f1', name: 'test', scopes });
 
-describe('session tokens', () => {
-  it('identify exactly one session', () => {
-    const id = newId();
-    const token = sessionToken(secret, id);
-    expect(principalFromBearer(secret, `Bearer ${token}`)).toEqual({ kind: 'session', sessionId: id });
-    expect(sessionToken(secret, id)).toBe(token);
-    expect(sessionToken(secret, newId())).not.toBe(token);
-  });
-
-  it('cannot be moved to another session or forged', () => {
-    const id = newId();
-    const other = newId();
-    const [prefix, , mac] = sessionToken(secret, id).split('.');
-    expect(principalFromBearer(secret, `Bearer ${prefix}.${other}.${mac}`)).toBeNull();
-    expect(principalFromBearer('b'.repeat(64), `Bearer ${sessionToken(secret, id)}`)).toBeNull();
-    expect(principalFromBearer(secret, `Bearer ${prefix}.${id}.${'0'.repeat(64)}`)).toBeNull();
-    expect(principalFromBearer(secret, `Bearer ${prefix}.not-an-id.${mac}`)).toBeNull();
-    expect(principalFromBearer(secret, 'Bearer')).toBeNull();
-    expect(principalFromBearer(secret, undefined)).toBeNull();
-    expect(principalFromBearer(secret, `Basic ${sessionToken(secret, id)}`)).toBeNull();
-  });
-
-  it("do not accept the daemon's own secret as a bearer credential", () => {
-    expect(principalFromBearer(secret, `Bearer ${secret}`)).toBeNull();
-  });
-});
+/** For a token: the one scope that opens each action. Anything not here is closed to every token. */
+const NEEDS: Partial<Record<Action, Scope>> = {
+  'canvases.read': 'read',
+  'sessions.read': 'read',
+  'events.read': 'read',
+  'canvases.write': 'canvases:write',
+  'layout.write': 'canvases:write',
+  'canvases.show': 'canvases:write',
+  'sessions.write': 'sessions:write',
+  'sessions.show': 'sessions:write',
+  'notes.write': 'notes:write',
+  'note.append': 'notes:write',
+};
 
 describe('authorize', () => {
-  const mine = newId();
-  const theirs = newId();
-  const session = { kind: 'session', sessionId: mine } as const;
-
-  it('lets a session act on itself only', () => {
-    expect(authorize(session, 'attention.set', { sessionId: mine })).toBe(true);
-    expect(authorize(session, 'note.append', { sessionId: mine })).toBe(true);
-    expect(authorize(session, 'attention.set', { sessionId: theirs })).toBe(false);
-    expect(authorize(session, 'note.append', { sessionId: theirs })).toBe(false);
-    expect(authorize(session, 'agent.report', { sessionId: mine })).toBe(true);
-    expect(authorize(session, 'agent.report', { sessionId: theirs })).toBe(false);
+  it('lets the signed-in user do everything', () => {
+    for (const action of ACTIONS) expect(authorize({ kind: 'user' }, action, {}), action).toBe(true);
   });
 
-  it('refuses actions it does not know', () => {
-    expect(authorize(session, 'session.kill' as never, { sessionId: mine })).toBe(false);
-  });
-
-  it('refuses a session everything on the public API, even about itself', () => {
-    for (const action of ['canvases.read', 'canvases.write', 'sessions.read', 'sessions.write', 'layout.write'] as const) {
-      expect(authorize(session, action, { sessionId: mine, canvasId: mine })).toBe(false);
-      expect(authorize({ kind: 'user' }, action, {})).toBe(true);
+  it('decides every action for every single scope: allowed with the scope it needs, refused with any other', () => {
+    for (const action of ACTIONS) {
+      for (const scope of GRANTABLE_SCOPES) {
+        const expected = NEEDS[action] === scope;
+        expect(authorize(token(scope), action, { sessionId: SESSION, canvasId: OTHER }), `${action} with ${scope}`).toBe(expected);
+      }
     }
-    // And an action about nothing in particular is not "its own".
-    expect(authorize(session, 'note.append', {})).toBe(false);
   });
 
-  it('lets the user do anything', () => {
-    expect(authorize({ kind: 'user' }, 'note.append', { sessionId: theirs })).toBe(true);
+  it('refuses a token holding every scope each thing no token may do', () => {
+    const everything = token(...GRANTABLE_SCOPES);
+    expect([...NEVER_BY_TOKEN].sort()).toEqual(['activity.read', 'outside.move', 'outside.read', 'processes.signal', 'settings.write', 'tokens.manage']);
+    for (const action of NEVER_BY_TOKEN) {
+      expect(authorize(everything, action, {}), action).toBe(false);
+      expect(authorize(everything, action, { sessionId: SESSION, canvasId: OTHER }), action).toBe(false);
+    }
+  });
+
+  it('gives a token with every scope exactly the actions that have a scope, and nothing else', () => {
+    const everything = token(...GRANTABLE_SCOPES);
+    const allowed = ACTIONS.filter((action) => authorize(everything, action, { sessionId: SESSION }));
+    expect([...allowed].sort()).toEqual(Object.keys(NEEDS).sort());
+    // What a session reports about itself is not something a token can do for it.
+    expect(authorize(everything, 'attention.set', { sessionId: SESSION })).toBe(false);
+    expect(authorize(everything, 'agent.report', { sessionId: SESSION })).toBe(false);
+  });
+
+  it('gives a token with no scopes nothing', () => {
+    for (const action of ACTIONS) expect(authorize(token(), action, { sessionId: SESSION }), action).toBe(false);
+  });
+
+  it('keeps a session token to exactly what it had: three things, for itself only', () => {
+    const session: Principal = { kind: 'session', sessionId: SESSION };
+    const own = ACTIONS.filter((action) => authorize(session, action, { sessionId: SESSION }));
+    expect([...own].sort()).toEqual(['agent.report', 'attention.set', 'note.append']);
+    for (const action of ACTIONS) {
+      expect(authorize(session, action, { sessionId: OTHER }), `${action} on another session`).toBe(false);
+      expect(authorize(session, action, {}), `${action} on nothing`).toBe(false);
+      expect(authorize(session, action, { canvasId: OTHER }), `${action} on a canvas`).toBe(false);
+    }
+  });
+
+  it('refuses an action it has never heard of to everyone but the user', () => {
+    const unknown = 'something.new' as Action;
+    expect(authorize(token(...GRANTABLE_SCOPES), unknown, {})).toBe(false);
+    expect(authorize({ kind: 'session', sessionId: SESSION }, unknown, { sessionId: SESSION })).toBe(false);
   });
 });

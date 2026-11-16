@@ -465,6 +465,45 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await page.keyboard.press('Escape');
   expect(await keyboardIn()).toBe('canvas');
 
+  // API tokens, from the palette: the secret is shown once, works at once, and stops working when revoked.
+  const palette = mac ? 'Meta+k' : 'Control+Shift+K';
+  await page.keyboard.press(palette);
+  await page.keyboard.type('>api tokens');
+  await page.keyboard.press('Enter');
+  const tokenScreen = page.getByTestId('token-screen');
+  await expect(tokenScreen).toBeVisible();
+  await tokenScreen.getByLabel('Token name').fill('browser test');
+  await tokenScreen.getByTestId('token-create').click();
+  await expect(tokenScreen.getByTestId('token-made')).toContainText('shown this once');
+  const secret = (await tokenScreen.getByTestId('token-secret').textContent()) ?? '';
+  expect(secret).toMatch(/^aubt_[A-Za-z0-9_-]{43}$/);
+  await expect(tokenScreen.getByTestId('token-row')).toHaveCount(1);
+  const asToken = { Authorization: `Bearer ${secret}` };
+  expect((await page.request.get('/v1/canvases', { headers: asToken })).status()).toBe(200);
+  expect((await page.request.post('/v1/canvases', { headers: asToken, data: { name: 'Not allowed' } })).status()).toBe(403);
+  // Closing the screen forgets the secret for good.
+  await page.keyboard.press('Escape');
+  await expect(tokenScreen).toHaveCount(0);
+  await page.keyboard.press(palette);
+  await page.keyboard.type('>api tokens');
+  await page.keyboard.press('Enter');
+  await expect(tokenScreen.getByTestId('token-row')).toContainText('browser test');
+  await expect(tokenScreen.getByTestId('token-made')).toHaveCount(0);
+  await expect(tokenScreen).not.toContainText(secret);
+  await tokenScreen.getByRole('button', { name: 'Revoke browser test' }).click();
+  await tokenScreen.getByTestId('token-revoke-confirm').click();
+  await expect(tokenScreen.getByTestId('token-row')).toHaveAttribute('data-status', 'revoked');
+  expect((await page.request.get('/v1/canvases', { headers: asToken })).status()).toBe(401);
+  // What it did is on record.
+  await tokenScreen.getByRole('button', { name: 'Activity…' }).click();
+  const activityScreen = page.getByTestId('activity-screen');
+  await expect(activityScreen.getByTestId('activity-row')).toHaveCount(3);
+  await expect(activityScreen.getByTestId('activity-row').first()).toContainText('token revoked or expired');
+  await expect(activityScreen.getByTestId('activity-row').nth(1)).toContainText('not allowed');
+  await expect(activityScreen).not.toContainText(secret);
+  await page.keyboard.press('Escape');
+  await expect(activityScreen).toHaveCount(0);
+
   // The sheet lists every command with its keys.
   await page.keyboard.press('?');
   const sheet = page.getByTestId('shortcut-sheet');

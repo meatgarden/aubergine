@@ -39,6 +39,9 @@ export type Command =
   | { name: 'hooks-print' }
   | { name: 'shell-hook-print' }
   | { name: 'service'; action: 'install' | 'uninstall' }
+  | { name: 'token-create'; tokenName: string; scopes: string[]; expires: string | null }
+  | { name: 'token-list' }
+  | { name: 'token-revoke'; query: string }
   | { name: 'start'; open: boolean }
   | { name: 'open'; print: boolean }
   | { name: 'update' }
@@ -77,6 +80,10 @@ export const USAGE = `Usage: aubergine <command>
                              (default)     start a copy of the conversation; the original keeps running
                              --stop        ask an idle original to exit, then resume the same conversation
                              --dry-run, --yes, --force, --no-open
+  token create <name> --scope <scope> [--scope …] [--expires 30d | <date>]
+                             Make an API token for a program of yours. Its secret is printed once, on standard output
+  token list                 The API tokens, with their scopes and when each was last used
+  token revoke <name|id>     Revoke a token: it stops working at once
   note <text>                Inside a session: add an entry to that session's note log
   hook <event>               For agent hooks: reads the hook's JSON on stdin (prompt, notification, stop)
   hooks print                Print the Claude Code hook settings, to add to your own config by hand
@@ -88,7 +95,7 @@ export const USAGE = `Usage: aubergine <command>
 new, here and import take --canvas <name>. Without it they use the canvas you looked at most recently
 in a browser, or the first one when no browser is open.
 
-The server must be running for list, new, canvas, attach, here, scan, import, move, note and open.`;
+The server must be running for list, new, canvas, token, attach, here, scan, import, move, note and open.`;
 
 export class UsageError extends Error {}
 
@@ -224,6 +231,35 @@ export function parseCommand(argv: readonly string[]): Command {
     case 'shell-hook':
       if (rest.length === 1 && rest[0] === 'print') return { name: 'shell-hook-print' };
       throw new UsageError('shell-hook needs "print"');
+    case 'token':
+    case 'tokens': {
+      const [action, ...words] = rest;
+      if (action === undefined || action === 'list' || action === 'ls') {
+        if (words.length > 0) throw new UsageError('token list takes no arguments');
+        return { name: 'token-list' };
+      }
+      if (action === 'revoke') {
+        if (words.length === 0 || words.some((word) => word.startsWith('--'))) throw new UsageError('token revoke needs the name or the ID of one token');
+        return { name: 'token-revoke', query: words.join(' ') };
+      }
+      if (action === 'create' || action === 'new') {
+        const { value: expires, rest: afterExpires } = takeOption(words, '--expires');
+        const scopes: string[] = [];
+        const names: string[] = [];
+        for (let index = 0; index < afterExpires.length; index += 1) {
+          const word = afterExpires[index] as string;
+          const given = word === '--scope' ? afterExpires[(index += 1)] : word.startsWith('--scope=') ? word.slice('--scope='.length) : null;
+          if (given === undefined || (given !== null && (given === '' || given.startsWith('--')))) throw new UsageError('--scope needs a scope');
+          if (given !== null) scopes.push(...given.split(',').map((scope) => scope.trim()).filter(Boolean));
+          else if (word.startsWith('--')) throw new UsageError(`token create does not know ${word}`);
+          else names.push(word);
+        }
+        if (names.length === 0) throw new UsageError('token create needs a name');
+        if (scopes.length === 0) throw new UsageError('token create needs at least one --scope: read, canvases:write, sessions:write or notes:write');
+        return { name: 'token-create', tokenName: names.join(' '), scopes: [...new Set(scopes)], expires };
+      }
+      throw new UsageError('token needs "create <name> --scope …", "list" or "revoke <name|id>"');
+    }
     case 'start': {
       const unknown = rest.find((word) => word !== '--open');
       if (unknown) throw new UsageError(`start does not know ${unknown}`);
@@ -344,4 +380,52 @@ export function formatCanvases(canvases: readonly CanvasSummary[], currentId: st
     return `${mark} ${c.name.padEnd(width)}  ${terminals}${waiting}${ids ? `  ${c.id}` : ''}`;
   });
   return `${lines.join('\n')}\n\n* where new sessions go when no --canvas is given`;
+}
+
+/**
+ * When a token should expire, from what was typed: a number of days (`30d`,
+ * `30`) or a date (`2027-01-31`, or a full ISO time). Returns the field of
+ * the request to send, or throws with what was wrong.
+ */
+export function expiryFromOption(value: string | null, now: Date = new Date()): { expiresInDays: number } | { expiresAt: string } | Record<string, never> {
+  if (value === null) return {};
+  const days = /^(\d{1,4})d?$/.exec(value.trim());
+  if (days) {
+    const count = Number(days[1]);
+    if (count < 1) throw new UsageError('--expires needs at least one day');
+    return { expiresInDays: count };
+  }
+  const date = new Date(/^\d{4}-\d{2}-\d{2}$/.test(value.trim()) ? `${value.trim()}T23:59:59` : value.trim());
+  if (Number.isNaN(date.getTime())) throw new UsageError(`--expires does not understand "${value}". Use a number of days (30d) or a date (2027-01-31).`);
+  if (date.getTime() <= now.getTime()) throw new UsageError(`--expires ${value} is in the past`);
+  return { expiresAt: date.toISOString() };
+}
+
+/** Finds the token a name or an ID refers to: an exact name (case does not matter), else an ID, else the start of one. */
+export function resolveToken<T extends { id: string; name: string; revokedAt: string | null }>(tokens: readonly T[], query: string): T {
+  const wanted = query.trim().toLowerCase();
+  const live = tokens.filter((t) => t.revokedAt === null);
+  const named = live.filter((t) => t.name.toLowerCase() === wanted);
+  if (named.length === 1) return named[0] as T;
+  if (named.length > 1) throw new UsageError(`${named.length} tokens are named "${query}". Give the ID of the one you mean (see: aubergine token list).`);
+  const byId = tokens.filter((t) => t.id === wanted || (wanted.length >= 8 && t.id.startsWith(wanted)));
+  if (byId.length === 1) return byId[0] as T;
+  throw new UsageError(`No token named "${query}". See: aubergine token list`);
+}
+
+/** The tokens as a table: never a secret, which the server does not have either. */
+export function formatTokens(tokens: readonly { id: string; name: string; scopes: readonly string[]; lastUsedAt: string | null; expiresAt: string | null; revokedAt: string | null }[], now: number = Date.now()): string {
+  if (tokens.length === 0) return 'No API tokens. Make one with: aubergine token create <name> --scope read';
+  const day = (iso: string | null): string => (iso ? iso.slice(0, 10) : 'never');
+  const rows = tokens.map((t) => [
+    t.name,
+    t.revokedAt ? 'revoked' : t.expiresAt && Date.parse(t.expiresAt) <= now ? 'expired' : 'active',
+    t.scopes.join(','),
+    day(t.lastUsedAt),
+    t.expiresAt ? day(t.expiresAt) : 'never',
+    t.id,
+  ]);
+  const head = ['NAME', 'STATE', 'SCOPES', 'LAST USED', 'EXPIRES', 'ID'];
+  const widths = head.map((title, i) => Math.max(title.length, ...rows.map((row) => (row[i] as string).length)));
+  return [head, ...rows].map((row) => row.map((cell, i) => (cell as string).padEnd(widths[i] as number)).join('  ').trimEnd()).join('\n');
 }

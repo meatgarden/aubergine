@@ -21,6 +21,7 @@ import {
   SessionNote,
   Tags,
 } from './entities';
+import { ActivityEntry, TokenView } from './tokens';
 import { CanvasChanges, ChangeEvent } from './events';
 import { Id } from './ids';
 import { Settings } from './settings';
@@ -302,6 +303,10 @@ export const ErrorCode = z.enum([
   'not_found',
   'conflict',
   'runtime_unavailable',
+  /** The request body is larger than the server accepts. */
+  'too_large',
+  /** Too many calls in a short time; `Retry-After` says when to try again. */
+  'rate_limited',
   'internal',
 ]);
 export type ErrorCode = z.infer<typeof ErrorCode>;
@@ -318,6 +323,8 @@ export const EventsServerMessage = z.discriminatedUnion('type', [
   z.object({ type: z.literal('event'), event: ChangeEvent }),
   /** Not a change of state: a request to bring a session into view and focus it. */
   z.object({ type: z.literal('show'), sessionId: Id }),
+  /** Likewise: a request to switch to a canvas. */
+  z.object({ type: z.literal('show-canvas'), canvasId: Id }),
 ]);
 export type EventsServerMessage = z.infer<typeof EventsServerMessage>;
 
@@ -383,7 +390,21 @@ export const publicPaths = {
   canvasNode: (canvasId: string, nodeId: string) => `/v1/canvases/${canvasId}/nodes/${nodeId}`,
   canvasFrames: (canvasId: string) => `/v1/canvases/${canvasId}/frames`,
   canvasFrame: (canvasId: string, frameId: string) => `/v1/canvases/${canvasId}/frames/${frameId}`,
+  /** What this server can do, and who is asking. Needs no scope. */
+  root: '/v1',
+  sessions: '/v1/sessions',
   session: (sessionId: string) => `/v1/sessions/${sessionId}`,
+  parkSession: (sessionId: string) => `/v1/sessions/${sessionId}/park`,
+  restoreSession: (sessionId: string) => `/v1/sessions/${sessionId}/restore`,
+  showSession: (sessionId: string) => `/v1/sessions/${sessionId}/show`,
+  showCanvas: (canvasId: string) => `/v1/canvases/${canvasId}/show`,
+  sessionNotes: (sessionId: string) => `/v1/sessions/${sessionId}/notes`,
+  /** A stream of changes (server-sent events). `?canvasId=` narrows it to one canvas. */
+  events: '/v1/events',
+  /** Tokens and the record of what they did: for the signed-in browser only, never for a token. */
+  tokens: '/v1/tokens',
+  token: (tokenId: string) => `/v1/tokens/${tokenId}`,
+  activity: '/v1/activity',
   moveSession: (sessionId: string) => `/v1/sessions/${sessionId}/move`,
 } as const;
 
@@ -465,14 +486,40 @@ export type StartSessionRequest = z.infer<typeof StartSessionRequest>;
 
 /** Body of changing a session: any of its name and its tags. `tags` replaces the whole list. */
 export const PatchSessionRequest = z
-  .object({ name: SessionName, tags: Tags })
+  .object({ name: SessionName, tags: Tags, note: SessionNote })
   .partial()
-  .refine((body) => body.name !== undefined || body.tags !== undefined, 'Nothing to update');
+  .refine((body) => body.name !== undefined || body.tags !== undefined || body.note !== undefined, 'Nothing to update');
 export type PatchSessionRequest = z.infer<typeof PatchSessionRequest>;
 
 /** A session together with where it is. */
 export const PlacedSession = z.object({ session: Session, canvasId: Id, node: LayoutNode });
 export type PlacedSession = z.infer<typeof PlacedSession>;
+
+/** Query of listing sessions: a page, optionally only those in one state. */
+export const SessionsQuery = PageQuery.extend({ state: z.enum(['open', 'parked', 'exited']).optional() });
+export type SessionsQuery = z.infer<typeof SessionsQuery>;
+
+/** Body of restoring a parked session: the canvas to put it on. Without one, the canvas most recently looked at. */
+export const RestoreSessionBody = z.object({ canvasId: Id.optional() });
+export type RestoreSessionBody = z.infer<typeof RestoreSessionBody>;
+
+/** The answer to asking for something to be shown: how many browser tabs were asked. */
+export const ShownResponse = z.object({ shown: z.number().int() });
+export type ShownResponse = z.infer<typeof ShownResponse>;
+
+/** Query of the stream of changes: optionally only what concerns one canvas. */
+export const EventsQuery = z.object({ canvasId: Id.optional() });
+export type EventsQuery = z.infer<typeof EventsQuery>;
+
+export const TokenList = pageOf(TokenView);
+export type TokenList = z.infer<typeof TokenList>;
+
+/** Query of reading the activity log: a page, optionally of one token only. Newest first. */
+export const ActivityQuery = PageQuery.extend({ tokenId: Id.optional() });
+export type ActivityQuery = z.infer<typeof ActivityQuery>;
+
+export const ActivityList = pageOf(ActivityEntry);
+export type ActivityList = z.infer<typeof ActivityList>;
 
 export const SessionList = pageOf(Session);
 export type SessionList = z.infer<typeof SessionList>;
