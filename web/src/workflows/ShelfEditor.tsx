@@ -6,7 +6,7 @@ import { DiffText } from '../review/DiffText';
 import { ElementReference } from './CopyPanel';
 import { ElementFields } from './ElementFields';
 
-const BLANK: Element = { id: 'new-element', kind: 'instructions', name: 'New element', instructions: '', doneWhen: '', needs: [], produces: 'note', origin: { kind: 'local' }, source: null, extra: {} };
+const BLANK: Element = { id: 'new-element', kind: 'instructions', name: 'New element', instructions: '', ask: '', lookAt: '', doneWhen: '', needs: [], produces: 'note', origin: { kind: 'local' }, source: null, extra: {} };
 
 /** One element of the shelf, or a new one: the same fields as in a workflow, beside what an agent would be told. */
 export function ShelfEditor() {

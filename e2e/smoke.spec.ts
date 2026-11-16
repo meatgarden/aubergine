@@ -1294,7 +1294,7 @@ test('the tour can be skipped, put away and taken up again, and put away for goo
   await page.getByTestId('toolbar-help').click();
   const help = page.getByTestId('help-panel');
   await expect(help.getByTestId('help-item')).toHaveCount(8);
-  await expect(help.locator('[data-step="workflow"]')).toContainText('A strip on a terminal shows the step its agent is on');
+  await expect(help.locator('[data-step="workflow"]')).toContainText('A strip shows the step an agent is on; click it for the run. “Board” shows every run at once.');
   await expect(page.getByTestId('tour-ring')).toHaveCount(0);
   await help.locator('[data-step="workflow"]').getByTestId('help-show').click();
   await expect(help).toHaveCount(0);
@@ -1867,7 +1867,7 @@ test('a shelf element has a life: a copy says where it came from, a newer versio
 
   // What goes in an element: every field, in the words of the reference.
   await editor.getByTestId('element-reference').locator('summary').click();
-  await expect(editor.getByTestId('reference-field')).toHaveCount(14);
+  await expect(editor.getByTestId('reference-field')).toHaveCount(16);
   await expect(editor.locator('[data-testid="reference-field"][data-field="doneWhen"]')).toContainText('how to tell that the element is finished');
   await editor.getByTestId('editor-close').click();
 
@@ -1939,7 +1939,7 @@ test('the library: a Git source is added, browsed and read; an item is installed
     await library.getByTestId('source-address').fill(`file://${root}`);
     await library.getByTestId('source-add').click();
     const source = library.locator('[data-testid="library-source"][data-kind="git"]');
-    await expect(source).toContainText('A publisher');
+    await expect(source).toContainText('calls itself “A publisher”');
     await expect(source).toContainText(/commit [0-9a-f]{12}/);
     await expect(source).toContainText('2 items');
 
@@ -1949,7 +1949,7 @@ test('the library: a Git source is added, browsed and read; an item is installed
     const item = library.locator('[data-testid="library-item"][data-item="release-notes"]');
     await expect(item).toHaveAttribute('data-standing', 'available');
     await item.click();
-    await expect(library.getByTestId('library-from')).toContainText(/A workflow, from A publisher \(file:\/\/.*\), item release-notes, version 1, commit [0-9a-f]{12}\. Not installed\./);
+    await expect(library.getByTestId('library-from')).toContainText(/A workflow, from calls itself “A publisher” \(file:\/\/.*\), item release-notes, version 1, commit [0-9a-f]{12}\. Not installed\./);
     await expect(library.getByTestId('library-text')).toContainText('Write the notes for (task).');
     await expect(library.getByTestId('library-text')).toContainText('<b>not markup</b>');
     await expect(library.locator('[data-testid="library-text"] b')).toHaveCount(0);
@@ -1960,7 +1960,7 @@ test('the library: a Git source is added, browsed and read; an item is installed
     if (process.env.LIBRARY_SHOT) await page.screenshot({ path: process.env.LIBRARY_SHOT + '-review.png' });
     const review = page.getByTestId('review-screen');
     await expect(review.getByTestId('review-title')).toHaveText('Release the notes');
-    await expect(review.getByTestId('review-origin')).toContainText(/A workflow, from A publisher \(file:\/\/.*\), item release-notes, version 1, commit/);
+    await expect(review.getByTestId('review-origin')).toContainText(/A workflow, from calls itself “A publisher” \(file:\/\/.*\), item release-notes, version 1, commit/);
     await expect(review.getByTestId('review-notice').first()).toHaveText('Someone else wrote this, and an agent will follow it. Read all of it before you accept.');
     await expect(review.getByTestId('review-text')).toContainText('Write the notes for (task).');
     await review.getByTestId('review-accept').click();
@@ -2019,4 +2019,163 @@ test('the library: a Git source is added, browsed and read; an item is installed
   } finally {
     rmSync(root, { recursive: true, force: true });
   }
+});
+
+test('an approval and the board: a run stops for the owner, shows on the board and in the waiting queue, is sent back with a comment the agent reads, comes back, and is approved', async ({ page }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  await page.getByRole('button', { name: 'New canvas' }).click();
+  const node = page.getByTestId('terminal-node');
+  await expect(node).toHaveCount(0);
+
+  // A workflow with an approval, made in the editor: a template, plus an approval moved to before the last element.
+  await page.getByTestId('toolbar-workflows').click();
+  await page.locator('[data-testid="template-use"][data-template="plan-build-check"]').click();
+  const editor = page.getByTestId('workflow-editor');
+  await editor.getByTestId('workflow-name').fill('Careful change');
+  await editor.getByTestId('element-add-approval').click();
+  // An approval that asks nothing cannot be saved.
+  await expect(editor.getByTestId('editor-problems')).toContainText('does not say what the person is asked to decide');
+  await expect(editor.getByTestId('element-instructions')).toHaveCount(0);
+  await editor.getByTestId('element-name').fill('Look it over');
+  await editor.getByTestId('element-ask').fill('Is the change what you wanted?');
+  await editor.getByTestId('element-look-at').fill('The note from Build.');
+  await expect(editor.getByTestId('editor-problems')).toHaveCount(0);
+  await editor.locator('[data-element="approval"]').getByTestId('element-up').click();
+  await expect(editor.getByTestId('editor-element').nth(2)).toHaveAttribute('data-element', 'approval');
+  // The preview is what an agent would be told there: to stop.
+  await editor.locator('[data-element="approval"] .editor-element-name').click();
+  await expect(editor.getByTestId('editor-preview')).toContainText('WAITING FOR A PERSON TO APPROVE');
+  await expect(editor.getByTestId('editor-preview')).toContainText('Is the change what you wanted?');
+  await editor.getByTestId('editor-save').click();
+  await expect(editor.getByTestId('editor-saved')).toContainText('Saved as version 2');
+  await editor.getByTestId('editor-close').click();
+
+  // A terminal on it. What an agent would do is typed into the terminal.
+  await page.getByTestId('toolbar-new-terminal').click();
+  await expect(node).toHaveCount(1);
+  await expect(page.locator('.xterm-rows')).toHaveText(/\S/);
+  await page.getByTestId('node-run-workflow').click();
+  const dialog = page.getByTestId('run-dialog');
+  await dialog.getByTestId('run-workflow').selectOption({ label: 'Careful change' });
+  await dialog.getByTestId('run-input-task').fill('the retry logic');
+  await dialog.getByTestId('run-start').click();
+  const run = page.getByTestId('run-view');
+  await expect(run.getByTestId('run-view-status')).toContainText('Plan · 1 of 4');
+  await run.getByTestId('run-view-close').click();
+  const strip = page.getByTestId('run-strip');
+  const type = async (line: string): Promise<void> => {
+    await page.getByTestId('node-body').click();
+    await page.keyboard.type(line);
+    await page.keyboard.press('Enter');
+  };
+  await type('"$AUBERGINE_BIN/aubergine" workflow done --note "planned it"');
+  await expect(strip).toHaveAttribute('data-element', 'build', { timeout: 20_000 });
+  await type('"$AUBERGINE_BIN/aubergine" workflow done --note "built it, three tries"');
+
+  // The run stops at the approval. The agent was told so by what its own command printed.
+  await expect(strip).toHaveAttribute('data-status', 'awaiting', { timeout: 20_000 });
+  await expect(strip).toContainText('waiting for approval');
+  await expect(page.locator('.xterm-rows')).toContainText('STOP and wait. A person has to approve before this run goes on.');
+  // It cannot approve: done is refused, and the owner's command does nothing in a canvas terminal.
+  await type('clear; "$AUBERGINE_BIN/aubergine" workflow done --note "approved by me"');
+  await expect(page.locator('.xterm-rows')).toContainText('only a person approves');
+  await type('clear; "$AUBERGINE_BIN/aubergine" workflow approve "$AUBERGINE_SESSION_ID"');
+  await expect(page.locator('.xterm-rows')).toContainText('does nothing inside a canvas terminal');
+  await expect(strip).toHaveAttribute('data-status', 'awaiting');
+  await expect(strip).toHaveAttribute('data-element', 'approval');
+  // It is in the waiting queue, with what it waits for.
+  await expect(page.getByTestId('attention-queue')).toHaveAttribute('title', /Approval needed at "Look it over" of "Careful change"/);
+
+  // The board: the run in its column, counted as waiting for the owner.
+  await page.getByTestId('toolbar-board').click();
+  const board = page.getByTestId('board');
+  await board.getByTestId('board-filter-workflow').selectOption({ label: 'Careful change' });
+  await expect(board.getByTestId('board-summary')).toHaveText('1 waiting for you');
+  const group = board.getByTestId('board-group');
+  await expect(group).toHaveCount(1);
+  await expect(group.getByTestId('board-column')).toHaveCount(4);
+  const card = board.getByTestId('board-card');
+  await expect(group.locator('[data-testid="board-column"][data-element="approval"]').getByTestId('board-card')).toHaveCount(1);
+  await expect(card.getByTestId('board-card-status')).toHaveText('waiting for approval');
+  // What it did, before deciding: the notes of every element so far, and what is asked.
+  await card.getByTestId('board-card-view').click();
+  await expect(run.locator('[data-testid="run-step"][data-element="plan"]')).toContainText('planned it');
+  await expect(run.locator('[data-testid="run-step"][data-element="build"]')).toContainText('built it, three tries');
+  await expect(run.getByTestId('approval-ask')).toContainText('Is the change what you wanted?');
+  await expect(run.getByTestId('run-view-approval')).toContainText('Waiting for you');
+  await expect(run.getByTestId('run-done')).toHaveCount(0);
+  await run.getByTestId('run-view-close').click();
+
+  // Sent back from the card, with a comment.
+  await card.getByTestId('send-back').click();
+  await expect(card.getByTestId('send-back-confirm')).toBeDisabled();
+  await card.getByTestId('approval-comment').fill('Give up after five tries, not three.');
+  await expect(card.getByTestId('send-back-to')).toHaveValue('build');
+  await card.getByTestId('send-back-confirm').click();
+  await expect(group.locator('[data-testid="board-column"][data-element="build"]').getByTestId('board-card')).toHaveCount(1);
+  await expect(card.getByTestId('board-card-status')).toHaveText('working');
+  await expect(board.getByTestId('board-summary')).toHaveText('1 working');
+  await expect(card.getByTestId('approve')).toHaveCount(0);
+  await board.getByTestId('board-close').click();
+  // It no longer waits for the owner. Other canvases may have terminals that do, so the queue is asked about this one.
+  await expect(page.locator('[data-testid="attention-queue"][title*="Careful change"]')).toHaveCount(0);
+
+  // The agent's status shows the comment as the person's words. It does the element again; the run comes back.
+  await type('clear; "$AUBERGINE_BIN/aubergine" workflow status');
+  await expect(page.locator('.xterm-rows')).toContainText('SENT IT BACK');
+  await expect(page.locator('.xterm-rows')).toContainText('Give up after five tries, not three.');
+  await type('clear; "$AUBERGINE_BIN/aubergine" workflow done --note "five tries now"');
+  await expect(strip).toHaveAttribute('data-status', 'awaiting', { timeout: 20_000 });
+
+  // Approved from the board, reached with the keyboard: an arrow to the card, then the button; Enter on the card goes to the terminal.
+  await page.getByTestId('toolbar-board').click();
+  await expect(board.getByTestId('board-summary')).toHaveText('1 waiting for you');
+  await page.keyboard.press('ArrowDown');
+  await expect(card).toBeFocused();
+  await card.getByTestId('approval-comment').waitFor({ state: 'detached' });
+  await card.getByTestId('approve').click();
+  await expect(group.locator('[data-testid="board-column"][data-element="check"]').getByTestId('board-card')).toHaveCount(1);
+  await expect(board.getByTestId('board-summary')).toHaveText('1 working');
+  await card.focus();
+  await page.keyboard.press('Enter');
+  await expect(board).toHaveCount(0);
+  await expect(strip).toHaveAttribute('data-element', 'check');
+  await expect(strip).toHaveAttribute('data-status', 'running');
+  await type('clear; "$AUBERGINE_BIN/aubergine" workflow status');
+  await expect(page.locator('.xterm-rows')).toContainText('was approved by a person');
+
+  // The run view keeps who decided.
+  await strip.click();
+  await expect(run.locator('[data-testid="run-step"][data-element="approval"]')).toContainText('by you');
+  await run.getByTestId('run-view-close').click();
+
+  // One workflow on several terminals: the one that is on a run is refused with a reason, the new one starts.
+  const firstId = (await node.first().getAttribute('data-session')) ?? '';
+  await page.getByTestId('toolbar-new-terminal').click();
+  await expect(node).toHaveCount(2);
+  await page.getByTestId('toolbar-board').click();
+  await board.getByTestId('board-start-many').click();
+  const many = page.getByTestId('run-many');
+  await many.getByTestId('run-many-workflow').selectOption({ label: 'Careful change' });
+  await many.getByTestId('run-many-input-task').fill('the same for all');
+  const ids = await node.evaluateAll((nodes) => nodes.map((n) => n.getAttribute('data-session') ?? ''));
+  expect(ids).toHaveLength(2);
+  for (const id of ids) await many.locator(`[data-testid="run-many-terminal"][data-session="${id}"]`).getByTestId('run-many-tick').check();
+  await expect(many.locator(`[data-testid="run-many-terminal"][data-session="${firstId}"]`)).toContainText('already on a run');
+  await many.getByTestId('run-many-start').click();
+  const results = many.getByTestId('run-many-results');
+  await expect(results.locator('li[data-started="true"]')).toHaveCount(1);
+  await expect(results.locator('li[data-started="false"]')).toContainText('already on');
+  await many.getByTestId('run-many-close').click();
+  await expect(board.getByTestId('board-summary')).toHaveText('2 working');
+  await expect(group.locator('[data-testid="board-column"][data-element="plan"]').getByTestId('board-card')).toHaveCount(1);
+
+  // No program can decide: a token with every scope is refused, for a run that waits or any other.
+  const origin = new URL(page.url()).origin;
+  const made = (await (await page.request.post('/v1/tokens', { headers: { origin }, data: { name: 'tries to approve', scopes: ['read', 'runs:write', 'workflows:write', 'sessions:write'] } })).json()) as { secret: string };
+  const runId = (await card.first().getAttribute('data-board-card')) ?? '';
+  const refused = await fetch(`${origin}/v1/runs/${runId}/approve`, { method: 'POST', headers: { authorization: `Bearer ${made.secret}`, 'content-type': 'application/json' }, body: '{}' });
+  expect(refused.status).toBe(403);
 });

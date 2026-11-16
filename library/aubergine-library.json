@@ -39,8 +39,8 @@
       "id": "reproduce-fix-verify",
       "kind": "workflow",
       "name": "Reproduce, fix, verify",
-      "description": "For a bug: see it fail first, fix the cause, show that it is fixed.",
-      "version": "1",
+      "description": "For a bug: see it fail first, find the cause, stop for your yes, fix it, show that it is fixed.",
+      "version": "2",
       "path": "workflows/reproduce-fix-verify.json"
     },
     {

@@ -20,9 +20,9 @@ export function draftOf(version: WorkflowVersion): Draft {
 export const sameDraft = (a: Draft, b: Draft): boolean => JSON.stringify(a) === JSON.stringify(b);
 
 /** A new element at the end. Its ID is made once, from its first name, and then stays: runs know elements by it. */
-export function addElement(draft: Draft, name = 'New element'): Draft {
+export function addElement(draft: Draft, name = 'New element', kind = 'instructions'): Draft {
   const id = elementIdFor(name, draft.elements.map((e) => e.id));
-  return { ...draft, elements: [...draft.elements, { id, kind: 'instructions', name, instructions: '', doneWhen: '', needs: [], produces: 'note', origin: { kind: 'local' }, source: null, extra: {} }] };
+  return { ...draft, elements: [...draft.elements, { id, kind, name, instructions: '', ask: '', lookAt: '', doneWhen: '', needs: [], produces: 'note', origin: { kind: 'local' }, source: null, extra: {} }] };
 }
 
 export function changeElement(draft: Draft, id: string, element: Element): Draft {

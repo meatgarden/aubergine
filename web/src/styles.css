@@ -3038,3 +3038,242 @@ tr[data-status='expired'] strong {
   padding: 4px 6px;
   font: inherit;
 }
+
+/* The board: every live run, by workflow and element. */
+.dialog.sheet.board-screen {
+  width: min(1280px, 96vw);
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+}
+.board-summary {
+  margin-left: 12px;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--muted);
+}
+.board-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.board-filters select {
+  font: inherit;
+  font-size: 13px;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 6px;
+  max-width: 200px;
+}
+.board-body {
+  overflow: auto;
+  min-height: 120px;
+}
+.board-group {
+  margin-bottom: 18px;
+}
+.board-group h3 {
+  margin: 0 0 6px;
+  font-size: 14px;
+}
+.board-version {
+  font-weight: 400;
+  color: var(--muted);
+}
+.board-columns {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+.board-column {
+  flex: 1 0 190px;
+  max-width: 280px;
+  min-height: 64px;
+  padding: 6px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+}
+.board-column.waits-for-person {
+  border-style: dashed;
+}
+.board-column-head {
+  display: flex;
+  gap: 6px;
+  align-items: baseline;
+  margin-bottom: 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.board-column-head > span:first-child {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text);
+}
+.board-column-mark {
+  font-size: 11px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0 6px;
+}
+.board-queued {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.board-queued .board-card {
+  width: 200px;
+}
+.board-card {
+  display: block;
+  margin-bottom: 6px;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-left-width: 3px;
+  border-radius: 6px;
+  background: var(--panel, var(--bg));
+  font-size: 13px;
+  cursor: pointer;
+  text-align: left;
+}
+.board-card:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+.board-card.status-blocked,
+.board-card.needs-you {
+  border-left-color: var(--accent);
+}
+.board-card.status-paused,
+.board-card.status-queued {
+  opacity: 0.8;
+}
+.board-card-head {
+  display: flex;
+  gap: 6px;
+  align-items: baseline;
+}
+.board-card-name {
+  flex: 1;
+  min-width: 0;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.board-card-canvas,
+.board-card-facts,
+.board-card-element {
+  font-size: 12px;
+  color: var(--muted);
+}
+.board-card.needs-you .board-card-status,
+.board-card.status-blocked .board-card-status {
+  color: var(--text);
+  font-weight: 600;
+}
+.board-card-reason {
+  margin: 4px 0 0;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.board-card-view {
+  margin-top: 4px;
+  padding: 0;
+  font-size: 12px;
+}
+.board-ended ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+}
+.approval-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  margin-top: 6px;
+}
+.approval-controls input {
+  flex: 1 1 180px;
+  min-width: 0;
+  font: inherit;
+  font-size: 13px;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 5px 8px;
+}
+.approval-controls.is-compact button {
+  font-size: 12px;
+  padding: 2px 8px;
+}
+.run-view-approval {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+}
+.run-view-approval p {
+  margin: 0;
+}
+.run-step-sent-back {
+  border-left-style: dashed;
+}
+.approval-ask p {
+  margin: 4px 0;
+  white-space: pre-wrap;
+}
+.dialog.sheet.run-many {
+  width: min(720px, 94vw);
+  max-height: 88vh;
+  overflow: auto;
+}
+.run-many-terminals,
+.run-many-results {
+  list-style: none;
+  margin: 6px 0 10px;
+  padding: 0;
+  max-height: 40vh;
+  overflow: auto;
+}
+.run-many-terminals li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  align-items: baseline;
+  padding: 4px 0;
+  border-bottom: 1px solid var(--border);
+}
+.run-many-terminals li input:not([type='checkbox']) {
+  flex: 1 1 100%;
+  font: inherit;
+  font-size: 13px;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 8px;
+}
+.run-many-results li {
+  padding: 4px 0;
+}

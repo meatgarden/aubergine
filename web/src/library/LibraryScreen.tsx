@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { FLAG_WORDS, ago, fromWords, historyWords, needWords, showControl, type InstalledItem, type LibraryItemDetail, type LibrarySource, type ListedItem } from '@aubergine/shared';
+import { FLAG_WORDS, sourceLabel, ago, fromWords, historyWords, needWords, showControl, type InstalledItem, type LibraryItemDetail, type LibrarySource, type ListedItem } from '@aubergine/shared';
 import { api } from '../api';
 import { useApp } from '../store';
 
@@ -105,7 +105,7 @@ export function LibraryScreen() {
     };
   }, [open, changed]);
 
-  const sources = useMemo(() => [...(library?.sources ?? [])].sort((a, b) => (a.kind === 'builtin' ? -1 : b.kind === 'builtin' ? 1 : a.name.localeCompare(b.name))), [library?.sources]);
+  const sources = useMemo(() => [...(library?.sources ?? [])].sort((a, b) => (a.kind === 'builtin' ? -1 : b.kind === 'builtin' ? 1 : sourceLabel(a).localeCompare(sourceLabel(b)))), [library?.sources]);
   const shownItems = useMemo(() => {
     const wanted = query.trim().toLowerCase();
     return wanted === '' ? items : items.filter((item) => `${item.name} ${item.description} ${item.id} ${item.sourceName} ${item.kindTitle}`.toLowerCase().includes(wanted));
@@ -163,7 +163,7 @@ export function LibraryScreen() {
           {sources.map((source) => (
             <li key={source.id} data-testid="library-source" data-kind={source.kind}>
               <div>
-                <strong>{showControl(source.name)}</strong> <span className="sheet-note">{showControl(sourceAbout(source))}</span>
+                <strong data-testid="library-source-name">{showControl(sourceLabel(source))}</strong> <span className="sheet-note">{showControl(sourceAbout(source))}</span>
                 <div className="sheet-note">
                   {source.items.length} item{source.items.length === 1 ? '' : 's'}
                   {source.skipped.length > 0 ? ` · ${source.skipped.length} entr${source.skipped.length === 1 ? 'y' : 'ies'} of its index could not be read: ${source.skipped.map((s) => `${s.id} (${s.reason})`).join('; ')}` : ''}

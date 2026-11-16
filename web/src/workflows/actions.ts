@@ -18,6 +18,19 @@ export async function reportRun(runId: string, report: ReportRunRequest): Promis
   }
 }
 
+/** The owner's decision on a run that waits for them. */
+export async function decideRun(runId: string, decision: { approve: { elementId?: string; comment?: string } } | { sendBack: { elementId: string; comment: string } }): Promise<boolean> {
+  useApp.getState().setNotice(null);
+  try {
+    const next = 'approve' in decision ? await api.approveRun(runId, decision.approve) : await api.sendBackRun(runId, decision.sendBack);
+    useApp.getState().apply(isLive(next.run.status) ? { type: 'run.moved', run: next.run as never } : { type: 'run.finished', run: next.run as never });
+    return true;
+  } catch (error) {
+    useApp.getState().setNotice(`Could not do that: ${(error as Error).message}`);
+    return false;
+  }
+}
+
 /** Ticks or unticks an item of what an element produced. For a run that is over, whoever shows it is told to read it again. */
 export async function tickItem(runId: string, elementId: string, item: number, ticked: boolean): Promise<void> {
   useApp.getState().setNotice(null);

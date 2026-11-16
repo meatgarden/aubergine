@@ -737,7 +737,7 @@ describe('a restart of the server', () => {
     await startRun(workflow.id, session.id);
     await hub.flush();
     const file = JSON.parse(await readFile(path.join(dir, 'state.json'), 'utf8'));
-    expect(file.version).toBe(9);
+    expect(file.version).toBe(10);
     expect(file.workflows).toHaveLength(1);
     expect(file.runs).toHaveLength(1);
     expect(file.runs[0].status).toBe('running');
@@ -781,9 +781,10 @@ describe('at scale: a thousand runs over, thirty going', () => {
           inputs: { task: `old task ${n}` },
           status: n % 10 === 0 ? 'stopped' : 'finished',
           currentElementId: null,
-          elements: version.elements.map((e) => ({ elementId: e.id, state: 'done' as const, startedAt: at(n), finishedAt: at(n), note: `note ${n}`, output: null, ticks: [], by: { kind: 'agent' as const }, sessionId: null })),
+          elements: version.elements.map((e) => ({ elementId: e.id, state: 'done' as const, startedAt: at(n), finishedAt: at(n), note: `note ${n}`, output: null, ticks: [], by: { kind: 'agent' as const }, sessionId: null, sentBack: null })),
           blockedReason: null,
           pausedFrom: null,
+          history: [],
           startedBy: { kind: 'person' },
           createdAt: at(n),
           updatedAt: at(n),

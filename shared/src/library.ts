@@ -102,11 +102,11 @@ export const ELEMENT_FILE_FORMAT = 1;
 /** One element as a file, to pass on: the counterpart of a workflow file. */
 export const ElementFile = z.looseObject({ aubergine: z.literal('element'), format: z.number().int().min(1), element: z.looseObject({ name: z.string() }) });
 
-const KNOWN_ELEMENT = ['id', 'kind', 'name', 'instructions', 'doneWhen', 'needs', 'produces', 'origin', 'source'];
+const KNOWN_ELEMENT = ['id', 'kind', 'name', 'instructions', 'ask', 'lookAt', 'doneWhen', 'needs', 'produces', 'origin', 'source'];
 
 export function exportElement(element: Element): Record<string, unknown> {
-  const { extra, source: _source, origin: _origin, id: _id, ...content } = element;
-  return { aubergine: 'element', format: ELEMENT_FILE_FORMAT, element: { ...content, ...extra } };
+  const { extra, source: _source, origin: _origin, id: _id, ask, lookAt, ...content } = element;
+  return { aubergine: 'element', format: ELEMENT_FILE_FORMAT, element: { ...content, ...(ask ? { ask } : {}), ...(lookAt ? { lookAt } : {}), ...extra } };
 }
 
 /** Reads a file into an element. Throws, with a sentence, when it is not one. Where it came from on the publisher's computer is not taken over. */
@@ -242,7 +242,10 @@ export const LibrarySource = z.object({
   kind: SourceKind,
   /** A folder's path, a Git address; empty for what ships with the app. Never holds a password. */
   address: z.string().max(2000),
+  /** The name the owner gave it. Empty when they gave none: it is then shown by what it calls itself, said as its own claim. */
   name: z.string().max(120),
+  /** What its index calls it, as last read. The source's own words: shown as a claim, never as a name the owner trusts. */
+  claims: z.string().max(120).nullable().default(null),
   addedAt: Timestamp,
   /** When it was last read; null before the first time. */
   refreshedAt: Timestamp.nullable().default(null),
@@ -264,6 +267,23 @@ export const LibrarySource = z.object({
   skipped: z.array(z.object({ id: z.string().max(100), reason: z.string().max(400) })).max(LIBRARY_ITEMS_MAX).default([]),
 });
 export type LibrarySource = z.infer<typeof LibrarySource>;
+
+/** An address short enough for a list: its last two parts. The whole address is always shown beside it. */
+export function shortAddress(address: string): string {
+  const parts = address.replace(/[\\/]+$/, '').split(/[\\/]/).filter((part) => part !== '');
+  const tail = parts.slice(-2).join('/');
+  return tail.length < address.length ? `…/${tail}`.slice(0, 60) : address.slice(0, 60);
+}
+
+/**
+ * What a source is called in a list. The owner's own name when they gave one. Otherwise what the source calls
+ * itself, said as that: a source can call itself anything, and the words must not read as a name someone vouched for.
+ */
+export function sourceLabel(source: Pick<LibrarySource, 'name' | 'claims' | 'address'>): string {
+  if (source.name.trim() !== '') return source.name;
+  if (source.claims) return `calls itself “${source.claims}”`;
+  return shortAddress(source.address);
+}
 
 /* ---------- What is installed, and what waits to be ---------- */
 
@@ -368,7 +388,7 @@ export function fromWords(from: InstalledFrom): string {
 export const AddSourceRequest = z.object({
   kind: SourceKind.describe('`folder` (a folder on this computer) or `git` (the address of a Git repository).'),
   address: z.string().trim().min(1).max(2000).describe('For a folder: its path. For Git: an address starting with https://, ssh:// or file://, or of the form user@host:path. Never with a password in it.'),
-  name: z.string().trim().max(120).regex(OneLine).optional().describe('What to call it. Left out, the name its index gives, or its address.'),
+  name: z.string().trim().max(120).regex(OneLine).optional().describe('What to call it. Left out, it is shown by what its index calls it, said as its own claim, with its address beside it.'),
 });
 export type AddSourceRequest = z.infer<typeof AddSourceRequest>;
 

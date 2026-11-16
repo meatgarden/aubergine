@@ -142,6 +142,12 @@ export const api = {
   startRun: (sessionId: string, body: { workflowId: string; inputs: Record<string, string>; replace?: boolean; kickoff?: boolean }) =>
     v1.startSessionRun({ sessionId, body: { replace: false, kickoff: true, ...body } }),
   reportRun: (runId: string, body: Parameters<typeof v1.reportRun>[0]['body']) => v1.reportRun({ runId, body }),
+  approveRun: (runId: string, body: { elementId?: string; comment?: string }) => v1.approveRun({ runId, body }),
+  sendBackRun: (runId: string, body: { elementId: string; comment: string }) => v1.sendBackRun({ runId, body }),
+  startRuns: (workflowId: string, body: { sessionIds: string[]; inputs: Record<string, string>; inputsBySession?: Record<string, Record<string, string>>; replace?: boolean }) =>
+    v1.startRuns({ workflowId, body: { replace: false, kickoff: true, ...body } }),
+  /** Runs that ended lately, for the board: newest first, a bounded number. */
+  listEndedRunsPage: (limit: number) => v1.listRuns({ query: { status: 'ended', limit } }),
   getRun: (runId: string) => v1.getRun({ runId }),
   /** The runs that ended most recently, from the archive. */
   listEndedRuns: (limit: number) => v1.listRuns({ query: { status: 'ended', limit } }),

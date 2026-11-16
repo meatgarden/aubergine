@@ -12,7 +12,7 @@ const id = (n: number): string => `01900000-0000-7000-8000-${String(n).padStart(
 
 const run = (n: number, sessionId: string | null): ArchivedRun =>
   ({
-    run: { id: id(n), workflowId: id(900), workflowVersion: 1, sessionId, inputs: {}, status: 'finished', currentElementId: null, elements: [], blockedReason: null, pausedFrom: null, startedBy: { kind: 'person' }, createdAt: '2026-03-01T10:00:00.000Z', updatedAt: '2026-03-01T10:00:00.000Z', finishedAt: '2026-03-01T10:00:00.000Z' },
+    run: { id: id(n), workflowId: id(900), workflowVersion: 1, sessionId, inputs: {}, status: 'finished', currentElementId: null, elements: [], blockedReason: null, pausedFrom: null, history: [], startedBy: { kind: 'person' }, createdAt: '2026-03-01T10:00:00.000Z', updatedAt: '2026-03-01T10:00:00.000Z', finishedAt: '2026-03-01T10:00:00.000Z' },
     workflowName: `Run ${n}`,
     elements: [],
   }) as ArchivedRun;

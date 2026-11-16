@@ -68,8 +68,15 @@ const StateFileV8 = StateFileV7.extend({ version: z.literal(8) });
 /** The same, with the library: its sources as last read, what was installed from them, and installs that wait. An older file has none of it. */
 const StateFileV9 = StateFileV8.extend({ version: z.literal(9), library: LibraryState });
 
-const StateFile = z.discriminatedUnion('version', [StateFileV1, StateFileV2, StateFileV3, StateFileV4, StateFileV5, StateFileV6, StateFileV7, StateFileV8, StateFileV9]);
-const CURRENT_VERSION = 9;
+/**
+ * The same at the top. A run may now wait for a person (a status of its own), keeps the decisions people made on
+ * it, and an element may be an approval. An older file has none of these: its runs load with no decisions, and
+ * nothing in it needs repair. The number changed so that the older file is kept beside this one before it is written.
+ */
+const StateFileV10 = StateFileV9.extend({ version: z.literal(10) });
+
+const StateFile = z.discriminatedUnion('version', [StateFileV1, StateFileV2, StateFileV3, StateFileV4, StateFileV5, StateFileV6, StateFileV7, StateFileV8, StateFileV9, StateFileV10]);
+const CURRENT_VERSION = 10;
 type StateFile = z.infer<typeof StateFile>;
 
 /**
@@ -88,6 +95,15 @@ function withSourceMarks(workflow: Workflow): Workflow {
       }),
     })),
   };
+}
+
+/**
+ * A library source from before a source kept what it calls itself: one the owner gave no name was stored under its
+ * address, cut to the length of a name. Such a name is taken away, so that the source is shown by its address in
+ * full and, after it is next read, by what it calls itself. A name the owner typed is not touched.
+ */
+function withoutAddressNames(library: LibraryState): LibraryState {
+  return { ...library, sources: library.sources.map((source) => (source.address !== '' && (source.name === source.address || source.name === source.address.slice(0, 120)) ? { ...source, name: '' } : source)) };
 }
 
 /**
@@ -112,7 +128,7 @@ export function migrate(file: StateFile): AppState {
     drafts: file.version >= 5 && 'drafts' in file ? file.drafts : [],
     shelf: (file.version >= 5 && 'shelf' in file ? file.shelf : []).map(withFirstVersion),
     repositoryAccepted: file.version >= 6 && 'repositoryAccepted' in file ? file.repositoryAccepted : [],
-    library: file.version >= 9 && 'library' in file ? file.library : { sources: [], installed: [], requests: [] },
+    library: file.version >= 9 && 'library' in file ? (file.version < 10 ? withoutAddressNames(file.library) : file.library) : { sources: [], installed: [], requests: [] },
   });
 }
 

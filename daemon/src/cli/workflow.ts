@@ -1,5 +1,5 @@
 import { AubergineError, createClient, type Client } from '@aubergine/client';
-import { NEEDS_REVIEW, SESSION_ENV, showControl, WorkflowFile, exportWorkflow, importWorkflow, needWords, type Session, type Workflow, type WorkflowDetail, type WorkflowSummary } from '@aubergine/shared';
+import { NEEDS_REVIEW, SESSION_ENV, showControl, waitsForPerson, WorkflowFile, exportWorkflow, importWorkflow, needWords, type Session, type Workflow, type WorkflowDetail, type WorkflowSummary } from '@aubergine/shared';
 import { UsageError, resolveSession, takeOption } from './commands';
 
 /** `aubergine workflow …`, as parsed. */
@@ -14,6 +14,9 @@ export type WorkflowCommand =
   | { action: 'export'; query: string; file: string | null; toRepository: boolean; overwrite: boolean }
   | { action: 'import'; file: string; newName: string | null }
   | { action: 'run'; query: string; session: string | null; inputs: Record<string, string>; replace: boolean }
+  /** The owner's decision on a run that waits for a person. The run is named by its ID, the start of it, or the name of its terminal. */
+  | { action: 'approve'; run: string; comment: string | null }
+  | { action: 'send-back'; run: string; to: string; comment: string }
   // From inside a session, about the run that session is on:
   | { action: 'status' }
   | { action: 'done'; note: string | null; element: string | null; output: string | null }
@@ -103,6 +106,21 @@ export function parseWorkflowCommand(words: readonly string[]): WorkflowCommand 
         inputs[given.slice(0, at)] = given.slice(at + 1);
       }
       return { action: 'run', query: name('run', flagsOf(parts, ['--replace'], 'run')), session, inputs, replace: parts.includes('--replace') };
+    }
+    case 'approve': {
+      const { value: comment, rest: after } = takeOption(rest, '--comment');
+      const run = flagsOf(after, [], 'approve').join(' ').trim();
+      if (run === '') throw new UsageError('workflow approve needs a run: its ID, or the name of its terminal. See: aubergine board');
+      return { action: 'approve', run, comment };
+    }
+    case 'send-back': {
+      const { value: to, rest: afterTo } = takeOption(rest, '--to');
+      const { value: comment, rest: after } = takeOption(afterTo, '--comment');
+      const run = flagsOf(after, [], 'send-back').join(' ').trim();
+      if (run === '') throw new UsageError('workflow send-back needs a run: its ID, or the name of its terminal. See: aubergine board');
+      if (to === null || to.trim() === '') throw new UsageError('workflow send-back needs --to <element>: the earlier element to do again, by name, ID or number');
+      if (comment === null || comment.trim() === '') throw new UsageError('workflow send-back needs --comment "<what should change>": the agent is told it');
+      return { action: 'send-back', run, to, comment };
     }
     case 'status':
       none('status');
@@ -259,6 +277,9 @@ export function formatWorkflow(workflow: WorkflowDetail): string {
   current.elements.forEach((element, index) => {
     lines.push('', `${index + 1}. ${element.name}  [${element.id}]`);
     if (element.instructions.trim()) lines.push(indent(element.instructions.trim()));
+    if (waitsForPerson(element.kind)) lines.push('   A person decides here: the run stops until you approve it or send it back.');
+    if (element.ask.trim()) lines.push(indent(`You are asked: ${element.ask.trim()}`));
+    if (element.lookAt.trim()) lines.push(indent(`To look at: ${element.lookAt.trim()}`));
     if (element.doneWhen) lines.push(`   Done when: ${element.doneWhen}`);
     if (element.needs.length > 0) lines.push(`   Needs: ${element.needs.map(needWords).join('; ')}`);
     if (element.produces !== 'note') lines.push(`   Produces: ${element.produces}`);
@@ -521,6 +542,44 @@ export async function runWorkflowCommand(command: WorkflowCommand, deps: Workflo
       print(`Started "${started.workflowName}" by itself on "${session.name}".`);
       print(started.kickoffTyped ? 'The agent in it has been told.' : `Nothing was typed into the terminal (no agent is running there). To set an agent off, give it this line:\n  ${started.kickoff}`);
       return 0;
+    }
+
+    case 'approve':
+    case 'send-back': {
+      // Only the owner decides: this goes with the owner's sign-in, never with a session's token.
+      // Typed inside a canvas terminal it is refused: that is where agents type. This is a sentence in an agent's way, not a lock.
+      if (deps.env[SESSION_ENV.sessionId]) {
+        print('A run is approved or sent back by a person, in the browser or from a terminal that is not on a canvas. This command does nothing inside a canvas terminal. If you are an agent: stop and wait for your owner.');
+        return 1;
+      }
+      const board = await owner((client) => client.getBoard({ query: {} }));
+      const cards = board.groups.flatMap((group) => [...group.queued, ...group.columns.flatMap((column) => column.cards)]);
+      const wanted = command.run.trim().toLowerCase();
+      const matches = cards.filter((card) => card.runId === wanted || (wanted.length >= 8 && card.runId.startsWith(wanted)) || card.sessionName.toLowerCase() === wanted);
+      if (matches.length !== 1) {
+        const waiting = cards.filter((card) => card.waitsForPerson);
+        print(showControl(matches.length === 0 ? `No run matches "${command.run}".` : `${matches.length} runs match "${command.run}". Use the ID.`));
+        print(waiting.length > 0 ? showControl(`Waiting for you:\n${waiting.map((card) => `  ${card.sessionName}: ${card.elementName}  [run ${card.runId}]`).join('\n')}`) : 'No run is waiting for approval.');
+        return 1;
+      }
+      const card = matches[0] as (typeof matches)[number];
+      try {
+        if (command.action === 'approve') {
+          const run = await owner((client) => client.approveRun({ runId: card.runId, body: { ...(card.elementId !== null ? { elementId: card.elementId } : {}), ...(command.comment !== null ? { comment: command.comment } : {}) } }));
+          print(showControl(`Approved "${card.elementName}" on "${card.sessionName}". ${run.run.status === 'finished' ? 'The run is finished.' : `The run goes on: ${run.position}.`}`));
+          if (run.run.status === 'running') print(run.kickoffTyped ? 'The agent has been told to read its status.' : 'Nothing was typed into the terminal: no agent was seen in front there. It reads the new element with: aubergine workflow status');
+        } else {
+          const detail = await owner((client) => client.getRun({ runId: card.runId }));
+          const run = await owner((client) => client.sendBackRun({ runId: card.runId, body: { elementId: resolveElement(detail.elements, command.to), comment: command.comment } }));
+          print(showControl(`Sent "${card.sessionName}" back: ${run.position}. Your comment is part of what the agent is told there.`));
+          if (run.run.status === 'running') print(run.kickoffTyped ? 'The agent has been told to read its status.' : 'Nothing was typed into the terminal: no agent was seen in front there. It reads your comment with: aubergine workflow status');
+        }
+        return 0;
+      } catch (error) {
+        if (!(error instanceof AubergineError)) throw error;
+        print(showControl(error.message));
+        return 1;
+      }
     }
 
     case 'brief':

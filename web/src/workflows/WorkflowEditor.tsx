@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { copyStatus, elementIdFor, latestVersion, previewRun, sourceOf, type Element } from '@aubergine/shared';
+import { copyStatus, elementIdFor, elementKind, elementKindNames, latestVersion, previewRun, sourceOf, waitsForPerson, type Element } from '@aubergine/shared';
 import { api } from '../api';
 import { runCommand } from '../commands';
 import { useApp } from '../store';
@@ -257,6 +257,25 @@ export function WorkflowEditor() {
             >
               + Element
             </button>
+            {/* Every other kind there is, by what it is called: no kind is named here. */}
+            {elementKindNames()
+              .filter((kind) => waitsForPerson(kind))
+              .map((kind) => (
+                <button
+                  key={kind}
+                  type="button"
+                  className="quiet"
+                  title="A place where the run stops until you have approved it or sent it back"
+                  onClick={() => {
+                    const next = addElement(draft, elementKind(kind)?.title ?? kind, kind);
+                    change(next);
+                    setSelected(next.elements.at(-1)?.id ?? null);
+                  }}
+                  data-testid={`element-add-${kind}`}
+                >
+                  + {elementKind(kind)?.title ?? kind}
+                </button>
+              ))}
             {offered.length > 0 && (
               <select
                 className="editor-insert"

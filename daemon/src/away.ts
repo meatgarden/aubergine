@@ -56,6 +56,8 @@ export function momentOf(event: ChangeEvent, memory: AwayMemory, at: string, wor
       const before = memory.element.get(event.run.id);
       memory.element.set(event.run.id, event.run.currentElementId);
       if (event.run.status === 'blocked') return { at, kind: 'run-moved', sessionId: event.run.sessionId, runId: event.run.id, detail: `is blocked on "${workflowName(event.run.workflowId)}"${event.run.blockedReason ? `: ${event.run.blockedReason}` : '.'}` };
+      // Waiting for the owner's decision is said as that, not as having moved on.
+      if (event.run.status === 'awaiting' && before !== event.run.currentElementId) return { at, kind: 'run-moved', sessionId: event.run.sessionId, runId: event.run.id, detail: `waits for your approval in "${workflowName(event.run.workflowId)}".` };
       if (before === event.run.currentElementId) return null;
       return { at, kind: 'run-moved', sessionId: event.run.sessionId, runId: event.run.id, detail: `moved on in "${workflowName(event.run.workflowId)}".` };
     }

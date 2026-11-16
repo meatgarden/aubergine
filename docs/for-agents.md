@@ -77,6 +77,7 @@ When you cannot go on without a person:
     aubergine workflow blocked "I need the address of the staging server."
 
 Only these move a run. `aubergine attention done` says you have stopped; it does not report an element done.
+Some elements are approvals: a person decides there, not you. When the status says the run is waiting for a person to approve, stop: do not continue that work and do not start what comes after. You cannot approve, and `aubergine workflow done` is refused there. When the person has decided, a line in your terminal tells you to read the status again. If they sent the run back, the status shows their comment with the element to do again.
 A run that is paused was paused by a person: stop working on it until the status says it goes on. `aubergine workflow goto <element>`, `aubergine workflow pause`, `aubergine workflow resume` and `aubergine workflow stop` exist; use them only when your owner asks.
 
 (Needs the terminal's own credential, or an API token with one of the scopes read, runs:write.)
@@ -175,7 +176,7 @@ To see canvases, terminals and their notes: canvases_list, sessions_list, sessio
 
 (Needs an API token with the scope read.)
 
-To see workflows and runs: workflows_list, runs_list, run_get.
+To see workflows and runs: workflows_list, runs_list, run_get. To see every run that is going at once, by workflow and element, with what waits for the owner: board. A run that waits for approval is approved or sent back by the owner; there is no tool for it.
 
 (Needs an API token with the scope sessions:write.)
 
@@ -207,7 +208,7 @@ A terminal marked "people only" is closed to every program, and a token reaches 
 
 ## What is your owner's alone
 
-No command and no tool of yours does these, and none of them is missing by mistake: making, listing or revoking credentials; reading the record of what credentials did; changing settings; stopping a program outside Aubergine; terminals that are not on a canvas; accepting, sending back or discarding a draft; accepting a workflow kept in a repository; saving a workflow into a repository; marking a terminal "people only", or opening it again; making or removing the demo; reading how an agent is set up; asking an agent for a recap; the list of what changed while the owner was away; an agent's past conversations; deciding which terminals may message each other, and pausing or stopping a thread; retiring a shelf element or bringing it back, and taking a newer version of one into a workflow; adding, removing or refreshing a library source, accepting an install or an update, and removing what was installed.
+No command and no tool of yours does these, and none of them is missing by mistake: making, listing or revoking credentials; reading the record of what credentials did; changing settings; stopping a program outside Aubergine; terminals that are not on a canvas; accepting, sending back or discarding a draft; accepting a workflow kept in a repository; saving a workflow into a repository; marking a terminal "people only", or opening it again; making or removing the demo; reading how an agent is set up; asking an agent for a recap; the list of what changed while the owner was away; an agent's past conversations; deciding which terminals may message each other, and pausing or stopping a thread; retiring a shelf element or bringing it back, and taking a newer version of one into a workflow; adding, removing or refreshing a library source, accepting an install or an update, and removing what was installed; approving a run that waits for a person, or sending it back.
 
 (Needs an Aubergine terminal.)
 

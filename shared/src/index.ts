@@ -27,3 +27,4 @@ export * from './guide';
 export * from './messages';
 export * from './shelf';
 export * from './library';
+export * from './board';

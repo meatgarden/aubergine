@@ -37,6 +37,11 @@ function Pipeline({ picture, elements, live, now }: RunViewProps) {
                 </button>
               )}
             </div>
+            {entry?.sentBack && (
+              <p className="run-step-note run-step-sent-back" data-testid="run-sent-back">
+                Sent back here by {actorWord(entry.sentBack.by)}: {entry.sentBack.comment}
+              </p>
+            )}
             {entry?.note && <p className="run-step-note">{entry.note}</p>}
             {Output && entry && entry.output !== null && entry.output !== undefined && (
               <div className="run-step-output">

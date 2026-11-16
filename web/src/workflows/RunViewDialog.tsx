@@ -3,6 +3,7 @@ import { kickoffLine, renderRun, type RunDetail } from '@aubergine/shared';
 import { api } from '../api';
 import { useApp } from '../store';
 import { reportRun } from './actions';
+import { ApprovalControls } from './ApprovalControls';
 import { runViewList } from './registries';
 import { STATUS_MARK, STATUS_WORD, pictureOf, versionOfRun } from './run-model';
 
@@ -145,6 +146,14 @@ export function RunViewDialog() {
                 text={live && version ? renderRun(version, live) : (ended?.text ?? '')}
                 kickoff={live && version ? kickoffLine() : ''}
               />
+            )}
+            {live && run.status === 'awaiting' && (
+              <div className="run-view-approval" data-testid="run-view-approval">
+                <p role="alert">
+                  <strong>Waiting for you.</strong> This run stops at “{picture.current?.name}” until you approve it or send it back. Read what was done above first.
+                </p>
+                <ApprovalControls run={run} elements={picture.segments} />
+              </div>
             )}
             {live && (
               <div className="run-view-actions">

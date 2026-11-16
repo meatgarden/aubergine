@@ -67,6 +67,7 @@ export const OWNERS_ALONE: Record<(typeof NEVER_BY_TOKEN)[number], string> = {
   'library.manage': 'adding, removing or refreshing a library source, accepting an install or an update, and removing what was installed',
   'shelf.manage': 'retiring a shelf element or bringing it back, and taking a newer version of one into a workflow',
   'messages.manage': 'deciding which terminals may message each other, and pausing or stopping a thread',
+  'runs.approve': 'approving a run that waits for a person, or sending it back',
 };
 
 const ownersAlone = (): string => [...new Set(NEVER_BY_TOKEN.map((action) => OWNERS_ALONE[action]))].join('; ');
@@ -152,6 +153,7 @@ export const GUIDE: readonly GuideSection[] = [
           'When you cannot go on without a person:',
           '    aubergine workflow blocked "I need the address of the staging server."',
           'Only these move a run. `aubergine attention done` says you have stopped; it does not report an element done.',
+          'Some elements are approvals: a person decides there, not you. When the status says the run is waiting for a person to approve, stop: do not continue that work and do not start what comes after. You cannot approve, and `aubergine workflow done` is refused there. When the person has decided, a line in your terminal tells you to read the status again. If they sent the run back, the status shows their comment with the element to do again.',
           'A run that is paused was paused by a person: stop working on it until the status says it goes on. `aubergine workflow goto <element>`, `aubergine workflow pause`, `aubergine workflow resume` and `aubergine workflow stop` exist; use them only when your owner asks.',
         ],
       },
@@ -264,7 +266,7 @@ export const GUIDE: readonly GuideSection[] = [
         tools: ['aubergine_status'],
       },
       { needs: ['canvases.read', 'sessions.read'], text: ['To see canvases, terminals and their notes: canvases_list, sessions_list, session_get, notes_read.'], tools: ['canvases_list', 'sessions_list', 'session_get', 'notes_read'] },
-      { needs: ['workflows.read', 'runs.read'], text: ['To see workflows and runs: workflows_list, runs_list, run_get.'], tools: ['workflows_list', 'runs_list', 'run_get'] },
+      { needs: ['workflows.read', 'runs.read'], text: ['To see workflows and runs: workflows_list, runs_list, run_get. To see every run that is going at once, by workflow and element, with what waits for the owner: board. A run that waits for approval is approved or sent back by the owner; there is no tool for it.'], tools: ['workflows_list', 'runs_list', 'run_get', 'board'] },
       {
         needs: ['sessions.write'],
         text: ['To start a terminal, move one to another canvas, or park one: session_start, session_move, session_park. A new terminal is a plain shell; starting it with a command also needs leave to type into it.'],

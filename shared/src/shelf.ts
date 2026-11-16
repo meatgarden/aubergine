@@ -14,7 +14,8 @@ import { Element, type ElementSource, type Workflow } from './workflows';
 
 /** What an element says: the fields that are copied, compared and versioned. Not where it came from, and not its ID. */
 export const CONTENT_FIELDS = ['kind', 'name', 'instructions', 'doneWhen', 'needs', 'produces'] as const;
-export type ElementContent = Pick<Element, (typeof CONTENT_FIELDS)[number]>;
+/** `ask` and `lookAt` belong to the content too; they are optional here because an element from before they existed has neither. */
+export type ElementContent = Pick<Element, (typeof CONTENT_FIELDS)[number]> & Partial<Pick<Element, 'ask' | 'lookAt'>>;
 
 export function contentOf(element: ElementContent): ElementContent {
   return {
@@ -24,6 +25,9 @@ export function contentOf(element: ElementContent): ElementContent {
     doneWhen: element.doneWhen,
     needs: element.needs.map((need) => ({ kind: need.kind, name: need.name, ...(need.note ? { note: need.note } : {}) })),
     produces: element.produces,
+    // Left out when empty, so that the mark of an element from before these fields is what it was.
+    ...(element.ask ? { ask: element.ask } : {}),
+    ...(element.lookAt ? { lookAt: element.lookAt } : {}),
   };
 }
 
@@ -145,6 +149,8 @@ export function elementLines(content: ElementContent): string[] {
     `Done when: ${content.doneWhen}`,
     `Produces: ${content.produces}`,
     `Needs: ${content.needs.map((need) => `${need.kind} ${need.name}${need.note ? ` (${need.note})` : ''}`).join('; ') || 'nothing'}`,
+    ...(content.ask ? [`The person is asked: ${content.ask}`] : []),
+    ...(content.lookAt ? [`To look at: ${content.lookAt}`] : []),
     '',
     ...content.instructions.split('\n'),
   ];
@@ -227,7 +233,7 @@ export interface FieldNote {
   written: 'by you' | 'for you';
 }
 
-const WRITTEN_BY_YOU = new Set(['name', 'instructions', 'doneWhen', 'needs', 'produces']);
+const WRITTEN_BY_YOU = new Set(['name', 'instructions', 'doneWhen', 'needs', 'produces', 'ask', 'lookAt']);
 
 function described(shape: Record<string, { description?: string | undefined }>, fields: readonly string[], written: (field: string) => FieldNote['written']): FieldNote[] {
   return fields.map((field) => ({ field, what: shape[field]?.description ?? '', written: written(field) }));
@@ -240,7 +246,7 @@ function described(shape: Record<string, { description?: string | undefined }>, 
  */
 export function elementReference(): { element: FieldNote[]; shelf: FieldNote[] } {
   return {
-    element: described(Element.shape, ['name', 'instructions', 'doneWhen', 'needs', 'produces', 'kind', 'origin', 'source', 'id', 'extra'], (field) => (WRITTEN_BY_YOU.has(field) ? 'by you' : 'for you')),
+    element: described(Element.shape, ['name', 'instructions', 'doneWhen', 'needs', 'produces', 'kind', 'ask', 'lookAt', 'origin', 'source', 'id', 'extra'], (field) => (WRITTEN_BY_YOU.has(field) ? 'by you' : 'for you')),
     shelf: described(ShelfElement.shape, ['version', 'versions', 'state', 'replacedBy'], () => 'for you'),
   };
 }

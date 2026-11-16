@@ -27,7 +27,7 @@ const ZSH = ['/bin/zsh', '/usr/bin/zsh'].find((p) => existsSync(p));
 const COMMAND = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..', 'bin', 'aubergine.mjs');
 
 const OWN_WORK = ['workflow_status', 'workflow_done', 'workflow_blocked', 'workflow_goto', 'note_add', 'attention_set', 'draft_brief', 'draft_propose_element', 'draft_propose_workflow', 'messages_inbox', 'message_reply', 'message_send', 'repository_workflows'];
-const READING = ['workflow_status', 'library_list', 'library_show', 'repository_workflows', 'canvases_list', 'sessions_list', 'session_get', 'notes_read', 'workflows_list', 'runs_list', 'run_get'];
+const READING = ['workflow_status', 'board', 'library_list', 'library_show', 'repository_workflows', 'canvases_list', 'sessions_list', 'session_get', 'notes_read', 'workflows_list', 'runs_list', 'run_get'];
 const EVERYTHING = [
   'workflow_status',
   'workflow_done',
@@ -39,6 +39,7 @@ const EVERYTHING = [
   'messages_inbox',
   'message_reply',
   'message_send',
+  'board',
   'library_list',
   'library_show',
   'library_request_install',
@@ -348,6 +349,12 @@ describe.runIf(ZSH)('aubergine mcp, through the protocol', () => {
       expect(run.data.kickoffTyped).toBe(false);
       expect(run.text).toContain('Nothing was typed into that terminal');
       expect((await ok('runs_list', { session: 'target' })).data.runs).toEqual([expect.objectContaining({ id: run.data.runId, workflow: 'Two steps', status: 'running' })]);
+      // The board: the same run in its column, as quoted text and as data.
+      const board = await ok('board');
+      expect(quotedPart(board.text).inside).toContain('1 working');
+      expect(quotedPart(board.text).inside).toContain('target on');
+      expect(board.data.runs).toEqual([expect.objectContaining({ runId: run.data.runId, sessionId: target.id, status: 'running', waitsForPerson: false })]);
+      expect((await ok('board', { tag: 'no terminal has this' })).data.counts.total).toBe(0);
       expect((await ok('run_get', { run: run.data.runId })).text).toContain('Do the first thing.');
       expect((await ok('workflow_status', { session: 'target' })).text).toContain('Do the first thing.');
       expect((await ok('workflow_goto', { session: 'target', element: 'Second' })).text).toContain('Do the second thing.');

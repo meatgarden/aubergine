@@ -38,7 +38,7 @@ The easiest way to make one is `aubergine library export <workflow> --to <folder
 |---|---|
 | `aubergine` | Always `"library"`. |
 | `format` | The version of this format: `1`. A source in a later format is not read by a version of Aubergine that does not know it, and says so. |
-| `name` | What the source calls itself. Optional; one line. |
+| `name` | What the source calls itself. Optional; one line. Aubergine shows it as that, `calls itself “…”`, beside the source's address, unless the owner gave the source a name of their own: a source can call itself anything. |
 | `items` | At most 500 entries. |
 
 Each entry:

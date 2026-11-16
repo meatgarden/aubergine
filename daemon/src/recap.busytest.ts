@@ -124,6 +124,8 @@ describe.runIf(ZSH)('a recap written by a stand-in agent', () => {
     expect((await asOwner('POST', `/api/v1/sessions/${session.id}/recap-request`, {})).body).toMatchObject({ asked: true });
     await until('the recap to be handed in', () => hub.state.sessions.find((s) => s.id === session.id)?.recap !== null);
 
+    // The server has the recap before the command has printed its answer: wait for the command, not only for the state.
+    await until('the command to have printed', async () => (await readFile(path.join(dir, 'handed.txt'), 'utf8').catch(() => '')).trim() !== '');
     // With nothing handed to it, the command prints what is wanted, word for word; with something, it stores it.
     expect((await readFile(path.join(dir, 'wanted.txt'), 'utf8')).trim()).toBe(RECAP_WANTED);
     expect((await readFile(path.join(dir, 'handed.txt'), 'utf8')).trim()).toBe('Handed in. Your owner sees it on this terminal.');

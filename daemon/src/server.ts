@@ -296,7 +296,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     return typeof said === 'string' && ClientName.safeParse(said).success ? said : null;
   };
   /** What only the owner may do and is worth seeing when it was not done in the browser. */
-  const WATCHED: readonly Action[] = ['drafts.review', 'repository.review', 'repository.write', 'tokens.manage', 'terminal.input', 'sessions.protect', 'messages.manage'];
+  const WATCHED: readonly Action[] = ['drafts.review', 'repository.review', 'repository.write', 'tokens.manage', 'terminal.input', 'sessions.protect', 'messages.manage', 'runs.approve'];
   /** Reading a terminal is watched too, though it changes nothing. */
   const WATCHED_READS: readonly Action[] = ['terminal.read'];
   const ownerLogged = new WeakSet<FastifyRequest>();

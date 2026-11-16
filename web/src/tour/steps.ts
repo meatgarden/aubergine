@@ -66,8 +66,8 @@ registerTourStep({
   id: 'workflow',
   order: 50,
   title: 'An agent on a workflow',
-  text: 'The strip on this terminal shows which step its agent is on. Click the strip to see every step and what was noted.',
-  reminder: 'A strip on a terminal shows the step its agent is on; click it for the whole run.',
+  text: 'The strip on this terminal shows its agent’s step; click it for the whole run. “Board” above shows every run at once.',
+  reminder: 'A strip shows the step an agent is on; click it for the run. “Board” shows every run at once.',
   target: (c) => find('[data-testid="run-view"]') ?? nodeOf(c.demo?.sessions.fixing)?.querySelector('[data-testid="run-strip"]') ?? find('[data-testid="run-strip"]'),
   done: (c) => c.demo !== null && c.demo.runId !== null && c.state.viewingRun === c.demo.runId,
 });
