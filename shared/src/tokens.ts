@@ -27,7 +27,7 @@ export const KnownScope = z.enum([...GRANTABLE_SCOPES, ...RESERVED_SCOPES]);
 export type KnownScope = z.infer<typeof KnownScope>;
 
 export const SCOPE_MEANING: Record<KnownScope, string> = {
-  read: 'See canvases, sessions, layout and notes, and follow changes.',
+  read: 'See canvases, sessions, layout and notes, and follow changes. See the sources of the library, with their addresses, and what they list.',
   'canvases:write': 'Create, rename, reorder and close canvases; move and resize nodes; add and change frames; show a canvas in the browser.',
   'sessions:write': 'Start, rename, tag, move, park, restore and end sessions; show a session in the browser. By itself it starts plain shells: starting a session with a command also needs terminal:input.',
   'notes:write': 'Change the pinned note of a session and add entries to its note log.',
@@ -35,7 +35,7 @@ export const SCOPE_MEANING: Record<KnownScope, string> = {
   'terminal:input': 'Type into the terminals it may reach, press keys there and run commands. This scope can run any command on this computer as you, in any terminal it may reach.',
   'messages:read': 'Read the messages to and from the sessions it may reach, the ones you sent among them. Reading does not mark them read.',
   'messages:write': 'Send messages to the sessions it may reach, under the name of the token. A message is never typed into a terminal. By itself this scope types nothing at all; with terminal:input on that terminal, one fixed sentence saying that a message waits is typed where an agent is idle.',
-  'workflows:write': 'Propose workflows and elements as drafts for you to review. With review switched off for the token: create, change, copy and remove workflows and shelf elements directly.',
+  'workflows:write': 'Propose workflows and elements as drafts for you to review, and ask for an item of the library to be installed, which waits for you in the same way. With review switched off for the token: create, change, copy and remove workflows and shelf elements directly.',
   'runs:write': 'Start runs of workflows on sessions, and report on them: done, blocked, go to, pause, resume, stop. By itself it types nothing into a terminal; with terminal:input on that terminal, the one fixed kickoff sentence is typed.',
 };
 

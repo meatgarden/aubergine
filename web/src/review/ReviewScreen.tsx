@@ -181,6 +181,17 @@ export function ReviewScreen() {
                 {current.item.state === 'returned' && <p className="sheet-note">Sent back with: “{current.item.comment}”. Waiting for a new version.</p>}
                 {detail && (
                   <>
+                    {(detail.notices ?? []).map((notice) => (
+                      <p key={notice} className="review-notice" role="note" data-testid="review-notice">
+                        {notice}
+                      </p>
+                    ))}
+                    {(detail.also ?? []).map((other) => (
+                      <details key={other.title} className="review-also" data-testid="review-also">
+                        <summary>{other.title}</summary>
+                        <pre className="review-text">{other.text}</pre>
+                      </details>
+                    ))}
                     <p className="review-needs" data-testid="review-needs">
                       <span className="wf-label">It needs</span>
                       {detail.needs.length > 0 ? detail.needs.map(needWords).join('; ') : 'nothing that was named'}

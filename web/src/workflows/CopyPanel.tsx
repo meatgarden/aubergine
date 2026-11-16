@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import { COPY_MARK, copyStatus, copyWords, decideUpdate, elementLines, elementReference, threeTexts, type Element, type ShelfElement } from '@aubergine/shared';
+import { COPY_MARK, copyStatus, copyWords, decideUpdate, elementLines, elementReference, fromWords, threeTexts, type Element, type ShelfElement } from '@aubergine/shared';
 import { DiffText } from '../review/DiffText';
+import { useApp } from '../store';
 
 /** The small mark on an element that is a copy of a shelf element: what can be told about it. */
 export function CopyMark({ element, shelf }: { element: Element; shelf: readonly ShelfElement[] }) {
@@ -28,6 +29,8 @@ export function CopyPanel({ element, shelf, onDecide }: { element: Element; shel
   const status = copyStatus(element, shelf);
   const item = status.shelf;
   const shelfVersion = item?.version ?? null;
+  // Through its shelf element, where that came from: an element installed from the library says which source, item and version.
+  const fromLibrary = useApp((s) => (item ? (s.app?.library.installed.find((entry) => entry.target.shelfId === item.id) ?? null) : null));
   // A comparison that was open is put away when what it compared has changed: another element, a decision, a newer version.
   useEffect(() => setOpen(false), [element.id, status.state, shelfVersion]);
   if (status.state === 'none') return null;
@@ -38,6 +41,12 @@ export function CopyPanel({ element, shelf, onDecide }: { element: Element; shel
       <p className="copy-words" data-testid="copy-words">
         {copyWords(status)}
       </p>
+      {fromLibrary && (
+        <p className="sheet-note" data-testid="copy-library">
+          The shelf element was installed from the library: {fromWords(fromLibrary.from)}.
+          {fromLibrary.atSource === 'retired' ? ` Its publisher has retired it${fromLibrary.useInstead ? `: use “${fromLibrary.useInstead}” in its place` : ''}.` : fromLibrary.atSource === 'gone' ? ' Its source no longer lists it.' : ''}
+        </p>
+      )}
       {newer && item && texts && (
         <>
           <button type="button" className="quiet" aria-expanded={open} onClick={() => setOpen(!open)} data-testid="copy-compare">

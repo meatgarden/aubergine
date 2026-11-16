@@ -81,6 +81,7 @@ export const COMMAND_IDS = [
   'tokens.manage',
   'activity.show',
   'workflows.open',
+  'library.open',
   'workflow.run',
   'workflow.runOnAgent',
   'workflow.view',

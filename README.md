@@ -754,6 +754,7 @@ Create `config.json` in the data folder (the server prints its location at start
   "api": { "rateLimitPerMinute": 600, "maxBodyBytes": 1048576, "activityLogMaxBytes": 5242880 },
   "workflows": { "maxElements": 50, "maxElementChars": 20000, "quietAfterSeconds": 300 },
   "terminal": { "protectNewSessions": false, "protectAgentSessions": true, "auditInput": false },
+  "library": { "fetchTimeoutSeconds": 60, "maxFetchMegabytes": 100 },
   "messages": { "perSenderPerMinute": 6, "perPairPerHour": 30, "pauseAfter": 6, "maxUnread": 20, "nudgeIntervalSeconds": 120, "keepDays": 30 },
   "shortcuts": {},
   "shortcutsInAppWindow": {}
@@ -775,6 +776,7 @@ Create `config.json` in the data folder (the server prints its location at start
 - `api`: limits on calls made with [API tokens](#api-tokens): calls per minute per token, the largest request body, and the size of the activity log. They apply when the server is next started.
 - `workflows`: how many elements a [workflow](#workflows) may have, how long the text of one element (and the text for every element) may be, and after how many seconds of output without a report a run is marked quiet. The two limits apply when the server is next started.
 - `terminal`: [terminal access](#terminal-access) for API tokens: whether new terminals, and new agent sessions, start "people only"; the limits on typing; and `auditInput`, which keeps what tokens type in a file.
+- `library`: how long and how large a fetch of a [library](#the-library) source may be.
 - `messages`: the limits on [messages between terminals](#messages-between-terminals). They apply from the next start of the server.
 - `shortcuts`, `shortcutsInAppWindow`: your own keys; see [Keyboard](#keyboard).
 
@@ -838,6 +840,7 @@ aubergine workflow done [--note <text>] [--output <file>]   the current element 
 aubergine workflow brief       inside a session asked to write a workflow or an element: the request
 aubergine workflow propose --file <file>   hand a workflow in as a draft, for you to review
 aubergine element propose --file <file>    the same for one element
+aubergine library list         what the library offers; also show, install, sources, add, remove, refresh, export
 aubergine element list         the shelf, each element with its version; also show <name> and remove <name> (which says where it is used first)
 aubergine element run <name> [--session <name|id>] [--input key=value]…   run one element by itself
 aubergine workflow blocked <reason>, goto <element>, pause, resume, stop
@@ -915,6 +918,63 @@ The guide prints no secret and reads no file of yours. It says nothing about you
 An agent that Aubergine starts reports "waiting for you" and "finished" by itself. Any other program in a terminal can say the same with `aubergine attention waiting "what it needs"`, `aubergine attention working` and `aubergine attention done`; the guide tells it so.
 
 Typed in a terminal, the other `aubergine` commands act as you, whoever types them, an agent included; they are recorded as coming from that terminal. The guide tells an agent to leave them alone unless you asked. That is advice to the agent, not a lock.
+
+## The library
+
+The **Library** (in the toolbar, or ⌘K, `Library…`) is a place to browse workflows and elements that others published, or that you published on another computer, read what one contains, and install it. It is not a marketplace: there are no accounts, no ratings, and nothing is published from the app.
+
+**Sources.** A source is a place with an index of items:
+
+- **Comes with Aubergine**: a small library inside the app (four elements and two workflows, written in plain language). It needs no network and is why Browse is not empty the first time.
+- **A folder** on this computer.
+- **A Git repository**, by its address: `https://…`, `ssh://…`, `user@host:path` or `file://…`.
+
+Add one in the Library screen or with `aubergine library add <folder or address>`. Adding and removing sources is yours alone.
+
+**Fetching.** A Git source is fetched when you add it and when you press **Refresh**, and at no other time: not on a timer, not when the server starts, and never because a program or an agent asked. This is the only thing in Aubergine that reaches the network. It uses the `git` program you already have, with the access you already have: your credential helper, your ssh keys, your proxy settings. Aubergine stores no credential and never asks for one; an address with a password in it is refused. A fetch that would wait for a password is stopped after a minute (`library.fetchTimeoutSeconds`), and a source larger than 100 MB is refused (`library.maxFetchMegabytes`).
+
+**Nothing fetched is run.** No hook runs, no submodule is followed, no filter or helper from your Git configuration is run on what was fetched, and a symbolic link in a repository is written out as a small text file and never followed. Aubergine then reads the index and the files it names, as ordinary files, and nothing else.
+
+**Browse and read.** Every item shows where it comes from, its version, and everything an agent would be told by it, as plain text. Read it there before you decide anything.
+
+**Installing is reading first.** **Read and install…** puts the item in **Review**, the same screen where you read what agents wrote. You see the whole text exactly as an agent would be told it, what it needs (with advice on whether the agents on your canvases have a thing of that name, where that can be read), where it comes from, at which version and commit. **Accept** installs exactly the file you were shown: if it changed in the meantime, nothing is installed and you are told to read it again. A workflow goes among your workflows; an element goes on your shelf.
+
+A program with an API token that may propose workflows (`workflows:write`) can **ask** for an install. The request waits in Review like any other; no token can accept it.
+
+**Updates are never automatic.** After a refresh, an item whose source has another version, or other content, than what you installed says **update available**. Nothing you installed is changed by a refresh. **Read the update…** shows the difference from what you have; if you changed yours since installing, it shows what you installed as well, and says that accepting puts the new version in place of yours (yours stays among the earlier versions). Nothing is merged for you.
+
+**What it tells you, in words.** These are things to know, not locks:
+
+- **Its history was rewritten**: the commit read last time is no longer part of the source's history.
+- **Changed without a new version**: the content under this version is not what it was.
+- **No longer listed**: the source dropped it. What you installed still works.
+- **Retired by its publisher**, with what to use in its place when the publisher named it.
+
+**Offline.** Everything installed works with no source reachable. A source that cannot be reached shows when it was last read and why the last try failed.
+
+**Removing** an installed item says where it is used first. Copies of an element in your workflows stay as they are and say that their source was removed.
+
+**Publishing your own.** A folder or repository of yours can be a source:
+
+```sh
+mkdir -p ~/team-library
+aubergine library export "Fix a bug" --to ~/team-library            # a workflow
+aubergine library export "Tidy up" --element --to ~/team-library    # a shelf element
+aubergine library add ~/team-library
+```
+
+`export` writes the item's file and adds or updates its entry in the folder's index. It writes only inside the folder you name, and never commits or pushes. The version in the index is yours to give (`--version`); left out, an unchanged item keeps its version and a changed one gets the next number. The format is in [docs/library.md](docs/library.md).
+
+```sh
+aubergine library list                 # what the sources offer, and what is installed
+aubergine library show <item>          # everything an agent would be told by it
+aubergine library install <item>       # shows all of it, asks, installs exactly that
+aubergine library sources
+aubergine library refresh [source]     # the only thing that fetches
+aubergine library remove <source>
+```
+
+**What this cannot do for you.** Git's options keep a source from running anything on your computer while it is fetched. They do nothing about what an item says. An item is instructions that an agent will follow with whatever that agent may do on your computer. If you accept without reading, a stranger's text is what your agent does next. Read it.
 
 ## When Aubergine types into an agent's terminal
 
@@ -1000,7 +1060,7 @@ curl -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/jso
 | `canvases:write` | create, rename, reorder and close canvases; move and resize nodes; frames; show a canvas in the browser |
 | `sessions:write` | start, rename, tag, move, park, restore and end sessions; show a session in the browser. By itself it starts plain shells and runs nothing: starting a session **with a command** also needs `terminal:input` with a reach that covers the new session (its canvas, its tags), and is refused where new sessions start people only |
 | `notes:write` | change a session's pinned note and add entries to its note log |
-| `workflows:write` | propose workflows and elements as drafts for you to review. With review switched off for the token: create, change, copy and remove workflows and shelf elements directly |
+| `workflows:write` | propose workflows and elements as drafts for you to review, and ask for an item of the [library](#the-library) to be installed (the request waits for you; no token can accept it). With review switched off for the token: create, change, copy and remove workflows and shelf elements directly |
 | `runs:write` | start runs of workflows on sessions and report on them (done, blocked, go to, pause, resume, stop). By itself it types nothing into a terminal; with `terminal:input` on that terminal, the one fixed kickoff sentence is typed |
 | `terminal:read`, `terminal:input` | read what terminals show, and type into them. Not implied by anything above, and each token says which terminals it may reach. **With `terminal:input` a token can run any command as you.** See [Terminal access](#terminal-access) before granting either |
 
@@ -1226,11 +1286,11 @@ It never reads your sign-in, and it has no tool for what only you may do: making
 | With | Tools |
 |---|---|
 | a session's own token | `workflow_status`, `workflow_done`, `workflow_blocked`, `workflow_goto`, `note_add`, `attention_set`, `draft_brief`, `draft_propose_element`, `draft_propose_workflow`, `messages_inbox`, `message_reply`, `message_send`, `repository_workflows`: its own work, on its own session only |
-| `read` | `canvases_list`, `sessions_list`, `session_get`, `notes_read`, `workflows_list`, `runs_list`, `run_get`, `workflow_status`, `repository_workflows` |
+| `read` | `library_list`, `library_show`, `canvases_list`, `sessions_list`, `session_get`, `notes_read`, `workflows_list`, `runs_list`, `run_get`, `workflow_status`, `repository_workflows` |
 | `sessions:write` | `session_start`, `session_move`, `session_park` |
 | `notes:write` | `note_add`, `note_write` |
 | `runs:write` | `workflow_run`, `element_run`, `workflow_done`, `workflow_blocked`, `workflow_goto` |
-| `workflows:write` | `draft_propose_element`, `draft_propose_workflow`: drafts for you to review, never a workflow that can run |
+| `workflows:write` | `library_request_install` (a request that waits for you), `draft_propose_element`, `draft_propose_workflow`: drafts for you to review, never a workflow that can run |
 | `terminal:read` | `terminal_screen`, `terminal_output`, `terminal_search` |
 | `terminal:input` | `terminal_send`, `terminal_keys`, `terminal_run` |
 | `messages:read` | `messages_inbox` |
