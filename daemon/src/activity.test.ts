@@ -14,6 +14,7 @@ const entry = (n: number, extra: Partial<ActivityEntry> = {}): ActivityEntry => 
   fromSessionId: null,
   chars: null,
   fingerprint: null,
+  client: null,
   tokenId: TOKEN_A,
   tokenName: 'build bot',
   action: 'canvases.read',

@@ -246,6 +246,8 @@ async function runHook(event: HookEvent): Promise<number> {
 async function main(): Promise<number> {
   const command = parseCommand(process.argv.slice(2));
   if (command.name === 'hook') return runHook(command.event);
+  // Before anything is read or printed: this command speaks a protocol on standard output, and never uses the owner's sign-in.
+  if (command.name === 'mcp') return (await import('@aubergine/mcp')).runMcp(command.words, process.env);
   if (command.name === 'shell-hook-print') {
     console.log(zshHookSnippet());
     return 0;

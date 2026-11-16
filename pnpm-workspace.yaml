@@ -1,6 +1,7 @@
 packages:
   - shared
   - client
+  - mcp
   - daemon
   - web
 

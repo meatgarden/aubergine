@@ -6,7 +6,7 @@ import { everyItem, requester, type CallOptions, type ClientOptions, type Operat
 /** The one shape every error has. */
 export type ErrorBody = {
   error: {
-    code: "bad_request" | "unauthorized" | "forbidden" | "not_found" | "conflict" | "runtime_unavailable" | "too_large" | "rate_limited" | "people_only" | "not_at_prompt" | "no_shell_integration" | "run_in_progress" | "internal";
+    code: "bad_request" | "unauthorized" | "forbidden" | "not_found" | "conflict" | "runtime_unavailable" | "too_large" | "rate_limited" | "people_only" | "out_of_reach" | "not_at_prompt" | "no_shell_integration" | "run_in_progress" | "internal";
     message: string;
   };
 };
@@ -1432,7 +1432,7 @@ export type StartRunBody = {
   };
   /** When the session is already on a run: stop that one and start this. Without it, that is refused. */
   replace?: boolean;
-  /** Type the line that tells the agent about the run into the session's terminal. Only ever done for the owner (the browser or the command line), and only when an agent is running there; an API token is given the line in the answer and nothing is typed. */
+  /** Type the line that tells the agent about the run into the session's terminal. Done for the owner, and for an API token that may type into that very session (`terminal:input` with a reach that covers it), and only when an agent is running there. Any other caller is given the line in the answer and nothing is typed. */
   kickoff?: boolean;
   /** The session that will do it. Without one the run waits, queued. */
   sessionId?: string;
@@ -1631,7 +1631,7 @@ export type StartSessionRunBody = {
   };
   /** When the session is already on a run: stop that one and start this. Without it, that is refused. */
   replace?: boolean;
-  /** Type the line that tells the agent about the run into the session's terminal. Only ever done for the owner (the browser or the command line), and only when an agent is running there; an API token is given the line in the answer and nothing is typed. */
+  /** Type the line that tells the agent about the run into the session's terminal. Done for the owner, and for an API token that may type into that very session (`terminal:input` with a reach that covers it), and only when an agent is running there. Any other caller is given the line in the answer and nothing is typed. */
   kickoff?: boolean;
 };
 
@@ -3332,6 +3332,7 @@ export interface SearchTerminalsQuery {
 export type SearchTerminalsResult = {
   hits: {
     sessionId: string;
+    sessionName: string;
     text: string;
     before: string[];
     after: string[];
@@ -3624,6 +3625,7 @@ export type ListActivityResult = {
     fromSessionId: string | null;
     chars: number | null;
     fingerprint: string | null;
+    client: string | null;
     action: string;
     resource: {
       sessionId?: string;
@@ -4111,83 +4113,83 @@ export type ReportAgentResult = {
 
 /** What each route is, for the code that makes the requests. */
 export const OPERATIONS = {
-  getCapabilities: { method: 'GET', path: '/v1', params: [], hasBody: false, paged: false, idempotent: false, stream: false },
-  getDescription: { method: 'GET', path: '/v1/openapi.json', params: [], hasBody: false, paged: false, idempotent: false, stream: false },
-  listCanvases: { method: 'GET', path: '/v1/canvases', params: [], hasBody: false, paged: true, idempotent: false, stream: false },
-  createCanvas: { method: 'POST', path: '/v1/canvases', params: [], hasBody: true, paged: false, idempotent: true, stream: false },
-  getCanvas: { method: 'GET', path: '/v1/canvases/{canvasId}', params: ["canvasId"], hasBody: false, paged: false, idempotent: false, stream: false },
-  updateCanvas: { method: 'PATCH', path: '/v1/canvases/{canvasId}', params: ["canvasId"], hasBody: true, paged: false, idempotent: false, stream: false },
-  closeCanvas: { method: 'DELETE', path: '/v1/canvases/{canvasId}', params: ["canvasId"], hasBody: false, paged: false, idempotent: false, stream: false },
-  showCanvas: { method: 'POST', path: '/v1/canvases/{canvasId}/show', params: ["canvasId"], hasBody: false, paged: false, idempotent: false, stream: false },
-  listCanvasSessions: { method: 'GET', path: '/v1/canvases/{canvasId}/sessions', params: ["canvasId"], hasBody: false, paged: true, idempotent: false, stream: false },
-  startSession: { method: 'POST', path: '/v1/canvases/{canvasId}/sessions', params: ["canvasId"], hasBody: true, paged: false, idempotent: true, stream: false },
-  listSessions: { method: 'GET', path: '/v1/sessions', params: [], hasBody: false, paged: true, idempotent: false, stream: false },
-  getSession: { method: 'GET', path: '/v1/sessions/{sessionId}', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false },
-  updateSession: { method: 'PATCH', path: '/v1/sessions/{sessionId}', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false },
-  endSession: { method: 'DELETE', path: '/v1/sessions/{sessionId}', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false },
-  moveSession: { method: 'POST', path: '/v1/sessions/{sessionId}/move', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false },
-  parkSession: { method: 'POST', path: '/v1/sessions/{sessionId}/park', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false },
-  restoreSession: { method: 'POST', path: '/v1/sessions/{sessionId}/restore', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false },
-  showSession: { method: 'POST', path: '/v1/sessions/{sessionId}/show', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false },
-  appendNote: { method: 'POST', path: '/v1/sessions/{sessionId}/notes', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false },
-  updateNode: { method: 'PATCH', path: '/v1/canvases/{canvasId}/nodes/{nodeId}', params: ["canvasId", "nodeId"], hasBody: true, paged: false, idempotent: false, stream: false },
-  createFrame: { method: 'POST', path: '/v1/canvases/{canvasId}/frames', params: ["canvasId"], hasBody: true, paged: false, idempotent: true, stream: false },
-  updateFrame: { method: 'PATCH', path: '/v1/canvases/{canvasId}/frames/{frameId}', params: ["canvasId", "frameId"], hasBody: true, paged: false, idempotent: false, stream: false },
-  removeFrame: { method: 'DELETE', path: '/v1/canvases/{canvasId}/frames/{frameId}', params: ["canvasId", "frameId"], hasBody: false, paged: false, idempotent: false, stream: false },
-  listWorkflows: { method: 'GET', path: '/v1/workflows', params: [], hasBody: false, paged: true, idempotent: false, stream: false },
-  createWorkflow: { method: 'POST', path: '/v1/workflows', params: [], hasBody: true, paged: false, idempotent: true, stream: false },
-  getWorkflow: { method: 'GET', path: '/v1/workflows/{workflowId}', params: ["workflowId"], hasBody: false, paged: false, idempotent: false, stream: false },
-  updateWorkflow: { method: 'PATCH', path: '/v1/workflows/{workflowId}', params: ["workflowId"], hasBody: true, paged: false, idempotent: false, stream: false },
-  removeWorkflow: { method: 'DELETE', path: '/v1/workflows/{workflowId}', params: ["workflowId"], hasBody: false, paged: false, idempotent: false, stream: false },
-  copyWorkflow: { method: 'POST', path: '/v1/workflows/{workflowId}/copy', params: ["workflowId"], hasBody: true, paged: false, idempotent: true, stream: false },
-  listWorkflowVersions: { method: 'GET', path: '/v1/workflows/{workflowId}/versions', params: ["workflowId"], hasBody: false, paged: true, idempotent: false, stream: false },
-  listWorkflowTemplates: { method: 'GET', path: '/v1/workflow-templates', params: [], hasBody: false, paged: true, idempotent: false, stream: false },
-  useWorkflowTemplate: { method: 'POST', path: '/v1/workflow-templates/{template}/use', params: ["template"], hasBody: true, paged: false, idempotent: true, stream: false },
-  listRuns: { method: 'GET', path: '/v1/runs', params: [], hasBody: false, paged: true, idempotent: false, stream: false },
-  startRun: { method: 'POST', path: '/v1/runs', params: [], hasBody: true, paged: false, idempotent: true, stream: false },
-  getRun: { method: 'GET', path: '/v1/runs/{runId}', params: ["runId"], hasBody: false, paged: false, idempotent: false, stream: false },
-  reportRun: { method: 'POST', path: '/v1/runs/{runId}/report', params: ["runId"], hasBody: true, paged: false, idempotent: false, stream: false },
-  startSessionRun: { method: 'POST', path: '/v1/sessions/{sessionId}/runs', params: ["sessionId"], hasBody: true, paged: false, idempotent: true, stream: false },
-  listDrafts: { method: 'GET', path: '/v1/drafts', params: [], hasBody: false, paged: true, idempotent: false, stream: false },
-  proposeDraft: { method: 'POST', path: '/v1/drafts', params: [], hasBody: true, paged: false, idempotent: true, stream: false },
-  getDraft: { method: 'GET', path: '/v1/drafts/{draftId}', params: ["draftId"], hasBody: false, paged: false, idempotent: false, stream: false },
-  reviseDraft: { method: 'PUT', path: '/v1/drafts/{draftId}', params: ["draftId"], hasBody: true, paged: false, idempotent: false, stream: false },
-  discardDraft: { method: 'DELETE', path: '/v1/drafts/{draftId}', params: ["draftId"], hasBody: false, paged: false, idempotent: false, stream: false },
-  acceptDraft: { method: 'POST', path: '/v1/drafts/{draftId}/accept', params: ["draftId"], hasBody: true, paged: false, idempotent: false, stream: false },
-  returnDraft: { method: 'POST', path: '/v1/drafts/{draftId}/return', params: ["draftId"], hasBody: true, paged: false, idempotent: false, stream: false },
-  listDraftRecords: { method: 'GET', path: '/v1/draft-records', params: [], hasBody: false, paged: true, idempotent: false, stream: false },
-  requestDraft: { method: 'POST', path: '/v1/draft-requests', params: [], hasBody: true, paged: false, idempotent: false, stream: false },
-  listElements: { method: 'GET', path: '/v1/elements', params: [], hasBody: false, paged: true, idempotent: false, stream: false },
-  createElement: { method: 'POST', path: '/v1/elements', params: [], hasBody: true, paged: false, idempotent: true, stream: false },
-  updateElement: { method: 'PATCH', path: '/v1/elements/{elementId}', params: ["elementId"], hasBody: true, paged: false, idempotent: false, stream: false },
-  removeElement: { method: 'DELETE', path: '/v1/elements/{elementId}', params: ["elementId"], hasBody: false, paged: false, idempotent: false, stream: false },
-  copyElement: { method: 'POST', path: '/v1/elements/{elementId}/copy', params: ["elementId"], hasBody: false, paged: false, idempotent: true, stream: false },
-  runElement: { method: 'POST', path: '/v1/elements/{elementId}/run', params: ["elementId"], hasBody: true, paged: false, idempotent: true, stream: false },
-  tickRunItem: { method: 'POST', path: '/v1/runs/{runId}/ticks', params: ["runId"], hasBody: true, paged: false, idempotent: false, stream: false },
-  listRepositoryWorkflows: { method: 'GET', path: '/v1/repository-workflows', params: [], hasBody: false, paged: true, idempotent: false, stream: false },
-  getRepositoryWorkflow: { method: 'GET', path: '/v1/repository-workflows/file', params: [], hasBody: false, paged: false, idempotent: false, stream: false },
-  acceptRepositoryWorkflow: { method: 'POST', path: '/v1/repository-workflows/accept', params: [], hasBody: true, paged: false, idempotent: false, stream: false },
-  saveToRepository: { method: 'POST', path: '/v1/repository-workflows/save', params: [], hasBody: true, paged: false, idempotent: false, stream: false },
-  runRepositoryWorkflow: { method: 'POST', path: '/v1/sessions/{sessionId}/repository-runs', params: ["sessionId"], hasBody: true, paged: false, idempotent: true, stream: false },
-  getScreen: { method: 'GET', path: '/v1/sessions/{sessionId}/screen', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false },
-  getOutput: { method: 'GET', path: '/v1/sessions/{sessionId}/output', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false },
-  searchTerminals: { method: 'GET', path: '/v1/search', params: [], hasBody: false, paged: false, idempotent: false, stream: false },
-  sendInput: { method: 'POST', path: '/v1/sessions/{sessionId}/input', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false },
-  getSessionRun: { method: 'GET', path: '/v1/sessions/{sessionId}/run', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false },
-  runCommand: { method: 'POST', path: '/v1/sessions/{sessionId}/run', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false },
-  protectSession: { method: 'PUT', path: '/v1/sessions/{sessionId}/protection', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false },
-  streamEvents: { method: 'GET', path: '/v1/events', params: [], hasBody: false, paged: false, idempotent: false, stream: true },
-  listTokens: { method: 'GET', path: '/v1/tokens', params: [], hasBody: false, paged: true, idempotent: false, stream: false },
-  createToken: { method: 'POST', path: '/v1/tokens', params: [], hasBody: true, paged: false, idempotent: false, stream: false },
-  revokeToken: { method: 'DELETE', path: '/v1/tokens/{tokenId}', params: ["tokenId"], hasBody: false, paged: false, idempotent: false, stream: false },
-  listActivity: { method: 'GET', path: '/v1/activity', params: [], hasBody: false, paged: true, idempotent: false, stream: false },
-  setAttention: { method: 'PUT', path: '/v1/sessions/{sessionId}/attention', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false },
-  reportSessionRun: { method: 'POST', path: '/v1/sessions/{sessionId}/run/report', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false },
-  getSessionBrief: { method: 'GET', path: '/v1/sessions/{sessionId}/brief', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false },
-  listSessionDrafts: { method: 'GET', path: '/v1/sessions/{sessionId}/drafts', params: ["sessionId"], hasBody: false, paged: true, idempotent: false, stream: false },
-  proposeSessionDraft: { method: 'POST', path: '/v1/sessions/{sessionId}/drafts', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false },
-  getSessionRepositoryWorkflows: { method: 'GET', path: '/v1/sessions/{sessionId}/repository-workflows', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false },
-  reportAgent: { method: 'PUT', path: '/v1/sessions/{sessionId}/agent', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false },
+  getCapabilities: { method: 'GET', path: '/v1', params: [], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'any', scope: null } },
+  getDescription: { method: 'GET', path: '/v1/openapi.json', params: [], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'any', scope: null } },
+  listCanvases: { method: 'GET', path: '/v1/canvases', params: [], hasBody: false, paged: true, idempotent: false, stream: false, access: { who: 'token', scope: "read" } },
+  createCanvas: { method: 'POST', path: '/v1/canvases', params: [], hasBody: true, paged: false, idempotent: true, stream: false, access: { who: 'token', scope: "canvases:write" } },
+  getCanvas: { method: 'GET', path: '/v1/canvases/{canvasId}', params: ["canvasId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "read" } },
+  updateCanvas: { method: 'PATCH', path: '/v1/canvases/{canvasId}', params: ["canvasId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "canvases:write" } },
+  closeCanvas: { method: 'DELETE', path: '/v1/canvases/{canvasId}', params: ["canvasId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "canvases:write" } },
+  showCanvas: { method: 'POST', path: '/v1/canvases/{canvasId}/show', params: ["canvasId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "canvases:write" } },
+  listCanvasSessions: { method: 'GET', path: '/v1/canvases/{canvasId}/sessions', params: ["canvasId"], hasBody: false, paged: true, idempotent: false, stream: false, access: { who: 'token', scope: "read" } },
+  startSession: { method: 'POST', path: '/v1/canvases/{canvasId}/sessions', params: ["canvasId"], hasBody: true, paged: false, idempotent: true, stream: false, access: { who: 'token', scope: "sessions:write", fieldScopes: {"command":"terminal:input"} } },
+  listSessions: { method: 'GET', path: '/v1/sessions', params: [], hasBody: false, paged: true, idempotent: false, stream: false, access: { who: 'token', scope: "read" } },
+  getSession: { method: 'GET', path: '/v1/sessions/{sessionId}', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "read" } },
+  updateSession: { method: 'PATCH', path: '/v1/sessions/{sessionId}', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "sessions:write", fieldScopes: {"note":"notes:write"} } },
+  endSession: { method: 'DELETE', path: '/v1/sessions/{sessionId}', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "sessions:write" } },
+  moveSession: { method: 'POST', path: '/v1/sessions/{sessionId}/move', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "sessions:write" } },
+  parkSession: { method: 'POST', path: '/v1/sessions/{sessionId}/park', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "sessions:write" } },
+  restoreSession: { method: 'POST', path: '/v1/sessions/{sessionId}/restore', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "sessions:write" } },
+  showSession: { method: 'POST', path: '/v1/sessions/{sessionId}/show', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "sessions:write" } },
+  appendNote: { method: 'POST', path: '/v1/sessions/{sessionId}/notes', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: "notes:write" } },
+  updateNode: { method: 'PATCH', path: '/v1/canvases/{canvasId}/nodes/{nodeId}', params: ["canvasId", "nodeId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "canvases:write" } },
+  createFrame: { method: 'POST', path: '/v1/canvases/{canvasId}/frames', params: ["canvasId"], hasBody: true, paged: false, idempotent: true, stream: false, access: { who: 'token', scope: "canvases:write" } },
+  updateFrame: { method: 'PATCH', path: '/v1/canvases/{canvasId}/frames/{frameId}', params: ["canvasId", "frameId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "canvases:write" } },
+  removeFrame: { method: 'DELETE', path: '/v1/canvases/{canvasId}/frames/{frameId}', params: ["canvasId", "frameId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "canvases:write" } },
+  listWorkflows: { method: 'GET', path: '/v1/workflows', params: [], hasBody: false, paged: true, idempotent: false, stream: false, access: { who: 'token', scope: "read" } },
+  createWorkflow: { method: 'POST', path: '/v1/workflows', params: [], hasBody: true, paged: false, idempotent: true, stream: false, access: { who: 'token', scope: "workflows:write" } },
+  getWorkflow: { method: 'GET', path: '/v1/workflows/{workflowId}', params: ["workflowId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "read" } },
+  updateWorkflow: { method: 'PATCH', path: '/v1/workflows/{workflowId}', params: ["workflowId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "workflows:write" } },
+  removeWorkflow: { method: 'DELETE', path: '/v1/workflows/{workflowId}', params: ["workflowId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "workflows:write" } },
+  copyWorkflow: { method: 'POST', path: '/v1/workflows/{workflowId}/copy', params: ["workflowId"], hasBody: true, paged: false, idempotent: true, stream: false, access: { who: 'token', scope: "workflows:write" } },
+  listWorkflowVersions: { method: 'GET', path: '/v1/workflows/{workflowId}/versions', params: ["workflowId"], hasBody: false, paged: true, idempotent: false, stream: false, access: { who: 'token', scope: "read" } },
+  listWorkflowTemplates: { method: 'GET', path: '/v1/workflow-templates', params: [], hasBody: false, paged: true, idempotent: false, stream: false, access: { who: 'token', scope: "read" } },
+  useWorkflowTemplate: { method: 'POST', path: '/v1/workflow-templates/{template}/use', params: ["template"], hasBody: true, paged: false, idempotent: true, stream: false, access: { who: 'token', scope: "workflows:write" } },
+  listRuns: { method: 'GET', path: '/v1/runs', params: [], hasBody: false, paged: true, idempotent: false, stream: false, access: { who: 'token', scope: "read" } },
+  startRun: { method: 'POST', path: '/v1/runs', params: [], hasBody: true, paged: false, idempotent: true, stream: false, access: { who: 'token', scope: "runs:write" } },
+  getRun: { method: 'GET', path: '/v1/runs/{runId}', params: ["runId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "read" } },
+  reportRun: { method: 'POST', path: '/v1/runs/{runId}/report', params: ["runId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "runs:write" } },
+  startSessionRun: { method: 'POST', path: '/v1/sessions/{sessionId}/runs', params: ["sessionId"], hasBody: true, paged: false, idempotent: true, stream: false, access: { who: 'token', scope: "runs:write" } },
+  listDrafts: { method: 'GET', path: '/v1/drafts', params: [], hasBody: false, paged: true, idempotent: false, stream: false, access: { who: 'token', scope: "read" } },
+  proposeDraft: { method: 'POST', path: '/v1/drafts', params: [], hasBody: true, paged: false, idempotent: true, stream: false, access: { who: 'token', scope: "workflows:write" } },
+  getDraft: { method: 'GET', path: '/v1/drafts/{draftId}', params: ["draftId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "read" } },
+  reviseDraft: { method: 'PUT', path: '/v1/drafts/{draftId}', params: ["draftId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "workflows:write" } },
+  discardDraft: { method: 'DELETE', path: '/v1/drafts/{draftId}', params: ["draftId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  acceptDraft: { method: 'POST', path: '/v1/drafts/{draftId}/accept', params: ["draftId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  returnDraft: { method: 'POST', path: '/v1/drafts/{draftId}/return', params: ["draftId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  listDraftRecords: { method: 'GET', path: '/v1/draft-records', params: [], hasBody: false, paged: true, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  requestDraft: { method: 'POST', path: '/v1/draft-requests', params: [], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  listElements: { method: 'GET', path: '/v1/elements', params: [], hasBody: false, paged: true, idempotent: false, stream: false, access: { who: 'token', scope: "read" } },
+  createElement: { method: 'POST', path: '/v1/elements', params: [], hasBody: true, paged: false, idempotent: true, stream: false, access: { who: 'token', scope: "workflows:write" } },
+  updateElement: { method: 'PATCH', path: '/v1/elements/{elementId}', params: ["elementId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "workflows:write" } },
+  removeElement: { method: 'DELETE', path: '/v1/elements/{elementId}', params: ["elementId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "workflows:write" } },
+  copyElement: { method: 'POST', path: '/v1/elements/{elementId}/copy', params: ["elementId"], hasBody: false, paged: false, idempotent: true, stream: false, access: { who: 'token', scope: "workflows:write" } },
+  runElement: { method: 'POST', path: '/v1/elements/{elementId}/run', params: ["elementId"], hasBody: true, paged: false, idempotent: true, stream: false, access: { who: 'token', scope: "runs:write" } },
+  tickRunItem: { method: 'POST', path: '/v1/runs/{runId}/ticks', params: ["runId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "runs:write" } },
+  listRepositoryWorkflows: { method: 'GET', path: '/v1/repository-workflows', params: [], hasBody: false, paged: true, idempotent: false, stream: false, access: { who: 'token', scope: "read" } },
+  getRepositoryWorkflow: { method: 'GET', path: '/v1/repository-workflows/file', params: [], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "read" } },
+  acceptRepositoryWorkflow: { method: 'POST', path: '/v1/repository-workflows/accept', params: [], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  saveToRepository: { method: 'POST', path: '/v1/repository-workflows/save', params: [], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  runRepositoryWorkflow: { method: 'POST', path: '/v1/sessions/{sessionId}/repository-runs', params: ["sessionId"], hasBody: true, paged: false, idempotent: true, stream: false, access: { who: 'token', scope: "runs:write" } },
+  getScreen: { method: 'GET', path: '/v1/sessions/{sessionId}/screen', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "terminal:read" } },
+  getOutput: { method: 'GET', path: '/v1/sessions/{sessionId}/output', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "terminal:read" } },
+  searchTerminals: { method: 'GET', path: '/v1/search', params: [], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "terminal:read" } },
+  sendInput: { method: 'POST', path: '/v1/sessions/{sessionId}/input', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "terminal:input" } },
+  getSessionRun: { method: 'GET', path: '/v1/sessions/{sessionId}/run', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: "read" } },
+  runCommand: { method: 'POST', path: '/v1/sessions/{sessionId}/run', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "terminal:input" } },
+  protectSession: { method: 'PUT', path: '/v1/sessions/{sessionId}/protection', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  streamEvents: { method: 'GET', path: '/v1/events', params: [], hasBody: false, paged: false, idempotent: false, stream: true, access: { who: 'token', scope: "read" } },
+  listTokens: { method: 'GET', path: '/v1/tokens', params: [], hasBody: false, paged: true, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  createToken: { method: 'POST', path: '/v1/tokens', params: [], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  revokeToken: { method: 'DELETE', path: '/v1/tokens/{tokenId}', params: ["tokenId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  listActivity: { method: 'GET', path: '/v1/activity', params: [], hasBody: false, paged: true, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  setAttention: { method: 'PUT', path: '/v1/sessions/{sessionId}/attention', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: null } },
+  reportSessionRun: { method: 'POST', path: '/v1/sessions/{sessionId}/run/report', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: "runs:write" } },
+  getSessionBrief: { method: 'GET', path: '/v1/sessions/{sessionId}/brief', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: null } },
+  listSessionDrafts: { method: 'GET', path: '/v1/sessions/{sessionId}/drafts', params: ["sessionId"], hasBody: false, paged: true, idempotent: false, stream: false, access: { who: 'session', scope: null } },
+  proposeSessionDraft: { method: 'POST', path: '/v1/sessions/{sessionId}/drafts', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: null } },
+  getSessionRepositoryWorkflows: { method: 'GET', path: '/v1/sessions/{sessionId}/repository-workflows', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: "read" } },
+  reportAgent: { method: 'PUT', path: '/v1/sessions/{sessionId}/agent', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: null } },
 } as const satisfies Record<string, OperationInfo>;
 
 export type OperationId = keyof typeof OPERATIONS;

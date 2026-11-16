@@ -82,7 +82,7 @@ export const TerminalSearchQuery = z.object({
 export type TerminalSearchQuery = z.infer<typeof TerminalSearchQuery>;
 
 export const TerminalSearchResponse = z.object({
-  hits: z.array(z.object({ sessionId: Id, text: z.string(), before: z.array(z.string()), after: z.array(z.string()) })),
+  hits: z.array(z.object({ sessionId: Id, /** The session's name, so that a hit can be told to a person. */ sessionName: z.string().default(''), text: z.string(), before: z.array(z.string()), after: z.array(z.string()) })),
   /** True when there were more matches than are returned. */
   truncated: z.boolean(),
   /** How many sessions were searched. */

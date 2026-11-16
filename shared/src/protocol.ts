@@ -196,6 +196,13 @@ export const SESSION_ENV = {
 export const SESSION_HEADER = 'x-aubergine-session';
 
 /**
+ * A program may say what it is with this header: a short name, a slash, a version (`mcp/0.1.0`).
+ * It is written beside the call in the activity log. It is what the caller says, nothing more: a trace, never a reason to allow or refuse.
+ */
+export const CLIENT_HEADER = 'x-aubergine-client';
+export const ClientName = z.string().regex(/^[a-z][a-z0-9-]{0,30}\/[0-9A-Za-z.+-]{1,30}$/);
+
+/**
  * A terminal the user has open outside the canvas, as the daemon found it.
  * `tty` and the process IDs are what a client sends back to act on it; the
  * daemon looks everything else up again itself.
@@ -314,6 +321,8 @@ export const ErrorCode = z.enum([
   'rate_limited',
   /** The session is "people only": no token may read it or type into it. */
   'people_only',
+  /** The token has the scope for terminals, but its reach does not cover that session. */
+  'out_of_reach',
   /** The session's shell is not at its prompt: a program or an agent has the keyboard. */
   'not_at_prompt',
   /** The session's shell does not report when a command finishes, so a run cannot be waited for. */

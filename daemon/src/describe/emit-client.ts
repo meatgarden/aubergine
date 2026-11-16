@@ -133,7 +133,7 @@ export function emitClient(document: OpenApiDocument): string {
   for (const { path, method, operation } of operations) {
     const params = operation.parameters.filter((p) => p.in === 'path').map((p) => JSON.stringify(p.name));
     out.push(
-      `  ${operation.operationId}: { method: '${method}', path: '${path}', params: [${params.join(', ')}], hasBody: ${operation.requestBody !== undefined}, paged: ${operation['x-aubergine-paged'] === true}, idempotent: ${operation['x-aubergine-idempotent'] === true}, stream: ${operation['x-aubergine-stream'] === true} },`,
+      `  ${operation.operationId}: { method: '${method}', path: '${path}', params: [${params.join(', ')}], hasBody: ${operation.requestBody !== undefined}, paged: ${operation['x-aubergine-paged'] === true}, idempotent: ${operation['x-aubergine-idempotent'] === true}, stream: ${operation['x-aubergine-stream'] === true}, access: { who: '${operation['x-aubergine-access'].who}', scope: ${JSON.stringify(operation['x-aubergine-access'].scope)}${Object.keys(operation['x-aubergine-access'].fieldScopes).length > 0 ? `, fieldScopes: ${JSON.stringify(operation['x-aubergine-access'].fieldScopes)}` : ''} } },`,
     );
   }
   out.push('} as const satisfies Record<string, OperationInfo>;', '', 'export type OperationId = keyof typeof OPERATIONS;', '');

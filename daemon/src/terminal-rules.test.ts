@@ -463,9 +463,15 @@ describe('which sessions a token may reach', () => {
     expect(await reached(byTag, parked)).toEqual(yes);
     expect(await reached(byTag, onSecond)).toEqual(no);
     // A session that is not there: refused like one out of reach, not "not found".
-    expect((await call(byTag, 'GET', `/v1/sessions/${newId()}/screen`)).status).toBe(403);
-    // Out of reach is plain "forbidden", not "people only": nothing is said about sessions it cannot reach.
-    expect((await call(byCanvas, 'GET', `/v1/sessions/${onFirst.id}/screen`)).body.error.code).toBe('forbidden');
+    const absent = await call(byTag, 'GET', `/v1/sessions/${newId()}/screen`);
+    expect(absent.status).toBe(403);
+    // Out of reach says so, and never "people only". One that is there and one that is not get the same answer, word for word:
+    // nothing is learned about which sessions there are outside the reach.
+    const beyond = await call(byCanvas, 'GET', `/v1/sessions/${onFirst.id}/screen`);
+    expect(beyond.body).toEqual({ error: { code: 'out_of_reach', message: "This token's reach does not cover that session." } });
+    expect(absent.body).toEqual(beyond.body);
+    // A token without the scope at all is told nothing about reach.
+    expect((await call(await makeToken('no terminal scope', ['read']), 'GET', `/v1/sessions/${onFirst.id}/screen`)).body.error.code).toBe('forbidden');
     // Everything typed went into sessions within reach.
     expect([...new Set(typed.map(([id]) => id))].sort()).toEqual([onSecond.id, onFirst.id, parked.id].sort());
 

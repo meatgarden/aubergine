@@ -139,6 +139,8 @@ export const ActivityEntry = z.object({
   chars: z.number().int().nullable().default(null),
   /** For typing: the first characters of a hash of what was typed, so that two entries can be seen to be the same text without keeping it. */
   fingerprint: z.string().max(32).nullable().default(null),
+  /** What the calling program said it was (`mcp/0.1.0`), when it said so. Its own word, not checked. */
+  client: z.string().max(64).nullable().default(null),
   /** What was asked for, as `authorize` names it; empty when the call never got that far. */
   action: z.string(),
   resource: z.object({ sessionId: z.string().optional(), canvasId: z.string().optional() }),

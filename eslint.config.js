@@ -17,7 +17,7 @@ export default tseslint.config(
     },
   },
   {
-    files: ['daemon/**/*.ts', 'e2e/**/*.ts', 'scripts/**', 'bin/**', '*.config.{js,ts}', 'web/vite.config.ts'],
+    files: ['daemon/**/*.ts', 'mcp/**/*.ts', 'e2e/**/*.ts', 'scripts/**', 'bin/**', '*.config.{js,ts}', 'web/vite.config.ts'],
     languageOptions: { globals: globals.node },
   },
   {
@@ -45,6 +45,24 @@ export default tseslint.config(
             {
               group: ['node:*', 'fastify', 'node-pty'],
               message: 'web/ runs in the browser.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    // mcp/ is a client of the public API and nothing more: it may use the
+    // generated client and shared/, never the daemon's own code.
+    files: ['mcp/**/*.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['@aubergine/daemon', '@aubergine/daemon/**', '**/daemon', '**/daemon/**', '@aubergine/web', '**/web/**'],
+              message: 'mcp/ reaches the server only through the public API, with @aubergine/client.',
             },
           ],
         },

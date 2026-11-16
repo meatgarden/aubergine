@@ -959,7 +959,7 @@ POST /v1/sessions/<id>/run     {"command": "pnpm test", "timeoutSeconds": 120}
 - **Whatever has the keyboard receives it.** Typed into a shell, text with Enter is a command that runs. Typed into an agent, it is a prompt.
 - **`run`** types one command into a shell that is at its prompt, waits until the shell says the command finished, and answers with the exit code, what the terminal showed meanwhile and how long it took. It is refused when a program or an agent has the keyboard (`not_at_prompt`), when the shell does not report when commands finish (`no_shell_integration`; today that means any shell but zsh), and when another run is being waited for there (`run_in_progress`). When the time is up it answers `"finished": false` and leaves the command running: it never stops anything. A token with `terminal:input` but not `terminal:read` gets the exit code without the output.
 
-A session that is people only answers every one of these with `403` and the code `people_only`.
+A session that is people only answers every one of these with `403` and the code `people_only`. A session outside a token's reach answers `403` with the code `out_of_reach`, in the same words whether or not there is such a session.
 
 With `runs:write` and `terminal:input` on a terminal, a token that starts a workflow run there has the one fixed kickoff sentence typed for it, so `workflow run` works with no browser open. Without input on that terminal the run starts and nothing is typed, as before.
 

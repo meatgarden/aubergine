@@ -2162,7 +2162,7 @@ An API token needs the scope `runs:write`.
 | `workflowId` | `string` | yes | The workflow to go through. The run keeps to the version that is latest now. |
 | `inputs` | `{ [key: string]: string; }` | no | The inputs the workflow asks for, by key. |
 | `replace` | `boolean` | no | When the session is already on a run: stop that one and start this. Without it, that is refused. |
-| `kickoff` | `boolean` | no | Type the line that tells the agent about the run into the session's terminal. Only ever done for the owner (the browser or the command line), and only when an agent is running there; an API token is given the line in the answer and nothing is typed. |
+| `kickoff` | `boolean` | no | Type the line that tells the agent about the run into the session's terminal. Done for the owner, and for an API token that may type into that very session (`terminal:input` with a reach that covers it), and only when an agent is running there. Any other caller is given the line in the answer and nothing is typed. |
 | `sessionId` | `string` | no | The session that will do it. Without one the run waits, queued. |
 
 **Answer** `201`:
@@ -2406,7 +2406,7 @@ An API token needs the scope `runs:write`.
 | `workflowId` | `string` | yes | The workflow to go through. The run keeps to the version that is latest now. |
 | `inputs` | `{ [key: string]: string; }` | no | The inputs the workflow asks for, by key. |
 | `replace` | `boolean` | no | When the session is already on a run: stop that one and start this. Without it, that is refused. |
-| `kickoff` | `boolean` | no | Type the line that tells the agent about the run into the session's terminal. Only ever done for the owner (the browser or the command line), and only when an agent is running there; an API token is given the line in the answer and nothing is typed. |
+| `kickoff` | `boolean` | no | Type the line that tells the agent about the run into the session's terminal. Done for the owner, and for an API token that may type into that very session (`terminal:input` with a reach that covers it), and only when an agent is running there. Any other caller is given the line in the answer and nothing is typed. |
 
 **Answer** `201`:
 
@@ -4368,6 +4368,7 @@ An API token needs the scope `terminal:read`.
 {
   hits: {
     sessionId: string;
+    sessionName: string;
     text: string;
     before: string[];
     after: string[];
@@ -4811,6 +4812,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
     fromSessionId: string | null;
     chars: number | null;
     fingerprint: string | null;
+    client: string | null;
     action: string;
     resource: {
       sessionId?: string;

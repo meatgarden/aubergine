@@ -18,6 +18,13 @@ export type ErrorCode =
   | 'runtime_unavailable'
   | 'too_large'
   | 'rate_limited'
+  /** The session is "people only": closed to every token. */
+  | 'people_only'
+  /** The token's reach does not cover that session. */
+  | 'out_of_reach'
+  | 'not_at_prompt'
+  | 'no_shell_integration'
+  | 'run_in_progress'
   | 'internal'
   /** The server could not be reached at all. */
   | 'network'
@@ -66,6 +73,8 @@ export interface OperationInfo {
   paged: boolean;
   idempotent: boolean;
   stream: boolean;
+  /** Who may call it, as the server's description says: the scope a token needs (null when none or no token may), and the kind of caller. */
+  access: { who: 'any' | 'token' | 'browser' | 'session'; scope: string | null; fieldScopes?: Record<string, string | null> };
 }
 
 /** What may be passed to any call besides the route's own input. */
