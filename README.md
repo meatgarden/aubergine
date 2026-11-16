@@ -976,7 +976,7 @@ The **Library** (in the toolbar, or ⌘K, `Library…`) is a place to browse wor
 - **A folder** on this computer.
 - **A Git repository**, by its address: `https://…`, `ssh://…`, `user@host:path` or `file://…`.
 
-Add one in the Library screen or with `aubergine library add <folder or address>`. Adding and removing sources is yours alone.
+Add one in the Library screen or with `aubergine library add <folder or address> [--name <name>]`. Adding and removing sources is yours alone. A source you gave no name is listed by what it calls itself, said as that (*calls itself “Team library”*), with its address beside it: a source can call itself anything, and only the address says where it is.
 
 **Fetching.** A Git source is fetched when you add it and when you press **Refresh**, and at no other time: not on a timer, not when the server starts, and never because a program or an agent asked. This is the only thing in Aubergine that reaches the network. It uses the `git` program you already have, with the access you already have: your credential helper, your ssh keys, your proxy settings. Aubergine stores no credential and never asks for one; an address with a password in it is refused. A fetch that would wait for a password is stopped after a minute (`library.fetchTimeoutSeconds`), and a source larger than 100 MB is refused (`library.maxFetchMegabytes`).
 

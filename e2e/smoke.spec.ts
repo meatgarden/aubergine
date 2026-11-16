@@ -1294,7 +1294,7 @@ test('the tour can be skipped, put away and taken up again, and put away for goo
   await page.getByTestId('toolbar-help').click();
   const help = page.getByTestId('help-panel');
   await expect(help.getByTestId('help-item')).toHaveCount(8);
-  await expect(help.locator('[data-step="workflow"]')).toContainText('A strip on a terminal shows the step its agent is on');
+  await expect(help.locator('[data-step="workflow"]')).toContainText('A strip shows the step an agent is on; click it for the run. “Board” shows every run at once.');
   await expect(page.getByTestId('tour-ring')).toHaveCount(0);
   await help.locator('[data-step="workflow"]').getByTestId('help-show').click();
   await expect(help).toHaveCount(0);
@@ -1867,7 +1867,7 @@ test('a shelf element has a life: a copy says where it came from, a newer versio
 
   // What goes in an element: every field, in the words of the reference.
   await editor.getByTestId('element-reference').locator('summary').click();
-  await expect(editor.getByTestId('reference-field')).toHaveCount(14);
+  await expect(editor.getByTestId('reference-field')).toHaveCount(16);
   await expect(editor.locator('[data-testid="reference-field"][data-field="doneWhen"]')).toContainText('how to tell that the element is finished');
   await editor.getByTestId('editor-close').click();
 
@@ -2119,7 +2119,8 @@ test('an approval and the board: a run stops for the owner, shows on the board a
   await expect(board.getByTestId('board-summary')).toHaveText('1 working');
   await expect(card.getByTestId('approve')).toHaveCount(0);
   await board.getByTestId('board-close').click();
-  await expect(page.getByTestId('attention-queue')).toHaveCount(0);
+  // It no longer waits for the owner. Other canvases may have terminals that do, so the queue is asked about this one.
+  await expect(page.locator('[data-testid="attention-queue"][title*="Careful change"]')).toHaveCount(0);
 
   // The agent's status shows the comment as the person's words. It does the element again; the run comes back.
   await type('clear; "$AUBERGINE_BIN/aubergine" workflow status');
