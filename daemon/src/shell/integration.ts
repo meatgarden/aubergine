@@ -197,8 +197,17 @@ export class ZshIntegration implements ShellIntegration {
   async read(sessionId: string): Promise<ShellReport | null> {
     try {
       const file = this.statusFile(sessionId);
-      const report = parseStatusLine(await readFile(file, 'utf8'));
-      return report ? { ...report, changedAtMs: (await stat(file)).mtimeMs } : null;
+      // What the file says and when it last changed must belong together: a shell may write between the two
+      // looks, and an old report under a new time reads as "the command is over" when it has only just begun.
+      // So the time is taken before and after the text, and the text is read again while they differ.
+      let before = (await stat(file)).mtimeMs;
+      for (let attempt = 0; ; attempt++) {
+        const report = parseStatusLine(await readFile(file, 'utf8'));
+        const after = (await stat(file)).mtimeMs;
+        // After a few tries the earlier time is used: the text is then at least as new as its time, never older.
+        if (after === before || attempt >= 3) return report ? { ...report, changedAtMs: before } : null;
+        before = after;
+      }
     } catch {
       return null;
     }

@@ -22,7 +22,7 @@ export interface Context {
 export interface Answer {
   /** What the model reads. */
   text: string;
-  /** The same as data, where there is something worth having as data. */
+  /** The parts of it worth having as data: IDs, counts, states. The text itself is added to it when it is sent, so that nothing is said in one form only. */
   data?: Record<string, unknown>;
 }
 

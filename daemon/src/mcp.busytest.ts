@@ -155,7 +155,10 @@ describe.runIf(ZSH)('aubergine mcp, through the protocol', () => {
       call: async (name, args = {}) => {
         const result = await client.callTool({ name, arguments: args });
         const content = result.content as { type: string; text?: string }[];
-        return { text: content.map((part) => part.text ?? '').join('\n'), isError: result.isError === true, data: result.structuredContent };
+        const text = content.map((part) => part.text ?? '').join('\n');
+        // Whichever of the two forms a client gives its model, it is the same text.
+        if (result.structuredContent !== undefined) expect((result.structuredContent as { text?: string }).text).toBe(text);
+        return { text, isError: result.isError === true, data: result.structuredContent };
       },
       stderr: () => said,
       close: () => client.close(),

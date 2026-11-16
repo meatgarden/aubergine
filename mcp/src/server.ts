@@ -48,6 +48,16 @@ export function whoOf(caller: Caller | null, url: string): Who {
   return { credential: 'the owner', scopes: [], reach: '', url };
 }
 
+/**
+ * An answer in the two forms the protocol has. A client may hand its model
+ * either one and drop the other, so the structured form carries the whole
+ * text as well, quotation marks and all: what a model reads never depends
+ * on which of the two its client chose.
+ */
+function said(text: string, data?: Record<string, unknown>): { content: { type: 'text'; text: string }[]; structuredContent?: Record<string, unknown> } {
+  return { content: [{ type: 'text', text }], ...(data ? { structuredContent: { text, ...(shownDeep(data) as Record<string, unknown>) } } : {}) };
+}
+
 export interface ServerParts {
   found: Found | null;
   client: Client | null;
@@ -91,7 +101,7 @@ export function buildServer(parts: ServerParts): McpServer {
         `Tools offered: ${tools.map((tool) => tool.name).join(', ') || 'none'}.`,
         'Not offered to anyone through these tools: making tokens, settings, "people only", accepting or discarding drafts, accepting repository workflows, the activity log. Those are the owner\'s.',
       ];
-      return { content: [{ type: 'text', text: lines.join('\n') }], structuredContent: { server: url, kind: parts.caller.kind, scopes: [...who.scopes], tools: tools.map((tool) => tool.name) } };
+      return said(lines.join('\n'), { server: url, kind: parts.caller.kind, scopes: [...who.scopes], tools: tools.map((tool) => tool.name) });
     },
   );
 
@@ -104,7 +114,7 @@ export function buildServer(parts: ServerParts): McpServer {
       async (args: unknown) => {
         try {
           const answer = await tool.run(args as never, context);
-          return { content: [{ type: 'text' as const, text: answer.text }], ...(answer.data ? { structuredContent: shownDeep(answer.data) as Record<string, unknown> } : {}) };
+          return said(answer.text, answer.data);
         } catch (error) {
           // A refusal is an answer the model can act on, not a failure of the protocol.
           return { content: [{ type: 'text' as const, text: sentenceFor(error, who) }], isError: true };
