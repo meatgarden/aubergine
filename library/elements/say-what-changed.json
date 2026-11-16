@@ -1,0 +1,9 @@
+{
+  "aubergine": "element",
+  "format": 1,
+  "element": {
+    "name": "Say what changed",
+    "instructions": "Look at what you changed for {{task}}: every file you touched, and why.\n\nWrite a short account for someone who was not here: what was wrong or missing, what you changed, and what you deliberately left alone. Use plain sentences. Name files and functions exactly, so they can be found.\n\nDo not describe how you got there, and do not list commands you ran unless someone needs to run them again.",
+    "doneWhen": "There is an account of the change that someone who did not see the work can follow."
+  }
+}

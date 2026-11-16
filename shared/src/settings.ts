@@ -64,6 +64,15 @@ export const Settings = z.object({
       quietAfterSeconds: z.number().int().min(10).max(86_400).default(300),
     })
     .prefault({}),
+  /** The library: how long and how much a fetch of a Git source may take. They apply from the next start of the server. */
+  library: z
+    .object({
+      /** The longest one Git command of a refresh may run, in seconds. */
+      fetchTimeoutSeconds: z.number().int().min(5).max(3600).default(60),
+      /** The largest file Git may write while fetching, in megabytes: a source that needs more is refused. */
+      maxFetchMegabytes: z.number().int().min(1).max(10_000).default(100),
+    })
+    .prefault({}),
   /** Messages between sessions: how many, how often, and when a thread waits for the owner. They apply from the next start of the server. */
   messages: z
     .object({

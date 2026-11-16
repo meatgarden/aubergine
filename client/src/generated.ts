@@ -3542,6 +3542,345 @@ export type RequestDraftResult = {
   line: string;
 };
 
+export type ListLibrarySourcesResult = {
+  sources: {
+    id: string;
+    kind: string;
+    address: string;
+    name: string;
+    addedAt: string;
+    refreshedAt: string | null;
+    commit: string | null;
+    problem: string | null;
+    history: ("same" | "grew" | "rewritten" | "cannot-tell") | null;
+    items: {
+      id: string;
+      kind: string;
+      name: string;
+      description: string;
+      version: string;
+      path: string;
+      digest: string | null;
+      retired: boolean;
+      replacedBy: string | null;
+      flags: ("changed-without-version" | "gone" | "unreadable" | "unknown-kind")[];
+      problem: string | null;
+    }[];
+    skipped: {
+      id: string;
+      reason: string;
+    }[];
+  }[];
+};
+
+export type AddLibrarySourceBody = {
+  /** `folder` (a folder on this computer) or `git` (the address of a Git repository). */
+  kind: string;
+  /** For a folder: its path. For Git: an address starting with https://, ssh:// or file://, or of the form user@host:path. Never with a password in it. */
+  address: string;
+  /** What to call it. Left out, the name its index gives, or its address. */
+  name?: string;
+};
+
+export type AddLibrarySourceResult = {
+  id: string;
+  kind: string;
+  address: string;
+  name: string;
+  addedAt: string;
+  refreshedAt: string | null;
+  commit: string | null;
+  problem: string | null;
+  history: ("same" | "grew" | "rewritten" | "cannot-tell") | null;
+  items: {
+    id: string;
+    kind: string;
+    name: string;
+    description: string;
+    version: string;
+    path: string;
+    digest: string | null;
+    retired: boolean;
+    replacedBy: string | null;
+    flags: ("changed-without-version" | "gone" | "unreadable" | "unknown-kind")[];
+    problem: string | null;
+  }[];
+  skipped: {
+    id: string;
+    reason: string;
+  }[];
+};
+
+export type RefreshLibrarySourceResult = {
+  id: string;
+  kind: string;
+  address: string;
+  name: string;
+  addedAt: string;
+  refreshedAt: string | null;
+  commit: string | null;
+  problem: string | null;
+  history: ("same" | "grew" | "rewritten" | "cannot-tell") | null;
+  items: {
+    id: string;
+    kind: string;
+    name: string;
+    description: string;
+    version: string;
+    path: string;
+    digest: string | null;
+    retired: boolean;
+    replacedBy: string | null;
+    flags: ("changed-without-version" | "gone" | "unreadable" | "unknown-kind")[];
+    problem: string | null;
+  }[];
+  skipped: {
+    id: string;
+    reason: string;
+  }[];
+};
+
+export type ListLibraryItemsResult = {
+  items: {
+    id: string;
+    kind: string;
+    name: string;
+    description: string;
+    version: string;
+    path: string;
+    digest: string | null;
+    retired: boolean;
+    replacedBy: string | null;
+    flags: ("changed-without-version" | "gone" | "unreadable" | "unknown-kind")[];
+    problem: string | null;
+    sourceId: string;
+    sourceName: string;
+    sourceKind: string;
+    kindTitle: string;
+    standing: "available" | "installed" | "update";
+    installedId: string | null;
+    installedVersion: string | null;
+    requested: boolean;
+  }[];
+};
+
+export type GetLibraryItemResult = {
+  item: {
+    id: string;
+    kind: string;
+    name: string;
+    description: string;
+    version: string;
+    path: string;
+    digest: string | null;
+    retired: boolean;
+    replacedBy: string | null;
+    flags: ("changed-without-version" | "gone" | "unreadable" | "unknown-kind")[];
+    problem: string | null;
+    sourceId: string;
+    sourceName: string;
+    sourceKind: string;
+    kindTitle: string;
+    standing: "available" | "installed" | "update";
+    installedId: string | null;
+    installedVersion: string | null;
+    requested: boolean;
+  };
+  text: string | null;
+  needs: {
+    kind: "mcp" | "command" | "access" | "other";
+    name: string;
+    note?: string;
+  }[];
+  digest: string | null;
+  from: string;
+  warnings: string[];
+};
+
+export type RequestLibraryInstallBody = {
+  sourceId: string;
+  itemId: string;
+};
+
+export type RequestLibraryInstallResult = {
+  id: string;
+  sourceId: string;
+  itemId: string;
+  updates: string | null;
+  requestedBy: {
+    kind: "owner";
+  } | {
+    kind: "token";
+    tokenId: string;
+    name: string;
+  };
+  at: string;
+};
+
+export type ListLibraryRequestsResult = {
+  requests: {
+    request: {
+      id: string;
+      sourceId: string;
+      itemId: string;
+      updates: string | null;
+      requestedBy: {
+        kind: "owner";
+      } | {
+        kind: "token";
+        tokenId: string;
+        name: string;
+      };
+      at: string;
+    };
+    item: {
+      id: string;
+      kind: string;
+      name: string;
+      description: string;
+      version: string;
+      path: string;
+      digest: string | null;
+      retired: boolean;
+      replacedBy: string | null;
+      flags: ("changed-without-version" | "gone" | "unreadable" | "unknown-kind")[];
+      problem: string | null;
+      sourceId: string;
+      sourceName: string;
+      sourceKind: string;
+      kindTitle: string;
+      standing: "available" | "installed" | "update";
+      installedId: string | null;
+      installedVersion: string | null;
+      requested: boolean;
+    } | null;
+    what: string;
+    from: string;
+    requestedBy: string;
+  }[];
+};
+
+export type GetLibraryRequestResult = {
+  request: {
+    id: string;
+    sourceId: string;
+    itemId: string;
+    updates: string | null;
+    requestedBy: {
+      kind: "owner";
+    } | {
+      kind: "token";
+      tokenId: string;
+      name: string;
+    };
+    at: string;
+  };
+  item: {
+    id: string;
+    kind: string;
+    name: string;
+    description: string;
+    version: string;
+    path: string;
+    digest: string | null;
+    retired: boolean;
+    replacedBy: string | null;
+    flags: ("changed-without-version" | "gone" | "unreadable" | "unknown-kind")[];
+    problem: string | null;
+    sourceId: string;
+    sourceName: string;
+    sourceKind: string;
+    kindTitle: string;
+    standing: "available" | "installed" | "update";
+    installedId: string | null;
+    installedVersion: string | null;
+    requested: boolean;
+  } | null;
+  what: string;
+  from: string;
+  requestedBy: string;
+  text: string | null;
+  previousText: string | null;
+  installedText: string | null;
+  needs: {
+    need: {
+      kind: "mcp" | "command" | "access" | "other";
+      name: string;
+      note?: string;
+    };
+    state: "found" | "not-found" | "cannot-tell";
+    words: string;
+  }[];
+  digest: string | null;
+  warnings: string[];
+  proposal: {
+    workflow: unknown | null;
+    element: unknown | null;
+  };
+};
+
+export type AcceptLibraryRequestBody = {
+  /** The digest of the file as it was shown for review. If the file is not that any more, nothing is installed. */
+  digest: string;
+  /** The workflow as edited before accepting. */
+  workflow?: unknown;
+  /** The element as edited before accepting. */
+  element?: unknown;
+};
+
+export type AcceptLibraryRequestResult = {
+  id: string;
+  kind: string;
+  name: string;
+  from: {
+    sourceId: string;
+    kind: string;
+    address: string;
+    sourceName: string;
+    itemId: string;
+    version: string;
+    commit: string | null;
+    digest: string;
+  };
+  installedAt: string;
+  target: {
+    workflowId?: string;
+    shelfId?: string;
+  };
+  atSource: "current" | "retired" | "gone";
+  useInstead: string | null;
+};
+
+export type ListLibraryInstalledResult = {
+  installed: {
+    id: string;
+    kind: string;
+    name: string;
+    from: {
+      sourceId: string;
+      kind: string;
+      address: string;
+      sourceName: string;
+      itemId: string;
+      version: string;
+      commit: string | null;
+      digest: string;
+    };
+    installedAt: string;
+    target: {
+      workflowId?: string;
+      shelfId?: string;
+    };
+    atSource: "current" | "retired" | "gone";
+    useInstead: string | null;
+  }[];
+};
+
+export type GetLibraryInstalledUsageResult = {
+  uses: string[];
+  liveRuns: number;
+};
+
 export interface ListElementsQuery {
   /**
    * How many items to return at most.
@@ -5997,6 +6336,20 @@ export const OPERATIONS = {
   returnDraft: { method: 'POST', path: '/v1/drafts/{draftId}/return', params: ["draftId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   listDraftRecords: { method: 'GET', path: '/v1/draft-records', params: [], hasBody: false, paged: true, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   requestDraft: { method: 'POST', path: '/v1/draft-requests', params: [], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  listLibrarySources: { method: 'GET', path: '/v1/library/sources', params: [], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "read" } },
+  addLibrarySource: { method: 'POST', path: '/v1/library/sources', params: [], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  removeLibrarySource: { method: 'DELETE', path: '/v1/library/sources/{sourceId}', params: ["sourceId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  refreshLibrarySource: { method: 'POST', path: '/v1/library/sources/{sourceId}/refresh', params: ["sourceId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  listLibraryItems: { method: 'GET', path: '/v1/library/items', params: [], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "read" } },
+  getLibraryItem: { method: 'GET', path: '/v1/library/sources/{sourceId}/items/{itemId}', params: ["sourceId", "itemId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "read" } },
+  requestLibraryInstall: { method: 'POST', path: '/v1/library/installs', params: [], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "workflows:write" } },
+  listLibraryRequests: { method: 'GET', path: '/v1/library/requests', params: [], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  getLibraryRequest: { method: 'GET', path: '/v1/library/requests/{requestId}', params: ["requestId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  discardLibraryRequest: { method: 'DELETE', path: '/v1/library/requests/{requestId}', params: ["requestId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  acceptLibraryRequest: { method: 'POST', path: '/v1/library/requests/{requestId}/accept', params: ["requestId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  listLibraryInstalled: { method: 'GET', path: '/v1/library/installed', params: [], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "read" } },
+  getLibraryInstalledUsage: { method: 'GET', path: '/v1/library/installed/{installedId}/usage', params: ["installedId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "read" } },
+  removeLibraryInstalled: { method: 'DELETE', path: '/v1/library/installed/{installedId}', params: ["installedId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   listElements: { method: 'GET', path: '/v1/elements', params: [], hasBody: false, paged: true, idempotent: false, stream: false, access: { who: 'token', scope: "read" } },
   createElement: { method: 'POST', path: '/v1/elements', params: [], hasBody: true, paged: false, idempotent: true, stream: false, access: { who: 'token', scope: "workflows:write" } },
   updateElement: { method: 'PATCH', path: '/v1/elements/{elementId}', params: ["elementId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "workflows:write" } },
@@ -6322,6 +6675,90 @@ export interface Client {
    * `POST /v1/draft-requests`. Signed-in browser only: no API token may call this.
    */
   requestDraft(args: { body: RequestDraftBody } & CallOptions): Promise<RequestDraftResult>;
+  /**
+   * List the sources of the library.
+   *
+   * `GET /v1/library/sources`. Scope: `read`.
+   */
+  listLibrarySources(args?: CallOptions): Promise<ListLibrarySourcesResult>;
+  /**
+   * Add a source.
+   *
+   * `POST /v1/library/sources`. Signed-in browser only: no API token may call this.
+   */
+  addLibrarySource(args: { body: AddLibrarySourceBody } & CallOptions): Promise<AddLibrarySourceResult>;
+  /**
+   * Remove a source.
+   *
+   * `DELETE /v1/library/sources/{sourceId}`. Signed-in browser only: no API token may call this.
+   */
+  removeLibrarySource(args: { sourceId: string } & CallOptions): Promise<void>;
+  /**
+   * Read a source again.
+   *
+   * `POST /v1/library/sources/{sourceId}/refresh`. Signed-in browser only: no API token may call this.
+   */
+  refreshLibrarySource(args: { sourceId: string } & CallOptions): Promise<RefreshLibrarySourceResult>;
+  /**
+   * List what the sources offer.
+   *
+   * `GET /v1/library/items`. Scope: `read`.
+   */
+  listLibraryItems(args?: CallOptions): Promise<ListLibraryItemsResult>;
+  /**
+   * One item, with what it says.
+   *
+   * `GET /v1/library/sources/{sourceId}/items/{itemId}`. Scope: `read`.
+   */
+  getLibraryItem(args: { sourceId: string; itemId: string } & CallOptions): Promise<GetLibraryItemResult>;
+  /**
+   * Ask for an item to be installed, or brought up to date.
+   *
+   * `POST /v1/library/installs`. Scope: `workflows:write`.
+   */
+  requestLibraryInstall(args: { body: RequestLibraryInstallBody } & CallOptions): Promise<RequestLibraryInstallResult>;
+  /**
+   * The installs that wait for the owner.
+   *
+   * `GET /v1/library/requests`. Signed-in browser only: no API token may call this.
+   */
+  listLibraryRequests(args?: CallOptions): Promise<ListLibraryRequestsResult>;
+  /**
+   * One waiting install, with everything its reviewer reads.
+   *
+   * `GET /v1/library/requests/{requestId}`. Signed-in browser only: no API token may call this.
+   */
+  getLibraryRequest(args: { requestId: string } & CallOptions): Promise<GetLibraryRequestResult>;
+  /**
+   * Discard a waiting install.
+   *
+   * `DELETE /v1/library/requests/{requestId}`. Signed-in browser only: no API token may call this.
+   */
+  discardLibraryRequest(args: { requestId: string } & CallOptions): Promise<void>;
+  /**
+   * Install what a request asks for.
+   *
+   * `POST /v1/library/requests/{requestId}/accept`. Signed-in browser only: no API token may call this.
+   */
+  acceptLibraryRequest(args: { requestId: string; body: AcceptLibraryRequestBody } & CallOptions): Promise<AcceptLibraryRequestResult>;
+  /**
+   * What was installed from the library.
+   *
+   * `GET /v1/library/installed`. Scope: `read`.
+   */
+  listLibraryInstalled(args?: CallOptions): Promise<ListLibraryInstalledResult>;
+  /**
+   * Where an installed item is used.
+   *
+   * `GET /v1/library/installed/{installedId}/usage`. Scope: `read`.
+   */
+  getLibraryInstalledUsage(args: { installedId: string } & CallOptions): Promise<GetLibraryInstalledUsageResult>;
+  /**
+   * Remove what was installed.
+   *
+   * `DELETE /v1/library/installed/{installedId}`. Signed-in browser only: no API token may call this.
+   */
+  removeLibraryInstalled(args: { installedId: string } & CallOptions): Promise<void>;
   /**
    * List the elements on the shelf.
    *

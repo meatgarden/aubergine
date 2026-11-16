@@ -61,7 +61,7 @@ async function workflowFolder(root: string): Promise<string | null> {
 }
 
 /** Reads one file's bytes without following a link, up to the cap. */
-async function readBounded(file: string): Promise<{ ok: true; bytes: Buffer } | { ok: false; reason: string }> {
+async function readBounded(file: string, maxBytes: number = REPOSITORY_MAX_BYTES): Promise<{ ok: true; bytes: Buffer } | { ok: false; reason: string }> {
   let handle;
   try {
     // O_NOFOLLOW: if the name became a link between listing and opening, the open fails.
@@ -72,7 +72,7 @@ async function readBounded(file: string): Promise<{ ok: true; bytes: Buffer } | 
   try {
     const stats = await handle.stat();
     if (!stats.isFile()) return { ok: false, reason: 'It is not a regular file.' };
-    if (stats.size > REPOSITORY_MAX_BYTES) return { ok: false, reason: `It is ${stats.size} bytes; at most ${REPOSITORY_MAX_BYTES} are read.` };
+    if (stats.size > maxBytes) return { ok: false, reason: `It is ${stats.size} bytes; at most ${maxBytes} are read.` };
     const bytes = Buffer.alloc(stats.size);
     await handle.read(bytes, 0, stats.size, 0);
     return { ok: true, bytes };
@@ -180,4 +180,82 @@ export async function writeRepositoryFile(root: string, workflowName: string, te
     await handle.close();
   }
   return { file, path: target, overwritten: existing !== null };
+}
+
+/* ---------- A file somewhere inside a folder, by a path its index gave ---------- */
+
+/** Whether a path, given by something that was fetched, is one that may be looked for inside a folder: plain names, no way up, not absolute. */
+function partsInside(relative: string): string[] | null {
+  if (relative === '' || relative.length > 300 || path.isAbsolute(relative) || relative.includes('\\') || relative.includes('\0')) return null;
+  const parts = relative.split('/');
+  return parts.every((part) => part !== '' && part !== '.' && part !== '..') ? parts : null;
+}
+
+/**
+ * Reads one regular file inside a folder, by a path from that folder's root:
+ * the index of a library source, or a file that index names. The same care
+ * as for a repository's workflow files, and the same reader: the path may
+ * not leave the folder, no part of it may be a link (the root itself
+ * included), and at most `maxBytes` are read. Nothing outside the folder is
+ * ever opened.
+ */
+export async function readInside(root: string, relative: string, maxBytes: number = REPOSITORY_MAX_BYTES): Promise<{ ok: true; bytes: Buffer } | { ok: false; reason: string }> {
+  const parts = partsInside(relative);
+  if (!parts) return { ok: false, reason: 'Its path is not a plain path inside the source: it may not be absolute or go up.' };
+  let dir = path.resolve(root);
+  const rootStats = await lstat(dir).catch(() => null);
+  if (!rootStats || rootStats.isSymbolicLink() || !rootStats.isDirectory()) return { ok: false, reason: 'The folder of the source is not there, or is a link.' };
+  for (const part of parts.slice(0, -1)) {
+    dir = path.join(dir, part);
+    const stats = await lstat(dir).catch(() => null);
+    if (!stats) return { ok: false, reason: 'There is no such file in the source.' };
+    // A link here could point anywhere on the machine: it is not followed.
+    if (stats.isSymbolicLink()) return { ok: false, reason: 'A folder on its path is a link; links are not followed.' };
+    if (!stats.isDirectory()) return { ok: false, reason: 'There is no such file in the source.' };
+  }
+  const target = path.join(dir, parts[parts.length - 1] as string);
+  // Belt and braces: whatever the path said, the file opened is under the root.
+  if (!target.startsWith(`${path.resolve(root)}${path.sep}`)) return { ok: false, reason: 'Its path leaves the source.' };
+  if (await isLink(target)) return { ok: false, reason: 'It is a link; links are not followed.' };
+  const read = await readBounded(target, maxBytes);
+  return read.ok ? read : { ok: false, reason: read.reason === 'It could not be opened.' ? 'There is no such file in the source.' : read.reason };
+}
+
+/**
+ * Writes one file inside a folder the owner named, for publishing: by a path
+ * of plain names from that folder's root. Folders on the way are made; none
+ * may be a link, and neither may the file. Nothing outside the folder is
+ * written.
+ */
+export async function writeInside(root: string, relative: string, text: string): Promise<{ path: string; replaced: boolean }> {
+  const parts = partsInside(relative);
+  if (!parts) throw new RepositoryWriteError('That is not a plain path inside the folder.');
+  let dir = path.resolve(root);
+  const rootStats = await lstat(dir).catch(() => null);
+  if (!rootStats || rootStats.isSymbolicLink() || !rootStats.isDirectory()) throw new RepositoryWriteError(`${root} is not a folder (or is a link). Nothing is written through a link.`);
+  for (const part of parts.slice(0, -1)) {
+    dir = path.join(dir, part);
+    if (await isLink(dir)) throw new RepositoryWriteError(`${part} is a link. Nothing is written through a link.`);
+    await mkdir(dir, { recursive: false }).catch((error: NodeJS.ErrnoException) => {
+      if (error.code !== 'EEXIST') throw new RepositoryWriteError(`${part} could not be made.`);
+    });
+    if (!(await lstat(dir)).isDirectory()) throw new RepositoryWriteError(`${part} is not a folder.`);
+  }
+  const target = path.join(dir, parts[parts.length - 1] as string);
+  if (!target.startsWith(`${path.resolve(root)}${path.sep}`)) throw new RepositoryWriteError('That path leaves the folder.');
+  const existing = await lstat(target).catch(() => null);
+  if (existing?.isSymbolicLink()) throw new RepositoryWriteError(`${relative} is a link. Nothing is written through a link.`);
+  if (existing && !existing.isFile()) throw new RepositoryWriteError(`${relative} is there and is not a file.`);
+  let handle;
+  try {
+    handle = await open(target, constants.O_WRONLY | constants.O_CREAT | constants.O_NOFOLLOW | (existing ? constants.O_TRUNC : constants.O_EXCL), 0o644);
+  } catch {
+    throw new RepositoryWriteError(`${relative} could not be written.`);
+  }
+  try {
+    await handle.writeFile(text, 'utf8');
+  } finally {
+    await handle.close();
+  }
+  return { path: target, replaced: existing !== null };
 }

@@ -8,6 +8,7 @@ import {
   Draft,
   ShelfElement,
   Id,
+  LibraryState,
   withFirstVersion,
   FIRST_CANVAS_NAME,
   Layout,
@@ -64,8 +65,11 @@ const StateFileV7 = StateFileV6.extend({ version: z.literal(7) });
  */
 const StateFileV8 = StateFileV7.extend({ version: z.literal(8) });
 
-const StateFile = z.discriminatedUnion('version', [StateFileV1, StateFileV2, StateFileV3, StateFileV4, StateFileV5, StateFileV6, StateFileV7, StateFileV8]);
-const CURRENT_VERSION = 8;
+/** The same, with the library: its sources as last read, what was installed from them, and installs that wait. An older file has none of it. */
+const StateFileV9 = StateFileV8.extend({ version: z.literal(9), library: LibraryState });
+
+const StateFile = z.discriminatedUnion('version', [StateFileV1, StateFileV2, StateFileV3, StateFileV4, StateFileV5, StateFileV6, StateFileV7, StateFileV8, StateFileV9]);
+const CURRENT_VERSION = 9;
 type StateFile = z.infer<typeof StateFile>;
 
 /**
@@ -108,6 +112,7 @@ export function migrate(file: StateFile): AppState {
     drafts: file.version >= 5 && 'drafts' in file ? file.drafts : [],
     shelf: (file.version >= 5 && 'shelf' in file ? file.shelf : []).map(withFirstVersion),
     repositoryAccepted: file.version >= 6 && 'repositoryAccepted' in file ? file.repositoryAccepted : [],
+    library: file.version >= 9 && 'library' in file ? file.library : { sources: [], installed: [], requests: [] },
   });
 }
 

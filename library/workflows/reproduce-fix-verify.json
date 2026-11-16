@@ -1,0 +1,35 @@
+{
+  "aubergine": "workflow",
+  "format": 1,
+  "workflow": {
+    "name": "Reproduce, fix, verify",
+    "description": "For a bug: see it fail first, fix the cause, and show that it is fixed.",
+    "standing": "Work on this bug only. When something is unclear or would be expensive to undo, report blocked and ask instead of guessing.",
+    "elements": [
+      {
+        "id": "reproduce",
+        "name": "Reproduce",
+        "instructions": "Make {{task}} happen in front of you before you change anything.\n\nFind the smallest way to see it fail: a test, a command, a few steps. Write down exactly what you did and what you saw. If you cannot make it fail, say so and stop: report blocked, and say what you tried.",
+        "doneWhen": "There is a way to see the failure that anyone can repeat, written down."
+      },
+      {
+        "id": "find-the-cause",
+        "name": "Find the cause",
+        "instructions": "Find out why it fails, not only where.\n\nFollow the failure back until you can say in one sentence what is wrong. If there are two possible causes, find out which it is before going on. Do not fix anything yet.",
+        "doneWhen": "The cause is stated in a sentence, with the place in the code."
+      },
+      {
+        "id": "fix",
+        "name": "Fix",
+        "instructions": "Fix the cause you found, and nothing else.\n\nMake the smallest change that removes the cause. If you see other things worth fixing on the way, write them down for the note instead of changing them.",
+        "doneWhen": "The change is made and is only about this bug."
+      },
+      {
+        "id": "verify",
+        "name": "Verify",
+        "instructions": "Show that it is fixed.\n\nRepeat exactly what made it fail in the first element: it must pass now. Run the tests around the change. Say what you ran and what it printed. If anything else broke, say so.",
+        "doneWhen": "What failed before passes now, and the tests around it were run."
+      }
+    ]
+  }
+}

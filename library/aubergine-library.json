@@ -1,0 +1,55 @@
+{
+  "aubergine": "library",
+  "format": 1,
+  "name": "Comes with Aubergine",
+  "items": [
+    {
+      "id": "say-what-changed",
+      "kind": "element",
+      "name": "Say what changed",
+      "description": "A short account of a change for someone who was not there.",
+      "version": "1",
+      "path": "elements/say-what-changed.json"
+    },
+    {
+      "id": "check-before-done",
+      "kind": "element",
+      "name": "Check before you say done",
+      "description": "Run it, read it, and name what is not finished before reporting done.",
+      "version": "1",
+      "path": "elements/check-before-done.json"
+    },
+    {
+      "id": "list-open-questions",
+      "kind": "element",
+      "name": "List the open questions",
+      "description": "Everything someone else has to decide, as a list you can tick.",
+      "version": "1",
+      "path": "elements/list-open-questions.json"
+    },
+    {
+      "id": "hand-over",
+      "kind": "element",
+      "name": "Write a hand-over note",
+      "description": "What whoever continues the work needs to know, and nothing else.",
+      "version": "1",
+      "path": "elements/hand-over.json"
+    },
+    {
+      "id": "reproduce-fix-verify",
+      "kind": "workflow",
+      "name": "Reproduce, fix, verify",
+      "description": "For a bug: see it fail first, fix the cause, show that it is fixed.",
+      "version": "1",
+      "path": "workflows/reproduce-fix-verify.json"
+    },
+    {
+      "id": "read-and-report",
+      "kind": "workflow",
+      "name": "Read a change and report",
+      "description": "For reviewing someone else's work: read it, check it, write down what you found.",
+      "version": "1",
+      "path": "workflows/read-and-report.json"
+    }
+  ]
+}

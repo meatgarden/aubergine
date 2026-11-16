@@ -64,6 +64,7 @@ export const OWNERS_ALONE: Record<(typeof NEVER_BY_TOKEN)[number], string> = {
   'away.read': 'the list of what changed while the owner was away',
   'history.read': "an agent's past conversations",
   'history.open': "an agent's past conversations",
+  'library.manage': 'adding, removing or refreshing a library source, accepting an install or an update, and removing what was installed',
   'shelf.manage': 'retiring a shelf element or bringing it back, and taking a newer version of one into a workflow',
   'messages.manage': 'deciding which terminals may message each other, and pausing or stopping a thread',
 };

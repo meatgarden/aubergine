@@ -349,6 +349,15 @@ describe('every route has a rule', () => {
     'POST /v1/elements/:elementId/retire',
     'POST /v1/elements/:elementId/restore',
     'POST /v1/workflows/:workflowId/elements/:elementId/shelf-update',
+    // The library: sources, refreshing (the one thing that fetches), accepting an install and removing one are the owner's.
+    'POST /v1/library/sources',
+    'DELETE /v1/library/sources/:sourceId',
+    'POST /v1/library/sources/:sourceId/refresh',
+    'GET /v1/library/requests',
+    'GET /v1/library/requests/:requestId',
+    'POST /v1/library/requests/:requestId/accept',
+    'DELETE /v1/library/requests/:requestId',
+    'DELETE /v1/library/installed/:installedId',
   ];
 
   it('has the routes the plan lists, under /v1', () => {
@@ -761,7 +770,7 @@ describe('the secret', () => {
 
     // The hash is what is stored, and it is not sent to the page.
     const state = JSON.parse(await readFile(path.join(dir, 'state.json'), 'utf8'));
-    expect(state.version).toBe(8);
+    expect(state.version).toBe(9);
     expect(state.tokens.map((t: { hash: string }) => t.hash)).toEqual([expect.stringMatching(/^[0-9a-f]{64}$/), expect.stringMatching(/^[0-9a-f]{64}$/)]);
   });
 

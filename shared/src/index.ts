@@ -26,3 +26,4 @@ export * from './openapi';
 export * from './guide';
 export * from './messages';
 export * from './shelf';
+export * from './library';

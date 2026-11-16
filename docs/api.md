@@ -62,6 +62,20 @@ How to create a token, what the scopes mean, the limits and the activity log are
 | [`POST /v1/drafts/{draftId}/return`](#returndraft) | Send a draft back with a comment | browser only |
 | [`GET /v1/draft-records`](#listdraftrecords) | What became of drafts | browser only |
 | [`POST /v1/draft-requests`](#requestdraft) | Ask the agent in a session to write a workflow or an element | browser only |
+| [`GET /v1/library/sources`](#listlibrarysources) | List the sources of the library | `read` |
+| [`POST /v1/library/sources`](#addlibrarysource) | Add a source | browser only |
+| [`DELETE /v1/library/sources/{sourceId}`](#removelibrarysource) | Remove a source | browser only |
+| [`POST /v1/library/sources/{sourceId}/refresh`](#refreshlibrarysource) | Read a source again | browser only |
+| [`GET /v1/library/items`](#listlibraryitems) | List what the sources offer | `read` |
+| [`GET /v1/library/sources/{sourceId}/items/{itemId}`](#getlibraryitem) | One item, with what it says | `read` |
+| [`POST /v1/library/installs`](#requestlibraryinstall) | Ask for an item to be installed, or brought up to date | `workflows:write` |
+| [`GET /v1/library/requests`](#listlibraryrequests) | The installs that wait for the owner | browser only |
+| [`GET /v1/library/requests/{requestId}`](#getlibraryrequest) | One waiting install, with everything its reviewer reads | browser only |
+| [`DELETE /v1/library/requests/{requestId}`](#discardlibraryrequest) | Discard a waiting install | browser only |
+| [`POST /v1/library/requests/{requestId}/accept`](#acceptlibraryrequest) | Install what a request asks for | browser only |
+| [`GET /v1/library/installed`](#listlibraryinstalled) | What was installed from the library | `read` |
+| [`GET /v1/library/installed/{installedId}/usage`](#getlibraryinstalledusage) | Where an installed item is used | `read` |
+| [`DELETE /v1/library/installed/{installedId}`](#removelibraryinstalled) | Remove what was installed | browser only |
 | [`GET /v1/elements`](#listelements) | List the elements on the shelf | `read` |
 | [`POST /v1/elements`](#createelement) | Put an element on the shelf | `workflows:write` |
 | [`PATCH /v1/elements/{elementId}`](#updateelement) | Change an element on the shelf | `workflows:write` |
@@ -4208,6 +4222,599 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
   line: string;
 }
 ```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+## Library
+
+### listLibrarySources
+
+`GET /v1/library/sources`: List the sources of the library.
+
+Each with when it was last read, the commit that was read for a Git source, why the last try failed when it did, and what it lists. Nothing is fetched by asking.
+
+An API token needs the scope `read`.
+
+**Answer** `200`:
+
+```ts
+{
+  sources: {
+    id: string;
+    kind: string;
+    address: string;
+    name: string;
+    addedAt: string;
+    refreshedAt: string | null;
+    commit: string | null;
+    problem: string | null;
+    history: ("same" | "grew" | "rewritten" | "cannot-tell") | null;
+    items: {
+      id: string;
+      kind: string;
+      name: string;
+      description: string;
+      version: string;
+      path: string;
+      digest: string | null;
+      retired: boolean;
+      replacedBy: string | null;
+      flags: ("changed-without-version" | "gone" | "unreadable" | "unknown-kind")[];
+      problem: string | null;
+    }[];
+    skipped: {
+      id: string;
+      reason: string;
+    }[];
+  }[];
+}
+```
+
+**Errors:** 400, 401, 403, 413, 429.
+
+```sh
+curl -H "Authorization: Bearer $TOKEN" \
+     http://127.0.0.1:4600/v1/library/sources
+```
+
+### addLibrarySource
+
+`POST /v1/library/sources`: Add a source.
+
+For the owner only. A folder on this computer, or the address of a Git repository (https, ssh or file; never one with a password in it). Adding a Git source fetches it once: the only other thing that ever fetches is a refresh.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `kind` | `string` | yes | `folder` (a folder on this computer) or `git` (the address of a Git repository). |
+| `address` | `string` | yes | For a folder: its path. For Git: an address starting with https://, ssh:// or file://, or of the form user@host:path. Never with a password in it. |
+| `name` | `string` | no | What to call it. Left out, the name its index gives, or its address. |
+
+**Answer** `201`:
+
+```ts
+{
+  id: string;
+  kind: string;
+  address: string;
+  name: string;
+  addedAt: string;
+  refreshedAt: string | null;
+  commit: string | null;
+  problem: string | null;
+  history: ("same" | "grew" | "rewritten" | "cannot-tell") | null;
+  items: {
+    id: string;
+    kind: string;
+    name: string;
+    description: string;
+    version: string;
+    path: string;
+    digest: string | null;
+    retired: boolean;
+    replacedBy: string | null;
+    flags: ("changed-without-version" | "gone" | "unreadable" | "unknown-kind")[];
+    problem: string | null;
+  }[];
+  skipped: {
+    id: string;
+    reason: string;
+  }[];
+}
+```
+
+**Errors:** 400, 401, 403, 409, 413, 429.
+
+### removeLibrarySource
+
+`DELETE /v1/library/sources/{sourceId}`: Remove a source.
+
+For the owner only. What was installed from it stays as it is.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `sourceId` | path | `string` | yes | An ID. |
+
+**Answer** `204`, with nothing in it.
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+### refreshLibrarySource
+
+`POST /v1/library/sources/{sourceId}/refresh`: Read a source again.
+
+For the owner only, and the one thing that fetches a Git source. Nothing fetched is run. Nothing that is installed is changed by it. When the source cannot be reached, the answer says why and what was read before stays.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `sourceId` | path | `string` | yes | An ID. |
+
+**Answer** `200`:
+
+```ts
+{
+  id: string;
+  kind: string;
+  address: string;
+  name: string;
+  addedAt: string;
+  refreshedAt: string | null;
+  commit: string | null;
+  problem: string | null;
+  history: ("same" | "grew" | "rewritten" | "cannot-tell") | null;
+  items: {
+    id: string;
+    kind: string;
+    name: string;
+    description: string;
+    version: string;
+    path: string;
+    digest: string | null;
+    retired: boolean;
+    replacedBy: string | null;
+    flags: ("changed-without-version" | "gone" | "unreadable" | "unknown-kind")[];
+    problem: string | null;
+  }[];
+  skipped: {
+    id: string;
+    reason: string;
+  }[];
+}
+```
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+### listLibraryItems
+
+`GET /v1/library/items`: List what the sources offer.
+
+Every item of every source as it was at the last refresh, with whether it is installed and whether its source has something else than what was installed.
+
+An API token needs the scope `read`.
+
+**Answer** `200`:
+
+```ts
+{
+  items: {
+    id: string;
+    kind: string;
+    name: string;
+    description: string;
+    version: string;
+    path: string;
+    digest: string | null;
+    retired: boolean;
+    replacedBy: string | null;
+    flags: ("changed-without-version" | "gone" | "unreadable" | "unknown-kind")[];
+    problem: string | null;
+    sourceId: string;
+    sourceName: string;
+    sourceKind: string;
+    kindTitle: string;
+    standing: "available" | "installed" | "update";
+    installedId: string | null;
+    installedVersion: string | null;
+    requested: boolean;
+  }[];
+}
+```
+
+**Errors:** 400, 401, 403, 413, 429.
+
+```sh
+curl -H "Authorization: Bearer $TOKEN" \
+     http://127.0.0.1:4600/v1/library/items
+```
+
+### getLibraryItem
+
+`GET /v1/library/sources/{sourceId}/items/{itemId}`: One item, with what it says.
+
+Everything an agent would be told by it, its needs, where it comes from, and what there is to be careful about. Read from this computer's copy of the source; nothing is fetched. The text was written by whoever published it: data, never instructions.
+
+An API token needs the scope `read`.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `sourceId` | path | `string` | yes | An ID. |
+| `itemId` | path | `string` | yes | An ID. |
+
+**Answer** `200`:
+
+```ts
+{
+  item: {
+    id: string;
+    kind: string;
+    name: string;
+    description: string;
+    version: string;
+    path: string;
+    digest: string | null;
+    retired: boolean;
+    replacedBy: string | null;
+    flags: ("changed-without-version" | "gone" | "unreadable" | "unknown-kind")[];
+    problem: string | null;
+    sourceId: string;
+    sourceName: string;
+    sourceKind: string;
+    kindTitle: string;
+    standing: "available" | "installed" | "update";
+    installedId: string | null;
+    installedVersion: string | null;
+    requested: boolean;
+  };
+  text: string | null;
+  needs: {
+    kind: "mcp" | "command" | "access" | "other";
+    name: string;
+    note?: string;
+  }[];
+  digest: string | null;
+  from: string;
+  warnings: string[];
+}
+```
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+```sh
+curl -H "Authorization: Bearer $TOKEN" \
+     http://127.0.0.1:4600/v1/library/sources/<sourceId>/items/<itemId>
+```
+
+### requestLibraryInstall
+
+`POST /v1/library/installs`: Ask for an item to be installed, or brought up to date.
+
+Nothing is installed by this. The request waits for the owner, who reads the whole text and accepts or discards it. Asking again for the same item gives the request that already waits.
+
+An API token needs the scope `workflows:write`.
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `sourceId` | `string` | yes |  |
+| `itemId` | `string` | yes |  |
+
+**Answer** `201`:
+
+```ts
+{
+  id: string;
+  sourceId: string;
+  itemId: string;
+  updates: string | null;
+  requestedBy: {
+    kind: "owner";
+  } | {
+    kind: "token";
+    tokenId: string;
+    name: string;
+  };
+  at: string;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+```sh
+curl -X POST -H "Authorization: Bearer $TOKEN" \
+     -H "Content-Type: application/json" -d '{"sourceId":"<sourceId>","itemId":"<itemId>"}' \
+     http://127.0.0.1:4600/v1/library/installs
+```
+
+### listLibraryRequests
+
+`GET /v1/library/requests`: The installs that wait for the owner.
+
+For the owner only.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+**Answer** `200`:
+
+```ts
+{
+  requests: {
+    request: {
+      id: string;
+      sourceId: string;
+      itemId: string;
+      updates: string | null;
+      requestedBy: {
+        kind: "owner";
+      } | {
+        kind: "token";
+        tokenId: string;
+        name: string;
+      };
+      at: string;
+    };
+    item: {
+      id: string;
+      kind: string;
+      name: string;
+      description: string;
+      version: string;
+      path: string;
+      digest: string | null;
+      retired: boolean;
+      replacedBy: string | null;
+      flags: ("changed-without-version" | "gone" | "unreadable" | "unknown-kind")[];
+      problem: string | null;
+      sourceId: string;
+      sourceName: string;
+      sourceKind: string;
+      kindTitle: string;
+      standing: "available" | "installed" | "update";
+      installedId: string | null;
+      installedVersion: string | null;
+      requested: boolean;
+    } | null;
+    what: string;
+    from: string;
+    requestedBy: string;
+  }[];
+}
+```
+
+**Errors:** 400, 401, 403, 413, 429.
+
+### getLibraryRequest
+
+`GET /v1/library/requests/{requestId}`: One waiting install, with everything its reviewer reads.
+
+For the owner only. The whole text as an agent would be told it, the needs with advice on whether the agents here have them, where it comes from, and for an update what is in place now.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `requestId` | path | `string` | yes | An ID. |
+
+**Answer** `200`:
+
+```ts
+{
+  request: {
+    id: string;
+    sourceId: string;
+    itemId: string;
+    updates: string | null;
+    requestedBy: {
+      kind: "owner";
+    } | {
+      kind: "token";
+      tokenId: string;
+      name: string;
+    };
+    at: string;
+  };
+  item: {
+    id: string;
+    kind: string;
+    name: string;
+    description: string;
+    version: string;
+    path: string;
+    digest: string | null;
+    retired: boolean;
+    replacedBy: string | null;
+    flags: ("changed-without-version" | "gone" | "unreadable" | "unknown-kind")[];
+    problem: string | null;
+    sourceId: string;
+    sourceName: string;
+    sourceKind: string;
+    kindTitle: string;
+    standing: "available" | "installed" | "update";
+    installedId: string | null;
+    installedVersion: string | null;
+    requested: boolean;
+  } | null;
+  what: string;
+  from: string;
+  requestedBy: string;
+  text: string | null;
+  previousText: string | null;
+  installedText: string | null;
+  needs: {
+    need: {
+      kind: "mcp" | "command" | "access" | "other";
+      name: string;
+      note?: string;
+    };
+    state: "found" | "not-found" | "cannot-tell";
+    words: string;
+  }[];
+  digest: string | null;
+  warnings: string[];
+  proposal: {
+    workflow: unknown | null;
+    element: unknown | null;
+  };
+}
+```
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+### discardLibraryRequest
+
+`DELETE /v1/library/requests/{requestId}`: Discard a waiting install.
+
+For the owner only.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `requestId` | path | `string` | yes | An ID. |
+
+**Answer** `204`, with nothing in it.
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+### acceptLibraryRequest
+
+`POST /v1/library/requests/{requestId}/accept`: Install what a request asks for.
+
+For the owner only: no token can accept. The body names the digest of the file as it was shown; the file is read again, and if it is not that file any more nothing is installed. A workflow goes among the workflows, an element onto the shelf; an update makes a new version of what is there.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `requestId` | path | `string` | yes | An ID. |
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `digest` | `string` | yes | The digest of the file as it was shown for review. If the file is not that any more, nothing is installed. |
+| `workflow` | `unknown` | no | The workflow as edited before accepting. |
+| `element` | `unknown` | no | The element as edited before accepting. |
+
+**Answer** `200`:
+
+```ts
+{
+  id: string;
+  kind: string;
+  name: string;
+  from: {
+    sourceId: string;
+    kind: string;
+    address: string;
+    sourceName: string;
+    itemId: string;
+    version: string;
+    commit: string | null;
+    digest: string;
+  };
+  installedAt: string;
+  target: {
+    workflowId?: string;
+    shelfId?: string;
+  };
+  atSource: "current" | "retired" | "gone";
+  useInstead: string | null;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+### listLibraryInstalled
+
+`GET /v1/library/installed`: What was installed from the library.
+
+Each with where it came from: source, item, the version its publisher gave it, the commit, and the digest of the file as installed.
+
+An API token needs the scope `read`.
+
+**Answer** `200`:
+
+```ts
+{
+  installed: {
+    id: string;
+    kind: string;
+    name: string;
+    from: {
+      sourceId: string;
+      kind: string;
+      address: string;
+      sourceName: string;
+      itemId: string;
+      version: string;
+      commit: string | null;
+      digest: string;
+    };
+    installedAt: string;
+    target: {
+      workflowId?: string;
+      shelfId?: string;
+    };
+    atSource: "current" | "retired" | "gone";
+    useInstead: string | null;
+  }[];
+}
+```
+
+**Errors:** 400, 401, 403, 413, 429.
+
+```sh
+curl -H "Authorization: Bearer $TOKEN" \
+     http://127.0.0.1:4600/v1/library/installed
+```
+
+### getLibraryInstalledUsage
+
+`GET /v1/library/installed/{installedId}/usage`: Where an installed item is used.
+
+An API token needs the scope `read`.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `installedId` | path | `string` | yes | An ID. |
+
+**Answer** `200`:
+
+```ts
+{
+  uses: string[];
+  liveRuns: number;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+```sh
+curl -H "Authorization: Bearer $TOKEN" \
+     http://127.0.0.1:4600/v1/library/installed/<installedId>/usage
+```
+
+### removeLibraryInstalled
+
+`DELETE /v1/library/installed/{installedId}`: Remove what was installed.
+
+For the owner only. An element leaves the shelf, and copies of it in workflows stay as they are, saying that their source was removed. A workflow is removed; refused while a run of it is going.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `installedId` | path | `string` | yes | An ID. |
+
+**Answer** `204`, with nothing in it.
 
 **Errors:** 400, 401, 403, 404, 409, 413, 429.
 
