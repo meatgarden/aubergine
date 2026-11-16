@@ -272,6 +272,10 @@ export function startSync(): () => void {
       },
       onEvent: apply,
       onShow: (sessionId) => useApp.getState().showSession(sessionId),
+      onShowCanvas: (canvasId) => {
+        const store = useApp.getState();
+        if (store.app?.canvases.some((c) => c.id === canvasId)) store.setCanvas(canvasId);
+      },
       onDown: () => useApp.setState({ live: false }),
     });
     const current = useApp.getState().canvasId;

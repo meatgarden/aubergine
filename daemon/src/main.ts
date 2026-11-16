@@ -2,7 +2,9 @@ import { mkdir } from 'node:fs/promises';
 import path from 'node:path';
 import { SESSION_ENV, paths } from '@aubergine/shared';
 import { claudeLaunchLine, writeClaudeSettings } from './agents/claude-code';
+import { FileActivityLog } from './activity';
 import { sessionToken } from './auth';
+import { installRoot, versionInfo } from './cli/install';
 import { StateHub } from './state-hub';
 import { loadConfig } from './config';
 import { TmuxRuntime } from './runtime/tmux-runtime';
@@ -68,6 +70,9 @@ async function main(): Promise<void> {
     token,
     devOrigin: config.devOrigin,
     webDist: config.webDist,
+    // What API tokens did, as a file of its own in the data folder: it is not part of the state.
+    activity: new FileActivityLog(config.dataDir, settings.value.api.activityLogMaxBytes, (error) => console.warn(`Could not write the activity log: ${String(error)}`)),
+    version: versionInfo(installRoot(), config).version,
   });
   // Loopback only: this server hands out shells.
   await app.listen({ host: '127.0.0.1', port: config.port });

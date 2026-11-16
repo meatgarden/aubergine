@@ -2,6 +2,7 @@ import { copyFile, constants, mkdir, open, readFile, rename } from 'node:fs/prom
 import path from 'node:path';
 import { z } from 'zod';
 import {
+  ApiToken,
   Canvas,
   FIRST_CANVAS_NAME,
   Layout,
@@ -26,11 +27,14 @@ const common = {
 /** The first on-disk shape: one layout for everything. Files like this must keep loading. */
 const StateFileV1 = z.object({ version: z.literal(1), ...common, layout: Layout });
 
-/** The current shape: canvases, each with its own layout. Sessions stay apart and are referred to by ID. */
+/** Canvases, each with its own layout. Sessions stay apart and are referred to by ID. */
 const StateFileV2 = z.object({ version: z.literal(2), ...common, canvases: z.array(Canvas).min(1) });
 
-const StateFile = z.discriminatedUnion('version', [StateFileV1, StateFileV2]);
-const CURRENT_VERSION = 2;
+/** The current shape: the same, with API tokens. Of a token only a hash of its secret is here. */
+const StateFileV3 = z.object({ version: z.literal(3), ...common, canvases: z.array(Canvas).min(1), tokens: z.array(ApiToken) });
+
+const StateFile = z.discriminatedUnion('version', [StateFileV1, StateFileV2, StateFileV3]);
+const CURRENT_VERSION = 3;
 type StateFile = z.infer<typeof StateFile>;
 
 /**
@@ -43,7 +47,7 @@ export function migrate(file: StateFile): AppState {
     file.version === 1
       ? [{ ...newCanvas(project.id, FIRST_CANVAS_NAME, 0, new Date(project.createdAt)), layout: file.layout }]
       : file.canvases;
-  return tidy({ organization, workspace, project, sessions, canvases });
+  return tidy({ organization, workspace, project, sessions, canvases, tokens: file.version === 3 ? file.tokens : [] });
 }
 
 /**

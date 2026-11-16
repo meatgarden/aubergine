@@ -119,6 +119,8 @@ export function subscribeToEvents(handlers: {
   onEvent: (event: ChangeEvent) => void;
   /** The daemon asks this page to bring a session into view. */
   onShow: (sessionId: string) => void;
+  /** Asked to switch to a canvas (by a program, through the public API). */
+  onShowCanvas: (canvasId: string) => void;
   onDown: () => void;
 }): { stop: () => void; viewing: (canvasId: string) => void } {
   let socket: WebSocket | null = null;
@@ -140,6 +142,7 @@ export function subscribeToEvents(handlers: {
         if (canvasId) say({ type: 'viewing', canvasId });
         handlers.onReady();
       } else if (parsed.data.type === 'show') handlers.onShow(parsed.data.sessionId);
+      else if (parsed.data.type === 'show-canvas') handlers.onShowCanvas(parsed.data.canvasId);
       else handlers.onEvent(parsed.data.event);
     };
     socket.onclose = () => {

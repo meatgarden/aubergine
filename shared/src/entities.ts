@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { ApiToken } from './tokens';
 import { Id, newId } from './ids';
 
 export const Timestamp = z.iso.datetime();
@@ -258,6 +259,8 @@ export const AppState = z.object({
   project: Project,
   sessions: z.array(Session),
   canvases: z.array(Canvas).min(1),
+  /** API tokens. Their hashes are blanked before the state is sent to a browser. */
+  tokens: z.array(ApiToken).default([]),
 });
 export type AppState = z.infer<typeof AppState>;
 
@@ -288,7 +291,7 @@ export function createInitialState(now: Date = new Date()): AppState {
     createdAt,
   };
   const project: Project = { id: newId(), workspaceId: workspace.id, name: 'Default', createdAt };
-  return { organization, workspace, project, sessions: [], canvases: [newCanvas(project.id, FIRST_CANVAS_NAME, 0, now)] };
+  return { organization, workspace, project, sessions: [], canvases: [newCanvas(project.id, FIRST_CANVAS_NAME, 0, now)], tokens: [] };
 }
 
 /** Canvases in tab order. */

@@ -56,4 +56,18 @@ export class Viewers {
     for (const viewer of chosen) viewer.send({ type: 'show', sessionId });
     return chosen.length;
   }
+
+  /**
+   * Asks the tab used most recently to switch to a canvas, unless a tab is
+   * already showing it. Returns how many tabs are now showing or were asked.
+   */
+  showCanvas(canvasId: string): number {
+    const all = [...this.viewers];
+    const already = all.filter((v) => v.canvasId === canvasId);
+    if (already.length > 0) return already.length;
+    const mostRecent = all.sort((a, b) => b.activeAt - a.activeAt)[0];
+    if (!mostRecent) return 0;
+    mostRecent.send({ type: 'show-canvas', canvasId });
+    return 1;
+  }
 }

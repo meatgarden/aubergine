@@ -22,6 +22,7 @@ import {
   type AppState,
   type Layout,
 } from './entities';
+import { ApiToken } from './tokens';
 import { Id } from './ids';
 
 /**
@@ -82,6 +83,10 @@ export const ChangeEvent = z.discriminatedUnion('type', [
   z.object({ type: z.literal('canvas.updated'), canvasId: Id, changes: CanvasChanges }),
   /** Closed. Its sessions were moved or parked first; anything still on it is parked here. */
   z.object({ type: z.literal('canvas.removed'), canvasId: Id }),
+  z.object({ type: z.literal('token.created'), token: ApiToken }),
+  z.object({ type: z.literal('token.revoked'), tokenId: Id, at: Timestamp }),
+  /** Recorded at most about once a minute per token. */
+  z.object({ type: z.literal('token.used'), tokenId: Id, at: Timestamp }),
 ]);
 export type ChangeEvent = z.infer<typeof ChangeEvent>;
 
@@ -214,6 +219,12 @@ export function applyEvent(state: AppState, event: ChangeEvent): AppState {
       return state.canvases.some((c) => c.id === event.canvas.id) ? state : { ...state, canvases: [...state.canvases, event.canvas] };
     case 'canvas.updated':
       return { ...state, canvases: state.canvases.map((c) => (c.id === event.canvasId ? { ...c, ...event.changes } : c)) };
+    case 'token.created':
+      return { ...state, tokens: [...state.tokens.filter((t) => t.id !== event.token.id), event.token] };
+    case 'token.revoked':
+      return { ...state, tokens: state.tokens.map((t) => (t.id === event.tokenId && t.revokedAt === null ? { ...t, revokedAt: event.at } : t)) };
+    case 'token.used':
+      return { ...state, tokens: state.tokens.map((t) => (t.id === event.tokenId ? { ...t, lastUsedAt: event.at } : t)) };
     case 'canvas.removed': {
       const canvas = state.canvases.find((c) => c.id === event.canvasId);
       // The last canvas stays: there is always one to look at.

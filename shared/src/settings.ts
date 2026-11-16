@@ -36,6 +36,17 @@ export const Settings = z.object({
       claudeCommand: z.string().trim().min(1).max(1000).default('claude'),
     })
     .prefault({}),
+  /** Limits on calls made with API tokens. They apply from the next start of the server. */
+  api: z
+    .object({
+      /** How many calls one token may make in a minute. */
+      rateLimitPerMinute: z.number().int().min(1).max(100_000).default(600),
+      /** The largest request body the server accepts, in bytes. */
+      maxBodyBytes: z.number().int().min(1024).max(64 * 1024 * 1024).default(1024 * 1024),
+      /** How large the activity log may grow before the older half is dropped, in bytes. */
+      activityLogMaxBytes: z.number().int().min(4096).max(1024 * 1024 * 1024).default(5 * 1024 * 1024),
+    })
+    .prefault({}),
   /**
    * Keys: command name to a chord (`"Ctrl+Meta+J"`), a list of chords, or
    * `null` for no key. Entries that are wrong are reported and skipped.
