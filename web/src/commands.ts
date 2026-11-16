@@ -238,6 +238,29 @@ export const COMMANDS: readonly Command[] = [
     },
   },
   {
+    id: 'agent.askRecap',
+    title: 'Ask this agent for a recap',
+    description: 'Types one fixed sentence into the terminal asking its agent to write what the session is about and where it stands. It shows with the terminal\'s notes.',
+    group: 'Terminals',
+    available: (state) => targetSession(state)?.agent != null,
+    run: (state) => {
+      const session = targetSession(state);
+      if (!session?.agent) return;
+      void api.askRecap(session.id).then(
+        () => state.openDrawer({ section: 'terminals', kind: 'notes', id: session.id }),
+        (error: unknown) => state.setNotice(`Could not ask for a recap: ${(error as Error).message}`),
+      );
+    },
+  },
+  {
+    id: 'history.open',
+    title: 'Past conversations…',
+    description: 'Lists the agent\'s earlier conversations in this terminal\'s folder: read one, open it on the canvas, or open a copy. Type @ in the palette to search them.',
+    group: 'Terminals',
+    available: always,
+    run: (state) => state.openHistory({ folder: targetSession(state)?.cwd ?? null, query: '' }),
+  },
+  {
     id: 'frame.new',
     title: 'New frame',
     description: 'Adds a frame to group terminals.',
@@ -628,11 +651,12 @@ export const COMMANDS: readonly Command[] = [
     title: 'Close panels',
     description: 'Closes whatever panel is open; else returns the keyboard from a button to the canvas; else clears the selection.',
     group: 'Panels',
-    available: (state) => state.picker || state.choosingAgentTools || state.inventoryFor !== null || state.describing !== null || state.editingElement !== null || state.viewingRun !== null || state.startingRun !== null || state.editingWorkflow !== null || state.panel !== null || state.drawer !== null || state.selected !== null || onControl(),
+    available: (state) => state.picker || state.choosingAgentTools || state.inventoryFor !== null || state.historyView !== null || state.describing !== null || state.editingElement !== null || state.viewingRun !== null || state.startingRun !== null || state.editingWorkflow !== null || state.panel !== null || state.drawer !== null || state.selected !== null || onControl(),
     run: (state) => {
       if (state.picker) state.setPicker(false);
       else if (state.choosingAgentTools) state.chooseAgentTools(false);
       else if (state.inventoryFor !== null) state.showInventory(null);
+      else if (state.historyView !== null) state.openHistory(null);
       else if (state.describing !== null) state.describe(null);
       else if (state.editingElement !== null) state.editElement(null);
       else if (state.startingRun !== null) state.startRun(null);

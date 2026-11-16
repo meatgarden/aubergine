@@ -74,6 +74,8 @@ export const ChangeEvent = z.discriminatedUnion('type', [
   z.object({ type: z.literal('session.protected'), sessionId: Id, peopleOnly: z.boolean() }),
   /** A token typed into the session through the API. Sent at most once every few seconds per session; never what was typed. */
   z.object({ type: z.literal('session.typed'), sessionId: Id, by: TypedBy }),
+  /** The session's agent handed in a recap; it takes the place of the one before. */
+  z.object({ type: z.literal('session.recap'), sessionId: Id, recap: z.object({ text: z.string().max(2000), at: Timestamp }) }),
   z.object({ type: z.literal('session.attention'), sessionId: Id, attention: Attention }),
   z.object({ type: z.literal('session.note.appended'), sessionId: Id, entry: NoteEntry }),
   /** Which agent runs in the session, and in which conversation. */
@@ -183,7 +185,7 @@ export function applyEvent(state: AppState, event: ChangeEvent): AppState {
     case 'session.parked':
       return state.sessions.some((s) => s.id === event.sessionId && s.state === 'parked') ? state : park(state, event.sessionId);
     case 'session.restored':
-      return patchSession(placeNode(state, event.canvasId, event.node), event.sessionId, { state: 'open', parkedFrom: null, peopleOnly: false, typedBy: null });
+      return patchSession(placeNode(state, event.canvasId, event.node), event.sessionId, { state: 'open', parkedFrom: null, peopleOnly: false, typedBy: null, recap: null });
     case 'session.moved':
       return placeNode(state, event.canvasId, event.node);
     case 'session.restarted':
@@ -208,6 +210,8 @@ export function applyEvent(state: AppState, event: ChangeEvent): AppState {
       return patchSession(state, event.sessionId, { peopleOnly: event.peopleOnly });
     case 'session.typed':
       return patchSession(state, event.sessionId, { typedBy: event.by });
+    case 'session.recap':
+      return patchSession(state, event.sessionId, { recap: event.recap });
     case 'session.attention':
       return patchSession(state, event.sessionId, { attention: event.attention });
     case 'session.note.appended': {

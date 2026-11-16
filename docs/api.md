@@ -87,6 +87,7 @@ How to create a token, what the scopes mean, the limits and the activity log are
 | [`DELETE /v1/tokens/{tokenId}`](#revoketoken) | Revoke an API token | browser only |
 | [`GET /v1/activity`](#listactivity) | What API tokens did | browser only |
 | [`PUT /v1/sessions/{sessionId}/attention`](#setattention) | Say whether the session wants the user | session's own token |
+| [`PUT /v1/sessions/{sessionId}/recap`](#writerecap) | Hand in a recap of the session | session's own token |
 | [`POST /v1/sessions/{sessionId}/run/report`](#reportsessionrun) | Report on the run a session is on | session's own token, or `runs:write` |
 | [`GET /v1/sessions/{sessionId}/brief`](#getsessionbrief) | What a session was asked to write | session's own token |
 | [`GET /v1/sessions/{sessionId}/drafts`](#listsessiondrafts) | The drafts a session proposed or was asked for | session's own token |
@@ -547,6 +548,10 @@ A list: it answers a page at a time, see `limit` and `cursor`.
       name: string;
       at: string;
     } | null;
+    recap: {
+      text: string;
+      at: string;
+    } | null;
   }[];
   nextCursor: string | null;
 }
@@ -635,6 +640,10 @@ An API token needs the scope `sessions:write`. Sending `command` needs `terminal
     peopleOnly: boolean;
     typedBy: {
       name: string;
+      at: string;
+    } | null;
+    recap: {
+      text: string;
       at: string;
     } | null;
   };
@@ -730,6 +739,10 @@ A list: it answers a page at a time, see `limit` and `cursor`.
       name: string;
       at: string;
     } | null;
+    recap: {
+      text: string;
+      at: string;
+    } | null;
   }[];
   nextCursor: string | null;
 }
@@ -804,6 +817,10 @@ An API token needs the scope `read`.
   peopleOnly: boolean;
   typedBy: {
     name: string;
+    at: string;
+  } | null;
+  recap: {
+    text: string;
     at: string;
   } | null;
 }
@@ -888,6 +905,10 @@ An API token needs the scope `sessions:write`. Sending `note` needs `notes:write
   peopleOnly: boolean;
   typedBy: {
     name: string;
+    at: string;
+  } | null;
+  recap: {
+    text: string;
     at: string;
   } | null;
 }
@@ -996,6 +1017,10 @@ An API token needs the scope `sessions:write`.
       name: string;
       at: string;
     } | null;
+    recap: {
+      text: string;
+      at: string;
+    } | null;
   };
   canvasId: string;
   node: {
@@ -1084,6 +1109,10 @@ An API token needs the scope `sessions:write`.
     name: string;
     at: string;
   } | null;
+  recap: {
+    text: string;
+    at: string;
+  } | null;
 }
 ```
 
@@ -1165,6 +1194,10 @@ An API token needs the scope `sessions:write`.
     peopleOnly: boolean;
     typedBy: {
       name: string;
+      at: string;
+    } | null;
+    recap: {
+      text: string;
       at: string;
     } | null;
   };
@@ -4616,6 +4649,10 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
     name: string;
     at: string;
   } | null;
+  recap: {
+    text: string;
+    at: string;
+  } | null;
 }
 ```
 
@@ -4869,6 +4906,41 @@ For a session's own token, about that session. No API token may call this.
 curl -X PUT -H "Authorization: Bearer $AUBERGINE_TOKEN" \
      -H "Content-Type: application/json" -d '{"state":"none"}' \
      $AUBERGINE_URL/v1/sessions/<sessionId>/attention
+```
+
+### writeRecap
+
+`PUT /v1/sessions/{sessionId}/recap`: Hand in a recap of the session.
+
+For the agent inside a session, with that session's own token, when its owner asked for a recap: a few plain sentences on the goal, what was done, what is left, and what the owner must decide. It replaces the recap before it. No API token may call this.
+
+For a session's own token, about that session. No API token may call this.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `sessionId` | path | `string` | yes | An ID. |
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `text` | `string` | yes | Three to six plain sentences: the goal, what was done, what is left, anything the owner must decide. |
+
+**Answer** `200`:
+
+```ts
+{
+  text: string;
+  at: string;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+```sh
+curl -X PUT -H "Authorization: Bearer $AUBERGINE_TOKEN" \
+     -H "Content-Type: application/json" -d '{"text":"text"}' \
+     $AUBERGINE_URL/v1/sessions/<sessionId>/recap
 ```
 
 ### reportSessionRun

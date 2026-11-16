@@ -9,6 +9,16 @@ import {
   ErrorResponse,
   SESSION_ENV,
   SESSION_HEADER,
+  HistoryList,
+  RECAP_MAX,
+  RECAP_WANTED,
+  ago,
+  recapLines,
+  recapOf,
+  recordOfRun,
+  showControl,
+  type RecapRun,
+  type Run,
   DemoStatus,
   ShownResponse,
   publicPaths,
@@ -34,6 +44,7 @@ import { commandsFor, formatAgents, formatOutside, normaliseTty, toShells } from
 import {
   BEGIN,
   USAGE,
+  formatHistory,
   UsageError,
   expiryFromOption,
   formatCanvases,
@@ -546,6 +557,60 @@ async function main(): Promise<number> {
         edit: editText,
         ask,
       });
+
+    case 'history': {
+      const folder = path.resolve(command.folder ?? process.cwd());
+      const list = HistoryList.parse(await call(config, 'GET', `${paths.history}?folder=${encodeURIComponent(folder)}`));
+      // Names and prompts are other people's text: control characters are shown, not passed on to this terminal.
+      console.log(showControl(formatHistory(list, new Date())));
+      return 0;
+    }
+
+    case 'history-open': {
+      const folder = path.resolve(command.folder ?? process.cwd());
+      const made = (await call(config, 'POST', paths.historyOpen, { folder, id: command.id, copy: command.copy, evenIfOpen: command.evenIfOpen })) as { session: { id: string; name: string } };
+      console.log(showControl(`Opened ${command.copy ? 'a copy of the conversation' : 'the conversation'} on the canvas as "${made.session.name}".`));
+      await showOnCanvas(config, made.session.id);
+      return 0;
+    }
+
+    case 'recap': {
+      if (command.write) {
+        // For the agent in a session. What it hands in is kept as its words; nothing here reads it as anything else.
+        const handed = command.file !== null ? await readFile(command.file === '-' ? '/dev/stdin' : command.file, 'utf8') : process.stdin.isTTY ? '' : await readStdin();
+        if (handed.trim() === '') {
+          console.log(RECAP_WANTED);
+          return 0;
+        }
+        const env = process.env;
+        const url = env[SESSION_ENV.url];
+        const sessionId = env[SESSION_ENV.sessionId];
+        const token = env[SESSION_ENV.token];
+        if (!url || !sessionId || !token) throw new UsageError('recap --write only works inside an Aubergine session (its environment is not set here).');
+        const text = handed.trim();
+        if (text.length > RECAP_MAX) throw new UsageError(`That is ${text.length} characters; a recap is at most ${RECAP_MAX}. Three to six sentences are wanted.`);
+        await createClient({ baseUrl: url, token }).writeRecap({ sessionId, body: { text } });
+        console.log('Handed in. Your owner sees it on this terminal.');
+        return 0;
+      }
+      const { state } = StateResponse.parse(await call(config, 'GET', paths.state));
+      const session = resolveSession(state.sessions, command.query ?? '');
+      const withNames = (run: Run | undefined): RecapRun | null => {
+        if (!run) return null;
+        const record = recordOfRun(run, state.workflows.find((w) => w.id === run.workflowId));
+        return { run, workflowName: record.workflowName, elements: record.elements };
+      };
+      const ended = await v1(config, (client) => client.listRuns({ query: { status: 'ended', sessionId: session.id, limit: 1 } })).catch(() => null);
+      const last = ended?.items[0];
+      const recap = recapOf(session, { live: withNames(state.runs.find((r) => r.sessionId === session.id)), ended: last ? { run: last.run as Run, workflowName: last.workflowName, elements: last.elements } : null });
+      console.log(recapLines(recap, new Date()).join('\n'));
+      if (recap.written) {
+        // The agent's own words: shown as such, with control characters shown.
+        console.log(`\nWhat its agent wrote, ${ago(recap.written.at, new Date())} ago${recap.written.stale ? ' (the terminal has printed since: this may be out of date)' : ''}:`);
+        console.log(showControl(recap.written.text).split('\n').map((line) => `  ${line}`).join('\n'));
+      } else if (recap.agent) console.log('\nIts agent has not been asked for a recap. Ask from the terminal\'s node in the browser.');
+      return 0;
+    }
 
     case 'note': {
       const entry = await agentClient().appendNote(command.text);

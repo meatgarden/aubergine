@@ -31,6 +31,7 @@ import {
 } from './protocol';
 import { Capabilities, CreateTokenRequest, CreatedToken, TokenView } from './tokens';
 import { Draft, ShelfElement } from './drafts';
+import { WriteRecapRequest, WrittenRecap } from './recap';
 import { InputRequest, InputResponse, OutputQuery, OutputResponse, ProtectRequest, RunCommandRequest, RunCommandResponse, ScreenResponse, TerminalSearchQuery, TerminalSearchResponse } from './terminal';
 import {
   AcceptRepositoryWorkflowRequest,
@@ -1058,6 +1059,19 @@ export const ROUTES = {
     params: sessionId,
     body: SetAttentionRequest,
     response: Attention,
+    status: 200,
+    errors: [404],
+  }),
+  writeRecap: route({
+    method: 'PUT',
+    path: '/v1/sessions/:sessionId/recap',
+    tag: 'For a session itself',
+    summary: 'Hand in a recap of the session',
+    description: "For the agent inside a session, with that session's own token, when its owner asked for a recap: a few plain sentences on the goal, what was done, what is left, and what the owner must decide. It replaces the recap before it. No API token may call this.",
+    action: 'recap.own.write',
+    params: sessionId,
+    body: WriteRecapRequest,
+    response: WrittenRecap,
     status: 200,
     errors: [404],
   }),

@@ -41,7 +41,9 @@ export function Picker() {
   const input = useRef<HTMLInputElement>(null);
   const list = useRef<HTMLDivElement>(null);
 
-  const { commandsOnly, text: wanted } = parseQuery(query);
+  const { commandsOnly: onlyCommands, conversations, text: wanted } = parseQuery(query);
+  // Searching past conversations is a mode of its own: nothing else is listed with it.
+  const commandsOnly = onlyCommands || conversations;
   const canvases = useMemo(() => (app ? sortedCanvases(app) : []), [app]);
   const matches = useMemo(() => (commandsOnly ? [] : searchSessions(sessions ?? [], wanted)), [sessions, wanted, commandsOnly]);
 
@@ -93,7 +95,18 @@ export function Picker() {
   if (!open) return null;
 
   const state = useApp.getState();
-  const rows: Row[] = [
+  /** With `@`: one row, which opens the search of past conversations with what was typed. They are read by the server only when asked. */
+  const searchPast: Command = {
+    id: 'history.open',
+    title: wanted.length >= 2 ? `Search past conversations for “${wanted}”` : 'Search past conversations: type at least two letters',
+    description: 'Looks in the folders of the terminals on your canvases, by name and by anything said.',
+    group: 'Terminals',
+    available: () => wanted.length >= 2,
+    run: (now) => now.openHistory({ folder: null, query: wanted }),
+  };
+  const rows: Row[] = conversations
+    ? [{ kind: 'command', command: searchPast, available: wanted.length >= 2 }]
+    : [
     ...matches.map((match): Row => ({ kind: 'session', match })),
     ...(commandsOnly ? [] : searchCanvases(canvases, wanted)).map((canvas): Row => ({ kind: 'canvas', canvas, number: canvases.indexOf(canvas) + 1 })),
     ...searchCommands(COMMANDS, wanted).map((command): Row => ({ kind: 'command', command, available: command.available(state) })),
@@ -207,7 +220,7 @@ export function Picker() {
         <input
           ref={input}
           className="picker-input"
-          placeholder="Search sessions, canvases and commands…   > commands only   1–9 [ ] canvases"
+          placeholder="Search sessions, canvases and commands…   > commands only   @ past conversations   1–9 [ ] canvases"
           aria-label="Search sessions, canvases and commands"
           value={query}
           onChange={(e) => {

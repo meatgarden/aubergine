@@ -1377,7 +1377,7 @@ test('what is switched on for an agent: names only, where each comes from, and w
   // The drawer is reached from a row that has notes: give this one a note.
   expect((await page.request.post(`/v1/sessions/${sessionId}/notes`, { headers: { origin }, data: { text: 'A note, so that the row offers its drawer.' } })).status()).toBe(201);
   await page.getByTestId('list-note').click();
-  await page.getByTestId('drawer-switched-on').getByRole('button').click();
+  await page.getByTestId('drawer-switched-on').getByRole('button', { name: /set up/ }).click();
   await expect(panel).toBeVisible();
   await page.keyboard.press('Escape');
   await expect(panel).toHaveCount(0);
@@ -1414,4 +1414,213 @@ test('what is switched on for an agent: names only, where each comes from, and w
   await run.locator('select').first().selectOption(workflow.id);
   await expect(run.getByTestId('need').nth(1)).toHaveAttribute('data-match', 'not-found');
   await page.keyboard.press('Escape');
+});
+
+test('a recap of a terminal: what is known, what its agent wrote, and what changed while away', async ({ page }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  const origin = new URL(page.url()).origin;
+  await page.getByRole('button', { name: 'New canvas' }).click();
+  await page.getByTestId('toolbar-new-terminal').click();
+  await expect(page.locator('.xterm-rows')).toHaveText(/\S/);
+  const sessionId = (await page.getByTestId('list-row').getAttribute('data-session')) ?? '';
+  expect((await page.request.put(`/v1/sessions/${sessionId}/agent`, { headers: { origin }, data: { kind: 'claude-code', conversationId: null } })).status()).toBe(200);
+  expect((await page.request.post(`/v1/sessions/${sessionId}/notes`, { headers: { origin }, data: { text: 'Found the cause: the cookie is set twice.' } })).status()).toBe(201);
+
+  // On hover over its row: a few lines from what is already known, with no agent asked.
+  const name = page.locator(`[data-testid="list-row"][data-session="${sessionId}"]`).getByTestId('list-name');
+  await name.hover();
+  await expect(name).toHaveAttribute('title', /started a moment ago\.\n.*Last note \((you|its agent), a moment ago\): Found the cause: the cookie is set twice\./s);
+
+  // In the drawer: the same, labelled as what Aubergine knows, and a way to ask the agent.
+  await page.getByTestId('list-note').click();
+  const recap = page.getByTestId('recap');
+  await expect(recap).toContainText('from what Aubergine knows');
+  await expect(recap.getByTestId('recap-lines')).toContainText("Found the cause: the cookie is set twice.");
+  await expect(recap.getByTestId('recap-written')).toHaveCount(0);
+
+  // Asking types one fixed sentence into the terminal, and nothing else.
+  await recap.getByTestId('recap-ask').click();
+  await expect(recap.getByTestId('recap-asked')).toBeVisible();
+  await expect(page.locator('.xterm-rows')).toContainText('Your owner asked for a recap of this session.');
+
+  // The agent (stood in for by typing its command) hands one in. It shows as the agent's words, with when.
+  await page.getByTestId('node-body').click();
+  await page.keyboard.type(`clear; printf '%s' 'The goal is to fix the login redirect. The cause is found. The test is left.' | "$AUBERGINE_BIN/aubergine" recap --write`);
+  await page.keyboard.press('Enter');
+  const written = recap.getByTestId('recap-written');
+  await expect(written).toContainText('The goal is to fix the login redirect. The cause is found. The test is left.', { timeout: 20_000 });
+  await expect(written).toContainText('What its agent wrote');
+  await expect(recap.getByTestId('recap-ask')).toHaveText('Ask for a new recap');
+  // Once the terminal has printed again, the recap says it may be out of date. (When a terminal last printed is noted
+  // every few seconds, not on every line: print again a little later.)
+  await expect(written.getByTestId('recap-stale')).toHaveCount(0);
+  await expect
+    .poll(
+      async () => {
+        await page.getByTestId('node-body').click();
+        await page.keyboard.type('echo later');
+        await page.keyboard.press('Enter');
+        return written.getByTestId('recap-stale').count();
+      },
+      { timeout: 30_000, intervals: [2500] },
+    )
+    .toBe(1);
+  await expect(written.getByTestId('recap-stale')).toHaveText('may be out of date', { timeout: 20_000 });
+
+  // Text that looks like markup or carries control characters is shown as text.
+  expect((await page.request.put(`/v1/sessions/${sessionId}/recap`, { headers: { origin }, data: { text: '<img src=x onerror=alert(1)> [link](javascript:x) \u001b[2J done' } })).status()).toBe(200);
+  await expect(written.locator('.recap-text')).toHaveText('<img src=x onerror=alert(1)> [link](javascript:x) ␛[2J done');
+  await expect(written.locator('img, a')).toHaveCount(0);
+
+  // While you were away: the page was last looked at two hours ago, and something has happened since.
+  expect((await page.request.put(`/v1/sessions/${sessionId}/attention`, { headers: { origin }, data: { state: 'waiting', message: 'May I delete the old migration?' } })).status()).toBe(200);
+  await expect(page.getByTestId('away-panel')).toHaveCount(0);
+  // Coming back to the page is what the browser tells it when the tab is shown again.
+  const comeBack = (): Promise<void> => page.evaluate(() => void document.dispatchEvent(new Event('visibilitychange')));
+  await page.evaluate(() => localStorage.setItem('aubergine.last-seen', new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()));
+  await comeBack();
+  const away = page.getByTestId('away-panel');
+  await expect(away).toBeVisible();
+  await expect(away.getByTestId('away-item').filter({ hasText: 'started waiting for you: May I delete the old migration?' })).toHaveCount(1);
+  // The server was started less than two hours ago: it says what it knows, and that this is all it knows.
+  await expect(away.getByTestId('away-partial')).toContainText('The server was started after you left');
+  // It is a small panel, not a dialog over the page, and goes when dismissed; coming straight back shows nothing.
+  await expect(page.locator('.dialog-backdrop')).toHaveCount(0);
+  await away.getByTestId('away-dismiss').click();
+  await expect(away).toHaveCount(0);
+  await comeBack();
+  await page.waitForTimeout(800);
+  await expect(away).toHaveCount(0);
+  // Leaving the page is when "last seen" is noted: a reload is not being away.
+  await page.reload();
+  await expect(page.getByTestId('terminal-node')).toHaveCount(1);
+  await page.waitForTimeout(800);
+  await expect(away).toHaveCount(0);
+});
+
+test('past conversations: the list for a folder, reading one, searching, and opening a copy on the canvas', async ({ page }) => {
+  const settingsFile = path.join(e2e.dataDir, 'config.json');
+  const settingsBefore = existsSync(settingsFile) ? readFileSync(settingsFile, 'utf8') : null;
+  writeFileSync(settingsFile, JSON.stringify({ ...(settingsBefore ? JSON.parse(settingsBefore) : {}), agents: { claudeCommand: 'echo stand-in-agent' } }));
+  try {
+    const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+    await page.goto(`/auth?token=${token}`);
+    await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+    const origin = new URL(page.url()).origin;
+    await page.getByRole('button', { name: 'New canvas' }).click();
+    await page.getByTestId('toolbar-new-terminal').click();
+    await expect(page.locator('.xterm-rows')).toHaveText(/\S/);
+    const sessionId = (await page.getByTestId('list-row').getAttribute('data-session')) ?? '';
+    await expect.poll(async () => (await (await page.request.get(`/v1/sessions/${sessionId}`, { headers: { origin } })).json()).cwd).toBeTruthy();
+    const folder = (await (await page.request.get(`/v1/sessions/${sessionId}`, { headers: { origin } })).json()).cwd as string;
+
+    // Two made-up conversations for that folder, where the stand-in for the agent's own folder keeps them.
+    const first = '11111111-1111-4111-8111-111111111111';
+    const second = '22222222-2222-4222-8222-222222222222';
+    const records = path.join(e2e.agentConfigDir, 'projects', folder.replace(/[^A-Za-z0-9]/g, '-'));
+    mkdirSync(records, { recursive: true });
+    const line = (value: object): string => JSON.stringify(value);
+    writeFileSync(
+      path.join(records, `${first}.jsonl`),
+      [
+        line({ type: 'user', timestamp: '2026-03-10T10:01:00.000Z', cwd: folder, message: { role: 'user', content: 'Fix the login redirect.' } }),
+        line({ type: 'assistant', timestamp: '2026-03-10T10:02:00.000Z', message: { role: 'assistant', content: [{ type: 'text', text: 'Reading the code. <b>not bold</b> \u001b[31mnot red' }, { type: 'tool_use', name: 'Bash', input: { command: 'grep -rn redirect src' } }] } }),
+        line({ type: 'user', timestamp: '2026-03-10T10:03:00.000Z', message: { role: 'user', content: [{ type: 'tool_result', content: Array.from({ length: 40 }, (_, i) => `src/file${i}.js: redirect`).join('\n') }] } }),
+        line({ type: 'assistant', timestamp: '2026-03-10T10:04:00.000Z', message: { role: 'assistant', content: [{ type: 'text', text: 'Found it: the zebra-crossing cookie is set twice. See https://example.com/x' }] } }),
+        line({ type: 'custom-title', customTitle: 'Login redirect fix' }),
+        'not a line anyone can read',
+      ].join('\n'),
+    );
+    writeFileSync(path.join(records, `${second}.jsonl`), line({ type: 'user', timestamp: '2026-03-09T10:00:00.000Z', cwd: folder, message: { role: 'user', content: 'Tidy the README.' } }));
+
+    // From the palette: the list for the folder of the terminal that is selected.
+    await page.getByTestId('node-body').click();
+    await page.keyboard.press(process.platform === 'darwin' ? 'Meta+k' : 'Control+Shift+K');
+    await page.keyboard.type('>past conversations');
+    await page.keyboard.press('Enter');
+    const panel = page.getByTestId('history-panel');
+    await expect(panel.getByTestId('history-folder')).toHaveValue(folder);
+    const items = panel.getByTestId('history-item');
+    await expect(items).toHaveCount(2);
+    const fix = panel.locator(`[data-testid="history-item"][data-id="${first}"]`);
+    await expect(fix).toContainText('Login redirect fix');
+    await expect(fix).toContainText('1 turn');
+    await expect(fix).toContainText('last: Fix the login redirect.');
+    await expect(panel.locator(`[data-testid="history-item"][data-id="${second}"]`)).toContainText('Tidy the README.');
+    await expect(panel.getByTestId('history-on-canvas')).toHaveCount(0);
+
+    // Read: who said what, in order, tools as one line, long output folded, and all of it as plain text.
+    await fix.getByTestId('history-read').click();
+    const transcript = panel.getByTestId('transcript');
+    const entries = transcript.getByTestId('transcript-entry');
+    await expect(entries).toHaveCount(5);
+    await expect(entries.nth(0)).toHaveAttribute('data-who', 'you');
+    await expect(entries.nth(0)).toContainText('Fix the login redirect.');
+    await expect(entries.nth(1)).toContainText('Reading the code. <b>not bold</b> ␛[31mnot red');
+    await expect(entries.nth(2)).toHaveAttribute('data-who', 'tool');
+    await expect(entries.nth(2)).toContainText('Bash: grep -rn redirect src');
+    await expect(entries.nth(3)).toContainText('src/file0.js: redirect');
+    await expect(entries.nth(3)).not.toContainText('src/file39.js: redirect');
+    await entries.nth(3).getByTestId('transcript-fold').click();
+    await expect(entries.nth(3)).toContainText('src/file39.js: redirect');
+    // Nothing is drawn as markup, and an address is not a link.
+    await expect(transcript.locator('b, a, img')).toHaveCount(0);
+    await expect(transcript).toContainText('Read only.');
+    await transcript.getByTestId('transcript-back').click();
+    await expect(items).toHaveCount(2);
+    await panel.getByTestId('history-close').click();
+
+    // Search, from the palette with "@": by anything said, in the folders of the terminals on the canvases.
+    await page.keyboard.press(process.platform === 'darwin' ? 'Meta+k' : 'Control+Shift+K');
+    await page.keyboard.type('@zebra-crossing');
+    await expect(page.getByTestId('picker-command-row')).toHaveText(/Search past conversations for “zebra-crossing”/);
+    await page.keyboard.press('Enter');
+    const hits = panel.getByTestId('history-hit');
+    await expect(hits).toHaveCount(1);
+    await expect(hits.first()).toContainText('Login redirect fix');
+    await expect(hits.first()).toContainText('Agent: Found it: the zebra-crossing cookie is set twice.');
+    await expect(panel.getByTestId('history-cut')).toHaveCount(0);
+    await hits.first().getByRole('button').click();
+    await expect(panel.getByTestId('transcript-entry')).toHaveCount(5);
+    await panel.getByTestId('transcript-back').click();
+
+    // Open a copy on the canvas: a new terminal in that folder, the agent started as a branch of the conversation.
+    await panel.getByTestId('history-folder').fill(folder);
+    await panel.getByTestId('history-list').click();
+    await panel.locator(`[data-testid="history-item"][data-id="${first}"]`).getByTestId('history-copy').click();
+    await expect(panel).toHaveCount(0);
+    await expect(page.getByTestId('terminal-node')).toHaveCount(2);
+    await expect(page.locator('.xterm-rows').filter({ hasText: `stand-in-agent --resume ${first} --fork-session` })).toHaveCount(1);
+
+    // A conversation a canvas terminal is on is marked, and opening it again is not done without saying so.
+    const opened = (await (await page.request.get('/v1/sessions?limit=200', { headers: { origin } })).json()).items.find((s: { cwd: string; id: string }) => s.cwd === folder && s.id !== sessionId) as { id: string; name: string };
+    expect((await page.request.put(`/v1/sessions/${opened.id}/agent`, { headers: { origin }, data: { kind: 'claude-code', conversationId: second } })).status()).toBe(200);
+    await page.locator('.react-flow__pane').click({ position: { x: 5, y: 300 } });
+    await page.keyboard.press(process.platform === 'darwin' ? 'Meta+k' : 'Control+Shift+K');
+    await page.keyboard.type('>past conversations');
+    await page.keyboard.press('Enter');
+    await panel.getByTestId('history-folder').fill(folder);
+    await panel.getByTestId('history-list').click();
+    const taken = panel.locator(`[data-testid="history-item"][data-id="${second}"]`);
+    await expect(taken.getByTestId('history-on-canvas')).toContainText(`on the canvas now: ${opened.name}`);
+    await taken.getByTestId('history-open').click();
+    await expect(taken.getByTestId('history-taken')).toContainText('Two agents in one conversation lose each other’s messages.');
+    await expect(page.getByTestId('terminal-node')).toHaveCount(2);
+    await taken.getByTestId('history-go').click();
+    await expect(panel).toHaveCount(0);
+
+    // What is not a folder is said to be so.
+    await page.keyboard.press(process.platform === 'darwin' ? 'Meta+k' : 'Control+Shift+K');
+    await page.keyboard.type('>past conversations');
+    await page.keyboard.press('Enter');
+    await panel.getByTestId('history-folder').fill('/no/such/folder/anywhere');
+    await panel.getByTestId('history-list').click();
+    await expect(panel.getByTestId('history-error')).toHaveText('That is not a folder on this computer.');
+    await page.keyboard.press('Escape');
+  } finally {
+    if (settingsBefore === null) rmSync(settingsFile, { force: true });
+    else writeFileSync(settingsFile, settingsBefore);
+  }
 });

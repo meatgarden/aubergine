@@ -812,6 +812,8 @@ aubergine run <session> [--timeout s] -- <command>   run a command at its prompt
 aubergine protect <session>    mark it people only: no API token may read it or type into it (unprotect undoes it)
 aubergine note <text>          inside a session: add an entry to its note log
 aubergine demo                 make a canvas named "Demo" with stand-in agents on it and a tour of it (--remove: take it all away; --no-open)
+aubergine recap <session>      what a terminal was about and where it stands (--write: inside a session, its agent hands one in)
+aubergine history [folder]     the agent's earlier conversations in a folder; history open <id> [--copy] opens one on the canvas
 aubergine mcp [--url <address>]   an MCP server on standard input and output: the API as tools, for an agent or another MCP client
 aubergine hooks print          print the Claude Code hook settings
 aubergine service install      start the Aubergine server at login (macOS)
@@ -1048,6 +1050,50 @@ A file that is there but cannot be read, or is not in the form Aubergine was wri
 **Only you, in the browser.** No API token and no session can read this, and the MCP server has no tool for it.
 
 **What an element needs.** When you start a workflow on an agent's terminal, each thing its elements need that is an MCP server or a command gets a mark: **found** (something configured has a name like it; hover to see what), **not found**, or **cannot tell**. The marks compare names. They do not check that anything works, and they never stop a run.
+
+## Recaps, and what changed while you were away
+
+**A recap** answers, for one terminal: what was this about, and where does it stand? It has two parts, kept apart and labelled.
+
+- **From what Aubergine knows.** Always there, with nobody asked: the terminal's name, folder and age, how its last command ended, whether it waits for you and for what, the run it is on or last finished with the newest note handed in, a list an agent handed in and how much of it is ticked, and the newest entry of its notes. It is worked out from what Aubergine already has. No agent and no model is involved, and no file is read.
+- **What its agent wrote.** On an agent's terminal, **Ask for a recap** types one fixed sentence into the terminal. Nothing of yours is in the sentence. It tells the agent to run `aubergine recap --write`, which prints what is wanted (three to six plain sentences: the goal, what was done, what is left, anything you must decide) and takes the answer on standard input or from `--file`. What the agent hands in is kept with the terminal, in place of the recap before it, and shown as the agent's words with when it was written. Once the terminal has printed again, it says "may be out of date".
+
+Where you see it: hover over a terminal's name in the side list, or over a parked terminal or **Resume agent**; open the notes drawer; on a terminal whose shell has ended; and `aubergine recap <session>` on the command line. For a terminal that is not on the canvas yet (`aubergine scan`, `import`, `move`, and the Outside terminals panel), an agent's line also says what its conversation began with and what was asked last, where its record could be read.
+
+A recap an agent wrote is the agent's text. It is shown as plain text with control characters made visible, it is never typed anywhere, and it is at most 2,000 characters. Only the terminal's own agent can write it; no API token can. Only you can ask for one.
+
+**While you were away.** When you come back to the page after more than 30 minutes (`away.afterMinutes` in the settings; 0 switches it off), a small panel lists what changed meanwhile: terminals that started waiting for you or whose agent finished, commands that failed, runs that moved on, were blocked or ended, and drafts that arrived. Click a line to go there; **Dismiss** puts it away. It is made from changes the server keeps in memory for a while, not from a log. After the server restarts it can only say what changed since it started, and it says so. When the page was last looked at is remembered in your browser only.
+
+## Past conversations
+
+**Past conversations…** in the palette (and "Past conversations in this folder…" in a terminal's notes drawer) lists the agent's earlier conversations in a folder: the name it has or the first thing you said, when it was last active, how many times you spoke, and whether a terminal on a canvas is on it right now. It is for Claude Code today.
+
+From the list:
+
+- **Read** shows the conversation: who said what, in order, each tool as one line, long output folded. It is read only.
+- **Open on the canvas** starts a new terminal in that folder with the agent resumed in that conversation.
+- **Open a copy** starts it in a branch of the conversation and leaves the original as it is.
+
+If a canvas terminal is on a conversation already, opening it again is not done without asking: two agents in one conversation lose each other's messages. You are offered that terminal, or a copy.
+
+**Search.** Type `@` and some words in the palette to search past conversations by name and by anything said in them, in the folders of the terminals on your canvases. The search reads the records when you ask. It has limits (how many conversations, how much text, how long), and when it stops early it says "the search was cut short" and that older conversations were not looked at. There is no index and nothing is copied.
+
+On the command line: `aubergine history [folder]` lists them, and `aubergine history open <id>` (`--copy` for a branch) opens one on the canvas. No command prints a conversation.
+
+**What this is careful about.** A conversation holds everything you and the agent said, including anything you pasted and any file it read.
+
+- **Only you, in the browser or on the command line.** No API token and no session can list, read, search or open conversations through Aubergine. An agent cannot read conversations through Aubergine, not even its own. The MCP server has no tool for it.
+- **Nothing is kept.** A list, a transcript or a search is read from the agent's own records when you ask and is gone when you close it. Nothing of it is in Aubergine's state or in any log.
+- **Nothing is changed.** Aubergine never deletes, renames or edits a conversation.
+- **Shown as text.** What was said is shown as plain text, control characters made visible; nothing is drawn as markup and an address is not made into a link.
+
+**What the list can and cannot be trusted for.** It is read from the files the agent itself keeps, and the agent's maker says plainly that the form of those files is its own business and changes between versions. So:
+
+- A conversation that is listed is there, and opening it uses the agent's own way of resuming one by its ID. That part is documented and firm.
+- Names, first prompts, counts of turns and the transcript are Aubergine's reading of files in a form it does not control. After an update of the agent they may be missing or thinner. A record it cannot make sense of is said to be "not in a form this was written to read"; it is not shown as an empty conversation.
+- The list is the agent's own retention: it removes old conversations after a while (30 days unless you changed that), and what it removed is not listed.
+- "On the canvas now" knows canvas terminals only. A conversation open in a terminal outside Aubergine is not marked.
+- A folder whose path is very long is kept by the agent under a shortened name Aubergine cannot work out; its conversations are not listed, and it says so.
 
 ## Tools for agents: the MCP server
 

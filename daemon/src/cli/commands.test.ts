@@ -27,6 +27,7 @@ function session(name: string, extra: Partial<Session> = {}): Session {
     noteLog: [],
     agent: null,
     parkedFrom: null, peopleOnly: false, typedBy: null,
+    recap: null,
     lastInputAt: null,
     lastOutputAt: null,
     tags: [],
@@ -296,3 +297,42 @@ describe('the terminal commands', () => {
     expect(parseCommand(['token', 'create', 'bot', '--scope', 'read'])).toMatchObject({ reach: null });
   });
 });
+
+describe('recap and history on the command line', () => {
+  it('reads what was typed', async () => {
+    const { parseCommand: parse } = await import('./commands');
+    expect(parse(['recap', 'api', 'server'])).toEqual({ name: 'recap', write: false, file: null, query: 'api server' });
+    expect(parse(['recap', '--write'])).toEqual({ name: 'recap', write: true, file: null, query: null });
+    expect(parse(['recap', '--write', '--file', 'r.txt'])).toEqual({ name: 'recap', write: true, file: 'r.txt', query: null });
+    expect(() => parse(['recap'])).toThrow(/needs a session/);
+    expect(() => parse(['recap', '--write', 'some', 'words'])).toThrow(/standard input/);
+    expect(() => parse(['recap', 'api', '--file', 'x'])).toThrow(/goes with --write/);
+    expect(parse(['history'])).toEqual({ name: 'history', folder: null });
+    expect(parse(['history', '/work/api'])).toEqual({ name: 'history', folder: '/work/api' });
+    expect(parse(['history', 'open', 'abc12345', '--copy'])).toEqual({ name: 'history-open', id: 'abc12345', copy: true, folder: null, evenIfOpen: false });
+    expect(parse(['history', 'open', 'abc12345', '--folder', '/work/api', '--even-if-open'])).toEqual({ name: 'history-open', id: 'abc12345', copy: false, folder: '/work/api', evenIfOpen: true });
+    expect(() => parse(['history', 'open'])).toThrow(/one conversation ID/);
+    expect(() => parse(['history', 'open', 'a', '--print'])).toThrow(/does not know --print/);
+    // No command prints a conversation.
+    expect(() => parse(['history', '--transcript'])).toThrow(/does not know/);
+  });
+
+  it('lists past conversations as lines, newest first, with what to type next', async () => {
+    const { formatHistory } = await import('./commands');
+    const now = new Date('2026-03-10T12:00:00.000Z');
+    const one = { id: '11111111-1111-4111-8111-111111111111', name: 'Login redirect fix', firstPrompt: 'Fix the login redirect.', lastPrompt: 'Now write the test.', startedAt: '2026-03-10T09:00:00.000Z', lastActiveAt: '2026-03-10T10:00:00.000Z', turns: 2, onCanvas: { sessionId: '01900000-0000-7000-8000-0000000000a1', name: 'api' } };
+    const two = { id: '22222222-2222-4222-8222-222222222222', name: null, firstPrompt: 'Tidy the README.', lastPrompt: 'Tidy the README.', startedAt: null, lastActiveAt: null, turns: null, onCanvas: null };
+    expect(formatHistory({ folder: '/work/api', agent: 'Claude Code', conversations: [one, two], notes: [{ level: 'gap', text: 'Only canvas terminals are known here.' }] }, now).split('\n')).toEqual([
+      'Claude Code conversations in /work/api, newest first:',
+      '  11111111-1111-4111-8111-111111111111  2 hours ago, 2 turns, on the canvas now as "api"',
+      '      Login redirect fix',
+      '      last: Now write the test.',
+      '  22222222-2222-4222-8222-222222222222  at a time not known, very long',
+      '      Tidy the README.',
+      'Note: Only canvas terminals are known here.',
+      'Open one on the canvas with: aubergine history open <id>   (--copy for a branch of it)',
+    ]);
+    expect(formatHistory({ folder: '/work/empty', agent: 'Claude Code', conversations: [], notes: [] }, now)).toBe('No Claude Code conversations are kept for /work/empty.');
+  });
+});
+

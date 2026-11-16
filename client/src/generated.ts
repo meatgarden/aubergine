@@ -285,6 +285,10 @@ export type ListCanvasSessionsResult = {
       name: string;
       at: string;
     } | null;
+    recap: {
+      text: string;
+      at: string;
+    } | null;
   }[];
   nextCursor: string | null;
 };
@@ -357,6 +361,10 @@ export type StartSessionResult = {
     peopleOnly: boolean;
     typedBy: {
       name: string;
+      at: string;
+    } | null;
+    recap: {
+      text: string;
       at: string;
     } | null;
   };
@@ -439,6 +447,10 @@ export type ListSessionsResult = {
       name: string;
       at: string;
     } | null;
+    recap: {
+      text: string;
+      at: string;
+    } | null;
   }[];
   nextCursor: string | null;
 };
@@ -492,6 +504,10 @@ export type GetSessionResult = {
   peopleOnly: boolean;
   typedBy: {
     name: string;
+    at: string;
+  } | null;
+  recap: {
+    text: string;
     at: string;
   } | null;
 };
@@ -551,6 +567,10 @@ export type UpdateSessionResult = {
   peopleOnly: boolean;
   typedBy: {
     name: string;
+    at: string;
+  } | null;
+  recap: {
+    text: string;
     at: string;
   } | null;
 };
@@ -617,6 +637,10 @@ export type MoveSessionResult = {
       name: string;
       at: string;
     } | null;
+    recap: {
+      text: string;
+      at: string;
+    } | null;
   };
   canvasId: string;
   node: {
@@ -681,6 +705,10 @@ export type ParkSessionResult = {
     name: string;
     at: string;
   } | null;
+  recap: {
+    text: string;
+    at: string;
+  } | null;
 };
 
 export type RestoreSessionBody = {
@@ -738,6 +766,10 @@ export type RestoreSessionResult = {
     peopleOnly: boolean;
     typedBy: {
       name: string;
+      at: string;
+    } | null;
+    recap: {
+      text: string;
       at: string;
     } | null;
   };
@@ -3483,6 +3515,10 @@ export type ProtectSessionResult = {
     name: string;
     at: string;
   } | null;
+  recap: {
+    text: string;
+    at: string;
+  } | null;
 };
 
 export interface StreamEventsQuery {
@@ -3651,6 +3687,16 @@ export type SetAttentionResult = {
   state: "none" | "working" | "waiting" | "done";
   message: string | null;
   at: string | null;
+};
+
+export type WriteRecapBody = {
+  /** Three to six plain sentences: the goal, what was done, what is left, anything the owner must decide. */
+  text: string;
+};
+
+export type WriteRecapResult = {
+  text: string;
+  at: string;
 };
 
 export type ReportSessionRunBody = {
@@ -4187,6 +4233,7 @@ export const OPERATIONS = {
   revokeToken: { method: 'DELETE', path: '/v1/tokens/{tokenId}', params: ["tokenId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   listActivity: { method: 'GET', path: '/v1/activity', params: [], hasBody: false, paged: true, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   setAttention: { method: 'PUT', path: '/v1/sessions/{sessionId}/attention', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: null } },
+  writeRecap: { method: 'PUT', path: '/v1/sessions/{sessionId}/recap', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: null } },
   reportSessionRun: { method: 'POST', path: '/v1/sessions/{sessionId}/run/report', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: "runs:write" } },
   getSessionBrief: { method: 'GET', path: '/v1/sessions/{sessionId}/brief', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: null } },
   listSessionDrafts: { method: 'GET', path: '/v1/sessions/{sessionId}/drafts', params: ["sessionId"], hasBody: false, paged: true, idempotent: false, stream: false, access: { who: 'session', scope: null } },
@@ -4625,6 +4672,12 @@ export interface Client {
    * `PUT /v1/sessions/{sessionId}/attention`. A session's own token.
    */
   setAttention(args: { sessionId: string; body: SetAttentionBody } & CallOptions): Promise<SetAttentionResult>;
+  /**
+   * Hand in a recap of the session.
+   *
+   * `PUT /v1/sessions/{sessionId}/recap`. A session's own token.
+   */
+  writeRecap(args: { sessionId: string; body: WriteRecapBody } & CallOptions): Promise<WriteRecapResult>;
   /**
    * Report on the run a session is on.
    *

@@ -1,4 +1,4 @@
-import type { CanvasSummary, Session } from '@aubergine/shared';
+import { ago, type CanvasSummary, type HistoryList, type Session } from '@aubergine/shared';
 import { HOOK_EVENTS, type HookEvent } from '../agents/claude-code';
 
 export type Command =
@@ -39,6 +39,11 @@ export type Command =
   /** `element …`: the shelf, running one element by itself, proposing one. */
   | { name: 'element'; words: string[] }
   | { name: 'note'; text: string }
+  /** Past conversations of the agent in a folder: list them, or open one on the canvas. No command prints a transcript. */
+  | { name: 'history'; folder: string | null }
+  | { name: 'history-open'; id: string; copy: boolean; folder: string | null; evenIfOpen: boolean }
+  /** `--write`: inside a session, hand in a recap (or read what is wanted). Otherwise: print the recap of a session. */
+  | { name: 'recap'; write: boolean; file: string | null; query: string | null }
   | { name: 'hook'; event: HookEvent }
   | { name: 'hooks-print' }
   | { name: 'mcp'; words: string[] }
@@ -143,6 +148,14 @@ export const USAGE = `Usage: aubergine <command>
   run <session> [--timeout s] -- <command>   Run a command at its shell prompt, wait, and print the output and exit code
   protect <session>          Mark it "people only": no API token may read it or type into it
   unprotect <session>        Open it to API tokens again (those whose scopes and reach allow)
+  history [folder]           The agent's earlier conversations in a folder (this one, when none is given): name or first
+                             prompt, when, how many turns, and whether a canvas terminal is on it now
+  history open <id> [--copy] [--folder f]
+                             Open one on the canvas: a new terminal in that folder with the agent resumed in it;
+                             --copy opens a branch of it and leaves the original as it is
+  recap <session>            What a terminal was about and where it stands: from what is known, and what its agent wrote
+  recap --write [--file f]   Inside a session, for its agent: hand in a recap on standard input or from a file.
+                             With nothing handed in, prints what is wanted
   note <text>                Inside a session: add an entry to that session's note log
   mcp [--url <address>]      An MCP server on standard input and output, for an agent or another MCP client: the
                              API as tools. Uses AUBERGINE_API_TOKEN, else the session's own token; offers only
@@ -329,6 +342,32 @@ export function parseCommand(argv: readonly string[]): Command {
     case 'element':
     case 'elements':
       return { name: 'element', words: rest };
+    case 'history': {
+      const { value: folder, rest: afterFolder } = takeOption(rest, '--folder');
+      if (afterFolder[0] === 'open') {
+        const words = afterFolder.slice(1);
+        const unknown = words.find((word) => word.startsWith('--') && word !== '--copy' && word !== '--even-if-open');
+        if (unknown) throw new UsageError(`history open does not know ${unknown}`);
+        const ids = words.filter((word) => !word.startsWith('--'));
+        if (ids.length !== 1) throw new UsageError('history open needs one conversation ID, as `aubergine history` lists them');
+        return { name: 'history-open', id: ids[0] as string, copy: words.includes('--copy'), folder, evenIfOpen: words.includes('--even-if-open') };
+      }
+      const unknown = afterFolder.find((word) => word.startsWith('--'));
+      if (unknown) throw new UsageError(`history does not know ${unknown}`);
+      if (afterFolder.length > 1) throw new UsageError('history takes one folder');
+      return { name: 'history', folder: afterFolder[0] ?? folder };
+    }
+    case 'recap': {
+      const { value: file, rest: afterFile } = takeOption(rest, '--file');
+      const write = afterFile.includes('--write');
+      const words = afterFile.filter((word) => word !== '--write');
+      const unknown = words.find((word) => word.startsWith('--'));
+      if (unknown) throw new UsageError(`recap does not know ${unknown}`);
+      if (write && words.length > 0) throw new UsageError('recap --write takes the recap on standard input or from --file, not as words');
+      if (!write && file !== null) throw new UsageError('--file goes with --write');
+      if (!write && words.length === 0) throw new UsageError('recap needs a session: aubergine recap <name>. Inside a session, an agent hands one in with: aubergine recap --write');
+      return { name: 'recap', write, file, query: write ? null : words.join(' ') };
+    }
     case 'note':
       if (rest.join(' ').trim() === '') throw new UsageError('note needs some text');
       return { name: 'note', text: rest.join(' ') };
@@ -553,4 +592,22 @@ export function formatTokens(
   const head = ['NAME', 'STATE', 'SCOPES', 'WORKFLOWS', 'TERMINALS', 'LAST USED', 'EXPIRES', 'ID'];
   const widths = head.map((title, i) => Math.max(title.length, ...rows.map((row) => (row[i] as string).length)));
   return [head, ...rows].map((row) => row.map((cell, i) => (cell as string).padEnd(widths[i] as number)).join('  ').trimEnd()).join('\n');
+}
+
+/** The list of past conversations as lines: newest first, each with what it was about, when, and its ID for `history open`. */
+export function formatHistory(list: HistoryList, now: Date): string {
+  const lines: string[] = [];
+  if (list.conversations.length === 0) lines.push(`No ${list.agent} conversations are kept for ${list.folder}.`);
+  else lines.push(`${list.agent} conversations in ${list.folder}, newest first:`);
+  for (const conversation of list.conversations) {
+    const about = conversation.name ?? conversation.firstPrompt ?? '(nothing said in it could be read)';
+    const when = conversation.lastActiveAt ? `${ago(conversation.lastActiveAt, now)} ago` : 'at a time not known';
+    const turns = conversation.turns === null ? 'very long' : `${conversation.turns} turn${conversation.turns === 1 ? '' : 's'}`;
+    lines.push(`  ${conversation.id}  ${when}, ${turns}${conversation.onCanvas ? `, on the canvas now as "${conversation.onCanvas.name}"` : ''}`);
+    lines.push(`      ${about.length > 110 ? `${about.slice(0, 109)}…` : about}`);
+    if (conversation.name && conversation.lastPrompt) lines.push(`      last: ${conversation.lastPrompt.length > 100 ? `${conversation.lastPrompt.slice(0, 99)}…` : conversation.lastPrompt}`);
+  }
+  for (const note of list.notes) lines.push(`Note: ${note.text}`);
+  if (list.conversations.length > 0) lines.push('Open one on the canvas with: aubergine history open <id>   (--copy for a branch of it)');
+  return lines.join('\n');
 }

@@ -18,6 +18,7 @@ describe('Settings', () => {
       theme: 'light',
       shell: '/bin/bash',
       defaultFolder: '~/work',
+      away: { afterMinutes: 45 },
       agents: { logPrompts: false, claudeCommand: 'mytool launch -- claude' },
       api: { rateLimitPerMinute: 120, maxBodyBytes: 65536, activityLogMaxBytes: 1048576 },
       workflows: { maxElements: 12, maxElementChars: 4000, quietAfterSeconds: 120 },

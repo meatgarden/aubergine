@@ -5,6 +5,7 @@ import { runCommand } from '../../commands';
 import { SCOPE_FILTER, TAG_FILTER, TEXT_FILTER, listFilters } from '../../list-filters';
 import { listModel } from '../../list-model';
 import { NotePanel } from '../../NotePanel';
+import { RecapBlock, recapTitle } from '../../Recap';
 import { markNotesSeen, useUnseenNotes } from '../../notes-seen';
 import { shortFolder } from '../../search';
 import { hint } from '../../shortcuts';
@@ -399,7 +400,16 @@ const RowView = memo(function RowView({ row, style, density, indented, current, 
         <span className="list-state" title={STATE_WORD[state]} aria-label={STATE_WORD[state]}>
           {STATE_MARK[state]}
         </span>
-        <span className="list-name">{session.name}</span>
+        <span
+          className="list-name"
+          // The recap, on hover: worked out when the pointer arrives, so that drawing a row costs nothing more.
+          onMouseEnter={(event) => {
+            event.currentTarget.title = recapTitle(session.id);
+          }}
+          data-testid="list-name"
+        >
+          {session.name}
+        </span>
         {badge && !compact && (
           <span className="list-badge" data-testid="list-badge" title={session.attention.message ?? session.status.commandLine ?? undefined}>
             {badge}
@@ -562,11 +572,17 @@ function NotesDrawer({ id, onClose }: { id: string; onClose: () => void }) {
     <>
       {isAgent && (
         <div className="drawer-section" data-testid="drawer-switched-on">
+          <button type="button" className="quiet" onClick={() => useApp.getState().openHistory({ folder: useApp.getState().app?.sessions.find((x) => x.id === id)?.cwd ?? null, query: '' })} data-testid="drawer-history">
+            Past conversations in this folder…
+          </button>
           <button type="button" className="quiet" onClick={() => useApp.getState().showInventory(id)}>
             ⚙ How this agent is set up…
           </button>
         </div>
       )}
+      <div className="drawer-section">
+        <RecapBlock sessionId={id} />
+      </div>
       <NotePanel sessionId={id} onClose={onClose} embedded />
     </>
   );

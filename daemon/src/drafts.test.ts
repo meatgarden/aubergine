@@ -94,7 +94,8 @@ async function makeToken(name: string, scopes: Scope[], more: object = {}): Prom
 }
 
 function fakeSession(name: string, more: Partial<Session> = {}): Session {
-  const session: Session = { id: newId(), projectId: hub.state.project.id, name, createdAt: new Date().toISOString(), state: 'open', cwd: null, command: null, note: '', status: NO_STATUS, attention: NO_ATTENTION, noteLog: [], agent: null, lastInputAt: null, lastOutputAt: null, tags: [], parkedFrom: null, peopleOnly: false, typedBy: null, ...more };
+  const session: Session = { id: newId(), projectId: hub.state.project.id, name, createdAt: new Date().toISOString(), state: 'open', cwd: null, command: null, note: '', status: NO_STATUS, attention: NO_ATTENTION, noteLog: [], agent: null, lastInputAt: null, lastOutputAt: null, tags: [], parkedFrom: null, peopleOnly: false, typedBy: null,
+    recap: null, ...more };
   hub.emit({ type: 'session.created', session, canvasId: hub.state.canvases[0]!.id, node: { id: newId(), sessionId: session.id, x: 0, y: 0, width: 640, height: 400, color: 'none' } });
   return session;
 }
