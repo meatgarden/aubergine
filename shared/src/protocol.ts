@@ -74,6 +74,8 @@ export const paths = {
     report: (sessionId: string) => `/v1/sessions/${sessionId}/agent`,
   },
   /** GET: the user's open terminals that are not on the canvas. Read-only. */
+  /** The demo: whether it is there (GET), make it (POST), remove it (DELETE). The owner's alone. */
+  demo: '/api/v1/demo',
   outside: '/api/v1/outside',
   /** POST: give one of those terminals a canvas session in its folder. */
   outsideAdd: '/api/v1/outside/add',
@@ -238,6 +240,25 @@ export const OutsideTerminal = z.object({
     .nullable(),
 });
 export type OutsideTerminal = z.infer<typeof OutsideTerminal>;
+
+/**
+ * The demo, as the server knows it: a canvas with a scene of stand-ins.
+ * `ready` once every stand-in has done its opening part.
+ */
+export const DemoStatus = z.object({
+  present: z.boolean(),
+  ready: z.boolean(),
+  canvasId: Id.nullable(),
+  /** Its sessions that still exist, by the part each plays. */
+  sessions: z.object({ shell: Id, fixing: Id, waiting: Id, checklist: Id, parked: Id }).partial(),
+  /** The run of the "Fix a bug" workflow the first stand-in is on. */
+  runId: Id.nullable(),
+  /** The run of one element that produced a checklist. It is over, and its list can be ticked. */
+  checklistRunId: Id.nullable(),
+  /** The draft a stand-in proposed, while it waits for review. */
+  draftId: Id.nullable(),
+});
+export type DemoStatus = z.infer<typeof DemoStatus>;
 
 export const OutsideResponse = z.object({ terminals: z.array(OutsideTerminal) });
 export type OutsideResponse = z.infer<typeof OutsideResponse>;

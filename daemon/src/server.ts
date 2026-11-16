@@ -7,6 +7,7 @@ import Fastify, { type FastifyInstance, type FastifyReply, type FastifyRequest }
 import type { ZodType } from 'zod';
 import {
   SESSION_HEADER,
+  type DemoStatus,
   CLIENT_HEADER,
   ClientName,
   type OwnerCaller,
@@ -46,6 +47,7 @@ import {
   type TerminalServerMessage,
 } from '@aubergine/shared';
 import { MemoryActivityLog, BadActivityCursorError, type ActivityLog } from './activity';
+import { Demo } from './demo';
 import { authorize, bearerOf, peopleOnlyRefusal, reachRefusal, principalFromBearer, type Action, type Principal, type Resource } from './auth';
 import { RateLimiter } from './rate-limit';
 import { TokenNotFoundError, Tokens } from './tokens';
@@ -89,6 +91,10 @@ export interface ServerOptions {
   draftLog?: DraftLog;
   /** Where runs that are over are kept. Left out, in memory only. */
   runArchive?: RunArchive;
+  /** The folder the demo may fill and remove. Left out, there is no demo. */
+  demoFolder?: string;
+  /** Where the demo's stand-in scripts are. Left out, this checkout's. For tests. */
+  demoSource?: string;
   /** The version this server reports about itself. */
   version?: string;
   /** Check every /v1 answer against the shape its route declares. On by default under the test runner. */
@@ -449,6 +455,28 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   };
 
   // Looking at, bringing in and stopping what runs outside Aubergine is the owner's alone: authorize() refuses it to every token.
+  /* ---------- The demo ---------- */
+
+  const demo = options.demoFolder === undefined ? null : new Demo(hub, sessions, workflows, drafts, { folder: options.demoFolder, ...(options.demoSource ? { source: options.demoSource } : {}) });
+  const theDemo = (): Demo => {
+    if (!demo) throw new HttpError(404, 'not_found', 'The demo is not available on this server');
+    return demo;
+  };
+  app.get(paths.demo, async (request): Promise<DemoStatus> => {
+    allowOn(request, 'demo.manage', {});
+    return theDemo().status();
+  });
+  app.post(paths.demo, async (request, reply): Promise<DemoStatus> => {
+    allowOn(request, 'demo.manage', {});
+    reply.code(201);
+    return theDemo().make();
+  });
+  app.delete(paths.demo, async (request): Promise<DemoStatus> => {
+    allowOn(request, 'demo.manage', {});
+    await theDemo().remove(ownerCaller(request));
+    return theDemo().status();
+  });
+
   app.get(paths.outside, async (request): Promise<OutsideResponse> => {
     allowOn(request, 'outside.read', {});
     return { terminals: await outside().list() };

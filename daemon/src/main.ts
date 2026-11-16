@@ -90,6 +90,7 @@ async function main(): Promise<void> {
     token,
     devOrigin: config.devOrigin,
     webDist: config.webDist,
+    demoFolder: path.join(config.dataDir, 'demo'),
     // What API tokens did, as a file of its own in the data folder: it is not part of the state.
     activity: new FileActivityLog(config.dataDir, settings.value.api.activityLogMaxBytes, (error) => console.warn(`Could not write the activity log: ${String(error)}`)),
     // What tokens type, in full, only when the owner switched that on in the settings.

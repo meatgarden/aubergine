@@ -9,6 +9,9 @@ import {
   ErrorResponse,
   SESSION_ENV,
   SESSION_HEADER,
+  DemoStatus,
+  ShownResponse,
+  publicPaths,
   OutsideResponse,
   OutsideResult,
   SHOW_PARAM,
@@ -29,6 +32,7 @@ import { parseElementCommand, parseWorkflowCommand, runWorkflowCommand } from '.
 import { openBrowser, sessionAddress } from './cli/open-browser';
 import { commandsFor, formatAgents, formatOutside, normaliseTty, toShells } from './cli/outside';
 import {
+  BEGIN,
   USAGE,
   UsageError,
   expiryFromOption,
@@ -262,6 +266,52 @@ async function main(): Promise<number> {
     case 'help':
       console.log(USAGE);
       return 0;
+
+    case 'begin': {
+      // Typed with nothing after it. With the server up and nothing on the canvas yet, three lines on where to begin; otherwise the usage.
+      const sessions = (await whoAnswers(config.port)) === 'aubergine' ? await v1(config, (client) => client.listSessions({ query: { limit: 1 } })).catch(() => null) : null;
+      console.log(sessions !== null && sessions.items.length === 0 ? BEGIN : USAGE);
+      return 0;
+    }
+
+    case 'demo': {
+      if ((await whoAnswers(config.port)) !== 'aubergine') {
+        console.error(`The Aubergine server is not answering at ${serverAddress(config)}. Start it first: aubergine start`);
+        return 1;
+      }
+      if (command.remove) {
+        const before = DemoStatus.parse(await call(config, 'GET', paths.demo));
+        await call(config, 'DELETE', paths.demo);
+        console.log(before.present ? 'Removed the demo: its canvas, its terminals, their runs and drafts, and its folder. Nothing else was touched.' : 'There is no demo to remove.');
+        return 0;
+      }
+      let demo = DemoStatus.parse(await call(config, 'POST', paths.demo, {}, 60_000));
+      // The stand-ins take a few seconds to do their opening parts.
+      const until = Date.now() + 45_000;
+      while (!demo.ready && Date.now() < until) {
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        demo = DemoStatus.parse(await call(config, 'GET', paths.demo));
+      }
+      console.log(
+        [
+          'The demo is on a canvas named "Demo": a shell, three stand-in agents (scripts, not real agents) and a parked terminal.',
+          'A short tour in the browser shows you round. Nothing in the demo is real, and nothing outside it was touched.',
+          'When you have seen enough: aubergine demo --remove',
+        ].join('\n'),
+      );
+      if (command.open && demo.canvasId !== null) {
+        const show = async (): Promise<number> => ShownResponse.parse(await call(config, 'POST', publicPaths.showCanvas(demo.canvasId as string), {}, 3000)).shown;
+        try {
+          if ((await show()) === 0 && (await openBrowser(await signInAddress(config)))) {
+            // The browser is opening, signed in; once it is there, take it to the demo.
+            for (let i = 0; i < 20 && (await show()) === 0; i++) await new Promise((resolve) => setTimeout(resolve, 500));
+          }
+        } catch {
+          // The demo is there either way.
+        }
+      }
+      return 0;
+    }
 
     case 'list': {
       const { state } = StateResponse.parse(await call(config, 'GET', paths.state));

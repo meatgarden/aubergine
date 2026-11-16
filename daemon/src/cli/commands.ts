@@ -61,7 +61,17 @@ export type Command =
   | { name: 'version' }
   | { name: 'uninstall'; yes: boolean }
   | { name: 'doctor' }
+  | { name: 'demo'; remove: boolean; open: boolean }
+  /** No arguments at all: a short word on where to begin, or the usage. */
+  | { name: 'begin' }
   | { name: 'help' };
+
+/** What `aubergine` says by itself while there is nothing on the canvas yet: the three ways to begin, as the empty canvas shows them. */
+export const BEGIN = `Nothing is on your canvas yet. Three ways to begin:
+  aubergine demo        show me around: a canvas of stand-ins and a short tour (remove it with: aubergine demo --remove)
+  aubergine new         start a new terminal on the canvas
+  aubergine here        bring in a terminal you already have open: type it there
+Everything else: aubergine help`;
 
 export const USAGE = `Usage: aubergine <command>
 
@@ -72,6 +82,9 @@ export const USAGE = `Usage: aubergine <command>
   version                    Version, commit, where this copy and your data are
   doctor                     Check that everything Aubergine needs is in place
   uninstall                  Remove the command and an installed copy. Your data and terminals are kept. (--yes: do not ask)
+
+  demo                       Make a canvas named "Demo" with a small scene of stand-ins, and a tour of it in the browser.
+                             Nothing in it is real. --remove takes away everything it made; --no-open leaves the browser alone
 
   list                       List sessions with their state, command and folder
   new [name]                 Start a new terminal on a canvas
@@ -179,6 +192,12 @@ export function parseCommand(argv: readonly string[]): Command {
   const [command, ...rest] = argv;
   switch (command) {
     case undefined:
+      return { name: 'begin' };
+    case 'demo': {
+      const unknown = rest.find((word) => word !== '--remove' && word !== '--no-open');
+      if (unknown) throw new UsageError(`demo does not know "${unknown}". It takes --remove, or --no-open.`);
+      return { name: 'demo', remove: rest.includes('--remove'), open: !rest.includes('--no-open') };
+    }
     case 'help':
     case '--help':
     case '-h':
