@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { Id } from './ids';
 import { CHECKLIST_FORMAT, outputKindNames } from './outputs';
-import { Element, NEEDS_MAX, WorkflowContent, needsOf, previewRun, type Need, type WorkflowLimits, type WorkflowVersion } from './workflows';
+import { Element, GUIDE_POINTER, NEEDS_MAX, WorkflowContent, needsOf, previewRun, type Need, type WorkflowLimits, type WorkflowVersion } from './workflows';
 
 /**
  * Drafts: workflows and elements that someone other than the owner wrote.
@@ -214,6 +214,8 @@ export function renderBrief(draft: Draft, limits: WorkflowLimits): string {
     '',
     'Hand it in with:',
     `    aubergine ${element ? 'element' : 'workflow'} propose --file <file>`,
+    '',
+    GUIDE_POINTER,
   );
   return lines.join('\n');
 }

@@ -1,4 +1,4 @@
-import { spawn } from 'node:child_process';
+import { execFile, spawn } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import { mkdir, mkdtemp, readFile, readdir, realpath, rm, writeFile } from 'node:fs/promises';
 import { createServer, type Server } from 'node:http';
@@ -7,7 +7,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { setTimeout as sleep } from 'node:timers/promises';
 import { fileURLToPath } from 'node:url';
-import { KICKOFF_LINE, type Session } from '@aubergine/shared';
+import { GUIDE_SNIPPET, KICKOFF_LINE, renderGuide, type Session } from '@aubergine/shared';
 import { Client } from '@modelcontextprotocol/client';
 import { StdioClientTransport } from '@modelcontextprotocol/client/stdio';
 import type { FastifyInstance } from 'fastify';
@@ -139,6 +139,8 @@ describe.runIf(ZSH)('aubergine mcp, through the protocol', () => {
     names: () => Promise<string[]>;
     tools: () => Promise<any[]>;
     call: (name: string, args?: Record<string, unknown>) => Promise<Called>;
+    /** What the server gave as its own instructions when the connection opened. */
+    instructions: () => string;
     stderr: () => string;
     close: () => Promise<void>;
   }
@@ -160,6 +162,7 @@ describe.runIf(ZSH)('aubergine mcp, through the protocol', () => {
         if (result.structuredContent !== undefined) expect((result.structuredContent as { text?: string }).text).toBe(text);
         return { text, isError: result.isError === true, data: result.structuredContent };
       },
+      instructions: () => client.getInstructions() ?? '',
       stderr: () => said,
       close: () => client.close(),
     };
@@ -197,17 +200,17 @@ describe.runIf(ZSH)('aubergine mcp, through the protocol', () => {
     it("with a session's own token: its own work, and nothing else", async () => {
       const session = await ready('own work');
       const mcp = await asSession(session);
-      expect(await mcp.names()).toEqual(['aubergine_status', ...OWN_WORK]);
+      expect(await mcp.names()).toEqual(['aubergine_status', 'aubergine_guide', ...OWN_WORK]);
       const status = await mcp.call('aubergine_status');
       expect(status.isError).toBe(false);
       expect(status.text).toContain("a session's own token");
-      expect(mcp.stderr()).toContain("serving 11 tools for a session's own token (credential from AUBERGINE_TOKEN)");
+      expect(mcp.stderr()).toContain("serving 12 tools for a session's own token (credential from AUBERGINE_TOKEN)");
     });
 
     it('with a read token: reading, and nothing that changes anything or touches a terminal', async () => {
       const mcp = await withToken(await makeToken('reader', ['read']));
       const names = await mcp.names();
-      expect(names).toEqual(['aubergine_status', ...READING]);
+      expect(names).toEqual(['aubergine_status', 'aubergine_guide', ...READING]);
       const tools = await mcp.tools();
       // Every tool has a schema for its input, and says that it only reads.
       for (const tool of tools) {
@@ -220,7 +223,7 @@ describe.runIf(ZSH)('aubergine mcp, through the protocol', () => {
     it('with a token that has every scope: everything there is a tool for, and no tool for what stays the owner\'s', async () => {
       const mcp = await withToken(await everything('all of it'));
       const tools = await mcp.tools();
-      expect(tools.map((tool) => tool.name)).toEqual(['aubergine_status', ...EVERYTHING]);
+      expect(tools.map((tool) => tool.name)).toEqual(['aubergine_status', 'aubergine_guide', ...EVERYTHING]);
       for (const tool of tools.slice(1)) expect(tool.name).not.toMatch(NEVER);
       // The same list in the same order, however often it is asked for.
       expect(await mcp.names()).toEqual(tools.map((tool) => tool.name));
@@ -236,13 +239,71 @@ describe.runIf(ZSH)('aubergine mcp, through the protocol', () => {
 
     it('opens the same way for a client of the newer protocol revision', async () => {
       const mcp = await connect({ AUBERGINE_URL: url, AUBERGINE_API_TOKEN: await makeToken('modern reader', ['read']) }, { modern: true });
-      expect(await mcp.names()).toEqual(['aubergine_status', ...READING]);
+      expect(await mcp.names()).toEqual(['aubergine_status', 'aubergine_guide', ...READING]);
       expect((await mcp.call('canvases_list')).isError).toBe(false);
     });
 
     it('takes the address from --url as well', async () => {
       const mcp = await connect({ AUBERGINE_API_TOKEN: await makeToken('by option', ['read']) }, { args: ['--url', url] });
-      expect(await mcp.names()).toEqual(['aubergine_status', ...READING]);
+      expect(await mcp.names()).toEqual(['aubergine_status', 'aubergine_guide', ...READING]);
+    });
+  });
+
+  describe('the guide for agents', () => {
+    /** The real command, with nothing in its environment but what is given: no owner's file is within its reach. */
+    const guide = (env: Record<string, string>, ...args: string[]): Promise<string> =>
+      new Promise((resolve, reject) => execFile(process.execPath, [COMMAND, 'guide', ...args], { env: { PATH: process.env.PATH ?? '', HOME: path.join(dir, 'no-home'), ...env } }, (error, stdout) => (error ? reject(error) : resolve(stdout))));
+    const own = { session: true, scopes: [] };
+
+    it("is the same text as a tool, as the server's instructions and from the command, for a session's own token", async () => {
+      const session = await ready('reads the guide');
+      const mcp = await asSession(session);
+      const text = renderGuide({ reader: own });
+      expect((await mcp.call('aubergine_guide')).text).toBe(text);
+      expect(mcp.instructions().endsWith(text)).toBe(true);
+      const env = { AUBERGINE_URL: url, AUBERGINE_SESSION_ID: session.id, AUBERGINE_TOKEN: sessionToken(ownerToken, session.id) };
+      expect(await guide(env)).toBe(`${text}\n`);
+      expect(await guide(env, '--snippet')).toBe(`${GUIDE_SNIPPET}\n`);
+      expect(await guide(env, '--all')).toBe(`${renderGuide({ all: true })}\n`);
+    });
+
+    it('grows with an API token, and for a client of the newer protocol revision', async () => {
+      const secret = await makeToken('reads more', ['read', 'terminal:read']);
+      const reader = { session: false, scopes: ['read', 'terminal:read'] };
+      const mcp = await withToken(secret, {});
+      expect((await mcp.call('aubergine_guide')).text).toBe(renderGuide({ reader }));
+      expect(mcp.instructions()).toContain('terminal_screen');
+      expect(mcp.instructions()).not.toContain('terminal_send');
+      const modern = await connect({ AUBERGINE_URL: url, AUBERGINE_API_TOKEN: secret }, { modern: true });
+      expect((await modern.call('aubergine_guide')).text).toBe(renderGuide({ reader }));
+      expect(await guide({ AUBERGINE_URL: url, AUBERGINE_API_TOKEN: secret })).toBe(`${renderGuide({ reader })}\n`);
+      // In a terminal with a token besides: the terminal's own work, and what the token adds.
+      const session = await ready('has a token too');
+      expect(await guide({ AUBERGINE_URL: url, AUBERGINE_SESSION_ID: session.id, AUBERGINE_TOKEN: sessionToken(ownerToken, session.id), AUBERGINE_API_TOKEN: secret })).toBe(`${renderGuide({ reader: { session: true, scopes: reader.scopes } })}\n`);
+    });
+
+    it('with no server to ask: the whole guide, saying it could not tell what applies, from the command and from the tool', async () => {
+      const secret = await makeToken('asks nobody', ['read']);
+      const nowhere = { AUBERGINE_URL: 'http://127.0.0.1:9', AUBERGINE_API_TOKEN: secret };
+      const printed = await guide(nowhere);
+      expect(printed).toContain('could not be told what applies to you');
+      expect(printed).toContain('## Other terminals, when you were given an API token');
+      expect(printed).not.toContain(secret);
+      const mcp = await connect(nowhere);
+      const told = await mcp.call('aubergine_guide');
+      expect(told.isError).toBe(false);
+      expect(told.text).toContain('could not be told what applies to you');
+      expect(await guide({})).toContain('This is not an Aubergine terminal');
+    });
+
+    it('a terminal says it needs its owner with the command the guide gives', async () => {
+      const session = await ready('needs its owner');
+      const env = { PATH: process.env.PATH ?? '', HOME: path.join(dir, 'no-home'), AUBERGINE_URL: url, AUBERGINE_SESSION_ID: session.id, AUBERGINE_TOKEN: sessionToken(ownerToken, session.id) };
+      const run = (...args: string[]): Promise<string> => new Promise((resolve, reject) => execFile(process.execPath, [COMMAND, ...args], { env }, (error, stdout) => (error ? reject(error) : resolve(stdout))));
+      expect(await run('attention', 'waiting', 'Which branch should I fix this on?')).toContain('Your owner has been told');
+      expect(hub.state.sessions.find((s) => s.id === session.id)?.attention).toMatchObject({ state: 'waiting', message: 'Which branch should I fix this on?' });
+      await run('attention', 'done');
+      expect(hub.state.sessions.find((s) => s.id === session.id)?.attention.state).toBe('done');
     });
   });
 
@@ -314,6 +375,7 @@ describe.runIf(ZSH)('aubergine mcp, through the protocol', () => {
       const found = await ok('terminal_search', { query: 'typed-by-a-tool' });
       expect(found.data.hits[0]).toMatchObject({ sessionId: target.id, sessionName: 'target' });
       await ok('aubergine_status');
+      await ok('aubergine_guide');
 
       // Every tool that is listed was called.
       expect([...new Set(called)].sort()).toEqual([...(await mcp.names())].sort());
@@ -616,7 +678,7 @@ describe.runIf(ZSH)('aubergine mcp, through the protocol', () => {
       const secret = await makeToken('nobody home', ['read']);
       const { answers, err, code } = await raw({ AUBERGINE_URL: `http://127.0.0.1:${closedPort}`, AUBERGINE_API_TOKEN: secret });
       expect(answers.map((answer) => answer.id).sort()).toEqual([1, 2, 3, 4, 5]);
-      expect(byId(answers, 2).result.tools.map((tool: { name: string }) => tool.name)).toEqual(['aubergine_status']);
+      expect(byId(answers, 2).result.tools.map((tool: { name: string }) => tool.name)).toEqual(['aubergine_status', 'aubergine_guide']);
       expect(byId(answers, 3).result).toMatchObject({ isError: true });
       expect(byId(answers, 3).result.content[0].text).toContain(`The Aubergine server at http://127.0.0.1:${closedPort} cannot be reached.`);
       expect(byId(answers, 5).error).toBeDefined();
@@ -628,7 +690,7 @@ describe.runIf(ZSH)('aubergine mcp, through the protocol', () => {
     it('when the token is wrong', async () => {
       const wrong = 'aub_pat_this-is-not-a-token-the-server-ever-made-0000';
       const { answers, err, out } = await raw({ AUBERGINE_URL: url, AUBERGINE_API_TOKEN: wrong });
-      expect(byId(answers, 2).result.tools).toHaveLength(1);
+      expect(byId(answers, 2).result.tools).toHaveLength(2);
       expect(byId(answers, 3).result.content[0].text).toContain('The server does not accept this credential');
       expect(err).toContain('does not accept this credential');
       expect(`${out}${err}`).not.toContain(wrong);
@@ -694,7 +756,7 @@ describe.runIf(ZSH)('aubergine mcp, through the protocol', () => {
     it('and it never reads the owner\'s access file: with no credential of its own it has none', async () => {
       // The data folder with the owner's token is right there; the command is not told a credential.
       const { answers, out, err } = await raw({ AUBERGINE_URL: url, AUBERGINE_DATA_DIR: data, AUBERGINE_PORT: String(port) });
-      expect(byId(answers, 2).result.tools).toHaveLength(1);
+      expect(byId(answers, 2).result.tools).toHaveLength(2);
       expect(byId(answers, 3).result.content[0].text).toContain('No credential.');
       expect(`${out}${err}`).not.toContain(ownerToken);
     });

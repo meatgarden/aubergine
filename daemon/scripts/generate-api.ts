@@ -1,13 +1,15 @@
 /**
- * Writes what is generated from the description of the API:
+ * Writes what is generated from the description of the API, and from the
+ * guide for agents:
  *
  *   client/src/generated.ts   the typed client
  *   docs/api.md               the reference
+ *   docs/for-agents.md        the guide for agents, in full
  *
  *   pnpm generate            write them
- *   pnpm generate --check    change nothing; fail if either is out of date
+ *   pnpm generate --check    change nothing; fail if any is out of date
  *
- * Both are committed, so that nothing has to be generated when Aubergine is
+ * All are committed, so that nothing has to be generated when Aubergine is
  * installed. `pnpm check` fails when a declaration has changed and they have
  * not been written again.
  */
@@ -32,5 +34,5 @@ for (const [file, text] of Object.entries(generatedFiles())) {
     console.log(`wrote ${file}`);
   }
 }
-if (check && stale === 0) console.log('The generated client and reference are up to date.');
+if (check && stale === 0) console.log('The generated client, reference and guide are up to date.');
 process.exit(stale > 0 ? 1 : 0);

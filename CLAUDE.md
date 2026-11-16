@@ -12,7 +12,7 @@ shared/   wire protocol (zod schemas), entity types, settings schema, the change
           the declarations of every /v1 route (routes.ts), the scope table (access.ts), openapi.ts;
           workflows.ts (entities, element kinds, the step function, what an agent is told, the file
           format), workflow-api.ts (bodies and answers), workflow-templates.ts,
-          outputs.ts (output kinds), drafts.ts (drafts, the shelf, what a reviewer reads, the brief), repository.ts, terminal.ts, demo.ts (the labels that mark what the demo made), recap.ts, away.ts, history.ts
+          outputs.ts (output kinds), drafts.ts (drafts, the shelf, what a reviewer reads, the brief), repository.ts, terminal.ts, demo.ts (the labels that mark what the demo made), recap.ts, away.ts, history.ts, guide.ts (the guide for agents)
 daemon/   Fastify HTTP + WebSocket server, tmux session runtime, JSON store, CLI, start-at-login,
           shell integration (src/shell/), agent support (src/agents/), authorization (src/auth.ts),
           migration of existing terminals (src/migrate/), including reading agent
@@ -42,7 +42,7 @@ web/      Vite + React + @xyflow/react + @xterm/xterm, Zustand for state; the ta
           spatial.ts, palette.ts, and the development-only key-tester.html
           workflows/ (run-model.ts, editor-model.ts, registries.ts, the screens), review/ (registry.ts, ReviewScreen.tsx, drafts-source.ts, repository-source.ts) and
           panel/sections/workflows.tsx, tour/ (registry.ts, steps.ts, Tour.tsx, tour-store.ts, placement.ts), EmptyCanvas.tsx, HelpPanel.tsx, InventoryPanel.tsx, Recap.tsx, Away.tsx, HistoryPanel.tsx
-docs/     keys.md: what is known about which keys reach a page; api.md: the API reference (generated)
+docs/     keys.md: what is known about which keys reach a page; api.md: the API reference (generated); for-agents.md (generated)
 e2e/      Playwright smoke test
 install.sh  the one-line installer; its commands are in daemon/src/cli/install.ts (start, open,
           update, version, uninstall, doctor), its tests in daemon/src/install/*.installtest.ts,
@@ -159,6 +159,12 @@ These are the only abstractions in the code base. Each has exactly one implement
 - **A conversation is opened through the launch line**, by an ID that passed `ConversationId` and is kept for that folder, never twice on the canvas without the owner saying so.
 - **A search of conversations is bounded and says when it was cut short.** No index, no copy.
 - **What a conversation says is shown as text**: through `showControl`, in text nodes, no markup drawn, no address made a link.
+- **The guide for agents is one module.** `shared/src/guide.ts`. The command (`daemon/src/cli/guide.ts`), `docs/for-agents.md`, the MCP server's instructions and its guide tool all render it; do not write about what an agent can do anywhere else. A part names the actions it needs from the access table; no scope is written into its text.
+- **The guide names only what exists.** A command or a tool it mentions must pass the tests in `daemon/src/cli/guide.test.ts`; a new owner-only action needs words in `OWNERS_ALONE`.
+- **The guide is fixed text.** Nothing stored, nothing from the server, the environment or a credential is printed by `aubergine guide`. It asks `GET /v1` and nothing else, and reads no file.
+- **The guide is never typed.** The fixed sentences stay as they are; what an agent is told about a run or a request ends with `GUIDE_POINTER`.
+- **The guide is advice, not a lock.** It tells an agent what is the owner's; it prevents nothing. Do not describe it as protection.
+- **Agent-neutral.** Nothing in the guide or the snippet names an agent product.
 - **Canvases.** A session is on at most one canvas; a parked session is on none and remembers where it was (`parkedFrom`). Closing a canvas never ends a shell: the caller says move or park, and the last canvas cannot be closed. Where no canvas is named, `Sessions.canvas(null)` decides (most recently looked at, else first); do not pick a default anywhere else.
 - **Public shapes.** Routes under `/v1` use one error shape, `pageOf` for every list, ignore unknown fields, use ISO times, and take `Idempotency-Key` on creates. Do not add a `/v1` route that departs from these. This API is public: only add to it; never rename or remove.
 - **A `/v1` route is a declaration and a handler.** Add the entry to `ROUTES` and a handler of the same name in `v1.ts`. Do not call `app.get`/`app.post` for anything under `/v1`: a route registered by hand is not in the description, and the tests fail on it. A handler does not decide who may call it and does not parse its own input; the loop does both, in the order parameters, `authorize`, query and body, handler.
@@ -272,6 +278,8 @@ The first five minutes: `aubergine demo` (a canvas of stand-ins, made and remove
 How an agent is set up: a read-only list per agent session of MCP servers, plugins, hooks, skills, permission rules and settings files, with where each comes from and what Aubergine added; names only; need marks in the run dialog. Follow-ups from the demo: withdrawn runs and draft records, a handed-in list shown on its terminal, the full-size hint. Commands also include `agent.switchedOn`.
 
 Recaps and past conversations: the recap of a terminal from what is known and from its agent, `aubergine recap`, "while you were away", the list of an agent's past conversations in a folder, a read-only transcript, a bounded search from the palette, opening one or a copy on the canvas, `aubergine history`. Sessions may carry a written recap. Change events also include `session.recap`. Commands also include `agent.askRecap` and `history.open`.
+
+A guide for agents: `aubergine guide` (`--all`, `--snippet`), `docs/for-agents.md`, the MCP instructions and `aubergine_guide`, `aubergine attention`.
 
 Not built yet: a packaged build without development dependencies, Linux tested, measured key tables for Safari, Firefox, Linux and Windows, publishing the client as a package, moving the remaining `/api/v1` routes onto `/v1`, the workflow library, the board of runs, approvals, branches, a pool of agents, a list of past runs in the browser, waiting for output, changing a token's reach, SQLite, an HTTP transport for the MCP server, presets, a finder agent, recording, bash or fish integration.
 
