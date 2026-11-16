@@ -45,7 +45,7 @@ export function RecapBlock({ sessionId, canAsk = true }: { sessionId: string; ca
   if (!recap) return null;
   const now = new Date();
 
-  const untold = useApp((s) => s.app?.sessions.find((x) => x.id === sessionId)?.untold ?? null);
+  const untold = session.untold;
   const ask = (): void => {
     setAsking('idle');
     void api.askRecap(sessionId).then(

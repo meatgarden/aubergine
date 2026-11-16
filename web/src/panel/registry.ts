@@ -29,6 +29,11 @@ export interface PanelSection {
   order: number;
   /** One or two characters for the collapsed strip. */
   icon: string;
+  /**
+   * It takes the room the other sections leave, and never less than a few rows: for the one long list.
+   * Every other section is as tall as what it holds, up to a share of the panel, and scrolls inside itself.
+   */
+  fill?: boolean;
   /** A hook giving the number shown beside the title, or null for none. */
   useCount?: () => number | null;
   /** A hook giving what the collapsed strip shows under the icon. */

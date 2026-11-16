@@ -1155,15 +1155,28 @@ kbd.kept {
 .strip-badge.is-failed {
   color: var(--danger);
 }
+/* A section is as tall as what it holds, up to a share of the panel, and scrolls inside itself. An empty one is
+   its heading and a line. The one that fills takes what the others leave, and never less than a few rows. */
 .panel-section {
   display: flex;
   flex-direction: column;
-  min-height: 0;
-  flex: 1 1 0;
+  min-height: 30px;
+  flex: 0 1 auto;
+  max-height: 45%;
   border-bottom: 1px solid var(--border);
 }
-.panel-section.folded {
+.panel-section.fill {
+  /* Its filters take room of their own: this much leaves a few rows under them, and the other sections give way. */
+  flex: 1 0 min(340px, 60%);
+  max-height: none;
+}
+.panel-section:not(.fill) .panel-section-body {
+  overflow-y: auto;
+}
+.panel-section.folded,
+.panel-section.fill.folded {
   flex: none;
+  min-height: 0;
 }
 .panel-section-head {
   flex: none;

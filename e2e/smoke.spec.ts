@@ -1727,3 +1727,81 @@ test('messages: the owner writes to a terminal, its agent reads and answers, and
   await expect(section.getByTestId('messages-switch-note')).toContainText('Terminals may message each other on:');
   await expect(section.getByTestId('thread-row')).toHaveCount(2);
 });
+
+test('the side panel gives each section the room it needs, in a small window and a normal one, and remembers what was folded', async ({ page }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  await page.getByRole('button', { name: 'New canvas' }).click();
+  await page.getByTestId('toolbar-new-terminal').click();
+  await expect(page.getByTestId('list-row').first()).toBeVisible();
+
+  interface Measured {
+    id: string;
+    fill: boolean;
+    height: number;
+    bottom: number;
+    bodyHeight: number;
+    contentHeight: number;
+    scrolls: boolean;
+  }
+  const measure = (): Promise<{ panelBottom: number; panelHeight: number; sections: Measured[] }> =>
+    page.evaluate(() => {
+      const panel = document.querySelector('[data-testid="side-panel"]') as HTMLElement;
+      const box = panel.getBoundingClientRect();
+      return {
+        panelBottom: box.bottom,
+        panelHeight: box.height,
+        sections: [...panel.querySelectorAll<HTMLElement>('.panel-section')].map((section) => {
+          const body = section.querySelector<HTMLElement>('.panel-section-body');
+          const content = body?.firstElementChild as HTMLElement | null;
+          return {
+            id: section.dataset.section ?? '',
+            fill: section.classList.contains('fill'),
+            height: section.getBoundingClientRect().height,
+            bottom: section.getBoundingClientRect().bottom,
+            bodyHeight: body?.clientHeight ?? 0,
+            contentHeight: content?.scrollHeight ?? 0,
+            scrolls: body ? getComputedStyle(body).overflowY === 'auto' : false,
+          };
+        }),
+      };
+    });
+
+  for (const [width, height] of [
+    [800, 600],
+    [1280, 800],
+  ] as const) {
+    await page.setViewportSize({ width, height });
+    const { panelBottom, panelHeight, sections } = await measure();
+    if (process.env.PANEL_SHOT) await page.screenshot({ path: process.env.PANEL_SHOT + '-' + String(width) + '.png' });
+    expect(sections.map((s) => s.id)).toEqual(['terminals', 'workflows', 'messages']);
+    const list = sections.find((s) => s.fill);
+    // The terminal list is never squeezed to a row: it has room for a few, and takes what the others leave.
+    expect(list?.id).toBe('terminals');
+    expect(list?.height ?? 0, `${width}×${height}`).toBeGreaterThanOrEqual(Math.min(340, panelHeight * 0.6) - 1);
+    // Under its filters there is room for rows: the first one is wholly in view.
+    await expect(page.getByTestId('list-row').first()).toBeInViewport({ ratio: 1 });
+    for (const section of sections) {
+      // Nothing is cut off at the bottom of the panel.
+      expect(section.bottom, `${section.id} at ${width}×${height}`).toBeLessThanOrEqual(panelBottom + 1);
+      if (section.fill) continue;
+      // Any other section is no taller than what it holds (an empty one is its heading and a line), and scrolls inside itself when that is more than its share.
+      expect(section.bodyHeight, `${section.id} at ${width}×${height}`).toBeLessThanOrEqual(section.contentHeight + 1);
+      expect(section.height, `${section.id} at ${width}×${height}`).toBeLessThanOrEqual(panelHeight * 0.45 + 1);
+      expect(section.scrolls).toBe(true);
+    }
+    expect(sections.reduce((sum, s) => sum + s.height, 0)).toBeLessThanOrEqual(panelHeight + 1);
+  }
+
+  // A section the owner folds stays folded after a reload, and takes only its heading.
+  const messages = page.locator('.panel-section[data-section="messages"]');
+  await messages.getByTestId('section-fold').click();
+  await expect(messages.getByTestId('section-fold')).toHaveAttribute('aria-expanded', 'false');
+  await page.reload();
+  await expect(messages.getByTestId('section-fold')).toHaveAttribute('aria-expanded', 'false');
+  expect((await messages.boundingBox())?.height ?? 99).toBeLessThan(40);
+  await expect(page.locator('.panel-section[data-section="workflows"]').getByTestId('section-fold')).toHaveAttribute('aria-expanded', 'true');
+  await messages.getByTestId('section-fold').click();
+  await expect(messages.getByTestId('section-fold')).toHaveAttribute('aria-expanded', 'true');
+});
