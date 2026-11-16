@@ -19,6 +19,7 @@ import {
   nodesInside,
   placeOfSession,
   type AgentKind,
+  type AgentToolsChoice,
   type Frame,
   type LayoutNode,
 } from '@aubergine/shared';
@@ -34,6 +35,7 @@ import { hint } from './shortcuts';
 import { ShortcutSheet } from './ShortcutSheet';
 import { ActivityScreen, TokenScreen } from './TokenScreen';
 import { RunDialog } from './workflows/RunDialog';
+import { AgentToolsDialog } from './AgentToolsDialog';
 import { RunViewDialog } from './workflows/RunViewDialog';
 import { WorkflowEditor } from './workflows/WorkflowEditor';
 import { WorkflowsScreen } from './workflows/WorkflowsScreen';
@@ -219,7 +221,7 @@ export function Canvas() {
   const [adding, setAdding] = useState(false);
   const setError = useApp((s) => s.setNotice);
 
-  const addTerminal = useCallback(async (agent?: AgentKind, agentArgs?: string[]): Promise<string | null> => {
+  const addTerminal = useCallback(async (agent?: AgentKind, agentArgs?: string[], agentTools?: AgentToolsChoice): Promise<string | null> => {
     setAdding(true);
     setError(null);
     try {
@@ -241,7 +243,7 @@ export function Canvas() {
       }));
       const rect = findFreeRect(taken, center, { width: NODE_DEFAULT_WIDTH, height: NODE_DEFAULT_HEIGHT });
       if (!canvasId) return null;
-      const created = await api.createSession({ rect, canvasId, ...(agent ? { agent } : {}), ...(agent && agentArgs ? { agentArgs } : {}) });
+      const created = await api.createSession({ rect, canvasId, ...(agent ? { agent } : {}), ...(agent && agentArgs ? { agentArgs } : {}), ...(agent && agentTools ? { agentTools } : {}) });
       useApp.getState().apply({ type: 'session.created', canvasId, ...created });
       goToNode(created.node.id, created.session.id);
       return created.session.id;
@@ -419,6 +421,17 @@ export function Canvas() {
           <button
             type="button"
             className="quiet toolbar-attached"
+            aria-label="New Claude Code session with Aubergine tools"
+            onClick={() => runCommand('agent.newWithTools')}
+            disabled={adding}
+            title={hint('agent.newWithTools', 'New Claude Code session with Aubergine tools: choose which first')}
+            data-testid="agent-with-tools"
+          >
+            ⚙
+          </button>
+          <button
+            type="button"
+            className="quiet toolbar-attached"
             aria-label="New Claude Code session on a workflow"
             onClick={() => runCommand('workflow.runOnAgent')}
             disabled={adding}
@@ -479,6 +492,7 @@ export function Canvas() {
       <DescribeDialog />
       <ReviewScreen />
       <RunDialog />
+      <AgentToolsDialog />
       <RunViewDialog />
     </div>
   );

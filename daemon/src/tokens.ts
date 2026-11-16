@@ -36,7 +36,7 @@ export class Tokens {
   }
 
   /** Makes a token. The secret in the answer exists nowhere else: it is not stored and cannot be shown again. */
-  create(input: Omit<CreateTokenRequest, 'reviewWorkflowChanges'> & { reviewWorkflowChanges?: boolean }): { token: ApiToken; secret: string } {
+  create(input: Omit<CreateTokenRequest, 'reviewWorkflowChanges'> & { reviewWorkflowChanges?: boolean; /** The agent session it is made for. Never from a request body. */ sessionId?: string }): { token: ApiToken; secret: string } {
     const terminal = input.scopes.some((scope) => (TERMINAL_SCOPES as readonly string[]).includes(scope));
     const secret = newSecret();
     const now = this.now();
@@ -55,6 +55,7 @@ export class Tokens {
       reviewWorkflowChanges: input.reviewWorkflowChanges ?? true,
       // A reach means something only with a terminal scope; without one the token reaches no terminal.
       reach: terminal ? (input.reach ?? null) : null,
+      sessionId: input.sessionId ?? null,
     };
     this.hub.emit({ type: 'token.created', token });
     return { token, secret };

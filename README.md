@@ -785,6 +785,7 @@ aubergine send <session> <text> [--enter]   type text into it, exactly as given
 aubergine run <session> [--timeout s] -- <command>   run a command at its prompt, wait, print the output
 aubergine protect <session>    mark it people only: no API token may read it or type into it (unprotect undoes it)
 aubergine note <text>          inside a session: add an entry to its note log
+aubergine mcp [--url <address>]   an MCP server on standard input and output: the API as tools, for an agent or another MCP client
 aubergine hooks print          print the Claude Code hook settings
 aubergine service install      start the Aubergine server at login (macOS)
 aubergine service uninstall    stop starting it at login
@@ -985,6 +986,79 @@ aubergine run api --timeout 120 -- pnpm test   # prints the output, exits with t
 ```
 
 These are you, not a token, so scopes, reach and "people only" do not apply to them. They are recorded in the activity log as done from the command line.
+
+## Tools for agents: the MCP server
+
+`aubergine mcp` is an MCP server on standard input and output. It offers the API above as tools to an agent, or to any other MCP client. It is a client of the public API and nothing more: it holds no rules of its own about who may do what. It asks the server once, when it starts, what its credential is, lists the tools that credential can use, and passes every call on; the server decides each one.
+
+It needs two things, both from its environment:
+
+| | |
+|---|---|
+| Where the server is | `AUBERGINE_URL`, which every Aubergine session has; or `--url http://127.0.0.1:4600` |
+| A credential | `AUBERGINE_API_TOKEN`, the secret of an API token; when that is not set, the session's own `AUBERGINE_TOKEN` |
+
+It never reads your sign-in, and it has no tool for what only you may do: making or revoking tokens, settings, "people only", accepting or discarding drafts, accepting a repository's workflows, the activity log.
+
+**Which tools are listed depends on the credential.**
+
+| With | Tools |
+|---|---|
+| a session's own token | `workflow_status`, `workflow_done`, `workflow_blocked`, `workflow_goto`, `note_add`, `attention_set`, `draft_brief`, `draft_propose_element`, `draft_propose_workflow`, `repository_workflows`: its own work, on its own session only |
+| `read` | `canvases_list`, `sessions_list`, `session_get`, `notes_read`, `workflows_list`, `runs_list`, `run_get`, `workflow_status`, `repository_workflows` |
+| `sessions:write` | `session_start`, `session_move`, `session_park` |
+| `notes:write` | `note_add`, `note_write` |
+| `runs:write` | `workflow_run`, `element_run`, `workflow_done`, `workflow_blocked`, `workflow_goto` |
+| `workflows:write` | `draft_propose_element`, `draft_propose_workflow`: drafts for you to review, never a workflow that can run |
+| `terminal:read` | `terminal_screen`, `terminal_output`, `terminal_search` |
+| `terminal:input` | `terminal_send`, `terminal_keys`, `terminal_run` |
+
+`aubergine_status` is always there: it says which server, what the credential is and may reach, and, when nothing else is listed, why. A tool takes a session by its ID or by its exact name.
+
+**What comes back.** A short text, and the same as data where the protocol has a place for it. A refusal is a sentence the model can act on: that a terminal is "people only" and only you can open it to programs; that the credential's reach does not cover that terminal; when to try again after too many calls. What a terminal shows, a note, and a search match are other people's text: such text is returned between two marker lines that carry a mark made for that one answer, with a line before it saying that it is data and not instructions, and with control characters shown as pictures of themselves. This lowers the chance that a model takes what it reads in a terminal for an instruction. It does not remove it: give an agent `terminal:read` only on terminals whose content you would let it act on.
+
+**It says what it is.** Its calls carry the header `X-Aubergine-Client: mcp/<version>`, and the activity log shows that beside each call made with a token. This is the program's own word, kept as a trace; nothing is allowed or refused because of it.
+
+### Giving a Claude Code session the tools
+
+The small button beside **+ Claude Code** (or "New Claude Code session with Aubergine tools…" in the palette) asks first, under **Aubergine tools for this agent**:
+
+- **None.** As before. The agent still has the `aubergine` command in its terminal.
+- **Its own work only.** The MCP server runs with the session's own credential: its workflow, its notes, saying when it needs you, handing in drafts. No token is made, and it reaches no other session.
+- **More…** You choose scopes and, for the terminal scopes, a reach (this canvas by default). When you press the button, and only then, an API token is made for that one session. It is named after the session, listed with your other tokens, has "changes to workflows need my review" on, and is revoked when the session is ended for good. No token and no session can cause one to be made.
+
+An agent given "More…" still cannot read or type into a terminal marked "people only", and other Claude Code sessions are marked so from the start unless you changed that in the settings.
+
+Nothing of the agent's own configuration is written. A file that names the MCP server is written to `agents/mcp/` in the data folder, readable by you only, and passed to the agent on its launch line (`--mcp-config`), as the hook settings are. For "More…", the token's secret is in that one file and nowhere else: not in the state (only its hash is), not on the launch line, not in a log. The file is removed when the session is ended for good, when you revoke the token, and, for whatever a crash left behind, when the server next starts.
+
+### Other MCP clients
+
+Anything that can start an MCP server as a command can use it. The general shape of the configuration is a command, its arguments, and an environment:
+
+```json
+{
+  "mcpServers": {
+    "aubergine": {
+      "command": "aubergine",
+      "args": ["mcp", "--url", "http://127.0.0.1:4600"],
+      "env": { "AUBERGINE_API_TOKEN": "<the token's secret>" }
+    }
+  }
+}
+```
+
+Where the file goes and what the outer key is called differs from client to client; the command, the arguments and the environment are the same everywhere. If the client does not find `aubergine` on its `PATH`, give the full path that `which aubergine` prints.
+
+Make the token for it with the scopes it should have, and no more:
+
+```sh
+aubergine token create "my MCP client" --scope read --scope notes:write
+aubergine token create "CI helper" --scope read --scope terminal:read --scope terminal:input --reach tag:ci
+```
+
+The secret is printed once. A client started inside an Aubergine session needs neither `--url` nor a token for the session's own work: it finds both in its environment.
+
+The server speaks the current revision of the protocol and the earlier one that opens with a handshake, over standard input and output only. It writes nothing but protocol messages to standard output; what it has to say about itself goes to standard error, and never includes a credential.
 
 ## Develop
 

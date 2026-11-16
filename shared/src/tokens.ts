@@ -61,6 +61,8 @@ export const ApiToken = z.object({
   reviewWorkflowChanges: z.boolean().default(false),
   /** Which sessions its terminal scopes apply to. Null for a token without those scopes: it reaches no terminal. */
   reach: Reach.nullable().default(null),
+  /** For a token made for one agent's session: that session. It is revoked when the session is ended for good. */
+  sessionId: Id.nullable().default(null),
 });
 export type ApiToken = z.infer<typeof ApiToken>;
 
@@ -99,6 +101,19 @@ export const CreateTokenRequest = z
   .refine((body) => body.reach !== undefined || !body.scopes.some((scope) => (TERMINAL_SCOPES as readonly string[]).includes(scope)), 'A token with a terminal scope must say which sessions it may reach: give `reach`')
   .refine((body) => body.expiresAt === undefined || body.expiresInDays === undefined, 'Give expiresAt or expiresInDays, not both');
 export type CreateTokenRequest = z.infer<typeof CreateTokenRequest>;
+
+/**
+ * What the owner chose to give a new agent session of the Aubergine tools.
+ * `own`: the MCP server with the session's own credential, and no token.
+ * `token`: an API token made for that one session, with these scopes and this reach.
+ */
+export const AgentToolsChoice = z.discriminatedUnion('kind', [
+  z.object({ kind: z.literal('own') }),
+  z
+    .object({ kind: z.literal('token'), scopes: Scopes, reach: Reach.optional() })
+    .refine((choice) => choice.reach !== undefined || !choice.scopes.some((scope) => (TERMINAL_SCOPES as readonly string[]).includes(scope)), 'A token with a terminal scope must say which sessions it may reach: give `reach`'),
+]);
+export type AgentToolsChoice = z.infer<typeof AgentToolsChoice>;
 
 /** The answer to creating a token: the only time its secret is ever sent. */
 export const CreatedToken = z.object({ token: TokenView, secret: z.string() });

@@ -24,6 +24,7 @@ const when = (iso: string | null): string => (iso ? new Date(iso).toLocaleString
  */
 export function TokenScreen() {
   const open = useApp((s) => s.panel === 'tokens');
+  const allSessions = useApp((s) => s.app?.sessions);
   const tokens = useApp((s) => s.app?.tokens);
   const [name, setName] = useState('');
   const [scopes, setScopes] = useState<Scope[]>(['read']);
@@ -57,6 +58,10 @@ export function TokenScreen() {
   if (!open) return null;
   const close = (): void => useApp.getState().togglePanel(null);
   const list = [...(tokens ?? [])].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  const sessionName = (sessionId: string): string => {
+    const session = allSessions?.find((s) => s.id === sessionId);
+    return session ? `“${session.name}”` : 'a session that has ended';
+  };
 
   const create = async (): Promise<void> => {
     setBusy(true);
@@ -234,6 +239,11 @@ export function TokenScreen() {
                   <td>
                     <strong>{token.name}</strong>
                     <div className="sheet-note">{token.scopes.join(', ')}</div>
+                    {token.sessionId && (
+                      <div className="sheet-note" data-testid="token-for-session">
+                        Made for the agent in {sessionName(token.sessionId)}. Revoked when that session is ended for good.
+                      </div>
+                    )}
                   </td>
                   <td className="sheet-note">
                     {status === 'active' ? (token.expiresAt ? `expires ${when(token.expiresAt)}` : 'does not expire') : status === 'revoked' ? `revoked ${when(token.revokedAt)}` : `expired ${when(token.expiresAt)}`}

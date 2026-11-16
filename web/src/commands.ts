@@ -218,6 +218,14 @@ export const COMMANDS: readonly Command[] = [
     run: () => void canvasActions.get()?.addTerminal('claude-code'),
   },
   {
+    id: 'agent.newWithTools',
+    title: 'New Claude Code session with Aubergine tools…',
+    description: 'Asks first which Aubergine tools the agent gets: none, those for its own work, or more, with a token made for that session.',
+    group: 'Terminals',
+    available: withCanvas,
+    run: (state) => state.chooseAgentTools(true),
+  },
+  {
     id: 'frame.new',
     title: 'New frame',
     description: 'Adds a frame to group terminals.',
@@ -584,9 +592,10 @@ export const COMMANDS: readonly Command[] = [
     title: 'Close panels',
     description: 'Closes whatever panel is open; else returns the keyboard from a button to the canvas; else clears the selection.',
     group: 'Panels',
-    available: (state) => state.picker || state.describing !== null || state.editingElement !== null || state.viewingRun !== null || state.startingRun !== null || state.editingWorkflow !== null || state.panel !== null || state.drawer !== null || state.selected !== null || onControl(),
+    available: (state) => state.picker || state.choosingAgentTools || state.describing !== null || state.editingElement !== null || state.viewingRun !== null || state.startingRun !== null || state.editingWorkflow !== null || state.panel !== null || state.drawer !== null || state.selected !== null || onControl(),
     run: (state) => {
       if (state.picker) state.setPicker(false);
+      else if (state.choosingAgentTools) state.chooseAgentTools(false);
       else if (state.describing !== null) state.describe(null);
       else if (state.editingElement !== null) state.editElement(null);
       else if (state.startingRun !== null) state.startRun(null);

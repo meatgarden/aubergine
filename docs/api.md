@@ -4690,6 +4690,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
       kind: "tag";
       tag: string;
     } | null;
+    sessionId: string | null;
   }[];
   nextCursor: string | null;
 }
@@ -4738,6 +4739,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
       kind: "tag";
       tag: string;
     } | null;
+    sessionId: string | null;
   };
   secret: string;
 }
@@ -4778,6 +4780,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
     kind: "tag";
     tag: string;
   } | null;
+  sessionId: string | null;
 }
 ```
 

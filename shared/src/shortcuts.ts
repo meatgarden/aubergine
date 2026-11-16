@@ -20,6 +20,7 @@ export const COMMAND_IDS = [
   'palette.toggle',
   'terminal.new',
   'agent.new',
+  'agent.newWithTools',
   'frame.new',
   'canvas.new',
   'canvas.next',

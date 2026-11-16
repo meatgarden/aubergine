@@ -3527,6 +3527,7 @@ export type ListTokensResult = {
       kind: "tag";
       tag: string;
     } | null;
+    sessionId: string | null;
   }[];
   nextCursor: string | null;
 };
@@ -3573,6 +3574,7 @@ export type CreateTokenResult = {
       kind: "tag";
       tag: string;
     } | null;
+    sessionId: string | null;
   };
   secret: string;
 };
@@ -3595,6 +3597,7 @@ export type RevokeTokenResult = {
     kind: "tag";
     tag: string;
   } | null;
+  sessionId: string | null;
 };
 
 export interface ListActivityQuery {

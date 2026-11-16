@@ -21,7 +21,7 @@ import {
   SessionNote,
   Tags,
 } from './entities';
-import { ActivityEntry, TokenView } from './tokens';
+import { ActivityEntry, AgentToolsChoice, TokenView } from './tokens';
 import { CanvasChanges, ChangeEvent } from './events';
 import { Id } from './ids';
 import { Settings } from './settings';
@@ -118,6 +118,11 @@ export const CreateSessionRequest = z.object({
    * example `["--resume", "<id>", "--fork-session"]`.
    */
   agentArgs: z.array(z.string().min(1).max(500)).max(40).optional(),
+  /**
+   * With `agent`: give it the Aubergine tools, through the MCP server. Left out: none.
+   * This route is the owner's alone, so a token for an agent is only ever made at the owner's request.
+   */
+  agentTools: AgentToolsChoice.optional(),
   /** Folder to start in (absolute path). The default folder is used when omitted. */
   cwd: z.string().startsWith('/').max(4096).optional(),
   /** A line to type into the new session once its shell is ready. */
