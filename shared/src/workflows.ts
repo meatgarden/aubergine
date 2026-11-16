@@ -27,6 +27,19 @@ export const WORKFLOW_VERSIONS_KEPT = 30;
 
 /* ---------- Where something came from ---------- */
 
+/**
+ * The name of a workflow or an element: one line of ordinary text. Control
+ * characters and characters that reverse the direction of text are refused,
+ * because a name is printed in terminals and shown beside buttons, and such
+ * a character there changes what a person sees or what a terminal does.
+ */
+export const PlainName = z
+  .string()
+  .trim()
+  .min(1)
+  .max(120)
+  .regex(/^[^\p{Cc}\u202a-\u202e\u2066-\u2069]*$/u, 'A name is one line of plain text, without control characters');
+
 /** Where a workflow or an element came from. Open on purpose: later sources add their own fields. */
 export const Origin = z.looseObject({
   /** `local` (made here), `template` (from a built-in template), `import` (from a file), and later others. */
@@ -49,7 +62,7 @@ export const Element = z.object({
   id: ElementId,
   /** What sort of element it is. Looked up in the registry of kinds; today there is one, `instructions`. */
   kind: z.string().min(1).max(40).default('instructions'),
-  name: z.string().trim().min(1).max(120),
+  name: PlainName,
   /** What to do, written for whoever does the work. Plain text or Markdown. */
   instructions: z.string().max(ELEMENT_TEXT_HARD_MAX).default(''),
   /** One line: how to tell that the element is finished. */
@@ -72,7 +85,7 @@ export const TASK_INPUT: WorkflowInput = { key: 'task', label: 'Task', descripti
 
 /** What a workflow says: everything that can be edited. A version is this, frozen. */
 export const WorkflowContent = z.object({
-  name: z.string().trim().min(1).max(120),
+  name: PlainName,
   description: z.string().trim().max(2000).default(''),
   /** Text added to every element: rules that hold from start to finish. */
   standing: z.string().max(ELEMENT_TEXT_HARD_MAX).default(''),
@@ -397,9 +410,23 @@ export function stepRun(version: WorkflowVersion, run: Run, report: RunReport, c
 
 /* ---------- What an agent is told ---------- */
 
+/**
+ * A stored name, made safe to be typed into a terminal as keys. A name can be
+ * written by a token or come from an imported file, and what is typed reaches
+ * whatever program has the keyboard: a control character there is a key press
+ * (interrupt, end of input, Enter), not text. So only letters, digits, spaces
+ * and a short list of punctuation are kept; anything else becomes a space.
+ */
+export function safeForTyping(text: string): string {
+  return text
+    .replace(/[^\p{L}\p{N} \-_.,:()/&+']/gu, ' ')
+    .replace(/ +/g, ' ')
+    .trim();
+}
+
 /** The line that sets an agent off on a run. The same whoever sends it. */
 export function kickoffLine(workflowName: string): string {
-  return `You are on the workflow "${workflowName.replace(/"/g, "'")}". Run \`aubergine workflow status\` to read your current element and follow it. When its "done when" is true, run \`aubergine workflow done --note "<what you did>"\` and follow what it prints.`;
+  return `You are on the workflow "${safeForTyping(workflowName)}". Run \`aubergine workflow status\` to read your current element and follow it. When its "done when" is true, run \`aubergine workflow done --note "<what you did>"\` and follow what it prints.`;
 }
 
 const HOW_TO_REPORT = [

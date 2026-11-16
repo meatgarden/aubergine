@@ -13,6 +13,8 @@ import {
   inputProblems,
   isQuiet,
   kickoffLine,
+  PlainName,
+  safeForTyping,
   newRun,
   previewRun,
   registerElementKind,
@@ -206,7 +208,7 @@ describe('what an agent is told', () => {
   });
 
   it('gives a kickoff line, a position and a summary', () => {
-    expect(kickoffLine('Fix "it"')).toContain("workflow \"Fix 'it'\"");
+    expect(kickoffLine('Fix "it"')).toContain('workflow "Fix it"');
     expect(kickoffLine('Three steps')).toContain('aubergine workflow status');
     expect(runPosition(version, after(start(), done('plan')))).toBe('Build · 2 of 3');
     const summary = runSummary(version, after(start(), done('plan', 'planned'), { type: 'goto', elementId: 'check' }, done('check', 'all green')));
@@ -374,5 +376,28 @@ describe('the workflow file', () => {
     expect(imported.content.elements.map((e) => e.id)).toEqual(['first-step', 'first-step-2']);
     expect(() => importWorkflow({ name: 'x' })).toThrow('not an Aubergine workflow file');
     expect(() => importWorkflow('nope')).toThrow('not an Aubergine workflow file');
+  });
+});
+
+describe('names', () => {
+  it('refuses control characters and direction overrides, and takes ordinary text in any script', () => {
+    for (const bad of ['a\u0003b', 'a\nb', 'a\u001b[2Jb', 'a\u202eb', 'a\u007fb']) expect(PlainName.safeParse(bad).success, JSON.stringify(bad)).toBe(false);
+    for (const good of ['Fix a bug', '修复错误', 'Étape 2 — revue', 'Ship it 🚀', "Ana's `flow` (v2)"]) expect(PlainName.safeParse(good).success, good).toBe(true);
+  });
+});
+
+describe('the kickoff line', () => {
+  it('types nothing but plain text, whatever the workflow is called', () => {
+    const hostile = 'Fix\u0003 a bug\r\nrm -rf ~\u001b[2J `id` $(id) "x" ; | > \u0004\u202e';
+    const line = kickoffLine(hostile);
+    // No control characters, no shell or quoting characters from the name.
+    expect(line).not.toMatch(/\p{C}/u);
+    expect(safeForTyping(hostile)).toBe('Fix a bug rm -rf 2J id (id) x');
+    expect(line).toContain('You are on the workflow "Fix a bug rm -rf 2J id (id) x".');
+  });
+
+  it('keeps ordinary names as they are', () => {
+    expect(safeForTyping("Plan, build, check (v2): Ana's flow & more")).toBe("Plan, build, check (v2): Ana's flow & more");
+    expect(safeForTyping('修复错误 — étape')).toBe('修复错误 étape');
   });
 });
