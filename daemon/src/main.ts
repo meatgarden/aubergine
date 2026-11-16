@@ -7,7 +7,7 @@ import { sessionToken } from './auth';
 import { installRoot, versionInfo } from './cli/install';
 import { StateHub } from './state-hub';
 import { loadConfig } from './config';
-import { TmuxRuntime } from './runtime/tmux-runtime';
+import { TmuxRuntime, shellEnvironment } from './runtime/tmux-runtime';
 import { buildServer } from './server';
 import { readClaudeSession } from './migrate/claude-sessions';
 import { systemProcesses } from './migrate/move';
@@ -17,6 +17,7 @@ import { Sessions } from './sessions';
 import { Viewers } from './viewers';
 import { ZshIntegration } from './shell/integration';
 import { SettingsFile, expandHome } from './settings';
+import { pathWithCommand, writeCommandLauncher } from './command-path';
 import { FileRunArchive } from './run-archive';
 import { JsonStore } from './store/json-store';
 import { loadOrCreateToken } from './token';
@@ -36,6 +37,9 @@ async function main(): Promise<void> {
   let listeningPort = config.port;
   const integration = new ZshIntegration(path.join(config.dataDir, 'shell'));
   const viewers = new Viewers();
+  // The `aubergine` command for programs inside sessions, at the end of their PATH.
+  const commandFolder = await writeCommandLauncher(config.dataDir);
+  const sessionPath = pathWithCommand(shellEnvironment(process.env).PATH ?? '', commandFolder);
   const sessions = new Sessions(hub, runtime, {
     integration,
     currentCanvas: () => viewers.lastViewedCanvasId,
@@ -43,6 +47,8 @@ async function main(): Promise<void> {
       [SESSION_ENV.url]: `http://127.0.0.1:${listeningPort}`,
       [SESSION_ENV.sessionId]: sessionId,
       [SESSION_ENV.token]: sessionToken(token, sessionId),
+      [SESSION_ENV.bin]: commandFolder,
+      PATH: sessionPath,
     }),
     logPrompts: () => settings.value.agents.logPrompts,
     agentLaunchLine: async (_agent, args) =>

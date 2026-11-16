@@ -1,6 +1,7 @@
 import { spawnSync } from 'node:child_process';
 import { createInterface } from 'node:readline';
-import { readFile } from 'node:fs/promises';
+import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import os from 'node:os';
 import path from 'node:path';
 import { AubergineError, createClient, type Client, type CreateTokenBody, type ListCanvasesResult } from '@aubergine/client';
 import {
@@ -22,6 +23,7 @@ import {
   type HookEvent,
 } from './agents/claude-code';
 import { agentClient } from './cli/agent';
+import { parseWorkflowCommand, runWorkflowCommand } from './cli/workflow';
 import { openBrowser, sessionAddress } from './cli/open-browser';
 import { commandsFor, formatAgents, formatOutside, normaliseTty, toShells } from './cli/outside';
 import {
@@ -123,6 +125,29 @@ async function allCanvases(config: Config): Promise<CanvasSummary[]> {
 async function canvasField(config: Config, name: string | null): Promise<{ canvasId?: string }> {
   if (name === null) return {};
   return { canvasId: resolveCanvas(await allCanvases(config), name).id };
+}
+
+async function readStdin(): Promise<string> {
+  const chunks: Buffer[] = [];
+  for await (const chunk of process.stdin) chunks.push(chunk as Buffer);
+  return Buffer.concat(chunks).toString('utf8');
+}
+
+/** Opens some text in the user's editor. Gives back what they saved, or null when the editor did not end well. */
+async function editText(text: string): Promise<string | null> {
+  if (!process.stdin.isTTY) throw new UsageError('There is no terminal to open an editor in. Use: aubergine workflow edit <name> --file <path>');
+  const dir = await mkdtemp(path.join(os.tmpdir(), 'aubergine-edit-'));
+  const file = path.join(dir, 'workflow.json');
+  try {
+    await writeFile(file, text, { mode: 0o600 });
+    // The editor is the user's own setting, run in their shell so that one with arguments works.
+    const editor = process.env.VISUAL || process.env.EDITOR || 'vi';
+    const result = spawnSync(`${editor} "$1"`, ['sh', file], { shell: true, stdio: 'inherit' });
+    if (result.status !== 0) return null;
+    return await readFile(file, 'utf8');
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
 }
 
 /** The daemon said no, with a message meant for the user. */
@@ -405,6 +430,18 @@ async function main(): Promise<number> {
       }
       return 0;
     }
+
+    case 'workflow':
+      return runWorkflowCommand(parseWorkflowCommand(command.words), {
+        owner: (work) => v1(config, work),
+        env: process.env,
+        sessions: async () => StateResponse.parse(await call(config, 'GET', paths.state)).state.sessions,
+        print: (text) => console.log(text),
+        readText: (file) => (file === '-' ? readStdin() : readFile(file, 'utf8')),
+        writeText: (file, text) => writeFile(file, text),
+        edit: editText,
+        ask,
+      });
 
     case 'note': {
       const entry = await agentClient().appendNote(command.text);
