@@ -14,7 +14,8 @@ import { existsSync, readFileSync, rmSync } from 'node:fs';
 import path from 'node:path';
 import { setTimeout as sleep } from 'node:timers/promises';
 import { fileURLToPath } from 'node:url';
-import { CanvasSummary, CreateSessionResponse, StateResponse, paths, publicPaths } from '@aubergine/shared';
+import { createClient } from '@aubergine/client';
+import { CreateSessionResponse, StateResponse, paths } from '@aubergine/shared';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const port = Number(process.env.LOAD_PORT ?? 4720);
@@ -96,11 +97,8 @@ const kinds = [
 // The canvas that is there from the start, plus two more.
 const first = StateResponse.parse(await (await fetch(origin + paths.state, { headers })).json()).defaultCanvasId;
 const canvasIds = [first];
-for (const name of CANVASES) {
-  const response = await fetch(origin + publicPaths.canvases, { method: 'POST', headers, body: JSON.stringify({ name }) });
-  if (!response.ok) throw new Error(`Could not create the canvas ${name}: HTTP ${response.status}`);
-  canvasIds.push(CanvasSummary.parse(await response.json()).id);
-}
+const client = createClient({ baseUrl: origin, headers: { origin, cookie: headers.cookie } });
+for (const name of CANVASES) canvasIds.push((await client.createCanvas({ body: { name } })).id);
 
 for (const [index, kind] of kinds.entries()) {
   // Dealt out in turn, so every canvas gets a third of each kind.

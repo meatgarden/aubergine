@@ -1,0 +1,55 @@
+import type { Scope } from './tokens';
+
+/**
+ * What can be asked of the server, and what a caller needs to be allowed it.
+ * This is the table `authorize` in the daemon decides by, and the one the
+ * description of the API reads, so that the two say the same thing.
+ */
+
+/** What a session may do, to itself only. */
+export const SESSION_ACTIONS = ['attention.set', 'note.append', 'agent.report'] as const;
+
+/** For a token, each of these needs the scope beside it. */
+export const SCOPE_OF = {
+  'canvases.read': 'read',
+  'sessions.read': 'read',
+  'events.read': 'read',
+  'canvases.write': 'canvases:write',
+  'layout.write': 'canvases:write',
+  'canvases.show': 'canvases:write',
+  'sessions.write': 'sessions:write',
+  'sessions.show': 'sessions:write',
+  'notes.write': 'notes:write',
+  // Adding to a note log: a session may for itself; a token with `notes:write` may for any session.
+  'note.append': 'notes:write',
+} as const satisfies Record<string, Scope>;
+
+/**
+ * What no token may ever do, whatever its scopes: these stay with the owner
+ * in the signed-in browser. Making or revoking credentials, reading what
+ * tokens did, changing settings, and anything that reaches processes outside
+ * Aubergine.
+ */
+export const NEVER_BY_TOKEN = ['tokens.manage', 'activity.read', 'settings.write', 'processes.signal', 'outside.read', 'outside.move'] as const;
+
+export type Action = (typeof SESSION_ACTIONS)[number] | keyof typeof SCOPE_OF | (typeof NEVER_BY_TOKEN)[number];
+
+/** Every action there is. */
+export const ACTIONS: readonly Action[] = [...new Set<Action>([...SESSION_ACTIONS, ...(Object.keys(SCOPE_OF) as (keyof typeof SCOPE_OF)[]), ...NEVER_BY_TOKEN])];
+
+/** The scope a token needs for an action, or null when no token may do it. */
+export function scopeFor(action: Action): Scope | null {
+  return (SCOPE_OF as Partial<Record<Action, Scope>>)[action] ?? null;
+}
+
+/** Who may do an action, for the description of a route. */
+export interface Access {
+  /** The scope an API token needs; null when no token may. */
+  scope: Scope | null;
+  /** Whether a session's own token may, for its own session. */
+  session: boolean;
+}
+
+export function accessOf(action: Action): Access {
+  return { scope: scopeFor(action), session: (SESSION_ACTIONS as readonly string[]).includes(action) };
+}

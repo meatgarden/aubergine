@@ -2,11 +2,8 @@ import { spawnSync } from 'node:child_process';
 import { createInterface } from 'node:readline';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
+import { AubergineError, createClient, type Client, type CreateTokenBody, type ListCanvasesResult } from '@aubergine/client';
 import {
-  CanvasList,
-  CanvasSummary,
-  CreatedToken,
-  TokenList,
   CreateSessionResponse,
   ErrorResponse,
   OutsideResponse,
@@ -15,9 +12,7 @@ import {
   ShowResponse,
   StateResponse,
   paths,
-  publicPaths,
   type NodeRect,
-  type TokenView,
   type OutsideTerminal,
 } from '@aubergine/shared';
 import {
@@ -84,17 +79,44 @@ async function call(config: Config, method: string, urlPath: string, body?: unkn
   return response.json();
 }
 
+/**
+ * The public API (/v1) as this command calls it: with the client generated
+ * from its description, as the owner. The access token is read from the data
+ * folder (a file only that user can read) and sent as the browser's cookie
+ * with the server's own origin, so the command passes exactly the checks the
+ * signed-in browser passes.
+ */
+async function ownerClient(config: Config): Promise<Client> {
+  const origin = `http://127.0.0.1:${config.port}`;
+  let token: string;
+  try {
+    token = (await readFile(path.join(config.dataDir, 'token'), 'utf8')).trim();
+  } catch {
+    throw new UsageError(`No access token in ${config.dataDir}. Start the Aubergine server first.`);
+  }
+  return createClient({ baseUrl: origin, headers: { origin, cookie: `${cookieName(config.port)}=${token}` } });
+}
+
+/** Runs calls made with the client, saying what the server said in the words this command uses. */
+async function v1<T>(config: Config, work: (client: Client) => Promise<T>): Promise<T> {
+  try {
+    return await work(await ownerClient(config));
+  } catch (error) {
+    if (!(error instanceof AubergineError)) throw error;
+    if (error.code === 'network') throw new UsageError(`The Aubergine server is not answering on http://127.0.0.1:${config.port}. Is it running?`);
+    throw new ServerRefusal(error.message);
+  }
+}
+
 /** Every canvas, in tab order. The list comes in pages. */
+type CanvasSummary = ListCanvasesResult['items'][number];
+
 async function allCanvases(config: Config): Promise<CanvasSummary[]> {
-  const canvases: CanvasSummary[] = [];
-  let cursor: string | null = null;
-  do {
-    const query: string = cursor ? `?cursor=${encodeURIComponent(cursor)}` : '';
-    const page = CanvasList.parse(await call(config, 'GET', publicPaths.canvases + query));
-    canvases.push(...page.items);
-    cursor = page.nextCursor;
-  } while (cursor);
-  return canvases;
+  return v1(config, async (client) => {
+    const canvases: CanvasSummary[] = [];
+    for await (const canvas of client.each.listCanvases()) canvases.push(canvas);
+    return canvases;
+  });
 }
 
 /** `--canvas <name>` as a request field; nothing when no canvas was named, so the server chooses. */
@@ -221,7 +243,7 @@ async function main(): Promise<number> {
     }
 
     case 'canvas-new': {
-      const canvas = CanvasSummary.parse(await call(config, 'POST', publicPaths.canvases, { name: command.canvasName }));
+      const canvas = await v1(config, (client) => client.createCanvas({ body: { name: command.canvasName } }));
       console.log(`Added the canvas "${canvas.name}". Put a session on it with: aubergine here --canvas "${canvas.name}"`);
       return 0;
     }
@@ -395,8 +417,9 @@ async function main(): Promise<number> {
     // the access token from the data folder (a file only that user can read), as `call` does for every
     // owner-only command. It sends it as the browser would, so it passes exactly the checks the browser passes.
     case 'token-create': {
-      const body = { name: command.tokenName, scopes: command.scopes, ...expiryFromOption(command.expires) };
-      const created = CreatedToken.parse(await call(config, 'POST', publicPaths.tokens, body));
+      // The scopes are as typed; whether each is one a token can have is for the server to say.
+      const body = { name: command.tokenName, scopes: command.scopes as CreateTokenBody['scopes'], ...expiryFromOption(command.expires) };
+      const created = await v1(config, (client) => client.createToken({ body }));
       // The secret, alone, on standard output, so that it can be captured: TOKEN=$(aubergine token create …).
       // Everything said about it goes to standard error. It is not written anywhere else.
       console.error(
@@ -408,26 +431,27 @@ async function main(): Promise<number> {
     }
 
     case 'token-list': {
-      const tokens: TokenView[] = [];
-      let cursor: string | null = null;
-      do {
-        const query: string = cursor ? `?cursor=${encodeURIComponent(cursor)}` : '';
-        const page = TokenList.parse(await call(config, 'GET', publicPaths.tokens + query));
-        tokens.push(...page.items);
-        cursor = page.nextCursor;
-      } while (cursor);
+      const tokens = await v1(config, async (client) => {
+        const all = [];
+        for await (const token of client.each.listTokens()) all.push(token);
+        return all;
+      });
       console.log(formatTokens(tokens));
       return 0;
     }
 
     case 'token-revoke': {
-      const tokens = TokenList.parse(await call(config, 'GET', `${publicPaths.tokens}?limit=500`)).items;
+      const tokens = await v1(config, async (client) => {
+        const all = [];
+        for await (const token of client.each.listTokens()) all.push(token);
+        return all;
+      });
       const token = resolveToken(tokens, command.query);
       if (token.revokedAt) {
         console.log(`"${token.name}" was already revoked.`);
         return 0;
       }
-      await call(config, 'DELETE', publicPaths.token(token.id));
+      await v1(config, (client) => client.revokeToken({ tokenId: token.id }));
       console.log(`Revoked "${token.name}". It stops working at once.`);
       return 0;
     }

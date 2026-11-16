@@ -151,7 +151,8 @@ export function normaliseTags(tags: readonly string[]): string[] {
 export const Tags = z
   .array(z.string().trim().min(1).max(TAG_MAX_LENGTH))
   .max(TAGS_MAX)
-  .transform((tags) => normaliseTags(tags));
+  // `overwrite`, not `transform`: the value is tidied but its kind stays the same, so it can still be described.
+  .overwrite((tags) => normaliseTags(tags));
 
 /** A terminal session. The running shell itself is owned by the session runtime. */
 export const Session = z.object({

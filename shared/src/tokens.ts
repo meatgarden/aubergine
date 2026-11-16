@@ -42,7 +42,8 @@ const Scopes = z
   .array(Scope)
   .min(1)
   .max(GRANTABLE_SCOPES.length)
-  .transform((scopes) => GRANTABLE_SCOPES.filter((scope) => scopes.includes(scope)));
+  // Always in the same order, smallest first. `overwrite` keeps the kind of value, so it can still be described.
+  .overwrite((scopes) => GRANTABLE_SCOPES.filter((scope) => scopes.includes(scope)));
 
 /** A token as it is stored. `hash` is the SHA-256 of the secret; the secret itself is never stored. */
 export const ApiToken = z.object({
@@ -80,10 +81,10 @@ export const TOKEN_MAX_DAYS = 3650;
 /** Body of creating a token. It may expire on a date, or after a number of days, or never. */
 export const CreateTokenRequest = z
   .object({
-    name: TokenName,
-    scopes: Scopes,
-    expiresAt: Timestamp.optional(),
-    expiresInDays: z.number().int().min(1).max(TOKEN_MAX_DAYS).optional(),
+    name: TokenName.describe('What will use it.'),
+    scopes: Scopes.describe('What it may do. At least one.'),
+    expiresAt: Timestamp.optional().describe('When it stops working. Never, when neither this nor `expiresInDays` is given.'),
+    expiresInDays: z.number().int().min(1).max(TOKEN_MAX_DAYS).optional().describe('In how many days it stops working.'),
   })
   .refine((body) => body.expiresAt === undefined || body.expiresInDays === undefined, 'Give expiresAt or expiresInDays, not both');
 export type CreateTokenRequest = z.infer<typeof CreateTokenRequest>;
@@ -131,6 +132,8 @@ export const Capabilities = z.object({
   name: z.literal('aubergine'),
   version: z.string(),
   api: z.literal('v1'),
+  /** Where the description of the API is served, as an OpenAPI document. */
+  description: z.string(),
   features: z.array(z.string()),
   scopes: z.array(z.object({ name: KnownScope, grantable: z.boolean(), meaning: z.string() })),
   /** Who is asking. A token learns its own name and scopes here and nowhere else. */
@@ -143,4 +146,4 @@ export const Capabilities = z.object({
 export type Capabilities = z.infer<typeof Capabilities>;
 
 /** The features a client may look for in `Capabilities.features`. */
-export const FEATURES = ['canvases', 'sessions', 'layout', 'notes', 'tags', 'events', 'show', 'tokens', 'activity'] as const;
+export const FEATURES = ['canvases', 'sessions', 'layout', 'notes', 'tags', 'events', 'show', 'tokens', 'activity', 'openapi'] as const;

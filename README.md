@@ -684,33 +684,38 @@ The names `terminal:read`, `terminal:input`, `workflows:write` and `runs:write` 
 
 **What no token can do, whatever its scopes:** create, list or revoke tokens; read the activity log; change settings; see, bring in or stop terminals outside Aubergine. Those stay with you, in the signed-in browser and the `aubergine` command.
 
-**The routes.**
+**The routes** are in [docs/api.md](docs/api.md): one section for each, with the scope it needs, its parameters, what it takes and gives, and an example with curl. In short: canvases (list, create, read, change, close, show), sessions (list, start, read, change, end, move, park, restore, show), notes, layout (nodes and frames), and a stream of changes.
 
+That reference is not written by hand. Every route is declared once in the code; the server registers its handlers from those declarations and describes them, as an OpenAPI 3.1 document, at:
+
+```sh
+curl -H "Authorization: Bearer $TOKEN" http://127.0.0.1:4600/v1/openapi.json
 ```
-GET    /v1                                   what this server can do, and who is asking
-GET    /v1/canvases                          list canvases, each with counts of sessions, waiting and unread
-POST   /v1/canvases                          {"name": "...", "color"?, "labels"?}
-GET    /v1/canvases/<id>                     one canvas with its nodes and frames
-PATCH  /v1/canvases/<id>                     any of name, color, order, labels
-DELETE /v1/canvases/<id>?sessions=park       close it; or ?sessions=move&to=<canvas id>
-POST   /v1/canvases/<id>/show                switch an open browser to it
-GET    /v1/canvases/<id>/sessions            the sessions on it
-POST   /v1/canvases/<id>/sessions            start a session there: {"name"?, "cwd"?, "command"?, "position"?, "tags"?}
-GET    /v1/sessions                          every session; ?state=open | parked | exited
-GET    /v1/sessions/<id>                     one session
-PATCH  /v1/sessions/<id>                     any of name, tags (sessions:write), note (notes:write)
-DELETE /v1/sessions/<id>                     end it
-POST   /v1/sessions/<id>/move                {"canvasId": "...", "position"?}
-POST   /v1/sessions/<id>/park                take it off its canvas; the shell keeps running
-POST   /v1/sessions/<id>/restore             {"canvasId"?} put it back
-POST   /v1/sessions/<id>/show                bring it up in an open browser
-POST   /v1/sessions/<id>/notes               {"text": "..."} add to its note log
-PATCH  /v1/canvases/<id>/nodes/<node id>     move, resize or color a node
-POST   /v1/canvases/<id>/frames              add a frame
-PATCH  /v1/canvases/<id>/frames/<frame id>   change a frame
-DELETE /v1/canvases/<id>/frames/<frame id>   remove a frame
-GET    /v1/events                            a stream of changes (server-sent events); ?canvasId= for one canvas
+
+The reference and a typed TypeScript client (`client/` in this repository) are generated from that description, so they cannot say something the server does not do. The description needs no scope, and `GET /v1` says where it is.
+
+**From TypeScript,** in Node or a browser, with no dependencies:
+
+```ts
+import { AubergineError, createClient } from '@aubergine/client';
+
+const api = createClient({ baseUrl: 'http://127.0.0.1:4600', token: process.env.TOKEN });
+
+const canvas = await api.createCanvas({ body: { name: 'Builds' } });
+await api.startSession({ canvasId: canvas.id, body: { name: 'tests', command: 'npm test' } });
+
+for await (const session of api.each.listSessions({ query: { state: 'open' } })) {
+  console.log(session.name);          // every session, fetched a page at a time
+}
+
+try {
+  await api.endSession({ sessionId });
+} catch (error) {
+  if (error instanceof AubergineError) console.error(error.status, error.code, error.message);
+}
 ```
+
+The client is part of this repository's workspace for now, not a published package.
 
 The shapes are meant to last:
 
@@ -733,6 +738,7 @@ Tokens work on this computer only. The server listens on `127.0.0.1` and that do
 ```sh
 pnpm dev          # daemon on :4600 and the web dev server on http://127.0.0.1:5173
 pnpm check        # type check, lint, unit tests and the browser smoke test
+pnpm generate     # write the client and docs/api.md again after changing a route or a schema
 pnpm load-canvas  # three throwaway canvases with 90 sessions between them, for judging scale by hand
 ```
 

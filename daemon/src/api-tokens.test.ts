@@ -372,7 +372,8 @@ describe('every route has a rule', () => {
     expect(reads.length).toBeGreaterThan(7);
     for (const route of reads) {
       const answer = await call(writer.secret, 'GET', filled(route.url));
-      expect(answer.status, `GET ${route.url}`).toBe(route.url === '/v1' ? 200 : 403);
+      // The two that need no scope: what the server can do, and the description of the API.
+      expect(answer.status, `GET ${route.url}`).toBe(route.url === '/v1' || route.url === '/v1/openapi.json' ? 200 : 403);
     }
   });
 
@@ -424,7 +425,7 @@ describe('every route has a rule', () => {
         expect((await call(secret, route.method, elsewhere, route.method === 'GET' || route.method === 'DELETE' ? undefined : {})).status, `${route.method} ${route.url} for another session`).toBe(403);
       }
     }
-    expect(allowed.sort()).toEqual(['GET /v1', 'POST /v1/sessions/:sessionId/notes', 'PUT /v1/sessions/:sessionId/agent', 'PUT /v1/sessions/:sessionId/attention']);
+    expect(allowed.sort()).toEqual(['GET /v1', 'GET /v1/openapi.json', 'POST /v1/sessions/:sessionId/notes', 'PUT /v1/sessions/:sessionId/agent', 'PUT /v1/sessions/:sessionId/attention']);
     // Session tokens are not recorded in the activity log: it is the record of API tokens.
     expect(await activityOf()).toEqual([]);
   });

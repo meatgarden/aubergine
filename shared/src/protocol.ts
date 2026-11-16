@@ -392,6 +392,8 @@ export const publicPaths = {
   canvasFrame: (canvasId: string, frameId: string) => `/v1/canvases/${canvasId}/frames/${frameId}`,
   /** What this server can do, and who is asking. Needs no scope. */
   root: '/v1',
+  /** The description of the API, as an OpenAPI document. Needs no scope. */
+  description: '/v1/openapi.json',
   sessions: '/v1/sessions',
   session: (sessionId: string) => `/v1/sessions/${sessionId}`,
   parkSession: (sessionId: string) => `/v1/sessions/${sessionId}/park`,
@@ -417,9 +419,8 @@ export const PAGE_MAX = 500;
 
 /** Query of every list: how many to return, and where to carry on from. */
 export const PageQuery = z.object({
-  limit: z.coerce.number().int().min(1).max(PAGE_MAX).default(PAGE_DEFAULT),
-  /** The `nextCursor` of the page before. Opaque: do not build or change it. */
-  cursor: z.string().min(1).max(512).optional(),
+  limit: z.coerce.number().int().min(1).max(PAGE_MAX).default(PAGE_DEFAULT).describe('How many items to return at most.'),
+  cursor: z.string().min(1).max(512).optional().describe('The `nextCursor` of the page before. Opaque: do not build or change it.'),
 });
 export type PageQuery = z.infer<typeof PageQuery>;
 
@@ -442,9 +443,9 @@ export const CanvasList = pageOf(CanvasSummary);
 export type CanvasList = z.infer<typeof CanvasList>;
 
 export const CreateCanvasRequest = z.object({
-  name: CanvasName,
-  color: NodeColor.optional(),
-  labels: Labels.optional(),
+  name: CanvasName.describe('The name on its tab.'),
+  color: NodeColor.optional().describe('The color of its tab.'),
+  labels: Labels.optional().describe('Pairs of key and value for tools of your own to give meaning to.'),
 });
 export type CreateCanvasRequest = z.infer<typeof CreateCanvasRequest>;
 
@@ -458,7 +459,10 @@ export type UpdateCanvasRequest = z.infer<typeof UpdateCanvasRequest>;
  * left out only when the canvas has no sessions.
  */
 export const CloseCanvasQuery = z
-  .object({ sessions: z.enum(['park', 'move']).optional(), to: Id.optional() })
+  .object({
+    sessions: z.enum(['park', 'move']).optional().describe('What happens to the sessions on it. Needed when it has any.'),
+    to: Id.optional().describe('With `sessions=move`: the canvas to move them to.'),
+  })
   .refine((query) => query.sessions !== 'move' || query.to !== undefined, 'sessions=move needs to=<canvas id>');
 export type CloseCanvasQuery = z.infer<typeof CloseCanvasQuery>;
 
@@ -472,15 +476,11 @@ export const Position = z.object({
 export type Position = z.infer<typeof Position>;
 
 export const StartSessionRequest = z.object({
-  name: SessionName.optional(),
-  /** Folder to start in (absolute path). */
-  cwd: z.string().startsWith('/').max(4096).optional(),
-  /** A line to type into the new session once its shell is ready. */
-  command: z.string().trim().min(1).max(4000).optional(),
-  /** Where to put it. A free spot is found when omitted. */
-  position: Position.optional(),
-  /** Short words of your own to find and filter the session by. */
-  tags: Tags.optional(),
+  name: SessionName.optional().describe('What to call it. A name is made up when left out.'),
+  cwd: z.string().startsWith('/').max(4096).optional().describe('Folder to start in (absolute path). The default folder when left out.'),
+  command: z.string().trim().min(1).max(4000).optional().describe('A line to type into the new session once its shell is ready.'),
+  position: Position.optional().describe('Where to put it. A free spot is found when left out.'),
+  tags: Tags.optional().describe('Short words of your own to find and filter the session by.'),
 });
 export type StartSessionRequest = z.infer<typeof StartSessionRequest>;
 
@@ -496,11 +496,11 @@ export const PlacedSession = z.object({ session: Session, canvasId: Id, node: La
 export type PlacedSession = z.infer<typeof PlacedSession>;
 
 /** Query of listing sessions: a page, optionally only those in one state. */
-export const SessionsQuery = PageQuery.extend({ state: z.enum(['open', 'parked', 'exited']).optional() });
+export const SessionsQuery = PageQuery.extend({ state: z.enum(['open', 'parked', 'exited']).optional().describe('Only sessions in this state.') });
 export type SessionsQuery = z.infer<typeof SessionsQuery>;
 
 /** Body of restoring a parked session: the canvas to put it on. Without one, the canvas most recently looked at. */
-export const RestoreSessionBody = z.object({ canvasId: Id.optional() });
+export const RestoreSessionBody = z.object({ canvasId: Id.optional().describe('The canvas to put it on. Without one, the canvas most recently looked at in a browser.') });
 export type RestoreSessionBody = z.infer<typeof RestoreSessionBody>;
 
 /** The answer to asking for something to be shown: how many browser tabs were asked. */
@@ -508,14 +508,14 @@ export const ShownResponse = z.object({ shown: z.number().int() });
 export type ShownResponse = z.infer<typeof ShownResponse>;
 
 /** Query of the stream of changes: optionally only what concerns one canvas. */
-export const EventsQuery = z.object({ canvasId: Id.optional() });
+export const EventsQuery = z.object({ canvasId: Id.optional().describe('Only changes that concern this canvas.') });
 export type EventsQuery = z.infer<typeof EventsQuery>;
 
 export const TokenList = pageOf(TokenView);
 export type TokenList = z.infer<typeof TokenList>;
 
 /** Query of reading the activity log: a page, optionally of one token only. Newest first. */
-export const ActivityQuery = PageQuery.extend({ tokenId: Id.optional() });
+export const ActivityQuery = PageQuery.extend({ tokenId: Id.optional().describe('Only calls made with this token.') });
 export type ActivityQuery = z.infer<typeof ActivityQuery>;
 
 export const ActivityList = pageOf(ActivityEntry);
@@ -525,8 +525,8 @@ export const SessionList = pageOf(Session);
 export type SessionList = z.infer<typeof SessionList>;
 
 export const MoveSessionRequest = z.object({
-  canvasId: Id,
-  position: z.object({ x: NodeRect.shape.x, y: NodeRect.shape.y }).optional(),
+  canvasId: Id.describe('The canvas to move it to.'),
+  position: z.object({ x: NodeRect.shape.x, y: NodeRect.shape.y }).optional().describe('Where to put it there. A free spot is found when left out.'),
 });
 export type MoveSessionRequest = z.infer<typeof MoveSessionRequest>;
 
