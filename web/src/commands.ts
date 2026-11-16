@@ -466,6 +466,22 @@ export const COMMANDS: readonly Command[] = [
     run: focusNextControls,
   },
   {
+    id: 'tokens.manage',
+    title: 'API tokens…',
+    description: 'Creates and revokes tokens that let programs of your own call the API.',
+    group: 'Panels',
+    available: always,
+    run: (state) => state.togglePanel('tokens'),
+  },
+  {
+    id: 'activity.show',
+    title: 'API activity…',
+    description: 'Shows what each API token did, call by call.',
+    group: 'Panels',
+    available: always,
+    run: (state) => state.togglePanel('activity'),
+  },
+  {
     id: 'shortcuts.show',
     title: 'Show shortcuts',
     description: 'Shows every command and its keys.',

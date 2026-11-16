@@ -32,6 +32,7 @@ import { canvasActions } from './canvas-actions';
 import { runCommand } from './commands';
 import { hint } from './shortcuts';
 import { ShortcutSheet } from './ShortcutSheet';
+import { ActivityScreen, TokenScreen } from './TokenScreen';
 import { FrameNode, type FrameFlowNode } from './FrameNode';
 import { TerminalNode, type TerminalFlowNode } from './TerminalNode';
 import { isFullZoom, loadViewport, saveViewport, useZoomToNode } from './viewport';
@@ -428,6 +429,8 @@ export function Canvas() {
       </ReactFlow>
       <Picker />
       <ShortcutSheet />
+      <TokenScreen />
+      <ActivityScreen />
     </div>
   );
 }

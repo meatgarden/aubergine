@@ -99,7 +99,7 @@ export interface AppStore {
 /** The longest a terminal is waited for after it was asked to take the keyboard. */
 const SETTLE_MS = 700;
 
-export type Panel = 'parked' | 'outside' | 'shortcuts';
+export type Panel = 'parked' | 'outside' | 'shortcuts' | 'tokens' | 'activity';
 export interface Ask {
   kind: 'rename-session' | 'rename-canvas' | 'note' | 'move' | 'tags' | 'list-search';
   /** The session or canvas it is about. */

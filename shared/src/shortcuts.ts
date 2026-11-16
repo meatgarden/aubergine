@@ -70,6 +70,8 @@ export const COMMAND_IDS = [
   'list.sort.cycle',
   'list.density.toggle',
   'controls.focus',
+  'tokens.manage',
+  'activity.show',
   'shortcuts.show',
   'panels.close',
 ] as const;

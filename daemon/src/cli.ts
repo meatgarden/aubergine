@@ -5,6 +5,8 @@ import path from 'node:path';
 import {
   CanvasList,
   CanvasSummary,
+  CreatedToken,
+  TokenList,
   CreateSessionResponse,
   ErrorResponse,
   OutsideResponse,
@@ -15,6 +17,7 @@ import {
   paths,
   publicPaths,
   type NodeRect,
+  type TokenView,
   type OutsideTerminal,
 } from '@aubergine/shared';
 import {
@@ -29,13 +32,16 @@ import { commandsFor, formatAgents, formatOutside, normaliseTty, toShells } from
 import {
   USAGE,
   UsageError,
+  expiryFromOption,
   formatCanvases,
+  formatTokens,
   formatSessions,
   insideAubergine,
   nameForFolder,
   parseCommand,
   resolveCanvas,
   resolveSession,
+  resolveToken,
 } from './cli/commands';
 import { doctor, ensureBuilt, formatChecks, formatVersion, installRoot, linkFolders, removeCopy, serve, serverAddress, signInAddress, uninstallPlan, update, versionInfo, whoAnswers } from './cli/install';
 import { loadConfig, type Config } from './config';
@@ -381,6 +387,48 @@ async function main(): Promise<number> {
     case 'note': {
       const entry = await agentClient().appendNote(command.text);
       console.log(entry ? 'Noted.' : 'Not kept.');
+      return 0;
+    }
+
+    // Tokens are made, listed and revoked by the owner only: over HTTP that means the signed-in browser,
+    // never a token. This command is the owner too: it runs as the same user on the same machine and reads
+    // the access token from the data folder (a file only that user can read), as `call` does for every
+    // owner-only command. It sends it as the browser would, so it passes exactly the checks the browser passes.
+    case 'token-create': {
+      const body = { name: command.tokenName, scopes: command.scopes, ...expiryFromOption(command.expires) };
+      const created = CreatedToken.parse(await call(config, 'POST', publicPaths.tokens, body));
+      // The secret, alone, on standard output, so that it can be captured: TOKEN=$(aubergine token create …).
+      // Everything said about it goes to standard error. It is not written anywhere else.
+      console.error(
+        `Made the token "${created.token.name}" (${created.token.scopes.join(', ')}${created.token.expiresAt ? `, expires ${created.token.expiresAt.slice(0, 10)}` : ''}).\n` +
+          'Its secret is below. It is shown this once and cannot be shown again; keep it like a password.',
+      );
+      console.log(created.secret);
+      return 0;
+    }
+
+    case 'token-list': {
+      const tokens: TokenView[] = [];
+      let cursor: string | null = null;
+      do {
+        const query: string = cursor ? `?cursor=${encodeURIComponent(cursor)}` : '';
+        const page = TokenList.parse(await call(config, 'GET', publicPaths.tokens + query));
+        tokens.push(...page.items);
+        cursor = page.nextCursor;
+      } while (cursor);
+      console.log(formatTokens(tokens));
+      return 0;
+    }
+
+    case 'token-revoke': {
+      const tokens = TokenList.parse(await call(config, 'GET', `${publicPaths.tokens}?limit=500`)).items;
+      const token = resolveToken(tokens, command.query);
+      if (token.revokedAt) {
+        console.log(`"${token.name}" was already revoked.`);
+        return 0;
+      }
+      await call(config, 'DELETE', publicPaths.token(token.id));
+      console.log(`Revoked "${token.name}". It stops working at once.`);
       return 0;
     }
 
