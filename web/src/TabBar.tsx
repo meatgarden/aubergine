@@ -144,7 +144,7 @@ export function TabBar() {
                   onClick={() => {
                     const on = canvas.messagesFrom.includes(canvas.id);
                     // Switching it on is a decision: said in full before it is taken.
-                    if (!on && !window.confirm(`Let the terminals on “${canvas.name}” message each other?\n\nAn agent there will be able to send a message to another terminal on this canvas, and to be told that one waits. A message is never typed into a terminal. Every message is shown to you, a thread between two pauses after a few turns until you have looked, and terminals marked “people only” take messages from you alone. Terminals that start an agent are “people only” from the start unless you changed that: such a terminal can send, and receives only once you open it.`)) return;
+                    if (!on && !window.confirm(`Let the terminals on “${canvas.name}” message each other?\n\nAn agent there will be able to send a message to another terminal on this canvas, and to be told that one waits. A message is never typed into a terminal. Every message is shown to you, a thread between two pauses after a few turns until you have looked, and terminals marked “people only” take messages from you alone. Terminals that start an agent are “people only” from the start unless you changed that: such a terminal can send, and receives only once you say so: open its drawer (✉ on the terminal) and tick that it takes messages while people only. That opens it to messages from terminals and to nothing else.`)) return;
                     run(api.setCanvasMessaging(canvas.id, !on));
                   }}
                   data-testid="tab-messaging"

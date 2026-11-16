@@ -127,6 +127,8 @@ export const api = {
   createToken: (request: { name: string; scopes: Scope[]; expiresInDays?: number; reviewWorkflowChanges?: boolean; reach?: Reach }) => v1.createToken({ body: request }),
   revokeToken: (tokenId: string) => v1.revokeToken({ tokenId }),
   /** Marks a session "people only", or opens it to tokens again. */
+  /** Whether a "people only" session still takes messages from other terminals. */
+  setTakesMessages: (sessionId: string, takesMessages: boolean) => v1.setTakesMessages({ sessionId, body: { takesMessages } }),
   protectSession: (sessionId: string, peopleOnly: boolean) => v1.protectSession({ sessionId, body: { peopleOnly } }),
   getActivity: (query: { tokenId?: string | undefined; sessionId?: string | undefined; cursor?: string | undefined; limit?: number }) =>
     v1.listActivity({ query: { limit: query.limit ?? 50, ...(query.tokenId ? { tokenId: query.tokenId } : {}), ...(query.sessionId ? { sessionId: query.sessionId } : {}), ...(query.cursor ? { cursor: query.cursor } : {}) } }),

@@ -104,7 +104,7 @@ async function makeToken(name: string, scopes: Scope[]): Promise<string> {
   return made.body.secret as string;
 }
 function fakeSession(name: string, cwd: string | null): Session {
-  const session: Session = { id: newId(), projectId: hub.state.project.id, name, createdAt: new Date().toISOString(), state: 'open', cwd, command: null, note: '', status: NO_STATUS, attention: NO_ATTENTION, noteLog: [], agent: null, lastInputAt: null, lastOutputAt: null, tags: [], parkedFrom: null, peopleOnly: false, typedBy: null, recap: null, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null } };
+  const session: Session = { id: newId(), projectId: hub.state.project.id, name, createdAt: new Date().toISOString(), state: 'open', cwd, command: null, note: '', status: NO_STATUS, attention: NO_ATTENTION, noteLog: [], agent: null, lastInputAt: null, lastOutputAt: null, tags: [], parkedFrom: null, peopleOnly: false, typedBy: null, recap: null, takesMessages: false, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null } };
   hub.emit({ type: 'session.created', session, canvasId: hub.state.canvases[0]!.id, node: { id: newId(), sessionId: session.id, x: 0, y: 0, width: 640, height: 400, color: 'none' } });
   return session;
 }

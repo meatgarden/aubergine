@@ -547,6 +547,13 @@ export class Sessions {
     return this.find(sessionId);
   }
 
+  /** Says whether a "people only" session still takes messages from other terminals. The owner's alone to call. */
+  setTakesMessages(sessionId: string, takesMessages: boolean): Session {
+    const session = this.find(sessionId);
+    if (session.takesMessages !== takesMessages) this.hub.emit({ type: 'session.takesMessages', sessionId, takesMessages });
+    return this.find(sessionId);
+  }
+
   /** Notes that a token typed into the session, for the owner to see. At most once every few seconds per session; never what was typed. */
   noteTypedBy(sessionId: string, name: string): void {
     const session = this.hub.state.sessions.find((s) => s.id === sessionId);
@@ -702,7 +709,7 @@ export class Sessions {
       noteLog: [],
       agent: null,
       parkedFrom: null, peopleOnly: false, typedBy: null,
-    recap: null, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null },
+    recap: null, takesMessages: false, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null },
       lastInputAt: null,
       lastOutputAt: null,
       tags,

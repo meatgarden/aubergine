@@ -344,6 +344,7 @@ describe('every route has a rule', () => {
     'POST /v1/repository-workflows/save',
     // Closing a session to programs, or opening it again.
     'PUT /v1/sessions/:sessionId/protection',
+    'PUT /v1/sessions/:sessionId/takes-messages',
   ];
 
   it('has the routes the plan lists, under /v1', () => {

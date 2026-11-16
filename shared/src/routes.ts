@@ -33,7 +33,7 @@ import {
 import { Capabilities, CreateTokenRequest, CreatedToken, TokenView } from './tokens';
 import { Draft, ShelfElement } from './drafts';
 import { WriteRecapRequest, WrittenRecap } from './recap';
-import { InputRequest, InputResponse, OutputQuery, OutputResponse, ProtectRequest, RunCommandRequest, RunCommandResponse, ScreenResponse, TerminalSearchQuery, TerminalSearchResponse } from './terminal';
+import { InputRequest, InputResponse, OutputQuery, OutputResponse, ProtectRequest, RunCommandRequest, TakesMessagesRequest, RunCommandResponse, ScreenResponse, TerminalSearchQuery, TerminalSearchResponse } from './terminal';
 import {
   AcceptRepositoryWorkflowRequest,
   RepositoryFileRef,
@@ -982,6 +982,19 @@ export const ROUTES = {
     action: 'sessions.protect',
     params: sessionId,
     body: ProtectRequest,
+    response: Session,
+    status: 200,
+    errors: [404],
+  }),
+  setTakesMessages: route({
+    method: 'PUT',
+    path: '/v1/sessions/:sessionId/takes-messages',
+    tag: 'Messages',
+    summary: 'Say whether a "people only" session still takes messages from other terminals',
+    description: 'For the owner only. A session that is "people only" is closed to messages from other terminals too, unless this is on: then terminals the owner let message it (by the switch of its canvas) can, while it stays closed to reading and typing, and to every token.',
+    action: 'sessions.protect',
+    params: sessionId,
+    body: TakesMessagesRequest,
     response: Session,
     status: 200,
     errors: [404],

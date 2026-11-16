@@ -293,6 +293,7 @@ export type ListCanvasSessionsResult = {
       text: string;
       at: string;
     } | null;
+    takesMessages: boolean;
     messages: {
       unread: number;
       from: string | null;
@@ -378,6 +379,7 @@ export type StartSessionResult = {
       text: string;
       at: string;
     } | null;
+    takesMessages: boolean;
     messages: {
       unread: number;
       from: string | null;
@@ -469,6 +471,7 @@ export type ListSessionsResult = {
       text: string;
       at: string;
     } | null;
+    takesMessages: boolean;
     messages: {
       unread: number;
       from: string | null;
@@ -535,6 +538,7 @@ export type GetSessionResult = {
     text: string;
     at: string;
   } | null;
+  takesMessages: boolean;
   messages: {
     unread: number;
     from: string | null;
@@ -605,6 +609,7 @@ export type UpdateSessionResult = {
     text: string;
     at: string;
   } | null;
+  takesMessages: boolean;
   messages: {
     unread: number;
     from: string | null;
@@ -680,6 +685,7 @@ export type MoveSessionResult = {
       text: string;
       at: string;
     } | null;
+    takesMessages: boolean;
     messages: {
       unread: number;
       from: string | null;
@@ -755,6 +761,7 @@ export type ParkSessionResult = {
     text: string;
     at: string;
   } | null;
+  takesMessages: boolean;
   messages: {
     unread: number;
     from: string | null;
@@ -825,6 +832,7 @@ export type RestoreSessionResult = {
       text: string;
       at: string;
     } | null;
+    takesMessages: boolean;
     messages: {
       unread: number;
       from: string | null;
@@ -3579,6 +3587,77 @@ export type ProtectSessionResult = {
     text: string;
     at: string;
   } | null;
+  takesMessages: boolean;
+  messages: {
+    unread: number;
+    from: string | null;
+    forOwner: number;
+    paused: number;
+    at: string | null;
+  };
+};
+
+export type SetTakesMessagesBody = {
+  /** True: while "people only", it still takes messages from terminals the owner let message it. It stays closed to reading, to typing and to every token. False: people only closes it to messages as well. */
+  takesMessages: boolean;
+};
+
+export type SetTakesMessagesResult = {
+  id: string;
+  projectId: string;
+  name: string;
+  createdAt: string;
+  state: "open" | "parked" | "exited";
+  cwd: string | null;
+  command: string | null;
+  note: string;
+  status: {
+    state: ("busy" | "idle") | null;
+    commandLine: string | null;
+    startedAt: string | null;
+    lastExit: number | null;
+    lastFinishedAt: string | null;
+    unread: boolean;
+  };
+  attention: {
+    state: "none" | "working" | "waiting" | "done";
+    message: string | null;
+    at: string | null;
+  };
+  noteLog: {
+    id: string;
+    at: string;
+    author: "user" | "agent";
+    kind: "note" | "prompt" | "event";
+    text: string;
+  }[];
+  agent: {
+    kind: "claude-code";
+    conversationId: string | null;
+  } | null;
+  lastInputAt: string | null;
+  lastOutputAt: string | null;
+  tags: string[];
+  parkedFrom: {
+    canvasId: string;
+    rect: {
+      x: number;
+      y: number;
+      width: number;
+      height: number;
+    };
+    color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+  } | null;
+  peopleOnly: boolean;
+  typedBy: {
+    name: string;
+    at: string;
+  } | null;
+  recap: {
+    text: string;
+    at: string;
+  } | null;
+  takesMessages: boolean;
   messages: {
     unread: number;
     from: string | null;
@@ -4495,6 +4574,7 @@ export const OPERATIONS = {
   getSessionRun: { method: 'GET', path: '/v1/sessions/{sessionId}/run', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: "read" } },
   runCommand: { method: 'POST', path: '/v1/sessions/{sessionId}/run', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "terminal:input" } },
   protectSession: { method: 'PUT', path: '/v1/sessions/{sessionId}/protection', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  setTakesMessages: { method: 'PUT', path: '/v1/sessions/{sessionId}/takes-messages', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   streamEvents: { method: 'GET', path: '/v1/events', params: [], hasBody: false, paged: false, idempotent: false, stream: true, access: { who: 'token', scope: "read" } },
   listTokens: { method: 'GET', path: '/v1/tokens', params: [], hasBody: false, paged: true, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   createToken: { method: 'POST', path: '/v1/tokens', params: [], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
@@ -4909,6 +4989,12 @@ export interface Client {
    * `PUT /v1/sessions/{sessionId}/protection`. Signed-in browser only: no API token may call this.
    */
   protectSession(args: { sessionId: string; body: ProtectSessionBody } & CallOptions): Promise<ProtectSessionResult>;
+  /**
+   * Say whether a "people only" session still takes messages from other terminals.
+   *
+   * `PUT /v1/sessions/{sessionId}/takes-messages`. Signed-in browser only: no API token may call this.
+   */
+  setTakesMessages(args: { sessionId: string; body: SetTakesMessagesBody } & CallOptions): Promise<SetTakesMessagesResult>;
   /**
    * Follow changes as they happen.
    *

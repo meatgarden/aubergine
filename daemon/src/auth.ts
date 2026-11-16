@@ -49,11 +49,11 @@ export function authorize(principal: Principal, action: Action, resource: Resour
   if (principal.kind === 'user') return true;
   if (principal.kind === 'session') {
     // One session messaging another: only where the owner let the sender's canvas message the receiver's,
-    // never a terminal that is "people only", never itself. With nothing switched on, this is always no.
+    // never a terminal that is "people only" unless the owner said it still takes messages, never itself. With nothing switched on, this is always no.
     if (action === 'messages.write') {
       const to = resource.session;
       const delivery = resource.delivery;
-      return to !== undefined && delivery !== undefined && resource.sessionId !== undefined && resource.sessionId !== principal.sessionId && !to.peopleOnly && to.canvasId !== null && canvasAdmits(delivery.messagesFrom, delivery.fromCanvasId);
+      return to !== undefined && delivery !== undefined && resource.sessionId !== undefined && resource.sessionId !== principal.sessionId && (!to.peopleOnly || to.takesMessages === true) && to.canvasId !== null && canvasAdmits(delivery.messagesFrom, delivery.fromCanvasId);
     }
     return (SESSION_ACTIONS as readonly string[]).includes(action) && resource.sessionId !== undefined && principal.sessionId === resource.sessionId;
   }

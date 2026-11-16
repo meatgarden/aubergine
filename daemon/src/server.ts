@@ -205,7 +205,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   const resourceOf = (sessionId: string): Resource => {
     const session = hub.state.sessions.find((s) => s.id === sessionId);
     if (!session) return { sessionId };
-    return { sessionId, session: { canvasId: placeOfSession(hub.state, sessionId)?.canvas.id ?? null, tags: session.tags, peopleOnly: session.peopleOnly } };
+    return { sessionId, session: { canvasId: placeOfSession(hub.state, sessionId)?.canvas.id ?? null, tags: session.tags, peopleOnly: session.peopleOnly, takesMessages: session.takesMessages } };
   };
 
   const routes: PublicRoute[] = [];

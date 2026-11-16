@@ -194,6 +194,12 @@ export const Session = z.object({
   typedBy: TypedBy.nullable().default(null),
   /** What its agent wrote when the owner asked for a recap, and when. The agent's words: other people's text wherever it is shown. */
   recap: z.object({ text: z.string().max(2000), at: Timestamp }).nullable().default(null),
+  /**
+   * Messages while "people only" is on. False: people only closes it to messages too, which is how every terminal starts.
+   * True: it still takes messages from terminals the owner let message it (never from tokens), while staying closed to reading and typing.
+   * Only the owner changes this.
+   */
+  takesMessages: z.boolean().default(false),
   /** Counts about its messages, for a mark on the canvas. The messages themselves are not state. */
   messages: SessionMessages.prefault({}),
 });

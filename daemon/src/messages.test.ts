@@ -148,7 +148,7 @@ function fakeSession(name: string, more: Partial<Session> = {}, canvasId = hub.s
     parkedFrom: null,
     peopleOnly: false,
     typedBy: null,
-    recap: null, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null },
+    recap: null, takesMessages: false, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null },
     ...more,
   };
   hub.emit({ type: 'session.created', session, canvasId, node: { id: newId(), sessionId: session.id, x: 0, y: 0, width: 640, height: 400, color: 'none' } });
@@ -421,6 +421,41 @@ describe('"people only"', () => {
     const [got] = await inbox(a);
     expect((await call(own(a), 'POST', `/v1/sessions/${a.id}/messages/${got!.id}/reply`, { text: 'back' })).status).toBe(403);
     expect(typed.filter(([id]) => id === closed.id).map(([, , what]) => what)).toEqual([INBOX_LINE]);
+  });
+});
+
+describe('a terminal that is "people only" and takes messages', () => {
+  it('takes them from terminals the owner let message it, stays closed to tokens, and only the owner says so', async () => {
+    const a = fakeSession('a');
+    const closed = fakeSession('closed', { peopleOnly: true });
+    await switchOn();
+    const token = await makeToken('every scope', [...GRANTABLE_SCOPES]);
+    const url = `/v1/sessions/${closed.id}/takes-messages`;
+    // Neither a token, nor the session itself, nor another session.
+    for (const secret of [token, own(closed), own(a)]) expect((await call(secret, 'PUT', url, { takesMessages: true })).status).toBe(403);
+    expect(stateOf(closed.id).takesMessages).toBe(false);
+    expect((await tell(a, closed.id)).status).toBe(403);
+    expect((await asOwner('PUT', url, { takesMessages: true })).status).toBe(200);
+    expect(stateOf(closed.id)).toMatchObject({ takesMessages: true, peopleOnly: true });
+    expect((await tell(a, closed.id, 'now it may')).status).toBe(201);
+    expect((await inbox(closed)).map((m) => m.text)).toEqual(['now it may']);
+    // Messages only: reading, typing and every token are as closed as before.
+    for (const [method, path, body] of [
+      ['POST', `/v1/sessions/${closed.id}/messages`, { text: 'from a program' }],
+      ['GET', `/v1/sessions/${closed.id}/messages`, undefined],
+      ['GET', `/v1/sessions/${closed.id}/screen`, undefined],
+      ['POST', `/v1/sessions/${closed.id}/input`, { text: 'echo', enter: true }],
+    ] as const) {
+      const refused = await call(token, method, path, body);
+      expect(refused.status, path).toBe(403);
+      expect(refused.body.error.code, path).toBe('people_only');
+    }
+    // With the canvas switched off it takes none, whatever the terminal says.
+    await switchOn(canvasId(), false);
+    expect((await tell(a, closed.id)).status).toBe(403);
+    await switchOn();
+    await asOwner('PUT', url, { takesMessages: false });
+    expect((await tell(a, closed.id)).status).toBe(403);
   });
 });
 

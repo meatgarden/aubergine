@@ -147,7 +147,7 @@ function fakeSession(name: string, more: Partial<Session> = {}, canvasId = hub.s
     parkedFrom: null,
     peopleOnly: false,
     typedBy: null,
-    recap: null, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null },
+    recap: null, takesMessages: false, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null },
     ...more,
   };
   hub.emit({ type: 'session.created', session, canvasId, node: { id: newId(), sessionId: session.id, x: 0, y: 0, width: 640, height: 400, color: 'none' } });

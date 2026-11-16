@@ -81,6 +81,7 @@ How to create a token, what the scopes mean, the limits and the activity log are
 | [`GET /v1/sessions/{sessionId}/run`](#getsessionrun) | The run a session is on | session's own token, or `read` |
 | [`POST /v1/sessions/{sessionId}/run`](#runcommand) | Run a command at a shell prompt and wait for it | `terminal:input` |
 | [`PUT /v1/sessions/{sessionId}/protection`](#protectsession) | Switch "people only" on or off for a session | browser only |
+| [`PUT /v1/sessions/{sessionId}/takes-messages`](#settakesmessages) | Say whether a "people only" session still takes messages from other terminals | browser only |
 | [`GET /v1/events`](#streamevents) | Follow changes as they happen | `read` |
 | [`GET /v1/tokens`](#listtokens) | List API tokens | browser only |
 | [`POST /v1/tokens`](#createtoken) | Create an API token | browser only |
@@ -561,6 +562,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
       text: string;
       at: string;
     } | null;
+    takesMessages: boolean;
     messages: {
       unread: number;
       from: string | null;
@@ -662,6 +664,7 @@ An API token needs the scope `sessions:write`. Sending `command` needs `terminal
       text: string;
       at: string;
     } | null;
+    takesMessages: boolean;
     messages: {
       unread: number;
       from: string | null;
@@ -766,6 +769,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
       text: string;
       at: string;
     } | null;
+    takesMessages: boolean;
     messages: {
       unread: number;
       from: string | null;
@@ -853,6 +857,7 @@ An API token needs the scope `read`.
     text: string;
     at: string;
   } | null;
+  takesMessages: boolean;
   messages: {
     unread: number;
     from: string | null;
@@ -948,6 +953,7 @@ An API token needs the scope `sessions:write`. Sending `note` needs `notes:write
     text: string;
     at: string;
   } | null;
+  takesMessages: boolean;
   messages: {
     unread: number;
     from: string | null;
@@ -1065,6 +1071,7 @@ An API token needs the scope `sessions:write`.
       text: string;
       at: string;
     } | null;
+    takesMessages: boolean;
     messages: {
       unread: number;
       from: string | null;
@@ -1164,6 +1171,7 @@ An API token needs the scope `sessions:write`.
     text: string;
     at: string;
   } | null;
+  takesMessages: boolean;
   messages: {
     unread: number;
     from: string | null;
@@ -1258,6 +1266,7 @@ An API token needs the scope `sessions:write`.
       text: string;
       at: string;
     } | null;
+    takesMessages: boolean;
     messages: {
       unread: number;
       from: string | null;
@@ -4718,6 +4727,98 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
     text: string;
     at: string;
   } | null;
+  takesMessages: boolean;
+  messages: {
+    unread: number;
+    from: string | null;
+    forOwner: number;
+    paused: number;
+    at: string | null;
+  };
+}
+```
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+## Messages
+
+### setTakesMessages
+
+`PUT /v1/sessions/{sessionId}/takes-messages`: Say whether a "people only" session still takes messages from other terminals.
+
+For the owner only. A session that is "people only" is closed to messages from other terminals too, unless this is on: then terminals the owner let message it (by the switch of its canvas) can, while it stays closed to reading and typing, and to every token.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `sessionId` | path | `string` | yes | An ID. |
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `takesMessages` | `boolean` | yes | True: while "people only", it still takes messages from terminals the owner let message it. It stays closed to reading, to typing and to every token. False: people only closes it to messages as well. |
+
+**Answer** `200`:
+
+```ts
+{
+  id: string;
+  projectId: string;
+  name: string;
+  createdAt: string;
+  state: "open" | "parked" | "exited";
+  cwd: string | null;
+  command: string | null;
+  note: string;
+  status: {
+    state: ("busy" | "idle") | null;
+    commandLine: string | null;
+    startedAt: string | null;
+    lastExit: number | null;
+    lastFinishedAt: string | null;
+    unread: boolean;
+  };
+  attention: {
+    state: "none" | "working" | "waiting" | "done";
+    message: string | null;
+    at: string | null;
+  };
+  noteLog: {
+    id: string;
+    at: string;
+    author: "user" | "agent";
+    kind: "note" | "prompt" | "event";
+    text: string;
+  }[];
+  agent: {
+    kind: "claude-code";
+    conversationId: string | null;
+  } | null;
+  lastInputAt: string | null;
+  lastOutputAt: string | null;
+  tags: string[];
+  parkedFrom: {
+    canvasId: string;
+    rect: {
+      x: number;
+      y: number;
+      width: number;
+      height: number;
+    };
+    color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+  } | null;
+  peopleOnly: boolean;
+  typedBy: {
+    name: string;
+    at: string;
+  } | null;
+  recap: {
+    text: string;
+    at: string;
+  } | null;
+  takesMessages: boolean;
   messages: {
     unread: number;
     from: string | null;

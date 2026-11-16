@@ -116,7 +116,7 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
     return { ...deps.resourceOf(toSessionId), delivery: { fromCanvasId: messages.canvasOf(fromSessionId), messagesFrom: hub.state.canvases.find((c) => c.id === toCanvasId)?.messagesFrom ?? [] } };
   };
   /** Said about a terminal a session may not message, and in the same words about one that does not exist. */
-  const NOT_TO_THAT = 'No terminal by that name or ID may be messaged from this one. Terminals may message each other only on a canvas where the owner switched that on, and never one marked "people only". A message from your owner can always be answered with `aubergine reply`. If you need to reach that terminal, ask your owner.';
+  const NOT_TO_THAT = 'No terminal by that name or ID may be messaged from this one. Terminals may message each other only on a canvas where the owner switched that on, and not one marked "people only" unless your owner said it takes messages. A message from your owner can always be answered with `aubergine reply`. If you need to reach that terminal, ask your owner.';
 
   const summary = (canvas: Canvas): CanvasSummary => {
     const { layout: _layout, ...rest } = canvas;
@@ -418,6 +418,8 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
     },
 
     protectSession: ({ params, body }) => sessions.protect(params.sessionId, body.peopleOnly),
+
+    setTakesMessages: ({ params, body }) => sessions.setTakesMessages(params.sessionId, body.takesMessages),
 
     /* ---------- The stream of changes ---------- */
 
