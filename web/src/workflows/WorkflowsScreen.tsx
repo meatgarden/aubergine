@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { latestVersion, needWords, type Workflow, type WorkflowTemplate } from '@aubergine/shared';
+import { latestVersion, needWords, usesOf, type Workflow, type WorkflowTemplate } from '@aubergine/shared';
 import { runCommand } from '../commands';
 import { api } from '../api';
 import { useApp } from '../store';
@@ -58,6 +58,76 @@ export function WorkflowsScreen() {
       store.togglePanel(null);
       store.editWorkflow(made.id);
     });
+
+  const current = shelfList.filter((item) => item.state === 'current');
+  const retired = shelfList.filter((item) => item.state === 'retired');
+  const usedIn = (shelfId: string): number => usesOf(shelfId, workflows ?? [], shelf ?? []).length;
+  const shelfTable = (items: typeof shelfList) => (
+
+          <table className="token-table workflow-table">
+            <tbody>
+              {items.map((item) => (
+                <tr key={item.id} data-testid="shelf-row" data-element={item.element.name}>
+                  <td>
+                    <strong>{item.element.name}</strong> <span className="sheet-note">version {item.version}</span>
+                    <div className="sheet-note">
+                      {item.state === 'retired' ? `retired${item.replacedBy ? `: use “${shelfList.find((o) => o.id === item.replacedBy)?.element.name ?? 'another'}”` : ''} · ` : ''}
+                      {usedIn(item.id) > 0 ? `in ${usedIn(item.id)} workflow${usedIn(item.id) === 1 ? '' : 's'} · ` : ''}
+                      {item.element.produces !== 'note' ? `produces a ${item.element.produces}` : 'produces a note'}
+                      {item.element.needs.length > 0 ? ` · needs ${item.element.needs.map(needWords).join('; ')}` : ''}
+                    </div>
+                  </td>
+                  <td className="workflow-actions">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const state = useApp.getState();
+                        state.togglePanel(null);
+                        state.startRun({ sessionId: state.focus?.sessionId ?? state.selected ?? null, elementId: item.id });
+                      }}
+                      disabled={item.state === 'retired'}
+                      title={item.state === 'retired' ? 'A retired element is not run by itself' : undefined}
+                      data-testid="shelf-run"
+                    >
+                      Run…
+                    </button>
+                    <button type="button" className="quiet" onClick={() => useApp.getState().editElement(item.id)} data-testid="shelf-edit">
+                      Edit
+                    </button>
+                    <button type="button" className="quiet" disabled={busy} onClick={() => void attempt(() => api.copyElement(item.id))}>
+                      Duplicate
+                    </button>
+                    {removingElement === item.id && usedIn(item.id) > 0 && (
+                      <span className="sheet-note" data-testid="shelf-remove-used">
+                        {usedIn(item.id) === 1 ? 'A workflow holds' : `${usedIn(item.id)} workflows hold`} a copy. The copies stay as they are and will say that their source was removed. To keep it out of new workflows only, retire it instead.
+                      </span>
+                    )}
+                    {removingElement === item.id ? (
+                      <button
+                        type="button"
+                        className="danger"
+                        disabled={busy}
+                        onClick={() =>
+                          void attempt(async () => {
+                            await api.removeElement(item.id);
+                            useApp.getState().apply({ type: 'shelf.removed', elementId: item.id });
+                            setRemovingElement(null);
+                          })
+                        }
+                      >
+                        Take off for good
+                      </button>
+                    ) : (
+                      <button type="button" className="quiet" onClick={() => setRemovingElement(item.id)}>
+                        Remove…
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+  );
 
   return (
     <div
@@ -153,61 +223,14 @@ export function WorkflowsScreen() {
 
         <h3>The shelf</h3>
         <p className="sheet-note">Elements kept for reuse: insert one into a workflow from its editor, or run one by itself.</p>
-        {shelfList.length > 0 && (
-          <table className="token-table workflow-table">
-            <tbody>
-              {shelfList.map((item) => (
-                <tr key={item.id} data-testid="shelf-row" data-element={item.element.name}>
-                  <td>
-                    <strong>{item.element.name}</strong>
-                    <div className="sheet-note">
-                      {item.element.produces !== 'note' ? `produces a ${item.element.produces}` : 'produces a note'}
-                      {item.element.needs.length > 0 ? ` · needs ${item.element.needs.map(needWords).join('; ')}` : ''}
-                    </div>
-                  </td>
-                  <td className="workflow-actions">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const state = useApp.getState();
-                        state.togglePanel(null);
-                        state.startRun({ sessionId: state.focus?.sessionId ?? state.selected ?? null, elementId: item.id });
-                      }}
-                      data-testid="shelf-run"
-                    >
-                      Run…
-                    </button>
-                    <button type="button" className="quiet" onClick={() => useApp.getState().editElement(item.id)} data-testid="shelf-edit">
-                      Edit
-                    </button>
-                    <button type="button" className="quiet" disabled={busy} onClick={() => void attempt(() => api.copyElement(item.id))}>
-                      Duplicate
-                    </button>
-                    {removingElement === item.id ? (
-                      <button
-                        type="button"
-                        className="danger"
-                        disabled={busy}
-                        onClick={() =>
-                          void attempt(async () => {
-                            await api.removeElement(item.id);
-                            useApp.getState().apply({ type: 'shelf.removed', elementId: item.id });
-                            setRemovingElement(null);
-                          })
-                        }
-                      >
-                        Take off for good
-                      </button>
-                    ) : (
-                      <button type="button" className="quiet" onClick={() => setRemovingElement(item.id)}>
-                        Remove…
-                      </button>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        {current.length > 0 && shelfTable(current)}
+        {retired.length > 0 && (
+          <details className="shelf-retired" data-testid="shelf-retired-fold">
+            <summary>
+              Retired ({retired.length}) <span className="sheet-note">kept, and still working where they are used; not offered when inserting</span>
+            </summary>
+            {shelfTable(retired)}
+          </details>
         )}
         <button type="button" className="quiet" onClick={() => useApp.getState().editElement('new')} data-testid="shelf-new">
           + New element

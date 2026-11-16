@@ -646,6 +646,40 @@ aubergine element run "Collect my to-dos" --session helper
 
 An example, end to end: ask an agent for "a to-do list from what people asked me in the team chat". It proposes an element, *Collect my to-dos*, that needs an MCP server for the chat and produces a checklist. You read it, send it back once ("shorter"), accept the second version, and run it by itself on the agent's terminal. The agent hands in the list; you tick the items you will do.
 
+### The life of a shelf element
+
+An element on the shelf is copied into workflows, never linked. What connects a copy to the shelf afterwards is what the copy remembers about where it came from, and you decide everything that follows from it.
+
+**Versions.** Saving a change to a shelf element adds a version; what it said before stays as it was. Each version has who saved it, when, and a line on what changed if you wrote one. The newest 30 are kept, and any version a copy in a workflow was made from. The shelf editor lists them, each with what it changed from the one before.
+
+**A copy knows its source.** An element inserted from the shelf records which shelf element it is a copy of, which version, and a mark of the content as it was copied. From those three the editor puts a small mark on the element:
+
+| Mark | What it means |
+|---|---|
+| from the shelf | as it was copied, and that is the newest version |
+| changed here | you changed it in this workflow since it was copied; the shelf has nothing newer |
+| newer on the shelf | as it was copied, and the shelf has a newer version |
+| changed here, newer on the shelf | both |
+| from the shelf, cannot tell | a copy made before versions were kept: Aubergine does not know which version it came from, and never says it is behind |
+| its source was removed | its shelf element is not on the shelf: it was removed, or the workflow came from another computer |
+
+**Taking a newer version.** When the shelf has a newer version, the editor shows what it changes (the same comparison the review screen uses) and offers **Take the shelf's version** or **Keep mine**. If the copy was also changed in the workflow, the three texts are shown side by side: as it was copied, yours now, the shelf's now. You pick one of the two; nothing is merged for you. To keep parts of both, take one and edit it. Saving then makes a new version of the workflow, as any edit does, and runs that are going keep to the version they started on. Nothing is ever updated by itself, no API token can do it (even one that may change workflows), and a draft cannot either: a token or a draft can change what a copy says, which then reads as "changed here", and cannot say that a copy was brought up to date.
+
+**From a workflow back to the shelf.** **Save to shelf** on an element that came from the shelf offers two things: a new element, or a new version of the one it came from. Other workflows that hold a copy are not changed; each says that a newer version is on the shelf.
+
+**Where it is used.** The shelf editor lists the workflows that hold a copy and what the mark on each copy is. Removing a shelf element that is used says so first; the copies stay as they are and say that their source was removed.
+
+**Retiring.** A shelf element is current, or **retired**: kept, and still working wherever a copy of it is, but not offered when inserting and not run by itself. Retired elements are under a fold on the Workflows screen. When you retire one you can name the element to use in its place, and the editor then says "retired: use …" on its copies. Retiring and bringing back are yours alone, like taking a newer version.
+
+**What goes in an element.** The editor has a fold of that name beside the form, and the same list is in [docs/element.md](docs/element.md): every field an element has, whether you write it or it is kept for you, and what it is for. Both are made from the descriptions in the code, so they cannot say something else than it does.
+
+**In a file.** A workflow written as a file (`workflow export`, or saved to a repository) keeps where each copy came from, and a file without such marks is read as before. On a computer whose shelf does not have that element, the copy says its source is not on the shelf, and nothing else is claimed.
+
+```sh
+aubergine element list           # each with its version, and whether it is retired
+aubergine element remove "Tidy up"   # says where it is used first
+```
+
 ### Workflows kept in a project's repository
 
 A team can share workflows through Git. A folder `.aubergine/workflows/` at the top of a repository holds workflow files (`*.json`, as `aubergine workflow export` writes them). A terminal whose folder is inside such a repository is offered them: in the run dialog, in their own group named after the repository's folder, and from the command line inside that terminal:
@@ -804,7 +838,7 @@ aubergine workflow done [--note <text>] [--output <file>]   the current element 
 aubergine workflow brief       inside a session asked to write a workflow or an element: the request
 aubergine workflow propose --file <file>   hand a workflow in as a draft, for you to review
 aubergine element propose --file <file>    the same for one element
-aubergine element list         the shelf; also show <name> and remove <name>
+aubergine element list         the shelf, each element with its version; also show <name> and remove <name> (which says where it is used first)
 aubergine element run <name> [--session <name|id>] [--input key=value]…   run one element by itself
 aubergine workflow blocked <reason>, goto <element>, pause, resume, stop
 aubergine screen <session>     what that terminal shows now, as text

@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
-import { REVIEW_LINES_SHOWN, lineDiff, needWords, needsShowAll, type DraftRecord, type Element, type WorkflowContent } from '@aubergine/shared';
+import { REVIEW_LINES_SHOWN, needWords, needsShowAll, type DraftRecord, type Element, type WorkflowContent } from '@aubergine/shared';
 import { api } from '../api';
 import { useApp } from '../store';
+import { DiffText } from './DiffText';
 import { ElementFields } from '../workflows/ElementFields';
 import { reviewSources, type ReviewDetail, type ReviewItem, type ReviewSource } from './registry';
 
@@ -217,15 +218,7 @@ export function ReviewScreen() {
                           )}
                         </div>
                         {changes && detail.previousText !== null ? (
-                          <pre className="review-text" data-testid="review-diff">
-                            {lineDiff(detail.previousText, detail.text).map((line, index) => (
-                              <span key={index} className={`diff-${line.kind}`}>
-                                {line.kind === 'added' ? '+ ' : line.kind === 'removed' ? '− ' : '  '}
-                                {line.text}
-                                {'\n'}
-                              </span>
-                            ))}
-                          </pre>
+                          <DiffText before={detail.previousText} after={detail.text} testId="review-diff" />
                         ) : (
                           <pre className="review-text" data-testid="review-text">
                             {(long && !shownAll ? lines.slice(0, REVIEW_LINES_SHOWN) : lines).join('\n')}

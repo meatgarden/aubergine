@@ -486,7 +486,7 @@ export async function runWorkflowCommand(command: WorkflowCommand, deps: Workflo
         return 0;
       }
       const width = Math.max(...shelf.map((item) => item.element.name.length));
-      print(showControl(shelf.map((item) => `${item.element.name.padEnd(width)}  ${item.element.produces === 'note' ? '' : `produces a ${item.element.produces}; `}${item.element.needs.length > 0 ? `needs ${item.element.needs.map(needWords).join('; ')}` : 'needs nothing'}`.trimEnd()).join('\n')));
+      print(showControl(shelf.map((item) => `${item.element.name.padEnd(width)}  version ${item.version}${item.state === 'retired' ? ', retired' : ''}; ${item.element.produces === 'note' ? '' : `produces a ${item.element.produces}; `}${item.element.needs.length > 0 ? `needs ${item.element.needs.map(needWords).join('; ')}` : 'needs nothing'}`.trimEnd()).join('\n')));
       return 0;
     }
 
@@ -497,10 +497,13 @@ export async function runWorkflowCommand(command: WorkflowCommand, deps: Workflo
       const item = resolveWorkflow(shelf.map((entry) => ({ ...entry, name: entry.element.name })), command.query);
       if (command.action === 'element-show') {
         const { element } = item;
-        print(showControl([element.name, '', element.instructions.trim(), ...(element.doneWhen ? ['', `Done when: ${element.doneWhen}`] : []), ...(element.needs.length > 0 ? [`Needs: ${element.needs.map(needWords).join('; ')}`] : []), `Produces: ${element.produces}`].join('\n')));
+        print(showControl([`${element.name}  (version ${item.version}${item.state === 'retired' ? ', retired' : ''})`, '', element.instructions.trim(), ...(element.doneWhen ? ['', `Done when: ${element.doneWhen}`] : []), ...(element.needs.length > 0 ? [`Needs: ${element.needs.map(needWords).join('; ')}`] : []), `Produces: ${element.produces}`].join('\n')));
         return 0;
       }
       if (command.action === 'element-remove') {
+        // Said first: where it is used. The copies stay, and say from then on that their source was removed.
+        const { uses } = await owner((client) => client.getElementUsage({ elementId: item.id }));
+        if (uses.length > 0) print(showControl(`"${item.element.name}" is used in ${uses.length === 1 ? 'a workflow' : `${uses.length} workflows`}: ${uses.map((use) => use.workflowName).join(', ')}. The copies there stay as they are and will say that their source was removed.`));
         if (!command.yes && !/^y(es)?$/i.test((await deps.ask(`Take "${item.element.name}" off the shelf? Copies of it in workflows stay. [y/N] `)).trim())) {
           print('Kept.');
           return 0;

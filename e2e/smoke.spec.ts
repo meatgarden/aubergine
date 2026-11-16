@@ -1805,3 +1805,101 @@ test('the side panel gives each section the room it needs, in a small window and
   await messages.getByTestId('section-fold').click();
   await expect(messages.getByTestId('section-fold')).toHaveAttribute('aria-expanded', 'true');
 });
+
+test('a shelf element has a life: a copy says where it came from, a newer version is compared and taken, and a retired element is no longer offered', async ({ page }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  const origin = new URL(page.url()).origin;
+  const asOwner = { headers: { origin } };
+  const onShelf = await page.request.post('/v1/elements', { ...asOwner, data: { name: 'Check every link', instructions: 'Open each link in the page.', doneWhen: 'Every link was opened.' } });
+  expect(onShelf.status()).toBe(201);
+  const shelfId = ((await onShelf.json()) as { id: string }).id;
+  const made = await page.request.post('/v1/workflows', { ...asOwner, data: { name: 'Publish the notes', elements: [{ name: 'Write', instructions: 'Write the notes.', doneWhen: 'They are written.' }] } });
+  expect(made.status()).toBe(201);
+
+  // In the editor: a copy from the shelf says so, and nothing is waiting.
+  await page.getByTestId('toolbar-workflows').click();
+  const screen = page.getByTestId('workflows-screen');
+  await screen.locator('[data-testid="workflow-row"][data-workflow="Publish the notes"]').getByTestId('workflow-edit').click();
+  const editor = page.getByTestId('workflow-editor');
+  await editor.getByTestId('insert-from-shelf').selectOption({ label: 'Check every link' });
+  const copy = editor.getByTestId('editor-element').nth(1);
+  await expect(copy.getByTestId('copy-mark')).toHaveAttribute('data-state', 'unchanged');
+  await expect(copy.getByTestId('copy-mark')).toHaveText('from the shelf');
+  await expect(editor.getByTestId('editor-element').nth(0).getByTestId('copy-mark')).toHaveCount(0);
+  await expect(editor.getByTestId('copy-words')).toContainText('A copy of "Check every link" from the shelf, version 1, unchanged.');
+  await editor.getByTestId('editor-save').click();
+  await expect(editor.getByTestId('editor-saved')).toContainText('Saved as version 2');
+
+  // The shelf moves on. The copy does not change; it says a newer version is there.
+  expect((await page.request.patch(`/v1/elements/${shelfId}`, { ...asOwner, data: { instructions: 'Open each link in the page.\nNote every one that fails.', note: 'Asks for the failures' } })).status()).toBe(200);
+  await expect(copy.getByTestId('copy-mark')).toHaveAttribute('data-state', 'behind');
+  await expect(copy.getByTestId('copy-mark')).toHaveText('newer on the shelf');
+  await expect(editor.getByTestId('copy-words')).toContainText('A newer version is on the shelf: version 2.');
+  await expect(editor.getByTestId('editor-preview')).not.toContainText('Note every one that fails.');
+
+  // The comparison: what the newer version adds, with its note. Then it is taken, and saving makes a version of the workflow.
+  await editor.getByTestId('copy-compare').click();
+  await expect(editor.getByTestId('copy-diff')).toContainText('+ Note every one that fails.');
+  await expect(editor.getByTestId('copy-panel')).toContainText('Asks for the failures');
+  await editor.getByTestId('copy-take').click();
+  await expect(copy.getByTestId('copy-mark')).toHaveAttribute('data-state', 'unchanged');
+  await expect(editor.getByTestId('editor-preview')).toContainText('Note every one that fails.');
+  await expect(editor.getByTestId('editor-saved')).toContainText('Took version 2');
+  await editor.getByTestId('editor-save').click();
+  await expect(editor.getByTestId('editor-saved')).toContainText('Saved as version 3');
+
+  // Changed here, and then on the shelf as well: three texts, one of which is picked. Keeping one's own leaves every word.
+  await editor.getByTestId('element-name').fill('Check every link, twice');
+  await expect(copy.getByTestId('copy-mark')).toHaveAttribute('data-state', 'changed');
+  expect((await page.request.patch(`/v1/elements/${shelfId}`, { ...asOwner, data: { doneWhen: 'Every link was opened and the failures are listed.' } })).status()).toBe(200);
+  await expect(copy.getByTestId('copy-mark')).toHaveAttribute('data-state', 'both');
+  await editor.getByTestId('copy-compare').click();
+  await expect(editor.getByTestId('copy-text-copied')).toContainText('Name: Check every link');
+  await expect(editor.getByTestId('copy-text-mine')).toContainText('+ Name: Check every link, twice');
+  await expect(editor.getByTestId('copy-text-shelf')).toContainText('+ Done when: Every link was opened and the failures are listed.');
+  await editor.getByTestId('copy-keep').click();
+  await expect(copy.getByTestId('copy-mark')).toHaveAttribute('data-state', 'changed');
+  await expect(editor.getByTestId('element-name')).toHaveValue('Check every link, twice');
+  await editor.getByTestId('editor-save').click();
+  await expect(editor.getByTestId('editor-saved')).toContainText('Saved as version 4');
+
+  // What goes in an element: every field, in the words of the reference.
+  await editor.getByTestId('element-reference').locator('summary').click();
+  await expect(editor.getByTestId('reference-field')).toHaveCount(14);
+  await expect(editor.locator('[data-testid="reference-field"][data-field="doneWhen"]')).toContainText('how to tell that the element is finished');
+  await editor.getByTestId('editor-close').click();
+
+  // On the shelf: its version, where it is used, its versions with what changed, and retiring it.
+  if (!(await screen.isVisible())) await page.getByTestId('toolbar-workflows').click();
+  const row = screen.locator('[data-testid="shelf-row"][data-element="Check every link"]');
+  await expect(row).toContainText('version 3');
+  await expect(row).toContainText('in 1 workflow');
+  await row.getByTestId('shelf-edit').click();
+  const shelf = page.getByTestId('shelf-editor');
+  await expect(shelf.getByTestId('shelf-version')).toContainText('version 3');
+  await expect(shelf.getByTestId('shelf-use')).toContainText('Publish the notes');
+  await expect(shelf.getByTestId('shelf-use')).toContainText('changed here');
+  await expect(shelf.getByTestId('shelf-version-row')).toHaveCount(3);
+  await expect(shelf.getByTestId('shelf-version-row').nth(1)).toContainText('Asks for the failures');
+  await shelf.getByTestId('shelf-version-compare').first().click();
+  await expect(shelf.getByTestId('shelf-version-diff')).toContainText('+ Every link was opened and the failures are listed.');
+  await shelf.getByTestId('shelf-retire').click();
+  await expect(shelf.getByTestId('shelf-retired')).toContainText('Retired');
+  await shelf.getByRole('button', { name: 'Close' }).click();
+
+  // Retired: under a fold, not run by itself, and not offered when inserting. The copy still works and says so.
+  await expect(screen.locator('[data-testid="shelf-row"][data-element="Check every link"]')).toBeHidden();
+  await screen.getByTestId('shelf-retired-fold').locator('summary').click();
+  await expect(screen.getByTestId('shelf-retired-fold').getByTestId('shelf-run')).toBeDisabled();
+  await screen.locator('[data-testid="workflow-row"][data-workflow="Publish the notes"]').getByTestId('workflow-edit').click();
+  await expect(editor.getByTestId('editor-element').nth(1).getByTestId('copy-mark')).toContainText('retired');
+  await expect(editor.getByTestId('insert-from-shelf').locator('option', { hasText: 'Check every link' })).toHaveCount(0);
+
+  // From the workflow back to the shelf: what the copy says now becomes a new version of what it came from.
+  await editor.getByTestId('editor-element').nth(1).locator('.editor-element-name').click();
+  await editor.getByTestId('save-as-version').click();
+  await expect(editor.getByTestId('editor-saved')).toContainText('Saved as version 4 of “Check every link, twice” on the shelf.');
+  await expect(editor.getByTestId('editor-element').nth(1).getByTestId('copy-mark')).toHaveAttribute('data-state', 'unchanged');
+});

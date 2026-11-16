@@ -2884,3 +2884,71 @@ tr[data-status='expired'] strong {
   margin-right: 6px;
   white-space: nowrap;
 }
+
+/* A copy of a shelf element, and what can be told about it */
+.copy-mark {
+  flex: none;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  font-size: 11px;
+  padding: 0 6px;
+  white-space: nowrap;
+  color: var(--muted);
+}
+.copy-mark.wants-you {
+  border-color: var(--accent);
+  color: var(--text);
+  font-weight: 600;
+}
+.copy-mark.is-gone {
+  border-style: dashed;
+}
+.copy-panel {
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 6px 8px;
+  margin-bottom: 8px;
+}
+.copy-panel.is-behind,
+.copy-panel.is-both {
+  border-color: var(--accent);
+}
+.copy-words {
+  margin: 0 0 4px;
+}
+.copy-three {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+@media (max-width: 900px) {
+  .copy-three {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.element-reference {
+  margin-top: 8px;
+  font-size: 12px;
+}
+.element-reference dl {
+  margin: 4px 0;
+}
+.element-reference dt {
+  margin-top: 6px;
+}
+.element-reference dd {
+  margin: 0 0 0 8px;
+  color: var(--muted);
+}
+.shelf-usage,
+.shelf-versions {
+  list-style: none;
+  margin: 0 0 6px;
+  padding: 0;
+}
+.shelf-versions li {
+  margin-bottom: 4px;
+}
+.shelf-retired {
+  margin: 6px 0;
+}

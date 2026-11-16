@@ -404,7 +404,7 @@ describe('workflow commands against a server', () => {
     const owner = createClient({ baseUrl: origin, headers: { origin, cookie: `${cookieName(port)}=${ownerToken}` } });
     expect((await runElement(['list'])).out).toContain('No elements on the shelf yet');
     await owner.createElement({ body: { name: 'Collect my to-dos', instructions: 'List what people asked me to do.', needs: [{ kind: 'mcp', name: 'team chat' }], produces: 'checklist' } });
-    expect((await runElement(['list'])).out).toBe('Collect my to-dos  produces a checklist; needs an MCP server: team chat');
+    expect((await runElement(['list'])).out).toBe('Collect my to-dos  version 1; produces a checklist; needs an MCP server: team chat');
     expect((await runElement(['show', 'collect'])).out).toContain('Produces: checklist');
 
     const session = fakeSession('api');
