@@ -442,7 +442,7 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await expect(listRows.first().getByTestId('list-updated')).toContainText('updated');
 
   await page.keyboard.press('b');
-  await expect(page.getByTestId('strip-entry')).toContainText('2');
+  await expect(page.locator('[data-testid="strip-entry"][data-section="terminals"]')).toContainText('2');
   await expect(listRows).toHaveCount(0);
   await page.keyboard.press('b');
   await expect(listRows).toHaveCount(2);
@@ -539,4 +539,144 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await page.keyboard.press('Enter');
   await expect(node).toHaveCount(2);
   await expect(page.getByRole('button', { name: /^Parked \(/ })).toHaveCount(0);
+});
+
+test('a workflow made from a template moves a terminal through its elements', async ({ page }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  // A canvas of its own, so that nothing left by another test is in the way.
+  await page.getByRole('button', { name: 'New canvas' }).click();
+  const node = page.getByTestId('terminal-node');
+  await expect(node).toHaveCount(0);
+
+  // Make a workflow from a template: it opens in the editor.
+  await page.getByTestId('toolbar-workflows').click();
+  const screen = page.getByTestId('workflows-screen');
+  await expect(screen.getByTestId('template-use')).toHaveCount(4);
+  await screen.locator('[data-testid="template-use"][data-template="plan-build-check"]').click();
+  const editor = page.getByTestId('workflow-editor');
+  await expect(editor.getByTestId('workflow-name')).toHaveValue('Plan, build, check');
+  await expect(editor.getByTestId('editor-element')).toHaveCount(3);
+  await expect(editor.getByTestId('editor-save')).toBeDisabled();
+
+  // Change it: a new name, and another text for the second element. The preview is what an agent will be told.
+  await editor.getByTestId('workflow-name').fill('Ship it');
+  await editor.locator('[data-element="build"] .editor-element-name').click();
+  await editor.getByTestId('element-instructions').fill('Build it, and write the tests first.');
+  await expect(editor.getByTestId('editor-preview')).toContainText('Workflow: Ship it');
+  await expect(editor.getByTestId('editor-preview')).toContainText('Element 2 of 3: Build');
+  await expect(editor.getByTestId('editor-preview')).toContainText('Build it, and write the tests first.');
+  // Reorder with the buttons, and back: the order is what is saved.
+  await editor.locator('[data-element="check"]').getByTestId('element-up').click();
+  await expect(editor.getByTestId('editor-element').nth(1)).toHaveAttribute('data-element', 'check');
+  await editor.locator('[data-element="check"]').getByTestId('element-down').click();
+  await expect(editor.getByTestId('editor-element').nth(2)).toHaveAttribute('data-element', 'check');
+  // And by dragging: the last element onto the first.
+  await editor.locator('[data-element="check"]').dragTo(editor.locator('[data-element="plan"]'));
+  await expect(editor.getByTestId('editor-element').first()).toHaveAttribute('data-element', 'check');
+  await editor.locator('[data-element="check"]').getByTestId('element-down').click();
+  await editor.locator('[data-element="check"]').getByTestId('element-down').click();
+  await expect(editor.getByTestId('editor-element').nth(2)).toHaveAttribute('data-element', 'check');
+  // An element without text cannot be saved, and the editor says which.
+  await editor.getByTestId('element-add').click();
+  await expect(editor.getByTestId('editor-problems')).toContainText('has no instructions');
+  await expect(editor.getByTestId('editor-save')).toBeDisabled();
+  await editor.locator('[data-element="new-element"]').getByTestId('element-remove').click();
+  await expect(editor.getByTestId('editor-problems')).toHaveCount(0);
+  await editor.getByTestId('editor-save').click();
+  await expect(editor.getByTestId('editor-saved')).toContainText('Saved as version 2');
+  await editor.getByTestId('editor-close').click();
+  await expect(editor).toHaveCount(0);
+
+  // A terminal, and the workflow started on it.
+  await page.getByRole('button', { name: 'New terminal' }).click();
+  await expect(node).toHaveCount(1);
+  await expect(page.locator('.xterm-rows')).toHaveText(/\S/);
+  await expect(page.getByTestId('run-strip')).toHaveCount(0);
+  await page.getByTestId('node-run-workflow').click();
+  const dialog = page.getByTestId('run-dialog');
+  await expect(dialog.getByTestId('run-workflow')).toContainText('Ship it');
+  await expect(dialog.getByTestId('run-start')).toBeDisabled();
+  await dialog.getByTestId('run-input-task').fill('the login page rejects valid passwords');
+  await expect(dialog.getByTestId('run-preview')).toContainText('The task: the login page rejects valid passwords');
+  await expect(dialog.getByTestId('run-preview')).toContainText('Element 1 of 3: Plan');
+  await dialog.getByTestId('run-start').click();
+
+  // No agent is running in this shell, so nothing was typed: the run is shown instead, with its buttons.
+  const run = page.getByTestId('run-view');
+  await expect(run.getByTestId('run-view-status')).toContainText('Plan · 1 of 3');
+  await expect(run.getByTestId('run-step')).toHaveCount(3);
+  await expect(run.locator('[data-testid="run-step"][data-element="plan"]')).toHaveAttribute('data-state', 'active');
+  await run.getByTestId('run-view-close').click();
+
+  // The strip on the node names the element, and so do the list row and the Workflows section.
+  const strip = page.getByTestId('run-strip');
+  await expect(strip).toHaveAttribute('data-element', 'plan');
+  await expect(strip).toContainText('Plan');
+  await expect(page.getByTestId('row-run')).toContainText('Plan');
+  await expect(page.getByTestId('runs-row')).toHaveAttribute('data-element', 'plan');
+  await expect(page.getByTestId('runs-row')).toContainText('Ship it · Plan · 1 of 3');
+  // The filter "on a workflow" keeps it; "workflow: blocked" does not.
+  await page.locator('[data-filter="workflow"]').click();
+  await expect(page.getByTestId('list-row')).toHaveCount(1);
+  await page.locator('[data-filter="workflow-blocked"]').click();
+  await expect(page.getByTestId('list-row')).toHaveCount(0);
+  await page.locator('[data-filter="workflow-blocked"]').click();
+  await page.locator('[data-filter="workflow"]').click();
+
+  // What an agent does: it runs the command in the terminal. The strip moves without anyone touching the page.
+  await page.getByTestId('node-body').click();
+  await page.keyboard.type('"$AUBERGINE_BIN/aubergine" workflow done --note "planned: change one file"');
+  await page.keyboard.press('Enter');
+  await expect(strip).toHaveAttribute('data-element', 'build', { timeout: 20_000 });
+  await expect(strip).toContainText('Build');
+  await expect(page.getByTestId('row-run')).toContainText('Build');
+  await expect(page.getByTestId('runs-row')).toHaveAttribute('data-element', 'build');
+  // The command printed what comes next, with the text that was edited.
+  await expect(page.locator('.xterm-rows')).toContainText('Build it, and write the tests first.');
+
+  // It says it is blocked: the session waits for its owner, and the element is named.
+  await page.keyboard.type('"$AUBERGINE_BIN/aubergine" workflow blocked I need the staging password');
+  await page.keyboard.press('Enter');
+  await expect(strip).toHaveAttribute('data-status', 'blocked', { timeout: 20_000 });
+  await expect(page.getByTestId('badge-attention')).toHaveAttribute('title', 'Blocked on "Build": I need the staging password');
+  // The waiting queue names the element it is blocked on.
+  await expect(page.getByTestId('attention-queue')).toHaveAttribute('title', /Blocked on "Build": I need the staging password/);
+
+  // A person moves it on with the buttons: done, pause, resume, done.
+  await strip.click();
+  await expect(run.getByTestId('run-view-status')).toContainText('Build · 2 of 3 · blocked');
+  await expect(run.locator('[data-testid="run-step"][data-element="plan"]')).toContainText('planned: change one file');
+  await expect(run.locator('[data-testid="run-step"][data-element="plan"]')).toContainText('by the agent');
+  await run.getByTestId('run-done').click();
+  await expect(run.getByTestId('run-view-status')).toContainText('Check · 3 of 3 · running');
+  await expect(run.locator('[data-testid="run-step"][data-element="build"]')).toContainText('by you');
+  await run.getByTestId('run-pause').click();
+  await expect(run.getByTestId('run-view-status')).toContainText('paused');
+  await expect(strip).toHaveAttribute('data-status', 'paused');
+  await run.getByTestId('run-resume').click();
+  await expect(strip).toHaveAttribute('data-status', 'running');
+  await run.getByTestId('run-done').click();
+
+  // Finished: the run is over, the strip is gone, and the summary is in the session's notes.
+  await expect(run).toHaveAttribute('data-status', 'finished');
+  await expect(run.getByTestId('run-done')).toHaveCount(0);
+  await run.getByTestId('run-view-close').click();
+  await expect(strip).toHaveCount(0);
+  await expect(page.getByTestId('runs-row')).toHaveCount(0);
+  await expect(page.getByTestId('badge-attention')).toHaveAttribute('title', 'Workflow "Ship it" finished after "Check"');
+  const runs = await (await page.request.get('/v1/runs?status=ended')).json();
+  expect(runs.items).toHaveLength(1);
+  expect(runs.items[0].run.elements.map((e: { note: string }) => e.note)[0]).toBe('planned: change one file');
+
+  // Duplicate and remove, from the screen.
+  await page.getByTestId('open-workflows').click();
+  await expect(screen.getByTestId('workflow-row')).toHaveCount(1);
+  await screen.getByTestId('workflow-duplicate').click();
+  await expect(screen.getByTestId('workflow-row')).toHaveCount(2);
+  const copy = screen.locator('[data-testid="workflow-row"][data-workflow="Ship it copy"]');
+  await copy.getByTestId('workflow-remove').click();
+  await copy.getByTestId('workflow-remove-confirm').click();
+  await expect(screen.getByTestId('workflow-row')).toHaveCount(1);
 });

@@ -188,6 +188,8 @@ export const SESSION_ENV = {
   url: 'AUBERGINE_URL',
   sessionId: 'AUBERGINE_SESSION_ID',
   token: 'AUBERGINE_TOKEN',
+  /** The folder that holds the `aubergine` command for programs in the session. */
+  bin: 'AUBERGINE_BIN',
 } as const;
 
 /**

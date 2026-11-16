@@ -28,7 +28,9 @@ export function AttentionQueue() {
           title={`Go to the next session that is waiting for you${keysOf('attention.next').length > 0 ? ` (${keysOf('attention.next').join(' or ')})` : ''}: ${queue
             .map((s) => {
               const canvas = canvasLabel(app, s.id, canvasId);
-              return canvas ? `${s.name} (on ${canvas})` : s.name;
+              // Why it waits, when it said: a blocked or finished run names its element here.
+              const why = s.attention.message ? `: ${s.attention.message}` : '';
+              return `${canvas ? `${s.name} (on ${canvas})` : s.name}${why}`;
             })
             .join(', ')}`}
           data-testid="attention-queue"

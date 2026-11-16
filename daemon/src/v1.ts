@@ -11,6 +11,8 @@ import {
   SCOPE_MEANING,
   canvasCounts,
   canvasOfNode,
+  detailOfWorkflow,
+  summaryOfWorkflow,
   openApiDocument,
   placeOfSession,
   viewOfToken,
@@ -35,11 +37,13 @@ import type { Sessions } from './sessions';
 import type { StateHub } from './state-hub';
 import type { Tokens } from './tokens';
 import type { Viewers } from './viewers';
+import { actorOf, type Workflows } from './workflows';
 
 export interface PublicRouteDeps {
   hub: StateHub;
   sessions: Sessions;
   tokens: Tokens;
+  workflows: Workflows;
   activity: ActivityLog;
   viewers: Viewers;
   limiter: RateLimiter;
@@ -71,7 +75,7 @@ type Handlers = { [I in RouteId]: (context: Context<I>) => RouteOutput<I> | Prom
  * call it, and no route exists that is not declared.
  */
 export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps): void {
-  const { hub, sessions, parse } = deps;
+  const { hub, sessions, workflows, parse } = deps;
   const remembered = new IdempotencyStore();
 
   const summary = (canvas: Canvas): CanvasSummary => {
@@ -240,6 +244,45 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
       sessions.removeFrame(params.frameId, params.canvasId);
     },
 
+    /* ---------- Workflows ---------- */
+
+    listWorkflows: ({ query }) => {
+      const page = paginate(workflows.list(), (w) => w.id, query);
+      return { items: page.items.map(summaryOfWorkflow), nextCursor: page.nextCursor };
+    },
+
+    createWorkflow: ({ body }) => detailOfWorkflow(workflows.create(body)),
+
+    getWorkflow: ({ params }) => detailOfWorkflow(workflows.get(params.workflowId)),
+
+    updateWorkflow: ({ params, body }) => detailOfWorkflow(workflows.update(params.workflowId, body)),
+
+    removeWorkflow: ({ params }) => {
+      workflows.remove(params.workflowId);
+    },
+
+    copyWorkflow: ({ params, body }) => detailOfWorkflow(workflows.copy(params.workflowId, body.name)),
+
+    listWorkflowVersions: ({ params, query }) => paginate(workflows.versions(params.workflowId), (v) => String(v.number), query),
+
+    listWorkflowTemplates: ({ query }) => paginate(workflows.templates(), (t) => t.name, query),
+
+    useWorkflowTemplate: ({ params, body }) => detailOfWorkflow(workflows.useTemplate(params.template, body.name)),
+
+    /* ---------- Runs ---------- */
+
+    listRuns: ({ query }) => workflows.listRuns(query),
+
+    // The line that tells an agent about its run is typed for the owner only: typing into a terminal is not something a token may cause.
+    startRun: ({ body, principal }) => workflows.start({ ...body, typeKickoff: body.kickoff && principal.kind === 'user' }, actorOf(principal)),
+
+    startSessionRun: ({ params, body, principal }) =>
+      workflows.start({ ...body, sessionId: params.sessionId, typeKickoff: body.kickoff && principal.kind === 'user' }, actorOf(principal)),
+
+    getRun: ({ params }) => workflows.getRun(params.runId),
+
+    reportRun: ({ params, body, principal }) => workflows.report(params.runId, body, actorOf(principal)),
+
     /* ---------- The stream of changes ---------- */
 
     // Server-sent events: one `data:` line of JSON per change. It needs nothing but an HTTP client,
@@ -292,6 +335,12 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
     setAttention: ({ params, body }) => sessions.setAttention(params.sessionId, body.state, body.message),
 
     reportAgent: ({ params, body }) => sessions.reportAgent(params.sessionId, body),
+
+    // The run a session is on. The address names the session, and `authorize` has already
+    // made sure a session's token is that session's own: there is no way from here to another run.
+    getSessionRun: ({ params }) => workflows.ownRun(params.sessionId),
+
+    reportSessionRun: ({ params, body, principal }) => workflows.reportOwn(params.sessionId, body, actorOf(principal)),
   };
 
   /** Which actions a request asks for: the route's own, and those of the fields it sends that need another. */

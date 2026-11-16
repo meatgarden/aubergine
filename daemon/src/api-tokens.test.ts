@@ -182,7 +182,7 @@ describe('creating and using a token', () => {
     expect(await bad({ name: 'x' })).toBe(400);
     expect(await bad({ name: 'x', scopes: ['everything'] })).toBe(400);
     // Known, but not to be had yet.
-    for (const reserved of ['terminal:read', 'terminal:input', 'workflows:write', 'runs:write']) expect(await bad({ name: 'x', scopes: [reserved] }), reserved).toBe(400);
+    for (const reserved of ['terminal:read', 'terminal:input']) expect(await bad({ name: 'x', scopes: [reserved] }), reserved).toBe(400);
     expect(await bad({ name: 'x', scopes: ['read'], expiresAt: '2030-01-01T00:00:00.000Z', expiresInDays: 3 })).toBe(400);
     expect(await bad({ name: 'x', scopes: ['read'], expiresInDays: 0 })).toBe(400);
     expect(hub.state.tokens).toEqual([]);
@@ -200,10 +200,10 @@ describe('creating and using a token', () => {
       ['canvases:write', true],
       ['sessions:write', true],
       ['notes:write', true],
+      ['workflows:write', true],
+      ['runs:write', true],
       ['terminal:read', false],
       ['terminal:input', false],
-      ['workflows:write', false],
-      ['runs:write', false],
     ]);
     expect(capabilities.caller).toMatchObject({ kind: 'token', id: notes.id, name: 'notes only', scopes: ['notes:write'] });
     expect(capabilities.caller.kind === 'token' && capabilities.caller.expiresAt).toBeTruthy();
@@ -406,7 +406,7 @@ describe('every route has a rule', () => {
     expect(hub.state.sessions).toEqual([]);
   });
 
-  it('gives a session token exactly what it had before: nothing new', async () => {
+  it('gives a session token what it reports about itself and the run it is on, and nothing else', async () => {
     const { session } = await sessions.create({});
     const other = await sessions.create({});
     const secret = sessionToken(ownerToken, session.id);
@@ -425,7 +425,15 @@ describe('every route has a rule', () => {
         expect((await call(secret, route.method, elsewhere, route.method === 'GET' || route.method === 'DELETE' ? undefined : {})).status, `${route.method} ${route.url} for another session`).toBe(403);
       }
     }
-    expect(allowed.sort()).toEqual(['GET /v1', 'GET /v1/openapi.json', 'POST /v1/sessions/:sessionId/notes', 'PUT /v1/sessions/:sessionId/agent', 'PUT /v1/sessions/:sessionId/attention']);
+    expect(allowed.sort()).toEqual([
+      'GET /v1',
+      'GET /v1/openapi.json',
+      'GET /v1/sessions/:sessionId/run',
+      'POST /v1/sessions/:sessionId/notes',
+      'POST /v1/sessions/:sessionId/run/report',
+      'PUT /v1/sessions/:sessionId/agent',
+      'PUT /v1/sessions/:sessionId/attention',
+    ]);
     // Session tokens are not recorded in the activity log: it is the record of API tokens.
     expect(await activityOf()).toEqual([]);
   });
@@ -708,7 +716,7 @@ describe('the secret', () => {
 
     // The hash is what is stored, and it is not sent to the page.
     const state = JSON.parse(await readFile(path.join(dir, 'state.json'), 'utf8'));
-    expect(state.version).toBe(3);
+    expect(state.version).toBe(4);
     expect(state.tokens.map((t: { hash: string }) => t.hash)).toEqual([expect.stringMatching(/^[0-9a-f]{64}$/), expect.stringMatching(/^[0-9a-f]{64}$/)]);
   });
 

@@ -18,6 +18,12 @@ const NEEDS: Partial<Record<Action, Scope>> = {
   'sessions.show': 'sessions:write',
   'notes.write': 'notes:write',
   'note.append': 'notes:write',
+  'workflows.read': 'read',
+  'runs.read': 'read',
+  'workflows.write': 'workflows:write',
+  'runs.write': 'runs:write',
+  'run.own.read': 'read',
+  'run.own.report': 'runs:write',
 };
 
 describe('authorize', () => {
@@ -56,10 +62,10 @@ describe('authorize', () => {
     for (const action of ACTIONS) expect(authorize(token(), action, { sessionId: SESSION }), action).toBe(false);
   });
 
-  it('keeps a session token to exactly what it had: three things, for itself only', () => {
+  it('keeps a session token to what it reports about itself and the run it is on, for itself only', () => {
     const session: Principal = { kind: 'session', sessionId: SESSION };
     const own = ACTIONS.filter((action) => authorize(session, action, { sessionId: SESSION }));
-    expect([...own].sort()).toEqual(['agent.report', 'attention.set', 'note.append']);
+    expect([...own].sort()).toEqual(['agent.report', 'attention.set', 'note.append', 'run.own.read', 'run.own.report']);
     for (const action of ACTIONS) {
       expect(authorize(session, action, { sessionId: OTHER }), `${action} on another session`).toBe(false);
       expect(authorize(session, action, {}), `${action} on nothing`).toBe(false);

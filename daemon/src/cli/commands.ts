@@ -34,6 +34,8 @@ export type Command =
       open: boolean;
     }
   | { name: 'import'; terminals: string[]; all: boolean; dryRun: boolean; canvas: string | null }
+  /** `workflow …`: its own words, parsed by the workflow commands. */
+  | { name: 'workflow'; words: string[] }
   | { name: 'note'; text: string }
   | { name: 'hook'; event: HookEvent }
   | { name: 'hooks-print' }
@@ -84,6 +86,24 @@ export const USAGE = `Usage: aubergine <command>
                              Make an API token for a program of yours. Its secret is printed once, on standard output
   token list                 The API tokens, with their scopes and when each was last used
   token revoke <name|id>     Revoke a token: it stops working at once
+  workflow list              The workflows, with how many elements each has and how many runs are going
+  workflow show <name>       One workflow in full: what every element says
+  workflow new <name> [--template <template>]
+                             Make a workflow, from a template or with one element to start from
+  workflow templates         The templates that come with Aubergine
+  workflow edit <name>       Change a workflow in your editor ($VISUAL or $EDITOR); --file <path> takes it from a file
+  workflow copy <name> [new name]
+  workflow remove <name>     Remove a workflow (--yes: do not ask). Refused while a run of it is going
+  workflow export <name> [file]   Write a workflow as a file, to pass on (to standard output without a file)
+  workflow import <file> [--name <name>]   Make a workflow from such a file ("-" reads standard input)
+  workflow run <name> [--session <name|id>] [--input key=value …] [--replace]
+                             Start a run on a session: this one, when typed inside a session
+  Inside a session that is on a run:
+  workflow status            Where the run stands and what to do now
+  workflow done [--note <text>]   The current element is finished; prints what comes next
+  workflow blocked <reason>  You cannot go on without a person
+  workflow goto <element>    Jump to an element, by name, ID or number
+  workflow pause | resume | stop
   note <text>                Inside a session: add an entry to that session's note log
   hook <event>               For agent hooks: reads the hook's JSON on stdin (prompt, notification, stop)
   hooks print                Print the Claude Code hook settings, to add to your own config by hand
@@ -95,7 +115,7 @@ export const USAGE = `Usage: aubergine <command>
 new, here and import take --canvas <name>. Without it they use the canvas you looked at most recently
 in a browser, or the first one when no browser is open.
 
-The server must be running for list, new, canvas, token, attach, here, scan, import, move, note and open.`;
+The server must be running for list, new, canvas, token, workflow, attach, here, scan, import, move, note and open.`;
 
 export class UsageError extends Error {}
 
@@ -217,6 +237,9 @@ export function parseCommand(argv: readonly string[]): Command {
         canvas,
       };
     }
+    case 'workflow':
+    case 'workflows':
+      return { name: 'workflow', words: rest };
     case 'note':
       if (rest.join(' ').trim() === '') throw new UsageError('note needs some text');
       return { name: 'note', text: rest.join(' ') };
@@ -255,7 +278,7 @@ export function parseCommand(argv: readonly string[]): Command {
           else names.push(word);
         }
         if (names.length === 0) throw new UsageError('token create needs a name');
-        if (scopes.length === 0) throw new UsageError('token create needs at least one --scope: read, canvases:write, sessions:write or notes:write');
+        if (scopes.length === 0) throw new UsageError('token create needs at least one --scope: read, canvases:write, sessions:write, notes:write, workflows:write or runs:write');
         return { name: 'token-create', tokenName: names.join(' '), scopes: [...new Set(scopes)], expires };
       }
       throw new UsageError('token needs "create <name> --scope …", "list" or "revoke <name|id>"');

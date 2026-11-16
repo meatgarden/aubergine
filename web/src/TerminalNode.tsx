@@ -4,7 +4,7 @@ import { NODE_MIN_HEIGHT, NODE_MIN_WIDTH } from '@aubergine/shared';
 import { api } from './api';
 import { canResumeAgent } from './attention';
 import { ColorButton } from './ColorButton';
-import { parkSession } from './commands';
+import { parkSession, runCommand } from './commands';
 import { hint } from './shortcuts';
 import { nodeMode, type NodeMode } from './culling';
 import { MoveToCanvas } from './MoveToCanvas';
@@ -14,6 +14,7 @@ import { StatusBadges } from './StatusBadges';
 import { currentLayout, useApp } from './store';
 import { TerminalView } from './TerminalView';
 import { useIsFullZoom } from './viewport';
+import { RunStrip } from './workflows/RunStrip';
 
 export type TerminalFlowNode = Node<{ sessionId: string }, 'terminal'>;
 
@@ -121,6 +122,7 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
             {session.attention.state === 'waiting' ? 'waiting for you' : session.attention.state === 'done' ? 'finished' : 'working'}
           </span>
         )}
+        {draft === null && !exited && <RunStrip sessionId={sessionId} variant="node" />}
         {draft === null && session && canResumeAgent(session) && (
           <button
             type="button"
@@ -141,6 +143,21 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
             onClick={() => useApp.getState().request({ kind: 'tags', id: sessionId })}
           >
             #{(session?.tags.length ?? 0) > 0 ? session?.tags.length : ''}
+          </button>
+        )}
+        {draft === null && !exited && (
+          <button
+            type="button"
+            className="node-tool nodrag"
+            aria-label={`Run a workflow on ${name}`}
+            title={hint('workflow.run', 'Run a workflow on this terminal')}
+            data-testid="node-run-workflow"
+            onClick={() => {
+              useApp.getState().select(sessionId);
+              runCommand('workflow.run');
+            }}
+          >
+            ⇶
           </button>
         )}
         {draft === null && <MoveToCanvas sessionId={sessionId} name={name} />}

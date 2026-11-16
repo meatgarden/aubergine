@@ -103,6 +103,17 @@ if [[ -o interactive && -n "$AUBERGINE_STATUS_FILE" ]]; then
 fi
 `;
 
+/**
+ * The user's startup files may have rebuilt PATH from nothing. Put the folder
+ * with the `aubergine` command back at the end, unless a command of that
+ * name is already found: one of their own always wins.
+ */
+const COMMAND = `
+if [[ -n "$AUBERGINE_BIN" ]] && ! whence -p aubergine >/dev/null 2>&1; then
+  path+=("$AUBERGINE_BIN")
+fi
+`;
+
 /** A history file placed in our folder by a system-wide startup file belongs with the user's files. */
 const FIX_HISTORY = `
 if [[ -n "$AUBERGINE_SHELL_DIR" && "$HISTFILE" == "$AUBERGINE_SHELL_DIR"/* ]]; then
@@ -118,7 +129,7 @@ else${LEAVE.trimEnd()}
 fi
 `,
   '.zprofile': `${HEADER}${handOver('.zprofile')}${STAY}`,
-  '.zshrc': `${HEADER}${FIX_HISTORY}${handOver('.zshrc')}${HOOKS}
+  '.zshrc': `${HEADER}${FIX_HISTORY}${handOver('.zshrc')}${COMMAND}${HOOKS}
 if [[ -o login ]]; then${STAY.trimEnd()}
 else${LEAVE.trimEnd()}
 fi

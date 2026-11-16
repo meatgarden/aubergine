@@ -72,6 +72,10 @@ export const COMMAND_IDS = [
   'controls.focus',
   'tokens.manage',
   'activity.show',
+  'workflows.open',
+  'workflow.run',
+  'workflow.runOnAgent',
+  'workflow.view',
   'shortcuts.show',
   'panels.close',
 ] as const;

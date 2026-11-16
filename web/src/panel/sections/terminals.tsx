@@ -26,6 +26,7 @@ import {
   type Sort,
 } from '../../terminal-rows';
 import { registerSection } from '../registry';
+import { RunStrip } from '../../workflows/RunStrip';
 
 const SECTION = 'terminals';
 /** Relative times are brought up to date this often, by one timer for the whole list. */
@@ -408,6 +409,7 @@ const RowView = memo(function RowView({ row, style, density, indented, current, 
             agent
           </span>
         )}
+        {!compact && <RunStrip sessionId={session.id} variant="row" />}
         <span className="list-spring" />
         {compact && updated && <span className="list-time">{updated}</span>}
         {hasNotes && (

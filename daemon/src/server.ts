@@ -54,6 +54,8 @@ import { SessionNotFoundError, type Attachment, type SessionRuntime } from './ru
 import { isTerminalReply } from './terminal-replies';
 import { BadInputError, ConflictError, NotFoundError, RuntimeUnavailableError, type Sessions } from './sessions';
 import { tokensMatch } from './token';
+import { MemoryRunArchive, type RunArchive } from './run-archive';
+import { Workflows } from './workflows';
 
 export interface ServerOptions {
   hub: StateHub;
@@ -70,6 +72,8 @@ export interface ServerOptions {
   webDist: string;
   /** Where calls made with API tokens are recorded. Left out, they are kept in memory only. */
   activity?: ActivityLog;
+  /** Where runs that are over are kept. Left out, in memory only. */
+  runArchive?: RunArchive;
   /** The version this server reports about itself. */
   version?: string;
   /** Check every /v1 answer against the shape its route declares. On by default under the test runner. */
@@ -128,6 +132,12 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   const tokens = new Tokens(hub);
   const limiter = new RateLimiter(limits.rateLimitPerMinute);
   const activity = options.activity ?? new MemoryActivityLog();
+  const workflowSettings = (await options.settings()).workflows;
+  const workflows = new Workflows(hub, sessions, options.runArchive ?? new MemoryRunArchive(), {
+    limits: () => ({ maxElements: workflowSettings.maxElements, maxElementChars: workflowSettings.maxElementChars }),
+    onError: (error) => console.error('Could not move a run:', error),
+  });
+  await workflows.reconcile();
 
   const routes: PublicRoute[] = [];
   routeLists.set(app, routes);
@@ -369,7 +379,12 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     return outside().move(body);
   });
 
-  app.post(paths.resumeAgent(':sessionId'), async (request) => sessions.resumeAgent(idParam(request, 'sessionId')));
+  app.post(paths.resumeAgent(':sessionId'), async (request) => {
+    const sessionId = idParam(request, 'sessionId');
+    // An agent started again in a session that is on a run is told about the run again.
+    const kickoff = workflows.kickoffFor(sessionId);
+    return sessions.resumeAgent(sessionId, kickoff ? [kickoff] : []);
+  });
 
   app.post(paths.showSession(':sessionId'), async (request): Promise<ShowResponse> => {
     const sessionId = idParam(request, 'sessionId');
@@ -434,6 +449,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     hub,
     sessions,
     tokens,
+    workflows,
     activity,
     viewers,
     limiter,

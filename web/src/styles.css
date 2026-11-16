@@ -1687,3 +1687,399 @@ tr[data-status='expired'] strong {
 .activity-outcome.is-limited {
   color: #e0a458;
 }
+
+/* ---------- Workflows ---------- */
+
+.wf-field {
+  display: grid;
+  gap: 4px;
+  margin: 0 0 10px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.wf-field input,
+.wf-field textarea,
+.wf-field select,
+.editor-inputs input,
+.run-view-actions input,
+.editor-sample {
+  font: inherit;
+  font-size: 13px;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 8px;
+  min-width: 0;
+}
+.wf-field textarea {
+  resize: vertical;
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.45;
+}
+.wf-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.wf-label .sheet-note {
+  font-size: 11px;
+}
+.wf-check {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.wf-element-text pre,
+.run-told pre,
+.run-dialog-preview pre,
+.editor-preview {
+  margin: 0;
+  padding: 10px;
+  max-height: 46vh;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--text);
+  background: var(--terminal-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+.wf-element-text p {
+  margin: 6px 0 0;
+  font-size: 12px;
+}
+
+/* The strip on a node's title bar and on a list row. */
+.run-strip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+  max-width: 260px;
+  padding: 1px 7px;
+  font-size: 11px;
+  line-height: 16px;
+  color: var(--text);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  cursor: pointer;
+}
+.run-strip:hover {
+  background: var(--panel-hover);
+}
+.run-strip.is-row {
+  max-width: 150px;
+  padding: 0 6px;
+  border-color: transparent;
+  color: var(--muted);
+}
+.run-segments {
+  display: inline-flex;
+  gap: 2px;
+}
+.run-segment {
+  width: 9px;
+  height: 5px;
+  border-radius: 2px;
+  background: var(--border);
+}
+.run-segment.is-done {
+  background: var(--accent);
+}
+.run-segment.is-active {
+  background: var(--accent-strong);
+  outline: 1px solid var(--text);
+}
+.run-segment.is-skipped {
+  background: repeating-linear-gradient(90deg, var(--border) 0 2px, transparent 2px 4px);
+}
+.run-element {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.run-count,
+.run-status,
+.run-quiet {
+  flex: none;
+  color: var(--muted);
+}
+.run-strip.status-blocked,
+.run-view-status.status-blocked {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+.run-strip.status-blocked .run-status {
+  color: var(--danger);
+}
+.run-strip.status-paused {
+  border-style: dashed;
+}
+.run-quiet {
+  font-style: italic;
+}
+.run-strip.is-quiet {
+  border-style: dotted;
+}
+
+/* The run view. */
+.run-view-status {
+  margin-left: 10px;
+  padding: 1px 8px;
+  font-size: 12px;
+  font-weight: normal;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+}
+.run-view-alert {
+  padding: 8px 10px;
+  color: var(--text) !important;
+  border: 1px solid var(--danger);
+  border-radius: 6px;
+}
+.run-view-tabs {
+  display: flex;
+  gap: 4px;
+  margin: 8px 0;
+}
+.run-view-tabs button {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--muted);
+}
+.run-view-tabs button[aria-selected='true'] {
+  color: var(--text);
+  border-color: var(--border);
+  background: var(--panel-hover);
+}
+.run-pipeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.run-step {
+  padding: 8px 10px;
+  margin: 0 0 6px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.run-step.is-current {
+  border-color: var(--accent);
+}
+.run-step.is-pending {
+  opacity: 0.75;
+}
+.run-step-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.run-step-mark {
+  flex: none;
+  width: 16px;
+  text-align: center;
+}
+.run-step-name {
+  padding: 0;
+  font-weight: 600;
+  color: var(--text);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+.run-step-facts {
+  flex: 1;
+  font-size: 12px;
+  color: var(--muted);
+}
+.run-step-note {
+  margin: 6px 0 0 24px !important;
+  padding-left: 8px;
+  font-size: 13px;
+  color: var(--text) !important;
+  border-left: 2px solid var(--border);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.run-step .wf-element-text {
+  margin: 8px 0 0 24px;
+}
+.run-kickoff {
+  max-height: none !important;
+}
+.run-view-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+.run-view-actions input {
+  flex: 2;
+}
+
+/* The run dialog and the editor: a form beside a preview. */
+.run-dialog-grid,
+.editor-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: 16px;
+  margin-top: 8px;
+}
+.dialog.sheet.workflow-editor {
+  width: min(1100px, calc(100vw - 32px));
+}
+.run-dialog-problem,
+.editor-saved {
+  flex: 1;
+  margin: 0 !important;
+  align-self: center;
+}
+.editor-inputs,
+.editor-elements,
+.template-list,
+.runs-list {
+  list-style: none;
+  margin: 0 0 6px;
+  padding: 0;
+}
+.editor-inputs li {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr auto auto;
+  gap: 6px;
+  align-items: center;
+  margin-bottom: 4px;
+}
+.editor-element {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 4px;
+  margin-bottom: 3px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--panel);
+}
+.editor-element.is-selected {
+  border-color: var(--accent);
+}
+.editor-element.is-dragging {
+  opacity: 0.5;
+}
+.editor-grip {
+  color: var(--muted);
+  cursor: grab;
+}
+.editor-element-name {
+  flex: 1;
+  min-width: 0;
+  padding: 4px;
+  text-align: left;
+  color: var(--text);
+  background: transparent;
+  border: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.editor-sample {
+  flex: 1;
+  padding: 2px 6px;
+  font-size: 12px;
+}
+.editor-problems {
+  margin: 10px 0 0;
+  padding-left: 18px;
+  font-size: 13px;
+  color: var(--danger);
+}
+.workflow-table td {
+  vertical-align: top;
+}
+.workflow-actions {
+  white-space: nowrap;
+  text-align: right;
+}
+.workflow-actions button {
+  margin-left: 4px;
+}
+.workflows-screen h3 {
+  margin: 16px 0 6px;
+  font-size: 13px;
+}
+.template-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  border-top: 1px solid var(--border);
+}
+.toolbar-attached {
+  margin-left: -6px;
+  padding-left: 6px;
+  padding-right: 6px;
+}
+
+/* The Workflows section of the side panel. */
+.runs-row {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr);
+  gap: 0 6px;
+  width: 100%;
+  padding: 4px 8px;
+  text-align: left;
+  color: var(--text);
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  cursor: pointer;
+}
+.runs-row:hover {
+  background: var(--panel-hover);
+}
+.runs-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.runs-where {
+  grid-column: 2;
+  font-size: 11px;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.runs-row.status-blocked .runs-where {
+  color: var(--danger);
+}
+.runs-foot {
+  padding: 4px 8px 8px;
+}
+.runs-section .list-empty {
+  padding: 8px;
+  margin: 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+@media (max-width: 760px) {
+  .run-dialog-grid,
+  .editor-grid {
+    grid-template-columns: 1fr;
+  }
+}

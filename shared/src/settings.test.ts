@@ -20,6 +20,7 @@ describe('Settings', () => {
       defaultFolder: '~/work',
       agents: { logPrompts: false, claudeCommand: 'mytool launch -- claude' },
       api: { rateLimitPerMinute: 120, maxBodyBytes: 65536, activityLogMaxBytes: 1048576 },
+      workflows: { maxElements: 12, maxElementChars: 4000, quietAfterSeconds: 120 },
       shortcuts: { 'terminal.park': 'X', 'view.fit': null },
       shortcutsInAppWindow: { 'canvas.go.1': ['Meta+1'] },
     };

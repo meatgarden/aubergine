@@ -69,7 +69,16 @@ export interface AppStore {
    * cleared when it has it. Keys typed in between are meant for that terminal.
    */
   settleUntil: number;
+  /** The workflow open in the editor. */
+  editingWorkflow: string | null;
+  /** The "Run workflow" dialog: on a session, or on a new agent session (`sessionId` null). */
+  startingRun: { sessionId: string | null; workflowId?: string } | null;
+  /** The run whose view is open. */
+  viewingRun: string | null;
 
+  editWorkflow: (workflowId: string | null) => void;
+  startRun: (starting: { sessionId: string | null; workflowId?: string } | null) => void;
+  viewRun: (runId: string | null) => void;
   load: () => Promise<void>;
   apply: (event: ChangeEvent) => void;
   focusSession: (sessionId: string | null) => void;
@@ -99,7 +108,7 @@ export interface AppStore {
 /** The longest a terminal is waited for after it was asked to take the keyboard. */
 const SETTLE_MS = 700;
 
-export type Panel = 'parked' | 'outside' | 'shortcuts' | 'tokens' | 'activity';
+export type Panel = 'parked' | 'outside' | 'shortcuts' | 'tokens' | 'activity' | 'workflows';
 export interface Ask {
   kind: 'rename-session' | 'rename-canvas' | 'note' | 'move' | 'tags' | 'list-search';
   /** The session or canvas it is about. */
@@ -128,6 +137,13 @@ export const useApp = create<AppStore>((set, get) => ({
   drawer: null,
   show: null,
   settleUntil: 0,
+  editingWorkflow: null,
+  startingRun: null,
+  viewingRun: null,
+
+  editWorkflow: (editingWorkflow) => set({ editingWorkflow }),
+  startRun: (startingRun) => set({ startingRun }),
+  viewRun: (viewingRun) => set({ viewingRun }),
 
   load: async () => {
     try {

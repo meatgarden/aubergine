@@ -110,19 +110,26 @@ const ERROR_TEXT: Record<string, { status: string; code: ErrorCode; description:
   BadRequest: { status: '400', code: 'bad_request', description: 'The request is not what this route accepts: a field is missing or wrong, a cursor is not one the server gave out.' },
   Unauthorized: { status: '401', code: 'unauthorized', description: 'No credential, a wrong one, or a token that has been revoked or has expired.' },
   Forbidden: { status: '403', code: 'forbidden', description: 'The credential is good but may not do this: the token lacks the scope, or no token may.' },
-  NotFound: { status: '404', code: 'not_found', description: 'There is no such canvas, session, node, frame or token.' },
-  Conflict: { status: '409', code: 'conflict', description: 'It cannot be done as things stand: for example closing the last canvas, or parking a session whose shell has ended.' },
+  NotFound: { status: '404', code: 'not_found', description: 'There is no such canvas, session, node, frame, token, workflow or run.' },
+  Conflict: { status: '409', code: 'conflict', description: 'It cannot be done as things stand: for example closing the last canvas, parking a session whose shell has ended, or a report that does not fit where a run stands.' },
   TooLarge: { status: '413', code: 'too_large', description: 'The request body is larger than the server accepts.' },
   RateLimited: { status: '429', code: 'rate_limited', description: 'Too many calls with this token in a short time. `Retry-After` says in how many seconds to try again.' },
   Unavailable: { status: '503', code: 'runtime_unavailable', description: 'The server cannot start or reach terminals right now (tmux is missing or too old).' },
 };
 const BY_STATUS = Object.fromEntries(Object.entries(ERROR_TEXT).map(([name, value]) => [value.status, name]));
 
+function pathParameter(name: string, schema: z.ZodType): { description?: string; schema: JsonSchema } {
+  if (name.endsWith('Id')) return { schema: { type: 'string', format: 'uuid' } };
+  const { description, ...rest } = jsonSchemaOf(schema, 'input');
+  return { ...(typeof description === 'string' ? { description } : {}), schema: rest };
+}
+
 function operation(id: RouteId, spec: RouteSpec): OpenApiOperation {
   const access = accessOfRoute(spec);
   const parameters: OpenApiOperation['parameters'] = [];
-  for (const name of Object.keys(spec.params?.shape ?? {})) {
-    parameters.push({ name, in: 'path', required: true, schema: { type: 'string', format: 'uuid' } });
+  for (const [name, schema] of Object.entries(spec.params?.shape ?? {})) {
+    // Nearly every parameter is an ID. One that is not is described by its own schema.
+    parameters.push({ name, in: 'path', required: true, ...pathParameter(name, schema as z.ZodType) });
   }
   if (spec.query) {
     const query = jsonSchemaOf(spec.query, 'input');

@@ -1,4 +1,4 @@
-import { needsUser, sortedCanvases, type AppState, type Canvas, type Layout, type Session } from '@aubergine/shared';
+import { needsUser, sortedCanvases, type AppState, type Canvas, type Layout, type Run, type Session } from '@aubergine/shared';
 import { SCOPE_FILTER, TAG_FILTER, TEXT_FILTER, filterById, type FilterContext } from './list-filters';
 import { listGroups } from './terminal-list';
 
@@ -185,7 +185,14 @@ export function filterChips(view: ListView): { key: string; label: string; remov
 }
 
 /** The rows that pass every filter in effect. Filters that are not registered (any more) are ignored. */
-export function filterRows(rows: readonly Row[], view: ListView, currentCanvasId: string | null): Row[] {
+const NO_RUNS: ReadonlyMap<string, Run> = new Map();
+
+/** Whether any filter in effect looks at runs. */
+export function viewUsesRuns(view: ListView): boolean {
+  return activeFilters(view).some((id) => filterById(id)?.usesRuns === true);
+}
+
+export function filterRows(rows: readonly Row[], view: ListView, currentCanvasId: string | null, runs: ReadonlyMap<string, Run> = NO_RUNS): Row[] {
   const tests = activeFilters(view)
     .map((id) => filterById(id))
     .filter((filter) => filter !== undefined)
@@ -195,6 +202,7 @@ export function filterRows(rows: readonly Row[], view: ListView, currentCanvasId
     currentCanvasId,
     words: view.text.toLowerCase().split(/\s+/).filter(Boolean),
     tags: view.tags.map((tag) => tag.toLowerCase()),
+    runs,
   };
   return rows.filter((row) => tests.every((test) => test(row, context)));
 }
