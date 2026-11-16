@@ -641,6 +641,13 @@ export const ArchivedRun = z.object({
 });
 export type ArchivedRun = z.infer<typeof ArchivedRun>;
 
+/**
+ * A line of the archive. Besides a run it may say that the run is withdrawn: it was part of something
+ * removed whole (the demo). The archive only grows, so taking a run back is a later line; readers leave it out.
+ */
+export const ArchiveLine = ArchivedRun.extend({ withdrawn: z.boolean().default(false) });
+export type ArchiveLine = z.infer<typeof ArchiveLine>;
+
 /* ---------- The file a workflow is exported to and imported from ---------- */
 
 export const WORKFLOW_FILE_FORMAT = 1;

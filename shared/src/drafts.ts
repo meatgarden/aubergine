@@ -94,7 +94,8 @@ export const DraftRecord = z.object({
   proposedBy: Proposer,
   /** How many versions were handed in before the decision. */
   revisions: z.number().int().min(0),
-  outcome: z.enum(['accepted', 'discarded']),
+  /** `withdrawn`: taken back, because the draft was part of something removed whole (the demo). Readers leave out every record of such a draft. */
+  outcome: z.enum(['accepted', 'discarded', 'withdrawn']),
   by: OwnerCaller,
 });
 export type DraftRecord = z.infer<typeof DraftRecord>;

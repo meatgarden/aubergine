@@ -1,9 +1,8 @@
-import { useEffect, useMemo, useState } from 'react';
-import type { RunRecord } from '@aubergine/shared';
-import { api } from '../../api';
+import { useMemo } from 'react';
 import { runCommand } from '../../commands';
 import { useApp } from '../../store';
 import { STATUS_MARK, STATUS_WORD, pictureOfLive, sortRuns } from '../../workflows/run-model';
+import { useEndedRuns } from '../../workflows/ended-runs';
 import { registerSection } from '../registry';
 
 /** The runs still going, on whichever canvas: what each is on, where it stands, whether it needs someone. */
@@ -12,20 +11,8 @@ function WorkflowsSection() {
   const app = useApp((s) => s.app);
   const quietAfter = useApp((s) => s.settings.workflows.quietAfterSeconds);
   const sorted = useMemo(() => sortRuns(runs ?? []), [runs]);
-  // The last few runs that are over: read from the archive, and again whenever a run leaves the live ones.
-  const [ended, setEnded] = useState<RunRecord[]>([]);
-  const live = runs?.length ?? 0;
-  useEffect(() => {
-    let cancelled = false;
-    void api
-      .listEndedRuns(5)
-      .then((page) => !cancelled && setEnded(page.items as RunRecord[]))
-      .catch(() => {});
-    return () => {
-      cancelled = true;
-    };
-  }, [live]);
-
+  // The last few runs that are over. They are read from the archive in one place for the whole page (see Canvas).
+  const ended = useEndedRuns((e) => e.items).slice(0, 5);
   return (
     <div className="runs-section" data-testid="runs-section">
       {sorted.length === 0 ? (

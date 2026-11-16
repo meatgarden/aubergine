@@ -1,3 +1,4 @@
+import { waitingQueue } from '../attention';
 import { registerTourStep, type TourContext } from './registry';
 
 /**
@@ -25,9 +26,15 @@ registerTourStep({
   id: 'waiting',
   order: 20,
   title: 'Something needs you',
-  text: 'Click “waiting” to go to the terminal that has a question. Type an answer there and press Enter.',
+  text: 'One terminal has a question for you. Click “waiting” (or the terminal itself), type an answer and press Enter.',
   reminder: 'When something waits for you, “waiting” at the top takes you to it.',
-  target: (c) => find('[data-testid="attention-queue"]') ?? nodeOf(c.demo?.sessions.waiting),
+  // The button goes to whoever has waited longest, on any canvas. When that is not the demo's terminal, or it has
+  // been looked at already, the terminal itself is pointed at instead, so that the step never leads away.
+  target: (c) => {
+    const mine = c.demo?.sessions.waiting;
+    const head = waitingQueue(c.app.sessions)[0];
+    return (head !== undefined && head.id === mine ? find('[data-testid="attention-queue"]') : null) ?? nodeOf(mine) ?? find('[data-testid="attention-queue"]');
+  },
   done: (c) => noted(c, c.demo?.sessions.waiting, 'Answered:'),
 });
 
@@ -69,13 +76,12 @@ registerTourStep({
   id: 'checklist',
   order: 60,
   title: 'A list an agent made for you',
-  text: 'Under “Over lately” on the left, open “List what is left”. Tick an item.',
-  reminder: 'A list an agent handed in is on its run; tick what is done.',
-  target: () => find('[data-testid="checklist"]') ?? find('[data-testid="ended-row"]') ?? find('[data-testid="runs-section"]'),
+  text: 'This terminal’s agent handed in a list. Click “list” on it, and tick an item.',
+  reminder: 'A terminal whose agent handed in a list says “list” on it; click that and tick what is done.',
+  target: (c) => find('[data-testid="checklist"]') ?? nodeOf(c.demo?.sessions.checklist)?.querySelector('[data-testid="list-mark"]') ?? nodeOf(c.demo?.sessions.checklist) ?? find('[data-testid="row-list-mark"]'),
   done: (c) => c.signals.has('checklist.ticked'),
   arrive: (c) => {
     if (c.state.viewingRun !== null) c.state.viewRun(null);
-    if (!c.state.side.open) c.state.setSide({ open: true, folded: [] });
   },
 });
 

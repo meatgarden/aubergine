@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
-import { inputProblems, kickoffLine, latestVersion, needWords, needsOf, previewRun, versionOfProposal, type RepositoryOffer, type WorkflowContent } from '@aubergine/shared';
+import { NeedMarks } from './NeedMarks';
+import { inputProblems, kickoffLine, latestVersion, needsOf, previewRun, versionOfProposal, type RepositoryOffer, type WorkflowContent } from '@aubergine/shared';
 import { api } from '../api';
 import { canvasActions } from '../canvas-actions';
 import { runCommand } from '../commands';
@@ -222,7 +223,7 @@ export function RunDialog() {
                   {needs.length > 0 && (
                     <p className="run-needs" data-testid="run-needs">
                       <span className="wf-label">Whoever does this needs</span>
-                      {needs.map(needWords).join('; ')}
+                      <NeedMarks needs={needs} sessionId={starting.sessionId} isAgent={session?.agent != null} />
                     </p>
                   )}
                   {version.inputs.map((input) => (

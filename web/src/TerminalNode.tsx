@@ -15,6 +15,7 @@ import { currentLayout, useApp } from './store';
 import { TerminalView } from './TerminalView';
 import { useIsFullZoom } from './viewport';
 import { tourSignal } from './tour/tour-store';
+import { ListMark } from './workflows/ListMark';
 import { RunStrip } from './workflows/RunStrip';
 
 export type TerminalFlowNode = Node<{ sessionId: string }, 'terminal'>;
@@ -126,6 +127,7 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
           </span>
         )}
         {draft === null && !exited && <RunStrip sessionId={sessionId} variant="node" />}
+        {draft === null && <ListMark sessionId={sessionId} variant="node" />}
         {draft === null && session?.typedBy && <TypedBy by={session.typedBy} />}
         {draft === null && !exited && session && (
           <button
@@ -141,6 +143,21 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
             }}
           >
             {session.peopleOnly ? '🔒 people only' : '🔓'}
+          </button>
+        )}
+        {draft === null && session?.agent && (
+          <button
+            type="button"
+            className="node-tool nodrag"
+            aria-label={`How this agent is set up: ${name}`}
+            title="How this agent is set up, read from its configuration files: MCP servers, plugins, hooks, skills, and what Aubergine added"
+            data-testid="switched-on"
+            onClick={(event) => {
+              event.stopPropagation();
+              useApp.getState().showInventory(sessionId);
+            }}
+          >
+            ⚙ set up
           </button>
         )}
         {draft === null && session && canResumeAgent(session) && (

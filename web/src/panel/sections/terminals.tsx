@@ -26,6 +26,7 @@ import {
   type Sort,
 } from '../../terminal-rows';
 import { registerSection } from '../registry';
+import { ListMark } from '../../workflows/ListMark';
 import { RunStrip } from '../../workflows/RunStrip';
 
 const SECTION = 'terminals';
@@ -415,6 +416,7 @@ const RowView = memo(function RowView({ row, style, density, indented, current, 
           </span>
         )}
         {!compact && <RunStrip sessionId={session.id} variant="row" />}
+        {!compact && <ListMark sessionId={session.id} variant="row" />}
         <span className="list-spring" />
         {compact && updated && <span className="list-time">{updated}</span>}
         {hasNotes && (
@@ -554,7 +556,20 @@ function NotesDrawer({ id, onClose }: { id: string; onClose: () => void }) {
   useEffect(() => {
     if (!exists) onClose();
   }, [exists, onClose]);
-  return exists ? <NotePanel sessionId={id} onClose={onClose} embedded /> : null;
+  const isAgent = useApp((s) => s.app?.sessions.find((x) => x.id === id)?.agent != null);
+  if (!exists) return null;
+  return (
+    <>
+      {isAgent && (
+        <div className="drawer-section" data-testid="drawer-switched-on">
+          <button type="button" className="quiet" onClick={() => useApp.getState().showInventory(id)}>
+            ⚙ How this agent is set up…
+          </button>
+        </div>
+      )}
+      <NotePanel sessionId={id} onClose={onClose} embedded />
+    </>
+  );
 }
 
 registerSection({

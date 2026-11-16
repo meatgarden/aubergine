@@ -25,7 +25,9 @@ daemon/   Fastify HTTP + WebSocket server, tmux session runtime, JSON store, CLI
           (offers, acceptance, runs, saving), draft-log.ts,
           terminal-access.ts (reading, typing, run-and-wait, the limits), terminal-redact.ts, input-audit.ts,
           agents/agent-tools.ts (the file an agent is pointed at, and the token made for one session),
-          demo.ts (the demo: make, status, remove) and demo/ (the stand-in scripts and the made-up project)
+          demo.ts (the demo: make, status, remove) and demo/ (the stand-in scripts and the made-up project),
+          agents/inventory.ts (the seam for reading how an agent is set up, and what Aubergine added),
+          agents/claude-inventory.ts (the only reader of the agent's configuration), agents/names-only.ts
 client/   a typed client for the public API, generated from its description; no dependencies;
           may not import from any other package
 mcp/      the MCP server (`aubergine mcp`): the public API as tools over standard input and output;
@@ -37,7 +39,7 @@ web/      Vite + React + @xyflow/react + @xterm/xterm, Zustand for state; the ta
           commands.ts, shortcuts.ts, canvas-actions.ts,
           spatial.ts, palette.ts, and the development-only key-tester.html
           workflows/ (run-model.ts, editor-model.ts, registries.ts, the screens), review/ (registry.ts, ReviewScreen.tsx, drafts-source.ts, repository-source.ts) and
-          panel/sections/workflows.tsx, tour/ (registry.ts, steps.ts, Tour.tsx, tour-store.ts, placement.ts), EmptyCanvas.tsx, HelpPanel.tsx
+          panel/sections/workflows.tsx, tour/ (registry.ts, steps.ts, Tour.tsx, tour-store.ts, placement.ts), EmptyCanvas.tsx, HelpPanel.tsx, InventoryPanel.tsx
 docs/     keys.md: what is known about which keys reach a page; api.md: the API reference (generated)
 e2e/      Playwright smoke test
 install.sh  the one-line installer; its commands are in daemon/src/cli/install.ts (start, open,
@@ -133,6 +135,17 @@ These are the only abstractions in the code base. Each has exactly one implement
 - **The tour never blocks.** Its ring takes no clicks, its card is not a dialog and keeps off the buttons of whatever is open (`placement.ts`). It uses timers, not animation frames.
 - **Nothing about the tour leaves the browser.** Whether it was finished or put away is one `localStorage` entry. No request, no log.
 - **An empty canvas offers three ways to begin**, and its panel must not take clicks meant for the toolbar.
+- **An agent's configuration is read in one module per agent kind** (`claude-inventory.ts`), behind `AgentInventory`. It never writes one of those files, never starts the agent's command line or any command a file names, and contacts no server. Do not add a second reader.
+- **Names only.** Whatever is shown of an agent's configuration goes through `names-only.ts`: a program's name, an address's host, the names of variables and headers. Never a value, an argument, the rest of a command line or the text of a rule. A new field that is shown gets a function there and hostile samples in its test. The copy as text is built from what is shown, never from the files.
+- **Nothing read from an agent's configuration is stored or logged.** Not in the state, not in the activity log, not in a cache. Keep the test that searches the data folder.
+- **Configured is not on.** The panel says how an agent is set up, not what the running agent has. Nothing read from files is called "on" unless a file says so by itself (a hook, a plugin, a skill). An MCP server is "configured", "off" or "waiting". Whether one answers is not known and must not be implied, in a label or anywhere else.
+- **Not readable and not recognised are said, never shown as empty.** Every file has those two paths, and both reach the top of the panel. A need is "cannot tell", not "not found", when any file could not be read.
+- **The gaps are always shown**: connectors from the account, whether a server answers, what the running agent loaded, settings delivered without a file.
+- **`inventory.read` is the owner's**: in `NEVER_BY_TOKEN`, not a session action, a cookie-only route, no MCP tool.
+- **A need mark is advice.** It compares names, says so, and never disables a button.
+- **Withdrawing is the demo's alone.** `RunArchive.withdraw` and `DraftLog.withdraw` are called only by the demo's removal, with the sessions its labels name. The files still only grow; readers leave withdrawn entries out.
+- **A hint that is said once** is remembered in the browser, and is not shown at all where it cannot be remembered.
+- **The agent's configuration and its documentation change often:** read the current pages before changing `claude-inventory.ts`, and say in the hand-over which version and pages.
 - **Canvases.** A session is on at most one canvas; a parked session is on none and remembers where it was (`parkedFrom`). Closing a canvas never ends a shell: the caller says move or park, and the last canvas cannot be closed. Where no canvas is named, `Sessions.canvas(null)` decides (most recently looked at, else first); do not pick a default anywhere else.
 - **Public shapes.** Routes under `/v1` use one error shape, `pageOf` for every list, ignore unknown fields, use ISO times, and take `Idempotency-Key` on creates. Do not add a `/v1` route that departs from these. This API is public: only add to it; never rename or remove.
 - **A `/v1` route is a declaration and a handler.** Add the entry to `ROUTES` and a handler of the same name in `v1.ts`. Do not call `app.get`/`app.post` for anything under `/v1`: a route registered by hand is not in the description, and the tests fail on it. A handler does not decide who may call it and does not parse its own input; the loop does both, in the order parameters, `authorize`, query and body, handler.
@@ -242,6 +255,8 @@ Stage C part 1: terminal access over the API: reading the screen and output, sea
 Stage C part 2: the MCP server (`mcp/`, `aubergine mcp`), tools listed by what the credential may do, refusals as sentences, quoted terminal content, the client header in the activity log, the choice of tools when starting Claude Code, the token made for one agent session and its file. Error codes also include `out_of_reach`. A token may belong to a session.
 
 The first five minutes: `aubergine demo` (a canvas of stand-ins, made and removed whole), the tour (eight registered steps on the demo), the start card of an empty canvas, the Help panel, `aubergine` by itself saying where to begin. Commands also include `tour.start`, `demo.remove` and `help.show`.
+
+How an agent is set up: a read-only list per agent session of MCP servers, plugins, hooks, skills, permission rules and settings files, with where each comes from and what Aubergine added; names only; need marks in the run dialog. Follow-ups from the demo: withdrawn runs and draft records, a handed-in list shown on its terminal, the full-size hint. Commands also include `agent.switchedOn`.
 
 Not built yet: a packaged build without development dependencies, Linux tested, measured key tables for Safari, Firefox, Linux and Windows, publishing the client as a package, moving the remaining `/api/v1` routes onto `/v1`, the workflow library, the board of runs, approvals, branches, a pool of agents, a list of past runs in the browser, waiting for output, changing a token's reach, SQLite, an HTTP transport for the MCP server, presets, a finder agent, recording, bash or fish integration.
 

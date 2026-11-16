@@ -2,6 +2,7 @@ import { isLive, type ReportRunRequest } from '@aubergine/shared';
 import { api } from '../api';
 import { useApp } from '../store';
 import { tourSignal } from '../tour/tour-store';
+import { useEndedRuns } from './ended-runs';
 
 /** Reports on a run from a button. The page shows the result at once; the same change also arrives as an event. */
 export async function reportRun(runId: string, report: ReportRunRequest): Promise<boolean> {
@@ -23,6 +24,8 @@ export async function tickItem(runId: string, elementId: string, item: number, t
   try {
     const next = await api.tickRunItem(runId, { elementId, item, ticked });
     tourSignal('checklist.ticked');
+    // A run that is over is not in the page's state: whoever shows its list reads it again.
+    if (!isLive(next.run.status)) void useEndedRuns.getState().refresh();
     if (isLive(next.run.status)) useApp.getState().apply({ type: 'run.ticked', run: next.run as never });
     else window.dispatchEvent(new CustomEvent('aubergine:run-read', { detail: next }));
   } catch (error) {

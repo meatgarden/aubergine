@@ -107,6 +107,12 @@ export class AgentTools {
     }
   }
 
+  /** Which choice the owner made for this session: its own credential, a token of its own, or nothing. Says only which; never the token. */
+  async choiceFor(sessionId: string): Promise<'own' | 'token' | null> {
+    if ((await this.fileFor(sessionId)) === null) return null;
+    return this.hub.state.tokens.some((token) => token.sessionId === sessionId) ? 'token' : 'own';
+  }
+
   private async removeFile(sessionId: string): Promise<void> {
     await rm(this.fileOf(sessionId), { force: true }).catch((error) => this.warn(`Could not remove an agent's MCP configuration: ${String(error)}`));
   }

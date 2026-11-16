@@ -35,6 +35,11 @@ const WHAT_IS_LEFT = Element.parse({
   origin: { kind: 'demo' },
 });
 
+/** Whether something was made by accepting a draft one of these sessions proposed. */
+function cameFrom(origin: { kind: string; sessionId?: unknown }, sessions: ReadonlySet<string>): boolean {
+  return origin.kind === 'draft' && typeof origin.sessionId === 'string' && sessions.has(origin.sessionId);
+}
+
 function shellQuote(value: string): string {
   return `'${value.replaceAll("'", `'\\''`)}'`;
 }
@@ -163,6 +168,17 @@ export class Demo {
     for (const sessionId of mine) {
       if (this.sessions.has(sessionId)) await this.sessions.close(sessionId);
     }
+    // What the owner accepted from a stand-in's draft was the demo's too: an element on the shelf, or a workflow.
+    for (const item of [...this.hub.state.shelf]) {
+      if (cameFrom(item.element.origin, mine)) this.drafts.removeFromShelf(item.id);
+    }
+    for (const workflow of [...this.hub.state.workflows]) {
+      if (workflow.listed && cameFrom(workflow.origin, mine) && !this.hub.state.runs.some((run) => run.workflowId === workflow.id)) this.workflows.remove(workflow.id);
+    }
+    // The records that only grow: the demo's past runs and what became of its drafts are taken back, so that
+    // no list shows them. Nothing is deleted; a later line says so, and only for what these sessions made.
+    await this.workflows.withdrawRuns(mine);
+    await this.drafts.withdrawRecords(mine);
     // Whatever else is on the canvas is the owner's: it goes to another canvas and keeps running.
     const now = this.hub.state.canvases.find((c) => c.id === canvas.id);
     if (now) {
