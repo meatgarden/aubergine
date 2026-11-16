@@ -16,9 +16,9 @@ const terminal = (tty: string, kind: OutsideTerminal['kind'], extra: Partial<Out
 const terminals = [
   terminal('ttys001', 'shell', { cwd: '/Users/me' }),
   terminal('ttys002', 'command', { running: 'npm run dev' }),
-  terminal('ttys003', 'agent', { agent: { known: true, name: 'fix the build', status: 'idle' } }),
-  terminal('ttys004', 'agent', { agent: { known: true, name: null, status: 'busy' } }),
-  terminal('ttys005', 'agent', { agent: { known: false, name: null, status: null } }),
+  terminal('ttys003', 'agent', { agent: { known: true, name: 'fix the build', status: 'idle', firstPrompt: null, lastPrompt: null } }),
+  terminal('ttys004', 'agent', { agent: { known: true, name: null, status: 'busy', firstPrompt: null, lastPrompt: null } }),
+  terminal('ttys005', 'agent', { agent: { known: false, name: null, status: null, firstPrompt: null, lastPrompt: null } }),
   terminal('ttys006', 'view'),
 ];
 

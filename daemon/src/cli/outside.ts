@@ -1,4 +1,4 @@
-import type { OutsideTerminal } from '@aubergine/shared';
+import { outsideRecap, type OutsideTerminal } from '@aubergine/shared';
 import type { ScannedShell } from '../migrate/shells';
 
 /** How a terminal is described in one cell. */
@@ -29,7 +29,16 @@ export function formatOutside(terminals: readonly OutsideTerminal[], currentTty:
   return table([
     ['TERMINAL', 'RUNNING', 'FOLDER'],
     ...terminals.map((t) => [t.tty + (t.tty === currentTty ? ' (this one)' : ''), what(t), t.cwd ?? '(unknown)']),
-  ]);
+  ]) + about(terminals);
+}
+
+/** Under a table: what each agent was doing, where its conversation could be read. */
+function about(terminals: readonly OutsideTerminal[]): string {
+  const lines = terminals.flatMap((t) => {
+    const recap = outsideRecap(t.agent);
+    return recap.length > 0 ? [`${t.tty}${t.agent?.name ? ` · ${t.agent.name}` : ''}`, ...recap.map((line) => `    ${line}`)] : [];
+  });
+  return lines.length > 0 ? `\n\nWhat each conversation was about:\n${lines.join('\n')}` : '';
 }
 
 /** The table `move` prints with nothing named: agent tabs only. */
@@ -44,7 +53,7 @@ export function formatAgents(terminals: readonly OutsideTerminal[]): string {
       t.agent?.known ? (t.agent.name ?? '(unnamed)') : '(not readable)',
       t.cwd ?? '(unknown)',
     ]),
-  ]);
+  ]) + about(agents);
 }
 
 /** One ready-to-copy command per terminal that something can be done with. */

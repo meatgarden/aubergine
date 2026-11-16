@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { OutsideTerminal } from '@aubergine/shared';
+import { outsideRecap, type OutsideTerminal } from '@aubergine/shared';
 import { api } from './api';
 import { runCommand } from './commands';
 import { hint } from './shortcuts';
@@ -133,6 +133,12 @@ export function OutsidePanel() {
                     <strong>{terminal.tty}</strong> <span title={terminal.cwd ?? undefined}>{shortFolder(terminal.cwd) || '(folder unknown)'}</span>
                   </div>
                   <div className="outside-detail">{describe(terminal)}</div>
+                  {/* What its conversation was about, where that could be read: the owner's own words, shown as text. */}
+                  {outsideRecap(terminal.agent).map((line) => (
+                    <div className="outside-detail outside-recap" key={line} data-testid="outside-recap">
+                      {line}
+                    </div>
+                  ))}
                   {terminal.kind === 'command' && !row.message && (
                     <div className="outside-detail">The running command itself cannot be moved; this adds a shell in the same folder.</div>
                   )}

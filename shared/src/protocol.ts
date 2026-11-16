@@ -74,6 +74,11 @@ export const paths = {
     report: (sessionId: string) => `/v1/sessions/${sessionId}/agent`,
   },
   /** GET: the user's open terminals that are not on the canvas. Read-only. */
+  /** Past conversations of an agent in a folder: the list, one to read, a search, and opening one on the canvas. The owner's alone. */
+  history: '/api/v1/history',
+  historyTranscript: '/api/v1/history/transcript',
+  historySearch: '/api/v1/history/search',
+  historyOpen: '/api/v1/history/open',
   /** Ask the agent in a session for a recap: types the one fixed sentence for that. The owner's alone. */
   askRecap: (sessionId: string) => `/api/v1/sessions/${sessionId}/recap-request`,
   /** What changed since a time, for someone who was away. The owner's alone. */
@@ -242,6 +247,9 @@ export const OutsideTerminal = z.object({
       name: z.string().nullable(),
       /** `idle`, `busy`, or null when unknown. */
       status: z.string().nullable(),
+      /** The first and the last thing the owner said in its conversation, where its record could be read. Shown, never kept. */
+      firstPrompt: z.string().max(400).nullable().default(null),
+      lastPrompt: z.string().max(400).nullable().default(null),
     })
     .nullable(),
 });

@@ -17,11 +17,15 @@ const canvases = [canvas('Main', 0), canvas('Deploys', 1), canvas('Design work',
 
 describe('parseQuery', () => {
   it('takes ">" in front to mean commands only', () => {
-    expect(parseQuery('>park')).toEqual({ commandsOnly: true, text: 'park' });
-    expect(parseQuery(' > new canvas ')).toEqual({ commandsOnly: true, text: 'new canvas' });
-    expect(parseQuery('>')).toEqual({ commandsOnly: true, text: '' });
-    expect(parseQuery('api > logs')).toEqual({ commandsOnly: false, text: 'api > logs' });
-    expect(parseQuery('')).toEqual({ commandsOnly: false, text: '' });
+    expect(parseQuery('>park')).toEqual({ commandsOnly: true, conversations: false, text: 'park' });
+    expect(parseQuery(' > new canvas ')).toEqual({ commandsOnly: true, conversations: false, text: 'new canvas' });
+    expect(parseQuery('>')).toEqual({ commandsOnly: true, conversations: false, text: '' });
+    expect(parseQuery('api > logs')).toEqual({ commandsOnly: false, conversations: false, text: 'api > logs' });
+    // "@" in front searches past conversations, and nothing else.
+    expect(parseQuery('@login redirect')).toEqual({ commandsOnly: false, conversations: true, text: 'login redirect' });
+    expect(parseQuery(' @ ')).toEqual({ commandsOnly: false, conversations: true, text: '' });
+    expect(parseQuery('mail@example')).toEqual({ commandsOnly: false, conversations: false, text: 'mail@example' });
+    expect(parseQuery('')).toEqual({ commandsOnly: false, conversations: false, text: '' });
   });
 });
 

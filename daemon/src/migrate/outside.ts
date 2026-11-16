@@ -10,6 +10,8 @@ export interface OutsideDeps {
   scan(): Promise<ScannedShell[]>;
   /** The agent's own record for a process, or null. */
   readAgentRecord(pid: number): Promise<ClaudeSession | null>;
+  /** What a conversation in a folder was about, where its record can be read. Left out, nothing is said. */
+  conversation?: (folder: string, conversationId: string) => Promise<{ name: string | null; firstPrompt: string | null; lastPrompt: string | null } | null>;
   processes: ProcessControl;
   /** How long to wait for an agent to exit after asking it to. */
   stopWaitMs?: number;
@@ -57,10 +59,13 @@ export class Outside {
 
   async list(): Promise<OutsideTerminal[]> {
     const { shells, candidates } = await this.look();
-    return shells.map((shell) => {
+    const listed: OutsideTerminal[] = [];
+    for (const shell of shells) {
       const candidate = candidates.find((c) => c.shell.tty === shell.tty) ?? null;
       const kind = shell.viewingAubergine ? 'view' : candidate ? 'agent' : shell.running ? 'command' : 'shell';
-      return {
+      // What the conversation was about, where its record can be read: the first and the last thing said in it. Read now, shown, not kept.
+      const said = candidate?.session?.cwd && this.deps.conversation ? await this.deps.conversation(candidate.session.cwd, candidate.session.conversationId).catch(() => null) : null;
+      listed.push({
         tty: shell.tty,
         pid: shell.pid,
         cwd: candidate?.session?.cwd ?? shell.cwd,
@@ -68,10 +73,11 @@ export class Outside {
         running: shell.running,
         runningPid: shell.runningPid,
         agent: candidate
-          ? { known: candidate.session !== null, name: candidate.session?.name ?? null, status: candidate.session?.status ?? null }
+          ? { known: candidate.session !== null, name: candidate.session?.name ?? said?.name ?? null, status: candidate.session?.status ?? null, firstPrompt: said?.firstPrompt ?? null, lastPrompt: said?.lastPrompt ?? null }
           : null,
-      };
-    });
+      });
+    }
+    return listed;
   }
 
   /** Gives a terminal a canvas session in its folder. `pid` is the terminal's shell, as listed. */

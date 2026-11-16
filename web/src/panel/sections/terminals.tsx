@@ -572,6 +572,9 @@ function NotesDrawer({ id, onClose }: { id: string; onClose: () => void }) {
     <>
       {isAgent && (
         <div className="drawer-section" data-testid="drawer-switched-on">
+          <button type="button" className="quiet" onClick={() => useApp.getState().openHistory({ folder: useApp.getState().app?.sessions.find((x) => x.id === id)?.cwd ?? null, query: '' })} data-testid="drawer-history">
+            Past conversations in this folder…
+          </button>
           <button type="button" className="quiet" onClick={() => useApp.getState().showInventory(id)}>
             ⚙ How this agent is set up…
           </button>

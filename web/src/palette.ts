@@ -1,10 +1,11 @@
 import type { Canvas, CommandId } from '@aubergine/shared';
 import type { Command } from './commands';
 
-/** What was typed into the palette: `>` in front means "commands only". */
-export function parseQuery(query: string): { commandsOnly: boolean; text: string } {
+/** What was typed into the palette: `>` in front means "commands only", `@` means "search past conversations". */
+export function parseQuery(query: string): { commandsOnly: boolean; conversations: boolean; text: string } {
   const trimmed = query.trimStart();
-  return trimmed.startsWith('>') ? { commandsOnly: true, text: trimmed.slice(1).trim() } : { commandsOnly: false, text: query.trim() };
+  if (trimmed.startsWith('@')) return { commandsOnly: false, conversations: true, text: trimmed.slice(1).trim() };
+  return trimmed.startsWith('>') ? { commandsOnly: true, conversations: false, text: trimmed.slice(1).trim() } : { commandsOnly: false, conversations: false, text: query.trim() };
 }
 
 const wordsOf = (text: string): string[] => text.toLowerCase().split(/\s+/).filter(Boolean);

@@ -4,6 +4,7 @@ export * from './demo';
 export * from './inventory';
 export * from './recap';
 export * from './away';
+export * from './history';
 export * from './outputs';
 export * from './workflows';
 export * from './drafts';

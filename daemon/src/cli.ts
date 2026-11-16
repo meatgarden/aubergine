@@ -9,6 +9,7 @@ import {
   ErrorResponse,
   SESSION_ENV,
   SESSION_HEADER,
+  HistoryList,
   RECAP_MAX,
   RECAP_WANTED,
   ago,
@@ -43,6 +44,7 @@ import { commandsFor, formatAgents, formatOutside, normaliseTty, toShells } from
 import {
   BEGIN,
   USAGE,
+  formatHistory,
   UsageError,
   expiryFromOption,
   formatCanvases,
@@ -555,6 +557,22 @@ async function main(): Promise<number> {
         edit: editText,
         ask,
       });
+
+    case 'history': {
+      const folder = path.resolve(command.folder ?? process.cwd());
+      const list = HistoryList.parse(await call(config, 'GET', `${paths.history}?folder=${encodeURIComponent(folder)}`));
+      // Names and prompts are other people's text: control characters are shown, not passed on to this terminal.
+      console.log(showControl(formatHistory(list, new Date())));
+      return 0;
+    }
+
+    case 'history-open': {
+      const folder = path.resolve(command.folder ?? process.cwd());
+      const made = (await call(config, 'POST', paths.historyOpen, { folder, id: command.id, copy: command.copy, evenIfOpen: command.evenIfOpen })) as { session: { id: string; name: string } };
+      console.log(showControl(`Opened ${command.copy ? 'a copy of the conversation' : 'the conversation'} on the canvas as "${made.session.name}".`));
+      await showOnCanvas(config, made.session.id);
+      return 0;
+    }
 
     case 'recap': {
       if (command.write) {

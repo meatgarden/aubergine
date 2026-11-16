@@ -156,3 +156,16 @@ export function recapLines(recap: Recap, now: Date): string[] {
   if (note) lines.push(`Last note (${note.author === 'agent' ? 'its agent' : 'you'}, ${ago(note.at, now)} ago): ${cut(note.text, 200)}`);
   return lines.slice(0, 6);
 }
+
+/**
+ * What a terminal that is not on the canvas yet was about, as far as is known without asking anyone: for an
+ * agent, the first and the last thing its owner said in its conversation. Lines of plain text; empty when
+ * nothing is known. What the owner typed is shown through `showControl`, on one line.
+ */
+export function outsideRecap(agent: { firstPrompt?: string | null; lastPrompt?: string | null } | null | undefined): string[] {
+  if (!agent) return [];
+  const lines: string[] = [];
+  if (agent.firstPrompt) lines.push(`began with: ${cut(agent.firstPrompt, 160)}`);
+  if (agent.lastPrompt && agent.lastPrompt !== agent.firstPrompt) lines.push(`last asked: ${cut(agent.lastPrompt, 160)}`);
+  return lines;
+}

@@ -85,6 +85,9 @@ export interface AppStore {
   describe: (kind: 'workflow' | 'element' | null) => void;
   editElement: (elementId: string | null) => void;
   viewRun: (runId: string | null) => void;
+  /** The panel of past conversations, when it is open: for a folder, with a search, or both. */
+  historyView: { folder: string | null; query: string } | null;
+  openHistory: (view: { folder: string | null; query: string } | null) => void;
   /** The session whose "what is switched on" panel is open. */
   inventoryFor: string | null;
   showInventory: (sessionId: string | null) => void;
@@ -152,6 +155,8 @@ export const useApp = create<AppStore>((set, get) => ({
   editingWorkflow: null,
   startingRun: null,
   viewingRun: null,
+  historyView: null,
+  openHistory: (historyView) => set({ historyView }),
   inventoryFor: null,
   showInventory: (inventoryFor) => set({ inventoryFor }),
   choosingAgentTools: false,

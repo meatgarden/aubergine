@@ -3,7 +3,9 @@ import path from 'node:path';
 import { SESSION_ENV, paths } from '@aubergine/shared';
 import { AgentTools } from './agents/agent-tools';
 import { claudeLaunchLine, claudeSettingsFile, writeClaudeSettings } from './agents/claude-code';
+import { ClaudeHistory } from './agents/claude-history';
 import { ClaudeInventory } from './agents/claude-inventory';
+import { Histories } from './agents/history';
 import { Inventories } from './agents/inventory';
 import { Tokens } from './tokens';
 import { FileActivityLog } from './activity';
@@ -78,6 +80,7 @@ async function main(): Promise<void> {
   const outside = new Outside({
     scan: () => scanShells(config),
     readAgentRecord: (pid) => readClaudeSession(pid),
+    conversation: (folder, id) => new ClaudeHistory().summary(folder, id),
     processes: systemProcesses,
     createSession: (input) => sessions.create(input),
   });
@@ -93,6 +96,7 @@ async function main(): Promise<void> {
     devOrigin: config.devOrigin,
     webDist: config.webDist,
     demoFolder: path.join(config.dataDir, 'demo'),
+    histories: (all) => new Histories(new ClaudeHistory(), all),
     inventories: new Inventories([new ClaudeInventory()], {
       settingsFile: () =>
         stat(claudeSettingsFile(config.dataDir)).then(

@@ -23,6 +23,7 @@ export const COMMAND_IDS = [
   'agent.newWithTools',
   'agent.switchedOn',
   'agent.askRecap',
+  'history.open',
   'tour.start',
   'demo.remove',
   'help.show',

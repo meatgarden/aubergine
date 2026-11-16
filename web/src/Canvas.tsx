@@ -40,6 +40,7 @@ import { useEndedRuns } from './workflows/ended-runs';
 import { EmptyCanvas } from './EmptyCanvas';
 import { FULL_SIZE_HINT, shouldSayFullSize } from './full-size-hint';
 import { HelpPanel } from './HelpPanel';
+import { HistoryPanel } from './HistoryPanel';
 import { InventoryPanel } from './InventoryPanel';
 import { tourSignal } from './tour/tour-store';
 import { AgentToolsDialog } from './AgentToolsDialog';
@@ -519,6 +520,7 @@ export function Canvas() {
       <ShortcutSheet />
       <HelpPanel />
       <InventoryPanel />
+      <HistoryPanel />
       <TokenScreen />
       <ActivityScreen />
       <WorkflowsScreen />

@@ -9,7 +9,15 @@ import {
   SESSION_HEADER,
   RECAP_LINE,
   AwayQuery,
+  HistoryQuery,
+  HistorySearchQuery,
+  OpenConversationRequest,
+  TranscriptQuery,
   type AwayDigest,
+  type HistoryList,
+  type HistorySearch,
+  type Session,
+  type Transcript,
   type DemoStatus,
   type Inventory,
   CLIENT_HEADER,
@@ -51,6 +59,7 @@ import {
   type TerminalServerMessage,
 } from '@aubergine/shared';
 import { MemoryActivityLog, BadActivityCursorError, type ActivityLog } from './activity';
+import type { Histories } from './agents/history';
 import { NotAnAgentError, type Inventories } from './agents/inventory';
 import { Away } from './away';
 import { Demo } from './demo';
@@ -97,6 +106,8 @@ export interface ServerOptions {
   draftLog?: DraftLog;
   /** Where runs that are over are kept. Left out, in memory only. */
   runArchive?: RunArchive;
+  /** Reads an agent's past conversations. Left out, those routes answer that it is not available. */
+  histories?: (sessions: Sessions) => Histories;
   /** Reads what is switched on for an agent. Left out, that route answers that it is not available. */
   inventories?: Inventories;
   /** The folder the demo may fill and remove. Left out, there is no demo. */
@@ -463,6 +474,34 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   };
 
   // Looking at, bringing in and stopping what runs outside Aubergine is the owner's alone: authorize() refuses it to every token.
+  /* ---------- Past conversations ---------- */
+
+  // Everything the owner and an agent said is in these, so they are the owner's alone, read when asked for and never kept.
+  const histories = (): Histories => {
+    if (!options.histories) throw new HttpError(404, 'not_found', 'Past conversations are not available on this server');
+    return options.histories(sessions);
+  };
+  app.get(paths.history, async (request): Promise<HistoryList> => {
+    allowOn(request, 'history.read', {});
+    return histories().list(parse(HistoryQuery, request.query).folder);
+  });
+  app.get(paths.historyTranscript, async (request): Promise<Transcript> => {
+    allowOn(request, 'history.read', {});
+    const query = parse(TranscriptQuery, request.query);
+    return histories().transcript(query.folder, query.id);
+  });
+  app.get(paths.historySearch, async (request): Promise<HistorySearch> => {
+    allowOn(request, 'history.read', {});
+    const query = parse(HistorySearchQuery, request.query);
+    return histories().search(query.q, query.folder);
+  });
+  app.post(paths.historyOpen, async (request, reply): Promise<{ session: Session }> => {
+    allowOn(request, 'history.open', {});
+    const body = parse(OpenConversationRequest, request.body);
+    reply.code(201);
+    return histories().open(body);
+  });
+
   /* ---------- While you were away ---------- */
 
   // A window of what changed lately, kept in memory for whoever comes back to the page. Not state, not a log.

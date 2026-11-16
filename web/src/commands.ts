@@ -253,6 +253,14 @@ export const COMMANDS: readonly Command[] = [
     },
   },
   {
+    id: 'history.open',
+    title: 'Past conversations…',
+    description: 'Lists the agent\'s earlier conversations in this terminal\'s folder: read one, open it on the canvas, or open a copy. Type @ in the palette to search them.',
+    group: 'Terminals',
+    available: always,
+    run: (state) => state.openHistory({ folder: targetSession(state)?.cwd ?? null, query: '' }),
+  },
+  {
     id: 'frame.new',
     title: 'New frame',
     description: 'Adds a frame to group terminals.',
@@ -643,11 +651,12 @@ export const COMMANDS: readonly Command[] = [
     title: 'Close panels',
     description: 'Closes whatever panel is open; else returns the keyboard from a button to the canvas; else clears the selection.',
     group: 'Panels',
-    available: (state) => state.picker || state.choosingAgentTools || state.inventoryFor !== null || state.describing !== null || state.editingElement !== null || state.viewingRun !== null || state.startingRun !== null || state.editingWorkflow !== null || state.panel !== null || state.drawer !== null || state.selected !== null || onControl(),
+    available: (state) => state.picker || state.choosingAgentTools || state.inventoryFor !== null || state.historyView !== null || state.describing !== null || state.editingElement !== null || state.viewingRun !== null || state.startingRun !== null || state.editingWorkflow !== null || state.panel !== null || state.drawer !== null || state.selected !== null || onControl(),
     run: (state) => {
       if (state.picker) state.setPicker(false);
       else if (state.choosingAgentTools) state.chooseAgentTools(false);
       else if (state.inventoryFor !== null) state.showInventory(null);
+      else if (state.historyView !== null) state.openHistory(null);
       else if (state.describing !== null) state.describe(null);
       else if (state.editingElement !== null) state.editElement(null);
       else if (state.startingRun !== null) state.startRun(null);

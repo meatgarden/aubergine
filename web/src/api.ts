@@ -9,6 +9,9 @@ import {
   type UpdateCanvasRequest,
   CreateSessionResponse,
   AwayDigest,
+  HistoryList,
+  HistorySearch,
+  Transcript,
   DemoStatus,
   Inventory,
   ErrorResponse,
@@ -72,6 +75,7 @@ async function call<T>(schema: ZodType<T> | null, method: string, path: string, 
 }
 
 const AskedRecap = z.object({ asked: z.boolean(), line: z.string() });
+const OpenedConversation = z.object({ session: Session });
 
 export const api = {
   getState: () => call(StateResponse, 'GET', paths.state),
@@ -88,6 +92,11 @@ export const api = {
     call<void>(null, 'POST', paths.revealInSession(sessionId), { text }),
   appendNote: (sessionId: string, text: string) =>
     call(AppendNoteResponse, 'POST', paths.sessionNotes(sessionId), { text }),
+  /** Past conversations of the agent in a folder. Read by the server when asked; nothing is kept. */
+  history: (folder: string) => call(HistoryList, 'GET', `${paths.history}?folder=${encodeURIComponent(folder)}`),
+  historyTranscript: (folder: string, id: string) => call(Transcript, 'GET', `${paths.historyTranscript}?folder=${encodeURIComponent(folder)}&id=${encodeURIComponent(id)}`),
+  searchConversations: (query: string, folder?: string) => call(HistorySearch, 'GET', `${paths.historySearch}?q=${encodeURIComponent(query)}${folder ? `&folder=${encodeURIComponent(folder)}` : ''}`),
+  openConversation: (request: { folder: string; id: string; copy: boolean; evenIfOpen: boolean; canvasId?: string }) => call(OpenedConversation, 'POST', paths.historyOpen, request),
   /** What changed since a time, for someone who was away. */
   away: (since: string) => call(AwayDigest, 'GET', `${paths.away}?since=${encodeURIComponent(since)}`),
   /** Asks the agent in a session for a recap: the server types its one fixed sentence for that. */
