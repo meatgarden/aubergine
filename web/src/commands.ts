@@ -7,6 +7,7 @@ import { currentLayout, useApp, type AppStore } from './store';
 import { SCOPE_FILTER } from './list-filters';
 import { listModel } from './list-model';
 import { SORTS } from './terminal-rows';
+import { runOfSession } from './workflows/run-model';
 
 /**
  * The commands: everything that can be done from a button, a key, or the
@@ -206,7 +207,7 @@ export const COMMANDS: readonly Command[] = [
     description: 'Starts a terminal in free space on this canvas.',
     group: 'Terminals',
     available: withCanvas,
-    run: () => canvasActions.get()?.addTerminal(),
+    run: () => void canvasActions.get()?.addTerminal(),
   },
   {
     id: 'agent.new',
@@ -214,7 +215,7 @@ export const COMMANDS: readonly Command[] = [
     description: 'Starts a terminal running Claude Code, with hooks that report to this canvas.',
     group: 'Terminals',
     available: withCanvas,
-    run: () => canvasActions.get()?.addTerminal('claude-code'),
+    run: () => void canvasActions.get()?.addTerminal('claude-code'),
   },
   {
     id: 'frame.new',
@@ -482,6 +483,48 @@ export const COMMANDS: readonly Command[] = [
     run: (state) => state.togglePanel('activity'),
   },
   {
+    id: 'workflows.open',
+    title: 'Workflows…',
+    description: 'Lists the workflows: make one from a template, change, duplicate or remove one.',
+    group: 'Panels',
+    available: always,
+    run: (state) => state.togglePanel('workflows'),
+  },
+  {
+    id: 'workflow.run',
+    title: 'Run workflow… on the terminal',
+    description: 'Puts the terminal on a workflow: choose one, fill in what it asks for, see what the agent will be told, start.',
+    group: 'Terminals',
+    available: hasTarget,
+    run: (state) => {
+      const session = targetSession(state);
+      if (session) state.startRun({ sessionId: session.id });
+    },
+  },
+  {
+    id: 'workflow.runOnAgent',
+    title: 'New Claude Code session on a workflow…',
+    description: 'Starts a terminal running Claude Code and puts it on a workflow from its first prompt.',
+    group: 'Terminals',
+    available: withCanvas,
+    run: (state) => state.startRun({ sessionId: null }),
+  },
+  {
+    id: 'workflow.view',
+    title: 'Show the run of the terminal',
+    description: 'Opens the run the terminal is on: every element with its state, and the buttons that move it.',
+    group: 'Terminals',
+    available: (state) => {
+      const session = targetSession(state);
+      return session !== null && runOfSession(state.app, session.id) !== null;
+    },
+    run: (state) => {
+      const session = targetSession(state);
+      const run = session ? runOfSession(state.app, session.id) : null;
+      if (run) state.viewRun(run.id);
+    },
+  },
+  {
     id: 'shortcuts.show',
     title: 'Show shortcuts',
     description: 'Shows every command and its keys.',
@@ -494,9 +537,12 @@ export const COMMANDS: readonly Command[] = [
     title: 'Close panels',
     description: 'Closes whatever panel is open; else returns the keyboard from a button to the canvas; else clears the selection.',
     group: 'Panels',
-    available: (state) => state.picker || state.panel !== null || state.drawer !== null || state.selected !== null || onControl(),
+    available: (state) => state.picker || state.viewingRun !== null || state.startingRun !== null || state.editingWorkflow !== null || state.panel !== null || state.drawer !== null || state.selected !== null || onControl(),
     run: (state) => {
       if (state.picker) state.setPicker(false);
+      else if (state.startingRun !== null) state.startRun(null);
+      else if (state.viewingRun !== null) state.viewRun(null);
+      else if (state.editingWorkflow !== null) state.editWorkflow(null);
       else if (state.panel !== null) state.togglePanel(null);
       else if (state.drawer !== null) state.openDrawer(null);
       else if (onControl()) (document.activeElement as HTMLElement).blur();

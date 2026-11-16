@@ -1,3 +1,4 @@
+import type { Run } from '@aubergine/shared';
 import type { Row } from './terminal-rows';
 
 /** What a filter may look at besides the row itself. */
@@ -8,6 +9,8 @@ export interface FilterContext {
   words: readonly string[];
   /** The tags chosen, in lower case. A row passes with any of them. */
   tags: readonly string[];
+  /** The run each session is on, by session. */
+  runs: ReadonlyMap<string, Run>;
 }
 
 /**
@@ -22,6 +25,8 @@ export interface ListFilter {
   /** Lower numbers come first in the filter bar. */
   order: number;
   test: (row: Row, context: FilterContext) => boolean;
+  /** The test looks at runs, so the list is worked out again when a run moves. */
+  usesRuns?: boolean;
 }
 
 const registry = new Map<string, ListFilter>();
@@ -59,6 +64,10 @@ registerFilter({ id: 'busy', label: 'Busy', order: 20, test: (row) => row.state 
 registerFilter({ id: 'unread', label: 'Unread', order: 30, test: (row) => row.session.status.unread && row.session.state !== 'exited' });
 registerFilter({ id: 'agent', label: 'Has an agent', order: 40, test: (row) => row.session.agent !== null });
 registerFilter({ id: 'parked', label: 'Parked', order: 50, test: (row) => row.parked });
+registerFilter({ id: 'workflow', label: 'On a workflow', order: 60, usesRuns: true, test: (row, context) => context.runs.has(row.session.id) });
+registerFilter({ id: 'workflow-running', label: 'Workflow: running', order: 61, usesRuns: true, test: (row, context) => context.runs.get(row.session.id)?.status === 'running' });
+registerFilter({ id: 'workflow-blocked', label: 'Workflow: blocked', order: 62, usesRuns: true, test: (row, context) => context.runs.get(row.session.id)?.status === 'blocked' });
+registerFilter({ id: 'workflow-paused', label: 'Workflow: paused', order: 63, usesRuns: true, test: (row, context) => context.runs.get(row.session.id)?.status === 'paused' });
 registerFilter({
   id: TEXT_FILTER,
   label: 'Text',

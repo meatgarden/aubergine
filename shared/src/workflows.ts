@@ -404,9 +404,12 @@ export function kickoffLine(workflowName: string): string {
 
 const HOW_TO_REPORT = [
   'How to report:',
-  '  aubergine workflow done --note "<what you did, for whoever comes next>"   when the "done when" above is true',
-  '  aubergine workflow blocked "<what you need>"                              when you cannot go on without a person',
-  '  aubergine workflow status                                                 to read this again',
+  '- When the "done when" above is true:',
+  '    aubergine workflow done --note "<what you did, for whoever comes next>"',
+  '- When you cannot go on without a person:',
+  '    aubergine workflow blocked "<what you need>"',
+  '- To read this again:',
+  '    aubergine workflow status',
 ].join('\n');
 
 /**

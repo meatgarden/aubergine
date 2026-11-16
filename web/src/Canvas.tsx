@@ -33,6 +33,12 @@ import { runCommand } from './commands';
 import { hint } from './shortcuts';
 import { ShortcutSheet } from './ShortcutSheet';
 import { ActivityScreen, TokenScreen } from './TokenScreen';
+import { RunDialog } from './workflows/RunDialog';
+import { RunViewDialog } from './workflows/RunViewDialog';
+import { WorkflowEditor } from './workflows/WorkflowEditor';
+import { WorkflowsScreen } from './workflows/WorkflowsScreen';
+import './workflows/element-views';
+import './workflows/run-views';
 import { FrameNode, type FrameFlowNode } from './FrameNode';
 import { TerminalNode, type TerminalFlowNode } from './TerminalNode';
 import { isFullZoom, loadViewport, saveViewport, useZoomToNode } from './viewport';
@@ -194,7 +200,7 @@ export function Canvas() {
   const [adding, setAdding] = useState(false);
   const setError = useApp((s) => s.setNotice);
 
-  const addTerminal = useCallback(async (agent?: AgentKind) => {
+  const addTerminal = useCallback(async (agent?: AgentKind, agentArgs?: string[]): Promise<string | null> => {
     setAdding(true);
     setError(null);
     try {
@@ -215,12 +221,14 @@ export function Canvas() {
         height: n.height ?? n.measured?.height ?? NODE_DEFAULT_HEIGHT,
       }));
       const rect = findFreeRect(taken, center, { width: NODE_DEFAULT_WIDTH, height: NODE_DEFAULT_HEIGHT });
-      if (!canvasId) return;
-      const created = await api.createSession({ rect, canvasId, ...(agent ? { agent } : {}) });
+      if (!canvasId) return null;
+      const created = await api.createSession({ rect, canvasId, ...(agent ? { agent } : {}), ...(agent && agentArgs ? { agentArgs } : {}) });
       useApp.getState().apply({ type: 'session.created', canvasId, ...created });
       goToNode(created.node.id, created.session.id);
+      return created.session.id;
     } catch (e) {
       setError(`Could not start a terminal: ${(e as Error).message}`);
+      return null;
     } finally {
       setAdding(false);
     }
@@ -296,7 +304,7 @@ export function Canvas() {
   useEffect(
     () =>
       canvasActions.register({
-        addTerminal: (agent) => void addTerminal(agent),
+        addTerminal,
         addFrame: () => void addFrame(),
         zoomToFit,
         resetZoom,
@@ -389,6 +397,20 @@ export function Canvas() {
           >
             + Claude Code
           </button>
+          <button
+            type="button"
+            className="quiet toolbar-attached"
+            aria-label="New Claude Code session on a workflow"
+            onClick={() => runCommand('workflow.runOnAgent')}
+            disabled={adding}
+            title={hint('workflow.runOnAgent', 'New Claude Code session on a workflow: choose the workflow first')}
+            data-testid="agent-on-workflow"
+          >
+            ⇶
+          </button>
+          <button type="button" className="quiet" onClick={() => runCommand('workflows.open')} title={hint('workflows.open', 'Workflows: make, change and run them')} data-testid="toolbar-workflows">
+            Workflows
+          </button>
           <button type="button" className="quiet" onClick={() => runCommand('frame.new')} title={hint('frame.new', 'Add a frame to group terminals')}>
             + Frame
           </button>
@@ -431,6 +453,10 @@ export function Canvas() {
       <ShortcutSheet />
       <TokenScreen />
       <ActivityScreen />
+      <WorkflowsScreen />
+      <WorkflowEditor />
+      <RunDialog />
+      <RunViewDialog />
     </div>
   );
 }

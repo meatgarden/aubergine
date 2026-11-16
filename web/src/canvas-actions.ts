@@ -6,7 +6,8 @@ import type { AgentKind } from '@aubergine/shared';
  * component registers itself here while it is mounted; commands call it.
  */
 export interface CanvasActions {
-  addTerminal: (agent?: AgentKind) => void;
+  /** Starts a terminal in free space. With an agent, `agentArgs` are handed to it. Gives back the new session's ID, or null when it could not be started. */
+  addTerminal: (agent?: AgentKind, agentArgs?: string[]) => Promise<string | null>;
   addFrame: () => void;
   zoomToFit: () => void;
   resetZoom: () => void;

@@ -94,6 +94,17 @@ export const api = {
   revokeToken: (tokenId: string) => v1.revokeToken({ tokenId }),
   getActivity: (query: { tokenId?: string | undefined; cursor?: string | undefined; limit?: number }) =>
     v1.listActivity({ query: { limit: query.limit ?? 50, ...(query.tokenId ? { tokenId: query.tokenId } : {}), ...(query.cursor ? { cursor: query.cursor } : {}) } }),
+  listWorkflowTemplates: () => v1.listWorkflowTemplates({ query: { limit: 100 } }),
+  workflowFromTemplate: (template: string) => v1.useWorkflowTemplate({ template }),
+  createWorkflow: (body: Parameters<typeof v1.createWorkflow>[0]['body']) => v1.createWorkflow({ body }),
+  updateWorkflow: (workflowId: string, body: Parameters<typeof v1.updateWorkflow>[0]['body']) => v1.updateWorkflow({ workflowId, body }),
+  copyWorkflow: (workflowId: string) => v1.copyWorkflow({ workflowId }),
+  removeWorkflow: (workflowId: string) => v1.removeWorkflow({ workflowId }),
+  /** Starts a run on a session. The line that tells the agent is typed by the server where an agent is running. */
+  startRun: (sessionId: string, body: { workflowId: string; inputs: Record<string, string>; replace?: boolean; kickoff?: boolean }) =>
+    v1.startSessionRun({ sessionId, body: { replace: false, kickoff: true, ...body } }),
+  reportRun: (runId: string, body: Parameters<typeof v1.reportRun>[0]['body']) => v1.reportRun({ runId, body }),
+  getRun: (runId: string) => v1.getRun({ runId }),
   moveSession: (sessionId: string, canvasId: string) => v1.moveSession({ sessionId, body: { canvasId } }),
   resumeAgent: (sessionId: string) => call(Session, 'POST', paths.resumeAgent(sessionId), {}),
   seenSession: (sessionId: string) => call(Session, 'POST', paths.seenSession(sessionId), {}),
