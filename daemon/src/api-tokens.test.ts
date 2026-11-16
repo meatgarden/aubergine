@@ -131,7 +131,8 @@ function safeJson(text: string): unknown {
 }
 
 async function makeToken(name: string, scopes: Scope[], extra: Record<string, unknown> = {}): Promise<{ id: string; secret: string }> {
-  const created = await asOwner('POST', publicPaths.tokens, { name, scopes, ...extra });
+  // Review of workflow changes is switched off here, so that these tests are about scopes alone; the switch has tests of its own.
+  const created = await asOwner('POST', publicPaths.tokens, { name, scopes, reviewWorkflowChanges: false, ...extra });
   expect(created.status).toBe(201);
   const { token, secret } = CreatedToken.parse(created.body);
   return { id: token.id, secret };
@@ -311,9 +312,25 @@ describe('a token that should not work', () => {
 
 describe('every route has a rule', () => {
   /** The routes only a session may use, for itself. */
-  const SESSION_ONLY = ['PUT /v1/sessions/:sessionId/attention', 'PUT /v1/sessions/:sessionId/agent'];
+  const SESSION_ONLY = [
+    'PUT /v1/sessions/:sessionId/attention',
+    'PUT /v1/sessions/:sessionId/agent',
+    'GET /v1/sessions/:sessionId/brief',
+    'GET /v1/sessions/:sessionId/drafts',
+    'POST /v1/sessions/:sessionId/drafts',
+  ];
   /** The routes no token may use, whatever its scopes. */
-  const NEVER = ['GET /v1/tokens', 'POST /v1/tokens', 'DELETE /v1/tokens/:tokenId', 'GET /v1/activity'];
+  const NEVER = [
+    'GET /v1/tokens',
+    'POST /v1/tokens',
+    'DELETE /v1/tokens/:tokenId',
+    'GET /v1/activity',
+    // Reading a draft and deciding about it is the owner's alone.
+    'POST /v1/drafts/:draftId/accept',
+    'POST /v1/drafts/:draftId/return',
+    'DELETE /v1/drafts/:draftId',
+    'POST /v1/draft-requests',
+  ];
 
   it('has the routes the plan lists, under /v1', () => {
     const have = publicRoutesOf(app).map((r) => `${r.method} ${r.url}`);
@@ -428,7 +445,10 @@ describe('every route has a rule', () => {
     expect(allowed.sort()).toEqual([
       'GET /v1',
       'GET /v1/openapi.json',
+      'GET /v1/sessions/:sessionId/brief',
+      'GET /v1/sessions/:sessionId/drafts',
       'GET /v1/sessions/:sessionId/run',
+      'POST /v1/sessions/:sessionId/drafts',
       'POST /v1/sessions/:sessionId/notes',
       'POST /v1/sessions/:sessionId/run/report',
       'PUT /v1/sessions/:sessionId/agent',
@@ -716,7 +736,7 @@ describe('the secret', () => {
 
     // The hash is what is stored, and it is not sent to the page.
     const state = JSON.parse(await readFile(path.join(dir, 'state.json'), 'utf8'));
-    expect(state.version).toBe(4);
+    expect(state.version).toBe(5);
     expect(state.tokens.map((t: { hash: string }) => t.hash)).toEqual([expect.stringMatching(/^[0-9a-f]{64}$/), expect.stringMatching(/^[0-9a-f]{64}$/)]);
   });
 

@@ -11,7 +11,8 @@ shared/   wire protocol (zod schemas), entity types, settings schema, the change
           chords and the command names with their default keys (chords.ts, shortcuts.ts);
           the declarations of every /v1 route (routes.ts), the scope table (access.ts), openapi.ts;
           workflows.ts (entities, element kinds, the step function, what an agent is told, the file
-          format), workflow-api.ts (bodies and answers), workflow-templates.ts
+          format), workflow-api.ts (bodies and answers), workflow-templates.ts,
+          outputs.ts (output kinds), drafts.ts (drafts, the shelf, what a reviewer reads, the brief)
 daemon/   Fastify HTTP + WebSocket server, tmux session runtime, JSON store, CLI, start-at-login,
           shell integration (src/shell/), agent support (src/agents/), authorization (src/auth.ts),
           migration of existing terminals (src/migrate/), including reading agent
@@ -19,7 +20,7 @@ daemon/   Fastify HTTP + WebSocket server, tmux session runtime, JSON store, CLI
           shared implementation behind the panel and the CLI (outside.ts); the state
           holder (state-hub.ts), the public routes (v1.ts, public-api.ts) and viewers.ts;
           workflows: the service (workflows.ts), the archive of finished runs (run-archive.ts),
-          the launcher for sessions (command-path.ts) and the commands (cli/workflow.ts)
+          the launcher for sessions (command-path.ts) and the commands (cli/workflow.ts), drafts.ts
 client/   a typed client for the public API, generated from its description; no dependencies;
           may not import from any other package
 web/      Vite + React + @xyflow/react + @xterm/xterm, Zustand for state; the tab bar (TabBar.tsx)
@@ -27,7 +28,7 @@ web/      Vite + React + @xyflow/react + @xterm/xterm, Zustand for state; the ta
           sections/), terminal-rows.ts, list-filters.ts, list-model.ts, TagDialog.tsx;
           commands.ts, shortcuts.ts, canvas-actions.ts,
           spatial.ts, palette.ts, and the development-only key-tester.html
-          workflows/ (run-model.ts, editor-model.ts, registries.ts, the screens) and
+          workflows/ (run-model.ts, editor-model.ts, registries.ts, the screens), review/ (registry.ts, ReviewScreen.tsx, drafts-source.ts) and
           panel/sections/workflows.tsx
 docs/     keys.md: what is known about which keys reach a page; api.md: the API reference (generated)
 e2e/      Playwright smoke test
@@ -59,7 +60,7 @@ These are the only abstractions in the code base. Each has exactly one implement
 - **Authorization.** Every route asks `authorize(principal, action, resource)` in `daemon/src/auth.ts` before it looks at the body or looks anything up, so a caller without the right learns nothing from the answer. There are three principals: the signed-in user, a session, an API token. A token's scopes are looked at in `authorize` only; no route checks a scope or the kind of caller. A new action is closed to tokens until one line in the scope table opens it.
 - **One principal per request.** A request with an `Authorization` header is judged by that credential alone: a cookie beside it is ignored, and a wrong credential is refused, never retried as the cookie's owner. `/api` and `/ws` take the cookie only.
 - **Never by token.** `NEVER_BY_TOKEN` in `auth.ts` lists what no token may do whatever its scopes: creating, listing and revoking tokens, reading the activity log, changing settings, and anything about terminals or processes outside Aubergine. Do not add a scope for any of these.
-- **Session tokens do not grow.** A session token may set its own attention, add to its own note log, report its own agent, read and report on the run it is on, and ask what the server can do. Wider access is an API token the owner makes on purpose. A session token must never reach a canvas, layout or other-session route, a run by its ID, a list of runs, or a workflow.
+- **Session tokens do not grow.** A session token may set its own attention, add to its own note log, report its own agent, read and report on the run it is on, read what it was asked to write, propose drafts and read its own drafts, and ask what the server can do. Wider access is an API token the owner makes on purpose. A session token must never reach a canvas, layout or other-session route, a run by its ID, a list of runs, a draft by its ID or anyone else's draft, the shelf, or a workflow.
 - **A token's secret exists once.** It is returned by the create route and never stored, logged or sent again; only its hash is kept, and the hash is not sent to the browser. Comparisons are constant-time. A test searches every file in the data folder for a secret after using it; keep it passing.
 - **`sessions:write` can run commands.** Starting a session with a command runs it as the user. Every description of that scope (README, `SCOPE_MEANING`, the token screen) must say so plainly.
 - **The activity log is not state.** One JSON line per call made with an API token, through the `ActivityLog` interface in `daemon/src/activity.ts`, in its own file with a size cap. It records who, what and how it ended; never the secret, never a request body or query. Nothing else reads or writes that file.
@@ -72,11 +73,20 @@ These are the only abstractions in the code base. Each has exactly one implement
 - **Element kinds and run views are registered.** Nothing compares a kind to a name. A new kind is `registerElementKind` in `shared/` and `registerElementView` in the web app; another way of looking at a run is `registerRunView`.
 - **Finished runs are not state.** They go to the archive through the `RunArchive` interface, into the archive first and out of the state second, and are read a page at a time. The browser holds live runs only.
 - **A report is one event about one run.** Nothing rescans runs on a report. The terminal list is worked out again for a run only while a filter that looks at runs is on (`usesRuns`); a strip listens to its own run.
-- **Nothing a caller wrote is typed into a terminal as keys.** The kickoff line is the server's own sentence, typed only for the owner and only where an agent is running. The one part that comes from stored data, the workflow's name, passes through `safeForTyping`, which keeps letters, digits, spaces and a short list of punctuation; do not add other stored text to anything `Sessions.tell` types. Reporting on a run never types into a terminal, and a token cannot cause typing.
+- **Only fixed sentences are typed.** `KICKOFF_LINE` and `BRIEF_LINE` in `shared/src/workflows.ts` are the only things `Sessions.tell` types for workflows, and the only text added to an agent's launch line. Nothing stored is in them: not a name, not a description, not a comment. What an agent needs to know it reads with a command. A test collects every line typed and compares it with those two. Reporting on a run never types into a terminal, and a token cannot cause typing.
 - **`aubergine` in sessions.** The launcher is written to `bin/` in the data folder with `stableNodePath()` and goes at the end of a session's `PATH`, never the front; the zsh integration puts it back only when no `aubergine` is found. No startup file is edited.
 - **Workflow files keep what they do not know.** Unknown fields go into `extra` on import and are written out on export; a change to the format needs the round-trip test to pass.
 - **Names are plain text.** A workflow's or element's name passes `PlainName`: one line, no control characters, no characters that reverse text direction. Names are printed in terminals and beside buttons.
 - **Tightening a stored schema needs a migration.** A state file that no longer passes its schema is set aside and a fresh state is started. So a rule that makes a schema stricter for anything already stored must come with a new state version and a migration that repairs old values, and a test with a fixture of the old file.
+- **What is not written by the owner is a draft first.** An agent's or a program's workflow or element enters through `Drafts` and can only leave it through `accept`, which is the owner's alone (`drafts.review` is in `NEVER_BY_TOKEN`). No route starts a run of a draft, lists it among workflows, or renders it as a run's text. Do not add a way round the review screen.
+- **The review screen knows no source.** It draws what `registerReviewSource` gives it. A new source of things to review is a module that registers; do not add content to `ReviewScreen.tsx`. Accepting waits until the whole text has been shown (`needsShowAll`).
+- **What a reviewer reads is what an agent would be told.** `reviewText` goes through `previewRun`. Do not build that text another way.
+- **Output kinds are registered**, in `shared/` (`registerOutputKind`) and in the web app (`registerOutputView`). The note stores nothing beyond the element's `note`.
+- **A tick is not a report.** `tickRun` changes ticks and nothing else, and also works on a run that is over, through `RunArchive.amend`; the archive file still only grows, and the later line for a run wins.
+- **A workflow made to run one element is unlisted** (`listed: false`), left out of every list, and removed when its run ends.
+- **Optional fields of a change carry no defaults.** A body that changes part of something must leave what is not sent as it was; a schema with a default turns "left out" into "empty". Build such bodies from fields without defaults.
+- **Commands show control characters.** Text that came from an agent, a token or a file is printed through `showControl`.
+- **A token's review switch is decided in `authorize`.** `workflows.write` is refused for a token whose changes need review; nothing else looks at the switch.
 - **Canvases.** A session is on at most one canvas; a parked session is on none and remembers where it was (`parkedFrom`). Closing a canvas never ends a shell: the caller says move or park, and the last canvas cannot be closed. Where no canvas is named, `Sessions.canvas(null)` decides (most recently looked at, else first); do not pick a default anywhere else.
 - **Public shapes.** Routes under `/v1` use one error shape, `pageOf` for every list, ignore unknown fields, use ISO times, and take `Idempotency-Key` on creates. Do not add a `/v1` route that departs from these. This API is public: only add to it; never rename or remove.
 - **A `/v1` route is a declaration and a handler.** Add the entry to `ROUTES` and a handler of the same name in `v1.ts`. Do not call `app.get`/`app.post` for anything under `/v1`: a route registered by hand is not in the description, and the tests fail on it. A handler does not decide who may call it and does not parse its own input; the loop does both, in the order parameters, `authorize`, query and body, handler.
@@ -177,7 +187,9 @@ Stage B2: every `/v1` route declared once, the OpenAPI description at `/v1/opena
 
 Workflows, stage W1a: workflows with versions, runs moved by one step function, the routes and the two scopes, the archive of finished runs, `aubergine workflow`, the command on every session's `PATH`, four templates, the Workflows screen and editor, the run dialog, the strip, the Workflows panel section and the run view. The state file is version 4: it also holds workflows and the runs still going. Change events also include `workflow.changed`, `workflow.removed`, `run.started`, `run.moved` and `run.finished`.
 
-Not built yet: a packaged build without development dependencies, Linux tested, measured key tables for Safari, Firefox, Linux and Windows, publishing the client as a package, moving the remaining `/api/v1` routes onto `/v1`, drafts and elements written by an agent, `needs`, outputs other than the note, the elements shelf, workflows kept in a repository, the workflow library, the board of runs, approvals, branches, a pool of agents, a list of past runs in the browser, terminal input and output over `/v1`, SQLite, an MCP server, presets, a finder agent, recording, bash or fish integration.
+Workflows, stage W1b: drafts and the review screen, asking an agent for an element or a workflow, needs, output kinds (note, checklist) with ticks, running one element by itself, the shelf, the per-token review switch. The state file is version 5: it also holds drafts and the shelf of elements. Change events also include `draft.changed`, `draft.removed`, `shelf.changed` and `shelf.removed`.
+
+Not built yet: a packaged build without development dependencies, Linux tested, measured key tables for Safari, Firefox, Linux and Windows, publishing the client as a package, moving the remaining `/api/v1` routes onto `/v1`, workflows kept in a repository, the workflow library, the board of runs, approvals, branches, a pool of agents, a list of past runs in the browser, terminal input and output over `/v1`, SQLite, an MCP server, presets, a finder agent, recording, bash or fish integration.
 
 ## Working in this repo
 

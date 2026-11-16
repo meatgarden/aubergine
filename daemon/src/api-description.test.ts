@@ -73,7 +73,7 @@ const withBearer = (secret: string, method: string, url: string, body?: unknown)
   app.inject({ method: method as 'GET', url, headers: { host: `127.0.0.1:${port}`, authorization: `Bearer ${secret}` }, ...(body === undefined ? {} : { payload: body as object }) });
 
 async function tokenWith(scopes: Scope[]): Promise<string> {
-  const created = await asOwner('POST', publicPaths.tokens, { name: scopes.join('+'), scopes });
+  const created = await asOwner('POST', publicPaths.tokens, { name: scopes.join('+'), scopes, reviewWorkflowChanges: false });
   return CreatedToken.parse(created.json()).secret;
 }
 
@@ -202,7 +202,7 @@ describe('the description of the API', () => {
 
     // Creates that can be retried safely say so.
     const retriable = operations.filter((o) => o.operation.parameters.some((p) => p.in === 'header' && p.name === IDEMPOTENCY_HEADER));
-    expect(retriable.map((o) => o.operation.operationId).sort()).toEqual(['copyWorkflow', 'createCanvas', 'createFrame', 'createWorkflow', 'startRun', 'startSession', 'startSessionRun', 'useWorkflowTemplate']);
+    expect(retriable.map((o) => o.operation.operationId).sort()).toEqual(['copyElement', 'copyWorkflow', 'createCanvas', 'createElement', 'createFrame', 'createWorkflow', 'proposeDraft', 'runElement', 'startRun', 'startSession', 'startSessionRun', 'useWorkflowTemplate']);
 
     // The ways to sign in.
     expect(document.components.securitySchemes.apiToken).toMatchObject({ type: 'http', scheme: 'bearer' });

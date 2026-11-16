@@ -11,7 +11,7 @@ function entry(n: number, more: { sessionId?: string; workflowId?: string; statu
   const at = new Date(Date.UTC(2026, 0, 1, 0, 0, n)).toISOString();
   return {
     workflowName: 'Made up',
-    elements: [{ id: 'one', name: 'One' }],
+    elements: [{ id: 'one', name: 'One', produces: 'note' }],
     run: {
       id: id(n),
       workflowId: more.workflowId ?? id(900_001),
@@ -20,7 +20,7 @@ function entry(n: number, more: { sessionId?: string; workflowId?: string; statu
       inputs: { task: `task ${n}` },
       status: more.status ?? 'finished',
       currentElementId: null,
-      elements: [{ elementId: 'one', state: 'done', startedAt: at, finishedAt: at, note: `note ${n}`, by: { kind: 'agent' }, sessionId: id(800_001) }],
+      elements: [{ elementId: 'one', state: 'done', startedAt: at, finishedAt: at, note: `note ${n}`, output: null, ticks: [], by: { kind: 'agent' }, sessionId: id(800_001) }],
       blockedReason: null,
       pausedFrom: null,
       startedBy: { kind: 'person' },

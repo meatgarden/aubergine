@@ -36,7 +36,7 @@ export class Tokens {
   }
 
   /** Makes a token. The secret in the answer exists nowhere else: it is not stored and cannot be shown again. */
-  create(input: CreateTokenRequest): { token: ApiToken; secret: string } {
+  create(input: Omit<CreateTokenRequest, 'reviewWorkflowChanges'> & { reviewWorkflowChanges?: boolean }): { token: ApiToken; secret: string } {
     const secret = newSecret();
     const now = this.now();
     const expiresAt = input.expiresAt ?? (input.expiresInDays !== undefined ? new Date(now + input.expiresInDays * DAY_MS).toISOString() : null);
@@ -50,6 +50,8 @@ export class Tokens {
       lastUsedAt: null,
       expiresAt,
       revokedAt: null,
+      // On unless the owner switched it off: what a new token writes about workflows is read first.
+      reviewWorkflowChanges: input.reviewWorkflowChanges ?? true,
     };
     this.hub.emit({ type: 'token.created', token });
     return { token, secret };

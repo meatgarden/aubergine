@@ -28,6 +28,8 @@ export function versionOfRun(app: AppState, run: Run): WorkflowVersion | null {
 export interface Segment {
   id: string;
   name: string;
+  /** The kind of thing it produces. */
+  produces: string;
   state: ElementState;
 }
 
@@ -53,11 +55,11 @@ export const STATE_MARK: Record<ElementState, string> = { pending: '○', active
 /** Everything the strip, the row and the run view need to draw one run. */
 export function pictureOf(
   run: Run,
-  names: { workflowName: string; elements: readonly { id: string; name: string }[] },
+  names: { workflowName: string; elements: readonly { id: string; name: string; produces?: string }[] },
   lastOutputAt: string | null,
   quietAfterSeconds: number,
 ): RunPicture {
-  const segments = names.elements.map((element) => ({ id: element.id, name: element.name, state: run.elements.find((e) => e.elementId === element.id)?.state ?? 'pending' }));
+  const segments = names.elements.map((element) => ({ id: element.id, name: element.name, produces: element.produces ?? 'note', state: run.elements.find((e) => e.elementId === element.id)?.state ?? 'pending' }));
   const index = names.elements.findIndex((e) => e.id === run.currentElementId);
   const current = index >= 0 ? { id: (names.elements[index] as { id: string }).id, name: (names.elements[index] as { name: string }).name, number: index + 1 } : null;
   return {

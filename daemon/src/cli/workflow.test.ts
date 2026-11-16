@@ -3,7 +3,7 @@ import type { AddressInfo } from 'node:net';
 import os from 'node:os';
 import path from 'node:path';
 import { createClient } from '@aubergine/client';
-import { NO_ATTENTION, NO_STATUS, SESSION_ENV, newId, type Session } from '@aubergine/shared';
+import { BRIEF_LINE, NO_ATTENTION, NO_STATUS, SESSION_ENV, newId, type Session } from '@aubergine/shared';
 import type { FastifyInstance } from 'fastify';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { sessionToken } from '../auth';
@@ -16,7 +16,7 @@ import { StateHub } from '../state-hub';
 import { JsonStore } from '../store/json-store';
 import { loadOrCreateToken } from '../token';
 import { UsageError, parseCommand } from './commands';
-import { formatWorkflows, parseWorkflowCommand, resolveElement, resolveWorkflow, runWorkflowCommand, type WorkflowCommandDeps } from './workflow';
+import { formatWorkflows, parseElementCommand, parseWorkflowCommand, resolveElement, resolveWorkflow, runWorkflowCommand, showControl, type WorkflowCommand, type WorkflowCommandDeps } from './workflow';
 
 describe('parsing workflow commands', () => {
   const parse = (line: string): unknown => parseWorkflowCommand(line.split(' ').filter(Boolean));
@@ -55,9 +55,9 @@ describe('parsing workflow commands', () => {
 
   it('reads what a session says about its run', () => {
     expect(parse('status')).toEqual({ action: 'status' });
-    expect(parse('done')).toEqual({ action: 'done', note: null, element: null });
-    expect(parseWorkflowCommand(['done', '--note', 'Wrote the plan, see PLAN.md'])).toEqual({ action: 'done', note: 'Wrote the plan, see PLAN.md', element: null });
-    expect(parse('done it is finished --element build')).toEqual({ action: 'done', note: 'it is finished', element: 'build' });
+    expect(parse('done')).toEqual({ action: 'done', note: null, element: null, output: null });
+    expect(parseWorkflowCommand(['done', '--note', 'Wrote the plan, see PLAN.md'])).toEqual({ action: 'done', note: 'Wrote the plan, see PLAN.md', element: null, output: null });
+    expect(parse('done it is finished --element build')).toEqual({ action: 'done', note: 'it is finished', element: 'build', output: null });
     expect(parse('blocked I need the password')).toEqual({ action: 'blocked', reason: 'I need the password' });
     expect(parse('goto 2')).toEqual({ action: 'goto', element: '2' });
     expect(parse('pause')).toEqual({ action: 'pause' });
@@ -117,6 +117,8 @@ describe('workflow commands against a server', () => {
   let edits: string[];
   let answers: string[];
   let typed: [string, string][];
+  /** What a command reads when its file is `-`. */
+  let stdin = '';
 
   const runtime = {
     check: async () => ({ status: 'ok', version: '3.4' }),
@@ -157,7 +159,10 @@ describe('workflow commands against a server', () => {
   }
 
   /** The command as typed, by the owner outside any session, or inside one. */
-  async function run(words: string[], inside?: Session): Promise<{ code: number; out: string }> {
+  const run = (words: string[], inside?: Session): Promise<{ code: number; out: string }> => runParsed(parseWorkflowCommand(words), inside);
+  const runElement = (words: string[], inside?: Session): Promise<{ code: number; out: string }> => runParsed(parseElementCommand(words), inside);
+
+  async function runParsed(command: WorkflowCommand, inside?: Session): Promise<{ code: number; out: string }> {
     printed = [];
     const origin = `http://127.0.0.1:${port}`;
     const deps: WorkflowCommandDeps = {
@@ -165,7 +170,7 @@ describe('workflow commands against a server', () => {
       env: inside ? { [SESSION_ENV.url]: origin, [SESSION_ENV.sessionId]: inside.id, [SESSION_ENV.token]: sessionToken(ownerToken, inside.id) } : {},
       sessions: async () => hub.state.sessions,
       print: (text) => printed.push(text),
-      readText: (file) => readFile(file, 'utf8'),
+      readText: (file) => (file === '-' ? Promise.resolve(stdin) : readFile(file, 'utf8')),
       writeText: (file, text) => writeFile(file, text),
       edit: async (text) => {
         edits.push(text);
@@ -173,7 +178,7 @@ describe('workflow commands against a server', () => {
       },
       ask: async () => answers.shift() ?? '',
     };
-    const code = await runWorkflowCommand(parseWorkflowCommand(words), deps);
+    const code = await runWorkflowCommand(command, deps);
     return { code, out: printed.join('\n') };
   }
 
@@ -215,14 +220,14 @@ describe('workflow commands against a server', () => {
     // Someone with a newer version added things this one does not know.
     exported.reviewedBy = 'someone';
     exported.workflow.budget = { minutes: 20 };
-    exported.workflow.elements[0].needs = ['a failing test'];
+    exported.workflow.elements[0].expects = ['a failing test'];
     await writeFile(file, JSON.stringify(exported));
     expect((await run(['import', file, '--name', 'Hotfix 2'])).out).toContain('Made the workflow "Hotfix 2"');
 
     const again = JSON.parse((await run(['export', 'Hotfix 2'])).out);
     expect(again.reviewedBy).toBe('someone');
     expect(again.workflow.budget).toEqual({ minutes: 20 });
-    expect(again.workflow.elements[0].needs).toEqual(['a failing test']);
+    expect(again.workflow.elements[0].expects).toEqual(['a failing test']);
     expect(again.workflow.elements).toEqual(exported.workflow.elements);
     expect(again.workflow.origin).toEqual({ kind: 'import' });
 
@@ -331,5 +336,127 @@ describe('workflow commands against a server', () => {
     );
     expect(code).toBe(1);
     expect(printed.join('\n')).toContain('not answering');
+  });
+
+  it('lets an agent read what it was asked to write, hand it in from a file or standard input, and read the comment', async () => {
+    const agent = fakeSession('helper', { agent: { kind: 'claude-code', conversationId: null }, status: { ...NO_STATUS, state: 'busy' } });
+    expect(await run(['brief'], agent)).toEqual({ code: 1, out: 'Nothing is asked of this session' });
+
+    // What the owner typed may hold anything. It is printed with control characters shown, never acted on.
+    const origin = `http://127.0.0.1:${port}`;
+    const owner = createClient({ baseUrl: origin, headers: { origin, cookie: `${cookieName(port)}=${ownerToken}` } });
+    await owner.requestDraft({ body: { kind: 'element', description: 'My to-do list from the chat.\u001b[2J\u0007 Thanks‮', sessionId: agent.id } });
+    expect(typed.map(([, line]) => line)).toEqual([BRIEF_LINE]);
+    const brief = await run(['brief'], agent);
+    expect(brief.code).toBe(0);
+    expect(brief.out).toContain('My to-do list from the chat.␛[2J␇ Thanks<U+202E>');
+    expect([...brief.out].filter((c) => c !== '\n' && c !== '\t' && ((c.codePointAt(0) as number) < 0x20 || c === '\u007f' || c === '\u202e'))).toEqual([]);
+    expect(brief.out).toContain('aubergine element propose --file <file>');
+
+    const file = path.join(dir, 'element.json');
+    const element = { name: 'Collect my to-dos', instructions: 'List what people asked me to do in the team chat.', needs: [{ kind: 'mcp', name: 'team chat' }], produces: 'checklist' };
+    await writeFile(file, JSON.stringify(element));
+    const handed = await runElement(['propose', '--file', file], agent);
+    expect(handed).toMatchObject({ code: 0 });
+    expect(handed.out).toContain('Handed in the element as a draft.');
+    expect(hub.state.drafts[0]).toMatchObject({ status: 'waiting', element: { name: 'Collect my to-dos', produces: 'checklist' } });
+
+    // Sent back: only the fixed line is typed again; the comment is what `brief` prints.
+    await owner.returnDraft({ draftId: hub.state.drafts[0]!.id, body: { comment: 'Also include email.' } });
+    expect(typed.map(([, line]) => line)).toEqual([BRIEF_LINE, BRIEF_LINE]);
+    expect((await run(['brief'], agent)).out).toContain('sent back with this comment:\n\nAlso include email.');
+    // Revised, this time on standard input.
+    stdin = JSON.stringify({ ...element, instructions: 'List what people asked me to do in the team chat and by email.' });
+    expect((await runElement(['propose'], agent)).out).toContain('as a draft (version 2)');
+    expect(hub.state.drafts[0]).toMatchObject({ status: 'waiting', revision: 2 });
+
+    // What is not an element is refused in words, and nothing is kept of it.
+    await writeFile(file, '{ nope');
+    await expect(runElement(['propose', '--file', file], agent)).rejects.toThrow(/not JSON/);
+    await writeFile(file, JSON.stringify({ name: 'Bad\u001bname', instructions: 'x' }));
+    expect(await runElement(['propose', '--file', file], agent)).toMatchObject({ code: 1 });
+    await expect(runElement(['propose', '--file', file])).rejects.toThrow(/only works inside an Aubergine session/);
+    expect(hub.state.drafts).toHaveLength(1);
+  });
+
+  it('hands a workflow in as a draft, also from a file that workflow export wrote', async () => {
+    const agent = fakeSession('helper');
+    await run(['new', 'Hotfix', '--template', 'fix-a-bug']);
+    const file = path.join(dir, 'flow.json');
+    await run(['export', 'Hotfix', file]);
+    expect((await run(['propose', '--file', file], agent)).out).toContain('Handed in the workflow as a draft.');
+    await writeFile(file, JSON.stringify({ name: 'Two steps', elements: [{ name: 'One', instructions: 'Do one.' }, { name: 'Two', instructions: 'Do two.' }] }));
+    expect((await run(['propose', '--file', file], agent)).code).toBe(0);
+    expect(hub.state.drafts.map((d) => [d.kind, d.workflow?.name, d.workflow?.elements.length])).toEqual([
+      ['workflow', 'Hotfix', 5],
+      ['workflow', 'Two steps', 2],
+    ]);
+    // Drafts are not workflows: the list still has the one the owner made.
+    expect(hub.state.workflows.map((w) => w.name)).toEqual(['Hotfix']);
+  });
+
+  it('runs one element by itself and takes a checklist with done --output', async () => {
+    const origin = `http://127.0.0.1:${port}`;
+    const owner = createClient({ baseUrl: origin, headers: { origin, cookie: `${cookieName(port)}=${ownerToken}` } });
+    expect((await runElement(['list'])).out).toContain('No elements on the shelf yet');
+    await owner.createElement({ body: { name: 'Collect my to-dos', instructions: 'List what people asked me to do.', needs: [{ kind: 'mcp', name: 'team chat' }], produces: 'checklist' } });
+    expect((await runElement(['list'])).out).toBe('Collect my to-dos  produces a checklist; needs an MCP server: team chat');
+    expect((await runElement(['show', 'collect'])).out).toContain('Produces: checklist');
+
+    const session = fakeSession('api');
+    await expect(runElement(['run', 'collect'])).rejects.toThrow(/needs a session/);
+    const started = await runElement(['run', 'collect', '--session', 'api']);
+    expect(started.out).toContain('Started "Collect my to-dos" by itself on "api".');
+    expect((await run(['list'])).out).toContain('No workflows yet');
+
+    const status = await run(['status'], session);
+    expect(status.out).toContain('This element needs: an MCP server: team chat.');
+    expect(status.out).toContain('This element produces a checklist.');
+    // Without the checklist: refused, with the format, and a failing exit code.
+    const refused = await run(['done', '--note', 'all done'], session);
+    expect(refused.code).toBe(1);
+    expect(refused.out).toContain('produces a checklist, and none was handed in');
+    expect(refused.out).toContain('{"items": [{"text": "one line"');
+    const file = path.join(dir, 'list.json');
+    await writeFile(file, 'not json');
+    await expect(run(['done', '--output', file], session)).rejects.toThrow(/The output is not JSON/);
+    await writeFile(file, JSON.stringify({ items: [{ text: '' }] }));
+    expect((await run(['done', '--output', file], session)).out).toContain('Item 1 (text)');
+
+    await writeFile(file, JSON.stringify({ items: [{ text: 'Review the retry change' }, { text: 'Book the room' }] }));
+    const done = await run(['done', '--note', 'Two requests.', '--output', file], session);
+    expect(done.code).toBe(0);
+    expect(done.out).toContain('This run is finished');
+    expect(hub.state.runs).toEqual([]);
+    expect(hub.state.workflows).toEqual([]);
+
+    answers = ['y'];
+    expect((await runElement(['remove', 'collect'])).out).toBe('Took "Collect my to-dos" off the shelf.');
+  });
+});
+
+describe('what the commands print of text someone else wrote', () => {
+  it('shows control characters instead of sending them to the terminal, and keeps lines and tabs', () => {
+    expect(showControl('plain text\n\twith a tab')).toBe('plain text\n\twith a tab');
+    expect(showControl('clear\u001b[2J bell\u0007 back\u0008 nul\u0000 del\u007f')).toBe('clear␛[2J bell␇ back␈ nul␀ del␡');
+    expect(showControl('a\r\nb\rc')).toBe('a\nb␍c');
+    expect(showControl('flip‮ped ⁦x⁩ \u009b31m')).toBe('flip<U+202E>ped <U+2066>x<U+2069> <U+009B>31m');
+    expect(showControl('修复 — étape 🚀')).toBe('修复 — étape 🚀');
+  });
+
+  it('reads the new commands, and refuses what they do not know', () => {
+    expect(parseWorkflowCommand(['brief'])).toEqual({ action: 'brief' });
+    expect(parseWorkflowCommand(['propose', '--file', 'w.json'])).toEqual({ action: 'propose', kind: 'workflow', file: 'w.json' });
+    expect(parseWorkflowCommand(['propose'])).toEqual({ action: 'propose', kind: 'workflow', file: '-' });
+    expect(parseElementCommand(['propose', '--file=-'])).toEqual({ action: 'propose', kind: 'element', file: '-' });
+    expect(parseElementCommand([])).toEqual({ action: 'element-list' });
+    expect(parseElementCommand(['show', 'Collect', 'my', 'to-dos'])).toEqual({ action: 'element-show', query: 'Collect my to-dos' });
+    expect(parseElementCommand(['run', 'collect', '--session', 'api', '--input', 'task=x', '--replace'])).toEqual({ action: 'element-run', query: 'collect', session: 'api', inputs: { task: 'x' }, replace: true });
+    expect(parseElementCommand(['remove', 'collect', '--yes'])).toEqual({ action: 'element-remove', query: 'collect', yes: true });
+    expect(parseWorkflowCommand(['done', '--output', 'list.json', '--note', 'n'])).toEqual({ action: 'done', note: 'n', element: null, output: 'list.json' });
+    expect(parseWorkflowCommand(['done', '--output', '-'])).toEqual({ action: 'done', note: null, element: null, output: '-' });
+    expect(parseCommand(['element', 'run', 'x'])).toEqual({ name: 'element', words: ['run', 'x'] });
+    for (const words of [['propose', 'w.json'], ['propose', '--file'], ['propose', '--file', 'a', '--loud'], ['brief', 'now'], ['done', '--output']]) expect(() => parseWorkflowCommand(words), words.join(' ')).toThrow(UsageError);
+    for (const words of [['frobnicate'], ['show'], ['run'], ['list', 'all'], ['remove', 'x', '--force'], ['propose', '--made-up']]) expect(() => parseElementCommand(words), words.join(' ')).toThrow(UsageError);
   });
 });

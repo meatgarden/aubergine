@@ -4,6 +4,8 @@ import { z } from 'zod';
 import {
   ApiToken,
   Canvas,
+  Draft,
+  ShelfElement,
   FIRST_CANVAS_NAME,
   Layout,
   Organization,
@@ -35,11 +37,14 @@ const StateFileV2 = z.object({ version: z.literal(2), ...common, canvases: z.arr
 /** The same, with API tokens. Of a token only a hash of its secret is here. */
 const StateFileV3 = z.object({ version: z.literal(3), ...common, canvases: z.array(Canvas).min(1), tokens: z.array(ApiToken) });
 
-/** The current shape: the same, with workflows and the runs still going. Runs that are over are in the archive, not here. */
+/** The same, with workflows and the runs still going. Runs that are over are in the archive, not here. */
 const StateFileV4 = StateFileV3.extend({ version: z.literal(4), workflows: z.array(Workflow), runs: z.array(Run) });
 
-const StateFile = z.discriminatedUnion('version', [StateFileV1, StateFileV2, StateFileV3, StateFileV4]);
-const CURRENT_VERSION = 4;
+/** The current shape: the same, with drafts waiting for the owner and the shelf of elements. Elements may say what they need and produce; runs keep what was produced and ticked. */
+const StateFileV5 = StateFileV4.extend({ version: z.literal(5), drafts: z.array(Draft), shelf: z.array(ShelfElement) });
+
+const StateFile = z.discriminatedUnion('version', [StateFileV1, StateFileV2, StateFileV3, StateFileV4, StateFileV5]);
+const CURRENT_VERSION = 5;
 type StateFile = z.infer<typeof StateFile>;
 
 /**
@@ -59,8 +64,10 @@ export function migrate(file: StateFile): AppState {
     sessions,
     canvases,
     tokens: file.version >= 3 && 'tokens' in file ? file.tokens : [],
-    workflows: file.version === 4 ? file.workflows : [],
-    runs: file.version === 4 ? file.runs : [],
+    workflows: file.version >= 4 && 'workflows' in file ? file.workflows : [],
+    runs: file.version >= 4 && 'runs' in file ? file.runs : [],
+    drafts: file.version === 5 ? file.drafts : [],
+    shelf: file.version === 5 ? file.shelf : [],
   });
 }
 
@@ -105,7 +112,9 @@ function tidy(state: AppState): AppState {
     onRun.add(run.sessionId);
     return true;
   });
-  return { ...state, sessions, canvases, runs };
+  // A draft of a session that is gone can still be read and accepted; it just belongs to no session any more.
+  const drafts = state.drafts.map((draft) => (draft.sessionId !== null && !byId.has(draft.sessionId) ? { ...draft, sessionId: null } : draft));
+  return { ...state, sessions, canvases, runs, drafts };
 }
 
 export class JsonStore implements Store {

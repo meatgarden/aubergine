@@ -7,7 +7,7 @@ import type { Scope } from './tokens';
  */
 
 /** What a session may do, to itself only. */
-export const SESSION_ACTIONS = ['attention.set', 'note.append', 'agent.report', 'run.own.read', 'run.own.report'] as const;
+export const SESSION_ACTIONS = ['attention.set', 'note.append', 'agent.report', 'run.own.read', 'run.own.report', 'draft.own.read', 'draft.own.propose'] as const;
 
 /** For a token, each of these needs the scope beside it. */
 export const SCOPE_OF = {
@@ -29,6 +29,9 @@ export const SCOPE_OF = {
   // The run a session is on: the session may read it and report on it, for itself only. A token needs the scope, and may for any session.
   'run.own.read': 'read',
   'run.own.report': 'runs:write',
+  // Drafts: reading them is reading; proposing one needs the scope to write workflows, and makes nothing that can be run.
+  'drafts.read': 'read',
+  'drafts.propose': 'workflows:write',
 } as const satisfies Record<string, Scope>;
 
 /**
@@ -37,7 +40,7 @@ export const SCOPE_OF = {
  * tokens did, changing settings, and anything that reaches processes outside
  * Aubergine.
  */
-export const NEVER_BY_TOKEN = ['tokens.manage', 'activity.read', 'settings.write', 'processes.signal', 'outside.read', 'outside.move'] as const;
+export const NEVER_BY_TOKEN = ['tokens.manage', 'activity.read', 'settings.write', 'processes.signal', 'outside.read', 'outside.move', 'drafts.review'] as const;
 
 export type Action = (typeof SESSION_ACTIONS)[number] | keyof typeof SCOPE_OF | (typeof NEVER_BY_TOKEN)[number];
 

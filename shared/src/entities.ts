@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { ApiToken } from './tokens';
 import { Id, newId } from './ids';
+import { Draft, ShelfElement } from './drafts';
 import { Run, Workflow } from './workflows';
 
 export const Timestamp = z.iso.datetime();
@@ -266,6 +267,10 @@ export const AppState = z.object({
   workflows: z.array(Workflow).default([]),
   /** Runs that are still going. One that finishes or is stopped leaves for the archive. */
   runs: z.array(Run).default([]),
+  /** Proposals waiting for the owner. One that is accepted or discarded leaves. */
+  drafts: z.array(Draft).default([]),
+  /** Elements kept for reuse. */
+  shelf: z.array(ShelfElement).default([]),
 });
 export type AppState = z.infer<typeof AppState>;
 
@@ -296,7 +301,7 @@ export function createInitialState(now: Date = new Date()): AppState {
     createdAt,
   };
   const project: Project = { id: newId(), workspaceId: workspace.id, name: 'Default', createdAt };
-  return { organization, workspace, project, sessions: [], canvases: [newCanvas(project.id, FIRST_CANVAS_NAME, 0, now)], tokens: [], workflows: [], runs: [] };
+  return { organization, workspace, project, sessions: [], canvases: [newCanvas(project.id, FIRST_CANVAS_NAME, 0, now)], tokens: [], workflows: [], runs: [], drafts: [], shelf: [] };
 }
 
 /** Canvases in tab order. */

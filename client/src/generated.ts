@@ -832,6 +832,12 @@ export type CreateWorkflowBody = {
     name: string;
     instructions?: string;
     doneWhen?: string;
+    needs?: {
+      kind: "mcp" | "command" | "access" | "other";
+      name: string;
+      note?: string;
+    }[];
+    produces?: string;
     origin?: {
       kind: string;
       name?: string;
@@ -889,6 +895,12 @@ export type CreateWorkflowResult = {
       name: string;
       instructions: string;
       doneWhen: string;
+      needs: {
+        kind: "mcp" | "command" | "access" | "other";
+        name: string;
+        note?: string;
+      }[];
+      produces: string;
       origin: {
         kind: string;
         name?: string;
@@ -938,6 +950,12 @@ export type GetWorkflowResult = {
       name: string;
       instructions: string;
       doneWhen: string;
+      needs: {
+        kind: "mcp" | "command" | "access" | "other";
+        name: string;
+        note?: string;
+      }[];
+      produces: string;
       origin: {
         kind: string;
         name?: string;
@@ -976,6 +994,12 @@ export type UpdateWorkflowBody = {
     name: string;
     instructions?: string;
     doneWhen?: string;
+    needs?: {
+      kind: "mcp" | "command" | "access" | "other";
+      name: string;
+      note?: string;
+    }[];
+    produces?: string;
     origin?: {
       kind: string;
       name?: string;
@@ -1023,6 +1047,12 @@ export type UpdateWorkflowResult = {
       name: string;
       instructions: string;
       doneWhen: string;
+      needs: {
+        kind: "mcp" | "command" | "access" | "other";
+        name: string;
+        note?: string;
+      }[];
+      produces: string;
       origin: {
         kind: string;
         name?: string;
@@ -1077,6 +1107,12 @@ export type CopyWorkflowResult = {
       name: string;
       instructions: string;
       doneWhen: string;
+      needs: {
+        kind: "mcp" | "command" | "access" | "other";
+        name: string;
+        note?: string;
+      }[];
+      produces: string;
       origin: {
         kind: string;
         name?: string;
@@ -1122,6 +1158,12 @@ export type ListWorkflowVersionsResult = {
       name: string;
       instructions: string;
       doneWhen: string;
+      needs: {
+        kind: "mcp" | "command" | "access" | "other";
+        name: string;
+        note?: string;
+      }[];
+      produces: string;
       origin: {
         kind: string;
         name?: string;
@@ -1172,6 +1214,12 @@ export type ListWorkflowTemplatesResult = {
         name: string;
         instructions: string;
         doneWhen: string;
+        needs: {
+          kind: "mcp" | "command" | "access" | "other";
+          name: string;
+          note?: string;
+        }[];
+        produces: string;
         origin: {
           kind: string;
           name?: string;
@@ -1226,6 +1274,12 @@ export type UseWorkflowTemplateResult = {
       name: string;
       instructions: string;
       doneWhen: string;
+      needs: {
+        kind: "mcp" | "command" | "access" | "other";
+        name: string;
+        note?: string;
+      }[];
+      produces: string;
       origin: {
         kind: string;
         name?: string;
@@ -1284,6 +1338,15 @@ export type ListRunsResult = {
         startedAt: string | null;
         finishedAt: string | null;
         note: string;
+        output: unknown | null;
+        ticks: {
+          item: number;
+          by: {
+            kind: "agent" | "person" | "token";
+            name?: string;
+          };
+          at: string;
+        }[];
         by: {
           kind: "agent" | "person" | "token";
           name?: string;
@@ -1304,6 +1367,7 @@ export type ListRunsResult = {
     elements: {
       id: string;
       name: string;
+      produces: string;
     }[];
   }[];
   nextCursor: string | null;
@@ -1341,6 +1405,15 @@ export type StartRunResult = {
       startedAt: string | null;
       finishedAt: string | null;
       note: string;
+      output: unknown | null;
+      ticks: {
+        item: number;
+        by: {
+          kind: "agent" | "person" | "token";
+          name?: string;
+        };
+        at: string;
+      }[];
       by: {
         kind: "agent" | "person" | "token";
         name?: string;
@@ -1361,6 +1434,7 @@ export type StartRunResult = {
   elements: {
     id: string;
     name: string;
+    produces: string;
   }[];
   position: string;
   text: string;
@@ -1385,6 +1459,15 @@ export type GetRunResult = {
       startedAt: string | null;
       finishedAt: string | null;
       note: string;
+      output: unknown | null;
+      ticks: {
+        item: number;
+        by: {
+          kind: "agent" | "person" | "token";
+          name?: string;
+        };
+        at: string;
+      }[];
       by: {
         kind: "agent" | "person" | "token";
         name?: string;
@@ -1405,6 +1488,7 @@ export type GetRunResult = {
   elements: {
     id: string;
     name: string;
+    produces: string;
   }[];
   position: string;
   text: string;
@@ -1416,6 +1500,7 @@ export type ReportRunBody = {
   type: "done";
   elementId: string;
   note?: string;
+  output?: unknown;
 } | {
   type: "blocked";
   reason: string;
@@ -1450,6 +1535,15 @@ export type ReportRunResult = {
       startedAt: string | null;
       finishedAt: string | null;
       note: string;
+      output: unknown | null;
+      ticks: {
+        item: number;
+        by: {
+          kind: "agent" | "person" | "token";
+          name?: string;
+        };
+        at: string;
+      }[];
       by: {
         kind: "agent" | "person" | "token";
         name?: string;
@@ -1470,6 +1564,7 @@ export type ReportRunResult = {
   elements: {
     id: string;
     name: string;
+    produces: string;
   }[];
   position: string;
   text: string;
@@ -1507,6 +1602,15 @@ export type StartSessionRunResult = {
       startedAt: string | null;
       finishedAt: string | null;
       note: string;
+      output: unknown | null;
+      ticks: {
+        item: number;
+        by: {
+          kind: "agent" | "person" | "token";
+          name?: string;
+        };
+        at: string;
+      }[];
       by: {
         kind: "agent" | "person" | "token";
         name?: string;
@@ -1527,6 +1631,1378 @@ export type StartSessionRunResult = {
   elements: {
     id: string;
     name: string;
+    produces: string;
+  }[];
+  position: string;
+  text: string;
+  kickoff: string;
+  kickoffTyped: boolean;
+};
+
+export interface ListDraftsQuery {
+  /**
+   * How many items to return at most.
+   */
+  limit?: number;
+  /**
+   * The `nextCursor` of the page before. Opaque: do not build or change it.
+   */
+  cursor?: string;
+}
+
+export type ListDraftsResult = {
+  items: {
+    workflow: {
+      name: string;
+      description: string;
+      standing: string;
+      inputs: {
+        key: string;
+        label: string;
+        description: string;
+        required: boolean;
+      }[];
+      elements: {
+        id: string;
+        kind: string;
+        name: string;
+        instructions: string;
+        doneWhen: string;
+        needs: {
+          kind: "mcp" | "command" | "access" | "other";
+          name: string;
+          note?: string;
+        }[];
+        produces: string;
+        origin: {
+          kind: string;
+          name?: string;
+          [key: string]: unknown;
+        };
+        extra: {
+          [key: string]: unknown;
+        };
+      }[];
+      extra: {
+        [key: string]: unknown;
+      };
+    } | null;
+    element: {
+      id: string;
+      kind: string;
+      name: string;
+      instructions: string;
+      doneWhen: string;
+      needs: {
+        kind: "mcp" | "command" | "access" | "other";
+        name: string;
+        note?: string;
+      }[];
+      produces: string;
+      origin: {
+        kind: string;
+        name?: string;
+        [key: string]: unknown;
+      };
+      extra: {
+        [key: string]: unknown;
+      };
+    } | null;
+    id: string;
+    kind: "workflow" | "element";
+    status: "requested" | "waiting" | "returned";
+    description: string;
+    proposedBy: {
+      kind: "session";
+      sessionId: string;
+    } | {
+      kind: "token";
+      tokenId: string;
+      name: string;
+    } | {
+      kind: "person";
+    };
+    sessionId: string | null;
+    revisesWorkflowId: string | null;
+    previous: {
+      workflow: {
+        name: string;
+        description: string;
+        standing: string;
+        inputs: {
+          key: string;
+          label: string;
+          description: string;
+          required: boolean;
+        }[];
+        elements: {
+          id: string;
+          kind: string;
+          name: string;
+          instructions: string;
+          doneWhen: string;
+          needs: {
+            kind: "mcp" | "command" | "access" | "other";
+            name: string;
+            note?: string;
+          }[];
+          produces: string;
+          origin: {
+            kind: string;
+            name?: string;
+            [key: string]: unknown;
+          };
+          extra: {
+            [key: string]: unknown;
+          };
+        }[];
+        extra: {
+          [key: string]: unknown;
+        };
+      } | null;
+      element: {
+        id: string;
+        kind: string;
+        name: string;
+        instructions: string;
+        doneWhen: string;
+        needs: {
+          kind: "mcp" | "command" | "access" | "other";
+          name: string;
+          note?: string;
+        }[];
+        produces: string;
+        origin: {
+          kind: string;
+          name?: string;
+          [key: string]: unknown;
+        };
+        extra: {
+          [key: string]: unknown;
+        };
+      } | null;
+    } | null;
+    revision: number;
+    comment: string | null;
+    createdAt: string;
+    updatedAt: string;
+  }[];
+  nextCursor: string | null;
+};
+
+export type ProposeDraftBody = {
+  /** A whole workflow. Give this or `element`, not both. */
+  workflow?: {
+    /** What it is called. */
+    name: string;
+    /** What it is for, in a sentence or two. */
+    description?: string;
+    /** Text added to every element: rules that hold from start to finish. */
+    standing?: string;
+    /** What a run is given when it starts. `{{key}}` in any text becomes the value. Without this, one input: `task`. */
+    inputs?: {
+      key: string;
+      label: string;
+      description?: string;
+      required?: boolean;
+    }[];
+    /** The elements, in the order they are gone through. */
+    elements: {
+      id?: string;
+      kind?: string;
+      name: string;
+      instructions?: string;
+      doneWhen?: string;
+      needs?: {
+        kind: "mcp" | "command" | "access" | "other";
+        name: string;
+        note?: string;
+      }[];
+      produces?: string;
+      origin?: {
+        kind: string;
+        name?: string;
+        [key: string]: unknown;
+      };
+      extra?: {
+        [key: string]: unknown;
+      };
+    }[];
+  };
+  /** One element, for the shelf. */
+  element?: {
+    id?: string;
+    kind?: string;
+    name: string;
+    instructions?: string;
+    doneWhen?: string;
+    needs?: {
+      kind: "mcp" | "command" | "access" | "other";
+      name: string;
+      note?: string;
+    }[];
+    produces?: string;
+    origin?: {
+      kind: string;
+      name?: string;
+      [key: string]: unknown;
+    };
+    extra?: {
+      [key: string]: unknown;
+    };
+  };
+  /** For a workflow: the workflow this is a new version of. Without it, accepting makes a new workflow. */
+  revisesWorkflowId?: string;
+  /** What it is meant to do, when nobody asked for it. */
+  description?: string;
+};
+
+export type ProposeDraftResult = {
+  draft: {
+    workflow: {
+      name: string;
+      description: string;
+      standing: string;
+      inputs: {
+        key: string;
+        label: string;
+        description: string;
+        required: boolean;
+      }[];
+      elements: {
+        id: string;
+        kind: string;
+        name: string;
+        instructions: string;
+        doneWhen: string;
+        needs: {
+          kind: "mcp" | "command" | "access" | "other";
+          name: string;
+          note?: string;
+        }[];
+        produces: string;
+        origin: {
+          kind: string;
+          name?: string;
+          [key: string]: unknown;
+        };
+        extra: {
+          [key: string]: unknown;
+        };
+      }[];
+      extra: {
+        [key: string]: unknown;
+      };
+    } | null;
+    element: {
+      id: string;
+      kind: string;
+      name: string;
+      instructions: string;
+      doneWhen: string;
+      needs: {
+        kind: "mcp" | "command" | "access" | "other";
+        name: string;
+        note?: string;
+      }[];
+      produces: string;
+      origin: {
+        kind: string;
+        name?: string;
+        [key: string]: unknown;
+      };
+      extra: {
+        [key: string]: unknown;
+      };
+    } | null;
+    id: string;
+    kind: "workflow" | "element";
+    status: "requested" | "waiting" | "returned";
+    description: string;
+    proposedBy: {
+      kind: "session";
+      sessionId: string;
+    } | {
+      kind: "token";
+      tokenId: string;
+      name: string;
+    } | {
+      kind: "person";
+    };
+    sessionId: string | null;
+    revisesWorkflowId: string | null;
+    previous: {
+      workflow: {
+        name: string;
+        description: string;
+        standing: string;
+        inputs: {
+          key: string;
+          label: string;
+          description: string;
+          required: boolean;
+        }[];
+        elements: {
+          id: string;
+          kind: string;
+          name: string;
+          instructions: string;
+          doneWhen: string;
+          needs: {
+            kind: "mcp" | "command" | "access" | "other";
+            name: string;
+            note?: string;
+          }[];
+          produces: string;
+          origin: {
+            kind: string;
+            name?: string;
+            [key: string]: unknown;
+          };
+          extra: {
+            [key: string]: unknown;
+          };
+        }[];
+        extra: {
+          [key: string]: unknown;
+        };
+      } | null;
+      element: {
+        id: string;
+        kind: string;
+        name: string;
+        instructions: string;
+        doneWhen: string;
+        needs: {
+          kind: "mcp" | "command" | "access" | "other";
+          name: string;
+          note?: string;
+        }[];
+        produces: string;
+        origin: {
+          kind: string;
+          name?: string;
+          [key: string]: unknown;
+        };
+        extra: {
+          [key: string]: unknown;
+        };
+      } | null;
+    } | null;
+    revision: number;
+    comment: string | null;
+    createdAt: string;
+    updatedAt: string;
+  };
+  text: string;
+  previousText: string | null;
+  needs: {
+    kind: "mcp" | "command" | "access" | "other";
+    name: string;
+    note?: string;
+  }[];
+};
+
+export type GetDraftResult = {
+  draft: {
+    workflow: {
+      name: string;
+      description: string;
+      standing: string;
+      inputs: {
+        key: string;
+        label: string;
+        description: string;
+        required: boolean;
+      }[];
+      elements: {
+        id: string;
+        kind: string;
+        name: string;
+        instructions: string;
+        doneWhen: string;
+        needs: {
+          kind: "mcp" | "command" | "access" | "other";
+          name: string;
+          note?: string;
+        }[];
+        produces: string;
+        origin: {
+          kind: string;
+          name?: string;
+          [key: string]: unknown;
+        };
+        extra: {
+          [key: string]: unknown;
+        };
+      }[];
+      extra: {
+        [key: string]: unknown;
+      };
+    } | null;
+    element: {
+      id: string;
+      kind: string;
+      name: string;
+      instructions: string;
+      doneWhen: string;
+      needs: {
+        kind: "mcp" | "command" | "access" | "other";
+        name: string;
+        note?: string;
+      }[];
+      produces: string;
+      origin: {
+        kind: string;
+        name?: string;
+        [key: string]: unknown;
+      };
+      extra: {
+        [key: string]: unknown;
+      };
+    } | null;
+    id: string;
+    kind: "workflow" | "element";
+    status: "requested" | "waiting" | "returned";
+    description: string;
+    proposedBy: {
+      kind: "session";
+      sessionId: string;
+    } | {
+      kind: "token";
+      tokenId: string;
+      name: string;
+    } | {
+      kind: "person";
+    };
+    sessionId: string | null;
+    revisesWorkflowId: string | null;
+    previous: {
+      workflow: {
+        name: string;
+        description: string;
+        standing: string;
+        inputs: {
+          key: string;
+          label: string;
+          description: string;
+          required: boolean;
+        }[];
+        elements: {
+          id: string;
+          kind: string;
+          name: string;
+          instructions: string;
+          doneWhen: string;
+          needs: {
+            kind: "mcp" | "command" | "access" | "other";
+            name: string;
+            note?: string;
+          }[];
+          produces: string;
+          origin: {
+            kind: string;
+            name?: string;
+            [key: string]: unknown;
+          };
+          extra: {
+            [key: string]: unknown;
+          };
+        }[];
+        extra: {
+          [key: string]: unknown;
+        };
+      } | null;
+      element: {
+        id: string;
+        kind: string;
+        name: string;
+        instructions: string;
+        doneWhen: string;
+        needs: {
+          kind: "mcp" | "command" | "access" | "other";
+          name: string;
+          note?: string;
+        }[];
+        produces: string;
+        origin: {
+          kind: string;
+          name?: string;
+          [key: string]: unknown;
+        };
+        extra: {
+          [key: string]: unknown;
+        };
+      } | null;
+    } | null;
+    revision: number;
+    comment: string | null;
+    createdAt: string;
+    updatedAt: string;
+  };
+  text: string;
+  previousText: string | null;
+  needs: {
+    kind: "mcp" | "command" | "access" | "other";
+    name: string;
+    note?: string;
+  }[];
+};
+
+export type ReviseDraftBody = {
+  /** A whole workflow. Give this or `element`, not both. */
+  workflow?: {
+    /** What it is called. */
+    name: string;
+    /** What it is for, in a sentence or two. */
+    description?: string;
+    /** Text added to every element: rules that hold from start to finish. */
+    standing?: string;
+    /** What a run is given when it starts. `{{key}}` in any text becomes the value. Without this, one input: `task`. */
+    inputs?: {
+      key: string;
+      label: string;
+      description?: string;
+      required?: boolean;
+    }[];
+    /** The elements, in the order they are gone through. */
+    elements: {
+      id?: string;
+      kind?: string;
+      name: string;
+      instructions?: string;
+      doneWhen?: string;
+      needs?: {
+        kind: "mcp" | "command" | "access" | "other";
+        name: string;
+        note?: string;
+      }[];
+      produces?: string;
+      origin?: {
+        kind: string;
+        name?: string;
+        [key: string]: unknown;
+      };
+      extra?: {
+        [key: string]: unknown;
+      };
+    }[];
+  };
+  /** One element, for the shelf. */
+  element?: {
+    id?: string;
+    kind?: string;
+    name: string;
+    instructions?: string;
+    doneWhen?: string;
+    needs?: {
+      kind: "mcp" | "command" | "access" | "other";
+      name: string;
+      note?: string;
+    }[];
+    produces?: string;
+    origin?: {
+      kind: string;
+      name?: string;
+      [key: string]: unknown;
+    };
+    extra?: {
+      [key: string]: unknown;
+    };
+  };
+  /** For a workflow: the workflow this is a new version of. Without it, accepting makes a new workflow. */
+  revisesWorkflowId?: string;
+  /** What it is meant to do, when nobody asked for it. */
+  description?: string;
+};
+
+export type ReviseDraftResult = {
+  draft: {
+    workflow: {
+      name: string;
+      description: string;
+      standing: string;
+      inputs: {
+        key: string;
+        label: string;
+        description: string;
+        required: boolean;
+      }[];
+      elements: {
+        id: string;
+        kind: string;
+        name: string;
+        instructions: string;
+        doneWhen: string;
+        needs: {
+          kind: "mcp" | "command" | "access" | "other";
+          name: string;
+          note?: string;
+        }[];
+        produces: string;
+        origin: {
+          kind: string;
+          name?: string;
+          [key: string]: unknown;
+        };
+        extra: {
+          [key: string]: unknown;
+        };
+      }[];
+      extra: {
+        [key: string]: unknown;
+      };
+    } | null;
+    element: {
+      id: string;
+      kind: string;
+      name: string;
+      instructions: string;
+      doneWhen: string;
+      needs: {
+        kind: "mcp" | "command" | "access" | "other";
+        name: string;
+        note?: string;
+      }[];
+      produces: string;
+      origin: {
+        kind: string;
+        name?: string;
+        [key: string]: unknown;
+      };
+      extra: {
+        [key: string]: unknown;
+      };
+    } | null;
+    id: string;
+    kind: "workflow" | "element";
+    status: "requested" | "waiting" | "returned";
+    description: string;
+    proposedBy: {
+      kind: "session";
+      sessionId: string;
+    } | {
+      kind: "token";
+      tokenId: string;
+      name: string;
+    } | {
+      kind: "person";
+    };
+    sessionId: string | null;
+    revisesWorkflowId: string | null;
+    previous: {
+      workflow: {
+        name: string;
+        description: string;
+        standing: string;
+        inputs: {
+          key: string;
+          label: string;
+          description: string;
+          required: boolean;
+        }[];
+        elements: {
+          id: string;
+          kind: string;
+          name: string;
+          instructions: string;
+          doneWhen: string;
+          needs: {
+            kind: "mcp" | "command" | "access" | "other";
+            name: string;
+            note?: string;
+          }[];
+          produces: string;
+          origin: {
+            kind: string;
+            name?: string;
+            [key: string]: unknown;
+          };
+          extra: {
+            [key: string]: unknown;
+          };
+        }[];
+        extra: {
+          [key: string]: unknown;
+        };
+      } | null;
+      element: {
+        id: string;
+        kind: string;
+        name: string;
+        instructions: string;
+        doneWhen: string;
+        needs: {
+          kind: "mcp" | "command" | "access" | "other";
+          name: string;
+          note?: string;
+        }[];
+        produces: string;
+        origin: {
+          kind: string;
+          name?: string;
+          [key: string]: unknown;
+        };
+        extra: {
+          [key: string]: unknown;
+        };
+      } | null;
+    } | null;
+    revision: number;
+    comment: string | null;
+    createdAt: string;
+    updatedAt: string;
+  };
+  text: string;
+  previousText: string | null;
+  needs: {
+    kind: "mcp" | "command" | "access" | "other";
+    name: string;
+    note?: string;
+  }[];
+};
+
+export type AcceptDraftBody = {
+  /** The workflow as edited before accepting. */
+  workflow?: {
+    /** What it is called. */
+    name: string;
+    /** What it is for, in a sentence or two. */
+    description?: string;
+    /** Text added to every element: rules that hold from start to finish. */
+    standing?: string;
+    /** What a run is given when it starts. `{{key}}` in any text becomes the value. Without this, one input: `task`. */
+    inputs?: {
+      key: string;
+      label: string;
+      description?: string;
+      required?: boolean;
+    }[];
+    /** The elements, in the order they are gone through. */
+    elements: {
+      id?: string;
+      kind?: string;
+      name: string;
+      instructions?: string;
+      doneWhen?: string;
+      needs?: {
+        kind: "mcp" | "command" | "access" | "other";
+        name: string;
+        note?: string;
+      }[];
+      produces?: string;
+      origin?: {
+        kind: string;
+        name?: string;
+        [key: string]: unknown;
+      };
+      extra?: {
+        [key: string]: unknown;
+      };
+    }[];
+  };
+  /** The element as edited before accepting. */
+  element?: {
+    id?: string;
+    kind?: string;
+    name: string;
+    instructions?: string;
+    doneWhen?: string;
+    needs?: {
+      kind: "mcp" | "command" | "access" | "other";
+      name: string;
+      note?: string;
+    }[];
+    produces?: string;
+    origin?: {
+      kind: string;
+      name?: string;
+      [key: string]: unknown;
+    };
+    extra?: {
+      [key: string]: unknown;
+    };
+  };
+};
+
+export type AcceptDraftResult = {
+  workflowId: string | null;
+  elementId: string | null;
+};
+
+export type ReturnDraftBody = {
+  /** What should change. */
+  comment: string;
+};
+
+export type ReturnDraftResult = {
+  workflow: {
+    name: string;
+    description: string;
+    standing: string;
+    inputs: {
+      key: string;
+      label: string;
+      description: string;
+      required: boolean;
+    }[];
+    elements: {
+      id: string;
+      kind: string;
+      name: string;
+      instructions: string;
+      doneWhen: string;
+      needs: {
+        kind: "mcp" | "command" | "access" | "other";
+        name: string;
+        note?: string;
+      }[];
+      produces: string;
+      origin: {
+        kind: string;
+        name?: string;
+        [key: string]: unknown;
+      };
+      extra: {
+        [key: string]: unknown;
+      };
+    }[];
+    extra: {
+      [key: string]: unknown;
+    };
+  } | null;
+  element: {
+    id: string;
+    kind: string;
+    name: string;
+    instructions: string;
+    doneWhen: string;
+    needs: {
+      kind: "mcp" | "command" | "access" | "other";
+      name: string;
+      note?: string;
+    }[];
+    produces: string;
+    origin: {
+      kind: string;
+      name?: string;
+      [key: string]: unknown;
+    };
+    extra: {
+      [key: string]: unknown;
+    };
+  } | null;
+  id: string;
+  kind: "workflow" | "element";
+  status: "requested" | "waiting" | "returned";
+  description: string;
+  proposedBy: {
+    kind: "session";
+    sessionId: string;
+  } | {
+    kind: "token";
+    tokenId: string;
+    name: string;
+  } | {
+    kind: "person";
+  };
+  sessionId: string | null;
+  revisesWorkflowId: string | null;
+  previous: {
+    workflow: {
+      name: string;
+      description: string;
+      standing: string;
+      inputs: {
+        key: string;
+        label: string;
+        description: string;
+        required: boolean;
+      }[];
+      elements: {
+        id: string;
+        kind: string;
+        name: string;
+        instructions: string;
+        doneWhen: string;
+        needs: {
+          kind: "mcp" | "command" | "access" | "other";
+          name: string;
+          note?: string;
+        }[];
+        produces: string;
+        origin: {
+          kind: string;
+          name?: string;
+          [key: string]: unknown;
+        };
+        extra: {
+          [key: string]: unknown;
+        };
+      }[];
+      extra: {
+        [key: string]: unknown;
+      };
+    } | null;
+    element: {
+      id: string;
+      kind: string;
+      name: string;
+      instructions: string;
+      doneWhen: string;
+      needs: {
+        kind: "mcp" | "command" | "access" | "other";
+        name: string;
+        note?: string;
+      }[];
+      produces: string;
+      origin: {
+        kind: string;
+        name?: string;
+        [key: string]: unknown;
+      };
+      extra: {
+        [key: string]: unknown;
+      };
+    } | null;
+  } | null;
+  revision: number;
+  comment: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type RequestDraftBody = {
+  kind: "workflow" | "element";
+  /** What you want, in your own words. */
+  description: string;
+  /** The session whose agent is asked. */
+  sessionId: string;
+  /** Type the fixed request line into the terminal, when an agent is running there. */
+  tell?: boolean;
+};
+
+export type RequestDraftResult = {
+  draft: {
+    workflow: {
+      name: string;
+      description: string;
+      standing: string;
+      inputs: {
+        key: string;
+        label: string;
+        description: string;
+        required: boolean;
+      }[];
+      elements: {
+        id: string;
+        kind: string;
+        name: string;
+        instructions: string;
+        doneWhen: string;
+        needs: {
+          kind: "mcp" | "command" | "access" | "other";
+          name: string;
+          note?: string;
+        }[];
+        produces: string;
+        origin: {
+          kind: string;
+          name?: string;
+          [key: string]: unknown;
+        };
+        extra: {
+          [key: string]: unknown;
+        };
+      }[];
+      extra: {
+        [key: string]: unknown;
+      };
+    } | null;
+    element: {
+      id: string;
+      kind: string;
+      name: string;
+      instructions: string;
+      doneWhen: string;
+      needs: {
+        kind: "mcp" | "command" | "access" | "other";
+        name: string;
+        note?: string;
+      }[];
+      produces: string;
+      origin: {
+        kind: string;
+        name?: string;
+        [key: string]: unknown;
+      };
+      extra: {
+        [key: string]: unknown;
+      };
+    } | null;
+    id: string;
+    kind: "workflow" | "element";
+    status: "requested" | "waiting" | "returned";
+    description: string;
+    proposedBy: {
+      kind: "session";
+      sessionId: string;
+    } | {
+      kind: "token";
+      tokenId: string;
+      name: string;
+    } | {
+      kind: "person";
+    };
+    sessionId: string | null;
+    revisesWorkflowId: string | null;
+    previous: {
+      workflow: {
+        name: string;
+        description: string;
+        standing: string;
+        inputs: {
+          key: string;
+          label: string;
+          description: string;
+          required: boolean;
+        }[];
+        elements: {
+          id: string;
+          kind: string;
+          name: string;
+          instructions: string;
+          doneWhen: string;
+          needs: {
+            kind: "mcp" | "command" | "access" | "other";
+            name: string;
+            note?: string;
+          }[];
+          produces: string;
+          origin: {
+            kind: string;
+            name?: string;
+            [key: string]: unknown;
+          };
+          extra: {
+            [key: string]: unknown;
+          };
+        }[];
+        extra: {
+          [key: string]: unknown;
+        };
+      } | null;
+      element: {
+        id: string;
+        kind: string;
+        name: string;
+        instructions: string;
+        doneWhen: string;
+        needs: {
+          kind: "mcp" | "command" | "access" | "other";
+          name: string;
+          note?: string;
+        }[];
+        produces: string;
+        origin: {
+          kind: string;
+          name?: string;
+          [key: string]: unknown;
+        };
+        extra: {
+          [key: string]: unknown;
+        };
+      } | null;
+    } | null;
+    revision: number;
+    comment: string | null;
+    createdAt: string;
+    updatedAt: string;
+  };
+  told: boolean;
+  line: string;
+};
+
+export interface ListElementsQuery {
+  /**
+   * How many items to return at most.
+   */
+  limit?: number;
+  /**
+   * The `nextCursor` of the page before. Opaque: do not build or change it.
+   */
+  cursor?: string;
+}
+
+export type ListElementsResult = {
+  items: {
+    id: string;
+    element: {
+      id: string;
+      kind: string;
+      name: string;
+      instructions: string;
+      doneWhen: string;
+      needs: {
+        kind: "mcp" | "command" | "access" | "other";
+        name: string;
+        note?: string;
+      }[];
+      produces: string;
+      origin: {
+        kind: string;
+        name?: string;
+        [key: string]: unknown;
+      };
+      extra: {
+        [key: string]: unknown;
+      };
+    };
+    createdAt: string;
+    updatedAt: string;
+  }[];
+  nextCursor: string | null;
+};
+
+export type CreateElementBody = {
+  id?: string;
+  kind?: string;
+  name: string;
+  instructions?: string;
+  doneWhen?: string;
+  needs?: {
+    kind: "mcp" | "command" | "access" | "other";
+    name: string;
+    note?: string;
+  }[];
+  produces?: string;
+  origin?: {
+    kind: string;
+    name?: string;
+    [key: string]: unknown;
+  };
+  extra?: {
+    [key: string]: unknown;
+  };
+};
+
+export type CreateElementResult = {
+  id: string;
+  element: {
+    id: string;
+    kind: string;
+    name: string;
+    instructions: string;
+    doneWhen: string;
+    needs: {
+      kind: "mcp" | "command" | "access" | "other";
+      name: string;
+      note?: string;
+    }[];
+    produces: string;
+    origin: {
+      kind: string;
+      name?: string;
+      [key: string]: unknown;
+    };
+    extra: {
+      [key: string]: unknown;
+    };
+  };
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type UpdateElementBody = {
+  kind?: string;
+  name?: string;
+  instructions?: string;
+  doneWhen?: string;
+  needs?: {
+    kind: "mcp" | "command" | "access" | "other";
+    name: string;
+    note?: string;
+  }[];
+  produces?: string;
+};
+
+export type UpdateElementResult = {
+  id: string;
+  element: {
+    id: string;
+    kind: string;
+    name: string;
+    instructions: string;
+    doneWhen: string;
+    needs: {
+      kind: "mcp" | "command" | "access" | "other";
+      name: string;
+      note?: string;
+    }[];
+    produces: string;
+    origin: {
+      kind: string;
+      name?: string;
+      [key: string]: unknown;
+    };
+    extra: {
+      [key: string]: unknown;
+    };
+  };
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type CopyElementResult = {
+  id: string;
+  element: {
+    id: string;
+    kind: string;
+    name: string;
+    instructions: string;
+    doneWhen: string;
+    needs: {
+      kind: "mcp" | "command" | "access" | "other";
+      name: string;
+      note?: string;
+    }[];
+    produces: string;
+    origin: {
+      kind: string;
+      name?: string;
+      [key: string]: unknown;
+    };
+    extra: {
+      [key: string]: unknown;
+    };
+  };
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type RunElementBody = {
+  /** The session that will do it. */
+  sessionId: string;
+  /** What the element asks for: `task`, when its text uses it. */
+  inputs?: {
+    [key: string]: string;
+  };
+  /** Stop the run the session is on, if any, and start this. */
+  replace?: boolean;
+  /** Type the fixed kickoff line, for the owner, where an agent is running. */
+  kickoff?: boolean;
+};
+
+export type RunElementResult = {
+  run: {
+    id: string;
+    workflowId: string;
+    workflowVersion: number;
+    sessionId: string | null;
+    inputs: {
+      [key: string]: string;
+    };
+    status: "queued" | "running" | "paused" | "blocked" | "finished" | "stopped";
+    currentElementId: string | null;
+    elements: {
+      elementId: string;
+      state: "pending" | "active" | "done" | "skipped";
+      startedAt: string | null;
+      finishedAt: string | null;
+      note: string;
+      output: unknown | null;
+      ticks: {
+        item: number;
+        by: {
+          kind: "agent" | "person" | "token";
+          name?: string;
+        };
+        at: string;
+      }[];
+      by: {
+        kind: "agent" | "person" | "token";
+        name?: string;
+      } | null;
+      sessionId: string | null;
+    }[];
+    blockedReason: string | null;
+    pausedFrom: ("running" | "blocked") | null;
+    startedBy: {
+      kind: "agent" | "person" | "token";
+      name?: string;
+    };
+    createdAt: string;
+    updatedAt: string;
+    finishedAt: string | null;
+  };
+  workflowName: string;
+  elements: {
+    id: string;
+    name: string;
+    produces: string;
+  }[];
+  position: string;
+  text: string;
+  kickoff: string;
+  kickoffTyped: boolean;
+};
+
+export type TickRunItemBody = {
+  /** The element whose output it is. */
+  elementId: string;
+  /** Which item, counting from zero. */
+  item: number;
+  /** True to tick it, false to take the tick away. */
+  ticked: boolean;
+};
+
+export type TickRunItemResult = {
+  run: {
+    id: string;
+    workflowId: string;
+    workflowVersion: number;
+    sessionId: string | null;
+    inputs: {
+      [key: string]: string;
+    };
+    status: "queued" | "running" | "paused" | "blocked" | "finished" | "stopped";
+    currentElementId: string | null;
+    elements: {
+      elementId: string;
+      state: "pending" | "active" | "done" | "skipped";
+      startedAt: string | null;
+      finishedAt: string | null;
+      note: string;
+      output: unknown | null;
+      ticks: {
+        item: number;
+        by: {
+          kind: "agent" | "person" | "token";
+          name?: string;
+        };
+        at: string;
+      }[];
+      by: {
+        kind: "agent" | "person" | "token";
+        name?: string;
+      } | null;
+      sessionId: string | null;
+    }[];
+    blockedReason: string | null;
+    pausedFrom: ("running" | "blocked") | null;
+    startedBy: {
+      kind: "agent" | "person" | "token";
+      name?: string;
+    };
+    createdAt: string;
+    updatedAt: string;
+    finishedAt: string | null;
+  };
+  workflowName: string;
+  elements: {
+    id: string;
+    name: string;
+    produces: string;
   }[];
   position: string;
   text: string;
@@ -1566,6 +3042,7 @@ export type ListTokensResult = {
     lastUsedAt: string | null;
     expiresAt: string | null;
     revokedAt: string | null;
+    reviewWorkflowChanges: boolean;
   }[];
   nextCursor: string | null;
 };
@@ -1579,6 +3056,8 @@ export type CreateTokenBody = {
   expiresAt?: string;
   /** In how many days it stops working. */
   expiresInDays?: number;
+  /** Changes to workflows need your review: with `workflows:write` the token may propose drafts, and may not create or change workflows directly. On unless you switch it off. */
+  reviewWorkflowChanges?: boolean;
 };
 
 export type CreateTokenResult = {
@@ -1590,6 +3069,7 @@ export type CreateTokenResult = {
     lastUsedAt: string | null;
     expiresAt: string | null;
     revokedAt: string | null;
+    reviewWorkflowChanges: boolean;
   };
   secret: string;
 };
@@ -1602,6 +3082,7 @@ export type RevokeTokenResult = {
   lastUsedAt: string | null;
   expiresAt: string | null;
   revokedAt: string | null;
+  reviewWorkflowChanges: boolean;
 };
 
 export interface ListActivityQuery {
@@ -1665,6 +3146,15 @@ export type GetSessionRunResult = {
       startedAt: string | null;
       finishedAt: string | null;
       note: string;
+      output: unknown | null;
+      ticks: {
+        item: number;
+        by: {
+          kind: "agent" | "person" | "token";
+          name?: string;
+        };
+        at: string;
+      }[];
       by: {
         kind: "agent" | "person" | "token";
         name?: string;
@@ -1685,6 +3175,7 @@ export type GetSessionRunResult = {
   elements: {
     id: string;
     name: string;
+    produces: string;
   }[];
   position: string;
   text: string;
@@ -1698,6 +3189,8 @@ export type ReportSessionRunBody = {
   elementId?: string;
   /** What was done, for whoever comes next. */
   note?: string;
+  /** What the element produced, when it declares an output other than a note: for a checklist, `{"items": [{"text": "…"}]}`. */
+  output?: unknown;
 } | {
   type: "blocked";
   reason: string;
@@ -1729,6 +3222,15 @@ export type ReportSessionRunResult = {
       startedAt: string | null;
       finishedAt: string | null;
       note: string;
+      output: unknown | null;
+      ticks: {
+        item: number;
+        by: {
+          kind: "agent" | "person" | "token";
+          name?: string;
+        };
+        at: string;
+      }[];
       by: {
         kind: "agent" | "person" | "token";
         name?: string;
@@ -1749,11 +3251,373 @@ export type ReportSessionRunResult = {
   elements: {
     id: string;
     name: string;
+    produces: string;
   }[];
   position: string;
   text: string;
   kickoff: string;
   kickoffTyped: boolean;
+};
+
+export type GetSessionBriefResult = {
+  text: string;
+  kind: "workflow" | "element";
+  status: "requested" | "waiting" | "returned";
+};
+
+export interface ListSessionDraftsQuery {
+  /**
+   * How many items to return at most.
+   */
+  limit?: number;
+  /**
+   * The `nextCursor` of the page before. Opaque: do not build or change it.
+   */
+  cursor?: string;
+}
+
+export type ListSessionDraftsResult = {
+  items: {
+    workflow: {
+      name: string;
+      description: string;
+      standing: string;
+      inputs: {
+        key: string;
+        label: string;
+        description: string;
+        required: boolean;
+      }[];
+      elements: {
+        id: string;
+        kind: string;
+        name: string;
+        instructions: string;
+        doneWhen: string;
+        needs: {
+          kind: "mcp" | "command" | "access" | "other";
+          name: string;
+          note?: string;
+        }[];
+        produces: string;
+        origin: {
+          kind: string;
+          name?: string;
+          [key: string]: unknown;
+        };
+        extra: {
+          [key: string]: unknown;
+        };
+      }[];
+      extra: {
+        [key: string]: unknown;
+      };
+    } | null;
+    element: {
+      id: string;
+      kind: string;
+      name: string;
+      instructions: string;
+      doneWhen: string;
+      needs: {
+        kind: "mcp" | "command" | "access" | "other";
+        name: string;
+        note?: string;
+      }[];
+      produces: string;
+      origin: {
+        kind: string;
+        name?: string;
+        [key: string]: unknown;
+      };
+      extra: {
+        [key: string]: unknown;
+      };
+    } | null;
+    id: string;
+    kind: "workflow" | "element";
+    status: "requested" | "waiting" | "returned";
+    description: string;
+    proposedBy: {
+      kind: "session";
+      sessionId: string;
+    } | {
+      kind: "token";
+      tokenId: string;
+      name: string;
+    } | {
+      kind: "person";
+    };
+    sessionId: string | null;
+    revisesWorkflowId: string | null;
+    previous: {
+      workflow: {
+        name: string;
+        description: string;
+        standing: string;
+        inputs: {
+          key: string;
+          label: string;
+          description: string;
+          required: boolean;
+        }[];
+        elements: {
+          id: string;
+          kind: string;
+          name: string;
+          instructions: string;
+          doneWhen: string;
+          needs: {
+            kind: "mcp" | "command" | "access" | "other";
+            name: string;
+            note?: string;
+          }[];
+          produces: string;
+          origin: {
+            kind: string;
+            name?: string;
+            [key: string]: unknown;
+          };
+          extra: {
+            [key: string]: unknown;
+          };
+        }[];
+        extra: {
+          [key: string]: unknown;
+        };
+      } | null;
+      element: {
+        id: string;
+        kind: string;
+        name: string;
+        instructions: string;
+        doneWhen: string;
+        needs: {
+          kind: "mcp" | "command" | "access" | "other";
+          name: string;
+          note?: string;
+        }[];
+        produces: string;
+        origin: {
+          kind: string;
+          name?: string;
+          [key: string]: unknown;
+        };
+        extra: {
+          [key: string]: unknown;
+        };
+      } | null;
+    } | null;
+    revision: number;
+    comment: string | null;
+    createdAt: string;
+    updatedAt: string;
+  }[];
+  nextCursor: string | null;
+};
+
+export type ProposeSessionDraftBody = {
+  /** A whole workflow. Give this or `element`, not both. */
+  workflow?: {
+    /** What it is called. */
+    name: string;
+    /** What it is for, in a sentence or two. */
+    description?: string;
+    /** Text added to every element: rules that hold from start to finish. */
+    standing?: string;
+    /** What a run is given when it starts. `{{key}}` in any text becomes the value. Without this, one input: `task`. */
+    inputs?: {
+      key: string;
+      label: string;
+      description?: string;
+      required?: boolean;
+    }[];
+    /** The elements, in the order they are gone through. */
+    elements: {
+      id?: string;
+      kind?: string;
+      name: string;
+      instructions?: string;
+      doneWhen?: string;
+      needs?: {
+        kind: "mcp" | "command" | "access" | "other";
+        name: string;
+        note?: string;
+      }[];
+      produces?: string;
+      origin?: {
+        kind: string;
+        name?: string;
+        [key: string]: unknown;
+      };
+      extra?: {
+        [key: string]: unknown;
+      };
+    }[];
+  };
+  /** One element, for the shelf. */
+  element?: {
+    id?: string;
+    kind?: string;
+    name: string;
+    instructions?: string;
+    doneWhen?: string;
+    needs?: {
+      kind: "mcp" | "command" | "access" | "other";
+      name: string;
+      note?: string;
+    }[];
+    produces?: string;
+    origin?: {
+      kind: string;
+      name?: string;
+      [key: string]: unknown;
+    };
+    extra?: {
+      [key: string]: unknown;
+    };
+  };
+  /** For a workflow: the workflow this is a new version of. Without it, accepting makes a new workflow. */
+  revisesWorkflowId?: string;
+  /** What it is meant to do, when nobody asked for it. */
+  description?: string;
+};
+
+export type ProposeSessionDraftResult = {
+  workflow: {
+    name: string;
+    description: string;
+    standing: string;
+    inputs: {
+      key: string;
+      label: string;
+      description: string;
+      required: boolean;
+    }[];
+    elements: {
+      id: string;
+      kind: string;
+      name: string;
+      instructions: string;
+      doneWhen: string;
+      needs: {
+        kind: "mcp" | "command" | "access" | "other";
+        name: string;
+        note?: string;
+      }[];
+      produces: string;
+      origin: {
+        kind: string;
+        name?: string;
+        [key: string]: unknown;
+      };
+      extra: {
+        [key: string]: unknown;
+      };
+    }[];
+    extra: {
+      [key: string]: unknown;
+    };
+  } | null;
+  element: {
+    id: string;
+    kind: string;
+    name: string;
+    instructions: string;
+    doneWhen: string;
+    needs: {
+      kind: "mcp" | "command" | "access" | "other";
+      name: string;
+      note?: string;
+    }[];
+    produces: string;
+    origin: {
+      kind: string;
+      name?: string;
+      [key: string]: unknown;
+    };
+    extra: {
+      [key: string]: unknown;
+    };
+  } | null;
+  id: string;
+  kind: "workflow" | "element";
+  status: "requested" | "waiting" | "returned";
+  description: string;
+  proposedBy: {
+    kind: "session";
+    sessionId: string;
+  } | {
+    kind: "token";
+    tokenId: string;
+    name: string;
+  } | {
+    kind: "person";
+  };
+  sessionId: string | null;
+  revisesWorkflowId: string | null;
+  previous: {
+    workflow: {
+      name: string;
+      description: string;
+      standing: string;
+      inputs: {
+        key: string;
+        label: string;
+        description: string;
+        required: boolean;
+      }[];
+      elements: {
+        id: string;
+        kind: string;
+        name: string;
+        instructions: string;
+        doneWhen: string;
+        needs: {
+          kind: "mcp" | "command" | "access" | "other";
+          name: string;
+          note?: string;
+        }[];
+        produces: string;
+        origin: {
+          kind: string;
+          name?: string;
+          [key: string]: unknown;
+        };
+        extra: {
+          [key: string]: unknown;
+        };
+      }[];
+      extra: {
+        [key: string]: unknown;
+      };
+    } | null;
+    element: {
+      id: string;
+      kind: string;
+      name: string;
+      instructions: string;
+      doneWhen: string;
+      needs: {
+        kind: "mcp" | "command" | "access" | "other";
+        name: string;
+        note?: string;
+      }[];
+      produces: string;
+      origin: {
+        kind: string;
+        name?: string;
+        [key: string]: unknown;
+      };
+      extra: {
+        [key: string]: unknown;
+      };
+    } | null;
+  } | null;
+  revision: number;
+  comment: string | null;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export type ReportAgentBody = {
@@ -1805,6 +3669,21 @@ export const OPERATIONS = {
   getRun: { method: 'GET', path: '/v1/runs/{runId}', params: ["runId"], hasBody: false, paged: false, idempotent: false, stream: false },
   reportRun: { method: 'POST', path: '/v1/runs/{runId}/report', params: ["runId"], hasBody: true, paged: false, idempotent: false, stream: false },
   startSessionRun: { method: 'POST', path: '/v1/sessions/{sessionId}/runs', params: ["sessionId"], hasBody: true, paged: false, idempotent: true, stream: false },
+  listDrafts: { method: 'GET', path: '/v1/drafts', params: [], hasBody: false, paged: true, idempotent: false, stream: false },
+  proposeDraft: { method: 'POST', path: '/v1/drafts', params: [], hasBody: true, paged: false, idempotent: true, stream: false },
+  getDraft: { method: 'GET', path: '/v1/drafts/{draftId}', params: ["draftId"], hasBody: false, paged: false, idempotent: false, stream: false },
+  reviseDraft: { method: 'PUT', path: '/v1/drafts/{draftId}', params: ["draftId"], hasBody: true, paged: false, idempotent: false, stream: false },
+  discardDraft: { method: 'DELETE', path: '/v1/drafts/{draftId}', params: ["draftId"], hasBody: false, paged: false, idempotent: false, stream: false },
+  acceptDraft: { method: 'POST', path: '/v1/drafts/{draftId}/accept', params: ["draftId"], hasBody: true, paged: false, idempotent: false, stream: false },
+  returnDraft: { method: 'POST', path: '/v1/drafts/{draftId}/return', params: ["draftId"], hasBody: true, paged: false, idempotent: false, stream: false },
+  requestDraft: { method: 'POST', path: '/v1/draft-requests', params: [], hasBody: true, paged: false, idempotent: false, stream: false },
+  listElements: { method: 'GET', path: '/v1/elements', params: [], hasBody: false, paged: true, idempotent: false, stream: false },
+  createElement: { method: 'POST', path: '/v1/elements', params: [], hasBody: true, paged: false, idempotent: true, stream: false },
+  updateElement: { method: 'PATCH', path: '/v1/elements/{elementId}', params: ["elementId"], hasBody: true, paged: false, idempotent: false, stream: false },
+  removeElement: { method: 'DELETE', path: '/v1/elements/{elementId}', params: ["elementId"], hasBody: false, paged: false, idempotent: false, stream: false },
+  copyElement: { method: 'POST', path: '/v1/elements/{elementId}/copy', params: ["elementId"], hasBody: false, paged: false, idempotent: true, stream: false },
+  runElement: { method: 'POST', path: '/v1/elements/{elementId}/run', params: ["elementId"], hasBody: true, paged: false, idempotent: true, stream: false },
+  tickRunItem: { method: 'POST', path: '/v1/runs/{runId}/ticks', params: ["runId"], hasBody: true, paged: false, idempotent: false, stream: false },
   streamEvents: { method: 'GET', path: '/v1/events', params: [], hasBody: false, paged: false, idempotent: false, stream: true },
   listTokens: { method: 'GET', path: '/v1/tokens', params: [], hasBody: false, paged: true, idempotent: false, stream: false },
   createToken: { method: 'POST', path: '/v1/tokens', params: [], hasBody: true, paged: false, idempotent: false, stream: false },
@@ -1813,6 +3692,9 @@ export const OPERATIONS = {
   setAttention: { method: 'PUT', path: '/v1/sessions/{sessionId}/attention', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false },
   getSessionRun: { method: 'GET', path: '/v1/sessions/{sessionId}/run', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false },
   reportSessionRun: { method: 'POST', path: '/v1/sessions/{sessionId}/run/report', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false },
+  getSessionBrief: { method: 'GET', path: '/v1/sessions/{sessionId}/brief', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false },
+  listSessionDrafts: { method: 'GET', path: '/v1/sessions/{sessionId}/drafts', params: ["sessionId"], hasBody: false, paged: true, idempotent: false, stream: false },
+  proposeSessionDraft: { method: 'POST', path: '/v1/sessions/{sessionId}/drafts', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false },
   reportAgent: { method: 'PUT', path: '/v1/sessions/{sessionId}/agent', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false },
 } as const satisfies Record<string, OperationInfo>;
 
@@ -2043,6 +3925,96 @@ export interface Client {
    */
   startSessionRun(args: { sessionId: string; body: StartSessionRunBody } & CallOptions): Promise<StartSessionRunResult>;
   /**
+   * List drafts.
+   *
+   * `GET /v1/drafts`. Scope: `read`.
+   */
+  listDrafts(args?: { query?: ListDraftsQuery } & CallOptions): Promise<ListDraftsResult>;
+  /**
+   * Propose a workflow or an element as a draft.
+   *
+   * `POST /v1/drafts`. Scope: `workflows:write`.
+   */
+  proposeDraft(args: { body: ProposeDraftBody } & CallOptions): Promise<ProposeDraftResult>;
+  /**
+   * Read a draft.
+   *
+   * `GET /v1/drafts/{draftId}`. Scope: `read`.
+   */
+  getDraft(args: { draftId: string } & CallOptions): Promise<GetDraftResult>;
+  /**
+   * Hand in a new version of a draft.
+   *
+   * `PUT /v1/drafts/{draftId}`. Scope: `workflows:write`.
+   */
+  reviseDraft(args: { draftId: string; body: ReviseDraftBody } & CallOptions): Promise<ReviseDraftResult>;
+  /**
+   * Discard a draft.
+   *
+   * `DELETE /v1/drafts/{draftId}`. Signed-in browser only: no API token may call this.
+   */
+  discardDraft(args: { draftId: string } & CallOptions): Promise<void>;
+  /**
+   * Accept a draft.
+   *
+   * `POST /v1/drafts/{draftId}/accept`. Signed-in browser only: no API token may call this.
+   */
+  acceptDraft(args: { draftId: string; body?: AcceptDraftBody } & CallOptions): Promise<AcceptDraftResult>;
+  /**
+   * Send a draft back with a comment.
+   *
+   * `POST /v1/drafts/{draftId}/return`. Signed-in browser only: no API token may call this.
+   */
+  returnDraft(args: { draftId: string; body: ReturnDraftBody } & CallOptions): Promise<ReturnDraftResult>;
+  /**
+   * Ask the agent in a session to write a workflow or an element.
+   *
+   * `POST /v1/draft-requests`. Signed-in browser only: no API token may call this.
+   */
+  requestDraft(args: { body: RequestDraftBody } & CallOptions): Promise<RequestDraftResult>;
+  /**
+   * List the elements on the shelf.
+   *
+   * `GET /v1/elements`. Scope: `read`.
+   */
+  listElements(args?: { query?: ListElementsQuery } & CallOptions): Promise<ListElementsResult>;
+  /**
+   * Put an element on the shelf.
+   *
+   * `POST /v1/elements`. Scope: `workflows:write`.
+   */
+  createElement(args: { body: CreateElementBody } & CallOptions): Promise<CreateElementResult>;
+  /**
+   * Change an element on the shelf.
+   *
+   * `PATCH /v1/elements/{elementId}`. Scope: `workflows:write`.
+   */
+  updateElement(args: { elementId: string; body: UpdateElementBody } & CallOptions): Promise<UpdateElementResult>;
+  /**
+   * Take an element off the shelf.
+   *
+   * `DELETE /v1/elements/{elementId}`. Scope: `workflows:write`.
+   */
+  removeElement(args: { elementId: string } & CallOptions): Promise<void>;
+  /**
+   * Duplicate an element on the shelf.
+   *
+   * `POST /v1/elements/{elementId}/copy`. Scope: `workflows:write`.
+   */
+  copyElement(args: { elementId: string } & CallOptions): Promise<CopyElementResult>;
+  /**
+   * Run one element by itself, on a session.
+   *
+   * `POST /v1/elements/{elementId}/run`. Scope: `runs:write`.
+   */
+  runElement(args: { elementId: string; body: RunElementBody } & CallOptions): Promise<RunElementResult>;
+  /**
+   * Tick an item of what an element produced.
+   *
+   * `POST /v1/runs/{runId}/ticks`. Scope: `runs:write`.
+   */
+  tickRunItem(args: { runId: string; body: TickRunItemBody } & CallOptions): Promise<TickRunItemResult>;
+  /**
    * Follow changes as they happen.
    *
    * `GET /v1/events`. Scope: `read`.
@@ -2091,6 +4063,24 @@ export interface Client {
    */
   reportSessionRun(args: { sessionId: string; body: ReportSessionRunBody } & CallOptions): Promise<ReportSessionRunResult>;
   /**
+   * What a session was asked to write.
+   *
+   * `GET /v1/sessions/{sessionId}/brief`. A session's own token.
+   */
+  getSessionBrief(args: { sessionId: string } & CallOptions): Promise<GetSessionBriefResult>;
+  /**
+   * The drafts a session proposed or was asked for.
+   *
+   * `GET /v1/sessions/{sessionId}/drafts`. A session's own token.
+   */
+  listSessionDrafts(args: { sessionId: string; query?: ListSessionDraftsQuery } & CallOptions): Promise<ListSessionDraftsResult>;
+  /**
+   * Hand in a draft from a session.
+   *
+   * `POST /v1/sessions/{sessionId}/drafts`. A session's own token.
+   */
+  proposeSessionDraft(args: { sessionId: string; body: ProposeSessionDraftBody } & CallOptions): Promise<ProposeSessionDraftResult>;
+  /**
    * Say which agent runs in the session, and in which conversation.
    *
    * `PUT /v1/sessions/{sessionId}/agent`. A session's own token.
@@ -2127,6 +4117,14 @@ export interface Client {
      */
     listRuns(args?: { query?: ListRunsQuery } & CallOptions): AsyncGenerator<ListRunsResult['items'][number], void, void>;
     /**
+     * Every item of `listDrafts`, fetched a page at a time as they are asked for.
+     */
+    listDrafts(args?: { query?: ListDraftsQuery } & CallOptions): AsyncGenerator<ListDraftsResult['items'][number], void, void>;
+    /**
+     * Every item of `listElements`, fetched a page at a time as they are asked for.
+     */
+    listElements(args?: { query?: ListElementsQuery } & CallOptions): AsyncGenerator<ListElementsResult['items'][number], void, void>;
+    /**
      * Every item of `listTokens`, fetched a page at a time as they are asked for.
      */
     listTokens(args?: { query?: ListTokensQuery } & CallOptions): AsyncGenerator<ListTokensResult['items'][number], void, void>;
@@ -2134,6 +4132,10 @@ export interface Client {
      * Every item of `listActivity`, fetched a page at a time as they are asked for.
      */
     listActivity(args?: { query?: ListActivityQuery } & CallOptions): AsyncGenerator<ListActivityResult['items'][number], void, void>;
+    /**
+     * Every item of `listSessionDrafts`, fetched a page at a time as they are asked for.
+     */
+    listSessionDrafts(args?: { sessionId: string; query?: ListSessionDraftsQuery } & CallOptions): AsyncGenerator<ListSessionDraftsResult['items'][number], void, void>;
   };
 }
 

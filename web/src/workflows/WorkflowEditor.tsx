@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
-import { latestVersion, previewRun, type Element } from '@aubergine/shared';
+import { elementIdFor, latestVersion, previewRun, type Element } from '@aubergine/shared';
 import { api } from '../api';
 import { runCommand } from '../commands';
 import { useApp } from '../store';
 import { addElement, addInput, changeElement, draftOf, draftProblems, moveElement, removeElement, sameDraft, sampleInputs, versionOfDraft, type Draft } from './editor-model';
-import { elementView } from './registries';
+import { ElementFields } from './ElementFields';
 
 /**
  * The editor of one workflow: its name, what holds for every element, what a
@@ -15,6 +15,7 @@ export function WorkflowEditor() {
   const workflowId = useApp((s) => s.editingWorkflow);
   const workflow = useApp((s) => (workflowId ? (s.app?.workflows.find((w) => w.id === workflowId) ?? null) : null));
   const limits = useApp((s) => s.settings.workflows);
+  const shelfItems = useApp((s) => s.app?.shelf);
   const [draft, setDraft] = useState<Draft | null>(null);
   const [selected, setSelected] = useState<string | null>(null);
   const [dragging, setDragging] = useState<number | null>(null);
@@ -35,6 +36,7 @@ export function WorkflowEditor() {
     setTyped({});
   }, [workflowId, version === null]); // eslint-disable-line react-hooks/exhaustive-deps -- not on every save: the draft is what is being edited
 
+  const shelf = useMemo(() => [...(shelfItems ?? [])].sort((a, b) => a.element.name.localeCompare(b.element.name)), [shelfItems]);
   const problems = useMemo(() => (draft ? draftProblems(draft, limits) : []), [draft, limits]);
 
   if (!workflowId) return null;
@@ -61,7 +63,6 @@ export function WorkflowEditor() {
   };
   const tryClose = (): void => (changed && !leaving ? setLeaving(true) : close());
   const element = draft.elements.find((e) => e.id === selected) ?? draft.elements[0] ?? null;
-  const Editor = element ? elementView(element.kind)?.Editor : undefined;
   const preview = element && problems.length === 0 ? previewRun(versionOfDraft(draft), sampleInputs(draft.inputs, typed), element.id) : null;
 
   const save = async (): Promise<void> => {
@@ -220,20 +221,55 @@ export function WorkflowEditor() {
             >
               + Element
             </button>
+            {shelf.length > 0 && (
+              <select
+                className="editor-insert"
+                aria-label="Insert from shelf"
+                value=""
+                onChange={(e) => {
+                  const item = shelf.find((entry) => entry.id === e.target.value);
+                  if (!item) return;
+                  // A copy, with where it came from: changing the shelf later does not change this workflow.
+                  const id = elementIdFor(item.element.name, draft.elements.map((el) => el.id));
+                  change({ ...draft, elements: [...draft.elements, { ...item.element, id, origin: { kind: 'shelf', shelfId: item.id } }] });
+                  setSelected(id);
+                }}
+                data-testid="insert-from-shelf"
+              >
+                <option value="">Insert from shelf…</option>
+                {shelf.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.element.name}
+                  </option>
+                ))}
+              </select>
+            )}
           </div>
 
           <div className="editor-detail">
             {element && (
               <>
-                <label className="wf-field">
-                  <span>Element</span>
-                  <input value={element.name} maxLength={120} onChange={(e) => change(changeElement(draft, element.id, { ...element, name: e.target.value }))} data-testid="element-name" />
-                </label>
-                {Editor ? (
-                  <Editor element={element} onChange={(next: Element) => change(changeElement(draft, element.id, next))} />
-                ) : (
-                  <p className="sheet-note">This element is of a kind this version cannot edit: {element.kind}. It is kept as it is.</p>
-                )}
+                <ElementFields element={element} onChange={(next: Element) => change(changeElement(draft, element.id, next))} />
+                <div className="editor-row">
+                  <button
+                    type="button"
+                    className="quiet"
+                    title="Keep a copy of this element on the shelf, to use in other workflows or to run by itself"
+                    onClick={() => {
+                      const { id: _id, origin: _origin, extra: _extra, ...fields } = element;
+                      void api
+                        .createElement(fields)
+                        .then((saved) => {
+                          useApp.getState().apply({ type: 'shelf.changed', item: saved as never });
+                          setSaved(`“${element.name}” is on the shelf.`);
+                        })
+                        .catch((e: unknown) => setError((e as Error).message));
+                    }}
+                    data-testid="save-to-shelf"
+                  >
+                    Save to shelf
+                  </button>
+                </div>
                 <div className="wf-label">
                   What an agent will be told on this element
                   {draft.inputs.slice(0, 1).map((input) => (

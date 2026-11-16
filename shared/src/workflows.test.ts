@@ -12,6 +12,8 @@ import {
   importWorkflow,
   inputProblems,
   isQuiet,
+  BRIEF_LINE,
+  KICKOFF_LINE,
   kickoffLine,
   PlainName,
   safeForTyping,
@@ -208,8 +210,7 @@ describe('what an agent is told', () => {
   });
 
   it('gives a kickoff line, a position and a summary', () => {
-    expect(kickoffLine('Fix "it"')).toContain('workflow "Fix it"');
-    expect(kickoffLine('Three steps')).toContain('aubergine workflow status');
+    expect(kickoffLine()).toContain('aubergine workflow status');
     expect(runPosition(version, after(start(), done('plan')))).toBe('Build · 2 of 3');
     const summary = runSummary(version, after(start(), done('plan', 'planned'), { type: 'goto', elementId: 'check' }, done('check', 'all green')));
     expect(summary).toBe('Workflow "Three steps" finished.\n- Plan: planned\n- Build (skipped)\n- Check: all green');
@@ -326,6 +327,7 @@ describe('the workflow file', () => {
     origin: { kind: 'local' },
     createdAt: T(0),
     updatedAt: T(0),
+    listed: true,
     versions: [{ ...content, number: 1, createdAt: T(0) }],
   });
 
@@ -351,15 +353,15 @@ describe('the workflow file', () => {
         inputs: [{ key: 'task', label: 'Task', description: '', required: true }],
         budget: { minutes: 30 },
         elements: [
-          { id: 'one', kind: 'instructions', name: 'One', instructions: 'Do one.', doneWhen: 'Done.', origin: { kind: 'local' }, needs: ['spec'], retries: 2 },
-          { id: 'two', kind: 'instructions', name: 'Two', instructions: 'Do two.', doneWhen: '', origin: { kind: 'shelf', shelfId: 'abc' } },
+          { id: 'one', kind: 'instructions', name: 'One', instructions: 'Do one.', doneWhen: 'Done.', needs: [{ kind: 'command', name: 'git' }], produces: 'note', origin: { kind: 'local' }, expects: ['spec'], retries: 2 },
+          { id: 'two', kind: 'instructions', name: 'Two', instructions: 'Do two.', doneWhen: '', needs: [], produces: 'checklist', origin: { kind: 'shelf', shelfId: 'abc' } },
         ],
         labels: {},
         origin: { kind: 'local' },
       },
     };
     const imported = importWorkflow(fromTheFuture);
-    expect(imported.content.elements[0]?.extra).toEqual({ needs: ['spec'], retries: 2 });
+    expect(imported.content.elements[0]?.extra).toEqual({ expects: ['spec'], retries: 2 });
     expect(imported.content.elements[1]?.origin).toEqual({ kind: 'shelf', shelfId: 'abc' });
     expect(imported.content.extra).toEqual({ budget: { minutes: 30 }, $file: { signedBy: 'someone' } });
 
@@ -387,13 +389,20 @@ describe('names', () => {
 });
 
 describe('the kickoff line', () => {
-  it('types nothing but plain text, whatever the workflow is called', () => {
+  it('is a fixed sentence: nothing stored is in what is typed, so nothing anyone wrote can become key presses', () => {
+    expect(kickoffLine()).toBe(KICKOFF_LINE);
+    expect(kickoffLine.length).toBe(0);
+    for (const line of [KICKOFF_LINE, BRIEF_LINE]) {
+      expect(line).not.toMatch(/\p{C}/u);
+      expect(line).toMatch(/^[A-Za-z0-9 `"<>.,:'-]+$/);
+    }
+    expect(KICKOFF_LINE).toContain('aubergine workflow status');
+    expect(BRIEF_LINE).toContain('aubergine workflow brief');
+  });
+
+  it('can make a stored name safe for typing, should one ever be needed there', () => {
     const hostile = 'Fix\u0003 a bug\r\nrm -rf ~\u001b[2J `id` $(id) "x" ; | > \u0004\u202e';
-    const line = kickoffLine(hostile);
-    // No control characters, no shell or quoting characters from the name.
-    expect(line).not.toMatch(/\p{C}/u);
     expect(safeForTyping(hostile)).toBe('Fix a bug rm -rf 2J id (id) x');
-    expect(line).toContain('You are on the workflow "Fix a bug rm -rf 2J id (id) x".');
   });
 
   it('keeps ordinary names as they are', () => {

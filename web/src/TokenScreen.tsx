@@ -25,6 +25,7 @@ export function TokenScreen() {
   const [name, setName] = useState('');
   const [scopes, setScopes] = useState<Scope[]>(['read']);
   const [days, setDays] = useState<number | null>(null);
+  const [review, setReview] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   /** The secret of the token just made. It lives here and nowhere else, until the screen is closed. */
@@ -49,7 +50,7 @@ export function TokenScreen() {
     setBusy(true);
     setError(null);
     try {
-      const created = await api.createToken({ name, scopes, ...(days === null ? {} : { expiresInDays: days }) });
+      const created = await api.createToken({ name, scopes, reviewWorkflowChanges: review, ...(days === null ? {} : { expiresInDays: days }) });
       useApp.getState().apply({ type: 'token.created', token: { ...created.token, hash: '' } });
       setMade({ name: created.token.name, secret: created.secret });
       setCopied(false);
@@ -167,6 +168,12 @@ export function TokenScreen() {
               ))}
             </select>
           </label>
+          {scopes.includes('workflows:write') && (
+            <label className="wf-check token-review">
+              <input type="checkbox" checked={review} onChange={(e) => setReview(e.target.checked)} data-testid="token-review" />
+              <span>Changes to workflows need my review: this token proposes drafts, and I read them before they can be used.</span>
+            </label>
+          )}
           <div className="dialog-actions">
             <button type="submit" disabled={busy || name.trim() === '' || scopes.length === 0} data-testid="token-create">
               Create token

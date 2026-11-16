@@ -49,7 +49,7 @@ function world(count: number): { app: AppState; sessions: Session[]; workflow: W
   const base = createInitialState(new Date(at));
   const sessions = Array.from({ length: count }, (_, i) => session(`s-${i}`));
   const nodes: LayoutNode[] = sessions.map((s, i) => ({ id: newId(), sessionId: s.id, x: (i % 10) * 700, y: Math.floor(i / 10) * 500, width: 640, height: 400, color: 'none' }));
-  const workflow: Workflow = { id: newId(), projectId: base.project.id, name: version.name, description: '', labels: {}, origin: { kind: 'local' }, createdAt: at, updatedAt: at, versions: [version] };
+  const workflow: Workflow = { id: newId(), projectId: base.project.id, name: version.name, description: '', labels: {}, origin: { kind: 'local' }, createdAt: at, updatedAt: at, listed: true, versions: [version] };
   return { app: { ...base, sessions, canvases: [{ ...base.canvases[0]!, layout: { nodes, frames: [] } }], workflows: [workflow] }, sessions, workflow };
 }
 
@@ -282,5 +282,58 @@ describe('editing a workflow', () => {
     expect(renderRun(saved, run)).toBe(preview);
     // Nothing typed yet: the label stands in, so the preview still reads as a sentence.
     expect(sampleInputs(edited.inputs, {})).toEqual({ task: '(task)' });
+  });
+});
+
+describe('the review screen takes things to review from sources', () => {
+  it('lists a draft with what it is, who it is from and how it stands', async () => {
+    const { itemOfDraft } = await import('../review/drafts-source');
+    const { app, sessions, workflow } = world(1);
+    const base = { id: newId(), status: 'waiting' as const, description: 'My to-dos.', sessionId: null, revisesWorkflowId: null, workflow: null, element: null, previous: null, revision: 1, comment: null, createdAt: at, updatedAt: at };
+    const element = { ...version.elements[0]!, name: 'Collect my to-dos' };
+    expect(itemOfDraft({ ...base, kind: 'element', proposedBy: { kind: 'session', sessionId: sessions[0]!.id }, element }, app)).toMatchObject({
+      title: 'Collect my to-dos',
+      what: 'An element',
+      from: 'the agent in “s-0”',
+      asked: 'My to-dos.',
+      state: 'waiting',
+    });
+    expect(itemOfDraft({ ...base, kind: 'workflow', proposedBy: { kind: 'token', tokenId: newId(), name: 'ci' }, workflow: version, revisesWorkflowId: workflow.id, revision: 2 }, app)).toMatchObject({
+      title: 'Three steps',
+      what: 'A new version of “Three steps”',
+      from: 'a program, with the token “ci”',
+      revision: 2,
+    });
+    expect(itemOfDraft({ ...base, kind: 'element', status: 'requested', revision: 0, proposedBy: { kind: 'session', sessionId: newId() } }, app)).toMatchObject({
+      title: 'An element, not written yet',
+      from: 'the agent in “a terminal that is gone”',
+      state: 'requested',
+    });
+  });
+
+  it('takes a second source, and a second way of showing an output, with nothing that asks changed', async () => {
+    const { registerReviewSource, reviewSources, unregisterReviewSource } = await import('../review/registry');
+    const { outputView, registerOutputView, unregisterOutputView } = await import('./registries');
+    await import('../review/drafts-source');
+    await import('./output-views');
+    expect(reviewSources().map((s) => s.id)).toEqual(['drafts']);
+    registerReviewSource({ id: 'test-installs', title: 'From a library', useItems: () => [], load: async () => ({ text: '', previousText: null, needs: [], proposal: { workflow: null, element: null } }), accept: async () => {}, discard: async () => {} });
+    expect(reviewSources().map((s) => s.id)).toEqual(['drafts', 'test-installs']);
+    // A source need not be able to send things back.
+    expect(reviewSources()[1]?.sendBack).toBeUndefined();
+    unregisterReviewSource('test-installs');
+    expect(reviewSources()).toHaveLength(1);
+
+    expect(outputView('checklist')).toBeDefined();
+    expect(outputView('note')).toBeUndefined();
+    registerOutputView({ kind: 'test-link', View: () => null });
+    expect(outputView('test-link')).toBeDefined();
+    unregisterOutputView('test-link');
+  });
+
+  it('a run with a checklist says, per element, what kind of thing was produced', () => {
+    const names = { workflowName: 'To-dos', elements: [{ id: 'plan', name: 'Collect', produces: 'checklist' }, { id: 'build', name: 'Do' }] };
+    const { workflow } = world(0);
+    expect(pictureOf(runFor(workflow, newId()), names, null, 300).segments.map((s) => s.produces)).toEqual(['checklist', 'note']);
   });
 });

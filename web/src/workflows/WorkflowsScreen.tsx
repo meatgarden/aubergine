@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { latestVersion, type Workflow, type WorkflowTemplate } from '@aubergine/shared';
+import { latestVersion, needWords, type Workflow, type WorkflowTemplate } from '@aubergine/shared';
+import { runCommand } from '../commands';
 import { api } from '../api';
 import { useApp } from '../store';
 
@@ -11,6 +12,9 @@ export function WorkflowsScreen() {
   const open = useApp((s) => s.panel === 'workflows');
   const workflows = useApp((s) => s.app?.workflows);
   const runs = useApp((s) => s.app?.runs);
+  const shelf = useApp((s) => s.app?.shelf);
+  const drafts = useApp((s) => s.app?.drafts);
+  const [removingElement, setRemovingElement] = useState<string | null>(null);
   const [templates, setTemplates] = useState<WorkflowTemplate[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [removing, setRemoving] = useState<string | null>(null);
@@ -30,7 +34,9 @@ export function WorkflowsScreen() {
 
   if (!open) return null;
   const close = (): void => useApp.getState().togglePanel(null);
-  const list = [...(workflows ?? [])].sort((a, b) => a.name.localeCompare(b.name));
+  const list = [...(workflows ?? [])].filter((w) => w.listed).sort((a, b) => a.name.localeCompare(b.name));
+  const shelfList = [...(shelf ?? [])].sort((a, b) => a.element.name.localeCompare(b.element.name));
+  const waiting = (drafts ?? []).filter((d) => d.status === 'waiting').length;
   const liveOf = (workflow: Workflow): number => (runs ?? []).filter((r) => r.workflowId === workflow.id).length;
 
   const attempt = async (work: () => Promise<unknown>): Promise<void> => {
@@ -78,6 +84,17 @@ export function WorkflowsScreen() {
           workflow is run by Aubergine; each element is text for whoever does the work, and a person can move a run with the buttons just as well.
         </p>
         {error && <p className="dialog-error">{error}</p>}
+        <div className="workflows-ask">
+          <button type="button" onClick={() => runCommand('workflow.describe')} data-testid="describe-workflow">
+            Describe a workflow…
+          </button>
+          <button type="button" onClick={() => runCommand('element.describe')} data-testid="describe-element">
+            Describe an element…
+          </button>
+          <button type="button" className={waiting > 0 ? '' : 'quiet'} onClick={() => runCommand('drafts.review')} data-testid="open-review">
+            Review{(drafts ?? []).length > 0 ? ` (${waiting} to read${(drafts ?? []).length > waiting ? `, ${(drafts ?? []).length - waiting} with an agent` : ''})` : ''}
+          </button>
+        </div>
 
         <h3>Your workflows</h3>
         {list.length === 0 ? (
@@ -133,6 +150,68 @@ export function WorkflowsScreen() {
             </tbody>
           </table>
         )}
+
+        <h3>The shelf</h3>
+        <p className="sheet-note">Elements kept for reuse: insert one into a workflow from its editor, or run one by itself.</p>
+        {shelfList.length > 0 && (
+          <table className="token-table workflow-table">
+            <tbody>
+              {shelfList.map((item) => (
+                <tr key={item.id} data-testid="shelf-row" data-element={item.element.name}>
+                  <td>
+                    <strong>{item.element.name}</strong>
+                    <div className="sheet-note">
+                      {item.element.produces !== 'note' ? `produces a ${item.element.produces}` : 'produces a note'}
+                      {item.element.needs.length > 0 ? ` · needs ${item.element.needs.map(needWords).join('; ')}` : ''}
+                    </div>
+                  </td>
+                  <td className="workflow-actions">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const state = useApp.getState();
+                        state.togglePanel(null);
+                        state.startRun({ sessionId: state.focus?.sessionId ?? state.selected ?? null, elementId: item.id });
+                      }}
+                      data-testid="shelf-run"
+                    >
+                      Run…
+                    </button>
+                    <button type="button" className="quiet" onClick={() => useApp.getState().editElement(item.id)} data-testid="shelf-edit">
+                      Edit
+                    </button>
+                    <button type="button" className="quiet" disabled={busy} onClick={() => void attempt(() => api.copyElement(item.id))}>
+                      Duplicate
+                    </button>
+                    {removingElement === item.id ? (
+                      <button
+                        type="button"
+                        className="danger"
+                        disabled={busy}
+                        onClick={() =>
+                          void attempt(async () => {
+                            await api.removeElement(item.id);
+                            useApp.getState().apply({ type: 'shelf.removed', elementId: item.id });
+                            setRemovingElement(null);
+                          })
+                        }
+                      >
+                        Take off for good
+                      </button>
+                    ) : (
+                      <button type="button" className="quiet" onClick={() => setRemovingElement(item.id)}>
+                        Remove…
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+        <button type="button" className="quiet" onClick={() => useApp.getState().editElement('new')} data-testid="shelf-new">
+          + New element
+        </button>
 
         <h3>Start from a template</h3>
         <ul className="template-list">

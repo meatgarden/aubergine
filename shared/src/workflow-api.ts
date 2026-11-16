@@ -1,10 +1,15 @@
 import { z } from 'zod';
+import { DRAFT_COMMENT_MAX, DRAFT_DESCRIPTION_MAX, Draft, DraftStatus, ShelfElement } from './drafts';
 import { Id } from './ids';
 import { PageQuery, pageOf } from './protocol';
 import {
   ArchivedRun,
   Element,
+  ELEMENT_TEXT_HARD_MAX,
   ElementId,
+  NEEDS_MAX,
+  Need,
+  PlainName,
   Origin,
   RunInputs,
   RunReport,
@@ -45,7 +50,7 @@ export type WorkflowDetail = z.infer<typeof WorkflowDetail>;
 
 export function summaryOfWorkflow(workflow: Workflow): WorkflowSummary {
   const current = latestVersion(workflow);
-  const { versions: _versions, projectId: _projectId, ...rest } = workflow;
+  const { versions: _versions, projectId: _projectId, listed: _listed, ...rest } = workflow;
   return { ...rest, version: current.number, elements: current.elements.map((e) => e.name) };
 }
 export const detailOfWorkflow = (workflow: Workflow): WorkflowDetail => ({ ...summaryOfWorkflow(workflow), current: latestVersion(workflow) });
@@ -56,11 +61,12 @@ export type ElementInput = z.infer<typeof ElementInput>;
 
 const contentFields = {
   name: WorkflowContent.shape.name.describe('What it is called.'),
-  description: WorkflowContent.shape.description.describe('What it is for, in a sentence or two.'),
-  standing: WorkflowContent.shape.standing.describe('Text added to every element: rules that hold from start to finish.'),
+  // Without defaults: a field that is left out of a change must stay as it is, not be emptied.
+  description: z.string().trim().max(2000).describe('What it is for, in a sentence or two.'),
+  standing: z.string().max(ELEMENT_TEXT_HARD_MAX).describe('Text added to every element: rules that hold from start to finish.'),
   inputs: z.array(WorkflowInput).max(20).describe('What a run is given when it starts. `{{key}}` in any text becomes the value. Without this, one input: `task`.'),
   elements: z.array(ElementInput).min(1).max(200).describe('The elements, in the order they are gone through.'),
-  labels: WorkflowLabels.describe('Pairs of key and value for tools of your own to give meaning to.'),
+  labels: z.record(z.string().max(63), z.string().max(256)).describe('Pairs of key and value for tools of your own to give meaning to.'),
   origin: Origin.describe('Where it came from. Left out, it was made here.'),
   extra: z.record(z.string(), z.unknown()).describe('Fields from a file that this version does not know, kept so they are written out again.'),
 };
@@ -162,7 +168,9 @@ export type ReportRunRequest = z.infer<typeof ReportRunRequest>;
 
 /** What a session may report about its own run: everything but giving a run a session. */
 export const ReportOwnRunRequest = z.discriminatedUnion('type', [
-  z.object({ type: z.literal('done'), elementId: ElementId.optional().describe('The element being finished. Without it: the current one.'), note: z.string().max(10_000).optional().describe('What was done, for whoever comes next.') }),
+  z.object({ type: z.literal('done'), elementId: ElementId.optional().describe('The element being finished. Without it: the current one.'), note: z.string().max(10_000).optional().describe('What was done, for whoever comes next.'),
+    output: z.unknown().optional().describe('What the element produced, when it declares an output other than a note: for a checklist, `{"items": [{"text": "…"}]}`.'),
+  }),
   z.object({ type: z.literal('blocked'), reason: z.string().trim().min(1).max(2000) }),
   z.object({ type: z.literal('goto'), elementId: ElementId }),
   z.object({ type: z.literal('pause') }),
@@ -174,5 +182,92 @@ export type ReportOwnRunRequest = z.infer<typeof ReportOwnRunRequest>;
 /** What the browser needs to draw a run without asking: its record. */
 export const recordOfRun = (run: Run, workflow: Workflow | undefined): RunRecord => {
   const version = workflow?.versions.find((v) => v.number === run.workflowVersion);
-  return { run, workflowName: version?.name ?? workflow?.name ?? '(removed workflow)', elements: (version?.elements ?? []).map((e) => ({ id: e.id, name: e.name })) };
+  return { run, workflowName: version?.name ?? workflow?.name ?? '(removed workflow)', elements: (version?.elements ?? []).map((e) => ({ id: e.id, name: e.name, produces: e.produces })) };
 };
+
+/* ---------- Drafts ---------- */
+
+/** Body of proposing a draft, and of revising one: a workflow, or one element. */
+export const ProposeDraftRequest = z
+  .object({
+    workflow: CreateWorkflowRequest.omit({ labels: true, origin: true, extra: true }).optional().describe('A whole workflow. Give this or `element`, not both.'),
+    element: ElementInput.optional().describe('One element, for the shelf.'),
+    revisesWorkflowId: Id.optional().describe('For a workflow: the workflow this is a new version of. Without it, accepting makes a new workflow.'),
+    description: z.string().max(DRAFT_DESCRIPTION_MAX).optional().describe('What it is meant to do, when nobody asked for it.'),
+  })
+  .refine((body) => (body.workflow === undefined) !== (body.element === undefined), 'Give a workflow or an element, one of the two');
+export type ProposeDraftRequest = z.infer<typeof ProposeDraftRequest>;
+
+/** A draft with what a reviewer reads: everything it would tell an agent, what it needs, and what changed since the version before. */
+export const DraftDetail = z.object({
+  draft: Draft,
+  /** The whole text an agent would be told, element by element, with stand-in inputs. Empty until something is handed in. */
+  text: z.string(),
+  /** The same for the version before the last revision; null when there was none. */
+  previousText: z.string().nullable(),
+  needs: z.array(Need),
+});
+export type DraftDetail = z.infer<typeof DraftDetail>;
+export const DraftList = pageOf(Draft);
+export type DraftList = z.infer<typeof DraftList>;
+
+/** Body of asking an agent for a draft. Only a fixed sentence is typed into the terminal; the description is read by the agent with a command. */
+export const RequestDraftRequest = z.object({
+  kind: z.enum(['workflow', 'element']),
+  description: z.string().trim().min(1).max(DRAFT_DESCRIPTION_MAX).describe('What you want, in your own words.'),
+  sessionId: Id.describe('The session whose agent is asked.'),
+  tell: z.boolean().default(true).describe('Type the fixed request line into the terminal, when an agent is running there.'),
+});
+export type RequestDraftRequest = z.infer<typeof RequestDraftRequest>;
+export const RequestedDraft = z.object({ draft: Draft, told: z.boolean(), line: z.string() });
+export type RequestedDraft = z.infer<typeof RequestedDraft>;
+
+/** Body of accepting a draft. The content may be sent as the owner edited it; without it, the draft is accepted as it stands. */
+export const AcceptDraftRequest = z.object({
+  workflow: CreateWorkflowRequest.omit({ labels: true, origin: true, extra: true }).optional().describe('The workflow as edited before accepting.'),
+  element: ElementInput.optional().describe('The element as edited before accepting.'),
+});
+export type AcceptDraftRequest = z.infer<typeof AcceptDraftRequest>;
+export const AcceptedDraft = z.object({ workflowId: Id.nullable(), elementId: Id.nullable() });
+export type AcceptedDraft = z.infer<typeof AcceptedDraft>;
+
+export const ReturnDraftRequest = z.object({ comment: z.string().trim().min(1).max(DRAFT_COMMENT_MAX).describe('What should change.') });
+export type ReturnDraftRequest = z.infer<typeof ReturnDraftRequest>;
+
+/** What a session asked for a draft is told: the request, the format, the limits, and how to hand it in. */
+export const Brief = z.object({ text: z.string(), kind: z.enum(['workflow', 'element']), status: DraftStatus });
+export type Brief = z.infer<typeof Brief>;
+
+/* ---------- The shelf ---------- */
+
+export const ShelfList = pageOf(ShelfElement);
+export type ShelfList = z.infer<typeof ShelfList>;
+export const CreateShelfElementRequest = ElementInput;
+export type CreateShelfElementRequest = z.infer<typeof CreateShelfElementRequest>;
+/** Body of changing a shelf element. Whatever is sent replaces what was there; what is left out stays. */
+export const UpdateShelfElementRequest = z.object({
+  kind: z.string().min(1).max(40).optional(),
+  name: PlainName.optional(),
+  instructions: z.string().max(ELEMENT_TEXT_HARD_MAX).optional(),
+  doneWhen: z.string().trim().max(500).optional(),
+  needs: z.array(Need).max(NEEDS_MAX).optional(),
+  produces: z.string().min(1).max(40).optional(),
+});
+export type UpdateShelfElementRequest = z.infer<typeof UpdateShelfElementRequest>;
+
+/** Body of running one element by itself, on a session. */
+export const RunElementRequest = z.object({
+  sessionId: Id.describe('The session that will do it.'),
+  inputs: RunInputs.describe('What the element asks for: `task`, when its text uses it.'),
+  replace: z.boolean().default(false).describe('Stop the run the session is on, if any, and start this.'),
+  kickoff: z.boolean().default(true).describe('Type the fixed kickoff line, for the owner, where an agent is running.'),
+});
+export type RunElementRequest = z.infer<typeof RunElementRequest>;
+
+/** Body of ticking an item of what an element produced. */
+export const TickRequest = z.object({
+  elementId: ElementId.describe('The element whose output it is.'),
+  item: z.number().int().min(0).describe('Which item, counting from zero.'),
+  ticked: z.boolean().describe('True to tick it, false to take the tick away.'),
+});
+export type TickRequest = z.infer<typeof TickRequest>;

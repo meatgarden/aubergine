@@ -8,7 +8,7 @@ export type Principal =
   /** A program running inside one session, holding that session's token. */
   | { kind: 'session'; sessionId: string }
   /** A program holding an API token the owner created, with the scopes the owner gave it. */
-  | { kind: 'token'; tokenId: string; name: string; scopes: readonly Scope[] };
+  | { kind: 'token'; tokenId: string; name: string; scopes: readonly Scope[]; /** What it writes about workflows needs the owner's review: it may propose, not change. */ reviewWorkflows?: boolean };
 
 export { ACTIONS, NEVER_BY_TOKEN, type Action } from '@aubergine/shared';
 
@@ -26,7 +26,8 @@ export interface Resource {
  * - A session may set its own attention state, append to its own note log and
  *   say which agent conversation it is in. Nothing else, and nothing about
  *   any other session.
- * - A token may do what its scopes allow, and never anything in
+ * - A token may do what its scopes allow (with one switch per token: changes
+ *   to workflows that need review can only be proposed as drafts), and never anything in
  *   `NEVER_BY_TOKEN`. An action that is not listed for tokens is refused:
  *   a new action is closed to tokens until a line here opens it.
  */
@@ -36,6 +37,8 @@ export function authorize(principal: Principal, action: Action, resource: Resour
     return (SESSION_ACTIONS as readonly string[]).includes(action) && resource.sessionId !== undefined && principal.sessionId === resource.sessionId;
   }
   if ((NEVER_BY_TOKEN as readonly string[]).includes(action)) return false;
+  // A token whose changes to workflows need review may propose drafts, and may not write workflows or the shelf itself.
+  if (action === 'workflows.write' && principal.reviewWorkflows) return false;
   const scope = scopeFor(action);
   return scope !== null && principal.scopes.includes(scope);
 }
