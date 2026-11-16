@@ -217,7 +217,8 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await expect(outputLine(page, 'second-2')).toHaveCount(1);
 
   // Renaming a tab, and going back with the browser.
-  await tabs.nth(1).dblclick();
+  // On the name: the tab also holds its own buttons, which are not for renaming.
+  await tabs.nth(1).locator('.tab-name').dblclick();
   await page.getByRole('textbox', { name: 'Canvas name' }).fill('Deploys');
   await page.keyboard.press('Enter');
   await expect(tabs.nth(1)).toContainText('Deploys');
@@ -1673,12 +1674,13 @@ test('messages: the owner writes to a terminal, its agent reads and answers, and
   await expect(row(first).getByTestId('message-mark')).toHaveCount(0);
   expect(await inTerminal(first, `reply ${sentId} "On main."`)).toContain('Sent to your owner');
   await expect(row(first).getByTestId('message-mark')).toHaveText('✉ 1 for you');
-  await expect(page.getByTestId('attention-queue')).toHaveText('1 waiting');
+  // It joins the queue of what waits for the owner (other tests' terminals may be in it too).
+  await expect(page.getByTestId('attention-queue')).toHaveAttribute('title', /: 1 for you/);
   await expect(drawer.getByTestId('thread-message')).toHaveCount(2);
   await expect(drawer.getByTestId('thread-message').nth(1)).toContainText('On main.');
   await drawer.getByTestId('thread-mark-read').click();
   await expect(row(first).getByTestId('message-mark')).toHaveCount(0);
-  await expect(page.getByTestId('attention-queue')).toHaveCount(0);
+  await expect.poll(async () => ((await page.getByTestId('attention-queue').count()) === 0 ? '' : ((await page.getByTestId('attention-queue').getAttribute('title')) ?? ''))).not.toMatch(/: 1 for you/);
 
   // The owner answers from the drawer.
   await drawer.getByTestId('thread-text').fill('Good. Go on.');
