@@ -680,3 +680,154 @@ test('a workflow made from a template moves a terminal through its elements', as
   await copy.getByTestId('workflow-remove-confirm').click();
   await expect(screen.getByTestId('workflow-row')).toHaveCount(1);
 });
+
+test('an element written by an agent is reviewed, accepted, run by itself, and its checklist ticked', async ({ page }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  await page.getByRole('button', { name: 'New canvas' }).click();
+  await expect(page.getByTestId('terminal-node')).toHaveCount(0);
+  const origin = new URL(page.url()).origin;
+
+  // A terminal that stands in for an agent's: the test types the commands an agent would run.
+  await page.getByRole('button', { name: 'New terminal' }).click();
+  await expect(page.getByTestId('terminal-node')).toHaveCount(1);
+  await expect(page.locator('.xterm-rows')).toHaveText(/\S/);
+  const sessionId = (await page.getByTestId('list-row').getAttribute('data-session')) ?? '';
+  // It says an agent runs in it, so that it can be asked.
+  expect((await page.request.put(`/v1/sessions/${sessionId}/agent`, { headers: { origin }, data: { kind: 'claude-code', conversationId: null } })).status()).toBe(200);
+
+  // What the stand-in agent will hand in: first too long, then as asked.
+  const work = mkdtempSync(path.join(tmpdir(), 'aubergine-e2e-draft-'));
+  const element = { name: 'Collect my to-dos', instructions: 'Read the team chat and write down, at great length, everything anyone asked of me.', doneWhen: 'Every request is on the list.', needs: [{ kind: 'mcp', name: 'team chat' }], produces: 'checklist' };
+  writeFileSync(path.join(work, 'first.json'), JSON.stringify(element));
+  writeFileSync(path.join(work, 'second.json'), JSON.stringify({ ...element, instructions: 'List what people asked me to do in the team chat.' }));
+  writeFileSync(path.join(work, 'list.json'), JSON.stringify({ items: [{ text: 'Review the retry change' }, { text: 'Answer about the release date', detail: 'Asked twice.' }, { text: 'Book the room' }] }));
+  const typeLine = async (line: string): Promise<void> => {
+    await page.getByTestId('node-body').click();
+    await page.keyboard.type(line);
+    await page.keyboard.press('Enter');
+  };
+  const aubergine = '"$AUBERGINE_BIN/aubergine"';
+
+  // The owner describes what they want.
+  await page.getByTestId('toolbar-workflows').click();
+  await page.getByTestId('describe-element').click();
+  const describe = page.getByTestId('describe-dialog');
+  await describe.getByTestId('describe-text').fill('Give me a to-do list from the team chat: zebra-crossing.');
+  await expect(describe.getByTestId('describe-target')).toContainText('The agent in');
+  await describe.getByTestId('describe-send').click();
+  await expect(describe.getByTestId('describe-sent')).toBeVisible();
+  await describe.getByRole('button', { name: 'Done' }).click();
+  await page.getByTestId('workflows-screen').getByRole('button', { name: 'Close' }).click();
+  // Nothing of the description was typed into the terminal.
+  await expect(page.locator('.xterm-rows')).not.toContainText('zebra-crossing');
+
+  // The agent reads the request with the command, and hands in a draft.
+  await typeLine(`${aubergine} workflow brief | head -8`);
+  await expect(page.locator('.xterm-rows')).toContainText('zebra-crossing', { timeout: 20_000 });
+  await typeLine(`clear; ${aubergine} element propose --file ${path.join(work, 'first.json')}`);
+  await expect(page.locator('.xterm-rows')).toContainText('Handed in the element as a draft', { timeout: 20_000 });
+
+  // It waits for the owner: read as an agent would be told it.
+  await page.keyboard.press(process.platform === 'darwin' ? 'Control+Meta+.' : 'Control+Shift+.');
+  await page.getByTestId('drafts-waiting').click();
+  const review = page.getByTestId('review-screen');
+  await expect(review.getByTestId('review-title')).toHaveText('Collect my to-dos');
+  await expect(review.getByTestId('review-origin')).toContainText('An element, from the agent in');
+  await expect(review.getByTestId('review-needs')).toContainText('an MCP server: team chat');
+  await expect(review.getByTestId('review-text')).toContainText('Element 1 of 1: Collect my to-dos');
+  await expect(review.getByTestId('review-text')).toContainText('at great length');
+  await expect(review.getByTestId('review-text')).toContainText('This element produces a checklist.');
+  // It is not a workflow, and not on the shelf: nothing can run it.
+  const workflowNames = async (): Promise<string[]> => (await (await page.request.get('/v1/workflows')).json()).items.map((w: { name: string }) => w.name);
+  const before = await workflowNames();
+  expect(before).not.toContain('Collect my to-dos');
+  expect((await (await page.request.get('/v1/elements')).json()).items).toEqual([]);
+
+  // Sent back with a comment; the agent reads it with the command and revises.
+  await review.getByTestId('review-send-back').click();
+  await review.getByTestId('review-comment').fill('Shorter please: quokka.');
+  await review.getByTestId('review-send-back-confirm').click();
+  await expect(review.getByTestId('review-row')).toHaveAttribute('data-state', 'returned');
+  await expect(review.getByTestId('review-accept')).toHaveCount(0);
+  await review.getByTestId('review-close').click();
+  await expect(page.locator('.xterm-rows')).not.toContainText('quokka');
+  await typeLine(`clear; ${aubergine} workflow brief | grep -A2 'sent back'`);
+  await expect(page.locator('.xterm-rows')).toContainText('Shorter please: quokka.', { timeout: 20_000 });
+  await typeLine(`clear; ${aubergine} element propose --file ${path.join(work, 'second.json')}`);
+  await expect(page.locator('.xterm-rows')).toContainText('as a draft (version 2)', { timeout: 20_000 });
+
+  // The new version, with what changed; then accepted.
+  await page.keyboard.press(process.platform === 'darwin' ? 'Control+Meta+.' : 'Control+Shift+.');
+  await page.getByTestId('drafts-waiting').click();
+  await expect(review.getByTestId('review-origin')).toContainText('version 2');
+  await review.getByTestId('review-changes').click();
+  await expect(review.getByTestId('review-diff').locator('.diff-added')).toContainText('List what people asked me to do in the team chat.');
+  await expect(review.getByTestId('review-diff').locator('.diff-removed')).toContainText('at great length');
+  await review.getByTestId('review-changes').click();
+  await review.getByTestId('review-accept').click();
+  await expect(review.getByTestId('review-empty')).toBeVisible();
+  await review.getByTestId('review-close').click();
+  await expect(page.getByTestId('drafts-waiting')).toHaveCount(0);
+
+  // It is on the shelf. Run it by itself on the terminal: the dialog says what it needs.
+  await page.getByTestId('list-row').click();
+  await page.getByTestId('toolbar-workflows').click();
+  const shelfRow = page.locator('[data-testid="shelf-row"][data-element="Collect my to-dos"]');
+  await expect(shelfRow).toContainText('produces a checklist');
+  await shelfRow.getByTestId('shelf-run').click();
+  const dialog = page.getByTestId('run-dialog');
+  await expect(dialog.getByTestId('run-needs')).toContainText('an MCP server: team chat');
+  await expect(dialog.getByTestId('run-preview')).toContainText('This element produces a checklist.');
+  await dialog.getByTestId('run-start').click();
+  const strip = page.getByTestId('run-strip');
+  await expect(strip).toHaveAttribute('data-element', 'collect-my-to-dos');
+  // No workflow was added for it.
+  expect(await workflowNames()).toEqual(before);
+  const run = page.getByTestId('run-view');
+  if (await run.count()) await run.getByTestId('run-view-close').click();
+
+  // Done without the checklist is refused, with what is expected; with it, the run is over.
+  await typeLine(`clear; ${aubergine} workflow done --note nothing | head -3`);
+  await expect(page.locator('.xterm-rows')).toContainText('produces a checklist, and none was handed in', { timeout: 20_000 });
+  await expect(strip).toHaveAttribute('data-element', 'collect-my-to-dos');
+  await typeLine(`clear; ${aubergine} workflow done --note "Three requests." --output ${path.join(work, 'list.json')}`);
+  await expect(strip).toHaveCount(0, { timeout: 20_000 });
+
+  // The owner reads the list in the browser and ticks what they choose.
+  await page.keyboard.press(process.platform === 'darwin' ? 'Control+Meta+.' : 'Control+Shift+.');
+  await page.getByTestId('ended-row').first().click();
+  await expect(run).toHaveAttribute('data-status', 'finished');
+  const items = run.getByTestId('checklist-item');
+  await expect(items).toHaveCount(3);
+  await expect(items.nth(1)).toContainText('Answer about the release date');
+  await expect(items.nth(1)).toContainText('Asked twice.');
+  await items.nth(0).getByRole('checkbox').click();
+  await items.nth(2).getByRole('checkbox').click();
+  await expect(items.nth(0)).toHaveAttribute('data-ticked', 'true');
+  await expect(items.nth(2)).toHaveAttribute('data-ticked', 'true');
+  await expect(items.nth(1)).toHaveAttribute('data-ticked', 'false');
+
+  // The ticks are kept: they are there after a reload.
+  await page.reload();
+  await page.getByTestId('ended-row').first().click();
+  await expect(run.getByTestId('checklist-item').nth(0)).toHaveAttribute('data-ticked', 'true');
+  await expect(run.getByTestId('checklist-item').nth(1)).toHaveAttribute('data-ticked', 'false');
+  await expect(run.getByTestId('checklist-item').nth(2)).toHaveAttribute('data-ticked', 'true');
+  await run.getByTestId('run-view-close').click();
+
+  // A long text is not accepted before all of it has been shown.
+  const long = { element: { name: 'A long one', instructions: Array.from({ length: 90 }, (_, n) => `Line ${n + 1} of the instructions.`).join('\n') } };
+  expect((await page.request.post('/v1/drafts', { headers: { origin }, data: long })).status()).toBe(201);
+  await page.getByTestId('drafts-waiting').click();
+  await expect(review.getByTestId('review-title')).toHaveText('A long one');
+  await expect(review.getByTestId('review-accept')).toBeDisabled();
+  await expect(review.getByTestId('review-text')).not.toContainText('Line 90 of the instructions.');
+  await review.getByTestId('review-show-all').click();
+  await expect(review.getByTestId('review-text')).toContainText('Line 90 of the instructions.');
+  await expect(review.getByTestId('review-accept')).toBeEnabled();
+  await review.getByTestId('review-discard').click();
+  await expect(review.getByTestId('review-empty')).toBeVisible();
+  rmSync(work, { recursive: true, force: true });
+});

@@ -72,12 +72,18 @@ export interface AppStore {
   /** The workflow open in the editor. */
   editingWorkflow: string | null;
   /** The "Run workflow" dialog: on a session, or on a new agent session (`sessionId` null). */
-  startingRun: { sessionId: string | null; workflowId?: string } | null;
+  startingRun: { sessionId: string | null; workflowId?: string; elementId?: string } | null;
+  /** "Describe an element…" or "Describe a workflow…": asking an agent for a draft. */
+  describing: 'workflow' | 'element' | null;
+  /** The shelf element open in its editor; `new` for one being made. */
+  editingElement: string | null;
   /** The run whose view is open. */
   viewingRun: string | null;
 
   editWorkflow: (workflowId: string | null) => void;
-  startRun: (starting: { sessionId: string | null; workflowId?: string } | null) => void;
+  startRun: (starting: { sessionId: string | null; workflowId?: string; elementId?: string } | null) => void;
+  describe: (kind: 'workflow' | 'element' | null) => void;
+  editElement: (elementId: string | null) => void;
   viewRun: (runId: string | null) => void;
   load: () => Promise<void>;
   apply: (event: ChangeEvent) => void;
@@ -108,7 +114,7 @@ export interface AppStore {
 /** The longest a terminal is waited for after it was asked to take the keyboard. */
 const SETTLE_MS = 700;
 
-export type Panel = 'parked' | 'outside' | 'shortcuts' | 'tokens' | 'activity' | 'workflows';
+export type Panel = 'parked' | 'outside' | 'shortcuts' | 'tokens' | 'activity' | 'workflows' | 'review';
 export interface Ask {
   kind: 'rename-session' | 'rename-canvas' | 'note' | 'move' | 'tags' | 'list-search';
   /** The session or canvas it is about. */
@@ -143,6 +149,10 @@ export const useApp = create<AppStore>((set, get) => ({
 
   editWorkflow: (editingWorkflow) => set({ editingWorkflow }),
   startRun: (startingRun) => set({ startingRun }),
+  describing: null,
+  editingElement: null,
+  describe: (describing) => set({ describing }),
+  editElement: (editingElement) => set({ editingElement }),
   viewRun: (viewingRun) => set({ viewingRun }),
 
   load: async () => {

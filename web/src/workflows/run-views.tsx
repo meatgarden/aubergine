@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { reportRun } from './actions';
-import { elementView, registerRunView, type RunViewProps } from './registries';
+import { reportRun, tickItem } from './actions';
+import { elementView, outputView, registerRunView, type RunViewProps } from './registries';
 import { STATE_MARK, actorWord, took } from './run-model';
 
 /** The run from top to bottom: every element with its state, how long it took, who moved it and the note; the current one open. */
@@ -15,6 +15,7 @@ function Pipeline({ picture, elements, live, now }: RunViewProps) {
         const current = segment.id === run.currentElementId;
         const shown = current || open === segment.id;
         const Detail = element ? elementView(element.kind)?.Detail : undefined;
+        const Output = outputView(segment.produces)?.View;
         const time = took(entry?.startedAt ?? null, entry?.finishedAt ?? null, now);
         return (
           <li key={segment.id} className={`run-step is-${segment.state}${current ? ' is-current' : ''}`} data-testid="run-step" data-element={segment.id} data-state={segment.state}>
@@ -37,6 +38,11 @@ function Pipeline({ picture, elements, live, now }: RunViewProps) {
               )}
             </div>
             {entry?.note && <p className="run-step-note">{entry.note}</p>}
+            {Output && entry && entry.output !== null && entry.output !== undefined && (
+              <div className="run-step-output">
+                <Output value={entry.output} ticks={entry.ticks} onTick={(item, ticked) => void tickItem(run.id, segment.id, item, ticked)} />
+              </div>
+            )}
             {shown && element && (Detail ? <Detail element={element} inputs={run.inputs} /> : <p className="sheet-note">This element is of a kind this version cannot show: {element.kind}.</p>)}
           </li>
         );

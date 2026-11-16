@@ -40,6 +40,15 @@ export function RunViewDialog() {
       cancelled = true;
     };
   }, [runId, live === null]); // eslint-disable-line react-hooks/exhaustive-deps -- only whether it is live matters, not each move
+  // A run that is over was changed (an item ticked): show what the server answered.
+  useEffect(() => {
+    const onRead = (event: Event): void => {
+      const detail = (event as CustomEvent<RunDetail>).detail;
+      if (detail.run.id === runId) setEnded(detail);
+    };
+    window.addEventListener('aubergine:run-read', onRead);
+    return () => window.removeEventListener('aubergine:run-read', onRead);
+  }, [runId]);
   useEffect(() => {
     setNote('');
     setStopping(false);

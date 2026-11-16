@@ -37,6 +37,11 @@ import { RunDialog } from './workflows/RunDialog';
 import { RunViewDialog } from './workflows/RunViewDialog';
 import { WorkflowEditor } from './workflows/WorkflowEditor';
 import { WorkflowsScreen } from './workflows/WorkflowsScreen';
+import { ReviewScreen } from './review/ReviewScreen';
+import './review/drafts-source';
+import { DescribeDialog } from './workflows/DescribeDialog';
+import { ShelfEditor } from './workflows/ShelfEditor';
+import './workflows/output-views';
 import './workflows/element-views';
 import './workflows/run-views';
 import { FrameNode, type FrameFlowNode } from './FrameNode';
@@ -73,6 +78,17 @@ function toFrameNode(frame: Frame, previous: CanvasNode | undefined): FrameFlowN
     // Frames sit behind the terminals.
     zIndex: -1,
   };
+}
+
+/** Shown only when something an agent or a program wrote is waiting to be read. */
+function DraftsWaiting() {
+  const waiting = useApp((s) => (s.app?.drafts ?? []).filter((d) => d.status === 'waiting').length);
+  if (waiting === 0) return null;
+  return (
+    <button type="button" className="attention-button" onClick={() => runCommand('drafts.review')} title="Drafts by agents and programs, waiting for you to read them" data-testid="drafts-waiting">
+      {waiting} to review
+    </button>
+  );
 }
 
 export function Canvas() {
@@ -411,6 +427,7 @@ export function Canvas() {
           <button type="button" className="quiet" onClick={() => runCommand('workflows.open')} title={hint('workflows.open', 'Workflows: make, change and run them')} data-testid="toolbar-workflows">
             Workflows
           </button>
+          <DraftsWaiting />
           <button type="button" className="quiet" onClick={() => runCommand('frame.new')} title={hint('frame.new', 'Add a frame to group terminals')}>
             + Frame
           </button>
@@ -455,6 +472,9 @@ export function Canvas() {
       <ActivityScreen />
       <WorkflowsScreen />
       <WorkflowEditor />
+      <ShelfEditor />
+      <DescribeDialog />
+      <ReviewScreen />
       <RunDialog />
       <RunViewDialog />
     </div>

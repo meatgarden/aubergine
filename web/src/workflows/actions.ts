@@ -15,3 +15,15 @@ export async function reportRun(runId: string, report: ReportRunRequest): Promis
     return false;
   }
 }
+
+/** Ticks or unticks an item of what an element produced. For a run that is over, whoever shows it is told to read it again. */
+export async function tickItem(runId: string, elementId: string, item: number, ticked: boolean): Promise<void> {
+  useApp.getState().setNotice(null);
+  try {
+    const next = await api.tickRunItem(runId, { elementId, item, ticked });
+    if (isLive(next.run.status)) useApp.getState().apply({ type: 'run.moved', run: next.run as never });
+    else window.dispatchEvent(new CustomEvent('aubergine:run-read', { detail: next }));
+  } catch (error) {
+    useApp.getState().setNotice(`Could not tick that: ${(error as Error).message}`);
+  }
+}

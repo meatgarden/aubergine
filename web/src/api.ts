@@ -90,7 +90,7 @@ export const api = {
   updateCanvas: (canvasId: string, request: UpdateCanvasRequest) => v1.updateCanvas({ canvasId, body: request }),
   /** Closes a canvas. Its sessions are moved to `to`, or parked when `to` is null. */
   closeCanvas: (canvasId: string, to: string | null) => v1.closeCanvas({ canvasId, query: to ? { sessions: 'move', to } : { sessions: 'park' } }),
-  createToken: (request: { name: string; scopes: Scope[]; expiresInDays?: number }) => v1.createToken({ body: request }),
+  createToken: (request: { name: string; scopes: Scope[]; expiresInDays?: number; reviewWorkflowChanges?: boolean }) => v1.createToken({ body: request }),
   revokeToken: (tokenId: string) => v1.revokeToken({ tokenId }),
   getActivity: (query: { tokenId?: string | undefined; cursor?: string | undefined; limit?: number }) =>
     v1.listActivity({ query: { limit: query.limit ?? 50, ...(query.tokenId ? { tokenId: query.tokenId } : {}), ...(query.cursor ? { cursor: query.cursor } : {}) } }),
@@ -105,6 +105,20 @@ export const api = {
     v1.startSessionRun({ sessionId, body: { replace: false, kickoff: true, ...body } }),
   reportRun: (runId: string, body: Parameters<typeof v1.reportRun>[0]['body']) => v1.reportRun({ runId, body }),
   getRun: (runId: string) => v1.getRun({ runId }),
+  /** The runs that ended most recently, from the archive. */
+  listEndedRuns: (limit: number) => v1.listRuns({ query: { status: 'ended', limit } }),
+  tickRunItem: (runId: string, body: { elementId: string; item: number; ticked: boolean }) => v1.tickRunItem({ runId, body }),
+  getDraft: (draftId: string) => v1.getDraft({ draftId }),
+  acceptDraft: (draftId: string, body: Parameters<typeof v1.acceptDraft>[0]['body'] = {}) => v1.acceptDraft({ draftId, body }),
+  returnDraft: (draftId: string, comment: string) => v1.returnDraft({ draftId, body: { comment } }),
+  discardDraft: (draftId: string) => v1.discardDraft({ draftId }),
+  requestDraft: (body: { kind: 'workflow' | 'element'; description: string; sessionId: string; tell?: boolean }) => v1.requestDraft({ body: { tell: true, ...body } }),
+  createElement: (body: Parameters<typeof v1.createElement>[0]['body']) => v1.createElement({ body }),
+  updateElement: (elementId: string, body: Parameters<typeof v1.updateElement>[0]['body']) => v1.updateElement({ elementId, body }),
+  copyElement: (elementId: string) => v1.copyElement({ elementId }),
+  removeElement: (elementId: string) => v1.removeElement({ elementId }),
+  runElement: (elementId: string, body: { sessionId: string; inputs: Record<string, string>; replace?: boolean; kickoff?: boolean }) =>
+    v1.runElement({ elementId, body: { replace: false, kickoff: true, ...body } }),
   moveSession: (sessionId: string, canvasId: string) => v1.moveSession({ sessionId, body: { canvasId } }),
   resumeAgent: (sessionId: string) => call(Session, 'POST', paths.resumeAgent(sessionId), {}),
   seenSession: (sessionId: string) => call(Session, 'POST', paths.seenSession(sessionId), {}),

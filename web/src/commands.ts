@@ -525,6 +525,30 @@ export const COMMANDS: readonly Command[] = [
     },
   },
   {
+    id: 'drafts.review',
+    title: 'Review drafts…',
+    description: 'Shows what agents and programs proposed: read each as an agent would be told it, then accept, send back or discard.',
+    group: 'Panels',
+    available: always,
+    run: (state) => state.togglePanel('review'),
+  },
+  {
+    id: 'workflow.describe',
+    title: 'Describe a workflow…',
+    description: 'Asks an agent to write a workflow from your description. What it writes arrives as a draft for you to read.',
+    group: 'Panels',
+    available: always,
+    run: (state) => state.describe('workflow'),
+  },
+  {
+    id: 'element.describe',
+    title: 'Describe an element…',
+    description: 'Asks an agent to write one element from your description. What it writes arrives as a draft for you to read.',
+    group: 'Panels',
+    available: always,
+    run: (state) => state.describe('element'),
+  },
+  {
     id: 'shortcuts.show',
     title: 'Show shortcuts',
     description: 'Shows every command and its keys.',
@@ -537,9 +561,11 @@ export const COMMANDS: readonly Command[] = [
     title: 'Close panels',
     description: 'Closes whatever panel is open; else returns the keyboard from a button to the canvas; else clears the selection.',
     group: 'Panels',
-    available: (state) => state.picker || state.viewingRun !== null || state.startingRun !== null || state.editingWorkflow !== null || state.panel !== null || state.drawer !== null || state.selected !== null || onControl(),
+    available: (state) => state.picker || state.describing !== null || state.editingElement !== null || state.viewingRun !== null || state.startingRun !== null || state.editingWorkflow !== null || state.panel !== null || state.drawer !== null || state.selected !== null || onControl(),
     run: (state) => {
       if (state.picker) state.setPicker(false);
+      else if (state.describing !== null) state.describe(null);
+      else if (state.editingElement !== null) state.editElement(null);
       else if (state.startingRun !== null) state.startRun(null);
       else if (state.viewingRun !== null) state.viewRun(null);
       else if (state.editingWorkflow !== null) state.editWorkflow(null);

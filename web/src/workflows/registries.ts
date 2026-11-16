@@ -1,5 +1,5 @@
 import type { ComponentType } from 'react';
-import type { Element } from '@aubergine/shared';
+import type { Element, Tick } from '@aubergine/shared';
 import type { RunPicture } from './run-model';
 
 /**
@@ -57,3 +57,23 @@ export function unregisterRunView(id: string): void {
 export function runViewList(): RunView[] {
   return [...runViews.values()].sort((a, b) => a.order - b.order || a.id.localeCompare(b.id));
 }
+
+/** How one kind of output is shown: a checklist as a list that can be ticked, and so on. */
+export interface OutputView {
+  kind: string;
+  View: ComponentType<{
+    value: unknown;
+    ticks: readonly Tick[];
+    /** Ticks or unticks an item; absent where ticking is not possible. */
+    onTick?: (item: number, ticked: boolean) => void;
+  }>;
+}
+
+const outputViews = new Map<string, OutputView>();
+export function registerOutputView(view: OutputView): void {
+  outputViews.set(view.kind, view);
+}
+export function unregisterOutputView(kind: string): void {
+  outputViews.delete(kind);
+}
+export const outputView = (kind: string): OutputView | undefined => outputViews.get(kind);

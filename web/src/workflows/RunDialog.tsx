@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { inputProblems, kickoffLine, latestVersion, previewRun } from '@aubergine/shared';
+import { inputProblems, kickoffLine, latestVersion, needWords, needsOf, previewRun, versionOfProposal } from '@aubergine/shared';
 import { api } from '../api';
 import { canvasActions } from '../canvas-actions';
 import { runCommand } from '../commands';
@@ -17,13 +17,14 @@ export function RunDialog() {
   const workflows = useApp((s) => s.app?.workflows);
   const session = useApp((s) => (starting?.sessionId ? (s.app?.sessions.find((x) => x.id === starting.sessionId) ?? null) : null));
   const existing = useApp((s) => (starting?.sessionId ? runOfSession(s.app, starting.sessionId) : null));
+  const shelfItem = useApp((s) => (starting?.elementId ? (s.app?.shelf.find((e) => e.id === starting.elementId) ?? null) : null));
   const [workflowId, setWorkflowId] = useState<string | null>(null);
   const [inputs, setInputs] = useState<Record<string, string>>({});
   const [replace, setReplace] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const list = useMemo(() => [...(workflows ?? [])].sort((a, b) => a.name.localeCompare(b.name)), [workflows]);
+  const list = useMemo(() => [...(workflows ?? [])].filter((w) => w.listed).sort((a, b) => a.name.localeCompare(b.name)), [workflows]);
   useEffect(() => {
     if (!starting) return;
     setWorkflowId(starting.workflowId ?? null);
@@ -35,15 +36,20 @@ export function RunDialog() {
 
   if (!starting) return null;
   const close = (): void => useApp.getState().startRun(null);
-  const workflow = list.find((w) => w.id === workflowId) ?? list[0] ?? null;
-  const version = workflow ? latestVersion(workflow) : null;
+  const alone = starting.elementId !== undefined;
+  const workflow = alone ? null : (list.find((w) => w.id === workflowId) ?? list[0] ?? null);
+  // One element by itself is shown, and asked about, as the workflow of one that it will be run as.
+  const aloneVersion = shelfItem ? versionOfProposal({ workflow: null, element: shelfItem.element }) : null;
+  const usesTask = shelfItem ? `${shelfItem.element.instructions}\n${shelfItem.element.doneWhen}`.includes('{{task}}') : false;
+  const version = alone ? (aloneVersion ? { ...aloneVersion, inputs: usesTask ? aloneVersion.inputs.map((i) => ({ ...i, required: true })) : [] } : null) : workflow ? latestVersion(workflow) : null;
+  const needs = version ? needsOf(version.elements) : [];
   const given = version ? Object.fromEntries(version.inputs.flatMap((input) => ((inputs[input.key] ?? '').trim() ? [[input.key, (inputs[input.key] as string).trim()]] : []))) : {};
   const problems = version ? inputProblems(version, given) : [];
   const onNewAgent = starting.sessionId === null;
   const blockedByRun = existing !== null && !replace;
 
   const start = async (): Promise<void> => {
-    if (!workflow || !version) return;
+    if (!version || (!workflow && !shelfItem)) return;
     setBusy(true);
     setError(null);
     try {
@@ -53,9 +59,11 @@ export function RunDialog() {
         sessionId = (await canvasActions.get()?.addTerminal('claude-code', [kickoffLine()])) ?? null;
         if (sessionId === null) throw new Error('The terminal could not be started.');
       }
-      const started = await api.startRun(sessionId, { workflowId: workflow.id, inputs: given, replace, kickoff: !onNewAgent });
+      const started = shelfItem
+        ? await api.runElement(shelfItem.id, { sessionId, inputs: given, replace, kickoff: !onNewAgent })
+        : await api.startRun(sessionId, { workflowId: (workflow as { id: string }).id, inputs: given, replace, kickoff: !onNewAgent });
       const store = useApp.getState();
-      store.apply({ type: 'run.started', run: started.run });
+      store.apply({ type: 'run.started', run: started.run as never });
       store.startRun(null);
       // In a plain shell nothing was typed: show the run, where the buttons and the line for an agent are.
       if (!onNewAgent && !started.kickoffTyped) store.viewRun(started.run.id);
@@ -80,13 +88,13 @@ export function RunDialog() {
     >
       <div className="dialog sheet run-dialog" role="dialog" aria-label="Run a workflow" data-testid="run-dialog">
         <header className="sheet-head">
-          <h2>{onNewAgent ? 'New Claude Code session on a workflow' : `Run a workflow on “${session?.name ?? 'this terminal'}”`}</h2>
+          <h2>{alone ? `Run “${shelfItem?.element.name ?? 'an element'}” by itself${onNewAgent ? ' on a new Claude Code session' : ` on “${session?.name ?? 'this terminal'}”`}` : onNewAgent ? 'New Claude Code session on a workflow' : `Run a workflow on “${session?.name ?? 'this terminal'}”`}</h2>
           <button type="button" className="quiet" onClick={close}>
             Close
           </button>
         </header>
 
-        {list.length === 0 ? (
+        {!alone && list.length === 0 ? (
           <>
             <p>There are no workflows yet. Make one from a template first.</p>
             <div className="dialog-actions">
@@ -102,22 +110,31 @@ export function RunDialog() {
             </div>
           </>
         ) : (
-          workflow &&
           version && (
             <>
               <div className="run-dialog-grid">
                 <div className="run-dialog-form">
-                  <label className="wf-field">
-                    <span>Workflow</span>
-                    <select value={workflow.id} onChange={(e) => setWorkflowId(e.target.value)} autoFocus data-testid="run-workflow">
-                      {list.map((w) => (
-                        <option key={w.id} value={w.id}>
-                          {w.name}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-                  <p className="sheet-note">{version.elements.map((e) => e.name).join(' → ')}</p>
+                  {workflow && (
+                    <>
+                      <label className="wf-field">
+                        <span>Workflow</span>
+                        <select value={workflow.id} onChange={(e) => setWorkflowId(e.target.value)} autoFocus data-testid="run-workflow">
+                          {list.map((w) => (
+                            <option key={w.id} value={w.id}>
+                              {w.name}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+                      <p className="sheet-note">{version.elements.map((e) => e.name).join(' → ')}</p>
+                    </>
+                  )}
+                  {needs.length > 0 && (
+                    <p className="run-needs" data-testid="run-needs">
+                      <span className="wf-label">Whoever does this needs</span>
+                      {needs.map(needWords).join('; ')}
+                    </p>
+                  )}
                   {version.inputs.map((input) => (
                     <label key={input.key} className="wf-field">
                       <span>

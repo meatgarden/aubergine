@@ -76,6 +76,9 @@ export const COMMAND_IDS = [
   'workflow.run',
   'workflow.runOnAgent',
   'workflow.view',
+  'drafts.review',
+  'workflow.describe',
+  'element.describe',
   'shortcuts.show',
   'panels.close',
 ] as const;
