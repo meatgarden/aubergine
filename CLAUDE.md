@@ -12,7 +12,7 @@ shared/   wire protocol (zod schemas), entity types, settings schema, the change
           the declarations of every /v1 route (routes.ts), the scope table (access.ts), openapi.ts;
           workflows.ts (entities, element kinds, the step function, what an agent is told, the file
           format), workflow-api.ts (bodies and answers), workflow-templates.ts,
-          outputs.ts (output kinds), drafts.ts (drafts, the shelf, what a reviewer reads, the brief), repository.ts, terminal.ts, demo.ts (the labels that mark what the demo made)
+          outputs.ts (output kinds), drafts.ts (drafts, the shelf, what a reviewer reads, the brief), repository.ts, terminal.ts, demo.ts (the labels that mark what the demo made), recap.ts, away.ts, history.ts
 daemon/   Fastify HTTP + WebSocket server, tmux session runtime, JSON store, CLI, start-at-login,
           shell integration (src/shell/), agent support (src/agents/), authorization (src/auth.ts),
           migration of existing terminals (src/migrate/), including reading agent
@@ -27,7 +27,9 @@ daemon/   Fastify HTTP + WebSocket server, tmux session runtime, JSON store, CLI
           agents/agent-tools.ts (the file an agent is pointed at, and the token made for one session),
           demo.ts (the demo: make, status, remove) and demo/ (the stand-in scripts and the made-up project),
           agents/inventory.ts (the seam for reading how an agent is set up, and what Aubergine added),
-          agents/claude-inventory.ts (the only reader of the agent's configuration), agents/names-only.ts
+          agents/claude-inventory.ts (the only reader of the agent's configuration), agents/names-only.ts,
+          away.ts (what changed while the owner was away), agents/history.ts (the seam for past conversations)
+          and agents/claude-history.ts (the only reader of conversation records)
 client/   a typed client for the public API, generated from its description; no dependencies;
           may not import from any other package
 mcp/      the MCP server (`aubergine mcp`): the public API as tools over standard input and output;
@@ -39,7 +41,7 @@ web/      Vite + React + @xyflow/react + @xterm/xterm, Zustand for state; the ta
           commands.ts, shortcuts.ts, canvas-actions.ts,
           spatial.ts, palette.ts, and the development-only key-tester.html
           workflows/ (run-model.ts, editor-model.ts, registries.ts, the screens), review/ (registry.ts, ReviewScreen.tsx, drafts-source.ts, repository-source.ts) and
-          panel/sections/workflows.tsx, tour/ (registry.ts, steps.ts, Tour.tsx, tour-store.ts, placement.ts), EmptyCanvas.tsx, HelpPanel.tsx, InventoryPanel.tsx
+          panel/sections/workflows.tsx, tour/ (registry.ts, steps.ts, Tour.tsx, tour-store.ts, placement.ts), EmptyCanvas.tsx, HelpPanel.tsx, InventoryPanel.tsx, Recap.tsx, Away.tsx, HistoryPanel.tsx
 docs/     keys.md: what is known about which keys reach a page; api.md: the API reference (generated)
 e2e/      Playwright smoke test
 install.sh  the one-line installer; its commands are in daemon/src/cli/install.ts (start, open,
@@ -83,7 +85,7 @@ These are the only abstractions in the code base. Each has exactly one implement
 - **Element kinds and run views are registered.** Nothing compares a kind to a name. A new kind is `registerElementKind` in `shared/` and `registerElementView` in the web app; another way of looking at a run is `registerRunView`.
 - **Finished runs are not state.** They go to the archive through the `RunArchive` interface, into the archive first and out of the state second, and are read a page at a time. The browser holds live runs only.
 - **A report is one event about one run.** Nothing rescans runs on a report. The terminal list is worked out again for a run only while a filter that looks at runs is on (`usesRuns`); a strip listens to its own run.
-- **Only fixed sentences are typed.** `KICKOFF_LINE` and `BRIEF_LINE` in `shared/src/workflows.ts` are the only things `Sessions.tell` types for workflows, and the only text added to an agent's launch line. Nothing stored is in them: not a name, not a description, not a comment. What an agent needs to know it reads with a command. A test collects every line typed and compares it with those two. Reporting on a run never types into a terminal, and a token cannot cause typing.
+- **Only fixed sentences are typed.** `KICKOFF_LINE`, `BRIEF_LINE` and `RECAP_LINE` in `shared/` are the only things `Sessions.tell` types for workflows, drafts and recaps, and the only text added to an agent's launch line. Nothing stored is in them: not a name, not a description, not a comment. What an agent needs to know it reads with a command. They are typed only for the owner (or, for the kickoff, a token that may type into that session) and only into a terminal an agent runs in. A test collects every line typed and compares it with these. Reporting on a run never types into a terminal.
 - **`aubergine` in sessions.** The launcher is written to `bin/` in the data folder with `stableNodePath()` and goes at the end of a session's `PATH`, never the front; the zsh integration puts it back only when no `aubergine` is found. No startup file is edited.
 - **Workflow files keep what they do not know.** Unknown fields go into `extra` on import and are written out on export; a change to the format needs the round-trip test to pass.
 - **Names are plain text.** A workflow's or element's name passes `PlainName`: one line, no control characters, no characters that reverse text direction. Names are printed in terminals and beside buttons.
@@ -146,6 +148,17 @@ These are the only abstractions in the code base. Each has exactly one implement
 - **Withdrawing is the demo's alone.** `RunArchive.withdraw` and `DraftLog.withdraw` are called only by the demo's removal, with the sessions its labels name. The files still only grow; readers leave withdrawn entries out.
 - **A hint that is said once** is remembered in the browser, and is not shown at all where it cannot be remembered.
 - **The agent's configuration and its documentation change often:** read the current pages before changing `claude-inventory.ts`, and say in the hand-over which version and pages.
+- **A recap has two parts, kept apart.** What Aubergine knows is `recapOf`, a pure function of a session and its runs: no agent, no model, no file. What the agent wrote is the session's `recap`, shown as the agent's words with its time, and "may be out of date" once the terminal has printed since. Do not merge the two or build the first anywhere else.
+- **A session may write its own recap; no API token may.** `recap.own.write` is a session action and nothing else. `recap.ask` is the owner's.
+- **Aubergine calls no model.** A recap is what is known or what the session's own agent wrote. Do not add a summary made by starting an agent or a model call.
+- **"While you were away" is memory, not state and not a log.** A bounded window of moments made from change events; after a restart it says it only knows since then. Never the command that failed, only that one did.
+- **Conversation records are read in one module per agent kind** (`claude-history.ts`), behind `AgentHistory`. It is given a folder, never a path; it never writes, renames or deletes; it starts nothing.
+- **The form of a conversation's lines is not ours.** The product calls it internal and changing. Every line is read as "something that may be a message" by `readLine`; a record none of whose lines is one is "not recognised", never empty. A new field read from a line gets a case in that function's test.
+- **Conversations are the owner's alone.** `history.read` and `history.open` are in `NEVER_BY_TOKEN` and are not session actions: cookie-only routes, nothing under `/v1`, no MCP tool. A session cannot read conversations through Aubergine, not even its own.
+- **Nothing read from a conversation is stored, logged or cached.** A list, a transcript and a search are read when asked for and dropped when the panel closes. Keep the test that searches the data folder and compares the records byte for byte.
+- **A conversation is opened through the launch line**, by an ID that passed `ConversationId` and is kept for that folder, never twice on the canvas without the owner saying so.
+- **A search of conversations is bounded and says when it was cut short.** No index, no copy.
+- **What a conversation says is shown as text**: through `showControl`, in text nodes, no markup drawn, no address made a link.
 - **Canvases.** A session is on at most one canvas; a parked session is on none and remembers where it was (`parkedFrom`). Closing a canvas never ends a shell: the caller says move or park, and the last canvas cannot be closed. Where no canvas is named, `Sessions.canvas(null)` decides (most recently looked at, else first); do not pick a default anywhere else.
 - **Public shapes.** Routes under `/v1` use one error shape, `pageOf` for every list, ignore unknown fields, use ISO times, and take `Idempotency-Key` on creates. Do not add a `/v1` route that departs from these. This API is public: only add to it; never rename or remove.
 - **A `/v1` route is a declaration and a handler.** Add the entry to `ROUTES` and a handler of the same name in `v1.ts`. Do not call `app.get`/`app.post` for anything under `/v1`: a route registered by hand is not in the description, and the tests fail on it. A handler does not decide who may call it and does not parse its own input; the loop does both, in the order parameters, `authorize`, query and body, handler.
@@ -257,6 +270,8 @@ Stage C part 2: the MCP server (`mcp/`, `aubergine mcp`), tools listed by what t
 The first five minutes: `aubergine demo` (a canvas of stand-ins, made and removed whole), the tour (eight registered steps on the demo), the start card of an empty canvas, the Help panel, `aubergine` by itself saying where to begin. Commands also include `tour.start`, `demo.remove` and `help.show`.
 
 How an agent is set up: a read-only list per agent session of MCP servers, plugins, hooks, skills, permission rules and settings files, with where each comes from and what Aubergine added; names only; need marks in the run dialog. Follow-ups from the demo: withdrawn runs and draft records, a handed-in list shown on its terminal, the full-size hint. Commands also include `agent.switchedOn`.
+
+Recaps and past conversations: the recap of a terminal from what is known and from its agent, `aubergine recap`, "while you were away", the list of an agent's past conversations in a folder, a read-only transcript, a bounded search from the palette, opening one or a copy on the canvas, `aubergine history`. Sessions may carry a written recap. Change events also include `session.recap`. Commands also include `agent.askRecap` and `history.open`.
 
 Not built yet: a packaged build without development dependencies, Linux tested, measured key tables for Safari, Firefox, Linux and Windows, publishing the client as a package, moving the remaining `/api/v1` routes onto `/v1`, the workflow library, the board of runs, approvals, branches, a pool of agents, a list of past runs in the browser, waiting for output, changing a token's reach, SQLite, an HTTP transport for the MCP server, presets, a finder agent, recording, bash or fish integration.
 
