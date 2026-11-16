@@ -532,6 +532,77 @@ The palette (⌘K) also searches what terminals have printed, in a **Terminal ou
 
 A terminal is live only while it is on screen and large enough to read. Zoomed far out, a node shows a plain-text picture of its screen, refreshed about once a second; off screen it costs nothing. Either way the shell keeps running.
 
+## Workflows
+
+A workflow is an ordered list of **elements** that an agent goes through one at a time: it reads the current one, does it, reports it done, and is given the next. Each element is a name, some instructions, and one line saying how to tell it is finished. The canvas shows where every terminal stands.
+
+Nothing in a workflow is run by Aubergine. An element is text for whoever does the work, and what moves a run is a report: from the agent, by a command it runs in its terminal, or from you, with a button. So a workflow works with any agent that can run a command, and a plain shell can be on one too, with a person moving it.
+
+### Make one
+
+**Workflows** in the toolbar (or ⌘K, `Workflows`) lists them. Four come as templates to start from:
+
+- **Plan, build, check**
+- **Fix a bug**: reproduce, find the cause, fix, test, summarise
+- **Review a change**: understand, look for problems, report
+- **Specify, design, then build**
+
+**Use** makes an ordinary workflow from a template and opens it in the editor. There you set its name, the text that holds **for every element**, what a run is given when it starts (one input, the task, unless you add more; write `{{task}}` in any text to use it), and the elements: add, remove, rename, and drag them into order. The right-hand side shows exactly what an agent will be told on the element you are editing.
+
+Saving makes a **new version**. A run keeps to the version it started on, so editing a workflow never moves or confuses a run that is going.
+
+### Run one
+
+On a terminal: the **⇶** button in its title bar, or ⌘K, `Run workflow`. Choose the workflow, fill in the task, read what the agent will be told first, and start. If an agent is running in that terminal, Aubergine types one line into it:
+
+```
+You are on the workflow "Fix a bug". Run `aubergine workflow status` to read your current element and follow it. When its "done when" is true, run `aubergine workflow done --note "<what you did>"` and follow what it prints.
+```
+
+From there the agent drives itself: `status` prints the element, and `done` records it and prints the next one, with the note the element before handed over. If no agent is running there, nothing is typed (a shell would try to run the sentence); the run is shown with its buttons, and with that line to give an agent yourself.
+
+On a new agent: the **⇶** button beside **+ Claude Code** starts a Claude Code session that is told about the run in its first prompt.
+
+A terminal is on one run at a time. **Resume agent** on a terminal that is on a run tells the agent about the run again, so it carries on where the run stands.
+
+### Watch it
+
+- The terminal's title bar has a **strip**: one mark per element and the name of the current one. The same is on its row in the side panel.
+- The side panel's **Workflows** section lists every run that is going, on whichever canvas, those that need someone first. The terminal list can be narrowed to terminals **on a workflow**, or by the state of their run.
+- Click a strip or a run for the **run view**: every element with its state, how long it took, who moved it (the agent, you, or a token) and the note handed in; the current element open with its text. Buttons: the current element **is done**, **Go to** any element (back to redo it, or forward, skipping what lies between), **Pause**, **Resume**, **Stop**.
+- A run the agent reports **blocked** puts its terminal in the waiting queue, naming the element and the reason. So does a run that **finishes**.
+- **quiet** on a strip means the terminal has kept printing for five minutes since the last report, so the picture may be behind what is really going on: the agent may have moved on without saying so. The time is `workflows.quietAfterSeconds` in the settings.
+- When a run finishes, a summary (each element and its note) is added to the terminal's notes. Finished and stopped runs leave the list; they are kept in `runs.log` in the data folder and can be read with `GET /v1/runs?status=ended`.
+
+### From the command line
+
+```sh
+aubergine workflow new "Hotfix" --template fix-a-bug
+aubergine workflow run "Hotfix" --session api --input task="the login page rejects valid passwords"
+```
+
+`workflow list`, `show`, `edit`, `copy`, `remove`, `export` and `import` do what they say; see [Command line](#command-line). `export` writes one workflow as a JSON file to pass on, and `import` makes a workflow from such a file. The file has a format number, and fields a version does not know are kept and written out again.
+
+Inside a session that is on a run:
+
+```sh
+aubergine workflow status              # where the run stands and what to do now
+aubergine workflow done --note "…"     # the current element is finished; prints what comes next
+aubergine workflow blocked "…"         # you cannot go on without a person
+aubergine workflow goto <element>      # by name, ID or number
+aubergine workflow pause | resume | stop
+```
+
+### The `aubergine` command inside terminals
+
+An agent can only report if it can run `aubergine`. So every terminal started on the canvas gets a small launcher for the command, kept in the data folder (`bin/aubergine`), at the **end** of its `PATH`. If you have linked the command yourself, yours comes first and is the one used. In zsh the folder is put back after your own startup files have run, in case they rebuild `PATH` from nothing, unless a command of that name is already found. No startup file of yours is edited.
+
+Terminals that were already open when you updated keep the `PATH` they started with. If `aubergine` is not found in one of those, restart its shell (type `exit`, then **Restart here**), or run the launcher by its full path: `bin/aubergine` inside the data folder (the server prints where that is when it starts). Terminals started since also have that folder in `$AUBERGINE_BIN`.
+
+### For programs
+
+Workflows and runs are in the [API](docs/api.md): list, create, change and copy workflows (`workflows:write`), start runs and report on them (`runs:write`), read both (`read`). Reporting on a run does not type into a terminal: a token that starts a run is given the line above in the answer, and nothing is typed. Limits on the size of a workflow are under `workflows` in the settings.
+
 ## Updating from an older version
 
 When a newer version changes how the canvas is saved, the server updates `state.json` in the data folder the first time it starts, and keeps the file as it was beside it (for example `state.json.v1.backup`). To go back to an older version of the code, stop the server and put that copy back as `state.json`.
@@ -552,6 +623,7 @@ Create `config.json` in the data folder (the server prints its location at start
   "defaultFolder": "~/work",
   "agents": { "logPrompts": true, "claudeCommand": "claude" },
   "api": { "rateLimitPerMinute": 600, "maxBodyBytes": 1048576, "activityLogMaxBytes": 5242880 },
+  "workflows": { "maxElements": 50, "maxElementChars": 20000, "quietAfterSeconds": 300 },
   "shortcuts": {},
   "shortcutsInAppWindow": {}
 }
@@ -570,6 +642,7 @@ Create `config.json` in the data folder (the server prints its location at start
   Aubergine adds its own flags (`--settings <file>`, and `--continue` or `--resume <id>`) at the end. If your launcher needs them somewhere else, mark the place with `{flags}`, for example `"mytool run claude {flags} --then-something"`. The line is typed into your shell exactly as you wrote it, so quote it as you would on the command line.
 
 - `api`: limits on calls made with [API tokens](#api-tokens): calls per minute per token, the largest request body, and the size of the activity log. They apply when the server is next started.
+- `workflows`: how many elements a [workflow](#workflows) may have, how long the text of one element (and the text for every element) may be, and after how many seconds of output without a report a run is marked quiet. The two limits apply when the server is next started.
 - `shortcuts`, `shortcutsInAppWindow`: your own keys; see [Keyboard](#keyboard).
 
 Font, theme and keys apply when you reload the page; shell and folder apply to the next new terminal.
@@ -614,6 +687,19 @@ aubergine shell-hook print     print the zsh lines that make new tabs start on t
 aubergine token create <name> --scope <scope>…   make an API token; its secret is printed once (--expires 30d)
 aubergine token list           the API tokens, their scopes and when each was last used
 aubergine token revoke <name>  revoke a token; it stops working at once
+aubergine workflow list        the workflows, with their elements and how many runs are going
+aubergine workflow show <name> one workflow in full
+aubergine workflow new <name> [--template <template>]   make one; `workflow templates` lists the templates
+aubergine workflow edit <name> change one in your editor ($VISUAL or $EDITOR), or from --file <path>
+aubergine workflow copy <name> [new name]
+aubergine workflow remove <name>   remove one (--yes: do not ask); refused while a run of it is going
+aubergine workflow export <name> [file]   write one as a file to pass on
+aubergine workflow import <file> [--name <name>]   make one from such a file ("-" reads standard input)
+aubergine workflow run <name> [--session <name|id>] [--input key=value]… [--replace]
+                               start a run on a session: the one it is typed in, when typed inside one
+aubergine workflow status      inside a session on a run: where it stands and what to do now
+aubergine workflow done [--note <text>]   the current element is finished; prints what comes next
+aubergine workflow blocked <reason>, goto <element>, pause, resume, stop
 aubergine note <text>          inside a session: add an entry to its note log
 aubergine hooks print          print the Claude Code hook settings
 aubergine service install      start the Aubergine server at login (macOS)
@@ -630,22 +716,25 @@ aubergine service uninstall    stop starting it at login
 
 ## For programs inside a session
 
-Every session's shell has three variables:
+Every session's shell has four variables:
 
 | Variable | Meaning |
 |---|---|
 | `AUBERGINE_URL` | Address of the server |
 | `AUBERGINE_SESSION_ID` | This session's ID |
 | `AUBERGINE_TOKEN` | A token that is valid for this session only |
+| `AUBERGINE_BIN` | The folder with the `aubergine` command, also at the end of `PATH` |
 
-With the token as a bearer credential, a program may do exactly two things, both for its own session:
+With the token as a bearer credential, a program may do these things, all for its own session and no other:
 
 ```
-PUT  /v1/sessions/<id>/attention   {"state": "working" | "waiting" | "done" | "none", "message": "..."}
-POST /v1/sessions/<id>/notes       {"text": "..."}
+PUT  /v1/sessions/<id>/attention    {"state": "working" | "waiting" | "done" | "none", "message": "..."}
+POST /v1/sessions/<id>/notes        {"text": "..."}
+GET  /v1/sessions/<id>/run          the run the session is on, and what to do now
+POST /v1/sessions/<id>/run/report   {"type": "done", "elementId": "...", "note": "..."} and the other reports
 ```
 
-Everything else is refused. `aubergine note` and `aubergine hook` are thin wrappers around these two calls. This token is made for the session by Aubergine and is separate from the [API tokens](#api-tokens) you create yourself, which can do more.
+Everything else is refused: it cannot list runs or workflows, start a run, or reach another session's run. `aubergine note`, `aubergine hook` and the in-session `aubergine workflow` commands are thin wrappers around these calls. This token is made for the session by Aubergine and is separate from the [API tokens](#api-tokens) you create yourself, which can do more.
 
 ## API tokens
 
