@@ -228,7 +228,7 @@ export const COMMANDS: readonly Command[] = [
   },
   {
     id: 'agent.switchedOn',
-    title: 'What is switched on for this agent…',
+    title: 'How this agent is set up…',
     description: 'Shows the MCP servers, plugins, hooks, skills and settings files the agent in this terminal is configured with, and what Aubergine added. Read only.',
     group: 'Terminals',
     available: (state) => targetSession(state)?.agent != null,

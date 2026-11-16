@@ -53,9 +53,9 @@ export function InventoryPanel() {
         }
       }}
     >
-      <div className="dialog sheet inventory-panel" role="dialog" aria-label="What is switched on" data-testid="inventory-panel">
+      <div className="dialog sheet inventory-panel" role="dialog" aria-label="How this agent is set up" data-testid="inventory-panel">
         <header className="sheet-head">
-          <h2>What is switched on for “{name}”</h2>
+          <h2>How “{name}” is set up</h2>
           <button type="button" className="quiet" onClick={close} data-testid="inventory-close">
             Close
           </button>

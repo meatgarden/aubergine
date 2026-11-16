@@ -100,7 +100,7 @@ export function searchInventory(items: readonly InventoryItem[], query: string):
 
 /** The whole inventory as plain text, for pasting into a bug report. Made only of what is shown, so it holds no value either. */
 export function inventoryText(inventory: Inventory, sessionName: string): string {
-  const lines: string[] = [`What is switched on for "${sessionName}" (${inventory.agent}), read ${inventory.readAt}`, `Folder: ${inventory.folder ?? 'not known'}`, ''];
+  const lines: string[] = [`How "${sessionName}" is set up (${inventory.agent}), read from its configuration files ${inventory.readAt}`, `Folder: ${inventory.folder ?? 'not known'}`, ''];
   lines.push('What Aubergine added:', ...(inventory.aubergine.length > 0 ? inventory.aubergine.map((line) => `  ${line}`) : ['  nothing']), '');
   for (const { kind, title } of INVENTORY_KINDS) {
     const items = inventory.items.filter((item) => item.kind === kind);
@@ -137,7 +137,7 @@ export interface NeedMatch {
  */
 export function matchNeed(need: { kind: string; name: string }, inventory: Inventory | null): NeedMatch {
   if (need.kind !== 'mcp' && need.kind !== 'command') return { state: 'cannot-tell', words: 'Not something Aubergine can look for.' };
-  if (!inventory) return { state: 'cannot-tell', words: 'What is switched on for this terminal could not be read.' };
+  if (!inventory) return { state: 'cannot-tell', words: 'How the agent in this terminal is set up could not be read.' };
   const wanted = plain(need.name);
   if (wanted.length < 2) return { state: 'cannot-tell', words: 'The name is too short to look for.' };
   const kinds: InventoryKind[] = need.kind === 'mcp' ? ['mcp-server', 'plugin'] : ['skill', 'plugin'];

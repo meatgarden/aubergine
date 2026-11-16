@@ -1014,7 +1014,7 @@ aubergine run api --timeout 120 -- pnpm test   # prints the output, exits with t
 
 These are you, not a token, so scopes, reach and "people only" do not apply to them. They are recorded in the activity log as done from the command line.
 
-## What is switched on for an agent
+## How an agent is set up
 
 You start an agent and want to know what it has been given: which MCP servers (connectors), which plugins, hooks and skills, which settings files apply, and what Aubergine itself added. **⚙ on** on an agent's terminal shows that; so does "What is switched on for this agent…" in the palette, and the notes drawer of the side list. It is for Claude Code today.
 

@@ -563,7 +563,7 @@ function NotesDrawer({ id, onClose }: { id: string; onClose: () => void }) {
       {isAgent && (
         <div className="drawer-section" data-testid="drawer-switched-on">
           <button type="button" className="quiet" onClick={() => useApp.getState().showInventory(id)}>
-            ⚙ What is switched on for this agent…
+            ⚙ How this agent is set up…
           </button>
         </div>
       )}
