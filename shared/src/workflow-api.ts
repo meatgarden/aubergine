@@ -255,7 +255,13 @@ export const UpdateShelfElementRequest = z.object({
   doneWhen: z.string().trim().max(500).optional(),
   needs: z.array(Need).max(NEEDS_MAX).optional(),
   produces: z.string().min(1).max(40).optional(),
-  note: z.string().trim().max(SHELF_NOTE_MAX).optional().describe('One line on what changed. Kept with the new version.'),
+  note: z
+    .string()
+    .trim()
+    .max(SHELF_NOTE_MAX)
+    .regex(/^[^\p{Cc}\u202a-\u202e\u2066-\u2069]*$/u, 'A note on a version is one line of plain text')
+    .optional()
+    .describe('One line on what changed. Kept with the new version.'),
 });
 export type UpdateShelfElementRequest = z.infer<typeof UpdateShelfElementRequest>;
 
