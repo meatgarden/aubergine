@@ -553,6 +553,14 @@ export const COMMANDS: readonly Command[] = [
     run: (state) => state.togglePanel('library'),
   },
   {
+    id: 'board.open',
+    title: 'Board…',
+    description: 'Every run that is going, on every canvas, by workflow and element: who is waiting for you, who is blocked, who is working. Approve or send back from there, or start one workflow on several terminals.',
+    group: 'Panels',
+    available: always,
+    run: (state) => state.togglePanel('board'),
+  },
+  {
     id: 'workflow.run',
     title: 'Run workflow… on the terminal',
     description: 'Puts the terminal on a workflow: choose one, fill in what it asks for, see what the agent will be told, start.',

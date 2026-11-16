@@ -12,6 +12,7 @@ import {
   PlainName,
   Origin,
   RunInputs,
+  RunComment,
   RunReport,
   RunStatus,
   WorkflowContent,
@@ -179,6 +180,42 @@ export const ReportOwnRunRequest = z.discriminatedUnion('type', [
 ]);
 export type ReportOwnRunRequest = z.infer<typeof ReportOwnRunRequest>;
 
+/** Body of approving the element a run waits on. Only the owner can. */
+export const ApproveRunRequest = z.object({
+  elementId: ElementId.optional().describe('The element being approved. Name it, so that a decision sent twice approves one element and not two. Without it: the one the run waits on.'),
+  comment: RunComment.optional().describe('A few words for whoever does the next element. Plain text on one line.'),
+});
+export type ApproveRunRequest = z.infer<typeof ApproveRunRequest>;
+
+/** Body of sending a run that waits for approval back to an earlier element. Only the owner can. */
+export const SendBackRunRequest = z.object({
+  elementId: ElementId.describe('The earlier element the run goes back to. It, and everything after it, is done again.'),
+  comment: RunComment.min(1).describe('What should change. Whoever does that element is told it, marked as your words. Plain text on one line.'),
+});
+export type SendBackRunRequest = z.infer<typeof SendBackRunRequest>;
+
+export const START_MANY_MAX = 50;
+/** Body of starting one workflow on several sessions at once. Each becomes a run of its own. */
+export const StartRunsRequest = z.object({
+  sessionIds: z.array(Id).min(1).max(START_MANY_MAX).describe('The sessions, each of which gets its own run.'),
+  inputs: RunInputs.describe('The inputs for every run.'),
+  inputsBySession: z.record(Id, RunInputs).optional().describe('For a session named here: its own inputs, in place of the ones for all.'),
+  replace: runFields.replace,
+  kickoff: runFields.kickoff,
+});
+export type StartRunsRequest = z.infer<typeof StartRunsRequest>;
+export const StartedRuns = z.object({
+  results: z.array(
+    z.object({
+      sessionId: Id,
+      started: z.boolean(),
+      run: RunDetail.nullable().describe('The run, when it started.'),
+      reason: z.string().nullable().describe('Why it did not start, in a sentence.'),
+    }),
+  ),
+});
+export type StartedRuns = z.infer<typeof StartedRuns>;
+
 /** What the browser needs to draw a run without asking: its record. */
 export const recordOfRun = (run: Run, workflow: Workflow | undefined): RunRecord => {
   const version = workflow?.versions.find((v) => v.number === run.workflowVersion);
@@ -253,6 +290,8 @@ export const UpdateShelfElementRequest = z.object({
   name: PlainName.optional(),
   instructions: z.string().max(ELEMENT_TEXT_HARD_MAX).optional(),
   doneWhen: z.string().trim().max(500).optional(),
+  ask: Element.shape.ask.unwrap().optional(),
+  lookAt: Element.shape.lookAt.unwrap().optional(),
   needs: z.array(Need).max(NEEDS_MAX).optional(),
   produces: z.string().min(1).max(40).optional(),
   note: z

@@ -21,6 +21,8 @@ import {
   recapOf,
   recordOfRun,
   showControl,
+  RunStatus,
+  boardText,
   type RecapRun,
   type Run,
   DemoStatus,
@@ -44,7 +46,7 @@ import {
 import { agentClient } from './cli/agent';
 import { guideText } from './cli/guide';
 import { parseLibraryCommand, runLibraryCommand } from './cli/library';
-import { parseElementCommand, parseWorkflowCommand, runWorkflowCommand } from './cli/workflow';
+import { parseElementCommand, parseWorkflowCommand, resolveWorkflow, runWorkflowCommand } from './cli/workflow';
 import { openBrowser, sessionAddress } from './cli/open-browser';
 import { commandsFor, formatAgents, formatOutside, normaliseTty, toShells } from './cli/outside';
 import {
@@ -554,6 +556,27 @@ async function main(): Promise<number> {
         return 124;
       }
       return result.exitCode ?? 0;
+    }
+
+    case 'board': {
+      const status = command.status === null ? undefined : RunStatus.safeParse(command.status);
+      if (status && !status.success) throw new UsageError(`board --status takes one of: ${RunStatus.options.join(', ')}`);
+      const collectAll = async <T>(items: AsyncIterable<T>): Promise<T[]> => {
+        const all: T[] = [];
+        for await (const item of items) all.push(item);
+        return all;
+      };
+      const board = await v1(config, async (client) => {
+        const canvases = command.canvas !== null ? await collectAll(client.each.listCanvases()) : [];
+        const workflows = command.workflow !== null ? await collectAll(client.each.listWorkflows()) : [];
+        const canvas = command.canvas !== null ? canvases.find((c) => c.id === command.canvas || c.name.toLowerCase() === command.canvas?.toLowerCase()) : undefined;
+        if (command.canvas !== null && !canvas) throw new UsageError(`No canvas is named "${command.canvas}".`);
+        const workflow = command.workflow !== null ? resolveWorkflow(workflows, command.workflow) : undefined;
+        return client.getBoard({ query: { ...(canvas ? { canvasId: canvas.id } : {}), ...(workflow ? { workflowId: workflow.id } : {}), ...(status?.success ? { status: status.data } : {}), ...(command.tag !== null ? { tag: command.tag } : {}) } });
+      });
+      // Names and reasons were written by agents and tokens: control characters are shown, not sent to the terminal.
+      console.log(showControl(boardText(board, Date.now())));
+      return 0;
     }
 
     case 'library':

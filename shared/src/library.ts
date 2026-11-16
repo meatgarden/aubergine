@@ -102,11 +102,11 @@ export const ELEMENT_FILE_FORMAT = 1;
 /** One element as a file, to pass on: the counterpart of a workflow file. */
 export const ElementFile = z.looseObject({ aubergine: z.literal('element'), format: z.number().int().min(1), element: z.looseObject({ name: z.string() }) });
 
-const KNOWN_ELEMENT = ['id', 'kind', 'name', 'instructions', 'doneWhen', 'needs', 'produces', 'origin', 'source'];
+const KNOWN_ELEMENT = ['id', 'kind', 'name', 'instructions', 'ask', 'lookAt', 'doneWhen', 'needs', 'produces', 'origin', 'source'];
 
 export function exportElement(element: Element): Record<string, unknown> {
-  const { extra, source: _source, origin: _origin, id: _id, ...content } = element;
-  return { aubergine: 'element', format: ELEMENT_FILE_FORMAT, element: { ...content, ...extra } };
+  const { extra, source: _source, origin: _origin, id: _id, ask, lookAt, ...content } = element;
+  return { aubergine: 'element', format: ELEMENT_FILE_FORMAT, element: { ...content, ...(ask ? { ask } : {}), ...(lookAt ? { lookAt } : {}), ...extra } };
 }
 
 /** Reads a file into an element. Throws, with a sentence, when it is not one. Where it came from on the publisher's computer is not taken over. */

@@ -1,4 +1,4 @@
-import { NEEDS_MAX, outputKind, outputKindNames, type Element, type Need } from '@aubergine/shared';
+import { NEEDS_MAX, outputKind, outputKindNames, waitsForPerson, type Element, type Need } from '@aubergine/shared';
 import { elementView } from './registries';
 
 const NEED_KINDS: [Need['kind'], string][] = [
@@ -23,6 +23,9 @@ export function ElementFields({ element, onChange }: { element: Element; onChang
         <input value={element.name} maxLength={120} onChange={(e) => onChange({ ...element, name: e.target.value })} data-testid="element-name" />
       </label>
       {Editor ? <Editor element={element} onChange={onChange} /> : <p className="sheet-note">This element is of a kind this version cannot edit: {element.kind}. It is kept as it is.</p>}
+      {/* What an agent needs, and what it hands in, are not asked of an element a person decides. */}
+      {!waitsForPerson(element.kind) && (
+        <>
       <div className="wf-label">
         It needs <span className="sheet-note">tools whoever does it must have; shown before a run, checked by nobody</span>
       </div>
@@ -58,6 +61,8 @@ export function ElementFields({ element, onChange }: { element: Element; onChang
           </select>
         </label>
       </div>
+        </>
+      )}
     </>
   );
 }

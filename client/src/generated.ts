@@ -1027,12 +1027,16 @@ export type CreateWorkflowBody = {
   elements: {
     /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
     id?: string;
-    /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+    /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
     kind?: string;
     /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
     name: string;
     /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
     instructions?: string;
+    /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+    ask?: string;
+    /** For an approval, if you like: what the person should look at before deciding. */
+    lookAt?: string;
     /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
     doneWhen?: string;
     /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -1105,12 +1109,16 @@ export type CreateWorkflowResult = {
     elements: {
       /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
       /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
       instructions: string;
+      /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+      ask: string;
+      /** For an approval, if you like: what the person should look at before deciding. */
+      lookAt: string;
       /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -1175,12 +1183,16 @@ export type GetWorkflowResult = {
     elements: {
       /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
       /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
       instructions: string;
+      /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+      ask: string;
+      /** For an approval, if you like: what the person should look at before deciding. */
+      lookAt: string;
       /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -1234,12 +1246,16 @@ export type UpdateWorkflowBody = {
   elements?: {
     /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
     id?: string;
-    /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+    /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
     kind?: string;
     /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
     name: string;
     /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
     instructions?: string;
+    /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+    ask?: string;
+    /** For an approval, if you like: what the person should look at before deciding. */
+    lookAt?: string;
     /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
     doneWhen?: string;
     /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -1302,12 +1318,16 @@ export type UpdateWorkflowResult = {
     elements: {
       /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
       /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
       instructions: string;
+      /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+      ask: string;
+      /** For an approval, if you like: what the person should look at before deciding. */
+      lookAt: string;
       /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -1377,12 +1397,16 @@ export type CopyWorkflowResult = {
     elements: {
       /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
       /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
       instructions: string;
+      /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+      ask: string;
+      /** For an approval, if you like: what the person should look at before deciding. */
+      lookAt: string;
       /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -1443,12 +1467,16 @@ export type ListWorkflowVersionsResult = {
     elements: {
       /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
       /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
       instructions: string;
+      /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+      ask: string;
+      /** For an approval, if you like: what the person should look at before deciding. */
+      lookAt: string;
       /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -1514,12 +1542,16 @@ export type ListWorkflowTemplatesResult = {
       elements: {
         /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
         id: string;
-        /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+        /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
         kind: string;
         /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
         /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
         instructions: string;
+        /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+        ask: string;
+        /** For an approval, if you like: what the person should look at before deciding. */
+        lookAt: string;
         /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
         doneWhen: string;
         /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -1589,12 +1621,16 @@ export type UseWorkflowTemplateResult = {
     elements: {
       /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
       /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
       instructions: string;
+      /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+      ask: string;
+      /** For an approval, if you like: what the person should look at before deciding. */
+      lookAt: string;
       /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -1642,7 +1678,7 @@ export interface ListRunsQuery {
   /**
    * `live` (the default): runs still going. `ended`: finished and stopped runs, newest first, from the archive. Or one status.
    */
-  status?: "queued" | "running" | "paused" | "blocked" | "finished" | "stopped" | "live" | "ended";
+  status?: "queued" | "running" | "paused" | "blocked" | "awaiting" | "finished" | "stopped" | "live" | "ended";
   /**
    * Only runs of this session.
    */
@@ -1663,7 +1699,7 @@ export type ListRunsResult = {
       inputs: {
         [key: string]: string;
       };
-      status: "queued" | "running" | "paused" | "blocked" | "finished" | "stopped";
+      status: "queued" | "running" | "paused" | "blocked" | "awaiting" | "finished" | "stopped";
       currentElementId: string | null;
       elements: {
         elementId: string;
@@ -1685,9 +1721,29 @@ export type ListRunsResult = {
           name?: string;
         } | null;
         sessionId: string | null;
+        sentBack: {
+          comment: string;
+          fromElementId: string;
+          by: {
+            kind: "agent" | "person" | "token";
+            name?: string;
+          };
+          at: string;
+        } | null;
       }[];
       blockedReason: string | null;
-      pausedFrom: ("running" | "blocked") | null;
+      pausedFrom: ("running" | "blocked" | "awaiting") | null;
+      history: {
+        type: "approved" | "sent-back";
+        elementId: string;
+        toElementId: string | null;
+        comment: string;
+        by: {
+          kind: "agent" | "person" | "token";
+          name?: string;
+        };
+        at: string;
+      }[];
       startedBy: {
         kind: "agent" | "person" | "token";
         name?: string;
@@ -1730,7 +1786,7 @@ export type StartRunResult = {
     inputs: {
       [key: string]: string;
     };
-    status: "queued" | "running" | "paused" | "blocked" | "finished" | "stopped";
+    status: "queued" | "running" | "paused" | "blocked" | "awaiting" | "finished" | "stopped";
     currentElementId: string | null;
     elements: {
       elementId: string;
@@ -1752,9 +1808,29 @@ export type StartRunResult = {
         name?: string;
       } | null;
       sessionId: string | null;
+      sentBack: {
+        comment: string;
+        fromElementId: string;
+        by: {
+          kind: "agent" | "person" | "token";
+          name?: string;
+        };
+        at: string;
+      } | null;
     }[];
     blockedReason: string | null;
-    pausedFrom: ("running" | "blocked") | null;
+    pausedFrom: ("running" | "blocked" | "awaiting") | null;
+    history: {
+      type: "approved" | "sent-back";
+      elementId: string;
+      toElementId: string | null;
+      comment: string;
+      by: {
+        kind: "agent" | "person" | "token";
+        name?: string;
+      };
+      at: string;
+    }[];
     startedBy: {
       kind: "agent" | "person" | "token";
       name?: string;
@@ -1784,7 +1860,7 @@ export type GetRunResult = {
     inputs: {
       [key: string]: string;
     };
-    status: "queued" | "running" | "paused" | "blocked" | "finished" | "stopped";
+    status: "queued" | "running" | "paused" | "blocked" | "awaiting" | "finished" | "stopped";
     currentElementId: string | null;
     elements: {
       elementId: string;
@@ -1806,9 +1882,29 @@ export type GetRunResult = {
         name?: string;
       } | null;
       sessionId: string | null;
+      sentBack: {
+        comment: string;
+        fromElementId: string;
+        by: {
+          kind: "agent" | "person" | "token";
+          name?: string;
+        };
+        at: string;
+      } | null;
     }[];
     blockedReason: string | null;
-    pausedFrom: ("running" | "blocked") | null;
+    pausedFrom: ("running" | "blocked" | "awaiting") | null;
+    history: {
+      type: "approved" | "sent-back";
+      elementId: string;
+      toElementId: string | null;
+      comment: string;
+      by: {
+        kind: "agent" | "person" | "token";
+        name?: string;
+      };
+      at: string;
+    }[];
     startedBy: {
       kind: "agent" | "person" | "token";
       name?: string;
@@ -1860,7 +1956,7 @@ export type ReportRunResult = {
     inputs: {
       [key: string]: string;
     };
-    status: "queued" | "running" | "paused" | "blocked" | "finished" | "stopped";
+    status: "queued" | "running" | "paused" | "blocked" | "awaiting" | "finished" | "stopped";
     currentElementId: string | null;
     elements: {
       elementId: string;
@@ -1882,9 +1978,29 @@ export type ReportRunResult = {
         name?: string;
       } | null;
       sessionId: string | null;
+      sentBack: {
+        comment: string;
+        fromElementId: string;
+        by: {
+          kind: "agent" | "person" | "token";
+          name?: string;
+        };
+        at: string;
+      } | null;
     }[];
     blockedReason: string | null;
-    pausedFrom: ("running" | "blocked") | null;
+    pausedFrom: ("running" | "blocked" | "awaiting") | null;
+    history: {
+      type: "approved" | "sent-back";
+      elementId: string;
+      toElementId: string | null;
+      comment: string;
+      by: {
+        kind: "agent" | "person" | "token";
+        name?: string;
+      };
+      at: string;
+    }[];
     startedBy: {
       kind: "agent" | "person" | "token";
       name?: string;
@@ -1903,6 +2019,400 @@ export type ReportRunResult = {
   text: string;
   kickoff: string;
   kickoffTyped: boolean;
+};
+
+export type ApproveRunBody = {
+  /** The element being approved. Name it, so that a decision sent twice approves one element and not two. Without it: the one the run waits on. */
+  elementId?: string;
+  /** A few words for whoever does the next element. Plain text on one line. */
+  comment?: string;
+};
+
+export type ApproveRunResult = {
+  run: {
+    id: string;
+    workflowId: string;
+    workflowVersion: number;
+    sessionId: string | null;
+    inputs: {
+      [key: string]: string;
+    };
+    status: "queued" | "running" | "paused" | "blocked" | "awaiting" | "finished" | "stopped";
+    currentElementId: string | null;
+    elements: {
+      elementId: string;
+      state: "pending" | "active" | "done" | "skipped";
+      startedAt: string | null;
+      finishedAt: string | null;
+      note: string;
+      output: unknown | null;
+      ticks: {
+        item: number;
+        by: {
+          kind: "agent" | "person" | "token";
+          name?: string;
+        };
+        at: string;
+      }[];
+      by: {
+        kind: "agent" | "person" | "token";
+        name?: string;
+      } | null;
+      sessionId: string | null;
+      sentBack: {
+        comment: string;
+        fromElementId: string;
+        by: {
+          kind: "agent" | "person" | "token";
+          name?: string;
+        };
+        at: string;
+      } | null;
+    }[];
+    blockedReason: string | null;
+    pausedFrom: ("running" | "blocked" | "awaiting") | null;
+    history: {
+      type: "approved" | "sent-back";
+      elementId: string;
+      toElementId: string | null;
+      comment: string;
+      by: {
+        kind: "agent" | "person" | "token";
+        name?: string;
+      };
+      at: string;
+    }[];
+    startedBy: {
+      kind: "agent" | "person" | "token";
+      name?: string;
+    };
+    createdAt: string;
+    updatedAt: string;
+    finishedAt: string | null;
+  };
+  workflowName: string;
+  elements: {
+    id: string;
+    name: string;
+    produces: string;
+  }[];
+  position: string;
+  text: string;
+  kickoff: string;
+  kickoffTyped: boolean;
+};
+
+export type SendBackRunBody = {
+  /** The earlier element the run goes back to. It, and everything after it, is done again. */
+  elementId: string;
+  /** What should change. Whoever does that element is told it, marked as your words. Plain text on one line. */
+  comment: string;
+};
+
+export type SendBackRunResult = {
+  run: {
+    id: string;
+    workflowId: string;
+    workflowVersion: number;
+    sessionId: string | null;
+    inputs: {
+      [key: string]: string;
+    };
+    status: "queued" | "running" | "paused" | "blocked" | "awaiting" | "finished" | "stopped";
+    currentElementId: string | null;
+    elements: {
+      elementId: string;
+      state: "pending" | "active" | "done" | "skipped";
+      startedAt: string | null;
+      finishedAt: string | null;
+      note: string;
+      output: unknown | null;
+      ticks: {
+        item: number;
+        by: {
+          kind: "agent" | "person" | "token";
+          name?: string;
+        };
+        at: string;
+      }[];
+      by: {
+        kind: "agent" | "person" | "token";
+        name?: string;
+      } | null;
+      sessionId: string | null;
+      sentBack: {
+        comment: string;
+        fromElementId: string;
+        by: {
+          kind: "agent" | "person" | "token";
+          name?: string;
+        };
+        at: string;
+      } | null;
+    }[];
+    blockedReason: string | null;
+    pausedFrom: ("running" | "blocked" | "awaiting") | null;
+    history: {
+      type: "approved" | "sent-back";
+      elementId: string;
+      toElementId: string | null;
+      comment: string;
+      by: {
+        kind: "agent" | "person" | "token";
+        name?: string;
+      };
+      at: string;
+    }[];
+    startedBy: {
+      kind: "agent" | "person" | "token";
+      name?: string;
+    };
+    createdAt: string;
+    updatedAt: string;
+    finishedAt: string | null;
+  };
+  workflowName: string;
+  elements: {
+    id: string;
+    name: string;
+    produces: string;
+  }[];
+  position: string;
+  text: string;
+  kickoff: string;
+  kickoffTyped: boolean;
+};
+
+export type StartRunsBody = {
+  /** The sessions, each of which gets its own run. */
+  sessionIds: string[];
+  /** The inputs for every run. */
+  inputs?: {
+    [key: string]: string;
+  };
+  /** For a session named here: its own inputs, in place of the ones for all. */
+  inputsBySession?: {
+    [key: string]: {
+      [key: string]: string;
+    };
+  };
+  /** When the session is already on a run: stop that one and start this. Without it, that is refused. */
+  replace?: boolean;
+  /** Type the line that tells the agent about the run into the session's terminal. Done for the owner, and for an API token that may type into that very session (`terminal:input` with a reach that covers it), and only when an agent is running there. Any other caller is given the line in the answer and nothing is typed. */
+  kickoff?: boolean;
+};
+
+export type StartRunsResult = {
+  results: {
+    sessionId: string;
+    started: boolean;
+    /** The run, when it started. */
+    run: {
+      run: {
+        id: string;
+        workflowId: string;
+        workflowVersion: number;
+        sessionId: string | null;
+        inputs: {
+          [key: string]: string;
+        };
+        status: "queued" | "running" | "paused" | "blocked" | "awaiting" | "finished" | "stopped";
+        currentElementId: string | null;
+        elements: {
+          elementId: string;
+          state: "pending" | "active" | "done" | "skipped";
+          startedAt: string | null;
+          finishedAt: string | null;
+          note: string;
+          output: unknown | null;
+          ticks: {
+            item: number;
+            by: {
+              kind: "agent" | "person" | "token";
+              name?: string;
+            };
+            at: string;
+          }[];
+          by: {
+            kind: "agent" | "person" | "token";
+            name?: string;
+          } | null;
+          sessionId: string | null;
+          sentBack: {
+            comment: string;
+            fromElementId: string;
+            by: {
+              kind: "agent" | "person" | "token";
+              name?: string;
+            };
+            at: string;
+          } | null;
+        }[];
+        blockedReason: string | null;
+        pausedFrom: ("running" | "blocked" | "awaiting") | null;
+        history: {
+          type: "approved" | "sent-back";
+          elementId: string;
+          toElementId: string | null;
+          comment: string;
+          by: {
+            kind: "agent" | "person" | "token";
+            name?: string;
+          };
+          at: string;
+        }[];
+        startedBy: {
+          kind: "agent" | "person" | "token";
+          name?: string;
+        };
+        createdAt: string;
+        updatedAt: string;
+        finishedAt: string | null;
+      };
+      workflowName: string;
+      elements: {
+        id: string;
+        name: string;
+        produces: string;
+      }[];
+      position: string;
+      text: string;
+      kickoff: string;
+      kickoffTyped: boolean;
+    } | null;
+    /** Why it did not start, in a sentence. */
+    reason: string | null;
+  }[];
+};
+
+export interface GetBoardQuery {
+  /**
+   * Only runs whose terminal is on this canvas.
+   */
+  canvasId?: string;
+  /**
+   * Only runs of this workflow.
+   */
+  workflowId?: string;
+  /**
+   * Only runs with this status.
+   */
+  status?: "queued" | "running" | "paused" | "blocked" | "awaiting" | "finished" | "stopped";
+  /**
+   * Only runs whose terminal has this tag.
+   */
+  tag?: string;
+}
+
+export type GetBoardResult = {
+  /** Of the live runs shown, after the filters. */
+  counts: {
+    waitingForYou: number;
+    blocked: number;
+    working: number;
+    paused: number;
+    queued: number;
+    total: number;
+  };
+  summary: string;
+  groups: {
+    /** Stays the same while the group exists: the workflow and its version, or `single`. */
+    key: string;
+    /** Null for the group of runs of one element by itself. */
+    workflowId: string | null;
+    workflowName: string;
+    /** Said only when live runs are on more than one version of the workflow. */
+    version: number | null;
+    /** The group of runs of one element by itself: each card names its element. */
+    single: boolean;
+    /** Runs that wait for a terminal. */
+    queued: {
+      runId: string;
+      workflowId: string;
+      /** The terminal doing the run. Null for a run that is queued. */
+      sessionId: string | null;
+      /** The name of that terminal; empty for a queued run. */
+      sessionName: string;
+      /** The canvas the terminal is on. Null when it is parked, or the run is queued. */
+      canvasId: string | null;
+      canvasName: string;
+      tags: string[];
+      status: "queued" | "running" | "paused" | "blocked" | "awaiting" | "finished" | "stopped";
+      /** The status as the interface says it: `working`, `waiting for approval`, `blocked` and so on. */
+      statusWords: string;
+      elementId: string | null;
+      elementName: string;
+      /** When the run came to the element it is on. */
+      since: string | null;
+      /** The terminal has printed for a while since the last report: the card may be behind. */
+      quiet: boolean;
+      blockedReason: string | null;
+      /** True when the run waits for a person to approve or send back. Only the owner can do either. */
+      waitsForPerson: boolean;
+      finishedAt: string | null;
+    }[];
+    /** That version's elements, in order. */
+    columns: {
+      elementId: string;
+      name: string;
+      /** An element where a run stops until a person has decided. */
+      waitsForPerson: boolean;
+      cards: {
+        runId: string;
+        workflowId: string;
+        /** The terminal doing the run. Null for a run that is queued. */
+        sessionId: string | null;
+        /** The name of that terminal; empty for a queued run. */
+        sessionName: string;
+        /** The canvas the terminal is on. Null when it is parked, or the run is queued. */
+        canvasId: string | null;
+        canvasName: string;
+        tags: string[];
+        status: "queued" | "running" | "paused" | "blocked" | "awaiting" | "finished" | "stopped";
+        /** The status as the interface says it: `working`, `waiting for approval`, `blocked` and so on. */
+        statusWords: string;
+        elementId: string | null;
+        elementName: string;
+        /** When the run came to the element it is on. */
+        since: string | null;
+        /** The terminal has printed for a while since the last report: the card may be behind. */
+        quiet: boolean;
+        blockedReason: string | null;
+        /** True when the run waits for a person to approve or send back. Only the owner can do either. */
+        waitsForPerson: boolean;
+        finishedAt: string | null;
+      }[];
+    }[];
+  }[];
+  /** Runs that finished or were stopped in the last day, newest first, at most a set number. */
+  ended: {
+    runId: string;
+    workflowId: string;
+    /** The terminal doing the run. Null for a run that is queued. */
+    sessionId: string | null;
+    /** The name of that terminal; empty for a queued run. */
+    sessionName: string;
+    /** The canvas the terminal is on. Null when it is parked, or the run is queued. */
+    canvasId: string | null;
+    canvasName: string;
+    tags: string[];
+    status: "queued" | "running" | "paused" | "blocked" | "awaiting" | "finished" | "stopped";
+    /** The status as the interface says it: `working`, `waiting for approval`, `blocked` and so on. */
+    statusWords: string;
+    elementId: string | null;
+    elementName: string;
+    /** When the run came to the element it is on. */
+    since: string | null;
+    /** The terminal has printed for a while since the last report: the card may be behind. */
+    quiet: boolean;
+    blockedReason: string | null;
+    /** True when the run waits for a person to approve or send back. Only the owner can do either. */
+    waitsForPerson: boolean;
+    finishedAt: string | null;
+    workflowName: string;
+  }[];
+  /** True when there were more ended runs than are shown. */
+  endedCut: boolean;
 };
 
 export type StartSessionRunBody = {
@@ -1927,7 +2437,7 @@ export type StartSessionRunResult = {
     inputs: {
       [key: string]: string;
     };
-    status: "queued" | "running" | "paused" | "blocked" | "finished" | "stopped";
+    status: "queued" | "running" | "paused" | "blocked" | "awaiting" | "finished" | "stopped";
     currentElementId: string | null;
     elements: {
       elementId: string;
@@ -1949,9 +2459,29 @@ export type StartSessionRunResult = {
         name?: string;
       } | null;
       sessionId: string | null;
+      sentBack: {
+        comment: string;
+        fromElementId: string;
+        by: {
+          kind: "agent" | "person" | "token";
+          name?: string;
+        };
+        at: string;
+      } | null;
     }[];
     blockedReason: string | null;
-    pausedFrom: ("running" | "blocked") | null;
+    pausedFrom: ("running" | "blocked" | "awaiting") | null;
+    history: {
+      type: "approved" | "sent-back";
+      elementId: string;
+      toElementId: string | null;
+      comment: string;
+      by: {
+        kind: "agent" | "person" | "token";
+        name?: string;
+      };
+      at: string;
+    }[];
     startedBy: {
       kind: "agent" | "person" | "token";
       name?: string;
@@ -1998,12 +2528,16 @@ export type ListDraftsResult = {
       elements: {
         /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
         id: string;
-        /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+        /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
         kind: string;
         /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
         /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
         instructions: string;
+        /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+        ask: string;
+        /** For an approval, if you like: what the person should look at before deciding. */
+        lookAt: string;
         /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
         doneWhen: string;
         /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -2038,12 +2572,16 @@ export type ListDraftsResult = {
     element: {
       /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
       /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
       instructions: string;
+      /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+      ask: string;
+      /** For an approval, if you like: what the person should look at before deciding. */
+      lookAt: string;
       /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -2101,12 +2639,16 @@ export type ListDraftsResult = {
         elements: {
           /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
           id: string;
-          /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+          /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
           kind: string;
           /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
           name: string;
           /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
           instructions: string;
+          /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+          ask: string;
+          /** For an approval, if you like: what the person should look at before deciding. */
+          lookAt: string;
           /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
           doneWhen: string;
           /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -2141,12 +2683,16 @@ export type ListDraftsResult = {
       element: {
         /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
         id: string;
-        /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+        /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
         kind: string;
         /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
         /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
         instructions: string;
+        /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+        ask: string;
+        /** For an approval, if you like: what the person should look at before deciding. */
+        lookAt: string;
         /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
         doneWhen: string;
         /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -2203,12 +2749,16 @@ export type ProposeDraftBody = {
     elements: {
       /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id?: string;
-      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
       kind?: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
       /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
       instructions?: string;
+      /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+      ask?: string;
+      /** For an approval, if you like: what the person should look at before deciding. */
+      lookAt?: string;
       /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
       doneWhen?: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -2241,12 +2791,16 @@ export type ProposeDraftBody = {
   element?: {
     /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
     id?: string;
-    /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+    /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
     kind?: string;
     /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
     name: string;
     /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
     instructions?: string;
+    /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+    ask?: string;
+    /** For an approval, if you like: what the person should look at before deciding. */
+    lookAt?: string;
     /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
     doneWhen?: string;
     /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -2295,12 +2849,16 @@ export type ProposeDraftResult = {
       elements: {
         /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
         id: string;
-        /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+        /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
         kind: string;
         /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
         /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
         instructions: string;
+        /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+        ask: string;
+        /** For an approval, if you like: what the person should look at before deciding. */
+        lookAt: string;
         /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
         doneWhen: string;
         /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -2335,12 +2893,16 @@ export type ProposeDraftResult = {
     element: {
       /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
       /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
       instructions: string;
+      /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+      ask: string;
+      /** For an approval, if you like: what the person should look at before deciding. */
+      lookAt: string;
       /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -2398,12 +2960,16 @@ export type ProposeDraftResult = {
         elements: {
           /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
           id: string;
-          /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+          /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
           kind: string;
           /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
           name: string;
           /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
           instructions: string;
+          /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+          ask: string;
+          /** For an approval, if you like: what the person should look at before deciding. */
+          lookAt: string;
           /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
           doneWhen: string;
           /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -2438,12 +3004,16 @@ export type ProposeDraftResult = {
       element: {
         /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
         id: string;
-        /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+        /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
         kind: string;
         /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
         /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
         instructions: string;
+        /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+        ask: string;
+        /** For an approval, if you like: what the person should look at before deciding. */
+        lookAt: string;
         /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
         doneWhen: string;
         /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -2501,12 +3071,16 @@ export type GetDraftResult = {
       elements: {
         /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
         id: string;
-        /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+        /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
         kind: string;
         /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
         /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
         instructions: string;
+        /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+        ask: string;
+        /** For an approval, if you like: what the person should look at before deciding. */
+        lookAt: string;
         /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
         doneWhen: string;
         /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -2541,12 +3115,16 @@ export type GetDraftResult = {
     element: {
       /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
       /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
       instructions: string;
+      /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+      ask: string;
+      /** For an approval, if you like: what the person should look at before deciding. */
+      lookAt: string;
       /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -2604,12 +3182,16 @@ export type GetDraftResult = {
         elements: {
           /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
           id: string;
-          /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+          /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
           kind: string;
           /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
           name: string;
           /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
           instructions: string;
+          /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+          ask: string;
+          /** For an approval, if you like: what the person should look at before deciding. */
+          lookAt: string;
           /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
           doneWhen: string;
           /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -2644,12 +3226,16 @@ export type GetDraftResult = {
       element: {
         /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
         id: string;
-        /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+        /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
         kind: string;
         /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
         /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
         instructions: string;
+        /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+        ask: string;
+        /** For an approval, if you like: what the person should look at before deciding. */
+        lookAt: string;
         /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
         doneWhen: string;
         /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -2712,12 +3298,16 @@ export type ReviseDraftBody = {
     elements: {
       /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id?: string;
-      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
       kind?: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
       /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
       instructions?: string;
+      /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+      ask?: string;
+      /** For an approval, if you like: what the person should look at before deciding. */
+      lookAt?: string;
       /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
       doneWhen?: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -2750,12 +3340,16 @@ export type ReviseDraftBody = {
   element?: {
     /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
     id?: string;
-    /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+    /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
     kind?: string;
     /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
     name: string;
     /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
     instructions?: string;
+    /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+    ask?: string;
+    /** For an approval, if you like: what the person should look at before deciding. */
+    lookAt?: string;
     /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
     doneWhen?: string;
     /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -2804,12 +3398,16 @@ export type ReviseDraftResult = {
       elements: {
         /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
         id: string;
-        /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+        /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
         kind: string;
         /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
         /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
         instructions: string;
+        /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+        ask: string;
+        /** For an approval, if you like: what the person should look at before deciding. */
+        lookAt: string;
         /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
         doneWhen: string;
         /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -2844,12 +3442,16 @@ export type ReviseDraftResult = {
     element: {
       /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
       /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
       instructions: string;
+      /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+      ask: string;
+      /** For an approval, if you like: what the person should look at before deciding. */
+      lookAt: string;
       /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -2907,12 +3509,16 @@ export type ReviseDraftResult = {
         elements: {
           /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
           id: string;
-          /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+          /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
           kind: string;
           /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
           name: string;
           /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
           instructions: string;
+          /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+          ask: string;
+          /** For an approval, if you like: what the person should look at before deciding. */
+          lookAt: string;
           /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
           doneWhen: string;
           /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -2947,12 +3553,16 @@ export type ReviseDraftResult = {
       element: {
         /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
         id: string;
-        /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+        /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
         kind: string;
         /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
         /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
         instructions: string;
+        /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+        ask: string;
+        /** For an approval, if you like: what the person should look at before deciding. */
+        lookAt: string;
         /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
         doneWhen: string;
         /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -3015,12 +3625,16 @@ export type AcceptDraftBody = {
     elements: {
       /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id?: string;
-      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
       kind?: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
       /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
       instructions?: string;
+      /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+      ask?: string;
+      /** For an approval, if you like: what the person should look at before deciding. */
+      lookAt?: string;
       /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
       doneWhen?: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -3053,12 +3667,16 @@ export type AcceptDraftBody = {
   element?: {
     /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
     id?: string;
-    /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+    /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
     kind?: string;
     /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
     name: string;
     /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
     instructions?: string;
+    /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+    ask?: string;
+    /** For an approval, if you like: what the person should look at before deciding. */
+    lookAt?: string;
     /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
     doneWhen?: string;
     /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -3112,12 +3730,16 @@ export type ReturnDraftResult = {
     elements: {
       /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
       /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
       instructions: string;
+      /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+      ask: string;
+      /** For an approval, if you like: what the person should look at before deciding. */
+      lookAt: string;
       /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -3152,12 +3774,16 @@ export type ReturnDraftResult = {
   element: {
     /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
     id: string;
-    /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+    /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
     kind: string;
     /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
     name: string;
     /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
     instructions: string;
+    /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+    ask: string;
+    /** For an approval, if you like: what the person should look at before deciding. */
+    lookAt: string;
     /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
     doneWhen: string;
     /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -3215,12 +3841,16 @@ export type ReturnDraftResult = {
       elements: {
         /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
         id: string;
-        /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+        /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
         kind: string;
         /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
         /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
         instructions: string;
+        /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+        ask: string;
+        /** For an approval, if you like: what the person should look at before deciding. */
+        lookAt: string;
         /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
         doneWhen: string;
         /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -3255,12 +3885,16 @@ export type ReturnDraftResult = {
     element: {
       /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
       /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
       instructions: string;
+      /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+      ask: string;
+      /** For an approval, if you like: what the person should look at before deciding. */
+      lookAt: string;
       /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -3356,12 +3990,16 @@ export type RequestDraftResult = {
       elements: {
         /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
         id: string;
-        /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+        /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
         kind: string;
         /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
         /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
         instructions: string;
+        /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+        ask: string;
+        /** For an approval, if you like: what the person should look at before deciding. */
+        lookAt: string;
         /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
         doneWhen: string;
         /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -3396,12 +4034,16 @@ export type RequestDraftResult = {
     element: {
       /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
       /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
       instructions: string;
+      /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+      ask: string;
+      /** For an approval, if you like: what the person should look at before deciding. */
+      lookAt: string;
       /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -3459,12 +4101,16 @@ export type RequestDraftResult = {
         elements: {
           /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
           id: string;
-          /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+          /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
           kind: string;
           /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
           name: string;
           /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
           instructions: string;
+          /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+          ask: string;
+          /** For an approval, if you like: what the person should look at before deciding. */
+          lookAt: string;
           /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
           doneWhen: string;
           /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -3499,12 +4145,16 @@ export type RequestDraftResult = {
       element: {
         /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
         id: string;
-        /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+        /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
         kind: string;
         /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
         /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
         instructions: string;
+        /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+        ask: string;
+        /** For an approval, if you like: what the person should look at before deciding. */
+        lookAt: string;
         /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
         doneWhen: string;
         /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -3898,12 +4548,16 @@ export type ListElementsResult = {
     element: {
       /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
       /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
       instructions: string;
+      /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+      ask: string;
+      /** For an approval, if you like: what the person should look at before deciding. */
+      lookAt: string;
       /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -3941,12 +4595,16 @@ export type ListElementsResult = {
       element: {
         /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
         id: string;
-        /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+        /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
         kind: string;
         /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
         /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
         instructions: string;
+        /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+        ask: string;
+        /** For an approval, if you like: what the person should look at before deciding. */
+        lookAt: string;
         /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
         doneWhen: string;
         /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -3992,12 +4650,16 @@ export type ListElementsResult = {
 export type CreateElementBody = {
   /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
   id?: string;
-  /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+  /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
   kind?: string;
   /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
   name: string;
   /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
   instructions?: string;
+  /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+  ask?: string;
+  /** For an approval, if you like: what the person should look at before deciding. */
+  lookAt?: string;
   /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
   doneWhen?: string;
   /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -4031,12 +4693,16 @@ export type CreateElementResult = {
   element: {
     /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
     id: string;
-    /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+    /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
     kind: string;
     /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
     name: string;
     /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
     instructions: string;
+    /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+    ask: string;
+    /** For an approval, if you like: what the person should look at before deciding. */
+    lookAt: string;
     /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
     doneWhen: string;
     /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -4074,12 +4740,16 @@ export type CreateElementResult = {
     element: {
       /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
       /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
       instructions: string;
+      /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+      ask: string;
+      /** For an approval, if you like: what the person should look at before deciding. */
+      lookAt: string;
       /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -4125,6 +4795,8 @@ export type UpdateElementBody = {
   name?: string;
   instructions?: string;
   doneWhen?: string;
+  ask?: string;
+  lookAt?: string;
   needs?: {
     kind: "mcp" | "command" | "access" | "other";
     name: string;
@@ -4140,12 +4812,16 @@ export type UpdateElementResult = {
   element: {
     /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
     id: string;
-    /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+    /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
     kind: string;
     /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
     name: string;
     /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
     instructions: string;
+    /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+    ask: string;
+    /** For an approval, if you like: what the person should look at before deciding. */
+    lookAt: string;
     /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
     doneWhen: string;
     /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -4183,12 +4859,16 @@ export type UpdateElementResult = {
     element: {
       /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
       /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
       instructions: string;
+      /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+      ask: string;
+      /** For an approval, if you like: what the person should look at before deciding. */
+      lookAt: string;
       /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -4234,12 +4914,16 @@ export type CopyElementResult = {
   element: {
     /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
     id: string;
-    /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+    /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
     kind: string;
     /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
     name: string;
     /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
     instructions: string;
+    /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+    ask: string;
+    /** For an approval, if you like: what the person should look at before deciding. */
+    lookAt: string;
     /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
     doneWhen: string;
     /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -4277,12 +4961,16 @@ export type CopyElementResult = {
     element: {
       /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
       /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
       instructions: string;
+      /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+      ask: string;
+      /** For an approval, if you like: what the person should look at before deciding. */
+      lookAt: string;
       /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -4340,12 +5028,16 @@ export type ListElementVersionsResult = {
     element: {
       /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
       /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
       instructions: string;
+      /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+      ask: string;
+      /** For an approval, if you like: what the person should look at before deciding. */
+      lookAt: string;
       /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -4411,12 +5103,16 @@ export type RetireElementResult = {
   element: {
     /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
     id: string;
-    /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+    /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
     kind: string;
     /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
     name: string;
     /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
     instructions: string;
+    /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+    ask: string;
+    /** For an approval, if you like: what the person should look at before deciding. */
+    lookAt: string;
     /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
     doneWhen: string;
     /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -4454,12 +5150,16 @@ export type RetireElementResult = {
     element: {
       /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
       /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
       instructions: string;
+      /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+      ask: string;
+      /** For an approval, if you like: what the person should look at before deciding. */
+      lookAt: string;
       /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -4505,12 +5205,16 @@ export type RestoreElementResult = {
   element: {
     /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
     id: string;
-    /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+    /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
     kind: string;
     /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
     name: string;
     /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
     instructions: string;
+    /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+    ask: string;
+    /** For an approval, if you like: what the person should look at before deciding. */
+    lookAt: string;
     /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
     doneWhen: string;
     /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -4548,12 +5252,16 @@ export type RestoreElementResult = {
     element: {
       /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
       /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
       instructions: string;
+      /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+      ask: string;
+      /** For an approval, if you like: what the person should look at before deciding. */
+      lookAt: string;
       /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -4628,12 +5336,16 @@ export type UpdateFromShelfResult = {
     elements: {
       /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
       /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
       instructions: string;
+      /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+      ask: string;
+      /** For an approval, if you like: what the person should look at before deciding. */
+      lookAt: string;
       /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -4691,7 +5403,7 @@ export type RunElementResult = {
     inputs: {
       [key: string]: string;
     };
-    status: "queued" | "running" | "paused" | "blocked" | "finished" | "stopped";
+    status: "queued" | "running" | "paused" | "blocked" | "awaiting" | "finished" | "stopped";
     currentElementId: string | null;
     elements: {
       elementId: string;
@@ -4713,9 +5425,29 @@ export type RunElementResult = {
         name?: string;
       } | null;
       sessionId: string | null;
+      sentBack: {
+        comment: string;
+        fromElementId: string;
+        by: {
+          kind: "agent" | "person" | "token";
+          name?: string;
+        };
+        at: string;
+      } | null;
     }[];
     blockedReason: string | null;
-    pausedFrom: ("running" | "blocked") | null;
+    pausedFrom: ("running" | "blocked" | "awaiting") | null;
+    history: {
+      type: "approved" | "sent-back";
+      elementId: string;
+      toElementId: string | null;
+      comment: string;
+      by: {
+        kind: "agent" | "person" | "token";
+        name?: string;
+      };
+      at: string;
+    }[];
     startedBy: {
       kind: "agent" | "person" | "token";
       name?: string;
@@ -4754,7 +5486,7 @@ export type TickRunItemResult = {
     inputs: {
       [key: string]: string;
     };
-    status: "queued" | "running" | "paused" | "blocked" | "finished" | "stopped";
+    status: "queued" | "running" | "paused" | "blocked" | "awaiting" | "finished" | "stopped";
     currentElementId: string | null;
     elements: {
       elementId: string;
@@ -4776,9 +5508,29 @@ export type TickRunItemResult = {
         name?: string;
       } | null;
       sessionId: string | null;
+      sentBack: {
+        comment: string;
+        fromElementId: string;
+        by: {
+          kind: "agent" | "person" | "token";
+          name?: string;
+        };
+        at: string;
+      } | null;
     }[];
     blockedReason: string | null;
-    pausedFrom: ("running" | "blocked") | null;
+    pausedFrom: ("running" | "blocked" | "awaiting") | null;
+    history: {
+      type: "approved" | "sent-back";
+      elementId: string;
+      toElementId: string | null;
+      comment: string;
+      by: {
+        kind: "agent" | "person" | "token";
+        name?: string;
+      };
+      at: string;
+    }[];
     startedBy: {
       kind: "agent" | "person" | "token";
       name?: string;
@@ -4869,12 +5621,16 @@ export type GetRepositoryWorkflowResult = {
     elements: {
       /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
       /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
       instructions: string;
+      /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+      ask: string;
+      /** For an approval, if you like: what the person should look at before deciding. */
+      lookAt: string;
       /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -4964,7 +5720,7 @@ export type RunRepositoryWorkflowResult = {
     inputs: {
       [key: string]: string;
     };
-    status: "queued" | "running" | "paused" | "blocked" | "finished" | "stopped";
+    status: "queued" | "running" | "paused" | "blocked" | "awaiting" | "finished" | "stopped";
     currentElementId: string | null;
     elements: {
       elementId: string;
@@ -4986,9 +5742,29 @@ export type RunRepositoryWorkflowResult = {
         name?: string;
       } | null;
       sessionId: string | null;
+      sentBack: {
+        comment: string;
+        fromElementId: string;
+        by: {
+          kind: "agent" | "person" | "token";
+          name?: string;
+        };
+        at: string;
+      } | null;
     }[];
     blockedReason: string | null;
-    pausedFrom: ("running" | "blocked") | null;
+    pausedFrom: ("running" | "blocked" | "awaiting") | null;
+    history: {
+      type: "approved" | "sent-back";
+      elementId: string;
+      toElementId: string | null;
+      comment: string;
+      by: {
+        kind: "agent" | "person" | "token";
+        name?: string;
+      };
+      at: string;
+    }[];
     startedBy: {
       kind: "agent" | "person" | "token";
       name?: string;
@@ -5085,7 +5861,7 @@ export type GetSessionRunResult = {
     inputs: {
       [key: string]: string;
     };
-    status: "queued" | "running" | "paused" | "blocked" | "finished" | "stopped";
+    status: "queued" | "running" | "paused" | "blocked" | "awaiting" | "finished" | "stopped";
     currentElementId: string | null;
     elements: {
       elementId: string;
@@ -5107,9 +5883,29 @@ export type GetSessionRunResult = {
         name?: string;
       } | null;
       sessionId: string | null;
+      sentBack: {
+        comment: string;
+        fromElementId: string;
+        by: {
+          kind: "agent" | "person" | "token";
+          name?: string;
+        };
+        at: string;
+      } | null;
     }[];
     blockedReason: string | null;
-    pausedFrom: ("running" | "blocked") | null;
+    pausedFrom: ("running" | "blocked" | "awaiting") | null;
+    history: {
+      type: "approved" | "sent-back";
+      elementId: string;
+      toElementId: string | null;
+      comment: string;
+      by: {
+        kind: "agent" | "person" | "token";
+        name?: string;
+      };
+      at: string;
+    }[];
     startedBy: {
       kind: "agent" | "person" | "token";
       name?: string;
@@ -5707,7 +6503,7 @@ export type ReportSessionRunResult = {
     inputs: {
       [key: string]: string;
     };
-    status: "queued" | "running" | "paused" | "blocked" | "finished" | "stopped";
+    status: "queued" | "running" | "paused" | "blocked" | "awaiting" | "finished" | "stopped";
     currentElementId: string | null;
     elements: {
       elementId: string;
@@ -5729,9 +6525,29 @@ export type ReportSessionRunResult = {
         name?: string;
       } | null;
       sessionId: string | null;
+      sentBack: {
+        comment: string;
+        fromElementId: string;
+        by: {
+          kind: "agent" | "person" | "token";
+          name?: string;
+        };
+        at: string;
+      } | null;
     }[];
     blockedReason: string | null;
-    pausedFrom: ("running" | "blocked") | null;
+    pausedFrom: ("running" | "blocked" | "awaiting") | null;
+    history: {
+      type: "approved" | "sent-back";
+      elementId: string;
+      toElementId: string | null;
+      comment: string;
+      by: {
+        kind: "agent" | "person" | "token";
+        name?: string;
+      };
+      at: string;
+    }[];
     startedBy: {
       kind: "agent" | "person" | "token";
       name?: string;
@@ -5784,12 +6600,16 @@ export type ListSessionDraftsResult = {
       elements: {
         /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
         id: string;
-        /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+        /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
         kind: string;
         /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
         /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
         instructions: string;
+        /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+        ask: string;
+        /** For an approval, if you like: what the person should look at before deciding. */
+        lookAt: string;
         /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
         doneWhen: string;
         /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -5824,12 +6644,16 @@ export type ListSessionDraftsResult = {
     element: {
       /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
       /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
       instructions: string;
+      /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+      ask: string;
+      /** For an approval, if you like: what the person should look at before deciding. */
+      lookAt: string;
       /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -5887,12 +6711,16 @@ export type ListSessionDraftsResult = {
         elements: {
           /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
           id: string;
-          /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+          /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
           kind: string;
           /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
           name: string;
           /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
           instructions: string;
+          /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+          ask: string;
+          /** For an approval, if you like: what the person should look at before deciding. */
+          lookAt: string;
           /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
           doneWhen: string;
           /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -5927,12 +6755,16 @@ export type ListSessionDraftsResult = {
       element: {
         /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
         id: string;
-        /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+        /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
         kind: string;
         /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
         /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
         instructions: string;
+        /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+        ask: string;
+        /** For an approval, if you like: what the person should look at before deciding. */
+        lookAt: string;
         /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
         doneWhen: string;
         /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -5989,12 +6821,16 @@ export type ProposeSessionDraftBody = {
     elements: {
       /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id?: string;
-      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
       kind?: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
       /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
       instructions?: string;
+      /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+      ask?: string;
+      /** For an approval, if you like: what the person should look at before deciding. */
+      lookAt?: string;
       /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
       doneWhen?: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -6027,12 +6863,16 @@ export type ProposeSessionDraftBody = {
   element?: {
     /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
     id?: string;
-    /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+    /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
     kind?: string;
     /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
     name: string;
     /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
     instructions?: string;
+    /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+    ask?: string;
+    /** For an approval, if you like: what the person should look at before deciding. */
+    lookAt?: string;
     /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
     doneWhen?: string;
     /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -6080,12 +6920,16 @@ export type ProposeSessionDraftResult = {
     elements: {
       /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
       /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
       instructions: string;
+      /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+      ask: string;
+      /** For an approval, if you like: what the person should look at before deciding. */
+      lookAt: string;
       /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -6120,12 +6964,16 @@ export type ProposeSessionDraftResult = {
   element: {
     /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
     id: string;
-    /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+    /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
     kind: string;
     /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
     name: string;
     /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
     instructions: string;
+    /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+    ask: string;
+    /** For an approval, if you like: what the person should look at before deciding. */
+    lookAt: string;
     /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
     doneWhen: string;
     /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -6183,12 +7031,16 @@ export type ProposeSessionDraftResult = {
       elements: {
         /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
         id: string;
-        /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+        /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
         kind: string;
         /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
         /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
         instructions: string;
+        /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+        ask: string;
+        /** For an approval, if you like: what the person should look at before deciding. */
+        lookAt: string;
         /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
         doneWhen: string;
         /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -6223,12 +7075,16 @@ export type ProposeSessionDraftResult = {
     element: {
       /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
       /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
       instructions: string;
+      /** For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. */
+      ask: string;
+      /** For an approval, if you like: what the person should look at before deciding. */
+      lookAt: string;
       /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
@@ -6326,6 +7182,10 @@ export const OPERATIONS = {
   startRun: { method: 'POST', path: '/v1/runs', params: [], hasBody: true, paged: false, idempotent: true, stream: false, access: { who: 'token', scope: "runs:write" } },
   getRun: { method: 'GET', path: '/v1/runs/{runId}', params: ["runId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "read" } },
   reportRun: { method: 'POST', path: '/v1/runs/{runId}/report', params: ["runId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "runs:write" } },
+  approveRun: { method: 'POST', path: '/v1/runs/{runId}/approve', params: ["runId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  sendBackRun: { method: 'POST', path: '/v1/runs/{runId}/send-back', params: ["runId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  startRuns: { method: 'POST', path: '/v1/workflows/{workflowId}/runs', params: ["workflowId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "runs:write" } },
+  getBoard: { method: 'GET', path: '/v1/board', params: [], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "read" } },
   startSessionRun: { method: 'POST', path: '/v1/sessions/{sessionId}/runs', params: ["sessionId"], hasBody: true, paged: false, idempotent: true, stream: false, access: { who: 'token', scope: "runs:write" } },
   listDrafts: { method: 'GET', path: '/v1/drafts', params: [], hasBody: false, paged: true, idempotent: false, stream: false, access: { who: 'token', scope: "read" } },
   proposeDraft: { method: 'POST', path: '/v1/drafts', params: [], hasBody: true, paged: false, idempotent: true, stream: false, access: { who: 'token', scope: "workflows:write" } },
@@ -6615,6 +7475,30 @@ export interface Client {
    * `POST /v1/runs/{runId}/report`. Scope: `runs:write`.
    */
   reportRun(args: { runId: string; body: ReportRunBody } & CallOptions): Promise<ReportRunResult>;
+  /**
+   * Approve the element a run waits on.
+   *
+   * `POST /v1/runs/{runId}/approve`. Signed-in browser only: no API token may call this.
+   */
+  approveRun(args: { runId: string; body: ApproveRunBody } & CallOptions): Promise<ApproveRunResult>;
+  /**
+   * Send a run that waits for approval back to an earlier element.
+   *
+   * `POST /v1/runs/{runId}/send-back`. Signed-in browser only: no API token may call this.
+   */
+  sendBackRun(args: { runId: string; body: SendBackRunBody } & CallOptions): Promise<SendBackRunResult>;
+  /**
+   * Start a workflow on several sessions at once.
+   *
+   * `POST /v1/workflows/{workflowId}/runs`. Scope: `runs:write`.
+   */
+  startRuns(args: { workflowId: string; body: StartRunsBody } & CallOptions): Promise<StartRunsResult>;
+  /**
+   * The board: every run that is going, by workflow and element.
+   *
+   * `GET /v1/board`. Scope: `read`.
+   */
+  getBoard(args?: { query?: GetBoardQuery } & CallOptions): Promise<GetBoardResult>;
   /**
    * Start a run on a session.
    *

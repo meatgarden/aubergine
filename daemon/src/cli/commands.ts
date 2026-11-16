@@ -41,6 +41,8 @@ export type Command =
   | { name: 'note'; text: string }
   /** `library …`: its own words, parsed by the library commands. */
   | { name: 'library'; words: string[] }
+  /** `board`: every run that is going, as text. */
+  | { name: 'board'; canvas: string | null; workflow: string | null; status: string | null; tag: string | null }
   /** Inside a session: take its unread messages. */
   | { name: 'inbox' }
   /** Inside a session: answer a message it received. */
@@ -140,6 +142,13 @@ export const USAGE = `Usage: aubergine <command>
   workflow import <file> [--name <name>]   Make a workflow from such a file ("-" reads standard input)
   workflow run <name> [--session <name|id>] [--input key=value …] [--replace]
                              Start a run on a session: this one, when typed inside a session
+  workflow approve <run> [--comment <text>]
+                             Approve the element a run waits on. The run is its ID or the name of its terminal.
+                             Only you can: no token and no agent's own command does this
+  workflow send-back <run> --to <element> --comment <text>
+                             Send a run that waits for approval back to an earlier element; the agent is told your comment
+  board [--canvas <name>] [--workflow <name>] [--status <status>] [--tag <tag>]
+                             Every run that is going, by workflow and element: who waits for you, who is blocked
   Inside a session that is on a run:
   workflow status            Where the run stands and what to do now
   workflow done [--note <text>] [--output <file>]
@@ -206,7 +215,7 @@ export const USAGE = `Usage: aubergine <command>
 new, here and import take --canvas <name>. Without it they use the canvas you looked at most recently
 in a browser, or the first one when no browser is open.
 
-The server must be running for list, new, canvas, token, workflow, element, library, screen, output, send, run, protect, attach, here, scan, import, move, tell, inbox, reply, note, attention and open.
+The server must be running for list, new, canvas, token, workflow, element, library, board, screen, output, send, run, protect, attach, here, scan, import, move, tell, inbox, reply, note, attention and open.
 guide works without it, and then prints every part.`;
 
 export class UsageError extends Error {}
@@ -381,6 +390,14 @@ export function parseCommand(argv: readonly string[]): Command {
       return { name: 'element', words: rest };
     case 'library':
       return { name: 'library', words: rest };
+    case 'board': {
+      const canvas = takeOption(rest, '--canvas');
+      const workflow = takeOption(canvas.rest, '--workflow');
+      const status = takeOption(workflow.rest, '--status');
+      const tag = takeOption(status.rest, '--tag');
+      if (tag.rest.length > 0) throw new UsageError(`board does not know ${tag.rest[0]}`);
+      return { name: 'board', canvas: canvas.value, workflow: workflow.value, status: status.value, tag: tag.value };
+    }
     case 'history': {
       const { value: folder, rest: afterFolder } = takeOption(rest, '--folder');
       if (afterFolder[0] === 'open') {

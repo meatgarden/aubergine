@@ -51,6 +51,7 @@ import { ReviewScreen } from './review/ReviewScreen';
 import './review/drafts-source';
 import './review/library-source';
 import { LibraryScreen } from './library/LibraryScreen';
+import { BoardScreen } from './board/BoardScreen';
 import { itemsOfListing, useRepositoryListing } from './review/repository-source';
 import { DescribeDialog } from './workflows/DescribeDialog';
 import { ShelfEditor } from './workflows/ShelfEditor';
@@ -468,6 +469,9 @@ export function Canvas() {
           <button type="button" className="quiet" onClick={() => runCommand('workflows.open')} title={hint('workflows.open', 'Workflows: make, change and run them')} data-testid="toolbar-workflows">
             Workflows
           </button>
+          <button type="button" className="quiet" onClick={() => runCommand('board.open')} title={hint('board.open', 'Board: every run that is going, by workflow and element; approve or send back from there')} data-testid="toolbar-board">
+            Board
+          </button>
           <button type="button" className="quiet" onClick={() => runCommand('library.open')} title={hint('library.open', 'Library: workflows and elements others published, to read and install')} data-testid="toolbar-library">
             Library
           </button>
@@ -534,6 +538,7 @@ export function Canvas() {
       <DescribeDialog />
       <ReviewScreen />
       <LibraryScreen />
+      <BoardScreen />
       <RunDialog />
       <AgentToolsDialog />
       <RunViewDialog />

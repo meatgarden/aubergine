@@ -770,7 +770,7 @@ describe('the secret', () => {
 
     // The hash is what is stored, and it is not sent to the page.
     const state = JSON.parse(await readFile(path.join(dir, 'state.json'), 'utf8'));
-    expect(state.version).toBe(9);
+    expect(state.version).toBe(10);
     expect(state.tokens.map((t: { hash: string }) => t.hash)).toEqual([expect.stringMatching(/^[0-9a-f]{64}$/), expect.stringMatching(/^[0-9a-f]{64}$/)]);
   });
 

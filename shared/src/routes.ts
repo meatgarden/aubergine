@@ -73,6 +73,10 @@ import {
   RunList,
   RunsQuery,
   StartRunRequest,
+  StartRunsRequest,
+  StartedRuns,
+  ApproveRunRequest,
+  SendBackRunRequest,
   StartSessionRunRequest,
   TemplateName,
   UpdateWorkflowRequest,
@@ -159,6 +163,7 @@ const runId = z.object({ runId: Id });
 const draftId = z.object({ draftId: Id });
 const elementId = z.object({ elementId: Id });
 import { ElementId } from './workflows';
+import { Board, BoardFilters } from './board';
 import { AcceptInstallRequest, AddSourceRequest, InstallRequest, InstallRequestDetail, InstallRequestList, InstalledItem, InstalledList, InstalledUsage, LibraryItemDetail, LibraryItemId, LibraryItemList, LibrarySource, LibrarySourceList, RequestInstallRequest } from './library';
 
 /** What the event stream sends: a change, as the reducer in `shared/` applies it. Described loosely on purpose: new kinds appear. */
@@ -633,6 +638,60 @@ export const ROUTES = {
     response: RunDetail,
     status: 200,
     errors: [404, 409],
+  }),
+  approveRun: route({
+    method: 'POST',
+    path: '/v1/runs/:runId/approve',
+    tag: 'Runs',
+    summary: 'Approve the element a run waits on',
+    description:
+      'For the owner only: no token and no session can do this, whatever its scopes. The run goes on to its next element, and the agent there is told with the fixed sentence to read its status. Refused with 409 when the run does not wait for approval.',
+    action: 'runs.approve',
+    params: runId,
+    body: ApproveRunRequest,
+    response: RunDetail,
+    status: 200,
+    errors: [404, 409],
+  }),
+  sendBackRun: route({
+    method: 'POST',
+    path: '/v1/runs/:runId/send-back',
+    tag: 'Runs',
+    summary: 'Send a run that waits for approval back to an earlier element',
+    description:
+      'For the owner only: no token and no session can do this. The run returns to the element named; it and everything after it is done again, the approval too. The comment is part of what the agent is told about that element, marked as the words of a person.',
+    action: 'runs.approve',
+    params: runId,
+    body: SendBackRunRequest,
+    response: RunDetail,
+    status: 200,
+    errors: [404, 409],
+  }),
+  startRuns: route({
+    method: 'POST',
+    path: '/v1/workflows/:workflowId/runs',
+    tag: 'Runs',
+    summary: 'Start a workflow on several sessions at once',
+    description:
+      'Each session gets a run of its own, started exactly as `POST /v1/runs` starts one, with the same rule for the kickoff line per session. The answer says for each session whether its run started, and if not, why. One that cannot start does not stop the others.',
+    action: 'runs.write',
+    params: workflowId,
+    body: StartRunsRequest,
+    response: StartedRuns,
+    status: 200,
+    errors: [404],
+  }),
+  getBoard: route({
+    method: 'GET',
+    path: '/v1/board',
+    tag: 'Runs',
+    summary: 'The board: every run that is going, by workflow and element',
+    description:
+      'Every live run on every canvas, grouped by workflow (and by version, where live runs are on more than one), in columns that are the elements in order; the counts of what waits for the owner, is blocked and is working; and the runs that ended in the last day. It holds nothing that listing runs and sessions does not already give. A card that waits for a person can be approved or sent back by the owner only.',
+    action: 'runs.read',
+    query: BoardFilters,
+    response: Board,
+    status: 200,
   }),
   startSessionRun: route({
     method: 'POST',

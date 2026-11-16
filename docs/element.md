@@ -13,7 +13,9 @@ An element is one piece of work for an agent: text it reads and follows, and a l
 | `doneWhen` | by you | One line: how to tell that the element is finished. The agent is told to report done when this is true. |
 | `needs` | by you | What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. |
 | `produces` | by you | What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). |
-| `kind` | for you | What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. |
+| `kind` | for you | What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. |
+| `ask` | by you | For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. |
+| `lookAt` | by you | For an approval, if you like: what the person should look at before deciding. |
 | `origin` | for you | Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. |
 | `source` | for you | For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. |
 | `id` | for you | Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. |

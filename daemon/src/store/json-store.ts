@@ -68,8 +68,15 @@ const StateFileV8 = StateFileV7.extend({ version: z.literal(8) });
 /** The same, with the library: its sources as last read, what was installed from them, and installs that wait. An older file has none of it. */
 const StateFileV9 = StateFileV8.extend({ version: z.literal(9), library: LibraryState });
 
-const StateFile = z.discriminatedUnion('version', [StateFileV1, StateFileV2, StateFileV3, StateFileV4, StateFileV5, StateFileV6, StateFileV7, StateFileV8, StateFileV9]);
-const CURRENT_VERSION = 9;
+/**
+ * The same at the top. A run may now wait for a person (a status of its own), keeps the decisions people made on
+ * it, and an element may be an approval. An older file has none of these: its runs load with no decisions, and
+ * nothing in it needs repair. The number changed so that the older file is kept beside this one before it is written.
+ */
+const StateFileV10 = StateFileV9.extend({ version: z.literal(10) });
+
+const StateFile = z.discriminatedUnion('version', [StateFileV1, StateFileV2, StateFileV3, StateFileV4, StateFileV5, StateFileV6, StateFileV7, StateFileV8, StateFileV9, StateFileV10]);
+const CURRENT_VERSION = 10;
 type StateFile = z.infer<typeof StateFile>;
 
 /**

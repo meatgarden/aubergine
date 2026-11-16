@@ -29,6 +29,15 @@ import {
   type RunDetail,
   type RunRecord,
   type RunReport,
+  type RunDecisionReport,
+  type RunStep,
+  type StartRunsRequest,
+  type StartedRuns,
+  type Board,
+  type BoardFilters,
+  boardOf,
+  BOARD_ENDED_MAX,
+  BOARD_ENDED_HOURS,
   type RunsQuery,
   type UpdateWorkflowRequest,
   type Workflow,
@@ -46,6 +55,8 @@ import type { StateHub } from './state-hub';
 export interface WorkflowsOptions {
   limits: () => WorkflowLimits;
   onError?: (error: unknown) => void;
+  /** After how long without a report a run that keeps printing is called quiet. */
+  quietAfterSeconds?: () => number;
 }
 
 /** What starting a run is given. */
@@ -59,6 +70,8 @@ export interface StartRun {
 }
 
 const BLOCKED = 'Blocked on';
+const APPROVAL = 'Approval needed at';
+const OURS = (message: string | null | undefined): boolean => message?.startsWith(BLOCKED) === true || message?.startsWith(APPROVAL) === true;
 
 /**
  * Workflows and their runs. Every change is a change event; a run moves only
@@ -313,10 +326,69 @@ export class Workflows {
     // The line is the server's own words; it is typed only where an agent is there to read it.
     // In a plain shell it would be run as a command.
     let typed = false;
-    if (session && input.typeKickoff && session.agent !== null && session.status.state !== 'idle') {
-      typed = await this.sessions.tell(session.id, kickoffLine()).catch(() => false);
-    }
+    if (session && input.typeKickoff) typed = await this.tellAgent(session.id);
+    // A workflow may begin with an approval: then the run waits for the owner from the start.
+    this.afterMove(version, null, run);
     return this.detail(run, typed);
+  }
+
+  /** Types the fixed sentence that tells an agent to read its status, where an agent is there to read it. */
+  private async tellAgent(sessionId: string): Promise<boolean> {
+    if (!this.sessions.has(sessionId)) return false;
+    const session = this.sessions.get(sessionId);
+    if (session.agent === null || session.status.state === 'idle') return false;
+    return this.sessions.tell(sessionId, kickoffLine()).catch(() => false);
+  }
+
+  /**
+   * A person's decision on a run that waits for them: approve, or send back. The caller has made sure it is the
+   * owner; the step function refuses anyone else again. Afterwards the agent is told, with the same fixed sentence
+   * that starts a run, to read its status: nothing of the comment is typed.
+   */
+  async decide(runId: string, decision: RunDecisionReport, by: Actor): Promise<RunDetail> {
+    const run = this.live(runId);
+    if (!run) {
+      const archived = await this.archive.get(runId);
+      if (!archived) throw new NotFoundError(`No run ${runId}`);
+      throw new ConflictError(`This run is ${archived.run.status}; there is nothing to decide on it.`);
+    }
+    const detail = await this.apply(run, decision, by);
+    const typed = detail.run.sessionId !== null && detail.run.status === 'running' ? await this.tellAgent(detail.run.sessionId) : false;
+    return { ...detail, kickoffTyped: typed };
+  }
+
+  /** Starts one workflow on several sessions: each through `start`, each with its own answer. */
+  async startMany(workflowId: string, body: StartRunsRequest, by: Actor, mayType: (sessionId: string) => boolean): Promise<StartedRuns> {
+    this.get(workflowId);
+    const results: StartedRuns['results'] = [];
+    for (const sessionId of [...new Set(body.sessionIds)]) {
+      try {
+        const run = await this.start({ workflowId, sessionId, inputs: body.inputsBySession?.[sessionId] ?? body.inputs, replace: body.replace, typeKickoff: body.kickoff && mayType(sessionId) }, by);
+        results.push({ sessionId, started: true, run, reason: null });
+      } catch (error) {
+        if (!(error instanceof NotFoundError || error instanceof ConflictError || error instanceof BadInputError)) throw error;
+        results.push({ sessionId, started: false, run: null, reason: error instanceof NotFoundError ? 'There is no such session.' : error.message });
+      }
+    }
+    return { results };
+  }
+
+  /** The board: every live run, and the ones that ended in the last day, read from the archive with a bound. */
+  async board(filters: BoardFilters): Promise<Board> {
+    const now = Date.now();
+    const since = now - BOARD_ENDED_HOURS * 3600 * 1000;
+    const ended: ArchivedRun[] = [];
+    let cursor: string | undefined;
+    // Newest first: stop at the first page that reaches back past a day, or at the bound.
+    for (let pages = 0; pages < 4; pages += 1) {
+      const page = await this.archive.read({ sessionId: undefined, workflowId: undefined, status: undefined, limit: 100, cursor });
+      ended.push(...page.items);
+      const last = page.items.at(-1);
+      if (page.nextCursor === null || !last || (last.run.finishedAt !== null && Date.parse(last.run.finishedAt) < since) || ended.length > BOARD_ENDED_MAX * 4) break;
+      cursor = page.nextCursor;
+    }
+    const { runs, workflows, sessions, canvases } = this.hub.state;
+    return boardOf({ runs, workflows, sessions, canvases, ended, now, quietAfterSeconds: this.options.quietAfterSeconds?.() ?? 300, filters });
   }
 
   /**
@@ -440,7 +512,7 @@ export class Workflows {
   }
 
   /** The one place a run is moved: through `stepRun`, then one event. */
-  private async apply(run: Run, report: RunReport, by: Actor): Promise<RunDetail> {
+  private async apply(run: Run, report: RunStep, by: Actor): Promise<RunDetail> {
     if (this.ending.has(run.id)) throw new ConflictError('This run is over; nothing more can be reported on it.');
     const version = this.versionFor(run);
     const result = stepRun(version, run, report, { by, at: new Date().toISOString() });
@@ -468,13 +540,16 @@ export class Workflows {
   }
 
   /** A blocked run asks for the owner, naming the element; one that moves on stops asking. */
-  private afterMove(version: WorkflowVersion, before: Run, after: Run): void {
+  private afterMove(version: WorkflowVersion, before: Run | null, after: Run): void {
     const sessionId = after.sessionId;
     if (sessionId === null || !this.sessions.has(sessionId)) return;
     const name = version.elements.find((e) => e.id === after.currentElementId)?.name ?? '';
     if (after.status === 'blocked') {
       this.sessions.setAttention(sessionId, 'waiting', `${BLOCKED} "${name}": ${after.blockedReason ?? ''}`.slice(0, 500));
-    } else if (before.status === 'blocked' && this.sessions.get(sessionId).attention.message?.startsWith(BLOCKED)) {
+    } else if (after.status === 'awaiting') {
+      // A run that waits for the owner's decision is in the waiting queue, like one that is blocked.
+      this.sessions.setAttention(sessionId, 'waiting', `${APPROVAL} "${name}" of "${version.name}"`.slice(0, 500));
+    } else if (before !== null && (before.status === 'blocked' || before.status === 'awaiting') && OURS(this.sessions.get(sessionId).attention.message)) {
       this.sessions.setAttention(sessionId, 'none');
     }
   }
@@ -486,7 +561,7 @@ export class Workflows {
     if (run.status === 'finished') {
       const last = version.elements.at(-1)?.name ?? '';
       this.sessions.setAttention(sessionId, 'done', `Workflow "${version.name}" finished after "${last}"`.slice(0, 500));
-    } else if (this.sessions.get(sessionId).attention.message?.startsWith(BLOCKED)) {
+    } else if (OURS(this.sessions.get(sessionId).attention.message)) {
       this.sessions.setAttention(sessionId, 'none');
     }
     this.sessions.appendNote(sessionId, { author: 'agent', kind: 'event', text: runSummary(version, run).slice(0, 20_000) });

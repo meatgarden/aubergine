@@ -326,6 +326,14 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
 
     reportRun: ({ params, body, principal }) => workflows.report(params.runId, body, actorOf(principal)),
 
+    // A person's decision. `authorize` has refused every token and every session before this is reached.
+    approveRun: ({ params, body, principal }) => workflows.decide(params.runId, { type: 'approve', ...(body.elementId !== undefined ? { elementId: body.elementId } : {}), ...(body.comment !== undefined ? { comment: body.comment } : {}) }, actorOf(principal)),
+    sendBackRun: ({ params, body, principal }) => workflows.decide(params.runId, { type: 'send-back', elementId: body.elementId, comment: body.comment }, actorOf(principal)),
+
+    startRuns: ({ params, body, principal }) => workflows.startMany(params.workflowId, body, actorOf(principal), (sessionId) => mayKickoff(principal, sessionId)),
+
+    getBoard: ({ query }) => workflows.board(query),
+
     /* ---------- Drafts ---------- */
 
     listDrafts: ({ query }) => paginate(drafts.list(), (d) => d.id, query),

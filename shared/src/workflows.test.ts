@@ -226,8 +226,8 @@ describe('inputs', () => {
 });
 
 describe('element kinds', () => {
-  it('has the one kind there is', () => {
-    expect(elementKindNames()).toEqual(['instructions']);
+  it('has the two kinds there are', () => {
+    expect(elementKindNames()).toEqual(['instructions', 'approval']);
   });
 
   it('takes a second kind without anything that validates, renders or steps being touched', () => {

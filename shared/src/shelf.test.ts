@@ -211,11 +211,11 @@ describe('a workflow file', () => {
 describe('what is in an element', () => {
   it('is read from the schemas: every field has words, and the page lists them all', () => {
     const { element: fields, shelf } = elementReference();
-    expect(fields.map((f) => f.field)).toEqual(['name', 'instructions', 'doneWhen', 'needs', 'produces', 'kind', 'origin', 'source', 'id', 'extra']);
+    expect(fields.map((f) => f.field)).toEqual(['name', 'instructions', 'doneWhen', 'needs', 'produces', 'kind', 'ask', 'lookAt', 'origin', 'source', 'id', 'extra']);
     expect(Object.keys(Element.shape).sort()).toEqual(fields.map((f) => f.field).sort());
     expect(shelf.map((f) => f.field)).toEqual(['version', 'versions', 'state', 'replacedBy']);
     for (const field of [...fields, ...shelf]) expect(field.what.length, field.field).toBeGreaterThan(30);
-    expect(fields.filter((f) => f.written === 'by you').map((f) => f.field)).toEqual(['name', 'instructions', 'doneWhen', 'needs', 'produces']);
+    expect(fields.filter((f) => f.written === 'by you').map((f) => f.field)).toEqual(['name', 'instructions', 'doneWhen', 'needs', 'produces', 'ask', 'lookAt']);
     const page = elementReferencePage();
     for (const field of [...fields, ...shelf]) expect(page).toContain(`| \`${field.field}\` |`);
     expect(page.startsWith('# What is in an element')).toBe(true);

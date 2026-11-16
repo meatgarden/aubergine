@@ -1,4 +1,4 @@
-import { isQuiet, outputKind, versionOf, type Actor, type AppState, type ElementState, type Run, type RunRecord, type RunStatus, type WorkflowVersion } from '@aubergine/shared';
+import { RUN_STATUS_WORDS, isQuiet, outputKind, versionOf, type Actor, type AppState, type ElementState, type Run, type RunRecord, type RunStatus, type WorkflowVersion } from '@aubergine/shared';
 
 /**
  * Runs as the page shows them: pure functions of the page's state. The
@@ -48,8 +48,8 @@ export interface RunPicture {
 }
 
 /** A mark and a word for each status, so that it never rests on color alone. */
-export const STATUS_MARK: Record<RunStatus, string> = { queued: '…', running: '▶', paused: '‖', blocked: '!', finished: '✓', stopped: '■' };
-export const STATUS_WORD: Record<RunStatus, string> = { queued: 'queued', running: 'running', paused: 'paused', blocked: 'blocked', finished: 'finished', stopped: 'stopped' };
+export const STATUS_MARK: Record<RunStatus, string> = { queued: '…', running: '▶', paused: '‖', blocked: '!', awaiting: '?', finished: '✓', stopped: '■' };
+export const STATUS_WORD: Record<RunStatus, string> = { ...RUN_STATUS_WORDS, running: 'running' };
 export const STATE_MARK: Record<ElementState, string> = { pending: '○', active: '▶', done: '✓', skipped: '–' };
 
 /** Everything the strip, the row and the run view need to draw one run. */
@@ -102,7 +102,7 @@ export function actorWord(actor: Actor | null): string {
 
 /** Runs in the order the Workflows section lists them: the ones that need someone first, then by when they last moved. */
 export function sortRuns(runs: readonly Run[]): Run[] {
-  const weight = (run: Run): number => (run.status === 'blocked' ? 0 : run.status === 'paused' ? 1 : run.status === 'running' ? 2 : 3);
+  const weight = (run: Run): number => (run.status === 'blocked' || run.status === 'awaiting' ? 0 : run.status === 'paused' ? 1 : run.status === 'running' ? 2 : 3);
   return [...runs].sort((a, b) => weight(a) - weight(b) || b.updatedAt.localeCompare(a.updatedAt) || a.id.localeCompare(b.id));
 }
 
