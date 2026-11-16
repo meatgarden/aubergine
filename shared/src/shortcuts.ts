@@ -79,6 +79,7 @@ export const COMMAND_IDS = [
   'drafts.review',
   'workflow.describe',
   'element.describe',
+  'element.run',
   'shortcuts.show',
   'panels.close',
 ] as const;

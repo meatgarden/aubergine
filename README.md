@@ -574,6 +574,50 @@ A terminal is on one run at a time. **Resume agent** on a terminal that is on a 
 - **quiet** on a strip means the terminal has kept printing for five minutes since the last report, so the picture may be behind what is really going on: the agent may have moved on without saying so. The time is `workflows.quietAfterSeconds` in the settings.
 - When a run finishes, a summary (each element and its note) is added to the terminal's notes. Finished and stopped runs leave the list; they are kept in `runs.log` in the data folder and can be read with `GET /v1/runs?status=ended`.
 
+### Let an agent write one
+
+**Describe an element…** and **Describe a workflow…** (on the Workflows screen, or ⌘K) ask an agent to write one for you. Say what you want, pick a terminal with an agent (or a new Claude Code session), and send.
+
+Your description is **not typed into the terminal**. The agent is typed one fixed sentence that tells it to run `aubergine workflow brief`; that command prints your description, the format with an example, the limits, and how to hand the result in:
+
+```sh
+aubergine element propose --file to-dos.json     # or: aubergine workflow propose --file flow.json
+```
+
+What an agent writes arrives as a **draft**. A draft cannot be run, is not among your workflows, and no agent is told any of it. **Review** (the toolbar shows "1 to review") is where you read it: the whole text exactly as an agent would be told it, what it needs, who it is from, and, for a second version, what changed. A text longer than the view is not accepted until you have asked to see all of it. Then:
+
+- **Accept**: an element goes on the shelf; a workflow becomes a workflow (or a new version, when the draft says which one it revises).
+- **Edit, then accept**: change the text first.
+- **Send back with a comment**: the agent is typed the same fixed sentence, reads your comment with `aubergine workflow brief`, and hands in a new version.
+- **Discard**.
+
+Programs can propose too: a token with `workflows:write` posts to `/v1/drafts`. A new token has **changes to workflows need my review** switched on, which closes the routes that create and change workflows to it and leaves it the draft route; switch it off, when you make the token in the browser, for one you trust to write workflows directly. No token, whatever its scopes, can accept, send back or discard a draft, and a session's own token can only propose drafts and read its own.
+
+### What an element needs, and what it produces
+
+An element can list what it **needs**: an MCP server, a command, access to something, or anything else, each with a short name. Aubergine does not supply or check these; the agent's own setup does. They are shown in the editor, before a run starts, and on the review screen, and the element tells the agent: *if you do not have one of these, report blocked and say which.*
+
+An element also says what it **produces**. Every element can hand over a note. One that produces a **checklist** must hand in a list when it is done:
+
+```sh
+aubergine workflow done --output list.json      # {"items": [{"text": "one line", "detail": "optional"}]}
+```
+
+`done` without it is refused, with the format. In the run view the checklist is a list you can tick, also after the run is over (the side panel lists the runs that ended lately). Your ticks are kept with the run, with when you made them, and the next element is told the list with your choices marked, so "do the ones I ticked" works.
+
+### The shelf, and running one element by itself
+
+The **shelf** on the Workflows screen keeps elements for reuse. **Insert from shelf…** in the workflow editor puts a copy into a workflow (changing the shelf later does not change the workflow), and **Save to shelf** keeps a copy of an element you wrote in one.
+
+**Run…** on a shelf element (or ⌘K, `Run an element by itself`, or the command below) runs just that element on a terminal, with no workflow around it. It shows up as a run like any other, and nothing is added to your workflows for it.
+
+```sh
+aubergine element list
+aubergine element run "Collect my to-dos" --session helper
+```
+
+An example, end to end: ask an agent for "a to-do list from what people asked me in the team chat". It proposes an element, *Collect my to-dos*, that needs an MCP server for the chat and produces a checklist. You read it, send it back once ("shorter"), accept the second version, and run it by itself on the agent's terminal. The agent hands in the list; you tick the items you will do.
+
 ### From the command line
 
 ```sh
@@ -588,6 +632,8 @@ Inside a session that is on a run:
 ```sh
 aubergine workflow status              # where the run stands and what to do now
 aubergine workflow done --note "…"     # the current element is finished; prints what comes next
+aubergine workflow done --output f     # the same, handing in what the element produces (a checklist)
+aubergine workflow brief               # what this session was asked to write, and how to hand it in
 aubergine workflow blocked "…"         # you cannot go on without a person
 aubergine workflow goto <element>      # by name, ID or number
 aubergine workflow pause | resume | stop
@@ -601,7 +647,7 @@ Terminals that were already open when you updated keep the `PATH` they started w
 
 ### For programs
 
-Workflows and runs are in the [API](docs/api.md): list, create, change and copy workflows (`workflows:write`), start runs and report on them (`runs:write`), read both (`read`). Reporting on a run does not type into a terminal: a token that starts a run is given the line above in the answer, and nothing is typed. Limits on the size of a workflow are under `workflows` in the settings.
+Workflows, the shelf, drafts and runs are in the [API](docs/api.md): propose drafts, and with review switched off for the token create and change workflows and shelf elements (`workflows:write`); start runs, report on them and tick checklist items (`runs:write`); read all of it (`read`). Reporting on a run does not type into a terminal: a token that starts a run is given the line above in the answer, and nothing is typed. Limits on the size of a workflow are under `workflows` in the settings.
 
 ## Updating from an older version
 
@@ -698,7 +744,12 @@ aubergine workflow import <file> [--name <name>]   make one from such a file ("-
 aubergine workflow run <name> [--session <name|id>] [--input key=value]… [--replace]
                                start a run on a session: the one it is typed in, when typed inside one
 aubergine workflow status      inside a session on a run: where it stands and what to do now
-aubergine workflow done [--note <text>]   the current element is finished; prints what comes next
+aubergine workflow done [--note <text>] [--output <file>]   the current element is finished; prints what comes next
+aubergine workflow brief       inside a session asked to write a workflow or an element: the request
+aubergine workflow propose --file <file>   hand a workflow in as a draft, for you to review
+aubergine element propose --file <file>    the same for one element
+aubergine element list         the shelf; also show <name> and remove <name>
+aubergine element run <name> [--session <name|id>] [--input key=value]…   run one element by itself
 aubergine workflow blocked <reason>, goto <element>, pause, resume, stop
 aubergine note <text>          inside a session: add an entry to its note log
 aubergine hooks print          print the Claude Code hook settings
@@ -732,9 +783,12 @@ PUT  /v1/sessions/<id>/attention    {"state": "working" | "waiting" | "done" | "
 POST /v1/sessions/<id>/notes        {"text": "..."}
 GET  /v1/sessions/<id>/run          the run the session is on, and what to do now
 POST /v1/sessions/<id>/run/report   {"type": "done", "elementId": "...", "note": "..."} and the other reports
+GET  /v1/sessions/<id>/brief        what the session was asked to write
+GET  /v1/sessions/<id>/drafts       the drafts it proposed, with the comments on them
+POST /v1/sessions/<id>/drafts       propose a workflow or an element as a draft
 ```
 
-Everything else is refused: it cannot list runs or workflows, start a run, or reach another session's run. `aubergine note`, `aubergine hook` and the in-session `aubergine workflow` commands are thin wrappers around these calls. This token is made for the session by Aubergine and is separate from the [API tokens](#api-tokens) you create yourself, which can do more.
+Everything else is refused: it cannot list runs or workflows, start a run, reach another session's run, read a draft it did not propose, or accept anything. `aubergine note`, `aubergine hook` and the in-session `aubergine workflow` commands are thin wrappers around these calls. This token is made for the session by Aubergine and is separate from the [API tokens](#api-tokens) you create yourself, which can do more.
 
 ## API tokens
 
@@ -768,7 +822,7 @@ curl -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/jso
 | `canvases:write` | create, rename, reorder and close canvases; move and resize nodes; frames; show a canvas in the browser |
 | `sessions:write` | start, rename, tag, move, park, restore and end sessions; show a session in the browser. **A session can be started with a command, so a token with this scope can run any command on this computer as you** |
 | `notes:write` | change a session's pinned note and add entries to its note log |
-| `workflows:write` | create, change, copy and remove workflows |
+| `workflows:write` | propose workflows and elements as drafts for you to review. With review switched off for the token: create, change, copy and remove workflows and shelf elements directly |
 | `runs:write` | start runs of workflows on sessions and report on them (done, blocked, go to, pause, resume, stop). It does not type into a terminal |
 
 The names `terminal:read` and `terminal:input` are reserved for what comes later; a token cannot be given them yet. A token cannot read what a terminal shows or type into it.

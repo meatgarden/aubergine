@@ -17,7 +17,10 @@ export function RunDialog() {
   const workflows = useApp((s) => s.app?.workflows);
   const session = useApp((s) => (starting?.sessionId ? (s.app?.sessions.find((x) => x.id === starting.sessionId) ?? null) : null));
   const existing = useApp((s) => (starting?.sessionId ? runOfSession(s.app, starting.sessionId) : null));
-  const shelfItem = useApp((s) => (starting?.elementId ? (s.app?.shelf.find((e) => e.id === starting.elementId) ?? null) : null));
+  const shelf = useApp((s) => s.app?.shelf);
+  const [elementId, setElementId] = useState<string | null>(null);
+  // One element by itself: the one named, or the one chosen here when none was.
+  const shelfItem = starting?.elementId !== undefined ? ((shelf ?? []).find((e) => e.id === (elementId ?? starting.elementId)) ?? (starting.elementId === '' ? ([...(shelf ?? [])].sort((a, b) => a.element.name.localeCompare(b.element.name))[0] ?? null) : null)) : null;
   const [workflowId, setWorkflowId] = useState<string | null>(null);
   const [inputs, setInputs] = useState<Record<string, string>>({});
   const [replace, setReplace] = useState(false);
@@ -28,6 +31,7 @@ export function RunDialog() {
   useEffect(() => {
     if (!starting) return;
     setWorkflowId(starting.workflowId ?? null);
+    setElementId(null);
     setInputs({});
     setReplace(false);
     setError(null);
@@ -128,6 +132,20 @@ export function RunDialog() {
                       </label>
                       <p className="sheet-note">{version.elements.map((e) => e.name).join(' → ')}</p>
                     </>
+                  )}
+                  {alone && starting.elementId === '' && shelfItem && (
+                    <label className="wf-field">
+                      <span>Element</span>
+                      <select value={shelfItem.id} onChange={(e) => setElementId(e.target.value)} autoFocus data-testid="run-element">
+                        {[...(shelf ?? [])]
+                          .sort((a, b) => a.element.name.localeCompare(b.element.name))
+                          .map((item) => (
+                            <option key={item.id} value={item.id}>
+                              {item.element.name}
+                            </option>
+                          ))}
+                      </select>
+                    </label>
                   )}
                   {needs.length > 0 && (
                     <p className="run-needs" data-testid="run-needs">

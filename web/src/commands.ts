@@ -549,6 +549,18 @@ export const COMMANDS: readonly Command[] = [
     run: (state) => state.describe('element'),
   },
   {
+    id: 'element.run',
+    title: 'Run an element by itself… on the terminal',
+    description: 'Runs one element from the shelf on the terminal, without a workflow around it.',
+    group: 'Terminals',
+    available: (state) => hasTarget(state) && (state.app?.shelf.length ?? 0) > 0,
+    run: (state) => {
+      const session = targetSession(state);
+      // An empty choice: the dialog asks which element.
+      if (session) state.startRun({ sessionId: session.id, elementId: '' });
+    },
+  },
+  {
     id: 'shortcuts.show',
     title: 'Show shortcuts',
     description: 'Shows every command and its keys.',
