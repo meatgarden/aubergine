@@ -1,5 +1,5 @@
 import { createHash, randomBytes, timingSafeEqual } from 'node:crypto';
-import { GRANTABLE_SCOPES, TOKEN_PREFIX, newId, tokenStatus, type ApiToken, type CreateTokenRequest, type TokenStatus, TERMINAL_SCOPES } from '@aubergine/shared';
+import { GRANTABLE_SCOPES, TOKEN_PREFIX, newId, tokenStatus, type ApiToken, type CreateTokenRequest, type TokenStatus, REACH_SCOPES } from '@aubergine/shared';
 import type { StateHub } from './state-hub';
 
 export class TokenNotFoundError extends Error {}
@@ -37,7 +37,7 @@ export class Tokens {
 
   /** Makes a token. The secret in the answer exists nowhere else: it is not stored and cannot be shown again. */
   create(input: Omit<CreateTokenRequest, 'reviewWorkflowChanges'> & { reviewWorkflowChanges?: boolean; /** The agent session it is made for. Never from a request body. */ sessionId?: string }): { token: ApiToken; secret: string } {
-    const terminal = input.scopes.some((scope) => (TERMINAL_SCOPES as readonly string[]).includes(scope));
+    const terminal = input.scopes.some((scope) => (REACH_SCOPES as readonly string[]).includes(scope));
     const secret = newSecret();
     const now = this.now();
     const expiresAt = input.expiresAt ?? (input.expiresInDays !== undefined ? new Date(now + input.expiresInDays * DAY_MS).toISOString() : null);

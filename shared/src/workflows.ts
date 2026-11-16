@@ -522,6 +522,9 @@ export const kickoffLine = (): string => KICKOFF_LINE;
 export const RECAP_LINE = 'Your owner asked for a recap of this session. Run `aubergine recap --write` to read what is wanted, and follow what it prints.';
 
 /** The line that asks an agent to write a draft. Fixed too: the owner's description is read with the command, never typed. */
+/** Typed where an idle agent has a message waiting. Nothing of the message, and no name, is in it. */
+export const INBOX_LINE = 'There is a message for this session in Aubergine. Run `aubergine inbox` to read it.';
+
 export const BRIEF_LINE = 'You have been asked to write something for Aubergine. Run `aubergine workflow brief` to read the request, and follow what it prints.';
 
 /** The one line that points at the guide for agents, at the end of what an agent is told about a run or a request. */

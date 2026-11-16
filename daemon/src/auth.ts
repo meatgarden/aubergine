@@ -1,5 +1,5 @@
 import { createHmac, timingSafeEqual } from 'node:crypto';
-import { Id, NEVER_BY_TOKEN, SESSION_ACTIONS, reaches, scopeFor, type Action, type Reach, type Scope, type SessionFacts } from '@aubergine/shared';
+import { Id, NEVER_BY_TOKEN, REACH_ACTIONS, SESSION_ACTIONS, canvasAdmits, reaches, scopeFor, type Action, type Reach, type Scope, type SessionFacts } from '@aubergine/shared';
 
 /** Who is making a request. Exactly one of these, decided once per request. */
 export type Principal =
@@ -18,10 +18,15 @@ export interface Resource {
   canvasId?: string;
   /** For a question about a session's terminal: what decides it. Given by whoever asks; never looked up afterwards. */
   session?: SessionFacts;
+  /**
+   * For a question about one session messaging another (`sessionId` and `session` are then the receiver's):
+   * the canvas the sender is on, and which canvases the receiver's canvas lets message it.
+   */
+  delivery?: { fromCanvasId: string | null; messagesFrom: readonly string[] };
 }
 
-/** The actions that reach into a terminal. */
-export const TERMINAL_ACTIONS: readonly Action[] = ['terminal.read', 'terminal.input'];
+/** The actions that reach into a terminal or its messages: a scope is not enough for them, the session must be within reach and not "people only". */
+export const TERMINAL_ACTIONS: readonly Action[] = REACH_ACTIONS;
 
 /**
  * The one place that decides what a principal may do. Every route asks here;
@@ -31,6 +36,8 @@ export const TERMINAL_ACTIONS: readonly Action[] = ['terminal.read', 'terminal.i
  * - A session may set its own attention state, append to its own note log and
  *   say which agent conversation it is in. Nothing else, and nothing about
  *   any other session.
+ * - A session may message another session only where the owner opened the
+ *   receiver's canvas to the sender's, and never one that is "people only".
  * - Nobody but the user reads or types in a terminal marked "people only".
  *   A token with a terminal scope reaches only the sessions its reach names.
  * - A token may do what its scopes allow (with one switch per token: changes
@@ -41,6 +48,13 @@ export const TERMINAL_ACTIONS: readonly Action[] = ['terminal.read', 'terminal.i
 export function authorize(principal: Principal, action: Action, resource: Resource): boolean {
   if (principal.kind === 'user') return true;
   if (principal.kind === 'session') {
+    // One session messaging another: only where the owner let the sender's canvas message the receiver's,
+    // never a terminal that is "people only", never itself. With nothing switched on, this is always no.
+    if (action === 'messages.write') {
+      const to = resource.session;
+      const delivery = resource.delivery;
+      return to !== undefined && delivery !== undefined && resource.sessionId !== undefined && resource.sessionId !== principal.sessionId && !to.peopleOnly && to.canvasId !== null && canvasAdmits(delivery.messagesFrom, delivery.fromCanvasId);
+    }
     return (SESSION_ACTIONS as readonly string[]).includes(action) && resource.sessionId !== undefined && principal.sessionId === resource.sessionId;
   }
   if ((NEVER_BY_TOKEN as readonly string[]).includes(action)) return false;

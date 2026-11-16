@@ -6,6 +6,7 @@ import { SCOPE_FILTER, TAG_FILTER, TEXT_FILTER, listFilters } from '../../list-f
 import { listModel } from '../../list-model';
 import { NotePanel } from '../../NotePanel';
 import { RecapBlock, recapTitle } from '../../Recap';
+import { MessageMark, SessionMessages } from '../../Messages';
 import { markNotesSeen, useUnseenNotes } from '../../notes-seen';
 import { shortFolder } from '../../search';
 import { hint } from '../../shortcuts';
@@ -415,6 +416,7 @@ const RowView = memo(function RowView({ row, style, density, indented, current, 
             {badge}
           </span>
         )}
+        {!compact && <MessageMark session={session} />}
         {session.agent && !compact && (
           <span className="list-agent" title="An agent runs here">
             agent
@@ -583,6 +585,7 @@ function NotesDrawer({ id, onClose }: { id: string; onClose: () => void }) {
       <div className="drawer-section">
         <RecapBlock sessionId={id} />
       </div>
+      <SessionMessages sessionId={id} />
       <NotePanel sessionId={id} onClose={onClose} embedded />
     </>
   );

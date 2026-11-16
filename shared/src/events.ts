@@ -24,6 +24,7 @@ import {
 } from './entities';
 import { ApiToken } from './tokens';
 import { Id } from './ids';
+import { SessionMessages } from './messages';
 import { Draft, ShelfElement } from './drafts';
 import { AcceptedRepositoryWorkflow, REPOSITORY_ACCEPTED_MAX } from './repository';
 import { TypedBy } from './terminal';
@@ -77,6 +78,8 @@ export const ChangeEvent = z.discriminatedUnion('type', [
   /** The session's agent handed in a recap; it takes the place of the one before. */
   z.object({ type: z.literal('session.recap'), sessionId: Id, recap: z.object({ text: z.string().max(2000), at: Timestamp }) }),
   z.object({ type: z.literal('session.attention'), sessionId: Id, attention: Attention }),
+  /** The counts about a session's messages changed. Nothing a message said is in an event. */
+  z.object({ type: z.literal('session.messages'), sessionId: Id, messages: SessionMessages }),
   z.object({ type: z.literal('session.note.appended'), sessionId: Id, entry: NoteEntry }),
   /** Which agent runs in the session, and in which conversation. */
   z.object({ type: z.literal('session.agent'), sessionId: Id, agent: AgentInfo.nullable() }),
@@ -93,6 +96,8 @@ export const ChangeEvent = z.discriminatedUnion('type', [
   z.object({ type: z.literal('canvas.updated'), canvasId: Id, changes: CanvasChanges }),
   /** Closed. Its sessions were moved or parked first; anything still on it is parked here. */
   z.object({ type: z.literal('canvas.removed'), canvasId: Id }),
+  /** The owner changed which canvases' terminals may message the terminals on this one. */
+  z.object({ type: z.literal('canvas.messaging'), canvasId: Id, messagesFrom: z.array(Id).max(200) }),
   z.object({ type: z.literal('token.created'), token: ApiToken }),
   z.object({ type: z.literal('token.revoked'), tokenId: Id, at: Timestamp }),
   /** Recorded at most about once a minute per token. */
@@ -212,6 +217,10 @@ export function applyEvent(state: AppState, event: ChangeEvent): AppState {
       return patchSession(state, event.sessionId, { typedBy: event.by });
     case 'session.recap':
       return patchSession(state, event.sessionId, { recap: event.recap });
+    case 'session.messages':
+      return patchSession(state, event.sessionId, { messages: event.messages });
+    case 'canvas.messaging':
+      return { ...state, canvases: state.canvases.map((c) => (c.id === event.canvasId ? { ...c, messagesFrom: event.messagesFrom } : c)) };
     case 'session.attention':
       return patchSession(state, event.sessionId, { attention: event.attention });
     case 'session.note.appended': {

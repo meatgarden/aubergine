@@ -12,6 +12,7 @@ const canvas = (name: string, order: number): Canvas => ({
   labels: {},
   createdAt: '2026-01-01T00:00:00.000Z',
   layout: { nodes: [], frames: [] },
+  messagesFrom: [],
 });
 const canvases = [canvas('Main', 0), canvas('Deploys', 1), canvas('Design work', 2)];
 

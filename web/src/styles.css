@@ -2771,3 +2771,93 @@ tr[data-status='expired'] strong {
 .transcript-entry.is-tool .transcript-text {
   font-family: var(--mono, monospace);
 }
+
+/* Messages between terminals */
+.message-mark {
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: transparent;
+  color: inherit;
+  font-size: 11px;
+  padding: 0 6px;
+  margin-right: 6px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.message-mark.wants-you,
+.thread-row.wants-you {
+  border-color: var(--accent);
+  font-weight: 600;
+}
+.thread-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.thread-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  color: inherit;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  padding: 4px 6px;
+  cursor: pointer;
+}
+.thread-row:hover {
+  border-color: var(--border);
+}
+.thread-about {
+  font-size: 11px;
+  opacity: 0.75;
+}
+.thread {
+  padding: 4px 6px 10px 12px;
+  border-left: 2px solid var(--border);
+  margin: 2px 0 8px 6px;
+}
+.thread-messages {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.thread-message {
+  margin-bottom: 8px;
+}
+.thread-who {
+  font-size: 11px;
+  opacity: 0.8;
+}
+.thread-paused {
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  padding: 6px 8px;
+  margin: 4px 0 8px;
+}
+.thread-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 6px 0;
+}
+.thread-reply {
+  display: flex;
+  gap: 6px;
+  align-items: flex-end;
+}
+.thread-reply textarea {
+  flex: 1;
+  min-width: 0;
+  resize: vertical;
+  font: inherit;
+}
+.messages-section {
+  padding: 4px 8px 8px;
+}
+.tab-messaging {
+  font-size: 11px;
+  padding: 0 4px;
+}

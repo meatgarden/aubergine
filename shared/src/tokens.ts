@@ -9,10 +9,13 @@ import { Reach } from './terminal';
  */
 
 /** What a token can be allowed to do. Smallest first. */
-export const GRANTABLE_SCOPES = ['read', 'canvases:write', 'sessions:write', 'notes:write', 'workflows:write', 'runs:write', 'terminal:read', 'terminal:input'] as const;
+export const GRANTABLE_SCOPES = ['read', 'canvases:write', 'sessions:write', 'notes:write', 'workflows:write', 'runs:write', 'terminal:read', 'terminal:input', 'messages:read', 'messages:write'] as const;
 
 /** The scopes that reach into terminals. Neither is implied by any other scope; a token that asks for one must say which sessions it may reach. */
 export const TERMINAL_SCOPES = ['terminal:read', 'terminal:input'] as const;
+
+/** The scopes that apply only to the sessions a token may reach: the terminal scopes and the message scopes. A token that asks for one must say which sessions. */
+export const REACH_SCOPES = [...TERMINAL_SCOPES, 'messages:read', 'messages:write'] as const;
 
 /** Names kept for what comes later. There are none at present. */
 export const RESERVED_SCOPES = [] as const;
@@ -30,6 +33,8 @@ export const SCOPE_MEANING: Record<KnownScope, string> = {
   'notes:write': 'Change the pinned note of a session and add entries to its note log.',
   'terminal:read': 'Read what the terminals it may reach show and have printed, and search that. Whatever is on those screens, secrets included, is readable to this token.',
   'terminal:input': 'Type into the terminals it may reach, press keys there and run commands. This scope can run any command on this computer as you, in any terminal it may reach.',
+  'messages:read': 'Read the messages to and from the sessions it may reach, the ones you sent among them. Reading does not mark them read.',
+  'messages:write': 'Send messages to the sessions it may reach, under the name of the token. A message is never typed into a terminal. By itself this scope types nothing at all; with terminal:input on that terminal, one fixed sentence saying that a message waits is typed where an agent is idle.',
   'workflows:write': 'Propose workflows and elements as drafts for you to review. With review switched off for the token: create, change, copy and remove workflows and shelf elements directly.',
   'runs:write': 'Start runs of workflows on sessions, and report on them: done, blocked, go to, pause, resume, stop. By itself it types nothing into a terminal; with terminal:input on that terminal, the one fixed kickoff sentence is typed.',
 };
@@ -96,9 +101,9 @@ export const CreateTokenRequest = z
       .boolean()
       .default(true)
       .describe('Changes to workflows need your review: with `workflows:write` the token may propose drafts, and may not create or change workflows directly. On unless you switch it off.'),
-    reach: Reach.optional().describe('Which sessions the terminal scopes apply to: all, those on named canvases, or those with a tag. Required when `terminal:read` or `terminal:input` is asked for; there is no default.'),
+    reach: Reach.optional().describe('Which sessions the terminal scopes and the message scopes apply to: all, those on named canvases, or those with a tag. Required when `terminal:read`, `terminal:input`, `messages:read` or `messages:write` is asked for; there is no default.'),
   })
-  .refine((body) => body.reach !== undefined || !body.scopes.some((scope) => (TERMINAL_SCOPES as readonly string[]).includes(scope)), 'A token with a terminal scope must say which sessions it may reach: give `reach`')
+  .refine((body) => body.reach !== undefined || !body.scopes.some((scope) => (REACH_SCOPES as readonly string[]).includes(scope)), 'A token with a terminal scope or a message scope must say which sessions it may reach: give `reach`')
   .refine((body) => body.expiresAt === undefined || body.expiresInDays === undefined, 'Give expiresAt or expiresInDays, not both');
 export type CreateTokenRequest = z.infer<typeof CreateTokenRequest>;
 
@@ -111,7 +116,7 @@ export const AgentToolsChoice = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('own') }),
   z
     .object({ kind: z.literal('token'), scopes: Scopes, reach: Reach.optional() })
-    .refine((choice) => choice.reach !== undefined || !choice.scopes.some((scope) => (TERMINAL_SCOPES as readonly string[]).includes(scope)), 'A token with a terminal scope must say which sessions it may reach: give `reach`'),
+    .refine((choice) => choice.reach !== undefined || !choice.scopes.some((scope) => (REACH_SCOPES as readonly string[]).includes(scope)), 'A token with a terminal scope or a message scope must say which sessions it may reach: give `reach`'),
 ]);
 export type AgentToolsChoice = z.infer<typeof AgentToolsChoice>;
 

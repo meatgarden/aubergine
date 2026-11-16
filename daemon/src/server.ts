@@ -10,6 +10,15 @@ import {
   RECAP_LINE,
   AwayQuery,
   HistoryQuery,
+  BlockSenderRequest,
+  CanvasMessagingRequest,
+  OwnerMessageRequest,
+  ThreadAction,
+  ThreadId,
+  ThreadsQuery,
+  type Message,
+  type ThreadDetail,
+  type ThreadList,
   HistorySearchQuery,
   OpenConversationRequest,
   TranscriptQuery,
@@ -81,6 +90,8 @@ import { Drafts } from './drafts';
 import { Repositories } from './repositories';
 import { noInputAudit, type InputAudit } from './input-audit';
 import { TerminalAccess, TerminalRefusal, type TerminalTrace } from './terminal-access';
+import { MessageRefusal, Messages } from './messages';
+import type { MessageLog } from './message-log';
 import { Workflows } from './workflows';
 
 export interface ServerOptions {
@@ -106,6 +117,8 @@ export interface ServerOptions {
   draftLog?: DraftLog;
   /** Where runs that are over are kept. Left out, in memory only. */
   runArchive?: RunArchive;
+  /** Where messages between sessions are kept. Left out, in memory only. */
+  messageLog?: MessageLog;
   /** Reads an agent's past conversations. Left out, those routes answer that it is not available. */
   histories?: (sessions: Sessions) => Histories;
   /** Reads what is switched on for an agent. Left out, that route answers that it is not available. */
@@ -182,6 +195,9 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   const drafts = new Drafts(hub, sessions, workflows, workflowLimits, options.draftLog);
   const repositories = new Repositories(hub, sessions, workflows, workflowLimits, options.homeFolder);
   const terminalSettings = (await options.settings()).terminal;
+  const messageSettings = (await options.settings()).messages;
+  const messages = new Messages(hub, sessions, () => messageSettings, options.messageLog);
+  await messages.load();
   const terminals = new TerminalAccess(sessions, runtime, () => terminalSettings, options.inputAudit ?? noInputAudit);
   /** How much a terminal call read or typed, for the activity log. */
   const traces = new WeakMap<FastifyRequest, TerminalTrace>();
@@ -221,7 +237,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     asked.set(request, { action, resource });
     if (!principal || !authorize(principal, action, resource)) {
       // One clear answer for a token that would otherwise have been allowed: the owner closed this session to programs.
-      if (principal && peopleOnlyRefusal(principal, action, resource)) throw new HttpError(403, 'people_only', 'This session is marked "people only": no token may read it or type into it.');
+      if (principal && peopleOnlyRefusal(principal, action, resource)) throw new HttpError(403, 'people_only', 'This session is marked "people only": no token may read it, type into it or message it.');
       if (principal && reachRefusal(principal, action, resource)) throw new HttpError(403, 'out_of_reach', "This token's reach does not cover that session.");
       throw new HttpError(403, 'forbidden', 'These credentials may not do that');
     }
@@ -253,7 +269,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     return typeof said === 'string' && ClientName.safeParse(said).success ? said : null;
   };
   /** What only the owner may do and is worth seeing when it was not done in the browser. */
-  const WATCHED: readonly Action[] = ['drafts.review', 'repository.review', 'repository.write', 'tokens.manage', 'terminal.input', 'sessions.protect'];
+  const WATCHED: readonly Action[] = ['drafts.review', 'repository.review', 'repository.write', 'tokens.manage', 'terminal.input', 'sessions.protect', 'messages.manage'];
   /** Reading a terminal is watched too, though it changes nothing. */
   const WATCHED_READS: readonly Action[] = ['terminal.read'];
   const ownerLogged = new WeakSet<FastifyRequest>();
@@ -399,6 +415,10 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     if (error instanceof BadInputError || error instanceof BadCursorError || error instanceof BadActivityCursorError) {
       return reply.code(400).send(errorBody('bad_request', error.message));
     }
+    if (error instanceof MessageRefusal) {
+      if (error.retryAfterSeconds !== undefined) void reply.header('retry-after', String(error.retryAfterSeconds));
+      return reply.code(error.status).send(errorBody(error.code, error.message));
+    }
     if (error instanceof TerminalRefusal) {
       if (error.retryAfterSeconds !== undefined) void reply.header('retry-after', String(error.retryAfterSeconds));
       return reply.code(error.status).send(errorBody(error.code, error.message));
@@ -507,10 +527,54 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   // A window of what changed lately, kept in memory for whoever comes back to the page. Not state, not a log.
   const away = new Away(hub);
   app.addHook('onClose', async () => away.close());
+  app.addHook('onClose', async () => messages.close());
   app.get(paths.away, async (request): Promise<AwayDigest> => {
     allowOn(request, 'away.read', {});
     const query = parse(AwayQuery, request.query);
     return away.digest(query.since);
+  });
+
+  /* ---------- Messages, as the owner sees and sends them ---------- */
+
+  app.get(paths.messageThreads, async (request): Promise<ThreadList> => {
+    allowOn(request, 'messages.manage', {});
+    return { threads: messages.list(parse(ThreadsQuery, request.query).sessionId) };
+  });
+  const threadParam = (request: FastifyRequest): string => parse(ThreadId, (request.params as { threadId?: string }).threadId);
+  app.get(paths.messageThread(':threadId'), async (request): Promise<ThreadDetail> => {
+    allowOn(request, 'messages.manage', {});
+    return messages.detail(threadParam(request));
+  });
+  app.post(paths.messageThread(':threadId'), async (request): Promise<ThreadDetail> => {
+    allowOn(request, 'messages.manage', {});
+    return messages.act(threadParam(request), parse(ThreadAction, request.body).action);
+  });
+  // The owner's own message. Nothing limits it; it is kept and shown like any other, and never typed.
+  app.post(paths.sessionMessages(':sessionId'), async (request, reply): Promise<Message> => {
+    const sessionId = idParam(request, 'sessionId');
+    allowOn(request, 'messages.manage', { sessionId });
+    const body = parse(OwnerMessageRequest, request.body);
+    void reply.code(201);
+    // Said with the message: whether it came from the page, or from a command line, where whoever types acts as the owner.
+    return messages.fromOwner(sessionId, body.text, body.replyTo ?? null, ownerCaller(request).kind === 'owner-cli' ? 'command' : 'page');
+  });
+  app.post(paths.sessionMessageBlocks(':sessionId'), async (request): Promise<{ sessionId: string; sender: string; blocked: boolean }> => {
+    const sessionId = idParam(request, 'sessionId');
+    allowOn(request, 'messages.manage', { sessionId });
+    const body = parse(BlockSenderRequest, request.body);
+    return messages.block(sessionId, body.sender, body.blocked);
+  });
+  // Whether the terminals on a canvas may message each other: the canvas's own ID in its own list, and nothing else can be put there here.
+  app.put(paths.canvasMessaging(':canvasId'), async (request): Promise<{ canvasId: string; sessions: boolean }> => {
+    const canvasId = idParam(request, 'canvasId');
+    allowOn(request, 'messages.manage', { canvasId });
+    const body = parse(CanvasMessagingRequest, request.body);
+    const canvas = hub.state.canvases.find((c) => c.id === canvasId);
+    if (!canvas) throw new HttpError(404, 'not_found', 'No canvas by that ID.');
+    const others = canvas.messagesFrom.filter((id) => id !== canvasId);
+    const messagesFrom = body.sessions ? [canvasId, ...others] : others;
+    if (canvas.messagesFrom.includes(canvasId) !== body.sessions) hub.emit({ type: 'canvas.messaging', canvasId, messagesFrom });
+    return { canvasId, sessions: body.sessions };
   });
 
   /* ---------- Recaps ---------- */
@@ -657,6 +721,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     drafts,
     repositories,
     terminals,
+    messages,
     may: (principal, action, resource) => authorize(principal, action, resource),
     resourceOf,
     trace: (request, trace) => void traces.set(request, trace),

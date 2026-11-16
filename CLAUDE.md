@@ -12,7 +12,7 @@ shared/   wire protocol (zod schemas), entity types, settings schema, the change
           the declarations of every /v1 route (routes.ts), the scope table (access.ts), openapi.ts;
           workflows.ts (entities, element kinds, the step function, what an agent is told, the file
           format), workflow-api.ts (bodies and answers), workflow-templates.ts,
-          outputs.ts (output kinds), drafts.ts (drafts, the shelf, what a reviewer reads, the brief), repository.ts, terminal.ts, demo.ts (the labels that mark what the demo made), recap.ts, away.ts, history.ts, guide.ts (the guide for agents)
+          outputs.ts (output kinds), drafts.ts (drafts, the shelf, what a reviewer reads, the brief), repository.ts, terminal.ts, demo.ts (the labels that mark what the demo made), recap.ts, away.ts, history.ts, guide.ts (the guide for agents), messages.ts
 daemon/   Fastify HTTP + WebSocket server, tmux session runtime, JSON store, CLI, start-at-login,
           shell integration (src/shell/), agent support (src/agents/), authorization (src/auth.ts),
           migration of existing terminals (src/migrate/), including reading agent
@@ -29,7 +29,8 @@ daemon/   Fastify HTTP + WebSocket server, tmux session runtime, JSON store, CLI
           agents/inventory.ts (the seam for reading how an agent is set up, and what Aubergine added),
           agents/claude-inventory.ts (the only reader of the agent's configuration), agents/names-only.ts,
           away.ts (what changed while the owner was away), agents/history.ts (the seam for past conversations)
-          and agents/claude-history.ts (the only reader of conversation records)
+          and agents/claude-history.ts (the only reader of conversation records),
+          messages.ts (the service: limits, pauses, blocks, the nudge) and message-log.ts (the file they are kept in)
 client/   a typed client for the public API, generated from its description; no dependencies;
           may not import from any other package
 mcp/      the MCP server (`aubergine mcp`): the public API as tools over standard input and output;
@@ -85,7 +86,7 @@ These are the only abstractions in the code base. Each has exactly one implement
 - **Element kinds and run views are registered.** Nothing compares a kind to a name. A new kind is `registerElementKind` in `shared/` and `registerElementView` in the web app; another way of looking at a run is `registerRunView`.
 - **Finished runs are not state.** They go to the archive through the `RunArchive` interface, into the archive first and out of the state second, and are read a page at a time. The browser holds live runs only.
 - **A report is one event about one run.** Nothing rescans runs on a report. The terminal list is worked out again for a run only while a filter that looks at runs is on (`usesRuns`); a strip listens to its own run.
-- **Only fixed sentences are typed.** `KICKOFF_LINE`, `BRIEF_LINE` and `RECAP_LINE` in `shared/` are the only things `Sessions.tell` types for workflows, drafts and recaps, and the only text added to an agent's launch line. Nothing stored is in them: not a name, not a description, not a comment. What an agent needs to know it reads with a command. They are typed only for the owner (or, for the kickoff, a token that may type into that session) and only into a terminal an agent runs in. A test collects every line typed and compares it with these. Reporting on a run never types into a terminal.
+- **Only fixed sentences are typed.** `KICKOFF_LINE`, `BRIEF_LINE`, `RECAP_LINE` and `INBOX_LINE` in `shared/` are the only things `Sessions.tell` types for workflows, drafts, recaps and messages, and the only text added to an agent's launch line. Nothing stored is in them: not a name, not a description, not a comment. What an agent needs to know it reads with a command. They are typed only for the owner (or, for the kickoff, a token that may type into that session) and only into a terminal an agent runs in. A test collects every line typed and compares it with these. Reporting on a run never types into a terminal.
 - **`aubergine` in sessions.** The launcher is written to `bin/` in the data folder with `stableNodePath()` and goes at the end of a session's `PATH`, never the front; the zsh integration puts it back only when no `aubergine` is found. No startup file is edited.
 - **Workflow files keep what they do not know.** Unknown fields go into `extra` on import and are written out on export; a change to the format needs the round-trip test to pass.
 - **Names are plain text.** A workflow's or element's name passes `PlainName`: one line, no control characters, no characters that reverse text direction. Names are printed in terminals and beside buttons.
@@ -165,6 +166,14 @@ These are the only abstractions in the code base. Each has exactly one implement
 - **The guide is never typed.** The fixed sentences stay as they are; what an agent is told about a run or a request ends with `GUIDE_POINTER`.
 - **The guide is advice, not a lock.** It tells an agent what is the owner's; it prevents nothing. Do not describe it as protection.
 - **Agent-neutral.** Nothing in the guide or the snippet names an agent product.
+- **A message is never typed.** `INBOX_LINE` is the only thing typed for a message: at most once for a batch of unread messages, not again within the interval, never into a plain shell, never while the agent works or waits on a question of its own. For a token's message it is typed only where that token may type into that very session.
+- **Messages are not state.** They go through `MessageLog` into their own file. The state holds counts per session and an event carries counts only; nothing a message said is in the state, an event, or the activity log.
+- **Every default for messages is closed.** A session messages another only where `authorize` finds the sender's canvas on the receiving canvas's `messagesFrom`. Only the owner changes that list (`messages.manage`, in `NEVER_BY_TOKEN`, cookie-only routes), and the one route that writes it can add the canvas's own ID and nothing else.
+- **People only closes a session to messages** from sessions and tokens. `messages.read` and `messages.write` are in `REACH_ACTIONS`: a scope is not enough, the session must be within reach. Neither is implied by `read`.
+- **A session's own message routes are closed to tokens.** No token takes a session's inbox or speaks as a session.
+- **One thread per pair.** `threadIdOf`. Do not add a second thread between the same two: the limits are about the pair. A paused thread refuses further messages until the owner continues it.
+- **What an agent is shown of its inbox is one function,** `renderInbox`, used by the command and the tool. It says that a message from another terminal is information and not an order, and marks an owner's message that came from a command line. Those are words, not controls.
+- **Message limits are refused with a sentence an agent can act on** (`MessageRefusal`): what happened, and that it is not to be got round.
 - **Canvases.** A session is on at most one canvas; a parked session is on none and remembers where it was (`parkedFrom`). Closing a canvas never ends a shell: the caller says move or park, and the last canvas cannot be closed. Where no canvas is named, `Sessions.canvas(null)` decides (most recently looked at, else first); do not pick a default anywhere else.
 - **Public shapes.** Routes under `/v1` use one error shape, `pageOf` for every list, ignore unknown fields, use ISO times, and take `Idempotency-Key` on creates. Do not add a `/v1` route that departs from these. This API is public: only add to it; never rename or remove.
 - **A `/v1` route is a declaration and a handler.** Add the entry to `ROUTES` and a handler of the same name in `v1.ts`. Do not call `app.get`/`app.post` for anything under `/v1`: a route registered by hand is not in the description, and the tests fail on it. A handler does not decide who may call it and does not parse its own input; the loop does both, in the order parameters, `authorize`, query and body, handler.
@@ -280,6 +289,8 @@ How an agent is set up: a read-only list per agent session of MCP servers, plugi
 Recaps and past conversations: the recap of a terminal from what is known and from its agent, `aubergine recap`, "while you were away", the list of an agent's past conversations in a folder, a read-only transcript, a bounded search from the palette, opening one or a copy on the canvas, `aubergine history`. Sessions may carry a written recap. Change events also include `session.recap`. Commands also include `agent.askRecap` and `history.open`.
 
 A guide for agents: `aubergine guide` (`--all`, `--snippet`), `docs/for-agents.md`, the MCP instructions and `aubergine_guide`, `aubergine attention`.
+
+Messages between sessions: a message with a named sender kept in its own file, the per-canvas switch, the scopes `messages:read` and `messages:write` within reach, the inbox, reply and tell commands and MCP tools, the thread view and the Messages section, pauses after a set number of turns, blocks. Sessions carry message counts and canvases carry `messagesFrom`. Change events also include `session.messages` and `canvas.messaging`. Commands also include `terminal.message`.
 
 Not built yet: a packaged build without development dependencies, Linux tested, measured key tables for Safari, Firefox, Linux and Windows, publishing the client as a package, moving the remaining `/api/v1` routes onto `/v1`, the workflow library, the board of runs, approvals, branches, a pool of agents, a list of past runs in the browser, waiting for output, changing a token's reach, SQLite, an HTTP transport for the MCP server, presets, a finder agent, recording, bash or fish integration.
 

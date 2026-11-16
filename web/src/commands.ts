@@ -253,6 +253,17 @@ export const COMMANDS: readonly Command[] = [
     },
   },
   {
+    id: 'terminal.message',
+    title: 'Message this terminal…',
+    description: 'Opens the terminal\'s drawer, where you can write a message for the agent in it and see every message to and from it. A message is kept for the agent to read; it is never typed.',
+    group: 'Terminals',
+    available: (state) => targetSession(state) != null,
+    run: (state) => {
+      const session = targetSession(state);
+      if (session) state.openDrawer({ section: 'terminals', kind: 'notes', id: session.id });
+    },
+  },
+  {
     id: 'history.open',
     title: 'Past conversations…',
     description: 'Lists the agent\'s earlier conversations in this terminal\'s folder: read one, open it on the canvas, or open a copy. Type @ in the palette to search them.',

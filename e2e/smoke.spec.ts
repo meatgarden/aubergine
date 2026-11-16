@@ -217,7 +217,8 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await expect(outputLine(page, 'second-2')).toHaveCount(1);
 
   // Renaming a tab, and going back with the browser.
-  await tabs.nth(1).dblclick();
+  // On the name: the tab also holds its own buttons, which are not for renaming.
+  await tabs.nth(1).locator('.tab-name').dblclick();
   await page.getByRole('textbox', { name: 'Canvas name' }).fill('Deploys');
   await page.keyboard.press('Enter');
   await expect(tabs.nth(1)).toContainText('Deploys');
@@ -1623,4 +1624,86 @@ test('past conversations: the list for a folder, reading one, searching, and ope
     if (settingsBefore === null) rmSync(settingsFile, { force: true });
     else writeFileSync(settingsFile, settingsBefore);
   }
+});
+
+test('messages: the owner writes to a terminal, its agent reads and answers, and two terminals reach each other only where the owner lets them', async ({ page }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  const origin = new URL(page.url()).origin;
+  await page.getByRole('button', { name: 'New canvas' }).click();
+  await page.getByTestId('toolbar-new-terminal').click();
+  await expect(page.getByTestId('list-row')).toHaveCount(1);
+  const first = (await page.getByTestId('list-row').getAttribute('data-session')) ?? '';
+  await page.getByTestId('toolbar-new-terminal').click();
+  await expect(page.getByTestId('list-row')).toHaveCount(2);
+  const ids = await page.getByTestId('list-row').evaluateAll((rows) => rows.map((row) => row.getAttribute('data-session') ?? ''));
+  const second = ids.find((id) => id !== first) ?? '';
+  const row = (id: string) => page.locator(`[data-testid="list-row"][data-session="${id}"]`);
+  /** What an agent in a terminal would run there: typed at its shell prompt, waited for, its output read. */
+  const inTerminal = async (id: string, command: string): Promise<string> => {
+    const answer = await page.request.post(`/v1/sessions/${id}/run`, { headers: { origin }, data: { command: `"$AUBERGINE_BIN/aubergine" ${command}`, timeoutSeconds: 30 } });
+    expect(answer.status()).toBe(200);
+    return ((await answer.json()) as { output: string }).output;
+  };
+  // The shells are at their prompts before anything is run in them.
+  await expect.poll(async () => (await inTerminal(first, 'guide --snippet')).includes('AUBERGINE_SESSION_ID'), { timeout: 30_000 }).toBe(true);
+  await expect.poll(async () => (await inTerminal(second, 'guide --snippet')).includes('AUBERGINE_SESSION_ID'), { timeout: 30_000 }).toBe(true);
+
+  // The owner writes. Nothing is typed into the terminal; its row says a message waits.
+  const sent = await page.request.post(`/api/v1/sessions/${first}/messages`, { headers: { origin }, data: { text: 'Which branch should the fix go on? <b>not markup</b>' } });
+  expect(sent.status()).toBe(201);
+  const sentId = ((await sent.json()) as { id: string }).id;
+  const mark = row(first).getByTestId('message-mark');
+  await expect(mark).toHaveText('✉ 1 from you');
+
+  // The mark opens the terminal's drawer: the thread, with the message as plain text and not read yet.
+  await mark.click();
+  const drawer = page.getByTestId('session-messages');
+  await expect(drawer.getByTestId('thread-row')).toHaveCount(1);
+  await drawer.getByTestId('thread-row').click();
+  await expect(drawer.getByTestId('thread-message')).toHaveCount(1);
+  await expect(drawer.getByTestId('thread-message')).toContainText('Which branch should the fix go on? <b>not markup</b>');
+  await expect(drawer.getByTestId('thread-read')).toHaveText('not read yet');
+  await expect(drawer.locator('.thread-message b')).toHaveCount(0);
+
+  // The agent there reads its inbox and answers. The owner sees the answer, and the terminal waits for the owner.
+  const inbox = await inTerminal(first, 'inbox');
+  expect(inbox).toContain(`Message ${sentId} from your owner`);
+  expect(inbox).toContain('Which branch should the fix go on?');
+  await expect(row(first).getByTestId('message-mark')).toHaveCount(0);
+  expect(await inTerminal(first, `reply ${sentId} "On main."`)).toContain('Sent to your owner');
+  await expect(row(first).getByTestId('message-mark')).toHaveText('✉ 1 for you');
+  // It joins the queue of what waits for the owner (other tests' terminals may be in it too).
+  await expect(page.getByTestId('attention-queue')).toHaveAttribute('title', /: 1 for you/);
+  await expect(drawer.getByTestId('thread-message')).toHaveCount(2);
+  await expect(drawer.getByTestId('thread-message').nth(1)).toContainText('On main.');
+  await drawer.getByTestId('thread-mark-read').click();
+  await expect(row(first).getByTestId('message-mark')).toHaveCount(0);
+  await expect.poll(async () => ((await page.getByTestId('attention-queue').count()) === 0 ? '' : ((await page.getByTestId('attention-queue').getAttribute('title')) ?? ''))).not.toMatch(/: 1 for you/);
+
+  // The owner answers from the drawer.
+  await drawer.getByTestId('thread-text').fill('Good. Go on.');
+  await drawer.getByTestId('thread-send').click();
+  await expect(drawer.getByTestId('thread-message')).toHaveCount(3);
+  await expect(row(first).getByTestId('message-mark')).toHaveText('✉ 1 from you');
+
+  // One terminal to another: refused while the canvas's switch is off, which is how it starts.
+  await expect(page.getByTestId('tab-messaging')).toHaveText('✉ off');
+  expect(await inTerminal(first, `tell ${second} "Are you there?"`)).toMatch(/only on a canvas where the owner switched that on/);
+  await expect(row(second).getByTestId('message-mark')).toHaveCount(0);
+  // The owner switches it on, after being told what that means.
+  page.once('dialog', (dialog) => {
+    expect(dialog.message()).toContain('message each other');
+    void dialog.accept();
+  });
+  await page.getByTestId('tab-messaging').click();
+  await expect(page.getByTestId('tab-messaging')).toHaveText('✉ on');
+  expect(await inTerminal(first, `tell ${second} "Are you there?"`)).toContain('nothing was typed into any terminal');
+  await expect(row(second).getByTestId('message-mark')).toContainText('✉ 1 from ');
+
+  // The Messages section lists every thread, and says where terminals may message each other.
+  const section = page.getByTestId('messages-section');
+  await expect(section.getByTestId('messages-switch-note')).toContainText('Terminals may message each other on:');
+  await expect(section.getByTestId('thread-row')).toHaveCount(2);
 });

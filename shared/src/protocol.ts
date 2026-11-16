@@ -75,6 +75,15 @@ export const paths = {
   },
   /** GET: the user's open terminals that are not on the canvas. Read-only. */
   /** Past conversations of an agent in a folder: the list, one to read, a search, and opening one on the canvas. The owner's alone. */
+  /** Messages, as the owner sees and sends them. Cookie only. */
+  messageThreads: '/api/v1/messages/threads',
+  messageThread: (threadId: string) => `/api/v1/messages/threads/${threadId}`,
+  /** POST: the owner sends a message to a session. */
+  sessionMessages: (sessionId: string) => `/api/v1/sessions/${sessionId}/messages`,
+  /** POST: close a session to one sender, or open it again. */
+  sessionMessageBlocks: (sessionId: string) => `/api/v1/sessions/${sessionId}/message-blocks`,
+  /** PUT: whether the terminals on a canvas may message each other. */
+  canvasMessaging: (canvasId: string) => `/api/v1/canvases/${canvasId}/messaging`,
   history: '/api/v1/history',
   historyTranscript: '/api/v1/history/transcript',
   historySearch: '/api/v1/history/search',

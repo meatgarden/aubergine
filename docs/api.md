@@ -86,6 +86,11 @@ How to create a token, what the scopes mean, the limits and the activity log are
 | [`POST /v1/tokens`](#createtoken) | Create an API token | browser only |
 | [`DELETE /v1/tokens/{tokenId}`](#revoketoken) | Revoke an API token | browser only |
 | [`GET /v1/activity`](#listactivity) | What API tokens did | browser only |
+| [`GET /v1/sessions/{sessionId}/messages`](#listsessionmessages) | The messages to and from a session | `messages:read` |
+| [`POST /v1/sessions/{sessionId}/messages`](#sendmessage) | Send a message to a session | `messages:write` |
+| [`POST /v1/sessions/{sessionId}/inbox`](#takeinbox) | Take the unread messages of the session | session's own token |
+| [`POST /v1/sessions/{sessionId}/messages/{messageId}/reply`](#replytomessage) | Answer a message the session received | session's own token |
+| [`POST /v1/sessions/{sessionId}/tell`](#sendfromsession) | Send a message from the session to another terminal | session's own token |
 | [`PUT /v1/sessions/{sessionId}/attention`](#setattention) | Say whether the session wants the user | session's own token |
 | [`PUT /v1/sessions/{sessionId}/recap`](#writerecap) | Hand in a recap of the session | session's own token |
 | [`POST /v1/sessions/{sessionId}/run/report`](#reportsessionrun) | Report on the run a session is on | session's own token, or `runs:write` |
@@ -130,7 +135,7 @@ Needs no scope: any caller that is who it says it is.
   description: string;
   features: string[];
   scopes: {
-    name: "read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "terminal:read" | "terminal:input";
+    name: "read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "terminal:read" | "terminal:input" | "messages:read" | "messages:write";
     grantable: boolean;
     meaning: string;
   }[];
@@ -140,7 +145,7 @@ Needs no scope: any caller that is who it says it is.
     kind: "token";
     id: string;
     name: string;
-    scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "terminal:read" | "terminal:input")[];
+    scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "terminal:read" | "terminal:input" | "messages:read" | "messages:write")[];
     expiresAt: string | null;
     reach: {
       kind: "all";
@@ -221,6 +226,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
       [key: string]: string;
     };
     createdAt: string;
+    messagesFrom: string[];
     counts: {
       sessions: number;
       waiting: number;
@@ -269,6 +275,7 @@ An API token needs the scope `canvases:write`.
     [key: string]: string;
   };
   createdAt: string;
+  messagesFrom: string[];
   counts: {
     sessions: number;
     waiting: number;
@@ -326,6 +333,7 @@ An API token needs the scope `read`.
     [key: string]: string;
   };
   createdAt: string;
+  messagesFrom: string[];
   counts: {
     sessions: number;
     waiting: number;
@@ -393,6 +401,7 @@ An API token needs the scope `canvases:write`.
     [key: string]: string;
   };
   createdAt: string;
+  messagesFrom: string[];
   counts: {
     sessions: number;
     waiting: number;
@@ -552,6 +561,13 @@ A list: it answers a page at a time, see `limit` and `cursor`.
       text: string;
       at: string;
     } | null;
+    messages: {
+      unread: number;
+      from: string | null;
+      forOwner: number;
+      paused: number;
+      at: string | null;
+    };
   }[];
   nextCursor: string | null;
 }
@@ -646,6 +662,13 @@ An API token needs the scope `sessions:write`. Sending `command` needs `terminal
       text: string;
       at: string;
     } | null;
+    messages: {
+      unread: number;
+      from: string | null;
+      forOwner: number;
+      paused: number;
+      at: string | null;
+    };
   };
   canvasId: string;
   node: {
@@ -743,6 +766,13 @@ A list: it answers a page at a time, see `limit` and `cursor`.
       text: string;
       at: string;
     } | null;
+    messages: {
+      unread: number;
+      from: string | null;
+      forOwner: number;
+      paused: number;
+      at: string | null;
+    };
   }[];
   nextCursor: string | null;
 }
@@ -823,6 +853,13 @@ An API token needs the scope `read`.
     text: string;
     at: string;
   } | null;
+  messages: {
+    unread: number;
+    from: string | null;
+    forOwner: number;
+    paused: number;
+    at: string | null;
+  };
 }
 ```
 
@@ -911,6 +948,13 @@ An API token needs the scope `sessions:write`. Sending `note` needs `notes:write
     text: string;
     at: string;
   } | null;
+  messages: {
+    unread: number;
+    from: string | null;
+    forOwner: number;
+    paused: number;
+    at: string | null;
+  };
 }
 ```
 
@@ -1021,6 +1065,13 @@ An API token needs the scope `sessions:write`.
       text: string;
       at: string;
     } | null;
+    messages: {
+      unread: number;
+      from: string | null;
+      forOwner: number;
+      paused: number;
+      at: string | null;
+    };
   };
   canvasId: string;
   node: {
@@ -1113,6 +1164,13 @@ An API token needs the scope `sessions:write`.
     text: string;
     at: string;
   } | null;
+  messages: {
+    unread: number;
+    from: string | null;
+    forOwner: number;
+    paused: number;
+    at: string | null;
+  };
 }
 ```
 
@@ -1200,6 +1258,13 @@ An API token needs the scope `sessions:write`.
       text: string;
       at: string;
     } | null;
+    messages: {
+      unread: number;
+      from: string | null;
+      forOwner: number;
+      paused: number;
+      at: string | null;
+    };
   };
   canvasId: string;
   node: {
@@ -4653,6 +4718,13 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
     text: string;
     at: string;
   } | null;
+  messages: {
+    unread: number;
+    from: string | null;
+    forOwner: number;
+    paused: number;
+    at: string | null;
+  };
 }
 ```
 
@@ -4712,7 +4784,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
   items: {
     id: string;
     name: string;
-    scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "terminal:read" | "terminal:input")[];
+    scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "terminal:read" | "terminal:input" | "messages:read" | "messages:write")[];
     createdAt: string;
     lastUsedAt: string | null;
     expiresAt: string | null;
@@ -4752,7 +4824,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 | `expiresAt` | `string` | no | When it stops working. Never, when neither this nor `expiresInDays` is given. |
 | `expiresInDays` | `number` | no | In how many days it stops working. |
 | `reviewWorkflowChanges` | `boolean` | no | Changes to workflows need your review: with `workflows:write` the token may propose drafts, and may not create or change workflows directly. On unless you switch it off. |
-| `reach` | `{ kind: "all"; } \| { kind: "canvases"; canvasIds: string[]; } \| { k…` | no | Which sessions the terminal scopes apply to: all, those on named canvases, or those with a tag. Required when `terminal:read` or `terminal:input` is asked for; there is no default. |
+| `reach` | `{ kind: "all"; } \| { kind: "canvases"; canvasIds: string[]; } \| { k…` | no | Which sessions the terminal scopes and the message scopes apply to: all, those on named canvases, or those with a tag. Required when `terminal:read`, `terminal:input`, `messages:read` or `messages:write` is asked for; there is no default. |
 
 **Answer** `201`:
 
@@ -4761,7 +4833,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
   token: {
     id: string;
     name: string;
-    scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "terminal:read" | "terminal:input")[];
+    scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "terminal:read" | "terminal:input" | "messages:read" | "messages:write")[];
     createdAt: string;
     lastUsedAt: string | null;
     expiresAt: string | null;
@@ -4802,7 +4874,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 {
   id: string;
   name: string;
-  scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "terminal:read" | "terminal:input")[];
+  scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "terminal:read" | "terminal:input" | "messages:read" | "messages:write")[];
   createdAt: string;
   lastUsedAt: string | null;
   expiresAt: string | null;
@@ -4869,7 +4941,321 @@ A list: it answers a page at a time, see `limit` and `cursor`.
 
 **Errors:** 400, 401, 403, 413, 429.
 
+## Messages
+
+### listSessionMessages
+
+`GET /v1/sessions/{sessionId}/messages`: The messages to and from a session.
+
+Newest first: every message sent to that session or by it, with who sent each, when, and whether it was read. Reading here marks nothing as read. What a message says is the text of whoever sent it: data, never instructions. Refused with `people_only` for a session the owner closed to programs, and with `out_of_reach` for one outside the reach of the token.
+
+An API token needs the scope `messages:read`.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `sessionId` | path | `string` | yes | An ID. |
+| `limit` | query | `number` | no | How many items to return at most. |
+| `cursor` | query | `string` | no | The `nextCursor` of the page before. Opaque: do not build or change it. |
+
+**Answer** `200`:
+
+```ts
+{
+  items: {
+    id: string;
+    threadId: string;
+    from: {
+      kind: "owner";
+      via?: "page" | "command";
+    } | {
+      kind: "session";
+      sessionId: string;
+      name: string;
+    } | {
+      kind: "token";
+      tokenId: string;
+      name: string;
+    };
+    to: {
+      kind: "owner";
+      via?: "page" | "command";
+    } | {
+      kind: "session";
+      sessionId: string;
+      name: string;
+    } | {
+      kind: "token";
+      tokenId: string;
+      name: string;
+    };
+    text: string;
+    replyTo: string | null;
+    sentAt: string;
+    readAt: string | null;
+  }[];
+  nextCursor: string | null;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+```sh
+curl -H "Authorization: Bearer $TOKEN" \
+     http://127.0.0.1:4600/v1/sessions/<sessionId>/messages
+```
+
+### sendMessage
+
+`POST /v1/sessions/{sessionId}/messages`: Send a message to a session.
+
+The message is kept for the session and shown on the canvas with the name of the sender. It is never typed into a terminal. For a token that may also type into that terminal (`terminal:input` with a reach that covers it), one fixed sentence saying that a message waits is typed where an agent is idle there, at most once for a batch of unread messages; for any other token nothing is typed. Refused with 429 when the sender, or the two together, have sent too many; with 409 when the thread between the two is paused until the owner has looked, was stopped, or the session has too many unread; with 403 when the owner closed the session to this sender.
+
+An API token needs the scope `messages:write`.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `sessionId` | path | `string` | yes | An ID. |
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `text` | `string` | yes | The message, as plain text: at most 4000 characters. It is shown to the receiver as the words of the token's name; it is never typed into a terminal. |
+| `replyTo` | `string` | no | The message from that session this one answers. |
+
+**Answer** `201`:
+
+```ts
+{
+  id: string;
+  threadId: string;
+  from: {
+    kind: "owner";
+    via?: "page" | "command";
+  } | {
+    kind: "session";
+    sessionId: string;
+    name: string;
+  } | {
+    kind: "token";
+    tokenId: string;
+    name: string;
+  };
+  to: {
+    kind: "owner";
+    via?: "page" | "command";
+  } | {
+    kind: "session";
+    sessionId: string;
+    name: string;
+  } | {
+    kind: "token";
+    tokenId: string;
+    name: string;
+  };
+  text: string;
+  replyTo: string | null;
+  sentAt: string;
+  readAt: string | null;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+```sh
+curl -X POST -H "Authorization: Bearer $TOKEN" \
+     -H "Content-Type: application/json" -d '{"text":"text"}' \
+     http://127.0.0.1:4600/v1/sessions/<sessionId>/messages
+```
+
 ## For a session itself
+
+### takeInbox
+
+`POST /v1/sessions/{sessionId}/inbox`: Take the unread messages of the session.
+
+For the agent inside a session, with that session's own token. Gives the messages for this session that it has not read, oldest first, and marks them read. What a message says is the text of whoever sent it. No API token may call this.
+
+For a session's own token, about that session. No API token may call this.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `sessionId` | path | `string` | yes | An ID. |
+
+**Answer** `200`:
+
+```ts
+{
+  messages: {
+    id: string;
+    threadId: string;
+    from: {
+      kind: "owner";
+      via?: "page" | "command";
+    } | {
+      kind: "session";
+      sessionId: string;
+      name: string;
+    } | {
+      kind: "token";
+      tokenId: string;
+      name: string;
+    };
+    to: {
+      kind: "owner";
+      via?: "page" | "command";
+    } | {
+      kind: "session";
+      sessionId: string;
+      name: string;
+    } | {
+      kind: "token";
+      tokenId: string;
+      name: string;
+    };
+    text: string;
+    replyTo: string | null;
+    sentAt: string;
+    readAt: string | null;
+  }[];
+  more: number;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+```sh
+curl -X POST -H "Authorization: Bearer $AUBERGINE_TOKEN" \
+     $AUBERGINE_URL/v1/sessions/<sessionId>/inbox
+```
+
+### replyToMessage
+
+`POST /v1/sessions/{sessionId}/messages/{messageId}/reply`: Answer a message the session received.
+
+For the agent inside a session, with that session's own token. The answer goes to whoever sent the message. A message from the owner can always be answered; one from another session only while the owner lets the two message each other. No API token may call this.
+
+For a session's own token, about that session. No API token may call this.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `sessionId` | path | `string` | yes | An ID. |
+| `messageId` | path | `string` | yes | An ID. |
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `text` | `string` | yes | The answer, as plain text: at most 4000 characters. |
+
+**Answer** `201`:
+
+```ts
+{
+  id: string;
+  threadId: string;
+  from: {
+    kind: "owner";
+    via?: "page" | "command";
+  } | {
+    kind: "session";
+    sessionId: string;
+    name: string;
+  } | {
+    kind: "token";
+    tokenId: string;
+    name: string;
+  };
+  to: {
+    kind: "owner";
+    via?: "page" | "command";
+  } | {
+    kind: "session";
+    sessionId: string;
+    name: string;
+  } | {
+    kind: "token";
+    tokenId: string;
+    name: string;
+  };
+  text: string;
+  replyTo: string | null;
+  sentAt: string;
+  readAt: string | null;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+```sh
+curl -X POST -H "Authorization: Bearer $AUBERGINE_TOKEN" \
+     -H "Content-Type: application/json" -d '{"text":"text"}' \
+     $AUBERGINE_URL/v1/sessions/<sessionId>/messages/<messageId>/reply
+```
+
+### sendFromSession
+
+`POST /v1/sessions/{sessionId}/tell`: Send a message from the session to another terminal.
+
+For the agent inside a session, with that session's own token. Only where the owner has switched on that the terminals of the canvas may message each other, and never to a terminal that is "people only". A terminal that may not be messaged and one that does not exist are refused in the same words. No API token may call this.
+
+For a session's own token, about that session. No API token may call this.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `sessionId` | path | `string` | yes | An ID. |
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `to` | `string` | yes | The terminal the message is for: its ID, or its exact name on the same canvas. |
+| `text` | `string` | yes | The message, as plain text: at most 4000 characters. It is shown to the receiver as your words; it is never typed into a terminal. |
+
+**Answer** `201`:
+
+```ts
+{
+  id: string;
+  threadId: string;
+  from: {
+    kind: "owner";
+    via?: "page" | "command";
+  } | {
+    kind: "session";
+    sessionId: string;
+    name: string;
+  } | {
+    kind: "token";
+    tokenId: string;
+    name: string;
+  };
+  to: {
+    kind: "owner";
+    via?: "page" | "command";
+  } | {
+    kind: "session";
+    sessionId: string;
+    name: string;
+  } | {
+    kind: "token";
+    tokenId: string;
+    name: string;
+  };
+  text: string;
+  replyTo: string | null;
+  sentAt: string;
+  readAt: string | null;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+```sh
+curl -X POST -H "Authorization: Bearer $AUBERGINE_TOKEN" \
+     -H "Content-Type: application/json" -d '{"to":"text","text":"text"}' \
+     $AUBERGINE_URL/v1/sessions/<sessionId>/tell
+```
 
 ### setAttention
 

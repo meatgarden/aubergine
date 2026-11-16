@@ -3,7 +3,7 @@ import { NEVER_BY_TOKEN, SESSION_ACTIONS, accessOf } from './access';
 import { GUIDE, GUIDE_SNIPPET, OWNERS_ALONE, guideCommands, guideFor, guideNeedWords, guideTools, partIsFor, renderGuide, type GuideReader } from './guide';
 import { showControl } from './text';
 import { Scope } from './tokens';
-import { BRIEF_LINE, GUIDE_POINTER, KICKOFF_LINE, RECAP_LINE } from './workflows';
+import { BRIEF_LINE, GUIDE_POINTER, INBOX_LINE, KICKOFF_LINE, RECAP_LINE } from './workflows';
 
 const session: GuideReader = { session: true, scopes: [] };
 const nobody: GuideReader = { session: false, scopes: [] };
@@ -17,7 +17,7 @@ describe('the guide for an agent in a terminal', () => {
   const sections = guideFor(session);
 
   it('is short, plain text', () => {
-    expect(text.split('\n').length).toBeLessThanOrEqual(120);
+    expect(text.split('\n').length).toBeLessThanOrEqual(140);
     expect(plain(text)).toBe(true);
     expect(text.endsWith('\n')).toBe(false);
   });
@@ -29,7 +29,7 @@ describe('the guide for an agent in a terminal', () => {
         expect(part.needs.some((action) => (SESSION_ACTIONS as readonly string[]).includes(action)), `${section.id}: ${part.text[0]}`).toBe(true);
       }
     }
-    expect(sections.map((section) => section.id)).toEqual(['what', 'terminal', 'attention', 'notes', 'workflows', 'drafts', 'recap', 'repository', 'owner', 'behave', 'tools']);
+    expect(sections.map((section) => section.id)).toEqual(['what', 'terminal', 'attention', 'notes', 'workflows', 'drafts', 'recap', 'messages', 'repository', 'owner', 'behave', 'tools']);
   });
 
   it('names no scope and nothing about other terminals', () => {
@@ -49,7 +49,7 @@ describe('the guide for an agent in a terminal', () => {
   });
 
   it('names the command of each sentence Aubergine types', () => {
-    for (const line of [KICKOFF_LINE, BRIEF_LINE, RECAP_LINE]) {
+    for (const line of [KICKOFF_LINE, BRIEF_LINE, RECAP_LINE, INBOX_LINE]) {
       const command = /`(aubergine [^`]+)`/.exec(line)?.[1];
       expect(command).toBeDefined();
       expect(guideCommands(sections)).toContain(command);
@@ -123,12 +123,12 @@ describe('the whole guide', () => {
   it('assumes no one agent product', () => {
     const all = `${text}\n${GUIDE_SNIPPET}`;
     // Every word with a capital inside a sentence is Aubergine's own, or one of these.
-    const allowed = new Set(['Aubergine', 'API', 'HTTP', 'MCP', 'Markdown', 'I', 'AUBERGINE_SESSION_ID', 'AUBERGINE_TOKEN', 'AUBERGINE_BIN', 'Needs']);
+    const allowed = new Set(['Aubergine', 'API', 'HTTP', 'MCP', 'Markdown', 'I', 'AUBERGINE_SESSION_ID', 'AUBERGINE_TOKEN', 'AUBERGINE_BIN', 'Needs', 'ID']);
     for (const match of all.matchAll(/(?<=[a-z,;:] )"?([A-Z][A-Za-z_]+)/g)) {
       const word = match[1] as string;
       if (allowed.has(word)) continue;
       // The first word of a sentence inside an example or after a colon.
-      expect(/^(Which|Tests|What|The|Plain|Then|Hand|Do|Run|Tell|Add|Never|Write|If)$/.test(word), word).toBe(true);
+      expect(/^(Fixed|Which|Tests|What|The|Plain|Then|Hand|Do|Run|Tell|Add|Never|Write|If)$/.test(word), word).toBe(true);
     }
   });
 

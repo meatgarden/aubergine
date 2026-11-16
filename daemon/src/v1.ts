@@ -44,6 +44,8 @@ import type { Repositories } from './repositories';
 import type { TerminalAccess, TerminalTrace, Typist } from './terminal-access';
 import { isTerminalContentEvent, withoutTerminalContent } from './terminal-redact';
 import { actorOf, type Workflows } from './workflows';
+import { MessageRefusal, type Messages } from './messages';
+import { fingerprintOf } from './terminal-access';
 
 export interface PublicRouteDeps {
   hub: StateHub;
@@ -53,6 +55,7 @@ export interface PublicRouteDeps {
   drafts: Drafts;
   repositories: Repositories;
   terminals: TerminalAccess;
+  messages: Messages;
   activity: ActivityLog;
   viewers: Viewers;
   limiter: RateLimiter;
@@ -105,6 +108,15 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
   /** Whether a caller may be given what a session's terminal shows. */
   const mayReadTerminal = (principal: Principal, sessionId: string): boolean => principal.kind === 'user' || deps.may(principal, 'terminal.read', deps.resourceOf(sessionId));
   const remembered = new IdempotencyStore();
+
+  const { messages } = deps;
+  /** What `authorize` is asked about one session messaging another: where the receiver is, and which canvases its canvas lets in. */
+  const deliveryTo = (fromSessionId: string, toSessionId: string): Resource => {
+    const toCanvasId = messages.canvasOf(toSessionId);
+    return { ...deps.resourceOf(toSessionId), delivery: { fromCanvasId: messages.canvasOf(fromSessionId), messagesFrom: hub.state.canvases.find((c) => c.id === toCanvasId)?.messagesFrom ?? [] } };
+  };
+  /** Said about a terminal a session may not message, and in the same words about one that does not exist. */
+  const NOT_TO_THAT = 'No terminal by that name or ID may be messaged from this one. Terminals may message each other only on a canvas where the owner switched that on, and never one marked "people only". A message from your owner can always be answered with `aubergine reply`. If you need to reach that terminal, ask your owner.';
 
   const summary = (canvas: Canvas): CanvasSummary => {
     const { layout: _layout, ...rest } = canvas;
@@ -456,6 +468,42 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
     },
 
     listActivity: ({ query }) => deps.activity.read(query),
+
+    /* ---------- Messages ---------- */
+
+    listSessionMessages: ({ params, query, request }) => {
+      const all = messages.of(params.sessionId);
+      // How much was read, for the record of what tokens did. Never the text.
+      deps.trace(request, { chars: all.reduce((sum, m) => sum + m.text.length, 0) });
+      return paginate(all, (m) => m.id, query);
+    },
+
+    sendMessage: ({ params, body, principal, request }) => {
+      deps.trace(request, { chars: body.text.length, fingerprint: fingerprintOf(body.text) });
+      // The fixed sentence is typed for a token's message only where that token may type into this very session, as for a run.
+      if (principal.kind === 'token') return messages.fromToken(principal, params.sessionId, body.text, body.replyTo ?? null, mayKickoff(principal, params.sessionId));
+      return messages.fromOwner(params.sessionId, body.text, body.replyTo ?? null, deps.ownerCaller(request).kind === 'owner-cli' ? 'command' : 'page');
+    },
+
+    // A session's own inbox, by its own address: `authorize` has made sure the token is that session's.
+    takeInbox: ({ params }) => messages.take(params.sessionId),
+
+    replyToMessage: ({ params, body, principal }) => {
+      const received = messages.received(params.sessionId, params.messageId);
+      // An answer to another session passes only where a message to it would: the owner may have switched that off since.
+      if (received.from.kind === 'session' && !deps.may(principal, 'messages.write', deliveryTo(params.sessionId, received.from.sessionId))) throw new MessageRefusal(403, 'forbidden', NOT_TO_THAT);
+      return messages.fromSession(params.sessionId, received.from, body.text, received.id);
+    },
+
+    sendFromSession: ({ params, body, principal }) => {
+      // By ID, or by its exact name among the terminals on the same canvas. Nothing is said about any other.
+      const here = messages.canvasOf(params.sessionId);
+      const wanted = body.to.toLowerCase();
+      const found = hub.state.sessions.filter((s) => s.id !== params.sessionId && (s.id === body.to || (here !== null && s.name.toLowerCase() === wanted && messages.canvasOf(s.id) === here)));
+      const target = found.length === 1 ? found[0] : undefined;
+      if (!target || !deps.may(principal, 'messages.write', deliveryTo(params.sessionId, target.id))) throw new MessageRefusal(403, 'forbidden', NOT_TO_THAT);
+      return messages.fromSession(params.sessionId, messages.party(target.id), body.text);
+    },
 
     /* ---------- What a session reports about itself ---------- */
 

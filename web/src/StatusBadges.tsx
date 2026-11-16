@@ -1,4 +1,5 @@
 import type { Session } from '@aubergine/shared';
+import { MessageMark } from './Messages';
 import { shortFolder } from './search';
 
 /** "3m ago", "2h ago": how long since a moment, in the largest sensible unit. */
@@ -46,6 +47,7 @@ export function StatusBadges({ session, focused }: { session: Session; focused: 
           exit {status.lastExit}
         </span>
       )}
+      <MessageMark session={session} />
       <span className="node-activity" data-testid="node-activity">
         {info.text}
       </span>

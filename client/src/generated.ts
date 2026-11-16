@@ -18,7 +18,7 @@ export type GetCapabilitiesResult = {
   description: string;
   features: string[];
   scopes: {
-    name: "read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "terminal:read" | "terminal:input";
+    name: "read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "terminal:read" | "terminal:input" | "messages:read" | "messages:write";
     grantable: boolean;
     meaning: string;
   }[];
@@ -28,7 +28,7 @@ export type GetCapabilitiesResult = {
     kind: "token";
     id: string;
     name: string;
-    scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "terminal:read" | "terminal:input")[];
+    scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "terminal:read" | "terminal:input" | "messages:read" | "messages:write")[];
     expiresAt: string | null;
     reach: {
       kind: "all";
@@ -73,6 +73,7 @@ export type ListCanvasesResult = {
       [key: string]: string;
     };
     createdAt: string;
+    messagesFrom: string[];
     counts: {
       sessions: number;
       waiting: number;
@@ -103,6 +104,7 @@ export type CreateCanvasResult = {
     [key: string]: string;
   };
   createdAt: string;
+  messagesFrom: string[];
   counts: {
     sessions: number;
     waiting: number;
@@ -138,6 +140,7 @@ export type GetCanvasResult = {
     [key: string]: string;
   };
   createdAt: string;
+  messagesFrom: string[];
   counts: {
     sessions: number;
     waiting: number;
@@ -182,6 +185,7 @@ export type UpdateCanvasResult = {
     [key: string]: string;
   };
   createdAt: string;
+  messagesFrom: string[];
   counts: {
     sessions: number;
     waiting: number;
@@ -289,6 +293,13 @@ export type ListCanvasSessionsResult = {
       text: string;
       at: string;
     } | null;
+    messages: {
+      unread: number;
+      from: string | null;
+      forOwner: number;
+      paused: number;
+      at: string | null;
+    };
   }[];
   nextCursor: string | null;
 };
@@ -367,6 +378,13 @@ export type StartSessionResult = {
       text: string;
       at: string;
     } | null;
+    messages: {
+      unread: number;
+      from: string | null;
+      forOwner: number;
+      paused: number;
+      at: string | null;
+    };
   };
   canvasId: string;
   node: {
@@ -451,6 +469,13 @@ export type ListSessionsResult = {
       text: string;
       at: string;
     } | null;
+    messages: {
+      unread: number;
+      from: string | null;
+      forOwner: number;
+      paused: number;
+      at: string | null;
+    };
   }[];
   nextCursor: string | null;
 };
@@ -510,6 +535,13 @@ export type GetSessionResult = {
     text: string;
     at: string;
   } | null;
+  messages: {
+    unread: number;
+    from: string | null;
+    forOwner: number;
+    paused: number;
+    at: string | null;
+  };
 };
 
 export type UpdateSessionBody = {
@@ -573,6 +605,13 @@ export type UpdateSessionResult = {
     text: string;
     at: string;
   } | null;
+  messages: {
+    unread: number;
+    from: string | null;
+    forOwner: number;
+    paused: number;
+    at: string | null;
+  };
 };
 
 export type MoveSessionBody = {
@@ -641,6 +680,13 @@ export type MoveSessionResult = {
       text: string;
       at: string;
     } | null;
+    messages: {
+      unread: number;
+      from: string | null;
+      forOwner: number;
+      paused: number;
+      at: string | null;
+    };
   };
   canvasId: string;
   node: {
@@ -709,6 +755,13 @@ export type ParkSessionResult = {
     text: string;
     at: string;
   } | null;
+  messages: {
+    unread: number;
+    from: string | null;
+    forOwner: number;
+    paused: number;
+    at: string | null;
+  };
 };
 
 export type RestoreSessionBody = {
@@ -772,6 +825,13 @@ export type RestoreSessionResult = {
       text: string;
       at: string;
     } | null;
+    messages: {
+      unread: number;
+      from: string | null;
+      forOwner: number;
+      paused: number;
+      at: string | null;
+    };
   };
   canvasId: string;
   node: {
@@ -3519,6 +3579,13 @@ export type ProtectSessionResult = {
     text: string;
     at: string;
   } | null;
+  messages: {
+    unread: number;
+    from: string | null;
+    forOwner: number;
+    paused: number;
+    at: string | null;
+  };
 };
 
 export interface StreamEventsQuery {
@@ -3548,7 +3615,7 @@ export type ListTokensResult = {
   items: {
     id: string;
     name: string;
-    scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "terminal:read" | "terminal:input")[];
+    scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "terminal:read" | "terminal:input" | "messages:read" | "messages:write")[];
     createdAt: string;
     lastUsedAt: string | null;
     expiresAt: string | null;
@@ -3572,14 +3639,14 @@ export type CreateTokenBody = {
   /** What will use it. */
   name: string;
   /** What it may do. At least one. */
-  scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "terminal:read" | "terminal:input")[];
+  scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "terminal:read" | "terminal:input" | "messages:read" | "messages:write")[];
   /** When it stops working. Never, when neither this nor `expiresInDays` is given. */
   expiresAt?: string;
   /** In how many days it stops working. */
   expiresInDays?: number;
   /** Changes to workflows need your review: with `workflows:write` the token may propose drafts, and may not create or change workflows directly. On unless you switch it off. */
   reviewWorkflowChanges?: boolean;
-  /** Which sessions the terminal scopes apply to: all, those on named canvases, or those with a tag. Required when `terminal:read` or `terminal:input` is asked for; there is no default. */
+  /** Which sessions the terminal scopes and the message scopes apply to: all, those on named canvases, or those with a tag. Required when `terminal:read`, `terminal:input`, `messages:read` or `messages:write` is asked for; there is no default. */
   reach?: {
     kind: "all";
   } | {
@@ -3595,7 +3662,7 @@ export type CreateTokenResult = {
   token: {
     id: string;
     name: string;
-    scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "terminal:read" | "terminal:input")[];
+    scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "terminal:read" | "terminal:input" | "messages:read" | "messages:write")[];
     createdAt: string;
     lastUsedAt: string | null;
     expiresAt: string | null;
@@ -3618,7 +3685,7 @@ export type CreateTokenResult = {
 export type RevokeTokenResult = {
   id: string;
   name: string;
-  scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "terminal:read" | "terminal:input")[];
+  scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "terminal:read" | "terminal:input" | "messages:read" | "messages:write")[];
   createdAt: string;
   lastUsedAt: string | null;
   expiresAt: string | null;
@@ -3676,6 +3743,207 @@ export type ListActivityResult = {
     outcome: "ok" | "denied" | "refused" | "limited" | "error";
   }[];
   nextCursor: string | null;
+};
+
+export interface ListSessionMessagesQuery {
+  /**
+   * How many items to return at most.
+   */
+  limit?: number;
+  /**
+   * The `nextCursor` of the page before. Opaque: do not build or change it.
+   */
+  cursor?: string;
+}
+
+export type ListSessionMessagesResult = {
+  items: {
+    id: string;
+    threadId: string;
+    from: {
+      kind: "owner";
+      via?: "page" | "command";
+    } | {
+      kind: "session";
+      sessionId: string;
+      name: string;
+    } | {
+      kind: "token";
+      tokenId: string;
+      name: string;
+    };
+    to: {
+      kind: "owner";
+      via?: "page" | "command";
+    } | {
+      kind: "session";
+      sessionId: string;
+      name: string;
+    } | {
+      kind: "token";
+      tokenId: string;
+      name: string;
+    };
+    text: string;
+    replyTo: string | null;
+    sentAt: string;
+    readAt: string | null;
+  }[];
+  nextCursor: string | null;
+};
+
+export type SendMessageBody = {
+  /** The message, as plain text: at most 4000 characters. It is shown to the receiver as the words of the token's name; it is never typed into a terminal. */
+  text: string;
+  /** The message from that session this one answers. */
+  replyTo?: string;
+};
+
+export type SendMessageResult = {
+  id: string;
+  threadId: string;
+  from: {
+    kind: "owner";
+    via?: "page" | "command";
+  } | {
+    kind: "session";
+    sessionId: string;
+    name: string;
+  } | {
+    kind: "token";
+    tokenId: string;
+    name: string;
+  };
+  to: {
+    kind: "owner";
+    via?: "page" | "command";
+  } | {
+    kind: "session";
+    sessionId: string;
+    name: string;
+  } | {
+    kind: "token";
+    tokenId: string;
+    name: string;
+  };
+  text: string;
+  replyTo: string | null;
+  sentAt: string;
+  readAt: string | null;
+};
+
+export type TakeInboxResult = {
+  messages: {
+    id: string;
+    threadId: string;
+    from: {
+      kind: "owner";
+      via?: "page" | "command";
+    } | {
+      kind: "session";
+      sessionId: string;
+      name: string;
+    } | {
+      kind: "token";
+      tokenId: string;
+      name: string;
+    };
+    to: {
+      kind: "owner";
+      via?: "page" | "command";
+    } | {
+      kind: "session";
+      sessionId: string;
+      name: string;
+    } | {
+      kind: "token";
+      tokenId: string;
+      name: string;
+    };
+    text: string;
+    replyTo: string | null;
+    sentAt: string;
+    readAt: string | null;
+  }[];
+  more: number;
+};
+
+export type ReplyToMessageBody = {
+  /** The answer, as plain text: at most 4000 characters. */
+  text: string;
+};
+
+export type ReplyToMessageResult = {
+  id: string;
+  threadId: string;
+  from: {
+    kind: "owner";
+    via?: "page" | "command";
+  } | {
+    kind: "session";
+    sessionId: string;
+    name: string;
+  } | {
+    kind: "token";
+    tokenId: string;
+    name: string;
+  };
+  to: {
+    kind: "owner";
+    via?: "page" | "command";
+  } | {
+    kind: "session";
+    sessionId: string;
+    name: string;
+  } | {
+    kind: "token";
+    tokenId: string;
+    name: string;
+  };
+  text: string;
+  replyTo: string | null;
+  sentAt: string;
+  readAt: string | null;
+};
+
+export type SendFromSessionBody = {
+  /** The terminal the message is for: its ID, or its exact name on the same canvas. */
+  to: string;
+  /** The message, as plain text: at most 4000 characters. It is shown to the receiver as your words; it is never typed into a terminal. */
+  text: string;
+};
+
+export type SendFromSessionResult = {
+  id: string;
+  threadId: string;
+  from: {
+    kind: "owner";
+    via?: "page" | "command";
+  } | {
+    kind: "session";
+    sessionId: string;
+    name: string;
+  } | {
+    kind: "token";
+    tokenId: string;
+    name: string;
+  };
+  to: {
+    kind: "owner";
+    via?: "page" | "command";
+  } | {
+    kind: "session";
+    sessionId: string;
+    name: string;
+  } | {
+    kind: "token";
+    tokenId: string;
+    name: string;
+  };
+  text: string;
+  replyTo: string | null;
+  sentAt: string;
+  readAt: string | null;
 };
 
 export type SetAttentionBody = {
@@ -4232,6 +4500,11 @@ export const OPERATIONS = {
   createToken: { method: 'POST', path: '/v1/tokens', params: [], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   revokeToken: { method: 'DELETE', path: '/v1/tokens/{tokenId}', params: ["tokenId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   listActivity: { method: 'GET', path: '/v1/activity', params: [], hasBody: false, paged: true, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  listSessionMessages: { method: 'GET', path: '/v1/sessions/{sessionId}/messages', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "messages:read" } },
+  sendMessage: { method: 'POST', path: '/v1/sessions/{sessionId}/messages', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "messages:write" } },
+  takeInbox: { method: 'POST', path: '/v1/sessions/{sessionId}/inbox', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: null } },
+  replyToMessage: { method: 'POST', path: '/v1/sessions/{sessionId}/messages/{messageId}/reply', params: ["sessionId", "messageId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: null } },
+  sendFromSession: { method: 'POST', path: '/v1/sessions/{sessionId}/tell', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: null } },
   setAttention: { method: 'PUT', path: '/v1/sessions/{sessionId}/attention', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: null } },
   writeRecap: { method: 'PUT', path: '/v1/sessions/{sessionId}/recap', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: null } },
   reportSessionRun: { method: 'POST', path: '/v1/sessions/{sessionId}/run/report', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: "runs:write" } },
@@ -4666,6 +4939,36 @@ export interface Client {
    * `GET /v1/activity`. Signed-in browser only: no API token may call this.
    */
   listActivity(args?: { query?: ListActivityQuery } & CallOptions): Promise<ListActivityResult>;
+  /**
+   * The messages to and from a session.
+   *
+   * `GET /v1/sessions/{sessionId}/messages`. Scope: `messages:read`.
+   */
+  listSessionMessages(args: { sessionId: string; query?: ListSessionMessagesQuery } & CallOptions): Promise<ListSessionMessagesResult>;
+  /**
+   * Send a message to a session.
+   *
+   * `POST /v1/sessions/{sessionId}/messages`. Scope: `messages:write`.
+   */
+  sendMessage(args: { sessionId: string; body: SendMessageBody } & CallOptions): Promise<SendMessageResult>;
+  /**
+   * Take the unread messages of the session.
+   *
+   * `POST /v1/sessions/{sessionId}/inbox`. A session's own token.
+   */
+  takeInbox(args: { sessionId: string } & CallOptions): Promise<TakeInboxResult>;
+  /**
+   * Answer a message the session received.
+   *
+   * `POST /v1/sessions/{sessionId}/messages/{messageId}/reply`. A session's own token.
+   */
+  replyToMessage(args: { sessionId: string; messageId: string; body: ReplyToMessageBody } & CallOptions): Promise<ReplyToMessageResult>;
+  /**
+   * Send a message from the session to another terminal.
+   *
+   * `POST /v1/sessions/{sessionId}/tell`. A session's own token.
+   */
+  sendFromSession(args: { sessionId: string; body: SendFromSessionBody } & CallOptions): Promise<SendFromSessionResult>;
   /**
    * Say whether the session wants the user.
    *

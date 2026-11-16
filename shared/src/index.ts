@@ -24,3 +24,4 @@ export * from './access';
 export * from './routes';
 export * from './openapi';
 export * from './guide';
+export * from './messages';

@@ -25,6 +25,7 @@ import { ZshIntegration } from './shell/integration';
 import { SettingsFile, expandHome } from './settings';
 import { pathWithCommand, writeCommandLauncher } from './command-path';
 import { FileDraftLog } from './draft-log';
+import { FileMessageLog } from './message-log';
 import { FileInputAudit } from './input-audit';
 import { FileRunArchive } from './run-archive';
 import { JsonStore } from './store/json-store';
@@ -110,6 +111,7 @@ async function main(): Promise<void> {
     activity: new FileActivityLog(config.dataDir, settings.value.api.activityLogMaxBytes, (error) => console.warn(`Could not write the activity log: ${String(error)}`)),
     // What tokens type, in full, only when the owner switched that on in the settings.
     inputAudit: new FileInputAudit(config.dataDir, () => settings.value.terminal.auditInput, (error) => console.warn(`Could not write the audit of typed text: ${String(error)}`)),
+    messageLog: new FileMessageLog(config.dataDir, () => settings.value.messages.logMaxBytes, (error) => console.warn(`Could not write the file of messages: ${String(error)}`)),
     draftLog: new FileDraftLog(config.dataDir, (error) => console.warn(`Could not write the record of drafts: ${String(error)}`)),
     runArchive: new FileRunArchive(config.dataDir, (error) => console.warn(`Could not write the archive of runs: ${String(error)}`)),
     version: versionInfo(installRoot(), config).version,
