@@ -55,6 +55,17 @@ describe('parsing workflow commands', () => {
     expect(parse('run flow')).toEqual({ action: 'run', query: 'flow', session: null, inputs: {}, replace: false });
   });
 
+  it("reads the owner's decision on a run that waits: the run, a comment, and where to send it back to", () => {
+    expect(parse('approve api')).toEqual({ action: 'approve', run: 'api', comment: null });
+    expect(parseWorkflowCommand(['approve', 'the', 'api', 'terminal', '--comment', 'Good. Go on.'])).toEqual({ action: 'approve', run: 'the api terminal', comment: 'Good. Go on.' });
+    expect(parseWorkflowCommand(['send-back', 'api', '--to', 'Design', '--comment', 'Per user.'])).toEqual({ action: 'send-back', run: 'api', to: 'Design', comment: 'Per user.' });
+    expect(() => parse('approve')).toThrow(/needs a run/);
+    expect(() => parse('approve api --force')).toThrow(UsageError);
+    expect(() => parse('send-back api --to Design')).toThrow(/needs --comment/);
+    expect(() => parseWorkflowCommand(['send-back', 'api', '--comment', 'x'])).toThrow(/needs --to/);
+    expect(() => parseWorkflowCommand(['send-back', '--to', 'Design', '--comment', 'x'])).toThrow(/needs a run/);
+  });
+
   it('reads what a session says about its run', () => {
     expect(parse('status')).toEqual({ action: 'status' });
     expect(parse('done')).toEqual({ action: 'done', note: null, element: null, output: null });

@@ -43,6 +43,9 @@ describe('parseCommand', () => {
     expect(parseCommand(['demo', '--remove', '--no-open'])).toEqual({ name: 'demo', remove: true, open: false });
     expect(() => parseCommand(['demo', 'twice'])).toThrow(/does not know/);
     expect(parseCommand(['list'])).toEqual({ name: 'list' });
+    expect(parseCommand(['board'])).toEqual({ name: 'board', canvas: null, workflow: null, status: null, tag: null });
+    expect(parseCommand(['board', '--canvas', 'Main', '--status', 'awaiting', '--tag', 'api', '--workflow', 'Fix a bug'])).toEqual({ name: 'board', canvas: 'Main', workflow: 'Fix a bug', status: 'awaiting', tag: 'api' });
+    expect(() => parseCommand(['board', 'everything'])).toThrow(/does not know/);
     expect(parseCommand(['new'])).toEqual({ name: 'new', sessionName: null, canvas: null });
     expect(parseCommand(['new', 'api', 'server'])).toEqual({ name: 'new', sessionName: 'api server', canvas: null });
     expect(parseCommand(['attach', 'api'])).toEqual({ name: 'attach', query: 'api' });

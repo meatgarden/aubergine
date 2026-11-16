@@ -433,6 +433,7 @@ Work while no terminal or text field has the keyboard:
 | `T`, `[` `]`, `1`–`9`, `Shift+R` | new canvas, previous and next canvas, go to a canvas, rename the canvas |
 | `W` | next session that is waiting for you |
 | `F`, `0` | zoom to fit, zoom to 100% |
+| `Shift+B` | the [board](#the-board): every run that is going |
 | `B`, `S`, `/` | show or hide the side panel; list this canvas or all canvases; filter the list by text |
 | `F6` | move the keyboard to the list, the toolbar, the tabs, and back |
 | `O`, `?`, `Esc` | Outside terminals, the shortcut sheet, close a panel or clear the selection |
@@ -599,6 +600,49 @@ A terminal is on one run at a time. **Resume agent** on a terminal that is on a 
 - A run the agent reports **blocked** puts its terminal in the waiting queue, naming the element and the reason. So does a run that **finishes**.
 - **quiet** on a strip means the terminal has kept printing for five minutes since the last report, so the picture may be behind what is really going on: the agent may have moved on without saying so. The time is `workflows.quietAfterSeconds` in the settings.
 - When a run finishes, a summary (each element and its note) is added to the terminal's notes. Finished and stopped runs leave the list; they are kept in `runs.log` in the data folder and can be read with `GET /v1/runs?status=ended`.
+
+### Approvals: where a run stops for you
+
+Some steps should not happen until you have said yes: building what was planned, deleting something, sending something out. Put an **approval** there. In the editor, **+ Approval** adds one; give it a name, write what you are asked to decide, and if you like what to look at. An approval has no instructions for an agent. The template *Specify, design, then build* has one before the building starts.
+
+When a run reaches an approval:
+
+- The run **waits for approval**. The agent is told to stop and that it cannot approve. If it reports done anyway, that is refused and the run does not move.
+- The terminal goes into the waiting queue ("Approval needed at …"), and the run is on the [board](#the-board) under what waits for you.
+- You read what was done, in the run view: the note of every element so far, any list handed in with its ticks, and how long each took.
+- Then you **Approve**, with a comment if you like, or **Send back…** to any earlier element with a comment saying what should change. The agent is told your comment as part of that element, marked as your words; that element and everything after it is done again, and the run comes back to you.
+
+After either, the agent is told to read its status again with the same fixed sentence that starts a run. Your comment is never typed into a terminal: the agent reads it with the command. Where no agent is seen in front of the terminal, nothing is typed, as with any run.
+
+From a terminal that is not on a canvas:
+
+```sh
+aubergine board
+aubergine workflow approve api --comment "Good. Keep the old flag for now."
+aubergine workflow send-back api --to Design --comment "The cache must be per user."
+```
+
+The run is named by its ID or by the name of its terminal.
+
+**Who can approve.** Only you. No API token can, whatever its scopes, and neither can the token a terminal's agent has; both are also kept from jumping a run over an approval. This is decided in the server and does not depend on the agent behaving.
+
+**What this does not stop.** An agent in your terminal runs as you. It can run `aubergine` the way you do, or read your sign-in from Aubergine's data folder, and approve as you. The `approve` and `send-back` commands refuse to work inside a canvas terminal, which is a sentence in an agent's way and not a lock. A decision made from a command line, by anyone, is written in the activity log as coming from outside the browser, so it can be seen afterwards. A program with a token that may stop runs and start runs can also stop the waiting run and start another without the approval; that shows on the board and in the run's record, and it is not an approval. If an agent must not be able to do something, do not give it the means to do it: an approval is a place where a well-behaved agent stops and you look, not a wall around one that does not.
+
+### The board
+
+**Board** in the toolbar (or `Shift+B`) shows every run that is going, on every canvas, on one screen.
+
+- Runs are grouped by **workflow**. Where runs of one workflow are on different versions of it, each version has its own group, because the elements may differ. Runs of one element by itself share a group.
+- In a group the **columns** are the workflow's elements in order, and a **card** is one run on one terminal, in the column of the element it is on. A column where a run stops for you is marked *you decide*.
+- A card says the terminal and its canvas, how the run stands in words (working, waiting for approval, blocked, paused), how long it has been on this element, **quiet** where the terminal has printed for a while without a report, and why it is blocked. A run that waits for you has **Approve** and **Send back…** on the card.
+- Click a card to go to that terminal on its canvas. **What it did** opens the run view.
+- At the top are the counts ("3 waiting for you, 2 blocked, 9 working") and filters by canvas, workflow, status and tag. The filters are remembered by this browser.
+- At the bottom are the runs that finished or were stopped in the last day, newest first, at most fifty.
+- With the keyboard: the arrows move between cards, `Enter` goes to the terminal, `Esc` closes.
+
+**Start on several terminals…** on the board starts one workflow on many terminals at once. Pick the workflow, tick the terminals, and give one task for all or one each. Beside each terminal it says what is known: whether an agent is in front, or that nothing will be typed there. Each terminal gets a run of its own, and the answer says, terminal by terminal, whether it started and if not why (one that is already on a run is refused unless you tick the box to replace). One that cannot start does not stop the others.
+
+The same picture is `aubergine board` in a terminal, `GET /v1/board` for a program with a token that may `read`, and the `board` tool for an agent with tools. It holds nothing such a program cannot already read from the lists of runs and terminals.
 
 ### Let an agent write one
 
@@ -835,6 +879,9 @@ aubergine workflow export <name> --to-repository [--overwrite]   inside a sessio
 aubergine workflow import <file> [--name <name>]   make one from such a file ("-" reads standard input)
 aubergine workflow run <name> [--session <name|id>] [--input key=value]… [--replace]
                                start a run on a session: the one it is typed in, when typed inside one
+aubergine workflow approve <run> [--comment <text>]      approve the element a run waits on; the run is its ID or its terminal's name
+aubergine workflow send-back <run> --to <element> --comment <text>
+aubergine board [--canvas <name>] [--workflow <name>] [--status <status>] [--tag <tag>]      every run that is going
 aubergine workflow status      inside a session on a run: where it stands and what to do now
 aubergine workflow done [--note <text>] [--output <file>]   the current element is finished; prints what comes next
 aubergine workflow brief       inside a session asked to write a workflow or an element: the request
@@ -978,7 +1025,7 @@ aubergine library remove <source>
 
 ## When Aubergine types into an agent's terminal
 
-Aubergine itself types four things, and only these: one fixed sentence each to say that a workflow was started, that the agent was asked to write something, that you asked for a recap, and that a message waits. Each names one command for the agent to run; nothing of yours and nothing anyone else wrote is in them.
+Aubergine itself types four things, and only these: one fixed sentence each to say that a workflow was started (the same one again after you approve a run or send it back), that the agent was asked to write something, that you asked for a recap, and that a message waits. Each names one command for the agent to run; nothing of yours and nothing anyone else wrote is in them.
 
 A sentence is typed only where the agent is seen to have the keyboard. Two things must hold: an agent has reported from that terminal (an agent Aubergine starts does so when its conversation begins), and the program in front of the terminal now is not a shell and is the same program that was in front when the agent last reported. If either cannot be established, nothing is typed. The terminal then shows **not told**, with which sentence and why, and the sentence is typed when the agent next reports from in front, within half an hour.
 
@@ -1286,7 +1333,7 @@ It never reads your sign-in, and it has no tool for what only you may do: making
 | With | Tools |
 |---|---|
 | a session's own token | `workflow_status`, `workflow_done`, `workflow_blocked`, `workflow_goto`, `note_add`, `attention_set`, `draft_brief`, `draft_propose_element`, `draft_propose_workflow`, `messages_inbox`, `message_reply`, `message_send`, `repository_workflows`: its own work, on its own session only |
-| `read` | `library_list`, `library_show`, `canvases_list`, `sessions_list`, `session_get`, `notes_read`, `workflows_list`, `runs_list`, `run_get`, `workflow_status`, `repository_workflows` |
+| `read` | `board`, `library_list`, `library_show`, `canvases_list`, `sessions_list`, `session_get`, `notes_read`, `workflows_list`, `runs_list`, `run_get`, `workflow_status`, `repository_workflows` |
 | `sessions:write` | `session_start`, `session_move`, `session_park` |
 | `notes:write` | `note_add`, `note_write` |
 | `runs:write` | `workflow_run`, `element_run`, `workflow_done`, `workflow_blocked`, `workflow_goto` |
