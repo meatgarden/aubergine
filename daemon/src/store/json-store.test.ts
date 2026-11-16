@@ -2,7 +2,7 @@ import { copyFile, mkdir, mkdtemp, readFile, readdir, rm, writeFile } from 'node
 import os from 'node:os';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { NO_ATTENTION, NO_STATUS, applyEvent, newId, type AppState, type ChangeEvent } from '@aubergine/shared';
+import { NO_ATTENTION, NO_STATUS, applyEvent, newId, type AppState, type ChangeEvent, copyStatus, usesOf } from '@aubergine/shared';
 import { JsonStore } from './json-store';
 
 let dir: string;
@@ -65,7 +65,7 @@ describe('JsonStore', () => {
     const state = withSession(await store.load(), 'one');
     await store.save(state);
     const raw = JSON.parse(await readFile(store.file, 'utf8'));
-    expect(raw.version).toBe(7);
+    expect(raw.version).toBe(8);
     expect(raw.sessions[0]).not.toHaveProperty('x');
     expect(raw.sessions[0]).not.toHaveProperty('width');
     expect(raw.canvases[0].layout.nodes[0].sessionId).toBe(raw.sessions[0].id);
@@ -167,7 +167,7 @@ describe('JsonStore', () => {
     // Saving writes the current shape, which loads back the same.
     await store.save(state);
     const raw = JSON.parse(await readFile(store.file, 'utf8'));
-    expect(raw.version).toBe(7);
+    expect(raw.version).toBe(8);
     expect(raw.layout).toBeUndefined();
     expect(await new JsonStore(dir).load()).toEqual(state);
 
@@ -194,7 +194,7 @@ describe('JsonStore', () => {
 
     await store.save(state);
     const raw = JSON.parse(await readFile(store.file, 'utf8'));
-    expect(raw.version).toBe(7);
+    expect(raw.version).toBe(8);
     expect(raw.tokens).toEqual([]);
     expect(await new JsonStore(dir).load()).toEqual(state);
     // The file as it was, byte for byte, is beside the new one.
@@ -219,7 +219,7 @@ describe('JsonStore', () => {
 
     await store.save(state);
     const raw = JSON.parse(await readFile(store.file, 'utf8'));
-    expect(raw.version).toBe(7);
+    expect(raw.version).toBe(8);
     expect(raw.workflows).toEqual([]);
     expect(raw.runs).toEqual([]);
     expect(await new JsonStore(dir).load()).toEqual(state);
@@ -250,7 +250,7 @@ describe('JsonStore', () => {
 
     await store.save(state);
     const raw = JSON.parse(await readFile(store.file, 'utf8'));
-    expect(raw.version).toBe(7);
+    expect(raw.version).toBe(8);
     expect(await new JsonStore(dir).load()).toEqual(state);
     expect(await readFile(`${store.file}.v4.backup`, 'utf8')).toBe(fixture);
   });
@@ -270,7 +270,7 @@ describe('JsonStore', () => {
 
     await store.save(state);
     const raw = JSON.parse(await readFile(store.file, 'utf8'));
-    expect(raw.version).toBe(7);
+    expect(raw.version).toBe(8);
     expect(raw.repositoryAccepted).toEqual([]);
     expect(await new JsonStore(dir).load()).toEqual(state);
     expect(await readFile(`${store.file}.v5.backup`, 'utf8')).toBe(fixture);
@@ -292,9 +292,50 @@ describe('JsonStore', () => {
 
     await store.save(state);
     const raw = JSON.parse(await readFile(store.file, 'utf8'));
-    expect(raw.version).toBe(7);
+    expect(raw.version).toBe(8);
     expect(await new JsonStore(dir).load()).toEqual(state);
     expect(await readFile(`${store.file}.v6.backup`, 'utf8')).toBe(fixture);
+  });
+
+  it('loads a file from before shelf versions: what each shelf element says is its version 1, and a copy is marked as from a version nobody recorded', async () => {
+    const store = new JsonStore(dir);
+    const fixture = await readFile(new URL('./fixtures/state-terminal-access-v7.json', import.meta.url), 'utf8');
+    await mkdir(dir, { recursive: true });
+    await writeFile(store.file, fixture);
+    const before = JSON.parse(fixture);
+
+    const state = await store.load();
+    const [item] = state.shelf;
+    expect(state.shelf).toHaveLength(1);
+    expect(item).toMatchObject({ version: 1, state: 'current', replacedBy: null });
+    expect(item!.versions).toEqual([{ version: 1, element: item!.element, at: item!.updatedAt, by: { kind: 'person' }, note: '' }]);
+    expect(item!.element.name).toBe(before.shelf[0].element.name);
+    expect(item!.element.instructions).toBe(before.shelf[0].element.instructions);
+
+    // Every kept version of the workflow: the copy says which shelf element, and that the version and the content as copied are not known.
+    const workflow = state.workflows[0]!;
+    for (const version of workflow.versions) {
+      expect(version.elements.find((e) => e.id === 'from-the-shelf')?.source, `version ${version.number}`).toEqual({ shelfId: item!.id, version: null, hash: null });
+    }
+    const latest = workflow.versions.at(-1)!;
+    expect(latest.elements.map((e) => [e.id, e.source?.shelfId ?? null])).toEqual([
+      ['plan', null],
+      ['build', null],
+      ['from-the-shelf', item!.id],
+      ['orphan', '01900000-0000-7000-8000-00000000dead'],
+    ]);
+    // What can be told: nothing about the one, and of the other that its source is not there. Neither is called behind.
+    expect(copyStatus(latest.elements[2]!, state.shelf).state).toBe('unknown');
+    expect(copyStatus(latest.elements[3]!, state.shelf).state).toBe('gone');
+    expect(usesOf(item!.id, state.workflows, state.shelf)).toEqual([{ workflowId: workflow.id, workflowName: workflow.name, workflowVersion: latest.number, copies: [{ elementId: 'from-the-shelf', name: 'Tidy up', state: 'unknown', copiedVersion: null }], inVersions: workflow.versions.map((v) => v.number) }]);
+    // What the elements say is as it was, word for word.
+    expect(latest.elements.map((e) => [e.name, e.instructions])).toEqual(before.workflows[0].versions.at(-1).elements.map((e: { name: string; instructions: string }) => [e.name, e.instructions]));
+
+    await store.save(state);
+    const raw = JSON.parse(await readFile(store.file, 'utf8'));
+    expect(raw.version).toBe(8);
+    expect(await new JsonStore(dir).load()).toEqual(state);
+    expect(await readFile(`${store.file}.v7.backup`, 'utf8')).toBe(fixture);
   });
 
   it('keeps a session on one canvas only, if a file ever says otherwise', async () => {

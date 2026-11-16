@@ -486,7 +486,7 @@ describe('the shelf', () => {
     expect(hub.state.workflows).toEqual([]);
     // Changing the shelf element later does not reach into a run: the run had its own copy.
     const state = JSON.parse(await readFile(path.join(dir, 'state.json'), 'utf8').catch(() => '{}'));
-    expect(state.version ?? 7).toBe(7);
+    expect(state.version ?? 8).toBe(8);
   });
 
   it('a workflow left over from running one element is cleared at the next start', async () => {

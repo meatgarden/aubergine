@@ -67,6 +67,11 @@ How to create a token, what the scopes mean, the limits and the activity log are
 | [`PATCH /v1/elements/{elementId}`](#updateelement) | Change an element on the shelf | `workflows:write` |
 | [`DELETE /v1/elements/{elementId}`](#removeelement) | Take an element off the shelf | `workflows:write` |
 | [`POST /v1/elements/{elementId}/copy`](#copyelement) | Duplicate an element on the shelf | `workflows:write` |
+| [`GET /v1/elements/{elementId}/versions`](#listelementversions) | The versions of a shelf element | `read` |
+| [`GET /v1/elements/{elementId}/usage`](#getelementusage) | Where a shelf element is used | `read` |
+| [`POST /v1/elements/{elementId}/retire`](#retireelement) | Retire a shelf element | browser only |
+| [`POST /v1/elements/{elementId}/restore`](#restoreelement) | Bring a retired shelf element back | browser only |
+| [`POST /v1/workflows/{workflowId}/elements/{elementId}/shelf-update`](#updatefromshelf) | Decide about a newer shelf version for one copy in a workflow | browser only |
 | [`POST /v1/elements/{elementId}/run`](#runelement) | Run one element by itself, on a session | `runs:write` |
 | [`POST /v1/runs/{runId}/ticks`](#tickrunitem) | Tick an item of what an element produced | `runs:write` |
 | [`GET /v1/repository-workflows`](#listrepositoryworkflows) | List the workflows that repositories offer | `read` |
@@ -1645,7 +1650,7 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
 | `description` | `string` | no | What it is for, in a sentence or two. |
 | `standing` | `string` | no | Text added to every element: rules that hold from start to finish. |
 | `inputs` | `{ key: string; label: string; description?: string; required?: bool…` | no | What a run is given when it starts. `{{key}}` in any text becomes the value. Without this, one input: `task`. |
-| `elements` | `{ id?: string; kind?: string; name: string; instructions?: string; …` | yes | The elements, in the order they are gone through. |
+| `elements` | `{ /** Its ID inside its workflow. It stays the same when the elemen…` | yes | The elements, in the order they are gone through. |
 | `labels` | `{ [key: string]: string; }` | no | Pairs of key and value for tools of your own to give meaning to. |
 | `origin` | `{ kind: string; name?: string; [key: string]: unknown; }` | no | Where it came from. Left out, it was made here. |
 | `extra` | `{ [key: string]: unknown; }` | no | Fields from a file that this version does not know, kept so they are written out again. |
@@ -1680,22 +1685,37 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
       required: boolean;
     }[];
     elements: {
+      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id: string;
+      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
       kind: string;
+      /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
+      /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
       instructions: string;
+      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
       doneWhen: string;
+      /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
         kind: "mcp" | "command" | "access" | "other";
         name: string;
         note?: string;
       }[];
+      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
       produces: string;
+      /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
         kind: string;
         name?: string;
         [key: string]: unknown;
       };
+      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      source: {
+        shelfId: string;
+        version: number | null;
+        hash: string | null;
+      } | null;
+      /** Fields from a file that this version does not know, kept so that they are written out again. */
       extra: {
         [key: string]: unknown;
       };
@@ -1759,22 +1779,37 @@ An API token needs the scope `read`.
       required: boolean;
     }[];
     elements: {
+      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id: string;
+      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
       kind: string;
+      /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
+      /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
       instructions: string;
+      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
       doneWhen: string;
+      /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
         kind: "mcp" | "command" | "access" | "other";
         name: string;
         note?: string;
       }[];
+      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
       produces: string;
+      /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
         kind: string;
         name?: string;
         [key: string]: unknown;
       };
+      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      source: {
+        shelfId: string;
+        version: number | null;
+        hash: string | null;
+      } | null;
+      /** Fields from a file that this version does not know, kept so that they are written out again. */
       extra: {
         [key: string]: unknown;
       };
@@ -1815,7 +1850,7 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
 | `description` | `string` | no | What it is for, in a sentence or two. |
 | `standing` | `string` | no | Text added to every element: rules that hold from start to finish. |
 | `inputs` | `{ key: string; label: string; description?: string; required?: bool…` | no | What a run is given when it starts. `{{key}}` in any text becomes the value. Without this, one input: `task`. |
-| `elements` | `{ id?: string; kind?: string; name: string; instructions?: string; …` | no | The elements, in the order they are gone through. |
+| `elements` | `{ /** Its ID inside its workflow. It stays the same when the elemen…` | no | The elements, in the order they are gone through. |
 | `labels` | `{ [key: string]: string; }` | no | Pairs of key and value for tools of your own to give meaning to. |
 
 **Answer** `200`:
@@ -1848,22 +1883,37 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
       required: boolean;
     }[];
     elements: {
+      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id: string;
+      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
       kind: string;
+      /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
+      /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
       instructions: string;
+      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
       doneWhen: string;
+      /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
         kind: "mcp" | "command" | "access" | "other";
         name: string;
         note?: string;
       }[];
+      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
       produces: string;
+      /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
         kind: string;
         name?: string;
         [key: string]: unknown;
       };
+      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      source: {
+        shelfId: string;
+        version: number | null;
+        hash: string | null;
+      } | null;
+      /** Fields from a file that this version does not know, kept so that they are written out again. */
       extra: {
         [key: string]: unknown;
       };
@@ -1955,22 +2005,37 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
       required: boolean;
     }[];
     elements: {
+      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id: string;
+      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
       kind: string;
+      /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
+      /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
       instructions: string;
+      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
       doneWhen: string;
+      /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
         kind: "mcp" | "command" | "access" | "other";
         name: string;
         note?: string;
       }[];
+      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
       produces: string;
+      /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
         kind: string;
         name?: string;
         [key: string]: unknown;
       };
+      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      source: {
+        shelfId: string;
+        version: number | null;
+        hash: string | null;
+      } | null;
+      /** Fields from a file that this version does not know, kept so that they are written out again. */
       extra: {
         [key: string]: unknown;
       };
@@ -2023,22 +2088,37 @@ A list: it answers a page at a time, see `limit` and `cursor`.
       required: boolean;
     }[];
     elements: {
+      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id: string;
+      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
       kind: string;
+      /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
+      /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
       instructions: string;
+      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
       doneWhen: string;
+      /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
         kind: "mcp" | "command" | "access" | "other";
         name: string;
         note?: string;
       }[];
+      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
       produces: string;
+      /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
         kind: string;
         name?: string;
         [key: string]: unknown;
       };
+      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      source: {
+        shelfId: string;
+        version: number | null;
+        hash: string | null;
+      } | null;
+      /** Fields from a file that this version does not know, kept so that they are written out again. */
       extra: {
         [key: string]: unknown;
       };
@@ -2092,22 +2172,37 @@ A list: it answers a page at a time, see `limit` and `cursor`.
         required: boolean;
       }[];
       elements: {
+        /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
         id: string;
+        /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
         kind: string;
+        /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
+        /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
         instructions: string;
+        /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
         doneWhen: string;
+        /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
         needs: {
           kind: "mcp" | "command" | "access" | "other";
           name: string;
           note?: string;
         }[];
+        /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
         produces: string;
+        /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
         origin: {
           kind: string;
           name?: string;
           [key: string]: unknown;
         };
+        /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+        source: {
+          shelfId: string;
+          version: number | null;
+          hash: string | null;
+        } | null;
+        /** Fields from a file that this version does not know, kept so that they are written out again. */
         extra: {
           [key: string]: unknown;
         };
@@ -2177,22 +2272,37 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
       required: boolean;
     }[];
     elements: {
+      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id: string;
+      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
       kind: string;
+      /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
+      /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
       instructions: string;
+      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
       doneWhen: string;
+      /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
         kind: "mcp" | "command" | "access" | "other";
         name: string;
         note?: string;
       }[];
+      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
       produces: string;
+      /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
         kind: string;
         name?: string;
         [key: string]: unknown;
       };
+      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      source: {
+        shelfId: string;
+        version: number | null;
+        hash: string | null;
+      } | null;
+      /** Fields from a file that this version does not know, kept so that they are written out again. */
       extra: {
         [key: string]: unknown;
       };
@@ -2662,22 +2772,37 @@ A list: it answers a page at a time, see `limit` and `cursor`.
         required: boolean;
       }[];
       elements: {
+        /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
         id: string;
+        /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
         kind: string;
+        /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
+        /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
         instructions: string;
+        /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
         doneWhen: string;
+        /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
         needs: {
           kind: "mcp" | "command" | "access" | "other";
           name: string;
           note?: string;
         }[];
+        /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
         produces: string;
+        /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
         origin: {
           kind: string;
           name?: string;
           [key: string]: unknown;
         };
+        /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+        source: {
+          shelfId: string;
+          version: number | null;
+          hash: string | null;
+        } | null;
+        /** Fields from a file that this version does not know, kept so that they are written out again. */
         extra: {
           [key: string]: unknown;
         };
@@ -2687,22 +2812,37 @@ A list: it answers a page at a time, see `limit` and `cursor`.
       };
     } | null;
     element: {
+      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id: string;
+      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
       kind: string;
+      /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
+      /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
       instructions: string;
+      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
       doneWhen: string;
+      /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
         kind: "mcp" | "command" | "access" | "other";
         name: string;
         note?: string;
       }[];
+      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
       produces: string;
+      /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
         kind: string;
         name?: string;
         [key: string]: unknown;
       };
+      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      source: {
+        shelfId: string;
+        version: number | null;
+        hash: string | null;
+      } | null;
+      /** Fields from a file that this version does not know, kept so that they are written out again. */
       extra: {
         [key: string]: unknown;
       };
@@ -2735,22 +2875,37 @@ A list: it answers a page at a time, see `limit` and `cursor`.
           required: boolean;
         }[];
         elements: {
+          /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
           id: string;
+          /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
           kind: string;
+          /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
           name: string;
+          /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
           instructions: string;
+          /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
           doneWhen: string;
+          /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
           needs: {
             kind: "mcp" | "command" | "access" | "other";
             name: string;
             note?: string;
           }[];
+          /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
           produces: string;
+          /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
           origin: {
             kind: string;
             name?: string;
             [key: string]: unknown;
           };
+          /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+          source: {
+            shelfId: string;
+            version: number | null;
+            hash: string | null;
+          } | null;
+          /** Fields from a file that this version does not know, kept so that they are written out again. */
           extra: {
             [key: string]: unknown;
           };
@@ -2760,22 +2915,37 @@ A list: it answers a page at a time, see `limit` and `cursor`.
         };
       } | null;
       element: {
+        /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
         id: string;
+        /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
         kind: string;
+        /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
+        /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
         instructions: string;
+        /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
         doneWhen: string;
+        /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
         needs: {
           kind: "mcp" | "command" | "access" | "other";
           name: string;
           note?: string;
         }[];
+        /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
         produces: string;
+        /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
         origin: {
           kind: string;
           name?: string;
           [key: string]: unknown;
         };
+        /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+        source: {
+          shelfId: string;
+          version: number | null;
+          hash: string | null;
+        } | null;
+        /** Fields from a file that this version does not know, kept so that they are written out again. */
         extra: {
           [key: string]: unknown;
         };
@@ -2814,7 +2984,7 @@ An API token needs the scope `workflows:write`.
 | Field | Type | Required | |
 |---|---|---|---|
 | `workflow` | `{ /** What it is called. */ name: string; /** What it is for, in a …` | no | A whole workflow. Give this or `element`, not both. |
-| `element` | `{ id?: string; kind?: string; name: string; instructions?: string; …` | no | One element, for the shelf. |
+| `element` | `{ /** Its ID inside its workflow. It stays the same when the elemen…` | no | One element, for the shelf. |
 | `revisesWorkflowId` | `string` | no | For a workflow: the workflow this is a new version of. Without it, accepting makes a new workflow. |
 | `description` | `string` | no | What it is meant to do, when nobody asked for it. |
 
@@ -2834,22 +3004,37 @@ An API token needs the scope `workflows:write`.
         required: boolean;
       }[];
       elements: {
+        /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
         id: string;
+        /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
         kind: string;
+        /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
+        /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
         instructions: string;
+        /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
         doneWhen: string;
+        /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
         needs: {
           kind: "mcp" | "command" | "access" | "other";
           name: string;
           note?: string;
         }[];
+        /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
         produces: string;
+        /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
         origin: {
           kind: string;
           name?: string;
           [key: string]: unknown;
         };
+        /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+        source: {
+          shelfId: string;
+          version: number | null;
+          hash: string | null;
+        } | null;
+        /** Fields from a file that this version does not know, kept so that they are written out again. */
         extra: {
           [key: string]: unknown;
         };
@@ -2859,22 +3044,37 @@ An API token needs the scope `workflows:write`.
       };
     } | null;
     element: {
+      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id: string;
+      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
       kind: string;
+      /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
+      /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
       instructions: string;
+      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
       doneWhen: string;
+      /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
         kind: "mcp" | "command" | "access" | "other";
         name: string;
         note?: string;
       }[];
+      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
       produces: string;
+      /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
         kind: string;
         name?: string;
         [key: string]: unknown;
       };
+      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      source: {
+        shelfId: string;
+        version: number | null;
+        hash: string | null;
+      } | null;
+      /** Fields from a file that this version does not know, kept so that they are written out again. */
       extra: {
         [key: string]: unknown;
       };
@@ -2907,22 +3107,37 @@ An API token needs the scope `workflows:write`.
           required: boolean;
         }[];
         elements: {
+          /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
           id: string;
+          /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
           kind: string;
+          /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
           name: string;
+          /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
           instructions: string;
+          /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
           doneWhen: string;
+          /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
           needs: {
             kind: "mcp" | "command" | "access" | "other";
             name: string;
             note?: string;
           }[];
+          /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
           produces: string;
+          /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
           origin: {
             kind: string;
             name?: string;
             [key: string]: unknown;
           };
+          /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+          source: {
+            shelfId: string;
+            version: number | null;
+            hash: string | null;
+          } | null;
+          /** Fields from a file that this version does not know, kept so that they are written out again. */
           extra: {
             [key: string]: unknown;
           };
@@ -2932,22 +3147,37 @@ An API token needs the scope `workflows:write`.
         };
       } | null;
       element: {
+        /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
         id: string;
+        /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
         kind: string;
+        /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
+        /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
         instructions: string;
+        /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
         doneWhen: string;
+        /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
         needs: {
           kind: "mcp" | "command" | "access" | "other";
           name: string;
           note?: string;
         }[];
+        /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
         produces: string;
+        /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
         origin: {
           kind: string;
           name?: string;
           [key: string]: unknown;
         };
+        /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+        source: {
+          shelfId: string;
+          version: number | null;
+          hash: string | null;
+        } | null;
+        /** Fields from a file that this version does not know, kept so that they are written out again. */
         extra: {
           [key: string]: unknown;
         };
@@ -3004,22 +3234,37 @@ An API token needs the scope `read`.
         required: boolean;
       }[];
       elements: {
+        /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
         id: string;
+        /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
         kind: string;
+        /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
+        /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
         instructions: string;
+        /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
         doneWhen: string;
+        /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
         needs: {
           kind: "mcp" | "command" | "access" | "other";
           name: string;
           note?: string;
         }[];
+        /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
         produces: string;
+        /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
         origin: {
           kind: string;
           name?: string;
           [key: string]: unknown;
         };
+        /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+        source: {
+          shelfId: string;
+          version: number | null;
+          hash: string | null;
+        } | null;
+        /** Fields from a file that this version does not know, kept so that they are written out again. */
         extra: {
           [key: string]: unknown;
         };
@@ -3029,22 +3274,37 @@ An API token needs the scope `read`.
       };
     } | null;
     element: {
+      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id: string;
+      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
       kind: string;
+      /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
+      /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
       instructions: string;
+      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
       doneWhen: string;
+      /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
         kind: "mcp" | "command" | "access" | "other";
         name: string;
         note?: string;
       }[];
+      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
       produces: string;
+      /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
         kind: string;
         name?: string;
         [key: string]: unknown;
       };
+      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      source: {
+        shelfId: string;
+        version: number | null;
+        hash: string | null;
+      } | null;
+      /** Fields from a file that this version does not know, kept so that they are written out again. */
       extra: {
         [key: string]: unknown;
       };
@@ -3077,22 +3337,37 @@ An API token needs the scope `read`.
           required: boolean;
         }[];
         elements: {
+          /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
           id: string;
+          /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
           kind: string;
+          /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
           name: string;
+          /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
           instructions: string;
+          /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
           doneWhen: string;
+          /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
           needs: {
             kind: "mcp" | "command" | "access" | "other";
             name: string;
             note?: string;
           }[];
+          /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
           produces: string;
+          /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
           origin: {
             kind: string;
             name?: string;
             [key: string]: unknown;
           };
+          /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+          source: {
+            shelfId: string;
+            version: number | null;
+            hash: string | null;
+          } | null;
+          /** Fields from a file that this version does not know, kept so that they are written out again. */
           extra: {
             [key: string]: unknown;
           };
@@ -3102,22 +3377,37 @@ An API token needs the scope `read`.
         };
       } | null;
       element: {
+        /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
         id: string;
+        /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
         kind: string;
+        /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
+        /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
         instructions: string;
+        /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
         doneWhen: string;
+        /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
         needs: {
           kind: "mcp" | "command" | "access" | "other";
           name: string;
           note?: string;
         }[];
+        /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
         produces: string;
+        /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
         origin: {
           kind: string;
           name?: string;
           [key: string]: unknown;
         };
+        /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+        source: {
+          shelfId: string;
+          version: number | null;
+          hash: string | null;
+        } | null;
+        /** Fields from a file that this version does not know, kept so that they are written out again. */
         extra: {
           [key: string]: unknown;
         };
@@ -3162,7 +3452,7 @@ An API token needs the scope `workflows:write`.
 | Field | Type | Required | |
 |---|---|---|---|
 | `workflow` | `{ /** What it is called. */ name: string; /** What it is for, in a …` | no | A whole workflow. Give this or `element`, not both. |
-| `element` | `{ id?: string; kind?: string; name: string; instructions?: string; …` | no | One element, for the shelf. |
+| `element` | `{ /** Its ID inside its workflow. It stays the same when the elemen…` | no | One element, for the shelf. |
 | `revisesWorkflowId` | `string` | no | For a workflow: the workflow this is a new version of. Without it, accepting makes a new workflow. |
 | `description` | `string` | no | What it is meant to do, when nobody asked for it. |
 
@@ -3182,22 +3472,37 @@ An API token needs the scope `workflows:write`.
         required: boolean;
       }[];
       elements: {
+        /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
         id: string;
+        /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
         kind: string;
+        /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
+        /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
         instructions: string;
+        /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
         doneWhen: string;
+        /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
         needs: {
           kind: "mcp" | "command" | "access" | "other";
           name: string;
           note?: string;
         }[];
+        /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
         produces: string;
+        /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
         origin: {
           kind: string;
           name?: string;
           [key: string]: unknown;
         };
+        /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+        source: {
+          shelfId: string;
+          version: number | null;
+          hash: string | null;
+        } | null;
+        /** Fields from a file that this version does not know, kept so that they are written out again. */
         extra: {
           [key: string]: unknown;
         };
@@ -3207,22 +3512,37 @@ An API token needs the scope `workflows:write`.
       };
     } | null;
     element: {
+      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id: string;
+      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
       kind: string;
+      /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
+      /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
       instructions: string;
+      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
       doneWhen: string;
+      /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
         kind: "mcp" | "command" | "access" | "other";
         name: string;
         note?: string;
       }[];
+      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
       produces: string;
+      /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
         kind: string;
         name?: string;
         [key: string]: unknown;
       };
+      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      source: {
+        shelfId: string;
+        version: number | null;
+        hash: string | null;
+      } | null;
+      /** Fields from a file that this version does not know, kept so that they are written out again. */
       extra: {
         [key: string]: unknown;
       };
@@ -3255,22 +3575,37 @@ An API token needs the scope `workflows:write`.
           required: boolean;
         }[];
         elements: {
+          /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
           id: string;
+          /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
           kind: string;
+          /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
           name: string;
+          /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
           instructions: string;
+          /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
           doneWhen: string;
+          /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
           needs: {
             kind: "mcp" | "command" | "access" | "other";
             name: string;
             note?: string;
           }[];
+          /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
           produces: string;
+          /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
           origin: {
             kind: string;
             name?: string;
             [key: string]: unknown;
           };
+          /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+          source: {
+            shelfId: string;
+            version: number | null;
+            hash: string | null;
+          } | null;
+          /** Fields from a file that this version does not know, kept so that they are written out again. */
           extra: {
             [key: string]: unknown;
           };
@@ -3280,22 +3615,37 @@ An API token needs the scope `workflows:write`.
         };
       } | null;
       element: {
+        /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
         id: string;
+        /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
         kind: string;
+        /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
+        /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
         instructions: string;
+        /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
         doneWhen: string;
+        /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
         needs: {
           kind: "mcp" | "command" | "access" | "other";
           name: string;
           note?: string;
         }[];
+        /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
         produces: string;
+        /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
         origin: {
           kind: string;
           name?: string;
           [key: string]: unknown;
         };
+        /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+        source: {
+          shelfId: string;
+          version: number | null;
+          hash: string | null;
+        } | null;
+        /** Fields from a file that this version does not know, kept so that they are written out again. */
         extra: {
           [key: string]: unknown;
         };
@@ -3357,7 +3707,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 | Field | Type | Required | |
 |---|---|---|---|
 | `workflow` | `{ /** What it is called. */ name: string; /** What it is for, in a …` | no | The workflow as edited before accepting. |
-| `element` | `{ id?: string; kind?: string; name: string; instructions?: string; …` | no | The element as edited before accepting. |
+| `element` | `{ /** Its ID inside its workflow. It stays the same when the elemen…` | no | The element as edited before accepting. |
 
 **Answer** `200`:
 
@@ -3403,22 +3753,37 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
       required: boolean;
     }[];
     elements: {
+      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id: string;
+      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
       kind: string;
+      /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
+      /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
       instructions: string;
+      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
       doneWhen: string;
+      /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
         kind: "mcp" | "command" | "access" | "other";
         name: string;
         note?: string;
       }[];
+      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
       produces: string;
+      /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
         kind: string;
         name?: string;
         [key: string]: unknown;
       };
+      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      source: {
+        shelfId: string;
+        version: number | null;
+        hash: string | null;
+      } | null;
+      /** Fields from a file that this version does not know, kept so that they are written out again. */
       extra: {
         [key: string]: unknown;
       };
@@ -3428,22 +3793,37 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
     };
   } | null;
   element: {
+    /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
     id: string;
+    /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
     kind: string;
+    /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
     name: string;
+    /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
     instructions: string;
+    /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
     doneWhen: string;
+    /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
     needs: {
       kind: "mcp" | "command" | "access" | "other";
       name: string;
       note?: string;
     }[];
+    /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
     produces: string;
+    /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
     origin: {
       kind: string;
       name?: string;
       [key: string]: unknown;
     };
+    /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+    source: {
+      shelfId: string;
+      version: number | null;
+      hash: string | null;
+    } | null;
+    /** Fields from a file that this version does not know, kept so that they are written out again. */
     extra: {
       [key: string]: unknown;
     };
@@ -3476,22 +3856,37 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
         required: boolean;
       }[];
       elements: {
+        /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
         id: string;
+        /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
         kind: string;
+        /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
+        /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
         instructions: string;
+        /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
         doneWhen: string;
+        /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
         needs: {
           kind: "mcp" | "command" | "access" | "other";
           name: string;
           note?: string;
         }[];
+        /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
         produces: string;
+        /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
         origin: {
           kind: string;
           name?: string;
           [key: string]: unknown;
         };
+        /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+        source: {
+          shelfId: string;
+          version: number | null;
+          hash: string | null;
+        } | null;
+        /** Fields from a file that this version does not know, kept so that they are written out again. */
         extra: {
           [key: string]: unknown;
         };
@@ -3501,22 +3896,37 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
       };
     } | null;
     element: {
+      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id: string;
+      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
       kind: string;
+      /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
+      /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
       instructions: string;
+      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
       doneWhen: string;
+      /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
         kind: "mcp" | "command" | "access" | "other";
         name: string;
         note?: string;
       }[];
+      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
       produces: string;
+      /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
         kind: string;
         name?: string;
         [key: string]: unknown;
       };
+      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      source: {
+        shelfId: string;
+        version: number | null;
+        hash: string | null;
+      } | null;
+      /** Fields from a file that this version does not know, kept so that they are written out again. */
       extra: {
         [key: string]: unknown;
       };
@@ -3610,22 +4020,37 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
         required: boolean;
       }[];
       elements: {
+        /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
         id: string;
+        /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
         kind: string;
+        /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
+        /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
         instructions: string;
+        /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
         doneWhen: string;
+        /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
         needs: {
           kind: "mcp" | "command" | "access" | "other";
           name: string;
           note?: string;
         }[];
+        /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
         produces: string;
+        /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
         origin: {
           kind: string;
           name?: string;
           [key: string]: unknown;
         };
+        /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+        source: {
+          shelfId: string;
+          version: number | null;
+          hash: string | null;
+        } | null;
+        /** Fields from a file that this version does not know, kept so that they are written out again. */
         extra: {
           [key: string]: unknown;
         };
@@ -3635,22 +4060,37 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
       };
     } | null;
     element: {
+      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id: string;
+      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
       kind: string;
+      /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
+      /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
       instructions: string;
+      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
       doneWhen: string;
+      /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
         kind: "mcp" | "command" | "access" | "other";
         name: string;
         note?: string;
       }[];
+      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
       produces: string;
+      /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
         kind: string;
         name?: string;
         [key: string]: unknown;
       };
+      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      source: {
+        shelfId: string;
+        version: number | null;
+        hash: string | null;
+      } | null;
+      /** Fields from a file that this version does not know, kept so that they are written out again. */
       extra: {
         [key: string]: unknown;
       };
@@ -3683,22 +4123,37 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
           required: boolean;
         }[];
         elements: {
+          /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
           id: string;
+          /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
           kind: string;
+          /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
           name: string;
+          /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
           instructions: string;
+          /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
           doneWhen: string;
+          /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
           needs: {
             kind: "mcp" | "command" | "access" | "other";
             name: string;
             note?: string;
           }[];
+          /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
           produces: string;
+          /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
           origin: {
             kind: string;
             name?: string;
             [key: string]: unknown;
           };
+          /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+          source: {
+            shelfId: string;
+            version: number | null;
+            hash: string | null;
+          } | null;
+          /** Fields from a file that this version does not know, kept so that they are written out again. */
           extra: {
             [key: string]: unknown;
           };
@@ -3708,22 +4163,37 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
         };
       } | null;
       element: {
+        /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
         id: string;
+        /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
         kind: string;
+        /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
+        /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
         instructions: string;
+        /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
         doneWhen: string;
+        /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
         needs: {
           kind: "mcp" | "command" | "access" | "other";
           name: string;
           note?: string;
         }[];
+        /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
         produces: string;
+        /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
         origin: {
           kind: string;
           name?: string;
           [key: string]: unknown;
         };
+        /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+        source: {
+          shelfId: string;
+          version: number | null;
+          hash: string | null;
+        } | null;
+        /** Fields from a file that this version does not know, kept so that they are written out again. */
         extra: {
           [key: string]: unknown;
         };
@@ -3763,28 +4233,95 @@ A list: it answers a page at a time, see `limit` and `cursor`.
   items: {
     id: string;
     element: {
+      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id: string;
+      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
       kind: string;
+      /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
+      /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
       instructions: string;
+      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
       doneWhen: string;
+      /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
         kind: "mcp" | "command" | "access" | "other";
         name: string;
         note?: string;
       }[];
+      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
       produces: string;
+      /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
         kind: string;
         name?: string;
         [key: string]: unknown;
       };
+      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      source: {
+        shelfId: string;
+        version: number | null;
+        hash: string | null;
+      } | null;
+      /** Fields from a file that this version does not know, kept so that they are written out again. */
       extra: {
         [key: string]: unknown;
       };
     };
     createdAt: string;
     updatedAt: string;
+    /** The number of its newest version. Editing it adds one. */
+    version: number;
+    /** Its saved versions, oldest first: each with who saved it, when, and a line on what changed. None is ever changed. */
+    versions: {
+      version: number;
+      element: {
+        /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+        id: string;
+        /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+        kind: string;
+        /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
+        name: string;
+        /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
+        instructions: string;
+        /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+        doneWhen: string;
+        /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
+        needs: {
+          kind: "mcp" | "command" | "access" | "other";
+          name: string;
+          note?: string;
+        }[];
+        /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+        produces: string;
+        /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
+        origin: {
+          kind: string;
+          name?: string;
+          [key: string]: unknown;
+        };
+        /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+        source: {
+          shelfId: string;
+          version: number | null;
+          hash: string | null;
+        } | null;
+        /** Fields from a file that this version does not know, kept so that they are written out again. */
+        extra: {
+          [key: string]: unknown;
+        };
+      };
+      at: string;
+      by: {
+        kind: "agent" | "person" | "token";
+        name?: string;
+      };
+      note: string;
+    }[];
+    /** `current`, or `retired`: kept and still working where it is used, but not offered when inserting and not run by itself. */
+    state: "current" | "retired";
+    /** For a retired element: the shelf element to use in its place, when one was named. */
+    replacedBy: string | null;
   }[];
   nextCursor: string | null;
 }
@@ -3811,15 +4348,16 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
 
 | Field | Type | Required | |
 |---|---|---|---|
-| `id` | `string` | no |  |
-| `kind` | `string` | no |  |
-| `name` | `string` | yes |  |
-| `instructions` | `string` | no |  |
-| `doneWhen` | `string` | no |  |
-| `needs` | `{ kind: "mcp" \| "command" \| "access" \| "other"; name: string; note?…` | no |  |
-| `produces` | `string` | no |  |
-| `origin` | `{ kind: string; name?: string; [key: string]: unknown; }` | no |  |
-| `extra` | `{ [key: string]: unknown; }` | no |  |
+| `id` | `string` | no | Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. |
+| `kind` | `string` | no | What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. |
+| `name` | `string` | yes | What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. |
+| `instructions` | `string` | no | What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. |
+| `doneWhen` | `string` | no | One line: how to tell that the element is finished. The agent is told to report done when this is true. |
+| `needs` | `{ kind: "mcp" \| "command" \| "access" \| "other"; name: string; note?…` | no | What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. |
+| `produces` | `string` | no | What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). |
+| `origin` | `{ kind: string; name?: string; [key: string]: unknown; }` | no | Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. |
+| `source` | `{ shelfId: string; version: number \| null; hash: string \| null; } \|…` | no | For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. |
+| `extra` | `{ [key: string]: unknown; }` | no | Fields from a file that this version does not know, kept so that they are written out again. |
 
 **Answer** `201`:
 
@@ -3827,28 +4365,95 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
 {
   id: string;
   element: {
+    /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
     id: string;
+    /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
     kind: string;
+    /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
     name: string;
+    /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
     instructions: string;
+    /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
     doneWhen: string;
+    /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
     needs: {
       kind: "mcp" | "command" | "access" | "other";
       name: string;
       note?: string;
     }[];
+    /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
     produces: string;
+    /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
     origin: {
       kind: string;
       name?: string;
       [key: string]: unknown;
     };
+    /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+    source: {
+      shelfId: string;
+      version: number | null;
+      hash: string | null;
+    } | null;
+    /** Fields from a file that this version does not know, kept so that they are written out again. */
     extra: {
       [key: string]: unknown;
     };
   };
   createdAt: string;
   updatedAt: string;
+  /** The number of its newest version. Editing it adds one. */
+  version: number;
+  /** Its saved versions, oldest first: each with who saved it, when, and a line on what changed. None is ever changed. */
+  versions: {
+    version: number;
+    element: {
+      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      id: string;
+      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+      kind: string;
+      /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
+      name: string;
+      /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
+      instructions: string;
+      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      doneWhen: string;
+      /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
+      needs: {
+        kind: "mcp" | "command" | "access" | "other";
+        name: string;
+        note?: string;
+      }[];
+      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      produces: string;
+      /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
+      origin: {
+        kind: string;
+        name?: string;
+        [key: string]: unknown;
+      };
+      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      source: {
+        shelfId: string;
+        version: number | null;
+        hash: string | null;
+      } | null;
+      /** Fields from a file that this version does not know, kept so that they are written out again. */
+      extra: {
+        [key: string]: unknown;
+      };
+    };
+    at: string;
+    by: {
+      kind: "agent" | "person" | "token";
+      name?: string;
+    };
+    note: string;
+  }[];
+  /** `current`, or `retired`: kept and still working where it is used, but not offered when inserting and not run by itself. */
+  state: "current" | "retired";
+  /** For a retired element: the shelf element to use in its place, when one was named. */
+  replacedBy: string | null;
 }
 ```
 
@@ -3882,6 +4487,7 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
 | `doneWhen` | `string` | no |  |
 | `needs` | `{ kind: "mcp" \| "command" \| "access" \| "other"; name: string; note?…` | no |  |
 | `produces` | `string` | no |  |
+| `note` | `string` | no | One line on what changed. Kept with the new version. |
 
 **Answer** `200`:
 
@@ -3889,28 +4495,95 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
 {
   id: string;
   element: {
+    /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
     id: string;
+    /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
     kind: string;
+    /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
     name: string;
+    /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
     instructions: string;
+    /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
     doneWhen: string;
+    /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
     needs: {
       kind: "mcp" | "command" | "access" | "other";
       name: string;
       note?: string;
     }[];
+    /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
     produces: string;
+    /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
     origin: {
       kind: string;
       name?: string;
       [key: string]: unknown;
     };
+    /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+    source: {
+      shelfId: string;
+      version: number | null;
+      hash: string | null;
+    } | null;
+    /** Fields from a file that this version does not know, kept so that they are written out again. */
     extra: {
       [key: string]: unknown;
     };
   };
   createdAt: string;
   updatedAt: string;
+  /** The number of its newest version. Editing it adds one. */
+  version: number;
+  /** Its saved versions, oldest first: each with who saved it, when, and a line on what changed. None is ever changed. */
+  versions: {
+    version: number;
+    element: {
+      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      id: string;
+      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+      kind: string;
+      /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
+      name: string;
+      /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
+      instructions: string;
+      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      doneWhen: string;
+      /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
+      needs: {
+        kind: "mcp" | "command" | "access" | "other";
+        name: string;
+        note?: string;
+      }[];
+      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      produces: string;
+      /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
+      origin: {
+        kind: string;
+        name?: string;
+        [key: string]: unknown;
+      };
+      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      source: {
+        shelfId: string;
+        version: number | null;
+        hash: string | null;
+      } | null;
+      /** Fields from a file that this version does not know, kept so that they are written out again. */
+      extra: {
+        [key: string]: unknown;
+      };
+    };
+    at: string;
+    by: {
+      kind: "agent" | "person" | "token";
+      name?: string;
+    };
+    note: string;
+  }[];
+  /** `current`, or `retired`: kept and still working where it is used, but not offered when inserting and not run by itself. */
+  state: "current" | "retired";
+  /** For a retired element: the shelf element to use in its place, when one was named. */
+  replacedBy: string | null;
 }
 ```
 
@@ -3958,28 +4631,95 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
 {
   id: string;
   element: {
+    /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
     id: string;
+    /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
     kind: string;
+    /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
     name: string;
+    /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
     instructions: string;
+    /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
     doneWhen: string;
+    /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
     needs: {
       kind: "mcp" | "command" | "access" | "other";
       name: string;
       note?: string;
     }[];
+    /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
     produces: string;
+    /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
     origin: {
       kind: string;
       name?: string;
       [key: string]: unknown;
     };
+    /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+    source: {
+      shelfId: string;
+      version: number | null;
+      hash: string | null;
+    } | null;
+    /** Fields from a file that this version does not know, kept so that they are written out again. */
     extra: {
       [key: string]: unknown;
     };
   };
   createdAt: string;
   updatedAt: string;
+  /** The number of its newest version. Editing it adds one. */
+  version: number;
+  /** Its saved versions, oldest first: each with who saved it, when, and a line on what changed. None is ever changed. */
+  versions: {
+    version: number;
+    element: {
+      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      id: string;
+      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+      kind: string;
+      /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
+      name: string;
+      /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
+      instructions: string;
+      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      doneWhen: string;
+      /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
+      needs: {
+        kind: "mcp" | "command" | "access" | "other";
+        name: string;
+        note?: string;
+      }[];
+      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      produces: string;
+      /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
+      origin: {
+        kind: string;
+        name?: string;
+        [key: string]: unknown;
+      };
+      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      source: {
+        shelfId: string;
+        version: number | null;
+        hash: string | null;
+      } | null;
+      /** Fields from a file that this version does not know, kept so that they are written out again. */
+      extra: {
+        [key: string]: unknown;
+      };
+    };
+    at: string;
+    by: {
+      kind: "agent" | "person" | "token";
+      name?: string;
+    };
+    note: string;
+  }[];
+  /** `current`, or `retired`: kept and still working where it is used, but not offered when inserting and not run by itself. */
+  state: "current" | "retired";
+  /** For a retired element: the shelf element to use in its place, when one was named. */
+  replacedBy: string | null;
 }
 ```
 
@@ -3989,6 +4729,448 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
 curl -X POST -H "Authorization: Bearer $TOKEN" \
      http://127.0.0.1:4600/v1/elements/<elementId>/copy
 ```
+
+### listElementVersions
+
+`GET /v1/elements/{elementId}/versions`: The versions of a shelf element.
+
+Newest first: each with what the element said, who saved it, when, and a line on what changed. The newest 30 are kept, and any a copy in a workflow was made from.
+
+An API token needs the scope `read`.
+
+A list: it answers a page at a time, see `limit` and `cursor`.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `elementId` | path | `string` | yes | An ID. |
+| `limit` | query | `number` | no | How many items to return at most. |
+| `cursor` | query | `string` | no | The `nextCursor` of the page before. Opaque: do not build or change it. |
+
+**Answer** `200`:
+
+```ts
+{
+  items: {
+    version: number;
+    element: {
+      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      id: string;
+      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+      kind: string;
+      /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
+      name: string;
+      /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
+      instructions: string;
+      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      doneWhen: string;
+      /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
+      needs: {
+        kind: "mcp" | "command" | "access" | "other";
+        name: string;
+        note?: string;
+      }[];
+      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      produces: string;
+      /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
+      origin: {
+        kind: string;
+        name?: string;
+        [key: string]: unknown;
+      };
+      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      source: {
+        shelfId: string;
+        version: number | null;
+        hash: string | null;
+      } | null;
+      /** Fields from a file that this version does not know, kept so that they are written out again. */
+      extra: {
+        [key: string]: unknown;
+      };
+    };
+    at: string;
+    by: {
+      kind: "agent" | "person" | "token";
+      name?: string;
+    };
+    note: string;
+  }[];
+  nextCursor: string | null;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+```sh
+curl -H "Authorization: Bearer $TOKEN" \
+     http://127.0.0.1:4600/v1/elements/<elementId>/versions
+```
+
+### getElementUsage
+
+`GET /v1/elements/{elementId}/usage`: Where a shelf element is used.
+
+The workflows that hold a copy of it, and for each copy whether it is unchanged, was changed in its workflow, or is behind the shelf.
+
+An API token needs the scope `read`.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `elementId` | path | `string` | yes | An ID. |
+
+**Answer** `200`:
+
+```ts
+{
+  uses: {
+    workflowId: string;
+    workflowName: string;
+    /** The number of the workflow's newest version. */
+    workflowVersion: number;
+    copies: {
+      elementId: string;
+      name: string;
+      /** `unchanged`, `changed` (here, since it was copied), `behind` (a newer version is on the shelf), `both`, or `unknown` for a copy from before versions were kept. */
+      state: "none" | "unchanged" | "changed" | "behind" | "both" | "unknown" | "gone";
+      copiedVersion: number | null;
+    }[];
+    /** Every kept version of the workflow that holds a copy. */
+    inVersions: number[];
+  }[];
+}
+```
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+```sh
+curl -H "Authorization: Bearer $TOKEN" \
+     http://127.0.0.1:4600/v1/elements/<elementId>/usage
+```
+
+### retireElement
+
+`POST /v1/elements/{elementId}/retire`: Retire a shelf element.
+
+For the owner only. A retired element is kept and still works wherever a copy of it is; it is no longer offered when inserting, and cannot be run by itself. It may name the element to use in its place.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `elementId` | path | `string` | yes | An ID. |
+
+**Body** (JSON, may be left out):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `replacedBy` | `string` | no | The shelf element to use in its place. The editor then says so wherever a copy of the retired one is. |
+
+**Answer** `200`:
+
+```ts
+{
+  id: string;
+  element: {
+    /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+    id: string;
+    /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+    kind: string;
+    /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
+    name: string;
+    /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
+    instructions: string;
+    /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+    doneWhen: string;
+    /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
+    needs: {
+      kind: "mcp" | "command" | "access" | "other";
+      name: string;
+      note?: string;
+    }[];
+    /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+    produces: string;
+    /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
+    origin: {
+      kind: string;
+      name?: string;
+      [key: string]: unknown;
+    };
+    /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+    source: {
+      shelfId: string;
+      version: number | null;
+      hash: string | null;
+    } | null;
+    /** Fields from a file that this version does not know, kept so that they are written out again. */
+    extra: {
+      [key: string]: unknown;
+    };
+  };
+  createdAt: string;
+  updatedAt: string;
+  /** The number of its newest version. Editing it adds one. */
+  version: number;
+  /** Its saved versions, oldest first: each with who saved it, when, and a line on what changed. None is ever changed. */
+  versions: {
+    version: number;
+    element: {
+      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      id: string;
+      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+      kind: string;
+      /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
+      name: string;
+      /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
+      instructions: string;
+      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      doneWhen: string;
+      /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
+      needs: {
+        kind: "mcp" | "command" | "access" | "other";
+        name: string;
+        note?: string;
+      }[];
+      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      produces: string;
+      /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
+      origin: {
+        kind: string;
+        name?: string;
+        [key: string]: unknown;
+      };
+      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      source: {
+        shelfId: string;
+        version: number | null;
+        hash: string | null;
+      } | null;
+      /** Fields from a file that this version does not know, kept so that they are written out again. */
+      extra: {
+        [key: string]: unknown;
+      };
+    };
+    at: string;
+    by: {
+      kind: "agent" | "person" | "token";
+      name?: string;
+    };
+    note: string;
+  }[];
+  /** `current`, or `retired`: kept and still working where it is used, but not offered when inserting and not run by itself. */
+  state: "current" | "retired";
+  /** For a retired element: the shelf element to use in its place, when one was named. */
+  replacedBy: string | null;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+### restoreElement
+
+`POST /v1/elements/{elementId}/restore`: Bring a retired shelf element back.
+
+For the owner only.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `elementId` | path | `string` | yes | An ID. |
+
+**Answer** `200`:
+
+```ts
+{
+  id: string;
+  element: {
+    /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+    id: string;
+    /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+    kind: string;
+    /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
+    name: string;
+    /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
+    instructions: string;
+    /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+    doneWhen: string;
+    /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
+    needs: {
+      kind: "mcp" | "command" | "access" | "other";
+      name: string;
+      note?: string;
+    }[];
+    /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+    produces: string;
+    /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
+    origin: {
+      kind: string;
+      name?: string;
+      [key: string]: unknown;
+    };
+    /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+    source: {
+      shelfId: string;
+      version: number | null;
+      hash: string | null;
+    } | null;
+    /** Fields from a file that this version does not know, kept so that they are written out again. */
+    extra: {
+      [key: string]: unknown;
+    };
+  };
+  createdAt: string;
+  updatedAt: string;
+  /** The number of its newest version. Editing it adds one. */
+  version: number;
+  /** Its saved versions, oldest first: each with who saved it, when, and a line on what changed. None is ever changed. */
+  versions: {
+    version: number;
+    element: {
+      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      id: string;
+      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+      kind: string;
+      /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
+      name: string;
+      /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
+      instructions: string;
+      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      doneWhen: string;
+      /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
+      needs: {
+        kind: "mcp" | "command" | "access" | "other";
+        name: string;
+        note?: string;
+      }[];
+      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      produces: string;
+      /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
+      origin: {
+        kind: string;
+        name?: string;
+        [key: string]: unknown;
+      };
+      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      source: {
+        shelfId: string;
+        version: number | null;
+        hash: string | null;
+      } | null;
+      /** Fields from a file that this version does not know, kept so that they are written out again. */
+      extra: {
+        [key: string]: unknown;
+      };
+    };
+    at: string;
+    by: {
+      kind: "agent" | "person" | "token";
+      name?: string;
+    };
+    note: string;
+  }[];
+  /** `current`, or `retired`: kept and still working where it is used, but not offered when inserting and not run by itself. */
+  state: "current" | "retired";
+  /** For a retired element: the shelf element to use in its place, when one was named. */
+  replacedBy: string | null;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+### updateFromShelf
+
+`POST /v1/workflows/{workflowId}/elements/{elementId}/shelf-update`: Decide about a newer shelf version for one copy in a workflow.
+
+For the owner only: no token and no draft can do this. `take` puts the shelf's newest version in place of the copy; `keep` leaves the copy and notes that the newer version was seen. Either saves a new version of the workflow, as any edit does; runs that are going are not touched. Nothing is merged, and nothing is ever updated by itself.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `workflowId` | path | `string` | yes | An ID. |
+| `elementId` | path | `string` | yes | An ID. |
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `decision` | `"take" \| "keep"` | yes | `take`: the shelf's newest version takes the place of the copy's content. `keep`: the copy stays as it is, and is from then on a copy of the newest version that was changed here. |
+
+**Answer** `200`:
+
+```ts
+{
+  id: string;
+  name: string;
+  description: string;
+  labels: {
+    [key: string]: string;
+  };
+  origin: {
+    kind: string;
+    name?: string;
+    [key: string]: unknown;
+  };
+  createdAt: string;
+  updatedAt: string;
+  version: number;
+  elements: string[];
+  current: {
+    name: string;
+    description: string;
+    standing: string;
+    inputs: {
+      key: string;
+      label: string;
+      description: string;
+      required: boolean;
+    }[];
+    elements: {
+      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      id: string;
+      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
+      kind: string;
+      /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
+      name: string;
+      /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
+      instructions: string;
+      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      doneWhen: string;
+      /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
+      needs: {
+        kind: "mcp" | "command" | "access" | "other";
+        name: string;
+        note?: string;
+      }[];
+      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      produces: string;
+      /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
+      origin: {
+        kind: string;
+        name?: string;
+        [key: string]: unknown;
+      };
+      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      source: {
+        shelfId: string;
+        version: number | null;
+        hash: string | null;
+      } | null;
+      /** Fields from a file that this version does not know, kept so that they are written out again. */
+      extra: {
+        [key: string]: unknown;
+      };
+    }[];
+    extra: {
+      [key: string]: unknown;
+    };
+    number: number;
+    createdAt: string;
+  };
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
 
 ### runElement
 
@@ -4256,22 +5438,37 @@ An API token needs the scope `read`.
       required: boolean;
     }[];
     elements: {
+      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id: string;
+      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
       kind: string;
+      /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
+      /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
       instructions: string;
+      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
       doneWhen: string;
+      /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
         kind: "mcp" | "command" | "access" | "other";
         name: string;
         note?: string;
       }[];
+      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
       produces: string;
+      /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
         kind: string;
         name?: string;
         [key: string]: unknown;
       };
+      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      source: {
+        shelfId: string;
+        version: number | null;
+        hash: string | null;
+      } | null;
+      /** Fields from a file that this version does not know, kept so that they are written out again. */
       extra: {
         [key: string]: unknown;
       };
@@ -5631,22 +6828,37 @@ A list: it answers a page at a time, see `limit` and `cursor`.
         required: boolean;
       }[];
       elements: {
+        /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
         id: string;
+        /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
         kind: string;
+        /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
+        /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
         instructions: string;
+        /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
         doneWhen: string;
+        /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
         needs: {
           kind: "mcp" | "command" | "access" | "other";
           name: string;
           note?: string;
         }[];
+        /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
         produces: string;
+        /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
         origin: {
           kind: string;
           name?: string;
           [key: string]: unknown;
         };
+        /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+        source: {
+          shelfId: string;
+          version: number | null;
+          hash: string | null;
+        } | null;
+        /** Fields from a file that this version does not know, kept so that they are written out again. */
         extra: {
           [key: string]: unknown;
         };
@@ -5656,22 +6868,37 @@ A list: it answers a page at a time, see `limit` and `cursor`.
       };
     } | null;
     element: {
+      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id: string;
+      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
       kind: string;
+      /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
+      /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
       instructions: string;
+      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
       doneWhen: string;
+      /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
         kind: "mcp" | "command" | "access" | "other";
         name: string;
         note?: string;
       }[];
+      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
       produces: string;
+      /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
         kind: string;
         name?: string;
         [key: string]: unknown;
       };
+      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      source: {
+        shelfId: string;
+        version: number | null;
+        hash: string | null;
+      } | null;
+      /** Fields from a file that this version does not know, kept so that they are written out again. */
       extra: {
         [key: string]: unknown;
       };
@@ -5704,22 +6931,37 @@ A list: it answers a page at a time, see `limit` and `cursor`.
           required: boolean;
         }[];
         elements: {
+          /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
           id: string;
+          /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
           kind: string;
+          /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
           name: string;
+          /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
           instructions: string;
+          /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
           doneWhen: string;
+          /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
           needs: {
             kind: "mcp" | "command" | "access" | "other";
             name: string;
             note?: string;
           }[];
+          /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
           produces: string;
+          /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
           origin: {
             kind: string;
             name?: string;
             [key: string]: unknown;
           };
+          /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+          source: {
+            shelfId: string;
+            version: number | null;
+            hash: string | null;
+          } | null;
+          /** Fields from a file that this version does not know, kept so that they are written out again. */
           extra: {
             [key: string]: unknown;
           };
@@ -5729,22 +6971,37 @@ A list: it answers a page at a time, see `limit` and `cursor`.
         };
       } | null;
       element: {
+        /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
         id: string;
+        /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
         kind: string;
+        /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
+        /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
         instructions: string;
+        /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
         doneWhen: string;
+        /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
         needs: {
           kind: "mcp" | "command" | "access" | "other";
           name: string;
           note?: string;
         }[];
+        /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
         produces: string;
+        /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
         origin: {
           kind: string;
           name?: string;
           [key: string]: unknown;
         };
+        /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+        source: {
+          shelfId: string;
+          version: number | null;
+          hash: string | null;
+        } | null;
+        /** Fields from a file that this version does not know, kept so that they are written out again. */
         extra: {
           [key: string]: unknown;
         };
@@ -5783,7 +7040,7 @@ For a session's own token, about that session. No API token may call this.
 | Field | Type | Required | |
 |---|---|---|---|
 | `workflow` | `{ /** What it is called. */ name: string; /** What it is for, in a …` | no | A whole workflow. Give this or `element`, not both. |
-| `element` | `{ id?: string; kind?: string; name: string; instructions?: string; …` | no | One element, for the shelf. |
+| `element` | `{ /** Its ID inside its workflow. It stays the same when the elemen…` | no | One element, for the shelf. |
 | `revisesWorkflowId` | `string` | no | For a workflow: the workflow this is a new version of. Without it, accepting makes a new workflow. |
 | `description` | `string` | no | What it is meant to do, when nobody asked for it. |
 
@@ -5802,22 +7059,37 @@ For a session's own token, about that session. No API token may call this.
       required: boolean;
     }[];
     elements: {
+      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id: string;
+      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
       kind: string;
+      /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
+      /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
       instructions: string;
+      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
       doneWhen: string;
+      /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
         kind: "mcp" | "command" | "access" | "other";
         name: string;
         note?: string;
       }[];
+      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
       produces: string;
+      /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
         kind: string;
         name?: string;
         [key: string]: unknown;
       };
+      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      source: {
+        shelfId: string;
+        version: number | null;
+        hash: string | null;
+      } | null;
+      /** Fields from a file that this version does not know, kept so that they are written out again. */
       extra: {
         [key: string]: unknown;
       };
@@ -5827,22 +7099,37 @@ For a session's own token, about that session. No API token may call this.
     };
   } | null;
   element: {
+    /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
     id: string;
+    /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
     kind: string;
+    /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
     name: string;
+    /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
     instructions: string;
+    /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
     doneWhen: string;
+    /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
     needs: {
       kind: "mcp" | "command" | "access" | "other";
       name: string;
       note?: string;
     }[];
+    /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
     produces: string;
+    /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
     origin: {
       kind: string;
       name?: string;
       [key: string]: unknown;
     };
+    /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+    source: {
+      shelfId: string;
+      version: number | null;
+      hash: string | null;
+    } | null;
+    /** Fields from a file that this version does not know, kept so that they are written out again. */
     extra: {
       [key: string]: unknown;
     };
@@ -5875,22 +7162,37 @@ For a session's own token, about that session. No API token may call this.
         required: boolean;
       }[];
       elements: {
+        /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
         id: string;
+        /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
         kind: string;
+        /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
+        /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
         instructions: string;
+        /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
         doneWhen: string;
+        /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
         needs: {
           kind: "mcp" | "command" | "access" | "other";
           name: string;
           note?: string;
         }[];
+        /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
         produces: string;
+        /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
         origin: {
           kind: string;
           name?: string;
           [key: string]: unknown;
         };
+        /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+        source: {
+          shelfId: string;
+          version: number | null;
+          hash: string | null;
+        } | null;
+        /** Fields from a file that this version does not know, kept so that they are written out again. */
         extra: {
           [key: string]: unknown;
         };
@@ -5900,22 +7202,37 @@ For a session's own token, about that session. No API token may call this.
       };
     } | null;
     element: {
+      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id: string;
+      /** What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer. */
       kind: string;
+      /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
+      /** What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. */
       instructions: string;
+      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
       doneWhen: string;
+      /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
         kind: "mcp" | "command" | "access" | "other";
         name: string;
         note?: string;
       }[];
+      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
       produces: string;
+      /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
         kind: string;
         name?: string;
         [key: string]: unknown;
       };
+      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      source: {
+        shelfId: string;
+        version: number | null;
+        hash: string | null;
+      } | null;
+      /** Fields from a file that this version does not know, kept so that they are written out again. */
       extra: {
         [key: string]: unknown;
       };

@@ -291,11 +291,12 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
       return { items: page.items.map(summaryOfWorkflow), nextCursor: page.nextCursor };
     },
 
-    createWorkflow: ({ body }) => detailOfWorkflow(workflows.create(body)),
+    // Where a copy came from is the owner's to say: anyone else's elements carry no such mark.
+    createWorkflow: ({ body, principal }) => detailOfWorkflow(workflows.create(body, principal.kind === 'user')),
 
     getWorkflow: ({ params }) => detailOfWorkflow(workflows.get(params.workflowId)),
 
-    updateWorkflow: ({ params, body }) => detailOfWorkflow(workflows.update(params.workflowId, body)),
+    updateWorkflow: ({ params, body, principal }) => detailOfWorkflow(workflows.update(params.workflowId, body, principal.kind === 'user')),
 
     removeWorkflow: ({ params }) => {
       workflows.remove(params.workflowId);
@@ -351,19 +352,31 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
 
     listElements: ({ query }) => paginate(drafts.shelf(), (e) => e.id, query),
 
-    createElement: ({ body }) => drafts.createOnShelf(body),
+    createElement: ({ body, principal }) => drafts.createOnShelf(body, actorOf(principal)),
 
-    updateElement: ({ params, body }) => drafts.updateOnShelf(params.elementId, body),
+    // A change is a new version: what the element said before stays, and no copy in a workflow is touched.
+    updateElement: ({ params, body, principal }) => drafts.updateOnShelf(params.elementId, body, actorOf(principal)),
+
+    listElementVersions: ({ params, query }) => paginate(drafts.shelfVersions(params.elementId), (v) => String(v.version), query),
+
+    getElementUsage: ({ params }) => drafts.shelfUsage(params.elementId),
+
+    retireElement: ({ params, body }) => drafts.retire(params.elementId, body.replacedBy ?? null),
+
+    restoreElement: ({ params }) => drafts.restore(params.elementId),
+
+    // The owner's decision about a newer version on the shelf, for one copy. `authorize` has made sure it is the owner.
+    updateFromShelf: ({ params, body }) => detailOfWorkflow(workflows.decideCopy(params.workflowId, params.elementId, body.decision)),
 
     removeElement: ({ params }) => {
       drafts.removeFromShelf(params.elementId);
     },
 
-    copyElement: ({ params }) => drafts.copyOnShelf(params.elementId),
+    copyElement: ({ params, principal }) => drafts.copyOnShelf(params.elementId, actorOf(principal)),
 
     runElement: ({ params, body, principal }) => {
       const { kickoff, ...rest } = body;
-      return workflows.startElement(drafts.shelfElement(params.elementId).element, { ...rest, typeKickoff: kickoff && mayKickoff(principal, rest.sessionId) }, actorOf(principal));
+      return workflows.startElement(drafts.runnable(params.elementId), { ...rest, typeKickoff: kickoff && mayKickoff(principal, rest.sessionId) }, actorOf(principal));
     },
 
     tickRunItem: ({ params, body, principal }) => workflows.tick(params.runId, body, actorOf(principal)),

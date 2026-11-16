@@ -34,6 +34,9 @@ import {
   type Workflow,
   type WorkflowLimits,
   type WorkflowVersion,
+  carrySources,
+  copyStatus,
+  decideUpdate,
 } from '@aubergine/shared';
 import { paginate } from './public-api';
 import type { RunArchive } from './run-archive';
@@ -132,9 +135,13 @@ export class Workflows {
     return parsed.data;
   }
 
-  create(body: CreateWorkflowRequest): Workflow {
+  /**
+   * `byOwner`: only the owner says where a copy came from. For anyone else the elements carry no source mark:
+   * a token cannot say that an element is a copy of a shelf element, or that one was brought up to date.
+   */
+  create(body: CreateWorkflowRequest, byOwner = true): Workflow {
     const { labels, origin, ...rest } = body;
-    return this.add(this.content(rest), labels ?? {}, origin ?? { kind: 'local' });
+    return this.add(this.content(byOwner ? rest : { ...rest, elements: carrySources(rest.elements, []) }), labels ?? {}, origin ?? { kind: 'local' });
   }
 
   private dropIfSpent(workflowId: string): void {
@@ -145,7 +152,24 @@ export class Workflows {
   /** Makes a workflow from content that was already read and accepted by the owner (a draft). */
   createAccepted(content: WorkflowContent, origin: Origin): Workflow {
     const { extra, ...rest } = content;
-    return this.add({ ...this.content(rest), extra }, {}, origin);
+    // What a draft says about where its elements came from is not taken over: only the owner says that.
+    return this.add({ ...this.content({ ...rest, elements: carrySources(rest.elements, []) }), extra }, {}, origin);
+  }
+
+  /**
+   * The owner's decision about the newer version on the shelf, for one copy: take it, or keep their own. It saves
+   * a new version of the workflow, as any edit does. Nothing is merged, and nothing calls this but the owner.
+   */
+  decideCopy(workflowId: string, elementId: string, decision: 'take' | 'keep'): Workflow {
+    const workflow = this.get(workflowId);
+    const element = latestVersion(workflow).elements.find((e) => e.id === elementId);
+    if (!element) throw new NotFoundError(`This workflow has no element ${elementId}`);
+    const status = copyStatus(element, this.hub.state.shelf);
+    if (status.state === 'none') throw new ConflictError('This element is not a copy of a shelf element.');
+    if (status.shelf === null) throw new ConflictError('Its source is not on the shelf any more, so there is no newer version to take.');
+    const item = status.shelf;
+    const elements = latestVersion(workflow).elements.map((e) => (e.id === elementId ? decideUpdate(e, item, decision) : e));
+    return this.update(workflowId, { elements });
   }
 
   private add(content: WorkflowContent, labels: Record<string, string>, origin: Origin, listed = true): Workflow {
@@ -167,10 +191,14 @@ export class Workflows {
   }
 
   /** A change of content is a new version. Runs keep to the version they started on. */
-  update(workflowId: string, body: UpdateWorkflowRequest): Workflow {
+  /**
+   * `byOwner`: only the owner says where a copy came from. For anyone else (a token, an accepted draft) each element
+   * keeps the source mark the element of the same ID had, and a new one has none.
+   */
+  update(workflowId: string, body: UpdateWorkflowRequest, byOwner = true): Workflow {
     const workflow = this.get(workflowId);
     const { number, createdAt: _createdAt, ...current } = latestVersion(workflow);
-    const { labels, ...changes } = body;
+    const { labels, ...changes } = byOwner || body.elements === undefined ? body : { ...body, elements: carrySources(body.elements, current.elements) };
     const given = Object.fromEntries(Object.entries(changes).filter(([, value]) => value !== undefined));
     const content = this.content({ ...current, ...given });
     const at = new Date().toISOString();

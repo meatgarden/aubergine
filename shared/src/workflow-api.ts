@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { DRAFT_COMMENT_MAX, DRAFT_DESCRIPTION_MAX, Draft, DraftRecord, DraftStatus, ShelfElement } from './drafts';
+import { DRAFT_COMMENT_MAX, DRAFT_DESCRIPTION_MAX, Draft, DraftRecord, DraftStatus, SHELF_NOTE_MAX, ShelfElement, ShelfVersion } from './drafts';
 import { Id } from './ids';
 import { PageQuery, pageOf } from './protocol';
 import {
@@ -255,6 +255,7 @@ export const UpdateShelfElementRequest = z.object({
   doneWhen: z.string().trim().max(500).optional(),
   needs: z.array(Need).max(NEEDS_MAX).optional(),
   produces: z.string().min(1).max(40).optional(),
+  note: z.string().trim().max(SHELF_NOTE_MAX).optional().describe('One line on what changed. Kept with the new version.'),
 });
 export type UpdateShelfElementRequest = z.infer<typeof UpdateShelfElementRequest>;
 
@@ -274,3 +275,38 @@ export const TickRequest = z.object({
   ticked: z.boolean().describe('True to tick it, false to take the tick away.'),
 });
 export type TickRequest = z.infer<typeof TickRequest>;
+
+/* ---------- The life of a shelf element ---------- */
+
+export const ShelfVersionList = pageOf(ShelfVersion);
+export type ShelfVersionList = z.infer<typeof ShelfVersionList>;
+
+/** Where a shelf element is used: the workflows that hold a copy, and what can be told about each copy. */
+export const ShelfUsage = z.object({
+  uses: z.array(
+    z.object({
+      workflowId: Id,
+      workflowName: z.string(),
+      workflowVersion: z.number().int().min(1).describe("The number of the workflow's newest version."),
+      copies: z.array(
+        z.object({
+          elementId: z.string(),
+          name: z.string(),
+          state: z.enum(['none', 'unchanged', 'changed', 'behind', 'both', 'unknown', 'gone']).describe('`unchanged`, `changed` (here, since it was copied), `behind` (a newer version is on the shelf), `both`, or `unknown` for a copy from before versions were kept.'),
+          copiedVersion: z.number().int().min(1).nullable(),
+        }),
+      ),
+      inVersions: z.array(z.number().int().min(1)).describe('Every kept version of the workflow that holds a copy.'),
+    }),
+  ),
+});
+export type ShelfUsage = z.infer<typeof ShelfUsage>;
+
+export const RetireElementRequest = z.object({ replacedBy: Id.optional().describe('The shelf element to use in its place. The editor then says so wherever a copy of the retired one is.') });
+export type RetireElementRequest = z.infer<typeof RetireElementRequest>;
+
+/** What the owner decided about the newer version on the shelf, for one copy in a workflow. Nothing is merged. */
+export const ShelfUpdateRequest = z.object({
+  decision: z.enum(['take', 'keep']).describe("`take`: the shelf's newest version takes the place of the copy's content. `keep`: the copy stays as it is, and is from then on a copy of the newest version that was changed here."),
+});
+export type ShelfUpdateRequest = z.infer<typeof ShelfUpdateRequest>;

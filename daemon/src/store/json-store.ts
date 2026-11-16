@@ -7,6 +7,8 @@ import {
   Canvas,
   Draft,
   ShelfElement,
+  Id,
+  withFirstVersion,
   FIRST_CANVAS_NAME,
   Layout,
   Organization,
@@ -54,9 +56,35 @@ const StateFileV6 = StateFileV5.extend({ version: z.literal(6), repositoryAccept
  */
 const StateFileV7 = StateFileV6.extend({ version: z.literal(7) });
 
-const StateFile = z.discriminatedUnion('version', [StateFileV1, StateFileV2, StateFileV3, StateFileV4, StateFileV5, StateFileV6, StateFileV7]);
-const CURRENT_VERSION = 7;
+/**
+ * The current shape. Nothing was added at the top: a shelf element has versions and a state, and an element in a
+ * workflow may say which shelf element it is a copy of. In an older file a shelf element has no versions, and a
+ * copy says only which shelf element it came from: on load, what each shelf element says becomes its version 1,
+ * and each such copy is marked as from that element at a version nobody recorded.
+ */
+const StateFileV8 = StateFileV7.extend({ version: z.literal(8) });
+
+const StateFile = z.discriminatedUnion('version', [StateFileV1, StateFileV2, StateFileV3, StateFileV4, StateFileV5, StateFileV6, StateFileV7, StateFileV8]);
+const CURRENT_VERSION = 8;
 type StateFile = z.infer<typeof StateFile>;
+
+/**
+ * A workflow from before copies knew their source: an element that says it came from the shelf is marked as a
+ * copy of that shelf element, from a version nobody recorded. About such a copy nothing is claimed: it is never
+ * said to be behind.
+ */
+function withSourceMarks(workflow: Workflow): Workflow {
+  return {
+    ...workflow,
+    versions: workflow.versions.map((version) => ({
+      ...version,
+      elements: version.elements.map((element) => {
+        const shelfId = element.origin.kind === 'shelf' ? Id.safeParse((element.origin as { shelfId?: unknown }).shelfId) : null;
+        return element.source === null && shelfId?.success ? { ...element, source: { shelfId: shelfId.data, version: null, hash: null } } : element;
+      }),
+    })),
+  };
+}
 
 /**
  * Turns whatever was on disk into the current state. An older file's single
@@ -75,10 +103,10 @@ export function migrate(file: StateFile): AppState {
     sessions,
     canvases,
     tokens: file.version >= 3 && 'tokens' in file ? file.tokens : [],
-    workflows: file.version >= 4 && 'workflows' in file ? file.workflows : [],
+    workflows: (file.version >= 4 && 'workflows' in file ? file.workflows : []).map((workflow) => (file.version < 8 ? withSourceMarks(workflow) : workflow)),
     runs: file.version >= 4 && 'runs' in file ? file.runs : [],
     drafts: file.version >= 5 && 'drafts' in file ? file.drafts : [],
-    shelf: file.version >= 5 && 'shelf' in file ? file.shelf : [],
+    shelf: (file.version >= 5 && 'shelf' in file ? file.shelf : []).map(withFirstVersion),
     repositoryAccepted: file.version >= 6 && 'repositoryAccepted' in file ? file.repositoryAccepted : [],
   });
 }

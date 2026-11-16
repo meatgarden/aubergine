@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { Id } from './ids';
 import { CHECKLIST_FORMAT, outputKindNames } from './outputs';
-import { Element, GUIDE_POINTER, NEEDS_MAX, WorkflowContent, needsOf, previewRun, type Need, type WorkflowLimits, type WorkflowVersion } from './workflows';
+import { Actor, Element, GUIDE_POINTER, NEEDS_MAX, WorkflowContent, needsOf, previewRun, type Need, type WorkflowLimits, type WorkflowVersion } from './workflows';
 
 /**
  * Drafts: workflows and elements that someone other than the owner wrote.
@@ -65,11 +65,43 @@ export const Draft = Proposal.extend({
 export type Draft = z.infer<typeof Draft>;
 
 /** An element kept for reuse: put into workflows as a copy, or run by itself. */
+export const SHELF_VERSIONS_KEPT = 30;
+export const SHELF_NOTE_MAX = 200;
+
+/** One saved state of a shelf element. Never changed after it is written: a copy in a workflow points at one. */
+export const ShelfVersion = z.object({
+  version: z.number().int().min(1),
+  element: Element,
+  at: Timestamp,
+  /** Who saved it. */
+  by: Actor,
+  /** One line on what changed, when whoever saved it said. */
+  note: z
+    .string()
+    .trim()
+    .max(SHELF_NOTE_MAX)
+    .regex(/^[^\p{Cc}\u202a-\u202e\u2066-\u2069]*$/u, 'A note on a version is one line of plain text')
+    .default(''),
+});
+export type ShelfVersion = z.infer<typeof ShelfVersion>;
+
+/** `retired`: kept, and still works where it is used; not offered when inserting, and not run by itself. */
+export const ShelfState = z.enum(['current', 'retired']);
+export type ShelfState = z.infer<typeof ShelfState>;
+
 export const ShelfElement = z.object({
   id: Id,
+  /** The newest version's content, here too so that lists need not open versions. */
   element: Element,
   createdAt: Timestamp,
   updatedAt: Timestamp,
+  /** The number of the newest version. */
+  version: z.number().int().min(1).default(1).describe('The number of its newest version. Editing it adds one.'),
+  /** Oldest first. Editing adds one; none is ever changed. The newest 30 are kept, and any a copy in a workflow was made from. */
+  versions: z.array(ShelfVersion).default([]).describe('Its saved versions, oldest first: each with who saved it, when, and a line on what changed. None is ever changed.'),
+  state: ShelfState.default('current').describe('`current`, or `retired`: kept and still working where it is used, but not offered when inserting and not run by itself.'),
+  /** For a retired element: the one to use in its place, when its owner named one. */
+  replacedBy: Id.nullable().default(null).describe('For a retired element: the shelf element to use in its place, when one was named.'),
 });
 export type ShelfElement = z.infer<typeof ShelfElement>;
 
