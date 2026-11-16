@@ -1,4 +1,5 @@
 import { execFile } from 'node:child_process';
+import { randomBytes } from 'node:crypto';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -15,6 +16,8 @@ import {
   type RuntimeSession,
   type SessionRuntime,
   type TerminalDimensions,
+  type TerminalKey,
+  type TerminalScreen,
 } from './runtime';
 
 export const MIN_TMUX_VERSION = '3.2';
@@ -331,6 +334,99 @@ export class TmuxRuntime implements SessionRuntime {
     }
   }
 
+  /** The session's size, cursor and how much history it keeps, in one call. */
+  private async geometry(name: string): Promise<{ columns: number; rows: number; x: number; y: number; history: number; command: string }> {
+    let output: string;
+    try {
+      output = await this.exec(['display-message', '-p', '-t', `=${name}:`, '#{pane_width}\t#{pane_height}\t#{cursor_x}\t#{cursor_y}\t#{history_size}\t#{pane_current_command}']);
+    } catch (error) {
+      if (isNoServer(error) || isNoSession(error)) throw new SessionNotFoundError(name);
+      throw error;
+    }
+    const [columns = '0', rows = '0', x = '0', y = '0', history = '0', command = ''] = output.trimEnd().split('\t');
+    return { columns: Number(columns), rows: Number(rows), x: Number(x), y: Number(y), history: Number(history), command };
+  }
+
+  // capture-pane reads the session's own screen and history. It attaches nothing, so it cannot change the session's size.
+  async screen(id: string): Promise<TerminalScreen> {
+    const name = sessionName(id);
+    const at = await this.geometry(name);
+    const text = await this.exec(['capture-pane', '-p', '-t', `=${name}:`]);
+    return { text: text.replace(/\n$/, ''), columns: at.columns, rows: at.rows, cursor: { x: at.x, y: at.y }, line: at.history + at.y };
+  }
+
+  async lines(id: string, range: { count: number; skip: number } | { from: number }): Promise<{ lines: string[]; more: boolean; lost: boolean }> {
+    const name = sessionName(id);
+    const at = await this.geometry(name);
+    // tmux counts rows from the top of the screen: 0 is the first visible row, and history is negative.
+    const total = at.history + at.rows;
+    let first: number;
+    let last: number;
+    let lost = false;
+    if ('from' in range) {
+      // A place remembered from before. If the history is shorter now, it was cleared: what was there is gone.
+      lost = range.from > at.history + at.y;
+      first = Math.max(0, range.from) - at.history;
+      last = at.y;
+    } else {
+      last = at.rows - 1 - range.skip;
+      first = last - range.count + 1;
+    }
+    const lowest = -at.history;
+    const more = !('from' in range) && first > lowest;
+    if (last < lowest || first > last) return { lines: [], more: false, lost };
+    let text: string;
+    try {
+      text = await this.exec(['capture-pane', '-p', '-J', '-S', String(Math.max(first, lowest)), '-E', String(last), '-t', `=${name}:`]);
+    } catch (error) {
+      if (isNoServer(error) || isNoSession(error)) throw new SessionNotFoundError(name);
+      throw error;
+    }
+    const lines = text.replace(/\n$/, '').split('\n');
+    // Rows below the last thing printed are empty: they are not output.
+    if (!('from' in range) && range.skip === 0) while (lines.length > 0 && lines.at(-1) === '') lines.pop();
+    return { lines, more: more && total > 0, lost };
+  }
+
+  async type(id: string, text: string, options: { paste?: boolean } = {}): Promise<void> {
+    const name = sessionName(id);
+    try {
+      if (options.paste) {
+        // A buffer of its own, filled from standard input so that the text is on no command line, and deleted when pasted.
+        // -p: bracketed, when the program in the session asked for that.
+        const buffer = `aubergine-${randomBytes(6).toString('hex')}`;
+        await this.exec(['load-buffer', '-b', buffer, '-'], true, text);
+        await this.exec(['paste-buffer', '-p', '-d', '-b', buffer, '-t', `=${name}:`]);
+        return;
+      }
+      // The text goes as the bytes it is, in hexadecimal (-H): tmux reads nothing in it as the name of a key, an option,
+      // or the end of a command. A few hundred bytes a call, in order.
+      const bytes = Buffer.from(text, 'utf8');
+      for (let start = 0; start < bytes.length; start += TYPE_CHUNK) {
+        const chunk = bytes.subarray(start, start + TYPE_CHUNK);
+        await this.exec(['send-keys', '-t', `=${name}:`, '-H', ...Array.from(chunk, (byte) => byte.toString(16).padStart(2, '0'))]);
+      }
+    } catch (error) {
+      if (isNoServer(error) || isNoSession(error)) throw new SessionNotFoundError(name);
+      throw error;
+    }
+  }
+
+  async press(id: string, keys: readonly TerminalKey[]): Promise<void> {
+    const name = sessionName(id);
+    try {
+      // One key per call, by tmux's own name for it, from the fixed table: nothing a caller wrote is on this command line.
+      for (const key of keys) await this.exec(['send-keys', '-t', `=${name}:`, TMUX_KEY[key] as string]);
+    } catch (error) {
+      if (isNoServer(error) || isNoSession(error)) throw new SessionNotFoundError(name);
+      throw error;
+    }
+  }
+
+  async foreground(id: string): Promise<string | null> {
+    return (await this.geometry(sessionName(id))).command || null;
+  }
+
   /**
    * The command a native terminal runs to view a session, with the same
    * socket and config the daemon uses.
@@ -383,10 +479,10 @@ export class TmuxRuntime implements SessionRuntime {
     }
   }
 
-  private exec(args: string[], withSocket = true): Promise<string> {
+  private exec(args: string[], withSocket = true, input?: string): Promise<string> {
     const fullArgs = withSocket ? [...this.baseArgs, ...args] : args;
     return new Promise((resolve, reject) => {
-      execFile(
+      const child = execFile(
         this.bin,
         fullArgs,
         { env: this.env, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 },
@@ -399,11 +495,41 @@ export class TmuxRuntime implements SessionRuntime {
           }
         },
       );
+      if (input !== undefined) child.stdin?.end(input);
     });
   }
 }
 
 /** Session IDs go onto a command line as tmux targets, so only real IDs get through. */
+/** How many bytes of typed text go in one tmux call. A multi-byte character may be split over two calls; the session reads them as one stream. */
+const TYPE_CHUNK = 512;
+
+/** tmux's name for each key that can be pressed by name. */
+const TMUX_KEY: Record<TerminalKey, string> = {
+  Enter: 'Enter',
+  Tab: 'Tab',
+  Escape: 'Escape',
+  Backspace: 'BSpace',
+  Delete: 'DC',
+  Up: 'Up',
+  Down: 'Down',
+  Left: 'Left',
+  Right: 'Right',
+  Home: 'Home',
+  End: 'End',
+  PageUp: 'PPage',
+  PageDown: 'NPage',
+  Space: 'Space',
+  'Ctrl+C': 'C-c',
+  'Ctrl+D': 'C-d',
+  'Ctrl+Z': 'C-z',
+  'Ctrl+L': 'C-l',
+  'Ctrl+U': 'C-u',
+  'Ctrl+A': 'C-a',
+  'Ctrl+E': 'C-e',
+  'Ctrl+R': 'C-r',
+};
+
 function sessionName(id: string): string {
   const parsed = Id.safeParse(id);
   if (!parsed.success) throw new Error(`Not a session ID: ${JSON.stringify(id)}`);

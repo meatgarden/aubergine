@@ -55,6 +55,8 @@ export interface SessionsOptions {
   sessionEnv?: (sessionId: string) => Record<string, string>;
   /** Whether prompts given to agents may be kept in the note log. */
   logPrompts?: () => boolean;
+  /** Whether a new session starts out "people only": for every session, and for those that start an agent. */
+  protectByDefault?: () => { all: boolean; agents: boolean };
   /** The line that starts an agent in a new session, with its reporting set up. */
   agentLaunchLine?: (agent: AgentKind, args: readonly string[]) => Promise<string>;
 }
@@ -138,7 +140,13 @@ export class Sessions {
       : undefined;
     const fallback = launch ? this.nextName('Claude Code') : undefined;
     const name = input.name && input.uniqueName ? this.uniqueName(input.name) : (input.name ?? fallback);
-    const created = this.record(id, name, input.rect, started.cwd, canvas, input.tags ?? []);
+    let created = this.record(id, name, input.rect, started.cwd, canvas, input.tags ?? []);
+    // Closed to programs from the start, where the owner's settings say so. A token typing into an agent is the riskiest case.
+    const protect = this.options.protectByDefault?.();
+    if (protect && (protect.all || (protect.agents && input.agent !== undefined))) {
+      this.hub.emit({ type: 'session.protected', sessionId: id, peopleOnly: true });
+      created = { ...created, session: this.find(id) };
+    }
     if (input.agent && launch) {
       this.hub.emit({ type: 'session.agent', sessionId: id, agent: { kind: input.agent, conversationId: null } });
     }
@@ -449,6 +457,11 @@ export class Sessions {
     throw new NotFoundError(`No frame ${frameId}`);
   }
 
+  /** Every session there is. */
+  all(): Session[] {
+    return this.hub.state.sessions;
+  }
+
   has(sessionId: string): boolean {
     return this.hub.state.sessions.some((s) => s.id === sessionId);
   }
@@ -496,6 +509,27 @@ export class Sessions {
     if (!line) throw new ConflictError('Starting agents is not set up');
     await this.runtime.typeLine(sessionId, line);
     return this.find(sessionId);
+  }
+
+  /** What the session's shell last reported about itself; null when it reports nothing (no integration for that shell). */
+  shellReport(sessionId: string): Promise<ShellReport | null> {
+    return this.integration.read(sessionId);
+  }
+
+  /** Switches "people only" on or off. The owner's alone to call. */
+  protect(sessionId: string, peopleOnly: boolean): Session {
+    const session = this.find(sessionId);
+    if (session.peopleOnly !== peopleOnly) this.hub.emit({ type: 'session.protected', sessionId, peopleOnly });
+    return this.find(sessionId);
+  }
+
+  /** Notes that a token typed into the session, for the owner to see. At most once every few seconds per session; never what was typed. */
+  noteTypedBy(sessionId: string, name: string): void {
+    const session = this.hub.state.sessions.find((s) => s.id === sessionId);
+    if (!session) return;
+    const now = Date.now();
+    if (session.typedBy?.name === name && now - Date.parse(session.typedBy.at) < TIMES_INTERVAL_MS) return;
+    this.hub.emit({ type: 'session.typed', sessionId, by: { name: name.slice(0, 120), at: new Date(now).toISOString() } });
   }
 
   /** One session, or a refusal that says there is none. */
@@ -624,7 +658,7 @@ export class Sessions {
       attention: NO_ATTENTION,
       noteLog: [],
       agent: null,
-      parkedFrom: null,
+      parkedFrom: null, peopleOnly: false, typedBy: null,
       lastInputAt: null,
       lastOutputAt: null,
       tags,

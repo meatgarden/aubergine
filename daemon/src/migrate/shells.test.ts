@@ -110,7 +110,7 @@ function session(cwd: string, state: Session['state'] = 'open'): Session {
     attention: NO_ATTENTION,
     noteLog: [],
     agent: null,
-    parkedFrom: null,
+    parkedFrom: null, peopleOnly: false, typedBy: null,
     lastInputAt: null,
     lastOutputAt: null,
     tags: [],

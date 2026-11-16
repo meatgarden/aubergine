@@ -44,11 +44,18 @@ const StateFileV4 = StateFileV3.extend({ version: z.literal(4), workflows: z.arr
 /** The same, with drafts waiting for the owner and the shelf of elements. Elements may say what they need and produce; runs keep what was produced and ticked. */
 const StateFileV5 = StateFileV4.extend({ version: z.literal(5), drafts: z.array(Draft), shelf: z.array(ShelfElement) });
 
-/** The current shape: the same, with the repository workflows the owner accepted. */
+/** The same, with the repository workflows the owner accepted. */
 const StateFileV6 = StateFileV5.extend({ version: z.literal(6), repositoryAccepted: z.array(AcceptedRepositoryWorkflow) });
 
-const StateFile = z.discriminatedUnion('version', [StateFileV1, StateFileV2, StateFileV3, StateFileV4, StateFileV5, StateFileV6]);
-const CURRENT_VERSION = 6;
+/**
+ * The current shape. Nothing was added at the top: sessions may be "people only" and remember which token typed last,
+ * and a token may carry which sessions its terminal scopes reach. Older files have none of that, and read as: open to
+ * tokens as before, typed by nobody, reaching no terminal.
+ */
+const StateFileV7 = StateFileV6.extend({ version: z.literal(7) });
+
+const StateFile = z.discriminatedUnion('version', [StateFileV1, StateFileV2, StateFileV3, StateFileV4, StateFileV5, StateFileV6, StateFileV7]);
+const CURRENT_VERSION = 7;
 type StateFile = z.infer<typeof StateFile>;
 
 /**
@@ -72,7 +79,7 @@ export function migrate(file: StateFile): AppState {
     runs: file.version >= 4 && 'runs' in file ? file.runs : [],
     drafts: file.version >= 5 && 'drafts' in file ? file.drafts : [],
     shelf: file.version >= 5 && 'shelf' in file ? file.shelf : [],
-    repositoryAccepted: file.version === 6 ? file.repositoryAccepted : [],
+    repositoryAccepted: file.version >= 6 && 'repositoryAccepted' in file ? file.repositoryAccepted : [],
   });
 }
 

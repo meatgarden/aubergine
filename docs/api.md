@@ -74,13 +74,19 @@ How to create a token, what the scopes mean, the limits and the activity log are
 | [`POST /v1/repository-workflows/accept`](#acceptrepositoryworkflow) | Accept a repository workflow as it is now | browser only |
 | [`POST /v1/repository-workflows/save`](#savetorepository) | Write a workflow into a repository | browser only |
 | [`POST /v1/sessions/{sessionId}/repository-runs`](#runrepositoryworkflow) | Start a run of a repository workflow on a session | `runs:write` |
+| [`GET /v1/sessions/{sessionId}/screen`](#getscreen) | What a terminal shows now | `terminal:read` |
+| [`GET /v1/sessions/{sessionId}/output`](#getoutput) | What a terminal printed recently | `terminal:read` |
+| [`GET /v1/search`](#searchterminals) | Search what terminals have printed | `terminal:read` |
+| [`POST /v1/sessions/{sessionId}/input`](#sendinput) | Type into a terminal, or press keys | `terminal:input` |
+| [`GET /v1/sessions/{sessionId}/run`](#getsessionrun) | The run a session is on | session's own token, or `read` |
+| [`POST /v1/sessions/{sessionId}/run`](#runcommand) | Run a command at a shell prompt and wait for it | `terminal:input` |
+| [`PUT /v1/sessions/{sessionId}/protection`](#protectsession) | Switch "people only" on or off for a session | browser only |
 | [`GET /v1/events`](#streamevents) | Follow changes as they happen | `read` |
 | [`GET /v1/tokens`](#listtokens) | List API tokens | browser only |
 | [`POST /v1/tokens`](#createtoken) | Create an API token | browser only |
 | [`DELETE /v1/tokens/{tokenId}`](#revoketoken) | Revoke an API token | browser only |
 | [`GET /v1/activity`](#listactivity) | What API tokens did | browser only |
 | [`PUT /v1/sessions/{sessionId}/attention`](#setattention) | Say whether the session wants the user | session's own token |
-| [`GET /v1/sessions/{sessionId}/run`](#getsessionrun) | The run a session is on | session's own token, or `read` |
 | [`POST /v1/sessions/{sessionId}/run/report`](#reportsessionrun) | Report on the run a session is on | session's own token, or `runs:write` |
 | [`GET /v1/sessions/{sessionId}/brief`](#getsessionbrief) | What a session was asked to write | session's own token |
 | [`GET /v1/sessions/{sessionId}/drafts`](#listsessiondrafts) | The drafts a session proposed or was asked for | session's own token |
@@ -133,7 +139,7 @@ Needs no scope: any caller that is who it says it is.
     kind: "token";
     id: string;
     name: string;
-    scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write")[];
+    scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "terminal:read" | "terminal:input")[];
     expiresAt: string | null;
   } | {
     kind: "session";
@@ -526,6 +532,11 @@ A list: it answers a page at a time, see `limit` and `cursor`.
       };
       color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
     } | null;
+    peopleOnly: boolean;
+    typedBy: {
+      name: string;
+      at: string;
+    } | null;
   }[];
   nextCursor: string | null;
 }
@@ -610,6 +621,11 @@ An API token needs the scope `sessions:write`.
         height: number;
       };
       color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+    } | null;
+    peopleOnly: boolean;
+    typedBy: {
+      name: string;
+      at: string;
     } | null;
   };
   canvasId: string;
@@ -699,6 +715,11 @@ A list: it answers a page at a time, see `limit` and `cursor`.
       };
       color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
     } | null;
+    peopleOnly: boolean;
+    typedBy: {
+      name: string;
+      at: string;
+    } | null;
   }[];
   nextCursor: string | null;
 }
@@ -769,6 +790,11 @@ An API token needs the scope `read`.
       height: number;
     };
     color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+  } | null;
+  peopleOnly: boolean;
+  typedBy: {
+    name: string;
+    at: string;
   } | null;
 }
 ```
@@ -848,6 +874,11 @@ An API token needs the scope `sessions:write`. Sending `note` needs `notes:write
       height: number;
     };
     color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+  } | null;
+  peopleOnly: boolean;
+  typedBy: {
+    name: string;
+    at: string;
   } | null;
 }
 ```
@@ -950,6 +981,11 @@ An API token needs the scope `sessions:write`.
       };
       color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
     } | null;
+    peopleOnly: boolean;
+    typedBy: {
+      name: string;
+      at: string;
+    } | null;
   };
   canvasId: string;
   node: {
@@ -1033,6 +1069,11 @@ An API token needs the scope `sessions:write`.
     };
     color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
   } | null;
+  peopleOnly: boolean;
+  typedBy: {
+    name: string;
+    at: string;
+  } | null;
 }
 ```
 
@@ -1110,6 +1151,11 @@ An API token needs the scope `sessions:write`.
         height: number;
       };
       color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+    } | null;
+    peopleOnly: boolean;
+    typedBy: {
+      name: string;
+      at: string;
     } | null;
   };
   canvasId: string;
@@ -4227,191 +4273,115 @@ curl -X POST -H "Authorization: Bearer $TOKEN" \
      http://127.0.0.1:4600/v1/sessions/<sessionId>/repository-runs
 ```
 
-## Events
+## Terminals
 
-### streamEvents
+### getScreen
 
-`GET /v1/events`: Follow changes as they happen.
+`GET /v1/sessions/{sessionId}/screen`: What a terminal shows now.
 
-A stream of server-sent events (`text/event-stream`) that does not end: one `data:` line of JSON per change, and a comment line now and then to keep the connection open. `canvasId` narrows it to what concerns one canvas. Changes to tokens are not sent.
+The visible rows as text, with the size and where the cursor is. Text only: colors and other control sequences are not in it. Reading attaches no viewer, so nothing is resized. Refused with `people_only` for a session the owner closed to programs.
 
-An API token needs the scope `read`.
+An API token needs the scope `terminal:read`.
 
 | Parameter | In | Type | Required | |
 |---|---|---|---|---|
-| `canvasId` | query | `string` | no | Only changes that concern this canvas. |
+| `sessionId` | path | `string` | yes | An ID. |
 
-**Answer** `200`, a stream; each `data:` line is
+**Answer** `200`:
 
 ```ts
 {
-  type: string;
-  [key: string]: unknown;
+  text: string;
+  columns: number;
+  rows: number;
+  cursor: {
+    x: number;
+    y: number;
+  };
 }
 ```
 
-**Errors:** 400, 401, 403, 404, 413, 429.
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
 
 ```sh
-curl -N -H "Authorization: Bearer $TOKEN" \
-     http://127.0.0.1:4600/v1/events
+curl -H "Authorization: Bearer $TOKEN" \
+     http://127.0.0.1:4600/v1/sessions/<sessionId>/screen
 ```
 
-## Tokens
+### getOutput
 
-### listTokens
+`GET /v1/sessions/{sessionId}/output`: What a terminal printed recently.
 
-`GET /v1/tokens`: List API tokens.
+So many lines back from the end, oldest first, as text. `nextCursor` reads further back, as far as the terminal remembers.
 
-Never their secrets, which the server does not have.
-
-For the signed-in browser only. No API token may call this, whatever its scopes.
-
-A list: it answers a page at a time, see `limit` and `cursor`.
+An API token needs the scope `terminal:read`.
 
 | Parameter | In | Type | Required | |
 |---|---|---|---|---|
-| `limit` | query | `number` | no | How many items to return at most. |
-| `cursor` | query | `string` | no | The `nextCursor` of the page before. Opaque: do not build or change it. |
+| `sessionId` | path | `string` | yes | An ID. |
+| `lines` | query | `number` | no | How many lines to return at most, counted back from the end. |
+| `cursor` | query | `string` | no | The `nextCursor` of an earlier answer: read further back from there. |
 
 **Answer** `200`:
 
 ```ts
 {
-  items: {
-    id: string;
-    name: string;
-    scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write")[];
-    createdAt: string;
-    lastUsedAt: string | null;
-    expiresAt: string | null;
-    revokedAt: string | null;
-    reviewWorkflowChanges: boolean;
-  }[];
+  text: string;
+  lines: number;
   nextCursor: string | null;
 }
 ```
 
-**Errors:** 400, 401, 403, 413, 429.
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
 
-### createToken
-
-`POST /v1/tokens`: Create an API token.
-
-The answer holds the secret. It is sent this once and cannot be had again.
-
-For the signed-in browser only. No API token may call this, whatever its scopes.
-
-**Body** (JSON):
-
-| Field | Type | Required | |
-|---|---|---|---|
-| `name` | `string` | yes | What will use it. |
-| `scopes` | `("read" \| "canvases:write" \| "sessions:write" \| "notes:write" \| "wo…` | yes | What it may do. At least one. |
-| `expiresAt` | `string` | no | When it stops working. Never, when neither this nor `expiresInDays` is given. |
-| `expiresInDays` | `number` | no | In how many days it stops working. |
-| `reviewWorkflowChanges` | `boolean` | no | Changes to workflows need your review: with `workflows:write` the token may propose drafts, and may not create or change workflows directly. On unless you switch it off. |
-
-**Answer** `201`:
-
-```ts
-{
-  token: {
-    id: string;
-    name: string;
-    scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write")[];
-    createdAt: string;
-    lastUsedAt: string | null;
-    expiresAt: string | null;
-    revokedAt: string | null;
-    reviewWorkflowChanges: boolean;
-  };
-  secret: string;
-}
+```sh
+curl -H "Authorization: Bearer $TOKEN" \
+     http://127.0.0.1:4600/v1/sessions/<sessionId>/output
 ```
 
-**Errors:** 400, 401, 403, 413, 429.
+### searchTerminals
 
-### revokeToken
+`GET /v1/search`: Search what terminals have printed.
 
-`DELETE /v1/tokens/{tokenId}`: Revoke an API token.
+Looks through the history of every session the caller may read. Sessions it may not read (out of its reach, or "people only") are not searched; the answer says that some were left out, not which.
 
-It is refused on its very next call. Revoking twice changes nothing.
-
-For the signed-in browser only. No API token may call this, whatever its scopes.
+An API token needs the scope `terminal:read`.
 
 | Parameter | In | Type | Required | |
 |---|---|---|---|---|
-| `tokenId` | path | `string` | yes | An ID. |
+| `limit` | query | `number` | no | How many matches to return at most. |
+| `q` | query | `string` | yes | The text to look for. Capitals do not matter. |
 
 **Answer** `200`:
 
 ```ts
 {
-  id: string;
-  name: string;
-  scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write")[];
-  createdAt: string;
-  lastUsedAt: string | null;
-  expiresAt: string | null;
-  revokedAt: string | null;
-  reviewWorkflowChanges: boolean;
-}
-```
-
-**Errors:** 400, 401, 403, 404, 413, 429.
-
-### listActivity
-
-`GET /v1/activity`: What API tokens did.
-
-One entry per call made with a token, newest first. `tokenId` narrows it to one token.
-
-For the signed-in browser only. No API token may call this, whatever its scopes.
-
-A list: it answers a page at a time, see `limit` and `cursor`.
-
-| Parameter | In | Type | Required | |
-|---|---|---|---|---|
-| `limit` | query | `number` | no | How many items to return at most. |
-| `cursor` | query | `string` | no | The `nextCursor` of the page before. Opaque: do not build or change it. |
-| `tokenId` | query | `string` | no | Only calls made with this token. |
-
-**Answer** `200`:
-
-```ts
-{
-  items: {
-    at: string;
-    caller: "token" | "owner-cli";
-    tokenId: string | null;
-    tokenName: string;
-    fromSessionId: string | null;
-    action: string;
-    resource: {
-      sessionId?: string;
-      canvasId?: string;
-    };
-    method: string;
-    route: string;
-    status: number;
-    outcome: "ok" | "denied" | "refused" | "limited" | "error";
+  hits: {
+    sessionId: string;
+    text: string;
+    before: string[];
+    after: string[];
   }[];
-  nextCursor: string | null;
+  truncated: boolean;
+  searched: number;
+  someLeftOut: boolean;
 }
 ```
 
 **Errors:** 400, 401, 403, 413, 429.
 
-## For a session itself
+```sh
+curl -H "Authorization: Bearer $TOKEN" \
+     http://127.0.0.1:4600/v1/search?q=text
+```
 
-### setAttention
+### sendInput
 
-`PUT /v1/sessions/{sessionId}/attention`: Say whether the session wants the user.
+`POST /v1/sessions/{sessionId}/input`: Type into a terminal, or press keys.
 
-For a program inside a session, with that session's own token (`AUBERGINE_TOKEN`). No API token may call this.
+Text is typed exactly as it is: nothing in it is read as the name of a key or as an escape, and it may hold no control characters. Enter is pressed only when `enter` says so. Text with line breaks is refused unless `paste` is set, and is then delivered as a paste. Keys are pressed by name, from a fixed list. Whatever has the keyboard in that terminal receives it: a shell will run it. Refused with `people_only` for a session the owner closed to programs.
 
-For a session's own token, about that session. No API token may call this.
+An API token needs the scope `terminal:input`.
 
 | Parameter | In | Type | Required | |
 |---|---|---|---|---|
@@ -4421,26 +4391,29 @@ For a session's own token, about that session. No API token may call this.
 
 | Field | Type | Required | |
 |---|---|---|---|
-| `state` | `"none" \| "working" \| "waiting" \| "done"` | yes |  |
-| `message` | `string` | no |  |
+| `text` | `string` | no | Text to type, exactly as it is. No control characters; no line breaks unless `paste` is true. |
+| `enter` | `boolean` | no | Press Enter after the text. Say so explicitly: text alone presses nothing. |
+| `paste` | `boolean` | no | Deliver the text as a paste. Needed for text with line breaks. |
+| `keys` | `("Enter" \| "Tab" \| "Escape" \| "Backspace" \| "Delete" \| "Up" \| "Down…` | no | Keys to press, in order, from this list only: Enter, Tab, Escape, Backspace, Delete, Up, Down, Left, Right, Home, End, PageUp, PageDown, Space, Ctrl+C, Ctrl+D, Ctrl+Z, Ctrl+L, Ctrl+U, Ctrl+A, Ctrl+E, Ctrl+R. |
 
 **Answer** `200`:
 
 ```ts
 {
-  state: "none" | "working" | "waiting" | "done";
-  message: string | null;
-  at: string | null;
+  typed: number;
+  keys: number;
 }
 ```
 
-**Errors:** 400, 401, 403, 404, 413, 429.
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
 
 ```sh
-curl -X PUT -H "Authorization: Bearer $AUBERGINE_TOKEN" \
-     -H "Content-Type: application/json" -d '{"state":"none"}' \
-     $AUBERGINE_URL/v1/sessions/<sessionId>/attention
+curl -X POST -H "Authorization: Bearer $TOKEN" \
+     -H "Content-Type: application/json" -d '{"text":"text"}' \
+     http://127.0.0.1:4600/v1/sessions/<sessionId>/input
 ```
+
+## For a session itself
 
 ### getSessionRun
 
@@ -4517,6 +4490,370 @@ For a session's own token, about that session; or an API token with the scope `r
 ```sh
 curl -H "Authorization: Bearer $TOKEN" \
      http://127.0.0.1:4600/v1/sessions/<sessionId>/run
+```
+
+## Terminals
+
+### runCommand
+
+`POST /v1/sessions/{sessionId}/run`: Run a command at a shell prompt and wait for it.
+
+Types one command line into a shell that is at its prompt and waits until the shell reports it finished: the exit code, what the terminal showed meanwhile, and how long it took. Refused (409) with `not_at_prompt` when a program or an agent has the keyboard, `no_shell_integration` when the shell does not report, `run_in_progress` when a run is already waited for there. When the time is up the answer has `finished: false`; the command is left running. The output is given only to a caller that may also read that terminal.
+
+An API token needs the scope `terminal:input`.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `sessionId` | path | `string` | yes | An ID. |
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `command` | `string` | yes | One command line, typed at the shell prompt. One line: no line breaks, no control characters. |
+| `timeoutSeconds` | `number` | no | How long to wait for it to finish. When the time is up the answer says it is still going; nothing is stopped. |
+
+**Answer** `200`:
+
+```ts
+{
+  finished: boolean;
+  exitCode: number | null;
+  output: string | null;
+  outputCut: boolean;
+  durationMs: number;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+```sh
+curl -X POST -H "Authorization: Bearer $TOKEN" \
+     -H "Content-Type: application/json" -d '{"command":"npm test"}' \
+     http://127.0.0.1:4600/v1/sessions/<sessionId>/run
+```
+
+### protectSession
+
+`PUT /v1/sessions/{sessionId}/protection`: Switch "people only" on or off for a session.
+
+For the owner only. While it is on, no token may read that terminal or type into it, whatever its scopes.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `sessionId` | path | `string` | yes | An ID. |
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `peopleOnly` | `boolean` | yes | True: no token may read this terminal or type into it, whatever its scopes. |
+
+**Answer** `200`:
+
+```ts
+{
+  id: string;
+  projectId: string;
+  name: string;
+  createdAt: string;
+  state: "open" | "parked" | "exited";
+  cwd: string | null;
+  command: string | null;
+  note: string;
+  status: {
+    state: ("busy" | "idle") | null;
+    commandLine: string | null;
+    startedAt: string | null;
+    lastExit: number | null;
+    lastFinishedAt: string | null;
+    unread: boolean;
+  };
+  attention: {
+    state: "none" | "working" | "waiting" | "done";
+    message: string | null;
+    at: string | null;
+  };
+  noteLog: {
+    id: string;
+    at: string;
+    author: "user" | "agent";
+    kind: "note" | "prompt" | "event";
+    text: string;
+  }[];
+  agent: {
+    kind: "claude-code";
+    conversationId: string | null;
+  } | null;
+  lastInputAt: string | null;
+  lastOutputAt: string | null;
+  tags: string[];
+  parkedFrom: {
+    canvasId: string;
+    rect: {
+      x: number;
+      y: number;
+      width: number;
+      height: number;
+    };
+    color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+  } | null;
+  peopleOnly: boolean;
+  typedBy: {
+    name: string;
+    at: string;
+  } | null;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+## Events
+
+### streamEvents
+
+`GET /v1/events`: Follow changes as they happen.
+
+A stream of server-sent events (`text/event-stream`) that does not end: one `data:` line of JSON per change, and a comment line now and then to keep the connection open. `canvasId` narrows it to what concerns one canvas. Changes to tokens are not sent.
+
+An API token needs the scope `read`.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `canvasId` | query | `string` | no | Only changes that concern this canvas. |
+
+**Answer** `200`, a stream; each `data:` line is
+
+```ts
+{
+  type: string;
+  [key: string]: unknown;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+```sh
+curl -N -H "Authorization: Bearer $TOKEN" \
+     http://127.0.0.1:4600/v1/events
+```
+
+## Tokens
+
+### listTokens
+
+`GET /v1/tokens`: List API tokens.
+
+Never their secrets, which the server does not have.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+A list: it answers a page at a time, see `limit` and `cursor`.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `limit` | query | `number` | no | How many items to return at most. |
+| `cursor` | query | `string` | no | The `nextCursor` of the page before. Opaque: do not build or change it. |
+
+**Answer** `200`:
+
+```ts
+{
+  items: {
+    id: string;
+    name: string;
+    scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "terminal:read" | "terminal:input")[];
+    createdAt: string;
+    lastUsedAt: string | null;
+    expiresAt: string | null;
+    revokedAt: string | null;
+    reviewWorkflowChanges: boolean;
+    reach: {
+      kind: "all";
+    } | {
+      kind: "canvases";
+      canvasIds: string[];
+    } | {
+      kind: "tag";
+      tag: string;
+    } | null;
+  }[];
+  nextCursor: string | null;
+}
+```
+
+**Errors:** 400, 401, 403, 413, 429.
+
+### createToken
+
+`POST /v1/tokens`: Create an API token.
+
+The answer holds the secret. It is sent this once and cannot be had again.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `name` | `string` | yes | What will use it. |
+| `scopes` | `("read" \| "canvases:write" \| "sessions:write" \| "notes:write" \| "wo…` | yes | What it may do. At least one. |
+| `expiresAt` | `string` | no | When it stops working. Never, when neither this nor `expiresInDays` is given. |
+| `expiresInDays` | `number` | no | In how many days it stops working. |
+| `reviewWorkflowChanges` | `boolean` | no | Changes to workflows need your review: with `workflows:write` the token may propose drafts, and may not create or change workflows directly. On unless you switch it off. |
+| `reach` | `{ kind: "all"; } \| { kind: "canvases"; canvasIds: string[]; } \| { k…` | no | Which sessions the terminal scopes apply to: all, those on named canvases, or those with a tag. Required when `terminal:read` or `terminal:input` is asked for; there is no default. |
+
+**Answer** `201`:
+
+```ts
+{
+  token: {
+    id: string;
+    name: string;
+    scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "terminal:read" | "terminal:input")[];
+    createdAt: string;
+    lastUsedAt: string | null;
+    expiresAt: string | null;
+    revokedAt: string | null;
+    reviewWorkflowChanges: boolean;
+    reach: {
+      kind: "all";
+    } | {
+      kind: "canvases";
+      canvasIds: string[];
+    } | {
+      kind: "tag";
+      tag: string;
+    } | null;
+  };
+  secret: string;
+}
+```
+
+**Errors:** 400, 401, 403, 413, 429.
+
+### revokeToken
+
+`DELETE /v1/tokens/{tokenId}`: Revoke an API token.
+
+It is refused on its very next call. Revoking twice changes nothing.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `tokenId` | path | `string` | yes | An ID. |
+
+**Answer** `200`:
+
+```ts
+{
+  id: string;
+  name: string;
+  scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "terminal:read" | "terminal:input")[];
+  createdAt: string;
+  lastUsedAt: string | null;
+  expiresAt: string | null;
+  revokedAt: string | null;
+  reviewWorkflowChanges: boolean;
+  reach: {
+    kind: "all";
+  } | {
+    kind: "canvases";
+    canvasIds: string[];
+  } | {
+    kind: "tag";
+    tag: string;
+  } | null;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+### listActivity
+
+`GET /v1/activity`: What API tokens did.
+
+One entry per call made with a token, newest first. `tokenId` narrows it to one token.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+A list: it answers a page at a time, see `limit` and `cursor`.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `limit` | query | `number` | no | How many items to return at most. |
+| `cursor` | query | `string` | no | The `nextCursor` of the page before. Opaque: do not build or change it. |
+| `tokenId` | query | `string` | no | Only calls made with this token. |
+| `sessionId` | query | `string` | no | Only calls about this session, or made from inside it. |
+
+**Answer** `200`:
+
+```ts
+{
+  items: {
+    at: string;
+    caller: "token" | "owner-cli";
+    tokenId: string | null;
+    tokenName: string;
+    fromSessionId: string | null;
+    chars: number | null;
+    fingerprint: string | null;
+    action: string;
+    resource: {
+      sessionId?: string;
+      canvasId?: string;
+    };
+    method: string;
+    route: string;
+    status: number;
+    outcome: "ok" | "denied" | "refused" | "limited" | "error";
+  }[];
+  nextCursor: string | null;
+}
+```
+
+**Errors:** 400, 401, 403, 413, 429.
+
+## For a session itself
+
+### setAttention
+
+`PUT /v1/sessions/{sessionId}/attention`: Say whether the session wants the user.
+
+For a program inside a session, with that session's own token (`AUBERGINE_TOKEN`). No API token may call this.
+
+For a session's own token, about that session. No API token may call this.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `sessionId` | path | `string` | yes | An ID. |
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `state` | `"none" \| "working" \| "waiting" \| "done"` | yes |  |
+| `message` | `string` | no |  |
+
+**Answer** `200`:
+
+```ts
+{
+  state: "none" | "working" | "waiting" | "done";
+  message: string | null;
+  at: string | null;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+```sh
+curl -X PUT -H "Authorization: Bearer $AUBERGINE_TOKEN" \
+     -H "Content-Type: application/json" -d '{"state":"none"}' \
+     $AUBERGINE_URL/v1/sessions/<sessionId>/attention
 ```
 
 ### reportSessionRun

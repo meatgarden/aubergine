@@ -79,6 +79,41 @@ export interface SessionRuntime {
   reveal(id: string, text: string): Promise<void>;
   /** The visible screen as plain text. */
   snapshot(id: string): Promise<string>;
+  /**
+   * The visible screen as plain text, with its size and where the cursor is.
+   * Read from the session itself: no viewer is attached, so nothing is
+   * resized and nobody watching sees a difference.
+   */
+  screen(id: string): Promise<TerminalScreen>;
+  /**
+   * Lines of the session's history and screen, oldest first, as plain text,
+   * with wrapped lines joined. `from` is a place as `screen` reports it
+   * (`line`); with `count` and `skip` it is so many lines counted back from
+   * the end. Also read without a viewer.
+   */
+  lines(id: string, range: { count: number; skip: number } | { from: number }): Promise<{ lines: string[]; more: boolean; lost: boolean }>;
+  /**
+   * Types text exactly as it is: no part of it is read as the name of a key.
+   * With `paste` it is handed over as a paste, bracketed where the program in
+   * the session asked for that.
+   */
+  type(id: string, text: string, options?: { paste?: boolean }): Promise<void>;
+  /** Presses keys from the fixed list, in order. */
+  press(id: string, keys: readonly TerminalKey[]): Promise<void>;
+  /** The name of the program that has the session's keyboard now. */
+  foreground(id: string): Promise<string | null>;
+}
+
+/** The keys that can be pressed by name. The same list the API offers. */
+export type TerminalKey = 'Enter' | 'Tab' | 'Escape' | 'Backspace' | 'Delete' | 'Up' | 'Down' | 'Left' | 'Right' | 'Home' | 'End' | 'PageUp' | 'PageDown' | 'Space' | 'Ctrl+C' | 'Ctrl+D' | 'Ctrl+Z' | 'Ctrl+L' | 'Ctrl+U' | 'Ctrl+A' | 'Ctrl+E' | 'Ctrl+R';
+
+export interface TerminalScreen {
+  text: string;
+  columns: number;
+  rows: number;
+  cursor: { x: number; y: number };
+  /** The line the cursor is on, counted from the first line the session still remembers. A place to read from later. */
+  line: number;
 }
 
 export interface HistoryHit {

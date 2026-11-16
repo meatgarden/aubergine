@@ -40,6 +40,8 @@ import type { Tokens } from './tokens';
 import type { Viewers } from './viewers';
 import type { Drafts } from './drafts';
 import type { Repositories } from './repositories';
+import type { TerminalAccess, TerminalTrace, Typist } from './terminal-access';
+import { isTerminalContentEvent, withoutTerminalContent } from './terminal-redact';
 import { actorOf, type Workflows } from './workflows';
 
 export interface PublicRouteDeps {
@@ -49,6 +51,7 @@ export interface PublicRouteDeps {
   workflows: Workflows;
   drafts: Drafts;
   repositories: Repositories;
+  terminals: TerminalAccess;
   activity: ActivityLog;
   viewers: Viewers;
   limiter: RateLimiter;
@@ -58,6 +61,12 @@ export interface PublicRouteDeps {
   validateResponses: boolean;
   /** Who a request was found to be, when the checks let it through. */
   principalOf(request: FastifyRequest): Principal | null;
+  /** Asks `authorize`, without refusing: for an answer that depends on what else the caller may do. */
+  may(principal: Principal, action: Action, resource: Resource): boolean;
+  /** What `authorize` needs to know about a session to decide about its terminal. */
+  resourceOf(sessionId: string): Resource;
+  /** Notes, for the activity log, how much text a terminal call read or typed. Never the text. */
+  trace(request: FastifyRequest, trace: TerminalTrace): void;
   /** Whether an owner's call came from a browser page or from outside one, and from which session it says it came. */
   ownerCaller(request: FastifyRequest): OwnerCaller;
   /** Records a token's call now, for a route whose response does not end for a long time. */
@@ -82,7 +91,18 @@ type Handlers = { [I in RouteId]: (context: Context<I>) => RouteOutput<I> | Prom
  * call it, and no route exists that is not declared.
  */
 export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps): void {
-  const { hub, sessions, workflows, drafts, repositories, parse } = deps;
+  const { hub, sessions, workflows, drafts, repositories, terminals, parse } = deps;
+
+  /** Who is typing, for the limits and for what the owner is shown. */
+  const typist = (principal: Principal): Typist => (principal.kind === 'token' ? { tokenId: principal.tokenId, name: principal.name } : { tokenId: null, name: 'owner' });
+  /**
+   * Whether the fixed kickoff sentence may be typed for this caller: the owner, or a token that may type into that very session.
+   * Nothing else is ever typed for starting a run.
+   */
+  const mayKickoff = (principal: Principal, sessionId: string | undefined): boolean =>
+    principal.kind === 'user' || (sessionId !== undefined && principal.kind === 'token' && deps.may(principal, 'terminal.input', deps.resourceOf(sessionId)));
+  /** Whether a caller may be given what a session's terminal shows. */
+  const mayReadTerminal = (principal: Principal, sessionId: string): boolean => principal.kind === 'user' || deps.may(principal, 'terminal.read', deps.resourceOf(sessionId));
   const remembered = new IdempotencyStore();
 
   const summary = (canvas: Canvas): CanvasSummary => {
@@ -281,10 +301,10 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
     listRuns: ({ query }) => workflows.listRuns(query),
 
     // The line that tells an agent about its run is typed for the owner only: typing into a terminal is not something a token may cause.
-    startRun: ({ body, principal }) => workflows.start({ ...body, typeKickoff: body.kickoff && principal.kind === 'user' }, actorOf(principal)),
+    startRun: ({ body, principal }) => workflows.start({ ...body, typeKickoff: body.kickoff && mayKickoff(principal, body.sessionId) }, actorOf(principal)),
 
     startSessionRun: ({ params, body, principal }) =>
-      workflows.start({ ...body, sessionId: params.sessionId, typeKickoff: body.kickoff && principal.kind === 'user' }, actorOf(principal)),
+      workflows.start({ ...body, sessionId: params.sessionId, typeKickoff: body.kickoff && mayKickoff(principal, params.sessionId) }, actorOf(principal)),
 
     getRun: ({ params }) => workflows.getRun(params.runId),
 
@@ -330,7 +350,7 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
 
     runElement: ({ params, body, principal }) => {
       const { kickoff, ...rest } = body;
-      return workflows.startElement(drafts.shelfElement(params.elementId).element, { ...rest, typeKickoff: kickoff && principal.kind === 'user' }, actorOf(principal));
+      return workflows.startElement(drafts.shelfElement(params.elementId).element, { ...rest, typeKickoff: kickoff && mayKickoff(principal, rest.sessionId) }, actorOf(principal));
     },
 
     tickRunItem: ({ params, body, principal }) => workflows.tick(params.runId, body, actorOf(principal)),
@@ -347,14 +367,50 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
 
     runRepositoryWorkflow: ({ params, body, principal }) => {
       const { file, kickoff, ...rest } = body;
-      return repositories.run(params.sessionId, file, { ...rest, typeKickoff: kickoff && principal.kind === 'user' }, actorOf(principal));
+      return repositories.run(params.sessionId, file, { ...rest, typeKickoff: kickoff && mayKickoff(principal, params.sessionId) }, actorOf(principal));
     },
+
+    /* ---------- Terminals ---------- */
+
+    getScreen: async ({ params, request }) => {
+      const { answer, trace } = await terminals.screen(params.sessionId);
+      deps.trace(request, trace);
+      return answer;
+    },
+
+    getOutput: async ({ params, query, request }) => {
+      const { answer, trace } = await terminals.output(params.sessionId, query);
+      deps.trace(request, trace);
+      return answer;
+    },
+
+    // Each session is asked about again: a token is given matches only from the sessions it may read.
+    searchTerminals: async ({ query, principal, request }) => {
+      const { answer, trace } = await terminals.search(query.q, query.limit, (session) => mayReadTerminal(principal, session.id));
+      deps.trace(request, trace);
+      return answer;
+    },
+
+    sendInput: async ({ params, body, principal, request }) => {
+      const { answer, trace } = await terminals.input(params.sessionId, body, typist(principal));
+      deps.trace(request, trace);
+      return answer;
+    },
+
+    // The output of the command is terminal text: it is given only to a caller that may also read this terminal.
+    runCommand: async ({ params, body, principal, request }) => {
+      const { answer, trace } = await terminals.run(params.sessionId, body, typist(principal), mayReadTerminal(principal, params.sessionId));
+      deps.trace(request, trace);
+      return answer;
+    },
+
+    protectSession: ({ params, body }) => sessions.protect(params.sessionId, body.peopleOnly),
 
     /* ---------- The stream of changes ---------- */
 
     // Server-sent events: one `data:` line of JSON per change. It needs nothing but an HTTP client,
     // and a bearer token goes in a header as on every other route.
-    streamEvents: ({ query, request, reply }) => {
+    streamEvents: ({ query, request, reply, principal }) => {
       const { canvasId } = query;
       if (canvasId !== undefined) sessions.getCanvas(canvasId);
       deps.recordNow(request);
@@ -367,7 +423,10 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
         // Tokens and what they did are the owner's business, not a stream's.
         if (event.type.startsWith('token.')) return;
         if (canvasId !== undefined && !concerns(hub.state, event, canvasId)) return;
-        out.write(`data: ${JSON.stringify(event)}\n\n`);
+        // What a terminal shows is not for a caller that may not read that terminal.
+        const about = 'sessionId' in event ? event.sessionId : 'session' in event ? event.session.id : null;
+        if (about !== null && !mayReadTerminal(principal, about) && isTerminalContentEvent(event)) return;
+        out.write(`data: ${JSON.stringify(withoutTerminalContent(event, (sessionId) => mayReadTerminal(principal, sessionId)))}\n\n`);
       });
       const beat = setInterval(() => out.write(': still here\n\n'), 25_000);
       const end = (): void => {
@@ -444,7 +503,8 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
         const params = spec.params ? (parse(spec.params, request.params) as Record<string, string>) : {};
 
         // Who may: decided before the query or the body is looked at closely, and before anything is looked up.
-        const resource: Resource = { ...(params.sessionId ? { sessionId: params.sessionId } : {}), ...(params.canvasId ? { canvasId: params.canvasId } : {}) };
+        // For a session: what decides about its terminal is handed to `authorize` with the question, not looked up after it.
+        const resource: Resource = { ...(params.sessionId ? deps.resourceOf(params.sessionId) : {}), ...(params.canvasId ? { canvasId: params.canvasId } : {}) };
         let principal = deps.principalOf(request);
         for (const action of actionsFor(spec, request.body)) principal = deps.allow(request, action, resource);
         if (!principal) throw deps.fail(401, 'unauthorized', 'Not signed in');
@@ -456,7 +516,10 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
         if (spec.stream) return handle(context);
 
         const checked = async (): Promise<unknown> => {
-          const result = await handle(context);
+          const answer = await handle(context);
+          // A token is not given terminal content of sessions whose terminal it may not read, whatever the route.
+          const caller = principal;
+          const result = caller.kind === 'user' ? answer : withoutTerminalContent(answer, (sessionId) => mayReadTerminal(caller, sessionId));
           // A handler that answers with something its route does not declare is a bug: say so at once, in tests.
           if (deps.validateResponses && spec.response) {
             const outcome = spec.response.safeParse(result);

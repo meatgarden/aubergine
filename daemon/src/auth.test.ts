@@ -4,7 +4,7 @@ import { ACTIONS, NEVER_BY_TOKEN, authorize, type Action, type Principal } from 
 
 const SESSION = '01900000-0000-7000-8000-0000000000a1';
 const OTHER = '01900000-0000-7000-8000-0000000000a2';
-const token = (...scopes: Scope[]): Principal => ({ kind: 'token', tokenId: '01900000-0000-7000-8000-0000000000f1', name: 'test', scopes });
+const token = (...scopes: Scope[]): Principal => ({ kind: 'token', tokenId: '01900000-0000-7000-8000-0000000000f1', name: 'test', scopes, reach: { kind: 'all' } });
 
 /** For a token: the one scope that opens each action. Anything not here is closed to every token. */
 const NEEDS: Partial<Record<Action, Scope>> = {
@@ -28,6 +28,8 @@ const NEEDS: Partial<Record<Action, Scope>> = {
   'drafts.propose': 'workflows:write',
   'repository.own.read': 'read',
   'repository.read': 'read',
+  'terminal.read': 'terminal:read',
+  'terminal.input': 'terminal:input',
 };
 
 describe('authorize', () => {
@@ -46,7 +48,7 @@ describe('authorize', () => {
 
   it('refuses a token holding every scope each thing no token may do', () => {
     const everything = token(...GRANTABLE_SCOPES);
-    expect([...NEVER_BY_TOKEN].sort()).toEqual(['activity.read', 'drafts.review', 'outside.move', 'outside.read', 'processes.signal', 'repository.review', 'repository.write', 'settings.write', 'tokens.manage']);
+    expect([...NEVER_BY_TOKEN].sort()).toEqual(['activity.read', 'drafts.review', 'outside.move', 'outside.read', 'processes.signal', 'repository.review', 'repository.write', 'sessions.protect', 'settings.write', 'tokens.manage']);
     for (const action of NEVER_BY_TOKEN) {
       expect(authorize(everything, action, {}), action).toBe(false);
       expect(authorize(everything, action, { sessionId: SESSION, canvasId: OTHER }), action).toBe(false);

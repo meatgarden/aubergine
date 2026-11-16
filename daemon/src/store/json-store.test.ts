@@ -33,7 +33,7 @@ function withSession(state: AppState, name: string): AppState {
       attention: NO_ATTENTION,
       noteLog: [],
       agent: null,
-      parkedFrom: null,
+      parkedFrom: null, peopleOnly: false, typedBy: null,
     lastInputAt: null,
     lastOutputAt: null,
     tags: [],
@@ -64,7 +64,7 @@ describe('JsonStore', () => {
     const state = withSession(await store.load(), 'one');
     await store.save(state);
     const raw = JSON.parse(await readFile(store.file, 'utf8'));
-    expect(raw.version).toBe(6);
+    expect(raw.version).toBe(7);
     expect(raw.sessions[0]).not.toHaveProperty('x');
     expect(raw.sessions[0]).not.toHaveProperty('width');
     expect(raw.canvases[0].layout.nodes[0].sessionId).toBe(raw.sessions[0].id);
@@ -166,7 +166,7 @@ describe('JsonStore', () => {
     // Saving writes the current shape, which loads back the same.
     await store.save(state);
     const raw = JSON.parse(await readFile(store.file, 'utf8'));
-    expect(raw.version).toBe(6);
+    expect(raw.version).toBe(7);
     expect(raw.layout).toBeUndefined();
     expect(await new JsonStore(dir).load()).toEqual(state);
 
@@ -193,7 +193,7 @@ describe('JsonStore', () => {
 
     await store.save(state);
     const raw = JSON.parse(await readFile(store.file, 'utf8'));
-    expect(raw.version).toBe(6);
+    expect(raw.version).toBe(7);
     expect(raw.tokens).toEqual([]);
     expect(await new JsonStore(dir).load()).toEqual(state);
     // The file as it was, byte for byte, is beside the new one.
@@ -218,7 +218,7 @@ describe('JsonStore', () => {
 
     await store.save(state);
     const raw = JSON.parse(await readFile(store.file, 'utf8'));
-    expect(raw.version).toBe(6);
+    expect(raw.version).toBe(7);
     expect(raw.workflows).toEqual([]);
     expect(raw.runs).toEqual([]);
     expect(await new JsonStore(dir).load()).toEqual(state);
@@ -249,7 +249,7 @@ describe('JsonStore', () => {
 
     await store.save(state);
     const raw = JSON.parse(await readFile(store.file, 'utf8'));
-    expect(raw.version).toBe(6);
+    expect(raw.version).toBe(7);
     expect(await new JsonStore(dir).load()).toEqual(state);
     expect(await readFile(`${store.file}.v4.backup`, 'utf8')).toBe(fixture);
   });
@@ -269,10 +269,31 @@ describe('JsonStore', () => {
 
     await store.save(state);
     const raw = JSON.parse(await readFile(store.file, 'utf8'));
-    expect(raw.version).toBe(6);
+    expect(raw.version).toBe(7);
     expect(raw.repositoryAccepted).toEqual([]);
     expect(await new JsonStore(dir).load()).toEqual(state);
     expect(await readFile(`${store.file}.v5.backup`, 'utf8')).toBe(fixture);
+  });
+
+  it('loads a file from before terminal access: sessions open to tokens as before, tokens reaching no terminal', async () => {
+    const store = new JsonStore(dir);
+    const fixture = await readFile(new URL('./fixtures/state-repository-v6.json', import.meta.url), 'utf8');
+    await mkdir(dir, { recursive: true });
+    await writeFile(store.file, fixture);
+
+    const state = await store.load();
+    expect(state.sessions.length).toBeGreaterThan(0);
+    expect(state.sessions.map((s) => [s.peopleOnly, s.typedBy])).toEqual(state.sessions.map(() => [false, null]));
+    expect(state.tokens.map((t) => [t.name, t.scopes, t.reach])).toEqual([['build script', ['read', 'sessions:write'], null]]);
+    expect(state.repositoryAccepted.map((e) => e.file)).toEqual(['release.json']);
+    expect(state.drafts).toHaveLength(1);
+    expect(state.shelf).toHaveLength(1);
+
+    await store.save(state);
+    const raw = JSON.parse(await readFile(store.file, 'utf8'));
+    expect(raw.version).toBe(7);
+    expect(await new JsonStore(dir).load()).toEqual(state);
+    expect(await readFile(`${store.file}.v6.backup`, 'utf8')).toBe(fixture);
   });
 
   it('keeps a session on one canvas only, if a file ever says otherwise', async () => {

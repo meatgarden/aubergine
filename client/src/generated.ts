@@ -6,7 +6,7 @@ import { everyItem, requester, type CallOptions, type ClientOptions, type Operat
 /** The one shape every error has. */
 export type ErrorBody = {
   error: {
-    code: "bad_request" | "unauthorized" | "forbidden" | "not_found" | "conflict" | "runtime_unavailable" | "too_large" | "rate_limited" | "internal";
+    code: "bad_request" | "unauthorized" | "forbidden" | "not_found" | "conflict" | "runtime_unavailable" | "too_large" | "rate_limited" | "people_only" | "not_at_prompt" | "no_shell_integration" | "run_in_progress" | "internal";
     message: string;
   };
 };
@@ -28,7 +28,7 @@ export type GetCapabilitiesResult = {
     kind: "token";
     id: string;
     name: string;
-    scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write")[];
+    scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "terminal:read" | "terminal:input")[];
     expiresAt: string | null;
   } | {
     kind: "session";
@@ -270,6 +270,11 @@ export type ListCanvasSessionsResult = {
       };
       color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
     } | null;
+    peopleOnly: boolean;
+    typedBy: {
+      name: string;
+      at: string;
+    } | null;
   }[];
   nextCursor: string | null;
 };
@@ -338,6 +343,11 @@ export type StartSessionResult = {
         height: number;
       };
       color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+    } | null;
+    peopleOnly: boolean;
+    typedBy: {
+      name: string;
+      at: string;
     } | null;
   };
   canvasId: string;
@@ -414,6 +424,11 @@ export type ListSessionsResult = {
       };
       color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
     } | null;
+    peopleOnly: boolean;
+    typedBy: {
+      name: string;
+      at: string;
+    } | null;
   }[];
   nextCursor: string | null;
 };
@@ -463,6 +478,11 @@ export type GetSessionResult = {
       height: number;
     };
     color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+  } | null;
+  peopleOnly: boolean;
+  typedBy: {
+    name: string;
+    at: string;
   } | null;
 };
 
@@ -517,6 +537,11 @@ export type UpdateSessionResult = {
       height: number;
     };
     color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+  } | null;
+  peopleOnly: boolean;
+  typedBy: {
+    name: string;
+    at: string;
   } | null;
 };
 
@@ -577,6 +602,11 @@ export type MoveSessionResult = {
       };
       color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
     } | null;
+    peopleOnly: boolean;
+    typedBy: {
+      name: string;
+      at: string;
+    } | null;
   };
   canvasId: string;
   node: {
@@ -636,6 +666,11 @@ export type ParkSessionResult = {
     };
     color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
   } | null;
+  peopleOnly: boolean;
+  typedBy: {
+    name: string;
+    at: string;
+  } | null;
 };
 
 export type RestoreSessionBody = {
@@ -689,6 +724,11 @@ export type RestoreSessionResult = {
         height: number;
       };
       color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+    } | null;
+    peopleOnly: boolean;
+    typedBy: {
+      name: string;
+      at: string;
     } | null;
   };
   canvasId: string;
@@ -3241,125 +3281,70 @@ export type RunRepositoryWorkflowResult = {
   kickoffTyped: boolean;
 };
 
-export interface StreamEventsQuery {
-  /**
-   * Only changes that concern this canvas.
-   */
-  canvasId?: string;
-}
-
-export type StreamEventsEvent = {
-  type: string;
-  [key: string]: unknown;
-};
-
-export interface ListTokensQuery {
-  /**
-   * How many items to return at most.
-   */
-  limit?: number;
-  /**
-   * The `nextCursor` of the page before. Opaque: do not build or change it.
-   */
-  cursor?: string;
-}
-
-export type ListTokensResult = {
-  items: {
-    id: string;
-    name: string;
-    scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write")[];
-    createdAt: string;
-    lastUsedAt: string | null;
-    expiresAt: string | null;
-    revokedAt: string | null;
-    reviewWorkflowChanges: boolean;
-  }[];
-  nextCursor: string | null;
-};
-
-export type CreateTokenBody = {
-  /** What will use it. */
-  name: string;
-  /** What it may do. At least one. */
-  scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write")[];
-  /** When it stops working. Never, when neither this nor `expiresInDays` is given. */
-  expiresAt?: string;
-  /** In how many days it stops working. */
-  expiresInDays?: number;
-  /** Changes to workflows need your review: with `workflows:write` the token may propose drafts, and may not create or change workflows directly. On unless you switch it off. */
-  reviewWorkflowChanges?: boolean;
-};
-
-export type CreateTokenResult = {
-  token: {
-    id: string;
-    name: string;
-    scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write")[];
-    createdAt: string;
-    lastUsedAt: string | null;
-    expiresAt: string | null;
-    revokedAt: string | null;
-    reviewWorkflowChanges: boolean;
+export type GetScreenResult = {
+  text: string;
+  columns: number;
+  rows: number;
+  cursor: {
+    x: number;
+    y: number;
   };
-  secret: string;
 };
 
-export type RevokeTokenResult = {
-  id: string;
-  name: string;
-  scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write")[];
-  createdAt: string;
-  lastUsedAt: string | null;
-  expiresAt: string | null;
-  revokedAt: string | null;
-  reviewWorkflowChanges: boolean;
-};
-
-export interface ListActivityQuery {
+export interface GetOutputQuery {
   /**
-   * How many items to return at most.
+   * How many lines to return at most, counted back from the end.
    */
-  limit?: number;
+  lines?: number;
   /**
-   * The `nextCursor` of the page before. Opaque: do not build or change it.
+   * The `nextCursor` of an earlier answer: read further back from there.
    */
   cursor?: string;
-  /**
-   * Only calls made with this token.
-   */
-  tokenId?: string;
 }
 
-export type ListActivityResult = {
-  items: {
-    at: string;
-    caller: "token" | "owner-cli";
-    tokenId: string | null;
-    tokenName: string;
-    fromSessionId: string | null;
-    action: string;
-    resource: {
-      sessionId?: string;
-      canvasId?: string;
-    };
-    method: string;
-    route: string;
-    status: number;
-    outcome: "ok" | "denied" | "refused" | "limited" | "error";
-  }[];
+export type GetOutputResult = {
+  text: string;
+  lines: number;
   nextCursor: string | null;
 };
 
-export type SetAttentionBody = {
-  state: "none" | "working" | "waiting" | "done";
-  message?: string;
+export interface SearchTerminalsQuery {
+  /**
+   * How many matches to return at most.
+   */
+  limit?: number;
+  /**
+   * The text to look for. Capitals do not matter.
+   */
+  q: string;
+}
+
+export type SearchTerminalsResult = {
+  hits: {
+    sessionId: string;
+    text: string;
+    before: string[];
+    after: string[];
+  }[];
+  truncated: boolean;
+  searched: number;
+  someLeftOut: boolean;
 };
 
-export type SetAttentionResult = {
-  state: "none" | "working" | "waiting" | "done";
-  message: string | null;
-  at: string | null;
+export type SendInputBody = {
+  /** Text to type, exactly as it is. No control characters; no line breaks unless `paste` is true. */
+  text?: string;
+  /** Press Enter after the text. Say so explicitly: text alone presses nothing. */
+  enter?: boolean;
+  /** Deliver the text as a paste. Needed for text with line breaks. */
+  paste?: boolean;
+  /** Keys to press, in order, from this list only: Enter, Tab, Escape, Backspace, Delete, Up, Down, Left, Right, Home, End, PageUp, PageDown, Space, Ctrl+C, Ctrl+D, Ctrl+Z, Ctrl+L, Ctrl+U, Ctrl+A, Ctrl+E, Ctrl+R. */
+  keys?: ("Enter" | "Tab" | "Escape" | "Backspace" | "Delete" | "Up" | "Down" | "Left" | "Right" | "Home" | "End" | "PageUp" | "PageDown" | "Space" | "Ctrl+C" | "Ctrl+D" | "Ctrl+Z" | "Ctrl+L" | "Ctrl+U" | "Ctrl+A" | "Ctrl+E" | "Ctrl+R")[];
+};
+
+export type SendInputResult = {
+  typed: number;
+  keys: number;
 };
 
 export type GetSessionRunResult = {
@@ -3414,6 +3399,243 @@ export type GetSessionRunResult = {
   text: string;
   kickoff: string;
   kickoffTyped: boolean;
+};
+
+export type RunCommandBody = {
+  /** One command line, typed at the shell prompt. One line: no line breaks, no control characters. */
+  command: string;
+  /** How long to wait for it to finish. When the time is up the answer says it is still going; nothing is stopped. */
+  timeoutSeconds?: number;
+};
+
+export type RunCommandResult = {
+  finished: boolean;
+  exitCode: number | null;
+  output: string | null;
+  outputCut: boolean;
+  durationMs: number;
+};
+
+export type ProtectSessionBody = {
+  /** True: no token may read this terminal or type into it, whatever its scopes. */
+  peopleOnly: boolean;
+};
+
+export type ProtectSessionResult = {
+  id: string;
+  projectId: string;
+  name: string;
+  createdAt: string;
+  state: "open" | "parked" | "exited";
+  cwd: string | null;
+  command: string | null;
+  note: string;
+  status: {
+    state: ("busy" | "idle") | null;
+    commandLine: string | null;
+    startedAt: string | null;
+    lastExit: number | null;
+    lastFinishedAt: string | null;
+    unread: boolean;
+  };
+  attention: {
+    state: "none" | "working" | "waiting" | "done";
+    message: string | null;
+    at: string | null;
+  };
+  noteLog: {
+    id: string;
+    at: string;
+    author: "user" | "agent";
+    kind: "note" | "prompt" | "event";
+    text: string;
+  }[];
+  agent: {
+    kind: "claude-code";
+    conversationId: string | null;
+  } | null;
+  lastInputAt: string | null;
+  lastOutputAt: string | null;
+  tags: string[];
+  parkedFrom: {
+    canvasId: string;
+    rect: {
+      x: number;
+      y: number;
+      width: number;
+      height: number;
+    };
+    color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+  } | null;
+  peopleOnly: boolean;
+  typedBy: {
+    name: string;
+    at: string;
+  } | null;
+};
+
+export interface StreamEventsQuery {
+  /**
+   * Only changes that concern this canvas.
+   */
+  canvasId?: string;
+}
+
+export type StreamEventsEvent = {
+  type: string;
+  [key: string]: unknown;
+};
+
+export interface ListTokensQuery {
+  /**
+   * How many items to return at most.
+   */
+  limit?: number;
+  /**
+   * The `nextCursor` of the page before. Opaque: do not build or change it.
+   */
+  cursor?: string;
+}
+
+export type ListTokensResult = {
+  items: {
+    id: string;
+    name: string;
+    scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "terminal:read" | "terminal:input")[];
+    createdAt: string;
+    lastUsedAt: string | null;
+    expiresAt: string | null;
+    revokedAt: string | null;
+    reviewWorkflowChanges: boolean;
+    reach: {
+      kind: "all";
+    } | {
+      kind: "canvases";
+      canvasIds: string[];
+    } | {
+      kind: "tag";
+      tag: string;
+    } | null;
+  }[];
+  nextCursor: string | null;
+};
+
+export type CreateTokenBody = {
+  /** What will use it. */
+  name: string;
+  /** What it may do. At least one. */
+  scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "terminal:read" | "terminal:input")[];
+  /** When it stops working. Never, when neither this nor `expiresInDays` is given. */
+  expiresAt?: string;
+  /** In how many days it stops working. */
+  expiresInDays?: number;
+  /** Changes to workflows need your review: with `workflows:write` the token may propose drafts, and may not create or change workflows directly. On unless you switch it off. */
+  reviewWorkflowChanges?: boolean;
+  /** Which sessions the terminal scopes apply to: all, those on named canvases, or those with a tag. Required when `terminal:read` or `terminal:input` is asked for; there is no default. */
+  reach?: {
+    kind: "all";
+  } | {
+    kind: "canvases";
+    canvasIds: string[];
+  } | {
+    kind: "tag";
+    tag: string;
+  };
+};
+
+export type CreateTokenResult = {
+  token: {
+    id: string;
+    name: string;
+    scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "terminal:read" | "terminal:input")[];
+    createdAt: string;
+    lastUsedAt: string | null;
+    expiresAt: string | null;
+    revokedAt: string | null;
+    reviewWorkflowChanges: boolean;
+    reach: {
+      kind: "all";
+    } | {
+      kind: "canvases";
+      canvasIds: string[];
+    } | {
+      kind: "tag";
+      tag: string;
+    } | null;
+  };
+  secret: string;
+};
+
+export type RevokeTokenResult = {
+  id: string;
+  name: string;
+  scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "terminal:read" | "terminal:input")[];
+  createdAt: string;
+  lastUsedAt: string | null;
+  expiresAt: string | null;
+  revokedAt: string | null;
+  reviewWorkflowChanges: boolean;
+  reach: {
+    kind: "all";
+  } | {
+    kind: "canvases";
+    canvasIds: string[];
+  } | {
+    kind: "tag";
+    tag: string;
+  } | null;
+};
+
+export interface ListActivityQuery {
+  /**
+   * How many items to return at most.
+   */
+  limit?: number;
+  /**
+   * The `nextCursor` of the page before. Opaque: do not build or change it.
+   */
+  cursor?: string;
+  /**
+   * Only calls made with this token.
+   */
+  tokenId?: string;
+  /**
+   * Only calls about this session, or made from inside it.
+   */
+  sessionId?: string;
+}
+
+export type ListActivityResult = {
+  items: {
+    at: string;
+    caller: "token" | "owner-cli";
+    tokenId: string | null;
+    tokenName: string;
+    fromSessionId: string | null;
+    chars: number | null;
+    fingerprint: string | null;
+    action: string;
+    resource: {
+      sessionId?: string;
+      canvasId?: string;
+    };
+    method: string;
+    route: string;
+    status: number;
+    outcome: "ok" | "denied" | "refused" | "limited" | "error";
+  }[];
+  nextCursor: string | null;
+};
+
+export type SetAttentionBody = {
+  state: "none" | "working" | "waiting" | "done";
+  message?: string;
+};
+
+export type SetAttentionResult = {
+  state: "none" | "working" | "waiting" | "done";
+  message: string | null;
+  at: string | null;
 };
 
 export type ReportSessionRunBody = {
@@ -3937,13 +4159,19 @@ export const OPERATIONS = {
   acceptRepositoryWorkflow: { method: 'POST', path: '/v1/repository-workflows/accept', params: [], hasBody: true, paged: false, idempotent: false, stream: false },
   saveToRepository: { method: 'POST', path: '/v1/repository-workflows/save', params: [], hasBody: true, paged: false, idempotent: false, stream: false },
   runRepositoryWorkflow: { method: 'POST', path: '/v1/sessions/{sessionId}/repository-runs', params: ["sessionId"], hasBody: true, paged: false, idempotent: true, stream: false },
+  getScreen: { method: 'GET', path: '/v1/sessions/{sessionId}/screen', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false },
+  getOutput: { method: 'GET', path: '/v1/sessions/{sessionId}/output', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false },
+  searchTerminals: { method: 'GET', path: '/v1/search', params: [], hasBody: false, paged: false, idempotent: false, stream: false },
+  sendInput: { method: 'POST', path: '/v1/sessions/{sessionId}/input', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false },
+  getSessionRun: { method: 'GET', path: '/v1/sessions/{sessionId}/run', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false },
+  runCommand: { method: 'POST', path: '/v1/sessions/{sessionId}/run', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false },
+  protectSession: { method: 'PUT', path: '/v1/sessions/{sessionId}/protection', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false },
   streamEvents: { method: 'GET', path: '/v1/events', params: [], hasBody: false, paged: false, idempotent: false, stream: true },
   listTokens: { method: 'GET', path: '/v1/tokens', params: [], hasBody: false, paged: true, idempotent: false, stream: false },
   createToken: { method: 'POST', path: '/v1/tokens', params: [], hasBody: true, paged: false, idempotent: false, stream: false },
   revokeToken: { method: 'DELETE', path: '/v1/tokens/{tokenId}', params: ["tokenId"], hasBody: false, paged: false, idempotent: false, stream: false },
   listActivity: { method: 'GET', path: '/v1/activity', params: [], hasBody: false, paged: true, idempotent: false, stream: false },
   setAttention: { method: 'PUT', path: '/v1/sessions/{sessionId}/attention', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false },
-  getSessionRun: { method: 'GET', path: '/v1/sessions/{sessionId}/run', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false },
   reportSessionRun: { method: 'POST', path: '/v1/sessions/{sessionId}/run/report', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false },
   getSessionBrief: { method: 'GET', path: '/v1/sessions/{sessionId}/brief', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false },
   listSessionDrafts: { method: 'GET', path: '/v1/sessions/{sessionId}/drafts', params: ["sessionId"], hasBody: false, paged: true, idempotent: false, stream: false },
@@ -4305,6 +4533,48 @@ export interface Client {
    */
   runRepositoryWorkflow(args: { sessionId: string; body: RunRepositoryWorkflowBody } & CallOptions): Promise<RunRepositoryWorkflowResult>;
   /**
+   * What a terminal shows now.
+   *
+   * `GET /v1/sessions/{sessionId}/screen`. Scope: `terminal:read`.
+   */
+  getScreen(args: { sessionId: string } & CallOptions): Promise<GetScreenResult>;
+  /**
+   * What a terminal printed recently.
+   *
+   * `GET /v1/sessions/{sessionId}/output`. Scope: `terminal:read`.
+   */
+  getOutput(args: { sessionId: string; query?: GetOutputQuery } & CallOptions): Promise<GetOutputResult>;
+  /**
+   * Search what terminals have printed.
+   *
+   * `GET /v1/search`. Scope: `terminal:read`.
+   */
+  searchTerminals(args: { query: SearchTerminalsQuery } & CallOptions): Promise<SearchTerminalsResult>;
+  /**
+   * Type into a terminal, or press keys.
+   *
+   * `POST /v1/sessions/{sessionId}/input`. Scope: `terminal:input`.
+   */
+  sendInput(args: { sessionId: string; body: SendInputBody } & CallOptions): Promise<SendInputResult>;
+  /**
+   * The run a session is on.
+   *
+   * `GET /v1/sessions/{sessionId}/run`. A session's own token, or an API token with `read`.
+   */
+  getSessionRun(args: { sessionId: string } & CallOptions): Promise<GetSessionRunResult>;
+  /**
+   * Run a command at a shell prompt and wait for it.
+   *
+   * `POST /v1/sessions/{sessionId}/run`. Scope: `terminal:input`.
+   */
+  runCommand(args: { sessionId: string; body: RunCommandBody } & CallOptions): Promise<RunCommandResult>;
+  /**
+   * Switch "people only" on or off for a session.
+   *
+   * `PUT /v1/sessions/{sessionId}/protection`. Signed-in browser only: no API token may call this.
+   */
+  protectSession(args: { sessionId: string; body: ProtectSessionBody } & CallOptions): Promise<ProtectSessionResult>;
+  /**
    * Follow changes as they happen.
    *
    * `GET /v1/events`. Scope: `read`.
@@ -4340,12 +4610,6 @@ export interface Client {
    * `PUT /v1/sessions/{sessionId}/attention`. A session's own token.
    */
   setAttention(args: { sessionId: string; body: SetAttentionBody } & CallOptions): Promise<SetAttentionResult>;
-  /**
-   * The run a session is on.
-   *
-   * `GET /v1/sessions/{sessionId}/run`. A session's own token, or an API token with `read`.
-   */
-  getSessionRun(args: { sessionId: string } & CallOptions): Promise<GetSessionRunResult>;
   /**
    * Report on the run a session is on.
    *

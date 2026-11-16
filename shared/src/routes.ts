@@ -31,6 +31,7 @@ import {
 } from './protocol';
 import { Capabilities, CreateTokenRequest, CreatedToken, TokenView } from './tokens';
 import { Draft, ShelfElement } from './drafts';
+import { InputRequest, InputResponse, OutputQuery, OutputResponse, ProtectRequest, RunCommandRequest, RunCommandResponse, ScreenResponse, TerminalSearchQuery, TerminalSearchResponse } from './terminal';
 import {
   AcceptRepositoryWorkflowRequest,
   RepositoryFileRef,
@@ -91,7 +92,7 @@ import {
 
 export type RouteMethod = 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';
 
-export const ROUTE_TAGS = ['Server', 'Canvases', 'Sessions', 'Notes', 'Layout', 'Workflows', 'Runs', 'Drafts', 'Elements', 'Repository workflows', 'Events', 'Tokens', 'For a session itself'] as const;
+export const ROUTE_TAGS = ['Server', 'Canvases', 'Sessions', 'Notes', 'Layout', 'Workflows', 'Runs', 'Drafts', 'Elements', 'Repository workflows', 'Terminals', 'Events', 'Tokens', 'For a session itself'] as const;
 export type RouteTag = (typeof ROUTE_TAGS)[number];
 
 export interface RouteSpec {
@@ -890,6 +891,85 @@ export const ROUTES = {
     status: 201,
     idempotent: true,
     errors: [404, 409],
+  }),
+
+  /* ---------- Terminals: reading what they show, and typing into them ---------- */
+  getScreen: route({
+    method: 'GET',
+    path: '/v1/sessions/:sessionId/screen',
+    tag: 'Terminals',
+    summary: 'What a terminal shows now',
+    description: 'The visible rows as text, with the size and where the cursor is. Text only: colors and other control sequences are not in it. Reading attaches no viewer, so nothing is resized. Refused with `people_only` for a session the owner closed to programs.',
+    action: 'terminal.read',
+    params: sessionId,
+    response: ScreenResponse,
+    status: 200,
+    errors: [404, 409],
+  }),
+  getOutput: route({
+    method: 'GET',
+    path: '/v1/sessions/:sessionId/output',
+    tag: 'Terminals',
+    summary: 'What a terminal printed recently',
+    description: 'So many lines back from the end, oldest first, as text. `nextCursor` reads further back, as far as the terminal remembers.',
+    action: 'terminal.read',
+    params: sessionId,
+    query: OutputQuery,
+    response: OutputResponse,
+    status: 200,
+    errors: [404, 409],
+  }),
+  searchTerminals: route({
+    method: 'GET',
+    path: '/v1/search',
+    tag: 'Terminals',
+    summary: 'Search what terminals have printed',
+    description: 'Looks through the history of every session the caller may read. Sessions it may not read (out of its reach, or "people only") are not searched; the answer says that some were left out, not which.',
+    action: 'terminal.read',
+    query: TerminalSearchQuery,
+    response: TerminalSearchResponse,
+    status: 200,
+  }),
+  sendInput: route({
+    method: 'POST',
+    path: '/v1/sessions/:sessionId/input',
+    tag: 'Terminals',
+    summary: 'Type into a terminal, or press keys',
+    description:
+      'Text is typed exactly as it is: nothing in it is read as the name of a key or as an escape, and it may hold no control characters. Enter is pressed only when `enter` says so. Text with line breaks is refused unless `paste` is set, and is then delivered as a paste. Keys are pressed by name, from a fixed list. Whatever has the keyboard in that terminal receives it: a shell will run it. Refused with `people_only` for a session the owner closed to programs.',
+    action: 'terminal.input',
+    params: sessionId,
+    body: InputRequest,
+    response: InputResponse,
+    status: 200,
+    errors: [404, 409],
+  }),
+  runCommand: route({
+    method: 'POST',
+    path: '/v1/sessions/:sessionId/run',
+    tag: 'Terminals',
+    summary: 'Run a command at a shell prompt and wait for it',
+    description:
+      'Types one command line into a shell that is at its prompt and waits until the shell reports it finished: the exit code, what the terminal showed meanwhile, and how long it took. Refused (409) with `not_at_prompt` when a program or an agent has the keyboard, `no_shell_integration` when the shell does not report, `run_in_progress` when a run is already waited for there. When the time is up the answer has `finished: false`; the command is left running. The output is given only to a caller that may also read that terminal.',
+    action: 'terminal.input',
+    params: sessionId,
+    body: RunCommandRequest,
+    response: RunCommandResponse,
+    status: 200,
+    errors: [404, 409],
+  }),
+  protectSession: route({
+    method: 'PUT',
+    path: '/v1/sessions/:sessionId/protection',
+    tag: 'Terminals',
+    summary: 'Switch "people only" on or off for a session',
+    description: 'For the owner only. While it is on, no token may read that terminal or type into it, whatever its scopes.',
+    action: 'sessions.protect',
+    params: sessionId,
+    body: ProtectRequest,
+    response: Session,
+    status: 200,
+    errors: [404],
   }),
 
   /* ---------- Events ---------- */

@@ -44,7 +44,7 @@ import {
   type TerminalServerMessage,
 } from '@aubergine/shared';
 import { MemoryActivityLog, BadActivityCursorError, type ActivityLog } from './activity';
-import { authorize, bearerOf, principalFromBearer, type Action, type Principal, type Resource } from './auth';
+import { authorize, bearerOf, peopleOnlyRefusal, principalFromBearer, type Action, type Principal, type Resource } from './auth';
 import { RateLimiter } from './rate-limit';
 import { TokenNotFoundError, Tokens } from './tokens';
 import { BadCursorError } from './public-api';
@@ -60,6 +60,8 @@ import { MemoryRunArchive, type RunArchive } from './run-archive';
 import type { DraftLog } from './draft-log';
 import { Drafts } from './drafts';
 import { Repositories } from './repositories';
+import { noInputAudit, type InputAudit } from './input-audit';
+import { TerminalAccess, TerminalRefusal, type TerminalTrace } from './terminal-access';
 import { Workflows } from './workflows';
 
 export interface ServerOptions {
@@ -79,6 +81,8 @@ export interface ServerOptions {
   activity?: ActivityLog;
   /** The folder the search for a repository stops at. Left out, the home folder. For tests. */
   homeFolder?: string;
+  /** Where typed text is kept in full, when the owner switched that on. Left out, nowhere. */
+  inputAudit?: InputAudit;
   /** Where what became of drafts is recorded. Left out, in memory only. */
   draftLog?: DraftLog;
   /** Where runs that are over are kept. Left out, in memory only. */
@@ -150,6 +154,16 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   const workflowLimits = (): { maxElements: number; maxElementChars: number } => ({ maxElements: workflowSettings.maxElements, maxElementChars: workflowSettings.maxElementChars });
   const drafts = new Drafts(hub, sessions, workflows, workflowLimits, options.draftLog);
   const repositories = new Repositories(hub, sessions, workflows, workflowLimits, options.homeFolder);
+  const terminalSettings = (await options.settings()).terminal;
+  const terminals = new TerminalAccess(sessions, runtime, () => terminalSettings, options.inputAudit ?? noInputAudit);
+  /** How much a terminal call read or typed, for the activity log. */
+  const traces = new WeakMap<FastifyRequest, TerminalTrace>();
+  /** What `authorize` is told about a session: where it is, its tags, whether it is closed to programs. */
+  const resourceOf = (sessionId: string): Resource => {
+    const session = hub.state.sessions.find((s) => s.id === sessionId);
+    if (!session) return { sessionId };
+    return { sessionId, session: { canvasId: placeOfSession(hub.state, sessionId)?.canvas.id ?? null, tags: session.tags, peopleOnly: session.peopleOnly } };
+  };
 
   const routes: PublicRoute[] = [];
   routeLists.set(app, routes);
@@ -179,6 +193,8 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     // Remembered for the activity log: what was asked for, whether or not it is allowed.
     asked.set(request, { action, resource });
     if (!principal || !authorize(principal, action, resource)) {
+      // One clear answer for a token that would otherwise have been allowed: the owner closed this session to programs.
+      if (principal && peopleOnlyRefusal(principal, action, resource)) throw new HttpError(403, 'people_only', 'This session is marked "people only": no token may read it or type into it.');
       throw new HttpError(403, 'forbidden', 'These credentials may not do that');
     }
     return principal;
@@ -204,7 +220,9 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     return { kind: 'owner-cli', sessionId };
   };
   /** What only the owner may do and is worth seeing when it was not done in the browser. */
-  const WATCHED: readonly Action[] = ['drafts.review', 'repository.review', 'repository.write', 'tokens.manage'];
+  const WATCHED: readonly Action[] = ['drafts.review', 'repository.review', 'repository.write', 'tokens.manage', 'terminal.input', 'sessions.protect'];
+  /** Reading a terminal is watched too, though it changes nothing. */
+  const WATCHED_READS: readonly Action[] = ['terminal.read'];
   const ownerLogged = new WeakSet<FastifyRequest>();
 
   /** Records one call made with a token, or one of the owner's own from outside the browser. Who, what and how it ended: never the secret, never what was sent. */
@@ -212,7 +230,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     const call = tokenCalls.get(request);
     if (!call) {
       const what = asked.get(request);
-      if (principals.get(request)?.kind !== 'user' || !what || !WATCHED.includes(what.action) || request.method === 'GET' || ownerLogged.has(request)) return;
+      if (principals.get(request)?.kind !== 'user' || !what || !(WATCHED_READS.includes(what.action) || (WATCHED.includes(what.action) && request.method !== 'GET')) || ownerLogged.has(request)) return;
       const caller = ownerCaller(request);
       if (caller.kind !== 'owner-cli') return;
       ownerLogged.add(request);
@@ -222,6 +240,8 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
         tokenId: null,
         tokenName: '',
         fromSessionId: caller.sessionId,
+        chars: traces.get(request)?.chars ?? null,
+        fingerprint: traces.get(request)?.fingerprint ?? null,
         action: what.action,
         resource: what.resource,
         method: request.method,
@@ -238,6 +258,8 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
       at: new Date().toISOString(),
       caller: 'token',
       fromSessionId: null,
+      chars: traces.get(request)?.chars ?? null,
+      fingerprint: traces.get(request)?.fingerprint ?? null,
       tokenId: call.tokenId,
       tokenName: call.tokenName,
       action: what?.action ?? '',
@@ -302,7 +324,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
               .send(errorBody('rate_limited', `Too many calls with this token. Try again in ${turn.retryAfterSeconds} s.`));
           }
           tokens.touch(found.token.id);
-          principals.set(request, { kind: 'token', tokenId: found.token.id, name: found.token.name, scopes: found.token.scopes, reviewWorkflows: found.token.reviewWorkflowChanges });
+          principals.set(request, { kind: 'token', tokenId: found.token.id, name: found.token.name, scopes: found.token.scopes, reviewWorkflows: found.token.reviewWorkflowChanges, reach: found.token.reach });
           return;
         }
         const principal = principalFromBearer(token, request.headers.authorization);
@@ -341,6 +363,10 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     }
     if (error instanceof BadInputError || error instanceof BadCursorError || error instanceof BadActivityCursorError) {
       return reply.code(400).send(errorBody('bad_request', error.message));
+    }
+    if (error instanceof TerminalRefusal) {
+      if (error.retryAfterSeconds !== undefined) void reply.header('retry-after', String(error.retryAfterSeconds));
+      return reply.code(error.status).send(errorBody(error.code, error.message));
     }
     if (error instanceof ConflictError) {
       return reply.code(409).send(errorBody('conflict', error.message));
@@ -506,6 +532,10 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     workflows,
     drafts,
     repositories,
+    terminals,
+    may: (principal, action, resource) => authorize(principal, action, resource),
+    resourceOf,
+    trace: (request, trace) => void traces.set(request, trace),
     activity,
     viewers,
     limiter,

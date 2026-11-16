@@ -133,7 +133,7 @@ function safeJson(text: string): unknown {
 
 async function makeToken(name: string, scopes: Scope[], extra: Record<string, unknown> = {}): Promise<{ id: string; secret: string }> {
   // Review of workflow changes is switched off here, so that these tests are about scopes alone; the switch has tests of its own.
-  const created = await asOwner('POST', publicPaths.tokens, { name, scopes, reviewWorkflowChanges: false, ...extra });
+  const created = await asOwner('POST', publicPaths.tokens, { name, scopes, reviewWorkflowChanges: false, reach: { kind: 'all' }, ...extra });
   expect(created.status).toBe(201);
   const { token, secret } = CreatedToken.parse(created.body);
   return { id: token.id, secret };
@@ -204,8 +204,8 @@ describe('creating and using a token', () => {
       ['notes:write', true],
       ['workflows:write', true],
       ['runs:write', true],
-      ['terminal:read', false],
-      ['terminal:input', false],
+      ['terminal:read', true],
+      ['terminal:input', true],
     ]);
     expect(capabilities.caller).toMatchObject({ kind: 'token', id: notes.id, name: 'notes only', scopes: ['notes:write'] });
     expect(capabilities.caller.kind === 'token' && capabilities.caller.expiresAt).toBeTruthy();
@@ -335,6 +335,8 @@ describe('every route has a rule', () => {
     // Accepting a repository workflow, and writing into a repository.
     'POST /v1/repository-workflows/accept',
     'POST /v1/repository-workflows/save',
+    // Closing a session to programs, or opening it again.
+    'PUT /v1/sessions/:sessionId/protection',
   ];
 
   it('has the routes the plan lists, under /v1', () => {
@@ -742,7 +744,7 @@ describe('the secret', () => {
 
     // The hash is what is stored, and it is not sent to the page.
     const state = JSON.parse(await readFile(path.join(dir, 'state.json'), 'utf8'));
-    expect(state.version).toBe(6);
+    expect(state.version).toBe(7);
     expect(state.tokens.map((t: { hash: string }) => t.hash)).toEqual([expect.stringMatching(/^[0-9a-f]{64}$/), expect.stringMatching(/^[0-9a-f]{64}$/)]);
   });
 

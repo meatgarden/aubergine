@@ -12,6 +12,8 @@ const entry = (n: number, extra: Partial<ActivityEntry> = {}): ActivityEntry => 
   at: new Date(Date.parse('2026-03-01T10:00:00.000Z') + n * 1000).toISOString(),
   caller: 'token',
   fromSessionId: null,
+  chars: null,
+  fingerprint: null,
   tokenId: TOKEN_A,
   tokenName: 'build bot',
   action: 'canvases.read',

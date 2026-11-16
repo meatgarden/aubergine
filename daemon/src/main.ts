@@ -19,6 +19,7 @@ import { ZshIntegration } from './shell/integration';
 import { SettingsFile, expandHome } from './settings';
 import { pathWithCommand, writeCommandLauncher } from './command-path';
 import { FileDraftLog } from './draft-log';
+import { FileInputAudit } from './input-audit';
 import { FileRunArchive } from './run-archive';
 import { JsonStore } from './store/json-store';
 import { loadOrCreateToken } from './token';
@@ -55,6 +56,7 @@ async function main(): Promise<void> {
       AUBERGINE_DATA_DIR: config.dataDir,
     }),
     logPrompts: () => settings.value.agents.logPrompts,
+    protectByDefault: () => ({ all: settings.value.terminal.protectNewSessions, agents: settings.value.terminal.protectAgentSessions }),
     agentLaunchLine: async (_agent, args) =>
       claudeLaunchLine(await writeClaudeSettings(config.dataDir), {
         command: (await settings.reload()).agents.claudeCommand,
@@ -83,6 +85,8 @@ async function main(): Promise<void> {
     webDist: config.webDist,
     // What API tokens did, as a file of its own in the data folder: it is not part of the state.
     activity: new FileActivityLog(config.dataDir, settings.value.api.activityLogMaxBytes, (error) => console.warn(`Could not write the activity log: ${String(error)}`)),
+    // What tokens type, in full, only when the owner switched that on in the settings.
+    inputAudit: new FileInputAudit(config.dataDir, () => settings.value.terminal.auditInput, (error) => console.warn(`Could not write the audit of typed text: ${String(error)}`)),
     draftLog: new FileDraftLog(config.dataDir, (error) => console.warn(`Could not write the record of drafts: ${String(error)}`)),
     runArchive: new FileRunArchive(config.dataDir, (error) => console.warn(`Could not write the archive of runs: ${String(error)}`)),
     version: versionInfo(installRoot(), config).version,

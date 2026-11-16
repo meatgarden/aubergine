@@ -35,6 +35,9 @@ export const SCOPE_OF = {
   // What a repository offers: a session may list what is offered to itself; a token with `read`, to any session.
   'repository.own.read': 'read',
   'repository.read': 'read',
+  // Terminals. Neither is implied by anything else, `read` included, and no session's own token has them.
+  'terminal.read': 'terminal:read',
+  'terminal.input': 'terminal:input',
 } as const satisfies Record<string, Scope>;
 
 /**
@@ -43,7 +46,7 @@ export const SCOPE_OF = {
  * tokens did, changing settings, and anything that reaches processes outside
  * Aubergine.
  */
-export const NEVER_BY_TOKEN = ['tokens.manage', 'activity.read', 'settings.write', 'processes.signal', 'outside.read', 'outside.move', 'drafts.review', 'repository.review', 'repository.write'] as const;
+export const NEVER_BY_TOKEN = ['tokens.manage', 'activity.read', 'settings.write', 'processes.signal', 'outside.read', 'outside.move', 'drafts.review', 'repository.review', 'repository.write', 'sessions.protect'] as const;
 
 export type Action = (typeof SESSION_ACTIONS)[number] | keyof typeof SCOPE_OF | (typeof NEVER_BY_TOKEN)[number];
 

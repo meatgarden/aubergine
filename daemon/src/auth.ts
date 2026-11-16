@@ -1,5 +1,5 @@
 import { createHmac, timingSafeEqual } from 'node:crypto';
-import { Id, NEVER_BY_TOKEN, SESSION_ACTIONS, scopeFor, type Action, type Scope } from '@aubergine/shared';
+import { Id, NEVER_BY_TOKEN, SESSION_ACTIONS, reaches, scopeFor, type Action, type Reach, type Scope, type SessionFacts } from '@aubergine/shared';
 
 /** Who is making a request. Exactly one of these, decided once per request. */
 export type Principal =
@@ -8,7 +8,7 @@ export type Principal =
   /** A program running inside one session, holding that session's token. */
   | { kind: 'session'; sessionId: string }
   /** A program holding an API token the owner created, with the scopes the owner gave it. */
-  | { kind: 'token'; tokenId: string; name: string; scopes: readonly Scope[]; /** What it writes about workflows needs the owner's review: it may propose, not change. */ reviewWorkflows?: boolean };
+  | { kind: 'token'; tokenId: string; name: string; scopes: readonly Scope[]; /** What it writes about workflows needs the owner's review: it may propose, not change. */ reviewWorkflows?: boolean; /** Which sessions its terminal scopes apply to. Absent or null: none. */ reach?: Reach | null };
 
 export { ACTIONS, NEVER_BY_TOKEN, type Action } from '@aubergine/shared';
 
@@ -16,7 +16,12 @@ export { ACTIONS, NEVER_BY_TOKEN, type Action } from '@aubergine/shared';
 export interface Resource {
   sessionId?: string;
   canvasId?: string;
+  /** For a question about a session's terminal: what decides it. Given by whoever asks; never looked up afterwards. */
+  session?: SessionFacts;
 }
+
+/** The actions that reach into a terminal. */
+export const TERMINAL_ACTIONS: readonly Action[] = ['terminal.read', 'terminal.input'];
 
 /**
  * The one place that decides what a principal may do. Every route asks here;
@@ -26,6 +31,8 @@ export interface Resource {
  * - A session may set its own attention state, append to its own note log and
  *   say which agent conversation it is in. Nothing else, and nothing about
  *   any other session.
+ * - Nobody but the user reads or types in a terminal marked "people only".
+ *   A token with a terminal scope reaches only the sessions its reach names.
  * - A token may do what its scopes allow (with one switch per token: changes
  *   to workflows that need review can only be proposed as drafts), and never anything in
  *   `NEVER_BY_TOKEN`. An action that is not listed for tokens is refused:
@@ -40,7 +47,26 @@ export function authorize(principal: Principal, action: Action, resource: Resour
   // A token whose changes to workflows need review may propose drafts, and may not write workflows or the shelf itself.
   if (action === 'workflows.write' && principal.reviewWorkflows) return false;
   const scope = scopeFor(action);
-  return scope !== null && principal.scopes.includes(scope);
+  if (scope === null || !principal.scopes.includes(scope)) return false;
+  if (!TERMINAL_ACTIONS.includes(action)) return true;
+  // A terminal: the scope is not enough. The session must be within the token's reach, and not marked "people only".
+  if (resource.session === undefined) {
+    // No particular session (a search over many, decided again for each), or one that does not exist:
+    // only a token that may reach every session is let through to be told so.
+    return resource.sessionId === undefined || principal.reach?.kind === 'all';
+  }
+  return !resource.session.peopleOnly && reaches(principal.reach ?? null, resource.session);
+}
+
+/**
+ * Why a token that holds the scope was still refused a terminal: because the
+ * session is "people only". Said only to a token that could otherwise have
+ * reached it, so that it learns nothing about sessions outside its reach.
+ */
+export function peopleOnlyRefusal(principal: Principal, action: Action, resource: Resource): boolean {
+  if (principal.kind !== 'token' || !TERMINAL_ACTIONS.includes(action) || resource.session === undefined) return false;
+  const scope = scopeFor(action);
+  return scope !== null && principal.scopes.includes(scope) && resource.session.peopleOnly && reaches(principal.reach ?? null, resource.session);
 }
 
 const PREFIX = 'aub1';
