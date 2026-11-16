@@ -9,14 +9,13 @@ Aubergine puts your terminals on a canvas in your browser, side by side, so you 
 ```sh
 curl -fsSL https://raw.githubusercontent.com/meatgarden/aubergine/main/install.sh | sh
 aubergine start --open
-aubergine demo
 ```
 
-The first line installs it (it needs macOS with tmux, Node.js and pnpm; [Quick start](#quick-start) says what the installer does and does not do). The second starts it and opens your browser, signed in. The third, typed in another terminal, makes a canvas named "Demo" with a few stand-in agents on it and walks you round in eight short steps: about five minutes. Nothing in the demo is real, and `aubergine demo --remove` takes all of it away again.
+The first line installs it (it needs macOS with tmux, Node.js and pnpm; [Quick start](#quick-start) says what the installer does and does not do). The second starts it and opens your browser, signed in. Then click **Show me around** in the middle of the empty canvas: it makes a canvas named "Demo" with a few stand-in agents on it and walks you round in eight short steps, about five minutes. Nothing in the demo is real, and **Remove the demo** (or `aubergine demo --remove`) takes it away again. From a terminal, `aubergine demo` does the same as the button.
 
 <!-- A recording of the tour goes here. -->
 
-The same tour is under **Show me around** on an empty canvas, and **?** in the toolbar lists the eight things it shows, one line each.
+**?** in the toolbar lists the eight things the tour shows, one line each.
 
 The rest of this page is the reference: every section below stands on its own.
 

@@ -12,7 +12,7 @@ shared/   wire protocol (zod schemas), entity types, settings schema, the change
           the declarations of every /v1 route (routes.ts), the scope table (access.ts), openapi.ts;
           workflows.ts (entities, element kinds, the step function, what an agent is told, the file
           format), workflow-api.ts (bodies and answers), workflow-templates.ts,
-          outputs.ts (output kinds), drafts.ts (drafts, the shelf, what a reviewer reads, the brief), repository.ts, terminal.ts
+          outputs.ts (output kinds), drafts.ts (drafts, the shelf, what a reviewer reads, the brief), repository.ts, terminal.ts, demo.ts (the labels that mark what the demo made)
 daemon/   Fastify HTTP + WebSocket server, tmux session runtime, JSON store, CLI, start-at-login,
           shell integration (src/shell/), agent support (src/agents/), authorization (src/auth.ts),
           migration of existing terminals (src/migrate/), including reading agent
@@ -24,7 +24,8 @@ daemon/   Fastify HTTP + WebSocket server, tmux session runtime, JSON store, CLI
           repository-files.ts (finding and reading, nothing but the file system), repositories.ts
           (offers, acceptance, runs, saving), draft-log.ts,
           terminal-access.ts (reading, typing, run-and-wait, the limits), terminal-redact.ts, input-audit.ts,
-          agents/agent-tools.ts (the file an agent is pointed at, and the token made for one session)
+          agents/agent-tools.ts (the file an agent is pointed at, and the token made for one session),
+          demo.ts (the demo: make, status, remove) and demo/ (the stand-in scripts and the made-up project)
 client/   a typed client for the public API, generated from its description; no dependencies;
           may not import from any other package
 mcp/      the MCP server (`aubergine mcp`): the public API as tools over standard input and output;
@@ -36,7 +37,7 @@ web/      Vite + React + @xyflow/react + @xterm/xterm, Zustand for state; the ta
           commands.ts, shortcuts.ts, canvas-actions.ts,
           spatial.ts, palette.ts, and the development-only key-tester.html
           workflows/ (run-model.ts, editor-model.ts, registries.ts, the screens), review/ (registry.ts, ReviewScreen.tsx, drafts-source.ts, repository-source.ts) and
-          panel/sections/workflows.tsx
+          panel/sections/workflows.tsx, tour/ (registry.ts, steps.ts, Tour.tsx, tour-store.ts, placement.ts), EmptyCanvas.tsx, HelpPanel.tsx
 docs/     keys.md: what is known about which keys reach a page; api.md: the API reference (generated)
 e2e/      Playwright smoke test
 install.sh  the one-line installer; its commands are in daemon/src/cli/install.ts (start, open,
@@ -123,6 +124,15 @@ These are the only abstractions in the code base. Each has exactly one implement
 - **`out_of_reach` is said the same about a session that is not there.** Do not let that answer differ.
 - **`X-Aubergine-Client` is a trace.** It is recorded as given and nothing is decided by it.
 - **The MCP SDK versions are pinned exactly.** The protocol and the SDK change often: read their current documentation before changing `mcp/`, and say in the hand-over which versions and pages.
+- **The demo is stand-ins only.** No real agent, no network, nothing outside `demo/` in the data folder. Its scripts are in `daemon/demo/`, are plain `sh`, pass shellcheck, and use only the commands a real agent uses. Do not give them a private way in.
+- **The demo adds a canvas and its sessions, and nothing to the owner's workflows, shelf or tokens.** Its runs are of workflows made for them alone. What it made is written on its canvas's labels as it is made; removal reads those and removes exactly that. Keep the test that compares the state file before making it and after removing it.
+- **`demo.manage` is the owner's**: in `NEVER_BY_TOKEN`, cookie-only routes, not a session action.
+- **The demo types nothing of its own.** A stand-in is started by the `command` of its new session, like any other. Do not add a path that types into a terminal for the demo.
+- **Tour steps are registered.** A step is `registerTourStep`: what it points at, what counts as done, at most two short sentences, a one-line reminder. Do not add content to `Tour.tsx`, and do not name a key combination in a step. The help panel reads the same registry.
+- **A tour step waits for the real action.** Where the state does not show that something was done, the place it happens calls `tourSignal`; do not complete a step on a timer or on a click of the card.
+- **The tour never blocks.** Its ring takes no clicks, its card is not a dialog and keeps off the buttons of whatever is open (`placement.ts`). It uses timers, not animation frames.
+- **Nothing about the tour leaves the browser.** Whether it was finished or put away is one `localStorage` entry. No request, no log.
+- **An empty canvas offers three ways to begin**, and its panel must not take clicks meant for the toolbar.
 - **Canvases.** A session is on at most one canvas; a parked session is on none and remembers where it was (`parkedFrom`). Closing a canvas never ends a shell: the caller says move or park, and the last canvas cannot be closed. Where no canvas is named, `Sessions.canvas(null)` decides (most recently looked at, else first); do not pick a default anywhere else.
 - **Public shapes.** Routes under `/v1` use one error shape, `pageOf` for every list, ignore unknown fields, use ISO times, and take `Idempotency-Key` on creates. Do not add a `/v1` route that departs from these. This API is public: only add to it; never rename or remove.
 - **A `/v1` route is a declaration and a handler.** Add the entry to `ROUTES` and a handler of the same name in `v1.ts`. Do not call `app.get`/`app.post` for anything under `/v1`: a route registered by hand is not in the description, and the tests fail on it. A handler does not decide who may call it and does not parse its own input; the loop does both, in the order parameters, `authorize`, query and body, handler.
@@ -230,6 +240,8 @@ Workflows kept in a repository: found by walking up, read with bounds and withou
 Stage C part 1: terminal access over the API: reading the screen and output, search, input, run-and-wait, the two scopes, the reach, people only, the recording and the audit file, the limits, the commands. The state file is version 7: sessions may be people only and remember which token typed last; a token may carry which sessions its terminal scopes reach. Change events also include `session.protected` and `session.typed`.
 
 Stage C part 2: the MCP server (`mcp/`, `aubergine mcp`), tools listed by what the credential may do, refusals as sentences, quoted terminal content, the client header in the activity log, the choice of tools when starting Claude Code, the token made for one agent session and its file. Error codes also include `out_of_reach`. A token may belong to a session.
+
+The first five minutes: `aubergine demo` (a canvas of stand-ins, made and removed whole), the tour (eight registered steps on the demo), the start card of an empty canvas, the Help panel, `aubergine` by itself saying where to begin. Commands also include `tour.start`, `demo.remove` and `help.show`.
 
 Not built yet: a packaged build without development dependencies, Linux tested, measured key tables for Safari, Firefox, Linux and Windows, publishing the client as a package, moving the remaining `/api/v1` routes onto `/v1`, the workflow library, the board of runs, approvals, branches, a pool of agents, a list of past runs in the browser, waiting for output, changing a token's reach, SQLite, an HTTP transport for the MCP server, presets, a finder agent, recording, bash or fish integration.
 
