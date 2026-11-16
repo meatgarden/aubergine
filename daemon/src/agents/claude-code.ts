@@ -94,11 +94,14 @@ export function claudeHooksSettings(command: string = aubergineCommand()): { hoo
   return { hooks };
 }
 
+/** Where the settings file with the hooks is, in the data folder. */
+export const claudeSettingsFile = (dataDir: string): string => path.join(dataDir, 'agents', 'claude-code-settings.json');
+
 /** Writes the settings file into the data folder and returns its path. */
 export async function writeClaudeSettings(dataDir: string): Promise<string> {
   const dir = path.join(dataDir, 'agents');
   await mkdir(dir, { recursive: true, mode: 0o700 });
-  const file = path.join(dir, 'claude-code-settings.json');
+  const file = claudeSettingsFile(dataDir);
   await writeFile(file, `${JSON.stringify(claudeHooksSettings(), null, 2)}\n`, { mode: 0o600 });
   return file;
 }

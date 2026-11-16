@@ -1,8 +1,10 @@
-import { mkdir } from 'node:fs/promises';
+import { mkdir, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { SESSION_ENV, paths } from '@aubergine/shared';
 import { AgentTools } from './agents/agent-tools';
-import { claudeLaunchLine, writeClaudeSettings } from './agents/claude-code';
+import { claudeLaunchLine, claudeSettingsFile, writeClaudeSettings } from './agents/claude-code';
+import { ClaudeInventory } from './agents/claude-inventory';
+import { Inventories } from './agents/inventory';
 import { Tokens } from './tokens';
 import { FileActivityLog } from './activity';
 import { sessionToken } from './auth';
@@ -91,6 +93,15 @@ async function main(): Promise<void> {
     devOrigin: config.devOrigin,
     webDist: config.webDist,
     demoFolder: path.join(config.dataDir, 'demo'),
+    inventories: new Inventories([new ClaudeInventory()], {
+      settingsFile: () =>
+        stat(claudeSettingsFile(config.dataDir)).then(
+          () => claudeSettingsFile(config.dataDir),
+          () => null,
+        ),
+      toolsFile: (sessionId) => agentTools.fileFor(sessionId),
+      toolsChoice: (sessionId) => agentTools.choiceFor(sessionId),
+    }),
     // What API tokens did, as a file of its own in the data folder: it is not part of the state.
     activity: new FileActivityLog(config.dataDir, settings.value.api.activityLogMaxBytes, (error) => console.warn(`Could not write the activity log: ${String(error)}`)),
     // What tokens type, in full, only when the owner switched that on in the settings.

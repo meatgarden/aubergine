@@ -74,6 +74,8 @@ export const paths = {
     report: (sessionId: string) => `/v1/sessions/${sessionId}/agent`,
   },
   /** GET: the user's open terminals that are not on the canvas. Read-only. */
+  /** What is switched on for the agent in a session, read from its configuration when asked. The owner's alone. */
+  inventory: (sessionId: string) => `/api/v1/sessions/${sessionId}/inventory`,
   /** The demo: whether it is there (GET), make it (POST), remove it (DELETE). The owner's alone. */
   demo: '/api/v1/demo',
   outside: '/api/v1/outside',

@@ -21,6 +21,7 @@ export const COMMAND_IDS = [
   'terminal.new',
   'agent.new',
   'agent.newWithTools',
+  'agent.switchedOn',
   'tour.start',
   'demo.remove',
   'help.show',

@@ -18,6 +18,8 @@ export const e2e = {
   port: 20000 + (Number.parseInt(run.split('-')[1] ?? '0', 16) % 20000),
   dataDir: path.join(root, `.e2e-data-${run}`),
   tmuxSocket: `aubergine-e2e-${run}`,
+  // A folder that stands in for the agent's own configuration folder, so that the test never reads the developer's.
+  agentConfigDir: path.join(root, `.e2e-data-${run}`, 'stand-in-agent-config'),
 };
 
 export default defineConfig({
@@ -45,6 +47,7 @@ export default defineConfig({
       AUBERGINE_PORT: String(e2e.port),
       AUBERGINE_DATA_DIR: e2e.dataDir,
       AUBERGINE_TMUX_SOCKET: e2e.tmuxSocket,
+      CLAUDE_CONFIG_DIR: e2e.agentConfigDir,
     },
   },
 });

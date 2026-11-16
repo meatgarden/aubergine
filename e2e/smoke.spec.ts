@@ -1310,3 +1310,108 @@ test('the tour can be skipped, put away and taken up again, and put away for goo
   await page.getByTestId('remove-demo').click();
   await expect(page.locator('.tabbar')).not.toContainText('Demo');
 });
+
+test('what is switched on for an agent: names only, where each comes from, and what cannot be told', async ({ page, context }) => {
+  // The agent's configuration is stood in for by a folder of this run's own; the server was started pointing at it.
+  const secrets = ['xoxb-made-up-0002', 'sk-live-OPAL7781', 'hunter2-topaz'];
+  mkdirSync(e2e.agentConfigDir, { recursive: true });
+  writeFileSync(path.join(e2e.agentConfigDir, 'settings.json'), JSON.stringify({ hooks: { PostToolUse: [{ matcher: 'Write|Edit', hooks: [{ type: 'command', command: 'API_KEY=sk-live-OPAL7781 /opt/tools/format.sh --token hunter2-topaz' }] }] }, permissions: { allow: ['Bash(npm run test *)'] } }));
+  writeFileSync(path.join(e2e.agentConfigDir, '.claude.json'), JSON.stringify({ mcpServers: { slack: { command: '/usr/local/bin/slack-mcp', args: ['--bot', 'xoxb-made-up-0002'], env: { SLACK_BOT_TOKEN: 'xoxb-made-up-0002' } }, github: { type: 'http', url: 'https://user:hunter2-topaz@mcp.example.com/v1?key=sk-live-OPAL7781', headers: { Authorization: 'sk-live-OPAL7781' } } } }));
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  const origin = new URL(page.url()).origin;
+  await page.getByRole('button', { name: 'New canvas' }).click();
+  await page.getByTestId('toolbar-new-terminal').click();
+  await expect(page.locator('.xterm-rows')).toHaveText(/\S/);
+  const sessionId = (await page.getByTestId('list-row').getAttribute('data-session')) ?? '';
+
+  // A terminal that is not an agent's has no such button.
+  await expect(page.getByTestId('switched-on')).toHaveCount(0);
+  expect((await page.request.put(`/v1/sessions/${sessionId}/agent`, { headers: { origin }, data: { kind: 'claude-code', conversationId: null } })).status()).toBe(200);
+  await page.getByTestId('switched-on').click();
+  const panel = page.getByTestId('inventory-panel');
+  await expect(panel.getByTestId('inventory-what')).toContainText('It is not a list of what the running agent has loaded');
+  await expect(panel.getByTestId('inventory-aubergine')).toContainText('Aubergine tools: none were given to this session.');
+
+  // Grouped by kind, each with its source as a plain word, and names only.
+  const servers = panel.locator('[data-testid="inventory-group"][data-kind="mcp-server"]');
+  await expect(servers.getByTestId('inventory-item')).toHaveCount(2);
+  const slack = servers.getByTestId('inventory-item').filter({ hasText: 'slack' });
+  await expect(slack).toContainText('configured');
+  await expect(slack).toContainText('yours');
+  await expect(slack).toContainText('runs slack-mcp with 2 arguments · environment: SLACK_BOT_TOKEN');
+  await expect(servers.getByTestId('inventory-item').filter({ hasText: 'github' })).toContainText('http, at mcp.example.com · headers: Authorization');
+  await expect(panel.locator('[data-testid="inventory-group"][data-kind="hook"]').getByTestId('inventory-item').filter({ hasText: 'PostToolUse (Write|Edit)' })).toContainText('runs format.sh');
+  await expect(panel.locator('[data-testid="inventory-group"][data-kind="permission-rule"]')).toContainText('allow: Bash: npm');
+  await expect(panel.getByTestId('inventory-gaps')).toContainText('Connectors from your account');
+  await expect(panel.getByTestId('inventory-gaps')).toContainText('Whether a server answers');
+  await expect(panel.getByTestId('inventory-problems')).toHaveCount(0);
+  for (const secret of secrets) await expect(panel).not.toContainText(secret);
+
+  // Search, and the copy for a bug report: the same names, and no value.
+  await panel.getByTestId('inventory-search').fill('slack');
+  await expect(panel.getByTestId('inventory-item')).toHaveCount(1);
+  await panel.getByTestId('inventory-search').fill('nothing like this');
+  await expect(panel.getByTestId('inventory-none')).toBeVisible();
+  await panel.getByTestId('inventory-search').fill('');
+  await panel.getByTestId('inventory-copy').click();
+  await expect(panel.getByTestId('inventory-copy')).toHaveText('Copied');
+  const copied = await page.evaluate(() => navigator.clipboard.readText());
+  expect(copied).toContain('[configured] slack — yours — runs slack-mcp with 2 arguments · environment: SLACK_BOT_TOKEN');
+  expect(copied).toContain('What this list cannot say:');
+  for (const secret of secrets) expect(copied).not.toContain(secret);
+  for (const part of ['OPAL7781', 'made-up-0002', 'topaz']) expect(copied).not.toContain(part);
+
+  // A file that cannot be understood is said to be so, at the top, and is not shown as nothing.
+  writeFileSync(path.join(e2e.agentConfigDir, 'settings.json'), '{ not json');
+  await panel.getByTestId('inventory-reread').click();
+  await expect(panel.getByTestId('inventory-problems')).toContainText('the list below is incomplete');
+  await expect(panel.getByTestId('inventory-problems')).toContainText('is not in a form this was written to read');
+  await panel.getByTestId('inventory-close').click();
+  await expect(panel).toHaveCount(0);
+
+  // The same panel from the side list's drawer, and from the palette.
+  // The drawer is reached from a row that has notes: give this one a note.
+  expect((await page.request.post(`/v1/sessions/${sessionId}/notes`, { headers: { origin }, data: { text: 'A note, so that the row offers its drawer.' } })).status()).toBe(201);
+  await page.getByTestId('list-note').click();
+  await page.getByTestId('drawer-switched-on').getByRole('button').click();
+  await expect(panel).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(panel).toHaveCount(0);
+
+  // What an element needs, marked against what is configured: advice, and it stops nothing.
+  const workflow = await (
+    await page.request.post('/v1/workflows', {
+      headers: { origin },
+      data: { name: 'Needs things', inputs: [], elements: [{ name: 'Tell the team', instructions: 'Post the summary.', needs: [{ kind: 'mcp', name: 'Slack' }, { kind: 'mcp', name: 'jira' }, { kind: 'command', name: 'gh' }, { kind: 'access', name: 'the staging database' }] }] },
+    })
+  ).json();
+  await page.getByTestId('node-body').click();
+  await page.keyboard.press(process.platform === 'darwin' ? 'Meta+k' : 'Control+Shift+K');
+  await page.keyboard.type('>run workflow');
+  await page.keyboard.press('Enter');
+  const run = page.getByTestId('run-dialog');
+  await run.locator('select').first().selectOption(workflow.id);
+  const needs = run.getByTestId('need');
+  await expect(needs).toHaveCount(4);
+  await expect(needs.nth(0)).toHaveAttribute('data-match', 'found');
+  await expect(needs.nth(0).getByTestId('need-mark')).toHaveAttribute('title', /A match of names only: whether it works was not checked\./);
+  // Part of the configuration is unreadable just now, so a missing name is "cannot tell", not "not found".
+  await expect(needs.nth(1)).toHaveAttribute('data-match', 'cannot-tell');
+  await expect(needs.nth(2)).toHaveAttribute('data-match', 'cannot-tell');
+  await expect(needs.nth(3)).toHaveAttribute('data-match', 'not-looked');
+  await expect(run.getByTestId('run-needs')).toContainText('do not stop a run');
+  await expect(run.getByRole('button', { name: /^Start/ })).toBeEnabled();
+  // With the file mended, the name that is nowhere is "not found".
+  writeFileSync(path.join(e2e.agentConfigDir, 'settings.json'), '{}');
+  await page.keyboard.press('Escape');
+  await page.keyboard.press(process.platform === 'darwin' ? 'Meta+k' : 'Control+Shift+K');
+  await page.keyboard.type('>run workflow');
+  await page.keyboard.press('Enter');
+  await run.locator('select').first().selectOption(workflow.id);
+  await expect(run.getByTestId('need').nth(1)).toHaveAttribute('data-match', 'not-found');
+  await page.keyboard.press('Escape');
+});

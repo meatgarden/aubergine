@@ -556,7 +556,20 @@ function NotesDrawer({ id, onClose }: { id: string; onClose: () => void }) {
   useEffect(() => {
     if (!exists) onClose();
   }, [exists, onClose]);
-  return exists ? <NotePanel sessionId={id} onClose={onClose} embedded /> : null;
+  const isAgent = useApp((s) => s.app?.sessions.find((x) => x.id === id)?.agent != null);
+  if (!exists) return null;
+  return (
+    <>
+      {isAgent && (
+        <div className="drawer-section" data-testid="drawer-switched-on">
+          <button type="button" className="quiet" onClick={() => useApp.getState().showInventory(id)}>
+            ⚙ What is switched on for this agent…
+          </button>
+        </div>
+      )}
+      <NotePanel sessionId={id} onClose={onClose} embedded />
+    </>
+  );
 }
 
 registerSection({

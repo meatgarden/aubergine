@@ -1014,6 +1014,41 @@ aubergine run api --timeout 120 -- pnpm test   # prints the output, exits with t
 
 These are you, not a token, so scopes, reach and "people only" do not apply to them. They are recorded in the activity log as done from the command line.
 
+## What is switched on for an agent
+
+You start an agent and want to know what it has been given: which MCP servers (connectors), which plugins, hooks and skills, which settings files apply, and what Aubergine itself added. **⚙ on** on an agent's terminal shows that; so does "What is switched on for this agent…" in the palette, and the notes drawer of the side list. It is for Claude Code today.
+
+**What it is, and what it is not.** It is what the agent's configuration files say, read at the moment you open the panel. It is not a list of what the running agent has loaded, and Aubergine starts and contacts nothing to make it: an MCP server shown as "configured" has not been checked, and may not work. Read it as "this is how it is set up", and ask the agent itself (`/mcp`, `/plugin`, `/status` inside it) for what is live.
+
+**What is shown.** Grouped by kind, each item with where it comes from as a plain word:
+
+| Source | Means |
+|---|---|
+| yours | your own settings for the agent, in every project |
+| this project | files in the terminal's folder that anyone working there shares |
+| yours, for this project | your own settings for this one project |
+| Aubergine | what Aubergine passes to an agent it starts |
+| a plugin: *name* | brought by a plugin that is switched on |
+| your organization | settings files your organization put on this computer |
+| your account | comes with your account at the agent's maker, not from a file |
+
+and whether it is on, off, waiting for your approval in the agent, or simply configured. Where the same MCP server is set in two places, the one that wins is shown and the other is marked as not used. A line at the top says what Aubergine added for this session: its hooks, the tools you chose for it (none, its own work only, or more), and the one sentence it types to start a workflow.
+
+**Names only.** These files can hold secrets: tokens in an MCP server's environment, in its arguments, in an address, in a header, in a hook's command. The panel shows the name of the program a server or a hook runs, the host of an address, and the names of environment variables and headers. It never shows a value, an argument, the rest of a command line, or the text of a permission rule beyond its tool and program. **Copy as text** gives the same list for a bug report, with the same rule. Nothing that is read is kept: not in Aubergine's state, not in a log.
+
+**What it cannot say**, and says so at the bottom of every list:
+
+- **Connectors from your account** (for example Slack, switched on in your account with the agent's maker). The agent fetches these itself; they are in no file on your computer. They are not in the list, whether or not the agent has them. This is the biggest gap: if you came here to see whether Slack is connected, ask the agent with `/mcp`.
+- **Whether anything works.** Checking would mean running the commands your configuration names, which Aubergine does not do.
+- **What the running agent has loaded.** An agent reads most of its configuration when it starts. What changed since, and what was on its command line when you started it yourself, is not known.
+- **Settings your organization delivers without a file** (from its console, or by device management).
+
+A file that is there but cannot be read, or is not in the form Aubergine was written to read, is named at the top of the panel as making the list incomplete. It is never shown as "nothing is on".
+
+**Only you, in the browser.** No API token and no session can read this, and the MCP server has no tool for it.
+
+**What an element needs.** When you start a workflow on an agent's terminal, each thing its elements need that is an MCP server or a command gets a mark: **found** (something configured has a name like it; hover to see what), **not found**, or **cannot tell**. The marks compare names. They do not check that anything works, and they never stop a run.
+
 ## Tools for agents: the MCP server
 
 `aubergine mcp` is an MCP server on standard input and output. It offers the API above as tools to an agent, or to any other MCP client. It is a client of the public API and nothing more: it holds no rules of its own about who may do what. It asks the server once, when it starts, what its credential is, lists the tools that credential can use, and passes every call on; the server decides each one.

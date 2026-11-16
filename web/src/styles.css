@@ -2497,3 +2497,77 @@ tr[data-status='expired'] strong {
   box-shadow: 0 6px 20px rgb(0 0 0 / 0.4);
   pointer-events: none;
 }
+
+/* ---------- What is switched on ---------- */
+
+.inventory-panel {
+  width: min(860px, calc(100vw - 32px));
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+}
+.inventory-panel h3 {
+  margin: 14px 0 6px;
+  font-size: 13px;
+}
+.inventory-panel ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.inventory-aubergine li,
+.inventory-gaps li,
+.inventory-problems li {
+  margin-bottom: 6px;
+  font-size: 12px;
+  line-height: 1.45;
+}
+.inventory-problems {
+  padding: 2px 10px 8px;
+  border: 1px solid var(--warn, #d08770);
+  border-radius: 8px;
+}
+.inventory-tools {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+.inventory-tools input {
+  flex: 1;
+}
+.inventory-item {
+  display: grid;
+  grid-template-columns: 150px minmax(120px, 1.2fr) minmax(110px, 0.8fr) 2fr;
+  gap: 8px;
+  padding: 4px 0;
+  font-size: 12px;
+  border-top: 1px solid var(--border);
+  overflow-wrap: anywhere;
+}
+.inventory-item.is-off .inventory-name {
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+.inventory-state {
+  opacity: 0.8;
+}
+.inventory-source,
+.inventory-detail {
+  opacity: 0.85;
+}
+.drawer-section {
+  padding: 8px 10px 0;
+}
+.need-mark {
+  margin-left: 6px;
+  padding: 0 5px;
+  font-size: 11px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  white-space: nowrap;
+}
+.need-note {
+  display: block;
+  margin-top: 4px;
+  font-size: 11px;
+  opacity: 0.75;
+}

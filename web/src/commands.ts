@@ -227,6 +227,17 @@ export const COMMANDS: readonly Command[] = [
     run: (state) => state.chooseAgentTools(true),
   },
   {
+    id: 'agent.switchedOn',
+    title: 'What is switched on for this agent…',
+    description: 'Shows the MCP servers, plugins, hooks, skills and settings files the agent in this terminal is configured with, and what Aubergine added. Read only.',
+    group: 'Terminals',
+    available: (state) => targetSession(state)?.agent != null,
+    run: (state) => {
+      const session = targetSession(state);
+      if (session?.agent) state.showInventory(session.id);
+    },
+  },
+  {
     id: 'frame.new',
     title: 'New frame',
     description: 'Adds a frame to group terminals.',
@@ -617,10 +628,11 @@ export const COMMANDS: readonly Command[] = [
     title: 'Close panels',
     description: 'Closes whatever panel is open; else returns the keyboard from a button to the canvas; else clears the selection.',
     group: 'Panels',
-    available: (state) => state.picker || state.choosingAgentTools || state.describing !== null || state.editingElement !== null || state.viewingRun !== null || state.startingRun !== null || state.editingWorkflow !== null || state.panel !== null || state.drawer !== null || state.selected !== null || onControl(),
+    available: (state) => state.picker || state.choosingAgentTools || state.inventoryFor !== null || state.describing !== null || state.editingElement !== null || state.viewingRun !== null || state.startingRun !== null || state.editingWorkflow !== null || state.panel !== null || state.drawer !== null || state.selected !== null || onControl(),
     run: (state) => {
       if (state.picker) state.setPicker(false);
       else if (state.choosingAgentTools) state.chooseAgentTools(false);
+      else if (state.inventoryFor !== null) state.showInventory(null);
       else if (state.describing !== null) state.describe(null);
       else if (state.editingElement !== null) state.editElement(null);
       else if (state.startingRun !== null) state.startRun(null);

@@ -9,6 +9,7 @@ import {
   type UpdateCanvasRequest,
   CreateSessionResponse,
   DemoStatus,
+  Inventory,
   ErrorResponse,
   Frame,
   EventsServerMessage,
@@ -84,6 +85,8 @@ export const api = {
     call<void>(null, 'POST', paths.revealInSession(sessionId), { text }),
   appendNote: (sessionId: string, text: string) =>
     call(AppendNoteResponse, 'POST', paths.sessionNotes(sessionId), { text }),
+  /** What is switched on for the agent in a session. Read by the server when asked; names only. */
+  inventory: (sessionId: string) => call(Inventory, 'GET', paths.inventory(sessionId)),
   makeDemo: () => call(DemoStatus, 'POST', paths.demo, {}),
   removeDemo: () => call(DemoStatus, 'DELETE', paths.demo),
   getOutside: () => call(OutsideResponse, 'GET', paths.outside),

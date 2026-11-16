@@ -8,6 +8,7 @@ import type { ZodType } from 'zod';
 import {
   SESSION_HEADER,
   type DemoStatus,
+  type Inventory,
   CLIENT_HEADER,
   ClientName,
   type OwnerCaller,
@@ -47,6 +48,7 @@ import {
   type TerminalServerMessage,
 } from '@aubergine/shared';
 import { MemoryActivityLog, BadActivityCursorError, type ActivityLog } from './activity';
+import { NotAnAgentError, type Inventories } from './agents/inventory';
 import { Demo } from './demo';
 import { authorize, bearerOf, peopleOnlyRefusal, reachRefusal, principalFromBearer, type Action, type Principal, type Resource } from './auth';
 import { RateLimiter } from './rate-limit';
@@ -91,6 +93,8 @@ export interface ServerOptions {
   draftLog?: DraftLog;
   /** Where runs that are over are kept. Left out, in memory only. */
   runArchive?: RunArchive;
+  /** Reads what is switched on for an agent. Left out, that route answers that it is not available. */
+  inventories?: Inventories;
   /** The folder the demo may fill and remove. Left out, there is no demo. */
   demoFolder?: string;
   /** Where the demo's stand-in scripts are. Left out, this checkout's. For tests. */
@@ -455,6 +459,21 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   };
 
   // Looking at, bringing in and stopping what runs outside Aubergine is the owner's alone: authorize() refuses it to every token.
+  /* ---------- What is switched on ---------- */
+
+  app.get(paths.inventory(':sessionId'), async (request): Promise<Inventory> => {
+    const sessionId = idParam(request, 'sessionId');
+    allowOn(request, 'inventory.read', { sessionId });
+    if (!options.inventories) throw new HttpError(404, 'not_found', 'Reading what is switched on is not available on this server');
+    try {
+      // Read now, from the files; nothing of it is kept.
+      return await options.inventories.of(sessions.get(sessionId));
+    } catch (error) {
+      if (error instanceof NotAnAgentError) throw new HttpError(409, 'conflict', error.message);
+      throw error;
+    }
+  });
+
   /* ---------- The demo ---------- */
 
   const demo = options.demoFolder === undefined ? null : new Demo(hub, sessions, workflows, drafts, { folder: options.demoFolder, ...(options.demoSource ? { source: options.demoSource } : {}) });

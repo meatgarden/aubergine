@@ -145,6 +145,21 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
             {session.peopleOnly ? '🔒 people only' : '🔓'}
           </button>
         )}
+        {draft === null && session?.agent && (
+          <button
+            type="button"
+            className="node-tool nodrag"
+            aria-label={`What is switched on: ${name}`}
+            title="What is switched on for this agent: MCP servers, plugins, hooks, skills, and what Aubergine added"
+            data-testid="switched-on"
+            onClick={(event) => {
+              event.stopPropagation();
+              useApp.getState().showInventory(sessionId);
+            }}
+          >
+            ⚙ on
+          </button>
+        )}
         {draft === null && session && canResumeAgent(session) && (
           <button
             type="button"
