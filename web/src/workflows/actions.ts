@@ -21,7 +21,7 @@ export async function tickItem(runId: string, elementId: string, item: number, t
   useApp.getState().setNotice(null);
   try {
     const next = await api.tickRunItem(runId, { elementId, item, ticked });
-    if (isLive(next.run.status)) useApp.getState().apply({ type: 'run.moved', run: next.run as never });
+    if (isLive(next.run.status)) useApp.getState().apply({ type: 'run.ticked', run: next.run as never });
     else window.dispatchEvent(new CustomEvent('aubergine:run-read', { detail: next }));
   } catch (error) {
     useApp.getState().setNotice(`Could not tick that: ${(error as Error).message}`);

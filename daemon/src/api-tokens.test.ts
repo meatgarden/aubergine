@@ -330,6 +330,9 @@ describe('every route has a rule', () => {
     'POST /v1/drafts/:draftId/return',
     'DELETE /v1/drafts/:draftId',
     'POST /v1/draft-requests',
+    // Accepting a repository workflow, and writing into a repository.
+    'POST /v1/repository-workflows/accept',
+    'POST /v1/repository-workflows/save',
   ];
 
   it('has the routes the plan lists, under /v1', () => {
@@ -447,6 +450,7 @@ describe('every route has a rule', () => {
       'GET /v1/openapi.json',
       'GET /v1/sessions/:sessionId/brief',
       'GET /v1/sessions/:sessionId/drafts',
+      'GET /v1/sessions/:sessionId/repository-workflows',
       'GET /v1/sessions/:sessionId/run',
       'POST /v1/sessions/:sessionId/drafts',
       'POST /v1/sessions/:sessionId/notes',
@@ -736,7 +740,7 @@ describe('the secret', () => {
 
     // The hash is what is stored, and it is not sent to the page.
     const state = JSON.parse(await readFile(path.join(dir, 'state.json'), 'utf8'));
-    expect(state.version).toBe(5);
+    expect(state.version).toBe(6);
     expect(state.tokens.map((t: { hash: string }) => t.hash)).toEqual([expect.stringMatching(/^[0-9a-f]{64}$/), expect.stringMatching(/^[0-9a-f]{64}$/)]);
   });
 

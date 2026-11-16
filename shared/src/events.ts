@@ -25,6 +25,7 @@ import {
 import { ApiToken } from './tokens';
 import { Id } from './ids';
 import { Draft, ShelfElement } from './drafts';
+import { AcceptedRepositoryWorkflow, REPOSITORY_ACCEPTED_MAX } from './repository';
 import { Run, Workflow } from './workflows';
 
 /**
@@ -103,6 +104,10 @@ export const ChangeEvent = z.discriminatedUnion('type', [
   z.object({ type: z.literal('draft.removed'), draftId: Id }),
   z.object({ type: z.literal('shelf.changed'), item: ShelfElement }),
   z.object({ type: z.literal('shelf.removed'), elementId: Id }),
+  /** The owner accepted a repository workflow as it is now. */
+  z.object({ type: z.literal('repository.accepted'), entry: AcceptedRepositoryWorkflow }),
+  /** An item of what an element produced was ticked or unticked. The run did not move. */
+  z.object({ type: z.literal('run.ticked'), run: Run }),
 ]);
 export type ChangeEvent = z.infer<typeof ChangeEvent>;
 
@@ -247,6 +252,7 @@ export function applyEvent(state: AppState, event: ChangeEvent): AppState {
       return { ...state, workflows: state.workflows.filter((w) => w.id !== event.workflowId) };
     case 'run.started':
       return { ...state, runs: [...state.runs.filter((r) => r.id !== event.run.id), event.run] };
+    case 'run.ticked':
     case 'run.moved':
       return { ...state, runs: state.runs.map((r) => (r.id === event.run.id ? event.run : r)) };
     case 'run.finished':
@@ -259,6 +265,9 @@ export function applyEvent(state: AppState, event: ChangeEvent): AppState {
       return { ...state, shelf: [...state.shelf.filter((e) => e.id !== event.item.id), event.item] };
     case 'shelf.removed':
       return { ...state, shelf: state.shelf.filter((e) => e.id !== event.elementId) };
+    case 'repository.accepted':
+      // One acceptance per file of a repository: a newer one takes the place of the older. The oldest go when there are too many.
+      return { ...state, repositoryAccepted: [...state.repositoryAccepted.filter((e) => !(e.root === event.entry.root && e.file === event.entry.file)), event.entry].slice(-REPOSITORY_ACCEPTED_MAX) };
     case 'canvas.removed': {
       const canvas = state.canvases.find((c) => c.id === event.canvasId);
       // The last canvas stays: there is always one to look at.

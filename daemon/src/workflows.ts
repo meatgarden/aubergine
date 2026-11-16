@@ -302,7 +302,24 @@ export class Workflows {
     const content = this.content({ name: element.name, inputs: [{ key: 'task', label: 'Task', description: 'What this run is about.', required: uses }], elements: [element] });
     const problems = inputProblems({ ...content, number: 1, createdAt: '' }, input.inputs);
     if (problems.length > 0) throw new BadInputError(problems.join(' '));
-    const workflow = this.add(content, {}, { kind: 'element' }, false);
+    return this.startUnlisted(content, input, by, { kind: 'element' });
+  }
+
+  /**
+   * Runs content that is not one of the listed workflows: a workflow of its
+   * own is made for the run from exactly this content, and removed with it.
+   */
+  async startContent(content: WorkflowContent, input: Omit<StartRun, 'workflowId'>, by: Actor, origin: Origin): Promise<RunDetail> {
+    if (input.sessionId !== undefined && this.sessions.get(input.sessionId).state === 'exited') throw new ConflictError('This shell has ended; restart it first');
+    const { extra, ...rest } = content;
+    const checked = { ...this.content(rest), extra };
+    const problems = inputProblems({ ...checked, number: 1, createdAt: '' }, input.inputs);
+    if (problems.length > 0) throw new BadInputError(problems.join(' '));
+    return this.startUnlisted(checked, input, by, origin);
+  }
+
+  private async startUnlisted(content: WorkflowContent, input: Omit<StartRun, 'workflowId'>, by: Actor, origin: Origin): Promise<RunDetail> {
+    const workflow = this.add(content, {}, origin, false);
     try {
       return await this.start({ ...input, workflowId: workflow.id }, by, true);
     } catch (error) {
@@ -318,7 +335,7 @@ export class Workflows {
     if (run) {
       const result = tickRun(this.versionFor(run), run, tick, context);
       if (!result.ok) throw new ConflictError(result.reason);
-      this.hub.emit({ type: 'run.moved', run: result.run });
+      this.hub.emit({ type: 'run.ticked', run: result.run });
       return this.detail(result.run);
     }
     const archived = await this.archive.get(runId);

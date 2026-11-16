@@ -32,6 +32,17 @@ import {
 import { Capabilities, CreateTokenRequest, CreatedToken, TokenView } from './tokens';
 import { Draft, ShelfElement } from './drafts';
 import {
+  AcceptRepositoryWorkflowRequest,
+  RepositoryFileRef,
+  RepositoryListing,
+  RepositoryOffer,
+  RepositoryWorkflow,
+  RepositoryWorkflowDetail,
+  RunRepositoryWorkflowRequest,
+  SaveToRepositoryRequest,
+  SavedToRepository,
+} from './repository';
+import {
   AcceptDraftRequest,
   AcceptedDraft,
   Brief,
@@ -79,7 +90,7 @@ import {
 
 export type RouteMethod = 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';
 
-export const ROUTE_TAGS = ['Server', 'Canvases', 'Sessions', 'Notes', 'Layout', 'Workflows', 'Runs', 'Drafts', 'Elements', 'Events', 'Tokens', 'For a session itself'] as const;
+export const ROUTE_TAGS = ['Server', 'Canvases', 'Sessions', 'Notes', 'Layout', 'Workflows', 'Runs', 'Drafts', 'Elements', 'Repository workflows', 'Events', 'Tokens', 'For a session itself'] as const;
 export type RouteTag = (typeof ROUTE_TAGS)[number];
 
 export interface RouteSpec {
@@ -804,6 +815,70 @@ export const ROUTES = {
     errors: [404, 409],
   }),
 
+  /* ---------- Workflows kept in a project's repository ---------- */
+  listRepositoryWorkflows: route({
+    method: 'GET',
+    path: '/v1/repository-workflows',
+    tag: 'Repository workflows',
+    summary: 'List the workflows that repositories offer',
+    description: 'For each Git repository a session\'s folder is in: the workflow files in its `.aubergine/workflows/` folder as they are now, each with whether its content was accepted. Read from disk when asked; nothing is remembered between calls.',
+    action: 'repository.read',
+    query: PageQuery,
+    response: RepositoryListing,
+    status: 200,
+    paged: true,
+  }),
+  getRepositoryWorkflow: route({
+    method: 'GET',
+    path: '/v1/repository-workflows/file',
+    tag: 'Repository workflows',
+    summary: 'Read one repository workflow',
+    description: 'The whole text it would tell an agent, what it needs, and, when it has changed since it was accepted, the text that was accepted.',
+    action: 'repository.read',
+    query: RepositoryFileRef,
+    response: RepositoryWorkflowDetail,
+    status: 200,
+    errors: [404],
+  }),
+  acceptRepositoryWorkflow: route({
+    method: 'POST',
+    path: '/v1/repository-workflows/accept',
+    tag: 'Repository workflows',
+    summary: 'Accept a repository workflow as it is now',
+    description: 'For the owner only. A repository workflow cannot be run until its exact content was accepted, and must be accepted again when the file changes.',
+    action: 'repository.review',
+    body: AcceptRepositoryWorkflowRequest,
+    response: RepositoryWorkflow,
+    status: 200,
+    errors: [404, 409],
+  }),
+  saveToRepository: route({
+    method: 'POST',
+    path: '/v1/repository-workflows/save',
+    tag: 'Repository workflows',
+    summary: 'Write a workflow into a repository',
+    description: 'For the owner only. Writes one file into `.aubergine/workflows/` of the repository a session\'s folder is in, named after the workflow. Nothing is replaced unless `overwrite` says so.',
+    action: 'repository.write',
+    body: SaveToRepositoryRequest,
+    response: SavedToRepository,
+    status: 201,
+    errors: [404, 409],
+  }),
+  runRepositoryWorkflow: route({
+    method: 'POST',
+    path: '/v1/sessions/:sessionId/repository-runs',
+    tag: 'Repository workflows',
+    summary: 'Start a run of a repository workflow on a session',
+    description: 'The session\'s folder must be in that repository, and the file\'s content must be what the owner accepted; otherwise 409. The run is made from the accepted content: a later change to the file does not reach it.',
+    action: 'runs.write',
+    params: sessionId,
+    body: RunRepositoryWorkflowRequest,
+    response: RunDetail,
+    status: 201,
+    idempotent: true,
+    errors: [404, 409],
+  }),
+
   /* ---------- Events ---------- */
   streamEvents: route({
     method: 'GET',
@@ -946,6 +1021,18 @@ export const ROUTES = {
     response: Draft,
     status: 201,
     errors: [404, 409],
+  }),
+  getSessionRepositoryWorkflows: route({
+    method: 'GET',
+    path: '/v1/sessions/:sessionId/repository-workflows',
+    tag: 'For a session itself',
+    summary: 'The workflows the repository of a session offers',
+    description: "With that session's own token: the workflow files of the repository its folder is in, and whether each was accepted. It cannot accept one, and cannot start a run.",
+    action: 'repository.own.read',
+    params: sessionId,
+    response: RepositoryOffer,
+    status: 200,
+    errors: [404],
   }),
   reportAgent: route({
     method: 'PUT',

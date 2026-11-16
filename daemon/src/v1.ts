@@ -38,6 +38,7 @@ import type { StateHub } from './state-hub';
 import type { Tokens } from './tokens';
 import type { Viewers } from './viewers';
 import type { Drafts } from './drafts';
+import type { Repositories } from './repositories';
 import { actorOf, type Workflows } from './workflows';
 
 export interface PublicRouteDeps {
@@ -46,6 +47,7 @@ export interface PublicRouteDeps {
   tokens: Tokens;
   workflows: Workflows;
   drafts: Drafts;
+  repositories: Repositories;
   activity: ActivityLog;
   viewers: Viewers;
   limiter: RateLimiter;
@@ -77,7 +79,7 @@ type Handlers = { [I in RouteId]: (context: Context<I>) => RouteOutput<I> | Prom
  * call it, and no route exists that is not declared.
  */
 export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps): void {
-  const { hub, sessions, workflows, drafts, parse } = deps;
+  const { hub, sessions, workflows, drafts, repositories, parse } = deps;
   const remembered = new IdempotencyStore();
 
   const summary = (canvas: Canvas): CanvasSummary => {
@@ -328,6 +330,21 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
 
     tickRunItem: ({ params, body, principal }) => workflows.tick(params.runId, body, actorOf(principal)),
 
+    /* ---------- Workflows kept in a repository ---------- */
+
+    listRepositoryWorkflows: async ({ query }) => paginate(await repositories.listing(), (r) => r.root, query),
+
+    getRepositoryWorkflow: ({ query }) => repositories.detail(query.root, query.file),
+
+    acceptRepositoryWorkflow: ({ body }) => repositories.accept(body.root, body.file, body.hash),
+
+    saveToRepository: ({ body }) => repositories.save(body.sessionId, body.workflowId, body.overwrite),
+
+    runRepositoryWorkflow: ({ params, body, principal }) => {
+      const { file, kickoff, ...rest } = body;
+      return repositories.run(params.sessionId, file, { ...rest, typeKickoff: kickoff && principal.kind === 'user' }, actorOf(principal));
+    },
+
     /* ---------- The stream of changes ---------- */
 
     // Server-sent events: one `data:` line of JSON per change. It needs nothing but an HTTP client,
@@ -391,6 +408,9 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
     listSessionDrafts: ({ params, query }) => paginate(drafts.ofSession(params.sessionId), (d) => d.id, query),
 
     proposeSessionDraft: ({ params, body }) => drafts.proposeFromSession(params.sessionId, body),
+
+    // What the repository of the session's own folder offers, and whether each was accepted. Reading only.
+    getSessionRepositoryWorkflows: ({ params }) => repositories.offer(params.sessionId),
 
     reportSessionRun: ({ params, body, principal }) => workflows.reportOwn(params.sessionId, body, actorOf(principal)),
   };

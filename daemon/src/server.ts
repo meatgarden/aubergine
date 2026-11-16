@@ -56,6 +56,7 @@ import { BadInputError, ConflictError, NotFoundError, RuntimeUnavailableError, t
 import { tokensMatch } from './token';
 import { MemoryRunArchive, type RunArchive } from './run-archive';
 import { Drafts } from './drafts';
+import { Repositories } from './repositories';
 import { Workflows } from './workflows';
 
 export interface ServerOptions {
@@ -73,6 +74,8 @@ export interface ServerOptions {
   webDist: string;
   /** Where calls made with API tokens are recorded. Left out, they are kept in memory only. */
   activity?: ActivityLog;
+  /** The folder the search for a repository stops at. Left out, the home folder. For tests. */
+  homeFolder?: string;
   /** Where runs that are over are kept. Left out, in memory only. */
   runArchive?: RunArchive;
   /** The version this server reports about itself. */
@@ -139,7 +142,9 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     onError: (error) => console.error('Could not move a run:', error),
   });
   await workflows.reconcile();
-  const drafts = new Drafts(hub, sessions, workflows, () => ({ maxElements: workflowSettings.maxElements, maxElementChars: workflowSettings.maxElementChars }));
+  const workflowLimits = (): { maxElements: number; maxElementChars: number } => ({ maxElements: workflowSettings.maxElements, maxElementChars: workflowSettings.maxElementChars });
+  const drafts = new Drafts(hub, sessions, workflows, workflowLimits);
+  const repositories = new Repositories(hub, sessions, workflows, workflowLimits, options.homeFolder);
 
   const routes: PublicRoute[] = [];
   routeLists.set(app, routes);
@@ -453,6 +458,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     tokens,
     workflows,
     drafts,
+    repositories,
     activity,
     viewers,
     limiter,
