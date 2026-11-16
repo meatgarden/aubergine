@@ -76,7 +76,7 @@ export const Settings = z.object({
       /** How many unread messages a session may have waiting. One more is refused. */
       maxUnread: z.number().int().min(1).max(1000).default(20),
       /** The fixed sentence that says a message is waiting is not typed into the same terminal again within this many seconds. */
-      nudgeIntervalSeconds: z.number().int().min(10).max(86_400).default(120),
+      nudgeIntervalSeconds: z.number().int().min(1).max(86_400).default(120),
       /** Read messages older than this many days are left out of what is listed. */
       keepDays: z.number().int().min(1).max(3650).default(30),
       /** How large the file of messages may grow before the older part is set aside, in bytes. */

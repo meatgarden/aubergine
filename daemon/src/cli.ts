@@ -1,4 +1,5 @@
 import { spawnSync } from 'node:child_process';
+import { randomUUID } from 'node:crypto';
 import { createInterface } from 'node:readline';
 import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import os from 'node:os';
@@ -12,6 +13,9 @@ import {
   HistoryList,
   RECAP_MAX,
   RECAP_WANTED,
+  renderInbox,
+  sentWords,
+  type Message,
   ago,
   recapLines,
   recapOf,
@@ -616,6 +620,38 @@ async function main(): Promise<number> {
         console.log(showControl(recap.written.text).split('\n').map((line) => `  ${line}`).join('\n'));
       } else if (recap.agent) console.log('\nIts agent has not been asked for a recap. Ask from the terminal\'s node in the browser.');
       return 0;
+    }
+
+    case 'inbox':
+    case 'reply':
+    case 'tell': {
+      const env = process.env;
+      const url = env[SESSION_ENV.url];
+      const sessionId = env[SESSION_ENV.sessionId];
+      const token = env[SESSION_ENV.token];
+      const inside = Boolean(url && sessionId && token);
+      if (!inside && command.name !== 'tell') throw new UsageError(`${command.name} only works inside an Aubergine session (its environment is not set here).`);
+      if (!inside && command.name === 'tell') {
+        // Typed outside a session: the owner's own message.
+        const { state } = StateResponse.parse(await call(config, 'GET', paths.state));
+        const session = resolveSession(state.sessions, command.query);
+        await call(config, 'POST', paths.sessionMessages(session.id), { text: command.text });
+        console.log(`Sent to "${showControl(session.name)}". It waits there to be read; nothing was typed into the terminal.`);
+        return 0;
+      }
+      // Inside a session: with that session's own credential, as that session.
+      const client = createClient({ baseUrl: url as string, token: token as string });
+      try {
+        if (command.name === 'inbox') console.log(renderInbox(await client.takeInbox({ sessionId: sessionId as string }), new Date(), randomUUID().replaceAll('-', '').slice(0, 12), showControl));
+        else if (command.name === 'reply') console.log(sentWords((await client.replyToMessage({ sessionId: sessionId as string, messageId: command.id, body: { text: command.text } })) as Message));
+        else console.log(sentWords((await client.sendFromSession({ sessionId: sessionId as string, body: { to: command.query, text: command.text } })) as Message));
+        return 0;
+      } catch (error) {
+        if (!(error instanceof AubergineError)) throw error;
+        // Said plainly, for whoever typed it: an agent reads this and acts on it.
+        console.log(error.code === 'network' ? `The Aubergine server is not answering on ${url}.` : showControl(error.message));
+        return 1;
+      }
     }
 
     case 'attention': {

@@ -39,6 +39,12 @@ export type Command =
   /** `element …`: the shelf, running one element by itself, proposing one. */
   | { name: 'element'; words: string[] }
   | { name: 'note'; text: string }
+  /** Inside a session: take its unread messages. */
+  | { name: 'inbox' }
+  /** Inside a session: answer a message it received. */
+  | { name: 'reply'; id: string; text: string }
+  /** Send a message to a session: from the session it is typed in, or from the owner when typed outside one. */
+  | { name: 'tell'; query: string; text: string }
   /** Inside a session: say whether its owner is needed. */
   | { name: 'attention'; state: 'none' | 'working' | 'waiting' | 'done'; message: string | null }
   /** The guide for agents: for whoever asks, in full, or the few lines for an instructions file. */
@@ -160,6 +166,11 @@ export const USAGE = `Usage: aubergine <command>
   recap <session>            What a terminal was about and where it stands: from what is known, and what its agent wrote
   recap --write [--file f]   Inside a session, for its agent: hand in a recap on standard input or from a file.
                              With nothing handed in, prints what is wanted
+  tell <session> <text>      Send a message to a terminal. It is kept for the agent there to read; it is never typed.
+                             Typed outside a session it is from you; inside one, from that session, which may
+                             message only where you switched that on for its canvas
+  inbox                      Inside a session: the unread messages for it, which are then read
+  reply <id> <text>          Inside a session: answer a message it received
   note <text>                Inside a session: add an entry to that session's note log
   attention waiting [what you need] | working | done | none
                              Inside a session: say whether its owner is needed. An agent Aubergine started reports this
@@ -181,7 +192,7 @@ export const USAGE = `Usage: aubergine <command>
 new, here and import take --canvas <name>. Without it they use the canvas you looked at most recently
 in a browser, or the first one when no browser is open.
 
-The server must be running for list, new, canvas, token, workflow, element, screen, output, send, run, protect, attach, here, scan, import, move, note, attention and open.
+The server must be running for list, new, canvas, token, workflow, element, screen, output, send, run, protect, attach, here, scan, import, move, tell, inbox, reply, note, attention and open.
 guide works without it, and then prints every part.`;
 
 export class UsageError extends Error {}
@@ -379,6 +390,21 @@ export function parseCommand(argv: readonly string[]): Command {
       if (!write && file !== null) throw new UsageError('--file goes with --write');
       if (!write && words.length === 0) throw new UsageError('recap needs a session: aubergine recap <name>. Inside a session, an agent hands one in with: aubergine recap --write');
       return { name: 'recap', write, file, query: write ? null : words.join(' ') };
+    }
+    case 'inbox':
+      if (rest.length > 0) throw new UsageError('inbox takes no arguments');
+      return { name: 'inbox' };
+    case 'reply': {
+      const [id, ...words] = rest;
+      if (id === undefined || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(id)) throw new UsageError('reply needs the ID of the message, as `aubergine inbox` shows it, then the answer: aubergine reply <id> "<your answer>"');
+      if (words.join(' ').trim() === '') throw new UsageError('reply needs the answer after the ID');
+      return { name: 'reply', id, text: words.join(' ') };
+    }
+    case 'tell': {
+      const [query, ...words] = rest;
+      if (query === undefined || query.startsWith('--')) throw new UsageError('tell needs a terminal (its name in quotes, or its ID), then the message: aubergine tell "<terminal>" "<message>"');
+      if (words.join(' ').trim() === '') throw new UsageError('tell needs the message after the terminal');
+      return { name: 'tell', query, text: words.join(' ') };
     }
     case 'note':
       if (rest.join(' ').trim() === '') throw new UsageError('note needs some text');
