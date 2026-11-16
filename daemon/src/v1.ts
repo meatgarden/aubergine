@@ -482,7 +482,7 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
       deps.trace(request, { chars: body.text.length, fingerprint: fingerprintOf(body.text) });
       // The fixed sentence is typed for a token's message only where that token may type into this very session, as for a run.
       if (principal.kind === 'token') return messages.fromToken(principal, params.sessionId, body.text, body.replyTo ?? null, mayKickoff(principal, params.sessionId));
-      return messages.fromOwner(params.sessionId, body.text, body.replyTo ?? null);
+      return messages.fromOwner(params.sessionId, body.text, body.replyTo ?? null, deps.ownerCaller(request).kind === 'owner-cli' ? 'command' : 'page');
     },
 
     // A session's own inbox, by its own address: `authorize` has made sure the token is that session's.

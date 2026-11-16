@@ -4966,6 +4966,7 @@ An API token needs the scope `messages:read`.
     threadId: string;
     from: {
       kind: "owner";
+      via?: "page" | "command";
     } | {
       kind: "session";
       sessionId: string;
@@ -4977,6 +4978,7 @@ An API token needs the scope `messages:read`.
     };
     to: {
       kind: "owner";
+      via?: "page" | "command";
     } | {
       kind: "session";
       sessionId: string;
@@ -5029,6 +5031,7 @@ An API token needs the scope `messages:write`.
   threadId: string;
   from: {
     kind: "owner";
+    via?: "page" | "command";
   } | {
     kind: "session";
     sessionId: string;
@@ -5040,6 +5043,7 @@ An API token needs the scope `messages:write`.
   };
   to: {
     kind: "owner";
+    via?: "page" | "command";
   } | {
     kind: "session";
     sessionId: string;
@@ -5087,6 +5091,7 @@ For a session's own token, about that session. No API token may call this.
     threadId: string;
     from: {
       kind: "owner";
+      via?: "page" | "command";
     } | {
       kind: "session";
       sessionId: string;
@@ -5098,6 +5103,7 @@ For a session's own token, about that session. No API token may call this.
     };
     to: {
       kind: "owner";
+      via?: "page" | "command";
     } | {
       kind: "session";
       sessionId: string;
@@ -5150,6 +5156,7 @@ For a session's own token, about that session. No API token may call this.
   threadId: string;
   from: {
     kind: "owner";
+    via?: "page" | "command";
   } | {
     kind: "session";
     sessionId: string;
@@ -5161,6 +5168,7 @@ For a session's own token, about that session. No API token may call this.
   };
   to: {
     kind: "owner";
+    via?: "page" | "command";
   } | {
     kind: "session";
     sessionId: string;
@@ -5212,6 +5220,7 @@ For a session's own token, about that session. No API token may call this.
   threadId: string;
   from: {
     kind: "owner";
+    via?: "page" | "command";
   } | {
     kind: "session";
     sessionId: string;
@@ -5223,6 +5232,7 @@ For a session's own token, about that session. No API token may call this.
   };
   to: {
     kind: "owner";
+    via?: "page" | "command";
   } | {
     kind: "session";
     sessionId: string;

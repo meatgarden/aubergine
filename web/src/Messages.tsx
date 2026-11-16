@@ -11,7 +11,7 @@ import { useApp } from './store';
  * text: plain text, control characters shown, nothing made into a link.
  */
 
-const who = (party: Party): string => (party.kind === 'owner' ? 'You' : party.kind === 'session' ? party.name : `${party.name} (a program)`);
+const who = (party: Party): string => (party.kind === 'owner' ? (party.via === 'command' ? 'You, from a command line' : 'You') : party.kind === 'session' ? party.name : `${party.name} (a program)`);
 
 /** What to say about a session's messages in a few words, or null when there is nothing to say. */
 export function messageMark(session: Session): { text: string; title: string } | null {

@@ -244,6 +244,10 @@ export class Messages {
           throw new MessageRefusal(429, 'rate_limited', `${lastHour.length} messages have passed between the two of you in the last hour, which is the most allowed. Try again in ${Math.ceil(wait / 60)} minutes. If the work needs more than that, tell your owner.`, wait);
         }
       }
+      if (to.kind === 'owner') {
+        const waiting = all.filter((m) => m.readAt === null && m.to.kind === 'owner' && partyKey(m.from) === mine).length;
+        if (waiting >= limits.maxUnread) throw new MessageRefusal(409, 'conflict', `Your owner has ${waiting} messages from this session that they have not read, which is the most that may wait. Sending more will not help; they will read them when they look.`);
+      }
       if (to.kind === 'session') {
         const waiting = all.filter((m) => m.readAt === null && m.to.kind === 'session' && m.to.sessionId === to.sessionId).length;
         if (waiting >= limits.maxUnread) {
@@ -270,8 +274,8 @@ export class Messages {
   }
 
   /** The owner's message to a session. Nothing limits the owner. */
-  fromOwner(sessionId: string, text: string, replyTo: string | null = null): Message {
-    return this.send({ kind: 'owner' }, this.partyOf(this.sessions.get(sessionId)), text, this.answered(replyTo, sessionId));
+  fromOwner(sessionId: string, text: string, replyTo: string | null = null, via: 'page' | 'command' = 'page'): Message {
+    return this.send({ kind: 'owner', via }, this.partyOf(this.sessions.get(sessionId)), text, this.answered(replyTo, sessionId));
   }
 
   /**

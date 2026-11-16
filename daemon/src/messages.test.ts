@@ -551,6 +551,11 @@ describe('loops and floods', () => {
     await inbox(b);
     expect((await tell(a, b.id)).status).toBe(201);
     expect((await tell(a, b.id, 'x'.repeat(4001))).status).toBe(400);
+    // Answers to the owner wait for the owner, and only so many of them.
+    const asked = (await asOwner('POST', paths.sessionMessages(a.id), { text: 'Tell me when it is done.' })).body as Message;
+    const answers: number[] = [];
+    for (let i = 0; i < 3; i++) answers.push((await call(own(a), 'POST', `/v1/sessions/${a.id}/messages/${asked.id}/reply`, { text: `done ${i}` })).status);
+    expect(answers).toEqual([201, 201, 409]);
     expect((await tell(a, b.id, '   ')).status).toBe(400);
   });
 });
@@ -561,7 +566,11 @@ describe('what is recorded', () => {
     const token = await makeToken('bot', ['messages:write', 'messages:read']);
     await call(token, 'POST', `/v1/sessions/${a.id}/messages`, { text: SAID });
     await call(token, 'GET', `/v1/sessions/${a.id}/messages`);
-    expect((await asCommand('POST', paths.sessionMessages(a.id), { text: SAID })).status).toBe(201);
+    const fromCommand = await asCommand('POST', paths.sessionMessages(a.id), { text: SAID });
+    expect(fromCommand.status).toBe(201);
+    // Said with the message itself, where it will be read: it did not come from the page.
+    expect(fromCommand.body.from).toEqual({ kind: 'owner', via: 'command' });
+    expect((await asOwner('POST', paths.sessionMessages(a.id), { text: 'from the page' })).body.from).toEqual({ kind: 'owner', via: 'page' });
     await stop();
     const activity = (await fileText(ACTIVITY_FILE)).split('\n').filter(Boolean).map((line) => JSON.parse(line));
     expect(activity.map((entry) => [entry.caller, entry.method, entry.status, entry.chars])).toEqual([
@@ -569,6 +578,7 @@ describe('what is recorded', () => {
       ['token', 'GET', 200, SAID.length],
       ['owner-cli', 'POST', 201, null],
     ]);
+    void fromCommand;
     expect(activity[0].fingerprint).toMatch(/^[0-9a-f]{12}$/);
     expect(await fileText(ACTIVITY_FILE)).not.toContain('5521');
     // The messages themselves are in their own file, which only its owner can read, and in no other file.

@@ -555,7 +555,8 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     allowOn(request, 'messages.manage', { sessionId });
     const body = parse(OwnerMessageRequest, request.body);
     void reply.code(201);
-    return messages.fromOwner(sessionId, body.text, body.replyTo ?? null);
+    // Said with the message: whether it came from the page, or from a command line, where whoever types acts as the owner.
+    return messages.fromOwner(sessionId, body.text, body.replyTo ?? null, ownerCaller(request).kind === 'owner-cli' ? 'command' : 'page');
   });
   app.post(paths.sessionMessageBlocks(':sessionId'), async (request): Promise<{ sessionId: string; sender: string; blocked: boolean }> => {
     const sessionId = idParam(request, 'sessionId');

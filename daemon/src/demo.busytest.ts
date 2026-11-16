@@ -190,6 +190,8 @@ describe.runIf(ZSH)('aubergine demo', () => {
     expect((await asOwner('POST', `/v1/sessions/${demo.sessions.waiting}/input`, { text: 'release', enter: true })).status).toBe(200);
     await until('the answer to be noted', () => session(demo.sessions.waiting)?.noteLog.some((n) => n.text === 'Answered: release') ?? false);
     await until('it to report that it has finished', () => session(demo.sessions.waiting)?.attention.state === 'done');
+    // The report is two calls, the state and then the note: wait for the second as well.
+    await until('the note that it has finished', () => session(demo.sessions.waiting)?.noteLog.some((n) => n.text.startsWith('Finished:')) ?? false);
     expect(session(demo.sessions.waiting)?.noteLog.at(-1)?.text).toBe('Finished: Fixed on the branch you chose. The tests pass.');
     expect(await screen(demo.sessions.waiting!)).toContain('Fixing it on "release"');
 

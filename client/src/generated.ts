@@ -3762,6 +3762,7 @@ export type ListSessionMessagesResult = {
     threadId: string;
     from: {
       kind: "owner";
+      via?: "page" | "command";
     } | {
       kind: "session";
       sessionId: string;
@@ -3773,6 +3774,7 @@ export type ListSessionMessagesResult = {
     };
     to: {
       kind: "owner";
+      via?: "page" | "command";
     } | {
       kind: "session";
       sessionId: string;
@@ -3802,6 +3804,7 @@ export type SendMessageResult = {
   threadId: string;
   from: {
     kind: "owner";
+    via?: "page" | "command";
   } | {
     kind: "session";
     sessionId: string;
@@ -3813,6 +3816,7 @@ export type SendMessageResult = {
   };
   to: {
     kind: "owner";
+    via?: "page" | "command";
   } | {
     kind: "session";
     sessionId: string;
@@ -3834,6 +3838,7 @@ export type TakeInboxResult = {
     threadId: string;
     from: {
       kind: "owner";
+      via?: "page" | "command";
     } | {
       kind: "session";
       sessionId: string;
@@ -3845,6 +3850,7 @@ export type TakeInboxResult = {
     };
     to: {
       kind: "owner";
+      via?: "page" | "command";
     } | {
       kind: "session";
       sessionId: string;
@@ -3872,6 +3878,7 @@ export type ReplyToMessageResult = {
   threadId: string;
   from: {
     kind: "owner";
+    via?: "page" | "command";
   } | {
     kind: "session";
     sessionId: string;
@@ -3883,6 +3890,7 @@ export type ReplyToMessageResult = {
   };
   to: {
     kind: "owner";
+    via?: "page" | "command";
   } | {
     kind: "session";
     sessionId: string;
@@ -3910,6 +3918,7 @@ export type SendFromSessionResult = {
   threadId: string;
   from: {
     kind: "owner";
+    via?: "page" | "command";
   } | {
     kind: "session";
     sessionId: string;
@@ -3921,6 +3930,7 @@ export type SendFromSessionResult = {
   };
   to: {
     kind: "owner";
+    via?: "page" | "command";
   } | {
     kind: "session";
     sessionId: string;
