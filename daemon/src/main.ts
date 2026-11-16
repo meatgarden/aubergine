@@ -50,6 +50,9 @@ async function main(): Promise<void> {
       [SESSION_ENV.token]: sessionToken(token, sessionId),
       [SESSION_ENV.bin]: commandFolder,
       PATH: sessionPath,
+      // So that `aubergine` typed in a session talks to the server that session belongs to, also when that is not the default one.
+      AUBERGINE_PORT: String(listeningPort),
+      AUBERGINE_DATA_DIR: config.dataDir,
     }),
     logPrompts: () => settings.value.agents.logPrompts,
     agentLaunchLine: async (_agent, args) =>

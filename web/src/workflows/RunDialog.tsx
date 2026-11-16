@@ -1,11 +1,14 @@
 import { useEffect, useMemo, useState } from 'react';
-import { inputProblems, kickoffLine, latestVersion, needWords, needsOf, previewRun, versionOfProposal } from '@aubergine/shared';
+import { inputProblems, kickoffLine, latestVersion, needWords, needsOf, previewRun, versionOfProposal, type RepositoryOffer, type WorkflowContent } from '@aubergine/shared';
 import { api } from '../api';
 import { canvasActions } from '../canvas-actions';
 import { runCommand } from '../commands';
 import { useApp } from '../store';
 import { sampleInputs } from './editor-model';
 import { runOfSession } from './run-model';
+
+/** How a repository workflow is told apart from one of the owner's in the list of choices. */
+const REPO = 'repo:';
 
 /**
  * "Run workflow…": choose a workflow, fill in what it asks for, read what the
@@ -26,6 +29,39 @@ export function RunDialog() {
   const [replace, setReplace] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  /** What the repository the terminal is in offers, read when the dialog opens. */
+  const [offer, setOffer] = useState<RepositoryOffer | null>(null);
+  /** The content of the repository workflow that is chosen, as it was accepted. */
+  const [fromFile, setFromFile] = useState<{ file: string; content: WorkflowContent } | null>(null);
+
+  const startingSession = starting?.sessionId ?? null;
+  useEffect(() => {
+    setOffer(null);
+    if (!startingSession) return;
+    let cancelled = false;
+    void api
+      .getSessionRepositoryWorkflows(startingSession)
+      .then((found) => !cancelled && setOffer(found as RepositoryOffer))
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [startingSession]);
+  // A repository workflow is chosen as `repo:<file>`: read what it says, for the inputs and the preview.
+  const chosenFile = workflowId?.startsWith(REPO) ? workflowId.slice(REPO.length) : null;
+  const offerRoot = offer?.root ?? null;
+  useEffect(() => {
+    setFromFile(null);
+    if (!chosenFile || !offerRoot) return;
+    let cancelled = false;
+    void api
+      .getRepositoryWorkflow(offerRoot, chosenFile)
+      .then((detail) => !cancelled && detail.content && setFromFile({ file: chosenFile, content: detail.content as WorkflowContent }))
+      .catch((e: unknown) => !cancelled && setError((e as Error).message));
+    return () => {
+      cancelled = true;
+    };
+  }, [chosenFile, offerRoot]);
 
   const list = useMemo(() => [...(workflows ?? [])].filter((w) => w.listed).sort((a, b) => a.name.localeCompare(b.name)), [workflows]);
   useEffect(() => {
@@ -38,14 +74,22 @@ export function RunDialog() {
     setBusy(false);
   }, [starting]);
 
+  // With no workflows of the owner's own, the first one the repository offers that can be run is chosen.
+  const firstAccepted = (offer?.workflows ?? []).find((w) => w.state === 'accepted' && w.name !== null)?.file ?? null;
+  useEffect(() => {
+    if (starting && starting.elementId === undefined && workflowId === null && list.length === 0 && firstAccepted) setWorkflowId(`${REPO}${firstAccepted}`);
+  }, [starting, workflowId, list.length, firstAccepted]);
+
   if (!starting) return null;
   const close = (): void => useApp.getState().startRun(null);
   const alone = starting.elementId !== undefined;
-  const workflow = alone ? null : (list.find((w) => w.id === workflowId) ?? list[0] ?? null);
+  const offered = (offer?.workflows ?? []).filter((w) => w.name !== null);
+  const toReview = offered.filter((w) => w.state !== 'accepted').length;
+  const workflow = alone || chosenFile ? null : (list.find((w) => w.id === workflowId) ?? list[0] ?? null);
   // One element by itself is shown, and asked about, as the workflow of one that it will be run as.
   const aloneVersion = shelfItem ? versionOfProposal({ workflow: null, element: shelfItem.element }) : null;
   const usesTask = shelfItem ? `${shelfItem.element.instructions}\n${shelfItem.element.doneWhen}`.includes('{{task}}') : false;
-  const version = alone ? (aloneVersion ? { ...aloneVersion, inputs: usesTask ? aloneVersion.inputs.map((i) => ({ ...i, required: true })) : [] } : null) : workflow ? latestVersion(workflow) : null;
+  const version = alone ? (aloneVersion ? { ...aloneVersion, inputs: usesTask ? aloneVersion.inputs.map((i) => ({ ...i, required: true })) : [] } : null) : chosenFile ? (fromFile ? { ...fromFile.content, number: 1, createdAt: '' } : null) : workflow ? latestVersion(workflow) : null;
   const needs = version ? needsOf(version.elements) : [];
   const given = version ? Object.fromEntries(version.inputs.flatMap((input) => ((inputs[input.key] ?? '').trim() ? [[input.key, (inputs[input.key] as string).trim()]] : []))) : {};
   const problems = version ? inputProblems(version, given) : [];
@@ -53,7 +97,7 @@ export function RunDialog() {
   const blockedByRun = existing !== null && !replace;
 
   const start = async (): Promise<void> => {
-    if (!version || (!workflow && !shelfItem)) return;
+    if (!version || (!workflow && !shelfItem && !fromFile)) return;
     setBusy(true);
     setError(null);
     try {
@@ -63,7 +107,9 @@ export function RunDialog() {
         sessionId = (await canvasActions.get()?.addTerminal('claude-code', [kickoffLine()])) ?? null;
         if (sessionId === null) throw new Error('The terminal could not be started.');
       }
-      const started = shelfItem
+      const started = fromFile && chosenFile
+        ? await api.runRepositoryWorkflow(sessionId, { file: fromFile.file, inputs: given, replace, kickoff: !onNewAgent })
+        : shelfItem
         ? await api.runElement(shelfItem.id, { sessionId, inputs: given, replace, kickoff: !onNewAgent })
         : await api.startRun(sessionId, { workflowId: (workflow as { id: string }).id, inputs: given, replace, kickoff: !onNewAgent });
       const store = useApp.getState();
@@ -98,7 +144,7 @@ export function RunDialog() {
           </button>
         </header>
 
-        {!alone && list.length === 0 ? (
+        {!alone && list.length === 0 && offered.length === 0 ? (
           <>
             <p>There are no workflows yet. Make one from a template first.</p>
             <div className="dialog-actions">
@@ -118,18 +164,44 @@ export function RunDialog() {
             <>
               <div className="run-dialog-grid">
                 <div className="run-dialog-form">
-                  {workflow && (
+                  {!alone && (
                     <>
                       <label className="wf-field">
                         <span>Workflow</span>
-                        <select value={workflow.id} onChange={(e) => setWorkflowId(e.target.value)} autoFocus data-testid="run-workflow">
+                        <select value={chosenFile ? `${REPO}${chosenFile}` : (workflow?.id ?? '')} onChange={(e) => setWorkflowId(e.target.value)} autoFocus data-testid="run-workflow">
                           {list.map((w) => (
                             <option key={w.id} value={w.id}>
                               {w.name}
                             </option>
                           ))}
+                          {offered.length > 0 && (
+                            <optgroup label={`From the repository ${offer?.folder ?? ''}`}>
+                              {offered.map((w) => (
+                                // Only content you accepted can be run; the rest is listed so that you know it is there.
+                                <option key={w.file} value={`${REPO}${w.file}`} disabled={w.state !== 'accepted'}>
+                                  {w.name}
+                                  {w.state === 'accepted' ? '' : w.state === 'changed' ? ' (changed: review it again first)' : ' (review it first)'}
+                                </option>
+                              ))}
+                            </optgroup>
+                          )}
                         </select>
                       </label>
+                      {toReview > 0 && (
+                        <p className="sheet-note" data-testid="run-to-review">
+                          {toReview === 1 ? 'One workflow' : `${toReview} workflows`} from the repository cannot be run until you have read {toReview === 1 ? 'it' : 'them'}.{' '}
+                          <button
+                            type="button"
+                            className="quiet"
+                            onClick={() => {
+                              close();
+                              runCommand('drafts.review');
+                            }}
+                          >
+                            Review…
+                          </button>
+                        </p>
+                      )}
                       <p className="sheet-note">{version.elements.map((e) => e.name).join(' → ')}</p>
                     </>
                   )}

@@ -39,6 +39,7 @@ import { WorkflowEditor } from './workflows/WorkflowEditor';
 import { WorkflowsScreen } from './workflows/WorkflowsScreen';
 import { ReviewScreen } from './review/ReviewScreen';
 import './review/drafts-source';
+import { itemsOfListing, useRepositoryListing } from './review/repository-source';
 import { DescribeDialog } from './workflows/DescribeDialog';
 import { ShelfEditor } from './workflows/ShelfEditor';
 import './workflows/output-views';
@@ -82,10 +83,12 @@ function toFrameNode(frame: Frame, previous: CanvasNode | undefined): FrameFlowN
 
 /** Shown only when something an agent or a program wrote is waiting to be read. */
 function DraftsWaiting() {
-  const waiting = useApp((s) => (s.app?.drafts ?? []).filter((d) => d.status === 'waiting').length);
+  const drafts = useApp((s) => (s.app?.drafts ?? []).filter((d) => d.status === 'waiting').length);
+  // Workflow files in repositories that were never accepted, or changed since.
+  const waiting = drafts + itemsOfListing(useRepositoryListing()).length;
   if (waiting === 0) return null;
   return (
-    <button type="button" className="attention-button" onClick={() => runCommand('drafts.review')} title="Drafts by agents and programs, waiting for you to read them" data-testid="drafts-waiting">
+    <button type="button" className="attention-button" onClick={() => runCommand('drafts.review')} title="Written by agents or programs, or kept in a repository: waiting for you to read them" data-testid="drafts-waiting">
       {waiting} to review
     </button>
   );

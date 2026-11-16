@@ -24,6 +24,7 @@ export function WorkflowEditor() {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [leaving, setLeaving] = useState(false);
+  const [replaceFile, setReplaceFile] = useState(false);
 
   const version = workflow ? latestVersion(workflow) : null;
   // A fresh draft when another workflow is opened, and when this one is first known.
@@ -79,6 +80,27 @@ export function WorkflowEditor() {
     }
   };
 
+  /** Writes the saved workflow into the repository of the terminal that is selected. Only ever when this button is pressed. */
+  const saveToRepository = async (overwrite: boolean): Promise<void> => {
+    const state = useApp.getState();
+    const sessionId = state.focus?.sessionId ?? state.selected;
+    setError(null);
+    setReplaceFile(false);
+    if (!sessionId) {
+      setError('Select a terminal first: the file goes into the repository that terminal is in.');
+      return;
+    }
+    try {
+      const written = await api.saveToRepository(sessionId, workflow.id, overwrite);
+      setSaved(`${written.overwritten ? 'Replaced' : 'Wrote'} ${written.path}. It is not committed: that is yours to do.`);
+    } catch (e) {
+      const message = (e as Error).message;
+      setError(message);
+      // A file of that name is there: nothing was written. Replacing it is a second, deliberate press.
+      if (message.includes('already a file')) setReplaceFile(true);
+    }
+  };
+
   return (
     <div
       className="dialog-backdrop"
@@ -106,6 +128,16 @@ export function WorkflowEditor() {
               }}
             >
               Run…
+            </button>
+            <button
+              type="button"
+              className="quiet"
+              disabled={changed}
+              title={changed ? 'Save first' : 'Write this workflow as a file into .aubergine/workflows of the repository the selected terminal is in, to share it through Git'}
+              onClick={() => void saveToRepository(false)}
+              data-testid="save-to-repository"
+            >
+              Save to the repository…
             </button>
             <button type="button" className="quiet" onClick={() => runCommand('workflows.open')}>
               All workflows…
@@ -292,6 +324,13 @@ export function WorkflowEditor() {
           </ul>
         )}
         {error && <p className="dialog-error">{error}</p>}
+        {replaceFile && (
+          <p className="editor-repository">
+            <button type="button" className="danger" onClick={() => void saveToRepository(true)} data-testid="replace-in-repository">
+              Replace the file in the repository
+            </button>
+          </p>
+        )}
         <div className="dialog-actions">
           <span className="sheet-note editor-saved" data-testid="editor-saved">
             {leaving ? 'There are changes that are not saved.' : (saved ?? (changed ? 'Not saved yet. Saving makes a new version.' : ''))}

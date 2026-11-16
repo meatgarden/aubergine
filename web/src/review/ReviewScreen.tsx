@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
-import { REVIEW_LINES_SHOWN, lineDiff, needWords, needsShowAll, type Element, type WorkflowContent } from '@aubergine/shared';
+import { REVIEW_LINES_SHOWN, lineDiff, needWords, needsShowAll, type DraftRecord, type Element, type WorkflowContent } from '@aubergine/shared';
+import { api } from '../api';
 import { useApp } from '../store';
 import { ElementFields } from '../workflows/ElementFields';
 import { reviewSources, type ReviewDetail, type ReviewItem, type ReviewSource } from './registry';
@@ -48,6 +49,7 @@ export function ReviewScreen() {
   const [comment, setComment] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [decided, setDecided] = useState<DraftRecord[]>([]);
 
   const sources = reviewSources();
   const onItems = useMemo(() => (source: string, items: ReviewItem[]) => setBySource((before) => (before[source] === items ? before : { ...before, [source]: items })), []);
@@ -80,6 +82,20 @@ export function ReviewScreen() {
       cancelled = true;
     };
   }, [open, currentKey, currentRevision, currentState]); // eslint-disable-line react-hooks/exhaustive-deps -- reloaded when another is chosen or this one is revised
+
+  // What became of the last few drafts: read when the screen opens, and after each decision.
+  const waitingCount = all.filter((entry) => entry.item.state === 'waiting').length;
+  useEffect(() => {
+    if (!open) return;
+    let cancelled = false;
+    void api
+      .listDraftRecords(5)
+      .then((page) => !cancelled && setDecided(page.items as DraftRecord[]))
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [open, waitingCount]);
 
   if (!open) return null;
   const close = (): void => useApp.getState().togglePanel(null);
@@ -130,6 +146,21 @@ export function ReviewScreen() {
               <SourceItems key={source.id} source={source} selected={selected} onSelect={setSelected} onItems={onItems} />
             ))}
             {all.length === 0 && <p className="sheet-note" data-testid="review-empty">Nothing is waiting to be read.</p>}
+            {decided.length > 0 && (
+              <>
+                <h3>Decided lately</h3>
+                <ul className="review-decided" data-testid="review-decided">
+                  {decided.map((record) => (
+                    <li key={`${record.at} ${record.draftId}`} data-outcome={record.outcome}>
+                      {record.outcome === 'accepted' ? 'Accepted' : 'Discarded'}: {record.kind === 'element' ? 'an element' : 'a workflow'} from{' '}
+                      {record.proposedBy.kind === 'session' ? 'an agent' : record.proposedBy.kind === 'token' ? `the token “${record.proposedBy.name}”` : 'you'},{' '}
+                      {new Date(record.at).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })}
+                      {record.by.kind === 'owner-cli' ? ', from the command line' : ''}
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
           </div>
           <div className="review-main">
             {current && (
