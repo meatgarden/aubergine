@@ -25,7 +25,7 @@ export type KnownScope = z.infer<typeof KnownScope>;
 export const SCOPE_MEANING: Record<KnownScope, string> = {
   read: 'See canvases, sessions, layout and notes, and follow changes.',
   'canvases:write': 'Create, rename, reorder and close canvases; move and resize nodes; add and change frames; show a canvas in the browser.',
-  'sessions:write': 'Start, rename, tag, move, park, restore and end sessions; show a session in the browser.',
+  'sessions:write': 'Start, rename, tag, move, park, restore and end sessions; show a session in the browser. A session can be started with a command, so this scope can run any command on this computer as you.',
   'notes:write': 'Change the pinned note of a session and add entries to its note log.',
   'terminal:read': 'Read what a terminal shows. Not available yet.',
   'terminal:input': 'Type into a terminal. Not available yet.',

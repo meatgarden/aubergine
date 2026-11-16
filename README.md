@@ -677,7 +677,7 @@ curl -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/jso
 |---|---|
 | `read` | see canvases, sessions, layout and notes; follow changes |
 | `canvases:write` | create, rename, reorder and close canvases; move and resize nodes; frames; show a canvas in the browser |
-| `sessions:write` | start, rename, tag, move, park, restore and end sessions; show a session in the browser |
+| `sessions:write` | start, rename, tag, move, park, restore and end sessions; show a session in the browser. **A session can be started with a command, so a token with this scope can run any command on this computer as you** |
 | `notes:write` | change a session's pinned note and add entries to its note log |
 
 The names `terminal:read`, `terminal:input`, `workflows:write` and `runs:write` are reserved for what comes later; a token cannot be given them yet. A token cannot read what a terminal shows or type into it.
