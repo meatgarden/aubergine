@@ -26,6 +26,7 @@ import {
   stepRun,
   unregisterElementKind,
   validateContent,
+  waitsForPerson,
   type Actor,
   type Run,
   type RunReport,
@@ -230,19 +231,19 @@ describe('element kinds', () => {
     expect(elementKindNames()).toEqual(['instructions', 'approval']);
   });
 
-  it('takes a second kind without anything that validates, renders or steps being touched', () => {
+  it('takes another kind without anything that validates, renders or steps being touched', () => {
     registerElementKind({
-      kind: 'approval',
-      title: 'Approval',
+      kind: 'sign-off',
+      title: 'Sign-off',
       validate: (element) => (element.doneWhen ? [] : [`"${element.name}" must say who approves.`]),
       render: (element) => `Stop here. A person must approve: ${element.doneWhen}`,
     });
     try {
       const content = WorkflowContent.parse({
-        name: 'With approval',
+        name: 'With a sign-off',
         elements: [
           { id: 'build', name: 'Build', instructions: 'Build it.' },
-          { id: 'ok', name: 'Sign-off', kind: 'approval', doneWhen: 'the owner said yes' },
+          { id: 'ok', name: 'Sign-off', kind: 'sign-off', doneWhen: 'the owner said yes' },
         ],
       });
       expect(validateContent(content)).toEqual([]);
@@ -255,9 +256,9 @@ describe('element kinds', () => {
       run = moved.run;
       expect(renderRun(v, run)).toContain('Stop here. A person must approve: the owner said yes');
     } finally {
-      unregisterElementKind('approval');
+      unregisterElementKind('sign-off');
     }
-    expect(elementKind('approval')).toBeUndefined();
+    expect(elementKind('sign-off')).toBeUndefined();
   });
 
   it('reports an element of a kind nobody registered, and still renders the run', () => {
@@ -300,8 +301,10 @@ describe('the built-in templates', () => {
       expect(validateContent(template.content), template.name).toEqual([]);
       expect(template.content.inputs.map((i) => i.key)).toEqual(['task']);
       expect(template.content.elements[0]?.instructions).toContain('{{task}}');
-      for (const element of template.content.elements) expect(element.doneWhen, `${template.name}/${element.id}`).not.toBe('');
+      // Every element says how to tell it is done; one where a person decides says what they are asked.
+      for (const element of template.content.elements) expect(waitsForPerson(element.kind) ? element.ask : element.doneWhen, `${template.name}/${element.id}`).not.toBe('');
     }
+    expect(WORKFLOW_TEMPLATES.find((t) => t.name === 'specify-design-build')?.content.elements.map((e) => [e.name, waitsForPerson(e.kind)])).toEqual([['Specify', false], ['Design', false], ['Agree before building', true], ['Build', false], ['Check against the specification', false]]);
     expect(WORKFLOW_TEMPLATES.find((t) => t.name === 'fix-a-bug')?.content.elements.map((e) => e.name)).toEqual(['Reproduce', 'Find the cause', 'Fix', 'Test', 'Summarise']);
   });
 });

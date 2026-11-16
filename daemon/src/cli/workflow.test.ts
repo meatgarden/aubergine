@@ -341,6 +341,47 @@ describe('workflow commands against a server', () => {
     expect((await run(['stop'], session)).out).toBe('The run is stopped.');
   });
 
+  it("approves and sends back as the owner, by the terminal's name, and does neither inside a canvas terminal", async () => {
+    const session = fakeSession('api');
+    await run(['new', 'Careful', '--template', 'specify-design-build']);
+    await run(['run', 'Careful', '--session', 'api', '--input', 'task=a cache']);
+    await run(['done', '--note', 'specified'], session);
+    const waits = await run(['done', '--note', 'designed'], session);
+    expect(waits.out).toContain('WAITING FOR A PERSON TO APPROVE');
+    expect(waits.out).toContain('Is this what you want built');
+    // The agent cannot: its done is refused, and the owner's command does nothing where an agent types.
+    const tried = await run(['done', '--note', 'approved by me'], session);
+    expect(tried).toMatchObject({ code: 1 });
+    expect(tried.out).toContain('only a person approves');
+    const inside = await run(['approve', 'api'], session);
+    expect(inside.code).toBe(1);
+    expect(inside.out).toContain('does nothing inside a canvas terminal');
+    expect(hub.state.runs[0]).toMatchObject({ status: 'awaiting', currentElementId: 'agree' });
+
+    const back = await run(['send-back', 'api', '--to', 'Design', '--comment', 'The cache must be per user.']);
+    expect(back.code).toBe(0);
+    expect(back.out).toContain('Sent "api" back: Design · 2 of 5.');
+    // No agent is in that terminal, and the command says that nothing was typed.
+    expect(back.out).toContain('Nothing was typed into the terminal');
+    expect(typed).toEqual([]);
+    expect((await run(['status'], session)).out).toContain('The cache must be per user.');
+    expect((await run(['send-back', 'api', '--to', 'Specify', '--comment', 'x'])).out).toContain('not waiting for approval');
+
+    await run(['done', '--note', 'designed again'], session);
+    const approved = await run(['approve', 'api', '--comment', 'Go on.']);
+    expect(approved.code).toBe(0);
+    expect(approved.out).toContain('Approved "Agree before building" on "api". The run goes on: Build · 4 of 5.');
+    expect(hub.state.runs[0]?.history.map((h) => [h.type, h.by.kind, h.comment])).toEqual([['sent-back', 'person', 'The cache must be per user.'], ['approved', 'person', 'Go on.']]);
+    // Nothing waits now, and a name that is no run's says what does.
+    expect((await run(['approve', 'api'])).code).toBe(1);
+    const nobody = await run(['approve', 'nobody']);
+    expect(nobody.code).toBe(1);
+    expect(nobody.out).toContain('No run matches "nobody".');
+    expect(nobody.out).toContain('No run is waiting for approval.');
+    // A workflow with an approval is shown as what it is.
+    expect((await run(['show', 'Careful'])).out).toContain('A person decides here: the run stops until you approve it or send it back.');
+  });
+
   it('says so when a session command is typed outside a session, or the server is gone', async () => {
     await expect(run(['status'])).rejects.toThrow(/only works inside an Aubergine session/);
     const session = fakeSession('api');
