@@ -104,7 +104,7 @@ async function makeToken(name: string, scopes: Scope[]): Promise<string> {
   return made.body.secret as string;
 }
 function fakeSession(name: string, cwd: string | null): Session {
-  const session: Session = { id: newId(), projectId: hub.state.project.id, name, createdAt: new Date().toISOString(), state: 'open', cwd, command: null, note: '', status: NO_STATUS, attention: NO_ATTENTION, noteLog: [], agent: null, lastInputAt: null, lastOutputAt: null, tags: [], parkedFrom: null };
+  const session: Session = { id: newId(), projectId: hub.state.project.id, name, createdAt: new Date().toISOString(), state: 'open', cwd, command: null, note: '', status: NO_STATUS, attention: NO_ATTENTION, noteLog: [], agent: null, lastInputAt: null, lastOutputAt: null, tags: [], parkedFrom: null, peopleOnly: false, typedBy: null };
   hub.emit({ type: 'session.created', session, canvasId: hub.state.canvases[0]!.id, node: { id: newId(), sessionId: session.id, x: 0, y: 0, width: 640, height: 400, color: 'none' } });
   return session;
 }
@@ -218,7 +218,7 @@ describe('review before use', () => {
       ['release.json', 'accepted'],
     ]);
     const state = JSON.parse(await readFile(path.join(dir, 'data', 'state.json'), 'utf8'));
-    expect(state.version).toBe(6);
+    expect(state.version).toBe(7);
     expect(state.repositoryAccepted.map((e: { root: string; file: string }) => [e.root, e.file])).toEqual([[project, 'release.json']]);
     // The same file name in another repository was never accepted.
     const twin = path.join(home, 'work', 'twin');

@@ -94,7 +94,7 @@ async function makeToken(name: string, scopes: Scope[], more: object = {}): Prom
 }
 
 function fakeSession(name: string, more: Partial<Session> = {}): Session {
-  const session: Session = { id: newId(), projectId: hub.state.project.id, name, createdAt: new Date().toISOString(), state: 'open', cwd: null, command: null, note: '', status: NO_STATUS, attention: NO_ATTENTION, noteLog: [], agent: null, lastInputAt: null, lastOutputAt: null, tags: [], parkedFrom: null, ...more };
+  const session: Session = { id: newId(), projectId: hub.state.project.id, name, createdAt: new Date().toISOString(), state: 'open', cwd: null, command: null, note: '', status: NO_STATUS, attention: NO_ATTENTION, noteLog: [], agent: null, lastInputAt: null, lastOutputAt: null, tags: [], parkedFrom: null, peopleOnly: false, typedBy: null, ...more };
   hub.emit({ type: 'session.created', session, canvasId: hub.state.canvases[0]!.id, node: { id: newId(), sessionId: session.id, x: 0, y: 0, width: 640, height: 400, color: 'none' } });
   return session;
 }
@@ -483,7 +483,7 @@ describe('the shelf', () => {
     expect(hub.state.workflows).toEqual([]);
     // Changing the shelf element later does not reach into a run: the run had its own copy.
     const state = JSON.parse(await readFile(path.join(dir, 'state.json'), 'utf8').catch(() => '{}'));
-    expect(state.version ?? 6).toBe(6);
+    expect(state.version ?? 7).toBe(7);
   });
 
   it('a workflow left over from running one element is cleared at the next start', async () => {

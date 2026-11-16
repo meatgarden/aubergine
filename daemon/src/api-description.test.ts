@@ -73,7 +73,7 @@ const withBearer = (secret: string, method: string, url: string, body?: unknown)
   app.inject({ method: method as 'GET', url, headers: { host: `127.0.0.1:${port}`, authorization: `Bearer ${secret}` }, ...(body === undefined ? {} : { payload: body as object }) });
 
 async function tokenWith(scopes: Scope[]): Promise<string> {
-  const created = await asOwner('POST', publicPaths.tokens, { name: scopes.join('+'), scopes, reviewWorkflowChanges: false });
+  const created = await asOwner('POST', publicPaths.tokens, { name: scopes.join('+').slice(0, 80), scopes, reviewWorkflowChanges: false, reach: { kind: 'all' } });
   return CreatedToken.parse(created.json()).secret;
 }
 
@@ -179,7 +179,7 @@ describe('the description of the API', () => {
 
     // One error shape, with its codes.
     const error = document.components.schemas.Error as { properties: { error: { properties: { code: { enum: string[] } } } } };
-    expect(error.properties.error.properties.code.enum).toEqual(['bad_request', 'unauthorized', 'forbidden', 'not_found', 'conflict', 'runtime_unavailable', 'too_large', 'rate_limited', 'internal']);
+    expect(error.properties.error.properties.code.enum).toEqual(['bad_request', 'unauthorized', 'forbidden', 'not_found', 'conflict', 'runtime_unavailable', 'too_large', 'rate_limited', 'people_only', 'not_at_prompt', 'no_shell_integration', 'run_in_progress', 'internal']);
     expect(Object.keys(document.components.responses).sort()).toEqual(['BadRequest', 'Conflict', 'Forbidden', 'NotFound', 'RateLimited', 'TooLarge', 'Unauthorized', 'Unavailable']);
     expect(document.components.responses.RateLimited?.headers).toHaveProperty('Retry-After');
     for (const { path, method, operation } of operations) {

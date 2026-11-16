@@ -935,3 +935,78 @@ test('a workflow kept in a repository is reviewed before it can be run, and agai
   await review.getByTestId('review-close').click();
   rmSync(project, { recursive: true, force: true });
 });
+
+test('a token types into a terminal, the owner sees it, and "people only" closes the terminal to it', async ({ page }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  await page.getByRole('button', { name: 'New canvas' }).click();
+  await page.getByRole('button', { name: 'New terminal' }).click();
+  await expect(page.locator('.xterm-rows')).toHaveText(/\S/);
+  const sessionId = (await page.getByTestId('list-row').getAttribute('data-session')) ?? '';
+  // An ordinary terminal is open to tokens; nothing typed by one yet.
+  await expect(page.getByTestId('people-only')).toHaveAttribute('aria-pressed', 'false');
+  await expect(page.getByTestId('badge-typed')).toHaveCount(0);
+
+  // A token that may type. It cannot be made without saying which terminals it may reach.
+  await page.getByTestId('node-body').click();
+  await page.keyboard.press(process.platform === 'darwin' ? 'Meta+k' : 'Control+Shift+K');
+  await page.keyboard.type('>api tokens');
+  await page.keyboard.press('Enter');
+  const tokenScreen = page.getByTestId('token-screen');
+  await tokenScreen.getByLabel('Token name').fill('e2e typer');
+  // The row of one scope: by the scope's own name, since other rows mention it in what they say.
+  const scopeBox = (scope: string) => tokenScreen.locator('label', { has: page.locator('code', { hasText: new RegExp(`^${scope}$`) }) });
+  await scopeBox('terminal:input').getByRole('checkbox').check();
+  await scopeBox('terminal:read').getByRole('checkbox').check();
+  await expect(scopeBox('terminal:input')).toContainText('can run any command on this computer as you');
+  await expect(tokenScreen.getByTestId('token-reach')).toBeVisible();
+  await expect(tokenScreen.getByTestId('token-create')).toBeDisabled();
+  await tokenScreen.getByTestId('reach-all').check();
+  await tokenScreen.getByTestId('token-create').click();
+  const secret = (await tokenScreen.getByTestId('token-secret').textContent()) ?? '';
+  await page.keyboard.press('Escape');
+  const asToken = { Authorization: `Bearer ${secret}` };
+
+  // It reads the screen, types a command, and the terminal runs it.
+  const screen = await page.request.get(`/v1/sessions/${sessionId}/screen`, { headers: asToken });
+  expect(screen.status()).toBe(200);
+  expect((await screen.json()).columns).toBeGreaterThan(10);
+  const sent = await page.request.post(`/v1/sessions/${sessionId}/input`, { headers: asToken, data: { text: 'echo typed-by-$((40 + 2))', enter: true } });
+  expect(sent.status()).toBe(200);
+  await expect(page.locator('.xterm-rows')).toContainText('typed-by-42');
+  // The owner sees that a program typed, and which one: on the node for a while, and on the row with the time.
+  await expect(page.getByTestId('badge-typed')).toHaveText('typed by e2e typer');
+  await expect(page.getByTestId('list-typed-by')).toContainText('typed by e2e typer');
+  // Text is typed as it is: "Enter" is five letters, and a control character is refused.
+  expect((await page.request.post(`/v1/sessions/${sessionId}/input`, { headers: asToken, data: { text: 'stop\u0003' } })).status()).toBe(400);
+
+  // People only: the owner closes the terminal to tokens. The mark is on the node and on the row.
+  await page.getByTestId('people-only').click();
+  await expect(page.getByTestId('people-only')).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.getByTestId('people-only')).toContainText('people only');
+  await expect(page.getByTestId('row-people-only')).toBeVisible();
+  for (const answer of [await page.request.get(`/v1/sessions/${sessionId}/screen`, { headers: asToken }), await page.request.post(`/v1/sessions/${sessionId}/input`, { headers: asToken, data: { text: 'echo not-typed', enter: true } })]) {
+    expect(answer.status()).toBe(403);
+    expect((await answer.json()).error.code).toBe('people_only');
+  }
+  await expect(page.locator('.xterm-rows')).not.toContainText('not-typed');
+  // The owner still types there.
+  await page.getByTestId('node-body').click();
+  await page.keyboard.type('echo "still-mine-$((1 + 1))"');
+  await page.keyboard.press('Enter');
+  await expect(page.locator('.xterm-rows')).toContainText('still-mine-2');
+
+  // What the token did is on record, and can be narrowed to this terminal: lengths and outcomes, not the text.
+  await page.keyboard.press(process.platform === 'darwin' ? 'Control+Meta+.' : 'Control+Shift+.');
+  await page.keyboard.press(process.platform === 'darwin' ? 'Meta+k' : 'Control+Shift+K');
+  await page.keyboard.type('>api activity');
+  await page.keyboard.press('Enter');
+  const activity = page.getByTestId('activity-screen');
+  await activity.getByTestId('activity-session').selectOption(sessionId);
+  await expect(activity.getByTestId('activity-row')).toHaveCount(5);
+  await expect(activity.getByTestId('activity-row').first()).toContainText('terminal.input');
+  await expect(activity.getByTestId('activity-row').nth(3)).toContainText('25 characters');
+  await expect(activity).not.toContainText('typed-by-');
+  await page.keyboard.press('Escape');
+});

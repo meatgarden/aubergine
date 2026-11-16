@@ -58,6 +58,25 @@ export const Settings = z.object({
       quietAfterSeconds: z.number().int().min(10).max(86_400).default(300),
     })
     .prefault({}),
+  /** Terminal access for programs with an API token: what is protected by default, the limits, and the audit of typed text. */
+  terminal: z
+    .object({
+      /** New sessions are "people only" from the start. */
+      protectNewSessions: z.boolean().default(false),
+      /** New sessions that start an agent are "people only" from the start: a token typing into an agent is the riskiest case. */
+      protectAgentSessions: z.boolean().default(true),
+      /** How many input calls one token may make to one session in a minute. */
+      inputCallsPerMinute: z.number().int().min(1).max(10_000).default(60),
+      /** How many characters one input call may carry. */
+      inputCharsPerCall: z.number().int().min(1).max(20_000).default(4000),
+      /** How many characters one token may type into one session in a minute. */
+      inputCharsPerMinute: z.number().int().min(1).max(1_000_000).default(20_000),
+      /** How many runs may be waited for at once, over all sessions. */
+      maxWaitingRuns: z.number().int().min(1).max(100).default(8),
+      /** Keep the text that tokens type, itself, in `input.log` in the data folder. Off: only its length and a fingerprint are recorded. */
+      auditInput: z.boolean().default(false),
+    })
+    .prefault({}),
   /**
    * Keys: command name to a chord (`"Ctrl+Meta+J"`), a list of chords, or
    * `null` for no key. Entries that are wrong are reported and skipped.

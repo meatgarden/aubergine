@@ -312,6 +312,14 @@ export const ErrorCode = z.enum([
   'too_large',
   /** Too many calls in a short time; `Retry-After` says when to try again. */
   'rate_limited',
+  /** The session is "people only": no token may read it or type into it. */
+  'people_only',
+  /** The session's shell is not at its prompt: a program or an agent has the keyboard. */
+  'not_at_prompt',
+  /** The session's shell does not report when a command finishes, so a run cannot be waited for. */
+  'no_shell_integration',
+  /** Another run is already being waited for on this session, or too many are waiting. */
+  'run_in_progress',
   'internal',
 ]);
 export type ErrorCode = z.infer<typeof ErrorCode>;
@@ -520,7 +528,10 @@ export const TokenList = pageOf(TokenView);
 export type TokenList = z.infer<typeof TokenList>;
 
 /** Query of reading the activity log: a page, optionally of one token only. Newest first. */
-export const ActivityQuery = PageQuery.extend({ tokenId: Id.optional().describe('Only calls made with this token.') });
+export const ActivityQuery = PageQuery.extend({
+  tokenId: Id.optional().describe('Only calls made with this token.'),
+  sessionId: Id.optional().describe('Only calls about this session, or made from inside it.'),
+});
 export type ActivityQuery = z.infer<typeof ActivityQuery>;
 
 export const ActivityList = pageOf(ActivityEntry);

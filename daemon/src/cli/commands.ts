@@ -43,7 +43,15 @@ export type Command =
   | { name: 'hooks-print' }
   | { name: 'shell-hook-print' }
   | { name: 'service'; action: 'install' | 'uninstall' }
-  | { name: 'token-create'; tokenName: string; scopes: string[]; expires: string | null; /** False with `--no-review`: the token may change workflows directly. */ review: boolean }
+  /** What a terminal shows now. */
+  | { name: 'screen'; query: string }
+  | { name: 'output'; query: string; lines: number | null }
+  /** Types text into a session, as the owner. */
+  | { name: 'send'; query: string; text: string; enter: boolean }
+  /** Runs a command at a session's prompt and waits for it. */
+  | { name: 'run'; query: string; command: string; timeout: number | null }
+  | { name: 'protect'; query: string; peopleOnly: boolean }
+  | { name: 'token-create'; tokenName: string; scopes: string[]; expires: string | null; /** `all`, `canvas:<name>` or `tag:<tag>`: which sessions the terminal scopes reach. */ reach: string | null; /** False with `--no-review`: the token may change workflows directly. */ review: boolean }
   | { name: 'token-list' }
   | { name: 'token-revoke'; query: string }
   | { name: 'start'; open: boolean }
@@ -85,6 +93,7 @@ export const USAGE = `Usage: aubergine <command>
                              --stop        ask an idle original to exit, then resume the same conversation
                              --dry-run, --yes, --force, --no-open
   token create <name> --scope <scope> [--scope …] [--expires 30d | <date>] [--no-review]
+                             [--reach all | canvas:<name> | tag:<tag>]   which sessions terminal:read and terminal:input reach
                              Make an API token for a program of yours. Its secret is printed once, on standard output
   token list                 The API tokens, with their scopes and when each was last used
   token revoke <name|id>     Revoke a token: it stops working at once
@@ -114,6 +123,12 @@ export const USAGE = `Usage: aubergine <command>
   workflow blocked <reason>  You cannot go on without a person
   workflow goto <element>    Jump to an element, by name, ID or number
   workflow pause | resume | stop
+  screen <session>           What that terminal shows now, as text
+  output <session> [--lines n]   What it printed recently
+  send <session> <text> [--enter]   Type text into it, exactly as given; --enter presses Enter after it
+  run <session> [--timeout s] -- <command>   Run a command at its shell prompt, wait, and print the output and exit code
+  protect <session>          Mark it "people only": no API token may read it or type into it
+  unprotect <session>        Open it to API tokens again (those whose scopes and reach allow)
   note <text>                Inside a session: add an entry to that session's note log
   hook <event>               For agent hooks: reads the hook's JSON on stdin (prompt, notification, stop)
   hooks print                Print the Claude Code hook settings, to add to your own config by hand
@@ -125,7 +140,7 @@ export const USAGE = `Usage: aubergine <command>
 new, here and import take --canvas <name>. Without it they use the canvas you looked at most recently
 in a browser, or the first one when no browser is open.
 
-The server must be running for list, new, canvas, token, workflow, element, attach, here, scan, import, move, note and open.`;
+The server must be running for list, new, canvas, token, workflow, element, screen, output, send, run, protect, attach, here, scan, import, move, note and open.`;
 
 export class UsageError extends Error {}
 
@@ -248,6 +263,43 @@ export function parseCommand(argv: readonly string[]): Command {
         canvas,
       };
     }
+    case 'screen':
+      if (rest.length === 0 || rest.some((word) => word.startsWith('--'))) throw new UsageError(rest.find((word) => word.startsWith('--')) ? `screen does not know ${rest.find((word) => word.startsWith('--'))}` : 'screen needs a session name');
+      return { name: 'screen', query: rest.join(' ') };
+    case 'output': {
+      const { value: lines, rest: words } = takeOption(rest, '--lines');
+      const unknown = words.find((word) => word.startsWith('--'));
+      if (unknown) throw new UsageError(`output does not know ${unknown}`);
+      if (words.length === 0) throw new UsageError('output needs a session name');
+      if (lines !== null && !/^\d{1,5}$/.test(lines)) throw new UsageError('--lines needs a number');
+      return { name: 'output', query: words.join(' '), lines: lines === null ? null : Number(lines) };
+    }
+    case 'send': {
+      // The first word names the session; the rest is the text, typed exactly as given. Only --enter before the text is an option.
+      const [query, ...after] = rest;
+      const enter = after[0] === '--enter' || after.at(-1) === '--enter';
+      const words = after[0] === '--enter' ? after.slice(1) : after.at(-1) === '--enter' ? after.slice(0, -1) : after;
+      if (query === undefined || query.startsWith('--')) throw new UsageError('send needs a session name, then the text');
+      if (words.join(' ').trim() === '') throw new UsageError('send needs some text to type');
+      return { name: 'send', query, text: words.join(' '), enter };
+    }
+    case 'run': {
+      const split = rest.indexOf('--');
+      const { value: timeout, rest: words } = takeOption(split < 0 ? rest : rest.slice(0, split), '--timeout');
+      const unknown = words.find((word) => word.startsWith('--'));
+      if (unknown) throw new UsageError(`run does not know ${unknown}`);
+      if (words.length === 0) throw new UsageError('run needs a session name, then -- and the command');
+      if (split < 0 || split === rest.length - 1) throw new UsageError('run needs the command after --');
+      if (timeout !== null && !/^\d{1,4}$/.test(timeout)) throw new UsageError('--timeout needs a number of seconds');
+      return { name: 'run', query: words.join(' '), command: rest.slice(split + 1).join(' '), timeout: timeout === null ? null : Number(timeout) };
+    }
+    case 'protect':
+    case 'unprotect': {
+      const unknown = rest.find((word) => word.startsWith('--'));
+      if (unknown) throw new UsageError(`${command} does not know ${unknown}`);
+      if (rest.length === 0) throw new UsageError(`${command} needs a session name`);
+      return { name: 'protect', query: rest.join(' '), peopleOnly: command === 'protect' };
+    }
     case 'workflow':
     case 'workflows':
       return { name: 'workflow', words: rest };
@@ -280,7 +332,8 @@ export function parseCommand(argv: readonly string[]): Command {
         return { name: 'token-revoke', query: words.join(' ') };
       }
       if (action === 'create' || action === 'new') {
-        const { value: expires, rest: withFlag } = takeOption(words, '--expires');
+        const { value: expires, rest: afterReach } = takeOption(words, '--expires');
+        const { value: reach, rest: withFlag } = takeOption(afterReach, '--reach');
         const review = !withFlag.includes('--no-review');
         const afterExpires = withFlag.filter((word) => word !== '--no-review');
         const scopes: string[] = [];
@@ -294,8 +347,8 @@ export function parseCommand(argv: readonly string[]): Command {
           else names.push(word);
         }
         if (names.length === 0) throw new UsageError('token create needs a name');
-        if (scopes.length === 0) throw new UsageError('token create needs at least one --scope: read, canvases:write, sessions:write, notes:write, workflows:write or runs:write');
-        return { name: 'token-create', tokenName: names.join(' '), scopes: [...new Set(scopes)], expires, review };
+        if (scopes.length === 0) throw new UsageError('token create needs at least one --scope: read, canvases:write, sessions:write, notes:write, workflows:write, runs:write, terminal:read or terminal:input');
+        return { name: 'token-create', tokenName: names.join(' '), scopes: [...new Set(scopes)], expires, reach, review };
       }
       throw new UsageError('token needs "create <name> --scope …", "list" or "revoke <name|id>"');
     }
@@ -454,7 +507,7 @@ export function resolveToken<T extends { id: string; name: string; revokedAt: st
 
 /** The tokens as a table: never a secret, which the server does not have either. */
 export function formatTokens(
-  tokens: readonly { id: string; name: string; scopes: readonly string[]; lastUsedAt: string | null; expiresAt: string | null; revokedAt: string | null; reviewWorkflowChanges?: boolean }[],
+  tokens: readonly { id: string; name: string; scopes: readonly string[]; lastUsedAt: string | null; expiresAt: string | null; revokedAt: string | null; reviewWorkflowChanges?: boolean; reach?: { kind: 'all' } | { kind: 'tag'; tag: string } | { kind: 'canvases'; canvasIds: readonly string[] } | null }[],
   now: number = Date.now(),
 ): string {
   if (tokens.length === 0) return 'No API tokens. Make one with: aubergine token create <name> --scope read';
@@ -465,11 +518,13 @@ export function formatTokens(
     t.scopes.join(','),
     // Only means something for a token that may write workflows.
     !t.scopes.includes('workflows:write') ? '-' : t.reviewWorkflowChanges ? 'reviewed' : 'direct',
+    // Which sessions its terminal scopes reach.
+    !t.reach ? '-' : t.reach.kind === 'all' ? 'all sessions' : t.reach.kind === 'tag' ? `tag ${t.reach.tag}` : `${t.reach.canvasIds.length} ${t.reach.canvasIds.length === 1 ? 'canvas' : 'canvases'}`,
     day(t.lastUsedAt),
     t.expiresAt ? day(t.expiresAt) : 'never',
     t.id,
   ]);
-  const head = ['NAME', 'STATE', 'SCOPES', 'WORKFLOWS', 'LAST USED', 'EXPIRES', 'ID'];
+  const head = ['NAME', 'STATE', 'SCOPES', 'WORKFLOWS', 'TERMINALS', 'LAST USED', 'EXPIRES', 'ID'];
   const widths = head.map((title, i) => Math.max(title.length, ...rows.map((row) => (row[i] as string).length)));
   return [head, ...rows].map((row) => row.map((cell, i) => (cell as string).padEnd(widths[i] as number)).join('  ').trimEnd()).join('\n');
 }

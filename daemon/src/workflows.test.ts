@@ -144,7 +144,7 @@ function fakeSession(name: string, more: Partial<Session> = {}): Session {
     lastInputAt: null,
     lastOutputAt: null,
     tags: [],
-    parkedFrom: null,
+    parkedFrom: null, peopleOnly: false, typedBy: null,
     ...more,
   };
   hub.emit({ type: 'session.created', session, canvasId: hub.state.canvases[0]!.id, node: { id: newId(), sessionId: session.id, x: 0, y: 0, width: 640, height: 400, color: 'none' } });
@@ -734,7 +734,7 @@ describe('a restart of the server', () => {
     await startRun(workflow.id, session.id);
     await hub.flush();
     const file = JSON.parse(await readFile(path.join(dir, 'state.json'), 'utf8'));
-    expect(file.version).toBe(6);
+    expect(file.version).toBe(7);
     expect(file.workflows).toHaveLength(1);
     expect(file.runs).toHaveLength(1);
     expect(file.runs[0].status).toBe('running');

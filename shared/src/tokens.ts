@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { Id } from './ids';
+import { Reach } from './terminal';
 
 /**
  * API tokens: credentials the owner creates for programs of their own. Each
@@ -8,13 +9,13 @@ import { Id } from './ids';
  */
 
 /** What a token can be allowed to do. Smallest first. */
-export const GRANTABLE_SCOPES = ['read', 'canvases:write', 'sessions:write', 'notes:write', 'workflows:write', 'runs:write'] as const;
+export const GRANTABLE_SCOPES = ['read', 'canvases:write', 'sessions:write', 'notes:write', 'workflows:write', 'runs:write', 'terminal:read', 'terminal:input'] as const;
 
-/**
- * Names kept for what comes later, so that there is one list of scopes from
- * the start. A token cannot be given these yet.
- */
-export const RESERVED_SCOPES = ['terminal:read', 'terminal:input'] as const;
+/** The scopes that reach into terminals. Neither is implied by any other scope; a token that asks for one must say which sessions it may reach. */
+export const TERMINAL_SCOPES = ['terminal:read', 'terminal:input'] as const;
+
+/** Names kept for what comes later. There are none at present. */
+export const RESERVED_SCOPES = [] as const;
 
 export const Scope = z.enum(GRANTABLE_SCOPES);
 export type Scope = z.infer<typeof Scope>;
@@ -27,10 +28,10 @@ export const SCOPE_MEANING: Record<KnownScope, string> = {
   'canvases:write': 'Create, rename, reorder and close canvases; move and resize nodes; add and change frames; show a canvas in the browser.',
   'sessions:write': 'Start, rename, tag, move, park, restore and end sessions; show a session in the browser. A session can be started with a command, so this scope can run any command on this computer as you.',
   'notes:write': 'Change the pinned note of a session and add entries to its note log.',
-  'terminal:read': 'Read what a terminal shows. Not available yet.',
-  'terminal:input': 'Type into a terminal. Not available yet.',
+  'terminal:read': 'Read what the terminals it may reach show and have printed, and search that. Whatever is on those screens, secrets included, is readable to this token.',
+  'terminal:input': 'Type into the terminals it may reach, press keys there and run commands. This scope can run any command on this computer as you, in any terminal it may reach.',
   'workflows:write': 'Propose workflows and elements as drafts for you to review. With review switched off for the token: create, change, copy and remove workflows and shelf elements directly.',
-  'runs:write': 'Start runs of workflows on sessions, and report on them: done, blocked, go to, pause, resume, stop. It does not type into a terminal.',
+  'runs:write': 'Start runs of workflows on sessions, and report on them: done, blocked, go to, pause, resume, stop. By itself it types nothing into a terminal; with terminal:input on that terminal, the one fixed kickoff sentence is typed.',
 };
 
 /** Every secret starts with this, so that one found in a file or a log can be recognised for what it is. */
@@ -58,6 +59,8 @@ export const ApiToken = z.object({
   revokedAt: Timestamp.nullable().default(null),
   /** What this token writes about workflows needs the owner's review: it may propose drafts, and may not create or change workflows or shelf elements directly. */
   reviewWorkflowChanges: z.boolean().default(false),
+  /** Which sessions its terminal scopes apply to. Null for a token without those scopes: it reaches no terminal. */
+  reach: Reach.nullable().default(null),
 });
 export type ApiToken = z.infer<typeof ApiToken>;
 
@@ -91,7 +94,9 @@ export const CreateTokenRequest = z
       .boolean()
       .default(true)
       .describe('Changes to workflows need your review: with `workflows:write` the token may propose drafts, and may not create or change workflows directly. On unless you switch it off.'),
+    reach: Reach.optional().describe('Which sessions the terminal scopes apply to: all, those on named canvases, or those with a tag. Required when `terminal:read` or `terminal:input` is asked for; there is no default.'),
   })
+  .refine((body) => body.reach !== undefined || !body.scopes.some((scope) => (TERMINAL_SCOPES as readonly string[]).includes(scope)), 'A token with a terminal scope must say which sessions it may reach: give `reach`')
   .refine((body) => body.expiresAt === undefined || body.expiresInDays === undefined, 'Give expiresAt or expiresInDays, not both');
 export type CreateTokenRequest = z.infer<typeof CreateTokenRequest>;
 
@@ -130,6 +135,10 @@ export const ActivityEntry = z.object({
   tokenName: z.string(),
   /** For an owner's call from the command line that says it came from inside a session: that session. */
   fromSessionId: Id.nullable().default(null),
+  /** For reading or typing in a terminal: how much text, as a number of characters. Never the text. */
+  chars: z.number().int().nullable().default(null),
+  /** For typing: the first characters of a hash of what was typed, so that two entries can be seen to be the same text without keeping it. */
+  fingerprint: z.string().max(32).nullable().default(null),
   /** What was asked for, as `authorize` names it; empty when the call never got that far. */
   action: z.string(),
   resource: z.object({ sessionId: z.string().optional(), canvasId: z.string().optional() }),
@@ -160,4 +169,4 @@ export const Capabilities = z.object({
 export type Capabilities = z.infer<typeof Capabilities>;
 
 /** The features a client may look for in `Capabilities.features`. */
-export const FEATURES = ['canvases', 'sessions', 'layout', 'notes', 'tags', 'events', 'show', 'tokens', 'activity', 'openapi', 'workflows', 'runs', 'drafts', 'elements', 'outputs'] as const;
+export const FEATURES = ['canvases', 'sessions', 'layout', 'notes', 'tags', 'events', 'show', 'tokens', 'activity', 'openapi', 'workflows', 'runs', 'drafts', 'elements', 'outputs', 'repository-workflows', 'terminal'] as const;

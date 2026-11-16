@@ -1,22 +1,34 @@
 import { appendFile, mkdir, readFile, rename, stat } from 'node:fs/promises';
 import path from 'node:path';
+import type { z } from 'zod';
 import { ActivityEntry } from '@aubergine/shared';
 
 /**
  * The record of what API tokens did. Callers know only this interface, so
  * the record can move from a file to a database without touching them.
  */
+/** An entry as it is handed in: what is left out takes its default. */
+export type ActivityInput = z.input<typeof ActivityEntry>;
+
+/** Which entries to read: of one token, about one session, or all. */
+export interface ActivityFilter {
+  tokenId?: string | undefined;
+  sessionId?: string | undefined;
+  limit: number;
+  cursor?: string | undefined;
+}
+
 export interface ActivityLog {
   /** Adds one entry. Never rejects: failing to record must not fail the call it records. */
-  append(entry: ActivityEntry): Promise<void>;
+  append(entry: ActivityInput): Promise<void>;
   /** Entries, newest first, optionally of one token. `cursor` is the `nextCursor` of the page before. */
-  read(query: { tokenId?: string | undefined; limit: number; cursor?: string | undefined }): Promise<{ items: ActivityEntry[]; nextCursor: string | null }>;
+  read(query: ActivityFilter): Promise<{ items: ActivityEntry[]; nextCursor: string | null }>;
 }
 
 export class BadActivityCursorError extends Error {}
 
-function pageOf(entries: ActivityEntry[], query: { tokenId?: string | undefined; limit: number; cursor?: string | undefined }): { items: ActivityEntry[]; nextCursor: string | null } {
-  const wanted = query.tokenId === undefined ? entries : entries.filter((entry) => entry.tokenId === query.tokenId);
+function pageOf(entries: ActivityEntry[], query: ActivityFilter): { items: ActivityEntry[]; nextCursor: string | null } {
+  const wanted = entries.filter((entry) => (query.tokenId === undefined || entry.tokenId === query.tokenId) && (query.sessionId === undefined || entry.resource.sessionId === query.sessionId || entry.fromSessionId === query.sessionId));
   let start = 0;
   if (query.cursor !== undefined) {
     // The cursor names the time of the last entry seen; older entries follow it. Entries only ever get added at the new end.
@@ -45,11 +57,11 @@ function pageOf(entries: ActivityEntry[], query: { tokenId?: string | undefined;
 export class MemoryActivityLog implements ActivityLog {
   readonly entries: ActivityEntry[] = [];
 
-  async append(entry: ActivityEntry): Promise<void> {
-    this.entries.push(entry);
+  async append(entry: ActivityInput): Promise<void> {
+    this.entries.push(ActivityEntry.parse(entry));
   }
 
-  async read(query: { tokenId?: string | undefined; limit: number; cursor?: string | undefined }): Promise<{ items: ActivityEntry[]; nextCursor: string | null }> {
+  async read(query: ActivityFilter): Promise<{ items: ActivityEntry[]; nextCursor: string | null }> {
     return pageOf([...this.entries].reverse(), query);
   }
 }
@@ -75,7 +87,7 @@ export class FileActivityLog implements ActivityLog {
     this.file = path.join(dir, ACTIVITY_FILE);
   }
 
-  append(entry: ActivityEntry): Promise<void> {
+  append(entry: ActivityInput): Promise<void> {
     const line = `${JSON.stringify(ActivityEntry.parse(entry))}\n`;
     // One write at a time, in order, so that lines never interleave and rotation sees a settled file.
     this.queue = this.queue
@@ -107,7 +119,7 @@ export class FileActivityLog implements ActivityLog {
     this.size += Buffer.byteLength(line);
   }
 
-  async read(query: { tokenId?: string | undefined; limit: number; cursor?: string | undefined }): Promise<{ items: ActivityEntry[]; nextCursor: string | null }> {
+  async read(query: ActivityFilter): Promise<{ items: ActivityEntry[]; nextCursor: string | null }> {
     await this.queue;
     const entries: ActivityEntry[] = [];
     for (const file of [`${this.file}.1`, this.file]) {

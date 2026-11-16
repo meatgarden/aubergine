@@ -21,6 +21,7 @@ describe('Settings', () => {
       agents: { logPrompts: false, claudeCommand: 'mytool launch -- claude' },
       api: { rateLimitPerMinute: 120, maxBodyBytes: 65536, activityLogMaxBytes: 1048576 },
       workflows: { maxElements: 12, maxElementChars: 4000, quietAfterSeconds: 120 },
+      terminal: { protectNewSessions: true, protectAgentSessions: false, inputCallsPerMinute: 10, inputCharsPerCall: 500, inputCharsPerMinute: 2000, maxWaitingRuns: 2, auditInput: true },
       shortcuts: { 'terminal.park': 'X', 'view.fit': null },
       shortcutsInAppWindow: { 'canvas.go.1': ['Meta+1'] },
     };

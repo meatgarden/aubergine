@@ -3,6 +3,7 @@ import { ApiToken } from './tokens';
 import { Id, newId } from './ids';
 import { Draft, ShelfElement } from './drafts';
 import { AcceptedRepositoryWorkflow } from './repository';
+import { TypedBy } from './terminal';
 import { Run, Workflow } from './workflows';
 
 export const Timestamp = z.iso.datetime();
@@ -186,6 +187,10 @@ export const Session = z.object({
   tags: Tags.default([]),
   /** For a parked session: the canvas it came from and where it sat there. */
   parkedFrom: ParkedPlace.nullable().default(null),
+  /** "People only": no token may read this terminal or type into it, whatever its scopes. Only the owner changes this. */
+  peopleOnly: z.boolean().default(false),
+  /** The token that last typed into it through the API, and when. Not what it typed. */
+  typedBy: TypedBy.nullable().default(null),
 });
 export type Session = z.infer<typeof Session>;
 

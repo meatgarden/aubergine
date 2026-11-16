@@ -561,6 +561,17 @@ export const COMMANDS: readonly Command[] = [
     },
   },
   {
+    id: 'terminal.peopleOnly',
+    title: 'People only: close the terminal to API tokens, or open it again',
+    description: 'While a terminal is people only, no API token may read it or type into it, whatever its scopes.',
+    group: 'Terminals',
+    available: hasTarget,
+    run: (state) => {
+      const session = targetSession(state);
+      if (session) attempt(api.protectSession(session.id, !session.peopleOnly).then((next) => useApp.getState().apply({ type: 'session.protected', sessionId: session.id, peopleOnly: next.peopleOnly })), 'Could not change that');
+    },
+  },
+  {
     id: 'shortcuts.show',
     title: 'Show shortcuts',
     description: 'Shows every command and its keys.',

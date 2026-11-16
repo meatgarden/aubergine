@@ -49,7 +49,7 @@ function fixture(): { state: AppState; session: Session; node: LayoutNode } {
     attention: NO_ATTENTION,
     noteLog: [],
     agent: null,
-    parkedFrom: null,
+    parkedFrom: null, peopleOnly: false, typedBy: null,
     lastInputAt: null,
     lastOutputAt: null,
     tags: [],
@@ -193,7 +193,7 @@ describe('applyEvent', () => {
     });
     expect(applyEvent(current, { type: 'session.parked', sessionId: id })).toEqual(current);
     current = applyEvent(current, { type: 'session.restored', sessionId: id, canvasId: main(state).id, node });
-    expect(current.sessions[0]).toMatchObject({ state: 'open', parkedFrom: null });
+    expect(current.sessions[0]).toMatchObject({ state: 'open', parkedFrom: null, peopleOnly: false, typedBy: null });
     expect(main(current).layout.nodes).toEqual([node]);
 
     current = applyEvent(current, { type: 'session.exited', sessionId: id });
@@ -260,7 +260,7 @@ describe('applyEvent', () => {
       attention: NO_ATTENTION,
       noteLog: [],
       agent: null,
-      parkedFrom: null,
+      parkedFrom: null, peopleOnly: false, typedBy: null,
     lastInputAt: null,
     lastOutputAt: null,
     tags: [],

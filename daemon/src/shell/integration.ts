@@ -1,5 +1,5 @@
 import { watch, type FSWatcher } from 'node:fs';
-import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, rm, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 /** What a shell says about itself. */
@@ -11,6 +11,8 @@ export interface ShellReport {
   /** Exit code of the last finished command, once one has finished. */
   lastExit: number | null;
   lastFinishedAt: Date | null;
+  /** When the shell last wrote its report, in milliseconds. Tells two reports of the same second apart. */
+  changedAtMs?: number;
 }
 
 /**
@@ -194,7 +196,9 @@ export class ZshIntegration implements ShellIntegration {
 
   async read(sessionId: string): Promise<ShellReport | null> {
     try {
-      return parseStatusLine(await readFile(this.statusFile(sessionId), 'utf8'));
+      const file = this.statusFile(sessionId);
+      const report = parseStatusLine(await readFile(file, 'utf8'));
+      return report ? { ...report, changedAtMs: (await stat(file)).mtimeMs } : null;
     } catch {
       return null;
     }

@@ -80,6 +80,7 @@ export const COMMAND_IDS = [
   'workflow.describe',
   'element.describe',
   'element.run',
+  'terminal.peopleOnly',
   'shortcuts.show',
   'panels.close',
 ] as const;
