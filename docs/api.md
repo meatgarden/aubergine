@@ -60,6 +60,7 @@ How to create a token, what the scopes mean, the limits and the activity log are
 | [`DELETE /v1/drafts/{draftId}`](#discarddraft) | Discard a draft | browser only |
 | [`POST /v1/drafts/{draftId}/accept`](#acceptdraft) | Accept a draft | browser only |
 | [`POST /v1/drafts/{draftId}/return`](#returndraft) | Send a draft back with a comment | browser only |
+| [`GET /v1/draft-records`](#listdraftrecords) | What became of drafts | browser only |
 | [`POST /v1/draft-requests`](#requestdraft) | Ask the agent in a session to write a workflow or an element | browser only |
 | [`GET /v1/elements`](#listelements) | List the elements on the shelf | `read` |
 | [`POST /v1/elements`](#createelement) | Put an element on the shelf | `workflows:write` |
@@ -68,6 +69,11 @@ How to create a token, what the scopes mean, the limits and the activity log are
 | [`POST /v1/elements/{elementId}/copy`](#copyelement) | Duplicate an element on the shelf | `workflows:write` |
 | [`POST /v1/elements/{elementId}/run`](#runelement) | Run one element by itself, on a session | `runs:write` |
 | [`POST /v1/runs/{runId}/ticks`](#tickrunitem) | Tick an item of what an element produced | `runs:write` |
+| [`GET /v1/repository-workflows`](#listrepositoryworkflows) | List the workflows that repositories offer | `read` |
+| [`GET /v1/repository-workflows/file`](#getrepositoryworkflow) | Read one repository workflow | `read` |
+| [`POST /v1/repository-workflows/accept`](#acceptrepositoryworkflow) | Accept a repository workflow as it is now | browser only |
+| [`POST /v1/repository-workflows/save`](#savetorepository) | Write a workflow into a repository | browser only |
+| [`POST /v1/sessions/{sessionId}/repository-runs`](#runrepositoryworkflow) | Start a run of a repository workflow on a session | `runs:write` |
 | [`GET /v1/events`](#streamevents) | Follow changes as they happen | `read` |
 | [`GET /v1/tokens`](#listtokens) | List API tokens | browser only |
 | [`POST /v1/tokens`](#createtoken) | Create an API token | browser only |
@@ -79,6 +85,7 @@ How to create a token, what the scopes mean, the limits and the activity log are
 | [`GET /v1/sessions/{sessionId}/brief`](#getsessionbrief) | What a session was asked to write | session's own token |
 | [`GET /v1/sessions/{sessionId}/drafts`](#listsessiondrafts) | The drafts a session proposed or was asked for | session's own token |
 | [`POST /v1/sessions/{sessionId}/drafts`](#proposesessiondraft) | Hand in a draft from a session | session's own token |
+| [`GET /v1/sessions/{sessionId}/repository-workflows`](#getsessionrepositoryworkflows) | The workflows the repository of a session offers | session's own token, or `read` |
 | [`PUT /v1/sessions/{sessionId}/agent`](#reportagent) | Say which agent runs in the session, and in which conversation | session's own token |
 
 ## Errors
@@ -3313,6 +3320,52 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 
 **Errors:** 400, 401, 403, 404, 409, 413, 429.
 
+### listDraftRecords
+
+`GET /v1/draft-records`: What became of drafts.
+
+For the owner only. Newest first: who proposed each draft, what kind it was, whether it was accepted or discarded, when, and whether that was done in the browser or from the command line. Never what a draft said.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+A list: it answers a page at a time, see `limit` and `cursor`.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `limit` | query | `number` | no | How many items to return at most. |
+| `cursor` | query | `string` | no | The `nextCursor` of the page before. Opaque: do not build or change it. |
+
+**Answer** `200`:
+
+```ts
+{
+  items: {
+    at: string;
+    draftId: string;
+    kind: "workflow" | "element";
+    proposedBy: {
+      kind: "session";
+      sessionId: string;
+    } | {
+      kind: "token";
+      tokenId: string;
+      name: string;
+    } | {
+      kind: "person";
+    };
+    revisions: number;
+    outcome: "accepted" | "discarded";
+    by: {
+      kind: "owner" | "owner-cli";
+      sessionId: string | null;
+    };
+  }[];
+  nextCursor: string | null;
+}
+```
+
+**Errors:** 400, 401, 403, 413, 429.
+
 ### requestDraft
 
 `POST /v1/draft-requests`: Ask the agent in a session to write a workflow or an element.
@@ -3902,6 +3955,278 @@ curl -X POST -H "Authorization: Bearer $TOKEN" \
      http://127.0.0.1:4600/v1/runs/<runId>/ticks
 ```
 
+## Repository workflows
+
+### listRepositoryWorkflows
+
+`GET /v1/repository-workflows`: List the workflows that repositories offer.
+
+For each Git repository a session's folder is in: the workflow files in its `.aubergine/workflows/` folder as they are now, each with whether its content was accepted. Read from disk when asked; nothing is remembered between calls.
+
+An API token needs the scope `read`.
+
+A list: it answers a page at a time, see `limit` and `cursor`.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `limit` | query | `number` | no | How many items to return at most. |
+| `cursor` | query | `string` | no | The `nextCursor` of the page before. Opaque: do not build or change it. |
+
+**Answer** `200`:
+
+```ts
+{
+  items: {
+    root: string;
+    folder: string;
+    workflows: {
+      file: string;
+      name: string | null;
+      elements: string[];
+      hash: string | null;
+      state: "accepted" | "review" | "changed" | "unreadable";
+      reason: string | null;
+    }[];
+    truncated: boolean;
+    sessionIds: string[];
+  }[];
+  nextCursor: string | null;
+}
+```
+
+**Errors:** 400, 401, 403, 413, 429.
+
+```sh
+curl -H "Authorization: Bearer $TOKEN" \
+     http://127.0.0.1:4600/v1/repository-workflows
+```
+
+### getRepositoryWorkflow
+
+`GET /v1/repository-workflows/file`: Read one repository workflow.
+
+The whole text it would tell an agent, what it needs, and, when it has changed since it was accepted, the text that was accepted.
+
+An API token needs the scope `read`.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `root` | query | `string` | yes | The top folder of the repository, as the list gives it. It must be the repository of a session. |
+| `file` | query | `string` | yes | The name of the file, as the list gives it. |
+
+**Answer** `200`:
+
+```ts
+{
+  workflow: {
+    file: string;
+    name: string | null;
+    elements: string[];
+    hash: string | null;
+    state: "accepted" | "review" | "changed" | "unreadable";
+    reason: string | null;
+  };
+  root: string;
+  text: string;
+  previousText: string | null;
+  needs: {
+    kind: "mcp" | "command" | "access" | "other";
+    name: string;
+    note?: string;
+  }[];
+  content: {
+    name: string;
+    description: string;
+    standing: string;
+    inputs: {
+      key: string;
+      label: string;
+      description: string;
+      required: boolean;
+    }[];
+    elements: {
+      id: string;
+      kind: string;
+      name: string;
+      instructions: string;
+      doneWhen: string;
+      needs: {
+        kind: "mcp" | "command" | "access" | "other";
+        name: string;
+        note?: string;
+      }[];
+      produces: string;
+      origin: {
+        kind: string;
+        name?: string;
+        [key: string]: unknown;
+      };
+      extra: {
+        [key: string]: unknown;
+      };
+    }[];
+    extra: {
+      [key: string]: unknown;
+    };
+  } | null;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+```sh
+curl -H "Authorization: Bearer $TOKEN" \
+     http://127.0.0.1:4600/v1/repository-workflows/file?root=text&file=text
+```
+
+### acceptRepositoryWorkflow
+
+`POST /v1/repository-workflows/accept`: Accept a repository workflow as it is now.
+
+For the owner only. A repository workflow cannot be run until its exact content was accepted, and must be accepted again when the file changes.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `root` | `string` | yes | The top folder of the repository, as the list gives it. It must be the repository of a session. |
+| `file` | `string` | yes | The name of the file, as the list gives it. |
+| `hash` | `string` | yes | The hash of the content that was read. If the file has changed since, nothing is accepted. |
+
+**Answer** `200`:
+
+```ts
+{
+  file: string;
+  name: string | null;
+  elements: string[];
+  hash: string | null;
+  state: "accepted" | "review" | "changed" | "unreadable";
+  reason: string | null;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+### saveToRepository
+
+`POST /v1/repository-workflows/save`: Write a workflow into a repository.
+
+For the owner only. Writes one file into `.aubergine/workflows/` of the repository a session's folder is in, named after the workflow. Nothing is replaced unless `overwrite` says so.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `sessionId` | `string` | yes | A session whose folder is inside the repository to write to. |
+| `workflowId` | `string` | yes | The workflow to write. |
+| `overwrite` | `boolean` | no | Replace the file if there is one of that name. Without this, that is refused. |
+
+**Answer** `201`:
+
+```ts
+{
+  root: string;
+  file: string;
+  path: string;
+  overwritten: boolean;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+### runRepositoryWorkflow
+
+`POST /v1/sessions/{sessionId}/repository-runs`: Start a run of a repository workflow on a session.
+
+The session's folder must be in that repository, and the file's content must be what the owner accepted; otherwise 409. The run is made from the accepted content: a later change to the file does not reach it.
+
+An API token needs the scope `runs:write`.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `sessionId` | path | `string` | yes | An ID. |
+| `idempotency-key` | header | `string` | no | A key of your choosing (1 to 128 visible ASCII characters). Sending the same request again with the same key returns the first answer and creates nothing more. |
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `file` | `string` | yes | The file, as the list gives it. |
+| `inputs` | `{ [key: string]: string; }` | no | The inputs the workflow asks for, by key. |
+| `replace` | `boolean` | no | Stop the run the session is on, if any, and start this. |
+| `kickoff` | `boolean` | no | Type the fixed kickoff line, for the owner, where an agent is running. |
+
+**Answer** `201`:
+
+```ts
+{
+  run: {
+    id: string;
+    workflowId: string;
+    workflowVersion: number;
+    sessionId: string | null;
+    inputs: {
+      [key: string]: string;
+    };
+    status: "queued" | "running" | "paused" | "blocked" | "finished" | "stopped";
+    currentElementId: string | null;
+    elements: {
+      elementId: string;
+      state: "pending" | "active" | "done" | "skipped";
+      startedAt: string | null;
+      finishedAt: string | null;
+      note: string;
+      output: unknown | null;
+      ticks: {
+        item: number;
+        by: {
+          kind: "agent" | "person" | "token";
+          name?: string;
+        };
+        at: string;
+      }[];
+      by: {
+        kind: "agent" | "person" | "token";
+        name?: string;
+      } | null;
+      sessionId: string | null;
+    }[];
+    blockedReason: string | null;
+    pausedFrom: ("running" | "blocked") | null;
+    startedBy: {
+      kind: "agent" | "person" | "token";
+      name?: string;
+    };
+    createdAt: string;
+    updatedAt: string;
+    finishedAt: string | null;
+  };
+  workflowName: string;
+  elements: {
+    id: string;
+    name: string;
+    produces: string;
+  }[];
+  position: string;
+  text: string;
+  kickoff: string;
+  kickoffTyped: boolean;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+```sh
+curl -X POST -H "Authorization: Bearer $TOKEN" \
+     -H "Content-Type: application/json" -d '{"file":"text"}' \
+     http://127.0.0.1:4600/v1/sessions/<sessionId>/repository-runs
+```
+
 ## Events
 
 ### streamEvents
@@ -4058,8 +4383,10 @@ A list: it answers a page at a time, see `limit` and `cursor`.
 {
   items: {
     at: string;
-    tokenId: string;
+    caller: "token" | "owner-cli";
+    tokenId: string | null;
     tokenName: string;
+    fromSessionId: string | null;
     action: string;
     resource: {
       sessionId?: string;
@@ -4636,6 +4963,43 @@ For a session's own token, about that session. No API token may call this.
 curl -X POST -H "Authorization: Bearer $AUBERGINE_TOKEN" \
      -H "Content-Type: application/json" -d '{"workflow":{"name":"example","elements":[{"name":"example"}]}}' \
      $AUBERGINE_URL/v1/sessions/<sessionId>/drafts
+```
+
+### getSessionRepositoryWorkflows
+
+`GET /v1/sessions/{sessionId}/repository-workflows`: The workflows the repository of a session offers.
+
+With that session's own token: the workflow files of the repository its folder is in, and whether each was accepted. It cannot accept one, and cannot start a run.
+
+For a session's own token, about that session; or an API token with the scope `read`, about any session.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `sessionId` | path | `string` | yes | An ID. |
+
+**Answer** `200`:
+
+```ts
+{
+  root: string | null;
+  folder: string | null;
+  workflows: {
+    file: string;
+    name: string | null;
+    elements: string[];
+    hash: string | null;
+    state: "accepted" | "review" | "changed" | "unreadable";
+    reason: string | null;
+  }[];
+  truncated: boolean;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+```sh
+curl -H "Authorization: Bearer $TOKEN" \
+     http://127.0.0.1:4600/v1/sessions/<sessionId>/repository-workflows
 ```
 
 ### reportAgent

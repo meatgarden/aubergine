@@ -7,6 +7,8 @@ import { AubergineError, createClient, type Client, type CreateTokenBody, type L
 import {
   CreateSessionResponse,
   ErrorResponse,
+  SESSION_ENV,
+  SESSION_HEADER,
   OutsideResponse,
   OutsideResult,
   SHOW_PARAM,
@@ -96,7 +98,9 @@ async function ownerClient(config: Config): Promise<Client> {
   } catch {
     throw new UsageError(`No access token in ${config.dataDir}. Start the Aubergine server first.`);
   }
-  return createClient({ baseUrl: origin, headers: { origin, cookie: `${cookieName(config.port)}=${token}` } });
+  // A command typed inside a session says which: the server records that beside the few things only the owner may do.
+  const inside = process.env[SESSION_ENV.sessionId];
+  return createClient({ baseUrl: origin, headers: { origin, cookie: `${cookieName(config.port)}=${token}`, ...(inside ? { [SESSION_HEADER]: inside } : {}) } });
 }
 
 /** Runs calls made with the client, saying what the server said in the words this command uses. */
@@ -456,12 +460,13 @@ async function main(): Promise<number> {
     // owner-only command. It sends it as the browser would, so it passes exactly the checks the browser passes.
     case 'token-create': {
       // The scopes are as typed; whether each is one a token can have is for the server to say.
-      const body = { name: command.tokenName, scopes: command.scopes as CreateTokenBody['scopes'], ...expiryFromOption(command.expires) };
+      const body = { name: command.tokenName, scopes: command.scopes as CreateTokenBody['scopes'], reviewWorkflowChanges: command.review, ...expiryFromOption(command.expires) };
       const created = await v1(config, (client) => client.createToken({ body }));
       // The secret, alone, on standard output, so that it can be captured: TOKEN=$(aubergine token create …).
       // Everything said about it goes to standard error. It is not written anywhere else.
       console.error(
         `Made the token "${created.token.name}" (${created.token.scopes.join(', ')}${created.token.expiresAt ? `, expires ${created.token.expiresAt.slice(0, 10)}` : ''}).\n` +
+          (created.token.scopes.includes('workflows:write') ? (created.token.reviewWorkflowChanges ? 'What it writes about workflows arrives as drafts for you to review.\n' : 'It may create and change workflows directly, without your review.\n') : '') +
           'Its secret is below. It is shown this once and cannot be shown again; keep it like a password.',
       );
       console.log(created.secret);

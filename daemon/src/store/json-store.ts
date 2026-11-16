@@ -3,6 +3,7 @@ import path from 'node:path';
 import { z } from 'zod';
 import {
   ApiToken,
+  AcceptedRepositoryWorkflow,
   Canvas,
   Draft,
   ShelfElement,
@@ -40,11 +41,14 @@ const StateFileV3 = z.object({ version: z.literal(3), ...common, canvases: z.arr
 /** The same, with workflows and the runs still going. Runs that are over are in the archive, not here. */
 const StateFileV4 = StateFileV3.extend({ version: z.literal(4), workflows: z.array(Workflow), runs: z.array(Run) });
 
-/** The current shape: the same, with drafts waiting for the owner and the shelf of elements. Elements may say what they need and produce; runs keep what was produced and ticked. */
+/** The same, with drafts waiting for the owner and the shelf of elements. Elements may say what they need and produce; runs keep what was produced and ticked. */
 const StateFileV5 = StateFileV4.extend({ version: z.literal(5), drafts: z.array(Draft), shelf: z.array(ShelfElement) });
 
-const StateFile = z.discriminatedUnion('version', [StateFileV1, StateFileV2, StateFileV3, StateFileV4, StateFileV5]);
-const CURRENT_VERSION = 5;
+/** The current shape: the same, with the repository workflows the owner accepted. */
+const StateFileV6 = StateFileV5.extend({ version: z.literal(6), repositoryAccepted: z.array(AcceptedRepositoryWorkflow) });
+
+const StateFile = z.discriminatedUnion('version', [StateFileV1, StateFileV2, StateFileV3, StateFileV4, StateFileV5, StateFileV6]);
+const CURRENT_VERSION = 6;
 type StateFile = z.infer<typeof StateFile>;
 
 /**
@@ -66,8 +70,9 @@ export function migrate(file: StateFile): AppState {
     tokens: file.version >= 3 && 'tokens' in file ? file.tokens : [],
     workflows: file.version >= 4 && 'workflows' in file ? file.workflows : [],
     runs: file.version >= 4 && 'runs' in file ? file.runs : [],
-    drafts: file.version === 5 ? file.drafts : [],
-    shelf: file.version === 5 ? file.shelf : [],
+    drafts: file.version >= 5 && 'drafts' in file ? file.drafts : [],
+    shelf: file.version >= 5 && 'shelf' in file ? file.shelf : [],
+    repositoryAccepted: file.version === 6 ? file.repositoryAccepted : [],
   });
 }
 

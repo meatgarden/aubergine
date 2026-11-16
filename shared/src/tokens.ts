@@ -120,8 +120,16 @@ export type ActivityOutcome = z.infer<typeof ActivityOutcome>;
  */
 export const ActivityEntry = z.object({
   at: Timestamp,
-  tokenId: Id,
+  /**
+   * `token`: a call made with an API token. `owner-cli`: a call made as the owner from outside a browser page
+   * (the command line, a script), recorded for the few things only the owner may do.
+   */
+  caller: z.enum(['token', 'owner-cli']).default('token'),
+  /** The token; null for a call that was not made with one. */
+  tokenId: Id.nullable(),
   tokenName: z.string(),
+  /** For an owner's call from the command line that says it came from inside a session: that session. */
+  fromSessionId: Id.nullable().default(null),
   /** What was asked for, as `authorize` names it; empty when the call never got that far. */
   action: z.string(),
   resource: z.object({ sessionId: z.string().optional(), canvasId: z.string().optional() }),

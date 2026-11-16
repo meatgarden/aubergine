@@ -64,7 +64,7 @@ describe('JsonStore', () => {
     const state = withSession(await store.load(), 'one');
     await store.save(state);
     const raw = JSON.parse(await readFile(store.file, 'utf8'));
-    expect(raw.version).toBe(5);
+    expect(raw.version).toBe(6);
     expect(raw.sessions[0]).not.toHaveProperty('x');
     expect(raw.sessions[0]).not.toHaveProperty('width');
     expect(raw.canvases[0].layout.nodes[0].sessionId).toBe(raw.sessions[0].id);
@@ -166,7 +166,7 @@ describe('JsonStore', () => {
     // Saving writes the current shape, which loads back the same.
     await store.save(state);
     const raw = JSON.parse(await readFile(store.file, 'utf8'));
-    expect(raw.version).toBe(5);
+    expect(raw.version).toBe(6);
     expect(raw.layout).toBeUndefined();
     expect(await new JsonStore(dir).load()).toEqual(state);
 
@@ -193,7 +193,7 @@ describe('JsonStore', () => {
 
     await store.save(state);
     const raw = JSON.parse(await readFile(store.file, 'utf8'));
-    expect(raw.version).toBe(5);
+    expect(raw.version).toBe(6);
     expect(raw.tokens).toEqual([]);
     expect(await new JsonStore(dir).load()).toEqual(state);
     // The file as it was, byte for byte, is beside the new one.
@@ -218,7 +218,7 @@ describe('JsonStore', () => {
 
     await store.save(state);
     const raw = JSON.parse(await readFile(store.file, 'utf8'));
-    expect(raw.version).toBe(5);
+    expect(raw.version).toBe(6);
     expect(raw.workflows).toEqual([]);
     expect(raw.runs).toEqual([]);
     expect(await new JsonStore(dir).load()).toEqual(state);
@@ -249,9 +249,30 @@ describe('JsonStore', () => {
 
     await store.save(state);
     const raw = JSON.parse(await readFile(store.file, 'utf8'));
-    expect(raw.version).toBe(5);
+    expect(raw.version).toBe(6);
     expect(await new JsonStore(dir).load()).toEqual(state);
     expect(await readFile(`${store.file}.v4.backup`, 'utf8')).toBe(fixture);
+  });
+
+  it('loads a file from before repository workflows, with nothing accepted, and keeps a copy of it', async () => {
+    const store = new JsonStore(dir);
+    const fixture = await readFile(new URL('./fixtures/state-drafts-v5.json', import.meta.url), 'utf8');
+    await mkdir(dir, { recursive: true });
+    await writeFile(store.file, fixture);
+
+    const state = await store.load();
+    expect(state.repositoryAccepted).toEqual([]);
+    expect(state.drafts.map((d) => [d.kind, d.status, d.element?.name])).toEqual([['element', 'waiting', 'Collect my to-dos']]);
+    expect(state.shelf.map((e) => e.element.name)).toEqual(['Tidy up']);
+    expect(state.workflows).toHaveLength(1);
+    expect(state.runs).toHaveLength(1);
+
+    await store.save(state);
+    const raw = JSON.parse(await readFile(store.file, 'utf8'));
+    expect(raw.version).toBe(6);
+    expect(raw.repositoryAccepted).toEqual([]);
+    expect(await new JsonStore(dir).load()).toEqual(state);
+    expect(await readFile(`${store.file}.v5.backup`, 'utf8')).toBe(fixture);
   });
 
   it('keeps a session on one canvas only, if a file ever says otherwise', async () => {

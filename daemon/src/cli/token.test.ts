@@ -32,8 +32,11 @@ describe('parsing the token commands', () => {
       tokenName: 'build bot',
       scopes: ['read', 'sessions:write', 'notes:write'],
       expires: '30d',
+      review: true,
     });
-    expect(parseCommand(['token', 'create', 'x', '--scope', 'read'])).toMatchObject({ expires: null });
+    expect(parseCommand(['token', 'create', 'x', '--scope', 'read'])).toMatchObject({ expires: null, review: true });
+    // Review of what it writes about workflows is on unless switched off.
+    expect(parseCommand(['token', 'create', 'x', '--scope', 'workflows:write', '--no-review'])).toMatchObject({ tokenName: 'x', review: false });
   });
 
   it('says what is missing', () => {
@@ -71,9 +74,15 @@ describe('parsing the token commands', () => {
     expect(() => resolveToken([tokens[0]!, { ...tokens[0]!, id: '01900000-0000-7000-8000-0000000000d4' }], 'Build bot')).toThrow(/2 tokens are named/);
 
     const table = formatTokens(tokens, Date.parse('2026-03-01T12:00:00.000Z')).split('\n');
-    expect(table[0]).toMatch(/^NAME +STATE +SCOPES +LAST USED +EXPIRES +ID$/);
-    expect(table[1]).toMatch(/^Build bot +active +read,sessions:write +2026-03-01 +never +01900000/);
-    expect(table[2]).toMatch(/^reader +expired +read +never +2026-02-01/);
+    expect(table[0]).toMatch(/^NAME +STATE +SCOPES +WORKFLOWS +LAST USED +EXPIRES +ID$/);
+    expect(table[1]).toMatch(/^Build bot +active +read,sessions:write +- +2026-03-01 +never +01900000/);
+    const writers = formatTokens([
+      { ...tokens[0]!, name: 'a', scopes: ['workflows:write'], reviewWorkflowChanges: true },
+      { ...tokens[0]!, name: 'b', scopes: ['workflows:write'], reviewWorkflowChanges: false },
+    ]).split('\n');
+    expect(writers[1]).toMatch(/^a +active +workflows:write +reviewed /);
+    expect(writers[2]).toMatch(/^b +active +workflows:write +direct /);
+    expect(table[2]).toMatch(/^reader +expired +read +- +never +2026-02-01/);
     expect(table[3]).toMatch(/^reader +revoked/);
     expect(formatTokens([])).toContain('No API tokens');
   });

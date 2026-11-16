@@ -1,5 +1,5 @@
 import { AubergineError, createClient, type Client } from '@aubergine/client';
-import { SESSION_ENV, WorkflowFile, exportWorkflow, importWorkflow, needWords, type Session, type Workflow, type WorkflowDetail, type WorkflowSummary } from '@aubergine/shared';
+import { NEEDS_REVIEW, SESSION_ENV, WorkflowFile, exportWorkflow, importWorkflow, needWords, type Session, type Workflow, type WorkflowDetail, type WorkflowSummary } from '@aubergine/shared';
 import { UsageError, resolveSession, takeOption } from './commands';
 
 /** `aubergine workflow …`, as parsed. */
@@ -11,7 +11,7 @@ export type WorkflowCommand =
   | { action: 'edit'; query: string; file: string | null }
   | { action: 'remove'; query: string; yes: boolean }
   | { action: 'copy'; query: string; newName: string | null }
-  | { action: 'export'; query: string; file: string | null }
+  | { action: 'export'; query: string; file: string | null; toRepository: boolean; overwrite: boolean }
   | { action: 'import'; file: string; newName: string | null }
   | { action: 'run'; query: string; session: string | null; inputs: Record<string, string>; replace: boolean }
   // From inside a session, about the run that session is on:
@@ -74,9 +74,12 @@ export function parseWorkflowCommand(words: readonly string[]): WorkflowCommand 
       return { action: 'copy', query: parts[0] as string, newName: parts.length > 1 ? parts.slice(1).join(' ') : null };
     }
     case 'export': {
-      const parts = flagsOf(rest, [], 'export');
-      if (parts.length === 0 || parts.length > 2) throw new UsageError('workflow export needs the name of a workflow, and may take a file');
-      return { action: 'export', query: parts[0] as string, file: parts[1] ?? null };
+      const parts = flagsOf(rest, ['--to-repository', '--overwrite'], 'export');
+      const toRepository = rest.includes('--to-repository');
+      // Into the repository the file is named after the workflow, so every word is the name.
+      if (parts.length === 0 || (!toRepository && parts.length > 2)) throw new UsageError('workflow export needs the name of a workflow, and may take a file');
+      if (rest.includes('--overwrite') && !toRepository) throw new UsageError('--overwrite only applies with --to-repository');
+      return { action: 'export', query: toRepository ? parts.join(' ') : (parts[0] as string), file: toRepository ? null : (parts[1] ?? null), toRepository, overwrite: rest.includes('--overwrite') };
     }
     case 'import': {
       const { value: newName, rest: after } = takeOption(rest, '--name');
@@ -251,6 +254,15 @@ export function formatWorkflows(workflows: readonly WorkflowSummary[], liveRuns:
   return [header, ...rows].map((row) => row.map((cell, column) => (column === row.length - 1 ? cell : cell.padEnd(widths[column] as number))).join('  ').trimEnd()).join('\n');
 }
 
+/** What a repository offers a session, for `workflow list`: each file, and whether it can be run yet. */
+export function formatRepositoryOffer(offer: { folder: string | null; workflows: readonly { file: string; name: string | null; state: string; reason: string | null; elements: readonly string[] }[]; truncated: boolean }): string {
+  const word: Record<string, string> = { accepted: 'can be run', review: 'a person has to review it first', changed: 'changed since it was accepted: a person has to review it again', unreadable: 'could not be read' };
+  const lines = ['', `From the repository ${offer.folder ?? ''} (.aubergine/workflows):`];
+  for (const w of offer.workflows) lines.push(`  ${w.name ?? w.file}  (${w.file})  ${word[w.state] ?? w.state}${w.state === 'unreadable' && w.reason ? `: ${w.reason}` : w.elements.length > 0 ? `  ${w.elements.join(' → ')}` : ''}`);
+  if (offer.truncated) lines.push('  There are more files than are looked at; only the first fifty are listed.');
+  return lines.join('\n');
+}
+
 export function formatWorkflow(workflow: WorkflowDetail): string {
   const { current } = workflow;
   const indent = (text: string): string =>
@@ -352,6 +364,12 @@ export async function runWorkflowCommand(command: WorkflowCommand, deps: Workflo
       const live = new Map<string, number>();
       for (const { run } of runs) live.set(run.workflowId, (live.get(run.workflowId) ?? 0) + 1);
       print(formatWorkflows(workflows, live));
+      // Inside a session: what the repository it is in offers, and whether each can be run yet.
+      const inside = deps.env[SESSION_ENV.sessionId];
+      if (inside) {
+        const offer = await owner((client) => client.getSessionRepositoryWorkflows({ sessionId: inside })).catch(() => null);
+        if (offer && offer.workflows.length > 0) print(showControl(formatRepositoryOffer(offer)));
+      }
       return 0;
     }
 
@@ -420,6 +438,14 @@ export async function runWorkflowCommand(command: WorkflowCommand, deps: Workflo
 
     case 'export': {
       const workflow = await find(command.query);
+      if (command.toRepository) {
+        const inside = deps.env[SESSION_ENV.sessionId];
+        if (!inside) throw new UsageError('workflow export --to-repository works inside a session: the file goes into the repository that session is in.');
+        const saved = await owner((client) => client.saveToRepository({ body: { sessionId: inside, workflowId: workflow.id, overwrite: command.overwrite } }));
+        print(`${saved.overwritten ? 'Replaced' : 'Wrote'} ${saved.path}`);
+        print('It is not committed: that is yours to do. Others who pull it will be asked to review it before it can run for them.');
+        return 0;
+      }
       const text = `${JSON.stringify(exportWorkflow(asWorkflow(workflow)), null, 2)}\n`;
       if (command.file === null) {
         print(text.trimEnd());
@@ -438,7 +464,6 @@ export async function runWorkflowCommand(command: WorkflowCommand, deps: Workflo
     }
 
     case 'run': {
-      const workflow = await find(command.query);
       const inside = deps.env[SESSION_ENV.sessionId];
       let session: { id: string; name: string };
       if (command.session !== null) {
@@ -448,6 +473,24 @@ export async function runWorkflowCommand(command: WorkflowCommand, deps: Workflo
       } else {
         throw new UsageError('workflow run needs a session: --session <name or ID>, or type it inside the session.');
       }
+      // One of your own workflows, or else one the repository of that session offers, by its name or its file.
+      const own = await owner((client) => collect(client.each.listWorkflows()));
+      const offered = (await owner((client) => client.getSessionRepositoryWorkflows({ sessionId: session.id }))).workflows.filter((w) => w.name !== null);
+      const wanted = command.query.trim().toLowerCase();
+      const ownMatch = own.some((w) => w.id === wanted || w.name.toLowerCase() === wanted || w.name.toLowerCase().startsWith(wanted));
+      const fromRepository = ownMatch ? undefined : offered.find((w) => w.file.toLowerCase() === wanted || w.file.toLowerCase() === `${wanted}.json` || (w.name ?? '').toLowerCase() === wanted) ?? offered.find((w) => (w.name ?? '').toLowerCase().startsWith(wanted));
+      if (fromRepository) {
+        if (fromRepository.state !== 'accepted') {
+          // Said plainly: an agent reads this and should stop and say so, not look for a way round.
+          print(showControl(`"${fromRepository.name}" (${fromRepository.file}) cannot be run yet. ${NEEDS_REVIEW}`));
+          return 1;
+        }
+        const started = await owner((client) => client.runRepositoryWorkflow({ sessionId: session.id, body: { file: fromRepository.file, inputs: command.inputs, replace: command.replace } }));
+        print(showControl(`Started "${started.workflowName}" from the repository on "${session.name}": ${started.position}.`));
+        print(started.kickoffTyped ? 'The agent in it has been told.' : `Nothing was typed into the terminal (no agent is running there). To set an agent off, give it this line:\n  ${started.kickoff}`);
+        return 0;
+      }
+      const workflow = await find(command.query);
       const started = await owner((client) => client.startSessionRun({ sessionId: session.id, body: { workflowId: workflow.id, inputs: command.inputs, replace: command.replace } }));
       print(`Started "${started.workflowName}" on "${session.name}": ${started.position}.`);
       print(started.kickoffTyped ? 'The agent in it has been told.' : `Nothing was typed into the terminal (no agent is running there). To set an agent off, give it this line:\n  ${started.kickoff}`);

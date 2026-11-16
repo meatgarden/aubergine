@@ -591,6 +591,8 @@ What an agent writes arrives as a **draft**. A draft cannot be run, is not among
 - **Send back with a comment**: the agent is typed the same fixed sentence, reads your comment with `aubergine workflow brief`, and hands in a new version.
 - **Discard**.
 
+What became of each draft is kept in `drafts.log` in the data folder and shown at the foot of Review ("Decided lately"): who proposed it, what kind it was, whether it was accepted or discarded, when, and whether that was done in the browser or from the command line. Not what the draft said.
+
 Programs can propose too: a token with `workflows:write` posts to `/v1/drafts`. A new token has **changes to workflows need my review** switched on, which closes the routes that create and change workflows to it and leaves it the draft route; switch it off, when you make the token in the browser, for one you trust to write workflows directly. No token, whatever its scopes, can accept, send back or discard a draft, and a session's own token can only propose drafts and read its own.
 
 ### What an element needs, and what it produces
@@ -617,6 +619,27 @@ aubergine element run "Collect my to-dos" --session helper
 ```
 
 An example, end to end: ask an agent for "a to-do list from what people asked me in the team chat". It proposes an element, *Collect my to-dos*, that needs an MCP server for the chat and produces a checklist. You read it, send it back once ("shorter"), accept the second version, and run it by itself on the agent's terminal. The agent hands in the list; you tick the items you will do.
+
+### Workflows kept in a project's repository
+
+A team can share workflows through Git. A folder `.aubergine/workflows/` at the top of a repository holds workflow files (`*.json`, as `aubergine workflow export` writes them). A terminal whose folder is inside such a repository is offered them: in the run dialog, in their own group named after the repository's folder, and from the command line inside that terminal:
+
+```sh
+aubergine workflow list                      # your workflows, then what the repository offers
+aubergine workflow run "Release checklist" --input task="version 2"
+```
+
+**You read one before it can run.** Anyone who can push to a repository can change those files, and what is in them is text your agent will obey. So a repository workflow shows up in **Review** like anything an agent wrote: the whole text as an agent would be told it, and what it needs. It cannot be run, by you, an agent or a token, until you have accepted that exact content. When the file changes it must be reviewed again, and Review shows what changed against what you accepted. An agent that asks for one that is not accepted is told that a person has to review it first.
+
+A run of an accepted one works from the content you accepted, not from the file, so a later change to the file never reaches a run that is going.
+
+How the files are found and read:
+
+- The repository is the first folder, going up from the terminal's folder, that holds `.git`. The search stops at your home folder and at the top of the disk, and does not run Git.
+- Only regular files directly in `.aubergine/workflows/` are read: at most 50, each at most 512 KiB and within the limits on workflows. A symbolic link is never followed; it is listed as skipped. A file that is not a workflow is listed with the reason and does not stop the others.
+- Nothing is remembered about the files between readings. What is remembered is what you accepted: the repository's folder, the file's name and a hash of its content.
+
+**Aubergine does not write there by itself.** **Save to the repository…** in the workflow editor, and `aubergine workflow export <name> --to-repository` typed inside a terminal, write one file into that folder, named after the workflow (`Fix a bug` becomes `fix-a-bug.json`; lower-case letters, digits and dashes only). A file of that name is not replaced unless you say so (`--overwrite`, or the second button). Committing it is yours to do. Only you can do this: no token and no session's own token can write into a repository or accept a file from one.
 
 ### From the command line
 
@@ -731,6 +754,7 @@ aubergine import               the same for every one, one per folder (--all, --
                                --canvas <name>  put them on this canvas
 aubergine shell-hook print     print the zsh lines that make new tabs start on the canvas
 aubergine token create <name> --scope <scope>…   make an API token; its secret is printed once (--expires 30d)
+                               --no-review  let it create and change workflows directly, without your review
 aubergine token list           the API tokens, their scopes and when each was last used
 aubergine token revoke <name>  revoke a token; it stops working at once
 aubergine workflow list        the workflows, with their elements and how many runs are going
@@ -740,6 +764,7 @@ aubergine workflow edit <name> change one in your editor ($VISUAL or $EDITOR), o
 aubergine workflow copy <name> [new name]
 aubergine workflow remove <name>   remove one (--yes: do not ask); refused while a run of it is going
 aubergine workflow export <name> [file]   write one as a file to pass on
+aubergine workflow export <name> --to-repository [--overwrite]   inside a session: write it into the repository's .aubergine/workflows
 aubergine workflow import <file> [--name <name>]   make one from such a file ("-" reads standard input)
 aubergine workflow run <name> [--session <name|id>] [--input key=value]… [--replace]
                                start a run on a session: the one it is typed in, when typed inside one
@@ -767,7 +792,7 @@ aubergine service uninstall    stop starting it at login
 
 ## For programs inside a session
 
-Every session's shell has four variables:
+Every session's shell has these variables:
 
 | Variable | Meaning |
 |---|---|
@@ -775,6 +800,7 @@ Every session's shell has four variables:
 | `AUBERGINE_SESSION_ID` | This session's ID |
 | `AUBERGINE_TOKEN` | A token that is valid for this session only |
 | `AUBERGINE_BIN` | The folder with the `aubergine` command, also at the end of `PATH` |
+| `AUBERGINE_PORT`, `AUBERGINE_DATA_DIR` | The port and data folder of the server the session belongs to, so that `aubergine` typed in it talks to that server |
 
 With the token as a bearer credential, a program may do these things, all for its own session and no other:
 
@@ -785,10 +811,11 @@ GET  /v1/sessions/<id>/run          the run the session is on, and what to do no
 POST /v1/sessions/<id>/run/report   {"type": "done", "elementId": "...", "note": "..."} and the other reports
 GET  /v1/sessions/<id>/brief        what the session was asked to write
 GET  /v1/sessions/<id>/drafts       the drafts it proposed, with the comments on them
+GET  /v1/sessions/<id>/repository-workflows   the workflows its repository offers, and whether each was accepted
 POST /v1/sessions/<id>/drafts       propose a workflow or an element as a draft
 ```
 
-Everything else is refused: it cannot list runs or workflows, start a run, reach another session's run, read a draft it did not propose, or accept anything. `aubergine note`, `aubergine hook` and the in-session `aubergine workflow` commands are thin wrappers around these calls. This token is made for the session by Aubergine and is separate from the [API tokens](#api-tokens) you create yourself, which can do more.
+Everything else is refused: it cannot list runs or workflows, start a run, reach another session's run, read a draft it did not propose, accept anything, or run a repository workflow nobody accepted. `aubergine note`, `aubergine hook` and the in-session `aubergine workflow` commands are thin wrappers around these calls. This token is made for the session by Aubergine and is separate from the [API tokens](#api-tokens) you create yourself, which can do more.
 
 ## API tokens
 
@@ -873,6 +900,8 @@ The shapes are meant to last:
 **Limits.** Each token may make 600 calls a minute; beyond that the answer is `429` with a `Retry-After` header. A request body may be at most 1 MiB; larger gets `413`. Change both under `api` in `config.json` (`rateLimitPerMinute`, `maxBodyBytes`); they apply from the next start of the server.
 
 **The activity log.** Every call made with a token is recorded: when, which token, what it asked for, and how it ended. The secret and what was sent are never recorded. See it in the browser (⌘K, `API activity`), where it can be narrowed to one token, or read the file: `activity.log` in the data folder, one JSON object per line. It is kept to 5 MiB (`api.activityLogMaxBytes`); when it is half full the older half moves to `activity.log.1`, replacing the one before.
+
+**What you do from the command line is recorded too, for a few things.** An agent in one of your terminals runs as you, so it can run `aubergine` commands that only you may use, or call the server with your sign-in. That cannot be prevented on your own computer; it can be seen. When one of the things only you may do (accepting or discarding a draft, accepting a repository workflow, writing into a repository, making or revoking a token) is done as you from outside a browser page, the activity log records it as "you, from the command line", with the terminal it came from when the caller says so. Read this as a trace of ordinary use, not as a guard: the server tells a browser page from other callers by a header browsers add, and learns the terminal from the command itself, so a program that wants to hide can leave both out or fake them. What is done in the browser is not recorded here.
 
 **Revoke** in the browser, or with `aubergine token revoke <name>`. A revoked or expired token is refused on its very next call. `aubergine token list` shows every token with its scopes and when it was last used.
 

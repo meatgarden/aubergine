@@ -12,7 +12,7 @@ shared/   wire protocol (zod schemas), entity types, settings schema, the change
           the declarations of every /v1 route (routes.ts), the scope table (access.ts), openapi.ts;
           workflows.ts (entities, element kinds, the step function, what an agent is told, the file
           format), workflow-api.ts (bodies and answers), workflow-templates.ts,
-          outputs.ts (output kinds), drafts.ts (drafts, the shelf, what a reviewer reads, the brief)
+          outputs.ts (output kinds), drafts.ts (drafts, the shelf, what a reviewer reads, the brief), repository.ts
 daemon/   Fastify HTTP + WebSocket server, tmux session runtime, JSON store, CLI, start-at-login,
           shell integration (src/shell/), agent support (src/agents/), authorization (src/auth.ts),
           migration of existing terminals (src/migrate/), including reading agent
@@ -20,7 +20,9 @@ daemon/   Fastify HTTP + WebSocket server, tmux session runtime, JSON store, CLI
           shared implementation behind the panel and the CLI (outside.ts); the state
           holder (state-hub.ts), the public routes (v1.ts, public-api.ts) and viewers.ts;
           workflows: the service (workflows.ts), the archive of finished runs (run-archive.ts),
-          the launcher for sessions (command-path.ts) and the commands (cli/workflow.ts), drafts.ts
+          the launcher for sessions (command-path.ts) and the commands (cli/workflow.ts), drafts.ts,
+          repository-files.ts (finding and reading, nothing but the file system), repositories.ts
+          (offers, acceptance, runs, saving), draft-log.ts
 client/   a typed client for the public API, generated from its description; no dependencies;
           may not import from any other package
 web/      Vite + React + @xyflow/react + @xterm/xterm, Zustand for state; the tab bar (TabBar.tsx)
@@ -28,7 +30,7 @@ web/      Vite + React + @xyflow/react + @xterm/xterm, Zustand for state; the ta
           sections/), terminal-rows.ts, list-filters.ts, list-model.ts, TagDialog.tsx;
           commands.ts, shortcuts.ts, canvas-actions.ts,
           spatial.ts, palette.ts, and the development-only key-tester.html
-          workflows/ (run-model.ts, editor-model.ts, registries.ts, the screens), review/ (registry.ts, ReviewScreen.tsx, drafts-source.ts) and
+          workflows/ (run-model.ts, editor-model.ts, registries.ts, the screens), review/ (registry.ts, ReviewScreen.tsx, drafts-source.ts, repository-source.ts) and
           panel/sections/workflows.tsx
 docs/     keys.md: what is known about which keys reach a page; api.md: the API reference (generated)
 e2e/      Playwright smoke test
@@ -60,7 +62,7 @@ These are the only abstractions in the code base. Each has exactly one implement
 - **Authorization.** Every route asks `authorize(principal, action, resource)` in `daemon/src/auth.ts` before it looks at the body or looks anything up, so a caller without the right learns nothing from the answer. There are three principals: the signed-in user, a session, an API token. A token's scopes are looked at in `authorize` only; no route checks a scope or the kind of caller. A new action is closed to tokens until one line in the scope table opens it.
 - **One principal per request.** A request with an `Authorization` header is judged by that credential alone: a cookie beside it is ignored, and a wrong credential is refused, never retried as the cookie's owner. `/api` and `/ws` take the cookie only.
 - **Never by token.** `NEVER_BY_TOKEN` in `auth.ts` lists what no token may do whatever its scopes: creating, listing and revoking tokens, reading the activity log, changing settings, and anything about terminals or processes outside Aubergine. Do not add a scope for any of these.
-- **Session tokens do not grow.** A session token may set its own attention, add to its own note log, report its own agent, read and report on the run it is on, read what it was asked to write, propose drafts and read its own drafts, and ask what the server can do. Wider access is an API token the owner makes on purpose. A session token must never reach a canvas, layout or other-session route, a run by its ID, a list of runs, a draft by its ID or anyone else's draft, the shelf, or a workflow.
+- **Session tokens do not grow.** A session token may set its own attention, add to its own note log, report its own agent, read and report on the run it is on, read what it was asked to write, propose drafts and read its own drafts, list the workflows its repository offers, and ask what the server can do. Wider access is an API token the owner makes on purpose. A session token must never reach a canvas, layout or other-session route, a run by its ID, a list of runs, a draft by its ID or anyone else's draft, the shelf, a workflow, a repository's files or their text, accepting anything, or starting any run.
 - **A token's secret exists once.** It is returned by the create route and never stored, logged or sent again; only its hash is kept, and the hash is not sent to the browser. Comparisons are constant-time. A test searches every file in the data folder for a secret after using it; keep it passing.
 - **`sessions:write` can run commands.** Starting a session with a command runs it as the user. Every description of that scope (README, `SCOPE_MEANING`, the token screen) must say so plainly.
 - **The activity log is not state.** One JSON line per call made with an API token, through the `ActivityLog` interface in `daemon/src/activity.ts`, in its own file with a size cap. It records who, what and how it ended; never the secret, never a request body or query. Nothing else reads or writes that file.
@@ -87,6 +89,13 @@ These are the only abstractions in the code base. Each has exactly one implement
 - **Optional fields of a change carry no defaults.** A body that changes part of something must leave what is not sent as it was; a schema with a default turns "left out" into "empty". Build such bodies from fields without defaults.
 - **Commands show control characters.** Text that came from an agent, a token or a file is printed through `showControl`.
 - **A token's review switch is decided in `authorize`.** `workflows.write` is refused for a token whose changes need review; nothing else looks at the switch.
+- **Repository files are read in one place.** `daemon/src/repository-files.ts` decides what may be read: regular files directly in `.aubergine/workflows/`, a bounded number and size, no link followed, opened with `O_NOFOLLOW`. Do not read a repository's files anywhere else, and do not run Git.
+- **A folder is read only as the repository of a session.** A `root` sent by a caller must be the repository of some session's folder now; otherwise 404 before anything is opened.
+- **Only accepted content runs.** A repository workflow is run from the content stored with its acceptance, after the file was read again and its hash matched. Never from the file. A changed file is reviewed again. Nothing about a repository's files is cached.
+- **The server writes into a repository only when the owner asks**, one file, named by `repositoryFileName`, never replacing one unasked, never through a link. `repository.write` and `repository.review` are in `NEVER_BY_TOKEN` and are not session actions.
+- **Owner calls from outside the browser are visible.** `ownerCaller` in `server.ts` tells a page (which sends `Sec-Fetch-Site`) from anything else; the actions in `WATCHED` are recorded in the activity log as `owner-cli`. This is a trace, not a control: do not describe it as protection, and do not let anything depend on it for a decision. Tests that call as the page send `Sec-Fetch-Site`.
+- **The record of drafts is not state**, like the activity log: `DraftLog`, its own file, never what a draft said.
+- **Sessions know their server**: `AUBERGINE_PORT` and `AUBERGINE_DATA_DIR` are in every session's environment beside the others.
 - **Canvases.** A session is on at most one canvas; a parked session is on none and remembers where it was (`parkedFrom`). Closing a canvas never ends a shell: the caller says move or park, and the last canvas cannot be closed. Where no canvas is named, `Sessions.canvas(null)` decides (most recently looked at, else first); do not pick a default anywhere else.
 - **Public shapes.** Routes under `/v1` use one error shape, `pageOf` for every list, ignore unknown fields, use ISO times, and take `Idempotency-Key` on creates. Do not add a `/v1` route that departs from these. This API is public: only add to it; never rename or remove.
 - **A `/v1` route is a declaration and a handler.** Add the entry to `ROUTES` and a handler of the same name in `v1.ts`. Do not call `app.get`/`app.post` for anything under `/v1`: a route registered by hand is not in the description, and the tests fail on it. A handler does not decide who may call it and does not parse its own input; the loop does both, in the order parameters, `authorize`, query and body, handler.
@@ -189,7 +198,9 @@ Workflows, stage W1a: workflows with versions, runs moved by one step function, 
 
 Workflows, stage W1b: drafts and the review screen, asking an agent for an element or a workflow, needs, output kinds (note, checklist) with ticks, running one element by itself, the shelf, the per-token review switch. The state file is version 5: it also holds drafts and the shelf of elements. Change events also include `draft.changed`, `draft.removed`, `shelf.changed` and `shelf.removed`.
 
-Not built yet: a packaged build without development dependencies, Linux tested, measured key tables for Safari, Firefox, Linux and Windows, publishing the client as a package, moving the remaining `/api/v1` routes onto `/v1`, workflows kept in a repository, the workflow library, the board of runs, approvals, branches, a pool of agents, a list of past runs in the browser, terminal input and output over `/v1`, SQLite, an MCP server, presets, a finder agent, recording, bash or fish integration.
+Workflows kept in a repository: found by walking up, read with bounds and without following links, reviewed before use and again on change, saved only by the owner. A record of resolved drafts. Owner calls from the command line in the activity log. The state file is version 6: it also holds the repository workflows the owner accepted, each with the content that was accepted. Change events also include `repository.accepted` and `run.ticked`.
+
+Not built yet: a packaged build without development dependencies, Linux tested, measured key tables for Safari, Firefox, Linux and Windows, publishing the client as a package, moving the remaining `/api/v1` routes onto `/v1`, the workflow library, the board of runs, approvals, branches, a pool of agents, a list of past runs in the browser, terminal input and output over `/v1`, SQLite, an MCP server, presets, a finder agent, recording, bash or fish integration.
 
 ## Working in this repo
 

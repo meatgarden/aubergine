@@ -2572,6 +2572,42 @@ export type ReturnDraftResult = {
   updatedAt: string;
 };
 
+export interface ListDraftRecordsQuery {
+  /**
+   * How many items to return at most.
+   */
+  limit?: number;
+  /**
+   * The `nextCursor` of the page before. Opaque: do not build or change it.
+   */
+  cursor?: string;
+}
+
+export type ListDraftRecordsResult = {
+  items: {
+    at: string;
+    draftId: string;
+    kind: "workflow" | "element";
+    proposedBy: {
+      kind: "session";
+      sessionId: string;
+    } | {
+      kind: "token";
+      tokenId: string;
+      name: string;
+    } | {
+      kind: "person";
+    };
+    revisions: number;
+    outcome: "accepted" | "discarded";
+    by: {
+      kind: "owner" | "owner-cli";
+      sessionId: string | null;
+    };
+  }[];
+  nextCursor: string | null;
+};
+
 export type RequestDraftBody = {
   kind: "workflow" | "element";
   /** What you want, in your own words. */
@@ -3010,6 +3046,201 @@ export type TickRunItemResult = {
   kickoffTyped: boolean;
 };
 
+export interface ListRepositoryWorkflowsQuery {
+  /**
+   * How many items to return at most.
+   */
+  limit?: number;
+  /**
+   * The `nextCursor` of the page before. Opaque: do not build or change it.
+   */
+  cursor?: string;
+}
+
+export type ListRepositoryWorkflowsResult = {
+  items: {
+    root: string;
+    folder: string;
+    workflows: {
+      file: string;
+      name: string | null;
+      elements: string[];
+      hash: string | null;
+      state: "accepted" | "review" | "changed" | "unreadable";
+      reason: string | null;
+    }[];
+    truncated: boolean;
+    sessionIds: string[];
+  }[];
+  nextCursor: string | null;
+};
+
+export interface GetRepositoryWorkflowQuery {
+  /**
+   * The top folder of the repository, as the list gives it. It must be the repository of a session.
+   */
+  root: string;
+  /**
+   * The name of the file, as the list gives it.
+   */
+  file: string;
+}
+
+export type GetRepositoryWorkflowResult = {
+  workflow: {
+    file: string;
+    name: string | null;
+    elements: string[];
+    hash: string | null;
+    state: "accepted" | "review" | "changed" | "unreadable";
+    reason: string | null;
+  };
+  root: string;
+  text: string;
+  previousText: string | null;
+  needs: {
+    kind: "mcp" | "command" | "access" | "other";
+    name: string;
+    note?: string;
+  }[];
+  content: {
+    name: string;
+    description: string;
+    standing: string;
+    inputs: {
+      key: string;
+      label: string;
+      description: string;
+      required: boolean;
+    }[];
+    elements: {
+      id: string;
+      kind: string;
+      name: string;
+      instructions: string;
+      doneWhen: string;
+      needs: {
+        kind: "mcp" | "command" | "access" | "other";
+        name: string;
+        note?: string;
+      }[];
+      produces: string;
+      origin: {
+        kind: string;
+        name?: string;
+        [key: string]: unknown;
+      };
+      extra: {
+        [key: string]: unknown;
+      };
+    }[];
+    extra: {
+      [key: string]: unknown;
+    };
+  } | null;
+};
+
+export type AcceptRepositoryWorkflowBody = {
+  /** The top folder of the repository, as the list gives it. It must be the repository of a session. */
+  root: string;
+  /** The name of the file, as the list gives it. */
+  file: string;
+  /** The hash of the content that was read. If the file has changed since, nothing is accepted. */
+  hash: string;
+};
+
+export type AcceptRepositoryWorkflowResult = {
+  file: string;
+  name: string | null;
+  elements: string[];
+  hash: string | null;
+  state: "accepted" | "review" | "changed" | "unreadable";
+  reason: string | null;
+};
+
+export type SaveToRepositoryBody = {
+  /** A session whose folder is inside the repository to write to. */
+  sessionId: string;
+  /** The workflow to write. */
+  workflowId: string;
+  /** Replace the file if there is one of that name. Without this, that is refused. */
+  overwrite?: boolean;
+};
+
+export type SaveToRepositoryResult = {
+  root: string;
+  file: string;
+  path: string;
+  overwritten: boolean;
+};
+
+export type RunRepositoryWorkflowBody = {
+  /** The file, as the list gives it. */
+  file: string;
+  /** The inputs the workflow asks for, by key. */
+  inputs?: {
+    [key: string]: string;
+  };
+  /** Stop the run the session is on, if any, and start this. */
+  replace?: boolean;
+  /** Type the fixed kickoff line, for the owner, where an agent is running. */
+  kickoff?: boolean;
+};
+
+export type RunRepositoryWorkflowResult = {
+  run: {
+    id: string;
+    workflowId: string;
+    workflowVersion: number;
+    sessionId: string | null;
+    inputs: {
+      [key: string]: string;
+    };
+    status: "queued" | "running" | "paused" | "blocked" | "finished" | "stopped";
+    currentElementId: string | null;
+    elements: {
+      elementId: string;
+      state: "pending" | "active" | "done" | "skipped";
+      startedAt: string | null;
+      finishedAt: string | null;
+      note: string;
+      output: unknown | null;
+      ticks: {
+        item: number;
+        by: {
+          kind: "agent" | "person" | "token";
+          name?: string;
+        };
+        at: string;
+      }[];
+      by: {
+        kind: "agent" | "person" | "token";
+        name?: string;
+      } | null;
+      sessionId: string | null;
+    }[];
+    blockedReason: string | null;
+    pausedFrom: ("running" | "blocked") | null;
+    startedBy: {
+      kind: "agent" | "person" | "token";
+      name?: string;
+    };
+    createdAt: string;
+    updatedAt: string;
+    finishedAt: string | null;
+  };
+  workflowName: string;
+  elements: {
+    id: string;
+    name: string;
+    produces: string;
+  }[];
+  position: string;
+  text: string;
+  kickoff: string;
+  kickoffTyped: boolean;
+};
+
 export interface StreamEventsQuery {
   /**
    * Only changes that concern this canvas.
@@ -3103,8 +3334,10 @@ export interface ListActivityQuery {
 export type ListActivityResult = {
   items: {
     at: string;
-    tokenId: string;
+    caller: "token" | "owner-cli";
+    tokenId: string | null;
     tokenName: string;
+    fromSessionId: string | null;
     action: string;
     resource: {
       sessionId?: string;
@@ -3620,6 +3853,20 @@ export type ProposeSessionDraftResult = {
   updatedAt: string;
 };
 
+export type GetSessionRepositoryWorkflowsResult = {
+  root: string | null;
+  folder: string | null;
+  workflows: {
+    file: string;
+    name: string | null;
+    elements: string[];
+    hash: string | null;
+    state: "accepted" | "review" | "changed" | "unreadable";
+    reason: string | null;
+  }[];
+  truncated: boolean;
+};
+
 export type ReportAgentBody = {
   kind: "claude-code";
   conversationId?: string | null;
@@ -3676,6 +3923,7 @@ export const OPERATIONS = {
   discardDraft: { method: 'DELETE', path: '/v1/drafts/{draftId}', params: ["draftId"], hasBody: false, paged: false, idempotent: false, stream: false },
   acceptDraft: { method: 'POST', path: '/v1/drafts/{draftId}/accept', params: ["draftId"], hasBody: true, paged: false, idempotent: false, stream: false },
   returnDraft: { method: 'POST', path: '/v1/drafts/{draftId}/return', params: ["draftId"], hasBody: true, paged: false, idempotent: false, stream: false },
+  listDraftRecords: { method: 'GET', path: '/v1/draft-records', params: [], hasBody: false, paged: true, idempotent: false, stream: false },
   requestDraft: { method: 'POST', path: '/v1/draft-requests', params: [], hasBody: true, paged: false, idempotent: false, stream: false },
   listElements: { method: 'GET', path: '/v1/elements', params: [], hasBody: false, paged: true, idempotent: false, stream: false },
   createElement: { method: 'POST', path: '/v1/elements', params: [], hasBody: true, paged: false, idempotent: true, stream: false },
@@ -3684,6 +3932,11 @@ export const OPERATIONS = {
   copyElement: { method: 'POST', path: '/v1/elements/{elementId}/copy', params: ["elementId"], hasBody: false, paged: false, idempotent: true, stream: false },
   runElement: { method: 'POST', path: '/v1/elements/{elementId}/run', params: ["elementId"], hasBody: true, paged: false, idempotent: true, stream: false },
   tickRunItem: { method: 'POST', path: '/v1/runs/{runId}/ticks', params: ["runId"], hasBody: true, paged: false, idempotent: false, stream: false },
+  listRepositoryWorkflows: { method: 'GET', path: '/v1/repository-workflows', params: [], hasBody: false, paged: true, idempotent: false, stream: false },
+  getRepositoryWorkflow: { method: 'GET', path: '/v1/repository-workflows/file', params: [], hasBody: false, paged: false, idempotent: false, stream: false },
+  acceptRepositoryWorkflow: { method: 'POST', path: '/v1/repository-workflows/accept', params: [], hasBody: true, paged: false, idempotent: false, stream: false },
+  saveToRepository: { method: 'POST', path: '/v1/repository-workflows/save', params: [], hasBody: true, paged: false, idempotent: false, stream: false },
+  runRepositoryWorkflow: { method: 'POST', path: '/v1/sessions/{sessionId}/repository-runs', params: ["sessionId"], hasBody: true, paged: false, idempotent: true, stream: false },
   streamEvents: { method: 'GET', path: '/v1/events', params: [], hasBody: false, paged: false, idempotent: false, stream: true },
   listTokens: { method: 'GET', path: '/v1/tokens', params: [], hasBody: false, paged: true, idempotent: false, stream: false },
   createToken: { method: 'POST', path: '/v1/tokens', params: [], hasBody: true, paged: false, idempotent: false, stream: false },
@@ -3695,6 +3948,7 @@ export const OPERATIONS = {
   getSessionBrief: { method: 'GET', path: '/v1/sessions/{sessionId}/brief', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false },
   listSessionDrafts: { method: 'GET', path: '/v1/sessions/{sessionId}/drafts', params: ["sessionId"], hasBody: false, paged: true, idempotent: false, stream: false },
   proposeSessionDraft: { method: 'POST', path: '/v1/sessions/{sessionId}/drafts', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false },
+  getSessionRepositoryWorkflows: { method: 'GET', path: '/v1/sessions/{sessionId}/repository-workflows', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false },
   reportAgent: { method: 'PUT', path: '/v1/sessions/{sessionId}/agent', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false },
 } as const satisfies Record<string, OperationInfo>;
 
@@ -3967,6 +4221,12 @@ export interface Client {
    */
   returnDraft(args: { draftId: string; body: ReturnDraftBody } & CallOptions): Promise<ReturnDraftResult>;
   /**
+   * What became of drafts.
+   *
+   * `GET /v1/draft-records`. Signed-in browser only: no API token may call this.
+   */
+  listDraftRecords(args?: { query?: ListDraftRecordsQuery } & CallOptions): Promise<ListDraftRecordsResult>;
+  /**
    * Ask the agent in a session to write a workflow or an element.
    *
    * `POST /v1/draft-requests`. Signed-in browser only: no API token may call this.
@@ -4014,6 +4274,36 @@ export interface Client {
    * `POST /v1/runs/{runId}/ticks`. Scope: `runs:write`.
    */
   tickRunItem(args: { runId: string; body: TickRunItemBody } & CallOptions): Promise<TickRunItemResult>;
+  /**
+   * List the workflows that repositories offer.
+   *
+   * `GET /v1/repository-workflows`. Scope: `read`.
+   */
+  listRepositoryWorkflows(args?: { query?: ListRepositoryWorkflowsQuery } & CallOptions): Promise<ListRepositoryWorkflowsResult>;
+  /**
+   * Read one repository workflow.
+   *
+   * `GET /v1/repository-workflows/file`. Scope: `read`.
+   */
+  getRepositoryWorkflow(args: { query: GetRepositoryWorkflowQuery } & CallOptions): Promise<GetRepositoryWorkflowResult>;
+  /**
+   * Accept a repository workflow as it is now.
+   *
+   * `POST /v1/repository-workflows/accept`. Signed-in browser only: no API token may call this.
+   */
+  acceptRepositoryWorkflow(args: { body: AcceptRepositoryWorkflowBody } & CallOptions): Promise<AcceptRepositoryWorkflowResult>;
+  /**
+   * Write a workflow into a repository.
+   *
+   * `POST /v1/repository-workflows/save`. Signed-in browser only: no API token may call this.
+   */
+  saveToRepository(args: { body: SaveToRepositoryBody } & CallOptions): Promise<SaveToRepositoryResult>;
+  /**
+   * Start a run of a repository workflow on a session.
+   *
+   * `POST /v1/sessions/{sessionId}/repository-runs`. Scope: `runs:write`.
+   */
+  runRepositoryWorkflow(args: { sessionId: string; body: RunRepositoryWorkflowBody } & CallOptions): Promise<RunRepositoryWorkflowResult>;
   /**
    * Follow changes as they happen.
    *
@@ -4081,6 +4371,12 @@ export interface Client {
    */
   proposeSessionDraft(args: { sessionId: string; body: ProposeSessionDraftBody } & CallOptions): Promise<ProposeSessionDraftResult>;
   /**
+   * The workflows the repository of a session offers.
+   *
+   * `GET /v1/sessions/{sessionId}/repository-workflows`. A session's own token, or an API token with `read`.
+   */
+  getSessionRepositoryWorkflows(args: { sessionId: string } & CallOptions): Promise<GetSessionRepositoryWorkflowsResult>;
+  /**
    * Say which agent runs in the session, and in which conversation.
    *
    * `PUT /v1/sessions/{sessionId}/agent`. A session's own token.
@@ -4121,9 +4417,17 @@ export interface Client {
      */
     listDrafts(args?: { query?: ListDraftsQuery } & CallOptions): AsyncGenerator<ListDraftsResult['items'][number], void, void>;
     /**
+     * Every item of `listDraftRecords`, fetched a page at a time as they are asked for.
+     */
+    listDraftRecords(args?: { query?: ListDraftRecordsQuery } & CallOptions): AsyncGenerator<ListDraftRecordsResult['items'][number], void, void>;
+    /**
      * Every item of `listElements`, fetched a page at a time as they are asked for.
      */
     listElements(args?: { query?: ListElementsQuery } & CallOptions): AsyncGenerator<ListElementsResult['items'][number], void, void>;
+    /**
+     * Every item of `listRepositoryWorkflows`, fetched a page at a time as they are asked for.
+     */
+    listRepositoryWorkflows(args?: { query?: ListRepositoryWorkflowsQuery } & CallOptions): AsyncGenerator<ListRepositoryWorkflowsResult['items'][number], void, void>;
     /**
      * Every item of `listTokens`, fetched a page at a time as they are asked for.
      */

@@ -337,3 +337,36 @@ describe('the review screen takes things to review from sources', () => {
     expect(pictureOf(runFor(workflow, newId()), names, null, 300).segments.map((s) => s.produces)).toEqual(['checklist', 'note']);
   });
 });
+
+describe('repository workflows as things to review', () => {
+  it('are the files never accepted or changed since, and not the accepted or unreadable ones', async () => {
+    const { itemsOfListing, idOf } = await import('../review/repository-source');
+    const file = (name: string, state: 'accepted' | 'review' | 'changed' | 'unreadable'): { file: string; name: string | null; elements: string[]; hash: string | null; state: typeof state; reason: string | null } => ({
+      file: `${name}.json`,
+      name: state === 'unreadable' ? null : name,
+      elements: [],
+      hash: `hash-of-${name}`,
+      state,
+      reason: null,
+    });
+    const listing = [{ root: '/work/project', folder: 'project', sessionIds: [], truncated: false, workflows: [file('release', 'accepted'), file('hotfix', 'review'), file('deploy', 'changed'), file('broken', 'unreadable')] }];
+    const items = itemsOfListing(listing);
+    expect(items.map((i) => [i.id, i.title, i.what, i.state, i.revision])).toEqual([
+      [idOf('/work/project', 'hotfix.json'), 'hotfix', 'A workflow file', 'waiting', 1],
+      [idOf('/work/project', 'deploy.json'), 'deploy', 'A workflow file that changed since you accepted it', 'waiting', 2],
+    ]);
+    expect(items[0]?.from).toBe('the repository “project” (hotfix.json in /work/project/.aubergine/workflows)');
+    // Content the owner declined in this browser is not offered again, until it changes.
+    expect(itemsOfListing(listing, new Set(['/work/project\nhotfix.json\nhash-of-hotfix'])).map((i) => i.title)).toEqual(['deploy']);
+    expect(itemsOfListing(listing, new Set(['/work/project\nhotfix.json\nan-older-hash'])).map((i) => i.title)).toEqual(['hotfix', 'deploy']);
+  });
+
+  it('is a source registered with the review screen, beside drafts', async () => {
+    const { reviewSources } = await import('../review/registry');
+    await import('../review/drafts-source');
+    await import('../review/repository-source');
+    expect(reviewSources().map((s) => s.id)).toEqual(['drafts', 'repository']);
+    // A file cannot be sent back to anyone.
+    expect(reviewSources().find((s) => s.id === 'repository')?.sendBack).toBeUndefined();
+  });
+});

@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { ApiToken } from './tokens';
 import { Id, newId } from './ids';
 import { Draft, ShelfElement } from './drafts';
+import { AcceptedRepositoryWorkflow } from './repository';
 import { Run, Workflow } from './workflows';
 
 export const Timestamp = z.iso.datetime();
@@ -271,6 +272,8 @@ export const AppState = z.object({
   drafts: z.array(Draft).default([]),
   /** Elements kept for reuse. */
   shelf: z.array(ShelfElement).default([]),
+  /** The repository workflows the owner accepted, each with the content that was accepted. */
+  repositoryAccepted: z.array(AcceptedRepositoryWorkflow).default([]),
 });
 export type AppState = z.infer<typeof AppState>;
 
@@ -301,7 +304,7 @@ export function createInitialState(now: Date = new Date()): AppState {
     createdAt,
   };
   const project: Project = { id: newId(), workspaceId: workspace.id, name: 'Default', createdAt };
-  return { organization, workspace, project, sessions: [], canvases: [newCanvas(project.id, FIRST_CANVAS_NAME, 0, now)], tokens: [], workflows: [], runs: [], drafts: [], shelf: [] };
+  return { organization, workspace, project, sessions: [], canvases: [newCanvas(project.id, FIRST_CANVAS_NAME, 0, now)], tokens: [], workflows: [], runs: [], drafts: [], shelf: [], repositoryAccepted: [] };
 }
 
 /** Canvases in tab order. */

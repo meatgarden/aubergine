@@ -26,6 +26,8 @@ const NEEDS: Partial<Record<Action, Scope>> = {
   'run.own.report': 'runs:write',
   'drafts.read': 'read',
   'drafts.propose': 'workflows:write',
+  'repository.own.read': 'read',
+  'repository.read': 'read',
 };
 
 describe('authorize', () => {
@@ -44,7 +46,7 @@ describe('authorize', () => {
 
   it('refuses a token holding every scope each thing no token may do', () => {
     const everything = token(...GRANTABLE_SCOPES);
-    expect([...NEVER_BY_TOKEN].sort()).toEqual(['activity.read', 'drafts.review', 'outside.move', 'outside.read', 'processes.signal', 'settings.write', 'tokens.manage']);
+    expect([...NEVER_BY_TOKEN].sort()).toEqual(['activity.read', 'drafts.review', 'outside.move', 'outside.read', 'processes.signal', 'repository.review', 'repository.write', 'settings.write', 'tokens.manage']);
     for (const action of NEVER_BY_TOKEN) {
       expect(authorize(everything, action, {}), action).toBe(false);
       expect(authorize(everything, action, { sessionId: SESSION, canvasId: OTHER }), action).toBe(false);
@@ -84,7 +86,7 @@ describe('authorize', () => {
   it('keeps a session token to what it reports about itself and the run it is on, for itself only', () => {
     const session: Principal = { kind: 'session', sessionId: SESSION };
     const own = ACTIONS.filter((action) => authorize(session, action, { sessionId: SESSION }));
-    expect([...own].sort()).toEqual(['agent.report', 'attention.set', 'draft.own.propose', 'draft.own.read', 'note.append', 'run.own.read', 'run.own.report']);
+    expect([...own].sort()).toEqual(['agent.report', 'attention.set', 'draft.own.propose', 'draft.own.read', 'note.append', 'repository.own.read', 'run.own.read', 'run.own.report']);
     for (const action of ACTIONS) {
       expect(authorize(session, action, { sessionId: OTHER }), `${action} on another session`).toBe(false);
       expect(authorize(session, action, {}), `${action} on nothing`).toBe(false);

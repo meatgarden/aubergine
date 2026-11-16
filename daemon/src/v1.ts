@@ -23,6 +23,7 @@ import {
   type CanvasSummary,
   type ChangeEvent,
   type ErrorCode,
+  type OwnerCaller,
   type Frame,
   type RouteId,
   type RouteInput,
@@ -38,6 +39,7 @@ import type { StateHub } from './state-hub';
 import type { Tokens } from './tokens';
 import type { Viewers } from './viewers';
 import type { Drafts } from './drafts';
+import type { Repositories } from './repositories';
 import { actorOf, type Workflows } from './workflows';
 
 export interface PublicRouteDeps {
@@ -46,6 +48,7 @@ export interface PublicRouteDeps {
   tokens: Tokens;
   workflows: Workflows;
   drafts: Drafts;
+  repositories: Repositories;
   activity: ActivityLog;
   viewers: Viewers;
   limiter: RateLimiter;
@@ -55,6 +58,8 @@ export interface PublicRouteDeps {
   validateResponses: boolean;
   /** Who a request was found to be, when the checks let it through. */
   principalOf(request: FastifyRequest): Principal | null;
+  /** Whether an owner's call came from a browser page or from outside one, and from which session it says it came. */
+  ownerCaller(request: FastifyRequest): OwnerCaller;
   /** Records a token's call now, for a route whose response does not end for a long time. */
   recordNow(request: FastifyRequest): void;
   /** Refuses the request unless its principal may do the action. Asked for every route before anything else. */
@@ -77,7 +82,7 @@ type Handlers = { [I in RouteId]: (context: Context<I>) => RouteOutput<I> | Prom
  * call it, and no route exists that is not declared.
  */
 export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps): void {
-  const { hub, sessions, workflows, drafts, parse } = deps;
+  const { hub, sessions, workflows, drafts, repositories, parse } = deps;
   const remembered = new IdempotencyStore();
 
   const summary = (canvas: Canvas): CanvasSummary => {
@@ -297,12 +302,14 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
 
     reviseDraft: ({ params, body }) => drafts.detail(drafts.revise(params.draftId, body)),
 
-    acceptDraft: ({ params, body }) => drafts.accept(params.draftId, body),
+    acceptDraft: ({ params, body, request }) => drafts.accept(params.draftId, body, deps.ownerCaller(request)),
+
+    listDraftRecords: async ({ query }) => paginate(await drafts.records(), (r) => `${r.at} ${r.draftId}`, query),
 
     returnDraft: ({ params, body }) => drafts.sendBack(params.draftId, body.comment),
 
-    discardDraft: ({ params }) => {
-      drafts.discard(params.draftId);
+    discardDraft: ({ params, request }) => {
+      drafts.discard(params.draftId, deps.ownerCaller(request));
     },
 
     requestDraft: ({ body }) => drafts.request(body),
@@ -327,6 +334,21 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
     },
 
     tickRunItem: ({ params, body, principal }) => workflows.tick(params.runId, body, actorOf(principal)),
+
+    /* ---------- Workflows kept in a repository ---------- */
+
+    listRepositoryWorkflows: async ({ query }) => paginate(await repositories.listing(), (r) => r.root, query),
+
+    getRepositoryWorkflow: ({ query }) => repositories.detail(query.root, query.file),
+
+    acceptRepositoryWorkflow: ({ body }) => repositories.accept(body.root, body.file, body.hash),
+
+    saveToRepository: ({ body }) => repositories.save(body.sessionId, body.workflowId, body.overwrite),
+
+    runRepositoryWorkflow: ({ params, body, principal }) => {
+      const { file, kickoff, ...rest } = body;
+      return repositories.run(params.sessionId, file, { ...rest, typeKickoff: kickoff && principal.kind === 'user' }, actorOf(principal));
+    },
 
     /* ---------- The stream of changes ---------- */
 
@@ -391,6 +413,9 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
     listSessionDrafts: ({ params, query }) => paginate(drafts.ofSession(params.sessionId), (d) => d.id, query),
 
     proposeSessionDraft: ({ params, body }) => drafts.proposeFromSession(params.sessionId, body),
+
+    // What the repository of the session's own folder offers, and whether each was accepted. Reading only.
+    getSessionRepositoryWorkflows: ({ params }) => repositories.offer(params.sessionId),
 
     reportSessionRun: ({ params, body, principal }) => workflows.reportOwn(params.sessionId, body, actorOf(principal)),
   };

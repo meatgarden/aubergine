@@ -226,7 +226,7 @@ describe('the example: an agent writes an element, the owner reads it, it is run
     const ticked = await asOwner('POST', `/v1/runs/${run.body.run.id}/ticks`, { elementId: 'collect-my-to-dos', item: 1, ticked: true });
     expect(ticked.status).toBe(200);
     // One event about one run; the run did not move.
-    expect(events.map((e) => e.type)).toEqual(['run.moved']);
+    expect(events.map((e) => e.type)).toEqual(['run.ticked']);
     expect(ticked.body.position).toBe('Do them · 2 of 2');
     expect(ticked.body.text).toContain('[ ] 1. Review the retry change\n[x] 2. Answer about the release date\n      Asked twice.\n[ ] 3. Book the room\nThe owner ticked 1 of 3');
 
@@ -483,7 +483,7 @@ describe('the shelf', () => {
     expect(hub.state.workflows).toEqual([]);
     // Changing the shelf element later does not reach into a run: the run had its own copy.
     const state = JSON.parse(await readFile(path.join(dir, 'state.json'), 'utf8').catch(() => '{}'));
-    expect(state.version ?? 5).toBe(5);
+    expect(state.version ?? 6).toBe(6);
   });
 
   it('a workflow left over from running one element is cleared at the next start', async () => {

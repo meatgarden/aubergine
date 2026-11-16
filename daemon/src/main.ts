@@ -18,6 +18,7 @@ import { Viewers } from './viewers';
 import { ZshIntegration } from './shell/integration';
 import { SettingsFile, expandHome } from './settings';
 import { pathWithCommand, writeCommandLauncher } from './command-path';
+import { FileDraftLog } from './draft-log';
 import { FileRunArchive } from './run-archive';
 import { JsonStore } from './store/json-store';
 import { loadOrCreateToken } from './token';
@@ -49,6 +50,9 @@ async function main(): Promise<void> {
       [SESSION_ENV.token]: sessionToken(token, sessionId),
       [SESSION_ENV.bin]: commandFolder,
       PATH: sessionPath,
+      // So that `aubergine` typed in a session talks to the server that session belongs to, also when that is not the default one.
+      AUBERGINE_PORT: String(listeningPort),
+      AUBERGINE_DATA_DIR: config.dataDir,
     }),
     logPrompts: () => settings.value.agents.logPrompts,
     agentLaunchLine: async (_agent, args) =>
@@ -79,6 +83,7 @@ async function main(): Promise<void> {
     webDist: config.webDist,
     // What API tokens did, as a file of its own in the data folder: it is not part of the state.
     activity: new FileActivityLog(config.dataDir, settings.value.api.activityLogMaxBytes, (error) => console.warn(`Could not write the activity log: ${String(error)}`)),
+    draftLog: new FileDraftLog(config.dataDir, (error) => console.warn(`Could not write the record of drafts: ${String(error)}`)),
     runArchive: new FileRunArchive(config.dataDir, (error) => console.warn(`Could not write the archive of runs: ${String(error)}`)),
     version: versionInfo(installRoot(), config).version,
   });
