@@ -59,7 +59,8 @@ describe('which tools a credential is offered', () => {
     expect(names(token(['notes:write']))).toEqual(['note_add', 'note_write']);
     expect(names(token(['sessions:write']))).toEqual(['session_start', 'session_move', 'session_park']);
     expect(names(token(['runs:write']))).toEqual(['workflow_done', 'workflow_blocked', 'workflow_goto', 'workflow_run', 'element_run']);
-    expect(names(token(['workflows:write']))).toEqual(['draft_propose_element', 'draft_propose_workflow']);
+    expect(names(token(['workflows:write']))).toEqual(['draft_propose_element', 'draft_propose_workflow', 'library_request_install']);
+    expect(names(token(['read'])).filter((name) => name.startsWith('library'))).toEqual(['library_list', 'library_show']);
     expect(names(session)).toEqual(['workflow_status', 'workflow_done', 'workflow_blocked', 'workflow_goto', 'note_add', 'attention_set', 'draft_brief', 'draft_propose_element', 'draft_propose_workflow', 'messages_inbox', 'message_reply', 'message_send', 'repository_workflows']);
     expect(names(token(['messages:read']))).toEqual(['messages_inbox']);
     expect(names(token(['messages:write']))).toEqual(['message_reply', 'message_send']);

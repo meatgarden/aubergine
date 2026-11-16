@@ -737,7 +737,7 @@ describe('a restart of the server', () => {
     await startRun(workflow.id, session.id);
     await hub.flush();
     const file = JSON.parse(await readFile(path.join(dir, 'state.json'), 'utf8'));
-    expect(file.version).toBe(8);
+    expect(file.version).toBe(9);
     expect(file.workflows).toHaveLength(1);
     expect(file.runs).toHaveLength(1);
     expect(file.runs[0].status).toBe('running');

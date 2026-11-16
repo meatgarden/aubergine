@@ -1,0 +1,9 @@
+{
+  "aubergine": "element",
+  "format": 1,
+  "element": {
+    "name": "Write a hand-over note",
+    "instructions": "Write a note for whoever continues {{task}} after you, a person or another agent, who knows nothing about this conversation.\n\nSay, in this order: what the goal is; what is done and can be relied on; what is started and not finished, and where it stands; what you would do next; anything that surprised you.\n\nKeep it to what they need. Leave out what they can read in the code.",
+    "doneWhen": "Someone who reads only the note can carry on without asking what happened."
+  }
+}

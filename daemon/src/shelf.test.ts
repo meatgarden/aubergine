@@ -47,11 +47,12 @@ const runtime = {
 async function start(): Promise<void> {
   const store = new JsonStore(dir);
   hub = new StateHub(await store.load(), store);
-  events = [];
-  hub.subscribe((event) => events.push(event));
   const settings = new SettingsFile(dir);
   const sessions = new Sessions(hub, runtime, {});
   app = await buildServer({ hub, sessions, runtime, settings: () => settings.reload(), token: ownerToken, devOrigin: null, webDist: path.join(dir, 'none'), runArchive: new FileRunArchive(dir) });
+  // What the server does while starting (reading the library that ships with it) is not what these tests are about.
+  events = [];
+  hub.subscribe((event) => events.push(event));
   await app.listen({ host: '127.0.0.1', port: 0 });
   port = (app.server.address() as AddressInfo).port;
   origin = `http://127.0.0.1:${port}`;

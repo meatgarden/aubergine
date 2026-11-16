@@ -1,0 +1,10 @@
+{
+  "aubergine": "element",
+  "format": 1,
+  "element": {
+    "name": "List the open questions",
+    "instructions": "Go through {{task}} and collect everything that someone has to decide and that you should not decide yourself: choices between two reasonable ways, things the request does not say, anything that would be expensive to undo.\n\nOne line per question, phrased so that it can be answered with a few words. Where it helps, add in the detail what you would do if nobody answers.",
+    "doneWhen": "Every decision that is not yours to make is on the list, one per item.",
+    "produces": "checklist"
+  }
+}

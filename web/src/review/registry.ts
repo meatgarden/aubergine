@@ -32,6 +32,10 @@ export interface ReviewDetail {
   needs: Need[];
   /** What it holds, for editing before accepting. */
   proposal: { workflow: WorkflowContent | null; element: Element | null };
+  /** Things to be said above the text, each a sentence: what to be careful about. Absent where there is nothing to say. */
+  notices?: string[];
+  /** Further texts to read beside it, each with what it is. */
+  also?: { title: string; text: string }[];
 }
 
 export interface ReviewSource {

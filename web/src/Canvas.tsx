@@ -49,6 +49,8 @@ import { WorkflowEditor } from './workflows/WorkflowEditor';
 import { WorkflowsScreen } from './workflows/WorkflowsScreen';
 import { ReviewScreen } from './review/ReviewScreen';
 import './review/drafts-source';
+import './review/library-source';
+import { LibraryScreen } from './library/LibraryScreen';
 import { itemsOfListing, useRepositoryListing } from './review/repository-source';
 import { DescribeDialog } from './workflows/DescribeDialog';
 import { ShelfEditor } from './workflows/ShelfEditor';
@@ -466,6 +468,9 @@ export function Canvas() {
           <button type="button" className="quiet" onClick={() => runCommand('workflows.open')} title={hint('workflows.open', 'Workflows: make, change and run them')} data-testid="toolbar-workflows">
             Workflows
           </button>
+          <button type="button" className="quiet" onClick={() => runCommand('library.open')} title={hint('library.open', 'Library: workflows and elements others published, to read and install')} data-testid="toolbar-library">
+            Library
+          </button>
           <DraftsWaiting />
           <button type="button" className="quiet" onClick={() => runCommand('frame.new')} title={hint('frame.new', 'Add a frame to group terminals')}>
             + Frame
@@ -528,6 +533,7 @@ export function Canvas() {
       <ShelfEditor />
       <DescribeDialog />
       <ReviewScreen />
+      <LibraryScreen />
       <RunDialog />
       <AgentToolsDialog />
       <RunViewDialog />

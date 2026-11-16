@@ -45,6 +45,7 @@ import type { TerminalAccess, TerminalTrace, Typist } from './terminal-access';
 import { isTerminalContentEvent, withoutTerminalContent } from './terminal-redact';
 import { actorOf, type Workflows } from './workflows';
 import { MessageRefusal, type Messages } from './messages';
+import type { Library } from './library';
 import { fingerprintOf } from './terminal-access';
 
 export interface PublicRouteDeps {
@@ -56,6 +57,7 @@ export interface PublicRouteDeps {
   repositories: Repositories;
   terminals: TerminalAccess;
   messages: Messages;
+  library: Library;
   activity: ActivityLog;
   viewers: Viewers;
   limiter: RateLimiter;
@@ -109,7 +111,7 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
   const mayReadTerminal = (principal: Principal, sessionId: string): boolean => principal.kind === 'user' || deps.may(principal, 'terminal.read', deps.resourceOf(sessionId));
   const remembered = new IdempotencyStore();
 
-  const { messages } = deps;
+  const { messages, library } = deps;
   /** What `authorize` is asked about one session messaging another: where the receiver is, and which canvases its canvas lets in. */
   const deliveryTo = (fromSessionId: string, toSessionId: string): Resource => {
     const toCanvasId = messages.canvasOf(toSessionId);
@@ -347,6 +349,47 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
     },
 
     requestDraft: ({ body }) => drafts.request(body),
+
+    /* ---------- The library ---------- */
+
+    listLibrarySources: () => ({ sources: library.sources() }),
+
+    // The owner's alone, and with `refreshLibrarySource` the only two things that can fetch.
+    addLibrarySource: ({ body }) => library.addSource(body),
+
+    removeLibrarySource: async ({ params }) => {
+      await library.removeSource(params.sourceId);
+    },
+
+    refreshLibrarySource: ({ params }) => library.refresh(params.sourceId),
+
+    listLibraryItems: () => ({ items: library.items() }),
+
+    getLibraryItem: ({ params }) => library.detail(params.sourceId, params.itemId),
+
+    // A request and nothing more: nothing is installed until the owner has read it and accepted.
+    requestLibraryInstall: ({ body, principal }) => library.request(body.sourceId, body.itemId, principal.kind === 'token' ? { kind: 'token', tokenId: principal.tokenId, name: principal.name } : { kind: 'owner' }),
+
+    listLibraryRequests: () => ({ requests: library.requests() }),
+
+    getLibraryRequest: ({ params }) => library.requestDetail(params.requestId),
+
+    acceptLibraryRequest: async ({ params, body }) => {
+      const { content: _content, ...item } = await library.accept(params.requestId, body.digest, { ...(body.workflow !== undefined ? { workflow: body.workflow } : {}), ...(body.element !== undefined ? { element: body.element } : {}) });
+      return item;
+    },
+
+    discardLibraryRequest: ({ params }) => {
+      library.discard(params.requestId);
+    },
+
+    listLibraryInstalled: () => ({ installed: library.installed() }),
+
+    getLibraryInstalledUsage: ({ params }) => library.usage(params.installedId),
+
+    removeLibraryInstalled: ({ params }) => {
+      library.remove(params.installedId);
+    },
 
     /* ---------- The shelf ---------- */
 

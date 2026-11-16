@@ -26,6 +26,7 @@ import {
 import { ApiToken } from './tokens';
 import { Id } from './ids';
 import { SessionMessages } from './messages';
+import { InstallRequest, InstalledItem, LibrarySource } from './library';
 import { Draft, ShelfElement } from './drafts';
 import { AcceptedRepositoryWorkflow, REPOSITORY_ACCEPTED_MAX } from './repository';
 import { TypedBy } from './terminal';
@@ -103,6 +104,15 @@ export const ChangeEvent = z.discriminatedUnion('type', [
   z.object({ type: z.literal('canvas.removed'), canvasId: Id }),
   /** The owner changed which canvases' terminals may message the terminals on this one. */
   z.object({ type: z.literal('canvas.messaging'), canvasId: Id, messagesFrom: z.array(Id).max(200) }),
+  /** A library source was added, or read again. */
+  z.object({ type: z.literal('library.source.changed'), source: LibrarySource }),
+  z.object({ type: z.literal('library.source.removed'), sourceId: Id }),
+  /** Something from the library was installed or brought up to date, or what its source says about it changed. */
+  z.object({ type: z.literal('library.installed.changed'), item: InstalledItem }),
+  z.object({ type: z.literal('library.installed.removed'), installedId: Id }),
+  /** An install waits for the owner, or no longer does. */
+  z.object({ type: z.literal('library.request.changed'), request: InstallRequest }),
+  z.object({ type: z.literal('library.request.removed'), requestId: Id }),
   z.object({ type: z.literal('token.created'), token: ApiToken }),
   z.object({ type: z.literal('token.revoked'), tokenId: Id, at: Timestamp }),
   /** Recorded at most about once a minute per token. */
@@ -271,6 +281,18 @@ export function applyEvent(state: AppState, event: ChangeEvent): AppState {
       return state.canvases.some((c) => c.id === event.canvas.id) ? state : { ...state, canvases: [...state.canvases, event.canvas] };
     case 'canvas.updated':
       return { ...state, canvases: state.canvases.map((c) => (c.id === event.canvasId ? { ...c, ...event.changes } : c)) };
+    case 'library.source.changed':
+      return { ...state, library: { ...state.library, sources: [...state.library.sources.filter((s) => s.id !== event.source.id), event.source] } };
+    case 'library.source.removed':
+      return { ...state, library: { ...state.library, sources: state.library.sources.filter((s) => s.id !== event.sourceId), requests: state.library.requests.filter((r) => r.sourceId !== event.sourceId) } };
+    case 'library.installed.changed':
+      return { ...state, library: { ...state.library, installed: [...state.library.installed.filter((i) => i.id !== event.item.id), event.item] } };
+    case 'library.installed.removed':
+      return { ...state, library: { ...state.library, installed: state.library.installed.filter((i) => i.id !== event.installedId), requests: state.library.requests.filter((r) => r.updates !== event.installedId) } };
+    case 'library.request.changed':
+      return { ...state, library: { ...state.library, requests: [...state.library.requests.filter((r) => r.id !== event.request.id), event.request] } };
+    case 'library.request.removed':
+      return { ...state, library: { ...state.library, requests: state.library.requests.filter((r) => r.id !== event.requestId) } };
     case 'token.created':
       return { ...state, tokens: [...state.tokens.filter((t) => t.id !== event.token.id), event.token] };
     case 'token.revoked':

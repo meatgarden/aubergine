@@ -27,7 +27,7 @@ const ZSH = ['/bin/zsh', '/usr/bin/zsh'].find((p) => existsSync(p));
 const COMMAND = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..', 'bin', 'aubergine.mjs');
 
 const OWN_WORK = ['workflow_status', 'workflow_done', 'workflow_blocked', 'workflow_goto', 'note_add', 'attention_set', 'draft_brief', 'draft_propose_element', 'draft_propose_workflow', 'messages_inbox', 'message_reply', 'message_send', 'repository_workflows'];
-const READING = ['workflow_status', 'repository_workflows', 'canvases_list', 'sessions_list', 'session_get', 'notes_read', 'workflows_list', 'runs_list', 'run_get'];
+const READING = ['workflow_status', 'library_list', 'library_show', 'repository_workflows', 'canvases_list', 'sessions_list', 'session_get', 'notes_read', 'workflows_list', 'runs_list', 'run_get'];
 const EVERYTHING = [
   'workflow_status',
   'workflow_done',
@@ -39,6 +39,9 @@ const EVERYTHING = [
   'messages_inbox',
   'message_reply',
   'message_send',
+  'library_list',
+  'library_show',
+  'library_request_install',
   'repository_workflows',
   'canvases_list',
   'sessions_list',
@@ -385,6 +388,16 @@ describe.runIf(ZSH)('aubergine mcp, through the protocol', () => {
       expect(read.text).toContain('Nothing was marked read');
       expect(hub.state.sessions.find((s) => s.id === target.id)?.messages).toMatchObject({ unread: 1, from: 'caller' });
       await ok('message_reply', { session: 'target', message: told.data.messageId, text: 'And one more.' });
+      // The library: what comes with the app is listed and read as quoted text; asking for an install installs nothing.
+      const offered = await ok('library_list');
+      expect(quotedPart(offered.text).inside).toContain('check-before-done');
+      const item = await ok('library_show', { item: 'check-before-done' });
+      expect(quotedPart(item.text).inside).toContain('Before you report that');
+      const asked = await ok('library_request_install', { item: 'check-before-done' });
+      expect(asked.text).toContain('It is not installed');
+      expect(hub.state.library.installed).toEqual([]);
+      expect(hub.state.library.requests).toHaveLength(1);
+      expect(hub.state.shelf.some((e) => e.element.name === 'Check before you say done')).toBe(false);
       await ok('aubergine_status');
       await ok('aubergine_guide');
 

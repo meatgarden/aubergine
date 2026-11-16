@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { ApiToken } from './tokens';
 import { Id, newId } from './ids';
 import { SessionMessages } from './messages';
+import { LibraryState } from './library';
 import { Draft, ShelfElement } from './drafts';
 import { AcceptedRepositoryWorkflow } from './repository';
 import { TypedBy } from './terminal';
@@ -335,6 +336,8 @@ export const AppState = z.object({
   shelf: z.array(ShelfElement).default([]),
   /** The repository workflows the owner accepted, each with the content that was accepted. */
   repositoryAccepted: z.array(AcceptedRepositoryWorkflow).default([]),
+  /** The library: its sources as they were last read, what is installed, and installs that wait for the owner. */
+  library: LibraryState.prefault({}),
 });
 export type AppState = z.infer<typeof AppState>;
 
@@ -366,7 +369,7 @@ export function createInitialState(now: Date = new Date()): AppState {
     createdAt,
   };
   const project: Project = { id: newId(), workspaceId: workspace.id, name: 'Default', createdAt };
-  return { organization, workspace, project, sessions: [], canvases: [newCanvas(project.id, FIRST_CANVAS_NAME, 0, now)], tokens: [], workflows: [], runs: [], drafts: [], shelf: [], repositoryAccepted: [] };
+  return { organization, workspace, project, sessions: [], canvases: [newCanvas(project.id, FIRST_CANVAS_NAME, 0, now)], tokens: [], workflows: [], runs: [], drafts: [], shelf: [], repositoryAccepted: [], library: { sources: [], installed: [], requests: [] } };
 }
 
 /** Canvases in tab order. */

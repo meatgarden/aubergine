@@ -545,6 +545,14 @@ export const COMMANDS: readonly Command[] = [
     run: (state) => state.togglePanel('workflows'),
   },
   {
+    id: 'library.open',
+    title: 'Library…',
+    description: 'Workflows and elements that others published: add a source, browse, read what an item would tell an agent, and ask for it to be installed. Nothing installs until you have read it in Review.',
+    group: 'Panels',
+    available: always,
+    run: (state) => state.togglePanel('library'),
+  },
+  {
     id: 'workflow.run',
     title: 'Run workflow… on the terminal',
     description: 'Puts the terminal on a workflow: choose one, fill in what it asks for, see what the agent will be told, start.',

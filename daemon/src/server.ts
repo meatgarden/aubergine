@@ -90,7 +90,11 @@ import { Drafts } from './drafts';
 import { Repositories } from './repositories';
 import { noInputAudit, type InputAudit } from './input-audit';
 import { TerminalAccess, TerminalRefusal, type TerminalTrace } from './terminal-access';
+import os from 'node:os';
+import path from 'node:path';
 import { MessageRefusal, Messages } from './messages';
+import { Library } from './library';
+import { FetchRefusal, type LibraryFetcher } from './library/git';
 import type { MessageLog } from './message-log';
 import { Workflows } from './workflows';
 
@@ -117,6 +121,12 @@ export interface ServerOptions {
   draftLog?: DraftLog;
   /** Where runs that are over are kept. Left out, in memory only. */
   runArchive?: RunArchive;
+  /** Fetches Git sources of the library. Left out, one that refuses: a server without a data folder fetches nothing. */
+  libraryFetcher?: LibraryFetcher;
+  /** Where fetched library sources are kept. Left out, nothing can be fetched. */
+  libraryCache?: string;
+  /** The folder of the library that ships with the app. Left out, this copy's. For tests. */
+  libraryBuiltin?: string;
   /** Where messages between sessions are kept. Left out, in memory only. */
   messageLog?: MessageLog;
   /** Reads an agent's past conversations. Left out, those routes answer that it is not available. */
@@ -177,6 +187,14 @@ export function cookieName(port: number): string {
   return `aubergine_token_${port}`;
 }
 
+/** For a server that was given no fetcher: it fetches nothing, and says so. */
+const NO_FETCHER: LibraryFetcher = {
+  fetch: async () => {
+    throw new FetchRefusal('This server was started without a place to keep fetched sources, so it fetches nothing.');
+  },
+  forget: async () => undefined,
+};
+
 export async function buildServer(options: ServerOptions): Promise<FastifyInstance> {
   const { hub, sessions, runtime, token } = options;
   // Limits are read once, when the server starts.
@@ -198,6 +216,15 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   const messageSettings = (await options.settings()).messages;
   const messages = new Messages(hub, sessions, () => messageSettings, options.messageLog);
   await messages.load();
+  const library = new Library(hub, sessions, workflows, drafts, {
+    cacheDir: options.libraryCache ?? path.join(os.tmpdir(), 'aubergine-no-library-cache'),
+    fetcher: options.libraryFetcher ?? NO_FETCHER,
+    limits: workflowLimits,
+    inventories: options.inventories,
+    builtin: options.libraryBuiltin,
+  });
+  // The library that ships with the app is read from this copy's own files. Nothing is fetched at start, or ever without the owner asking.
+  await library.start();
   const terminals = new TerminalAccess(sessions, runtime, () => terminalSettings, options.inputAudit ?? noInputAudit);
   /** How much a terminal call read or typed, for the activity log. */
   const traces = new WeakMap<FastifyRequest, TerminalTrace>();
@@ -722,6 +749,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     repositories,
     terminals,
     messages,
+    library,
     may: (principal, action, resource) => authorize(principal, action, resource),
     resourceOf,
     trace: (request, trace) => void traces.set(request, trace),

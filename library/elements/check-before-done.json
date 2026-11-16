@@ -1,0 +1,9 @@
+{
+  "aubergine": "element",
+  "format": 1,
+  "element": {
+    "name": "Check before you say done",
+    "instructions": "Before you report that {{task}} is finished, check it the way its owner would.\n\n1. Run what proves it works: the tests, the build, or the thing itself. Read the output; do not assume.\n2. Read your own change from top to bottom once, as if someone else had written it.\n3. Look for what you said you would do and did not.\n\nIf anything fails or is missing, say so plainly and say what is left. A true \"not done yet\" is worth more than a hopeful \"done\".",
+    "doneWhen": "What proves the work was run and read, and anything that is not finished is named."
+  }
+}

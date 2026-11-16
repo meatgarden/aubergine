@@ -1903,3 +1903,120 @@ test('a shelf element has a life: a copy says where it came from, a newer versio
   await expect(editor.getByTestId('editor-saved')).toContainText('Saved as version 4 of “Check every link, twice” on the shelf.');
   await expect(editor.getByTestId('editor-element').nth(1).getByTestId('copy-mark')).toHaveAttribute('data-state', 'unchanged');
 });
+
+test('the library: a Git source is added, browsed and read; an item is installed after reading, and its update after the source changed; a program\'s request waits', async ({ page }) => {
+  const { execFileSync } = await import('node:child_process');
+  // A repository of someone else's, made here: a file address, so nothing reaches the network.
+  const root = mkdtempSync(path.join(tmpdir(), 'aubergine-e2e-library-'));
+  const git = (...args: string[]): string =>
+    execFileSync('git', args, { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], env: { PATH: process.env.PATH ?? '', HOME: root, GIT_CONFIG_GLOBAL: '/dev/null', GIT_CONFIG_SYSTEM: '/dev/null', GIT_AUTHOR_NAME: 'A Publisher', GIT_AUTHOR_EMAIL: 'publisher@example.invalid', GIT_COMMITTER_NAME: 'A Publisher', GIT_COMMITTER_EMAIL: 'publisher@example.invalid' } }).trim();
+  const write = (file: string, content: unknown): void => {
+    mkdirSync(path.dirname(path.join(root, file)), { recursive: true });
+    writeFileSync(path.join(root, file), JSON.stringify(content, null, 2));
+  };
+  const workflow = (instructions: string) => ({ aubergine: 'workflow', format: 1, workflow: { name: 'Release the notes', description: 'From a publisher.', elements: [{ id: 'write', name: 'Write them', instructions, doneWhen: 'They are written. <b>not markup</b>' }] } });
+  const index = (version: string) => ({ aubergine: 'library', format: 1, name: 'A publisher', items: [{ id: 'release-notes', kind: 'workflow', name: 'Release the notes', description: 'Write the notes for a release.', version, path: 'workflows/release-notes.json' }, { id: 'proof', kind: 'element', name: 'Proofread', description: 'Read it once more.', version: '1', path: 'elements/proof.json' }] });
+  write('workflows/release-notes.json', workflow('Write the notes for {{task}}.'));
+  write('elements/proof.json', { aubergine: 'element', format: 1, element: { name: 'Proofread', instructions: 'Read it once more, slowly.', doneWhen: 'No mistake is left.' } });
+  write('aubergine-library.json', index('1'));
+  git('init', '--quiet', '--initial-branch=main');
+  git('add', '-A');
+  git('commit', '--quiet', '-m', 'A library');
+
+  try {
+    const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+    await page.goto(`/auth?token=${token}`);
+    await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+    const origin = new URL(page.url()).origin;
+
+    // What comes with the app is there before any source is added: Browse is not empty on first use.
+    await page.getByTestId('toolbar-library').click();
+    const library = page.getByTestId('library-screen');
+    await expect(library.locator('[data-testid="library-source"][data-kind="builtin"]')).toContainText('comes with Aubergine; needs no network');
+    await expect(library.locator('[data-testid="library-item"][data-item="check-before-done"]')).toBeVisible();
+
+    // A Git source: added, fetched once, listed with the commit that was read.
+    await library.getByTestId('source-address').fill(`file://${root}`);
+    await library.getByTestId('source-add').click();
+    const source = library.locator('[data-testid="library-source"][data-kind="git"]');
+    await expect(source).toContainText('A publisher');
+    await expect(source).toContainText(/commit [0-9a-f]{12}/);
+    await expect(source).toContainText('2 items');
+
+    // Browse and read: everything an agent would be told, as plain text.
+    await library.getByTestId('library-search').fill('release');
+    await expect(library.getByTestId('library-item')).toHaveCount(1);
+    const item = library.locator('[data-testid="library-item"][data-item="release-notes"]');
+    await expect(item).toHaveAttribute('data-standing', 'available');
+    await item.click();
+    await expect(library.getByTestId('library-from')).toContainText(/A workflow, from A publisher \(file:\/\/.*\), item release-notes, version 1, commit [0-9a-f]{12}\. Not installed\./);
+    await expect(library.getByTestId('library-text')).toContainText('Write the notes for (task).');
+    await expect(library.getByTestId('library-text')).toContainText('<b>not markup</b>');
+    await expect(library.locator('[data-testid="library-text"] b')).toHaveCount(0);
+
+    if (process.env.LIBRARY_SHOT) await page.screenshot({ path: process.env.LIBRARY_SHOT + '-library.png' });
+    // Installing goes through Review: the whole text, where it is from, and only then Accept.
+    await library.getByTestId('library-install').click();
+    if (process.env.LIBRARY_SHOT) await page.screenshot({ path: process.env.LIBRARY_SHOT + '-review.png' });
+    const review = page.getByTestId('review-screen');
+    await expect(review.getByTestId('review-title')).toHaveText('Release the notes');
+    await expect(review.getByTestId('review-origin')).toContainText(/A workflow, from A publisher \(file:\/\/.*\), item release-notes, version 1, commit/);
+    await expect(review.getByTestId('review-notice').first()).toHaveText('Someone else wrote this, and an agent will follow it. Read all of it before you accept.');
+    await expect(review.getByTestId('review-text')).toContainText('Write the notes for (task).');
+    await review.getByTestId('review-accept').click();
+    await expect(review.getByTestId('review-empty')).toBeVisible();
+    await review.getByTestId('review-close').click();
+
+    // It is among the workflows, and runs like any other.
+    const workflows = ((await (await page.request.get('/v1/workflows', { headers: { origin } })).json()) as { items: { id: string; name: string }[] }).items;
+    const installed = workflows.find((w) => w.name === 'Release the notes');
+    expect(installed).toBeDefined();
+    await page.getByTestId('toolbar-library').click();
+    await expect(library.locator('[data-testid="library-item"][data-item="release-notes"]')).toHaveAttribute('data-standing', 'installed');
+    await expect(library.getByTestId('library-installed-item')).toContainText('Release the notes');
+
+    // The publisher brings out a new version. Nothing here changes until Refresh; then it says an update is there.
+    write('workflows/release-notes.json', workflow('Write the notes for {{task}}.\nThen read them aloud once.'));
+    write('aubergine-library.json', index('2'));
+    git('add', '-A');
+    git('commit', '--quiet', '-m', 'Version 2');
+    await expect(library.locator('[data-testid="library-item"][data-item="release-notes"]')).toHaveAttribute('data-standing', 'installed');
+    await source.getByTestId('source-refresh').click();
+    await expect(library.locator('[data-testid="library-item"][data-item="release-notes"]')).toHaveAttribute('data-standing', 'update');
+    await expect(library.locator('[data-testid="library-item"][data-item="release-notes"]').getByTestId('library-marks')).toContainText('update available');
+    // What is installed is as it was.
+    const before = (await (await page.request.get(`/v1/workflows/${installed!.id}`, { headers: { origin } })).json()) as { version: number; current: { elements: { instructions: string }[] } };
+    expect([before.version, before.current.elements[0]!.instructions]).toEqual([1, 'Write the notes for {{task}}.']);
+
+    // The update is read as a difference from what is in place, and accepted the same way.
+    await library.locator('[data-testid="library-item"][data-item="release-notes"]').click();
+    await expect(library.getByTestId('library-install')).toHaveText('Read the update…');
+    await library.getByTestId('library-install').click();
+    await expect(review.getByTestId('review-origin')).toContainText('A new version of the workflow "Release the notes" (you have version 1; this is version 2)');
+    await review.getByTestId('review-changes').click();
+    await expect(review.getByTestId('review-diff').locator('.diff-added')).toContainText('Then read them aloud once.');
+    await review.getByTestId('review-changes').click();
+    await review.getByTestId('review-accept').click();
+    await expect(review.getByTestId('review-empty')).toBeVisible();
+    const after = (await (await page.request.get(`/v1/workflows/${installed!.id}`, { headers: { origin } })).json()) as { version: number; current: { elements: { instructions: string }[] } };
+    expect([after.version, after.current.elements[0]!.instructions]).toEqual([2, 'Write the notes for {{task}}.\nThen read them aloud once.']);
+
+    // A program asks for an install. It waits in Review until the owner accepts; nothing is on the shelf meanwhile.
+    const made = await page.request.post('/v1/tokens', { headers: { origin }, data: { name: 'library asker', scopes: ['read', 'workflows:write'] } });
+    const secret = ((await made.json()) as { secret: string }).secret;
+    const sourceId = ((await (await page.request.get('/v1/library/items', { headers: { origin } })).json()) as { items: { id: string; sourceId: string }[] }).items.find((entry) => entry.id === 'proof')!.sourceId;
+    const asked = await fetch(`${origin}/v1/library/installs`, { method: 'POST', headers: { authorization: `Bearer ${secret}`, 'content-type': 'application/json' }, body: JSON.stringify({ sourceId, itemId: 'proof' }) });
+    expect(asked.status).toBe(201);
+    const requestId = ((await asked.json()) as { id: string }).id;
+    expect((await fetch(`${origin}/v1/library/requests/${requestId}/accept`, { method: 'POST', headers: { authorization: `Bearer ${secret}`, 'content-type': 'application/json' }, body: JSON.stringify({ digest: 'a'.repeat(64) }) })).status).toBe(403);
+    await expect(review.getByTestId('review-title')).toHaveText('Proofread');
+    await expect(review.locator('.review-asked')).toContainText('Asked for by the program "library asker".');
+    const shelf = async (): Promise<string[]> => ((await (await page.request.get('/v1/elements', { headers: { origin } })).json()) as { items: { element: { name: string } }[] }).items.map((entry) => entry.element.name);
+    expect(await shelf()).not.toContain('Proofread');
+    await review.getByTestId('review-accept').click();
+    await expect(review.getByTestId('review-empty')).toBeVisible();
+    expect(await shelf()).toContain('Proofread');
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});

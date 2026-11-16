@@ -1,0 +1,30 @@
+{
+  "aubergine": "workflow",
+  "format": 1,
+  "workflow": {
+    "name": "Read a change and report",
+    "description": "For reviewing work that someone else did: read it, check it, and write down what you found.",
+    "standing": "You are reading, not changing. Do not edit the work you review.",
+    "elements": [
+      {
+        "id": "understand",
+        "name": "Understand what it is for",
+        "instructions": "Read what {{task}} was meant to do before reading how it does it: the request, the description, the tests.\n\nSay in two or three sentences what the change is for. If you cannot tell, that is the first finding.",
+        "doneWhen": "What the change is for is stated in a few sentences."
+      },
+      {
+        "id": "read",
+        "name": "Read all of it",
+        "instructions": "Read the whole change, every file, in an order that makes sense.\n\nFor each thing that looks wrong, risky or unclear, write one line: where it is, what you saw, and why it matters. Keep what must be fixed apart from what is a matter of taste. Do not change anything.",
+        "doneWhen": "Every file was read, and each finding has a place and a reason.",
+        "produces": "checklist"
+      },
+      {
+        "id": "report",
+        "name": "Report",
+        "instructions": "Write the report for the person who made the change.\n\nStart with whether it does what it was for. Then the findings that must be fixed, then the rest, each with where it is. Say what you did not check. Be plain and be kind: the reader wants to know what to do next.",
+        "doneWhen": "There is a report that says what to fix first and what was not checked."
+      }
+    ]
+  }
+}

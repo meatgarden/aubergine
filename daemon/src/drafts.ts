@@ -315,7 +315,7 @@ export class Drafts {
   }
 
   /** A new element on the shelf: what it says is its version 1. Where a copy came from is not something a shelf element has. */
-  private addToShelf(input: Element, by: Actor = OWNER): ShelfElement {
+  addToShelf(input: Element, by: Actor = OWNER): ShelfElement {
     if (this.hub.state.shelf.length >= SHELF_MAX) throw new ConflictError(`The shelf holds ${SHELF_MAX} elements; take some off first.`);
     const at = new Date().toISOString();
     const element: Element = { ...input, source: null };
