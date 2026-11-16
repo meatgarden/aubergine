@@ -1,13 +1,8 @@
 import type { ZodType } from 'zod';
+import { createClient } from '@aubergine/client';
 import {
-  ActivityList,
-  CreatedToken,
-  TokenView,
   type Scope,
   AppendNoteResponse,
-  CanvasDetail,
-  PlacedSession,
-  publicPaths,
   type CreateCanvasRequest,
   type EventsClientMessage,
   type UpdateCanvasRequest,
@@ -45,6 +40,9 @@ export class ApiError extends Error {
     super(message);
   }
 }
+
+/** The public API (/v1), as the page calls it: with its own cookie. */
+const v1 = createClient({ useCookie: true });
 
 async function call<T>(schema: ZodType<T> | null, method: string, path: string, body?: unknown): Promise<T> {
   let response: Response;
@@ -87,23 +85,16 @@ export const api = {
   getOutside: () => call(OutsideResponse, 'GET', paths.outside),
   outsideAdd: (request: OutsideAddRequest) => call(OutsideResult, 'POST', paths.outsideAdd, request),
   outsideMove: (request: OutsideMoveRequest) => call(OutsideResult, 'POST', paths.outsideMove, request),
-  createCanvas: (request: CreateCanvasRequest) => call(CanvasDetail, 'POST', publicPaths.canvases, request),
-  updateCanvas: (canvasId: string, request: UpdateCanvasRequest) =>
-    call(CanvasDetail, 'PATCH', publicPaths.canvas(canvasId), request),
+  // What follows goes through the public API, with the client generated from its description.
+  createCanvas: (request: CreateCanvasRequest) => v1.createCanvas({ body: request }),
+  updateCanvas: (canvasId: string, request: UpdateCanvasRequest) => v1.updateCanvas({ canvasId, body: request }),
   /** Closes a canvas. Its sessions are moved to `to`, or parked when `to` is null. */
-  closeCanvas: (canvasId: string, to: string | null) =>
-    call<void>(null, 'DELETE', `${publicPaths.canvas(canvasId)}?sessions=${to ? `move&to=${to}` : 'park'}`),
-  createToken: (request: { name: string; scopes: Scope[]; expiresInDays?: number }) => call(CreatedToken, 'POST', publicPaths.tokens, request),
-  revokeToken: (tokenId: string) => call(TokenView, 'DELETE', publicPaths.token(tokenId)),
-  getActivity: (query: { tokenId?: string | undefined; cursor?: string | undefined; limit?: number }) => {
-    const params = new URLSearchParams();
-    if (query.tokenId) params.set('tokenId', query.tokenId);
-    if (query.cursor) params.set('cursor', query.cursor);
-    params.set('limit', String(query.limit ?? 50));
-    return call(ActivityList, 'GET', `${publicPaths.activity}?${params.toString()}`);
-  },
-  moveSession: (sessionId: string, canvasId: string) =>
-    call(PlacedSession, 'POST', publicPaths.moveSession(sessionId), { canvasId }),
+  closeCanvas: (canvasId: string, to: string | null) => v1.closeCanvas({ canvasId, query: to ? { sessions: 'move', to } : { sessions: 'park' } }),
+  createToken: (request: { name: string; scopes: Scope[]; expiresInDays?: number }) => v1.createToken({ body: request }),
+  revokeToken: (tokenId: string) => v1.revokeToken({ tokenId }),
+  getActivity: (query: { tokenId?: string | undefined; cursor?: string | undefined; limit?: number }) =>
+    v1.listActivity({ query: { limit: query.limit ?? 50, ...(query.tokenId ? { tokenId: query.tokenId } : {}), ...(query.cursor ? { cursor: query.cursor } : {}) } }),
+  moveSession: (sessionId: string, canvasId: string) => v1.moveSession({ sessionId, body: { canvasId } }),
   resumeAgent: (sessionId: string) => call(Session, 'POST', paths.resumeAgent(sessionId), {}),
   seenSession: (sessionId: string) => call(Session, 'POST', paths.seenSession(sessionId), {}),
   restartSession: (sessionId: string) => call(Session, 'POST', paths.restartSession(sessionId), {}),

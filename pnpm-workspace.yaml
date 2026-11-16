@@ -1,5 +1,6 @@
 packages:
   - shared
+  - client
   - daemon
   - web
 

@@ -11,6 +11,7 @@
     "test:install": "vitest run --config vitest.install.config.ts"
   },
   "dependencies": {
+    "@aubergine/client": "workspace:*",
     "@aubergine/shared": "workspace:*",
     "@fastify/cookie": "^11.1.5",
     "@fastify/static": "^10.1.10",

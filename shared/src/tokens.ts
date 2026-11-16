@@ -81,10 +81,10 @@ export const TOKEN_MAX_DAYS = 3650;
 /** Body of creating a token. It may expire on a date, or after a number of days, or never. */
 export const CreateTokenRequest = z
   .object({
-    name: TokenName,
-    scopes: Scopes,
-    expiresAt: Timestamp.optional(),
-    expiresInDays: z.number().int().min(1).max(TOKEN_MAX_DAYS).optional(),
+    name: TokenName.describe('What will use it.'),
+    scopes: Scopes.describe('What it may do. At least one.'),
+    expiresAt: Timestamp.optional().describe('When it stops working. Never, when neither this nor `expiresInDays` is given.'),
+    expiresInDays: z.number().int().min(1).max(TOKEN_MAX_DAYS).optional().describe('In how many days it stops working.'),
   })
   .refine((body) => body.expiresAt === undefined || body.expiresInDays === undefined, 'Give expiresAt or expiresInDays, not both');
 export type CreateTokenRequest = z.infer<typeof CreateTokenRequest>;
