@@ -1,6 +1,6 @@
 import { appendFile, mkdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
-import { ArchivedRun } from '@aubergine/shared';
+import { ArchiveLine, ArchivedRun } from '@aubergine/shared';
 import { BadCursorError } from './public-api';
 
 export interface ArchiveQuery {
@@ -25,6 +25,11 @@ export interface RunArchive {
   read(query: ArchiveQuery): Promise<{ items: ArchivedRun[]; nextCursor: string | null }>;
   get(runId: string): Promise<ArchivedRun | null>;
   has(runId: string): Promise<boolean>;
+  /**
+   * Takes back every run that was on one of these sessions: readers no longer see them. Nothing is deleted;
+   * a later line says the run is withdrawn. Only the demo's removal calls this, for the sessions it made.
+   */
+  withdraw(sessionIds: ReadonlySet<string>): Promise<void>;
 }
 
 /** One page of entries that are already newest first. The cursor names the last run given. */
@@ -60,6 +65,8 @@ export class MemoryRunArchive implements RunArchive {
   /** Newest first. */
   protected entries: ArchivedRun[] = [];
   protected readonly ids = new Set<string>();
+  /** Runs that were withdrawn: never shown, and not taken in again. */
+  protected readonly gone = new Set<string>();
 
   async append(entry: ArchivedRun): Promise<void> {
     this.add(entry);
@@ -78,10 +85,24 @@ export class MemoryRunArchive implements RunArchive {
   }
 
   protected add(entry: ArchivedRun): boolean {
-    if (this.ids.has(entry.run.id)) return false;
+    if (this.ids.has(entry.run.id) || this.gone.has(entry.run.id)) return false;
     this.ids.add(entry.run.id);
     this.entries.unshift(entry);
     return true;
+  }
+
+  /** Takes a run out of what readers see. Gives back the entry that was there, or null. */
+  protected drop(runId: string): ArchivedRun | null {
+    this.gone.add(runId);
+    if (!this.ids.has(runId)) return null;
+    const index = this.entries.findIndex((e) => e.run.id === runId);
+    const [entry] = index < 0 ? [] : this.entries.splice(index, 1);
+    this.ids.delete(runId);
+    return entry ?? null;
+  }
+
+  async withdraw(sessionIds: ReadonlySet<string>): Promise<void> {
+    for (const entry of [...this.entries]) if (entry.run.sessionId !== null && sessionIds.has(entry.run.sessionId)) this.drop(entry.run.id);
   }
 
   async read(query: ArchiveQuery): Promise<{ items: ArchivedRun[]; nextCursor: string | null }> {
@@ -122,17 +143,21 @@ export class FileRunArchive extends MemoryRunArchive {
   private load(): Promise<void> {
     this.loaded ??= (async () => {
       const text = await readFile(this.file, 'utf8').catch(() => '');
-      const found: ArchivedRun[] = [];
+      const found: ArchiveLine[] = [];
       for (const line of text.split('\n')) {
         if (!line) continue;
         try {
-          found.push(ArchivedRun.parse(JSON.parse(line)));
+          found.push(ArchiveLine.parse(JSON.parse(line)));
         } catch {
           // A line cut short by a crash: skip it, keep the rest.
         }
       }
       // A run may be here more than once: a later line is a newer record of it, and takes the place of the earlier.
-      for (const entry of found) if (!this.add(entry)) this.replace(entry);
+      // A line that says a run is withdrawn takes it out for good.
+      for (const { withdrawn, ...entry } of found) {
+        if (withdrawn) this.drop(entry.run.id);
+        else if (!this.add(entry)) this.replace(entry);
+      }
       // A line without an end would glue itself to the next one.
       if (text !== '' && !text.endsWith('\n')) await appendFile(this.file, '\n');
     })();
@@ -149,6 +174,16 @@ export class FileRunArchive extends MemoryRunArchive {
     await this.load();
     if (!this.replace(entry)) return;
     await this.write(`${JSON.stringify(ArchivedRun.parse(entry))}\n`);
+  }
+
+  override async withdraw(sessionIds: ReadonlySet<string>): Promise<void> {
+    await this.load();
+    for (const entry of [...this.entries]) {
+      if (entry.run.sessionId === null || !sessionIds.has(entry.run.sessionId)) continue;
+      const dropped = this.drop(entry.run.id);
+      // The file only grows: a later line for the run says it is withdrawn, and the later line wins.
+      if (dropped) await this.write(`${JSON.stringify(ArchiveLine.parse({ ...dropped, withdrawn: true }))}\n`);
+    }
   }
 
   private write(line: string): Promise<void> {

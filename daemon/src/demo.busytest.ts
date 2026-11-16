@@ -9,7 +9,8 @@ import type { FastifyInstance } from 'fastify';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { sessionToken } from './auth';
 import { pathWithCommand, writeCommandLauncher } from './command-path';
-import { FileRunArchive } from './run-archive';
+import { DRAFT_LOG_FILE, FileDraftLog } from './draft-log';
+import { FileRunArchive, RUN_ARCHIVE_FILE } from './run-archive';
 import { TmuxRuntime, shellEnvironment } from './runtime/tmux-runtime';
 import { buildServer, cookieName } from './server';
 import { Sessions } from './sessions';
@@ -66,7 +67,7 @@ describe.runIf(ZSH)('aubergine demo', () => {
         AUBERGINE_DEMO_PAUSE: '0.1',
       }),
     });
-    app = await buildServer({ hub, sessions, runtime, settings: () => settings.reload(), token: ownerToken, devOrigin: null, webDist: path.join(dir, 'none'), runArchive: new FileRunArchive(data), demoFolder: path.join(data, 'demo') });
+    app = await buildServer({ hub, sessions, runtime, settings: () => settings.reload(), token: ownerToken, devOrigin: null, webDist: path.join(dir, 'none'), runArchive: new FileRunArchive(data), draftLog: new FileDraftLog(data), demoFolder: path.join(data, 'demo') });
     await app.listen({ host: '127.0.0.1', port: 0 });
     port = (app.server.address() as AddressInfo).port;
   });
@@ -235,6 +236,18 @@ describe.runIf(ZSH)('aubergine demo', () => {
     await asOwner('POST', '/v1/elements', { name: 'Check the sign-in page by hand', instructions: 'Mine, with the same name as the demo\'s.' });
     await asOwner('POST', '/v1/drafts', { element: { name: 'My own draft', instructions: 'Mine.' } });
     await until('their shells', async () => (await screen(mine)).includes('ready>') && (await screen(other)).includes('ready>'));
+    // And a past of their own: a run that is over, and a draft they decided on.
+    const pastRun = (await asOwner('POST', `/v1/sessions/${other}/runs`, { workflowId: workflow.id })).body.run.id as string;
+    await asOwner('POST', `/v1/runs/${pastRun}/report`, { type: 'stop' });
+    const decided = (await asOwner('POST', '/v1/drafts', { element: { name: 'Decided before the demo', instructions: 'Mine.' } })).body.draft.id as string;
+    await asOwner('DELETE', `/v1/drafts/${decided}`);
+    const endedRuns = async (): Promise<string[]> => ((await asOwner('GET', '/v1/runs?status=ended&limit=200')).body.items as { run: { id: string } }[]).map((item) => item.run.id);
+    const draftRecords = async (): Promise<string[]> => ((await asOwner('GET', '/v1/draft-records?limit=200')).body.items as { draftId: string; outcome: string }[]).map((item) => `${item.draftId} ${item.outcome}`);
+    const linesOf = async (file: string): Promise<number> => (await readFile(path.join(data, file), 'utf8').catch(() => '')).split('\n').filter(Boolean).length;
+    const pastBefore = { runs: await endedRuns(), records: await draftRecords() };
+    expect(pastBefore.runs).toContain(pastRun);
+    expect(pastBefore.records).toContain(`${decided} discarded`);
+    const grownBefore = { runs: await linesOf(RUN_ARCHIVE_FILE), drafts: await linesOf(DRAFT_LOG_FILE) };
 
     const before = await stateWithoutTimes();
     const demo = await makeDemo();
@@ -243,6 +256,15 @@ describe.runIf(ZSH)('aubergine demo', () => {
     await asOwner('POST', `/v1/runs/${demo.checklistRunId}/ticks`, { elementId: 'list-what-is-left', item: 1, ticked: true });
     await asOwner('POST', `/v1/sessions/${demo.sessions.waiting}/input`, { text: 'main', enter: true });
     await until('the answer', () => session(demo.sessions.waiting)?.noteLog.some((n) => n.text === 'Answered: main') ?? false);
+    // Accept what the stand-in proposed, as the tour invites: it goes on the shelf. And finish a second run on a demo terminal.
+    const accepted = await asOwner('POST', `/v1/drafts/${demo.draftId}/accept`, {});
+    expect(accepted.status).toBe(200);
+    expect(hub.state.shelf.map((item) => item.element.name).filter((name) => name === 'Check the sign-in page by hand')).toHaveLength(2);
+    const extra = (await asOwner('POST', `/v1/sessions/${demo.sessions.shell}/runs`, { workflowId: workflow.id })).body.run.id as string;
+    await asOwner('POST', `/v1/runs/${extra}/report`, { type: 'stop' });
+    // While the demo is there its traces are listed, as anything's would be.
+    expect(await endedRuns()).toEqual(expect.arrayContaining([demo.checklistRunId, extra]));
+    expect((await draftRecords()).some((record) => record === `${demo.draftId} accepted`)).toBe(true);
 
     const removed = await asOwner('DELETE', '/api/v1/demo');
     expect(removed.status).toBe(200);
@@ -254,6 +276,16 @@ describe.runIf(ZSH)('aubergine demo', () => {
     for (const id of [mine, other, set]) expect(await runtime.has(id)).toBe(true);
     for (const id of Object.values(demo.sessions)) expect(await runtime.has(id)).toBe(false);
     expect(existsSync(path.join(data, 'demo'))).toBe(false);
+    // Nothing of the demo is in the lists of what is over: not its runs, not what became of its draft. The owner's own past is as it was.
+    expect(await endedRuns()).toEqual(pastBefore.runs);
+    expect(await draftRecords()).toEqual(pastBefore.records);
+    expect((await asOwner('GET', `/v1/runs/${demo.checklistRunId}`)).status).toBe(404);
+    // Read afresh from the files, as after a restart, it is the same.
+    expect((await new FileRunArchive(data).read({ limit: 200 })).items.map((item) => item.run.id)).toEqual(pastBefore.runs);
+    expect((await new FileDraftLog(data).read()).map((record) => `${record.draftId} ${record.outcome}`)).toEqual(pastBefore.records);
+    // And nothing was deleted to get there: both files only grew.
+    expect(await linesOf(RUN_ARCHIVE_FILE)).toBeGreaterThan(grownBefore.runs);
+    expect(await linesOf(DRAFT_LOG_FILE)).toBeGreaterThan(grownBefore.drafts);
     // Removing it again changes nothing.
     expect((await asOwner('DELETE', '/api/v1/demo')).status).toBe(200);
     expect(await stateWithoutTimes()).toEqual(before);

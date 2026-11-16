@@ -26,6 +26,7 @@ import {
   type Sort,
 } from '../../terminal-rows';
 import { registerSection } from '../registry';
+import { ListMark } from '../../workflows/ListMark';
 import { RunStrip } from '../../workflows/RunStrip';
 
 const SECTION = 'terminals';
@@ -415,6 +416,7 @@ const RowView = memo(function RowView({ row, style, density, indented, current, 
           </span>
         )}
         {!compact && <RunStrip sessionId={session.id} variant="row" />}
+        {!compact && <ListMark sessionId={session.id} variant="row" />}
         <span className="list-spring" />
         {compact && updated && <span className="list-time">{updated}</span>}
         {hasNotes && (

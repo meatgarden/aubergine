@@ -15,6 +15,7 @@ import { currentLayout, useApp } from './store';
 import { TerminalView } from './TerminalView';
 import { useIsFullZoom } from './viewport';
 import { tourSignal } from './tour/tour-store';
+import { ListMark } from './workflows/ListMark';
 import { RunStrip } from './workflows/RunStrip';
 
 export type TerminalFlowNode = Node<{ sessionId: string }, 'terminal'>;
@@ -126,6 +127,7 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
           </span>
         )}
         {draft === null && !exited && <RunStrip sessionId={sessionId} variant="node" />}
+        {draft === null && <ListMark sessionId={sessionId} variant="node" />}
         {draft === null && session?.typedBy && <TypedBy by={session.typedBy} />}
         {draft === null && !exited && session && (
           <button

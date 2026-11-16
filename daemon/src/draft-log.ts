@@ -11,8 +11,31 @@ import { DraftRecord } from '@aubergine/shared';
 export interface DraftLog {
   /** Adds one record. Never rejects: failing to record must not fail the decision it records. */
   append(record: DraftRecord): Promise<void>;
-  /** Every record kept, newest first. */
+  /** Every record kept, newest first, without those of drafts that were withdrawn. */
   read(): Promise<DraftRecord[]>;
+  /**
+   * Takes back every record of a draft proposed by one of these sessions: readers no longer see them.
+   * Nothing is deleted; a later record says the draft is withdrawn. Only the demo's removal calls this.
+   */
+  withdraw(sessionIds: ReadonlySet<string>): Promise<void>;
+}
+
+/** The records a reader is given: none of a draft that has a record saying it was withdrawn. */
+export function withoutWithdrawn(records: readonly DraftRecord[]): DraftRecord[] {
+  const gone = new Set(records.filter((record) => record.outcome === 'withdrawn').map((record) => record.draftId));
+  return records.filter((record) => !gone.has(record.draftId));
+}
+
+/** One record per draft proposed by these sessions and not yet withdrawn, saying that it is. */
+function withdrawals(records: readonly DraftRecord[], sessionIds: ReadonlySet<string>): DraftRecord[] {
+  const seen = new Set<string>();
+  const lines: DraftRecord[] = [];
+  for (const record of withoutWithdrawn(records)) {
+    if (record.proposedBy.kind !== 'session' || !sessionIds.has(record.proposedBy.sessionId) || seen.has(record.draftId)) continue;
+    seen.add(record.draftId);
+    lines.push({ ...record, at: new Date().toISOString(), outcome: 'withdrawn' });
+  }
+  return lines;
 }
 
 /** Keeps records in memory. For tests, and for a server started without a data folder. */
@@ -22,7 +45,10 @@ export class MemoryDraftLog implements DraftLog {
     this.records.push(record);
   }
   async read(): Promise<DraftRecord[]> {
-    return [...this.records].reverse();
+    return withoutWithdrawn([...this.records].reverse());
+  }
+  async withdraw(sessionIds: ReadonlySet<string>): Promise<void> {
+    this.records.push(...withdrawals(this.records, sessionIds));
   }
 }
 
@@ -68,6 +94,14 @@ export class FileDraftLog implements DraftLog {
   }
 
   async read(): Promise<DraftRecord[]> {
+    return withoutWithdrawn(await this.all());
+  }
+
+  async withdraw(sessionIds: ReadonlySet<string>): Promise<void> {
+    for (const record of withdrawals(await this.all(), sessionIds)) await this.append(record);
+  }
+
+  private async all(): Promise<DraftRecord[]> {
     await this.queue;
     const records: DraftRecord[] = [];
     for (const file of [`${this.file}.1`, this.file]) {

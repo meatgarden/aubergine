@@ -1,4 +1,4 @@
-import { isQuiet, versionOf, type Actor, type AppState, type ElementState, type Run, type RunStatus, type WorkflowVersion } from '@aubergine/shared';
+import { isQuiet, outputKind, versionOf, type Actor, type AppState, type ElementState, type Run, type RunRecord, type RunStatus, type WorkflowVersion } from '@aubergine/shared';
 
 /**
  * Runs as the page shows them: pure functions of the page's state. The
@@ -105,3 +105,46 @@ export function sortRuns(runs: readonly Run[]): Run[] {
   const weight = (run: Run): number => (run.status === 'blocked' ? 0 : run.status === 'paused' ? 1 : run.status === 'running' ? 2 : 3);
   return [...runs].sort((a, b) => weight(a) - weight(b) || b.updatedAt.localeCompare(a.updatedAt) || a.id.localeCompare(b.id));
 }
+
+/** Something with items that an element handed in (a checklist), and how far its owner has got through it. */
+export interface HandedIn {
+  runId: string;
+  elementId: string;
+  total: number;
+  ticked: number;
+}
+
+/** The latest thing with items a run's elements handed in, or null. Which kind each element produces comes from its workflow. */
+export function handedIn(run: Run, elements: readonly { id: string; produces?: string }[]): HandedIn | null {
+  for (let index = run.elements.length - 1; index >= 0; index -= 1) {
+    const state = run.elements[index];
+    if (!state || state.output === null || state.output === undefined) continue;
+    const kind = outputKind(elements.find((element) => element.id === state.elementId)?.produces ?? 'note');
+    const total = kind ? kind.items(state.output) : 0;
+    if (total > 0) return { runId: run.id, elementId: state.elementId, total, ticked: new Set(state.ticks.map((tick) => tick.item).filter((item) => item < total)).size };
+  }
+  return null;
+}
+
+/**
+ * What a session's agent handed in that can be ticked: from the run it is on, else from the latest of its
+ * runs that ended lately. Null when there is nothing.
+ */
+export function handedInBy(app: AppState, sessionId: string, ended: readonly RunRecord[]): HandedIn | null {
+  const live = runOfSession(app, sessionId);
+  if (live) {
+    const version = versionOfRun(app, live);
+    const found = version ? handedIn(live, version.elements) : null;
+    if (found) return found;
+  }
+  // Newest first, as the archive gives them.
+  for (const record of ended) {
+    if (record.run.sessionId !== sessionId) continue;
+    const found = handedIn(record.run, record.elements);
+    if (found) return found;
+  }
+  return null;
+}
+
+/** In a few words: `list: 1 of 3 ticked`. */
+export const handedInWords = (list: HandedIn): string => `list: ${list.ticked} of ${list.total} ticked`;

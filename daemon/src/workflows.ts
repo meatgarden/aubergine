@@ -328,6 +328,11 @@ export class Workflows {
     }
   }
 
+  /** Takes back the past runs of these sessions: they are no longer listed. For the demo's removal only. */
+  withdrawRuns(sessionIds: ReadonlySet<string>): Promise<void> {
+    return this.archive.withdraw(sessionIds);
+  }
+
   /** Ticks an item of what an element produced. Also for a run that is over: the list is read after the work. */
   async tick(runId: string, tick: { elementId: string; item: number; ticked: boolean }, by: Actor): Promise<RunDetail> {
     const context = { by, at: new Date().toISOString() };

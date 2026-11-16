@@ -36,7 +36,9 @@ import { hint } from './shortcuts';
 import { ShortcutSheet } from './ShortcutSheet';
 import { ActivityScreen, TokenScreen } from './TokenScreen';
 import { RunDialog } from './workflows/RunDialog';
+import { useEndedRuns } from './workflows/ended-runs';
 import { EmptyCanvas } from './EmptyCanvas';
+import { FULL_SIZE_HINT, shouldSayFullSize } from './full-size-hint';
 import { HelpPanel } from './HelpPanel';
 import { tourSignal } from './tour/tour-store';
 import { AgentToolsDialog } from './AgentToolsDialog';
@@ -181,10 +183,15 @@ export function Canvas() {
     (event: React.MouseEvent, node: Node) => {
       if (node.type !== 'terminal') return;
       if ((event.target as HTMLElement).closest('input, button, textarea')) return;
+      // Zoomed out, a click does not type: it zooms in first. Said once, where it happens.
+      if (!isFullZoom(flow.getViewport().zoom) && shouldSayFullSize()) {
+        setFullSizeHint({ x: event.clientX, y: event.clientY });
+        setTimeout(() => setFullSizeHint(null), 6000);
+      }
       zoomToNode(node.id);
       focusSession((node as TerminalFlowNode).data.sessionId);
     },
-    [zoomToNode, focusSession],
+    [zoomToNode, focusSession, flow],
   );
 
   const onMoveEnd = useCallback(
@@ -225,7 +232,14 @@ export function Canvas() {
     [flow, zoomToNode, focusSession],
   );
 
+  // Runs that are over are read from the archive: at first, and again whenever a run leaves the live ones.
+  const liveRuns = useApp((s) => s.app?.runs.length ?? 0);
+  useEffect(() => {
+    void useEndedRuns.getState().refresh();
+  }, [liveRuns]);
+
   const [adding, setAdding] = useState(false);
+  const [fullSizeHint, setFullSizeHint] = useState<{ x: number; y: number } | null>(null);
   const setError = useApp((s) => s.setNotice);
 
   const addTerminal = useCallback(async (agent?: AgentKind, agentArgs?: string[], agentTools?: AgentToolsChoice): Promise<string | null> => {
@@ -495,6 +509,11 @@ export function Canvas() {
           </Panel>
         )}
       </ReactFlow>
+      {fullSizeHint && (
+        <div className="full-size-hint" role="status" style={{ left: Math.max(8, Math.min(fullSizeHint.x + 12, window.innerWidth - 340)), top: Math.max(8, fullSizeHint.y - 44) }} data-testid="full-size-hint">
+          {FULL_SIZE_HINT}
+        </div>
+      )}
       <Picker />
       <ShortcutSheet />
       <HelpPanel />

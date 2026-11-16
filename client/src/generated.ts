@@ -2649,7 +2649,7 @@ export type ListDraftRecordsResult = {
       kind: "person";
     };
     revisions: number;
-    outcome: "accepted" | "discarded";
+    outcome: "accepted" | "discarded" | "withdrawn";
     by: {
       kind: "owner" | "owner-cli";
       sessionId: string | null;

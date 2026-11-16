@@ -1147,13 +1147,12 @@ test('the tour: each step is done on the real thing, on the demo', async ({ page
 
   // 2. Something needs you: go to it from the queue, and answer.
   await expect(node('waiting')).toHaveAttribute('data-attention', 'waiting');
-  // The queue goes to whoever has waited longest, on whichever canvas: earlier tests left some waiting too. Follow it round to the demo's.
-  const answering = page.locator(`[data-testid="terminal-node"][data-session="${demo.sessions.waiting}"][data-focused="true"]`);
-  for (let i = 0; i < 12 && (await answering.count()) === 0; i++) {
-    await page.getByTestId('attention-queue').click();
-    await page.waitForTimeout(700);
-  }
-  await expect(answering).toHaveCount(1);
+  // Other terminals elsewhere have waited longer (earlier tests left some), so the button would lead away:
+  // the tour points at the demo's own terminal instead. Clicking it while zoomed out zooms in first, and says why, once.
+  await expect(page.getByTestId('full-size-hint')).toHaveCount(0);
+  await node('waiting').getByTestId('node-body').click();
+  await expect(page.getByTestId('full-size-hint')).toHaveText('Terminals take typing at full size: zooming in…');
+  await expect(node('waiting')).toHaveAttribute('data-focused', 'true');
   await page.keyboard.type('main');
   await page.keyboard.press('Enter');
   await expect(card).toHaveAttribute('data-step', 'find', { timeout: 20_000 });
@@ -1179,12 +1178,19 @@ test('the tour: each step is done on the real thing, on the demo', async ({ page
   await expect(page.getByTestId('run-view')).toHaveCount(0);
 
   // 6. A checklist: tick an item.
-  await page.getByTestId('ended-row').filter({ hasText: 'List what is left' }).first().click();
+  // The list is on the terminal that made it, and on its row in the side list.
+  await page.getByRole('button', { name: 'Fit' }).click();
+  await expect(node('checklist').getByTestId('list-mark')).toHaveText('☑ list: 0 of 3 ticked');
+  await expect(page.locator(`[data-testid="list-row"][data-session="${demo.sessions.checklist}"]`).getByTestId('row-list-mark')).toHaveText('☑ list: 0 of 3 ticked');
+  // Said once: a second click on a zoomed-out terminal's mark, or on a terminal, says nothing more.
+  await expect(page.getByTestId('full-size-hint')).toHaveCount(0, { timeout: 8000 });
+  await node('checklist').getByTestId('list-mark').click();
   const items = page.getByTestId('run-view').getByTestId('checklist-item');
   await expect(items).toHaveCount(3);
   await items.first().getByRole('checkbox').click();
   await expect(items.first()).toHaveAttribute('data-ticked', 'true');
   await expect(card).toHaveAttribute('data-step', 'review');
+  await expect(node('checklist').getByTestId('list-mark')).toHaveText('☑ list: 1 of 3 ticked');
 
   // 7. Something an agent wrote: read it, and decide.
   await page.getByTestId('drafts-waiting').click();
@@ -1205,6 +1211,9 @@ test('the tour: each step is done on the real thing, on the demo', async ({ page
   await expect(page.locator('.tabbar')).not.toContainText('Demo');
   expect((await (await page.request.get('/api/v1/demo', { headers: { origin } })).json()).present).toBe(false);
   expect((await (await page.request.get('/v1/canvases?limit=200', { headers: { origin } })).json()).items.length).toBe(canvasesBefore);
+  // Nothing of it is left under "Over lately" either.
+  await expect(page.getByTestId('runs-section')).not.toContainText('List what is left');
+  await expect(page.getByTestId('runs-section')).not.toContainText('Fix a bug (demo)');
 
   // Finished: in this browser it does not begin by itself again, though the demo is made anew.
   expect(await page.evaluate(() => localStorage.getItem('aubergine.tour'))).toContain('finished');

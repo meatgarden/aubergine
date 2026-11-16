@@ -1,5 +1,8 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest';
+import type { Run } from '@aubergine/shared';
+import { shouldSayFullSize } from '../full-size-hint';
+import { handedIn, handedInWords } from '../workflows/run-model';
 import { bestCorner, cornerBox, overlap } from './placement';
 import { tourSteps } from './registry';
 import './steps';
@@ -82,5 +85,46 @@ describe('where the card goes', () => {
     const sliver = { box: { x: 1004, y: 654, width: 30, height: 30 }, weight: 1 };
     expect(bestCorner(card, window, [sliver], 'bottom-right')).toBe('bottom-right');
     expect(bestCorner(card, window, [], 'top-left')).toBe('top-left');
+  });
+});
+
+describe('the rule about full size', () => {
+  it('is said once, and never where it could not be remembered', () => {
+    const kept = new Map<string, string>();
+    const storage = { getItem: (key: string) => kept.get(key) ?? null, setItem: (key: string, value: string) => void kept.set(key, value) };
+    expect(shouldSayFullSize(storage)).toBe(true);
+    expect(shouldSayFullSize(storage)).toBe(false);
+    expect(shouldSayFullSize(null)).toBe(false);
+    const blocked = {
+      getItem: () => {
+        throw new Error('blocked');
+      },
+      setItem: () => {},
+    };
+    expect(shouldSayFullSize(blocked)).toBe(false);
+  });
+});
+
+describe('a list an agent handed in', () => {
+  const element = (elementId: string, output: unknown, ticks: number[] = []) => ({ elementId, state: 'done', startedAt: null, finishedAt: null, note: '', output, ticks: ticks.map((item) => ({ item, by: { kind: 'person' as const }, at: '2026-03-01T10:00:00.000Z' })), by: null, sessionId: null });
+  const run = (elements: ReturnType<typeof element>[]): Run => ({ id: 'r1', elements }) as unknown as Run;
+  const kinds = [
+    { id: 'plan', produces: 'checklist' },
+    { id: 'build', produces: 'note' },
+    { id: 'left', produces: 'checklist' },
+  ];
+  const list = { items: [{ text: 'a' }, { text: 'b' }, { text: 'c' }] };
+
+  it('is the latest one with items, with how many are ticked', () => {
+    expect(handedIn(run([element('plan', list, [0, 2]), element('build', null)]), kinds)).toEqual({ runId: 'r1', elementId: 'plan', total: 3, ticked: 2 });
+    expect(handedIn(run([element('plan', list, [0]), element('build', null), element('left', { items: [{ text: 'x' }] })]), kinds)).toEqual({ runId: 'r1', elementId: 'left', total: 1, ticked: 0 });
+    expect(handedInWords({ runId: 'r1', elementId: 'plan', total: 3, ticked: 1 })).toBe('list: 1 of 3 ticked');
+  });
+
+  it('is nothing for notes, for an empty list, and counts a tick once and only for an item that is there', () => {
+    expect(handedIn(run([element('build', null)]), kinds)).toBeNull();
+    expect(handedIn(run([element('plan', { items: [] })]), kinds)).toBeNull();
+    expect(handedIn(run([element('unknown', list)]), kinds)).toBeNull();
+    expect(handedIn(run([element('plan', list, [1, 1, 7])]), kinds)?.ticked).toBe(1);
   });
 });

@@ -252,6 +252,11 @@ export class Drafts {
     void this.log.append({ at: new Date().toISOString(), draftId: draft.id, kind: draft.kind, proposedBy: draft.proposedBy, revisions: draft.revision, outcome, by });
   }
 
+  /** Takes back the records of drafts these sessions proposed. For the demo's removal only. */
+  withdrawRecords(sessionIds: ReadonlySet<string>): Promise<void> {
+    return this.log.withdraw(sessionIds);
+  }
+
   /** What became of drafts, newest first. */
   records(): Promise<DraftRecord[]> {
     return this.log.read();
@@ -265,7 +270,8 @@ export class Drafts {
    */
   accept(draftId: string, edited: AcceptDraftRequest, by: OwnerCaller): { workflowId: string | null; elementId: string | null } {
     const draft = this.waiting(draftId);
-    const origin = { kind: 'draft', by: draft.proposedBy.kind, ...(draft.proposedBy.kind === 'token' ? { name: draft.proposedBy.name } : {}) };
+    // Which session it came from is kept with what it became, so that something removed whole (the demo) can take that along.
+    const origin = { kind: 'draft', by: draft.proposedBy.kind, ...(draft.proposedBy.kind === 'token' ? { name: draft.proposedBy.name } : {}), ...(draft.proposedBy.kind === 'session' ? { sessionId: draft.proposedBy.sessionId } : {}) };
     if (draft.kind === 'element') {
       const element = edited.element !== undefined ? this.proposal({ element: edited.element }).element : draft.element;
       if (!element) throw new ConflictError('Nothing has been handed in for this yet.');
