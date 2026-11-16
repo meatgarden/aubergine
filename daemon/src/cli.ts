@@ -38,6 +38,7 @@ import {
   type HookEvent,
 } from './agents/claude-code';
 import { agentClient } from './cli/agent';
+import { guideText } from './cli/guide';
 import { parseElementCommand, parseWorkflowCommand, runWorkflowCommand } from './cli/workflow';
 import { openBrowser, sessionAddress } from './cli/open-browser';
 import { commandsFor, formatAgents, formatOutside, normaliseTty, toShells } from './cli/outside';
@@ -263,6 +264,11 @@ async function main(): Promise<number> {
   if (command.name === 'hook') return runHook(command.event);
   // Before anything is read or printed: this command speaks a protocol on standard output, and never uses the owner's sign-in.
   if (command.name === 'mcp') return (await import('@aubergine/mcp')).runMcp(command.words, process.env);
+  // Before the settings or anything of the owner's is read: the guide uses only what is in the environment.
+  if (command.name === 'guide') {
+    console.log(await guideText({ all: command.all, snippet: command.snippet }, process.env));
+    return 0;
+  }
   if (command.name === 'shell-hook-print') {
     console.log(zshHookSnippet());
     return 0;
@@ -609,6 +615,12 @@ async function main(): Promise<number> {
         console.log(`\nWhat its agent wrote, ${ago(recap.written.at, new Date())} ago${recap.written.stale ? ' (the terminal has printed since: this may be out of date)' : ''}:`);
         console.log(showControl(recap.written.text).split('\n').map((line) => `  ${line}`).join('\n'));
       } else if (recap.agent) console.log('\nIts agent has not been asked for a recap. Ask from the terminal\'s node in the browser.');
+      return 0;
+    }
+
+    case 'attention': {
+      await agentClient().setAttention(command.state, command.message ?? undefined);
+      console.log(command.state === 'waiting' ? 'Your owner has been told that this terminal waits for them.' : command.state === 'none' ? 'Cleared.' : `This terminal now shows "${command.state}".`);
       return 0;
     }
 

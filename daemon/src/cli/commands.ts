@@ -39,6 +39,10 @@ export type Command =
   /** `element …`: the shelf, running one element by itself, proposing one. */
   | { name: 'element'; words: string[] }
   | { name: 'note'; text: string }
+  /** Inside a session: say whether its owner is needed. */
+  | { name: 'attention'; state: 'none' | 'working' | 'waiting' | 'done'; message: string | null }
+  /** The guide for agents: for whoever asks, in full, or the few lines for an instructions file. */
+  | { name: 'guide'; all: boolean; snippet: boolean }
   /** Past conversations of the agent in a folder: list them, or open one on the canvas. No command prints a transcript. */
   | { name: 'history'; folder: string | null }
   | { name: 'history-open'; id: string; copy: boolean; folder: string | null; evenIfOpen: boolean }
@@ -157,6 +161,13 @@ export const USAGE = `Usage: aubergine <command>
   recap --write [--file f]   Inside a session, for its agent: hand in a recap on standard input or from a file.
                              With nothing handed in, prints what is wanted
   note <text>                Inside a session: add an entry to that session's note log
+  attention waiting [what you need] | working | done | none
+                             Inside a session: say whether its owner is needed. An agent Aubergine started reports this
+                             by itself; any other program in a terminal says it with this
+  guide                      For agents: what an agent can do here and how to behave, for whoever asks (a terminal's own
+                             credential, an API token in AUBERGINE_API_TOKEN, or both)
+                             --all       every part, each saying what it needs
+                             --snippet   a few lines to paste into a project's instructions file for agents
   mcp [--url <address>]      An MCP server on standard input and output, for an agent or another MCP client: the
                              API as tools. Uses AUBERGINE_API_TOKEN, else the session's own token; offers only
                              the tools that credential may use
@@ -170,7 +181,8 @@ export const USAGE = `Usage: aubergine <command>
 new, here and import take --canvas <name>. Without it they use the canvas you looked at most recently
 in a browser, or the first one when no browser is open.
 
-The server must be running for list, new, canvas, token, workflow, element, screen, output, send, run, protect, attach, here, scan, import, move, note and open.`;
+The server must be running for list, new, canvas, token, workflow, element, screen, output, send, run, protect, attach, here, scan, import, move, note, attention and open.
+guide works without it, and then prints every part.`;
 
 export class UsageError extends Error {}
 
@@ -371,6 +383,21 @@ export function parseCommand(argv: readonly string[]): Command {
     case 'note':
       if (rest.join(' ').trim() === '') throw new UsageError('note needs some text');
       return { name: 'note', text: rest.join(' ') };
+    case 'attention': {
+      const [state, ...words] = rest;
+      if (state !== 'none' && state !== 'working' && state !== 'waiting' && state !== 'done') throw new UsageError('attention needs one of: waiting, working, done, none. With waiting, say what you need: aubergine attention waiting "<what you need>"');
+      const unknown = words.find((word) => word.startsWith('--'));
+      if (unknown) throw new UsageError(`attention does not know ${unknown}`);
+      const message = words.join(' ').trim();
+      if (message.length > 500) throw new UsageError('What is needed is one sentence: at most 500 characters.');
+      return { name: 'attention', state, message: message === '' ? null : message };
+    }
+    case 'guide': {
+      const unknown = rest.find((word) => word !== '--all' && word !== '--snippet');
+      if (unknown) throw new UsageError(`guide does not know "${unknown}". It takes --all, or --snippet.`);
+      if (rest.includes('--all') && rest.includes('--snippet')) throw new UsageError('guide takes --all or --snippet, not both');
+      return { name: 'guide', all: rest.includes('--all'), snippet: rest.includes('--snippet') };
+    }
     case 'hook': {
       const event = HOOK_EVENTS.find((e) => e === rest[0]);
       if (!event || rest.length !== 1) throw new UsageError(`hook needs one of: ${HOOK_EVENTS.join(', ')}`);

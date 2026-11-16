@@ -31,5 +31,8 @@ banner() {
   clear
   say "STAND-IN AGENT: a script from Aubergine's demo, not a real agent."
   say "It uses the same commands a real agent would. $1"
+  # Where any agent learns what it can do in a terminal here. A stand-in reads it too, and says how long it is.
+  guide_lines=$("$aubergine" guide 2>/dev/null | wc -l | tr -d ' ')
+  say "An agent learns what it can do here from: aubergine guide ($guide_lines lines)"
   say ""
 }

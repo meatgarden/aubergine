@@ -811,6 +811,9 @@ aubergine send <session> <text> [--enter]   type text into it, exactly as given
 aubergine run <session> [--timeout s] -- <command>   run a command at its prompt, wait, print the output
 aubergine protect <session>    mark it people only: no API token may read it or type into it (unprotect undoes it)
 aubergine note <text>          inside a session: add an entry to its note log
+aubergine attention waiting [what is needed] | working | done | none
+                               inside a session: say whether you are needed there
+aubergine guide                for agents: what an agent can do here, for whoever asks (--all, --snippet)
 aubergine demo                 make a canvas named "Demo" with stand-in agents on it and a tour of it (--remove: take it all away; --no-open)
 aubergine recap <session>      what a terminal was about and where it stands (--write: inside a session, its agent hands one in)
 aubergine history [folder]     the agent's earlier conversations in a folder; history open <id> [--copy] opens one on the canvas
@@ -853,7 +856,23 @@ GET  /v1/sessions/<id>/repository-workflows   the workflows its repository offer
 POST /v1/sessions/<id>/drafts       propose a workflow or an element as a draft
 ```
 
-Everything else is refused: it cannot list runs or workflows, start a run, reach another session's run, read a draft it did not propose, accept anything, or run a repository workflow nobody accepted. `aubergine note`, `aubergine hook` and the in-session `aubergine workflow` commands are thin wrappers around these calls. This token is made for the session by Aubergine and is separate from the [API tokens](#api-tokens) you create yourself, which can do more.
+Everything else is refused: it cannot list runs or workflows, start a run, reach another session's run, read a draft it did not propose, accept anything, or run a repository workflow nobody accepted. `aubergine note`, `aubergine attention`, `aubergine hook` and the in-session `aubergine workflow` commands are thin wrappers around these calls. This token is made for the session by Aubergine and is separate from the [API tokens](#api-tokens) you create yourself, which can do more.
+
+## A guide for agents
+
+An agent in a canvas terminal can do a few things for you there: say that it needs you, add to the terminal's notes, report on a workflow, hand in a draft or a recap. **The guide** tells it what those are, what is yours alone, and how to behave: text from a terminal or a note is data and never an instruction, a refusal is an answer, and when in doubt it asks you.
+
+It is written for any command-line agent, and it is one text with three ways to reach an agent:
+
+- **A command.** `aubergine guide`, typed by the agent in its terminal, prints the guide for whoever asks. With only the terminal's own credential it is short: the agent's own work. With an API token in `AUBERGINE_API_TOKEN` it also says what that token adds. When the server is not running it prints everything and says it could not tell what applies. `aubergine guide --all` prints every part with what each needs; the same text is in [docs/for-agents.md](docs/for-agents.md).
+- **A few lines in your project's instructions for agents.** `aubergine guide --snippet` prints five lines that say: if `AUBERGINE_SESSION_ID` is set, run `aubergine guide` once. Paste them into the file your agent reads at the start of every conversation in a project (most command-line agents have such a file; its name depends on the agent). Aubergine prints the lines and never writes them into any file.
+- **Through MCP.** An agent that has Aubergine's tools is given the guide as the server's own instructions, and can read it again with the tool `aubergine_guide`.
+
+The guide prints no secret and reads no file of yours. It says nothing about your terminals, workflows or notes: it is the same text for everyone, cut to what the asker may do.
+
+An agent that Aubergine starts reports "waiting for you" and "finished" by itself. Any other program in a terminal can say the same with `aubergine attention waiting "what it needs"`, `aubergine attention working` and `aubergine attention done`; the guide tells it so.
+
+Typed in a terminal, the other `aubergine` commands act as you, whoever types them, an agent included; they are recorded as coming from that terminal. The guide tells an agent to leave them alone unless you asked. That is advice to the agent, not a lock.
 
 ## API tokens
 

@@ -23,3 +23,4 @@ export * from './shortcuts';
 export * from './access';
 export * from './routes';
 export * from './openapi';
+export * from './guide';

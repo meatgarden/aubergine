@@ -243,7 +243,7 @@ export const TOOLS: readonly Tool[] = [
   define({
     name: 'draft_brief',
     title: 'What the owner asked this agent to write',
-    description: 'When the owner has asked this session to write a workflow or an element: what they asked for, and how to hand it in. The same text `aubergine draft brief` prints.',
+    description: 'When the owner has asked this session to write a workflow or an element: what they asked for, and how to hand it in. The same text `aubergine workflow brief` prints.',
     uses: ['getSessionBrief'],
     input: z.object({ session: sessionArg }),
     readOnly: true,

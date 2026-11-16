@@ -524,6 +524,9 @@ export const RECAP_LINE = 'Your owner asked for a recap of this session. Run `au
 /** The line that asks an agent to write a draft. Fixed too: the owner's description is read with the command, never typed. */
 export const BRIEF_LINE = 'You have been asked to write something for Aubergine. Run `aubergine workflow brief` to read the request, and follow what it prints.';
 
+/** The one line that points at the guide for agents, at the end of what an agent is told about a run or a request. */
+export const GUIDE_POINTER = 'For everything else you can do here: aubergine guide';
+
 const HOW_TO_REPORT = [
   'How to report:',
   '- When the "done when" above is true:',
@@ -532,6 +535,8 @@ const HOW_TO_REPORT = [
   '    aubergine workflow blocked "<what you need>"',
   '- To read this again:',
   '    aubergine workflow status',
+  '',
+  GUIDE_POINTER,
 ].join('\n');
 
 /**

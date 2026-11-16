@@ -6,7 +6,7 @@ export { findServer } from './config';
 export { quoted, shownDeep } from './quote';
 export { sentenceFor, ToolProblem } from './errors';
 export { TOOLS, mayUse, offered } from './tools';
-export { CLIENT_NAME, askWho, buildServer, clientFor, toolsFor, whoOf } from './server';
+export { CLIENT_NAME, askWho, buildServer, clientFor, guideViewOf, instructionsFor, toolsFor, whoOf } from './server';
 export { MCP_VERSION } from './version';
 
 /**
@@ -39,7 +39,7 @@ export async function runMcp(args: readonly string[], env: Env): Promise<number>
       say(who.problem);
     } else {
       parts.caller = who.caller;
-      say(`serving ${toolsFor(parts).length + 1} tools for ${who.caller.kind === 'token' ? `the API token "${who.caller.name}"` : who.caller.kind === 'session' ? "a session's own token" : 'the owner'} (credential from ${found.tokenFrom}) at ${found.url}`);
+      say(`serving ${toolsFor(parts).length + 2} tools for ${who.caller.kind === 'token' ? `the API token "${who.caller.name}"` : who.caller.kind === 'session' ? "a session's own token" : 'the owner'} (credential from ${found.tokenFrom}) at ${found.url}`);
     }
   }
 
