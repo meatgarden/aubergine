@@ -7,6 +7,9 @@ import Fastify, { type FastifyInstance, type FastifyReply, type FastifyRequest }
 import type { ZodType } from 'zod';
 import {
   SESSION_HEADER,
+  RECAP_LINE,
+  AwayQuery,
+  type AwayDigest,
   type DemoStatus,
   type Inventory,
   CLIENT_HEADER,
@@ -49,6 +52,7 @@ import {
 } from '@aubergine/shared';
 import { MemoryActivityLog, BadActivityCursorError, type ActivityLog } from './activity';
 import { NotAnAgentError, type Inventories } from './agents/inventory';
+import { Away } from './away';
 import { Demo } from './demo';
 import { authorize, bearerOf, peopleOnlyRefusal, reachRefusal, principalFromBearer, type Action, type Principal, type Resource } from './auth';
 import { RateLimiter } from './rate-limit';
@@ -459,6 +463,30 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   };
 
   // Looking at, bringing in and stopping what runs outside Aubergine is the owner's alone: authorize() refuses it to every token.
+  /* ---------- While you were away ---------- */
+
+  // A window of what changed lately, kept in memory for whoever comes back to the page. Not state, not a log.
+  const away = new Away(hub);
+  app.addHook('onClose', async () => away.close());
+  app.get(paths.away, async (request): Promise<AwayDigest> => {
+    allowOn(request, 'away.read', {});
+    const query = parse(AwayQuery, request.query);
+    return away.digest(query.since);
+  });
+
+  /* ---------- Recaps ---------- */
+
+  app.post(paths.askRecap(':sessionId'), async (request): Promise<{ asked: boolean; line: string }> => {
+    const sessionId = idParam(request, 'sessionId');
+    allowOn(request, 'recap.ask', { sessionId });
+    try {
+      return { asked: await sessions.askForRecap(sessionId), line: RECAP_LINE };
+    } catch (error) {
+      if (error instanceof ConflictError) throw new HttpError(409, 'conflict', error.message);
+      throw error;
+    }
+  });
+
   /* ---------- What is switched on ---------- */
 
   app.get(paths.inventory(':sessionId'), async (request): Promise<Inventory> => {

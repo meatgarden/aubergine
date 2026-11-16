@@ -39,6 +39,7 @@ function session(name: string, extra: Partial<Session> = {}): Session {
     noteLog: [],
     agent: null,
     parkedFrom: null, peopleOnly: false, typedBy: null,
+    recap: null,
     lastInputAt: null,
     lastOutputAt: null,
     tags: [],

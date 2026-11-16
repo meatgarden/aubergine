@@ -238,6 +238,21 @@ export const COMMANDS: readonly Command[] = [
     },
   },
   {
+    id: 'agent.askRecap',
+    title: 'Ask this agent for a recap',
+    description: 'Types one fixed sentence into the terminal asking its agent to write what the session is about and where it stands. It shows with the terminal\'s notes.',
+    group: 'Terminals',
+    available: (state) => targetSession(state)?.agent != null,
+    run: (state) => {
+      const session = targetSession(state);
+      if (!session?.agent) return;
+      void api.askRecap(session.id).then(
+        () => state.openDrawer({ section: 'terminals', kind: 'notes', id: session.id }),
+        (error: unknown) => state.setNotice(`Could not ask for a recap: ${(error as Error).message}`),
+      );
+    },
+  },
+  {
     id: 'frame.new',
     title: 'New frame',
     description: 'Adds a frame to group terminals.',

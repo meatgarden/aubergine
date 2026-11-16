@@ -21,6 +21,12 @@ export const Settings = z.object({
   shell: z.string().startsWith('/').nullable().default(null),
   /** Folder new terminals start in (`~` is allowed). `null` means the home folder. */
   defaultFolder: z.string().min(1).nullable().default(null),
+  away: z
+    .object({
+      /** After this many minutes without the page being looked at, coming back shows what changed meanwhile. 0 switches that off. */
+      afterMinutes: z.number().int().min(0).max(10_080).default(30),
+    })
+    .prefault({}),
   agents: z
     .object({
       /**

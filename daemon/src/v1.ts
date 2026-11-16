@@ -463,6 +463,9 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
 
     reportAgent: ({ params, body }) => sessions.reportAgent(params.sessionId, body),
 
+    // What the session's agent wrote when asked for a recap. Kept as its words; nothing is typed or run for it.
+    writeRecap: ({ params, body }) => sessions.writeRecap(params.sessionId, body.text),
+
     // The run a session is on. The address names the session, and `authorize` has already
     // made sure a session's token is that session's own: there is no way from here to another run.
     getSessionRun: ({ params }) => workflows.ownRun(params.sessionId),

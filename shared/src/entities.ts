@@ -191,6 +191,8 @@ export const Session = z.object({
   peopleOnly: z.boolean().default(false),
   /** The token that last typed into it through the API, and when. Not what it typed. */
   typedBy: TypedBy.nullable().default(null),
+  /** What its agent wrote when the owner asked for a recap, and when. The agent's words: other people's text wherever it is shown. */
+  recap: z.object({ text: z.string().max(2000), at: Timestamp }).nullable().default(null),
 });
 export type Session = z.infer<typeof Session>;
 

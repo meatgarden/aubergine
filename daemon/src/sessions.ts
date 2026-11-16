@@ -18,6 +18,7 @@ import {
   type Canvas,
   type CanvasChanges,
   type AgentKind,
+  RECAP_LINE,
   type AgentToolsChoice,
   type Attention,
   type AttentionState,
@@ -583,6 +584,25 @@ export class Sessions {
     if (this.isRunning(sessionId)) await this.runtime.reveal(sessionId, text);
   }
 
+  /** Keeps what the session's agent wrote as its recap, in place of the one before. */
+  writeRecap(sessionId: string, text: string): { text: string; at: string } {
+    this.find(sessionId);
+    const recap = { text, at: new Date().toISOString() };
+    this.hub.emit({ type: 'session.recap', sessionId, recap });
+    return recap;
+  }
+
+  /**
+   * Asks the agent in a session for a recap, with the one fixed sentence for that. The owner's alone to
+   * call. Only where an agent is there to read it: in a plain shell the sentence would be run as a command.
+   */
+  async askForRecap(sessionId: string): Promise<boolean> {
+    const session = this.find(sessionId);
+    if (session.agent === null) throw new ConflictError('No agent is known to run in this terminal, so there is nobody to ask.');
+    if (session.state === 'exited') throw new ConflictError('This shell has ended.');
+    return this.tell(sessionId, RECAP_LINE);
+  }
+
   /** Says whether the session wants the user. Reported by the agent running in it. */
   setAttention(sessionId: string, state: AttentionState, message?: string): Attention {
     this.find(sessionId);
@@ -682,6 +702,7 @@ export class Sessions {
       noteLog: [],
       agent: null,
       parkedFrom: null, peopleOnly: false, typedBy: null,
+    recap: null,
       lastInputAt: null,
       lastOutputAt: null,
       tags,

@@ -39,6 +39,8 @@ export type Command =
   /** `element …`: the shelf, running one element by itself, proposing one. */
   | { name: 'element'; words: string[] }
   | { name: 'note'; text: string }
+  /** `--write`: inside a session, hand in a recap (or read what is wanted). Otherwise: print the recap of a session. */
+  | { name: 'recap'; write: boolean; file: string | null; query: string | null }
   | { name: 'hook'; event: HookEvent }
   | { name: 'hooks-print' }
   | { name: 'mcp'; words: string[] }
@@ -143,6 +145,9 @@ export const USAGE = `Usage: aubergine <command>
   run <session> [--timeout s] -- <command>   Run a command at its shell prompt, wait, and print the output and exit code
   protect <session>          Mark it "people only": no API token may read it or type into it
   unprotect <session>        Open it to API tokens again (those whose scopes and reach allow)
+  recap <session>            What a terminal was about and where it stands: from what is known, and what its agent wrote
+  recap --write [--file f]   Inside a session, for its agent: hand in a recap on standard input or from a file.
+                             With nothing handed in, prints what is wanted
   note <text>                Inside a session: add an entry to that session's note log
   mcp [--url <address>]      An MCP server on standard input and output, for an agent or another MCP client: the
                              API as tools. Uses AUBERGINE_API_TOKEN, else the session's own token; offers only
@@ -329,6 +334,17 @@ export function parseCommand(argv: readonly string[]): Command {
     case 'element':
     case 'elements':
       return { name: 'element', words: rest };
+    case 'recap': {
+      const { value: file, rest: afterFile } = takeOption(rest, '--file');
+      const write = afterFile.includes('--write');
+      const words = afterFile.filter((word) => word !== '--write');
+      const unknown = words.find((word) => word.startsWith('--'));
+      if (unknown) throw new UsageError(`recap does not know ${unknown}`);
+      if (write && words.length > 0) throw new UsageError('recap --write takes the recap on standard input or from --file, not as words');
+      if (!write && file !== null) throw new UsageError('--file goes with --write');
+      if (!write && words.length === 0) throw new UsageError('recap needs a session: aubergine recap <name>. Inside a session, an agent hands one in with: aubergine recap --write');
+      return { name: 'recap', write, file, query: write ? null : words.join(' ') };
+    }
     case 'note':
       if (rest.join(' ').trim() === '') throw new UsageError('note needs some text');
       return { name: 'note', text: rest.join(' ') };

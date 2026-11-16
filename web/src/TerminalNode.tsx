@@ -15,6 +15,7 @@ import { currentLayout, useApp } from './store';
 import { TerminalView } from './TerminalView';
 import { useIsFullZoom } from './viewport';
 import { tourSignal } from './tour/tour-store';
+import { RecapBlock, recapTitle } from './Recap';
 import { ListMark } from './workflows/ListMark';
 import { RunStrip } from './workflows/RunStrip';
 
@@ -165,6 +166,11 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
             type="button"
             className="node-tool resume-agent nodrag"
             title="Start the agent again in the conversation it was last in"
+            // What that conversation was about, as far as is known, when the pointer arrives.
+            onMouseEnter={(event) => {
+              event.currentTarget.title = `Start the agent again in the conversation it was last in.\n\n${recapTitle(sessionId)}`;
+            }}
+            data-testid="resume-agent"
             onClick={() => void api.resumeAgent(sessionId).catch(() => {})}
           >
             Resume agent
@@ -229,6 +235,7 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
       {exited ? (
         <div className="node-body node-ended nodrag" data-testid="node-ended">
           <p>This shell has ended.</p>
+          <RecapBlock sessionId={sessionId} canAsk={false} />
           <div className="node-ended-actions">
             <button type="button" onClick={() => void api.restartSession(sessionId)}>
               Restart here

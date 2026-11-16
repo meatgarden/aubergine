@@ -315,6 +315,7 @@ describe('every route has a rule', () => {
   /** The routes only a session may use, for itself. */
   const SESSION_ONLY = [
     'PUT /v1/sessions/:sessionId/attention',
+    'PUT /v1/sessions/:sessionId/recap',
     'PUT /v1/sessions/:sessionId/agent',
     'GET /v1/sessions/:sessionId/brief',
     'GET /v1/sessions/:sessionId/drafts',
@@ -461,6 +462,7 @@ describe('every route has a rule', () => {
       'POST /v1/sessions/:sessionId/run/report',
       'PUT /v1/sessions/:sessionId/agent',
       'PUT /v1/sessions/:sessionId/attention',
+      'PUT /v1/sessions/:sessionId/recap',
     ]);
     // Session tokens are not recorded in the activity log: it is the record of API tokens.
     expect(await activityOf()).toEqual([]);

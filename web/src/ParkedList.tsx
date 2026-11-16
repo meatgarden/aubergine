@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { runCommand } from './commands';
 import { hint } from './shortcuts';
+import { recapTitle } from './Recap';
 import { useApp } from './store';
 
 /** Sessions taken off the canvas whose shells are still running. */
@@ -46,7 +47,15 @@ export function ParkedList() {
       {open && (
         <div className="parked-panel" role="dialog" aria-label="Parked sessions">
           {parked.map((session) => (
-            <div className="parked-row" key={session.id} data-testid="parked-row">
+            <div
+              className="parked-row"
+              key={session.id}
+              data-testid="parked-row"
+              // What it was about, when the pointer arrives.
+              onMouseEnter={(event) => {
+                event.currentTarget.title = recapTitle(session.id);
+              }}
+            >
               <div className="parked-info">
                 <div>{session.name}</div>
                 <div className="parked-detail">

@@ -7,6 +7,7 @@ import { startShortcuts } from './shortcuts';
 import { startSync, useApp } from './store';
 import { TabBar } from './TabBar';
 import { SidePanel } from './panel/SidePanel';
+import { Away } from './Away';
 import { TagDialog } from './TagDialog';
 import { Tour } from './tour/Tour';
 
@@ -81,6 +82,7 @@ export function App() {
       <CloseCanvasDialog />
       <TagDialog />
       <Tour />
+      <Away />
     </div>
   );
 }

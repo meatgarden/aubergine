@@ -34,6 +34,7 @@ function withSession(state: AppState, name: string): AppState {
       noteLog: [],
       agent: null,
       parkedFrom: null, peopleOnly: false, typedBy: null,
+    recap: null,
     lastInputAt: null,
     lastOutputAt: null,
     tags: [],

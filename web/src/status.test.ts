@@ -16,6 +16,7 @@ const base: Session = {
   noteLog: [],
   agent: null,
   parkedFrom: null, peopleOnly: false, typedBy: null,
+    recap: null,
     lastInputAt: null,
     lastOutputAt: null,
     tags: [],

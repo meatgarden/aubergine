@@ -518,6 +518,9 @@ export const KICKOFF_LINE =
   'You are on an Aubergine workflow. Run `aubergine workflow status` to read your current element and follow it. When its "done when" is true, run `aubergine workflow done --note "<what you did>"` and follow what it prints.';
 export const kickoffLine = (): string => KICKOFF_LINE;
 
+/** The line that asks an agent for a recap. Fixed, like the others: what is wanted is read with the command, never typed. */
+export const RECAP_LINE = 'Your owner asked for a recap of this session. Run `aubergine recap --write` to read what is wanted, and follow what it prints.';
+
 /** The line that asks an agent to write a draft. Fixed too: the owner's description is read with the command, never typed. */
 export const BRIEF_LINE = 'You have been asked to write something for Aubergine. Run `aubergine workflow brief` to read the request, and follow what it prints.';
 

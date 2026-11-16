@@ -482,7 +482,7 @@ describe('parked sessions', () => {
     });
 
     const restored = CreateSessionResponse.parse((await request('POST', paths.restoreSession(session.id), { body: {} })).json());
-    expect(restored.session).toMatchObject({ state: 'open', parkedFrom: null, peopleOnly: false, typedBy: null });
+    expect(restored.session).toMatchObject({ state: 'open', parkedFrom: null, peopleOnly: false, typedBy: null, recap: null });
     expect(restored.node).toMatchObject({ sessionId: session.id, x: 40, y: 80, width: 800, height: 500, color: 'green' });
     expect(mainLayout(hub.state).nodes).toEqual([restored.node]);
   });
