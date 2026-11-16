@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { ApiToken } from './tokens';
 import { Id, newId } from './ids';
+import { SessionMessages } from './messages';
 import { Draft, ShelfElement } from './drafts';
 import { AcceptedRepositoryWorkflow } from './repository';
 import { TypedBy } from './terminal';
@@ -193,6 +194,8 @@ export const Session = z.object({
   typedBy: TypedBy.nullable().default(null),
   /** What its agent wrote when the owner asked for a recap, and when. The agent's words: other people's text wherever it is shown. */
   recap: z.object({ text: z.string().max(2000), at: Timestamp }).nullable().default(null),
+  /** Counts about its messages, for a mark on the canvas. The messages themselves are not state. */
+  messages: SessionMessages.prefault({}),
 });
 export type Session = z.infer<typeof Session>;
 
@@ -260,6 +263,11 @@ export const Canvas = z.object({
   labels: Labels.default({}),
   createdAt: Timestamp,
   layout: Layout,
+  /**
+   * The canvases whose terminals may message the terminals on this one. Empty: none, which is how every canvas starts.
+   * Its own ID in the list: its terminals may message each other. Only the owner changes this.
+   */
+  messagesFrom: z.array(Id).max(200).default([]),
 });
 export type Canvas = z.infer<typeof Canvas>;
 
@@ -297,6 +305,7 @@ export function newCanvas(projectId: string, name: string, order: number, now: D
     labels: {},
     createdAt: now.toISOString(),
     layout: { nodes: [], frames: [] },
+    messagesFrom: [],
   };
 }
 

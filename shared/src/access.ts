@@ -7,7 +7,7 @@ import type { Scope } from './tokens';
  */
 
 /** What a session may do, to itself only. */
-export const SESSION_ACTIONS = ['attention.set', 'note.append', 'agent.report', 'run.own.read', 'run.own.report', 'draft.own.read', 'draft.own.propose', 'repository.own.read', 'recap.own.write'] as const;
+export const SESSION_ACTIONS = ['attention.set', 'note.append', 'agent.report', 'run.own.read', 'run.own.report', 'draft.own.read', 'draft.own.propose', 'repository.own.read', 'recap.own.write', 'message.own.read', 'message.own.send'] as const;
 
 /** For a token, each of these needs the scope beside it. */
 export const SCOPE_OF = {
@@ -38,6 +38,9 @@ export const SCOPE_OF = {
   // Terminals. Neither is implied by anything else, `read` included, and no session's own token has them.
   'terminal.read': 'terminal:read',
   'terminal.input': 'terminal:input',
+  // Messages. Neither is implied by anything else, and both apply only within the token's reach. A session's own inbox is not open to tokens.
+  'messages.read': 'messages:read',
+  'messages.write': 'messages:write',
 } as const satisfies Record<string, Scope>;
 
 /**
@@ -46,7 +49,7 @@ export const SCOPE_OF = {
  * tokens did, changing settings, and anything that reaches processes outside
  * Aubergine.
  */
-export const NEVER_BY_TOKEN = ['tokens.manage', 'activity.read', 'settings.write', 'processes.signal', 'outside.read', 'outside.move', 'drafts.review', 'repository.review', 'repository.write', 'sessions.protect', 'demo.manage', 'inventory.read', 'recap.ask', 'away.read', 'history.read', 'history.open'] as const;
+export const NEVER_BY_TOKEN = ['tokens.manage', 'activity.read', 'settings.write', 'processes.signal', 'outside.read', 'outside.move', 'drafts.review', 'repository.review', 'repository.write', 'sessions.protect', 'demo.manage', 'inventory.read', 'recap.ask', 'away.read', 'history.read', 'history.open', 'messages.manage'] as const;
 
 export type Action = (typeof SESSION_ACTIONS)[number] | keyof typeof SCOPE_OF | (typeof NEVER_BY_TOKEN)[number];
 
@@ -69,3 +72,10 @@ export interface Access {
 export function accessOf(action: Action): Access {
   return { scope: scopeFor(action), session: (SESSION_ACTIONS as readonly string[]).includes(action) };
 }
+
+/**
+ * The actions that are about one session's terminal or its messages: for a
+ * token the scope is not enough. The session must be within the token's
+ * reach and not "people only".
+ */
+export const REACH_ACTIONS: readonly Action[] = ['terminal.read', 'terminal.input', 'messages.read', 'messages.write'];

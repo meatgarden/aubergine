@@ -64,6 +64,25 @@ export const Settings = z.object({
       quietAfterSeconds: z.number().int().min(10).max(86_400).default(300),
     })
     .prefault({}),
+  /** Messages between sessions: how many, how often, and when a thread waits for the owner. They apply from the next start of the server. */
+  messages: z
+    .object({
+      /** How many messages one sender may send in a minute, to anyone. */
+      perSenderPerMinute: z.number().int().min(1).max(1000).default(6),
+      /** How many messages may pass between the same two in an hour, both ways together. */
+      perPairPerHour: z.number().int().min(1).max(10_000).default(30),
+      /** After this many messages between two that are not the owner, without the owner having looked, the thread pauses. */
+      pauseAfter: z.number().int().min(1).max(1000).default(6),
+      /** How many unread messages a session may have waiting. One more is refused. */
+      maxUnread: z.number().int().min(1).max(1000).default(20),
+      /** The fixed sentence that says a message is waiting is not typed into the same terminal again within this many seconds. */
+      nudgeIntervalSeconds: z.number().int().min(10).max(86_400).default(120),
+      /** Read messages older than this many days are left out of what is listed. */
+      keepDays: z.number().int().min(1).max(3650).default(30),
+      /** How large the file of messages may grow before the older part is set aside, in bytes. */
+      logMaxBytes: z.number().int().min(4096).max(1024 * 1024 * 1024).default(4 * 1024 * 1024),
+    })
+    .prefault({}),
   /** Terminal access for programs with an API token: what is protected by default, the limits, and the audit of typed text. */
   terminal: z
     .object({

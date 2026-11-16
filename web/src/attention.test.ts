@@ -17,7 +17,7 @@ function session(name: string, state: AttentionState, at: string | null, extra: 
     noteLog: [],
     agent: null,
     parkedFrom: null, peopleOnly: false, typedBy: null,
-    recap: null,
+    recap: null, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null },
     lastInputAt: null,
     lastOutputAt: null,
     tags: [],

@@ -27,7 +27,7 @@ function session(name: string, extra: Partial<Session> = {}): Session {
     noteLog: [],
     agent: null,
     parkedFrom: null, peopleOnly: false, typedBy: null,
-    recap: null,
+    recap: null, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null },
     lastInputAt: null,
     lastOutputAt: null,
     tags: [],
@@ -207,6 +207,7 @@ describe('canvases', () => {
     order: 0,
     labels: {},
     createdAt: '2026-01-01T00:00:00.000Z',
+    messagesFrom: [],
     counts: { sessions, waiting, unread: 0 },
   });
 

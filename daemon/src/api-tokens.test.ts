@@ -206,6 +206,8 @@ describe('creating and using a token', () => {
       ['runs:write', true],
       ['terminal:read', true],
       ['terminal:input', true],
+      ['messages:read', true],
+      ['messages:write', true],
     ]);
     expect(capabilities.caller).toMatchObject({ kind: 'token', id: notes.id, name: 'notes only', scopes: ['notes:write'] });
     expect(capabilities.caller.kind === 'token' && capabilities.caller.expiresAt).toBeTruthy();
@@ -320,6 +322,10 @@ describe('every route has a rule', () => {
     'GET /v1/sessions/:sessionId/brief',
     'GET /v1/sessions/:sessionId/drafts',
     'POST /v1/sessions/:sessionId/drafts',
+    // A session's own inbox, and what it sends: no token may take a session's messages or speak as it.
+    'POST /v1/sessions/:sessionId/inbox',
+    'POST /v1/sessions/:sessionId/messages/:messageId/reply',
+    'POST /v1/sessions/:sessionId/tell',
   ];
   /** The routes no token may use, whatever its scopes. */
   const NEVER = [
@@ -458,8 +464,12 @@ describe('every route has a rule', () => {
       'GET /v1/sessions/:sessionId/repository-workflows',
       'GET /v1/sessions/:sessionId/run',
       'POST /v1/sessions/:sessionId/drafts',
+      // Messages: its own inbox, an answer, and a message of its own. Exactly these three.
+      'POST /v1/sessions/:sessionId/inbox',
+      'POST /v1/sessions/:sessionId/messages/:messageId/reply',
       'POST /v1/sessions/:sessionId/notes',
       'POST /v1/sessions/:sessionId/run/report',
+      'POST /v1/sessions/:sessionId/tell',
       'PUT /v1/sessions/:sessionId/agent',
       'PUT /v1/sessions/:sessionId/attention',
       'PUT /v1/sessions/:sessionId/recap',

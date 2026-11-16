@@ -64,6 +64,7 @@ export const OWNERS_ALONE: Record<(typeof NEVER_BY_TOKEN)[number], string> = {
   'away.read': 'the list of what changed while the owner was away',
   'history.read': "an agent's past conversations",
   'history.open': "an agent's past conversations",
+  'messages.manage': 'deciding which terminals may message each other, and pausing or stopping a thread',
 };
 
 const ownersAlone = (): string => [...new Set(NEVER_BY_TOKEN.map((action) => OWNERS_ALONE[action]))].join('; ');
