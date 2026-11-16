@@ -1,5 +1,5 @@
 import { AubergineError, createClient, type Client } from '@aubergine/client';
-import { SESSION_ENV, exportWorkflow, importWorkflow, type Session, type Workflow, type WorkflowDetail, type WorkflowSummary } from '@aubergine/shared';
+import { SESSION_ENV, WorkflowFile, exportWorkflow, importWorkflow, needWords, type Session, type Workflow, type WorkflowDetail, type WorkflowSummary } from '@aubergine/shared';
 import { UsageError, resolveSession, takeOption } from './commands';
 
 /** `aubergine workflow …`, as parsed. */
@@ -16,7 +16,15 @@ export type WorkflowCommand =
   | { action: 'run'; query: string; session: string | null; inputs: Record<string, string>; replace: boolean }
   // From inside a session, about the run that session is on:
   | { action: 'status' }
-  | { action: 'done'; note: string | null; element: string | null }
+  | { action: 'done'; note: string | null; element: string | null; output: string | null }
+  /** What this session was asked to write. */
+  | { action: 'brief' }
+  /** Hands in a draft from a file (`-` or nothing: standard input). */
+  | { action: 'propose'; kind: 'workflow' | 'element'; file: string }
+  | { action: 'element-list' }
+  | { action: 'element-show'; query: string }
+  | { action: 'element-remove'; query: string; yes: boolean }
+  | { action: 'element-run'; query: string; session: string | null; inputs: Record<string, string>; replace: boolean }
   | { action: 'blocked'; reason: string }
   | { action: 'goto'; element: string }
   | { action: 'pause' }
@@ -96,13 +104,19 @@ export function parseWorkflowCommand(words: readonly string[]): WorkflowCommand 
     case 'status':
       none('status');
       return { action: 'status' };
+    case 'brief':
+      none('brief');
+      return { action: 'brief' };
+    case 'propose':
+      return { action: 'propose', kind: 'workflow', file: proposeFile(rest, 'workflow') };
     case 'done': {
       const { value: note, rest: afterNote } = takeOption(rest, '--note');
-      const { value: element, rest: after } = takeOption(afterNote, '--element');
+      const { value: output, rest: afterOutput } = takeOutputOption(afterNote);
+      const { value: element, rest: after } = takeOption(afterOutput, '--element');
       // The note may also simply follow the word.
       const words = flagsOf(after, [], 'done').join(' ').trim();
       if (note !== null && words !== '') throw new UsageError('workflow done: give the note once, after --note');
-      return { action: 'done', note: note ?? (words === '' ? null : words), element };
+      return { action: 'done', note: note ?? (words === '' ? null : words), element, output };
     }
     case 'blocked': {
       const reason = rest.join(' ').trim();
@@ -122,6 +136,83 @@ export function parseWorkflowCommand(words: readonly string[]): WorkflowCommand 
     default:
       throw new UsageError(`workflow does not know "${action}"`);
   }
+}
+
+/** `--output <file>`, where the file may be `-` for standard input. */
+function takeOutputOption(words: readonly string[]): { value: string | null; rest: string[] } {
+  const at = words.findIndex((word) => word === '--output' || word.startsWith('--output='));
+  if (at < 0) return { value: null, rest: [...words] };
+  const word = words[at] as string;
+  const inline = word.startsWith('--output=');
+  const value = inline ? word.slice('--output='.length) : words[at + 1];
+  if (value === undefined || value === '' || (value.startsWith('--') && value !== '-')) throw new UsageError('--output needs a file, or - for standard input');
+  return { value, rest: [...words.slice(0, at), ...words.slice(at + (inline ? 1 : 2))] };
+}
+
+/** The file of `propose --file <file>`; standard input when none is named. */
+function proposeFile(words: readonly string[], what: string): string {
+  const at = words.findIndex((word) => word === '--file' || word.startsWith('--file='));
+  if (at < 0) {
+    if (words.length > 0) throw new UsageError(`${what} propose does not know ${words[0]}. Use --file <file>, or give the file on standard input.`);
+    return '-';
+  }
+  const word = words[at] as string;
+  const inline = word.startsWith('--file=');
+  const value = inline ? word.slice('--file='.length) : words[at + 1];
+  const rest = [...words.slice(0, at), ...words.slice(at + (inline ? 1 : 2))];
+  if (value === undefined || value === '') throw new UsageError('--file needs a file, or - for standard input');
+  if (rest.length > 0) throw new UsageError(`${what} propose does not know ${rest[0]}`);
+  return value;
+}
+
+/** `aubergine element …`: the shelf, and running one element by itself. */
+export function parseElementCommand(words: readonly string[]): WorkflowCommand {
+  const [action, ...rest] = words;
+  const name = (what: string, parts: readonly string[]): string => {
+    if (parts.join(' ').trim() === '') throw new UsageError(`element ${what} needs the name of an element`);
+    return parts.join(' ');
+  };
+  switch (action) {
+    case undefined:
+    case 'list':
+    case 'ls':
+      if (rest.length > 0) throw new UsageError('element list takes no arguments');
+      return { action: 'element-list' };
+    case 'show':
+      return { action: 'element-show', query: name('show', flagsOf(rest, [], 'show')) };
+    case 'remove':
+    case 'rm':
+      return { action: 'element-remove', query: name('remove', flagsOf(rest, ['--yes'], 'remove')), yes: rest.includes('--yes') };
+    case 'propose':
+      return { action: 'propose', kind: 'element', file: proposeFile(rest, 'element') };
+    case 'run': {
+      const run = parseWorkflowCommand(['run', ...rest]);
+      if (run.action !== 'run') throw new UsageError('element run needs the name of an element');
+      return { action: 'element-run', query: run.query, session: run.session, inputs: run.inputs, replace: run.replace };
+    }
+    default:
+      throw new UsageError(`element does not know "${action}"`);
+  }
+}
+
+/**
+ * Text that an agent or a file may have written, made safe to print in a
+ * terminal: a control character is shown as a picture of itself, and a
+ * character that reverses the direction of text as its number, so that
+ * nothing in it is acted on by the terminal or hides what is there. Line
+ * breaks and tabs stay.
+ */
+export function showControl(text: string): string {
+  let out = '';
+  for (const char of text.replace(/\r\n/g, '\n')) {
+    const code = char.codePointAt(0) as number;
+    if (char === '\n' || char === '\t') out += char;
+    else if (code < 0x20) out += String.fromCodePoint(0x2400 + code);
+    else if (code === 0x7f) out += '\u2421';
+    else if ((code >= 0x80 && code <= 0x9f) || (code >= 0x202a && code <= 0x202e) || (code >= 0x2066 && code <= 0x2069) || code === 0x200e || code === 0x200f) out += `<U+${code.toString(16).toUpperCase().padStart(4, '0')}>`;
+    else out += char;
+  }
+  return out;
 }
 
 /** Finds the one workflow a name refers to: an exact name, else a unique start of one, else the start of an ID. */
@@ -175,6 +266,8 @@ export function formatWorkflow(workflow: WorkflowDetail): string {
     lines.push('', `${index + 1}. ${element.name}  [${element.id}]`);
     if (element.instructions.trim()) lines.push(indent(element.instructions.trim()));
     if (element.doneWhen) lines.push(`   Done when: ${element.doneWhen}`);
+    if (element.needs.length > 0) lines.push(`   Needs: ${element.needs.map(needWords).join('; ')}`);
+    if (element.produces !== 'note') lines.push(`   Produces: ${element.produces}`);
   });
   return lines.join('\n');
 }
@@ -217,6 +310,25 @@ function parseFile(text: string): ReturnType<typeof importWorkflow> {
   }
 }
 
+function jsonOf(text: string, what: string): unknown {
+  try {
+    return JSON.parse(text);
+  } catch (error) {
+    throw new UsageError(`${what} is not JSON: ${(error as Error).message}`);
+  }
+}
+
+/** What a file handed in with `propose` holds: an element, or a workflow, plain or in the form `workflow export` writes. */
+export function proposalFrom(kind: 'workflow' | 'element', text: string): { workflow?: never; element: never } | { workflow: never; element?: never } {
+  const json = jsonOf(text, 'The file');
+  if (!json || typeof json !== 'object' || Array.isArray(json)) throw new UsageError(`The file must hold one ${kind}, as a JSON object.`);
+  if (kind === 'element') return { element: json as never };
+  // A file as `workflow export` writes it carries the workflow inside.
+  const exported = WorkflowFile.safeParse(json);
+  const { labels: _labels, origin: _origin, ...workflow } = (exported.success ? exported.data.workflow : json) as Record<string, unknown>;
+  return { workflow: workflow as never };
+}
+
 /** The client a program inside a session uses: that session's own token, about that session only. */
 function sessionClient(env: NodeJS.ProcessEnv): { client: Client; sessionId: string } {
   const url = env[SESSION_ENV.url];
@@ -251,7 +363,7 @@ export async function runWorkflowCommand(command: WorkflowCommand, deps: Workflo
     }
 
     case 'show':
-      print(formatWorkflow(await find(command.query)));
+      print(showControl(formatWorkflow(await find(command.query))));
       return 0;
 
     case 'new': {
@@ -342,6 +454,49 @@ export async function runWorkflowCommand(command: WorkflowCommand, deps: Workflo
       return 0;
     }
 
+    case 'element-list': {
+      const shelf = await owner((client) => collect(client.each.listElements()));
+      if (shelf.length === 0) {
+        print('No elements on the shelf yet. Put one there from a workflow in the browser, or ask an agent for one.');
+        return 0;
+      }
+      const width = Math.max(...shelf.map((item) => item.element.name.length));
+      print(showControl(shelf.map((item) => `${item.element.name.padEnd(width)}  ${item.element.produces === 'note' ? '' : `produces a ${item.element.produces}; `}${item.element.needs.length > 0 ? `needs ${item.element.needs.map(needWords).join('; ')}` : 'needs nothing'}`.trimEnd()).join('\n')));
+      return 0;
+    }
+
+    case 'element-show':
+    case 'element-remove':
+    case 'element-run': {
+      const shelf = await owner((client) => collect(client.each.listElements()));
+      const item = resolveWorkflow(shelf.map((entry) => ({ ...entry, name: entry.element.name })), command.query);
+      if (command.action === 'element-show') {
+        const { element } = item;
+        print(showControl([element.name, '', element.instructions.trim(), ...(element.doneWhen ? ['', `Done when: ${element.doneWhen}`] : []), ...(element.needs.length > 0 ? [`Needs: ${element.needs.map(needWords).join('; ')}`] : []), `Produces: ${element.produces}`].join('\n')));
+        return 0;
+      }
+      if (command.action === 'element-remove') {
+        if (!command.yes && !/^y(es)?$/i.test((await deps.ask(`Take "${item.element.name}" off the shelf? Copies of it in workflows stay. [y/N] `)).trim())) {
+          print('Kept.');
+          return 0;
+        }
+        await owner((client) => client.removeElement({ elementId: item.id }));
+        print(`Took "${item.element.name}" off the shelf.`);
+        return 0;
+      }
+      const inside = deps.env[SESSION_ENV.sessionId];
+      let session: { id: string; name: string };
+      if (command.session !== null) session = resolveSession(await deps.sessions(), command.session);
+      else if (inside) session = (await deps.sessions()).find((s) => s.id === inside) ?? { id: inside, name: 'this session' };
+      else throw new UsageError('element run needs a session: --session <name or ID>, or type it inside the session.');
+      const started = await owner((client) => client.runElement({ elementId: item.id, body: { sessionId: session.id, inputs: command.inputs, replace: command.replace } }));
+      print(`Started "${started.workflowName}" by itself on "${session.name}".`);
+      print(started.kickoffTyped ? 'The agent in it has been told.' : `Nothing was typed into the terminal (no agent is running there). To set an agent off, give it this line:\n  ${started.kickoff}`);
+      return 0;
+    }
+
+    case 'brief':
+    case 'propose':
     case 'status':
     case 'done':
     case 'blocked':
@@ -353,13 +508,22 @@ export async function runWorkflowCommand(command: WorkflowCommand, deps: Workflo
   }
 }
 
-async function runInSession(command: Extract<WorkflowCommand, { action: 'status' | 'done' | 'blocked' | 'goto' | 'pause' | 'resume' | 'stop' }>, deps: WorkflowCommandDeps): Promise<number> {
+async function runInSession(command: Extract<WorkflowCommand, { action: 'brief' | 'propose' | 'status' | 'done' | 'blocked' | 'goto' | 'pause' | 'resume' | 'stop' }>, deps: WorkflowCommandDeps): Promise<number> {
   const { print } = deps;
   const { client, sessionId } = sessionClient(deps.env);
   try {
     switch (command.action) {
+      case 'brief':
+        // The owner's words, and after a draft was sent back their comment: printed here, never typed into the terminal.
+        print(showControl((await client.getSessionBrief({ sessionId })).text));
+        return 0;
+      case 'propose': {
+        const draft = await client.proposeSessionDraft({ sessionId, body: proposalFrom(command.kind, await deps.readText(command.file)) });
+        print(`Handed in ${command.kind === 'element' ? 'the element' : 'the workflow'} as a draft${draft.revision > 1 ? ` (version ${draft.revision})` : ''}. A person reads it before it can be used; it may come back with a comment, which \`aubergine workflow brief\` will then show.`);
+        return 0;
+      }
       case 'status':
-        print((await client.getSessionRun({ sessionId })).text);
+        print(showControl((await client.getSessionRun({ sessionId })).text));
         return 0;
       case 'done': {
         // The element is named in the report, so that a report sent twice finishes one element and not two.
@@ -369,9 +533,10 @@ async function runInSession(command: Extract<WorkflowCommand, { action: 'status'
           print(now.text);
           return 1;
         }
-        const next = await client.reportSessionRun({ sessionId, body: { type: 'done', elementId, ...(command.note !== null ? { note: command.note } : {}) } });
+        const output = command.output !== null ? jsonOf(await deps.readText(command.output), 'The output') : undefined;
+        const next = await client.reportSessionRun({ sessionId, body: { type: 'done', elementId, ...(command.note !== null ? { note: command.note } : {}), ...(output !== undefined ? { output } : {}) } });
         print(`Recorded: "${now.elements.find((e) => e.id === elementId)?.name ?? elementId}" is done.\n`);
-        print(next.text);
+        print(showControl(next.text));
         return 0;
       }
       case 'blocked': {

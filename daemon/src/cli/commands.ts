@@ -36,6 +36,8 @@ export type Command =
   | { name: 'import'; terminals: string[]; all: boolean; dryRun: boolean; canvas: string | null }
   /** `workflow …`: its own words, parsed by the workflow commands. */
   | { name: 'workflow'; words: string[] }
+  /** `element …`: the shelf, running one element by itself, proposing one. */
+  | { name: 'element'; words: string[] }
   | { name: 'note'; text: string }
   | { name: 'hook'; event: HookEvent }
   | { name: 'hooks-print' }
@@ -100,7 +102,15 @@ export const USAGE = `Usage: aubergine <command>
                              Start a run on a session: this one, when typed inside a session
   Inside a session that is on a run:
   workflow status            Where the run stands and what to do now
-  workflow done [--note <text>]   The current element is finished; prints what comes next
+  workflow done [--note <text>] [--output <file>]
+                             The current element is finished; prints what comes next. --output hands in what the
+                             element produces when that is more than a note (a checklist); - reads standard input
+  workflow brief             Inside a session that was asked to write a workflow or an element: the request
+  workflow propose --file <file>   Hand a workflow in as a draft, for a person to read (- or nothing: standard input)
+  element propose --file <file>    The same for one element
+  element list | show <name> | remove <name>     The shelf of elements
+  element run <name> [--session <name|id>] [--input key=value …] [--replace]
+                             Run one element by itself on a session
   workflow blocked <reason>  You cannot go on without a person
   workflow goto <element>    Jump to an element, by name, ID or number
   workflow pause | resume | stop
@@ -115,7 +125,7 @@ export const USAGE = `Usage: aubergine <command>
 new, here and import take --canvas <name>. Without it they use the canvas you looked at most recently
 in a browser, or the first one when no browser is open.
 
-The server must be running for list, new, canvas, token, workflow, attach, here, scan, import, move, note and open.`;
+The server must be running for list, new, canvas, token, workflow, element, attach, here, scan, import, move, note and open.`;
 
 export class UsageError extends Error {}
 
@@ -241,6 +251,9 @@ export function parseCommand(argv: readonly string[]): Command {
     case 'workflow':
     case 'workflows':
       return { name: 'workflow', words: rest };
+    case 'element':
+    case 'elements':
+      return { name: 'element', words: rest };
     case 'note':
       if (rest.join(' ').trim() === '') throw new UsageError('note needs some text');
       return { name: 'note', text: rest.join(' ') };

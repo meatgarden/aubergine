@@ -23,7 +23,7 @@ import {
   type HookEvent,
 } from './agents/claude-code';
 import { agentClient } from './cli/agent';
-import { parseWorkflowCommand, runWorkflowCommand } from './cli/workflow';
+import { parseElementCommand, parseWorkflowCommand, runWorkflowCommand } from './cli/workflow';
 import { openBrowser, sessionAddress } from './cli/open-browser';
 import { commandsFor, formatAgents, formatOutside, normaliseTty, toShells } from './cli/outside';
 import {
@@ -432,7 +432,8 @@ async function main(): Promise<number> {
     }
 
     case 'workflow':
-      return runWorkflowCommand(parseWorkflowCommand(command.words), {
+    case 'element':
+      return runWorkflowCommand(command.name === 'element' ? parseElementCommand(command.words) : parseWorkflowCommand(command.words), {
         owner: (work) => v1(config, work),
         env: process.env,
         sessions: async () => StateResponse.parse(await call(config, 'GET', paths.state)).state.sessions,
