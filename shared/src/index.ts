@@ -1,5 +1,6 @@
 export * from './ids';
 export * from './text';
+export * from './demo';
 export * from './outputs';
 export * from './workflows';
 export * from './drafts';

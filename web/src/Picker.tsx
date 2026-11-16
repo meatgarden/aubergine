@@ -6,6 +6,7 @@ import { paletteStep, parseQuery, searchCanvases, searchCommands } from './palet
 import { canvasLabel, searchSessions, shortFolder, type SessionMatch } from './search';
 import { keysOf } from './shortcuts';
 import { useApp } from './store';
+import { tourSignal } from './tour/tour-store';
 
 const HISTORY_DELAY_MS = 250;
 const HISTORY_MIN_LENGTH = 2;
@@ -120,6 +121,7 @@ export function Picker() {
       // Scroll the terminal back to the line that matched.
       const text = row.hit.text.trim().slice(0, REVEAL_LENGTH);
       if (text) void api.revealInSession(sessionId, text).catch(() => {});
+      tourSignal('picker.output');
     }
   };
 

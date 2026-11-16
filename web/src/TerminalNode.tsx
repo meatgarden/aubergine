@@ -14,6 +14,7 @@ import { StatusBadges } from './StatusBadges';
 import { currentLayout, useApp } from './store';
 import { TerminalView } from './TerminalView';
 import { useIsFullZoom } from './viewport';
+import { tourSignal } from './tour/tour-store';
 import { RunStrip } from './workflows/RunStrip';
 
 export type TerminalFlowNode = Node<{ sessionId: string }, 'terminal'>;
@@ -32,6 +33,7 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
     (now: boolean) => {
       setFocused(now);
       if (now) useApp.getState().settled();
+      if (now) tourSignal('terminal.focused');
       // Looking at it, and looking away from it, both mark everything so far as seen.
       void api.seenSession(sessionId).catch(() => {});
     },
@@ -77,6 +79,7 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
     <div
       className={`terminal-node color-${color}${selected ? ' selected' : ''}${isSelected && !focused ? ' is-selected' : ''}`}
       data-testid="terminal-node"
+      data-session={sessionId}
       data-selected={isSelected && !focused ? 'true' : undefined}
       data-focused={focused ? 'true' : undefined}
       data-mode={exited ? 'ended' : mode}

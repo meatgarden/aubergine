@@ -36,7 +36,11 @@ function session(name: string, extra: Partial<Session> = {}): Session {
 
 describe('parseCommand', () => {
   it('parses each command', () => {
-    expect(parseCommand([])).toEqual({ name: 'help' });
+    expect(parseCommand([])).toEqual({ name: 'begin' });
+    expect(parseCommand(['help'])).toEqual({ name: 'help' });
+    expect(parseCommand(['demo'])).toEqual({ name: 'demo', remove: false, open: true });
+    expect(parseCommand(['demo', '--remove', '--no-open'])).toEqual({ name: 'demo', remove: true, open: false });
+    expect(() => parseCommand(['demo', 'twice'])).toThrow(/does not know/);
     expect(parseCommand(['list'])).toEqual({ name: 'list' });
     expect(parseCommand(['new'])).toEqual({ name: 'new', sessionName: null, canvas: null });
     expect(parseCommand(['new', 'api', 'server'])).toEqual({ name: 'new', sessionName: 'api server', canvas: null });

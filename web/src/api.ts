@@ -8,6 +8,7 @@ import {
   type EventsClientMessage,
   type UpdateCanvasRequest,
   CreateSessionResponse,
+  DemoStatus,
   ErrorResponse,
   Frame,
   EventsServerMessage,
@@ -83,6 +84,8 @@ export const api = {
     call<void>(null, 'POST', paths.revealInSession(sessionId), { text }),
   appendNote: (sessionId: string, text: string) =>
     call(AppendNoteResponse, 'POST', paths.sessionNotes(sessionId), { text }),
+  makeDemo: () => call(DemoStatus, 'POST', paths.demo, {}),
+  removeDemo: () => call(DemoStatus, 'DELETE', paths.demo),
   getOutside: () => call(OutsideResponse, 'GET', paths.outside),
   outsideAdd: (request: OutsideAddRequest) => call(OutsideResult, 'POST', paths.outsideAdd, request),
   outsideMove: (request: OutsideMoveRequest) => call(OutsideResult, 'POST', paths.outsideMove, request),

@@ -1,4 +1,4 @@
-import { COMMAND_IDS, sortedCanvases, type CommandId, type Session } from '@aubergine/shared';
+import { COMMAND_IDS, demoOf, sortedCanvases, type CommandId, type Session } from '@aubergine/shared';
 import { api } from './api';
 import { nextWaiting } from './attention';
 import { canvasActions } from './canvas-actions';
@@ -8,6 +8,7 @@ import { SCOPE_FILTER } from './list-filters';
 import { listModel } from './list-model';
 import { SORTS } from './terminal-rows';
 import { runOfSession } from './workflows/run-model';
+import { removeDemo, showMeAround } from './tour/actions';
 
 /**
  * The commands: everything that can be done from a button, a key, or the
@@ -176,12 +177,12 @@ const filterCommands = FILTER_COMMANDS.map(([id, filter, words]): Command => ({
 }));
 
 /** The parts of the page that hold controls, in the order the keyboard visits them. */
-const CONTROL_REGIONS = ['.side-panel:not(.collapsed) .list-rows', '.toolbar button', '.tabbar [role="tab"], .tabbar button'];
+const CONTROL_REGIONS = ['.tour-card button', '.side-panel:not(.collapsed) .list-rows', '.toolbar button', '.tabbar [role="tab"], .tabbar button'];
 
 function focusNextControls(): void {
   const active = document.activeElement;
   const regions = CONTROL_REGIONS.map((selector) => document.querySelector<HTMLElement>(selector)).filter((el): el is HTMLElement => el !== null);
-  const containers = ['.side-panel', '.toolbar', '.tabbar'];
+  const containers = ['.tour-card', '.side-panel', '.toolbar', '.tabbar'];
   const at = containers.findIndex((selector) => active?.closest(selector));
   const current = at < 0 ? -1 : regions.findIndex((el) => el.closest(containers[at] as string));
   const next = regions[current + 1];
@@ -578,6 +579,30 @@ export const COMMANDS: readonly Command[] = [
       const session = targetSession(state);
       if (session) attempt(api.protectSession(session.id, !session.peopleOnly).then((next) => useApp.getState().apply({ type: 'session.protected', sessionId: session.id, peopleOnly: next.peopleOnly })), 'Could not change that');
     },
+  },
+  {
+    id: 'tour.start',
+    title: 'Take the tour (show me around)',
+    description: 'Makes a canvas named "Demo" with stand-ins on it, if there is none, and shows you round it in a few steps. Nothing in it is real.',
+    group: 'Panels',
+    available: always,
+    run: () => void showMeAround(),
+  },
+  {
+    id: 'demo.remove',
+    title: 'Remove the demo',
+    description: 'Takes away everything the demo made: its canvas, its terminals, their runs and drafts. Nothing else is touched.',
+    group: 'Panels',
+    available: (state) => state.app !== null && demoOf(state.app) !== null,
+    run: () => void removeDemo(),
+  },
+  {
+    id: 'help.show',
+    title: 'Help: what you can do here',
+    description: 'Lists the main things in one line each, and points at them.',
+    group: 'Panels',
+    available: always,
+    run: (state) => state.togglePanel('help'),
   },
   {
     id: 'shortcuts.show',

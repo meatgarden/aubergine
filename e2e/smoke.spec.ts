@@ -23,7 +23,7 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
   await expect(page.getByTestId('terminal-node')).toHaveCount(0);
 
-  await page.getByRole('button', { name: 'New terminal' }).click();
+  await page.getByTestId('toolbar-new-terminal').click();
   const node = page.getByTestId('terminal-node');
   await expect(node).toHaveCount(1);
   const terminal = page.getByTestId('terminal');
@@ -200,7 +200,7 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   expect(page.url()).not.toBe(mainAddress);
 
   // A terminal started here is on this canvas only, and comes back when the canvas is reopened by its address.
-  await page.getByRole('button', { name: '+ New terminal' }).click();
+  await page.getByTestId('toolbar-new-terminal').click();
   await expect(node).toHaveCount(1);
   await expect(page.locator('.xterm-rows')).toHaveText(/\S/);
   await page.getByTestId('node-body').click();
@@ -590,7 +590,7 @@ test('a workflow made from a template moves a terminal through its elements', as
   await expect(editor).toHaveCount(0);
 
   // A terminal, and the workflow started on it.
-  await page.getByRole('button', { name: 'New terminal' }).click();
+  await page.getByTestId('toolbar-new-terminal').click();
   await expect(node).toHaveCount(1);
   await expect(page.locator('.xterm-rows')).toHaveText(/\S/);
   await expect(page.getByTestId('run-strip')).toHaveCount(0);
@@ -690,7 +690,7 @@ test('an element written by an agent is reviewed, accepted, run by itself, and i
   const origin = new URL(page.url()).origin;
 
   // A terminal that stands in for an agent's: the test types the commands an agent would run.
-  await page.getByRole('button', { name: 'New terminal' }).click();
+  await page.getByTestId('toolbar-new-terminal').click();
   await expect(page.getByTestId('terminal-node')).toHaveCount(1);
   await expect(page.locator('.xterm-rows')).toHaveText(/\S/);
   const sessionId = (await page.getByTestId('list-row').getAttribute('data-session')) ?? '';
@@ -865,7 +865,7 @@ test('a workflow kept in a repository is reviewed before it can be run, and agai
   const fileOf = (text: string): string => JSON.stringify({ aubergine: 'workflow', format: 1, workflow: { name: 'Release checklist', elements: [{ name: 'Tag it', instructions: text }, { name: 'Announce it', instructions: 'Tell the team.' }] } });
   writeFileSync(path.join(folder, 'release-checklist.json'), fileOf('Tag the release of {{task}}.'));
 
-  await page.getByRole('button', { name: 'New terminal' }).click();
+  await page.getByTestId('toolbar-new-terminal').click();
   await expect(page.locator('.xterm-rows')).toHaveText(/\S/);
   await page.getByTestId('node-body').click();
   await page.keyboard.type(`cd ${project}`);
@@ -941,7 +941,7 @@ test('a token types into a terminal, the owner sees it, and "people only" closes
   await page.goto(`/auth?token=${token}`);
   await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
   await page.getByRole('button', { name: 'New canvas' }).click();
-  await page.getByRole('button', { name: 'New terminal' }).click();
+  await page.getByTestId('toolbar-new-terminal').click();
   await expect(page.locator('.xterm-rows')).toHaveText(/\S/);
   const sessionId = (await page.getByTestId('list-row').getAttribute('data-session')) ?? '';
   // An ordinary terminal is open to tokens; nothing typed by one yet.
@@ -1095,4 +1095,209 @@ test('a Claude Code session is given Aubergine tools: a token made for it at the
     if (settingsBefore === null) rmSync(settingsFile, { force: true });
     else writeFileSync(settingsFile, settingsBefore);
   }
+});
+
+test('an empty canvas says how to begin, and stops saying it with the first terminal', async ({ page }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  await page.getByRole('button', { name: 'New canvas' }).click();
+  const empty = page.getByTestId('empty-canvas');
+  await expect(empty).toBeVisible();
+  // Three ways to begin, and nothing else.
+  await expect(empty.getByRole('button')).toHaveText(['Show me around', '+ New terminal', 'Bring in a terminal I already have open']);
+  await expect(empty.getByTestId('empty-bring-line')).toHaveCount(0);
+  await empty.getByTestId('empty-bring').click();
+  await expect(empty.getByTestId('empty-bring-line')).toContainText('aubergine here');
+  await empty.getByTestId('empty-new-terminal').click();
+  await expect(page.getByTestId('terminal-node')).toHaveCount(1);
+  await expect(empty).toHaveCount(0);
+});
+
+test('the tour: each step is done on the real thing, on the demo', async ({ page }) => {
+  const started = Date.now();
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  const origin = new URL(page.url()).origin;
+  await page.getByRole('button', { name: 'New canvas' }).click();
+  const canvasesBefore = (await (await page.request.get('/v1/canvases?limit=200', { headers: { origin } })).json()).items.length as number;
+
+  // "Show me around" makes the demo, goes to it, and the tour begins.
+  await page.getByTestId('empty-show-me').click();
+  const card = page.getByTestId('tour-card');
+  await expect(card).toHaveAttribute('data-step', 'terminal', { timeout: 30_000 });
+  await expect(card.getByTestId('tour-count')).toHaveText('1 of 8');
+  await expect(page.getByTestId('terminal-node')).toHaveCount(4);
+  const demo = await (await page.request.get('/api/v1/demo', { headers: { origin } })).json();
+  const node = (part: string) => page.locator(`[data-testid="terminal-node"][data-session="${demo.sessions[part]}"]`);
+  // The stand-ins take a few seconds over their opening parts; the later steps need them done.
+  await expect.poll(async () => (await (await page.request.get('/api/v1/demo', { headers: { origin } })).json()).ready, { timeout: 45_000 }).toBe(true);
+  const settled = Date.now();
+  // It points at the thing itself, and takes no clicks away from it.
+  await expect(page.getByTestId('tour-ring')).toBeVisible();
+
+  // 1. A terminal: click it, then see all of them.
+  await node('shell').getByTestId('node-body').click();
+  await expect(node('shell')).toHaveAttribute('data-focused', 'true');
+  await expect(card).toHaveAttribute('data-step', 'terminal');
+  await page.getByRole('button', { name: 'Fit' }).click();
+  await expect(card.getByTestId('tour-done')).toBeVisible();
+  await expect(card).toHaveAttribute('data-step', 'waiting');
+
+  // 2. Something needs you: go to it from the queue, and answer.
+  await expect(node('waiting')).toHaveAttribute('data-attention', 'waiting');
+  // The queue goes to whoever has waited longest, on whichever canvas: earlier tests left some waiting too. Follow it round to the demo's.
+  const answering = page.locator(`[data-testid="terminal-node"][data-session="${demo.sessions.waiting}"][data-focused="true"]`);
+  for (let i = 0; i < 12 && (await answering.count()) === 0; i++) {
+    await page.getByTestId('attention-queue').click();
+    await page.waitForTimeout(700);
+  }
+  await expect(answering).toHaveCount(1);
+  await page.keyboard.type('main');
+  await page.keyboard.press('Enter');
+  await expect(card).toHaveAttribute('data-step', 'find', { timeout: 20_000 });
+
+  // 3. Find a terminal by what it printed.
+  await page.getByTestId('toolbar-goto').click();
+  await page.keyboard.type('redirects twice');
+  await page.getByTestId('picker-output-row').first().click();
+  await expect(card).toHaveAttribute('data-step', 'list');
+
+  // 4. The list: only what waits for me.
+  await page.locator('.list-filter[data-filter="waiting"]').click();
+  await expect(card).toHaveAttribute('data-step', 'workflow');
+  await page.locator('.list-filter[data-filter="waiting"]').click();
+
+  // 5. A workflow: the strip, and the run behind it.
+  await page.getByRole('button', { name: 'Fit' }).click();
+  await expect(node('fixing').getByTestId('run-strip')).toHaveAttribute('data-element', 'find-the-cause');
+  await node('fixing').getByTestId('run-strip').click();
+  await expect(page.getByTestId('run-view')).toContainText('Reproduced it: test/login.test.js fails, two redirects.');
+  await expect(card).toHaveAttribute('data-step', 'checklist');
+  // Reaching the next step put the run away, so that the list on the left can be got at.
+  await expect(page.getByTestId('run-view')).toHaveCount(0);
+
+  // 6. A checklist: tick an item.
+  await page.getByTestId('ended-row').filter({ hasText: 'List what is left' }).first().click();
+  const items = page.getByTestId('run-view').getByTestId('checklist-item');
+  await expect(items).toHaveCount(3);
+  await items.first().getByRole('checkbox').click();
+  await expect(items.first()).toHaveAttribute('data-ticked', 'true');
+  await expect(card).toHaveAttribute('data-step', 'review');
+
+  // 7. Something an agent wrote: read it, and decide.
+  await page.getByTestId('drafts-waiting').click();
+  const review = page.getByTestId('review-screen');
+  await expect(review.getByTestId('review-title')).toContainText('Check the sign-in page by hand');
+  // The card has moved out of the way: every button of the review can be reached with it up.
+  await expect(card).not.toHaveAttribute('data-corner', 'bottom-right');
+  for (const button of ['review-accept', 'review-send-back', 'review-discard']) await review.getByTestId(button).click({ trial: true });
+  await review.getByTestId('review-discard').click();
+  await expect(card).toHaveAttribute('data-step', 'your-own');
+  await review.getByTestId('review-close').click();
+
+  // 8. Bring in your own, and take the demo away. Everything it made goes, and nothing else.
+  await expect(card.getByTestId('tour-count')).toHaveText('8 of 8');
+  await expect(card).toContainText('aubergine here');
+  await card.getByTestId('tour-remove-demo').click();
+  await expect(card).toHaveCount(0);
+  await expect(page.locator('.tabbar')).not.toContainText('Demo');
+  expect((await (await page.request.get('/api/v1/demo', { headers: { origin } })).json()).present).toBe(false);
+  expect((await (await page.request.get('/v1/canvases?limit=200', { headers: { origin } })).json()).items.length).toBe(canvasesBefore);
+
+  // Finished: in this browser it does not begin by itself again, though the demo is made anew.
+  expect(await page.evaluate(() => localStorage.getItem('aubergine.tour'))).toContain('finished');
+  const again = await (await page.request.post('/api/v1/demo', { headers: { origin }, data: {} })).json();
+  await page.goto(`/c/${again.canvasId}`);
+  await expect(page.getByTestId('terminal-node')).toHaveCount(4);
+  await page.waitForTimeout(1000);
+  await expect(card).toHaveCount(0);
+  // The demo's own canvas offers to take it away.
+  await page.getByTestId('remove-demo').click();
+  await expect(page.locator('.tabbar')).not.toContainText('Demo');
+  console.log(`The tour test: ${Math.round((settled - started) / 1000)} s until the scene had settled, ${Math.round((Date.now() - started) / 1000)} s in all.`);
+});
+
+test('the tour can be skipped, put away and taken up again, and put away for good; help points at things', async ({ page }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  const origin = new URL(page.url()).origin;
+  // The demo made from the command line, as `aubergine demo` does: the browser is taken to it and the tour begins.
+  const demo = await (await page.request.post('/api/v1/demo', { headers: { origin }, data: {} })).json();
+  expect((await page.request.post(`/v1/canvases/${demo.canvasId}/show`, { headers: { origin } })).status()).toBe(200);
+  await expect(page).toHaveURL(new RegExp(`/c/${demo.canvasId}$`));
+  const card = page.getByTestId('tour-card');
+  await expect(card).toHaveAttribute('data-step', 'terminal');
+
+  // The canvas stays usable under it: a terminal still takes a click and the keyboard.
+  await page.getByTestId('node-body').first().click();
+  await expect(page.locator('[data-testid="terminal-node"][data-focused="true"]')).toHaveCount(1);
+
+  // Skipping, and going back.
+  await card.getByTestId('tour-next').click();
+  await expect(card).toHaveAttribute('data-step', 'waiting');
+  await card.getByTestId('tour-back').click();
+  await expect(card).toHaveAttribute('data-step', 'terminal');
+  await card.getByTestId('tour-next').click();
+  await card.getByTestId('tour-next').click();
+  await expect(card).toHaveAttribute('data-step', 'find');
+
+  // With the keyboard alone: the key that moves between groups of controls reaches the card, and Enter presses its button.
+  await page.locator('.react-flow__pane').click({ position: { x: 5, y: 300 } });
+  await page.keyboard.press('F6');
+  await expect(card.locator('button:focus')).toHaveCount(1);
+  await expect(card.locator('button:focus')).toHaveText('Back');
+  await page.keyboard.press('Enter');
+  await expect(card).toHaveAttribute('data-step', 'waiting');
+  await card.getByTestId('tour-next').click();
+
+  // Put away for now: gone, also after a reload, and taken up again where it was left.
+  await card.getByTestId('tour-later').click();
+  await expect(card).toHaveCount(0);
+  await page.reload();
+  await expect(page.getByTestId('terminal-node')).toHaveCount(4);
+  await page.waitForTimeout(800);
+  await expect(card).toHaveCount(0);
+  await page.locator('.react-flow__pane').click({ position: { x: 5, y: 300 } });
+  await page.keyboard.press(process.platform === 'darwin' ? 'Meta+k' : 'Control+Shift+K');
+  await page.keyboard.type('>take the tour');
+  await page.keyboard.press('Enter');
+  await expect(card).toHaveAttribute('data-step', 'find');
+  await expect(card.getByTestId('tour-count')).toHaveText('3 of 8');
+
+  // Left up over a reload, it is still there, at the same step.
+  await page.reload();
+  await expect(card).toHaveAttribute('data-step', 'find');
+
+  // Put away for good.
+  await card.getByTestId('tour-dismiss').click();
+  await expect(card).toHaveCount(0);
+  await page.reload();
+  await expect(page.getByTestId('terminal-node')).toHaveCount(4);
+  await page.waitForTimeout(800);
+  await expect(card).toHaveCount(0);
+  expect(await page.evaluate(() => localStorage.getItem('aubergine.tour'))).toBe('{"status":"dismissed","step":null}');
+
+  // Help: the same eight things as reminders, and "show me" points at what is on this canvas.
+  await page.getByTestId('toolbar-help').click();
+  const help = page.getByTestId('help-panel');
+  await expect(help.getByTestId('help-item')).toHaveCount(8);
+  await expect(help.locator('[data-step="workflow"]')).toContainText('A strip on a terminal shows the step its agent is on');
+  await expect(page.getByTestId('tour-ring')).toHaveCount(0);
+  await help.locator('[data-step="workflow"]').getByTestId('help-show').click();
+  await expect(help).toHaveCount(0);
+  await expect(page.getByTestId('tour-ring')).toBeVisible();
+  // It points for a few seconds, and then stops.
+  await expect(page.getByTestId('tour-ring')).toHaveCount(0, { timeout: 8000 });
+  // The shortcuts are a click away from help.
+  await page.getByTestId('toolbar-help').click();
+  await help.getByTestId('help-shortcuts').click();
+  await expect(page.getByTestId('shortcut-sheet')).toBeVisible();
+  await page.keyboard.press('Escape');
+
+  // Nothing about the tour went to the server: no request named it.
+  await page.getByTestId('remove-demo').click();
+  await expect(page.locator('.tabbar')).not.toContainText('Demo');
 });

@@ -8,6 +8,7 @@ import { startSync, useApp } from './store';
 import { TabBar } from './TabBar';
 import { SidePanel } from './panel/SidePanel';
 import { TagDialog } from './TagDialog';
+import { Tour } from './tour/Tour';
 
 export function App() {
   const phase = useApp((s) => s.phase);
@@ -79,6 +80,7 @@ export function App() {
       </div>
       <CloseCanvasDialog />
       <TagDialog />
+      <Tour />
     </div>
   );
 }
