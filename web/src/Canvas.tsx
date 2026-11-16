@@ -13,6 +13,7 @@ import {
   type Viewport,
 } from '@xyflow/react';
 import {
+  DEMO_LABEL,
   NODE_DEFAULT_HEIGHT,
   NODE_DEFAULT_WIDTH,
   findFreeRect,
@@ -35,6 +36,9 @@ import { hint } from './shortcuts';
 import { ShortcutSheet } from './ShortcutSheet';
 import { ActivityScreen, TokenScreen } from './TokenScreen';
 import { RunDialog } from './workflows/RunDialog';
+import { EmptyCanvas } from './EmptyCanvas';
+import { HelpPanel } from './HelpPanel';
+import { tourSignal } from './tour/tour-store';
 import { AgentToolsDialog } from './AgentToolsDialog';
 import { RunViewDialog } from './workflows/RunViewDialog';
 import { WorkflowEditor } from './workflows/WorkflowEditor';
@@ -98,6 +102,8 @@ function DraftsWaiting() {
 
 export function Canvas() {
   const canvasId = useApp((s) => s.canvasId);
+  // The demo's own canvas offers to take the demo away.
+  const onDemo = useApp((s) => s.canvasId !== null && s.app?.canvases.find((c) => c.id === s.canvasId)?.labels[DEMO_LABEL] !== undefined);
   const layout = useApp((s) => currentLayout(s).nodes);
   // This component is mounted afresh for each canvas, so this is read once per canvas.
   const [initialViewport] = useState(() => loadViewport(canvasId ?? ''));
@@ -191,6 +197,7 @@ export function Canvas() {
         return;
       }
       if (canvasId) saveViewport(canvasId, viewport);
+      if (viewport.zoom < 0.95) tourSignal('canvas.zoomed-out');
     },
     [flow, canvasId],
   );
@@ -406,7 +413,7 @@ export function Canvas() {
         <MiniMap pannable zoomable position="bottom-right" className="minimap" />
         <Panel position="top-left" className="toolbar">
           <span className="brand">Aubergine</span>
-          <button type="button" onClick={() => runCommand('terminal.new')} disabled={adding} title={hint('terminal.new')}>
+          <button type="button" onClick={() => runCommand('terminal.new')} disabled={adding} title={hint('terminal.new')} data-testid="toolbar-new-terminal">
             + New terminal
           </button>
           <button
@@ -452,6 +459,7 @@ export function Canvas() {
             className="quiet"
             onClick={() => runCommand('palette.toggle')}
             title={hint('palette.toggle', 'Go to a session or canvas, or run a command')}
+            data-testid="toolbar-goto"
           >
             Go to…
           </button>
@@ -471,19 +479,25 @@ export function Canvas() {
           <AttentionQueue />
           <ParkedList />
           {!live && <span className="warning">Reconnecting…</span>}
-          <button type="button" className="quiet" aria-label="Show shortcuts" onClick={() => runCommand('shortcuts.show')} title={hint('shortcuts.show')}>
+          {onDemo && (
+            <button type="button" className="quiet" onClick={() => runCommand('demo.remove')} title="Take away everything the demo made. Nothing else is touched." data-testid="remove-demo">
+              Remove the demo
+            </button>
+          )}
+          <button type="button" className="quiet" aria-label="Help" onClick={() => runCommand('help.show')} title={hint('help.show', 'Help: what you can do here, and the keyboard shortcuts')} data-testid="toolbar-help">
             ?
           </button>
           {notice && <span className="warning">{notice}</span>}
         </Panel>
         {layout.length === 0 && frames.length === 0 && (
           <Panel position="top-center" className="empty">
-            No terminals yet. Choose “New terminal” to start one.
+            <EmptyCanvas />
           </Panel>
         )}
       </ReactFlow>
       <Picker />
       <ShortcutSheet />
+      <HelpPanel />
       <TokenScreen />
       <ActivityScreen />
       <WorkflowsScreen />

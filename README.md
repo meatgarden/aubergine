@@ -1,8 +1,24 @@
 # Aubergine
 
-A local, browser-based canvas where each terminal session is a node you can arrange and use.
+## What it is
 
-Terminals keep running when you close the browser or restart the Aubergine server: reopen the page and every terminal is where you left it, with the same shell.
+Aubergine puts your terminals on a canvas in your browser, side by side, so you can see all of them at once and use any of them. It is made for running several coding agents at a time: it shows which one is waiting for you, which step of its work each is on, and what each has written for you to read. Everything runs on your own computer, and your terminals keep running when you close the browser or restart Aubergine.
+
+## Try it
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/meatgarden/aubergine/main/install.sh | sh
+aubergine start --open
+aubergine demo
+```
+
+The first line installs it (it needs macOS with tmux, Node.js and pnpm; [Quick start](#quick-start) says what the installer does and does not do). The second starts it and opens your browser, signed in. The third, typed in another terminal, makes a canvas named "Demo" with a few stand-in agents on it and walks you round in eight short steps: about five minutes. Nothing in the demo is real, and `aubergine demo --remove` takes all of it away again.
+
+<!-- A recording of the tour goes here. -->
+
+The same tour is under **Show me around** on an empty canvas, and **?** in the toolbar lists the eight things it shows, one line each.
+
+The rest of this page is the reference: every section below stands on its own.
 
 ## Quick start
 
@@ -46,7 +62,7 @@ First visit in a browser? Open this link once:
 
 **3. Open the sign-in link** once per browser. After that, `http://127.0.0.1:4600` works on its own. Use `127.0.0.1` rather than `localhost`, since the sign-in is remembered per address. `aubergine start --open` does both steps: it starts the server and opens your browser signed in. With the server already running, `aubergine open` opens a signed-in browser.
 
-**4. Add a terminal.** Choose **New terminal** (or press `N`), click the terminal, and type.
+**4. Add a terminal.** Choose **New terminal** (or press `N`), click the terminal, and type. An empty canvas offers three ways to begin: **Show me around** (the demo and its tour), **+ New terminal**, and **Bring in a terminal I already have open**. `aubergine`, typed by itself while nothing is on your canvas, says the same three.
 
 If something is not right, `aubergine doctor` checks everything Aubergine needs, one line per check.
 
@@ -351,6 +367,17 @@ Each new tab makes a new session, so park or end the ones you no longer need.
 - Ending the sessions (from the canvas, or `tmux -L aubergine kill-server`) leaves nothing running.
 
 ## Use
+
+### The demo and the tour
+
+`aubergine demo`, or **Show me around** on an empty canvas, makes a canvas named "Demo" with a small scene on it: a shell with some output, a stand-in agent part-way through the "Fix a bug" workflow, one that is waiting with a question, one that has handed in a checklist and proposed an element for you to review, and a parked terminal. A tour of eight steps points at each in turn and waits for you to try it.
+
+- **Nothing in it is real.** The stand-ins are short scripts in `daemon/demo/`, labelled as stand-ins where they run. They use the same commands a real agent uses (`aubergine workflow`, `aubergine note`, the hooks), so they also show that those work. They react: answer the one that is waiting and it carries on and reports that it has finished; press Enter in the first one's terminal, or **Done** on its run, and the strip moves.
+- **It touches nothing of yours.** It adds a canvas and its terminals, working in a folder of its own inside Aubergine's data folder. No workflow, shelf element or token is added. Making it twice makes one.
+- **Removing it removes all of it and nothing else**: `aubergine demo --remove`, **Remove the demo** on its canvas, or the last step of the tour. The canvas, its terminals, their runs, the draft and the folder go. A terminal of your own that you put on the demo's canvas is moved to another canvas, still running. Two things stay because they are records that only grow: the runs you finished in the demo are in the list of past runs, and the record of drafts says that one was discarded.
+- **The tour** can be skipped step by step, put away ("Not now") and taken up again from the palette ("Take the tour") or from **?**, or put away for good. Whether you finished it is remembered in your browser only; nothing about it is sent anywhere or recorded.
+
+**?** in the toolbar lists the same eight things as one-line reminders. **Show me** beside a line points at the thing on the canvas you are looking at.
 
 ### Canvas
 
@@ -785,6 +812,7 @@ aubergine send <session> <text> [--enter]   type text into it, exactly as given
 aubergine run <session> [--timeout s] -- <command>   run a command at its prompt, wait, print the output
 aubergine protect <session>    mark it people only: no API token may read it or type into it (unprotect undoes it)
 aubergine note <text>          inside a session: add an entry to its note log
+aubergine demo                 make a canvas named "Demo" with stand-in agents on it and a tour of it (--remove: take it all away; --no-open)
 aubergine mcp [--url <address>]   an MCP server on standard input and output: the API as tools, for an agent or another MCP client
 aubergine hooks print          print the Claude Code hook settings
 aubergine service install      start the Aubergine server at login (macOS)

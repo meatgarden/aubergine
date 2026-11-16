@@ -221,10 +221,13 @@ code {
 .warning {
   color: #e5c07b;
 }
-.empty {
-  margin-top: 30vh;
-  color: var(--muted);
-  font-size: 15px;
+/* The middle of an empty canvas. The panel itself takes no clicks, so that nothing near it (the toolbar above) is covered; the card inside does. */
+.react-flow__panel.empty {
+  top: 16vh;
+  margin: 0;
+  color: var(--text, inherit);
+  font-size: 14px;
+  pointer-events: none;
 }
 
 /* ---------- Terminal node ---------- */
@@ -2347,4 +2350,101 @@ tr[data-status='expired'] strong {
 }
 .list-typed-by {
   color: var(--danger);
+}
+
+/* ---------- The tour ---------- */
+
+.tour-ring {
+  position: fixed;
+  z-index: 300;
+  border: 2px solid var(--accent);
+  border-radius: 8px;
+  box-shadow: 0 0 0 4px rgb(180 142 173 / 0.3);
+  pointer-events: none;
+  transition: left 0.15s, top 0.15s, width 0.15s, height 0.15s;
+}
+.tour-card {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 301;
+  width: min(380px, calc(100vw - 32px));
+  padding: 14px 16px;
+  background: var(--panel);
+  border: 1px solid var(--accent);
+  border-radius: 10px;
+  box-shadow: 0 12px 40px rgb(0 0 0 / 0.5);
+}
+.tour-card h2 {
+  margin: 2px 0 6px;
+  font-size: 15px;
+}
+.tour-card p {
+  margin: 0 0 10px;
+  line-height: 1.45;
+}
+.tour-count {
+  font-size: 11px;
+  opacity: 0.7;
+}
+.tour-done {
+  color: var(--ok, #6cc070);
+}
+.tour-hint {
+  font-size: 12px;
+  opacity: 0.75;
+}
+.tour-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+.tour-spacer {
+  flex: 1;
+}
+
+/* ---------- An empty canvas, and help ---------- */
+
+.empty-canvas {
+  width: min(520px, calc(100vw - 48px));
+  padding: 20px 22px;
+  text-align: left;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  pointer-events: auto;
+}
+.empty-canvas h2 {
+  margin: 0 0 6px;
+  font-size: 16px;
+}
+.empty-canvas p {
+  margin: 0 0 12px;
+}
+.empty-choices {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.empty-choices button {
+  text-align: left;
+  padding: 9px 12px;
+}
+.empty-line code,
+.help-list code {
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: rgb(127 127 127 / 0.2);
+}
+.help-list {
+  margin: 0 0 16px;
+  padding-left: 22px;
+}
+.help-list li {
+  margin-bottom: 8px;
+}
+.help-list li button {
+  margin-left: 8px;
 }
