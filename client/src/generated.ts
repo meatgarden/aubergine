@@ -270,6 +270,7 @@ export type ListCanvasSessionsResult = {
     agent: {
       kind: "claude-code";
       conversationId: string | null;
+      program: string | null;
     } | null;
     lastInputAt: string | null;
     lastOutputAt: string | null;
@@ -294,6 +295,11 @@ export type ListCanvasSessionsResult = {
       at: string;
     } | null;
     takesMessages: boolean;
+    untold: {
+      what: "kickoff" | "brief" | "recap" | "inbox";
+      why: "no-report" | "at-shell" | "other-program" | "unknown";
+      at: string;
+    } | null;
     messages: {
       unread: number;
       from: string | null;
@@ -356,6 +362,7 @@ export type StartSessionResult = {
     agent: {
       kind: "claude-code";
       conversationId: string | null;
+      program: string | null;
     } | null;
     lastInputAt: string | null;
     lastOutputAt: string | null;
@@ -380,6 +387,11 @@ export type StartSessionResult = {
       at: string;
     } | null;
     takesMessages: boolean;
+    untold: {
+      what: "kickoff" | "brief" | "recap" | "inbox";
+      why: "no-report" | "at-shell" | "other-program" | "unknown";
+      at: string;
+    } | null;
     messages: {
       unread: number;
       from: string | null;
@@ -448,6 +460,7 @@ export type ListSessionsResult = {
     agent: {
       kind: "claude-code";
       conversationId: string | null;
+      program: string | null;
     } | null;
     lastInputAt: string | null;
     lastOutputAt: string | null;
@@ -472,6 +485,11 @@ export type ListSessionsResult = {
       at: string;
     } | null;
     takesMessages: boolean;
+    untold: {
+      what: "kickoff" | "brief" | "recap" | "inbox";
+      why: "no-report" | "at-shell" | "other-program" | "unknown";
+      at: string;
+    } | null;
     messages: {
       unread: number;
       from: string | null;
@@ -515,6 +533,7 @@ export type GetSessionResult = {
   agent: {
     kind: "claude-code";
     conversationId: string | null;
+    program: string | null;
   } | null;
   lastInputAt: string | null;
   lastOutputAt: string | null;
@@ -539,6 +558,11 @@ export type GetSessionResult = {
     at: string;
   } | null;
   takesMessages: boolean;
+  untold: {
+    what: "kickoff" | "brief" | "recap" | "inbox";
+    why: "no-report" | "at-shell" | "other-program" | "unknown";
+    at: string;
+  } | null;
   messages: {
     unread: number;
     from: string | null;
@@ -586,6 +610,7 @@ export type UpdateSessionResult = {
   agent: {
     kind: "claude-code";
     conversationId: string | null;
+    program: string | null;
   } | null;
   lastInputAt: string | null;
   lastOutputAt: string | null;
@@ -610,6 +635,11 @@ export type UpdateSessionResult = {
     at: string;
   } | null;
   takesMessages: boolean;
+  untold: {
+    what: "kickoff" | "brief" | "recap" | "inbox";
+    why: "no-report" | "at-shell" | "other-program" | "unknown";
+    at: string;
+  } | null;
   messages: {
     unread: number;
     from: string | null;
@@ -662,6 +692,7 @@ export type MoveSessionResult = {
     agent: {
       kind: "claude-code";
       conversationId: string | null;
+      program: string | null;
     } | null;
     lastInputAt: string | null;
     lastOutputAt: string | null;
@@ -686,6 +717,11 @@ export type MoveSessionResult = {
       at: string;
     } | null;
     takesMessages: boolean;
+    untold: {
+      what: "kickoff" | "brief" | "recap" | "inbox";
+      why: "no-report" | "at-shell" | "other-program" | "unknown";
+      at: string;
+    } | null;
     messages: {
       unread: number;
       from: string | null;
@@ -738,6 +774,7 @@ export type ParkSessionResult = {
   agent: {
     kind: "claude-code";
     conversationId: string | null;
+    program: string | null;
   } | null;
   lastInputAt: string | null;
   lastOutputAt: string | null;
@@ -762,6 +799,11 @@ export type ParkSessionResult = {
     at: string;
   } | null;
   takesMessages: boolean;
+  untold: {
+    what: "kickoff" | "brief" | "recap" | "inbox";
+    why: "no-report" | "at-shell" | "other-program" | "unknown";
+    at: string;
+  } | null;
   messages: {
     unread: number;
     from: string | null;
@@ -809,6 +851,7 @@ export type RestoreSessionResult = {
     agent: {
       kind: "claude-code";
       conversationId: string | null;
+      program: string | null;
     } | null;
     lastInputAt: string | null;
     lastOutputAt: string | null;
@@ -833,6 +876,11 @@ export type RestoreSessionResult = {
       at: string;
     } | null;
     takesMessages: boolean;
+    untold: {
+      what: "kickoff" | "brief" | "recap" | "inbox";
+      why: "no-report" | "at-shell" | "other-program" | "unknown";
+      at: string;
+    } | null;
     messages: {
       unread: number;
       from: string | null;
@@ -3564,6 +3612,7 @@ export type ProtectSessionResult = {
   agent: {
     kind: "claude-code";
     conversationId: string | null;
+    program: string | null;
   } | null;
   lastInputAt: string | null;
   lastOutputAt: string | null;
@@ -3588,6 +3637,11 @@ export type ProtectSessionResult = {
     at: string;
   } | null;
   takesMessages: boolean;
+  untold: {
+    what: "kickoff" | "brief" | "recap" | "inbox";
+    why: "no-report" | "at-shell" | "other-program" | "unknown";
+    at: string;
+  } | null;
   messages: {
     unread: number;
     from: string | null;
@@ -3634,6 +3688,7 @@ export type SetTakesMessagesResult = {
   agent: {
     kind: "claude-code";
     conversationId: string | null;
+    program: string | null;
   } | null;
   lastInputAt: string | null;
   lastOutputAt: string | null;
@@ -3658,6 +3713,11 @@ export type SetTakesMessagesResult = {
     at: string;
   } | null;
   takesMessages: boolean;
+  untold: {
+    what: "kickoff" | "brief" | "recap" | "inbox";
+    why: "no-report" | "at-shell" | "other-program" | "unknown";
+    at: string;
+  } | null;
   messages: {
     unread: number;
     from: string | null;
@@ -4505,6 +4565,7 @@ export type ReportAgentBody = {
 export type ReportAgentResult = {
   kind: "claude-code";
   conversationId: string | null;
+  program: string | null;
 };
 
 /** What each route is, for the code that makes the requests. */

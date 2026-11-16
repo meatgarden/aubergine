@@ -19,6 +19,12 @@ import {
   type CanvasChanges,
   type AgentKind,
   RECAP_LINE,
+  BRIEF_LINE,
+  INBOX_LINE,
+  KICKOFF_LINE,
+  SHELL_NAMES,
+  type ToldKind,
+  type UntoldWhy,
   type AgentToolsChoice,
   type Attention,
   type AttentionState,
@@ -38,6 +44,11 @@ import {
 import type { StateHub } from './state-hub';
 import type { HistorySearch, RuntimeSession, SessionRuntime } from './runtime/runtime';
 import { noIntegration, type ShellIntegration, type ShellReport } from './shell/integration';
+
+/** The fixed sentences, by what each is for. Nothing else is typed for an agent. */
+const SENTENCES: Record<ToldKind, string> = { kickoff: KICKOFF_LINE, brief: BRIEF_LINE, recap: RECAP_LINE, inbox: INBOX_LINE };
+/** How long a sentence that could not be typed is still worth typing. */
+const UNTOLD_KEPT_MS = 30 * 60_000;
 
 export class NotFoundError extends Error {}
 export class ConflictError extends Error {}
@@ -166,7 +177,7 @@ export class Sessions {
       created = { ...created, session: this.find(id) };
     }
     if (input.agent && launch) {
-      this.hub.emit({ type: 'session.agent', sessionId: id, agent: { kind: input.agent, conversationId: null } });
+      this.hub.emit({ type: 'session.agent', sessionId: id, agent: { kind: input.agent, conversationId: null, program: null } });
     }
 
     // Typed once the shell is ready; the new node does not wait for that.
@@ -507,15 +518,55 @@ export class Sessions {
   }
 
   /** Records which agent is running in the session and in which conversation. */
-  reportAgent(sessionId: string, agent: AgentInfo): AgentInfo {
+  async reportAgent(sessionId: string, agent: Pick<AgentInfo, 'kind' | 'conversationId'>): Promise<AgentInfo> {
     const session = this.find(sessionId);
+    // Which program is in front now, as the server sees it: the agent, when it reports from a running conversation.
+    // A shell in front (a report made by hand from a prompt) says nothing about which program the agent is.
+    const front = await this.front(sessionId);
+    const program = front !== null && !SHELL_NAMES.includes(front) ? front.slice(0, 200) : (session.agent?.program ?? null);
     // An agent that reports without a conversation does not erase the one we know.
-    const next: AgentInfo = { kind: agent.kind, conversationId: agent.conversationId ?? session.agent?.conversationId ?? null };
-    if (session.agent?.kind !== next.kind || session.agent.conversationId !== next.conversationId) {
+    const next: AgentInfo = { kind: agent.kind, conversationId: agent.conversationId ?? session.agent?.conversationId ?? null, program };
+    if (session.agent?.kind !== next.kind || session.agent.conversationId !== next.conversationId || session.agent.program !== next.program) {
       this.hub.emit({ type: 'session.agent', sessionId, agent: next });
     }
+    // Something was waiting to be said to this agent: now that it is seen, it is said.
+    void this.tellAgain(sessionId);
     return next;
   }
+
+  /**
+   * Why a fixed sentence may not be typed into a session now, or null when it may. Two facts are needed, the
+   * reverse of what running a command needs: an agent is on record as running there, and the program in front
+   * is not a shell and is the program that was in front when the agent last reported.
+   */
+  /** The program in front in a session's terminal, by the name the runtime gives it; null when it cannot be read. */
+  private async front(sessionId: string): Promise<string | null> {
+    try {
+      return (await this.runtime.foreground(sessionId))?.replace(/^-/, '') ?? null;
+    } catch {
+      return null;
+    }
+  }
+
+  private async cannotTell(session: Session): Promise<UntoldWhy | null> {
+    if (session.agent === null || session.agent.program === null) return 'no-report';
+    const front = await this.front(session.id);
+    if (front === null || front === '') return 'unknown';
+    if (SHELL_NAMES.includes(front)) return 'at-shell';
+    return front === session.agent.program ? null : 'other-program';
+  }
+
+  /** Types what could not be typed before, if it still can be and is not too old to matter. A message is announced again by the messages themselves. */
+  private async tellAgain(sessionId: string): Promise<void> {
+    const untold = this.hub.state.sessions.find((s) => s.id === sessionId)?.untold;
+    if (!untold || untold.what === 'inbox') return;
+    if (Date.now() - Date.parse(untold.at) > UNTOLD_KEPT_MS) {
+      this.hub.emit({ type: 'session.untold', sessionId, untold: null });
+      return;
+    }
+    await this.tell(sessionId, SENTENCES[untold.what]).catch(() => false);
+  }
+
 
   /** Starts the session's agent again, in the conversation it was last in. */
   async resumeAgent(sessionId: string, more: readonly string[] = []): Promise<Session> {
@@ -569,13 +620,24 @@ export class Sessions {
   }
 
   /**
-   * Types one line into a session's terminal, as if the owner had. Only for
-   * text the server itself made up; nothing a token or a session sent.
+   * Types one of the fixed sentences into a session's terminal, for the agent there. Only where the agent is
+   * seen to have the keyboard; otherwise nothing is typed and the session says why. Nothing a token or a session
+   * sent is ever typed here.
    */
   async tell(sessionId: string, line: string): Promise<boolean> {
     const session = this.find(sessionId);
+    const what = (Object.keys(SENTENCES) as ToldKind[]).find((kind) => SENTENCES[kind] === line);
+    // Only the fixed sentences are ever typed for an agent.
+    if (what === undefined) throw new Error('Only a fixed sentence may be typed for an agent');
     if (session.state === 'exited' || !this.isRunning(sessionId)) return false;
+    // Not unless the agent is the program that has the keyboard: anything else would take the sentence as its own input.
+    const why = await this.cannotTell(session);
+    if (why !== null) {
+      if (session.untold?.what !== what || session.untold.why !== why) this.hub.emit({ type: 'session.untold', sessionId, untold: { what, why, at: session.untold?.what === what ? session.untold.at : new Date().toISOString() } });
+      return false;
+    }
     await this.runtime.typeLine(sessionId, line);
+    if (this.hub.state.sessions.find((s) => s.id === sessionId)?.untold) this.hub.emit({ type: 'session.untold', sessionId, untold: null });
     return true;
   }
 
@@ -709,7 +771,7 @@ export class Sessions {
       noteLog: [],
       agent: null,
       parkedFrom: null, peopleOnly: false, typedBy: null,
-    recap: null, takesMessages: false, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null },
+    recap: null, takesMessages: false, untold: null, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null },
       lastInputAt: null,
       lastOutputAt: null,
       tags,

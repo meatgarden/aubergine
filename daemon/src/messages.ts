@@ -327,6 +327,8 @@ export class Messages {
     const nudged = this.nudges.get(sessionId);
     if (nudged && unread.length === taken.length) this.nudges.set(sessionId, { at: nudged.at, batch: false });
     this.count(sessionId);
+    // It has read them: the word that it could not be told is over.
+    if (this.session(sessionId)?.untold?.what === 'inbox') this.hub.emit({ type: 'session.untold', sessionId, untold: null });
     for (const message of taken) if (message.from.kind === 'session') this.count(message.from.sessionId);
     return { messages: taken.map((m) => ({ ...m, readAt: at })), more: unread.length - taken.length };
   }

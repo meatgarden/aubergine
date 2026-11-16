@@ -31,17 +31,22 @@ let origin: string;
 let typed: [string, string][] = [];
 let events: ChangeEvent[] = [];
 
+/** The program in front of every terminal of the stand-in runtime. */
+let front: string | null = 'the-agent';
 const runtime = {
   check: async () => ({ status: 'ok', version: '3.4' }),
   create: async (options: { id: string }) => ({ id: options.id, cwd: null, command: null, activityAt: null }),
   list: async () => [],
   has: async () => true,
   kill: async () => {},
+  // The program an agent's record names is in front.
+  foreground: async () => front,
   typeLine: async (id: string, line: string) => void typed.push([id, line]),
   snapshot: async () => '',
 } as unknown as SessionRuntime;
 
 beforeEach(async () => {
+  front = 'the-agent';
   dir = await mkdtemp(path.join(os.tmpdir(), 'aubergine-recap-'));
   ownerToken = await loadOrCreateToken(dir);
   const store = new JsonStore(dir);
@@ -80,10 +85,62 @@ async function send(headers: Record<string, string>, method: string, url: string
 }
 const asOwner = (method: string, url: string, body?: unknown): Promise<Answer> => send({ origin, cookie: `${cookieName(port)}=${ownerToken}`, 'sec-fetch-site': 'same-origin' }, method, url, body);
 const asSession = (sessionId: string, method: string, url: string, body?: unknown): Promise<Answer> => send({ authorization: `Bearer ${sessionToken(ownerToken, sessionId)}` }, method, url, body);
-const newSession = async (agent: boolean): Promise<string> => (await asOwner('POST', '/api/v1/sessions', agent ? { agent: 'claude-code' } : { name: 'plain' })).body.session.id as string;
+const newSession = async (agent: boolean): Promise<string> => {
+  const id = (await asOwner('POST', '/api/v1/sessions', agent ? { agent: 'claude-code' } : { name: 'plain' })).body.session.id as string;
+  // The agent reports when its conversation begins, as its start hook does: from then on it is known which program it is.
+  if (agent) await asOwner('PUT', `/v1/sessions/${id}/agent`, { kind: 'claude-code', conversationId: null });
+  return id;
+};
 const settled = async (): Promise<void> => {
   for (let i = 0; i < 20; i++) await new Promise((resolve) => setImmediate(resolve));
 };
+
+describe('a fixed sentence is typed only where the agent is seen to have the keyboard', () => {
+  const stateOf = (id: string) => hub.state.sessions.find((s) => s.id === id)!;
+  const ask = async (id: string): Promise<boolean> => (await asOwner('POST', `/api/v1/sessions/${id}/recap-request`, {})).body.asked as boolean;
+
+  it('not before an agent has reported from the terminal, not at a shell, not when another program is in front; and the terminal says which', async () => {
+    // An agent session Aubergine started, from which nothing has reported yet.
+    const id = (await asOwner('POST', '/api/v1/sessions', { agent: 'claude-code' })).body.session.id as string;
+    await settled();
+    typed = [];
+    expect(stateOf(id).agent).toEqual({ kind: 'claude-code', conversationId: null, program: null });
+    expect(await ask(id)).toBe(false);
+    expect(stateOf(id).untold).toMatchObject({ what: 'recap', why: 'no-report' });
+    // A report made while a shell is in front says nothing about which program the agent is.
+    front = 'zsh';
+    await asOwner('PUT', `/v1/sessions/${id}/agent`, { kind: 'claude-code', conversationId: null });
+    await settled();
+    expect(stateOf(id).agent?.program).toBeNull();
+    expect(typed).toEqual([]);
+    // The agent reports while it is in front: now it is known, and what waited is typed, once.
+    front = 'the-agent';
+    await asOwner('PUT', `/v1/sessions/${id}/agent`, { kind: 'claude-code', conversationId: null });
+    await settled();
+    expect(stateOf(id).agent?.program).toBe('the-agent');
+    expect(typed).toEqual([[id, RECAP_LINE]]);
+    expect(stateOf(id).untold).toBeNull();
+    // The agent has exited to its shell.
+    for (const [now, why] of [['zsh', 'at-shell'], ['-zsh', 'at-shell'], ['bash', 'at-shell'], ['vim', 'other-program'], ['python3', 'other-program'], [null, 'unknown']] as const) {
+      front = now;
+      expect(await ask(id), String(now)).toBe(false);
+      expect(stateOf(id).untold, String(now)).toMatchObject({ what: 'recap', why });
+    }
+    expect(typed).toEqual([[id, RECAP_LINE]]);
+    // A caller cannot say which program the agent is: the field is the server's own.
+    await asOwner('PUT', `/v1/sessions/${id}/agent`, { kind: 'claude-code', conversationId: null, program: 'vim' });
+    expect(stateOf(id).agent?.program).toBe('the-agent');
+    front = 'the-agent';
+    expect(await ask(id)).toBe(true);
+    expect(stateOf(id).untold).toBeNull();
+  });
+
+  it('nothing but one of the fixed sentences can be typed this way', async () => {
+    const id = await newSession(true);
+    await expect(sessions.tell(id, 'echo owned')).rejects.toThrow(/Only a fixed sentence/);
+    await expect(sessions.tell(id, `${RECAP_LINE} && echo owned`)).rejects.toThrow(/Only a fixed sentence/);
+  });
+});
 
 describe('asking an agent for a recap', () => {
   it('types the one fixed sentence for it, and nothing else, into an agent\'s terminal only', async () => {

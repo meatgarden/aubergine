@@ -207,7 +207,8 @@ export type AppendNoteResponse = z.infer<typeof AppendNoteResponse>;
 
 export const AttentionResponse = Attention;
 
-export const ReportAgentRequest = AgentInfo;
+/** What an agent says about itself. Which program is in front is seen by the server, never said by a caller. */
+export const ReportAgentRequest = AgentInfo.omit({ program: true });
 export type ReportAgentRequest = z.infer<typeof ReportAgentRequest>;
 
 /** Environment variables every session's shell is given, for programs that talk to the daemon. */

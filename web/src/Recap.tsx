@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ago, recapLines, recapOf, recordOfRun, showControl, type AppState, type Recap, type RecapRun, type RunRecord } from '@aubergine/shared';
+import { ago, recapLines, recapOf, recordOfRun, showControl, type AppState, type Recap, type RecapRun, type RunRecord, untoldWords } from '@aubergine/shared';
 import { api } from './api';
 import { useApp } from './store';
 import { useEndedRuns } from './workflows/ended-runs';
@@ -45,6 +45,7 @@ export function RecapBlock({ sessionId, canAsk = true }: { sessionId: string; ca
   if (!recap) return null;
   const now = new Date();
 
+  const untold = useApp((s) => s.app?.sessions.find((x) => x.id === sessionId)?.untold ?? null);
   const ask = (): void => {
     setAsking('idle');
     void api.askRecap(sessionId).then(
@@ -86,7 +87,11 @@ export function RecapBlock({ sessionId, canAsk = true }: { sessionId: string; ca
             {recap.written ? 'Ask for a new recap' : 'Ask for a recap'}
           </button>
           {asking === 'asked' && <span className="sheet-note" data-testid="recap-asked">Asked. It appears here when the agent hands it in.</span>}
-          {asking === 'failed' && <span className="dialog-error">{why || 'It could not be asked: the terminal is not running.'}</span>}
+          {asking === 'failed' && (
+            <span className="dialog-error" data-testid="recap-not-asked">
+              {why || (untold ? untoldWords(untold) : 'It could not be asked: the terminal is not running.')}
+            </span>
+          )}
         </div>
       )}
     </section>

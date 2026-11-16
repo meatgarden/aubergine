@@ -53,6 +53,8 @@ const runtime = {
   list: async () => [],
   has: async () => true,
   kill: async () => {},
+  // The program an agent's record names is in front.
+  foreground: async () => 'the-agent',
   typeLine: async (id: string, line: string) => {
     typed.push([id, line]);
   },
@@ -145,7 +147,7 @@ function fakeSession(name: string, more: Partial<Session> = {}): Session {
     lastOutputAt: null,
     tags: [],
     parkedFrom: null, peopleOnly: false, typedBy: null,
-    recap: null, takesMessages: false, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null },
+    recap: null, takesMessages: false, untold: null, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null },
     ...more,
   };
   hub.emit({ type: 'session.created', session, canvasId: hub.state.canvases[0]!.id, node: { id: newId(), sessionId: session.id, x: 0, y: 0, width: 640, height: 400, color: 'none' } });
@@ -620,9 +622,9 @@ describe('what a session token reaches', () => {
 describe('telling the agent', () => {
   it('types the kickoff line for the owner where an agent is running, and nowhere else', async () => {
     const workflow = await makeWorkflow();
-    const withAgent = fakeSession('agent', { agent: { kind: 'claude-code', conversationId: null }, status: { ...NO_STATUS, state: 'busy' } });
+    const withAgent = fakeSession('agent', { agent: { kind: 'claude-code', conversationId: null, program: 'the-agent' }, status: { ...NO_STATUS, state: 'busy' } });
     const plainShell = fakeSession('shell');
-    const idleAgent = fakeSession('idle', { agent: { kind: 'claude-code', conversationId: null }, status: { ...NO_STATUS, state: 'idle' } });
+    const idleAgent = fakeSession('idle', { agent: { kind: 'claude-code', conversationId: null, program: 'the-agent' }, status: { ...NO_STATUS, state: 'idle' } });
 
     const started = await startRun(workflow.id, withAgent.id);
     expect(started.kickoffTyped).toBe(true);
@@ -641,7 +643,7 @@ describe('telling the agent', () => {
 
   it('never types for an API token: it is given the line instead', async () => {
     const workflow = await makeWorkflow();
-    const withAgent = fakeSession('agent', { agent: { kind: 'claude-code', conversationId: null }, status: { ...NO_STATUS, state: 'busy' } });
+    const withAgent = fakeSession('agent', { agent: { kind: 'claude-code', conversationId: null, program: 'the-agent' }, status: { ...NO_STATUS, state: 'busy' } });
     const runner = await makeToken('runner', ['runs:write', 'sessions:write', 'read']);
     const started = await call(runner, 'POST', `/v1/sessions/${withAgent.id}/runs`, { workflowId: workflow.id, inputs: { task: 'x' }, kickoff: true });
     expect(started.status).toBe(201);
@@ -683,7 +685,7 @@ describe('telling the agent', () => {
     port = (app.server.address() as AddressInfo).port;
     origin = `http://127.0.0.1:${port}`;
 
-    const session = fakeSession('agent', { agent: { kind: 'claude-code', conversationId } });
+    const session = fakeSession('agent', { agent: { kind: 'claude-code', conversationId, program: 'the-agent' } });
     expect((await asOwner('POST', paths.resumeAgent(session.id))).status).toBe(200);
     expect(launched.at(-1)).toEqual(['--resume', conversationId]);
 

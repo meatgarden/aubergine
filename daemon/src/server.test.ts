@@ -1115,7 +1115,7 @@ describe('agent API', () => {
 
     const reported = await agent('PUT', paths.agent.report(session.id), mine, { kind: 'claude-code', conversationId: id });
     expect(reported.statusCode).toBe(200);
-    expect(hub.state.sessions[0]?.agent).toEqual({ kind: 'claude-code', conversationId: id });
+    expect(hub.state.sessions[0]?.agent).toEqual({ kind: 'claude-code', conversationId: id, program: null });
 
     // Not something another session may set, and not with an ID that is unsafe to type.
     const other = await createSession();
@@ -1135,7 +1135,7 @@ describe('agent API', () => {
     // Still known after a restart of the daemon.
     await stop();
     await start();
-    expect(hub.state.sessions[0]?.agent).toEqual({ kind: 'claude-code', conversationId: id });
+    expect(hub.state.sessions[0]?.agent).toEqual({ kind: 'claude-code', conversationId: id, program: null });
   });
 
   it("keeps prompts out of the log when prompt logging is turned off", async () => {

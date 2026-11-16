@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import {
   AgentInfo,
+  Untold,
   Attention,
   Canvas,
   CanvasName,
@@ -74,6 +75,8 @@ export const ChangeEvent = z.discriminatedUnion('type', [
   /** "People only" was switched on or off. */
   z.object({ type: z.literal('session.protected'), sessionId: Id, peopleOnly: z.boolean() }),
   /** The owner changed whether the session takes messages from other terminals while it is "people only". */
+  /** A fixed sentence could not be typed for the agent there, or that is over. */
+  z.object({ type: z.literal('session.untold'), sessionId: Id, untold: Untold.nullable() }),
   z.object({ type: z.literal('session.takesMessages'), sessionId: Id, takesMessages: z.boolean() }),
   /** A token typed into the session through the API. Sent at most once every few seconds per session; never what was typed. */
   z.object({ type: z.literal('session.typed'), sessionId: Id, by: TypedBy }),
@@ -213,6 +216,8 @@ export function applyEvent(state: AppState, event: ChangeEvent): AppState {
       });
     case 'session.tagged':
       return patchSession(state, event.sessionId, { tags: event.tags });
+    case 'session.untold':
+      return patchSession(state, event.sessionId, { untold: event.untold });
     case 'session.takesMessages':
       return patchSession(state, event.sessionId, { takesMessages: event.takesMessages });
     case 'session.protected':

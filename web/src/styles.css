@@ -2861,3 +2861,13 @@ tr[data-status='expired'] strong {
   font-size: 11px;
   padding: 0 4px;
 }
+
+/* A fixed sentence that could not be typed for the agent */
+.badge-untold {
+  border: 1px dashed var(--danger);
+  border-radius: 9px;
+  font-size: 11px;
+  padding: 0 6px;
+  margin-right: 6px;
+  white-space: nowrap;
+}

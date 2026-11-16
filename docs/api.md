@@ -539,6 +539,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
     agent: {
       kind: "claude-code";
       conversationId: string | null;
+      program: string | null;
     } | null;
     lastInputAt: string | null;
     lastOutputAt: string | null;
@@ -563,6 +564,11 @@ A list: it answers a page at a time, see `limit` and `cursor`.
       at: string;
     } | null;
     takesMessages: boolean;
+    untold: {
+      what: "kickoff" | "brief" | "recap" | "inbox";
+      why: "no-report" | "at-shell" | "other-program" | "unknown";
+      at: string;
+    } | null;
     messages: {
       unread: number;
       from: string | null;
@@ -641,6 +647,7 @@ An API token needs the scope `sessions:write`. Sending `command` needs `terminal
     agent: {
       kind: "claude-code";
       conversationId: string | null;
+      program: string | null;
     } | null;
     lastInputAt: string | null;
     lastOutputAt: string | null;
@@ -665,6 +672,11 @@ An API token needs the scope `sessions:write`. Sending `command` needs `terminal
       at: string;
     } | null;
     takesMessages: boolean;
+    untold: {
+      what: "kickoff" | "brief" | "recap" | "inbox";
+      why: "no-report" | "at-shell" | "other-program" | "unknown";
+      at: string;
+    } | null;
     messages: {
       unread: number;
       from: string | null;
@@ -746,6 +758,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
     agent: {
       kind: "claude-code";
       conversationId: string | null;
+      program: string | null;
     } | null;
     lastInputAt: string | null;
     lastOutputAt: string | null;
@@ -770,6 +783,11 @@ A list: it answers a page at a time, see `limit` and `cursor`.
       at: string;
     } | null;
     takesMessages: boolean;
+    untold: {
+      what: "kickoff" | "brief" | "recap" | "inbox";
+      why: "no-report" | "at-shell" | "other-program" | "unknown";
+      at: string;
+    } | null;
     messages: {
       unread: number;
       from: string | null;
@@ -834,6 +852,7 @@ An API token needs the scope `read`.
   agent: {
     kind: "claude-code";
     conversationId: string | null;
+    program: string | null;
   } | null;
   lastInputAt: string | null;
   lastOutputAt: string | null;
@@ -858,6 +877,11 @@ An API token needs the scope `read`.
     at: string;
   } | null;
   takesMessages: boolean;
+  untold: {
+    what: "kickoff" | "brief" | "recap" | "inbox";
+    why: "no-report" | "at-shell" | "other-program" | "unknown";
+    at: string;
+  } | null;
   messages: {
     unread: number;
     from: string | null;
@@ -930,6 +954,7 @@ An API token needs the scope `sessions:write`. Sending `note` needs `notes:write
   agent: {
     kind: "claude-code";
     conversationId: string | null;
+    program: string | null;
   } | null;
   lastInputAt: string | null;
   lastOutputAt: string | null;
@@ -954,6 +979,11 @@ An API token needs the scope `sessions:write`. Sending `note` needs `notes:write
     at: string;
   } | null;
   takesMessages: boolean;
+  untold: {
+    what: "kickoff" | "brief" | "recap" | "inbox";
+    why: "no-report" | "at-shell" | "other-program" | "unknown";
+    at: string;
+  } | null;
   messages: {
     unread: number;
     from: string | null;
@@ -1048,6 +1078,7 @@ An API token needs the scope `sessions:write`.
     agent: {
       kind: "claude-code";
       conversationId: string | null;
+      program: string | null;
     } | null;
     lastInputAt: string | null;
     lastOutputAt: string | null;
@@ -1072,6 +1103,11 @@ An API token needs the scope `sessions:write`.
       at: string;
     } | null;
     takesMessages: boolean;
+    untold: {
+      what: "kickoff" | "brief" | "recap" | "inbox";
+      why: "no-report" | "at-shell" | "other-program" | "unknown";
+      at: string;
+    } | null;
     messages: {
       unread: number;
       from: string | null;
@@ -1148,6 +1184,7 @@ An API token needs the scope `sessions:write`.
   agent: {
     kind: "claude-code";
     conversationId: string | null;
+    program: string | null;
   } | null;
   lastInputAt: string | null;
   lastOutputAt: string | null;
@@ -1172,6 +1209,11 @@ An API token needs the scope `sessions:write`.
     at: string;
   } | null;
   takesMessages: boolean;
+  untold: {
+    what: "kickoff" | "brief" | "recap" | "inbox";
+    why: "no-report" | "at-shell" | "other-program" | "unknown";
+    at: string;
+  } | null;
   messages: {
     unread: number;
     from: string | null;
@@ -1243,6 +1285,7 @@ An API token needs the scope `sessions:write`.
     agent: {
       kind: "claude-code";
       conversationId: string | null;
+      program: string | null;
     } | null;
     lastInputAt: string | null;
     lastOutputAt: string | null;
@@ -1267,6 +1310,11 @@ An API token needs the scope `sessions:write`.
       at: string;
     } | null;
     takesMessages: boolean;
+    untold: {
+      what: "kickoff" | "brief" | "recap" | "inbox";
+      why: "no-report" | "at-shell" | "other-program" | "unknown";
+      at: string;
+    } | null;
     messages: {
       unread: number;
       from: string | null;
@@ -4704,6 +4752,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
   agent: {
     kind: "claude-code";
     conversationId: string | null;
+    program: string | null;
   } | null;
   lastInputAt: string | null;
   lastOutputAt: string | null;
@@ -4728,6 +4777,11 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
     at: string;
   } | null;
   takesMessages: boolean;
+  untold: {
+    what: "kickoff" | "brief" | "recap" | "inbox";
+    why: "no-report" | "at-shell" | "other-program" | "unknown";
+    at: string;
+  } | null;
   messages: {
     unread: number;
     from: string | null;
@@ -4795,6 +4849,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
   agent: {
     kind: "claude-code";
     conversationId: string | null;
+    program: string | null;
   } | null;
   lastInputAt: string | null;
   lastOutputAt: string | null;
@@ -4819,6 +4874,11 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
     at: string;
   } | null;
   takesMessages: boolean;
+  untold: {
+    what: "kickoff" | "brief" | "recap" | "inbox";
+    why: "no-report" | "at-shell" | "other-program" | "unknown";
+    at: string;
+  } | null;
   messages: {
     unread: number;
     from: string | null;
@@ -5938,6 +5998,7 @@ For a session's own token, about that session. No API token may call this.
 {
   kind: "claude-code";
   conversationId: string | null;
+  program: string | null;
 }
 ```
 

@@ -1441,10 +1441,30 @@ test('a recap of a terminal: what is known, what its agent wrote, and what chang
   await expect(recap.getByTestId('recap-lines')).toContainText("Found the cause: the cookie is set twice.");
   await expect(recap.getByTestId('recap-written')).toHaveCount(0);
 
-  // Asking types one fixed sentence into the terminal, and nothing else.
+  // With a shell in front, the sentence is not typed (it would be run as a command), and the terminal says why.
+  await recap.getByTestId('recap-ask').click();
+  await expect(recap.getByTestId('recap-not-asked')).toContainText('Nothing was typed');
+  await expect(page.getByTestId('badge-untold')).toHaveAttribute('title', /The agent was not told that you asked for a recap: no agent has reported from this terminal yet/);
+  await expect(page.locator('.xterm-rows')).not.toContainText('Your owner asked for a recap');
+
+  // A program that is not a shell is in front, and reports as the agent, as an agent's hooks do when it starts.
+  // What had waited to be said is then typed: the one fixed sentence, and nothing else.
+  await page.getByTestId('node-body').click();
+  await page.keyboard.type('cat');
+  await page.keyboard.press('Enter');
+  await expect
+    .poll(async () => {
+      await page.request.put(`/v1/sessions/${sessionId}/agent`, { headers: { origin }, data: { kind: 'claude-code', conversationId: null } });
+      return page.locator('.xterm-rows').textContent();
+    }, { timeout: 20_000 })
+    .toContain('Your owner asked for a recap of this session.');
+  await expect(page.getByTestId('badge-untold')).toHaveCount(0);
+  // Asked again while it is in front: typed at once.
   await recap.getByTestId('recap-ask').click();
   await expect(recap.getByTestId('recap-asked')).toBeVisible();
-  await expect(page.locator('.xterm-rows')).toContainText('Your owner asked for a recap of this session.');
+  // The stand-in ends, and the shell has the keyboard again.
+  await page.getByTestId('node-body').click();
+  await page.keyboard.press('Control+d');
 
   // The agent (stood in for by typing its command) hands one in. It shows as the agent's words, with when.
   await page.getByTestId('node-body').click();

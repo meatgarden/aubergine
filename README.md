@@ -882,6 +882,14 @@ An agent that Aubergine starts reports "waiting for you" and "finished" by itsel
 
 Typed in a terminal, the other `aubergine` commands act as you, whoever types them, an agent included; they are recorded as coming from that terminal. The guide tells an agent to leave them alone unless you asked. That is advice to the agent, not a lock.
 
+## When Aubergine types into an agent's terminal
+
+Aubergine itself types four things, and only these: one fixed sentence each to say that a workflow was started, that the agent was asked to write something, that you asked for a recap, and that a message waits. Each names one command for the agent to run; nothing of yours and nothing anyone else wrote is in them.
+
+A sentence is typed only where the agent is seen to have the keyboard. Two things must hold: an agent has reported from that terminal (an agent Aubergine starts does so when its conversation begins), and the program in front of the terminal now is not a shell and is the same program that was in front when the agent last reported. If either cannot be established, nothing is typed. The terminal then shows **not told**, with which sentence and why, and the sentence is typed when the agent next reports from in front, within half an hour.
+
+What this catches: the agent has exited and its shell is back, where the sentence would be run as a command; an editor, a pager or another program is in front; no agent was ever seen there. What it cannot catch: a different program of the same name as the agent (a second `node` program started by hand after the agent exited looks the same to the terminal), and an agent that is in front but showing a question of its own. Messages are held back for the second case as well; the other three sentences are not.
+
 ## Messages between terminals
 
 An agent in one terminal sometimes needs to tell the agent in another something: "the schema changed", "I am done with the branch you wait for". A **message** is the way to do that without anyone typing into anyone's terminal. It has a named sender and one receiver, it is kept until the receiver reads it, and you can see every one of them.
@@ -894,7 +902,7 @@ An agent in one terminal sometimes needs to tell the agent in another something:
 aubergine tell "api server" "Rebase on main before you go on."
 ```
 
-Nothing is typed into the terminal. Its tile and its row show "✉ 1 from you". If an agent is running there and is idle, Aubergine types one fixed sentence into it: "There is a message for this session in Aubergine. Run `aubergine inbox` to read it." That sentence is the same for every message; nothing of yours and no name is in it. It is typed at most once for a batch of unread messages, not again within two minutes, never into a plain shell (where it would be run as a command), never while the agent is working or is waiting on a question of its own, and not on top of something you typed a moment ago.
+Nothing is typed into the terminal. Its tile and its row show "✉ 1 from you". If an agent is running there and is idle, Aubergine types one fixed sentence into it: "There is a message for this session in Aubergine. Run `aubergine inbox` to read it." That sentence is the same for every message; nothing of yours and no name is in it. It is typed at most once for a batch of unread messages, not again within two minutes, never into a plain shell (where it would be run as a command), only while the agent is seen to be the program in front of the terminal, never while the agent is working or is waiting on a question of its own, and not on top of something you typed a moment ago.
 
 **The agent reads and answers** with `aubergine inbox` (which prints each unread message between two marker lines, with who sent it, and marks it read) and `aubergine reply <id> "<answer>"`. An agent can always answer a message from you. Its answer shows on the terminal as "✉ 1 for you" and puts the terminal in the "waiting" queue.
 

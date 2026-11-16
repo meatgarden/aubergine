@@ -39,7 +39,7 @@ function session(name: string, extra: Partial<Session> = {}): Session {
     noteLog: [],
     agent: null,
     parkedFrom: null, peopleOnly: false, typedBy: null,
-    recap: null, takesMessages: false, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null },
+    recap: null, takesMessages: false, untold: null, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null },
     lastInputAt: null,
     lastOutputAt: null,
     tags: [],
@@ -53,7 +53,7 @@ const node = (s: Session, x: number, y: number): LayoutNode => ({ id: newId(), s
 function sample() {
   const base = createInitialState(new Date(at));
   const api = session('api', { status: { ...NO_STATUS, state: 'busy' }, tags: ['backend'], lastOutputAt: '2026-01-01T00:05:00.000Z' });
-  const db = session('db', { attention: { state: 'waiting', message: 'ok?', at }, agent: { kind: 'claude-code', conversationId: null }, tags: ['Backend', 'data'] });
+  const db = session('db', { attention: { state: 'waiting', message: 'ok?', at }, agent: { kind: 'claude-code', conversationId: null, program: null }, tags: ['Backend', 'data'] });
   const web = session('web', { status: { ...NO_STATUS, unread: true }, note: 'fix the header', lastInputAt: '2026-01-01T00:09:00.000Z' });
   const builder = session('builder', { status: { ...NO_STATUS, state: 'idle', lastExit: 2 }, lastOutputAt: '2026-01-01T00:07:00.000Z' });
   const old = session('old', { state: 'parked' });

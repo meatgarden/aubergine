@@ -82,7 +82,7 @@ export class Inventories {
 export function whatAubergineAdded(hasSettings: boolean, tools: 'own' | 'token' | null): string[] {
   const lines = [
     hasSettings
-      ? 'When Aubergine starts this agent ("+ Claude Code", "Resume agent", aubergine here --claude), it passes its own settings file: three hooks that tell the canvas when the agent starts working, needs you, or has finished. They are listed below as from Aubergine.'
+      ? 'When Aubergine starts this agent ("+ Claude Code", "Resume agent", aubergine here --claude), it passes its own settings file: four hooks that tell the canvas when the agent starts working, needs you, or has finished. They are listed below as from Aubergine.'
       : 'Aubergine has not generated its hooks settings yet: no agent has been started by it on this server.',
     tools === 'token'
       ? 'Aubergine tools: you chose "More…" for this session. An API token was made for it, and the agent was pointed at the MCP server "aubergine" with that token.'

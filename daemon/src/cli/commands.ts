@@ -182,7 +182,7 @@ export const USAGE = `Usage: aubergine <command>
   mcp [--url <address>]      An MCP server on standard input and output, for an agent or another MCP client: the
                              API as tools. Uses AUBERGINE_API_TOKEN, else the session's own token; offers only
                              the tools that credential may use
-  hook <event>               For agent hooks: reads the hook's JSON on stdin (prompt, notification, stop)
+  hook <event>               For agent hooks: reads the hook's JSON on stdin (start, prompt, notification, stop)
   hooks print                Print the Claude Code hook settings, to add to your own config by hand
   shell-hook print           Print a zsh snippet that makes new terminal tabs start on the canvas
   service install            Start the Aubergine server at login
