@@ -192,8 +192,12 @@ describe.runIf(ZSH)('terminal access, against real terminals', () => {
       await call(reader, 'GET', '/v1/search?q=ready');
       expect(await sizes()).toBe(before);
       expect((await call(reader, 'GET', `/v1/sessions/${several[0]!.id}/screen`)).body).toMatchObject({ columns: 97, rows: 31 });
-      // Sixty reads and a search later, the viewer was sent nothing: nothing was redrawn.
-      expect(JSON.stringify(seen)).toBe('""');
+      // Sixty reads and a search later, nothing was redrawn for the viewer. The terminal may, at a moment of its own
+      // choosing, hide the cursor, set its blinking and show it again: that draws nothing and moves nothing, and is
+      // not counted. Any other byte is.
+      const ESC = String.fromCharCode(27);
+      const drawn = seen.split(`${ESC}[?25l`).join('').split(`${ESC}[?25h`).join('').split(`${ESC}[?12l`).join('').split(`${ESC}[?12h`).join('');
+      expect(JSON.stringify(drawn)).toBe('""');
       viewer.close();
     });
   });
