@@ -1,5 +1,5 @@
 import { createHmac, timingSafeEqual } from 'node:crypto';
-import { Id, type Scope } from '@aubergine/shared';
+import { Id, NEVER_BY_TOKEN, SESSION_ACTIONS, scopeFor, type Action, type Scope } from '@aubergine/shared';
 
 /** Who is making a request. Exactly one of these, decided once per request. */
 export type Principal =
@@ -10,36 +10,7 @@ export type Principal =
   /** A program holding an API token the owner created, with the scopes the owner gave it. */
   | { kind: 'token'; tokenId: string; name: string; scopes: readonly Scope[] };
 
-/** What a session may do, to itself only. */
-const SESSION_ACTIONS = ['attention.set', 'note.append', 'agent.report'] as const;
-
-/** The public API. For a token, each needs the scope beside it. */
-const SCOPE_OF = {
-  'canvases.read': 'read',
-  'sessions.read': 'read',
-  'events.read': 'read',
-  'canvases.write': 'canvases:write',
-  'layout.write': 'canvases:write',
-  'canvases.show': 'canvases:write',
-  'sessions.write': 'sessions:write',
-  'sessions.show': 'sessions:write',
-  'notes.write': 'notes:write',
-  // Adding to a note log: a session may for itself; a token with `notes:write` may for any session.
-  'note.append': 'notes:write',
-} as const satisfies Record<string, Scope>;
-
-/**
- * What no token may ever do, whatever its scopes: these stay with the owner
- * in the signed-in browser. Making or revoking credentials, reading what
- * tokens did, changing settings, and anything that reaches processes outside
- * Aubergine.
- */
-export const NEVER_BY_TOKEN = ['tokens.manage', 'activity.read', 'settings.write', 'processes.signal', 'outside.read', 'outside.move'] as const;
-
-export type Action = (typeof SESSION_ACTIONS)[number] | keyof typeof SCOPE_OF | (typeof NEVER_BY_TOKEN)[number];
-
-/** Every action there is, for tests that walk the whole table. */
-export const ACTIONS: readonly Action[] = [...new Set<Action>([...SESSION_ACTIONS, ...(Object.keys(SCOPE_OF) as (keyof typeof SCOPE_OF)[]), ...NEVER_BY_TOKEN])];
+export { ACTIONS, NEVER_BY_TOKEN, type Action } from '@aubergine/shared';
 
 /** What the action is about. Either may be absent when the action is not about one. */
 export interface Resource {
@@ -65,8 +36,8 @@ export function authorize(principal: Principal, action: Action, resource: Resour
     return (SESSION_ACTIONS as readonly string[]).includes(action) && resource.sessionId !== undefined && principal.sessionId === resource.sessionId;
   }
   if ((NEVER_BY_TOKEN as readonly string[]).includes(action)) return false;
-  const scope = (SCOPE_OF as Partial<Record<Action, Scope>>)[action];
-  return scope !== undefined && principal.scopes.includes(scope);
+  const scope = scopeFor(action);
+  return scope !== null && principal.scopes.includes(scope);
 }
 
 const PREFIX = 'aub1';

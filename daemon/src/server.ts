@@ -16,11 +16,9 @@ import {
   OutsideAddRequest,
   OutsideMoveRequest,
   PROTOCOL_VERSION,
-  ReportAgentRequest,
   RestoreSessionRequest,
   RevealRequest,
   SearchQuery,
-  SetAttentionRequest,
   UpdateSessionRequest,
   TerminalClientMessage,
   TerminalSize,
@@ -74,6 +72,8 @@ export interface ServerOptions {
   activity?: ActivityLog;
   /** The version this server reports about itself. */
   version?: string;
+  /** Check every /v1 answer against the shape its route declares. On by default under the test runner. */
+  validateResponses?: boolean;
 }
 
 /** A route of the public API, as the tests walk them. */
@@ -161,7 +161,6 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     }
     return principal;
   };
-  const allow = (request: FastifyRequest, action: Action, sessionId: string): Principal => allowOn(request, action, { sessionId });
 
   /** What each request asked `authorize` for, and how a token call ended when that was decided before any route ran. */
   const asked = new WeakMap<FastifyRequest, { action: Action; resource: Resource }>();
@@ -429,35 +428,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     return { entry: sessions.appendNote(idParam(request, 'sessionId'), { author: 'user', text: body.text }) };
   });
 
-  /* ---------- Agent API: bearer token, checked by authorize() ---------- */
-
-  app.put(paths.agent.attention(':sessionId'), async (request) => {
-    const sessionId = idParam(request, 'sessionId');
-    allow(request, 'attention.set', sessionId);
-    const body = parse(SetAttentionRequest, request.body);
-    return sessions.setAttention(sessionId, body.state, body.message);
-  });
-
-  app.post(paths.agent.notes(':sessionId'), async (request, reply): Promise<AppendNoteResponse> => {
-    const sessionId = idParam(request, 'sessionId');
-    const principal = allow(request, 'note.append', sessionId);
-    const body = parse(AppendNoteRequest, request.body);
-    reply.code(201);
-    return {
-      entry: sessions.appendNote(sessionId, {
-        // Anything that is not the owner in the browser is a program.
-        author: principal.kind === 'user' ? 'user' : 'agent',
-        kind: body.kind,
-        text: body.text,
-      }),
-    };
-  });
-
-  app.put(paths.agent.report(':sessionId'), async (request) => {
-    const sessionId = idParam(request, 'sessionId');
-    allow(request, 'agent.report', sessionId);
-    return sessions.reportAgent(sessionId, parse(ReportAgentRequest, request.body));
-  });
+  /* ---------- The public API, under /v1: declared in shared/src/routes.ts, handled in v1.ts ---------- */
 
   registerPublicRoutes(app, {
     hub,
@@ -467,6 +438,8 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     viewers,
     limiter,
     version: options.version ?? 'unknown',
+    // In tests every answer is held against what its route declares.
+    validateResponses: options.validateResponses ?? process.env.VITEST !== undefined,
     principalOf: (request) => principals.get(request) ?? null,
     recordNow: (request) => record(request, 200),
     allow: allowOn,

@@ -42,7 +42,8 @@ const Scopes = z
   .array(Scope)
   .min(1)
   .max(GRANTABLE_SCOPES.length)
-  .transform((scopes) => GRANTABLE_SCOPES.filter((scope) => scopes.includes(scope)));
+  // Always in the same order, smallest first. `overwrite` keeps the kind of value, so it can still be described.
+  .overwrite((scopes) => GRANTABLE_SCOPES.filter((scope) => scopes.includes(scope)));
 
 /** A token as it is stored. `hash` is the SHA-256 of the secret; the secret itself is never stored. */
 export const ApiToken = z.object({
@@ -131,6 +132,8 @@ export const Capabilities = z.object({
   name: z.literal('aubergine'),
   version: z.string(),
   api: z.literal('v1'),
+  /** Where the description of the API is served, as an OpenAPI document. */
+  description: z.string(),
   features: z.array(z.string()),
   scopes: z.array(z.object({ name: KnownScope, grantable: z.boolean(), meaning: z.string() })),
   /** Who is asking. A token learns its own name and scopes here and nowhere else. */
@@ -143,4 +146,4 @@ export const Capabilities = z.object({
 export type Capabilities = z.infer<typeof Capabilities>;
 
 /** The features a client may look for in `Capabilities.features`. */
-export const FEATURES = ['canvases', 'sessions', 'layout', 'notes', 'tags', 'events', 'show', 'tokens', 'activity'] as const;
+export const FEATURES = ['canvases', 'sessions', 'layout', 'notes', 'tags', 'events', 'show', 'tokens', 'activity', 'openapi'] as const;

@@ -7,3 +7,6 @@ export * from './placement';
 export * from './settings';
 export * from './chords';
 export * from './shortcuts';
+export * from './access';
+export * from './routes';
+export * from './openapi';

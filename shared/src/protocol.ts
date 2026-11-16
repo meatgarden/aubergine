@@ -392,6 +392,8 @@ export const publicPaths = {
   canvasFrame: (canvasId: string, frameId: string) => `/v1/canvases/${canvasId}/frames/${frameId}`,
   /** What this server can do, and who is asking. Needs no scope. */
   root: '/v1',
+  /** The description of the API, as an OpenAPI document. Needs no scope. */
+  description: '/v1/openapi.json',
   sessions: '/v1/sessions',
   session: (sessionId: string) => `/v1/sessions/${sessionId}`,
   parkSession: (sessionId: string) => `/v1/sessions/${sessionId}/park`,
