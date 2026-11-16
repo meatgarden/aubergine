@@ -487,15 +487,31 @@ export class Sessions {
   }
 
   /** Starts the session's agent again, in the conversation it was last in. */
-  async resumeAgent(sessionId: string): Promise<Session> {
+  async resumeAgent(sessionId: string, more: readonly string[] = []): Promise<Session> {
     const session = this.find(sessionId);
     if (session.state === 'exited') throw new ConflictError('This shell has ended; restart it first');
     if (!session.agent?.conversationId) throw new ConflictError('No agent conversation is known for this session');
     // The ID was validated when it was recorded, and is quoted again when the line is built.
-    const line = await this.options.agentLaunchLine?.(session.agent.kind, ['--resume', session.agent.conversationId]);
+    const line = await this.options.agentLaunchLine?.(session.agent.kind, ['--resume', session.agent.conversationId, ...more]);
     if (!line) throw new ConflictError('Starting agents is not set up');
     await this.runtime.typeLine(sessionId, line);
     return this.find(sessionId);
+  }
+
+  /** One session, or a refusal that says there is none. */
+  get(sessionId: string): Session {
+    return this.find(sessionId);
+  }
+
+  /**
+   * Types one line into a session's terminal, as if the owner had. Only for
+   * text the server itself made up; nothing a token or a session sent.
+   */
+  async tell(sessionId: string, line: string): Promise<boolean> {
+    const session = this.find(sessionId);
+    if (session.state === 'exited' || !this.isRunning(sessionId)) return false;
+    await this.runtime.typeLine(sessionId, line);
+    return true;
   }
 
   /** Searches the terminal history of every running session, parked ones included. */

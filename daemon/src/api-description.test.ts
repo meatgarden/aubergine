@@ -202,7 +202,7 @@ describe('the description of the API', () => {
 
     // Creates that can be retried safely say so.
     const retriable = operations.filter((o) => o.operation.parameters.some((p) => p.in === 'header' && p.name === IDEMPOTENCY_HEADER));
-    expect(retriable.map((o) => o.operation.operationId).sort()).toEqual(['createCanvas', 'createFrame', 'startSession']);
+    expect(retriable.map((o) => o.operation.operationId).sort()).toEqual(['copyWorkflow', 'createCanvas', 'createFrame', 'createWorkflow', 'startRun', 'startSession', 'startSessionRun', 'useWorkflowTemplate']);
 
     // The ways to sign in.
     expect(document.components.securitySchemes.apiToken).toMatchObject({ type: 'http', scheme: 'bearer' });

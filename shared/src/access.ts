@@ -7,7 +7,7 @@ import type { Scope } from './tokens';
  */
 
 /** What a session may do, to itself only. */
-export const SESSION_ACTIONS = ['attention.set', 'note.append', 'agent.report'] as const;
+export const SESSION_ACTIONS = ['attention.set', 'note.append', 'agent.report', 'run.own.read', 'run.own.report'] as const;
 
 /** For a token, each of these needs the scope beside it. */
 export const SCOPE_OF = {
@@ -22,6 +22,13 @@ export const SCOPE_OF = {
   'notes.write': 'notes:write',
   // Adding to a note log: a session may for itself; a token with `notes:write` may for any session.
   'note.append': 'notes:write',
+  'workflows.read': 'read',
+  'runs.read': 'read',
+  'workflows.write': 'workflows:write',
+  'runs.write': 'runs:write',
+  // The run a session is on: the session may read it and report on it, for itself only. A token needs the scope, and may for any session.
+  'run.own.read': 'read',
+  'run.own.report': 'runs:write',
 } as const satisfies Record<string, Scope>;
 
 /**

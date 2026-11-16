@@ -47,6 +47,17 @@ export const Settings = z.object({
       activityLogMaxBytes: z.number().int().min(4096).max(1024 * 1024 * 1024).default(5 * 1024 * 1024),
     })
     .prefault({}),
+  /** Limits on workflows, and when a run counts as quiet. */
+  workflows: z
+    .object({
+      /** How many elements one workflow may have. */
+      maxElements: z.number().int().min(1).max(200).default(50),
+      /** How long the text of one element (or the standing text) may be, in characters. */
+      maxElementChars: z.number().int().min(100).max(100_000).default(20_000),
+      /** A running run is marked quiet when its session has printed this many seconds after the last report. */
+      quietAfterSeconds: z.number().int().min(10).max(86_400).default(300),
+    })
+    .prefault({}),
   /**
    * Keys: command name to a chord (`"Ctrl+Meta+J"`), a list of chords, or
    * `null` for no key. Entries that are wrong are reported and skipped.

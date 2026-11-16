@@ -24,6 +24,7 @@ import {
 } from './entities';
 import { ApiToken } from './tokens';
 import { Id } from './ids';
+import { Run, Workflow } from './workflows';
 
 /**
  * Every change to canvas state is one of these events. The daemon applies an
@@ -87,6 +88,14 @@ export const ChangeEvent = z.discriminatedUnion('type', [
   z.object({ type: z.literal('token.revoked'), tokenId: Id, at: Timestamp }),
   /** Recorded at most about once a minute per token. */
   z.object({ type: z.literal('token.used'), tokenId: Id, at: Timestamp }),
+  /** A workflow was created, or saved as a new version. */
+  z.object({ type: z.literal('workflow.changed'), workflow: Workflow }),
+  z.object({ type: z.literal('workflow.removed'), workflowId: Id }),
+  z.object({ type: z.literal('run.started'), run: Run }),
+  /** A report moved a run. One event per report, carrying that one run. */
+  z.object({ type: z.literal('run.moved'), run: Run }),
+  /** A run finished or was stopped: it leaves the state for the archive. */
+  z.object({ type: z.literal('run.finished'), run: Run }),
 ]);
 export type ChangeEvent = z.infer<typeof ChangeEvent>;
 
@@ -225,6 +234,16 @@ export function applyEvent(state: AppState, event: ChangeEvent): AppState {
       return { ...state, tokens: state.tokens.map((t) => (t.id === event.tokenId && t.revokedAt === null ? { ...t, revokedAt: event.at } : t)) };
     case 'token.used':
       return { ...state, tokens: state.tokens.map((t) => (t.id === event.tokenId ? { ...t, lastUsedAt: event.at } : t)) };
+    case 'workflow.changed':
+      return { ...state, workflows: [...state.workflows.filter((w) => w.id !== event.workflow.id), event.workflow] };
+    case 'workflow.removed':
+      return { ...state, workflows: state.workflows.filter((w) => w.id !== event.workflowId) };
+    case 'run.started':
+      return { ...state, runs: [...state.runs.filter((r) => r.id !== event.run.id), event.run] };
+    case 'run.moved':
+      return { ...state, runs: state.runs.map((r) => (r.id === event.run.id ? event.run : r)) };
+    case 'run.finished':
+      return { ...state, runs: state.runs.filter((r) => r.id !== event.run.id) };
     case 'canvas.removed': {
       const canvas = state.canvases.find((c) => c.id === event.canvasId);
       // The last canvas stays: there is always one to look at.

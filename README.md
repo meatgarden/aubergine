@@ -679,8 +679,10 @@ curl -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/jso
 | `canvases:write` | create, rename, reorder and close canvases; move and resize nodes; frames; show a canvas in the browser |
 | `sessions:write` | start, rename, tag, move, park, restore and end sessions; show a session in the browser. **A session can be started with a command, so a token with this scope can run any command on this computer as you** |
 | `notes:write` | change a session's pinned note and add entries to its note log |
+| `workflows:write` | create, change, copy and remove workflows |
+| `runs:write` | start runs of workflows on sessions and report on them (done, blocked, go to, pause, resume, stop). It does not type into a terminal |
 
-The names `terminal:read`, `terminal:input`, `workflows:write` and `runs:write` are reserved for what comes later; a token cannot be given them yet. A token cannot read what a terminal shows or type into it.
+The names `terminal:read` and `terminal:input` are reserved for what comes later; a token cannot be given them yet. A token cannot read what a terminal shows or type into it.
 
 **What no token can do, whatever its scopes:** create, list or revoke tokens; read the activity log; change settings; see, bring in or stop terminals outside Aubergine. Those stay with you, in the signed-in browser and the `aubergine` command.
 

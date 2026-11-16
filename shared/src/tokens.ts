@@ -8,13 +8,13 @@ import { Id } from './ids';
  */
 
 /** What a token can be allowed to do. Smallest first. */
-export const GRANTABLE_SCOPES = ['read', 'canvases:write', 'sessions:write', 'notes:write'] as const;
+export const GRANTABLE_SCOPES = ['read', 'canvases:write', 'sessions:write', 'notes:write', 'workflows:write', 'runs:write'] as const;
 
 /**
  * Names kept for what comes later, so that there is one list of scopes from
  * the start. A token cannot be given these yet.
  */
-export const RESERVED_SCOPES = ['terminal:read', 'terminal:input', 'workflows:write', 'runs:write'] as const;
+export const RESERVED_SCOPES = ['terminal:read', 'terminal:input'] as const;
 
 export const Scope = z.enum(GRANTABLE_SCOPES);
 export type Scope = z.infer<typeof Scope>;
@@ -29,8 +29,8 @@ export const SCOPE_MEANING: Record<KnownScope, string> = {
   'notes:write': 'Change the pinned note of a session and add entries to its note log.',
   'terminal:read': 'Read what a terminal shows. Not available yet.',
   'terminal:input': 'Type into a terminal. Not available yet.',
-  'workflows:write': 'Create and change workflows. Not available yet.',
-  'runs:write': 'Start and steer runs of workflows. Not available yet.',
+  'workflows:write': 'Create, change, copy and remove workflows.',
+  'runs:write': 'Start runs of workflows on sessions, and report on them: done, blocked, go to, pause, resume, stop. It does not type into a terminal.',
 };
 
 /** Every secret starts with this, so that one found in a file or a log can be recognised for what it is. */
@@ -146,4 +146,4 @@ export const Capabilities = z.object({
 export type Capabilities = z.infer<typeof Capabilities>;
 
 /** The features a client may look for in `Capabilities.features`. */
-export const FEATURES = ['canvases', 'sessions', 'layout', 'notes', 'tags', 'events', 'show', 'tokens', 'activity', 'openapi'] as const;
+export const FEATURES = ['canvases', 'sessions', 'layout', 'notes', 'tags', 'events', 'show', 'tokens', 'activity', 'openapi', 'workflows', 'runs'] as const;

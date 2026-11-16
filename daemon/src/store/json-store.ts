@@ -8,7 +8,9 @@ import {
   Layout,
   Organization,
   Project,
+  Run,
   Session,
+  Workflow,
   Workspace,
   createInitialState,
   newCanvas,
@@ -30,11 +32,14 @@ const StateFileV1 = z.object({ version: z.literal(1), ...common, layout: Layout 
 /** Canvases, each with its own layout. Sessions stay apart and are referred to by ID. */
 const StateFileV2 = z.object({ version: z.literal(2), ...common, canvases: z.array(Canvas).min(1) });
 
-/** The current shape: the same, with API tokens. Of a token only a hash of its secret is here. */
+/** The same, with API tokens. Of a token only a hash of its secret is here. */
 const StateFileV3 = z.object({ version: z.literal(3), ...common, canvases: z.array(Canvas).min(1), tokens: z.array(ApiToken) });
 
-const StateFile = z.discriminatedUnion('version', [StateFileV1, StateFileV2, StateFileV3]);
-const CURRENT_VERSION = 3;
+/** The current shape: the same, with workflows and the runs still going. Runs that are over are in the archive, not here. */
+const StateFileV4 = StateFileV3.extend({ version: z.literal(4), workflows: z.array(Workflow), runs: z.array(Run) });
+
+const StateFile = z.discriminatedUnion('version', [StateFileV1, StateFileV2, StateFileV3, StateFileV4]);
+const CURRENT_VERSION = 4;
 type StateFile = z.infer<typeof StateFile>;
 
 /**
@@ -47,7 +52,16 @@ export function migrate(file: StateFile): AppState {
     file.version === 1
       ? [{ ...newCanvas(project.id, FIRST_CANVAS_NAME, 0, new Date(project.createdAt)), layout: file.layout }]
       : file.canvases;
-  return tidy({ organization, workspace, project, sessions, canvases, tokens: file.version === 3 ? file.tokens : [] });
+  return tidy({
+    organization,
+    workspace,
+    project,
+    sessions,
+    canvases,
+    tokens: file.version >= 3 && 'tokens' in file ? file.tokens : [],
+    workflows: file.version === 4 ? file.workflows : [],
+    runs: file.version === 4 ? file.runs : [],
+  });
 }
 
 /**
@@ -81,7 +95,17 @@ function tidy(state: AppState): AppState {
     const place = parkedFrom.get(session.id);
     return place && !session.parkedFrom ? { ...session, parkedFrom: place } : session;
   });
-  return { ...state, sessions, canvases };
+  // A run points at a workflow version that exists and at a session that exists, and a session is on one run.
+  const onRun = new Set<string>();
+  const runs = state.runs.filter((run) => {
+    const workflow = state.workflows.find((w) => w.id === run.workflowId);
+    if (!workflow?.versions.some((v) => v.number === run.workflowVersion)) return false;
+    if (run.sessionId === null) return true;
+    if (!byId.has(run.sessionId) || onRun.has(run.sessionId)) return false;
+    onRun.add(run.sessionId);
+    return true;
+  });
+  return { ...state, sessions, canvases, runs };
 }
 
 export class JsonStore implements Store {

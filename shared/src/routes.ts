@@ -30,6 +30,24 @@ import {
   UpdateCanvasRequest,
 } from './protocol';
 import { Capabilities, CreateTokenRequest, CreatedToken, TokenView } from './tokens';
+import {
+  CopyWorkflowRequest,
+  CreateWorkflowRequest,
+  ReportOwnRunRequest,
+  ReportRunRequest,
+  RunDetail,
+  RunList,
+  RunsQuery,
+  StartRunRequest,
+  StartSessionRunRequest,
+  TemplateName,
+  UpdateWorkflowRequest,
+  UseTemplateRequest,
+  WorkflowDetail,
+  WorkflowList,
+  WorkflowTemplateList,
+  WorkflowVersionList,
+} from './workflow-api';
 
 /**
  * Every route of the public API, declared once.
@@ -46,7 +64,7 @@ import { Capabilities, CreateTokenRequest, CreatedToken, TokenView } from './tok
 
 export type RouteMethod = 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';
 
-export const ROUTE_TAGS = ['Server', 'Canvases', 'Sessions', 'Notes', 'Layout', 'Events', 'Tokens', 'For a session itself'] as const;
+export const ROUTE_TAGS = ['Server', 'Canvases', 'Sessions', 'Notes', 'Layout', 'Workflows', 'Runs', 'Events', 'Tokens', 'For a session itself'] as const;
 export type RouteTag = (typeof ROUTE_TAGS)[number];
 
 export interface RouteSpec {
@@ -69,7 +87,7 @@ export interface RouteSpec {
    * nothing else is sent).
    */
   fieldActions?: Record<string, Action>;
-  /** The parameters in the address. Every one is an ID. */
+  /** The parameters in the address. One whose name ends in `Id` is an ID. */
   params?: z.ZodObject;
   query?: z.ZodType;
   body?: z.ZodType;
@@ -92,6 +110,8 @@ const route = <const S extends RouteSpec>(spec: S): S => spec;
 
 const canvasId = z.object({ canvasId: Id });
 const sessionId = z.object({ sessionId: Id });
+const workflowId = z.object({ workflowId: Id });
+const runId = z.object({ runId: Id });
 
 /** What the event stream sends: a change, as the reducer in `shared/` applies it. Described loosely on purpose: new kinds appear. */
 const StreamedEvent = z.looseObject({ type: z.string() }).describe('One change. `type` names it (for example `session.created`, `canvas.updated`); the other fields depend on the type.');
@@ -394,6 +414,189 @@ export const ROUTES = {
     errors: [404],
   }),
 
+  /* ---------- Workflows ---------- */
+  listWorkflows: route({
+    method: 'GET',
+    path: '/v1/workflows',
+    tag: 'Workflows',
+    summary: 'List workflows',
+    description: 'By name. Each with the names of its elements, without their text.',
+    action: 'workflows.read',
+    query: PageQuery,
+    response: WorkflowList,
+    status: 200,
+    paged: true,
+  }),
+  createWorkflow: route({
+    method: 'POST',
+    path: '/v1/workflows',
+    tag: 'Workflows',
+    summary: 'Create a workflow',
+    description: 'A workflow is an ordered list of elements, each a piece of text for whoever does the work. Nothing in it is run by the server.',
+    action: 'workflows.write',
+    body: CreateWorkflowRequest,
+    response: WorkflowDetail,
+    status: 201,
+    idempotent: true,
+  }),
+  getWorkflow: route({
+    method: 'GET',
+    path: '/v1/workflows/:workflowId',
+    tag: 'Workflows',
+    summary: 'Read a workflow',
+    description: 'With everything its latest version says.',
+    action: 'workflows.read',
+    params: workflowId,
+    response: WorkflowDetail,
+    status: 200,
+    errors: [404],
+  }),
+  updateWorkflow: route({
+    method: 'PATCH',
+    path: '/v1/workflows/:workflowId',
+    tag: 'Workflows',
+    summary: 'Change a workflow',
+    description: 'A change to what it says is saved as a new version. Runs already going keep to the version they started on.',
+    action: 'workflows.write',
+    params: workflowId,
+    body: UpdateWorkflowRequest,
+    response: WorkflowDetail,
+    status: 200,
+    errors: [404],
+  }),
+  removeWorkflow: route({
+    method: 'DELETE',
+    path: '/v1/workflows/:workflowId',
+    tag: 'Workflows',
+    summary: 'Remove a workflow',
+    description: 'Refused while a run of it is still going. Runs that are over stay in the archive.',
+    action: 'workflows.write',
+    params: workflowId,
+    response: null,
+    status: 204,
+    errors: [404, 409],
+  }),
+  copyWorkflow: route({
+    method: 'POST',
+    path: '/v1/workflows/:workflowId/copy',
+    tag: 'Workflows',
+    summary: 'Copy a workflow',
+    description: 'A new workflow with the same content, to change without touching the first.',
+    action: 'workflows.write',
+    params: workflowId,
+    body: CopyWorkflowRequest,
+    bodyOptional: true,
+    response: WorkflowDetail,
+    status: 201,
+    idempotent: true,
+    errors: [404],
+  }),
+  listWorkflowVersions: route({
+    method: 'GET',
+    path: '/v1/workflows/:workflowId/versions',
+    tag: 'Workflows',
+    summary: 'List the versions of a workflow',
+    description: 'Newest first. Old versions that no run needs are dropped past a limit.',
+    action: 'workflows.read',
+    params: workflowId,
+    query: PageQuery,
+    response: WorkflowVersionList,
+    status: 200,
+    paged: true,
+    errors: [404],
+  }),
+  listWorkflowTemplates: route({
+    method: 'GET',
+    path: '/v1/workflow-templates',
+    tag: 'Workflows',
+    summary: 'List the workflows that come with the server',
+    action: 'workflows.read',
+    query: PageQuery,
+    response: WorkflowTemplateList,
+    status: 200,
+    paged: true,
+  }),
+  useWorkflowTemplate: route({
+    method: 'POST',
+    path: '/v1/workflow-templates/:template/use',
+    tag: 'Workflows',
+    summary: 'Create a workflow from a template',
+    description: 'The result is an ordinary workflow that can be changed like any other.',
+    action: 'workflows.write',
+    params: z.object({ template: TemplateName.describe('The name of the template, as the list gives it.') }),
+    body: UseTemplateRequest,
+    bodyOptional: true,
+    response: WorkflowDetail,
+    status: 201,
+    idempotent: true,
+    errors: [404],
+  }),
+
+  /* ---------- Runs ---------- */
+  listRuns: route({
+    method: 'GET',
+    path: '/v1/runs',
+    tag: 'Runs',
+    summary: 'List runs',
+    description: 'Runs still going, or with `status=ended` the ones that are over, newest first.',
+    action: 'runs.read',
+    query: RunsQuery,
+    response: RunList,
+    status: 200,
+    paged: true,
+  }),
+  startRun: route({
+    method: 'POST',
+    path: '/v1/runs',
+    tag: 'Runs',
+    summary: 'Start a run of a workflow',
+    description: 'On a session, or on none yet: the run then waits, queued. A session is on one run at a time.',
+    action: 'runs.write',
+    body: StartRunRequest,
+    response: RunDetail,
+    status: 201,
+    idempotent: true,
+    errors: [404, 409],
+  }),
+  getRun: route({
+    method: 'GET',
+    path: '/v1/runs/:runId',
+    tag: 'Runs',
+    summary: 'Read a run',
+    description: 'Where it stands, every element with its state, times and note, and the text whoever is on it is told now. Also for a run that is over.',
+    action: 'runs.read',
+    params: runId,
+    response: RunDetail,
+    status: 200,
+    errors: [404],
+  }),
+  reportRun: route({
+    method: 'POST',
+    path: '/v1/runs/:runId/report',
+    tag: 'Runs',
+    summary: 'Report on a run: done, blocked, go to, pause, resume, stop',
+    description: 'The only way a run moves. A report that does not fit where the run stands is refused with 409 and changes nothing: `done` for an element that is not the current one, anything for a run that is over.',
+    action: 'runs.write',
+    params: runId,
+    body: ReportRunRequest,
+    response: RunDetail,
+    status: 200,
+    errors: [404, 409],
+  }),
+  startSessionRun: route({
+    method: 'POST',
+    path: '/v1/sessions/:sessionId/runs',
+    tag: 'Runs',
+    summary: 'Start a run on a session',
+    action: 'runs.write',
+    params: sessionId,
+    body: StartSessionRunRequest,
+    response: RunDetail,
+    status: 201,
+    idempotent: true,
+    errors: [404, 409],
+  }),
+
   /* ---------- Events ---------- */
   streamEvents: route({
     method: 'GET',
@@ -472,6 +675,31 @@ export const ROUTES = {
     response: Attention,
     status: 200,
     errors: [404],
+  }),
+  getSessionRun: route({
+    method: 'GET',
+    path: '/v1/sessions/:sessionId/run',
+    tag: 'For a session itself',
+    summary: 'The run a session is on',
+    description: "For a program inside a session, with that session's own token (`AUBERGINE_TOKEN`): where its run stands and what to do now. 404 when the session is on no run.",
+    action: 'run.own.read',
+    params: sessionId,
+    response: RunDetail,
+    status: 200,
+    errors: [404],
+  }),
+  reportSessionRun: route({
+    method: 'POST',
+    path: '/v1/sessions/:sessionId/run/report',
+    tag: 'For a session itself',
+    summary: 'Report on the run a session is on',
+    description: "For a program inside a session, with that session's own token: the current element is done, the work is blocked, and so on. It reaches that session's run and nothing else.",
+    action: 'run.own.report',
+    params: sessionId,
+    body: ReportOwnRunRequest,
+    response: RunDetail,
+    status: 200,
+    errors: [404, 409],
   }),
   reportAgent: route({
     method: 'PUT',

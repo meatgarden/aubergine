@@ -18,7 +18,7 @@ export type GetCapabilitiesResult = {
   description: string;
   features: string[];
   scopes: {
-    name: "read" | "canvases:write" | "sessions:write" | "notes:write" | "terminal:read" | "terminal:input" | "workflows:write" | "runs:write";
+    name: "read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "terminal:read" | "terminal:input";
     grantable: boolean;
     meaning: string;
   }[];
@@ -28,7 +28,7 @@ export type GetCapabilitiesResult = {
     kind: "token";
     id: string;
     name: string;
-    scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write")[];
+    scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write")[];
     expiresAt: string | null;
   } | {
     kind: "session";
@@ -779,6 +779,761 @@ export type UpdateFrameResult = {
   color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
 };
 
+export interface ListWorkflowsQuery {
+  /**
+   * How many items to return at most.
+   */
+  limit?: number;
+  /**
+   * The `nextCursor` of the page before. Opaque: do not build or change it.
+   */
+  cursor?: string;
+}
+
+export type ListWorkflowsResult = {
+  items: {
+    id: string;
+    name: string;
+    description: string;
+    labels: {
+      [key: string]: string;
+    };
+    origin: {
+      kind: string;
+      name?: string;
+      [key: string]: unknown;
+    };
+    createdAt: string;
+    updatedAt: string;
+    version: number;
+    elements: string[];
+  }[];
+  nextCursor: string | null;
+};
+
+export type CreateWorkflowBody = {
+  /** What it is called. */
+  name: string;
+  /** What it is for, in a sentence or two. */
+  description?: string;
+  /** Text added to every element: rules that hold from start to finish. */
+  standing?: string;
+  /** What a run is given when it starts. `{{key}}` in any text becomes the value. Without this, one input: `task`. */
+  inputs?: {
+    key: string;
+    label: string;
+    description?: string;
+    required?: boolean;
+  }[];
+  /** The elements, in the order they are gone through. */
+  elements: {
+    id?: string;
+    kind?: string;
+    name: string;
+    instructions?: string;
+    doneWhen?: string;
+    origin?: {
+      kind: string;
+      name?: string;
+      [key: string]: unknown;
+    };
+    extra?: {
+      [key: string]: unknown;
+    };
+  }[];
+  /** Pairs of key and value for tools of your own to give meaning to. */
+  labels?: {
+    [key: string]: string;
+  };
+  /** Where it came from. Left out, it was made here. */
+  origin?: {
+    kind: string;
+    name?: string;
+    [key: string]: unknown;
+  };
+  /** Fields from a file that this version does not know, kept so they are written out again. */
+  extra?: {
+    [key: string]: unknown;
+  };
+};
+
+export type CreateWorkflowResult = {
+  id: string;
+  name: string;
+  description: string;
+  labels: {
+    [key: string]: string;
+  };
+  origin: {
+    kind: string;
+    name?: string;
+    [key: string]: unknown;
+  };
+  createdAt: string;
+  updatedAt: string;
+  version: number;
+  elements: string[];
+  current: {
+    name: string;
+    description: string;
+    standing: string;
+    inputs: {
+      key: string;
+      label: string;
+      description: string;
+      required: boolean;
+    }[];
+    elements: {
+      id: string;
+      kind: string;
+      name: string;
+      instructions: string;
+      doneWhen: string;
+      origin: {
+        kind: string;
+        name?: string;
+        [key: string]: unknown;
+      };
+      extra: {
+        [key: string]: unknown;
+      };
+    }[];
+    extra: {
+      [key: string]: unknown;
+    };
+    number: number;
+    createdAt: string;
+  };
+};
+
+export type GetWorkflowResult = {
+  id: string;
+  name: string;
+  description: string;
+  labels: {
+    [key: string]: string;
+  };
+  origin: {
+    kind: string;
+    name?: string;
+    [key: string]: unknown;
+  };
+  createdAt: string;
+  updatedAt: string;
+  version: number;
+  elements: string[];
+  current: {
+    name: string;
+    description: string;
+    standing: string;
+    inputs: {
+      key: string;
+      label: string;
+      description: string;
+      required: boolean;
+    }[];
+    elements: {
+      id: string;
+      kind: string;
+      name: string;
+      instructions: string;
+      doneWhen: string;
+      origin: {
+        kind: string;
+        name?: string;
+        [key: string]: unknown;
+      };
+      extra: {
+        [key: string]: unknown;
+      };
+    }[];
+    extra: {
+      [key: string]: unknown;
+    };
+    number: number;
+    createdAt: string;
+  };
+};
+
+export type UpdateWorkflowBody = {
+  /** What it is called. */
+  name?: string;
+  /** What it is for, in a sentence or two. */
+  description?: string;
+  /** Text added to every element: rules that hold from start to finish. */
+  standing?: string;
+  /** What a run is given when it starts. `{{key}}` in any text becomes the value. Without this, one input: `task`. */
+  inputs?: {
+    key: string;
+    label: string;
+    description?: string;
+    required?: boolean;
+  }[];
+  /** The elements, in the order they are gone through. */
+  elements?: {
+    id?: string;
+    kind?: string;
+    name: string;
+    instructions?: string;
+    doneWhen?: string;
+    origin?: {
+      kind: string;
+      name?: string;
+      [key: string]: unknown;
+    };
+    extra?: {
+      [key: string]: unknown;
+    };
+  }[];
+  /** Pairs of key and value for tools of your own to give meaning to. */
+  labels?: {
+    [key: string]: string;
+  };
+};
+
+export type UpdateWorkflowResult = {
+  id: string;
+  name: string;
+  description: string;
+  labels: {
+    [key: string]: string;
+  };
+  origin: {
+    kind: string;
+    name?: string;
+    [key: string]: unknown;
+  };
+  createdAt: string;
+  updatedAt: string;
+  version: number;
+  elements: string[];
+  current: {
+    name: string;
+    description: string;
+    standing: string;
+    inputs: {
+      key: string;
+      label: string;
+      description: string;
+      required: boolean;
+    }[];
+    elements: {
+      id: string;
+      kind: string;
+      name: string;
+      instructions: string;
+      doneWhen: string;
+      origin: {
+        kind: string;
+        name?: string;
+        [key: string]: unknown;
+      };
+      extra: {
+        [key: string]: unknown;
+      };
+    }[];
+    extra: {
+      [key: string]: unknown;
+    };
+    number: number;
+    createdAt: string;
+  };
+};
+
+export type CopyWorkflowBody = {
+  /** The name of the copy. Without one: the name with "copy" after it. */
+  name?: string;
+};
+
+export type CopyWorkflowResult = {
+  id: string;
+  name: string;
+  description: string;
+  labels: {
+    [key: string]: string;
+  };
+  origin: {
+    kind: string;
+    name?: string;
+    [key: string]: unknown;
+  };
+  createdAt: string;
+  updatedAt: string;
+  version: number;
+  elements: string[];
+  current: {
+    name: string;
+    description: string;
+    standing: string;
+    inputs: {
+      key: string;
+      label: string;
+      description: string;
+      required: boolean;
+    }[];
+    elements: {
+      id: string;
+      kind: string;
+      name: string;
+      instructions: string;
+      doneWhen: string;
+      origin: {
+        kind: string;
+        name?: string;
+        [key: string]: unknown;
+      };
+      extra: {
+        [key: string]: unknown;
+      };
+    }[];
+    extra: {
+      [key: string]: unknown;
+    };
+    number: number;
+    createdAt: string;
+  };
+};
+
+export interface ListWorkflowVersionsQuery {
+  /**
+   * How many items to return at most.
+   */
+  limit?: number;
+  /**
+   * The `nextCursor` of the page before. Opaque: do not build or change it.
+   */
+  cursor?: string;
+}
+
+export type ListWorkflowVersionsResult = {
+  items: {
+    name: string;
+    description: string;
+    standing: string;
+    inputs: {
+      key: string;
+      label: string;
+      description: string;
+      required: boolean;
+    }[];
+    elements: {
+      id: string;
+      kind: string;
+      name: string;
+      instructions: string;
+      doneWhen: string;
+      origin: {
+        kind: string;
+        name?: string;
+        [key: string]: unknown;
+      };
+      extra: {
+        [key: string]: unknown;
+      };
+    }[];
+    extra: {
+      [key: string]: unknown;
+    };
+    number: number;
+    createdAt: string;
+  }[];
+  nextCursor: string | null;
+};
+
+export interface ListWorkflowTemplatesQuery {
+  /**
+   * How many items to return at most.
+   */
+  limit?: number;
+  /**
+   * The `nextCursor` of the page before. Opaque: do not build or change it.
+   */
+  cursor?: string;
+}
+
+export type ListWorkflowTemplatesResult = {
+  items: {
+    name: string;
+    title: string;
+    description: string;
+    content: {
+      name: string;
+      description: string;
+      standing: string;
+      inputs: {
+        key: string;
+        label: string;
+        description: string;
+        required: boolean;
+      }[];
+      elements: {
+        id: string;
+        kind: string;
+        name: string;
+        instructions: string;
+        doneWhen: string;
+        origin: {
+          kind: string;
+          name?: string;
+          [key: string]: unknown;
+        };
+        extra: {
+          [key: string]: unknown;
+        };
+      }[];
+      extra: {
+        [key: string]: unknown;
+      };
+    };
+  }[];
+  nextCursor: string | null;
+};
+
+export type UseWorkflowTemplateBody = {
+  /** The name of the new workflow. Without one, the template's own title. */
+  name?: string;
+};
+
+export type UseWorkflowTemplateResult = {
+  id: string;
+  name: string;
+  description: string;
+  labels: {
+    [key: string]: string;
+  };
+  origin: {
+    kind: string;
+    name?: string;
+    [key: string]: unknown;
+  };
+  createdAt: string;
+  updatedAt: string;
+  version: number;
+  elements: string[];
+  current: {
+    name: string;
+    description: string;
+    standing: string;
+    inputs: {
+      key: string;
+      label: string;
+      description: string;
+      required: boolean;
+    }[];
+    elements: {
+      id: string;
+      kind: string;
+      name: string;
+      instructions: string;
+      doneWhen: string;
+      origin: {
+        kind: string;
+        name?: string;
+        [key: string]: unknown;
+      };
+      extra: {
+        [key: string]: unknown;
+      };
+    }[];
+    extra: {
+      [key: string]: unknown;
+    };
+    number: number;
+    createdAt: string;
+  };
+};
+
+export interface ListRunsQuery {
+  /**
+   * How many items to return at most.
+   */
+  limit?: number;
+  /**
+   * The `nextCursor` of the page before. Opaque: do not build or change it.
+   */
+  cursor?: string;
+  /**
+   * `live` (the default): runs still going. `ended`: finished and stopped runs, newest first, from the archive. Or one status.
+   */
+  status?: "queued" | "running" | "paused" | "blocked" | "finished" | "stopped" | "live" | "ended";
+  /**
+   * Only runs of this session.
+   */
+  sessionId?: string;
+  /**
+   * Only runs of this workflow.
+   */
+  workflowId?: string;
+}
+
+export type ListRunsResult = {
+  items: {
+    run: {
+      id: string;
+      workflowId: string;
+      workflowVersion: number;
+      sessionId: string | null;
+      inputs: {
+        [key: string]: string;
+      };
+      status: "queued" | "running" | "paused" | "blocked" | "finished" | "stopped";
+      currentElementId: string | null;
+      elements: {
+        elementId: string;
+        state: "pending" | "active" | "done" | "skipped";
+        startedAt: string | null;
+        finishedAt: string | null;
+        note: string;
+        by: {
+          kind: "agent" | "person" | "token";
+          name?: string;
+        } | null;
+        sessionId: string | null;
+      }[];
+      blockedReason: string | null;
+      pausedFrom: ("running" | "blocked") | null;
+      startedBy: {
+        kind: "agent" | "person" | "token";
+        name?: string;
+      };
+      createdAt: string;
+      updatedAt: string;
+      finishedAt: string | null;
+    };
+    workflowName: string;
+    elements: {
+      id: string;
+      name: string;
+    }[];
+  }[];
+  nextCursor: string | null;
+};
+
+export type StartRunBody = {
+  /** The workflow to go through. The run keeps to the version that is latest now. */
+  workflowId: string;
+  /** The inputs the workflow asks for, by key. */
+  inputs?: {
+    [key: string]: string;
+  };
+  /** When the session is already on a run: stop that one and start this. Without it, that is refused. */
+  replace?: boolean;
+  /** Type the line that tells the agent about the run into the session's terminal. Only ever done for the owner (the browser or the command line), and only when an agent is running there; an API token is given the line in the answer and nothing is typed. */
+  kickoff?: boolean;
+  /** The session that will do it. Without one the run waits, queued. */
+  sessionId?: string;
+};
+
+export type StartRunResult = {
+  run: {
+    id: string;
+    workflowId: string;
+    workflowVersion: number;
+    sessionId: string | null;
+    inputs: {
+      [key: string]: string;
+    };
+    status: "queued" | "running" | "paused" | "blocked" | "finished" | "stopped";
+    currentElementId: string | null;
+    elements: {
+      elementId: string;
+      state: "pending" | "active" | "done" | "skipped";
+      startedAt: string | null;
+      finishedAt: string | null;
+      note: string;
+      by: {
+        kind: "agent" | "person" | "token";
+        name?: string;
+      } | null;
+      sessionId: string | null;
+    }[];
+    blockedReason: string | null;
+    pausedFrom: ("running" | "blocked") | null;
+    startedBy: {
+      kind: "agent" | "person" | "token";
+      name?: string;
+    };
+    createdAt: string;
+    updatedAt: string;
+    finishedAt: string | null;
+  };
+  workflowName: string;
+  elements: {
+    id: string;
+    name: string;
+  }[];
+  position: string;
+  text: string;
+  kickoff: string;
+  kickoffTyped: boolean;
+};
+
+export type GetRunResult = {
+  run: {
+    id: string;
+    workflowId: string;
+    workflowVersion: number;
+    sessionId: string | null;
+    inputs: {
+      [key: string]: string;
+    };
+    status: "queued" | "running" | "paused" | "blocked" | "finished" | "stopped";
+    currentElementId: string | null;
+    elements: {
+      elementId: string;
+      state: "pending" | "active" | "done" | "skipped";
+      startedAt: string | null;
+      finishedAt: string | null;
+      note: string;
+      by: {
+        kind: "agent" | "person" | "token";
+        name?: string;
+      } | null;
+      sessionId: string | null;
+    }[];
+    blockedReason: string | null;
+    pausedFrom: ("running" | "blocked") | null;
+    startedBy: {
+      kind: "agent" | "person" | "token";
+      name?: string;
+    };
+    createdAt: string;
+    updatedAt: string;
+    finishedAt: string | null;
+  };
+  workflowName: string;
+  elements: {
+    id: string;
+    name: string;
+  }[];
+  position: string;
+  text: string;
+  kickoff: string;
+  kickoffTyped: boolean;
+};
+
+export type ReportRunBody = {
+  type: "done";
+  elementId: string;
+  note?: string;
+} | {
+  type: "blocked";
+  reason: string;
+} | {
+  type: "goto";
+  elementId: string;
+} | {
+  type: "pause";
+} | {
+  type: "resume";
+} | {
+  type: "stop";
+} | {
+  type: "assign";
+  sessionId: string;
+};
+
+export type ReportRunResult = {
+  run: {
+    id: string;
+    workflowId: string;
+    workflowVersion: number;
+    sessionId: string | null;
+    inputs: {
+      [key: string]: string;
+    };
+    status: "queued" | "running" | "paused" | "blocked" | "finished" | "stopped";
+    currentElementId: string | null;
+    elements: {
+      elementId: string;
+      state: "pending" | "active" | "done" | "skipped";
+      startedAt: string | null;
+      finishedAt: string | null;
+      note: string;
+      by: {
+        kind: "agent" | "person" | "token";
+        name?: string;
+      } | null;
+      sessionId: string | null;
+    }[];
+    blockedReason: string | null;
+    pausedFrom: ("running" | "blocked") | null;
+    startedBy: {
+      kind: "agent" | "person" | "token";
+      name?: string;
+    };
+    createdAt: string;
+    updatedAt: string;
+    finishedAt: string | null;
+  };
+  workflowName: string;
+  elements: {
+    id: string;
+    name: string;
+  }[];
+  position: string;
+  text: string;
+  kickoff: string;
+  kickoffTyped: boolean;
+};
+
+export type StartSessionRunBody = {
+  /** The workflow to go through. The run keeps to the version that is latest now. */
+  workflowId: string;
+  /** The inputs the workflow asks for, by key. */
+  inputs?: {
+    [key: string]: string;
+  };
+  /** When the session is already on a run: stop that one and start this. Without it, that is refused. */
+  replace?: boolean;
+  /** Type the line that tells the agent about the run into the session's terminal. Only ever done for the owner (the browser or the command line), and only when an agent is running there; an API token is given the line in the answer and nothing is typed. */
+  kickoff?: boolean;
+};
+
+export type StartSessionRunResult = {
+  run: {
+    id: string;
+    workflowId: string;
+    workflowVersion: number;
+    sessionId: string | null;
+    inputs: {
+      [key: string]: string;
+    };
+    status: "queued" | "running" | "paused" | "blocked" | "finished" | "stopped";
+    currentElementId: string | null;
+    elements: {
+      elementId: string;
+      state: "pending" | "active" | "done" | "skipped";
+      startedAt: string | null;
+      finishedAt: string | null;
+      note: string;
+      by: {
+        kind: "agent" | "person" | "token";
+        name?: string;
+      } | null;
+      sessionId: string | null;
+    }[];
+    blockedReason: string | null;
+    pausedFrom: ("running" | "blocked") | null;
+    startedBy: {
+      kind: "agent" | "person" | "token";
+      name?: string;
+    };
+    createdAt: string;
+    updatedAt: string;
+    finishedAt: string | null;
+  };
+  workflowName: string;
+  elements: {
+    id: string;
+    name: string;
+  }[];
+  position: string;
+  text: string;
+  kickoff: string;
+  kickoffTyped: boolean;
+};
+
 export interface StreamEventsQuery {
   /**
    * Only changes that concern this canvas.
@@ -806,7 +1561,7 @@ export type ListTokensResult = {
   items: {
     id: string;
     name: string;
-    scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write")[];
+    scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write")[];
     createdAt: string;
     lastUsedAt: string | null;
     expiresAt: string | null;
@@ -819,7 +1574,7 @@ export type CreateTokenBody = {
   /** What will use it. */
   name: string;
   /** What it may do. At least one. */
-  scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write")[];
+  scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write")[];
   /** When it stops working. Never, when neither this nor `expiresInDays` is given. */
   expiresAt?: string;
   /** In how many days it stops working. */
@@ -830,7 +1585,7 @@ export type CreateTokenResult = {
   token: {
     id: string;
     name: string;
-    scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write")[];
+    scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write")[];
     createdAt: string;
     lastUsedAt: string | null;
     expiresAt: string | null;
@@ -842,7 +1597,7 @@ export type CreateTokenResult = {
 export type RevokeTokenResult = {
   id: string;
   name: string;
-  scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write")[];
+  scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write")[];
   createdAt: string;
   lastUsedAt: string | null;
   expiresAt: string | null;
@@ -893,6 +1648,114 @@ export type SetAttentionResult = {
   at: string | null;
 };
 
+export type GetSessionRunResult = {
+  run: {
+    id: string;
+    workflowId: string;
+    workflowVersion: number;
+    sessionId: string | null;
+    inputs: {
+      [key: string]: string;
+    };
+    status: "queued" | "running" | "paused" | "blocked" | "finished" | "stopped";
+    currentElementId: string | null;
+    elements: {
+      elementId: string;
+      state: "pending" | "active" | "done" | "skipped";
+      startedAt: string | null;
+      finishedAt: string | null;
+      note: string;
+      by: {
+        kind: "agent" | "person" | "token";
+        name?: string;
+      } | null;
+      sessionId: string | null;
+    }[];
+    blockedReason: string | null;
+    pausedFrom: ("running" | "blocked") | null;
+    startedBy: {
+      kind: "agent" | "person" | "token";
+      name?: string;
+    };
+    createdAt: string;
+    updatedAt: string;
+    finishedAt: string | null;
+  };
+  workflowName: string;
+  elements: {
+    id: string;
+    name: string;
+  }[];
+  position: string;
+  text: string;
+  kickoff: string;
+  kickoffTyped: boolean;
+};
+
+export type ReportSessionRunBody = {
+  type: "done";
+  /** The element being finished. Without it: the current one. */
+  elementId?: string;
+  /** What was done, for whoever comes next. */
+  note?: string;
+} | {
+  type: "blocked";
+  reason: string;
+} | {
+  type: "goto";
+  elementId: string;
+} | {
+  type: "pause";
+} | {
+  type: "resume";
+} | {
+  type: "stop";
+};
+
+export type ReportSessionRunResult = {
+  run: {
+    id: string;
+    workflowId: string;
+    workflowVersion: number;
+    sessionId: string | null;
+    inputs: {
+      [key: string]: string;
+    };
+    status: "queued" | "running" | "paused" | "blocked" | "finished" | "stopped";
+    currentElementId: string | null;
+    elements: {
+      elementId: string;
+      state: "pending" | "active" | "done" | "skipped";
+      startedAt: string | null;
+      finishedAt: string | null;
+      note: string;
+      by: {
+        kind: "agent" | "person" | "token";
+        name?: string;
+      } | null;
+      sessionId: string | null;
+    }[];
+    blockedReason: string | null;
+    pausedFrom: ("running" | "blocked") | null;
+    startedBy: {
+      kind: "agent" | "person" | "token";
+      name?: string;
+    };
+    createdAt: string;
+    updatedAt: string;
+    finishedAt: string | null;
+  };
+  workflowName: string;
+  elements: {
+    id: string;
+    name: string;
+  }[];
+  position: string;
+  text: string;
+  kickoff: string;
+  kickoffTyped: boolean;
+};
+
 export type ReportAgentBody = {
   kind: "claude-code";
   conversationId?: string | null;
@@ -928,12 +1791,28 @@ export const OPERATIONS = {
   createFrame: { method: 'POST', path: '/v1/canvases/{canvasId}/frames', params: ["canvasId"], hasBody: true, paged: false, idempotent: true, stream: false },
   updateFrame: { method: 'PATCH', path: '/v1/canvases/{canvasId}/frames/{frameId}', params: ["canvasId", "frameId"], hasBody: true, paged: false, idempotent: false, stream: false },
   removeFrame: { method: 'DELETE', path: '/v1/canvases/{canvasId}/frames/{frameId}', params: ["canvasId", "frameId"], hasBody: false, paged: false, idempotent: false, stream: false },
+  listWorkflows: { method: 'GET', path: '/v1/workflows', params: [], hasBody: false, paged: true, idempotent: false, stream: false },
+  createWorkflow: { method: 'POST', path: '/v1/workflows', params: [], hasBody: true, paged: false, idempotent: true, stream: false },
+  getWorkflow: { method: 'GET', path: '/v1/workflows/{workflowId}', params: ["workflowId"], hasBody: false, paged: false, idempotent: false, stream: false },
+  updateWorkflow: { method: 'PATCH', path: '/v1/workflows/{workflowId}', params: ["workflowId"], hasBody: true, paged: false, idempotent: false, stream: false },
+  removeWorkflow: { method: 'DELETE', path: '/v1/workflows/{workflowId}', params: ["workflowId"], hasBody: false, paged: false, idempotent: false, stream: false },
+  copyWorkflow: { method: 'POST', path: '/v1/workflows/{workflowId}/copy', params: ["workflowId"], hasBody: true, paged: false, idempotent: true, stream: false },
+  listWorkflowVersions: { method: 'GET', path: '/v1/workflows/{workflowId}/versions', params: ["workflowId"], hasBody: false, paged: true, idempotent: false, stream: false },
+  listWorkflowTemplates: { method: 'GET', path: '/v1/workflow-templates', params: [], hasBody: false, paged: true, idempotent: false, stream: false },
+  useWorkflowTemplate: { method: 'POST', path: '/v1/workflow-templates/{template}/use', params: ["template"], hasBody: true, paged: false, idempotent: true, stream: false },
+  listRuns: { method: 'GET', path: '/v1/runs', params: [], hasBody: false, paged: true, idempotent: false, stream: false },
+  startRun: { method: 'POST', path: '/v1/runs', params: [], hasBody: true, paged: false, idempotent: true, stream: false },
+  getRun: { method: 'GET', path: '/v1/runs/{runId}', params: ["runId"], hasBody: false, paged: false, idempotent: false, stream: false },
+  reportRun: { method: 'POST', path: '/v1/runs/{runId}/report', params: ["runId"], hasBody: true, paged: false, idempotent: false, stream: false },
+  startSessionRun: { method: 'POST', path: '/v1/sessions/{sessionId}/runs', params: ["sessionId"], hasBody: true, paged: false, idempotent: true, stream: false },
   streamEvents: { method: 'GET', path: '/v1/events', params: [], hasBody: false, paged: false, idempotent: false, stream: true },
   listTokens: { method: 'GET', path: '/v1/tokens', params: [], hasBody: false, paged: true, idempotent: false, stream: false },
   createToken: { method: 'POST', path: '/v1/tokens', params: [], hasBody: true, paged: false, idempotent: false, stream: false },
   revokeToken: { method: 'DELETE', path: '/v1/tokens/{tokenId}', params: ["tokenId"], hasBody: false, paged: false, idempotent: false, stream: false },
   listActivity: { method: 'GET', path: '/v1/activity', params: [], hasBody: false, paged: true, idempotent: false, stream: false },
   setAttention: { method: 'PUT', path: '/v1/sessions/{sessionId}/attention', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false },
+  getSessionRun: { method: 'GET', path: '/v1/sessions/{sessionId}/run', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false },
+  reportSessionRun: { method: 'POST', path: '/v1/sessions/{sessionId}/run/report', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false },
   reportAgent: { method: 'PUT', path: '/v1/sessions/{sessionId}/agent', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false },
 } as const satisfies Record<string, OperationInfo>;
 
@@ -1080,6 +1959,90 @@ export interface Client {
    */
   removeFrame(args: { canvasId: string; frameId: string } & CallOptions): Promise<void>;
   /**
+   * List workflows.
+   *
+   * `GET /v1/workflows`. Scope: `read`.
+   */
+  listWorkflows(args?: { query?: ListWorkflowsQuery } & CallOptions): Promise<ListWorkflowsResult>;
+  /**
+   * Create a workflow.
+   *
+   * `POST /v1/workflows`. Scope: `workflows:write`.
+   */
+  createWorkflow(args: { body: CreateWorkflowBody } & CallOptions): Promise<CreateWorkflowResult>;
+  /**
+   * Read a workflow.
+   *
+   * `GET /v1/workflows/{workflowId}`. Scope: `read`.
+   */
+  getWorkflow(args: { workflowId: string } & CallOptions): Promise<GetWorkflowResult>;
+  /**
+   * Change a workflow.
+   *
+   * `PATCH /v1/workflows/{workflowId}`. Scope: `workflows:write`.
+   */
+  updateWorkflow(args: { workflowId: string; body: UpdateWorkflowBody } & CallOptions): Promise<UpdateWorkflowResult>;
+  /**
+   * Remove a workflow.
+   *
+   * `DELETE /v1/workflows/{workflowId}`. Scope: `workflows:write`.
+   */
+  removeWorkflow(args: { workflowId: string } & CallOptions): Promise<void>;
+  /**
+   * Copy a workflow.
+   *
+   * `POST /v1/workflows/{workflowId}/copy`. Scope: `workflows:write`.
+   */
+  copyWorkflow(args: { workflowId: string; body?: CopyWorkflowBody } & CallOptions): Promise<CopyWorkflowResult>;
+  /**
+   * List the versions of a workflow.
+   *
+   * `GET /v1/workflows/{workflowId}/versions`. Scope: `read`.
+   */
+  listWorkflowVersions(args: { workflowId: string; query?: ListWorkflowVersionsQuery } & CallOptions): Promise<ListWorkflowVersionsResult>;
+  /**
+   * List the workflows that come with the server.
+   *
+   * `GET /v1/workflow-templates`. Scope: `read`.
+   */
+  listWorkflowTemplates(args?: { query?: ListWorkflowTemplatesQuery } & CallOptions): Promise<ListWorkflowTemplatesResult>;
+  /**
+   * Create a workflow from a template.
+   *
+   * `POST /v1/workflow-templates/{template}/use`. Scope: `workflows:write`.
+   */
+  useWorkflowTemplate(args: { template: string; body?: UseWorkflowTemplateBody } & CallOptions): Promise<UseWorkflowTemplateResult>;
+  /**
+   * List runs.
+   *
+   * `GET /v1/runs`. Scope: `read`.
+   */
+  listRuns(args?: { query?: ListRunsQuery } & CallOptions): Promise<ListRunsResult>;
+  /**
+   * Start a run of a workflow.
+   *
+   * `POST /v1/runs`. Scope: `runs:write`.
+   */
+  startRun(args: { body: StartRunBody } & CallOptions): Promise<StartRunResult>;
+  /**
+   * Read a run.
+   *
+   * `GET /v1/runs/{runId}`. Scope: `read`.
+   */
+  getRun(args: { runId: string } & CallOptions): Promise<GetRunResult>;
+  /**
+   * Report on a run: done, blocked, go to, pause, resume, stop.
+   *
+   * `POST /v1/runs/{runId}/report`. Scope: `runs:write`.
+   */
+  reportRun(args: { runId: string; body: ReportRunBody } & CallOptions): Promise<ReportRunResult>;
+  /**
+   * Start a run on a session.
+   *
+   * `POST /v1/sessions/{sessionId}/runs`. Scope: `runs:write`.
+   */
+  startSessionRun(args: { sessionId: string; body: StartSessionRunBody } & CallOptions): Promise<StartSessionRunResult>;
+  /**
    * Follow changes as they happen.
    *
    * `GET /v1/events`. Scope: `read`.
@@ -1116,6 +2079,18 @@ export interface Client {
    */
   setAttention(args: { sessionId: string; body: SetAttentionBody } & CallOptions): Promise<SetAttentionResult>;
   /**
+   * The run a session is on.
+   *
+   * `GET /v1/sessions/{sessionId}/run`. A session's own token, or an API token with `read`.
+   */
+  getSessionRun(args: { sessionId: string } & CallOptions): Promise<GetSessionRunResult>;
+  /**
+   * Report on the run a session is on.
+   *
+   * `POST /v1/sessions/{sessionId}/run/report`. A session's own token, or an API token with `runs:write`.
+   */
+  reportSessionRun(args: { sessionId: string; body: ReportSessionRunBody } & CallOptions): Promise<ReportSessionRunResult>;
+  /**
    * Say which agent runs in the session, and in which conversation.
    *
    * `PUT /v1/sessions/{sessionId}/agent`. A session's own token.
@@ -1135,6 +2110,22 @@ export interface Client {
      * Every item of `listSessions`, fetched a page at a time as they are asked for.
      */
     listSessions(args?: { query?: ListSessionsQuery } & CallOptions): AsyncGenerator<ListSessionsResult['items'][number], void, void>;
+    /**
+     * Every item of `listWorkflows`, fetched a page at a time as they are asked for.
+     */
+    listWorkflows(args?: { query?: ListWorkflowsQuery } & CallOptions): AsyncGenerator<ListWorkflowsResult['items'][number], void, void>;
+    /**
+     * Every item of `listWorkflowVersions`, fetched a page at a time as they are asked for.
+     */
+    listWorkflowVersions(args?: { workflowId: string; query?: ListWorkflowVersionsQuery } & CallOptions): AsyncGenerator<ListWorkflowVersionsResult['items'][number], void, void>;
+    /**
+     * Every item of `listWorkflowTemplates`, fetched a page at a time as they are asked for.
+     */
+    listWorkflowTemplates(args?: { query?: ListWorkflowTemplatesQuery } & CallOptions): AsyncGenerator<ListWorkflowTemplatesResult['items'][number], void, void>;
+    /**
+     * Every item of `listRuns`, fetched a page at a time as they are asked for.
+     */
+    listRuns(args?: { query?: ListRunsQuery } & CallOptions): AsyncGenerator<ListRunsResult['items'][number], void, void>;
     /**
      * Every item of `listTokens`, fetched a page at a time as they are asked for.
      */
