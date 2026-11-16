@@ -125,6 +125,15 @@ async function allCanvases(config: Config): Promise<CanvasSummary[]> {
   });
 }
 
+/** `--reach all | canvas:<name> | tag:<tag>` as a request field. Nothing when it was not given: the server then says it is needed. */
+async function reachFromOption(config: Config, reach: string | null): Promise<{ reach?: CreateTokenBody['reach'] }> {
+  if (reach === null) return {};
+  if (reach === 'all') return { reach: { kind: 'all' } };
+  if (reach.startsWith('tag:') && reach.length > 4) return { reach: { kind: 'tag', tag: reach.slice(4) } };
+  if (reach.startsWith('canvas:') && reach.length > 7) return { reach: { kind: 'canvases', canvasIds: reach.slice(7).split(',').length > 0 ? await Promise.all(reach.slice(7).split(',').map(async (name) => resolveCanvas(await allCanvases(config), name.trim()).id)) : [] } };
+  throw new UsageError('--reach needs all, canvas:<name> (several with commas) or tag:<tag>');
+}
+
 /** `--canvas <name>` as a request field; nothing when no canvas was named, so the server chooses. */
 async function canvasField(config: Config, name: string | null): Promise<{ canvasId?: string }> {
   if (name === null) return {};
@@ -435,6 +444,44 @@ async function main(): Promise<number> {
       return 0;
     }
 
+    // Reading a terminal and typing into one from the command line, as the owner. The server records these
+    // as the owner's, from outside the browser, with the session the command was typed in.
+    case 'screen':
+    case 'output':
+    case 'send':
+    case 'run':
+    case 'protect': {
+      const { state } = StateResponse.parse(await call(config, 'GET', paths.state));
+      const session = resolveSession(state.sessions, command.query);
+      const sessionId = session.id;
+      if (command.name === 'screen') {
+        console.log((await v1(config, (client) => client.getScreen({ sessionId }))).text);
+        return 0;
+      }
+      if (command.name === 'output') {
+        console.log((await v1(config, (client) => client.getOutput({ sessionId, query: { lines: command.lines ?? 200 } }))).text);
+        return 0;
+      }
+      if (command.name === 'send') {
+        const sent = await v1(config, (client) => client.sendInput({ sessionId, body: { text: command.text, enter: command.enter, paste: false } }));
+        console.log(`Typed ${sent.typed} ${sent.typed === 1 ? 'character' : 'characters'} into "${session.name}"${command.enter ? ' and pressed Enter' : '. Enter was not pressed: add --enter for that'}.`);
+        return 0;
+      }
+      if (command.name === 'protect') {
+        await v1(config, (client) => client.protectSession({ sessionId, body: { peopleOnly: command.peopleOnly } }));
+        console.log(command.peopleOnly ? `"${session.name}" is now people only: no API token may read it or type into it.` : `"${session.name}" is open to API tokens again, as far as their scopes and reach allow.`);
+        return 0;
+      }
+      const result = await v1(config, (client) => client.runCommand({ sessionId, body: { command: command.command, timeoutSeconds: command.timeout ?? 30 } }));
+      if (result.output) console.log(result.output);
+      if (result.outputCut) console.error('(The output was longer than is shown.)');
+      if (!result.finished) {
+        console.error(`Still going after ${Math.round(result.durationMs / 1000)} s. It was left running; look at it with: aubergine screen "${session.name}"`);
+        return 124;
+      }
+      return result.exitCode ?? 0;
+    }
+
     case 'workflow':
     case 'element':
       return runWorkflowCommand(command.name === 'element' ? parseElementCommand(command.words) : parseWorkflowCommand(command.words), {
@@ -460,7 +507,7 @@ async function main(): Promise<number> {
     // owner-only command. It sends it as the browser would, so it passes exactly the checks the browser passes.
     case 'token-create': {
       // The scopes are as typed; whether each is one a token can have is for the server to say.
-      const body = { name: command.tokenName, scopes: command.scopes as CreateTokenBody['scopes'], reviewWorkflowChanges: command.review, ...expiryFromOption(command.expires) };
+      const body = { name: command.tokenName, scopes: command.scopes as CreateTokenBody['scopes'], reviewWorkflowChanges: command.review, ...expiryFromOption(command.expires), ...(await reachFromOption(config, command.reach)) };
       const created = await v1(config, (client) => client.createToken({ body }));
       // The secret, alone, on standard output, so that it can be captured: TOKEN=$(aubergine token create …).
       // Everything said about it goes to standard error. It is not written anywhere else.

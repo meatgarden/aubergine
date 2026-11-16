@@ -693,6 +693,7 @@ Create `config.json` in the data folder (the server prints its location at start
   "agents": { "logPrompts": true, "claudeCommand": "claude" },
   "api": { "rateLimitPerMinute": 600, "maxBodyBytes": 1048576, "activityLogMaxBytes": 5242880 },
   "workflows": { "maxElements": 50, "maxElementChars": 20000, "quietAfterSeconds": 300 },
+  "terminal": { "protectNewSessions": false, "protectAgentSessions": true, "auditInput": false },
   "shortcuts": {},
   "shortcutsInAppWindow": {}
 }
@@ -712,6 +713,7 @@ Create `config.json` in the data folder (the server prints its location at start
 
 - `api`: limits on calls made with [API tokens](#api-tokens): calls per minute per token, the largest request body, and the size of the activity log. They apply when the server is next started.
 - `workflows`: how many elements a [workflow](#workflows) may have, how long the text of one element (and the text for every element) may be, and after how many seconds of output without a report a run is marked quiet. The two limits apply when the server is next started.
+- `terminal`: [terminal access](#terminal-access) for API tokens: whether new terminals, and new agent sessions, start "people only"; the limits on typing; and `auditInput`, which keeps what tokens type in a file.
 - `shortcuts`, `shortcutsInAppWindow`: your own keys; see [Keyboard](#keyboard).
 
 Font, theme and keys apply when you reload the page; shell and folder apply to the next new terminal.
@@ -755,6 +757,7 @@ aubergine import               the same for every one, one per folder (--all, --
 aubergine shell-hook print     print the zsh lines that make new tabs start on the canvas
 aubergine token create <name> --scope <scope>…   make an API token; its secret is printed once (--expires 30d)
                                --no-review  let it create and change workflows directly, without your review
+                               --reach all | canvas:<name> | tag:<tag>   which terminals terminal:read and terminal:input reach
 aubergine token list           the API tokens, their scopes and when each was last used
 aubergine token revoke <name>  revoke a token; it stops working at once
 aubergine workflow list        the workflows, with their elements and how many runs are going
@@ -776,6 +779,11 @@ aubergine element propose --file <file>    the same for one element
 aubergine element list         the shelf; also show <name> and remove <name>
 aubergine element run <name> [--session <name|id>] [--input key=value]…   run one element by itself
 aubergine workflow blocked <reason>, goto <element>, pause, resume, stop
+aubergine screen <session>     what that terminal shows now, as text
+aubergine output <session> [--lines n]   what it printed recently
+aubergine send <session> <text> [--enter]   type text into it, exactly as given
+aubergine run <session> [--timeout s] -- <command>   run a command at its prompt, wait, print the output
+aubergine protect <session>    mark it people only: no API token may read it or type into it (unprotect undoes it)
 aubergine note <text>          inside a session: add an entry to its note log
 aubergine hooks print          print the Claude Code hook settings
 aubergine service install      start the Aubergine server at login (macOS)
@@ -850,9 +858,10 @@ curl -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/jso
 | `sessions:write` | start, rename, tag, move, park, restore and end sessions; show a session in the browser. **A session can be started with a command, so a token with this scope can run any command on this computer as you** |
 | `notes:write` | change a session's pinned note and add entries to its note log |
 | `workflows:write` | propose workflows and elements as drafts for you to review. With review switched off for the token: create, change, copy and remove workflows and shelf elements directly |
-| `runs:write` | start runs of workflows on sessions and report on them (done, blocked, go to, pause, resume, stop). It does not type into a terminal |
+| `runs:write` | start runs of workflows on sessions and report on them (done, blocked, go to, pause, resume, stop). By itself it types nothing into a terminal; with `terminal:input` on that terminal, the one fixed kickoff sentence is typed |
+| `terminal:read`, `terminal:input` | read what terminals show, and type into them. Not implied by anything above, and each token says which terminals it may reach. **With `terminal:input` a token can run any command as you.** See [Terminal access](#terminal-access) before granting either |
 
-The names `terminal:read` and `terminal:input` are reserved for what comes later; a token cannot be given them yet. A token cannot read what a terminal shows or type into it.
+Neither terminal scope is implied by any other, `read` included.
 
 **What no token can do, whatever its scopes:** create, list or revoke tokens; read the activity log; change settings; see, bring in or stop terminals outside Aubergine. Those stay with you, in the signed-in browser and the `aubergine` command.
 
@@ -906,6 +915,76 @@ The shapes are meant to last:
 **Revoke** in the browser, or with `aubergine token revoke <name>`. A revoked or expired token is refused on its very next call. `aubergine token list` shows every token with its scopes and when it was last used.
 
 Tokens work on this computer only. The server listens on `127.0.0.1` and that does not change.
+
+## Terminal access
+
+A program with an API token can read what your terminals show and type into them. This is the most that can be given to a token, so it is given in pieces, and each piece is yours to decide.
+
+**Read these three sentences before you make such a token.** A token with `terminal:input` can run any command on this computer as you, in every terminal it may reach. A token with `terminal:read` can read whatever is on those screens, secrets included. Neither comes with any other scope: `read` does not read terminals.
+
+### What you decide
+
+- **The two scopes**, `terminal:read` and `terminal:input`. Both are off unless you tick them.
+- **Which terminals.** A token with either scope must be told when it is made: only terminals on certain canvases, only terminals with a certain tag, or every terminal. There is no default. The limit is checked on every call, so a terminal moved onto a canvas, or given the tag, comes within reach, and one that leaves is out.
+- **People only.** The lock in a terminal's title bar (or `aubergine protect <session>`) closes that terminal to every token, whatever its scopes and reach: no reading, no typing, and its matches are left out of searches. Only you can switch it, in the browser or from the command line; no token can, and neither can the terminal's own programs. **New Claude Code sessions start people only**: a program typing into an agent is the riskiest case. Change that, or make every new terminal start people only, under `terminal` in the settings.
+
+```sh
+aubergine token create "deploy bot" --scope terminal:read --scope terminal:input --reach tag:deploy
+aubergine protect api        # close the terminal "api" to every token
+aubergine unprotect api
+```
+
+### What a token can do
+
+Reading needs `terminal:read`:
+
+```
+GET /v1/sessions/<id>/screen             what the terminal shows now: text, size, cursor
+GET /v1/sessions/<id>/output?lines=200   what it printed recently; "nextCursor" reads further back
+GET /v1/search?q=<text>                  search what terminals printed
+```
+
+What comes back is text only: colors and other control sequences are not in it. Reading does not attach to the terminal, so nothing is resized and nothing changes for you while a program reads. A search covers only the terminals the token may read; the answer says when some were left out, not which.
+
+Typing needs `terminal:input`:
+
+```
+POST /v1/sessions/<id>/input   {"text": "git status", "enter": true}
+POST /v1/sessions/<id>/input   {"keys": ["Ctrl+C"]}
+POST /v1/sessions/<id>/run     {"command": "pnpm test", "timeoutSeconds": 120}
+```
+
+- **`text` is typed exactly as it is.** Nothing in it is read as the name of a key or as an escape: `"Enter"` types five letters. Enter is pressed only when `enter` is true. Text with control characters is refused; press keys by name instead. Text with line breaks is refused too, unless you set `"paste": true`: then it is handed over as a paste (bracketed, where the program in the terminal asked for that), which is how a terminal takes several lines without each line break being the Enter key. In a shell that does not use bracketed paste, each pasted line runs as it arrives.
+- **`keys`** are from a fixed list: Enter, Tab, Escape, Backspace, Delete, Space, the arrows, Home, End, PageUp, PageDown, Ctrl+C, Ctrl+D, Ctrl+Z, Ctrl+L, Ctrl+U, Ctrl+A, Ctrl+E, Ctrl+R.
+- **Whatever has the keyboard receives it.** Typed into a shell, text with Enter is a command that runs. Typed into an agent, it is a prompt.
+- **`run`** types one command into a shell that is at its prompt, waits until the shell says the command finished, and answers with the exit code, what the terminal showed meanwhile and how long it took. It is refused when a program or an agent has the keyboard (`not_at_prompt`), when the shell does not report when commands finish (`no_shell_integration`; today that means any shell but zsh), and when another run is being waited for there (`run_in_progress`). When the time is up it answers `"finished": false` and leaves the command running: it never stops anything. A token with `terminal:input` but not `terminal:read` gets the exit code without the output.
+
+A session that is people only answers every one of these with `403` and the code `people_only`.
+
+With `runs:write` and `terminal:input` on a terminal, a token that starts a workflow run there has the one fixed kickoff sentence typed for it, so `workflow run` works with no browser open. Without input on that terminal the run starts and nothing is typed, as before.
+
+What a `read` token no longer sees: the command line a terminal is running (`status.commandLine`) and the prompts in a session's note log are terminal content, and are given only to a token that may read that terminal.
+
+### What you see
+
+- When a token types into a terminal, its title bar shows **typed by <token>** for half a minute, and its row in the list keeps "typed by <token>" with the time.
+- The **activity log** (⌘K, `API activity`) records every read and every input by a token: when, which token, which terminal, how many characters, how it ended, and for input a short fingerprint, so that two entries can be seen to be the same text. It can be narrowed to one terminal. **It does not keep what was typed or read.**
+- If you want what was typed kept in full, set `"terminal": { "auditInput": true }` in the settings. Then every text and key a token types (and what you type with `aubergine send` and `aubergine run`) is written to `input.log` in the data folder, one JSON line each, readable only by you. That file then holds whatever was typed, passwords included; it is not trimmed. It is off unless you turn it on.
+
+### Limits
+
+Per token and per terminal: 60 input calls a minute and 20,000 characters a minute; 4,000 characters in one call; at most 8 runs being waited for at once. All under `terminal` in the settings (`inputCallsPerMinute`, `inputCharsPerMinute`, `inputCharsPerCall`, `maxWaitingRuns`); they apply from the next start of the server. Beyond them the answer is `429` with `Retry-After`, or `413`.
+
+### From the command line, as you
+
+```sh
+aubergine screen api                        # what the terminal "api" shows now
+aubergine output api --lines 500
+aubergine send api "git status" --enter     # typed exactly as given; without --enter nothing is pressed
+aubergine run api --timeout 120 -- pnpm test   # prints the output, exits with the command's exit code
+```
+
+These are you, not a token, so scopes, reach and "people only" do not apply to them. They are recorded in the activity log as done from the command line.
 
 ## Develop
 

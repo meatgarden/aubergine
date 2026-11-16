@@ -248,7 +248,7 @@ describe('canvases', () => {
 
 describe('an option a command does not know', () => {
   // Every command, with something made up after it. Free text (a note) may hold anything.
-  const lines = ['list', 'new x', 'canvas list', 'canvas new x', 'attach x', 'here', 'scan', 'move', 'import', 'hook stop', 'hooks print', 'shell-hook print', 'token list', 'token create x --scope read', 'token revoke x', 'start', 'open', 'update', 'version', 'doctor', 'uninstall', 'service install'];
+  const lines = ['list', 'new x', 'canvas list', 'canvas new x', 'attach x', 'here', 'scan', 'move', 'import', 'hook stop', 'hooks print', 'shell-hook print', 'token list', 'token create x --scope read', 'token revoke x', 'start', 'open', 'update', 'version', 'doctor', 'uninstall', 'service install', 'screen x', 'output x', 'protect x', 'unprotect x'];
   it.each(lines)('is refused in one sentence that names it: %s', (line) => {
     let thrown: unknown;
     try {
@@ -263,5 +263,32 @@ describe('an option a command does not know', () => {
   it('is named where the command can tell which word it was', () => {
     expect(() => parseCommand(['new', 'w1', '--no-attach'])).toThrow('new does not know --no-attach');
     expect(() => parseCommand(['attach', 'api', '--now'])).toThrow('attach does not know --now');
+  });
+});
+
+describe('the terminal commands', () => {
+  it('read a session name, and for send and run the text exactly as given', () => {
+    expect(parseCommand(['screen', 'api', 'server'])).toEqual({ name: 'screen', query: 'api server' });
+    expect(parseCommand(['output', 'api', '--lines', '50'])).toEqual({ name: 'output', query: 'api', lines: 50 });
+    expect(parseCommand(['output', 'api'])).toEqual({ name: 'output', query: 'api', lines: null });
+    expect(parseCommand(['send', 'api', 'echo', 'hello', '--enter'])).toEqual({ name: 'send', query: 'api', text: 'echo hello', enter: true });
+    expect(parseCommand(['send', 'api', '--enter', 'git', 'log', '--oneline'])).toEqual({ name: 'send', query: 'api', text: 'git log --oneline', enter: true });
+    // Without --enter nothing is pressed, and options of the text itself are text.
+    expect(parseCommand(['send', 'api', 'ls', '--all'])).toEqual({ name: 'send', query: 'api', text: 'ls --all', enter: false });
+    expect(parseCommand(['run', 'api', '--timeout', '5', '--', 'pnpm', 'test', '--', '--watch'])).toEqual({ name: 'run', query: 'api', command: 'pnpm test -- --watch', timeout: 5 });
+    expect(parseCommand(['run', 'api', 'server', '--', 'ls'])).toEqual({ name: 'run', query: 'api server', command: 'ls', timeout: null });
+    expect(parseCommand(['protect', 'api'])).toEqual({ name: 'protect', query: 'api', peopleOnly: true });
+    expect(parseCommand(['unprotect', 'api'])).toEqual({ name: 'protect', query: 'api', peopleOnly: false });
+  });
+
+  it('say what is missing or unknown', () => {
+    for (const words of [['screen'], ['output'], ['output', 'x', '--lines', 'many'], ['send'], ['send', 'x'], ['send', '--enter'], ['run', 'x'], ['run', 'x', '--'], ['run', '--', 'ls'], ['run', 'x', '--loud', '--', 'ls'], ['run', 'x', '--timeout', 'soon', '--', 'ls'], ['protect'], ['unprotect', 'x', '--now']]) {
+      expect(() => parseCommand(words), words.join(' ')).toThrow(UsageError);
+    }
+  });
+
+  it('read which sessions a new token may reach', () => {
+    expect(parseCommand(['token', 'create', 'bot', '--scope', 'terminal:read', '--reach', 'tag:ci'])).toMatchObject({ scopes: ['terminal:read'], reach: 'tag:ci' });
+    expect(parseCommand(['token', 'create', 'bot', '--scope', 'read'])).toMatchObject({ reach: null });
   });
 });

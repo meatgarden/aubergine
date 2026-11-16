@@ -1,6 +1,7 @@
 import type { ZodType } from 'zod';
 import { createClient } from '@aubergine/client';
 import {
+  type Reach,
   type Scope,
   AppendNoteResponse,
   type CreateCanvasRequest,
@@ -90,10 +91,12 @@ export const api = {
   updateCanvas: (canvasId: string, request: UpdateCanvasRequest) => v1.updateCanvas({ canvasId, body: request }),
   /** Closes a canvas. Its sessions are moved to `to`, or parked when `to` is null. */
   closeCanvas: (canvasId: string, to: string | null) => v1.closeCanvas({ canvasId, query: to ? { sessions: 'move', to } : { sessions: 'park' } }),
-  createToken: (request: { name: string; scopes: Scope[]; expiresInDays?: number; reviewWorkflowChanges?: boolean }) => v1.createToken({ body: request }),
+  createToken: (request: { name: string; scopes: Scope[]; expiresInDays?: number; reviewWorkflowChanges?: boolean; reach?: Reach }) => v1.createToken({ body: request }),
   revokeToken: (tokenId: string) => v1.revokeToken({ tokenId }),
-  getActivity: (query: { tokenId?: string | undefined; cursor?: string | undefined; limit?: number }) =>
-    v1.listActivity({ query: { limit: query.limit ?? 50, ...(query.tokenId ? { tokenId: query.tokenId } : {}), ...(query.cursor ? { cursor: query.cursor } : {}) } }),
+  /** Marks a session "people only", or opens it to tokens again. */
+  protectSession: (sessionId: string, peopleOnly: boolean) => v1.protectSession({ sessionId, body: { peopleOnly } }),
+  getActivity: (query: { tokenId?: string | undefined; sessionId?: string | undefined; cursor?: string | undefined; limit?: number }) =>
+    v1.listActivity({ query: { limit: query.limit ?? 50, ...(query.tokenId ? { tokenId: query.tokenId } : {}), ...(query.sessionId ? { sessionId: query.sessionId } : {}), ...(query.cursor ? { cursor: query.cursor } : {}) } }),
   listWorkflowTemplates: () => v1.listWorkflowTemplates({ query: { limit: 100 } }),
   workflowFromTemplate: (template: string) => v1.useWorkflowTemplate({ template }),
   createWorkflow: (body: Parameters<typeof v1.createWorkflow>[0]['body']) => v1.createWorkflow({ body }),

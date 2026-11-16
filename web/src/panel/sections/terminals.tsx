@@ -409,6 +409,11 @@ const RowView = memo(function RowView({ row, style, density, indented, current, 
             agent
           </span>
         )}
+        {session.peopleOnly && (
+          <span className="list-lock" title="People only: no API token may read this terminal or type into it" data-testid="row-people-only">
+            🔒
+          </span>
+        )}
         {!compact && <RunStrip sessionId={session.id} variant="row" />}
         <span className="list-spring" />
         {compact && updated && <span className="list-time">{updated}</span>}
@@ -471,6 +476,11 @@ const RowView = memo(function RowView({ row, style, density, indented, current, 
           {updated && (
             <span className="list-time" title={`Last printed: ${new Date(session.lastOutputAt ?? 0).toLocaleString()}`} data-testid="list-updated">
               updated {updated === 'now' ? 'just now' : `${updated} ago`}
+            </span>
+          )}
+          {session.typedBy && (
+            <span className="list-time list-typed-by" title={`An API token typed into this terminal: ${new Date(session.typedBy.at).toLocaleString()}`} data-testid="list-typed-by">
+              typed by {session.typedBy.name} {ago(session.typedBy.at, now) === 'now' ? 'just now' : `${ago(session.typedBy.at, now)} ago`}
             </span>
           )}
           {session.tags.map((tag) => (

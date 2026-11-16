@@ -31,7 +31,7 @@ export const SCOPE_MEANING: Record<KnownScope, string> = {
   'terminal:read': 'Read what the terminals it may reach show and have printed, and search that. Whatever is on those screens, secrets included, is readable to this token.',
   'terminal:input': 'Type into the terminals it may reach, press keys there and run commands. This scope can run any command on this computer as you, in any terminal it may reach.',
   'workflows:write': 'Propose workflows and elements as drafts for you to review. With review switched off for the token: create, change, copy and remove workflows and shelf elements directly.',
-  'runs:write': 'Start runs of workflows on sessions, and report on them: done, blocked, go to, pause, resume, stop. It does not type into a terminal.',
+  'runs:write': 'Start runs of workflows on sessions, and report on them: done, blocked, go to, pause, resume, stop. By itself it types nothing into a terminal; with terminal:input on that terminal, the one fixed kickoff sentence is typed.',
 };
 
 /** Every secret starts with this, so that one found in a file or a log can be recognised for what it is. */

@@ -123,6 +123,23 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
           </span>
         )}
         {draft === null && !exited && <RunStrip sessionId={sessionId} variant="node" />}
+        {draft === null && session?.typedBy && <TypedBy by={session.typedBy} />}
+        {draft === null && !exited && session && (
+          <button
+            type="button"
+            className={`node-tool nodrag people-only${session.peopleOnly ? ' is-on' : ''}`}
+            aria-pressed={session.peopleOnly}
+            aria-label={`People only: ${name}`}
+            title={hint('terminal.peopleOnly', session.peopleOnly ? 'People only: no API token may read this terminal or type into it. Click to open it to tokens again.' : 'Open to API tokens that have the scope and the reach. Click to make it people only.')}
+            data-testid="people-only"
+            onClick={() => {
+              useApp.getState().select(sessionId);
+              runCommand('terminal.peopleOnly');
+            }}
+          >
+            {session.peopleOnly ? '🔒 people only' : '🔓'}
+          </button>
+        )}
         {draft === null && session && canResumeAgent(session) && (
           <button
             type="button"
@@ -214,6 +231,24 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
     </div>
   );
 });
+
+/** A brief mark that a token typed into the terminal, and which. It fades after half a minute; the row in the list keeps the time. */
+function TypedBy({ by }: { by: { name: string; at: string } }) {
+  const [recent, setRecent] = useState(() => Date.now() - Date.parse(by.at) < 30_000);
+  useEffect(() => {
+    const left = 30_000 - (Date.now() - Date.parse(by.at));
+    setRecent(left > 0);
+    if (left <= 0) return;
+    const timer = window.setTimeout(() => setRecent(false), left);
+    return () => window.clearTimeout(timer);
+  }, [by.at]);
+  if (!recent) return null;
+  return (
+    <span className="badge-typed" title={`The API token “${by.name}” typed into this terminal at ${new Date(by.at).toLocaleTimeString()}`} data-testid="badge-typed">
+      typed by {by.name}
+    </span>
+  );
+}
 
 /**
  * The body never drags or pans the canvas. Until its terminal has focus (and

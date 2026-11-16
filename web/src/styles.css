@@ -2291,3 +2291,46 @@ tr[data-status='expired'] strong {
   color: var(--muted);
   overflow-wrap: anywhere;
 }
+
+/* ---------- Terminal access ---------- */
+.token-warning {
+  color: var(--danger);
+}
+.token-reach label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.token-reach-item {
+  margin-left: 22px;
+}
+.token-reach input:not([type]) {
+  flex: 1;
+  font: inherit;
+  font-size: 13px;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 3px 6px;
+}
+.node-tool.people-only.is-on {
+  color: var(--accent-strong);
+  border-color: var(--accent);
+}
+.badge-typed {
+  flex: none;
+  padding: 0 6px;
+  font-size: 11px;
+  line-height: 16px;
+  color: var(--danger);
+  border: 1px solid var(--danger);
+  border-radius: 8px;
+}
+.list-lock {
+  flex: none;
+  font-size: 11px;
+}
+.list-typed-by {
+  color: var(--danger);
+}

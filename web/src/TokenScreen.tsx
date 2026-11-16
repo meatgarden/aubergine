@@ -1,8 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
-import { GRANTABLE_SCOPES, RESERVED_SCOPES, SCOPE_MEANING, tokenStatus, type ActivityEntry, type Scope, type TokenView } from '@aubergine/shared';
+import { GRANTABLE_SCOPES, RESERVED_SCOPES, SCOPE_MEANING, TERMINAL_SCOPES, tokenStatus, type ActivityEntry, type Reach, type Scope, type TokenView } from '@aubergine/shared';
 import { api } from './api';
 import { runCommand } from './commands';
 import { useApp } from './store';
+
+/** The scopes that reach into terminals: shown with their warnings, and they need a reach. */
+const TERMINAL: readonly string[] = TERMINAL_SCOPES;
 
 const EXPIRY: [label: string, days: number | null][] = [
   ['Never', null],
@@ -26,6 +29,15 @@ export function TokenScreen() {
   const [scopes, setScopes] = useState<Scope[]>(['read']);
   const [days, setDays] = useState<number | null>(null);
   const [review, setReview] = useState(true);
+  /** Which terminals: nothing is chosen for the owner. */
+  const [reachKind, setReachKind] = useState<'all' | 'canvases' | 'tag' | null>(null);
+  const [reachCanvases, setReachCanvases] = useState<string[]>([]);
+  const [reachTag, setReachTag] = useState('');
+  const canvasList = useApp((s) => s.app?.canvases);
+  const canvases = [...(canvasList ?? [])].sort((a, b) => a.order - b.order);
+  const terminal = scopes.some((scope) => TERMINAL.includes(scope));
+  const reach: Reach | null =
+    reachKind === 'all' ? { kind: 'all' } : reachKind === 'canvases' && reachCanvases.length > 0 ? { kind: 'canvases', canvasIds: reachCanvases } : reachKind === 'tag' && reachTag.trim() ? { kind: 'tag', tag: reachTag.trim() } : null;
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   /** The secret of the token just made. It lives here and nowhere else, until the screen is closed. */
@@ -50,7 +62,7 @@ export function TokenScreen() {
     setBusy(true);
     setError(null);
     try {
-      const created = await api.createToken({ name, scopes, reviewWorkflowChanges: review, ...(days === null ? {} : { expiresInDays: days }) });
+      const created = await api.createToken({ name, scopes, reviewWorkflowChanges: review, ...(terminal && reach ? { reach } : {}), ...(days === null ? {} : { expiresInDays: days }) });
       useApp.getState().apply({ type: 'token.created', token: { ...created.token, hash: '' } });
       setMade({ name: created.token.name, secret: created.secret });
       setCopied(false);
@@ -148,7 +160,7 @@ export function TokenScreen() {
                   checked={scopes.includes(scope)}
                   onChange={(e) => setScopes(e.target.checked ? GRANTABLE_SCOPES.filter((s) => s === scope || scopes.includes(s)) : scopes.filter((s) => s !== scope))}
                 />
-                <code>{scope}</code> <span>{SCOPE_MEANING[scope]}</span>
+                <code>{scope}</code> <span className={TERMINAL.includes(scope) ? 'token-warning' : undefined}>{SCOPE_MEANING[scope]}</span>
               </label>
             ))}
             {RESERVED_SCOPES.map((scope) => (
@@ -158,6 +170,35 @@ export function TokenScreen() {
               </label>
             ))}
           </fieldset>
+          {terminal && (
+            <fieldset className="token-scopes token-reach" data-testid="token-reach">
+              <legend>Which terminals it may reach</legend>
+              <p className="sheet-note">
+                A token with a terminal scope must be told. Terminals marked “people only” are closed to every token, whatever is chosen here; new Claude Code sessions are
+                marked so from the start unless you changed that in the settings.
+              </p>
+              <label>
+                <input type="radio" name="reach" checked={reachKind === 'canvases'} onChange={() => setReachKind('canvases')} data-testid="reach-canvases" />
+                <span>Only terminals on these canvases:</span>
+              </label>
+              {reachKind === 'canvases' &&
+                canvases.map((canvas) => (
+                  <label key={canvas.id} className="token-reach-item">
+                    <input type="checkbox" checked={reachCanvases.includes(canvas.id)} onChange={(e) => setReachCanvases(e.target.checked ? [...reachCanvases, canvas.id] : reachCanvases.filter((id) => id !== canvas.id))} />
+                    <span>{canvas.name}</span>
+                  </label>
+                ))}
+              <label>
+                <input type="radio" name="reach" checked={reachKind === 'tag'} onChange={() => setReachKind('tag')} data-testid="reach-tag" />
+                <span>Only terminals with the tag</span>
+                <input value={reachTag} maxLength={32} placeholder="for example: ci" aria-label="Tag" onFocus={() => setReachKind('tag')} onChange={(e) => setReachTag(e.target.value)} />
+              </label>
+              <label>
+                <input type="radio" name="reach" checked={reachKind === 'all'} onChange={() => setReachKind('all')} data-testid="reach-all" />
+                <span className="token-warning">Every terminal, on every canvas, also ones started later</span>
+              </label>
+            </fieldset>
+          )}
           <label className="token-field">
             <span>Expires</span>
             <select aria-label="Expires" value={days ?? ''} onChange={(e) => setDays(e.target.value === '' ? null : Number(e.target.value))}>
@@ -175,7 +216,7 @@ export function TokenScreen() {
             </label>
           )}
           <div className="dialog-actions">
-            <button type="submit" disabled={busy || name.trim() === '' || scopes.length === 0} data-testid="token-create">
+            <button type="submit" disabled={busy || name.trim() === '' || scopes.length === 0 || (terminal && reach === null)} title={terminal && reach === null ? 'Say which terminals it may reach first' : undefined} data-testid="token-create">
               Create token
             </button>
           </div>
@@ -234,6 +275,7 @@ export function ActivityScreen() {
   const open = useApp((s) => s.panel === 'activity');
   const tokens = useApp((s) => s.app?.tokens);
   const [tokenId, setTokenId] = useState('');
+  const [sessionFilter, setSessionFilter] = useState('');
   const sessions = useApp((s) => s.app?.sessions);
   const sessionNames = new Map((sessions ?? []).map((s) => [s.id, s.name]));
   const [entries, setEntries] = useState<ActivityEntry[]>([]);
@@ -245,15 +287,15 @@ export function ActivityScreen() {
     setLoading(true);
     setError(null);
     try {
-      const page = await api.getActivity({ tokenId: filter || undefined, cursor: after ?? undefined });
-      setEntries((before) => (after ? [...before, ...page.items] : page.items));
+      const page = await api.getActivity({ tokenId: filter || undefined, sessionId: sessionFilter || undefined, cursor: after ?? undefined });
+      setEntries((before) => (after ? [...before, ...page.items] : page.items) as ActivityEntry[]);
       setCursor(page.nextCursor);
     } catch (e) {
       setError((e as Error).message);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [sessionFilter]);
 
   // Read when the screen opens and when the filter changes; nothing is read while it is closed.
   useEffect(() => {
@@ -302,6 +344,14 @@ export function ActivityScreen() {
               </option>
             ))}
           </select>
+          <select aria-label="Terminal" value={sessionFilter} onChange={(e) => setSessionFilter(e.target.value)} data-testid="activity-session">
+            <option value="">Every terminal</option>
+            {(sessions ?? []).map((s) => (
+              <option key={s.id} value={s.id}>
+                {s.name}
+              </option>
+            ))}
+          </select>
           <button type="button" className="quiet" onClick={() => void load(tokenId, null)} disabled={loading}>
             Refresh
           </button>
@@ -322,7 +372,14 @@ export function ActivityScreen() {
                   <code>
                     {entry.method} {entry.route}
                   </code>
-                  {entry.action && <div className="sheet-note">{entry.action}</div>}
+                  {entry.action && (
+                    <div className="sheet-note">
+                      {entry.action}
+                      {entry.resource.sessionId ? ` · ${sessionNames.get(entry.resource.sessionId) ?? 'a terminal that is gone'}` : ''}
+                      {typeof entry.chars === 'number' ? ` · ${entry.chars} characters` : ''}
+                      {entry.fingerprint ? ` · ${entry.fingerprint}` : ''}
+                    </div>
+                  )}
                 </td>
                 <td className={`activity-outcome is-${entry.outcome}`}>
                   {OUTCOME[entry.outcome]} <span className="sheet-note">{entry.status}</span>
