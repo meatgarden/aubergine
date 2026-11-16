@@ -18,6 +18,7 @@ import {
   type Canvas,
   type CanvasChanges,
   type AgentKind,
+  type AgentToolsChoice,
   type Attention,
   type AttentionState,
   type CreateFrameRequest,
@@ -58,7 +59,12 @@ export interface SessionsOptions {
   /** Whether a new session starts out "people only": for every session, and for those that start an agent. */
   protectByDefault?: () => { all: boolean; agents: boolean };
   /** The line that starts an agent in a new session, with its reporting set up. */
-  agentLaunchLine?: (agent: AgentKind, args: readonly string[]) => Promise<string>;
+  agentLaunchLine?: (agent: AgentKind, args: readonly string[], sessionId: string) => Promise<string>;
+  /**
+   * Makes what the owner chose to give a new agent of the Aubergine tools, before the agent is started.
+   * Only `create` calls it, and only with what the owner's own request said.
+   */
+  prepareAgentTools?: (session: { id: string; name: string }, choice: AgentToolsChoice) => Promise<void>;
 }
 
 /** The two times of a session (last typed into, last printed) are recorded at most this often. */
@@ -135,11 +141,22 @@ export class Sessions {
     const started = await this.startShell(id, input.cwd ?? null);
     // What a new shell prints while starting up is not news.
     this.seenAt.set(id, Date.now() + 5000);
-    const launch = input.agent
-      ? await this.options.agentLaunchLine?.(input.agent, input.agentArgs ?? (input.agentContinue ? ['--continue'] : []))
-      : undefined;
-    const fallback = launch ? this.nextName('Claude Code') : undefined;
+    const startsAgent = input.agent !== undefined && this.options.agentLaunchLine !== undefined;
+    const fallback = startsAgent ? this.nextName('Claude Code') : undefined;
     const name = input.name && input.uniqueName ? this.uniqueName(input.name) : (input.name ?? fallback);
+    if (startsAgent && input.agentTools) {
+      // Before the agent is started, so that the file it is pointed at is there. If this fails, nothing is left running.
+      try {
+        if (!this.options.prepareAgentTools) throw new ConflictError('Tools for agents are not set up on this server');
+        await this.options.prepareAgentTools({ id, name: name ?? 'Claude Code' }, input.agentTools);
+      } catch (error) {
+        await this.runtime.kill(id).catch(() => {});
+        throw error;
+      }
+    }
+    const launch = input.agent
+      ? await this.options.agentLaunchLine?.(input.agent, input.agentArgs ?? (input.agentContinue ? ['--continue'] : []), id)
+      : undefined;
     let created = this.record(id, name, input.rect, started.cwd, canvas, input.tags ?? []);
     // Closed to programs from the start, where the owner's settings say so. A token typing into an agent is the riskiest case.
     const protect = this.options.protectByDefault?.();
@@ -505,7 +522,7 @@ export class Sessions {
     if (session.state === 'exited') throw new ConflictError('This shell has ended; restart it first');
     if (!session.agent?.conversationId) throw new ConflictError('No agent conversation is known for this session');
     // The ID was validated when it was recorded, and is quoted again when the line is built.
-    const line = await this.options.agentLaunchLine?.(session.agent.kind, ['--resume', session.agent.conversationId, ...more]);
+    const line = await this.options.agentLaunchLine?.(session.agent.kind, ['--resume', session.agent.conversationId, ...more], sessionId);
     if (!line) throw new ConflictError('Starting agents is not set up');
     await this.runtime.typeLine(sessionId, line);
     return this.find(sessionId);
@@ -514,6 +531,12 @@ export class Sessions {
   /** What the session's shell last reported about itself; null when it reports nothing (no integration for that shell). */
   shellReport(sessionId: string): Promise<ShellReport | null> {
     return this.integration.read(sessionId);
+  }
+
+  /** Whether a session started now would be "people only" from the start. */
+  startsProtected(agent: boolean): boolean {
+    const protect = this.options.protectByDefault?.();
+    return protect !== undefined && (protect.all || (protect.agents && agent));
   }
 
   /** Switches "people only" on or off. The owner's alone to call. */

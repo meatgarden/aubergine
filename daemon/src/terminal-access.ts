@@ -116,7 +116,8 @@ export class TerminalAccess {
       query,
       { limit },
     );
-    const hits = found.hits.map((hit) => ({ sessionId: hit.sessionId, text: plain(hit.text), before: hit.before.map(plain), after: hit.after.map(plain) }));
+    const nameOf = new Map(allowed.map((s) => [s.id, s.name]));
+    const hits = found.hits.map((hit) => ({ sessionId: hit.sessionId, sessionName: nameOf.get(hit.sessionId) ?? '', text: plain(hit.text), before: hit.before.map(plain), after: hit.after.map(plain) }));
     const chars = hits.reduce((sum, hit) => sum + hit.text.length + hit.before.join('').length + hit.after.join('').length, 0);
     return { answer: { hits, truncated: found.truncated, searched: allowed.length, someLeftOut: allowed.length < all.length }, trace: { chars } };
   }
@@ -205,6 +206,9 @@ export class TerminalAccess {
       const place = (await this.runtime.screen(sessionId)).line;
       const started = Date.now();
       await this.runtime.type(sessionId, body.command);
+      // A command wider than the terminal takes several rows, and a shell's line editor draws them itself,
+      // so the terminal does not know they are one line. Where the cursor comes to rest is the command's last row.
+      const end = await this.settledLine(sessionId, place);
       await this.runtime.press(sessionId, ['Enter']);
       this.typed(who, sessionId, 'run', `${body.command}\n`);
       const trace: TerminalTrace = { chars: body.command.length, fingerprint: fingerprintOf(body.command) };
@@ -217,7 +221,7 @@ export class TerminalAccess {
         if (now && now.changedAtMs !== undefined && now.changedAtMs !== before.changedAtMs) {
           seenStart = true;
           if (now.state === 'idle') {
-            const output = mayRead ? await this.outputSince(sessionId, place) : null;
+            const output = mayRead ? await this.outputSince(sessionId, end) : null;
             return { answer: { finished: true, exitCode: now.lastExit, output: output?.text ?? null, outputCut: output?.cut ?? false, durationMs: Date.now() - started }, trace };
           }
         }
@@ -226,11 +230,25 @@ export class TerminalAccess {
       }
       // Time is up. It is left alone; if it never started, the session is not trusted to be at a prompt until its shell reports again.
       if (!seenStart) this.unsettled.set(sessionId, before.changedAtMs);
-      const output = mayRead ? await this.outputSince(sessionId, place) : null;
+      const output = mayRead ? await this.outputSince(sessionId, end) : null;
       return { answer: { finished: false, exitCode: null, output: output?.text ?? null, outputCut: output?.cut ?? false, durationMs: Date.now() - started }, trace };
     } finally {
       this.waiting.delete(sessionId);
     }
+  }
+
+  /** The line the cursor is on once the shell has drawn what was typed: read until it stays put for a moment, for at most half a second. */
+  private async settledLine(sessionId: string, from: number): Promise<number> {
+    let line = from;
+    let same = 0;
+    const until = Date.now() + 500;
+    while (Date.now() < until && same < 2) {
+      await sleep(30);
+      const now = Math.max(from, (await this.runtime.screen(sessionId)).line);
+      same = now === line ? same + 1 : 0;
+      line = now;
+    }
+    return line;
   }
 
   /** What the terminal showed after the line the command was typed on, up to the prompt that followed. */

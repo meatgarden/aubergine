@@ -41,6 +41,7 @@ export type Command =
   | { name: 'note'; text: string }
   | { name: 'hook'; event: HookEvent }
   | { name: 'hooks-print' }
+  | { name: 'mcp'; words: string[] }
   | { name: 'shell-hook-print' }
   | { name: 'service'; action: 'install' | 'uninstall' }
   /** What a terminal shows now. */
@@ -130,6 +131,9 @@ export const USAGE = `Usage: aubergine <command>
   protect <session>          Mark it "people only": no API token may read it or type into it
   unprotect <session>        Open it to API tokens again (those whose scopes and reach allow)
   note <text>                Inside a session: add an entry to that session's note log
+  mcp [--url <address>]      An MCP server on standard input and output, for an agent or another MCP client: the
+                             API as tools. Uses AUBERGINE_API_TOKEN, else the session's own token; offers only
+                             the tools that credential may use
   hook <event>               For agent hooks: reads the hook's JSON on stdin (prompt, notification, stop)
   hooks print                Print the Claude Code hook settings, to add to your own config by hand
   shell-hook print           Print a zsh snippet that makes new terminal tabs start on the canvas
@@ -314,6 +318,9 @@ export function parseCommand(argv: readonly string[]): Command {
       if (!event || rest.length !== 1) throw new UsageError(`hook needs one of: ${HOOK_EVENTS.join(', ')}`);
       return { name: 'hook', event };
     }
+    case 'mcp':
+      // Its own options are read by the MCP server itself, which answers a wrong one in the protocol rather than here.
+      return { name: 'mcp', words: rest };
     case 'hooks':
       if (rest.length === 1 && rest[0] === 'print') return { name: 'hooks-print' };
       throw new UsageError('hooks needs "print"');

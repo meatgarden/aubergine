@@ -124,7 +124,7 @@ const runFields = {
   workflowId: Id.describe('The workflow to go through. The run keeps to the version that is latest now.'),
   inputs: RunInputs.describe('The inputs the workflow asks for, by key.'),
   replace: z.boolean().default(false).describe('When the session is already on a run: stop that one and start this. Without it, that is refused.'),
-  kickoff: z.boolean().default(true).describe('Type the line that tells the agent about the run into the session\'s terminal. Only ever done for the owner (the browser or the command line), and only when an agent is running there; an API token is given the line in the answer and nothing is typed.'),
+  kickoff: z.boolean().default(true).describe('Type the line that tells the agent about the run into the session\'s terminal. Done for the owner, and for an API token that may type into that very session (`terminal:input` with a reach that covers it), and only when an agent is running there. Any other caller is given the line in the answer and nothing is typed.'),
 };
 
 /** Body of starting a run. Without a session it waits, queued. */

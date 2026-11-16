@@ -179,7 +179,7 @@ describe('the description of the API', () => {
 
     // One error shape, with its codes.
     const error = document.components.schemas.Error as { properties: { error: { properties: { code: { enum: string[] } } } } };
-    expect(error.properties.error.properties.code.enum).toEqual(['bad_request', 'unauthorized', 'forbidden', 'not_found', 'conflict', 'runtime_unavailable', 'too_large', 'rate_limited', 'people_only', 'not_at_prompt', 'no_shell_integration', 'run_in_progress', 'internal']);
+    expect(error.properties.error.properties.code.enum).toEqual(['bad_request', 'unauthorized', 'forbidden', 'not_found', 'conflict', 'runtime_unavailable', 'too_large', 'rate_limited', 'people_only', 'out_of_reach', 'not_at_prompt', 'no_shell_integration', 'run_in_progress', 'internal']);
     expect(Object.keys(document.components.responses).sort()).toEqual(['BadRequest', 'Conflict', 'Forbidden', 'NotFound', 'RateLimited', 'TooLarge', 'Unauthorized', 'Unavailable']);
     expect(document.components.responses.RateLimited?.headers).toHaveProperty('Retry-After');
     for (const { path, method, operation } of operations) {

@@ -23,9 +23,13 @@ daemon/   Fastify HTTP + WebSocket server, tmux session runtime, JSON store, CLI
           the launcher for sessions (command-path.ts) and the commands (cli/workflow.ts), drafts.ts,
           repository-files.ts (finding and reading, nothing but the file system), repositories.ts
           (offers, acceptance, runs, saving), draft-log.ts,
-          terminal-access.ts (reading, typing, run-and-wait, the limits), terminal-redact.ts, input-audit.ts
+          terminal-access.ts (reading, typing, run-and-wait, the limits), terminal-redact.ts, input-audit.ts,
+          agents/agent-tools.ts (the file an agent is pointed at, and the token made for one session)
 client/   a typed client for the public API, generated from its description; no dependencies;
           may not import from any other package
+mcp/      the MCP server (`aubergine mcp`): the public API as tools over standard input and output;
+          a client of @aubergine/client and shared/ only; tools.ts (what each tool stands on),
+          errors.ts (sentences from the server's codes), quote.ts (other people's text)
 web/      Vite + React + @xyflow/react + @xterm/xterm, Zustand for state; the tab bar (TabBar.tsx)
           and canvas addresses (address.ts); the side panel (panel/: SidePanel.tsx, registry.ts,
           sections/), terminal-rows.ts, list-filters.ts, list-model.ts, TagDialog.tsx;
@@ -65,7 +69,7 @@ These are the only abstractions in the code base. Each has exactly one implement
 - **Never by token.** `NEVER_BY_TOKEN` in `auth.ts` lists what no token may do whatever its scopes: creating, listing and revoking tokens, reading the activity log, changing settings, and anything about terminals or processes outside Aubergine. Do not add a scope for any of these.
 - **Session tokens do not grow.** A session token may set its own attention, add to its own note log, report its own agent, read and report on the run it is on, read what it was asked to write, propose drafts and read its own drafts, list the workflows its repository offers, and ask what the server can do. Wider access is an API token the owner makes on purpose. A session token must never reach a canvas, layout or other-session route, a run by its ID, a list of runs, a draft by its ID or anyone else's draft, the shelf, a workflow, a repository's files or their text, accepting anything, or starting any run.
 - **A token's secret exists once.** It is returned by the create route and never stored, logged or sent again; only its hash is kept, and the hash is not sent to the browser. Comparisons are constant-time. A test searches every file in the data folder for a secret after using it; keep it passing.
-- **`sessions:write` can run commands.** Starting a session with a command runs it as the user. Every description of that scope (README, `SCOPE_MEANING`, the token screen) must say so plainly.
+- **`sessions:write` starts plain shells.** Starting a session with a command also needs `terminal:input` reaching the new session. Every description of these scopes (README, `SCOPE_MEANING`, the token screen) must say plainly what can run commands.
 - **The activity log is not state.** One JSON line per call made with an API token, through the `ActivityLog` interface in `daemon/src/activity.ts`, in its own file with a size cap. It records who, what and how it ended; never the secret, never a request body or query. Nothing else reads or writes that file.
 - **Limits** (`api` in settings) are read when the server starts. Refusals use the one error shape: 429 with `Retry-After`, 413.
 - **Public routes are walked by tests.** `publicRoutesOf(app)` lists every `/v1` route; the tests try each with a read token, a token without `read`, a token with every scope, and a cross-origin browser. A new route needs no test of its own for these, and must pass them.
@@ -97,7 +101,7 @@ These are the only abstractions in the code base. Each has exactly one implement
 - **Owner calls from outside the browser are visible.** `ownerCaller` in `server.ts` tells a page (which sends `Sec-Fetch-Site`) from anything else; the actions in `WATCHED` are recorded in the activity log as `owner-cli`. This is a trace, not a control: do not describe it as protection, and do not let anything depend on it for a decision. Tests that call as the page send `Sec-Fetch-Site`.
 - **The record of drafts is not state**, like the activity log: `DraftLog`, its own file, never what a draft said.
 - **Sessions know their server**: `AUBERGINE_PORT` and `AUBERGINE_DATA_DIR` are in every session's environment beside the others.
-- **Terminal access is two scopes, a reach and a switch, all decided in `authorize`.** `terminal:read` and `terminal:input` are implied by nothing. `authorize` is handed the session's canvas, tags and people-only switch in the resource; do not look them up after it. A session token never has either. A token with a limited reach is told 403, not 404, about a session that does not exist.
+- **Terminal access is two scopes, a reach and a switch, all decided in `authorize`.** `terminal:read` and `terminal:input` are implied by nothing. `authorize` is handed the session's canvas, tags and people-only switch in the resource; do not look them up after it. A session token never has either. A token that holds the scope but whose reach does not cover a session is told `out_of_reach`, and told exactly the same about a session that does not exist.
 - **People only is the owner's.** `sessions.protect` is in `NEVER_BY_TOKEN` and is not a session action. No route, field or default may let a token or a session change it.
 - **Text is typed as it is, or refused.** `inputProblem` in `shared/src/terminal.ts` is the whole rule. Do not add escapes, key names inside text, or cleaning up: what is not plainly text is refused and nothing of the call is typed. Keys come from `NAMED_KEYS` only.
 - **Nothing a caller wrote is on a tmux command line** except as bytes after `-H`, or on standard input.
@@ -107,6 +111,18 @@ These are the only abstractions in the code base. Each has exactly one implement
 - **A fixed sentence is typed for a run only for the owner or for a token that may type into that session** (`mayKickoff`).
 - **Reading must not disturb a viewer.** Keep the test that attaches a viewer and counts what it is sent.
 - **Terminal tests.** A token made in a test for anything but reach says `reach: { kind: 'all' }`; the stand-in runtime in `terminal-rules.test.ts` keeps everything it is asked to type, and the walks there must stay empty.
+- **The MCP server decides nothing.** A tool names the route it stands on; whether it is listed comes from the access the description gives that route (`OPERATIONS[…].access`) and from what `GET /v1` says the caller is. Do not write a scope's name into `mcp/`, and do not refuse a call there for a reason of permission: pass it on and turn the server's answer into a sentence.
+- **`mcp/` may import `@aubergine/client` and `shared/`, never the daemon.** ESLint enforces it.
+- **Nothing but protocol messages on standard output** from `aubergine mcp`, whatever fails. Diagnostics go to standard error and never include a credential. The command never reads the owner's access file. Keep the tests that read every byte.
+- **Other people's text is quoted.** What a terminal shows, a note, a search match and a command's output go through `quoted` (a mark made for that answer, a line saying it is data, `showControl`). A new tool that returns such text does the same and says so in its description. Quoting lowers the chance that a model takes such text for instructions; it does not remove it, and nothing may rely on it as a control.
+- **Both forms of an answer say the same.** The structured form carries the whole text. Do not put anything a model needs into one form only.
+- **No tool for what stays the owner's**: tokens, settings, people only, accepting or discarding drafts, accepting repository workflows, the activity log.
+- **A token for an agent is made only by the owner's own request to start that session** (`agentTools` on the cookie-only create route). No `/v1` route, no token and no session can cause one. It has review of workflow changes on, belongs to one session (`ApiToken.sessionId`), and is revoked when that session is ended for good.
+- **An agent's secret is in one file**: `agents/mcp/<session id>.json` in the data folder, mode 600, passed with `--mcp-config`. Never on the launch line, in the state, in an event or in a log. Ending the session, revoking the token and the sweep at start each remove it. The agent's own configuration is never written.
+- **A field that needs a further permission is declared** (`fieldAlso` on the route), and for a route that makes a session the question is asked about the session being made. `sessions:write` alone starts plain shells; a `command` needs `terminal:input` whose reach covers the new session.
+- **`out_of_reach` is said the same about a session that is not there.** Do not let that answer differ.
+- **`X-Aubergine-Client` is a trace.** It is recorded as given and nothing is decided by it.
+- **The MCP SDK versions are pinned exactly.** The protocol and the SDK change often: read their current documentation before changing `mcp/`, and say in the hand-over which versions and pages.
 - **Canvases.** A session is on at most one canvas; a parked session is on none and remembers where it was (`parkedFrom`). Closing a canvas never ends a shell: the caller says move or park, and the last canvas cannot be closed. Where no canvas is named, `Sessions.canvas(null)` decides (most recently looked at, else first); do not pick a default anywhere else.
 - **Public shapes.** Routes under `/v1` use one error shape, `pageOf` for every list, ignore unknown fields, use ISO times, and take `Idempotency-Key` on creates. Do not add a `/v1` route that departs from these. This API is public: only add to it; never rename or remove.
 - **A `/v1` route is a declaration and a handler.** Add the entry to `ROUTES` and a handler of the same name in `v1.ts`. Do not call `app.get`/`app.post` for anything under `/v1`: a route registered by hand is not in the description, and the tests fail on it. A handler does not decide who may call it and does not parse its own input; the loop does both, in the order parameters, `authorize`, query and body, handler.
@@ -213,7 +229,9 @@ Workflows kept in a repository: found by walking up, read with bounds and withou
 
 Stage C part 1: terminal access over the API: reading the screen and output, search, input, run-and-wait, the two scopes, the reach, people only, the recording and the audit file, the limits, the commands. The state file is version 7: sessions may be people only and remember which token typed last; a token may carry which sessions its terminal scopes reach. Change events also include `session.protected` and `session.typed`.
 
-Not built yet: a packaged build without development dependencies, Linux tested, measured key tables for Safari, Firefox, Linux and Windows, publishing the client as a package, moving the remaining `/api/v1` routes onto `/v1`, the workflow library, the board of runs, approvals, branches, a pool of agents, a list of past runs in the browser, waiting for output, changing a token's reach, SQLite, an MCP server, presets, a finder agent, recording, bash or fish integration.
+Stage C part 2: the MCP server (`mcp/`, `aubergine mcp`), tools listed by what the credential may do, refusals as sentences, quoted terminal content, the client header in the activity log, the choice of tools when starting Claude Code, the token made for one agent session and its file. Error codes also include `out_of_reach`. A token may belong to a session.
+
+Not built yet: a packaged build without development dependencies, Linux tested, measured key tables for Safari, Firefox, Linux and Windows, publishing the client as a package, moving the remaining `/api/v1` routes onto `/v1`, the workflow library, the board of runs, approvals, branches, a pool of agents, a list of past runs in the browser, waiting for output, changing a token's reach, SQLite, an HTTP transport for the MCP server, presets, a finder agent, recording, bash or fish integration.
 
 ## Working in this repo
 

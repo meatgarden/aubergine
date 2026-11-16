@@ -26,7 +26,7 @@ export type KnownScope = z.infer<typeof KnownScope>;
 export const SCOPE_MEANING: Record<KnownScope, string> = {
   read: 'See canvases, sessions, layout and notes, and follow changes.',
   'canvases:write': 'Create, rename, reorder and close canvases; move and resize nodes; add and change frames; show a canvas in the browser.',
-  'sessions:write': 'Start, rename, tag, move, park, restore and end sessions; show a session in the browser. A session can be started with a command, so this scope can run any command on this computer as you.',
+  'sessions:write': 'Start, rename, tag, move, park, restore and end sessions; show a session in the browser. By itself it starts plain shells: starting a session with a command also needs terminal:input.',
   'notes:write': 'Change the pinned note of a session and add entries to its note log.',
   'terminal:read': 'Read what the terminals it may reach show and have printed, and search that. Whatever is on those screens, secrets included, is readable to this token.',
   'terminal:input': 'Type into the terminals it may reach, press keys there and run commands. This scope can run any command on this computer as you, in any terminal it may reach.',
@@ -61,6 +61,8 @@ export const ApiToken = z.object({
   reviewWorkflowChanges: z.boolean().default(false),
   /** Which sessions its terminal scopes apply to. Null for a token without those scopes: it reaches no terminal. */
   reach: Reach.nullable().default(null),
+  /** For a token made for one agent's session: that session. It is revoked when the session is ended for good. */
+  sessionId: Id.nullable().default(null),
 });
 export type ApiToken = z.infer<typeof ApiToken>;
 
@@ -99,6 +101,19 @@ export const CreateTokenRequest = z
   .refine((body) => body.reach !== undefined || !body.scopes.some((scope) => (TERMINAL_SCOPES as readonly string[]).includes(scope)), 'A token with a terminal scope must say which sessions it may reach: give `reach`')
   .refine((body) => body.expiresAt === undefined || body.expiresInDays === undefined, 'Give expiresAt or expiresInDays, not both');
 export type CreateTokenRequest = z.infer<typeof CreateTokenRequest>;
+
+/**
+ * What the owner chose to give a new agent session of the Aubergine tools.
+ * `own`: the MCP server with the session's own credential, and no token.
+ * `token`: an API token made for that one session, with these scopes and this reach.
+ */
+export const AgentToolsChoice = z.discriminatedUnion('kind', [
+  z.object({ kind: z.literal('own') }),
+  z
+    .object({ kind: z.literal('token'), scopes: Scopes, reach: Reach.optional() })
+    .refine((choice) => choice.reach !== undefined || !choice.scopes.some((scope) => (TERMINAL_SCOPES as readonly string[]).includes(scope)), 'A token with a terminal scope must say which sessions it may reach: give `reach`'),
+]);
+export type AgentToolsChoice = z.infer<typeof AgentToolsChoice>;
 
 /** The answer to creating a token: the only time its secret is ever sent. */
 export const CreatedToken = z.object({ token: TokenView, secret: z.string() });
@@ -139,6 +154,8 @@ export const ActivityEntry = z.object({
   chars: z.number().int().nullable().default(null),
   /** For typing: the first characters of a hash of what was typed, so that two entries can be seen to be the same text without keeping it. */
   fingerprint: z.string().max(32).nullable().default(null),
+  /** What the calling program said it was (`mcp/0.1.0`), when it said so. Its own word, not checked. */
+  client: z.string().max(64).nullable().default(null),
   /** What was asked for, as `authorize` names it; empty when the call never got that far. */
   action: z.string(),
   resource: z.object({ sessionId: z.string().optional(), canvasId: z.string().optional() }),
@@ -162,7 +179,17 @@ export const Capabilities = z.object({
   /** Who is asking. A token learns its own name and scopes here and nowhere else. */
   caller: z.discriminatedUnion('kind', [
     z.object({ kind: z.literal('user') }),
-    z.object({ kind: z.literal('token'), id: Id, name: z.string(), scopes: z.array(Scope), expiresAt: Timestamp.nullable() }),
+    z.object({
+      kind: z.literal('token'),
+      id: Id,
+      name: z.string(),
+      scopes: z.array(Scope),
+      expiresAt: Timestamp.nullable(),
+      /** Which sessions its terminal scopes reach; null when it has none of those scopes. */
+      reach: Reach.nullable().default(null),
+      /** Whether what it writes about workflows needs the owner's review. */
+      reviewWorkflowChanges: z.boolean().default(false),
+    }),
     z.object({ kind: z.literal('session'), sessionId: Id }),
   ]),
 });

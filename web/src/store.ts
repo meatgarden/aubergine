@@ -85,6 +85,9 @@ export interface AppStore {
   describe: (kind: 'workflow' | 'element' | null) => void;
   editElement: (elementId: string | null) => void;
   viewRun: (runId: string | null) => void;
+  /** The question about tools for a new agent session is on screen. */
+  choosingAgentTools: boolean;
+  chooseAgentTools: (open: boolean) => void;
   load: () => Promise<void>;
   apply: (event: ChangeEvent) => void;
   focusSession: (sessionId: string | null) => void;
@@ -146,6 +149,8 @@ export const useApp = create<AppStore>((set, get) => ({
   editingWorkflow: null,
   startingRun: null,
   viewingRun: null,
+  choosingAgentTools: false,
+  chooseAgentTools: (choosingAgentTools) => set({ choosingAgentTools }),
 
   editWorkflow: (editingWorkflow) => set({ editingWorkflow }),
   startRun: (startingRun) => set({ startingRun }),

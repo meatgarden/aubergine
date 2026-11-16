@@ -141,6 +141,16 @@ Needs no scope: any caller that is who it says it is.
     name: string;
     scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "terminal:read" | "terminal:input")[];
     expiresAt: string | null;
+    reach: {
+      kind: "all";
+    } | {
+      kind: "canvases";
+      canvasIds: string[];
+    } | {
+      kind: "tag";
+      tag: string;
+    } | null;
+    reviewWorkflowChanges: boolean;
   } | {
     kind: "session";
     sessionId: string;
@@ -553,9 +563,9 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 `POST /v1/canvases/{canvasId}/sessions`: Start a session on a canvas.
 
-Starts a terminal, optionally in a folder (`cwd`), optionally typing a command into it once its shell is ready. This runs that command as you: a token that may start sessions may run anything you can.
+Starts a terminal, optionally in a folder (`cwd`), optionally typing a command into it once its shell is ready. A command is typed into the new terminal and runs as you, so for a token it needs `terminal:input` as well, with a reach that covers the session being made (this canvas, the tags sent); without it the call is refused and no session is made. Without a command the session is a plain shell.
 
-An API token needs the scope `sessions:write`.
+An API token needs the scope `sessions:write`. Sending `command` needs `terminal:input` as well, with a reach that covers the session being made.
 
 | Parameter | In | Type | Required | |
 |---|---|---|---|---|
@@ -2152,7 +2162,7 @@ An API token needs the scope `runs:write`.
 | `workflowId` | `string` | yes | The workflow to go through. The run keeps to the version that is latest now. |
 | `inputs` | `{ [key: string]: string; }` | no | The inputs the workflow asks for, by key. |
 | `replace` | `boolean` | no | When the session is already on a run: stop that one and start this. Without it, that is refused. |
-| `kickoff` | `boolean` | no | Type the line that tells the agent about the run into the session's terminal. Only ever done for the owner (the browser or the command line), and only when an agent is running there; an API token is given the line in the answer and nothing is typed. |
+| `kickoff` | `boolean` | no | Type the line that tells the agent about the run into the session's terminal. Done for the owner, and for an API token that may type into that very session (`terminal:input` with a reach that covers it), and only when an agent is running there. Any other caller is given the line in the answer and nothing is typed. |
 | `sessionId` | `string` | no | The session that will do it. Without one the run waits, queued. |
 
 **Answer** `201`:
@@ -2396,7 +2406,7 @@ An API token needs the scope `runs:write`.
 | `workflowId` | `string` | yes | The workflow to go through. The run keeps to the version that is latest now. |
 | `inputs` | `{ [key: string]: string; }` | no | The inputs the workflow asks for, by key. |
 | `replace` | `boolean` | no | When the session is already on a run: stop that one and start this. Without it, that is refused. |
-| `kickoff` | `boolean` | no | Type the line that tells the agent about the run into the session's terminal. Only ever done for the owner (the browser or the command line), and only when an agent is running there; an API token is given the line in the answer and nothing is typed. |
+| `kickoff` | `boolean` | no | Type the line that tells the agent about the run into the session's terminal. Done for the owner, and for an API token that may type into that very session (`terminal:input` with a reach that covers it), and only when an agent is running there. Any other caller is given the line in the answer and nothing is typed. |
 
 **Answer** `201`:
 
@@ -4358,6 +4368,7 @@ An API token needs the scope `terminal:read`.
 {
   hits: {
     sessionId: string;
+    sessionName: string;
     text: string;
     before: string[];
     after: string[];
@@ -4679,6 +4690,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
       kind: "tag";
       tag: string;
     } | null;
+    sessionId: string | null;
   }[];
   nextCursor: string | null;
 }
@@ -4727,6 +4739,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
       kind: "tag";
       tag: string;
     } | null;
+    sessionId: string | null;
   };
   secret: string;
 }
@@ -4767,6 +4780,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
     kind: "tag";
     tag: string;
   } | null;
+  sessionId: string | null;
 }
 ```
 
@@ -4801,6 +4815,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
     fromSessionId: string | null;
     chars: number | null;
     fingerprint: string | null;
+    client: string | null;
     action: string;
     resource: {
       sessionId?: string;

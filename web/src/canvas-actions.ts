@@ -1,4 +1,4 @@
-import type { AgentKind } from '@aubergine/shared';
+import type { AgentKind, AgentToolsChoice } from '@aubergine/shared';
 
 /**
  * What only the canvas on screen can do, because it needs the view: placing a
@@ -7,7 +7,7 @@ import type { AgentKind } from '@aubergine/shared';
  */
 export interface CanvasActions {
   /** Starts a terminal in free space. With an agent, `agentArgs` are handed to it. Gives back the new session's ID, or null when it could not be started. */
-  addTerminal: (agent?: AgentKind, agentArgs?: string[]) => Promise<string | null>;
+  addTerminal: (agent?: AgentKind, agentArgs?: string[], agentTools?: AgentToolsChoice) => Promise<string | null>;
   addFrame: () => void;
   zoomToFit: () => void;
   resetZoom: () => void;

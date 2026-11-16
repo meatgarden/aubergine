@@ -7,6 +7,8 @@ import Fastify, { type FastifyInstance, type FastifyReply, type FastifyRequest }
 import type { ZodType } from 'zod';
 import {
   SESSION_HEADER,
+  CLIENT_HEADER,
+  ClientName,
   type OwnerCaller,
   AppendNoteRequest,
   CLOSE_BAD_MESSAGE,
@@ -44,7 +46,7 @@ import {
   type TerminalServerMessage,
 } from '@aubergine/shared';
 import { MemoryActivityLog, BadActivityCursorError, type ActivityLog } from './activity';
-import { authorize, bearerOf, peopleOnlyRefusal, principalFromBearer, type Action, type Principal, type Resource } from './auth';
+import { authorize, bearerOf, peopleOnlyRefusal, reachRefusal, principalFromBearer, type Action, type Principal, type Resource } from './auth';
 import { RateLimiter } from './rate-limit';
 import { TokenNotFoundError, Tokens } from './tokens';
 import { BadCursorError } from './public-api';
@@ -195,6 +197,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     if (!principal || !authorize(principal, action, resource)) {
       // One clear answer for a token that would otherwise have been allowed: the owner closed this session to programs.
       if (principal && peopleOnlyRefusal(principal, action, resource)) throw new HttpError(403, 'people_only', 'This session is marked "people only": no token may read it or type into it.');
+      if (principal && reachRefusal(principal, action, resource)) throw new HttpError(403, 'out_of_reach', "This token's reach does not cover that session.");
       throw new HttpError(403, 'forbidden', 'These credentials may not do that');
     }
     return principal;
@@ -219,6 +222,11 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     const sessionId = typeof said === 'string' && Id.safeParse(said).success && sessions.has(said) ? said : null;
     return { kind: 'owner-cli', sessionId };
   };
+  /** What the calling program says it is, when it says so in the form asked for. A trace: nothing is decided by it. */
+  const clientOf = (request: FastifyRequest): string | null => {
+    const said = request.headers[CLIENT_HEADER];
+    return typeof said === 'string' && ClientName.safeParse(said).success ? said : null;
+  };
   /** What only the owner may do and is worth seeing when it was not done in the browser. */
   const WATCHED: readonly Action[] = ['drafts.review', 'repository.review', 'repository.write', 'tokens.manage', 'terminal.input', 'sessions.protect'];
   /** Reading a terminal is watched too, though it changes nothing. */
@@ -240,6 +248,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
         tokenId: null,
         tokenName: '',
         fromSessionId: caller.sessionId,
+        client: clientOf(request),
         chars: traces.get(request)?.chars ?? null,
         fingerprint: traces.get(request)?.fingerprint ?? null,
         action: what.action,
@@ -258,6 +267,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
       at: new Date().toISOString(),
       caller: 'token',
       fromSessionId: null,
+      client: clientOf(request),
       chars: traces.get(request)?.chars ?? null,
       fingerprint: traces.get(request)?.fingerprint ?? null,
       tokenId: call.tokenId,

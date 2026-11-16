@@ -1,0 +1,24 @@
+{
+  "name": "@aubergine/mcp",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "An MCP server for Aubergine: the public API as tools, over standard input and output. It decides nothing about who may do what; it asks the server.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@aubergine/client": "workspace:*",
+    "@aubergine/shared": "workspace:*",
+    "@modelcontextprotocol/server": "2.4.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "vitest": "^5.1.0"
+  }
+}

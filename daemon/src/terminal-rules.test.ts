@@ -171,6 +171,7 @@ describe('a token without terminal:input', () => {
     // What each route would need to be sent to type something, where it could; `{}` for the rest.
     const bodies: Record<string, object> = {
       'POST /v1/sessions/:sessionId/input': { text: 'echo owned', enter: true },
+      'POST /v1/canvases/:canvasId/sessions': { command: 'echo owned', tags: ['any'] },
       'POST /v1/sessions/:sessionId/run': { command: 'echo owned' },
       'POST /v1/sessions/:sessionId/runs': { workflowId: workflow.body.id, inputs: { task: 'x' }, kickoff: true, replace: true },
       'POST /v1/runs': { workflowId: workflow.body.id, sessionId: session.id, inputs: { task: 'x' }, kickoff: true, replace: true },
@@ -185,7 +186,7 @@ describe('a token without terminal:input', () => {
     const routes = [...publicRoutesOf(app)].sort((a, b) => Number(`${b.method} ${b.url}` in bodies) - Number(`${a.method} ${a.url}` in bodies));
     for (const route of routes) {
       if (route.url === '/v1/events') continue;
-      const url = route.url.replace(':sessionId', session.id).replace(':elementId', element.body.id).replace(/:[A-Za-z]+/g, () => newId());
+      const url = route.url.replace(':sessionId', session.id).replace(':elementId', element.body.id).replace(':canvasId', hub.state.canvases[0]!.id).replace(/:[A-Za-z]+/g, () => newId());
       const answer = await call(secret, route.method, url, route.method === 'GET' || route.method === 'DELETE' ? undefined : (bodies[`${route.method} ${route.url}`] ?? {}));
       expect(answer.status, `${route.method} ${route.url}`).not.toBe(500);
       walked += 1;
@@ -196,13 +197,56 @@ describe('a token without terminal:input', () => {
     expect(typed).toEqual([]);
   });
 
-  it('has one exception that was there before and is said plainly: sessions:write may start a new session with a command', async () => {
-    const secret = await makeToken('starter', ['sessions:write']);
-    const made = await call(secret, 'POST', `/v1/canvases/${hub.state.canvases[0]!.id}/sessions`, { command: 'echo started-with' });
-    expect(made.status).toBe(201);
-    await expect.poll(() => typed).toEqual([[made.body.session.id, 'line', 'echo started-with']]);
-    // Into the session it made, and nowhere else: it cannot type into that session, or any other, afterwards.
-    expect((await call(secret, 'POST', `/v1/sessions/${made.body.session.id}/input`, { text: 'more' })).status).toBe(403);
+  it('cannot start a session with a command: that needs terminal:input whose reach covers the session being made', async () => {
+    const canvas = hub.state.canvases[0]!.id;
+    const second = await asOwner('POST', '/v1/canvases', { name: 'Second' });
+    const start = (secret: string, body: object, on = canvas): Promise<Answer> => call(secret, 'POST', `/v1/canvases/${on}/sessions`, body);
+    const starter = await makeToken('starter', ['sessions:write']);
+    const everywhere = await makeToken('everywhere', ['sessions:write', 'terminal:input']);
+    const tagged = await makeToken('tagged', ['sessions:write', 'terminal:input'], { kind: 'tag', tag: 'ci' });
+    const onSecond = await makeToken('second canvas', ['sessions:write', 'terminal:input'], { kind: 'canvases', canvasIds: [second.body.id] });
+    const typerOnly = await makeToken('typer only', ['terminal:input']);
+    typed = [];
+
+    // Without the scope: a plain shell is fine; with a command, refused in a sentence, and no session is made.
+    const before = hub.state.sessions.length;
+    const refused = await start(starter, { command: 'echo owned' });
+    expect(refused.status).toBe(403);
+    expect(refused.body.error.message).toContain('needs the scope `terminal:input` with a reach that covers the session being made');
+    expect((await start(tagged, { command: 'echo owned' })).status).toBe(403);
+    expect((await start(tagged, { command: 'echo owned', tags: ['other'] })).status).toBe(403);
+    expect((await start(onSecond, { command: 'echo owned' })).status).toBe(403);
+    // Typing alone does not start sessions.
+    expect((await start(typerOnly, { command: 'echo owned' })).status).toBe(403);
+    expect(hub.state.sessions.length).toBe(before);
+    expect(typed).toEqual([]);
+    expect((await start(starter, { name: 'plain' })).status).toBe(201);
+    expect(typed).toEqual([]);
+
+    // With it, within reach: the command is typed into the session that was made.
+    const all = await start(everywhere, { command: 'echo everywhere' });
+    const byTag = await start(tagged, { command: 'echo tagged', tags: ['CI'] });
+    const byCanvas = await start(onSecond, { command: 'echo second' }, second.body.id);
+    expect([all.status, byTag.status, byCanvas.status]).toEqual([201, 201, 201]);
+    await expect.poll(() => typed.map(([id, , line]) => [id, line]).sort()).toEqual(
+      [
+        [all.body.session.id, 'echo everywhere'],
+        [byTag.body.session.id, 'echo tagged'],
+        [byCanvas.body.session.id, 'echo second'],
+      ].sort(),
+    );
+    // The owner is unaffected.
+    expect((await asOwner('POST', `/v1/canvases/${canvas}/sessions`, { command: 'echo mine' })).status).toBe(201);
+  });
+
+  it('cannot start one with a command where new sessions start people only', async () => {
+    await stop();
+    await start({ terminal: { protectNewSessions: true } });
+    const everywhere = await makeToken('everywhere', ['sessions:write', 'terminal:input']);
+    typed = [];
+    expect((await call(everywhere, 'POST', `/v1/canvases/${hub.state.canvases[0]!.id}/sessions`, { command: 'echo owned' })).status).toBe(403);
+    expect((await call(everywhere, 'POST', `/v1/canvases/${hub.state.canvases[0]!.id}/sessions`, {})).status).toBe(201);
+    expect(typed).toEqual([]);
   });
 
   it('with terminal:input and reach on that session, starting a run types the fixed kickoff sentence and nothing else', async () => {
@@ -419,9 +463,15 @@ describe('which sessions a token may reach', () => {
     expect(await reached(byTag, parked)).toEqual(yes);
     expect(await reached(byTag, onSecond)).toEqual(no);
     // A session that is not there: refused like one out of reach, not "not found".
-    expect((await call(byTag, 'GET', `/v1/sessions/${newId()}/screen`)).status).toBe(403);
-    // Out of reach is plain "forbidden", not "people only": nothing is said about sessions it cannot reach.
-    expect((await call(byCanvas, 'GET', `/v1/sessions/${onFirst.id}/screen`)).body.error.code).toBe('forbidden');
+    const absent = await call(byTag, 'GET', `/v1/sessions/${newId()}/screen`);
+    expect(absent.status).toBe(403);
+    // Out of reach says so, and never "people only". One that is there and one that is not get the same answer, word for word:
+    // nothing is learned about which sessions there are outside the reach.
+    const beyond = await call(byCanvas, 'GET', `/v1/sessions/${onFirst.id}/screen`);
+    expect(beyond.body).toEqual({ error: { code: 'out_of_reach', message: "This token's reach does not cover that session." } });
+    expect(absent.body).toEqual(beyond.body);
+    // A token without the scope at all is told nothing about reach.
+    expect((await call(await makeToken('no terminal scope', ['read']), 'GET', `/v1/sessions/${onFirst.id}/screen`)).body.error.code).toBe('forbidden');
     // Everything typed went into sessions within reach.
     expect([...new Set(typed.map(([id]) => id))].sort()).toEqual([onSecond.id, onFirst.id, parked.id].sort());
 

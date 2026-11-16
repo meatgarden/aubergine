@@ -1,7 +1,9 @@
 import { mkdir } from 'node:fs/promises';
 import path from 'node:path';
 import { SESSION_ENV, paths } from '@aubergine/shared';
+import { AgentTools } from './agents/agent-tools';
 import { claudeLaunchLine, writeClaudeSettings } from './agents/claude-code';
+import { Tokens } from './tokens';
 import { FileActivityLog } from './activity';
 import { sessionToken } from './auth';
 import { installRoot, versionInfo } from './cli/install';
@@ -42,6 +44,8 @@ async function main(): Promise<void> {
   // The `aubergine` command for programs inside sessions, at the end of their PATH.
   const commandFolder = await writeCommandLauncher(config.dataDir);
   const sessionPath = pathWithCommand(shellEnvironment(process.env).PATH ?? '', commandFolder);
+  // Tools for agents: the file each is pointed at, and the token made for one when the owner asked for more than its own work.
+  const agentTools = new AgentTools(hub, new Tokens(hub), config.dataDir, (message) => console.warn(message));
   const sessions = new Sessions(hub, runtime, {
     integration,
     currentCanvas: () => viewers.lastViewedCanvasId,
@@ -57,11 +61,14 @@ async function main(): Promise<void> {
     }),
     logPrompts: () => settings.value.agents.logPrompts,
     protectByDefault: () => ({ all: settings.value.terminal.protectNewSessions, agents: settings.value.terminal.protectAgentSessions }),
-    agentLaunchLine: async (_agent, args) =>
+    agentLaunchLine: async (_agent, args, sessionId) =>
       claudeLaunchLine(await writeClaudeSettings(config.dataDir), {
         command: (await settings.reload()).agents.claudeCommand,
         args,
+        // The tools the owner gave this session, if any: also when its agent is resumed.
+        mcpConfig: await agentTools.fileFor(sessionId),
       }),
+    prepareAgentTools: (session, choice) => agentTools.prepare(session, choice),
     defaultFolder: () => (settings.value.defaultFolder ? expandHome(settings.value.defaultFolder) : null),
     shell: () => settings.value.shell,
   });
@@ -102,6 +109,8 @@ async function main(): Promise<void> {
   const status = await sessions.status();
   if (status.status === 'ok') {
     await sessions.reconcile();
+    // Whatever a session that is gone left behind: its token is revoked and its file removed.
+    await agentTools.sweep();
   } else {
     console.warn(
       status.status === 'missing'

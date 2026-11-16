@@ -69,6 +69,17 @@ export function peopleOnlyRefusal(principal: Principal, action: Action, resource
   return scope !== null && principal.scopes.includes(scope) && resource.session.peopleOnly && reaches(principal.reach ?? null, resource.session);
 }
 
+/**
+ * Why a token that holds the scope was still refused a terminal, when it is
+ * not "people only": the session is outside its reach. Said about a session
+ * that does not exist too, so that it tells nothing about which sessions there are.
+ */
+export function reachRefusal(principal: Principal, action: Action, resource: Resource): boolean {
+  if (principal.kind !== 'token' || !TERMINAL_ACTIONS.includes(action) || resource.sessionId === undefined) return false;
+  const scope = scopeFor(action);
+  return scope !== null && principal.scopes.includes(scope) && !authorize(principal, action, resource) && !peopleOnlyRefusal(principal, action, resource);
+}
+
 const PREFIX = 'aub1';
 
 function mac(secret: string, sessionId: string): string {

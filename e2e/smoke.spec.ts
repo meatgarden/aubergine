@@ -1,4 +1,4 @@
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
@@ -1009,4 +1009,90 @@ test('a token types into a terminal, the owner sees it, and "people only" closes
   await expect(activity.getByTestId('activity-row').nth(3)).toContainText('25 characters');
   await expect(activity).not.toContainText('typed-by-');
   await page.keyboard.press('Escape');
+});
+
+test('a Claude Code session is given Aubergine tools: a token made for it at the owner\'s click, revoked when the session ends', async ({ page }) => {
+  // The agent is stood in for: the launch command is one that only prints what it was started with.
+  const settingsFile = path.join(e2e.dataDir, 'config.json');
+  const settingsBefore = existsSync(settingsFile) ? readFileSync(settingsFile, 'utf8') : null;
+  writeFileSync(settingsFile, JSON.stringify({ ...(settingsBefore ? JSON.parse(settingsBefore) : {}), agents: { claudeCommand: 'echo stand-in-agent' } }));
+  try {
+    const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+    await page.goto(`/auth?token=${token}`);
+    await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+    await page.getByRole('button', { name: 'New canvas' }).click();
+    const origin = new URL(page.url()).origin;
+    const tokensNow = async (): Promise<{ id: string; name: string; sessionId: string | null; revokedAt: string | null; scopes: string[]; reviewWorkflowChanges: boolean }[]> =>
+      (await (await page.request.get('/v1/tokens?limit=200', { headers: { origin } })).json()).items;
+    const before = (await tokensNow()).length;
+    const mcpFolder = path.join(e2e.dataDir, 'agents', 'mcp');
+
+    // The question comes first, and its answer to begin with is "none".
+    await page.getByTestId('agent-with-tools').click();
+    const dialog = page.getByTestId('agent-tools-dialog');
+    await expect(dialog).toContainText('Aubergine tools for this agent');
+    await expect(dialog.getByTestId('agent-tools-none')).toBeChecked();
+    await expect(dialog.getByTestId('agent-tools-scopes')).toHaveCount(0);
+
+    // More: scopes, and for a terminal scope a reach, which starts at this canvas.
+    await dialog.getByTestId('agent-tools-more').check();
+    const scopeBox = (scope: string) => dialog.locator('label', { has: page.locator('code', { hasText: new RegExp(`^${scope}$`) }) });
+    await expect(scopeBox('read').getByRole('checkbox')).toBeChecked();
+    await expect(dialog.getByTestId('agent-tools-reach')).toHaveCount(0);
+    await scopeBox('terminal:read').getByRole('checkbox').check();
+    await expect(dialog.getByTestId('agent-tools-reach')).toContainText('Only terminals on this canvas');
+    await expect(dialog).toContainText('Terminals marked “people only” stay closed to it');
+    // Nothing is made by choosing.
+    expect((await tokensNow()).length).toBe(before);
+
+    await dialog.getByTestId('agent-tools-start').click();
+    await expect(dialog).toHaveCount(0);
+    await expect(page.getByTestId('terminal-node')).toHaveCount(1);
+    const sessionId = (await page.getByTestId('list-row').getAttribute('data-session')) ?? '';
+
+    // One token, for this session, named after it, with review on.
+    const made = (await tokensNow()).filter((t) => t.sessionId === sessionId);
+    expect(made).toHaveLength(1);
+    expect(made[0]).toMatchObject({ scopes: ['read', 'terminal:read'], reviewWorkflowChanges: true, revokedAt: null });
+    expect(made[0]?.name).toMatch(/^Agent in "Claude Code/);
+    // The file the agent is pointed at: in the data folder, for the owner's eyes only, and on the launch line.
+    const file = path.join(mcpFolder, `${sessionId}.json`);
+    expect(statSync(file).mode & 0o777).toBe(0o600);
+    const secret = JSON.parse(readFileSync(file, 'utf8')).mcpServers.aubergine.env.AUBERGINE_API_TOKEN as string;
+    await expect(page.locator('.xterm-rows')).toContainText('stand-in-agent');
+    await expect(page.locator('.xterm-rows')).toContainText('--mcp-config');
+    await expect(page.locator('.xterm-rows')).not.toContainText(secret.slice(0, 16));
+    expect(readFileSync(path.join(e2e.dataDir, 'state.json'), 'utf8')).not.toContain(secret);
+    // It works as that token, and the session is closed to tokens, its own included.
+    expect((await page.request.get('/v1', { headers: { Authorization: `Bearer ${secret}` } })).status()).toBe(200);
+    expect((await (await page.request.get(`/v1/sessions/${sessionId}/screen`, { headers: { Authorization: `Bearer ${secret}` } })).json()).error.code).toBe('people_only');
+
+    // Listed with the other tokens, saying whose it is.
+    await page.keyboard.press(process.platform === 'darwin' ? 'Meta+k' : 'Control+Shift+K');
+    await page.keyboard.type('>api tokens');
+    await page.keyboard.press('Enter');
+    const row = page.getByTestId('token-row').filter({ hasText: 'Agent in' });
+    await expect(row.getByTestId('token-for-session')).toContainText('Made for the agent in “Claude Code');
+    await expect(row).toHaveAttribute('data-status', 'active');
+
+    // Ended for good: the token stops working, and its file is gone.
+    expect((await page.request.delete(`/v1/sessions/${sessionId}`, { headers: { origin } })).status()).toBe(204);
+    await expect(row).toHaveAttribute('data-status', 'revoked');
+    expect((await page.request.get('/v1', { headers: { Authorization: `Bearer ${secret}` } })).status()).toBe(401);
+    await expect.poll(() => existsSync(file)).toBe(false);
+    await page.keyboard.press('Escape');
+
+    // "Its own work only" makes a file without a secret and no token.
+    const count = (await tokensNow()).length;
+    await page.getByTestId('agent-with-tools').click();
+    await dialog.getByTestId('agent-tools-own').check();
+    await dialog.getByTestId('agent-tools-start').click();
+    await expect(page.getByTestId('terminal-node')).toHaveCount(1);
+    const ownId = (await page.getByTestId('list-row').getAttribute('data-session')) ?? '';
+    expect(JSON.parse(readFileSync(path.join(mcpFolder, `${ownId}.json`), 'utf8')).mcpServers.aubergine.env).toBeUndefined();
+    expect((await tokensNow()).length).toBe(count);
+  } finally {
+    if (settingsBefore === null) rmSync(settingsFile, { force: true });
+    else writeFileSync(settingsFile, settingsBefore);
+  }
 });

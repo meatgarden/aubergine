@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@aubergine/client": "workspace:*",
+    "@aubergine/mcp": "workspace:*",
     "@aubergine/shared": "workspace:*",
     "@fastify/cookie": "^11.1.5",
     "@fastify/static": "^10.1.10",
@@ -22,6 +23,7 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@modelcontextprotocol/client": "2.4.0",
     "@seriousme/openapi-schema-validator": "2.12.0",
     "@types/node": "^26.6.6",
     "@types/ws": "^8.18.2",

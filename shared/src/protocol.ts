@@ -21,7 +21,7 @@ import {
   SessionNote,
   Tags,
 } from './entities';
-import { ActivityEntry, TokenView } from './tokens';
+import { ActivityEntry, AgentToolsChoice, TokenView } from './tokens';
 import { CanvasChanges, ChangeEvent } from './events';
 import { Id } from './ids';
 import { Settings } from './settings';
@@ -118,6 +118,11 @@ export const CreateSessionRequest = z.object({
    * example `["--resume", "<id>", "--fork-session"]`.
    */
   agentArgs: z.array(z.string().min(1).max(500)).max(40).optional(),
+  /**
+   * With `agent`: give it the Aubergine tools, through the MCP server. Left out: none.
+   * This route is the owner's alone, so a token for an agent is only ever made at the owner's request.
+   */
+  agentTools: AgentToolsChoice.optional(),
   /** Folder to start in (absolute path). The default folder is used when omitted. */
   cwd: z.string().startsWith('/').max(4096).optional(),
   /** A line to type into the new session once its shell is ready. */
@@ -194,6 +199,13 @@ export const SESSION_ENV = {
 
 /** The header in which a command run inside a session says which session that is. Said by the caller itself. */
 export const SESSION_HEADER = 'x-aubergine-session';
+
+/**
+ * A program may say what it is with this header: a short name, a slash, a version (`mcp/0.1.0`).
+ * It is written beside the call in the activity log. It is what the caller says, nothing more: a trace, never a reason to allow or refuse.
+ */
+export const CLIENT_HEADER = 'x-aubergine-client';
+export const ClientName = z.string().regex(/^[a-z][a-z0-9-]{0,30}\/[0-9A-Za-z.+-]{1,30}$/);
 
 /**
  * A terminal the user has open outside the canvas, as the daemon found it.
@@ -314,6 +326,8 @@ export const ErrorCode = z.enum([
   'rate_limited',
   /** The session is "people only": no token may read it or type into it. */
   'people_only',
+  /** The token has the scope for terminals, but its reach does not cover that session. */
+  'out_of_reach',
   /** The session's shell is not at its prompt: a program or an agent has the keyboard. */
   'not_at_prompt',
   /** The session's shell does not report when a command finishes, so a run cannot be waited for. */

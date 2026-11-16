@@ -114,6 +114,8 @@ export interface LaunchOptions {
   command?: string;
   /** Arguments for the agent itself, such as `--continue` or `--resume <id>`. Each is quoted. */
   args?: readonly string[];
+  /** A file of ours that names an MCP server for the agent, passed with `--mcp-config`. A path the server made, never one a caller sent. */
+  mcpConfig?: string | null;
 }
 
 /**
@@ -124,7 +126,7 @@ export interface LaunchOptions {
  */
 export function claudeLaunchLine(settingsFile: string, options: LaunchOptions = {}): string {
   const command = (options.command ?? 'claude').trim() || 'claude';
-  const flags = [shellJoin(options.args ?? []), `--settings ${shellQuote(settingsFile)}`].filter(Boolean).join(' ');
+  const flags = [shellJoin(options.args ?? []), `--settings ${shellQuote(settingsFile)}`, options.mcpConfig ? `--mcp-config ${shellQuote(options.mcpConfig)}` : ''].filter(Boolean).join(' ');
   return command.includes(FLAGS_PLACEHOLDER) ? command.replaceAll(FLAGS_PLACEHOLDER, flags) : `${command} ${flags}`;
 }
 
