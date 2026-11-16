@@ -1,5 +1,6 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest';
+import { bestCorner, cornerBox, overlap } from './placement';
 import { tourSteps } from './registry';
 import './steps';
 import { neverShown, parseRemembered, resumeAt } from './tour-store';
@@ -54,5 +55,32 @@ describe('what is remembered of the tour', () => {
     // A step that no longer exists: from the start.
     expect(resumeAt(parseRemembered('{"status":"paused","step":"gone"}'), ids)).toBe(0);
     expect(resumeAt(null, ids)).toBe(0);
+  });
+});
+
+describe('where the card goes', () => {
+  const card = { width: 380, height: 190 };
+  const window = { width: 1400, height: 860 };
+
+  it('stays in the bottom right while nothing it would cover matters', () => {
+    expect(bestCorner(card, window, [])).toBe('bottom-right');
+    expect(bestCorner(card, window, [{ box: { x: 100, y: 100, width: 300, height: 200 }, weight: 3 }])).toBe('bottom-right');
+  });
+
+  it('moves off the buttons of a dialog, and off the thing being pointed at', () => {
+    // A wide dialog whose buttons are at its bottom right, under where the card would be.
+    const dialog = { box: { x: 130, y: 115, width: 1140, height: 640 }, weight: 1 };
+    const accept = { box: { x: 1150, y: 700, width: 100, height: 32 }, weight: 12 };
+    const corner = bestCorner(card, window, [dialog, accept]);
+    expect(corner).not.toBe('bottom-right');
+    expect(overlap(cornerBox(corner, card, window), accept.box)).toBe(0);
+    // The thing pointed at is in the bottom right: go elsewhere.
+    expect(bestCorner(card, window, [{ box: { x: 1000, y: 600, width: 380, height: 240 }, weight: 3 }])).not.toBe('bottom-right');
+  });
+
+  it('does not jump about for a sliver: it moves only when another corner is clearly better', () => {
+    const sliver = { box: { x: 1004, y: 654, width: 30, height: 30 }, weight: 1 };
+    expect(bestCorner(card, window, [sliver], 'bottom-right')).toBe('bottom-right');
+    expect(bestCorner(card, window, [], 'top-left')).toBe('top-left');
   });
 });

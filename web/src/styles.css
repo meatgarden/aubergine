@@ -2365,8 +2365,6 @@ tr[data-status='expired'] strong {
 }
 .tour-card {
   position: fixed;
-  right: 16px;
-  bottom: 16px;
   z-index: 301;
   width: min(380px, calc(100vw - 32px));
   padding: 14px 16px;
@@ -2374,6 +2372,23 @@ tr[data-status='expired'] strong {
   border: 1px solid var(--accent);
   border-radius: 10px;
   box-shadow: 0 12px 40px rgb(0 0 0 / 0.5);
+}
+/* It sits in whichever corner covers least of what is needed just now. */
+.tour-card.at-bottom-right {
+  right: 16px;
+  bottom: 16px;
+}
+.tour-card.at-bottom-left {
+  left: 16px;
+  bottom: 16px;
+}
+.tour-card.at-top-right {
+  right: 16px;
+  top: 16px;
+}
+.tour-card.at-top-left {
+  left: 16px;
+  top: 16px;
 }
 .tour-card h2 {
   margin: 2px 0 6px;

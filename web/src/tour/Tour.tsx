@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { demoOf } from '@aubergine/shared';
 import { useApp } from '../store';
 import { removeDemo } from './actions';
+import { bestCorner, type Corner, type Obstacle } from './placement';
 import { tourSteps, type TourContext, type TourStep } from './registry';
 import './steps';
 import { neverShown, remembered, resumeAt, useTour } from './tour-store';
@@ -35,6 +36,33 @@ function Ring({ rect }: { rect: DOMRect | null }) {
   if (!rect) return null;
   const pad = 6;
   return <div className="tour-ring" aria-hidden="true" style={{ left: rect.x - pad, top: rect.y - pad, width: rect.width + pad * 2, height: rect.height + pad * 2 }} data-testid="tour-ring" />;
+}
+
+/**
+ * The corner the card sits in: wherever it covers least of what is needed just now. Looked at again as things
+ * open and move, on the same kind of timer as the ring.
+ */
+function useCorner(card: React.RefObject<HTMLElement | null>, target: DOMRect | null, up: boolean): Corner {
+  const [corner, setCorner] = useState<Corner>('bottom-right');
+  useEffect(() => {
+    if (!up) return;
+    const place = (): void => {
+      const size = card.current?.getBoundingClientRect();
+      if (!size) return;
+      const obstacles: Obstacle[] = [];
+      if (target) obstacles.push({ box: target, weight: 3 });
+      for (const dialog of document.querySelectorAll('.dialog, .picker')) {
+        obstacles.push({ box: dialog.getBoundingClientRect(), weight: 1 });
+        // What can be pressed in a dialog must stay in reach.
+        for (const control of dialog.querySelectorAll('button, input, select, textarea')) obstacles.push({ box: control.getBoundingClientRect(), weight: 12 });
+      }
+      setCorner((now) => bestCorner({ width: size.width, height: size.height }, { width: window.innerWidth, height: window.innerHeight }, obstacles, now));
+    };
+    place();
+    const timer = setInterval(place, 250);
+    return () => clearInterval(timer);
+  }, [card, target, up]);
+  return corner;
 }
 
 function contextNow(signals: ReadonlySet<string>): TourContext | null {
@@ -118,6 +146,8 @@ export function Tour() {
     };
   }, [shown]);
   const rect = useRectOf(find);
+  const cardRef = useRef<HTMLElement | null>(null);
+  const corner = useCorner(cardRef, rect, current !== null);
 
   if (!current || step === null) return <Ring rect={rect} />;
   const last = step === steps.length - 1;
@@ -130,7 +160,7 @@ export function Tour() {
   return (
     <>
       <Ring rect={rect} />
-      <section className="tour-card" role="region" aria-label="Tour" data-testid="tour-card" data-step={current.id} data-done={done ? 'true' : undefined}>
+      <section ref={cardRef} className={`tour-card at-${corner}`} role="region" aria-label="Tour" data-testid="tour-card" data-step={current.id} data-corner={corner} data-done={done ? 'true' : undefined}>
         <div className="tour-count" data-testid="tour-count">
           {step + 1} of {steps.length}
         </div>

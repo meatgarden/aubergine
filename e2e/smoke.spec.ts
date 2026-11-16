@@ -1190,6 +1190,9 @@ test('the tour: each step is done on the real thing, on the demo', async ({ page
   await page.getByTestId('drafts-waiting').click();
   const review = page.getByTestId('review-screen');
   await expect(review.getByTestId('review-title')).toContainText('Check the sign-in page by hand');
+  // The card has moved out of the way: every button of the review can be reached with it up.
+  await expect(card).not.toHaveAttribute('data-corner', 'bottom-right');
+  for (const button of ['review-accept', 'review-send-back', 'review-discard']) await review.getByTestId(button).click({ trial: true });
   await review.getByTestId('review-discard').click();
   await expect(card).toHaveAttribute('data-step', 'your-own');
   await review.getByTestId('review-close').click();
