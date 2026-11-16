@@ -351,6 +351,8 @@ describe('every route has a rule', () => {
     'POST /v1/workflows/:workflowId/elements/:elementId/shelf-update',
     // The library: sources, refreshing (the one thing that fetches), accepting an install and removing one are the owner's.
     'POST /v1/library/sources',
+    'POST /v1/runs/:runId/approve',
+    'POST /v1/runs/:runId/send-back',
     'DELETE /v1/library/sources/:sourceId',
     'POST /v1/library/sources/:sourceId/refresh',
     'GET /v1/library/requests',

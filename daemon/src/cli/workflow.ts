@@ -1,5 +1,5 @@
 import { AubergineError, createClient, type Client } from '@aubergine/client';
-import { NEEDS_REVIEW, SESSION_ENV, showControl, WorkflowFile, exportWorkflow, importWorkflow, needWords, type Session, type Workflow, type WorkflowDetail, type WorkflowSummary } from '@aubergine/shared';
+import { NEEDS_REVIEW, SESSION_ENV, showControl, waitsForPerson, WorkflowFile, exportWorkflow, importWorkflow, needWords, type Session, type Workflow, type WorkflowDetail, type WorkflowSummary } from '@aubergine/shared';
 import { UsageError, resolveSession, takeOption } from './commands';
 
 /** `aubergine workflow …`, as parsed. */
@@ -277,6 +277,9 @@ export function formatWorkflow(workflow: WorkflowDetail): string {
   current.elements.forEach((element, index) => {
     lines.push('', `${index + 1}. ${element.name}  [${element.id}]`);
     if (element.instructions.trim()) lines.push(indent(element.instructions.trim()));
+    if (waitsForPerson(element.kind)) lines.push('   A person decides here: the run stops until you approve it or send it back.');
+    if (element.ask.trim()) lines.push(indent(`You are asked: ${element.ask.trim()}`));
+    if (element.lookAt.trim()) lines.push(indent(`To look at: ${element.lookAt.trim()}`));
     if (element.doneWhen) lines.push(`   Done when: ${element.doneWhen}`);
     if (element.needs.length > 0) lines.push(`   Needs: ${element.needs.map(needWords).join('; ')}`);
     if (element.produces !== 'note') lines.push(`   Produces: ${element.produces}`);

@@ -347,8 +347,9 @@ describe('JsonStore', () => {
 
     const state = await store.load();
     expect(state.library).toEqual({ sources: [], installed: [], requests: [] });
-    expect(state.shelf).toEqual(before.shelf);
-    expect(state.workflows).toEqual(before.workflows);
+    // Everything the file said is still said; elements have gained two empty fields since.
+    expect(state.shelf).toMatchObject(before.shelf);
+    expect(state.workflows).toMatchObject(before.workflows);
     expect(state.sessions.length).toBe(before.sessions.length);
 
     await store.save(state);
@@ -372,7 +373,8 @@ describe('JsonStore', () => {
     expect(state.runs[0]?.history).toEqual([]);
     expect(state.runs[0]?.elements.every((e) => e.sentBack === null)).toBe(true);
     expect(state.workflows.flatMap((w) => w.versions.flatMap((v) => v.elements.map((e) => [e.ask, e.lookAt])))).toSatisfy((pairs: string[][]) => pairs.every(([ask, lookAt]) => ask === '' && lookAt === ''));
-    expect(state.library).toEqual(before.library);
+    // A source stored under its address, cut short, loses that name; one the owner named keeps it.
+    expect(state.library.sources.map((s) => [s.name, s.claims, s.address === before.library.sources.find((b: { id: string }) => b.id === s.id).address])).toEqual([['', null, true], ["The team's", null, true]]);
 
     await store.save(state);
     const raw = JSON.parse(await readFile(store.file, 'utf8'));

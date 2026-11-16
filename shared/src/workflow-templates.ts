@@ -16,7 +16,7 @@ const STANDING = [
   'Keep the change as small as the task allows. If something is unclear and guessing would be risky, report blocked and say what you need.',
 ].join('\n');
 
-const template = (name: string, title: string, description: string, elements: { id: string; name: string; instructions: string; doneWhen: string }[]): BuiltInTemplate => ({
+const template = (name: string, title: string, description: string, elements: ({ id: string; name: string; instructions: string; doneWhen: string } | { id: string; kind: string; name: string; ask: string; lookAt?: string })[]): BuiltInTemplate => ({
   name,
   title,
   description,
@@ -96,7 +96,7 @@ export const WORKFLOW_TEMPLATES: readonly BuiltInTemplate[] = [
       doneWhen: 'The note holds the review, ready to hand to the author.',
     },
   ]),
-  template('specify-design-build', 'Specify, design, then build', 'Agree on what is wanted before deciding how, and decide how before building.', [
+  template('specify-design-build', 'Specify, design, then build', 'Agree on what is wanted before deciding how, decide how before building, and stop for your yes before anything is built.', [
     {
       id: 'specify',
       name: 'Specify',
@@ -108,6 +108,13 @@ export const WORKFLOW_TEMPLATES: readonly BuiltInTemplate[] = [
       name: 'Design',
       instructions: 'Decide how to build what was specified: the parts, what each is responsible for, what changes in existing code, and the order of work. Name the choices you made and what you chose against.',
       doneWhen: 'There is a design that covers every point of the specification.',
+    },
+    {
+      id: 'agree',
+      kind: 'approval',
+      name: 'Agree before building',
+      ask: 'Is this what you want built, and is this how you want it built?',
+      lookAt: 'The specification and the design, in the notes of the two elements before.',
     },
     {
       id: 'build',

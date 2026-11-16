@@ -78,6 +78,11 @@ export function BoardScreen() {
   const [now, setNow] = useState(() => Date.now());
   const [many, setMany] = useState(false);
   const body = useRef<HTMLDivElement | null>(null);
+  const dialog = useRef<HTMLDivElement | null>(null);
+  // The board takes the keyboard when it opens, so that the arrows work at once.
+  useEffect(() => {
+    if (open) dialog.current?.focus();
+  }, [open]);
 
   // What is over, from the archive: when the board opens, and when the number of live runs changes (one ended, or began).
   const liveCount = app?.runs.length ?? 0;
@@ -172,7 +177,7 @@ export function BoardScreen() {
       }}
       onKeyDown={onKeyDown}
     >
-      <div className="dialog sheet board-screen" role="dialog" aria-label="Board" data-testid="board">
+      <div className="dialog sheet board-screen" role="dialog" aria-label="Board" data-testid="board" tabIndex={-1} ref={dialog}>
         <header className="sheet-head">
           <h2>
             Board

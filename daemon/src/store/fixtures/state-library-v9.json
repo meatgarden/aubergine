@@ -518,7 +518,34 @@
     }
   ],
   "library": {
-    "sources": [],
+    "sources": [
+      {
+        "id": "01900000-0000-7000-8000-0000000c0001",
+        "kind": "folder",
+        "address": "/home/someone/work/shared/libraries/a-rather-long-folder-name-for-a-team-library/a-rather-long-folder-name-for-a-team-library/a-rather-long-folder-name-for-a-team-library/workflows",
+        "name": "/home/someone/work/shared/libraries/a-rather-long-folder-name-for-a-team-library/a-rather-long-folder-name-for-a-team-li",
+        "addedAt": "2026-04-03T09:00:00.000Z",
+        "refreshedAt": null,
+        "commit": null,
+        "problem": null,
+        "history": null,
+        "items": [],
+        "skipped": []
+      },
+      {
+        "id": "01900000-0000-7000-8000-0000000c0002",
+        "kind": "folder",
+        "address": "/home/someone/work/team-library",
+        "name": "The team's",
+        "addedAt": "2026-04-03T09:00:00.000Z",
+        "refreshedAt": null,
+        "commit": null,
+        "problem": null,
+        "history": null,
+        "items": [],
+        "skipped": []
+      }
+    ],
     "installed": [],
     "requests": []
   }

@@ -4924,6 +4924,7 @@ An API token needs the scope `read`.
     kind: string;
     address: string;
     name: string;
+    claims: string | null;
     addedAt: string;
     refreshedAt: string | null;
     commit: string | null;
@@ -4971,7 +4972,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 |---|---|---|---|
 | `kind` | `string` | yes | `folder` (a folder on this computer) or `git` (the address of a Git repository). |
 | `address` | `string` | yes | For a folder: its path. For Git: an address starting with https://, ssh:// or file://, or of the form user@host:path. Never with a password in it. |
-| `name` | `string` | no | What to call it. Left out, the name its index gives, or its address. |
+| `name` | `string` | no | What to call it. Left out, it is shown by what its index calls it, said as its own claim, with its address beside it. |
 
 **Answer** `201`:
 
@@ -4981,6 +4982,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
   kind: string;
   address: string;
   name: string;
+  claims: string | null;
   addedAt: string;
   refreshedAt: string | null;
   commit: string | null;
@@ -5044,6 +5046,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
   kind: string;
   address: string;
   name: string;
+  claims: string | null;
   addedAt: string;
   refreshedAt: string | null;
   commit: string | null;

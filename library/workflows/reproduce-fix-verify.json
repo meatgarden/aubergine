@@ -3,7 +3,7 @@
   "format": 1,
   "workflow": {
     "name": "Reproduce, fix, verify",
-    "description": "For a bug: see it fail first, fix the cause, and show that it is fixed.",
+    "description": "For a bug: see it fail first, find the cause, stop for a person's yes, fix it, and show that it is fixed.",
     "standing": "Work on this bug only. When something is unclear or would be expensive to undo, report blocked and ask instead of guessing.",
     "elements": [
       {
@@ -17,6 +17,13 @@
         "name": "Find the cause",
         "instructions": "Find out why it fails, not only where.\n\nFollow the failure back until you can say in one sentence what is wrong. If there are two possible causes, find out which it is before going on. Do not fix anything yet.",
         "doneWhen": "The cause is stated in a sentence, with the place in the code."
+      },
+      {
+        "id": "agree-on-the-cause",
+        "kind": "approval",
+        "name": "Agree on the cause",
+        "ask": "Is this the cause, and should it be fixed this way?",
+        "lookAt": "The note of \"Find the cause\": the cause in a sentence, with the place in the code."
       },
       {
         "id": "fix",

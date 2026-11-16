@@ -1,7 +1,7 @@
 import { realpath, stat } from 'node:fs/promises';
 import path from 'node:path';
 import type { Client } from '@aubergine/client';
-import { FLAG_WORDS, LIBRARY_INDEX_FILE, LIBRARY_INDEX_FORMAT, LibraryItemId, PublisherVersion, exportElement, exportWorkflow, historyWords, repositoryFileName, showControl, type Element, type Workflow } from '@aubergine/shared';
+import { FLAG_WORDS, sourceLabel, LIBRARY_INDEX_FILE, LIBRARY_INDEX_FORMAT, LibraryItemId, PublisherVersion, exportElement, exportWorkflow, historyWords, repositoryFileName, showControl, type Element, type Workflow } from '@aubergine/shared';
 import { hashOf, readInside, writeInside } from '../repository-files';
 import { UsageError, takeOption } from './commands';
 import { resolveWorkflow } from './workflow';
@@ -94,9 +94,9 @@ type Listed = Awaited<ReturnType<Client['listLibraryItems']>>['items'][number];
 
 function pickSource(sources: readonly Source[], query: string): Source {
   const wanted = query.trim().toLowerCase();
-  const found = sources.filter((source) => source.id === query || source.name.toLowerCase() === wanted || source.address === query);
+  const found = sources.filter((source) => source.id === query || (source.name !== '' && source.name.toLowerCase() === wanted) || (source.claims ?? '').toLowerCase() === wanted || source.address === query);
   if (found.length === 1) return found[0] as Source;
-  throw new UsageError(found.length === 0 ? `No source is named "${query}". They are: ${sources.map((s) => `"${s.name}"`).join(', ')}.` : `${found.length} sources are named "${query}". Use the address or the ID.`);
+  throw new UsageError(found.length === 0 ? `No source is named "${query}". They are: ${sources.map((s) => `${sourceLabel(s)}${s.address ? ` (${s.address})` : ''}`).join('; ')}.` : `${found.length} sources are named "${query}". Use the address or the ID.`);
 }
 
 function pickItem(items: readonly Listed[], query: string): Listed {
@@ -108,7 +108,7 @@ function pickItem(items: readonly Listed[], query: string): Listed {
 
 const sourceLine = (source: Source): string =>
   [
-    `${source.name}  (${source.kind === 'builtin' ? 'comes with Aubergine' : `${source.kind}: ${source.address}`})`,
+    `${sourceLabel(source)}  (${source.kind === 'builtin' ? 'comes with Aubergine' : `${source.kind}: ${source.address}`})`,
     `  ${source.items.length} item${source.items.length === 1 ? '' : 's'}; ${source.refreshedAt ? `last read ${source.refreshedAt}` : 'not read yet'}${source.commit ? `, commit ${source.commit.slice(0, 12)}` : ''}`,
     ...(source.problem ? [`  Could not be read at the last try: ${source.problem}`] : []),
     ...(historyWords(source.history) ? [`  ${historyWords(source.history)}`] : []),
@@ -137,7 +137,7 @@ export async function runLibraryCommand(command: LibraryCommand, deps: LibraryCo
       const { sources } = await owner((client) => client.listLibrarySources());
       const source = pickSource(sources, command.query);
       await owner((client) => client.removeLibrarySource({ sourceId: source.id }));
-      print(showControl(`Removed the source "${source.name}". What was installed from it stays as it is.`));
+      print(showControl(`Removed the source ${sourceLabel(source)}${source.address ? ` (${source.address})` : ''}. What was installed from it stays as it is.`));
       return 0;
     }
     case 'refresh': {

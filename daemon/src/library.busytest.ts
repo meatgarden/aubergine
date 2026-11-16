@@ -3,7 +3,7 @@ import type { AddressInfo } from 'node:net';
 import os from 'node:os';
 import path from 'node:path';
 import { NO_ATTENTION, NO_STATUS, newId, type ChangeEvent, type Scope, type Session } from '@aubergine/shared';
-import { GRANTABLE_SCOPES, LIBRARY_INDEX_FILE, copyStatus, registerLibraryKind, unregisterLibraryKind, type InstalledItem, type LibraryItemDetail, type LibrarySource, type ListedItem } from '@aubergine/shared';
+import { GRANTABLE_SCOPES, sourceLabel, LIBRARY_INDEX_FILE, copyStatus, registerLibraryKind, unregisterLibraryKind, type InstalledItem, type LibraryItemDetail, type LibrarySource, type ListedItem } from '@aubergine/shared';
 import { execFileSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import { chmod, mkdir, readFile, readdir, symlink, writeFile } from 'node:fs/promises';
@@ -243,7 +243,7 @@ describe('what comes with the app', () => {
     const element = await install(source!.id, 'check-before-done');
     expect(hub.state.shelf.find((e) => e.id === element.target.shelfId)?.element).toMatchObject({ name: 'Check before you say done', origin: { kind: 'library', source: 'builtin', itemId: 'check-before-done', version: '1' } });
     const workflow = await install(source!.id, 'reproduce-fix-verify');
-    expect(hub.state.workflows.find((w) => w.id === workflow.target.workflowId)?.versions[0]?.elements.map((e) => e.name)).toEqual(['Reproduce', 'Find the cause', 'Fix', 'Verify']);
+    expect(hub.state.workflows.find((w) => w.id === workflow.target.workflowId)?.versions[0]?.elements.map((e) => e.name)).toEqual(['Reproduce', 'Find the cause', 'Agree on the cause', 'Fix', 'Verify']);
     expect((await asOwner('POST', '/v1/runs', { workflowId: workflow.target.workflowId, sessionId: agentSession('runner').id, inputs: { task: 'the login bug' }, kickoff: false })).status).toBe(201);
   });
 });
@@ -252,7 +252,17 @@ describe('a source', () => {
   it('in a folder lists what its index names; without a valid index it says so and lists nothing', async () => {
     const root = await folderLibrary();
     const source = await addSource('folder', root);
-    expect(source).toMatchObject({ kind: 'folder', name: 'A test library', problem: null });
+    // What the index calls the source is kept as its own claim, and never becomes its name.
+    expect(source).toMatchObject({ kind: 'folder', name: '', claims: 'A test library', problem: null });
+    expect(sourceLabel(source)).toBe('calls itself “A test library”');
+    // With a name from the owner, that is what it is called; the claim is still kept beside it.
+    const other = await folderLibrary('another');
+    const named = await asOwner('POST', '/v1/library/sources', { kind: 'folder', address: other, name: 'From the team' });
+    expect(named.body).toMatchObject({ name: 'From the team', claims: 'A test library' });
+    expect(sourceLabel(named.body)).toBe('From the team');
+    // A long address with nothing else known is shortened for the list, and is whole in `address`.
+    expect(sourceLabel({ name: '', claims: null, address: `/srv/${'a-long-part/'.repeat(20)}team/library` })).toBe('…/team/library');
+    expect((await asOwner('DELETE', `/v1/library/sources/${named.body.id}`)).status).toBe(204);
     expect(source.items.map((item) => [item.id, item.kind, item.version, item.digest !== null])).toEqual([
       ['tidy', 'element', '1', true],
       ['ship', 'workflow', '1', true],
@@ -617,7 +627,7 @@ describe('installing', () => {
     const read = await asOwner('GET', `/v1/library/requests/${asked.body.id}`);
     expect(read.body).toMatchObject({ what: 'A workflow', requestedBy: 'the program "asks"', previousText: null, installedText: null });
     expect(read.body.text).toContain('Do the first thing.');
-    expect(read.body.from).toBe(`A test library (${source.address}), item ship, version 1`);
+    expect(read.body.from).toBe(`calls itself “A test library” (${source.address}), item ship, version 1`);
     expect(read.body.digest).toBe(source.items[1]!.digest);
 
     // The file changes after it was read. Accepting what was read installs nothing.
@@ -875,7 +885,7 @@ describe('the commands', () => {
     expect((await library(['list'])).out).toMatch(/tidy-up .*\n +installed \(version 1\)/);
 
     expect((await library(['refresh', 'Mine'])).code).toBe(0);
-    expect((await library(['remove', 'Mine'])).out).toMatch(/Removed the source "Mine"\. What was installed from it stays/);
+    expect((await library(['remove', 'Mine'])).out).toMatch(/Removed the source Mine \(.+\)\. What was installed from it stays/);
     await expect(library(['remove', 'Comes with Aubergine'])).rejects.toThrow(/cannot be removed/);
     expect(fetcher.calls).toEqual([]);
   });

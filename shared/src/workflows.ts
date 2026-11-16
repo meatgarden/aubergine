@@ -697,7 +697,8 @@ const HOW_TO_REPORT = [
 ].join('\n');
 
 const HOW_TO_WAIT = [
-  'What to do now:',
+  // Said again at the end: a terminal shows the end of what was printed.
+  'What to do now: STOP and wait. A person has to approve before this run goes on.',
   '- Nothing more on this run. You cannot approve: `aubergine workflow done` is refused on this element, whoever runs it.',
   '- When the person has decided you are told to read your status again. To read it yourself:',
   '    aubergine workflow status',

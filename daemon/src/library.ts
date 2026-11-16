@@ -2,6 +2,7 @@ import { realpath, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
+  sourceLabel,
   FLAG_WORDS,
   LIBRARY_INDEX_FILE,
   LIBRARY_REQUESTS_MAX,
@@ -256,7 +257,7 @@ export class Library {
   async start(): Promise<void> {
     let builtin = this.state.sources.find((source) => source.kind === 'builtin');
     if (!builtin) {
-      builtin = { id: newId(), kind: 'builtin', address: this.options.builtin ?? '', name: 'Comes with Aubergine', addedAt: new Date().toISOString(), refreshedAt: null, commit: null, problem: null, history: null, items: [], skipped: [] };
+      builtin = { id: newId(), kind: 'builtin', address: this.options.builtin ?? '', name: 'Comes with Aubergine', claims: null, addedAt: new Date().toISOString(), refreshedAt: null, commit: null, problem: null, history: null, items: [], skipped: [] };
       this.hub.emit({ type: 'library.source.changed', source: builtin });
     } else if ((this.options.builtin ?? '') !== builtin.address) {
       builtin = { ...builtin, address: this.options.builtin ?? '' };
@@ -289,10 +290,9 @@ export class Library {
     if (this.state.sources.length >= LIBRARY_SOURCES_MAX) throw new ConflictError(`There are ${LIBRARY_SOURCES_MAX} sources; remove one first.`);
     const address = await kind.check(body.address);
     if (this.state.sources.some((s) => s.kind === body.kind && s.address === address)) throw new ConflictError('That source is already among yours.');
-    const source: LibrarySource = { id: newId(), kind: body.kind, address, name: (body.name || address).slice(0, 120), addedAt: new Date().toISOString(), refreshedAt: null, commit: null, problem: null, history: null, items: [], skipped: [] };
+    const source: LibrarySource = { id: newId(), kind: body.kind, address, name: (body.name ?? '').slice(0, 120), claims: null, addedAt: new Date().toISOString(), refreshedAt: null, commit: null, problem: null, history: null, items: [], skipped: [] };
     this.hub.emit({ type: 'library.source.changed', source });
     const read = await this.read(source, true);
-    // Named after what its index calls it, when the owner gave no name.
     return read;
   }
 
@@ -369,8 +369,8 @@ export class Library {
       if (items.some((item) => item.id === was.id)) continue;
       if (this.state.installed.some((entry) => entry.from.sourceId === source.id && entry.from.itemId === was.id)) items.push({ ...was, flags: ['gone'], problem: FLAG_WORDS.gone });
     }
-    const named = source.name === source.address && parsed.index.name ? parsed.index.name : source.name;
-    const next: LibrarySource = { ...source, name: named, refreshedAt: at, commit: located.commit, history: located.history, problem: null, items, skipped: parsed.index.skipped };
+    // What the index calls the source is kept as its own claim. It never becomes the name.
+    const next: LibrarySource = { ...source, claims: parsed.index.name ? parsed.index.name.slice(0, 120) : null, refreshedAt: at, commit: located.commit, history: located.history, problem: null, items, skipped: parsed.index.skipped };
     this.hub.emit({ type: 'library.source.changed', source: next });
 
     // What the source now says about what is installed from it: a state, and never a change to what is installed.
@@ -390,7 +390,7 @@ export class Library {
     return {
       ...item,
       sourceId: source.id,
-      sourceName: source.name,
+      sourceName: sourceLabel(source),
       sourceKind: source.kind,
       kindTitle: libraryKind(item.kind)?.title ?? item.kind,
       standing,
@@ -428,7 +428,7 @@ export class Library {
   }
 
   private fromOf(source: LibrarySource, item: LibraryItem, digest: string): InstalledFrom {
-    return { sourceId: source.id, kind: source.kind, address: source.address, sourceName: source.name, itemId: item.id, version: item.version, commit: source.commit, digest };
+    return { sourceId: source.id, kind: source.kind, address: source.address, sourceName: sourceLabel(source), itemId: item.id, version: item.version, commit: source.commit, digest };
   }
 
   private warnings(source: LibrarySource, item: LibraryItem, digestNow: string | null): string[] {

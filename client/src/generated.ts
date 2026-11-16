@@ -4198,6 +4198,7 @@ export type ListLibrarySourcesResult = {
     kind: string;
     address: string;
     name: string;
+    claims: string | null;
     addedAt: string;
     refreshedAt: string | null;
     commit: string | null;
@@ -4228,7 +4229,7 @@ export type AddLibrarySourceBody = {
   kind: string;
   /** For a folder: its path. For Git: an address starting with https://, ssh:// or file://, or of the form user@host:path. Never with a password in it. */
   address: string;
-  /** What to call it. Left out, the name its index gives, or its address. */
+  /** What to call it. Left out, it is shown by what its index calls it, said as its own claim, with its address beside it. */
   name?: string;
 };
 
@@ -4237,6 +4238,7 @@ export type AddLibrarySourceResult = {
   kind: string;
   address: string;
   name: string;
+  claims: string | null;
   addedAt: string;
   refreshedAt: string | null;
   commit: string | null;
@@ -4266,6 +4268,7 @@ export type RefreshLibrarySourceResult = {
   kind: string;
   address: string;
   name: string;
+  claims: string | null;
   addedAt: string;
   refreshedAt: string | null;
   commit: string | null;

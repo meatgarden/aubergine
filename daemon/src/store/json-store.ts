@@ -98,6 +98,15 @@ function withSourceMarks(workflow: Workflow): Workflow {
 }
 
 /**
+ * A library source from before a source kept what it calls itself: one the owner gave no name was stored under its
+ * address, cut to the length of a name. Such a name is taken away, so that the source is shown by its address in
+ * full and, after it is next read, by what it calls itself. A name the owner typed is not touched.
+ */
+function withoutAddressNames(library: LibraryState): LibraryState {
+  return { ...library, sources: library.sources.map((source) => (source.address !== '' && (source.name === source.address || source.name === source.address.slice(0, 120)) ? { ...source, name: '' } : source)) };
+}
+
+/**
  * Turns whatever was on disk into the current state. An older file's single
  * layout becomes one canvas named "Main" holding it. Pure.
  */
@@ -119,7 +128,7 @@ export function migrate(file: StateFile): AppState {
     drafts: file.version >= 5 && 'drafts' in file ? file.drafts : [],
     shelf: (file.version >= 5 && 'shelf' in file ? file.shelf : []).map(withFirstVersion),
     repositoryAccepted: file.version >= 6 && 'repositoryAccepted' in file ? file.repositoryAccepted : [],
-    library: file.version >= 9 && 'library' in file ? file.library : { sources: [], installed: [], requests: [] },
+    library: file.version >= 9 && 'library' in file ? (file.version < 10 ? withoutAddressNames(file.library) : file.library) : { sources: [], installed: [], requests: [] },
   });
 }
 
