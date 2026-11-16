@@ -79,7 +79,7 @@ export function jsonSchemaOf(schema: z.ZodType, io: 'input' | 'output'): JsonSch
 export const openApiPath = (path: string): string => path.replace(/:([A-Za-z]+)/g, '{$1}');
 
 export function accessOfRoute(spec: RouteSpec): RouteAccess {
-  const fieldScopes = Object.fromEntries(Object.entries(spec.fieldActions ?? {}).map(([field, action]) => [field, scopeFor(action)]));
+  const fieldScopes = Object.fromEntries(Object.entries({ ...spec.fieldActions, ...spec.fieldAlso }).map(([field, action]) => [field, scopeFor(action)]));
   if (spec.action === null) return { scope: null, fieldScopes, who: 'any' };
   const access = accessOf(spec.action);
   if (access.session) return { scope: access.scope, fieldScopes, who: 'session' };
@@ -89,7 +89,11 @@ export function accessOfRoute(spec: RouteSpec): RouteAccess {
 /** Who may call a route, in a sentence, for the description and the reference. */
 export function accessSentence(spec: RouteSpec): string {
   const access = accessOfRoute(spec);
+  const also = Object.entries(spec.fieldAlso ?? {})
+    .map(([field, action]) => ` Sending \`${field}\` needs \`${scopeFor(action)}\` as well, with a reach that covers the session being made.`)
+    .join('');
   const fields = Object.entries(access.fieldScopes)
+    .filter(([field]) => spec.fieldActions?.[field] !== undefined)
     .map(([field, scope]) => ` Sending \`${field}\` needs \`${scope}\`${spec.fieldActions && Object.keys(spec.fieldActions).length > 0 ? ' instead, or as well when other fields are sent' : ''}.`)
     .join('');
   switch (access.who) {
@@ -102,7 +106,7 @@ export function accessSentence(spec: RouteSpec): string {
         ? `For a session's own token, about that session; or an API token with the scope \`${access.scope}\`, about any session.`
         : "For a session's own token, about that session. No API token may call this.";
     default:
-      return `An API token needs the scope \`${access.scope}\`.${spec.action === 'workflows.write' ? ' A token whose changes to workflows need review is refused here: it proposes a draft instead (`POST /v1/drafts`).' : ''}${fields}`;
+      return `An API token needs the scope \`${access.scope}\`.${spec.action === 'workflows.write' ? ' A token whose changes to workflows need review is refused here: it proposes a draft instead (`POST /v1/drafts`).' : ''}${fields}${also}`;
   }
 }
 

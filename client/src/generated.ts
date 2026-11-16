@@ -30,6 +30,16 @@ export type GetCapabilitiesResult = {
     name: string;
     scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "terminal:read" | "terminal:input")[];
     expiresAt: string | null;
+    reach: {
+      kind: "all";
+    } | {
+      kind: "canvases";
+      canvasIds: string[];
+    } | {
+      kind: "tag";
+      tag: string;
+    } | null;
+    reviewWorkflowChanges: boolean;
   } | {
     kind: "session";
     sessionId: string;

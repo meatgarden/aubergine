@@ -516,6 +516,12 @@ export class Sessions {
     return this.integration.read(sessionId);
   }
 
+  /** Whether a session started now would be "people only" from the start. */
+  startsProtected(agent: boolean): boolean {
+    const protect = this.options.protectByDefault?.();
+    return protect !== undefined && (protect.all || (protect.agents && agent));
+  }
+
   /** Switches "people only" on or off. The owner's alone to call. */
   protect(sessionId: string, peopleOnly: boolean): Session {
     const session = this.find(sessionId);

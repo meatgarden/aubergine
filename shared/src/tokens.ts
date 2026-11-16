@@ -26,7 +26,7 @@ export type KnownScope = z.infer<typeof KnownScope>;
 export const SCOPE_MEANING: Record<KnownScope, string> = {
   read: 'See canvases, sessions, layout and notes, and follow changes.',
   'canvases:write': 'Create, rename, reorder and close canvases; move and resize nodes; add and change frames; show a canvas in the browser.',
-  'sessions:write': 'Start, rename, tag, move, park, restore and end sessions; show a session in the browser. A session can be started with a command, so this scope can run any command on this computer as you.',
+  'sessions:write': 'Start, rename, tag, move, park, restore and end sessions; show a session in the browser. By itself it starts plain shells: starting a session with a command also needs terminal:input.',
   'notes:write': 'Change the pinned note of a session and add entries to its note log.',
   'terminal:read': 'Read what the terminals it may reach show and have printed, and search that. Whatever is on those screens, secrets included, is readable to this token.',
   'terminal:input': 'Type into the terminals it may reach, press keys there and run commands. This scope can run any command on this computer as you, in any terminal it may reach.',
@@ -162,7 +162,17 @@ export const Capabilities = z.object({
   /** Who is asking. A token learns its own name and scopes here and nowhere else. */
   caller: z.discriminatedUnion('kind', [
     z.object({ kind: z.literal('user') }),
-    z.object({ kind: z.literal('token'), id: Id, name: z.string(), scopes: z.array(Scope), expiresAt: Timestamp.nullable() }),
+    z.object({
+      kind: z.literal('token'),
+      id: Id,
+      name: z.string(),
+      scopes: z.array(Scope),
+      expiresAt: Timestamp.nullable(),
+      /** Which sessions its terminal scopes reach; null when it has none of those scopes. */
+      reach: Reach.nullable().default(null),
+      /** Whether what it writes about workflows needs the owner's review. */
+      reviewWorkflowChanges: z.boolean().default(false),
+    }),
     z.object({ kind: z.literal('session'), sessionId: Id }),
   ]),
 });

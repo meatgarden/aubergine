@@ -115,6 +115,13 @@ export interface RouteSpec {
    * nothing else is sent).
    */
   fieldActions?: Record<string, Action>;
+  /**
+   * Fields of the body that need a further permission besides the route's own: sending one asks for that action too.
+   * For a route that makes a session, the question is about the session being made.
+   */
+  fieldAlso?: Record<string, Action>;
+  /** The route makes a session on the canvas in its address: `authorize` is told where it will be and with which tags. */
+  makesSession?: boolean;
   /** The parameters in the address. One whose name ends in `Id` is an ID. */
   params?: z.ZodObject;
   query?: z.ZodType;
@@ -264,8 +271,11 @@ export const ROUTES = {
     tag: 'Sessions',
     summary: 'Start a session on a canvas',
     description:
-      'Starts a terminal, optionally in a folder (`cwd`), optionally typing a command into it once its shell is ready. This runs that command as you: a token that may start sessions may run anything you can.',
+      'Starts a terminal, optionally in a folder (`cwd`), optionally typing a command into it once its shell is ready. A command is typed into the new terminal and runs as you, so for a token it needs `terminal:input` as well, with a reach that covers the session being made (this canvas, the tags sent); without it the call is refused and no session is made. Without a command the session is a plain shell.',
     action: 'sessions.write',
+    // A command is typed into the new terminal: that is typing, and needs the scope for it, with a reach that covers the new session.
+    fieldAlso: { command: 'terminal.input' },
+    makesSession: true,
     params: canvasId,
     body: StartSessionRequest,
     bodyOptional: true,

@@ -14,6 +14,7 @@ import {
   detailOfWorkflow,
   summaryOfWorkflow,
   openApiDocument,
+  scopeFor,
   placeOfSession,
   viewOfToken,
   type Action,
@@ -132,7 +133,7 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
             ? { kind: 'user' }
             : principal.kind === 'session'
               ? { kind: 'session', sessionId: principal.sessionId }
-              : { kind: 'token', id: principal.tokenId, name: principal.name, scopes: [...principal.scopes], expiresAt: token?.expiresAt ?? null },
+              : { kind: 'token', id: principal.tokenId, name: principal.name, scopes: [...principal.scopes], expiresAt: token?.expiresAt ?? null, reach: token?.reach ?? null, reviewWorkflowChanges: token?.reviewWorkflowChanges ?? false },
       };
     },
 
@@ -507,6 +508,18 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
         const resource: Resource = { ...(params.sessionId ? deps.resourceOf(params.sessionId) : {}), ...(params.canvasId ? { canvasId: params.canvasId } : {}) };
         let principal = deps.principalOf(request);
         for (const action of actionsFor(spec, request.body)) principal = deps.allow(request, action, resource);
+        // A field that needs a further permission: asked as well, about the session this call would make.
+        for (const [field, action] of Object.entries(spec.fieldAlso ?? {})) {
+          const raw = request.body as Record<string, unknown> | null | undefined;
+          if (!raw || typeof raw !== 'object' || raw[field] === undefined) continue;
+          const tags = Array.isArray(raw.tags) ? raw.tags.filter((tag): tag is string => typeof tag === 'string') : [];
+          const about: Resource = spec.makesSession && params.canvasId ? { canvasId: params.canvasId, session: { canvasId: params.canvasId, tags, peopleOnly: sessions.startsProtected(false) } } : resource;
+          try {
+            principal = deps.allow(request, action, about);
+          } catch {
+            throw deps.fail(403, 'forbidden', `Sending \`${field}\` types into the new terminal, so it needs the scope \`${scopeFor(action)}\` with a reach that covers the session being made (its canvas and its tags), and the session must not start as "people only". Without \`${field}\` the session starts as a plain shell.`);
+          }
+        }
         if (!principal) throw deps.fail(401, 'unauthorized', 'Not signed in');
 
         const query = spec.query ? parse(spec.query, request.query) : undefined;

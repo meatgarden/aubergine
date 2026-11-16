@@ -141,6 +141,16 @@ Needs no scope: any caller that is who it says it is.
     name: string;
     scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "terminal:read" | "terminal:input")[];
     expiresAt: string | null;
+    reach: {
+      kind: "all";
+    } | {
+      kind: "canvases";
+      canvasIds: string[];
+    } | {
+      kind: "tag";
+      tag: string;
+    } | null;
+    reviewWorkflowChanges: boolean;
   } | {
     kind: "session";
     sessionId: string;
@@ -553,9 +563,9 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 `POST /v1/canvases/{canvasId}/sessions`: Start a session on a canvas.
 
-Starts a terminal, optionally in a folder (`cwd`), optionally typing a command into it once its shell is ready. This runs that command as you: a token that may start sessions may run anything you can.
+Starts a terminal, optionally in a folder (`cwd`), optionally typing a command into it once its shell is ready. A command is typed into the new terminal and runs as you, so for a token it needs `terminal:input` as well, with a reach that covers the session being made (this canvas, the tags sent); without it the call is refused and no session is made. Without a command the session is a plain shell.
 
-An API token needs the scope `sessions:write`.
+An API token needs the scope `sessions:write`. Sending `command` needs `terminal:input` as well, with a reach that covers the session being made.
 
 | Parameter | In | Type | Required | |
 |---|---|---|---|---|

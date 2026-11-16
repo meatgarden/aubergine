@@ -847,7 +847,7 @@ curl -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/jso
      http://127.0.0.1:4600/v1/canvases/<canvas id>/sessions
 ```
 
-`GET /v1` needs no scope: it says which features and scopes this server has and, for a token, its own name and scopes.
+`GET /v1` needs no scope: it says which features and scopes this server has and, for a token, its own name, its scopes, which terminals its terminal scopes reach, and whether its workflow changes need your review.
 
 **Scopes.**
 
@@ -855,7 +855,7 @@ curl -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/jso
 |---|---|
 | `read` | see canvases, sessions, layout and notes; follow changes |
 | `canvases:write` | create, rename, reorder and close canvases; move and resize nodes; frames; show a canvas in the browser |
-| `sessions:write` | start, rename, tag, move, park, restore and end sessions; show a session in the browser. **A session can be started with a command, so a token with this scope can run any command on this computer as you** |
+| `sessions:write` | start, rename, tag, move, park, restore and end sessions; show a session in the browser. By itself it starts plain shells and runs nothing: starting a session **with a command** also needs `terminal:input` with a reach that covers the new session (its canvas, its tags), and is refused where new sessions start people only |
 | `notes:write` | change a session's pinned note and add entries to its note log |
 | `workflows:write` | propose workflows and elements as drafts for you to review. With review switched off for the token: create, change, copy and remove workflows and shelf elements directly |
 | `runs:write` | start runs of workflows on sessions and report on them (done, blocked, go to, pause, resume, stop). By itself it types nothing into a terminal; with `terminal:input` on that terminal, the one fixed kickoff sentence is typed |
