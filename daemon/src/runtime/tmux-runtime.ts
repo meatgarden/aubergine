@@ -359,7 +359,6 @@ export class TmuxRuntime implements SessionRuntime {
     const name = sessionName(id);
     const at = await this.geometry(name);
     // tmux counts rows from the top of the screen: 0 is the first visible row, and history is negative.
-    const total = at.history + at.rows;
     let first: number;
     let last: number;
     let lost = false;
@@ -369,7 +368,8 @@ export class TmuxRuntime implements SessionRuntime {
       first = Math.max(0, range.from) - at.history;
       last = at.y;
     } else {
-      last = at.rows - 1 - range.skip;
+      // The end is the line the cursor is on, not the bottom of the screen: below the cursor a screen that is not full is empty.
+      last = at.y - range.skip;
       first = last - range.count + 1;
     }
     const lowest = -at.history;
@@ -383,9 +383,7 @@ export class TmuxRuntime implements SessionRuntime {
       throw error;
     }
     const lines = text.replace(/\n$/, '').split('\n');
-    // Rows below the last thing printed are empty: they are not output.
-    if (!('from' in range) && range.skip === 0) while (lines.length > 0 && lines.at(-1) === '') lines.pop();
-    return { lines, more: more && total > 0, lost };
+    return { lines, more, lost };
   }
 
   async type(id: string, text: string, options: { paste?: boolean } = {}): Promise<void> {

@@ -280,7 +280,7 @@ export function parseCommand(argv: readonly string[]): Command {
       const enter = after[0] === '--enter' || after.at(-1) === '--enter';
       const words = after[0] === '--enter' ? after.slice(1) : after.at(-1) === '--enter' ? after.slice(0, -1) : after;
       if (query === undefined || query.startsWith('--')) throw new UsageError('send needs a session name, then the text');
-      if (words.length === 0) throw new UsageError('send needs some text to type');
+      if (words.join(' ').trim() === '') throw new UsageError('send needs some text to type');
       return { name: 'send', query, text: words.join(' '), enter };
     }
     case 'run': {

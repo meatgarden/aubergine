@@ -152,6 +152,21 @@ describe.runIf(ZSH)('terminal access, against real terminals', () => {
       expect((await call(reader, 'GET', `/v1/sessions/${session.id}/output?lines=99999`)).status).toBe(400);
     });
 
+    it('counts recent output back from where the cursor is, on a screen that is not full yet', async () => {
+      const session = await ready('fresh');
+      await runtime.typeLine(session.id, 'echo one; echo two');
+      await until('the output', async () => (await runtime.snapshot(session.id)).includes('two'));
+      const recent = await call(reader, 'GET', `/v1/sessions/${session.id}/output?lines=3`);
+      expect((recent.body.text as string).split('\n').map((line) => line.trimEnd())).toEqual(['one', 'two', 'ready>']);
+      expect(recent.body).toMatchObject({ lines: 3, nextCursor: expect.any(String) });
+      // Further back there is only the line the command was typed on; then nothing.
+      const earlier = await call(reader, 'GET', `/v1/sessions/${session.id}/output?lines=3&cursor=${recent.body.nextCursor}`);
+      // (A shell may print a line of its own before its first prompt; whatever is above, the command line is the last of this page.)
+      expect((earlier.body.text as string).split('\n').at(-1)?.trimEnd()).toBe('ready> echo one; echo two');
+      expect((earlier.body.text as string).split('\n').length).toBeLessThanOrEqual(3);
+      expect(earlier.body.nextCursor).toBeNull();
+    });
+
     it('reading the screens of many sessions over and over changes no size and disturbs no viewer', async () => {
       const several = await Promise.all(Array.from({ length: 6 }, (_, n) => ready(`many ${n}`)));
       // Someone is looking at the first one, at a size of their own.
