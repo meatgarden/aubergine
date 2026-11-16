@@ -1,4 +1,4 @@
-import type { Session } from '@aubergine/shared';
+import { untoldWords, type Session } from '@aubergine/shared';
 import { MessageMark } from './Messages';
 import { shortFolder } from './search';
 
@@ -45,6 +45,11 @@ export function StatusBadges({ session, focused }: { session: Session; focused: 
       {failed && (
         <span className="badge-exit" data-testid="badge-exit">
           exit {status.lastExit}
+        </span>
+      )}
+      {session.untold && Date.now() - Date.parse(session.untold.at) < 30 * 60_000 && (
+        <span className="badge-untold" title={untoldWords(session.untold)} data-testid="badge-untold">
+          not told
         </span>
       )}
       <MessageMark session={session} />

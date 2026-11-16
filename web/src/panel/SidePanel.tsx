@@ -53,7 +53,7 @@ export function SidePanel() {
         {sections.map((section, index) => {
           const folded = prefs.folded.includes(section.id);
           return (
-            <section key={section.id} className={`panel-section${folded ? ' folded' : ''}`} data-section={section.id} aria-label={section.title}>
+            <section key={section.id} className={`panel-section${folded ? ' folded' : ''}${section.fill ? ' fill' : ''}`} data-section={section.id} aria-label={section.title}>
               <header className="panel-section-head">
                 <button type="button" className="panel-fold" aria-expanded={!folded} onClick={() => toggleFold(section.id)} data-testid="section-fold">
                   <span className="list-chevron">{folded ? '▸' : '▾'}</span>

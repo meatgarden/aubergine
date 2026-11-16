@@ -127,6 +127,7 @@ describe('workflow commands against a server', () => {
     list: async () => [],
     has: async () => true,
     kill: async () => {},
+    foreground: async () => 'the-agent',
     typeLine: async (id: string, line: string) => {
       typed.push([id, line]);
     },
@@ -156,7 +157,7 @@ describe('workflow commands against a server', () => {
 
   function fakeSession(name: string, more: Partial<Session> = {}): Session {
     const session: Session = { id: newId(), projectId: hub.state.project.id, name, createdAt: new Date().toISOString(), state: 'open', cwd: null, command: null, note: '', status: NO_STATUS, attention: NO_ATTENTION, noteLog: [], agent: null, lastInputAt: null, lastOutputAt: null, tags: [], parkedFrom: null, peopleOnly: false, typedBy: null,
-    recap: null, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null }, ...more };
+    recap: null, takesMessages: false, untold: null, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null }, ...more };
     hub.emit({ type: 'session.created', session, canvasId: hub.state.canvases[0]!.id, node: { id: newId(), sessionId: session.id, x: 0, y: 0, width: 640, height: 400, color: 'none' } });
     return session;
   }
@@ -263,7 +264,7 @@ describe('workflow commands against a server', () => {
   it('starts a run on a named session, or on the session it is typed in', async () => {
     await run(['new', 'Hotfix', '--template', 'plan-build-check']);
     const api = fakeSession('api');
-    const web = fakeSession('web', { agent: { kind: 'claude-code', conversationId: null }, status: { ...NO_STATUS, state: 'busy' } });
+    const web = fakeSession('web', { agent: { kind: 'claude-code', conversationId: null, program: 'the-agent' }, status: { ...NO_STATUS, state: 'busy' } });
 
     await expect(run(['run', 'Hotfix', '--input', 'task=x'])).rejects.toThrow(/needs a session/);
     const started = await run(['run', 'Hotfix', '--session', 'api', '--input', 'task=the login bug']);
@@ -342,7 +343,7 @@ describe('workflow commands against a server', () => {
   });
 
   it('lets an agent read what it was asked to write, hand it in from a file or standard input, and read the comment', async () => {
-    const agent = fakeSession('helper', { agent: { kind: 'claude-code', conversationId: null }, status: { ...NO_STATUS, state: 'busy' } });
+    const agent = fakeSession('helper', { agent: { kind: 'claude-code', conversationId: null, program: 'the-agent' }, status: { ...NO_STATUS, state: 'busy' } });
     expect(await run(['brief'], agent)).toEqual({ code: 1, out: 'Nothing is asked of this session' });
 
     // What the owner typed may hold anything. It is printed with control characters shown, never acted on.
@@ -403,7 +404,7 @@ describe('workflow commands against a server', () => {
     const owner = createClient({ baseUrl: origin, headers: { origin, cookie: `${cookieName(port)}=${ownerToken}` } });
     expect((await runElement(['list'])).out).toContain('No elements on the shelf yet');
     await owner.createElement({ body: { name: 'Collect my to-dos', instructions: 'List what people asked me to do.', needs: [{ kind: 'mcp', name: 'team chat' }], produces: 'checklist' } });
-    expect((await runElement(['list'])).out).toBe('Collect my to-dos  produces a checklist; needs an MCP server: team chat');
+    expect((await runElement(['list'])).out).toBe('Collect my to-dos  version 1; produces a checklist; needs an MCP server: team chat');
     expect((await runElement(['show', 'collect'])).out).toContain('Produces: checklist');
 
     const session = fakeSession('api');

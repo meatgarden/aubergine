@@ -50,7 +50,7 @@ function fixture(): { state: AppState; session: Session; node: LayoutNode } {
     noteLog: [],
     agent: null,
     parkedFrom: null, peopleOnly: false, typedBy: null,
-    recap: null, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null },
+    recap: null, takesMessages: false, untold: null, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null },
     lastInputAt: null,
     lastOutputAt: null,
     tags: [],
@@ -235,7 +235,7 @@ describe('applyEvent', () => {
   it('remembers the agent and its conversation, also after the shell has ended', () => {
     const { state, session, node } = fixture();
     let current = applyEvent(state, { type: 'session.created', canvasId: main(state).id, session, node });
-    const agent = { kind: 'claude-code' as const, conversationId: '0190aaaa-bbbb-7ccc-8ddd-eeeeeeeeeeee' };
+    const agent = { kind: 'claude-code' as const, conversationId: '0190aaaa-bbbb-7ccc-8ddd-eeeeeeeeeeee', program: null };
     current = applyEvent(current, { type: 'session.agent', sessionId: session.id, agent });
     current = applyEvent(current, { type: 'session.exited', sessionId: session.id });
     expect(current.sessions[0]?.agent).toEqual(agent);
@@ -262,7 +262,7 @@ describe('applyEvent', () => {
       noteLog: [],
       agent: null,
       parkedFrom: null, peopleOnly: false, typedBy: null,
-    recap: null, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null },
+    recap: null, takesMessages: false, untold: null, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null },
     lastInputAt: null,
     lastOutputAt: null,
     tags: [],

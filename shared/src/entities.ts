@@ -133,6 +133,11 @@ export const ConversationId = z.string().regex(/^[A-Za-z0-9][A-Za-z0-9-]{7,63}$/
 export const AgentInfo = z.object({
   kind: AgentKind,
   conversationId: ConversationId.nullable().default(null),
+  /**
+   * The program that was in front in the terminal when the agent last reported, as the server saw it then.
+   * Never from a caller. Null until an agent has reported while a program other than a shell was in front.
+   */
+  program: z.string().max(200).nullable().default(null),
 });
 export type AgentInfo = z.infer<typeof AgentInfo>;
 
@@ -158,6 +163,36 @@ export const Tags = z
   .max(TAGS_MAX)
   // `overwrite`, not `transform`: the value is tidied but its kind stays the same, so it can still be described.
   .overwrite((tags) => normaliseTags(tags));
+
+/** Which of the fixed sentences. */
+export const ToldKind = z.enum(['kickoff', 'brief', 'recap', 'inbox']);
+export type ToldKind = z.infer<typeof ToldKind>;
+
+/**
+ * Why a fixed sentence was not typed. `no-report`: no agent has reported from this terminal yet, so it is not known
+ * which program it is. `at-shell`: a shell has the keyboard, where the sentence would be run as a command.
+ * `other-program`: something other than the agent is in front. `unknown`: what is in front could not be read.
+ */
+export const UntoldWhy = z.enum(['no-report', 'at-shell', 'other-program', 'unknown']);
+export type UntoldWhy = z.infer<typeof UntoldWhy>;
+
+export const Untold = z.object({ what: ToldKind, why: UntoldWhy, at: Timestamp });
+export type Untold = z.infer<typeof Untold>;
+
+/** What the owner is told on the terminal about a sentence that was not typed. */
+export function untoldWords(untold: Untold): string {
+  const what = { kickoff: 'that a workflow was started here', brief: 'that it was asked to write something', recap: 'that you asked for a recap', inbox: 'that a message waits' }[untold.what];
+  const why = {
+    'no-report': 'no agent has reported from this terminal yet, so it cannot be told which program is the agent',
+    'at-shell': 'a shell has the keyboard there, and the sentence would be run as a command',
+    'other-program': 'a program other than the agent is in front there',
+    unknown: 'what is in front in that terminal could not be read',
+  }[untold.why];
+  return `The agent was not told ${what}: ${why}. Nothing was typed. It is told when the agent is seen in front again; or tell it yourself.`;
+}
+
+/** The names a shell goes by as the program in front of a terminal. */
+export const SHELL_NAMES: readonly string[] = ['zsh', 'bash', 'fish', 'sh', 'dash', 'ksh', 'tcsh', 'csh'];
 
 /** A terminal session. The running shell itself is owned by the session runtime. */
 export const Session = z.object({
@@ -194,6 +229,17 @@ export const Session = z.object({
   typedBy: TypedBy.nullable().default(null),
   /** What its agent wrote when the owner asked for a recap, and when. The agent's words: other people's text wherever it is shown. */
   recap: z.object({ text: z.string().max(2000), at: Timestamp }).nullable().default(null),
+  /**
+   * Messages while "people only" is on. False: people only closes it to messages too, which is how every terminal starts.
+   * True: it still takes messages from terminals the owner let message it (never from tokens), while staying closed to reading and typing.
+   * Only the owner changes this.
+   */
+  takesMessages: z.boolean().default(false),
+  /**
+   * A fixed sentence that was to be typed for the agent here and was not, because it could not be told that the
+   * agent has the keyboard. Which sentence and why; nothing else. Cleared when it is typed, or put away by the owner.
+   */
+  untold: Untold.nullable().default(null),
   /** Counts about its messages, for a mark on the canvas. The messages themselves are not state. */
   messages: SessionMessages.prefault({}),
 });

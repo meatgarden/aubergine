@@ -69,7 +69,7 @@ async function failure(call: Promise<unknown>): Promise<AubergineError> {
 describe('what is generated and kept in the repository', () => {
   it('is up to date: the client and the reference are what the declarations give now', async () => {
     const files = generatedFiles();
-    expect(Object.keys(files).sort()).toEqual(['client/src/generated.ts', 'docs/api.md', 'docs/for-agents.md']);
+    expect(Object.keys(files).sort()).toEqual(['client/src/generated.ts', 'docs/api.md', 'docs/element.md', 'docs/for-agents.md']);
     for (const [file, text] of Object.entries(files)) {
       const committed = await readFile(path.join(repoRoot, file), 'utf8');
       // If this fails: a declaration, a schema or the guide for agents changed. Run `pnpm generate` and commit the result.
@@ -124,7 +124,7 @@ describe('what is generated and kept in the repository', () => {
     }
     for (const id of ROUTE_IDS) expect(reference).toContain(`### ${id}\n`);
     // Every route a token may call has an example with curl; the browser-only ones have none.
-    expect(reference.match(/^curl/gm)?.length).toBe(ROUTE_IDS.filter((id) => !['tokens.manage', 'activity.read', 'drafts.review', 'repository.review', 'repository.write', 'sessions.protect'].includes(ROUTES[id].action ?? '')).length);
+    expect(reference.match(/^curl/gm)?.length).toBe(ROUTE_IDS.filter((id) => !['tokens.manage', 'activity.read', 'drafts.review', 'repository.review', 'repository.write', 'sessions.protect', 'shelf.manage'].includes(ROUTES[id].action ?? '')).length);
   });
 });
 

@@ -362,6 +362,7 @@ describe('what is switched on', () => {
       ['hook', 'aubergine'],
       ['hook', 'aubergine'],
       ['hook', 'aubergine'],
+      ['hook', 'aubergine'],
     ]);
     expect(inventory.notes.every((note) => note.level === 'gap')).toBe(true);
   });

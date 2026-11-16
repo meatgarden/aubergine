@@ -646,6 +646,40 @@ aubergine element run "Collect my to-dos" --session helper
 
 An example, end to end: ask an agent for "a to-do list from what people asked me in the team chat". It proposes an element, *Collect my to-dos*, that needs an MCP server for the chat and produces a checklist. You read it, send it back once ("shorter"), accept the second version, and run it by itself on the agent's terminal. The agent hands in the list; you tick the items you will do.
 
+### The life of a shelf element
+
+An element on the shelf is copied into workflows, never linked. What connects a copy to the shelf afterwards is what the copy remembers about where it came from, and you decide everything that follows from it.
+
+**Versions.** Saving a change to a shelf element adds a version; what it said before stays as it was. Each version has who saved it, when, and a line on what changed if you wrote one. The newest 30 are kept, and any version a copy in a workflow was made from. The shelf editor lists them, each with what it changed from the one before.
+
+**A copy knows its source.** An element inserted from the shelf records which shelf element it is a copy of, which version, and a mark of the content as it was copied. From those three the editor puts a small mark on the element:
+
+| Mark | What it means |
+|---|---|
+| from the shelf | as it was copied, and that is the newest version |
+| changed here | you changed it in this workflow since it was copied; the shelf has nothing newer |
+| newer on the shelf | as it was copied, and the shelf has a newer version |
+| changed here, newer on the shelf | both |
+| from the shelf, cannot tell | a copy made before versions were kept: Aubergine does not know which version it came from, and never says it is behind |
+| its source was removed | its shelf element is not on the shelf: it was removed, or the workflow came from another computer |
+
+**Taking a newer version.** When the shelf has a newer version, the editor shows what it changes (the same comparison the review screen uses) and offers **Take the shelf's version** or **Keep mine**. If the copy was also changed in the workflow, the three texts are shown side by side: as it was copied, yours now, the shelf's now. You pick one of the two; nothing is merged for you. To keep parts of both, take one and edit it. Saving then makes a new version of the workflow, as any edit does, and runs that are going keep to the version they started on. Nothing is ever updated by itself, no API token can do it (even one that may change workflows), and a draft cannot either: a token or a draft can change what a copy says, which then reads as "changed here", and cannot say that a copy was brought up to date.
+
+**From a workflow back to the shelf.** **Save to shelf** on an element that came from the shelf offers two things: a new element, or a new version of the one it came from. Other workflows that hold a copy are not changed; each says that a newer version is on the shelf.
+
+**Where it is used.** The shelf editor lists the workflows that hold a copy and what the mark on each copy is. Removing a shelf element that is used says so first; the copies stay as they are and say that their source was removed.
+
+**Retiring.** A shelf element is current, or **retired**: kept, and still working wherever a copy of it is, but not offered when inserting and not run by itself. Retired elements are under a fold on the Workflows screen. When you retire one you can name the element to use in its place, and the editor then says "retired: use …" on its copies. Retiring and bringing back are yours alone, like taking a newer version.
+
+**What goes in an element.** The editor has a fold of that name beside the form, and the same list is in [docs/element.md](docs/element.md): every field an element has, whether you write it or it is kept for you, and what it is for. Both are made from the descriptions in the code, so they cannot say something else than it does.
+
+**In a file.** A workflow written as a file (`workflow export`, or saved to a repository) keeps where each copy came from, and a file without such marks is read as before. On a computer whose shelf does not have that element, the copy says its source is not on the shelf, and nothing else is claimed.
+
+```sh
+aubergine element list           # each with its version, and whether it is retired
+aubergine element remove "Tidy up"   # says where it is used first
+```
+
 ### Workflows kept in a project's repository
 
 A team can share workflows through Git. A folder `.aubergine/workflows/` at the top of a repository holds workflow files (`*.json`, as `aubergine workflow export` writes them). A terminal whose folder is inside such a repository is offered them: in the run dialog, in their own group named after the repository's folder, and from the command line inside that terminal:
@@ -804,7 +838,7 @@ aubergine workflow done [--note <text>] [--output <file>]   the current element 
 aubergine workflow brief       inside a session asked to write a workflow or an element: the request
 aubergine workflow propose --file <file>   hand a workflow in as a draft, for you to review
 aubergine element propose --file <file>    the same for one element
-aubergine element list         the shelf; also show <name> and remove <name>
+aubergine element list         the shelf, each element with its version; also show <name> and remove <name> (which says where it is used first)
 aubergine element run <name> [--session <name|id>] [--input key=value]…   run one element by itself
 aubergine workflow blocked <reason>, goto <element>, pause, resume, stop
 aubergine screen <session>     what that terminal shows now, as text
@@ -882,6 +916,14 @@ An agent that Aubergine starts reports "waiting for you" and "finished" by itsel
 
 Typed in a terminal, the other `aubergine` commands act as you, whoever types them, an agent included; they are recorded as coming from that terminal. The guide tells an agent to leave them alone unless you asked. That is advice to the agent, not a lock.
 
+## When Aubergine types into an agent's terminal
+
+Aubergine itself types four things, and only these: one fixed sentence each to say that a workflow was started, that the agent was asked to write something, that you asked for a recap, and that a message waits. Each names one command for the agent to run; nothing of yours and nothing anyone else wrote is in them.
+
+A sentence is typed only where the agent is seen to have the keyboard. Two things must hold: an agent has reported from that terminal (an agent Aubergine starts does so when its conversation begins), and the program in front of the terminal now is not a shell and is the same program that was in front when the agent last reported. If either cannot be established, nothing is typed. The terminal then shows **not told**, with which sentence and why, and the sentence is typed when the agent next reports from in front, within half an hour.
+
+What this catches: the agent has exited and its shell is back, where the sentence would be run as a command; an editor, a pager or another program is in front; no agent was ever seen there. What it cannot catch: a different program of the same name as the agent (a second `node` program started by hand after the agent exited looks the same to the terminal), and an agent that is in front but showing a question of its own. Messages are held back for the second case as well; the other three sentences are not.
+
 ## Messages between terminals
 
 An agent in one terminal sometimes needs to tell the agent in another something: "the schema changed", "I am done with the branch you wait for". A **message** is the way to do that without anyone typing into anyone's terminal. It has a named sender and one receiver, it is kept until the receiver reads it, and you can see every one of them.
@@ -894,14 +936,14 @@ An agent in one terminal sometimes needs to tell the agent in another something:
 aubergine tell "api server" "Rebase on main before you go on."
 ```
 
-Nothing is typed into the terminal. Its tile and its row show "✉ 1 from you". If an agent is running there and is idle, Aubergine types one fixed sentence into it: "There is a message for this session in Aubergine. Run `aubergine inbox` to read it." That sentence is the same for every message; nothing of yours and no name is in it. It is typed at most once for a batch of unread messages, not again within two minutes, never into a plain shell (where it would be run as a command), never while the agent is working or is waiting on a question of its own, and not on top of something you typed a moment ago.
+Nothing is typed into the terminal. Its tile and its row show "✉ 1 from you". If an agent is running there and is idle, Aubergine types one fixed sentence into it: "There is a message for this session in Aubergine. Run `aubergine inbox` to read it." That sentence is the same for every message; nothing of yours and no name is in it. It is typed at most once for a batch of unread messages, not again within two minutes, never into a plain shell (where it would be run as a command), only while the agent is seen to be the program in front of the terminal, never while the agent is working or is waiting on a question of its own, and not on top of something you typed a moment ago.
 
 **The agent reads and answers** with `aubergine inbox` (which prints each unread message between two marker lines, with who sent it, and marks it read) and `aubergine reply <id> "<answer>"`. An agent can always answer a message from you. Its answer shows on the terminal as "✉ 1 for you" and puts the terminal in the "waiting" queue.
 
 **One terminal to another: only where you switch it on.** Each canvas has a switch on its tab, **✉ off**. Click it, read what it says, and it becomes **✉ on**: the terminals on that canvas may now message each other with `aubergine tell "<terminal>" "<message>"`. Off is how every canvas starts, and only you can change it: no API token and no agent can. With it on:
 
 - only terminals on the same canvas reach each other. Nothing passes between canvases in this version, and a parked terminal neither sends nor receives;
-- a terminal marked **people only** takes messages from you alone. Terminals that start an agent are people only from the start (`terminal.protectAgentSessions`), so with nothing else changed such a terminal can send and cannot receive: open it (`aubergine unprotect`, or the mark on its tile) to let it receive. Opening it also opens it to any API token whose terminal scopes reach it;
+- a terminal marked **people only** takes messages from you alone. Terminals that start an agent are people only from the start (`terminal.protectAgentSessions`), so with nothing else changed such a terminal can send and cannot receive. To let it receive, open its drawer (**✉** on the terminal) and tick that it takes messages while people only. That lets terminals message it where the canvas's switch is on, and nothing else: it stays closed to reading and typing, and to every program with a token. Only you can tick it;
 - a terminal cannot message itself, and a terminal that may not be messaged is refused in the same words as one that does not exist.
 
 **Programs with an API token** need a scope of their own: `messages:write` to send, `messages:read` to read. Neither comes with `read` or with anything else, and a token that asks for one must say which terminals it reaches, as for terminal access. People only closes a terminal to them. A token's message is shown under the token's name. A token with `messages:write` alone causes nothing to be typed, not even the fixed sentence: its message waits until the agent next reads its inbox. Only a token that may also type into that very terminal (`terminal:input`) has the sentence typed for it.

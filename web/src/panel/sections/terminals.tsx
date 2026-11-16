@@ -596,6 +596,7 @@ registerSection({
   title: 'Terminals',
   order: 10,
   icon: '▤',
+  fill: true,
   useCount: () => useModel().filtered.length,
   useBadges: () => {
     const counts = stateCounts(useModel().filtered);

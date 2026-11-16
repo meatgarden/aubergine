@@ -22,7 +22,7 @@ export const sameDraft = (a: Draft, b: Draft): boolean => JSON.stringify(a) === 
 /** A new element at the end. Its ID is made once, from its first name, and then stays: runs know elements by it. */
 export function addElement(draft: Draft, name = 'New element'): Draft {
   const id = elementIdFor(name, draft.elements.map((e) => e.id));
-  return { ...draft, elements: [...draft.elements, { id, kind: 'instructions', name, instructions: '', doneWhen: '', needs: [], produces: 'note', origin: { kind: 'local' }, extra: {} }] };
+  return { ...draft, elements: [...draft.elements, { id, kind: 'instructions', name, instructions: '', doneWhen: '', needs: [], produces: 'note', origin: { kind: 'local' }, source: null, extra: {} }] };
 }
 
 export function changeElement(draft: Draft, id: string, element: Element): Draft {

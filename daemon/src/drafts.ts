@@ -21,6 +21,14 @@ import {
   type UpdateShelfElementRequest,
   type WorkflowContent,
   type WorkflowLimits,
+  elementHash,
+  keptVersions,
+  usesOf,
+  versionsInUse,
+  withFirstVersion,
+  type Actor,
+  type ShelfUsage,
+  type ShelfVersion,
 } from '@aubergine/shared';
 import { MemoryDraftLog, type DraftLog } from './draft-log';
 import { BadInputError, ConflictError, NotFoundError, type Sessions } from './sessions';
@@ -42,6 +50,9 @@ export const SHELF_MAX = 500;
  * Nothing proposed is ever typed into a terminal. The one thing typed from
  * here is `BRIEF_LINE`, a fixed sentence.
  */
+/** The owner, as who saved a version. */
+const OWNER: Actor = { kind: 'person' };
+
 export class Drafts {
   constructor(
     private readonly hub: StateHub,
@@ -284,7 +295,8 @@ export class Drafts {
     if (!content) throw new ConflictError('Nothing has been handed in for this yet.');
     const revised = draft.revisesWorkflowId !== null ? this.hub.state.workflows.find((w) => w.id === draft.revisesWorkflowId && w.listed) : undefined;
     const { extra: _extra, ...fields } = content;
-    const workflow = revised ? this.workflows.update(revised.id, fields) : this.workflows.createAccepted(content, origin);
+    // A draft says nothing about where an element came from: each keeps the mark it had in the workflow it revises.
+    const workflow = revised ? this.workflows.update(revised.id, fields, false) : this.workflows.createAccepted(content, origin);
     this.hub.emit({ type: 'draft.removed', draftId });
     this.resolved(draft, 'accepted', by);
     return { workflowId: workflow.id, elementId: null };
@@ -302,38 +314,98 @@ export class Drafts {
     return item;
   }
 
-  private addToShelf(element: Element): ShelfElement {
+  /** A new element on the shelf: what it says is its version 1. Where a copy came from is not something a shelf element has. */
+  private addToShelf(input: Element, by: Actor = OWNER): ShelfElement {
     if (this.hub.state.shelf.length >= SHELF_MAX) throw new ConflictError(`The shelf holds ${SHELF_MAX} elements; take some off first.`);
     const at = new Date().toISOString();
-    const item: ShelfElement = { id: newId(), element, createdAt: at, updatedAt: at };
+    const element: Element = { ...input, source: null };
+    const item: ShelfElement = { id: newId(), element, createdAt: at, updatedAt: at, version: 1, versions: [{ version: 1, element, at, by, note: '' }], state: 'current', replacedBy: null };
     this.hub.emit({ type: 'shelf.changed', item });
     return item;
   }
 
-  createOnShelf(input: ElementInput): ShelfElement {
+  createOnShelf(input: ElementInput, by: Actor = OWNER): ShelfElement {
     const element = this.proposal({ element: input }).element as Element;
-    return this.addToShelf(element);
+    return this.addToShelf(element, by);
   }
 
-  updateOnShelf(elementId: string, changes: UpdateShelfElementRequest): ShelfElement {
-    const item = this.shelfElement(elementId);
-    const given = Object.fromEntries(Object.entries(changes).filter(([, value]) => value !== undefined));
-    const element = this.proposal({ element: { ...item.element, ...given } }).element as Element;
-    const next = { ...item, element, updatedAt: new Date().toISOString() };
+  /**
+   * Changes a shelf element by adding a version: what it said before stays as it was. Copies in workflows are
+   * not touched. The newest versions are kept, and any a copy was made from.
+   */
+  updateOnShelf(elementId: string, changes: UpdateShelfElementRequest, by: Actor = OWNER): ShelfElement {
+    const item = withFirstVersion(this.shelfElement(elementId));
+    const { note, ...fields } = changes;
+    const given = Object.fromEntries(Object.entries(fields).filter(([, value]) => value !== undefined));
+    const element: Element = { ...(this.proposal({ element: { ...item.element, ...given } }).element as Element), source: null };
+    // Saved as it was: no new version for nothing.
+    if (elementHash(element) === elementHash(item.element)) return item;
+    const at = new Date().toISOString();
+    const version = item.version + 1;
+    const versions = keptVersions([...item.versions, { version, element, at, by, note: note ?? '' }], versionsInUse(item.id, this.hub.state.workflows));
+    const next: ShelfElement = { ...item, element, updatedAt: at, version, versions };
     this.hub.emit({ type: 'shelf.changed', item: next });
     return next;
   }
 
-  copyOnShelf(elementId: string): ShelfElement {
+  copyOnShelf(elementId: string, by: Actor = OWNER): ShelfElement {
     const { element } = this.shelfElement(elementId);
     const names = new Set(this.hub.state.shelf.map((e) => e.element.name));
     let name = `${element.name} copy`.slice(0, 120);
     for (let n = 2; names.has(name); n += 1) name = `${element.name} copy ${n}`.slice(0, 120);
-    return this.addToShelf({ ...element, name });
+    return this.addToShelf({ ...element, name }, by);
   }
 
+  /** Newest first. */
+  shelfVersions(elementId: string): ShelfVersion[] {
+    return [...withFirstVersion(this.shelfElement(elementId)).versions].reverse();
+  }
+
+  /** The workflows that hold a copy, and what can be told about each. */
+  shelfUsage(elementId: string): ShelfUsage {
+    this.shelfElement(elementId);
+    return { uses: usesOf(elementId, this.hub.state.workflows, this.hub.state.shelf) };
+  }
+
+  /** Retires an element: kept, and still working where it is used; not offered, and not run by itself. The owner's alone. */
+  retire(elementId: string, replacedBy: string | null): ShelfElement {
+    const item = this.shelfElement(elementId);
+    if (replacedBy !== null) {
+      if (replacedBy === elementId) throw new BadInputError('An element cannot be replaced by itself.');
+      const other = this.shelfElement(replacedBy);
+      if (other.state === 'retired') throw new ConflictError(`"${other.element.name}" is retired too. Name one that is in use, or none.`);
+    }
+    const next: ShelfElement = { ...item, state: 'retired', replacedBy, updatedAt: new Date().toISOString() };
+    this.hub.emit({ type: 'shelf.changed', item: next });
+    return next;
+  }
+
+  /** Brings a retired element back. The owner's alone. */
+  restore(elementId: string): ShelfElement {
+    const item = this.shelfElement(elementId);
+    if (item.state === 'current') return item;
+    const next: ShelfElement = { ...item, state: 'current', replacedBy: null, updatedAt: new Date().toISOString() };
+    this.hub.emit({ type: 'shelf.changed', item: next });
+    return next;
+  }
+
+  /** The element to run by itself. A retired one is not run. */
+  runnable(elementId: string): Element {
+    const item = this.shelfElement(elementId);
+    if (item.state === 'retired') {
+      const other = item.replacedBy ? this.hub.state.shelf.find((e) => e.id === item.replacedBy) : undefined;
+      throw new ConflictError(`"${item.element.name}" is retired and is not run by itself.${other ? ` Use "${other.element.name}".` : ''}`);
+    }
+    return item.element;
+  }
+
+  /**
+   * Takes an element off the shelf. Copies of it in workflows stay as they are, and say from then on that their
+   * source was removed. An element named as the replacement of a retired one is no longer named.
+   */
   removeFromShelf(elementId: string): void {
     this.shelfElement(elementId);
+    for (const other of this.hub.state.shelf) if (other.replacedBy === elementId) this.hub.emit({ type: 'shelf.changed', item: { ...other, replacedBy: null } });
     this.hub.emit({ type: 'shelf.removed', elementId });
   }
 }

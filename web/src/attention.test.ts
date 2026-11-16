@@ -17,7 +17,7 @@ function session(name: string, state: AttentionState, at: string | null, extra: 
     noteLog: [],
     agent: null,
     parkedFrom: null, peopleOnly: false, typedBy: null,
-    recap: null, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null },
+    recap: null, takesMessages: false, untold: null, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null },
     lastInputAt: null,
     lastOutputAt: null,
     tags: [],
@@ -72,7 +72,7 @@ describe('announcement', () => {
 });
 
 describe('canResumeAgent', () => {
-  const agent = { kind: 'claude-code' as const, conversationId: '0190aaaa-bbbb-7ccc-8ddd-eeeeeeeeeeee' };
+  const agent = { kind: 'claude-code' as const, conversationId: '0190aaaa-bbbb-7ccc-8ddd-eeeeeeeeeeee', program: null };
   const idle = { ...NO_STATUS, state: 'idle' as const };
 
   it('offers a resume when a conversation is known and the shell is at its prompt', () => {
@@ -85,7 +85,7 @@ describe('canResumeAgent', () => {
     expect(canResumeAgent(session('a', 'none', null, { agent, status: { ...idle, state: 'busy' } }))).toBe(false);
     expect(canResumeAgent(session('a', 'none', null, { agent, command: 'claude' }))).toBe(false);
     expect(canResumeAgent(session('a', 'none', null, { status: idle }))).toBe(false);
-    expect(canResumeAgent(session('a', 'none', null, { agent: { kind: 'claude-code', conversationId: null }, status: idle }))).toBe(false);
+    expect(canResumeAgent(session('a', 'none', null, { agent: { kind: 'claude-code', conversationId: null, program: null }, status: idle }))).toBe(false);
     expect(canResumeAgent(session('a', 'none', null, { agent, status: idle, state: 'parked' }))).toBe(false);
   });
 });

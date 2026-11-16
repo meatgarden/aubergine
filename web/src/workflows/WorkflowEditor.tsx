@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
-import { elementIdFor, latestVersion, previewRun, type Element } from '@aubergine/shared';
+import { copyStatus, elementIdFor, latestVersion, previewRun, sourceOf, type Element } from '@aubergine/shared';
 import { api } from '../api';
 import { runCommand } from '../commands';
 import { useApp } from '../store';
 import { addElement, addInput, changeElement, draftOf, draftProblems, moveElement, removeElement, sameDraft, sampleInputs, versionOfDraft, type Draft } from './editor-model';
+import { CopyMark, CopyPanel, ElementReference } from './CopyPanel';
 import { ElementFields } from './ElementFields';
 
 /**
@@ -38,6 +39,8 @@ export function WorkflowEditor() {
   }, [workflowId, version === null]); // eslint-disable-line react-hooks/exhaustive-deps -- not on every save: the draft is what is being edited
 
   const shelf = useMemo(() => [...(shelfItems ?? [])].sort((a, b) => a.element.name.localeCompare(b.element.name)), [shelfItems]);
+  // A retired element is not offered when inserting.
+  const offered = useMemo(() => shelf.filter((item) => item.state === 'current'), [shelf]);
   const problems = useMemo(() => (draft ? draftProblems(draft, limits) : []), [draft, limits]);
 
   if (!workflowId) return null;
@@ -219,6 +222,7 @@ export function WorkflowEditor() {
                   <button type="button" className="editor-element-name" aria-pressed={item.id === element?.id} onClick={() => setSelected(item.id)}>
                     {index + 1}. {item.name || '(no name)'}
                   </button>
+                  <CopyMark element={item} shelf={shelf} />
                   <button type="button" className="quiet" aria-label={`Move ${item.name} up`} disabled={index === 0} onClick={() => change(moveElement(draft, index, index - 1))} data-testid="element-up">
                     ↑
                   </button>
@@ -253,23 +257,24 @@ export function WorkflowEditor() {
             >
               + Element
             </button>
-            {shelf.length > 0 && (
+            {offered.length > 0 && (
               <select
                 className="editor-insert"
                 aria-label="Insert from shelf"
                 value=""
                 onChange={(e) => {
-                  const item = shelf.find((entry) => entry.id === e.target.value);
+                  const item = offered.find((entry) => entry.id === e.target.value);
                   if (!item) return;
-                  // A copy, with where it came from: changing the shelf later does not change this workflow.
+                  // A copy, with where it came from and from which version: changing the shelf later does not change this
+                  // workflow, and the editor can say when the shelf has moved on.
                   const id = elementIdFor(item.element.name, draft.elements.map((el) => el.id));
-                  change({ ...draft, elements: [...draft.elements, { ...item.element, id, origin: { kind: 'shelf', shelfId: item.id } }] });
+                  change({ ...draft, elements: [...draft.elements, { ...item.element, id, origin: { kind: 'shelf', shelfId: item.id }, source: sourceOf(item) }] });
                   setSelected(id);
                 }}
                 data-testid="insert-from-shelf"
               >
                 <option value="">Insert from shelf…</option>
-                {shelf.map((item) => (
+                {offered.map((item) => (
                   <option key={item.id} value={item.id}>
                     {item.element.name}
                   </option>
@@ -281,14 +286,23 @@ export function WorkflowEditor() {
           <div className="editor-detail">
             {element && (
               <>
+                <CopyPanel
+                  element={element}
+                  shelf={shelf}
+                  onDecide={(next, said) => {
+                    change(changeElement(draft, element.id, next));
+                    setSaved(said);
+                  }}
+                />
                 <ElementFields element={element} onChange={(next: Element) => change(changeElement(draft, element.id, next))} />
+                <ElementReference />
                 <div className="editor-row">
                   <button
                     type="button"
                     className="quiet"
                     title="Keep a copy of this element on the shelf, to use in other workflows or to run by itself"
                     onClick={() => {
-                      const { id: _id, origin: _origin, extra: _extra, ...fields } = element;
+                      const { id: _id, origin: _origin, extra: _extra, source: _source, ...fields } = element;
                       void api
                         .createElement(fields)
                         .then((saved) => {
@@ -299,8 +313,35 @@ export function WorkflowEditor() {
                     }}
                     data-testid="save-to-shelf"
                   >
-                    Save to shelf
+                    {copyStatus(element, shelf).shelf ? 'Save to shelf as a new element' : 'Save to shelf'}
                   </button>
+                  {(() => {
+                    // An element that came from the shelf can go back to it as a new version of what it came from.
+                    const from = copyStatus(element, shelf).shelf;
+                    if (!from) return null;
+                    return (
+                      <button
+                        type="button"
+                        className="quiet"
+                        title={`Save what this element says now as version ${from.version + 1} of “${from.element.name}” on the shelf. Other workflows that hold a copy are not changed; they will say a newer version is there.`}
+                        onClick={() => {
+                          const { id: _id, origin: _origin, extra: _extra, source: _source, ...fields } = element;
+                          void api
+                            .updateElement(from.id, { ...fields, note: `From the workflow “${draft.name}”`.slice(0, 200) })
+                            .then((saved) => {
+                              useApp.getState().apply({ type: 'shelf.changed', item: saved as never });
+                              // This copy is now an unchanged copy of the version just made.
+                              change(changeElement(draft, element.id, { ...element, source: sourceOf(saved as never) }));
+                              setSaved(`Saved as version ${saved.version} of “${saved.element.name}” on the shelf.`);
+                            })
+                            .catch((e: unknown) => setError((e as Error).message));
+                        }}
+                        data-testid="save-as-version"
+                      >
+                        Save to shelf as a new version of “{from.element.name}”
+                      </button>
+                    );
+                  })()}
                 </div>
                 <div className="wf-label">
                   What an agent will be told on this element

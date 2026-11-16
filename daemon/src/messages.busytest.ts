@@ -19,7 +19,7 @@ import { SETTINGS_FILE, SettingsFile } from './settings';
 import { ZshIntegration } from './shell/integration';
 import { StateHub } from './state-hub';
 import { JsonStore } from './store/json-store';
-import { destroyTmuxServer, testSocketName } from './test-support';
+import { destroyTmuxServer, standInProgram, testSocketName } from './test-support';
 import { loadOrCreateToken } from './token';
 
 const ZSH = ['/bin/zsh', '/usr/bin/zsh'].find((p) => existsSync(p));
@@ -130,7 +130,7 @@ describe.runIf(ZSH)('two stand-in agents that answer every message', () => {
       ].join('\n'),
       { mode: 0o755 },
     );
-    await runtime.typeLine(session.id, `sh ${script}`);
+    await runtime.typeLine(session.id, `${await standInProgram(dir)} ${script}`);
     await until(`${name} to listen`, async () => (await runtime.snapshot(session.id)).includes('listening'));
     // It says an agent runs in it, as an agent's hooks do.
     expect((await app.inject({ method: 'PUT', url: `/v1/sessions/${session.id}/agent`, headers: { host: `127.0.0.1:${port}`, authorization: `Bearer ${sessionToken(ownerToken, session.id)}` }, payload: { kind: 'claude-code' } })).statusCode).toBe(200);

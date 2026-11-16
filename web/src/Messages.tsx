@@ -248,6 +248,7 @@ export function SessionMessages({ sessionId }: { sessionId: string }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const peopleOnly = useApp((s) => s.app?.sessions.find((x) => x.id === sessionId)?.peopleOnly ?? false);
+  const takesMessages = useApp((s) => s.app?.sessions.find((x) => x.id === sessionId)?.takesMessages ?? false);
   return (
     <div className="drawer-section session-messages" data-testid="session-messages">
       <form
@@ -279,7 +280,18 @@ export function SessionMessages({ sessionId }: { sessionId: string }) {
           Send
         </button>
       </form>
-      {peopleOnly && <p className="sheet-note">People only: this terminal takes messages from you alone.</p>}
+      {peopleOnly && (
+        <label className="sheet-note takes-messages" data-testid="takes-messages">
+          <input
+            type="checkbox"
+            checked={takesMessages}
+            onChange={(event) => void api.setTakesMessages(sessionId, event.target.checked).catch((e: unknown) => setError((e as Error).message))}
+          />{' '}
+          {takesMessages
+            ? 'People only, and it still takes messages from terminals on a canvas where you let terminals message each other. It stays closed to reading and typing, and to every program with a token.'
+            : 'People only: this terminal takes messages from you alone. Tick to let terminals message it where you switched that on for its canvas; it stays closed to reading and typing.'}
+        </label>
+      )}
       {error && <p className="dialog-error">{error}</p>}
       <ThreadList sessionId={sessionId} />
     </div>

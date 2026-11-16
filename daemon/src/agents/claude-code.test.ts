@@ -60,9 +60,12 @@ describe('hookActions', () => {
 });
 
 describe('generated settings', () => {
-  it('attaches one command hook to each of the three events', () => {
+  it('attaches one command hook to each of the four events', () => {
     const settings = claudeHooksSettings('aubergine');
-    expect(Object.keys(settings.hooks).sort()).toEqual(['Notification', 'Stop', 'UserPromptSubmit']);
+    expect(Object.keys(settings.hooks).sort()).toEqual(['Notification', 'SessionStart', 'Stop', 'UserPromptSubmit']);
+    expect(settings.hooks.SessionStart).toEqual([{ hooks: [{ type: 'command', command: 'aubergine hook start', timeout: 10 }] }]);
+    // The start of a conversation says which conversation it is, and nothing else.
+    expect(hookActions('start', { session_id: '0190aaaa-bbbb-7ccc-8ddd-eeeeeeeeeeee', source: 'startup' })).toEqual([{ do: 'agent', conversationId: '0190aaaa-bbbb-7ccc-8ddd-eeeeeeeeeeee' }]);
     expect(settings.hooks.UserPromptSubmit).toEqual([
       { hooks: [{ type: 'command', command: 'aubergine hook prompt', timeout: 10 }] },
     ]);

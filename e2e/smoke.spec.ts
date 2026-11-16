@@ -1441,10 +1441,30 @@ test('a recap of a terminal: what is known, what its agent wrote, and what chang
   await expect(recap.getByTestId('recap-lines')).toContainText("Found the cause: the cookie is set twice.");
   await expect(recap.getByTestId('recap-written')).toHaveCount(0);
 
-  // Asking types one fixed sentence into the terminal, and nothing else.
+  // With a shell in front, the sentence is not typed (it would be run as a command), and the terminal says why.
+  await recap.getByTestId('recap-ask').click();
+  await expect(recap.getByTestId('recap-not-asked')).toContainText('Nothing was typed');
+  await expect(page.getByTestId('badge-untold')).toHaveAttribute('title', /The agent was not told that you asked for a recap: no agent has reported from this terminal yet/);
+  await expect(page.locator('.xterm-rows')).not.toContainText('Your owner asked for a recap');
+
+  // A program that is not a shell is in front, and reports as the agent, as an agent's hooks do when it starts.
+  // What had waited to be said is then typed: the one fixed sentence, and nothing else.
+  await page.getByTestId('node-body').click();
+  await page.keyboard.type('cat');
+  await page.keyboard.press('Enter');
+  await expect
+    .poll(async () => {
+      await page.request.put(`/v1/sessions/${sessionId}/agent`, { headers: { origin }, data: { kind: 'claude-code', conversationId: null } });
+      return page.locator('.xterm-rows').textContent();
+    }, { timeout: 20_000 })
+    .toContain('Your owner asked for a recap of this session.');
+  await expect(page.getByTestId('badge-untold')).toHaveCount(0);
+  // Asked again while it is in front: typed at once.
   await recap.getByTestId('recap-ask').click();
   await expect(recap.getByTestId('recap-asked')).toBeVisible();
-  await expect(page.locator('.xterm-rows')).toContainText('Your owner asked for a recap of this session.');
+  // The stand-in ends, and the shell has the keyboard again.
+  await page.getByTestId('node-body').click();
+  await page.keyboard.press('Control+d');
 
   // The agent (stood in for by typing its command) hands one in. It shows as the agent's words, with when.
   await page.getByTestId('node-body').click();
@@ -1706,4 +1726,180 @@ test('messages: the owner writes to a terminal, its agent reads and answers, and
   const section = page.getByTestId('messages-section');
   await expect(section.getByTestId('messages-switch-note')).toContainText('Terminals may message each other on:');
   await expect(section.getByTestId('thread-row')).toHaveCount(2);
+});
+
+test('the side panel gives each section the room it needs, in a small window and a normal one, and remembers what was folded', async ({ page }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  await page.getByRole('button', { name: 'New canvas' }).click();
+  await page.getByTestId('toolbar-new-terminal').click();
+  await expect(page.getByTestId('list-row').first()).toBeVisible();
+
+  interface Measured {
+    id: string;
+    fill: boolean;
+    height: number;
+    bottom: number;
+    bodyHeight: number;
+    contentHeight: number;
+    scrolls: boolean;
+  }
+  const measure = (): Promise<{ panelBottom: number; panelHeight: number; sections: Measured[] }> =>
+    page.evaluate(() => {
+      const panel = document.querySelector('[data-testid="side-panel"]') as HTMLElement;
+      const box = panel.getBoundingClientRect();
+      return {
+        panelBottom: box.bottom,
+        panelHeight: box.height,
+        sections: [...panel.querySelectorAll<HTMLElement>('.panel-section')].map((section) => {
+          const body = section.querySelector<HTMLElement>('.panel-section-body');
+          const content = body?.firstElementChild as HTMLElement | null;
+          return {
+            id: section.dataset.section ?? '',
+            fill: section.classList.contains('fill'),
+            height: section.getBoundingClientRect().height,
+            bottom: section.getBoundingClientRect().bottom,
+            bodyHeight: body?.clientHeight ?? 0,
+            contentHeight: content?.scrollHeight ?? 0,
+            scrolls: body ? getComputedStyle(body).overflowY === 'auto' : false,
+          };
+        }),
+      };
+    });
+
+  for (const [width, height] of [
+    [800, 600],
+    [1280, 800],
+  ] as const) {
+    await page.setViewportSize({ width, height });
+    const { panelBottom, panelHeight, sections } = await measure();
+    if (process.env.PANEL_SHOT) await page.screenshot({ path: process.env.PANEL_SHOT + '-' + String(width) + '.png' });
+    expect(sections.map((s) => s.id)).toEqual(['terminals', 'workflows', 'messages']);
+    const list = sections.find((s) => s.fill);
+    // The terminal list is never squeezed to a row: it has room for a few, and takes what the others leave.
+    expect(list?.id).toBe('terminals');
+    expect(list?.height ?? 0, `${width}×${height}`).toBeGreaterThanOrEqual(Math.min(340, panelHeight * 0.6) - 1);
+    // Under its filters there is room for rows: the first one is wholly in view.
+    await expect(page.getByTestId('list-row').first()).toBeInViewport({ ratio: 1 });
+    for (const section of sections) {
+      // Nothing is cut off at the bottom of the panel.
+      expect(section.bottom, `${section.id} at ${width}×${height}`).toBeLessThanOrEqual(panelBottom + 1);
+      if (section.fill) continue;
+      // Any other section is no taller than what it holds (an empty one is its heading and a line), and scrolls inside itself when that is more than its share.
+      expect(section.bodyHeight, `${section.id} at ${width}×${height}`).toBeLessThanOrEqual(section.contentHeight + 1);
+      expect(section.height, `${section.id} at ${width}×${height}`).toBeLessThanOrEqual(panelHeight * 0.45 + 1);
+      expect(section.scrolls).toBe(true);
+    }
+    expect(sections.reduce((sum, s) => sum + s.height, 0)).toBeLessThanOrEqual(panelHeight + 1);
+  }
+
+  // A section the owner folds stays folded after a reload, and takes only its heading.
+  const messages = page.locator('.panel-section[data-section="messages"]');
+  await messages.getByTestId('section-fold').click();
+  await expect(messages.getByTestId('section-fold')).toHaveAttribute('aria-expanded', 'false');
+  await page.reload();
+  await expect(messages.getByTestId('section-fold')).toHaveAttribute('aria-expanded', 'false');
+  expect((await messages.boundingBox())?.height ?? 99).toBeLessThan(40);
+  await expect(page.locator('.panel-section[data-section="workflows"]').getByTestId('section-fold')).toHaveAttribute('aria-expanded', 'true');
+  await messages.getByTestId('section-fold').click();
+  await expect(messages.getByTestId('section-fold')).toHaveAttribute('aria-expanded', 'true');
+});
+
+test('a shelf element has a life: a copy says where it came from, a newer version is compared and taken, and a retired element is no longer offered', async ({ page }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  const origin = new URL(page.url()).origin;
+  const asOwner = { headers: { origin } };
+  const onShelf = await page.request.post('/v1/elements', { ...asOwner, data: { name: 'Check every link', instructions: 'Open each link in the page.', doneWhen: 'Every link was opened.' } });
+  expect(onShelf.status()).toBe(201);
+  const shelfId = ((await onShelf.json()) as { id: string }).id;
+  const made = await page.request.post('/v1/workflows', { ...asOwner, data: { name: 'Publish the notes', elements: [{ name: 'Write', instructions: 'Write the notes.', doneWhen: 'They are written.' }] } });
+  expect(made.status()).toBe(201);
+
+  // In the editor: a copy from the shelf says so, and nothing is waiting.
+  await page.getByTestId('toolbar-workflows').click();
+  const screen = page.getByTestId('workflows-screen');
+  await screen.locator('[data-testid="workflow-row"][data-workflow="Publish the notes"]').getByTestId('workflow-edit').click();
+  const editor = page.getByTestId('workflow-editor');
+  await editor.getByTestId('insert-from-shelf').selectOption({ label: 'Check every link' });
+  const copy = editor.getByTestId('editor-element').nth(1);
+  await expect(copy.getByTestId('copy-mark')).toHaveAttribute('data-state', 'unchanged');
+  await expect(copy.getByTestId('copy-mark')).toHaveText('from the shelf');
+  await expect(editor.getByTestId('editor-element').nth(0).getByTestId('copy-mark')).toHaveCount(0);
+  await expect(editor.getByTestId('copy-words')).toContainText('A copy of "Check every link" from the shelf, version 1, unchanged.');
+  await editor.getByTestId('editor-save').click();
+  await expect(editor.getByTestId('editor-saved')).toContainText('Saved as version 2');
+
+  // The shelf moves on. The copy does not change; it says a newer version is there.
+  expect((await page.request.patch(`/v1/elements/${shelfId}`, { ...asOwner, data: { instructions: 'Open each link in the page.\nNote every one that fails.', note: 'Asks for the failures' } })).status()).toBe(200);
+  await expect(copy.getByTestId('copy-mark')).toHaveAttribute('data-state', 'behind');
+  await expect(copy.getByTestId('copy-mark')).toHaveText('newer on the shelf');
+  await expect(editor.getByTestId('copy-words')).toContainText('A newer version is on the shelf: version 2.');
+  await expect(editor.getByTestId('editor-preview')).not.toContainText('Note every one that fails.');
+
+  // The comparison: what the newer version adds, with its note. Then it is taken, and saving makes a version of the workflow.
+  await editor.getByTestId('copy-compare').click();
+  await expect(editor.getByTestId('copy-diff')).toContainText('+ Note every one that fails.');
+  await expect(editor.getByTestId('copy-panel')).toContainText('Asks for the failures');
+  await editor.getByTestId('copy-take').click();
+  await expect(copy.getByTestId('copy-mark')).toHaveAttribute('data-state', 'unchanged');
+  await expect(editor.getByTestId('editor-preview')).toContainText('Note every one that fails.');
+  await expect(editor.getByTestId('editor-saved')).toContainText('Took version 2');
+  await editor.getByTestId('editor-save').click();
+  await expect(editor.getByTestId('editor-saved')).toContainText('Saved as version 3');
+
+  // Changed here, and then on the shelf as well: three texts, one of which is picked. Keeping one's own leaves every word.
+  await editor.getByTestId('element-name').fill('Check every link, twice');
+  await expect(copy.getByTestId('copy-mark')).toHaveAttribute('data-state', 'changed');
+  expect((await page.request.patch(`/v1/elements/${shelfId}`, { ...asOwner, data: { doneWhen: 'Every link was opened and the failures are listed.' } })).status()).toBe(200);
+  await expect(copy.getByTestId('copy-mark')).toHaveAttribute('data-state', 'both');
+  await editor.getByTestId('copy-compare').click();
+  await expect(editor.getByTestId('copy-text-copied')).toContainText('Name: Check every link');
+  await expect(editor.getByTestId('copy-text-mine')).toContainText('+ Name: Check every link, twice');
+  await expect(editor.getByTestId('copy-text-shelf')).toContainText('+ Done when: Every link was opened and the failures are listed.');
+  await editor.getByTestId('copy-keep').click();
+  await expect(copy.getByTestId('copy-mark')).toHaveAttribute('data-state', 'changed');
+  await expect(editor.getByTestId('element-name')).toHaveValue('Check every link, twice');
+  await editor.getByTestId('editor-save').click();
+  await expect(editor.getByTestId('editor-saved')).toContainText('Saved as version 4');
+
+  // What goes in an element: every field, in the words of the reference.
+  await editor.getByTestId('element-reference').locator('summary').click();
+  await expect(editor.getByTestId('reference-field')).toHaveCount(14);
+  await expect(editor.locator('[data-testid="reference-field"][data-field="doneWhen"]')).toContainText('how to tell that the element is finished');
+  await editor.getByTestId('editor-close').click();
+
+  // On the shelf: its version, where it is used, its versions with what changed, and retiring it.
+  if (!(await screen.isVisible())) await page.getByTestId('toolbar-workflows').click();
+  const row = screen.locator('[data-testid="shelf-row"][data-element="Check every link"]');
+  await expect(row).toContainText('version 3');
+  await expect(row).toContainText('in 1 workflow');
+  await row.getByTestId('shelf-edit').click();
+  const shelf = page.getByTestId('shelf-editor');
+  await expect(shelf.getByTestId('shelf-version')).toContainText('version 3');
+  await expect(shelf.getByTestId('shelf-use')).toContainText('Publish the notes');
+  await expect(shelf.getByTestId('shelf-use')).toContainText('changed here');
+  await expect(shelf.getByTestId('shelf-version-row')).toHaveCount(3);
+  await expect(shelf.getByTestId('shelf-version-row').nth(1)).toContainText('Asks for the failures');
+  await shelf.getByTestId('shelf-version-compare').first().click();
+  await expect(shelf.getByTestId('shelf-version-diff')).toContainText('+ Every link was opened and the failures are listed.');
+  await shelf.getByTestId('shelf-retire').click();
+  await expect(shelf.getByTestId('shelf-retired')).toContainText('Retired');
+  await shelf.getByRole('button', { name: 'Close' }).click();
+
+  // Retired: under a fold, not run by itself, and not offered when inserting. The copy still works and says so.
+  await expect(screen.locator('[data-testid="shelf-row"][data-element="Check every link"]')).toBeHidden();
+  await screen.getByTestId('shelf-retired-fold').locator('summary').click();
+  await expect(screen.getByTestId('shelf-retired-fold').getByTestId('shelf-run')).toBeDisabled();
+  await screen.locator('[data-testid="workflow-row"][data-workflow="Publish the notes"]').getByTestId('workflow-edit').click();
+  await expect(editor.getByTestId('editor-element').nth(1).getByTestId('copy-mark')).toContainText('retired');
+  await expect(editor.getByTestId('insert-from-shelf').locator('option', { hasText: 'Check every link' })).toHaveCount(0);
+
+  // From the workflow back to the shelf: what the copy says now becomes a new version of what it came from.
+  await editor.getByTestId('editor-element').nth(1).locator('.editor-element-name').click();
+  await editor.getByTestId('save-as-version').click();
+  await expect(editor.getByTestId('editor-saved')).toContainText('Saved as version 4 of “Check every link, twice” on the shelf.');
+  await expect(editor.getByTestId('editor-element').nth(1).getByTestId('copy-mark')).toHaveAttribute('data-state', 'unchanged');
 });

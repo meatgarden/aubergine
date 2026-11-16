@@ -344,6 +344,11 @@ describe('every route has a rule', () => {
     'POST /v1/repository-workflows/save',
     // Closing a session to programs, or opening it again.
     'PUT /v1/sessions/:sessionId/protection',
+    'PUT /v1/sessions/:sessionId/takes-messages',
+    // Retiring a shelf element, bringing it back, and taking a newer version into a workflow are the owner's.
+    'POST /v1/elements/:elementId/retire',
+    'POST /v1/elements/:elementId/restore',
+    'POST /v1/workflows/:workflowId/elements/:elementId/shelf-update',
   ];
 
   it('has the routes the plan lists, under /v1', () => {
@@ -756,7 +761,7 @@ describe('the secret', () => {
 
     // The hash is what is stored, and it is not sent to the page.
     const state = JSON.parse(await readFile(path.join(dir, 'state.json'), 'utf8'));
-    expect(state.version).toBe(7);
+    expect(state.version).toBe(8);
     expect(state.tokens.map((t: { hash: string }) => t.hash)).toEqual([expect.stringMatching(/^[0-9a-f]{64}$/), expect.stringMatching(/^[0-9a-f]{64}$/)]);
   });
 

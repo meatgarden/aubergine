@@ -75,22 +75,39 @@ export const Need = z.object({
 });
 export type Need = z.infer<typeof Need>;
 
+/**
+ * Where a copy of a shelf element came from: which element, which of its versions, and a mark of the content as it
+ * was copied. With these three it can be told whether the copy is as it was copied, was changed in its workflow, or
+ * has a newer version waiting on the shelf. `version` and `hash` are null for a copy made before versions existed:
+ * about such a copy nothing can be told, and it is never said to be behind.
+ */
+export const ElementSource = z.object({
+  shelfId: Id,
+  version: z.number().int().min(1).nullable(),
+  hash: z
+    .string()
+    .regex(/^[0-9a-f]{16}$/)
+    .nullable(),
+});
+export type ElementSource = z.infer<typeof ElementSource>;
+
 export const Element = z.object({
-  /** Stable inside its workflow: a run points at an element by this. */
-  id: ElementId,
-  /** What sort of element it is. Looked up in the registry of kinds; today there is one, `instructions`. */
-  kind: z.string().min(1).max(40).default('instructions'),
-  name: PlainName,
-  /** What to do, written for whoever does the work. Plain text or Markdown. */
-  instructions: z.string().max(ELEMENT_TEXT_HARD_MAX).default(''),
-  /** One line: how to tell that the element is finished. */
-  doneWhen: z.string().trim().max(500).default(''),
-  /** What whoever does it must have: tools the agent's own setup supplies. Shown before a run; nothing here is checked by the server. */
-  needs: z.array(Need).max(NEEDS_MAX).default([]),
-  /** The kind of thing it produces, from the registry of output kinds. `note` is what every element can hand over. */
-  produces: z.string().min(1).max(40).default('note'),
-  origin: Origin.default(LOCAL),
-  extra: Extra,
+  id: ElementId.describe('Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you.'),
+  kind: z.string().min(1).max(40).default('instructions').describe('What sort of element it is. Today there is one, `instructions`: text an agent reads and follows. Nothing in an element is run by a computer.'),
+  name: PlainName.describe('What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals.'),
+  instructions: z.string().max(ELEMENT_TEXT_HARD_MAX).default('').describe('What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in.'),
+  doneWhen: z.string().trim().max(500).default('').describe('One line: how to tell that the element is finished. The agent is told to report done when this is true.'),
+  needs: z
+    .array(Need)
+    .max(NEEDS_MAX)
+    .default([])
+    .describe("What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed."),
+  produces: z.string().min(1).max(40).default('note').describe('What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick).'),
+  origin: Origin.default(LOCAL).describe('Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it.'),
+  source: ElementSource.nullable()
+    .default(null)
+    .describe('For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy.'),
+  extra: Extra.describe('Fields from a file that this version does not know, kept so that they are written out again.'),
 });
 export type Element = z.infer<typeof Element>;
 
@@ -683,7 +700,7 @@ export const WorkflowFile = z.looseObject({
 });
 export type WorkflowFile = z.infer<typeof WorkflowFile>;
 
-const KNOWN_ELEMENT = ['id', 'kind', 'name', 'instructions', 'doneWhen', 'needs', 'produces', 'origin'];
+const KNOWN_ELEMENT = ['id', 'kind', 'name', 'instructions', 'doneWhen', 'needs', 'produces', 'origin', 'source'];
 const KNOWN_WORKFLOW = ['name', 'description', 'standing', 'inputs', 'elements', 'labels', 'origin'];
 const KNOWN_FILE = ['aubergine', 'format', 'workflow'];
 
@@ -701,7 +718,8 @@ export function exportWorkflow(workflow: Workflow): Record<string, unknown> {
       description: version.description,
       standing: version.standing,
       inputs: version.inputs,
-      elements: version.elements.map(({ extra, ...element }) => ({ ...element, ...extra })),
+      // Where a copy came from is written only for an element that is one: a file without it reads as before.
+      elements: version.elements.map(({ extra, source, ...element }) => ({ ...element, ...(source ? { source } : {}), ...extra })),
       labels: workflow.labels,
       origin: workflow.origin,
       ...rest,
@@ -718,7 +736,9 @@ export function importWorkflow(file: unknown): { content: WorkflowContent; label
   const elements = source.elements.map((raw) => {
     const id = typeof raw.id === 'string' && ElementId.safeParse(raw.id).success && !taken.includes(raw.id) ? raw.id : elementIdFor(String(raw.name ?? 'element'), taken);
     taken.push(id);
-    return { ...Object.fromEntries(KNOWN_ELEMENT.filter((key) => key in raw).map((key) => [key, raw[key]])), id, extra: unknownOf(raw, KNOWN_ELEMENT) };
+    // A source mark that cannot be read is left out, not a reason to refuse the file.
+    const source = ElementSource.safeParse(raw.source);
+    return { ...Object.fromEntries(KNOWN_ELEMENT.filter((key) => key in raw && key !== 'source').map((key) => [key, raw[key]])), ...(source.success ? { source: source.data } : {}), id, extra: unknownOf(raw, KNOWN_ELEMENT) };
   });
   const fileExtra = unknownOf(parsed.data as Record<string, unknown>, KNOWN_FILE);
   const content = WorkflowContent.parse({

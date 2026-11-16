@@ -26,3 +26,15 @@ export async function destroyTmuxServer(runtime: TmuxRuntime, socket: string): P
   await runtime.killServer();
   await rm(tmuxSocketFile(socket), { force: true });
 }
+
+/**
+ * How a stand-in agent is started, as the beginning of a command line: its script is given as the argument.
+ * The script is a shell script, but what is in front of the terminal must not be a shell by name, as it is not
+ * with a real agent. So a small program of another name runs the script and stays in front while it does.
+ */
+export async function standInProgram(dir: string): Promise<string> {
+  const { writeFile } = await import('node:fs/promises');
+  const launcher = `${dir}/stand-in-agent.mjs`;
+  await writeFile(launcher, "import { spawnSync } from 'node:child_process';\nprocess.exit(spawnSync('/bin/sh', process.argv.slice(2), { stdio: 'inherit' }).status ?? 1);\n");
+  return `'${process.execPath}' '${launcher}'`;
+}

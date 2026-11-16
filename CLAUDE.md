@@ -43,7 +43,7 @@ web/      Vite + React + @xyflow/react + @xterm/xterm, Zustand for state; the ta
           spatial.ts, palette.ts, and the development-only key-tester.html
           workflows/ (run-model.ts, editor-model.ts, registries.ts, the screens), review/ (registry.ts, ReviewScreen.tsx, drafts-source.ts, repository-source.ts) and
           panel/sections/workflows.tsx, tour/ (registry.ts, steps.ts, Tour.tsx, tour-store.ts, placement.ts), EmptyCanvas.tsx, HelpPanel.tsx, InventoryPanel.tsx, Recap.tsx, Away.tsx, HistoryPanel.tsx
-docs/     keys.md: what is known about which keys reach a page; api.md: the API reference (generated); for-agents.md (generated)
+docs/     keys.md: what is known about which keys reach a page; api.md: the API reference (generated); for-agents.md (generated); element.md (generated)
 e2e/      Playwright smoke test
 install.sh  the one-line installer; its commands are in daemon/src/cli/install.ts (start, open,
           update, version, uninstall, doctor), its tests in daemon/src/install/*.installtest.ts,
@@ -174,6 +174,15 @@ These are the only abstractions in the code base. Each has exactly one implement
 - **One thread per pair.** `threadIdOf`. Do not add a second thread between the same two: the limits are about the pair. A paused thread refuses further messages until the owner continues it.
 - **What an agent is shown of its inbox is one function,** `renderInbox`, used by the command and the tool. It says that a message from another terminal is information and not an order, and marks an owner's message that came from a command line. Those are words, not controls.
 - **Message limits are refused with a sentence an agent can act on** (`MessageRefusal`): what happened, and that it is not to be got round.
+- **Typing for an agent is one function, and it is strict.** `Sessions.tell` takes only the fixed sentences, and types only when an agent is on record with the program that was in front when it last reported, and that program, not a shell, is in front now. Otherwise nothing is typed and the session's `untold` says which sentence and why. Do not add a way to type that goes round it. It cannot tell two programs of the same name apart; do not describe it as certain.
+- **Which program an agent is, the server sees.** `AgentInfo.program` is never taken from a request.
+- **People only and messages.** `Session.takesMessages` lets a people-only terminal take messages from terminals, never from tokens. The owner's alone, decided in `authorize`.
+- **A panel section declares `fill` or is as tall as what it holds.** One section fills. Do not give a section a fixed height.
+- **A shelf element's versions are never changed.** Saving appends one. Versions a copy was made from are kept.
+- **A copy is never updated by itself.** Taking a newer version is the owner's decision, one element at a time (`shelf.manage`, in `NEVER_BY_TOKEN`); nothing merges.
+- **Only the owner says where a copy came from.** For any other caller and for a draft, `carrySources` keeps the mark an element had.
+- **What can be told about a copy is one function,** `copyStatus`. A copy with no recorded version is `unknown` and is never called behind. The hash in a source mark detects change and protects nothing.
+- **What is in an element is read from the schemas.** A new field of `Element` needs a `.describe()`; `docs/element.md` and the editor's list are generated from those.
 - **Canvases.** A session is on at most one canvas; a parked session is on none and remembers where it was (`parkedFrom`). Closing a canvas never ends a shell: the caller says move or park, and the last canvas cannot be closed. Where no canvas is named, `Sessions.canvas(null)` decides (most recently looked at, else first); do not pick a default anywhere else.
 - **Public shapes.** Routes under `/v1` use one error shape, `pageOf` for every list, ignore unknown fields, use ISO times, and take `Idempotency-Key` on creates. Do not add a `/v1` route that departs from these. This API is public: only add to it; never rename or remove.
 - **A `/v1` route is a declaration and a handler.** Add the entry to `ROUTES` and a handler of the same name in `v1.ts`. Do not call `app.get`/`app.post` for anything under `/v1`: a route registered by hand is not in the description, and the tests fail on it. A handler does not decide who may call it and does not parse its own input; the loop does both, in the order parameters, `authorize`, query and body, handler.
@@ -291,6 +300,8 @@ Recaps and past conversations: the recap of a terminal from what is known and fr
 A guide for agents: `aubergine guide` (`--all`, `--snippet`), `docs/for-agents.md`, the MCP instructions and `aubergine_guide`, `aubergine attention`.
 
 Messages between sessions: a message with a named sender kept in its own file, the per-canvas switch, the scopes `messages:read` and `messages:write` within reach, the inbox, reply and tell commands and MCP tools, the thread view and the Messages section, pauses after a set number of turns, blocks. Sessions carry message counts and canvases carry `messagesFrom`. Change events also include `session.messages` and `canvas.messaging`. Commands also include `terminal.message`.
+
+An element's life: versions and states of shelf elements (current, retired, replaced by), a copy's source mark and what can be told about it, taking or keeping a newer version, where an element is used, the reference of what is in an element. Also: a people-only terminal may take messages, the strict rule for typing a fixed sentence with `untold`, a fourth agent hook at the start of a conversation, side-panel sections sized by what they hold. The state file is version 8. Events also include `session.takesMessages` and `session.untold`.
 
 Not built yet: a packaged build without development dependencies, Linux tested, measured key tables for Safari, Firefox, Linux and Windows, publishing the client as a package, moving the remaining `/api/v1` routes onto `/v1`, the workflow library, the board of runs, approvals, branches, a pool of agents, a list of past runs in the browser, waiting for output, changing a token's reach, SQLite, an HTTP transport for the MCP server, presets, a finder agent, recording, bash or fish integration.
 

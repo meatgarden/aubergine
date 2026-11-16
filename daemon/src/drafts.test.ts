@@ -36,6 +36,8 @@ const runtime = {
   list: async () => [],
   has: async () => true,
   kill: async () => {},
+  // The program an agent's record names is in front.
+  foreground: async () => 'the-agent',
   typeLine: async (id: string, line: string) => {
     typed.push([id, line]);
   },
@@ -95,12 +97,12 @@ async function makeToken(name: string, scopes: Scope[], more: object = {}): Prom
 
 function fakeSession(name: string, more: Partial<Session> = {}): Session {
   const session: Session = { id: newId(), projectId: hub.state.project.id, name, createdAt: new Date().toISOString(), state: 'open', cwd: null, command: null, note: '', status: NO_STATUS, attention: NO_ATTENTION, noteLog: [], agent: null, lastInputAt: null, lastOutputAt: null, tags: [], parkedFrom: null, peopleOnly: false, typedBy: null,
-    recap: null, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null }, ...more };
+    recap: null, takesMessages: false, untold: null, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null }, ...more };
   hub.emit({ type: 'session.created', session, canvasId: hub.state.canvases[0]!.id, node: { id: newId(), sessionId: session.id, x: 0, y: 0, width: 640, height: 400, color: 'none' } });
   return session;
 }
 /** A session with an agent at work in it: the only kind anything is typed into. */
-const agentSession = (name: string): Session => fakeSession(name, { agent: { kind: 'claude-code', conversationId: null }, status: { ...NO_STATUS, state: 'busy' } });
+const agentSession = (name: string): Session => fakeSession(name, { agent: { kind: 'claude-code', conversationId: null, program: 'the-agent' }, status: { ...NO_STATUS, state: 'busy' } });
 
 const COLLECT = {
   name: 'Collect my to-dos',
@@ -484,7 +486,7 @@ describe('the shelf', () => {
     expect(hub.state.workflows).toEqual([]);
     // Changing the shelf element later does not reach into a run: the run had its own copy.
     const state = JSON.parse(await readFile(path.join(dir, 'state.json'), 'utf8').catch(() => '{}'));
-    expect(state.version ?? 7).toBe(7);
+    expect(state.version ?? 8).toBe(8);
   });
 
   it('a workflow left over from running one element is cleared at the next start', async () => {

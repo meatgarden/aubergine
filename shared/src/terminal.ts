@@ -32,6 +32,8 @@ export interface SessionFacts {
   tags: readonly string[];
   /** "People only": no token may read or type, whatever its scopes. */
   peopleOnly: boolean;
+  /** While "people only": whether it still takes messages from terminals the owner let message it. Never from tokens. */
+  takesMessages?: boolean;
 }
 
 /** Whether a reach covers a session. */
@@ -183,6 +185,10 @@ export type RunCommandResponse = z.infer<typeof RunCommandResponse>;
 /** Body of switching "people only" on or off for a session. */
 export const ProtectRequest = z.object({ peopleOnly: z.boolean().describe('True: no token may read this terminal or type into it, whatever its scopes.') });
 export type ProtectRequest = z.infer<typeof ProtectRequest>;
+
+/** Body of saying whether a "people only" session still takes messages from other terminals. */
+export const TakesMessagesRequest = z.object({ takesMessages: z.boolean().describe('True: while "people only", it still takes messages from terminals the owner let message it. It stays closed to reading, to typing and to every token. False: people only closes it to messages as well.') });
+export type TakesMessagesRequest = z.infer<typeof TakesMessagesRequest>;
 
 /** Who typed into a session last through the API, for the owner to see. Not what was typed. */
 export const TypedBy = z.object({ name: z.string().max(120), at: z.iso.datetime() });

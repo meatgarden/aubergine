@@ -13,12 +13,14 @@ import { stableNodePath } from '../node-path';
  * edited.
  */
 
-export type HookEvent = 'prompt' | 'notification' | 'stop';
+export type HookEvent = 'start' | 'prompt' | 'notification' | 'stop';
 
-export const HOOK_EVENTS: readonly HookEvent[] = ['prompt', 'notification', 'stop'];
+export const HOOK_EVENTS: readonly HookEvent[] = ['start', 'prompt', 'notification', 'stop'];
 
 /** Which Claude Code hook each of our events is attached to. */
 const CLAUDE_EVENT: Record<HookEvent, string> = {
+  // When a conversation begins or is resumed: so that the agent is on record before anything is typed for it.
+  start: 'SessionStart',
   prompt: 'UserPromptSubmit',
   notification: 'Notification',
   stop: 'Stop',
@@ -52,6 +54,9 @@ export function hookActions(event: HookEvent, input: unknown): HookAction[] {
 
 function eventActions(event: HookEvent, data: Record<string, unknown>): HookAction[] {
   switch (event) {
+    case 'start':
+      // Nothing but which conversation it is, which every event reports.
+      return [];
     case 'prompt': {
       const prompt = text(data.prompt, 20_000);
       return [{ do: 'attention', state: 'working' }, ...(prompt ? [{ do: 'note' as const, kind: 'prompt' as const, text: prompt }] : [])];

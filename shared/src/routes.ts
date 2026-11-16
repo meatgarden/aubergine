@@ -33,7 +33,7 @@ import {
 import { Capabilities, CreateTokenRequest, CreatedToken, TokenView } from './tokens';
 import { Draft, ShelfElement } from './drafts';
 import { WriteRecapRequest, WrittenRecap } from './recap';
-import { InputRequest, InputResponse, OutputQuery, OutputResponse, ProtectRequest, RunCommandRequest, RunCommandResponse, ScreenResponse, TerminalSearchQuery, TerminalSearchResponse } from './terminal';
+import { InputRequest, InputResponse, OutputQuery, OutputResponse, ProtectRequest, RunCommandRequest, TakesMessagesRequest, RunCommandResponse, ScreenResponse, TerminalSearchQuery, TerminalSearchResponse } from './terminal';
 import {
   AcceptRepositoryWorkflowRequest,
   RepositoryFileRef,
@@ -59,6 +59,10 @@ import {
   ReturnDraftRequest,
   RunElementRequest,
   ShelfList,
+  ShelfUsage,
+  ShelfVersionList,
+  ShelfUpdateRequest,
+  RetireElementRequest,
   TickRequest,
   UpdateShelfElementRequest,
   CopyWorkflowRequest,
@@ -154,6 +158,7 @@ const workflowId = z.object({ workflowId: Id });
 const runId = z.object({ runId: Id });
 const draftId = z.object({ draftId: Id });
 const elementId = z.object({ elementId: Id });
+import { ElementId } from './workflows';
 
 /** What the event stream sends: a change, as the reducer in `shared/` applies it. Described loosely on purpose: new kinds appear. */
 const StreamedEvent = z.looseObject({ type: z.string() }).describe('One change. `type` names it (for example `session.created`, `canvas.updated`); the other fields depend on the type.');
@@ -816,6 +821,72 @@ export const ROUTES = {
     idempotent: true,
     errors: [404],
   }),
+  listElementVersions: route({
+    method: 'GET',
+    path: '/v1/elements/:elementId/versions',
+    tag: 'Elements',
+    summary: 'The versions of a shelf element',
+    description: 'Newest first: each with what the element said, who saved it, when, and a line on what changed. The newest 30 are kept, and any a copy in a workflow was made from.',
+    action: 'workflows.read',
+    params: elementId,
+    query: PageQuery,
+    response: ShelfVersionList,
+    status: 200,
+    paged: true,
+    errors: [404],
+  }),
+  getElementUsage: route({
+    method: 'GET',
+    path: '/v1/elements/:elementId/usage',
+    tag: 'Elements',
+    summary: 'Where a shelf element is used',
+    description: 'The workflows that hold a copy of it, and for each copy whether it is unchanged, was changed in its workflow, or is behind the shelf.',
+    action: 'workflows.read',
+    params: elementId,
+    response: ShelfUsage,
+    status: 200,
+    errors: [404],
+  }),
+  retireElement: route({
+    method: 'POST',
+    path: '/v1/elements/:elementId/retire',
+    tag: 'Elements',
+    summary: 'Retire a shelf element',
+    description: 'For the owner only. A retired element is kept and still works wherever a copy of it is; it is no longer offered when inserting, and cannot be run by itself. It may name the element to use in its place.',
+    action: 'shelf.manage',
+    params: elementId,
+    body: RetireElementRequest,
+    bodyOptional: true,
+    response: ShelfElement,
+    status: 200,
+    errors: [404, 409],
+  }),
+  restoreElement: route({
+    method: 'POST',
+    path: '/v1/elements/:elementId/restore',
+    tag: 'Elements',
+    summary: 'Bring a retired shelf element back',
+    description: 'For the owner only.',
+    action: 'shelf.manage',
+    params: elementId,
+    response: ShelfElement,
+    status: 200,
+    errors: [404],
+  }),
+  updateFromShelf: route({
+    method: 'POST',
+    path: '/v1/workflows/:workflowId/elements/:elementId/shelf-update',
+    tag: 'Elements',
+    summary: 'Decide about a newer shelf version for one copy in a workflow',
+    description:
+      "For the owner only: no token and no draft can do this. `take` puts the shelf's newest version in place of the copy; `keep` leaves the copy and notes that the newer version was seen. Either saves a new version of the workflow, as any edit does; runs that are going are not touched. Nothing is merged, and nothing is ever updated by itself.",
+    action: 'shelf.manage',
+    params: z.object({ workflowId: Id, elementId: ElementId }),
+    body: ShelfUpdateRequest,
+    response: WorkflowDetail,
+    status: 200,
+    errors: [404, 409],
+  }),
   runElement: route({
     method: 'POST',
     path: '/v1/elements/:elementId/run',
@@ -982,6 +1053,19 @@ export const ROUTES = {
     action: 'sessions.protect',
     params: sessionId,
     body: ProtectRequest,
+    response: Session,
+    status: 200,
+    errors: [404],
+  }),
+  setTakesMessages: route({
+    method: 'PUT',
+    path: '/v1/sessions/:sessionId/takes-messages',
+    tag: 'Messages',
+    summary: 'Say whether a "people only" session still takes messages from other terminals',
+    description: 'For the owner only. A session that is "people only" is closed to messages from other terminals too, unless this is on: then terminals the owner let message it (by the switch of its canvas) can, while it stays closed to reading and typing, and to every token.',
+    action: 'sessions.protect',
+    params: sessionId,
+    body: TakesMessagesRequest,
     response: Session,
     status: 200,
     errors: [404],

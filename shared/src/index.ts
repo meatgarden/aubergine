@@ -25,3 +25,4 @@ export * from './routes';
 export * from './openapi';
 export * from './guide';
 export * from './messages';
+export * from './shelf';

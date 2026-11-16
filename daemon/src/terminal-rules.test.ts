@@ -52,7 +52,8 @@ const runtime = {
   screen: async () => ({ text: `${SCREEN}\nready> `, columns: 80, rows: 24, cursor: { x: 7, y: 1 }, line: 1 }),
   lines: async () => ({ lines: [SCREEN, 'ready> '], more: false, lost: false }),
   search: async (ids: string[]) => ({ hits: ids.map((sessionId) => ({ sessionId, text: SCREEN, before: [], after: [] })), truncated: false }),
-  foreground: async () => 'zsh',
+  // At a shell prompt a shell is in front; otherwise the program an agent's record names.
+  foreground: async (id: string) => (hub.state.sessions.find((s) => s.id === id)?.status.state === 'idle' ? 'zsh' : 'the-agent'),
   snapshot: async () => SCREEN,
 } as unknown as SessionRuntime;
 
@@ -140,14 +141,14 @@ function fakeSession(name: string, more: Partial<Session> = {}, canvasId = hub.s
       { id: newId(), at: new Date().toISOString(), author: 'user', kind: 'prompt', text: PROMPT },
       { id: newId(), at: new Date().toISOString(), author: 'user', kind: 'note', text: 'an ordinary note' },
     ],
-    agent: { kind: 'claude-code', conversationId: null },
+    agent: { kind: 'claude-code', conversationId: null, program: 'the-agent' },
     lastInputAt: null,
     lastOutputAt: null,
     tags: [],
     parkedFrom: null,
     peopleOnly: false,
     typedBy: null,
-    recap: null, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null },
+    recap: null, takesMessages: false, untold: null, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null },
     ...more,
   };
   hub.emit({ type: 'session.created', session, canvasId, node: { id: newId(), sessionId: session.id, x: 0, y: 0, width: 640, height: 400, color: 'none' } });
