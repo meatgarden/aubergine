@@ -335,5 +335,16 @@ describe('recap and history on the command line', () => {
     ]);
     expect(formatHistory({ folder: '/work/empty', agent: 'Claude Code', conversations: [], notes: [] }, now)).toBe('No Claude Code conversations are kept for /work/empty.');
   });
-});
 
+  it('parses the commands for messages', () => {
+    expect(parseCommand(['inbox'])).toEqual({ name: 'inbox' });
+    expect(() => parseCommand(['inbox', 'all'])).toThrow(/no arguments/);
+    expect(parseCommand(['tell', 'api server', 'The', 'schema changed.'])).toEqual({ name: 'tell', query: 'api server', text: 'The schema changed.' });
+    expect(() => parseCommand(['tell', 'api server'])).toThrow(/needs the message/);
+    expect(() => parseCommand(['tell'])).toThrow(/needs a terminal/);
+    const id = '0198c0de-7a11-7000-8000-00000000abcd';
+    expect(parseCommand(['reply', id, 'main'])).toEqual({ name: 'reply', id, text: 'main' });
+    expect(() => parseCommand(['reply', 'the-last-one', 'main'])).toThrow(/needs the ID of the message/);
+    expect(() => parseCommand(['reply', id])).toThrow(/needs the answer/);
+  });
+});

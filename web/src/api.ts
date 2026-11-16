@@ -1,6 +1,9 @@
 import { z, type ZodType } from 'zod';
 import { createClient } from '@aubergine/client';
 import {
+  Message,
+  ThreadDetail,
+  ThreadList,
   type Reach,
   type Scope,
   AppendNoteResponse,
@@ -97,6 +100,14 @@ export const api = {
   historyTranscript: (folder: string, id: string) => call(Transcript, 'GET', `${paths.historyTranscript}?folder=${encodeURIComponent(folder)}&id=${encodeURIComponent(id)}`),
   searchConversations: (query: string, folder?: string) => call(HistorySearch, 'GET', `${paths.historySearch}?q=${encodeURIComponent(query)}${folder ? `&folder=${encodeURIComponent(folder)}` : ''}`),
   openConversation: (request: { folder: string; id: string; copy: boolean; evenIfOpen: boolean; canvasId?: string }) => call(OpenedConversation, 'POST', paths.historyOpen, request),
+  /** Messages, as the owner sees and sends them. */
+  messageThreads: (sessionId?: string) => call(ThreadList, 'GET', `${paths.messageThreads}${sessionId ? `?sessionId=${sessionId}` : ''}`),
+  messageThread: (threadId: string) => call(ThreadDetail, 'GET', paths.messageThread(threadId)),
+  threadAct: (threadId: string, action: 'look' | 'read' | 'pause' | 'continue' | 'stop') => call(ThreadDetail, 'POST', paths.messageThread(threadId), { action }),
+  sendMessage: (sessionId: string, text: string) => call(Message, 'POST', paths.sessionMessages(sessionId), { text }),
+  blockSender: (sessionId: string, sender: string, blocked: boolean) => call(null, 'POST', paths.sessionMessageBlocks(sessionId), { sender, blocked }),
+  /** Whether the terminals on a canvas may message each other. The owner's alone. */
+  setCanvasMessaging: (canvasId: string, sessions: boolean) => call(null, 'PUT', paths.canvasMessaging(canvasId), { sessions }),
   /** What changed since a time, for someone who was away. */
   away: (since: string) => call(AwayDigest, 'GET', `${paths.away}?since=${encodeURIComponent(since)}`),
   /** Asks the agent in a session for a recap: the server types its one fixed sentence for that. */

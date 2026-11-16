@@ -27,7 +27,6 @@ import { loadOrCreateToken } from './token';
 const SCREEN = 'SCREEN-SECRET-7781';
 const COMMAND_LINE = 'deploy --password hunter2-9912';
 const PROMPT = 'what I asked the agent: opal-3320';
-const SECRETS = [SCREEN, 'hunter2-9912', 'opal-3320'];
 
 let dir: string;
 let ownerToken: string;

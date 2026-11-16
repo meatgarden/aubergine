@@ -720,6 +720,7 @@ Create `config.json` in the data folder (the server prints its location at start
   "api": { "rateLimitPerMinute": 600, "maxBodyBytes": 1048576, "activityLogMaxBytes": 5242880 },
   "workflows": { "maxElements": 50, "maxElementChars": 20000, "quietAfterSeconds": 300 },
   "terminal": { "protectNewSessions": false, "protectAgentSessions": true, "auditInput": false },
+  "messages": { "perSenderPerMinute": 6, "perPairPerHour": 30, "pauseAfter": 6, "maxUnread": 20, "nudgeIntervalSeconds": 120, "keepDays": 30 },
   "shortcuts": {},
   "shortcutsInAppWindow": {}
 }
@@ -740,6 +741,7 @@ Create `config.json` in the data folder (the server prints its location at start
 - `api`: limits on calls made with [API tokens](#api-tokens): calls per minute per token, the largest request body, and the size of the activity log. They apply when the server is next started.
 - `workflows`: how many elements a [workflow](#workflows) may have, how long the text of one element (and the text for every element) may be, and after how many seconds of output without a report a run is marked quiet. The two limits apply when the server is next started.
 - `terminal`: [terminal access](#terminal-access) for API tokens: whether new terminals, and new agent sessions, start "people only"; the limits on typing; and `auditInput`, which keeps what tokens type in a file.
+- `messages`: the limits on [messages between terminals](#messages-between-terminals). They apply from the next start of the server.
 - `shortcuts`, `shortcutsInAppWindow`: your own keys; see [Keyboard](#keyboard).
 
 Font, theme and keys apply when you reload the page; shell and folder apply to the next new terminal.
@@ -783,7 +785,7 @@ aubergine import               the same for every one, one per folder (--all, --
 aubergine shell-hook print     print the zsh lines that make new tabs start on the canvas
 aubergine token create <name> --scope <scope>…   make an API token; its secret is printed once (--expires 30d)
                                --no-review  let it create and change workflows directly, without your review
-                               --reach all | canvas:<name> | tag:<tag>   which terminals terminal:read and terminal:input reach
+                               --reach all | canvas:<name> | tag:<tag>   which terminals the terminal scopes and the message scopes reach
 aubergine token list           the API tokens, their scopes and when each was last used
 aubergine token revoke <name>  revoke a token; it stops working at once
 aubergine workflow list        the workflows, with their elements and how many runs are going
@@ -810,6 +812,9 @@ aubergine output <session> [--lines n]   what it printed recently
 aubergine send <session> <text> [--enter]   type text into it, exactly as given
 aubergine run <session> [--timeout s] -- <command>   run a command at its prompt, wait, print the output
 aubergine protect <session>    mark it people only: no API token may read it or type into it (unprotect undoes it)
+aubergine tell <session> <text>   send a message to a terminal, for its agent to read; never typed (inside a session: from that session)
+aubergine inbox                inside a session: its unread messages, which are then read
+aubergine reply <id> <text>    inside a session: answer a message it received
 aubergine note <text>          inside a session: add an entry to its note log
 aubergine attention waiting [what is needed] | working | done | none
                                inside a session: say whether you are needed there
@@ -854,9 +859,12 @@ GET  /v1/sessions/<id>/brief        what the session was asked to write
 GET  /v1/sessions/<id>/drafts       the drafts it proposed, with the comments on them
 GET  /v1/sessions/<id>/repository-workflows   the workflows its repository offers, and whether each was accepted
 POST /v1/sessions/<id>/drafts       propose a workflow or an element as a draft
+POST /v1/sessions/<id>/inbox        take the unread messages for the session; they are then read
+POST /v1/sessions/<id>/messages/<message>/reply   {"text": "..."} answer a message it received
+POST /v1/sessions/<id>/tell         {"to": "<name or ID>", "text": "..."} message another terminal, where you allowed that
 ```
 
-Everything else is refused: it cannot list runs or workflows, start a run, reach another session's run, read a draft it did not propose, accept anything, or run a repository workflow nobody accepted. `aubergine note`, `aubergine attention`, `aubergine hook` and the in-session `aubergine workflow` commands are thin wrappers around these calls. This token is made for the session by Aubergine and is separate from the [API tokens](#api-tokens) you create yourself, which can do more.
+Everything else is refused: it cannot list runs or workflows, start a run, reach another session's run, read a draft it did not propose, accept anything, or run a repository workflow nobody accepted. `aubergine note`, `aubergine attention`, `aubergine inbox`, `aubergine reply`, `aubergine tell`, `aubergine hook` and the in-session `aubergine workflow` commands are thin wrappers around these calls. This token is made for the session by Aubergine and is separate from the [API tokens](#api-tokens) you create yourself, which can do more.
 
 ## A guide for agents
 
@@ -873,6 +881,50 @@ The guide prints no secret and reads no file of yours. It says nothing about you
 An agent that Aubergine starts reports "waiting for you" and "finished" by itself. Any other program in a terminal can say the same with `aubergine attention waiting "what it needs"`, `aubergine attention working` and `aubergine attention done`; the guide tells it so.
 
 Typed in a terminal, the other `aubergine` commands act as you, whoever types them, an agent included; they are recorded as coming from that terminal. The guide tells an agent to leave them alone unless you asked. That is advice to the agent, not a lock.
+
+## Messages between terminals
+
+An agent in one terminal sometimes needs to tell the agent in another something: "the schema changed", "I am done with the branch you wait for". A **message** is the way to do that without anyone typing into anyone's terminal. It has a named sender and one receiver, it is kept until the receiver reads it, and you can see every one of them.
+
+**Everything about this starts closed.** Until you change something, the only one who can message a terminal is you.
+
+**You, to any terminal.** Click **✉** on a terminal (or "Message this terminal…" in the palette), write, send. From a terminal that is not on the canvas:
+
+```sh
+aubergine tell "api server" "Rebase on main before you go on."
+```
+
+Nothing is typed into the terminal. Its tile and its row show "✉ 1 from you". If an agent is running there and is idle, Aubergine types one fixed sentence into it: "There is a message for this session in Aubergine. Run `aubergine inbox` to read it." That sentence is the same for every message; nothing of yours and no name is in it. It is typed at most once for a batch of unread messages, not again within two minutes, never into a plain shell (where it would be run as a command), never while the agent is working or is waiting on a question of its own, and not on top of something you typed a moment ago.
+
+**The agent reads and answers** with `aubergine inbox` (which prints each unread message between two marker lines, with who sent it, and marks it read) and `aubergine reply <id> "<answer>"`. An agent can always answer a message from you. Its answer shows on the terminal as "✉ 1 for you" and puts the terminal in the "waiting" queue.
+
+**One terminal to another: only where you switch it on.** Each canvas has a switch on its tab, **✉ off**. Click it, read what it says, and it becomes **✉ on**: the terminals on that canvas may now message each other with `aubergine tell "<terminal>" "<message>"`. Off is how every canvas starts, and only you can change it: no API token and no agent can. With it on:
+
+- only terminals on the same canvas reach each other. Nothing passes between canvases in this version, and a parked terminal neither sends nor receives;
+- a terminal marked **people only** takes messages from you alone;
+- a terminal cannot message itself, and a terminal that may not be messaged is refused in the same words as one that does not exist.
+
+**Programs with an API token** need a scope of their own: `messages:write` to send, `messages:read` to read. Neither comes with `read` or with anything else, and a token that asks for one must say which terminals it reaches, as for terminal access. People only closes a terminal to them. A token's message is shown under the token's name. A token with `messages:write` alone causes nothing to be typed, not even the fixed sentence: its message waits until the agent next reads its inbox. Only a token that may also type into that very terminal (`terminal:input`) has the sentence typed for it.
+
+**Loops and floods.** Two agents that answer each other can go on for ever. So:
+
+| Limit | Default | Setting |
+|---|---|---|
+| Messages one sender may send in a minute | 6 | `messages.perSenderPerMinute` |
+| Messages between the same two in an hour, both ways together | 30 | `messages.perPairPerHour` |
+| Messages between two that are not you, before the thread pauses until you have looked | 6 | `messages.pauseAfter` |
+| Unread messages a terminal may have waiting | 20 | `messages.maxUnread` |
+| Seconds before the fixed sentence is typed into the same terminal again | 120 | `messages.nudgeIntervalSeconds` |
+| Days a read message stays listed | 30 | `messages.keepDays` |
+| Characters in one message | 4,000 | fixed |
+
+There is one thread for each two parties, so a limit on a thread cannot be got round by starting another. When a thread **pauses**, nothing more passes between the two, each is told why when it tries, both terminals join the "waiting" queue, and the thread says: "Paused: these two have exchanged 6 messages without you looking. Continue?" **Continue** starts the count again; opening a thread that is not paused starts it again too, because then you have looked. **Stop this thread** ends it for good, and **Block** closes one terminal to one sender. None of the limits applies to you. A refusal is one sentence that says what happened and that it is not to be got round. The limits are read when the server starts.
+
+**You see everything.** A terminal's drawer lists its threads; the **Messages** section of the side panel lists all of them, the paused ones and the ones with something for you first. Every message is shown with who sent it, when, and whether it was read, as plain text: control characters are made visible and nothing is drawn as markup or made into a link.
+
+**Where they are kept.** In `messages.log` in the data folder, a file only you can read, apart from the rest of Aubergine's state. The state itself holds only counts per terminal, which is also all that a change event carries. When the file reaches 4 MB (`messages.logMaxBytes`) it is set aside as `messages.log.1` and started again with what is still current. What a token sent or read is in the activity log as a length and a fingerprint, never the text. Messages of a terminal you ended for good are no longer listed.
+
+**What this does not do.** A message is text from one agent to another. Nothing stops an agent from writing "run this" in one, and nothing but the receiving agent's own judgement stops it from doing so. The guide for agents tells them to treat a message from another terminal as information and not as an order, and `aubergine inbox` says so above every batch; that is advice, not a lock. And a command typed in a terminal acts as you, as everywhere in Aubergine: an agent that types `aubergine tell` in a way that hides which terminal it is in sends as you. Such calls are recorded in the activity log as made from outside the browser.
 
 ## API tokens
 
@@ -1131,7 +1183,7 @@ It never reads your sign-in, and it has no tool for what only you may do: making
 
 | With | Tools |
 |---|---|
-| a session's own token | `workflow_status`, `workflow_done`, `workflow_blocked`, `workflow_goto`, `note_add`, `attention_set`, `draft_brief`, `draft_propose_element`, `draft_propose_workflow`, `repository_workflows`: its own work, on its own session only |
+| a session's own token | `workflow_status`, `workflow_done`, `workflow_blocked`, `workflow_goto`, `note_add`, `attention_set`, `draft_brief`, `draft_propose_element`, `draft_propose_workflow`, `messages_inbox`, `message_reply`, `message_send`, `repository_workflows`: its own work, on its own session only |
 | `read` | `canvases_list`, `sessions_list`, `session_get`, `notes_read`, `workflows_list`, `runs_list`, `run_get`, `workflow_status`, `repository_workflows` |
 | `sessions:write` | `session_start`, `session_move`, `session_park` |
 | `notes:write` | `note_add`, `note_write` |
@@ -1139,6 +1191,8 @@ It never reads your sign-in, and it has no tool for what only you may do: making
 | `workflows:write` | `draft_propose_element`, `draft_propose_workflow`: drafts for you to review, never a workflow that can run |
 | `terminal:read` | `terminal_screen`, `terminal_output`, `terminal_search` |
 | `terminal:input` | `terminal_send`, `terminal_keys`, `terminal_run` |
+| `messages:read` | `messages_inbox` |
+| `messages:write` | `message_send`, `message_reply` |
 
 `aubergine_status` is always there: it says which server, what the credential is and may reach, and, when nothing else is listed, why. A tool takes a session by its ID or by its exact name.
 

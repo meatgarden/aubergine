@@ -24,6 +24,7 @@ export const COMMAND_IDS = [
   'agent.switchedOn',
   'agent.askRecap',
   'history.open',
+  'terminal.message',
   'tour.start',
   'demo.remove',
   'help.show',

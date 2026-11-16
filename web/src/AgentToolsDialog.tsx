@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import { GRANTABLE_SCOPES, SCOPE_MEANING, TERMINAL_SCOPES, sortedCanvases, type AgentToolsChoice, type Reach, type Scope } from '@aubergine/shared';
+import { GRANTABLE_SCOPES, SCOPE_MEANING, REACH_SCOPES, sortedCanvases, type AgentToolsChoice, type Reach, type Scope } from '@aubergine/shared';
 import { canvasActions } from './canvas-actions';
 import { useApp } from './store';
 
-const TERMINAL: readonly string[] = TERMINAL_SCOPES;
+const TERMINAL: readonly string[] = REACH_SCOPES;
 
 type Kind = 'none' | 'own' | 'token';
 

@@ -132,6 +132,25 @@ export function TabBar() {
             {active && (
               <span className="tab-tools" onClick={(e) => e.stopPropagation()} onDoubleClick={(e) => e.stopPropagation()}>
                 <ColorButton value={canvas.color} onChange={(color) => run(api.updateCanvas(canvas.id, { color }))} />
+                <button
+                  type="button"
+                  className="quiet tab-messaging"
+                  aria-pressed={canvas.messagesFrom.includes(canvas.id)}
+                  title={
+                    canvas.messagesFrom.includes(canvas.id)
+                      ? 'Terminals on this canvas may message each other. Click to switch that off.'
+                      : 'Terminals on this canvas may not message each other. Click to let them. You can always message any terminal yourself.'
+                  }
+                  onClick={() => {
+                    const on = canvas.messagesFrom.includes(canvas.id);
+                    // Switching it on is a decision: said in full before it is taken.
+                    if (!on && !window.confirm(`Let the terminals on “${canvas.name}” message each other?\n\nAn agent there will be able to send a message to another terminal on this canvas, and to be told that one waits. A message is never typed into a terminal. Every message is shown to you, a thread between two pauses after a few turns until you have looked, and terminals marked “people only” take messages from you alone.`)) return;
+                    run(api.setCanvasMessaging(canvas.id, !on));
+                  }}
+                  data-testid="tab-messaging"
+                >
+                  {canvas.messagesFrom.includes(canvas.id) ? '✉ on' : '✉ off'}
+                </button>
                 {canvases.length > 1 && (
                   <button
                     type="button"

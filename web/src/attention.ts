@@ -1,10 +1,13 @@
-import { needsUser, type ChangeEvent, type Session } from '@aubergine/shared';
+import { messagesWantOwner, needsUser, type ChangeEvent, type Session } from '@aubergine/shared';
 
-/** Sessions waiting for the user, the one that has waited longest first. Parked ones count too. */
+/**
+ * Sessions waiting for the user, the one that has waited longest first. Parked ones count too.
+ * A session with a message for the owner, or with a thread that is paused until the owner has looked, waits as well.
+ */
 export function waitingQueue(sessions: readonly Session[]): Session[] {
   return sessions
-    .filter((s) => s.state !== 'exited' && needsUser(s.attention))
-    .sort((a, b) => (a.attention.at ?? '').localeCompare(b.attention.at ?? ''));
+    .filter((s) => s.state !== 'exited' && (needsUser(s.attention) || messagesWantOwner(s.messages)))
+    .sort((a, b) => (needsUser(a.attention) ? (a.attention.at ?? '') : (a.messages.at ?? '')).localeCompare(needsUser(b.attention) ? (b.attention.at ?? '') : (b.messages.at ?? '')));
 }
 
 /** The session to jump to next: the first in the queue after `currentId`, wrapping around. */

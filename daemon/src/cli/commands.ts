@@ -122,7 +122,7 @@ export const USAGE = `Usage: aubergine <command>
                              --stop        ask an idle original to exit, then resume the same conversation
                              --dry-run, --yes, --force, --no-open
   token create <name> --scope <scope> [--scope …] [--expires 30d | <date>] [--no-review]
-                             [--reach all | canvas:<name> | tag:<tag>]   which sessions terminal:read and terminal:input reach
+                             [--reach all | canvas:<name> | tag:<tag>]   which sessions the terminal scopes and the message scopes reach
                              Make an API token for a program of yours. Its secret is printed once, on standard output
   token list                 The API tokens, with their scopes and when each was last used
   token revoke <name|id>     Revoke a token: it stops working at once
@@ -465,7 +465,7 @@ export function parseCommand(argv: readonly string[]): Command {
           else names.push(word);
         }
         if (names.length === 0) throw new UsageError('token create needs a name');
-        if (scopes.length === 0) throw new UsageError('token create needs at least one --scope: read, canvases:write, sessions:write, notes:write, workflows:write, runs:write, terminal:read or terminal:input');
+        if (scopes.length === 0) throw new UsageError('token create needs at least one --scope: read, canvases:write, sessions:write, notes:write, workflows:write, runs:write, terminal:read, terminal:input, messages:read or messages:write');
         return { name: 'token-create', tokenName: names.join(' '), scopes: [...new Set(scopes)], expires, reach, review };
       }
       throw new UsageError('token needs "create <name> --scope …", "list" or "revoke <name|id>"');

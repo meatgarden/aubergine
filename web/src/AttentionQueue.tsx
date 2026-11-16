@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { notificationsWanted, setNotificationsWanted, waitingQueue } from './attention';
 import { runCommand } from './commands';
+import { messageMark } from './Messages';
 import { keysOf } from './shortcuts';
 import { canvasLabel } from './search';
 import { useApp } from './store';
@@ -29,7 +30,8 @@ export function AttentionQueue() {
             .map((s) => {
               const canvas = canvasLabel(app, s.id, canvasId);
               // Why it waits, when it said: a blocked or finished run names its element here.
-              const why = s.attention.message ? `: ${s.attention.message}` : '';
+              const mark = messageMark(s);
+              const why = s.attention.message ? `: ${s.attention.message}` : mark && (s.messages.paused > 0 || s.messages.forOwner > 0) ? `: ${s.messages.paused > 0 ? 'these two have exchanged many messages; continue?' : mark.text}` : '';
               return `${canvas ? `${s.name} (on ${canvas})` : s.name}${why}`;
             })
             .join(', ')}`}

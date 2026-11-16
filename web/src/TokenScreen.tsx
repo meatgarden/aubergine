@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
-import { GRANTABLE_SCOPES, RESERVED_SCOPES, SCOPE_MEANING, TERMINAL_SCOPES, tokenStatus, type ActivityEntry, type Reach, type Scope, type TokenView } from '@aubergine/shared';
+import { GRANTABLE_SCOPES, RESERVED_SCOPES, SCOPE_MEANING, REACH_SCOPES, tokenStatus, type ActivityEntry, type Reach, type Scope, type TokenView } from '@aubergine/shared';
 import { api } from './api';
 import { runCommand } from './commands';
 import { useApp } from './store';
 
 /** The scopes that reach into terminals: shown with their warnings, and they need a reach. */
-const TERMINAL: readonly string[] = TERMINAL_SCOPES;
+const TERMINAL: readonly string[] = REACH_SCOPES;
 
 const EXPIRY: [label: string, days: number | null][] = [
   ['Never', null],

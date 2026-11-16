@@ -203,6 +203,21 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
             ⇶
           </button>
         )}
+        {draft === null && !exited && (
+          <button
+            type="button"
+            className="node-tool nodrag"
+            aria-label={`Message ${name}`}
+            title={hint('terminal.message', 'Message the agent in this terminal, and see every message to and from it')}
+            data-testid="node-message"
+            onClick={() => {
+              useApp.getState().select(sessionId);
+              runCommand('terminal.message');
+            }}
+          >
+            ✉
+          </button>
+        )}
         {draft === null && <MoveToCanvas sessionId={sessionId} name={name} />}
         <button
           type="button"
