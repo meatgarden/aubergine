@@ -116,7 +116,8 @@ async function asOwner(method: string, url: string, body?: unknown, headers: Rec
   const response = await app.inject({
     method: method as 'GET',
     url,
-    headers: { host: `127.0.0.1:${port}`, origin, cookie: `${cookieName(port)}=${ownerToken}`, ...headers },
+    // What a browser adds to every request a page makes: these calls are the page's.
+    headers: { host: `127.0.0.1:${port}`, origin, cookie: `${cookieName(port)}=${ownerToken}`, 'sec-fetch-site': 'same-origin', ...headers },
     ...(body === undefined ? {} : { payload: body as object }),
   });
   return { status: response.statusCode, body: response.body ? safeJson(response.body) : null, headers: response.headers as Answer['headers'] };
@@ -330,6 +331,7 @@ describe('every route has a rule', () => {
     'POST /v1/drafts/:draftId/return',
     'DELETE /v1/drafts/:draftId',
     'POST /v1/draft-requests',
+    'GET /v1/draft-records',
     // Accepting a repository workflow, and writing into a repository.
     'POST /v1/repository-workflows/accept',
     'POST /v1/repository-workflows/save',
@@ -752,5 +754,63 @@ describe('the secret', () => {
     expect((await call(secret, 'GET', publicPaths.canvases)).status).toBe(200);
     // The log from before the restart is still there to read.
     expect((await activityOf(id)).length).toBe(1);
+  });
+});
+
+describe('what the owner does from outside the browser', () => {
+  /** A call as the command line makes it: the owner's cookie and Origin, and nothing a browser page adds. */
+  const asCommand = async (method: string, url: string, body?: unknown, headers: Record<string, string> = {}): Promise<Answer> => {
+    const response = await app.inject({ method: method as 'GET', url, headers: { host: `127.0.0.1:${port}`, origin, cookie: `${cookieName(port)}=${ownerToken}`, ...headers }, ...(body === undefined ? {} : { payload: body as object }) });
+    return { status: response.statusCode, body: response.body ? safeJson(response.body) : null, headers: response.headers as Answer['headers'] };
+  };
+
+  it('is recorded for the things only the owner may do, with the session it says it came from', async () => {
+    const { session } = await sessions.create({});
+    // Making a token from the command line, inside a session.
+    const made = await asCommand('POST', publicPaths.tokens, { name: 'made in a terminal', scopes: ['read'] }, { 'x-aubergine-session': session.id });
+    expect(made.status).toBe(201);
+    // Revoking it, from a command line outside any session.
+    expect((await asCommand('DELETE', publicPaths.token(made.body.token.id))).status).toBe(200);
+    // Deciding about a draft.
+    const writer = await makeToken('writer', ['workflows:write']);
+    const draft = await call(writer.secret, 'POST', '/v1/drafts', { element: { name: 'An element', instructions: 'Do it.' } });
+    expect((await asCommand('POST', `/v1/drafts/${draft.body.draft.id}/accept`, {}, { 'x-aubergine-session': session.id })).status).toBe(200);
+    const second = await call(writer.secret, 'POST', '/v1/drafts', { element: { name: 'Another', instructions: 'Do it.' } });
+    expect((await asCommand('DELETE', `/v1/drafts/${second.body.draft.id}`)).status).toBe(204);
+    // A session that does not exist, or nonsense, is not taken at its word.
+    expect((await asCommand('POST', publicPaths.tokens, { name: 'x', scopes: [] }, { 'x-aubergine-session': newId() })).status).toBe(400);
+
+    const log = (await activityOf()).filter((e) => e.caller === 'owner-cli');
+    expect(log.map((e) => [e.method, e.route, e.action, e.status, e.fromSessionId])).toEqual([
+      ['POST', '/v1/tokens', 'tokens.manage', 201, session.id],
+      ['DELETE', '/v1/tokens/:tokenId', 'tokens.manage', 200, null],
+      ['POST', '/v1/drafts/:draftId/accept', 'drafts.review', 200, session.id],
+      ['DELETE', '/v1/drafts/:draftId', 'drafts.review', 204, null],
+      ['POST', '/v1/tokens', 'tokens.manage', 400, null],
+    ]);
+    for (const entry of log) expect(entry).toMatchObject({ tokenId: null, tokenName: '' });
+    // The record of drafts says the same: who decided, and from where.
+    const records = await asOwner('GET', '/v1/draft-records');
+    expect(records.body.items.map((r: { outcome: string; kind: string; by: unknown; proposedBy: { kind: string } }) => [r.outcome, r.kind, r.by, r.proposedBy.kind])).toEqual([
+      ['discarded', 'element', { kind: 'owner-cli', sessionId: null }, 'token'],
+      ['accepted', 'element', { kind: 'owner-cli', sessionId: session.id }, 'token'],
+    ]);
+    // Not what the drafts said.
+    expect(JSON.stringify(records.body)).not.toContain('Do it.');
+    expect(await readFile(path.join(dir, ACTIVITY_FILE), 'utf8')).not.toContain(made.body.secret);
+  });
+
+  it('is not recorded when it is done in the browser, nor for reading, nor for ordinary work', async () => {
+    // The page: the same calls with what a browser adds.
+    const made = await asOwner('POST', publicPaths.tokens, { name: 'made in the browser', scopes: ['workflows:write'], reviewWorkflowChanges: false });
+    const draft = await call(made.body.secret, 'POST', '/v1/drafts', { element: { name: 'An element', instructions: 'Do it.' } });
+    expect((await asOwner('POST', `/v1/drafts/${draft.body.draft.id}/accept`)).status).toBe(200);
+    // The command line: reading tokens and drafts, making a canvas, starting a workflow.
+    await asCommand('GET', publicPaths.tokens);
+    await asCommand('GET', '/v1/draft-records');
+    await asCommand('POST', publicPaths.canvases, { name: 'From the command line' });
+    await asCommand('POST', '/v1/workflows', { name: 'Mine', elements: [{ name: 'One', instructions: 'x' }] });
+    expect((await activityOf()).filter((e) => e.caller === 'owner-cli')).toEqual([]);
+    expect((await asOwner('GET', '/v1/draft-records')).body.items.map((r: { by: unknown }) => r.by)).toEqual([{ kind: 'owner', sessionId: null }]);
   });
 });

@@ -36,8 +36,10 @@ describe('parsing workflow commands', () => {
     expect(parse('edit My flow --file /tmp/x.json')).toEqual({ action: 'edit', query: 'My flow', file: '/tmp/x.json' });
     expect(parse('remove My flow --yes')).toEqual({ action: 'remove', query: 'My flow', yes: true });
     expect(parse('copy flow Another name')).toEqual({ action: 'copy', query: 'flow', newName: 'Another name' });
-    expect(parse('export flow')).toEqual({ action: 'export', query: 'flow', file: null });
-    expect(parse('export flow out.json')).toEqual({ action: 'export', query: 'flow', file: 'out.json' });
+    expect(parse('export flow')).toEqual({ action: 'export', query: 'flow', file: null, toRepository: false, overwrite: false });
+    expect(parse('export My flow --to-repository --overwrite')).toEqual({ action: 'export', query: 'My flow', file: null, toRepository: true, overwrite: true });
+    expect(() => parse('export flow --overwrite')).toThrow(UsageError);
+    expect(parse('export flow out.json')).toEqual({ action: 'export', query: 'flow', file: 'out.json', toRepository: false, overwrite: false });
     expect(parse('import in.json --name Mine')).toEqual({ action: 'import', file: 'in.json', newName: 'Mine' });
     expect(parse('import -')).toEqual({ action: 'import', file: '-', newName: null });
   });

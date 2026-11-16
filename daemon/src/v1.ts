@@ -23,6 +23,7 @@ import {
   type CanvasSummary,
   type ChangeEvent,
   type ErrorCode,
+  type OwnerCaller,
   type Frame,
   type RouteId,
   type RouteInput,
@@ -57,6 +58,8 @@ export interface PublicRouteDeps {
   validateResponses: boolean;
   /** Who a request was found to be, when the checks let it through. */
   principalOf(request: FastifyRequest): Principal | null;
+  /** Whether an owner's call came from a browser page or from outside one, and from which session it says it came. */
+  ownerCaller(request: FastifyRequest): OwnerCaller;
   /** Records a token's call now, for a route whose response does not end for a long time. */
   recordNow(request: FastifyRequest): void;
   /** Refuses the request unless its principal may do the action. Asked for every route before anything else. */
@@ -299,12 +302,14 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
 
     reviseDraft: ({ params, body }) => drafts.detail(drafts.revise(params.draftId, body)),
 
-    acceptDraft: ({ params, body }) => drafts.accept(params.draftId, body),
+    acceptDraft: ({ params, body, request }) => drafts.accept(params.draftId, body, deps.ownerCaller(request)),
+
+    listDraftRecords: async ({ query }) => paginate(await drafts.records(), (r) => `${r.at} ${r.draftId}`, query),
 
     returnDraft: ({ params, body }) => drafts.sendBack(params.draftId, body.comment),
 
-    discardDraft: ({ params }) => {
-      drafts.discard(params.draftId);
+    discardDraft: ({ params, request }) => {
+      drafts.discard(params.draftId, deps.ownerCaller(request));
     },
 
     requestDraft: ({ body }) => drafts.request(body),

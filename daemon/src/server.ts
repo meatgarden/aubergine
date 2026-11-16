@@ -6,6 +6,8 @@ import websocket from '@fastify/websocket';
 import Fastify, { type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify';
 import type { ZodType } from 'zod';
 import {
+  SESSION_HEADER,
+  type OwnerCaller,
   AppendNoteRequest,
   CLOSE_BAD_MESSAGE,
   CLOSE_SESSION_ENDED,
@@ -55,6 +57,7 @@ import { isTerminalReply } from './terminal-replies';
 import { BadInputError, ConflictError, NotFoundError, RuntimeUnavailableError, type Sessions } from './sessions';
 import { tokensMatch } from './token';
 import { MemoryRunArchive, type RunArchive } from './run-archive';
+import type { DraftLog } from './draft-log';
 import { Drafts } from './drafts';
 import { Repositories } from './repositories';
 import { Workflows } from './workflows';
@@ -76,6 +79,8 @@ export interface ServerOptions {
   activity?: ActivityLog;
   /** The folder the search for a repository stops at. Left out, the home folder. For tests. */
   homeFolder?: string;
+  /** Where what became of drafts is recorded. Left out, in memory only. */
+  draftLog?: DraftLog;
   /** Where runs that are over are kept. Left out, in memory only. */
   runArchive?: RunArchive;
   /** The version this server reports about itself. */
@@ -143,7 +148,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   });
   await workflows.reconcile();
   const workflowLimits = (): { maxElements: number; maxElementChars: number } => ({ maxElements: workflowSettings.maxElements, maxElementChars: workflowSettings.maxElementChars });
-  const drafts = new Drafts(hub, sessions, workflows, workflowLimits);
+  const drafts = new Drafts(hub, sessions, workflows, workflowLimits, options.draftLog);
   const repositories = new Repositories(hub, sessions, workflows, workflowLimits, options.homeFolder);
 
   const routes: PublicRoute[] = [];
@@ -183,14 +188,56 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   const asked = new WeakMap<FastifyRequest, { action: Action; resource: Resource }>();
   const tokenCalls = new WeakMap<FastifyRequest, { tokenId: string; tokenName: string; outcome?: 'refused' | 'limited'; logged?: boolean }>();
 
-  /** Records one call made with a token. Who, what and how it ended: never the secret, never what was sent. */
+  /**
+   * Whether an owner's call came from a page in a browser or from outside one.
+   *
+   * A browser adds `Sec-Fetch-Site` to every request a page makes, and a page
+   * cannot leave it out. The command line does not send it. So an owner's
+   * call without it did not come from the page. This tells apart, it does not
+   * prevent: a program that runs as the owner can add the header, and can
+   * leave out the session it runs in. It makes the ordinary case visible.
+   */
+  const ownerCaller = (request: FastifyRequest): OwnerCaller => {
+    if (request.headers['sec-fetch-site'] !== undefined) return { kind: 'owner', sessionId: null };
+    const said = request.headers[SESSION_HEADER];
+    const sessionId = typeof said === 'string' && Id.safeParse(said).success && sessions.has(said) ? said : null;
+    return { kind: 'owner-cli', sessionId };
+  };
+  /** What only the owner may do and is worth seeing when it was not done in the browser. */
+  const WATCHED: readonly Action[] = ['drafts.review', 'repository.review', 'repository.write', 'tokens.manage'];
+  const ownerLogged = new WeakSet<FastifyRequest>();
+
+  /** Records one call made with a token, or one of the owner's own from outside the browser. Who, what and how it ended: never the secret, never what was sent. */
   const record = (request: FastifyRequest, status: number): void => {
     const call = tokenCalls.get(request);
-    if (!call || call.logged) return;
+    if (!call) {
+      const what = asked.get(request);
+      if (principals.get(request)?.kind !== 'user' || !what || !WATCHED.includes(what.action) || request.method === 'GET' || ownerLogged.has(request)) return;
+      const caller = ownerCaller(request);
+      if (caller.kind !== 'owner-cli') return;
+      ownerLogged.add(request);
+      void activity.append({
+        at: new Date().toISOString(),
+        caller: 'owner-cli',
+        tokenId: null,
+        tokenName: '',
+        fromSessionId: caller.sessionId,
+        action: what.action,
+        resource: what.resource,
+        method: request.method,
+        route: request.routeOptions?.url ?? '(no such route)',
+        status,
+        outcome: status < 400 ? 'ok' : status === 403 ? 'denied' : 'error',
+      });
+      return;
+    }
+    if (call.logged) return;
     call.logged = true;
     const what = asked.get(request);
     void activity.append({
       at: new Date().toISOString(),
+      caller: 'token',
+      fromSessionId: null,
       tokenId: call.tokenId,
       tokenName: call.tokenName,
       action: what?.action ?? '',
@@ -467,6 +514,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     validateResponses: options.validateResponses ?? process.env.VITEST !== undefined,
     principalOf: (request) => principals.get(request) ?? null,
     recordNow: (request) => record(request, 200),
+    ownerCaller,
     allow: allowOn,
     parse,
     fail: (status, code, message) => new HttpError(status, code, message),

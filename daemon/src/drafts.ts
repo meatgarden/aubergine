@@ -10,6 +10,8 @@ import {
   type AcceptDraftRequest,
   type Brief,
   type Draft,
+  type DraftRecord,
+  type OwnerCaller,
   type DraftDetail,
   type ElementInput,
   type ProposeDraftRequest,
@@ -20,6 +22,7 @@ import {
   type WorkflowContent,
   type WorkflowLimits,
 } from '@aubergine/shared';
+import { MemoryDraftLog, type DraftLog } from './draft-log';
 import { BadInputError, ConflictError, NotFoundError, type Sessions } from './sessions';
 import type { StateHub } from './state-hub';
 import type { Workflows } from './workflows';
@@ -45,6 +48,7 @@ export class Drafts {
     private readonly sessions: Sessions,
     private readonly workflows: Workflows,
     private readonly limits: () => WorkflowLimits,
+    private readonly log: DraftLog = new MemoryDraftLog(),
   ) {
     // A session that is ended for good takes what was asked of it, and never answered, with it.
     hub.subscribe((event) => {
@@ -237,9 +241,20 @@ export class Drafts {
     return draft;
   }
 
-  discard(draftId: string): void {
-    this.get(draftId);
+  discard(draftId: string, by: OwnerCaller): void {
+    const draft = this.get(draftId);
     this.hub.emit({ type: 'draft.removed', draftId });
+    this.resolved(draft, 'discarded', by);
+  }
+
+  /** Keeps a short record of what became of a draft: not what it said. */
+  private resolved(draft: Draft, outcome: DraftRecord['outcome'], by: OwnerCaller): void {
+    void this.log.append({ at: new Date().toISOString(), draftId: draft.id, kind: draft.kind, proposedBy: draft.proposedBy, revisions: draft.revision, outcome, by });
+  }
+
+  /** What became of drafts, newest first. */
+  records(): Promise<DraftRecord[]> {
+    return this.log.read();
   }
 
   /**
@@ -248,7 +263,7 @@ export class Drafts {
    * draft goes on the shelf. This is the only way a draft becomes something
    * that can be run.
    */
-  accept(draftId: string, edited: AcceptDraftRequest): { workflowId: string | null; elementId: string | null } {
+  accept(draftId: string, edited: AcceptDraftRequest, by: OwnerCaller): { workflowId: string | null; elementId: string | null } {
     const draft = this.waiting(draftId);
     const origin = { kind: 'draft', by: draft.proposedBy.kind, ...(draft.proposedBy.kind === 'token' ? { name: draft.proposedBy.name } : {}) };
     if (draft.kind === 'element') {
@@ -256,6 +271,7 @@ export class Drafts {
       if (!element) throw new ConflictError('Nothing has been handed in for this yet.');
       const item = this.addToShelf({ ...element, origin });
       this.hub.emit({ type: 'draft.removed', draftId });
+      this.resolved(draft, 'accepted', by);
       return { workflowId: null, elementId: item.id };
     }
     const content = edited.workflow !== undefined ? this.proposal({ workflow: edited.workflow }).workflow : draft.workflow;
@@ -264,6 +280,7 @@ export class Drafts {
     const { extra: _extra, ...fields } = content;
     const workflow = revised ? this.workflows.update(revised.id, fields) : this.workflows.createAccepted(content, origin);
     this.hub.emit({ type: 'draft.removed', draftId });
+    this.resolved(draft, 'accepted', by);
     return { workflowId: workflow.id, elementId: null };
   }
 

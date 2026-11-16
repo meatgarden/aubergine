@@ -234,6 +234,8 @@ export function ActivityScreen() {
   const open = useApp((s) => s.panel === 'activity');
   const tokens = useApp((s) => s.app?.tokens);
   const [tokenId, setTokenId] = useState('');
+  const sessions = useApp((s) => s.app?.sessions);
+  const sessionNames = new Map((sessions ?? []).map((s) => [s.id, s.name]));
   const [entries, setEntries] = useState<ActivityEntry[]>([]);
   const [cursor, setCursor] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -287,8 +289,9 @@ export function ActivityScreen() {
           </span>
         </header>
         <p className="sheet-note">
-          Every call made with an API token: when, which token, what it asked for and how it ended. What was sent is not kept. The file is{' '}
-          <code>activity.log</code> in the data folder.
+          Every call made with an API token: when, which token, what it asked for and how it ended. Also the few things only you may do (deciding about a draft or a
+          repository workflow, making or revoking a token) when they were done as you from outside this browser, such as from the command line. What was sent is not
+          kept. The file is <code>activity.log</code> in the data folder.
         </p>
         <div className="token-field">
           <select aria-label="Token" value={tokenId} onChange={(e) => setTokenId(e.target.value)} data-testid="activity-filter">
@@ -310,7 +313,11 @@ export function ActivityScreen() {
             {entries.map((entry, i) => (
               <tr key={`${entry.at}:${i}`} data-testid="activity-row" data-outcome={entry.outcome}>
                 <td className="sheet-note">{when(entry.at)}</td>
-                <td>{entry.tokenName}</td>
+                <td data-caller={entry.caller ?? 'token'}>
+                  {entry.caller === 'owner-cli'
+                    ? `you, from the command line${entry.fromSessionId ? ` (it says: inside “${sessionNames.get(entry.fromSessionId) ?? 'a terminal that is gone'}”)` : ''}`
+                    : entry.tokenName}
+                </td>
                 <td>
                   <code>
                     {entry.method} {entry.route}

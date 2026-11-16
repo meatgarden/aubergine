@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { DRAFT_COMMENT_MAX, DRAFT_DESCRIPTION_MAX, Draft, DraftStatus, ShelfElement } from './drafts';
+import { DRAFT_COMMENT_MAX, DRAFT_DESCRIPTION_MAX, Draft, DraftRecord, DraftStatus, ShelfElement } from './drafts';
 import { Id } from './ids';
 import { PageQuery, pageOf } from './protocol';
 import {
@@ -210,6 +210,9 @@ export const DraftDetail = z.object({
 export type DraftDetail = z.infer<typeof DraftDetail>;
 export const DraftList = pageOf(Draft);
 export type DraftList = z.infer<typeof DraftList>;
+
+export const DraftRecordList = pageOf(DraftRecord);
+export type DraftRecordList = z.infer<typeof DraftRecordList>;
 
 /** Body of asking an agent for a draft. Only a fixed sentence is typed into the terminal; the description is read by the agent with a command. */
 export const RequestDraftRequest = z.object({

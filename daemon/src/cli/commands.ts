@@ -43,7 +43,7 @@ export type Command =
   | { name: 'hooks-print' }
   | { name: 'shell-hook-print' }
   | { name: 'service'; action: 'install' | 'uninstall' }
-  | { name: 'token-create'; tokenName: string; scopes: string[]; expires: string | null }
+  | { name: 'token-create'; tokenName: string; scopes: string[]; expires: string | null; /** False with `--no-review`: the token may change workflows directly. */ review: boolean }
   | { name: 'token-list' }
   | { name: 'token-revoke'; query: string }
   | { name: 'start'; open: boolean }
@@ -84,7 +84,7 @@ export const USAGE = `Usage: aubergine <command>
                              (default)     start a copy of the conversation; the original keeps running
                              --stop        ask an idle original to exit, then resume the same conversation
                              --dry-run, --yes, --force, --no-open
-  token create <name> --scope <scope> [--scope …] [--expires 30d | <date>]
+  token create <name> --scope <scope> [--scope …] [--expires 30d | <date>] [--no-review]
                              Make an API token for a program of yours. Its secret is printed once, on standard output
   token list                 The API tokens, with their scopes and when each was last used
   token revoke <name|id>     Revoke a token: it stops working at once
@@ -280,7 +280,9 @@ export function parseCommand(argv: readonly string[]): Command {
         return { name: 'token-revoke', query: words.join(' ') };
       }
       if (action === 'create' || action === 'new') {
-        const { value: expires, rest: afterExpires } = takeOption(words, '--expires');
+        const { value: expires, rest: withFlag } = takeOption(words, '--expires');
+        const review = !withFlag.includes('--no-review');
+        const afterExpires = withFlag.filter((word) => word !== '--no-review');
         const scopes: string[] = [];
         const names: string[] = [];
         for (let index = 0; index < afterExpires.length; index += 1) {
@@ -293,7 +295,7 @@ export function parseCommand(argv: readonly string[]): Command {
         }
         if (names.length === 0) throw new UsageError('token create needs a name');
         if (scopes.length === 0) throw new UsageError('token create needs at least one --scope: read, canvases:write, sessions:write, notes:write, workflows:write or runs:write');
-        return { name: 'token-create', tokenName: names.join(' '), scopes: [...new Set(scopes)], expires };
+        return { name: 'token-create', tokenName: names.join(' '), scopes: [...new Set(scopes)], expires, review };
       }
       throw new UsageError('token needs "create <name> --scope …", "list" or "revoke <name|id>"');
     }
@@ -451,18 +453,23 @@ export function resolveToken<T extends { id: string; name: string; revokedAt: st
 }
 
 /** The tokens as a table: never a secret, which the server does not have either. */
-export function formatTokens(tokens: readonly { id: string; name: string; scopes: readonly string[]; lastUsedAt: string | null; expiresAt: string | null; revokedAt: string | null }[], now: number = Date.now()): string {
+export function formatTokens(
+  tokens: readonly { id: string; name: string; scopes: readonly string[]; lastUsedAt: string | null; expiresAt: string | null; revokedAt: string | null; reviewWorkflowChanges?: boolean }[],
+  now: number = Date.now(),
+): string {
   if (tokens.length === 0) return 'No API tokens. Make one with: aubergine token create <name> --scope read';
   const day = (iso: string | null): string => (iso ? iso.slice(0, 10) : 'never');
   const rows = tokens.map((t) => [
     t.name,
     t.revokedAt ? 'revoked' : t.expiresAt && Date.parse(t.expiresAt) <= now ? 'expired' : 'active',
     t.scopes.join(','),
+    // Only means something for a token that may write workflows.
+    !t.scopes.includes('workflows:write') ? '-' : t.reviewWorkflowChanges ? 'reviewed' : 'direct',
     day(t.lastUsedAt),
     t.expiresAt ? day(t.expiresAt) : 'never',
     t.id,
   ]);
-  const head = ['NAME', 'STATE', 'SCOPES', 'LAST USED', 'EXPIRES', 'ID'];
+  const head = ['NAME', 'STATE', 'SCOPES', 'WORKFLOWS', 'LAST USED', 'EXPIRES', 'ID'];
   const widths = head.map((title, i) => Math.max(title.length, ...rows.map((row) => (row[i] as string).length)));
   return [head, ...rows].map((row) => row.map((cell, i) => (cell as string).padEnd(widths[i] as number)).join('  ').trimEnd()).join('\n');
 }

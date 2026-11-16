@@ -73,6 +73,32 @@ export const ShelfElement = z.object({
 });
 export type ShelfElement = z.infer<typeof ShelfElement>;
 
+/**
+ * Who made an owner's decision: the owner in the browser, or something that
+ * called as the owner from outside a browser page (the command line, a
+ * script). A program that runs as the owner on this computer can do what the
+ * owner can; this does not prevent that, it only makes it visible.
+ */
+export const OwnerCaller = z.object({
+  kind: z.enum(['owner', 'owner-cli']),
+  /** For a call from outside the browser that says it came from inside a session: that session. The caller says so itself; it can leave it out. */
+  sessionId: Id.nullable().default(null),
+});
+export type OwnerCaller = z.infer<typeof OwnerCaller>;
+
+/** What became of a draft. A record of the decision; never what the draft said. */
+export const DraftRecord = z.object({
+  at: Timestamp,
+  draftId: Id,
+  kind: z.enum(['workflow', 'element']),
+  proposedBy: Proposer,
+  /** How many versions were handed in before the decision. */
+  revisions: z.number().int().min(0),
+  outcome: z.enum(['accepted', 'discarded']),
+  by: OwnerCaller,
+});
+export type DraftRecord = z.infer<typeof DraftRecord>;
+
 /* ---------- A draft as text, for the person who reviews it ---------- */
 
 /** The proposal as a workflow version, so that it can be shown through the very code that tells an agent. An element is a workflow of one. */

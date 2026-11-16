@@ -2572,6 +2572,42 @@ export type ReturnDraftResult = {
   updatedAt: string;
 };
 
+export interface ListDraftRecordsQuery {
+  /**
+   * How many items to return at most.
+   */
+  limit?: number;
+  /**
+   * The `nextCursor` of the page before. Opaque: do not build or change it.
+   */
+  cursor?: string;
+}
+
+export type ListDraftRecordsResult = {
+  items: {
+    at: string;
+    draftId: string;
+    kind: "workflow" | "element";
+    proposedBy: {
+      kind: "session";
+      sessionId: string;
+    } | {
+      kind: "token";
+      tokenId: string;
+      name: string;
+    } | {
+      kind: "person";
+    };
+    revisions: number;
+    outcome: "accepted" | "discarded";
+    by: {
+      kind: "owner" | "owner-cli";
+      sessionId: string | null;
+    };
+  }[];
+  nextCursor: string | null;
+};
+
 export type RequestDraftBody = {
   kind: "workflow" | "element";
   /** What you want, in your own words. */
@@ -3298,8 +3334,10 @@ export interface ListActivityQuery {
 export type ListActivityResult = {
   items: {
     at: string;
-    tokenId: string;
+    caller: "token" | "owner-cli";
+    tokenId: string | null;
     tokenName: string;
+    fromSessionId: string | null;
     action: string;
     resource: {
       sessionId?: string;
@@ -3885,6 +3923,7 @@ export const OPERATIONS = {
   discardDraft: { method: 'DELETE', path: '/v1/drafts/{draftId}', params: ["draftId"], hasBody: false, paged: false, idempotent: false, stream: false },
   acceptDraft: { method: 'POST', path: '/v1/drafts/{draftId}/accept', params: ["draftId"], hasBody: true, paged: false, idempotent: false, stream: false },
   returnDraft: { method: 'POST', path: '/v1/drafts/{draftId}/return', params: ["draftId"], hasBody: true, paged: false, idempotent: false, stream: false },
+  listDraftRecords: { method: 'GET', path: '/v1/draft-records', params: [], hasBody: false, paged: true, idempotent: false, stream: false },
   requestDraft: { method: 'POST', path: '/v1/draft-requests', params: [], hasBody: true, paged: false, idempotent: false, stream: false },
   listElements: { method: 'GET', path: '/v1/elements', params: [], hasBody: false, paged: true, idempotent: false, stream: false },
   createElement: { method: 'POST', path: '/v1/elements', params: [], hasBody: true, paged: false, idempotent: true, stream: false },
@@ -4182,6 +4221,12 @@ export interface Client {
    */
   returnDraft(args: { draftId: string; body: ReturnDraftBody } & CallOptions): Promise<ReturnDraftResult>;
   /**
+   * What became of drafts.
+   *
+   * `GET /v1/draft-records`. Signed-in browser only: no API token may call this.
+   */
+  listDraftRecords(args?: { query?: ListDraftRecordsQuery } & CallOptions): Promise<ListDraftRecordsResult>;
+  /**
    * Ask the agent in a session to write a workflow or an element.
    *
    * `POST /v1/draft-requests`. Signed-in browser only: no API token may call this.
@@ -4371,6 +4416,10 @@ export interface Client {
      * Every item of `listDrafts`, fetched a page at a time as they are asked for.
      */
     listDrafts(args?: { query?: ListDraftsQuery } & CallOptions): AsyncGenerator<ListDraftsResult['items'][number], void, void>;
+    /**
+     * Every item of `listDraftRecords`, fetched a page at a time as they are asked for.
+     */
+    listDraftRecords(args?: { query?: ListDraftRecordsQuery } & CallOptions): AsyncGenerator<ListDraftRecordsResult['items'][number], void, void>;
     /**
      * Every item of `listElements`, fetched a page at a time as they are asked for.
      */

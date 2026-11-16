@@ -45,6 +45,7 @@ import {
 import {
   AcceptDraftRequest,
   AcceptedDraft,
+  DraftRecordList,
   Brief,
   CreateShelfElementRequest,
   DraftDetail,
@@ -714,6 +715,18 @@ export const ROUTES = {
     response: null,
     status: 204,
     errors: [404],
+  }),
+  listDraftRecords: route({
+    method: 'GET',
+    path: '/v1/draft-records',
+    tag: 'Drafts',
+    summary: 'What became of drafts',
+    description: 'For the owner only. Newest first: who proposed each draft, what kind it was, whether it was accepted or discarded, when, and whether that was done in the browser or from the command line. Never what a draft said.',
+    action: 'drafts.review',
+    query: PageQuery,
+    response: DraftRecordList,
+    status: 200,
+    paged: true,
   }),
   requestDraft: route({
     method: 'POST',

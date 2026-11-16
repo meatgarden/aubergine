@@ -192,6 +192,9 @@ export const SESSION_ENV = {
   bin: 'AUBERGINE_BIN',
 } as const;
 
+/** The header in which a command run inside a session says which session that is. Said by the caller itself. */
+export const SESSION_HEADER = 'x-aubergine-session';
+
 /**
  * A terminal the user has open outside the canvas, as the daemon found it.
  * `tty` and the process IDs are what a client sends back to act on it; the

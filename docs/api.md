@@ -60,6 +60,7 @@ How to create a token, what the scopes mean, the limits and the activity log are
 | [`DELETE /v1/drafts/{draftId}`](#discarddraft) | Discard a draft | browser only |
 | [`POST /v1/drafts/{draftId}/accept`](#acceptdraft) | Accept a draft | browser only |
 | [`POST /v1/drafts/{draftId}/return`](#returndraft) | Send a draft back with a comment | browser only |
+| [`GET /v1/draft-records`](#listdraftrecords) | What became of drafts | browser only |
 | [`POST /v1/draft-requests`](#requestdraft) | Ask the agent in a session to write a workflow or an element | browser only |
 | [`GET /v1/elements`](#listelements) | List the elements on the shelf | `read` |
 | [`POST /v1/elements`](#createelement) | Put an element on the shelf | `workflows:write` |
@@ -3319,6 +3320,52 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 
 **Errors:** 400, 401, 403, 404, 409, 413, 429.
 
+### listDraftRecords
+
+`GET /v1/draft-records`: What became of drafts.
+
+For the owner only. Newest first: who proposed each draft, what kind it was, whether it was accepted or discarded, when, and whether that was done in the browser or from the command line. Never what a draft said.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+A list: it answers a page at a time, see `limit` and `cursor`.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `limit` | query | `number` | no | How many items to return at most. |
+| `cursor` | query | `string` | no | The `nextCursor` of the page before. Opaque: do not build or change it. |
+
+**Answer** `200`:
+
+```ts
+{
+  items: {
+    at: string;
+    draftId: string;
+    kind: "workflow" | "element";
+    proposedBy: {
+      kind: "session";
+      sessionId: string;
+    } | {
+      kind: "token";
+      tokenId: string;
+      name: string;
+    } | {
+      kind: "person";
+    };
+    revisions: number;
+    outcome: "accepted" | "discarded";
+    by: {
+      kind: "owner" | "owner-cli";
+      sessionId: string | null;
+    };
+  }[];
+  nextCursor: string | null;
+}
+```
+
+**Errors:** 400, 401, 403, 413, 429.
+
 ### requestDraft
 
 `POST /v1/draft-requests`: Ask the agent in a session to write a workflow or an element.
@@ -4336,8 +4383,10 @@ A list: it answers a page at a time, see `limit` and `cursor`.
 {
   items: {
     at: string;
-    tokenId: string;
+    caller: "token" | "owner-cli";
+    tokenId: string | null;
     tokenName: string;
+    fromSessionId: string | null;
     action: string;
     resource: {
       sessionId?: string;
