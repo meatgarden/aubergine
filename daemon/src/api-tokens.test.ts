@@ -353,6 +353,10 @@ describe('every route has a rule', () => {
     'POST /v1/library/sources',
     'POST /v1/runs/:runId/approve',
     'POST /v1/runs/:runId/send-back',
+    'GET /v1/environments/offers',
+    'GET /v1/environments/:environmentId/difference',
+    'GET /v1/environments/:environmentId/endings',
+    'POST /v1/environments/:environmentId/end',
     'DELETE /v1/library/sources/:sourceId',
     'POST /v1/library/sources/:sourceId/refresh',
     'GET /v1/library/requests',
@@ -477,6 +481,8 @@ describe('every route has a rule', () => {
       'GET /v1/openapi.json',
       'GET /v1/sessions/:sessionId/brief',
       'GET /v1/sessions/:sessionId/drafts',
+      // Where it works itself, and which of its own files changed: names and counts.
+      'GET /v1/sessions/:sessionId/environment',
       'GET /v1/sessions/:sessionId/repository-workflows',
       'GET /v1/sessions/:sessionId/run',
       'POST /v1/sessions/:sessionId/drafts',
@@ -748,6 +754,8 @@ describe('the secret', () => {
         expect(searched.includes(secret.slice(TOKEN_PREFIX.length)), `${path.basename(file)} holds the random part of a secret`).toBe(false);
       }
     }
+    // A call is recorded after it was answered: wait for the last line before reading the file.
+    await expect.poll(async () => (await readFile(path.join(dir, ACTIVITY_FILE), 'utf8')).trimEnd().split('\n').length, { timeout: 5000 }).toBe(8);
     const activity = await readFile(path.join(dir, ACTIVITY_FILE), 'utf8');
     const recorded = activity
       .trimEnd()
@@ -772,7 +780,7 @@ describe('the secret', () => {
 
     // The hash is what is stored, and it is not sent to the page.
     const state = JSON.parse(await readFile(path.join(dir, 'state.json'), 'utf8'));
-    expect(state.version).toBe(10);
+    expect(state.version).toBe(11);
     expect(state.tokens.map((t: { hash: string }) => t.hash)).toEqual([expect.stringMatching(/^[0-9a-f]{64}$/), expect.stringMatching(/^[0-9a-f]{64}$/)]);
   });
 

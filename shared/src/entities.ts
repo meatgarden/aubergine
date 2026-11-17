@@ -1,3 +1,4 @@
+import { SessionEnvironment } from './environment';
 import { z } from 'zod';
 import { ApiToken } from './tokens';
 import { Id, newId } from './ids';
@@ -346,6 +347,8 @@ export const AppState = z.object({
   repositoryAccepted: z.array(AcceptedRepositoryWorkflow).default([]),
   /** The library: its sources as they were last read, what is installed, and installs that wait for the owner. */
   library: LibraryState.prefault({}),
+  /** What was prepared for sessions to work in: today, working copies. A session that works in the folder it was started in has none. */
+  environments: z.array(SessionEnvironment).default([]),
 });
 export type AppState = z.infer<typeof AppState>;
 
@@ -377,7 +380,7 @@ export function createInitialState(now: Date = new Date()): AppState {
     createdAt,
   };
   const project: Project = { id: newId(), workspaceId: workspace.id, name: 'Default', createdAt };
-  return { organization, workspace, project, sessions: [], canvases: [newCanvas(project.id, FIRST_CANVAS_NAME, 0, now)], tokens: [], workflows: [], runs: [], drafts: [], shelf: [], repositoryAccepted: [], library: { sources: [], installed: [], requests: [] } };
+  return { organization, workspace, project, sessions: [], canvases: [newCanvas(project.id, FIRST_CANVAS_NAME, 0, now)], tokens: [], workflows: [], runs: [], drafts: [], shelf: [], repositoryAccepted: [], library: { sources: [], installed: [], requests: [] }, environments: [] };
 }
 
 /** Canvases in tab order. */

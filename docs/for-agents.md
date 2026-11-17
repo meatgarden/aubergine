@@ -123,6 +123,20 @@ It prints what is wanted: a few plain sentences on the goal, what was done, what
 
 Write one only when asked. It takes the place of the one before, and your owner reads it as your words.
 
+## Where you work
+
+(Needs the terminal's own credential.)
+
+This terminal may work in a working copy of its own: a second checkout of the repository on its own branch, so that agents on one repository do not touch each other's files. To find out, and to read what to do and leave alone there:
+
+    aubergine where
+
+In short: work and commit there, on that branch; do not change branch; do not work in the checkout it was made from; do not merge or push unless asked. What becomes of the branch is your owner's decision.
+
+(Needs the terminal's own credential, or an API token with the scope read.)
+
+As a tool: where_am_i.
+
 ## Messages
 
 (Needs the terminal's own credential.)
@@ -208,7 +222,7 @@ A terminal marked "people only" is closed to every program, and a token reaches 
 
 ## What is your owner's alone
 
-No command and no tool of yours does these, and none of them is missing by mistake: making, listing or revoking credentials; reading the record of what credentials did; changing settings; stopping a program outside Aubergine; terminals that are not on a canvas; accepting, sending back or discarding a draft; accepting a workflow kept in a repository; saving a workflow into a repository; marking a terminal "people only", or opening it again; making or removing the demo; reading how an agent is set up; asking an agent for a recap; the list of what changed while the owner was away; an agent's past conversations; deciding which terminals may message each other, and pausing or stopping a thread; retiring a shelf element or bringing it back, and taking a newer version of one into a workflow; adding, removing or refreshing a library source, accepting an install or an update, and removing what was installed; approving a run that waits for a person, or sending it back.
+No command and no tool of yours does these, and none of them is missing by mistake: making, listing or revoking credentials; reading the record of what credentials did; changing settings; stopping a program outside Aubergine; terminals that are not on a canvas; accepting, sending back or discarding a draft; accepting a workflow kept in a repository; saving a workflow into a repository; marking a terminal "people only", or opening it again; making or removing the demo; reading how an agent is set up; asking an agent for a recap; the list of what changed while the owner was away; an agent's past conversations; deciding which terminals may message each other, and pausing or stopping a thread; retiring a shelf element or bringing it back, and taking a newer version of one into a workflow; adding, removing or refreshing a library source, accepting an install or an update, and removing what was installed; approving a run that waits for a person, or sending it back; removing or discarding a working copy.
 
 (Needs an Aubergine terminal.)
 

@@ -46,6 +46,7 @@ import { isTerminalContentEvent, withoutTerminalContent } from './terminal-redac
 import { actorOf, type Workflows } from './workflows';
 import { MessageRefusal, type Messages } from './messages';
 import type { Library } from './library';
+import type { Environments } from './environments';
 import { fingerprintOf } from './terminal-access';
 
 export interface PublicRouteDeps {
@@ -58,6 +59,7 @@ export interface PublicRouteDeps {
   terminals: TerminalAccess;
   messages: Messages;
   library: Library;
+  environments: Environments;
   activity: ActivityLog;
   viewers: Viewers;
   limiter: RateLimiter;
@@ -111,7 +113,7 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
   const mayReadTerminal = (principal: Principal, sessionId: string): boolean => principal.kind === 'user' || deps.may(principal, 'terminal.read', deps.resourceOf(sessionId));
   const remembered = new IdempotencyStore();
 
-  const { messages, library } = deps;
+  const { messages, library, environments } = deps;
   /** What `authorize` is asked about one session messaging another: where the receiver is, and which canvases its canvas lets in. */
   const deliveryTo = (fromSessionId: string, toSessionId: string): Resource => {
     const toCanvasId = messages.canvasOf(toSessionId);
@@ -313,6 +315,25 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
     useWorkflowTemplate: ({ params, body }) => detailOfWorkflow(workflows.useTemplate(params.template, body.name)),
 
     /* ---------- Runs ---------- */
+
+    /* ---------- Environments ---------- */
+
+    getEnvironmentOffers: ({ query }) => environments.offers(query.folder),
+    listEnvironments: ({ query }) => environments.list(query),
+    getEnvironment: ({ params }) => environments.detail(params.environmentId),
+    // The owner's own: `authorize` has refused everyone else. For an environment whose session is gone, this is the only way to its text.
+    getEnvironmentDifference: ({ params, query }) => environments.difference(params.environmentId, query.file),
+    getEnvironmentEndings: ({ params }) => environments.endings(params.environmentId),
+    endEnvironment: ({ params, body }) => environments.end(params.environmentId, body),
+    getSessionEnvironment: ({ params }) => {
+      sessions.get(params.sessionId);
+      return environments.ofSessionDetail(params.sessionId);
+    },
+    // Content: asked as reading a terminal is, with the session's canvas, tags and people-only switch, before this is reached.
+    getSessionDifference: ({ params, query }) => {
+      sessions.get(params.sessionId);
+      return environments.differenceForSession(params.sessionId, query.file);
+    },
 
     listRuns: ({ query }) => workflows.listRuns(query),
 

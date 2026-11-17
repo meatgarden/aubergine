@@ -26,8 +26,8 @@ import { loadOrCreateToken } from './token';
 const ZSH = ['/bin/zsh', '/usr/bin/zsh'].find((p) => existsSync(p));
 const COMMAND = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..', 'bin', 'aubergine.mjs');
 
-const OWN_WORK = ['workflow_status', 'workflow_done', 'workflow_blocked', 'workflow_goto', 'note_add', 'attention_set', 'draft_brief', 'draft_propose_element', 'draft_propose_workflow', 'messages_inbox', 'message_reply', 'message_send', 'repository_workflows'];
-const READING = ['workflow_status', 'board', 'library_list', 'library_show', 'repository_workflows', 'canvases_list', 'sessions_list', 'session_get', 'notes_read', 'workflows_list', 'runs_list', 'run_get'];
+const OWN_WORK = ['workflow_status', 'workflow_done', 'workflow_blocked', 'workflow_goto', 'note_add', 'attention_set', 'draft_brief', 'draft_propose_element', 'draft_propose_workflow', 'messages_inbox', 'message_reply', 'message_send', 'repository_workflows', 'where_am_i'];
+const READING = ['workflow_status', 'board', 'library_list', 'library_show', 'repository_workflows', 'canvases_list', 'sessions_list', 'session_get', 'where_am_i', 'notes_read', 'workflows_list', 'runs_list', 'run_get'];
 const EVERYTHING = [
   'workflow_status',
   'workflow_done',
@@ -47,6 +47,7 @@ const EVERYTHING = [
   'canvases_list',
   'sessions_list',
   'session_get',
+  'where_am_i',
   'notes_read',
   'workflows_list',
   'runs_list',
@@ -211,7 +212,7 @@ describe.runIf(ZSH)('aubergine mcp, through the protocol', () => {
       const status = await mcp.call('aubergine_status');
       expect(status.isError).toBe(false);
       expect(status.text).toContain("a session's own token");
-      expect(mcp.stderr()).toContain("serving 15 tools for a session's own token (credential from AUBERGINE_TOKEN)");
+      expect(mcp.stderr()).toContain("serving 16 tools for a session's own token (credential from AUBERGINE_TOKEN)");
     });
 
     it('with a read token: reading, and nothing that changes anything or touches a terminal', async () => {
@@ -336,6 +337,10 @@ describe.runIf(ZSH)('aubergine mcp, through the protocol', () => {
       expect(listed.data.sessions).toEqual([expect.objectContaining({ id: target.id, name: 'target', tags: ['ci'] })]);
       // A session is found by its name as well as by its ID.
       expect((await ok('session_get', { session: 'target' })).data).toMatchObject({ id: target.id, peopleOnly: false });
+      // Where it works: this one in the folder it was started in, with nothing prepared for it.
+      const where = await ok('where_am_i', { session: 'target' });
+      expect(where.text).toContain('works in the folder it was started in');
+      expect(where.data).toMatchObject({ kind: 'full', folder: null, branch: null });
       await ok('note_add', { session: 'target', text: 'Found the cause.' });
       await ok('note_write', { session: target.id, note: '# Pinned\nKeep this.' });
       const notes = await ok('notes_read', { session: 'target' });

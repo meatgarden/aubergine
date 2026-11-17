@@ -52,6 +52,9 @@ import './review/drafts-source';
 import './review/library-source';
 import { LibraryScreen } from './library/LibraryScreen';
 import { BoardScreen } from './board/BoardScreen';
+import { StartDialog } from './environment/StartDialog';
+import { EnvironmentPanel } from './environment/EnvironmentPanel';
+import './panel/sections/copies';
 import { itemsOfListing, useRepositoryListing } from './review/repository-source';
 import { DescribeDialog } from './workflows/DescribeDialog';
 import { ShelfEditor } from './workflows/ShelfEditor';
@@ -251,7 +254,7 @@ export function Canvas() {
   const [fullSizeHint, setFullSizeHint] = useState<{ x: number; y: number } | null>(null);
   const setError = useApp((s) => s.setNotice);
 
-  const addTerminal = useCallback(async (agent?: AgentKind, agentArgs?: string[], agentTools?: AgentToolsChoice): Promise<string | null> => {
+  const addTerminal = useCallback(async (agent?: AgentKind, agentArgs?: string[], agentTools?: AgentToolsChoice, where?: { cwd?: string; environment?: string; name?: string }): Promise<string | null> => {
     setAdding(true);
     setError(null);
     try {
@@ -273,7 +276,7 @@ export function Canvas() {
       }));
       const rect = findFreeRect(taken, center, { width: NODE_DEFAULT_WIDTH, height: NODE_DEFAULT_HEIGHT });
       if (!canvasId) return null;
-      const created = await api.createSession({ rect, canvasId, ...(agent ? { agent } : {}), ...(agent && agentArgs ? { agentArgs } : {}), ...(agent && agentTools ? { agentTools } : {}) });
+      const created = await api.createSession({ rect, canvasId, ...(agent ? { agent } : {}), ...(agent && agentArgs ? { agentArgs } : {}), ...(agent && agentTools ? { agentTools } : {}), ...(where?.cwd ? { cwd: where.cwd } : {}), ...(where?.environment ? { environment: where.environment } : {}), ...(where?.name ? { name: where.name, uniqueName: true } : {}) });
       useApp.getState().apply({ type: 'session.created', canvasId, ...created });
       goToNode(created.node.id, created.session.id);
       return created.session.id;
@@ -459,6 +462,9 @@ export function Canvas() {
           >
             ⚙
           </button>
+          <button type="button" className="quiet" onClick={() => runCommand('terminal.newIn')} disabled={adding} title={hint('terminal.newIn', 'New terminal in a folder you choose, or in a working copy of its own: kept apart from your checkout, on its own branch')} data-testid="toolbar-new-in">
+            New in…
+          </button>
           <button
             type="button"
             className="quiet toolbar-attached"
@@ -543,6 +549,8 @@ export function Canvas() {
       <ReviewScreen />
       <LibraryScreen />
       <BoardScreen />
+      <StartDialog />
+      <EnvironmentPanel />
       <RunDialog />
       <AgentToolsDialog />
       <RunViewDialog />

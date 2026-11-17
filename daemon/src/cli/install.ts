@@ -1,3 +1,5 @@
+import { GIT_MINIMUM, gitNewEnough } from '../git/copies';
+import { gitVersion } from '../git/run';
 import { spawn, spawnSync } from 'node:child_process';
 import { existsSync, lstatSync, readFileSync, readdirSync, readlinkSync, realpathSync, rmSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
@@ -305,6 +307,16 @@ export async function doctor(root: string, config: Config, env: NodeJS.ProcessEn
   const gitThere = has('git');
   const archive = has('curl') && has('tar');
   checks.push({ ok: gitThere || archive, text: gitThere ? 'git, for updates' : archive ? 'curl and tar, for updates by archive (no git)' : 'neither git nor curl with tar: updates are not possible' });
+
+  // Working copies and library sources start Git. Without it, or with an old one, everything else still works.
+  const git = await gitVersion();
+  checks.push(
+    git === null
+      ? { ok: null, text: 'git is not installed: working copies and library sources from Git need it; everything else works without' }
+      : gitNewEnough(git)
+        ? { ok: true, text: `git ${git}, for working copies and library sources` }
+        : { ok: false, text: `git ${git}: working copies need version ${GIT_MINIMUM.join('.')} or newer` },
+  );
 
   const info = versionInfo(root, config);
   checks.push({ ok: null, text: `this copy: ${info.root} (${info.kind === 'git' ? `commit ${info.commit ?? 'unknown'}` : info.kind === 'archive' ? 'from an archive' : 'not a git checkout'})` });

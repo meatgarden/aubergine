@@ -559,6 +559,71 @@ The palette (⌘K) also searches what terminals have printed, in a **Terminal ou
 
 A terminal is live only while it is on screen and large enough to read. Zoomed far out, a node shows a plain-text picture of its screen, refreshed about once a second; off screen it costs nothing. Either way the shell keeps running.
 
+## Working copies: two agents on one repository
+
+Every terminal works in your real folder. Two agents in one repository then edit the same files, and you cannot tell what one changed apart from the other. A **working copy** gives a terminal its own copy of the repository's files, on its own branch, so that each agent's work is kept apart and can be read apart.
+
+**It is not a lock.** A working copy keeps work apart; it does not keep an agent in. The agent runs as you and can still read and change every file you can, your own checkout included. Nothing here should be relied on to hold back an agent that does the wrong thing.
+
+### Starting a terminal in one
+
+- **New in…** in the toolbar (or "New terminal in a folder, or in a working copy…" in the palette): give the folder, and choose **In its own working copy**. The dialog for a Claude Code session with tools, and the one for a run on a new agent, have the same choice.
+- From a terminal: `aubergine here --copy` in a folder of the repository (add `--claude` to start Claude Code in it), or `aubergine new "name" --copy --in <folder>`.
+
+The choice is offered only where it can be had, and says why where it cannot: the folder is not in a Git repository, the repository is a bare one, or it has no commit yet.
+
+What you get is a Git worktree: a second checkout of the same repository, in a folder Aubergine keeps under its data folder (never inside your repository), on a new branch named `aubergine/<the terminal's name>-<six characters>`. It starts from the commit your checkout is on, and the terminal starts in the same subfolder you were in.
+
+What is **not** in a new working copy:
+
+- **Your uncommitted changes.** The dialog says how many files have them. They are not carried over, and they are not touched: nothing is stashed or committed for you. Commit first if the new terminal should have them.
+- **Files Git ignores or does not track**: installed dependencies, local settings, environment files. None is copied. A project that needs an install step needs it again in the working copy, and a project that reads a local settings file will not find it there.
+
+Your checkout is never changed by any of this: not its files, not what is staged, not the branch you have checked out. The repository gains a branch and Git's own record of the extra checkout, and nothing else.
+
+### What changed
+
+A terminal in a working copy shows its branch on its title bar, with the number of files that differ; rest the pointer on it for the words *kept apart*. Click it, or the terminal's row in the side panel's **Working copies** section, for the panel:
+
+- the branch, the folder and its size, and the commit it started from;
+- the files that are **changed**, **added** or **removed** against that commit, with work that is in no commit included and marked;
+- for a file you choose, its difference as text. It is read-only. A long difference is cut and says so; a file that is not text, or is larger than two megabytes, is not drawn.
+
+It is read when you open the panel or press **Read again**, and when the terminal's agent goes idle or a command there ends, at most once in ten seconds. Nothing reads it on a timer.
+
+### When a terminal ends
+
+A working copy is never removed because its terminal ended. Ending a terminal asks what becomes of it, and the same three choices are in its panel and in `aubergine copies` for as long as it exists:
+
+- **Keep the branch, remove the folder.** Only when everything in it is committed; otherwise it says how many files are not, and you can commit there first or keep everything.
+- **Keep everything.** Folder and branch stay; it stays in the list, saying its terminal is gone.
+- **Discard both.** When the copy holds work that exists nowhere else (commits on no other branch, or files in no commit), it asks a second time and names the count of each.
+
+Aubergine never merges, pushes or rebases, and never changes the branch you have checked out. What you do with a kept branch is yours: look at it, merge it, delete it.
+
+A working copy whose folder you deleted by hand, or whose repository moved, is shown as **broken** with a sentence saying which, and can be forgotten. Forgetting removes nothing.
+
+```sh
+aubergine copies                      # every working copy: terminal, branch, what changed, size
+aubergine copies show api             # the files that changed, and what can be done with it
+aubergine copies keep-branch api
+aubergine copies discard api
+```
+
+### What Aubergine runs in your repository
+
+Working copies are made and read with the `git` on your `PATH` (version 2.31 or newer; `aubergine doctor` says). For every Git command Aubergine itself starts there:
+
+- **No hook runs.** Not `post-checkout` when a working copy is made, not any other, wherever the repository says its hooks live. A hook that runs when you type `git` yourself is untouched, and an agent that types `git commit` in the working copy runs your hooks as you would.
+- **Nothing prompts, nothing reaches the network**, and no file-system watcher, external difference program or text converter named in a configuration is started. Submodules are not fetched or entered: a project with submodules has empty folders for them in a new working copy.
+- **Your filters do run.** A filter named in your Git configuration (large-file storage is one) decides what the files in a checkout are, so Git runs it when a working copy is written out and when its files are compared, exactly as it does for your own `git status`. A repository cannot bring such a program with it; it is run only if your configuration names it.
+
+### For programs
+
+A token with `read` sees the list of working copies and, for a terminal, the names of the files that changed and the counts. The **text** of a difference is content, like what a terminal shows: it needs `terminal:read` with a reach that covers the terminal, and "people only" closes it. Starting a terminal in a working copy follows the rules for starting a terminal. **Removing or discarding a working copy is yours alone**: no token can, whatever its scopes, and neither can an agent with its terminal's own credential.
+
+An agent can ask where it is: `aubergine where` in its terminal, or the `where_am_i` tool. It is told its folder and branch, to commit there, not to change branch, and not to work in your checkout. That is advice to an agent, not something that holds it.
+
 ## Workflows
 
 A workflow is an ordered list of **elements** that an agent goes through one at a time: it reads the current one, does it, reports it done, and is given the next. Each element is a name, some instructions, and one line saying how to tell it is finished. The canvas shows where every terminal stands.
@@ -845,6 +910,7 @@ aubergine doctor               check everything Aubergine needs, one line per ch
 aubergine uninstall            remove the command and an installed copy; data and terminals are kept (--yes: do not ask)
 aubergine list                 sessions with their state, command and folder
 aubergine new [name]           start a new terminal on a canvas
+aubergine new [name] --copy [--in <folder>]   start it in a working copy of its own, of the repository that folder (or this one) is in
 aubergine canvas list          the canvases, with how many terminals are on each and how many wait for you
 aubergine canvas new <name>    add a canvas
 aubergine attach <name>        open a session in this terminal
@@ -881,6 +947,9 @@ aubergine workflow run <name> [--session <name|id>] [--input key=value]… [--re
                                start a run on a session: the one it is typed in, when typed inside one
 aubergine workflow approve <run> [--comment <text>]      approve the element a run waits on; the run is its ID or its terminal's name
 aubergine workflow send-back <run> --to <element> --comment <text>
+aubergine here --copy [--claude]   the same as here, in a working copy of its own
+aubergine copies               the working copies there are; `copies show`, `keep-branch`, `keep`, `discard`, `forget` <copy>
+aubergine where                inside a session: whether it works in a working copy, its branch, and what to leave alone
 aubergine board [--canvas <name>] [--workflow <name>] [--status <status>] [--tag <tag>]      every run that is going
 aubergine workflow status      inside a session on a run: where it stands and what to do now
 aubergine workflow done [--note <text>] [--output <file>]   the current element is finished; prints what comes next
@@ -1333,7 +1402,7 @@ It never reads your sign-in, and it has no tool for what only you may do: making
 | With | Tools |
 |---|---|
 | a session's own token | `workflow_status`, `workflow_done`, `workflow_blocked`, `workflow_goto`, `note_add`, `attention_set`, `draft_brief`, `draft_propose_element`, `draft_propose_workflow`, `messages_inbox`, `message_reply`, `message_send`, `repository_workflows`: its own work, on its own session only |
-| `read` | `board`, `library_list`, `library_show`, `canvases_list`, `sessions_list`, `session_get`, `notes_read`, `workflows_list`, `runs_list`, `run_get`, `workflow_status`, `repository_workflows` |
+| `read` | `where_am_i`, `board`, `library_list`, `library_show`, `canvases_list`, `sessions_list`, `session_get`, `notes_read`, `workflows_list`, `runs_list`, `run_get`, `workflow_status`, `repository_workflows` |
 | `sessions:write` | `session_start`, `session_move`, `session_park` |
 | `notes:write` | `note_add`, `note_write` |
 | `runs:write` | `workflow_run`, `element_run`, `workflow_done`, `workflow_blocked`, `workflow_goto` |

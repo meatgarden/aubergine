@@ -48,6 +48,9 @@ export default defineConfig({
       AUBERGINE_DATA_DIR: e2e.dataDir,
       AUBERGINE_TMUX_SOCKET: e2e.tmuxSocket,
       CLAUDE_CONFIG_DIR: e2e.agentConfigDir,
+      // The server's Git reads the owner's configuration. In a test run that is nobody's: never the developer's own.
+      GIT_CONFIG_GLOBAL: '/dev/null',
+      GIT_CONFIG_SYSTEM: '/dev/null',
     },
   },
 });

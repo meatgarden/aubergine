@@ -68,6 +68,7 @@ export const OWNERS_ALONE: Record<(typeof NEVER_BY_TOKEN)[number], string> = {
   'shelf.manage': 'retiring a shelf element or bringing it back, and taking a newer version of one into a workflow',
   'messages.manage': 'deciding which terminals may message each other, and pausing or stopping a thread',
   'runs.approve': 'approving a run that waits for a person, or sending it back',
+  'environments.manage': 'removing or discarding a working copy',
 };
 
 const ownersAlone = (): string => [...new Set(NEVER_BY_TOKEN.map((action) => OWNERS_ALONE[action]))].join('; ');
@@ -198,6 +199,22 @@ export const GUIDE: readonly GuideSection[] = [
           'Write one only when asked. It takes the place of the one before, and your owner reads it as your words.',
         ],
       },
+    ],
+  },
+  {
+    id: 'where',
+    title: 'Where you work',
+    parts: [
+      {
+        needs: ['environment.own.read'],
+        inTerminal: true,
+        text: [
+          "This terminal may work in a working copy of its own: a second checkout of the repository on its own branch, so that agents on one repository do not touch each other's files. To find out, and to read what to do and leave alone there:",
+          '    aubergine where',
+          "In short: work and commit there, on that branch; do not change branch; do not work in the checkout it was made from; do not merge or push unless asked. What becomes of the branch is your owner's decision.",
+        ],
+      },
+      { needs: ['environment.own.read', 'environments.read'], text: ['As a tool: where_am_i.'], tools: ['where_am_i'] },
     ],
   },
   {

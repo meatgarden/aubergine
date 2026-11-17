@@ -105,7 +105,7 @@ const MessageList = pageOf(Message);
 
 export type RouteMethod = 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';
 
-export const ROUTE_TAGS = ['Server', 'Canvases', 'Sessions', 'Notes', 'Layout', 'Workflows', 'Runs', 'Drafts', 'Elements', 'Library', 'Repository workflows', 'Terminals', 'Messages', 'Events', 'Tokens', 'For a session itself'] as const;
+export const ROUTE_TAGS = ['Server', 'Canvases', 'Sessions', 'Notes', 'Layout', 'Workflows', 'Runs', 'Drafts', 'Elements', 'Library', 'Environments', 'Repository workflows', 'Terminals', 'Messages', 'Events', 'Tokens', 'For a session itself'] as const;
 export type RouteTag = (typeof ROUTE_TAGS)[number];
 
 export interface RouteSpec {
@@ -164,6 +164,8 @@ const draftId = z.object({ draftId: Id });
 const elementId = z.object({ elementId: Id });
 import { ElementId } from './workflows';
 import { Board, BoardFilters } from './board';
+import { Difference, DifferenceQuery, EndEnvironmentRequest, EndedEnvironment, Endings, EnvironmentDetail, EnvironmentOffers, OffersQuery } from './environment';
+import { EnvironmentList, EnvironmentsQuery } from './environment-api';
 import { AcceptInstallRequest, AddSourceRequest, InstallRequest, InstallRequestDetail, InstallRequestList, InstalledItem, InstalledList, InstalledUsage, LibraryItemDetail, LibraryItemId, LibraryItemList, LibrarySource, LibrarySourceList, RequestInstallRequest } from './library';
 
 /** What the event stream sends: a change, as the reducer in `shared/` applies it. Described loosely on purpose: new kinds appear. */
@@ -1198,6 +1200,108 @@ export const ROUTES = {
     response: RunDetail,
     status: 201,
     idempotent: true,
+    errors: [404, 409],
+  }),
+
+  /* ---------- Environments: where a session works, and what changed there ---------- */
+  getEnvironmentOffers: route({
+    method: 'GET',
+    path: '/v1/environments/offers',
+    tag: 'Environments',
+    summary: 'Where a new session in a folder could work',
+    description:
+      'For the owner only. Every kind of environment, with whether it can be had for that folder and, when not, why: a working copy needs the folder to be in a Git repository with at least one commit. It also says what would not be carried over. It reads; nothing is made or changed.',
+    action: 'environments.manage',
+    query: OffersQuery,
+    response: EnvironmentOffers,
+    status: 200,
+  }),
+  listEnvironments: route({
+    method: 'GET',
+    path: '/v1/environments',
+    tag: 'Environments',
+    summary: 'List what was prepared for sessions to work in',
+    description: 'Every working copy there is, with its session (or that its session is gone), its branch, the counts of what changed, and what its folder takes on disk. Names and counts only.',
+    action: 'environments.read',
+    query: EnvironmentsQuery,
+    response: EnvironmentList,
+    status: 200,
+    paged: true,
+  }),
+  getEnvironment: route({
+    method: 'GET',
+    path: '/v1/environments/:environmentId',
+    tag: 'Environments',
+    summary: 'Read one environment: what it is, and which files changed',
+    description: 'The files that differ from the commit it started from, uncommitted work included, by name. Read afresh each time. No content.',
+    action: 'environments.read',
+    params: z.object({ environmentId: Id }),
+    response: EnvironmentDetail,
+    status: 200,
+    errors: [404],
+  }),
+  getEnvironmentDifference: route({
+    method: 'GET',
+    path: '/v1/environments/:environmentId/difference',
+    tag: 'Environments',
+    summary: 'The difference of one file in an environment, as text',
+    description: 'For the owner only: this is the route for an environment whose session is gone. For a session that is there, a token reads it through the session, where its reach is asked.',
+    action: 'environments.manage',
+    params: z.object({ environmentId: Id }),
+    query: DifferenceQuery,
+    response: Difference,
+    status: 200,
+    errors: [404, 409],
+  }),
+  getEnvironmentEndings: route({
+    method: 'GET',
+    path: '/v1/environments/:environmentId/endings',
+    tag: 'Environments',
+    summary: 'What can be done with an environment when its session ends',
+    description: 'For the owner only. The choices its kind offers, whether each is possible now, and for one that would lose work that exists nowhere else, the question to ask once more with the count of commits and files.',
+    action: 'environments.manage',
+    params: z.object({ environmentId: Id }),
+    response: Endings,
+    status: 200,
+    errors: [404],
+  }),
+  endEnvironment: route({
+    method: 'POST',
+    path: '/v1/environments/:environmentId/end',
+    tag: 'Environments',
+    summary: 'Keep, remove or discard an environment',
+    description:
+      'For the owner only: no token and no session can do this. Nothing is ever merged, pushed or rebased, and the branch the owner has checked out is never changed. A choice that would lose work that exists nowhere else is refused with 409 and the question to ask, until it is sent again with `confirm`.',
+    action: 'environments.manage',
+    params: z.object({ environmentId: Id }),
+    body: EndEnvironmentRequest,
+    response: EndedEnvironment,
+    status: 200,
+    errors: [404, 409],
+  }),
+  getSessionEnvironment: route({
+    method: 'GET',
+    path: '/v1/sessions/:sessionId/environment',
+    tag: 'Environments',
+    summary: 'Where a session works, and which files changed there',
+    description: 'For a session in a working copy: its branch, the commit it started from and the files that differ from it, by name, uncommitted work included. For any other session: that it works in the folder it was started in. No content. A session may read this about itself.',
+    action: 'environment.own.read',
+    params: sessionId,
+    response: EnvironmentDetail,
+    status: 200,
+    errors: [404],
+  }),
+  getSessionDifference: route({
+    method: 'GET',
+    path: '/v1/sessions/:sessionId/environment/difference',
+    tag: 'Environments',
+    summary: "The difference of one file in a session's working copy, as text",
+    description: 'What is in the files: content, like what a terminal shows. So it needs the scope for reading terminals, with a reach that covers the session, and is closed by "people only". Bounded: a long difference is cut and says so; a file that is not text, or is very large, is not drawn.',
+    action: 'terminal.read',
+    params: sessionId,
+    query: DifferenceQuery,
+    response: Difference,
+    status: 200,
     errors: [404, 409],
   }),
 

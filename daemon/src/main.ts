@@ -114,6 +114,8 @@ async function main(): Promise<void> {
     inputAudit: new FileInputAudit(config.dataDir, () => settings.value.terminal.auditInput, (error) => console.warn(`Could not write the audit of typed text: ${String(error)}`)),
     libraryFetcher: new GitFetcher(() => ({ timeoutSeconds: settings.value.library.fetchTimeoutSeconds, maxMegabytes: settings.value.library.maxFetchMegabytes })),
     libraryCache: path.join(config.dataDir, 'library'),
+    copiesDir: path.join(config.dataDir, 'copies'),
+    defaultFolder: () => (settings.value.defaultFolder ? expandHome(settings.value.defaultFolder) : null),
     messageLog: new FileMessageLog(config.dataDir, () => settings.value.messages.logMaxBytes, (error) => console.warn(`Could not write the file of messages: ${String(error)}`)),
     draftLog: new FileDraftLog(config.dataDir, (error) => console.warn(`Could not write the record of drafts: ${String(error)}`)),
     runArchive: new FileRunArchive(config.dataDir, (error) => console.warn(`Could not write the archive of runs: ${String(error)}`)),

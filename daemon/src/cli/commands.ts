@@ -3,7 +3,9 @@ import { HOOK_EVENTS, type HookEvent } from '../agents/claude-code';
 
 export type Command =
   | { name: 'list' }
-  | { name: 'new'; sessionName: string | null; canvas: string | null }
+  | { name: 'new'; sessionName: string | null; canvas: string | null; copy: boolean; folder: string | null }
+  /** `copies …`: its own words, parsed by the working-copy commands. */
+  | { name: 'copies'; words: string[] }
   | { name: 'canvas-list' }
   | { name: 'canvas-new'; canvasName: string }
   | { name: 'attach'; query: string }
@@ -16,6 +18,8 @@ export type Command =
       /** Show the new session on an open canvas, or open a browser on it. */
       open: boolean;
       claude: boolean;
+      /** Start it in a working copy of the repository this folder is in. */
+      copy: boolean;
       /** Words after `--`: a command to type into the new session, or with `claude`, arguments for the agent. */
       command: string[];
       /** Called from the shell snippet: be quick, be quiet, and report failure by exit code. */
@@ -50,6 +54,8 @@ export type Command =
   /** Send a message to a session: from the session it is typed in, or from the owner when typed outside one. */
   | { name: 'tell'; query: string; text: string }
   /** Inside a session: say whether its owner is needed. */
+  /** `where`: inside a session, where it works. */
+  | { name: 'where' }
   | { name: 'attention'; state: 'none' | 'working' | 'waiting' | 'done'; message: string | null }
   /** The guide for agents: for whoever asks, in full, or the few lines for an instructions file. */
   | { name: 'guide'; all: boolean; snippet: boolean }
@@ -107,10 +113,19 @@ export const USAGE = `Usage: aubergine <command>
 
   list                       List sessions with their state, command and folder
   new [name]                 Start a new terminal on a canvas
+  new [name] --copy [--in <folder>]
+                             Start it in a working copy of its own: a second checkout of the repository this folder
+                             (or <folder>) is in, on a new branch. Kept apart from your checkout; that is not a lock
   canvas list                List the canvases, with how many terminals are on each and how many wait for you
   canvas new <name>          Add a canvas
   attach <name>              Open a session in this terminal (detach by closing the window)
   here [name] [-- command]   Start a session in this folder and turn this terminal into a view of it
+  here --copy [--claude]     The same, in a working copy of its own of the repository this folder is in
+  copies                     The working copies there are: terminal, branch, what changed, size on disk
+  copies show <copy>         One of them: the files that changed, and what can be done with it
+  copies keep-branch | keep | discard | forget <copy>
+                             Keep its branch and remove its folder; keep everything; discard both; stop listing one that
+                             is broken. Nothing is ever merged or pushed. Only you can: no token and no agent does this
                              --canvas <name>   put it on this canvas
                              --no-attach   only create it
                              --no-open     do not bring it up in the browser
@@ -195,6 +210,7 @@ export const USAGE = `Usage: aubergine <command>
   inbox                      Inside a session: the unread messages for it, which are then read
   reply <id> <text>          Inside a session: answer a message it received
   note <text>                Inside a session: add an entry to that session's note log
+  where                      Inside a session: whether it works in a working copy of its own, on which branch, and what to leave alone
   attention waiting [what you need] | working | done | none
                              Inside a session: say whether its owner is needed. An agent Aubergine started reports this
                              by itself; any other program in a terminal says it with this
@@ -215,7 +231,7 @@ export const USAGE = `Usage: aubergine <command>
 new, here and import take --canvas <name>. Without it they use the canvas you looked at most recently
 in a browser, or the first one when no browser is open.
 
-The server must be running for list, new, canvas, token, workflow, element, library, board, screen, output, send, run, protect, attach, here, scan, import, move, tell, inbox, reply, note, attention and open.
+The server must be running for list, new, canvas, copies, token, workflow, element, library, board, screen, output, send, run, protect, attach, here, scan, import, move, tell, inbox, reply, note, attention and open.
 guide works without it, and then prints every part.`;
 
 export class UsageError extends Error {}
@@ -266,10 +282,12 @@ export function parseCommand(argv: readonly string[]): Command {
       if (rest.length > 0) throw new UsageError('list takes no arguments');
       return { name: 'list' };
     case 'new': {
-      const { value: canvas, rest: words } = takeOption(rest, '--canvas');
-      const unknown = words.find((word) => word.startsWith('--'));
+      const { value: canvas, rest: afterCanvas } = takeOption(rest, '--canvas');
+      const { value: folder, rest: all } = takeOption(afterCanvas, '--in');
+      const unknown = all.find((word) => word.startsWith('--') && word !== '--copy');
       if (unknown) throw new UsageError(`new does not know ${unknown}`);
-      return { name: 'new', sessionName: words.length > 0 ? words.join(' ') : null, canvas };
+      const words = all.filter((word) => word !== '--copy');
+      return { name: 'new', sessionName: words.length > 0 ? words.join(' ') : null, canvas, copy: all.includes('--copy'), folder };
     }
     case 'canvas':
     case 'canvases': {
@@ -295,7 +313,7 @@ export function parseCommand(argv: readonly string[]): Command {
       const { value: canvas, rest: options } = takeOption(split < 0 ? rest : rest.slice(0, split), '--canvas');
       const command = split < 0 ? [] : rest.slice(split + 1);
       const flags = options.filter((word) => word.startsWith('--'));
-      const unknown = flags.find((flag) => !['--no-attach', '--no-open', '--claude', '--from-shell-hook'].includes(flag));
+      const unknown = flags.find((flag) => !['--no-attach', '--no-open', '--claude', '--from-shell-hook', '--copy'].includes(flag));
       if (unknown) throw new UsageError(`here does not know ${unknown}`);
       if (split >= 0 && command.length === 0) throw new UsageError('here: nothing after "--"');
       const words = options.filter((word) => !word.startsWith('--'));
@@ -307,6 +325,7 @@ export function parseCommand(argv: readonly string[]): Command {
         // Never from the shell snippet or when only creating: those must not take the user's attention.
         open: !flags.some((flag) => ['--no-open', '--no-attach', '--from-shell-hook'].includes(flag)),
         claude: flags.includes('--claude'),
+        copy: flags.includes('--copy'),
         command,
         fromShellHook: flags.includes('--from-shell-hook'),
       };
@@ -390,6 +409,9 @@ export function parseCommand(argv: readonly string[]): Command {
       return { name: 'element', words: rest };
     case 'library':
       return { name: 'library', words: rest };
+    case 'copies':
+    case 'copy':
+      return { name: 'copies', words: rest };
     case 'board': {
       const canvas = takeOption(rest, '--canvas');
       const workflow = takeOption(canvas.rest, '--workflow');
@@ -442,6 +464,9 @@ export function parseCommand(argv: readonly string[]): Command {
     case 'note':
       if (rest.join(' ').trim() === '') throw new UsageError('note needs some text');
       return { name: 'note', text: rest.join(' ') };
+    case 'where':
+      if (rest.length > 0) throw new UsageError('where takes no arguments');
+      return { name: 'where' };
     case 'attention': {
       const [state, ...words] = rest;
       if (state !== 'none' && state !== 'working' && state !== 'waiting' && state !== 'done') throw new UsageError('attention needs one of: waiting, working, done, none. With waiting, say what you need: aubergine attention waiting "<what you need>"');

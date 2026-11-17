@@ -79,6 +79,13 @@ export interface SessionsOptions {
   prepareAgentTools?: (session: { id: string; name: string }, choice: AgentToolsChoice) => Promise<void>;
 }
 
+/** Where sessions work, as far as starting one needs to know: something that prepares a place and takes it away again. */
+export interface SessionPlaces {
+  prepare(kind: string, session: { id: string; name: string; folder: string | null }): Promise<{ cwd: string | null }>;
+  abandon(sessionId: string): Promise<void>;
+  adopt(sessionId: string, name: string, cwd: string | null): void;
+}
+
 /** The two times of a session (last typed into, last printed) are recorded at most this often. */
 export const TIMES_INTERVAL_MS = 5000;
 
@@ -95,6 +102,12 @@ export class Sessions {
   private readonly seenAt = new Map<string, number>();
   private readonly inputNotedAt = new Map<string, number>();
   private readonly startedAt = Date.now();
+  private places: SessionPlaces | null = null;
+
+  /** Given by the server once it has it: what prepares the place a new session works in. */
+  usePlaces(places: SessionPlaces): void {
+    this.places = places;
+  }
 
   constructor(
     private readonly hub: StateHub,
@@ -150,12 +163,25 @@ export class Sessions {
     const canvas = this.canvas(input.canvasId ?? null);
 
     const id = newId();
-    const started = await this.startShell(id, input.cwd ?? null);
-    // What a new shell prints while starting up is not news.
-    this.seenAt.set(id, Date.now() + 5000);
     const startsAgent = input.agent !== undefined && this.options.agentLaunchLine !== undefined;
     const fallback = startsAgent ? this.nextName('Claude Code') : undefined;
     const name = input.name && input.uniqueName ? this.uniqueName(input.name) : (input.name ?? fallback);
+    // Where it works. Asked of whatever prepares places, by the name of a kind: nothing here knows one kind from another.
+    let folder = input.cwd ?? null;
+    if (input.environment !== undefined) {
+      if (!this.places) throw new ConflictError('This server cannot prepare a place for a session to work in');
+      folder = (await this.places.prepare(input.environment, { id, name: name ?? 'Terminal', folder })).cwd;
+    }
+    let started: RuntimeSession;
+    try {
+      started = await this.startShell(id, folder);
+    } catch (error) {
+      // No shell: what was prepared for it is taken away again.
+      await this.places?.abandon(id);
+      throw error;
+    }
+    // What a new shell prints while starting up is not news.
+    this.seenAt.set(id, Date.now() + 5000);
     if (startsAgent && input.agentTools) {
       // Before the agent is started, so that the file it is pointed at is there. If this fails, nothing is left running.
       try {
@@ -163,6 +189,7 @@ export class Sessions {
         await this.options.prepareAgentTools({ id, name: name ?? 'Claude Code' }, input.agentTools);
       } catch (error) {
         await this.runtime.kill(id).catch(() => {});
+        await this.places?.abandon(id);
         throw error;
       }
     }
@@ -170,6 +197,8 @@ export class Sessions {
       ? await this.options.agentLaunchLine?.(input.agent, input.agentArgs ?? (input.agentContinue ? ['--continue'] : []), id)
       : undefined;
     let created = this.record(id, name, input.rect, started.cwd, canvas, input.tags ?? []);
+    // A session started by hand inside a place whose own session is gone takes that session's place.
+    this.places?.adopt(id, created.session.name, started.cwd);
     // Closed to programs from the start, where the owner's settings say so. A token typing into an agent is the riskiest case.
     const protect = this.options.protectByDefault?.();
     if (protect && (protect.all || (protect.agents && input.agent !== undefined))) {

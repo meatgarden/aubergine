@@ -170,6 +170,13 @@ export const api = {
   copyElement: (elementId: string) => v1.copyElement({ elementId }),
   /** The library. Adding and refreshing a source are the only things that fetch; accepting names the digest of what was shown. */
   libraryItems: () => v1.listLibraryItems(),
+  /** Where a new session in a folder could work: each kind, whether it can be had there, and what to know first. */
+  environmentOffers: (folder: string | undefined) => v1.getEnvironmentOffers({ query: folder ? { folder } : {} }),
+  environment: (environmentId: string) => v1.getEnvironment({ environmentId }),
+  environmentDifference: (environmentId: string, file: string) => v1.getEnvironmentDifference({ environmentId, query: { file } }),
+  environmentEndings: (environmentId: string) => v1.getEnvironmentEndings({ environmentId }),
+  endEnvironment: (environmentId: string, choice: string, confirm: boolean) => v1.endEnvironment({ environmentId, body: { choice, confirm } }),
+  listEnvironments: () => v1.listEnvironments({ query: { limit: 200 } }),
   libraryItem: (sourceId: string, itemId: string) => v1.getLibraryItem({ sourceId, itemId }),
   addLibrarySource: (kind: string, address: string) => v1.addLibrarySource({ body: { kind, address } }),
   removeLibrarySource: (sourceId: string) => v1.removeLibrarySource({ sourceId }),

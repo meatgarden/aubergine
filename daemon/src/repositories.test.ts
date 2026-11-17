@@ -220,7 +220,7 @@ describe('review before use', () => {
       ['release.json', 'accepted'],
     ]);
     const state = JSON.parse(await readFile(path.join(dir, 'data', 'state.json'), 'utf8'));
-    expect(state.version).toBe(10);
+    expect(state.version).toBe(11);
     expect(state.repositoryAccepted.map((e: { root: string; file: string }) => [e.root, e.file])).toEqual([[project, 'release.json']]);
     // The same file name in another repository was never accepted.
     const twin = path.join(home, 'work', 'twin');

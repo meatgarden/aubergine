@@ -327,6 +327,8 @@ export type StartSessionBody = {
   };
   /** Short words of your own to find and filter the session by. */
   tags?: string[];
+  /** Where it works. Left out: in the folder itself. `working-copy`: in a working copy of its own, a second checkout of the repository the folder is in, on a new branch. Refused with the reason when the folder is not in a repository that can have one. */
+  environment?: string;
 };
 
 export type StartSessionResult = {
@@ -5788,6 +5790,273 @@ export type RunRepositoryWorkflowResult = {
   kickoffTyped: boolean;
 };
 
+export interface GetEnvironmentOffersQuery {
+  /**
+   * The folder a session would start in. Without one: the folder new sessions start in.
+   */
+  folder?: string;
+}
+
+export type GetEnvironmentOffersResult = {
+  folder: string;
+  offers: {
+    kind: string;
+    title: string;
+    /** The kind's own words for how far it keeps an agent apart. */
+    words: string;
+    available: boolean;
+    /** When it is not available for this folder: why, in a sentence. */
+    reason: string | null;
+    /** What to know before choosing it, in sentences: what is not carried over, what will not be there. */
+    notes: string[];
+  }[];
+};
+
+export interface ListEnvironmentsQuery {
+  /**
+   * How many items to return at most.
+   */
+  limit?: number;
+  /**
+   * The `nextCursor` of the page before. Opaque: do not build or change it.
+   */
+  cursor?: string;
+}
+
+export type ListEnvironmentsResult = {
+  items: {
+    id: string;
+    kind: string;
+    /** What the kind is called, as it was when this was made: `Its own working copy`. */
+    title: string;
+    /** The kind's own words for how far it keeps an agent apart. Never more than 'kept apart'. */
+    words: string;
+    /** The session that works in it. Null when that session is gone. */
+    sessionId: string | null;
+    /** The name of the session it was made for, as it was then. */
+    sessionName: string;
+    /** The owner's own folder it was made from: for a working copy, the top of their checkout. */
+    projectFolder: string;
+    /** The folder that was prepared. */
+    folder: string;
+    /** The folder inside it that the session started in. */
+    startFolder: string;
+    /** For a working copy: the branch made for it. */
+    branch: string | null;
+    /** For a working copy: the commit it started from. "What changed" is told against this. */
+    startCommit: string | null;
+    createdAt: string;
+    /** What changed, as last read; null before the first reading. */
+    changes: {
+      /** Files that were there at the start and are different now. */
+      changed: number;
+      /** Files that are new, committed or not. */
+      added: number;
+      /** Files that were there at the start and are gone. */
+      removed: number;
+      /** Commits made since the start. */
+      commits: number;
+      /** Of those files, how many hold work that is in no commit. */
+      uncommitted: number;
+      /** When this was last read. */
+      at: string;
+    } | null;
+    /** Why it cannot be used any more, in a sentence: its folder was deleted, or its repository moved. Null while it is whole. */
+    broken: string | null;
+    /** What its folder takes on disk. Null when it could not be measured. */
+    bytes: number | null;
+    /** True when measuring stopped early: it takes at least that much. */
+    bytesAtLeast: boolean;
+  }[];
+  nextCursor: string | null;
+};
+
+export type GetEnvironmentResult = {
+  kind: string;
+  title: string;
+  words: string;
+  /** Null for a session that works in the folder it was started in: nothing was prepared for it. */
+  environment: {
+    id: string;
+    kind: string;
+    /** What the kind is called, as it was when this was made: `Its own working copy`. */
+    title: string;
+    /** The kind's own words for how far it keeps an agent apart. Never more than 'kept apart'. */
+    words: string;
+    /** The session that works in it. Null when that session is gone. */
+    sessionId: string | null;
+    /** The name of the session it was made for, as it was then. */
+    sessionName: string;
+    /** The owner's own folder it was made from: for a working copy, the top of their checkout. */
+    projectFolder: string;
+    /** The folder that was prepared. */
+    folder: string;
+    /** The folder inside it that the session started in. */
+    startFolder: string;
+    /** For a working copy: the branch made for it. */
+    branch: string | null;
+    /** For a working copy: the commit it started from. "What changed" is told against this. */
+    startCommit: string | null;
+    createdAt: string;
+    /** What changed, as last read; null before the first reading. */
+    changes: {
+      /** Files that were there at the start and are different now. */
+      changed: number;
+      /** Files that are new, committed or not. */
+      added: number;
+      /** Files that were there at the start and are gone. */
+      removed: number;
+      /** Commits made since the start. */
+      commits: number;
+      /** Of those files, how many hold work that is in no commit. */
+      uncommitted: number;
+      /** When this was last read. */
+      at: string;
+    } | null;
+    /** Why it cannot be used any more, in a sentence: its folder was deleted, or its repository moved. Null while it is whole. */
+    broken: string | null;
+  } | null;
+  /** The files that differ from the start, at most 500. */
+  files: {
+    /** From the top of the working copy. */
+    path: string;
+    state: "changed" | "added" | "removed";
+    /** False when the file holds work that is in no commit. */
+    committed: boolean;
+  }[];
+  /** True when there are more files than are listed. */
+  filesCut: boolean;
+  /** The branch the working copy is on now. Other than its own when someone changed it there. */
+  onBranch: string | null;
+  /** Anything else worth saying, in a sentence. */
+  note: string | null;
+};
+
+export interface GetEnvironmentDifferenceQuery {
+  /**
+   * One of the files the environment lists as different.
+   */
+  file: string;
+}
+
+export type GetEnvironmentDifferenceResult = {
+  file: string;
+  state: "changed" | "added" | "removed";
+  /** The difference in the usual form of lines with `+` and `-`. Empty when it is not drawn. */
+  text: string;
+  /** True when the text was longer than is given. */
+  cut: boolean;
+  /** Why there is no text: the file is not text, or is too large. */
+  notDrawn: string | null;
+};
+
+export type GetEnvironmentEndingsResult = {
+  environmentId: string;
+  endings: {
+    choice: string;
+    label: string;
+    /** What it does, in a sentence. */
+    says: string;
+    available: boolean;
+    /** When it is not available: why. */
+    reason: string | null;
+    /** When choosing it would lose work that exists nowhere else: the question to ask once more, naming what would be lost. Null when nothing would be. */
+    asksAgain: string | null;
+  }[];
+};
+
+export type EndEnvironmentBody = {
+  /** One of the choices the environment offers. */
+  choice: string;
+  /** True after the second question was answered with yes. Without it, a choice that would lose work that exists nowhere else is refused with that question. */
+  confirm?: boolean;
+};
+
+export type EndEnvironmentResult = {
+  /** True when nothing is kept of it in Aubergine. */
+  removed: boolean;
+  says: string;
+};
+
+export type GetSessionEnvironmentResult = {
+  kind: string;
+  title: string;
+  words: string;
+  /** Null for a session that works in the folder it was started in: nothing was prepared for it. */
+  environment: {
+    id: string;
+    kind: string;
+    /** What the kind is called, as it was when this was made: `Its own working copy`. */
+    title: string;
+    /** The kind's own words for how far it keeps an agent apart. Never more than 'kept apart'. */
+    words: string;
+    /** The session that works in it. Null when that session is gone. */
+    sessionId: string | null;
+    /** The name of the session it was made for, as it was then. */
+    sessionName: string;
+    /** The owner's own folder it was made from: for a working copy, the top of their checkout. */
+    projectFolder: string;
+    /** The folder that was prepared. */
+    folder: string;
+    /** The folder inside it that the session started in. */
+    startFolder: string;
+    /** For a working copy: the branch made for it. */
+    branch: string | null;
+    /** For a working copy: the commit it started from. "What changed" is told against this. */
+    startCommit: string | null;
+    createdAt: string;
+    /** What changed, as last read; null before the first reading. */
+    changes: {
+      /** Files that were there at the start and are different now. */
+      changed: number;
+      /** Files that are new, committed or not. */
+      added: number;
+      /** Files that were there at the start and are gone. */
+      removed: number;
+      /** Commits made since the start. */
+      commits: number;
+      /** Of those files, how many hold work that is in no commit. */
+      uncommitted: number;
+      /** When this was last read. */
+      at: string;
+    } | null;
+    /** Why it cannot be used any more, in a sentence: its folder was deleted, or its repository moved. Null while it is whole. */
+    broken: string | null;
+  } | null;
+  /** The files that differ from the start, at most 500. */
+  files: {
+    /** From the top of the working copy. */
+    path: string;
+    state: "changed" | "added" | "removed";
+    /** False when the file holds work that is in no commit. */
+    committed: boolean;
+  }[];
+  /** True when there are more files than are listed. */
+  filesCut: boolean;
+  /** The branch the working copy is on now. Other than its own when someone changed it there. */
+  onBranch: string | null;
+  /** Anything else worth saying, in a sentence. */
+  note: string | null;
+};
+
+export interface GetSessionDifferenceQuery {
+  /**
+   * One of the files the environment lists as different.
+   */
+  file: string;
+}
+
+export type GetSessionDifferenceResult = {
+  file: string;
+  state: "changed" | "added" | "removed";
+  /** The difference in the usual form of lines with `+` and `-`. Empty when it is not drawn. */
+  text: string;
+  /** True when the text was longer than is given. */
+  cut: boolean;
+  /** Why there is no text: the file is not text, or is too large. */
+  notDrawn: string | null;
+};
+
 export type GetScreenResult = {
   text: string;
   columns: number;
@@ -7230,6 +7499,14 @@ export const OPERATIONS = {
   acceptRepositoryWorkflow: { method: 'POST', path: '/v1/repository-workflows/accept', params: [], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   saveToRepository: { method: 'POST', path: '/v1/repository-workflows/save', params: [], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   runRepositoryWorkflow: { method: 'POST', path: '/v1/sessions/{sessionId}/repository-runs', params: ["sessionId"], hasBody: true, paged: false, idempotent: true, stream: false, access: { who: 'token', scope: "runs:write" } },
+  getEnvironmentOffers: { method: 'GET', path: '/v1/environments/offers', params: [], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  listEnvironments: { method: 'GET', path: '/v1/environments', params: [], hasBody: false, paged: true, idempotent: false, stream: false, access: { who: 'token', scope: "read" } },
+  getEnvironment: { method: 'GET', path: '/v1/environments/{environmentId}', params: ["environmentId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "read" } },
+  getEnvironmentDifference: { method: 'GET', path: '/v1/environments/{environmentId}/difference', params: ["environmentId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  getEnvironmentEndings: { method: 'GET', path: '/v1/environments/{environmentId}/endings', params: ["environmentId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  endEnvironment: { method: 'POST', path: '/v1/environments/{environmentId}/end', params: ["environmentId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  getSessionEnvironment: { method: 'GET', path: '/v1/sessions/{sessionId}/environment', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: "read" } },
+  getSessionDifference: { method: 'GET', path: '/v1/sessions/{sessionId}/environment/difference', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "terminal:read" } },
   getScreen: { method: 'GET', path: '/v1/sessions/{sessionId}/screen', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "terminal:read" } },
   getOutput: { method: 'GET', path: '/v1/sessions/{sessionId}/output', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "terminal:read" } },
   searchTerminals: { method: 'GET', path: '/v1/search', params: [], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "terminal:read" } },
@@ -7749,6 +8026,54 @@ export interface Client {
    */
   runRepositoryWorkflow(args: { sessionId: string; body: RunRepositoryWorkflowBody } & CallOptions): Promise<RunRepositoryWorkflowResult>;
   /**
+   * Where a new session in a folder could work.
+   *
+   * `GET /v1/environments/offers`. Signed-in browser only: no API token may call this.
+   */
+  getEnvironmentOffers(args?: { query?: GetEnvironmentOffersQuery } & CallOptions): Promise<GetEnvironmentOffersResult>;
+  /**
+   * List what was prepared for sessions to work in.
+   *
+   * `GET /v1/environments`. Scope: `read`.
+   */
+  listEnvironments(args?: { query?: ListEnvironmentsQuery } & CallOptions): Promise<ListEnvironmentsResult>;
+  /**
+   * Read one environment: what it is, and which files changed.
+   *
+   * `GET /v1/environments/{environmentId}`. Scope: `read`.
+   */
+  getEnvironment(args: { environmentId: string } & CallOptions): Promise<GetEnvironmentResult>;
+  /**
+   * The difference of one file in an environment, as text.
+   *
+   * `GET /v1/environments/{environmentId}/difference`. Signed-in browser only: no API token may call this.
+   */
+  getEnvironmentDifference(args: { environmentId: string; query: GetEnvironmentDifferenceQuery } & CallOptions): Promise<GetEnvironmentDifferenceResult>;
+  /**
+   * What can be done with an environment when its session ends.
+   *
+   * `GET /v1/environments/{environmentId}/endings`. Signed-in browser only: no API token may call this.
+   */
+  getEnvironmentEndings(args: { environmentId: string } & CallOptions): Promise<GetEnvironmentEndingsResult>;
+  /**
+   * Keep, remove or discard an environment.
+   *
+   * `POST /v1/environments/{environmentId}/end`. Signed-in browser only: no API token may call this.
+   */
+  endEnvironment(args: { environmentId: string; body: EndEnvironmentBody } & CallOptions): Promise<EndEnvironmentResult>;
+  /**
+   * Where a session works, and which files changed there.
+   *
+   * `GET /v1/sessions/{sessionId}/environment`. A session's own token, or an API token with `read`.
+   */
+  getSessionEnvironment(args: { sessionId: string } & CallOptions): Promise<GetSessionEnvironmentResult>;
+  /**
+   * The difference of one file in a session's working copy, as text.
+   *
+   * `GET /v1/sessions/{sessionId}/environment/difference`. Scope: `terminal:read`.
+   */
+  getSessionDifference(args: { sessionId: string; query: GetSessionDifferenceQuery } & CallOptions): Promise<GetSessionDifferenceResult>;
+  /**
    * What a terminal shows now.
    *
    * `GET /v1/sessions/{sessionId}/screen`. Scope: `terminal:read`.
@@ -7954,6 +8279,10 @@ export interface Client {
      * Every item of `listRepositoryWorkflows`, fetched a page at a time as they are asked for.
      */
     listRepositoryWorkflows(args?: { query?: ListRepositoryWorkflowsQuery } & CallOptions): AsyncGenerator<ListRepositoryWorkflowsResult['items'][number], void, void>;
+    /**
+     * Every item of `listEnvironments`, fetched a page at a time as they are asked for.
+     */
+    listEnvironments(args?: { query?: ListEnvironmentsQuery } & CallOptions): AsyncGenerator<ListEnvironmentsResult['items'][number], void, void>;
     /**
      * Every item of `listTokens`, fetched a page at a time as they are asked for.
      */

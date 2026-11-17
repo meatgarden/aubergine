@@ -227,6 +227,29 @@ export const COMMANDS: readonly Command[] = [
     run: (state) => state.chooseAgentTools(true),
   },
   {
+    id: 'terminal.newIn',
+    title: 'New terminal in a folder, or in a working copy…',
+    description: 'Asks where: a folder of your choosing, and whether the terminal works there or in a working copy of its own, a second checkout of that repository on a new branch. A working copy keeps its work apart from yours; it is not a lock.',
+    group: 'Terminals',
+    available: withCanvas,
+    run: (state) => state.chooseStart(true),
+  },
+  {
+    id: 'copies.show',
+    title: 'What changed in this terminal’s working copy…',
+    description: 'For a terminal that works in a working copy of its own: the files that differ from where it started, the difference of each, and what to do with the copy.',
+    group: 'Terminals',
+    available: (state) => {
+      const target = targetSession(state);
+      return target !== null && (state.app?.environments.some((e) => e.sessionId === target.id) ?? false);
+    },
+    run: (state) => {
+      const target = targetSession(state);
+      const found = target ? state.app?.environments.find((e) => e.sessionId === target.id) : undefined;
+      if (found) state.viewEnvironment(found.id);
+    },
+  },
+  {
     id: 'agent.switchedOn',
     title: 'How this agent is set up…',
     description: 'Shows the MCP servers, plugins, hooks, skills and settings files the agent in this terminal is configured with, and what Aubergine added. Read only.',

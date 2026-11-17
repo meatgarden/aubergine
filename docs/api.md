@@ -97,6 +97,14 @@ How to create a token, what the scopes mean, the limits and the activity log are
 | [`POST /v1/repository-workflows/accept`](#acceptrepositoryworkflow) | Accept a repository workflow as it is now | browser only |
 | [`POST /v1/repository-workflows/save`](#savetorepository) | Write a workflow into a repository | browser only |
 | [`POST /v1/sessions/{sessionId}/repository-runs`](#runrepositoryworkflow) | Start a run of a repository workflow on a session | `runs:write` |
+| [`GET /v1/environments/offers`](#getenvironmentoffers) | Where a new session in a folder could work | browser only |
+| [`GET /v1/environments`](#listenvironments) | List what was prepared for sessions to work in | `read` |
+| [`GET /v1/environments/{environmentId}`](#getenvironment) | Read one environment: what it is, and which files changed | `read` |
+| [`GET /v1/environments/{environmentId}/difference`](#getenvironmentdifference) | The difference of one file in an environment, as text | browser only |
+| [`GET /v1/environments/{environmentId}/endings`](#getenvironmentendings) | What can be done with an environment when its session ends | browser only |
+| [`POST /v1/environments/{environmentId}/end`](#endenvironment) | Keep, remove or discard an environment | browser only |
+| [`GET /v1/sessions/{sessionId}/environment`](#getsessionenvironment) | Where a session works, and which files changed there | session's own token, or `read` |
+| [`GET /v1/sessions/{sessionId}/environment/difference`](#getsessiondifference) | The difference of one file in a session's working copy, as text | `terminal:read` |
 | [`GET /v1/sessions/{sessionId}/screen`](#getscreen) | What a terminal shows now | `terminal:read` |
 | [`GET /v1/sessions/{sessionId}/output`](#getoutput) | What a terminal printed recently | `terminal:read` |
 | [`GET /v1/search`](#searchterminals) | Search what terminals have printed | `terminal:read` |
@@ -633,6 +641,7 @@ An API token needs the scope `sessions:write`. Sending `command` needs `terminal
 | `command` | `string` | no | A line to type into the new session once its shell is ready. |
 | `position` | `{ x: number; y: number; width?: number; height?: number; }` | no | Where to put it. A free spot is found when left out. |
 | `tags` | `string[]` | no | Short words of your own to find and filter the session by. |
+| `environment` | `string` | no | Where it works. Left out: in the folder itself. `working-copy`: in a working copy of its own, a second checkout of the repository the folder is in, on a new branch. Refused with the reason when the folder is not in a repository that can have one. |
 
 **Answer** `201`:
 
@@ -7047,6 +7056,412 @@ An API token needs the scope `runs:write`.
 curl -X POST -H "Authorization: Bearer $TOKEN" \
      -H "Content-Type: application/json" -d '{"file":"text"}' \
      http://127.0.0.1:4600/v1/sessions/<sessionId>/repository-runs
+```
+
+## Environments
+
+### getEnvironmentOffers
+
+`GET /v1/environments/offers`: Where a new session in a folder could work.
+
+For the owner only. Every kind of environment, with whether it can be had for that folder and, when not, why: a working copy needs the folder to be in a Git repository with at least one commit. It also says what would not be carried over. It reads; nothing is made or changed.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `folder` | query | `string` | no | The folder a session would start in. Without one: the folder new sessions start in. |
+
+**Answer** `200`:
+
+```ts
+{
+  folder: string;
+  offers: {
+    kind: string;
+    title: string;
+    /** The kind's own words for how far it keeps an agent apart. */
+    words: string;
+    available: boolean;
+    /** When it is not available for this folder: why, in a sentence. */
+    reason: string | null;
+    /** What to know before choosing it, in sentences: what is not carried over, what will not be there. */
+    notes: string[];
+  }[];
+}
+```
+
+**Errors:** 400, 401, 403, 413, 429.
+
+### listEnvironments
+
+`GET /v1/environments`: List what was prepared for sessions to work in.
+
+Every working copy there is, with its session (or that its session is gone), its branch, the counts of what changed, and what its folder takes on disk. Names and counts only.
+
+An API token needs the scope `read`.
+
+A list: it answers a page at a time, see `limit` and `cursor`.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `limit` | query | `number` | no | How many items to return at most. |
+| `cursor` | query | `string` | no | The `nextCursor` of the page before. Opaque: do not build or change it. |
+
+**Answer** `200`:
+
+```ts
+{
+  items: {
+    id: string;
+    kind: string;
+    /** What the kind is called, as it was when this was made: `Its own working copy`. */
+    title: string;
+    /** The kind's own words for how far it keeps an agent apart. Never more than 'kept apart'. */
+    words: string;
+    /** The session that works in it. Null when that session is gone. */
+    sessionId: string | null;
+    /** The name of the session it was made for, as it was then. */
+    sessionName: string;
+    /** The owner's own folder it was made from: for a working copy, the top of their checkout. */
+    projectFolder: string;
+    /** The folder that was prepared. */
+    folder: string;
+    /** The folder inside it that the session started in. */
+    startFolder: string;
+    /** For a working copy: the branch made for it. */
+    branch: string | null;
+    /** For a working copy: the commit it started from. "What changed" is told against this. */
+    startCommit: string | null;
+    createdAt: string;
+    /** What changed, as last read; null before the first reading. */
+    changes: {
+      /** Files that were there at the start and are different now. */
+      changed: number;
+      /** Files that are new, committed or not. */
+      added: number;
+      /** Files that were there at the start and are gone. */
+      removed: number;
+      /** Commits made since the start. */
+      commits: number;
+      /** Of those files, how many hold work that is in no commit. */
+      uncommitted: number;
+      /** When this was last read. */
+      at: string;
+    } | null;
+    /** Why it cannot be used any more, in a sentence: its folder was deleted, or its repository moved. Null while it is whole. */
+    broken: string | null;
+    /** What its folder takes on disk. Null when it could not be measured. */
+    bytes: number | null;
+    /** True when measuring stopped early: it takes at least that much. */
+    bytesAtLeast: boolean;
+  }[];
+  nextCursor: string | null;
+}
+```
+
+**Errors:** 400, 401, 403, 413, 429.
+
+```sh
+curl -H "Authorization: Bearer $TOKEN" \
+     http://127.0.0.1:4600/v1/environments
+```
+
+### getEnvironment
+
+`GET /v1/environments/{environmentId}`: Read one environment: what it is, and which files changed.
+
+The files that differ from the commit it started from, uncommitted work included, by name. Read afresh each time. No content.
+
+An API token needs the scope `read`.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `environmentId` | path | `string` | yes | An ID. |
+
+**Answer** `200`:
+
+```ts
+{
+  kind: string;
+  title: string;
+  words: string;
+  /** Null for a session that works in the folder it was started in: nothing was prepared for it. */
+  environment: {
+    id: string;
+    kind: string;
+    /** What the kind is called, as it was when this was made: `Its own working copy`. */
+    title: string;
+    /** The kind's own words for how far it keeps an agent apart. Never more than 'kept apart'. */
+    words: string;
+    /** The session that works in it. Null when that session is gone. */
+    sessionId: string | null;
+    /** The name of the session it was made for, as it was then. */
+    sessionName: string;
+    /** The owner's own folder it was made from: for a working copy, the top of their checkout. */
+    projectFolder: string;
+    /** The folder that was prepared. */
+    folder: string;
+    /** The folder inside it that the session started in. */
+    startFolder: string;
+    /** For a working copy: the branch made for it. */
+    branch: string | null;
+    /** For a working copy: the commit it started from. "What changed" is told against this. */
+    startCommit: string | null;
+    createdAt: string;
+    /** What changed, as last read; null before the first reading. */
+    changes: {
+      /** Files that were there at the start and are different now. */
+      changed: number;
+      /** Files that are new, committed or not. */
+      added: number;
+      /** Files that were there at the start and are gone. */
+      removed: number;
+      /** Commits made since the start. */
+      commits: number;
+      /** Of those files, how many hold work that is in no commit. */
+      uncommitted: number;
+      /** When this was last read. */
+      at: string;
+    } | null;
+    /** Why it cannot be used any more, in a sentence: its folder was deleted, or its repository moved. Null while it is whole. */
+    broken: string | null;
+  } | null;
+  /** The files that differ from the start, at most 500. */
+  files: {
+    /** From the top of the working copy. */
+    path: string;
+    state: "changed" | "added" | "removed";
+    /** False when the file holds work that is in no commit. */
+    committed: boolean;
+  }[];
+  /** True when there are more files than are listed. */
+  filesCut: boolean;
+  /** The branch the working copy is on now. Other than its own when someone changed it there. */
+  onBranch: string | null;
+  /** Anything else worth saying, in a sentence. */
+  note: string | null;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+```sh
+curl -H "Authorization: Bearer $TOKEN" \
+     http://127.0.0.1:4600/v1/environments/<environmentId>
+```
+
+### getEnvironmentDifference
+
+`GET /v1/environments/{environmentId}/difference`: The difference of one file in an environment, as text.
+
+For the owner only: this is the route for an environment whose session is gone. For a session that is there, a token reads it through the session, where its reach is asked.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `environmentId` | path | `string` | yes | An ID. |
+| `file` | query | `string` | yes | One of the files the environment lists as different. |
+
+**Answer** `200`:
+
+```ts
+{
+  file: string;
+  state: "changed" | "added" | "removed";
+  /** The difference in the usual form of lines with `+` and `-`. Empty when it is not drawn. */
+  text: string;
+  /** True when the text was longer than is given. */
+  cut: boolean;
+  /** Why there is no text: the file is not text, or is too large. */
+  notDrawn: string | null;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+### getEnvironmentEndings
+
+`GET /v1/environments/{environmentId}/endings`: What can be done with an environment when its session ends.
+
+For the owner only. The choices its kind offers, whether each is possible now, and for one that would lose work that exists nowhere else, the question to ask once more with the count of commits and files.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `environmentId` | path | `string` | yes | An ID. |
+
+**Answer** `200`:
+
+```ts
+{
+  environmentId: string;
+  endings: {
+    choice: string;
+    label: string;
+    /** What it does, in a sentence. */
+    says: string;
+    available: boolean;
+    /** When it is not available: why. */
+    reason: string | null;
+    /** When choosing it would lose work that exists nowhere else: the question to ask once more, naming what would be lost. Null when nothing would be. */
+    asksAgain: string | null;
+  }[];
+}
+```
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+### endEnvironment
+
+`POST /v1/environments/{environmentId}/end`: Keep, remove or discard an environment.
+
+For the owner only: no token and no session can do this. Nothing is ever merged, pushed or rebased, and the branch the owner has checked out is never changed. A choice that would lose work that exists nowhere else is refused with 409 and the question to ask, until it is sent again with `confirm`.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `environmentId` | path | `string` | yes | An ID. |
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `choice` | `string` | yes | One of the choices the environment offers. |
+| `confirm` | `boolean` | no | True after the second question was answered with yes. Without it, a choice that would lose work that exists nowhere else is refused with that question. |
+
+**Answer** `200`:
+
+```ts
+{
+  /** True when nothing is kept of it in Aubergine. */
+  removed: boolean;
+  says: string;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+### getSessionEnvironment
+
+`GET /v1/sessions/{sessionId}/environment`: Where a session works, and which files changed there.
+
+For a session in a working copy: its branch, the commit it started from and the files that differ from it, by name, uncommitted work included. For any other session: that it works in the folder it was started in. No content. A session may read this about itself.
+
+For a session's own token, about that session; or an API token with the scope `read`, about any session.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `sessionId` | path | `string` | yes | An ID. |
+
+**Answer** `200`:
+
+```ts
+{
+  kind: string;
+  title: string;
+  words: string;
+  /** Null for a session that works in the folder it was started in: nothing was prepared for it. */
+  environment: {
+    id: string;
+    kind: string;
+    /** What the kind is called, as it was when this was made: `Its own working copy`. */
+    title: string;
+    /** The kind's own words for how far it keeps an agent apart. Never more than 'kept apart'. */
+    words: string;
+    /** The session that works in it. Null when that session is gone. */
+    sessionId: string | null;
+    /** The name of the session it was made for, as it was then. */
+    sessionName: string;
+    /** The owner's own folder it was made from: for a working copy, the top of their checkout. */
+    projectFolder: string;
+    /** The folder that was prepared. */
+    folder: string;
+    /** The folder inside it that the session started in. */
+    startFolder: string;
+    /** For a working copy: the branch made for it. */
+    branch: string | null;
+    /** For a working copy: the commit it started from. "What changed" is told against this. */
+    startCommit: string | null;
+    createdAt: string;
+    /** What changed, as last read; null before the first reading. */
+    changes: {
+      /** Files that were there at the start and are different now. */
+      changed: number;
+      /** Files that are new, committed or not. */
+      added: number;
+      /** Files that were there at the start and are gone. */
+      removed: number;
+      /** Commits made since the start. */
+      commits: number;
+      /** Of those files, how many hold work that is in no commit. */
+      uncommitted: number;
+      /** When this was last read. */
+      at: string;
+    } | null;
+    /** Why it cannot be used any more, in a sentence: its folder was deleted, or its repository moved. Null while it is whole. */
+    broken: string | null;
+  } | null;
+  /** The files that differ from the start, at most 500. */
+  files: {
+    /** From the top of the working copy. */
+    path: string;
+    state: "changed" | "added" | "removed";
+    /** False when the file holds work that is in no commit. */
+    committed: boolean;
+  }[];
+  /** True when there are more files than are listed. */
+  filesCut: boolean;
+  /** The branch the working copy is on now. Other than its own when someone changed it there. */
+  onBranch: string | null;
+  /** Anything else worth saying, in a sentence. */
+  note: string | null;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+```sh
+curl -H "Authorization: Bearer $TOKEN" \
+     http://127.0.0.1:4600/v1/sessions/<sessionId>/environment
+```
+
+### getSessionDifference
+
+`GET /v1/sessions/{sessionId}/environment/difference`: The difference of one file in a session's working copy, as text.
+
+What is in the files: content, like what a terminal shows. So it needs the scope for reading terminals, with a reach that covers the session, and is closed by "people only". Bounded: a long difference is cut and says so; a file that is not text, or is very large, is not drawn.
+
+An API token needs the scope `terminal:read`.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `sessionId` | path | `string` | yes | An ID. |
+| `file` | query | `string` | yes | One of the files the environment lists as different. |
+
+**Answer** `200`:
+
+```ts
+{
+  file: string;
+  state: "changed" | "added" | "removed";
+  /** The difference in the usual form of lines with `+` and `-`. Empty when it is not drawn. */
+  text: string;
+  /** True when the text was longer than is given. */
+  cut: boolean;
+  /** Why there is no text: the file is not text, or is too large. */
+  notDrawn: string | null;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+```sh
+curl -H "Authorization: Bearer $TOKEN" \
+     http://127.0.0.1:4600/v1/sessions/<sessionId>/environment/difference?file=text
 ```
 
 ## Terminals

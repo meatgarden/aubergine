@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { GRANTABLE_SCOPES, SCOPE_MEANING, REACH_SCOPES, sortedCanvases, type AgentToolsChoice, type Reach, type Scope } from '@aubergine/shared';
 import { canvasActions } from './canvas-actions';
 import { useApp } from './store';
+import { WhereFields, proposedFolder, type Where } from './environment/WhereFields';
 
 const TERMINAL: readonly string[] = REACH_SCOPES;
 
@@ -23,6 +24,7 @@ export function AgentToolsDialog() {
   const [reachTag, setReachTag] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [where, setWhere] = useState<Where>({ folder: '', kind: null });
 
   useEffect(() => {
     if (!open) return;
@@ -32,6 +34,7 @@ export function AgentToolsDialog() {
     setReachTag('');
     setError(null);
     setBusy(false);
+    setWhere({ folder: proposedFolder(), kind: null });
   }, [open]);
 
   if (!open || !app) return null;
@@ -64,7 +67,8 @@ export function AgentToolsDialog() {
     }
     setBusy(true);
     setError(null);
-    const made = await canvasActions.get()?.addTerminal('claude-code', undefined, tools);
+    const folder = where.folder.trim();
+    const made = await canvasActions.get()?.addTerminal('claude-code', undefined, tools, { ...(folder ? { cwd: folder } : {}), ...(where.kind ? { environment: where.kind } : {}) });
     if (made) choose(false);
     else {
       setError('The session could not be started.');
@@ -84,6 +88,7 @@ export function AgentToolsDialog() {
     >
       <div className="dialog agent-tools" role="dialog" aria-modal="true" aria-labelledby="agent-tools-title" data-testid="agent-tools-dialog">
         <h2 id="agent-tools-title">New Claude Code session</h2>
+        <WhereFields where={where} onChange={setWhere} />
         <fieldset className="token-scopes">
           <legend>Aubergine tools for this agent</legend>
           <label>

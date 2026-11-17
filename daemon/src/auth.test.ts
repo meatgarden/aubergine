@@ -31,6 +31,8 @@ const NEEDS: Partial<Record<Action, Scope>> = {
   'terminal.read': 'terminal:read',
   'terminal.input': 'terminal:input',
   'library.read': 'read',
+  'environments.read': 'read',
+  'environment.own.read': 'read',
   'library.request': 'workflows:write',
   'messages.read': 'messages:read',
   'messages.write': 'messages:write',
@@ -52,7 +54,7 @@ describe('authorize', () => {
 
   it('refuses a token holding every scope each thing no token may do', () => {
     const everything = token(...GRANTABLE_SCOPES);
-    expect([...NEVER_BY_TOKEN].sort()).toEqual(['activity.read', 'away.read', 'demo.manage', 'drafts.review', 'history.open', 'history.read', 'inventory.read', 'library.manage', 'messages.manage', 'outside.move', 'outside.read', 'processes.signal', 'recap.ask', 'repository.review', 'repository.write', 'runs.approve', 'sessions.protect', 'settings.write', 'shelf.manage', 'tokens.manage']);
+    expect([...NEVER_BY_TOKEN].sort()).toEqual(['activity.read', 'away.read', 'demo.manage', 'drafts.review', 'environments.manage', 'history.open', 'history.read', 'inventory.read', 'library.manage', 'messages.manage', 'outside.move', 'outside.read', 'processes.signal', 'recap.ask', 'repository.review', 'repository.write', 'runs.approve', 'sessions.protect', 'settings.write', 'shelf.manage', 'tokens.manage']);
     for (const action of NEVER_BY_TOKEN) {
       expect(authorize(everything, action, {}), action).toBe(false);
       expect(authorize(everything, action, { sessionId: SESSION, canvasId: OTHER }), action).toBe(false);
@@ -92,7 +94,7 @@ describe('authorize', () => {
   it('keeps a session token to what it reports about itself and the run it is on, for itself only', () => {
     const session: Principal = { kind: 'session', sessionId: SESSION };
     const own = ACTIONS.filter((action) => authorize(session, action, { sessionId: SESSION }));
-    expect([...own].sort()).toEqual(['agent.report', 'attention.set', 'draft.own.propose', 'draft.own.read', 'message.own.read', 'message.own.send', 'note.append', 'recap.own.write', 'repository.own.read', 'run.own.read', 'run.own.report']);
+    expect([...own].sort()).toEqual(['agent.report', 'attention.set', 'draft.own.propose', 'draft.own.read', 'environment.own.read', 'message.own.read', 'message.own.send', 'note.append', 'recap.own.write', 'repository.own.read', 'run.own.read', 'run.own.report']);
     for (const action of ACTIONS) {
       expect(authorize(session, action, { sessionId: OTHER }), `${action} on another session`).toBe(false);
       expect(authorize(session, action, {}), `${action} on nothing`).toBe(false);

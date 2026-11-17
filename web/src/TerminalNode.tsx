@@ -19,6 +19,7 @@ import { tourSignal } from './tour/tour-store';
 import { RecapBlock, recapTitle } from './Recap';
 import { ListMark } from './workflows/ListMark';
 import { RunStrip } from './workflows/RunStrip';
+import { EnvironmentChip } from './environment/EnvironmentChip';
 
 export type TerminalFlowNode = Node<{ sessionId: string }, 'terminal'>;
 
@@ -153,6 +154,7 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
           </span>
         )}
         {draft === null && !exited && <RunStrip sessionId={sessionId} variant="node" />}
+        {draft === null && <EnvironmentChip sessionId={sessionId} />}
         {draft === null && <ListMark sessionId={sessionId} variant="node" />}
         {draft === null && session?.typedBy && <TypedBy by={session.typedBy} />}
         {draft === null && !exited && session && (
