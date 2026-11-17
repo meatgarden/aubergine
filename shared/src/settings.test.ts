@@ -25,6 +25,7 @@ describe('Settings', () => {
       terminal: { protectNewSessions: true, protectAgentSessions: false, inputCallsPerMinute: 10, inputCharsPerCall: 500, inputCharsPerMinute: 2000, maxWaitingRuns: 2, auditInput: true },
       messages: { perSenderPerMinute: 3, perPairPerHour: 12, pauseAfter: 4, maxUnread: 5, nudgeIntervalSeconds: 60, keepDays: 7, logMaxBytes: 65536 },
       library: { fetchTimeoutSeconds: 30, maxFetchMegabytes: 20 },
+      schedules: { lateWithinHours: 2 },
       shortcuts: { 'terminal.park': 'X', 'view.fit': null },
       shortcutsInAppWindow: { 'canvas.go.1': ['Meta+1'] },
     };

@@ -49,6 +49,7 @@ import { guideText } from './cli/guide';
 import { parseLibraryCommand, runLibraryCommand } from './cli/library';
 import { parseCopiesCommand, runCopiesCommand } from './cli/copies';
 import { parseAskCommand, parseRuleCommand, parseTaskCommand, parseTodoCommand, runQueueCommand } from './cli/queue';
+import { parseScheduleCommand, runScheduleCommand } from './cli/schedule';
 
 /** What `--copy` asks for, by the name its kind is registered under. The server says whether the folder can have one. */
 const WORKING_COPY = 'working-copy';
@@ -593,6 +594,9 @@ async function main(): Promise<number> {
       const parsed = command.which === 'task' ? parseTaskCommand(command.words) : command.which === 'todo' ? parseTodoCommand(command.words) : command.which === 'ask' ? parseAskCommand(command.words) : parseRuleCommand(command.words);
       return runQueueCommand(parsed, { owner: (work) => v1(config, work), env: process.env, print: (text) => console.log(text) });
     }
+
+    case 'schedule':
+      return runScheduleCommand(parseScheduleCommand(command.words), { owner: (work) => v1(config, work), env: process.env, print: (text) => console.log(text) });
 
     case 'copies':
       return runCopiesCommand(parseCopiesCommand(command.words), { owner: (work) => v1(config, work), print: (text) => console.log(text), ask });

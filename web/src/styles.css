@@ -3596,6 +3596,15 @@ tr[data-status='expired'] strong {
   font-size: 12px;
   color: var(--muted);
 }
+/* What kind of thing it is stays on one line; where it came from may be long, and wraps. */
+.foryou-kind {
+  flex: 0 0 auto;
+}
+.foryou-from {
+  flex: 1;
+  min-width: 0;
+  text-align: right;
+}
 .foryou-sentence,
 .task-reason {
   margin: 2px 0 4px;
@@ -3625,4 +3634,31 @@ tr[data-status='expired'] strong {
 }
 .queue-rules li span {
   flex: 1;
+}
+.schedule-row label,
+.schedule-days label {
+  display: inline-flex;
+  gap: 3px;
+  align-items: center;
+  white-space: nowrap;
+}
+.schedule-days {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.schedule-form input[type='text'],
+.schedule-form input:not([type]),
+.schedule-form input[type='time'],
+.schedule-form textarea {
+  font: inherit;
+  font-size: 13px;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 3px 6px;
+}
+.schedule-form textarea {
+  flex-basis: 100%;
 }

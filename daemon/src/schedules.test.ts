@@ -4,7 +4,11 @@ import os from 'node:os';
 import path from 'node:path';
 import { GRANTABLE_SCOPES, KICKOFF_LINE, NO_ATTENTION, NO_STATUS, newId, type ChangeEvent, type ForYou, type QueueState, type Schedule, type ScheduleRow, type Scope, type Session, type Task } from '@aubergine/shared';
 import type { FastifyInstance } from 'fastify';
+import { createClient } from '@aubergine/client';
+import { SESSION_ENV } from '@aubergine/shared';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { USAGE } from './cli/commands';
+import { SCHEDULE_ADD_EXAMPLE, parseScheduleCommand, runScheduleCommand } from './cli/schedule';
 import { MemoryActivityLog } from './activity';
 import { sessionToken } from './auth';
 import { FileRunArchive } from './run-archive';
@@ -34,18 +38,23 @@ interface Wake {
   then: () => void;
 }
 /** The stand-in clock: it stands still until the test moves it, and counts every time the timer was set. */
-const clock = {
+interface StandInClock extends ScheduleClock {
+  at: number;
+  set: number[];
+  pending: Wake[];
+}
+const clock: StandInClock = {
   at: 0,
-  set: [] as number[],
-  pending: [] as Wake[],
+  set: [],
+  pending: [],
   now: () => clock.at,
-  wake: (ms: number, then: () => void) => {
+  wake: (ms, then) => {
     clock.set.push(ms);
     const wake = { due: clock.at + ms, then };
     clock.pending.push(wake);
     return () => void (clock.pending = clock.pending.filter((w) => w !== wake));
   },
-} satisfies ScheduleClock & Record<string, unknown>;
+};
 const turn = (): Promise<void> => new Promise((resolve) => setImmediate(resolve));
 /** Moves the clock to a moment, waking the timer at each time it asked for on the way. */
 async function moveTo(iso: string): Promise<void> {
@@ -74,6 +83,9 @@ let notified: string[] = [];
 const activity = new MemoryActivityLog();
 let events: ChangeEvent[] = [];
 
+/** What every new shell was started with. */
+let created: object[] = [];
+
 const runtime = {
   check: async () => ({ status: 'ok', version: '3.4' }),
   list: async () => [],
@@ -84,7 +96,10 @@ const runtime = {
   typeLine: async (id: string, line: string) => {
     typed.push([id, line]);
   },
-  create: async (options: { id: string }) => ({ id: options.id, cwd: null, command: null, activityAt: null }),
+  create: async (options: { id: string }) => {
+    created.push(options);
+    return { id: options.id, cwd: null, command: null, activityAt: null };
+  },
   // What a token that may type causes is another matter than deciding, and is not what these tests collect.
   type: async () => {},
   press: async () => {},
@@ -98,7 +113,8 @@ async function start(): Promise<void> {
   const store = new JsonStore(dir);
   hub = new StateHub(await store.load(), store);
   const settings = new SettingsFile(dir);
-  const sessions = new Sessions(hub, runtime, {});
+  // The line that would start an agent, stood in for: the program and what it is given, as they would be typed.
+  const sessions = new Sessions(hub, runtime, { agentLaunchLine: async (_agent, args) => `the-agent ${args.map((arg) => JSON.stringify(arg)).join(' ')}` });
   viewers = new Viewers();
   viewers.add((message) => void (message.type === 'notify' && notified.push(message.body)));
   app = await buildServer({ hub, sessions, runtime, settings: () => settings.reload(), token: ownerToken, devOrigin: null, webDist: path.join(dir, 'none'), runArchive: new FileRunArchive(dir), taskArchive: new FileTaskArchive(dir), activity, viewers, scheduleClock: clock, scheduleZone: ZONE });
@@ -120,6 +136,7 @@ beforeEach(async () => {
   // The walk below makes more calls with one token than the usual limit allows in a minute.
   await writeFile(path.join(dir, 'config.json'), JSON.stringify({ api: { rateLimitPerMinute: 100_000 } }));
   typed = [];
+  created = [];
   notified = [];
   // Monday the 15th of June 2026, 08:00 on the owner's clock.
   clock.at = Date.parse('2026-06-15T12:00:00.000Z');
@@ -553,6 +570,26 @@ describe('run now', () => {
     expect(fromSchedule()).toHaveLength(2);
   });
 
+  it('on a new agent terminal: one is started on the canvas it names, told in its first prompt, and nothing is typed', async () => {
+    const canvasId = hub.state.canvases[0]!.id;
+    const made = await asOwner('POST', '/v1/schedules', { name: 'My morning list', time: '08:30', days: ['mon', 'tue', 'wed', 'thu', 'fri'], what: { kind: 'element', elementId: await element() }, where: { kind: 'new', canvasId }, environment: 'full' });
+    expect(made.status, JSON.stringify(made.body)).toBe(201);
+    expect(made.body.says).toBe(`Weekdays at 08:30, run “Morning list” on a new agent terminal on “${hub.state.canvases[0]!.name}”.`);
+    expect(hub.state.sessions).toEqual([]);
+    await moveTo('2026-06-15T12:31:00.000Z');
+    await until(() => working(fromSchedule()[0]));
+    const task = fromSchedule()[0] as Task;
+    const session = hub.state.sessions.find((s) => s.id === task.sessionId) as Session;
+    expect(session).toMatchObject({ name: 'My morning list', state: 'open' });
+    // It was started as an agent, with the one fixed sentence as its first prompt.
+    expect(created).toHaveLength(1);
+    expect(typed).toEqual([[session.id, `the-agent ${JSON.stringify(KICKOFF_LINE)}`]]);
+    expect(hub.state.canvases[0]!.layout.nodes.map((node) => node.sessionId)).toEqual([session.id]);
+    expect(hub.state.runs[0]).toMatchObject({ sessionId: session.id });
+    // The fixed sentence was in its launch line, as for any new agent terminal: it is not typed a second time.
+    expect(typed.filter(([, line]) => line === KICKOFF_LINE)).toEqual([]);
+  });
+
   it('runs a workflow, and one that is switched off', async () => {
     const worker = agent('worker');
     const flow = await asOwner('POST', '/v1/workflows', { name: 'Two steps', inputs: [{ key: 'task', label: 'Task' }], elements: [{ id: 'a', name: 'First', instructions: 'Do {{task}}.' }, { id: 'b', name: 'Second', instructions: 'Check it.' }] });
@@ -628,5 +665,70 @@ describe('the timer', () => {
       if ('every' in bad) expect(answer.body.time).toBe('08:30');
       else expect(answer.status, JSON.stringify(bad)).toBe(400);
     }
+  });
+});
+
+describe('the commands', () => {
+  /** A command as typed: by the owner outside any terminal of a canvas, or inside one. */
+  const typed_ = async (words: string[], inside?: Session): Promise<{ code: number; out: string }> => {
+    const printed: string[] = [];
+    const clientOrigin = `http://127.0.0.1:${port}`;
+    const owner = createClient({ baseUrl: clientOrigin, headers: { origin: clientOrigin, cookie: `${cookieName(port)}=${ownerToken}` } });
+    const env = inside ? { [SESSION_ENV.url]: clientOrigin, [SESSION_ENV.sessionId]: inside.id, [SESSION_ENV.token]: sessionToken(ownerToken, inside.id) } : {};
+    const code = await runScheduleCommand(parseScheduleCommand(words), { owner: (work) => work(owner), env, print: (text) => printed.push(text) });
+    return { code, out: printed.join('\n') };
+  };
+
+  it('add, list, change, off, on, run and remove as the owner; inside a canvas terminal they do nothing', async () => {
+    const worker = agent('worker');
+    await element();
+    expect((await typed_(['list'])).out).toContain(`No schedules. To make one:\n  ${SCHEDULE_ADD_EXAMPLE}`);
+    const made = await typed_(['add', 'My morning list', '--at', '08:30', '--days', 'weekdays', '--element', 'Morning list', '--on', 'worker', '--task', 'what is open today']);
+    expect(made.out).toContain('Made “My morning list”: Weekdays at 08:30, run “Morning list” on “worker”. Next today at 08:30.');
+    expect(made.out).toContain('To try it now: aubergine schedule run "My morning list"');
+    expect(schedulesNow()[0]).toMatchObject({ name: 'My morning list', time: '08:30', days: ['mon', 'tue', 'wed', 'thu', 'fri'], where: { kind: 'session', sessionId: worker.id }, task: 'what is open today', on: true });
+    const list = await typed_(['list']);
+    expect(list.out).toContain('1. My morning list  [');
+    expect(list.out).toContain('     Weekdays at 08:30, run “Morning list” on “worker”.');
+    expect(list.out).toContain('     Next today at 08:30. It has not run yet.');
+    // Changed: only what was named changes.
+    expect((await typed_(['change', 'My morning list', '--at', '09:15', '--days', 'mon,fri'])).out).toContain('Changed “My morning list”: Monday and Friday at 09:15, run “Morning list” on “worker”.');
+    expect(schedulesNow()[0]).toMatchObject({ time: '09:15', days: ['mon', 'fri'], task: 'what is open today' });
+    expect((await typed_(['off', '1'])).out).toBe('“My morning list” is switched off. Switched off.');
+    expect((await typed_(['list'])).out).toContain('1. My morning list  (off)');
+    expect((await typed_(['on', 'My morning list'])).out).toContain('is switched on. Next ');
+    // Run now: through the queue.
+    const ran = await typed_(['run', 'My morning list']);
+    expect(ran).toEqual({ code: 0, out: '“My morning list” is in the queue and starts when a place is free.' });
+    await until(() => working(fromSchedule()[0]));
+    const again = await typed_(['run', 'My morning list']);
+    expect(again).toEqual({ code: 1, out: 'Its earlier task is not over: it is working.' });
+
+    // Inside a canvas terminal: nothing, with a sentence an agent can act on.
+    const before = JSON.stringify(hub.state.schedules);
+    for (const words of [['list'], ['add', 'Theirs', '--at', '08:30', '--days', 'weekdays', '--element', 'Morning list', '--on', 'worker'], ['change', '1', '--at', '10:00'], ['off', '1'], ['on', '1'], ['run', '1'], ['remove', '1']]) {
+      const inside = await typed_(words, worker);
+      expect(inside.code, words.join(' ')).toBe(1);
+      expect(inside.out).toContain('This command does nothing inside a canvas terminal.');
+    }
+    expect(JSON.stringify(hub.state.schedules)).toBe(before);
+
+    expect((await typed_(['remove', 'My morning list'])).out).toBe('Removed “My morning list”. A task it already added to the queue stays there.');
+    expect(schedulesNow()).toEqual([]);
+    expect(fromSchedule()).toHaveLength(1);
+  });
+
+  it('say the right form when something is missing or wrong, and the help has an example', () => {
+    for (const wrong of [['add', 'x'], ['add', 'x', '--at', '08:30'], ['add', 'x', '--at', '08:30', '--days', 'weekdays'], ['add', 'x', '--at', '08:30', '--days', 'weekdays', '--element', 'e'], ['add', '--at', '08:30', '--days', 'weekdays', '--element', 'e', '--new', 'Main']]) {
+      expect(() => parseScheduleCommand(wrong), wrong.join(' ')).toThrow(/The form is:\n {2}aubergine schedule add "<name>" --at <08:30> .*\nFor example:\n {2}aubergine schedule add "My morning list" --at 08:30 --days weekdays --element "Morning list" --new Main$/s);
+    }
+    expect(() => parseScheduleCommand(['add', 'x', '--every', '5m'])).toThrow(/schedule add does not know --every\. The form is:/);
+    expect(() => parseScheduleCommand(['add', 'x', '--at', '8.30'])).toThrow(/--at takes a time of day like 08:30/);
+    expect(() => parseScheduleCommand(['add', 'x', '--at', '08:30', '--days', 'sometimes'])).toThrow(/--days takes weekdays/);
+    expect(() => parseScheduleCommand(['change', 'x'])).toThrow(/needs something to change/);
+    expect(() => parseScheduleCommand(['run'])).toThrow(/needs a schedule/);
+    expect(() => parseScheduleCommand(['pause', 'x'])).toThrow(/It knows: list, add, change, on, off, run, remove/);
+    expect(parseScheduleCommand(['add', 'A', 'name', '--at', '08:30', '--days', 'every day', '--workflow', 'w', '--new', 'Main', '--off'])).toMatchObject({ action: 'add', off: true, fields: { name: 'A name', days: EVERY, workflow: 'w', onNew: 'Main' } });
+    expect(USAGE).toContain(`For example: ${SCHEDULE_ADD_EXAMPLE}`);
   });
 });

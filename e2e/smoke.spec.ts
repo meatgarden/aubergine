@@ -2524,3 +2524,111 @@ test('the queue and For you: tasks start when the owner says and no more than th
     expect((await fetch(`${origin}${url}`, { method, headers: as, body })).status, url).toBe(403);
   }
 });
+
+test('a schedule: the owner makes one for an element that hands in a list, runs it now, sees its task in the queue as from the schedule, and the list arrives on the owner\'s list naming it', async ({ page }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  const origin = new URL(page.url()).origin;
+  await page.getByRole('button', { name: 'New canvas' }).click();
+  // One terminal with an agent in front, stood in for by a program that is not a shell and reports as an agent does.
+  const rows = page.getByTestId('list-row');
+  // The list shows the canvas being looked at: the new one is empty.
+  await expect(rows).toHaveCount(0);
+  await page.getByTestId('toolbar-new-terminal').click();
+  await expect(rows).toHaveCount(1);
+  const terminal = (await rows.first().getAttribute('data-session')) ?? '';
+  await expect
+    .poll(
+      async () => {
+        const answer = await page.request.post(`/v1/sessions/${terminal}/run`, { headers: { origin }, data: { command: 'echo ready-$((1 + 1))', timeoutSeconds: 30 } });
+        return answer.status() === 200 ? ((await answer.json()) as { output: string }).output : '';
+      },
+      { timeout: 30_000 },
+    )
+    .toContain('ready-2');
+  expect((await page.request.post(`/v1/sessions/${terminal}/input`, { headers: { origin }, data: { text: 'cat', enter: true } })).status()).toBe(200);
+  await expect
+    .poll(
+      async () => {
+        await page.request.put(`/v1/sessions/${terminal}/agent`, { headers: { origin }, data: { kind: 'claude-code', conversationId: null } });
+        return ((await (await page.request.get(`/v1/sessions/${terminal}`, { headers: { origin } })).json()) as { agent: { program: string | null } | null }).agent?.program;
+      },
+      { timeout: 20_000 },
+    )
+    .toBe('cat');
+  expect((await page.request.patch(`/v1/sessions/${terminal}`, { headers: { origin }, data: { name: 'schedule test terminal' } })).status()).toBe(200);
+  // The element it will run: it hands in a checklist.
+  const element = await page.request.post('/v1/elements', { headers: { origin }, data: { name: 'Schedule test list', instructions: 'Gather what is open today: {{task}}', produces: 'checklist' } });
+  expect(element.status()).toBe(201);
+
+  // The Queue screen. Earlier tests left tasks at work: room for one more, and nothing held.
+  await page.getByTestId('toolbar-queue').click();
+  const screen = page.getByTestId('queue-screen');
+  await screen.getByTestId('queue-limit').fill('20');
+  if (await screen.getByTestId('queue-hold').isChecked()) {
+    await screen.getByTestId('queue-hold').click();
+    await expect(screen.getByTestId('queue-hold')).not.toBeChecked();
+  }
+  await expect(screen.getByTestId('queue-automatic')).not.toBeChecked();
+
+  // The owner makes the schedule: weekdays at 08:30, that element, on that terminal.
+  const schedules = screen.getByTestId('queue-schedules');
+  await schedules.locator('summary').click();
+  await schedules.getByTestId('schedule-add').click();
+  const form = schedules.getByTestId('schedule-form');
+  await form.getByTestId('schedule-name').fill('Schedule test morning');
+  await form.getByTestId('schedule-time').fill('08:30');
+  await form.getByTestId('schedule-what').selectOption({ label: 'the element “Schedule test list”' });
+  await form.getByTestId('schedule-where').selectOption({ label: 'on “schedule test terminal”' });
+  await form.getByTestId('schedule-task').fill('letters and rooms');
+  await expect(form.getByTestId('schedule-save')).toHaveText('Add: weekdays at 08:30');
+  await form.getByTestId('schedule-save').click();
+  await expect(form).toHaveCount(0);
+  const row = schedules.getByTestId('schedule-row').filter({ hasText: 'Schedule test morning' });
+  await expect(row).toContainText('Weekdays at 08:30, run “Schedule test list” on “schedule test terminal”.');
+  await expect(row.getByTestId('schedule-next')).toHaveText(/^Next (today|tomorrow|Monday) at 08:30\.$/);
+  await expect(row.getByTestId('schedule-last')).toHaveText('It has not run yet.');
+  await expect(row.getByTestId('schedule-on')).toBeChecked();
+  // Making it started nothing.
+  const mine = screen.locator('[data-testid="task-row"]').filter({ hasText: 'Schedule test morning' });
+  await expect(mine).toHaveCount(0);
+
+  // Run now: its task is in the queue, marked as from the schedule, and starts without Start next.
+  await row.getByTestId('schedule-run').click();
+  await expect(schedules.getByTestId('schedule-said')).toHaveText('“Schedule test morning” is in the queue and starts when a place is free.');
+  await expect(mine).toHaveCount(1);
+  await expect(mine).toContainText('added by you, from the schedule “Schedule test morning”, run by hand');
+  await expect(mine).toHaveAttribute('data-state', 'working');
+  await expect(row.getByTestId('schedule-last')).toHaveText(/^Run by hand today at \d\d:\d\d\.$/);
+  // A second press while that one is at work is refused, in words.
+  await row.getByTestId('schedule-run').click();
+  await expect(schedules.locator('.dialog-error')).toHaveText('Its earlier task is not over: it is working.');
+
+  // The agent hands in its list (stood in for by a report on its run).
+  const tasks = ((await (await page.request.get('/v1/tasks', { headers: { origin } })).json()) as { items: { title: string; runId: string | null }[] }).items;
+  const runId = tasks.find((task) => task.title === 'Schedule test morning')?.runId ?? '';
+  const run = (await (await page.request.get(`/v1/runs/${runId}`, { headers: { origin } })).json()) as { run: { currentElementId: string } };
+  expect((await page.request.post(`/v1/runs/${runId}/report`, { headers: { origin }, data: { type: 'done', elementId: run.run.currentElementId, output: { items: [{ text: 'Answer the letter' }, { text: 'Book the room' }] } } })).status()).toBe(200);
+  // It is on the owner's list, and says which schedule it came from.
+  const list = screen.locator('[data-testid="foryou-row"][data-kind="checklist"]').filter({ hasText: 'Schedule test list' });
+  await expect(list).toContainText('0 of 2 ticked');
+  await expect(list.locator('.foryou-from')).toHaveText('from schedule test terminal, from the schedule “Schedule test morning”, run by hand');
+  await expect(mine).toHaveAttribute('data-state', 'done');
+
+  // Switched off, it says so; and no program makes or runs one.
+  // The switch shows what the server has: it changes when the server has answered.
+  await row.getByTestId('schedule-on').click();
+  await expect(row.getByTestId('schedule-on')).not.toBeChecked();
+  await expect(row.getByTestId('schedule-next')).toHaveText('Switched off.');
+  const program = (await (await page.request.post('/v1/tokens', { headers: { origin }, data: { name: 'schedule test program', scopes: ['read', 'tasks:write', 'runs:write'] } })).json()) as { secret: string };
+  const as = { authorization: `Bearer ${program.secret}`, 'content-type': 'application/json' };
+  const listed = (await (await fetch(`${origin}/v1/schedules`, { headers: as })).json()) as { items: { id: string; name: string }[] };
+  const id = listed.items.find((item) => item.name === 'Schedule test morning')?.id ?? '';
+  expect(id).not.toBe('');
+  for (const [method, url, body] of [['POST', `/v1/schedules/${id}/run`, '{}'], ['PATCH', `/v1/schedules/${id}`, '{"on":true}'], ['DELETE', `/v1/schedules/${id}`, undefined], ['POST', '/v1/schedules', '{}']] as const) {
+    expect((await fetch(`${origin}${url}`, { method, headers: body === undefined ? { authorization: as.authorization } : as, ...(body === undefined ? {} : { body }) })).status, url).toBe(403);
+  }
+  await row.getByTestId('schedule-remove').click();
+  await expect(row).toHaveCount(0);
+});

@@ -6,6 +6,7 @@ import { ASKS_WAITING_MAX, GRANTABLE_SCOPES, KICKOFF_LINE, NO_ATTENTION, NO_STAT
 import { createClient } from '@aubergine/client';
 import { SESSION_ENV } from '@aubergine/shared';
 import type { FastifyInstance } from 'fastify';
+import { USAGE } from './cli/commands';
 import { parseAskCommand, parseRuleCommand, parseTaskCommand, parseTodoCommand, runQueueCommand, type QueueCommand } from './cli/queue';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { MemoryActivityLog } from './activity';
@@ -671,6 +672,12 @@ describe('the commands', () => {
     expect(queueNow().rules).toEqual([]);
     expect(() => parseRuleCommand(['add', '--when', 'task.done'])).toThrow(/needs what to do/);
     expect(() => parseRuleCommand(['add', '--when', 'task.done', '--run', 'x'])).toThrow(/needs where/);
+    // A wrong option, a wrong event, a stray word: each answer gives the right form and one that works.
+    for (const wrong of [['add', '--when', 'task.done', '--notfy'], ['add', '--when', 'task.finished', '--notify'], ['add', '--notify'], ['add', '--when', 'task.done', '--notify', 'please'], ['add', '--on', 'task.done', '--notify']]) {
+      expect(() => parseRuleCommand(wrong), wrong.join(' ')).toThrow(/The form is:\n {2}aubergine rule add --when <event> \(--notify \| --run <shelf element> \(--on <terminal> \| --new <canvas>\)\)\nwhere <event> is one of: task\.done, .*\nFor example:\n {2}aubergine rule add --when task\.done --notify$/s);
+    }
+    expect(() => parseRuleCommand(['add', '--when', 'task.done', '--notfy'])).toThrow(/^rule add does not know --notfy\./);
+    expect(USAGE).toContain('For example: aubergine rule add --when task.done --notify');
     expect(() => parseTaskCommand(['add'])).toThrow(/needs a title/);
     expect(() => parseTaskCommand(['move', 'x'])).toThrow(/where to/);
   });
