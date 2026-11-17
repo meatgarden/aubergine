@@ -17,7 +17,8 @@ export function AttentionQueue() {
   const canvasId = useApp((s) => s.canvasId);
   const [notify, setNotify] = useState(notificationsWanted);
 
-  const queue = waitingQueue(sessions ?? []);
+  const runs = useApp((s) => s.app?.runs);
+  const queue = waitingQueue(sessions ?? [], runs ?? []);
 
   return (
     <>

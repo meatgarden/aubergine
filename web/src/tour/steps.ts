@@ -27,12 +27,12 @@ registerTourStep({
   order: 20,
   title: 'Something needs you',
   text: 'One terminal has a question for you. Click “waiting” (or the terminal itself), type an answer and press Enter.',
-  reminder: 'When something waits for you, “waiting” at the top takes you to it.',
+  reminder: '“waiting” at the top takes you to what waits; “Queue” lists all of it, and tasks for agents.',
   // The button goes to whoever has waited longest, on any canvas. When that is not the demo's terminal, or it has
   // been looked at already, the terminal itself is pointed at instead, so that the step never leads away.
   target: (c) => {
     const mine = c.demo?.sessions.waiting;
-    const head = waitingQueue(c.app.sessions)[0];
+    const head = waitingQueue(c.app.sessions, c.app.runs)[0];
     return (head !== undefined && head.id === mine ? find('[data-testid="attention-queue"]') : null) ?? nodeOf(mine) ?? find('[data-testid="attention-queue"]');
   },
   done: (c) => noted(c, c.demo?.sessions.waiting, 'Answered:'),

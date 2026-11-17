@@ -400,6 +400,8 @@ export const EventsServerMessage = z.discriminatedUnion('type', [
   z.object({ type: z.literal('show'), sessionId: Id }),
   /** Likewise: a request to switch to a canvas. */
   z.object({ type: z.literal('show-canvas'), canvasId: Id }),
+  /** Likewise not a change of state: a rule of the owner's asks the open page to notify them. Nothing of it leaves the computer. */
+  z.object({ type: z.literal('notify'), title: z.string().max(200), body: z.string().max(600) }),
 ]);
 export type EventsServerMessage = z.infer<typeof EventsServerMessage>;
 

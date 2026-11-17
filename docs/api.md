@@ -97,6 +97,29 @@ How to create a token, what the scopes mean, the limits and the activity log are
 | [`POST /v1/repository-workflows/accept`](#acceptrepositoryworkflow) | Accept a repository workflow as it is now | browser only |
 | [`POST /v1/repository-workflows/save`](#savetorepository) | Write a workflow into a repository | browser only |
 | [`POST /v1/sessions/{sessionId}/repository-runs`](#runrepositoryworkflow) | Start a run of a repository workflow on a session | `runs:write` |
+| [`GET /v1/tasks`](#listtasks) | List the tasks of the queue | `read` |
+| [`POST /v1/tasks`](#addtask) | Add a task to the queue | `tasks:write` |
+| [`GET /v1/tasks/{taskId}`](#gettask) | Read one task | `read` |
+| [`PATCH /v1/tasks/{taskId}`](#changetask) | Change a task that has not started | browser only |
+| [`POST /v1/tasks/{taskId}/withdraw`](#withdrawtask) | Take a task back before it starts | `tasks:write` |
+| [`POST /v1/tasks/{taskId}/accept`](#accepttask) | Say yes to a proposed task | browser only |
+| [`POST /v1/tasks/{taskId}/decline`](#declinetask) | Say no to a proposed task | browser only |
+| [`POST /v1/tasks/{taskId}/again`](#retrytask) | Put a failed task back among those that wait | browser only |
+| [`POST /v1/tasks/{taskId}/clear`](#cleartask) | Put away a task that is over | browser only |
+| [`PUT /v1/tasks/order`](#reordertasks) | Say in which order the waiting tasks start | browser only |
+| [`POST /v1/tasks/start`](#starttasks) | Start the next task, or one named | browser only |
+| [`GET /v1/queue`](#getqueue) | How tasks are started, and how the queue stands | `read` |
+| [`PUT /v1/queue`](#changequeue) | Change the limit, hold new starts, or switch automatic starting | browser only |
+| [`GET /v1/for-you`](#getforyou) | What waits on the owner | `read` |
+| [`POST /v1/asks`](#addask) | Ask the owner for something, in writing | `tasks:write` |
+| [`POST /v1/asks/{askId}/done`](#finishask) | Mark something written on the list as done | browser only |
+| [`POST /v1/asks/{askId}/dismiss`](#dismissask) | Take something written off the list without doing it | browser only |
+| [`GET /v1/rules`](#listrules) | List the rules | browser only |
+| [`POST /v1/rules`](#addrule) | Write a rule | browser only |
+| [`DELETE /v1/rules/{ruleId}`](#removerule) | Remove a rule | browser only |
+| [`POST /v1/sessions/{sessionId}/tasks`](#proposesessiontask) | Propose a task for the queue | session's own token |
+| [`POST /v1/sessions/{sessionId}/asks`](#addsessionask) | Ask the owner for something, in writing | session's own token |
+| [`GET /v1/sessions/{sessionId}/queue`](#getsessionqueue) | What is in the queue, and what the session itself proposed and asked | session's own token |
 | [`GET /v1/environments/offers`](#getenvironmentoffers) | Where a new session in a folder could work | browser only |
 | [`GET /v1/environments`](#listenvironments) | List what was prepared for sessions to work in | `read` |
 | [`GET /v1/environments/{environmentId}`](#getenvironment) | Read one environment: what it is, and which files changed | `read` |
@@ -167,7 +190,7 @@ Needs no scope: any caller that is who it says it is.
   description: string;
   features: string[];
   scopes: {
-    name: "read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "terminal:read" | "terminal:input" | "messages:read" | "messages:write";
+    name: "read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "tasks:write" | "terminal:read" | "terminal:input" | "messages:read" | "messages:write";
     grantable: boolean;
     meaning: string;
   }[];
@@ -177,7 +200,7 @@ Needs no scope: any caller that is who it says it is.
     kind: "token";
     id: string;
     name: string;
-    scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "terminal:read" | "terminal:input" | "messages:read" | "messages:write")[];
+    scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "tasks:write" | "terminal:read" | "terminal:input" | "messages:read" | "messages:write")[];
     expiresAt: string | null;
     reach: {
       kind: "all";
@@ -7058,6 +7081,1202 @@ curl -X POST -H "Authorization: Bearer $TOKEN" \
      http://127.0.0.1:4600/v1/sessions/<sessionId>/repository-runs
 ```
 
+## Queue
+
+### listTasks
+
+`GET /v1/tasks`: List the tasks of the queue.
+
+Every task that is not over, and those that are over and not yet looked at; with `state=ended`, the ones put away, newest first.
+
+An API token needs the scope `read`.
+
+A list: it answers a page at a time, see `limit` and `cursor`.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `limit` | query | `number` | no | How many items to return at most. |
+| `cursor` | query | `string` | no | The `nextCursor` of the page before. Opaque: do not build or change it. |
+| `state` | query | `"proposed" \| "queued" \| "taken" \| "working" \| "needs-owner" \| "done…` | no | `live` (the default): every task that is not over, and those that are over and not yet looked at. `ended`: tasks that are over and were put away, newest first, from the archive. Or one state. |
+
+**Answer** `200`:
+
+```ts
+{
+  items: {
+    id: string;
+    /** What it is, in one line. Shown in lists and in terminals. */
+    title: string;
+    /** What to do, for the agent that takes it. Plain text. */
+    details: string;
+    /** The folder it is done in. For a new terminal: where it starts. Null: the folder new terminals start in. */
+    folder: string | null;
+    /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
+    workflowId: string | null;
+    /** Where a new terminal for it works. Null: in a working copy of its own where the folder can have one, else in the folder itself. */
+    environment: string | null;
+    /** Who may take it. */
+    taker: {
+      kind: "any";
+    } | {
+      kind: "session";
+      sessionId: string;
+    } | {
+      kind: "new";
+      canvasId: string;
+    };
+    addedBy: {
+      kind: "agent" | "person" | "token";
+      name?: string;
+      sessionId?: string;
+      tokenId?: string;
+    };
+    source: {
+      kind: string;
+      [key: string]: unknown;
+    };
+    labels: string[];
+    /** Its place among the tasks that wait: lower is sooner. */
+    order: number;
+    state: "proposed" | "queued" | "taken" | "working" | "needs-owner" | "done" | "failed" | "withdrawn";
+    /** The terminal that took it. */
+    sessionId: string | null;
+    /** The run it became. */
+    runId: string | null;
+    /** With `failed` and `needs-owner`: why, in a sentence. */
+    reason: string | null;
+    createdAt: string;
+    updatedAt: string;
+    endedAt: string | null;
+  }[];
+  nextCursor: string | null;
+}
+```
+
+**Errors:** 400, 401, 403, 413, 429.
+
+```sh
+curl -H "Authorization: Bearer $TOKEN" \
+     http://127.0.0.1:4600/v1/tasks
+```
+
+### addTask
+
+`POST /v1/tasks`: Add a task to the queue.
+
+From the owner it is queued. From a program it is a proposal: it waits on the owner's list for a yes, and starts nothing. A token with review switched off queues directly. Refused with 409 when the caller already has as many proposals waiting as are allowed.
+
+An API token needs the scope `tasks:write`.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `idempotency-key` | header | `string` | no | A key of your choosing (1 to 128 visible ASCII characters). Sending the same request again with the same key returns the first answer and creates nothing more. |
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `title` | `string` | yes | What it is, in one line. |
+| `details` | `string` | no | What to do, for the agent that takes it. Plain text. |
+| `folder` | `string \| null` | no | The folder it is done in. Null: the folder new terminals start in. |
+| `workflowId` | `string \| null` | no | The workflow it goes through. Null: it is told as one element, with the details as its task. |
+| `environment` | `string \| null` | no | Where a new terminal for it works. Null: a working copy of its own where the folder can have one. |
+| `taker` | `{ kind: "any"; } \| { kind: "session"; sessionId: string; } \| { kind…` | no | Who may take it: `{"kind":"any"}`, one terminal, or a new agent terminal on a canvas. |
+| `labels` | `string[]` | no | Short words of your own. |
+| `source` | `{ kind: string; [key: string]: unknown; }` | no | Where it came from. Left out: through the API for a program, by hand for the owner. |
+
+**Answer** `201`:
+
+```ts
+{
+  id: string;
+  /** What it is, in one line. Shown in lists and in terminals. */
+  title: string;
+  /** What to do, for the agent that takes it. Plain text. */
+  details: string;
+  /** The folder it is done in. For a new terminal: where it starts. Null: the folder new terminals start in. */
+  folder: string | null;
+  /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
+  workflowId: string | null;
+  /** Where a new terminal for it works. Null: in a working copy of its own where the folder can have one, else in the folder itself. */
+  environment: string | null;
+  /** Who may take it. */
+  taker: {
+    kind: "any";
+  } | {
+    kind: "session";
+    sessionId: string;
+  } | {
+    kind: "new";
+    canvasId: string;
+  };
+  addedBy: {
+    kind: "agent" | "person" | "token";
+    name?: string;
+    sessionId?: string;
+    tokenId?: string;
+  };
+  source: {
+    kind: string;
+    [key: string]: unknown;
+  };
+  labels: string[];
+  /** Its place among the tasks that wait: lower is sooner. */
+  order: number;
+  state: "proposed" | "queued" | "taken" | "working" | "needs-owner" | "done" | "failed" | "withdrawn";
+  /** The terminal that took it. */
+  sessionId: string | null;
+  /** The run it became. */
+  runId: string | null;
+  /** With `failed` and `needs-owner`: why, in a sentence. */
+  reason: string | null;
+  createdAt: string;
+  updatedAt: string;
+  endedAt: string | null;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+```sh
+curl -X POST -H "Authorization: Bearer $TOKEN" \
+     -H "Content-Type: application/json" -d '{"title":"text"}' \
+     http://127.0.0.1:4600/v1/tasks
+```
+
+### getTask
+
+`GET /v1/tasks/{taskId}`: Read one task.
+
+Also for a task that was put away.
+
+An API token needs the scope `read`.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `taskId` | path | `string` | yes | An ID. |
+
+**Answer** `200`:
+
+```ts
+{
+  id: string;
+  /** What it is, in one line. Shown in lists and in terminals. */
+  title: string;
+  /** What to do, for the agent that takes it. Plain text. */
+  details: string;
+  /** The folder it is done in. For a new terminal: where it starts. Null: the folder new terminals start in. */
+  folder: string | null;
+  /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
+  workflowId: string | null;
+  /** Where a new terminal for it works. Null: in a working copy of its own where the folder can have one, else in the folder itself. */
+  environment: string | null;
+  /** Who may take it. */
+  taker: {
+    kind: "any";
+  } | {
+    kind: "session";
+    sessionId: string;
+  } | {
+    kind: "new";
+    canvasId: string;
+  };
+  addedBy: {
+    kind: "agent" | "person" | "token";
+    name?: string;
+    sessionId?: string;
+    tokenId?: string;
+  };
+  source: {
+    kind: string;
+    [key: string]: unknown;
+  };
+  labels: string[];
+  /** Its place among the tasks that wait: lower is sooner. */
+  order: number;
+  state: "proposed" | "queued" | "taken" | "working" | "needs-owner" | "done" | "failed" | "withdrawn";
+  /** The terminal that took it. */
+  sessionId: string | null;
+  /** The run it became. */
+  runId: string | null;
+  /** With `failed` and `needs-owner`: why, in a sentence. */
+  reason: string | null;
+  createdAt: string;
+  updatedAt: string;
+  endedAt: string | null;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+```sh
+curl -H "Authorization: Bearer $TOKEN" \
+     http://127.0.0.1:4600/v1/tasks/<taskId>
+```
+
+### changeTask
+
+`PATCH /v1/tasks/{taskId}`: Change a task that has not started.
+
+For the owner only: no token and no session can do this, whatever its scopes. What is left out stays as it was.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `taskId` | path | `string` | yes | An ID. |
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `title` | `string` | no | What it is, in one line. |
+| `details` | `string` | no | What to do, for the agent that takes it. Plain text. |
+| `folder` | `string \| null` | no | The folder it is done in. Null: the folder new terminals start in. |
+| `workflowId` | `string \| null` | no | The workflow it goes through. Null: it is told as one element, with the details as its task. |
+| `environment` | `string \| null` | no | Where a new terminal for it works. Null: a working copy of its own where the folder can have one. |
+| `taker` | `{ kind: "any"; } \| { kind: "session"; sessionId: string; } \| { kind…` | no | Who may take it: `{"kind":"any"}`, one terminal, or a new agent terminal on a canvas. |
+| `labels` | `string[]` | no | Short words of your own. |
+
+**Answer** `200`:
+
+```ts
+{
+  id: string;
+  /** What it is, in one line. Shown in lists and in terminals. */
+  title: string;
+  /** What to do, for the agent that takes it. Plain text. */
+  details: string;
+  /** The folder it is done in. For a new terminal: where it starts. Null: the folder new terminals start in. */
+  folder: string | null;
+  /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
+  workflowId: string | null;
+  /** Where a new terminal for it works. Null: in a working copy of its own where the folder can have one, else in the folder itself. */
+  environment: string | null;
+  /** Who may take it. */
+  taker: {
+    kind: "any";
+  } | {
+    kind: "session";
+    sessionId: string;
+  } | {
+    kind: "new";
+    canvasId: string;
+  };
+  addedBy: {
+    kind: "agent" | "person" | "token";
+    name?: string;
+    sessionId?: string;
+    tokenId?: string;
+  };
+  source: {
+    kind: string;
+    [key: string]: unknown;
+  };
+  labels: string[];
+  /** Its place among the tasks that wait: lower is sooner. */
+  order: number;
+  state: "proposed" | "queued" | "taken" | "working" | "needs-owner" | "done" | "failed" | "withdrawn";
+  /** The terminal that took it. */
+  sessionId: string | null;
+  /** The run it became. */
+  runId: string | null;
+  /** With `failed` and `needs-owner`: why, in a sentence. */
+  reason: string | null;
+  createdAt: string;
+  updatedAt: string;
+  endedAt: string | null;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+### withdrawTask
+
+`POST /v1/tasks/{taskId}/withdraw`: Take a task back before it starts.
+
+The owner may withdraw any task that has not started. A program may withdraw what it itself added, and nothing else.
+
+An API token needs the scope `tasks:write`.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `taskId` | path | `string` | yes | An ID. |
+
+**Answer** `200`:
+
+```ts
+{
+  id: string;
+  /** What it is, in one line. Shown in lists and in terminals. */
+  title: string;
+  /** What to do, for the agent that takes it. Plain text. */
+  details: string;
+  /** The folder it is done in. For a new terminal: where it starts. Null: the folder new terminals start in. */
+  folder: string | null;
+  /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
+  workflowId: string | null;
+  /** Where a new terminal for it works. Null: in a working copy of its own where the folder can have one, else in the folder itself. */
+  environment: string | null;
+  /** Who may take it. */
+  taker: {
+    kind: "any";
+  } | {
+    kind: "session";
+    sessionId: string;
+  } | {
+    kind: "new";
+    canvasId: string;
+  };
+  addedBy: {
+    kind: "agent" | "person" | "token";
+    name?: string;
+    sessionId?: string;
+    tokenId?: string;
+  };
+  source: {
+    kind: string;
+    [key: string]: unknown;
+  };
+  labels: string[];
+  /** Its place among the tasks that wait: lower is sooner. */
+  order: number;
+  state: "proposed" | "queued" | "taken" | "working" | "needs-owner" | "done" | "failed" | "withdrawn";
+  /** The terminal that took it. */
+  sessionId: string | null;
+  /** The run it became. */
+  runId: string | null;
+  /** With `failed` and `needs-owner`: why, in a sentence. */
+  reason: string | null;
+  createdAt: string;
+  updatedAt: string;
+  endedAt: string | null;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+```sh
+curl -X POST -H "Authorization: Bearer $TOKEN" \
+     http://127.0.0.1:4600/v1/tasks/<taskId>/withdraw
+```
+
+### acceptTask
+
+`POST /v1/tasks/{taskId}/accept`: Say yes to a proposed task.
+
+For the owner only: no token and no session can do this, whatever its scopes. The task joins the ones that wait to be started. Accepting starts nothing by itself.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `taskId` | path | `string` | yes | An ID. |
+
+**Answer** `200`:
+
+```ts
+{
+  id: string;
+  /** What it is, in one line. Shown in lists and in terminals. */
+  title: string;
+  /** What to do, for the agent that takes it. Plain text. */
+  details: string;
+  /** The folder it is done in. For a new terminal: where it starts. Null: the folder new terminals start in. */
+  folder: string | null;
+  /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
+  workflowId: string | null;
+  /** Where a new terminal for it works. Null: in a working copy of its own where the folder can have one, else in the folder itself. */
+  environment: string | null;
+  /** Who may take it. */
+  taker: {
+    kind: "any";
+  } | {
+    kind: "session";
+    sessionId: string;
+  } | {
+    kind: "new";
+    canvasId: string;
+  };
+  addedBy: {
+    kind: "agent" | "person" | "token";
+    name?: string;
+    sessionId?: string;
+    tokenId?: string;
+  };
+  source: {
+    kind: string;
+    [key: string]: unknown;
+  };
+  labels: string[];
+  /** Its place among the tasks that wait: lower is sooner. */
+  order: number;
+  state: "proposed" | "queued" | "taken" | "working" | "needs-owner" | "done" | "failed" | "withdrawn";
+  /** The terminal that took it. */
+  sessionId: string | null;
+  /** The run it became. */
+  runId: string | null;
+  /** With `failed` and `needs-owner`: why, in a sentence. */
+  reason: string | null;
+  createdAt: string;
+  updatedAt: string;
+  endedAt: string | null;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+### declineTask
+
+`POST /v1/tasks/{taskId}/decline`: Say no to a proposed task.
+
+For the owner only: no token and no session can do this, whatever its scopes. A record is kept that it was proposed and declined.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `taskId` | path | `string` | yes | An ID. |
+
+**Answer** `200`:
+
+```ts
+{
+  id: string;
+  /** What it is, in one line. Shown in lists and in terminals. */
+  title: string;
+  /** What to do, for the agent that takes it. Plain text. */
+  details: string;
+  /** The folder it is done in. For a new terminal: where it starts. Null: the folder new terminals start in. */
+  folder: string | null;
+  /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
+  workflowId: string | null;
+  /** Where a new terminal for it works. Null: in a working copy of its own where the folder can have one, else in the folder itself. */
+  environment: string | null;
+  /** Who may take it. */
+  taker: {
+    kind: "any";
+  } | {
+    kind: "session";
+    sessionId: string;
+  } | {
+    kind: "new";
+    canvasId: string;
+  };
+  addedBy: {
+    kind: "agent" | "person" | "token";
+    name?: string;
+    sessionId?: string;
+    tokenId?: string;
+  };
+  source: {
+    kind: string;
+    [key: string]: unknown;
+  };
+  labels: string[];
+  /** Its place among the tasks that wait: lower is sooner. */
+  order: number;
+  state: "proposed" | "queued" | "taken" | "working" | "needs-owner" | "done" | "failed" | "withdrawn";
+  /** The terminal that took it. */
+  sessionId: string | null;
+  /** The run it became. */
+  runId: string | null;
+  /** With `failed` and `needs-owner`: why, in a sentence. */
+  reason: string | null;
+  createdAt: string;
+  updatedAt: string;
+  endedAt: string | null;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+### retryTask
+
+`POST /v1/tasks/{taskId}/again`: Put a failed task back among those that wait.
+
+For the owner only: no token and no session can do this, whatever its scopes. Nothing is ever tried again by itself.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `taskId` | path | `string` | yes | An ID. |
+
+**Answer** `200`:
+
+```ts
+{
+  id: string;
+  /** What it is, in one line. Shown in lists and in terminals. */
+  title: string;
+  /** What to do, for the agent that takes it. Plain text. */
+  details: string;
+  /** The folder it is done in. For a new terminal: where it starts. Null: the folder new terminals start in. */
+  folder: string | null;
+  /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
+  workflowId: string | null;
+  /** Where a new terminal for it works. Null: in a working copy of its own where the folder can have one, else in the folder itself. */
+  environment: string | null;
+  /** Who may take it. */
+  taker: {
+    kind: "any";
+  } | {
+    kind: "session";
+    sessionId: string;
+  } | {
+    kind: "new";
+    canvasId: string;
+  };
+  addedBy: {
+    kind: "agent" | "person" | "token";
+    name?: string;
+    sessionId?: string;
+    tokenId?: string;
+  };
+  source: {
+    kind: string;
+    [key: string]: unknown;
+  };
+  labels: string[];
+  /** Its place among the tasks that wait: lower is sooner. */
+  order: number;
+  state: "proposed" | "queued" | "taken" | "working" | "needs-owner" | "done" | "failed" | "withdrawn";
+  /** The terminal that took it. */
+  sessionId: string | null;
+  /** The run it became. */
+  runId: string | null;
+  /** With `failed` and `needs-owner`: why, in a sentence. */
+  reason: string | null;
+  createdAt: string;
+  updatedAt: string;
+  endedAt: string | null;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+### clearTask
+
+`POST /v1/tasks/{taskId}/clear`: Put away a task that is over.
+
+For the owner only: no token and no session can do this, whatever its scopes. A task that is done or failed stays on the owner's list until it was looked at; this puts it in the archive.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `taskId` | path | `string` | yes | An ID. |
+
+**Answer** `200`:
+
+```ts
+{
+  id: string;
+  /** What it is, in one line. Shown in lists and in terminals. */
+  title: string;
+  /** What to do, for the agent that takes it. Plain text. */
+  details: string;
+  /** The folder it is done in. For a new terminal: where it starts. Null: the folder new terminals start in. */
+  folder: string | null;
+  /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
+  workflowId: string | null;
+  /** Where a new terminal for it works. Null: in a working copy of its own where the folder can have one, else in the folder itself. */
+  environment: string | null;
+  /** Who may take it. */
+  taker: {
+    kind: "any";
+  } | {
+    kind: "session";
+    sessionId: string;
+  } | {
+    kind: "new";
+    canvasId: string;
+  };
+  addedBy: {
+    kind: "agent" | "person" | "token";
+    name?: string;
+    sessionId?: string;
+    tokenId?: string;
+  };
+  source: {
+    kind: string;
+    [key: string]: unknown;
+  };
+  labels: string[];
+  /** Its place among the tasks that wait: lower is sooner. */
+  order: number;
+  state: "proposed" | "queued" | "taken" | "working" | "needs-owner" | "done" | "failed" | "withdrawn";
+  /** The terminal that took it. */
+  sessionId: string | null;
+  /** The run it became. */
+  runId: string | null;
+  /** With `failed` and `needs-owner`: why, in a sentence. */
+  reason: string | null;
+  createdAt: string;
+  updatedAt: string;
+  endedAt: string | null;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+### reorderTasks
+
+`PUT /v1/tasks/order`: Say in which order the waiting tasks start.
+
+For the owner only: no token and no session can do this, whatever its scopes.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `taskIds` | `string[]` | yes | Tasks that wait, in the order they are to be started. One that is left out keeps its place after these. |
+
+**Answer** `200`:
+
+```ts
+{
+  /** How many tasks may be at work at once. */
+  limit: number;
+  /** True: no new task is started. What is running is not touched. */
+  hold: boolean;
+  /** True: a task starts by itself when a place is free. Off unless the owner switched it on. */
+  automatic: boolean;
+  /** The counts in one line. */
+  summary: string;
+}
+```
+
+**Errors:** 400, 401, 403, 413, 429.
+
+### startTasks
+
+`POST /v1/tasks/start`: Start the next task, or one named.
+
+For the owner only: no token and no session can do this, whatever its scopes. Without a task: the next one that someone can take now, if a place is free. A start is the existing start of a run on a terminal; nothing is typed but the fixed kickoff sentence, by the existing rule. Refused while new starts are held.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+**Body** (JSON, may be left out):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `taskId` | `string` | no | The task to start. Without one: the next in order that can be taken now. |
+
+**Answer** `200`:
+
+```ts
+{
+  started: {
+    taskId: string;
+    sessionId: string | null;
+    ok: boolean;
+    reason: string | null;
+  }[];
+  /** In a sentence: what was started, or why nothing was. */
+  says: string;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+### getQueue
+
+`GET /v1/queue`: How tasks are started, and how the queue stands.
+
+The limit, whether new starts are held, whether tasks start by themselves, and the counts.
+
+An API token needs the scope `read`.
+
+**Answer** `200`:
+
+```ts
+{
+  /** How many tasks may be at work at once. */
+  limit: number;
+  /** True: no new task is started. What is running is not touched. */
+  hold: boolean;
+  /** True: a task starts by itself when a place is free. Off unless the owner switched it on. */
+  automatic: boolean;
+  /** The counts in one line. */
+  summary: string;
+}
+```
+
+**Errors:** 400, 401, 403, 413, 429.
+
+```sh
+curl -H "Authorization: Bearer $TOKEN" \
+     http://127.0.0.1:4600/v1/queue
+```
+
+### changeQueue
+
+`PUT /v1/queue`: Change the limit, hold new starts, or switch automatic starting.
+
+For the owner only: no token and no session can do this, whatever its scopes.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `limit` | `number` | no | How many tasks may be at work at once. |
+| `hold` | `boolean` | no |  |
+| `automatic` | `boolean` | no |  |
+
+**Answer** `200`:
+
+```ts
+{
+  /** How many tasks may be at work at once. */
+  limit: number;
+  /** True: no new task is started. What is running is not touched. */
+  hold: boolean;
+  /** True: a task starts by itself when a place is free. Off unless the owner switched it on. */
+  automatic: boolean;
+  /** The counts in one line. */
+  summary: string;
+}
+```
+
+**Errors:** 400, 401, 403, 413, 429.
+
+### getForYou
+
+`GET /v1/for-you`: What waits on the owner.
+
+Everything that waits on a person, in one list: terminals that wait, runs to approve, drafts and installs to read, proposed tasks, tasks that are done or failed, lists handed in, working copies to decide about, and what was asked in writing. Gathered from what the caller can already read elsewhere, plus what was written on the list.
+
+An API token needs the scope `read`.
+
+**Answer** `200`:
+
+```ts
+{
+  items: {
+    /** Stays the same while the thing waits: its kind and what it is about. */
+    id: string;
+    kind: string;
+    /** What its kind is called: `Approval`, `A draft to read`. */
+    title: string;
+    /** What waits, in a sentence. Where part of it was written by an agent or a program, it is their words. */
+    sentence: string;
+    /** Where it came from: a terminal by name, a program, the library. */
+    from: string;
+    /** Since when, when that is known. */
+    at: string | null;
+    /** Where one acts on it: `run:<id>`, `session:<id>`, `task:<id>`, `ask:<id>`, `copy:<id>`, `review`. */
+    act: string;
+    /** True for a terminal that waits for the owner: these are what the count in the toolbar counts. */
+    waits: boolean;
+    /** True for something written on the list, which the owner marks done. False for what is gathered: that goes when the thing is done. */
+    written: boolean;
+    sessionId: string | null;
+    runId: string | null;
+    taskId: string | null;
+    askId: string | null;
+    environmentId: string | null;
+    elementId: string | null;
+  }[];
+  waiting: number;
+  summary: string;
+}
+```
+
+**Errors:** 400, 401, 403, 413, 429.
+
+```sh
+curl -H "Authorization: Bearer $TOKEN" \
+     http://127.0.0.1:4600/v1/for-you
+```
+
+### addAsk
+
+`POST /v1/asks`: Ask the owner for something, in writing.
+
+It appears on the owner's list until they mark it done or dismiss it. Nothing is typed anywhere and nothing is started. Refused with 409 when the caller already has as many waiting as are allowed.
+
+An API token needs the scope `tasks:write`.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `idempotency-key` | header | `string` | no | A key of your choosing (1 to 128 visible ASCII characters). Sending the same request again with the same key returns the first answer and creates nothing more. |
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `text` | `string` | yes | What is asked, in plain text. |
+| `source` | `{ kind: string; [key: string]: unknown; }` | no |  |
+
+**Answer** `201`:
+
+```ts
+{
+  id: string;
+  text: string;
+  addedBy: {
+    kind: "agent" | "person" | "token";
+    name?: string;
+    sessionId?: string;
+    tokenId?: string;
+  };
+  source: {
+    kind: string;
+    [key: string]: unknown;
+  };
+  createdAt: string;
+}
+```
+
+**Errors:** 400, 401, 403, 409, 413, 429.
+
+```sh
+curl -X POST -H "Authorization: Bearer $TOKEN" \
+     -H "Content-Type: application/json" -d '{"text":"text"}' \
+     http://127.0.0.1:4600/v1/asks
+```
+
+### finishAsk
+
+`POST /v1/asks/{askId}/done`: Mark something written on the list as done.
+
+For the owner only: no token and no session can do this, whatever its scopes.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `askId` | path | `string` | yes | An ID. |
+
+**Answer** `200`:
+
+```ts
+{
+  id: string;
+  text: string;
+  addedBy: {
+    kind: "agent" | "person" | "token";
+    name?: string;
+    sessionId?: string;
+    tokenId?: string;
+  };
+  source: {
+    kind: string;
+    [key: string]: unknown;
+  };
+  createdAt: string;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+### dismissAsk
+
+`POST /v1/asks/{askId}/dismiss`: Take something written off the list without doing it.
+
+For the owner only: no token and no session can do this, whatever its scopes.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `askId` | path | `string` | yes | An ID. |
+
+**Answer** `200`:
+
+```ts
+{
+  id: string;
+  text: string;
+  addedBy: {
+    kind: "agent" | "person" | "token";
+    name?: string;
+    sessionId?: string;
+    tokenId?: string;
+  };
+  source: {
+    kind: string;
+    [key: string]: unknown;
+  };
+  createdAt: string;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+### listRules
+
+`GET /v1/rules`: List the rules.
+
+For the owner only: no token and no session can do this, whatever its scopes. A rule is "when this happens, do that".
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+**Answer** `200`:
+
+```ts
+{
+  rules: {
+    id: string;
+    event: "task.done" | "task.failed" | "task.needs-owner" | "ask.added";
+    action: {
+      kind: string;
+      [key: string]: unknown;
+    };
+    createdAt: string;
+    /** The rule in a sentence. */
+    says: string;
+  }[];
+  /** The kinds of action there are. */
+  actions: {
+    kind: string;
+    title: string;
+    says: string;
+  }[];
+}
+```
+
+**Errors:** 400, 401, 403, 413, 429.
+
+### addRule
+
+`POST /v1/rules`: Write a rule.
+
+For the owner only: no token and no session can do this, whatever its scopes. The action is one of the registered kinds: a notification in the open page, or a run of one shelf element on a terminal. Nothing a rule does leaves this computer by Aubergine's own hand.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `event` | `"task.done" \| "task.failed" \| "task.needs-owner" \| "ask.added"` | yes | What sets it off. |
+| `action` | `{ kind: string; [key: string]: unknown; }` | yes | What it does: `{"kind":"notify"}`, or `{"kind":"run-element","elementId":"…","on":{"kind":"session","sessionId":"…"}}`. |
+
+**Answer** `201`:
+
+```ts
+{
+  rules: {
+    id: string;
+    event: "task.done" | "task.failed" | "task.needs-owner" | "ask.added";
+    action: {
+      kind: string;
+      [key: string]: unknown;
+    };
+    createdAt: string;
+    /** The rule in a sentence. */
+    says: string;
+  }[];
+  /** The kinds of action there are. */
+  actions: {
+    kind: string;
+    title: string;
+    says: string;
+  }[];
+}
+```
+
+**Errors:** 400, 401, 403, 409, 413, 429.
+
+### removeRule
+
+`DELETE /v1/rules/{ruleId}`: Remove a rule.
+
+For the owner only: no token and no session can do this, whatever its scopes.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `ruleId` | path | `string` | yes | An ID. |
+
+**Answer** `204`, with nothing in it.
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+## For a session itself
+
+### proposeSessionTask
+
+`POST /v1/sessions/{sessionId}/tasks`: Propose a task for the queue.
+
+What the session thinks should be done, by another agent or later. It waits on the owner's list for a yes and starts nothing. Where it would run and who takes it are the owner's to say.
+
+For a session's own token, about that session. No API token may call this.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `sessionId` | path | `string` | yes | An ID. |
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `title` | `string` | yes | What it is, in one line. |
+| `details` | `string` | no | What to do, for the agent that takes it. Plain text. |
+| `labels` | `string[]` | no | Short words of your own. |
+
+**Answer** `201`:
+
+```ts
+{
+  id: string;
+  /** What it is, in one line. Shown in lists and in terminals. */
+  title: string;
+  /** What to do, for the agent that takes it. Plain text. */
+  details: string;
+  /** The folder it is done in. For a new terminal: where it starts. Null: the folder new terminals start in. */
+  folder: string | null;
+  /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
+  workflowId: string | null;
+  /** Where a new terminal for it works. Null: in a working copy of its own where the folder can have one, else in the folder itself. */
+  environment: string | null;
+  /** Who may take it. */
+  taker: {
+    kind: "any";
+  } | {
+    kind: "session";
+    sessionId: string;
+  } | {
+    kind: "new";
+    canvasId: string;
+  };
+  addedBy: {
+    kind: "agent" | "person" | "token";
+    name?: string;
+    sessionId?: string;
+    tokenId?: string;
+  };
+  source: {
+    kind: string;
+    [key: string]: unknown;
+  };
+  labels: string[];
+  /** Its place among the tasks that wait: lower is sooner. */
+  order: number;
+  state: "proposed" | "queued" | "taken" | "working" | "needs-owner" | "done" | "failed" | "withdrawn";
+  /** The terminal that took it. */
+  sessionId: string | null;
+  /** The run it became. */
+  runId: string | null;
+  /** With `failed` and `needs-owner`: why, in a sentence. */
+  reason: string | null;
+  createdAt: string;
+  updatedAt: string;
+  endedAt: string | null;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+```sh
+curl -X POST -H "Authorization: Bearer $AUBERGINE_TOKEN" \
+     -H "Content-Type: application/json" -d '{"title":"text"}' \
+     $AUBERGINE_URL/v1/sessions/<sessionId>/tasks
+```
+
+### addSessionAsk
+
+`POST /v1/sessions/{sessionId}/asks`: Ask the owner for something, in writing.
+
+For something only a person can do. It appears on the owner's list until they mark it done or dismiss it.
+
+For a session's own token, about that session. No API token may call this.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `sessionId` | path | `string` | yes | An ID. |
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `text` | `string` | yes | What is asked, in plain text. |
+
+**Answer** `201`:
+
+```ts
+{
+  id: string;
+  text: string;
+  addedBy: {
+    kind: "agent" | "person" | "token";
+    name?: string;
+    sessionId?: string;
+    tokenId?: string;
+  };
+  source: {
+    kind: string;
+    [key: string]: unknown;
+  };
+  createdAt: string;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+```sh
+curl -X POST -H "Authorization: Bearer $AUBERGINE_TOKEN" \
+     -H "Content-Type: application/json" -d '{"text":"text"}' \
+     $AUBERGINE_URL/v1/sessions/<sessionId>/asks
+```
+
+### getSessionQueue
+
+`GET /v1/sessions/{sessionId}/queue`: What is in the queue, and what the session itself proposed and asked.
+
+Every task by its title and state, so that nothing is proposed twice, and what this session asked of its owner that still waits. Not what other sessions asked, and not the rest of what waits on the owner.
+
+For a session's own token, about that session. No API token may call this.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `sessionId` | path | `string` | yes | An ID. |
+
+**Answer** `200`:
+
+```ts
+{
+  tasks: {
+    id: string;
+    title: string;
+    state: "proposed" | "queued" | "taken" | "working" | "needs-owner" | "done" | "failed" | "withdrawn";
+    mine: boolean;
+  }[];
+  /** What this session asked of its owner and that still waits. */
+  asks: {
+    id: string;
+    text: string;
+    addedBy: {
+      kind: "agent" | "person" | "token";
+      name?: string;
+      sessionId?: string;
+      tokenId?: string;
+    };
+    source: {
+      kind: string;
+      [key: string]: unknown;
+    };
+    createdAt: string;
+  }[];
+  says: string;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+```sh
+curl -H "Authorization: Bearer $AUBERGINE_TOKEN" \
+     $AUBERGINE_URL/v1/sessions/<sessionId>/queue
+```
+
 ## Environments
 
 ### getEnvironmentOffers
@@ -7991,7 +9210,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
   items: {
     id: string;
     name: string;
-    scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "terminal:read" | "terminal:input" | "messages:read" | "messages:write")[];
+    scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "tasks:write" | "terminal:read" | "terminal:input" | "messages:read" | "messages:write")[];
     createdAt: string;
     lastUsedAt: string | null;
     expiresAt: string | null;
@@ -8040,7 +9259,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
   token: {
     id: string;
     name: string;
-    scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "terminal:read" | "terminal:input" | "messages:read" | "messages:write")[];
+    scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "tasks:write" | "terminal:read" | "terminal:input" | "messages:read" | "messages:write")[];
     createdAt: string;
     lastUsedAt: string | null;
     expiresAt: string | null;
@@ -8081,7 +9300,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 {
   id: string;
   name: string;
-  scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "terminal:read" | "terminal:input" | "messages:read" | "messages:write")[];
+  scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "tasks:write" | "terminal:read" | "terminal:input" | "messages:read" | "messages:write")[];
   createdAt: string;
   lastUsedAt: string | null;
   expiresAt: string | null;
@@ -8125,7 +9344,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
 {
   items: {
     at: string;
-    caller: "token" | "owner-cli";
+    caller: "token" | "owner-cli" | "rule";
     tokenId: string | null;
     tokenName: string;
     fromSessionId: string | null;

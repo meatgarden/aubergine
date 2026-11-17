@@ -47,6 +47,7 @@ import { actorOf, type Workflows } from './workflows';
 import { MessageRefusal, type Messages } from './messages';
 import type { Library } from './library';
 import type { Environments } from './environments';
+import type { Asker, Queue } from './queue';
 import { fingerprintOf } from './terminal-access';
 
 export interface PublicRouteDeps {
@@ -60,6 +61,7 @@ export interface PublicRouteDeps {
   messages: Messages;
   library: Library;
   environments: Environments;
+  queue: Queue;
   activity: ActivityLog;
   viewers: Viewers;
   limiter: RateLimiter;
@@ -113,7 +115,14 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
   const mayReadTerminal = (principal: Principal, sessionId: string): boolean => principal.kind === 'user' || deps.may(principal, 'terminal.read', deps.resourceOf(sessionId));
   const remembered = new IdempotencyStore();
 
-  const { messages, library, environments } = deps;
+  const { messages, library, environments, queue } = deps;
+  /** Who adds to one of the two lists. Only the owner, and a token the owner made with review switched off, add without waiting for a yes. */
+  const askerOf = (principal: Principal): Asker =>
+    principal.kind === 'user'
+      ? { by: { kind: 'person' }, trusted: true, owner: true }
+      : principal.kind === 'token'
+        ? { by: { kind: 'token', name: principal.name.slice(0, 120), tokenId: principal.tokenId }, trusted: principal.reviewWorkflows === false, owner: false }
+        : { by: { kind: 'agent', name: sessions.get(principal.sessionId).name.slice(0, 120), sessionId: principal.sessionId }, trusted: false, owner: false };
   /** What `authorize` is asked about one session messaging another: where the receiver is, and which canvases its canvas lets in. */
   const deliveryTo = (fromSessionId: string, toSessionId: string): Resource => {
     const toCanvasId = messages.canvasOf(toSessionId);
@@ -315,6 +324,34 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
     useWorkflowTemplate: ({ params, body }) => detailOfWorkflow(workflows.useTemplate(params.template, body.name)),
 
     /* ---------- Runs ---------- */
+
+    /* ---------- The queue, the owner's list, rules ---------- */
+
+    listTasks: ({ query }) => queue.list(query),
+    addTask: ({ body, principal }) => queue.add(body, askerOf(principal)),
+    getTask: ({ params }) => queue.get(params.taskId),
+    // Everything from here to the rules that changes what was decided is the owner's: `authorize` has refused everyone else.
+    changeTask: ({ params, body }) => queue.change(params.taskId, body),
+    withdrawTask: ({ params, principal }) => queue.withdraw(params.taskId, askerOf(principal)),
+    acceptTask: ({ params }) => queue.accept(params.taskId),
+    declineTask: ({ params }) => queue.decline(params.taskId),
+    retryTask: ({ params }) => queue.again(params.taskId),
+    clearTask: ({ params }) => queue.clear(params.taskId),
+    reorderTasks: ({ body }) => queue.reorder(body.taskIds),
+    startTasks: ({ body }) => queue.start(body?.taskId),
+    getQueue: () => queue.settings(),
+    changeQueue: ({ body }) => queue.changeSettings(body),
+    getForYou: () => queue.forYou(),
+    addAsk: ({ body, principal }) => queue.addAsk(body, askerOf(principal)),
+    finishAsk: ({ params }) => queue.removeAsk(params.askId),
+    dismissAsk: ({ params }) => queue.removeAsk(params.askId),
+    listRules: () => queue.rules(),
+    addRule: ({ body }) => queue.addRule(body),
+    removeRule: ({ params }) => queue.removeRule(params.ruleId),
+    // A session, about itself: what it proposes waits for its owner, and it reads only what is its own of the owner's list.
+    proposeSessionTask: ({ params, body }) => queue.add(body, { by: { kind: 'agent', name: sessions.get(params.sessionId).name.slice(0, 120), sessionId: params.sessionId }, trusted: false, owner: false }),
+    addSessionAsk: ({ params, body }) => queue.addAsk(body, { by: { kind: 'agent', name: sessions.get(params.sessionId).name.slice(0, 120), sessionId: params.sessionId }, trusted: false, owner: false }),
+    getSessionQueue: ({ params }) => queue.ownQueue(params.sessionId),
 
     /* ---------- Environments ---------- */
 

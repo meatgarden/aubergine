@@ -183,7 +183,9 @@ describe('with the switch of the canvas off, which is how every canvas starts', 
     typed = [];
     events = [];
     const before = JSON.stringify(stateOf(b.id));
-    const stateBefore = JSON.stringify({ ...hub.state, sessions: hub.state.sessions.filter((s) => s.id !== a.id) });
+    // What a session asks of its owner in writing is its own to do, and is about no other session: it is looked at by itself below.
+    const rest = (): string => JSON.stringify({ ...hub.state, sessions: hub.state.sessions.filter((s) => s.id !== a.id), queue: { ...hub.state.queue, asks: [], tasks: [] } });
+    const stateBefore = rest();
 
     const bodies: (object | undefined)[] = [undefined, {}, { to: b.id, text: SAID }, { to: b.name, text: SAID }, { text: SAID }, { text: SAID, replyTo: fromOwner.id }, { text: SAID, enter: true }, { state: 'waiting', message: SAID }];
     let tried = 0;
@@ -207,7 +209,9 @@ describe('with the switch of the canvas off, which is how every canvas starts', 
     // Nothing was typed into the other terminal, nothing about it changed, no event names it, and it has no message.
     expect(typed.filter(([id]) => id === b.id)).toEqual([]);
     expect(JSON.stringify(stateOf(b.id))).toBe(before);
-    expect(JSON.stringify({ ...hub.state, sessions: hub.state.sessions.filter((s) => s.id !== a.id) })).toBe(stateBefore);
+    expect(rest()).toBe(stateBefore);
+    expect([...hub.state.queue.asks, ...hub.state.queue.tasks].every((entry) => entry.addedBy.sessionId === a.id && !JSON.stringify(entry).includes(b.id))).toBe(true);
+    expect(hub.state.queue.tasks.every((task) => task.state === 'proposed')).toBe(true);
     expect(events.filter((event) => 'sessionId' in event && event.sessionId === b.id)).toEqual([]);
     expect(await threadsOf(b.id)).toEqual([]);
     expect(await inbox(b)).toEqual([]);

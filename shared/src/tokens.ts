@@ -9,7 +9,7 @@ import { Reach } from './terminal';
  */
 
 /** What a token can be allowed to do. Smallest first. */
-export const GRANTABLE_SCOPES = ['read', 'canvases:write', 'sessions:write', 'notes:write', 'workflows:write', 'runs:write', 'terminal:read', 'terminal:input', 'messages:read', 'messages:write'] as const;
+export const GRANTABLE_SCOPES = ['read', 'canvases:write', 'sessions:write', 'notes:write', 'workflows:write', 'runs:write', 'tasks:write', 'terminal:read', 'terminal:input', 'messages:read', 'messages:write'] as const;
 
 /** The scopes that reach into terminals. Neither is implied by any other scope; a token that asks for one must say which sessions it may reach. */
 export const TERMINAL_SCOPES = ['terminal:read', 'terminal:input'] as const;
@@ -36,6 +36,7 @@ export const SCOPE_MEANING: Record<KnownScope, string> = {
   'messages:read': 'Read the messages to and from the sessions it may reach, the ones you sent among them. Reading does not mark them read.',
   'messages:write': 'Send messages to the sessions it may reach, under the name of the token. A message is never typed into a terminal. By itself this scope types nothing at all; with terminal:input on that terminal, one fixed sentence saying that a message waits is typed where an agent is idle.',
   'workflows:write': 'Propose workflows and elements as drafts for you to review, and ask for an item of the library to be installed, which waits for you in the same way. With review switched off for the token: create, change, copy and remove workflows and shelf elements directly.',
+  'tasks:write': 'Propose tasks for the queue and ask you for something in writing; both wait for you, and a proposal starts nothing. Withdraw what it proposed. With review switched off for the token, a task it adds is queued without waiting for your yes. It cannot accept, reorder or start tasks.',
   'runs:write': 'Start runs of workflows on sessions, and report on them: done, blocked, go to, pause, resume, stop. By itself it types nothing into a terminal; with terminal:input on that terminal, the one fixed kickoff sentence is typed.',
 };
 
@@ -148,8 +149,9 @@ export const ActivityEntry = z.object({
   /**
    * `token`: a call made with an API token. `owner-cli`: a call made as the owner from outside a browser page
    * (the command line, a script), recorded for the few things only the owner may do.
+   * `rule`: not a call at all, but a rule of the owner's that fired: which rule, for what event, and how it ended.
    */
-  caller: z.enum(['token', 'owner-cli']).default('token'),
+  caller: z.enum(['token', 'owner-cli', 'rule']).default('token'),
   /** The token; null for a call that was not made with one. */
   tokenId: Id.nullable(),
   tokenName: z.string(),

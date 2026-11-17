@@ -434,6 +434,7 @@ Work while no terminal or text field has the keyboard:
 | `W` | next session that is waiting for you |
 | `F`, `0` | zoom to fit, zoom to 100% |
 | `Shift+B` | the [board](#the-board): every run that is going |
+| `Q` | the [queue and For you](#the-queue-and-for-you) |
 | `B`, `S`, `/` | show or hide the side panel; list this canvas or all canvases; filter the list by text |
 | `F6` | move the keyboard to the list, the toolbar, the tabs, and back |
 | `O`, `?`, `Esc` | Outside terminals, the shortcut sheet, close a panel or clear the selection |
@@ -558,6 +559,72 @@ The palette (⌘K) also searches what terminals have printed, in a **Terminal ou
 ### Many sessions
 
 A terminal is live only while it is on screen and large enough to read. Zoomed far out, a node shows a plain-text picture of its screen, refreshed about once a second; off screen it costs nothing. Either way the shell keeps running.
+
+## The queue, and "For you"
+
+Two lists that feed each other. **Queue** in the toolbar (or `Q`) shows both.
+
+**The queue** is work for agents. You write a task once: a title, what to do, and if you like a folder, a workflow, and who may take it. A free agent takes it when you say so.
+
+**For you** is everything that waits on a person, in one place: terminals with a question, runs to approve and runs that are blocked, drafts and installs to read, tasks proposed for the queue, tasks that are done (to look at) or failed (with why), lists handed in by a run, working copies whose terminal is gone, and anything written on the list. The count at the top of the canvas and "next waiting" are the same list: the terminals among its items. The side panel has its first few items.
+
+Most of that list is gathered, not written: an item goes when the thing itself is done, and cannot be ticked. What **is** written (by you with the box at the top, or asked of you by an agent or a program) you mark **Done** or **Dismiss**.
+
+### Tasks
+
+- **+ Task** adds one. By default any terminal where an agent is free may take it; you can name one terminal, or have a new agent terminal started for it on a canvas. A new terminal for a task works in a [working copy](#working-copies-two-agents-on-one-repository) of its own where the folder is in a repository.
+- **Start next** starts the first task in order that someone can take now. A terminal counts as free only where an agent is seen in front and is neither at work nor waiting on a question; a plain shell is never given a task.
+- **At most N at once** (three unless you change it). A task that is being started, is at work, or needs you holds a place.
+- **Hold** stops new starts and touches nothing that is running.
+- **Start by itself** is off. When you switch it on, a task starts when a place frees: when a run ends, a task is added, or you change the limit or the hold. Nothing checks on a timer.
+- The order is yours: drag a waiting task, use ↑ and ↓, or hold Alt and press an arrow with the row selected.
+- A task follows its run. A run that waits for your approval or is blocked makes it **needs you**; a finished run makes it **done**; a stopped run, or a start that did not work, makes it **failed** with a sentence. Nothing is tried again by itself: **Put it back in the queue** is yours.
+- A task that is over stays on your list until you press **Looked at**. Then it is under "Finished today", and kept in `tasks.log` in the data folder.
+
+Starting a task starts a run on a terminal, exactly as "Run workflow…" does, and the agent is told by the same fixed sentence. A task with no workflow is told as one piece of work: its title and details.
+
+### What agents and programs add waits for you
+
+An agent that finds work it should not do now can **propose a task**; one that needs something only a person can do can **ask you**:
+
+```sh
+aubergine task add "Add a test for the retry" --details "it should fail without the fix"
+aubergine ask "the staging key expires this week: rotate it, or say who can"
+```
+
+Both land on your list. A proposal starts nothing until you **Accept** it; declined ones are kept on record. Each terminal and each program may have ten proposals and ten requests waiting, and is refused past that. A program adds through the API with a token that has `tasks:write`; a token you made with review switched off queues its tasks without asking.
+
+From a line of a checklist an agent handed in, or from anything written on your list, **To the queue…** makes a task: tick the lines, send them, and fill in the small form.
+
+### Rules: when something happens, do something
+
+Under **Rules** on the same screen, or with `aubergine rule`. A rule is yours alone to write: no program and no agent can add or change one.
+
+- **When**: a task is done, a task failed, a task needs you, or something is asked of you.
+- **Then**, one of two things:
+  - **Notify me**: a notification from the open Aubergine page. The browser asks your permission when you press **Allow notifications**, not before. Nothing leaves your computer.
+  - **Run an element**: starts a run of one element from your shelf, on a terminal you name or a new one, with a short account of what happened as its task. This is how something outside gets called: write an element that says "put this in the calendar", and the agent does it with its own connectors. Aubergine holds no credential for any app and calls no address itself.
+
+A rule fires once for one event and at most six times a minute; what comes faster is dropped. Every firing is in the activity log, with which rule and how it ended, and without what the task said. What an agent does *because of* a run a rule started sets off no rule, so a rule cannot feed itself.
+
+### From the command line
+
+```sh
+aubergine task add "Fix the retry" --details "It gives up too early." --to new:Main
+aubergine task list
+aubergine task start
+aubergine task accept "Add a test for the retry"
+aubergine task move "Fix the retry" --first
+aubergine todo                              # everything that waits on you
+aubergine todo add "Renew the certificate"
+aubergine rule add --when task.done --notify
+```
+
+Typed inside a terminal on a canvas, `task add` proposes and `ask` asks, with that terminal's own credential. What only you decide (accept, decline, start, move, rules, marking something done) does nothing there and says so. That is a sentence in an agent's way and not a lock: an agent runs as you, and can act as you from outside the canvas, which the activity log then shows as a call from a command line.
+
+### For programs
+
+`GET /v1/tasks`, `/v1/queue` and `/v1/for-you` are readable with `read`. The owner's list holds nothing a `read` token cannot already read from terminals, runs, drafts and working copies, except what was written on it: treat that like a note. `tasks:write` adds tasks (as proposals, unless the token has review off) and writes on the owner's list, and withdraws what it added itself. Accepting, declining, reordering, starting, the limit, the hold, automatic starting and rules are yours alone.
 
 ## Working copies: two agents on one repository
 
@@ -947,6 +1014,10 @@ aubergine workflow run <name> [--session <name|id>] [--input key=value]… [--re
                                start a run on a session: the one it is typed in, when typed inside one
 aubergine workflow approve <run> [--comment <text>]      approve the element a run waits on; the run is its ID or its terminal's name
 aubergine workflow send-back <run> --to <element> --comment <text>
+aubergine task add | list | show | start | accept | decline | withdraw | move      the queue of tasks for agents
+aubergine todo [add <text> | done <item>]      what waits on you
+aubergine ask <text>           inside a session: ask your owner for something only a person can do
+aubergine rule list | add | remove      when something happens, do something
 aubergine here --copy [--claude]   the same as here, in a working copy of its own
 aubergine copies               the working copies there are; `copies show`, `keep-branch`, `keep`, `discard`, `forget` <copy>
 aubergine where                inside a session: whether it works in a working copy, its branch, and what to leave alone
@@ -1178,6 +1249,7 @@ curl -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/jso
 | `notes:write` | change a session's pinned note and add entries to its note log |
 | `workflows:write` | propose workflows and elements as drafts for you to review, and ask for an item of the [library](#the-library) to be installed (the request waits for you; no token can accept it). With review switched off for the token: create, change, copy and remove workflows and shelf elements directly |
 | `runs:write` | start runs of workflows on sessions and report on them (done, blocked, go to, pause, resume, stop). By itself it types nothing into a terminal; with `terminal:input` on that terminal, the one fixed kickoff sentence is typed |
+| `tasks:write` | propose tasks for the queue and ask you for something in writing; withdraw what it proposed. Both wait for you and start nothing. With review switched off for the token, its tasks are queued without your yes. It cannot accept, reorder or start tasks |
 | `terminal:read`, `terminal:input` | read what terminals show, and type into them. Not implied by anything above, and each token says which terminals it may reach. **With `terminal:input` a token can run any command as you.** See [Terminal access](#terminal-access) before granting either |
 
 Neither terminal scope is implied by any other, `read` included.
@@ -1402,10 +1474,11 @@ It never reads your sign-in, and it has no tool for what only you may do: making
 | With | Tools |
 |---|---|
 | a session's own token | `workflow_status`, `workflow_done`, `workflow_blocked`, `workflow_goto`, `note_add`, `attention_set`, `draft_brief`, `draft_propose_element`, `draft_propose_workflow`, `messages_inbox`, `message_reply`, `message_send`, `repository_workflows`: its own work, on its own session only |
-| `read` | `where_am_i`, `board`, `library_list`, `library_show`, `canvases_list`, `sessions_list`, `session_get`, `notes_read`, `workflows_list`, `runs_list`, `run_get`, `workflow_status`, `repository_workflows` |
+| `read` | `queue_read`, `for_you_read`, `where_am_i`, `board`, `library_list`, `library_show`, `canvases_list`, `sessions_list`, `session_get`, `notes_read`, `workflows_list`, `runs_list`, `run_get`, `workflow_status`, `repository_workflows` |
 | `sessions:write` | `session_start`, `session_move`, `session_park` |
 | `notes:write` | `note_add`, `note_write` |
 | `runs:write` | `workflow_run`, `element_run`, `workflow_done`, `workflow_blocked`, `workflow_goto` |
+| `tasks:write` | `task_propose`, `ask_owner` |
 | `workflows:write` | `library_request_install` (a request that waits for you), `draft_propose_element`, `draft_propose_workflow`: drafts for you to review, never a workflow that can run |
 | `terminal:read` | `terminal_screen`, `terminal_output`, `terminal_search` |
 | `terminal:input` | `terminal_send`, `terminal_keys`, `terminal_run` |

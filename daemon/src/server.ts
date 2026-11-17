@@ -95,6 +95,8 @@ import path from 'node:path';
 import { MessageRefusal, Messages } from './messages';
 import { Library } from './library';
 import { Environments } from './environments';
+import { Queue } from './queue';
+import { MemoryTaskArchive, type TaskArchive } from './task-archive';
 import { FetchRefusal, type LibraryFetcher } from './library/git';
 import type { MessageLog } from './message-log';
 import { Workflows } from './workflows';
@@ -122,6 +124,8 @@ export interface ServerOptions {
   draftLog?: DraftLog;
   /** Where runs that are over are kept. Left out, in memory only. */
   runArchive?: RunArchive;
+  /** Where tasks that are over are kept. Left out, in memory only. */
+  taskArchive?: TaskArchive;
   /** Fetches Git sources of the library. Left out, one that refuses: a server without a data folder fetches nothing. */
   libraryFetcher?: LibraryFetcher;
   /** Where fetched library sources are kept. Left out, nothing can be fetched. */
@@ -231,6 +235,9 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   // Where sessions work. The session code asks this for a place by the name of a kind, and knows no kind itself.
   const environments = new Environments(hub, { keptIn: options.copiesDir ?? null, defaultFolder: () => options.defaultFolder?.() ?? os.homedir(), onError: (error) => console.error('Could not read a working copy:', error) });
   sessions.usePlaces(environments);
+  // The queue of tasks, the owner's list and the rules. A rule's notification goes to the pages that are open, and nowhere else.
+  const queue = new Queue(hub, sessions, workflows, drafts, environments, options.taskArchive ?? new MemoryTaskArchive(), { notify: (title, body) => viewers.notify(title, body), activity, onError: (error) => console.error('Could not start a task:', error) });
+  await queue.reconcile();
   // The library that ships with the app is read from this copy's own files. Nothing is fetched at start, or ever without the owner asking.
   await library.start();
   const terminals = new TerminalAccess(sessions, runtime, () => terminalSettings, options.inputAudit ?? noInputAudit);
@@ -564,6 +571,10 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   app.addHook('onClose', async () => away.close());
   app.addHook('onClose', async () => messages.close());
   app.addHook('onClose', async () => environments.close());
+  app.addHook('onClose', async () => {
+    queue.close();
+    await queue.settled();
+  });
   app.get(paths.away, async (request): Promise<AwayDigest> => {
     allowOn(request, 'away.read', {});
     const query = parse(AwayQuery, request.query);
@@ -760,6 +771,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     messages,
     library,
     environments,
+    queue,
     may: (principal, action, resource) => authorize(principal, action, resource),
     resourceOf,
     trace: (request, trace) => void traces.set(request, trace),

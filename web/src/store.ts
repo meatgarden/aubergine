@@ -1,3 +1,4 @@
+import { showNotification } from './attention';
 import { create } from 'zustand';
 import {
   DEFAULT_SETTINGS,
@@ -129,7 +130,7 @@ export interface AppStore {
 /** The longest a terminal is waited for after it was asked to take the keyboard. */
 const SETTLE_MS = 700;
 
-export type Panel = 'parked' | 'outside' | 'shortcuts' | 'tokens' | 'activity' | 'workflows' | 'review' | 'help' | 'library' | 'board';
+export type Panel = 'parked' | 'outside' | 'shortcuts' | 'tokens' | 'activity' | 'workflows' | 'review' | 'help' | 'library' | 'board' | 'queue';
 export interface Ask {
   kind: 'rename-session' | 'rename-canvas' | 'note' | 'move' | 'tags' | 'list-search';
   /** The session or canvas it is about. */
@@ -323,6 +324,11 @@ export function startSync(): () => void {
       },
       onEvent: apply,
       onShow: (sessionId) => useApp.getState().showSession(sessionId),
+      // A rule of the owner's: said in the page, and as a notification of the browser where the owner allowed those.
+      onNotify: (title, body) => {
+        useApp.getState().setNotice(body);
+        showNotification(title, body);
+      },
       onShowCanvas: (canvasId) => {
         const store = useApp.getState();
         if (store.app?.canvases.some((c) => c.id === canvasId)) store.setCanvas(canvasId);

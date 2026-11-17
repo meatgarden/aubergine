@@ -177,6 +177,19 @@ export const api = {
   environmentEndings: (environmentId: string) => v1.getEnvironmentEndings({ environmentId }),
   endEnvironment: (environmentId: string, choice: string, confirm: boolean) => v1.endEnvironment({ environmentId, body: { choice, confirm } }),
   listEnvironments: () => v1.listEnvironments({ query: { limit: 200 } }),
+  addTask: (body: Parameters<typeof v1.addTask>[0]['body']) => v1.addTask({ body }),
+  taskDo: (taskId: string, what: 'accept' | 'decline' | 'withdraw' | 'again' | 'clear') =>
+    what === 'accept' ? v1.acceptTask({ taskId }) : what === 'decline' ? v1.declineTask({ taskId }) : what === 'withdraw' ? v1.withdrawTask({ taskId }) : what === 'again' ? v1.retryTask({ taskId }) : v1.clearTask({ taskId }),
+  reorderTasks: (taskIds: string[]) => v1.reorderTasks({ body: { taskIds } }),
+  startTasks: (taskId?: string) => v1.startTasks({ body: taskId ? { taskId } : {} }),
+  changeQueue: (body: { limit?: number; hold?: boolean; automatic?: boolean }) => v1.changeQueue({ body }),
+  /** Tasks that were put away, newest first: for "finished today". */
+  endedTasks: () => v1.listTasks({ query: { state: 'ended', limit: 100 } }),
+  addAsk: (text: string) => v1.addAsk({ body: { text } }),
+  askDo: (askId: string, what: 'done' | 'dismiss') => (what === 'done' ? v1.finishAsk({ askId }) : v1.dismissAsk({ askId })),
+  listRules: () => v1.listRules(),
+  addRule: (body: Parameters<typeof v1.addRule>[0]['body']) => v1.addRule({ body }),
+  removeRule: (ruleId: string) => v1.removeRule({ ruleId }),
   libraryItem: (sourceId: string, itemId: string) => v1.getLibraryItem({ sourceId, itemId }),
   addLibrarySource: (kind: string, address: string) => v1.addLibrarySource({ body: { kind, address } }),
   removeLibrarySource: (sourceId: string) => v1.removeLibrarySource({ sourceId }),
@@ -227,6 +240,8 @@ export function subscribeToEvents(handlers: {
   onShow: (sessionId: string) => void;
   /** Asked to switch to a canvas (by a program, through the public API). */
   onShowCanvas: (canvasId: string) => void;
+  /** A rule of the owner's asks this page to notify them. */
+  onNotify?: (title: string, body: string) => void;
   onDown: () => void;
 }): { stop: () => void; viewing: (canvasId: string) => void } {
   let socket: WebSocket | null = null;
@@ -249,6 +264,7 @@ export function subscribeToEvents(handlers: {
         handlers.onReady();
       } else if (parsed.data.type === 'show') handlers.onShow(parsed.data.sessionId);
       else if (parsed.data.type === 'show-canvas') handlers.onShowCanvas(parsed.data.canvasId);
+      else if (parsed.data.type === 'notify') handlers.onNotify?.(parsed.data.title, parsed.data.body);
       else handlers.onEvent(parsed.data.event);
     };
     socket.onclose = () => {

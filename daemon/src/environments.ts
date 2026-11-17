@@ -130,6 +130,23 @@ export class Environments {
   }
 
   /**
+   * The kind a new terminal for a task works in when the owner named none: one that keeps its work apart, where the
+   * folder can have it, and otherwise the folder itself. No kind is named: the first that prepares something and is
+   * available is taken.
+   */
+  async suggestedFor(folder: string | null): Promise<string> {
+    const where = folder ?? this.options.defaultFolder();
+    if (this.options.keptIn !== null) {
+      for (const kind of environmentKinds()) {
+        if (kind.nothingPrepared) continue;
+        const offer = await kind.offer(where).catch(() => null);
+        if (offer?.available) return kind.kind;
+      }
+    }
+    return plainKind().kind;
+  }
+
+  /**
    * Prepares the place a new session will work in, and says which folder its shell starts in. For the kind that
    * prepares nothing, that is the folder itself and no record is kept.
    */

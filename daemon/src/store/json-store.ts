@@ -10,6 +10,7 @@ import {
   Id,
   LibraryState,
   SessionEnvironment,
+  QueueState,
   withFirstVersion,
   FIRST_CANVAS_NAME,
   Layout,
@@ -79,8 +80,11 @@ const StateFileV10 = StateFileV9.extend({ version: z.literal(10) });
 /** The same, with what was prepared for sessions to work in: working copies. An older file has none, and every session in it works in the folder it was started in. */
 const StateFileV11 = StateFileV10.extend({ version: z.literal(11), environments: z.array(SessionEnvironment).default([]) });
 
-const StateFile = z.discriminatedUnion('version', [StateFileV1, StateFileV2, StateFileV3, StateFileV4, StateFileV5, StateFileV6, StateFileV7, StateFileV8, StateFileV9, StateFileV10, StateFileV11]);
-const CURRENT_VERSION = 11;
+/** The same, with the queue: tasks for agents, what is asked of the owner in writing, the rules, and how tasks are started. An older file has none of it. */
+const StateFileV12 = StateFileV11.extend({ version: z.literal(12), queue: QueueState.prefault({}) });
+
+const StateFile = z.discriminatedUnion('version', [StateFileV1, StateFileV2, StateFileV3, StateFileV4, StateFileV5, StateFileV6, StateFileV7, StateFileV8, StateFileV9, StateFileV10, StateFileV11, StateFileV12]);
+const CURRENT_VERSION = 12;
 type StateFile = z.infer<typeof StateFile>;
 
 /**
@@ -134,6 +138,7 @@ export function migrate(file: StateFile): AppState {
     repositoryAccepted: file.version >= 6 && 'repositoryAccepted' in file ? file.repositoryAccepted : [],
     library: file.version >= 9 && 'library' in file ? (file.version < 10 ? withoutAddressNames(file.library) : file.library) : { sources: [], installed: [], requests: [] },
     environments: file.version >= 11 && 'environments' in file ? file.environments : [],
+    queue: file.version >= 12 && 'queue' in file ? file.queue : QueueState.parse({}),
   });
 }
 

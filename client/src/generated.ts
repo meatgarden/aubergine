@@ -18,7 +18,7 @@ export type GetCapabilitiesResult = {
   description: string;
   features: string[];
   scopes: {
-    name: "read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "terminal:read" | "terminal:input" | "messages:read" | "messages:write";
+    name: "read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "tasks:write" | "terminal:read" | "terminal:input" | "messages:read" | "messages:write";
     grantable: boolean;
     meaning: string;
   }[];
@@ -28,7 +28,7 @@ export type GetCapabilitiesResult = {
     kind: "token";
     id: string;
     name: string;
-    scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "terminal:read" | "terminal:input" | "messages:read" | "messages:write")[];
+    scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "tasks:write" | "terminal:read" | "terminal:input" | "messages:read" | "messages:write")[];
     expiresAt: string | null;
     reach: {
       kind: "all";
@@ -5790,6 +5790,803 @@ export type RunRepositoryWorkflowResult = {
   kickoffTyped: boolean;
 };
 
+export interface ListTasksQuery {
+  /**
+   * How many items to return at most.
+   */
+  limit?: number;
+  /**
+   * The `nextCursor` of the page before. Opaque: do not build or change it.
+   */
+  cursor?: string;
+  /**
+   * `live` (the default): every task that is not over, and those that are over and not yet looked at. `ended`: tasks that are over and were put away, newest first, from the archive. Or one state.
+   */
+  state?: "proposed" | "queued" | "taken" | "working" | "needs-owner" | "done" | "failed" | "withdrawn" | "live" | "ended";
+}
+
+export type ListTasksResult = {
+  items: {
+    id: string;
+    /** What it is, in one line. Shown in lists and in terminals. */
+    title: string;
+    /** What to do, for the agent that takes it. Plain text. */
+    details: string;
+    /** The folder it is done in. For a new terminal: where it starts. Null: the folder new terminals start in. */
+    folder: string | null;
+    /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
+    workflowId: string | null;
+    /** Where a new terminal for it works. Null: in a working copy of its own where the folder can have one, else in the folder itself. */
+    environment: string | null;
+    /** Who may take it. */
+    taker: {
+      kind: "any";
+    } | {
+      kind: "session";
+      sessionId: string;
+    } | {
+      kind: "new";
+      canvasId: string;
+    };
+    addedBy: {
+      kind: "agent" | "person" | "token";
+      name?: string;
+      sessionId?: string;
+      tokenId?: string;
+    };
+    source: {
+      kind: string;
+      [key: string]: unknown;
+    };
+    labels: string[];
+    /** Its place among the tasks that wait: lower is sooner. */
+    order: number;
+    state: "proposed" | "queued" | "taken" | "working" | "needs-owner" | "done" | "failed" | "withdrawn";
+    /** The terminal that took it. */
+    sessionId: string | null;
+    /** The run it became. */
+    runId: string | null;
+    /** With `failed` and `needs-owner`: why, in a sentence. */
+    reason: string | null;
+    createdAt: string;
+    updatedAt: string;
+    endedAt: string | null;
+  }[];
+  nextCursor: string | null;
+};
+
+export type AddTaskBody = {
+  /** What it is, in one line. */
+  title: string;
+  /** What to do, for the agent that takes it. Plain text. */
+  details?: string;
+  /** The folder it is done in. Null: the folder new terminals start in. */
+  folder?: string | null;
+  /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
+  workflowId?: string | null;
+  /** Where a new terminal for it works. Null: a working copy of its own where the folder can have one. */
+  environment?: string | null;
+  /** Who may take it: `{"kind":"any"}`, one terminal, or a new agent terminal on a canvas. */
+  taker?: {
+    kind: "any";
+  } | {
+    kind: "session";
+    sessionId: string;
+  } | {
+    kind: "new";
+    canvasId: string;
+  };
+  /** Short words of your own. */
+  labels?: string[];
+  /** Where it came from. Left out: through the API for a program, by hand for the owner. */
+  source?: {
+    kind: string;
+    [key: string]: unknown;
+  };
+};
+
+export type AddTaskResult = {
+  id: string;
+  /** What it is, in one line. Shown in lists and in terminals. */
+  title: string;
+  /** What to do, for the agent that takes it. Plain text. */
+  details: string;
+  /** The folder it is done in. For a new terminal: where it starts. Null: the folder new terminals start in. */
+  folder: string | null;
+  /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
+  workflowId: string | null;
+  /** Where a new terminal for it works. Null: in a working copy of its own where the folder can have one, else in the folder itself. */
+  environment: string | null;
+  /** Who may take it. */
+  taker: {
+    kind: "any";
+  } | {
+    kind: "session";
+    sessionId: string;
+  } | {
+    kind: "new";
+    canvasId: string;
+  };
+  addedBy: {
+    kind: "agent" | "person" | "token";
+    name?: string;
+    sessionId?: string;
+    tokenId?: string;
+  };
+  source: {
+    kind: string;
+    [key: string]: unknown;
+  };
+  labels: string[];
+  /** Its place among the tasks that wait: lower is sooner. */
+  order: number;
+  state: "proposed" | "queued" | "taken" | "working" | "needs-owner" | "done" | "failed" | "withdrawn";
+  /** The terminal that took it. */
+  sessionId: string | null;
+  /** The run it became. */
+  runId: string | null;
+  /** With `failed` and `needs-owner`: why, in a sentence. */
+  reason: string | null;
+  createdAt: string;
+  updatedAt: string;
+  endedAt: string | null;
+};
+
+export type GetTaskResult = {
+  id: string;
+  /** What it is, in one line. Shown in lists and in terminals. */
+  title: string;
+  /** What to do, for the agent that takes it. Plain text. */
+  details: string;
+  /** The folder it is done in. For a new terminal: where it starts. Null: the folder new terminals start in. */
+  folder: string | null;
+  /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
+  workflowId: string | null;
+  /** Where a new terminal for it works. Null: in a working copy of its own where the folder can have one, else in the folder itself. */
+  environment: string | null;
+  /** Who may take it. */
+  taker: {
+    kind: "any";
+  } | {
+    kind: "session";
+    sessionId: string;
+  } | {
+    kind: "new";
+    canvasId: string;
+  };
+  addedBy: {
+    kind: "agent" | "person" | "token";
+    name?: string;
+    sessionId?: string;
+    tokenId?: string;
+  };
+  source: {
+    kind: string;
+    [key: string]: unknown;
+  };
+  labels: string[];
+  /** Its place among the tasks that wait: lower is sooner. */
+  order: number;
+  state: "proposed" | "queued" | "taken" | "working" | "needs-owner" | "done" | "failed" | "withdrawn";
+  /** The terminal that took it. */
+  sessionId: string | null;
+  /** The run it became. */
+  runId: string | null;
+  /** With `failed` and `needs-owner`: why, in a sentence. */
+  reason: string | null;
+  createdAt: string;
+  updatedAt: string;
+  endedAt: string | null;
+};
+
+export type ChangeTaskBody = {
+  /** What it is, in one line. */
+  title?: string;
+  /** What to do, for the agent that takes it. Plain text. */
+  details?: string;
+  /** The folder it is done in. Null: the folder new terminals start in. */
+  folder?: string | null;
+  /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
+  workflowId?: string | null;
+  /** Where a new terminal for it works. Null: a working copy of its own where the folder can have one. */
+  environment?: string | null;
+  /** Who may take it: `{"kind":"any"}`, one terminal, or a new agent terminal on a canvas. */
+  taker?: {
+    kind: "any";
+  } | {
+    kind: "session";
+    sessionId: string;
+  } | {
+    kind: "new";
+    canvasId: string;
+  };
+  /** Short words of your own. */
+  labels?: string[];
+};
+
+export type ChangeTaskResult = {
+  id: string;
+  /** What it is, in one line. Shown in lists and in terminals. */
+  title: string;
+  /** What to do, for the agent that takes it. Plain text. */
+  details: string;
+  /** The folder it is done in. For a new terminal: where it starts. Null: the folder new terminals start in. */
+  folder: string | null;
+  /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
+  workflowId: string | null;
+  /** Where a new terminal for it works. Null: in a working copy of its own where the folder can have one, else in the folder itself. */
+  environment: string | null;
+  /** Who may take it. */
+  taker: {
+    kind: "any";
+  } | {
+    kind: "session";
+    sessionId: string;
+  } | {
+    kind: "new";
+    canvasId: string;
+  };
+  addedBy: {
+    kind: "agent" | "person" | "token";
+    name?: string;
+    sessionId?: string;
+    tokenId?: string;
+  };
+  source: {
+    kind: string;
+    [key: string]: unknown;
+  };
+  labels: string[];
+  /** Its place among the tasks that wait: lower is sooner. */
+  order: number;
+  state: "proposed" | "queued" | "taken" | "working" | "needs-owner" | "done" | "failed" | "withdrawn";
+  /** The terminal that took it. */
+  sessionId: string | null;
+  /** The run it became. */
+  runId: string | null;
+  /** With `failed` and `needs-owner`: why, in a sentence. */
+  reason: string | null;
+  createdAt: string;
+  updatedAt: string;
+  endedAt: string | null;
+};
+
+export type WithdrawTaskResult = {
+  id: string;
+  /** What it is, in one line. Shown in lists and in terminals. */
+  title: string;
+  /** What to do, for the agent that takes it. Plain text. */
+  details: string;
+  /** The folder it is done in. For a new terminal: where it starts. Null: the folder new terminals start in. */
+  folder: string | null;
+  /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
+  workflowId: string | null;
+  /** Where a new terminal for it works. Null: in a working copy of its own where the folder can have one, else in the folder itself. */
+  environment: string | null;
+  /** Who may take it. */
+  taker: {
+    kind: "any";
+  } | {
+    kind: "session";
+    sessionId: string;
+  } | {
+    kind: "new";
+    canvasId: string;
+  };
+  addedBy: {
+    kind: "agent" | "person" | "token";
+    name?: string;
+    sessionId?: string;
+    tokenId?: string;
+  };
+  source: {
+    kind: string;
+    [key: string]: unknown;
+  };
+  labels: string[];
+  /** Its place among the tasks that wait: lower is sooner. */
+  order: number;
+  state: "proposed" | "queued" | "taken" | "working" | "needs-owner" | "done" | "failed" | "withdrawn";
+  /** The terminal that took it. */
+  sessionId: string | null;
+  /** The run it became. */
+  runId: string | null;
+  /** With `failed` and `needs-owner`: why, in a sentence. */
+  reason: string | null;
+  createdAt: string;
+  updatedAt: string;
+  endedAt: string | null;
+};
+
+export type AcceptTaskResult = {
+  id: string;
+  /** What it is, in one line. Shown in lists and in terminals. */
+  title: string;
+  /** What to do, for the agent that takes it. Plain text. */
+  details: string;
+  /** The folder it is done in. For a new terminal: where it starts. Null: the folder new terminals start in. */
+  folder: string | null;
+  /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
+  workflowId: string | null;
+  /** Where a new terminal for it works. Null: in a working copy of its own where the folder can have one, else in the folder itself. */
+  environment: string | null;
+  /** Who may take it. */
+  taker: {
+    kind: "any";
+  } | {
+    kind: "session";
+    sessionId: string;
+  } | {
+    kind: "new";
+    canvasId: string;
+  };
+  addedBy: {
+    kind: "agent" | "person" | "token";
+    name?: string;
+    sessionId?: string;
+    tokenId?: string;
+  };
+  source: {
+    kind: string;
+    [key: string]: unknown;
+  };
+  labels: string[];
+  /** Its place among the tasks that wait: lower is sooner. */
+  order: number;
+  state: "proposed" | "queued" | "taken" | "working" | "needs-owner" | "done" | "failed" | "withdrawn";
+  /** The terminal that took it. */
+  sessionId: string | null;
+  /** The run it became. */
+  runId: string | null;
+  /** With `failed` and `needs-owner`: why, in a sentence. */
+  reason: string | null;
+  createdAt: string;
+  updatedAt: string;
+  endedAt: string | null;
+};
+
+export type DeclineTaskResult = {
+  id: string;
+  /** What it is, in one line. Shown in lists and in terminals. */
+  title: string;
+  /** What to do, for the agent that takes it. Plain text. */
+  details: string;
+  /** The folder it is done in. For a new terminal: where it starts. Null: the folder new terminals start in. */
+  folder: string | null;
+  /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
+  workflowId: string | null;
+  /** Where a new terminal for it works. Null: in a working copy of its own where the folder can have one, else in the folder itself. */
+  environment: string | null;
+  /** Who may take it. */
+  taker: {
+    kind: "any";
+  } | {
+    kind: "session";
+    sessionId: string;
+  } | {
+    kind: "new";
+    canvasId: string;
+  };
+  addedBy: {
+    kind: "agent" | "person" | "token";
+    name?: string;
+    sessionId?: string;
+    tokenId?: string;
+  };
+  source: {
+    kind: string;
+    [key: string]: unknown;
+  };
+  labels: string[];
+  /** Its place among the tasks that wait: lower is sooner. */
+  order: number;
+  state: "proposed" | "queued" | "taken" | "working" | "needs-owner" | "done" | "failed" | "withdrawn";
+  /** The terminal that took it. */
+  sessionId: string | null;
+  /** The run it became. */
+  runId: string | null;
+  /** With `failed` and `needs-owner`: why, in a sentence. */
+  reason: string | null;
+  createdAt: string;
+  updatedAt: string;
+  endedAt: string | null;
+};
+
+export type RetryTaskResult = {
+  id: string;
+  /** What it is, in one line. Shown in lists and in terminals. */
+  title: string;
+  /** What to do, for the agent that takes it. Plain text. */
+  details: string;
+  /** The folder it is done in. For a new terminal: where it starts. Null: the folder new terminals start in. */
+  folder: string | null;
+  /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
+  workflowId: string | null;
+  /** Where a new terminal for it works. Null: in a working copy of its own where the folder can have one, else in the folder itself. */
+  environment: string | null;
+  /** Who may take it. */
+  taker: {
+    kind: "any";
+  } | {
+    kind: "session";
+    sessionId: string;
+  } | {
+    kind: "new";
+    canvasId: string;
+  };
+  addedBy: {
+    kind: "agent" | "person" | "token";
+    name?: string;
+    sessionId?: string;
+    tokenId?: string;
+  };
+  source: {
+    kind: string;
+    [key: string]: unknown;
+  };
+  labels: string[];
+  /** Its place among the tasks that wait: lower is sooner. */
+  order: number;
+  state: "proposed" | "queued" | "taken" | "working" | "needs-owner" | "done" | "failed" | "withdrawn";
+  /** The terminal that took it. */
+  sessionId: string | null;
+  /** The run it became. */
+  runId: string | null;
+  /** With `failed` and `needs-owner`: why, in a sentence. */
+  reason: string | null;
+  createdAt: string;
+  updatedAt: string;
+  endedAt: string | null;
+};
+
+export type ClearTaskResult = {
+  id: string;
+  /** What it is, in one line. Shown in lists and in terminals. */
+  title: string;
+  /** What to do, for the agent that takes it. Plain text. */
+  details: string;
+  /** The folder it is done in. For a new terminal: where it starts. Null: the folder new terminals start in. */
+  folder: string | null;
+  /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
+  workflowId: string | null;
+  /** Where a new terminal for it works. Null: in a working copy of its own where the folder can have one, else in the folder itself. */
+  environment: string | null;
+  /** Who may take it. */
+  taker: {
+    kind: "any";
+  } | {
+    kind: "session";
+    sessionId: string;
+  } | {
+    kind: "new";
+    canvasId: string;
+  };
+  addedBy: {
+    kind: "agent" | "person" | "token";
+    name?: string;
+    sessionId?: string;
+    tokenId?: string;
+  };
+  source: {
+    kind: string;
+    [key: string]: unknown;
+  };
+  labels: string[];
+  /** Its place among the tasks that wait: lower is sooner. */
+  order: number;
+  state: "proposed" | "queued" | "taken" | "working" | "needs-owner" | "done" | "failed" | "withdrawn";
+  /** The terminal that took it. */
+  sessionId: string | null;
+  /** The run it became. */
+  runId: string | null;
+  /** With `failed` and `needs-owner`: why, in a sentence. */
+  reason: string | null;
+  createdAt: string;
+  updatedAt: string;
+  endedAt: string | null;
+};
+
+export type ReorderTasksBody = {
+  /** Tasks that wait, in the order they are to be started. One that is left out keeps its place after these. */
+  taskIds: string[];
+};
+
+export type ReorderTasksResult = {
+  /** How many tasks may be at work at once. */
+  limit: number;
+  /** True: no new task is started. What is running is not touched. */
+  hold: boolean;
+  /** True: a task starts by itself when a place is free. Off unless the owner switched it on. */
+  automatic: boolean;
+  /** The counts in one line. */
+  summary: string;
+};
+
+export type StartTasksBody = {
+  /** The task to start. Without one: the next in order that can be taken now. */
+  taskId?: string;
+};
+
+export type StartTasksResult = {
+  started: {
+    taskId: string;
+    sessionId: string | null;
+    ok: boolean;
+    reason: string | null;
+  }[];
+  /** In a sentence: what was started, or why nothing was. */
+  says: string;
+};
+
+export type GetQueueResult = {
+  /** How many tasks may be at work at once. */
+  limit: number;
+  /** True: no new task is started. What is running is not touched. */
+  hold: boolean;
+  /** True: a task starts by itself when a place is free. Off unless the owner switched it on. */
+  automatic: boolean;
+  /** The counts in one line. */
+  summary: string;
+};
+
+export type ChangeQueueBody = {
+  /** How many tasks may be at work at once. */
+  limit?: number;
+  hold?: boolean;
+  automatic?: boolean;
+};
+
+export type ChangeQueueResult = {
+  /** How many tasks may be at work at once. */
+  limit: number;
+  /** True: no new task is started. What is running is not touched. */
+  hold: boolean;
+  /** True: a task starts by itself when a place is free. Off unless the owner switched it on. */
+  automatic: boolean;
+  /** The counts in one line. */
+  summary: string;
+};
+
+export type GetForYouResult = {
+  items: {
+    /** Stays the same while the thing waits: its kind and what it is about. */
+    id: string;
+    kind: string;
+    /** What its kind is called: `Approval`, `A draft to read`. */
+    title: string;
+    /** What waits, in a sentence. Where part of it was written by an agent or a program, it is their words. */
+    sentence: string;
+    /** Where it came from: a terminal by name, a program, the library. */
+    from: string;
+    /** Since when, when that is known. */
+    at: string | null;
+    /** Where one acts on it: `run:<id>`, `session:<id>`, `task:<id>`, `ask:<id>`, `copy:<id>`, `review`. */
+    act: string;
+    /** True for a terminal that waits for the owner: these are what the count in the toolbar counts. */
+    waits: boolean;
+    /** True for something written on the list, which the owner marks done. False for what is gathered: that goes when the thing is done. */
+    written: boolean;
+    sessionId: string | null;
+    runId: string | null;
+    taskId: string | null;
+    askId: string | null;
+    environmentId: string | null;
+    elementId: string | null;
+  }[];
+  waiting: number;
+  summary: string;
+};
+
+export type AddAskBody = {
+  /** What is asked, in plain text. */
+  text: string;
+  source?: {
+    kind: string;
+    [key: string]: unknown;
+  };
+};
+
+export type AddAskResult = {
+  id: string;
+  text: string;
+  addedBy: {
+    kind: "agent" | "person" | "token";
+    name?: string;
+    sessionId?: string;
+    tokenId?: string;
+  };
+  source: {
+    kind: string;
+    [key: string]: unknown;
+  };
+  createdAt: string;
+};
+
+export type FinishAskResult = {
+  id: string;
+  text: string;
+  addedBy: {
+    kind: "agent" | "person" | "token";
+    name?: string;
+    sessionId?: string;
+    tokenId?: string;
+  };
+  source: {
+    kind: string;
+    [key: string]: unknown;
+  };
+  createdAt: string;
+};
+
+export type DismissAskResult = {
+  id: string;
+  text: string;
+  addedBy: {
+    kind: "agent" | "person" | "token";
+    name?: string;
+    sessionId?: string;
+    tokenId?: string;
+  };
+  source: {
+    kind: string;
+    [key: string]: unknown;
+  };
+  createdAt: string;
+};
+
+export type ListRulesResult = {
+  rules: {
+    id: string;
+    event: "task.done" | "task.failed" | "task.needs-owner" | "ask.added";
+    action: {
+      kind: string;
+      [key: string]: unknown;
+    };
+    createdAt: string;
+    /** The rule in a sentence. */
+    says: string;
+  }[];
+  /** The kinds of action there are. */
+  actions: {
+    kind: string;
+    title: string;
+    says: string;
+  }[];
+};
+
+export type AddRuleBody = {
+  /** What sets it off. */
+  event: "task.done" | "task.failed" | "task.needs-owner" | "ask.added";
+  /** What it does: `{"kind":"notify"}`, or `{"kind":"run-element","elementId":"…","on":{"kind":"session","sessionId":"…"}}`. */
+  action: {
+    kind: string;
+    [key: string]: unknown;
+  };
+};
+
+export type AddRuleResult = {
+  rules: {
+    id: string;
+    event: "task.done" | "task.failed" | "task.needs-owner" | "ask.added";
+    action: {
+      kind: string;
+      [key: string]: unknown;
+    };
+    createdAt: string;
+    /** The rule in a sentence. */
+    says: string;
+  }[];
+  /** The kinds of action there are. */
+  actions: {
+    kind: string;
+    title: string;
+    says: string;
+  }[];
+};
+
+export type ProposeSessionTaskBody = {
+  /** What it is, in one line. */
+  title: string;
+  /** What to do, for the agent that takes it. Plain text. */
+  details?: string;
+  /** Short words of your own. */
+  labels?: string[];
+};
+
+export type ProposeSessionTaskResult = {
+  id: string;
+  /** What it is, in one line. Shown in lists and in terminals. */
+  title: string;
+  /** What to do, for the agent that takes it. Plain text. */
+  details: string;
+  /** The folder it is done in. For a new terminal: where it starts. Null: the folder new terminals start in. */
+  folder: string | null;
+  /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
+  workflowId: string | null;
+  /** Where a new terminal for it works. Null: in a working copy of its own where the folder can have one, else in the folder itself. */
+  environment: string | null;
+  /** Who may take it. */
+  taker: {
+    kind: "any";
+  } | {
+    kind: "session";
+    sessionId: string;
+  } | {
+    kind: "new";
+    canvasId: string;
+  };
+  addedBy: {
+    kind: "agent" | "person" | "token";
+    name?: string;
+    sessionId?: string;
+    tokenId?: string;
+  };
+  source: {
+    kind: string;
+    [key: string]: unknown;
+  };
+  labels: string[];
+  /** Its place among the tasks that wait: lower is sooner. */
+  order: number;
+  state: "proposed" | "queued" | "taken" | "working" | "needs-owner" | "done" | "failed" | "withdrawn";
+  /** The terminal that took it. */
+  sessionId: string | null;
+  /** The run it became. */
+  runId: string | null;
+  /** With `failed` and `needs-owner`: why, in a sentence. */
+  reason: string | null;
+  createdAt: string;
+  updatedAt: string;
+  endedAt: string | null;
+};
+
+export type AddSessionAskBody = {
+  /** What is asked, in plain text. */
+  text: string;
+};
+
+export type AddSessionAskResult = {
+  id: string;
+  text: string;
+  addedBy: {
+    kind: "agent" | "person" | "token";
+    name?: string;
+    sessionId?: string;
+    tokenId?: string;
+  };
+  source: {
+    kind: string;
+    [key: string]: unknown;
+  };
+  createdAt: string;
+};
+
+export type GetSessionQueueResult = {
+  tasks: {
+    id: string;
+    title: string;
+    state: "proposed" | "queued" | "taken" | "working" | "needs-owner" | "done" | "failed" | "withdrawn";
+    mine: boolean;
+  }[];
+  /** What this session asked of its owner and that still waits. */
+  asks: {
+    id: string;
+    text: string;
+    addedBy: {
+      kind: "agent" | "person" | "token";
+      name?: string;
+      sessionId?: string;
+      tokenId?: string;
+    };
+    source: {
+      kind: string;
+      [key: string]: unknown;
+    };
+    createdAt: string;
+  }[];
+  says: string;
+};
+
 export interface GetEnvironmentOffersQuery {
   /**
    * The folder a session would start in. Without one: the folder new sessions start in.
@@ -6392,7 +7189,7 @@ export type ListTokensResult = {
   items: {
     id: string;
     name: string;
-    scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "terminal:read" | "terminal:input" | "messages:read" | "messages:write")[];
+    scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "tasks:write" | "terminal:read" | "terminal:input" | "messages:read" | "messages:write")[];
     createdAt: string;
     lastUsedAt: string | null;
     expiresAt: string | null;
@@ -6416,7 +7213,7 @@ export type CreateTokenBody = {
   /** What will use it. */
   name: string;
   /** What it may do. At least one. */
-  scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "terminal:read" | "terminal:input" | "messages:read" | "messages:write")[];
+  scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "tasks:write" | "terminal:read" | "terminal:input" | "messages:read" | "messages:write")[];
   /** When it stops working. Never, when neither this nor `expiresInDays` is given. */
   expiresAt?: string;
   /** In how many days it stops working. */
@@ -6439,7 +7236,7 @@ export type CreateTokenResult = {
   token: {
     id: string;
     name: string;
-    scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "terminal:read" | "terminal:input" | "messages:read" | "messages:write")[];
+    scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "tasks:write" | "terminal:read" | "terminal:input" | "messages:read" | "messages:write")[];
     createdAt: string;
     lastUsedAt: string | null;
     expiresAt: string | null;
@@ -6462,7 +7259,7 @@ export type CreateTokenResult = {
 export type RevokeTokenResult = {
   id: string;
   name: string;
-  scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "terminal:read" | "terminal:input" | "messages:read" | "messages:write")[];
+  scopes: ("read" | "canvases:write" | "sessions:write" | "notes:write" | "workflows:write" | "runs:write" | "tasks:write" | "terminal:read" | "terminal:input" | "messages:read" | "messages:write")[];
   createdAt: string;
   lastUsedAt: string | null;
   expiresAt: string | null;
@@ -6502,7 +7299,7 @@ export interface ListActivityQuery {
 export type ListActivityResult = {
   items: {
     at: string;
-    caller: "token" | "owner-cli";
+    caller: "token" | "owner-cli" | "rule";
     tokenId: string | null;
     tokenName: string;
     fromSessionId: string | null;
@@ -7499,6 +8296,29 @@ export const OPERATIONS = {
   acceptRepositoryWorkflow: { method: 'POST', path: '/v1/repository-workflows/accept', params: [], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   saveToRepository: { method: 'POST', path: '/v1/repository-workflows/save', params: [], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   runRepositoryWorkflow: { method: 'POST', path: '/v1/sessions/{sessionId}/repository-runs', params: ["sessionId"], hasBody: true, paged: false, idempotent: true, stream: false, access: { who: 'token', scope: "runs:write" } },
+  listTasks: { method: 'GET', path: '/v1/tasks', params: [], hasBody: false, paged: true, idempotent: false, stream: false, access: { who: 'token', scope: "read" } },
+  addTask: { method: 'POST', path: '/v1/tasks', params: [], hasBody: true, paged: false, idempotent: true, stream: false, access: { who: 'token', scope: "tasks:write" } },
+  getTask: { method: 'GET', path: '/v1/tasks/{taskId}', params: ["taskId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "read" } },
+  changeTask: { method: 'PATCH', path: '/v1/tasks/{taskId}', params: ["taskId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  withdrawTask: { method: 'POST', path: '/v1/tasks/{taskId}/withdraw', params: ["taskId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "tasks:write" } },
+  acceptTask: { method: 'POST', path: '/v1/tasks/{taskId}/accept', params: ["taskId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  declineTask: { method: 'POST', path: '/v1/tasks/{taskId}/decline', params: ["taskId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  retryTask: { method: 'POST', path: '/v1/tasks/{taskId}/again', params: ["taskId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  clearTask: { method: 'POST', path: '/v1/tasks/{taskId}/clear', params: ["taskId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  reorderTasks: { method: 'PUT', path: '/v1/tasks/order', params: [], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  startTasks: { method: 'POST', path: '/v1/tasks/start', params: [], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  getQueue: { method: 'GET', path: '/v1/queue', params: [], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "read" } },
+  changeQueue: { method: 'PUT', path: '/v1/queue', params: [], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  getForYou: { method: 'GET', path: '/v1/for-you', params: [], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "read" } },
+  addAsk: { method: 'POST', path: '/v1/asks', params: [], hasBody: true, paged: false, idempotent: true, stream: false, access: { who: 'token', scope: "tasks:write" } },
+  finishAsk: { method: 'POST', path: '/v1/asks/{askId}/done', params: ["askId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  dismissAsk: { method: 'POST', path: '/v1/asks/{askId}/dismiss', params: ["askId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  listRules: { method: 'GET', path: '/v1/rules', params: [], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  addRule: { method: 'POST', path: '/v1/rules', params: [], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  removeRule: { method: 'DELETE', path: '/v1/rules/{ruleId}', params: ["ruleId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  proposeSessionTask: { method: 'POST', path: '/v1/sessions/{sessionId}/tasks', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: null } },
+  addSessionAsk: { method: 'POST', path: '/v1/sessions/{sessionId}/asks', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: null } },
+  getSessionQueue: { method: 'GET', path: '/v1/sessions/{sessionId}/queue', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: null } },
   getEnvironmentOffers: { method: 'GET', path: '/v1/environments/offers', params: [], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   listEnvironments: { method: 'GET', path: '/v1/environments', params: [], hasBody: false, paged: true, idempotent: false, stream: false, access: { who: 'token', scope: "read" } },
   getEnvironment: { method: 'GET', path: '/v1/environments/{environmentId}', params: ["environmentId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "read" } },
@@ -8026,6 +8846,144 @@ export interface Client {
    */
   runRepositoryWorkflow(args: { sessionId: string; body: RunRepositoryWorkflowBody } & CallOptions): Promise<RunRepositoryWorkflowResult>;
   /**
+   * List the tasks of the queue.
+   *
+   * `GET /v1/tasks`. Scope: `read`.
+   */
+  listTasks(args?: { query?: ListTasksQuery } & CallOptions): Promise<ListTasksResult>;
+  /**
+   * Add a task to the queue.
+   *
+   * `POST /v1/tasks`. Scope: `tasks:write`.
+   */
+  addTask(args: { body: AddTaskBody } & CallOptions): Promise<AddTaskResult>;
+  /**
+   * Read one task.
+   *
+   * `GET /v1/tasks/{taskId}`. Scope: `read`.
+   */
+  getTask(args: { taskId: string } & CallOptions): Promise<GetTaskResult>;
+  /**
+   * Change a task that has not started.
+   *
+   * `PATCH /v1/tasks/{taskId}`. Signed-in browser only: no API token may call this.
+   */
+  changeTask(args: { taskId: string; body: ChangeTaskBody } & CallOptions): Promise<ChangeTaskResult>;
+  /**
+   * Take a task back before it starts.
+   *
+   * `POST /v1/tasks/{taskId}/withdraw`. Scope: `tasks:write`.
+   */
+  withdrawTask(args: { taskId: string } & CallOptions): Promise<WithdrawTaskResult>;
+  /**
+   * Say yes to a proposed task.
+   *
+   * `POST /v1/tasks/{taskId}/accept`. Signed-in browser only: no API token may call this.
+   */
+  acceptTask(args: { taskId: string } & CallOptions): Promise<AcceptTaskResult>;
+  /**
+   * Say no to a proposed task.
+   *
+   * `POST /v1/tasks/{taskId}/decline`. Signed-in browser only: no API token may call this.
+   */
+  declineTask(args: { taskId: string } & CallOptions): Promise<DeclineTaskResult>;
+  /**
+   * Put a failed task back among those that wait.
+   *
+   * `POST /v1/tasks/{taskId}/again`. Signed-in browser only: no API token may call this.
+   */
+  retryTask(args: { taskId: string } & CallOptions): Promise<RetryTaskResult>;
+  /**
+   * Put away a task that is over.
+   *
+   * `POST /v1/tasks/{taskId}/clear`. Signed-in browser only: no API token may call this.
+   */
+  clearTask(args: { taskId: string } & CallOptions): Promise<ClearTaskResult>;
+  /**
+   * Say in which order the waiting tasks start.
+   *
+   * `PUT /v1/tasks/order`. Signed-in browser only: no API token may call this.
+   */
+  reorderTasks(args: { body: ReorderTasksBody } & CallOptions): Promise<ReorderTasksResult>;
+  /**
+   * Start the next task, or one named.
+   *
+   * `POST /v1/tasks/start`. Signed-in browser only: no API token may call this.
+   */
+  startTasks(args?: { body?: StartTasksBody } & CallOptions): Promise<StartTasksResult>;
+  /**
+   * How tasks are started, and how the queue stands.
+   *
+   * `GET /v1/queue`. Scope: `read`.
+   */
+  getQueue(args?: CallOptions): Promise<GetQueueResult>;
+  /**
+   * Change the limit, hold new starts, or switch automatic starting.
+   *
+   * `PUT /v1/queue`. Signed-in browser only: no API token may call this.
+   */
+  changeQueue(args: { body: ChangeQueueBody } & CallOptions): Promise<ChangeQueueResult>;
+  /**
+   * What waits on the owner.
+   *
+   * `GET /v1/for-you`. Scope: `read`.
+   */
+  getForYou(args?: CallOptions): Promise<GetForYouResult>;
+  /**
+   * Ask the owner for something, in writing.
+   *
+   * `POST /v1/asks`. Scope: `tasks:write`.
+   */
+  addAsk(args: { body: AddAskBody } & CallOptions): Promise<AddAskResult>;
+  /**
+   * Mark something written on the list as done.
+   *
+   * `POST /v1/asks/{askId}/done`. Signed-in browser only: no API token may call this.
+   */
+  finishAsk(args: { askId: string } & CallOptions): Promise<FinishAskResult>;
+  /**
+   * Take something written off the list without doing it.
+   *
+   * `POST /v1/asks/{askId}/dismiss`. Signed-in browser only: no API token may call this.
+   */
+  dismissAsk(args: { askId: string } & CallOptions): Promise<DismissAskResult>;
+  /**
+   * List the rules.
+   *
+   * `GET /v1/rules`. Signed-in browser only: no API token may call this.
+   */
+  listRules(args?: CallOptions): Promise<ListRulesResult>;
+  /**
+   * Write a rule.
+   *
+   * `POST /v1/rules`. Signed-in browser only: no API token may call this.
+   */
+  addRule(args: { body: AddRuleBody } & CallOptions): Promise<AddRuleResult>;
+  /**
+   * Remove a rule.
+   *
+   * `DELETE /v1/rules/{ruleId}`. Signed-in browser only: no API token may call this.
+   */
+  removeRule(args: { ruleId: string } & CallOptions): Promise<void>;
+  /**
+   * Propose a task for the queue.
+   *
+   * `POST /v1/sessions/{sessionId}/tasks`. A session's own token.
+   */
+  proposeSessionTask(args: { sessionId: string; body: ProposeSessionTaskBody } & CallOptions): Promise<ProposeSessionTaskResult>;
+  /**
+   * Ask the owner for something, in writing.
+   *
+   * `POST /v1/sessions/{sessionId}/asks`. A session's own token.
+   */
+  addSessionAsk(args: { sessionId: string; body: AddSessionAskBody } & CallOptions): Promise<AddSessionAskResult>;
+  /**
+   * What is in the queue, and what the session itself proposed and asked.
+   *
+   * `GET /v1/sessions/{sessionId}/queue`. A session's own token.
+   */
+  getSessionQueue(args: { sessionId: string } & CallOptions): Promise<GetSessionQueueResult>;
+  /**
    * Where a new session in a folder could work.
    *
    * `GET /v1/environments/offers`. Signed-in browser only: no API token may call this.
@@ -8279,6 +9237,10 @@ export interface Client {
      * Every item of `listRepositoryWorkflows`, fetched a page at a time as they are asked for.
      */
     listRepositoryWorkflows(args?: { query?: ListRepositoryWorkflowsQuery } & CallOptions): AsyncGenerator<ListRepositoryWorkflowsResult['items'][number], void, void>;
+    /**
+     * Every item of `listTasks`, fetched a page at a time as they are asked for.
+     */
+    listTasks(args?: { query?: ListTasksQuery } & CallOptions): AsyncGenerator<ListTasksResult['items'][number], void, void>;
     /**
      * Every item of `listEnvironments`, fetched a page at a time as they are asked for.
      */

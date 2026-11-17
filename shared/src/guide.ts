@@ -69,6 +69,8 @@ export const OWNERS_ALONE: Record<(typeof NEVER_BY_TOKEN)[number], string> = {
   'messages.manage': 'deciding which terminals may message each other, and pausing or stopping a thread',
   'runs.approve': 'approving a run that waits for a person, or sending it back',
   'environments.manage': 'removing or discarding a working copy',
+  'queue.manage': 'accepting, declining, reordering or starting tasks, and changing how many run at once',
+  'rules.manage': 'writing or removing a rule',
 };
 
 const ownersAlone = (): string => [...new Set(NEVER_BY_TOKEN.map((action) => OWNERS_ALONE[action]))].join('; ');
@@ -199,6 +201,25 @@ export const GUIDE: readonly GuideSection[] = [
           'Write one only when asked. It takes the place of the one before, and your owner reads it as your words.',
         ],
       },
+    ],
+  },
+  {
+    id: 'queue',
+    title: 'The queue, and asking your owner',
+    parts: [
+      {
+        needs: ['task.own.propose', 'ask.own.add'],
+        inTerminal: true,
+        text: [
+          "Work that should be done, but not by you now (a follow-up, something outside your task), is proposed for the queue of tasks; a thing only a person can do or decide (a key, an account, a choice) is asked of your owner:",
+          '    aubergine task add "Add a test for the retry" --details "it should fail without the fix"',
+          '    aubergine ask "the staging key expires this week: rotate it, or say who can"',
+          'Neither is done until your owner acts, and nothing tells you when. Do not start a proposed task yourself; carry on with what does not depend on it, or report blocked. `aubergine task list` shows the queue and what you proposed.',
+        ],
+      },
+      { needs: ['task.own.propose', 'ask.own.add', 'tasks.write'], text: ['As tools: task_propose, ask_owner.'], tools: ['task_propose', 'ask_owner'] },
+      { needs: ['queue.own.read', 'tasks.read'], text: ['To read the queue: queue_read.'], tools: ['queue_read'] },
+      { needs: ['tasks.read'], text: ['To read everything that waits on the owner: for_you_read. Nothing on that list can be decided by a tool.'], tools: ['for_you_read'] },
     ],
   },
   {
