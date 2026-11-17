@@ -3,7 +3,10 @@ import type { AddressInfo } from 'node:net';
 import os from 'node:os';
 import path from 'node:path';
 import { ASKS_WAITING_MAX, GRANTABLE_SCOPES, KICKOFF_LINE, NO_ATTENTION, NO_STATUS, PROPOSALS_WAITING_MAX, RULE_RATE_PER_MINUTE, newId, sessionsWaiting, type ChangeEvent, type ForYou, type QueueState, type Scope, type Session, type Task } from '@aubergine/shared';
+import { createClient } from '@aubergine/client';
+import { SESSION_ENV } from '@aubergine/shared';
 import type { FastifyInstance } from 'fastify';
+import { parseAskCommand, parseRuleCommand, parseTaskCommand, parseTodoCommand, runQueueCommand, type QueueCommand } from './cli/queue';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { MemoryActivityLog } from './activity';
 import { sessionToken } from './auth';
@@ -571,5 +574,70 @@ describe('the owner\'s list', () => {
     expect(taskNow(task.id)).toMatchObject({ state: 'working', sessionId: one.id });
     await finish(one);
     await until(() => taskNow(task.id).state === 'done');
+  });
+});
+
+describe('the commands', () => {
+  /** A command as typed: by the owner outside any terminal of a canvas, or inside one, with that terminal's own credential. */
+  const typed_ = async (command: QueueCommand, inside?: Session): Promise<{ code: number; out: string }> => {
+    const printed: string[] = [];
+    const clientOrigin = `http://127.0.0.1:${port}`;
+    const owner = createClient({ baseUrl: clientOrigin, headers: { origin: clientOrigin, cookie: `${cookieName(port)}=${ownerToken}` } });
+    const env = inside ? { [SESSION_ENV.url]: clientOrigin, [SESSION_ENV.sessionId]: inside.id, [SESSION_ENV.token]: sessionToken(ownerToken, inside.id) } : {};
+    const code = await runQueueCommand(command, { owner: (work) => work(owner), env, print: (text) => printed.push(text) });
+    return { code, out: printed.join('\n') };
+  };
+  const task = (words: string[], inside?: Session) => typed_(parseTaskCommand(words), inside);
+
+  it('add, list, start, move and decide as the owner; inside a canvas terminal a task is a proposal, asking is asking, and what only the owner decides does nothing', async () => {
+    const one = agent('one');
+    expect((await task(['add', 'Fix the retry', '--details', 'It gives up too early.', '--label', 'api'])).out).toContain('Added “Fix the retry” to the queue.');
+    await task(['add', 'Second', '--to', 'one']);
+    await task(['add', 'Third']);
+    expect(queueNow().tasks.map((t) => [t.title, t.state, t.taker.kind, t.labels])).toEqual([['Fix the retry', 'queued', 'any', ['api']], ['Second', 'queued', 'session', []], ['Third', 'queued', 'any', []]]);
+    expect((await task(['move', 'Third', '--first'])).code).toBe(0);
+    expect((await task(['move', 'Fix the retry', '--before', 'Third'])).code).toBe(0);
+    const list = await task(['list']);
+    expect(list.out).toContain('0 working, 3 next. At most 3 at once; nothing starts by itself.');
+    expect(list.out.indexOf('Fix the retry')).toBeLessThan(list.out.indexOf('Third'));
+    expect(list.out.indexOf('Third')).toBeLessThan(list.out.indexOf('Second'));
+    expect((await task(['show', 'Fix the retry'])).out).toContain('added by you, written by hand');
+    expect((await task(['start'])).out).toBe('Started “Fix the retry”.');
+    expect(typed).toEqual([[one.id, KICKOFF_LINE]]);
+
+    // Inside a canvas terminal.
+    const worker = agent('worker');
+    const proposed = await task(['add', 'Proposed here', '--details', 'why', '--to', 'one'], worker);
+    expect(proposed.out).toContain('Where a task runs, by which workflow and who takes it are for your owner to say');
+    expect(proposed.out).toContain("It waits for your owner's yes and starts nothing until then.");
+    expect(queueNow().tasks.find((t) => t.title === 'Proposed here')).toMatchObject({ state: 'proposed', taker: { kind: 'any' }, addedBy: { kind: 'agent', name: 'worker' } });
+    expect((await typed_(parseAskCommand(['Which', 'region?']), worker)).out).toContain("It is on your owner's list, and it is not done until they act.");
+    expect(queueNow().asks.map((a) => [a.text, a.addedBy.name])).toEqual([['Which region?', 'worker']]);
+    const mine = await task(['list'], worker);
+    expect(mine.out).toContain('Proposed here  (proposed by you)');
+    expect((await typed_(parseTodoCommand([]), worker)).out).toContain('Which region?');
+    // What only the owner decides: said, and nothing done.
+    const before = JSON.stringify(queueNow());
+    for (const command of [parseTaskCommand(['accept', 'Proposed here']), parseTaskCommand(['decline', 'Proposed here']), parseTaskCommand(['start']), parseTaskCommand(['move', 'Third', '--last']), parseTaskCommand(['clear', 'x']), parseTodoCommand(['done', 'Which']), parseRuleCommand(['add', '--when', 'task.done', '--notify']), parseRuleCommand(['list']), parseRuleCommand(['remove', '1'])]) {
+      const answer = await typed_(command, worker);
+      expect(answer.code, JSON.stringify(command)).toBe(1);
+      expect(answer.out).toContain('This command does nothing inside a canvas terminal');
+    }
+    expect(JSON.stringify(queueNow())).toBe(before);
+    await expect(typed_(parseAskCommand(['x']))).rejects.toThrow(/only works inside an Aubergine session/);
+
+    // The owner's side of it.
+    expect((await typed_(parseTodoCommand([]))).out).toContain('Asked of you: Which region?');
+    expect((await task(['accept', 'Proposed here'])).out).toBe('“Proposed here”: It waits to be started.');
+    expect((await typed_(parseTodoCommand(['done', 'Which region?']))).out).toBe('Done: Which region?');
+    expect((await typed_(parseTodoCommand(['add', 'Renew the certificate']))).out).toBe('Written on your list.');
+    expect((await typed_(parseRuleCommand(['add', '--when', 'task.done', '--notify']))).out).toContain('Written: When a task is done, notify me in the open page.');
+    expect((await typed_(parseRuleCommand(['list']))).out).toContain('1. When a task is done, notify me in the open page.');
+    expect((await typed_(parseRuleCommand(['remove', '1']))).out).toBe('Removed.');
+    expect(queueNow().rules).toEqual([]);
+    expect(() => parseRuleCommand(['add', '--when', 'task.done'])).toThrow(/needs what to do/);
+    expect(() => parseRuleCommand(['add', '--when', 'task.done', '--run', 'x'])).toThrow(/needs where/);
+    expect(() => parseTaskCommand(['add'])).toThrow(/needs a title/);
+    expect(() => parseTaskCommand(['move', 'x'])).toThrow(/where to/);
   });
 });
