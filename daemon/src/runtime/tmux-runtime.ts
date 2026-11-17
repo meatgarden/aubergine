@@ -149,13 +149,16 @@ export class TmuxRuntime implements SessionRuntime {
     return created ?? { id, cwd: null, command: null, activityAt: null };
   }
 
+  /** How many viewers this runtime itself has attached to each session. */
+  private readonly own = new Map<string, number>();
+
   async list(): Promise<RuntimeSession[]> {
     let output: string;
     try {
       output = await this.exec([
         'list-sessions',
         '-F',
-        '#{session_name}\t#{pane_current_path}\t#{pane_current_command}\t#{window_activity}',
+        '#{session_name}\t#{pane_current_path}\t#{pane_current_command}\t#{window_activity}\t#{session_attached}',
       ]);
     } catch (error) {
       if (isNoServer(error)) return [];
@@ -165,12 +168,14 @@ export class TmuxRuntime implements SessionRuntime {
       .split('\n')
       .filter(Boolean)
       .map((line) => {
-        const [id = '', cwd = '', command = '', activity = ''] = line.split('\t');
+        const [id = '', cwd = '', command = '', activity = '', attached = ''] = line.split('\t');
         return {
           id,
           cwd: cwd || null,
           command: command || null,
           activityAt: /^\d+$/.test(activity) ? new Date(Number(activity) * 1000) : null,
+          // Every client tmux counts, less the ones this runtime attached for its own viewers.
+          outside: /^\d+$/.test(attached) ? Math.max(0, Number(attached) - (this.own.get(id) ?? 0)) : 0,
         };
       });
   }
@@ -207,9 +212,14 @@ export class TmuxRuntime implements SessionRuntime {
       encoding: null, // raw bytes; the browser terminal does the decoding
     });
 
+    // Counted, so that viewers from outside (a window on the desktop) can be told from these.
+    this.own.set(name, (this.own.get(name) ?? 0) + 1);
     let closed = false;
     child.onExit(() => {
       closed = true;
+      const left = (this.own.get(name) ?? 1) - 1;
+      if (left > 0) this.own.set(name, left);
+      else this.own.delete(name);
     });
 
     // tmux paints the screen on attach, but a client that joins a session

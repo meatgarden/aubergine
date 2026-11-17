@@ -239,6 +239,11 @@ export const Session = z.object({
   peopleOnly: z.boolean().default(false),
   /** The token that last typed into it through the API, and when. Not what it typed. */
   typedBy: TypedBy.nullable().default(null),
+  /**
+   * How many viewers are attached to it that this server did not attach itself: a window of a terminal application, or
+   * any other program attached to the same session. Which program is not known. Left out: none.
+   */
+  outsideViewers: z.number().int().min(0).max(999).optional(),
   /** What its agent wrote when the owner asked for a recap, and when. The agent's words: other people's text wherever it is shown. */
   recap: z.object({ text: z.string().max(2000), at: Timestamp }).nullable().default(null),
   /**

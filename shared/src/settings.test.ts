@@ -26,6 +26,7 @@ describe('Settings', () => {
       messages: { perSenderPerMinute: 3, perPairPerHour: 12, pauseAfter: 4, maxUnread: 5, nudgeIntervalSeconds: 60, keepDays: 7, logMaxBytes: 65536 },
       library: { fetchTimeoutSeconds: 30, maxFetchMegabytes: 20 },
       schedules: { lateWithinHours: 2 },
+      desktop: { app: 'command', command: 'a-terminal -e {file}', openNew: true },
       shortcuts: { 'terminal.park': 'X', 'view.fit': null },
       shortcutsInAppWindow: { 'canvas.go.1': ['Meta+1'] },
     };

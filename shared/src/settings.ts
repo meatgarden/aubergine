@@ -92,6 +92,24 @@ export const Settings = z.object({
       logMaxBytes: z.number().int().min(4096).max(1024 * 1024 * 1024).default(4 * 1024 * 1024),
     })
     .prefault({}),
+  /** Opening a canvas terminal in the owner's own terminal application. */
+  desktop: z
+    .object({
+      /**
+       * Which application: `terminal` or `iterm` (macOS), or `command` for a command line of your own. Null: the
+       * usual one for this system, which is `terminal` on macOS, and `command` elsewhere once one is written.
+       */
+      app: z
+        .string()
+        .regex(/^[a-z][a-z0-9-]{0,39}$/)
+        .nullable()
+        .default(null),
+      /** For `command`: the command line, with `{file}` where the script file goes. Started without a shell. */
+      command: z.string().max(1000).nullable().default(null),
+      /** New terminals made in the page also open on the desktop. */
+      openNew: z.boolean().default(false),
+    })
+    .prefault({}),
   /** Schedules. */
   schedules: z
     .object({

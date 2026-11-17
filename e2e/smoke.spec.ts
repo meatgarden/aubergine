@@ -2650,3 +2650,110 @@ test('a schedule: the owner makes one for an element that hands in a list, runs 
   await row.getByTestId('schedule-remove').click();
   await expect(row).toHaveCount(0);
 });
+
+test('a terminal on the desktop: the line in the menu makes new terminals open there too, "Open on desktop" works on one that is running, and the mark appears when a second viewer attaches', async ({ page }) => {
+  // The terminal application is stood in for: a command of the owner's that only leaves a file beside the script it was handed. No application is opened.
+  const settingsFile = path.join(e2e.dataDir, 'config.json');
+  const settingsBefore = existsSync(settingsFile) ? readFileSync(settingsFile, 'utf8') : null;
+  writeFileSync(settingsFile, JSON.stringify({ ...(settingsBefore ? JSON.parse(settingsBefore) : {}), desktop: { app: 'command', command: '/usr/bin/touch {file}.asked' } }));
+  const script = (id: string): string => path.join(e2e.dataDir, 'desktop', `${id}.command`);
+  try {
+    const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+    await page.goto(`/auth?token=${token}`);
+    await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+    const origin = new URL(page.url()).origin;
+    await page.getByRole('button', { name: 'New canvas' }).click();
+    const rows = page.getByTestId('list-row');
+    await expect(rows).toHaveCount(0);
+    const newest = async (known: string[]): Promise<string> => (await rows.evaluateAll((all) => all.map((row) => row.getAttribute('data-session') ?? ''))).find((id) => !known.includes(id)) ?? '';
+
+    // Off to begin with: a new terminal opens nothing on the desktop.
+    await page.getByTestId('toolbar-new-more').click();
+    const line = page.getByTestId('toolbar-desktop-new');
+    await expect(line).not.toBeChecked();
+    await page.keyboard.press('Escape');
+    await page.getByTestId('toolbar-new-terminal').click();
+    await expect(rows).toHaveCount(1);
+    const first = await newest([]);
+    await page.waitForTimeout(500);
+    expect(existsSync(script(first))).toBe(false);
+
+    // "Open on desktop" on that running terminal, from its title bar: the application is handed its script.
+    await page.locator(`[data-testid="terminal-node"][data-session="${first}"]`).getByTestId('node-open-desktop').click();
+    await expect.poll(() => existsSync(`${script(first)}.asked`)).toBe(true);
+    // The script is one command for that session, and only the owner may run it.
+    const text = readFileSync(script(first), 'utf8');
+    expect(text.trimEnd().split('\n')).toHaveLength(3);
+    expect(text).toContain(`attach '${first}'`);
+    expect(statSync(script(first)).mode & 0o777).toBe(0o700);
+    // The first time, the page says what happens with size.
+    await expect(page.locator('.warning')).toContainText('they share one size: the view you used last sets it');
+
+    // The line in the menu: ticked, it is kept in the settings file, and the next new terminal opens on the desktop too.
+    if (!(await page.getByTestId('toolbar-new-menu').isVisible())) await page.getByTestId('toolbar-new-more').click();
+    await line.click();
+    await expect(line).toBeChecked();
+    expect((JSON.parse(readFileSync(settingsFile, 'utf8')) as { desktop: object }).desktop).toEqual({ app: 'command', command: '/usr/bin/touch {file}.asked', openNew: true });
+    await page.keyboard.press('Escape');
+    await page.getByTestId('toolbar-new-terminal').click();
+    await expect(rows).toHaveCount(2);
+    const second = await newest([first]);
+    await expect.poll(() => existsSync(`${script(second)}.asked`)).toBe(true);
+    // The dialog shows the same box, ticked by the setting, and unticking it is for that one terminal.
+    await page.getByTestId('toolbar-new-more').click();
+    await page.getByTestId('toolbar-new-in').click();
+    const dialog = page.getByTestId('start-dialog');
+    await expect(dialog.getByTestId('desktop-box')).toBeChecked();
+    await dialog.getByTestId('desktop-box').uncheck();
+    await dialog.getByTestId('start-go').click();
+    await expect(dialog).toHaveCount(0);
+    await expect(rows).toHaveCount(3);
+    const third = await newest([first, second]);
+    await page.waitForTimeout(500);
+    expect(existsSync(script(third))).toBe(false);
+
+    // From the row's menu in the list, for the third.
+    const thirdRow = page.locator(`[data-testid="list-row"][data-session="${third}"]`);
+    await thirdRow.hover();
+    await thirdRow.locator('.list-more').click();
+    await page.getByTestId('row-open-desktop').click();
+    await expect.poll(() => existsSync(`${script(third)}.asked`)).toBe(true);
+
+    // No window is open, so no node says "also on desktop". Then a second viewer attaches to the first terminal, as a
+    // window on the desktop would: another program on the same sessions, here started inside the second terminal.
+    await expect(page.getByTestId('badge-desktop')).toHaveCount(0);
+    await expect
+      .poll(
+        async () => {
+          const answer = await page.request.post(`/v1/sessions/${second}/run`, { headers: { origin }, data: { command: 'echo ready-$((1 + 1))', timeoutSeconds: 30 } });
+          return answer.status() === 200 ? ((await answer.json()) as { output: string }).output : '';
+        },
+        { timeout: 30_000 },
+      )
+      .toContain('ready-2');
+    expect((await page.request.post(`/v1/sessions/${second}/input`, { headers: { origin }, data: { text: `env -u TMUX tmux -L ${e2e.tmuxSocket} attach-session -t '=${first}'`, enter: true } })).status()).toBe(200);
+    const mark = page.locator(`[data-testid="terminal-node"][data-session="${first}"]`).getByTestId('badge-desktop');
+    await expect(mark).toHaveText('also on desktop', { timeout: 15_000 });
+    await expect(page.getByTestId('badge-desktop')).toHaveCount(1);
+    // That viewer goes (its terminal is ended for good): the mark goes, the first terminal is as it was, and the ended terminal's script is removed.
+    expect((await page.request.delete(`/api/v1/sessions/${second}`, { headers: { origin } })).status()).toBeLessThan(300);
+    await expect(mark).toHaveCount(0, { timeout: 15_000 });
+    await expect.poll(() => existsSync(script(second))).toBe(false);
+    expect(existsSync(script(first))).toBe(true);
+
+    // No program opens a window or changes the setting.
+    const program = (await (await page.request.post('/v1/tokens', { headers: { origin }, data: { name: 'desktop test program', scopes: ['read', 'sessions:write', 'runs:write', 'tasks:write'] } })).json()) as { secret: string };
+    const as = { authorization: `Bearer ${program.secret}`, 'content-type': 'application/json' };
+    expect((await fetch(`${origin}/v1/sessions/${first}/desktop`, { method: 'POST', headers: as, body: '{}' })).status).toBe(403);
+    expect((await fetch(`${origin}/v1/settings/desktop`, { method: 'PUT', headers: as, body: '{"openNew":false}' })).status).toBe(403);
+
+    // Unticked again: kept, and the rest of the file is as it was.
+    await page.getByTestId('toolbar-new-more').click();
+    await line.click();
+    await expect(line).not.toBeChecked();
+    expect((JSON.parse(readFileSync(settingsFile, 'utf8')) as { desktop: { openNew: boolean } }).desktop.openNew).toBe(false);
+  } finally {
+    if (settingsBefore === null) rmSync(settingsFile, { force: true });
+    else writeFileSync(settingsFile, settingsBefore);
+  }
+});

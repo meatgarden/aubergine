@@ -1,4 +1,5 @@
 import { COMMAND_IDS, demoOf, sortedCanvases, type CommandId, type Session } from '@aubergine/shared';
+import { openOnDesktop } from './desktop';
 import { api } from './api';
 import { nextWaiting } from './attention';
 import { canvasActions } from './canvas-actions';
@@ -292,6 +293,20 @@ export const COMMANDS: readonly Command[] = [
     run: (state) => {
       const session = targetSession(state);
       if (session) state.openDrawer({ section: 'terminals', kind: 'notes', id: session.id });
+    },
+  },
+  {
+    id: 'terminal.openOnDesktop',
+    title: 'Open on desktop',
+    description: 'Opens this terminal in a window of your own terminal application. Both show the same terminal, an agent\'s too, and you can type in either. Closing the window ends nothing. Which application is in the settings file.',
+    group: 'Terminals',
+    available: (state) => {
+      const session = targetSession(state);
+      return session != null && session.state !== 'exited';
+    },
+    run: (state) => {
+      const session = targetSession(state);
+      if (session && session.state !== 'exited') void openOnDesktop(session.id);
     },
   },
   {

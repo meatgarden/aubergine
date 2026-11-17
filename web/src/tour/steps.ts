@@ -17,7 +17,7 @@ registerTourStep({
   order: 10,
   title: 'This is a terminal',
   text: 'Click it to type in it. Then click “Fit” at the top to see all of them at once.',
-  reminder: 'Click a terminal to use it; zoom out to see them all.',
+  reminder: 'Click a terminal to use it; zoom out to see them all. ⧉ on one opens it on your desktop too.',
   target: (c) => nodeOf(c.demo?.sessions.shell) ?? find('[data-testid="terminal-node"]'),
   done: (c) => c.signals.has('terminal.focused') && c.signals.has('canvas.zoomed-out'),
 });

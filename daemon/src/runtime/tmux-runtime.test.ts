@@ -153,6 +153,32 @@ describe('shell environment when the daemon starts outside a terminal', () => {
 });
 
 describe('TmuxRuntime', () => {
+  it('tells its own viewers from one attached from outside, such as a window on the desktop', async () => {
+    const id = newId();
+    await runtime.create({ id });
+    const outsideOf = async (): Promise<number | undefined> => (await runtime.list()).find((s) => s.id === id)?.outside;
+    expect(await outsideOf()).toBe(0);
+    // Two viewers of its own, as two browser tabs would be: none is from outside.
+    const mine = [await runtime.attach(id, { cols: 80, rows: 24 }), await runtime.attach(id, { cols: 100, rows: 30 })];
+    mine.forEach((attachment) => collect(attachment));
+    await sleep(300);
+    expect(await outsideOf()).toBe(0);
+    // A viewer this runtime did not attach: another program on the same socket, as `aubergine attach` in a window is.
+    const other = new TmuxRuntime({ socket: SOCKET });
+    const theirs = await other.attach(id, { cols: 120, rows: 40 });
+    collect(theirs);
+    await waitUntil(async () => (await outsideOf()) === 1);
+    // One of its own goes: the one from outside is still one.
+    mine[0]?.close();
+    await sleep(300);
+    expect(await outsideOf()).toBe(1);
+    // The window is closed: none, and the session is as alive as before.
+    theirs.close();
+    await waitUntil(async () => (await outsideOf()) === 0);
+    expect(await runtime.has(id)).toBe(true);
+    await runtime.kill(id);
+  });
+
   it('lists nothing when no server is running', async () => {
     const idle = new TmuxRuntime({ socket: `${SOCKET}-idle` });
     expect(await idle.list()).toEqual([]);

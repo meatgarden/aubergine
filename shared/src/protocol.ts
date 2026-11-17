@@ -128,8 +128,22 @@ export const StateResponse = z.object({
 });
 export type StateResponse = z.infer<typeof StateResponse>;
 
+/** What opening a session on the desktop did. */
+export const OpenedOnDesktop = z.object({
+  opened: z.boolean().describe('True: the terminal application was asked to open a window. False: it could not be, and `says` is why.'),
+  says: z.string().describe('What was done, or why it could not be, in a sentence.'),
+});
+export type OpenedOnDesktop = z.infer<typeof OpenedOnDesktop>;
+/** The one setting about the desktop that the page changes. */
+export const DesktopSettingsAnswer = z.object({ openNew: z.boolean().describe('New terminals made in the page also open on the desktop.') });
+export type DesktopSettingsAnswer = z.infer<typeof DesktopSettingsAnswer>;
+export const ChangeDesktopSettingsRequest = z.object({ openNew: z.boolean().describe('Whether new terminals made in the page also open on the desktop.') });
+export type ChangeDesktopSettingsRequest = z.infer<typeof ChangeDesktopSettingsRequest>;
+
 export const CreateSessionRequest = z.object({
   name: SessionName.optional(),
+  /** Also open the new session in the owner's terminal application. Only this route looks at it; left out or false: no. */
+  desktop: z.boolean().optional(),
   /** Where to put the new node. The daemon picks a spot when omitted. */
   rect: NodeRect.optional(),
   /** Start an agent in the new session, wired up to report to the canvas. */
@@ -160,7 +174,12 @@ export const CreateSessionRequest = z.object({
 });
 export type CreateSessionRequest = z.infer<typeof CreateSessionRequest>;
 
-export const CreateSessionResponse = z.object({ session: Session, node: LayoutNode });
+export const CreateSessionResponse = z.object({
+  session: Session,
+  node: LayoutNode,
+  /** When the request asked for a window on the desktop too: what that did. The session is made either way. */
+  desktop: OpenedOnDesktop.optional(),
+});
 export type CreateSessionResponse = z.infer<typeof CreateSessionResponse>;
 
 /** PATCH body: any of the fields the user can edit. */

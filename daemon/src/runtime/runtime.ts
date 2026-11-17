@@ -9,6 +9,11 @@ export interface RuntimeSession {
   command: string | null;
   /** When the session last printed anything, when known. */
   activityAt: Date | null;
+  /**
+   * How many viewers are attached to it that this runtime did not attach itself: a terminal window on the desktop,
+   * or any other program. Which is not known. Left out by a runtime that cannot tell.
+   */
+  outside?: number;
 }
 
 export interface TerminalDimensions {

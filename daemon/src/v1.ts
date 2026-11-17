@@ -48,6 +48,7 @@ import { MessageRefusal, type Messages } from './messages';
 import type { Library } from './library';
 import type { Environments } from './environments';
 import type { Asker, Queue } from './queue';
+import type { Desktop } from './desktop';
 import type { Schedules } from './schedules';
 import { fingerprintOf } from './terminal-access';
 
@@ -64,6 +65,7 @@ export interface PublicRouteDeps {
   environments: Environments;
   queue: Queue;
   schedules: Schedules;
+  desktop: Desktop;
   activity: ActivityLog;
   viewers: Viewers;
   limiter: RateLimiter;
@@ -350,6 +352,9 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
     listRules: () => queue.rules(),
     addRule: ({ body }) => queue.addRule(body),
     removeRule: ({ params }) => queue.removeRule(params.ruleId),
+    // A window on the owner's desktop, and the one setting about it: `authorize` has refused everyone but the owner.
+    openSessionOnDesktop: ({ params }) => deps.desktop.open(params.sessionId),
+    changeDesktopSettings: ({ body }) => deps.desktop.setOpenNew(body.openNew),
     listSchedules: ({ query }) => schedules.list(query),
     addSchedule: ({ body }) => schedules.add(body),
     changeSchedule: ({ params, body }) => schedules.change(params.scheduleId, body),

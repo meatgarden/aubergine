@@ -114,6 +114,8 @@ export interface AppStore {
   /** An ask is used once: forget it, unless a newer one has replaced it. */
   asked: (tick: number) => void;
   setNotice: (notice: string | null) => void;
+  /** The one setting the page changes: whether new terminals also open on the desktop. */
+  setDesktopOpenNew: (openNew: boolean) => void;
   setSide: (change: Partial<PanelPrefs>) => void;
   setListView: (change: Partial<ListView>) => void;
   /** Opens a section's drawer for a row; `null` closes whatever is open. */
@@ -254,6 +256,7 @@ export const useApp = create<AppStore>((set, get) => ({
   request: (ask) => set((state) => ({ ask: { ...ask, tick: (state.ask?.tick ?? 0) + 1 } })),
   asked: (tick) => set((state) => (state.ask?.tick === tick ? { ask: null } : {})),
   setNotice: (notice) => set({ notice }),
+  setDesktopOpenNew: (openNew) => set((state) => ({ settings: { ...state.settings, desktop: { ...state.settings.desktop, openNew } } })),
   setSide: (change) => {
     const side = { ...get().side, ...change };
     side.width = clampPanelWidth(side.width);
