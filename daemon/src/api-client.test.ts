@@ -124,7 +124,7 @@ describe('what is generated and kept in the repository', () => {
     }
     for (const id of ROUTE_IDS) expect(reference).toContain(`### ${id}\n`);
     // Every route a token may call has an example with curl; the browser-only ones have none.
-    expect(reference.match(/^curl/gm)?.length).toBe(ROUTE_IDS.filter((id) => !['tokens.manage', 'activity.read', 'drafts.review', 'repository.review', 'repository.write', 'sessions.protect', 'shelf.manage', 'library.manage', 'runs.approve', 'environments.manage'].includes(ROUTES[id].action ?? '')).length);
+    expect(reference.match(/^curl/gm)?.length).toBe(ROUTE_IDS.filter((id) => !['tokens.manage', 'activity.read', 'drafts.review', 'repository.review', 'repository.write', 'sessions.protect', 'shelf.manage', 'library.manage', 'runs.approve', 'environments.manage', 'queue.manage', 'rules.manage'].includes(ROUTES[id].action ?? '')).length);
   });
 });
 

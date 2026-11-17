@@ -227,6 +227,14 @@ export const COMMANDS: readonly Command[] = [
     run: (state) => state.chooseAgentTools(true),
   },
   {
+    id: 'queue.open',
+    title: 'Queue and For you…',
+    description: 'Two lists side by side. On the left, everything that waits on you: terminals, approvals, drafts, proposed tasks, tasks that are done or failed, what was asked of you. On the right, the queue of tasks for agents: add one, say how many run at once, start the next.',
+    group: 'Panels',
+    available: always,
+    run: (state) => state.togglePanel('queue'),
+  },
+  {
     id: 'terminal.newIn',
     title: 'New terminal in a folder, or in a working copy…',
     description: 'Asks where: a folder of your choosing, and whether the terminal works there or in a working copy of its own, a second checkout of that repository on a new branch. A working copy keeps its work apart from yours; it is not a lock.',
@@ -402,9 +410,9 @@ export const COMMANDS: readonly Command[] = [
     title: 'Go to the next waiting session',
     description: 'Goes to the next session that is waiting for you, on whichever canvas it is.',
     group: 'Terminals',
-    available: (state) => nextWaiting(state.app?.sessions ?? [], state.focus?.sessionId ?? null) !== null,
+    available: (state) => nextWaiting(state.app?.sessions ?? [], state.focus?.sessionId ?? null, state.app?.runs ?? []) !== null,
     run: (state) => {
-      const next = nextWaiting(state.app?.sessions ?? [], state.focus?.sessionId ?? null);
+      const next = nextWaiting(state.app?.sessions ?? [], state.focus?.sessionId ?? null, state.app?.runs ?? []);
       if (next) state.showSession(next.id);
     },
   },

@@ -117,9 +117,9 @@ How to create a token, what the scopes mean, the limits and the activity log are
 | [`GET /v1/rules`](#listrules) | List the rules | browser only |
 | [`POST /v1/rules`](#addrule) | Write a rule | browser only |
 | [`DELETE /v1/rules/{ruleId}`](#removerule) | Remove a rule | browser only |
-| [`POST /v1/sessions/{sessionId}/tasks`](#proposesessiontask) | Propose a task for the queue | session's own token, or `tasks:write` |
-| [`POST /v1/sessions/{sessionId}/asks`](#addsessionask) | Ask the owner for something, in writing | session's own token, or `tasks:write` |
-| [`GET /v1/sessions/{sessionId}/queue`](#getsessionqueue) | What is in the queue, and what the session itself proposed and asked | session's own token, or `read` |
+| [`POST /v1/sessions/{sessionId}/tasks`](#proposesessiontask) | Propose a task for the queue | session's own token |
+| [`POST /v1/sessions/{sessionId}/asks`](#addsessionask) | Ask the owner for something, in writing | session's own token |
+| [`GET /v1/sessions/{sessionId}/queue`](#getsessionqueue) | What is in the queue, and what the session itself proposed and asked | session's own token |
 | [`GET /v1/environments/offers`](#getenvironmentoffers) | Where a new session in a folder could work | browser only |
 | [`GET /v1/environments`](#listenvironments) | List what was prepared for sessions to work in | `read` |
 | [`GET /v1/environments/{environmentId}`](#getenvironment) | Read one environment: what it is, and which files changed | `read` |
@@ -8109,7 +8109,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 
 What the session thinks should be done, by another agent or later. It waits on the owner's list for a yes and starts nothing. Where it would run and who takes it are the owner's to say.
 
-For a session's own token, about that session; or an API token with the scope `tasks:write`, about any session.
+For a session's own token, about that session. No API token may call this.
 
 | Parameter | In | Type | Required | |
 |---|---|---|---|---|
@@ -8177,9 +8177,9 @@ For a session's own token, about that session; or an API token with the scope `t
 **Errors:** 400, 401, 403, 404, 409, 413, 429.
 
 ```sh
-curl -X POST -H "Authorization: Bearer $TOKEN" \
+curl -X POST -H "Authorization: Bearer $AUBERGINE_TOKEN" \
      -H "Content-Type: application/json" -d '{"title":"text"}' \
-     http://127.0.0.1:4600/v1/sessions/<sessionId>/tasks
+     $AUBERGINE_URL/v1/sessions/<sessionId>/tasks
 ```
 
 ### addSessionAsk
@@ -8188,7 +8188,7 @@ curl -X POST -H "Authorization: Bearer $TOKEN" \
 
 For something only a person can do. It appears on the owner's list until they mark it done or dismiss it.
 
-For a session's own token, about that session; or an API token with the scope `tasks:write`, about any session.
+For a session's own token, about that session. No API token may call this.
 
 | Parameter | In | Type | Required | |
 |---|---|---|---|---|
@@ -8223,9 +8223,9 @@ For a session's own token, about that session; or an API token with the scope `t
 **Errors:** 400, 401, 403, 404, 409, 413, 429.
 
 ```sh
-curl -X POST -H "Authorization: Bearer $TOKEN" \
+curl -X POST -H "Authorization: Bearer $AUBERGINE_TOKEN" \
      -H "Content-Type: application/json" -d '{"text":"text"}' \
-     http://127.0.0.1:4600/v1/sessions/<sessionId>/asks
+     $AUBERGINE_URL/v1/sessions/<sessionId>/asks
 ```
 
 ### getSessionQueue
@@ -8234,7 +8234,7 @@ curl -X POST -H "Authorization: Bearer $TOKEN" \
 
 Every task by its title and state, so that nothing is proposed twice, and what this session asked of its owner that still waits. Not what other sessions asked, and not the rest of what waits on the owner.
 
-For a session's own token, about that session; or an API token with the scope `read`, about any session.
+For a session's own token, about that session. No API token may call this.
 
 | Parameter | In | Type | Required | |
 |---|---|---|---|---|
@@ -8273,8 +8273,8 @@ For a session's own token, about that session; or an API token with the scope `r
 **Errors:** 400, 401, 403, 404, 413, 429.
 
 ```sh
-curl -H "Authorization: Bearer $TOKEN" \
-     http://127.0.0.1:4600/v1/sessions/<sessionId>/queue
+curl -H "Authorization: Bearer $AUBERGINE_TOKEN" \
+     $AUBERGINE_URL/v1/sessions/<sessionId>/queue
 ```
 
 ## Environments

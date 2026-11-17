@@ -204,6 +204,7 @@ describe('creating and using a token', () => {
       ['notes:write', true],
       ['workflows:write', true],
       ['runs:write', true],
+      ['tasks:write', true],
       ['terminal:read', true],
       ['terminal:input', true],
       ['messages:read', true],
@@ -322,6 +323,10 @@ describe('every route has a rule', () => {
     'GET /v1/sessions/:sessionId/brief',
     'GET /v1/sessions/:sessionId/drafts',
     'POST /v1/sessions/:sessionId/drafts',
+    // What a session proposes for the queue and asks of its owner, and what it reads back of them: no token speaks as a session.
+    'POST /v1/sessions/:sessionId/tasks',
+    'POST /v1/sessions/:sessionId/asks',
+    'GET /v1/sessions/:sessionId/queue',
     // A session's own inbox, and what it sends: no token may take a session's messages or speak as it.
     'POST /v1/sessions/:sessionId/inbox',
     'POST /v1/sessions/:sessionId/messages/:messageId/reply',
@@ -357,6 +362,19 @@ describe('every route has a rule', () => {
     'GET /v1/environments/:environmentId/difference',
     'GET /v1/environments/:environmentId/endings',
     'POST /v1/environments/:environmentId/end',
+    'PATCH /v1/tasks/:taskId',
+    'POST /v1/tasks/:taskId/accept',
+    'POST /v1/tasks/:taskId/decline',
+    'POST /v1/tasks/:taskId/again',
+    'POST /v1/tasks/:taskId/clear',
+    'PUT /v1/tasks/order',
+    'POST /v1/tasks/start',
+    'PUT /v1/queue',
+    'POST /v1/asks/:askId/done',
+    'POST /v1/asks/:askId/dismiss',
+    'GET /v1/rules',
+    'POST /v1/rules',
+    'DELETE /v1/rules/:ruleId',
     'DELETE /v1/library/sources/:sourceId',
     'POST /v1/library/sources/:sourceId/refresh',
     'GET /v1/library/requests',
@@ -483,14 +501,17 @@ describe('every route has a rule', () => {
       'GET /v1/sessions/:sessionId/drafts',
       // Where it works itself, and which of its own files changed: names and counts.
       'GET /v1/sessions/:sessionId/environment',
+      'GET /v1/sessions/:sessionId/queue',
       'GET /v1/sessions/:sessionId/repository-workflows',
       'GET /v1/sessions/:sessionId/run',
+      'POST /v1/sessions/:sessionId/asks',
       'POST /v1/sessions/:sessionId/drafts',
       // Messages: its own inbox, an answer, and a message of its own. Exactly these three.
       'POST /v1/sessions/:sessionId/inbox',
       'POST /v1/sessions/:sessionId/messages/:messageId/reply',
       'POST /v1/sessions/:sessionId/notes',
       'POST /v1/sessions/:sessionId/run/report',
+      'POST /v1/sessions/:sessionId/tasks',
       'POST /v1/sessions/:sessionId/tell',
       'PUT /v1/sessions/:sessionId/agent',
       'PUT /v1/sessions/:sessionId/attention',
@@ -780,7 +801,7 @@ describe('the secret', () => {
 
     // The hash is what is stored, and it is not sent to the page.
     const state = JSON.parse(await readFile(path.join(dir, 'state.json'), 'utf8'));
-    expect(state.version).toBe(11);
+    expect(state.version).toBe(12);
     expect(state.tokens.map((t: { hash: string }) => t.hash)).toEqual([expect.stringMatching(/^[0-9a-f]{64}$/), expect.stringMatching(/^[0-9a-f]{64}$/)]);
   });
 

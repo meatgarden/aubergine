@@ -349,8 +349,8 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
     addRule: ({ body }) => queue.addRule(body),
     removeRule: ({ params }) => queue.removeRule(params.ruleId),
     // A session, about itself: what it proposes waits for its owner, and it reads only what is its own of the owner's list.
-    proposeSessionTask: ({ params, body, principal }) => queue.add(body, principal.kind === 'user' || principal.kind === 'token' ? { by: { kind: 'agent', name: sessions.get(params.sessionId).name.slice(0, 120), sessionId: params.sessionId }, trusted: false, owner: false } : askerOf(principal)),
-    addSessionAsk: ({ params, body, principal }) => queue.addAsk(body, principal.kind === 'session' ? askerOf(principal) : { by: { kind: 'agent', name: sessions.get(params.sessionId).name.slice(0, 120), sessionId: params.sessionId }, trusted: false, owner: false }),
+    proposeSessionTask: ({ params, body }) => queue.add(body, { by: { kind: 'agent', name: sessions.get(params.sessionId).name.slice(0, 120), sessionId: params.sessionId }, trusted: false, owner: false }),
+    addSessionAsk: ({ params, body }) => queue.addAsk(body, { by: { kind: 'agent', name: sessions.get(params.sessionId).name.slice(0, 120), sessionId: params.sessionId }, trusted: false, owner: false }),
     getSessionQueue: ({ params }) => queue.ownQueue(params.sessionId),
 
     /* ---------- Environments ---------- */

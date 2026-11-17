@@ -55,6 +55,8 @@ import { BoardScreen } from './board/BoardScreen';
 import { StartDialog } from './environment/StartDialog';
 import { EnvironmentPanel } from './environment/EnvironmentPanel';
 import './panel/sections/copies';
+import './panel/sections/for-you';
+import { QueueScreen } from './queue/QueueScreen';
 import { itemsOfListing, useRepositoryListing } from './review/repository-source';
 import { DescribeDialog } from './workflows/DescribeDialog';
 import { ShelfEditor } from './workflows/ShelfEditor';
@@ -479,6 +481,9 @@ export function Canvas() {
           <button type="button" className="quiet" onClick={() => runCommand('workflows.open')} title={hint('workflows.open', 'Workflows: make, change and run them')} data-testid="toolbar-workflows">
             Workflows
           </button>
+          <button type="button" className="quiet" onClick={() => runCommand('queue.open')} title={hint('queue.open', 'For you, and the queue: everything that waits on you, and tasks for agents')} data-testid="toolbar-queue">
+            Queue
+          </button>
           <button type="button" className="quiet" onClick={() => runCommand('board.open')} title={hint('board.open', 'Board: every run that is going, by workflow and element; approve or send back from there')} data-testid="toolbar-board">
             Board
           </button>
@@ -548,6 +553,7 @@ export function Canvas() {
       <DescribeDialog />
       <ReviewScreen />
       <LibraryScreen />
+      <QueueScreen />
       <BoardScreen />
       <StartDialog />
       <EnvironmentPanel />

@@ -44,13 +44,10 @@ export const SCOPE_OF = {
   'environments.read': 'read',
   // Where a session itself works, and which of its own files changed: a session may read that about itself.
   'environment.own.read': 'read',
+  // A session may propose a task, ask its owner, and read what is its own of the two lists: those three are session actions and no token's.
   // The queue and the owner's list: reading both is reading. Adding a task or asking the owner needs the scope for it, and what is added waits for the owner.
   'tasks.read': 'read',
   'tasks.write': 'tasks:write',
-  // A session may propose a task, ask its owner for something, and read what it itself proposed and asked.
-  'task.own.propose': 'tasks:write',
-  'ask.own.add': 'tasks:write',
-  'queue.own.read': 'read',
   'library.read': 'read',
   'library.request': 'workflows:write',
   'messages.read': 'messages:read',

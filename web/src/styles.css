@@ -3500,3 +3500,129 @@ tr[data-status='expired'] strong {
 .close-copy-again {
   margin-top: 6px;
 }
+
+/* For you, and the queue of tasks. */
+.dialog.sheet.queue-screen {
+  width: min(1240px, 96vw);
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+}
+.queue-columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: 16px;
+  min-height: 0;
+  overflow: auto;
+}
+@media (max-width: 900px) {
+  .queue-columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.queue-columns h3 {
+  margin: 0 0 8px;
+  font-size: 14px;
+}
+.queue-write,
+.queue-bar,
+.queue-rule-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.queue-write input {
+  flex: 1;
+  min-width: 0;
+}
+.queue-write input,
+.queue-bar input[type='number'],
+.queue-rule-form select,
+.task-form select,
+.task-form textarea {
+  font: inherit;
+  font-size: 13px;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 5px 8px;
+}
+.queue-bar input[type='number'] {
+  width: 56px;
+}
+.foryou-list,
+.task-list,
+.queue-rules ul {
+  list-style: none;
+  margin: 0 0 8px;
+  padding: 0;
+}
+.foryou-row,
+.task-row {
+  margin-bottom: 6px;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-left-width: 3px;
+  border-radius: 6px;
+  font-size: 13px;
+}
+.foryou-row.waits,
+.task-row.state-needs-owner,
+.task-row.state-failed {
+  border-left-color: var(--accent);
+}
+.task-row:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+.foryou-head,
+.task-head {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+}
+.foryou-kind,
+.task-title {
+  flex: 1;
+  min-width: 0;
+  font-weight: 600;
+}
+.foryou-from,
+.task-facts,
+.task-state {
+  font-size: 12px;
+  color: var(--muted);
+}
+.foryou-sentence,
+.task-reason {
+  margin: 2px 0 4px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.foryou-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.foryou-actions button {
+  font-size: 12px;
+  padding: 2px 8px;
+}
+.queue-rules {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+}
+.queue-rules li {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  padding: 2px 0;
+}
+.queue-rules li span {
+  flex: 1;
+}

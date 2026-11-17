@@ -8316,9 +8316,9 @@ export const OPERATIONS = {
   listRules: { method: 'GET', path: '/v1/rules', params: [], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   addRule: { method: 'POST', path: '/v1/rules', params: [], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   removeRule: { method: 'DELETE', path: '/v1/rules/{ruleId}', params: ["ruleId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
-  proposeSessionTask: { method: 'POST', path: '/v1/sessions/{sessionId}/tasks', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: "tasks:write" } },
-  addSessionAsk: { method: 'POST', path: '/v1/sessions/{sessionId}/asks', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: "tasks:write" } },
-  getSessionQueue: { method: 'GET', path: '/v1/sessions/{sessionId}/queue', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: "read" } },
+  proposeSessionTask: { method: 'POST', path: '/v1/sessions/{sessionId}/tasks', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: null } },
+  addSessionAsk: { method: 'POST', path: '/v1/sessions/{sessionId}/asks', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: null } },
+  getSessionQueue: { method: 'GET', path: '/v1/sessions/{sessionId}/queue', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: null } },
   getEnvironmentOffers: { method: 'GET', path: '/v1/environments/offers', params: [], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   listEnvironments: { method: 'GET', path: '/v1/environments', params: [], hasBody: false, paged: true, idempotent: false, stream: false, access: { who: 'token', scope: "read" } },
   getEnvironment: { method: 'GET', path: '/v1/environments/{environmentId}', params: ["environmentId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "read" } },
@@ -8968,19 +8968,19 @@ export interface Client {
   /**
    * Propose a task for the queue.
    *
-   * `POST /v1/sessions/{sessionId}/tasks`. A session's own token, or an API token with `tasks:write`.
+   * `POST /v1/sessions/{sessionId}/tasks`. A session's own token.
    */
   proposeSessionTask(args: { sessionId: string; body: ProposeSessionTaskBody } & CallOptions): Promise<ProposeSessionTaskResult>;
   /**
    * Ask the owner for something, in writing.
    *
-   * `POST /v1/sessions/{sessionId}/asks`. A session's own token, or an API token with `tasks:write`.
+   * `POST /v1/sessions/{sessionId}/asks`. A session's own token.
    */
   addSessionAsk(args: { sessionId: string; body: AddSessionAskBody } & CallOptions): Promise<AddSessionAskResult>;
   /**
    * What is in the queue, and what the session itself proposed and asked.
    *
-   * `GET /v1/sessions/{sessionId}/queue`. A session's own token, or an API token with `read`.
+   * `GET /v1/sessions/{sessionId}/queue`. A session's own token.
    */
   getSessionQueue(args: { sessionId: string } & CallOptions): Promise<GetSessionQueueResult>;
   /**

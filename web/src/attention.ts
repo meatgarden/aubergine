@@ -1,18 +1,17 @@
-import { messagesWantOwner, needsUser, type ChangeEvent, type Session } from '@aubergine/shared';
+import { needsUser, sessionsWaiting, type ChangeEvent, type Run, type Session } from '@aubergine/shared';
 
 /**
  * Sessions waiting for the user, the one that has waited longest first. Parked ones count too.
  * A session with a message for the owner, or with a thread that is paused until the owner has looked, waits as well.
  */
-export function waitingQueue(sessions: readonly Session[]): Session[] {
-  return sessions
-    .filter((s) => s.state !== 'exited' && (needsUser(s.attention) || messagesWantOwner(s.messages)))
-    .sort((a, b) => (needsUser(a.attention) ? (a.attention.at ?? '') : (a.messages.at ?? '')).localeCompare(needsUser(b.attention) ? (b.attention.at ?? '') : (b.messages.at ?? '')));
+export function waitingQueue(sessions: readonly Session[], runs: readonly Run[] = []): Session[] {
+  // The same test the owner's list is made with: the count in the toolbar and the items there cannot disagree.
+  return sessionsWaiting(sessions, runs).map((waiting) => waiting.session);
 }
 
 /** The session to jump to next: the first in the queue after `currentId`, wrapping around. */
-export function nextWaiting(sessions: readonly Session[], currentId: string | null): Session | null {
-  const queue = waitingQueue(sessions);
+export function nextWaiting(sessions: readonly Session[], currentId: string | null, runs: readonly Run[] = []): Session | null {
+  const queue = waitingQueue(sessions, runs);
   if (queue.length === 0) return null;
   const index = queue.findIndex((s) => s.id === currentId);
   return queue[(index + 1) % queue.length] ?? null;
@@ -74,4 +73,15 @@ export function canResumeAgent(session: Session): boolean {
   if (session.status.state === 'idle') return true;
   // No report from the shell: go by what is in the foreground.
   return session.command !== null && SHELLS.has(session.command.replace(/^-/, ''));
+}
+
+/** Shows a notification of the browser, where the owner switched those on. Never asks for permission: that happens at a click. */
+export function showNotification(title: string, body: string): boolean {
+  try {
+    if (!notificationsWanted()) return false;
+    new Notification(title, { body });
+    return true;
+  } catch {
+    return false;
+  }
 }

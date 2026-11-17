@@ -136,7 +136,11 @@ Neither is done until your owner acts, and nothing tells you when. Do not start 
 
 (Needs the terminal's own credential, or an API token with the scope tasks:write.)
 
-As tools: task_propose, ask_owner, queue_read.
+As tools: task_propose, ask_owner.
+
+(Needs the terminal's own credential, or an API token with the scope read.)
+
+To read the queue: queue_read.
 
 (Needs an API token with the scope read.)
 
