@@ -57,6 +57,12 @@ export class Viewers {
     return chosen.length;
   }
 
+  /** Asks every open page to notify the owner. Returns how many pages were asked. */
+  notify(title: string, body: string): number {
+    for (const viewer of this.viewers) viewer.send({ type: 'notify', title: title.slice(0, 200), body: body.slice(0, 600) });
+    return this.viewers.size;
+  }
+
   /**
    * Asks the tab used most recently to switch to a canvas, unless a tab is
    * already showing it. Returns how many tabs are now showing or were asked.

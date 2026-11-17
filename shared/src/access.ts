@@ -7,7 +7,7 @@ import type { Scope } from './tokens';
  */
 
 /** What a session may do, to itself only. */
-export const SESSION_ACTIONS = ['attention.set', 'note.append', 'agent.report', 'run.own.read', 'run.own.report', 'draft.own.read', 'draft.own.propose', 'repository.own.read', 'recap.own.write', 'message.own.read', 'message.own.send', 'environment.own.read'] as const;
+export const SESSION_ACTIONS = ['attention.set', 'note.append', 'agent.report', 'run.own.read', 'run.own.report', 'draft.own.read', 'draft.own.propose', 'repository.own.read', 'recap.own.write', 'message.own.read', 'message.own.send', 'environment.own.read', 'task.own.propose', 'ask.own.add', 'queue.own.read'] as const;
 
 /** For a token, each of these needs the scope beside it. */
 export const SCOPE_OF = {
@@ -44,6 +44,13 @@ export const SCOPE_OF = {
   'environments.read': 'read',
   // Where a session itself works, and which of its own files changed: a session may read that about itself.
   'environment.own.read': 'read',
+  // The queue and the owner's list: reading both is reading. Adding a task or asking the owner needs the scope for it, and what is added waits for the owner.
+  'tasks.read': 'read',
+  'tasks.write': 'tasks:write',
+  // A session may propose a task, ask its owner for something, and read what it itself proposed and asked.
+  'task.own.propose': 'tasks:write',
+  'ask.own.add': 'tasks:write',
+  'queue.own.read': 'read',
   'library.read': 'read',
   'library.request': 'workflows:write',
   'messages.read': 'messages:read',
@@ -56,7 +63,7 @@ export const SCOPE_OF = {
  * tokens did, changing settings, and anything that reaches processes outside
  * Aubergine.
  */
-export const NEVER_BY_TOKEN = ['tokens.manage', 'activity.read', 'settings.write', 'processes.signal', 'outside.read', 'outside.move', 'drafts.review', 'repository.review', 'repository.write', 'sessions.protect', 'demo.manage', 'inventory.read', 'recap.ask', 'away.read', 'history.read', 'history.open', 'messages.manage', 'shelf.manage', 'library.manage', 'runs.approve', 'environments.manage'] as const;
+export const NEVER_BY_TOKEN = ['tokens.manage', 'activity.read', 'settings.write', 'processes.signal', 'outside.read', 'outside.move', 'drafts.review', 'repository.review', 'repository.write', 'sessions.protect', 'demo.manage', 'inventory.read', 'recap.ask', 'away.read', 'history.read', 'history.open', 'messages.manage', 'shelf.manage', 'library.manage', 'runs.approve', 'environments.manage', 'queue.manage', 'rules.manage'] as const;
 
 export type Action = (typeof SESSION_ACTIONS)[number] | keyof typeof SCOPE_OF | (typeof NEVER_BY_TOKEN)[number];
 

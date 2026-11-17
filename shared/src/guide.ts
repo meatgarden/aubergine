@@ -69,6 +69,8 @@ export const OWNERS_ALONE: Record<(typeof NEVER_BY_TOKEN)[number], string> = {
   'messages.manage': 'deciding which terminals may message each other, and pausing or stopping a thread',
   'runs.approve': 'approving a run that waits for a person, or sending it back',
   'environments.manage': 'removing or discarding a working copy',
+  'queue.manage': 'accepting, declining, reordering or starting tasks, and changing how many run at once',
+  'rules.manage': 'writing or removing a rule',
 };
 
 const ownersAlone = (): string => [...new Set(NEVER_BY_TOKEN.map((action) => OWNERS_ALONE[action]))].join('; ');

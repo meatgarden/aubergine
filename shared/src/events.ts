@@ -1,3 +1,4 @@
+import { Ask, QUEUE_LIMIT_MAX, Rule, Task } from './tasks';
 import { SessionEnvironment } from './environment';
 import { z } from 'zod';
 import {
@@ -117,6 +118,17 @@ export const ChangeEvent = z.discriminatedUnion('type', [
   /** Something was prepared for a session to work in, or what is known about it changed: what changed there, its session, whether it is whole. */
   z.object({ type: z.literal('environment.changed'), environment: SessionEnvironment }),
   z.object({ type: z.literal('environment.removed'), environmentId: Id }),
+  /** A task was added to the queue, or moved: proposed, accepted, started, following its run, over. */
+  z.object({ type: z.literal('task.changed'), task: Task }),
+  /** A task left the state: withdrawn, declined, or looked at after it was over. It is in the archive. */
+  z.object({ type: z.literal('task.removed'), taskId: Id }),
+  /** Something was written on the owner's list, or taken off it. */
+  z.object({ type: z.literal('ask.changed'), ask: Ask }),
+  z.object({ type: z.literal('ask.removed'), askId: Id }),
+  z.object({ type: z.literal('rule.changed'), rule: Rule }),
+  z.object({ type: z.literal('rule.removed'), ruleId: Id }),
+  /** How tasks are started: how many at once, whether new starts are held, whether they start by themselves; and which runs a rule started. */
+  z.object({ type: z.literal('queue.settings'), limit: z.number().int().min(1).max(QUEUE_LIMIT_MAX), hold: z.boolean(), automatic: z.boolean(), ruleRuns: z.array(Id).max(200) }),
   z.object({ type: z.literal('token.created'), token: ApiToken }),
   z.object({ type: z.literal('token.revoked'), tokenId: Id, at: Timestamp }),
   /** Recorded at most about once a minute per token. */
@@ -285,6 +297,20 @@ export function applyEvent(state: AppState, event: ChangeEvent): AppState {
       return state.canvases.some((c) => c.id === event.canvas.id) ? state : { ...state, canvases: [...state.canvases, event.canvas] };
     case 'canvas.updated':
       return { ...state, canvases: state.canvases.map((c) => (c.id === event.canvasId ? { ...c, ...event.changes } : c)) };
+    case 'task.changed':
+      return { ...state, queue: { ...state.queue, tasks: [...state.queue.tasks.filter((t) => t.id !== event.task.id), event.task] } };
+    case 'task.removed':
+      return { ...state, queue: { ...state.queue, tasks: state.queue.tasks.filter((t) => t.id !== event.taskId) } };
+    case 'ask.changed':
+      return { ...state, queue: { ...state.queue, asks: [...state.queue.asks.filter((a) => a.id !== event.ask.id), event.ask] } };
+    case 'ask.removed':
+      return { ...state, queue: { ...state.queue, asks: state.queue.asks.filter((a) => a.id !== event.askId) } };
+    case 'rule.changed':
+      return { ...state, queue: { ...state.queue, rules: [...state.queue.rules.filter((r) => r.id !== event.rule.id), event.rule] } };
+    case 'rule.removed':
+      return { ...state, queue: { ...state.queue, rules: state.queue.rules.filter((r) => r.id !== event.ruleId) } };
+    case 'queue.settings':
+      return { ...state, queue: { ...state.queue, limit: event.limit, hold: event.hold, automatic: event.automatic, ruleRuns: event.ruleRuns } };
     case 'environment.changed':
       return { ...state, environments: [...state.environments.filter((e) => e.id !== event.environment.id), event.environment] };
     case 'environment.removed':

@@ -227,6 +227,8 @@ export function subscribeToEvents(handlers: {
   onShow: (sessionId: string) => void;
   /** Asked to switch to a canvas (by a program, through the public API). */
   onShowCanvas: (canvasId: string) => void;
+  /** A rule of the owner's asks this page to notify them. */
+  onNotify?: (title: string, body: string) => void;
   onDown: () => void;
 }): { stop: () => void; viewing: (canvasId: string) => void } {
   let socket: WebSocket | null = null;
@@ -249,6 +251,7 @@ export function subscribeToEvents(handlers: {
         handlers.onReady();
       } else if (parsed.data.type === 'show') handlers.onShow(parsed.data.sessionId);
       else if (parsed.data.type === 'show-canvas') handlers.onShowCanvas(parsed.data.canvasId);
+      else if (parsed.data.type === 'notify') handlers.onNotify?.(parsed.data.title, parsed.data.body);
       else handlers.onEvent(parsed.data.event);
     };
     socket.onclose = () => {

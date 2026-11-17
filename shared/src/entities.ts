@@ -1,3 +1,4 @@
+import { QueueState } from './tasks';
 import { SessionEnvironment } from './environment';
 import { z } from 'zod';
 import { ApiToken } from './tokens';
@@ -349,6 +350,8 @@ export const AppState = z.object({
   library: LibraryState.prefault({}),
   /** What was prepared for sessions to work in: today, working copies. A session that works in the folder it was started in has none. */
   environments: z.array(SessionEnvironment).default([]),
+  /** The queue of tasks for agents, what is asked of the owner in writing, the rules, and how tasks are started. */
+  queue: QueueState.prefault({}),
 });
 export type AppState = z.infer<typeof AppState>;
 
@@ -380,7 +383,7 @@ export function createInitialState(now: Date = new Date()): AppState {
     createdAt,
   };
   const project: Project = { id: newId(), workspaceId: workspace.id, name: 'Default', createdAt };
-  return { organization, workspace, project, sessions: [], canvases: [newCanvas(project.id, FIRST_CANVAS_NAME, 0, now)], tokens: [], workflows: [], runs: [], drafts: [], shelf: [], repositoryAccepted: [], library: { sources: [], installed: [], requests: [] }, environments: [] };
+  return { organization, workspace, project, sessions: [], canvases: [newCanvas(project.id, FIRST_CANVAS_NAME, 0, now)], tokens: [], workflows: [], runs: [], drafts: [], shelf: [], repositoryAccepted: [], library: { sources: [], installed: [], requests: [] }, environments: [], queue: QueueState.parse({}) };
 }
 
 /** Canvases in tab order. */

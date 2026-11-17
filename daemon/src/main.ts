@@ -1,3 +1,4 @@
+import { FileTaskArchive } from './task-archive';
 import { mkdir, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { SESSION_ENV, paths } from '@aubergine/shared';
@@ -118,6 +119,7 @@ async function main(): Promise<void> {
     defaultFolder: () => (settings.value.defaultFolder ? expandHome(settings.value.defaultFolder) : null),
     messageLog: new FileMessageLog(config.dataDir, () => settings.value.messages.logMaxBytes, (error) => console.warn(`Could not write the file of messages: ${String(error)}`)),
     draftLog: new FileDraftLog(config.dataDir, (error) => console.warn(`Could not write the record of drafts: ${String(error)}`)),
+    taskArchive: new FileTaskArchive(config.dataDir),
     runArchive: new FileRunArchive(config.dataDir, (error) => console.warn(`Could not write the archive of runs: ${String(error)}`)),
     version: versionInfo(installRoot(), config).version,
   });
