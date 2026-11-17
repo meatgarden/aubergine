@@ -48,7 +48,7 @@ export function AttentionQueue() {
         title={notify ? 'Desktop notifications are on. Click to turn them off.' : 'Notify me on the desktop when a session starts waiting'}
         onClick={() => void setNotificationsWanted(!notify).then(setNotify)}
       >
-        {notify ? 'Notify: on' : 'Notify: off'}
+        Notify {notify ? 'on' : 'off'}
       </button>
     </>
   );

@@ -6,9 +6,10 @@ import { useApp } from '../../store';
 import { useEndedRuns } from '../../workflows/ended-runs';
 import { registerSection } from '../registry';
 
-const SHOWN = 4;
+/** More than this is for the Queue screen, which has room for it. */
+const SHOWN = 30;
 
-/** The first few things that wait on the owner, with the way to all of them. */
+/** What waits on the owner, each with what it is, what it says and who it is from, and the way to act on it. */
 function ForYouSection() {
   const app = useApp((s) => s.app);
   const ended = useEndedRuns((e) => e.items);
@@ -22,9 +23,10 @@ function ForYouSection() {
         <ul className="runs-list">
           {items.slice(0, SHOWN).map((item) => (
             <li key={item.id}>
-              <button type="button" className="runs-row" title={`${item.title}, from ${item.from}`} onClick={() => goTo(item.act)} data-testid="foryou-section-row" data-kind={item.kind}>
-                <span className="runs-name">{item.title}</span>
-                <span className="runs-where">{item.sentence}</span>
+              <button type="button" className="foryou-row" title={`${item.title}, from ${item.from}`} onClick={() => goTo(item.act)} data-testid="foryou-section-row" data-kind={item.kind}>
+                <span className="foryou-kind">{item.title}</span>
+                <span className="foryou-says">{item.sentence}</span>
+                <span className="foryou-from">from {item.from}</span>
               </button>
             </li>
           ))}
@@ -42,6 +44,7 @@ function ForYouSection() {
 registerSection({
   id: 'for-you',
   title: 'For you',
+  urgent: true,
   order: 15,
   icon: '☑',
   useCount: () => {

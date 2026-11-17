@@ -116,7 +116,8 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await expect(page.getByTestId('node-shield')).toHaveCount(0);
 
   // A frame can be added, labeled and removed.
-  await page.getByRole('button', { name: '+ Frame' }).click();
+  await page.getByTestId('toolbar-new-more').click();
+  await page.getByTestId('toolbar-new-frame').click();
   await expect(page.getByTestId('frame')).toHaveCount(1);
   await page.getByTestId('frame-label').dblclick();
   await page.getByRole('textbox', { name: 'Frame label' }).fill('Billing');
@@ -406,7 +407,7 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   // The list on the left, by keyboard: scope, the text filter, tags, the collapsed strip.
   const listRows = page.locator('.list-rows [data-testid="list-row"]');
   await expect(listRows).toHaveCount(2); // the terminal on this canvas and the parked one
-  await expect(page.getByTestId('section-count')).toHaveText('2');
+  await expect(page.locator('[data-testid="panel-tab"][data-section="terminals"]').getByTestId('section-count')).toHaveText('2');
   await expect(page.getByTestId('list-group')).toHaveCount(1); // only "Parked": one canvas is in scope
   await page.keyboard.press('s');
   await expect(page.getByTestId('scope-all')).toHaveAttribute('aria-pressed', 'true');
@@ -418,7 +419,7 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await expect(page.getByTestId('list-search')).toBeFocused();
   await page.keyboard.type('zzz-no-such');
   await expect(page.getByTestId('list-empty')).toContainText('No terminal matches This canvas + “zzz-no-such”');
-  await expect(page.getByTestId('section-count')).toHaveText('0');
+  await expect(page.locator('[data-testid="panel-tab"][data-section="terminals"]').getByTestId('section-count')).toHaveText('0');
   await page.keyboard.press('Escape'); // clears the text
   await expect(listRows).toHaveCount(2);
   await page.keyboard.press('Escape'); // back to the canvas
@@ -617,9 +618,14 @@ test('a workflow made from a template moves a terminal through its elements', as
   await expect(strip).toHaveAttribute('data-element', 'plan');
   await expect(strip).toContainText('Plan');
   await expect(page.getByTestId('row-run')).toContainText('Plan');
+  // The Runs tab of the side panel says the same, and its tab says how many are going.
+  await expect(page.locator('[data-testid="panel-tab"][data-section="workflows"]').getByTestId('section-count')).toHaveText('1');
+  await page.locator('[data-testid="panel-tab"][data-section="workflows"]').click();
   await expect(page.getByTestId('runs-row')).toHaveAttribute('data-element', 'plan');
   await expect(page.getByTestId('runs-row')).toContainText('Ship it · Plan · 1 of 3');
+  await page.locator('[data-testid="panel-tab"][data-section="terminals"]').click();
   // The filter "on a workflow" keeps it; "workflow: blocked" does not.
+  await page.getByTestId('list-more').click();
   await page.locator('[data-filter="workflow"]').click();
   await expect(page.getByTestId('list-row')).toHaveCount(1);
   await page.locator('[data-filter="workflow-blocked"]').click();
@@ -634,7 +640,11 @@ test('a workflow made from a template moves a terminal through its elements', as
   await expect(strip).toHaveAttribute('data-element', 'build', { timeout: 20_000 });
   await expect(strip).toContainText('Build');
   await expect(page.getByTestId('row-run')).toContainText('Build');
+  await page.locator('[data-testid="panel-tab"][data-section="workflows"]').click();
   await expect(page.getByTestId('runs-row')).toHaveAttribute('data-element', 'build');
+  await page.locator('[data-testid="panel-tab"][data-section="terminals"]').click();
+  // Looking at the panel took the keyboard from the terminal: one click gives it back.
+  await page.getByTestId('node-body').click();
   // The command printed what comes next, with the text that was edited.
   await expect(page.locator('.xterm-rows')).toContainText('Build it, and write the tests first.');
 
@@ -666,13 +676,16 @@ test('a workflow made from a template moves a terminal through its elements', as
   await expect(run.getByTestId('run-done')).toHaveCount(0);
   await run.getByTestId('run-view-close').click();
   await expect(strip).toHaveCount(0);
+  await page.locator('[data-testid="panel-tab"][data-section="workflows"]').click();
   await expect(page.getByTestId('runs-row')).toHaveCount(0);
+  await page.locator('[data-testid="panel-tab"][data-section="terminals"]').click();
   await expect(page.getByTestId('badge-attention')).toHaveAttribute('title', 'Workflow "Ship it" finished after "Check"');
   const runs = await (await page.request.get('/v1/runs?status=ended')).json();
   expect(runs.items).toHaveLength(1);
   expect(runs.items[0].run.elements.map((e: { note: string }) => e.note)[0]).toBe('planned: change one file');
 
   // Duplicate and remove, from the screen.
+  await page.locator('[data-testid="panel-tab"][data-section="workflows"]').click();
   await page.getByTestId('open-workflows').click();
   await expect(screen.getByTestId('workflow-row')).toHaveCount(1);
   await screen.getByTestId('workflow-duplicate').click();
@@ -799,6 +812,7 @@ test('an element written by an agent is reviewed, accepted, run by itself, and i
 
   // The owner reads the list in the browser and ticks what they choose.
   await page.keyboard.press(process.platform === 'darwin' ? 'Control+Meta+.' : 'Control+Shift+.');
+  await page.locator('[data-testid="panel-tab"][data-section="workflows"]').click();
   await page.getByTestId('ended-row').first().click();
   await expect(run).toHaveAttribute('data-status', 'finished');
   const items = run.getByTestId('checklist-item');
@@ -1030,6 +1044,7 @@ test('a Claude Code session is given Aubergine tools: a token made for it at the
     const mcpFolder = path.join(e2e.dataDir, 'agents', 'mcp');
 
     // The question comes first, and its answer to begin with is "none".
+    await page.getByTestId('toolbar-new-more').click();
     await page.getByTestId('agent-with-tools').click();
     const dialog = page.getByTestId('agent-tools-dialog');
     await expect(dialog).toContainText('Aubergine tools for this agent');
@@ -1086,6 +1101,7 @@ test('a Claude Code session is given Aubergine tools: a token made for it at the
 
     // "Its own work only" makes a file without a secret and no token.
     const count = (await tokensNow()).length;
+    await page.getByTestId('toolbar-new-more').click();
     await page.getByTestId('agent-with-tools').click();
     await dialog.getByTestId('agent-tools-own').check();
     await dialog.getByTestId('agent-tools-start').click();
@@ -1213,6 +1229,7 @@ test('the tour: each step is done on the real thing, on the demo', async ({ page
   expect((await (await page.request.get('/api/v1/demo', { headers: { origin } })).json()).present).toBe(false);
   expect((await (await page.request.get('/v1/canvases?limit=200', { headers: { origin } })).json()).items.length).toBe(canvasesBefore);
   // Nothing of it is left under "Over lately" either.
+  await page.locator('[data-testid="panel-tab"][data-section="workflows"]').click();
   await expect(page.getByTestId('runs-section')).not.toContainText('List what is left');
   await expect(page.getByTestId('runs-section')).not.toContainText('Fix a bug (demo)');
 
@@ -1723,12 +1740,13 @@ test('messages: the owner writes to a terminal, its agent reads and answers, and
   await expect(row(second).getByTestId('message-mark')).toContainText('✉ 1 from ');
 
   // The Messages section lists every thread, and says where terminals may message each other.
+  await page.locator('[data-testid="panel-tab"][data-section="messages"]').click();
   const section = page.getByTestId('messages-section');
   await expect(section.getByTestId('messages-switch-note')).toContainText('Terminals may message each other on:');
   await expect(section.getByTestId('thread-row')).toHaveCount(2);
 });
 
-test('the side panel gives each section the room it needs, in a small window and a normal one, and remembers what was folded', async ({ page }) => {
+test('the side panel shows one section at a time with all of its height, says how much is in the others, and remembers which was chosen', async ({ page }) => {
   const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
   await page.goto(`/auth?token=${token}`);
   await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
@@ -1736,74 +1754,69 @@ test('the side panel gives each section the room it needs, in a small window and
   await page.getByTestId('toolbar-new-terminal').click();
   await expect(page.getByTestId('list-row').first()).toBeVisible();
 
-  interface Measured {
-    id: string;
-    fill: boolean;
-    height: number;
-    bottom: number;
-    bodyHeight: number;
-    contentHeight: number;
-    scrolls: boolean;
-  }
-  const measure = (): Promise<{ panelBottom: number; panelHeight: number; sections: Measured[] }> =>
-    page.evaluate(() => {
-      const panel = document.querySelector('[data-testid="side-panel"]') as HTMLElement;
-      const box = panel.getBoundingClientRect();
-      return {
-        panelBottom: box.bottom,
-        panelHeight: box.height,
-        sections: [...panel.querySelectorAll<HTMLElement>('.panel-section')].map((section) => {
-          const body = section.querySelector<HTMLElement>('.panel-section-body');
-          const content = body?.firstElementChild as HTMLElement | null;
-          return {
-            id: section.dataset.section ?? '',
-            fill: section.classList.contains('fill'),
-            height: section.getBoundingClientRect().height,
-            bottom: section.getBoundingClientRect().bottom,
-            bodyHeight: body?.clientHeight ?? 0,
-            contentHeight: content?.scrollHeight ?? 0,
-            scrolls: body ? getComputedStyle(body).overflowY === 'auto' : false,
-          };
-        }),
-      };
-    });
+  const tabs = page.getByTestId('panel-tab');
+  const tab = (id: string) => page.locator(`[data-testid="panel-tab"][data-section="${id}"]`);
+  expect(await tabs.evaluateAll((all) => all.map((t) => (t as HTMLElement).dataset.section))).toEqual(['terminals', 'for-you', 'workflows', 'copies', 'messages']);
+  // The terminals come first and are what shows; their tab says how many.
+  await expect(tab('terminals')).toHaveAttribute('aria-selected', 'true');
+  await expect(tab('terminals').getByTestId('section-count')).not.toHaveText('0');
 
   for (const [width, height] of [
     [800, 600],
     [1280, 800],
   ] as const) {
     await page.setViewportSize({ width, height });
-    const { panelBottom, panelHeight, sections } = await measure();
     if (process.env.PANEL_SHOT) await page.screenshot({ path: process.env.PANEL_SHOT + '-' + String(width) + '.png' });
-    expect(sections.map((s) => s.id)).toEqual(['terminals', 'for-you', 'workflows', 'copies', 'messages']);
-    const list = sections.find((s) => s.fill);
-    // The terminal list is never squeezed to a row: it has room for a few, and takes what the others leave.
-    expect(list?.id).toBe('terminals');
-    expect(list?.height ?? 0, `${width}×${height}`).toBeGreaterThanOrEqual(Math.min(340, panelHeight * 0.6) - 1);
+    for (const id of ['terminals', 'for-you', 'workflows', 'copies', 'messages']) {
+      await tab(id).click();
+      await expect(tab(id)).toHaveAttribute('aria-selected', 'true');
+      // One section, and it reaches the bottom of the panel: nothing is squeezed and nothing is cut off.
+      const measured = await page.evaluate(() => {
+        const panel = document.querySelector('[data-testid="side-panel"]') as HTMLElement;
+        const sections = [...panel.querySelectorAll<HTMLElement>('.panel-section')];
+        const row = panel.querySelector<HTMLElement>('.panel-tabs-row');
+        return { count: sections.length, id: sections[0]?.dataset.section, bottom: sections[0]?.getBoundingClientRect().bottom ?? 0, top: sections[0]?.getBoundingClientRect().top ?? 0, panelBottom: panel.getBoundingClientRect().bottom, tabsBottom: row?.getBoundingClientRect().bottom ?? 0, tabsRight: Math.max(...[...panel.querySelectorAll<HTMLElement>('[data-testid="panel-tab"]')].map((t) => t.getBoundingClientRect().right)), panelRight: panel.getBoundingClientRect().right };
+      });
+      expect(measured.count).toBe(1);
+      expect(measured.id).toBe(id);
+      expect(Math.abs(measured.bottom - measured.panelBottom), `${id} at ${width}×${height}`).toBeLessThanOrEqual(1);
+      expect(measured.top, `${id} at ${width}×${height}`).toBeGreaterThanOrEqual(measured.tabsBottom - 1);
+      // Every tab is inside the panel: they wrap to a second line before they would be cut off.
+      expect(measured.tabsRight, `${width}×${height}`).toBeLessThanOrEqual(measured.panelRight);
+    }
+    await tab('terminals').click();
     // Under its filters there is room for rows: the first one is wholly in view.
     await expect(page.getByTestId('list-row').first()).toBeInViewport({ ratio: 1 });
-    for (const section of sections) {
-      // Nothing is cut off at the bottom of the panel.
-      expect(section.bottom, `${section.id} at ${width}×${height}`).toBeLessThanOrEqual(panelBottom + 1);
-      if (section.fill) continue;
-      // Any other section is no taller than what it holds (an empty one is its heading and a line), and scrolls inside itself when that is more than its share.
-      expect(section.bodyHeight, `${section.id} at ${width}×${height}`).toBeLessThanOrEqual(section.contentHeight + 1);
-      expect(section.height, `${section.id} at ${width}×${height}`).toBeLessThanOrEqual(panelHeight * 0.45 + 1);
-      expect(section.scrolls).toBe(true);
-    }
-    expect(sections.reduce((sum, s) => sum + s.height, 0)).toBeLessThanOrEqual(panelHeight + 1);
   }
 
-  // A section the owner folds stays folded after a reload, and takes only its heading.
-  const messages = page.locator('.panel-section[data-section="messages"]');
-  await messages.getByTestId('section-fold').click();
-  await expect(messages.getByTestId('section-fold')).toHaveAttribute('aria-expanded', 'false');
+  // The filters used every day are there; the rest are behind "More", which says when one of them is on.
+  await expect(page.locator('.list-filter[data-filter="waiting"]')).toBeVisible();
+  await expect(page.locator('.list-filter[data-filter="workflow"]')).toHaveCount(0);
+  await page.getByTestId('list-more').click();
+  await page.locator('.list-filter[data-filter="workflow"]').click();
+  await page.getByTestId('list-more').click();
+  await expect(page.getByTestId('list-more')).toContainText('1');
+  await page.getByTestId('list-clear').click();
+
+  // The tab that was chosen is still chosen after a reload.
+  await tab('messages').click();
   await page.reload();
-  await expect(messages.getByTestId('section-fold')).toHaveAttribute('aria-expanded', 'false');
-  expect((await messages.boundingBox())?.height ?? 99).toBeLessThan(40);
-  await expect(page.locator('.panel-section[data-section="workflows"]').getByTestId('section-fold')).toHaveAttribute('aria-expanded', 'true');
-  await messages.getByTestId('section-fold').click();
-  await expect(messages.getByTestId('section-fold')).toHaveAttribute('aria-expanded', 'true');
+  await expect(tab('messages')).toHaveAttribute('aria-selected', 'true');
+  await expect(page.getByTestId('messages-section')).toBeVisible();
+  await tab('terminals').click();
+
+  // The bar over the canvas: nothing in it is a bare sign, and nothing runs off the edge.
+  const bar = await page.evaluate(() => {
+    const toolbar = document.querySelector('.toolbar') as HTMLElement;
+    const buttons = [...toolbar.querySelectorAll('button')];
+    return { right: toolbar.getBoundingClientRect().right, width: window.innerWidth, bare: buttons.filter((b) => (b.textContent ?? '').trim().length < 2 && !b.getAttribute('aria-label')).length };
+  });
+  expect(bar.right).toBeLessThanOrEqual(bar.width);
+  expect(bar.bare).toBe(0);
+  await page.getByTestId('toolbar-new-more').click();
+  await expect(page.getByTestId('toolbar-new-menu')).toContainText('Claude Code with Aubergine tools');
+  await page.keyboard.press('Escape');
+  await expect(page.getByTestId('toolbar-new-menu')).toHaveCount(0);
 });
 
 test('a shelf element has a life: a copy says where it came from, a newer version is compared and taken, and a retired element is no longer offered', async ({ page }) => {
@@ -2208,6 +2221,7 @@ test("working copies: two terminals on one repository change the same file apart
     await expect(node).toHaveCount(0);
 
     // The dialog: a folder that is in no repository cannot have a working copy, and says why.
+    await page.getByTestId('toolbar-new-more').click();
     await page.getByTestId('toolbar-new-in').click();
     const dialog = page.getByTestId('start-dialog');
     await dialog.getByTestId('where-folder').fill(elsewhere);
@@ -2227,6 +2241,7 @@ test("working copies: two terminals on one repository change the same file apart
     await expect(dialog).toHaveCount(0);
     await expect(node).toHaveCount(1);
 
+    await page.getByTestId('toolbar-new-more').click();
     await page.getByTestId('toolbar-new-in').click();
     await dialog.getByTestId('where-folder').fill(repo);
     await expect(copyKind).toHaveAttribute('data-available', 'true');
@@ -2285,6 +2300,7 @@ test("working copies: two terminals on one repository change the same file apart
     await panel.getByTestId('copy-close').click();
 
     // And what two changed, from the list of working copies in the side panel.
+    await page.locator('[data-testid="panel-tab"][data-section="copies"]').click();
     const section = page.getByTestId('copies-section');
     await expect(section.getByTestId('copies-row')).toHaveCount(2);
     await section.getByTestId('copies-row').filter({ hasText: 'two' }).click();
@@ -2326,6 +2342,7 @@ test("working copies: two terminals on one repository change the same file apart
     expect(ownerNow()).toEqual(ownerBefore);
 
     // Ending a terminal for good asks what becomes of its working copy, and removes nothing unasked.
+    await page.getByTestId('toolbar-new-more').click();
     await page.getByTestId('toolbar-new-in').click();
     await dialog.getByTestId('where-folder').fill(repo);
     await expect(copyKind).toHaveAttribute('data-available', 'true');
@@ -2514,6 +2531,7 @@ test('the queue and For you: tasks start when the owner says and no more than th
 
   // The side panel's short list is the same list.
   await screen.getByTestId('queue-close').click();
+  await page.locator('[data-testid="panel-tab"][data-section="for-you"]').click();
   await expect(page.getByTestId('foryou-section')).toBeVisible();
   // No program decides: a token that may add tasks is refused when it accepts, starts or writes a rule.
   const program = (await (await page.request.post('/v1/tokens', { headers: { origin }, data: { name: 'queue test program', scopes: ['read', 'tasks:write'] } })).json()) as { secret: string };

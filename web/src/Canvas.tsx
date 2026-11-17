@@ -113,6 +113,68 @@ function DraftsWaiting() {
   );
 }
 
+/**
+ * The one button for the commonest thing, a new terminal, and beside it a menu of everything else
+ * that can be made, each said in words: no control here is a bare sign.
+ */
+function NewMenu({ adding }: { adding: boolean }) {
+  const [open, setOpen] = useState(false);
+  const root = useRef<HTMLSpanElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const away = (event: PointerEvent): void => {
+      if (!root.current?.contains(event.target as globalThis.Node)) setOpen(false);
+    };
+    const key = (event: KeyboardEvent): void => {
+      if (event.key !== 'Escape') return;
+      // The menu's own Escape: it goes no further, so that it does not also leave a terminal or close something behind.
+      event.stopPropagation();
+      setOpen(false);
+    };
+    window.addEventListener('pointerdown', away, true);
+    window.addEventListener('keydown', key, true);
+    return () => {
+      window.removeEventListener('pointerdown', away, true);
+      window.removeEventListener('keydown', key, true);
+    };
+  }, [open]);
+  const item = (command: Parameters<typeof runCommand>[0], label: string, says: string, testid?: string) => (
+    <button
+      type="button"
+      role="menuitem"
+      disabled={adding}
+      title={hint(command)}
+      data-testid={testid}
+      onClick={() => {
+        setOpen(false);
+        runCommand(command);
+      }}
+    >
+      {label}
+      <small>{says}</small>
+    </button>
+  );
+  return (
+    <span className="toolbar-new" ref={root}>
+      <button type="button" onClick={() => runCommand('terminal.new')} disabled={adding} title={hint('terminal.new')} data-testid="toolbar-new-terminal">
+        + New terminal
+      </button>
+      <button type="button" className="toolbar-new-more" aria-haspopup="menu" aria-expanded={open} aria-label="More to make: an agent, a terminal somewhere else, a frame" title="More to make: an agent, a terminal somewhere else, a frame" onClick={() => setOpen((v) => !v)} data-testid="toolbar-new-more">
+        ▾
+      </button>
+      {open && (
+        <span className="toolbar-menu" role="menu" data-testid="toolbar-new-menu">
+          {item('agent.new', 'Claude Code', 'An agent that reports to this canvas.', 'toolbar-new-agent')}
+          {item('agent.newWithTools', 'Claude Code with Aubergine tools…', 'Choose what it may do here first.', 'agent-with-tools')}
+          {item('workflow.runOnAgent', 'Claude Code on a workflow…', 'Choose the workflow first.', 'agent-on-workflow')}
+          {item('terminal.newIn', 'Terminal in a folder or a working copy…', 'Somewhere you choose, or kept apart on its own branch.', 'toolbar-new-in')}
+          {item('frame.new', 'Frame', 'A box to group terminals in.', 'toolbar-new-frame')}
+        </span>
+      )}
+    </span>
+  );
+}
+
 export function Canvas() {
   const canvasId = useApp((s) => s.canvasId);
   // The demo's own canvas offers to take the demo away.
@@ -440,93 +502,61 @@ export function Canvas() {
         <Background variant={BackgroundVariant.Dots} gap={24} size={1} />
         <MiniMap pannable zoomable position="bottom-right" className="minimap" />
         <Panel position="top-left" className="toolbar">
-          <span className="brand">Aubergine</span>
-          <button type="button" onClick={() => runCommand('terminal.new')} disabled={adding} title={hint('terminal.new')} data-testid="toolbar-new-terminal">
-            + New terminal
-          </button>
-          <button
-            type="button"
-            className="quiet"
-            onClick={() => runCommand('agent.new')}
-            disabled={adding}
-            title={hint('agent.new', 'New Claude Code session: starts claude with hooks that report to this canvas')}
-          >
-            + Claude Code
-          </button>
-          <button
-            type="button"
-            className="quiet toolbar-attached"
-            aria-label="New Claude Code session with Aubergine tools"
-            onClick={() => runCommand('agent.newWithTools')}
-            disabled={adding}
-            title={hint('agent.newWithTools', 'New Claude Code session with Aubergine tools: choose which first')}
-            data-testid="agent-with-tools"
-          >
-            ⚙
-          </button>
-          <button type="button" className="quiet" onClick={() => runCommand('terminal.newIn')} disabled={adding} title={hint('terminal.newIn', 'New terminal in a folder you choose, or in a working copy of its own: kept apart from your checkout, on its own branch')} data-testid="toolbar-new-in">
-            New in…
-          </button>
-          <button
-            type="button"
-            className="quiet toolbar-attached"
-            aria-label="New Claude Code session on a workflow"
-            onClick={() => runCommand('workflow.runOnAgent')}
-            disabled={adding}
-            title={hint('workflow.runOnAgent', 'New Claude Code session on a workflow: choose the workflow first')}
-            data-testid="agent-on-workflow"
-          >
-            ⇶
-          </button>
-          <button type="button" className="quiet" onClick={() => runCommand('workflows.open')} title={hint('workflows.open', 'Workflows: make, change and run them')} data-testid="toolbar-workflows">
-            Workflows
-          </button>
-          <button type="button" className="quiet" onClick={() => runCommand('queue.open')} title={hint('queue.open', 'For you, and the queue: everything that waits on you, and tasks for agents')} data-testid="toolbar-queue">
-            Queue
-          </button>
-          <button type="button" className="quiet" onClick={() => runCommand('board.open')} title={hint('board.open', 'Board: every run that is going, by workflow and element; approve or send back from there')} data-testid="toolbar-board">
-            Board
-          </button>
-          <button type="button" className="quiet" onClick={() => runCommand('library.open')} title={hint('library.open', 'Library: workflows and elements others published, to read and install')} data-testid="toolbar-library">
-            Library
-          </button>
-          <DraftsWaiting />
-          <button type="button" className="quiet" onClick={() => runCommand('frame.new')} title={hint('frame.new', 'Add a frame to group terminals')}>
-            + Frame
-          </button>
-          <button
-            type="button"
-            className="quiet"
-            onClick={() => runCommand('palette.toggle')}
-            title={hint('palette.toggle', 'Go to a session or canvas, or run a command')}
-            data-testid="toolbar-goto"
-          >
-            Go to…
-          </button>
-          <button type="button" className="quiet" onClick={() => runCommand('view.fit')} title={hint('view.fit', 'Zoom to fit everything')}>
-            Fit
-          </button>
-          <button
-            type="button"
-            className="quiet"
-            onClick={() => runCommand('view.actualSize')}
-            title={hint('view.actualSize', 'Zoom to 100%. Terminals take input only at 100%.')}
-            data-testid="zoom-level"
-          >
-            {percent}
-          </button>
-          <OutsidePanel />
-          <AttentionQueue />
-          <ParkedList />
-          {!live && <span className="warning">Reconnecting…</span>}
-          {onDemo && (
-            <button type="button" className="quiet" onClick={() => runCommand('demo.remove')} title="Take away everything the demo made. Nothing else is touched." data-testid="remove-demo">
-              Remove the demo
+          <span className="toolbar-group" role="group" aria-label="Make something new">
+            <NewMenu adding={adding} />
+          </span>
+          <span className="toolbar-group" role="group" aria-label="Screens">
+            <button type="button" className="quiet" onClick={() => runCommand('queue.open')} title={hint('queue.open', 'For you, and the queue: everything that waits on you, and tasks for agents')} data-testid="toolbar-queue">
+              Queue
             </button>
-          )}
-          <button type="button" className="quiet" aria-label="Help" onClick={() => runCommand('help.show')} title={hint('help.show', 'Help: what you can do here, and the keyboard shortcuts')} data-testid="toolbar-help">
-            ?
-          </button>
+            <button type="button" className="quiet" onClick={() => runCommand('board.open')} title={hint('board.open', 'Board: every run that is going, by workflow and element; approve or send back from there')} data-testid="toolbar-board">
+              Board
+            </button>
+            <button type="button" className="quiet" onClick={() => runCommand('workflows.open')} title={hint('workflows.open', 'Workflows: make, change and run them')} data-testid="toolbar-workflows">
+              Workflows
+            </button>
+            <button type="button" className="quiet" onClick={() => runCommand('library.open')} title={hint('library.open', 'Library: workflows and elements others published, to read and install')} data-testid="toolbar-library">
+              Library
+            </button>
+          </span>
+          <span className="toolbar-group" role="group" aria-label="The view">
+            <button
+              type="button"
+              className="quiet"
+              onClick={() => runCommand('palette.toggle')}
+              title={hint('palette.toggle', 'Go to a session or canvas, or run a command')}
+              data-testid="toolbar-goto"
+            >
+              Go to…
+            </button>
+            <button type="button" className="quiet" onClick={() => runCommand('view.fit')} title={hint('view.fit', 'Zoom to fit everything')}>
+              Fit
+            </button>
+            <button
+              type="button"
+              className="quiet"
+              onClick={() => runCommand('view.actualSize')}
+              title={hint('view.actualSize', 'Zoom to 100%, where text is sharpest')}
+              data-testid="zoom-level"
+            >
+              {percent}
+            </button>
+          </span>
+          <span className="toolbar-group toolbar-status" role="group" aria-label="What needs you, and what is elsewhere">
+            <AttentionQueue />
+            <DraftsWaiting />
+            <ParkedList />
+            <OutsidePanel />
+            {!live && <span className="warning">Reconnecting…</span>}
+            {onDemo && (
+              <button type="button" className="quiet" onClick={() => runCommand('demo.remove')} title="Take away everything the demo made. Nothing else is touched." data-testid="remove-demo">
+                Remove the demo
+              </button>
+            )}
+            <button type="button" className="quiet" aria-label="Help" onClick={() => runCommand('help.show')} title={hint('help.show', 'Help: what you can do here, and the keyboard shortcuts')} data-testid="toolbar-help">
+              ?
+            </button>
+          </span>
           {notice && <span className="warning">{notice}</span>}
         </Panel>
         {layout.length === 0 && frames.length === 0 && (

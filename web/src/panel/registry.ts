@@ -18,7 +18,8 @@ export interface SectionDrawer {
 
 /**
  * A section of the side panel. The panel knows nothing about what a section
- * shows: it draws whatever is registered, each one foldable, in `order`.
+ * shows: it draws a tab for whatever is registered, in `order`, and the one
+ * section whose tab is chosen, with all of the panel's height to itself.
  * Adding something to the panel is adding one module under
  * `panel/sections/` that calls `registerSection`.
  */
@@ -27,13 +28,12 @@ export interface PanelSection {
   title: string;
   /** Lower numbers come first. */
   order: number;
+  /** A shorter name for its tab, where the title is long. */
+  tab?: string;
+  /** Whether its count is of things that wait on the owner: the tab then stands out while it is not zero. */
+  urgent?: boolean;
   /** One or two characters for the collapsed strip. */
   icon: string;
-  /**
-   * It takes the room the other sections leave, and never less than a few rows: for the one long list.
-   * Every other section is as tall as what it holds, up to a share of the panel, and scrolls inside itself.
-   */
-  fill?: boolean;
   /** A hook giving the number shown beside the title, or null for none. */
   useCount?: () => number | null;
   /** A hook giving what the collapsed strip shows under the icon. */
@@ -87,11 +87,13 @@ export interface PanelPrefs {
   /** False when the panel is collapsed to its strip. */
   open: boolean;
   width: number;
-  /** Ids of the sections that are folded. */
+  /** Ids of the sections that are folded. Kept from before the panel had tabs; nothing reads it now. */
   folded: string[];
+  /** The section that is showing. Null, or one that is no longer registered, means the first. */
+  tab: string | null;
 }
 
-export const DEFAULT_PANEL: PanelPrefs = { open: true, width: PANEL_DEFAULT_WIDTH, folded: [] };
+export const DEFAULT_PANEL: PanelPrefs = { open: true, width: PANEL_DEFAULT_WIDTH, folded: [], tab: null };
 
 export function clampPanelWidth(width: number): number {
   return Math.round(Math.min(PANEL_MAX_WIDTH, Math.max(PANEL_MIN_WIDTH, width)));
@@ -104,6 +106,7 @@ export function parsePanelPrefs(saved: unknown): PanelPrefs {
     open: p.open !== false,
     width: typeof p.width === 'number' && Number.isFinite(p.width) ? clampPanelWidth(p.width) : PANEL_DEFAULT_WIDTH,
     folded: Array.isArray(p.folded) ? p.folded.filter((id): id is string => typeof id === 'string') : [],
+    tab: typeof p.tab === 'string' ? p.tab : null,
   };
 }
 
