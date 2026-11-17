@@ -213,7 +213,7 @@ export const GUIDE: readonly GuideSection[] = [
         text: [
           "Work that should be done, but not by you now (a follow-up, something outside your task), is proposed for the queue of tasks; a thing only a person can do or decide (a key, an account, a choice) is asked of your owner:",
           '    aubergine task add "Add a test for the retry" --details "it should fail without the fix"',
-          '    aubergine ask "the staging key expires on Friday: rotate it, or say who can"',
+          '    aubergine ask "the staging key expires this week: rotate it, or say who can"',
           'Neither is done until your owner acts, and nothing tells you when. Do not start a proposed task yourself; carry on with what does not depend on it, or report blocked. `aubergine task list` shows the queue and what you proposed.',
         ],
       },
