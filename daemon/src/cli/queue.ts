@@ -25,6 +25,9 @@ export type QueueCommand =
   | { action: 'rule-add'; event: string; notify: boolean; run: string | null; on: string | null; onNew: string | null }
   | { action: 'rule-remove'; query: string };
 
+export const RULE_ADD_FORM = 'aubergine rule add --when <event> (--notify | --run <shelf element> (--on <terminal> | --new <canvas>))';
+export const RULE_ADD_EXAMPLE = 'aubergine rule add --when task.done --notify';
+
 const words = (rest: readonly string[], what: string, known: readonly string[] = []): string => {
   const unknown = rest.find((word) => word.startsWith('--') && !known.includes(word));
   if (unknown) throw new UsageError(`${what} does not know ${unknown}`);
@@ -120,12 +123,15 @@ export function parseRuleCommand(args: readonly string[]): QueueCommand {
     const run = takeOption(when.rest, '--run');
     const on = takeOption(run.rest, '--on');
     const onNew = takeOption(on.rest, '--new');
+    // Whatever is wrong, the answer says the right form and gives one that works.
+    const wrong = (what: string): UsageError => new UsageError(`${what} The form is:\n  ${RULE_ADD_FORM}\nwhere <event> is one of: ${RuleEvent.options.join(', ')}\nFor example:\n  ${RULE_ADD_EXAMPLE}`);
     const unknown = onNew.rest.find((word) => word !== '--notify');
-    if (unknown) throw new UsageError(`rule add does not know ${unknown}`);
+    if (unknown) throw wrong(`rule add does not know ${unknown.startsWith('--') ? unknown : `"${unknown}"`}.`);
     const notify = onNew.rest.includes('--notify');
-    if (when.value === null) throw new UsageError(`rule add needs --when: one of ${RuleEvent.options.join(', ')}`);
-    if (notify === (run.value !== null)) throw new UsageError('rule add needs what to do: --notify, or --run <shelf element> with --on <terminal> or --new <canvas>');
-    if (run.value !== null && (on.value === null) === (onNew.value === null)) throw new UsageError('rule add --run needs where: --on <terminal>, or --new <canvas>');
+    if (when.value === null) throw wrong('rule add needs --when <event>.');
+    if (!RuleEvent.safeParse(when.value).success) throw wrong(`--when does not know "${when.value}".`);
+    if (notify === (run.value !== null)) throw wrong('rule add needs what to do: --notify, or --run <shelf element>.');
+    if (run.value !== null && (on.value === null) === (onNew.value === null)) throw wrong('rule add --run needs where: --on <terminal>, or --new <canvas>.');
     return { action: 'rule-add', event: when.value, notify, run: run.value, on: on.value, onNew: onNew.value };
   }
   throw new UsageError(`rule does not know "${action}"`);

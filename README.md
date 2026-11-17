@@ -576,7 +576,7 @@ Most of that list is gathered, not written: an item goes when the thing itself i
 - **Start next** starts the first task in order that someone can take now. A terminal counts as free only where an agent is seen in front and is neither at work nor waiting on a question; a plain shell is never given a task.
 - **At most N at once** (three unless you change it). A task that is being started, is at work, or needs you holds a place.
 - **Hold** stops new starts and touches nothing that is running.
-- **Start by itself** is off. When you switch it on, a task starts when a place frees: when a run ends, a task is added, or you change the limit or the hold. Nothing checks on a timer.
+- **Start by itself** is off. When you switch it on, a task starts when a place frees: when a run ends, a task is added, you change the limit or the hold, or an agent becomes free (a new agent terminal, an agent that stopped working). Nothing checks on a timer. The one thing that starts without it is a task from a [schedule](#schedules-at-these-times-run-this-there), because you said when.
 - The order is yours: drag a waiting task, use ↑ and ↓, or hold Alt and press an arrow with the row selected.
 - A task follows its run. A run that waits for your approval or is blocked makes it **needs you**; a finished run makes it **done**; a stopped run, or a start that did not work, makes it **failed** with a sentence. Nothing is tried again by itself: **Put it back in the queue** is yours.
 - A task that is over stays on your list until you press **Looked at**. Then it is under "Finished today", and kept in `tasks.log` in the data folder.
@@ -600,7 +600,7 @@ From a line of a checklist an agent handed in, or from anything written on your 
 
 Under **Rules** on the same screen, or with `aubergine rule`. A rule is yours alone to write: no program and no agent can add or change one.
 
-- **When**: a task is done, a task failed, a task needs you, or something is asked of you.
+- **When**: a task is done, a task failed, a task needs you, something is asked of you, a schedule fired, or a schedule could not run or was missed.
 - **Then**, one of two things:
   - **Notify me**: a notification from the open Aubergine page. The browser asks your permission when you press **Allow notifications**, not before. Nothing leaves your computer.
   - **Run an element**: starts a run of one element from your shelf, on a terminal you name or a new one, with a short account of what happened as its task. This is how something outside gets called: write an element that says "put this in the calendar", and the agent does it with its own connectors. Aubergine holds no credential for any app and calls no address itself.
@@ -625,6 +625,57 @@ Typed inside a terminal on a canvas, `task add` proposes and `ask` asks, with th
 ### For programs
 
 `GET /v1/tasks`, `/v1/queue` and `/v1/for-you` are readable with `read`. The owner's list holds nothing a `read` token cannot already read from terminals, runs, drafts and working copies, except what was written on it: treat that like a note. `tasks:write` adds tasks (as proposals, unless the token has review off) and writes on the owner's list, and withdraws what it added itself. Accepting, declining, reordering, starting, the limit, the hold, automatic starting and rules are yours alone.
+
+## Schedules: at these times, run this there
+
+A schedule is a time of day, days of the week, something to run and somewhere to run it. When its time comes, it adds one task to [the queue](#the-queue-and-for-you), and the queue starts it. What the run hands back (a checklist, a note) arrives on your list like any other, and says which schedule it came from.
+
+They are under **Schedules** on the Queue screen, and under `aubergine schedule`.
+
+- **When**: a time on this computer's clock, in its own time zone, and the days. Nothing more elaborate: no expressions, nothing more often than once a day.
+- **What**: one element from your shelf, or a workflow, with a task text of your own.
+- **Where**: a terminal you name, or a new agent terminal on a canvas you name. A new terminal works in a [working copy](#working-copies-two-agents-on-one-repository) of its own where its folder is in a repository.
+- **On** or off. **Run now** tries it at once, by the same path as one of its times.
+
+Aubergine calls nothing itself and holds no credential for any app. A schedule only starts a run; the agent that takes it does the work with its own tools and connectors. **If the element needs a connector (for a chat, a calendar, mail), the agent on that terminal must have it**: the run dialog's need marks tell you what an element asks for, and a schedule does not check it.
+
+### An example: my to-do list, every weekday morning
+
+1. **Make the element.** Ask an agent for one ("a to-do list from what people asked me in the team chat since yesterday"), or write it on the Workflows screen. Give it the output **checklist**, read it, and save it to the shelf as *Morning list*.
+2. **Try it by hand** on a terminal whose agent has the connector for the chat: **Run…** on the shelf element. If the list that comes back is what you want, go on.
+3. **Make the schedule**: Queue, **Schedules**, **Add a schedule…**: the name *My morning list*, 08:30, Monday to Friday, the element *Morning list*, on a new agent terminal on your canvas. Or:
+
+   ```sh
+   aubergine schedule add "My morning list" --at 08:30 --days weekdays --element "Morning list" --new Main
+   ```
+
+4. **Press Run now.** A task named *My morning list* appears in the queue, "from the schedule “My morning list”, run by hand", and starts. When the agent hands in its list, **A list handed in** appears under For you, naming the schedule. Tick what you will do; send lines to the queue if an agent should do them.
+5. **The next weekday at 08:30** the same happens without you. The list is there when you look.
+
+### What it does when things are not as planned
+
+- **The computer must be awake and Aubergine running.** Nothing wakes the computer. A time that passed while it was asleep, or while the server was stopped, runs **once** when it is back, marked "late" with how late, if that time is less than six hours old (`schedules.lateWithinHours` in the [settings](#settings)). Older than that it does not run and the row says it was **missed**. Three missed mornings are one late run or one missed one, never three.
+- **The limit and Hold count.** A schedule's task waits in the queue while new starts are held or every place is taken, and starts when it may. It does not need **Start next** and does not need "Start by itself" switched on: you said when.
+- **One at a time.** While the task of its earlier time still waits or is at work, a schedule does not add another: the row says it was **skipped**, and why.
+- **Something it names is gone** (the terminal ended, the element was retired or removed, the canvas closed): it does not run, the row says why, and one item, "A schedule could not run", is on your list until you change the schedule, switch it off or remove it. One item, not one a day.
+- **Clocks that change.** On the day the clocks go forward, a time that does not exist runs at the next minute that does. On the day they go back, a time that comes twice runs once.
+- A schedule made, changed or switched on after its time today first runs at its next time.
+
+Every time a schedule fires, is skipped, is missed or cannot run is in the activity log: which schedule, for which time, how it ended, and nothing of what the task says. Two [rules](#rules-when-something-happens-do-something) can tell you: **a schedule fired**, and **a schedule could not run or was missed**.
+
+### Who can do what
+
+Making, changing, switching, removing and running a schedule are yours alone: no program with any token and no agent can, and `aubergine schedule` does nothing inside a terminal on a canvas. A token with `read` can list schedules (`GET /v1/schedules`). What an agent adds while it is on a run a schedule started (a proposal, a request) sets off no rule, the same as for a run a rule started.
+
+This is the one place where Aubergine starts something by the clock. The timer looks once a minute, only while a schedule is switched on, and does nothing but add the task.
+
+```sh
+aubergine schedule list
+aubergine schedule change "My morning list" --at 09:00 --days mon,wed,fri
+aubergine schedule off "My morning list"
+aubergine schedule run "My morning list"
+aubergine schedule remove "My morning list"
+```
 
 ## Working copies: two agents on one repository
 
@@ -931,6 +982,7 @@ Create `config.json` in the data folder (the server prints its location at start
   "workflows": { "maxElements": 50, "maxElementChars": 20000, "quietAfterSeconds": 300 },
   "terminal": { "protectNewSessions": false, "protectAgentSessions": true, "auditInput": false },
   "library": { "fetchTimeoutSeconds": 60, "maxFetchMegabytes": 100 },
+  "schedules": { "lateWithinHours": 6 },
   "messages": { "perSenderPerMinute": 6, "perPairPerHour": 30, "pauseAfter": 6, "maxUnread": 20, "nudgeIntervalSeconds": 120, "keepDays": 30 },
   "shortcuts": {},
   "shortcutsInAppWindow": {}
@@ -953,6 +1005,7 @@ Create `config.json` in the data folder (the server prints its location at start
 - `workflows`: how many elements a [workflow](#workflows) may have, how long the text of one element (and the text for every element) may be, and after how many seconds of output without a report a run is marked quiet. The two limits apply when the server is next started.
 - `terminal`: [terminal access](#terminal-access) for API tokens: whether new terminals, and new agent sessions, start "people only"; the limits on typing; and `auditInput`, which keeps what tokens type in a file.
 - `library`: how long and how large a fetch of a [library](#the-library) source may be.
+- `schedules.lateWithinHours`: a time of a [schedule](#schedules-at-these-times-run-this-there) that passed while the computer was asleep or the server stopped still runs, marked late, when it is at most this many hours old. Default 6; 0 means never. It applies from the next start of the server.
 - `messages`: the limits on [messages between terminals](#messages-between-terminals). They apply from the next start of the server.
 - `shortcuts`, `shortcutsInAppWindow`: your own keys; see [Keyboard](#keyboard).
 
@@ -1018,6 +1071,7 @@ aubergine task add | list | show | start | accept | decline | withdraw | move   
 aubergine todo [add <text> | done <item>]      what waits on you
 aubergine ask <text>           inside a session: ask your owner for something only a person can do
 aubergine rule list | add | remove      when something happens, do something
+aubergine schedule list | add | change | on | off | run | remove      at these times, run this there
 aubergine here --copy [--claude]   the same as here, in a working copy of its own
 aubergine copies               the working copies there are; `copies show`, `keep-branch`, `keep`, `discard`, `forget` <copy>
 aubergine where                inside a session: whether it works in a working copy, its branch, and what to leave alone

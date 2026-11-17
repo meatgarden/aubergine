@@ -166,6 +166,7 @@ import { ElementId } from './workflows';
 import { Board, BoardFilters } from './board';
 import { ForYou } from './for-you';
 import { Ask, Task } from './tasks';
+import { AddScheduleRequest, ChangeScheduleRequest, RanSchedule, ScheduleList, ScheduleRow, SchedulesQuery } from './schedules-api';
 import { AddAskRequest, AddRuleRequest, AddTaskRequest, ChangeQueueRequest, ChangeTaskRequest, OwnQueue, ProposeTaskRequest, QueueSettings, ReorderTasksRequest, RuleList, StartedTasks, TaskList, TasksQuery } from './tasks-api';
 import { Difference, DifferenceQuery, EndEnvironmentRequest, EndedEnvironment, Endings, EnvironmentDetail, EnvironmentOffers, OffersQuery } from './environment';
 import { EnvironmentList, EnvironmentsQuery } from './environment-api';
@@ -1442,6 +1443,68 @@ export const ROUTES = {
     response: null,
     status: 204,
     errors: [404],
+  }),
+  listSchedules: route({
+    method: 'GET',
+    path: '/v1/schedules',
+    tag: 'Queue',
+    summary: 'List the schedules',
+    description: 'A schedule is "at these times, run this there": a time of day on this computer\'s clock, days of the week, an element from the shelf or a workflow, and a terminal or a new agent terminal on a canvas. Each of its times becomes a task of the queue. Each row says when it is next and how its latest time ended.',
+    action: 'schedules.read',
+    query: SchedulesQuery,
+    response: ScheduleList,
+    paged: true,
+    status: 200,
+  }),
+  addSchedule: route({
+    method: 'POST',
+    path: '/v1/schedules',
+    tag: 'Queue',
+    summary: 'Make a schedule',
+    description: "For the owner only: no token and no session can do this, whatever its scopes. A time that passed before it was made is not its own: it first runs at its next time. Aubergine calls nothing itself and holds no credential: the agent that takes the task uses its own tools.",
+    action: 'schedules.manage',
+    body: AddScheduleRequest,
+    response: ScheduleRow,
+    status: 201,
+    idempotent: true,
+    errors: [409],
+  }),
+  changeSchedule: route({
+    method: 'PATCH',
+    path: '/v1/schedules/:scheduleId',
+    tag: 'Queue',
+    summary: 'Change a schedule, or switch it on or off',
+    description: 'For the owner only: no token and no session can do this, whatever its scopes. What is left out stays as it was. After a change of its time or days, and after it is switched on, a time that passed before the change does not run.',
+    action: 'schedules.manage',
+    params: z.object({ scheduleId: Id }),
+    body: ChangeScheduleRequest,
+    response: ScheduleRow,
+    status: 200,
+    errors: [404],
+  }),
+  removeSchedule: route({
+    method: 'DELETE',
+    path: '/v1/schedules/:scheduleId',
+    tag: 'Queue',
+    summary: 'Remove a schedule',
+    description: 'For the owner only: no token and no session can do this, whatever its scopes. A task it already added to the queue stays there.',
+    action: 'schedules.manage',
+    params: z.object({ scheduleId: Id }),
+    response: null,
+    status: 204,
+    errors: [404],
+  }),
+  runSchedule: route({
+    method: 'POST',
+    path: '/v1/schedules/:scheduleId/run',
+    tag: 'Queue',
+    summary: 'Run a schedule now',
+    description: 'For the owner only: no token and no session can do this, whatever its scopes. The same as one of its times, marked as run by hand: a task is added to the queue and starts when a place is free. The limit and the hold count for it. Refused with 409 while the task of its earlier firing is not over.',
+    action: 'schedules.manage',
+    params: z.object({ scheduleId: Id }),
+    response: RanSchedule,
+    status: 200,
+    errors: [404, 409],
   }),
   proposeSessionTask: route({
     method: 'POST',

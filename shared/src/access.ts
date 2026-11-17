@@ -48,6 +48,8 @@ export const SCOPE_OF = {
   // The queue and the owner's list: reading both is reading. Adding a task or asking the owner needs the scope for it, and what is added waits for the owner.
   'tasks.read': 'read',
   'tasks.write': 'tasks:write',
+  // Schedules: the list is reading. Making, changing, switching, removing and running one now are the owner's alone.
+  'schedules.read': 'read',
   'library.read': 'read',
   'library.request': 'workflows:write',
   'messages.read': 'messages:read',
@@ -60,7 +62,7 @@ export const SCOPE_OF = {
  * tokens did, changing settings, and anything that reaches processes outside
  * Aubergine.
  */
-export const NEVER_BY_TOKEN = ['tokens.manage', 'activity.read', 'settings.write', 'processes.signal', 'outside.read', 'outside.move', 'drafts.review', 'repository.review', 'repository.write', 'sessions.protect', 'demo.manage', 'inventory.read', 'recap.ask', 'away.read', 'history.read', 'history.open', 'messages.manage', 'shelf.manage', 'library.manage', 'runs.approve', 'environments.manage', 'queue.manage', 'rules.manage'] as const;
+export const NEVER_BY_TOKEN = ['tokens.manage', 'activity.read', 'settings.write', 'processes.signal', 'outside.read', 'outside.move', 'drafts.review', 'repository.review', 'repository.write', 'sessions.protect', 'demo.manage', 'inventory.read', 'recap.ask', 'away.read', 'history.read', 'history.open', 'messages.manage', 'shelf.manage', 'library.manage', 'runs.approve', 'environments.manage', 'queue.manage', 'rules.manage', 'schedules.manage'] as const;
 
 export type Action = (typeof SESSION_ACTIONS)[number] | keyof typeof SCOPE_OF | (typeof NEVER_BY_TOKEN)[number];
 

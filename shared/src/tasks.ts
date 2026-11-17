@@ -66,6 +66,8 @@ export interface TaskSourceKind {
   title: string;
   /** Where this one item came from, in a few words, for the row that shows it. */
   words(source: ItemSource): string;
+  /** True where what a task from here hands in should say where the task came from. */
+  says?: boolean;
 }
 const sourceKinds = new Map<string, TaskSourceKind>();
 export function registerTaskSource(kind: TaskSourceKind): void {
@@ -121,6 +123,11 @@ export const Task = z.object({
   details: PlainWords(TASK_DETAILS_MAX).default('').describe('What to do, for the agent that takes it. Plain text.'),
   folder: z.string().startsWith('/').max(4096).nullable().default(null).describe('The folder it is done in. For a new terminal: where it starts. Null: the folder new terminals start in.'),
   workflowId: Id.nullable().default(null).describe('The workflow it goes through. Null: it is told as one element, with the details as its task.'),
+  elementId: Id.nullable().default(null).describe('The shelf element it runs, where it runs one and no workflow. Set by the server for what a schedule adds.'),
+  unattended: z
+    .boolean()
+    .default(false)
+    .describe('True for what the owner arranged beforehand, such as a time of a schedule. It starts when a place is free without being started by hand, still within the limit and the hold, and what its agent adds sets off no rule. Set by the server, never by a caller.'),
   environment: EnvironmentKindName.nullable().default(null).describe('Where a new terminal for it works. Null: in a working copy of its own where the folder can have one, else in the folder itself.'),
   taker: TaskTaker.default({ kind: 'any' }).describe('Who may take it.'),
   addedBy: AddedBy,
@@ -287,13 +294,15 @@ export type Ask = z.infer<typeof Ask>;
 
 /* ---------- Rules: when something happens, do something ---------- */
 
-export const RuleEvent = z.enum(['task.done', 'task.failed', 'task.needs-owner', 'ask.added']);
+export const RuleEvent = z.enum(['task.done', 'task.failed', 'task.needs-owner', 'ask.added', 'schedule.fired', 'schedule.failed']);
 export type RuleEvent = z.infer<typeof RuleEvent>;
 export const RULE_EVENT_WORDS: Record<RuleEvent, string> = {
   'task.done': 'a task is done',
   'task.failed': 'a task failed',
   'task.needs-owner': 'a task needs you',
   'ask.added': 'something is asked of you',
+  'schedule.fired': 'a schedule fired',
+  'schedule.failed': 'a schedule could not run or was missed',
 };
 export const RULES_MAX = 50;
 /** How often one rule may fire in a minute. What comes after that is dropped, and said in the activity log. */
@@ -323,7 +332,7 @@ export interface Occasion {
 }
 
 /** The sentence for something that happened to a task. */
-export function occasionOfTask(task: Task, event: Exclude<RuleEvent, 'ask.added'>): Occasion {
+export function occasionOfTask(task: Task, event: 'task.done' | 'task.failed' | 'task.needs-owner'): Occasion {
   const what = event === 'task.done' ? 'is done' : event === 'task.failed' ? `failed${task.reason ? `: ${task.reason}` : ''}` : `needs you${task.reason ? `: ${task.reason}` : ''}`;
   return { id: `${event} ${task.id} ${task.updatedAt}`, event, sentence: `The task “${task.title}” ${what}`.slice(0, 500), taskId: task.id, askId: null };
 }

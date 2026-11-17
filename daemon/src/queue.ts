@@ -53,6 +53,9 @@ import type { StateHub } from './state-hub';
 import type { TaskArchive } from './task-archive';
 import type { Workflows } from './workflows';
 
+/** The changes after which a terminal's agent may be free though no run ended: a new agent terminal, an agent seen in front (its record, or the program in front), an agent that stopped working. */
+const FREES_AN_AGENT: ReadonlySet<ChangeEvent['type']> = new Set(['session.created', 'session.agent', 'session.activity', 'session.attention', 'session.restored', 'session.restarted', 'session.moved']);
+
 export interface QueueOptions {
   /** Asks every open page to notify the owner; returns how many were asked. */
   notify: (title: string, body: string) => number;
@@ -145,9 +148,11 @@ export class Queue {
       }
       return;
     }
-    // The other two things that can free a place or fill one: a task that now waits, and a change of the limit or the hold.
+    // The other things that can free a place or fill one: a task that now waits, a change of the limit or the hold,
+    // and a terminal whose agent may have become free without a run ending. All of them are change events.
     if (event.type === 'task.changed' && event.task.state === 'queued') this.maybeDispatch();
-    if (event.type === 'queue.settings') this.maybeDispatch();
+    else if (event.type === 'queue.settings') this.maybeDispatch();
+    else if (FREES_AN_AGENT.has(event.type)) this.maybeDispatch();
   }
 
   /** A task follows its run. */
@@ -249,8 +254,12 @@ export class Queue {
     return this.viaRule(asker.by) ? { ...said, viaRule: true } : said;
   }
 
-  /** Adds a task. From the owner (or a token made with review off) it waits to be started; from anyone else it waits for the owner's yes first. */
-  async add(body: AddTaskRequest, asker: Asker): Promise<Task> {
+  /**
+   * Adds a task. From the owner (or a token made with review off) it waits to be started; from anyone else it waits
+   * for the owner's yes first. `arranged` is the server's own, for what the owner arranged beforehand (a time of a
+   * schedule): no route passes it.
+   */
+  async add(body: AddTaskRequest, asker: Asker, arranged?: { elementId: string | null }): Promise<Task> {
     this.check(body);
     if (this.queue.tasks.length >= TASKS_MAX) throw new ConflictError(`The queue holds ${TASKS_MAX} tasks. Put away the ones that are over first.`);
     if (!asker.trusted) {
@@ -264,6 +273,8 @@ export class Queue {
       details: body.details ?? '',
       folder: body.folder ?? null,
       workflowId: body.workflowId ?? null,
+      elementId: arranged?.elementId ?? null,
+      unattended: arranged !== undefined,
       environment: body.environment ?? null,
       taker: body.taker ?? { kind: 'any' },
       addedBy: asker.by,
@@ -353,8 +364,9 @@ export class Queue {
     return this.hub.state.sessions.map((s) => ({ id: s.id, state: s.state, command: s.command, agent: s.agent, attention: s.attention, onCanvas: placeOfSession(this.hub.state, s.id) !== null }));
   }
 
-  private toStart(only?: string): { taskId: string; sessionId: string | null }[] {
-    const tasks = only === undefined ? this.queue.tasks : this.queue.tasks.filter((task) => task.id === only || task.state !== 'queued');
+  /** `only`: one task by its ID. `arranged`: of the tasks that wait, only those the owner arranged beforehand. */
+  private toStart(only?: string, arranged = false): { taskId: string; sessionId: string | null }[] {
+    const tasks = only !== undefined ? this.queue.tasks.filter((task) => task.id === only || task.state !== 'queued') : arranged ? this.queue.tasks.filter((task) => task.unattended || task.state !== 'queued') : this.queue.tasks;
     return nextToStart(
       tasks.filter((task) => !this.starting.has(task.id)),
       this.dispatchSessions(),
@@ -407,7 +419,11 @@ export class Queue {
       const input = { sessionId, inputs: { task: taskText(task) }, replace: false, typeKickoff: !onNew };
       const run = task.workflowId
         ? await this.workflows.start({ ...input, workflowId: task.workflowId }, by)
-        : await this.workflows.startElement(Element.parse({ id: 'task', name: task.title, instructions: '{{task}}', doneWhen: 'The task is done, and your note says what was done.', origin: { kind: 'task' } }), input, by);
+        : task.elementId
+          ? await this.workflows.startElement(this.drafts.runnable(task.elementId), input, by)
+          : await this.workflows.startElement(Element.parse({ id: 'task', name: task.title, instructions: '{{task}}', doneWhen: 'The task is done, and your note says what was done.', origin: { kind: 'task' } }), input, by);
+      // Nobody was there when this one started: what comes about because of its run sets off no rule, like a run a rule started.
+      if (task.unattended) this.emitSettings({ ruleRuns: [...this.queue.ruleRuns, run.run.id].slice(-200) });
       task = await this.apply(this.find(taskId), { type: 'started', runId: run.run.id });
       // It may have moved already: a workflow that begins with an approval waits at once.
       const live = this.hub.state.runs.find((r) => r.id === run.run.id);
@@ -424,15 +440,20 @@ export class Queue {
     }
   }
 
-  /** With automatic starting on: starts what can be started now. Called when an event says a place may be free; never by a timer. */
+  /**
+   * Starts what can be started now without the owner pressing anything: every waiting task while automatic starting
+   * is on, and otherwise only those the owner arranged beforehand (a time of a schedule). Called when a change event
+   * says a place may be free; never by a timer. The limit and the hold count for all of them.
+   */
   private maybeDispatch(): void {
-    if (this.closed || !this.queue.automatic || this.queue.hold) return;
+    const wanted = (): boolean => !this.closed && !this.queue.hold && this.queue.tasks.some((task) => task.state === 'queued' && (this.queue.automatic || task.unattended));
+    if (!wanted()) return;
     this.dispatching = this.dispatching
       .then(async () => {
         // One at a time, looking again after each: a start changes who is free.
         for (let guard = 0; guard < 50; guard += 1) {
-          if (this.closed || !this.queue.automatic || this.queue.hold) return;
-          const [next] = this.toStart();
+          if (!wanted()) return;
+          const [next] = this.toStart(undefined, !this.queue.automatic);
           if (!next) return;
           await this.startOne(next.taskId, next.sessionId);
         }
@@ -510,6 +531,10 @@ export class Queue {
    * most so many times a minute, and every firing is written down. What comes about because of a run that a rule
    * started (`viaRule` on its source) fires nothing: a rule cannot set itself off.
    */
+  happened(occasion: Occasion, source: ItemSource = { kind: 'hand' }): void {
+    this.fire(occasion, source);
+  }
+
   private fire(occasion: Occasion, source: ItemSource): void {
     if ((source as { viaRule?: unknown }).viaRule === true) return;
     for (const rule of this.queue.rules.filter((r) => r.event === occasion.event)) {

@@ -1,4 +1,5 @@
 import { Ask, QUEUE_LIMIT_MAX, Rule, Task } from './tasks';
+import { Schedule } from './schedules';
 import { SessionEnvironment } from './environment';
 import { z } from 'zod';
 import {
@@ -129,6 +130,11 @@ export const ChangeEvent = z.discriminatedUnion('type', [
   z.object({ type: z.literal('rule.removed'), ruleId: Id }),
   /** How tasks are started: how many at once, whether new starts are held, whether they start by themselves; and which runs a rule started. */
   z.object({ type: z.literal('queue.settings'), limit: z.number().int().min(1).max(QUEUE_LIMIT_MAX), hold: z.boolean(), automatic: z.boolean(), ruleRuns: z.array(Id).max(200) }),
+  /** A schedule was made or changed, or one of its times was answered for: fired, late, skipped, missed, could not run. */
+  z.object({ type: z.literal('schedule.changed'), schedule: Schedule }),
+  z.object({ type: z.literal('schedule.removed'), scheduleId: Id }),
+  /** The schedules were looked at and at least one had a time to answer for. Not sent for a look that found nothing. */
+  z.object({ type: z.literal('schedules.checked'), at: Timestamp }),
   z.object({ type: z.literal('token.created'), token: ApiToken }),
   z.object({ type: z.literal('token.revoked'), tokenId: Id, at: Timestamp }),
   /** Recorded at most about once a minute per token. */
@@ -309,6 +315,12 @@ export function applyEvent(state: AppState, event: ChangeEvent): AppState {
       return { ...state, queue: { ...state.queue, rules: [...state.queue.rules.filter((r) => r.id !== event.rule.id), event.rule] } };
     case 'rule.removed':
       return { ...state, queue: { ...state.queue, rules: state.queue.rules.filter((r) => r.id !== event.ruleId) } };
+    case 'schedule.changed':
+      return { ...state, schedules: { ...state.schedules, items: [...state.schedules.items.filter((s) => s.id !== event.schedule.id), event.schedule] } };
+    case 'schedule.removed':
+      return { ...state, schedules: { ...state.schedules, items: state.schedules.items.filter((s) => s.id !== event.scheduleId) } };
+    case 'schedules.checked':
+      return { ...state, schedules: { ...state.schedules, checkedAt: event.at } };
     case 'queue.settings':
       return { ...state, queue: { ...state.queue, limit: event.limit, hold: event.hold, automatic: event.automatic, ruleRuns: event.ruleRuns } };
     case 'environment.changed':

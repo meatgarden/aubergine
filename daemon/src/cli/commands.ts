@@ -6,6 +6,8 @@ export type Command =
   | { name: 'new'; sessionName: string | null; canvas: string | null; copy: boolean; folder: string | null }
   /** `task …`, `todo …`, `ask …`, `rule …`: their own words, parsed by the queue commands. */
   | { name: 'queue'; which: 'task' | 'todo' | 'ask' | 'rule'; words: string[] }
+  /** `schedule …`: its own words, parsed by the schedule commands. */
+  | { name: 'schedule'; words: string[] }
   /** `copies …`: its own words, parsed by the working-copy commands. */
   | { name: 'copies'; words: string[] }
   | { name: 'canvas-list' }
@@ -174,8 +176,19 @@ export const USAGE = `Usage: aubergine <command>
   todo                       What waits on you: terminals, approvals, drafts, proposals, done and failed tasks, what was asked
   todo add <text> | todo done <item>
   ask <text>                 Inside a session: ask your owner for something only a person can do
-  rule list | add --when <event> (--notify | --run <element> (--on <terminal> | --new <canvas>)) | remove <rule>
-                             When something happens, do something. Only you write rules
+  rule list                  The rules: when something happens, do something. Only you write rules
+  rule add --when <event> --notify
+  rule add --when <event> --run <shelf element> (--on <terminal> | --new <canvas>)
+                             For example: aubergine rule add --when task.done --notify
+  rule remove <rule>
+  schedule list              The schedules: at these times, run this there. Only you make and run them
+  schedule add "<name>" --at <08:30> --days <weekdays | every day | mon,wed,fri>
+               (--element <shelf element> | --workflow <workflow>) (--on <terminal> | --new <canvas>)
+               [--task "<what to do>"] [--folder <path>] [--off]
+                             For example: aubergine schedule add "My morning list" --at 08:30 --days weekdays --element "Morning list" --new Main
+  schedule change <schedule> [the same options]
+  schedule on | off | run | remove <schedule>
+                             run: try it now, as one of its times. It goes through the queue
   board [--canvas <name>] [--workflow <name>] [--status <status>] [--tag <tag>]
                              Every run that is going, by workflow and element: who waits for you, who is blocked
   Inside a session that is on a run:
@@ -245,7 +258,7 @@ export const USAGE = `Usage: aubergine <command>
 new, here and import take --canvas <name>. Without it they use the canvas you looked at most recently
 in a browser, or the first one when no browser is open.
 
-The server must be running for list, new, canvas, copies, task, todo, ask, rule, token, workflow, element, library, board, screen, output, send, run, protect, attach, here, scan, import, move, tell, inbox, reply, note, attention and open.
+The server must be running for list, new, canvas, copies, task, todo, ask, rule, schedule, token, workflow, element, library, board, screen, output, send, run, protect, attach, here, scan, import, move, tell, inbox, reply, note, attention and open.
 guide works without it, and then prints every part.`;
 
 export class UsageError extends Error {}
@@ -433,6 +446,9 @@ export function parseCommand(argv: readonly string[]): Command {
     case 'rule':
     case 'rules':
       return { name: 'queue', which: 'rule', words: rest };
+    case 'schedule':
+    case 'schedules':
+      return { name: 'schedule', words: rest };
     case 'copies':
     case 'copy':
       return { name: 'copies', words: rest };

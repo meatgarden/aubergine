@@ -375,6 +375,10 @@ describe('every route has a rule', () => {
     'GET /v1/rules',
     'POST /v1/rules',
     'DELETE /v1/rules/:ruleId',
+    'POST /v1/schedules',
+    'PATCH /v1/schedules/:scheduleId',
+    'DELETE /v1/schedules/:scheduleId',
+    'POST /v1/schedules/:scheduleId/run',
     'DELETE /v1/library/sources/:sourceId',
     'POST /v1/library/sources/:sourceId/refresh',
     'GET /v1/library/requests',
@@ -801,7 +805,7 @@ describe('the secret', () => {
 
     // The hash is what is stored, and it is not sent to the page.
     const state = JSON.parse(await readFile(path.join(dir, 'state.json'), 'utf8'));
-    expect(state.version).toBe(12);
+    expect(state.version).toBe(13);
     expect(state.tokens.map((t: { hash: string }) => t.hash)).toEqual([expect.stringMatching(/^[0-9a-f]{64}$/), expect.stringMatching(/^[0-9a-f]{64}$/)]);
   });
 

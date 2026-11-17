@@ -11,6 +11,7 @@ import {
   LibraryState,
   SessionEnvironment,
   QueueState,
+  SchedulesState,
   withFirstVersion,
   FIRST_CANVAS_NAME,
   Layout,
@@ -83,8 +84,11 @@ const StateFileV11 = StateFileV10.extend({ version: z.literal(11), environments:
 /** The same, with the queue: tasks for agents, what is asked of the owner in writing, the rules, and how tasks are started. An older file has none of it. */
 const StateFileV12 = StateFileV11.extend({ version: z.literal(12), queue: QueueState.prefault({}) });
 
-const StateFile = z.discriminatedUnion('version', [StateFileV1, StateFileV2, StateFileV3, StateFileV4, StateFileV5, StateFileV6, StateFileV7, StateFileV8, StateFileV9, StateFileV10, StateFileV11, StateFileV12]);
-const CURRENT_VERSION = 12;
+/** The same, with schedules. An older file has none, and its tasks say neither that they run an element nor that they were arranged beforehand. */
+const StateFileV13 = StateFileV12.extend({ version: z.literal(13), schedules: SchedulesState.prefault({}) });
+
+const StateFile = z.discriminatedUnion('version', [StateFileV1, StateFileV2, StateFileV3, StateFileV4, StateFileV5, StateFileV6, StateFileV7, StateFileV8, StateFileV9, StateFileV10, StateFileV11, StateFileV12, StateFileV13]);
+const CURRENT_VERSION = 13;
 type StateFile = z.infer<typeof StateFile>;
 
 /**
@@ -139,6 +143,7 @@ export function migrate(file: StateFile): AppState {
     library: file.version >= 9 && 'library' in file ? (file.version < 10 ? withoutAddressNames(file.library) : file.library) : { sources: [], installed: [], requests: [] },
     environments: file.version >= 11 && 'environments' in file ? file.environments : [],
     queue: file.version >= 12 && 'queue' in file ? file.queue : QueueState.parse({}),
+    schedules: file.version >= 13 && 'schedules' in file ? file.schedules : SchedulesState.parse({}),
   });
 }
 

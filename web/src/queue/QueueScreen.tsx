@@ -5,6 +5,7 @@ import { notificationsWanted, setNotificationsWanted } from '../attention';
 import { useApp } from '../store';
 import { useEndedRuns } from '../workflows/ended-runs';
 import { actionView } from './action-views';
+import { Schedules } from './Schedules';
 import { TaskForm, type TaskDraft } from './TaskForm';
 
 /**
@@ -413,6 +414,7 @@ export function QueueScreen() {
                 <TaskRow key={task.id} task={task} waiting={false} />
               ))}
             </ul>
+            <Schedules />
             <Rules />
           </section>
         </div>

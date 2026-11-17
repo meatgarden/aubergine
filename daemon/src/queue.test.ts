@@ -6,6 +6,7 @@ import { ASKS_WAITING_MAX, GRANTABLE_SCOPES, KICKOFF_LINE, NO_ATTENTION, NO_STAT
 import { createClient } from '@aubergine/client';
 import { SESSION_ENV } from '@aubergine/shared';
 import type { FastifyInstance } from 'fastify';
+import { USAGE } from './cli/commands';
 import { parseAskCommand, parseRuleCommand, parseTaskCommand, parseTodoCommand, runQueueCommand, type QueueCommand } from './cli/queue';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { MemoryActivityLog } from './activity';
@@ -414,6 +415,40 @@ describe('starting by itself', () => {
     await asOwner('PUT', '/v1/queue', { hold: false });
     await until(() => taskNow(c.id).state === 'working');
   });
+
+  it('when on, also starts when an agent becomes free without a run ending; and while off the same changes start nothing', async () => {
+    // Off: a task waits, and every change that could free an agent comes and goes.
+    const waiting = await add('Waits for an agent');
+    const plain = fakeSession('becomes an agent');
+    const busy = agent('at work', { attention: { ...NO_ATTENTION, state: 'working', at: new Date().toISOString() } });
+    const free = (session: Session): void => hub.emit({ type: 'session.attention', sessionId: session.id, attention: NO_ATTENTION });
+    free(busy);
+    agent('a new agent terminal');
+    await new Promise((resolve) => setTimeout(resolve, 200));
+    expect(taskNow(waiting.id).state).toBe('queued');
+    expect(hub.state.runs).toEqual([]);
+    expect(typed).toEqual([]);
+    // On: what is free now is used at once, by the change of the setting.
+    await asOwner('PUT', '/v1/queue', { automatic: true, limit: 5 });
+    await until(() => taskNow(waiting.id).state === 'working');
+    const second = await add('Second');
+    await until(() => taskNow(second.id).state === 'working');
+    // Nobody is free now: the next task waits.
+    const third = await add('Third', { taker: { kind: 'session', sessionId: plain.id } });
+    const fourth = await add('Fourth');
+    await new Promise((resolve) => setTimeout(resolve, 150));
+    expect([third, fourth].map((t) => taskNow(t.id).state)).toEqual(['queued', 'queued']);
+    // An agent is seen in front of the plain terminal: no run ended, and the task meant for it starts.
+    events = [];
+    hub.emit({ type: 'session.agent', sessionId: plain.id, agent: { kind: 'claude-code', conversationId: null, program: 'the-agent' } });
+    hub.emit({ type: 'session.activity', sessionId: plain.id, cwd: null, command: 'the-agent' });
+    await until(() => taskNow(third.id).state === 'working');
+    expect(events.some((event) => event.type === 'run.finished')).toBe(false);
+    // A new agent terminal appears: the last one starts on it.
+    const fresh = agent('fresh');
+    await until(() => taskNow(fourth.id).state === 'working');
+    expect(taskNow(fourth.id).sessionId).toBe(fresh.id);
+  });
 });
 
 describe('rules', () => {
@@ -567,8 +602,8 @@ describe('the owner\'s list', () => {
     await asOwner('POST', '/v1/rules', { event: 'task.failed', action: { kind: 'notify' } });
     const before = JSON.stringify(queueNow());
     await stop();
-    // The file says version 12.
-    expect(JSON.parse(await readFile(path.join(dir, 'state.json'), 'utf8')).version).toBe(12);
+    // The file says version 13.
+    expect(JSON.parse(await readFile(path.join(dir, 'state.json'), 'utf8')).version).toBe(13);
     await start();
     expect(JSON.stringify(queueNow())).toBe(before);
     expect(taskNow(task.id)).toMatchObject({ state: 'working', sessionId: one.id });
@@ -637,6 +672,12 @@ describe('the commands', () => {
     expect(queueNow().rules).toEqual([]);
     expect(() => parseRuleCommand(['add', '--when', 'task.done'])).toThrow(/needs what to do/);
     expect(() => parseRuleCommand(['add', '--when', 'task.done', '--run', 'x'])).toThrow(/needs where/);
+    // A wrong option, a wrong event, a stray word: each answer gives the right form and one that works.
+    for (const wrong of [['add', '--when', 'task.done', '--notfy'], ['add', '--when', 'task.finished', '--notify'], ['add', '--notify'], ['add', '--when', 'task.done', '--notify', 'please'], ['add', '--on', 'task.done', '--notify']]) {
+      expect(() => parseRuleCommand(wrong), wrong.join(' ')).toThrow(/The form is:\n {2}aubergine rule add --when <event> \(--notify \| --run <shelf element> \(--on <terminal> \| --new <canvas>\)\)\nwhere <event> is one of: task\.done, .*\nFor example:\n {2}aubergine rule add --when task\.done --notify$/s);
+    }
+    expect(() => parseRuleCommand(['add', '--when', 'task.done', '--notfy'])).toThrow(/^rule add does not know --notfy\./);
+    expect(USAGE).toContain('For example: aubergine rule add --when task.done --notify');
     expect(() => parseTaskCommand(['add'])).toThrow(/needs a title/);
     expect(() => parseTaskCommand(['move', 'x'])).toThrow(/where to/);
   });
