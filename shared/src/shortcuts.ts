@@ -83,6 +83,8 @@ export const COMMAND_IDS = [
   'workflows.open',
   'library.open',
   'board.open',
+  'terminal.newIn',
+  'copies.show',
   'workflow.run',
   'workflow.runOnAgent',
   'workflow.view',

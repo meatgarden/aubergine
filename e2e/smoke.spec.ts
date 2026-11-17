@@ -2179,3 +2179,182 @@ test('an approval and the board: a run stops for the owner, shows on the board a
   const refused = await fetch(`${origin}/v1/runs/${runId}/approve`, { method: 'POST', headers: { authorization: `Bearer ${made.secret}`, 'content-type': 'application/json' }, body: '{}' });
   expect(refused.status).toBe(403);
 });
+
+test("working copies: two terminals on one repository change the same file apart, the owner's checkout is untouched, each difference is read, one is kept as a branch and the other discarded", async ({ page }) => {
+  const { execFileSync } = await import('node:child_process');
+  const { realpathSync } = await import('node:fs');
+  // A repository as an owner has one, with something of theirs that is in no commit.
+  const repo = realpathSync(mkdtempSync(path.join(tmpdir(), 'aubergine-e2e-copies-')));
+  const elsewhere = realpathSync(mkdtempSync(path.join(tmpdir(), 'aubergine-e2e-no-repository-')));
+  const git = (...args: string[]): string =>
+    execFileSync('git', args, { cwd: repo, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], env: { PATH: process.env.PATH ?? '', HOME: repo, GIT_CONFIG_GLOBAL: '/dev/null', GIT_CONFIG_SYSTEM: '/dev/null', GIT_AUTHOR_NAME: 'An Owner', GIT_AUTHOR_EMAIL: 'owner@example.invalid', GIT_COMMITTER_NAME: 'An Owner', GIT_COMMITTER_EMAIL: 'owner@example.invalid' } }).trim();
+  writeFileSync(path.join(repo, 'retry.js'), 'export const tries = 3;\n');
+  writeFileSync(path.join(repo, '.gitignore'), 'node_modules/\n');
+  git('init', '--quiet', '--initial-branch=main');
+  git('add', '-A');
+  git('commit', '--quiet', '-m', 'First');
+  writeFileSync(path.join(repo, 'notes-of-mine.txt'), 'not committed\n');
+  mkdirSync(path.join(repo, 'node_modules'));
+  writeFileSync(path.join(repo, 'node_modules', 'dep.js'), 'module.exports = 1;\n');
+  const ownerBefore = { status: git('status', '--porcelain'), head: git('rev-parse', 'HEAD'), branch: git('symbolic-ref', 'HEAD'), index: readFileSync(path.join(repo, '.git', 'index')).toString('hex') };
+
+  try {
+    const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+    await page.goto(`/auth?token=${token}`);
+    await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+    const origin = new URL(page.url()).origin;
+    await page.getByRole('button', { name: 'New canvas' }).click();
+    const node = page.getByTestId('terminal-node');
+    await expect(node).toHaveCount(0);
+
+    // The dialog: a folder that is in no repository cannot have a working copy, and says why.
+    await page.getByTestId('toolbar-new-in').click();
+    const dialog = page.getByTestId('start-dialog');
+    await dialog.getByTestId('where-folder').fill(elsewhere);
+    const copyKind = dialog.locator('[data-testid="where-kind"][data-kind="working-copy"]');
+    await expect(copyKind).toHaveAttribute('data-available', 'false');
+    await expect(copyKind.getByTestId('where-reason')).toContainText('This folder is not in a Git repository.');
+    await expect(copyKind.locator('input')).toBeDisabled();
+    // In the repository it can, in the kind's own words, with what is not carried over.
+    await dialog.getByTestId('where-folder').fill(repo);
+    await expect(copyKind).toHaveAttribute('data-available', 'true');
+    await expect(copyKind).toContainText('Kept apart');
+    await copyKind.locator('input').check();
+    await expect(copyKind.getByTestId('where-notes')).toContainText('1 file in your checkout has changes that are in no commit. They are not carried over');
+    await expect(copyKind.getByTestId('where-notes')).toContainText('Files Git ignores or does not track are not in a new working copy');
+    await dialog.getByTestId('start-name').fill('one');
+    await dialog.getByTestId('start-go').click();
+    await expect(dialog).toHaveCount(0);
+    await expect(node).toHaveCount(1);
+
+    await page.getByTestId('toolbar-new-in').click();
+    await dialog.getByTestId('where-folder').fill(repo);
+    await expect(copyKind).toHaveAttribute('data-available', 'true');
+    await copyKind.locator('input').check();
+    await dialog.getByTestId('start-name').fill('two');
+    await dialog.getByTestId('start-go').click();
+    await expect(dialog).toHaveCount(0);
+    await expect(node).toHaveCount(2);
+
+    // Each terminal says on itself that it is kept apart, and on which branch.
+    const nodeOf = (name: string) => node.filter({ hasText: name });
+    await expect(nodeOf('one').getByTestId('copy-chip')).toHaveAttribute('title', /In its own working copy\. Kept apart: its own copy of the files, on its own branch\. Not a lock/);
+    await expect(nodeOf('one').getByTestId('copy-chip')).toContainText(/one-[0-9a-f]{6}/);
+    const rowOf = (name: string) => page.getByTestId('list-row').filter({ hasText: name });
+    const one = (await rowOf('one').getAttribute('data-session')) ?? '';
+    const two = (await rowOf('two').getAttribute('data-session')) ?? '';
+    /** What an agent in a terminal would run there: typed at its shell prompt, waited for, its output read. */
+    const inTerminal = async (id: string, command: string): Promise<string> => {
+      const answer = await page.request.post(`/v1/sessions/${id}/run`, { headers: { origin }, data: { command, timeoutSeconds: 30 } });
+      expect(answer.status()).toBe(200);
+      return ((await answer.json()) as { output: string }).output;
+    };
+    // Each is in a folder of its own, neither is the owner's, and neither has what the owner left uncommitted or what Git ignores.
+    await expect.poll(async () => inTerminal(one, 'pwd'), { timeout: 30_000 }).toMatch(/\/copies\/one-[0-9a-f]{6}/);
+    await expect.poll(async () => inTerminal(two, 'pwd'), { timeout: 30_000 }).toMatch(/\/copies\/two-[0-9a-f]{6}/);
+    expect(await inTerminal(one, 'ls -a')).not.toMatch(/notes-of-mine|node_modules/);
+    // What an agent there is told about where it is.
+    const where = await inTerminal(one, '"$AUBERGINE_BIN/aubergine" where');
+    expect(where).toContain('This session works in its own working copy.');
+    expect(where).toMatch(/Branch: aubergine\/one-[0-9a-f]{6}/);
+    expect(where).toContain(`Do not work in ${repo}`);
+
+    // The same file, changed differently: one commits, the other does not and adds a file.
+    await inTerminal(one, `printf 'export const tries = 5;\\n' > retry.js && git -c user.name=One -c user.email=one@example.invalid commit -qam "Five tries" && echo committed`);
+    await inTerminal(two, `printf 'export const tries = 9;\\n' > retry.js && printf 'a note\\n' > extra.txt && echo written`);
+    expect(await inTerminal(one, 'cat retry.js')).toContain('tries = 5');
+    expect(await inTerminal(two, 'cat retry.js')).toContain('tries = 9');
+    expect(await inTerminal(one, 'ls')).not.toContain('extra.txt');
+    // The owner's checkout: the file as it was, and Git's view of it byte for byte the same.
+    const ownerNow = (): typeof ownerBefore => ({ status: git('status', '--porcelain'), head: git('rev-parse', 'HEAD'), branch: git('symbolic-ref', 'HEAD'), index: readFileSync(path.join(repo, '.git', 'index')).toString('hex') });
+    expect(readFileSync(path.join(repo, 'retry.js'), 'utf8')).toBe('export const tries = 3;\n');
+    expect(ownerNow()).toEqual(ownerBefore);
+
+    // Read what one changed, from its terminal.
+    await nodeOf('one').getByTestId('copy-chip').click();
+    const panel = page.getByTestId('copy-panel');
+    await expect(panel.getByTestId('copy-words')).toContainText('Kept apart');
+    await expect(panel.getByTestId('copy-branch')).toHaveText(/^aubergine\/one-[0-9a-f]{6}$/);
+    await panel.getByTestId('copy-refresh').click();
+    await expect(panel.getByTestId('copy-counts')).toHaveText('1 changed · 1 commit');
+    await expect(panel.getByTestId('copy-file')).toHaveCount(1);
+    await panel.getByTestId('copy-file').click();
+    await expect(panel.getByTestId('difference-text')).toContainText('-export const tries = 3;');
+    await expect(panel.getByTestId('difference-text')).toContainText('+export const tries = 5;');
+    await expect(panel.getByTestId('difference-text')).not.toContainText('tries = 9');
+    await panel.getByTestId('copy-close').click();
+
+    // And what two changed, from the list of working copies in the side panel.
+    const section = page.getByTestId('copies-section');
+    await expect(section.getByTestId('copies-row')).toHaveCount(2);
+    await section.getByTestId('copies-row').filter({ hasText: 'two' }).click();
+    await panel.getByTestId('copy-refresh').click();
+    await expect(panel.getByTestId('copy-counts')).toHaveText('1 changed, 1 added · 2 not committed');
+    await panel.getByTestId('copy-file').filter({ hasText: 'retry.js' }).click();
+    await expect(panel.getByTestId('difference-text')).toContainText('+export const tries = 9;');
+    await expect(panel.getByTestId('difference-text')).not.toContainText('tries = 5');
+    await panel.getByTestId('copy-file').filter({ hasText: 'extra.txt' }).click();
+    await expect(panel.getByTestId('difference-text')).toContainText('+a note');
+    // Its branch cannot be kept without its folder while work there is in no commit, and it says what.
+    const ending = (choice: string) => panel.locator(`[data-testid="copy-ending"][data-choice="${choice}"]`);
+    await expect(ending('keep-branch')).toBeDisabled();
+    await expect(panel.getByTestId('copy-endings')).toContainText('2 files hold work that is in no commit');
+    // Discarding it asks a second time, naming what would be lost; "no" keeps everything.
+    await ending('discard').click();
+    await expect(panel.getByTestId('copy-ask-again')).toContainText('This working copy holds 2 files with work that is in no commit. That work exists nowhere else');
+    await panel.getByTestId('copy-keep').click();
+    expect(await inTerminal(two, 'cat extra.txt')).toContain('a note');
+    await ending('discard').click();
+    await panel.getByTestId('copy-confirm').click();
+    await expect(panel.getByTestId('copy-said')).toHaveText('The folder and the branch are removed.');
+    await panel.getByTestId('copy-close').click();
+    await expect(section.getByTestId('copies-row')).toHaveCount(1);
+    await expect(nodeOf('two').getByTestId('copy-chip')).toHaveCount(0);
+
+    // One is kept as a branch: the folder goes, the branch stays with its commit. Nothing is merged.
+    await nodeOf('one').getByTestId('copy-chip').click();
+    await ending('keep-branch').click();
+    await expect(panel.getByTestId('copy-said')).toHaveText(/^The folder is removed\. The branch aubergine\/one-[0-9a-f]{6} is in your repository\.$/);
+    await panel.getByTestId('copy-close').click();
+    await expect(section.getByTestId('copies-row')).toHaveCount(0);
+    const branches = git('for-each-ref', '--format=%(refname:short)', 'refs/heads').split('\n');
+    expect(branches).toHaveLength(2);
+    const kept = branches.find((branch) => branch.startsWith('aubergine/one-')) ?? '';
+    expect(git('show', `${kept}:retry.js`)).toBe('export const tries = 5;');
+    expect(git('worktree', 'list', '--porcelain').split('\n').filter((line) => line.startsWith('worktree '))).toHaveLength(1);
+    expect(readFileSync(path.join(repo, 'retry.js'), 'utf8')).toBe('export const tries = 3;\n');
+    expect(ownerNow()).toEqual(ownerBefore);
+
+    // Ending a terminal for good asks what becomes of its working copy, and removes nothing unasked.
+    await page.getByTestId('toolbar-new-in').click();
+    await dialog.getByTestId('where-folder').fill(repo);
+    await expect(copyKind).toHaveAttribute('data-available', 'true');
+    await copyKind.locator('input').check();
+    await dialog.getByTestId('start-name').fill('three');
+    await dialog.getByTestId('start-go').click();
+    await expect(section.getByTestId('copies-row')).toHaveCount(1);
+    await expect(nodeOf('three').getByRole('button', { name: /^Park three/ })).toBeInViewport({ ratio: 1 });
+    await nodeOf('three').getByRole('button', { name: /^Park three/ }).click();
+    await page.getByRole('button', { name: /^Parked \(/ }).click();
+    await page.locator('.parked-row, li, div').filter({ has: page.getByText('three', { exact: true }) }).getByRole('button', { name: 'End', exact: true }).last().click();
+    const closing = page.getByTestId('close-copy');
+    await expect(closing).toContainText('Ending the terminal removes nothing of it.');
+    await expect(closing.getByTestId('close-copy-later')).toBeChecked();
+    await expect(closing.getByTestId('close-copy-choice')).toHaveCount(3);
+    // Nothing was done in it, so discarding loses nothing and is not asked twice.
+    await closing.locator('[data-testid="close-copy-choice"][data-choice="discard"]').check();
+    await expect(closing.getByTestId('close-copy-again')).toHaveCount(0);
+    await page.getByTestId('close-confirm').click();
+    await expect(section.getByTestId('copies-row')).toHaveCount(0);
+    await expect.poll(() => git('for-each-ref', '--format=%(refname:short)', 'refs/heads').split('\n').length).toBe(2);
+    expect(ownerNow()).toEqual(ownerBefore);
+
+    // No program can remove or discard one: a token with every scope that can be given is refused.
+    const made = (await (await page.request.post('/v1/tokens', { headers: { origin }, data: { name: 'tries to discard', scopes: ['read', 'sessions:write', 'runs:write', 'workflows:write'] } })).json()) as { secret: string };
+    const refused = await fetch(`${origin}/v1/environments/01900000-0000-7000-8000-000000000001/end`, { method: 'POST', headers: { authorization: `Bearer ${made.secret}`, 'content-type': 'application/json' }, body: JSON.stringify({ choice: 'discard', confirm: true }) });
+    expect(refused.status).toBe(403);
+  } finally {
+    rmSync(repo, { recursive: true, force: true });
+    rmSync(elsewhere, { recursive: true, force: true });
+  }
+});

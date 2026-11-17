@@ -94,6 +94,12 @@ export interface AppStore {
   /** The question about tools for a new agent session is on screen. */
   choosingAgentTools: boolean;
   chooseAgentTools: (open: boolean) => void;
+  /** The dialog for a new terminal in a folder of the owner's choosing, or in a working copy of its own. */
+  startingTerminal: boolean;
+  chooseStart: (open: boolean) => void;
+  /** The environment whose changes are being read: a working copy's panel. */
+  viewingEnvironment: string | null;
+  viewEnvironment: (environmentId: string | null) => void;
   load: () => Promise<void>;
   apply: (event: ChangeEvent) => void;
   focusSession: (sessionId: string | null) => void;
@@ -161,6 +167,10 @@ export const useApp = create<AppStore>((set, get) => ({
   showInventory: (inventoryFor) => set({ inventoryFor }),
   choosingAgentTools: false,
   chooseAgentTools: (choosingAgentTools) => set({ choosingAgentTools }),
+  startingTerminal: false,
+  chooseStart: (startingTerminal) => set({ startingTerminal }),
+  viewingEnvironment: null,
+  viewEnvironment: (viewingEnvironment) => set({ viewingEnvironment }),
 
   editWorkflow: (editingWorkflow) => set({ editingWorkflow }),
   startRun: (startingRun) => set({ startingRun }),

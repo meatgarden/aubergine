@@ -7,6 +7,7 @@ import { runCommand } from '../commands';
 import { useApp } from '../store';
 import { sampleInputs } from './editor-model';
 import { runOfSession } from './run-model';
+import { WhereFields, proposedFolder, type Where } from '../environment/WhereFields';
 
 /** How a repository workflow is told apart from one of the owner's in the list of choices. */
 const REPO = 'repo:';
@@ -28,6 +29,8 @@ export function RunDialog() {
   const [workflowId, setWorkflowId] = useState<string | null>(null);
   const [inputs, setInputs] = useState<Record<string, string>>({});
   const [replace, setReplace] = useState(false);
+  /** For a run on a new agent session: where that session works. */
+  const [where, setWhere] = useState<Where>({ folder: '', kind: null });
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   /** What the repository the terminal is in offers, read when the dialog opens. */
@@ -73,6 +76,7 @@ export function RunDialog() {
     setReplace(false);
     setError(null);
     setBusy(false);
+    setWhere({ folder: proposedFolder(), kind: null });
   }, [starting]);
 
   // With no workflows of the owner's own, the first one the repository offers that can be run is chosen.
@@ -105,7 +109,8 @@ export function RunDialog() {
       let sessionId = starting.sessionId;
       if (sessionId === null) {
         // A new agent session is told about the run in its first prompt; nothing needs typing afterwards.
-        sessionId = (await canvasActions.get()?.addTerminal('claude-code', [kickoffLine()])) ?? null;
+        const folder = where.folder.trim();
+        sessionId = (await canvasActions.get()?.addTerminal('claude-code', [kickoffLine()], undefined, { ...(folder ? { cwd: folder } : {}), ...(where.kind ? { environment: where.kind } : {}) })) ?? null;
         if (sessionId === null) throw new Error('The terminal could not be started.');
       }
       const started = fromFile && chosenFile
@@ -241,6 +246,7 @@ export function RunDialog() {
                       />
                     </label>
                   ))}
+                  {onNewAgent && <WhereFields where={where} onChange={setWhere} />}
                   {existing && (
                     <label className="wf-check">
                       <input type="checkbox" checked={replace} onChange={(e) => setReplace(e.target.checked)} />

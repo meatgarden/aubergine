@@ -103,6 +103,6 @@ registerTourStep({
   order: 80,
   title: 'Now bring in your own',
   text: 'Type “aubergine here” in any terminal you already have open, or use “+ New terminal”. Then remove the demo.',
-  reminder: '“aubergine here” in a terminal you have open brings it in; “+ New terminal” starts a fresh one.',
+  reminder: '“aubergine here” brings a terminal in. “New in…” starts one in a folder, or in its own working copy.',
   target: () => find('[data-testid="toolbar-new-terminal"]'),
 });

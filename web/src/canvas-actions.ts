@@ -7,7 +7,8 @@ import type { AgentKind, AgentToolsChoice } from '@aubergine/shared';
  */
 export interface CanvasActions {
   /** Starts a terminal in free space. With an agent, `agentArgs` are handed to it. Gives back the new session's ID, or null when it could not be started. */
-  addTerminal: (agent?: AgentKind, agentArgs?: string[], agentTools?: AgentToolsChoice) => Promise<string | null>;
+  /** `where`: the folder it starts in, the kind of environment it works in, and its name, where the owner said. */
+  addTerminal: (agent?: AgentKind, agentArgs?: string[], agentTools?: AgentToolsChoice, where?: { cwd?: string; environment?: string; name?: string }) => Promise<string | null>;
   addFrame: () => void;
   zoomToFit: () => void;
   resetZoom: () => void;

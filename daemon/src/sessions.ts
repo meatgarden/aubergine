@@ -198,7 +198,7 @@ export class Sessions {
       : undefined;
     let created = this.record(id, name, input.rect, started.cwd, canvas, input.tags ?? []);
     // A session started by hand inside a place whose own session is gone takes that session's place.
-    if (input.environment === undefined) this.places?.adopt(id, created.session.name, started.cwd);
+    this.places?.adopt(id, created.session.name, started.cwd);
     // Closed to programs from the start, where the owner's settings say so. A token typing into an agent is the riskiest case.
     const protect = this.options.protectByDefault?.();
     if (protect && (protect.all || (protect.agents && input.agent !== undefined))) {

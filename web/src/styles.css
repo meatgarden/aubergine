@@ -3277,3 +3277,169 @@ tr[data-status='expired'] strong {
 .run-many-results li {
   padding: 4px 0;
 }
+
+/* Working copies: where a terminal works, what changed there, and what becomes of it. */
+.where-fields label.is-unavailable,
+.close-copy label.is-unavailable {
+  opacity: 0.7;
+}
+.where-fields .wf-field input {
+  width: 100%;
+}
+.where-reason {
+  color: var(--muted);
+}
+.where-notes {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.where-notes > span {
+  display: block;
+}
+.copy-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  max-width: 180px;
+  padding: 0 6px;
+  font-size: 11px;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  background: none;
+  color: var(--muted);
+  cursor: pointer;
+}
+.copy-chip.is-broken {
+  color: var(--danger);
+}
+.copy-chip-branch {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.copy-chip-count {
+  color: var(--text);
+}
+.dialog.sheet.copy-panel {
+  width: min(1100px, 96vw);
+  max-height: 92vh;
+  overflow: auto;
+}
+.copy-gone {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--muted);
+}
+.copy-words {
+  margin: 0 0 8px;
+}
+.copy-facts {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 2px 12px;
+  margin: 0 0 10px;
+  font-size: 13px;
+}
+.copy-facts dt {
+  color: var(--muted);
+}
+.copy-facts dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.copy-changes {
+  display: grid;
+  grid-template-columns: minmax(200px, 300px) minmax(0, 1fr);
+  gap: 12px;
+  margin-bottom: 12px;
+}
+@media (max-width: 800px) {
+  .copy-changes {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.copy-files ul,
+.copy-endings ul {
+  list-style: none;
+  margin: 4px 0;
+  padding: 0;
+}
+.copy-files ul {
+  max-height: 46vh;
+  overflow: auto;
+}
+.copy-file {
+  display: flex;
+  gap: 6px;
+  width: 100%;
+  padding: 2px 6px;
+  font-size: 13px;
+  text-align: left;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  color: var(--text);
+  cursor: pointer;
+}
+.copy-file.is-open {
+  border-color: var(--accent);
+}
+.copy-file-name {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.copy-file-mark {
+  width: 1em;
+  color: var(--muted);
+}
+.copy-file-loose {
+  font-size: 11px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.copy-difference {
+  min-width: 0;
+}
+.difference-text {
+  margin: 0;
+  max-height: 52vh;
+  overflow: auto;
+  padding: 8px;
+  font-size: 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+}
+.difference-text .is-added {
+  color: #3fb950;
+}
+.difference-text .is-removed {
+  color: #f0883e;
+}
+.difference-text .is-place {
+  color: var(--muted);
+}
+.copy-endings li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  align-items: baseline;
+  padding: 3px 0;
+}
+.copy-ask-again {
+  padding: 10px 12px;
+  border: 1px dashed var(--danger);
+  border-radius: 8px;
+}
+.copy-ask-again p {
+  margin: 0 0 8px;
+}
+.copy-ask-again button {
+  margin-right: 8px;
+}
+.close-copy-again {
+  margin-top: 6px;
+}
