@@ -1,3 +1,4 @@
+import { EnvironmentKindName } from './environment';
 import { z } from 'zod';
 import {
   AgentInfo,
@@ -154,6 +155,8 @@ export const CreateSessionRequest = z.object({
   /** The canvas to put it on. Without one: the canvas most recently looked at in a browser, else the first. */
   canvasId: Id.optional(),
   tags: Tags.optional(),
+  /** Where it works: one of the kinds of environment. Left out: in the folder itself. */
+  environment: EnvironmentKindName.optional(),
 });
 export type CreateSessionRequest = z.infer<typeof CreateSessionRequest>;
 
@@ -553,6 +556,7 @@ export const StartSessionRequest = z.object({
   command: z.string().trim().min(1).max(4000).optional().describe('A line to type into the new session once its shell is ready.'),
   position: Position.optional().describe('Where to put it. A free spot is found when left out.'),
   tags: Tags.optional().describe('Short words of your own to find and filter the session by.'),
+  environment: EnvironmentKindName.optional().describe('Where it works. Left out: in the folder itself. `working-copy`: in a working copy of its own, a second checkout of the repository the folder is in, on a new branch. Refused with the reason when the folder is not in a repository that can have one.'),
 });
 export type StartSessionRequest = z.infer<typeof StartSessionRequest>;
 

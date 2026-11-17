@@ -1,3 +1,4 @@
+import { SessionEnvironment } from './environment';
 import { z } from 'zod';
 import {
   AgentInfo,
@@ -113,6 +114,9 @@ export const ChangeEvent = z.discriminatedUnion('type', [
   /** An install waits for the owner, or no longer does. */
   z.object({ type: z.literal('library.request.changed'), request: InstallRequest }),
   z.object({ type: z.literal('library.request.removed'), requestId: Id }),
+  /** Something was prepared for a session to work in, or what is known about it changed: what changed there, its session, whether it is whole. */
+  z.object({ type: z.literal('environment.changed'), environment: SessionEnvironment }),
+  z.object({ type: z.literal('environment.removed'), environmentId: Id }),
   z.object({ type: z.literal('token.created'), token: ApiToken }),
   z.object({ type: z.literal('token.revoked'), tokenId: Id, at: Timestamp }),
   /** Recorded at most about once a minute per token. */
@@ -281,6 +285,10 @@ export function applyEvent(state: AppState, event: ChangeEvent): AppState {
       return state.canvases.some((c) => c.id === event.canvas.id) ? state : { ...state, canvases: [...state.canvases, event.canvas] };
     case 'canvas.updated':
       return { ...state, canvases: state.canvases.map((c) => (c.id === event.canvasId ? { ...c, ...event.changes } : c)) };
+    case 'environment.changed':
+      return { ...state, environments: [...state.environments.filter((e) => e.id !== event.environment.id), event.environment] };
+    case 'environment.removed':
+      return { ...state, environments: state.environments.filter((e) => e.id !== event.environmentId) };
     case 'library.source.changed':
       return { ...state, library: { ...state.library, sources: [...state.library.sources.filter((s) => s.id !== event.source.id), event.source] } };
     case 'library.source.removed':

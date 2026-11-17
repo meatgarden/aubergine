@@ -28,3 +28,5 @@ export * from './messages';
 export * from './shelf';
 export * from './library';
 export * from './board';
+export * from './environment';
+export * from './environment-api';

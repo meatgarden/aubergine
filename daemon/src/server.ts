@@ -94,6 +94,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { MessageRefusal, Messages } from './messages';
 import { Library } from './library';
+import { Environments } from './environments';
 import { FetchRefusal, type LibraryFetcher } from './library/git';
 import type { MessageLog } from './message-log';
 import { Workflows } from './workflows';
@@ -125,6 +126,10 @@ export interface ServerOptions {
   libraryFetcher?: LibraryFetcher;
   /** Where fetched library sources are kept. Left out, nothing can be fetched. */
   libraryCache?: string;
+  /** Where working copies are kept: a folder of the data folder. Left out, none can be made. */
+  copiesDir?: string;
+  /** The folder new sessions start in when none is named. Left out, the home folder. */
+  defaultFolder?: () => string | null;
   /** The folder of the library that ships with the app. Left out, this copy's. For tests. */
   libraryBuiltin?: string;
   /** Where messages between sessions are kept. Left out, in memory only. */
@@ -223,6 +228,9 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     inventories: options.inventories,
     builtin: options.libraryBuiltin,
   });
+  // Where sessions work. The session code asks this for a place by the name of a kind, and knows no kind itself.
+  const environments = new Environments(hub, { keptIn: options.copiesDir ?? null, defaultFolder: () => options.defaultFolder?.() ?? os.homedir(), onError: (error) => console.error('Could not read a working copy:', error) });
+  sessions.usePlaces(environments);
   // The library that ships with the app is read from this copy's own files. Nothing is fetched at start, or ever without the owner asking.
   await library.start();
   const terminals = new TerminalAccess(sessions, runtime, () => terminalSettings, options.inputAudit ?? noInputAudit);
@@ -555,6 +563,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   const away = new Away(hub);
   app.addHook('onClose', async () => away.close());
   app.addHook('onClose', async () => messages.close());
+  app.addHook('onClose', async () => environments.close());
   app.get(paths.away, async (request): Promise<AwayDigest> => {
     allowOn(request, 'away.read', {});
     const query = parse(AwayQuery, request.query);
@@ -750,6 +759,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     terminals,
     messages,
     library,
+    environments,
     may: (principal, action, resource) => authorize(principal, action, resource),
     resourceOf,
     trace: (request, trace) => void traces.set(request, trace),

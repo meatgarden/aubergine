@@ -1,7 +1,7 @@
-import { spawn } from 'node:child_process';
 import { mkdir, rm } from 'node:fs/promises';
 import path from 'node:path';
 import { gitAddressProblem } from '@aubergine/shared';
+import { gitBin, isolatedEnv, networkEnv, runSourceGit, type Ran } from '../git/run';
 
 /**
  * Fetching a Git source into a folder of the data folder, and nothing else.
@@ -50,112 +50,15 @@ export interface GitLimits {
 /** How far back history is read to tell whether a commit is still part of it. */
 const HISTORY_DEPTH = 200;
 
-interface Ran {
-  code: number | null;
-  out: string;
-  err: string;
-  timedOut: boolean;
-}
-
-/** The environment of the step that speaks to the network: the owner's own, plus what keeps Git from asking or wandering. */
-function networkEnv(address: string): NodeJS.ProcessEnv {
-  return {
-    ...process.env,
-    // Never ask on a terminal; a prompt nobody sees would hang until the timeout.
-    GIT_TERMINAL_PROMPT: '0',
-    // Only these transports, whatever any configuration says (this overrides `protocol.*`). `file` only when the address is one.
-    GIT_ALLOW_PROTOCOL: address.startsWith('file:') ? 'file' : 'https:ssh',
-    // Large-file content is not downloaded.
-    GIT_LFS_SKIP_SMUDGE: '1',
-    // Not the user's editor, pager or askpass window.
-    GIT_ASKPASS: '',
-    SSH_ASKPASS: '',
-    GIT_PAGER: 'cat',
-    GIT_OPTIONAL_LOCKS: '0',
-  };
-}
-
-/** The environment of the step that writes files out: no configuration but ours, and no network at all. */
-function isolatedEnv(): NodeJS.ProcessEnv {
-  return {
-    PATH: process.env.PATH ?? '/usr/bin:/bin',
-    HOME: '/nonexistent',
-    GIT_CONFIG_GLOBAL: '/dev/null',
-    GIT_CONFIG_SYSTEM: '/dev/null',
-    GIT_CONFIG_NOSYSTEM: '1',
-    GIT_ATTR_NOSYSTEM: '1',
-    GIT_TERMINAL_PROMPT: '0',
-    // Nothing may be fetched while writing files out: not a missing object, not a submodule.
-    GIT_ALLOW_PROTOCOL: '',
-    GIT_NO_LAZY_FETCH: '1',
-    GIT_LFS_SKIP_SMUDGE: '1',
-    GIT_PAGER: 'cat',
-  };
-}
-
-/** Options given on every command line; the command line wins over every configuration file. */
-const ALWAYS = [
-  // No hook, wherever one might be configured to live.
-  '-c', 'core.hooksPath=/dev/null',
-  // No program that watches the file system.
-  '-c', 'core.fsmonitor=false',
-  // Links are written as small plain files holding the link's text.
-  '-c', 'core.symlinks=false',
-  // Malformed objects, and the known tricks with `.git` and `.gitmodules`, abort the fetch.
-  '-c', 'transfer.fsckObjects=true',
-  '-c', 'fetch.fsckObjects=true',
-  // Submodules are never followed.
-  '-c', 'submodule.recurse=false',
-  '-c', 'fetch.recurseSubmodules=false',
-  // The large-file filter, if the owner has it installed, does nothing here.
-  '-c', 'filter.lfs.smudge=',
-  '-c', 'filter.lfs.process=',
-  '-c', 'filter.lfs.required=false',
-  // No maintenance in the background after a fetch.
-  '-c', 'gc.auto=0',
-  '-c', 'maintenance.auto=false',
-  '-c', 'advice.detachedHead=false',
-];
-
 export class GitFetcher implements LibraryFetcher {
   constructor(
     private readonly limits: () => GitLimits,
-    private readonly bin: string = process.env.AUBERGINE_GIT_BIN ?? 'git',
+    private readonly bin: string = gitBin(),
   ) {}
 
-  /**
-   * Runs one Git command. Through `sh` only to set a limit on the size of any file the command writes
-   * (`ulimit -f`), which is what bounds a fetch; nothing of a caller's is in the script, every argument is
-   * passed as an argument.
-   */
+  /** Runs one Git command, by the rules for a library source. Git itself is started in one place: `git/run.ts`. */
   private run(args: readonly string[], env: NodeJS.ProcessEnv, cwd?: string): Promise<Ran> {
-    const { timeoutSeconds, maxMegabytes } = this.limits();
-    const blocks = String(maxMegabytes * 2048);
-    return new Promise((resolve) => {
-      const child = spawn('/bin/sh', ['-c', 'ulimit -f "$1" 2>/dev/null; shift; exec "$@"', 'sh', blocks, this.bin, ...ALWAYS, ...args], { env, cwd, stdio: ['ignore', 'pipe', 'pipe'], detached: true });
-      let out = '';
-      let err = '';
-      let timedOut = false;
-      child.stdout.on('data', (chunk: Buffer) => (out = (out + chunk.toString('utf8')).slice(-20_000)));
-      child.stderr.on('data', (chunk: Buffer) => (err = (err + chunk.toString('utf8')).slice(-20_000)));
-      const timer = setTimeout(() => {
-        timedOut = true;
-        // The command and everything it started (ssh, a helper): it runs in a process group of its own for this.
-        try {
-          if (child.pid !== undefined) process.kill(-child.pid, 'SIGKILL');
-        } catch {
-          child.kill('SIGKILL');
-        }
-      }, timeoutSeconds * 1000);
-      child.on('error', () => {
-        clearTimeout(timer);
-        resolve({ code: null, out, err: 'Git could not be started. Is it installed?', timedOut });
-      });
-      child.on('close', (code) => {
-        clearTimeout(timer);
-        resolve({ code, out, err, timedOut });
-      });
-    });
+    return runSourceGit(args, env, this.limits(), cwd, this.bin);
   }
 
   /** What went wrong, for the owner: the last lines Git said, without anything that looks like a credential. */

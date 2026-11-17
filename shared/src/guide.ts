@@ -68,6 +68,7 @@ export const OWNERS_ALONE: Record<(typeof NEVER_BY_TOKEN)[number], string> = {
   'shelf.manage': 'retiring a shelf element or bringing it back, and taking a newer version of one into a workflow',
   'messages.manage': 'deciding which terminals may message each other, and pausing or stopping a thread',
   'runs.approve': 'approving a run that waits for a person, or sending it back',
+  'environments.manage': 'removing or discarding a working copy',
 };
 
 const ownersAlone = (): string => [...new Set(NEVER_BY_TOKEN.map((action) => OWNERS_ALONE[action]))].join('; ');

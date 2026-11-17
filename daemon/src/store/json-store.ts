@@ -9,6 +9,7 @@ import {
   ShelfElement,
   Id,
   LibraryState,
+  SessionEnvironment,
   withFirstVersion,
   FIRST_CANVAS_NAME,
   Layout,
@@ -75,8 +76,11 @@ const StateFileV9 = StateFileV8.extend({ version: z.literal(9), library: Library
  */
 const StateFileV10 = StateFileV9.extend({ version: z.literal(10) });
 
-const StateFile = z.discriminatedUnion('version', [StateFileV1, StateFileV2, StateFileV3, StateFileV4, StateFileV5, StateFileV6, StateFileV7, StateFileV8, StateFileV9, StateFileV10]);
-const CURRENT_VERSION = 10;
+/** The same, with what was prepared for sessions to work in: working copies. An older file has none, and every session in it works in the folder it was started in. */
+const StateFileV11 = StateFileV10.extend({ version: z.literal(11), environments: z.array(SessionEnvironment).default([]) });
+
+const StateFile = z.discriminatedUnion('version', [StateFileV1, StateFileV2, StateFileV3, StateFileV4, StateFileV5, StateFileV6, StateFileV7, StateFileV8, StateFileV9, StateFileV10, StateFileV11]);
+const CURRENT_VERSION = 11;
 type StateFile = z.infer<typeof StateFile>;
 
 /**
@@ -129,6 +133,7 @@ export function migrate(file: StateFile): AppState {
     shelf: (file.version >= 5 && 'shelf' in file ? file.shelf : []).map(withFirstVersion),
     repositoryAccepted: file.version >= 6 && 'repositoryAccepted' in file ? file.repositoryAccepted : [],
     library: file.version >= 9 && 'library' in file ? (file.version < 10 ? withoutAddressNames(file.library) : file.library) : { sources: [], installed: [], requests: [] },
+    environments: file.version >= 11 && 'environments' in file ? file.environments : [],
   });
 }
 
@@ -175,7 +180,9 @@ function tidy(state: AppState): AppState {
   });
   // A draft of a session that is gone can still be read and accepted; it just belongs to no session any more.
   const drafts = state.drafts.map((draft) => (draft.sessionId !== null && !byId.has(draft.sessionId) ? { ...draft, sessionId: null } : draft));
-  return { ...state, sessions, canvases, runs, drafts };
+  // An environment whose session is gone says so; it is kept, because what it holds may exist nowhere else.
+  const environments = state.environments.map((environment) => (environment.sessionId !== null && !byId.has(environment.sessionId) ? { ...environment, sessionId: null } : environment));
+  return { ...state, sessions, canvases, runs, drafts, environments };
 }
 
 export class JsonStore implements Store {

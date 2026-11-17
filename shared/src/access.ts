@@ -40,6 +40,8 @@ export const SCOPE_OF = {
   'terminal.input': 'terminal:input',
   // Messages. Neither is implied by anything else, and both apply only within the token's reach. A session's own inbox is not open to tokens.
   // The library: seeing sources and items is reading. Asking for an install needs the scope to write workflows, and installs nothing: it waits for the owner.
+  // Where a session works and what changed there: names and counts are reading. The text of a difference is content, and is `terminal.read`.
+  'environments.read': 'read',
   'library.read': 'read',
   'library.request': 'workflows:write',
   'messages.read': 'messages:read',
@@ -52,7 +54,7 @@ export const SCOPE_OF = {
  * tokens did, changing settings, and anything that reaches processes outside
  * Aubergine.
  */
-export const NEVER_BY_TOKEN = ['tokens.manage', 'activity.read', 'settings.write', 'processes.signal', 'outside.read', 'outside.move', 'drafts.review', 'repository.review', 'repository.write', 'sessions.protect', 'demo.manage', 'inventory.read', 'recap.ask', 'away.read', 'history.read', 'history.open', 'messages.manage', 'shelf.manage', 'library.manage', 'runs.approve'] as const;
+export const NEVER_BY_TOKEN = ['tokens.manage', 'activity.read', 'settings.write', 'processes.signal', 'outside.read', 'outside.move', 'drafts.review', 'repository.review', 'repository.write', 'sessions.protect', 'demo.manage', 'inventory.read', 'recap.ask', 'away.read', 'history.read', 'history.open', 'messages.manage', 'shelf.manage', 'library.manage', 'runs.approve', 'environments.manage'] as const;
 
 export type Action = (typeof SESSION_ACTIONS)[number] | keyof typeof SCOPE_OF | (typeof NEVER_BY_TOKEN)[number];
 
