@@ -48,6 +48,7 @@ import { agentClient } from './cli/agent';
 import { guideText } from './cli/guide';
 import { parseLibraryCommand, runLibraryCommand } from './cli/library';
 import { parseCopiesCommand, runCopiesCommand } from './cli/copies';
+import { parseAskCommand, parseRuleCommand, parseTaskCommand, parseTodoCommand, runQueueCommand } from './cli/queue';
 
 /** What `--copy` asks for, by the name its kind is registered under. The server says whether the folder can have one. */
 const WORKING_COPY = 'working-copy';
@@ -586,6 +587,11 @@ async function main(): Promise<number> {
       // Names and reasons were written by agents and tokens: control characters are shown, not sent to the terminal.
       console.log(showControl(boardText(board, Date.now())));
       return 0;
+    }
+
+    case 'queue': {
+      const parsed = command.which === 'task' ? parseTaskCommand(command.words) : command.which === 'todo' ? parseTodoCommand(command.words) : command.which === 'ask' ? parseAskCommand(command.words) : parseRuleCommand(command.words);
+      return runQueueCommand(parsed, { owner: (work) => v1(config, work), env: process.env, print: (text) => console.log(text) });
     }
 
     case 'copies':

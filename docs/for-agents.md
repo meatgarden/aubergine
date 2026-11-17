@@ -123,6 +123,25 @@ It prints what is wanted: a few plain sentences on the goal, what was done, what
 
 Write one only when asked. It takes the place of the one before, and your owner reads it as your words.
 
+## The queue, and asking your owner
+
+(Needs the terminal's own credential.)
+
+Work that should be done, but not by you now (a follow-up, something outside your task), is proposed for the queue of tasks; a thing only a person can do or decide (a key, an account, a choice) is asked of your owner:
+
+    aubergine task add "Add a test for the retry" --details "it should fail without the fix"
+    aubergine ask "the staging key expires on Friday: rotate it, or say who can"
+
+Neither is done until your owner acts, and nothing tells you when. Do not start a proposed task yourself; carry on with what does not depend on it, or report blocked. `aubergine task list` shows the queue and what you proposed.
+
+(Needs the terminal's own credential, or an API token with the scope tasks:write.)
+
+As tools: task_propose, ask_owner, queue_read.
+
+(Needs an API token with the scope read.)
+
+To read everything that waits on the owner: for_you_read. Nothing on that list can be decided by a tool.
+
 ## Where you work
 
 (Needs the terminal's own credential.)

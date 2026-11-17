@@ -4,6 +4,8 @@ import { HOOK_EVENTS, type HookEvent } from '../agents/claude-code';
 export type Command =
   | { name: 'list' }
   | { name: 'new'; sessionName: string | null; canvas: string | null; copy: boolean; folder: string | null }
+  /** `task …`, `todo …`, `ask …`, `rule …`: their own words, parsed by the queue commands. */
+  | { name: 'queue'; which: 'task' | 'todo' | 'ask' | 'rule'; words: string[] }
   /** `copies …`: its own words, parsed by the working-copy commands. */
   | { name: 'copies'; words: string[] }
   | { name: 'canvas-list' }
@@ -162,6 +164,18 @@ export const USAGE = `Usage: aubergine <command>
                              Only you can: no token and no agent's own command does this
   workflow send-back <run> --to <element> --comment <text>
                              Send a run that waits for approval back to an earlier element; the agent is told your comment
+  task add <title> [--details <text>] [--folder <folder>] [--workflow <name>] [--to any | <terminal> | new:<canvas>] [--label <word>]
+                             Add a task to the queue for agents. Typed inside a canvas terminal it is a proposal, which waits for your yes
+  task list | show <task>    The queue: what is at work, what is next, what waits for your yes
+  task start [task]          Start the next task that someone can take, or the one named. Only you can
+  task accept | decline <task>   Say yes or no to a proposed task. Only you can
+  task move <task> --first | --last | --before <task>
+  task withdraw | again | clear <task>   Take one back; put a failed one back; put away one that is over
+  todo                       What waits on you: terminals, approvals, drafts, proposals, done and failed tasks, what was asked
+  todo add <text> | todo done <item>
+  ask <text>                 Inside a session: ask your owner for something only a person can do
+  rule list | add --when <event> (--notify | --run <element> (--on <terminal> | --new <canvas>)) | remove <rule>
+                             When something happens, do something. Only you write rules
   board [--canvas <name>] [--workflow <name>] [--status <status>] [--tag <tag>]
                              Every run that is going, by workflow and element: who waits for you, who is blocked
   Inside a session that is on a run:
@@ -231,7 +245,7 @@ export const USAGE = `Usage: aubergine <command>
 new, here and import take --canvas <name>. Without it they use the canvas you looked at most recently
 in a browser, or the first one when no browser is open.
 
-The server must be running for list, new, canvas, copies, token, workflow, element, library, board, screen, output, send, run, protect, attach, here, scan, import, move, tell, inbox, reply, note, attention and open.
+The server must be running for list, new, canvas, copies, task, todo, ask, rule, token, workflow, element, library, board, screen, output, send, run, protect, attach, here, scan, import, move, tell, inbox, reply, note, attention and open.
 guide works without it, and then prints every part.`;
 
 export class UsageError extends Error {}
@@ -409,6 +423,16 @@ export function parseCommand(argv: readonly string[]): Command {
       return { name: 'element', words: rest };
     case 'library':
       return { name: 'library', words: rest };
+    case 'task':
+    case 'tasks':
+      return { name: 'queue', which: 'task', words: rest };
+    case 'todo':
+      return { name: 'queue', which: 'todo', words: rest };
+    case 'ask':
+      return { name: 'queue', which: 'ask', words: rest };
+    case 'rule':
+    case 'rules':
+      return { name: 'queue', which: 'rule', words: rest };
     case 'copies':
     case 'copy':
       return { name: 'copies', words: rest };

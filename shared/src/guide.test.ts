@@ -17,7 +17,7 @@ describe('the guide for an agent in a terminal', () => {
   const sections = guideFor(session);
 
   it('is short, plain text', () => {
-    expect(text.split('\n').length).toBeLessThanOrEqual(150);
+    expect(text.split('\n').length).toBeLessThanOrEqual(160);
     expect(plain(text)).toBe(true);
     expect(text.endsWith('\n')).toBe(false);
   });
@@ -29,7 +29,7 @@ describe('the guide for an agent in a terminal', () => {
         expect(part.needs.some((action) => (SESSION_ACTIONS as readonly string[]).includes(action)), `${section.id}: ${part.text[0]}`).toBe(true);
       }
     }
-    expect(sections.map((section) => section.id)).toEqual(['what', 'terminal', 'attention', 'notes', 'workflows', 'drafts', 'recap', 'where', 'messages', 'repository', 'owner', 'behave', 'tools']);
+    expect(sections.map((section) => section.id)).toEqual(['what', 'terminal', 'attention', 'notes', 'workflows', 'drafts', 'recap', 'queue', 'where', 'messages', 'repository', 'owner', 'behave', 'tools']);
   });
 
   it('names no scope and nothing about other terminals', () => {
