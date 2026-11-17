@@ -527,7 +527,7 @@ A terminal on the canvas can also be open in a window of your terminal applicati
 Which application is used is in the [settings](#settings):
 
 - `desktop.app`: `"terminal"` (Terminal, the default on macOS), `"iterm"` (iTerm), or `"command"`.
-- `desktop.command`, for `"command"`: a command line of your own, with `{file}` where the script goes, for example `"alacritty -e {file}"`. It is started as it is written, without a shell: the words are split at spaces (quotes keep a part together), and nothing in it is expanded.
+- `desktop.command`, for `"command"`: a command line of your own, with `{file}` where the script goes, for example `"my-terminal -e {file}"`. It is started as it is written, without a shell: the words are split at spaces (quotes keep a part together), and nothing in it is expanded.
 - `desktop.openNew`: the box in the menu. This is the one setting the page writes into the file; the other two you write by hand.
 
 On Linux only `"command"` works for now; Windows is not built.
