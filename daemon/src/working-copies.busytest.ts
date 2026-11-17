@@ -9,6 +9,8 @@ import { COPY_BRANCH, COPY_NAME, DIFFERENCE_MAX_BYTES, GRANTABLE_SCOPES, NO_ATTE
 import type { FastifyInstance } from 'fastify';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { sessionToken } from './auth';
+import { createClient } from '@aubergine/client';
+import { parseCopiesCommand, runCopiesCommand } from './cli/copies';
 import { registerEnvironmentKind, unregisterEnvironmentKind } from './environments/kind';
 import { FileRunArchive } from './run-archive';
 import type { SessionRuntime } from './runtime/runtime';
@@ -134,6 +136,14 @@ function fakeSession(name: string, more: Partial<Session> = {}): Session {
     recap: null, takesMessages: false, untold: null, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null }, ...more };
   hub.emit({ type: 'session.created', session, canvasId: hub.state.canvases[0]!.id, node: { id: newId(), sessionId: session.id, x: 0, y: 0, width: 640, height: 400, color: 'none' } });
   return session;
+}
+
+async function until(done: () => boolean, ms = 8000): Promise<void> {
+  const end = Date.now() + ms;
+  while (!done()) {
+    if (Date.now() > end) throw new Error('Waited too long');
+    await new Promise((resolve) => setTimeout(resolve, 25));
+  }
 }
 
 /** Git, for making fixtures and for what an agent in a working copy would do: with no configuration of anyone's. */
@@ -592,6 +602,75 @@ describe('surviving', () => {
     execFileSync('mv', [root, path.join(dir, 'moved')]);
     expect((await detailOf(second.sessionId as string)).note).toContain('no longer where it was');
     expect((await endingsOf(second.id)).find((e) => e.choice === 'discard')?.available).toBe(false);
+  });
+});
+
+describe('what changed is read without anyone asking, and not too often', () => {
+  it('when the session in it changes its status: once, a while after, and the counts arrive as one event', async () => {
+    const root = await repository();
+    const started = await startIn(root, 'watched');
+    const copy = environmentOf(started.session.id);
+    await put(copy.folder, 'src/retry.js', 'export const tries = 1;\n');
+    expect(environmentOf(started.session.id).changes).toBeNull();
+    events = [];
+    // A command ended there, three times in a row: as a shell's hooks report it.
+    for (let n = 0; n < 3; n += 1) hub.emit({ type: 'session.status', sessionId: started.session.id, status: { ...NO_STATUS, state: 'idle', lastFinishedAt: new Date().toISOString() } });
+    await until(() => environmentOf(started.session.id).changes !== null);
+    expect(environmentOf(started.session.id).changes).toMatchObject({ changed: 1, added: 0, removed: 0, uncommitted: 1 });
+    expect(events.filter((event) => event.type === 'environment.changed')).toHaveLength(1);
+    // Parked and brought back, it is the same session in the same working copy.
+    expect((await asOwner('POST', `/v1/sessions/${started.session.id}/park`)).status).toBe(200);
+    expect(environmentOf(started.session.id).id).toBe(copy.id);
+    expect((await asOwner('POST', `/v1/sessions/${started.session.id}/restore`, {})).status).toBe(200);
+    expect(environmentOf(started.session.id)).toMatchObject({ id: copy.id, folder: copy.folder });
+  });
+});
+
+describe('the commands', () => {
+  it('list the working copies, show one with what can be done, and never discard work that exists nowhere else without asking a person', async () => {
+    const root = await repository();
+    const started = await startIn(root, 'by command');
+    const copy = environmentOf(started.session.id);
+    await put(copy.folder, 'src/retry.js', 'export const tries = 2;\n');
+    const clientOrigin = `http://127.0.0.1:${port}`;
+    const client = createClient({ baseUrl: clientOrigin, headers: { origin: clientOrigin, cookie: `${cookieName(port)}=${ownerToken}` } });
+    const answers: string[] = [];
+    const asked: string[] = [];
+    const copiesCommand = async (words: string[]): Promise<{ code: number; out: string }> => {
+      const printed: string[] = [];
+      const code = await runCopiesCommand(parseCopiesCommand(words), { owner: (work) => work(client), print: (text) => printed.push(text), ask: async (question) => (asked.push(question), answers.shift() ?? '') });
+      return { code, out: printed.join('\n') };
+    };
+    const list = await copiesCommand([]);
+    expect(list.out).toContain('by command');
+    expect(list.out).toContain(`branch ${copy.branch}`);
+    expect(list.out).toContain('1 changed, 1 not committed');
+    expect(list.out).toContain(copy.folder);
+    const shown = await copiesCommand(['show', 'by command']);
+    expect(shown.out).toContain('changed  src/retry.js  (not committed)');
+    expect(shown.out).toContain('aubergine copies keep-branch "by command"');
+    expect(shown.out).toContain('Not now: 1 file holds work that is in no commit');
+    // Not possible now: said, and nothing done.
+    expect((await copiesCommand(['keep-branch', 'by command'])).code).toBe(1);
+    // --yes does not answer the second question; "no" keeps everything.
+    answers.push('n');
+    const kept = await copiesCommand(['discard', 'by command', '--yes']);
+    expect(kept).toEqual({ code: 0, out: 'Kept.' });
+    expect(asked.at(-1)).toContain('This working copy holds 1 file with work that is in no commit. That work exists nowhere else');
+    expect(existsSync(copy.folder)).toBe(true);
+    answers.push('yes');
+    expect((await copiesCommand(['discard', 'by command'])).out).toBe('The folder and the branch are removed.');
+    expect(existsSync(copy.folder)).toBe(false);
+    expect(branchesOf(root)).toEqual(['main']);
+    expect((await copiesCommand([])).out).toContain('No working copies.');
+    // A word that is no choice of a working copy is answered by what it does offer.
+    const another = environmentOf((await startIn(root, 'another')).session.id);
+    const unknown = await copiesCommand(['explode', 'another']);
+    expect(unknown.code).toBe(1);
+    expect(unknown.out).toBe('A working copy does not offer "explode". It offers: keep-branch, keep, discard.');
+    expect(existsSync(another.folder)).toBe(true);
+    expect(() => parseCopiesCommand(['discard'])).toThrow(/needs a working copy/);
+    expect(() => parseCopiesCommand(['discard', 'x', '--force'])).toThrow(/does not know --force/);
   });
 });
 

@@ -65,6 +65,8 @@ export type SessionEnvironment = z.infer<typeof SessionEnvironment>;
 export function plainSlug(name: string): string {
   const slug = name
     .normalize('NFKD')
+    // An accented letter is its letter: the marks that were split off are dropped.
+    .replace(/\p{M}+/gu, '')
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '')

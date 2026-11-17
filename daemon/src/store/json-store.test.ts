@@ -383,6 +383,37 @@ describe('JsonStore', () => {
     expect(await readFile(`${store.file}.v9.backup`, 'utf8')).toBe(fixture);
   });
 
+  it('loads a file from before working copies: nothing was prepared for any session, everything else is as it was, and the older file is kept', async () => {
+    const store = new JsonStore(dir);
+    const fixture = await readFile(new URL('./fixtures/state-approvals-v10.json', import.meta.url), 'utf8');
+    await mkdir(dir, { recursive: true });
+    await writeFile(store.file, fixture);
+    const before = JSON.parse(fixture);
+
+    const state = await store.load();
+    expect(state.environments).toEqual([]);
+    expect(state.sessions.length).toBe(before.sessions.length);
+    expect(state.runs).toMatchObject(before.runs);
+    expect(state.library).toMatchObject(before.library);
+
+    await store.save(state);
+    const raw = JSON.parse(await readFile(store.file, 'utf8'));
+    expect(raw.version).toBe(11);
+    expect(raw.environments).toEqual([]);
+    expect(await new JsonStore(dir).load()).toEqual(state);
+    expect(await readFile(`${store.file}.v10.backup`, 'utf8')).toBe(fixture);
+  });
+
+  it('keeps a working copy whose session is no longer in the file, and says its session is gone', async () => {
+    const store = new JsonStore(dir);
+    const state = withSession(await store.load(), 'one');
+    const sessionId = state.sessions[0]!.id;
+    const copy = (id: string, of: string | null) => ({ id, kind: 'working-copy', title: 'In its own working copy', words: 'Kept apart.', sessionId: of, sessionName: 'one', projectFolder: '/home/someone/project', folder: '/home/someone/data/copies/one-0a1b2c', startFolder: '/home/someone/data/copies/one-0a1b2c', branch: 'aubergine/one-0a1b2c', startCommit: 'a'.repeat(40), createdAt: '2026-05-01T10:00:00.000Z', changes: null, broken: null });
+    await store.save({ ...state, environments: [copy(newId(), sessionId), copy(newId(), newId())] });
+    const loaded = await new JsonStore(dir).load();
+    expect(loaded.environments.map((e) => e.sessionId)).toEqual([sessionId, null]);
+  });
+
   it('keeps a session on one canvas only, if a file ever says otherwise', async () => {
     const store = new JsonStore(dir);
     const state = withSession(await store.load(), 'one');
