@@ -1,12 +1,12 @@
 /**
- * The rule that a terminal takes typing only at full size, said once: the
- * first time someone clicks a terminal that is zoomed out. Remembered in
+ * A terminal that is too small to read cannot be typed in: a click zooms in
+ * first. Said once, the first time that happens. Remembered in
  * this browser, and never said again.
  */
 
 const STORAGE_KEY = 'aubergine.hint.full-size';
 
-export const FULL_SIZE_HINT = 'Terminals take typing at full size: zooming in…';
+export const FULL_SIZE_HINT = 'Too small to type in: zooming in…';
 
 /** Whether to say it now. Saying it is remembered at once, so that it is said one time only. */
 export function shouldSayFullSize(storage: Pick<Storage, 'getItem' | 'setItem'> | null = safeStorage()): boolean {

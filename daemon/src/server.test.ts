@@ -712,7 +712,7 @@ describe('public API: canvases under /v1', () => {
     expect(main()).toMatchObject({ name: 'Main again', color: 'blue', labels: { team: 'core' } });
 
     expect((await json('PATCH', publicPaths.canvas(main().id), {})).status).toBe(400);
-    expect((await json('PATCH', publicPaths.canvas(main().id), { color: 'pink' })).status).toBe(400);
+    expect((await json('PATCH', publicPaths.canvas(main().id), { color: 'plaid' })).status).toBe(400);
     const missing = await json('GET', publicPaths.canvas(newId()));
     expect(missing.status).toBe(404);
     expect(missing.body.error.code).toBe('not_found');
@@ -1564,7 +1564,13 @@ describe('frames and colors', () => {
     await request('PUT', paths.node(node.id), { body: { x: 5, y: 5, width: 720, height: 440, color: 'green' } });
     await request('PUT', paths.node(node.id), { body: { x: 50, y: 5, width: 720, height: 440 } });
     expect(mainLayout(hub.state).nodes[0]).toMatchObject({ x: 50, color: 'green' });
-    expect((await request('PUT', paths.node(node.id), { body: { x: 5, y: 5, width: 720, height: 440, color: 'pink' } })).statusCode).toBe(400);
+    expect((await request('PUT', paths.node(node.id), { body: { x: 5, y: 5, width: 720, height: 440, color: 'plaid' } })).statusCode).toBe(400);
+    // A color of one's own: six hexadecimal digits in lower case, and nothing looser.
+    await request('PUT', paths.node(node.id), { body: { x: 5, y: 5, width: 720, height: 440, color: '#8a6fd1' } });
+    expect(mainLayout(hub.state).nodes[0]).toMatchObject({ color: '#8a6fd1' });
+    for (const color of ['#8A6FD1', '#fff', 'red; background: url(x)', '#8a6fd1 ']) {
+      expect((await request('PUT', paths.node(node.id), { body: { x: 5, y: 5, width: 720, height: 440, color } })).statusCode).toBe(400);
+    }
   });
 });
 

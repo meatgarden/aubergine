@@ -61,6 +61,7 @@ import './workflows/run-views';
 import { FrameNode, type FrameFlowNode } from './FrameNode';
 import { TerminalNode, type TerminalFlowNode } from './TerminalNode';
 import { isFullZoom, loadViewport, saveViewport, useZoomToNode } from './viewport';
+import { READABLE_ZOOM } from './culling';
 
 const nodeTypes = { terminal: TerminalNode, frame: FrameNode };
 type CanvasNode = TerminalFlowNode | FrameFlowNode;
@@ -188,12 +189,15 @@ export function Canvas() {
     (event: React.MouseEvent, node: Node) => {
       if (node.type !== 'terminal') return;
       if ((event.target as HTMLElement).closest('input, button, textarea')) return;
-      // Zoomed out, a click does not type: it zooms in first. Said once, where it happens.
-      if (!isFullZoom(flow.getViewport().zoom) && shouldSayFullSize()) {
-        setFullSizeHint({ x: event.clientX, y: event.clientY });
-        setTimeout(() => setFullSizeHint(null), 6000);
+      // A click gives the terminal the keyboard where it is. Only when it is too small to read
+      // does the view zoom in first; that is said once, where it happens.
+      if (flow.getViewport().zoom < READABLE_ZOOM) {
+        if (shouldSayFullSize()) {
+          setFullSizeHint({ x: event.clientX, y: event.clientY });
+          setTimeout(() => setFullSizeHint(null), 6000);
+        }
+        zoomToNode(node.id);
       }
-      zoomToNode(node.id);
       focusSession((node as TerminalFlowNode).data.sessionId);
     },
     [zoomToNode, focusSession, flow],
