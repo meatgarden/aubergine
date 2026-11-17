@@ -1775,7 +1775,7 @@ test('the side panel gives each section the room it needs, in a small window and
     await page.setViewportSize({ width, height });
     const { panelBottom, panelHeight, sections } = await measure();
     if (process.env.PANEL_SHOT) await page.screenshot({ path: process.env.PANEL_SHOT + '-' + String(width) + '.png' });
-    expect(sections.map((s) => s.id)).toEqual(['terminals', 'workflows', 'copies', 'messages']);
+    expect(sections.map((s) => s.id)).toEqual(['terminals', 'for-you', 'workflows', 'copies', 'messages']);
     const list = sections.find((s) => s.fill);
     // The terminal list is never squeezed to a row: it has room for a few, and takes what the others leave.
     expect(list?.id).toBe('terminals');

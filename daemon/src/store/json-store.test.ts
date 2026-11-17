@@ -404,6 +404,27 @@ describe('JsonStore', () => {
     expect(await readFile(`${store.file}.v10.backup`, 'utf8')).toBe(fixture);
   });
 
+  it('loads a file from before the queue: no tasks, nothing asked, no rules, three at once, nothing held and nothing starting by itself; the older file is kept', async () => {
+    const store = new JsonStore(dir);
+    const fixture = await readFile(new URL('./fixtures/state-copies-v11.json', import.meta.url), 'utf8');
+    await mkdir(dir, { recursive: true });
+    await writeFile(store.file, fixture);
+    const before = JSON.parse(fixture);
+
+    const state = await store.load();
+    expect(state.queue).toEqual({ tasks: [], asks: [], rules: [], limit: 3, hold: false, automatic: false, ruleRuns: [] });
+    expect(state.environments).toMatchObject(before.environments);
+    expect(state.runs).toMatchObject(before.runs);
+    expect(state.sessions.length).toBe(before.sessions.length);
+
+    await store.save(state);
+    const raw = JSON.parse(await readFile(store.file, 'utf8'));
+    expect(raw.version).toBe(12);
+    expect(raw.queue.automatic).toBe(false);
+    expect(await new JsonStore(dir).load()).toEqual(state);
+    expect(await readFile(`${store.file}.v11.backup`, 'utf8')).toBe(fixture);
+  });
+
   it('keeps a working copy whose session is no longer in the file, and says its session is gone', async () => {
     const store = new JsonStore(dir);
     const state = withSession(await store.load(), 'one');
