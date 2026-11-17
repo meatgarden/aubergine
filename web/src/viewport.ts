@@ -3,7 +3,7 @@ import { useReactFlow, useStore, type Viewport } from '@xyflow/react';
 
 const STORAGE_KEY = 'aubergine.viewport';
 
-/** A terminal can only be used at exactly 100% zoom; text selection is wrong at any other scale. */
+/** Text is sharpest at exactly 100% zoom. A terminal is usable at any zoom at which it is drawn live. */
 export function isFullZoom(zoom: number): boolean {
   return Math.abs(zoom - 1) < 0.001;
 }

@@ -40,8 +40,16 @@ export const NodeRect = z.object({
 export type NodeRect = z.infer<typeof NodeRect>;
 
 /** Colors a node or frame can be given. `none` is the default look. */
-export const NodeColor = z.enum(['none', 'red', 'orange', 'yellow', 'green', 'blue', 'purple']);
+/** The colors that have a name. `none` is no color. */
+export const NAMED_COLORS = ['none', 'red', 'orange', 'yellow', 'lime', 'green', 'teal', 'cyan', 'blue', 'indigo', 'purple', 'pink', 'brown', 'gray'] as const;
+export const NamedColor = z.enum(NAMED_COLORS);
+export type NamedColor = z.infer<typeof NamedColor>;
+/** A color of one's own: six hexadecimal digits after `#`, in lower case. */
+export const CustomColor = z.string().regex(/^#[0-9a-f]{6}$/, 'A color is one of the named colors, or # and six hexadecimal digits in lower case');
+/** The color of a terminal, a frame or a canvas tab: a named one, or one of the owner's own. */
+export const NodeColor = z.union([NamedColor, CustomColor]);
 export type NodeColor = z.infer<typeof NodeColor>;
+export const isNamedColor = (color: string): color is NamedColor => (NAMED_COLORS as readonly string[]).includes(color);
 
 /** Where a parked session sat, so that it can be put back. */
 export const ParkedPlace = z.object({ canvasId: Id, rect: NodeRect, color: NodeColor.default('none') });

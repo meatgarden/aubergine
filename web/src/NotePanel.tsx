@@ -15,11 +15,14 @@ export function NotePanel({
   sessionId,
   onClose,
   embedded = false,
+  takeKeyboard = false,
 }: {
   sessionId: string;
   onClose: () => void;
   /** Shown inside something that has its own frame and close button (the side panel's drawer), not on a node. */
   embedded?: boolean;
+  /** Whether the note takes the keyboard when it appears: yes when it was just asked for, no when it is simply there. */
+  takeKeyboard?: boolean;
 }) {
   const saved = useApp((s) => s.app?.sessions.find((x) => x.id === sessionId)?.note ?? '');
   const [text, setText] = useState(saved);
@@ -86,7 +89,7 @@ export function NotePanel({
       <textarea
         className="note-summary"
         aria-label="Session note"
-        autoFocus={!embedded}
+        autoFocus={!embedded && takeKeyboard}
         placeholder="Pinned Markdown summary for this session…"
         spellCheck={false}
         value={text}

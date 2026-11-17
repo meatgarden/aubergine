@@ -252,7 +252,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
     id: string;
     projectId: string;
     name: string;
-    color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+    color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
     order: number;
     labels: {
       [key: string]: string;
@@ -291,7 +291,7 @@ An API token needs the scope `canvases:write`.
 | Field | Type | Required | |
 |---|---|---|---|
 | `name` | `string` | yes | The name on its tab. |
-| `color` | `"none" \| "red" \| "orange" \| "yellow" \| "green" \| "blue" \| "purple"` | no | The color of its tab. |
+| `color` | `("none" \| "red" \| "orange" \| "yellow" \| "lime" \| "green" \| "teal" \|…` | no | The color of its tab. |
 | `labels` | `{ [key: string]: string; }` | no | Pairs of key and value for tools of your own to give meaning to. |
 
 **Answer** `201`:
@@ -301,7 +301,7 @@ An API token needs the scope `canvases:write`.
   id: string;
   projectId: string;
   name: string;
-  color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+  color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
   order: number;
   labels: {
     [key: string]: string;
@@ -320,7 +320,7 @@ An API token needs the scope `canvases:write`.
     height: number;
     id: string;
     sessionId: string;
-    color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+    color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
   }[];
   frames: {
     x: number;
@@ -329,7 +329,7 @@ An API token needs the scope `canvases:write`.
     height: number;
     id: string;
     label: string;
-    color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+    color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
   }[];
 }
 ```
@@ -359,7 +359,7 @@ An API token needs the scope `read`.
   id: string;
   projectId: string;
   name: string;
-  color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+  color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
   order: number;
   labels: {
     [key: string]: string;
@@ -378,7 +378,7 @@ An API token needs the scope `read`.
     height: number;
     id: string;
     sessionId: string;
-    color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+    color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
   }[];
   frames: {
     x: number;
@@ -387,7 +387,7 @@ An API token needs the scope `read`.
     height: number;
     id: string;
     label: string;
-    color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+    color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
   }[];
 }
 ```
@@ -416,7 +416,7 @@ An API token needs the scope `canvases:write`.
 | Field | Type | Required | |
 |---|---|---|---|
 | `name` | `string` | no |  |
-| `color` | `"none" \| "red" \| "orange" \| "yellow" \| "green" \| "blue" \| "purple"` | no |  |
+| `color` | `("none" \| "red" \| "orange" \| "yellow" \| "lime" \| "green" \| "teal" \|…` | no |  |
 | `order` | `number` | no |  |
 | `labels` | `{ [key: string]: string; }` | no |  |
 
@@ -427,7 +427,7 @@ An API token needs the scope `canvases:write`.
   id: string;
   projectId: string;
   name: string;
-  color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+  color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
   order: number;
   labels: {
     [key: string]: string;
@@ -446,7 +446,7 @@ An API token needs the scope `canvases:write`.
     height: number;
     id: string;
     sessionId: string;
-    color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+    color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
   }[];
   frames: {
     x: number;
@@ -455,7 +455,7 @@ An API token needs the scope `canvases:write`.
     height: number;
     id: string;
     label: string;
-    color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+    color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
   }[];
 }
 ```
@@ -583,7 +583,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
         width: number;
         height: number;
       };
-      color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+      color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
     } | null;
     peopleOnly: boolean;
     typedBy: {
@@ -692,7 +692,7 @@ An API token needs the scope `sessions:write`. Sending `command` needs `terminal
         width: number;
         height: number;
       };
-      color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+      color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
     } | null;
     peopleOnly: boolean;
     typedBy: {
@@ -725,7 +725,7 @@ An API token needs the scope `sessions:write`. Sending `command` needs `terminal
     height: number;
     id: string;
     sessionId: string;
-    color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+    color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
   };
 }
 ```
@@ -803,7 +803,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
         width: number;
         height: number;
       };
-      color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+      color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
     } | null;
     peopleOnly: boolean;
     typedBy: {
@@ -897,7 +897,7 @@ An API token needs the scope `read`.
       width: number;
       height: number;
     };
-    color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+    color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
   } | null;
   peopleOnly: boolean;
   typedBy: {
@@ -999,7 +999,7 @@ An API token needs the scope `sessions:write`. Sending `note` needs `notes:write
       width: number;
       height: number;
     };
-    color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+    color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
   } | null;
   peopleOnly: boolean;
   typedBy: {
@@ -1123,7 +1123,7 @@ An API token needs the scope `sessions:write`.
         width: number;
         height: number;
       };
-      color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+      color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
     } | null;
     peopleOnly: boolean;
     typedBy: {
@@ -1156,7 +1156,7 @@ An API token needs the scope `sessions:write`.
     height: number;
     id: string;
     sessionId: string;
-    color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+    color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
   };
 }
 ```
@@ -1229,7 +1229,7 @@ An API token needs the scope `sessions:write`.
       width: number;
       height: number;
     };
-    color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+    color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
   } | null;
   peopleOnly: boolean;
   typedBy: {
@@ -1330,7 +1330,7 @@ An API token needs the scope `sessions:write`.
         width: number;
         height: number;
       };
-      color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+      color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
     } | null;
     peopleOnly: boolean;
     typedBy: {
@@ -1363,7 +1363,7 @@ An API token needs the scope `sessions:write`.
     height: number;
     id: string;
     sessionId: string;
-    color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+    color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
   };
 }
 ```
@@ -1469,7 +1469,7 @@ An API token needs the scope `canvases:write`.
 | `y` | `number` | no |  |
 | `width` | `number` | no |  |
 | `height` | `number` | no |  |
-| `color` | `"none" \| "red" \| "orange" \| "yellow" \| "green" \| "blue" \| "purple"` | no |  |
+| `color` | `("none" \| "red" \| "orange" \| "yellow" \| "lime" \| "green" \| "teal" \|…` | no |  |
 
 **Answer** `200`:
 
@@ -1481,7 +1481,7 @@ An API token needs the scope `canvases:write`.
   height: number;
   id: string;
   sessionId: string;
-  color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+  color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
 }
 ```
 
@@ -1515,7 +1515,7 @@ An API token needs the scope `canvases:write`.
 | `width` | `number` | yes |  |
 | `height` | `number` | yes |  |
 | `label` | `string` | no |  |
-| `color` | `"none" \| "red" \| "orange" \| "yellow" \| "green" \| "blue" \| "purple"` | no |  |
+| `color` | `("none" \| "red" \| "orange" \| "yellow" \| "lime" \| "green" \| "teal" \|…` | no |  |
 
 **Answer** `201`:
 
@@ -1527,7 +1527,7 @@ An API token needs the scope `canvases:write`.
   height: number;
   id: string;
   label: string;
-  color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+  color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
 }
 ```
 
@@ -1561,7 +1561,7 @@ An API token needs the scope `canvases:write`.
 | `width` | `number` | no |  |
 | `height` | `number` | no |  |
 | `label` | `string` | no |  |
-| `color` | `"none" \| "red" \| "orange" \| "yellow" \| "green" \| "blue" \| "purple"` | no |  |
+| `color` | `("none" \| "red" \| "orange" \| "yellow" \| "lime" \| "green" \| "teal" \|…` | no |  |
 | `carry` | `boolean` | no |  |
 
 **Answer** `200`:
@@ -1574,7 +1574,7 @@ An API token needs the scope `canvases:write`.
   height: number;
   id: string;
   label: string;
-  color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+  color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
 }
 ```
 
@@ -7811,7 +7811,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
       width: number;
       height: number;
     };
-    color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+    color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
   } | null;
   peopleOnly: boolean;
   typedBy: {
@@ -7908,7 +7908,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
       width: number;
       height: number;
     };
-    color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+    color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
   } | null;
   peopleOnly: boolean;
   typedBy: {

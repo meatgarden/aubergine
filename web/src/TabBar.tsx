@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { canvasCounts, sortedCanvases, type Canvas } from '@aubergine/shared';
 import { api } from './api';
 import { ColorButton } from './ColorButton';
+import { colorClass, colorStyle } from './color';
 import { runCommand } from './commands';
 import { hint } from './shortcuts';
 import { useApp } from './store';
@@ -68,7 +69,8 @@ export function TabBar() {
         return (
           <div
             key={canvas.id}
-            className={`tab color-${canvas.color}${active ? ' active' : ''}${dragging === canvas.id ? ' dragging' : ''}`}
+            style={colorStyle(canvas.color)}
+            className={`tab ${colorClass(canvas.color)}${active ? ' active' : ''}${dragging === canvas.id ? ' dragging' : ''}`}
             role="tab"
             aria-selected={active}
             data-testid="tab"

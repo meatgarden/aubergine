@@ -76,7 +76,8 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await expect(outputLine(page, 'picked-44')).toHaveCount(1);
 
   // A note is saved with the session, and the picker finds the session by its text.
-  await page.getByRole('button', { name: /^Note for/ }).click();
+  // The note is beside the terminal from the start, and does not take the keyboard by being there.
+  await expect(page.getByTestId('note-panel')).toBeVisible();
   await page.getByRole('textbox', { name: 'Session note' }).fill('# Fixing the invoice rounding bug');
   await expect(page.getByTestId('note-panel')).toContainText('Saved');
 
@@ -1149,10 +1150,9 @@ test('the tour: each step is done on the real thing, on the demo', async ({ page
   // 2. Something needs you: go to it from the queue, and answer.
   await expect(node('waiting')).toHaveAttribute('data-attention', 'waiting');
   // Other terminals elsewhere have waited longer (earlier tests left some), so the button would lead away:
-  // the tour points at the demo's own terminal instead. Clicking it while zoomed out zooms in first, and says why, once.
+  // the tour points at the demo's own terminal instead. One click gives it the keyboard where it is, zoomed out or not.
   await expect(page.getByTestId('full-size-hint')).toHaveCount(0);
   await node('waiting').getByTestId('node-body').click();
-  await expect(page.getByTestId('full-size-hint')).toHaveText('Terminals take typing at full size: zooming in…');
   await expect(node('waiting')).toHaveAttribute('data-focused', 'true');
   await page.keyboard.type('main');
   await page.keyboard.press('Enter');

@@ -636,6 +636,14 @@ code {
 .swatch-green, .color-green { --swatch: #7fb37a; }
 .swatch-blue, .color-blue { --swatch: #6a9fd9; }
 .swatch-purple, .color-purple { --swatch: #b48ead; }
+.swatch-lime, .color-lime { --swatch: #a9c95c; }
+.swatch-teal, .color-teal { --swatch: #4fb3a2; }
+.swatch-cyan, .color-cyan { --swatch: #5cc4d6; }
+.swatch-indigo, .color-indigo { --swatch: #7d83e0; }
+.swatch-pink, .color-pink { --swatch: #dd7fb0; }
+.swatch-brown, .color-brown { --swatch: #a8805e; }
+.swatch-gray, .color-gray { --swatch: #9aa0ad; }
+/* A color of one's own arrives as the value itself, on the element. */
 
 .terminal-node:not(.color-none) .node-title {
   box-shadow: inset 0 3px 0 var(--swatch);
@@ -664,13 +672,38 @@ code {
   top: 22px;
   right: -6px;
   z-index: 10;
-  display: flex;
-  gap: 6px;
-  padding: 7px;
+  display: grid;
+  grid-template-columns: repeat(7, 14px);
+  gap: 7px;
+  padding: 8px;
   background: var(--panel);
   border: 1px solid var(--border);
   border-radius: 8px;
   box-shadow: 0 6px 18px rgb(0 0 0 / 0.45);
+}
+
+.color-own {
+  grid-column: 1 / -1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding-top: 6px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--muted);
+  cursor: pointer;
+}
+.color-own input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+.color-dot.swatch-custom.is-empty {
+  background: conic-gradient(#d2636b, #d9bf63, #7fb37a, #6a9fd9, #b48ead, #d2636b);
 }
 
 .node-tool {
@@ -691,16 +724,38 @@ code {
 
 /* ---------- Note panel ---------- */
 
+.note-tab {
+  position: absolute;
+  top: 0;
+  left: calc(100% + 8px);
+  width: 22px;
+  padding: 8px 0;
+  writing-mode: vertical-rl;
+  font-size: 11px;
+  color: var(--muted);
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+}
+.note-tab.has-note {
+  color: var(--text);
+  border-color: var(--accent, var(--border));
+}
+
+/* Beside the terminal, not over it: the terminal keeps all of its own room. */
 .note-panel {
   position: absolute;
-  top: 31px;
-  right: 0;
+  top: 0;
+  left: calc(100% + 8px);
   bottom: 0;
-  width: min(46%, 380px);
+  width: 280px;
   display: flex;
   flex-direction: column;
   background: var(--panel);
-  border-left: 1px solid var(--border);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
   cursor: default;
 }
 .note-panel header {
@@ -1234,6 +1289,8 @@ kbd.kept {
 }
 .note-panel.embedded {
   position: static;
+  border: none;
+  border-radius: 0;
   width: auto;
   flex: 1;
   min-height: 0;

@@ -67,7 +67,7 @@ export type ListCanvasesResult = {
     id: string;
     projectId: string;
     name: string;
-    color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+    color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
     order: number;
     labels: {
       [key: string]: string;
@@ -87,7 +87,7 @@ export type CreateCanvasBody = {
   /** The name on its tab. */
   name: string;
   /** The color of its tab. */
-  color?: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+  color?: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
   /** Pairs of key and value for tools of your own to give meaning to. */
   labels?: {
     [key: string]: string;
@@ -98,7 +98,7 @@ export type CreateCanvasResult = {
   id: string;
   projectId: string;
   name: string;
-  color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+  color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
   order: number;
   labels: {
     [key: string]: string;
@@ -117,7 +117,7 @@ export type CreateCanvasResult = {
     height: number;
     id: string;
     sessionId: string;
-    color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+    color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
   }[];
   frames: {
     x: number;
@@ -126,7 +126,7 @@ export type CreateCanvasResult = {
     height: number;
     id: string;
     label: string;
-    color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+    color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
   }[];
 };
 
@@ -134,7 +134,7 @@ export type GetCanvasResult = {
   id: string;
   projectId: string;
   name: string;
-  color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+  color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
   order: number;
   labels: {
     [key: string]: string;
@@ -153,7 +153,7 @@ export type GetCanvasResult = {
     height: number;
     id: string;
     sessionId: string;
-    color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+    color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
   }[];
   frames: {
     x: number;
@@ -162,13 +162,13 @@ export type GetCanvasResult = {
     height: number;
     id: string;
     label: string;
-    color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+    color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
   }[];
 };
 
 export type UpdateCanvasBody = {
   name?: string;
-  color?: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+  color?: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
   order?: number;
   labels?: {
     [key: string]: string;
@@ -179,7 +179,7 @@ export type UpdateCanvasResult = {
   id: string;
   projectId: string;
   name: string;
-  color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+  color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
   order: number;
   labels: {
     [key: string]: string;
@@ -198,7 +198,7 @@ export type UpdateCanvasResult = {
     height: number;
     id: string;
     sessionId: string;
-    color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+    color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
   }[];
   frames: {
     x: number;
@@ -207,7 +207,7 @@ export type UpdateCanvasResult = {
     height: number;
     id: string;
     label: string;
-    color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+    color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
   }[];
 };
 
@@ -283,7 +283,7 @@ export type ListCanvasSessionsResult = {
         width: number;
         height: number;
       };
-      color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+      color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
     } | null;
     peopleOnly: boolean;
     typedBy: {
@@ -377,7 +377,7 @@ export type StartSessionResult = {
         width: number;
         height: number;
       };
-      color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+      color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
     } | null;
     peopleOnly: boolean;
     typedBy: {
@@ -410,7 +410,7 @@ export type StartSessionResult = {
     height: number;
     id: string;
     sessionId: string;
-    color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+    color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
   };
 };
 
@@ -475,7 +475,7 @@ export type ListSessionsResult = {
         width: number;
         height: number;
       };
-      color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+      color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
     } | null;
     peopleOnly: boolean;
     typedBy: {
@@ -548,7 +548,7 @@ export type GetSessionResult = {
       width: number;
       height: number;
     };
-    color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+    color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
   } | null;
   peopleOnly: boolean;
   typedBy: {
@@ -625,7 +625,7 @@ export type UpdateSessionResult = {
       width: number;
       height: number;
     };
-    color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+    color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
   } | null;
   peopleOnly: boolean;
   typedBy: {
@@ -707,7 +707,7 @@ export type MoveSessionResult = {
         width: number;
         height: number;
       };
-      color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+      color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
     } | null;
     peopleOnly: boolean;
     typedBy: {
@@ -740,7 +740,7 @@ export type MoveSessionResult = {
     height: number;
     id: string;
     sessionId: string;
-    color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+    color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
   };
 };
 
@@ -789,7 +789,7 @@ export type ParkSessionResult = {
       width: number;
       height: number;
     };
-    color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+    color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
   } | null;
   peopleOnly: boolean;
   typedBy: {
@@ -866,7 +866,7 @@ export type RestoreSessionResult = {
         width: number;
         height: number;
       };
-      color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+      color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
     } | null;
     peopleOnly: boolean;
     typedBy: {
@@ -899,7 +899,7 @@ export type RestoreSessionResult = {
     height: number;
     id: string;
     sessionId: string;
-    color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+    color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
   };
 };
 
@@ -927,7 +927,7 @@ export type UpdateNodeBody = {
   y?: number;
   width?: number;
   height?: number;
-  color?: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+  color?: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
 };
 
 export type UpdateNodeResult = {
@@ -937,7 +937,7 @@ export type UpdateNodeResult = {
   height: number;
   id: string;
   sessionId: string;
-  color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+  color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
 };
 
 export type CreateFrameBody = {
@@ -946,7 +946,7 @@ export type CreateFrameBody = {
   width: number;
   height: number;
   label?: string;
-  color?: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+  color?: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
 };
 
 export type CreateFrameResult = {
@@ -956,7 +956,7 @@ export type CreateFrameResult = {
   height: number;
   id: string;
   label: string;
-  color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+  color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
 };
 
 export type UpdateFrameBody = {
@@ -965,7 +965,7 @@ export type UpdateFrameBody = {
   width?: number;
   height?: number;
   label?: string;
-  color?: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+  color?: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
   carry?: boolean;
 };
 
@@ -976,7 +976,7 @@ export type UpdateFrameResult = {
   height: number;
   id: string;
   label: string;
-  color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+  color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
 };
 
 export interface ListWorkflowsQuery {
@@ -6263,7 +6263,7 @@ export type ProtectSessionResult = {
       width: number;
       height: number;
     };
-    color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+    color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
   } | null;
   peopleOnly: boolean;
   typedBy: {
@@ -6339,7 +6339,7 @@ export type SetTakesMessagesResult = {
       width: number;
       height: number;
     };
-    color: "none" | "red" | "orange" | "yellow" | "green" | "blue" | "purple";
+    color: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
   } | null;
   peopleOnly: boolean;
   typedBy: {
