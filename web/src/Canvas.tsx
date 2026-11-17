@@ -32,6 +32,7 @@ import { Picker } from './Picker';
 import { currentLayout, useApp } from './store';
 import { canvasActions } from './canvas-actions';
 import { runCommand } from './commands';
+import { afterOpening, setOpenNew } from './desktop';
 import { hint } from './shortcuts';
 import { ShortcutSheet } from './ShortcutSheet';
 import { ActivityScreen, TokenScreen } from './TokenScreen';
@@ -138,6 +139,7 @@ function NewMenu({ adding }: { adding: boolean }) {
       window.removeEventListener('keydown', key, true);
     };
   }, [open]);
+  const openNew = useApp((state) => state.settings.desktop.openNew);
   const item = (command: Parameters<typeof runCommand>[0], label: string, says: string, testid?: string) => (
     <button
       type="button"
@@ -169,6 +171,13 @@ function NewMenu({ adding }: { adding: boolean }) {
           {item('workflow.runOnAgent', 'Claude Code on a workflow…', 'Choose the workflow first.', 'agent-on-workflow')}
           {item('terminal.newIn', 'Terminal in a folder or a working copy…', 'Somewhere you choose, or kept apart on its own branch.', 'toolbar-new-in')}
           {item('frame.new', 'Frame', 'A box to group terminals in.', 'toolbar-new-frame')}
+          <label className="toolbar-menu-check" role="menuitemcheckbox" aria-checked={openNew} title="Every terminal you make here also opens in a window of your terminal application, showing the same terminal. Which application is in the settings file (desktop.app).">
+            <input type="checkbox" checked={openNew} onChange={(e) => void setOpenNew(e.target.checked)} data-testid="toolbar-desktop-new" />
+            <span>
+              Also open new terminals on the desktop
+              <small>A window of your terminal app, on the same terminal.</small>
+            </span>
+          </label>
         </span>
       )}
     </span>
@@ -318,7 +327,7 @@ export function Canvas() {
   const [fullSizeHint, setFullSizeHint] = useState<{ x: number; y: number } | null>(null);
   const setError = useApp((s) => s.setNotice);
 
-  const addTerminal = useCallback(async (agent?: AgentKind, agentArgs?: string[], agentTools?: AgentToolsChoice, where?: { cwd?: string; environment?: string; name?: string }): Promise<string | null> => {
+  const addTerminal = useCallback(async (agent?: AgentKind, agentArgs?: string[], agentTools?: AgentToolsChoice, where?: { cwd?: string; environment?: string; name?: string; desktop?: boolean }): Promise<string | null> => {
     setAdding(true);
     setError(null);
     try {
@@ -340,9 +349,12 @@ export function Canvas() {
       }));
       const rect = findFreeRect(taken, center, { width: NODE_DEFAULT_WIDTH, height: NODE_DEFAULT_HEIGHT });
       if (!canvasId) return null;
-      const created = await api.createSession({ rect, canvasId, ...(agent ? { agent } : {}), ...(agent && agentArgs ? { agentArgs } : {}), ...(agent && agentTools ? { agentTools } : {}), ...(where?.cwd ? { cwd: where.cwd } : {}), ...(where?.environment ? { environment: where.environment } : {}), ...(where?.name ? { name: where.name, uniqueName: true } : {}) });
+      // Every way of making a terminal in the page comes through here: the setting decides, unless a dialog said otherwise for this one.
+      const created = await api.createSession({ rect, canvasId, ...(agent ? { agent } : {}), ...(agent && agentArgs ? { agentArgs } : {}), ...(agent && agentTools ? { agentTools } : {}), ...(where?.cwd ? { cwd: where.cwd } : {}), ...(where?.environment ? { environment: where.environment } : {}), ...(where?.name ? { name: where.name, uniqueName: true } : {}) , desktop: where?.desktop ?? useApp.getState().settings.desktop.openNew });
       useApp.getState().apply({ type: 'session.created', canvasId, ...created });
       goToNode(created.node.id, created.session.id);
+      // The terminal is made either way; why its window could not be opened is said.
+      if (created.desktop) setError(afterOpening(created.desktop));
       return created.session.id;
     } catch (e) {
       setError(`Could not start a terminal: ${(e as Error).message}`);

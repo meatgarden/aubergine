@@ -84,6 +84,8 @@ export const api = {
   getState: () => call(StateResponse, 'GET', paths.state),
   createSession: (request: CreateSessionRequest) =>
     call(CreateSessionResponse, 'POST', paths.sessions, request),
+  openOnDesktop: (sessionId: string) => v1.openSessionOnDesktop({ sessionId }),
+  setDesktopOpenNew: (openNew: boolean) => v1.changeDesktopSettings({ body: { openNew } }),
   updateSession: (sessionId: string, request: UpdateSessionRequest) =>
     call(Session, 'PATCH', paths.session(sessionId), request),
   parkSession: (sessionId: string) => call(Session, 'POST', paths.parkSession(sessionId), {}),

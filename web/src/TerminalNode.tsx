@@ -157,6 +157,15 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
         {draft === null && <EnvironmentChip sessionId={sessionId} />}
         {draft === null && <ListMark sessionId={sessionId} variant="node" />}
         {draft === null && session?.typedBy && <TypedBy by={session.typedBy} />}
+        {draft === null && !exited && (session?.outsideViewers ?? 0) > 0 && (
+          <span
+            className="badge-desktop"
+            title="Something outside this page is attached to this terminal and shows it too: most likely a window of your terminal application. Which program it is cannot be told from here. The two views share one size."
+            data-testid="badge-desktop"
+          >
+            also on desktop
+          </span>
+        )}
         {draft === null && !exited && session && (
           <button
             type="button"
@@ -243,6 +252,21 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
             }}
           >
             ✉
+          </button>
+        )}
+        {draft === null && !exited && (
+          <button
+            type="button"
+            className="node-tool nodrag"
+            aria-label={`Open ${name} on the desktop`}
+            title={hint('terminal.openOnDesktop', 'Open on desktop: a window of your terminal application on this same terminal. Closing the window ends nothing.')}
+            data-testid="node-open-desktop"
+            onClick={() => {
+              useApp.getState().select(sessionId);
+              runCommand('terminal.openOnDesktop');
+            }}
+          >
+            ⧉
           </button>
         )}
         {draft === null && <MoveToCanvas sessionId={sessionId} name={name} />}

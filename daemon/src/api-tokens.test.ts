@@ -376,6 +376,8 @@ describe('every route has a rule', () => {
     'POST /v1/rules',
     'DELETE /v1/rules/:ruleId',
     'POST /v1/schedules',
+    'POST /v1/sessions/:sessionId/desktop',
+    'PUT /v1/settings/desktop',
     'PATCH /v1/schedules/:scheduleId',
     'DELETE /v1/schedules/:scheduleId',
     'POST /v1/schedules/:scheduleId/run',

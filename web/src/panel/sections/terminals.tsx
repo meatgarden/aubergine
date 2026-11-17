@@ -543,6 +543,11 @@ const RowView = memo(function RowView({ row, style, density, indented, current, 
           <button type="button" role="menuitem" onClick={() => onAct(session.id, 'terminal.tags')}>
             Tags…
           </button>
+          {session.state !== 'exited' && (
+            <button type="button" role="menuitem" onClick={() => onAct(session.id, 'terminal.openOnDesktop')} data-testid="row-open-desktop">
+              Open on desktop
+            </button>
+          )}
           {canMove && (
             <button type="button" role="menuitem" onClick={() => onAct(session.id, 'terminal.moveToCanvas')}>
               Move to canvas…

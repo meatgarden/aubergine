@@ -283,6 +283,29 @@ code {
 .toolbar-menu button:hover:not(:disabled) {
   background: var(--panel-hover);
 }
+.toolbar-menu-check {
+  display: flex;
+  gap: 7px;
+  align-items: flex-start;
+  margin-top: 4px;
+  padding: 7px 9px 6px;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+  cursor: pointer;
+}
+.toolbar-menu-check span {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.badge-desktop {
+  padding: 0 6px;
+  font-size: 11px;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  white-space: nowrap;
+}
 .toolbar-menu small {
   font-size: 11px;
   color: var(--muted);

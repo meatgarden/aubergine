@@ -1,3 +1,4 @@
+import { DesktopBox } from '../desktop';
 import { useState } from 'react';
 import { canvasActions } from '../canvas-actions';
 import { useApp } from '../store';
@@ -15,6 +16,8 @@ function StartFields() {
   const [where, setWhere] = useState<Where>(() => ({ folder: proposedFolder(), kind: null }));
   const [name, setName] = useState('');
   const [agent, setAgent] = useState(false);
+  // Ticked or not by the setting; changed here, it is for this one terminal.
+  const [desktop, setDesktop] = useState(() => useApp.getState().settings.desktop.openNew);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -23,7 +26,7 @@ function StartFields() {
     setBusy(true);
     setError(null);
     const folder = where.folder.trim();
-    const made = await canvasActions.get()?.addTerminal(agent ? 'claude-code' : undefined, undefined, undefined, { ...(folder ? { cwd: folder } : {}), ...(where.kind ? { environment: where.kind } : {}), ...(name.trim() ? { name: name.trim() } : {}) });
+    const made = await canvasActions.get()?.addTerminal(agent ? 'claude-code' : undefined, undefined, undefined, { ...(folder ? { cwd: folder } : {}), ...(where.kind ? { environment: where.kind } : {}), ...(name.trim() ? { name: name.trim() } : {}), desktop });
     if (made) choose(false);
     else {
       // Why it did not start is in the notice the canvas shows; it is said here too, where the eyes are.
@@ -53,6 +56,7 @@ function StartFields() {
           <input type="checkbox" checked={agent} onChange={(e) => setAgent(e.target.checked)} data-testid="start-agent" />
           <span>Start Claude Code in it</span>
         </label>
+        <DesktopBox checked={desktop} onChange={setDesktop} />
         {error && (
           <p className="dialog-error" role="alert">
             {error}

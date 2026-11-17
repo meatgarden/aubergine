@@ -1,3 +1,4 @@
+import { DesktopBox } from './desktop';
 import { useEffect, useState } from 'react';
 import { GRANTABLE_SCOPES, SCOPE_MEANING, REACH_SCOPES, sortedCanvases, type AgentToolsChoice, type Reach, type Scope } from '@aubergine/shared';
 import { canvasActions } from './canvas-actions';
@@ -24,6 +25,8 @@ export function AgentToolsDialog() {
   const [reachTag, setReachTag] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  // Ticked or not by the setting; changed here, it is for this one terminal.
+  const [desktop, setDesktop] = useState(() => useApp.getState().settings.desktop.openNew);
   const [where, setWhere] = useState<Where>({ folder: '', kind: null });
 
   useEffect(() => {
@@ -35,6 +38,7 @@ export function AgentToolsDialog() {
     setError(null);
     setBusy(false);
     setWhere({ folder: proposedFolder(), kind: null });
+    setDesktop(useApp.getState().settings.desktop.openNew);
   }, [open]);
 
   if (!open || !app) return null;
@@ -68,7 +72,7 @@ export function AgentToolsDialog() {
     setBusy(true);
     setError(null);
     const folder = where.folder.trim();
-    const made = await canvasActions.get()?.addTerminal('claude-code', undefined, tools, { ...(folder ? { cwd: folder } : {}), ...(where.kind ? { environment: where.kind } : {}) });
+    const made = await canvasActions.get()?.addTerminal('claude-code', undefined, tools, { ...(folder ? { cwd: folder } : {}), ...(where.kind ? { environment: where.kind } : {}), desktop });
     if (made) choose(false);
     else {
       setError('The session could not be started.');
@@ -149,6 +153,7 @@ export function AgentToolsDialog() {
           </>
         )}
 
+        <DesktopBox checked={desktop} onChange={setDesktop} />
         {error && (
           <p className="dialog-error" role="alert">
             {error}

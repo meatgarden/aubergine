@@ -514,6 +514,28 @@ The list costs nothing to keep open, also with hundreds of sessions: it is drawn
 - × on a node **parks** the session: the node leaves the canvas but the shell keeps running. **Parked (n)** in the toolbar lists parked sessions; restore one, or end it for good (this asks first).
 - When a shell exits by itself, its node stays and offers **Restart here** (a new shell in the same folder) and **Remove**.
 
+### The same terminal in your own terminal app
+
+A terminal on the canvas can also be open in a window of your terminal application. It is the same terminal in both places, not a copy: what you type in one shows in the other, and an agent running in it is the same agent. It is `aubergine attach` started for you in a new window.
+
+- **One terminal that is already running**: **⧉** in its title bar, or **Open on desktop** in its row's menu in the list. This works for a terminal with an agent in it too.
+- **Every new terminal**: open the menu **▾** beside **+ New terminal** and tick **Also open new terminals on the desktop**. From then on each terminal you make in the page also opens a window. The dialogs that make a terminal show the same box, so you can decide for one terminal.
+- **Closing the window ends nothing.** The shell goes on, and the node on the canvas stays. Parking a node does not close the window either; ending the shell does.
+- **The two views share one size.** A terminal has one width and height, and the view you used last sets it. If your desktop window is larger than the node, then after you type in the window the node shows only the top-left part of the screen; after you click into the node again, the window shows the smaller screen with the rest left empty. Make the two about the same size if you use both.
+- A node says **also on desktop** while something outside the page is attached to its terminal. Aubergine counts those viewers; it cannot tell which program each is, so anything else attached to that terminal shows the same mark. It appears and goes within a couple of seconds.
+
+Which application is used is in the [settings](#settings):
+
+- `desktop.app`: `"terminal"` (Terminal, the default on macOS), `"iterm"` (iTerm), or `"command"`.
+- `desktop.command`, for `"command"`: a command line of your own, with `{file}` where the script goes, for example `"alacritty -e {file}"`. It is started as it is written, without a shell: the words are split at spaces (quotes keep a part together), and nothing in it is expanded.
+- `desktop.openNew`: the box in the menu. This is the one setting the page writes into the file; the other two you write by hand.
+
+On Linux only `"command"` works for now; Windows is not built.
+
+How it is done: Aubergine writes a small script for the terminal into its data folder (`desktop/<id>.command`, readable and runnable by you only) and asks the application to open that file. The script is one line that runs this copy's `aubergine attach` for that terminal. Nothing is typed into any window and no other application is scripted. The script is removed when the terminal's shell ends.
+
+Only you can ask for this, in the page: no API token and no agent can open a window or change these settings, and a terminal that a program, the queue or a schedule starts never opens one. If the application is not installed, the terminal is made all the same and the page says why the window did not open.
+
 ### Status at a glance
 
 With zsh, each node's title bar shows what its shell is doing:
@@ -989,6 +1011,7 @@ Create `config.json` in the data folder (the server prints its location at start
   "terminal": { "protectNewSessions": false, "protectAgentSessions": true, "auditInput": false },
   "library": { "fetchTimeoutSeconds": 60, "maxFetchMegabytes": 100 },
   "schedules": { "lateWithinHours": 6 },
+  "desktop": { "app": null, "command": null, "openNew": false },
   "messages": { "perSenderPerMinute": 6, "perPairPerHour": 30, "pauseAfter": 6, "maxUnread": 20, "nudgeIntervalSeconds": 120, "keepDays": 30 },
   "shortcuts": {},
   "shortcutsInAppWindow": {}
@@ -1011,6 +1034,7 @@ Create `config.json` in the data folder (the server prints its location at start
 - `workflows`: how many elements a [workflow](#workflows) may have, how long the text of one element (and the text for every element) may be, and after how many seconds of output without a report a run is marked quiet. The two limits apply when the server is next started.
 - `terminal`: [terminal access](#terminal-access) for API tokens: whether new terminals, and new agent sessions, start "people only"; the limits on typing; and `auditInput`, which keeps what tokens type in a file.
 - `library`: how long and how large a fetch of a [library](#the-library) source may be.
+- `desktop`: [the same terminal in your own terminal app](#the-same-terminal-in-your-own-terminal-app). `app` is `"terminal"`, `"iterm"` or `"command"` (`null`: Terminal on macOS); `command` is your own command line with `{file}`; `openNew` makes every terminal you make in the page also open on the desktop. They are read each time a window is opened.
 - `schedules.lateWithinHours`: a time of a [schedule](#schedules-at-these-times-run-this-there) that passed while the computer was asleep or the server stopped still runs, marked late, when it is at most this many hours old. Default 6; 0 means never. It applies from the next start of the server.
 - `messages`: the limits on [messages between terminals](#messages-between-terminals). They apply from the next start of the server.
 - `shortcuts`, `shortcutsInAppWindow`: your own keys; see [Keyboard](#keyboard).

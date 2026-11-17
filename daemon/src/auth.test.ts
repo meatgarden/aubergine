@@ -57,7 +57,7 @@ describe('authorize', () => {
 
   it('refuses a token holding every scope each thing no token may do', () => {
     const everything = token(...GRANTABLE_SCOPES);
-    expect([...NEVER_BY_TOKEN].sort()).toEqual(['activity.read', 'away.read', 'demo.manage', 'drafts.review', 'environments.manage', 'history.open', 'history.read', 'inventory.read', 'library.manage', 'messages.manage', 'outside.move', 'outside.read', 'processes.signal', 'queue.manage', 'recap.ask', 'repository.review', 'repository.write', 'rules.manage', 'runs.approve', 'schedules.manage', 'sessions.protect', 'settings.write', 'shelf.manage', 'tokens.manage']);
+    expect([...NEVER_BY_TOKEN].sort()).toEqual(['activity.read', 'away.read', 'demo.manage', 'desktop.open', 'drafts.review', 'environments.manage', 'history.open', 'history.read', 'inventory.read', 'library.manage', 'messages.manage', 'outside.move', 'outside.read', 'processes.signal', 'queue.manage', 'recap.ask', 'repository.review', 'repository.write', 'rules.manage', 'runs.approve', 'schedules.manage', 'sessions.protect', 'settings.write', 'shelf.manage', 'tokens.manage']);
     for (const action of NEVER_BY_TOKEN) {
       expect(authorize(everything, action, {}), action).toBe(false);
       expect(authorize(everything, action, { sessionId: SESSION, canvasId: OTHER }), action).toBe(false);
