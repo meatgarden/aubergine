@@ -227,7 +227,10 @@ These are the only abstractions in the code base. Each has exactly one implement
 
 ### Canvas behaviour
 
-- A terminal takes input only at 100% zoom and only while it has focus. Clicking a zoomed-out node zooms to it first. An unfocused terminal is covered by a shield: the first click focuses it.
+- A terminal takes input at any zoom at which it is drawn live, and only while it has focus. One click focuses it and moves nothing; only a node too small to read (below `READABLE_ZOOM`) zooms in first. An unfocused terminal is covered by a shield: the first click focuses it.
+- On a canvas that is not at 100%, the pointer is told to the terminal as it would be at 100% (`correctMouse` in `web/src/scaled-mouse.ts`); without that, selections land in the wrong cells. The same module evens out the wheel: one report for every `LINES_PER_REPORT` lines of movement, at most once a frame, and `tmux.conf` moves the scroll-back view by that many lines per report. Change the two together.
+- A terminal's note is beside the node, outside its rectangle, open unless closed in this browser (`note-open.ts`). Being there never takes the keyboard; being asked for does.
+- A color is a named one or `#rrggbb`. `colorClass` and `colorStyle` in `web/src/color.ts` are the only place a color becomes a class or a style.
 - Terminal bodies never drag or pan the canvas. The wheel belongs to a terminal only while it has focus; anywhere else it zooms the canvas.
 - **Commands.** Everything a button, a key or the palette does is a command in `web/src/commands.ts`, implemented once. A new action is a new command there and a new name in `COMMAND_IDS` in `shared/src/shortcuts.ts`; a button calls `runCommand`. Do not handle a key anywhere else: `web/src/shortcuts.ts` is the only key listener for commands.
 - **Two layers of keys.** A chord works inside a focused terminal only if `belongsToTerminal` says no program there can need it: it includes ⌘ on macOS, or is Ctrl+Shift with a key elsewhere. Everything else (plain keys, Ctrl+key, Alt/Option+key) works only while no terminal, text field, menu or list has the keyboard, whatever the settings file says. Do not weaken that function; its tests list the shell keys that must get through.

@@ -384,7 +384,7 @@ Each new tab makes a new session, so park or end the ones you no longer need.
 - Drag a node by its title bar; resize it from its edges; double-click the title to rename it.
 - Drag the background to pan; scroll or pinch to zoom. **Fit** (or `F`) shows everything; the percentage (or `0`) returns to 100%. The minimap in the corner also pans and zooms.
 - **+ Frame** adds a labeled frame. Drag a frame by its label and the terminals inside it move along.
-- The dot in a title bar gives a node or frame a color.
+- The dot in a title bar gives a node or frame a color: one of thirteen, or **Your own…** for any color.
 - The title bar shows the running command and current folder of each session.
 
 ### Canvases
@@ -405,7 +405,7 @@ From a terminal, `aubergine canvas list` and `aubergine canvas new <name>` do th
 
 Everything you do often has a key, and **?** shows all of them for your system.
 
-**Focus.** Click a terminal to give it the keyboard. A terminal takes input only at 100% zoom; clicking a zoomed-out terminal zooms to it first. While a terminal has the keyboard, every key goes to the program in it, apart from the few chords in the first table below. Those are chosen so that no shell, editor or tmux can need them: Ctrl+C, Ctrl+R, Ctrl+A, Option with an arrow, Escape and the rest all reach the terminal.
+**Focus.** Click a terminal to give it the keyboard. One click is enough at any zoom at which you can read it; text is sharpest at 100%. Only a terminal that is too small to read (under 45%) zooms in first. While a terminal has the keyboard, every key goes to the program in it, apart from the few chords in the first table below. Those are chosen so that no shell, editor or tmux can need them: Ctrl+C, Ctrl+R, Ctrl+A, Option with an arrow, Escape and the rest all reach the terminal.
 
 Leaving a terminal (⌃⌘. or a click on the background) keeps it **selected**, shown with a dashed ring. The single keys in the second table then act on the selected terminal, and Enter goes back into it.
 
@@ -543,7 +543,7 @@ Prompts can contain secrets. To keep them out of the note log, set `"agents": { 
 
 ### Notes
 
-**Note** in a title bar opens the session's notes: a pinned Markdown summary that you edit freely and that is saved as you type, above a log that only grows. Each log entry has an author (you, or the agent in that session) and a time. Add an entry in the panel, or from inside the session:
+A session's notes sit beside its terminal, to the right, and are open unless you closed them (**Note** in the title bar, or the × on the notes, hides and shows them; this browser remembers which you closed). They are a pinned Markdown summary that you edit freely and that is saved as you type, above a log that only grows. Each log entry has an author (you, or the agent in that session) and a time. Add an entry in the panel, or from inside the session:
 
 ```sh
 aubergine note "migrations done, starting the backfill"

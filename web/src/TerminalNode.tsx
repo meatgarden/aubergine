@@ -1,5 +1,5 @@
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
-import { NodeResizer, useStore, type Node, type NodeProps } from '@xyflow/react';
+import { NodeResizer, useStore, useStoreApi, type Node, type NodeProps } from '@xyflow/react';
 import { NODE_MIN_HEIGHT, NODE_MIN_WIDTH } from '@aubergine/shared';
 import { api } from './api';
 import { canResumeAgent } from './attention';
@@ -13,7 +13,8 @@ import { SnapshotView } from './SnapshotView';
 import { StatusBadges } from './StatusBadges';
 import { currentLayout, useApp } from './store';
 import { TerminalView } from './TerminalView';
-import { useIsFullZoom } from './viewport';
+import { colorClass, colorStyle } from './color';
+import { noteRoom, noteStartsOpen, rememberNoteOpen } from './note-open';
 import { tourSignal } from './tour/tour-store';
 import { RecapBlock, recapTitle } from './Recap';
 import { ListMark } from './workflows/ListMark';
@@ -26,9 +27,24 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
   const session = useApp((s) => s.app?.sessions.find((x) => x.id === sessionId));
   const name = session?.name ?? '';
   const exited = session?.state === 'exited';
-  const interactive = useIsFullZoom();
   const [draft, setDraft] = useState<string | null>(null);
-  const [noteOpen, setNoteOpen] = useState(false);
+  // The note sits beside the terminal and is open unless it was closed here before.
+  const [noteOpen, setNoteOpenState] = useState(() => noteStartsOpen(sessionId));
+  const [noteAsked, setNoteAsked] = useState(false);
+  const noteOpenRef = useRef(noteOpen);
+  // Whether the whole note is showing now; a note that is open but has no room is not.
+  const noteShownRef = useRef(false);
+  const setNoteOpen = useCallback(
+    (next: boolean | ((was: boolean) => boolean)): void => {
+      const now = typeof next === 'function' ? next(noteOpenRef.current) : next;
+      noteOpenRef.current = now;
+      rememberNoteOpen(sessionId, now);
+      // Asked for just now: it takes the keyboard. Simply being there, it does not.
+      if (now) setNoteAsked(true);
+      setNoteOpenState(now);
+    },
+    [sessionId],
+  );
   // Whether this node's terminal holds the keyboard.
   const [focused, setFocused] = useState(false);
   const onFocusChange = useCallback(
@@ -50,12 +66,20 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
   useEffect(() => {
     if (!ask) return;
     if (ask.kind === 'rename-session') setDraft(useApp.getState().app?.sessions.find((x) => x.id === sessionId)?.name ?? '');
-    else setNoteOpen((open) => !open);
+    else setNoteOpen(!noteShownRef.current);
     useApp.getState().asked(ask.tick);
-  }, [ask, sessionId]);
+  }, [ask, sessionId, setNoteOpen]);
 
   const node = useApp((s) => currentLayout(s).nodes.find((n) => n.id === id));
   const color = node?.color ?? 'none';
+  // The note never lies over a neighbour by simply being there: it is whole where there is room, a tab where there is little.
+  const room = useApp((s) => {
+    const nodes = currentLayout(s).nodes;
+    const me = nodes.find((n) => n.id === id);
+    return me ? noteRoom(me, nodes.filter((n) => n.id !== id)) : 'full';
+  });
+  const noteShown = noteOpen && (noteAsked || room === 'full');
+  noteShownRef.current = noteShown;
   const hasNote = (session?.note ?? '') !== '';
 
   // Live only while on screen and large enough to read; see culling.ts.
@@ -79,7 +103,8 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
 
   return (
     <div
-      className={`terminal-node color-${color}${selected ? ' selected' : ''}${isSelected && !focused ? ' is-selected' : ''}`}
+      style={colorStyle(color)}
+      className={`terminal-node ${colorClass(color)}${selected ? ' selected' : ''}${isSelected && !focused ? ' is-selected' : ''}`}
       data-testid="terminal-node"
       data-session={sessionId}
       data-selected={isSelected && !focused ? 'true' : undefined}
@@ -223,9 +248,9 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
           type="button"
           className={`node-tool nodrag${hasNote ? ' has-note' : ''}`}
           aria-label={`Note for ${name}`}
-          aria-pressed={noteOpen}
+          aria-pressed={noteShown}
           title={hint('notes.toggle', hasNote ? 'Show note' : 'Add a note')}
-          onClick={() => setNoteOpen((v) => !v)}
+          onClick={() => setNoteOpen(!noteShown)}
         >
           Note
         </button>
@@ -262,14 +287,28 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
           {session?.cwd && <p className="node-ended-folder">{session.cwd}</p>}
         </div>
       ) : mode === 'live' ? (
-        <LiveBody sessionId={sessionId} interactive={interactive} onFocusChange={onFocusChange} />
+        <LiveBody sessionId={sessionId} onFocusChange={onFocusChange} />
       ) : (
         <div className="node-body nodrag nopan" data-testid="node-body" data-mode={mode}>
           <SnapshotView sessionId={sessionId} refreshing={mode === 'snapshot'} />
-          <div className="node-shield zoomed-out" title="Click to zoom in and use this terminal" />
+          <div className="node-shield zoomed-out" title="Too small to type in: click to zoom in" />
         </div>
       )}
-      {noteOpen && <NotePanel sessionId={sessionId} onClose={() => setNoteOpen(false)} />}
+      {noteShown && (mode === 'live' || exited) && (
+        <NotePanel sessionId={sessionId} onClose={() => setNoteOpen(false)} takeKeyboard={noteAsked} />
+      )}
+      {noteOpen && (mode === 'live' || exited) && !noteAsked && room === 'tab' && (
+        <button
+          type="button"
+          className={`note-tab nodrag nopan${hasNote ? ' has-note' : ''}`}
+          title={hasNote ? 'Show the note (a terminal beside this one leaves no room to keep it open)' : 'Add a note'}
+          aria-label={`Show the note for ${name}`}
+          data-testid="note-tab"
+          onClick={() => setNoteOpen(true)}
+        >
+          Note
+        </button>
+      )}
     </div>
   );
 });
@@ -293,21 +332,15 @@ function TypedBy({ by }: { by: { name: string; at: string } }) {
 }
 
 /**
- * The body never drags or pans the canvas. Until its terminal has focus (and
- * whenever the view is zoomed out) a shield covers it: the wheel then belongs
- * to the canvas, and a click focuses the terminal.
+ * The body never drags or pans the canvas. Until its terminal has focus a
+ * shield covers it: the wheel then belongs to the canvas, and one click
+ * gives the terminal the keyboard, at whatever zoom it is drawn live.
  */
-function LiveBody({
-  sessionId,
-  interactive,
-  onFocusChange,
-}: {
-  sessionId: string;
-  interactive: boolean;
-  onFocusChange: (focused: boolean) => void;
-}) {
+function LiveBody({ sessionId, onFocusChange }: { sessionId: string; onFocusChange: (focused: boolean) => void }) {
   const [focused, setFocused] = useState(false);
-  const live = interactive && focused;
+  const flow = useStoreApi();
+  const zoom = useCallback(() => flow.getState().transform[2], [flow]);
+  const live = focused;
   const change = (now: boolean): void => {
     setFocused(now);
     onFocusChange(now);
@@ -319,11 +352,11 @@ function LiveBody({
       onBlur={() => change(false)}
       data-testid="node-body"
     >
-      <TerminalView sessionId={sessionId} interactive={interactive} />
+      <TerminalView sessionId={sessionId} interactive zoom={zoom} />
       {!live && (
         <div
-          className={`node-shield${interactive ? '' : ' zoomed-out'}`}
-          title={interactive ? 'Click to use this terminal' : 'Click to zoom in and use this terminal'}
+          className="node-shield"
+          title="Click to use this terminal"
           data-testid="node-shield"
         />
       )}

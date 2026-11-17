@@ -4,6 +4,7 @@ import { FRAME_MIN_HEIGHT, FRAME_MIN_WIDTH } from '@aubergine/shared';
 import { api } from './api';
 import { ColorButton } from './ColorButton';
 import { currentLayout, useApp } from './store';
+import { colorClass, colorStyle } from './color';
 
 export type FrameFlowNode = Node<{ frameId: string }, 'frame'>;
 
@@ -21,7 +22,7 @@ export const FrameNode = memo(function FrameNode({ id, selected }: NodeProps<Fra
   };
 
   return (
-    <div className={`frame color-${frame.color}${selected ? ' selected' : ''}`} data-testid="frame">
+    <div style={colorStyle(frame.color)} className={`frame ${colorClass(frame.color)}${selected ? ' selected' : ''}`} data-testid="frame">
       <NodeResizer
         minWidth={FRAME_MIN_WIDTH}
         minHeight={FRAME_MIN_HEIGHT}

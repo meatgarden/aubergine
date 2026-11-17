@@ -12,11 +12,14 @@ import { decodeOsc52 } from './clipboard';
 import { isMac, isPasteChord } from './keys';
 import { activeShortcuts, pickBinding } from './shortcuts';
 import { Outbox } from './outbox';
+import { correctMouse } from './scaled-mouse';
 import { useApp } from './store';
 
 interface Props {
+  /** The canvas's zoom now, so that the pointer lands on the right cell at any size. */
+  zoom?: () => number;
   sessionId: string;
-  /** False when the canvas is not at 100% zoom: the terminal shows output but takes no input. */
+  /** False while the terminal only shows output and takes no input. */
   interactive: boolean;
 }
 
@@ -32,10 +35,12 @@ type Link = 'connecting' | 'open' | 'reconnecting' | 'ended';
  * One terminal and its own WebSocket: opened when this mounts, closed when
  * it unmounts. The shell lives on in the daemon's runtime either way.
  */
-export function TerminalView({ sessionId, interactive }: Props) {
+export function TerminalView({ sessionId, interactive, zoom }: Props) {
   const host = useRef<HTMLDivElement>(null);
   const terminal = useRef<Terminal | null>(null);
   const interactiveRef = useRef(interactive);
+  const zoomRef = useRef(zoom);
+  zoomRef.current = zoom;
   const [link, setLink] = useState<Link>('connecting');
   const focus = useApp((s) => (s.focus?.sessionId === sessionId ? s.focus.tick : 0));
 
@@ -58,6 +63,9 @@ export function TerminalView({ sessionId, interactive }: Props) {
     term.loadAddon(fit);
     term.open(element);
     terminal.current = term;
+
+    // On a zoomed canvas the pointer is told to the terminal as it would be at 100%.
+    const uncorrect = correctMouse(element, () => zoomRef.current?.() ?? 1);
 
     const mac = isMac();
     // Returning false hands the key back to the browser and the canvas.
@@ -141,6 +149,7 @@ export function TerminalView({ sessionId, interactive }: Props) {
 
     return () => {
       disposed = true;
+      uncorrect();
       window.clearTimeout(retry);
       cancelAnimationFrame(frame);
       observer.disconnect();
@@ -164,7 +173,7 @@ export function TerminalView({ sessionId, interactive }: Props) {
     term.options.theme = terminalTheme(theme);
   }, [font, theme]);
 
-  // Input is accepted only at 100% zoom.
+  // Input is accepted while the terminal is the live one.
   useEffect(() => {
     interactiveRef.current = interactive;
     const term = terminal.current;
