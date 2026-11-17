@@ -104,10 +104,11 @@ export function OutsidePanel() {
         type="button"
         className="quiet"
         aria-expanded={open}
+        aria-label={`Outside terminals${terminals ? ` (${actionable.length})` : ''}`}
         title={hint('outside.open', 'Terminals you have open outside the canvas')}
         onClick={() => runCommand('outside.open')}
       >
-        Outside terminals{terminals ? ` (${actionable.length})` : ''}
+        Outside{terminals ? ` (${actionable.length})` : ''}
       </button>
       {open && (
         <div className="outside-panel nowheel" role="dialog" aria-label="Outside terminals" data-testid="outside-panel">

@@ -6,10 +6,10 @@ import { PANEL_STRIP_WIDTH, panelSections, sectionById, subscribeToSections, typ
 import './sections';
 
 /**
- * The panel down the left side. It is only a shell: it draws the registered
- * sections, each foldable, lets the whole panel collapse to a strip and be
- * resized, and shows a section's drawer beside itself. What the sections
- * contain is their own business.
+ * The panel down the left side. It is only a shell: a tab for each registered
+ * section, the one section that is chosen with all of the height to itself,
+ * a strip to collapse to, a width to drag, and a section's drawer beside it.
+ * What the sections contain is their own business.
  */
 export function SidePanel() {
   const prefs = useApp((s) => s.side);
@@ -42,39 +42,28 @@ export function SidePanel() {
     window.addEventListener('pointerup', stop);
   };
 
-  const toggleFold = (id: string): void => {
-    const folded = prefs.folded.includes(id) ? prefs.folded.filter((f) => f !== id) : [...prefs.folded, id];
-    useApp.getState().setSide({ folded });
-  };
+  const active = sections.find((section) => section.id === prefs.tab) ?? sections[0];
 
   return (
     <>
       <aside className="side-panel" style={{ width: prefs.width }} aria-label="Side panel" data-testid="side-panel">
-        {sections.map((section, index) => {
-          const folded = prefs.folded.includes(section.id);
-          return (
-            <section key={section.id} className={`panel-section${folded ? ' folded' : ''}${section.fill ? ' fill' : ''}`} data-section={section.id} aria-label={section.title}>
-              <header className="panel-section-head">
-                <button type="button" className="panel-fold" aria-expanded={!folded} onClick={() => toggleFold(section.id)} data-testid="section-fold">
-                  <span className="list-chevron">{folded ? '▸' : '▾'}</span>
-                  {section.title}
-                  <SectionCount section={section} />
-                </button>
-                {index === 0 && (
-                  <button type="button" className="quiet" aria-label="Collapse the side panel" title={hint('panel.toggle', 'Collapse the side panel')} onClick={() => runCommand('panel.toggle')}>
-                    ‹
-                  </button>
-                )}
-              </header>
-              {!folded && (
-                <div className="panel-section-body">
-                  <section.Component />
-                </div>
-              )}
-            </section>
-          );
-        })}
-        {sections.length === 0 && <p className="list-empty">Nothing to show here yet.</p>}
+        <header className="panel-tabs-row">
+          <div className="panel-tabs" role="tablist" aria-label="What the panel shows">
+            {sections.map((section) => (
+              <Tab key={section.id} section={section} selected={section === active} />
+            ))}
+          </div>
+          <button type="button" className="quiet panel-collapse" aria-label="Collapse the side panel" title={hint('panel.toggle', 'Collapse the side panel')} onClick={() => runCommand('panel.toggle')}>
+            ‹
+          </button>
+        </header>
+        {active ? (
+          <section key={active.id} className="panel-section" role="tabpanel" data-section={active.id} aria-label={active.title}>
+            <active.Component />
+          </section>
+        ) : (
+          <p className="list-empty">Nothing to show here yet.</p>
+        )}
         <div className="list-resize" role="separator" aria-orientation="vertical" aria-label="Resize the side panel" onPointerDown={startResize} data-testid="panel-resize" />
       </aside>
       <Drawer left={prefs.width} />
@@ -82,12 +71,27 @@ export function SidePanel() {
   );
 }
 
-function SectionCount({ section }: { section: PanelSection }) {
+/** One section's tab: its name and, where it has one, its count. */
+function Tab({ section, selected }: { section: PanelSection; selected: boolean }) {
   const count = section.useCount?.() ?? null;
-  return count === null ? null : (
-    <span className="list-count" data-testid="section-count">
-      {count}
-    </span>
+  return (
+    <button
+      type="button"
+      role="tab"
+      className={`panel-tab${section.urgent && count ? ' is-urgent' : ''}`}
+      aria-selected={selected}
+      title={section.title}
+      onClick={() => useApp.getState().setSide({ tab: section.id })}
+      data-testid="panel-tab"
+      data-section={section.id}
+    >
+      {section.tab ?? section.title}
+      {count !== null && (
+        <span className="panel-tab-count" data-testid="section-count">
+          {count}
+        </span>
+      )}
+    </button>
   );
 }
 
@@ -96,8 +100,8 @@ function StripEntry({ section }: { section: PanelSection }) {
   const count = section.useCount?.() ?? null;
   const badges = section.useBadges?.() ?? [];
   const open = (): void => {
-    const { side, setSide } = useApp.getState();
-    setSide({ open: true, folded: side.folded.filter((id) => id !== section.id) });
+    const { setSide } = useApp.getState();
+    setSide({ open: true, tab: section.id });
   };
   return (
     <button type="button" className="strip-entry" title={`${section.title}${count === null ? '' : `: ${count}`}`} onClick={open} data-testid="strip-entry" data-section={section.id}>

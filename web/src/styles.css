@@ -203,15 +203,90 @@ code {
   --xy-background-pattern-dots-color-default: #2c2f37;
 }
 
+/* The bar over the canvas: one row where there is room, a second where there is not, never off the edge.
+   Three groups, left to right: make something, open a screen, move the view; what needs you is at the right. */
 .toolbar {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 10px;
-  padding: 6px 8px 6px 12px;
+  gap: 6px 4px;
+  max-width: calc(100% - 30px);
+  padding: 5px 8px;
   background: var(--panel);
   border: 1px solid var(--border);
   border-radius: 8px;
   box-shadow: 0 4px 16px rgb(0 0 0 / 0.35);
+}
+.toolbar button {
+  white-space: nowrap;
+  padding: 4px 9px;
+}
+.toolbar button.quiet {
+  min-width: 0;
+  border-color: transparent;
+}
+.toolbar button.quiet:hover:not(:disabled) {
+  color: var(--text);
+  background: var(--panel-hover);
+  border-color: transparent;
+}
+.toolbar-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+.toolbar-group + .toolbar-group {
+  margin-left: 4px;
+  padding-left: 8px;
+  border-left: 1px solid var(--border);
+}
+.toolbar-status {
+  margin-left: auto;
+}
+.toolbar-new {
+  position: relative;
+  display: inline-flex;
+}
+.toolbar-new > button:first-child {
+  border-radius: 6px 0 0 6px;
+}
+.toolbar-new > .toolbar-new-more {
+  margin-left: -1px;
+  padding: 4px 7px;
+  border-radius: 0 6px 6px 0;
+}
+.toolbar-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  min-width: 270px;
+  padding: 4px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.45);
+}
+.toolbar-menu button {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  padding: 6px 9px;
+  text-align: left;
+  background: transparent;
+  border: none;
+  border-radius: 5px;
+}
+.toolbar-menu button:hover:not(:disabled) {
+  background: var(--panel-hover);
+}
+.toolbar-menu small {
+  font-size: 11px;
+  color: var(--muted);
+  white-space: normal;
 }
 .brand {
   font-weight: 600;
@@ -1210,56 +1285,109 @@ kbd.kept {
 .strip-badge.is-failed {
   color: var(--danger);
 }
-/* A section is as tall as what it holds, up to a share of the panel, and scrolls inside itself. An empty one is
-   its heading and a line. The one that fills takes what the others leave, and never less than a few rows. */
-.panel-section {
+/* One section shows at a time and has all of the panel's height; the tabs say what else there is, and how much. */
+.panel-tabs-row {
+  flex: none;
   display: flex;
-  flex-direction: column;
-  min-height: 30px;
-  flex: 0 1 auto;
-  max-height: 45%;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 6px 6px 0 8px;
   border-bottom: 1px solid var(--border);
 }
-.panel-section.fill {
-  /* Its filters take room of their own: this much leaves a few rows under them, and the other sections give way. */
-  flex: 1 0 min(340px, 60%);
-  max-height: none;
-}
-.panel-section:not(.fill) .panel-section-body {
-  overflow-y: auto;
-}
-.panel-section.folded,
-.panel-section.fill.folded {
-  flex: none;
-  min-height: 0;
-}
-.panel-section-head {
-  flex: none;
+.panel-tabs {
+  flex: 1;
+  min-width: 0;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 2px 4px 2px 2px;
+  flex-wrap: wrap;
+  gap: 2px 2px;
 }
-.panel-section-head .quiet {
-  padding: 0 6px;
-}
-.panel-fold {
-  display: flex;
+.panel-tab {
+  display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 5px 8px;
-  background: none;
-  border: none;
+  gap: 5px;
+  padding: 5px 8px 6px;
+  font-size: 12.5px;
+  white-space: nowrap;
   color: var(--muted);
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  border-radius: 4px 4px 0 0;
 }
-.panel-section-body {
+.panel-tab:hover:not(:disabled) {
+  color: var(--text);
+  background: var(--panel-hover);
+}
+.panel-tab[aria-selected='true'] {
+  color: var(--text);
+  border-bottom-color: var(--accent);
+}
+.panel-tab-count {
+  min-width: 16px;
+  padding: 0 5px;
+  font-size: 11px;
+  line-height: 16px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+  background: var(--panel-hover);
+  border-radius: 8px;
+}
+.panel-tab.is-urgent .panel-tab-count {
+  color: #1b1c20;
+  background: #e5c07b;
+}
+.panel-collapse {
+  flex: none;
+  min-width: 0 !important;
+  padding: 2px 7px;
+}
+.panel-section {
   flex: 1;
   min-height: 0;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
+}
+.panel-section > .terminal-list {
+  overflow: hidden;
+}
+.list-more {
+  margin-left: auto;
+}
+/* What waits on the owner: what it is, what it says in full, and who it is from. */
+.foryou-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+  padding: 8px 10px;
+  text-align: left;
+  color: var(--text);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+}
+.foryou-row:hover:not(:disabled) {
+  background: var(--panel-hover);
+}
+.foryou-kind {
+  font-size: 11px;
+  color: #e5c07b;
+}
+.foryou-says {
+  font-size: 13px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.foryou-from {
+  font-size: 11px;
+  color: var(--muted);
 }
 .panel-drawer {
   position: absolute;

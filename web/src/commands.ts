@@ -506,7 +506,7 @@ export const COMMANDS: readonly Command[] = [
     group: 'List',
     available: always,
     run: (state) => {
-      state.setSide({ open: true, folded: state.side.folded.filter((id) => id !== 'terminals') });
+      state.setSide({ open: true, tab: 'terminals' });
       state.request({ kind: 'list-search', id: 'terminals' });
     },
   },

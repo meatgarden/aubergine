@@ -156,6 +156,28 @@ function TerminalsSection() {
   const scoped = view.filters.includes(SCOPE_FILTER);
   const toggles = listFilters().filter((filter) => ![SCOPE_FILTER, TEXT_FILTER, TAG_FILTER].includes(filter.id));
   const chips = filterChips(view);
+  // The three filters used every day are always there; the rest, and how the list is laid out, are behind "More".
+  const everyday = toggles.slice(0, EVERYDAY_FILTERS);
+  const rest = toggles.slice(EVERYDAY_FILTERS);
+  const restOn = rest.filter((filter) => view.filters.includes(filter.id)).length;
+  const laidOut = view.grouping !== 'canvas' || view.density === 'compact';
+  const [moreAsked, setMoreAsked] = useState(false);
+  const more = moreAsked;
+  const toggle = (filter: (typeof toggles)[number]) => {
+    const on = view.filters.includes(filter.id);
+    return (
+      <button
+        key={filter.id}
+        type="button"
+        className="list-filter"
+        aria-pressed={on}
+        data-filter={filter.id}
+        onClick={() => setView({ filters: on ? view.filters.filter((id) => id !== filter.id) : [...view.filters, filter.id] })}
+      >
+        {filter.label}
+      </button>
+    );
+  };
 
   return (
     <div className="terminal-list" data-testid="terminal-list">
@@ -187,22 +209,17 @@ function TerminalsSection() {
           }}
         />
         <div className="list-toggles" role="group" aria-label="Filters">
-          {toggles.map((filter) => {
-            const on = view.filters.includes(filter.id);
-            return (
-              <button
-                key={filter.id}
-                type="button"
-                className="list-filter"
-                aria-pressed={on}
-                data-filter={filter.id}
-                onClick={() => setView({ filters: on ? view.filters.filter((id) => id !== filter.id) : [...view.filters, filter.id] })}
-              >
-                {filter.label}
-              </button>
-            );
-          })}
+          {everyday.map(toggle)}
+          <button type="button" className="list-filter list-more" aria-expanded={more} onClick={() => setMoreAsked((v) => !v)} title="More filters, and how the list is laid out" data-testid="list-more">
+            More{restOn > 0 || laidOut ? ` · ${restOn + (laidOut ? 1 : 0)}` : ''} {more ? '▴' : '▾'}
+          </button>
         </div>
+        {more && (
+          <div className="list-toggles" role="group" aria-label="More filters" data-testid="list-more-filters">
+            {rest.map(toggle)}
+          </div>
+        )}
+        {more && (
         <div className="list-options">
           <label>
             <span className="visually-hidden">Grouping</span>
@@ -233,6 +250,7 @@ function TerminalsSection() {
             Compact
           </button>
         </div>
+        )}
         {chips.length > 0 && (
           <div className="list-chips" data-testid="list-chips">
             {chips.map((chip) => (
@@ -591,12 +609,13 @@ function NotesDrawer({ id, onClose }: { id: string; onClose: () => void }) {
   );
 }
 
+const EVERYDAY_FILTERS = 3;
+
 registerSection({
   id: SECTION,
   title: 'Terminals',
   order: 10,
   icon: '▤',
-  fill: true,
   useCount: () => useModel().filtered.length,
   useBadges: () => {
     const counts = stateCounts(useModel().filtered);

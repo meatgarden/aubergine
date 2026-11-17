@@ -61,6 +61,7 @@ function CopiesSection() {
 registerSection({
   id: 'copies',
   title: 'Working copies',
+  tab: 'Copies',
   order: 25,
   icon: '⑂',
   useCount: () => useApp((s) => s.app?.environments.length ?? 0) || null,

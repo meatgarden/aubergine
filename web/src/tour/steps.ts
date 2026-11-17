@@ -58,7 +58,7 @@ registerTourStep({
   done: (c) => c.state.listView.filters.includes('waiting'),
   // The list has to be there to be pointed at.
   arrive: (c) => {
-    if (!c.state.side.open) c.state.setSide({ open: true, folded: [] });
+    if (!c.state.side.open || c.state.side.tab !== 'terminals') c.state.setSide({ open: true, tab: 'terminals' });
   },
 });
 
@@ -103,6 +103,6 @@ registerTourStep({
   order: 80,
   title: 'Now bring in your own',
   text: 'Type “aubergine here” in any terminal you already have open, or use “+ New terminal”. Then remove the demo.',
-  reminder: '“aubergine here” brings a terminal in. “New in…” starts one in a folder, or in its own working copy.',
+  reminder: '“aubergine here” brings a terminal in. ▾ by “+ New terminal” starts one in a working copy.',
   target: () => find('[data-testid="toolbar-new-terminal"]'),
 });

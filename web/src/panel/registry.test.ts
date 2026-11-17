@@ -58,8 +58,10 @@ describe('the section registry', () => {
 
 describe('what the panel remembers', () => {
   it('reads saved preferences and repairs odd ones', () => {
-    expect(parsePanelPrefs(null)).toEqual({ open: true, width: 300, folded: [] });
-    expect(parsePanelPrefs({ open: false, width: 9000, folded: ['terminals', 7] })).toEqual({ open: false, width: 560, folded: ['terminals'] });
+    expect(parsePanelPrefs(null)).toEqual({ open: true, width: 300, folded: [], tab: null });
+    expect(parsePanelPrefs({ open: false, width: 9000, folded: ['terminals', 7] })).toEqual({ open: false, width: 560, folded: ['terminals'], tab: null });
+    expect(parsePanelPrefs({ tab: 'for-you' }).tab).toBe('for-you');
+    expect(parsePanelPrefs({ tab: 7 }).tab).toBeNull();
     expect(parsePanelPrefs({ width: 'wide' }).width).toBe(300);
     expect(clampPanelWidth(10)).toBe(180);
   });

@@ -222,7 +222,7 @@ Nothing here edits your dotfiles, and with one exception nothing stops, signals 
 
 ### From the canvas
 
-The quickest way is the **Outside terminals** button in the canvas toolbar. It lists every terminal you have open outside the canvas: the terminal's name, its folder, what is running in it, and for a Claude Code tab the conversation's name and whether the agent is idle or busy. **Refresh** looks again; nothing is looked up while the panel is closed.
+The quickest way is the **Outside** button in the canvas toolbar. It lists every terminal you have open outside the canvas: the terminal's name, its folder, what is running in it, and for a Claude Code tab the conversation's name and whether the agent is idle or busy. **Refresh** looks again; nothing is looked up while the panel is closed.
 
 Each row has its own action, so you bring terminals over one at a time:
 
@@ -465,7 +465,13 @@ Reload the page to apply. If a key is set twice or cannot be read, the shortcut 
 
 ### Side panel and terminal list
 
-A panel down the left side holds sections. Today it has one, **Terminals**; further sections will appear here as they are added. Each section folds, and the whole panel collapses to a narrow strip that shows each section's icon and counts (`B`, or the arrow at the top). Drag its right edge to change the width. All of this is remembered by the browser.
+The panel on the left shows one thing at a time, chosen by the tabs at its top: **Terminals**, **For you**, **Runs**, **Copies** and **Messages**. A tab says how many it holds, and **For you** stands out while something waits on you. The panel remembers which tab you chose.
+
+The bar over the canvas has three groups: **+ New terminal** (with **▾** for everything else you can make: a Claude Code session, one with Aubergine tools, one on a workflow, a terminal in a folder or a working copy, a frame), the screens (**Queue**, **Board**, **Workflows**, **Library**), and the view (**Go to…**, **Fit**, the zoom). At its right is what needs you and what is elsewhere: sessions waiting, things to review, parked and outside terminals, and **?** for help. On a narrow window it wraps to a second line; nothing runs off the edge.
+
+In the terminal list, the three filters used every day (**Waiting for me**, **Busy**, **Unread**) are always there. **More** opens the rest, and how the list is grouped and ordered, and shows a number while any of those is in effect.
+
+The whole panel collapses to a narrow strip that shows each tab's icon and counts (`B`, or the arrow at the top); click one there to open the panel on it. Drag its right edge to change the width. All of this is remembered by the browser.
 
 **Terminals** lists every session: the terminals on every canvas, and the parked ones.
 
@@ -685,7 +691,7 @@ Every terminal works in your real folder. Two agents in one repository then edit
 
 ### Starting a terminal in one
 
-- **New in…** in the toolbar (or "New terminal in a folder, or in a working copy…" in the palette): give the folder, and choose **In its own working copy**. The dialog for a Claude Code session with tools, and the one for a run on a new agent, have the same choice.
+- **▾** beside **+ New terminal** in the toolbar, then **Terminal in a folder or a working copy…** (or "New terminal in a folder, or in a working copy…" in the palette): give the folder, and choose **In its own working copy**. The dialog for a Claude Code session with tools, and the one for a run on a new agent, have the same choice.
 - From a terminal: `aubergine here --copy` in a folder of the repository (add `--claude` to start Claude Code in it), or `aubergine new "name" --copy --in <folder>`.
 
 The choice is offered only where it can be had, and says why where it cannot: the folder is not in a Git repository, the repository is a bare one, or it has no commit yet.
@@ -701,7 +707,7 @@ Your checkout is never changed by any of this: not its files, not what is staged
 
 ### What changed
 
-A terminal in a working copy shows its branch on its title bar, with the number of files that differ; rest the pointer on it for the words *kept apart*. Click it, or the terminal's row in the side panel's **Working copies** section, for the panel:
+A terminal in a working copy shows its branch on its title bar, with the number of files that differ; rest the pointer on it for the words *kept apart*. Click it, or the terminal's row under the side panel's **Copies** tab, for the panel:
 
 - the branch, the folder and its size, and the commit it started from;
 - the files that are **changed**, **added** or **removed** against that commit, with work that is in no commit included and marked;
@@ -778,7 +784,7 @@ A terminal is on one run at a time. **Resume agent** on a terminal that is on a 
 ### Watch it
 
 - The terminal's title bar has a **strip**: one mark per element and the name of the current one. The same is on its row in the side panel.
-- The side panel's **Workflows** section lists every run that is going, on whichever canvas, those that need someone first. The terminal list can be narrowed to terminals **on a workflow**, or by the state of their run.
+- The side panel's **Runs** tab lists every run that is going, on whichever canvas, those that need someone first. The terminal list can be narrowed to terminals **on a workflow**, or by the state of their run.
 - Click a strip or a run for the **run view**: every element with its state, how long it took, who moved it (the agent, you, or a token) and the note handed in; the current element open with its text. Buttons: the current element **is done**, **Go to** any element (back to redo it, or forward, skipping what lies between), **Pause**, **Resume**, **Stop**.
 - A run the agent reports **blocked** puts its terminal in the waiting queue, naming the element and the reason. So does a run that **finishes**.
 - **quiet** on a strip means the terminal has kept printing for five minutes since the last report, so the picture may be behind what is really going on: the agent may have moved on without saying so. The time is `workflows.quietAfterSeconds` in the settings.
@@ -1263,7 +1269,7 @@ Nothing is typed into the terminal. Its tile and its row show "✉ 1 from you". 
 
 There is one thread for each two parties, so a limit on a thread cannot be got round by starting another. When a thread **pauses**, nothing more passes between the two, each is told why when it tries, both terminals join the "waiting" queue, and the thread says: "Paused: these two have exchanged 6 messages without you looking. Continue?" **Continue** starts the count again; opening a thread that is not paused starts it again too, because then you have looked. **Stop this thread** ends it for good, and **Block** closes one terminal to one sender. None of the limits applies to you. A refusal is one sentence that says what happened and that it is not to be got round. The limits are read when the server starts.
 
-**You see everything.** A terminal's drawer lists its threads; the **Messages** section of the side panel lists all of them, the paused ones and the ones with something for you first. Every message is shown with who sent it, when, and whether it was read, as plain text: control characters are made visible and nothing is drawn as markup or made into a link.
+**You see everything.** A terminal's drawer lists its threads; the **Messages** tab of the side panel lists all of them, the paused ones and the ones with something for you first. Every message is shown with who sent it, when, and whether it was read, as plain text: control characters are made visible and nothing is drawn as markup or made into a link.
 
 **Where they are kept.** In `messages.log` in the data folder, a file only you can read, apart from the rest of Aubergine's state. The state itself holds only counts per terminal, which is also all that a change event carries. When the file reaches 4 MB (`messages.logMaxBytes`) it is set aside as `messages.log.1` and started again with what is still current. What a token sent or read is in the activity log as a length and a fingerprint, never the text. Messages of a terminal you ended for good are no longer listed.
 

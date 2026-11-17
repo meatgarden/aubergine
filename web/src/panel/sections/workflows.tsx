@@ -81,6 +81,7 @@ function WorkflowsSection() {
 registerSection({
   id: 'workflows',
   title: 'Workflows',
+  tab: 'Runs',
   order: 20,
   icon: '⇶',
   useCount: () => useApp((s) => s.app?.runs.length ?? 0) || null,
