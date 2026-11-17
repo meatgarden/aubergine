@@ -277,8 +277,9 @@ describe('what is switched on', () => {
       expect(answer.includes(secret), secret).toBe(false);
       expect(copied.includes(secret), secret).toBe(false);
     }
-    // Not a part of one either: the distinctive middles of the made-up secrets.
-    for (const part of ['OPAL7781', 'made-up-0002', 'made_up_0001', 'topaz', 'garnet', 'abc-def', '9912', '5521', '6634', '7745']) expect(`${answer}${copied}`.includes(part), part).toBe(false);
+    // Not a part of one either: the distinctive middles of the made-up secrets. (Four digits alone are not
+    // distinctive: the answer holds made-up folder names and IDs, which now and then hold the same four.)
+    for (const part of ['OPAL7781', 'made-up-0002', 'made_up_0001', 'topaz', 'garnet', 'abc-def', 'rule-9912', 'secret-5521', 'secret-6634', 'oauth-7745']) expect(`${answer}${copied}`.includes(part), part).toBe(false);
     // The names are there, so that the list is of use.
     for (const name of ['SLACK_BOT_TOKEN', 'GITHUB_TOKEN', 'Authorization', 'DEPLOY_KEY', 'X-Api-Key']) expect(copied).toContain(name);
     expect(copied).toContain('[configured] slack — yours, for this project — runs slack-mcp with 2 arguments');

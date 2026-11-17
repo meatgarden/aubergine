@@ -754,6 +754,8 @@ describe('the secret', () => {
         expect(searched.includes(secret.slice(TOKEN_PREFIX.length)), `${path.basename(file)} holds the random part of a secret`).toBe(false);
       }
     }
+    // A call is recorded after it was answered: wait for the last line before reading the file.
+    await expect.poll(async () => (await readFile(path.join(dir, ACTIVITY_FILE), 'utf8')).trimEnd().split('\n').length, { timeout: 5000 }).toBe(8);
     const activity = await readFile(path.join(dir, ACTIVITY_FILE), 'utf8');
     const recorded = activity
       .trimEnd()
