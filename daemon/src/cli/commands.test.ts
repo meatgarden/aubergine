@@ -46,8 +46,15 @@ describe('parseCommand', () => {
     expect(parseCommand(['board'])).toEqual({ name: 'board', canvas: null, workflow: null, status: null, tag: null });
     expect(parseCommand(['board', '--canvas', 'Main', '--status', 'awaiting', '--tag', 'api', '--workflow', 'Fix a bug'])).toEqual({ name: 'board', canvas: 'Main', workflow: 'Fix a bug', status: 'awaiting', tag: 'api' });
     expect(() => parseCommand(['board', 'everything'])).toThrow(/does not know/);
-    expect(parseCommand(['new'])).toEqual({ name: 'new', sessionName: null, canvas: null });
-    expect(parseCommand(['new', 'api', 'server'])).toEqual({ name: 'new', sessionName: 'api server', canvas: null });
+    expect(parseCommand(['new'])).toEqual({ name: 'new', sessionName: null, canvas: null, copy: false, folder: null });
+    expect(parseCommand(['new', 'api', 'server'])).toEqual({ name: 'new', sessionName: 'api server', canvas: null, copy: false, folder: null });
+    // In a working copy of its own, of the repository a folder is in.
+    expect(parseCommand(['new', 'fix it', '--copy'])).toEqual({ name: 'new', sessionName: 'fix it', canvas: null, copy: true, folder: null });
+    expect(parseCommand(['new', '--copy', '--in', '/somewhere/project'])).toEqual({ name: 'new', sessionName: null, canvas: null, copy: true, folder: '/somewhere/project' });
+    expect(parseCommand(['here', '--copy', '--claude'])).toMatchObject({ name: 'here', copy: true, claude: true });
+    expect(parseCommand(['copies'])).toEqual({ name: 'copies', words: [] });
+    expect(parseCommand(['copies', 'discard', 'fix it', '--yes'])).toEqual({ name: 'copies', words: ['discard', 'fix it', '--yes'] });
+    expect(parseCommand(['where'])).toEqual({ name: 'where' });
     expect(parseCommand(['attach', 'api'])).toEqual({ name: 'attach', query: 'api' });
     expect(parseCommand(['note', 'tests', 'pass'])).toEqual({ name: 'note', text: 'tests pass' });
     expect(parseCommand(['scan'])).toEqual({ name: 'scan' });
@@ -96,6 +103,7 @@ describe('here', () => {
       attach: true,
       open: true,
       claude: false,
+      copy: false,
       command: [],
       fromShellHook: false,
     });
@@ -221,8 +229,8 @@ describe('canvases', () => {
     expect(() => parseCommand(['canvas', 'new'])).toThrow(/needs a name/);
     expect(() => parseCommand(['canvas', 'close', 'x'])).toThrow(UsageError);
 
-    expect(parseCommand(['new', 'api', '--canvas', 'Client work'])).toEqual({ name: 'new', sessionName: 'api', canvas: 'Client work' });
-    expect(parseCommand(['new', '--canvas=Deploys'])).toEqual({ name: 'new', sessionName: null, canvas: 'Deploys' });
+    expect(parseCommand(['new', 'api', '--canvas', 'Client work'])).toEqual({ name: 'new', sessionName: 'api', canvas: 'Client work', copy: false, folder: null });
+    expect(parseCommand(['new', '--canvas=Deploys'])).toEqual({ name: 'new', sessionName: null, canvas: 'Deploys', copy: false, folder: null });
     expect(parseCommand(['here', '--canvas', 'Deploys', 'api', '--no-attach'])).toMatchObject({ sessionName: 'api', canvas: 'Deploys', attach: false });
     expect(parseCommand(['import', 'ttys004', '--canvas', 'Deploys'])).toMatchObject({ terminals: ['ttys004'], canvas: 'Deploys' });
     // After "--" it belongs to the command being started.
