@@ -8,6 +8,7 @@ import { AubergineError, createClient, type Client, type CreateTokenBody, type L
 import {
   CreateSessionResponse,
   ErrorResponse,
+  Id,
   SESSION_ENV,
   SESSION_HEADER,
   HistoryList,
@@ -405,7 +406,9 @@ async function main(): Promise<number> {
 
     case 'attach': {
       const { state } = StateResponse.parse(await call(config, 'GET', paths.state));
-      const session = resolveSession(state.sessions, command.query);
+      // An ID in full is that session, whatever other sessions are named: the script of a desktop window names its session so.
+      const byId = Id.safeParse(command.query.trim()).success ? state.sessions.find((s) => s.id === command.query.trim() && s.state !== 'exited') : undefined;
+      const session = byId ?? resolveSession(state.sessions, command.query);
       return attachTo(config, session.id);
     }
 

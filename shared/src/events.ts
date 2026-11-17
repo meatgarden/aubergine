@@ -84,6 +84,8 @@ export const ChangeEvent = z.discriminatedUnion('type', [
   z.object({ type: z.literal('session.takesMessages'), sessionId: Id, takesMessages: z.boolean() }),
   /** A token typed into the session through the API. Sent at most once every few seconds per session; never what was typed. */
   z.object({ type: z.literal('session.typed'), sessionId: Id, by: TypedBy }),
+  /** The number of viewers attached to a session from outside this server changed: a window was opened on the desktop, or closed. */
+  z.object({ type: z.literal('session.viewers'), sessionId: Id, outside: z.number().int().min(0).max(999) }),
   /** The session's agent handed in a recap; it takes the place of the one before. */
   z.object({ type: z.literal('session.recap'), sessionId: Id, recap: z.object({ text: z.string().max(2000), at: Timestamp }) }),
   z.object({ type: z.literal('session.attention'), sessionId: Id, attention: Attention }),
@@ -254,6 +256,8 @@ export function applyEvent(state: AppState, event: ChangeEvent): AppState {
       return patchSession(state, event.sessionId, { takesMessages: event.takesMessages });
     case 'session.protected':
       return patchSession(state, event.sessionId, { peopleOnly: event.peopleOnly });
+    case 'session.viewers':
+      return patchSession(state, event.sessionId, { outsideViewers: event.outside });
     case 'session.typed':
       return patchSession(state, event.sessionId, { typedBy: event.by });
     case 'session.recap':

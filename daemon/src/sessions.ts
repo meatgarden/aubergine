@@ -460,6 +460,8 @@ export class Sessions {
       if (live.cwd !== session.cwd || live.command !== session.command) {
         this.hub.emit({ type: 'session.activity', sessionId: session.id, cwd: live.cwd, command: live.command });
       }
+      // A window opened on the desktop, or closed: seen here, from what the runtime counts, and nowhere guessed.
+      if ((live.outside ?? 0) !== (session.outsideViewers ?? 0)) this.hub.emit({ type: 'session.viewers', sessionId: session.id, outside: Math.min(999, live.outside ?? 0) });
       const status = this.nextStatus(session, await this.integration.read(session.id), live.activityAt);
       if (!sameStatus(status, session.status)) {
         this.hub.emit({ type: 'session.status', sessionId: session.id, status });

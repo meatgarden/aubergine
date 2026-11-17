@@ -72,6 +72,7 @@ export const OWNERS_ALONE: Record<(typeof NEVER_BY_TOKEN)[number], string> = {
   'queue.manage': 'accepting, declining, reordering or starting tasks, and changing how many run at once',
   'rules.manage': 'writing or removing a rule',
   'schedules.manage': 'making, changing, switching, removing or running a schedule',
+  'desktop.open': "opening a terminal in a window of the owner's own terminal application",
 };
 
 const ownersAlone = (): string => [...new Set(NEVER_BY_TOKEN.map((action) => OWNERS_ALONE[action]))].join('; ');

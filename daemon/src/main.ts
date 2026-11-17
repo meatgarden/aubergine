@@ -25,6 +25,7 @@ import { Viewers } from './viewers';
 import { ZshIntegration } from './shell/integration';
 import { SettingsFile, expandHome } from './settings';
 import { pathWithCommand, writeCommandLauncher } from './command-path';
+import { FileDesktopOpener } from './desktop/open';
 import { FileDraftLog } from './draft-log';
 import { FileMessageLog } from './message-log';
 import { GitFetcher } from './library/git';
@@ -120,6 +121,13 @@ async function main(): Promise<void> {
     messageLog: new FileMessageLog(config.dataDir, () => settings.value.messages.logMaxBytes, (error) => console.warn(`Could not write the file of messages: ${String(error)}`)),
     draftLog: new FileDraftLog(config.dataDir, (error) => console.warn(`Could not write the record of drafts: ${String(error)}`)),
     taskArchive: new FileTaskArchive(config.dataDir),
+    // A window of the owner's terminal application for a session: a script in the data folder that runs this copy's `aubergine attach`.
+    desktop: new FileDesktopOpener({
+      dataDir: config.dataDir,
+      facts: () => ({ command: path.join(commandFolder, 'aubergine'), port: listeningPort, dataDir: config.dataDir, socket: config.tmuxSocket, tmuxBin: process.env.AUBERGINE_TMUX_BIN || null }),
+      settings: async () => (await settings.reload()).desktop,
+    }),
+    setDesktopOpenNew: (value) => settings.setDesktopOpenNew(value),
     runArchive: new FileRunArchive(config.dataDir, (error) => console.warn(`Could not write the archive of runs: ${String(error)}`)),
     version: versionInfo(installRoot(), config).version,
   });

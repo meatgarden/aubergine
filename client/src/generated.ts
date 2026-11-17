@@ -290,6 +290,7 @@ export type ListCanvasSessionsResult = {
       name: string;
       at: string;
     } | null;
+    outsideViewers?: number;
     recap: {
       text: string;
       at: string;
@@ -384,6 +385,7 @@ export type StartSessionResult = {
       name: string;
       at: string;
     } | null;
+    outsideViewers?: number;
     recap: {
       text: string;
       at: string;
@@ -482,6 +484,7 @@ export type ListSessionsResult = {
       name: string;
       at: string;
     } | null;
+    outsideViewers?: number;
     recap: {
       text: string;
       at: string;
@@ -555,6 +558,7 @@ export type GetSessionResult = {
     name: string;
     at: string;
   } | null;
+  outsideViewers?: number;
   recap: {
     text: string;
     at: string;
@@ -632,6 +636,7 @@ export type UpdateSessionResult = {
     name: string;
     at: string;
   } | null;
+  outsideViewers?: number;
   recap: {
     text: string;
     at: string;
@@ -714,6 +719,7 @@ export type MoveSessionResult = {
       name: string;
       at: string;
     } | null;
+    outsideViewers?: number;
     recap: {
       text: string;
       at: string;
@@ -796,6 +802,7 @@ export type ParkSessionResult = {
     name: string;
     at: string;
   } | null;
+  outsideViewers?: number;
   recap: {
     text: string;
     at: string;
@@ -873,6 +880,7 @@ export type RestoreSessionResult = {
       name: string;
       at: string;
     } | null;
+    outsideViewers?: number;
     recap: {
       text: string;
       at: string;
@@ -905,6 +913,23 @@ export type RestoreSessionResult = {
 
 export type ShowSessionResult = {
   shown: number;
+};
+
+export type OpenSessionOnDesktopResult = {
+  /** True: the terminal application was asked to open a window. False: it could not be, and `says` is why. */
+  opened: boolean;
+  /** What was done, or why it could not be, in a sentence. */
+  says: string;
+};
+
+export type ChangeDesktopSettingsBody = {
+  /** Whether new terminals made in the page also open on the desktop. */
+  openNew: boolean;
+};
+
+export type ChangeDesktopSettingsResult = {
+  /** New terminals made in the page also open on the desktop. */
+  openNew: boolean;
 };
 
 export type AppendNoteBody = {
@@ -7445,6 +7470,7 @@ export type ProtectSessionResult = {
     name: string;
     at: string;
   } | null;
+  outsideViewers?: number;
   recap: {
     text: string;
     at: string;
@@ -7521,6 +7547,7 @@ export type SetTakesMessagesResult = {
     name: string;
     at: string;
   } | null;
+  outsideViewers?: number;
   recap: {
     text: string;
     at: string;
@@ -8611,6 +8638,8 @@ export const OPERATIONS = {
   parkSession: { method: 'POST', path: '/v1/sessions/{sessionId}/park', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "sessions:write" } },
   restoreSession: { method: 'POST', path: '/v1/sessions/{sessionId}/restore', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "sessions:write" } },
   showSession: { method: 'POST', path: '/v1/sessions/{sessionId}/show', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "sessions:write" } },
+  openSessionOnDesktop: { method: 'POST', path: '/v1/sessions/{sessionId}/desktop', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  changeDesktopSettings: { method: 'PUT', path: '/v1/settings/desktop', params: [], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   appendNote: { method: 'POST', path: '/v1/sessions/{sessionId}/notes', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: "notes:write" } },
   updateNode: { method: 'PATCH', path: '/v1/canvases/{canvasId}/nodes/{nodeId}', params: ["canvasId", "nodeId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "canvases:write" } },
   createFrame: { method: 'POST', path: '/v1/canvases/{canvasId}/frames', params: ["canvasId"], hasBody: true, paged: false, idempotent: true, stream: false, access: { who: 'token', scope: "canvases:write" } },
@@ -8850,6 +8879,18 @@ export interface Client {
    * `POST /v1/sessions/{sessionId}/show`. Scope: `sessions:write`.
    */
   showSession(args: { sessionId: string } & CallOptions): Promise<ShowSessionResult>;
+  /**
+   * Open a session in the owner's terminal application.
+   *
+   * `POST /v1/sessions/{sessionId}/desktop`. Signed-in browser only: no API token may call this.
+   */
+  openSessionOnDesktop(args: { sessionId: string } & CallOptions): Promise<OpenSessionOnDesktopResult>;
+  /**
+   * Say whether new terminals made in the page also open on the desktop.
+   *
+   * `PUT /v1/settings/desktop`. Signed-in browser only: no API token may call this.
+   */
+  changeDesktopSettings(args: { body: ChangeDesktopSettingsBody } & CallOptions): Promise<ChangeDesktopSettingsResult>;
   /**
    * Add an entry to a session's note log.
    *

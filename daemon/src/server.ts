@@ -95,6 +95,8 @@ import path from 'node:path';
 import { MessageRefusal, Messages } from './messages';
 import { Library } from './library';
 import { Environments } from './environments';
+import { Desktop } from './desktop';
+import type { DesktopOpener } from './desktop/open';
 import { Queue } from './queue';
 import { REAL_CLOCK, Schedules, ownZone, type ScheduleClock } from './schedules';
 import { MemoryTaskArchive, type TaskArchive } from './task-archive';
@@ -127,6 +129,10 @@ export interface ServerOptions {
   runArchive?: RunArchive;
   /** Where tasks that are over are kept. Left out, in memory only. */
   taskArchive?: TaskArchive;
+  /** What opens a terminal on the owner's desktop. Left out: this server opens none, and says so. */
+  desktop?: DesktopOpener;
+  /** Writes `desktop.openNew` into the settings file. Left out: the page cannot change it. */
+  setDesktopOpenNew?: (value: boolean) => Promise<void>;
   /** The clock and the timer schedules use. A test passes its own. */
   scheduleClock?: ScheduleClock;
   /** The time zone schedules are written in. Left out: this computer's own. */
@@ -243,6 +249,9 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   // The queue of tasks, the owner's list and the rules. A rule's notification goes to the pages that are open, and nowhere else.
   const queue = new Queue(hub, sessions, workflows, drafts, environments, options.taskArchive ?? new MemoryTaskArchive(), { notify: (title, body) => viewers.notify(title, body), activity, onError: (error) => console.error('Could not start a task:', error) });
   await queue.reconcile();
+  // A terminal in a window of the owner's own terminal application: the owner's alone to ask for.
+  const desktop = new Desktop(hub, sessions, { opener: options.desktop ?? null, setOpenNew: options.setDesktopOpenNew ?? null, openNew: async () => (await options.settings()).desktop.openNew, onError: (error) => console.error('Could not open a terminal on the desktop:', error) });
+  await desktop.sweep();
   // Schedules, and the one timer that starts something. It is on only while a schedule is switched on.
   const schedules = new Schedules(hub, queue, {
     clock: options.scheduleClock ?? REAL_CLOCK,
@@ -324,7 +333,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     return typeof said === 'string' && ClientName.safeParse(said).success ? said : null;
   };
   /** What only the owner may do and is worth seeing when it was not done in the browser. */
-  const WATCHED: readonly Action[] = ['drafts.review', 'repository.review', 'repository.write', 'tokens.manage', 'terminal.input', 'sessions.protect', 'messages.manage', 'runs.approve'];
+  const WATCHED: readonly Action[] = ['desktop.open', 'settings.write', 'drafts.review', 'repository.review', 'repository.write', 'tokens.manage', 'terminal.input', 'sessions.protect', 'messages.manage', 'runs.approve'];
   /** Reading a terminal is watched too, though it changes nothing. */
   const WATCHED_READS: readonly Action[] = ['terminal.read'];
   const ownerLogged = new WeakSet<FastifyRequest>();
@@ -526,9 +535,12 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   }));
 
   app.post(paths.sessions, async (request, reply): Promise<CreateSessionResponse> => {
-    const body = parse(CreateSessionRequest, request.body ?? {});
+    const { desktop: alsoOnDesktop, ...body } = parse(CreateSessionRequest, request.body ?? {});
     reply.code(201);
-    return sessions.create(body);
+    const created = await sessions.create(body);
+    // Only here, on the owner's own route, and only when the request says so: a session a token, a task or a schedule
+    // makes goes through other code and never opens a window. The session is made whether or not the window opens.
+    return alsoOnDesktop === true ? { ...created, desktop: await desktop.openNew(created.session.id) } : created;
   });
 
   app.patch(paths.session(':sessionId'), async (request) => {
@@ -585,6 +597,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   app.addHook('onClose', async () => messages.close());
   app.addHook('onClose', async () => environments.close());
   app.addHook('onClose', async () => {
+    desktop.close();
     schedules.close();
     await schedules.settled();
     queue.close();
@@ -788,6 +801,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     environments,
     queue,
     schedules,
+    desktop,
     may: (principal, action, resource) => authorize(principal, action, resource),
     resourceOf,
     trace: (request, trace) => void traces.set(request, trace),

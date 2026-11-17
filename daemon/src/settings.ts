@@ -1,4 +1,4 @@
-import { readFile } from 'node:fs/promises';
+import { mkdir, readFile, rename, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { DEFAULT_SETTINGS, Settings, resolveShortcuts, type Platform } from '@aubergine/shared';
@@ -55,6 +55,13 @@ export function expandHome(folder: string): string {
   return folder.startsWith('~/') ? path.join(os.homedir(), folder.slice(2)) : folder;
 }
 
+/** The settings file is there and cannot be read as settings: it is left as it is. */
+export class SettingsUnreadableError extends Error {
+  constructor(file: string) {
+    super(`${file} is not a file of settings that can be read (it is not a JSON object). Mend it by hand; it was not changed.`);
+  }
+}
+
 /** Keeps the current settings at hand and re-reads the file when asked. */
 export class SettingsFile {
   private current: Settings = DEFAULT_SETTINGS;
@@ -67,6 +74,30 @@ export class SettingsFile {
 
   get value(): Settings {
     return this.current;
+  }
+
+  /**
+   * Writes `desktop.openNew` into the file and leaves everything else in it as it was: the file is the owner's, and
+   * this is the one key the page changes. A file that is not JSON is not touched: the owner is told to mend it.
+   */
+  async setDesktopOpenNew(value: boolean): Promise<void> {
+    const file = path.join(this.dir, SETTINGS_FILE);
+    let whole: Record<string, unknown> = {};
+    try {
+      const parsed: unknown = JSON.parse(await readFile(file, 'utf8'));
+      if (parsed === null || typeof parsed !== 'object' || Array.isArray(parsed)) throw new SettingsUnreadableError(file);
+      whole = parsed as Record<string, unknown>;
+    } catch (error) {
+      if (error instanceof SyntaxError) throw new SettingsUnreadableError(file);
+      if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
+    }
+    const desktop = whole.desktop !== null && typeof whole.desktop === 'object' && !Array.isArray(whole.desktop) ? (whole.desktop as Record<string, unknown>) : {};
+    const next = { ...whole, desktop: { ...desktop, openNew: value } };
+    await mkdir(this.dir, { recursive: true });
+    const tmp = `${file}.${process.pid}.tmp`;
+    await writeFile(tmp, `${JSON.stringify(next, null, 2)}\n`);
+    await rename(tmp, file);
+    await this.reload();
   }
 
   async reload(): Promise<Settings> {
