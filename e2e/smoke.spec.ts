@@ -2358,3 +2358,169 @@ test("working copies: two terminals on one repository change the same file apart
     rmSync(elsewhere, { recursive: true, force: true });
   }
 });
+
+test('the queue and For you: tasks start when the owner says and no more than the limit, an agent proposes and asks, lines of a checklist are sent to the queue, and a rule notifies', async ({ page }) => {
+  // The browser's own notifications, stood in for: what the page asks to show is kept, and permission is the owner's click.
+  await page.addInitScript(() => {
+    const shown: string[] = [];
+    (window as unknown as { shownNotifications: string[] }).shownNotifications = shown;
+    class StandIn {
+      static permission = 'default';
+      static async requestPermission(): Promise<string> {
+        StandIn.permission = 'granted';
+        return 'granted';
+      }
+      constructor(_title: string, options?: { body?: string }) {
+        shown.push(options?.body ?? '');
+      }
+    }
+    (window as unknown as { Notification: unknown }).Notification = StandIn;
+  });
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  const origin = new URL(page.url()).origin;
+  await page.getByRole('button', { name: 'New canvas' }).click();
+  // Three terminals: in two an agent is in front (stood in for by a program that is not a shell, reporting as an agent does); one is a plain shell.
+  const rows = page.getByTestId('list-row');
+  const made: string[] = [];
+  for (let n = 0; n < 3; n += 1) {
+    await page.getByTestId('toolbar-new-terminal').click();
+    await expect(rows).toHaveCount(n + 1);
+    const ids = await rows.evaluateAll((all) => all.map((row) => row.getAttribute('data-session') ?? ''));
+    made.push(ids.find((id) => !made.includes(id)) ?? '');
+  }
+  const [first, second, plain] = made as [string, string, string];
+  const inTerminal = async (id: string, command: string): Promise<string> => {
+    const answer = await page.request.post(`/v1/sessions/${id}/run`, { headers: { origin }, data: { command, timeoutSeconds: 30 } });
+    expect(answer.status()).toBe(200);
+    return ((await answer.json()) as { output: string }).output;
+  };
+  await expect.poll(async () => inTerminal(plain, 'echo ready-$((1 + 1))'), { timeout: 30_000 }).toContain('ready-2');
+  for (const id of [first, second]) {
+    await expect.poll(async () => inTerminal(id, 'echo ready-$((1 + 1))'), { timeout: 30_000 }).toContain('ready-2');
+    expect((await page.request.post(`/v1/sessions/${id}/input`, { headers: { origin }, data: { text: 'cat', enter: true } })).status()).toBe(200);
+    await expect
+      .poll(async () => {
+        await page.request.put(`/v1/sessions/${id}/agent`, { headers: { origin }, data: { kind: 'claude-code', conversationId: null } });
+        return ((await (await page.request.get(`/v1/sessions/${id}`, { headers: { origin } })).json()) as { agent: { program: string | null } | null; command: string | null }).agent?.program;
+      }, { timeout: 20_000 })
+      .toBe('cat');
+  }
+
+  // The screen: nothing waits, nothing is queued. A limit of two.
+  await page.getByTestId('toolbar-queue').click();
+  const screen = page.getByTestId('queue-screen');
+  const mine = (title: string) => screen.locator('[data-testid="task-row"]').filter({ hasText: title });
+  await screen.getByTestId('queue-limit').fill('2');
+  await expect(screen.getByTestId('queue-automatic')).not.toBeChecked();
+  const form = page.getByTestId('task-form');
+  for (const title of ['Queue test one', 'Queue test two', 'Queue test three']) {
+    await screen.getByTestId('queue-add').click();
+    await form.getByTestId('task-title').fill(title);
+    await form.getByTestId('task-details').fill('Do this one.');
+    await form.getByTestId('task-add').click();
+    await expect(form).toHaveCount(0);
+    await expect(mine(title)).toHaveAttribute('data-state', 'queued');
+  }
+  // Every row says who added it. Adding started nothing.
+  await expect(mine('Queue test one')).toContainText('added by you, written by hand');
+  await expect(screen.getByTestId('queue-working').getByTestId('task-row')).toHaveCount(0);
+
+  // A rule, written by the owner: when a task is done, notify. The browser is asked for permission at this click, not before.
+  await screen.getByTestId('queue-rules').locator('summary').click();
+  expect(await page.evaluate(() => (window as unknown as { Notification: { permission: string } }).Notification.permission)).toBe('default');
+  await screen.getByTestId('rule-allow-notify').click();
+  await expect(screen.getByTestId('rule-allow-notify')).toHaveText('Notifications are on');
+  await screen.getByTestId('rule-add').click();
+  await expect(screen.getByTestId('rule-row')).toHaveText(/When a task is done, notify me in the open page\./);
+
+  // Start next, twice: two at work, one still next. A third press starts nothing and says why.
+  await screen.getByTestId('queue-start-next').click();
+  await expect(mine('Queue test one')).toHaveAttribute('data-state', 'working');
+  await screen.getByTestId('queue-start-next').click();
+  await expect(mine('Queue test two')).toHaveAttribute('data-state', 'working');
+  await expect(screen.getByTestId('queue-working').getByTestId('task-row')).toHaveCount(2);
+  await expect(mine('Queue test three')).toHaveAttribute('data-state', 'queued');
+  await screen.getByTestId('queue-start-next').click();
+  await expect(screen.getByTestId('queue-said')).toHaveText('2 tasks are at work, and the limit is 2. Nothing was started.');
+  await expect(mine('Queue test three')).toHaveAttribute('data-state', 'queued');
+
+  // One finishes (its agent reports, stood in for by a report on its run). It shows on the owner's list to look at,
+  // the rule notifies, and the third does not start by itself.
+  const tasks = ((await (await page.request.get('/v1/tasks', { headers: { origin } })).json()) as { items: { title: string; runId: string | null }[] }).items;
+  const firstRun = tasks.find((task) => task.title === 'Queue test one')?.runId ?? '';
+  expect((await page.request.post(`/v1/runs/${firstRun}/report`, { headers: { origin }, data: { type: 'done', elementId: 'task', note: 'Did it.' } })).status()).toBe(200);
+  const done = screen.locator('[data-testid="foryou-row"][data-kind="task-done"]').filter({ hasText: 'Queue test one' });
+  await expect(done).toContainText('The task “Queue test one” is done. Look at what was made.');
+  await expect.poll(() => page.evaluate(() => (window as unknown as { shownNotifications: string[] }).shownNotifications)).toContain('The task “Queue test one” is done');
+  await page.waitForTimeout(400);
+  await expect(mine('Queue test three')).toHaveAttribute('data-state', 'queued');
+  // The owner says so, and it starts.
+  await screen.getByTestId('queue-start-next').click();
+  await expect(mine('Queue test three')).toHaveAttribute('data-state', 'working');
+  // Looked at: it leaves the owner's list, and stays under "finished today".
+  await done.getByTestId('task-clear').click();
+  await expect(done).toHaveCount(0);
+  await expect(screen.getByTestId('queue-finished').getByTestId('task-row').filter({ hasText: 'Queue test one' })).toHaveCount(1);
+
+  // An agent in a terminal proposes a task and asks for something. Both appear on the owner's list, and neither does anything by itself.
+  expect(await inTerminal(plain, '"$AUBERGINE_BIN/aubergine" task add "Proposed by an agent" --details "it should fail without the fix"')).toContain("It waits for your owner's yes and starts nothing until then.");
+  expect(await inTerminal(plain, '"$AUBERGINE_BIN/aubergine" ask "the staging key expires this week: rotate it"')).toContain("It is on your owner's list");
+  // What only the owner decides does nothing there.
+  expect(await inTerminal(plain, '"$AUBERGINE_BIN/aubergine" task accept "Proposed by an agent"')).toContain('This command does nothing inside a canvas terminal');
+  const proposal = screen.locator('[data-testid="foryou-row"][data-kind="proposal"]').filter({ hasText: 'Proposed by an agent' });
+  await expect(proposal).toContainText('from the agent in');
+  const asked = screen.locator('[data-testid="foryou-row"][data-kind="ask"]').filter({ hasText: 'the staging key expires this week' });
+  await expect(asked).toHaveCount(1);
+  await proposal.getByTestId('task-accept').click();
+  await expect(proposal).toHaveCount(0);
+  await expect(mine('Proposed by an agent')).toHaveAttribute('data-state', 'queued');
+  await expect(mine('Proposed by an agent')).toContainText('added by the agent in');
+  await asked.getByTestId('ask-done').click();
+  await expect(asked).toHaveCount(0);
+
+  // A run hands in a checklist. The owner ticks two of its lines and sends them to the queue.
+  const flow = (await (await page.request.post('/v1/workflows', { headers: { origin }, data: { name: 'Queue test review', elements: [{ id: 'find', name: 'Find things', instructions: 'Find things in {{task}}.', produces: 'checklist' }] } })).json()) as { id: string };
+  const run = (await (await page.request.post('/v1/runs', { headers: { origin }, data: { workflowId: flow.id, sessionId: plain, inputs: { task: 'the code' }, kickoff: false } })).json()) as { run: { id: string } };
+  expect((await page.request.post(`/v1/runs/${run.run.id}/report`, { headers: { origin }, data: { type: 'done', elementId: 'find', output: { items: [{ text: 'Queue line: rename the flag' }, { text: 'Queue line: not this one' }, { text: 'Queue line: remove the old test' }] } } })).status()).toBe(200);
+  const list = screen.locator('[data-testid="foryou-row"][data-kind="checklist"]').filter({ hasText: 'Queue test review' });
+  await expect(list).toContainText('0 of 3 ticked');
+  await list.getByTestId('foryou-open').click();
+  const view = page.getByTestId('run-view');
+  // The run is over, so a tick is kept by the server first and shown when it has answered.
+  for (const line of [0, 2]) {
+    await view.getByTestId('checklist-item').nth(line).locator('input').click();
+    await expect(view.getByTestId('checklist-item').nth(line)).toHaveAttribute('data-ticked', 'true');
+  }
+  await view.getByTestId('run-view-close').click();
+  await expect(list).toContainText('2 of 3 ticked');
+  await list.getByTestId('checklist-to-queue').click();
+  await expect(form.getByTestId('task-title')).toHaveCount(2);
+  await expect(form.getByTestId('task-title').nth(0)).toHaveValue('Queue line: rename the flag');
+  await expect(form.getByTestId('task-title').nth(1)).toHaveValue('Queue line: remove the old test');
+  await form.getByTestId('task-add').click();
+  await expect(form).toHaveCount(0);
+  await expect(mine('Queue line: rename the flag')).toHaveAttribute('data-state', 'queued');
+  await expect(mine('Queue line: remove the old test')).toContainText('from a checklist');
+  await expect(mine('Queue line: not this one')).toHaveCount(0);
+
+  // The order is the owner's: with the row in hand, Alt and an arrow move it.
+  const next = screen.getByTestId('queue-next').getByTestId('task-row');
+  const last = await next.last().getAttribute('data-task');
+  await next.last().focus();
+  await page.keyboard.press('Alt+ArrowUp');
+  await expect.poll(async () => next.last().getAttribute('data-task')).not.toBe(last);
+
+  // The side panel's short list is the same list.
+  await screen.getByTestId('queue-close').click();
+  await expect(page.getByTestId('foryou-section')).toBeVisible();
+  // No program decides: a token that may add tasks is refused when it accepts, starts or writes a rule.
+  const program = (await (await page.request.post('/v1/tokens', { headers: { origin }, data: { name: 'queue test program', scopes: ['read', 'tasks:write'] } })).json()) as { secret: string };
+  const as = { authorization: `Bearer ${program.secret}`, 'content-type': 'application/json' };
+  const proposedByProgram = (await (await fetch(`${origin}/v1/tasks`, { method: 'POST', headers: as, body: JSON.stringify({ title: 'Queue test from a program' }) })).json()) as { id: string; state: string };
+  expect(proposedByProgram.state).toBe('proposed');
+  for (const [method, url, body] of [['POST', `/v1/tasks/${proposedByProgram.id}/accept`, '{}'], ['POST', '/v1/tasks/start', '{}'], ['PUT', '/v1/queue', '{"automatic":true}'], ['POST', '/v1/rules', '{"event":"task.done","action":{"kind":"notify"}}']] as const) {
+    expect((await fetch(`${origin}${url}`, { method, headers: as, body })).status, url).toBe(403);
+  }
+});
