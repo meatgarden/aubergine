@@ -115,7 +115,7 @@ export const USAGE = `Usage: aubergine <command>
   new [name]                 Start a new terminal on a canvas
   new [name] --copy [--in <folder>]
                              Start it in a working copy of its own: a second checkout of the repository this folder
-                             (or <folder>) is in, on a new branch. Kept apart from your checkout, not locked in
+                             (or <folder>) is in, on a new branch. Kept apart from your checkout; that is not a lock
   canvas list                List the canvases, with how many terminals are on each and how many wait for you
   canvas new <name>          Add a canvas
   attach <name>              Open a session in this terminal (detach by closing the window)

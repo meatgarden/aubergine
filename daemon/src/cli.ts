@@ -353,7 +353,7 @@ async function main(): Promise<number> {
       const folder = command.folder !== null ? path.resolve(command.folder) : command.copy ? process.cwd() : null;
       const body = { ...(command.sessionName ? { name: command.sessionName } : {}), ...(await canvasField(config, command.canvas)), ...(folder !== null ? { cwd: folder } : {}), ...(command.copy ? { environment: WORKING_COPY, name: command.sessionName ?? nameForFolder(folder ?? process.cwd()), uniqueName: true } : {}) };
       const { session } = CreateSessionResponse.parse(await call(config, 'POST', paths.sessions, body));
-      console.log(`Started "${session.name}"${command.copy ? ` in a working copy of its own, in ${session.cwd ?? 'its own folder'}. It is kept apart from your checkout, not locked in. See: aubergine copies` : ''}. Attach with: aubergine attach "${session.name}"`);
+      console.log(`Started "${session.name}"${command.copy ? ` in a working copy of its own, in ${session.cwd ?? 'its own folder'}. It is kept apart from your checkout; that is not a lock. See: aubergine copies` : ''}. Attach with: aubergine attach "${session.name}"`);
       return 0;
     }
 
