@@ -21,6 +21,7 @@ import {
   recapOf,
   recordOfRun,
   showControl,
+  whereWords,
   RunStatus,
   boardText,
   type RecapRun,
@@ -46,6 +47,10 @@ import {
 import { agentClient } from './cli/agent';
 import { guideText } from './cli/guide';
 import { parseLibraryCommand, runLibraryCommand } from './cli/library';
+import { parseCopiesCommand, runCopiesCommand } from './cli/copies';
+
+/** What `--copy` asks for, by the name its kind is registered under. The server says whether the folder can have one. */
+const WORKING_COPY = 'working-copy';
 import { parseElementCommand, parseWorkflowCommand, resolveWorkflow, runWorkflowCommand } from './cli/workflow';
 import { openBrowser, sessionAddress } from './cli/open-browser';
 import { commandsFor, formatAgents, formatOutside, normaliseTty, toShells } from './cli/outside';
@@ -344,9 +349,11 @@ async function main(): Promise<number> {
     }
 
     case 'new': {
-      const body = { ...(command.sessionName ? { name: command.sessionName } : {}), ...(await canvasField(config, command.canvas)) };
+      // In a working copy: of the repository the folder named is in, or the one this was typed in.
+      const folder = command.folder !== null ? path.resolve(command.folder) : command.copy ? process.cwd() : null;
+      const body = { ...(command.sessionName ? { name: command.sessionName } : {}), ...(await canvasField(config, command.canvas)), ...(folder !== null ? { cwd: folder } : {}), ...(command.copy ? { environment: WORKING_COPY, name: command.sessionName ?? nameForFolder(folder ?? process.cwd()), uniqueName: true } : {}) };
       const { session } = CreateSessionResponse.parse(await call(config, 'POST', paths.sessions, body));
-      console.log(`Started "${session.name}". Attach with: aubergine attach "${session.name}"`);
+      console.log(`Started "${session.name}"${command.copy ? ` in a working copy of its own, in ${session.cwd ?? 'its own folder'}. It is kept apart from your checkout, not locked in. See: aubergine copies` : ''}. Attach with: aubergine attach "${session.name}"`);
       return 0;
     }
 
@@ -375,8 +382,10 @@ async function main(): Promise<number> {
         uniqueName: true,
         cwd: folder,
         // With --claude, what follows "--" is for the agent; without it, it is a command to run.
+        ...(command.copy ? { environment: WORKING_COPY } : {}),
         ...(command.claude
-          ? { agent: 'claude-code', ...(command.command.length > 0 ? { agentArgs: command.command } : { agentContinue: true }) }
+          ? // A new working copy is a new folder: there is no conversation there to carry on.
+            { agent: 'claude-code', ...(command.command.length > 0 ? { agentArgs: command.command } : command.copy ? {} : { agentContinue: true }) }
           : command.command.length > 0
             ? { command: shellJoin(command.command) }
             : {}),
@@ -579,6 +588,9 @@ async function main(): Promise<number> {
       return 0;
     }
 
+    case 'copies':
+      return runCopiesCommand(parseCopiesCommand(command.words), { owner: (work) => v1(config, work), print: (text) => console.log(text), ask });
+
     case 'library':
       return runLibraryCommand(parseLibraryCommand(command.words), { owner: (work) => v1(config, work), print: (text) => console.log(text), ask, cwd: process.cwd() });
 
@@ -679,6 +691,17 @@ async function main(): Promise<number> {
         console.log(error.code === 'network' ? `The Aubergine server is not answering on ${url}.` : showControl(error.message));
         return 1;
       }
+    }
+
+    case 'where': {
+      const url = process.env[SESSION_ENV.url];
+      const sessionId = process.env[SESSION_ENV.sessionId];
+      const token = process.env[SESSION_ENV.token];
+      if (!url || !sessionId || !token) throw new UsageError('where only works inside an Aubergine session (its environment is not set here). For every working copy: aubergine copies');
+      const detail = await createClient({ baseUrl: url, token }).getSessionEnvironment({ sessionId });
+      // Folders and branches are printed with control characters shown.
+      console.log(showControl(whereWords(detail)));
+      return 0;
     }
 
     case 'attention': {

@@ -202,6 +202,22 @@ export const GUIDE: readonly GuideSection[] = [
     ],
   },
   {
+    id: 'where',
+    title: 'Where you work',
+    parts: [
+      {
+        needs: ['environment.own.read'],
+        inTerminal: true,
+        text: [
+          "This terminal may work in a working copy of its own: a second checkout of the repository on its own branch, so that agents on one repository do not touch each other's files. To find out, and to read what to do and leave alone there:",
+          '    aubergine where',
+          "In short: work and commit there, on that branch; do not change branch; do not work in the checkout it was made from; do not merge or push unless asked. What becomes of the branch is your owner's decision.",
+        ],
+      },
+      { needs: ['environment.own.read', 'environments.read'], text: ['As a tool: where_am_i.'], tools: ['where_am_i'] },
+    ],
+  },
+  {
     id: 'messages',
     title: 'Messages',
     parts: [

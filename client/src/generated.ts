@@ -7505,7 +7505,7 @@ export const OPERATIONS = {
   getEnvironmentDifference: { method: 'GET', path: '/v1/environments/{environmentId}/difference', params: ["environmentId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   getEnvironmentEndings: { method: 'GET', path: '/v1/environments/{environmentId}/endings', params: ["environmentId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   endEnvironment: { method: 'POST', path: '/v1/environments/{environmentId}/end', params: ["environmentId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
-  getSessionEnvironment: { method: 'GET', path: '/v1/sessions/{sessionId}/environment', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "read" } },
+  getSessionEnvironment: { method: 'GET', path: '/v1/sessions/{sessionId}/environment', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: "read" } },
   getSessionDifference: { method: 'GET', path: '/v1/sessions/{sessionId}/environment/difference', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "terminal:read" } },
   getScreen: { method: 'GET', path: '/v1/sessions/{sessionId}/screen', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "terminal:read" } },
   getOutput: { method: 'GET', path: '/v1/sessions/{sessionId}/output', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "terminal:read" } },
@@ -8064,7 +8064,7 @@ export interface Client {
   /**
    * Where a session works, and which files changed there.
    *
-   * `GET /v1/sessions/{sessionId}/environment`. Scope: `read`.
+   * `GET /v1/sessions/{sessionId}/environment`. A session's own token, or an API token with `read`.
    */
   getSessionEnvironment(args: { sessionId: string } & CallOptions): Promise<GetSessionEnvironmentResult>;
   /**

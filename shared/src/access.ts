@@ -7,7 +7,7 @@ import type { Scope } from './tokens';
  */
 
 /** What a session may do, to itself only. */
-export const SESSION_ACTIONS = ['attention.set', 'note.append', 'agent.report', 'run.own.read', 'run.own.report', 'draft.own.read', 'draft.own.propose', 'repository.own.read', 'recap.own.write', 'message.own.read', 'message.own.send'] as const;
+export const SESSION_ACTIONS = ['attention.set', 'note.append', 'agent.report', 'run.own.read', 'run.own.report', 'draft.own.read', 'draft.own.propose', 'repository.own.read', 'recap.own.write', 'message.own.read', 'message.own.send', 'environment.own.read'] as const;
 
 /** For a token, each of these needs the scope beside it. */
 export const SCOPE_OF = {
@@ -42,6 +42,8 @@ export const SCOPE_OF = {
   // The library: seeing sources and items is reading. Asking for an install needs the scope to write workflows, and installs nothing: it waits for the owner.
   // Where a session works and what changed there: names and counts are reading. The text of a difference is content, and is `terminal.read`.
   'environments.read': 'read',
+  // Where a session itself works, and which of its own files changed: a session may read that about itself.
+  'environment.own.read': 'read',
   'library.read': 'read',
   'library.request': 'workflows:write',
   'messages.read': 'messages:read',

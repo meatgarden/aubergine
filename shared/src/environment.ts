@@ -187,3 +187,29 @@ export function bytesWords(bytes: number): string {
   }
   return `${value >= 100 ? Math.round(value) : value.toFixed(1)} ${units[unit]}`;
 }
+
+/**
+ * What a session is told about where it works, in plain lines. One function: the command a session types and
+ * the tool an agent calls both print this. For a working copy it says where it is, which branch is its own, to
+ * commit there, and what to leave alone. That is advice to an agent; nothing here prevents anything.
+ */
+export function whereWords(detail: EnvironmentDetail): string {
+  const environment = detail.environment;
+  if (environment === null) return ['This session works in the folder it was started in, on the files that are there.', 'Other sessions in the same folder work on the same files. Nothing keeps their changes and yours apart.'].join('\n');
+  const lines = [`This session works ${detail.title.charAt(0).toLowerCase()}${detail.title.slice(1)}.`, `Folder: ${environment.folder}`];
+  if (environment.branch) lines.push(`Branch: ${environment.branch}  (made for this session; it started from commit ${(environment.startCommit ?? '').slice(0, 12)})`);
+  if (environment.broken) return [...lines, '', `It cannot be used as it is: ${environment.broken}`, 'Stop, and tell your owner.'].join('\n');
+  lines.push(
+    '',
+    'What that means for you:',
+    '- Do your work in this folder. Commit it here, on this branch: your owner reads what you changed from it, and work that is not committed is easy to lose.',
+    '- Do not change to another branch here, and do not make this branch follow another.',
+    `- Do not work in ${environment.projectFolder}: that is your owner's own checkout, and other sessions may have copies of their own.`,
+    '- Do not merge, rebase or push unless your owner asks. They decide what becomes of this branch.',
+    '- Files Git ignores or does not track were not brought along: installed dependencies, local settings. If the project needs an install step, it needs it here too.',
+    '',
+    `Since it started: ${countsWords(environment.changes ?? { changed: 0, added: 0, removed: 0 })}${environment.changes && environment.changes.commits > 0 ? `, in ${environment.changes.commits} commit${environment.changes.commits === 1 ? '' : 's'}` : ''}${environment.changes && environment.changes.uncommitted > 0 ? `; ${environment.changes.uncommitted} not committed yet` : ''}.`,
+  );
+  if (detail.note) lines.push(detail.note);
+  return lines.join('\n');
+}

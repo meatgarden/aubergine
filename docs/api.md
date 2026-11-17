@@ -103,7 +103,7 @@ How to create a token, what the scopes mean, the limits and the activity log are
 | [`GET /v1/environments/{environmentId}/difference`](#getenvironmentdifference) | The difference of one file in an environment, as text | browser only |
 | [`GET /v1/environments/{environmentId}/endings`](#getenvironmentendings) | What can be done with an environment when its session ends | browser only |
 | [`POST /v1/environments/{environmentId}/end`](#endenvironment) | Keep, remove or discard an environment | browser only |
-| [`GET /v1/sessions/{sessionId}/environment`](#getsessionenvironment) | Where a session works, and which files changed there | `read` |
+| [`GET /v1/sessions/{sessionId}/environment`](#getsessionenvironment) | Where a session works, and which files changed there | session's own token, or `read` |
 | [`GET /v1/sessions/{sessionId}/environment/difference`](#getsessiondifference) | The difference of one file in a session's working copy, as text | `terminal:read` |
 | [`GET /v1/sessions/{sessionId}/screen`](#getscreen) | What a terminal shows now | `terminal:read` |
 | [`GET /v1/sessions/{sessionId}/output`](#getoutput) | What a terminal printed recently | `terminal:read` |
@@ -7349,9 +7349,9 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 
 `GET /v1/sessions/{sessionId}/environment`: Where a session works, and which files changed there.
 
-For a session in a working copy: its branch, the commit it started from and the files that differ from it, by name, uncommitted work included. For any other session: that it works in the folder it was started in. No content.
+For a session in a working copy: its branch, the commit it started from and the files that differ from it, by name, uncommitted work included. For any other session: that it works in the folder it was started in. No content. A session may read this about itself.
 
-An API token needs the scope `read`.
+For a session's own token, about that session; or an API token with the scope `read`, about any session.
 
 | Parameter | In | Type | Required | |
 |---|---|---|---|---|
