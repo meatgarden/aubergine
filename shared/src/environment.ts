@@ -36,7 +36,7 @@ export const SessionEnvironment = z.object({
   id: Id,
   kind: EnvironmentKindName,
   title: z.string().max(80).describe("What the kind is called, as it was when this was made: `Its own working copy`."),
-  words: z.string().max(400).describe("The kind's own words for how far it keeps an agent apart. Never more than "kept apart"."),
+  words: z.string().max(400).describe("The kind's own words for how far it keeps an agent apart. Never more than 'kept apart'."),
   sessionId: Id.nullable().describe('The session that works in it. Null when that session is gone.'),
   sessionName: z.string().max(120).describe('The name of the session it was made for, as it was then.'),
   projectFolder: z.string().max(4096).describe("The owner's own folder it was made from: for a working copy, the top of their checkout."),

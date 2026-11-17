@@ -5829,7 +5829,7 @@ export type ListEnvironmentsResult = {
     kind: string;
     /** What the kind is called, as it was when this was made: `Its own working copy`. */
     title: string;
-    /** The kind's own words for how far it keeps an agent apart. It is kept apart, never locked in. */
+    /** The kind's own words for how far it keeps an agent apart. Never more than 'kept apart'. */
     words: string;
     /** The session that works in it. Null when that session is gone. */
     sessionId: string | null;
@@ -5881,7 +5881,7 @@ export type GetEnvironmentResult = {
     kind: string;
     /** What the kind is called, as it was when this was made: `Its own working copy`. */
     title: string;
-    /** The kind's own words for how far it keeps an agent apart. It is kept apart, never locked in. */
+    /** The kind's own words for how far it keeps an agent apart. Never more than 'kept apart'. */
     words: string;
     /** The session that works in it. Null when that session is gone. */
     sessionId: string | null;
@@ -5988,7 +5988,7 @@ export type GetSessionEnvironmentResult = {
     kind: string;
     /** What the kind is called, as it was when this was made: `Its own working copy`. */
     title: string;
-    /** The kind's own words for how far it keeps an agent apart. It is kept apart, never locked in. */
+    /** The kind's own words for how far it keeps an agent apart. Never more than 'kept apart'. */
     words: string;
     /** The session that works in it. Null when that session is gone. */
     sessionId: string | null;

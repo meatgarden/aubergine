@@ -7117,7 +7117,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
     kind: string;
     /** What the kind is called, as it was when this was made: `Its own working copy`. */
     title: string;
-    /** The kind's own words for how far it keeps an agent apart. It is kept apart, never locked in. */
+    /** The kind's own words for how far it keeps an agent apart. Never more than 'kept apart'. */
     words: string;
     /** The session that works in it. Null when that session is gone. */
     sessionId: string | null;
@@ -7192,7 +7192,7 @@ An API token needs the scope `read`.
     kind: string;
     /** What the kind is called, as it was when this was made: `Its own working copy`. */
     title: string;
-    /** The kind's own words for how far it keeps an agent apart. It is kept apart, never locked in. */
+    /** The kind's own words for how far it keeps an agent apart. Never more than 'kept apart'. */
     words: string;
     /** The session that works in it. Null when that session is gone. */
     sessionId: string | null;
@@ -7370,7 +7370,7 @@ For a session's own token, about that session; or an API token with the scope `r
     kind: string;
     /** What the kind is called, as it was when this was made: `Its own working copy`. */
     title: string;
-    /** The kind's own words for how far it keeps an agent apart. It is kept apart, never locked in. */
+    /** The kind's own words for how far it keeps an agent apart. Never more than 'kept apart'. */
     words: string;
     /** The session that works in it. Null when that session is gone. */
     sessionId: string | null;
