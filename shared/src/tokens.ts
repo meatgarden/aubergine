@@ -150,8 +150,9 @@ export const ActivityEntry = z.object({
    * `token`: a call made with an API token. `owner-cli`: a call made as the owner from outside a browser page
    * (the command line, a script), recorded for the few things only the owner may do.
    * `rule`: not a call at all, but a rule of the owner's that fired: which rule, for what event, and how it ended.
+   * `schedule`: not a call either, but a time of a schedule of the owner's: which schedule, the time, and how it ended.
    */
-  caller: z.enum(['token', 'owner-cli', 'rule']).default('token'),
+  caller: z.enum(['token', 'owner-cli', 'rule', 'schedule']).default('token'),
   /** The token; null for a call that was not made with one. */
   tokenId: Id.nullable(),
   tokenName: z.string(),

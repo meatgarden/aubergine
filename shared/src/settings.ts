@@ -92,6 +92,16 @@ export const Settings = z.object({
       logMaxBytes: z.number().int().min(4096).max(1024 * 1024 * 1024).default(4 * 1024 * 1024),
     })
     .prefault({}),
+  /** Schedules. */
+  schedules: z
+    .object({
+      /**
+       * A time that passed while the server was stopped or the computer asleep still runs, marked late, when it is
+       * at most this many hours old. Older than that it does not run and its row says it was missed. 0: never late.
+       */
+      lateWithinHours: z.number().min(0).max(24).default(6),
+    })
+    .prefault({}),
   /** Terminal access for programs with an API token: what is protected by default, the limits, and the audit of typed text. */
   terminal: z
     .object({

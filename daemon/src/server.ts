@@ -96,6 +96,7 @@ import { MessageRefusal, Messages } from './messages';
 import { Library } from './library';
 import { Environments } from './environments';
 import { Queue } from './queue';
+import { REAL_CLOCK, Schedules, ownZone, type ScheduleClock } from './schedules';
 import { MemoryTaskArchive, type TaskArchive } from './task-archive';
 import { FetchRefusal, type LibraryFetcher } from './library/git';
 import type { MessageLog } from './message-log';
@@ -126,6 +127,10 @@ export interface ServerOptions {
   runArchive?: RunArchive;
   /** Where tasks that are over are kept. Left out, in memory only. */
   taskArchive?: TaskArchive;
+  /** The clock and the timer schedules use. A test passes its own. */
+  scheduleClock?: ScheduleClock;
+  /** The time zone schedules are written in. Left out: this computer's own. */
+  scheduleZone?: string;
   /** Fetches Git sources of the library. Left out, one that refuses: a server without a data folder fetches nothing. */
   libraryFetcher?: LibraryFetcher;
   /** Where fetched library sources are kept. Left out, nothing can be fetched. */
@@ -238,6 +243,14 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   // The queue of tasks, the owner's list and the rules. A rule's notification goes to the pages that are open, and nowhere else.
   const queue = new Queue(hub, sessions, workflows, drafts, environments, options.taskArchive ?? new MemoryTaskArchive(), { notify: (title, body) => viewers.notify(title, body), activity, onError: (error) => console.error('Could not start a task:', error) });
   await queue.reconcile();
+  // Schedules, and the one timer that starts something. It is on only while a schedule is switched on.
+  const schedules = new Schedules(hub, queue, {
+    clock: options.scheduleClock ?? REAL_CLOCK,
+    zone: options.scheduleZone ?? ownZone(),
+    lateWithinMs: (await options.settings()).schedules.lateWithinHours * 3600 * 1000,
+    activity,
+    onError: (error) => console.error('Could not answer for a schedule:', error),
+  });
   // The library that ships with the app is read from this copy's own files. Nothing is fetched at start, or ever without the owner asking.
   await library.start();
   const terminals = new TerminalAccess(sessions, runtime, () => terminalSettings, options.inputAudit ?? noInputAudit);
@@ -572,6 +585,8 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   app.addHook('onClose', async () => messages.close());
   app.addHook('onClose', async () => environments.close());
   app.addHook('onClose', async () => {
+    schedules.close();
+    await schedules.settled();
     queue.close();
     await queue.settled();
   });
@@ -772,6 +787,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     library,
     environments,
     queue,
+    schedules,
     may: (principal, action, resource) => authorize(principal, action, resource),
     resourceOf,
     trace: (request, trace) => void traces.set(request, trace),
@@ -942,5 +958,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     reply.code(404).send(errorBody('not_found', 'Not found')),
   );
 
+  // Last, when everything a firing may reach is there: one look for times that passed while the server was stopped.
+  await schedules.start();
   return app;
 }

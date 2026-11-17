@@ -1,3 +1,4 @@
+import { SchedulesState } from './schedules';
 import { QueueState } from './tasks';
 import { SessionEnvironment } from './environment';
 import { z } from 'zod';
@@ -352,6 +353,8 @@ export const AppState = z.object({
   environments: z.array(SessionEnvironment).default([]),
   /** The queue of tasks for agents, what is asked of the owner in writing, the rules, and how tasks are started. */
   queue: QueueState.prefault({}),
+  /** Schedules: at these times, run this there. Each of their times becomes a task of the queue. */
+  schedules: SchedulesState.prefault({}),
 });
 export type AppState = z.infer<typeof AppState>;
 
@@ -383,7 +386,7 @@ export function createInitialState(now: Date = new Date()): AppState {
     createdAt,
   };
   const project: Project = { id: newId(), workspaceId: workspace.id, name: 'Default', createdAt };
-  return { organization, workspace, project, sessions: [], canvases: [newCanvas(project.id, FIRST_CANVAS_NAME, 0, now)], tokens: [], workflows: [], runs: [], drafts: [], shelf: [], repositoryAccepted: [], library: { sources: [], installed: [], requests: [] }, environments: [], queue: QueueState.parse({}) };
+  return { organization, workspace, project, sessions: [], canvases: [newCanvas(project.id, FIRST_CANVAS_NAME, 0, now)], tokens: [], workflows: [], runs: [], drafts: [], shelf: [], repositoryAccepted: [], library: { sources: [], installed: [], requests: [] }, environments: [], queue: QueueState.parse({}), schedules: SchedulesState.parse({}) };
 }
 
 /** Canvases in tab order. */

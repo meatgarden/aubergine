@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { needsUser, type AppState, type Session } from './entities';
 import { messagesWantOwner } from './messages';
 import { outputKind } from './outputs';
-import { addedByWords, sourceWords } from './tasks';
+import { addedByWords, sourceWords, taskSource } from './tasks';
 import { versionOf, type ArchivedRun, type Run } from './workflows';
 
 /**
@@ -26,7 +26,7 @@ export const ForYouItem = z.object({
   sentence: z.string().describe('What waits, in a sentence. Where part of it was written by an agent or a program, it is their words.'),
   from: z.string().describe('Where it came from: a terminal by name, a program, the library.'),
   at: z.iso.datetime().nullable().describe('Since when, when that is known.'),
-  act: z.string().describe('Where one acts on it: `run:<id>`, `session:<id>`, `task:<id>`, `ask:<id>`, `copy:<id>`, `review`.'),
+  act: z.string().describe('Where one acts on it: `run:<id>`, `session:<id>`, `task:<id>`, `ask:<id>`, `copy:<id>`, `schedule:<id>`, `review`.'),
   waits: z.boolean().describe('True for a terminal that waits for the owner: these are what the count in the toolbar counts.'),
   written: z.boolean().describe('True for something written on the list, which the owner marks done. False for what is gathered: that goes when the thing is done.'),
   sessionId: z.string().nullable(),
@@ -204,7 +204,7 @@ registerForYouKind({
       const list = listOf(run, elements);
       // A list with every line ticked has been dealt with.
       if (!list || list.ticked >= list.total) return;
-      made.push({ id: `checklist:${run.id}`, sentence: `A list was handed in by “${list.name}” of “${workflowName}”: ${list.ticked} of ${list.total} ticked.`, from: sessionName(state, run.sessionId) ?? 'a terminal that is gone', at: run.updatedAt, act: `run:${run.id}`, runId: run.id, sessionId: run.sessionId, elementId: list.elementId });
+      made.push({ id: `checklist:${run.id}`, sentence: `A list was handed in by “${list.name}” of “${workflowName}”: ${list.ticked} of ${list.total} ticked.`, from: `${sessionName(state, run.sessionId) ?? 'a terminal that is gone'}${cameFrom(state, run.id)}`, at: run.updatedAt, act: `run:${run.id}`, runId: run.id, sessionId: run.sessionId, elementId: list.elementId });
     };
     for (const run of state.runs) {
       const workflow = state.workflows.find((w) => w.id === run.workflowId);
@@ -237,6 +237,23 @@ registerForYouKind({
   },
 });
 
+/** For a run that a task became, where that task's source says it is worth saying: `, from the schedule "…"`. Else nothing. */
+function cameFrom(state: AppState, runId: string): string {
+  const task = state.queue.tasks.find((t) => t.runId === runId);
+  return task && taskSource(task.source.kind)?.says ? `, ${sourceWords(task.source)}` : '';
+}
+
+registerForYouKind({
+  kind: 'schedule',
+  title: 'A schedule could not run',
+  order: 27,
+  // One item for a schedule for as long as it cannot run as it is written: not one for each of its times.
+  items: ({ state }) =>
+    state.schedules.items
+      .filter((schedule) => schedule.on && schedule.problem !== null)
+      .map((schedule) => ({ id: `schedule:${schedule.id}`, sentence: `The schedule “${schedule.name}” could not run: ${schedule.problem ?? ''}`, from: 'a schedule', at: schedule.last?.at ?? schedule.updatedAt, act: `schedule:${schedule.id}` })),
+});
+
 function sessionName(state: AppState, sessionId: string | null): string | null {
   return sessionId ? (state.sessions.find((s) => s.id === sessionId)?.name ?? null) : null;
 }
@@ -261,6 +278,7 @@ export function actWords(item: Pick<ForYouItem, 'act' | 'from'>): string {
   if (what === 'task') return `aubergine task show ${id ?? ''}`;
   if (what === 'ask') return `aubergine todo done ${id ?? ''}`;
   if (what === 'copy') return 'aubergine copies';
+  if (what === 'schedule') return 'aubergine schedule list';
   return 'in the browser: Review';
 }
 

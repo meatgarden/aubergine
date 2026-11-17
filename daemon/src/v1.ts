@@ -48,6 +48,7 @@ import { MessageRefusal, type Messages } from './messages';
 import type { Library } from './library';
 import type { Environments } from './environments';
 import type { Asker, Queue } from './queue';
+import type { Schedules } from './schedules';
 import { fingerprintOf } from './terminal-access';
 
 export interface PublicRouteDeps {
@@ -62,6 +63,7 @@ export interface PublicRouteDeps {
   library: Library;
   environments: Environments;
   queue: Queue;
+  schedules: Schedules;
   activity: ActivityLog;
   viewers: Viewers;
   limiter: RateLimiter;
@@ -115,7 +117,7 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
   const mayReadTerminal = (principal: Principal, sessionId: string): boolean => principal.kind === 'user' || deps.may(principal, 'terminal.read', deps.resourceOf(sessionId));
   const remembered = new IdempotencyStore();
 
-  const { messages, library, environments, queue } = deps;
+  const { messages, library, environments, queue, schedules } = deps;
   /** Who adds to one of the two lists. Only the owner, and a token the owner made with review switched off, add without waiting for a yes. */
   const askerOf = (principal: Principal): Asker =>
     principal.kind === 'user'
@@ -348,6 +350,11 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
     listRules: () => queue.rules(),
     addRule: ({ body }) => queue.addRule(body),
     removeRule: ({ params }) => queue.removeRule(params.ruleId),
+    listSchedules: ({ query }) => schedules.list(query),
+    addSchedule: ({ body }) => schedules.add(body),
+    changeSchedule: ({ params, body }) => schedules.change(params.scheduleId, body),
+    removeSchedule: ({ params }) => schedules.remove(params.scheduleId),
+    runSchedule: ({ params }) => schedules.runNow(params.scheduleId),
     // A session, about itself: what it proposes waits for its owner, and it reads only what is its own of the owner's list.
     proposeSessionTask: ({ params, body }) => queue.add(body, { by: { kind: 'agent', name: sessions.get(params.sessionId).name.slice(0, 120), sessionId: params.sessionId }, trusted: false, owner: false }),
     addSessionAsk: ({ params, body }) => queue.addAsk(body, { by: { kind: 'agent', name: sessions.get(params.sessionId).name.slice(0, 120), sessionId: params.sessionId }, trusted: false, owner: false }),

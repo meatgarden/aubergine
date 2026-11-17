@@ -33,3 +33,5 @@ export * from './environment-api';
 export * from './tasks';
 export * from './for-you';
 export * from './tasks-api';
+export * from './schedules';
+export * from './schedules-api';

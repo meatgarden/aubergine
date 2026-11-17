@@ -117,6 +117,11 @@ How to create a token, what the scopes mean, the limits and the activity log are
 | [`GET /v1/rules`](#listrules) | List the rules | browser only |
 | [`POST /v1/rules`](#addrule) | Write a rule | browser only |
 | [`DELETE /v1/rules/{ruleId}`](#removerule) | Remove a rule | browser only |
+| [`GET /v1/schedules`](#listschedules) | List the schedules | `read` |
+| [`POST /v1/schedules`](#addschedule) | Make a schedule | browser only |
+| [`PATCH /v1/schedules/{scheduleId}`](#changeschedule) | Change a schedule, or switch it on or off | browser only |
+| [`DELETE /v1/schedules/{scheduleId}`](#removeschedule) | Remove a schedule | browser only |
+| [`POST /v1/schedules/{scheduleId}/run`](#runschedule) | Run a schedule now | browser only |
 | [`POST /v1/sessions/{sessionId}/tasks`](#proposesessiontask) | Propose a task for the queue | session's own token |
 | [`POST /v1/sessions/{sessionId}/asks`](#addsessionask) | Ask the owner for something, in writing | session's own token |
 | [`GET /v1/sessions/{sessionId}/queue`](#getsessionqueue) | What is in the queue, and what the session itself proposed and asked | session's own token |
@@ -7113,6 +7118,10 @@ A list: it answers a page at a time, see `limit` and `cursor`.
     folder: string | null;
     /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
     workflowId: string | null;
+    /** The shelf element it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
+    elementId: string | null;
+    /** True for what the owner arranged beforehand, such as a time of a schedule. It starts when a place is free without being started by hand, still within the limit and the hold, and what its agent adds sets off no rule. Set by the server, never by a caller. */
+    unattended: boolean;
     /** Where a new terminal for it works. Null: in a working copy of its own where the folder can have one, else in the folder itself. */
     environment: string | null;
     /** Who may take it. */
@@ -7198,6 +7207,10 @@ An API token needs the scope `tasks:write`.
   folder: string | null;
   /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
   workflowId: string | null;
+  /** The shelf element it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
+  elementId: string | null;
+  /** True for what the owner arranged beforehand, such as a time of a schedule. It starts when a place is free without being started by hand, still within the limit and the hold, and what its agent adds sets off no rule. Set by the server, never by a caller. */
+  unattended: boolean;
   /** Where a new terminal for it works. Null: in a working copy of its own where the folder can have one, else in the folder itself. */
   environment: string | null;
   /** Who may take it. */
@@ -7269,6 +7282,10 @@ An API token needs the scope `read`.
   folder: string | null;
   /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
   workflowId: string | null;
+  /** The shelf element it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
+  elementId: string | null;
+  /** True for what the owner arranged beforehand, such as a time of a schedule. It starts when a place is free without being started by hand, still within the limit and the hold, and what its agent adds sets off no rule. Set by the server, never by a caller. */
+  unattended: boolean;
   /** Where a new terminal for it works. Null: in a working copy of its own where the folder can have one, else in the folder itself. */
   environment: string | null;
   /** Who may take it. */
@@ -7351,6 +7368,10 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
   folder: string | null;
   /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
   workflowId: string | null;
+  /** The shelf element it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
+  elementId: string | null;
+  /** True for what the owner arranged beforehand, such as a time of a schedule. It starts when a place is free without being started by hand, still within the limit and the hold, and what its agent adds sets off no rule. Set by the server, never by a caller. */
+  unattended: boolean;
   /** Where a new terminal for it works. Null: in a working copy of its own where the folder can have one, else in the folder itself. */
   environment: string | null;
   /** Who may take it. */
@@ -7416,6 +7437,10 @@ An API token needs the scope `tasks:write`.
   folder: string | null;
   /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
   workflowId: string | null;
+  /** The shelf element it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
+  elementId: string | null;
+  /** True for what the owner arranged beforehand, such as a time of a schedule. It starts when a place is free without being started by hand, still within the limit and the hold, and what its agent adds sets off no rule. Set by the server, never by a caller. */
+  unattended: boolean;
   /** Where a new terminal for it works. Null: in a working copy of its own where the folder can have one, else in the folder itself. */
   environment: string | null;
   /** Who may take it. */
@@ -7486,6 +7511,10 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
   folder: string | null;
   /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
   workflowId: string | null;
+  /** The shelf element it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
+  elementId: string | null;
+  /** True for what the owner arranged beforehand, such as a time of a schedule. It starts when a place is free without being started by hand, still within the limit and the hold, and what its agent adds sets off no rule. Set by the server, never by a caller. */
+  unattended: boolean;
   /** Where a new terminal for it works. Null: in a working copy of its own where the folder can have one, else in the folder itself. */
   environment: string | null;
   /** Who may take it. */
@@ -7551,6 +7580,10 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
   folder: string | null;
   /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
   workflowId: string | null;
+  /** The shelf element it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
+  elementId: string | null;
+  /** True for what the owner arranged beforehand, such as a time of a schedule. It starts when a place is free without being started by hand, still within the limit and the hold, and what its agent adds sets off no rule. Set by the server, never by a caller. */
+  unattended: boolean;
   /** Where a new terminal for it works. Null: in a working copy of its own where the folder can have one, else in the folder itself. */
   environment: string | null;
   /** Who may take it. */
@@ -7616,6 +7649,10 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
   folder: string | null;
   /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
   workflowId: string | null;
+  /** The shelf element it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
+  elementId: string | null;
+  /** True for what the owner arranged beforehand, such as a time of a schedule. It starts when a place is free without being started by hand, still within the limit and the hold, and what its agent adds sets off no rule. Set by the server, never by a caller. */
+  unattended: boolean;
   /** Where a new terminal for it works. Null: in a working copy of its own where the folder can have one, else in the folder itself. */
   environment: string | null;
   /** Who may take it. */
@@ -7681,6 +7718,10 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
   folder: string | null;
   /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
   workflowId: string | null;
+  /** The shelf element it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
+  elementId: string | null;
+  /** True for what the owner arranged beforehand, such as a time of a schedule. It starts when a place is free without being started by hand, still within the limit and the hold, and what its agent adds sets off no rule. Set by the server, never by a caller. */
+  unattended: boolean;
   /** Where a new terminal for it works. Null: in a working copy of its own where the folder can have one, else in the folder itself. */
   environment: string | null;
   /** Who may take it. */
@@ -7870,7 +7911,7 @@ An API token needs the scope `read`.
     from: string;
     /** Since when, when that is known. */
     at: string | null;
-    /** Where one acts on it: `run:<id>`, `session:<id>`, `task:<id>`, `ask:<id>`, `copy:<id>`, `review`. */
+    /** Where one acts on it: `run:<id>`, `session:<id>`, `task:<id>`, `ask:<id>`, `copy:<id>`, `schedule:<id>`, `review`. */
     act: string;
     /** True for a terminal that waits for the owner: these are what the count in the toolbar counts. */
     waits: boolean;
@@ -8024,7 +8065,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 {
   rules: {
     id: string;
-    event: "task.done" | "task.failed" | "task.needs-owner" | "ask.added";
+    event: "task.done" | "task.failed" | "task.needs-owner" | "ask.added" | "schedule.fired" | "schedule.failed";
     action: {
       kind: string;
       [key: string]: unknown;
@@ -8056,7 +8097,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 
 | Field | Type | Required | |
 |---|---|---|---|
-| `event` | `"task.done" \| "task.failed" \| "task.needs-owner" \| "ask.added"` | yes | What sets it off. |
+| `event` | `"task.done" \| "task.failed" \| "task.needs-owner" \| "ask.added" \| "s…` | yes | What sets it off. |
 | `action` | `{ kind: string; [key: string]: unknown; }` | yes | What it does: `{"kind":"notify"}`, or `{"kind":"run-element","elementId":"…","on":{"kind":"session","sessionId":"…"}}`. |
 
 **Answer** `201`:
@@ -8065,7 +8106,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 {
   rules: {
     id: string;
-    event: "task.done" | "task.failed" | "task.needs-owner" | "ask.added";
+    event: "task.done" | "task.failed" | "task.needs-owner" | "ask.added" | "schedule.fired" | "schedule.failed";
     action: {
       kind: string;
       [key: string]: unknown;
@@ -8100,6 +8141,391 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 **Answer** `204`, with nothing in it.
 
 **Errors:** 400, 401, 403, 404, 413, 429.
+
+### listSchedules
+
+`GET /v1/schedules`: List the schedules.
+
+A schedule is "at these times, run this there": a time of day on this computer's clock, days of the week, an element from the shelf or a workflow, and a terminal or a new agent terminal on a canvas. Each of its times becomes a task of the queue. Each row says when it is next and how its latest time ended.
+
+An API token needs the scope `read`.
+
+A list: it answers a page at a time, see `limit` and `cursor`.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `limit` | query | `number` | no | How many items to return at most. |
+| `cursor` | query | `string` | no | The `nextCursor` of the page before. Opaque: do not build or change it. |
+
+**Answer** `200`:
+
+```ts
+{
+  items: {
+    id: string;
+    /** What it is called. Shown in lists and beside what it hands in. */
+    name: string;
+    /** The time of day, on this computer's clock and in its time zone. */
+    time: string;
+    /** The days of the week it runs on. */
+    days: ("mon" | "tue" | "wed" | "thu" | "fri" | "sat" | "sun")[];
+    /** What it runs: one element from the shelf, or a workflow. */
+    what: {
+      kind: "element";
+      elementId: string;
+    } | {
+      kind: "workflow";
+      workflowId: string;
+    };
+    /** Where: a terminal, or a new agent terminal on a canvas. */
+    where: {
+      kind: "session";
+      sessionId: string;
+    } | {
+      kind: "new";
+      canvasId: string;
+    };
+    /** For a new terminal: the folder it starts in. Null: the folder new terminals start in. */
+    folder: string | null;
+    /** For a new terminal: where it works. Null: a working copy of its own where the folder can have one. */
+    environment: string | null;
+    /** What the agent is told to do, as the task of what it runs. Plain text. */
+    task: string;
+    on: boolean;
+    /** Times up to this moment are not its own: it was made, changed or switched on then. */
+    since: string;
+    /** How its latest time ended. */
+    last: {
+      /** When this was decided. */
+      at: string;
+      /** The time it was for. Null when the owner ran it by hand. */
+      due: string | null;
+      result: "fired" | "late" | "by-hand" | "skipped" | "missed" | "could-not-run";
+      /** With `late`: by how many minutes. */
+      lateMinutes: number;
+      /** With `skipped`, `missed` and `could-not-run`: why, in a sentence. */
+      reason: string | null;
+      /** The task it became, when it became one. */
+      taskId: string | null;
+    } | null;
+    /** The task of its latest firing. While that one waits or is at work, it does not fire again. */
+    taskId: string | null;
+    /** Why it cannot run as it is written, when it cannot. Said once on the owner's list, until it is changed or runs again. */
+    problem: string | null;
+    createdAt: string;
+    updatedAt: string;
+    /** The schedule in a sentence: when, what and where. */
+    says: string;
+    /** Its next time. Null while it is switched off. */
+    next: string | null;
+    /** Its next time in words, on this computer's clock. */
+    nextSays: string;
+    /** How its latest time ended, in a sentence. */
+    lastSays: string;
+  }[];
+  nextCursor: string | null;
+}
+```
+
+**Errors:** 400, 401, 403, 413, 429.
+
+```sh
+curl -H "Authorization: Bearer $TOKEN" \
+     http://127.0.0.1:4600/v1/schedules
+```
+
+### addSchedule
+
+`POST /v1/schedules`: Make a schedule.
+
+For the owner only: no token and no session can do this, whatever its scopes. A time that passed before it was made is not its own: it first runs at its next time. Aubergine calls nothing itself and holds no credential: the agent that takes the task uses its own tools.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `idempotency-key` | header | `string` | no | A key of your choosing (1 to 128 visible ASCII characters). Sending the same request again with the same key returns the first answer and creates nothing more. |
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `name` | `string` | yes | What it is called. Shown in lists and beside what it hands in. |
+| `time` | `string` | yes | The time of day, on this computer's clock and in its time zone. |
+| `days` | `("mon" \| "tue" \| "wed" \| "thu" \| "fri" \| "sat" \| "sun")[]` | yes | The days of the week it runs on. |
+| `what` | `{ kind: "element"; elementId: string; } \| { kind: "workflow"; workf…` | yes | What it runs: one element from the shelf, or a workflow. |
+| `where` | `{ kind: "session"; sessionId: string; } \| { kind: "new"; canvasId: …` | yes | Where: a terminal, or a new agent terminal on a canvas. |
+| `folder` | `string \| null` | no | For a new terminal: the folder it starts in. Null: the folder new terminals start in. |
+| `environment` | `string \| null` | no | For a new terminal: where it works. Null: a working copy of its own where the folder can have one. |
+| `task` | `string` | no | What the agent is told to do, as the task of what it runs. Plain text. |
+| `on` | `boolean` | no | False: it keeps its place in the list and does not run. |
+
+**Answer** `201`:
+
+```ts
+{
+  id: string;
+  /** What it is called. Shown in lists and beside what it hands in. */
+  name: string;
+  /** The time of day, on this computer's clock and in its time zone. */
+  time: string;
+  /** The days of the week it runs on. */
+  days: ("mon" | "tue" | "wed" | "thu" | "fri" | "sat" | "sun")[];
+  /** What it runs: one element from the shelf, or a workflow. */
+  what: {
+    kind: "element";
+    elementId: string;
+  } | {
+    kind: "workflow";
+    workflowId: string;
+  };
+  /** Where: a terminal, or a new agent terminal on a canvas. */
+  where: {
+    kind: "session";
+    sessionId: string;
+  } | {
+    kind: "new";
+    canvasId: string;
+  };
+  /** For a new terminal: the folder it starts in. Null: the folder new terminals start in. */
+  folder: string | null;
+  /** For a new terminal: where it works. Null: a working copy of its own where the folder can have one. */
+  environment: string | null;
+  /** What the agent is told to do, as the task of what it runs. Plain text. */
+  task: string;
+  on: boolean;
+  /** Times up to this moment are not its own: it was made, changed or switched on then. */
+  since: string;
+  /** How its latest time ended. */
+  last: {
+    /** When this was decided. */
+    at: string;
+    /** The time it was for. Null when the owner ran it by hand. */
+    due: string | null;
+    result: "fired" | "late" | "by-hand" | "skipped" | "missed" | "could-not-run";
+    /** With `late`: by how many minutes. */
+    lateMinutes: number;
+    /** With `skipped`, `missed` and `could-not-run`: why, in a sentence. */
+    reason: string | null;
+    /** The task it became, when it became one. */
+    taskId: string | null;
+  } | null;
+  /** The task of its latest firing. While that one waits or is at work, it does not fire again. */
+  taskId: string | null;
+  /** Why it cannot run as it is written, when it cannot. Said once on the owner's list, until it is changed or runs again. */
+  problem: string | null;
+  createdAt: string;
+  updatedAt: string;
+  /** The schedule in a sentence: when, what and where. */
+  says: string;
+  /** Its next time. Null while it is switched off. */
+  next: string | null;
+  /** Its next time in words, on this computer's clock. */
+  nextSays: string;
+  /** How its latest time ended, in a sentence. */
+  lastSays: string;
+}
+```
+
+**Errors:** 400, 401, 403, 409, 413, 429.
+
+### changeSchedule
+
+`PATCH /v1/schedules/{scheduleId}`: Change a schedule, or switch it on or off.
+
+For the owner only: no token and no session can do this, whatever its scopes. What is left out stays as it was. After a change of its time or days, and after it is switched on, a time that passed before the change does not run.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `scheduleId` | path | `string` | yes | An ID. |
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `name` | `string` | no | What it is called. Shown in lists and beside what it hands in. |
+| `time` | `string` | no | The time of day, on this computer's clock and in its time zone. |
+| `days` | `("mon" \| "tue" \| "wed" \| "thu" \| "fri" \| "sat" \| "sun")[]` | no | The days of the week it runs on. |
+| `what` | `{ kind: "element"; elementId: string; } \| { kind: "workflow"; workf…` | no | What it runs: one element from the shelf, or a workflow. |
+| `where` | `{ kind: "session"; sessionId: string; } \| { kind: "new"; canvasId: …` | no | Where: a terminal, or a new agent terminal on a canvas. |
+| `folder` | `string \| null` | no | For a new terminal: the folder it starts in. Null: the folder new terminals start in. |
+| `environment` | `string \| null` | no | For a new terminal: where it works. Null: a working copy of its own where the folder can have one. |
+| `task` | `string` | no | What the agent is told to do, as the task of what it runs. Plain text. |
+| `on` | `boolean` | no | False: it keeps its place in the list and does not run. |
+
+**Answer** `200`:
+
+```ts
+{
+  id: string;
+  /** What it is called. Shown in lists and beside what it hands in. */
+  name: string;
+  /** The time of day, on this computer's clock and in its time zone. */
+  time: string;
+  /** The days of the week it runs on. */
+  days: ("mon" | "tue" | "wed" | "thu" | "fri" | "sat" | "sun")[];
+  /** What it runs: one element from the shelf, or a workflow. */
+  what: {
+    kind: "element";
+    elementId: string;
+  } | {
+    kind: "workflow";
+    workflowId: string;
+  };
+  /** Where: a terminal, or a new agent terminal on a canvas. */
+  where: {
+    kind: "session";
+    sessionId: string;
+  } | {
+    kind: "new";
+    canvasId: string;
+  };
+  /** For a new terminal: the folder it starts in. Null: the folder new terminals start in. */
+  folder: string | null;
+  /** For a new terminal: where it works. Null: a working copy of its own where the folder can have one. */
+  environment: string | null;
+  /** What the agent is told to do, as the task of what it runs. Plain text. */
+  task: string;
+  on: boolean;
+  /** Times up to this moment are not its own: it was made, changed or switched on then. */
+  since: string;
+  /** How its latest time ended. */
+  last: {
+    /** When this was decided. */
+    at: string;
+    /** The time it was for. Null when the owner ran it by hand. */
+    due: string | null;
+    result: "fired" | "late" | "by-hand" | "skipped" | "missed" | "could-not-run";
+    /** With `late`: by how many minutes. */
+    lateMinutes: number;
+    /** With `skipped`, `missed` and `could-not-run`: why, in a sentence. */
+    reason: string | null;
+    /** The task it became, when it became one. */
+    taskId: string | null;
+  } | null;
+  /** The task of its latest firing. While that one waits or is at work, it does not fire again. */
+  taskId: string | null;
+  /** Why it cannot run as it is written, when it cannot. Said once on the owner's list, until it is changed or runs again. */
+  problem: string | null;
+  createdAt: string;
+  updatedAt: string;
+  /** The schedule in a sentence: when, what and where. */
+  says: string;
+  /** Its next time. Null while it is switched off. */
+  next: string | null;
+  /** Its next time in words, on this computer's clock. */
+  nextSays: string;
+  /** How its latest time ended, in a sentence. */
+  lastSays: string;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+### removeSchedule
+
+`DELETE /v1/schedules/{scheduleId}`: Remove a schedule.
+
+For the owner only: no token and no session can do this, whatever its scopes. A task it already added to the queue stays there.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `scheduleId` | path | `string` | yes | An ID. |
+
+**Answer** `204`, with nothing in it.
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+### runSchedule
+
+`POST /v1/schedules/{scheduleId}/run`: Run a schedule now.
+
+For the owner only: no token and no session can do this, whatever its scopes. The same as one of its times, marked as run by hand: a task is added to the queue and starts when a place is free. The limit and the hold count for it. Refused with 409 while the task of its earlier firing is not over.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `scheduleId` | path | `string` | yes | An ID. |
+
+**Answer** `200`:
+
+```ts
+{
+  schedule: {
+    id: string;
+    /** What it is called. Shown in lists and beside what it hands in. */
+    name: string;
+    /** The time of day, on this computer's clock and in its time zone. */
+    time: string;
+    /** The days of the week it runs on. */
+    days: ("mon" | "tue" | "wed" | "thu" | "fri" | "sat" | "sun")[];
+    /** What it runs: one element from the shelf, or a workflow. */
+    what: {
+      kind: "element";
+      elementId: string;
+    } | {
+      kind: "workflow";
+      workflowId: string;
+    };
+    /** Where: a terminal, or a new agent terminal on a canvas. */
+    where: {
+      kind: "session";
+      sessionId: string;
+    } | {
+      kind: "new";
+      canvasId: string;
+    };
+    /** For a new terminal: the folder it starts in. Null: the folder new terminals start in. */
+    folder: string | null;
+    /** For a new terminal: where it works. Null: a working copy of its own where the folder can have one. */
+    environment: string | null;
+    /** What the agent is told to do, as the task of what it runs. Plain text. */
+    task: string;
+    on: boolean;
+    /** Times up to this moment are not its own: it was made, changed or switched on then. */
+    since: string;
+    /** How its latest time ended. */
+    last: {
+      /** When this was decided. */
+      at: string;
+      /** The time it was for. Null when the owner ran it by hand. */
+      due: string | null;
+      result: "fired" | "late" | "by-hand" | "skipped" | "missed" | "could-not-run";
+      /** With `late`: by how many minutes. */
+      lateMinutes: number;
+      /** With `skipped`, `missed` and `could-not-run`: why, in a sentence. */
+      reason: string | null;
+      /** The task it became, when it became one. */
+      taskId: string | null;
+    } | null;
+    /** The task of its latest firing. While that one waits or is at work, it does not fire again. */
+    taskId: string | null;
+    /** Why it cannot run as it is written, when it cannot. Said once on the owner's list, until it is changed or runs again. */
+    problem: string | null;
+    createdAt: string;
+    updatedAt: string;
+    /** The schedule in a sentence: when, what and where. */
+    says: string;
+    /** Its next time. Null while it is switched off. */
+    next: string | null;
+    /** Its next time in words, on this computer's clock. */
+    nextSays: string;
+    /** How its latest time ended, in a sentence. */
+    lastSays: string;
+  };
+  /** The task it became. Null when it did not run. */
+  taskId: string | null;
+  /** In a sentence: what happened. */
+  says: string;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
 
 ## For a session itself
 
@@ -8136,6 +8562,10 @@ For a session's own token, about that session. No API token may call this.
   folder: string | null;
   /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
   workflowId: string | null;
+  /** The shelf element it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
+  elementId: string | null;
+  /** True for what the owner arranged beforehand, such as a time of a schedule. It starts when a place is free without being started by hand, still within the limit and the hold, and what its agent adds sets off no rule. Set by the server, never by a caller. */
+  unattended: boolean;
   /** Where a new terminal for it works. Null: in a working copy of its own where the folder can have one, else in the folder itself. */
   environment: string | null;
   /** Who may take it. */
@@ -9344,7 +9774,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
 {
   items: {
     at: string;
-    caller: "token" | "owner-cli" | "rule";
+    caller: "token" | "owner-cli" | "rule" | "schedule";
     tokenId: string | null;
     tokenName: string;
     fromSessionId: string | null;

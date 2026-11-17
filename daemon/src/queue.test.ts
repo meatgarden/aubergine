@@ -414,6 +414,40 @@ describe('starting by itself', () => {
     await asOwner('PUT', '/v1/queue', { hold: false });
     await until(() => taskNow(c.id).state === 'working');
   });
+
+  it('when on, also starts when an agent becomes free without a run ending; and while off the same changes start nothing', async () => {
+    // Off: a task waits, and every change that could free an agent comes and goes.
+    const waiting = await add('Waits for an agent');
+    const plain = fakeSession('becomes an agent');
+    const busy = agent('at work', { attention: { ...NO_ATTENTION, state: 'working', at: new Date().toISOString() } });
+    const free = (session: Session): void => hub.emit({ type: 'session.attention', sessionId: session.id, attention: NO_ATTENTION });
+    free(busy);
+    agent('a new agent terminal');
+    await new Promise((resolve) => setTimeout(resolve, 200));
+    expect(taskNow(waiting.id).state).toBe('queued');
+    expect(hub.state.runs).toEqual([]);
+    expect(typed).toEqual([]);
+    // On: what is free now is used at once, by the change of the setting.
+    await asOwner('PUT', '/v1/queue', { automatic: true, limit: 5 });
+    await until(() => taskNow(waiting.id).state === 'working');
+    const second = await add('Second');
+    await until(() => taskNow(second.id).state === 'working');
+    // Nobody is free now: the next task waits.
+    const third = await add('Third', { taker: { kind: 'session', sessionId: plain.id } });
+    const fourth = await add('Fourth');
+    await new Promise((resolve) => setTimeout(resolve, 150));
+    expect([third, fourth].map((t) => taskNow(t.id).state)).toEqual(['queued', 'queued']);
+    // An agent is seen in front of the plain terminal: no run ended, and the task meant for it starts.
+    events = [];
+    hub.emit({ type: 'session.agent', sessionId: plain.id, agent: { kind: 'claude-code', conversationId: null, program: 'the-agent' } });
+    hub.emit({ type: 'session.activity', sessionId: plain.id, cwd: null, command: 'the-agent' });
+    await until(() => taskNow(third.id).state === 'working');
+    expect(events.some((event) => event.type === 'run.finished')).toBe(false);
+    // A new agent terminal appears: the last one starts on it.
+    const fresh = agent('fresh');
+    await until(() => taskNow(fourth.id).state === 'working');
+    expect(taskNow(fourth.id).sessionId).toBe(fresh.id);
+  });
 });
 
 describe('rules', () => {
@@ -567,8 +601,8 @@ describe('the owner\'s list', () => {
     await asOwner('POST', '/v1/rules', { event: 'task.failed', action: { kind: 'notify' } });
     const before = JSON.stringify(queueNow());
     await stop();
-    // The file says version 12.
-    expect(JSON.parse(await readFile(path.join(dir, 'state.json'), 'utf8')).version).toBe(12);
+    // The file says version 13.
+    expect(JSON.parse(await readFile(path.join(dir, 'state.json'), 'utf8')).version).toBe(13);
     await start();
     expect(JSON.stringify(queueNow())).toBe(before);
     expect(taskNow(task.id)).toMatchObject({ state: 'working', sessionId: one.id });

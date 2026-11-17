@@ -71,6 +71,7 @@ export const OWNERS_ALONE: Record<(typeof NEVER_BY_TOKEN)[number], string> = {
   'environments.manage': 'removing or discarding a working copy',
   'queue.manage': 'accepting, declining, reordering or starting tasks, and changing how many run at once',
   'rules.manage': 'writing or removing a rule',
+  'schedules.manage': 'making, changing, switching, removing or running a schedule',
 };
 
 const ownersAlone = (): string => [...new Set(NEVER_BY_TOKEN.map((action) => OWNERS_ALONE[action]))].join('; ');
@@ -160,6 +161,10 @@ export const GUIDE: readonly GuideSection[] = [
           'A run that is paused was paused by a person: stop working on it until the status says it goes on. `aubergine workflow goto <element>`, `aubergine workflow pause`, `aubergine workflow resume` and `aubergine workflow stop` exist; use them only when your owner asks.',
         ],
       },
+      {
+        needs: ['run.own.read', 'run.own.report'],
+        text: ['A run may have been started by a schedule of your owner, at a time when nobody is there. That changes nothing about how you report: finish it, or say blocked, as for any run.'],
+      },
       { needs: ['run.own.read', 'run.own.report'], text: ['As tools: workflow_status, workflow_done, workflow_blocked, workflow_goto.'], tools: ['workflow_status', 'workflow_done', 'workflow_blocked', 'workflow_goto'] },
     ],
   },
@@ -220,6 +225,7 @@ export const GUIDE: readonly GuideSection[] = [
       { needs: ['task.own.propose', 'ask.own.add', 'tasks.write'], text: ['As tools: task_propose, ask_owner.'], tools: ['task_propose', 'ask_owner'] },
       { needs: ['queue.own.read', 'tasks.read'], text: ['To read the queue: queue_read.'], tools: ['queue_read'] },
       { needs: ['tasks.read'], text: ['To read everything that waits on the owner: for_you_read. Nothing on that list can be decided by a tool.'], tools: ['for_you_read'] },
+      { needs: ['schedules.read'], text: ['To read the schedules, with when each is next and how its latest time ended: schedules_read. A schedule is made and run by the owner alone.'], tools: ['schedules_read'] },
     ],
   },
   {
