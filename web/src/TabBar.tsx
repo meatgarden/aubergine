@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { canvasCounts, openProjects, sortedCanvases, type Canvas } from '@aubergine/shared';
+import { DEMO_LABEL, canvasCounts, openProjects, sortedCanvases, type Canvas } from '@aubergine/shared';
 import { api } from './api';
 import { ColorButton } from './ColorButton';
 import { colorClass, colorStyle } from './color';
@@ -44,10 +44,10 @@ export function TabBar() {
       if (event.key === 'Escape') setMenu(null);
     };
     window.addEventListener('pointerdown', away);
-    window.addEventListener('keydown', key);
+    window.addEventListener('keydown', key, true);
     return () => {
       window.removeEventListener('pointerdown', away);
-      window.removeEventListener('keydown', key);
+      window.removeEventListener('keydown', key, true);
     };
   }, [menu]);
   useEffect(() => setMenu(null), [current]);
@@ -205,6 +205,20 @@ export function TabBar() {
                       Messages between terminals: {messaging ? 'on' : 'off'}
                       <small>{messaging ? 'Terminals on this canvas may message each other. Click to switch that off.' : 'Terminals on this canvas may not message each other. You can always message any terminal yourself.'}</small>
                     </button>
+                    {canvas.labels[DEMO_LABEL] !== undefined && (
+                      <button
+                        type="button"
+                        role="menuitem"
+                        onClick={() => {
+                          setMenu(null);
+                          runCommand('demo.remove');
+                        }}
+                        data-testid="remove-demo"
+                      >
+                        Remove the demo
+                        <small>Take away everything the demo made. Nothing else is touched.</small>
+                      </button>
+                    )}
                     {others.length > 0 && (
                       <label className="tab-menu-line">
                         <span>Move to another project</span>

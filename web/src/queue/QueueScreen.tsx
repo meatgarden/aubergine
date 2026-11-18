@@ -7,7 +7,9 @@ import { useEndedRuns } from '../workflows/ended-runs';
 import { actionView } from './action-views';
 import { Schedules } from './Schedules';
 import { TaskForm, type TaskDraft } from './TaskForm';
-import { ScreenHead } from '../ui';
+import { ScreenHead, Tabs } from '../ui';
+import { itemsOfListing, useRepositoryListing } from '../review/repository-source';
+import { runCommand } from '../commands';
 
 /**
  * Two lists side by side. On the left, what waits on the owner: gathered by
@@ -56,8 +58,20 @@ function ForYouRow({ item, onSend, named }: { item: ForYouItem; onSend: (draft: 
     }
   };
   const ticked = item.elementId ? tickedLines(liveRun ?? endedRun, item.elementId) : [];
+  const opens = item.askId === null && !(task && (task.state === 'proposed' || task.state === 'done' || task.state === 'failed'));
   return (
-    <li className={`foryou-row${item.waits ? ' waits' : ''}`} data-testid="foryou-row" data-kind={item.kind}>
+    <li
+      className={`foryou-row${item.waits ? ' waits' : ''}${opens ? ' is-pressed' : ''}`}
+      // Where the one thing to do is to go and look, the card is pressed as a whole.
+      role={opens ? 'button' : undefined}
+      tabIndex={opens ? 0 : undefined}
+      // A control inside the card does its own thing and nothing more.
+      onClick={opens ? (e) => !(e.target as HTMLElement).closest('button, a, input, select, textarea, label') && goTo(item.act) : undefined}
+      onKeyDown={opens ? (e) => e.target === e.currentTarget && (e.key === 'Enter' || e.key === ' ') && goTo(item.act) : undefined}
+      data-testid="foryou-row"
+      data-kind={item.kind}
+      data-opens={opens ? 'true' : undefined}
+    >
       <div className="foryou-head">
         <span className="foryou-kind">{item.title}</span>
         <span className="foryou-from">
@@ -104,11 +118,7 @@ function ForYouRow({ item, onSend, named }: { item: ForYouItem; onSend: (draft: 
               Looked at
             </button>
           </>
-        ) : (
-          <button type="button" className="quiet" onClick={() => goTo(item.act)} data-testid="foryou-open">
-            Open
-          </button>
-        )}
+        ) : null}
         {ticked.length > 0 && (
           <button type="button" className="quiet" onClick={() => onSend({ titles: ticked.map((line) => line.text.slice(0, 120)), details: '', sources: ticked.map((line) => ({ kind: 'checklist', from: item.from, runId: item.runId, elementId: item.elementId, item: line.item })) })} data-testid="checklist-to-queue">
             Send {ticked.length} ticked {ticked.length === 1 ? 'line' : 'lines'} to the queue…
@@ -218,8 +228,8 @@ function Rules() {
   }, [count]);
   const Fields = actionView(action.kind)?.Fields;
   return (
-    <details className="queue-rules" data-testid="queue-rules">
-      <summary>Rules{count > 0 ? ` (${count})` : ''}: when something happens, do something</summary>
+    <section className="queue-part queue-rules" data-testid="queue-rules">
+      <p className="ui-meta">When something happens, do something.</p>
       <ul>
         {(list?.rules ?? []).map((rule) => (
           <li key={rule.id} data-testid="rule-row" data-on={rule.on}>
@@ -269,7 +279,23 @@ function Rules() {
         </button>
       </p>
       {error && <p className="dialog-error">{error}</p>}
-    </details>
+    </section>
+  );
+}
+
+/** What waits to be read before it can be used: said in a line of the owner's list, with the way to the review. */
+function ReviewLine() {
+  const drafts = useApp((s) => (s.app?.drafts ?? []).filter((d) => d.status === 'waiting').length);
+  // Workflow files in repositories that were never accepted, or changed since.
+  const files = itemsOfListing(useRepositoryListing()).length;
+  if (drafts + files === 0) return null;
+  return (
+    <p className="ui-notice" data-testid="drafts-waiting">
+      {drafts + files} to read before {drafts + files === 1 ? 'it' : 'they'} can be used.
+      <button type="button" onClick={() => runCommand('drafts.review')} data-testid="review-open">
+        Review
+      </button>
+    </p>
   );
 }
 
@@ -281,6 +307,9 @@ export function QueueScreen() {
   const [written, setWritten] = useState('');
   const [put, setPut] = useState<Task[]>([]);
   const [said, setSaid] = useState<string | null>(null);
+  const [part, setPart] = useState<'queue' | 'schedules' | 'rules'>('queue');
+  const scheduleCount = useApp((s) => s.app?.schedules.items.length ?? 0);
+  const ruleCount = useApp((s) => s.app?.queue.rules.length ?? 0);
 
   // Of the project being looked at: its tasks, its list, and how its tasks are started.
   const projectId = useApp(currentProjectId);
@@ -346,9 +375,24 @@ export function QueueScreen() {
       }}
     >
       <div className="dialog sheet queue-screen" role="dialog" aria-label="Queue and For you" data-testid="queue-screen">
-        <ScreenHead title="For you, and the queue" onClose={close} closeTestid="queue-close" />
+        <ScreenHead title="Queue" onClose={close} closeTestid="queue-close" />
+        <div className="ui-bar">
+          <Tabs
+            label="What this screen shows"
+            value={part}
+            onChange={setPart}
+            tabs={[
+              { value: 'queue', label: 'Queue', testid: 'queue-tab-queue' },
+              { value: 'schedules', label: `Schedules${scheduleCount > 0 ? ` ${scheduleCount}` : ''}`, testid: 'queue-tab-schedules' },
+              { value: 'rules', label: `Rules${ruleCount > 0 ? ` ${ruleCount}` : ''}`, testid: 'queue-tab-rules' },
+            ]}
+          />
+        </div>
+        {part === 'schedules' && <Schedules />}
+        {part === 'rules' && <Rules />}
+        {part === 'queue' && (
         <div className="queue-columns">
-          <section className="queue-foryou" aria-label="For you">
+          <section className="queue-foryou ui-card" aria-label="For you">
             <h3>
               For you <span className="board-summary" data-testid="foryou-summary">{list.summary}</span>
             </h3>
@@ -375,6 +419,7 @@ export function QueueScreen() {
                 Add
               </button>
             </div>
+            <ReviewLine />
             {list.items.length === 0 && <p className="list-empty">Nothing waits for you.</p>}
             <ul className="foryou-list">
               {list.items.map((item) => (
@@ -382,62 +427,73 @@ export function QueueScreen() {
               ))}
             </ul>
           </section>
-          <section className="queue-tasks" aria-label="Queue">
+          <section className="queue-tasks ui-card" aria-label="Queue">
             <h3>
-              Queue <span className="board-summary" data-testid="queue-summary">{queueWords(queue.tasks)}</span>
+              Tasks for agents <span className="board-summary" data-testid="queue-summary">{queueWords(queue.tasks)}</span>
             </h3>
             <div className="queue-bar" data-testid="queue-bar">
+              <button type="button" className="primary" onClick={() => setDraft({ titles: [''], details: '', sources: [{ kind: 'hand' }] })} data-testid="queue-add">
+                + Task
+              </button>
               <button type="button" disabled={queue.hold} onClick={() => say(api.startTasks())} data-testid="queue-start-next">
                 Start next
               </button>
-              <label className="wf-inline">
-                <span>At most</span>
-                <input type="number" min={1} max={QUEUE_LIMIT_MAX} value={queue.limit} onChange={(e) => Number(e.target.value) >= 1 && say(api.changeQueue({ limit: Math.min(QUEUE_LIMIT_MAX, Math.round(Number(e.target.value))) }))} aria-label="How many at once" data-testid="queue-limit" />
-                <span>at once</span>
-              </label>
-              <label className="wf-inline" title="No new task is started while this is on. What is running is not touched.">
-                <input type="checkbox" checked={queue.hold} onChange={(e) => say(api.changeQueue({ hold: e.target.checked }))} data-testid="queue-hold" />
-                <span>Hold</span>
-              </label>
-              <label className="wf-inline" title="A task starts by itself when a place is free and someone can take it. Off: nothing starts until you press Start next.">
-                <input type="checkbox" checked={queue.automatic} onChange={(e) => say(api.changeQueue({ automatic: e.target.checked }))} data-testid="queue-automatic" />
-                <span>Start by itself</span>
-              </label>
-              <button type="button" className="quiet" onClick={() => setDraft({ titles: [''], details: '', sources: [{ kind: 'hand' }] })} data-testid="queue-add">
-                + Task
-              </button>
             </div>
+            <details className="ui-fold queue-starts" data-testid="queue-starts">
+              <summary>
+                How the queue starts things{' '}
+                <span className="ui-meta" data-testid="queue-starts-says">
+                  Up to {queue.limit} at once · {queue.automatic ? 'starts by itself' : 'starts when you press'}
+                  {queue.hold ? ' · held' : ''}
+                </span>
+              </summary>
+              <div className="queue-settings">
+                <label className="wf-inline">
+                  <span>At most</span>
+                  <input type="number" min={1} max={QUEUE_LIMIT_MAX} value={queue.limit} onChange={(e) => Number(e.target.value) >= 1 && say(api.changeQueue({ limit: Math.min(QUEUE_LIMIT_MAX, Math.round(Number(e.target.value))) }))} aria-label="How many at once" data-testid="queue-limit" />
+                  <span>at once</span>
+                </label>
+                <label className="wf-inline" title="No new task is started while this is on. What is running is not touched.">
+                  <input type="checkbox" checked={queue.hold} onChange={(e) => say(api.changeQueue({ hold: e.target.checked }))} data-testid="queue-hold" />
+                  <span>Hold: start nothing new</span>
+                </label>
+                <label className="wf-inline" title="A task starts by itself when a place is free and someone can take it. Off: nothing starts until you press Start next.">
+                  <input type="checkbox" checked={queue.automatic} onChange={(e) => say(api.changeQueue({ automatic: e.target.checked }))} data-testid="queue-automatic" />
+                  <span>Start by itself when a place is free</span>
+                </label>
+              </div>
+            </details>
             {said && (
               <p className="sheet-note" role="status" data-testid="queue-said">
                 {said}
               </p>
             )}
-            <div className="wf-label">At work</div>
+            {busy.length + next.length + finished.length === 0 && <p className="list-empty">No task yet. Add one with “+ Task”, then press Start next.</p>}
+            {busy.length > 0 && <div className="wf-label">At work</div>}
             <ul className="task-list" data-testid="queue-working">
               {busy.map((task) => (
                 <TaskRow key={task.id} task={task} waiting={false} />
               ))}
             </ul>
-            {busy.length === 0 && <p className="list-empty">Nothing is at work.</p>}
-            <div className="wf-label">
-              Next <span className="sheet-note">in this order; drag, or Alt with an arrow on a row, to change it</span>
-            </div>
+            {next.length > 0 && (
+              <div className="wf-label">
+                Next <span className="sheet-note">in this order; drag, or Alt with an arrow on a row, to change it</span>
+              </div>
+            )}
             <ul className="task-list" data-testid="queue-next">
               {next.map((task) => (
                 <TaskRow key={task.id} task={task} waiting onMove={(by) => move(task, by)} onDropOn={(dragged) => dropOn(task, dragged)} />
               ))}
             </ul>
-            {next.length === 0 && <p className="list-empty">No task waits. Add one with “+ Task”.</p>}
-            <div className="wf-label">Finished today</div>
+            {finished.length > 0 && <div className="wf-label">Finished today</div>}
             <ul className="task-list" data-testid="queue-finished">
               {finished.map((task) => (
                 <TaskRow key={task.id} task={task} waiting={false} />
               ))}
             </ul>
-            <Schedules />
-            <Rules />
           </section>
         </div>
+        )}
       </div>
       {draft && <TaskForm draft={draft} onClose={() => setDraft(null)} />}
     </div>

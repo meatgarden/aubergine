@@ -46,7 +46,7 @@ registerElementView({
       </label>
       <label className="wf-field">
         <span>What to look at (optional)</span>
-        <textarea rows={2} value={element.lookAt} maxLength={ASK_MAX} placeholder="For example: the notes of the elements before, and the diff" onChange={(e) => onChange({ ...element, lookAt: e.target.value })} data-testid="element-look-at" />
+        <textarea rows={2} value={element.lookAt} maxLength={ASK_MAX} placeholder="For example: the notes of the steps before, and the diff" onChange={(e) => onChange({ ...element, lookAt: e.target.value })} data-testid="element-look-at" />
       </label>
     </>
   ),

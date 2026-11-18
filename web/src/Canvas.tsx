@@ -13,7 +13,6 @@ import {
   type Viewport,
 } from '@xyflow/react';
 import {
-  DEMO_LABEL,
   NODE_DEFAULT_HEIGHT,
   NODE_DEFAULT_WIDTH,
   findFreeRect,
@@ -175,7 +174,6 @@ function NewMenu({ adding }: { adding: boolean }) {
 export function Canvas() {
   const canvasId = useApp((s) => s.canvasId);
   // The demo's own canvas offers to take the demo away.
-  const onDemo = useApp((s) => s.canvasId !== null && s.app?.canvases.find((c) => c.id === s.canvasId)?.labels[DEMO_LABEL] !== undefined);
   const layout = useApp((s) => currentLayout(s).nodes);
   // This component is mounted afresh for each canvas, so this is read once per canvas.
   const [initialViewport] = useState(() => loadViewport(canvasId ?? ''));
@@ -532,11 +530,6 @@ export function Canvas() {
           <span className="toolbar-group toolbar-status" role="group" aria-label="Terminals that are not on this canvas">
             <ParkedList />
             <OutsidePanel />
-            {onDemo && (
-              <button type="button" className="quiet" onClick={() => runCommand('demo.remove')} title="Take away everything the demo made. Nothing else is touched." data-testid="remove-demo">
-                Remove the demo
-              </button>
-            )}
           </span>
           {notice && <span className="warning">{notice}</span>}
         </Panel>

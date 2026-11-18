@@ -18,6 +18,7 @@ function MessagesSection() {
 }
 
 registerSection({
+  more: true,
   id: 'messages',
   title: 'Messages',
   order: 30,

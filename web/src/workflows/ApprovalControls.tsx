@@ -35,7 +35,7 @@ export function ApprovalControls({ run, elements, compact = false }: { run: Run;
         <input
           value={comment}
           maxLength={RUN_COMMENT_MAX}
-          placeholder={sending ? 'What should change? The agent is told this.' : 'A comment for whoever does the next element (optional)'}
+          placeholder={sending ? 'What should change? The agent is told this.' : 'A comment for whoever does the next step (optional)'}
           aria-label="Comment"
           onChange={(e) => setComment(e.target.value)}
           data-testid="approval-comment"
@@ -65,7 +65,7 @@ export function ApprovalControls({ run, elements, compact = false }: { run: Run;
           <button type="button" disabled={busy} onClick={() => void act({ approve: { elementId, ...(clean ? { comment: clean } : {}) } })} data-testid="approve">
             Approve
           </button>
-          <button type="button" className="quiet" disabled={busy || earlier.length === 0} title={earlier.length === 0 ? 'There is no earlier element to send it back to' : 'Send it back to an earlier element, with a comment the agent is told'} onClick={() => setSending(true)} data-testid="send-back">
+          <button type="button" className="quiet" disabled={busy || earlier.length === 0} title={earlier.length === 0 ? 'There is no earlier step to send it back to' : 'Send it back to an earlier step, with a comment the agent is told'} onClick={() => setSending(true)} data-testid="send-back">
             Send back…
           </button>
         </>

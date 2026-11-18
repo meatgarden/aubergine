@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { FLAG_WORDS, sourceLabel, ago, fromWords, historyWords, needWords, showControl, type InstalledItem, type LibraryItemDetail, type LibrarySource, type ListedItem } from '@aubergine/shared';
 import { api } from '../api';
 import { useApp } from '../store';
-import { ScreenHead } from '../ui';
+import { HowThisWorks, ScreenHead } from '../ui';
 
 /**
  * The library: sources of workflows and elements that others published, what
@@ -64,6 +64,7 @@ function ItemDetail({ item, onAsk, busy }: { item: ListedItem; onAsk: (item: Lis
       <div className="editor-row">
         <button
           type="button"
+          className="primary"
           disabled={busy || item.problem !== null || item.standing === 'installed' || item.requested}
           title={item.problem ?? 'Asks for it to be installed. It then waits in Review, where you read all of it before anything is installed.'}
           onClick={() => onAsk(item)}
@@ -144,17 +145,19 @@ export function LibraryScreen() {
     >
       <div className="dialog sheet library-screen" role="dialog" aria-label="Library" data-testid="library-screen">
         <ScreenHead title="Library" onClose={close} closeTestid="library-close" />
-        <p className="sheet-note">
-          Workflows and elements that others published, to read and install. What a source lists was written by whoever published it. Nothing is fetched unless you press Refresh or add a source, and nothing is installed until you have read all of it
-          in Review and accepted it.
-        </p>
+        <HowThisWorks line="Workflows and steps that others published, to read and install.">
+          What a source lists was written by whoever published it. Nothing is fetched unless you press Refresh or add a source, and nothing is installed until you have read all of it in Review and accepted it.
+        </HowThisWorks>
         {error && (
           <p className="dialog-error" role="alert" data-testid="library-error">
             {error}
           </p>
         )}
 
-        <h3>Sources</h3>
+        <details className="ui-fold library-sources-fold" data-testid="library-sources-fold">
+          <summary>
+            {(library?.sources ?? []).length} {(library?.sources ?? []).length === 1 ? 'source' : 'sources'} <span className="ui-how-more">Manage</span>
+          </summary>
         <ul className="library-sources" data-testid="library-sources">
           {sources.map((source) => (
             <li key={source.id} data-testid="library-source" data-kind={source.kind}>
@@ -230,8 +233,8 @@ export function LibraryScreen() {
             Add source
           </button>
         </form>
+        </details>
 
-        <h3>Browse</h3>
         <div className="library-browse">
           <div className="library-list">
             <input value={query} placeholder="Search by name, description or source" aria-label="Search the library" onChange={(e) => setQuery(e.target.value)} data-testid="library-search" />
@@ -272,7 +275,7 @@ export function LibraryScreen() {
                 }
               />
             ) : (
-              <p className="sheet-note">Pick an item to read what it would tell an agent.</p>
+              <p className="ui-empty" data-testid="library-none-picked">Pick one at the left to read what it would tell an agent, before anything is installed.</p>
             )}
           </div>
         </div>

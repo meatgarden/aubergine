@@ -19,7 +19,7 @@ export function ElementFields({ element, onChange }: { element: Element; onChang
   return (
     <>
       <label className="wf-field">
-        <span>Element</span>
+        <span>Step</span>
         <input value={element.name} maxLength={120} onChange={(e) => onChange({ ...element, name: e.target.value })} data-testid="element-name" />
       </label>
       {Editor ? <Editor element={element} onChange={onChange} /> : <p className="sheet-note">This element is of a kind this version cannot edit: {element.kind}. It is kept as it is.</p>}

@@ -18,7 +18,7 @@ export function detailOfFile(reading: ProjectFileReading): ReviewDetail {
   const { counts } = reading;
   return {
     // Everything an agent would be told by what the file brings, in full.
-    text: reading.texts.length > 0 ? reading.texts.map((one) => `${one.title}\n\n${one.text}`).join(LINE) : 'This file brings no workflow, no element and no schedule: nothing in it would be told to an agent.',
+    text: reading.texts.length > 0 ? reading.texts.map((one) => `${one.title}\n\n${one.text}`).join(LINE) : 'This file brings no workflow, no step and no schedule: nothing in it would be told to an agent.',
     previousText: null,
     needs: [],
     proposal: { workflow: null, element: null },

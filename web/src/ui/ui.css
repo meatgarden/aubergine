@@ -859,3 +859,462 @@ button.color-dot:hover {
 .list-row.focused {
   box-shadow: inset 2px 0 0 var(--accent);
 }
+
+/* ---------- Menus: what is chosen, headings and lines with a control ---------- */
+
+/* A line that is on or off, or one of several: a tick column, so the words of every line start together. */
+.ui-menu > [role='menuitemcheckbox'],
+.ui-menu > [role='menuitemradio'] {
+  padding-left: var(--space-8);
+  position: relative;
+}
+.ui-menu > [role='menuitemcheckbox'][aria-checked='true']::before,
+.ui-menu > [role='menuitemradio'][aria-checked='true']::before {
+  content: '✓';
+  position: absolute;
+  left: var(--space-3);
+  color: var(--accent-text);
+}
+.ui-menu-label {
+  display: block;
+  padding: var(--space-2) var(--space-3) var(--space-1);
+  font-size: var(--font-meta);
+  color: var(--text-muted);
+}
+.ui-menu-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-1) var(--space-3) var(--space-1) var(--space-8);
+  font-size: var(--font-body);
+  color: var(--text);
+}
+
+/* A quiet button at the start of a line: pulled left by its own padding, so its words stand on the gutter. */
+.ui-start,
+.dialog.sheet > button.quiet:first-child,
+.ui-card > button.quiet:first-child {
+  margin-left: calc(var(--space-3) * -1);
+}
+
+/* ---------- The side panel: tabs, a field with Filter, the list ---------- */
+
+.panel-tabs {
+  flex-wrap: nowrap;
+  gap: var(--space-1);
+  min-width: 0;
+}
+.panel-more {
+  position: relative;
+  display: inline-flex;
+}
+.panel-more-menu {
+  position: absolute;
+  top: calc(100% + var(--space-1));
+  right: 0;
+  left: auto;
+  min-width: 180px;
+}
+.panel-more-menu > button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+.list-bar {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.list-find {
+  display: flex;
+  gap: var(--space-2);
+}
+.list-find > input {
+  flex: 1;
+  min-width: 0;
+}
+.list-filter-menu {
+  position: absolute;
+  top: calc(var(--space-2) + var(--control-compact) + var(--space-1));
+  left: var(--gutter-panel);
+  right: var(--gutter-panel);
+  min-width: 0;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+.list-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+/* A row: its state, its name with the whole line, one muted line under it. What it waits for is a chip at the right. */
+.list-row {
+  padding: var(--space-1) var(--space-8) var(--space-1) var(--gutter-panel);
+}
+.list-row .list-main {
+  height: var(--chip);
+}
+.list-row .list-name {
+  flex: 1 1 auto;
+  min-width: 30%;
+}
+/* A state chip is never cut: the name gives way first, then the marks. */
+.list-row .list-main > :not(.list-state, .list-name, .list-badge) {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.list-row .list-detail {
+  height: var(--space-4);
+  line-height: var(--space-4);
+}
+.list-where {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.list-lock {
+  flex: none;
+}
+.list-badge {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  height: var(--chip);
+  padding: 0 var(--space-2);
+  font-size: var(--font-meta);
+  border-radius: var(--radius-pill);
+  background: var(--surface-raised);
+}
+.state-waiting .list-badge {
+  color: var(--on-attention);
+  background: var(--attention);
+}
+/* Tags are on a row while the pointer or the keyboard is on it, and while the list is filtered by a tag. */
+.list-tags {
+  display: none;
+  flex: none;
+  gap: var(--space-1);
+}
+.list-row:hover .list-tags,
+.list-row:focus-within .list-tags,
+.terminal-list.by-tag .list-tags {
+  display: inline-flex;
+}
+.list-row .list-tag {
+  height: var(--space-4);
+}
+/* The one menu of a row, at its right, level with its middle. */
+.list-row > .list-more {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-1);
+  opacity: 0;
+}
+.list-row.compact > .list-more {
+  top: 2px;
+}
+.list-row:hover > .list-more,
+.list-row:focus-within > .list-more,
+.list-row > .list-more[aria-expanded='true'] {
+  opacity: 1;
+}
+.list-row .list-note {
+  width: auto;
+  min-width: 0;
+  height: var(--chip);
+  padding: 0 var(--space-1);
+  font-size: var(--font-meta);
+}
+
+/* The drawer beside the panel: the head of a screen, and a screen's gutter. */
+.panel-drawer-head.sheet-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border);
+}
+.panel-drawer-head.sheet-head h2 {
+  margin: 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--font-title);
+}
+
+/* ---------- A terminal's title: its name first, then what is known, Note, and one menu ---------- */
+
+.node-title .node-name {
+  flex: 0 1 auto;
+  min-width: 96px;
+}
+/* What the terminal runs and where gives way before the name does, and takes what room is left. */
+.node-title .node-status {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: none;
+  overflow: hidden;
+}
+.node-more {
+  flex: none;
+  display: inline-flex;
+}
+.node-more > button {
+  width: var(--control-h);
+  padding: 0;
+}
+/* The terminal's box does not cut off what hangs from its title: its title and its body keep the corners instead. */
+.terminal-node {
+  overflow: visible;
+}
+.terminal-node > .node-title {
+  border-radius: var(--radius-surface) var(--radius-surface) 0 0;
+}
+.terminal-node > .node-body,
+.terminal-node > :last-child {
+  border-radius: 0 0 var(--radius-surface) var(--radius-surface);
+  overflow: hidden;
+}
+.node-more {
+  position: relative;
+}
+.node-menu {
+  position: absolute;
+  top: calc(100% + var(--space-1));
+  right: 0;
+  left: auto;
+  width: 240px;
+}
+.node-menu-colour .color-button {
+  position: relative;
+}
+
+/* One row of tabs: each takes little at its sides, and a count is said only where something is counted. */
+.panel-tab {
+  padding: 0 var(--space-1);
+}
+.panel-tabs-row {
+  padding-left: var(--space-2);
+}
+
+.panel-tabs {
+  gap: 0;
+}
+
+/* ---------- More pieces: a button with a menu, the parts of a screen, cards in a list ---------- */
+
+.ui-menu-button {
+  position: relative;
+  display: inline-flex;
+}
+.ui-menu-under {
+  position: absolute;
+  top: calc(100% + var(--space-1));
+  right: 0;
+  left: auto;
+  min-width: 240px;
+}
+/* The parts of a screen and the one thing to do there, on one line: the parts at the left, the action at the right. */
+.ui-bar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin: var(--space-3) 0 var(--space-4);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0;
+}
+.ui-bar > .ui-menu-button,
+.ui-bar > button {
+  margin-bottom: var(--space-2);
+}
+.ui-tabs {
+  display: flex;
+  gap: var(--space-4);
+}
+.ui-tabs > .ui-tab {
+  padding: 0;
+}
+/* One line that says what something is; the rest is behind "How this works". */
+.ui-how {
+  margin: 0 0 var(--space-3);
+  color: var(--text-muted);
+}
+.ui-how > summary {
+  list-style: none;
+  cursor: pointer;
+}
+.ui-how > summary::-webkit-details-marker {
+  display: none;
+}
+.ui-how-more {
+  color: var(--accent-text);
+  text-decoration: underline;
+}
+.ui-how-text {
+  max-width: 80ch;
+  margin-top: var(--space-2);
+  line-height: var(--leading);
+}
+.ui-notice {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: 0 0 var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  color: var(--text);
+  background: var(--attention-soft);
+  border-radius: var(--radius-control);
+}
+.dialog .ui-notice {
+  color: var(--text);
+}
+.ui-cards {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ui-cards > .ui-card {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+.ui-card.is-pressed {
+  cursor: pointer;
+  transition: border-color var(--ease);
+}
+.ui-card.is-pressed:hover {
+  border-color: var(--border-strong);
+}
+.ui-card-text {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+.ui-card-actions {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+.ui-card-confirm {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+.ui-steps {
+  color: var(--text);
+}
+.ui-fold {
+  margin-top: var(--space-4);
+}
+.ui-fold > summary {
+  cursor: pointer;
+  font-weight: var(--weight-strong);
+  margin-bottom: var(--space-2);
+}
+.ui-check {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  cursor: pointer;
+}
+.for-you-count {
+  font-weight: var(--weight-strong);
+}
+.help-setting {
+  margin: 0 0 var(--space-4);
+}
+
+/* ---------- The queue ---------- */
+
+.dialog.sheet > p.ui-notice {
+  max-width: none;
+}
+.queue-columns > section.ui-card > h3:first-child {
+  margin-top: 0;
+}
+.queue-bar {
+  display: flex;
+  gap: var(--space-2);
+}
+.queue-settings {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-2) 0 0 var(--space-4);
+}
+.queue-starts > summary {
+  font-weight: var(--weight-normal);
+}
+.queue-part > .ui-meta {
+  margin: 0 0 var(--space-3);
+}
+.foryou-row.is-pressed {
+  cursor: pointer;
+}
+.foryou-row.is-pressed:hover {
+  border-color: var(--border-strong);
+}
+
+/* The list of canvases a terminal can move to hangs from its title; it is asked for from the menu or by its key. */
+.node-title > .move-to {
+  position: relative;
+  flex: none;
+  width: 0;
+}
+.node-title > .move-to > button {
+  display: none;
+}
+
+/* ---------- The board ---------- */
+
+/* Its filters are one menu at the left; the columns share the width, so up to five need no sideways scroll. */
+.board-filter > .ui-menu-under {
+  left: 0;
+  right: auto;
+  min-width: 320px;
+}
+.board-filter .ui-menu-line {
+  padding-left: var(--space-3);
+}
+.board-columns {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(176px, 1fr);
+  gap: var(--space-2);
+}
+.board-column {
+  min-width: 0;
+}
+
+/* ---------- The library: the list has a proper width, and what is read has the rest ---------- */
+
+.library-browse {
+  grid-template-columns: minmax(280px, 2fr) minmax(0, 3fr);
+  gap: var(--space-6);
+}
+.library-sources-fold > summary {
+  font-weight: var(--weight-normal);
+}
+
+/* On a row the state is said by its mark; the word is added only where the terminal waits for the owner or failed. */
+.list-row:not(.state-waiting, .state-failed) .list-badge {
+  display: none;
+}

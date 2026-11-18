@@ -549,9 +549,11 @@ Reload the page to apply. If a key is set twice or cannot be read, the shortcut 
 
 The panel on the left shows one thing at a time, chosen by the tabs at its top: **Terminals**, **For you**, **Runs**, **Copies** and **Messages**. A tab says how many it holds, and **For you** stands out while something waits on you. The panel remembers which tab you chose.
 
-The top of the page says where you are and what waits for you: the name, the project, the screens of that project (**For you and queue**, **Board**, **Workflows**, **Library**), and at the right the sessions waiting, things to review and **Help**. The canvases have the row below it to themselves; the tab you are on has **Options** for what is done seldom (rename, messages between its terminals, moving it to another project). The bar over the canvas holds only what acts on that canvas: **+ New terminal** (with **▾** for everything else you can make: a Claude Code session, one with Aubergine tools, one on a workflow, a terminal in a folder or a working copy, a frame), the view (**Go to…**, **Fit**, the zoom), and the terminals that are not on it (parked and outside). On a narrow window each bar wraps to a second line; nothing runs off the edge.
+The top of the page says where you are and what waits for you: the name, the project, the screens of that project (**Queue**, **Board**, **Workflows**, **Library**), and at the right **For you**, with a count of everything that waits on you, and **Help**. The canvases have the row below it to themselves; the tab you are on has **Options** for what is done seldom (rename, messages between its terminals, moving it to another project, removing the demo). The bar over the canvas holds only what acts on that canvas: **+ New terminal** (with **▾** for everything else you can make), the view (**Go to…**, **Fit**, the zoom), and parked and outside terminals while there are any.
 
-A terminal that is on a workflow says so in a line under its title: the workflow, which step of how many, and what it waits for. Click it for every step.
+The side panel has one row of tabs (**Terminals**, **For you**, **Runs**, and **More** for working copies and messages), a field to find a terminal with **Filter** at its end, and the list. A terminal's title is its name, what it runs, **Note**, and one menu (**⋯**) with the rest: tags, a workflow, a message, the desktop, moving it, its colour, people only, parking it.
+
+A terminal that is on a workflow says so in a line under its title: the workflow, which step of how many, and what it waits for. Click it for every step. On screen a workflow is made of steps and the ones you keep for reuse are saved steps; the commands, the API and the files call a step an element.
 
 In the terminal list, the three filters used every day (**Waiting for me**, **Busy**, **Unread**) are always there. **More** opens the rest, and how the list is grouped and ordered, and shows a number while any of those is in effect.
 
@@ -674,7 +676,7 @@ A terminal is live only while it is on screen and large enough to read. Zoomed f
 
 ## The queue, and "For you"
 
-Two lists that feed each other. **For you and queue** at the top of the page (or `Q`) shows both.
+Two lists that feed each other. **Queue** at the top of the page (or `Q`) shows both.
 
 **The queue** is work for agents. You write a task once: a title, what to do, and if you like a folder, a workflow, and who may take it. A free agent takes it when you say so.
 
@@ -876,7 +878,7 @@ Saving makes a **new version**. A run keeps to the version it started on, so edi
 
 ### Run one
 
-On a terminal: **Workflow** in its title bar (**⇶** on a narrow terminal), or ⌘K, `Run workflow`. Choose the workflow, fill in the task, read what the agent will be told first, and start. If an agent is running in that terminal, Aubergine types one line into it:
+On a terminal: **Run a workflow…** in the menu (**⋯**) of its title, or ⌘K, `Run workflow`. Choose the workflow, fill in the task, read what the agent will be told first, and start. If an agent is running in that terminal, Aubergine types one line into it:
 
 ```
 You are on an Aubergine workflow. Run `aubergine workflow status` to read your current element and follow it. When its "done when" is true, run `aubergine workflow done --note "<what you did>"` and follow what it prints.

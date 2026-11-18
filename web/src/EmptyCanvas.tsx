@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { demoOf } from '@aubergine/shared';
+import { DEMO_LABEL, demoOf } from '@aubergine/shared';
 import { runCommand } from './commands';
 import { useApp } from './store';
 import { showMeAround } from './tour/actions';
@@ -13,6 +13,8 @@ export function EmptyCanvas() {
   const [bringing, setBringing] = useState(false);
   const [busy, setBusy] = useState(false);
   const demo = app ? demoOf(app) : null;
+  // On the demo's own canvas, emptied: the way to take the demo away is said here too.
+  const onDemo = useApp((state) => state.canvasId !== null && state.app?.canvases.find((c) => c.id === state.canvasId)?.labels[DEMO_LABEL] !== undefined);
 
   return (
     <div className="empty-canvas" data-testid="empty-canvas">
@@ -39,6 +41,14 @@ export function EmptyCanvas() {
         </button>
       </div>
       {!demo && <p className="sheet-note">“Show me around” makes a canvas named “Demo” with stand-ins on it, and a short tour. Nothing in it is real, and one click removes it.</p>}
+      {onDemo && (
+        <p className="empty-line">
+          This is the demo’s canvas.{' '}
+          <button type="button" className="quiet" onClick={() => runCommand('demo.remove')} data-testid="empty-remove-demo">
+            Remove the demo
+          </button>
+        </p>
+      )}
       {bringing && (
         <p className="empty-line" data-testid="empty-bring-line">
           In that terminal, type <code>aubergine here</code> and press Enter. It appears on this canvas, in the same folder.

@@ -30,6 +30,8 @@ export interface PanelSection {
   order: number;
   /** A shorter name for its tab, where the title is long. */
   tab?: string;
+  /** Used less often: it is under “More” at the end of the tabs, so that the tabs fit one row. */
+  more?: boolean;
   /** Whether its count is of things that wait on the owner: the tab then stands out while it is not zero. */
   urgent?: boolean;
   /** One or two characters for the collapsed strip. */
@@ -80,7 +82,7 @@ export function subscribeToSections(listener: () => void): () => void {
 
 export const PANEL_MIN_WIDTH = 180;
 export const PANEL_MAX_WIDTH = 560;
-export const PANEL_DEFAULT_WIDTH = 300;
+export const PANEL_DEFAULT_WIDTH = 320;
 export const PANEL_STRIP_WIDTH = 34;
 
 export interface PanelPrefs {

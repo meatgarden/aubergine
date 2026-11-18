@@ -32,7 +32,7 @@ registerActionView({
     return (
       <>
         <select aria-label="Element" value={String(action.elementId ?? '')} onChange={(e) => onChange({ ...action, elementId: e.target.value })} data-testid="rule-element">
-          <option value="">Which element…</option>
+          <option value="">Which saved step…</option>
           {[...(shelf ?? [])].filter((item) => item.state !== 'retired').map((item) => (
             <option key={item.id} value={item.id}>
               {item.element.name}

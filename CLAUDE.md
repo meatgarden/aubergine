@@ -298,6 +298,16 @@ These are the only abstractions in the code base. Each has exactly one implement
 - **The light theme redefines colours and nothing else.** Every pair of text and background is tested for contrast in both.
 - **Only a control shows the focus ring.** A screen or panel the page focuses when it opens (`tabindex="-1"`) shows none.
 
+- **One primary on a surface, and it comes first.** The browser test "simpler surfaces" counts them.
+- **What is done seldom is in a menu, a fold-out or a tab, never gone.** Each thing that moved keeps its test id and its command, and is reached from the keyboard: the test opens each menu with Enter and checks its lines.
+- **A panel section that is used less says `more`.** The shell puts it under More; it knows no section by name. The tabs are one row.
+- **The list's default says nothing.** This canvas with no other filter shows no chip; anything else is named in one line with Clear, which returns to the default.
+- **A row or a card is pressed as a whole** where the one thing to do is to open it; a control inside it does only its own thing.
+- **A state chip is never cut.** In a row the name gives way first, then the marks.
+- **On screen a workflow is made of steps, and what is kept for reuse is a saved step.** "Element" is the word of the API, the commands, the files and what an agent is told.
+- **A menu takes Escape before what is behind it.** Menus listen in the capture phase, and `belongsToControl` gives Escape to an open menu.
+- **What hangs from a terminal's title is not clipped by the terminal's box.**
+
 ### Canvas behaviour
 
 - A terminal takes input at any zoom at which it is drawn live, and only while it has focus. One click focuses it and moves nothing; only a node too small to read (below `READABLE_ZOOM`) zooms in first. An unfocused terminal is covered by a shield: the first click focuses it.
@@ -416,6 +426,8 @@ Projects: several in one server, each with its own canvases, terminals, queue, o
 The page no longer loses a change after loading (changes are numbered; `web/src/following.ts`). A project as a file: the format (`shared/src/project-file.ts`, `docs/project-file.md`), export, reading in through the review screen with places and choices (`daemon/src/project-files.ts`, `web/src/review/project-file-source.tsx`), templates (two that ship, in `templates/`), `aubergine project export | import | templates | new --template`, a switch on rules. New optional fields, no migration: `Rule.on`, `Session.meantFor`, `Project.fileExtra`. A file is a copy at one moment, not a link. Not built: a library source listing projects.
 
 The look: tokens for every size, colour, space, corner and layer in both themes (`web/src/tokens.css`), one anatomy for controls and the shared pieces (`web/src/ui/`), the old stylesheet in a layer below them, a test that fails on drift, a browser test that measures the page and each screen, `docs/design.md`. Most buttons are still plain elements rather than the components. Many dialogs and panels were measured or neither measured nor looked at; Safari and Firefox were not run.
+
+Simpler surfaces: one row of panel tabs with More, one Filter menu, 44px rows, a terminal's title with one menu, one For you count in the top bar, Workflows as cards with two tabs, the Queue with three tabs, the Library's sources folded, the Board's filters in one menu, new pieces in `web/src/ui` (`MenuButton`, `MenuItem`, `Tabs`, `HowThisWorks`). The workflow editor and the run dialog were not reworked, and unused layout rules for what moved are still in `styles.css`.
 
 Not built yet: a packaged build without development dependencies, Linux tested, measured key tables for Safari, Firefox, Linux and Windows, publishing the client as a package, moving the remaining `/api/v1` routes onto `/v1`, the workflow library, the board of runs, approvals, branches, a pool of agents, a list of past runs in the browser, waiting for output, changing a token's reach, SQLite, an HTTP transport for the MCP server, presets, a finder agent, recording, bash or fish integration.
 
