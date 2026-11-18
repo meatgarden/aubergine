@@ -84,6 +84,11 @@ b {
   outline-offset: 2px;
 }
 
+/* A screen or panel that is given focus by the page when it opens is not a control: it shows no ring. */
+[tabindex='-1']:focus-visible {
+  outline: none;
+}
+
 /* ---------- Controls: button, field, select ---------- */
 
 /* What is drawn as a row, a card, a tab or a chip is a button underneath, and has its own piece below. */
