@@ -3,6 +3,7 @@ import { NO_ATTENTION, NO_STATUS, applyEvent, createInitialState, newCanvas, new
 import { SCOPE_FILTER, listFilters, registerFilter, unregisterFilter } from './list-filters';
 import {
   DEFAULT_VIEW,
+  FRAME_HEIGHT,
   GROUP_HEIGHT,
   ROW_HEIGHT,
   activeFilters,
@@ -283,8 +284,8 @@ describe('drawing only what is in view', () => {
 
   it('knows where each item starts', () => {
     const { tops, total } = measureItems(items, 'comfortable');
-    expect(tops.slice(0, 4)).toEqual([0, GROUP_HEIGHT, GROUP_HEIGHT + 22, GROUP_HEIGHT + 22 + ROW_HEIGHT.comfortable]);
-    expect(total).toBe(3 * GROUP_HEIGHT + 22 + 5 * ROW_HEIGHT.comfortable);
+    expect(tops.slice(0, 4)).toEqual([0, GROUP_HEIGHT, GROUP_HEIGHT + FRAME_HEIGHT, GROUP_HEIGHT + FRAME_HEIGHT + ROW_HEIGHT.comfortable]);
+    expect(total).toBe(3 * GROUP_HEIGHT + FRAME_HEIGHT + 5 * ROW_HEIGHT.comfortable);
     expect(measureItems(items, 'compact').total).toBeLessThan(total);
     expect(measureItems([], 'compact')).toEqual({ tops: [], total: 0 });
   });

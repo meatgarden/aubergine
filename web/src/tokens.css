@@ -1,0 +1,126 @@
+/*
+ * The tokens: every size, colour, space, shape and layer the page uses.
+ * Nothing else in the stylesheets states one of these as a number or a colour; docs/design.md says what each is for.
+ * The light theme gives the same names other values, and nothing else.
+ */
+:root {
+  /* Type: four sizes, two weights. */
+  --font-meta: 12px;
+  --font-body: 13px;
+  --font-title: 15px;
+  --font-screen: 20px;
+  --weight-normal: 400;
+  --weight-strong: 600;
+  --leading: 1.45;
+  --leading-heading: 1.25;
+  --font-sans: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: Menlo, Monaco, Consolas, monospace;
+
+  /* Space: a grid of four. */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --gutter-panel: var(--space-3);
+  --gutter-card: var(--space-4);
+  --gutter-screen: var(--space-6);
+
+  /* Shape. */
+  --radius-control: 6px;
+  --radius-surface: 10px;
+  --radius-pill: 999px;
+
+  /* Controls: two heights, one chip. */
+  --control: 32px;
+  --control-compact: 28px;
+  --chip: 20px;
+  --ease: 120ms;
+
+  /* Layers, lowest first. */
+  --z-canvas: 0;
+  --z-panel: 10;
+  --z-menu: 40;
+  --z-screen: 100;
+  --z-tour: 200;
+  --z-toast: 300;
+
+  /* Colour, by job. Dark. */
+  --bg: #17181c;
+  --surface: #23252b;
+  --surface-raised: #2d3038;
+  --surface-active: #3a3d48;
+  --border: #383b45;
+  --border-strong: #5a5e6b;
+  --border-control: #777c8a;
+  --text: #dfe2e8;
+  --text-muted: #a6abb8;
+  --accent: #b48ead;
+  --accent-soft: #3a2f3b;
+  --accent-text: #d3aecd;
+  --on-accent: #17181c;
+  --attention: #e0a458;
+  --attention-soft: #3d3222;
+  --attention-text: #edbd7d;
+  --on-attention: #17181c;
+  --working: #6a9fd9;
+  --working-soft: #1f2f45;
+  --working-text: #93bceb;
+  --ok: #7fb37a;
+  --ok-soft: #22331f;
+  --ok-text: #a3cd9e;
+  --danger: #d2636b;
+  --danger-soft: #40242a;
+  --danger-text: #ee979d;
+  --on-danger: #17181c;
+  --scrim: rgb(8 8 11 / 0.72);
+  --shadow: rgb(0 0 0 / 0.45);
+  --ring: rgb(180 142 173 / 0.3);
+
+  /* The terminal's own theme, and the canvas it lies on. */
+  --terminal-bg: #101114;
+  --canvas-dot: #2c2f37;
+  --minimap-mask: rgb(10 10 12 / 0.6);
+  --minimap-node: #4a4e5a;
+
+  font: var(--weight-normal) var(--font-body) / var(--leading) var(--font-sans);
+  color: var(--text);
+}
+
+:root[data-theme='light'] {
+  --bg: #eceef2;
+  --surface: #ffffff;
+  --surface-raised: #f1f3f6;
+  --surface-active: #e2e5ec;
+  --border: #d3d7df;
+  --border-strong: #9aa0ad;
+  --border-control: #7f8492;
+  --text: #1f2126;
+  --text-muted: #5a5f6e;
+  --accent: #80507a;
+  --accent-soft: #f1e6ef;
+  --accent-text: #74446e;
+  --on-accent: #ffffff;
+  --attention: #a35a08;
+  --attention-soft: #fbeedb;
+  --attention-text: #8a4b04;
+  --on-attention: #ffffff;
+  --working: #2f6fb8;
+  --working-soft: #e3eefb;
+  --working-text: #215a9c;
+  --ok: #3f7d3a;
+  --ok-soft: #e4f2e2;
+  --ok-text: #316a2d;
+  --danger: #b93a44;
+  --danger-soft: #fbe6e8;
+  --danger-text: #a12d37;
+  --on-danger: #ffffff;
+  --scrim: rgb(30 32 40 / 0.5);
+  --shadow: rgb(30 32 40 / 0.22);
+  --ring: rgb(128 80 122 / 0.28);
+  --terminal-bg: #fbfbfc;
+  --canvas-dot: #c5c9d2;
+  --minimap-mask: rgb(200 204 214 / 0.6);
+  --minimap-node: #a9aebb;
+}
