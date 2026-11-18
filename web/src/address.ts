@@ -1,4 +1,4 @@
-import { SHOW_PARAM, canvasAddress, projectCanvasAddress } from '@aubergine/shared';
+import { PAGE_NAMES, SHOW_PARAM, canvasAddress, isPageName, pageAddress, projectCanvasAddress, type PageName } from '@aubergine/shared';
 
 /**
  * Which canvas a browser tab shows is carried by its address (`/p/<project>/c/<canvas>`;
@@ -12,9 +12,20 @@ const LAST_CANVAS_KEY = 'aubergine.canvas';
 /** The canvas named by an address path, if it names one. */
 export function canvasIdFromPath(pathname: string): string | null {
   // The canvas is what counts: a canvas that moved to another project is found under its old address too.
-  const match = /^(?:\/p\/[^/]+)?\/c\/([^/]+)\/?$/.exec(pathname);
+  // After it may come the name of a page that is shown over it, and nothing else.
+  const match = new RegExp(`^(?:/p/[^/]+)?/c/([^/]+)(?:/(?:${PAGE_NAMES.join('|')}))?/?$`).exec(pathname);
   return match?.[1] ?? null;
 }
+
+/** The page named by an address path, after its canvas: `/c/<canvas>/queue`. Null for the canvas itself. */
+export function pageFromPath(pathname: string): PageName | null {
+  const name = /^(?:\/p\/[^/]+)?\/c\/[^/]+\/([a-z]+)\/?$/.exec(pathname)?.[1];
+  return isPageName(name) ? name : null;
+}
+
+/** What a history step made here carries: that it was added when a page was opened, so that leaving the page can go back over it. */
+const OPENED = { auberginePage: true };
+export const openedHere = (): boolean => (history.state as { auberginePage?: boolean } | null)?.auberginePage === true;
 
 /**
  * The canvas to show when a page opens: the one in the address if it exists;
@@ -57,9 +68,12 @@ export function sessionFromAddress(search: string): string | null {
 }
 
 /** Puts a canvas in the address bar. `push` adds a history step; otherwise the current one is replaced. */
-export function writeAddress(canvasId: string, push: boolean, projectId?: string | null): void {
-  const target = projectId ? projectCanvasAddress(projectId, canvasId) : canvasAddress(canvasId);
+export function writeAddress(canvasId: string, push: boolean, projectId?: string | null, page: PageName | null = null): void {
+  const canvas = projectId ? projectCanvasAddress(projectId, canvasId) : canvasAddress(canvasId);
+  const target = page ? pageAddress(canvas, page) : canvas;
   if (location.pathname === target && location.search === '') return;
-  if (push) history.pushState(null, '', target);
-  else history.replaceState(null, '', target);
+  // A step that opens a page over the canvas says so, and a step that only changes what the page is over keeps saying it.
+  const state = page && (push || openedHere()) ? OPENED : null;
+  if (push) history.pushState(state, '', target);
+  else history.replaceState(state, '', target);
 }

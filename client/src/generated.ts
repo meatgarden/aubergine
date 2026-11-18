@@ -6636,8 +6636,10 @@ export type GetForYouResult = {
     /** Stays the same while the thing waits: its kind and what it is about. */
     id: string;
     kind: string;
-    /** What its kind is called: `Approval`, `A draft to read`. */
+    /** What its kind is called, short enough for a chip: `Approval`, `Draft to read`. */
     title: string;
+    /** How its kind is to be drawn: `attention` for what waits on the owner to go on, `ok` for what ended well, `neutral` for the rest. */
+    tone: "attention" | "ok" | "neutral";
     /** What waits, in a sentence. Where part of it was written by an agent or a program, it is their words. */
     sentence: string;
     /** Where it came from: a terminal by name, a program, the library. */

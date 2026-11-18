@@ -28,41 +28,20 @@ import {
 import { api } from './api';
 import { OutsidePanel } from './OutsidePanel';
 import { ParkedList } from './ParkedList';
-import { Picker } from './Picker';
 import { currentLayout, useApp } from './store';
 import { canvasActions } from './canvas-actions';
 import { runCommand } from './commands';
-import { ProjectsScreen } from './projects/ProjectsScreen';
-import { SharingScreen } from './projects/SharingScreen';
 import { afterOpening, setOpenNew } from './desktop';
 import { hint } from './shortcuts';
-import { ShortcutSheet } from './ShortcutSheet';
-import { ActivityScreen, TokenScreen } from './TokenScreen';
-import { RunDialog } from './workflows/RunDialog';
 import { useEndedRuns } from './workflows/ended-runs';
 import { EmptyCanvas } from './EmptyCanvas';
 import { FULL_SIZE_HINT, shouldSayFullSize } from './full-size-hint';
-import { HelpPanel } from './HelpPanel';
-import { HistoryPanel } from './HistoryPanel';
-import { InventoryPanel } from './InventoryPanel';
 import { tourSignal } from './tour/tour-store';
-import { AgentToolsDialog } from './AgentToolsDialog';
-import { RunViewDialog } from './workflows/RunViewDialog';
-import { WorkflowEditor } from './workflows/WorkflowEditor';
-import { WorkflowsScreen } from './workflows/WorkflowsScreen';
-import { ReviewScreen } from './review/ReviewScreen';
 import './review/drafts-source';
 import './review/library-source';
 import './review/project-file-source';
-import { LibraryScreen } from './library/LibraryScreen';
-import { BoardScreen } from './board/BoardScreen';
-import { StartDialog } from './environment/StartDialog';
-import { EnvironmentPanel } from './environment/EnvironmentPanel';
 import './panel/sections/copies';
 import './panel/sections/for-you';
-import { QueueScreen } from './queue/QueueScreen';
-import { DescribeDialog } from './workflows/DescribeDialog';
-import { ShelfEditor } from './workflows/ShelfEditor';
 import './workflows/output-views';
 import './workflows/element-views';
 import './workflows/run-views';
@@ -575,28 +554,6 @@ export function Canvas() {
           {FULL_SIZE_HINT}
         </div>
       )}
-      <Picker />
-      <ShortcutSheet />
-      <HelpPanel />
-      <InventoryPanel />
-      <HistoryPanel />
-      <TokenScreen />
-      <ActivityScreen />
-      <WorkflowsScreen />
-      <WorkflowEditor />
-      <ShelfEditor />
-      <DescribeDialog />
-      <ReviewScreen />
-      <LibraryScreen />
-      <QueueScreen />
-      <ProjectsScreen />
-      <SharingScreen />
-      <BoardScreen />
-      <StartDialog />
-      <EnvironmentPanel />
-      <RunDialog />
-      <AgentToolsDialog />
-      <RunViewDialog />
     </div>
   );
 }

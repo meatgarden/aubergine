@@ -1,6 +1,8 @@
 import { showNotification } from './attention';
 import { create } from 'zustand';
 import {
+  isPageName,
+  type PageName,
   DEFAULT_SETTINGS,
   placeOfSession,
   sortedCanvases,
@@ -15,7 +17,7 @@ import {
 } from '@aubergine/shared';
 import { ApiError, api, askAbout, lookAt, subscribeToEvents } from './api';
 import { NOT_FOLLOWING, behind, takeChange, takeWhole, type Following } from './following';
-import { canvasIdFromPath, chooseCanvas, rememberCanvas, rememberedCanvas, sessionFromAddress, writeAddress } from './address';
+import { canvasIdFromPath, chooseCanvas, openedHere, pageFromPath, rememberCanvas, rememberedCanvas, sessionFromAddress, writeAddress } from './address';
 import { announcement, notificationsWanted } from './attention';
 import { clampPanelWidth, loadPanelPrefs, savePanelPrefs, type PanelPrefs } from './panel/registry';
 import { loadView, saveView, type ListView } from './terminal-rows';
@@ -59,6 +61,11 @@ export interface AppStore {
   selected: string | null;
   /** The one panel that is open, if any. */
   panel: Panel | null;
+  /**
+   * The page that is shown in place of the canvas, if any: Queue, Board, Workflows or Library. The canvas stays as it
+   * was underneath, and a panel or a dialog opens over a page as it does over the canvas. Its name is in the address.
+   */
+  page: PageName | null;
   /** Something a component was asked to start: renaming, a note, the move menu. Used once. */
   ask: Ask | null;
   /** The last thing that went wrong, shown in the toolbar. */
@@ -119,8 +126,13 @@ export interface AppStore {
   askToCloseCanvas: (canvasId: string | null) => void;
   setPicker: (open: boolean) => void;
   select: (sessionId: string | null) => void;
-  /** Opens a panel, or closes it when it is the one that is open. `null` closes whatever is open. */
+  /**
+   * Opens a panel, or closes it when it is the one that is open. `null` closes the panel that is open, or, with none
+   * open, leaves the page for the canvas. A name that is a page's shows that page, or leaves it when it is the one shown.
+   */
   togglePanel: (panel: Panel | null) => void;
+  /** Shows a page in place of the canvas, or (null) the canvas as it was. */
+  showPage: (page: PageName | null) => void;
   request: (ask: Omit<Ask, 'tick'>) => void;
   /** An ask is used once: forget it, unless a newer one has replaced it. */
   asked: (tick: number) => void;
@@ -169,6 +181,8 @@ export const useApp = create<AppStore>((set, get) => ({
   picker: false,
   selected: null,
   panel: null,
+  // A page whose address the browser was opened at is shown from the start.
+  page: typeof location === 'undefined' ? null : pageFromPath(location.pathname),
   ask: null,
   notice: null,
   parkedHere: [],
@@ -283,7 +297,23 @@ export const useApp = create<AppStore>((set, get) => ({
       settleUntil: sessionId ? Date.now() + SETTLE_MS : 0,
     })),
   select: (sessionId) => set({ selected: sessionId }),
-  togglePanel: (panel) => set((state) => ({ panel: panel === null || state.panel === panel ? null : panel })),
+  togglePanel: (panel) => {
+    const state = get();
+    if (panel !== null && isPageName(panel)) return state.showPage(state.page === panel ? null : panel);
+    if (panel === null && state.panel === null) return state.showPage(null);
+    set({ panel: panel === null || state.panel === panel ? null : panel });
+  },
+  showPage: (page) => {
+    const state = get();
+    if (state.page === page) return;
+    set({ page });
+    if (!state.canvasId) return;
+    // Leaving a page that this page's own step opened goes back over that step, so that the browser's back and
+    // the page's own ways out leave the same history. Anything else is written in place.
+    if (page === null && state.page !== null && openedHere()) return history.back();
+    const projectId = state.whole?.canvases.find((c) => c.id === state.canvasId)?.projectId ?? null;
+    writeAddress(state.canvasId, page !== null && state.page === null, projectId, page);
+  },
   request: (ask) => set((state) => ({ ask: { ...ask, tick: (state.ask?.tick ?? 0) + 1 } })),
   asked: (tick) => set((state) => (state.ask?.tick === tick ? { ask: null } : {})),
   setNotice: (notice) => set({ notice }),
@@ -312,7 +342,7 @@ export const useApp = create<AppStore>((set, get) => ({
     const everything = get().whole;
     if (get().canvasId !== canvasId) set({ canvasId, focus: null, selected: null, settleUntil: 0, ...(everything ? { app: viewOf(everything, canvasId, get().app) } : {}) });
     const projectId = everything?.canvases.find((c) => c.id === canvasId)?.projectId ?? null;
-    writeAddress(canvasId, options?.push !== false, projectId);
+    writeAddress(canvasId, options?.push !== false, projectId, get().page);
     rememberCanvas(canvasId, projectId ?? undefined);
     events?.viewing(canvasId);
   },
@@ -420,6 +450,9 @@ export function startSync(): () => void {
   const onPopState = (): void => {
     const id = canvasIdFromPath(location.pathname);
     const store = useApp.getState();
+    // And between a page and the canvas it was opened from.
+    const page = pageFromPath(location.pathname);
+    if (page !== store.page) useApp.setState({ page });
     if (id && store.whole?.canvases.some((c) => c.id === id) && id !== store.canvasId) {
       useApp.setState({ canvasId: id, focus: null, selected: null, app: viewOf(store.whole, id, store.app) });
       rememberCanvas(id, store.whole.canvases.find((c) => c.id === id)?.projectId);

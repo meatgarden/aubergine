@@ -145,7 +145,7 @@ export function ShelfEditor() {
                     ))}
                   </ul>
                 )}
-                <p className="sheet-note">Saving here changes no workflow: each copy stays as it is and says that a newer version is on the shelf.</p>
+                <p className="sheet-note">Saving here changes no workflow: each copy stays as it is and says that a newer version is saved.</p>
 
                 <div className="wf-label">Versions</div>
                 <ul className="shelf-versions" data-testid="shelf-versions">

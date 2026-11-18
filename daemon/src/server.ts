@@ -53,6 +53,8 @@ import {
   UpdateNodeRequest,
   canvasAddress,
   projectCanvasAddress,
+  PAGE_NAMES,
+  pageAddress,
   paths,
   placeOfSession,
   type AppendNoteResponse,
@@ -987,6 +989,11 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     // The address of a canvas is a page of the same web app.
     app.get(canvasAddress(':canvasId'), async (_request, reply) => reply.sendFile('index.html'));
     app.get(projectCanvasAddress(':projectId', ':canvasId'), async (_request, reply) => reply.sendFile('index.html'));
+    // And so is the address of each page that is about a whole project.
+    for (const page of PAGE_NAMES) {
+      app.get(pageAddress(canvasAddress(':canvasId'), page), async (_request, reply) => reply.sendFile('index.html'));
+      app.get(pageAddress(projectCanvasAddress(':projectId', ':canvasId'), page), async (_request, reply) => reply.sendFile('index.html'));
+    }
   } else {
     app.get('/', async (_request, reply) =>
       reply

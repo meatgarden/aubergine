@@ -229,9 +229,17 @@ export const COMMANDS: readonly Command[] = [
     run: (state) => state.chooseAgentTools(true),
   },
   {
+    id: 'canvas.show',
+    title: 'Canvas',
+    description: 'Leaves the Queue, the Board, Workflows or the Library for the canvas, as it was: the same tab, the same view, the same terminal selected.',
+    group: 'Panels',
+    available: (state) => state.page !== null,
+    run: (state) => state.showPage(null),
+  },
+  {
     id: 'queue.open',
     title: 'Queue and For you…',
-    description: 'Two lists side by side. On the left, everything that waits on you: terminals, approvals, drafts, proposed tasks, tasks that are done or failed, what was asked of you. On the right, the queue of tasks for agents: add one, say how many run at once, start the next.',
+    description: 'A page with two parts. First, everything that waits on you: terminals, approvals, drafts, proposed tasks, tasks that are done or failed, what was asked of you. Then the queue of tasks for agents: add one, say how many run at once, start the next.',
     group: 'Panels',
     available: always,
     run: (state) => state.togglePanel('queue'),
@@ -719,7 +727,7 @@ export const COMMANDS: readonly Command[] = [
   {
     id: 'element.run',
     title: 'Run a step by itself… on the terminal',
-    description: 'Runs one step from the shelf on the terminal, without a workflow around it.',
+    description: 'Runs one saved step on the terminal, without a workflow around it.',
     group: 'Terminals',
     available: (state) => hasTarget(state) && (state.app?.shelf.length ?? 0) > 0,
     run: (state) => {
@@ -776,7 +784,7 @@ export const COMMANDS: readonly Command[] = [
     title: 'Close panels',
     description: 'Closes whatever panel is open; else returns the keyboard from a button to the canvas; else clears the selection.',
     group: 'Panels',
-    available: (state) => state.picker || state.choosingAgentTools || state.viewingEnvironment !== null || state.inventoryFor !== null || state.historyView !== null || state.describing !== null || state.editingElement !== null || state.viewingRun !== null || state.startingRun !== null || state.editingWorkflow !== null || state.panel !== null || state.drawer !== null || state.selected !== null || onControl(),
+    available: (state) => state.picker || state.page !== null || state.choosingAgentTools || state.viewingEnvironment !== null || state.inventoryFor !== null || state.historyView !== null || state.describing !== null || state.editingElement !== null || state.viewingRun !== null || state.startingRun !== null || state.editingWorkflow !== null || state.panel !== null || state.drawer !== null || state.selected !== null || onControl(),
     run: (state) => {
       if (state.picker) state.setPicker(false);
       else if (state.choosingAgentTools) state.chooseAgentTools(false);
@@ -789,6 +797,7 @@ export const COMMANDS: readonly Command[] = [
       else if (state.viewingRun !== null) state.viewRun(null);
       else if (state.editingWorkflow !== null) state.editWorkflow(null);
       else if (state.panel !== null) state.togglePanel(null);
+      else if (state.page !== null) state.showPage(null);
       else if (state.drawer !== null) state.openDrawer(null);
       else if (onControl()) (document.activeElement as HTMLElement).blur();
       else state.select(null);

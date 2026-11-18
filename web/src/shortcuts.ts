@@ -65,7 +65,8 @@ export function belongsToControl(target: EventTarget | null, key: string): boole
   if (key === 'Tab') return target !== document.body;
   // An open menu is closed by Escape before anything behind it is: the key is the menu's, not the canvas's or a panel's.
   if (key === 'Escape' && document.querySelector('[role="menu"]:not([hidden])') !== null) return true;
-  if (target.closest('[role="dialog"], [role="alertdialog"]')) return key !== 'Escape';
+  // A page is a place of its own, like a dialog: while the keyboard is in one, plain keys are its own and not the canvas's.
+  if (target.closest('[role="dialog"], [role="alertdialog"], .ui-page')) return key !== 'Escape';
   return (key === 'Enter' || key === ' ') && target.closest('button, a[href], summary, [role="button"], [role="tab"]') !== null;
 }
 
@@ -151,7 +152,7 @@ export function startShortcuts(): () => void {
     if (event.detail === 0 || !(event.target instanceof Element)) return;
     const button = event.target.closest('button');
     if (!button) return;
-    if (button.closest('[role="dialog"], [role="alertdialog"], [role="menu"], .xterm')) return;
+    if (button.closest('[role="dialog"], [role="alertdialog"], [role="menu"], .ui-page, .xterm')) return;
     // After the button's own handler has run, and only if it did not move the keyboard itself.
     window.setTimeout(() => {
       if (document.activeElement === button) button.blur();

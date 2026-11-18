@@ -18,6 +18,26 @@ const openReview = async (page: Page): Promise<void> => {
   await page.getByTestId('queue-screen').getByTestId('review-open').click();
 };
 
+/** Closes Review, and leaves the page it was opened from (the Queue) for the canvas, where the tests go on. */
+const closeReview = async (page: Page): Promise<void> => {
+  await page.getByTestId('review-screen').getByTestId('review-close').click();
+  await expect(page.getByTestId('review-screen')).toHaveCount(0);
+  await toCanvas(page);
+};
+
+/** Back to the canvas from whichever page is shown; nothing where none is. */
+const toCanvas = async (page: Page): Promise<void> => {
+  if ((await page.locator('.ui-page').count()) > 0) await page.getByTestId('toolbar-canvas').click();
+  await expect(page.locator('.ui-page')).toHaveCount(0);
+};
+
+/** Shows a page from the top bar, where it is not the one shown already (pressing its name again would leave it). */
+const openPage = async (page: Page, name: 'queue' | 'board' | 'workflows' | 'library'): Promise<void> => {
+  const item = page.getByTestId(`toolbar-${name}`);
+  if ((await item.getAttribute('aria-current')) !== 'page') await item.click();
+  await expect(page.locator(`.ui-page[data-page="${name}"]`)).toBeVisible();
+};
+
 /** Shows a control that is behind a menu, a tab or a fold-out, where it is not showing yet: each opener is pressed in turn. */
 const reveal = async (target: Locator, ...openers: Locator[]): Promise<void> => {
   for (const opener of openers) {
@@ -776,7 +796,7 @@ test('a step written by an agent is reviewed, accepted, run by itself, and its c
   await describe.getByTestId('describe-send').click();
   await expect(describe.getByTestId('describe-sent')).toBeVisible();
   await describe.getByRole('button', { name: 'Done' }).click();
-  await page.getByTestId('workflows-screen').getByRole('button', { name: 'Close' }).click();
+  await page.getByTestId('toolbar-canvas').click();
   // Nothing of the description was typed into the terminal.
   await expect(page.locator('.xterm-rows')).not.toContainText('zebra-crossing');
 
@@ -808,7 +828,7 @@ test('a step written by an agent is reviewed, accepted, run by itself, and its c
   await review.getByTestId('review-send-back-confirm').click();
   await expect(review.getByTestId('review-row')).toHaveAttribute('data-state', 'returned');
   await expect(review.getByTestId('review-accept')).toHaveCount(0);
-  await review.getByTestId('review-close').click();
+  await closeReview(page);
   await expect(page.locator('.xterm-rows')).not.toContainText('quokka');
   await typeLine(`clear; ${aubergine} workflow brief | grep -A2 'sent back'`);
   await expect(page.locator('.xterm-rows')).toContainText('Shorter please: quokka.', { timeout: 20_000 });
@@ -825,7 +845,7 @@ test('a step written by an agent is reviewed, accepted, run by itself, and its c
   await review.getByTestId('review-changes').click();
   await review.getByTestId('review-accept').click();
   await expect(review.getByTestId('review-empty')).toBeVisible();
-  await review.getByTestId('review-close').click();
+  await closeReview(page);
   await expect(page.getByTestId('for-you')).toHaveAttribute('data-review', '0');
 
   // It is on the shelf. Run it by itself on the terminal: the dialog says what it needs.
@@ -905,7 +925,7 @@ test('a step written by an agent is reviewed, accepted, run by itself, and its c
   // What became of the drafts is on the screen: decided, not what they said.
   await expect(review.getByTestId('review-decided').locator('li').first()).toContainText('Accepted: a step');
   await expect(review.getByTestId('review-decided')).toContainText('Discarded: a step');
-  await review.getByTestId('review-close').click();
+  await closeReview(page);
   rmSync(work, { recursive: true, force: true });
 });
 
@@ -958,7 +978,7 @@ test('a workflow kept in a repository is reviewed before it can be run, and agai
   await expect(review.getByTestId('review-text')).toContainText('Step 2 of 2: Announce it');
   await review.getByTestId('review-accept').click();
   await expect(review.getByTestId('review-empty')).toBeVisible();
-  await review.getByTestId('review-close').click();
+  await closeReview(page);
   await expect(waiting).toHaveAttribute('data-review', '0');
 
   // Accepted: it can be chosen, and runs.
@@ -994,7 +1014,7 @@ test('a workflow kept in a repository is reviewed before it can be run, and agai
   await review.getByTestId('review-changes').click();
   await expect(review.getByTestId('review-diff').locator('.diff-added')).toContainText('delete the release of (task)');
   await expect(review.getByTestId('review-diff').locator('.diff-removed')).toContainText('Tag the release of (task).');
-  await review.getByTestId('review-close').click();
+  await closeReview(page);
   rmSync(project, { recursive: true, force: true });
 });
 
@@ -1279,7 +1299,7 @@ test('the tour: each step is done on the real thing, on the demo', async ({ page
   for (const button of ['review-accept', 'review-send-back', 'review-discard']) await review.getByTestId(button).click({ trial: true });
   await review.getByTestId('review-discard').click();
   await expect(card).toHaveAttribute('data-step', 'your-own');
-  await review.getByTestId('review-close').click();
+  await closeReview(page);
 
   // 8. Bring in your own, and take the demo away. Everything it made goes, and nothing else.
   await expect(card.getByTestId('tour-count')).toHaveText('8 of 8');
@@ -1404,10 +1424,17 @@ test('what is switched on for an agent: names only, where each comes from, and w
   await page.goto(`/auth?token=${token}`);
   await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
   const origin = new URL(page.url()).origin;
+  const addressBefore = page.url();
   await page.getByRole('button', { name: 'New canvas' }).click();
-  await page.getByTestId('toolbar-new-terminal').click();
+  await expect(page).not.toHaveURL(addressBefore);
+  // The terminal starts in a folder of this test's own: what is read as "this project" is then nobody's real configuration.
+  const agentFolder = mkdtempSync(path.join(tmpdir(), 'aubergine-e2e-agent-'));
+  await expect(page.getByTestId('terminal-node')).toHaveCount(0);
+  const madeThere = await page.request.post('/api/v1/sessions', { headers: { origin, 'sec-fetch-site': 'same-origin' }, data: { cwd: agentFolder, canvasId: page.url().split('/c/')[1] ?? '' } });
+  expect(madeThere.status()).toBe(201);
+  const sessionId = ((await madeThere.json()) as { session: { id: string } }).session.id;
+  await page.locator(`[data-testid="list-row"][data-session="${sessionId}"]`).click();
   await expect(page.locator('.xterm-rows')).toHaveText(/\S/);
-  const sessionId = (await page.getByTestId('list-row').getAttribute('data-session')) ?? '';
 
   // A terminal that is not an agent's has no such button.
   await expect(page.getByTestId('switched-on')).toHaveCount(0);
@@ -1941,17 +1968,17 @@ test('a saved step has a life: a copy says where it came from, a newer version i
   await editor.getByTestId('insert-from-shelf').selectOption({ label: 'Check every link' });
   const copy = editor.getByTestId('editor-element').nth(1);
   await expect(copy.getByTestId('copy-mark')).toHaveAttribute('data-state', 'unchanged');
-  await expect(copy.getByTestId('copy-mark')).toHaveText('from the shelf');
+  await expect(copy.getByTestId('copy-mark')).toHaveText('a saved step');
   await expect(editor.getByTestId('editor-element').nth(0).getByTestId('copy-mark')).toHaveCount(0);
-  await expect(editor.getByTestId('copy-words')).toContainText('A copy of "Check every link" from the shelf, version 1, unchanged.');
+  await expect(editor.getByTestId('copy-words')).toContainText('A copy of "Check every link" from your saved steps, version 1, unchanged.');
   await editor.getByTestId('editor-save').click();
   await expect(editor.getByTestId('editor-saved')).toContainText('Saved as version 2');
 
   // The shelf moves on. The copy does not change; it says a newer version is there.
   expect((await page.request.patch(`/v1/elements/${shelfId}`, { ...asOwner, data: { instructions: 'Open each link in the page.\nNote every one that fails.', note: 'Asks for the failures' } })).status()).toBe(200);
   await expect(copy.getByTestId('copy-mark')).toHaveAttribute('data-state', 'behind');
-  await expect(copy.getByTestId('copy-mark')).toHaveText('newer on the shelf');
-  await expect(editor.getByTestId('copy-words')).toContainText('A newer version is on the shelf: version 2.');
+  await expect(copy.getByTestId('copy-mark')).toHaveText('a newer version is saved');
+  await expect(editor.getByTestId('copy-words')).toContainText('A newer version is saved: version 2.');
   await expect(editor.getByTestId('editor-preview')).not.toContainText('Note every one that fails.');
 
   // The comparison: what the newer version adds, with its note. Then it is taken, and saving makes a version of the workflow.
@@ -2084,7 +2111,7 @@ test('the library: a Git source is added, browsed and read; an item is installed
     await expect(review.getByTestId('review-text')).toContainText('Write the notes for (task).');
     await review.getByTestId('review-accept').click();
     await expect(review.getByTestId('review-empty')).toBeVisible();
-    await review.getByTestId('review-close').click();
+    await closeReview(page);
 
     // It is among the workflows, and runs like any other.
     const workflows = ((await (await page.request.get('/v1/workflows', { headers: { origin } })).json()) as { items: { id: string; name: string }[] }).items;
@@ -2242,7 +2269,7 @@ test('an approval and the board: a run stops for the owner, shows on the board a
   await expect(card.getByTestId('board-card-status')).toHaveText('working');
   await expect(board.getByTestId('board-summary')).toHaveText('1 working');
   await expect(card.getByTestId('approve')).toHaveCount(0);
-  await board.getByTestId('board-close').click();
+  await page.getByTestId('toolbar-canvas').click();
   // It no longer waits for the owner. Other canvases may have terminals that do, so the queue is asked about this one.
   await expect(page.locator('[data-testid="for-you"][title*="Careful change"]')).toHaveCount(0);
 
@@ -2646,7 +2673,7 @@ test('the queue and For you: tasks start when the owner says and no more than th
   await expect.poll(async () => next.last().getAttribute('data-task')).not.toBe(last);
 
   // The side panel's short list is the same list.
-  await screen.getByTestId('queue-close').click();
+  await page.getByTestId('toolbar-canvas').click();
   await page.locator('[data-testid="panel-tab"][data-section="for-you"]').click();
   await expect(page.getByTestId('foryou-section')).toBeVisible();
   // No program decides: a token that may add tasks is refused when it accepts, starts or writes a rule.
@@ -2945,7 +2972,7 @@ test('projects: a second project has its own tabs, terminals and queue; what wai
   await queue.getByTestId('foryou-write').fill('Project test: look at this');
   await queue.getByTestId('foryou-add').click();
   await expect(queue.locator('[data-testid="foryou-row"]').filter({ hasText: 'Project test: look at this' })).toHaveCount(1);
-  await queue.getByTestId('queue-close').click();
+  await page.getByTestId('toolbar-canvas').click();
   // The shared workflow is in this project's list too.
   await page.getByTestId('toolbar-workflows').click();
   await expect(page.getByTestId('workflows-screen').locator('[data-testid="workflow-row"][data-workflow="Project test workflow"]')).toHaveCount(1);
@@ -2965,7 +2992,7 @@ test('projects: a second project has its own tabs, terminals and queue; what wai
   const elsewhere = queue.locator('[data-testid="foryou-row"]').filter({ hasText: 'Project test: look at this' });
   await expect(elsewhere).toHaveCount(1);
   await expect(elsewhere.getByTestId('foryou-project')).toHaveText('Project test second · ');
-  await queue.getByTestId('queue-close').click();
+  await page.getByTestId('toolbar-canvas').click();
   // What waits in the other project is said on the switcher, and beside that project in its menu.
   await expect(page.getByTestId('project-elsewhere')).toHaveText(/^[1-9]\d*$/);
   await switcher.click();
@@ -3098,7 +3125,7 @@ test('a project as a file: written out, read in under another name through the r
   const schedule = queue.getByTestId('schedule-row').filter({ hasText: 'File test morning' });
   await expect(schedule).toHaveAttribute('data-on', 'false');
   await expect(schedule.getByTestId('schedule-next')).toHaveText('Switched off.');
-  await queue.getByTestId('queue-close').click();
+  await page.getByTestId('toolbar-canvas').click();
   // The owner starts the terminal: a shell, where there was none.
   await node.getByTestId('node-start').click();
   await expect(node.getByTestId('node-not-started')).toHaveCount(0);
@@ -3252,6 +3279,26 @@ test('one look: the canvas page and every screen use the two control heights and
     await page.keyboard.press('Escape');
     await expect(page.getByTestId(testid)).toHaveCount(0);
   }
+  // The four pages are laid out the same: the row of the name as tall, the name as large, on the same gutter, in a column of the same width.
+  const laidOut: Record<string, string> = {};
+  for (const name of ['queue', 'board', 'workflows', 'library'] as const) {
+    await openPage(page, name);
+    laidOut[name] = await page.evaluate(() => {
+      const root = document.querySelector('.ui-page') as HTMLElement;
+      const row = root.querySelector('.ui-page-head-row') as HTMLElement;
+      const title = root.querySelector('.ui-page-head h1') as HTMLElement;
+      const column = root.querySelector('.ui-page-body > .ui-page-column') as HTMLElement;
+      const first = column.firstElementChild as HTMLElement;
+      return [`head ${row.offsetHeight}`, `name ${getComputedStyle(title).fontSize} at ${Math.round(title.getBoundingClientRect().left)}`, `gutter ${getComputedStyle(column).paddingLeft}`, `content at ${Math.round(first.getBoundingClientRect().left)}`, `from the top ${Math.round(root.getBoundingClientRect().top)}`, root.matches('.is-wide') ? 'wide' : `width ${getComputedStyle(column).maxWidth}`].join(', ');
+    });
+    await toCanvas(page);
+  }
+  expect(laidOut.queue).toBe('head 72, name 20px at 24, gutter 24px, content at 24, from the top ' + (laidOut.queue?.split('from the top ')[1]?.split(',')[0] ?? '') + ', width 1120px');
+  expect(laidOut.workflows).toBe(laidOut.queue);
+  expect(laidOut.library).toBe(laidOut.queue);
+  // The Board is columns itself: it has all the width, and is otherwise the same.
+  expect(laidOut.board).toBe(laidOut.queue?.replace('width 1120px', 'wide'));
+
   // The surfaces where the work on a workflow is done, and the smaller ones that are reached from a menu or the palette.
   const look = async (name: string, testid: string, open: () => Promise<void>): Promise<void> => {
     await open();
@@ -3263,6 +3310,7 @@ test('one look: the canvas page and every screen use the two control heights and
       await page.waitForTimeout(100);
     }
     await expect(page.locator('.dialog-backdrop'), `${name} closes`).toHaveCount(0);
+    await toCanvas(page);
   };
   const command = async (words: string): Promise<void> => {
     await page.keyboard.press(mac ? 'Meta+k' : 'Control+Shift+K');
@@ -3271,19 +3319,19 @@ test('one look: the canvas page and every screen use the two control heights and
     await page.keyboard.press('Enter');
   };
   await look('the workflow editor', 'workflow-editor', async () => {
-    await page.getByTestId('toolbar-workflows').click();
+    await openPage(page, 'workflows');
     const use = page.locator('[data-testid="template-use"][data-template="plan-build-check"]');
     await reveal(use, page.getByTestId('templates-fold').locator('summary'));
     await use.click();
   });
   await look('the saved-step editor', 'shelf-editor', async () => {
-    await page.getByTestId('toolbar-workflows').click();
+    await openPage(page, 'workflows');
     await page.getByTestId('steps-tab').click();
     await page.getByTestId('step-new').click();
     await page.getByTestId('shelf-new').click();
   });
   await look('the describe dialog', 'describe-dialog', async () => {
-    await page.getByTestId('toolbar-workflows').click();
+    await openPage(page, 'workflows');
     await page.getByTestId('workflows-tab').click();
     await page.getByTestId('workflow-new').click();
     await page.getByTestId('describe-workflow').click();
@@ -3293,11 +3341,11 @@ test('one look: the canvas page and every screen use the two control heights and
     await node.getByTestId('node-run-workflow').click();
   });
   await look('the Schedules part of the queue', 'queue-schedules', async () => {
-    await page.getByTestId('toolbar-queue').click();
+    await openPage(page, 'queue');
     await page.getByTestId('queue-tab-schedules').click();
   });
   await look('the Rules part of the queue', 'queue-rules', async () => {
-    await page.getByTestId('toolbar-queue').click();
+    await openPage(page, 'queue');
     await page.getByTestId('queue-tab-rules').click();
   });
   await look('Review', 'review-screen', () => command('Review drafts'));
@@ -3435,7 +3483,9 @@ test('simpler surfaces: the list starts near the top, a name is not cut, one pri
     page.evaluate((sel) => {
       const surface = document.querySelector(sel) as HTMLElement;
       const left = surface.getBoundingClientRect().left + surface.clientLeft;
-      return [...new Set([...surface.children].filter((el) => !el.matches('.sheet-head, .list-resize, .list-rows, .panel-section') && (el as HTMLElement).offsetParent !== null && el.getBoundingClientRect().width > 0).map((el) => Math.round(el.getBoundingClientRect().left - left)))];
+      // A page's own children are its head and its body, edge to edge; what it holds is in their columns.
+      const held = surface.matches('.ui-page') ? [...surface.querySelectorAll('.ui-page-head-row > *:first-child, .ui-page-tabs > *, .ui-page-body > .ui-page-column > *')] : [...surface.children];
+      return [...new Set(held.filter((el) => !el.matches('.sheet-head, .list-resize, .list-rows, .panel-section') && (el as HTMLElement).offsetParent !== null && el.getBoundingClientRect().width > 0).map((el) => Math.round(el.getBoundingClientRect().left - left)))];
     }, selector);
 
   /**
@@ -3484,13 +3534,16 @@ test('simpler surfaces: the list starts near the top, a name is not cut, one pri
     // Rows that are pressed and quiet buttons that begin a line: their words are on the screen's gutter of 24.
     // Cards: their words are on the card's own gutter of 16, inside the line round the card.
     if (testid === 'library-screen') await expect(page.getByTestId('library-screen').locator('.library-row').first()).toBeVisible();
-    if (testid === 'library-screen') expect(await wordEdges('[data-testid="library-screen"]', '.library-row'), 'library rows').toEqual([24]);
+    if (testid === 'library-screen') expect(await wordEdges('[data-testid="library-screen"]', '.library-row'), 'library rows').toEqual([33]); // a row begins with the chip of its kind, which stands on the gutter: its word is inside its padding and its line
+    if (testid === 'library-screen') expect(await page.evaluate(() => [...new Set([...document.querySelectorAll('[data-testid="library-screen"] .library-row .library-kind')].map((chip) => Math.round(chip.getBoundingClientRect().left)))])).toEqual([24]);
     if (testid === 'board') expect(await wordEdges('[data-testid="board"]', '[data-testid="board-ended-row"]:first-child, .board-group > h3, .board-filters > .ui-menu-button > button'), 'board lines').toEqual(expect.arrayContaining([37]));
     // (A heading and a line of the last day, where there are any, begin at 24; the Filter button's words are inside its own line and padding.)
     if (testid === 'board') expect((await wordEdges('[data-testid="board"]', '[data-testid="board-ended-row"]:first-child, .board-group > h3')).filter((x) => x !== 24), 'board headings and lines').toEqual([]);
     if (testid === 'workflows-screen') await expect(page.getByTestId('workflows-screen').locator('.ui-card').first()).toBeVisible();
     if (testid === 'workflows-screen') expect(await wordEdges('[data-testid="workflows-screen"]', '.ui-card > .ui-card-text > strong'), 'workflow cards').toEqual([41]);
-    if (testid === 'queue-screen') expect(await wordEdges('[data-testid="queue-screen"]', '.queue-columns > .ui-card > h3'), 'queue cards').toContain(41);
+    // The Queue's two parts are on the page's own surface: the first begins on the gutter, and neither is a card.
+    if (testid === 'queue-screen') expect(await wordEdges('[data-testid="queue-screen"]', '.queue-columns > section > h3'), 'the queue parts').toContain(24);
+    if (testid === 'queue-screen') await expect(page.locator('[data-testid="queue-screen"] .queue-columns > .ui-card')).toHaveCount(0);
     await page.keyboard.press('Escape');
     await expect(page.getByTestId(testid)).toHaveCount(0);
   }
@@ -3640,4 +3693,129 @@ test('calm canvas: one thing is filled with the colour of waiting, a terminal ha
   const count = await page.getByTestId('for-you').getAttribute('data-count');
   expect(await filledWithAttention(page)).toEqual(count === '0' ? [] : ['for-you']);
   console.log(`Calm canvas: after the demo was removed ${count} thing(s) waited on the owner.`);
+});
+
+test('screens are pages: each is a place under the top bar with an address, and the canvas is as it was on the way back', async ({ page }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  // A canvas of its own with a terminal that is selected, looked at with a zoom that is not the usual one.
+  const before = page.url();
+  await page.getByRole('button', { name: 'New canvas' }).click();
+  await expect(page).not.toHaveURL(before);
+  await page.getByTestId('toolbar-new-terminal').click();
+  const node = page.getByTestId('terminal-node');
+  await expect(node).toHaveCount(1);
+  await expect(page.locator('.xterm-rows')).toContainText(/[$%#>]/, { timeout: 20_000 });
+  await page.getByTestId('node-body').click();
+  const mac = await page.evaluate(() => navigator.platform.toLowerCase().includes('mac'));
+  await page.keyboard.press(`${mac ? 'Control+Meta' : 'Control+Shift'}+Period`);
+  await expect(node).toHaveAttribute('data-selected', 'true');
+  await page.getByRole('button', { name: 'Fit' }).click();
+  await page.waitForTimeout(600);
+  const canvasAddress = page.url();
+  /** What the canvas page looks like: which tab, which zoom, which terminal is selected, where it is drawn, and what its terminal shows. */
+  const canvasNow = (): Promise<string> =>
+    page.evaluate(() => {
+      const terminal = document.querySelector('[data-testid="terminal-node"]') as HTMLElement;
+      const box = terminal.getBoundingClientRect();
+      return [document.querySelector('[data-testid="tab"][aria-selected="true"]')?.getAttribute('data-canvas'), document.querySelector('[data-testid="zoom-level"]')?.textContent, terminal.dataset.selected, terminal.dataset.mode, Math.round(box.left), Math.round(box.top), Math.round(box.width)].join(' | ');
+    });
+  const was = await canvasNow();
+  expect(was).toContain('| true | live |');
+  const current = (): Promise<(string | null)[]> => page.evaluate(() => [...document.querySelectorAll('[data-testid="appbar"] [aria-current="page"]')].map((el) => el.getAttribute('data-testid')));
+  expect(await current()).toEqual(['toolbar-canvas']);
+
+  const pages: [name: 'queue' | 'board' | 'workflows' | 'library', testid: string][] = [
+    ['queue', 'queue-screen'],
+    ['board', 'board'],
+    ['workflows', 'workflows-screen'],
+    ['library', 'library-screen'],
+  ];
+  for (const [name, testid] of pages) {
+    // Opening it marks its place and nothing else, puts its name in the address, and shows it in place of the canvas: no dimmed dialog.
+    await page.getByTestId(`toolbar-${name}`).click();
+    await expect(page.getByTestId(testid)).toBeVisible();
+    expect(await current(), name).toEqual([`toolbar-${name}`]);
+    await expect(page).toHaveURL(`${canvasAddress}/${name}`);
+    await expect(page.locator('.dialog-backdrop')).toHaveCount(0);
+    await expect(page.getByTestId(testid).getByRole('button', { name: 'Close', exact: true })).toHaveCount(0);
+    // The canvas page is not drawn and not reachable, and its terminal is still there.
+    expect(await page.evaluate(() => {
+      const under = document.querySelector('[data-testid="app-canvas"]') as HTMLElement;
+      return [under.hasAttribute('inert'), getComputedStyle(under).visibility, document.querySelectorAll('[data-testid="terminal-node"] .xterm').length, under.contains(document.activeElement)];
+    }), name).toEqual([true, 'hidden', 1, false]);
+    // It fills the room under the top bar.
+    expect(await page.evaluate(() => {
+      const shown = document.querySelector('.ui-page') as HTMLElement;
+      const bar = document.querySelector('[data-testid="appbar"]') as HTMLElement;
+      const box = shown.getBoundingClientRect();
+      return [Math.round(box.left), Math.round(box.top - bar.getBoundingClientRect().bottom), Math.round(innerWidth - box.right), Math.round(innerHeight - box.bottom)];
+    }), name).toEqual([0, 0, 0, 0]);
+    // No box inside a box: a card never holds a card, and no item has an edge of another colour.
+    expect(await page.evaluate(() => document.querySelectorAll('.ui-page :is(.ui-card, .board-card) :is(.ui-card, .board-card)').length), `${name}: a card in a card`).toBe(0);
+    expect(await page.evaluate(() => [...document.querySelectorAll('.ui-page :is(.foryou-row, .task-row, .board-card, .ui-card, .library-row)')].filter((el) => { const style = getComputedStyle(el); return parseFloat(style.borderLeftWidth) > 1 || (parseFloat(style.borderLeftWidth) > 0 && style.borderLeftColor !== style.borderBottomColor && parseFloat(style.borderBottomWidth) > 0 && parseFloat(style.borderTopWidth) > 0 && style.borderLeftColor !== style.borderTopColor); }).length), `${name}: an edge of another colour`).toBe(0);
+
+    // Escape leads back to the canvas as it was.
+    await page.keyboard.press('Escape');
+    await expect(page.getByTestId(testid)).toHaveCount(0);
+    await expect(page).toHaveURL(canvasAddress);
+    expect(await current(), name).toEqual(['toolbar-canvas']);
+    expect(await canvasNow(), `${name}: after Escape`).toBe(was);
+
+    // So does Canvas in the top bar, and so does pressing the page's own name again.
+    await page.getByTestId(`toolbar-${name}`).click();
+    await expect(page.getByTestId(testid)).toBeVisible();
+    await page.getByTestId('toolbar-canvas').click();
+    await expect(page.getByTestId(testid)).toHaveCount(0);
+    expect(await canvasNow(), `${name}: after Canvas`).toBe(was);
+    await page.getByTestId(`toolbar-${name}`).click();
+    await expect(page.getByTestId(testid)).toBeVisible();
+    await page.getByTestId(`toolbar-${name}`).click();
+    await expect(page.getByTestId(testid)).toHaveCount(0);
+    await expect(page).toHaveURL(canvasAddress);
+
+    // The browser's back button returns from the page to the canvas, and forward goes to the page again.
+    await page.getByTestId(`toolbar-${name}`).click();
+    await expect(page.getByTestId(testid)).toBeVisible();
+    await page.goBack();
+    await expect(page.getByTestId(testid)).toHaveCount(0);
+    await expect(page).toHaveURL(canvasAddress);
+    expect(await canvasNow(), `${name}: after back`).toBe(was);
+    await page.goForward();
+    await expect(page.getByTestId(testid)).toBeVisible();
+    await expect(page).toHaveURL(`${canvasAddress}/${name}`);
+    await page.keyboard.press('Escape');
+    await expect(page.getByTestId(testid)).toHaveCount(0);
+  }
+
+  // From one page straight to another: one place is marked at a time, and one step back is the canvas.
+  await page.getByTestId('toolbar-queue').click();
+  await page.getByTestId('toolbar-board').click();
+  await expect(page.getByTestId('board')).toBeVisible();
+  await expect(page.getByTestId('queue-screen')).toHaveCount(0);
+  expect(await current()).toEqual(['toolbar-board']);
+  await page.goBack();
+  await expect(page.locator('.ui-page')).toHaveCount(0);
+  await expect(page).toHaveURL(canvasAddress);
+
+  // A dialog opens over a page as it does over the canvas, and closing it leaves the page.
+  await page.getByTestId('toolbar-queue').click();
+  await page.getByTestId('toolbar-help').click();
+  await expect(page.getByTestId('help-panel')).toBeVisible();
+  await expect(page.getByTestId('queue-screen')).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(page.getByTestId('help-panel')).toHaveCount(0);
+  await expect(page.getByTestId('queue-screen')).toBeVisible();
+
+  // A reload on a page stays on it, and the canvas it was opened over is still the one to go back to.
+  await page.reload();
+  await expect(page.getByTestId('queue-screen')).toBeVisible();
+  await expect(page).toHaveURL(`${canvasAddress}/queue`);
+  expect(await current()).toEqual(['toolbar-queue']);
+  await page.getByTestId('toolbar-canvas').click();
+  await expect(page.getByTestId('queue-screen')).toHaveCount(0);
+  await expect(page).toHaveURL(canvasAddress);
+  await expect(node).toHaveCount(1);
+  await expect(page.locator('.xterm-rows')).toContainText(/[$%#>]/, { timeout: 20_000 });
 });

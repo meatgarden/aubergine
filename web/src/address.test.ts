@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { canvasIdFromPath, chooseCanvas, sessionFromAddress } from './address';
+import { canvasIdFromPath, chooseCanvas, sessionFromAddress, pageFromPath } from './address';
 
 describe('canvas addresses', () => {
   it('reads the canvas from /c/<id>', () => {
@@ -8,6 +8,17 @@ describe('canvas addresses', () => {
     expect(canvasIdFromPath('/')).toBeNull();
     expect(canvasIdFromPath('/c/')).toBeNull();
     expect(canvasIdFromPath('/c/a/b')).toBeNull();
+  });
+
+  it('reads the page that is shown over a canvas, and the canvas under it', () => {
+    expect(pageFromPath('/c/abc/queue')).toBe('queue');
+    expect(pageFromPath('/p/proj/c/abc/library/')).toBe('library');
+    expect(canvasIdFromPath('/c/abc/queue')).toBe('abc');
+    expect(canvasIdFromPath('/p/proj/c/abc/board')).toBe('abc');
+    // The canvas itself, and a name that is no page's.
+    expect(pageFromPath('/c/abc')).toBeNull();
+    expect(pageFromPath('/c/abc/settings')).toBeNull();
+    expect(canvasIdFromPath('/c/abc/settings')).toBeNull();
   });
 
   it('prefers the address, then what this browser looked at last, then the default', () => {
