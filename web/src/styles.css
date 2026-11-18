@@ -4172,3 +4172,106 @@ tr[data-status='expired'] strong {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+/* ---------- Screens: one shape for all of them ---------- */
+
+/* What is behind a dialog is plainly behind it. */
+.dialog-backdrop {
+  background: rgb(8 8 11 / 0.72);
+}
+/* A screen opens in the same place at the same width, whatever it holds: from under the top of the page, growing downwards. */
+.dialog-backdrop:has(> .dialog.sheet) {
+  place-items: start center;
+  padding: 56px 24px 24px;
+  box-sizing: border-box;
+}
+.dialog.sheet {
+  box-sizing: border-box;
+  max-height: calc(100vh - 80px);
+  padding: 0 24px 24px;
+  border-radius: 12px;
+}
+.dialog.sheet.queue-screen,
+.dialog.sheet.board-screen,
+.dialog.sheet.workflows-screen,
+.dialog.sheet.library-screen,
+.dialog.sheet.projects-screen,
+.dialog.sheet.sharing-screen,
+.dialog.sheet.review-screen {
+  width: min(1120px, calc(100vw - 48px));
+}
+/* Its name and the way out stay in view while what it holds scrolls. */
+.dialog.sheet > .sheet-head {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  margin: 0 -24px 16px;
+  padding: 16px 24px 12px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+}
+.dialog.sheet > :first-child:not(.sheet-head) {
+  margin-top: 20px;
+}
+.dialog.sheet > .sheet-head h2 {
+  margin: 0;
+  font-size: 18px;
+}
+.dialog.sheet h3 {
+  margin: 22px 0 8px;
+  font-size: 14px;
+}
+/* A paragraph that explains is as wide as a line can be read, not as wide as the screen. */
+.dialog.sheet > p,
+.dialog.sheet .sheet-note {
+  max-width: 82ch;
+  line-height: 1.55;
+}
+
+/* For you, and the queue: two lists, each in a box of its own with its name at the top. */
+.queue-columns {
+  gap: 20px;
+  align-items: start;
+}
+.queue-columns > section {
+  padding: 14px 16px 16px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.queue-columns > section > h3:first-child {
+  margin-top: 0;
+  font-size: 15px;
+}
+.queue-screen details {
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.queue-screen details > summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+/* The board: columns with room in them, and a card that reads as something to press. */
+.board-column {
+  min-height: 96px;
+  padding: 10px;
+}
+.board-group h3 {
+  font-size: 15px;
+}
+
+/* The library: the list beside what is read, each with room. */
+.library-row {
+  padding: 8px 10px;
+}
+.queue-columns > section {
+  min-width: 0;
+}
+.queue-columns .foryou-row {
+  box-sizing: border-box;
+  max-width: 100%;
+}

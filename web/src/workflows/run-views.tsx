@@ -71,5 +71,5 @@ function Told({ text, kickoff, live }: RunViewProps) {
   );
 }
 
-registerRunView({ id: 'pipeline', title: 'Elements', order: 0, Component: Pipeline });
+registerRunView({ id: 'pipeline', title: 'Steps', order: 0, Component: Pipeline });
 registerRunView({ id: 'told', title: 'What the agent is told', order: 10, Component: Told });
