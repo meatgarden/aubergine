@@ -3,7 +3,7 @@
   "format": 1,
   "template": true,
   "name": "Morning list",
-  "description": "A list of what is open for you, every weekday morning. One agent terminal, one element that gathers the list, and a schedule that runs it at 08:30. The agent on that terminal needs whatever connections the list is to be gathered from (a chat, a calendar, mail): the template brings none.",
+  "description": "A list of what is open for you, every weekday morning. One agent terminal, one step that gathers the list, and a schedule that runs it at 08:30. The agent on that terminal needs whatever connections the list is to be gathered from (a chat, a calendar, mail): the template brings none.",
   "color": "yellow",
   "places": [],
   "canvases": [

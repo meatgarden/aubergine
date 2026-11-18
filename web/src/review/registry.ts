@@ -12,7 +12,7 @@ export interface ReviewItem {
   id: string;
   /** What it is called. */
   title: string;
-  /** `An element`, `A workflow`, `A new version of "Fix a bug"`. */
+  /** `A step`, `A workflow`, `A new version of "Fix a bug"`. */
   what: string;
   /** Who it is from, in words. */
   from: string;

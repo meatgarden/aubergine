@@ -10,6 +10,8 @@ import {
   ago,
   buildItems,
   createRowSelector,
+  dotTone,
+  shortCommand,
   describeEmpty,
   filterChips,
   filterRows,
@@ -363,5 +365,34 @@ describe('ago', () => {
     expect(ago('2025-12-30T12:00:00.000Z', now)).toBe('2d');
     // A clock that is slightly ahead never shows a negative time.
     expect(ago('2026-01-01T12:00:03.000Z', now)).toBe('now');
+  });
+});
+
+describe('the one mark of a terminal', () => {
+  it('is coloured by what the terminal is doing, and hollow when it is put away or over', () => {
+    expect(dotTone(session('a'))).toBe('ordinary');
+    expect(dotTone(session('a'), true)).toBe('hollow');
+    expect(dotTone(session('a', { state: 'exited' }))).toBe('hollow');
+    expect(dotTone(session('a', { status: { ...NO_STATUS, state: 'busy' } }))).toBe('working');
+    expect(dotTone(session('a', { status: { ...NO_STATUS, unread: true } }))).toBe('unread');
+    expect(dotTone(session('a', { status: { ...NO_STATUS, state: 'idle', lastExit: 3 } }))).toBe('failed');
+    expect(dotTone(session('a', { attention: { ...NO_ATTENTION, state: 'waiting' } }))).toBe('waiting');
+    // Finished is not waiting: it has a colour of its own.
+    expect(dotTone(session('a', { attention: { ...NO_ATTENTION, state: 'done' } }))).toBe('finished');
+    // A parked terminal that waits still says so.
+    expect(dotTone(session('a', { attention: { ...NO_ATTENTION, state: 'waiting' } }), true)).toBe('waiting');
+  });
+});
+
+describe('what a terminal runs, in short', () => {
+  it('is the program and the last part of the first path, never a quoted absolute path', () => {
+    expect(shortCommand(null)).toBe('');
+    expect(shortCommand('zsh')).toBe('zsh');
+    expect(shortCommand("sh '/work/made up/demo/demo-agent.sh' fixing")).toBe('sh demo-agent.sh');
+    expect(shortCommand('/usr/local/bin/node --inspect "/work/app/server.js"')).toBe('node server.js');
+    expect(shortCommand('npm test')).toBe('npm test');
+    expect(shortCommand('git status --short')).toBe('git status');
+    expect(shortCommand('sleep 5; exit 3')).toBe('sleep 5');
+    expect(shortCommand(`x ${'y'.repeat(80)}`).length).toBe(40);
   });
 });

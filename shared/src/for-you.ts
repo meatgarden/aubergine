@@ -174,7 +174,7 @@ registerForYouKind({
   items: ({ state }) =>
     state.drafts
       .filter((draft) => draft.status === 'waiting')
-      .map((draft) => ({ id: `draft:${draft.id}`, sentence: `A draft of ${draft.kind === 'workflow' ? 'a workflow' : 'an element'} waits to be read: “${draft.workflow?.name ?? draft.element?.name ?? 'unnamed'}”.`, from: sessionName(state, draft.sessionId) ?? 'a program', at: draft.updatedAt, act: 'review' })),
+      .map((draft) => ({ id: `draft:${draft.id}`, sentence: `A draft of ${draft.kind === 'workflow' ? 'a workflow' : 'a step'} waits to be read: “${draft.workflow?.name ?? draft.element?.name ?? 'unnamed'}”.`, from: sessionName(state, draft.sessionId) ?? 'a program', at: draft.updatedAt, act: 'review' })),
 });
 
 registerForYouKind({

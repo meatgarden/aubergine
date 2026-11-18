@@ -66,7 +66,7 @@ const states = (run: Run): string => run.elements.map((e) => e.state).join(' ');
 const done = (elementId: string, note?: string): RunReport => ({ type: 'done', elementId, ...(note !== undefined ? { note } : {}) });
 
 describe('a new run', () => {
-  it('starts on the first element when it has a session', () => {
+  it('starts on the first step when it has a session', () => {
     const run = start();
     expect(run).toMatchObject({ status: 'running', currentElementId: 'plan', workflowVersion: 1, sessionId: ID(1) });
     expect(states(run)).toBe('active pending pending');
@@ -83,12 +83,12 @@ describe('a new run', () => {
 describe('stepRun', () => {
   // Each row: where the run stands (reports already applied), a report, and what comes of it.
   const table: { name: string; from: RunReport[]; report: RunReport; status?: string; current?: string | null; states?: string; refused?: RegExp; queued?: boolean }[] = [
-    { name: 'done moves to the next element', from: [], report: done('plan', 'planned'), status: 'running', current: 'build', states: 'done active pending' },
-    { name: 'done on the last element finishes the run', from: [done('plan'), done('build')], report: done('check'), status: 'finished', current: null, states: 'done done done' },
-    { name: 'the same done sent twice is refused, and nothing is skipped', from: [done('plan')], report: done('plan'), refused: /"Plan" is not the current element \(it is done\).*"Build"/ },
-    { name: 'done for a later element is refused', from: [], report: done('check'), refused: /not the current element \(it is pending\)/ },
-    { name: 'done for an element that does not exist is refused', from: [], report: done('nope'), refused: /no element "nope"/ },
-    { name: 'blocked keeps the element and records why', from: [], report: { type: 'blocked', reason: 'need the API key' }, status: 'blocked', current: 'plan', states: 'active pending pending' },
+    { name: 'done moves to the next step', from: [], report: done('plan', 'planned'), status: 'running', current: 'build', states: 'done active pending' },
+    { name: 'done on the last step finishes the run', from: [done('plan'), done('build')], report: done('check'), status: 'finished', current: null, states: 'done done done' },
+    { name: 'the same done sent twice is refused, and nothing is skipped', from: [done('plan')], report: done('plan'), refused: /"Plan" is not the current step \(it is done\).*"Build"/ },
+    { name: 'done for a later step is refused', from: [], report: done('check'), refused: /not the current step \(it is pending\)/ },
+    { name: 'done for a step that does not exist is refused', from: [], report: done('nope'), refused: /no step "nope"/ },
+    { name: 'blocked keeps the step and records why', from: [], report: { type: 'blocked', reason: 'need the API key' }, status: 'blocked', current: 'plan', states: 'active pending pending' },
     { name: 'done after blocked carries on', from: [{ type: 'blocked', reason: 'x' }], report: done('plan'), status: 'running', current: 'build', states: 'done active pending' },
     { name: 'pause holds the run', from: [], report: { type: 'pause' }, status: 'paused', current: 'plan' },
     { name: 'pause twice is refused', from: [{ type: 'pause' }], report: { type: 'pause' }, refused: /already paused/ },
@@ -100,8 +100,8 @@ describe('stepRun', () => {
     { name: 'goto forward skips what lies between', from: [], report: { type: 'goto', elementId: 'check' }, status: 'running', current: 'check', states: 'skipped skipped active' },
     { name: 'goto forward leaves what was done as done', from: [done('plan')], report: { type: 'goto', elementId: 'check' }, status: 'running', current: 'check', states: 'done skipped active' },
     { name: 'goto back makes the later ones pending again', from: [done('plan'), done('build')], report: { type: 'goto', elementId: 'plan' }, status: 'running', current: 'plan', states: 'active pending pending' },
-    { name: 'goto the current element is refused', from: [], report: { type: 'goto', elementId: 'plan' }, refused: /already the current element/ },
-    { name: 'goto an unknown element is refused', from: [], report: { type: 'goto', elementId: 'nope' }, refused: /no element "nope"/ },
+    { name: 'goto the current step is refused', from: [], report: { type: 'goto', elementId: 'plan' }, refused: /already the current step/ },
+    { name: 'goto an unknown step is refused', from: [], report: { type: 'goto', elementId: 'nope' }, refused: /no step "nope"/ },
     { name: 'goto unblocks', from: [{ type: 'blocked', reason: 'x' }], report: { type: 'goto', elementId: 'build' }, status: 'running', current: 'build' },
     { name: 'goto while paused stays paused', from: [{ type: 'pause' }], report: { type: 'goto', elementId: 'build' }, status: 'paused', current: 'build' },
     { name: 'stop ends a running run', from: [done('plan')], report: { type: 'stop' }, status: 'stopped', current: 'build' },
@@ -111,7 +111,7 @@ describe('stepRun', () => {
     { name: 'nothing moves a stopped run', from: [{ type: 'stop' }], report: { type: 'resume' }, refused: /stopped/ },
     { name: 'a stopped run cannot be stopped again', from: [{ type: 'stop' }], report: { type: 'stop' }, refused: /stopped/ },
     { name: 'assign is refused for a run that has a session', from: [], report: { type: 'assign', sessionId: ID(2) }, refused: /already has a session/ },
-    { name: 'assign starts a queued run on the first element', queued: true, from: [], report: { type: 'assign', sessionId: ID(2) }, status: 'running', current: 'plan', states: 'active pending pending' },
+    { name: 'assign starts a queued run on the first step', queued: true, from: [], report: { type: 'assign', sessionId: ID(2) }, status: 'running', current: 'plan', states: 'active pending pending' },
     { name: 'done on a queued run is refused', queued: true, from: [], report: done('plan'), refused: /not started/ },
     { name: 'pause on a queued run is refused', queued: true, from: [], report: { type: 'pause' }, refused: /not started/ },
     { name: 'goto on a queued run is refused', queued: true, from: [], report: { type: 'goto', elementId: 'build' }, refused: /not started/ },
@@ -137,20 +137,20 @@ describe('stepRun', () => {
     expect(result.run.updatedAt).toBe(T(30));
   });
 
-  it('records the note, who finished an element and when, and times the next', () => {
+  it('records the note, who finished a step and when, and times the next', () => {
     const run = after(start(), done('plan', 'Chose the short way.'));
     expect(run.elements[0]).toMatchObject({ state: 'done', note: 'Chose the short way.', by: AGENT, startedAt: T(0), finishedAt: T(1) });
     expect(run.elements[1]).toMatchObject({ state: 'active', startedAt: T(1), finishedAt: null, sessionId: ID(1) });
   });
 
-  it('records who skipped an element, and that a person stopped a run', () => {
+  it('records who skipped a step, and that a person stopped a run', () => {
     const skipped = stepRun(version, start(), { type: 'goto', elementId: 'check' }, { by: PERSON, at: T(2) });
     expect(skipped.ok && skipped.run.elements[0]).toMatchObject({ state: 'skipped', by: PERSON, finishedAt: T(2) });
     const stopped = stepRun(version, start(), { type: 'stop' }, { by: PERSON, at: T(3) });
     expect(stopped.ok && stopped.run).toMatchObject({ status: 'stopped', finishedAt: T(3) });
   });
 
-  it('after a jump forward and back, done goes to the next element that is still to do', () => {
+  it('after a jump forward and back, done goes to the next step that is still to do', () => {
     // Skip to check, finish it: nothing pending follows, so the run is finished with two skipped.
     const run = after(start(), { type: 'goto', elementId: 'check' }, done('check'));
     expect(run.status).toBe('finished');
@@ -165,10 +165,10 @@ describe('stepRun', () => {
 });
 
 describe('what an agent is told', () => {
-  it('has the standing text, the element, the done-when, the inputs filled in and how to report', () => {
+  it('has the standing text, the step, the done-when, the inputs filled in and how to report', () => {
     const text = renderRun(version, start());
     expect(text).toContain('Workflow: Three steps');
-    expect(text).toContain('Element 1 of 3: Plan');
+    expect(text).toContain('Step 1 of 3: Plan');
     expect(text).toContain('Task: the login bug');
     expect(text).toContain('Keep changes small. The task is the login bug.');
     expect(text).toContain('Plan how to do the login bug.');
@@ -178,16 +178,16 @@ describe('what an agent is told', () => {
     expect(text).not.toContain('{{task}}');
   });
 
-  it('hands over the note of the element before', () => {
+  it('hands over the note of the step before', () => {
     const text = renderRun(version, after(start(), done('plan', 'Use the retry helper in net.ts.')));
-    expect(text).toContain('Element 2 of 3: Build');
-    expect(text).toContain('From "Plan", the element before:\nUse the retry helper in net.ts.');
+    expect(text).toContain('Step 2 of 3: Build');
+    expect(text).toContain('From "Plan", the step before:\nUse the retry helper in net.ts.');
     expect(text).toContain('After this: Check.');
-    expect(renderRun(version, after(start(), done('plan'), done('build')))).toContain('This is the last element.');
+    expect(renderRun(version, after(start(), done('plan'), done('build')))).toContain('This is the last step.');
     // Only the element before hands over. An older note is not passed off as its.
     expect(renderRun(version, after(start(), done('plan', 'an older note'), done('build')))).not.toContain('an older note');
     // A skipped element handed over nothing; the one done before it did.
-    expect(renderRun(version, after(start(), done('plan', 'from the plan'), { type: 'goto', elementId: 'check' }))).toContain('From "Plan", the element before:\nfrom the plan');
+    expect(renderRun(version, after(start(), done('plan', 'from the plan'), { type: 'goto', elementId: 'check' }))).toContain('From "Plan", the step before:\nfrom the plan');
   });
 
   it('says so when the run is paused, blocked, finished, stopped or queued', () => {
@@ -226,7 +226,7 @@ describe('inputs', () => {
   });
 });
 
-describe('element kinds', () => {
+describe('step kinds', () => {
   it('has the two kinds there are', () => {
     expect(elementKindNames()).toEqual(['instructions', 'approval']);
   });
@@ -261,7 +261,7 @@ describe('element kinds', () => {
     expect(elementKind('sign-off')).toBeUndefined();
   });
 
-  it('reports an element of a kind nobody registered, and still renders the run', () => {
+  it('reports a step of a kind nobody registered, and still renders the run', () => {
     const content = WorkflowContent.parse({ name: 'x', elements: [{ id: 'a', name: 'A', kind: 'mystery', instructions: 'x' }] });
     expect(validateContent(content)).toEqual(['"A" is of a kind this version does not know: mystery.']);
     const v: WorkflowVersion = { ...content, number: 1, createdAt: T(0) };
@@ -274,20 +274,20 @@ describe('validating a workflow', () => {
 
   it('finds empty instructions, repeated IDs and repeated input keys', () => {
     expect(validateContent(content([{ id: 'a', name: 'A', instructions: ' ' }]))).toEqual(['"A" has no instructions.']);
-    expect(validateContent(content([{ id: 'a', name: 'A', instructions: 'x' }, { id: 'a', name: 'B', instructions: 'y' }]))).toEqual(['Two elements have the ID "a".']);
+    expect(validateContent(content([{ id: 'a', name: 'A', instructions: 'x' }, { id: 'a', name: 'B', instructions: 'y' }]))).toEqual(['Two steps have the ID "a".']);
     expect(validateContent(content([{ id: 'a', name: 'A', instructions: 'x' }], { inputs: [{ key: 'task', label: 'Task' }, { key: 'task', label: 'Again' }] }))).toEqual(['Two inputs have the key "task".']);
   });
 
   it('holds a workflow to the limits it is given', () => {
     const limits = { maxElements: 2, maxElementChars: 10 };
     const three = content([1, 2, 3].map((n) => ({ id: `e${n}`, name: `E${n}`, instructions: 'short' })));
-    expect(validateContent(three, limits)).toEqual(['It has 3 elements; at most 2 are allowed.']);
+    expect(validateContent(three, limits)).toEqual(['It has 3 steps; at most 2 are allowed.']);
     expect(validateContent(content([{ id: 'a', name: 'A', instructions: 'much too long for this' }]), limits)[0]).toMatch(/22 characters; at most 10/);
     expect(validateContent(content([{ id: 'a', name: 'A', instructions: 'ok' }], { standing: 'x'.repeat(11) }), limits)[0]).toMatch(/standing text is 11 characters/);
     expect(validateContent(three, DEFAULT_WORKFLOW_LIMITS)).toEqual([]);
   });
 
-  it('makes element IDs from names, unique among the others', () => {
+  it('makes step IDs from names, unique among the others', () => {
     expect(elementIdFor('Find the cause!', [])).toBe('find-the-cause');
     expect(elementIdFor('Build', ['build', 'build-2'])).toBe('build-3');
     expect(elementIdFor('???', [])).toBe('element');
@@ -376,7 +376,7 @@ describe('the workflow file', () => {
     expect(exportWorkflow(workflow(importWorkflow(JSON.parse(JSON.stringify(out))).content))).toEqual(out);
   });
 
-  it('gives elements without a usable ID one, and refuses what is not a workflow file', () => {
+  it('gives steps without a usable ID one, and refuses what is not a workflow file', () => {
     const imported = importWorkflow({ aubergine: 'workflow', format: 1, workflow: { name: 'x', elements: [{ name: 'First step', instructions: 'a' }, { id: 'bad id!', name: 'First step', instructions: 'b' }] } });
     expect(imported.content.elements.map((e) => e.id)).toEqual(['first-step', 'first-step-2']);
     expect(() => importWorkflow({ name: 'x' })).toThrow('not an Aubergine workflow file');

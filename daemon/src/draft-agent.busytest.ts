@@ -26,7 +26,7 @@ import { loadOrCreateToken } from './token';
  * sent back once, revises it; the owner accepts it and runs it by itself;
  * the agent hands in a checklist; the owner ticks it.
  */
-describe('a stand-in agent writes an element and then does it', () => {
+describe('a stand-in agent writes a step and then does it', () => {
   const socket = testSocketName('draft-agent');
   const runtime = new TmuxRuntime({ socket });
   let dir: string;
@@ -156,7 +156,7 @@ describe('a stand-in agent writes an element and then does it', () => {
     expect(brief).not.toContain('\u001b');
     expect(await read('brief-2.txt')).toContain('sent back with this comment:\n\nShorter, please.');
     expect(await read('propose-2.txt')).toContain('as a draft (version 2)');
-    expect(await read('status.txt')).toContain('This element needs: an MCP server: team chat.');
+    expect(await read('status.txt')).toContain('This step needs: an MCP server: team chat.');
     const refused = await read('done-refused.txt');
     expect(refused).toContain('produces a checklist, and none was handed in');
     expect(refused).toContain('exit=1');

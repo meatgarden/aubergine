@@ -246,7 +246,7 @@ export class ProjectFiles {
       for (const element of content.elements) if (element.needs.length > 0) needs.push({ of: `${content.name}: ${element.name}`, needs: element.needs.map((need) => `${need.kind}: ${need.name}`) });
     }
     for (const { element } of file.elements) {
-      texts.push({ title: `The element “${element.name}”`, text: reviewText({ workflow: null, element }) });
+      texts.push({ title: `The step “${element.name}”`, text: reviewText({ workflow: null, element }) });
       if (element.needs.length > 0) needs.push({ of: element.name, needs: element.needs.map((need) => `${need.kind}: ${need.name}`) });
     }
     for (const schedule of file.schedules) if (schedule.task.trim() !== '') texts.push({ title: `The task of the schedule “${schedule.name}”`, text: schedule.task });

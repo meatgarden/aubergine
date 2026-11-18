@@ -12,7 +12,7 @@ export interface BuiltInTemplate {
 }
 
 const STANDING = [
-  'Work on one element at a time and do not start the next before reporting this one done.',
+  'Work on one step at a time and do not start the next before reporting this one done.',
   'Keep the change as small as the task allows. If something is unclear and guessing would be risky, report blocked and say what you need.',
 ].join('\n');
 
@@ -34,7 +34,7 @@ export const WORKFLOW_TEMPLATES: readonly BuiltInTemplate[] = [
     {
       id: 'build',
       name: 'Build',
-      instructions: 'Carry out the plan from the element before. Keep to it; where you have to depart from it, say why in your note.',
+      instructions: 'Carry out the plan from the step before. Keep to it; where you have to depart from it, say why in your note.',
       doneWhen: 'The change is made and the project builds.',
     },
     {
@@ -114,7 +114,7 @@ export const WORKFLOW_TEMPLATES: readonly BuiltInTemplate[] = [
       kind: 'approval',
       name: 'Agree before building',
       ask: 'Is this what you want built, and is this how you want it built?',
-      lookAt: 'The specification and the design, in the notes of the two elements before.',
+      lookAt: 'The specification and the design, in the notes of the two steps before.',
     },
     {
       id: 'build',

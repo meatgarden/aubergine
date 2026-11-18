@@ -22,7 +22,7 @@ export function ElementFields({ element, onChange }: { element: Element; onChang
         <span>Name of the step</span>
         <input value={element.name} maxLength={120} onChange={(e) => onChange({ ...element, name: e.target.value })} data-testid="element-name" />
       </label>
-      {Editor ? <Editor element={element} onChange={onChange} /> : <p className="sheet-note">This element is of a kind this version cannot edit: {element.kind}. It is kept as it is.</p>}
+      {Editor ? <Editor element={element} onChange={onChange} /> : <p className="sheet-note">This step is of a kind this version cannot edit: {element.kind}. It is kept as it is.</p>}
       {/* What an agent needs, and what it hands in, are not asked of an element a person decides. */}
       {!waitsForPerson(element.kind) && (
         <details className="ui-fold" data-testid="element-more-about">

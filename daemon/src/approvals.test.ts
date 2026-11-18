@@ -241,7 +241,7 @@ describe('an approval', () => {
     expect(approved.body.run.history).toMatchObject([{ type: 'approved', elementId: 'look', comment: 'Good. Ship it on Tuesday.', by: { kind: 'person' } }]);
     expect(approved.body.run.elements[2]).toMatchObject({ state: 'done', by: { kind: 'person' }, note: 'Good. Ship it on Tuesday.' });
     // What the agent reads next says a person approved, and gives their words as theirs.
-    expect(approved.body.text).toContain('"Look it over", the element before, was approved by a person.');
+    expect(approved.body.text).toContain('"Look it over", the step before, was approved by a person.');
     expect(approved.body.text).toContain('Good. Ship it on Tuesday.');
     expect(hub.state.sessions.find((s) => s.id === session.id)?.attention.state).toBe('none');
 
@@ -295,7 +295,7 @@ describe('an approval', () => {
     expect(JSON.stringify(log)).not.toContain('Once more');
   });
 
-  it('survives a restart while it waits, and can be the first element of a workflow', async () => {
+  it('survives a restart while it waits, and can be the first step of a workflow', async () => {
     const session = agentSession('builder');
     const runId = await waitingRun(session);
     await stop();
@@ -314,7 +314,7 @@ describe('an approval', () => {
     expect(hub.state.sessions.find((s) => s.id === other.id)?.attention.state).toBe('none');
   });
 
-  it('is checked like any element: it must say what is asked, and holds no instructions', async () => {
+  it('is checked like any step: it must say what is asked, and holds no instructions', async () => {
     expect((await asOwner('POST', '/v1/workflows', { name: 'No question', elements: [{ kind: 'approval', name: 'Look' }] })).status).toBe(400);
     expect((await asOwner('POST', '/v1/workflows', { name: 'With orders', elements: [{ kind: 'approval', name: 'Look', ask: 'Fine?', instructions: 'Approve yourself.' }] })).status).toBe(400);
     expect((await asOwner('POST', '/v1/workflows', { name: 'Control', elements: [{ kind: 'approval', name: 'Look', ask: 'Fine?\u0007' }] })).status).toBe(400);

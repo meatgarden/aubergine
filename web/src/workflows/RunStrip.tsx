@@ -1,10 +1,10 @@
 import { memo } from 'react';
 import { useApp } from '../store';
-import { STATUS_MARK, STATUS_WORD, pictureOf, runsBySession, versionOfRun } from './run-model';
+import { STATUS_WORD, pictureOf, runsBySession, versionOfRun } from './run-model';
 
 /**
  * Where a session's run stands. On a terminal: a line of its own under the title, in words
- * (the workflow, the step and how many there are, what it waits for). On a list row: a few pixels.
+ * (the workflow, the step and how many there are, what it waits for). On a list row: the step as one chip.
  * It listens to its own run only, so a report redraws one strip.
  */
 export const RunStrip = memo(function RunStrip({ sessionId, variant }: { sessionId: string; variant: 'node' | 'row' }) {
@@ -34,14 +34,8 @@ export const RunStrip = memo(function RunStrip({ sessionId, variant }: { session
     const says = run.status === 'awaiting' ? 'Waiting for you to approve' : run.status === 'blocked' ? `Blocked${run.blockedReason ? `: ${run.blockedReason}` : ''}` : run.status === 'running' ? (picture.quiet ? 'No report for a while, so this may be behind' : null) : STATUS_WORD[run.status];
     return (
       <button type="button" className={`run-banner nodrag status-${run.status}${picture.quiet ? ' is-quiet' : ''}`} title={title} data-testid="run-strip" data-status={run.status} data-element={picture.current?.id ?? ''} data-quiet={picture.quiet ? 'true' : undefined} onClick={open}>
-        <span className="run-banner-label">Workflow</span>
         <span className="run-banner-name" data-testid="run-workflow-name">
           {picture.workflowName}
-        </span>
-        <span className="run-segments" aria-hidden="true">
-          {picture.segments.map((segment) => (
-            <span key={segment.id} className={`run-segment is-${segment.state}`} />
-          ))}
         </span>
         <span className="run-banner-step">
           {picture.current ? `Step ${picture.current.number} of ${picture.total}: ` : ''}
@@ -49,16 +43,22 @@ export const RunStrip = memo(function RunStrip({ sessionId, variant }: { session
             {picture.current ? picture.current.name : STATUS_WORD[run.status]}
           </strong>
         </span>
+        <span className="run-segments" aria-hidden="true">
+          {picture.segments.map((segment) => (
+            <span key={segment.id} className={`run-segment is-${segment.state}`} />
+          ))}
+        </span>
         {says && picture.current && (
           <span className="run-banner-says" data-testid="run-says">
             {says}
           </span>
         )}
-        <span className="run-banner-open">{run.status === 'awaiting' ? 'Review and decide' : 'See all steps'} ›</span>
+        <span className="run-banner-open">{run.status === 'awaiting' ? 'Review and decide' : 'All steps'}</span>
       </button>
     );
   }
 
+  // On a list row: the step it is on as one chip, and how the run stands where it is not simply going.
   return (
     <button
       type="button"
@@ -70,15 +70,8 @@ export const RunStrip = memo(function RunStrip({ sessionId, variant }: { session
       data-quiet={picture.quiet ? 'true' : undefined}
       onClick={open}
     >
-      {run.status !== 'running' && <span className="run-mark">{STATUS_MARK[run.status]}</span>}
-      <span className="run-element">{picture.current ? picture.current.name : STATUS_WORD[run.status]}</span>
-      {picture.current && (
-        <span className="run-count">
-          {picture.current.number}/{picture.total}
-        </span>
-      )}
-      {run.status !== 'running' && <span className="run-status">{STATUS_WORD[run.status]}</span>}
-      {picture.quiet && <span className="run-quiet">quiet</span>}
+      {picture.current ? `Step ${picture.current.number} of ${picture.total}` : STATUS_WORD[run.status]}
+      {picture.current && run.status !== 'running' ? ` · ${STATUS_WORD[run.status]}` : ''}
     </button>
   );
 });

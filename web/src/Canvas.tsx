@@ -1,3 +1,5 @@
+import { useMapFolded, underMap } from './map-fold';
+import { NOTE_GAP, NOTE_WIDTH } from './note-open';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Background,
@@ -168,6 +170,35 @@ function NewMenu({ adding }: { adding: boolean }) {
         </span>
       )}
     </span>
+  );
+}
+
+/**
+ * The small map in the corner, with the one button that folds it away. It steps aside while the terminal in use
+ * (typed into, or selected), or the note beside it, lies under it, so that it never covers what is being used.
+ */
+function CanvasMap() {
+  const folded = useMapFolded();
+  useApp((s) => s.settings.shortcuts);
+  // The terminal in use: the one that has the keyboard, or the one that is selected (its note may have the keyboard).
+  const focused = useApp((s) => {
+    const id = s.focus?.sessionId ?? s.selected;
+    return id ? (currentLayout(s).nodes.find((n) => n.sessionId === id) ?? null) : null;
+  });
+  const aside = useStore((s) => focused !== null && underMap(focused, NOTE_GAP + NOTE_WIDTH, { x: s.transform[0], y: s.transform[1], zoom: s.transform[2] }, { width: s.width, height: s.height }));
+  const words = folded ? 'Show the map of this canvas' : 'Hide the map of this canvas';
+  return (
+    <>
+      {!folded && !aside && <MiniMap pannable zoomable position="bottom-right" className="minimap" />}
+      {/* While the map has stepped aside its button does too: nothing of it lies over what is being used. */}
+      {!(aside && !folded) && (
+        <Panel position="bottom-right" className={`map-fold${folded ? ' is-folded' : ''}`}>
+          <button type="button" className="quiet" aria-expanded={!folded} title={hint('view.map', words)} onClick={() => runCommand('view.map')} data-testid="map-fold">
+            {folded ? 'Map' : 'Hide map'}
+          </button>
+        </Panel>
+      )}
+    </>
   );
 }
 
@@ -499,7 +530,7 @@ export function Canvas() {
         nodeDragThreshold={2}
       >
         <Background variant={BackgroundVariant.Dots} gap={24} size={1} />
-        <MiniMap pannable zoomable position="bottom-right" className="minimap" />
+        <CanvasMap />
         <Panel position="top-left" className="toolbar">
           <span className="toolbar-group" role="group" aria-label="Make something new">
             <NewMenu adding={adding} />

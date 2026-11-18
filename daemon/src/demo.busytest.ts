@@ -200,7 +200,7 @@ describe.runIf(ZSH)('aubergine demo', () => {
     expect(moved.body).toMatchObject({ run: { currentElementId: 'fix' } });
     // Enter in the stand-in's terminal: it finishes the next element itself.
     expect((await asOwner('POST', `/v1/sessions/${demo.sessions.fixing}/input`, { keys: ['Enter'] })).status).toBe(200);
-    await until('the stand-in to report the next element', () => hub.state.runs.find((r) => r.id === demo.runId)?.currentElementId === 'test');
+    await until('the stand-in to report the next step', () => hub.state.runs.find((r) => r.id === demo.runId)?.currentElementId === 'test');
     expect(hub.state.runs.find((r) => r.id === demo.runId)?.elements[2]).toMatchObject({ state: 'done', by: { kind: 'agent' }, note: 'Done by the stand-in agent.' });
   });
 

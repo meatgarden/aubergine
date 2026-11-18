@@ -11,7 +11,7 @@ const taskFields = {
   title: PlainName.describe('What it is, in one line.'),
   details: PlainWords(TASK_DETAILS_MAX).describe('What to do, for the agent that takes it. Plain text.'),
   folder: z.string().startsWith('/').max(4096).nullable().describe('The folder it is done in. Null: the folder new terminals start in.'),
-  workflowId: Id.nullable().describe('The workflow it goes through. Null: it is told as one element, with the details as its task.'),
+  workflowId: Id.nullable().describe('The workflow it goes through. Null: it is told as one step, with the details as its task.'),
   environment: EnvironmentKindName.nullable().describe('Where a new terminal for it works. Null: a working copy of its own where the folder can have one.'),
   taker: TaskTaker.describe('Who may take it: `{"kind":"any"}`, one terminal, or a new agent terminal on a canvas.'),
   labels: z.array(TaskLabel).max(TASK_LABELS_MAX).describe('Short words of your own.'),

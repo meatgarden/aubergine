@@ -5,7 +5,8 @@ import { currentProjectId, useApp } from '../store';
 import { ApprovalControls } from '../workflows/ApprovalControls';
 import { liveFilters, loadFilters, nextCard, saveFilters, type Box } from './board-model';
 import { RunManyDialog } from './RunManyDialog';
-import { MenuButton } from '../ui';
+import { DOT_WORD, dotTone } from '../terminal-rows';
+import { MenuButton, StateDot } from '../ui';
 
 /**
  * The board: every run that is going, on every canvas, by workflow and by
@@ -23,6 +24,11 @@ function Card({ card, single, now, onGo, onView, named }: { card: BoardCard; sin
   const elements = useApp((s) => {
     const workflow = run ? s.whole?.workflows.find((w) => w.id === run.workflowId) : undefined;
     return workflow && run ? (versionOf(workflow, run.workflowVersion)?.elements ?? null) : null;
+  });
+  // The same mark as the terminal has in the list and in its title; hollow where the run has no terminal yet.
+  const tone = useApp((s) => {
+    const session = card.sessionId ? s.whole?.sessions.find((x) => x.id === card.sessionId) : undefined;
+    return session ? dotTone(session) : 'hollow';
   });
   return (
     <div
@@ -43,6 +49,7 @@ function Card({ card, single, now, onGo, onView, named }: { card: BoardCard; sin
       data-session={card.sessionId ?? ''}
     >
       <div className="board-card-head">
+        <StateDot tone={tone} word={tone === 'hollow' ? (card.sessionId ? 'ended' : 'no terminal yet') : DOT_WORD[tone]} />
         <span className="board-card-name">
           {named && card.projectId ? <span data-testid="board-card-project">{named(card.projectId)} · </span> : null}
           {card.sessionName || 'no terminal yet'}

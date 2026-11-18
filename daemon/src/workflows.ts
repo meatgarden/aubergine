@@ -181,9 +181,9 @@ export class Workflows {
   decideCopy(workflowId: string, elementId: string, decision: 'take' | 'keep'): Workflow {
     const workflow = this.get(workflowId);
     const element = latestVersion(workflow).elements.find((e) => e.id === elementId);
-    if (!element) throw new NotFoundError(`This workflow has no element ${elementId}`);
+    if (!element) throw new NotFoundError(`This workflow has no step ${elementId}`);
     const status = copyStatus(element, this.hub.state.shelf);
-    if (status.state === 'none') throw new ConflictError('This element is not a copy of a shelf element.');
+    if (status.state === 'none') throw new ConflictError('This step is not a copy of a saved step.');
     if (status.shelf === null) throw new ConflictError('Its source is not on the shelf any more, so there is no newer version to take.');
     const item = status.shelf;
     const elements = latestVersion(workflow).elements.map((e) => (e.id === elementId ? decideUpdate(e, item, decision) : e));
@@ -302,7 +302,7 @@ export class Workflows {
 
   private detailOfArchived(entry: ArchivedRun): RunDetail {
     const position = entry.run.status;
-    const text = [`Workflow: ${entry.workflowName}`, entry.run.status === 'finished' ? `This run is finished: all ${entry.elements.length} elements are done. There is nothing more to do for it.` : 'This run was stopped. There is nothing more to do for it.'].join('\n');
+    const text = [`Workflow: ${entry.workflowName}`, entry.run.status === 'finished' ? `This run is finished: all ${entry.elements.length} steps are done. There is nothing more to do for it.` : 'This run was stopped. There is nothing more to do for it.'].join('\n');
     return { ...entry, position, text, kickoff: kickoffLine(), kickoffTyped: false };
   }
 
@@ -522,7 +522,7 @@ export class Workflows {
     if (report.type === 'done') {
       // Without a name it means the current element. A caller that may repeat itself should name it.
       const elementId = report.elementId ?? run.currentElementId;
-      if (elementId === null) throw new ConflictError('This run has no current element.');
+      if (elementId === null) throw new ConflictError('This run has no current step.');
       return this.apply(run, { type: 'done', elementId, ...(report.note !== undefined ? { note: report.note } : {}), ...(report.output !== undefined ? { output: report.output } : {}) }, by);
     }
     return this.apply(run, report, by);

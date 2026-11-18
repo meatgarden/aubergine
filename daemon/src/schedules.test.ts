@@ -515,7 +515,7 @@ describe('a schedule that cannot run', () => {
     await until(() => working(fromSchedule()[0]));
   });
 
-  it('for an element that was retired or removed, and a canvas that was closed', async () => {
+  it('for a step that was retired or removed, and a canvas that was closed', async () => {
     const worker = agent('worker');
     const second = (await asOwner('POST', '/v1/canvases', { name: 'Second' })).body.id as string;
     const retired = await schedule(worker, { name: 'Retired' });
@@ -528,8 +528,8 @@ describe('a schedule that cannot run', () => {
     await moveTo('2026-06-15T12:31:00.000Z');
     expect(queueNow().tasks).toEqual([]);
     expect(Object.fromEntries(schedulesNow().map((s) => [s.name, s.problem]))).toEqual({
-      Retired: 'The element it runs, “Morning list”, was retired.',
-      Removed: 'The element it runs is no longer on the shelf.',
+      Retired: 'The step it runs, “Morning list”, was retired.',
+      Removed: 'The step it runs is no longer on the shelf.',
       Closed: 'The canvas its new terminal was to start on was closed.',
     });
     expect((await forYouNow()).items.filter((item) => item.kind === 'schedule')).toHaveLength(3);

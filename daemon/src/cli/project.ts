@@ -196,7 +196,7 @@ export async function runProjectCommand(command: ProjectCommand, deps: ProjectCo
         if (command.file === null) print(exported.text.trimEnd());
         else {
           await deps.writeNew(command.file, exported.text);
-          print(`Written to ${command.file}. It is a copy of the project as it is now: its canvases, terminals to make, pinned notes, rules, schedules, workflows and elements. Nothing that ran, no credential and no path of this computer is in it.`);
+          print(`Written to ${command.file}. It is a copy of the project as it is now: its canvases, terminals to make, pinned notes, rules, schedules, workflows and steps. Nothing that ran, no credential and no path of this computer is in it.`);
         }
         for (const line of exported.leftOut) print(showControl(`Not in the file: ${line}`));
         return 0;

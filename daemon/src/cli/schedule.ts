@@ -127,7 +127,7 @@ async function scheduleOf(client: Client, query: string) {
 async function named(client: Client, fields: Fields) {
   const what =
     fields.element !== null
-      ? { kind: 'element' as const, elementId: pick(await collect(client.each.listElements()), fields.element, (e) => e.element.name, 'shelf element').id }
+      ? { kind: 'element' as const, elementId: pick(await collect(client.each.listElements()), fields.element, (e) => e.element.name, 'saved step').id }
       : fields.workflow !== null
         ? { kind: 'workflow' as const, workflowId: pick(await collect(client.each.listWorkflows()), fields.workflow, (w) => w.name, 'workflow').id }
         : undefined;

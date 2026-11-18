@@ -10,8 +10,8 @@ export function itemOfDraft(draft: Draft, app: Pick<AppState, 'sessions' | 'work
   const session = by.kind === 'session' ? app.sessions.find((s) => s.id === by.sessionId) : undefined;
   return {
     id: draft.id,
-    title: draft.workflow?.name ?? draft.element?.name ?? (draft.kind === 'element' ? 'An element, not written yet' : 'A workflow, not written yet'),
-    what: draft.kind === 'element' ? 'An element' : revised ? `A new version of “${revised.name}”` : 'A workflow',
+    title: draft.workflow?.name ?? draft.element?.name ?? (draft.kind === 'element' ? 'A step, not written yet' : 'A workflow, not written yet'),
+    what: draft.kind === 'element' ? 'A step' : revised ? `A new version of “${revised.name}”` : 'A workflow',
     from: by.kind === 'session' ? `the agent in “${session?.name ?? 'a terminal that is gone'}”` : by.kind === 'token' ? `a program, with the token “${by.name}”` : 'you',
     asked: draft.description,
     state: draft.status,

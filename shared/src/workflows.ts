@@ -53,7 +53,7 @@ export const LOCAL: Origin = { kind: 'local' };
 
 /* ---------- Elements ---------- */
 
-export const ElementId = z.string().regex(/^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$/, 'An element ID is letters, digits, - and _');
+export const ElementId = z.string().regex(/^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$/, 'A step ID is letters, digits, - and _');
 
 /** Fields nobody here knows, kept so that a file from a newer version survives being opened and saved by this one. */
 const Extra = z.record(z.string(), z.unknown()).default({});
@@ -100,23 +100,23 @@ const PlainText = (max: number) =>
 export const ASK_MAX = 2000;
 
 export const Element = z.object({
-  id: ElementId.describe('Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you.'),
-  kind: z.string().min(1).max(40).default('instructions').describe('What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer.'),
+  id: ElementId.describe('Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you.'),
+  kind: z.string().min(1).max(40).default('instructions').describe('What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer.'),
   name: PlainName.describe('What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals.'),
   instructions: z.string().max(ELEMENT_TEXT_HARD_MAX).default('').describe('What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in.'),
   ask: PlainText(ASK_MAX).default('').describe('For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent.'),
   lookAt: PlainText(ASK_MAX).default('').describe('For an approval, if you like: what the person should look at before deciding.'),
-  doneWhen: z.string().trim().max(500).default('').describe('One line: how to tell that the element is finished. The agent is told to report done when this is true.'),
+  doneWhen: z.string().trim().max(500).default('').describe('One line: how to tell that the step is finished. The agent is told to report done when this is true.'),
   needs: z
     .array(Need)
     .max(NEEDS_MAX)
     .default([])
     .describe("What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed."),
-  produces: z.string().min(1).max(40).default('note').describe('What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick).'),
+  produces: z.string().min(1).max(40).default('note').describe('What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick).'),
   origin: Origin.default(LOCAL).describe('Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it.'),
   source: ElementSource.nullable()
     .default(null)
-    .describe('For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy.'),
+    .describe('For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy.'),
   extra: Extra.describe('Fields from a file that this version does not know, kept so that they are written out again.'),
 });
 export type Element = z.infer<typeof Element>;
@@ -262,7 +262,7 @@ registerElementKind({
     return problems;
   },
   render: (element) => {
-    const lines = ['This element is an approval: a person decides here, not you.', '', 'The person is asked:', ...element.ask.trim().split('\n').map((line) => `  ${line}`)];
+    const lines = ['This step is an approval: a person decides here, not you.', '', 'The person is asked:', ...element.ask.trim().split('\n').map((line) => `  ${line}`)];
     if (element.lookAt.trim()) lines.push('', 'They are pointed at:', ...element.lookAt.trim().split('\n').map((line) => `  ${line}`));
     return lines.join('\n');
   },
@@ -271,11 +271,11 @@ registerElementKind({
 /** Everything wrong with a workflow's content, in sentences. Empty means it can be saved. */
 export function validateContent(content: WorkflowContent, limits: WorkflowLimits = DEFAULT_WORKFLOW_LIMITS): string[] {
   const problems: string[] = [];
-  if (content.elements.length > limits.maxElements) problems.push(`It has ${content.elements.length} elements; at most ${limits.maxElements} are allowed.`);
+  if (content.elements.length > limits.maxElements) problems.push(`It has ${content.elements.length} steps; at most ${limits.maxElements} are allowed.`);
   if (content.standing.length > limits.maxElementChars) problems.push(`The standing text is ${content.standing.length} characters; at most ${limits.maxElementChars} are allowed.`);
   const ids = new Set<string>();
   for (const element of content.elements) {
-    if (ids.has(element.id)) problems.push(`Two elements have the ID "${element.id}".`);
+    if (ids.has(element.id)) problems.push(`Two steps have the ID "${element.id}".`);
     ids.add(element.id);
     const kind = elementKind(element.kind);
     if (!kind) problems.push(`"${element.name}" is of a kind this version does not know: ${element.kind}.`);
@@ -524,7 +524,7 @@ export function stepRun(version: WorkflowVersion, run: Run, report: RunStep, con
     case 'assign': {
       if (run.status !== 'queued') return refuse('This run already has a session.');
       const first = version.elements[0];
-      if (!first) return refuse('This workflow has no elements.');
+      if (!first) return refuse('This workflow has no steps.');
       return touch({ sessionId: report.sessionId, status: statusOn(first.id), currentElementId: first.id, elements: patch(run.elements, first.id, { state: 'active', startedAt: at, sessionId: report.sessionId }) });
     }
 
@@ -551,9 +551,9 @@ export function stepRun(version: WorkflowVersion, run: Run, report: RunStep, con
       if (run.status === 'paused') return refuse('This run is paused. Resume it first.');
       if (report.elementId !== run.currentElementId) {
         const state = run.elements.find((e) => e.elementId === report.elementId)?.state;
-        if (state === undefined) return refuse(`This workflow has no element "${report.elementId}".`);
+        if (state === undefined) return refuse(`This workflow has no step "${report.elementId}".`);
         // The usual cause: the same report sent twice. Nothing moves.
-        return refuse(`"${nameOf(report.elementId)}" is not the current element (it is ${state}). The current element is "${nameOf(run.currentElementId)}".`);
+        return refuse(`"${nameOf(report.elementId)}" is not the current step (it is ${state}). The current step is "${nameOf(run.currentElementId)}".`);
       }
       // An element that waits for a person is not finished by a report, whoever sends it: only by their decision.
       if (waits(report.elementId)) return refuse(`"${nameOf(report.elementId)}" is an approval: only a person approves it, and \`done\` is refused here. Stop and wait; you will be told when they have decided.`);
@@ -592,8 +592,8 @@ export function stepRun(version: WorkflowVersion, run: Run, report: RunStep, con
       const current = run.currentElementId;
       const target = version.elements.findIndex((e) => e.id === report.elementId);
       const from = version.elements.findIndex((e) => e.id === current);
-      if (target < 0) return refuse(`This workflow has no element "${report.elementId}".`);
-      if (target >= from) return refuse(`A run is sent back to an earlier element. "${nameOf(report.elementId)}" does not come before "${nameOf(current)}".`);
+      if (target < 0) return refuse(`This workflow has no step "${report.elementId}".`);
+      if (target >= from) return refuse(`A run is sent back to an earlier step. "${nameOf(report.elementId)}" does not come before "${nameOf(current)}".`);
       const elements = run.elements.map((entry): RunElement => {
         const index = version.elements.findIndex((e) => e.id === entry.elementId);
         if (index === target) return { ...entry, state: 'active', startedAt: at, finishedAt: null, by: null, sessionId: run.sessionId, sentBack: { comment: report.comment, fromElementId: current, by, at } };
@@ -607,8 +607,8 @@ export function stepRun(version: WorkflowVersion, run: Run, report: RunStep, con
     case 'goto': {
       if (run.status === 'queued') return refuse('This run has not started yet.');
       const target = version.elements.findIndex((e) => e.id === report.elementId);
-      if (target < 0) return refuse(`This workflow has no element "${report.elementId}".`);
-      if (report.elementId === run.currentElementId) return refuse(`"${nameOf(report.elementId)}" is already the current element.`);
+      if (target < 0) return refuse(`This workflow has no step "${report.elementId}".`);
+      if (report.elementId === run.currentElementId) return refuse(`"${nameOf(report.elementId)}" is already the current step.`);
       const from = version.elements.findIndex((e) => e.id === run.currentElementId);
       if (by.kind !== 'person') {
         // A program cannot jump off an element a person has to decide, or over one.
@@ -638,8 +638,8 @@ export function stepRun(version: WorkflowVersion, run: Run, report: RunStep, con
  */
 export function tickRun(version: { elements: readonly { id: string; produces: string }[] } | null, run: Run, tick: { elementId: string; item: number; ticked: boolean }, context: { by: Actor; at: string }): StepResult {
   const entry = run.elements.find((e) => e.elementId === tick.elementId);
-  if (!entry) return refuse(`This run has no element "${tick.elementId}".`);
-  if (entry.state !== 'done') return refuse('Only what a finished element produced can be ticked.');
+  if (!entry) return refuse(`This run has no step "${tick.elementId}".`);
+  if (entry.state !== 'done') return refuse('Only what a finished step produced can be ticked.');
   // The kind is the element's own where the version is still known; an archived run's output says what it is by its shape.
   const produces = version?.elements.find((e) => e.id === tick.elementId)?.produces;
   const count = Math.max(...(produces ? [outputKind(produces)?.items(entry.output) ?? 0] : outputKindNames().map((name) => outputKind(name)?.items(entry.output) ?? 0)), 0);
@@ -672,7 +672,7 @@ export function safeForTyping(text: string): string {
  * else, the agent reads with the command.
  */
 export const KICKOFF_LINE =
-  'You are on an Aubergine workflow. Run `aubergine workflow status` to read your current element and follow it. When its "done when" is true, run `aubergine workflow done --note "<what you did>"` and follow what it prints.';
+  'You are on an Aubergine workflow. Run `aubergine workflow status` to read your current step and follow it. When its "done when" is true, run `aubergine workflow done --note "<what you did>"` and follow what it prints.';
 export const kickoffLine = (): string => KICKOFF_LINE;
 
 /** The line that asks an agent for a recap. Fixed, like the others: what is wanted is read with the command, never typed. */
@@ -702,7 +702,7 @@ const HOW_TO_REPORT = [
 const HOW_TO_WAIT = [
   // Said again at the end: a terminal shows the end of what was printed.
   'What to do now: STOP and wait. A person has to approve before this run goes on.',
-  '- Nothing more on this run. You cannot approve: `aubergine workflow done` is refused on this element, whoever runs it.',
+  '- Nothing more on this run. You cannot approve: `aubergine workflow done` is refused on this step, whoever runs it.',
   '- When the person has decided you are told to read your status again. To read it yourself:',
   '    aubergine workflow status',
   '',
@@ -724,11 +724,11 @@ export function renderRun(version: WorkflowVersion, run: Run): string {
   const index = version.elements.findIndex((e) => e.id === run.currentElementId);
   const element = version.elements[index];
 
-  if (run.status === 'finished') return [...lines, `This run is finished: all ${total} elements are done. There is nothing more to do for it.`].join('\n');
+  if (run.status === 'finished') return [...lines, `This run is finished: all ${total} steps are done. There is nothing more to do for it.`].join('\n');
   if (run.status === 'stopped') return [...lines, 'This run was stopped. There is nothing more to do for it.'].join('\n');
   if (run.status === 'queued' || !element) return [...lines, 'This run has not started yet: it is waiting for a session.'].join('\n');
 
-  lines.push(`Element ${index + 1} of ${total}: ${element.name}`);
+  lines.push(`Step ${index + 1} of ${total}: ${element.name}`);
   if (run.status === 'paused') lines.push('', 'This run is PAUSED by a person. Do not work on it until it is resumed.');
   if (run.status === 'blocked') lines.push('', `This run is BLOCKED: ${run.blockedReason ?? ''}`, 'If that is resolved, carry on and report as usual.');
   const kind = elementKind(element.kind);
@@ -737,17 +737,17 @@ export function renderRun(version: WorkflowVersion, run: Run): string {
 
   const given = version.inputs.filter((input) => (run.inputs[input.key] ?? '') !== '');
   if (given.length > 0) lines.push('', ...given.map((input) => `${input.label}: ${run.inputs[input.key]}`));
-  if (version.standing.trim()) lines.push('', 'For every element:', fillInputs(version.standing.trim(), run.inputs));
+  if (version.standing.trim()) lines.push('', 'For every step:', fillInputs(version.standing.trim(), run.inputs));
 
-  lines.push('', kind ? kind.render(element, { inputs: run.inputs }) : `(This element is of a kind this version does not know: ${element.kind}.)`);
-  if (element.needs.length > 0) lines.push('', `This element needs: ${element.needs.map(needWords).join('; ')}. If you do not have one of these, report blocked and say which.`);
+  lines.push('', kind ? kind.render(element, { inputs: run.inputs }) : `(This step is of a kind this version does not know: ${element.kind}.)`);
+  if (element.needs.length > 0) lines.push('', `This step needs: ${element.needs.map(needWords).join('; ')}. If you do not have one of these, report blocked and say which.`);
   const produces = outputKind(element.produces);
-  if (produces?.required) lines.push('', `This element produces ${produces.title.toLowerCase()}. ${produces.expects}`);
+  if (produces?.required) lines.push('', `This step produces ${produces.title.toLowerCase()}. ${produces.expects}`);
 
   // A person sent the run back here: their words, marked as theirs.
   const sentBack = run.elements.find((e) => e.elementId === element.id)?.sentBack;
   if (sentBack) {
-    lines.push('', `A person looked at this run at "${version.elements.find((e) => e.id === sentBack.fromElementId)?.name ?? sentBack.fromElementId}" and SENT IT BACK to this element. Their comment (the person's own words, not part of the workflow):`, `  ${sentBack.comment}`, 'Do this element again with that in mind.');
+    lines.push('', `A person looked at this run at "${version.elements.find((e) => e.id === sentBack.fromElementId)?.name ?? sentBack.fromElementId}" and SENT IT BACK to this step. Their comment (the person's own words, not part of the workflow):`, `  ${sentBack.comment}`, 'Do this step again with that in mind.');
   }
 
   // What the element before handed over: the nearest one before this that was done (skipped ones handed over nothing).
@@ -759,12 +759,12 @@ export function renderRun(version: WorkflowVersion, run: Run): string {
   if (before?.state) {
     const handed = outputKind(before.element.produces)?.render(before.state.output, new Set(before.state.ticks.map((t) => t.item))) ?? '';
     const parts = [before.state.note.trim(), handed].filter((part) => part !== '');
-    if (waitsForPerson(before.element.kind)) lines.push('', `"${before.element.name}", the element before, was approved by a person.${parts.length > 0 ? " Their comment (the person's own words):" : ''}`, ...parts.map((part) => `  ${part}`));
-    else if (parts.length > 0) lines.push('', `From "${before.element.name}", the element before:`, ...parts);
+    if (waitsForPerson(before.element.kind)) lines.push('', `"${before.element.name}", the step before, was approved by a person.${parts.length > 0 ? " Their comment (the person's own words):" : ''}`, ...parts.map((part) => `  ${part}`));
+    else if (parts.length > 0) lines.push('', `From "${before.element.name}", the step before:`, ...parts);
   }
 
   const later = version.elements.slice(index + 1).map((e) => e.name);
-  lines.push('', later.length > 0 ? `After this: ${later.join(', ')}.` : 'This is the last element.');
+  lines.push('', later.length > 0 ? `After this: ${later.join(', ')}.` : 'This is the last step.');
   lines.push('', waiting ? HOW_TO_WAIT : HOW_TO_REPORT);
   return lines.join('\n');
 }

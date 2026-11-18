@@ -109,7 +109,7 @@ export const ProjectFile = z.looseObject({
   places: z.array(FilePlace).max(FILE_PLACES_MAX).default([]).describe("The project's folders, as names. Where each is on a computer is asked there."),
   canvases: z.array(FileCanvas).min(1).max(FILE_CANVASES_MAX).describe('Its canvases, in the order of their tabs. At least one.'),
   workflows: z.array(FileWorkflow).max(FILE_WORKFLOWS_MAX).default([]).describe('The workflows it owns and the shared ones its schedules run. Each has a reference (`w1`), `shared` (true if it was shared with every project where the file was written) and `file`: the workflow as a workflow file.'),
-  elements: z.array(FileElement).max(FILE_ELEMENTS_MAX).default([]).describe('The shelf elements it owns and the shared ones its rules and schedules run. Each has a reference (`e1`), `shared` and `element` (see the element reference).'),
+  elements: z.array(FileElement).max(FILE_ELEMENTS_MAX).default([]).describe('The saved steps it owns and the shared ones its rules and schedules run. Each has a reference (`e1`), `shared` and `element` (see the step reference).'),
   rules: z.array(FileRule).max(FILE_RULES_MAX).default([]).describe('Its rules.'),
   schedules: z.array(FileSchedule).max(FILE_SCHEDULES_MAX).default([]).describe('Its schedules.'),
   leftOut: z.array(z.string().max(300)).max(100).default([]).describe('What could not be written into the file, each in a sentence.'),
@@ -157,7 +157,7 @@ export function readProjectFile(text: string): ReadProjectFile {
   const onProblem = (on: z.infer<typeof OnWhat>, what: string): string | null => ('terminal' in on ? (has(terminals, on.terminal) ? null : `${what} names a terminal that is not in the file.`) : has(file.canvases, on.canvas) ? null : `${what} names a canvas that is not in the file.`);
   for (const rule of file.rules) {
     if (rule.action.kind !== 'run-element') continue;
-    if (!has(file.elements, rule.action.element)) return no('A rule runs an element that is not in the file.');
+    if (!has(file.elements, rule.action.element)) return no('A rule runs a step that is not in the file.');
     const problem = onProblem(rule.action.on, 'A rule');
     if (problem) return no(problem);
   }
@@ -182,9 +182,9 @@ export const ProjectFileReading = z.object({
   counts: z.object({ canvases: z.number().int(), terminals: z.number().int(), agents: z.number().int(), frames: z.number().int(), notes: z.number().int(), workflows: z.number().int(), elements: z.number().int(), rules: z.number().int(), schedules: z.number().int() }),
   says: z.array(z.string()).describe('What will be made and what will not be started, each in a sentence.'),
   agents: z.array(z.string()).describe('The terminals that were an agent’s, by name. Each is made as a plain shell.'),
-  needs: z.array(z.object({ of: z.string(), needs: z.array(z.string()) })).describe('What its elements say they need, by element.'),
-  texts: z.array(z.object({ title: z.string(), text: z.string() })).describe('Everything an agent would be told: every workflow, element, and the task of every schedule, in full.'),
-  shared: z.array(z.string()).describe('The workflows and elements that were shared with every project where the file was written, by name.'),
+  needs: z.array(z.object({ of: z.string(), needs: z.array(z.string()) })).describe('What its steps say they need, by step.'),
+  texts: z.array(z.object({ title: z.string(), text: z.string() })).describe('Everything an agent would be told: every workflow, step, and the task of every schedule, in full.'),
+  shared: z.array(z.string()).describe('The workflows and steps that were shared with every project where the file was written, by name.'),
   sharedDefault: z.enum(['shared', 'project']).describe('What they become here unless the owner says otherwise.'),
   leftOut: z.array(z.string()),
 });
@@ -196,7 +196,7 @@ export const ImportProjectFileRequest = z.object({
   digest: z.string().max(200).describe('The digest of the text that was read and shown. A text that is not exactly that one is refused.'),
   name: Project.shape.name.optional().describe('The name of the new project. Left out: the name in the file.'),
   places: z.record(z.string(), z.string().startsWith('/').max(4096).nullable()).default({}).describe('Where each place is on this computer: a folder that exists, or null to leave it unset.'),
-  shared: z.enum(['shared', 'project']).optional().describe("What the file's shared workflows and elements become: shared with every project here, or the new project's own."),
+  shared: z.enum(['shared', 'project']).optional().describe("What the file's shared workflows and steps become: shared with every project here, or the new project's own."),
   start: z.boolean().default(false).describe('Start a fresh shell in each terminal. Off: each is made as a terminal whose shell has not started, with a button to start it. An agent is never started.'),
 });
 export type ImportProjectFileRequest = z.infer<typeof ImportProjectFileRequest>;
@@ -273,6 +273,6 @@ export function projectFileReferencePage(): string {
     '',
     '## Bounds',
     '',
-    `A file is at most ${PROJECT_FILE_MAX_CHARS} characters. It may hold ${FILE_CANVASES_MAX} canvases, ${FILE_NODES_MAX} nodes and ${FILE_FRAMES_MAX} frames on a canvas, ${FILE_TERMINALS_MAX} terminals in all, ${FILE_PLACES_MAX} places, ${FILE_WORKFLOWS_MAX} workflows, ${FILE_ELEMENTS_MAX} elements, ${FILE_RULES_MAX} rules and ${FILE_SCHEDULES_MAX} schedules.`,
+    `A file is at most ${PROJECT_FILE_MAX_CHARS} characters. It may hold ${FILE_CANVASES_MAX} canvases, ${FILE_NODES_MAX} nodes and ${FILE_FRAMES_MAX} frames on a canvas, ${FILE_TERMINALS_MAX} terminals in all, ${FILE_PLACES_MAX} places, ${FILE_WORKFLOWS_MAX} workflows, ${FILE_ELEMENTS_MAX} steps, ${FILE_RULES_MAX} rules and ${FILE_SCHEDULES_MAX} schedules.`,
   ].join('\n');
 }

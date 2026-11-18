@@ -54,14 +54,14 @@ describe('output kinds', () => {
       const v = WorkflowVersion.parse({ number: 1, createdAt: T(0), name: 'x', elements: [{ id: 'a', name: 'A', instructions: 'x', produces: 'link' }, { id: 'b', name: 'B', instructions: 'y' }] });
       expect(validateContent(v)).toEqual([]);
       const run = newRun(v, { id: ID(9), workflowId: ID(8), sessionId: ID(1), inputs: {}, by: OWNER, at: T(0) });
-      expect(renderRun(v, run)).toContain('This element produces a link. A JSON file of the form {"url": "https://…"}.');
+      expect(renderRun(v, run)).toContain('This step produces a link. A JSON file of the form {"url": "https://…"}.');
       const refused = stepRun(v, run, { type: 'done', elementId: 'a' }, { by: AGENT, at: T(1) });
       expect(refused.ok === false && refused.reason).toContain('produces a link, and none was handed in');
       const wrong = stepRun(v, run, { type: 'done', elementId: 'a', output: {} }, { by: AGENT, at: T(1) });
       expect(wrong.ok === false && wrong.reason).toContain('It has no url.');
       const done = stepRun(v, run, { type: 'done', elementId: 'a', output: { url: 'https://example.test/x' } }, { by: AGENT, at: T(1) });
       if (!done.ok) throw new Error(done.reason);
-      expect(renderRun(v, done.run)).toContain('From "A", the element before:\nLink: https://example.test/x');
+      expect(renderRun(v, done.run)).toContain('From "A", the step before:\nLink: https://example.test/x');
       // Nothing to tick in a link.
       const tick = tickRun(v, done.run, { elementId: 'a', item: 0, ticked: true }, { by: OWNER, at: T(2) });
       expect(tick.ok === false && tick.reason).toBe('There is nothing to tick here.');
@@ -90,11 +90,11 @@ describe('output kinds', () => {
   });
 });
 
-describe('an element that produces a checklist', () => {
+describe('a step that produces a checklist', () => {
   it('is told what it produces and in what format, and cannot be done without one', () => {
     const run = start();
     const text = renderRun(version, run);
-    expect(text).toContain('This element produces a checklist.');
+    expect(text).toContain('This step produces a checklist.');
     expect(text).toContain('aubergine workflow done --output <file>');
     const without = stepRun(version, run, { type: 'done', elementId: 'collect', note: 'here you go' }, { by: AGENT, at: T(1) });
     expect(without.ok).toBe(false);
@@ -106,13 +106,13 @@ describe('an element that produces a checklist', () => {
     expect(wrong.ok === false && wrong.reason).toContain('is not right. Item 1 (text)');
   });
 
-  it('keeps the checklist with the run, lets the owner tick items, and tells the next element which', () => {
+  it('keeps the checklist with the run, lets the owner tick items, and tells the next step which', () => {
     let run = step(start(), { type: 'done', elementId: 'collect', note: 'Three requests.', output: list });
     expect(run.elements[0]).toMatchObject({ state: 'done', note: 'Three requests.', output: list, ticks: [] });
     expect(run.currentElementId).toBe('do');
 
     const told = renderRun(version, run);
-    expect(told).toContain('From "Collect my to-dos", the element before:\nThree requests.\n[ ] 1. Review the retry change\n[ ] 2. Answer about the release date\n      Asked twice.\n      Second time on Tuesday.\n[ ] 3. Book the room\nThe owner has ticked none of these yet.');
+    expect(told).toContain('From "Collect my to-dos", the step before:\nThree requests.\n[ ] 1. Review the retry change\n[ ] 2. Answer about the release date\n      Asked twice.\n      Second time on Tuesday.\n[ ] 3. Book the room\nThe owner has ticked none of these yet.');
 
     const tick = (item: number, ticked: boolean, at: string): void => {
       const result = tickRun(version, run, { elementId: 'collect', item, ticked }, { by: OWNER, at });
@@ -139,8 +139,8 @@ describe('an element that produces a checklist', () => {
       return result.ok ? 'ticked' : result.reason;
     };
     expect(refuse('collect', 3)).toBe('There are 3 items; 4 is not one of them.');
-    expect(refuse('do', 0)).toBe('Only what a finished element produced can be ticked.');
-    expect(refuse('nope', 0)).toBe('This run has no element "nope".');
+    expect(refuse('do', 0)).toBe('Only what a finished step produced can be ticked.');
+    expect(refuse('nope', 0)).toBe('This run has no step "nope".');
 
     // It still works when the run is over, and without the workflow (an archived run): the output says what it is.
     const over = step(run, { type: 'done', elementId: 'do' });
@@ -149,7 +149,7 @@ describe('an element that produces a checklist', () => {
     expect(later.ok && later.run.elements[0]?.ticks.map((t) => t.item)).toEqual([1, 2]);
   });
 
-  it('starts from a clean list when the element is done again', () => {
+  it('starts from a clean list when the step is done again', () => {
     let run = step(start(), { type: 'done', elementId: 'collect', output: list });
     const ticked = tickRun(version, run, { elementId: 'collect', item: 0, ticked: true }, { by: OWNER, at: T(2) });
     if (!ticked.ok) throw new Error(ticked.reason);
@@ -158,7 +158,7 @@ describe('an element that produces a checklist', () => {
     expect(run.elements[0]).toMatchObject({ output: { items: [{ text: 'Only this now' }] }, ticks: [] });
   });
 
-  it('a note element takes no output, and behaves as it always did', () => {
+  it('a note step takes no output, and behaves as it always did', () => {
     const run = step(start(), { type: 'done', elementId: 'collect', output: list });
     const refused = stepRun(version, run, { type: 'done', elementId: 'do', output: list }, { by: AGENT, at: T(2) });
     expect(refused.ok === false && refused.reason).toBe('"Do the chosen ones" produces a note only: hand it in with --note.');
@@ -168,14 +168,14 @@ describe('an element that produces a checklist', () => {
 });
 
 describe('needs', () => {
-  it('are told to whoever does the element, with what to do when one is missing', () => {
-    expect(renderRun(version, start())).toContain('This element needs: an MCP server: team chat (read access is enough). If you do not have one of these, report blocked and say which.');
-    expect(previewRun(version, {}, 'do')).toContain('This element needs: the command git; an MCP server: Team Chat.');
+  it('are told to whoever does the step, with what to do when one is missing', () => {
+    expect(renderRun(version, start())).toContain('This step needs: an MCP server: team chat (read access is enough). If you do not have one of these, report blocked and say which.');
+    expect(previewRun(version, {}, 'do')).toContain('This step needs: the command git; an MCP server: Team Chat.');
     expect(needWords({ kind: 'access', name: 'the staging database' })).toBe('access to the staging database');
     expect(needWords({ kind: 'other', name: 'a second monitor' })).toBe('a second monitor');
   });
 
-  it('of a workflow are those of its elements, each once', () => {
+  it('of a workflow are those of its steps, each once', () => {
     expect(needsOf(version.elements).map(needWords)).toEqual(['an MCP server: team chat (read access is enough)', 'the command git']);
     expect(needsOf([])).toEqual([]);
   });
@@ -198,14 +198,14 @@ describe('a draft as text for the reviewer', () => {
   it('is what an agent would be told, made by the function that tells agents', () => {
     const text = reviewText(proposal);
     expect(text).toContain('Workflow: Collect my to-dos');
-    expect(text).toContain('Element 1 of 1: Collect my to-dos');
+    expect(text).toContain('Step 1 of 1: Collect my to-dos');
     expect(text).toContain('Read my unread messages in the team chat');
-    expect(text).toContain('This element needs: an MCP server: team chat');
-    expect(text).toContain('This element produces a checklist.');
+    expect(text).toContain('This step needs: an MCP server: team chat');
+    expect(text).toContain('This step produces a checklist.');
     // A workflow: every element, in order, each as it would be told.
     const whole = reviewText({ workflow: version, element: null });
     expect(whole.split('────────────────────────────────────────')).toHaveLength(2);
-    expect(whole).toContain('Element 2 of 2: Do the chosen ones');
+    expect(whole).toContain('Step 2 of 2: Do the chosen ones');
     expect(reviewText({ workflow: null, element: null })).toBe('');
     expect(needsOfProposal(proposal).map((n) => n.name)).toEqual(['team chat']);
   });
@@ -235,7 +235,7 @@ describe('a draft as text for the reviewer', () => {
 
   it('the brief gives the description, the format with an example, the limits and how to hand in', () => {
     const brief = renderBrief(draft(), LIMITS);
-    expect(brief).toContain('You have been asked to write an element for Aubergine.');
+    expect(brief).toContain('You have been asked to write a step for Aubergine.');
     expect(brief).toContain('Give me my to-do list from the team chat.');
     expect(brief).toContain('"produces": "checklist"');
     expect(brief).toContain('at most 20000 characters');
@@ -245,7 +245,7 @@ describe('a draft as text for the reviewer', () => {
 
     const workflow = renderBrief(draft({ kind: 'workflow' }), LIMITS);
     expect(workflow).toContain('aubergine workflow propose --file <file>');
-    expect(workflow).toContain('A workflow has 1 to 50 elements.');
+    expect(workflow).toContain('A workflow has 1 to 50 steps.');
   });
 
   it('after a draft is sent back, the brief has the comment and the last version', () => {

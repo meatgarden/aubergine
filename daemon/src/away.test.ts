@@ -40,7 +40,7 @@ describe('what counts as a moment', () => {
     expect(momentOf(run('run.moved', { status: 'blocked', blockedReason: 'No access.' }), memory, at(3), name)?.detail).toBe('is blocked on "Fix a bug": No access.');
     expect(momentOf(run('run.finished', { status: 'finished', currentElementId: null }), memory, at(4), name)).toMatchObject({ kind: 'run-finished', detail: 'finished "Fix a bug".' });
     const draft = { type: 'draft.changed', draft: { id: B, status: 'waiting', kind: 'element', sessionId: A } } as unknown as ChangeEvent;
-    expect(momentOf(draft, memory, at(5), name)).toMatchObject({ kind: 'draft-arrived', detail: 'handed in an element for you to review.' });
+    expect(momentOf(draft, memory, at(5), name)).toMatchObject({ kind: 'draft-arrived', detail: 'handed in a step for you to review.' });
     expect(momentOf(draft, memory, at(6), name)).toBeNull();
     // Everything else is not a moment.
     expect(momentOf({ type: 'session.renamed', sessionId: A, name: 'x' } as ChangeEvent, memory, at(7), name)).toBeNull();

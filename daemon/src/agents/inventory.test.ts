@@ -396,7 +396,7 @@ describe('who may read it', () => {
   });
 });
 
-describe('finding, and matching what an element needs', () => {
+describe('finding, and matching what a step needs', () => {
   it('searches by every word, and matches a need by name, loosely, claiming no more than that', async () => {
     const { inventory } = await inventoryOf(await agent());
     expect(searchInventory(inventory.items, 'slack').map((item) => item.name)).toEqual(expect.arrayContaining(['slack', 'allow: mcp__slack__post_message']));

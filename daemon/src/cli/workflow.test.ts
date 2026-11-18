@@ -97,7 +97,7 @@ describe('parsing workflow commands', () => {
     expect(() => resolveWorkflow(list, 'nothing')).toThrow(/No workflow matches/);
   });
 
-  it('finds an element by ID, name, start of a name or number', () => {
+  it('finds a step by ID, name, start of a name or number', () => {
     const elements = [
       { id: 'plan', name: 'Plan' },
       { id: 'build', name: 'Build' },
@@ -201,8 +201,8 @@ describe('workflow commands against a server', () => {
     expect((await run(['list'])).out).toContain('No workflows yet');
     expect((await run(['templates'])).out).toContain('fix-a-bug');
     const made = await run(['new', 'Hotfix', '--template', 'fix-a-bug']);
-    expect(made.out).toContain('Made the workflow "Hotfix" with 5 elements: Reproduce → Find the cause → Fix → Test → Summarise.');
-    expect((await run(['new', 'Scratch'])).out).toContain('with one element');
+    expect(made.out).toContain('Made the workflow "Hotfix" with 5 steps: Reproduce → Find the cause → Fix → Test → Summarise.');
+    expect((await run(['new', 'Scratch'])).out).toContain('with one step');
 
     const shown = (await run(['show', 'hot'])).out;
     expect(shown).toContain('Hotfix (version 1)');
@@ -308,21 +308,21 @@ describe('workflow commands against a server', () => {
 
     const status = await run(['status'], session);
     expect(status.code).toBe(0);
-    expect(status.out).toContain('Element 1 of 3: Plan');
+    expect(status.out).toContain('Step 1 of 3: Plan');
     expect(status.out).toContain('The task: the login bug');
 
     const done = await run(['done', '--note', 'Planned: change net.ts only.'], session);
     expect(done.code).toBe(0);
     expect(done.out).toContain('Recorded: "Plan" is done.');
-    expect(done.out).toContain('Element 2 of 3: Build');
+    expect(done.out).toContain('Step 2 of 3: Build');
     expect(done.out).toContain('Planned: change net.ts only.');
     expect(hub.state.runs[0]?.elements[0]).toMatchObject({ state: 'done', note: 'Planned: change net.ts only.', by: { kind: 'agent' } });
 
     expect((await run(['blocked', 'I', 'need', 'the', 'password'], session)).out).toContain('Recorded: blocked on Build · 2 of 3.');
     expect(hub.state.runs[0]).toMatchObject({ status: 'blocked', blockedReason: 'I need the password' });
-    expect((await run(['goto', 'plan'], session)).out).toContain('Element 1 of 3: Plan');
-    expect((await run(['goto', '3'], session)).out).toContain('Element 3 of 3: Check');
-    await expect(run(['goto', 'nowhere'], session)).rejects.toThrow(/No element matches/);
+    expect((await run(['goto', 'plan'], session)).out).toContain('Step 1 of 3: Plan');
+    expect((await run(['goto', '3'], session)).out).toContain('Step 3 of 3: Check');
+    await expect(run(['goto', 'nowhere'], session)).rejects.toThrow(/No step matches/);
 
     expect((await run(['pause'], session)).out).toBe('The run is paused at Check · 3 of 3.');
     // Refused while paused, in words an agent can act on, with a failing exit code.
@@ -414,7 +414,7 @@ describe('workflow commands against a server', () => {
     await writeFile(file, JSON.stringify(element));
     const handed = await runElement(['propose', '--file', file], agent);
     expect(handed).toMatchObject({ code: 0 });
-    expect(handed.out).toContain('Handed in the element as a draft.');
+    expect(handed.out).toContain('Handed in the step as a draft.');
     expect(hub.state.drafts[0]).toMatchObject({ status: 'waiting', element: { name: 'Collect my to-dos', produces: 'checklist' } });
 
     // Sent back: only the fixed line is typed again; the comment is what `brief` prints.
@@ -451,10 +451,10 @@ describe('workflow commands against a server', () => {
     expect(hub.state.workflows.map((w) => w.name)).toEqual(['Hotfix']);
   });
 
-  it('runs one element by itself and takes a checklist with done --output', async () => {
+  it('runs one step by itself and takes a checklist with done --output', async () => {
     const origin = `http://127.0.0.1:${port}`;
     const owner = createClient({ baseUrl: origin, headers: { origin, cookie: `${cookieName(port)}=${ownerToken}` } });
-    expect((await runElement(['list'])).out).toContain('No elements on the shelf yet');
+    expect((await runElement(['list'])).out).toContain('No saved steps yet');
     await owner.createElement({ body: { name: 'Collect my to-dos', instructions: 'List what people asked me to do.', needs: [{ kind: 'mcp', name: 'team chat' }], produces: 'checklist' } });
     expect((await runElement(['list'])).out).toBe('Collect my to-dos  version 1; produces a checklist; needs an MCP server: team chat');
     expect((await runElement(['show', 'collect'])).out).toContain('Produces: checklist');
@@ -466,8 +466,8 @@ describe('workflow commands against a server', () => {
     expect((await run(['list'])).out).toContain('No workflows yet');
 
     const status = await run(['status'], session);
-    expect(status.out).toContain('This element needs: an MCP server: team chat.');
-    expect(status.out).toContain('This element produces a checklist.');
+    expect(status.out).toContain('This step needs: an MCP server: team chat.');
+    expect(status.out).toContain('This step produces a checklist.');
     // Without the checklist: refused, with the format, and a failing exit code.
     const refused = await run(['done', '--note', 'all done'], session);
     expect(refused.code).toBe(1);

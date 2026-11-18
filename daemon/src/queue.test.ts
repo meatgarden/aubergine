@@ -546,7 +546,7 @@ describe('the owner\'s list', () => {
     await asSession(approves, 'POST', `/v1/sessions/${approves.id}/run/report`, { type: 'done', output: { items: [{ text: 'Rename the flag' }, { text: 'Remove the old test' }] } });
     // A draft, a proposal, something asked, a task that is done and one that failed, a working copy whose terminal is gone.
     const writer = agent('writer');
-    await asSession(writer, 'POST', `/v1/sessions/${writer.id}/drafts`, { element: { name: 'A drafted element', instructions: 'Do it.' } });
+    await asSession(writer, 'POST', `/v1/sessions/${writer.id}/drafts`, { element: { name: 'A drafted step', instructions: 'Do it.' } });
     await asSession(writer, 'POST', `/v1/sessions/${writer.id}/tasks`, { title: 'A proposed task' });
     await asSession(writer, 'POST', `/v1/sessions/${writer.id}/asks`, { text: 'Renew the certificate' });
     const done = await add('Done task', { taker: { kind: 'session', sessionId: writer.id } });

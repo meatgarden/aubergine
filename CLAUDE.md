@@ -300,11 +300,11 @@ These are the only abstractions in the code base. Each has exactly one implement
 
 - **One primary on a surface, and it comes first.** The browser test "simpler surfaces" counts them.
 - **What is done seldom is in a menu, a fold-out or a tab, never gone.** Each thing that moved keeps its test id and its command, and is reached from the keyboard: the test opens each menu with Enter and checks its lines.
-- **A panel section that is used less says `more`.** The shell puts it under More; it knows no section by name. The tabs are one row.
+- **A panel section that is used less says `more`.** The shell puts it under More; it knows no section by name. The tabs are one row from 280px of panel width; below that they take a second, and none is cut off.
 - **The list's default says nothing.** This canvas with no other filter shows no chip; anything else is named in one line with Clear, which returns to the default.
 - **A row or a card is pressed as a whole** where the one thing to do is to open it; a control inside it does only its own thing.
 - **A state chip is never cut.** In a row the name gives way first, then the marks.
-- **On screen a workflow is made of steps, and what is kept for reuse is a saved step.** "Element" is the word of the API, the commands, the files and what an agent is told.
+- **A person reads "step" and "saved step" everywhere:** the page, a command's output, what an agent is told, the guide and the docs. "Element" is only a name: of the command, an option, a field, a route, a kind in a file. The guide says so once.
 - **A menu takes Escape before what is behind it.** Menus listen in the capture phase, and `belongsToControl` gives Escape to an open menu.
 - **What hangs from a terminal's title is not clipped by the terminal's box.**
 
@@ -312,6 +312,15 @@ These are the only abstractions in the code base. Each has exactly one implement
 - **Words begin on the gutter.** A quiet button that begins a line and a row pressed as a whole hang left by their padding; this is in the piece, not in a screen's rule. "simpler surfaces" measures the first letter of rows, cards and headings.
 - **A class no component renders has no rule.** Before removing rules by class name, a name inside `:not(...)` is taken out of the list; the selector stays.
 - **The tour looks when a screen is put into the page**, not only on its timer, and its ring is not drawn across a menu or the drawer.
+
+- **One thing is filled with the colour of waiting:** the count beside For you at the top, and only while something waits. A count on a tab is a plain number; a state in words is a soft chip; finished is the ok colour. The browser test "calm canvas" counts.
+- **The mark of a state is one dot.** `dotTone` decides it and `StateDot` draws it, the same in the list, a terminal's title, a Board card and the folded strip. No letter or sign stands for a state.
+- **A terminal's line has one width.** Accent while it is selected or typed into, the colour of waiting while it waits, the ordinary line otherwise; nothing is drawn outside it. Selected wins the line.
+- **A row of the list is the name's.** The dot and the name on the first line; on the second the state in words where it is not ordinary, the step of a run, the folder and one time. Nothing else is put on a row: it goes in the title or the drawer.
+- **What a terminal runs is said short** (`shortCommand`), with the whole line in the tooltip. Never a quoted absolute path in a title.
+- **A choice control is laid out by its label.** No screen sets the gap between a tick box or a radio button and its words; "one look" measures it.
+- **The map never lies over the terminal in use.** It steps aside, button and all (`underMap`), and folds away for good in this browser.
+- **A filter that is on keeps its one line with Clear**, in plain chips; the count on the Filter button is the one coloured sign.
 
 ### Canvas behaviour
 

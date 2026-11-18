@@ -54,20 +54,20 @@ How to create a token, what the scopes mean, the limits and the activity log are
 | [`POST /v1/runs`](#startrun) | Start a run of a workflow | `runs:write` |
 | [`GET /v1/runs/{runId}`](#getrun) | Read a run | `read` |
 | [`POST /v1/runs/{runId}/report`](#reportrun) | Report on a run: done, blocked, go to, pause, resume, stop | `runs:write` |
-| [`POST /v1/runs/{runId}/approve`](#approverun) | Approve the element a run waits on | browser only |
-| [`POST /v1/runs/{runId}/send-back`](#sendbackrun) | Send a run that waits for approval back to an earlier element | browser only |
+| [`POST /v1/runs/{runId}/approve`](#approverun) | Approve the step a run waits on | browser only |
+| [`POST /v1/runs/{runId}/send-back`](#sendbackrun) | Send a run that waits for approval back to an earlier step | browser only |
 | [`POST /v1/workflows/{workflowId}/runs`](#startruns) | Start a workflow on several sessions at once | `runs:write` |
-| [`GET /v1/board`](#getboard) | The board: every run that is going, by workflow and element | `read` |
+| [`GET /v1/board`](#getboard) | The board: every run that is going, by workflow and step | `read` |
 | [`POST /v1/sessions/{sessionId}/runs`](#startsessionrun) | Start a run on a session | `runs:write` |
 | [`GET /v1/drafts`](#listdrafts) | List drafts | `read` |
-| [`POST /v1/drafts`](#proposedraft) | Propose a workflow or an element as a draft | `workflows:write` |
+| [`POST /v1/drafts`](#proposedraft) | Propose a workflow or a step as a draft | `workflows:write` |
 | [`GET /v1/drafts/{draftId}`](#getdraft) | Read a draft | `read` |
 | [`PUT /v1/drafts/{draftId}`](#revisedraft) | Hand in a new version of a draft | `workflows:write` |
 | [`DELETE /v1/drafts/{draftId}`](#discarddraft) | Discard a draft | browser only |
 | [`POST /v1/drafts/{draftId}/accept`](#acceptdraft) | Accept a draft | browser only |
 | [`POST /v1/drafts/{draftId}/return`](#returndraft) | Send a draft back with a comment | browser only |
 | [`GET /v1/draft-records`](#listdraftrecords) | What became of drafts | browser only |
-| [`POST /v1/draft-requests`](#requestdraft) | Ask the agent in a session to write a workflow or an element | browser only |
+| [`POST /v1/draft-requests`](#requestdraft) | Ask the agent in a session to write a workflow or a step | browser only |
 | [`GET /v1/library/sources`](#listlibrarysources) | List the sources of the library | `read` |
 | [`POST /v1/library/sources`](#addlibrarysource) | Add a source | browser only |
 | [`DELETE /v1/library/sources/{sourceId}`](#removelibrarysource) | Remove a source | browser only |
@@ -82,18 +82,18 @@ How to create a token, what the scopes mean, the limits and the activity log are
 | [`GET /v1/library/installed`](#listlibraryinstalled) | What was installed from the library | `read` |
 | [`GET /v1/library/installed/{installedId}/usage`](#getlibraryinstalledusage) | Where an installed item is used | `read` |
 | [`DELETE /v1/library/installed/{installedId}`](#removelibraryinstalled) | Remove what was installed | browser only |
-| [`GET /v1/elements`](#listelements) | List the elements on the shelf | `read` |
-| [`POST /v1/elements`](#createelement) | Put an element on the shelf | `workflows:write` |
-| [`PATCH /v1/elements/{elementId}`](#updateelement) | Change an element on the shelf | `workflows:write` |
-| [`DELETE /v1/elements/{elementId}`](#removeelement) | Take an element off the shelf | `workflows:write` |
-| [`POST /v1/elements/{elementId}/copy`](#copyelement) | Duplicate an element on the shelf | `workflows:write` |
-| [`GET /v1/elements/{elementId}/versions`](#listelementversions) | The versions of a shelf element | `read` |
-| [`GET /v1/elements/{elementId}/usage`](#getelementusage) | Where a shelf element is used | `read` |
-| [`POST /v1/elements/{elementId}/retire`](#retireelement) | Retire a shelf element | browser only |
-| [`POST /v1/elements/{elementId}/restore`](#restoreelement) | Bring a retired shelf element back | browser only |
+| [`GET /v1/elements`](#listelements) | List the saved steps | `read` |
+| [`POST /v1/elements`](#createelement) | Put a saved step | `workflows:write` |
+| [`PATCH /v1/elements/{elementId}`](#updateelement) | Change a saved step | `workflows:write` |
+| [`DELETE /v1/elements/{elementId}`](#removeelement) | Take a step off the shelf | `workflows:write` |
+| [`POST /v1/elements/{elementId}/copy`](#copyelement) | Duplicate a saved step | `workflows:write` |
+| [`GET /v1/elements/{elementId}/versions`](#listelementversions) | The versions of a saved step | `read` |
+| [`GET /v1/elements/{elementId}/usage`](#getelementusage) | Where a saved step is used | `read` |
+| [`POST /v1/elements/{elementId}/retire`](#retireelement) | Retire a saved step | browser only |
+| [`POST /v1/elements/{elementId}/restore`](#restoreelement) | Bring a retired saved step back | browser only |
 | [`POST /v1/workflows/{workflowId}/elements/{elementId}/shelf-update`](#updatefromshelf) | Decide about a newer shelf version for one copy in a workflow | browser only |
-| [`POST /v1/elements/{elementId}/run`](#runelement) | Run one element by itself, on a session | `runs:write` |
-| [`POST /v1/runs/{runId}/ticks`](#tickrunitem) | Tick an item of what an element produced | `runs:write` |
+| [`POST /v1/elements/{elementId}/run`](#runelement) | Run one step by itself, on a session | `runs:write` |
+| [`POST /v1/runs/{runId}/ticks`](#tickrunitem) | Tick an item of what a step produced | `runs:write` |
 | [`GET /v1/repository-workflows`](#listrepositoryworkflows) | List the workflows that repositories offer | `read` |
 | [`GET /v1/repository-workflows/file`](#getrepositoryworkflow) | Read one repository workflow | `read` |
 | [`POST /v1/repository-workflows/accept`](#acceptrepositoryworkflow) | Accept a repository workflow as it is now | browser only |
@@ -1797,7 +1797,7 @@ curl -X DELETE -H "Authorization: Bearer $TOKEN" \
 
 `GET /v1/workflows`: List workflows.
 
-By name. Each with the names of its elements, without their text.
+By name. Each with the names of its steps, without their text.
 
 An API token needs the scope `read`.
 
@@ -1847,7 +1847,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 `POST /v1/workflows`: Create a workflow.
 
-A workflow is an ordered list of elements, each a piece of text for whoever does the work. Nothing in it is run by the server.
+A workflow is an ordered list of steps, each a piece of text for whoever does the work. Nothing in it is run by the server.
 
 An API token needs the scope `workflows:write`. A token whose changes to workflows need review is refused here: it proposes a draft instead (`POST /v1/drafts`).
 
@@ -1861,9 +1861,9 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
 |---|---|---|---|
 | `name` | `string` | yes | What it is called. |
 | `description` | `string` | no | What it is for, in a sentence or two. |
-| `standing` | `string` | no | Text added to every element: rules that hold from start to finish. |
+| `standing` | `string` | no | Text added to every step: rules that hold from start to finish. |
 | `inputs` | `{ key: string; label: string; description?: string; required?: bool…` | no | What a run is given when it starts. `{{key}}` in any text becomes the value. Without this, one input: `task`. |
-| `elements` | `{ /** Its ID inside its workflow. It stays the same when the elemen…` | yes | The elements, in the order they are gone through. |
+| `elements` | `{ /** Its ID inside its workflow. It stays the same when the step i…` | yes | The steps, in the order they are gone through. |
 | `labels` | `{ [key: string]: string; }` | no | Pairs of key and value for tools of your own to give meaning to. |
 | `origin` | `{ kind: string; name?: string; [key: string]: unknown; }` | no | Where it came from. Left out, it was made here. |
 | `extra` | `{ [key: string]: unknown; }` | no | Fields from a file that this version does not know, kept so they are written out again. |
@@ -1900,9 +1900,9 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
       required: boolean;
     }[];
     elements: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -1912,7 +1912,7 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -1920,7 +1920,7 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -1928,7 +1928,7 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -2000,9 +2000,9 @@ An API token needs the scope `read`.
       required: boolean;
     }[];
     elements: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -2012,7 +2012,7 @@ An API token needs the scope `read`.
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -2020,7 +2020,7 @@ An API token needs the scope `read`.
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -2028,7 +2028,7 @@ An API token needs the scope `read`.
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -2073,9 +2073,9 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
 |---|---|---|---|
 | `name` | `string` | no | What it is called. |
 | `description` | `string` | no | What it is for, in a sentence or two. |
-| `standing` | `string` | no | Text added to every element: rules that hold from start to finish. |
+| `standing` | `string` | no | Text added to every step: rules that hold from start to finish. |
 | `inputs` | `{ key: string; label: string; description?: string; required?: bool…` | no | What a run is given when it starts. `{{key}}` in any text becomes the value. Without this, one input: `task`. |
-| `elements` | `{ /** Its ID inside its workflow. It stays the same when the elemen…` | no | The elements, in the order they are gone through. |
+| `elements` | `{ /** Its ID inside its workflow. It stays the same when the step i…` | no | The steps, in the order they are gone through. |
 | `labels` | `{ [key: string]: string; }` | no | Pairs of key and value for tools of your own to give meaning to. |
 
 **Answer** `200`:
@@ -2110,9 +2110,9 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
       required: boolean;
     }[];
     elements: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -2122,7 +2122,7 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -2130,7 +2130,7 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -2138,7 +2138,7 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -2238,9 +2238,9 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
       required: boolean;
     }[];
     elements: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -2250,7 +2250,7 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -2258,7 +2258,7 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -2266,7 +2266,7 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -2326,9 +2326,9 @@ A list: it answers a page at a time, see `limit` and `cursor`.
       required: boolean;
     }[];
     elements: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -2338,7 +2338,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -2346,7 +2346,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -2354,7 +2354,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -2415,9 +2415,9 @@ A list: it answers a page at a time, see `limit` and `cursor`.
         required: boolean;
       }[];
       elements: {
-        /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+        /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
         id: string;
-        /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+        /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
         kind: string;
         /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
@@ -2427,7 +2427,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
         ask: string;
         /** For an approval, if you like: what the person should look at before deciding. */
         lookAt: string;
-        /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+        /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
         doneWhen: string;
         /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
         needs: {
@@ -2435,7 +2435,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
           name: string;
           note?: string;
         }[];
-        /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+        /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
         produces: string;
         /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
         origin: {
@@ -2443,7 +2443,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
           name?: string;
           [key: string]: unknown;
         };
-        /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+        /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
         source: {
           shelfId: string;
           version: number | null;
@@ -2521,9 +2521,9 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
       required: boolean;
     }[];
     elements: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -2533,7 +2533,7 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -2541,7 +2541,7 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -2549,7 +2549,7 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -2796,7 +2796,7 @@ curl -X POST -H "Authorization: Bearer $TOKEN" \
 
 `GET /v1/runs/{runId}`: Read a run.
 
-Where it stands, every element with its state, times and note, and the text whoever is on it is told now. Also for a run that is over.
+Where it stands, every step with its state, times and note, and the text whoever is on it is told now. Also for a run that is over.
 
 An API token needs the scope `read`.
 
@@ -2894,7 +2894,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 `POST /v1/runs/{runId}/report`: Report on a run: done, blocked, go to, pause, resume, stop.
 
-The only way a run moves. A report that does not fit where the run stands is refused with 409 and changes nothing: `done` for an element that is not the current one, anything for a run that is over.
+The only way a run moves. A report that does not fit where the run stands is refused with 409 and changes nothing: `done` for a step that is not the current one, anything for a run that is over.
 
 An API token needs the scope `runs:write`.
 
@@ -2993,9 +2993,9 @@ curl -X POST -H "Authorization: Bearer $TOKEN" \
 
 ### approveRun
 
-`POST /v1/runs/{runId}/approve`: Approve the element a run waits on.
+`POST /v1/runs/{runId}/approve`: Approve the step a run waits on.
 
-For the owner only: no token and no session can do this, whatever its scopes. The run goes on to its next element, and the agent there is told with the fixed sentence to read its status. Refused with 409 when the run does not wait for approval.
+For the owner only: no token and no session can do this, whatever its scopes. The run goes on to its next step, and the agent there is told with the fixed sentence to read its status. Refused with 409 when the run does not wait for approval.
 
 For the signed-in browser only. No API token may call this, whatever its scopes.
 
@@ -3007,8 +3007,8 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 
 | Field | Type | Required | |
 |---|---|---|---|
-| `elementId` | `string` | no | The element being approved. Name it, so that a decision sent twice approves one element and not two. Without it: the one the run waits on. |
-| `comment` | `string` | no | A few words for whoever does the next element. Plain text on one line. |
+| `elementId` | `string` | no | The step being approved. Name it, so that a decision sent twice approves one step and not two. Without it: the one the run waits on. |
+| `comment` | `string` | no | A few words for whoever does the next step. Plain text on one line. |
 
 **Answer** `200`:
 
@@ -3093,9 +3093,9 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 
 ### sendBackRun
 
-`POST /v1/runs/{runId}/send-back`: Send a run that waits for approval back to an earlier element.
+`POST /v1/runs/{runId}/send-back`: Send a run that waits for approval back to an earlier step.
 
-For the owner only: no token and no session can do this. The run returns to the element named; it and everything after it is done again, the approval too. The comment is part of what the agent is told about that element, marked as the words of a person.
+For the owner only: no token and no session can do this. The run returns to the step named; it and everything after it is done again, the approval too. The comment is part of what the agent is told about that step, marked as the words of a person.
 
 For the signed-in browser only. No API token may call this, whatever its scopes.
 
@@ -3107,8 +3107,8 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 
 | Field | Type | Required | |
 |---|---|---|---|
-| `elementId` | `string` | yes | The earlier element the run goes back to. It, and everything after it, is done again. |
-| `comment` | `string` | yes | What should change. Whoever does that element is told it, marked as your words. Plain text on one line. |
+| `elementId` | `string` | yes | The earlier step the run goes back to. It, and everything after it, is done again. |
+| `comment` | `string` | yes | What should change. Whoever does that step is told it, marked as your words. Plain text on one line. |
 
 **Answer** `200`:
 
@@ -3311,9 +3311,9 @@ curl -X POST -H "Authorization: Bearer $TOKEN" \
 
 ### getBoard
 
-`GET /v1/board`: The board: every run that is going, by workflow and element.
+`GET /v1/board`: The board: every run that is going, by workflow and step.
 
-Every live run on every canvas, grouped by workflow (and by version, where live runs are on more than one), in columns that are the elements in order; the counts of what waits for the owner, is blocked and is working; and the runs that ended in the last day. It holds nothing that listing runs and sessions does not already give. A card that waits for a person can be approved or sent back by the owner only.
+Every live run on every canvas, grouped by workflow (and by version, where live runs are on more than one), in columns that are the steps in order; the counts of what waits for the owner, is blocked and is working; and the runs that ended in the last day. It holds nothing that listing runs and sessions does not already give. A card that waits for a person can be approved or sent back by the owner only.
 
 An API token needs the scope `read`.
 
@@ -3342,12 +3342,12 @@ An API token needs the scope `read`.
   groups: {
     /** Stays the same while the group exists: the workflow and its version, or `single`. */
     key: string;
-    /** Null for the group of runs of one element by itself. */
+    /** Null for the group of runs of one step by itself. */
     workflowId: string | null;
     workflowName: string;
     /** Said only when live runs are on more than one version of the workflow. */
     version: number | null;
-    /** The group of runs of one element by itself: each card names its element. */
+    /** The group of runs of one step by itself: each card names its step. */
     single: boolean;
     /** Runs that wait for a terminal. */
     queued: {
@@ -3368,7 +3368,7 @@ An API token needs the scope `read`.
       statusWords: string;
       elementId: string | null;
       elementName: string;
-      /** When the run came to the element it is on. */
+      /** When the run came to the step it is on. */
       since: string | null;
       /** The terminal has printed for a while since the last report: the card may be behind. */
       quiet: boolean;
@@ -3377,11 +3377,11 @@ An API token needs the scope `read`.
       waitsForPerson: boolean;
       finishedAt: string | null;
     }[];
-    /** That version's elements, in order. */
+    /** That version's steps, in order. */
     columns: {
       elementId: string;
       name: string;
-      /** An element where a run stops until a person has decided. */
+      /** A step where a run stops until a person has decided. */
       waitsForPerson: boolean;
       cards: {
         runId: string;
@@ -3401,7 +3401,7 @@ An API token needs the scope `read`.
         statusWords: string;
         elementId: string | null;
         elementName: string;
-        /** When the run came to the element it is on. */
+        /** When the run came to the step it is on. */
         since: string | null;
         /** The terminal has printed for a while since the last report: the card may be behind. */
         quiet: boolean;
@@ -3431,7 +3431,7 @@ An API token needs the scope `read`.
     statusWords: string;
     elementId: string | null;
     elementName: string;
-    /** When the run came to the element it is on. */
+    /** When the run came to the step it is on. */
     since: string | null;
     /** The terminal has printed for a while since the last report: the card may be behind. */
     quiet: boolean;
@@ -3566,7 +3566,7 @@ curl -X POST -H "Authorization: Bearer $TOKEN" \
 
 `GET /v1/drafts`: List drafts.
 
-Workflows and elements that were proposed and wait for the owner, oldest first. A draft cannot be run and is not among the workflows.
+Workflows and steps that were proposed and wait for the owner, oldest first. A draft cannot be run and is not among the workflows.
 
 An API token needs the scope `read`.
 
@@ -3594,9 +3594,9 @@ A list: it answers a page at a time, see `limit` and `cursor`.
         required: boolean;
       }[];
       elements: {
-        /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+        /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
         id: string;
-        /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+        /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
         kind: string;
         /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
@@ -3606,7 +3606,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
         ask: string;
         /** For an approval, if you like: what the person should look at before deciding. */
         lookAt: string;
-        /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+        /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
         doneWhen: string;
         /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
         needs: {
@@ -3614,7 +3614,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
           name: string;
           note?: string;
         }[];
-        /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+        /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
         produces: string;
         /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
         origin: {
@@ -3622,7 +3622,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
           name?: string;
           [key: string]: unknown;
         };
-        /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+        /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
         source: {
           shelfId: string;
           version: number | null;
@@ -3638,9 +3638,9 @@ A list: it answers a page at a time, see `limit` and `cursor`.
       };
     } | null;
     element: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -3650,7 +3650,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -3658,7 +3658,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -3666,7 +3666,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -3705,9 +3705,9 @@ A list: it answers a page at a time, see `limit` and `cursor`.
           required: boolean;
         }[];
         elements: {
-          /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+          /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
           id: string;
-          /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+          /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
           kind: string;
           /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
           name: string;
@@ -3717,7 +3717,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
           ask: string;
           /** For an approval, if you like: what the person should look at before deciding. */
           lookAt: string;
-          /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+          /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
           doneWhen: string;
           /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
           needs: {
@@ -3725,7 +3725,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
             name: string;
             note?: string;
           }[];
-          /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+          /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
           produces: string;
           /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
           origin: {
@@ -3733,7 +3733,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
             name?: string;
             [key: string]: unknown;
           };
-          /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+          /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
           source: {
             shelfId: string;
             version: number | null;
@@ -3749,9 +3749,9 @@ A list: it answers a page at a time, see `limit` and `cursor`.
         };
       } | null;
       element: {
-        /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+        /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
         id: string;
-        /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+        /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
         kind: string;
         /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
@@ -3761,7 +3761,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
         ask: string;
         /** For an approval, if you like: what the person should look at before deciding. */
         lookAt: string;
-        /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+        /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
         doneWhen: string;
         /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
         needs: {
@@ -3769,7 +3769,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
           name: string;
           note?: string;
         }[];
-        /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+        /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
         produces: string;
         /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
         origin: {
@@ -3777,7 +3777,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
           name?: string;
           [key: string]: unknown;
         };
-        /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+        /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
         source: {
           shelfId: string;
           version: number | null;
@@ -3807,7 +3807,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 ### proposeDraft
 
-`POST /v1/drafts`: Propose a workflow or an element as a draft.
+`POST /v1/drafts`: Propose a workflow or a step as a draft.
 
 Nothing proposed here can be run or is told to an agent until the owner has read and accepted it in the browser.
 
@@ -3822,7 +3822,7 @@ An API token needs the scope `workflows:write`.
 | Field | Type | Required | |
 |---|---|---|---|
 | `workflow` | `{ /** What it is called. */ name: string; /** What it is for, in a …` | no | A whole workflow. Give this or `element`, not both. |
-| `element` | `{ /** Its ID inside its workflow. It stays the same when the elemen…` | no | One element, for the shelf. |
+| `element` | `{ /** Its ID inside its workflow. It stays the same when the step i…` | no | One step, for the shelf. |
 | `revisesWorkflowId` | `string` | no | For a workflow: the workflow this is a new version of. Without it, accepting makes a new workflow. |
 | `description` | `string` | no | What it is meant to do, when nobody asked for it. |
 
@@ -3842,9 +3842,9 @@ An API token needs the scope `workflows:write`.
         required: boolean;
       }[];
       elements: {
-        /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+        /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
         id: string;
-        /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+        /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
         kind: string;
         /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
@@ -3854,7 +3854,7 @@ An API token needs the scope `workflows:write`.
         ask: string;
         /** For an approval, if you like: what the person should look at before deciding. */
         lookAt: string;
-        /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+        /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
         doneWhen: string;
         /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
         needs: {
@@ -3862,7 +3862,7 @@ An API token needs the scope `workflows:write`.
           name: string;
           note?: string;
         }[];
-        /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+        /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
         produces: string;
         /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
         origin: {
@@ -3870,7 +3870,7 @@ An API token needs the scope `workflows:write`.
           name?: string;
           [key: string]: unknown;
         };
-        /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+        /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
         source: {
           shelfId: string;
           version: number | null;
@@ -3886,9 +3886,9 @@ An API token needs the scope `workflows:write`.
       };
     } | null;
     element: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -3898,7 +3898,7 @@ An API token needs the scope `workflows:write`.
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -3906,7 +3906,7 @@ An API token needs the scope `workflows:write`.
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -3914,7 +3914,7 @@ An API token needs the scope `workflows:write`.
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -3953,9 +3953,9 @@ An API token needs the scope `workflows:write`.
           required: boolean;
         }[];
         elements: {
-          /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+          /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
           id: string;
-          /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+          /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
           kind: string;
           /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
           name: string;
@@ -3965,7 +3965,7 @@ An API token needs the scope `workflows:write`.
           ask: string;
           /** For an approval, if you like: what the person should look at before deciding. */
           lookAt: string;
-          /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+          /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
           doneWhen: string;
           /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
           needs: {
@@ -3973,7 +3973,7 @@ An API token needs the scope `workflows:write`.
             name: string;
             note?: string;
           }[];
-          /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+          /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
           produces: string;
           /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
           origin: {
@@ -3981,7 +3981,7 @@ An API token needs the scope `workflows:write`.
             name?: string;
             [key: string]: unknown;
           };
-          /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+          /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
           source: {
             shelfId: string;
             version: number | null;
@@ -3997,9 +3997,9 @@ An API token needs the scope `workflows:write`.
         };
       } | null;
       element: {
-        /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+        /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
         id: string;
-        /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+        /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
         kind: string;
         /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
@@ -4009,7 +4009,7 @@ An API token needs the scope `workflows:write`.
         ask: string;
         /** For an approval, if you like: what the person should look at before deciding. */
         lookAt: string;
-        /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+        /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
         doneWhen: string;
         /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
         needs: {
@@ -4017,7 +4017,7 @@ An API token needs the scope `workflows:write`.
           name: string;
           note?: string;
         }[];
-        /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+        /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
         produces: string;
         /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
         origin: {
@@ -4025,7 +4025,7 @@ An API token needs the scope `workflows:write`.
           name?: string;
           [key: string]: unknown;
         };
-        /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+        /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
         source: {
           shelfId: string;
           version: number | null;
@@ -4088,9 +4088,9 @@ An API token needs the scope `read`.
         required: boolean;
       }[];
       elements: {
-        /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+        /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
         id: string;
-        /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+        /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
         kind: string;
         /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
@@ -4100,7 +4100,7 @@ An API token needs the scope `read`.
         ask: string;
         /** For an approval, if you like: what the person should look at before deciding. */
         lookAt: string;
-        /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+        /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
         doneWhen: string;
         /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
         needs: {
@@ -4108,7 +4108,7 @@ An API token needs the scope `read`.
           name: string;
           note?: string;
         }[];
-        /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+        /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
         produces: string;
         /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
         origin: {
@@ -4116,7 +4116,7 @@ An API token needs the scope `read`.
           name?: string;
           [key: string]: unknown;
         };
-        /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+        /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
         source: {
           shelfId: string;
           version: number | null;
@@ -4132,9 +4132,9 @@ An API token needs the scope `read`.
       };
     } | null;
     element: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -4144,7 +4144,7 @@ An API token needs the scope `read`.
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -4152,7 +4152,7 @@ An API token needs the scope `read`.
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -4160,7 +4160,7 @@ An API token needs the scope `read`.
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -4199,9 +4199,9 @@ An API token needs the scope `read`.
           required: boolean;
         }[];
         elements: {
-          /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+          /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
           id: string;
-          /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+          /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
           kind: string;
           /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
           name: string;
@@ -4211,7 +4211,7 @@ An API token needs the scope `read`.
           ask: string;
           /** For an approval, if you like: what the person should look at before deciding. */
           lookAt: string;
-          /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+          /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
           doneWhen: string;
           /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
           needs: {
@@ -4219,7 +4219,7 @@ An API token needs the scope `read`.
             name: string;
             note?: string;
           }[];
-          /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+          /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
           produces: string;
           /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
           origin: {
@@ -4227,7 +4227,7 @@ An API token needs the scope `read`.
             name?: string;
             [key: string]: unknown;
           };
-          /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+          /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
           source: {
             shelfId: string;
             version: number | null;
@@ -4243,9 +4243,9 @@ An API token needs the scope `read`.
         };
       } | null;
       element: {
-        /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+        /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
         id: string;
-        /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+        /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
         kind: string;
         /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
@@ -4255,7 +4255,7 @@ An API token needs the scope `read`.
         ask: string;
         /** For an approval, if you like: what the person should look at before deciding. */
         lookAt: string;
-        /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+        /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
         doneWhen: string;
         /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
         needs: {
@@ -4263,7 +4263,7 @@ An API token needs the scope `read`.
           name: string;
           note?: string;
         }[];
-        /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+        /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
         produces: string;
         /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
         origin: {
@@ -4271,7 +4271,7 @@ An API token needs the scope `read`.
           name?: string;
           [key: string]: unknown;
         };
-        /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+        /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
         source: {
           shelfId: string;
           version: number | null;
@@ -4322,7 +4322,7 @@ An API token needs the scope `workflows:write`.
 | Field | Type | Required | |
 |---|---|---|---|
 | `workflow` | `{ /** What it is called. */ name: string; /** What it is for, in a …` | no | A whole workflow. Give this or `element`, not both. |
-| `element` | `{ /** Its ID inside its workflow. It stays the same when the elemen…` | no | One element, for the shelf. |
+| `element` | `{ /** Its ID inside its workflow. It stays the same when the step i…` | no | One step, for the shelf. |
 | `revisesWorkflowId` | `string` | no | For a workflow: the workflow this is a new version of. Without it, accepting makes a new workflow. |
 | `description` | `string` | no | What it is meant to do, when nobody asked for it. |
 
@@ -4342,9 +4342,9 @@ An API token needs the scope `workflows:write`.
         required: boolean;
       }[];
       elements: {
-        /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+        /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
         id: string;
-        /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+        /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
         kind: string;
         /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
@@ -4354,7 +4354,7 @@ An API token needs the scope `workflows:write`.
         ask: string;
         /** For an approval, if you like: what the person should look at before deciding. */
         lookAt: string;
-        /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+        /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
         doneWhen: string;
         /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
         needs: {
@@ -4362,7 +4362,7 @@ An API token needs the scope `workflows:write`.
           name: string;
           note?: string;
         }[];
-        /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+        /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
         produces: string;
         /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
         origin: {
@@ -4370,7 +4370,7 @@ An API token needs the scope `workflows:write`.
           name?: string;
           [key: string]: unknown;
         };
-        /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+        /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
         source: {
           shelfId: string;
           version: number | null;
@@ -4386,9 +4386,9 @@ An API token needs the scope `workflows:write`.
       };
     } | null;
     element: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -4398,7 +4398,7 @@ An API token needs the scope `workflows:write`.
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -4406,7 +4406,7 @@ An API token needs the scope `workflows:write`.
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -4414,7 +4414,7 @@ An API token needs the scope `workflows:write`.
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -4453,9 +4453,9 @@ An API token needs the scope `workflows:write`.
           required: boolean;
         }[];
         elements: {
-          /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+          /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
           id: string;
-          /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+          /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
           kind: string;
           /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
           name: string;
@@ -4465,7 +4465,7 @@ An API token needs the scope `workflows:write`.
           ask: string;
           /** For an approval, if you like: what the person should look at before deciding. */
           lookAt: string;
-          /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+          /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
           doneWhen: string;
           /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
           needs: {
@@ -4473,7 +4473,7 @@ An API token needs the scope `workflows:write`.
             name: string;
             note?: string;
           }[];
-          /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+          /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
           produces: string;
           /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
           origin: {
@@ -4481,7 +4481,7 @@ An API token needs the scope `workflows:write`.
             name?: string;
             [key: string]: unknown;
           };
-          /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+          /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
           source: {
             shelfId: string;
             version: number | null;
@@ -4497,9 +4497,9 @@ An API token needs the scope `workflows:write`.
         };
       } | null;
       element: {
-        /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+        /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
         id: string;
-        /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+        /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
         kind: string;
         /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
@@ -4509,7 +4509,7 @@ An API token needs the scope `workflows:write`.
         ask: string;
         /** For an approval, if you like: what the person should look at before deciding. */
         lookAt: string;
-        /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+        /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
         doneWhen: string;
         /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
         needs: {
@@ -4517,7 +4517,7 @@ An API token needs the scope `workflows:write`.
           name: string;
           note?: string;
         }[];
-        /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+        /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
         produces: string;
         /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
         origin: {
@@ -4525,7 +4525,7 @@ An API token needs the scope `workflows:write`.
           name?: string;
           [key: string]: unknown;
         };
-        /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+        /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
         source: {
           shelfId: string;
           version: number | null;
@@ -4580,7 +4580,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 
 `POST /v1/drafts/{draftId}/accept`: Accept a draft.
 
-A workflow draft becomes a workflow, or a new version of the one it revises; an element draft goes on the shelf. For the owner only: no token may accept.
+A workflow draft becomes a workflow, or a new version of the one it revises; a step draft goes on the shelf. For the owner only: no token may accept.
 
 For the signed-in browser only. No API token may call this, whatever its scopes.
 
@@ -4593,7 +4593,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 | Field | Type | Required | |
 |---|---|---|---|
 | `workflow` | `{ /** What it is called. */ name: string; /** What it is for, in a …` | no | The workflow as edited before accepting. |
-| `element` | `{ /** Its ID inside its workflow. It stays the same when the elemen…` | no | The element as edited before accepting. |
+| `element` | `{ /** Its ID inside its workflow. It stays the same when the step i…` | no | The step as edited before accepting. |
 
 **Answer** `200`:
 
@@ -4639,9 +4639,9 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
       required: boolean;
     }[];
     elements: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -4651,7 +4651,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -4659,7 +4659,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -4667,7 +4667,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -4683,9 +4683,9 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
     };
   } | null;
   element: {
-    /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+    /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
     id: string;
-    /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+    /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
     kind: string;
     /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
     name: string;
@@ -4695,7 +4695,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
     ask: string;
     /** For an approval, if you like: what the person should look at before deciding. */
     lookAt: string;
-    /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+    /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
     doneWhen: string;
     /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
     needs: {
@@ -4703,7 +4703,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
       name: string;
       note?: string;
     }[];
-    /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+    /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
     produces: string;
     /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
     origin: {
@@ -4711,7 +4711,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
       name?: string;
       [key: string]: unknown;
     };
-    /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+    /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
     source: {
       shelfId: string;
       version: number | null;
@@ -4750,9 +4750,9 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
         required: boolean;
       }[];
       elements: {
-        /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+        /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
         id: string;
-        /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+        /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
         kind: string;
         /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
@@ -4762,7 +4762,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
         ask: string;
         /** For an approval, if you like: what the person should look at before deciding. */
         lookAt: string;
-        /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+        /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
         doneWhen: string;
         /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
         needs: {
@@ -4770,7 +4770,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
           name: string;
           note?: string;
         }[];
-        /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+        /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
         produces: string;
         /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
         origin: {
@@ -4778,7 +4778,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
           name?: string;
           [key: string]: unknown;
         };
-        /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+        /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
         source: {
           shelfId: string;
           version: number | null;
@@ -4794,9 +4794,9 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
       };
     } | null;
     element: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -4806,7 +4806,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -4814,7 +4814,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -4822,7 +4822,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -4892,7 +4892,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
 
 ### requestDraft
 
-`POST /v1/draft-requests`: Ask the agent in a session to write a workflow or an element.
+`POST /v1/draft-requests`: Ask the agent in a session to write a workflow or a step.
 
 For the owner only. The description is kept with the request and read by the agent with `aubergine workflow brief`; only a fixed sentence is typed into the terminal.
 
@@ -4923,9 +4923,9 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
         required: boolean;
       }[];
       elements: {
-        /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+        /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
         id: string;
-        /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+        /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
         kind: string;
         /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
@@ -4935,7 +4935,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
         ask: string;
         /** For an approval, if you like: what the person should look at before deciding. */
         lookAt: string;
-        /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+        /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
         doneWhen: string;
         /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
         needs: {
@@ -4943,7 +4943,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
           name: string;
           note?: string;
         }[];
-        /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+        /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
         produces: string;
         /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
         origin: {
@@ -4951,7 +4951,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
           name?: string;
           [key: string]: unknown;
         };
-        /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+        /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
         source: {
           shelfId: string;
           version: number | null;
@@ -4967,9 +4967,9 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
       };
     } | null;
     element: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -4979,7 +4979,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -4987,7 +4987,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -4995,7 +4995,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -5034,9 +5034,9 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
           required: boolean;
         }[];
         elements: {
-          /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+          /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
           id: string;
-          /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+          /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
           kind: string;
           /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
           name: string;
@@ -5046,7 +5046,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
           ask: string;
           /** For an approval, if you like: what the person should look at before deciding. */
           lookAt: string;
-          /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+          /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
           doneWhen: string;
           /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
           needs: {
@@ -5054,7 +5054,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
             name: string;
             note?: string;
           }[];
-          /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+          /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
           produces: string;
           /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
           origin: {
@@ -5062,7 +5062,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
             name?: string;
             [key: string]: unknown;
           };
-          /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+          /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
           source: {
             shelfId: string;
             version: number | null;
@@ -5078,9 +5078,9 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
         };
       } | null;
       element: {
-        /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+        /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
         id: string;
-        /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+        /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
         kind: string;
         /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
@@ -5090,7 +5090,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
         ask: string;
         /** For an approval, if you like: what the person should look at before deciding. */
         lookAt: string;
-        /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+        /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
         doneWhen: string;
         /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
         needs: {
@@ -5098,7 +5098,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
           name: string;
           note?: string;
         }[];
-        /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+        /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
         produces: string;
         /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
         origin: {
@@ -5106,7 +5106,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
           name?: string;
           [key: string]: unknown;
         };
-        /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+        /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
         source: {
           shelfId: string;
           version: number | null;
@@ -5602,7 +5602,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 
 `POST /v1/library/requests/{requestId}/accept`: Install what a request asks for.
 
-For the owner only: no token can accept. The body names the digest of the file as it was shown; the file is read again, and if it is not that file any more nothing is installed. A workflow goes among the workflows, an element onto the shelf; an update makes a new version of what is there.
+For the owner only: no token can accept. The body names the digest of the file as it was shown; the file is read again, and if it is not that file any more nothing is installed. A workflow goes among the workflows, a step onto the shelf; an update makes a new version of what is there.
 
 For the signed-in browser only. No API token may call this, whatever its scopes.
 
@@ -5616,7 +5616,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 |---|---|---|---|
 | `digest` | `string` | yes | The digest of the file as it was shown for review. If the file is not that any more, nothing is installed. |
 | `workflow` | `unknown` | no | The workflow as edited before accepting. |
-| `element` | `unknown` | no | The element as edited before accepting. |
+| `element` | `unknown` | no | The step as edited before accepting. |
 
 **Answer** `200`:
 
@@ -5723,7 +5723,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 `DELETE /v1/library/installed/{installedId}`: Remove what was installed.
 
-For the owner only. An element leaves the shelf, and copies of it in workflows stay as they are, saying that their source was removed. A workflow is removed; refused while a run of it is going.
+For the owner only. A step leaves the shelf, and copies of it in workflows stay as they are, saying that their source was removed. A workflow is removed; refused while a run of it is going.
 
 For the signed-in browser only. No API token may call this, whatever its scopes.
 
@@ -5739,7 +5739,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 
 ### listElements
 
-`GET /v1/elements`: List the elements on the shelf.
+`GET /v1/elements`: List the saved steps.
 
 An API token needs the scope `read`.
 
@@ -5759,9 +5759,9 @@ A list: it answers a page at a time, see `limit` and `cursor`.
     id: string;
     projectId: string | null;
     element: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -5771,7 +5771,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -5779,7 +5779,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -5787,7 +5787,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -5806,9 +5806,9 @@ A list: it answers a page at a time, see `limit` and `cursor`.
     versions: {
       version: number;
       element: {
-        /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+        /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
         id: string;
-        /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+        /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
         kind: string;
         /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
@@ -5818,7 +5818,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
         ask: string;
         /** For an approval, if you like: what the person should look at before deciding. */
         lookAt: string;
-        /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+        /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
         doneWhen: string;
         /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
         needs: {
@@ -5826,7 +5826,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
           name: string;
           note?: string;
         }[];
-        /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+        /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
         produces: string;
         /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
         origin: {
@@ -5834,7 +5834,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
           name?: string;
           [key: string]: unknown;
         };
-        /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+        /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
         source: {
           shelfId: string;
           version: number | null;
@@ -5854,7 +5854,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
     }[];
     /** `current`, or `retired`: kept and still working where it is used, but not offered when inserting and not run by itself. */
     state: "current" | "retired";
-    /** For a retired element: the shelf element to use in its place, when one was named. */
+    /** For a retired step: the saved step to use in its place, when one was named. */
     replacedBy: string | null;
   }[];
   nextCursor: string | null;
@@ -5870,7 +5870,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 ### createElement
 
-`POST /v1/elements`: Put an element on the shelf.
+`POST /v1/elements`: Put a saved step.
 
 An API token needs the scope `workflows:write`. A token whose changes to workflows need review is refused here: it proposes a draft instead (`POST /v1/drafts`).
 
@@ -5882,17 +5882,17 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
 
 | Field | Type | Required | |
 |---|---|---|---|
-| `id` | `string` | no | Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. |
-| `kind` | `string` | no | What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. |
+| `id` | `string` | no | Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. |
+| `kind` | `string` | no | What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. |
 | `name` | `string` | yes | What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. |
 | `instructions` | `string` | no | What to do, written for whoever does the work and knows nothing else about it. Plain text or Markdown. `{{task}}` and the other inputs of a run are filled in. |
 | `ask` | `string` | no | For an approval: what the person is asked to decide, in plain text. It is shown to the person beside the buttons; an approval has no instructions for an agent. |
 | `lookAt` | `string` | no | For an approval, if you like: what the person should look at before deciding. |
-| `doneWhen` | `string` | no | One line: how to tell that the element is finished. The agent is told to report done when this is true. |
+| `doneWhen` | `string` | no | One line: how to tell that the step is finished. The agent is told to report done when this is true. |
 | `needs` | `{ kind: "mcp" \| "command" \| "access" \| "other"; name: string; note?…` | no | What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. |
-| `produces` | `string` | no | What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). |
+| `produces` | `string` | no | What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). |
 | `origin` | `{ kind: string; name?: string; [key: string]: unknown; }` | no | Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. |
-| `source` | `{ shelfId: string; version: number \| null; hash: string \| null; } \|…` | no | For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. |
+| `source` | `{ shelfId: string; version: number \| null; hash: string \| null; } \|…` | no | For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. |
 | `extra` | `{ [key: string]: unknown; }` | no | Fields from a file that this version does not know, kept so that they are written out again. |
 
 **Answer** `201`:
@@ -5902,9 +5902,9 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
   id: string;
   projectId: string | null;
   element: {
-    /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+    /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
     id: string;
-    /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+    /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
     kind: string;
     /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
     name: string;
@@ -5914,7 +5914,7 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
     ask: string;
     /** For an approval, if you like: what the person should look at before deciding. */
     lookAt: string;
-    /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+    /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
     doneWhen: string;
     /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
     needs: {
@@ -5922,7 +5922,7 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
       name: string;
       note?: string;
     }[];
-    /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+    /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
     produces: string;
     /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
     origin: {
@@ -5930,7 +5930,7 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
       name?: string;
       [key: string]: unknown;
     };
-    /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+    /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
     source: {
       shelfId: string;
       version: number | null;
@@ -5949,9 +5949,9 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
   versions: {
     version: number;
     element: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -5961,7 +5961,7 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -5969,7 +5969,7 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -5977,7 +5977,7 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -5997,7 +5997,7 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
   }[];
   /** `current`, or `retired`: kept and still working where it is used, but not offered when inserting and not run by itself. */
   state: "current" | "retired";
-  /** For a retired element: the shelf element to use in its place, when one was named. */
+  /** For a retired step: the saved step to use in its place, when one was named. */
   replacedBy: string | null;
 }
 ```
@@ -6012,7 +6012,7 @@ curl -X POST -H "Authorization: Bearer $TOKEN" \
 
 ### updateElement
 
-`PATCH /v1/elements/{elementId}`: Change an element on the shelf.
+`PATCH /v1/elements/{elementId}`: Change a saved step.
 
 Copies of it already in workflows are not changed.
 
@@ -6043,9 +6043,9 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
   id: string;
   projectId: string | null;
   element: {
-    /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+    /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
     id: string;
-    /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+    /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
     kind: string;
     /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
     name: string;
@@ -6055,7 +6055,7 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
     ask: string;
     /** For an approval, if you like: what the person should look at before deciding. */
     lookAt: string;
-    /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+    /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
     doneWhen: string;
     /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
     needs: {
@@ -6063,7 +6063,7 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
       name: string;
       note?: string;
     }[];
-    /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+    /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
     produces: string;
     /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
     origin: {
@@ -6071,7 +6071,7 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
       name?: string;
       [key: string]: unknown;
     };
-    /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+    /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
     source: {
       shelfId: string;
       version: number | null;
@@ -6090,9 +6090,9 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
   versions: {
     version: number;
     element: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -6102,7 +6102,7 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -6110,7 +6110,7 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -6118,7 +6118,7 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -6138,7 +6138,7 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
   }[];
   /** `current`, or `retired`: kept and still working where it is used, but not offered when inserting and not run by itself. */
   state: "current" | "retired";
-  /** For a retired element: the shelf element to use in its place, when one was named. */
+  /** For a retired step: the saved step to use in its place, when one was named. */
   replacedBy: string | null;
 }
 ```
@@ -6153,7 +6153,7 @@ curl -X PATCH -H "Authorization: Bearer $TOKEN" \
 
 ### removeElement
 
-`DELETE /v1/elements/{elementId}`: Take an element off the shelf.
+`DELETE /v1/elements/{elementId}`: Take a step off the shelf.
 
 An API token needs the scope `workflows:write`. A token whose changes to workflows need review is refused here: it proposes a draft instead (`POST /v1/drafts`).
 
@@ -6172,7 +6172,7 @@ curl -X DELETE -H "Authorization: Bearer $TOKEN" \
 
 ### copyElement
 
-`POST /v1/elements/{elementId}/copy`: Duplicate an element on the shelf.
+`POST /v1/elements/{elementId}/copy`: Duplicate a saved step.
 
 An API token needs the scope `workflows:write`. A token whose changes to workflows need review is refused here: it proposes a draft instead (`POST /v1/drafts`).
 
@@ -6188,9 +6188,9 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
   id: string;
   projectId: string | null;
   element: {
-    /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+    /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
     id: string;
-    /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+    /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
     kind: string;
     /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
     name: string;
@@ -6200,7 +6200,7 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
     ask: string;
     /** For an approval, if you like: what the person should look at before deciding. */
     lookAt: string;
-    /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+    /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
     doneWhen: string;
     /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
     needs: {
@@ -6208,7 +6208,7 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
       name: string;
       note?: string;
     }[];
-    /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+    /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
     produces: string;
     /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
     origin: {
@@ -6216,7 +6216,7 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
       name?: string;
       [key: string]: unknown;
     };
-    /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+    /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
     source: {
       shelfId: string;
       version: number | null;
@@ -6235,9 +6235,9 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
   versions: {
     version: number;
     element: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -6247,7 +6247,7 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -6255,7 +6255,7 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -6263,7 +6263,7 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -6283,7 +6283,7 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
   }[];
   /** `current`, or `retired`: kept and still working where it is used, but not offered when inserting and not run by itself. */
   state: "current" | "retired";
-  /** For a retired element: the shelf element to use in its place, when one was named. */
+  /** For a retired step: the saved step to use in its place, when one was named. */
   replacedBy: string | null;
 }
 ```
@@ -6297,9 +6297,9 @@ curl -X POST -H "Authorization: Bearer $TOKEN" \
 
 ### listElementVersions
 
-`GET /v1/elements/{elementId}/versions`: The versions of a shelf element.
+`GET /v1/elements/{elementId}/versions`: The versions of a saved step.
 
-Newest first: each with what the element said, who saved it, when, and a line on what changed. The newest 30 are kept, and any a copy in a workflow was made from.
+Newest first: each with what the step said, who saved it, when, and a line on what changed. The newest 30 are kept, and any a copy in a workflow was made from.
 
 An API token needs the scope `read`.
 
@@ -6319,9 +6319,9 @@ A list: it answers a page at a time, see `limit` and `cursor`.
   items: {
     version: number;
     element: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -6331,7 +6331,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -6339,7 +6339,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -6347,7 +6347,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -6378,7 +6378,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 ### getElementUsage
 
-`GET /v1/elements/{elementId}/usage`: Where a shelf element is used.
+`GET /v1/elements/{elementId}/usage`: Where a saved step is used.
 
 The workflows that hold a copy of it, and for each copy whether it is unchanged, was changed in its workflow, or is behind the shelf.
 
@@ -6419,9 +6419,9 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 ### retireElement
 
-`POST /v1/elements/{elementId}/retire`: Retire a shelf element.
+`POST /v1/elements/{elementId}/retire`: Retire a saved step.
 
-For the owner only. A retired element is kept and still works wherever a copy of it is; it is no longer offered when inserting, and cannot be run by itself. It may name the element to use in its place.
+For the owner only. A retired step is kept and still works wherever a copy of it is; it is no longer offered when inserting, and cannot be run by itself. It may name the step to use in its place.
 
 For the signed-in browser only. No API token may call this, whatever its scopes.
 
@@ -6433,7 +6433,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 
 | Field | Type | Required | |
 |---|---|---|---|
-| `replacedBy` | `string` | no | The shelf element to use in its place. The editor then says so wherever a copy of the retired one is. |
+| `replacedBy` | `string` | no | The saved step to use in its place. The editor then says so wherever a copy of the retired one is. |
 
 **Answer** `200`:
 
@@ -6442,9 +6442,9 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
   id: string;
   projectId: string | null;
   element: {
-    /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+    /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
     id: string;
-    /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+    /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
     kind: string;
     /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
     name: string;
@@ -6454,7 +6454,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
     ask: string;
     /** For an approval, if you like: what the person should look at before deciding. */
     lookAt: string;
-    /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+    /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
     doneWhen: string;
     /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
     needs: {
@@ -6462,7 +6462,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
       name: string;
       note?: string;
     }[];
-    /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+    /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
     produces: string;
     /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
     origin: {
@@ -6470,7 +6470,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
       name?: string;
       [key: string]: unknown;
     };
-    /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+    /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
     source: {
       shelfId: string;
       version: number | null;
@@ -6489,9 +6489,9 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
   versions: {
     version: number;
     element: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -6501,7 +6501,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -6509,7 +6509,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -6517,7 +6517,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -6537,7 +6537,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
   }[];
   /** `current`, or `retired`: kept and still working where it is used, but not offered when inserting and not run by itself. */
   state: "current" | "retired";
-  /** For a retired element: the shelf element to use in its place, when one was named. */
+  /** For a retired step: the saved step to use in its place, when one was named. */
   replacedBy: string | null;
 }
 ```
@@ -6546,7 +6546,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 
 ### restoreElement
 
-`POST /v1/elements/{elementId}/restore`: Bring a retired shelf element back.
+`POST /v1/elements/{elementId}/restore`: Bring a retired saved step back.
 
 For the owner only.
 
@@ -6563,9 +6563,9 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
   id: string;
   projectId: string | null;
   element: {
-    /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+    /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
     id: string;
-    /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+    /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
     kind: string;
     /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
     name: string;
@@ -6575,7 +6575,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
     ask: string;
     /** For an approval, if you like: what the person should look at before deciding. */
     lookAt: string;
-    /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+    /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
     doneWhen: string;
     /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
     needs: {
@@ -6583,7 +6583,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
       name: string;
       note?: string;
     }[];
-    /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+    /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
     produces: string;
     /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
     origin: {
@@ -6591,7 +6591,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
       name?: string;
       [key: string]: unknown;
     };
-    /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+    /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
     source: {
       shelfId: string;
       version: number | null;
@@ -6610,9 +6610,9 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
   versions: {
     version: number;
     element: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -6622,7 +6622,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -6630,7 +6630,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -6638,7 +6638,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -6658,7 +6658,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
   }[];
   /** `current`, or `retired`: kept and still working where it is used, but not offered when inserting and not run by itself. */
   state: "current" | "retired";
-  /** For a retired element: the shelf element to use in its place, when one was named. */
+  /** For a retired step: the saved step to use in its place, when one was named. */
   replacedBy: string | null;
 }
 ```
@@ -6716,9 +6716,9 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
       required: boolean;
     }[];
     elements: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -6728,7 +6728,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -6736,7 +6736,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -6744,7 +6744,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -6768,9 +6768,9 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 
 ### runElement
 
-`POST /v1/elements/{elementId}/run`: Run one element by itself, on a session.
+`POST /v1/elements/{elementId}/run`: Run one step by itself, on a session.
 
-A run of that one element. It is listed among the runs, and no workflow is added for it.
+A run of that one step. It is listed among the runs, and no workflow is added for it.
 
 An API token needs the scope `runs:write`.
 
@@ -6784,7 +6784,7 @@ An API token needs the scope `runs:write`.
 | Field | Type | Required | |
 |---|---|---|---|
 | `sessionId` | `string` | yes | The session that will do it. |
-| `inputs` | `{ [key: string]: string; }` | no | What the element asks for: `task`, when its text uses it. |
+| `inputs` | `{ [key: string]: string; }` | no | What the step asks for: `task`, when its text uses it. |
 | `replace` | `boolean` | no | Stop the run the session is on, if any, and start this. |
 | `kickoff` | `boolean` | no | Type the fixed kickoff line, for the owner, where an agent is running. |
 
@@ -6879,9 +6879,9 @@ curl -X POST -H "Authorization: Bearer $TOKEN" \
 
 ### tickRunItem
 
-`POST /v1/runs/{runId}/ticks`: Tick an item of what an element produced.
+`POST /v1/runs/{runId}/ticks`: Tick an item of what a step produced.
 
-For a checklist. Ticks are kept with the run, also after it is over, with who ticked and when; the next element is told which items are ticked.
+For a checklist. Ticks are kept with the run, also after it is over, with who ticked and when; the next step is told which items are ticked.
 
 An API token needs the scope `runs:write`.
 
@@ -6893,7 +6893,7 @@ An API token needs the scope `runs:write`.
 
 | Field | Type | Required | |
 |---|---|---|---|
-| `elementId` | `string` | yes | The element whose output it is. |
+| `elementId` | `string` | yes | The step whose output it is. |
 | `item` | `number` | yes | Which item, counting from zero. |
 | `ticked` | `boolean` | yes | True to tick it, false to take the tick away. |
 
@@ -7075,9 +7075,9 @@ An API token needs the scope `read`.
       required: boolean;
     }[];
     elements: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -7087,7 +7087,7 @@ An API token needs the scope `read`.
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -7095,7 +7095,7 @@ An API token needs the scope `read`.
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -7103,7 +7103,7 @@ An API token needs the scope `read`.
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -7330,9 +7330,9 @@ A list: it answers a page at a time, see `limit` and `cursor`.
     details: string;
     /** The folder it is done in. For a new terminal: where it starts. Null: the folder new terminals start in. */
     folder: string | null;
-    /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
+    /** The workflow it goes through. Null: it is told as one step, with the details as its task. */
     workflowId: string | null;
-    /** The shelf element it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
+    /** The saved step it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
     elementId: string | null;
     /** True for what the owner arranged beforehand, such as a time of a schedule. It starts when a place is free without being started by hand, still within the limit and the hold, and what its agent adds sets off no rule. Set by the server, never by a caller. */
     unattended: boolean;
@@ -7403,7 +7403,7 @@ An API token needs the scope `tasks:write`.
 | `title` | `string` | yes | What it is, in one line. |
 | `details` | `string` | no | What to do, for the agent that takes it. Plain text. |
 | `folder` | `string \| null` | no | The folder it is done in. Null: the folder new terminals start in. |
-| `workflowId` | `string \| null` | no | The workflow it goes through. Null: it is told as one element, with the details as its task. |
+| `workflowId` | `string \| null` | no | The workflow it goes through. Null: it is told as one step, with the details as its task. |
 | `environment` | `string \| null` | no | Where a new terminal for it works. Null: a working copy of its own where the folder can have one. |
 | `taker` | `{ kind: "any"; } \| { kind: "session"; sessionId: string; } \| { kind…` | no | Who may take it: `{"kind":"any"}`, one terminal, or a new agent terminal on a canvas. |
 | `labels` | `string[]` | no | Short words of your own. |
@@ -7422,9 +7422,9 @@ An API token needs the scope `tasks:write`.
   details: string;
   /** The folder it is done in. For a new terminal: where it starts. Null: the folder new terminals start in. */
   folder: string | null;
-  /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
+  /** The workflow it goes through. Null: it is told as one step, with the details as its task. */
   workflowId: string | null;
-  /** The shelf element it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
+  /** The saved step it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
   elementId: string | null;
   /** True for what the owner arranged beforehand, such as a time of a schedule. It starts when a place is free without being started by hand, still within the limit and the hold, and what its agent adds sets off no rule. Set by the server, never by a caller. */
   unattended: boolean;
@@ -7499,9 +7499,9 @@ An API token needs the scope `read`.
   details: string;
   /** The folder it is done in. For a new terminal: where it starts. Null: the folder new terminals start in. */
   folder: string | null;
-  /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
+  /** The workflow it goes through. Null: it is told as one step, with the details as its task. */
   workflowId: string | null;
-  /** The shelf element it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
+  /** The saved step it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
   elementId: string | null;
   /** True for what the owner arranged beforehand, such as a time of a schedule. It starts when a place is free without being started by hand, still within the limit and the hold, and what its agent adds sets off no rule. Set by the server, never by a caller. */
   unattended: boolean;
@@ -7569,7 +7569,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 | `title` | `string` | no | What it is, in one line. |
 | `details` | `string` | no | What to do, for the agent that takes it. Plain text. |
 | `folder` | `string \| null` | no | The folder it is done in. Null: the folder new terminals start in. |
-| `workflowId` | `string \| null` | no | The workflow it goes through. Null: it is told as one element, with the details as its task. |
+| `workflowId` | `string \| null` | no | The workflow it goes through. Null: it is told as one step, with the details as its task. |
 | `environment` | `string \| null` | no | Where a new terminal for it works. Null: a working copy of its own where the folder can have one. |
 | `taker` | `{ kind: "any"; } \| { kind: "session"; sessionId: string; } \| { kind…` | no | Who may take it: `{"kind":"any"}`, one terminal, or a new agent terminal on a canvas. |
 | `labels` | `string[]` | no | Short words of your own. |
@@ -7587,9 +7587,9 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
   details: string;
   /** The folder it is done in. For a new terminal: where it starts. Null: the folder new terminals start in. */
   folder: string | null;
-  /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
+  /** The workflow it goes through. Null: it is told as one step, with the details as its task. */
   workflowId: string | null;
-  /** The shelf element it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
+  /** The saved step it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
   elementId: string | null;
   /** True for what the owner arranged beforehand, such as a time of a schedule. It starts when a place is free without being started by hand, still within the limit and the hold, and what its agent adds sets off no rule. Set by the server, never by a caller. */
   unattended: boolean;
@@ -7658,9 +7658,9 @@ An API token needs the scope `tasks:write`.
   details: string;
   /** The folder it is done in. For a new terminal: where it starts. Null: the folder new terminals start in. */
   folder: string | null;
-  /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
+  /** The workflow it goes through. Null: it is told as one step, with the details as its task. */
   workflowId: string | null;
-  /** The shelf element it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
+  /** The saved step it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
   elementId: string | null;
   /** True for what the owner arranged beforehand, such as a time of a schedule. It starts when a place is free without being started by hand, still within the limit and the hold, and what its agent adds sets off no rule. Set by the server, never by a caller. */
   unattended: boolean;
@@ -7734,9 +7734,9 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
   details: string;
   /** The folder it is done in. For a new terminal: where it starts. Null: the folder new terminals start in. */
   folder: string | null;
-  /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
+  /** The workflow it goes through. Null: it is told as one step, with the details as its task. */
   workflowId: string | null;
-  /** The shelf element it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
+  /** The saved step it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
   elementId: string | null;
   /** True for what the owner arranged beforehand, such as a time of a schedule. It starts when a place is free without being started by hand, still within the limit and the hold, and what its agent adds sets off no rule. Set by the server, never by a caller. */
   unattended: boolean;
@@ -7805,9 +7805,9 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
   details: string;
   /** The folder it is done in. For a new terminal: where it starts. Null: the folder new terminals start in. */
   folder: string | null;
-  /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
+  /** The workflow it goes through. Null: it is told as one step, with the details as its task. */
   workflowId: string | null;
-  /** The shelf element it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
+  /** The saved step it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
   elementId: string | null;
   /** True for what the owner arranged beforehand, such as a time of a schedule. It starts when a place is free without being started by hand, still within the limit and the hold, and what its agent adds sets off no rule. Set by the server, never by a caller. */
   unattended: boolean;
@@ -7876,9 +7876,9 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
   details: string;
   /** The folder it is done in. For a new terminal: where it starts. Null: the folder new terminals start in. */
   folder: string | null;
-  /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
+  /** The workflow it goes through. Null: it is told as one step, with the details as its task. */
   workflowId: string | null;
-  /** The shelf element it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
+  /** The saved step it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
   elementId: string | null;
   /** True for what the owner arranged beforehand, such as a time of a schedule. It starts when a place is free without being started by hand, still within the limit and the hold, and what its agent adds sets off no rule. Set by the server, never by a caller. */
   unattended: boolean;
@@ -7947,9 +7947,9 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
   details: string;
   /** The folder it is done in. For a new terminal: where it starts. Null: the folder new terminals start in. */
   folder: string | null;
-  /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
+  /** The workflow it goes through. Null: it is told as one step, with the details as its task. */
   workflowId: string | null;
-  /** The shelf element it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
+  /** The saved step it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
   elementId: string | null;
   /** True for what the owner arranged beforehand, such as a time of a schedule. It starts when a place is free without being started by hand, still within the limit and the hold, and what its agent adds sets off no rule. Set by the server, never by a caller. */
   unattended: boolean;
@@ -8352,7 +8352,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 
 `POST /v1/rules`: Write a rule.
 
-For the owner only: no token and no session can do this, whatever its scopes. The action is one of the registered kinds: a notification in the open page, or a run of one shelf element on a terminal. Nothing a rule does leaves this computer by Aubergine's own hand.
+For the owner only: no token and no session can do this, whatever its scopes. The action is one of the registered kinds: a notification in the open page, or a run of one saved step on a terminal. Nothing a rule does leaves this computer by Aubergine's own hand.
 
 For the signed-in browser only. No API token may call this, whatever its scopes.
 
@@ -8876,7 +8876,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 
 `GET /v1/projects/{projectId}/file`: Write a project out as a file.
 
-For the owner only: no token and no session can do this, whatever its scopes. The file is a copy of the project at this moment: its canvases and their layout, the terminals to make there, pinned notes, rules, schedules, and the workflows and elements they need. It holds nothing that ran (no task, run, log or message), no credential or setting, and no path or ID of this computer: folders are written as named places. The format is in docs/project-file.md.
+For the owner only: no token and no session can do this, whatever its scopes. The file is a copy of the project at this moment: its canvases and their layout, the terminals to make there, pinned notes, rules, schedules, and the workflows and steps they need. It holds nothing that ran (no task, run, log or message), no credential or setting, and no path or ID of this computer: folders are written as named places. The format is in docs/project-file.md.
 
 For the signed-in browser only. No API token may call this, whatever its scopes.
 
@@ -8947,17 +8947,17 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
   says: string[];
   /** The terminals that were an agent’s, by name. Each is made as a plain shell. */
   agents: string[];
-  /** What its elements say they need, by element. */
+  /** What its steps say they need, by step. */
   needs: {
     of: string;
     needs: string[];
   }[];
-  /** Everything an agent would be told: every workflow, element, and the task of every schedule, in full. */
+  /** Everything an agent would be told: every workflow, step, and the task of every schedule, in full. */
   texts: {
     title: string;
     text: string;
   }[];
-  /** The workflows and elements that were shared with every project where the file was written, by name. */
+  /** The workflows and steps that were shared with every project where the file was written, by name. */
   shared: string[];
   /** What they become here unless the owner says otherwise. */
   sharedDefault: "shared" | "project";
@@ -8983,7 +8983,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 | `digest` | `string` | yes | The digest of the text that was read and shown. A text that is not exactly that one is refused. |
 | `name` | `string` | no | The name of the new project. Left out: the name in the file. |
 | `places` | `{ [key: string]: string \| null; }` | no | Where each place is on this computer: a folder that exists, or null to leave it unset. |
-| `shared` | `"shared" \| "project"` | no | What the file's shared workflows and elements become: shared with every project here, or the new project's own. |
+| `shared` | `"shared" \| "project"` | no | What the file's shared workflows and steps become: shared with every project here, or the new project's own. |
 | `start` | `boolean` | no | Start a fresh shell in each terminal. Off: each is made as a terminal whose shell has not started, with a button to start it. An agent is never started. |
 
 **Answer** `201`:
@@ -9113,7 +9113,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 
 `GET /v1/sharing`: What is shared between projects.
 
-For the owner only: no token and no session can do this, whatever its scopes. For each kind of thing that is shared or owned (workflows, shelf elements, library sources and installed items, API tokens): what a new one is, and where each existing one belongs.
+For the owner only: no token and no session can do this, whatever its scopes. For each kind of thing that is shared or owned (workflows, saved steps, library sources and installed items, API tokens): what a new one is, and where each existing one belongs.
 
 For the signed-in browser only. No API token may call this, whatever its scopes.
 
@@ -9186,7 +9186,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 
 `POST /v1/sharing/move`: Make one thing belong to a project, or to all.
 
-For the owner only: no token and no session can do this, whatever its scopes. A run that is going keeps going. A new run does not start from a workflow or an element the project cannot see, and a schedule or a rule that runs one stops and says so.
+For the owner only: no token and no session can do this, whatever its scopes. A run that is going keeps going. A new run does not start from a workflow or a step the project cannot see, and a schedule or a rule that runs one stops and says so.
 
 For the signed-in browser only. No API token may call this, whatever its scopes.
 
@@ -9284,7 +9284,7 @@ curl -H "Authorization: Bearer $AUBERGINE_TOKEN" \
 
 `GET /v1/schedules`: List the schedules.
 
-A schedule is "at these times, run this there": a time of day on this computer's clock, days of the week, an element from the shelf or a workflow, and a terminal or a new agent terminal on a canvas. Each of its times becomes a task of the queue. Each row says when it is next and how its latest time ended.
+A schedule is "at these times, run this there": a time of day on this computer's clock, days of the week, a saved step or a workflow, and a terminal or a new agent terminal on a canvas. Each of its times becomes a task of the queue. Each row says when it is next and how its latest time ended.
 
 An API token needs the scope `read`.
 
@@ -9310,7 +9310,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
     time: string;
     /** The days of the week it runs on. */
     days: ("mon" | "tue" | "wed" | "thu" | "fri" | "sat" | "sun")[];
-    /** What it runs: one element from the shelf, or a workflow. */
+    /** What it runs: one saved step, or a workflow. */
     what: {
       kind: "element";
       elementId: string;
@@ -9395,7 +9395,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 | `name` | `string` | yes | What it is called. Shown in lists and beside what it hands in. |
 | `time` | `string` | yes | The time of day, on this computer's clock and in its time zone. |
 | `days` | `("mon" \| "tue" \| "wed" \| "thu" \| "fri" \| "sat" \| "sun")[]` | yes | The days of the week it runs on. |
-| `what` | `{ kind: "element"; elementId: string; } \| { kind: "workflow"; workf…` | yes | What it runs: one element from the shelf, or a workflow. |
+| `what` | `{ kind: "element"; elementId: string; } \| { kind: "workflow"; workf…` | yes | What it runs: one saved step, or a workflow. |
 | `where` | `{ kind: "session"; sessionId: string; } \| { kind: "new"; canvasId: …` | yes | Where: a terminal, or a new agent terminal on a canvas. |
 | `folder` | `string \| null` | no | For a new terminal: the folder it starts in. Null: the folder new terminals start in. |
 | `environment` | `string \| null` | no | For a new terminal: where it works. Null: a working copy of its own where the folder can have one. |
@@ -9415,7 +9415,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
   time: string;
   /** The days of the week it runs on. */
   days: ("mon" | "tue" | "wed" | "thu" | "fri" | "sat" | "sun")[];
-  /** What it runs: one element from the shelf, or a workflow. */
+  /** What it runs: one saved step, or a workflow. */
   what: {
     kind: "element";
     elementId: string;
@@ -9492,7 +9492,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 | `name` | `string` | no | What it is called. Shown in lists and beside what it hands in. |
 | `time` | `string` | no | The time of day, on this computer's clock and in its time zone. |
 | `days` | `("mon" \| "tue" \| "wed" \| "thu" \| "fri" \| "sat" \| "sun")[]` | no | The days of the week it runs on. |
-| `what` | `{ kind: "element"; elementId: string; } \| { kind: "workflow"; workf…` | no | What it runs: one element from the shelf, or a workflow. |
+| `what` | `{ kind: "element"; elementId: string; } \| { kind: "workflow"; workf…` | no | What it runs: one saved step, or a workflow. |
 | `where` | `{ kind: "session"; sessionId: string; } \| { kind: "new"; canvasId: …` | no | Where: a terminal, or a new agent terminal on a canvas. |
 | `folder` | `string \| null` | no | For a new terminal: the folder it starts in. Null: the folder new terminals start in. |
 | `environment` | `string \| null` | no | For a new terminal: where it works. Null: a working copy of its own where the folder can have one. |
@@ -9512,7 +9512,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
   time: string;
   /** The days of the week it runs on. */
   days: ("mon" | "tue" | "wed" | "thu" | "fri" | "sat" | "sun")[];
-  /** What it runs: one element from the shelf, or a workflow. */
+  /** What it runs: one saved step, or a workflow. */
   what: {
     kind: "element";
     elementId: string;
@@ -9612,7 +9612,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
     time: string;
     /** The days of the week it runs on. */
     days: ("mon" | "tue" | "wed" | "thu" | "fri" | "sat" | "sun")[];
-    /** What it runs: one element from the shelf, or a workflow. */
+    /** What it runs: one saved step, or a workflow. */
     what: {
       kind: "element";
       elementId: string;
@@ -9710,9 +9710,9 @@ For a session's own token, about that session. No API token may call this.
   details: string;
   /** The folder it is done in. For a new terminal: where it starts. Null: the folder new terminals start in. */
   folder: string | null;
-  /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
+  /** The workflow it goes through. Null: it is told as one step, with the details as its task. */
   workflowId: string | null;
-  /** The shelf element it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
+  /** The saved step it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
   elementId: string | null;
   /** True for what the owner arranged beforehand, such as a time of a schedule. It starts when a place is free without being started by hand, still within the limit and the hold, and what its agent adds sets off no rule. Set by the server, never by a caller. */
   unattended: boolean;
@@ -11397,7 +11397,7 @@ curl -X PUT -H "Authorization: Bearer $AUBERGINE_TOKEN" \
 
 `POST /v1/sessions/{sessionId}/run/report`: Report on the run a session is on.
 
-For a program inside a session, with that session's own token: the current element is done, the work is blocked, and so on. It reaches that session's run and nothing else.
+For a program inside a session, with that session's own token: the current step is done, the work is blocked, and so on. It reaches that session's run and nothing else.
 
 For a session's own token, about that session; or an API token with the scope `runs:write`, about any session.
 
@@ -11498,7 +11498,7 @@ curl -X POST -H "Authorization: Bearer $TOKEN" \
 
 `GET /v1/sessions/{sessionId}/brief`: What a session was asked to write.
 
-For a program inside a session, with that session's own token: the owner's request for a workflow or an element, the format, and how to hand it in; after a draft was sent back, the comment too. 404 when nothing is asked of the session.
+For a program inside a session, with that session's own token: the owner's request for a workflow or a step, the format, and how to hand it in; after a draft was sent back, the comment too. 404 when nothing is asked of the session.
 
 For a session's own token, about that session. No API token may call this.
 
@@ -11556,9 +11556,9 @@ A list: it answers a page at a time, see `limit` and `cursor`.
         required: boolean;
       }[];
       elements: {
-        /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+        /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
         id: string;
-        /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+        /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
         kind: string;
         /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
@@ -11568,7 +11568,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
         ask: string;
         /** For an approval, if you like: what the person should look at before deciding. */
         lookAt: string;
-        /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+        /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
         doneWhen: string;
         /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
         needs: {
@@ -11576,7 +11576,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
           name: string;
           note?: string;
         }[];
-        /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+        /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
         produces: string;
         /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
         origin: {
@@ -11584,7 +11584,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
           name?: string;
           [key: string]: unknown;
         };
-        /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+        /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
         source: {
           shelfId: string;
           version: number | null;
@@ -11600,9 +11600,9 @@ A list: it answers a page at a time, see `limit` and `cursor`.
       };
     } | null;
     element: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -11612,7 +11612,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -11620,7 +11620,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -11628,7 +11628,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -11667,9 +11667,9 @@ A list: it answers a page at a time, see `limit` and `cursor`.
           required: boolean;
         }[];
         elements: {
-          /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+          /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
           id: string;
-          /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+          /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
           kind: string;
           /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
           name: string;
@@ -11679,7 +11679,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
           ask: string;
           /** For an approval, if you like: what the person should look at before deciding. */
           lookAt: string;
-          /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+          /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
           doneWhen: string;
           /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
           needs: {
@@ -11687,7 +11687,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
             name: string;
             note?: string;
           }[];
-          /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+          /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
           produces: string;
           /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
           origin: {
@@ -11695,7 +11695,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
             name?: string;
             [key: string]: unknown;
           };
-          /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+          /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
           source: {
             shelfId: string;
             version: number | null;
@@ -11711,9 +11711,9 @@ A list: it answers a page at a time, see `limit` and `cursor`.
         };
       } | null;
       element: {
-        /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+        /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
         id: string;
-        /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+        /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
         kind: string;
         /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
@@ -11723,7 +11723,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
         ask: string;
         /** For an approval, if you like: what the person should look at before deciding. */
         lookAt: string;
-        /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+        /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
         doneWhen: string;
         /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
         needs: {
@@ -11731,7 +11731,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
           name: string;
           note?: string;
         }[];
-        /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+        /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
         produces: string;
         /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
         origin: {
@@ -11739,7 +11739,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
           name?: string;
           [key: string]: unknown;
         };
-        /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+        /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
         source: {
           shelfId: string;
           version: number | null;
@@ -11784,7 +11784,7 @@ For a session's own token, about that session. No API token may call this.
 | Field | Type | Required | |
 |---|---|---|---|
 | `workflow` | `{ /** What it is called. */ name: string; /** What it is for, in a …` | no | A whole workflow. Give this or `element`, not both. |
-| `element` | `{ /** Its ID inside its workflow. It stays the same when the elemen…` | no | One element, for the shelf. |
+| `element` | `{ /** Its ID inside its workflow. It stays the same when the step i…` | no | One step, for the shelf. |
 | `revisesWorkflowId` | `string` | no | For a workflow: the workflow this is a new version of. Without it, accepting makes a new workflow. |
 | `description` | `string` | no | What it is meant to do, when nobody asked for it. |
 
@@ -11803,9 +11803,9 @@ For a session's own token, about that session. No API token may call this.
       required: boolean;
     }[];
     elements: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -11815,7 +11815,7 @@ For a session's own token, about that session. No API token may call this.
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -11823,7 +11823,7 @@ For a session's own token, about that session. No API token may call this.
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -11831,7 +11831,7 @@ For a session's own token, about that session. No API token may call this.
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -11847,9 +11847,9 @@ For a session's own token, about that session. No API token may call this.
     };
   } | null;
   element: {
-    /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+    /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
     id: string;
-    /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+    /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
     kind: string;
     /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
     name: string;
@@ -11859,7 +11859,7 @@ For a session's own token, about that session. No API token may call this.
     ask: string;
     /** For an approval, if you like: what the person should look at before deciding. */
     lookAt: string;
-    /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+    /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
     doneWhen: string;
     /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
     needs: {
@@ -11867,7 +11867,7 @@ For a session's own token, about that session. No API token may call this.
       name: string;
       note?: string;
     }[];
-    /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+    /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
     produces: string;
     /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
     origin: {
@@ -11875,7 +11875,7 @@ For a session's own token, about that session. No API token may call this.
       name?: string;
       [key: string]: unknown;
     };
-    /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+    /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
     source: {
       shelfId: string;
       version: number | null;
@@ -11914,9 +11914,9 @@ For a session's own token, about that session. No API token may call this.
         required: boolean;
       }[];
       elements: {
-        /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+        /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
         id: string;
-        /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+        /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
         kind: string;
         /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
@@ -11926,7 +11926,7 @@ For a session's own token, about that session. No API token may call this.
         ask: string;
         /** For an approval, if you like: what the person should look at before deciding. */
         lookAt: string;
-        /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+        /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
         doneWhen: string;
         /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
         needs: {
@@ -11934,7 +11934,7 @@ For a session's own token, about that session. No API token may call this.
           name: string;
           note?: string;
         }[];
-        /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+        /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
         produces: string;
         /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
         origin: {
@@ -11942,7 +11942,7 @@ For a session's own token, about that session. No API token may call this.
           name?: string;
           [key: string]: unknown;
         };
-        /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+        /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
         source: {
           shelfId: string;
           version: number | null;
@@ -11958,9 +11958,9 @@ For a session's own token, about that session. No API token may call this.
       };
     } | null;
     element: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -11970,7 +11970,7 @@ For a session's own token, about that session. No API token may call this.
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -11978,7 +11978,7 @@ For a session's own token, about that session. No API token may call this.
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -11986,7 +11986,7 @@ For a session's own token, about that session. No API token may call this.
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;

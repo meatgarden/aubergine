@@ -70,12 +70,12 @@ const RunElement = z.object({
 
 registerActionKind({
   kind: 'run-element',
-  title: 'Run an element',
-  says: 'Starts a run of one element from your shelf, on a terminal you name or a new one, with a short account of what happened as its task. The agent there does the rest with its own tools; Aubergine holds no credential for any app.',
+  title: 'Run a step',
+  says: 'Starts a run of one step from your shelf, on a terminal you name or a new one, with a short account of what happened as its task. The agent there does the rest with its own tools; Aubergine holds no credential for any app.',
   problem: (action, state) => {
     const parsed = RunElement.safeParse(action);
-    if (!parsed.success) return 'Say which shelf element to run, and on which terminal or on a new one on which canvas.';
-    if (!state.shelf.some((item) => item.id === parsed.data.elementId)) return 'There is no such element on the shelf.';
+    if (!parsed.success) return 'Say which saved step to run, and on which terminal or on a new one on which canvas.';
+    if (!state.shelf.some((item) => item.id === parsed.data.elementId)) return 'There is no such saved step.';
     const on = parsed.data.on;
     if (on.kind === 'session' && !state.sessions.some((s) => s.id === on.sessionId)) return 'There is no such terminal.';
     if (on.kind === 'new' && !state.canvases.some((c) => c.id === on.canvasId)) return 'There is no such canvas.';
@@ -83,8 +83,8 @@ registerActionKind({
   },
   words: (action, state) => {
     const parsed = RunElement.safeParse(action);
-    if (!parsed.success) return 'run an element';
-    const element = state.shelf.find((item) => item.id === parsed.data.elementId)?.element.name ?? 'an element that is gone';
+    if (!parsed.success) return 'run a step';
+    const element = state.shelf.find((item) => item.id === parsed.data.elementId)?.element.name ?? 'a step that is gone';
     const on = parsed.data.on;
     const where = on.kind === 'session' ? `on “${state.sessions.find((s) => s.id === on.sessionId)?.name ?? 'a terminal that is gone'}”` : `on a new terminal on “${state.canvases.find((c) => c.id === on.canvasId)?.name ?? 'a canvas that is gone'}”`;
     return `run “${element}” ${where}`;

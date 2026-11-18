@@ -3,6 +3,7 @@ import { runCommand } from '../commands';
 import { hint } from '../shortcuts';
 import { useApp } from '../store';
 import { PANEL_STRIP_WIDTH, panelSections, sectionById, subscribeToSections, type PanelSection } from './registry';
+import { StateDot } from '../ui';
 import './sections';
 
 /**
@@ -19,9 +20,7 @@ export function SidePanel() {
   if (!prefs.open) {
     return (
       <aside className="side-panel collapsed" style={{ width: PANEL_STRIP_WIDTH }} aria-label="Side panel" data-testid="side-panel">
-        <button type="button" className="quiet strip-open" aria-label="Open the side panel" title={hint('panel.toggle', 'Open the side panel')} onClick={() => runCommand('panel.toggle')}>
-          ›
-        </button>
+        <Fold open={false} />
         {sections.map((section) => (
           <StripEntry key={section.id} section={section} />
         ))}
@@ -56,9 +55,6 @@ export function SidePanel() {
               ))}
             <MoreTabs sections={sections.filter((section) => section.more)} active={active} />
           </div>
-          <button type="button" className="quiet panel-collapse" aria-label="Collapse the side panel" title={hint('panel.toggle', 'Collapse the side panel')} onClick={() => runCommand('panel.toggle')}>
-            ‹
-          </button>
         </header>
         {active ? (
           <section key={active.id} className="panel-section" role="tabpanel" data-section={active.id} aria-label={active.title}>
@@ -67,10 +63,24 @@ export function SidePanel() {
         ) : (
           <p className="list-empty">Nothing to show here yet.</p>
         )}
+        <Fold open />
         <div className="list-resize" role="separator" aria-orientation="vertical" aria-label="Resize the side panel" onPointerDown={startResize} data-testid="panel-resize" />
       </aside>
       <Drawer left={prefs.width} />
     </>
+  );
+}
+
+/**
+ * The one control that folds the panel away and brings it back: a handle on the panel's own edge, in the same place
+ * whether the panel is open or not, so that it is never taken for one of the tabs.
+ */
+function Fold({ open }: { open: boolean }) {
+  const words = open ? 'Hide the side panel' : 'Show the side panel';
+  return (
+    <button type="button" className="panel-fold" aria-label={words} aria-expanded={open} title={hint('panel.toggle', words)} onClick={() => runCommand('panel.toggle')} data-testid="panel-fold">
+      <span aria-hidden="true">{open ? '‹' : '›'}</span>
+    </button>
   );
 }
 
@@ -192,7 +202,7 @@ function StripEntry({ section }: { section: PanelSection }) {
         .filter((badge) => badge.count > 0)
         .map((badge) => (
           <span key={badge.key} className={`strip-badge is-${badge.key}`} title={`${badge.count} ${badge.title}`} data-testid="strip-badge" data-badge={badge.key}>
-            <span aria-hidden="true">{badge.mark}</span>
+            {badge.tone ? <StateDot tone={badge.tone} word={badge.title} /> : <span aria-hidden="true">{badge.mark}</span>}
             {badge.count}
             <span className="visually-hidden"> {badge.title}</span>
           </span>

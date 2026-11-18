@@ -255,7 +255,7 @@ describe('two projects', () => {
     const proposed = await asSession(inA, 'POST', `/v1/sessions/${inA.id}/tasks`, { title: 'A proposes this' });
     expect(proposed.body).toMatchObject({ state: 'proposed', projectId: a.id });
     await asOwner('POST', '/v1/rules', { event: 'task.done', action: { kind: 'notify' } });
-    await asOwner('POST', '/v1/schedules', { name: 'A schedule', time: '08:30', days: EVERY, what: { kind: 'element', elementId: await element('Shared element') }, where: { kind: 'session', sessionId: inA.id } });
+    await asOwner('POST', '/v1/schedules', { name: 'A schedule', time: '08:30', days: EVERY, what: { kind: 'element', elementId: await element('Shared step') }, where: { kind: 'session', sessionId: inA.id } });
     await asOwner('POST', '/v1/asks', { text: 'A wrote this' });
     await asOwner('PUT', '/v1/queue', { limit: 1, hold: true, automatic: true });
     const runId = taskNow(running.id).runId as string;
@@ -394,7 +394,7 @@ describe('what is shared, and what is a project\'s own', () => {
     expect((await asOwner('POST', '/v1/runs', { workflowId: flow.body.id, sessionId: inB.id, inputs: { task: 'x' } })).status).toBe(201);
   });
 
-  it('a schedule whose element stops being visible to its project does not fire, and says so once', async () => {
+  it('a schedule whose step stops being visible to its project does not fire, and says so once', async () => {
     const a = first();
     const b = await project('Second');
     const inB = agentOn(b.canvasId, 'worker in B');
@@ -406,7 +406,7 @@ describe('what is shared, and what is a project\'s own', () => {
     for (const day of ['15', '16', '17']) await moveTo(`2026-06-${day}T12:31:00.000Z`);
     expect(queueNow().tasks).toEqual([]);
     const items = (await asOwner('GET', `/v1/for-you?projectId=${b.id}`)).body.items.filter((item: { kind: string }) => item.kind === 'schedule');
-    expect(items.map((item: { sentence: string; projectId: string }) => [item.sentence, item.projectId])).toEqual([['The schedule “Morning in B” could not run: The element it runs now belongs to another project.', b.id]]);
+    expect(items.map((item: { sentence: string; projectId: string }) => [item.sentence, item.projectId])).toEqual([['The schedule “Morning in B” could not run: The step it runs now belongs to another project.', b.id]]);
     // Not on A's list; and B's rule heard of it once.
     expect((await asOwner('GET', `/v1/for-you?projectId=${a.id}`)).body.items.filter((item: { kind: string }) => item.kind === 'schedule')).toEqual([]);
     await until(() => notified.length > 0);
@@ -444,7 +444,7 @@ describe('a token limited to one project', () => {
     const inB = agentOn(b.canvasId, 'bravo terminal');
     // In B: one of everything that is a project's own, and one thing of each shared kind made B's own.
     const flowB = (await asOwner('POST', '/v1/workflows', { name: 'bravo workflow', elements: [{ name: 'bravo step', instructions: 'x' }] })).body;
-    const elementB = await element('bravo element');
+    const elementB = await element('bravo step');
     await asOwner('POST', '/v1/sharing/move', { kind: 'workflow', id: flowB.id, projectId: b.id });
     await asOwner('POST', '/v1/sharing/move', { kind: 'element', id: elementB, projectId: b.id });
     const taskB = (await asOwner('POST', '/v1/tasks', { projectId: b.id, title: 'bravo task', details: 'bravo details' })).body as Task;

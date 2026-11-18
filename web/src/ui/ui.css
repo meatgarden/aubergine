@@ -93,35 +93,7 @@ b {
 
 /* What is drawn as a row, a card, a tab or a chip is a button underneath, and has its own piece below. */
 button:not(
-    .ui-row,
-    .ui-chip,
-    .ui-tab,
-    [role='menuitem'],
-    [role='menuitemradio'],
-    [role='menuitemcheckbox'],
-    [role='option'],
-    [role='tab'],
-    .panel-tab,
-    .runs-row,
-    .history-row,
-    .away-item,
-    .strip-entry,
-    .foryou-row,
-    .list-group,
-    .run-banner,
-    .library-row,
-    .review-row,
-    .copy-file,
-    .editor-element-name,
-    .run-step-name,
-    .note-tab,
-    .list-tag,
-    .list-chip,
-    .list-clear,
-    .run-strip,
-    .list-mark,
-    .copy-chip,
-    .color-dot
+    .ui-row, .ui-chip, .ui-tab, [role='menuitem'], [role='menuitemradio'], [role='menuitemcheckbox'], [role='option'], [role='tab'], .panel-tab, .runs-row, .history-row, .away-item, .strip-entry, .foryou-row, .list-group, .run-banner, .library-row, .review-row, .copy-file, .editor-element-name, .run-step-name, .list-tag, .list-chip, .list-clear, .run-strip, .list-mark, .copy-chip, .color-dot
   ),
 .ui-button {
   box-sizing: border-box;
@@ -178,7 +150,6 @@ button.quiet,
 button.node-tool,
 button.node-close,
 button.list-more,
-button.list-note,
 button.list-restore,
 .ui-button.is-quiet {
   color: var(--text);
@@ -189,7 +160,6 @@ button.quiet:hover:not(:disabled),
 button.node-tool:hover:not(:disabled),
 button.node-close:hover:not(:disabled),
 button.list-more:hover:not(:disabled),
-button.list-note:hover:not(:disabled),
 button.list-restore:hover:not(:disabled),
 .ui-button.is-quiet:hover:not(:disabled) {
   background: var(--surface-raised);
@@ -243,9 +213,7 @@ textarea:disabled,
 /* A button that is only a sign is a square. */
 button.node-close,
 button.tab-add,
-button.panel-collapse,
 button.list-more,
-button.list-note,
 button.toolbar-new-more,
 .ui-icon-button {
   flex: none;
@@ -253,9 +221,6 @@ button.toolbar-new-more,
   min-width: var(--control-h);
   padding: 0;
   font-size: var(--font-title);
-}
-button.list-note {
-  font-size: var(--font-body);
 }
 
 /* A field and a select: the height, text and corners of a button, so the two line up side by side. */
@@ -381,9 +346,7 @@ input.tab-input {
 .list-mark,
 .copy-chip,
 .run-view-status,
-.run-banner-label,
-.board-column-mark,
-.list-note-new {
+.board-column-mark {
   box-sizing: border-box;
   flex: none;
   display: inline-flex;
@@ -439,15 +402,6 @@ button.list-clear {
   text-decoration: underline;
   color: var(--text-muted);
 }
-.tab-waiting,
-.badge-attention.is-waiting,
-.panel-tab.is-urgent .panel-tab-count,
-.ui-badge.is-attention {
-  justify-content: center;
-  font-weight: var(--weight-strong);
-  color: var(--on-attention);
-  background: var(--attention);
-}
 .badge-attention.is-done,
 .ui-badge.is-ok {
   color: var(--ok-text);
@@ -464,8 +418,7 @@ button.list-clear {
   color: var(--danger-text);
   background: var(--danger-soft);
 }
-.panel-tab-count,
-.list-note-new {
+.panel-tab-count {
   justify-content: center;
   padding: 0 var(--space-1);
   color: var(--text-muted);
@@ -770,9 +723,6 @@ button.color-dot:hover {
   font-size: var(--font-meta);
   color: var(--text-muted);
 }
-.list-badge {
-  font-size: var(--font-meta);
-}
 .list-group {
   height: var(--space-8);
   padding: 0 var(--gutter-panel);
@@ -811,8 +761,7 @@ button.color-dot:hover {
 
 /* Labels are written as sentences, never in capitals. */
 .picker-section,
-.sheet-groups h3,
-.run-banner-label {
+.sheet-groups h3 {
   text-transform: none;
   letter-spacing: 0;
 }
@@ -973,20 +922,6 @@ button.color-dot:hover {
 .list-lock {
   flex: none;
 }
-.list-badge {
-  flex: none;
-  display: inline-flex;
-  align-items: center;
-  height: var(--chip);
-  padding: 0 var(--space-2);
-  font-size: var(--font-meta);
-  border-radius: var(--radius-pill);
-  background: var(--surface-raised);
-}
-.state-waiting .list-badge {
-  color: var(--on-attention);
-  background: var(--attention);
-}
 /* Tags are on a row while the pointer or the keyboard is on it, and while the list is filtered by a tag. */
 .list-tags {
   display: none;
@@ -1016,13 +951,6 @@ button.color-dot:hover {
 .list-row > .list-more[aria-expanded='true'] {
   opacity: 1;
 }
-.list-row .list-note {
-  width: auto;
-  min-width: 0;
-  height: var(--chip);
-  padding: 0 var(--space-1);
-  font-size: var(--font-meta);
-}
 
 /* The drawer beside the panel: the head of a screen, and a screen's gutter. */
 .panel-drawer-head.sheet-head {
@@ -1048,13 +976,7 @@ button.color-dot:hover {
   flex: 0 1 auto;
   min-width: 96px;
 }
-/* What the terminal runs and where gives way before the name does, and takes what room is left. */
-.node-title .node-status {
-  flex: 1 1 0;
-  min-width: 0;
-  max-width: none;
-  overflow: hidden;
-}
+
 .node-more {
   flex: none;
   display: inline-flex;
@@ -1305,11 +1227,6 @@ button.color-dot:hover {
   font-weight: var(--weight-normal);
 }
 
-/* On a row the state is said by its mark; the word is added only where the terminal waits for the owner or failed. */
-.list-row:not(.state-waiting, .state-failed) .list-badge {
-  display: none;
-}
-
 /* ---------- On the gutter ---------- */
 
 /* A quiet button that begins a line hangs left by its own padding, so that its words stand where the line begins. */
@@ -1477,4 +1394,355 @@ p > button.quiet:first-child,
 }
 .editor-row > button.quiet:first-child {
   margin-left: calc(var(--space-3) * -1);
+}
+
+/* ---------- A calm canvas: one thing shouts ---------- */
+
+/*
+ * The count at the top of the page is the only thing filled with the colour of waiting. Everything else that
+ * says the same says it quietly: a number, a soft chip, a line of one width.
+ */
+
+/* The one mark of a state: a dot of one size in a slot of one width. The list, a terminal's title and the Board use it. */
+.ui-dot {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: var(--space-4);
+  height: var(--space-4);
+}
+.ui-dot > span {
+  box-sizing: border-box;
+  width: var(--space-2);
+  height: var(--space-2);
+  border-radius: var(--radius-pill);
+  background: var(--border-control);
+}
+.ui-dot.is-waiting > span {
+  background: var(--attention);
+}
+.ui-dot.is-finished > span {
+  background: var(--ok);
+}
+.ui-dot.is-working > span {
+  background: var(--working);
+}
+.ui-dot.is-unread > span {
+  background: var(--text);
+}
+.ui-dot.is-failed > span {
+  background: var(--danger);
+}
+.ui-dot.is-hollow > span {
+  background: transparent;
+  border: 1px solid var(--border-control);
+}
+
+/* A count on a tab is a plain number. What waits is in the colour of waiting as words, never filled. */
+.tab-waiting,
+.panel-tab-count,
+.panel-tab.is-urgent .panel-tab-count,
+.panel-tab-count.is-urgent,
+.node-note-new {
+  min-width: 0;
+  height: auto;
+  padding: 0;
+  font-weight: var(--weight-normal);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+  background: transparent;
+  border: 0;
+}
+.panel-tab.is-urgent .panel-tab-count,
+.panel-tab-count.is-urgent {
+  color: var(--attention-text);
+}
+
+/* A state in words is the soft tint with coloured words, in a row, in a title and everywhere else. */
+.badge-attention.is-waiting,
+.ui-badge.is-attention {
+  justify-content: flex-start;
+  font-weight: var(--weight-normal);
+  color: var(--attention-text);
+  background: var(--attention-soft);
+}
+
+/* A filter that is on is a plain chip: the Filter button's count is the sign. */
+button.list-chip {
+  color: var(--text);
+  background: var(--surface-raised);
+  border-color: var(--border);
+}
+
+/* A terminal's line is one width whatever its state. The one being used is in the accent; one that waits, in the colour of waiting. */
+.terminal-node,
+.terminal-node.selected,
+.terminal-node[data-attention='done'] {
+  border: 2px solid var(--border);
+  outline: 0;
+  box-shadow: 0 6px 20px var(--shadow);
+}
+.terminal-node[data-attention='waiting'] {
+  border-color: var(--attention);
+}
+.terminal-node.is-selected,
+.terminal-node:focus-within {
+  border-color: var(--accent);
+}
+
+/* ---------- A row of the list reads in one pass ---------- */
+
+/* The first line is the name's. The second: its state in words where that is not the ordinary one, then what is known. */
+.list-row .list-main {
+  gap: var(--space-2);
+}
+.list-row .list-name {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.list-row .list-detail {
+  height: var(--chip);
+  line-height: var(--chip);
+  gap: var(--space-1);
+}
+.list-row .list-detail > .ui-badge,
+.list-row .list-detail > .run-strip {
+  flex: none;
+  margin-right: var(--space-1);
+}
+.list-row .run-strip.is-row {
+  overflow: visible;
+}
+.list-detail .list-where {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+.list-active {
+  flex: none;
+}
+.list-where:not(:empty) + .list-active::before,
+.list-where:not(:empty) + .visually-hidden + .list-active::before {
+  content: '· ';
+}
+/* The row that is chosen: one fill and one line at its start. */
+.list-row.current,
+.list-row.focused {
+  background: var(--surface-active);
+  box-shadow: inset 2px 0 0 var(--accent);
+}
+/* A heading of the list is a title on the panel's gutter with an arrow that folds it: no fill, open or shut. */
+button.list-group,
+button.list-group[aria-expanded='true'],
+button.list-group:hover:not(:disabled) {
+  gap: var(--space-1);
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  color: var(--text);
+}
+button.list-group:hover:not(:disabled) .list-group-title {
+  text-decoration: underline;
+}
+.list-group .list-chevron {
+  width: var(--space-3);
+  margin-left: calc(-1 * var(--space-1));
+  color: var(--text-muted);
+}
+.list-group .list-count {
+  font-weight: var(--weight-normal);
+}
+
+/* ---------- The side panel's head ---------- */
+
+/* The handle that folds the panel is on the panel's own edge, in the same place open or shut, apart from the tabs. */
+button.panel-fold {
+  position: absolute;
+  top: 50%;
+  right: calc(-1 * var(--space-4));
+  z-index: var(--z-panel);
+  width: var(--space-4);
+  min-width: 0;
+  height: var(--control-compact);
+  padding: 0;
+  color: var(--text-muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 0;
+  border-radius: 0 var(--radius-control) var(--radius-control) 0;
+}
+button.panel-fold:hover:not(:disabled),
+button.panel-fold:focus-visible {
+  color: var(--text);
+  background: var(--surface-raised);
+}
+.panel-tabs-row {
+  padding-right: var(--space-2);
+}
+
+/* ---------- A tab of a canvas ---------- */
+
+/* Its name, its count, one menu and the way to close it. The last two are on the tab being looked at, and where the pointer or the keyboard is. */
+button.tab-more {
+  flex: none;
+  width: var(--control-h);
+  min-width: var(--control-h);
+  padding: 0;
+  font-size: var(--font-title);
+}
+/* On a tab that is not being looked at they take room only while the pointer or the keyboard is there, after the name: a press on the name is never a press on them. */
+.tab:not(.active) .tab-tools {
+  display: none;
+}
+.tab:not(.active):hover .tab-tools,
+.tab:not(.active):focus-within .tab-tools {
+  display: inline-flex;
+}
+
+/* ---------- A terminal's title ---------- */
+
+/* Its mark, its name, its state in words where there is one, then quietly what it runs; what is done to it keeps to the right. */
+.node-title {
+  gap: var(--space-2);
+}
+.node-title .node-name {
+  flex: 0 1 auto;
+  min-width: 60px;
+}
+.node-title .node-activity {
+  flex: 1 1 0;
+  min-width: 0;
+}
+.node-note-new {
+  margin-left: var(--space-1);
+  font-size: var(--font-meta);
+}
+
+/* The run a terminal is on: one line on the title's gutter, in the size of what is known about a thing. */
+button.run-banner,
+button.run-banner:hover:not(:disabled) {
+  gap: var(--space-2);
+  height: auto;
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--font-meta);
+  color: var(--text-muted);
+  background: var(--surface);
+}
+.run-banner-name {
+  color: var(--text);
+}
+.run-banner-step::before {
+  content: '· ';
+}
+.run-banner-step,
+.run-banner-step strong {
+  font-weight: var(--weight-normal);
+  color: var(--text);
+}
+button.run-banner:hover:not(:disabled) .run-banner-open {
+  text-decoration: underline;
+}
+button.run-banner.status-awaiting,
+button.run-banner.status-awaiting:hover:not(:disabled) {
+  background: var(--attention-soft);
+}
+button.run-banner.status-blocked,
+button.run-banner.status-blocked:hover:not(:disabled) {
+  background: var(--danger-soft);
+}
+
+/* ---------- The map of the canvas ---------- */
+
+/* One button folds it away and brings it back; it stands over the map's corner, and alone in the corner when the map is folded. */
+.react-flow__panel.map-fold {
+  --control-h: var(--control-compact);
+  margin: var(--space-4);
+  bottom: 150px;
+}
+.react-flow__panel.map-fold.is-folded {
+  bottom: 0;
+}
+.map-fold > button,
+.map-fold > button:hover:not(:disabled) {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+/* ---------- The panels about one terminal: how its agent is set up, where it works, its note ---------- */
+
+/* Each part of the list has the room of a heading above it; the first follows the head of the panel. */
+.inventory-panel > section,
+.inventory-panel > .inventory-tools {
+  margin-top: var(--space-6);
+}
+.inventory-panel > p {
+  max-width: 72ch;
+  margin: 0;
+}
+.inventory-panel > .inventory-tools + section {
+  margin-top: var(--space-4);
+}
+/* What can be done with a working copy: each choice a button of one width, with what it does beside it. */
+.copy-panel > p {
+  max-width: 72ch;
+  margin: 0 0 var(--space-2);
+}
+.copy-endings ul {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+}
+.copy-endings li {
+  display: contents;
+}
+.copy-endings li > button {
+  justify-content: flex-start;
+}
+@media (max-width: 800px) {
+  .copy-endings ul {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ---------- Choice controls ---------- */
+
+/*
+ * A tick box or a radio button stands one gap from its words and level with their first line. The label that
+ * holds one lays the two out itself, so that the gap is the same whatever is written between them in the page.
+ */
+input[type='checkbox'],
+input[type='radio'] {
+  flex: none;
+  margin: 0;
+}
+label:has(> input:is([type='checkbox'], [type='radio']):first-child) {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+label:has(> input:is([type='checkbox'], [type='radio']):first-child) > input {
+  margin-top: calc((1lh - var(--space-4)) / 2);
+}
+/* The ones that stand in a line with other things stay in that line. */
+label:is(.wf-inline, .ui-check, .schedule-days label, .toolbar-menu-check):has(> input:is([type='checkbox'], [type='radio']):first-child) {
+  display: inline-flex;
+}
+
+/* Where the panel is too narrow for its tabs in one row, they take a second: none is cut off. */
+.panel-tabs-row {
+  container-type: inline-size;
+}
+@container (max-width: 280px) {
+  .panel-tabs {
+    flex-wrap: wrap;
+  }
+}
+/* On the folded strip a count of terminals in one state has the same dot before it. */
+.strip-badge {
+  align-items: center;
+  gap: 0;
+}
+/* A line of a tab's menu that holds a control begins where the lines that are pressed begin. */
+.tab-menu .tab-menu-line {
+  padding: var(--space-2) var(--space-3);
 }

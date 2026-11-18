@@ -48,9 +48,9 @@ const runs = [
 const input: BoardInput = { runs, workflows: [change, other, lone(102, 'Tidy up')], sessions, canvases, now: NOW, quietAfterSeconds: 300 };
 
 describe('the board', () => {
-  it('groups by workflow, and by version where live runs are on two; the columns are that version\'s elements in order', () => {
+  it('groups by workflow, and by version where live runs are on two; the columns are that version\'s steps in order', () => {
     const board = boardOf(input);
-    expect(board.groups.map((g) => [g.workflowName, g.version, g.single])).toEqual([['Another', null, false], ['Change', 1, false], ['Change', 2, false], ['One element by itself', null, true]]);
+    expect(board.groups.map((g) => [g.workflowName, g.version, g.single])).toEqual([['Another', null, false], ['Change', 1, false], ['Change', 2, false], ['One step by itself', null, true]]);
     const [another, first, second, single] = board.groups;
     expect(first?.columns.map((c) => [c.name, c.cards.map((card) => card.sessionName)])).toEqual([['Plan', ['alpha']], ['Ship', []]]);
     expect(second?.columns.map((c) => [c.name, c.waitsForPerson, c.cards.map((card) => card.sessionName)])).toEqual([['Plan', false, ['gamma', 'delta']], ['Look', true, ['beta']], ['Ship', false, []]]);

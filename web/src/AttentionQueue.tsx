@@ -17,7 +17,7 @@ export function useWaitingWords(): string {
   return `Waiting for you${keysOf('attention.next').length > 0 ? ` (${keysOf('attention.next').join(' or ')} goes to the next)` : ''}: ${queue
     .map((s) => {
       const canvas = canvasLabel(app, s.id, canvasId);
-      // Why it waits, when it said: a blocked or finished run names its element here.
+      // Why it waits, when it said: a blocked or finished run names its step here.
       const mark = messageMark(s);
       const why = s.attention.message ? `: ${s.attention.message}` : mark && (s.messages.paused > 0 || s.messages.forOwner > 0) ? `: ${s.messages.paused > 0 ? 'these two have exchanged many messages; continue?' : mark.text}` : '';
       return `${canvas ? `${s.name} (on ${canvas})` : s.name}${why}`;

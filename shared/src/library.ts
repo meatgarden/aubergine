@@ -112,8 +112,8 @@ export function exportElement(element: Element): Record<string, unknown> {
 /** Reads a file into an element. Throws, with a sentence, when it is not one. Where it came from on the publisher's computer is not taken over. */
 export function importElement(file: unknown): Element {
   const parsed = ElementFile.safeParse(file);
-  if (!parsed.success) throw new Error('This is not an Aubergine element file.');
-  if (parsed.data.format > ELEMENT_FILE_FORMAT) throw new Error(`This element file is in format ${parsed.data.format}, which this version of Aubergine does not know.`);
+  if (!parsed.success) throw new Error('This is not an Aubergine step file.');
+  if (parsed.data.format > ELEMENT_FILE_FORMAT) throw new Error(`This step file is in format ${parsed.data.format}, which this version of Aubergine does not know.`);
   const raw = parsed.data.element as Record<string, unknown>;
   const known = Object.fromEntries(KNOWN_ELEMENT.filter((key) => key in raw && key !== 'source' && key !== 'origin' && key !== 'id').map((key) => [key, raw[key]]));
   const extra = Object.fromEntries(Object.entries(raw).filter(([key]) => !KNOWN_ELEMENT.includes(key)));
@@ -142,7 +142,7 @@ export interface ReadItem {
  */
 export interface LibraryKind {
   kind: string;
-  /** `A workflow`, `An element`. */
+  /** `A workflow`, `A step`. */
   title: string;
   /** Where an installed one is found, in a few words: `among your workflows`. */
   lands: string;
@@ -164,7 +164,7 @@ export const libraryKinds = (): LibraryKind[] => [...kinds.values()];
 export function wholeText(content: WorkflowContent): string {
   const version = { ...content, number: 1, createdAt: '1970-01-01T00:00:00.000Z' };
   const inputs = Object.fromEntries(content.inputs.map((input) => [input.key, `(${input.label.toLowerCase()})`]));
-  return content.elements.map((element, index) => `--- Element ${index + 1} of ${content.elements.length} ---\n${previewRun(version, inputs, element.id)}`).join('\n\n');
+  return content.elements.map((element, index) => `--- Step ${index + 1} of ${content.elements.length} ---\n${previewRun(version, inputs, element.id)}`).join('\n\n');
 }
 
 registerLibraryKind({
@@ -184,12 +184,12 @@ registerLibraryKind({
 
 registerLibraryKind({
   kind: 'element',
-  title: 'An element',
+  title: 'A step',
   lands: 'on your shelf',
   read(json, limits) {
     const element = importElement(json);
     const version = versionOfProposal({ workflow: null, element });
-    if (!version) throw new Error('This is not an element.');
+    if (!version) throw new Error('This is not a step.');
     const problems = validateContent(version, limits);
     if (problems.length > 0) throw new Error(problems.join(' '));
     return { name: element.name, text: previewRun(version, { task: '(task)' }), needs: element.needs, content: element };
@@ -404,7 +404,7 @@ export const ListedItem = LibraryItem.extend({
   sourceId: Id,
   sourceName: z.string(),
   sourceKind: z.string(),
-  /** `A workflow`, `An element`; the kind's own name when this version does not know it. */
+  /** `A workflow`, `A step`; the kind's own name when this version does not know it. */
   kindTitle: z.string(),
   standing: z.enum(['available', 'installed', 'update']),
   installedId: Id.nullable(),
@@ -442,7 +442,7 @@ export type RequestInstallRequest = z.infer<typeof RequestInstallRequest>;
 export const InstallRequestDetail = z.object({
   request: InstallRequest,
   item: ListedItem.nullable(),
-  /** `An element`, `A new version of the workflow "Fix a bug"`. */
+  /** `A step`, `A new version of the workflow "Fix a bug"`. */
   what: z.string(),
   from: z.string(),
   requestedBy: z.string(),
@@ -467,7 +467,7 @@ export const AcceptInstallRequest = z.object({
     .regex(/^[0-9a-f]{64}$/)
     .describe('The digest of the file as it was shown for review. If the file is not that any more, nothing is installed.'),
   workflow: z.unknown().optional().describe('The workflow as edited before accepting.'),
-  element: z.unknown().optional().describe('The element as edited before accepting.'),
+  element: z.unknown().optional().describe('The step as edited before accepting.'),
 });
 export type AcceptInstallRequest = z.infer<typeof AcceptInstallRequest>;
 

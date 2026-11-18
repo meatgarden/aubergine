@@ -243,10 +243,10 @@ describe('workflows', () => {
       expect(answer.status).toBe(400);
       return answer.body.error.message as string;
     };
-    await bad({ name: 'No elements', elements: [] });
+    await bad({ name: 'No steps', elements: [] });
     await bad({ elements: THREE.elements });
     expect(await bad({ name: 'x', elements: [{ name: 'Empty', instructions: '  ' }] })).toContain('"Empty" has no instructions');
-    expect(await bad({ name: 'x', elements: [{ id: 'a', name: 'A', instructions: 'x' }, { id: 'a', name: 'B', instructions: 'y' }] })).toContain('Two elements have the ID "a"');
+    expect(await bad({ name: 'x', elements: [{ id: 'a', name: 'A', instructions: 'x' }, { id: 'a', name: 'B', instructions: 'y' }] })).toContain('Two steps have the ID "a"');
     expect(await bad({ name: 'x', elements: [{ name: 'A', kind: 'mystery', instructions: 'x' }] })).toContain('a kind this version does not know');
     expect(hub.state.workflows).toEqual([]);
   });
@@ -324,7 +324,7 @@ describe('runs', () => {
     expect(second.status).toBe(200);
     expect(second.body.position).toBe('Build · 2 of 3');
     // What comes back is what to do next, with what the element before handed over.
-    expect(second.body.text).toContain('Element 2 of 3: Build');
+    expect(second.body.text).toContain('Step 2 of 3: Build');
     expect(second.body.text).toContain('Planned it.');
     // One report, one event, about this one run.
     expect(events.map((e) => e.type)).toEqual(['run.moved']);
@@ -361,7 +361,7 @@ describe('runs', () => {
     expect((await ownReport(session, { type: 'done' })).status).toBe(404);
   });
 
-  it('refuse the same done twice, so a repeat cannot skip an element', async () => {
+  it('refuse the same done twice, so a repeat cannot skip a step', async () => {
     const workflow = await makeWorkflow();
     const session = fakeSession('worker');
     await startRun(workflow.id, session.id);
@@ -370,12 +370,12 @@ describe('runs', () => {
     const again = await ownReport(session, { type: 'done', elementId: 'plan' });
     expect(again.status).toBe(409);
     expect(again.body.error).toMatchObject({ code: 'conflict' });
-    expect(again.body.error.message).toContain('"Plan" is not the current element');
+    expect(again.body.error.message).toContain('"Plan" is not the current step');
     expect(events).toEqual([]);
     expect(hub.state.runs[0]).toMatchObject({ currentElementId: 'build' });
   });
 
-  it('put a blocked run in front of the owner, naming the element, and take it back when it moves on', async () => {
+  it('put a blocked run in front of the owner, naming the step, and take it back when it moves on', async () => {
     const workflow = await makeWorkflow();
     const session = fakeSession('worker');
     const run = await startRun(workflow.id, session.id);

@@ -63,7 +63,7 @@ const moved = (run: Run, report: Parameters<typeof stepRun>[2], when = minutes(1
 const view = (extra: Partial<ListView> = {}): ListView => ({ ...DEFAULT_VIEW, filters: [], ...extra });
 
 describe('the picture of a run', () => {
-  it('has a segment per element, the current one named and numbered, and a position in words', () => {
+  it('has a segment per step, the current one named and numbered, and a position in words', () => {
     const { app, sessions, workflow } = world(1);
     const run = moved(runFor(workflow, sessions[0]!.id), { type: 'done', elementId: 'plan' });
     const picture = pictureOfLive({ ...app, runs: [run] }, run, 300)!;
@@ -72,7 +72,7 @@ describe('the picture of a run', () => {
     expect(picture).toMatchObject({ workflowName: 'Three steps', total: 3, position: 'Build · 2 of 3', quiet: false });
   });
 
-  it('says the status when there is no current element, and works from the names an archived run carries', () => {
+  it('says the status when there is no current step, and works from the names an archived run carries', () => {
     const { workflow } = world(0);
     const queued = runFor(workflow, null);
     const names = { workflowName: 'Three steps', elements: version.elements.map((e) => ({ id: e.id, name: e.name })) };
@@ -207,12 +207,12 @@ describe('the registries', () => {
     unregisterRunView('test-timeline');
   });
 
-  it('have the element kind and the run views there are', () => {
+  it('have the step kind and the run views there are', () => {
     expect(elementView('instructions')).toBeDefined();
     expect(runViewList().map((v) => v.id)).toEqual(['pipeline', 'told']);
   });
 
-  it('take a second kind of element and another view of a run, and nothing that asks is changed', () => {
+  it('take a second kind of step and another view of a run, and nothing that asks is changed', () => {
     const Nothing = (): null => null;
     registerElementView({ kind: 'test-approval', Editor: Nothing, Detail: Nothing });
     expect(elementView('test-approval')?.Editor).toBe(Nothing);
@@ -236,17 +236,17 @@ describe('editing a workflow', () => {
     expect(draftProblems(draft, LIMITS)).toEqual([]);
   });
 
-  it('adds an element with an ID of its own that renaming does not change', () => {
+  it('adds a step with an ID of its own that renaming does not change', () => {
     const added = addElement(addElement(draft));
-    expect(added.elements.map((e) => e.id)).toEqual(['plan', 'build', 'check', 'new-element', 'new-element-2']);
-    const renamed = changeElement(added, 'new-element', { ...added.elements[3]!, name: 'Tidy up', instructions: 'Remove what is left over.' });
-    expect(renamed.elements[3]).toMatchObject({ id: 'new-element', name: 'Tidy up' });
+    expect(added.elements.map((e) => e.id)).toEqual(['plan', 'build', 'check', 'new-step', 'new-step-2']);
+    const renamed = changeElement(added, 'new-step', { ...added.elements[3]!, name: 'Tidy up', instructions: 'Remove what is left over.' });
+    expect(renamed.elements[3]).toMatchObject({ id: 'new-step', name: 'Tidy up' });
     expect(sameDraft(renamed, draft)).toBe(false);
     // The empty one cannot be saved, and the problem says which.
-    expect(draftProblems(renamed, LIMITS)).toEqual(['"New element" has no instructions.']);
+    expect(draftProblems(renamed, LIMITS)).toEqual(['"New step" has no instructions.']);
   });
 
-  it('reorders by moving one element to where it was dropped, and removes', () => {
+  it('reorders by moving one step to where it was dropped, and removes', () => {
     const order = (d: typeof draft): string => d.elements.map((e) => e.id).join(' ');
     expect(order(moveElement(draft, 0, 2))).toBe('build check plan');
     expect(order(moveElement(draft, 2, 0))).toBe('check plan build');
@@ -256,12 +256,12 @@ describe('editing a workflow', () => {
     expect(order(removeElement(draft, 'build'))).toBe('plan check');
   });
 
-  it('says what is wrong in words: no name, no elements, a bad key, the limits', () => {
+  it('says what is wrong in words: no name, no steps, a bad key, the limits', () => {
     expect(draftProblems({ ...draft, name: ' ' }, LIMITS)).toEqual(['The workflow needs a name.']);
-    expect(draftProblems({ ...draft, elements: [] }, LIMITS)).toEqual(['A workflow needs at least one element.']);
-    expect(draftProblems(changeElement(draft, 'build', { ...draft.elements[1]!, name: '' }), LIMITS)).toEqual(['Element 2 needs a name.']);
+    expect(draftProblems({ ...draft, elements: [] }, LIMITS)).toEqual(['A workflow needs at least one step.']);
+    expect(draftProblems(changeElement(draft, 'build', { ...draft.elements[1]!, name: '' }), LIMITS)).toEqual(['Step 2 needs a name.']);
     expect(draftProblems({ ...draft, inputs: [{ key: 'Bad Key', label: 'x', description: '', required: true }] }, LIMITS)[0]).toContain('Input 1');
-    expect(draftProblems(draft, { maxElements: 2, maxElementChars: 20_000 })).toEqual(['It has 3 elements; at most 2 are allowed.']);
+    expect(draftProblems(draft, { maxElements: 2, maxElementChars: 20_000 })).toEqual(['It has 3 steps; at most 2 are allowed.']);
   });
 
   it('adds inputs: the task first when it is missing, then numbered ones', () => {
@@ -273,7 +273,7 @@ describe('editing a workflow', () => {
     const edited = changeElement(draft, 'build', { ...draft.elements[1]!, instructions: 'Build it, tests first.' });
     const inputs = sampleInputs(edited.inputs, { task: 'the login bug' });
     const preview = previewRun(versionOfDraft(edited), inputs, 'build');
-    expect(preview).toContain('Element 2 of 3: Build');
+    expect(preview).toContain('Step 2 of 3: Build');
     expect(preview).toContain('Build it, tests first.');
     // Saved as the next version, a run on that element prints exactly this.
     const saved = { ...versionOfDraft(edited), number: 2 };
@@ -294,7 +294,7 @@ describe('the review screen takes things to review from sources', () => {
     const element = { ...version.elements[0]!, name: 'Collect my to-dos' };
     expect(itemOfDraft({ ...base, kind: 'element', proposedBy: { kind: 'session', sessionId: sessions[0]!.id }, element }, app)).toMatchObject({
       title: 'Collect my to-dos',
-      what: 'An element',
+      what: 'A step',
       from: 'the agent in “s-0”',
       asked: 'My to-dos.',
       state: 'waiting',
@@ -306,7 +306,7 @@ describe('the review screen takes things to review from sources', () => {
       revision: 2,
     });
     expect(itemOfDraft({ ...base, kind: 'element', status: 'requested', revision: 0, proposedBy: { kind: 'session', sessionId: newId() } }, app)).toMatchObject({
-      title: 'An element, not written yet',
+      title: 'A step, not written yet',
       from: 'the agent in “a terminal that is gone”',
       state: 'requested',
     });
@@ -332,7 +332,7 @@ describe('the review screen takes things to review from sources', () => {
     unregisterOutputView('test-link');
   });
 
-  it('a run with a checklist says, per element, what kind of thing was produced', () => {
+  it('a run with a checklist says, per step, what kind of thing was produced', () => {
     const names = { workflowName: 'To-dos', elements: [{ id: 'plan', name: 'Collect', produces: 'checklist' }, { id: 'build', name: 'Do' }] };
     const { workflow } = world(0);
     expect(pictureOf(runFor(workflow, newId()), names, null, 300).segments.map((s) => s.produces)).toEqual(['checklist', 'note']);

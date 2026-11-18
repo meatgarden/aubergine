@@ -136,7 +136,7 @@ export function Schedules() {
               .filter((item) => item.state !== 'retired')
               .map((item) => (
                 <option key={item.id} value={`e:${item.id}`}>
-                  the element “{item.element.name}”
+                  the step “{item.element.name}”
                 </option>
               ))}
             {[...(workflows ?? [])]

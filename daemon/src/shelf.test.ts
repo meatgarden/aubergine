@@ -133,7 +133,7 @@ async function shelfAndCopy(): Promise<{ shelfId: string; workflowId: string }> 
 }
 
 describe('versions on the shelf', () => {
-  it('a new element is version 1; a change adds a version with who, when and a line on what changed; nothing saved for nothing', async () => {
+  it('a new step is version 1; a change adds a version with who, when and a line on what changed; nothing saved for nothing', async () => {
     const made = await asOwner('POST', '/v1/elements', TIDY);
     expect(made.status).toBe(201);
     expect(made.body).toMatchObject({ version: 1, state: 'current', replacedBy: null });
@@ -206,7 +206,7 @@ describe('a copy in a workflow', () => {
     ]);
   });
 
-  it('takes the newer version when its owner says so: a new version of the workflow, the same element ID, and a run that is going is not touched', async () => {
+  it('takes the newer version when its owner says so: a new version of the workflow, the same step ID, and a run that is going is not touched', async () => {
     const { shelfId, workflowId } = await shelfAndCopy();
     const session = agentSession('at work');
     const run = await asOwner('POST', '/v1/runs', { workflowId, sessionId: session.id, inputs: { task: 'x' }, kickoff: false });
@@ -261,7 +261,7 @@ describe('a copy in a workflow', () => {
     expect((await asOwner('POST', `/v1/workflows/${workflowId}/elements/tidy/shelf-update`, { decision: 'merge' })).status).toBe(400);
   });
 
-  it('is never brought up to date by a token or by a draft, and neither can say where an element came from', async () => {
+  it('is never brought up to date by a token or by a draft, and neither can say where a step came from', async () => {
     const { shelfId, workflowId } = await shelfAndCopy();
     await asOwner('PATCH', `/v1/elements/${shelfId}`, { instructions: 'Remove what is not needed. Then run the tests.' });
     const latest = sourceOf(shelfItem(shelfId));
@@ -294,7 +294,7 @@ describe('a copy in a workflow', () => {
 });
 
 describe('retiring, bringing back and removing', () => {
-  it('a retired element is kept and still works where it is used; it is not run by itself; it may name what to use', async () => {
+  it('a retired step is kept and still works where it is used; it is not run by itself; it may name what to use', async () => {
     const { shelfId, workflowId } = await shelfAndCopy();
     const better = ((await asOwner('POST', '/v1/elements', { ...TIDY, name: 'Tidy up, carefully' })).body as ShelfElement).id;
     const session = agentSession('runner');
@@ -338,7 +338,7 @@ describe('retiring, bringing back and removing', () => {
     expect(shelfItem(shelfId).state).toBe('current');
   });
 
-  it('removing an element that is used leaves the copies as they are, saying their source was removed', async () => {
+  it('removing a step that is used leaves the copies as they are, saying their source was removed', async () => {
     const { shelfId, workflowId } = await shelfAndCopy();
     const old = ((await asOwner('POST', '/v1/elements', { ...TIDY, name: 'Old way' })).body as ShelfElement).id;
     await asOwner('POST', `/v1/elements/${old}/retire`, { replacedBy: shelfId });

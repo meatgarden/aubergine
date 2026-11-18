@@ -166,8 +166,8 @@ export class Schedules {
     const state = stateOf(whole, projectId);
     if (what.kind === 'element') {
       const item = state.shelf.find((e) => e.id === what.elementId);
-      if (!item) return whole.shelf.some((e) => e.id === what.elementId) ? 'The element it runs now belongs to another project.' : 'The element it runs is no longer on the shelf.';
-      if (item.state === 'retired') return `The element it runs, “${item.element.name}”, was retired.`;
+      if (!item) return whole.shelf.some((e) => e.id === what.elementId) ? 'The step it runs now belongs to another project.' : 'The step it runs is no longer on the shelf.';
+      if (item.state === 'retired') return `The step it runs, “${item.element.name}”, was retired.`;
     } else if (!state.workflows.some((w) => w.id === what.workflowId && w.listed)) return whole.workflows.some((w) => w.id === what.workflowId && w.listed) ? 'The workflow it runs now belongs to another project.' : 'The workflow it runs is gone.';
     if (where.kind === 'session' && !state.sessions.some((s) => s.id === where.sessionId)) return whole.sessions.some((s) => s.id === where.sessionId) ? 'The terminal it runs on is in another project now.' : 'The terminal it runs on is gone.';
     if (where.kind === 'new' && !state.canvases.some((c) => c.id === where.canvasId)) return whole.canvases.some((c) => c.id === where.canvasId) ? 'The canvas its new terminal was to start on is in another project now.' : 'The canvas its new terminal was to start on was closed.';
@@ -257,7 +257,7 @@ export class Schedules {
     const state = this.hub.state;
     const now = this.options.clock.now();
     const { what, where } = schedule;
-    const runs = what.kind === 'element' ? (state.shelf.find((e) => e.id === what.elementId)?.element.name ?? 'an element that is gone') : (state.workflows.find((w) => w.id === what.workflowId)?.versions.at(-1)?.name ?? 'a workflow that is gone');
+    const runs = what.kind === 'element' ? (state.shelf.find((e) => e.id === what.elementId)?.element.name ?? 'a step that is gone') : (state.workflows.find((w) => w.id === what.workflowId)?.versions.at(-1)?.name ?? 'a workflow that is gone');
     const place = where.kind === 'session' ? `on “${state.sessions.find((s) => s.id === where.sessionId)?.name ?? 'a terminal that is gone'}”` : `on a new agent terminal on “${state.canvases.find((c) => c.id === where.canvasId)?.name ?? 'a canvas that is gone'}”`;
     const next = schedule.on ? nextTime(schedule, now, this.options.zone) : null;
     return {

@@ -35,7 +35,7 @@ The file is JSON. It begins `{ "aubergine": "project", "format": 1, … }`.
 | `places` | The project's folders, as names. Where each is on a computer is asked there. |
 | `canvases` | Its canvases, in the order of their tabs. At least one. |
 | `workflows` | The workflows it owns and the shared ones its schedules run. Each has a reference (`w1`), `shared` (true if it was shared with every project where the file was written) and `file`: the workflow as a workflow file. |
-| `elements` | The shelf elements it owns and the shared ones its rules and schedules run. Each has a reference (`e1`), `shared` and `element` (see the element reference). |
+| `elements` | The saved steps it owns and the shared ones its rules and schedules run. Each has a reference (`e1`), `shared` and `element` (see the step reference). |
 | `rules` | Its rules. |
 | `schedules` | Its schedules. |
 | `leftOut` | What could not be written into the file, each in a sentence. |
@@ -94,4 +94,4 @@ Fields this version does not know are kept when a file is read in, and written o
 
 ## Bounds
 
-A file is at most 400000 characters. It may hold 50 canvases, 200 nodes and 100 frames on a canvas, 300 terminals in all, 20 places, 50 workflows, 100 elements, 50 rules and 50 schedules.
+A file is at most 400000 characters. It may hold 50 canvases, 200 nodes and 100 frames on a canvas, 300 terminals in all, 20 places, 50 workflows, 100 steps, 50 rules and 50 schedules.
