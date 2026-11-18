@@ -2,7 +2,47 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://meatgarden.github.io/aubergine/</loc>
-    <changefreq>monthly</changefreq>
+    <lastmod>2026-11-18</lastmod>
     <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://meatgarden.github.io/aubergine/install/</loc>
+    <lastmod>2026-11-18</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://meatgarden.github.io/aubergine/guides/</loc>
+    <lastmod>2026-11-18</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://meatgarden.github.io/aubergine/run-multiple-coding-agents/</loc>
+    <lastmod>2026-11-18</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://meatgarden.github.io/aubergine/working-copies/</loc>
+    <lastmod>2026-11-18</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://meatgarden.github.io/aubergine/queue-and-schedules/</loc>
+    <lastmod>2026-11-18</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://meatgarden.github.io/aubergine/security/</loc>
+    <lastmod>2026-11-18</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://meatgarden.github.io/aubergine/faq/</loc>
+    <lastmod>2026-11-18</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://meatgarden.github.io/aubergine/roadmap/</loc>
+    <lastmod>2026-11-18</lastmod>
+    <priority>0.8</priority>
   </url>
 </urlset>

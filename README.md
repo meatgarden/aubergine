@@ -1,21 +1,124 @@
 # Aubergine
 
-## What it is
+**All your terminals on one canvas in your browser.** Run several coding agents side by side and see at a glance which one is waiting for you, which step each is on, and what each has written for you.
 
-Aubergine puts your terminals on a canvas in your browser, side by side, so you can see all of them at once and use any of them. It is made for running several coding agents at a time: it shows which one is waiting for you, which step of its work each is on, and what each has written for you to read. Everything runs on your own computer, and your terminals keep running when you close the browser or restart Aubergine.
-
-## Try it
-
-```sh
-curl -fsSL https://raw.githubusercontent.com/meatgarden/aubergine/main/install.sh | sh
-aubergine start --open
-```
-
-The first line installs it (it needs macOS with tmux, Node.js and pnpm; [Quick start](#quick-start) says what the installer does and does not do). The second starts it and opens your browser, signed in. Then click **Show me around** in the middle of the empty canvas: it makes a canvas named "Demo" with a few stand-in agents on it and walks you round in eight short steps, about five minutes. Nothing in the demo is real, and **Remove the demo** (or `aubergine demo --remove`) takes it away again. From a terminal, `aubergine demo` does the same as the button.
+- Runs on your own computer, and nowhere else.
+- Terminals keep running when you close the browser or restart Aubergine.
+- Works with plain shells and with agents.
 
 <!-- A recording of the tour goes here. -->
 
-**?** in the toolbar lists the eight things the tour shows, one line each.
+---
+
+## Start in two minutes
+
+**1. Install** (macOS with tmux, Node.js and pnpm; `brew install tmux node pnpm` gets all three)
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/meatgarden/aubergine/main/install.sh | sh
+```
+
+**2. Start it and open your browser**
+
+```sh
+aubergine start --open
+```
+
+**3. Click "Show me around"** in the middle of the empty canvas.
+
+It makes a canvas named "Demo" with a few stand-in agents and walks you round in eight short steps, about five minutes. Nothing in it is real, and **Remove the demo** takes it away again.
+
+Something not right? Run `aubergine doctor`, or see [If something goes wrong](#if-something-goes-wrong). The installer is described in full under [Quick start](#quick-start).
+
+---
+
+## Your first real session
+
+| Step | Do this |
+|---|---|
+| 1. Add a terminal | Click **+ New terminal**, or press `N` |
+| 2. Type in it | Click the terminal. One click is enough |
+| 3. Start an agent | Press `C` for a new Claude Code session |
+| 4. Arrange things | Drag a terminal by its title bar. Double-click the title to rename it |
+| 5. See who needs you | The count at the top shows who is waiting. Press `W` to go to the next one |
+| 6. Find anything | Press `⌘K` and type part of a name, folder, note or output |
+
+Already have terminals open elsewhere? Click **Outside** in the toolbar (or press `O`) and bring them in one at a time: [Moving your existing terminals over](#moving-your-existing-terminals-over).
+
+---
+
+## What you can do
+
+| I want to… | How | Read more |
+|---|---|---|
+| Keep pieces of work apart | Canvases as tabs, and projects | [Canvases](#canvases), [Projects](#projects) |
+| Know which agent needs me | The waiting count, `W`, desktop notifications | [Agents: who is waiting for you?](#agents-who-is-waiting-for-you) |
+| See every terminal in one list | The side panel, with filters and tags (`B`) | [Side panel and terminal list](#side-panel-and-terminal-list) |
+| Keep notes on a terminal | The notes beside it, or `aubergine note "…"` | [Notes](#notes) |
+| Put a terminal away without stopping it | **×** on it parks it; **Parked** brings it back | [Parking](#parking-and-shells-that-end) |
+| Search what terminals printed | `⌘K`, then type | [Searching terminal output](#searching-terminal-output) |
+| Give an agent steps to follow | A workflow: an ordered list of elements, with a strip that shows where the agent is | [Workflows](#workflows) |
+| Use workflows others made | Browse the library and install | [The library](#the-library) |
+| Line up work for agents | The queue (`Q`) | [The queue, and "For you"](#the-queue-and-for-you) |
+| Run something every morning | A schedule | [Schedules](#schedules-at-these-times-run-this-there) |
+| Run two agents on one repository | A working copy for each | [Working copies](#working-copies-two-agents-on-one-repository) |
+| Let agents talk to each other | Messages | [Messages between terminals](#messages-between-terminals) |
+| Let a script or agent use Aubergine | An API token, and the MCP server | [API tokens](#api-tokens), [Terminal access](#terminal-access), [MCP server](#tools-for-agents-the-mcp-server) |
+
+---
+
+## Commands you will use most
+
+Every command is listed under [Command line](#command-line). These are the everyday ones.
+
+**Run Aubergine**
+
+| Command | What it does |
+|---|---|
+| `aubergine start --open` | Start the server and open the browser, signed in |
+| `aubergine open` | Open the browser when the server is already running |
+| `aubergine doctor` | Check everything Aubergine needs, one line per check |
+| `aubergine update` | Get the latest version. Restart the server afterwards |
+| `aubergine demo` | Make the demo canvas (`--remove` takes it away) |
+
+**Terminals**
+
+| Command | What it does |
+|---|---|
+| `aubergine list` | Every session with its state, command and folder |
+| `aubergine new [name]` | Start a new terminal on a canvas |
+| `aubergine here` | Put the terminal you are in on the canvas (`--claude` starts Claude Code in it) |
+| `aubergine scan` | List open terminals that are not on the canvas yet |
+| `aubergine attach <name>` | Open a canvas session in this terminal |
+| `aubergine note "…"` | Inside a session: add a line to its notes |
+
+**Workflows**
+
+| Command | What it does |
+|---|---|
+| `aubergine workflow list` | The workflows you have |
+| `aubergine workflow new <name>` | Make one (`--template <template>` starts from a template) |
+| `aubergine workflow run <name>` | Start a run on a session |
+| `aubergine board` | Every run that is going |
+| `aubergine library list` | What the library offers |
+
+**Keys** (while no terminal has the keyboard; **?** shows all of them)
+
+| Key | What it does |
+|---|---|
+| `N` / `C` | New terminal / new Claude Code session |
+| `⌘K` | Palette: go to anything, run any command |
+| `W` | Next session that is waiting for you |
+| `B` | Show or hide the side panel |
+| `Q` | The queue and "For you" |
+| `P` / `U` | Park the selected terminal / bring back the last parked one |
+| `F` / `0` | Zoom to fit / zoom to 100% |
+
+Stop the server with Ctrl+C. Your terminals keep running; `aubergine start` brings them back.
+
+---
+
+## Reference
 
 The rest of this page is the reference: every section below stands on its own.
 
