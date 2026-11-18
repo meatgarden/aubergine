@@ -166,7 +166,7 @@ export class Schedules {
     const state = stateOf(whole, projectId);
     if (what.kind === 'element') {
       const item = state.shelf.find((e) => e.id === what.elementId);
-      if (!item) return whole.shelf.some((e) => e.id === what.elementId) ? 'The step it runs now belongs to another project.' : 'The step it runs is no longer on the shelf.';
+      if (!item) return whole.shelf.some((e) => e.id === what.elementId) ? 'The step it runs now belongs to another project.' : 'The step it runs is no longer among the saved steps.';
       if (item.state === 'retired') return `The step it runs, “${item.element.name}”, was retired.`;
     } else if (!state.workflows.some((w) => w.id === what.workflowId && w.listed)) return whole.workflows.some((w) => w.id === what.workflowId && w.listed) ? 'The workflow it runs now belongs to another project.' : 'The workflow it runs is gone.';
     if (where.kind === 'session' && !state.sessions.some((s) => s.id === where.sessionId)) return whole.sessions.some((s) => s.id === where.sessionId) ? 'The terminal it runs on is in another project now.' : 'The terminal it runs on is gone.';

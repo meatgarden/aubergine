@@ -16,6 +16,10 @@ export interface SectionBadge {
 export interface SectionDrawer {
   /** The heading of the drawer for the thing with this id. */
   useTitle: (id: string) => string;
+  /** Its own head, where the name alone is not enough: what the thing is, the one thing to do with it, the rest behind a menu. The shell adds nothing to it. */
+  Head?: ComponentType<{ id: string; onClose: () => void }>;
+  /** What is given the keyboard when the drawer closes: the row it was opened from. */
+  returnTo?: (id: string) => HTMLElement | null;
   Component: ComponentType<{ id: string; onClose: () => void }>;
 }
 

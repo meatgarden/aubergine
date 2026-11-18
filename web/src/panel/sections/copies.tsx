@@ -25,7 +25,7 @@ function CopiesSection() {
   return (
     <div className="runs-section" data-testid="copies-section">
       {sorted.length === 0 ? (
-        <p className="list-empty">No working copies. A terminal started in one works on its own copy of a repository, on its own branch.</p>
+        <p className="list-empty">Terminals that work in their own copy of a repository will be listed here.</p>
       ) : (
         <ul className="runs-list">
           {sorted.map((environment) => (

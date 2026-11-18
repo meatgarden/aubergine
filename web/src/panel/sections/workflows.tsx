@@ -16,7 +16,7 @@ function WorkflowsSection() {
   return (
     <div className="runs-section" data-testid="runs-section">
       {sorted.length === 0 ? (
-        <p className="list-empty">No runs are going. Put a terminal on a workflow with “Run workflow…”.</p>
+        <p className="list-empty">Workflows that are running will be listed here.</p>
       ) : (
         <ul className="runs-list">
           {sorted.map((run) => {
@@ -37,7 +37,7 @@ function WorkflowsSection() {
                   <span className="list-state" aria-label={STATUS_WORD[run.status]}>
                     {STATUS_MARK[run.status]}
                   </span>
-                  <span className="runs-name">{session?.name ?? 'no session yet'}</span>
+                  <span className="runs-name">{session?.name ?? 'no terminal yet'}</span>
                   <span className="runs-where">
                     {picture.workflowName} · {picture.position}
                     {run.status !== 'running' ? ` · ${STATUS_WORD[run.status]}` : ''}

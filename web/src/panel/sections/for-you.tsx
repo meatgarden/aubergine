@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { forYou } from '@aubergine/shared';
 import { runCommand } from '../../commands';
-import { goTo } from '../../queue/QueueScreen';
+import { ForYouRow } from '../../queue/ForYouRow';
 import { useApp } from '../../store';
 import { useEndedRuns } from '../../workflows/ended-runs';
 import { registerSection } from '../registry';
@@ -20,15 +20,9 @@ function ForYouSection() {
       {items.length === 0 ? (
         <p className="list-empty">Nothing waits for you.</p>
       ) : (
-        <ul className="runs-list">
+        <ul className="foryou-list">
           {items.slice(0, SHOWN).map((item) => (
-            <li key={item.id}>
-              <button type="button" className="foryou-row" title={`${item.title}, from ${item.from}`} onClick={() => goTo(item.act)} data-testid="foryou-section-row" data-kind={item.kind}>
-                <span className="foryou-kind">{item.title}</span>
-                <span className="foryou-says">{item.sentence}</span>
-                <span className="foryou-from">from {item.from}</span>
-              </button>
-            </li>
+            <ForYouRow key={item.id} item={item} testid="foryou-section-row" />
           ))}
         </ul>
       )}

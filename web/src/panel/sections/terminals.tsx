@@ -4,10 +4,7 @@ import { canvasActions } from '../../canvas-actions';
 import { runCommand } from '../../commands';
 import { SCOPE_FILTER, TAG_FILTER, TEXT_FILTER, listFilters } from '../../list-filters';
 import { listModel, listSource } from '../../list-model';
-import { NotePanel } from '../../NotePanel';
-import { RecapBlock, recapTitle } from '../../Recap';
-import { SessionMessages } from '../../Messages';
-import { markNotesSeen } from '../../notes-seen';
+import { recapTitle } from '../../Recap';
 import { shortFolder } from '../../search';
 import { hint } from '../../shortcuts';
 import { useApp } from '../../store';
@@ -30,6 +27,7 @@ import {
   type Sort,
 } from '../../terminal-rows';
 import { registerSection } from '../registry';
+import { Details, DetailsHead } from './terminal-details';
 import { Menu, StateDot } from '../../ui';
 import { RunStrip } from '../../workflows/RunStrip';
 
@@ -133,13 +131,11 @@ function TerminalsSection() {
   /** Runs a command on a row's terminal: it becomes the selected one first. */
   const act = (sessionId: string, command: CommandId): void => {
     setMenu(null);
-    canvasActions.get()?.releaseFocus();
-    useApp.getState().select(sessionId);
-    canvasActions.get()?.reveal(sessionId);
-    runCommand(command);
+    actOnTerminal(sessionId, command);
   };
 
   const openNotes = (sessionId: string): void => {
+    setMenu(null);
     const open = useApp.getState().drawer;
     const same = open?.section === SECTION && open.kind === 'notes' && open.id === sessionId;
     useApp.getState().openDrawer(same ? null : { section: SECTION, kind: 'notes', id: sessionId });
@@ -388,8 +384,36 @@ interface RowProps {
   onTag: (tag: string) => void;
 }
 
+/** What can be done with a terminal from its row and from its details: the same lines in both menus. `command` runs on the terminal once it is the selected one. */
+export interface TerminalAction {
+  key: string;
+  label: string;
+  testid?: string;
+  command?: CommandId;
+}
+export function terminalActions(session: Row['session'], where: { here: boolean; parked: boolean; canMove: boolean; hasNotes: boolean }): TerminalAction[] {
+  const exited = session.state === 'exited';
+  if (!where.here) return [{ key: 'details', label: 'Details' }, { key: 'go', label: where.parked ? 'Restore to this canvas' : 'Go to it', testid: 'row-restore' }];
+  return [
+    { key: 'details', label: 'Details' },
+    { key: 'rename', label: 'Rename', command: 'terminal.rename' },
+    { key: 'tags', label: 'Tags…', command: 'terminal.tags' },
+    ...(exited ? [] : [{ key: 'desktop', label: 'Open on desktop', testid: 'row-open-desktop', command: 'terminal.openOnDesktop' as const }]),
+    ...(where.canMove ? [{ key: 'move', label: 'Move to canvas…', command: 'terminal.moveToCanvas' as const }] : []),
+    { key: 'park', label: exited ? 'Remove' : 'Park', command: 'terminal.park' },
+  ];
+}
+
+/** Runs a command on a terminal: it becomes the selected one first, and is brought into view. */
+export function actOnTerminal(sessionId: string, command: CommandId): void {
+  canvasActions.get()?.releaseFocus();
+  useApp.getState().select(sessionId);
+  canvasActions.get()?.reveal(sessionId);
+  runCommand(command);
+}
+
 /** The state of a row in words, where it is not the ordinary one: what the chip on its second line says. */
-function chipOf(row: Row): { text: string; tone: 'attention' | 'ok' | 'danger' } | null {
+export function chipOf(row: Pick<Row, 'session' | 'state'>): { text: string; tone: 'attention' | 'ok' | 'danger' } | null {
   const { session, state } = row;
   if (state === 'waiting') return session.attention.state === 'done' ? { text: 'finished', tone: 'ok' } : { text: 'waiting for you', tone: 'attention' };
   if (state === 'failed') return { text: `exit ${session.status.lastExit}`, tone: 'danger' };
@@ -499,78 +523,23 @@ const RowView = memo(function RowView({ row, style, density, indented, current, 
       </button>
       {menuOpen && (
         <div className="list-menu" role="menu" aria-label={`Actions for ${session.name}`} onClick={(event) => event.stopPropagation()}>
-          {!here && (
-            <button type="button" role="menuitem" className="list-restore" onClick={() => onGo(session.id)} data-testid="row-restore">
-              {row.parked ? 'Restore to this canvas' : 'Go to it'}
+          {terminalActions(session, { here, parked: row.parked, canMove, hasNotes }).map((action) => (
+            <button
+              key={action.key}
+              type="button"
+              role="menuitem"
+              className={action.key === 'go' ? 'list-restore' : undefined}
+              onClick={() => (action.command ? onAct(session.id, action.command) : action.key === 'details' ? onNotes(session.id) : onGo(session.id))}
+              data-testid={action.testid}
+            >
+              {action.label}
             </button>
-          )}
-          {!here && hasNotes && (
-            <button type="button" role="menuitem" onClick={() => onNotes(session.id)}>
-              Notes
-            </button>
-          )}
-          {here && (
-            <>
-          <button type="button" role="menuitem" onClick={() => onAct(session.id, 'terminal.rename')}>
-                Rename
-              </button>
-              <button type="button" role="menuitem" onClick={() => onAct(session.id, 'notes.toggle')}>
-                Notes
-              </button>
-              <button type="button" role="menuitem" onClick={() => onAct(session.id, 'terminal.tags')}>
-                Tags…
-              </button>
-              {session.state !== 'exited' && (
-                <button type="button" role="menuitem" onClick={() => onAct(session.id, 'terminal.openOnDesktop')} data-testid="row-open-desktop">
-                  Open on desktop
-                </button>
-              )}
-              {canMove && (
-                <button type="button" role="menuitem" onClick={() => onAct(session.id, 'terminal.moveToCanvas')}>
-                  Move to canvas…
-                </button>
-              )}
-              <button type="button" role="menuitem" onClick={() => onAct(session.id, 'terminal.park')}>
-                {session.state === 'exited' ? 'Remove' : 'Park'}
-              </button>
-            </>
-          )}
+          ))}
         </div>
       )}
     </div>
   );
 });
-
-/** The notes of one session beside the list: the same component the node uses. */
-function NotesDrawer({ id, onClose }: { id: string; onClose: () => void }) {
-  const entries = useApp((s) => s.app?.sessions.find((x) => x.id === id)?.noteLog.length ?? 0);
-  const exists = useApp((s) => s.app?.sessions.some((x) => x.id === id) ?? false);
-  useEffect(() => markNotesSeen(id, entries), [id, entries]);
-  useEffect(() => {
-    if (!exists) onClose();
-  }, [exists, onClose]);
-  const isAgent = useApp((s) => s.app?.sessions.find((x) => x.id === id)?.agent != null);
-  if (!exists) return null;
-  return (
-    <>
-      {isAgent && (
-        <div className="drawer-section" data-testid="drawer-switched-on">
-          <button type="button" className="quiet" onClick={() => useApp.getState().openHistory({ folder: useApp.getState().app?.sessions.find((x) => x.id === id)?.cwd ?? null, query: '' })} data-testid="drawer-history">
-            Past conversations in this folder…
-          </button>
-          <button type="button" className="quiet" onClick={() => useApp.getState().showInventory(id)}>
-            ⚙ How this agent is set up…
-          </button>
-        </div>
-      )}
-      <div className="drawer-section">
-        <RecapBlock sessionId={id} />
-      </div>
-      <SessionMessages sessionId={id} />
-      <NotePanel sessionId={id} onClose={onClose} embedded />
-    </>
-  );
-}
 
 registerSection({
   id: SECTION,
@@ -585,8 +554,11 @@ registerSection({
   Component: TerminalsSection,
   drawers: {
     notes: {
-      useTitle: (id) => useApp((s) => s.app?.sessions.find((x) => x.id === id)?.name ?? 'Notes'),
-      Component: NotesDrawer,
+      useTitle: (id) => useApp((s) => s.app?.sessions.find((x) => x.id === id)?.name ?? 'Details'),
+      Head: DetailsHead,
+      Component: Details,
+      // Back to the row it was opened from: its menu button, which is the control of the row.
+      returnTo: (id) => document.querySelector<HTMLElement>(`[data-testid="list-row"][data-session="${id}"] [data-testid="row-more"]`) ?? document.querySelector<HTMLElement>('.list-rows'),
     },
   },
 });

@@ -180,7 +180,7 @@ describe('the queue', () => {
     await finish(one);
     await until(() => taskNow(first.id).state === 'done');
     // It is on the owner's list to look at, and the third did not start by itself.
-    expect((await forYouNow()).items.filter((item) => item.taskId === first.id).map((item) => [item.kind, item.sentence])).toEqual([['task-done', 'The task “Fix the retry” is done. Look at what was made.']]);
+    expect((await forYouNow()).items.filter((item) => item.taskId === first.id).map((item) => [item.kind, item.sentence])).toEqual([['task-done', 'The task “Fix the retry” is done.']]);
     await new Promise((resolve) => setTimeout(resolve, 150));
     expect(taskNow(third.id).state).toBe('queued');
     expect(typed.length).toBe(2);
@@ -244,7 +244,7 @@ describe('proposals', () => {
     expect(proposed.status, JSON.stringify(proposed.body)).toBe(201);
     expect(proposed.body).toMatchObject({ state: 'proposed', addedBy: { kind: 'agent', name: 'worker', sessionId: worker.id }, source: { kind: 'api' } });
     // It is on the owner's list, and nothing started.
-    expect((await forYouNow()).items.filter((item) => item.kind === 'proposal').map((item) => [item.sentence, item.from])).toEqual([['Proposed for the queue: “Add a test for the retry”.', 'the agent in “worker”, through the API']]);
+    expect((await forYouNow()).items.filter((item) => item.kind === 'proposal').map((item) => [item.sentence, item.from])).toEqual([['Proposed for the queue: Add a test for the retry', 'the agent in “worker”, through the API']]);
     expect((await startNext()).body).toEqual({ started: [], says: 'No task waits to be started.' });
     await asOwner('PUT', '/v1/queue', { automatic: true });
     await new Promise((resolve) => setTimeout(resolve, 150));
@@ -563,9 +563,10 @@ describe('the owner\'s list', () => {
     expect(list.items.map((item) => item.kind)).toEqual(['approval', 'blocked', 'question', 'proposal', 'ask', 'task-failed', 'task-done', 'draft', 'checklist', 'finished', 'finished', 'copy']);
     const of = (kind: string) => list.items.find((item) => item.kind === kind)!;
     expect(of('approval')).toMatchObject({ from: 'approves', waits: true, written: false, act: expect.stringMatching(/^run:/) });
-    expect(of('blocked').sentence).toBe('“blocked” is blocked: No access.');
-    expect(of('question')).toMatchObject({ sentence: '“asks” waits for you: May I delete the old logs?', act: `session:${asks.id}` });
-    expect(of('checklist')).toMatchObject({ sentence: 'A list was handed in by “Do” of “Careful”: 0 of 2 ticked.', from: 'approves', elementId: 'do' });
+    expect(of('blocked').sentence).toBe('blocked: No access.');
+    // The sentence stands by itself; the row has who and what apart, and the one thing to do with it from its kind.
+    expect(of('question')).toMatchObject({ sentence: 'asks: May I delete the old logs?', who: 'asks', what: 'May I delete the old logs?', action: 'Go to terminal', act: `session:${asks.id}` });
+    expect(of('checklist')).toMatchObject({ sentence: 'approves handed in a list (Do, Careful): 2 of 2 left to tick.', who: 'approves', what: 'Careful, Do: 2 of 2 left to tick', action: 'Open list', from: 'approves', elementId: 'do' });
     expect(of('copy').sentence).toContain('The terminal of “gone” is gone');
     expect(of('ask')).toMatchObject({ written: true, sentence: 'Renew the certificate' });
     // Only what was written is ticked off; everything else goes when the thing is done.

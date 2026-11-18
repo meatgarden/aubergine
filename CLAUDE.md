@@ -331,6 +331,17 @@ These are the only abstractions in the code base. Each has exactly one implement
 - **A kind of the owner's list has a short title and a tone**, registered with it; the row draws them and compares no kind to a name.
 - **A browser test that reads a terminal's folder starts the terminal in a temporary folder.**
 
+- **The details of a thing answer in order:** what it is and the one thing to do with it; what it asks of the owner, in its own words, with how to answer; what is known about it; then its parts as tabs. One text box is in view at a time. The drawer is a column beside the side panel, under the bar of tabs: it narrows the canvas and lies over nothing.
+- **What is known about a terminal as facts is one function**, `recapFacts`, beside `recapOf`. No whole path is in a value: `shortFolder` and `shortCommand` (in `shared/`) cut them, and the whole is a tooltip.
+- **A row of what waits is one component**, `ForYouRow`, wherever the list is drawn. An item has `who`, `what` and `action`; a kind registers its action as it registers its tone and title. The row and its button do the same thing. A kind whose row has buttons of its own registers no action and is not pressed.
+- **The count beside For you is the length of the owner's list** over every project, from `forYou`. Nothing is added to it that is not a row.
+- **What waits to be read is said by `toReadWords`**, which names each thing as what it is.
+- **Nothing here yet is one sentence of what will be here and one button that makes the first.** A label is a noun; a button is a verb and has no plus.
+- **A person reads "terminal".** "Session" is a name: of a command's argument, a field, a setting.
+- **A task is an agent's; a to-do is the owner's. A draft is written; a task is proposed. A step hands in a report; a terminal has a note.**
+- **On a page the keys of the places still work**; no other canvas key does.
+- **A terminal's note is a Summary and a Log**, in one component beside the terminal and in its details. The words pinned and Markdown are not said.
+
 ### Canvas behaviour
 
 - A terminal takes input at any zoom at which it is drawn live, and only while it has focus. One click focuses it and moves nothing; only a node too small to read (below `READABLE_ZOOM`) zooms in first. An unfocused terminal is covered by a shield: the first click focuses it.

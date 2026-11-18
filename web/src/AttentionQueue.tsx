@@ -29,7 +29,7 @@ export function useWaitingWords(): string {
 export function NotifySwitch() {
   const [notify, setNotify] = useState(notificationsWanted);
   return (
-    <label className="ui-check" title={notify ? 'Desktop notifications are on.' : 'Notify me on the desktop when a session starts waiting'}>
+    <label className="ui-check" title={notify ? 'Desktop notifications are on.' : 'Notify me on the desktop when a terminal starts waiting'}>
       <input type="checkbox" checked={notify} onChange={() => void setNotificationsWanted(!notify).then(setNotify)} data-testid="notify-switch" />
       <span>Notify me on the desktop when a terminal starts waiting</span>
     </label>

@@ -108,6 +108,9 @@ export function hint(id: CommandId, text?: string): string {
   return `${text ?? commandById(id).title}${keys.length > 0 ? ` (${keys.join(' or ')})` : ''}`;
 }
 
+/** The commands that lead to a place of the app: the canvas and the four pages. */
+const PLACE_COMMANDS: readonly CommandId[] = ['canvas.show', 'queue.open', 'board.open', 'workflows.open', 'library.open'];
+
 /**
  * Handles a key press for the whole page. Returns true when it was a shortcut
  * and has been dealt with.
@@ -122,7 +125,9 @@ export function handleKey(event: KeyboardEvent): boolean {
   if (!binding) return false;
   // With the palette open, plain keys are typing even if the field has lost the keyboard.
   if (state.picker && binding.layer === 'canvas') return false;
-  if (binding.layer === 'canvas' && belongsToControl(event.target, event.key)) return false;
+  // On a page the keys that lead to another place still lead there: from the Queue, the Board's key goes to the Board.
+  const betweenPlaces = PLACE_COMMANDS.includes(binding.command) && event.target instanceof Element && event.target.closest('.ui-page') !== null && event.key !== 'Enter' && event.key !== ' ' && event.key !== 'Tab';
+  if (binding.layer === 'canvas' && !betweenPlaces && belongsToControl(event.target, event.key)) return false;
   // A terminal has just been given the keyboard, or is about to be, and the view may still be
   // on its way there: what is typed in that moment is meant for the terminal, not the canvas.
   const settling = Date.now() < state.settleUntil;

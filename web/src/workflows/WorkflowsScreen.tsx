@@ -3,7 +3,8 @@ import { latestVersion, needWords, usesOf, type Workflow, type WorkflowTemplate 
 import { runCommand } from '../commands';
 import { api } from '../api';
 import { useApp } from '../store';
-import { Banner, HowThisWorks, MenuButton, MenuItem, Page, Tabs } from '../ui';
+import { toReadWords } from '../review/to-read';
+import { Banner, EmptyState, HowThisWorks, MenuButton, MenuItem, Page, Tabs } from '../ui';
 
 /**
  * The workflows there are: make one from a template, change, duplicate,
@@ -197,7 +198,7 @@ export function WorkflowsScreen() {
         {error && <p className="dialog-error">{error}</p>}
         {(drafts ?? []).length > 0 && waiting > 0 && (
           <Banner action="Review" onAction={() => runCommand('drafts.review')} actionTestid="open-review">
-            {waiting} written by an agent or a program {waiting === 1 ? 'waits' : 'wait'} to be read before {waiting === 1 ? 'it' : 'they'} can be used.
+            {toReadWords({ agentDrafts: (drafts ?? []).filter((d) => d.status === 'waiting' && d.sessionId !== null).length, programDrafts: (drafts ?? []).filter((d) => d.status === 'waiting' && d.sessionId === null).length, installs: 0, files: 0 })}
             {(drafts ?? []).length > waiting ? ` ${(drafts ?? []).length - waiting} more ${(drafts ?? []).length - waiting === 1 ? 'is' : 'are'} with an agent.` : ''}
           </Banner>
         )}
@@ -290,7 +291,15 @@ export function WorkflowsScreen() {
         {part === 'steps' && (
           <section data-testid="steps-part">
             {current.length === 0 && retired.length === 0 ? (
-              <p className="ui-empty">Steps kept for reuse: put one into a workflow from its editor, or run one by itself. None yet.</p>
+              <EmptyState
+                action={
+                  <button type="button" onClick={() => useApp.getState().editElement('new')} data-testid="steps-empty-new">
+                    New step
+                  </button>
+                }
+              >
+                Steps you save for reuse will be listed here.
+              </EmptyState>
             ) : (
               stepCards(current)
             )}

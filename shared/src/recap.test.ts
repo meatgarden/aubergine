@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { Session } from './entities';
-import { RECAP_MAX, RECAP_WANTED, RecapText, ago, recapLines, recapOf, type RecapRun } from './recap';
+import { RECAP_MAX, RECAP_WANTED, RecapText, ago, recapFacts, recapLines, recapOf, type RecapRun } from './recap';
 import { BRIEF_LINE, KICKOFF_LINE, RECAP_LINE, type Run } from './workflows';
 
 const NOW = new Date('2026-03-10T12:00:00.000Z');
@@ -146,5 +146,18 @@ describe('how long ago', () => {
     expect(ago('2026-03-10T10:00:00.000Z', NOW)).toBe('2 hours');
     expect(ago('2026-03-05T12:00:00.000Z', NOW)).toBe('5 days');
     expect(ago('nonsense', NOW)).toBe('a moment');
+  });
+});
+
+describe('the recap as facts', () => {
+  it('names where, since when and the run, with no whole path in a value', () => {
+    const facts = recapFacts(recapOf(session({ cwd: '/work/made up/garden/api', tags: ['api'], status: { ...session().status, state: 'busy', commandLine: "sh '/work/made up/garden/api/run-all.sh' --fast" } }), { live: null, ended: null }), new Date('2026-03-10T12:00:00.000Z'));
+    const of = (key: string) => facts.find((fact) => fact.key === key);
+    expect(of('where')).toMatchObject({ label: 'Where', value: '…/garden/api', title: '/work/made up/garden/api' });
+    expect(of('running')).toMatchObject({ value: 'sh run-all.sh' });
+    expect(of('running')?.title).toContain('/work/made up/garden/api/run-all.sh');
+    expect(of('tags')?.value).toBe('#api');
+    expect(of('started')?.value).toMatch(/ ago$/);
+    for (const fact of facts) expect(fact.value, fact.key).not.toMatch(/(^|\s|')\/\w+\/\w+\/\w+/);
   });
 });

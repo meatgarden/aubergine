@@ -525,12 +525,12 @@ export async function runWorkflowCommand(command: WorkflowCommand, deps: Workflo
         // Said first: where it is used. The copies stay, and say from then on that their source was removed.
         const { uses } = await owner((client) => client.getElementUsage({ elementId: item.id }));
         if (uses.length > 0) print(showControl(`"${item.element.name}" is used in ${uses.length === 1 ? 'a workflow' : `${uses.length} workflows`}: ${uses.map((use) => use.workflowName).join(', ')}. The copies there stay as they are and will say that their source was removed.`));
-        if (!command.yes && !/^y(es)?$/i.test((await deps.ask(`Take "${item.element.name}" off the shelf? Copies of it in workflows stay. [y/N] `)).trim())) {
+        if (!command.yes && !/^y(es)?$/i.test((await deps.ask(`Take "${item.element.name}" from your saved steps? Copies of it in workflows stay. [y/N] `)).trim())) {
           print('Kept.');
           return 0;
         }
         await owner((client) => client.removeElement({ elementId: item.id }));
-        print(`Took "${item.element.name}" off the shelf.`);
+        print(`Removed "${item.element.name}" from your saved steps.`);
         return 0;
       }
       const inside = deps.env[SESSION_ENV.sessionId];

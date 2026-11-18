@@ -75,7 +75,7 @@ export function AgentToolsDialog() {
     const made = await canvasActions.get()?.addTerminal('claude-code', undefined, tools, { ...(folder ? { cwd: folder } : {}), ...(where.kind ? { environment: where.kind } : {}), desktop });
     if (made) choose(false);
     else {
-      setError('The session could not be started.');
+      setError('The terminal could not be started.');
       setBusy(false);
     }
   };
@@ -97,18 +97,18 @@ export function AgentToolsDialog() {
           <legend>Aubergine tools for this agent</legend>
           <label>
             <input type="radio" name="agent-tools" checked={kind === 'none'} onChange={() => setKind('none')} data-testid="agent-tools-none" autoFocus />
-            <span>None. It has the <code>aubergine</code> command in its terminal, as every session does.</span>
+            <span>None. It has the <code>aubergine</code> command in its terminal, as every terminal does.</span>
           </label>
           <label>
             <input type="radio" name="agent-tools" checked={kind === 'own'} onChange={() => setKind('own')} data-testid="agent-tools-own" />
             <span>
-              Its own work only: its workflow, its notes, saying when it needs you, and handing in drafts for you to review. It uses the session’s own credential; no token is
-              made, and it reaches no other session.
+              Its own work only: its workflow, its notes, saying when it needs you, and handing in drafts for you to review. It uses the terminal’s own credential; no token is
+              made, and it reaches no other terminal.
             </span>
           </label>
           <label>
             <input type="radio" name="agent-tools" checked={kind === 'token'} onChange={() => setKind('token')} data-testid="agent-tools-more" />
-            <span>More… An API token is made for this one session, with what you choose here.</span>
+            <span>More… An API token is made for this one terminal, with what you choose here.</span>
           </label>
         </fieldset>
 
@@ -146,8 +146,8 @@ export function AgentToolsDialog() {
               </fieldset>
             )}
             <p className="sheet-note">
-              The token is named after the session and listed with your other tokens, where you can revoke it. It is revoked when the session is ended for good. What it writes
-              about workflows comes to you as drafts to review. Terminals marked “people only” stay closed to it whatever you choose here, and other Claude Code sessions are
+              The token is named after the terminal and listed with your other tokens, where you can revoke it. It is revoked when the terminal is ended for good. What it writes
+              about workflows comes to you as drafts to review. Terminals marked “people only” stay closed to it whatever you choose here, and other Claude Code terminals are
               marked so from the start unless you changed that in the settings. Its secret is kept in one file in Aubergine’s data folder, readable by you only.
             </p>
           </>

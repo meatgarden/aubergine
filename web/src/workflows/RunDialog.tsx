@@ -146,7 +146,7 @@ export function RunDialog() {
       }}
     >
       <div className="dialog sheet run-dialog" role="dialog" aria-label="Run a workflow" data-testid="run-dialog">
-        <ScreenHead title={<>{alone ? `Run “${shelfItem?.element.name ?? 'a step'}” by itself${onNewAgent ? ' on a new Claude Code session' : ` on “${session?.name ?? 'this terminal'}”`}` : onNewAgent ? 'New Claude Code session on a workflow' : `Run a workflow on “${session?.name ?? 'this terminal'}”`}</>} onClose={close} />
+        <ScreenHead title={<>{alone ? `Run “${shelfItem?.element.name ?? 'a step'}” by itself${onNewAgent ? ' on a new Claude Code terminal' : ` on “${session?.name ?? 'this terminal'}”`}` : onNewAgent ? 'New Claude Code session on a workflow' : `Run a workflow on “${session?.name ?? 'this terminal'}”`}</>} onClose={close} />
 
         {!alone && list.length === 0 && offered.length === 0 ? (
           <>
@@ -269,7 +269,7 @@ export function RunDialog() {
                   Cancel
                 </button>
                 <button type="button" className="primary" onClick={() => void start()} disabled={busy || problems.length > 0 || blockedByRun} data-testid="run-start">
-                  {onNewAgent ? 'Start the session and the run' : 'Start'}
+                  {onNewAgent ? 'Start the terminal and the run' : 'Start'}
                 </button>
               </div>
             </>

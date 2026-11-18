@@ -75,7 +75,8 @@ export interface AppStore {
   /** The terminal list: its filters, grouping, order and density. Remembered by this browser. */
   listView: ListView;
   /** What is open beside the side panel: a section's drawer for one of its rows. */
-  drawer: { section: string; kind: string; id: string } | null;
+  /** `part` names the part of the drawer that was asked for, where it has parts: a terminal's messages, say. */
+  drawer: { section: string; kind: string; id: string; part?: string } | null;
   /** Sessions parked from this page, oldest first, so the last one can be brought back. */
   parkedHere: string[];
   /** A session the canvas was asked to bring into view. The counter makes repeats count. */
@@ -145,7 +146,7 @@ export interface AppStore {
   setSide: (change: Partial<PanelPrefs>) => void;
   setListView: (change: Partial<ListView>) => void;
   /** Opens a section's drawer for a row; `null` closes whatever is open. */
-  openDrawer: (drawer: { section: string; kind: string; id: string } | null) => void;
+  openDrawer: (drawer: { section: string; kind: string; id: string; part?: string } | null) => void;
   showSession: (sessionId: string) => void;
   /** A terminal has the keyboard: nothing is on its way any more. */
   settled: () => void;

@@ -101,7 +101,7 @@ registerTourStep({
   id: 'your-own',
   order: 80,
   title: 'Now bring in your own',
-  text: 'Type “aubergine here” in any terminal you already have open, or use “+ New terminal”. Then remove the demo.',
+  text: 'Type “aubergine here” in any terminal you already have open, or use “New terminal”. Then remove the demo.',
   reminder: '“aubergine here” brings a terminal in. A project can be sent as a file: Projects, then Export.',
   target: () => find('[data-testid="toolbar-new-terminal"]'),
 });

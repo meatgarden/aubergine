@@ -18,7 +18,7 @@ export const RunStrip = memo(function RunStrip({ sessionId, variant }: { session
     `${picture.workflowName}: ${picture.position}`,
     run.status !== 'running' ? STATUS_WORD[run.status] : null,
     run.status === 'blocked' && run.blockedReason ? run.blockedReason : null,
-    picture.quiet ? 'quiet: the terminal has printed for a while with no report, so this may be behind' : null,
+    picture.quiet ? 'quiet for a while: the terminal has printed without saying a step is done, so the step shown may be out of date' : null,
     'Click for the whole run',
   ]
     .filter(Boolean)
@@ -31,7 +31,7 @@ export const RunStrip = memo(function RunStrip({ sessionId, variant }: { session
 
   if (variant === 'node') {
     // On a terminal the run is said in a line of its own, in words: which workflow, which step of how many, and what it waits for.
-    const says = run.status === 'awaiting' ? 'Waiting for you to approve' : run.status === 'blocked' ? `Blocked${run.blockedReason ? `: ${run.blockedReason}` : ''}` : run.status === 'running' ? (picture.quiet ? 'No report for a while, so this may be behind' : null) : STATUS_WORD[run.status];
+    const says = run.status === 'awaiting' ? 'Waiting for you to approve' : run.status === 'blocked' ? `Blocked${run.blockedReason ? `: ${run.blockedReason}` : ''}` : run.status === 'running' ? (picture.quiet ? 'Quiet for a while: the step shown may be out of date' : null) : STATUS_WORD[run.status];
     return (
       <button type="button" className={`run-banner nodrag status-${run.status}${picture.quiet ? ' is-quiet' : ''}`} title={title} data-testid="run-strip" data-status={run.status} data-element={picture.current?.id ?? ''} data-quiet={picture.quiet ? 'true' : undefined} onClick={open}>
         <span className="run-banner-name" data-testid="run-workflow-name">

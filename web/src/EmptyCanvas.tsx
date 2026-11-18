@@ -34,7 +34,7 @@ export function EmptyCanvas() {
           {demo ? 'Go to the demo' : 'Show me around'}
         </button>
         <button type="button" className="quiet" onClick={() => runCommand('terminal.new')} data-testid="empty-new-terminal">
-          + New terminal
+          New terminal
         </button>
         <button type="button" className="quiet" aria-expanded={bringing} onClick={() => setBringing(!bringing)} data-testid="empty-bring">
           Bring in a terminal I already have open

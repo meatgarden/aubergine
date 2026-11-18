@@ -67,7 +67,7 @@ export function TokenScreen() {
   const list = [...(tokens ?? [])].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
   const sessionName = (sessionId: string): string => {
     const session = allSessions?.find((s) => s.id === sessionId);
-    return session ? `“${session.name}”` : 'a session that has ended';
+    return session ? `“${session.name}”` : 'a terminal that has ended';
   };
 
   const create = async (): Promise<void> => {
@@ -186,7 +186,7 @@ export function TokenScreen() {
             <fieldset className="token-scopes token-reach" data-testid="token-reach">
               <legend>Which terminals it may reach</legend>
               <p className="sheet-note">
-                A token with a terminal scope must be told. Terminals marked “people only” are closed to every token, whatever is chosen here; new Claude Code sessions are
+                A token with a terminal scope must be told. Terminals marked “people only” are closed to every token, whatever is chosen here; new Claude Code terminals are
                 marked so from the start unless you changed that in the settings.
               </p>
               <label>
@@ -269,7 +269,7 @@ export function TokenScreen() {
                     )}
                     {token.sessionId && (
                       <div className="sheet-note" data-testid="token-for-session">
-                        Made for the agent in {sessionName(token.sessionId)}. Revoked when that session is ended for good.
+                        Made for the agent in {sessionName(token.sessionId)}. Revoked when that terminal is ended for good.
                       </div>
                     )}
                   </td>

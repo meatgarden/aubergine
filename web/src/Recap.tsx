@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ago, recapLines, recapOf, recordOfRun, showControl, type AppState, type Recap, type RecapRun, type RunRecord, untoldWords } from '@aubergine/shared';
+import { ago, recapFacts, recapLines, recapOf, recordOfRun, showControl, type AppState, type Recap, type RecapRun, type RunRecord, untoldWords } from '@aubergine/shared';
 import { api } from './api';
 import { useApp } from './store';
 import { useEndedRuns } from './workflows/ended-runs';
@@ -31,7 +31,7 @@ export function recapTitle(sessionId: string): string {
   return [...recapLines(recap, now), ...written].join('\n');
 }
 
-export function RecapBlock({ sessionId, canAsk = true }: { sessionId: string; canAsk?: boolean }) {
+export function RecapBlock({ sessionId, canAsk = true, omit = [] }: { sessionId: string; canAsk?: boolean; /** Facts that are not said here because they are in view beside this: the last log entry, where the log itself is under it. */ omit?: readonly string[] }) {
   const ended = useEndedRuns((e) => e.items);
   // Worked out again when the session itself changes, not when anything else does.
   const session = useApp((s) => s.app?.sessions.find((x) => x.id === sessionId));
@@ -58,19 +58,22 @@ export function RecapBlock({ sessionId, canAsk = true }: { sessionId: string; ca
   };
 
   return (
-    <section className="recap" aria-label="Recap" data-testid="recap">
-      <h3>
-        Recap <span className="recap-source">from what Aubergine knows</span>
-      </h3>
-      <ul className="recap-lines" data-testid="recap-lines">
-        {recapLines(recap, now).map((line) => (
-          <li key={line}>{line}</li>
+    <section className="recap" aria-label="What is known about this terminal" data-testid="recap">
+      {/* What is known, as facts: a label and what it is. A folder and a command are short here, whole in their tooltips. */}
+      <dl className="ui-facts" data-testid="recap-lines">
+        {recapFacts(recap, now)
+          .filter((fact) => !omit.includes(fact.key))
+          .map((fact) => (
+          <div key={fact.key} data-fact={fact.key}>
+            <dt>{fact.label}</dt>
+            <dd title={fact.title}>{fact.value}</dd>
+          </div>
         ))}
-      </ul>
+      </dl>
       {recap.written && (
         <div className="recap-written" data-testid="recap-written" data-stale={recap.written.stale ? 'true' : undefined}>
           <h3>
-            What its agent wrote <span className="recap-source">{ago(recap.written.at, now)} ago</span>
+            Recap from its agent <span className="recap-source">{ago(recap.written.at, now)} ago</span>
             {recap.written.stale && (
               <span className="recap-stale" title="The terminal has printed since this was written" data-testid="recap-stale">
                 may be out of date
@@ -84,7 +87,7 @@ export function RecapBlock({ sessionId, canAsk = true }: { sessionId: string; ca
       {canAsk && recap.agent && recap.state !== 'exited' && (
         <div className="recap-ask">
           <button type="button" className="quiet" onClick={ask} title="Types one fixed sentence into the terminal, asking its agent to write a recap. Nothing of yours is in the sentence." data-testid="recap-ask">
-            {recap.written ? 'Ask for a new recap' : 'Ask for a recap'}
+            {recap.written ? 'Ask its agent for a new recap' : 'Ask its agent for a recap'}
           </button>
           {asking === 'asked' && <span className="sheet-note" data-testid="recap-asked">Asked. It appears here when the agent hands it in.</span>}
           {asking === 'failed' && (

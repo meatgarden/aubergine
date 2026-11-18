@@ -50,21 +50,7 @@ export function dotTone(session: Session, parked = false): DotTone {
   return state === 'unread' ? 'unread' : 'ordinary';
 }
 
-/**
- * What a terminal runs, short enough to read at a glance: the program and the last part of the first path it was
- * given ("sh demo-agent.sh"), never a quoted absolute path. The whole line is for a tooltip.
- */
-export function shortCommand(line: string | null | undefined): string {
-  if (!line) return '';
-  // Only the first command of a line that holds several.
-  const words = ((line.trim().split(/\s*(?:;|&&|\|\|?)\s*/)[0] ?? '').match(/'[^']*'|"[^"]*"|\S+/g) ?? []).map((word) => word.replace(/^['"]|['"]$/g, ''));
-  const last = (word: string): string => word.replace(/\/+$/, '').split('/').at(-1) ?? word;
-  const program = last(words[0] ?? '');
-  const first = words.slice(1).find((word) => !word.startsWith('-'));
-  const rest = first === undefined ? '' : first.includes('/') ? last(first) : first;
-  const short = [program, rest].filter(Boolean).join(' ');
-  return short.length > 40 ? `${short.slice(0, 39)}…` : short;
-}
+export { shortCommand } from '@aubergine/shared';
 
 export function rowState(session: Session): RowState {
   if (session.state === 'exited') return 'ended';
@@ -328,7 +314,7 @@ export function stateCounts(rows: readonly Row[]): Record<RowState, number> {
 
 /** Why the list is empty: the filters that are hiding everything, in words. */
 export function describeEmpty(view: ListView, total: number): string {
-  if (total === 0) return 'No terminals yet.';
+  if (total === 0) return 'Terminals you start will be listed here.';
   const chips = filterChips(view).map((chip) => chip.label);
   if (chips.length === 0) return 'No terminals.';
   return `No terminal matches ${chips.join(' + ')}. ${total} ${total === 1 ? 'is' : 'are'} hidden.`;

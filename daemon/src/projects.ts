@@ -260,7 +260,7 @@ registerSharedKind({
 registerSharedKind({
   kind: 'element',
   title: 'Saved steps',
-  says: 'A shared step is on the shelf of every project. A schedule or a rule of another project that runs a step which becomes one project’s own stops, and says so once on your list.',
+  says: 'A shared step is among the saved steps of every project. A schedule or a rule of another project that runs a step which becomes one project’s own stops, and says so once on your list.',
   things: (state) => state.shelf.map((item) => ({ id: item.id, name: item.element.name, projectId: item.projectId })),
   move: (id, projectId, hub) => hub.emit({ type: 'sharing.moved', kind: 'element', id, projectId }),
 });

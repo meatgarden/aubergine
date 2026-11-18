@@ -216,12 +216,12 @@ export function Picker() {
         if (e.target === e.currentTarget) setPicker(false);
       }}
     >
-      <div className="picker" role="dialog" aria-label="Go to a session or canvas, or run a command">
+      <div className="picker" role="dialog" aria-label="Go to a terminal or canvas, or run a command">
         <input
           ref={input}
           className="picker-input"
-          placeholder="Search sessions, canvases and commands…   > commands only   @ past conversations   1–9 [ ] canvases"
-          aria-label="Search sessions, canvases and commands"
+          placeholder="Search terminals, canvases and commands…   > commands only   @ past conversations   1–9 [ ] canvases"
+          aria-label="Search terminals, canvases and commands"
           value={query}
           onChange={(e) => {
             setQuery(e.target.value);

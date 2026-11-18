@@ -99,7 +99,7 @@ export function boardSummary(counts: BoardCounts): string {
     counts.paused > 0 ? `${counts.paused} paused` : '',
     counts.queued > 0 ? `${counts.queued} queued` : '',
   ].filter((part) => part !== '');
-  return parts.length > 0 ? parts.join(', ') : 'No runs are going.';
+  return parts.length > 0 ? parts.join(', ') : 'Nothing is running.';
 }
 
 /** Cards that need someone come first in a column; then the one that has been there longest. */
