@@ -169,7 +169,8 @@ export const WorkflowLabels = z.record(z.string().max(63), z.string().max(256)).
 
 export const Workflow = z.object({
   id: Id,
-  projectId: Id,
+  /** The project it belongs to. Null: shared with every project. */
+  projectId: Id.nullable().default(null),
   /** The name and description of the latest version, here too so that lists need not open versions. */
   name: z.string(),
   description: z.string().default(''),
@@ -379,6 +380,8 @@ export const Run = z.object({
   workflowVersion: z.number().int().min(1),
   /** The session doing the work. None yet for a run that is queued. */
   sessionId: Id.nullable().default(null),
+  /** The project it runs in: its session's. Kept here too, for when the session is gone. Left out in records from before projects. */
+  projectId: Id.optional(),
   inputs: RunInputs,
   status: RunStatus,
   /** The element being worked on; null before the first and after the last. */

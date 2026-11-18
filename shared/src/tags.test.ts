@@ -27,7 +27,7 @@ describe('a session from before times and tags existed', () => {
 describe('events for times and tags', () => {
   const now = new Date('2026-01-01T00:00:00.000Z');
   const initial = createInitialState(now);
-  const session = Session.parse({ id: newId(), projectId: initial.project.id, name: 'api', createdAt: now.toISOString() });
+  const session = Session.parse({ id: newId(), projectId: initial.projects[0]!.id, name: 'api', createdAt: now.toISOString() });
   const state = { ...initial, sessions: [session] };
 
   it('set one time without touching the other', () => {
@@ -43,7 +43,7 @@ describe('events for times and tags', () => {
   });
 
   it('leave other sessions as the very same objects', () => {
-    const other = Session.parse({ id: newId(), projectId: initial.project.id, name: 'web', createdAt: now.toISOString() });
+    const other = Session.parse({ id: newId(), projectId: initial.projects[0]!.id, name: 'web', createdAt: now.toISOString() });
     const two = { ...state, sessions: [session, other] };
     const next = applyEvent(two, { type: 'session.times', sessionId: session.id, lastOutputAt: '2026-01-01T00:02:00.000Z' });
     expect(next.sessions[1]).toBe(other);

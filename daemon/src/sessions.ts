@@ -1,3 +1,4 @@
+import { projectNow } from './project-context';
 import { existsSync, statSync } from 'node:fs';
 import os from 'node:os';
 import {
@@ -40,6 +41,10 @@ import {
   type UpdateFrameRequest,
   type UpdateNodeRequest,
   type UpdateSessionRequest,
+  LOCAL_HOST,
+  isLocalHome,
+  isLocalHost,
+  projectById,
 } from '@aubergine/shared';
 import type { StateHub } from './state-hub';
 import type { HistorySearch, RuntimeSession, SessionRuntime } from './runtime/runtime';
@@ -49,6 +54,9 @@ import { noIntegration, type ShellIntegration, type ShellReport } from './shell/
 const SENTENCES: Record<ToldKind, string> = { kickoff: KICKOFF_LINE, brief: BRIEF_LINE, recap: RECAP_LINE, inbox: INBOX_LINE };
 /** How long a sentence that could not be typed is still worth typing. */
 const UNTOLD_KEPT_MS = 30 * 60_000;
+
+/** Said for a terminal whose shell does not run on this computer, wherever something would have to touch it. */
+export const NOT_HERE = 'This terminal does not run on this computer: it cannot be read, typed into or started from here.';
 
 export class NotFoundError extends Error {}
 export class ConflictError extends Error {}
@@ -81,7 +89,7 @@ export interface SessionsOptions {
 
 /** Where sessions work, as far as starting one needs to know: something that prepares a place and takes it away again. */
 export interface SessionPlaces {
-  prepare(kind: string, session: { id: string; name: string; folder: string | null }): Promise<{ cwd: string | null }>;
+  prepare(kind: string, session: { id: string; name: string; folder: string | null; projectId: string }): Promise<{ cwd: string | null }>;
   abandon(sessionId: string): Promise<void>;
   adopt(sessionId: string, name: string, cwd: string | null): void;
 }
@@ -161,16 +169,21 @@ export class Sessions {
     if (input.cwd !== undefined && !isFolder(input.cwd)) throw new BadInputError(`Not a folder: ${input.cwd}`);
     // Looked up before anything is started, so that a wrong canvas starts nothing.
     const canvas = this.canvas(input.canvasId ?? null);
+    // A terminal is of its canvas's project. Nothing is started in a project that is archived, or one this server does not keep.
+    const project = projectById(this.hub.state, canvas.projectId);
+    if (!project || project.state !== 'open') throw new ConflictError('This project is archived: nothing is started in it. Reopen it first.');
+    if (!isLocalHome(project)) throw new ConflictError('This project is not kept on this server: a terminal cannot be started for it here.');
 
     const id = newId();
     const startsAgent = input.agent !== undefined && this.options.agentLaunchLine !== undefined;
     const fallback = startsAgent ? this.nextName('Claude Code') : undefined;
     const name = input.name && input.uniqueName ? this.uniqueName(input.name) : (input.name ?? fallback);
     // Where it works. Asked of whatever prepares places, by the name of a kind: nothing here knows one kind from another.
-    let folder = input.cwd ?? null;
+    // Where it names no folder of its own: the project's, when it has one.
+    let folder = input.cwd ?? project.defaultFolder ?? null;
     if (input.environment !== undefined) {
       if (!this.places) throw new ConflictError('This server cannot prepare a place for a session to work in');
-      folder = (await this.places.prepare(input.environment, { id, name: name ?? 'Terminal', folder })).cwd;
+      folder = (await this.places.prepare(input.environment, { id, name: name ?? 'Terminal', folder, projectId: project.id })).cwd;
     }
     let started: RuntimeSession;
     try {
@@ -289,7 +302,10 @@ export class Sessions {
     }
     const from = session.parkedFrom;
     const fromStillThere = from !== null && this.hub.state.canvases.some((c) => c.id === from.canvasId);
-    const canvas = this.canvas(canvasId ?? (fromStillThere ? from.canvasId : null));
+    // A terminal comes back onto a canvas of its own project: the one named, the one it came from, else that project's first.
+    const named = canvasId ?? (fromStillThere ? from.canvasId : null);
+    const canvas = named !== null ? this.canvas(named) : (this.listCanvases().find((c) => c.projectId === session.projectId) ?? this.canvas(null));
+    if (canvas.projectId !== session.projectId) throw new NotFoundError(`No canvas ${canvas.id}`);
     const spot = from
       ? findFreeRect(canvas.layout.nodes, centerOf(from.rect), { width: from.rect.width, height: from.rect.height })
       : null;
@@ -305,6 +321,8 @@ export class Sessions {
   moveToCanvas(sessionId: string, canvasId: string, position?: { x: number; y: number }): { session: Session; node: LayoutNode } {
     const session = this.find(sessionId);
     const target = this.canvas(canvasId);
+    // To another canvas of its own project. A terminal changes project only with its canvas, which the owner moves.
+    if (target.projectId !== session.projectId) throw new NotFoundError(`No canvas ${canvasId}`);
     const place = placeOfSession(this.hub.state, sessionId);
     if (!place) throw new ConflictError('This session is parked; restore it onto the canvas instead');
     if (place.canvas.id === target.id && !position) return { session, node: place.node };
@@ -331,10 +349,14 @@ export class Sessions {
     return this.canvas(canvasId);
   }
 
-  createCanvas(input: { name: string; color?: Canvas['color'] | undefined; labels?: Canvas['labels'] | undefined }): Canvas {
+  /** A new canvas, in the project the request is made in unless another is named. */
+  createCanvas(input: { name: string; color?: Canvas['color'] | undefined; labels?: Canvas['labels'] | undefined }, projectId: string = projectNow(this.hub.state)): Canvas {
+    const project = projectById(this.hub.state, projectId);
+    if (!project) throw new NotFoundError(`No project ${projectId}`);
+    if (project.state !== 'open') throw new ConflictError('This project is archived: nothing is made in it. Reopen it first.');
     const last = this.listCanvases().at(-1);
     const canvas: Canvas = {
-      ...newCanvas(this.hub.state.project.id, input.name, (last?.order ?? 0) + 1),
+      ...newCanvas(projectId, input.name, (last?.order ?? 0) + 1),
       ...(input.color ? { color: input.color } : {}),
       ...(input.labels ? { labels: input.labels } : {}),
     };
@@ -354,13 +376,14 @@ export class Sessions {
    */
   removeCanvas(canvasId: string, choice: { sessions: 'park' } | { sessions: 'move'; to: string } | null): void {
     const canvas = this.canvas(canvasId);
-    if (this.hub.state.canvases.length === 1) throw new ConflictError('The last canvas cannot be closed');
+    // A project keeps at least one canvas, as the server did when it had one project.
+    if (this.hub.state.canvases.filter((c) => c.projectId === canvas.projectId).length === 1) throw new ConflictError('The last canvas cannot be closed');
     if (canvas.layout.nodes.length > 0 && !choice) {
       throw new ConflictError('This canvas still has sessions: say whether to move them to another canvas or park them');
     }
     if (choice?.sessions === 'move') {
       if (choice.to === canvasId) throw new BadInputError('Sessions cannot be moved to the canvas that is being closed');
-      this.canvas(choice.to);
+      if (this.canvas(choice.to).projectId !== canvas.projectId) throw new NotFoundError(`No canvas ${choice.to}`);
     }
     for (const node of canvas.layout.nodes) {
       const session = this.hub.state.sessions.find((s) => s.id === node.sessionId);
@@ -384,8 +407,10 @@ export class Sessions {
       if (!found) throw new NotFoundError(`No canvas ${canvasId}`);
       return found;
     }
+    // Where none is named: of the project the request is made in, the one looked at last, else its first.
+    const mine = canvases.filter((c) => c.projectId === projectNow(this.hub.state));
     const current = this.options.currentCanvas?.() ?? null;
-    const fallback = canvases.find((c) => c.id === current) ?? canvases[0];
+    const fallback = mine.find((c) => c.id === current) ?? mine[0] ?? canvases[0];
     if (!fallback) throw new NotFoundError('There is no canvas');
     return fallback;
   }
@@ -394,6 +419,7 @@ export class Sessions {
   async restart(sessionId: string): Promise<Session> {
     const session = this.find(sessionId);
     if (session.state !== 'exited') throw new ConflictError('This shell is still running');
+    if (!isLocalHost(session)) throw new ConflictError(NOT_HERE);
     if (!(await this.runtime.has(sessionId))) {
       await this.startShell(sessionId, session.cwd);
     }
@@ -651,6 +677,17 @@ export class Sessions {
   }
 
   /**
+   * A session whose shell runs on this computer, for whoever is about to read its terminal, type into it, start
+   * something on it or read the folder it works in. For one that runs elsewhere this says so in a sentence, and
+   * nothing is touched. Today every session runs here.
+   */
+  here(sessionId: string): Session {
+    const session = this.find(sessionId);
+    if (!isLocalHost(session)) throw new ConflictError(NOT_HERE);
+    return session;
+  }
+
+  /**
    * Types one of the fixed sentences into a session's terminal, for the agent there. Only where the agent is
    * seen to have the keyboard; otherwise nothing is typed and the session says why. Nothing a token or a session
    * sent is ever typed here.
@@ -660,7 +697,7 @@ export class Sessions {
     const what = (Object.keys(SENTENCES) as ToldKind[]).find((kind) => SENTENCES[kind] === line);
     // Only the fixed sentences are ever typed for an agent.
     if (what === undefined) throw new Error('Only a fixed sentence may be typed for an agent');
-    if (session.state === 'exited' || !this.isRunning(sessionId)) return false;
+    if (session.state === 'exited' || !isLocalHost(session) || !this.isRunning(sessionId)) return false;
     // Not unless the agent is the program that has the keyboard: anything else would take the sentence as its own input.
     const why = await this.cannotTell(session);
     if (why !== null) {
@@ -787,10 +824,11 @@ export class Sessions {
     canvas: Canvas,
     tags: string[] = [],
   ): { session: Session; node: LayoutNode } {
-    const state = this.hub.state;
     const session: Session = {
       id,
-      projectId: state.project.id,
+      projectId: canvas.projectId,
+      // Set here and nowhere else: its shell runs on this computer.
+      host: LOCAL_HOST,
       name: name ?? this.nextName(),
       createdAt: new Date().toISOString(),
       state: 'open',

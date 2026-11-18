@@ -122,7 +122,7 @@ async function makeToken(name: string, scopes: Scope[], more: object = {}): Prom
 }
 
 function fakeSession(name: string, more: Partial<Session> = {}): Session {
-  const session: Session = { id: newId(), projectId: hub.state.project.id, name, createdAt: new Date().toISOString(), state: 'open', cwd: null, command: null, note: '', status: NO_STATUS, attention: NO_ATTENTION, noteLog: [], agent: null, lastInputAt: null, lastOutputAt: null, tags: [], parkedFrom: null, peopleOnly: false, typedBy: null,
+  const session: Session = { id: newId(), projectId: hub.state.projects[0]!.id, name, createdAt: new Date().toISOString(), state: 'open', cwd: null, command: null, note: '', status: NO_STATUS, attention: NO_ATTENTION, noteLog: [], agent: null, lastInputAt: null, lastOutputAt: null, tags: [], parkedFrom: null, peopleOnly: false, typedBy: null,
     recap: null, takesMessages: false, untold: null, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null }, ...more };
   hub.emit({ type: 'session.created', session, canvasId: hub.state.canvases[0]!.id, node: { id: newId(), sessionId: session.id, x: 0, y: 0, width: 640, height: 400, color: 'none' } });
   return session;
@@ -557,7 +557,7 @@ describe('the owner\'s list', () => {
     await startNext(failed.id);
     await asOwner('POST', `/v1/runs/${taskNow(failed.id).runId}/report`, { type: 'stop' });
     await until(() => taskNow(failed.id).state === 'failed');
-    hub.emit({ type: 'environment.changed', environment: { id: newId(), kind: 'working-copy', title: 'In its own working copy', words: 'Kept apart.', sessionId: null, sessionName: 'gone', projectFolder: '/home/someone/project', folder: '/home/someone/data/copies/gone-0a1b2c', startFolder: '/home/someone/data/copies/gone-0a1b2c', branch: 'aubergine/gone-0a1b2c', startCommit: 'a'.repeat(40), createdAt: new Date().toISOString(), changes: null, broken: null } });
+    hub.emit({ type: 'environment.changed', environment: { id: newId(), projectId: hub.state.projects[0]!.id, kind: 'working-copy', title: 'In its own working copy', words: 'Kept apart.', sessionId: null, sessionName: 'gone', projectFolder: '/home/someone/project', folder: '/home/someone/data/copies/gone-0a1b2c', startFolder: '/home/someone/data/copies/gone-0a1b2c', branch: 'aubergine/gone-0a1b2c', startCommit: 'a'.repeat(40), createdAt: new Date().toISOString(), changes: null, broken: null } });
 
     const list = await forYouNow();
     expect(list.items.map((item) => item.kind)).toEqual(['approval', 'blocked', 'question', 'proposal', 'ask', 'task-failed', 'task-done', 'draft', 'checklist', 'finished', 'finished', 'copy']);
@@ -602,8 +602,8 @@ describe('the owner\'s list', () => {
     await asOwner('POST', '/v1/rules', { event: 'task.failed', action: { kind: 'notify' } });
     const before = JSON.stringify(queueNow());
     await stop();
-    // The file says version 13.
-    expect(JSON.parse(await readFile(path.join(dir, 'state.json'), 'utf8')).version).toBe(13);
+    // The file says version 14.
+    expect(JSON.parse(await readFile(path.join(dir, 'state.json'), 'utf8')).version).toBe(14);
     await start();
     expect(JSON.stringify(queueNow())).toBe(before);
     expect(taskNow(task.id)).toMatchObject({ state: 'working', sessionId: one.id });

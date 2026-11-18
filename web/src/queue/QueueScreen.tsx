@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
-import { BUSY_STATES, QUEUE_LIMIT_MAX, RULE_EVENT_WORDS, RuleEvent, TASK_STATE_WORDS, addedByWords, forYou, queueWords, sourceWords, waitingTasks, type ForYouItem, type RuleAction, type RuleList, type Run, type Task } from '@aubergine/shared';
+import { queueSettingsOf, stateOf, BUSY_STATES, QUEUE_LIMIT_MAX, RULE_EVENT_WORDS, RuleEvent, TASK_STATE_WORDS, addedByWords, forYou, queueWords, sourceWords, waitingTasks, type ForYouItem, type RuleAction, type RuleList, type Run, type Task } from '@aubergine/shared';
 import { api } from '../api';
 import { notificationsWanted, setNotificationsWanted } from '../attention';
-import { useApp } from '../store';
+import { currentProjectId, useApp } from '../store';
 import { useEndedRuns } from '../workflows/ended-runs';
 import { actionView } from './action-views';
 import { Schedules } from './Schedules';
@@ -274,7 +274,10 @@ export function QueueScreen() {
   const [put, setPut] = useState<Task[]>([]);
   const [said, setSaid] = useState<string | null>(null);
 
-  const queue = app?.queue;
+  // Of the project being looked at: its tasks, its list, and how its tasks are started.
+  const projectId = useApp(currentProjectId);
+  const view = useMemo(() => (app && projectId ? stateOf(app, projectId) : null), [app, projectId]);
+  const queue = view && projectId ? { ...view.queue, ...queueSettingsOf(view.queue, projectId) } : undefined;
   // Tasks that were put away, for "finished today": read when the screen opens and when the number of tasks changes.
   const taskCount = queue?.tasks.length ?? 0;
   useEffect(() => {
@@ -292,7 +295,7 @@ export function QueueScreen() {
     if (open) setSaid(null);
   }, [open]);
 
-  const list = useMemo(() => (open && app ? forYou(app, Date.now(), ended) : null), [open, app, ended]);
+  const list = useMemo(() => (open && app ? forYou(app, Date.now(), ended, projectId) : null), [open, app, ended, projectId]);
   if (!open || !app || !queue || !list) return null;
   const close = (): void => useApp.getState().togglePanel(null);
   const busy = queue.tasks.filter((task) => BUSY_STATES.includes(task.state)).sort((a, b) => a.updatedAt.localeCompare(b.updatedAt));

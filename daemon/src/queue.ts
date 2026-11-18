@@ -8,7 +8,19 @@ import {
   RULES_MAX,
   RULE_RATE_PER_MINUTE,
   TASKS_MAX,
+  firstProject,
   forYou,
+  isLocalHome,
+  isLocalHost,
+  isOpenProject,
+  ofProject,
+  openProjects,
+  projectById,
+  projectOfRun,
+  projectOfSession,
+  queueSettingsOf,
+  stateOf,
+  visibleIn,
   kickoffLine,
   newId,
   nextToStart,
@@ -30,6 +42,7 @@ import {
   type ChangeQueueRequest,
   type ChangeTaskRequest,
   type DispatchSession,
+  type ProjectScope,
   type ForYou,
   type ItemSource,
   type Occasion,
@@ -66,6 +79,8 @@ export interface QueueOptions {
 /** Who asks, as far as the queue needs to know: the owner, or someone whose additions wait for the owner. */
 export interface Asker {
   by: AddedBy;
+  /** The project what is added goes into: the caller's own, or the one it named and may reach. */
+  projectId: string;
   /** True for the owner, and for a token the owner made with review switched off. */
   trusted: boolean;
   owner: boolean;
@@ -143,7 +158,7 @@ export class Queue {
       if (task) this.follow(task, event.run);
       if (event.type === 'run.finished') {
         // A run a rule started is over: what its terminal does from now on can set off rules again.
-        if (this.queue.ruleRuns.includes(event.run.id)) this.emitSettings({ ruleRuns: this.queue.ruleRuns.filter((id) => id !== event.run.id) });
+        if (this.queue.ruleRuns.includes(event.run.id)) this.emitSettings(projectOfRun(this.hub.state, event.run) ?? firstProject(this.hub.state).id, { ruleRuns: this.queue.ruleRuns.filter((id) => id !== event.run.id) });
         this.maybeDispatch();
       }
       return;
@@ -196,10 +211,11 @@ export class Queue {
 
   /* ---------- Reading ---------- */
 
-  async list(query: TasksQuery): Promise<{ items: Task[]; nextCursor: string | null }> {
-    if (query.state === 'ended') return this.archive.read({ limit: query.limit, cursor: query.cursor });
+  /** `projectId`: the tasks of one project; null: of every project. */
+  async list(query: TasksQuery, projectId: ProjectScope = null): Promise<{ items: Task[]; nextCursor: string | null }> {
+    if (query.state === 'ended') return this.archive.read({ limit: query.limit, cursor: query.cursor }, projectId);
     const order = (task: Task): number => (BUSY_STATES.includes(task.state) ? 0 : task.state === 'queued' ? 1 : task.state === 'proposed' ? 2 : 3);
-    const wanted = this.queue.tasks.filter((task) => query.state === 'live' || task.state === query.state).sort((a, b) => order(a) - order(b) || a.order - b.order || a.createdAt.localeCompare(b.createdAt) || a.id.localeCompare(b.id));
+    const wanted = this.queue.tasks.filter((task) => ofProject(task, projectId) && (query.state === 'live' || task.state === query.state)).sort((a, b) => order(a) - order(b) || a.order - b.order || a.createdAt.localeCompare(b.createdAt) || a.id.localeCompare(b.id));
     return paginate(wanted, (task) => task.id, { limit: query.limit, cursor: query.cursor });
   }
 
@@ -211,33 +227,36 @@ export class Queue {
     return archived;
   }
 
-  settings(): QueueSettings {
-    const { limit, hold, automatic } = this.queue;
-    return { limit, hold, automatic, summary: queueWords(this.queue.tasks) };
+  /** How one project's tasks are started, and how its queue stands. */
+  settings(projectId: string): QueueSettings {
+    const { limit, hold, automatic } = queueSettingsOf(this.queue, projectId);
+    return { projectId, limit, hold, automatic, summary: queueWords(this.queue.tasks.filter((task) => task.projectId === projectId)) };
   }
 
   /** What waits on the owner: gathered from the state, and from the runs that ended lately for the lists they handed in. */
-  async forYou(): Promise<ForYou> {
+  async forYou(projectId: ProjectScope = null): Promise<ForYou> {
     const ended = await this.workflows.listRuns({ status: 'ended', limit: 50, cursor: undefined, sessionId: undefined, workflowId: undefined }).catch(() => ({ items: [] }));
-    return forYou(this.hub.state, Date.now(), ended.items);
+    return forYou(this.hub.state, Date.now(), ended.items, projectId);
   }
 
   /** What a session is shown: every task by title and state, and what it itself asked. */
   ownQueue(sessionId: string): OwnQueue {
-    this.sessions.get(sessionId);
-    const tasks = this.queue.tasks.filter((task) => !OVER_STATES.includes(task.state)).map((task) => ({ id: task.id, title: task.title, state: task.state, mine: task.addedBy.sessionId === sessionId }));
+    // Of its own project only: a terminal sees nothing of another project's queue.
+    const projectId = this.sessions.get(sessionId).projectId;
+    const tasks = this.queue.tasks.filter((task) => task.projectId === projectId && !OVER_STATES.includes(task.state)).map((task) => ({ id: task.id, title: task.title, state: task.state, mine: task.addedBy.sessionId === sessionId }));
     const asks = this.queue.asks.filter((ask) => ask.addedBy.sessionId === sessionId);
     const mine = tasks.filter((task) => task.mine && task.state === 'proposed').length;
-    return { tasks, asks, says: `${queueWords(this.queue.tasks)}. Of yours, ${mine} ${mine === 1 ? 'proposal waits' : 'proposals wait'} for your owner's yes, and ${asks.length} ${asks.length === 1 ? 'thing you asked is' : 'things you asked are'} still open. Neither is done until your owner acts.` };
+    return { tasks, asks, says: `${queueWords(this.queue.tasks.filter((task) => task.projectId === projectId))}. Of yours, ${mine} ${mine === 1 ? 'proposal waits' : 'proposals wait'} for your owner's yes, and ${asks.length} ${asks.length === 1 ? 'thing you asked is' : 'things you asked are'} still open. Neither is done until your owner acts.` };
   }
 
   /* ---------- Adding and changing ---------- */
 
   /** Checks what a task names: its workflow, its terminal or its canvas must exist, and its source must be a kind that is known. */
-  private check(fields: { workflowId?: string | null | undefined; taker?: Task['taker'] | undefined; source?: ItemSource | undefined; environment?: string | null | undefined }): void {
-    if (fields.workflowId && !this.hub.state.workflows.some((w) => w.id === fields.workflowId && w.listed)) throw new NotFoundError('There is no such workflow.');
-    if (fields.taker?.kind === 'session' && !this.sessions.has(fields.taker.sessionId)) throw new NotFoundError('There is no such terminal.');
-    if (fields.taker?.kind === 'new') this.sessions.getCanvas(fields.taker.canvasId);
+  private check(fields: { workflowId?: string | null | undefined; taker?: Task['taker'] | undefined; source?: ItemSource | undefined; environment?: string | null | undefined }, projectId: string): void {
+    // A workflow of another project, a terminal or a canvas of another project: to this project they are not there.
+    if (fields.workflowId && !this.hub.state.workflows.some((w) => w.id === fields.workflowId && w.listed && visibleIn(w, projectId))) throw new NotFoundError('There is no such workflow.');
+    if (fields.taker?.kind === 'session' && projectOfSession(this.hub.state, fields.taker.sessionId) !== projectId) throw new NotFoundError('There is no such terminal.');
+    if (fields.taker?.kind === 'new' && this.hub.state.canvases.find((c) => c.id === (fields.taker as { canvasId: string }).canvasId)?.projectId !== projectId) throw new NotFoundError('There is no such canvas.');
     if (fields.source && !taskSource(fields.source.kind)) throw new BadInputError(`A task does not come from “${fields.source.kind}”.`);
   }
 
@@ -260,7 +279,7 @@ export class Queue {
    * schedule): no route passes it.
    */
   async add(body: AddTaskRequest, asker: Asker, arranged?: { elementId: string | null }): Promise<Task> {
-    this.check(body);
+    this.check(body, asker.projectId);
     if (this.queue.tasks.length >= TASKS_MAX) throw new ConflictError(`The queue holds ${TASKS_MAX} tasks. Put away the ones that are over first.`);
     if (!asker.trusted) {
       const waiting = this.queue.tasks.filter((task) => task.state === 'proposed' && ((asker.by.sessionId !== undefined && task.addedBy.sessionId === asker.by.sessionId) || (asker.by.tokenId !== undefined && task.addedBy.tokenId === asker.by.tokenId))).length;
@@ -269,6 +288,7 @@ export class Queue {
     const at = new Date().toISOString();
     const task: Task = {
       id: newId(),
+      projectId: asker.projectId,
       title: body.title,
       details: body.details ?? '',
       folder: body.folder ?? null,
@@ -297,7 +317,7 @@ export class Queue {
   change(taskId: string, body: ChangeTaskRequest): Task {
     const task = this.find(taskId);
     if (task.state !== 'proposed' && task.state !== 'queued') throw new ConflictError('Only a task that has not started can be changed.');
-    this.check(body);
+    this.check(body, task.projectId);
     const given = Object.fromEntries(Object.entries(body).filter(([, value]) => value !== undefined));
     const next: Task = { ...task, ...given, updatedAt: new Date().toISOString() };
     this.hub.emit({ type: 'task.changed', task: next });
@@ -340,58 +360,78 @@ export class Queue {
       const task = this.queue.tasks.find((t) => t.id === id && t.state === 'queued');
       return task ? [task] : [];
     });
-    const rest = waitingTasks(this.queue.tasks).filter((task) => !named.includes(task));
-    [...new Set(named), ...rest].forEach((task, index) => {
+    // The order is a project's own: the tasks of the project of the first one named, and no other's.
+    const projectId = named[0]?.projectId ?? firstProject(this.hub.state).id;
+    const mine = named.filter((task) => task.projectId === projectId);
+    const rest = waitingTasks(this.queue.tasks).filter((task) => task.projectId === projectId && !mine.includes(task));
+    [...new Set(mine), ...rest].forEach((task, index) => {
       if (task.order !== index + 1) this.hub.emit({ type: 'task.changed', task: { ...task, order: index + 1 } });
     });
-    return this.settings();
+    return this.settings(projectId);
   }
 
-  private emitSettings(change: Partial<{ limit: number; hold: boolean; automatic: boolean; ruleRuns: string[] }>): void {
-    const { limit, hold, automatic, ruleRuns } = this.queue;
-    this.hub.emit({ type: 'queue.settings', limit, hold, automatic, ruleRuns, ...change });
+  private emitSettings(projectId: string, change: Partial<{ limit: number; hold: boolean; automatic: boolean; ruleRuns: string[] }>): void {
+    const { limit, hold, automatic } = queueSettingsOf(this.queue, projectId);
+    this.hub.emit({ type: 'queue.settings', projectId, limit, hold, automatic, ruleRuns: this.queue.ruleRuns, ...change });
   }
 
-  changeSettings(body: ChangeQueueRequest): QueueSettings {
+  /** The limit, the hold and automatic starting of one project. Another project's are not touched. */
+  changeSettings(projectId: string, body: Omit<ChangeQueueRequest, 'projectId'>): QueueSettings {
     const given = Object.fromEntries(Object.entries(body).filter(([, value]) => value !== undefined));
-    if (Object.keys(given).length > 0) this.emitSettings(given);
-    return this.settings();
+    if (Object.keys(given).length > 0) this.emitSettings(projectId, given);
+    return this.settings(projectId);
   }
 
   /* ---------- Starting ---------- */
 
-  private dispatchSessions(): DispatchSession[] {
-    return this.hub.state.sessions.map((s) => ({ id: s.id, state: s.state, command: s.command, agent: s.agent, attention: s.attention, onCanvas: placeOfSession(this.hub.state, s.id) !== null }));
+  private dispatchSessions(projectId: string): DispatchSession[] {
+    // Only terminals of the project, and only those whose shell runs on this computer: nothing is started anywhere else.
+    return this.hub.state.sessions.filter((s) => s.projectId === projectId && isLocalHost(s)).map((s) => ({ id: s.id, state: s.state, command: s.command, agent: s.agent, attention: s.attention, onCanvas: placeOfSession(this.hub.state, s.id) !== null }));
+  }
+  private canvasIds(projectId: string): string[] {
+    return this.hub.state.canvases.filter((c) => c.projectId === projectId).map((c) => c.id);
+  }
+  /** How many tasks of a project are being started right now. */
+  private startingIn(projectId: string): number {
+    return this.queue.tasks.filter((task) => task.projectId === projectId && this.starting.has(task.id)).length;
   }
 
-  /** `only`: one task by its ID. `arranged`: of the tasks that wait, only those the owner arranged beforehand. */
-  private toStart(only?: string, arranged = false): { taskId: string; sessionId: string | null }[] {
-    const tasks = only !== undefined ? this.queue.tasks.filter((task) => task.id === only || task.state !== 'queued') : arranged ? this.queue.tasks.filter((task) => task.unattended || task.state !== 'queued') : this.queue.tasks;
+  /** What may start now in one project. `only`: one task by its ID. `arranged`: of the tasks that wait, only those the owner arranged beforehand. */
+  private toStart(projectId: string, only?: string, arranged = false): { taskId: string; sessionId: string | null }[] {
+    // An archived project starts nothing; nor does one whose record is not this server's.
+    const project = projectById(this.hub.state, projectId);
+    if (!project || project.state !== 'open' || !isLocalHome(project)) return [];
+    const own = this.queue.tasks.filter((task) => task.projectId === projectId);
+    const tasks = only !== undefined ? own.filter((task) => task.id === only || task.state !== 'queued') : arranged ? own.filter((task) => task.unattended || task.state !== 'queued') : own;
+    const { limit, hold } = queueSettingsOf(this.queue, projectId);
     return nextToStart(
       tasks.filter((task) => !this.starting.has(task.id)),
-      this.dispatchSessions(),
+      this.dispatchSessions(projectId),
       this.hub.state.runs,
       // A task that is being started holds its place before the state says so.
-      this.queue.limit - this.starting.size,
-      this.queue.hold,
-      this.hub.state.canvases.map((c) => c.id),
+      limit - this.startingIn(projectId),
+      hold,
+      this.canvasIds(projectId),
     );
   }
 
-  /** The owner's "Start next", or the start of one task they named. One task. */
-  async start(taskId?: string): Promise<StartedTasks> {
-    if (this.queue.hold) throw new ConflictError('New starts are held. Take the hold off first.');
-    if (taskId !== undefined) {
-      const task = this.find(taskId);
-      if (task.state !== 'queued') throw new ConflictError(`This task is not waiting to be started.`);
-    }
-    const [next] = this.toStart(taskId);
+  /** The owner's "Start next" in a project, or the start of one task they named. One task. */
+  async start(taskId: string | undefined, inProject: string): Promise<StartedTasks> {
+    const projectId = taskId !== undefined ? this.find(taskId).projectId : inProject;
+    const project = projectById(this.hub.state, projectId);
+    if (!project || project.state !== 'open') throw new ConflictError('This project is archived: nothing is started in it. Reopen it first.');
+    if (!isLocalHome(project)) throw new ConflictError('This project is not kept on this server: nothing can be started for it here.');
+    const settings = queueSettingsOf(this.queue, projectId);
+    if (settings.hold) throw new ConflictError('New starts are held. Take the hold off first.');
+    if (taskId !== undefined && this.find(taskId).state !== 'queued') throw new ConflictError(`This task is not waiting to be started.`);
+    const [next] = this.toStart(projectId, taskId);
     if (!next) {
-      const busy = this.queue.tasks.filter((task) => BUSY_STATES.includes(task.state)).length + this.starting.size;
-      if (busy >= this.queue.limit) return { started: [], says: `${busy} ${busy === 1 ? 'task is' : 'tasks are'} at work, and the limit is ${this.queue.limit}. Nothing was started.` };
-      const first = taskId !== undefined ? this.find(taskId) : waitingTasks(this.queue.tasks)[0];
+      const own = this.queue.tasks.filter((task) => task.projectId === projectId);
+      const busy = own.filter((task) => BUSY_STATES.includes(task.state)).length + this.startingIn(projectId);
+      if (busy >= settings.limit) return { started: [], says: `${busy} ${busy === 1 ? 'task is' : 'tasks are'} at work, and the limit is ${settings.limit}. Nothing was started.` };
+      const first = taskId !== undefined ? this.find(taskId) : waitingTasks(own)[0];
       if (!first) return { started: [], says: 'No task waits to be started.' };
-      return { started: [], says: `Nothing was started. ${whyNotNow(first, this.dispatchSessions(), this.hub.state.runs, this.hub.state.canvases.map((c) => c.id)) ?? 'No task that waits can be taken now.'}` };
+      return { started: [], says: `Nothing was started. ${whyNotNow(first, this.dispatchSessions(projectId), this.hub.state.runs, this.canvasIds(projectId)) ?? 'No task that waits can be taken now.'}` };
     }
     const outcome = await this.startOne(next.taskId, next.sessionId);
     const title = this.queue.tasks.find((t) => t.id === next.taskId)?.title ?? 'the task';
@@ -408,8 +448,10 @@ export class Queue {
       if (sessionId === null) {
         if (task.taker.kind !== 'new') throw new ConflictError('No terminal was chosen for it.');
         // A new agent terminal: where the task says, in the kind of place it says, or one that keeps its work apart where the folder allows.
-        const environment = task.environment ?? (await this.environments.suggestedFor(task.folder));
-        const created = await this.sessions.create({ agent: 'claude-code', agentArgs: [kickoffLine()], canvasId: task.taker.canvasId, ...(task.folder ? { cwd: task.folder } : {}), environment, name: task.title.slice(0, 60), uniqueName: true });
+        // Where it names no folder of its own: the project's.
+        const folder = task.folder ?? projectById(this.hub.state, task.projectId)?.defaultFolder ?? null;
+        const environment = task.environment ?? (await this.environments.suggestedFor(folder));
+        const created = await this.sessions.create({ agent: 'claude-code', agentArgs: [kickoffLine()], canvasId: task.taker.canvasId, ...(folder ? { cwd: folder } : {}), environment, name: task.title.slice(0, 60), uniqueName: true });
         sessionId = created.session.id;
         onNew = true;
       }
@@ -420,10 +462,10 @@ export class Queue {
       const run = task.workflowId
         ? await this.workflows.start({ ...input, workflowId: task.workflowId }, by)
         : task.elementId
-          ? await this.workflows.startElement(this.drafts.runnable(task.elementId), input, by)
+          ? await this.workflows.startElement(this.drafts.runnable(task.elementId, task.projectId), input, by)
           : await this.workflows.startElement(Element.parse({ id: 'task', name: task.title, instructions: '{{task}}', doneWhen: 'The task is done, and your note says what was done.', origin: { kind: 'task' } }), input, by);
       // Nobody was there when this one started: what comes about because of its run sets off no rule, like a run a rule started.
-      if (task.unattended) this.emitSettings({ ruleRuns: [...this.queue.ruleRuns, run.run.id].slice(-200) });
+      if (task.unattended) this.emitSettings(task.projectId, { ruleRuns: [...this.queue.ruleRuns, run.run.id].slice(-200) });
       task = await this.apply(this.find(taskId), { type: 'started', runId: run.run.id });
       // It may have moved already: a workflow that begins with an approval waits at once.
       const live = this.hub.state.runs.find((r) => r.id === run.run.id);
@@ -446,16 +488,23 @@ export class Queue {
    * says a place may be free; never by a timer. The limit and the hold count for all of them.
    */
   private maybeDispatch(): void {
-    const wanted = (): boolean => !this.closed && !this.queue.hold && this.queue.tasks.some((task) => task.state === 'queued' && (this.queue.automatic || task.unattended));
-    if (!wanted()) return;
+    const wanted = (projectId: string): boolean => {
+      const { hold, automatic } = queueSettingsOf(this.queue, projectId);
+      return !this.closed && !hold && this.queue.tasks.some((task) => task.projectId === projectId && task.state === 'queued' && (automatic || task.unattended));
+    };
+    // Each project by itself: its own limit, its own hold, its own terminals.
+    const projects = openProjects(this.hub.state).map((project) => project.id);
+    if (!projects.some(wanted)) return;
     this.dispatching = this.dispatching
       .then(async () => {
-        // One at a time, looking again after each: a start changes who is free.
-        for (let guard = 0; guard < 50; guard += 1) {
-          if (!wanted()) return;
-          const [next] = this.toStart(undefined, !this.queue.automatic);
-          if (!next) return;
-          await this.startOne(next.taskId, next.sessionId);
+        for (const projectId of projects) {
+          // One at a time, looking again after each: a start changes who is free.
+          for (let guard = 0; guard < 50; guard += 1) {
+            if (!wanted(projectId)) break;
+            const [next] = this.toStart(projectId, undefined, !queueSettingsOf(this.queue, projectId).automatic);
+            if (!next) break;
+            await this.startOne(next.taskId, next.sessionId);
+          }
         }
       })
       .catch(this.options.onError ?? (() => {}));
@@ -470,9 +519,9 @@ export class Queue {
       if (waiting >= ASKS_WAITING_MAX) throw new ConflictError(`${waiting} things you asked of the owner still wait, and that is as many as may. Wait for the owner; do not look for another way to ask.`);
     }
     if (body.source && !taskSource(body.source.kind)) throw new BadInputError(`Nothing comes from “${body.source.kind}”.`);
-    const ask: Ask = { id: newId(), text: body.text, addedBy: asker.by, source: this.sourceFor(asker, body.source), createdAt: new Date().toISOString() };
+    const ask: Ask = { id: newId(), projectId: asker.projectId, text: body.text, addedBy: asker.by, source: this.sourceFor(asker, body.source), createdAt: new Date().toISOString() };
     this.hub.emit({ type: 'ask.changed', ask });
-    this.fire({ id: `ask.added ${ask.id}`, event: 'ask.added', sentence: `${asker.owner ? 'You wrote' : 'Asked of you'}: ${ask.text}`.slice(0, 500), taskId: null, askId: ask.id }, ask.source);
+    this.fire({ id: `ask.added ${ask.id}`, event: 'ask.added', sentence: `${asker.owner ? 'You wrote' : 'Asked of you'}: ${ask.text}`.slice(0, 500), taskId: null, askId: ask.id, projectId: ask.projectId }, ask.source);
     return ask;
   }
 
@@ -486,20 +535,23 @@ export class Queue {
 
   /* ---------- Rules ---------- */
 
-  rules(): RuleList {
+  /** The rules of one project; null: of every project. */
+  rules(projectId: ProjectScope = null): RuleList {
     const state = this.hub.state;
-    return { rules: [...this.queue.rules].sort((a, b) => a.createdAt.localeCompare(b.createdAt)).map((rule) => ({ ...rule, says: ruleWords(rule, state) })), actions: actionKinds().map((kind) => ({ kind: kind.kind, title: kind.title, says: kind.says })) };
+    return { rules: this.queue.rules.filter((rule) => ofProject(rule, projectId)).sort((a, b) => a.createdAt.localeCompare(b.createdAt)).map((rule) => ({ ...rule, says: ruleWords(rule, state) })), actions: actionKinds().map((kind) => ({ kind: kind.kind, title: kind.title, says: kind.says })) };
   }
 
-  addRule(body: AddRuleRequest): RuleList {
+  /** A rule is its project's: it hears what happens there, and what it starts is started there. */
+  addRule(body: Pick<AddRuleRequest, 'event' | 'action'>, projectId: string): RuleList {
     const kind = actionKind(body.action.kind);
     if (!kind) throw new BadInputError(`A rule can: ${actionKinds().map((k) => k.kind).join(', ')}.`);
-    const problem = kind.problem(body.action, this.hub.state);
+    // What the action names is looked for in the rule's own project, and in what is shared with it.
+    const problem = kind.problem(body.action, stateOf(this.hub.state, projectId));
     if (problem) throw new BadInputError(problem);
     if (this.queue.rules.length >= RULES_MAX) throw new ConflictError(`There are ${RULES_MAX} rules; remove one first.`);
-    const rule: Rule = { id: newId(), event: body.event, action: body.action, createdAt: new Date().toISOString() };
+    const rule: Rule = { id: newId(), projectId, event: body.event, action: body.action, createdAt: new Date().toISOString() };
     this.hub.emit({ type: 'rule.changed', rule });
-    return this.rules();
+    return this.rules(projectId);
   }
 
   removeRule(ruleId: string): void {
@@ -507,20 +559,23 @@ export class Queue {
     this.hub.emit({ type: 'rule.removed', ruleId });
   }
 
-  private context(): ActionContext {
+  private context(projectId: string): ActionContext {
     return {
-      state: this.hub.state,
+      // An action sees its own project, and what is shared with it.
+      state: stateOf(this.hub.state, projectId),
       notify: this.options.notify,
       runElement: async (elementId, on, task) => {
         let sessionId: string;
         let onNew = false;
+        // Nothing of another project: not its terminal, not its canvas, not an element that is its own.
+        if (on.kind === 'session' ? projectOfSession(this.hub.state, on.sessionId) !== projectId : this.hub.state.canvases.find((c) => c.id === on.canvasId)?.projectId !== projectId) throw new NotFoundError('What this rule runs on is not in its project any more.');
         if (on.kind === 'new') {
           sessionId = (await this.sessions.create({ agent: 'claude-code', agentArgs: [kickoffLine()], canvasId: on.canvasId, uniqueName: true, name: 'For a rule' })).session.id;
           onNew = true;
         } else sessionId = on.sessionId;
-        const run = await this.workflows.startElement(this.drafts.runnable(elementId), { sessionId, inputs: { task }, replace: false, typeKickoff: !onNew }, { kind: 'person' });
+        const run = await this.workflows.startElement(this.drafts.runnable(elementId, projectId), { sessionId, inputs: { task }, replace: false, typeKickoff: !onNew }, { kind: 'person' });
         // Remembered while it goes: what comes about because of this run sets off no rule.
-        this.emitSettings({ ruleRuns: [...this.queue.ruleRuns, run.run.id].slice(-200) });
+        this.emitSettings(projectId, { ruleRuns: [...this.queue.ruleRuns, run.run.id].slice(-200) });
         return run.run.id;
       },
     };
@@ -537,7 +592,9 @@ export class Queue {
 
   private fire(occasion: Occasion, source: ItemSource): void {
     if ((source as { viaRule?: unknown }).viaRule === true) return;
-    for (const rule of this.queue.rules.filter((r) => r.event === occasion.event)) {
+    // A rule hears what happens in its own project, and nothing of another's. An archived project's rules are silent.
+    if (!isOpenProject(this.hub.state, occasion.projectId)) return;
+    for (const rule of this.queue.rules.filter((r) => r.event === occasion.event && r.projectId === occasion.projectId)) {
       const key = `${rule.id} ${occasion.id}`;
       if (this.fired.has(key)) continue;
       this.fired.add(key);
@@ -558,7 +615,7 @@ export class Queue {
         continue;
       }
       this.dispatching = this.dispatching
-        .then(() => kind.run(rule.action, occasion, this.context()))
+        .then(() => kind.run(rule.action, occasion, this.context(rule.projectId)))
         .then(
           () => record(200, 'ok'),
           (error: unknown) => {

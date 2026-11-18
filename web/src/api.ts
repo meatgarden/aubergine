@@ -80,6 +80,17 @@ async function call<T>(schema: ZodType<T> | null, method: string, path: string, 
 const AskedRecap = z.object({ asked: z.boolean(), line: z.string() });
 const OpenedConversation = z.object({ session: Session });
 
+/** Which project the page is looking at, as the store says; asked at each call. */
+let lookingAt: () => string | null = () => null;
+export function askAbout(project: () => string | null): void {
+  lookingAt = project;
+}
+/** The project to name in a request: the one being looked at. */
+const here = (): { projectId?: string } => {
+  const projectId = lookingAt();
+  return projectId ? { projectId } : {};
+};
+
 export const api = {
   getState: () => call(StateResponse, 'GET', paths.state),
   createSession: (request: CreateSessionRequest) =>
@@ -178,22 +189,22 @@ export const api = {
   environmentDifference: (environmentId: string, file: string) => v1.getEnvironmentDifference({ environmentId, query: { file } }),
   environmentEndings: (environmentId: string) => v1.getEnvironmentEndings({ environmentId }),
   endEnvironment: (environmentId: string, choice: string, confirm: boolean) => v1.endEnvironment({ environmentId, body: { choice, confirm } }),
-  listEnvironments: () => v1.listEnvironments({ query: { limit: 200 } }),
-  addTask: (body: Parameters<typeof v1.addTask>[0]['body']) => v1.addTask({ body }),
+  listEnvironments: () => v1.listEnvironments({ query: { ...here(), limit: 200 } }),
+  addTask: (body: Parameters<typeof v1.addTask>[0]['body']) => v1.addTask({ body: { ...here(), ...body } }),
   taskDo: (taskId: string, what: 'accept' | 'decline' | 'withdraw' | 'again' | 'clear') =>
     what === 'accept' ? v1.acceptTask({ taskId }) : what === 'decline' ? v1.declineTask({ taskId }) : what === 'withdraw' ? v1.withdrawTask({ taskId }) : what === 'again' ? v1.retryTask({ taskId }) : v1.clearTask({ taskId }),
   reorderTasks: (taskIds: string[]) => v1.reorderTasks({ body: { taskIds } }),
-  startTasks: (taskId?: string) => v1.startTasks({ body: taskId ? { taskId } : {} }),
-  changeQueue: (body: { limit?: number; hold?: boolean; automatic?: boolean }) => v1.changeQueue({ body }),
+  startTasks: (taskId?: string) => v1.startTasks({ body: taskId ? { taskId } : here() }),
+  changeQueue: (body: { limit?: number; hold?: boolean; automatic?: boolean }) => v1.changeQueue({ body: { ...here(), ...body } }),
   /** Tasks that were put away, newest first: for "finished today". */
-  endedTasks: () => v1.listTasks({ query: { state: 'ended', limit: 100 } }),
-  addAsk: (text: string) => v1.addAsk({ body: { text } }),
+  endedTasks: () => v1.listTasks({ query: { ...here(), state: 'ended', limit: 100 } }),
+  addAsk: (text: string) => v1.addAsk({ body: { ...here(), text } }),
   askDo: (askId: string, what: 'done' | 'dismiss') => (what === 'done' ? v1.finishAsk({ askId }) : v1.dismissAsk({ askId })),
-  listRules: () => v1.listRules(),
-  addRule: (body: Parameters<typeof v1.addRule>[0]['body']) => v1.addRule({ body }),
+  listRules: () => v1.listRules({ query: here() }),
+  addRule: (body: Parameters<typeof v1.addRule>[0]['body']) => v1.addRule({ body: { ...here(), ...body } }),
   removeRule: (ruleId: string) => v1.removeRule({ ruleId }),
-  listSchedules: async () => (await v1.listSchedules({ query: { limit: 200 } })).items,
-  addSchedule: (body: Parameters<typeof v1.addSchedule>[0]['body']) => v1.addSchedule({ body }),
+  listSchedules: async () => (await v1.listSchedules({ query: { ...here(), limit: 200 } })).items,
+  addSchedule: (body: Parameters<typeof v1.addSchedule>[0]['body']) => v1.addSchedule({ body: { ...here(), ...body } }),
   changeSchedule: (scheduleId: string, body: Parameters<typeof v1.changeSchedule>[0]['body']) => v1.changeSchedule({ scheduleId, body }),
   removeSchedule: (scheduleId: string) => v1.removeSchedule({ scheduleId }),
   runSchedule: (scheduleId: string) => v1.runSchedule({ scheduleId }),

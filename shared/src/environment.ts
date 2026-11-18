@@ -34,6 +34,7 @@ export type EnvironmentCounts = z.infer<typeof EnvironmentCounts>;
 /** A place prepared for a session, as the state keeps it. */
 export const SessionEnvironment = z.object({
   id: Id,
+  projectId: Id.describe('The project it was made in: its session\'s. Kept when the session is gone.'),
   kind: EnvironmentKindName,
   title: z.string().max(80).describe("What the kind is called, as it was when this was made: `Its own working copy`."),
   words: z.string().max(400).describe("The kind's own words for how far it keeps an agent apart. Never more than 'kept apart'."),

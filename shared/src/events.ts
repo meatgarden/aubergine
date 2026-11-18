@@ -17,6 +17,7 @@ import {
   NodeColor,
   NoteEntry,
   Session,
+  Project,
   SessionName,
   SessionNote,
   ShellStatus,
@@ -131,7 +132,17 @@ export const ChangeEvent = z.discriminatedUnion('type', [
   z.object({ type: z.literal('rule.changed'), rule: Rule }),
   z.object({ type: z.literal('rule.removed'), ruleId: Id }),
   /** How tasks are started: how many at once, whether new starts are held, whether they start by themselves; and which runs a rule started. */
-  z.object({ type: z.literal('queue.settings'), limit: z.number().int().min(1).max(QUEUE_LIMIT_MAX), hold: z.boolean(), automatic: z.boolean(), ruleRuns: z.array(Id).max(200) }),
+  z.object({ type: z.literal('queue.settings'), projectId: Id, limit: z.number().int().min(1).max(QUEUE_LIMIT_MAX), hold: z.boolean(), automatic: z.boolean(), ruleRuns: z.array(Id).max(200) }),
+  /** A project was made or changed: its name, color, folders, order, or whether it is open or archived. */
+  z.object({ type: z.literal('project.changed'), project: Project }),
+  /** A project was removed for good. It was empty. */
+  z.object({ type: z.literal('project.removed'), projectId: Id }),
+  /** A canvas moved to another project, with its terminals, their runs and what they work in, and the waiting tasks that name one of its terminals. */
+  z.object({ type: z.literal('canvas.project'), canvasId: Id, projectId: Id }),
+  /** For one kind of thing that can be shared: what a new one is from now on. */
+  z.object({ type: z.literal('sharing.default'), kind: z.string().max(40), default: z.enum(['shared', 'project']) }),
+  /** A shelf element, a library source, an installed item or a token now belongs to another project, or to all. (A workflow says so with `workflow.changed`.) */
+  z.object({ type: z.literal('sharing.moved'), kind: z.enum(['element', 'source', 'installed', 'token']), id: Id, projectId: Id.nullable() }),
   /** A schedule was made or changed, or one of its times was answered for: fired, late, skipped, missed, could not run. */
   z.object({ type: z.literal('schedule.changed'), schedule: Schedule }),
   z.object({ type: z.literal('schedule.removed'), scheduleId: Id }),
@@ -319,6 +330,33 @@ export function applyEvent(state: AppState, event: ChangeEvent): AppState {
       return { ...state, queue: { ...state.queue, rules: [...state.queue.rules.filter((r) => r.id !== event.rule.id), event.rule] } };
     case 'rule.removed':
       return { ...state, queue: { ...state.queue, rules: state.queue.rules.filter((r) => r.id !== event.ruleId) } };
+    case 'project.changed':
+      return { ...state, projects: [...state.projects.filter((p) => p.id !== event.project.id), event.project] };
+    case 'project.removed':
+      return state.projects.length > 1 ? { ...state, projects: state.projects.filter((p) => p.id !== event.projectId) } : state;
+    case 'canvas.project': {
+      const canvas = state.canvases.find((c) => c.id === event.canvasId);
+      if (!canvas) return state;
+      // Its terminals: the ones on it, and the parked ones that came from it.
+      const moved = new Set([...canvas.layout.nodes.map((node) => node.sessionId), ...state.sessions.filter((s) => s.parkedFrom?.canvasId === canvas.id).map((s) => s.id)]);
+      const to = <T extends { projectId?: string | undefined }>(thing: T): T => ({ ...thing, projectId: event.projectId });
+      return {
+        ...state,
+        canvases: state.canvases.map((c) => (c.id === canvas.id ? to(c) : c)),
+        sessions: state.sessions.map((s) => (moved.has(s.id) ? to(s) : s)),
+        runs: state.runs.map((run) => (run.sessionId !== null && moved.has(run.sessionId) ? to(run) : run)),
+        environments: state.environments.map((environment) => (environment.sessionId !== null && moved.has(environment.sessionId) ? to(environment) : environment)),
+        // A task that waits for one of its terminals goes with it; one that is at work is on a terminal that moved.
+        queue: { ...state.queue, tasks: state.queue.tasks.map((task) => ((task.taker.kind === 'session' && moved.has(task.taker.sessionId)) || (task.sessionId !== null && moved.has(task.sessionId)) ? to(task) : task)) },
+      };
+    }
+    case 'sharing.default':
+      return { ...state, sharing: { ...state.sharing, [event.kind]: event.default } };
+    case 'sharing.moved':
+      if (event.kind === 'element') return { ...state, shelf: state.shelf.map((item) => (item.id === event.id ? { ...item, projectId: event.projectId } : item)) };
+      if (event.kind === 'token') return { ...state, tokens: state.tokens.map((token) => (token.id === event.id ? { ...token, projectId: event.projectId } : token)) };
+      if (event.kind === 'source') return { ...state, library: { ...state.library, sources: state.library.sources.map((source) => (source.id === event.id ? { ...source, projectId: event.projectId } : source)) } };
+      return { ...state, library: { ...state.library, installed: state.library.installed.map((item) => (item.id === event.id ? { ...item, projectId: event.projectId } : item)) } };
     case 'schedule.changed':
       return { ...state, schedules: { ...state.schedules, items: [...state.schedules.items.filter((s) => s.id !== event.schedule.id), event.schedule] } };
     case 'schedule.removed':
@@ -326,7 +364,7 @@ export function applyEvent(state: AppState, event: ChangeEvent): AppState {
     case 'schedules.checked':
       return { ...state, schedules: { ...state.schedules, checkedAt: event.at } };
     case 'queue.settings':
-      return { ...state, queue: { ...state.queue, limit: event.limit, hold: event.hold, automatic: event.automatic, ruleRuns: event.ruleRuns } };
+      return { ...state, queue: { ...state.queue, settings: { ...state.queue.settings, [event.projectId]: { limit: event.limit, hold: event.hold, automatic: event.automatic } }, ruleRuns: event.ruleRuns } };
     case 'environment.changed':
       return { ...state, environments: [...state.environments.filter((e) => e.id !== event.environment.id), event.environment] };
     case 'environment.removed':

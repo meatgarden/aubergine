@@ -113,7 +113,7 @@ describe('parsing workflow commands', () => {
   it('lists workflows in columns', () => {
     expect(formatWorkflows([], new Map())).toContain('No workflows yet');
     const text = formatWorkflows(
-      [{ id: 'a', name: 'Fix a bug', description: '', labels: {}, origin: { kind: 'local' }, createdAt: '', updatedAt: '', version: 3, elements: ['Reproduce', 'Fix'] }],
+      [{ id: 'a', projectId: null, name: 'Fix a bug', description: '', labels: {}, origin: { kind: 'local' }, createdAt: '', updatedAt: '', version: 3, elements: ['Reproduce', 'Fix'] }],
       new Map([['a', 2]]),
     );
     expect(text.split('\n')).toEqual(['NAME       ELEMENTS  VERSION  RUNS', 'Fix a bug  2         v3       2     Reproduce → Fix']);
@@ -167,7 +167,7 @@ describe('workflow commands against a server', () => {
   });
 
   function fakeSession(name: string, more: Partial<Session> = {}): Session {
-    const session: Session = { id: newId(), projectId: hub.state.project.id, name, createdAt: new Date().toISOString(), state: 'open', cwd: null, command: null, note: '', status: NO_STATUS, attention: NO_ATTENTION, noteLog: [], agent: null, lastInputAt: null, lastOutputAt: null, tags: [], parkedFrom: null, peopleOnly: false, typedBy: null,
+    const session: Session = { id: newId(), projectId: hub.state.projects[0]!.id, name, createdAt: new Date().toISOString(), state: 'open', cwd: null, command: null, note: '', status: NO_STATUS, attention: NO_ATTENTION, noteLog: [], agent: null, lastInputAt: null, lastOutputAt: null, tags: [], parkedFrom: null, peopleOnly: false, typedBy: null,
     recap: null, takesMessages: false, untold: null, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null }, ...more };
     hub.emit({ type: 'session.created', session, canvasId: hub.state.canvases[0]!.id, node: { id: newId(), sessionId: session.id, x: 0, y: 0, width: 640, height: 400, color: 'none' } });
     return session;

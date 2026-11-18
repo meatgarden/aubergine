@@ -11,8 +11,9 @@ import {
   type ChangeEvent,
   type RuntimeStatus,
   type Settings,
+  firstProject,
 } from '@aubergine/shared';
-import { ApiError, api, subscribeToEvents } from './api';
+import { ApiError, api, askAbout, subscribeToEvents } from './api';
 import { canvasIdFromPath, chooseCanvas, rememberCanvas, rememberedCanvas, sessionFromAddress, writeAddress } from './address';
 import { announcement, notificationsWanted } from './attention';
 import { clampPanelWidth, loadPanelPrefs, savePanelPrefs, type PanelPrefs } from './panel/registry';
@@ -293,6 +294,13 @@ export function currentCanvas(state: Pick<AppStore, 'app' | 'canvasId'>): Canvas
 }
 
 /** The nodes and frames of the canvas this page is showing. */
+/** The project being looked at: the one of the canvas that is shown. */
+export function currentProjectId(state: Pick<AppStore, 'app' | 'canvasId'>): string | null {
+  return currentCanvas(state)?.projectId ?? (state.app ? firstProject(state.app).id : null);
+}
+// What the page asks the server is asked about the project being looked at.
+askAbout(() => currentProjectId(useApp.getState()));
+
 export function currentLayout(state: Pick<AppStore, 'app' | 'canvasId'>): Layout {
   return currentCanvas(state)?.layout ?? noLayout;
 }

@@ -90,7 +90,7 @@ describe('an element as a file', () => {
 
 describe('what is installed, against what its source has', () => {
   const sourceId = newId();
-  const installed = (version: string, digest: string): InstalledItem => ({ id: newId(), kind: 'element', name: 'Tidy', from: { sourceId, kind: 'git', address: 'https://example.invalid/x.git', sourceName: 'Team', itemId: 'tidy', version, commit: 'a'.repeat(40), digest }, installedAt: '2026-04-01T09:00:00.000Z', content: {}, target: {}, atSource: 'current', useInstead: null });
+  const installed = (version: string, digest: string): InstalledItem => ({ id: newId(), projectId: null, kind: 'element', name: 'Tidy', from: { sourceId, kind: 'git', address: 'https://example.invalid/x.git', sourceName: 'Team', itemId: 'tidy', version, commit: 'a'.repeat(40), digest }, installedAt: '2026-04-01T09:00:00.000Z', content: {}, target: {}, atSource: 'current', useInstead: null });
   const A = 'a'.repeat(64);
   const B = 'b'.repeat(64);
 

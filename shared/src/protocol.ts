@@ -514,7 +514,15 @@ export const PAGE_DEFAULT = 100;
 export const PAGE_MAX = 500;
 
 /** Query of every list: how many to return, and where to carry on from. */
+/**
+ * Which project a request is about, where it names no thing that is of one. Left out: the first project the caller
+ * reaches. `all`: every project, for a caller that reaches every project. Inside a session it is that session's
+ * project whatever is sent.
+ */
+export const ProjectAsked = z.union([Id, z.literal('all')]).optional().describe('Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project.');
+
 export const PageQuery = z.object({
+  projectId: ProjectAsked,
   limit: z.coerce.number().int().min(1).max(PAGE_MAX).default(PAGE_DEFAULT).describe('How many items to return at most.'),
   cursor: z.string().min(1).max(512).optional().describe('The `nextCursor` of the page before. Opaque: do not build or change it.'),
 });
@@ -539,6 +547,7 @@ export const CanvasList = pageOf(CanvasSummary);
 export type CanvasList = z.infer<typeof CanvasList>;
 
 export const CreateCanvasRequest = z.object({
+  projectId: Id.optional().describe('The project it is made in. Left out: the first project the caller reaches.'),
   name: CanvasName.describe('The name on its tab.'),
   color: NodeColor.optional().describe('The color of its tab.'),
   labels: Labels.optional().describe('Pairs of key and value for tools of your own to give meaning to.'),

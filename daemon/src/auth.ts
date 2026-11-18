@@ -1,5 +1,5 @@
 import { createHmac, timingSafeEqual } from 'node:crypto';
-import { Id, NEVER_BY_TOKEN, REACH_ACTIONS, SESSION_ACTIONS, canvasAdmits, reaches, scopeFor, type Action, type Reach, type Scope, type SessionFacts } from '@aubergine/shared';
+import { Id, NEVER_BY_TOKEN, REACH_ACTIONS, SESSION_ACTIONS, canvasAdmits, reaches, reachesProject, scopeFor, type Action, type ProjectReach, type Reach, type Scope, type SessionFacts } from '@aubergine/shared';
 
 /** Who is making a request. Exactly one of these, decided once per request. */
 export type Principal =
@@ -8,7 +8,7 @@ export type Principal =
   /** A program running inside one session, holding that session's token. */
   | { kind: 'session'; sessionId: string }
   /** A program holding an API token the owner created, with the scopes the owner gave it. */
-  | { kind: 'token'; tokenId: string; name: string; scopes: readonly Scope[]; /** What it writes about workflows needs the owner's review: it may propose, not change. */ reviewWorkflows?: boolean; /** Which sessions its terminal scopes apply to. Absent or null: none. */ reach?: Reach | null };
+  | { kind: 'token'; tokenId: string; name: string; scopes: readonly Scope[]; /** What it writes about workflows needs the owner's review: it may propose, not change. */ reviewWorkflows?: boolean; /** Which projects it reaches at all, for every scope. Left out: all. */ projects?: ProjectReach; /** Which sessions its terminal scopes apply to. Absent or null: none. */ reach?: Reach | null };
 
 export { ACTIONS, NEVER_BY_TOKEN, type Action } from '@aubergine/shared';
 
@@ -16,6 +16,11 @@ export { ACTIONS, NEVER_BY_TOKEN, type Action } from '@aubergine/shared';
 export interface Resource {
   sessionId?: string;
   canvasId?: string;
+  /**
+   * The project of what is asked about: of the thing the request names, or the project it names. Null: a thing shared
+   * with every project. Left out: nothing of a project is named. Given by whoever asks; never looked up afterwards.
+   */
+  projectId?: string | null;
   /** For a question about a session's terminal: what decides it. Given by whoever asks; never looked up afterwards. */
   session?: SessionFacts;
   /**
@@ -58,6 +63,8 @@ export function authorize(principal: Principal, action: Action, resource: Resour
     return (SESSION_ACTIONS as readonly string[]).includes(action) && resource.sessionId !== undefined && principal.sessionId === resource.sessionId;
   }
   if ((NEVER_BY_TOKEN as readonly string[]).includes(action)) return false;
+  // A token limited to some projects reaches nothing of another, whatever its scopes: not to read it either.
+  if (!reachesProject(principal.projects, resource.projectId)) return false;
   // A token whose changes to workflows need review may propose drafts, and may not write workflows or the shelf itself.
   if (action === 'workflows.write' && principal.reviewWorkflows) return false;
   const scope = scopeFor(action);
@@ -70,6 +77,14 @@ export function authorize(principal: Principal, action: Action, resource: Resour
     return resource.sessionId === undefined || principal.reach?.kind === 'all';
   }
   return !resource.session.peopleOnly && reaches(principal.reach ?? null, resource.session);
+}
+
+/**
+ * Whether a token was refused only because what it asked about is of a project outside its reach. The route then
+ * answers as for a thing that is not there, so that the token learns nothing about what other projects hold.
+ */
+export function projectRefusal(principal: Principal, resource: Resource): boolean {
+  return principal.kind === 'token' && !reachesProject(principal.projects, resource.projectId);
 }
 
 /**

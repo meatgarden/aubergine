@@ -1,3 +1,4 @@
+import { ownerOfNew } from './project-context';
 import { createHash, randomBytes, timingSafeEqual } from 'node:crypto';
 import { GRANTABLE_SCOPES, TOKEN_PREFIX, newId, tokenStatus, type ApiToken, type CreateTokenRequest, type TokenStatus, REACH_SCOPES } from '@aubergine/shared';
 import type { StateHub } from './state-hub';
@@ -43,6 +44,8 @@ export class Tokens {
     const expiresAt = input.expiresAt ?? (input.expiresInDays !== undefined ? new Date(now + input.expiresInDays * DAY_MS).toISOString() : null);
     const token: ApiToken = {
       id: newId(),
+      projects: input.projects ?? { kind: 'all' },
+      projectId: ownerOfNew(this.hub.state, 'token'),
       name: input.name,
       // Always in the same order, smallest first, however they were given.
       scopes: GRANTABLE_SCOPES.filter((scope) => input.scopes.includes(scope)),

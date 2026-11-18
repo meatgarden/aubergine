@@ -1,12 +1,12 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { AddAskRequest, AddTaskRequest } from './tasks-api';
-import { QueueState, Task, isFreeAgent, nextToStart, queueWords, registerTaskSource, sourceWords, stepTask, taskText, unregisterTaskSource, whyNotNow, type DispatchSession, type TaskState, type TaskStep } from './tasks';
+import { QueueState, Task, queueSettingsOf, isFreeAgent, nextToStart, queueWords, registerTaskSource, sourceWords, stepTask, taskText, unregisterTaskSource, whyNotNow, type DispatchSession, type TaskState, type TaskStep } from './tasks';
 
 const ID = (n: number): string => `01900000-0000-7000-8000-${String(n).padStart(12, '0')}`;
 const T = (minute: number): string => `2026-05-01T10:${String(minute).padStart(2, '0')}:00.000Z`;
 
 const task = (n: number, state: TaskState = 'queued', more: Partial<Task> = {}): Task =>
-  Task.parse({ id: ID(n), title: `Task ${n}`, addedBy: { kind: 'person' }, order: n, state, createdAt: T(0), updatedAt: T(0), ...more });
+  Task.parse({ id: ID(n), projectId: ID(900), title: `Task ${n}`, addedBy: { kind: 'person' }, order: n, state, createdAt: T(0), updatedAt: T(0), ...more });
 const free = (n: number, more: Partial<DispatchSession> = {}): DispatchSession => ({ id: ID(100 + n), state: 'open', command: 'the-agent', agent: { program: 'the-agent' }, attention: { state: 'none' }, onCanvas: true, ...more });
 function go(start: Task, steps: TaskStep[]): Task {
   let now = start;
@@ -142,7 +142,9 @@ describe('what is written', () => {
   });
 
   it('has closed defaults: three at once, nothing held, nothing by itself', () => {
-    expect(QueueState.parse({})).toEqual({ tasks: [], asks: [], rules: [], limit: 3, hold: false, automatic: false, ruleRuns: [] });
+    expect(QueueState.parse({})).toEqual({ tasks: [], asks: [], rules: [], settings: {}, ruleRuns: [] });
+    // A project that never changed how its tasks start has the settings every project starts with.
+    expect(queueSettingsOf(QueueState.parse({}), ID(900))).toEqual({ limit: 3, hold: false, automatic: false });
     expect(queueWords([task(1, 'working'), task(2), task(3), task(4, 'proposed'), task(5, 'needs-owner'), task(6, 'done')])).toBe('1 need you, 1 working, 2 next, 1 for your yes, 1 done to look at');
     expect(taskText({ title: 'Fix it', details: '' })).toBe('Fix it');
     expect(taskText({ title: 'Fix it', details: 'The login page.' })).toBe('Fix it\n\nThe login page.');

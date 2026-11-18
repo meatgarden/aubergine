@@ -313,7 +313,7 @@ describe('API', () => {
   it('creates, renames, moves and closes a session', async () => {
     const { session, node } = await createSession();
     expect(session.name).toBe('Terminal 1');
-    expect(session.projectId).toBe(hub.state.project.id);
+    expect(session.projectId).toBe(hub.state.projects[0]!.id);
     expect(node.sessionId).toBe(session.id);
     expect(await runtime.has(session.id)).toBe(true);
 

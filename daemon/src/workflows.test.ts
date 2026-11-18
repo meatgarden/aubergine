@@ -132,7 +132,7 @@ async function makeToken(name: string, scopes: Scope[]): Promise<string> {
 function fakeSession(name: string, more: Partial<Session> = {}): Session {
   const session: Session = {
     id: newId(),
-    projectId: hub.state.project.id,
+    projectId: hub.state.projects[0]!.id,
     name,
     createdAt: new Date().toISOString(),
     state: 'open',
@@ -737,7 +737,7 @@ describe('a restart of the server', () => {
     await startRun(workflow.id, session.id);
     await hub.flush();
     const file = JSON.parse(await readFile(path.join(dir, 'state.json'), 'utf8'));
-    expect(file.version).toBe(13);
+    expect(file.version).toBe(14);
     expect(file.workflows).toHaveLength(1);
     expect(file.runs).toHaveLength(1);
     expect(file.runs[0].status).toBe('running');

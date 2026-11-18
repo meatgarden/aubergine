@@ -57,6 +57,7 @@ export type ScheduleLast = z.infer<typeof ScheduleLast>;
 
 export const Schedule = z.object({
   id: Id,
+  projectId: Id.describe('The project it belongs to. Set by the server from where it was made.'),
   name: PlainName.describe('What it is called. Shown in lists and beside what it hands in.'),
   time: TimeOfDay.describe("The time of day, on this computer's clock and in its time zone."),
   days: Days.describe('The days of the week it runs on.'),

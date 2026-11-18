@@ -1,3 +1,4 @@
+import { isLocalHost } from '@aubergine/shared';
 import { createHash } from 'node:crypto';
 import { setTimeout as sleep } from 'node:timers/promises';
 import {
@@ -82,7 +83,8 @@ export class TerminalAccess {
   ) {}
 
   private running(sessionId: string): Session {
-    const session = this.sessions.get(sessionId);
+    // Reading a terminal and typing into it are done on this computer, or not at all.
+    const session = this.sessions.here(sessionId);
     if (session.state === 'exited') throw new ConflictError('This shell has ended; restart it first');
     return session;
   }
@@ -109,7 +111,8 @@ export class TerminalAccess {
 
   /** Searches the history of the sessions this caller may read. The others are not searched, and are not named. */
   async search(query: string, limit: number, mayRead: (session: Session) => boolean): Promise<{ answer: TerminalSearchResponse; trace: TerminalTrace }> {
-    const all = this.sessions.all().filter((s) => s.state !== 'exited');
+    // Only terminals whose shell runs on this computer have output here to search.
+    const all = this.sessions.all().filter((s) => s.state !== 'exited' && isLocalHost(s));
     const allowed = all.filter(mayRead);
     const found = await this.runtime.search(
       allowed.map((s) => s.id),

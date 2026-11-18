@@ -1,3 +1,4 @@
+import { ownerOfNew } from './project-context';
 import { realpath, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -257,7 +258,7 @@ export class Library {
   async start(): Promise<void> {
     let builtin = this.state.sources.find((source) => source.kind === 'builtin');
     if (!builtin) {
-      builtin = { id: newId(), kind: 'builtin', address: this.options.builtin ?? '', name: 'Comes with Aubergine', claims: null, addedAt: new Date().toISOString(), refreshedAt: null, commit: null, problem: null, history: null, items: [], skipped: [] };
+      builtin = { id: newId(), projectId: null, kind: 'builtin', address: this.options.builtin ?? '', name: 'Comes with Aubergine', claims: null, addedAt: new Date().toISOString(), refreshedAt: null, commit: null, problem: null, history: null, items: [], skipped: [] };
       this.hub.emit({ type: 'library.source.changed', source: builtin });
     } else if ((this.options.builtin ?? '') !== builtin.address) {
       builtin = { ...builtin, address: this.options.builtin ?? '' };
@@ -290,7 +291,7 @@ export class Library {
     if (this.state.sources.length >= LIBRARY_SOURCES_MAX) throw new ConflictError(`There are ${LIBRARY_SOURCES_MAX} sources; remove one first.`);
     const address = await kind.check(body.address);
     if (this.state.sources.some((s) => s.kind === body.kind && s.address === address)) throw new ConflictError('That source is already among yours.');
-    const source: LibrarySource = { id: newId(), kind: body.kind, address, name: (body.name ?? '').slice(0, 120), claims: null, addedAt: new Date().toISOString(), refreshedAt: null, commit: null, problem: null, history: null, items: [], skipped: [] };
+    const source: LibrarySource = { id: newId(), projectId: ownerOfNew(this.hub.state, 'source'), kind: body.kind, address, name: (body.name ?? '').slice(0, 120), claims: null, addedAt: new Date().toISOString(), refreshedAt: null, commit: null, problem: null, history: null, items: [], skipped: [] };
     this.hub.emit({ type: 'library.source.changed', source });
     const read = await this.read(source, true);
     return read;
@@ -599,6 +600,7 @@ export class Library {
     }
     const item: InstalledItem = {
       id: installed?.id ?? newId(),
+      projectId: installed ? installed.projectId : ownerOfNew(this.hub.state, 'installed'),
       kind: found.kind,
       name: file.read.name,
       from,

@@ -128,7 +128,7 @@ const except = (...without: Scope[]): Scope[] => GRANTABLE_SCOPES.filter((scope)
 function fakeSession(name: string, more: Partial<Session> = {}, canvasId = hub.state.canvases[0]!.id): Session {
   const session: Session = {
     id: newId(),
-    projectId: hub.state.project.id,
+    projectId: hub.state.projects[0]!.id,
     name,
     createdAt: new Date().toISOString(),
     state: 'open',
