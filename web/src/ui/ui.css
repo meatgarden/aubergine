@@ -960,9 +960,10 @@ button.color-dot:hover {
 }
 .list-row .list-name {
   flex: 1 1 auto;
-  min-width: 45%;
+  min-width: 30%;
 }
-.list-row .list-main > :not(.list-state, .list-name) {
+/* A state chip is never cut: the name gives way first, then the marks. */
+.list-row .list-main > :not(.list-state, .list-name, .list-badge) {
   flex: 0 1 auto;
   min-width: 0;
   overflow: hidden;
@@ -1316,7 +1317,4 @@ button.color-dot:hover {
 /* On a row the state is said by its mark; the word is added only where the terminal waits for the owner or failed. */
 .list-row:not(.state-waiting, .state-failed) .list-badge {
   display: none;
-}
-.list-row .list-name {
-  min-width: 40%;
 }
