@@ -308,6 +308,11 @@ These are the only abstractions in the code base. Each has exactly one implement
 - **A menu takes Escape before what is behind it.** Menus listen in the capture phase, and `belongsToControl` gives Escape to an open menu.
 - **What hangs from a terminal's title is not clipped by the terminal's box.**
 
+- **A step is changed where it stands.** In the editor a step is a card: its name opens it in place, one menu holds what is done to it (move, insert before, duplicate, remove), and what is seldom set is folded with a one-line summary. Save is the one primary.
+- **Words begin on the gutter.** A quiet button that begins a line and a row pressed as a whole hang left by their padding; this is in the piece, not in a screen's rule. "simpler surfaces" measures the first letter of rows, cards and headings.
+- **A class no component renders has no rule.** Before removing rules by class name, a name inside `:not(...)` is taken out of the list; the selector stays.
+- **The tour looks when a screen is put into the page**, not only on its timer, and its ring is not drawn across a menu or the drawer.
+
 ### Canvas behaviour
 
 - A terminal takes input at any zoom at which it is drawn live, and only while it has focus. One click focuses it and moves nothing; only a node too small to read (below `READABLE_ZOOM`) zooms in first. An unfocused terminal is covered by a shield: the first click focuses it.
@@ -427,7 +432,7 @@ The page no longer loses a change after loading (changes are numbered; `web/src/
 
 The look: tokens for every size, colour, space, corner and layer in both themes (`web/src/tokens.css`), one anatomy for controls and the shared pieces (`web/src/ui/`), the old stylesheet in a layer below them, a test that fails on drift, a browser test that measures the page and each screen, `docs/design.md`. Most buttons are still plain elements rather than the components. Many dialogs and panels were measured or neither measured nor looked at; Safari and Firefox were not run.
 
-Simpler surfaces: one row of panel tabs with More, one Filter menu, 44px rows, a terminal's title with one menu, one For you count in the top bar, Workflows as cards with two tabs, the Queue with three tabs, the Library's sources folded, the Board's filters in one menu, new pieces in `web/src/ui` (`MenuButton`, `MenuItem`, `Tabs`, `HowThisWorks`). The workflow editor and the run dialog were not reworked, and unused layout rules for what moved are still in `styles.css`.
+Simpler surfaces: one row of panel tabs with More, one Filter menu, 44px rows, a terminal's title with one menu, one For you count in the top bar, Workflows as cards with two tabs, the Queue with three tabs, the Library's sources folded, the Board's filters in one menu, new pieces in `web/src/ui` (`MenuButton`, `MenuItem`, `Tabs`, `HowThisWorks`). The workflow editor, the saved-step editor and the run dialog are one column with steps changed in place. The inventory panel, the working-copy panel and the note panel beside a terminal were not looked at after these changes.
 
 Not built yet: a packaged build without development dependencies, Linux tested, measured key tables for Safari, Firefox, Linux and Windows, publishing the client as a package, moving the remaining `/api/v1` routes onto `/v1`, the workflow library, the board of runs, approvals, branches, a pool of agents, a list of past runs in the browser, waiting for output, changing a token's reach, SQLite, an HTTP transport for the MCP server, presets, a finder agent, recording, bash or fish integration.
 

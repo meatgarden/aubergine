@@ -1494,8 +1494,7 @@ kbd.kept {
   border-radius: 0 var(--radius-control) var(--radius-control) 0;
   border-left: none;
 }
-.list-scope button[aria-pressed='true'],
-.list-filter[aria-pressed='true'] {
+.list-scope button[aria-pressed='true'] {
   background: var(--surface-raised);
   color: var(--text);
   border-color: var(--accent);
@@ -1512,8 +1511,6 @@ kbd.kept {
   border: 1px solid var(--border);
   border-radius: var(--radius-control);
 }
-.list-toggles,
-.list-options,
 .list-chips,
 .tag-chips {
   display: flex;
@@ -1521,19 +1518,7 @@ kbd.kept {
   gap: var(--space-1);
   align-items: center;
 }
-.list-filter,
-.list-options select {
-  padding: 1px var(--space-2);
-  font-size: var(--font-meta);
-  color: var(--text-muted);
-  background: none;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-surface);
-}
-.list-options select {
-  border-radius: var(--radius-control);
-  background: var(--surface);
-}
+
 .list-chip,
 .list-tag {
   padding: 0 var(--space-2);
@@ -1688,14 +1673,7 @@ kbd.kept {
   flex: none;
   font-size: var(--font-meta);
 }
-.list-agent {
-  flex: none;
-  color: var(--text-muted);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-control);
-  padding: 0 var(--space-1);
-  font-size: var(--font-meta);
-}
+
 .list-spring {
   flex: 1;
 }
@@ -2177,7 +2155,6 @@ tr[data-status='expired'] strong {
 }
 .editor-inputs,
 .editor-elements,
-.template-list,
 .runs-list {
   list-style: none;
   margin: 0 0 var(--space-2);
@@ -2234,9 +2211,7 @@ tr[data-status='expired'] strong {
   font-size: var(--font-body);
   color: var(--danger);
 }
-.workflow-table td {
-  vertical-align: top;
-}
+
 .workflow-actions {
   white-space: nowrap;
   text-align: right;
@@ -2247,19 +2222,6 @@ tr[data-status='expired'] strong {
 .workflows-screen h3 {
   margin: var(--space-4) 0 var(--space-2);
   font-size: var(--font-body);
-}
-.template-list li {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
-  padding: var(--space-2) 0;
-  border-top: 1px solid var(--border);
-}
-.toolbar-attached {
-  margin-left: -8px;
-  padding-left: var(--space-2);
-  padding-right: var(--space-2);
 }
 
 /* The Workflows section of the side panel. */
@@ -2312,14 +2274,6 @@ tr[data-status='expired'] strong {
   }
 }
 
-/* ---------- Drafts, the shelf, needs, checklists ---------- */
-
-.workflows-ask {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-  margin: var(--space-2) 0 var(--space-1);
-}
 .review-grid {
   display: grid;
   grid-template-columns: minmax(180px, 260px) minmax(0, 1fr);
@@ -3050,10 +3004,6 @@ tr[data-status='expired'] strong {
 }
 .messages-section {
   padding: var(--space-1) var(--space-2) var(--space-2);
-}
-.tab-messaging {
-  font-size: var(--font-meta);
-  padding: 0 var(--space-1);
 }
 
 /* A fixed sentence that could not be typed for the agent */
@@ -3896,22 +3846,9 @@ tr[data-status='expired'] strong {
   container-type: inline-size;
   container-name: node-title;
 }
-.tool-sign {
-  display: none;
-}
-.tool-count {
-  margin-left: var(--space-1);
-}
+
 @container node-title (max-width: 660px) {
-  .tool-word {
-    display: none;
-  }
-  .tool-sign {
-    display: inline;
-  }
-  .tool-count {
-    margin-left: 0;
-  }
+
 }
 /* The name comes first and keeps its room; what the terminal runs gives way before the name does. */
 .node-title .node-name {

@@ -6,6 +6,7 @@ import { useApp } from '../store';
 import { addElement, addInput, changeElement, draftOf, draftProblems, moveElement, removeElement, sameDraft, sampleInputs, versionOfDraft, type Draft } from './editor-model';
 import { CopyMark, CopyPanel, ElementReference } from './CopyPanel';
 import { ElementFields } from './ElementFields';
+import { MenuButton, MenuItem } from '../ui';
 
 /**
  * The editor of one workflow: its name, what holds for every element, what a
@@ -104,6 +105,15 @@ export function WorkflowEditor() {
     }
   };
 
+  /** A copy of a saved step, with where it came from and from which version, put at a place in the list. */
+  const insertSaved = (shelfId: string, at: number): void => {
+    const item = offered.find((entry) => entry.id === shelfId);
+    if (!item) return;
+    const id = elementIdFor(item.element.name, draft.elements.map((el) => el.id));
+    change({ ...draft, elements: [...draft.elements.slice(0, at), { ...item.element, id, origin: { kind: 'shelf', shelfId: item.id }, source: sourceOf(item) }, ...draft.elements.slice(at)] });
+    setSelected(id);
+  };
+
   return (
     <div
       className="dialog-backdrop"
@@ -116,47 +126,45 @@ export function WorkflowEditor() {
     >
       <div className="dialog sheet workflow-editor" role="dialog" aria-label={`Workflow ${workflow.name}`} data-testid="workflow-editor">
         <header className="sheet-head">
-          <h2>
-            Workflow <span className="sheet-note">version {version.number}</span>
-          </h2>
-          <span>
-            <button
-              type="button"
-              className="quiet"
-              disabled={changed}
-              title={changed ? 'Save first' : 'Start a run of this workflow'}
-              onClick={() => {
-                close();
-                useApp.getState().startRun({ sessionId: useApp.getState().focus?.sessionId ?? useApp.getState().selected ?? null, workflowId: workflow.id });
-              }}
-            >
-              Run…
-            </button>
-            <button
-              type="button"
-              className="quiet"
-              disabled={changed}
-              title={changed ? 'Save first' : 'Write this workflow as a file into .aubergine/workflows of the repository the selected terminal is in, to share it through Git'}
-              onClick={() => void saveToRepository(false)}
-              data-testid="save-to-repository"
-            >
-              Save to the repository…
-            </button>
-            <button type="button" className="quiet" onClick={() => runCommand('workflows.open')}>
-              All workflows…
-            </button>
+          <div>
+            <h2>Edit workflow</h2>
+            <p className="ui-meta">Version {version.number}. Saving makes a new version; runs that are going keep the one they started on.</p>
+          </div>
+          <span className="ui-head-actions">
+            <MenuButton more label="More for this workflow" testid="workflow-editor-more">
+              <MenuItem
+                disabled={changed}
+                hint={changed ? 'Save first.' : 'Start a run of this workflow.'}
+                onClick={() => {
+                  close();
+                  useApp.getState().startRun({ sessionId: useApp.getState().focus?.sessionId ?? useApp.getState().selected ?? null, workflowId: workflow.id });
+                }}
+              >
+                Run…
+              </MenuItem>
+              <MenuItem disabled={changed} hint={changed ? 'Save first.' : 'Write it as a file into .aubergine/workflows of the repository the selected terminal is in, to share it through Git.'} onClick={() => void saveToRepository(false)} data-testid="save-to-repository">
+                Save to the repository…
+              </MenuItem>
+              <MenuItem onClick={() => runCommand('workflows.open')}>All workflows…</MenuItem>
+            </MenuButton>
             <button type="button" className="quiet" onClick={tryClose} data-testid="editor-close">
               Close
             </button>
           </span>
         </header>
 
-        <div className="editor-grid">
-          <div className="editor-form">
-            <label className="wf-field">
-              <span>Name</span>
-              <input value={draft.name} maxLength={120} onChange={(e) => change({ ...draft, name: e.target.value })} data-testid="workflow-name" />
-            </label>
+        <div className="editor-column">
+          <label className="wf-field">
+            <span>Name</span>
+            <input value={draft.name} maxLength={120} onChange={(e) => change({ ...draft, name: e.target.value })} data-testid="workflow-name" />
+          </label>
+          <details className="ui-fold" data-testid="workflow-more-about">
+            <summary>
+              More about this workflow{' '}
+              <span className="ui-meta">
+                {draft.description.trim() ? 'described' : 'no description'} · {draft.inputs.length} {draft.inputs.length === 1 ? 'thing' : 'things'} a run is given{draft.standing.trim() ? ' · rules for every step' : ''}
+              </span>
+            </summary>
             <label className="wf-field">
               <span>What it is for</span>
               <input value={draft.description} maxLength={2000} onChange={(e) => change({ ...draft, description: e.target.value })} />
@@ -188,9 +196,11 @@ export function WorkflowEditor() {
               + Input
             </button>
 
-            <div className="wf-label">
-              Elements <span className="sheet-note">drag to reorder</span>
-            </div>
+          </details>
+
+          <h3>
+            Steps <span className="ui-meta">in the order an agent goes through them; press one to change it</span>
+          </h3>
             <ol className="editor-elements" data-testid="editor-elements">
               {draft.elements.map((item, index) => (
                 <li
@@ -216,164 +226,180 @@ export function WorkflowEditor() {
                   onDrop={(e) => e.preventDefault()}
                   onDragEnd={() => setDragging(null)}
                 >
-                  <span className="editor-grip" aria-hidden="true">
-                    ⠿
-                  </span>
-                  <button type="button" className="editor-element-name" aria-pressed={item.id === element?.id} onClick={() => setSelected(item.id)}>
-                    {index + 1}. {item.name || '(no name)'}
-                  </button>
-                  <CopyMark element={item} shelf={shelf} />
-                  <button type="button" className="quiet" aria-label={`Move ${item.name} up`} disabled={index === 0} onClick={() => change(moveElement(draft, index, index - 1))} data-testid="element-up">
-                    ↑
-                  </button>
-                  <button type="button" className="quiet" aria-label={`Move ${item.name} down`} disabled={index === draft.elements.length - 1} onClick={() => change(moveElement(draft, index, index + 1))} data-testid="element-down">
-                    ↓
-                  </button>
-                  <button
-                    type="button"
-                    className="quiet"
-                    aria-label={`Remove ${item.name}`}
-                    disabled={draft.elements.length === 1}
-                    onClick={() => {
-                      change(removeElement(draft, item.id));
-                      if (selected === item.id) setSelected(null);
-                    }}
-                    data-testid="element-remove"
-                  >
-                    ×
-                  </button>
-                </li>
-              ))}
-            </ol>
-            <button
-              type="button"
-              className="quiet"
-              onClick={() => {
-                const next = addElement(draft);
-                change(next);
-                setSelected(next.elements.at(-1)?.id ?? null);
-              }}
-              data-testid="element-add"
-            >
-              + Element
-            </button>
-            {/* Every other kind there is, by what it is called: no kind is named here. */}
-            {elementKindNames()
-              .filter((kind) => waitsForPerson(kind))
-              .map((kind) => (
-                <button
-                  key={kind}
-                  type="button"
-                  className="quiet"
-                  title="A place where the run stops until you have approved it or sent it back"
-                  onClick={() => {
-                    const next = addElement(draft, elementKind(kind)?.title ?? kind, kind);
-                    change(next);
-                    setSelected(next.elements.at(-1)?.id ?? null);
-                  }}
-                  data-testid={`element-add-${kind}`}
-                >
-                  + {elementKind(kind)?.title ?? kind}
-                </button>
-              ))}
-            {offered.length > 0 && (
-              <select
-                className="editor-insert"
-                aria-label="Insert from shelf"
-                value=""
-                onChange={(e) => {
-                  const item = offered.find((entry) => entry.id === e.target.value);
-                  if (!item) return;
-                  // A copy, with where it came from and from which version: changing the shelf later does not change this
-                  // workflow, and the editor can say when the shelf has moved on.
-                  const id = elementIdFor(item.element.name, draft.elements.map((el) => el.id));
-                  change({ ...draft, elements: [...draft.elements, { ...item.element, id, origin: { kind: 'shelf', shelfId: item.id }, source: sourceOf(item) }] });
-                  setSelected(id);
-                }}
-                data-testid="insert-from-shelf"
-              >
-                <option value="">Insert from shelf…</option>
-                {offered.map((item) => (
-                  <option key={item.id} value={item.id}>
-                    {item.element.name}
-                  </option>
-                ))}
-              </select>
-            )}
-          </div>
-
-          <div className="editor-detail">
-            {element && (
-              <>
-                <CopyPanel
-                  element={element}
-                  shelf={shelf}
-                  onDecide={(next, said) => {
-                    change(changeElement(draft, element.id, next));
-                    setSaved(said);
-                  }}
-                />
-                <ElementFields element={element} onChange={(next: Element) => change(changeElement(draft, element.id, next))} />
-                <ElementReference />
-                <div className="editor-row">
-                  <button
-                    type="button"
-                    className="quiet"
-                    title="Keep a copy of this step among the saved steps, to use in other workflows or to run by itself"
-                    onClick={() => {
-                      const { id: _id, origin: _origin, extra: _extra, source: _source, ...fields } = element;
-                      void api
-                        .createElement(fields)
-                        .then((saved) => {
-                          useApp.getState().apply({ type: 'shelf.changed', item: saved as never });
-                          setSaved(`“${element.name}” is among the saved steps.`);
-                        })
-                        .catch((e: unknown) => setError((e as Error).message));
-                    }}
-                    data-testid="save-to-shelf"
-                  >
-                    {copyStatus(element, shelf).shelf ? 'Save as a new saved step' : 'Save among the saved steps'}
-                  </button>
-                  {(() => {
-                    // An element that came from the shelf can go back to it as a new version of what it came from.
-                    const from = copyStatus(element, shelf).shelf;
-                    if (!from) return null;
-                    return (
+                  <div className="editor-step-head">
+                    <span className="editor-grip" aria-hidden="true" title="Drag to move this step">
+                      ⠿
+                    </span>
+                    <button type="button" className="editor-element-name" aria-expanded={item.id === selected} title={item.id === selected ? undefined : 'Open this step to change it'} onClick={() => setSelected(item.id)}>
+                      {index + 1}. {item.name || '(no name)'}
+                    </button>
+                    <CopyMark element={item} shelf={shelf} />
+                    <MenuButton more label={`More for step ${index + 1}, ${item.name}`} testid="element-more">
+                      <MenuItem aria-label={`Move ${item.name} up`} disabled={index === 0} onClick={() => change(moveElement(draft, index, index - 1))} data-testid="element-up">
+                        Move up
+                      </MenuItem>
+                      <MenuItem aria-label={`Move ${item.name} down`} disabled={index === draft.elements.length - 1} onClick={() => change(moveElement(draft, index, index + 1))} data-testid="element-down">
+                        Move down
+                      </MenuItem>
+                      {offered.length > 0 && (
+                        <label className="ui-menu-line">
+                          <span>Insert a saved step before</span>
+                          <select aria-label={`Insert a saved step before ${item.name}`} value="" onChange={(e) => insertSaved(e.target.value, index)} data-testid="insert-before">
+                            <option value="">Choose…</option>
+                            {offered.map((entry) => (
+                              <option key={entry.id} value={entry.id}>
+                                {entry.element.name}
+                              </option>
+                            ))}
+                          </select>
+                        </label>
+                      )}
+                      <MenuItem
+                        onClick={() => {
+                          const id = elementIdFor(item.name, draft.elements.map((el) => el.id));
+                          change({ ...draft, elements: [...draft.elements.slice(0, index + 1), { ...item, id }, ...draft.elements.slice(index + 1)] });
+                          setSelected(id);
+                        }}
+                        data-testid="element-duplicate"
+                      >
+                        Duplicate
+                      </MenuItem>
+                      <MenuItem
+                        aria-label={`Remove ${item.name}`}
+                        disabled={draft.elements.length === 1}
+                        onClick={() => {
+                          change(removeElement(draft, item.id));
+                          if (selected === item.id) setSelected(null);
+                        }}
+                        data-testid="element-remove"
+                      >
+                        Remove
+                      </MenuItem>
+                    </MenuButton>
+                  </div>
+                  {/* Open: changed in place, under its own name. */}
+                  {item.id === selected && element && (
+                    <div className="editor-step-body" draggable onDragStart={(e) => { e.preventDefault(); e.stopPropagation(); }}>
+                    <CopyPanel
+                      element={element}
+                      shelf={shelf}
+                      onDecide={(next, said) => {
+                        change(changeElement(draft, element.id, next));
+                        setSaved(said);
+                      }}
+                    />
+                    <ElementFields element={element} onChange={(next: Element) => change(changeElement(draft, element.id, next))} />
+                    <ElementReference />
+                    <div className="editor-row">
                       <button
                         type="button"
                         className="quiet"
-                        title={`Save what this step says now as version ${from.version + 1} of “${from.element.name}” among the saved steps. Other workflows that hold a copy are not changed; they will say a newer version is there.`}
+                        title="Keep a copy of this step among the saved steps, to use in other workflows or to run by itself"
                         onClick={() => {
                           const { id: _id, origin: _origin, extra: _extra, source: _source, ...fields } = element;
                           void api
-                            .updateElement(from.id, { ...fields, note: `From the workflow “${draft.name}”`.slice(0, 200) })
+                            .createElement(fields)
                             .then((saved) => {
                               useApp.getState().apply({ type: 'shelf.changed', item: saved as never });
-                              // This copy is now an unchanged copy of the version just made.
-                              change(changeElement(draft, element.id, { ...element, source: sourceOf(saved as never) }));
-                              setSaved(`Saved as version ${saved.version} of “${saved.element.name}” among the saved steps.`);
+                              setSaved(`“${element.name}” is among the saved steps.`);
                             })
                             .catch((e: unknown) => setError((e as Error).message));
                         }}
-                        data-testid="save-as-version"
+                        data-testid="save-to-shelf"
                       >
-                        Save to shelf as a new version of “{from.element.name}”
+                        {copyStatus(element, shelf).shelf ? 'Save as a new saved step' : 'Save among the saved steps'}
                       </button>
-                    );
-                  })()}
-                </div>
-                <div className="wf-label">
-                  What an agent will be told on this step
-                  {draft.inputs.slice(0, 1).map((input) => (
-                    <input key={input.key} className="editor-sample" aria-label={`A sample ${input.label}`} placeholder={`try a ${input.label.toLowerCase()}`} value={typed[input.key] ?? ''} onChange={(e) => setTyped({ ...typed, [input.key]: e.target.value })} />
+                      {(() => {
+                        // An element that came from the shelf can go back to it as a new version of what it came from.
+                        const from = copyStatus(element, shelf).shelf;
+                        if (!from) return null;
+                        return (
+                          <button
+                            type="button"
+                            className="quiet"
+                            title={`Save what this step says now as version ${from.version + 1} of “${from.element.name}” among the saved steps. Other workflows that hold a copy are not changed; they will say a newer version is there.`}
+                            onClick={() => {
+                              const { id: _id, origin: _origin, extra: _extra, source: _source, ...fields } = element;
+                              void api
+                                .updateElement(from.id, { ...fields, note: `From the workflow “${draft.name}”`.slice(0, 200) })
+                                .then((saved) => {
+                                  useApp.getState().apply({ type: 'shelf.changed', item: saved as never });
+                                  // This copy is now an unchanged copy of the version just made.
+                                  change(changeElement(draft, element.id, { ...element, source: sourceOf(saved as never) }));
+                                  setSaved(`Saved as version ${saved.version} of “${saved.element.name}” among the saved steps.`);
+                                })
+                                .catch((e: unknown) => setError((e as Error).message));
+                            }}
+                            data-testid="save-as-version"
+                          >
+                            Save to shelf as a new version of “{from.element.name}”
+                          </button>
+                        );
+                      })()}
+                    </div>
+                    <div className="wf-label">
+                      What an agent will be told on this step
+                      {draft.inputs.slice(0, 1).map((input) => (
+                        <input key={input.key} className="editor-sample" aria-label={`A sample ${input.label}`} placeholder={`try a ${input.label.toLowerCase()}`} value={typed[input.key] ?? ''} onChange={(e) => setTyped({ ...typed, [input.key]: e.target.value })} />
+                      ))}
+                    </div>
+                    <pre className="editor-preview" data-testid="editor-preview">
+                      {preview ?? 'Fix what is listed below to see this.'}
+                    </pre>
+
+                    </div>
+                  )}
+                </li>
+              ))}
+            </ol>
+            <div className="editor-add">
+              <button
+                type="button"
+                onClick={() => {
+                  const next = addElement(draft);
+                  change(next);
+                  setSelected(next.elements.at(-1)?.id ?? null);
+                }}
+                data-testid="element-add"
+              >
+                Add a step
+              </button>
+              {/* Every other kind there is, by what it is called: no kind is named here. */}
+              {elementKindNames()
+                .filter((kind) => waitsForPerson(kind))
+                .map((kind) => (
+                  <button
+                    key={kind}
+                    type="button"
+                    className="quiet"
+                    title="A place where the run stops until you have approved it or sent it back"
+                    onClick={() => {
+                      const next = addElement(draft, elementKind(kind)?.title ?? kind, kind);
+                      change(next);
+                      setSelected(next.elements.at(-1)?.id ?? null);
+                    }}
+                    data-testid={`element-add-${kind}`}
+                  >
+                    Add {(elementKind(kind)?.title ?? kind).toLowerCase()}
+                  </button>
+                ))}
+              {offered.length > 0 && (
+                <select
+                  className="editor-insert"
+                  aria-label="Add a saved step"
+                  value=""
+                  onChange={(e) => insertSaved(e.target.value, draft.elements.length)}
+                  data-testid="insert-from-shelf"
+                >
+                  <option value="">Add a saved step…</option>
+                  {offered.map((item) => (
+                    <option key={item.id} value={item.id}>
+                      {item.element.name}
+                    </option>
                   ))}
-                </div>
-                <pre className="editor-preview" data-testid="editor-preview">
-                  {preview ?? 'Fix what is listed below to see this.'}
-                </pre>
-              </>
-            )}
-          </div>
+                </select>
+              )}
+            </div>
         </div>
 
         {problems.length > 0 && (
@@ -400,7 +426,10 @@ export function WorkflowEditor() {
               Close without saving
             </button>
           )}
-          <button type="button" onClick={() => void save()} disabled={busy || !changed || problems.length > 0} data-testid="editor-save">
+          <button type="button" onClick={tryClose} data-testid="editor-cancel">
+            Cancel
+          </button>
+          <button type="button" className="primary" onClick={() => void save()} disabled={busy || !changed || problems.length > 0} data-testid="editor-save">
             Save
           </button>
         </div>

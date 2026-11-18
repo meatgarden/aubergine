@@ -126,10 +126,10 @@ export function DescribeDialog() {
             </>
           ) : (
             <>
-              <button type="button" className="quiet" onClick={close}>
+              <button type="button" onClick={close}>
                 Cancel
               </button>
-              <button type="button" disabled={busy || description.trim() === ''} onClick={() => void send()} data-testid="describe-send">
+              <button type="button" className="primary" disabled={busy || description.trim() === ''} onClick={() => void send()} data-testid="describe-send">
                 Send
               </button>
             </>

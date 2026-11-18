@@ -600,20 +600,27 @@ test('a workflow made from a template moves a terminal through its elements', as
   await expect(editor.getByTestId('editor-preview')).toContainText('Element 2 of 3: Build');
   await expect(editor.getByTestId('editor-preview')).toContainText('Build it, and write the tests first.');
   // Reorder with the buttons, and back: the order is what is saved.
+  await reveal(editor.locator('[data-element="check"]').getByTestId('element-up'), editor.locator('[data-element="check"]').getByTestId('element-more'));
   await editor.locator('[data-element="check"]').getByTestId('element-up').click();
   await expect(editor.getByTestId('editor-element').nth(1)).toHaveAttribute('data-element', 'check');
+  await reveal(editor.locator('[data-element="check"]').getByTestId('element-down'), editor.locator('[data-element="check"]').getByTestId('element-more'));
   await editor.locator('[data-element="check"]').getByTestId('element-down').click();
   await expect(editor.getByTestId('editor-element').nth(2)).toHaveAttribute('data-element', 'check');
-  // And by dragging: the last element onto the first.
-  await editor.locator('[data-element="check"]').dragTo(editor.locator('[data-element="plan"]'));
+  // And by dragging, by the grip at the start of a step: the last step onto the first.
+  // (With the last step open the first two are closed, and all three grips are in sight.)
+  await editor.locator('[data-element="check"] .editor-element-name').click();
+  await editor.locator('[data-element="check"] .editor-grip').dragTo(editor.locator('[data-element="plan"] .editor-grip'));
   await expect(editor.getByTestId('editor-element').first()).toHaveAttribute('data-element', 'check');
+  await reveal(editor.locator('[data-element="check"]').getByTestId('element-down'), editor.locator('[data-element="check"]').getByTestId('element-more'));
   await editor.locator('[data-element="check"]').getByTestId('element-down').click();
+  await reveal(editor.locator('[data-element="check"]').getByTestId('element-down'), editor.locator('[data-element="check"]').getByTestId('element-more'));
   await editor.locator('[data-element="check"]').getByTestId('element-down').click();
   await expect(editor.getByTestId('editor-element').nth(2)).toHaveAttribute('data-element', 'check');
   // An element without text cannot be saved, and the editor says which.
   await editor.getByTestId('element-add').click();
   await expect(editor.getByTestId('editor-problems')).toContainText('has no instructions');
   await expect(editor.getByTestId('editor-save')).toBeDisabled();
+  await reveal(editor.locator('[data-element="new-element"]').getByTestId('element-remove'), editor.locator('[data-element="new-element"]').getByTestId('element-more'));
   await editor.locator('[data-element="new-element"]').getByTestId('element-remove').click();
   await expect(editor.getByTestId('editor-problems')).toHaveCount(0);
   await editor.getByTestId('editor-save').click();
@@ -1196,8 +1203,9 @@ test('the tour: each step is done on the real thing, on the demo', async ({ page
   // (The ring takes no clicks, so a hit test cannot see it: it must not be there at all.)
   await page.getByTestId('toolbar-board').click();
   await expect(page.getByTestId('board')).toBeVisible();
-  await expect(page.getByTestId('tour-ring')).toHaveCount(0);
-  await expect(card).toBeHidden();
+  // At once, not when a timer next looks: asked one time, a moment after the screen is there, with no waiting for it to become so.
+  await page.waitForTimeout(60);
+  expect(await page.evaluate(() => ({ ring: document.querySelectorAll('[data-testid="tour-ring"]').length, card: (document.querySelector('[data-testid="tour-card"]') as HTMLElement).hidden }))).toEqual({ ring: 0, card: true });
   expect(await onTop(page, 'board')).toBe(true);
   await page.keyboard.press('Escape');
   await expect(page.getByTestId('board')).toHaveCount(0);
@@ -2147,6 +2155,7 @@ test('an approval and the board: a run stops for the owner, shows on the board a
   await editor.getByTestId('element-ask').fill('Is the change what you wanted?');
   await editor.getByTestId('element-look-at').fill('The note from Build.');
   await expect(editor.getByTestId('editor-problems')).toHaveCount(0);
+  await reveal(editor.locator('[data-element="approval"]').getByTestId('element-up'), editor.locator('[data-element="approval"]').getByTestId('element-more'));
   await editor.locator('[data-element="approval"]').getByTestId('element-up').click();
   await expect(editor.getByTestId('editor-element').nth(2)).toHaveAttribute('data-element', 'approval');
   // The preview is what an agent would be told there: to stop.
@@ -3214,6 +3223,71 @@ test('one look: the canvas page and every screen use the two control heights and
     await page.keyboard.press('Escape');
     await expect(page.getByTestId(testid)).toHaveCount(0);
   }
+  // The surfaces where the work on a workflow is done, and the smaller ones that are reached from a menu or the palette.
+  const look = async (name: string, testid: string, open: () => Promise<void>): Promise<void> => {
+    await open();
+    await expect(page.getByTestId(testid), name).toBeVisible();
+    expect(await measureLook(page), name).toEqual([]);
+    expect(await onTop(page, testid), `${name} is on top`).toBe(true);
+    for (let presses = 0; presses < 4 && (await page.locator('.dialog-backdrop').count()) > 0; presses += 1) {
+      await page.keyboard.press('Escape');
+      await page.waitForTimeout(100);
+    }
+    await expect(page.locator('.dialog-backdrop'), `${name} closes`).toHaveCount(0);
+  };
+  const command = async (words: string): Promise<void> => {
+    await page.keyboard.press(mac ? 'Meta+k' : 'Control+Shift+K');
+    await page.keyboard.type(`>${words}`);
+    await expect(page.getByTestId('picker-command-row').first()).toBeVisible();
+    await page.keyboard.press('Enter');
+  };
+  await look('the workflow editor', 'workflow-editor', async () => {
+    await page.getByTestId('toolbar-workflows').click();
+    const use = page.locator('[data-testid="template-use"][data-template="plan-build-check"]');
+    await reveal(use, page.getByTestId('templates-fold').locator('summary'));
+    await use.click();
+  });
+  await look('the saved-step editor', 'shelf-editor', async () => {
+    await page.getByTestId('toolbar-workflows').click();
+    await page.getByTestId('steps-tab').click();
+    await page.getByTestId('step-new').click();
+    await page.getByTestId('shelf-new').click();
+  });
+  await look('the describe dialog', 'describe-dialog', async () => {
+    await page.getByTestId('toolbar-workflows').click();
+    await page.getByTestId('workflows-tab').click();
+    await page.getByTestId('workflow-new').click();
+    await page.getByTestId('describe-workflow').click();
+  });
+  await look('the run dialog', 'run-dialog', async () => {
+    await node.getByTestId('node-more').click();
+    await node.getByTestId('node-run-workflow').click();
+  });
+  await look('the Schedules part of the queue', 'queue-schedules', async () => {
+    await page.getByTestId('toolbar-queue').click();
+    await page.getByTestId('queue-tab-schedules').click();
+  });
+  await look('the Rules part of the queue', 'queue-rules', async () => {
+    await page.getByTestId('toolbar-queue').click();
+    await page.getByTestId('queue-tab-rules').click();
+  });
+  await look('Review', 'review-screen', () => command('Review drafts'));
+  await look('the tags dialog', 'tag-dialog', () => command('Edit the tags'));
+  await look('API tokens', 'token-screen', () => command('API tokens'));
+  await look('API activity', 'activity-screen', () => command('API activity'));
+  await look('past conversations', 'history-panel', () => command('Past conversations'));
+  // The detail drawer beside the panel, and the menu of the less used parts.
+  await page.getByTestId('list-row').first().hover();
+  await page.getByTestId('row-more').first().click();
+  await page.getByRole('menuitem', { name: 'Notes' }).click();
+  await expect(page.getByTestId('panel-drawer')).toBeVisible();
+  expect(await measureLook(page), 'the drawer').toEqual([]);
+  await page.getByRole('button', { name: 'Close the drawer' }).click();
+  await page.getByTestId('panel-more').click();
+  await expect(page.getByTestId('panel-more-menu')).toBeVisible();
+  expect(await measureLook(page), 'the More menu').toEqual([]);
+  await page.keyboard.press('Escape');
+
   // The side panel's other parts.
   const tabs = page.getByTestId('panel-tab');
   for (let index = 0; index < (await tabs.count()); index += 1) {
@@ -3277,6 +3351,30 @@ test('simpler surfaces: the list starts near the top, a name is not cut, one pri
       return [...new Set([...surface.children].filter((el) => !el.matches('.sheet-head, .list-resize, .list-rows, .panel-section') && (el as HTMLElement).offsetParent !== null && el.getBoundingClientRect().width > 0).map((el) => Math.round(el.getBoundingClientRect().left - left)))];
     }, selector);
 
+  /**
+   * Where the words of rows, cards and quiet buttons begin, from the left edge of the screen they are in: the first
+   * letter of each, not its box, since a row and a quiet button hang left by their padding. Each must be on a gutter.
+   */
+  const wordEdges = (screen: string, selector: string): Promise<number[]> =>
+    page.evaluate(
+      ([scr, sel]) => {
+        const surface = document.querySelector(scr as string) as HTMLElement;
+        const left = surface.getBoundingClientRect().left + surface.clientLeft;
+        const firstLetter = (el: Element): number | null => {
+          const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+          for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+            if (!(node.textContent ?? '').trim()) continue;
+            const range = document.createRange();
+            range.selectNodeContents(node);
+            return range.getBoundingClientRect().left;
+          }
+          return null;
+        };
+        return [...new Set([...surface.querySelectorAll(sel as string)].map(firstLetter).filter((x): x is number => x !== null).map((x) => Math.round(x - left)))];
+      },
+      [screen, selector],
+    );
+
   expect(await primaries('.appbar')).toBe(0);
   expect(await primaries('.toolbar')).toBe(1);
   expect(await primaries('.side-panel')).toBe(0);
@@ -3296,6 +3394,16 @@ test('simpler surfaces: the list starts near the top, a name is not cut, one pri
     expect(await primaries(`[data-testid="${testid}"]`), `${testid}: one primary at most`).toBeLessThanOrEqual(1);
     // A screen's gutter is 24: everything it holds directly starts there.
     expect(await edges(`[data-testid="${testid}"]`), `${testid}: on the gutter`).toEqual([24]);
+    // Rows that are pressed and quiet buttons that begin a line: their words are on the screen's gutter of 24.
+    // Cards: their words are on the card's own gutter of 16, inside the line round the card.
+    if (testid === 'library-screen') await expect(page.getByTestId('library-screen').locator('.library-row').first()).toBeVisible();
+    if (testid === 'library-screen') expect(await wordEdges('[data-testid="library-screen"]', '.library-row'), 'library rows').toEqual([24]);
+    if (testid === 'board') expect(await wordEdges('[data-testid="board"]', '[data-testid="board-ended-row"]:first-child, .board-group > h3, .board-filters > .ui-menu-button > button'), 'board lines').toEqual(expect.arrayContaining([37]));
+    // (A heading and a line of the last day, where there are any, begin at 24; the Filter button's words are inside its own line and padding.)
+    if (testid === 'board') expect((await wordEdges('[data-testid="board"]', '[data-testid="board-ended-row"]:first-child, .board-group > h3')).filter((x) => x !== 24), 'board headings and lines').toEqual([]);
+    if (testid === 'workflows-screen') await expect(page.getByTestId('workflows-screen').locator('.ui-card').first()).toBeVisible();
+    if (testid === 'workflows-screen') expect(await wordEdges('[data-testid="workflows-screen"]', '.ui-card > .ui-card-text > strong'), 'workflow cards').toEqual([41]);
+    if (testid === 'queue-screen') expect(await wordEdges('[data-testid="queue-screen"]', '.queue-columns > .ui-card > h3'), 'queue cards').toContain(41);
     await page.keyboard.press('Escape');
     await expect(page.getByTestId(testid)).toHaveCount(0);
   }

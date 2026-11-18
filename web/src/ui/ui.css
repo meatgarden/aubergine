@@ -117,7 +117,6 @@ button:not(
     .note-tab,
     .list-tag,
     .list-chip,
-    .list-filter,
     .list-clear,
     .run-strip,
     .list-mark,
@@ -196,7 +195,7 @@ button.list-restore:hover:not(:disabled),
   background: var(--surface-raised);
   border-color: transparent;
 }
-button[aria-pressed='true']:not(.ui-chip, .list-filter, .list-chip, [role^='menuitem']),
+button[aria-pressed='true']:not(.ui-chip, .list-chip, [role^='menuitem']),
 button[aria-expanded='true']:not([role^='menuitem'], .color-dot) {
   background: var(--surface-active);
   border-color: var(--border-strong);
@@ -375,10 +374,8 @@ input.tab-input {
 .badge-untold,
 .badge-typed,
 .badge-exit,
-.list-agent,
 .list-tag,
 .list-chip,
-.list-filter,
 .list-clear,
 .run-strip,
 .list-mark,
@@ -410,7 +407,6 @@ input.tab-input {
 button.ui-chip,
 button.list-tag,
 button.list-chip,
-button.list-filter,
 button.list-clear,
 button.run-strip,
 button.list-mark,
@@ -424,7 +420,6 @@ button.copy-chip {
 button.ui-chip:hover,
 button.list-tag:hover,
 button.list-chip:hover,
-button.list-filter:hover,
 button.list-clear:hover,
 button.run-strip:hover,
 button.list-mark:hover,
@@ -432,7 +427,6 @@ button.copy-chip:hover {
   background: var(--surface-active);
   border-color: var(--border-strong);
 }
-button.list-filter[aria-pressed='true'],
 button.list-chip,
 .ui-chip.is-accent {
   color: var(--accent-text);
@@ -489,8 +483,7 @@ button.list-clear {
 
 .ui-tab,
 .panel-tab,
-.run-view-tabs button,
-.review-tabs button {
+.run-view-tabs button {
   box-sizing: border-box;
   display: inline-flex;
   align-items: center;
@@ -512,14 +505,12 @@ button.list-clear {
 }
 .ui-tab:hover,
 .panel-tab:hover,
-.run-view-tabs button:hover,
-.review-tabs button:hover {
+.run-view-tabs button:hover {
   color: var(--text);
 }
 .ui-tab[aria-selected='true'],
 .panel-tab[aria-selected='true'],
-.run-view-tabs button[aria-selected='true'],
-.review-tabs button[aria-selected='true'] {
+.run-view-tabs button[aria-selected='true'] {
   font-weight: var(--weight-strong);
   color: var(--text);
   border-bottom-color: var(--accent);
@@ -1317,4 +1308,173 @@ button.color-dot:hover {
 /* On a row the state is said by its mark; the word is added only where the terminal waits for the owner or failed. */
 .list-row:not(.state-waiting, .state-failed) .list-badge {
   display: none;
+}
+
+/* ---------- On the gutter ---------- */
+
+/* A quiet button that begins a line hangs left by its own padding, so that its words stand where the line begins. */
+.ui-start,
+li > button.quiet:first-child,
+p > button.quiet:first-child,
+.ui-card-text > button.quiet:first-child,
+.board-card > button.quiet {
+  margin-left: calc(var(--space-3) * -1);
+}
+/* A row that is pressed as a whole does the same, by its padding and the line round it, and reaches as far to the right. */
+.dialog.sheet .ui-row,
+.dialog.sheet .library-row {
+  margin-left: calc(var(--space-3) * -1 - 1px);
+  width: calc(100% + var(--space-3) + 1px);
+}
+.board-card > button.quiet {
+  padding: 0 var(--space-3);
+}
+
+/* ---------- The editors: one column ---------- */
+
+.dialog.sheet.workflow-editor,
+.dialog.sheet.run-dialog,
+.dialog.sheet.describe-dialog {
+  width: min(800px, calc(100vw - 48px));
+}
+.editor-column {
+  display: flex;
+  flex-direction: column;
+}
+.editor-column > h3 {
+  margin-top: var(--space-4);
+}
+/* A step is a card: its number and name, pressed to open it where it stands, and one menu. */
+.editor-elements {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-3);
+  padding: 0;
+  list-style: none;
+}
+.editor-element {
+  display: block;
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-surface);
+}
+.editor-element.is-selected {
+  border-color: var(--accent);
+}
+.editor-step-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-2) var(--space-2) var(--space-3);
+}
+.editor-step-head > .editor-element-name {
+  flex: 1;
+  min-width: 0;
+  min-height: var(--control);
+  padding: 0;
+  font-size: var(--font-body);
+  font-weight: var(--weight-strong);
+  text-align: left;
+  color: var(--text);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+.editor-grip {
+  flex: none;
+  color: var(--text-muted);
+  cursor: grab;
+}
+.editor-step-body {
+  padding: var(--space-3) var(--gutter-card) var(--gutter-card);
+  border-top: 1px solid var(--border);
+}
+.editor-add {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+/* A field of a form: its name above it, the field as wide as the column. */
+.wf-field {
+  font-size: var(--font-meta);
+  color: var(--text-muted);
+}
+.wf-field > input,
+.wf-field > textarea,
+.wf-field > select {
+  width: 100%;
+}
+.ui-fold > summary > .ui-meta {
+  font-weight: var(--weight-normal);
+}
+.dialog-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}
+.dialog-actions > .editor-saved {
+  margin-right: auto;
+}
+/* The name of a step is words to press, open or not: it is never drawn as a pressed button. */
+.editor-step-head > .editor-element-name[aria-expanded] {
+  background: transparent;
+  border-color: transparent;
+}
+
+/* The run dialog and the saved-step editor: one column too. What is read before starting is folded under the form. */
+.run-dialog-grid,
+.editor-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.dialog.sheet.workflow-editor[data-testid='shelf-editor'] {
+  width: min(800px, calc(100vw - 48px));
+}
+
+/* ---------- Seen and put right ---------- */
+
+/* A part of the queue's screen begins at the top of its tab: no line above it. */
+.queue-part {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+/* A menu that hangs from a tab is not written in the tab's own weight. */
+.tab-menu,
+.panel-more-menu {
+  font-weight: var(--weight-normal);
+}
+/* The drawer: everything in it starts on one gutter. */
+.panel-drawer > :not(.panel-drawer-head) {
+  box-sizing: border-box;
+  padding-left: var(--space-4);
+  padding-right: var(--space-4);
+}
+.panel-drawer .drawer-section > *,
+.panel-drawer .note-panel > * {
+  margin-left: 0;
+  margin-right: 0;
+}
+.panel-drawer .note-panel header,
+.panel-drawer .note-add,
+.panel-drawer .note-panel textarea {
+  padding-left: 0;
+  padding-right: 0;
+}
+.panel-drawer .note-panel textarea,
+.panel-drawer .note-add {
+  padding: var(--space-2) var(--space-3);
+}
+.panel-drawer p {
+  margin-left: 0;
+  padding-left: 0;
+}
+.editor-row > button.quiet:first-child {
+  margin-left: calc(var(--space-3) * -1);
 }
