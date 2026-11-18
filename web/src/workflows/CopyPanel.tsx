@@ -55,7 +55,7 @@ export function CopyPanel({ element, shelf, onDecide }: { element: Element; shel
           {open && status.state === 'behind' && (
             <div className="copy-compare">
               <div className="wf-label">
-                From yours to version {item.version} on the shelf
+                From yours to the saved version {item.version}
                 {item.versions.at(-1)?.note ? <span className="sheet-note"> “{item.versions.at(-1)?.note}”</span> : null}
               </div>
               <DiffText before={text(elementLines(texts.mine))} after={text(elementLines(texts.shelf))} testId="copy-diff" />
@@ -63,7 +63,7 @@ export function CopyPanel({ element, shelf, onDecide }: { element: Element; shel
           )}
           {open && status.state === 'both' && (
             <div className="copy-compare">
-              <p className="sheet-note">It was changed here and on the shelf. Pick one of the two; nothing is merged for you. To keep parts of both, take one and then edit it.</p>
+              <p className="sheet-note">It was changed here and among the saved steps. Pick one of the two; nothing is merged for you. To keep parts of both, take one and then edit it.</p>
               <div className="copy-three">
                 <div>
                   <div className="wf-label">As it was copied{status.copiedVersion ? ` (version ${status.copiedVersion})` : ''}</div>
@@ -76,15 +76,15 @@ export function CopyPanel({ element, shelf, onDecide }: { element: Element; shel
                   {texts.copied ? <DiffText before={text(elementLines(texts.copied))} after={text(elementLines(texts.mine))} testId="copy-text-mine" /> : <pre className="review-text" data-testid="copy-text-mine">{text(elementLines(texts.mine))}</pre>}
                 </div>
                 <div>
-                  <div className="wf-label">On the shelf now (version {item.version})</div>
+                  <div className="wf-label">Saved now (version {item.version})</div>
                   {texts.copied ? <DiffText before={text(elementLines(texts.copied))} after={text(elementLines(texts.shelf))} testId="copy-text-shelf" /> : <pre className="review-text" data-testid="copy-text-shelf">{text(elementLines(texts.shelf))}</pre>}
                 </div>
               </div>
             </div>
           )}
           <div className="editor-row">
-            <button type="button" onClick={() => onDecide(decideUpdate(element, item, 'take'), `Took version ${item.version} of “${item.element.name}” from the shelf. Save to keep it: that makes a new version of this workflow.`)} data-testid="copy-take">
-              Take the shelf’s version
+            <button type="button" onClick={() => onDecide(decideUpdate(element, item, 'take'), `Took version ${item.version} of “${item.element.name}” from the saved steps. Save to keep it: that makes a new version of this workflow.`)} data-testid="copy-take">
+              Take the saved version
             </button>
             <button type="button" className="quiet" onClick={() => onDecide(decideUpdate(element, item, 'keep'), `Kept yours. It is now a copy of version ${item.version} that was changed here. Save to keep that.`)} data-testid="copy-keep">
               Keep mine

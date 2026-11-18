@@ -11,11 +11,13 @@ import { SidePanel } from './panel/SidePanel';
 import { Away } from './Away';
 import { TagDialog } from './TagDialog';
 import { Tour } from './tour/Tour';
+import { Pages, Screens } from './Screens';
 
 export function App() {
   const phase = useApp((s) => s.phase);
   const runtime = useApp((s) => s.runtime);
   const canvasId = useApp((s) => s.canvasId);
+  const page = useApp((s) => s.page);
 
   useEffect(() => startSync(), []);
   useEffect(() => startShortcuts(), []);
@@ -72,15 +74,22 @@ export function App() {
   return (
     <div className="app">
       <AppBar />
-      <TabBar />
-      <div className="workspace">
-        <SidePanel />
-        {/* Keyed by canvas: each canvas gets a fresh view, with its own pan, zoom and live terminals. */}
-        <ReactFlowProvider key={canvasId ?? 'none'}>
-          <Canvas />
-          <CloseDialog />
-        </ReactFlowProvider>
+      <div className="app-under">
+        {/* The canvas page stays as it is while a page is shown in its place: not drawn, not reachable, its terminals running. */}
+        <div className="app-canvas" inert={page !== null} data-testid="app-canvas">
+          <TabBar />
+          <div className="workspace">
+            <SidePanel />
+            {/* Keyed by canvas: each canvas gets a fresh view, with its own pan, zoom and live terminals. */}
+            <ReactFlowProvider key={canvasId ?? 'none'}>
+              <Canvas />
+              <CloseDialog />
+            </ReactFlowProvider>
+          </div>
+        </div>
+        <Pages />
       </div>
+      <Screens />
       <CloseCanvasDialog />
       <TagDialog />
       <Tour />

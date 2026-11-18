@@ -57,7 +57,7 @@ Already have terminals open elsewhere? Click **Outside** in the toolbar (or pres
 | Keep notes on a terminal | The notes beside it, or `aubergine note "…"` | [Notes](#notes) |
 | Put a terminal away without stopping it | **×** on it parks it; **Parked** brings it back | [Parking](#parking-and-shells-that-end) |
 | Search what terminals printed | `⌘K`, then type | [Searching terminal output](#searching-terminal-output) |
-| Give an agent steps to follow | A workflow: an ordered list of elements, with a strip that shows where the agent is | [Workflows](#workflows) |
+| Give an agent steps to follow | A workflow: an ordered list of steps, with a strip that shows where the agent is | [Workflows](#workflows) |
 | Use workflows others made | Browse the library and install | [The library](#the-library) |
 | Line up work for agents | The queue (`Q`) | [The queue, and "For you"](#the-queue-and-for-you) |
 | Run something every morning | A schedule | [Schedules](#schedules-at-these-times-run-this-there) |
@@ -652,7 +652,9 @@ Reload the page to apply. If a key is set twice or cannot be read, the shortcut 
 
 The panel on the left shows one thing at a time, chosen by the tabs at its top: **Terminals**, **For you**, **Runs**, **Copies** and **Messages**. A tab says how many it holds, and **For you** stands out while something waits on you. The panel remembers which tab you chose.
 
-The top of the page says where you are and what waits for you: the name, the project, the screens of that project (**Queue**, **Board**, **Workflows**, **Library**), and at the right **For you**, with a count of everything that waits on you, and **Help**. The canvases have the row below it to themselves; a tab has its name, a plain number while terminals on it wait for you, and, on the tab you are on or point at, one menu (**⋯**) for what is done seldom (rename, its colour, messages between its terminals, moving it to another project, removing the demo) and the mark that closes it. The bar over the canvas holds only what acts on that canvas: **+ New terminal** (with **▾** for everything else you can make), the view (**Go to…**, **Fit**, the zoom), and parked and outside terminals while there are any.
+The top of the page says where you are and what waits for you: the name, the project, the places of that project (**Canvas**, **Queue**, **Board**, **Workflows**, **Library**, the one you are in marked), and at the right **For you**, with a count of everything that waits on you, and **Help**. The canvases have the row below it to themselves; a tab has its name, a plain number while terminals on it wait for you, and, on the tab you are on or point at, one menu (**⋯**) for what is done seldom (rename, its colour, messages between its terminals, moving it to another project, removing the demo) and the mark that closes it. The bar over the canvas holds only what acts on that canvas: **+ New terminal** (with **▾** for everything else you can make), the view (**Go to…**, **Fit**, the zoom), and parked and outside terminals while there are any.
+
+**Queue**, **Board**, **Workflows** and **Library** are pages: each takes the place of the canvas under the top bar and is laid out the same way, with its name and what is done most at the top, its tabs under that, and its content below. A page has no Close: **Canvas** in the top bar, the page's own name pressed again, `Esc` or the browser's back button lead back to the canvas exactly as you left it (the same tab, the same view, the same terminal selected; the terminals keep running meanwhile). Each page has an address (the canvas's, with `/queue`, `/board`, `/workflows` or `/library` after it), so a reload stays on it. What is a question about one thing (running a workflow, describing one, tags, API tokens, Review, the editors) still opens as a dialog, over a page or over the canvas alike.
 
 The side panel has one row of tabs (**Terminals**, **For you**, **Runs**, and **More** for working copies and messages), a field to find a terminal with **Filter** at its end, and the list. A row of the list is the terminal's name with the whole line, after a dot for its state; under it, in words where it is not the ordinary state (**waiting for you**, **finished**, how the last command failed, the step of a run), then its folder and when it was last active. The same dot begins a terminal's title and a card on the Board. A terminal's title is that dot, its name, its state in words where there is one, what it runs in short (the whole line when you point at it), its first tag, **Note**, and one menu (**⋯**) with the rest: tags, a workflow, a message, the desktop, moving it, its colour, people only, parking it.
 
@@ -984,7 +986,7 @@ Saving makes a **new version**. A run keeps to the version it started on, so edi
 On a terminal: **Run a workflow…** in the menu (**⋯**) of its title, or ⌘K, `Run workflow`. Choose the workflow, fill in the task, read what the agent will be told first, and start. If an agent is running in that terminal, Aubergine types one line into it:
 
 ```
-You are on an Aubergine workflow. Run `aubergine workflow status` to read your current element and follow it. When its "done when" is true, run `aubergine workflow done --note "<what you did>"` and follow what it prints.
+You are on an Aubergine workflow. Run `aubergine workflow status` to read your current step and follow it. When its "done when" is true, run `aubergine workflow done --note "<what you did>"` and follow what it prints.
 ```
 
 From there the agent drives itself: `status` prints the step, and `done` records it and prints the next one, with the note the step before handed over. If no agent is running there, nothing is typed (a shell would try to run the sentence); the run is shown with its buttons, and with that line to give an agent yourself.
@@ -1080,7 +1082,7 @@ aubergine workflow done --output list.json      # {"items": [{"text": "one line"
 
 ### The shelf, and running one step by itself
 
-The **shelf** on the Workflows screen keeps steps for reuse. **Insert from shelf…** in the workflow editor puts a copy into a workflow (changing the shelf later does not change the workflow), and **Save to shelf** keeps a copy of a step you wrote in one.
+The **shelf** on the Workflows screen keeps steps for reuse. **Add a saved step…** in the workflow editor puts a copy into a workflow (changing the shelf later does not change the workflow), and **Save to shelf** keeps a copy of a step you wrote in one.
 
 **Run…** on a saved step (or ⌘K, `Run a step by itself`, or the command below) runs just that step on a terminal, with no workflow around it. It shows up as a run like any other, and nothing is added to your workflows for it.
 
@@ -1101,16 +1103,16 @@ A step on the shelf is copied into workflows, never linked. What connects a copy
 
 | Mark | What it means |
 |---|---|
-| from the shelf | as it was copied, and that is the newest version |
+| a saved step | as it was copied, and that is the newest version |
 | changed here | you changed it in this workflow since it was copied; the shelf has nothing newer |
-| newer on the shelf | as it was copied, and the shelf has a newer version |
-| changed here, newer on the shelf | both |
-| from the shelf, cannot tell | a copy made before versions were kept: Aubergine does not know which version it came from, and never says it is behind |
+| a newer version is saved | as it was copied, and there is a newer saved version |
+| changed here, a newer version is saved | both |
+| a saved step, cannot tell | a copy made before versions were kept: Aubergine does not know which version it came from, and never says it is behind |
 | its source was removed | its saved step is not on the shelf: it was removed, or the workflow came from another computer |
 
-**Taking a newer version.** When the shelf has a newer version, the editor shows what it changes (the same comparison the review screen uses) and offers **Take the shelf's version** or **Keep mine**. If the copy was also changed in the workflow, the three texts are shown side by side: as it was copied, yours now, the shelf's now. You pick one of the two; nothing is merged for you. To keep parts of both, take one and edit it. Saving then makes a new version of the workflow, as any edit does, and runs that are going keep to the version they started on. Nothing is ever updated by itself, no API token can do it (even one that may change workflows), and a draft cannot either: a token or a draft can change what a copy says, which then reads as "changed here", and cannot say that a copy was brought up to date.
+**Taking a newer version.** When the shelf has a newer version, the editor shows what it changes (the same comparison the review screen uses) and offers **Take the saved version** or **Keep mine**. If the copy was also changed in the workflow, the three texts are shown side by side: as it was copied, yours now, the shelf's now. You pick one of the two; nothing is merged for you. To keep parts of both, take one and edit it. Saving then makes a new version of the workflow, as any edit does, and runs that are going keep to the version they started on. Nothing is ever updated by itself, no API token can do it (even one that may change workflows), and a draft cannot either: a token or a draft can change what a copy says, which then reads as "changed here", and cannot say that a copy was brought up to date.
 
-**From a workflow back to the shelf.** **Save to shelf** on a step that came from the shelf offers two things: a new step, or a new version of the one it came from. Other workflows that hold a copy are not changed; each says that a newer version is on the shelf.
+**From a workflow back to the shelf.** **Save as a new saved step** on a step that came from your saved steps offers two things: a new step, or a new version of the one it came from. Other workflows that hold a copy are not changed; each says that a newer version is saved.
 
 **Where it is used.** The shelf editor lists the workflows that hold a copy and what the mark on each copy is. Removing a saved step that is used says so first; the copies stay as they are and say that their source was removed.
 
@@ -1159,8 +1161,8 @@ Inside a session that is on a run:
 
 ```sh
 aubergine workflow status              # where the run stands and what to do now
-aubergine workflow done --note "…"     # the current element is finished; prints what comes next
-aubergine workflow done --output f     # the same, handing in what the element produces (a checklist)
+aubergine workflow done --note "…"     # the current step is finished; prints what comes next
+aubergine workflow done --output f     # the same, handing in what the step produces (a checklist)
 aubergine workflow brief               # what this session was asked to write, and how to hand it in
 aubergine workflow blocked "…"         # you cannot go on without a person
 aubergine workflow goto <element>      # by name, ID or number
@@ -1274,7 +1276,7 @@ aubergine token create <name> --scope <scope>…   make an API token; its secret
                                --reach all | canvas:<name> | tag:<tag>   which terminals the terminal scopes and the message scopes reach
 aubergine token list           the API tokens, their scopes and when each was last used
 aubergine token revoke <name>  revoke a token; it stops working at once
-aubergine workflow list        the workflows, with their elements and how many runs are going
+aubergine workflow list        the workflows, with their steps and how many runs are going
 aubergine workflow show <name> one workflow in full
 aubergine workflow new <name> [--template <template>]   make one; `workflow templates` lists the templates
 aubergine workflow edit <name> change one in your editor ($VISUAL or $EDITOR), or from --file <path>
@@ -1285,7 +1287,7 @@ aubergine workflow export <name> --to-repository [--overwrite]   inside a sessio
 aubergine workflow import <file> [--name <name>]   make one from such a file ("-" reads standard input)
 aubergine workflow run <name> [--session <name|id>] [--input key=value]… [--replace]
                                start a run on a session: the one it is typed in, when typed inside one
-aubergine workflow approve <run> [--comment <text>]      approve the element a run waits on; the run is its ID or its terminal's name
+aubergine workflow approve <run> [--comment <text>]      approve the step a run waits on; the run is its ID or its terminal's name
 aubergine workflow send-back <run> --to <element> --comment <text>
 aubergine task add | list | show | start | accept | decline | withdraw | move      the queue of tasks for agents
 aubergine todo [add <text> | done <item>]      what waits on you
@@ -1298,13 +1300,13 @@ aubergine copies               the working copies there are; `copies show`, `kee
 aubergine where                inside a session: whether it works in a working copy, its branch, and what to leave alone
 aubergine board [--canvas <name>] [--workflow <name>] [--status <status>] [--tag <tag>]      every run that is going
 aubergine workflow status      inside a session on a run: where it stands and what to do now
-aubergine workflow done [--note <text>] [--output <file>]   the current element is finished; prints what comes next
-aubergine workflow brief       inside a session asked to write a workflow or an element: the request
+aubergine workflow done [--note <text>] [--output <file>]   the current step is finished; prints what comes next
+aubergine workflow brief       inside a session asked to write a workflow or a step: the request
 aubergine workflow propose --file <file>   hand a workflow in as a draft, for you to review
-aubergine element propose --file <file>    the same for one element
+aubergine element propose --file <file>    the same for one step
 aubergine library list         what the library offers; also show, install, sources, add, remove, refresh, export
-aubergine element list         the shelf, each element with its version; also show <name> and remove <name> (which says where it is used first)
-aubergine element run <name> [--session <name|id>] [--input key=value]…   run one element by itself
+aubergine element list         the saved steps, each with its version; also show <name> and remove <name> (which says where it is used first)
+aubergine element run <name> [--session <name|id>] [--input key=value]…   run one step by itself
 aubergine workflow blocked <reason>, goto <element>, pause, resume, stop
 aubergine screen <session>     what that terminal shows now, as text
 aubergine output <session> [--lines n]   what it printed recently
@@ -1357,7 +1359,7 @@ POST /v1/sessions/<id>/run/report   {"type": "done", "elementId": "...", "note":
 GET  /v1/sessions/<id>/brief        what the session was asked to write
 GET  /v1/sessions/<id>/drafts       the drafts it proposed, with the comments on them
 GET  /v1/sessions/<id>/repository-workflows   the workflows its repository offers, and whether each was accepted
-POST /v1/sessions/<id>/drafts       propose a workflow or an element as a draft
+POST /v1/sessions/<id>/drafts       propose a workflow or a step as a draft
 POST /v1/sessions/<id>/inbox        take the unread messages for the session; they are then read
 POST /v1/sessions/<id>/messages/<message>/reply   {"text": "..."} answer a message it received
 POST /v1/sessions/<id>/tell         {"to": "<name or ID>", "text": "..."} message another terminal, where you allowed that
@@ -1421,7 +1423,7 @@ A program with an API token that may propose workflows (`workflows:write`) can *
 ```sh
 mkdir -p ~/team-library
 aubergine library export "Fix a bug" --to ~/team-library            # a workflow
-aubergine library export "Tidy up" --element --to ~/team-library    # a shelf element
+aubergine library export "Tidy up" --element --to ~/team-library    # a saved step
 aubergine library add ~/team-library
 ```
 

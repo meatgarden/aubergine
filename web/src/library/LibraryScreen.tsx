@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { FLAG_WORDS, sourceLabel, ago, fromWords, historyWords, needWords, showControl, type InstalledItem, type LibraryItemDetail, type LibrarySource, type ListedItem } from '@aubergine/shared';
 import { api } from '../api';
 import { useApp } from '../store';
-import { HowThisWorks, ScreenHead } from '../ui';
+import { Badge, HowThisWorks, Page } from '../ui';
 
 /**
  * The library: sources of workflows and elements that others published, what
@@ -83,7 +83,7 @@ function ItemDetail({ item, onAsk, busy }: { item: ListedItem; onAsk: (item: Lis
 }
 
 export function LibraryScreen() {
-  const open = useApp((s) => s.panel === 'library');
+  const open = useApp((s) => s.page === 'library');
   const library = useApp((s) => s.app?.library);
   const [items, setItems] = useState<ListedItem[]>([]);
   const [query, setQuery] = useState('');
@@ -115,7 +115,7 @@ export function LibraryScreen() {
   const current = items.find((item) => `${item.sourceId} ${item.id}` === selected) ?? null;
 
   if (!open) return null;
-  const close = (): void => useApp.getState().togglePanel(null);
+  const close = (): void => useApp.getState().showPage(null);
   const act = async (what: () => Promise<unknown>): Promise<void> => {
     setBusy(true);
     setError(null);
@@ -131,11 +131,13 @@ export function LibraryScreen() {
   const looksLikeFolder = (text: string): boolean => text.startsWith('/') || text.startsWith('~');
 
   return (
-    <div
-      className="dialog-backdrop"
-      onMouseDown={(e) => {
-        if (e.target === e.currentTarget) close();
-      }}
+    <Page
+      name="library"
+      title="Library"
+      line="Workflows and steps that others published, to read and install."
+      label="Library"
+      testid="library-screen"
+      className="library-screen"
       onKeyDown={(e) => {
         if (e.key === 'Escape') {
           e.stopPropagation();
@@ -143,11 +145,6 @@ export function LibraryScreen() {
         }
       }}
     >
-      <div className="dialog sheet library-screen" role="dialog" aria-label="Library" data-testid="library-screen">
-        <ScreenHead title="Library" onClose={close} closeTestid="library-close" />
-        <HowThisWorks line="Workflows and steps that others published, to read and install.">
-          What a source lists was written by whoever published it. Nothing is fetched unless you press Refresh or add a source, and nothing is installed until you have read all of it in Review and accepted it.
-        </HowThisWorks>
         {error && (
           <p className="dialog-error" role="alert" data-testid="library-error">
             {error}
@@ -156,7 +153,10 @@ export function LibraryScreen() {
 
         <details className="ui-fold library-sources-fold" data-testid="library-sources-fold">
           <summary>
-            {(library?.sources ?? []).length} {(library?.sources ?? []).length === 1 ? 'source' : 'sources'} <span className="ui-how-more">Manage</span>
+            <span className="ui-meta">
+              {(library?.sources ?? []).length} {(library?.sources ?? []).length === 1 ? 'source' : 'sources'}
+            </span>{' '}
+            <span className="ui-how-more">Manage</span>
           </summary>
         <ul className="library-sources" data-testid="library-sources">
           {sources.map((source) => (
@@ -235,6 +235,10 @@ export function LibraryScreen() {
         </form>
         </details>
 
+        <HowThisWorks line="Nothing is fetched or installed unless you ask.">
+          What a source lists was written by whoever published it. Nothing is fetched unless you press Refresh or add a source, and nothing is installed until you have read all of it in Review and accepted it.
+        </HowThisWorks>
+
         <div className="library-browse">
           <div className="library-list">
             <input value={query} placeholder="Search by name, description or source" aria-label="Search the library" onChange={(e) => setQuery(e.target.value)} data-testid="library-search" />
@@ -245,9 +249,12 @@ export function LibraryScreen() {
                 return (
                   <li key={key}>
                     <button type="button" className={`library-row${selected === key ? ' is-selected' : ''}`} aria-pressed={selected === key} onClick={() => setSelected(key)} title={[item.problem, ...item.flags.map((flag) => FLAG_WORDS[flag])].filter(Boolean).join(' ')} data-testid="library-item" data-item={item.id} data-standing={item.standing}>
-                      <span className="library-name">{showControl(item.name)}</span>
-                      <span className="sheet-note">
-                        {item.kindTitle} · {showControl(item.sourceName)} · version {showControl(item.version)}
+                      <span className="library-row-head">
+                        <Badge className="library-kind">{item.kindTitle.replace(/^An? /, '').replace(/^./, (c) => c.toUpperCase())}</Badge>
+                        <span className="library-name">{showControl(item.name)}</span>
+                      </span>
+                      <span className="ui-meta">
+                        {showControl(item.sourceName)} · version {showControl(item.version)}
                       </span>
                       {marks.length > 0 && (
                         <span className={`library-marks${item.standing === 'update' || item.flags.length > 0 ? ' wants-you' : ''}`} data-testid="library-marks">
@@ -330,7 +337,6 @@ export function LibraryScreen() {
               ))}
           </ul>
         )}
-      </div>
-    </div>
+    </Page>
   );
 }

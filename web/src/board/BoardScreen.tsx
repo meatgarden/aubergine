@@ -6,7 +6,7 @@ import { ApprovalControls } from '../workflows/ApprovalControls';
 import { liveFilters, loadFilters, nextCard, saveFilters, type Box } from './board-model';
 import { RunManyDialog } from './RunManyDialog';
 import { DOT_WORD, dotTone } from '../terminal-rows';
-import { MenuButton, StateDot } from '../ui';
+import { MenuButton, Page, StateDot } from '../ui';
 
 /**
  * The board: every run that is going, on every canvas, by workflow and by
@@ -49,7 +49,6 @@ function Card({ card, single, now, onGo, onView, named }: { card: BoardCard; sin
       data-session={card.sessionId ?? ''}
     >
       <div className="board-card-head">
-        <StateDot tone={tone} word={tone === 'hollow' ? (card.sessionId ? 'ended' : 'no terminal yet') : DOT_WORD[tone]} />
         <span className="board-card-name">
           {named && card.projectId ? <span data-testid="board-card-project">{named(card.projectId)} · </span> : null}
           {card.sessionName || 'no terminal yet'}
@@ -58,6 +57,8 @@ function Card({ card, single, now, onGo, onView, named }: { card: BoardCard; sin
       </div>
       {single && <div className="board-card-element">{card.elementName}</div>}
       <div className="board-card-facts">
+        {/* The same mark as the terminal has in the list and in its title, before how its run stands. */}
+        <StateDot tone={tone} word={tone === 'hollow' ? (card.sessionId ? 'ended' : 'no terminal yet') : DOT_WORD[tone]} />
         <span className="board-card-status" data-testid="board-card-status">
           {card.statusWords}
         </span>
@@ -82,7 +83,7 @@ function Card({ card, single, now, onGo, onView, named }: { card: BoardCard; sin
 }
 
 export function BoardScreen() {
-  const open = useApp((s) => s.panel === 'board');
+  const open = useApp((s) => s.page === 'board');
   // This project's runs, or every project's: in the second view a card names its project.
   const [everywhere, setEverywhere] = useState(false);
   const app = useApp((s) => (everywhere ? s.whole : s.app));
@@ -145,7 +146,7 @@ export function BoardScreen() {
   }, [runs, sessions, workflows]);
 
   if (!open || !board) return null;
-  const close = (): void => useApp.getState().togglePanel(null);
+  const close = (): void => useApp.getState().showPage(null);
   const change = (next: BoardFilters): void => {
     setFilters(next);
     saveFilters(next);
@@ -188,20 +189,23 @@ export function BoardScreen() {
 
   const chosen = [shownFilters.canvasId, shownFilters.workflowId, shownFilters.status, shownFilters.tag].filter(Boolean).length;
   return (
-    <div
-      className="dialog-backdrop"
-      onMouseDown={(e) => {
-        if (e.target === e.currentTarget) close();
-      }}
-      onKeyDown={onKeyDown}
-    >
-      <div className="dialog sheet board-screen" role="dialog" aria-label="Board" data-testid="board" tabIndex={-1} ref={dialog}>
-        <header className="sheet-head">
-          <h2>
-            Board
-            <span className="board-summary" data-testid="board-summary">
-              {board.summary}
-            </span>
+    <>
+      <Page
+        name="board"
+        title="Board"
+        summary={
+          <span className="board-summary" data-testid="board-summary">
+            {board.summary}
+          </span>
+        }
+        line="Every run that is going, by workflow and step."
+        label="Board"
+        testid="board"
+        className="board-screen"
+        wide
+        onKeyDown={onKeyDown}
+        actions={
+          <>
             {severalProjects && (
               <span className="list-scope" role="group" aria-label="Which projects">
                 <button type="button" aria-pressed={!everywhere} onClick={() => setEverywhere(false)} data-testid="board-this-project">
@@ -212,16 +216,12 @@ export function BoardScreen() {
                 </button>
               </span>
             )}
-          </h2>
-          <span>
-            <button type="button" className="quiet" onClick={() => setMany(true)} data-testid="board-start-many">
+            <button type="button" onClick={() => setMany(true)} data-testid="board-start-many">
               Start on several terminals…
             </button>
-            <button type="button" className="quiet" onClick={close} data-testid="board-close">
-              Close
-            </button>
-          </span>
-        </header>
+          </>
+        }
+      >
         <div className="board-filters" data-testid="board-filters">
           <MenuButton label={`Filter${chosen > 0 ? ` · ${chosen}` : ''}`} testid="board-filter-open" menuTestid="board-filter-menu" className="board-filter">
             <label className="ui-menu-line">
@@ -328,8 +328,8 @@ export function BoardScreen() {
             </section>
           )}
         </div>
-      </div>
+      </Page>
       {many && <RunManyDialog onClose={() => setMany(false)} />}
-    </div>
+    </>
   );
 }

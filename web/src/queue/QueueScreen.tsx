@@ -7,7 +7,8 @@ import { useEndedRuns } from '../workflows/ended-runs';
 import { actionView } from './action-views';
 import { Schedules } from './Schedules';
 import { TaskForm, type TaskDraft } from './TaskForm';
-import { ScreenHead, Tabs } from '../ui';
+import { Badge, Banner, Page, Tabs } from '../ui';
+import { timeAgo } from '../StatusBadges';
 import { itemsOfListing, useRepositoryListing } from '../review/repository-source';
 import { runCommand } from '../commands';
 
@@ -25,11 +26,11 @@ export function goTo(act: string): void {
   const store = useApp.getState();
   if (what === 'run' && id) store.viewRun(id);
   else if (what === 'session' && id) {
-    store.togglePanel(null);
+    store.showPage(null);
     store.showSession(id);
   } else if (what === 'copy' && id) store.viewEnvironment(id);
   else if (what === 'review') store.togglePanel('review');
-  else if (store.panel !== 'queue') store.togglePanel('queue');
+  else store.showPage('queue');
 }
 
 /** The lines of a list a run handed in that the owner ticked. */
@@ -72,13 +73,24 @@ function ForYouRow({ item, onSend, named }: { item: ForYouItem; onSend: (draft: 
       data-kind={item.kind}
       data-opens={opens ? 'true' : undefined}
     >
+      {/* One line: what kind of thing it is as a chip, what waits in a sentence, and since when. */}
       <div className="foryou-head">
-        <span className="foryou-kind">{item.title}</span>
-        <span className="foryou-from">
-          {project ? <span data-testid="foryou-project">{project} · </span> : null}from {item.from}
-        </span>
+        <Badge tone={item.tone} className="foryou-kind">
+          {item.title}
+        </Badge>
+        <span className="foryou-sentence">{item.sentence}</span>
+        {item.at && (
+          <time className="foryou-when" dateTime={item.at} title={new Date(item.at).toLocaleString()}>
+            {timeAgo(item.at)}
+          </time>
+        )}
       </div>
-      <p className="foryou-sentence">{item.sentence}</p>
+      {/* Where it came from, unless the sentence has already named it. */}
+      {(project || !item.sentence.includes(item.from)) && (
+        <div className="foryou-from">
+          {project ? <span data-testid="foryou-project">{project} · </span> : null}from {item.from}
+        </div>
+      )}
       <div className="foryou-actions">
         {/* What was written is ticked off by the owner; what was gathered is opened where one acts on it. */}
         {item.askId !== null ? (
@@ -290,17 +302,14 @@ function ReviewLine() {
   const files = itemsOfListing(useRepositoryListing()).length;
   if (drafts + files === 0) return null;
   return (
-    <p className="ui-notice" data-testid="drafts-waiting">
-      {drafts + files} to read before {drafts + files === 1 ? 'it' : 'they'} can be used.
-      <button type="button" onClick={() => runCommand('drafts.review')} data-testid="review-open">
-        Review
-      </button>
-    </p>
+    <Banner action="Review" onAction={() => runCommand('drafts.review')} testid="drafts-waiting" actionTestid="review-open">
+      {drafts + files} written by an agent or a program {drafts + files === 1 ? 'waits' : 'wait'} to be read before {drafts + files === 1 ? 'it' : 'they'} can be used.
+    </Banner>
   );
 }
 
 export function QueueScreen() {
-  const open = useApp((s) => s.panel === 'queue');
+  const open = useApp((s) => s.page === 'queue');
   const app = useApp((s) => s.app);
   const ended = useEndedRuns((e) => e.items);
   const [draft, setDraft] = useState<TaskDraft | null>(null);
@@ -338,7 +347,7 @@ export function QueueScreen() {
   const severalProjects = (whole ? openProjects(whole).length : 0) > 1;
   const list = useMemo(() => (open && app && whole ? forYou(whole, Date.now(), ended, everywhere && severalProjects ? null : projectId) : null), [open, app, whole, ended, projectId, everywhere, severalProjects]);
   if (!open || !app || !queue || !list) return null;
-  const close = (): void => useApp.getState().togglePanel(null);
+  const close = (): void => useApp.getState().showPage(null);
   const busy = queue.tasks.filter((task) => BUSY_STATES.includes(task.state)).sort((a, b) => a.updatedAt.localeCompare(b.updatedAt));
   const next = waitingTasks(queue.tasks);
   const today = new Date().toDateString();
@@ -362,23 +371,23 @@ export function QueueScreen() {
   };
 
   return (
-    <div
-      className="dialog-backdrop"
-      onMouseDown={(e) => {
-        if (e.target === e.currentTarget) close();
-      }}
-      onKeyDown={(e) => {
-        if (e.key === 'Escape') {
-          e.stopPropagation();
-          close();
-        }
-      }}
-    >
-      <div className="dialog sheet queue-screen" role="dialog" aria-label="Queue and For you" data-testid="queue-screen">
-        <ScreenHead title="Queue" onClose={close} closeTestid="queue-close" />
-        <div className="ui-bar">
+    <>
+      <Page
+        name="queue"
+        title="Queue"
+        line="What waits on you, and the tasks for agents."
+        label="Queue and For you"
+        testid="queue-screen"
+        className="queue-screen"
+        onKeyDown={(e) => {
+          if (e.key === 'Escape') {
+            e.stopPropagation();
+            close();
+          }
+        }}
+        tabs={
           <Tabs
-            label="What this screen shows"
+            label="What this page shows"
             value={part}
             onChange={setPart}
             tabs={[
@@ -387,12 +396,26 @@ export function QueueScreen() {
               { value: 'rules', label: `Rules${ruleCount > 0 ? ` ${ruleCount}` : ''}`, testid: 'queue-tab-rules' },
             ]}
           />
-        </div>
+        }
+        actions={
+          part === 'queue' && (
+            <span className="queue-bar" data-testid="queue-bar">
+              <button type="button" disabled={queue.hold} onClick={() => say(api.startTasks())} data-testid="queue-start-next">
+                Start next
+              </button>
+              <button type="button" className="primary" onClick={() => setDraft({ titles: [''], details: '', sources: [{ kind: 'hand' }] })} data-testid="queue-add">
+                + Task
+              </button>
+            </span>
+          )
+        }
+      >
         {part === 'schedules' && <Schedules />}
         {part === 'rules' && <Rules />}
+        {part === 'queue' && <ReviewLine />}
         {part === 'queue' && (
         <div className="queue-columns">
-          <section className="queue-foryou ui-card" aria-label="For you">
+          <section className="queue-foryou" aria-label="For you">
             <h3>
               For you <span className="board-summary" data-testid="foryou-summary">{list.summary}</span>
             </h3>
@@ -419,26 +442,16 @@ export function QueueScreen() {
                 Add
               </button>
             </div>
-            <ReviewLine />
-            {list.items.length === 0 && <p className="list-empty">Nothing waits for you.</p>}
             <ul className="foryou-list">
               {list.items.map((item) => (
                 <ForYouRow key={item.id} item={item} onSend={setDraft} named={everywhere && severalProjects} />
               ))}
             </ul>
           </section>
-          <section className="queue-tasks ui-card" aria-label="Queue">
+          <section className="queue-tasks" aria-label="Queue">
             <h3>
               Tasks for agents <span className="board-summary" data-testid="queue-summary">{queueWords(queue.tasks)}</span>
             </h3>
-            <div className="queue-bar" data-testid="queue-bar">
-              <button type="button" className="primary" onClick={() => setDraft({ titles: [''], details: '', sources: [{ kind: 'hand' }] })} data-testid="queue-add">
-                + Task
-              </button>
-              <button type="button" disabled={queue.hold} onClick={() => say(api.startTasks())} data-testid="queue-start-next">
-                Start next
-              </button>
-            </div>
             <details className="ui-fold queue-starts" data-testid="queue-starts">
               <summary>
                 How the queue starts things{' '}
@@ -494,8 +507,8 @@ export function QueueScreen() {
           </section>
         </div>
         )}
-      </div>
+      </Page>
       {draft && <TaskForm draft={draft} onClose={() => setDraft(null)} />}
-    </div>
+    </>
   );
 }

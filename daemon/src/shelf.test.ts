@@ -350,7 +350,7 @@ describe('retiring, bringing back and removing', () => {
     expect(JSON.stringify((await elementsOf(workflowId)).find((e) => e.id === 'tidy'))).toBe(before);
     const status = copyStatus((await elementsOf(workflowId)).find((e) => e.id === 'tidy'), hub.state.shelf);
     expect(status.state).toBe('gone');
-    expect(copyWords(status)).toMatch(/whose source is not on the shelf/);
+    expect(copyWords(status)).toMatch(/whose source is not among your saved steps/);
     // Nothing to take any more, and the retired one no longer names it.
     expect((await asOwner('POST', `/v1/workflows/${workflowId}/elements/tidy/shelf-update`, { decision: 'take' })).status).toBe(409);
     expect(shelfItem(old)).toMatchObject({ state: 'retired', replacedBy: null });

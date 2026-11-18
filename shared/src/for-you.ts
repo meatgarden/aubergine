@@ -23,7 +23,8 @@ import { versionOf, type ArchivedRun, type Run } from './workflows';
 export const ForYouItem = z.object({
   id: z.string().describe('Stays the same while the thing waits: its kind and what it is about.'),
   kind: z.string(),
-  title: z.string().describe("What its kind is called: `Approval`, `A draft to read`."),
+  title: z.string().describe("What its kind is called, short enough for a chip: `Approval`, `Draft to read`."),
+  tone: z.enum(['attention', 'ok', 'neutral']).default('neutral').describe('How its kind is to be drawn: `attention` for what waits on the owner to go on, `ok` for what ended well, `neutral` for the rest.'),
   sentence: z.string().describe('What waits, in a sentence. Where part of it was written by an agent or a program, it is their words.'),
   from: z.string().describe('Where it came from: a terminal by name, a program, the library.'),
   at: z.iso.datetime().nullable().describe('Since when, when that is known.'),
@@ -65,6 +66,8 @@ type Made = Partial<ForYouItem> & Pick<ForYouItem, 'id' | 'sentence' | 'from' | 
 export interface ForYouKind {
   kind: string;
   title: string;
+  /** How its chip is drawn. Left out: `attention` for an item that waits, `neutral` otherwise. */
+  tone?: 'attention' | 'ok' | 'neutral';
   /** Lower numbers come first. */
   order: number;
   items(input: ForYouInput): Made[];
@@ -117,10 +120,11 @@ export function sessionsWaiting(sessions: readonly Session[], runs: readonly Run
   return found.sort((a, b) => (a.at ?? '').localeCompare(b.at ?? '') || a.session.id.localeCompare(b.session.id));
 }
 
-const terminalKind = (kind: string, title: string, order: number, why: WaitingFor, sentence: (w: WaitingSession) => string): void =>
+const terminalKind = (kind: string, title: string, order: number, why: WaitingFor, sentence: (w: WaitingSession) => string, tone?: ForYouKind['tone']): void =>
   registerForYouKind({
     kind,
     title,
+    tone,
     order,
     items: ({ state }) =>
       sessionsWaiting(state.sessions, state.runs)
@@ -130,15 +134,15 @@ const terminalKind = (kind: string, title: string, order: number, why: WaitingFo
 
 terminalKind('approval', 'Approval', 10, 'approval', (w) => `“${w.session.name}” waits for your approval${w.session.attention.message ? `: ${w.session.attention.message}` : '.'}`);
 terminalKind('blocked', 'Blocked', 11, 'blocked', (w) => `“${w.session.name}” is blocked${w.run?.blockedReason ? `: ${w.run.blockedReason}` : '.'}`);
-terminalKind('question', 'A terminal waits', 12, 'question', (w) => `“${w.session.name}” waits for you${w.session.attention.message ? `: ${w.session.attention.message}` : '.'}`);
-terminalKind('message', 'A message', 13, 'message', (w) => (w.session.messages.paused > 0 ? `“${w.session.name}” and another terminal have exchanged many messages. Continue?` : `“${w.session.name}” has a message for you.`));
-terminalKind('finished', 'Finished', 30, 'finished', (w) => `“${w.session.name}” has finished${w.session.attention.message ? `: ${w.session.attention.message}` : '.'}`);
+terminalKind('question', 'Question', 12, 'question', (w) => `“${w.session.name}” waits for you${w.session.attention.message ? `: ${w.session.attention.message}` : '.'}`);
+terminalKind('message', 'Message', 13, 'message', (w) => (w.session.messages.paused > 0 ? `“${w.session.name}” and another terminal have exchanged many messages. Continue?` : `“${w.session.name}” has a message for you.`));
+terminalKind('finished', 'Finished', 30, 'finished', (w) => `“${w.session.name}” has finished${w.session.attention.message ? `: ${w.session.attention.message}` : '.'}`, 'ok');
 
 /* ---------- The other kinds there are today ---------- */
 
 registerForYouKind({
   kind: 'proposal',
-  title: 'A task for your yes',
+  title: 'Proposed task',
   order: 20,
   items: ({ state }) =>
     state.queue.tasks.filter((task) => task.state === 'proposed').map((task) => ({ id: `proposal:${task.id}`, sentence: `Proposed for the queue: “${task.title}”.`, from: `${addedByWords(task.addedBy)}, ${sourceWords(task.source)}`, at: task.createdAt, act: `task:${task.id}`, taskId: task.id })),
@@ -153,7 +157,7 @@ registerForYouKind({
 
 registerForYouKind({
   kind: 'task-failed',
-  title: 'A task failed',
+  title: 'Task failed',
   order: 22,
   items: ({ state }) =>
     state.queue.tasks.filter((task) => task.state === 'failed').map((task) => ({ id: `task-failed:${task.id}`, sentence: `The task “${task.title}” failed${task.reason ? `: ${task.reason}` : '.'}`, from: sessionName(state, task.sessionId) ?? 'the queue', at: task.endedAt, act: `task:${task.id}`, taskId: task.id, runId: task.runId })),
@@ -161,7 +165,8 @@ registerForYouKind({
 
 registerForYouKind({
   kind: 'task-done',
-  title: 'A task is done',
+  title: 'Task done',
+  tone: 'ok',
   order: 23,
   items: ({ state }) =>
     state.queue.tasks.filter((task) => task.state === 'done').map((task) => ({ id: `task-done:${task.id}`, sentence: `The task “${task.title}” is done. Look at what was made.`, from: sessionName(state, task.sessionId) ?? 'the queue', at: task.endedAt, act: `task:${task.id}`, taskId: task.id, runId: task.runId, sessionId: task.sessionId })),
@@ -169,7 +174,7 @@ registerForYouKind({
 
 registerForYouKind({
   kind: 'draft',
-  title: 'A draft to read',
+  title: 'Draft to read',
   order: 24,
   items: ({ state }) =>
     state.drafts
@@ -179,7 +184,7 @@ registerForYouKind({
 
 registerForYouKind({
   kind: 'library',
-  title: 'An install to read',
+  title: 'Install to read',
   order: 25,
   items: ({ state }) => state.library.requests.map((request) => ({ id: `library:${request.id}`, sentence: `An item of the library waits to be read before it is installed: “${request.itemId}”.`, from: 'the library', at: request.at, act: 'review' })),
 });
@@ -198,7 +203,7 @@ function listOf(run: Run, elements: readonly { id: string; name: string; produce
 
 registerForYouKind({
   kind: 'checklist',
-  title: 'A list handed in',
+  title: 'List handed in',
   order: 26,
   items: ({ state, ended, now }) => {
     const made: Made[] = [];
@@ -221,7 +226,7 @@ registerForYouKind({
 
 registerForYouKind({
   kind: 'copy',
-  title: 'A working copy to decide about',
+  title: 'Working copy',
   order: 40,
   items: ({ state }) => {
     const done = new Set(state.queue.tasks.flatMap((task) => (task.state === 'done' && task.sessionId ? [task.sessionId] : [])));
@@ -278,7 +283,7 @@ export function forYou(whole: AppState, now: number, endedAll: readonly Archived
   for (const kind of forYouKinds()) {
     const made = kind.items({ state, now, ended });
     made.sort((a, b) => (a.at ?? '').localeCompare(b.at ?? '') || a.id.localeCompare(b.id));
-    for (const item of made) items.push({ kind: kind.kind, title: kind.title, at: null, waits: false, written: false, sessionId: null, runId: null, taskId: null, askId: null, environmentId: null, elementId: null, projectId: projectOf(item), ...item });
+    for (const item of made) items.push({ kind: kind.kind, title: kind.title, tone: kind.tone ?? (item.waits ? 'attention' : 'neutral'), at: null, waits: false, written: false, sessionId: null, runId: null, taskId: null, askId: null, environmentId: null, elementId: null, projectId: projectOf(item), ...item });
   }
   const waiting = items.filter((item) => item.waits).length;
   return { items, waiting, summary: items.length === 0 ? 'Nothing waits for you.' : `${items.length} ${items.length === 1 ? 'thing waits' : 'things wait'} for you${waiting > 0 ? `, ${waiting} of them ${waiting === 1 ? 'a terminal' : 'terminals'}` : ''}.` };

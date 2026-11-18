@@ -443,6 +443,17 @@ export const canvasAddress = (canvasId: string): string => `/c/${canvasId}`;
 /** The address of a canvas with its project: `/p/<project id>/c/<canvas id>`. The shorter one keeps working and leads to the same place. */
 export const projectCanvasAddress = (projectId: string, canvasId: string): string => `/p/${projectId}/c/${canvasId}`;
 
+/**
+ * The screens that are pages of the web app, each about a whole project: they have an address of their own, the
+ * address of the canvas they were opened from with their name after it (`/p/<project>/c/<canvas>/queue`), so that a
+ * reload stays on the page and the browser's back button returns to the canvas.
+ */
+export const PAGE_NAMES = ['queue', 'board', 'workflows', 'library'] as const;
+export type PageName = (typeof PAGE_NAMES)[number];
+export const isPageName = (name: string | undefined): name is PageName => (PAGE_NAMES as readonly string[]).includes(name ?? '');
+/** The address of a page, given the address of the canvas it is over. */
+export const pageAddress = (canvas: string, page: PageName): string => `${canvas}/${page}`;
+
 /* ---------- Terminal WebSocket ---------- */
 
 export const TerminalSize = z.object({

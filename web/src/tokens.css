@@ -26,6 +26,10 @@
   --gutter-panel: var(--space-3);
   --gutter-card: var(--space-4);
   --gutter-screen: var(--space-6);
+  /* The column of a page: one width for every page, so that they are laid out the same. */
+  --page-width: 1120px;
+  /* The row at the top of a page that holds its name. */
+  --page-head: 72px;
 
   /* Shape. */
   --radius-control: 6px;

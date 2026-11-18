@@ -46,7 +46,7 @@ function useBehindScreen(find: (() => Element | null) | null): { behind: boolean
       return;
     }
     const look = (): void => {
-      const screens = [...document.querySelectorAll('.dialog-backdrop')];
+      const screens = [...document.querySelectorAll('.dialog-backdrop, .ui-page')];
       const pointed = find();
       setBehind(screens.length > 0 && !screens.some((screen) => pointed !== null && screen.contains(pointed)));
       const box = pointed?.getBoundingClientRect();
@@ -63,7 +63,7 @@ function useBehindScreen(find: (() => Element | null) | null): { behind: boolean
     // A screen is added to one of three places in the page: looked at the moment one is, so that the ring and the
     // card are never drawn over a screen while a timer is waited for. The timer stays, for what these do not see.
     const watcher = new MutationObserver(look);
-    for (const place of document.querySelectorAll('.app, .workspace, .canvas, .tabbar, .side-panel')) watcher.observe(place, { childList: true, subtree: place.matches('.tabbar') });
+    for (const place of document.querySelectorAll('.app, .app-under, .workspace, .canvas, .tabbar, .side-panel')) watcher.observe(place, { childList: true, subtree: place.matches('.tabbar') });
     const timer = setInterval(look, 200);
     return () => {
       watcher.disconnect();

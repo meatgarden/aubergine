@@ -332,7 +332,7 @@ export function WorkflowEditor() {
                             }}
                             data-testid="save-as-version"
                           >
-                            Save to shelf as a new version of “{from.element.name}”
+                            Save as a new version of the saved step “{from.element.name}”
                           </button>
                         );
                       })()}

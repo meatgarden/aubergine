@@ -106,22 +106,22 @@ export function copyWords(status: CopyStatus): string {
     case 'none':
       return '';
     case 'unchanged':
-      return `A copy of "${name}" from the shelf, version ${status.copiedVersion}, unchanged.${retired}`;
+      return `A copy of "${name}" from your saved steps, version ${status.copiedVersion}, unchanged.${retired}`;
     case 'changed':
-      return `A copy of "${name}" from the shelf, version ${status.copiedVersion}, changed here since.${retired}`;
+      return `A copy of "${name}" from your saved steps, version ${status.copiedVersion}, changed here since.${retired}`;
     case 'behind':
-      return `A copy of "${name}" from the shelf, version ${status.copiedVersion}. A newer version is on the shelf: version ${status.shelf?.version}.${retired}`;
+      return `A copy of "${name}" from your saved steps, version ${status.copiedVersion}. A newer version is saved: version ${status.shelf?.version}.${retired}`;
     case 'both':
-      return `A copy of "${name}" from the shelf, version ${status.copiedVersion}, changed here since. A newer version is on the shelf too: version ${status.shelf?.version}.${retired}`;
+      return `A copy of "${name}" from your saved steps, version ${status.copiedVersion}, changed here since. A newer version is saved too: version ${status.shelf?.version}.${retired}`;
     case 'unknown':
-      return `A copy of "${name}" from the shelf, made before versions were kept: it cannot be told whether it was changed or is behind.${retired}`;
+      return `A copy of "${name}" from your saved steps, made before versions were kept: it cannot be told whether it was changed or is behind.${retired}`;
     case 'gone':
-      return 'A copy of a saved step whose source is not on the shelf: it was removed, or this workflow came from somewhere else.';
+      return 'A copy of a saved step whose source is not among your saved steps: it was removed, or this workflow came from somewhere else.';
   }
 }
 
 /** The one word of the mark. */
-export const COPY_MARK: Record<CopyState, string> = { none: '', unchanged: 'from the shelf', changed: 'changed here', behind: 'newer on the shelf', both: 'changed here, newer on the shelf', unknown: 'from the shelf, cannot tell', gone: 'its source was removed' };
+export const COPY_MARK: Record<CopyState, string> = { none: '', unchanged: 'a saved step', changed: 'changed here', behind: 'a newer version is saved', both: 'changed here, a newer version is saved', unknown: 'a saved step, cannot tell', gone: 'its source was removed' };
 
 /* ---------- Taking a newer version, or keeping one's own ---------- */
 

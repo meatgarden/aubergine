@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { forYou } from '@aubergine/shared';
+import { forYou, type PageName } from '@aubergine/shared';
 import { useWaitingWords } from './AttentionQueue';
 import { waitingQueue } from './attention';
 import { runCommand } from './commands';
@@ -45,8 +45,10 @@ function ForYou() {
 export function AppBar() {
   const live = useApp((s) => s.live);
   useApp((s) => s.settings.shortcuts);
-  const screen = (command: Parameters<typeof runCommand>[0], words: string, title: string, testid: string): React.ReactElement => (
-    <Button kind="quiet" onClick={() => runCommand(command)} title={hint(command, title)} data-testid={testid}>
+  const page = useApp((s) => s.page);
+  // A place in the app: the one being looked at is marked, and pressing it again leads back to the canvas.
+  const screen = (command: Parameters<typeof runCommand>[0], words: string, title: string, testid: string, place?: PageName | null): React.ReactElement => (
+    <Button kind="quiet" className={place !== undefined ? 'appbar-place' : undefined} aria-current={place !== undefined && place === page ? 'page' : undefined} onClick={() => runCommand(command)} title={hint(command, title)} data-testid={testid}>
       {words}
     </Button>
   );
@@ -56,12 +58,13 @@ export function AppBar() {
         Aubergine
       </span>
       <ProjectSwitcher />
-      <span className="appbar-group" role="group" aria-label="Screens of this project">
-        {screen('queue.open', 'Queue', 'The tasks for agents, and everything that waits on you', 'toolbar-queue')}
-        {screen('board.open', 'Board', 'Every run that is going, by workflow and step; approve or send back from there', 'toolbar-board')}
-        {screen('workflows.open', 'Workflows', 'Make, change and run workflows', 'toolbar-workflows')}
-        {screen('library.open', 'Library', 'Workflows and steps others published, to read and install', 'toolbar-library')}
-      </span>
+      <nav className="appbar-group" aria-label="Places of this project">
+        {screen('canvas.show', 'Canvas', 'The canvas, as you left it', 'toolbar-canvas', null)}
+        {screen('queue.open', 'Queue', 'The tasks for agents, and everything that waits on you', 'toolbar-queue', 'queue')}
+        {screen('board.open', 'Board', 'Every run that is going, by workflow and step; approve or send back from there', 'toolbar-board', 'board')}
+        {screen('workflows.open', 'Workflows', 'Make, change and run workflows', 'toolbar-workflows', 'workflows')}
+        {screen('library.open', 'Library', 'Workflows and steps others published, to read and install', 'toolbar-library', 'library')}
+      </nav>
       <span className="appbar-group appbar-status" role="group" aria-label="What needs you">
         {!live && <span className="warning">Reconnecting…</span>}
         <ForYou />

@@ -8,7 +8,7 @@ Every screen is made from one set of sizes, colours, spaces, shapes and controls
 | --- | --- |
 | `web/src/tokens.css` | The tokens: every size, weight, colour, space, corner, control height and layer, for both themes. |
 | `web/src/ui/ui.css` | The pieces: the one button, field, select, chip, tab, menu, card, heading. Outside any layer, so it decides. |
-| `web/src/ui/index.tsx` | The same pieces as components, for the kind of a thing (`Button`, `IconButton`, `TextField`, `Select`, `Segmented`, `Badge`, `StateDot`, `Card`, `Row`, `SectionTitle`, `EmptyState`, `Menu`, `ScreenHead`). |
+| `web/src/ui/index.tsx` | The same pieces as components, for the kind of a thing (`Button`, `IconButton`, `TextField`, `Select`, `Segmented`, `Badge`, `StateDot`, `Card`, `Row`, `SectionTitle`, `EmptyState`, `Menu`, `ScreenHead`, `Page`, `Banner`). |
 | `web/src/styles.css` | The screens' own rules: where things are put. In the layer `legacy`, below the pieces. |
 | `web/src/vendor.css` | The canvas library's and the terminal's own styles, in the lowest layer. |
 
@@ -103,7 +103,11 @@ A tick box or a radio button is 16px, one gap (`--space-2`) from its words and l
 - **A heading inside a list** (a canvas's name over its terminals, Parked): strong words on the list's gutter with an arrow that folds it and a plain count. No fill, open or shut.
 - **The heading of a part** (`SectionTitle`): `--font-title`, strong, 24px above and 8px below.
 - **Nothing here yet** (`EmptyState`): a sentence and one thing to do.
-- **The head of a screen** (`ScreenHead`): its name in `--font-screen`, a line under it where one helps, Close at the right. It stays in view while the screen scrolls.
+- **A page** (`Page`): a screen that is a place in the app (Queue, Board, Workflows, Library). It takes the room under the top bar. Its head stays while it scrolls: the row of its name is `--page-head` (72px) high, with the name in `--font-screen`, one line of what it is, and what is done most at the right (the one primary). Its tabs are under that, inside the head. Its content is one column on `--gutter-screen`, `--page-width` (1120px) wide at most, from the left; a page that is columns itself (`wide`, the Board) has all the width. It has no Close: the top bar marks where you are and leads back. "one look" measures that the four are laid out the same.
+- **What is a page and what is a dialog:** a page is a place you go to and stay in, about the whole project, with no one thing it is about. A dialog is a question about one thing (run this, describe that, these tags, this draft) that ends with a decision; it opens over a page or the canvas alike.
+- **A part of a page** is a title and rows or cards on the page's own surface. A card is never inside a card. Items of a list are rows with a hairline between them, pressed as a whole where the one thing to do is to open them; an item is a card only where it stands alone with actions of its own (a workflow). Not both in one list, and no item has an edge of another colour: what kind it is, is a dot or a soft chip.
+- **A banner** (`Banner`): what waits to be read or decided, said once at the top of a page: the soft attention tint, one sentence, one button. It is not the filled thing of "One thing shouts".
+- **The head of a dialog** (`ScreenHead`): its name in `--font-screen`, a line under it where one helps, Close at the right. It stays in view while the screen scrolls.
 
 ## Layers
 

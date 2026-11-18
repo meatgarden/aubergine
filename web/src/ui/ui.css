@@ -1746,3 +1746,367 @@ label:is(.wf-inline, .ui-check, .schedule-days label, .toolbar-menu-check):has(>
 .tab-menu .tab-menu-line {
   padding: var(--space-2) var(--space-3);
 }
+
+/* ---------- A page: a screen that is a place in the app ---------- */
+
+/* Under the top bar, the canvas page and whichever page is shown in its place have the same room. */
+.app-under {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.app-canvas {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+/* While a page is shown the canvas page is not drawn and not reachable; it stays as it is, its terminals running. */
+.app-canvas[inert] {
+  visibility: hidden;
+}
+/* The place being looked at is marked in the top bar. */
+.appbar .appbar-place[aria-current='page'] {
+  font-weight: var(--weight-strong);
+  color: var(--text);
+  background: var(--surface-active);
+}
+.appbar .appbar-place:not([aria-current='page']) {
+  color: var(--text-muted);
+}
+
+/*
+ * Every page is laid out the same: a head that stays, its tabs under that, then its content in one column on the
+ * screen's gutter. The column has one width on every page; a page that is columns itself takes all the room.
+ */
+.ui-page {
+  --control-h: var(--control);
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  color: var(--text);
+  background: var(--bg);
+  outline: 0;
+}
+.ui-page.is-wide .ui-page-column {
+  max-width: none;
+}
+.ui-page-column {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: var(--page-width);
+  /* From the left on every page, under the name of the product: a page that is columns itself begins there too. */
+  margin: 0;
+  padding: 0 var(--gutter-screen);
+}
+.ui-page-head {
+  flex: none;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+.ui-page-head-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  height: var(--page-head);
+}
+.ui-page-name {
+  min-width: 0;
+}
+.ui-page-head h1 {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  margin: 0;
+  font-size: var(--font-screen);
+  font-weight: var(--weight-strong);
+  line-height: var(--leading-heading);
+  color: var(--text);
+}
+.ui-page-head h1 > span {
+  font-size: var(--font-body);
+  font-weight: var(--weight-normal);
+  color: var(--text-muted);
+}
+.ui-page-head .ui-meta {
+  margin: 2px 0 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ui-page-head .ui-head-actions {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.ui-page-tabs {
+  display: flex;
+  align-items: flex-end;
+}
+.ui-page-tabs .ui-tabs {
+  margin: 0;
+  border-bottom: 0;
+}
+.ui-page-body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: var(--space-6) 0 var(--space-8);
+}
+/* A part of a page is a title and what is under it, on the page's own surface. */
+.ui-page-body h3 {
+  margin: var(--space-6) 0 var(--space-2);
+  font-size: var(--font-title);
+  font-weight: var(--weight-strong);
+  line-height: var(--leading-heading);
+  color: var(--text);
+}
+.ui-page-body section > h3:first-child,
+.ui-page-body .ui-page-column > h3:first-child {
+  margin-top: 0;
+}
+
+/* Something that waits to be read: one sentence and one button on a soft tint, the same wherever it is said. */
+.ui-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin: 0 0 var(--space-6);
+  padding: var(--space-2) var(--space-2) var(--space-2) var(--space-4);
+  color: var(--text);
+  background: var(--attention-soft);
+  border-radius: var(--radius-surface);
+}
+
+/* ---------- The Queue ---------- */
+
+/* Two parts on the page's own surface: side by side where there is room, one after the other where there is not. */
+.ui-page .queue-columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--space-8);
+  align-items: start;
+}
+@media (max-width: 1040px) {
+  .ui-page .queue-columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.ui-page .queue-columns > section {
+  min-width: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+}
+.ui-page .queue-columns h3 {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+}
+.ui-page .queue-columns h3 > span {
+  font-size: var(--font-meta);
+  font-weight: var(--weight-normal);
+  color: var(--text-muted);
+}
+.ui-page .queue-write {
+  margin: 0 0 var(--space-2);
+}
+/* An item is a row with a hairline under it. What kind it is, is a chip; its words are the text colour. */
+.ui-page .foryou-list,
+.ui-page .task-list {
+  margin: 0;
+  border-top: 1px solid var(--border);
+}
+.ui-page .foryou-list:empty,
+.ui-page .task-list:empty {
+  border-top: 0;
+}
+.ui-page .foryou-row,
+.ui-page .task-row {
+  margin: 0;
+  padding: var(--space-3) 0;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+}
+.ui-page .foryou-row.is-pressed {
+  cursor: pointer;
+}
+.ui-page .foryou-row.is-pressed:hover,
+.ui-page .foryou-row.is-pressed:focus-visible {
+  background: var(--surface-raised);
+}
+.ui-page .foryou-head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+.ui-page .foryou-kind {
+  flex: none;
+  font-weight: var(--weight-normal);
+}
+.ui-page .foryou-sentence {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  color: var(--text);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.ui-page .foryou-when {
+  flex: none;
+  font-size: var(--font-meta);
+  color: var(--text-muted);
+}
+.ui-page .foryou-from {
+  flex: none;
+  margin-top: var(--space-1);
+  text-align: left;
+}
+.ui-page .foryou-actions:not(:empty) {
+  margin-top: var(--space-2);
+}
+.ui-page .task-title {
+  color: var(--text);
+}
+.ui-page .wf-label {
+  margin: var(--space-4) 0 var(--space-1);
+  font-size: var(--font-meta);
+  color: var(--text-muted);
+}
+.ui-page .queue-starts {
+  margin: 0 0 var(--space-2);
+}
+
+/* ---------- The Board ---------- */
+
+/* Columns keep one width and the row of them scrolls sideways where there are many. A column is as tall as what it holds. */
+.ui-page .board-columns {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  overflow-x: auto;
+  padding-bottom: var(--space-2);
+}
+.ui-page .board-column {
+  flex: 0 0 240px;
+  box-sizing: border-box;
+  width: 240px;
+  max-width: none;
+  min-height: 0;
+}
+.ui-page .board-filters {
+  margin: 0 0 var(--space-4);
+}
+/* A card says its terminal's state with the dot before how its run stands, so that its name begins where its other lines do. No edge of another colour. */
+.board-card,
+.board-card.status-blocked,
+.board-card.needs-you {
+  border-left-width: 1px;
+  border-left-color: var(--border);
+}
+.board-card-facts {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0 var(--space-1);
+}
+.board-card-facts > .ui-dot {
+  margin-left: calc(-1 * var(--space-1));
+}
+
+/* ---------- The Library ---------- */
+
+/* The list and what is read, side by side; with nothing picked the reading side says so level with the first row. */
+.ui-page .library-browse {
+  display: grid;
+  grid-template-columns: minmax(280px, 2fr) minmax(0, 3fr);
+  gap: var(--space-8);
+  align-items: start;
+  margin-top: var(--space-4);
+}
+@media (max-width: 760px) {
+  .ui-page .library-browse {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.ui-page .library-list ul {
+  max-height: none;
+  margin: var(--space-2) 0 0;
+  border-top: 1px solid var(--border);
+}
+.ui-page .library-row {
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+  padding: var(--space-2) 0;
+  gap: 2px;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+}
+.ui-page .library-row:hover,
+.ui-page .library-row.is-selected {
+  background: var(--surface-raised);
+}
+.ui-page .library-row.is-selected {
+  box-shadow: inset 2px 0 0 var(--accent);
+}
+.library-row-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+.ui-page .library-main > .ui-empty {
+  /* Level with the first row: under the search field's height and the list's gap. */
+  margin: calc(var(--control) + var(--space-2) + var(--space-2)) 0 0;
+  padding: 0;
+  text-align: left;
+}
+.ui-page .library-sources-fold {
+  margin: 0;
+}
+/* A page has the room under the top bar, whatever width or height its screen had as a dialog. */
+.ui-page {
+  width: auto;
+  max-width: none;
+  max-height: none;
+}
+/* A line that says a list is empty begins on the gutter like everything else. */
+.ui-page .list-empty,
+.ui-page .ui-empty {
+  padding-left: 0;
+  padding-right: 0;
+  text-align: left;
+}
+/* What is done from a page's head is one row of controls. */
+.ui-page-head .queue-bar {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  gap: var(--space-2);
+  margin: 0;
+}
+/* How the queue starts things is a line that opens, not a box. */
+.ui-page .queue-starts {
+  padding: 0;
+  background: transparent;
+  border: 0;
+}
+/* A row that is pressed as a whole has room at its sides for its fill, and hangs out by that much: its words stay on the gutter. */
+.ui-page .library-row,
+.ui-page .foryou-row.is-pressed {
+  box-sizing: border-box;
+  width: calc(100% + 2 * var(--space-2));
+  margin-left: calc(-1 * var(--space-2));
+  margin-right: calc(-1 * var(--space-2));
+  padding-left: var(--space-2);
+  padding-right: var(--space-2);
+}

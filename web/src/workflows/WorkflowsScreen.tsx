@@ -3,14 +3,14 @@ import { latestVersion, needWords, usesOf, type Workflow, type WorkflowTemplate 
 import { runCommand } from '../commands';
 import { api } from '../api';
 import { useApp } from '../store';
-import { HowThisWorks, MenuButton, MenuItem, ScreenHead, Tabs } from '../ui';
+import { Banner, HowThisWorks, MenuButton, MenuItem, Page, Tabs } from '../ui';
 
 /**
  * The workflows there are: make one from a template, change, duplicate,
  * remove, or start one from here.
  */
 export function WorkflowsScreen() {
-  const open = useApp((s) => s.panel === 'workflows');
+  const open = useApp((s) => s.page === 'workflows');
   const workflows = useApp((s) => s.app?.workflows);
   const runs = useApp((s) => s.app?.runs);
   const shelf = useApp((s) => s.app?.shelf);
@@ -35,7 +35,7 @@ export function WorkflowsScreen() {
   }, [open]);
 
   if (!open) return null;
-  const close = (): void => useApp.getState().togglePanel(null);
+  const close = (): void => useApp.getState().showPage(null);
   const list = [...(workflows ?? [])].filter((w) => w.listed).sort((a, b) => a.name.localeCompare(b.name));
   const shelfList = [...(shelf ?? [])].sort((a, b) => a.element.name.localeCompare(b.element.name));
   const waiting = (drafts ?? []).filter((d) => d.status === 'waiting').length;
@@ -148,63 +148,70 @@ export function WorkflowsScreen() {
   );
 
   return (
-    <div
-      className="dialog-backdrop"
-      onMouseDown={(e) => {
-        if (e.target === e.currentTarget) close();
-      }}
+    <Page
+      name="workflows"
+      title="Workflows"
+      line="A workflow is a list of steps an agent goes through one at a time."
+      label="Workflows"
+      testid="workflows-screen"
+      className="workflows-screen"
       onKeyDown={(e) => {
         if (e.key === 'Escape') {
           e.stopPropagation();
           close();
         }
       }}
+      tabs={
+        <Tabs
+          label="What this page shows"
+          value={part}
+          onChange={setPart}
+          tabs={[
+            { value: 'workflows', label: `Workflows${list.length > 0 ? ` ${list.length}` : ''}`, testid: 'workflows-tab' },
+            { value: 'steps', label: `Saved steps${current.length > 0 ? ` ${current.length}` : ''}`, testid: 'steps-tab' },
+          ]}
+        />
+      }
+      actions={
+        part === 'workflows' ? (
+          <MenuButton kind="primary" label="New workflow" testid="workflow-new" menuTestid="workflow-new-menu">
+            <MenuItem hint="Say what it should do; an agent writes it and you read it first." onClick={() => runCommand('workflow.describe')} data-testid="describe-workflow">
+              Describe one in words…
+            </MenuItem>
+            <MenuItem hint="One step to start from." disabled={busy} onClick={() => void emptyWorkflow()} data-testid="workflow-empty">
+              Start empty
+            </MenuItem>
+          </MenuButton>
+        ) : (
+          <MenuButton kind="primary" label="New step" testid="step-new" menuTestid="step-new-menu">
+            <MenuItem hint="Write it yourself." onClick={() => useApp.getState().editElement('new')} data-testid="shelf-new">
+              Write one
+            </MenuItem>
+            <MenuItem hint="Say what it should do; an agent writes it and you read it first." onClick={() => runCommand('element.describe')} data-testid="describe-element">
+              Describe one in words…
+            </MenuItem>
+          </MenuButton>
+        )
+      }
     >
-      <div className="dialog sheet workflows-screen" role="dialog" aria-label="Workflows" data-testid="workflows-screen">
-        <ScreenHead title="Workflows" onClose={close} />
-        <HowThisWorks line="A workflow is a list of steps an agent goes through one at a time.">
-          The agent reads the current step, does it, reports it done and is given the next. Nothing in a workflow is run by Aubergine; each step is text for whoever does the work, and a person can move a run with the buttons just as well.
-        </HowThisWorks>
         {error && <p className="dialog-error">{error}</p>}
-        {(drafts ?? []).length > 0 && (
-          <p className="ui-notice">
-            {waiting > 0 ? `${waiting} written by an agent or a program ${waiting === 1 ? 'waits' : 'wait'} to be read.` : 'Nothing waits to be read.'}
-            {(drafts ?? []).length > waiting ? ` ${(drafts ?? []).length - waiting} with an agent.` : ''}{' '}
-            <button type="button" className={waiting > 0 ? '' : 'quiet'} onClick={() => runCommand('drafts.review')} data-testid="open-review">
-              Review{` (${waiting} to read${(drafts ?? []).length > waiting ? `, ${(drafts ?? []).length - waiting} with an agent` : ''})`}
+        {(drafts ?? []).length > 0 && waiting > 0 && (
+          <Banner action="Review" onAction={() => runCommand('drafts.review')} actionTestid="open-review">
+            {waiting} written by an agent or a program {waiting === 1 ? 'waits' : 'wait'} to be read before {waiting === 1 ? 'it' : 'they'} can be used.
+            {(drafts ?? []).length > waiting ? ` ${(drafts ?? []).length - waiting} more ${(drafts ?? []).length - waiting === 1 ? 'is' : 'are'} with an agent.` : ''}
+          </Banner>
+        )}
+        {(drafts ?? []).length > 0 && waiting === 0 && (
+          <p className="ui-meta">
+            {(drafts ?? []).length} asked of an agent, not handed in yet.{' '}
+            <button type="button" className="quiet" onClick={() => runCommand('drafts.review')} data-testid="open-review">
+              Review
             </button>
           </p>
         )}
-        <div className="ui-bar">
-          <Tabs
-            label="What this screen shows"
-            value={part}
-            onChange={setPart}
-            tabs={[
-              { value: 'workflows', label: `Workflows${list.length > 0 ? ` ${list.length}` : ''}`, testid: 'workflows-tab' },
-              { value: 'steps', label: `Saved steps${current.length > 0 ? ` ${current.length}` : ''}`, testid: 'steps-tab' },
-            ]}
-          />
-          {part === 'workflows' ? (
-            <MenuButton kind="primary" label="New workflow" testid="workflow-new" menuTestid="workflow-new-menu">
-              <MenuItem hint="Say what it should do; an agent writes it and you read it first." onClick={() => runCommand('workflow.describe')} data-testid="describe-workflow">
-                Describe one in words…
-              </MenuItem>
-              <MenuItem hint="One step to start from." disabled={busy} onClick={() => void emptyWorkflow()} data-testid="workflow-empty">
-                Start empty
-              </MenuItem>
-            </MenuButton>
-          ) : (
-            <MenuButton kind="primary" label="New step" testid="step-new" menuTestid="step-new-menu">
-              <MenuItem hint="Write it yourself." onClick={() => useApp.getState().editElement('new')} data-testid="shelf-new">
-                Write one
-              </MenuItem>
-              <MenuItem hint="Say what it should do; an agent writes it and you read it first." onClick={() => runCommand('element.describe')} data-testid="describe-element">
-                Describe one in words…
-              </MenuItem>
-            </MenuButton>
-          )}
-        </div>
+        <HowThisWorks line="A run moves by reports, from the agent or from you.">
+          The agent reads the current step, does it, reports it done and is given the next. Nothing in a workflow is run by Aubergine; each step is text for whoever does the work, and a person can move a run with the buttons just as well.
+        </HowThisWorks>
 
         {part === 'workflows' && (
           <section data-testid="workflows-part">
@@ -297,7 +304,6 @@ export function WorkflowsScreen() {
             )}
           </section>
         )}
-      </div>
-    </div>
+    </Page>
   );
 }

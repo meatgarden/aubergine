@@ -82,6 +82,7 @@ export const COMMAND_IDS = [
   'controls.focus',
   'tokens.manage',
   'activity.show',
+  'canvas.show',
   'workflows.open',
   'library.open',
   'board.open',

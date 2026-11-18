@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ButtonHTMLAttributes, type HTMLAttributes, type InputHTMLAttributes, type ReactNode, type SelectHTMLAttributes } from 'react';
+import { useEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent, type ButtonHTMLAttributes, type HTMLAttributes, type InputHTMLAttributes, type ReactNode, type SelectHTMLAttributes } from 'react';
 
 /**
  * The pieces every surface is made of. Each is a thin name for one anatomy in ui.css and uses only tokens;
@@ -119,6 +119,59 @@ export function ScreenHead({ title, subtitle, onClose, closeTestid, children }: 
         </Button>
       </span>
     </header>
+  );
+}
+
+/**
+ * A page: a screen that is a place in the app, shown under the top bar in place of the canvas. Every page is laid
+ * out the same way: a head that does not scroll away (its name, one line of what it is, what is done most at the
+ * right), its tabs under that where it has parts, then its content in one column on the screen's gutter. The column
+ * has one width for every page; `wide` is for a page that is columns itself and takes all the room. It has no way
+ * out of its own: the top bar, Escape and the browser's back button lead back to the canvas. It takes the keyboard
+ * when it opens and gives it back to whatever had it.
+ */
+export function Page({ name, title, summary, line, actions, tabs, wide = false, label, testid, className, onKeyDown, children }: { name: string; title: ReactNode; summary?: ReactNode; line?: ReactNode; actions?: ReactNode; tabs?: ReactNode; wide?: boolean; label: string; testid: string; className?: string; onKeyDown?: (event: ReactKeyboardEvent<HTMLElement>) => void; children: ReactNode }) {
+  const root = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const had = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    root.current?.focus();
+    // Given back a moment later: what had it is shown again only once the page is gone.
+    return () => void setTimeout(() => had?.isConnected && !document.querySelector('.ui-page') && had.focus(), 0);
+  }, []);
+  return (
+    <main className={join('ui-page', wide && 'is-wide', className)} aria-label={label} tabIndex={-1} ref={root} onKeyDown={onKeyDown} data-testid={testid} data-page={name}>
+      <header className="ui-page-head">
+        <div className="ui-page-column ui-page-head-row">
+          <div className="ui-page-name">
+            <h1>
+              {title}
+              {summary}
+            </h1>
+            {line && <p className="ui-meta">{line}</p>}
+          </div>
+          {actions && <span className="ui-head-actions">{actions}</span>}
+        </div>
+        {tabs && <div className="ui-page-column ui-page-tabs">{tabs}</div>}
+      </header>
+      <div className="ui-page-body">
+        <div className="ui-page-column">{children}</div>
+      </div>
+    </main>
+  );
+}
+
+/**
+ * Something that waits to be read or decided, said once at the top of a page: a soft tint, one sentence, one button.
+ * The same piece wherever it is said.
+ */
+export function Banner({ children, action, onAction, testid, actionTestid }: { children: ReactNode; action: string; onAction: () => void; testid?: string; actionTestid?: string }) {
+  return (
+    <p className="ui-banner" role="status" data-testid={testid}>
+      <span>{children}</span>
+      <button type="button" onClick={onAction} data-testid={actionTestid}>
+        {action}
+      </button>
+    </p>
   );
 }
 
