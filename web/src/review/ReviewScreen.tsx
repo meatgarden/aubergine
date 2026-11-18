@@ -58,6 +58,14 @@ export function ReviewScreen() {
   const current = all.find((entry) => entry.key === selected) ?? null;
   const firstWaiting = all.find((entry) => entry.item.state === 'waiting')?.key ?? all[0]?.key ?? null;
 
+  // Asked for by whoever opened the screen (a file that was just read): that one is chosen, once.
+  const wanted = useApp((s) => s.reviewWanted);
+  useEffect(() => {
+    if (!open || wanted === null || !all.some((entry) => entry.key === wanted)) return;
+    setSelected(wanted);
+    useApp.getState().wantReview(null);
+  }, [open, wanted, all]);
+
   // Something to read is chosen when the screen opens, and when what was chosen is gone.
   useEffect(() => {
     if (open && !current && firstWaiting) setSelected(firstWaiting);
@@ -192,7 +200,8 @@ export function ReviewScreen() {
                         <pre className="review-text">{other.text}</pre>
                       </details>
                     ))}
-                    <p className="review-needs" data-testid="review-needs">
+                    {current.source.Choices && <current.source.Choices id={current.item.id} />}
+                    <p className="review-needs" data-testid="review-needs" hidden={current.source.readOnly === true}>
                       <span className="wf-label">It needs</span>
                       {detail.needs.length > 0 ? detail.needs.map(needWords).join('; ') : 'nothing that was named'}
                     </p>
@@ -269,7 +278,7 @@ export function ReviewScreen() {
                         Send back with a comment…
                       </button>
                     )}
-                    {waiting && detail && !editing && (
+                    {waiting && detail && !editing && !current.source.readOnly && (
                       <button type="button" className="quiet" disabled={!mayAccept} onClick={() => setEditing(detail.proposal)} data-testid="review-edit-button">
                         Edit, then accept…
                       </button>

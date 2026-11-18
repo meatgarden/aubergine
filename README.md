@@ -408,6 +408,48 @@ Canvases, terminals, tasks, schedules and rules always belong to one project. Fo
 - A run that is going is never stopped by moving anything. A new run does not start from a workflow or an element its project cannot see. A schedule or a rule that runs such an element stops, and says so once on your list.
 - Settings are for the whole server, not for a project: the settings file, the keys, the limits.
 
+#### Sending a project to someone: a project as a file
+
+A project can be written out as a file and read in somewhere else: on a teammate's computer, or on another machine of yours. The file is **a copy of the project at one moment**. Nothing links the two afterwards; a change on one side does not reach the other.
+
+**What is in the file**: the project's name and color; its canvases with their tabs, frames and the layout of their terminals; for each terminal its name, tags, pinned note and where it starts; the project's rules and schedules; and the workflows and shelf elements they need.
+
+**What is never in it**: tasks and what is on your list, runs and their notes, the log of notes, messages, tokens, settings, working copies, what a terminal showed or ran, and anything of your computer: no path, no user name, no ID. Folders are written as **named places** ("main", "docs"), with only the last part of the path as a hint.
+
+The teammate case, from start to end:
+
+1. **You export.** Projects, then **Export…** on the project (or `aubergine project export "Garden site" garden.project.json`). The browser saves a file. If something could not be written (a parked terminal, a rule whose terminal is parked) the page says what.
+2. **You send the file** however you send files.
+3. **They read it in.** Projects, then **Read in a project file…** (or `aubergine project import garden.project.json`). The Review screen shows everything the file holds before anything is made: every workflow, element and schedule task in full, as an agent would be told it; how many canvases, terminals, rules and schedules it makes; which terminals were an agent's; what its elements say they need.
+4. **They choose**: the project's name (it must not be one they already have), where each place is on their computer (a folder that exists, or left unset), and whether what the file calls shared becomes shared with all their projects or the new project's own.
+5. **They accept**, and the project is there: the same canvases, frames, notes, workflows, rules and schedules.
+
+What reading a file in does **not** do:
+
+- **It starts nothing.** Each terminal is made with a **Start** button and no shell, unless "Start the terminals" was ticked. Importing a project of twenty terminals does not start twenty shells.
+- **It never starts an agent.** A terminal that was an agent's is made as a plain shell and says which agent it was meant for; they start the agent themselves, with their own tools.
+- **Schedules and rules arrive switched off.** They switch on the ones they want. Tasks start only when started; automatic starting is off.
+- **No path from the file is used.** A terminal whose place is unset starts in the home folder and says so.
+- It is made in one step: if any part cannot be made, nothing is.
+
+A file is other people's instructions for agents. The review is where you read them; nothing else checks them.
+
+**Templates** are the same file, marked as a template: **Save as template** on the Projects page keeps one (without the pinned notes) in `templates/` in the data folder, and **New project from a template…** in the switcher lists yours and the two that come with Aubergine:
+
+- **Feature work**: one piece of work on one repository. Two agent terminals (one builds, one reviews), a plain shell, a workflow that stops for your approval before finishing, and a rule that notifies you when a task needs you.
+- **Morning list**: a list of what is open for you every weekday at 08:30. One agent terminal, the element that gathers the list, and its schedule. The agent there needs whatever connections your list comes from; the template brings none.
+
+A project from a template goes through the same review, and starts nothing either.
+
+```sh
+aubergine project export "Garden site" garden.project.json
+aubergine project import garden.project.json --place main=~/work/garden   # prints all of it, then asks
+aubergine project templates
+aubergine project new "Mornings" --template "Morning list"
+```
+
+The format is written down in [docs/project-file.md](docs/project-file.md).
+
 #### Projects and API tokens
 
 A token reaches every project unless you limit it when you make it (`"projects": {"kind": "projects", "projectIds": […]}`, or `aubergine token create … --project <name>`). A limited token is kept to those projects for every scope, reading included: it does not see another project's canvases, terminals, tasks, rules, schedules or runs, nor things that are another project's own, and it hears nothing of them on the stream of changes. Things shared with every project it sees. To it, a thing of another project is simply not there. An agent's own credential sees its own project.
@@ -669,6 +711,7 @@ From a line of a checklist an agent handed in, or from anything written on your 
 Under **Rules** on the same screen, or with `aubergine rule`. A rule is yours alone to write: no program and no agent can add or change one.
 
 - **When**: a task is done, a task failed, a task needs you, something is asked of you, a schedule fired, or a schedule could not run or was missed.
+- A rule has a switch: one that is **off** is kept and does nothing. Rules that came in a project file arrive off.
 - **Then**, one of two things:
   - **Notify me**: a notification from the open Aubergine page. The browser asks your permission when you press **Allow notifications**, not before. Nothing leaves your computer.
   - **Run an element**: starts a run of one element from your shelf, on a terminal you name or a new one, with a short account of what happened as its task. This is how something outside gets called: write an element that says "put this in the calendar", and the agent does it with its own connectors. Aubergine holds no credential for any app and calls no address itself.

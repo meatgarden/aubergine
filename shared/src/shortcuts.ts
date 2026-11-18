@@ -87,6 +87,7 @@ export const COMMAND_IDS = [
   'queue.open',
   'projects.open',
   'project.new',
+  'project.fromTemplate',
   'sharing.open',
   'terminal.newIn',
   'copies.show',

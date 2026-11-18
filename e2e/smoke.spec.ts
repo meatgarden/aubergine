@@ -2911,3 +2911,104 @@ test('projects: a second project has its own tabs, terminals and queue; what wai
   }
   expect((await fetch(`${origin}/v1/sessions/${inSecond}`, { headers: as })).status).toBe(404);
 });
+
+test('a project as a file: written out, read in under another name through the review, with nothing started that was not asked for; and a project from a template', async ({ page }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  const origin = new URL(page.url()).origin;
+  const asOwner = { headers: { origin } };
+  // A project with two canvases, a colored tab, a frame, a terminal with a pinned note, and a schedule.
+  const made = (await (await page.request.post('/v1/projects', { ...asOwner, data: { name: 'File test source', color: 'green' } })).json()) as { id: string };
+  const canvases = ((await (await page.request.get(`/v1/canvases?projectId=${made.id}`, asOwner)).json()) as { items: { id: string }[] }).items;
+  const main = canvases[0]?.id ?? '';
+  expect((await page.request.patch(`/v1/canvases/${main}`, { ...asOwner, data: { name: 'File test build', color: 'purple' } })).status()).toBe(200);
+  expect((await page.request.post('/v1/canvases', { ...asOwner, data: { projectId: made.id, name: 'File test notes' } })).status()).toBe(201);
+  expect((await page.request.post(`/v1/canvases/${main}/frames`, { ...asOwner, data: { label: 'File test frame', x: 20, y: 20, width: 900, height: 560 } })).status()).toBe(201);
+  const session = (await (await page.request.post('/api/v1/sessions', { ...asOwner, data: { canvasId: main, name: 'file test terminal', rect: { x: 60, y: 80, width: 700, height: 420 } } })).json()) as { session: { id: string } };
+  expect((await page.request.patch(`/v1/sessions/${session.session.id}`, { ...asOwner, data: { note: 'File test note: keep the tests green.' } })).status()).toBe(200);
+  const element = (await (await page.request.post('/v1/elements', { ...asOwner, data: { name: 'File test list', instructions: 'Gather what is open: {{task}}', produces: 'checklist' } })).json()) as { id: string };
+  expect((await page.request.post('/v1/schedules', { ...asOwner, data: { projectId: made.id, name: 'File test morning', time: '08:30', days: ['mon'], what: { kind: 'element', elementId: element.id }, where: { kind: 'session', sessionId: session.session.id }, task: 'since yesterday' } })).status()).toBe(201);
+
+  // Written out from the Projects page: the browser is handed a file.
+  const switcher = page.getByTestId('project-switcher');
+  await switcher.click();
+  await page.getByTestId('projects-open').click();
+  const projects = page.getByTestId('projects-screen');
+  const download = page.waitForEvent('download');
+  await projects.locator('[data-testid="project-item"]').filter({ has: page.locator('input[value="File test source"]') }).getByTestId('project-export').click();
+  const saved = await download;
+  expect(saved.suggestedFilename()).toBe('file-test-source.project.json');
+  const text = readFileSync((await saved.path()) ?? '', 'utf8');
+  expect(JSON.parse(text)).toMatchObject({ aubergine: 'project', format: 1, name: 'File test source' });
+  // Nothing of this computer or this server is in it.
+  expect(text).not.toContain(e2e.dataDir);
+  expect(text).not.toContain(session.session.id);
+  expect(text).not.toContain(made.id);
+  await expect(projects.getByTestId('projects-said')).toContainText('was written to file-test-source.project.json');
+
+  // Read in: the review screen shows what it holds, and nothing is made yet.
+  await projects.getByTestId('project-import').setInputFiles({ name: 'file-test-source.project.json', mimeType: 'application/json', buffer: Buffer.from(text) });
+  const review = page.getByTestId('review-screen');
+  await expect(review).toBeVisible();
+  const choices = review.getByTestId('file-choices');
+  await expect(choices.getByTestId('file-name')).toHaveValue('File test source');
+  // The name is taken here: said, and Accept would be refused. Another name is chosen.
+  await expect(choices.getByTestId('file-name-taken')).toBeVisible();
+  await expect(review.getByTestId('review-notice').filter({ hasText: 'It makes 2 canvases, 1 terminal' })).toHaveCount(1);
+  await expect(review.getByTestId('review-notice').filter({ hasText: '1 schedule arrives switched off.' })).toHaveCount(1);
+  await expect(review.locator('.review-text').first()).toContainText('Gather what is open');
+  await expect(choices.getByTestId('file-start')).not.toBeChecked();
+  expect(((await (await page.request.get('/v1/projects', asOwner)).json()) as { items: { name: string }[] }).items.filter((p) => p.name.startsWith('File test')).map((p) => p.name)).toEqual(['File test source']);
+  await choices.getByTestId('file-name').fill('File test copy');
+  await expect(choices.getByTestId('file-name-taken')).toHaveCount(0);
+  await review.getByTestId('review-accept').click();
+  await expect(review).toHaveCount(0);
+
+  // The page is in the new project: the same tabs, the color, the frame and the note.
+  await expect(page.getByTestId('project-name')).toHaveText('File test copy');
+  const tabs = page.getByTestId('tab');
+  await expect(tabs).toHaveCount(2);
+  await expect(tabs.nth(0)).toContainText('File test build');
+  await expect(tabs.nth(0)).toHaveClass(/color-purple/);
+  await expect(tabs.nth(1)).toContainText('File test notes');
+  await expect(page.getByTestId('frame-label')).toHaveText('File test frame');
+  await expect(page.getByText('File test note: keep the tests green.')).toBeVisible();
+  // Its terminal was not started: it says so and offers to start. Nothing of the first project's is running in it.
+  const node = page.getByTestId('terminal-node');
+  await expect(node).toHaveCount(1);
+  await expect(node.getByTestId('node-not-started')).toContainText('Not started yet.');
+  await expect(node.getByTestId('node-not-started')).toContainText('Its place was not set: it starts in your home folder.');
+  // Its schedule arrived switched off.
+  await page.getByTestId('toolbar-queue').click();
+  const queue = page.getByTestId('queue-screen');
+  await queue.getByTestId('queue-schedules').locator('summary').click();
+  const schedule = queue.getByTestId('schedule-row').filter({ hasText: 'File test morning' });
+  await expect(schedule).toHaveAttribute('data-on', 'false');
+  await expect(schedule.getByTestId('schedule-next')).toHaveText('Switched off.');
+  await queue.getByTestId('queue-close').click();
+  // The owner starts the terminal: a shell, where there was none.
+  await node.getByTestId('node-start').click();
+  await expect(node.getByTestId('node-not-started')).toHaveCount(0);
+  await expect(node.getByTestId('node-ended')).toHaveCount(0);
+
+  // A project from a template that comes with the app.
+  await switcher.click();
+  await page.getByTestId('project-from-template-open').click();
+  await expect(projects.getByTestId('project-template')).toHaveCount(2);
+  await projects.locator('[data-testid="project-template"][data-template="app:morning-list"]').getByTestId('project-from-template').click();
+  await expect(review).toBeVisible();
+  await expect(review.getByTestId('review-notice').filter({ hasText: 'A template: a project to start others from.' })).toHaveCount(1);
+  await expect(review.getByTestId('review-notice').filter({ hasText: 'Were an agent’s: helper.' })).toHaveCount(1);
+  await review.getByTestId('file-name').fill('File test mornings');
+  await review.getByTestId('review-accept').click();
+  await expect(review).toHaveCount(0);
+  await expect(page.getByTestId('project-name')).toHaveText('File test mornings');
+  await expect(tabs).toHaveCount(1);
+  await expect(tabs.first()).toContainText('Desk');
+  // Its terminal was an agent's: made as a plain shell that is not started, and it says which agent it was meant for.
+  await expect(node.getByTestId('node-not-started')).toContainText('It was an agent’s terminal (claude-code)');
+  await expect(page.getByTestId('row-meant-for')).toHaveText('was claude-code');
+  const sessions = ((await (await page.request.get('/v1/sessions?projectId=all&limit=200', asOwner)).json()) as { items: { name: string; state: string; agent: unknown }[] }).items;
+  expect(sessions.filter((s) => s.name === 'helper').map((s) => [s.state, s.agent])).toEqual([['exited', null]]);
+});

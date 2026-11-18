@@ -125,6 +125,9 @@ export interface AppStore {
   /** An ask is used once: forget it, unless a newer one has replaced it. */
   asked: (tick: number) => void;
   setNotice: (notice: string | null) => void;
+  /** The thing the review screen is asked to show when it opens (`source:item`); null: whatever waits first. */
+  reviewWanted: string | null;
+  wantReview: (key: string | null) => void;
   /** The one setting the page changes: whether new terminals also open on the desktop. */
   setDesktopOpenNew: (openNew: boolean) => void;
   setSide: (change: Partial<PanelPrefs>) => void;
@@ -145,7 +148,7 @@ const SETTLE_MS = 700;
 
 export type Panel = 'parked' | 'outside' | 'shortcuts' | 'tokens' | 'activity' | 'workflows' | 'review' | 'help' | 'library' | 'board' | 'queue' | 'projects' | 'sharing';
 export interface Ask {
-  kind: 'rename-session' | 'rename-canvas' | 'note' | 'move' | 'tags' | 'list-search' | 'new-project';
+  kind: 'rename-session' | 'rename-canvas' | 'note' | 'move' | 'tags' | 'list-search' | 'new-project' | 'project-from-template';
   /** The session or canvas it is about. */
   id: string;
   tick: number;
@@ -282,6 +285,8 @@ export const useApp = create<AppStore>((set, get) => ({
   request: (ask) => set((state) => ({ ask: { ...ask, tick: (state.ask?.tick ?? 0) + 1 } })),
   asked: (tick) => set((state) => (state.ask?.tick === tick ? { ask: null } : {})),
   setNotice: (notice) => set({ notice }),
+  reviewWanted: null,
+  wantReview: (key) => set({ reviewWanted: key }),
   setDesktopOpenNew: (openNew) => set((state) => ({ settings: { ...state.settings, desktop: { ...state.settings.desktop, openNew } } })),
   setSide: (change) => {
     const side = { ...get().side, ...change };

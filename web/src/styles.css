@@ -362,6 +362,31 @@ code {
   gap: 4px;
   margin-left: auto;
 }
+.projects-heading {
+  margin: 14px 0 2px;
+  font-size: 14px;
+}
+.project-import {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin: 6px 0;
+  font-size: 13px;
+}
+.project-template-words {
+  flex: 1;
+  min-width: 240px;
+}
+.review-choices {
+  margin: 8px 0;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.review-choices input:not([type]) {
+  box-sizing: border-box;
+  width: 100%;
+}
 .project-deciding {
   flex-basis: 100%;
   margin: 2px 0;

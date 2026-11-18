@@ -53,6 +53,7 @@ import { WorkflowsScreen } from './workflows/WorkflowsScreen';
 import { ReviewScreen } from './review/ReviewScreen';
 import './review/drafts-source';
 import './review/library-source';
+import './review/project-file-source';
 import { LibraryScreen } from './library/LibraryScreen';
 import { BoardScreen } from './board/BoardScreen';
 import { StartDialog } from './environment/StartDialog';

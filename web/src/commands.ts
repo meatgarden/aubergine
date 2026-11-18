@@ -255,6 +255,17 @@ export const COMMANDS: readonly Command[] = [
     },
   },
   {
+    id: 'project.fromTemplate',
+    title: 'New project from a template, or from a file…',
+    description: 'Makes a project from a template (two come with Aubergine; your own are saved from the Projects page) or from a project file someone sent you. You read everything it holds first; it starts no terminal and no agent unless you say so.',
+    group: 'Panels',
+    available: always,
+    run: (state) => {
+      if (state.panel !== 'projects') state.togglePanel('projects');
+      state.request({ kind: 'project-from-template', id: '' });
+    },
+  },
+  {
     id: 'sharing.open',
     title: 'Sharing…',
     description: 'What is shared between projects: for workflows, shelf elements, library sources and API tokens, whether a new one is shared with every project or belongs to the project it is made in, and where each existing one belongs.',

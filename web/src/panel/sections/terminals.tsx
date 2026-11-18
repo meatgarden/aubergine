@@ -450,6 +450,11 @@ const RowView = memo(function RowView({ row, style, density, indented, current, 
           </span>
         )}
         {!compact && <MessageMark session={session} />}
+        {session.meantFor?.agent && !compact && (
+          <span className="list-agent" title={`Not started yet. It was an agent’s terminal (${session.meantFor.agent}) where its project came from; no agent is started for it here.`} data-testid="row-meant-for">
+            was {session.meantFor.agent}
+          </span>
+        )}
         {session.agent && !compact && (
           <span className="list-agent" title="An agent runs here">
             agent
