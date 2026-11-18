@@ -322,6 +322,15 @@ These are the only abstractions in the code base. Each has exactly one implement
 - **The map never lies over the terminal in use.** It steps aside, button and all (`underMap`), and folds away for good in this browser.
 - **A filter that is on keeps its one line with Clear**, in plain chips; the count on the Filter button is the one coloured sign.
 
+- **A page is a place, a dialog is a question.** Queue, Board, Workflows and Library are pages (`Page` in `web/src/ui`): shown under the top bar in place of the canvas, laid out the same, with no way out of their own. Anything about one thing that ends with a decision is a dialog and opens over a page or the canvas alike. A new place in the top bar is a page; do not make a dialog of it.
+- **The canvas stays as it was under a page.** It is not unmounted: it is hidden and `inert`. Pages and dialogs are mounted beside it (`Screens.tsx`), never inside it.
+- **A page has an address**: the canvas's with its name after it (`PAGE_NAMES`, `pageAddress` in the protocol; the server serves each). Opening one adds one history step and every way out goes back over it. `page` in the store is the one state; `showPage` is the one way to change it.
+- **Every page is laid out by the piece.** The name's row, the gutter and the column come from `--page-head`, `--gutter-screen` and `--page-width`; a screen's rule does not set them. "one look" requires the four to be equal.
+- **No box inside a box.** On a page a part is a title and rows or cards on the page's own surface; a card never holds a card; items of one list are all rows or all cards; no item has an edge of another colour. The browser test "screens are pages" counts.
+- **What waits to be read is the banner** (`Banner`), one sentence and one button, the same wherever it is said.
+- **A kind of the owner's list has a short title and a tone**, registered with it; the row draws them and compares no kind to a name.
+- **A browser test that reads a terminal's folder starts the terminal in a temporary folder.**
+
 ### Canvas behaviour
 
 - A terminal takes input at any zoom at which it is drawn live, and only while it has focus. One click focuses it and moves nothing; only a node too small to read (below `READABLE_ZOOM`) zooms in first. An unfocused terminal is covered by a shield: the first click focuses it.
