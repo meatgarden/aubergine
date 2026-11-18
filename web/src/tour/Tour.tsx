@@ -31,9 +31,19 @@ function useRectOf(find: (() => Element | null) | null): DOMRect | null {
   return rect;
 }
 
+/** Whether a rectangle is that of something a dialog holds: it lies within the dialog's own box. */
+function isInside(rect: DOMRect, backdrop: Element): boolean {
+  const box = backdrop.querySelector('.dialog, .picker')?.getBoundingClientRect();
+  return !!box && rect.x >= box.x - 1 && rect.y >= box.y - 1 && rect.right <= box.right + 1 && rect.bottom <= box.bottom + 1;
+}
+
 /** A ring round what is being pointed at. It takes no clicks: what is under it stays usable. */
 function Ring({ rect }: { rect: DOMRect | null }) {
   if (!rect) return null;
+  // While a dialog is open and what is pointed at is behind it, no ring is drawn over the dialog.
+  const middle = document.elementFromPoint(rect.x + rect.width / 2, rect.y + rect.height / 2);
+  const dialog = middle?.closest('.dialog-backdrop');
+  if (dialog && !isInside(rect, dialog)) return null;
   const pad = 6;
   return <div className="tour-ring" aria-hidden="true" style={{ left: rect.x - pad, top: rect.y - pad, width: rect.width + pad * 2, height: rect.height + pad * 2 }} data-testid="tour-ring" />;
 }

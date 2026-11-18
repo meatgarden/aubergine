@@ -4135,3 +4135,40 @@ tr[data-status='expired'] strong {
     min-width: 60px;
   }
 }
+
+/* ---------- The list of terminals: the name first ---------- */
+
+/* A row's name keeps its room; the marks beside it give way before the name is cut to nothing. */
+.list-row .list-name {
+  flex: 1 1 auto;
+  min-width: 96px;
+}
+.list-row .list-badge,
+.list-row .run-strip.is-row {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.list-row .list-spring {
+  flex: 0 0 0;
+}
+.list-detail .list-where {
+  flex: 1 1 auto;
+}
+/* Whatever a title holds, the way to put the terminal away stays in reach: it keeps to the right edge, over what does not fit. */
+.node-title > .node-close {
+  position: sticky;
+  right: 0;
+  z-index: 1;
+  background: var(--panel);
+}
+.node-title .node-name {
+  min-width: 72px;
+}
+.node-title .copy-chip {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

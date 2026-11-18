@@ -171,14 +171,14 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
             className={`node-tool nodrag people-only${session.peopleOnly ? ' is-on' : ''}`}
             aria-pressed={session.peopleOnly}
             aria-label={`People only: ${name}`}
-            title={hint('terminal.peopleOnly', session.peopleOnly ? 'People only: no API token may read this terminal or type into it. Click to open it to tokens again.' : 'Open to API tokens that have the scope and the reach. Click to make it people only.')}
+            title={hint('terminal.peopleOnly', session.peopleOnly ? 'People only: no API token may read this terminal or type into it. Click to open it to tokens again.' : 'People only is off: API tokens that have the scope and the reach may read this terminal and type into it. Click to make it people only.')}
             data-testid="people-only"
             onClick={() => {
               useApp.getState().select(sessionId);
               runCommand('terminal.peopleOnly');
             }}
           >
-            {session.peopleOnly ? '🔒 people only' : '🔓'}
+            {session.peopleOnly ? '🔒 People only' : '🔓'}
           </button>
         )}
         {draft === null && session?.agent && (

@@ -441,8 +441,10 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await page.keyboard.press('s');
 
   // Typing in a terminal is recorded, and the row says so.
-  await expect(listRows.first().getByTestId('list-typed')).toContainText('typed');
-  await expect(listRows.first().getByTestId('list-updated')).toContainText('updated');
+  // One time on the row, the later of the two; both are behind it.
+  await expect(listRows.first().getByTestId('list-active')).toContainText('active');
+  await expect(listRows.first().getByTestId('list-active')).toHaveAttribute('data-typed', /.+/);
+  await expect(listRows.first().getByTestId('list-active')).toHaveAttribute('data-updated', /.+/);
 
   await page.keyboard.press('b');
   await expect(page.locator('[data-testid="strip-entry"][data-section="terminals"]')).toContainText('2');
@@ -1000,7 +1002,7 @@ test('a token types into a terminal, the owner sees it, and "people only" closes
   // People only: the owner closes the terminal to tokens. The mark is on the node and on the row.
   await page.getByTestId('people-only').click();
   await expect(page.getByTestId('people-only')).toHaveAttribute('aria-pressed', 'true');
-  await expect(page.getByTestId('people-only')).toContainText('people only');
+  await expect(page.getByTestId('people-only')).toContainText('People only');
   await expect(page.getByTestId('row-people-only')).toBeVisible();
   for (const answer of [await page.request.get(`/v1/sessions/${sessionId}/screen`, { headers: asToken }), await page.request.post(`/v1/sessions/${sessionId}/input`, { headers: asToken, data: { text: 'echo not-typed', enter: true } })]) {
     expect(answer.status()).toBe(403);
