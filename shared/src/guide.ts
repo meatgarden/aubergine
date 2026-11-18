@@ -228,6 +228,7 @@ export const GUIDE: readonly GuideSection[] = [
       { needs: ['task.own.propose', 'ask.own.add', 'tasks.write'], text: ['As tools: task_propose, ask_owner.'], tools: ['task_propose', 'ask_owner'] },
       { needs: ['queue.own.read', 'tasks.read'], text: ['To read the queue: queue_read.'], tools: ['queue_read'] },
       { needs: ['tasks.read'], text: ['To read everything that waits on the owner: for_you_read. Nothing on that list can be decided by a tool.'], tools: ['for_you_read'] },
+      { needs: ['project.own.read', 'projects.read'], text: ['Your terminal belongs to one project, and what you see here is that project: its queue, its runs, its terminals. Other projects on the same server are not yours to see or to reach: projects_list.'], tools: ['projects_list'] },
       { needs: ['schedules.read'], text: ['To read the schedules, with when each is next and how its latest time ended: schedules_read. A schedule is made and run by the owner alone.'], tools: ['schedules_read'] },
     ],
   },

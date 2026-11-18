@@ -1,4 +1,4 @@
-import { isLocalHost } from '@aubergine/shared';
+import { PROJECT_HEADER, isLocalHost } from '@aubergine/shared';
 import { existsSync } from 'node:fs';
 import type { AddressInfo } from 'node:net';
 import cookie from '@fastify/cookie';
@@ -97,6 +97,7 @@ import { MessageRefusal, Messages } from './messages';
 import { Library } from './library';
 import { Environments } from './environments';
 import { Desktop } from './desktop';
+import { inProject } from './project-context';
 import { Projects } from './projects';
 import type { DesktopOpener } from './desktop/open';
 import { Queue } from './queue';
@@ -543,7 +544,9 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   app.post(paths.sessions, async (request, reply): Promise<CreateSessionResponse> => {
     const { desktop: alsoOnDesktop, ...body } = parse(CreateSessionRequest, request.body ?? {});
     reply.code(201);
-    const created = await sessions.create(body);
+    // Where it names no canvas: of the project the caller means (a command line says so in a header), else the first.
+    const meant = request.headers[PROJECT_HEADER];
+    const created = await (typeof meant === 'string' && hub.state.projects.some((p) => p.id === meant) ? inProject(meant, () => sessions.create(body)) : sessions.create(body));
     // Only here, on the owner's own route, and only when the request says so: a session a token, a task or a schedule
     // makes goes through other code and never opens a window. The session is made whether or not the window opens.
     return alsoOnDesktop === true ? { ...created, desktop: await desktop.openNew(created.session.id) } : created;

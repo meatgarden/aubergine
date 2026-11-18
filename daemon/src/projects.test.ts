@@ -4,7 +4,11 @@ import os from 'node:os';
 import path from 'node:path';
 import { GRANTABLE_SCOPES, NO_ATTENTION, NO_STATUS, boardOf, dueSchedules, forYou, newId, nextToStart, queueSettingsOf, stateOf, visibleIn, type AppState, type ChangeEvent, type ForYou, type ProjectRow, type QueueState, type Scope, type Session, type Task } from '@aubergine/shared';
 import type { FastifyInstance } from 'fastify';
+import { createClient } from '@aubergine/client';
+import { PROJECT_HEADER, SESSION_ENV } from '@aubergine/shared';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { USAGE } from './cli/commands';
+import { INSIDE_ITS_OWN, PROJECT_NEW_EXAMPLE, parseProjectCommand, runProjectCommand, takeProject } from './cli/project';
 import { MemoryActivityLog } from './activity';
 import { sessionToken } from './auth';
 import { FileRunArchive } from './run-archive';
@@ -736,5 +740,85 @@ describe('kept here, running here', () => {
     // The two questions themselves.
     expect(state().sessions.find((s) => s.id === local.id)?.host).toBeUndefined();
     expect(state().projects.find((p) => p.id === a.id)?.home).toEqual({ kind: 'local' });
+  });
+});
+
+describe('the commands', () => {
+  let chosen: string | null = null;
+  /** A command as typed by the owner outside any canvas terminal, or inside one. `meant`: the project the command line means, as it sends it. */
+  const typed_ = async (words: string[], inside?: Session): Promise<{ code: number; out: string }> => {
+    const printed: string[] = [];
+    const owner = createClient({ baseUrl: origin, headers: { origin, cookie: `${cookieName(port)}=${ownerToken}` } });
+    const env = inside ? { [SESSION_ENV.url]: origin, [SESSION_ENV.sessionId]: inside.id, [SESSION_ENV.token]: sessionToken(ownerToken, inside.id) } : {};
+    const code = await runProjectCommand(parseProjectCommand(words), { owner: (work) => work(owner), env, print: (text) => printed.push(text), remember: async (id) => void (chosen = id), remembered: async () => chosen, expandFolder: (folder) => folder });
+    return { code, out: printed.join('\n') };
+  };
+
+  it('list, new, use, rename, move-canvas, archive, reopen and remove as the owner; inside a canvas terminal only the list', async () => {
+    chosen = null;
+    const a = first();
+    const worker = agentOn(a.canvasId, 'worker');
+    expect((await typed_(['new', 'Garden site', '--folder', dir, '--color', 'green'])).out).toContain(`Made the project “Garden site”, with one empty canvas. New terminals in it start in ${dir}.`);
+    const garden = state().projects.find((p) => p.name === 'Garden site')!;
+    expect(garden).toMatchObject({ color: 'green', defaultFolder: dir, folders: [dir], state: 'open', home: { kind: 'local' } });
+    const list = await typed_(['list']);
+    expect(list.out).toContain(`1. ${state().projects[0]!.name}  1 canvas, 1 running, 0 waiting for you`);
+    expect(list.out).toContain(`2. Garden site  1 canvas, 0 running, 0 waiting for you  in ${dir}`);
+    expect((await typed_(['use', 'Garden site'])).out).toContain('Commands that name no project mean “Garden site” from now on.');
+    expect(chosen).toBe(garden.id);
+    expect((await typed_(['list'])).out).toContain('2. Garden site  (the one commands mean)');
+    expect((await typed_(['rename', '2', '--to', 'Garden'])).out).toBe('It is called “Garden” now.');
+    // A canvas moves across by name.
+    await asOwner('POST', '/v1/canvases', { name: 'Spare' });
+    expect((await typed_(['move-canvas', 'Spare', '--to', 'Garden'])).out).toBe('“Spare” is in “Garden” now, with its terminals, their runs and what they work in.');
+    expect(state().canvases.find((c) => c.name === 'Spare')?.projectId).toBe(garden.id);
+    // Archived: forgotten as the one commands mean. Reopened, archived again, removed when empty.
+    expect((await typed_(['archive', 'Garden'])).out).toContain('“Garden” is archived: it is out of the switcher and starts nothing.');
+    expect(chosen).toBeNull();
+    await expect(typed_(['use', 'Garden'])).rejects.toThrow(/is archived. Reopen it first/);
+    expect((await typed_(['reopen', 'Garden'])).out).toBe('“Garden” is open again.');
+    expect((await typed_(['archive', 'Garden', '--end'])).code).toBe(0);
+    expect((await typed_(['remove', 'Garden'])).out).toBe('Removed “Garden” for good.');
+    expect(state().projects.map((p) => p.name)).not.toContain('Garden');
+    void worker;
+  });
+
+  it('says the right form, and the option is taken from the commands that take it', () => {
+    expect(takeProject(['task', 'list', '--project', 'Garden site'])).toEqual({ project: 'Garden site', rest: ['task', 'list'] });
+    expect(takeProject(['new', '--project', 'Garden', 'api'])).toEqual({ project: 'Garden', rest: ['new', 'api'] });
+    expect(takeProject(['list'])).toEqual({ project: null, rest: ['list'] });
+    // A command that does not take it is left as it was typed, and says so itself.
+    expect(takeProject(['attach', 'x', '--project', 'Garden'])).toEqual({ project: null, rest: ['attach', 'x', '--project', 'Garden'] });
+    expect(() => takeProject(['task', 'list', '--project'])).toThrow(/--project needs/);
+    expect(() => parseProjectCommand(['new'])).toThrow(new RegExp(`project new needs a name. For example:\\n {2}${PROJECT_NEW_EXAMPLE.replace(/[~/"]/g, '.')}`));
+    expect(() => parseProjectCommand(['new', 'x', '--color', 'no-such-color'])).toThrow(/--color takes a named color/);
+    expect(() => parseProjectCommand(['archive', 'x', '--park', '--end'])).toThrow(/not both/);
+    expect(() => parseProjectCommand(['move-canvas', 'Main'])).toThrow(/needs a canvas and where it goes/);
+    expect(() => parseProjectCommand(['delete', 'x'])).toThrow(/It knows: list, new, rename, use, archive, reopen, remove, move-canvas/);
+    expect(parseProjectCommand(['archive', 'Garden', 'site', '--end'])).toEqual({ action: 'archive', query: 'Garden site', sessions: 'end' });
+    expect(USAGE).toContain(`For example: ${PROJECT_NEW_EXAMPLE}`);
+    expect(INSIDE_ITS_OWN).toContain('no option changes it');
+  });
+
+  it('a command line that means a project says so in a header: lists and new things are that project\'s', async () => {
+    const a = first();
+    const b = await project('Second');
+    const meaning = (projectId: string, method: string, url: string, body?: unknown) => send({ origin, cookie: `${cookieName(port)}=${ownerToken}`, [PROJECT_HEADER]: projectId }, method, url, body);
+    const made = await meaning(b.id, 'POST', '/v1/tasks', { title: 'Meant for B' });
+    expect(made.body).toMatchObject({ projectId: b.id });
+    expect((await meaning(b.id, 'GET', '/v1/tasks')).body.items.map((t: Task) => t.title)).toEqual(['Meant for B']);
+    expect((await meaning(a.id, 'GET', '/v1/tasks')).body.items).toEqual([]);
+    // A new terminal that names no canvas goes onto a canvas of that project.
+    const session = await meaning(b.id, 'POST', '/api/v1/sessions', {});
+    expect(session.body.session.projectId).toBe(b.id);
+    // What the request itself names wins over the header.
+    expect((await meaning(b.id, 'GET', `/v1/tasks?projectId=${a.id}`)).body.items).toEqual([]);
+    expect((await meaning(newId(), 'GET', '/v1/tasks')).status).toBe(404);
+    // Inside a canvas terminal, project commands that change anything do nothing; the list is its own project.
+    const worker = agentOn(a.canvasId, 'worker');
+    const inside = await typed_(['new', 'Theirs'], worker);
+    expect(inside).toMatchObject({ code: 1 });
+    expect(inside.out).toContain('This command does nothing inside a canvas terminal.');
+    expect(state().projects.map((p) => p.name)).not.toContain('Theirs');
   });
 });

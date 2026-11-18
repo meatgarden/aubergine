@@ -244,6 +244,8 @@ export const SESSION_ENV = {
 
 /** The header in which a command run inside a session says which session that is. Said by the caller itself. */
 export const SESSION_HEADER = 'x-aubergine-session';
+/** A request may name its project in this header instead of in its query or body: the ID of a project, or `all`. A query or a body that names one wins. */
+export const PROJECT_HEADER = 'x-aubergine-project';
 
 /**
  * A program may say what it is with this header: a short name, a slash, a version (`mcp/0.1.0`).

@@ -150,6 +150,10 @@ To read the queue: queue_read.
 
 To read everything that waits on the owner: for_you_read. Nothing on that list can be decided by a tool.
 
+(Needs the terminal's own credential, or an API token with the scope read.)
+
+Your terminal belongs to one project, and what you see here is that project: its queue, its runs, its terminals. Other projects on the same server are not yours to see or to reach: projects_list.
+
 (Needs an API token with the scope read.)
 
 To read the schedules, with when each is next and how its latest time ended: schedules_read. A schedule is made and run by the owner alone.

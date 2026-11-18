@@ -2,6 +2,7 @@ import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import type { ZodType } from 'zod';
 import {
   FEATURES,
+  PROJECT_HEADER,
   firstProject,
   ofProject,
   openProjects,
@@ -774,12 +775,14 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
           .map((value) => projectOfId(state, value))
           .find((found) => typeof found === 'string') as string | undefined;
         const sent = (from: unknown): unknown => (from !== null && typeof from === 'object' ? (from as Record<string, unknown>).projectId : undefined);
-        const asked = sent(request.query) ?? sent(request.body);
+        // In its query, in its body, or (for a client that means one project for everything it asks) in a header.
+        const inHeader = request.headers[PROJECT_HEADER];
+        const asked = sent(request.query) ?? sent(request.body) ?? (typeof inHeader === 'string' && inHeader !== '' ? inHeader : undefined);
         const askedId = typeof asked === 'string' && asked !== 'all' ? asked : undefined;
         const resource: Resource = { ...(params.sessionId ? deps.resourceOf(params.sessionId) : {}), ...(params.canvasId ? { canvasId: params.canvasId } : {}), ...(named !== undefined ? { projectId: named } : askedId !== undefined ? { projectId: askedId } : {}) };
         let principal = deps.principalOf(request);
         // A token limited to some projects: anything its body or its query names must be within them, whatever the route does with it.
-        if (principal?.kind === 'token' && principal.projects && principal.projects.kind !== 'all' && namesOutOfReach([request.body, request.query], principal.projects, (id) => projectOfId(state, id))) throw deps.fail(404, 'not_found', 'Not found');
+        if (principal?.kind === 'token' && principal.projects && principal.projects.kind !== 'all' && namesOutOfReach([request.body, request.query, asked], principal.projects, (id) => projectOfId(state, id))) throw deps.fail(404, 'not_found', 'Not found');
         for (const action of actionsFor(spec, request.body)) principal = deps.allow(request, action, resource);
         // A field that needs a further permission: asked as well, about the session this call would make.
         for (const [field, action] of Object.entries(spec.fieldAlso ?? {})) {
