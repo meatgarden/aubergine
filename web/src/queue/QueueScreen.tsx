@@ -221,8 +221,11 @@ function Rules() {
       <summary>Rules{count > 0 ? ` (${count})` : ''}: when something happens, do something</summary>
       <ul>
         {(list?.rules ?? []).map((rule) => (
-          <li key={rule.id} data-testid="rule-row">
+          <li key={rule.id} data-testid="rule-row" data-on={rule.on}>
             <span>{rule.says}</span>
+            <label title="A rule that is off is kept and does nothing. A rule that came in a project file arrives off.">
+              <input type="checkbox" checked={rule.on} aria-label={`The rule is switched on: ${rule.says}`} onChange={(e) => void api.switchRule(rule.id, e.target.checked).then((found) => setList(found as RuleList), (error: unknown) => setError((error as Error).message))} data-testid="rule-on" /> On
+            </label>
             <button type="button" className="quiet" aria-label={`Remove the rule: ${rule.says}`} onClick={() => void api.removeRule(rule.id).catch((e: unknown) => setError((e as Error).message))} data-testid="rule-remove">
               ×
             </button>

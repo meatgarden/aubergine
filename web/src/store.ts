@@ -2,7 +2,6 @@ import { showNotification } from './attention';
 import { create } from 'zustand';
 import {
   DEFAULT_SETTINGS,
-  applyEvent,
   placeOfSession,
   sortedCanvases,
   type AppState,
@@ -15,6 +14,7 @@ import {
   stateOf,
 } from '@aubergine/shared';
 import { ApiError, api, askAbout, lookAt, subscribeToEvents } from './api';
+import { NOT_FOLLOWING, takeChange, takeWhole, type Following } from './following';
 import { canvasIdFromPath, chooseCanvas, rememberCanvas, rememberedCanvas, sessionFromAddress, writeAddress } from './address';
 import { announcement, notificationsWanted } from './attention';
 import { clampPanelWidth, loadPanelPrefs, savePanelPrefs, type PanelPrefs } from './panel/registry';
@@ -110,7 +110,10 @@ export interface AppStore {
   viewingEnvironment: string | null;
   viewEnvironment: (environmentId: string | null) => void;
   load: () => Promise<void>;
-  apply: (event: ChangeEvent) => void;
+  /** A change. With its number when it came from the server's stream; without, when the page applies the answer to its own request. */
+  apply: (event: ChangeEvent, revision?: number) => void;
+  /** What is known of the server's state and how far: so that an older whole state never replaces a newer one, and no change is lost or applied twice. */
+  following: Following;
   focusSession: (sessionId: string | null) => void;
   askToClose: (sessionId: string | null) => void;
   askToCloseCanvas: (canvasId: string | null) => void;
@@ -122,6 +125,9 @@ export interface AppStore {
   /** An ask is used once: forget it, unless a newer one has replaced it. */
   asked: (tick: number) => void;
   setNotice: (notice: string | null) => void;
+  /** The thing the review screen is asked to show when it opens (`source:item`); null: whatever waits first. */
+  reviewWanted: string | null;
+  wantReview: (key: string | null) => void;
   /** The one setting the page changes: whether new terminals also open on the desktop. */
   setDesktopOpenNew: (openNew: boolean) => void;
   setSide: (change: Partial<PanelPrefs>) => void;
@@ -142,7 +148,7 @@ const SETTLE_MS = 700;
 
 export type Panel = 'parked' | 'outside' | 'shortcuts' | 'tokens' | 'activity' | 'workflows' | 'review' | 'help' | 'library' | 'board' | 'queue' | 'projects' | 'sharing';
 export interface Ask {
-  kind: 'rename-session' | 'rename-canvas' | 'note' | 'move' | 'tags' | 'list-search' | 'new-project';
+  kind: 'rename-session' | 'rename-canvas' | 'note' | 'move' | 'tags' | 'list-search' | 'new-project' | 'project-from-template';
   /** The session or canvas it is about. */
   id: string;
   tick: number;
@@ -154,6 +160,7 @@ export const useApp = create<AppStore>((set, get) => ({
   settings: DEFAULT_SETTINGS,
   app: null,
   whole: null,
+  following: NOT_FOLLOWING,
   canvasId: null,
   live: true,
   focus: null,
@@ -195,9 +202,12 @@ export const useApp = create<AppStore>((set, get) => ({
   load: async () => {
     try {
       const response = await api.getState();
-      const exists = (id: string): boolean => response.state.canvases.some((c) => c.id === id);
+      // Taken unless it is older than what the stream has already brought; what the stream brought before it is applied after it.
+      const following = takeWhole(get().following, response.state, response.epoch ?? 'unnumbered', response.revision ?? 0);
+      const everything = following.whole ?? response.state;
+      const exists = (id: string): boolean => everything.canvases.some((c) => c.id === id);
       const current = get().canvasId;
-      set({ phase: 'ready', runtime: response.runtime, settings: response.settings, whole: response.state, app: viewOf(response.state, current, get().app) });
+      set({ phase: 'ready', runtime: response.runtime, settings: response.settings, following, whole: everything, app: viewOf(everything, current, get().app) });
       // Keep looking at the same canvas. On opening the page, or if that canvas is gone: the one
       // in the address, else the one this browser looked at last, else the server's default.
       if (!current || !exists(current)) {
@@ -208,7 +218,7 @@ export const useApp = create<AppStore>((set, get) => ({
           exists,
         });
         // An address that asks for a session is left for that to deal with.
-        if (sessionFromAddress(location.search)) set({ canvasId: chosen, focus: null, app: viewOf(response.state, chosen, get().app) });
+        if (sessionFromAddress(location.search)) set({ canvasId: chosen, focus: null, app: viewOf(everything, chosen, get().app) });
         else get().setCanvas(chosen, { push: false });
       }
     } catch (error) {
@@ -220,10 +230,17 @@ export const useApp = create<AppStore>((set, get) => ({
     }
   },
 
-  apply: (event) => {
-    // Changes are applied to everything; what is shown is worked out from that again.
-    const app = get().whole;
-    if (!app) return;
+  apply: (event, revision) => {
+    // Changes are applied to everything, each once and in its place; what is shown is worked out from that again.
+    const before = get().following;
+    const after = takeChange(before, event, revision);
+    if (after === before) return;
+    const app = before.whole;
+    if (!app || after.whole === null || after.whole === app) {
+      // Before the first whole state: kept for when it arrives.
+      set({ following: after });
+      return;
+    }
     // A session has just started waiting: say so on the desktop, if the user asked for that
     // and is not already looking at it.
     const news = announcement(event, app.sessions);
@@ -234,8 +251,8 @@ export const useApp = create<AppStore>((set, get) => ({
         // Notifications are a nicety; never let one break an update.
       }
     }
-    const whole = applyEvent(app, event);
-    const next: Partial<AppStore> = { whole, app: viewOf(whole, get().canvasId, get().app) };
+    const whole = after.whole;
+    const next: Partial<AppStore> = { following: after, whole, app: viewOf(whole, get().canvasId, get().app) };
     if (event.type === 'session.closed') {
       if (get().closing === event.sessionId) next.closing = null;
     }
@@ -268,6 +285,8 @@ export const useApp = create<AppStore>((set, get) => ({
   request: (ask) => set((state) => ({ ask: { ...ask, tick: (state.ask?.tick ?? 0) + 1 } })),
   asked: (tick) => set((state) => (state.ask?.tick === tick ? { ask: null } : {})),
   setNotice: (notice) => set({ notice }),
+  reviewWanted: null,
+  wantReview: (key) => set({ reviewWanted: key }),
   setDesktopOpenNew: (openNew) => set((state) => ({ settings: { ...state.settings, desktop: { ...state.settings.desktop, openNew } } })),
   setSide: (change) => {
     const side = { ...get().side, ...change };

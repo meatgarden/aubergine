@@ -59,6 +59,7 @@ import type { Asker, Queue } from './queue';
 import type { Desktop } from './desktop';
 import { inProject } from './project-context';
 import { ProjectMemory, namesOutOfReach, projectOfId, withinReach } from './project-reach';
+import type { ProjectFiles } from './project-files';
 import type { Projects } from './projects';
 import type { Schedules } from './schedules';
 import { fingerprintOf } from './terminal-access';
@@ -78,6 +79,7 @@ export interface PublicRouteDeps {
   schedules: Schedules;
   desktop: Desktop;
   projects: Projects;
+  projectFiles: ProjectFiles;
   activity: ActivityLog;
   viewers: Viewers;
   limiter: RateLimiter;
@@ -395,6 +397,7 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
     dismissAsk: ({ params }) => queue.removeAsk(params.askId),
     listRules: ({ project }) => queue.rules(project.scope),
     addRule: ({ body, project }) => queue.addRule(body, project.id),
+    switchRule: ({ params, body }) => queue.switchRule(params.ruleId, body.on),
     removeRule: ({ params }) => queue.removeRule(params.ruleId),
     // A window on the owner's desktop, and the one setting about it: `authorize` has refused everyone but the owner.
     openSessionOnDesktop: ({ params }) => deps.desktop.open(params.sessionId),
@@ -410,6 +413,13 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
     archiveProject: ({ params, body }) => deps.projects.archive(params.projectId, body ?? {}),
     reopenProject: ({ params }) => deps.projects.reopen(params.projectId),
     removeProject: ({ params }) => deps.projects.remove(params.projectId),
+    // A project as a file, and templates. Writing out, reading and taking in are the owner's alone.
+    exportProject: ({ params, query }) => deps.projectFiles.export(params.projectId, { template: query.template === 'true', ...(query.notes !== undefined ? { notes: query.notes === 'true' } : {}), ...(query.description !== undefined ? { description: query.description } : {}) }),
+    readProjectFile: ({ body }) => deps.projectFiles.read(body.text),
+    importProjectFile: ({ body }) => deps.projectFiles.import(body),
+    listProjectTemplates: async () => ({ templates: await deps.projectFiles.templates() }),
+    getProjectTemplate: ({ params }) => deps.projectFiles.template(params.templateId),
+    saveProjectTemplate: ({ params, body }) => deps.projectFiles.saveTemplate(params.projectId, body ?? {}),
     getSharing: () => deps.projects.sharing(),
     changeSharing: ({ body }) => deps.projects.setDefault(body.kind, body.default),
     moveSharedThing: ({ body }) => deps.projects.moveThing(body.kind, body.id, body.projectId),

@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { sortedProjects, type Project } from '@aubergine/shared';
+import { sortedProjects, type Project, type ProjectTemplate } from '@aubergine/shared';
 import { api } from '../api';
 import { ColorButton } from '../ColorButton';
 import { useApp } from '../store';
+import { readForReview, saveAs } from './file-store';
 import { goToProject, waitingIn } from './projects';
 
 /**
@@ -13,16 +14,22 @@ import { goToProject, waitingIn } from './projects';
 export function ProjectsScreen() {
   const open = useApp((s) => s.panel === 'projects');
   const whole = useApp((s) => s.whole);
-  const wantsNew = useApp((s) => (s.ask?.kind === 'new-project' ? s.ask : null));
+  const wantsNew = useApp((s) => (s.ask?.kind === 'new-project' || s.ask?.kind === 'project-from-template' ? s.ask : null));
   const [name, setName] = useState('');
   const [folder, setFolder] = useState('');
   const [error, setError] = useState<string | null>(null);
   /** The project whose running terminals need a decision before it is archived. */
   const [deciding, setDeciding] = useState<string | null>(null);
+  const [said, setSaid] = useState<string | null>(null);
+  const [templates, setTemplates] = useState<ProjectTemplate[]>([]);
+  const loadTemplates = (): void => void api.projectTemplates().then(setTemplates, () => {});
   useEffect(() => {
     if (open) {
       setError(null);
       setDeciding(null);
+      setSaid(null);
+      // Read when the page opens, and after one is saved.
+      loadTemplates();
     }
   }, [open]);
   useEffect(() => {
@@ -125,6 +132,12 @@ export function ProjectsScreen() {
                       <button type="button" className="quiet" disabled={index === projects.length - 1} aria-label={`Move ${project.name} down`} onClick={() => doing(api.changeProject(project.id, { before: projects[index + 2]?.id ?? null }))}>
                         ↓
                       </button>
+                      <button type="button" className="quiet" title="Write this project out as a file: a copy to send to someone, or to keep. Nothing that ran, no credential and no path of this computer is in it." onClick={() => doing(api.exportProject(project.id).then((out) => (saveAs(out.fileName, out.text), setSaid(`“${project.name}” was written to ${out.fileName}.${out.leftOut.length > 0 ? ` Not in it: ${out.leftOut.join(' ')}` : ''}`))))} data-testid="project-export">
+                        Export…
+                      </button>
+                      <button type="button" className="quiet" title="Keep it as a template to start other projects from. Its pinned notes are left out." onClick={() => doing(api.saveProjectTemplate(project.id, false).then((made) => (setSaid(`Saved as the template “${made.name}”.`), loadTemplates())))} data-testid="project-save-template">
+                        Save as template
+                      </button>
                       <button type="button" className="quiet" onClick={() => archive(project)} data-testid="project-archive">
                         Archive
                       </button>
@@ -166,6 +179,43 @@ export function ProjectsScreen() {
             Add the project
           </button>
         </div>
+        <h3 className="projects-heading">From a file, or from a template</h3>
+        <p className="sheet-note">
+          A project file is a copy of a project as it was when someone wrote it out. Reading one in shows you everything it holds first, and makes nothing until you accept. It starts no terminal and no agent unless you say so.
+        </p>
+        <label className="project-import">
+          <span>Read in a project file…</span>
+          <input
+            type="file"
+            accept=".json,application/json"
+            aria-label="A project file to read in"
+            onChange={(e) => {
+              const picked = e.target.files?.[0];
+              e.target.value = '';
+              if (picked) doing(picked.text().then((text) => readForReview(text, `the file ${picked.name}`)));
+            }}
+            data-testid="project-import"
+          />
+        </label>
+        <ul className="project-list" data-testid="project-templates">
+          {templates.map((template) => (
+            <li key={template.id} className="project-item" data-testid="project-template" data-template={template.id}>
+              <span className="project-template-words">
+                <strong>{template.name}</strong> <span className="sheet-note">{template.from === 'app' ? 'comes with Aubergine' : 'yours'} · {template.canvases} {template.canvases === 1 ? 'canvas' : 'canvases'}, {template.terminals} {template.terminals === 1 ? 'terminal' : 'terminals'}</span>
+                <br />
+                <span className="sheet-note">{template.description}</span>
+              </span>
+              <button type="button" onClick={() => doing(api.projectTemplate(template.id).then((text) => readForReview(text, `the template “${template.name}”`, name)))} data-testid="project-from-template">
+                New project from this…
+              </button>
+            </li>
+          ))}
+        </ul>
+        {said && (
+          <p className="sheet-note" role="status" data-testid="projects-said">
+            {said}
+          </p>
+        )}
         <p className="sheet-note">An archived project is out of the switcher and starts nothing: no task, no schedule, no rule. It can be reopened. It is removed for good only when it holds nothing.</p>
         {error && (
           <p className="dialog-error" role="alert" data-testid="projects-error">

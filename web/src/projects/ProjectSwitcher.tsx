@@ -100,6 +100,10 @@ export function ProjectSwitcher() {
             New project…
             <small>Its own canvases, terminals, queue, schedules and rules.</small>
           </button>
+          <button type="button" role="menuitem" onClick={() => go('project.fromTemplate')} data-testid="project-from-template-open">
+            New project from a template…
+            <small>Or from a file someone sent you. You read what it holds first.</small>
+          </button>
           <button type="button" role="menuitem" onClick={() => go('projects.open')} data-testid="projects-open">
             Projects…
             <small>Rename, color, folders, order; archive, reopen, remove.</small>

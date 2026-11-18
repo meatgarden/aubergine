@@ -1,3 +1,4 @@
+import type { ComponentType } from 'react';
 import type { Element, Need, WorkflowContent } from '@aubergine/shared';
 
 /**
@@ -50,6 +51,10 @@ export interface ReviewSource {
   /** Sends it back with a comment; absent where that makes no sense. */
   sendBack?: (id: string, comment: string) => Promise<void>;
   discard: (id: string) => Promise<void>;
+  /** What the owner chooses before accepting, where a source has such choices: drawn below what is read. The source keeps what was chosen. */
+  Choices?: ComponentType<{ id: string }>;
+  /** True where what is read cannot be edited before it is accepted. */
+  readOnly?: boolean;
 }
 
 const sources = new Map<string, ReviewSource>();

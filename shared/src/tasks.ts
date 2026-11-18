@@ -320,6 +320,8 @@ export const Rule = z.object({
   projectId: Id.describe('The project it belongs to. Set by the server from where it was made.'),
   event: RuleEvent,
   action: RuleAction,
+  /** False: it is kept and does nothing. A rule that came in a project file arrives so, until the owner switches it on. */
+  on: z.boolean().default(true),
   createdAt: Timestamp,
 });
 export type Rule = z.infer<typeof Rule>;

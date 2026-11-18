@@ -1,7 +1,8 @@
-import { applyEvent, type AppState, type ChangeEvent } from '@aubergine/shared';
+import { applyEvent, newId, type AppState, type ChangeEvent } from '@aubergine/shared';
 import type { Store } from './store/store';
 
-export type EventListener = (event: ChangeEvent) => void;
+/** `revision`: the number of this change, counted from when this server started. */
+export type EventListener = (event: ChangeEvent, revision: number) => void;
 
 /**
  * Holds the canvas state. `emit` is the only way to change it: the event is
@@ -11,6 +12,18 @@ export class StateHub {
   private current: AppState;
   private readonly listeners = new Set<EventListener>();
   private lastSave: Promise<void> = Promise.resolve();
+  /**
+   * How many changes there have been since this server started. Given with the whole state and with each change, so
+   * that whoever follows both can tell which is newer. Not kept: it starts again with the server, under a new epoch.
+   */
+  private changes = 0;
+  /** Names this run of the server. A follower that sees another epoch knows the numbers started again. */
+  readonly epoch: string = newId();
+  /** Changes that were made and not yet told to the listeners, in order. */
+  private readonly untold: { event: ChangeEvent; revision: number }[] = [];
+  private telling = false;
+  /** The changes of a step that is being made and is not whole yet; null outside one. */
+  private step: { event: ChangeEvent; revision: number }[] | null = null;
 
   constructor(
     initial: AppState,
@@ -24,10 +37,67 @@ export class StateHub {
     return this.current;
   }
 
+  /** The number of the last change that is in `state`. Read in the same turn as `state`, the two belong together. */
+  get revision(): number {
+    return this.changes;
+  }
+
+  /**
+   * Several changes as one step that either wholly happens or leaves nothing. While `work` runs, each change it
+   * makes is applied, so that what it does next sees what it did before, and nobody is told and nothing is saved.
+   * When it returns, the whole is saved once and the listeners are told of each change in order. When it throws, the
+   * state is as it was before, and nobody ever hears of any of it. `work` must not wait for anything.
+   */
+  atomically<T>(work: () => T): T {
+    if (this.step !== null) return work();
+    const before = { state: this.current, changes: this.changes };
+    this.step = [];
+    let made: { event: ChangeEvent; revision: number }[];
+    let result: T;
+    try {
+      result = work();
+      if (result instanceof Promise) throw new Error('A step that either wholly happens or not cannot wait for anything');
+      made = this.step;
+    } catch (error) {
+      this.current = before.state;
+      this.changes = before.changes;
+      this.step = null;
+      throw error;
+    }
+    this.step = null;
+    if (made.length === 0) return result;
+    this.lastSave = this.store.save(this.current).catch(this.onSaveError);
+    this.tell(made);
+    return result;
+  }
+
   emit(event: ChangeEvent): void {
     this.current = applyEvent(this.current, event);
+    this.changes += 1;
+    if (this.step !== null) {
+      // Part of a step that is not whole yet: applied, and told when the step is.
+      this.step.push({ event, revision: this.changes });
+      return;
+    }
     this.lastSave = this.store.save(this.current).catch(this.onSaveError);
-    for (const listener of [...this.listeners]) listener(event);
+    // Told in the order the changes were made. A listener that makes a change of its own while it is being told of one
+    // would otherwise have that later change reach the listeners after it before the earlier one did, and whoever
+    // follows by number would take the earlier one for something it already has.
+    this.tell([{ event, revision: this.changes }]);
+  }
+
+  private tell(made: readonly { event: ChangeEvent; revision: number }[]): void {
+    this.untold.push(...made);
+    if (this.telling) return;
+    this.telling = true;
+    try {
+      for (let next = this.untold.shift(); next !== undefined; next = this.untold.shift()) {
+        for (const listener of [...this.listeners]) listener(next.event, next.revision);
+      }
+    } finally {
+      this.telling = false;
+      this.untold.length = 0;
+    }
   }
 
   subscribe(listener: EventListener): () => void {

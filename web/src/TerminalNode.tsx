@@ -300,11 +300,21 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
       </header>
       {exited ? (
         <div className="node-body node-ended nodrag" data-testid="node-ended">
-          <p>This shell has ended.</p>
-          <RecapBlock sessionId={sessionId} canAsk={false} />
+          {session?.meantFor ? (
+            // Came in a project file: its shell was never started here. What it was is said; nothing is done because of it.
+            <p data-testid="node-not-started">
+              Not started yet.{session.meantFor.agent ? ` It was an agent’s terminal (${session.meantFor.agent}): Start gives you a plain shell, and you start the agent yourself.` : ''}
+              {session.meantFor.environment && session.meantFor.environment !== 'full' ? ' It worked in a place of its own (a working copy); here it starts in the folder itself.' : ''}
+              {session.meantFor.placeUnset ? ' Its place was not set: it starts in your home folder.' : ''}
+            </p>
+          ) : (
+            <p>This shell has ended.</p>
+          )}
+          {/* A terminal that was never started here has nothing to look back on. */}
+          {!session?.meantFor && <RecapBlock sessionId={sessionId} canAsk={false} />}
           <div className="node-ended-actions">
-            <button type="button" onClick={() => void api.restartSession(sessionId)}>
-              Restart here
+            <button type="button" onClick={() => void api.restartSession(sessionId)} data-testid="node-start">
+              {session?.meantFor ? 'Start' : 'Restart here'}
             </button>
             <button type="button" className="quiet" onClick={() => void api.closeSession(sessionId)}>
               Remove

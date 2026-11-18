@@ -148,6 +148,13 @@ export const api = {
   reopenProject: (projectId: string) => v1.reopenProject({ projectId }),
   removeProject: (projectId: string) => v1.removeProject({ projectId }),
   moveCanvasToProject: (canvasId: string, projectId: string) => v1.moveCanvasToProject({ canvasId, body: { projectId } }),
+  exportProject: (projectId: string, template = false) => v1.exportProject({ projectId, query: template ? { template: 'true' } : {} }),
+  readProjectFile: (text: string) => v1.readProjectFile({ body: { text } }),
+  importProjectFile: (body: Parameters<typeof v1.importProjectFile>[0]['body']) => v1.importProjectFile({ body }),
+  projectTemplates: async () => (await v1.listProjectTemplates()).templates,
+  projectTemplate: async (templateId: string) => (await v1.getProjectTemplate({ templateId })).text,
+  saveProjectTemplate: (projectId: string, notes: boolean) => v1.saveProjectTemplate({ projectId, body: { notes } }),
+  switchRule: (ruleId: string, on: boolean) => v1.switchRule({ ruleId, body: { on } }),
   getSharing: () => v1.getSharing(),
   changeSharing: (kind: string, value: 'shared' | 'project') => v1.changeSharing({ body: { kind, default: value } }),
   moveSharedThing: (kind: string, id: string, projectId: string | null) => v1.moveSharedThing({ body: { kind, id, projectId } }),
@@ -271,7 +278,8 @@ export function socketUrl(path: string): string {
  */
 export function subscribeToEvents(handlers: {
   onReady: () => void;
-  onEvent: (event: ChangeEvent) => void;
+  /** `revision`: the change's number, as the server counts them. */
+  onEvent: (event: ChangeEvent, revision?: number) => void;
   /** The daemon asks this page to bring a session into view. */
   onShow: (sessionId: string) => void;
   /** Asked to switch to a canvas (by a program, through the public API). */
@@ -301,7 +309,7 @@ export function subscribeToEvents(handlers: {
       } else if (parsed.data.type === 'show') handlers.onShow(parsed.data.sessionId);
       else if (parsed.data.type === 'show-canvas') handlers.onShowCanvas(parsed.data.canvasId);
       else if (parsed.data.type === 'notify') handlers.onNotify?.(parsed.data.title, parsed.data.body);
-      else handlers.onEvent(parsed.data.event);
+      else handlers.onEvent(parsed.data.event, parsed.data.revision);
     };
     socket.onclose = () => {
       if (stopped) return;

@@ -94,11 +94,13 @@ import { noInputAudit, type InputAudit } from './input-audit';
 import { TerminalAccess, TerminalRefusal, type TerminalTrace } from './terminal-access';
 import os from 'node:os';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { MessageRefusal, Messages } from './messages';
 import { Library } from './library';
 import { Environments } from './environments';
 import { Desktop } from './desktop';
 import { inProject } from './project-context';
+import { ProjectFiles } from './project-files';
 import { Projects } from './projects';
 import type { DesktopOpener } from './desktop/open';
 import { Queue } from './queue';
@@ -133,6 +135,10 @@ export interface ServerOptions {
   runArchive?: RunArchive;
   /** Where tasks that are over are kept. Left out, in memory only. */
   taskArchive?: TaskArchive;
+  /** Where the owner's templates of projects are kept. Left out: this server keeps none. */
+  templatesDir?: string;
+  /** The templates that come with the app. Left out: this copy's own `templates` folder. */
+  appTemplatesDir?: string | null;
   /** What opens a terminal on the owner's desktop. Left out: this server opens none, and says so. */
   desktop?: DesktopOpener;
   /** Writes `desktop.openNew` into the settings file. Left out: the page cannot change it. */
@@ -265,6 +271,11 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     lateWithinMs: (await options.settings()).schedules.lateWithinHours * 3600 * 1000,
     activity,
     onError: (error) => console.error('Could not answer for a schedule:', error),
+  });
+  // A project as a file, and templates: the ones that come with this copy, and the owner's own in the data folder.
+  const projectFiles = new ProjectFiles(hub, sessions, workflows, drafts, queue, schedules, projects, {
+    templatesDir: options.templatesDir ?? null,
+    appTemplatesDir: options.appTemplatesDir === undefined ? path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..', 'templates') : options.appTemplatesDir,
   });
   // The library that ships with the app is read from this copy's own files. Nothing is fetched at start, or ever without the owner asking.
   await library.start();
@@ -533,14 +544,20 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   const idParam = (request: FastifyRequest, name: string): string =>
     parse(Id, (request.params as Record<string, string>)[name]);
 
-  app.get(paths.state, async (): Promise<StateResponse> => ({
-    protocolVersion: PROTOCOL_VERSION,
-    runtime: await sessions.status(),
-    settings: await options.settings(),
-    // A browser has no use for the hashes of token secrets, so they stay here.
-    state: { ...hub.state, tokens: hub.state.tokens.map((t) => ({ ...t, hash: '' })) },
-    defaultCanvasId: sessions.defaultCanvasId(),
-  }));
+  app.get(paths.state, async (): Promise<StateResponse> => {
+    const [runtimeNow, settingsNow] = [await sessions.status(), await options.settings()];
+    // The state and its number are read together, after everything that waits: a change cannot come between the two.
+    return {
+      protocolVersion: PROTOCOL_VERSION,
+      runtime: runtimeNow,
+      settings: settingsNow,
+      // A browser has no use for the hashes of token secrets, so they stay here.
+      state: { ...hub.state, tokens: hub.state.tokens.map((t) => ({ ...t, hash: '' })) },
+      epoch: hub.epoch,
+      revision: hub.revision,
+      defaultCanvasId: sessions.defaultCanvasId(),
+    };
+  });
 
   app.post(paths.sessions, async (request, reply): Promise<CreateSessionResponse> => {
     const { desktop: alsoOnDesktop, ...body } = parse(CreateSessionRequest, request.body ?? {});
@@ -813,6 +830,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     schedules,
     desktop,
     projects,
+    projectFiles,
     may: (principal, action, resource) => authorize(principal, action, resource),
     resourceOf,
     trace: (request, trace) => void traces.set(request, trace),
@@ -836,8 +854,8 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     const send = (message: EventsServerMessage): void => {
       if (socket.readyState === socket.OPEN) socket.send(JSON.stringify(message));
     };
-    const unsubscribe = hub.subscribe((event) =>
-      send({ type: 'event', event: event.type === 'token.created' ? { ...event, token: { ...event.token, hash: '' } } : event }),
+    const unsubscribe = hub.subscribe((event, revision) =>
+      send({ type: 'event', revision, event: event.type === 'token.created' ? { ...event, token: { ...event.token, hash: '' } } : event }),
     );
     const viewer = viewers.add(send);
     const leave = (): void => {

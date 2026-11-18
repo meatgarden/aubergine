@@ -244,7 +244,8 @@ export function applyEvent(state: AppState, event: ChangeEvent): AppState {
     case 'session.moved':
       return placeNode(state, event.canvasId, event.node);
     case 'session.restarted':
-      return patchSession(state, event.sessionId, { state: 'open' });
+      // Its shell is started: what it was meant for where it came from has been said, and is said no more.
+      return { ...state, sessions: state.sessions.map((s) => (s.id === event.sessionId ? (({ meantFor: _meant, ...rest }) => ({ ...rest, state: 'open' as const }))(s) : s)) };
     case 'session.exited':
       return patchSession(state, event.sessionId, {
         state: 'exited',
