@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://meatgarden.github.io/aubergine/sitemap.xml
