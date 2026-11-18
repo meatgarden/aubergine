@@ -100,6 +100,8 @@ export function OutsidePanel() {
 
   return (
     <div className="outside" ref={root}>
+      {/* In the bar only while there is one to bring in; the command and its key open the panel all the same. */}
+      {(open || actionable.length > 0) && (
       <button
         type="button"
         className="quiet"
@@ -110,6 +112,7 @@ export function OutsidePanel() {
       >
         Outside{terminals ? ` (${actionable.length})` : ''}
       </button>
+      )}
       {open && (
         <div className="outside-panel nowheel" role="dialog" aria-label="Outside terminals" data-testid="outside-panel">
           <header>

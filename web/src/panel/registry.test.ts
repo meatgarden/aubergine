@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { clampPanelWidth, panelSections, parsePanelPrefs, registerSection, sectionById, subscribeToSections, unregisterSection, type PanelSection } from './registry';
+import { PANEL_DEFAULT_WIDTH, clampPanelWidth, panelSections, parsePanelPrefs, registerSection, sectionById, subscribeToSections, unregisterSection, type PanelSection } from './registry';
 
 const dummy = (id: string, order: number, extra: Partial<PanelSection> = {}): PanelSection => ({
   id,
@@ -58,11 +58,11 @@ describe('the section registry', () => {
 
 describe('what the panel remembers', () => {
   it('reads saved preferences and repairs odd ones', () => {
-    expect(parsePanelPrefs(null)).toEqual({ open: true, width: 300, folded: [], tab: null });
+    expect(parsePanelPrefs(null)).toEqual({ open: true, width: PANEL_DEFAULT_WIDTH, folded: [], tab: null });
     expect(parsePanelPrefs({ open: false, width: 9000, folded: ['terminals', 7] })).toEqual({ open: false, width: 560, folded: ['terminals'], tab: null });
     expect(parsePanelPrefs({ tab: 'for-you' }).tab).toBe('for-you');
     expect(parsePanelPrefs({ tab: 7 }).tab).toBeNull();
-    expect(parsePanelPrefs({ width: 'wide' }).width).toBe(300);
+    expect(parsePanelPrefs({ width: 'wide' }).width).toBe(PANEL_DEFAULT_WIDTH);
     expect(clampPanelWidth(10)).toBe(180);
   });
 });

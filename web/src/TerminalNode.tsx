@@ -29,6 +29,24 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
   const name = session?.name ?? '';
   const exited = session?.state === 'exited';
   const [draft, setDraft] = useState<string | null>(null);
+  // The one menu of the title: everything that is done seldom.
+  const [more, setMore] = useState(false);
+  const moreRoot = useRef<HTMLSpanElement>(null);
+  useEffect(() => {
+    if (!more) return;
+    const away = (event: PointerEvent): void => {
+      if (!moreRoot.current?.contains(event.target as globalThis.Node)) setMore(false);
+    };
+    const key = (event: KeyboardEvent): void => {
+      if (event.key === 'Escape') setMore(false);
+    };
+    window.addEventListener('pointerdown', away);
+    window.addEventListener('keydown', key, true);
+    return () => {
+      window.removeEventListener('pointerdown', away);
+      window.removeEventListener('keydown', key, true);
+    };
+  }, [more]);
   // The note sits beside the terminal and is open unless it was closed here before.
   const [noteOpen, setNoteOpenState] = useState(() => noteStartsOpen(sessionId));
   const [noteAsked, setNoteAsked] = useState(false);
@@ -165,37 +183,7 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
             also on desktop
           </span>
         )}
-        {draft === null && !exited && session && (
-          <button
-            type="button"
-            className={`node-tool nodrag people-only${session.peopleOnly ? ' is-on' : ''}`}
-            aria-pressed={session.peopleOnly}
-            aria-label={`People only: ${name}`}
-            title={hint('terminal.peopleOnly', session.peopleOnly ? 'People only: no API token may read this terminal or type into it. Click to open it to tokens again.' : 'People only is off: API tokens that have the scope and the reach may read this terminal and type into it. Click to make it people only.')}
-            data-testid="people-only"
-            onClick={() => {
-              useApp.getState().select(sessionId);
-              runCommand('terminal.peopleOnly');
-            }}
-          >
-            {session.peopleOnly ? '🔒 People only' : '🔓'}
-          </button>
-        )}
-        {draft === null && session?.agent && (
-          <button
-            type="button"
-            className="node-tool nodrag"
-            aria-label={`How this agent is set up: ${name}`}
-            title="How this agent is set up, read from its configuration files: MCP servers, plugins, hooks, skills, and what Aubergine added"
-            data-testid="switched-on"
-            onClick={(event) => {
-              event.stopPropagation();
-              useApp.getState().showInventory(sessionId);
-            }}
-          >
-            ⚙ set up
-          </button>
-        )}
+        {draft === null && !exited && session && <StatusBadges session={session} focused={focused} />}
         {draft === null && session && canResumeAgent(session) && (
           <button
             type="button"
@@ -211,69 +199,16 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
             Resume agent
           </button>
         )}
-        {draft === null && !exited && session && <StatusBadges session={session} focused={focused} />}
-        {draft === null && (
-          <button
-            type="button"
-            className={`node-tool nodrag${(session?.tags.length ?? 0) > 0 ? ' has-note' : ''}`}
-            aria-label={`Tags of ${name}`}
-            title={hint('terminal.tags', (session?.tags.length ?? 0) > 0 ? `Tags: ${session?.tags.join(', ')}` : 'Add tags')}
-            onClick={() => useApp.getState().request({ kind: 'tags', id: sessionId })}
-          >
-            <span className="tool-word">Tags</span>
-            <span className="tool-sign" aria-hidden="true">#</span>
-            {(session?.tags.length ?? 0) > 0 ? <span className="tool-count">{session?.tags.length}</span> : null}
+        {draft === null && !exited && session?.peopleOnly && (
+          <span className="ui-badge" title="People only: no API token may read this terminal or type into it. It is switched in the menu at the right." data-testid="badge-people-only">
+            people only
+          </span>
+        )}
+        {draft === null && (session?.tags.length ?? 0) > 0 && (
+          <button type="button" className="ui-chip nodrag" title={hint('terminal.tags', `Tags: ${session?.tags.join(', ')}`)} aria-label={`Tags of ${name}: ${session?.tags.join(', ')}`} onClick={() => useApp.getState().request({ kind: 'tags', id: sessionId })} data-testid="node-tags">
+            #{session?.tags.length}
           </button>
         )}
-        {draft === null && !exited && (
-          <button
-            type="button"
-            className="node-tool nodrag"
-            aria-label={`Run a workflow on ${name}`}
-            title={hint('workflow.run', 'Run a workflow on this terminal')}
-            data-testid="node-run-workflow"
-            onClick={() => {
-              useApp.getState().select(sessionId);
-              runCommand('workflow.run');
-            }}
-          >
-            <span className="tool-word">Workflow</span>
-            <span className="tool-sign" aria-hidden="true">⇶</span>
-          </button>
-        )}
-        {draft === null && !exited && (
-          <button
-            type="button"
-            className="node-tool nodrag"
-            aria-label={`Message ${name}`}
-            title={hint('terminal.message', 'Message the agent in this terminal, and see every message to and from it')}
-            data-testid="node-message"
-            onClick={() => {
-              useApp.getState().select(sessionId);
-              runCommand('terminal.message');
-            }}
-          >
-            <span className="tool-word">Message</span>
-            <span className="tool-sign" aria-hidden="true">✉</span>
-          </button>
-        )}
-        {draft === null && !exited && (
-          <button
-            type="button"
-            className="node-tool nodrag"
-            aria-label={`Open ${name} on the desktop`}
-            title={hint('terminal.openOnDesktop', 'Open on desktop: a window of your terminal application on this same terminal. Closing the window ends nothing.')}
-            data-testid="node-open-desktop"
-            onClick={() => {
-              useApp.getState().select(sessionId);
-              runCommand('terminal.openOnDesktop');
-            }}
-          >
-            <span className="tool-word">Desktop</span>
-            <span className="tool-sign" aria-hidden="true">⧉</span>
-          </button>
-        )}
-        {draft === null && <MoveToCanvas sessionId={sessionId} name={name} />}
         <button
           type="button"
           className={`node-tool nodrag${hasNote ? ' has-note' : ''}`}
@@ -284,23 +219,140 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
         >
           Note
         </button>
-        {node && (
-          <ColorButton
-            value={color}
-            onChange={(next) =>
-              void api.updateNode(id, { x: node.x, y: node.y, width: node.width, height: node.height, color: next })
-            }
-          />
+        {/* The list of canvases to move to hangs from the title; its own button is not shown, the menu's line and the key ask for it. */}
+        {draft === null && <MoveToCanvas sessionId={sessionId} name={name} />}
+        {draft === null && (
+          <span className="node-more nodrag" ref={moreRoot}>
+            <button type="button" className="node-tool" aria-haspopup="menu" aria-expanded={more} aria-label={`More for ${name}`} title="More: tags, a workflow, a message, the desktop, move, colour, park" onClick={() => setMore((v) => !v)} data-testid="node-more">
+              ⋯
+            </button>
+            {/* Kept in the page while closed: what a key or the palette asks for (move, colour) is answered from here. */}
+            <span className="ui-menu toolbar-menu node-menu" role="menu" hidden={!more} onClick={(event) => (event.target as HTMLElement).closest('[role^="menuitem"]') && !(event.target as HTMLElement).closest('.move-to, .color-button') && setMore(false)} data-testid="node-menu">
+              {draft === null && (
+                <button
+                  type="button"
+                  role="menuitem"
+                  aria-label={`Tags of ${name}`}
+                  title={hint('terminal.tags', (session?.tags.length ?? 0) > 0 ? `Tags: ${session?.tags.join(', ')}` : 'Add tags')}
+                  onClick={() => useApp.getState().request({ kind: 'tags', id: sessionId })}
+                >
+                  Tags…
+                </button>
+              )}
+              {draft === null && !exited && (
+                <button
+                  type="button"
+                  role="menuitem"
+                  aria-label={`Run a workflow on ${name}`}
+                  title={hint('workflow.run', 'Run a workflow on this terminal')}
+                  data-testid="node-run-workflow"
+                  onClick={() => {
+                    useApp.getState().select(sessionId);
+                    runCommand('workflow.run');
+                  }}
+                >
+                  Run a workflow…
+                </button>
+              )}
+              {draft === null && !exited && (
+                <button
+                  type="button"
+                  role="menuitem"
+                  aria-label={`Message ${name}`}
+                  title={hint('terminal.message', 'Message the agent in this terminal, and see every message to and from it')}
+                  data-testid="node-message"
+                  onClick={() => {
+                    useApp.getState().select(sessionId);
+                    runCommand('terminal.message');
+                  }}
+                >
+                  Message…
+                </button>
+              )}
+              {draft === null && !exited && (
+                <button
+                  type="button"
+                  role="menuitem"
+                  aria-label={`Open ${name} on the desktop`}
+                  title={hint('terminal.openOnDesktop', 'Open on desktop: a window of your terminal application on this same terminal. Closing the window ends nothing.')}
+                  data-testid="node-open-desktop"
+                  onClick={() => {
+                    useApp.getState().select(sessionId);
+                    runCommand('terminal.openOnDesktop');
+                  }}
+                >
+                  Open on desktop
+                </button>
+              )}
+              <button
+                type="button"
+                role="menuitem"
+                title={hint('terminal.moveToCanvas', 'Move this terminal to another canvas')}
+                data-testid="node-move"
+                onClick={() => {
+                  useApp.getState().select(sessionId);
+                  runCommand('terminal.moveToCanvas');
+                }}
+              >
+                Move to canvas…
+              </button>
+
+              {node && (
+                <span className="ui-menu-line node-menu-colour">
+                  <span>Colour</span>
+                  <ColorButton
+                    value={color}
+                    onChange={(next) =>
+                      void api.updateNode(id, { x: node.x, y: node.y, width: node.width, height: node.height, color: next })
+                    }
+                  />
+                </span>
+              )}
+              {draft === null && !exited && session && (
+                <button
+                  type="button"
+                  role="menuitemcheckbox"
+                  aria-checked={session.peopleOnly}
+                  aria-pressed={session.peopleOnly}
+                  aria-label={`People only: ${name}`}
+                  title={hint('terminal.peopleOnly', session.peopleOnly ? 'People only: no API token may read this terminal or type into it. Click to open it to tokens again.' : 'People only is off: API tokens that have the scope and the reach may read this terminal and type into it. Click to make it people only.')}
+                  data-testid="people-only"
+                  onClick={() => {
+                    useApp.getState().select(sessionId);
+                    runCommand('terminal.peopleOnly');
+                  }}
+                >
+                  People only
+                </button>
+              )}
+              {draft === null && session?.agent && (
+                <button
+                  type="button"
+                  role="menuitem"
+                  aria-label={`How this agent is set up: ${name}`}
+                  title="How this agent is set up, read from its configuration files: MCP servers, plugins, hooks, skills, and what Aubergine added"
+                  data-testid="switched-on"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    useApp.getState().showInventory(sessionId);
+                  }}
+                >
+                  How this agent is set up…
+                </button>
+              )}
+                <button
+                  type="button"
+                  role="menuitem"
+                  aria-label={exited ? `Remove ${name}` : `Park ${name}`}
+                  title={exited ? 'Remove' : hint('terminal.park', 'Park: take it off the canvas, the shell keeps running')}
+                  onClick={() => parkSession(sessionId)}
+                >
+                  {exited ? 'Remove' : 'Park'}
+                </button>
+
+            </span>
+          </span>
         )}
-        <button
-          type="button"
-          className="node-close nodrag"
-          aria-label={exited ? `Remove ${name}` : `Park ${name}`}
-          title={exited ? 'Remove' : hint('terminal.park', 'Park: take it off the canvas, the shell keeps running')}
-          onClick={() => parkSession(sessionId)}
-        >
-          ×
-        </button>
       </header>
       {!exited && <RunStrip sessionId={sessionId} variant="node" />}
       {exited ? (

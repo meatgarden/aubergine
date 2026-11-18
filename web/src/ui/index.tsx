@@ -1,4 +1,4 @@
-import type { ButtonHTMLAttributes, HTMLAttributes, InputHTMLAttributes, ReactNode, SelectHTMLAttributes } from 'react';
+import { useEffect, useRef, useState, type ButtonHTMLAttributes, type HTMLAttributes, type InputHTMLAttributes, type ReactNode, type SelectHTMLAttributes } from 'react';
 
 /**
  * The pieces every surface is made of. Each is a thin name for one anatomy in ui.css and uses only tokens;
@@ -105,5 +105,79 @@ export function ScreenHead({ title, subtitle, onClose, closeTestid, children }: 
         </Button>
       </span>
     </header>
+  );
+}
+
+/**
+ * A button that opens a menu under itself, and the menu. It closes when a line is chosen, when something else is
+ * pressed, and on Escape. `more` draws the button as the sign for "everything else that can be done with this".
+ */
+export function MenuButton({ label, children, kind = 'default', more = false, testid, menuTestid, className, title }: { label: string; children: ReactNode; kind?: ButtonKind; more?: boolean; testid?: string; menuTestid?: string; className?: string; title?: string }) {
+  const [open, setOpen] = useState(false);
+  const root = useRef<HTMLSpanElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const away = (event: PointerEvent): void => {
+      if (!root.current?.contains(event.target as Node)) setOpen(false);
+    };
+    const key = (event: KeyboardEvent): void => {
+      if (event.key !== 'Escape') return;
+      event.stopPropagation();
+      setOpen(false);
+    };
+    window.addEventListener('pointerdown', away);
+    window.addEventListener('keydown', key, true);
+    return () => {
+      window.removeEventListener('pointerdown', away);
+      window.removeEventListener('keydown', key, true);
+    };
+  }, [open]);
+  return (
+    <span className={join('ui-menu-button', className)} ref={root} onClick={(event) => event.stopPropagation()}>
+      <button type="button" className={join(more ? 'quiet ui-icon-button' : KIND_CLASS[kind])} aria-haspopup="menu" aria-expanded={open} aria-label={more ? label : undefined} title={title ?? (more ? label : undefined)} onClick={() => setOpen((v) => !v)} data-testid={testid}>
+        {more ? '⋯' : label}
+        {!more && <span aria-hidden="true">▾</span>}
+      </button>
+      {open && (
+        <span className="ui-menu toolbar-menu ui-menu-under" role="menu" onClick={(event) => (event.target as HTMLElement).closest('[role^="menuitem"]') && setOpen(false)} data-testid={menuTestid}>
+          {children}
+        </span>
+      )}
+    </span>
+  );
+}
+
+/** One line of a menu: a name and, where it helps, a line saying what it is. */
+export function MenuItem({ children, hint, ...rest }: ButtonHTMLAttributes<HTMLButtonElement> & { hint?: ReactNode }) {
+  return (
+    <button type="button" role="menuitem" {...rest}>
+      {children}
+      {hint && <small>{hint}</small>}
+    </button>
+  );
+}
+
+/** The parts of a screen, one of which shows. */
+export function Tabs<T extends string>({ value, tabs, onChange, label }: { value: T; tabs: readonly { value: T; label: ReactNode; testid?: string }[]; onChange: (value: T) => void; label: string }) {
+  return (
+    <div className="ui-tabs" role="tablist" aria-label={label}>
+      {tabs.map((tab) => (
+        <button key={tab.value} type="button" role="tab" className="ui-tab" aria-selected={tab.value === value} onClick={() => onChange(tab.value)} data-testid={tab.testid}>
+          {tab.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+/** Something that is explained in a line, with the rest behind "How this works". */
+export function HowThisWorks({ line, children }: { line: ReactNode; children: ReactNode }) {
+  return (
+    <details className="ui-how">
+      <summary>
+        <span className="ui-how-line">{line}</span> <span className="ui-how-more">How this works</span>
+      </summary>
+      <div className="ui-how-text">{children}</div>
+    </details>
   );
 }

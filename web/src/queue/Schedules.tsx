@@ -40,8 +40,6 @@ const draftOf = (row: ScheduleRow): Draft => ({
 export function Schedules() {
   // Changes with every change of a schedule: when one fires, is switched, is made or removed.
   const stamp = useApp((s) => (s.app?.schedules.items ?? []).map((item) => `${item.id}${item.updatedAt}`).join(' '));
-  const count = useApp((s) => s.app?.schedules.items.length ?? 0);
-  const broken = useApp((s) => (s.app?.schedules.items ?? []).some((item) => item.on && item.problem !== null));
   const shelf = useApp((s) => s.app?.shelf);
   const workflows = useApp((s) => s.app?.workflows);
   const sessions = useApp((s) => s.app?.sessions);
@@ -77,8 +75,8 @@ export function Schedules() {
     doing((draft.id === null ? api.addSchedule(body) : api.changeSchedule(draft.id, body)).then(() => setDraft(null)));
   };
   return (
-    <details className="queue-rules queue-schedules" data-testid="queue-schedules" open={broken || undefined}>
-      <summary>Schedules{count > 0 ? ` (${count})` : ''}: at these times, run this there</summary>
+    <section className="queue-part queue-schedules" data-testid="queue-schedules">
+      <p className="ui-meta">At these times, run this there.</p>
       <ul>
         {rows.map((row) => (
           <li key={row.id} className="schedule-row" data-testid="schedule-row" data-on={row.on} data-result={row.last?.result ?? 'none'}>
@@ -178,6 +176,6 @@ export function Schedules() {
         time that passed while it was not runs late, once, if it was not long ago, and is otherwise said to be missed.
       </p>
       {error && <p className="dialog-error">{error}</p>}
-    </details>
+    </section>
   );
 }

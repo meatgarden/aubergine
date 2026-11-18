@@ -1,4 +1,4 @@
-import { useSyncExternalStore } from 'react';
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { runCommand } from '../commands';
 import { hint } from '../shortcuts';
 import { useApp } from '../store';
@@ -49,9 +49,12 @@ export function SidePanel() {
       <aside className="side-panel" style={{ width: prefs.width }} aria-label="Side panel" data-testid="side-panel">
         <header className="panel-tabs-row">
           <div className="panel-tabs" role="tablist" aria-label="What the panel shows">
-            {sections.map((section) => (
-              <Tab key={section.id} section={section} selected={section === active} />
-            ))}
+            {sections
+              .filter((section) => !section.more)
+              .map((section) => (
+                <Tab key={section.id} section={section} selected={section === active} />
+              ))}
+            <MoreTabs sections={sections.filter((section) => section.more)} active={active} />
           </div>
           <button type="button" className="quiet panel-collapse" aria-label="Collapse the side panel" title={hint('panel.toggle', 'Collapse the side panel')} onClick={() => runCommand('panel.toggle')}>
             ‹
@@ -87,6 +90,82 @@ function Tab({ section, selected }: { section: PanelSection; selected: boolean }
     >
       {section.tab ?? section.title}
       {count !== null && (
+        <span className="panel-tab-count" data-testid="section-count">
+          {count}
+        </span>
+      )}
+    </button>
+  );
+}
+
+/** The parts that are used less often: one tab that opens a list of them, so that the tabs fit one row. */
+function MoreTabs({ sections, active }: { sections: PanelSection[]; active: PanelSection | undefined }) {
+  const [open, setOpen] = useState(false);
+  const root = useRef<HTMLSpanElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const away = (event: PointerEvent): void => {
+      if (!root.current?.contains(event.target as Node)) setOpen(false);
+    };
+    const key = (event: KeyboardEvent): void => {
+      if (event.key === 'Escape') setOpen(false);
+    };
+    window.addEventListener('pointerdown', away);
+    window.addEventListener('keydown', key, true);
+    return () => {
+      window.removeEventListener('pointerdown', away);
+      window.removeEventListener('keydown', key, true);
+    };
+  }, [open]);
+  if (sections.length === 0) return null;
+  const chosen = sections.find((section) => section === active);
+  return (
+    <span className="panel-more" ref={root}>
+      <button type="button" role="tab" className="panel-tab" aria-selected={chosen !== undefined} aria-haspopup="menu" aria-expanded={open} title={`More: ${sections.map((section) => section.title).join(', ')}`} onClick={() => setOpen((v) => !v)} data-testid="panel-more">
+        {chosen ? (chosen.tab ?? chosen.title) : 'More'}
+        {sections.map((section) => (
+          <MoreCount key={section.id} section={section} />
+        ))}
+        <span aria-hidden="true">▾</span>
+      </button>
+      {open && (
+        <span className="ui-menu toolbar-menu panel-more-menu" role="menu" data-testid="panel-more-menu">
+          {sections.map((section) => (
+            <MoreItem key={section.id} section={section} selected={section === active} onChoose={() => setOpen(false)} />
+          ))}
+        </span>
+      )}
+    </span>
+  );
+}
+
+/** On “More”: the count of a part under it, while that part has something waiting on the owner. */
+function MoreCount({ section }: { section: PanelSection }) {
+  const count = section.useCount?.() ?? null;
+  if (!section.urgent || !count) return null;
+  return (
+    <span className="panel-tab-count is-urgent" data-testid="more-count">
+      {count}
+    </span>
+  );
+}
+
+function MoreItem({ section, selected, onChoose }: { section: PanelSection; selected: boolean; onChoose: () => void }) {
+  const count = section.useCount?.() ?? null;
+  return (
+    <button
+      type="button"
+      role="menuitemradio"
+      aria-checked={selected}
+      onClick={() => {
+        useApp.getState().setSide({ tab: section.id });
+        onChoose();
+      }}
+      data-testid="panel-tab"
+      data-section={section.id}
+    >
+      {section.title}
+      {count !== null && count > 0 && (
         <span className="panel-tab-count" data-testid="section-count">
           {count}
         </span>
@@ -145,10 +224,12 @@ function Drawer({ left }: { left: number }) {
         }
       }}
     >
-      <header className="panel-drawer-head">
-        <DrawerTitle id={drawer.id} useTitle={definition.useTitle} />
-        <button type="button" className="node-close" aria-label="Close the drawer" title="Close (Esc)" onClick={close}>
-          ×
+      <header className="panel-drawer-head sheet-head">
+        <h2>
+          <DrawerTitle id={drawer.id} useTitle={definition.useTitle} />
+        </h2>
+        <button type="button" className="quiet" aria-label="Close the drawer" title="Close (Esc)" onClick={close}>
+          Close
         </button>
       </header>
       <definition.Component key={`${drawer.kind}:${drawer.id}`} id={drawer.id} onClose={close} />

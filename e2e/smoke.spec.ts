@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, statSync, wri
 import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test, type Locator, type Page } from '@playwright/test';
 import { e2e } from '../playwright.config';
 
 const repoRoot = path.resolve(e2e.dataDir, '..');
@@ -11,6 +11,20 @@ const repoRoot = path.resolve(e2e.dataDir, '..');
 function outputLine(page: Page, text: string) {
   return page.locator('.xterm-rows > div').filter({ hasText: new RegExp(`^\\s*${text}\\s*$`) });
 }
+
+/** To the review screen, from the one thing in the top bar that counts what waits: the owner's list, then what is to be read. */
+const openReview = async (page: Page): Promise<void> => {
+  await page.getByTestId('for-you').click();
+  await page.getByTestId('queue-screen').getByTestId('review-open').click();
+};
+
+/** Shows a control that is behind a menu, a tab or a fold-out, where it is not showing yet: each opener is pressed in turn. */
+const reveal = async (target: Locator, ...openers: Locator[]): Promise<void> => {
+  for (const opener of openers) {
+    if (await target.isVisible()) return;
+    await opener.click();
+  }
+};
 
 test('a terminal on the canvas survives a reload with its output', async ({ page }) => {
   // Without the access cookie the app explains how to sign in.
@@ -96,9 +110,10 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await page.keyboard.press('Enter');
   await page.locator('.react-flow__pane').click({ position: { x: 5, y: 300 } }); // look away
   await expect(page.getByTestId('badge-attention')).toHaveText('waiting for you', { timeout: 15_000 });
-  await expect(page.getByTestId('attention-queue')).toHaveText('1 waiting');
-  await page.getByTestId('attention-queue').click();
-  await expect(page.getByTestId('attention-queue')).toHaveCount(0);
+  await expect(page.getByTestId('for-you')).toHaveAttribute('data-waiting', '1');
+  // The key that goes to the next terminal that waits.
+  await page.keyboard.press('w');
+  await expect(page.getByTestId('for-you')).toHaveAttribute('data-waiting', '0');
   await expect(page.getByTestId('badge-attention')).toHaveCount(0);
 
 
@@ -127,7 +142,8 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await expect(page.getByTestId('frame')).toHaveCount(0);
 
   // Parking takes the node off the canvas but keeps the shell.
-  await page.getByRole('button', { name: /^Park Terminal/ }).click();
+  await page.getByTestId('node-more').click();
+  await page.getByRole('menuitem', { name: /^Park Terminal/ }).click();
   await expect(node).toHaveCount(0);
   await page.getByRole('button', { name: 'Parked (1)' }).click();
   await page.getByRole('dialog', { name: 'Parked sessions' }).getByRole('button', { name: 'Restore' }).click();
@@ -147,7 +163,8 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await expect(page.getByTestId('node-shield')).toHaveCount(0);
 
   // The picker also searches what terminals have printed, including in a parked session.
-  await page.getByRole('button', { name: /^Park / }).click();
+  await page.getByTestId('node-more').click();
+  await page.getByRole('menuitem', { name: /^Park / }).click();
   await expect(node).toHaveCount(0);
   await page.getByRole('button', { name: 'Go to…' }).click();
   await page.getByRole('textbox', { name: 'Search sessions' }).fill('picked-44');
@@ -175,11 +192,12 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
     // The new node has the keyboard: it is the only one without a shield.
     await expect(page.getByTestId('node-shield')).toHaveCount(1);
     // The canvas glides to the new node; wait for that before touching anything, since a click interrupts it.
-    const parkNew = page.getByRole('button', { name: new RegExp(`^Park ${path.basename(outsideFolder)}`) });
+    const parkNew = page.getByTestId('terminal-node').filter({ hasText: path.basename(outsideFolder) }).getByTestId('node-more');
     await expect(parkNew).toBeInViewport({ ratio: 1 });
     await page.getByRole('button', { name: /^Outside terminals/ }).click(); // close the panel, which lies over the node
     await expect(page.getByTestId('outside-panel')).toHaveCount(0);
     await parkNew.click();
+    await page.getByRole('menuitem', { name: new RegExp(`^Park ${path.basename(outsideFolder)}`) }).click();
     await page.getByRole('button', { name: 'Parked (1)' }).click();
     await page.getByRole('button', { name: 'End', exact: true }).click();
     await page.getByRole('button', { name: 'End session' }).click();
@@ -233,10 +251,11 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await tabs.first().click();
   await expect(page).toHaveURL(mainAddress);
   await expect(tabs.nth(1).getByTestId('tab-waiting')).toHaveText('1', { timeout: 15_000 });
-  await expect(page.getByTestId('attention-queue')).toHaveText('1 waiting');
-  await page.getByTestId('attention-queue').click();
+  await expect(page.getByTestId('for-you')).toHaveAttribute('data-waiting', '1');
+  // The key that goes to the next terminal that waits.
+  await page.keyboard.press('w');
   await expect(page).toHaveURL(secondAddress);
-  await expect(page.getByTestId('attention-queue')).toHaveCount(0);
+  await expect(page.getByTestId('for-you')).toHaveAttribute('data-waiting', '0');
   await expect(page.getByTestId('tab-waiting')).toHaveCount(0);
 
   // Closing a canvas with terminals asks what to do with them; moving brings them to the other canvas.
@@ -252,7 +271,8 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await expect(tabs).toHaveCount(2);
   await tabs.first().click();
   await expect(node).toHaveCount(2);
-  await page.getByRole('button', { name: `Move ${movedName} to another canvas` }).click();
+  await page.getByTestId('terminal-node').filter({ hasText: movedName ?? '' }).getByTestId('node-more').click();
+  await page.getByTestId('terminal-node').filter({ hasText: movedName ?? '' }).getByTestId('node-move').click();
   await page.getByRole('menuitem', { name: 'Canvas 2' }).click();
   await expect(node).toHaveCount(1);
   await tabs.nth(1).click();
@@ -281,7 +301,7 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await expect(terminal).toHaveAttribute('data-link', 'open');
 
   // Ending a parked session for good asks first.
-  await page.getByRole('button', { name: /^Park Terminal/ }).dispatchEvent('click'); // it may sit under the minimap, so no aiming at a point
+  await page.getByRole('menuitem', { name: /^Park Terminal/, includeHidden: true }).dispatchEvent('click'); // it is in the terminal's menu, and the terminal may sit under the minimap, so no aiming at a point
   await page.getByRole('button', { name: 'Parked (1)' }).click();
   await page.getByRole('button', { name: 'End', exact: true }).click();
   await expect(page.getByRole('alertdialog')).toContainText('ends the shell');
@@ -410,10 +430,14 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await expect(page.locator('[data-testid="panel-tab"][data-section="terminals"]').getByTestId('section-count')).toHaveText('2');
   await expect(page.getByTestId('list-group')).toHaveCount(1); // only "Parked": one canvas is in scope
   await page.keyboard.press('s');
-  await expect(page.getByTestId('scope-all')).toHaveAttribute('aria-pressed', 'true');
+  // Beyond the default, the one line under the field says what is on.
+  await expect(page.getByTestId('list-chip')).toHaveText(/All canvases/);
+  await expect(page.getByTestId('list-more')).toHaveText('Filter · 1');
   await expect(page.getByTestId('list-group')).toHaveCount(2); // this canvas by name, and "Parked"
   await page.keyboard.press('s');
-  await expect(page.getByTestId('scope-this')).toHaveAttribute('aria-pressed', 'true');
+  // The canvas being looked at is the default: nothing is said of it.
+  await expect(page.getByTestId('list-chips')).toHaveCount(0);
+  await expect(page.getByTestId('list-more')).toHaveText('Filter');
 
   await page.keyboard.press('/');
   await expect(page.getByTestId('list-search')).toBeFocused();
@@ -433,12 +457,15 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await page.keyboard.press('Enter');
   await expect(page.getByTestId('tag-dialog')).toHaveCount(0);
   await expect(page.getByTestId('list-tag')).toHaveText('#e2e-tag');
+  // A row's tags are on it while the pointer is, and while the list is filtered by a tag.
+  await page.locator('[data-testid="list-row"]', { has: page.getByTestId('list-tag') }).hover();
   await page.getByTestId('list-tag').click();
   await expect(listRows).toHaveCount(1);
   await expect(page.getByTestId('list-chip').last()).toContainText('#e2e-tag');
+  // Clear goes back to where the list starts: this canvas, and nothing else chosen.
   await page.getByTestId('list-clear').click();
-  await expect(page.getByTestId('scope-all')).toHaveAttribute('aria-pressed', 'true'); // clearing shows everything
-  await page.keyboard.press('s');
+  await expect(page.getByTestId('list-chips')).toHaveCount(0);
+  await expect(listRows).toHaveCount(2);
 
   // Typing in a terminal is recorded, and the row says so.
   // One time on the row, the later of the two; both are behind it.
@@ -599,6 +626,7 @@ test('a workflow made from a template moves a terminal through its elements', as
   await expect(node).toHaveCount(1);
   await expect(page.locator('.xterm-rows')).toHaveText(/\S/);
   await expect(page.getByTestId('run-strip')).toHaveCount(0);
+  await reveal(page.getByTestId('node-run-workflow'), page.getByTestId('node-more'));
   await page.getByTestId('node-run-workflow').click();
   const dialog = page.getByTestId('run-dialog');
   await expect(dialog.getByTestId('run-workflow')).toContainText('Ship it');
@@ -656,7 +684,7 @@ test('a workflow made from a template moves a terminal through its elements', as
   await expect(strip).toHaveAttribute('data-status', 'blocked', { timeout: 20_000 });
   await expect(page.getByTestId('badge-attention')).toHaveAttribute('title', 'Blocked on "Build": I need the staging password');
   // The waiting queue names the element it is blocked on.
-  await expect(page.getByTestId('attention-queue')).toHaveAttribute('title', /Blocked on "Build": I need the staging password/);
+  await expect(page.getByTestId('for-you')).toHaveAttribute('title', /Blocked on "Build": I need the staging password/);
 
   // A person moves it on with the buttons: done, pause, resume, done.
   await strip.click();
@@ -690,9 +718,11 @@ test('a workflow made from a template moves a terminal through its elements', as
   await page.locator('[data-testid="panel-tab"][data-section="workflows"]').click();
   await page.getByTestId('open-workflows').click();
   await expect(screen.getByTestId('workflow-row')).toHaveCount(1);
+  await reveal(screen.getByTestId('workflow-duplicate'), page.getByTestId('workflows-tab'), screen.getByTestId('workflow-more'));
   await screen.getByTestId('workflow-duplicate').click();
   await expect(screen.getByTestId('workflow-row')).toHaveCount(2);
   const copy = screen.locator('[data-testid="workflow-row"][data-workflow="Ship it copy"]');
+  await reveal(copy.getByTestId('workflow-remove'), page.getByTestId('workflows-tab'), copy.getByTestId('workflow-more'));
   await copy.getByTestId('workflow-remove').click();
   await copy.getByTestId('workflow-remove-confirm').click();
   await expect(screen.getByTestId('workflow-row')).toHaveCount(1);
@@ -729,6 +759,7 @@ test('an element written by an agent is reviewed, accepted, run by itself, and i
 
   // The owner describes what they want.
   await page.getByTestId('toolbar-workflows').click();
+  await reveal(page.getByTestId('describe-element'), page.getByTestId('steps-tab'), page.getByTestId('step-new'));
   await page.getByTestId('describe-element').click();
   const describe = page.getByTestId('describe-dialog');
   await describe.getByTestId('describe-text').fill('Give me a to-do list from the team chat: zebra-crossing.');
@@ -748,7 +779,7 @@ test('an element written by an agent is reviewed, accepted, run by itself, and i
 
   // It waits for the owner: read as an agent would be told it.
   await page.keyboard.press(process.platform === 'darwin' ? 'Control+Meta+.' : 'Control+Shift+.');
-  await page.getByTestId('drafts-waiting').click();
+  await openReview(page);
   const review = page.getByTestId('review-screen');
   await expect(review.getByTestId('review-title')).toHaveText('Collect my to-dos');
   await expect(review.getByTestId('review-origin')).toContainText('An element, from the agent in');
@@ -777,7 +808,7 @@ test('an element written by an agent is reviewed, accepted, run by itself, and i
 
   // The new version, with what changed; then accepted.
   await page.keyboard.press(process.platform === 'darwin' ? 'Control+Meta+.' : 'Control+Shift+.');
-  await page.getByTestId('drafts-waiting').click();
+  await openReview(page);
   await expect(review.getByTestId('review-origin')).toContainText('version 2');
   await review.getByTestId('review-changes').click();
   await expect(review.getByTestId('review-diff').locator('.diff-added')).toContainText('List what people asked me to do in the team chat.');
@@ -786,13 +817,14 @@ test('an element written by an agent is reviewed, accepted, run by itself, and i
   await review.getByTestId('review-accept').click();
   await expect(review.getByTestId('review-empty')).toBeVisible();
   await review.getByTestId('review-close').click();
-  await expect(page.getByTestId('drafts-waiting')).toHaveCount(0);
+  await expect(page.getByTestId('for-you')).toHaveAttribute('data-review', '0');
 
   // It is on the shelf. Run it by itself on the terminal: the dialog says what it needs.
   await page.getByTestId('list-row').click();
   await page.getByTestId('toolbar-workflows').click();
   const shelfRow = page.locator('[data-testid="shelf-row"][data-element="Collect my to-dos"]');
   await expect(shelfRow).toContainText('produces a checklist');
+  await reveal(shelfRow.getByTestId('shelf-run'), page.getByTestId('steps-tab'));
   await shelfRow.getByTestId('shelf-run').click();
   const dialog = page.getByTestId('run-dialog');
   await expect(dialog.getByTestId('run-needs')).toContainText('an MCP server: team chat');
@@ -838,7 +870,7 @@ test('an element written by an agent is reviewed, accepted, run by itself, and i
   // A long text is not accepted before all of it has been shown.
   const long = { element: { name: 'A long one', instructions: Array.from({ length: 90 }, (_, n) => `Line ${n + 1} of the instructions.`).join('\n') } };
   expect((await page.request.post('/v1/drafts', { headers: { origin }, data: long })).status()).toBe(201);
-  await page.getByTestId('drafts-waiting').click();
+  await openReview(page);
   await expect(review.getByTestId('review-title')).toHaveText('A long one');
   await expect(review.getByTestId('review-accept')).toBeDisabled();
   await expect(review.getByTestId('review-text')).not.toContainText('Line 90 of the instructions.');
@@ -889,10 +921,11 @@ test('a workflow kept in a repository is reviewed before it can be run, and agai
   await page.keyboard.type(`cd ${project}`);
   await page.keyboard.press('Enter');
   // The canvas learns the terminal's folder within a few seconds; then the file is waiting to be read.
-  const waiting = page.getByTestId('drafts-waiting');
-  await expect(waiting).toContainText('1 to review', { timeout: 20_000 });
+  const waiting = page.getByTestId('for-you');
+  await expect(waiting).toHaveAttribute('data-review', '1', { timeout: 20_000 });
 
   // It is offered in the run dialog, and cannot be chosen yet.
+  await reveal(page.getByTestId('node-run-workflow'), page.getByTestId('node-more'));
   await page.getByTestId('node-run-workflow').click();
   const dialog = page.getByTestId('run-dialog');
   const option = dialog.getByTestId('run-workflow').locator('option', { hasText: 'Release checklist' });
@@ -917,9 +950,10 @@ test('a workflow kept in a repository is reviewed before it can be run, and agai
   await review.getByTestId('review-accept').click();
   await expect(review.getByTestId('review-empty')).toBeVisible();
   await review.getByTestId('review-close').click();
-  await expect(waiting).toHaveCount(0);
+  await expect(waiting).toHaveAttribute('data-review', '0');
 
   // Accepted: it can be chosen, and runs.
+  await reveal(page.getByTestId('node-run-workflow'), page.getByTestId('node-more'));
   await page.getByTestId('node-run-workflow').click();
   await expect(option).toHaveText('Release checklist');
   await dialog.getByTestId('run-workflow').selectOption({ label: 'Release checklist' });
@@ -942,6 +976,7 @@ test('a workflow kept in a repository is reviewed before it can be run, and agai
   await run.getByTestId('run-view-close').click();
 
   // A new run of it must wait for another review, which shows what changed.
+  await reveal(page.getByTestId('node-run-workflow'), page.getByTestId('node-more'));
   await page.getByTestId('node-run-workflow').click();
   await expect(option).toHaveText('Release checklist (changed: review it again first)');
   await expect(option).toBeDisabled();
@@ -1000,6 +1035,7 @@ test('a token types into a terminal, the owner sees it, and "people only" closes
   expect((await page.request.post(`/v1/sessions/${sessionId}/input`, { headers: asToken, data: { text: 'stop\u0003' } })).status()).toBe(400);
 
   // People only: the owner closes the terminal to tokens. The mark is on the node and on the row.
+  await reveal(page.getByTestId('people-only'), page.getByTestId('node-more'));
   await page.getByTestId('people-only').click();
   await expect(page.getByTestId('people-only')).toHaveAttribute('aria-pressed', 'true');
   await expect(page.getByTestId('people-only')).toContainText('People only');
@@ -1194,9 +1230,11 @@ test('the tour: each step is done on the real thing, on the demo', async ({ page
   await expect(card).toHaveAttribute('data-step', 'list');
 
   // 4. The list: only what waits for me.
-  await page.locator('.list-filter[data-filter="waiting"]').click();
+  await reveal(page.locator('[data-filter="waiting"]'), page.getByTestId('list-more'));
+  await page.locator('[data-filter="waiting"]').click();
   await expect(card).toHaveAttribute('data-step', 'workflow');
-  await page.locator('.list-filter[data-filter="waiting"]').click();
+  await reveal(page.locator('[data-filter="waiting"]'), page.getByTestId('list-more'));
+  await page.locator('[data-filter="waiting"]').click();
 
   // 5. A workflow: the strip, and the run behind it.
   await page.getByRole('button', { name: 'Fit' }).click();
@@ -1223,7 +1261,7 @@ test('the tour: each step is done on the real thing, on the demo', async ({ page
   await expect(node('checklist').getByTestId('list-mark')).toHaveText('☑ list: 1 of 3 ticked');
 
   // 7. Something an agent wrote: read it, and decide.
-  await page.getByTestId('drafts-waiting').click();
+  await openReview(page);
   const review = page.getByTestId('review-screen');
   await expect(review.getByTestId('review-title')).toContainText('Check the sign-in page by hand');
   // The card has moved out of the way: every button of the review can be reached with it up.
@@ -1254,6 +1292,7 @@ test('the tour: each step is done on the real thing, on the demo', async ({ page
   await page.waitForTimeout(1000);
   await expect(card).toHaveCount(0);
   // The demo's own canvas offers to take it away.
+  await reveal(page.getByTestId('remove-demo'), page.getByTestId('tab-more'));
   await page.getByTestId('remove-demo').click();
   await expect(page.locator('.tabbar')).not.toContainText('Demo');
   console.log(`The tour test: ${Math.round((settled - started) / 1000)} s until the scene had settled, ${Math.round((Date.now() - started) / 1000)} s in all.`);
@@ -1338,6 +1377,7 @@ test('the tour can be skipped, put away and taken up again, and put away for goo
   await page.keyboard.press('Escape');
 
   // Nothing about the tour went to the server: no request named it.
+  await reveal(page.getByTestId('remove-demo'), page.getByTestId('tab-more'));
   await page.getByTestId('remove-demo').click();
   await expect(page.locator('.tabbar')).not.toContainText('Demo');
 });
@@ -1362,6 +1402,7 @@ test('what is switched on for an agent: names only, where each comes from, and w
   // A terminal that is not an agent's has no such button.
   await expect(page.getByTestId('switched-on')).toHaveCount(0);
   expect((await page.request.put(`/v1/sessions/${sessionId}/agent`, { headers: { origin }, data: { kind: 'claude-code', conversationId: null } })).status()).toBe(200);
+  await reveal(page.getByTestId('switched-on'), page.getByTestId('node-more'));
   await page.getByTestId('switched-on').click();
   const panel = page.getByTestId('inventory-panel');
   await expect(panel.getByTestId('inventory-what')).toContainText('It is not a list of what the running agent has loaded');
@@ -1725,12 +1766,12 @@ test('messages: the owner writes to a terminal, its agent reads and answers, and
   expect(await inTerminal(first, `reply ${sentId} "On main."`)).toContain('Sent to your owner');
   await expect(row(first).getByTestId('message-mark')).toHaveText('✉ 1 for you');
   // It joins the queue of what waits for the owner (other tests' terminals may be in it too).
-  await expect(page.getByTestId('attention-queue')).toHaveAttribute('title', /: 1 for you/);
+  await expect(page.getByTestId('for-you')).toHaveAttribute('title', /: 1 for you/);
   await expect(drawer.getByTestId('thread-message')).toHaveCount(2);
   await expect(drawer.getByTestId('thread-message').nth(1)).toContainText('On main.');
   await drawer.getByTestId('thread-mark-read').click();
   await expect(row(first).getByTestId('message-mark')).toHaveCount(0);
-  await expect.poll(async () => ((await page.getByTestId('attention-queue').count()) === 0 ? '' : ((await page.getByTestId('attention-queue').getAttribute('title')) ?? ''))).not.toMatch(/: 1 for you/);
+  await expect.poll(async () => ((await page.getByTestId('for-you').count()) === 0 ? '' : ((await page.getByTestId('for-you').getAttribute('title')) ?? ''))).not.toMatch(/: 1 for you/);
 
   // The owner answers from the drawer.
   await drawer.getByTestId('thread-text').fill('Good. Go on.');
@@ -1755,6 +1796,7 @@ test('messages: the owner writes to a terminal, its agent reads and answers, and
   await expect(row(second).getByTestId('message-mark')).toContainText('✉ 1 from ');
 
   // The Messages section lists every thread, and says where terminals may message each other.
+  await reveal(page.locator('[data-testid="panel-tab"][data-section="messages"]'), page.getByTestId('panel-more'));
   await page.locator('[data-testid="panel-tab"][data-section="messages"]').click();
   const section = page.getByTestId('messages-section');
   await expect(section.getByTestId('messages-switch-note')).toContainText('Terminals may message each other on:');
@@ -1771,7 +1813,12 @@ test('the side panel shows one section at a time with all of its height, says ho
 
   const tabs = page.getByTestId('panel-tab');
   const tab = (id: string) => page.locator(`[data-testid="panel-tab"][data-section="${id}"]`);
-  expect(await tabs.evaluateAll((all) => all.map((t) => (t as HTMLElement).dataset.section))).toEqual(['terminals', 'for-you', 'workflows', 'copies', 'messages']);
+  expect(await tabs.evaluateAll((all) => all.map((t) => (t as HTMLElement).dataset.section))).toEqual(['terminals', 'for-you', 'workflows']);
+  // The two that are used less are under More, so that the tabs are one row.
+  await page.getByTestId('panel-more').click();
+  expect(await page.getByTestId('panel-more-menu').getByTestId('panel-tab').evaluateAll((all) => all.map((t) => (t as HTMLElement).dataset.section))).toEqual(['copies', 'messages']);
+  await page.keyboard.press('Escape');
+  await expect(page.getByTestId('panel-more-menu')).toHaveCount(0);
   // The terminals come first and are what shows; their tab says how many.
   await expect(tab('terminals')).toHaveAttribute('aria-selected', 'true');
   await expect(tab('terminals').getByTestId('section-count')).not.toHaveText('0');
@@ -1783,8 +1830,11 @@ test('the side panel shows one section at a time with all of its height, says ho
     await page.setViewportSize({ width, height });
     if (process.env.PANEL_SHOT) await page.screenshot({ path: process.env.PANEL_SHOT + '-' + String(width) + '.png' });
     for (const id of ['terminals', 'for-you', 'workflows', 'copies', 'messages']) {
+      await reveal(tab(id), page.getByTestId('panel-more'));
       await tab(id).click();
-      await expect(tab(id)).toHaveAttribute('aria-selected', 'true');
+      // A part under More is the one chosen there, and More says so.
+      if (id === 'copies' || id === 'messages') await expect(page.getByTestId('panel-more')).toHaveAttribute('aria-selected', 'true');
+      else await expect(tab(id)).toHaveAttribute('aria-selected', 'true');
       // One section, and it reaches the bottom of the panel: nothing is squeezed and nothing is cut off.
       const measured = await page.evaluate(() => {
         const panel = document.querySelector('[data-testid="side-panel"]') as HTMLElement;
@@ -1805,18 +1855,21 @@ test('the side panel shows one section at a time with all of its height, says ho
   }
 
   // The filters used every day are there; the rest are behind "More", which says when one of them is on.
-  await expect(page.locator('.list-filter[data-filter="waiting"]')).toBeVisible();
-  await expect(page.locator('.list-filter[data-filter="workflow"]')).toHaveCount(0);
+  await expect(page.locator('[data-filter="waiting"]')).toHaveCount(0);
   await page.getByTestId('list-more').click();
-  await page.locator('.list-filter[data-filter="workflow"]').click();
-  await page.getByTestId('list-more').click();
+  await expect(page.locator('[data-filter="waiting"]')).toBeVisible();
+  await page.locator('[data-filter="workflow"]').click();
+  await page.keyboard.press('Escape');
+  await expect(page.getByTestId('list-more-filters')).toHaveCount(0);
   await expect(page.getByTestId('list-more')).toContainText('1');
   await page.getByTestId('list-clear').click();
 
   // The tab that was chosen is still chosen after a reload.
+  await reveal(tab('messages'), page.getByTestId('panel-more'));
   await tab('messages').click();
   await page.reload();
-  await expect(tab('messages')).toHaveAttribute('aria-selected', 'true');
+  await expect(page.getByTestId('panel-more')).toHaveAttribute('aria-selected', 'true');
+  await expect(page.getByTestId('panel-more')).toContainText('Messages');
   await expect(page.getByTestId('messages-section')).toBeVisible();
   await tab('terminals').click();
 
@@ -1866,6 +1919,7 @@ test('a shelf element has a life: a copy says where it came from, a newer versio
   // In the editor: a copy from the shelf says so, and nothing is waiting.
   await page.getByTestId('toolbar-workflows').click();
   const screen = page.getByTestId('workflows-screen');
+  await reveal(screen.locator('[data-testid="workflow-row"][data-workflow="Publish the notes"]').getByTestId('workflow-edit'), page.getByTestId('workflows-tab'), screen.locator('[data-testid="workflow-row"][data-workflow="Publish the notes"]').getByTestId('workflow-more'));
   await screen.locator('[data-testid="workflow-row"][data-workflow="Publish the notes"]').getByTestId('workflow-edit').click();
   const editor = page.getByTestId('workflow-editor');
   await editor.getByTestId('insert-from-shelf').selectOption({ label: 'Check every link' });
@@ -1918,9 +1972,11 @@ test('a shelf element has a life: a copy says where it came from, a newer versio
 
   // On the shelf: its version, where it is used, its versions with what changed, and retiring it.
   if (!(await screen.isVisible())) await page.getByTestId('toolbar-workflows').click();
+  await page.getByTestId('steps-tab').click();
   const row = screen.locator('[data-testid="shelf-row"][data-element="Check every link"]');
   await expect(row).toContainText('version 3');
   await expect(row).toContainText('in 1 workflow');
+  await reveal(row.getByTestId('shelf-edit'), page.getByTestId('steps-tab'), row.getByTestId('shelf-more'));
   await row.getByTestId('shelf-edit').click();
   const shelf = page.getByTestId('shelf-editor');
   await expect(shelf.getByTestId('shelf-version')).toContainText('version 3');
@@ -1938,6 +1994,7 @@ test('a shelf element has a life: a copy says where it came from, a newer versio
   await expect(screen.locator('[data-testid="shelf-row"][data-element="Check every link"]')).toBeHidden();
   await screen.getByTestId('shelf-retired-fold').locator('summary').click();
   await expect(screen.getByTestId('shelf-retired-fold').getByTestId('shelf-run')).toBeDisabled();
+  await reveal(screen.locator('[data-testid="workflow-row"][data-workflow="Publish the notes"]').getByTestId('workflow-edit'), page.getByTestId('workflows-tab'), screen.locator('[data-testid="workflow-row"][data-workflow="Publish the notes"]').getByTestId('workflow-more'));
   await screen.locator('[data-testid="workflow-row"][data-workflow="Publish the notes"]').getByTestId('workflow-edit').click();
   await expect(editor.getByTestId('editor-element').nth(1).getByTestId('copy-mark')).toContainText('retired');
   await expect(editor.getByTestId('insert-from-shelf').locator('option', { hasText: 'Check every link' })).toHaveCount(0);
@@ -2076,6 +2133,7 @@ test('an approval and the board: a run stops for the owner, shows on the board a
 
   // A workflow with an approval, made in the editor: a template, plus an approval moved to before the last element.
   await page.getByTestId('toolbar-workflows').click();
+  await reveal(page.locator('[data-testid="template-use"][data-template="plan-build-check"]'), page.getByTestId('workflows-tab'), page.getByTestId('templates-fold').locator('summary'));
   await page.locator('[data-testid="template-use"][data-template="plan-build-check"]').click();
   const editor = page.getByTestId('workflow-editor');
   await editor.getByTestId('workflow-name').fill('Careful change');
@@ -2101,6 +2159,7 @@ test('an approval and the board: a run stops for the owner, shows on the board a
   await page.getByTestId('toolbar-new-terminal').click();
   await expect(node).toHaveCount(1);
   await expect(page.locator('.xterm-rows')).toHaveText(/\S/);
+  await reveal(page.getByTestId('node-run-workflow'), page.getByTestId('node-more'));
   await page.getByTestId('node-run-workflow').click();
   const dialog = page.getByTestId('run-dialog');
   await dialog.getByTestId('run-workflow').selectOption({ label: 'Careful change' });
@@ -2131,7 +2190,7 @@ test('an approval and the board: a run stops for the owner, shows on the board a
   await expect(strip).toHaveAttribute('data-status', 'awaiting');
   await expect(strip).toHaveAttribute('data-element', 'approval');
   // It is in the waiting queue, with what it waits for.
-  await expect(page.getByTestId('attention-queue')).toHaveAttribute('title', /Approval needed at "Look it over" of "Careful change"/);
+  await expect(page.getByTestId('for-you')).toHaveAttribute('title', /Approval needed at "Look it over" of "Careful change"/);
 
   // The board: the run in its column, counted as waiting for the owner.
   await page.getByTestId('toolbar-board').click();
@@ -2165,7 +2224,7 @@ test('an approval and the board: a run stops for the owner, shows on the board a
   await expect(card.getByTestId('approve')).toHaveCount(0);
   await board.getByTestId('board-close').click();
   // It no longer waits for the owner. Other canvases may have terminals that do, so the queue is asked about this one.
-  await expect(page.locator('[data-testid="attention-queue"][title*="Careful change"]')).toHaveCount(0);
+  await expect(page.locator('[data-testid="for-you"][title*="Careful change"]')).toHaveCount(0);
 
   // The agent's status shows the comment as the person's words. It does the element again; the run comes back.
   await type('clear; "$AUBERGINE_BIN/aubergine" workflow status');
@@ -2332,7 +2391,8 @@ test("working copies: two terminals on one repository change the same file apart
     await panel.getByTestId('copy-close').click();
 
     // And what two changed, from the list of working copies in the side panel.
-    await page.locator('[data-testid="panel-tab"][data-section="copies"]').click();
+    await reveal(page.locator('[data-testid="panel-tab"][data-section="copies"]'), page.getByTestId('panel-more'));
+  await page.locator('[data-testid="panel-tab"][data-section="copies"]').click();
     const section = page.getByTestId('copies-section');
     await expect(section.getByTestId('copies-row')).toHaveCount(2);
     await section.getByTestId('copies-row').filter({ hasText: 'two' }).click();
@@ -2382,8 +2442,9 @@ test("working copies: two terminals on one repository change the same file apart
     await dialog.getByTestId('start-name').fill('three');
     await dialog.getByTestId('start-go').click();
     await expect(section.getByTestId('copies-row')).toHaveCount(1);
-    await expect(nodeOf('three').getByRole('button', { name: /^Park three/ })).toBeInViewport({ ratio: 1 });
-    await nodeOf('three').getByRole('button', { name: /^Park three/ }).click();
+    await expect(nodeOf('three').getByTestId('node-more')).toBeInViewport({ ratio: 1 });
+    await nodeOf('three').getByTestId('node-more').click();
+    await nodeOf('three').getByRole('menuitem', { name: /^Park three/ }).click();
     await page.getByRole('button', { name: /^Parked \(/ }).click();
     await page.locator('.parked-row, li, div').filter({ has: page.getByText('three', { exact: true }) }).getByRole('button', { name: 'End', exact: true }).last().click();
     const closing = page.getByTestId('close-copy');
@@ -2461,6 +2522,7 @@ test('the queue and For you: tasks start when the owner says and no more than th
   await page.getByTestId('toolbar-queue').click();
   const screen = page.getByTestId('queue-screen');
   const mine = (title: string) => screen.locator('[data-testid="task-row"]').filter({ hasText: title });
+  await reveal(screen.getByTestId('queue-limit'), screen.getByTestId('queue-starts').locator('summary'));
   await screen.getByTestId('queue-limit').fill('2');
   await expect(screen.getByTestId('queue-automatic')).not.toBeChecked();
   const form = page.getByTestId('task-form');
@@ -2477,7 +2539,7 @@ test('the queue and For you: tasks start when the owner says and no more than th
   await expect(screen.getByTestId('queue-working').getByTestId('task-row')).toHaveCount(0);
 
   // A rule, written by the owner: when a task is done, notify. The browser is asked for permission at this click, not before.
-  await screen.getByTestId('queue-rules').locator('summary').click();
+  await screen.getByTestId('queue-tab-rules').click();
   expect(await page.evaluate(() => (window as unknown as { Notification: { permission: string } }).Notification.permission)).toBe('default');
   await screen.getByTestId('rule-allow-notify').click();
   await expect(screen.getByTestId('rule-allow-notify')).toHaveText('Notifications are on');
@@ -2485,6 +2547,7 @@ test('the queue and For you: tasks start when the owner says and no more than th
   await expect(screen.getByTestId('rule-row')).toHaveText(/When a task is done, notify me in the open page\./);
 
   // Start next, twice: two at work, one still next. A third press starts nothing and says why.
+  await screen.getByTestId('queue-tab-queue').click();
   await screen.getByTestId('queue-start-next').click();
   await expect(mine('Queue test one')).toHaveAttribute('data-state', 'working');
   await screen.getByTestId('queue-start-next').click();
@@ -2535,7 +2598,8 @@ test('the queue and For you: tasks start when the owner says and no more than th
   expect((await page.request.post(`/v1/runs/${run.run.id}/report`, { headers: { origin }, data: { type: 'done', elementId: 'find', output: { items: [{ text: 'Queue line: rename the flag' }, { text: 'Queue line: not this one' }, { text: 'Queue line: remove the old test' }] } } })).status()).toBe(200);
   const list = screen.locator('[data-testid="foryou-row"][data-kind="checklist"]').filter({ hasText: 'Queue test review' });
   await expect(list).toContainText('0 of 3 ticked');
-  await list.getByTestId('foryou-open').click();
+  // The card is pressed as a whole.
+  await list.click({ position: { x: 12, y: 12 } });
   const view = page.getByTestId('run-view');
   // The run is over, so a tick is kept by the server first and shown when it has answered.
   for (const line of [0, 2]) {
@@ -2615,16 +2679,18 @@ test('a schedule: the owner makes one for an element that hands in a list, runs 
   // The Queue screen. Earlier tests left tasks at work: room for one more, and nothing held.
   await page.getByTestId('toolbar-queue').click();
   const screen = page.getByTestId('queue-screen');
+  await reveal(screen.getByTestId('queue-limit'), screen.getByTestId('queue-starts').locator('summary'));
   await screen.getByTestId('queue-limit').fill('20');
   if (await screen.getByTestId('queue-hold').isChecked()) {
+    await reveal(screen.getByTestId('queue-hold'), screen.getByTestId('queue-starts').locator('summary'));
     await screen.getByTestId('queue-hold').click();
     await expect(screen.getByTestId('queue-hold')).not.toBeChecked();
   }
   await expect(screen.getByTestId('queue-automatic')).not.toBeChecked();
 
   // The owner makes the schedule: weekdays at 08:30, that element, on that terminal.
+  await screen.getByTestId('queue-tab-schedules').click();
   const schedules = screen.getByTestId('queue-schedules');
-  await schedules.locator('summary').click();
   await schedules.getByTestId('schedule-add').click();
   const form = schedules.getByTestId('schedule-form');
   await form.getByTestId('schedule-name').fill('Schedule test morning');
@@ -2647,9 +2713,11 @@ test('a schedule: the owner makes one for an element that hands in a list, runs 
   // Run now: its task is in the queue, marked as from the schedule, and starts without Start next.
   await row.getByTestId('schedule-run').click();
   await expect(schedules.getByTestId('schedule-said')).toHaveText('“Schedule test morning” is in the queue and starts when a place is free.');
+  await screen.getByTestId('queue-tab-queue').click();
   await expect(mine).toHaveCount(1);
   await expect(mine).toContainText('added by you, from the schedule “Schedule test morning”, run by hand');
   await expect(mine).toHaveAttribute('data-state', 'working');
+  await screen.getByTestId('queue-tab-schedules').click();
   await expect(row.getByTestId('schedule-last')).toHaveText(/^Run by hand today at \d\d:\d\d\.$/);
   // A second press while that one is at work is refused, in words.
   await row.getByTestId('schedule-run').click();
@@ -2661,6 +2729,7 @@ test('a schedule: the owner makes one for an element that hands in a list, runs 
   const run = (await (await page.request.get(`/v1/runs/${runId}`, { headers: { origin } })).json()) as { run: { currentElementId: string } };
   expect((await page.request.post(`/v1/runs/${runId}/report`, { headers: { origin }, data: { type: 'done', elementId: run.run.currentElementId, output: { items: [{ text: 'Answer the letter' }, { text: 'Book the room' }] } } })).status()).toBe(200);
   // It is on the owner's list, and says which schedule it came from.
+  await screen.getByTestId('queue-tab-queue').click();
   const list = screen.locator('[data-testid="foryou-row"][data-kind="checklist"]').filter({ hasText: 'Schedule test list' });
   await expect(list).toContainText('0 of 2 ticked');
   await expect(list.locator('.foryou-from')).toHaveText('from schedule test terminal, from the schedule “Schedule test morning”, run by hand');
@@ -2668,6 +2737,7 @@ test('a schedule: the owner makes one for an element that hands in a list, runs 
 
   // Switched off, it says so; and no program makes or runs one.
   // The switch shows what the server has: it changes when the server has answered.
+  await screen.getByTestId('queue-tab-schedules').click();
   await row.getByTestId('schedule-on').click();
   await expect(row.getByTestId('schedule-on')).not.toBeChecked();
   await expect(row.getByTestId('schedule-next')).toHaveText('Switched off.');
@@ -2711,6 +2781,7 @@ test('a terminal on the desktop: the line in the menu makes new terminals open t
     expect(existsSync(script(first))).toBe(false);
 
     // "Open on desktop" on that running terminal, from its title bar: the application is handed its script.
+    await reveal(page.locator(`[data-testid="terminal-node"][data-session="${first}"]`).getByTestId('node-open-desktop'), page.locator(`[data-testid="terminal-node"][data-session="${first}"]`).getByTestId('node-more'));
     await page.locator(`[data-testid="terminal-node"][data-session="${first}"]`).getByTestId('node-open-desktop').click();
     await expect.poll(() => existsSync(`${script(first)}.asked`)).toBe(true);
     // The script is one command for that session, and only the owner may run it.
@@ -2834,6 +2905,7 @@ test('projects: a second project has its own tabs, terminals and queue; what wai
   await expect(tabs).toHaveCount(1);
   await expect(page).toHaveURL(/\/p\/[0-9a-f-]+\/c\/[0-9a-f-]+$/);
   const secondAddress = page.url();
+  await reveal(page.getByTestId('scope-all'), page.getByTestId('list-more'));
   await page.getByTestId('scope-all').click();
   await expect(rows).toHaveCount(0);
 
@@ -2897,6 +2969,7 @@ test('projects: a second project has its own tabs, terminals and queue; what wai
   await page.getByRole('button', { name: 'New canvas' }).click();
   await expect(tabs).toHaveCount(tabsBefore + 1);
   // The list is put back to the canvas being looked at, which is new and empty: its one terminal is the one made now.
+  await reveal(page.getByTestId('scope-this'), page.getByTestId('list-more'));
   await page.getByTestId('scope-this').click();
   await expect(rows).toHaveCount(0);
   await page.getByTestId('toolbar-new-terminal').click();
@@ -2908,6 +2981,7 @@ test('projects: a second project has its own tabs, terminals and queue; what wai
   await expect(tabs).toHaveCount(2);
   await expect(page.locator(`[data-testid="list-row"][data-session="${moved}"]`)).toHaveCount(1);
   // With every canvas of this project listed, the terminal that was made here is beside it.
+  await reveal(page.getByTestId('scope-all'), page.getByTestId('list-more'));
   await page.getByTestId('scope-all').click();
   await expect(page.locator(`[data-testid="list-row"][data-session="${inSecond}"]`)).toHaveCount(1);
   await expect(page.locator(`[data-testid="list-row"][data-session="${moved}"]`)).toHaveCount(1);
@@ -3000,7 +3074,7 @@ test('a project as a file: written out, read in under another name through the r
   // Its schedule arrived switched off.
   await page.getByTestId('toolbar-queue').click();
   const queue = page.getByTestId('queue-screen');
-  await queue.getByTestId('queue-schedules').locator('summary').click();
+  await queue.getByTestId('queue-tab-schedules').click();
   const schedule = queue.getByTestId('schedule-row').filter({ hasText: 'File test morning' });
   await expect(schedule).toHaveAttribute('data-on', 'false');
   await expect(schedule.getByTestId('schedule-next')).toHaveText('Switched off.');

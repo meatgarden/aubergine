@@ -28,6 +28,7 @@ import {
   type Sort,
 } from '../../terminal-rows';
 import { registerSection } from '../registry';
+import { Menu } from '../../ui';
 import { ListMark } from '../../workflows/ListMark';
 import { RunStrip } from '../../workflows/RunStrip';
 
@@ -163,21 +164,40 @@ function TerminalsSection() {
     return projectId && whole ? `${projectName(whole, projectId)} · ` : '';
   };
   const toggles = listFilters().filter((filter) => ![SCOPE_FILTER, TEXT_FILTER, TAG_FILTER].includes(filter.id));
-  const chips = filterChips(view);
-  // The three filters used every day are always there; the rest, and how the list is laid out, are behind "More".
-  const everyday = toggles.slice(0, EVERYDAY_FILTERS);
-  const rest = toggles.slice(EVERYDAY_FILTERS);
-  const restOn = rest.filter((filter) => view.filters.includes(filter.id)).length;
+  // What is on beyond the default. The default is the canvas being looked at and nothing else: it is not said.
+  const chips = [
+    ...filterChips(view).filter((chip) => chip.key !== SCOPE_FILTER),
+    ...(scoped ? [] : [{ key: 'everywhere', label: view.everyProject ? 'All projects' : 'All canvases', remove: { everyProject: false, filters: [...view.filters.filter((id) => id !== SCOPE_FILTER), SCOPE_FILTER] } }]),
+  ];
   const laidOut = view.grouping !== 'canvas' || view.density === 'compact';
+  const chosen = chips.length + (laidOut ? 1 : 0);
   const [moreAsked, setMoreAsked] = useState(false);
   const more = moreAsked;
+  const bar = useRef<HTMLDivElement>(null);
+  // The menu closes when something else is pressed, and on Escape.
+  useEffect(() => {
+    if (!more) return;
+    const away = (event: PointerEvent): void => {
+      if (!bar.current?.contains(event.target as Node)) setMoreAsked(false);
+    };
+    const key = (event: KeyboardEvent): void => {
+      if (event.key === 'Escape') setMoreAsked(false);
+    };
+    window.addEventListener('pointerdown', away);
+    window.addEventListener('keydown', key, true);
+    return () => {
+      window.removeEventListener('pointerdown', away);
+      window.removeEventListener('keydown', key, true);
+    };
+  }, [more]);
   const toggle = (filter: (typeof toggles)[number]) => {
     const on = view.filters.includes(filter.id);
     return (
       <button
         key={filter.id}
         type="button"
-        className="list-filter"
+        role="menuitemcheckbox"
+        aria-checked={on}
         aria-pressed={on}
         data-filter={filter.id}
         onClick={() => setView({ filters: on ? view.filters.filter((id) => id !== filter.id) : [...view.filters, filter.id] })}
@@ -188,81 +208,77 @@ function TerminalsSection() {
   };
 
   return (
-    <div className="terminal-list" data-testid="terminal-list">
-      <div className="list-bar">
-        <div className="list-scope" role="group" aria-label="Which canvases">
-          <button type="button" aria-pressed={scoped} title={hint('list.scope.toggle', 'Only the canvas you are looking at')} onClick={() => !scoped && runCommand('list.scope.toggle')} data-testid="scope-this">
-            This canvas
+    <div className={`terminal-list${view.tags.length > 0 ? ' by-tag' : ''}`} data-testid="terminal-list">
+      <div className="list-bar" ref={bar}>
+        <div className="list-find">
+          <input
+            ref={search}
+            className="list-search"
+            type="search"
+            placeholder="Find a terminal…"
+            aria-label="Filter terminals by text"
+            title={hint('list.search', 'Filter by name, folder, command or note')}
+            value={view.text}
+            data-testid="list-search"
+            onChange={(event) => setView({ text: event.target.value })}
+            onKeyDown={(event) => {
+              if (event.key === 'Escape') {
+                event.stopPropagation();
+                if (view.text) setView({ text: '' });
+                else event.currentTarget.blur();
+              }
+            }}
+          />
+          <button type="button" aria-haspopup="menu" aria-expanded={more} onClick={() => setMoreAsked((v) => !v)} title="Which terminals are listed, and how" data-testid="list-more">
+            Filter{chosen > 0 ? ` · ${chosen}` : ''}
           </button>
-          <button type="button" aria-pressed={!scoped && !view.everyProject} title={hint('list.scope.toggle', 'Every canvas of this project')} onClick={() => (view.everyProject ? setView({ everyProject: false }) : scoped && runCommand('list.scope.toggle'))} data-testid="scope-all">
-            All canvases
-          </button>
-          {severalProjects && (
-            <button type="button" aria-pressed={view.everyProject === true} title="The terminals of every project; each group names its project" onClick={() => setView({ everyProject: true, filters: view.filters.filter((id) => id !== SCOPE_FILTER) })} data-testid="scope-projects">
-              All projects
+        </div>
+        {more && (
+          <Menu className="list-filter-menu" aria-label="Which terminals are listed, and how" data-testid="list-more-filters">
+            <span className="ui-menu-label">Where</span>
+            <button type="button" role="menuitemradio" aria-checked={scoped} aria-pressed={scoped} title={hint('list.scope.toggle', 'Only the canvas you are looking at')} onClick={() => !scoped && runCommand('list.scope.toggle')} data-testid="scope-this">
+              This canvas
             </button>
-          )}
-        </div>
-        <input
-          ref={search}
-          className="list-search"
-          type="search"
-          placeholder="Filter by name, folder, command, note…"
-          aria-label="Filter terminals by text"
-          title={hint('list.search', 'Filter by text')}
-          value={view.text}
-          data-testid="list-search"
-          onChange={(event) => setView({ text: event.target.value })}
-          onKeyDown={(event) => {
-            if (event.key === 'Escape') {
-              event.stopPropagation();
-              if (view.text) setView({ text: '' });
-              else event.currentTarget.blur();
-            }
-          }}
-        />
-        <div className="list-toggles" role="group" aria-label="Filters">
-          {everyday.map(toggle)}
-          <button type="button" className="list-filter list-more" aria-expanded={more} onClick={() => setMoreAsked((v) => !v)} title="More filters, and how the list is laid out" data-testid="list-more">
-            More{restOn > 0 || laidOut ? ` · ${restOn + (laidOut ? 1 : 0)}` : ''} {more ? '▴' : '▾'}
-          </button>
-        </div>
-        {more && (
-          <div className="list-toggles" role="group" aria-label="More filters" data-testid="list-more-filters">
-            {rest.map(toggle)}
-          </div>
-        )}
-        {more && (
-        <div className="list-options">
-          <label>
-            <span className="visually-hidden">Grouping</span>
-            <select value={view.grouping} aria-label="Grouping" title={hint('list.grouping.toggle', 'Group by canvas, or one flat list')} onChange={(e) => {
-                setView({ grouping: e.target.value === 'flat' ? 'flat' : 'canvas' });
-                e.currentTarget.blur();
-              }} data-testid="list-grouping">
-              <option value="canvas">By canvas</option>
-              <option value="flat">Flat list</option>
-            </select>
-          </label>
-          {view.grouping === 'flat' && (
-            <label>
-              <span className="visually-hidden">Order</span>
-              <select value={view.sort} aria-label="Order" title={hint('list.sort.cycle', 'Order of the flat list')} onChange={(e) => {
-                  setView({ sort: e.target.value as Sort });
+            <button type="button" role="menuitemradio" aria-checked={!scoped && !view.everyProject} aria-pressed={!scoped && !view.everyProject} title={hint('list.scope.toggle', 'Every canvas of this project')} onClick={() => (view.everyProject ? setView({ everyProject: false }) : scoped && runCommand('list.scope.toggle'))} data-testid="scope-all">
+              All canvases
+            </button>
+            {severalProjects && (
+              <button type="button" role="menuitemradio" aria-checked={view.everyProject === true} aria-pressed={view.everyProject === true} title="The terminals of every project; each group names its project" onClick={() => setView({ everyProject: true, filters: view.filters.filter((id) => id !== SCOPE_FILTER) })} data-testid="scope-projects">
+                All projects
+              </button>
+            )}
+            <span className="ui-menu-label">Only those that are</span>
+            {toggles.map(toggle)}
+            <span className="ui-menu-label">How the list is laid out</span>
+            <label className="ui-menu-line">
+              <span>Grouping</span>
+              <select value={view.grouping} aria-label="Grouping" title={hint('list.grouping.toggle', 'Group by canvas, or one flat list')} onChange={(e) => {
+                  setView({ grouping: e.target.value === 'flat' ? 'flat' : 'canvas' });
                   e.currentTarget.blur();
-                }} data-testid="list-sort">
-                {SORTS.map((sort) => (
-                  <option key={sort} value={sort}>
-                    {SORT_LABEL[sort]}
-                  </option>
-                ))}
+                }} data-testid="list-grouping">
+                <option value="canvas">By canvas</option>
+                <option value="flat">Flat list</option>
               </select>
             </label>
-          )}
-          <button type="button" className="list-filter" aria-pressed={view.density === 'compact'} title={hint('list.density.toggle', 'One line per terminal')} onClick={() => runCommand('list.density.toggle')} data-testid="list-density">
-            Compact
-          </button>
-        </div>
+            {view.grouping === 'flat' && (
+              <label className="ui-menu-line">
+                <span>Order</span>
+                <select value={view.sort} aria-label="Order" title={hint('list.sort.cycle', 'Order of the flat list')} onChange={(e) => {
+                    setView({ sort: e.target.value as Sort });
+                    e.currentTarget.blur();
+                  }} data-testid="list-sort">
+                  {SORTS.map((sort) => (
+                    <option key={sort} value={sort}>
+                      {SORT_LABEL[sort]}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            )}
+            <button type="button" role="menuitemcheckbox" aria-checked={view.density === 'compact'} aria-pressed={view.density === 'compact'} title={hint('list.density.toggle', 'One line per terminal')} onClick={() => runCommand('list.density.toggle')} data-testid="list-density">
+              One line per terminal
+            </button>
+          </Menu>
         )}
         {chips.length > 0 && (
           <div className="list-chips" data-testid="list-chips">
@@ -271,7 +287,7 @@ function TerminalsSection() {
                 {chip.label} <span aria-hidden="true">×</span>
               </button>
             ))}
-            <button type="button" className="list-clear" title={hint('list.filters.clear', 'Remove every filter')} onClick={() => runCommand('list.filters.clear')} data-testid="list-clear">
+            <button type="button" className="list-clear" title="Back to the terminals of this canvas, all of them" onClick={() => setView({ filters: [SCOPE_FILTER], text: '', tags: [], everyProject: false })} data-testid="list-clear">
               Clear
             </button>
           </div>
@@ -446,36 +462,20 @@ const RowView = memo(function RowView({ row, style, density, indented, current, 
         >
           {session.name}
         </span>
+        {/* At the right of the first line: what the terminal waits for, and the run it is on. Nothing when there is nothing. */}
         {badge && !compact && (
           <span className="list-badge" data-testid="list-badge" title={session.attention.message ?? session.status.commandLine ?? undefined}>
             {badge}
           </span>
         )}
         {!compact && <MessageMark session={session} />}
-        {session.meantFor?.agent && !compact && (
-          <span className="list-agent" title={`Not started yet. It was an agent’s terminal (${session.meantFor.agent}) where its project came from; no agent is started for it here.`} data-testid="row-meant-for">
-            was {session.meantFor.agent}
-          </span>
-        )}
-        {session.agent && !compact && (
-          <span className="list-agent" title="An agent runs here">
-            agent
-          </span>
-        )}
-        {session.peopleOnly && (
-          <span className="list-lock" title="People only: no API token may read this terminal or type into it" data-testid="row-people-only">
-            🔒
-          </span>
-        )}
         {!compact && <RunStrip sessionId={session.id} variant="row" />}
         {!compact && <ListMark sessionId={session.id} variant="row" />}
-        <span className="list-spring" />
-        {compact && updated && <span className="list-time">{updated}</span>}
-        {hasNotes && (
+        {hasNotes && unseen > 0 && (
           <button
             type="button"
             className={`list-note${notesOpen ? ' open' : ''}`}
-            aria-label={`Notes of ${session.name}${unseen > 0 ? `, ${unseen} new` : ''}`}
+            aria-label={`Notes of ${session.name}, ${unseen} new`}
             aria-expanded={notesOpen}
             data-testid="list-note"
             onClick={(event) => {
@@ -487,51 +487,25 @@ const RowView = memo(function RowView({ row, style, density, indented, current, 
             onFocus={(event) => event.currentTarget.matches(':focus-visible') && showPreview(event.currentTarget)}
             onBlur={hidePreview}
           >
-            ✎{unseen > 0 && <span className="list-note-new">{unseen}</span>}
+            ✎<span className="list-note-new">{unseen}</span>
           </button>
-        )}
-        {row.parked ? (
-          <button
-            type="button"
-            className="list-restore"
-            title="Put it back on the canvas you are looking at"
-            onClick={(event) => {
-              event.stopPropagation();
-              onGo(session.id);
-            }}
-          >
-            Restore
-          </button>
-        ) : (
-          here && (
-            <button
-              type="button"
-              className="list-more"
-              aria-label={`Actions for ${session.name}`}
-              aria-expanded={menuOpen}
-              onClick={(event) => {
-                event.stopPropagation();
-                onMenu(menuOpen ? null : session.id);
-              }}
-            >
-              ⋯
-            </button>
-          )
         )}
       </div>
       {!compact && (
         <div className="list-detail">
-          <span className="list-where">{detail || ' '}</span>
+          <span className="list-where">
+            {[detail, session.meantFor?.agent ? `was ${session.meantFor.agent}` : session.agent ? 'agent' : null, active ? (active === 'now' ? 'just now' : `${active} ago`) : null].filter(Boolean).join(' · ') || ' '}
+          </span>
+          {session.meantFor?.agent && <span className="visually-hidden" data-testid="row-meant-for">was {session.meantFor.agent}</span>}
           {active && (
-            // One time, the later of the two; both are said in full when the pointer rests on it.
-            <span
-              className="list-time"
-              title={[typed ? `You last typed here ${typed === 'now' ? 'just now' : `${typed} ago`}` : null, updated ? `It last printed ${updated === 'now' ? 'just now' : `${updated} ago`}` : null].filter(Boolean).join('. ')}
-              data-testid="list-active"
-              data-typed={typed || undefined}
-              data-updated={updated || undefined}
-            >
-              {active === 'now' ? 'active just now' : `active ${active} ago`}
+            // The later of the two times is in the line; both are said in full to whoever asks.
+            <span className="visually-hidden" title={[typed ? `You last typed here ${typed === 'now' ? 'just now' : `${typed} ago`}` : null, updated ? `It last printed ${updated === 'now' ? 'just now' : `${updated} ago`}` : null].filter(Boolean).join('. ')} data-testid="list-active" data-typed={typed || undefined} data-updated={updated || undefined}>
+              active {active === 'now' ? 'just now' : `${active} ago`}
+            </span>
+          )}
+          {session.peopleOnly && (
+            <span className="list-lock" title="People only: no API token may read this terminal or type into it" data-testid="row-people-only">
+              people only
             </span>
           )}
           {session.typedBy && (
@@ -539,47 +513,79 @@ const RowView = memo(function RowView({ row, style, density, indented, current, 
               typed by {session.typedBy.name} {ago(session.typedBy.at, now) === 'now' ? 'just now' : `${ago(session.typedBy.at, now)} ago`}
             </span>
           )}
-          {session.tags.map((tag) => (
-            <button
-              key={tag}
-              type="button"
-              className="list-tag"
-              title={`Show only terminals tagged ${tag}`}
-              data-testid="list-tag"
-              onClick={(event) => {
-                event.stopPropagation();
-                onTag(tag);
-              }}
-            >
-              #{tag}
-            </button>
-          ))}
+          {/* Tags are on the row while the pointer or the keyboard is on it, and while the list is filtered by a tag. */}
+          <span className="list-tags">
+            {session.tags.map((tag) => (
+              <button
+                key={tag}
+                type="button"
+                className="list-tag"
+                title={`Show only terminals tagged ${tag}`}
+                data-testid="list-tag"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  onTag(tag);
+                }}
+              >
+                #{tag}
+              </button>
+            ))}
+          </span>
         </div>
       )}
+      {/* Everything else that can be done with it: one menu, there while the pointer or the keyboard is on the row. */}
+      <button
+        type="button"
+        className="list-more"
+        aria-haspopup="menu"
+        aria-label={`Actions for ${session.name}`}
+        aria-expanded={menuOpen}
+        onClick={(event) => {
+          event.stopPropagation();
+          onMenu(menuOpen ? null : session.id);
+        }}
+        data-testid="row-more"
+      >
+        ⋯
+      </button>
       {menuOpen && (
         <div className="list-menu" role="menu" aria-label={`Actions for ${session.name}`} onClick={(event) => event.stopPropagation()}>
+          {!here && (
+            <button type="button" role="menuitem" className="list-restore" onClick={() => onGo(session.id)} data-testid="row-restore">
+              {row.parked ? 'Restore to this canvas' : 'Go to it'}
+            </button>
+          )}
+          {!here && hasNotes && (
+            <button type="button" role="menuitem" onClick={() => onNotes(session.id)}>
+              Notes
+            </button>
+          )}
+          {here && (
+            <>
           <button type="button" role="menuitem" onClick={() => onAct(session.id, 'terminal.rename')}>
-            Rename
-          </button>
-          <button type="button" role="menuitem" onClick={() => onAct(session.id, 'notes.toggle')}>
-            Notes
-          </button>
-          <button type="button" role="menuitem" onClick={() => onAct(session.id, 'terminal.tags')}>
-            Tags…
-          </button>
-          {session.state !== 'exited' && (
-            <button type="button" role="menuitem" onClick={() => onAct(session.id, 'terminal.openOnDesktop')} data-testid="row-open-desktop">
-              Open on desktop
-            </button>
+                Rename
+              </button>
+              <button type="button" role="menuitem" onClick={() => onAct(session.id, 'notes.toggle')}>
+                Notes
+              </button>
+              <button type="button" role="menuitem" onClick={() => onAct(session.id, 'terminal.tags')}>
+                Tags…
+              </button>
+              {session.state !== 'exited' && (
+                <button type="button" role="menuitem" onClick={() => onAct(session.id, 'terminal.openOnDesktop')} data-testid="row-open-desktop">
+                  Open on desktop
+                </button>
+              )}
+              {canMove && (
+                <button type="button" role="menuitem" onClick={() => onAct(session.id, 'terminal.moveToCanvas')}>
+                  Move to canvas…
+                </button>
+              )}
+              <button type="button" role="menuitem" onClick={() => onAct(session.id, 'terminal.park')}>
+                {session.state === 'exited' ? 'Remove' : 'Park'}
+              </button>
+            </>
           )}
-          {canMove && (
-            <button type="button" role="menuitem" onClick={() => onAct(session.id, 'terminal.moveToCanvas')}>
-              Move to canvas…
-            </button>
-          )}
-          <button type="button" role="menuitem" onClick={() => onAct(session.id, 'terminal.park')}>
-            {session.state === 'exited' ? 'Remove' : 'Park'}
-          </button>
         </div>
       )}
     </div>
@@ -637,8 +643,6 @@ function NotesDrawer({ id, onClose }: { id: string; onClose: () => void }) {
     </>
   );
 }
-
-const EVERYDAY_FILTERS = 3;
 
 registerSection({
   id: SECTION,

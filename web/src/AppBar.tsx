@@ -1,20 +1,38 @@
-import { AttentionQueue } from './AttentionQueue';
+import { useMemo } from 'react';
+import { forYou } from '@aubergine/shared';
+import { useWaitingWords } from './AttentionQueue';
+import { waitingQueue } from './attention';
 import { runCommand } from './commands';
 import { ProjectSwitcher } from './projects/ProjectSwitcher';
 import { itemsOfListing, useRepositoryListing } from './review/repository-source';
 import { hint } from './shortcuts';
 import { useApp } from './store';
+import { useEndedRuns } from './workflows/ended-runs';
 import { Button } from './ui';
 
-/** How many things written by agents, programs or kept in a repository wait to be read. */
-function DraftsWaiting() {
-  const drafts = useApp((s) => (s.app?.drafts ?? []).filter((d) => d.status === 'waiting').length);
-  // Workflow files in repositories that were never accepted, or changed since.
-  const waiting = drafts + itemsOfListing(useRepositoryListing()).length;
-  if (waiting === 0) return null;
+/**
+ * The one thing in the bar for what waits on the owner: a count, in the colour of waiting while it is not zero.
+ * It opens the owner's list, which holds the terminals that wait, the drafts to read and the rest.
+ */
+function ForYou() {
+  const whole = useApp((s) => s.whole);
+  const ended = useEndedRuns((e) => e.items);
+  const count = useMemo(() => (whole ? forYou(whole, Date.now(), ended).items.length : 0), [whole, ended]);
+  // Workflow files in repositories that were never accepted, or changed since: read from the Workflows screen.
+  const files = itemsOfListing(useRepositoryListing()).length;
+  const waiting = useWaitingWords();
+  // Said apart for whoever asks: how many terminals wait, and how many things wait to be read.
+  const waitingCount = useApp((s) => waitingQueue(s.whole?.sessions ?? [], s.whole?.runs ?? []).length);
+  const reviews = useApp((s) => (s.whole?.drafts ?? []).filter((d) => d.status === 'waiting').length);
+  const total = count + files;
   return (
-    <button type="button" className="attention-button" onClick={() => runCommand('drafts.review')} title="Written by agents or programs, or kept in a repository: waiting for you to read them" data-testid="drafts-waiting">
-      {waiting} to review
+    <button type="button" className={total > 0 ? 'attention-button' : 'quiet'} onClick={() => runCommand('queue.open')} title={hint('queue.open', [`Everything that waits on you${total > 0 ? `: ${total}` : ''}`, waiting, files > 0 ? `${files} workflow ${files === 1 ? 'file' : 'files'} to read, on the Workflows screen` : ''].filter(Boolean).join('. '))} data-testid="for-you" data-count={total} data-waiting={waitingCount} data-review={reviews + files}>
+      For you
+      {total > 0 && (
+        <span className="for-you-count" data-testid="for-you-count">
+          {total}
+        </span>
+      )}
     </button>
   );
 }
@@ -39,15 +57,14 @@ export function AppBar() {
       </span>
       <ProjectSwitcher />
       <span className="appbar-group" role="group" aria-label="Screens of this project">
-        {screen('queue.open', 'For you and queue', 'Everything that waits on you, and the tasks for agents', 'toolbar-queue')}
+        {screen('queue.open', 'Queue', 'The tasks for agents, and everything that waits on you', 'toolbar-queue')}
         {screen('board.open', 'Board', 'Every run that is going, by workflow and step; approve or send back from there', 'toolbar-board')}
         {screen('workflows.open', 'Workflows', 'Make, change and run workflows', 'toolbar-workflows')}
         {screen('library.open', 'Library', 'Workflows and elements others published, to read and install', 'toolbar-library')}
       </span>
       <span className="appbar-group appbar-status" role="group" aria-label="What needs you">
         {!live && <span className="warning">Reconnecting…</span>}
-        <AttentionQueue />
-        <DraftsWaiting />
+        <ForYou />
         {screen('help.show', 'Help', 'What you can do here, and the keyboard shortcuts', 'toolbar-help')}
       </span>
     </header>

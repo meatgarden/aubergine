@@ -59,6 +59,7 @@ function CopiesSection() {
 }
 
 registerSection({
+  more: true,
   id: 'copies',
   title: 'Working copies',
   tab: 'Copies',
