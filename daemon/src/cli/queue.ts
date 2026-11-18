@@ -295,7 +295,7 @@ export async function runQueueCommand(command: QueueCommand, deps: QueueCommandD
         if (!event.success) throw new UsageError(`--when takes one of: ${RuleEvent.options.join(', ')}`);
         const list = await owner(async (client) => {
           if (command.notify) return client.addRule({ body: { event: event.data, action: { kind: 'notify' } } });
-          const element = pickBy(await collect(client.each.listElements()), command.run ?? '', (e) => e.element.name, 'shelf element');
+          const element = pickBy(await collect(client.each.listElements()), command.run ?? '', (e) => e.element.name, 'saved step');
           const on = command.on !== null ? { kind: 'session', sessionId: pickBy(await collect(client.each.listSessions()), command.on, (s) => s.name, 'terminal').id } : { kind: 'new', canvasId: pickBy(await collect(client.each.listCanvases()), command.onNew ?? '', (c) => c.name, 'canvas').id };
           return client.addRule({ body: { event: event.data, action: { kind: 'run-element', elementId: element.id, on } } });
         });

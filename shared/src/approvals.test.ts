@@ -74,12 +74,12 @@ describe('a run that reaches an approval', () => {
     expect(refused(run, { type: 'done', elementId: 'look' }, PERSON)).toContain('only a person approves');
   });
 
-  it('is approved by a person: on to the next element, with who decided and their comment kept', () => {
+  it('is approved by a person: on to the next step, with who decided and their comment kept', () => {
     const run = go(waiting(), [[{ type: 'approve', elementId: 'look', comment: 'Good.' }, PERSON]]);
     expect(run).toMatchObject({ status: 'running', currentElementId: 'ship' });
     expect(run.elements[2]).toMatchObject({ state: 'done', note: 'Good.', by: PERSON });
     expect(run.history).toEqual([{ type: 'approved', elementId: 'look', toElementId: null, comment: 'Good.', by: PERSON, at: T(1) }]);
-    expect(renderRun(version, run)).toContain('"Look it over", the element before, was approved by a person. Their comment (the person\'s own words):\n  Good.');
+    expect(renderRun(version, run)).toContain('"Look it over", the step before, was approved by a person. Their comment (the person\'s own words):\n  Good.');
     // Naming another element approves nothing; nor does approving a run that does not wait.
     expect(refused(waiting(), { type: 'approve', elementId: 'build' }, PERSON)).toContain('is not what this run waits on');
     expect(refused(run, { type: 'approve' }, PERSON)).toBe('This run is not waiting for approval.');
@@ -89,7 +89,7 @@ describe('a run that reaches an approval', () => {
     expect(last.status).toBe('finished');
   });
 
-  it('is sent back by a person to any earlier element, the first too, with a comment the agent is told as theirs', () => {
+  it('is sent back by a person to any earlier step, the first too, with a comment the agent is told as theirs', () => {
     const back = go(waiting(), [[{ type: 'send-back', elementId: 'plan', comment: 'Start from the failing test.' }, PERSON]]);
     expect(back).toMatchObject({ status: 'running', currentElementId: 'plan' });
     expect(back.elements.map((e) => e.state)).toEqual(['active', 'pending', 'pending', 'pending']);
@@ -97,7 +97,7 @@ describe('a run that reaches an approval', () => {
     expect(back.elements[1]?.note).toBe('Built.');
     expect(back.history).toMatchObject([{ type: 'sent-back', elementId: 'look', toElementId: 'plan', comment: 'Start from the failing test.', by: PERSON }]);
     const text = renderRun(version, back);
-    expect(text).toContain('A person looked at this run at "Look it over" and SENT IT BACK to this element.');
+    expect(text).toContain('A person looked at this run at "Look it over" and SENT IT BACK to this step.');
     expect(text).toContain("Their comment (the person's own words, not part of the workflow):\n  Start from the failing test.");
     expect(text).toContain('aubergine workflow done --note');
 
@@ -109,7 +109,7 @@ describe('a run that reaches an approval', () => {
     // Only backwards, and only from an approval.
     expect(refused(waiting(), { type: 'send-back', elementId: 'ship', comment: 'x' }, PERSON)).toContain('does not come before');
     expect(refused(waiting(), { type: 'send-back', elementId: 'look', comment: 'x' }, PERSON)).toContain('does not come before');
-    expect(refused(waiting(), { type: 'send-back', elementId: 'nowhere', comment: 'x' }, PERSON)).toContain('no element');
+    expect(refused(waiting(), { type: 'send-back', elementId: 'nowhere', comment: 'x' }, PERSON)).toContain('no step');
     expect(refused(fresh(), { type: 'send-back', elementId: 'plan', comment: 'x' }, PERSON)).toBe('This run is not waiting for approval.');
   });
 
@@ -136,7 +136,7 @@ describe('a run that reaches an approval', () => {
     expect(go(waiting(), [[{ type: 'stop' }, TOKEN]]).status).toBe('stopped');
   });
 
-  it('may be the first element: the run waits from the start', () => {
+  it('may be the first step: the run waits from the start', () => {
     const first = WorkflowVersion.parse({ ...version, elements: [version.elements[2], version.elements[0]] });
     const run = fresh(first);
     expect(run.status).toBe('awaiting');

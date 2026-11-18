@@ -82,7 +82,7 @@ export interface AppStore {
   editingWorkflow: string | null;
   /** The "Run workflow" dialog: on a session, or on a new agent session (`sessionId` null). */
   startingRun: { sessionId: string | null; workflowId?: string; elementId?: string } | null;
-  /** "Describe an element…" or "Describe a workflow…": asking an agent for a draft. */
+  /** "Describe a step…" or "Describe a workflow…": asking an agent for a draft. */
   describing: 'workflow' | 'element' | null;
   /** The shelf element open in its editor; `new` for one being made. */
   editingElement: string | null;

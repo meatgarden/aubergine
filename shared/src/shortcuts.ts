@@ -65,6 +65,7 @@ export const COMMAND_IDS = [
   'outside.open',
   'view.fit',
   'view.actualSize',
+  'view.map',
   'terminal.tags',
   'panel.toggle',
   'list.scope.toggle',

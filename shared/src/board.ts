@@ -26,7 +26,7 @@ export const BoardCard = z.object({
   statusWords: z.string().describe('The status as the interface says it: `working`, `waiting for approval`, `blocked` and so on.'),
   elementId: z.string().nullable(),
   elementName: z.string(),
-  since: z.iso.datetime().nullable().describe('When the run came to the element it is on.'),
+  since: z.iso.datetime().nullable().describe('When the run came to the step it is on.'),
   quiet: z.boolean().describe('The terminal has printed for a while since the last report: the card may be behind.'),
   blockedReason: z.string().nullable(),
   waitsForPerson: z.boolean().describe('True when the run waits for a person to approve or send back. Only the owner can do either.'),
@@ -37,19 +37,19 @@ export type BoardCard = z.infer<typeof BoardCard>;
 export const BoardColumn = z.object({
   elementId: z.string(),
   name: z.string(),
-  waitsForPerson: z.boolean().describe('An element where a run stops until a person has decided.'),
+  waitsForPerson: z.boolean().describe('A step where a run stops until a person has decided.'),
   cards: z.array(BoardCard),
 });
 export type BoardColumn = z.infer<typeof BoardColumn>;
 
 export const BoardGroup = z.object({
   key: z.string().describe('Stays the same while the group exists: the workflow and its version, or `single`.'),
-  workflowId: Id.nullable().describe('Null for the group of runs of one element by itself.'),
+  workflowId: Id.nullable().describe('Null for the group of runs of one step by itself.'),
   workflowName: z.string(),
   version: z.number().int().nullable().describe('Said only when live runs are on more than one version of the workflow.'),
-  single: z.boolean().describe('The group of runs of one element by itself: each card names its element.'),
+  single: z.boolean().describe('The group of runs of one step by itself: each card names its step.'),
   queued: z.array(BoardCard).describe('Runs that wait for a terminal.'),
-  columns: z.array(BoardColumn).describe("That version's elements, in order."),
+  columns: z.array(BoardColumn).describe("That version's steps, in order."),
 });
 export type BoardGroup = z.infer<typeof BoardGroup>;
 
@@ -175,7 +175,7 @@ export function boardOf(input: BoardInput): Board {
       group = {
         key,
         workflowId: single ? null : run.workflowId,
-        workflowName: single ? 'One element by itself' : (version?.name ?? workflow?.name ?? '(removed workflow)'),
+        workflowName: single ? 'One step by itself' : (version?.name ?? workflow?.name ?? '(removed workflow)'),
         version: single || !several ? null : run.workflowVersion,
         single,
         queued: [],

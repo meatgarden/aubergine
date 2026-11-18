@@ -32,13 +32,13 @@ export function TabBar() {
   const [dragging, setDragging] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   // The options of the tab being looked at, open at a place against the window.
-  const [menu, setMenu] = useState<{ left: number; top: number } | null>(null);
+  const [menu, setMenu] = useState<{ id: string; left: number; top: number } | null>(null);
   const menuRoot = useRef<HTMLSpanElement>(null);
   useEffect(() => {
     if (!menu) return;
     const away = (event: PointerEvent): void => {
       const target = event.target as Element | null;
-      if (!menuRoot.current?.contains(target) && !target?.closest('[data-testid="tab-more"]')) setMenu(null);
+      if (!menuRoot.current?.contains(target) && !target?.closest('.tab-more, .color-palette')) setMenu(null);
     };
     const key = (event: KeyboardEvent): void => {
       if (event.key === 'Escape') setMenu(null);
@@ -152,31 +152,32 @@ export function TabBar() {
               </span>
             )}
             {counts.waiting > 0 && (
-              <span className="tab-waiting" title={`${counts.waiting} waiting for you`} data-testid="tab-waiting">
+              // A plain number: what waits is counted once in colour, at the top of the page.
+              <span className="tab-waiting" title={`${counts.waiting} waiting for you`} aria-label={`${counts.waiting} waiting for you`} data-testid="tab-waiting">
                 {counts.waiting}
               </span>
             )}
             {counts.unread > 0 && !active && <span className="badge-unread" title="New output" data-testid="tab-unread" />}
-            {active && (
+            {renaming?.id !== canvas.id && (
+              // The same two things on every tab, shown on the one being looked at and where the pointer or the keyboard is.
               <span className="tab-tools" onClick={(e) => e.stopPropagation()} onDoubleClick={(e) => e.stopPropagation()}>
-                <ColorButton value={canvas.color} onChange={(color) => run(api.updateCanvas(canvas.id, { color }))} againstWindow title="Pick a color for this tab" />
                 <button
                   type="button"
                   className="quiet tab-more"
                   aria-haspopup="menu"
-                  aria-expanded={menu !== null}
+                  aria-expanded={menu?.id === canvas.id}
                   aria-label={`Options for the canvas ${canvas.name}`}
-                  title="Options for this canvas: rename, messages between its terminals, move to another project"
+                  title="Options for this canvas: rename, colour, messages between its terminals, move to another project"
                   onClick={(e) => {
                     // The bar of tabs scrolls sideways and cuts off what hangs below it: the menu is placed against the window.
                     const box = e.currentTarget.getBoundingClientRect();
-                    setMenu(menu ? null : { left: Math.min(box.left, window.innerWidth - 330), top: box.bottom + 6 });
+                    setMenu(menu?.id === canvas.id ? null : { id: canvas.id, left: Math.min(box.left, window.innerWidth - 330), top: box.bottom + 6 });
                   }}
-                  data-testid="tab-more"
+                  data-testid={active ? 'tab-more' : 'tab-more-other'}
                 >
-                  Options ▾
+                  ⋯
                 </button>
-                {menu && (
+                {menu?.id === canvas.id && (
                   <span className="toolbar-menu tab-menu" role="menu" style={{ left: menu.left, top: menu.top }} ref={menuRoot} data-testid="tab-menu">
                     <button
                       type="button"
@@ -205,6 +206,10 @@ export function TabBar() {
                       Messages between terminals: {messaging ? 'on' : 'off'}
                       <small>{messaging ? 'Terminals on this canvas may message each other. Click to switch that off.' : 'Terminals on this canvas may not message each other. You can always message any terminal yourself.'}</small>
                     </button>
+                    <span className="tab-menu-line tab-menu-colour">
+                      <span>Colour</span>
+                      <ColorButton value={canvas.color} onChange={(color) => run(api.updateCanvas(canvas.id, { color }))} againstWindow title="Pick a color for this tab" />
+                    </span>
                     {canvas.labels[DEMO_LABEL] !== undefined && (
                       <button
                         type="button"

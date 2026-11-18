@@ -103,7 +103,7 @@ export const ShelfElement = z.object({
   versions: z.array(ShelfVersion).default([]).describe('Its saved versions, oldest first: each with who saved it, when, and a line on what changed. None is ever changed.'),
   state: ShelfState.default('current').describe('`current`, or `retired`: kept and still working where it is used, but not offered when inserting and not run by itself.'),
   /** For a retired element: the one to use in its place, when its owner named one. */
-  replacedBy: Id.nullable().default(null).describe('For a retired element: the shelf element to use in its place, when one was named.'),
+  replacedBy: Id.nullable().default(null).describe('For a retired step: the saved step to use in its place, when one was named.'),
 });
 export type ShelfElement = z.infer<typeof ShelfElement>;
 
@@ -218,7 +218,7 @@ const EXAMPLE_ELEMENT = {
  */
 export function renderBrief(draft: Draft, limits: WorkflowLimits): string {
   const element = draft.kind === 'element';
-  const lines = [`You have been asked to write ${element ? 'an element' : 'a workflow'} for Aubergine.`, ''];
+  const lines = [`You have been asked to write ${element ? 'a step' : 'a workflow'} for Aubergine.`, ''];
   lines.push('What is wanted, in the words of the person who asked:', '', draft.description.trim() || '(no description was given)', '');
   if (draft.status === 'returned') {
     lines.push('Your last version was read and sent back with this comment:', '', draft.comment?.trim() || '(no comment)', '');
@@ -226,24 +226,24 @@ export function renderBrief(draft: Draft, limits: WorkflowLimits): string {
   }
   lines.push(
     element
-      ? 'An element is one piece of work for an agent: a name, instructions, and one line saying how to tell it is done.'
-      : 'A workflow is an ordered list of elements that an agent goes through one at a time. An element is a name, instructions, and one line saying how to tell it is done.',
+      ? 'A step is one piece of work for an agent: a name, instructions, and one line saying how to tell it is done.'
+      : 'A workflow is an ordered list of steps that an agent goes through one at a time. A step is a name, instructions, and one line saying how to tell it is done.',
     'Write the instructions for an agent that knows nothing about this conversation. Nothing you write is run by a computer: it is text another agent will read and follow.',
     '',
-    'The format is a JSON file. An example of an element:',
+    'The format is a JSON file. An example of a step:',
     '',
     JSON.stringify(EXAMPLE_ELEMENT, null, 2),
     '',
   );
-  if (!element) lines.push('A workflow is:', '', JSON.stringify({ name: 'A short name', description: 'What it is for.', standing: 'Text added to every element (may be empty).', elements: ['…elements like the one above…'] }, null, 2), '');
+  if (!element) lines.push('A workflow is:', '', JSON.stringify({ name: 'A short name', description: 'What it is for.', standing: 'Text added to every step (may be empty).', elements: ['…steps like the one above…'] }, null, 2), '');
   lines.push(
     'Rules:',
     `- name: one line, at most 120 characters. instructions: at most ${limits.maxElementChars} characters. doneWhen: one line, at most 500.`,
-    ...(element ? [] : [`- A workflow has 1 to ${limits.maxElements} elements.`]),
+    ...(element ? [] : [`- A workflow has 1 to ${limits.maxElements} steps.`]),
     '- {{task}} in any text becomes what the run is about.',
-    ...(element ? [] : ['- Where a person should decide before the work goes on, put an approval there in place of an element: {"kind": "approval", "name": "…", "ask": "What the person is asked to decide", "lookAt": "What they should look at (optional)"}. It has no instructions: a run stops there until the person approves it or sends it back.']),
-    `- needs (optional, at most ${NEEDS_MAX}): what whoever does the element must have. Each has a kind (mcp, command, access or other), a name, and may have a note. Name a need only if the work cannot be done without it.`,
-    `- produces (optional): ${outputKindNames().join(' or ')}. Leave it out for a note. ${CHECKLIST_FORMAT.split(' Hand it in')[0]} is what an element that produces a checklist hands in when it is done.`,
+    ...(element ? [] : ['- Where a person should decide before the work goes on, put an approval there in place of a step: {"kind": "approval", "name": "…", "ask": "What the person is asked to decide", "lookAt": "What they should look at (optional)"}. It has no instructions: a run stops there until the person approves it or sends it back.']),
+    `- needs (optional, at most ${NEEDS_MAX}): what whoever does the step must have. Each has a kind (mcp, command, access or other), a name, and may have a note. Name a need only if the work cannot be done without it.`,
+    `- produces (optional): ${outputKindNames().join(' or ')}. Leave it out for a note. ${CHECKLIST_FORMAT.split(' Hand it in')[0]} is what a step that produces a checklist hands in when it is done.`,
     '',
     'What you hand in is a draft. A person reads it before it can be used; it may come back to you with a comment.',
     '',

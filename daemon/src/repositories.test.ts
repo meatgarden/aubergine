@@ -165,7 +165,7 @@ describe('review before use', () => {
 
     // The owner reads it, exactly as an agent would be told it, and accepts what was read.
     const read = await asOwner('GET', fileQuery('release.json'));
-    expect(read.body.text).toContain('Element 1 of 2: First');
+    expect(read.body.text).toContain('Step 1 of 2: First');
     expect(read.body.text).toContain('Do the first thing with (task).');
     expect(read.body).toMatchObject({ previousText: null, workflow: { state: 'review' } });
     expect((await asOwner('POST', '/v1/repository-workflows/accept', { root: project, file: 'release.json', hash: 'not-the-hash' })).status).toBe(409);
@@ -241,7 +241,7 @@ describe('review before use', () => {
     expect((await asOwner('POST', `/v1/sessions/${agent.id}/repository-runs`, { file: 'hostile.json', inputs: {} })).status).toBe(400);
     const started = await asOwner('POST', `/v1/sessions/${agent.id}/repository-runs`, { file: 'hostile.json', inputs: { task: 'x' } });
     expect(started.body.kickoffTyped).toBe(true);
-    expect(typed.map(([, line]) => line)).toEqual(['You are on an Aubergine workflow. Run `aubergine workflow status` to read your current element and follow it. When its "done when" is true, run `aubergine workflow done --note "<what you did>"` and follow what it prints.']);
+    expect(typed.map(([, line]) => line)).toEqual(['You are on an Aubergine workflow. Run `aubergine workflow status` to read your current step and follow it. When its "done when" is true, run `aubergine workflow done --note "<what you did>"` and follow what it prints.']);
   });
 });
 

@@ -1,6 +1,6 @@
 #!/bin/sh
 # A stand-in for an agent that is part-way through the "Fix a bug" workflow.
-# It reports the first element done and then waits: each Enter in this
+# It reports the first step done and then waits: each Enter in this
 # terminal makes it finish the next one, as an agent would.
 aubergine="$AUBERGINE_BIN/aubergine"
 # shellcheck source=/dev/null
@@ -23,8 +23,8 @@ say "> aubergine workflow done --note \"Reproduced it: test/login.test.js fails,
 
 while :; do
   say ""
-  say "The stand-in is now working on the element the strip shows."
-  say "Press Enter here to let it finish that element (or use Done on the run)."
+  say "The stand-in is now working on the step the strip shows."
+  say "Press Enter here to let it finish that step (or use Done on the run)."
   read -r _ || exit 0
   pause
   out=$("$aubergine" workflow "done" --note "Done by the stand-in agent." 2>&1) || break

@@ -71,7 +71,7 @@ describe('the index of a source', () => {
   });
 });
 
-describe('an element as a file', () => {
+describe('a step as a file', () => {
   it('goes out and comes back the same, without where it came from here', () => {
     const element = Element.parse({ id: 'tidy', name: 'Tidy up', instructions: 'Remove what is not needed.', doneWhen: 'Nothing is left over.', needs: [{ kind: 'command', name: 'git' }], produces: 'checklist', origin: { kind: 'draft', by: 'session' }, source: { shelfId: newId(), version: 2, hash: null }, extra: { later: true } });
     const file = exportElement(element);
@@ -83,7 +83,7 @@ describe('an element as a file', () => {
     expect(exportElement(back)).toEqual(file);
     // A file that claims a source or an origin does not get to keep them.
     expect(importElement({ aubergine: 'element', format: 1, element: { name: 'x', source: { shelfId: newId(), version: 9, hash: null }, origin: { kind: 'local' } } })).toMatchObject({ source: null });
-    expect(() => importElement({ aubergine: 'workflow', format: 1, workflow: {} })).toThrow(/not an Aubergine element file/);
+    expect(() => importElement({ aubergine: 'workflow', format: 1, workflow: {} })).toThrow(/not an Aubergine step file/);
     expect(() => importElement({ aubergine: 'element', format: 5, element: { name: 'x' } })).toThrow(/format 5/);
   });
 });
@@ -123,10 +123,10 @@ describe('what is installed, against what its source has', () => {
 });
 
 describe('the kinds of item', () => {
-  it('are a workflow and an element, each read by its own kind', () => {
+  it('are a workflow and a step, each read by its own kind', () => {
     expect(libraryKinds().map((kind) => [kind.kind, kind.title])).toEqual([
       ['workflow', 'A workflow'],
-      ['element', 'An element'],
+      ['element', 'A step'],
     ]);
     const limits = { maxElements: 50, maxElementChars: 20_000 };
     const element = libraryKind('element')!.read({ aubergine: 'element', format: 1, element: { name: 'Tidy', instructions: 'Tidy {{task}}.', doneWhen: 'Tidy.', needs: [{ kind: 'command', name: 'git' }] } }, limits);
@@ -134,9 +134,9 @@ describe('the kinds of item', () => {
     expect(element.needs).toEqual([{ kind: 'command', name: 'git' }]);
     const workflow = libraryKind('workflow')!.read({ aubergine: 'workflow', format: 1, workflow: { name: 'Two', elements: [{ name: 'A', instructions: 'First.', source: { shelfId: newId(), version: 1, hash: null } }, { name: 'B', instructions: 'Second.' }] } }, limits);
     // All of it: every element's text, one after another.
-    expect(workflow.text).toContain('--- Element 1 of 2 ---');
+    expect(workflow.text).toContain('--- Step 1 of 2 ---');
     expect(workflow.text).toContain('First.');
-    expect(workflow.text).toContain('--- Element 2 of 2 ---');
+    expect(workflow.text).toContain('--- Step 2 of 2 ---');
     expect(workflow.text).toContain('Second.');
     // Where a publisher's copy came from on their computer means nothing here.
     expect((workflow.content as { elements: { source: unknown }[] }).elements.map((e) => e.source)).toEqual([null, null]);

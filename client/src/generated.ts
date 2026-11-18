@@ -1133,7 +1133,7 @@ export type CreateWorkflowBody = {
   name: string;
   /** What it is for, in a sentence or two. */
   description?: string;
-  /** Text added to every element: rules that hold from start to finish. */
+  /** Text added to every step: rules that hold from start to finish. */
   standing?: string;
   /** What a run is given when it starts. `{{key}}` in any text becomes the value. Without this, one input: `task`. */
   inputs?: {
@@ -1142,11 +1142,11 @@ export type CreateWorkflowBody = {
     description?: string;
     required?: boolean;
   }[];
-  /** The elements, in the order they are gone through. */
+  /** The steps, in the order they are gone through. */
   elements: {
-    /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+    /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
     id?: string;
-    /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+    /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
     kind?: string;
     /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
     name: string;
@@ -1156,7 +1156,7 @@ export type CreateWorkflowBody = {
     ask?: string;
     /** For an approval, if you like: what the person should look at before deciding. */
     lookAt?: string;
-    /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+    /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
     doneWhen?: string;
     /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
     needs?: {
@@ -1164,7 +1164,7 @@ export type CreateWorkflowBody = {
       name: string;
       note?: string;
     }[];
-    /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+    /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
     produces?: string;
     /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
     origin?: {
@@ -1172,7 +1172,7 @@ export type CreateWorkflowBody = {
       name?: string;
       [key: string]: unknown;
     };
-    /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+    /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
     source?: {
       shelfId: string;
       version: number | null;
@@ -1228,9 +1228,9 @@ export type CreateWorkflowResult = {
       required: boolean;
     }[];
     elements: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -1240,7 +1240,7 @@ export type CreateWorkflowResult = {
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -1248,7 +1248,7 @@ export type CreateWorkflowResult = {
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -1256,7 +1256,7 @@ export type CreateWorkflowResult = {
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -1304,9 +1304,9 @@ export type GetWorkflowResult = {
       required: boolean;
     }[];
     elements: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -1316,7 +1316,7 @@ export type GetWorkflowResult = {
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -1324,7 +1324,7 @@ export type GetWorkflowResult = {
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -1332,7 +1332,7 @@ export type GetWorkflowResult = {
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -1356,7 +1356,7 @@ export type UpdateWorkflowBody = {
   name?: string;
   /** What it is for, in a sentence or two. */
   description?: string;
-  /** Text added to every element: rules that hold from start to finish. */
+  /** Text added to every step: rules that hold from start to finish. */
   standing?: string;
   /** What a run is given when it starts. `{{key}}` in any text becomes the value. Without this, one input: `task`. */
   inputs?: {
@@ -1365,11 +1365,11 @@ export type UpdateWorkflowBody = {
     description?: string;
     required?: boolean;
   }[];
-  /** The elements, in the order they are gone through. */
+  /** The steps, in the order they are gone through. */
   elements?: {
-    /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+    /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
     id?: string;
-    /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+    /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
     kind?: string;
     /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
     name: string;
@@ -1379,7 +1379,7 @@ export type UpdateWorkflowBody = {
     ask?: string;
     /** For an approval, if you like: what the person should look at before deciding. */
     lookAt?: string;
-    /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+    /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
     doneWhen?: string;
     /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
     needs?: {
@@ -1387,7 +1387,7 @@ export type UpdateWorkflowBody = {
       name: string;
       note?: string;
     }[];
-    /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+    /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
     produces?: string;
     /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
     origin?: {
@@ -1395,7 +1395,7 @@ export type UpdateWorkflowBody = {
       name?: string;
       [key: string]: unknown;
     };
-    /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+    /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
     source?: {
       shelfId: string;
       version: number | null;
@@ -1441,9 +1441,9 @@ export type UpdateWorkflowResult = {
       required: boolean;
     }[];
     elements: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -1453,7 +1453,7 @@ export type UpdateWorkflowResult = {
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -1461,7 +1461,7 @@ export type UpdateWorkflowResult = {
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -1469,7 +1469,7 @@ export type UpdateWorkflowResult = {
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -1522,9 +1522,9 @@ export type CopyWorkflowResult = {
       required: boolean;
     }[];
     elements: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -1534,7 +1534,7 @@ export type CopyWorkflowResult = {
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -1542,7 +1542,7 @@ export type CopyWorkflowResult = {
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -1550,7 +1550,7 @@ export type CopyWorkflowResult = {
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -1596,9 +1596,9 @@ export type ListWorkflowVersionsResult = {
       required: boolean;
     }[];
     elements: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -1608,7 +1608,7 @@ export type ListWorkflowVersionsResult = {
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -1616,7 +1616,7 @@ export type ListWorkflowVersionsResult = {
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -1624,7 +1624,7 @@ export type ListWorkflowVersionsResult = {
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -1675,9 +1675,9 @@ export type ListWorkflowTemplatesResult = {
         required: boolean;
       }[];
       elements: {
-        /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+        /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
         id: string;
-        /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+        /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
         kind: string;
         /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
@@ -1687,7 +1687,7 @@ export type ListWorkflowTemplatesResult = {
         ask: string;
         /** For an approval, if you like: what the person should look at before deciding. */
         lookAt: string;
-        /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+        /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
         doneWhen: string;
         /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
         needs: {
@@ -1695,7 +1695,7 @@ export type ListWorkflowTemplatesResult = {
           name: string;
           note?: string;
         }[];
-        /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+        /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
         produces: string;
         /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
         origin: {
@@ -1703,7 +1703,7 @@ export type ListWorkflowTemplatesResult = {
           name?: string;
           [key: string]: unknown;
         };
-        /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+        /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
         source: {
           shelfId: string;
           version: number | null;
@@ -1756,9 +1756,9 @@ export type UseWorkflowTemplateResult = {
       required: boolean;
     }[];
     elements: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -1768,7 +1768,7 @@ export type UseWorkflowTemplateResult = {
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -1776,7 +1776,7 @@ export type UseWorkflowTemplateResult = {
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -1784,7 +1784,7 @@ export type UseWorkflowTemplateResult = {
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -2167,9 +2167,9 @@ export type ReportRunResult = {
 };
 
 export type ApproveRunBody = {
-  /** The element being approved. Name it, so that a decision sent twice approves one element and not two. Without it: the one the run waits on. */
+  /** The step being approved. Name it, so that a decision sent twice approves one step and not two. Without it: the one the run waits on. */
   elementId?: string;
-  /** A few words for whoever does the next element. Plain text on one line. */
+  /** A few words for whoever does the next step. Plain text on one line. */
   comment?: string;
 };
 
@@ -2249,9 +2249,9 @@ export type ApproveRunResult = {
 };
 
 export type SendBackRunBody = {
-  /** The earlier element the run goes back to. It, and everything after it, is done again. */
+  /** The earlier step the run goes back to. It, and everything after it, is done again. */
   elementId: string;
-  /** What should change. Whoever does that element is told it, marked as your words. Plain text on one line. */
+  /** What should change. Whoever does that step is told it, marked as your words. Plain text on one line. */
   comment: string;
 };
 
@@ -2470,12 +2470,12 @@ export type GetBoardResult = {
   groups: {
     /** Stays the same while the group exists: the workflow and its version, or `single`. */
     key: string;
-    /** Null for the group of runs of one element by itself. */
+    /** Null for the group of runs of one step by itself. */
     workflowId: string | null;
     workflowName: string;
     /** Said only when live runs are on more than one version of the workflow. */
     version: number | null;
-    /** The group of runs of one element by itself: each card names its element. */
+    /** The group of runs of one step by itself: each card names its step. */
     single: boolean;
     /** Runs that wait for a terminal. */
     queued: {
@@ -2496,7 +2496,7 @@ export type GetBoardResult = {
       statusWords: string;
       elementId: string | null;
       elementName: string;
-      /** When the run came to the element it is on. */
+      /** When the run came to the step it is on. */
       since: string | null;
       /** The terminal has printed for a while since the last report: the card may be behind. */
       quiet: boolean;
@@ -2505,11 +2505,11 @@ export type GetBoardResult = {
       waitsForPerson: boolean;
       finishedAt: string | null;
     }[];
-    /** That version's elements, in order. */
+    /** That version's steps, in order. */
     columns: {
       elementId: string;
       name: string;
-      /** An element where a run stops until a person has decided. */
+      /** A step where a run stops until a person has decided. */
       waitsForPerson: boolean;
       cards: {
         runId: string;
@@ -2529,7 +2529,7 @@ export type GetBoardResult = {
         statusWords: string;
         elementId: string | null;
         elementName: string;
-        /** When the run came to the element it is on. */
+        /** When the run came to the step it is on. */
         since: string | null;
         /** The terminal has printed for a while since the last report: the card may be behind. */
         quiet: boolean;
@@ -2559,7 +2559,7 @@ export type GetBoardResult = {
     statusWords: string;
     elementId: string | null;
     elementName: string;
-    /** When the run came to the element it is on. */
+    /** When the run came to the step it is on. */
     since: string | null;
     /** The terminal has printed for a while since the last report: the card may be behind. */
     quiet: boolean;
@@ -2689,9 +2689,9 @@ export type ListDraftsResult = {
         required: boolean;
       }[];
       elements: {
-        /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+        /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
         id: string;
-        /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+        /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
         kind: string;
         /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
@@ -2701,7 +2701,7 @@ export type ListDraftsResult = {
         ask: string;
         /** For an approval, if you like: what the person should look at before deciding. */
         lookAt: string;
-        /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+        /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
         doneWhen: string;
         /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
         needs: {
@@ -2709,7 +2709,7 @@ export type ListDraftsResult = {
           name: string;
           note?: string;
         }[];
-        /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+        /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
         produces: string;
         /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
         origin: {
@@ -2717,7 +2717,7 @@ export type ListDraftsResult = {
           name?: string;
           [key: string]: unknown;
         };
-        /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+        /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
         source: {
           shelfId: string;
           version: number | null;
@@ -2733,9 +2733,9 @@ export type ListDraftsResult = {
       };
     } | null;
     element: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -2745,7 +2745,7 @@ export type ListDraftsResult = {
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -2753,7 +2753,7 @@ export type ListDraftsResult = {
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -2761,7 +2761,7 @@ export type ListDraftsResult = {
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -2800,9 +2800,9 @@ export type ListDraftsResult = {
           required: boolean;
         }[];
         elements: {
-          /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+          /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
           id: string;
-          /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+          /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
           kind: string;
           /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
           name: string;
@@ -2812,7 +2812,7 @@ export type ListDraftsResult = {
           ask: string;
           /** For an approval, if you like: what the person should look at before deciding. */
           lookAt: string;
-          /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+          /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
           doneWhen: string;
           /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
           needs: {
@@ -2820,7 +2820,7 @@ export type ListDraftsResult = {
             name: string;
             note?: string;
           }[];
-          /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+          /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
           produces: string;
           /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
           origin: {
@@ -2828,7 +2828,7 @@ export type ListDraftsResult = {
             name?: string;
             [key: string]: unknown;
           };
-          /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+          /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
           source: {
             shelfId: string;
             version: number | null;
@@ -2844,9 +2844,9 @@ export type ListDraftsResult = {
         };
       } | null;
       element: {
-        /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+        /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
         id: string;
-        /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+        /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
         kind: string;
         /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
@@ -2856,7 +2856,7 @@ export type ListDraftsResult = {
         ask: string;
         /** For an approval, if you like: what the person should look at before deciding. */
         lookAt: string;
-        /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+        /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
         doneWhen: string;
         /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
         needs: {
@@ -2864,7 +2864,7 @@ export type ListDraftsResult = {
           name: string;
           note?: string;
         }[];
-        /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+        /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
         produces: string;
         /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
         origin: {
@@ -2872,7 +2872,7 @@ export type ListDraftsResult = {
           name?: string;
           [key: string]: unknown;
         };
-        /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+        /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
         source: {
           shelfId: string;
           version: number | null;
@@ -2899,7 +2899,7 @@ export type ProposeDraftBody = {
     name: string;
     /** What it is for, in a sentence or two. */
     description?: string;
-    /** Text added to every element: rules that hold from start to finish. */
+    /** Text added to every step: rules that hold from start to finish. */
     standing?: string;
     /** What a run is given when it starts. `{{key}}` in any text becomes the value. Without this, one input: `task`. */
     inputs?: {
@@ -2908,11 +2908,11 @@ export type ProposeDraftBody = {
       description?: string;
       required?: boolean;
     }[];
-    /** The elements, in the order they are gone through. */
+    /** The steps, in the order they are gone through. */
     elements: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id?: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind?: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -2922,7 +2922,7 @@ export type ProposeDraftBody = {
       ask?: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt?: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen?: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs?: {
@@ -2930,7 +2930,7 @@ export type ProposeDraftBody = {
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces?: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin?: {
@@ -2938,7 +2938,7 @@ export type ProposeDraftBody = {
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source?: {
         shelfId: string;
         version: number | null;
@@ -2950,11 +2950,11 @@ export type ProposeDraftBody = {
       };
     }[];
   };
-  /** One element, for the shelf. */
+  /** One step, for the shelf. */
   element?: {
-    /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+    /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
     id?: string;
-    /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+    /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
     kind?: string;
     /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
     name: string;
@@ -2964,7 +2964,7 @@ export type ProposeDraftBody = {
     ask?: string;
     /** For an approval, if you like: what the person should look at before deciding. */
     lookAt?: string;
-    /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+    /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
     doneWhen?: string;
     /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
     needs?: {
@@ -2972,7 +2972,7 @@ export type ProposeDraftBody = {
       name: string;
       note?: string;
     }[];
-    /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+    /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
     produces?: string;
     /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
     origin?: {
@@ -2980,7 +2980,7 @@ export type ProposeDraftBody = {
       name?: string;
       [key: string]: unknown;
     };
-    /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+    /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
     source?: {
       shelfId: string;
       version: number | null;
@@ -3010,9 +3010,9 @@ export type ProposeDraftResult = {
         required: boolean;
       }[];
       elements: {
-        /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+        /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
         id: string;
-        /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+        /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
         kind: string;
         /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
@@ -3022,7 +3022,7 @@ export type ProposeDraftResult = {
         ask: string;
         /** For an approval, if you like: what the person should look at before deciding. */
         lookAt: string;
-        /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+        /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
         doneWhen: string;
         /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
         needs: {
@@ -3030,7 +3030,7 @@ export type ProposeDraftResult = {
           name: string;
           note?: string;
         }[];
-        /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+        /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
         produces: string;
         /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
         origin: {
@@ -3038,7 +3038,7 @@ export type ProposeDraftResult = {
           name?: string;
           [key: string]: unknown;
         };
-        /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+        /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
         source: {
           shelfId: string;
           version: number | null;
@@ -3054,9 +3054,9 @@ export type ProposeDraftResult = {
       };
     } | null;
     element: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -3066,7 +3066,7 @@ export type ProposeDraftResult = {
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -3074,7 +3074,7 @@ export type ProposeDraftResult = {
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -3082,7 +3082,7 @@ export type ProposeDraftResult = {
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -3121,9 +3121,9 @@ export type ProposeDraftResult = {
           required: boolean;
         }[];
         elements: {
-          /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+          /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
           id: string;
-          /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+          /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
           kind: string;
           /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
           name: string;
@@ -3133,7 +3133,7 @@ export type ProposeDraftResult = {
           ask: string;
           /** For an approval, if you like: what the person should look at before deciding. */
           lookAt: string;
-          /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+          /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
           doneWhen: string;
           /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
           needs: {
@@ -3141,7 +3141,7 @@ export type ProposeDraftResult = {
             name: string;
             note?: string;
           }[];
-          /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+          /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
           produces: string;
           /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
           origin: {
@@ -3149,7 +3149,7 @@ export type ProposeDraftResult = {
             name?: string;
             [key: string]: unknown;
           };
-          /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+          /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
           source: {
             shelfId: string;
             version: number | null;
@@ -3165,9 +3165,9 @@ export type ProposeDraftResult = {
         };
       } | null;
       element: {
-        /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+        /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
         id: string;
-        /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+        /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
         kind: string;
         /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
@@ -3177,7 +3177,7 @@ export type ProposeDraftResult = {
         ask: string;
         /** For an approval, if you like: what the person should look at before deciding. */
         lookAt: string;
-        /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+        /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
         doneWhen: string;
         /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
         needs: {
@@ -3185,7 +3185,7 @@ export type ProposeDraftResult = {
           name: string;
           note?: string;
         }[];
-        /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+        /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
         produces: string;
         /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
         origin: {
@@ -3193,7 +3193,7 @@ export type ProposeDraftResult = {
           name?: string;
           [key: string]: unknown;
         };
-        /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+        /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
         source: {
           shelfId: string;
           version: number | null;
@@ -3232,9 +3232,9 @@ export type GetDraftResult = {
         required: boolean;
       }[];
       elements: {
-        /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+        /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
         id: string;
-        /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+        /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
         kind: string;
         /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
@@ -3244,7 +3244,7 @@ export type GetDraftResult = {
         ask: string;
         /** For an approval, if you like: what the person should look at before deciding. */
         lookAt: string;
-        /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+        /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
         doneWhen: string;
         /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
         needs: {
@@ -3252,7 +3252,7 @@ export type GetDraftResult = {
           name: string;
           note?: string;
         }[];
-        /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+        /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
         produces: string;
         /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
         origin: {
@@ -3260,7 +3260,7 @@ export type GetDraftResult = {
           name?: string;
           [key: string]: unknown;
         };
-        /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+        /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
         source: {
           shelfId: string;
           version: number | null;
@@ -3276,9 +3276,9 @@ export type GetDraftResult = {
       };
     } | null;
     element: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -3288,7 +3288,7 @@ export type GetDraftResult = {
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -3296,7 +3296,7 @@ export type GetDraftResult = {
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -3304,7 +3304,7 @@ export type GetDraftResult = {
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -3343,9 +3343,9 @@ export type GetDraftResult = {
           required: boolean;
         }[];
         elements: {
-          /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+          /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
           id: string;
-          /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+          /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
           kind: string;
           /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
           name: string;
@@ -3355,7 +3355,7 @@ export type GetDraftResult = {
           ask: string;
           /** For an approval, if you like: what the person should look at before deciding. */
           lookAt: string;
-          /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+          /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
           doneWhen: string;
           /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
           needs: {
@@ -3363,7 +3363,7 @@ export type GetDraftResult = {
             name: string;
             note?: string;
           }[];
-          /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+          /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
           produces: string;
           /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
           origin: {
@@ -3371,7 +3371,7 @@ export type GetDraftResult = {
             name?: string;
             [key: string]: unknown;
           };
-          /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+          /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
           source: {
             shelfId: string;
             version: number | null;
@@ -3387,9 +3387,9 @@ export type GetDraftResult = {
         };
       } | null;
       element: {
-        /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+        /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
         id: string;
-        /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+        /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
         kind: string;
         /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
@@ -3399,7 +3399,7 @@ export type GetDraftResult = {
         ask: string;
         /** For an approval, if you like: what the person should look at before deciding. */
         lookAt: string;
-        /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+        /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
         doneWhen: string;
         /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
         needs: {
@@ -3407,7 +3407,7 @@ export type GetDraftResult = {
           name: string;
           note?: string;
         }[];
-        /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+        /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
         produces: string;
         /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
         origin: {
@@ -3415,7 +3415,7 @@ export type GetDraftResult = {
           name?: string;
           [key: string]: unknown;
         };
-        /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+        /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
         source: {
           shelfId: string;
           version: number | null;
@@ -3448,7 +3448,7 @@ export type ReviseDraftBody = {
     name: string;
     /** What it is for, in a sentence or two. */
     description?: string;
-    /** Text added to every element: rules that hold from start to finish. */
+    /** Text added to every step: rules that hold from start to finish. */
     standing?: string;
     /** What a run is given when it starts. `{{key}}` in any text becomes the value. Without this, one input: `task`. */
     inputs?: {
@@ -3457,11 +3457,11 @@ export type ReviseDraftBody = {
       description?: string;
       required?: boolean;
     }[];
-    /** The elements, in the order they are gone through. */
+    /** The steps, in the order they are gone through. */
     elements: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id?: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind?: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -3471,7 +3471,7 @@ export type ReviseDraftBody = {
       ask?: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt?: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen?: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs?: {
@@ -3479,7 +3479,7 @@ export type ReviseDraftBody = {
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces?: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin?: {
@@ -3487,7 +3487,7 @@ export type ReviseDraftBody = {
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source?: {
         shelfId: string;
         version: number | null;
@@ -3499,11 +3499,11 @@ export type ReviseDraftBody = {
       };
     }[];
   };
-  /** One element, for the shelf. */
+  /** One step, for the shelf. */
   element?: {
-    /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+    /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
     id?: string;
-    /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+    /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
     kind?: string;
     /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
     name: string;
@@ -3513,7 +3513,7 @@ export type ReviseDraftBody = {
     ask?: string;
     /** For an approval, if you like: what the person should look at before deciding. */
     lookAt?: string;
-    /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+    /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
     doneWhen?: string;
     /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
     needs?: {
@@ -3521,7 +3521,7 @@ export type ReviseDraftBody = {
       name: string;
       note?: string;
     }[];
-    /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+    /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
     produces?: string;
     /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
     origin?: {
@@ -3529,7 +3529,7 @@ export type ReviseDraftBody = {
       name?: string;
       [key: string]: unknown;
     };
-    /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+    /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
     source?: {
       shelfId: string;
       version: number | null;
@@ -3559,9 +3559,9 @@ export type ReviseDraftResult = {
         required: boolean;
       }[];
       elements: {
-        /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+        /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
         id: string;
-        /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+        /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
         kind: string;
         /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
@@ -3571,7 +3571,7 @@ export type ReviseDraftResult = {
         ask: string;
         /** For an approval, if you like: what the person should look at before deciding. */
         lookAt: string;
-        /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+        /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
         doneWhen: string;
         /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
         needs: {
@@ -3579,7 +3579,7 @@ export type ReviseDraftResult = {
           name: string;
           note?: string;
         }[];
-        /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+        /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
         produces: string;
         /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
         origin: {
@@ -3587,7 +3587,7 @@ export type ReviseDraftResult = {
           name?: string;
           [key: string]: unknown;
         };
-        /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+        /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
         source: {
           shelfId: string;
           version: number | null;
@@ -3603,9 +3603,9 @@ export type ReviseDraftResult = {
       };
     } | null;
     element: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -3615,7 +3615,7 @@ export type ReviseDraftResult = {
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -3623,7 +3623,7 @@ export type ReviseDraftResult = {
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -3631,7 +3631,7 @@ export type ReviseDraftResult = {
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -3670,9 +3670,9 @@ export type ReviseDraftResult = {
           required: boolean;
         }[];
         elements: {
-          /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+          /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
           id: string;
-          /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+          /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
           kind: string;
           /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
           name: string;
@@ -3682,7 +3682,7 @@ export type ReviseDraftResult = {
           ask: string;
           /** For an approval, if you like: what the person should look at before deciding. */
           lookAt: string;
-          /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+          /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
           doneWhen: string;
           /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
           needs: {
@@ -3690,7 +3690,7 @@ export type ReviseDraftResult = {
             name: string;
             note?: string;
           }[];
-          /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+          /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
           produces: string;
           /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
           origin: {
@@ -3698,7 +3698,7 @@ export type ReviseDraftResult = {
             name?: string;
             [key: string]: unknown;
           };
-          /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+          /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
           source: {
             shelfId: string;
             version: number | null;
@@ -3714,9 +3714,9 @@ export type ReviseDraftResult = {
         };
       } | null;
       element: {
-        /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+        /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
         id: string;
-        /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+        /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
         kind: string;
         /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
@@ -3726,7 +3726,7 @@ export type ReviseDraftResult = {
         ask: string;
         /** For an approval, if you like: what the person should look at before deciding. */
         lookAt: string;
-        /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+        /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
         doneWhen: string;
         /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
         needs: {
@@ -3734,7 +3734,7 @@ export type ReviseDraftResult = {
           name: string;
           note?: string;
         }[];
-        /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+        /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
         produces: string;
         /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
         origin: {
@@ -3742,7 +3742,7 @@ export type ReviseDraftResult = {
           name?: string;
           [key: string]: unknown;
         };
-        /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+        /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
         source: {
           shelfId: string;
           version: number | null;
@@ -3775,7 +3775,7 @@ export type AcceptDraftBody = {
     name: string;
     /** What it is for, in a sentence or two. */
     description?: string;
-    /** Text added to every element: rules that hold from start to finish. */
+    /** Text added to every step: rules that hold from start to finish. */
     standing?: string;
     /** What a run is given when it starts. `{{key}}` in any text becomes the value. Without this, one input: `task`. */
     inputs?: {
@@ -3784,11 +3784,11 @@ export type AcceptDraftBody = {
       description?: string;
       required?: boolean;
     }[];
-    /** The elements, in the order they are gone through. */
+    /** The steps, in the order they are gone through. */
     elements: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id?: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind?: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -3798,7 +3798,7 @@ export type AcceptDraftBody = {
       ask?: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt?: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen?: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs?: {
@@ -3806,7 +3806,7 @@ export type AcceptDraftBody = {
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces?: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin?: {
@@ -3814,7 +3814,7 @@ export type AcceptDraftBody = {
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source?: {
         shelfId: string;
         version: number | null;
@@ -3826,11 +3826,11 @@ export type AcceptDraftBody = {
       };
     }[];
   };
-  /** The element as edited before accepting. */
+  /** The step as edited before accepting. */
   element?: {
-    /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+    /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
     id?: string;
-    /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+    /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
     kind?: string;
     /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
     name: string;
@@ -3840,7 +3840,7 @@ export type AcceptDraftBody = {
     ask?: string;
     /** For an approval, if you like: what the person should look at before deciding. */
     lookAt?: string;
-    /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+    /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
     doneWhen?: string;
     /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
     needs?: {
@@ -3848,7 +3848,7 @@ export type AcceptDraftBody = {
       name: string;
       note?: string;
     }[];
-    /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+    /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
     produces?: string;
     /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
     origin?: {
@@ -3856,7 +3856,7 @@ export type AcceptDraftBody = {
       name?: string;
       [key: string]: unknown;
     };
-    /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+    /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
     source?: {
       shelfId: string;
       version: number | null;
@@ -3891,9 +3891,9 @@ export type ReturnDraftResult = {
       required: boolean;
     }[];
     elements: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -3903,7 +3903,7 @@ export type ReturnDraftResult = {
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -3911,7 +3911,7 @@ export type ReturnDraftResult = {
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -3919,7 +3919,7 @@ export type ReturnDraftResult = {
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -3935,9 +3935,9 @@ export type ReturnDraftResult = {
     };
   } | null;
   element: {
-    /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+    /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
     id: string;
-    /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+    /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
     kind: string;
     /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
     name: string;
@@ -3947,7 +3947,7 @@ export type ReturnDraftResult = {
     ask: string;
     /** For an approval, if you like: what the person should look at before deciding. */
     lookAt: string;
-    /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+    /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
     doneWhen: string;
     /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
     needs: {
@@ -3955,7 +3955,7 @@ export type ReturnDraftResult = {
       name: string;
       note?: string;
     }[];
-    /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+    /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
     produces: string;
     /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
     origin: {
@@ -3963,7 +3963,7 @@ export type ReturnDraftResult = {
       name?: string;
       [key: string]: unknown;
     };
-    /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+    /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
     source: {
       shelfId: string;
       version: number | null;
@@ -4002,9 +4002,9 @@ export type ReturnDraftResult = {
         required: boolean;
       }[];
       elements: {
-        /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+        /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
         id: string;
-        /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+        /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
         kind: string;
         /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
@@ -4014,7 +4014,7 @@ export type ReturnDraftResult = {
         ask: string;
         /** For an approval, if you like: what the person should look at before deciding. */
         lookAt: string;
-        /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+        /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
         doneWhen: string;
         /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
         needs: {
@@ -4022,7 +4022,7 @@ export type ReturnDraftResult = {
           name: string;
           note?: string;
         }[];
-        /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+        /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
         produces: string;
         /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
         origin: {
@@ -4030,7 +4030,7 @@ export type ReturnDraftResult = {
           name?: string;
           [key: string]: unknown;
         };
-        /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+        /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
         source: {
           shelfId: string;
           version: number | null;
@@ -4046,9 +4046,9 @@ export type ReturnDraftResult = {
       };
     } | null;
     element: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -4058,7 +4058,7 @@ export type ReturnDraftResult = {
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -4066,7 +4066,7 @@ export type ReturnDraftResult = {
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -4074,7 +4074,7 @@ export type ReturnDraftResult = {
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -4155,9 +4155,9 @@ export type RequestDraftResult = {
         required: boolean;
       }[];
       elements: {
-        /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+        /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
         id: string;
-        /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+        /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
         kind: string;
         /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
@@ -4167,7 +4167,7 @@ export type RequestDraftResult = {
         ask: string;
         /** For an approval, if you like: what the person should look at before deciding. */
         lookAt: string;
-        /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+        /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
         doneWhen: string;
         /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
         needs: {
@@ -4175,7 +4175,7 @@ export type RequestDraftResult = {
           name: string;
           note?: string;
         }[];
-        /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+        /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
         produces: string;
         /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
         origin: {
@@ -4183,7 +4183,7 @@ export type RequestDraftResult = {
           name?: string;
           [key: string]: unknown;
         };
-        /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+        /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
         source: {
           shelfId: string;
           version: number | null;
@@ -4199,9 +4199,9 @@ export type RequestDraftResult = {
       };
     } | null;
     element: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -4211,7 +4211,7 @@ export type RequestDraftResult = {
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -4219,7 +4219,7 @@ export type RequestDraftResult = {
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -4227,7 +4227,7 @@ export type RequestDraftResult = {
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -4266,9 +4266,9 @@ export type RequestDraftResult = {
           required: boolean;
         }[];
         elements: {
-          /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+          /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
           id: string;
-          /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+          /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
           kind: string;
           /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
           name: string;
@@ -4278,7 +4278,7 @@ export type RequestDraftResult = {
           ask: string;
           /** For an approval, if you like: what the person should look at before deciding. */
           lookAt: string;
-          /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+          /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
           doneWhen: string;
           /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
           needs: {
@@ -4286,7 +4286,7 @@ export type RequestDraftResult = {
             name: string;
             note?: string;
           }[];
-          /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+          /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
           produces: string;
           /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
           origin: {
@@ -4294,7 +4294,7 @@ export type RequestDraftResult = {
             name?: string;
             [key: string]: unknown;
           };
-          /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+          /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
           source: {
             shelfId: string;
             version: number | null;
@@ -4310,9 +4310,9 @@ export type RequestDraftResult = {
         };
       } | null;
       element: {
-        /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+        /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
         id: string;
-        /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+        /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
         kind: string;
         /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
@@ -4322,7 +4322,7 @@ export type RequestDraftResult = {
         ask: string;
         /** For an approval, if you like: what the person should look at before deciding. */
         lookAt: string;
-        /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+        /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
         doneWhen: string;
         /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
         needs: {
@@ -4330,7 +4330,7 @@ export type RequestDraftResult = {
           name: string;
           note?: string;
         }[];
-        /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+        /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
         produces: string;
         /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
         origin: {
@@ -4338,7 +4338,7 @@ export type RequestDraftResult = {
           name?: string;
           [key: string]: unknown;
         };
-        /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+        /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
         source: {
           shelfId: string;
           version: number | null;
@@ -4654,7 +4654,7 @@ export type AcceptLibraryRequestBody = {
   digest: string;
   /** The workflow as edited before accepting. */
   workflow?: unknown;
-  /** The element as edited before accepting. */
+  /** The step as edited before accepting. */
   element?: unknown;
 };
 
@@ -4733,9 +4733,9 @@ export type ListElementsResult = {
     id: string;
     projectId: string | null;
     element: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -4745,7 +4745,7 @@ export type ListElementsResult = {
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -4753,7 +4753,7 @@ export type ListElementsResult = {
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -4761,7 +4761,7 @@ export type ListElementsResult = {
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -4780,9 +4780,9 @@ export type ListElementsResult = {
     versions: {
       version: number;
       element: {
-        /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+        /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
         id: string;
-        /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+        /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
         kind: string;
         /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
@@ -4792,7 +4792,7 @@ export type ListElementsResult = {
         ask: string;
         /** For an approval, if you like: what the person should look at before deciding. */
         lookAt: string;
-        /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+        /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
         doneWhen: string;
         /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
         needs: {
@@ -4800,7 +4800,7 @@ export type ListElementsResult = {
           name: string;
           note?: string;
         }[];
-        /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+        /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
         produces: string;
         /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
         origin: {
@@ -4808,7 +4808,7 @@ export type ListElementsResult = {
           name?: string;
           [key: string]: unknown;
         };
-        /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+        /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
         source: {
           shelfId: string;
           version: number | null;
@@ -4828,16 +4828,16 @@ export type ListElementsResult = {
     }[];
     /** `current`, or `retired`: kept and still working where it is used, but not offered when inserting and not run by itself. */
     state: "current" | "retired";
-    /** For a retired element: the shelf element to use in its place, when one was named. */
+    /** For a retired step: the saved step to use in its place, when one was named. */
     replacedBy: string | null;
   }[];
   nextCursor: string | null;
 };
 
 export type CreateElementBody = {
-  /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+  /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
   id?: string;
-  /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+  /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
   kind?: string;
   /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
   name: string;
@@ -4847,7 +4847,7 @@ export type CreateElementBody = {
   ask?: string;
   /** For an approval, if you like: what the person should look at before deciding. */
   lookAt?: string;
-  /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+  /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
   doneWhen?: string;
   /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
   needs?: {
@@ -4855,7 +4855,7 @@ export type CreateElementBody = {
     name: string;
     note?: string;
   }[];
-  /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+  /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
   produces?: string;
   /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
   origin?: {
@@ -4863,7 +4863,7 @@ export type CreateElementBody = {
     name?: string;
     [key: string]: unknown;
   };
-  /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+  /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
   source?: {
     shelfId: string;
     version: number | null;
@@ -4879,9 +4879,9 @@ export type CreateElementResult = {
   id: string;
   projectId: string | null;
   element: {
-    /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+    /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
     id: string;
-    /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+    /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
     kind: string;
     /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
     name: string;
@@ -4891,7 +4891,7 @@ export type CreateElementResult = {
     ask: string;
     /** For an approval, if you like: what the person should look at before deciding. */
     lookAt: string;
-    /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+    /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
     doneWhen: string;
     /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
     needs: {
@@ -4899,7 +4899,7 @@ export type CreateElementResult = {
       name: string;
       note?: string;
     }[];
-    /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+    /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
     produces: string;
     /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
     origin: {
@@ -4907,7 +4907,7 @@ export type CreateElementResult = {
       name?: string;
       [key: string]: unknown;
     };
-    /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+    /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
     source: {
       shelfId: string;
       version: number | null;
@@ -4926,9 +4926,9 @@ export type CreateElementResult = {
   versions: {
     version: number;
     element: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -4938,7 +4938,7 @@ export type CreateElementResult = {
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -4946,7 +4946,7 @@ export type CreateElementResult = {
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -4954,7 +4954,7 @@ export type CreateElementResult = {
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -4974,7 +4974,7 @@ export type CreateElementResult = {
   }[];
   /** `current`, or `retired`: kept and still working where it is used, but not offered when inserting and not run by itself. */
   state: "current" | "retired";
-  /** For a retired element: the shelf element to use in its place, when one was named. */
+  /** For a retired step: the saved step to use in its place, when one was named. */
   replacedBy: string | null;
 };
 
@@ -4999,9 +4999,9 @@ export type UpdateElementResult = {
   id: string;
   projectId: string | null;
   element: {
-    /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+    /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
     id: string;
-    /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+    /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
     kind: string;
     /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
     name: string;
@@ -5011,7 +5011,7 @@ export type UpdateElementResult = {
     ask: string;
     /** For an approval, if you like: what the person should look at before deciding. */
     lookAt: string;
-    /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+    /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
     doneWhen: string;
     /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
     needs: {
@@ -5019,7 +5019,7 @@ export type UpdateElementResult = {
       name: string;
       note?: string;
     }[];
-    /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+    /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
     produces: string;
     /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
     origin: {
@@ -5027,7 +5027,7 @@ export type UpdateElementResult = {
       name?: string;
       [key: string]: unknown;
     };
-    /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+    /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
     source: {
       shelfId: string;
       version: number | null;
@@ -5046,9 +5046,9 @@ export type UpdateElementResult = {
   versions: {
     version: number;
     element: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -5058,7 +5058,7 @@ export type UpdateElementResult = {
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -5066,7 +5066,7 @@ export type UpdateElementResult = {
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -5074,7 +5074,7 @@ export type UpdateElementResult = {
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -5094,7 +5094,7 @@ export type UpdateElementResult = {
   }[];
   /** `current`, or `retired`: kept and still working where it is used, but not offered when inserting and not run by itself. */
   state: "current" | "retired";
-  /** For a retired element: the shelf element to use in its place, when one was named. */
+  /** For a retired step: the saved step to use in its place, when one was named. */
   replacedBy: string | null;
 };
 
@@ -5102,9 +5102,9 @@ export type CopyElementResult = {
   id: string;
   projectId: string | null;
   element: {
-    /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+    /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
     id: string;
-    /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+    /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
     kind: string;
     /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
     name: string;
@@ -5114,7 +5114,7 @@ export type CopyElementResult = {
     ask: string;
     /** For an approval, if you like: what the person should look at before deciding. */
     lookAt: string;
-    /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+    /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
     doneWhen: string;
     /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
     needs: {
@@ -5122,7 +5122,7 @@ export type CopyElementResult = {
       name: string;
       note?: string;
     }[];
-    /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+    /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
     produces: string;
     /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
     origin: {
@@ -5130,7 +5130,7 @@ export type CopyElementResult = {
       name?: string;
       [key: string]: unknown;
     };
-    /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+    /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
     source: {
       shelfId: string;
       version: number | null;
@@ -5149,9 +5149,9 @@ export type CopyElementResult = {
   versions: {
     version: number;
     element: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -5161,7 +5161,7 @@ export type CopyElementResult = {
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -5169,7 +5169,7 @@ export type CopyElementResult = {
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -5177,7 +5177,7 @@ export type CopyElementResult = {
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -5197,7 +5197,7 @@ export type CopyElementResult = {
   }[];
   /** `current`, or `retired`: kept and still working where it is used, but not offered when inserting and not run by itself. */
   state: "current" | "retired";
-  /** For a retired element: the shelf element to use in its place, when one was named. */
+  /** For a retired step: the saved step to use in its place, when one was named. */
   replacedBy: string | null;
 };
 
@@ -5220,9 +5220,9 @@ export type ListElementVersionsResult = {
   items: {
     version: number;
     element: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -5232,7 +5232,7 @@ export type ListElementVersionsResult = {
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -5240,7 +5240,7 @@ export type ListElementVersionsResult = {
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -5248,7 +5248,7 @@ export type ListElementVersionsResult = {
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -5288,7 +5288,7 @@ export type GetElementUsageResult = {
 };
 
 export type RetireElementBody = {
-  /** The shelf element to use in its place. The editor then says so wherever a copy of the retired one is. */
+  /** The saved step to use in its place. The editor then says so wherever a copy of the retired one is. */
   replacedBy?: string;
 };
 
@@ -5296,9 +5296,9 @@ export type RetireElementResult = {
   id: string;
   projectId: string | null;
   element: {
-    /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+    /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
     id: string;
-    /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+    /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
     kind: string;
     /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
     name: string;
@@ -5308,7 +5308,7 @@ export type RetireElementResult = {
     ask: string;
     /** For an approval, if you like: what the person should look at before deciding. */
     lookAt: string;
-    /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+    /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
     doneWhen: string;
     /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
     needs: {
@@ -5316,7 +5316,7 @@ export type RetireElementResult = {
       name: string;
       note?: string;
     }[];
-    /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+    /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
     produces: string;
     /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
     origin: {
@@ -5324,7 +5324,7 @@ export type RetireElementResult = {
       name?: string;
       [key: string]: unknown;
     };
-    /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+    /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
     source: {
       shelfId: string;
       version: number | null;
@@ -5343,9 +5343,9 @@ export type RetireElementResult = {
   versions: {
     version: number;
     element: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -5355,7 +5355,7 @@ export type RetireElementResult = {
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -5363,7 +5363,7 @@ export type RetireElementResult = {
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -5371,7 +5371,7 @@ export type RetireElementResult = {
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -5391,7 +5391,7 @@ export type RetireElementResult = {
   }[];
   /** `current`, or `retired`: kept and still working where it is used, but not offered when inserting and not run by itself. */
   state: "current" | "retired";
-  /** For a retired element: the shelf element to use in its place, when one was named. */
+  /** For a retired step: the saved step to use in its place, when one was named. */
   replacedBy: string | null;
 };
 
@@ -5399,9 +5399,9 @@ export type RestoreElementResult = {
   id: string;
   projectId: string | null;
   element: {
-    /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+    /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
     id: string;
-    /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+    /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
     kind: string;
     /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
     name: string;
@@ -5411,7 +5411,7 @@ export type RestoreElementResult = {
     ask: string;
     /** For an approval, if you like: what the person should look at before deciding. */
     lookAt: string;
-    /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+    /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
     doneWhen: string;
     /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
     needs: {
@@ -5419,7 +5419,7 @@ export type RestoreElementResult = {
       name: string;
       note?: string;
     }[];
-    /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+    /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
     produces: string;
     /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
     origin: {
@@ -5427,7 +5427,7 @@ export type RestoreElementResult = {
       name?: string;
       [key: string]: unknown;
     };
-    /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+    /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
     source: {
       shelfId: string;
       version: number | null;
@@ -5446,9 +5446,9 @@ export type RestoreElementResult = {
   versions: {
     version: number;
     element: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -5458,7 +5458,7 @@ export type RestoreElementResult = {
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -5466,7 +5466,7 @@ export type RestoreElementResult = {
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -5474,7 +5474,7 @@ export type RestoreElementResult = {
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -5494,7 +5494,7 @@ export type RestoreElementResult = {
   }[];
   /** `current`, or `retired`: kept and still working where it is used, but not offered when inserting and not run by itself. */
   state: "current" | "retired";
-  /** For a retired element: the shelf element to use in its place, when one was named. */
+  /** For a retired step: the saved step to use in its place, when one was named. */
   replacedBy: string | null;
 };
 
@@ -5532,9 +5532,9 @@ export type UpdateFromShelfResult = {
       required: boolean;
     }[];
     elements: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -5544,7 +5544,7 @@ export type UpdateFromShelfResult = {
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -5552,7 +5552,7 @@ export type UpdateFromShelfResult = {
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -5560,7 +5560,7 @@ export type UpdateFromShelfResult = {
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -5582,7 +5582,7 @@ export type UpdateFromShelfResult = {
 export type RunElementBody = {
   /** The session that will do it. */
   sessionId: string;
-  /** What the element asks for: `task`, when its text uses it. */
+  /** What the step asks for: `task`, when its text uses it. */
   inputs?: {
     [key: string]: string;
   };
@@ -5668,7 +5668,7 @@ export type RunElementResult = {
 };
 
 export type TickRunItemBody = {
-  /** The element whose output it is. */
+  /** The step whose output it is. */
   elementId: string;
   /** Which item, counting from zero. */
   item: number;
@@ -5823,9 +5823,9 @@ export type GetRepositoryWorkflowResult = {
       required: boolean;
     }[];
     elements: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -5835,7 +5835,7 @@ export type GetRepositoryWorkflowResult = {
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -5843,7 +5843,7 @@ export type GetRepositoryWorkflowResult = {
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -5851,7 +5851,7 @@ export type GetRepositoryWorkflowResult = {
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -6020,9 +6020,9 @@ export type ListTasksResult = {
     details: string;
     /** The folder it is done in. For a new terminal: where it starts. Null: the folder new terminals start in. */
     folder: string | null;
-    /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
+    /** The workflow it goes through. Null: it is told as one step, with the details as its task. */
     workflowId: string | null;
-    /** The shelf element it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
+    /** The saved step it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
     elementId: string | null;
     /** True for what the owner arranged beforehand, such as a time of a schedule. It starts when a place is free without being started by hand, still within the limit and the hold, and what its agent adds sets off no rule. Set by the server, never by a caller. */
     unattended: boolean;
@@ -6074,7 +6074,7 @@ export type AddTaskBody = {
   details?: string;
   /** The folder it is done in. Null: the folder new terminals start in. */
   folder?: string | null;
-  /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
+  /** The workflow it goes through. Null: it is told as one step, with the details as its task. */
   workflowId?: string | null;
   /** Where a new terminal for it works. Null: a working copy of its own where the folder can have one. */
   environment?: string | null;
@@ -6107,9 +6107,9 @@ export type AddTaskResult = {
   details: string;
   /** The folder it is done in. For a new terminal: where it starts. Null: the folder new terminals start in. */
   folder: string | null;
-  /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
+  /** The workflow it goes through. Null: it is told as one step, with the details as its task. */
   workflowId: string | null;
-  /** The shelf element it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
+  /** The saved step it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
   elementId: string | null;
   /** True for what the owner arranged beforehand, such as a time of a schedule. It starts when a place is free without being started by hand, still within the limit and the hold, and what its agent adds sets off no rule. Set by the server, never by a caller. */
   unattended: boolean;
@@ -6160,9 +6160,9 @@ export type GetTaskResult = {
   details: string;
   /** The folder it is done in. For a new terminal: where it starts. Null: the folder new terminals start in. */
   folder: string | null;
-  /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
+  /** The workflow it goes through. Null: it is told as one step, with the details as its task. */
   workflowId: string | null;
-  /** The shelf element it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
+  /** The saved step it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
   elementId: string | null;
   /** True for what the owner arranged beforehand, such as a time of a schedule. It starts when a place is free without being started by hand, still within the limit and the hold, and what its agent adds sets off no rule. Set by the server, never by a caller. */
   unattended: boolean;
@@ -6210,7 +6210,7 @@ export type ChangeTaskBody = {
   details?: string;
   /** The folder it is done in. Null: the folder new terminals start in. */
   folder?: string | null;
-  /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
+  /** The workflow it goes through. Null: it is told as one step, with the details as its task. */
   workflowId?: string | null;
   /** Where a new terminal for it works. Null: a working copy of its own where the folder can have one. */
   environment?: string | null;
@@ -6238,9 +6238,9 @@ export type ChangeTaskResult = {
   details: string;
   /** The folder it is done in. For a new terminal: where it starts. Null: the folder new terminals start in. */
   folder: string | null;
-  /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
+  /** The workflow it goes through. Null: it is told as one step, with the details as its task. */
   workflowId: string | null;
-  /** The shelf element it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
+  /** The saved step it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
   elementId: string | null;
   /** True for what the owner arranged beforehand, such as a time of a schedule. It starts when a place is free without being started by hand, still within the limit and the hold, and what its agent adds sets off no rule. Set by the server, never by a caller. */
   unattended: boolean;
@@ -6291,9 +6291,9 @@ export type WithdrawTaskResult = {
   details: string;
   /** The folder it is done in. For a new terminal: where it starts. Null: the folder new terminals start in. */
   folder: string | null;
-  /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
+  /** The workflow it goes through. Null: it is told as one step, with the details as its task. */
   workflowId: string | null;
-  /** The shelf element it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
+  /** The saved step it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
   elementId: string | null;
   /** True for what the owner arranged beforehand, such as a time of a schedule. It starts when a place is free without being started by hand, still within the limit and the hold, and what its agent adds sets off no rule. Set by the server, never by a caller. */
   unattended: boolean;
@@ -6344,9 +6344,9 @@ export type AcceptTaskResult = {
   details: string;
   /** The folder it is done in. For a new terminal: where it starts. Null: the folder new terminals start in. */
   folder: string | null;
-  /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
+  /** The workflow it goes through. Null: it is told as one step, with the details as its task. */
   workflowId: string | null;
-  /** The shelf element it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
+  /** The saved step it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
   elementId: string | null;
   /** True for what the owner arranged beforehand, such as a time of a schedule. It starts when a place is free without being started by hand, still within the limit and the hold, and what its agent adds sets off no rule. Set by the server, never by a caller. */
   unattended: boolean;
@@ -6397,9 +6397,9 @@ export type DeclineTaskResult = {
   details: string;
   /** The folder it is done in. For a new terminal: where it starts. Null: the folder new terminals start in. */
   folder: string | null;
-  /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
+  /** The workflow it goes through. Null: it is told as one step, with the details as its task. */
   workflowId: string | null;
-  /** The shelf element it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
+  /** The saved step it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
   elementId: string | null;
   /** True for what the owner arranged beforehand, such as a time of a schedule. It starts when a place is free without being started by hand, still within the limit and the hold, and what its agent adds sets off no rule. Set by the server, never by a caller. */
   unattended: boolean;
@@ -6450,9 +6450,9 @@ export type RetryTaskResult = {
   details: string;
   /** The folder it is done in. For a new terminal: where it starts. Null: the folder new terminals start in. */
   folder: string | null;
-  /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
+  /** The workflow it goes through. Null: it is told as one step, with the details as its task. */
   workflowId: string | null;
-  /** The shelf element it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
+  /** The saved step it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
   elementId: string | null;
   /** True for what the owner arranged beforehand, such as a time of a schedule. It starts when a place is free without being started by hand, still within the limit and the hold, and what its agent adds sets off no rule. Set by the server, never by a caller. */
   unattended: boolean;
@@ -6503,9 +6503,9 @@ export type ClearTaskResult = {
   details: string;
   /** The folder it is done in. For a new terminal: where it starts. Null: the folder new terminals start in. */
   folder: string | null;
-  /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
+  /** The workflow it goes through. Null: it is told as one step, with the details as its task. */
   workflowId: string | null;
-  /** The shelf element it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
+  /** The saved step it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
   elementId: string | null;
   /** True for what the owner arranged beforehand, such as a time of a schedule. It starts when a place is free without being started by hand, still within the limit and the hold, and what its agent adds sets off no rule. Set by the server, never by a caller. */
   unattended: boolean;
@@ -7148,17 +7148,17 @@ export type ReadProjectFileResult = {
   says: string[];
   /** The terminals that were an agent’s, by name. Each is made as a plain shell. */
   agents: string[];
-  /** What its elements say they need, by element. */
+  /** What its steps say they need, by step. */
   needs: {
     of: string;
     needs: string[];
   }[];
-  /** Everything an agent would be told: every workflow, element, and the task of every schedule, in full. */
+  /** Everything an agent would be told: every workflow, step, and the task of every schedule, in full. */
   texts: {
     title: string;
     text: string;
   }[];
-  /** The workflows and elements that were shared with every project where the file was written, by name. */
+  /** The workflows and steps that were shared with every project where the file was written, by name. */
   shared: string[];
   /** What they become here unless the owner says otherwise. */
   sharedDefault: "shared" | "project";
@@ -7175,7 +7175,7 @@ export type ImportProjectFileBody = {
   places?: {
     [key: string]: string | null;
   };
-  /** What the file's shared workflows and elements become: shared with every project here, or the new project's own. */
+  /** What the file's shared workflows and steps become: shared with every project here, or the new project's own. */
   shared?: "shared" | "project";
   /** Start a fresh shell in each terminal. Off: each is made as a terminal whose shell has not started, with a button to start it. An agent is never started. */
   start?: boolean;
@@ -7374,7 +7374,7 @@ export type ListSchedulesResult = {
     time: string;
     /** The days of the week it runs on. */
     days: ("mon" | "tue" | "wed" | "thu" | "fri" | "sat" | "sun")[];
-    /** What it runs: one element from the shelf, or a workflow. */
+    /** What it runs: one saved step, or a workflow. */
     what: {
       kind: "element";
       elementId: string;
@@ -7440,7 +7440,7 @@ export type AddScheduleBody = {
   time: string;
   /** The days of the week it runs on. */
   days: ("mon" | "tue" | "wed" | "thu" | "fri" | "sat" | "sun")[];
-  /** What it runs: one element from the shelf, or a workflow. */
+  /** What it runs: one saved step, or a workflow. */
   what: {
     kind: "element";
     elementId: string;
@@ -7476,7 +7476,7 @@ export type AddScheduleResult = {
   time: string;
   /** The days of the week it runs on. */
   days: ("mon" | "tue" | "wed" | "thu" | "fri" | "sat" | "sun")[];
-  /** What it runs: one element from the shelf, or a workflow. */
+  /** What it runs: one saved step, or a workflow. */
   what: {
     kind: "element";
     elementId: string;
@@ -7538,7 +7538,7 @@ export type ChangeScheduleBody = {
   time?: string;
   /** The days of the week it runs on. */
   days?: ("mon" | "tue" | "wed" | "thu" | "fri" | "sat" | "sun")[];
-  /** What it runs: one element from the shelf, or a workflow. */
+  /** What it runs: one saved step, or a workflow. */
   what?: {
     kind: "element";
     elementId: string;
@@ -7574,7 +7574,7 @@ export type ChangeScheduleResult = {
   time: string;
   /** The days of the week it runs on. */
   days: ("mon" | "tue" | "wed" | "thu" | "fri" | "sat" | "sun")[];
-  /** What it runs: one element from the shelf, or a workflow. */
+  /** What it runs: one saved step, or a workflow. */
   what: {
     kind: "element";
     elementId: string;
@@ -7640,7 +7640,7 @@ export type RunScheduleResult = {
     time: string;
     /** The days of the week it runs on. */
     days: ("mon" | "tue" | "wed" | "thu" | "fri" | "sat" | "sun")[];
-    /** What it runs: one element from the shelf, or a workflow. */
+    /** What it runs: one saved step, or a workflow. */
     what: {
       kind: "element";
       elementId: string;
@@ -7719,9 +7719,9 @@ export type ProposeSessionTaskResult = {
   details: string;
   /** The folder it is done in. For a new terminal: where it starts. Null: the folder new terminals start in. */
   folder: string | null;
-  /** The workflow it goes through. Null: it is told as one element, with the details as its task. */
+  /** The workflow it goes through. Null: it is told as one step, with the details as its task. */
   workflowId: string | null;
-  /** The shelf element it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
+  /** The saved step it runs, where it runs one and no workflow. Set by the server for what a schedule adds. */
   elementId: string | null;
   /** True for what the owner arranged beforehand, such as a time of a schedule. It starts when a place is free without being started by hand, still within the limit and the hold, and what its agent adds sets off no rule. Set by the server, never by a caller. */
   unattended: boolean;
@@ -8842,11 +8842,11 @@ export type WriteRecapResult = {
 
 export type ReportSessionRunBody = {
   type: "done";
-  /** The element being finished. Without it: the current one. */
+  /** The step being finished. Without it: the current one. */
   elementId?: string;
   /** What was done, for whoever comes next. */
   note?: string;
-  /** What the element produced, when it declares an output other than a note: for a checklist, `{"items": [{"text": "…"}]}`. */
+  /** What the step produced, when it declares an output other than a note: for a checklist, `{"items": [{"text": "…"}]}`. */
   output?: unknown;
 } | {
   type: "blocked";
@@ -8971,9 +8971,9 @@ export type ListSessionDraftsResult = {
         required: boolean;
       }[];
       elements: {
-        /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+        /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
         id: string;
-        /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+        /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
         kind: string;
         /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
@@ -8983,7 +8983,7 @@ export type ListSessionDraftsResult = {
         ask: string;
         /** For an approval, if you like: what the person should look at before deciding. */
         lookAt: string;
-        /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+        /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
         doneWhen: string;
         /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
         needs: {
@@ -8991,7 +8991,7 @@ export type ListSessionDraftsResult = {
           name: string;
           note?: string;
         }[];
-        /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+        /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
         produces: string;
         /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
         origin: {
@@ -8999,7 +8999,7 @@ export type ListSessionDraftsResult = {
           name?: string;
           [key: string]: unknown;
         };
-        /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+        /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
         source: {
           shelfId: string;
           version: number | null;
@@ -9015,9 +9015,9 @@ export type ListSessionDraftsResult = {
       };
     } | null;
     element: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -9027,7 +9027,7 @@ export type ListSessionDraftsResult = {
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -9035,7 +9035,7 @@ export type ListSessionDraftsResult = {
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -9043,7 +9043,7 @@ export type ListSessionDraftsResult = {
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -9082,9 +9082,9 @@ export type ListSessionDraftsResult = {
           required: boolean;
         }[];
         elements: {
-          /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+          /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
           id: string;
-          /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+          /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
           kind: string;
           /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
           name: string;
@@ -9094,7 +9094,7 @@ export type ListSessionDraftsResult = {
           ask: string;
           /** For an approval, if you like: what the person should look at before deciding. */
           lookAt: string;
-          /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+          /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
           doneWhen: string;
           /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
           needs: {
@@ -9102,7 +9102,7 @@ export type ListSessionDraftsResult = {
             name: string;
             note?: string;
           }[];
-          /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+          /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
           produces: string;
           /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
           origin: {
@@ -9110,7 +9110,7 @@ export type ListSessionDraftsResult = {
             name?: string;
             [key: string]: unknown;
           };
-          /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+          /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
           source: {
             shelfId: string;
             version: number | null;
@@ -9126,9 +9126,9 @@ export type ListSessionDraftsResult = {
         };
       } | null;
       element: {
-        /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+        /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
         id: string;
-        /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+        /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
         kind: string;
         /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
@@ -9138,7 +9138,7 @@ export type ListSessionDraftsResult = {
         ask: string;
         /** For an approval, if you like: what the person should look at before deciding. */
         lookAt: string;
-        /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+        /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
         doneWhen: string;
         /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
         needs: {
@@ -9146,7 +9146,7 @@ export type ListSessionDraftsResult = {
           name: string;
           note?: string;
         }[];
-        /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+        /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
         produces: string;
         /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
         origin: {
@@ -9154,7 +9154,7 @@ export type ListSessionDraftsResult = {
           name?: string;
           [key: string]: unknown;
         };
-        /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+        /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
         source: {
           shelfId: string;
           version: number | null;
@@ -9181,7 +9181,7 @@ export type ProposeSessionDraftBody = {
     name: string;
     /** What it is for, in a sentence or two. */
     description?: string;
-    /** Text added to every element: rules that hold from start to finish. */
+    /** Text added to every step: rules that hold from start to finish. */
     standing?: string;
     /** What a run is given when it starts. `{{key}}` in any text becomes the value. Without this, one input: `task`. */
     inputs?: {
@@ -9190,11 +9190,11 @@ export type ProposeSessionDraftBody = {
       description?: string;
       required?: boolean;
     }[];
-    /** The elements, in the order they are gone through. */
+    /** The steps, in the order they are gone through. */
     elements: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id?: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind?: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -9204,7 +9204,7 @@ export type ProposeSessionDraftBody = {
       ask?: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt?: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen?: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs?: {
@@ -9212,7 +9212,7 @@ export type ProposeSessionDraftBody = {
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces?: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin?: {
@@ -9220,7 +9220,7 @@ export type ProposeSessionDraftBody = {
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source?: {
         shelfId: string;
         version: number | null;
@@ -9232,11 +9232,11 @@ export type ProposeSessionDraftBody = {
       };
     }[];
   };
-  /** One element, for the shelf. */
+  /** One step, for the shelf. */
   element?: {
-    /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+    /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
     id?: string;
-    /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+    /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
     kind?: string;
     /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
     name: string;
@@ -9246,7 +9246,7 @@ export type ProposeSessionDraftBody = {
     ask?: string;
     /** For an approval, if you like: what the person should look at before deciding. */
     lookAt?: string;
-    /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+    /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
     doneWhen?: string;
     /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
     needs?: {
@@ -9254,7 +9254,7 @@ export type ProposeSessionDraftBody = {
       name: string;
       note?: string;
     }[];
-    /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+    /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
     produces?: string;
     /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
     origin?: {
@@ -9262,7 +9262,7 @@ export type ProposeSessionDraftBody = {
       name?: string;
       [key: string]: unknown;
     };
-    /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+    /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
     source?: {
       shelfId: string;
       version: number | null;
@@ -9291,9 +9291,9 @@ export type ProposeSessionDraftResult = {
       required: boolean;
     }[];
     elements: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -9303,7 +9303,7 @@ export type ProposeSessionDraftResult = {
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -9311,7 +9311,7 @@ export type ProposeSessionDraftResult = {
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -9319,7 +9319,7 @@ export type ProposeSessionDraftResult = {
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -9335,9 +9335,9 @@ export type ProposeSessionDraftResult = {
     };
   } | null;
   element: {
-    /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+    /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
     id: string;
-    /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+    /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
     kind: string;
     /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
     name: string;
@@ -9347,7 +9347,7 @@ export type ProposeSessionDraftResult = {
     ask: string;
     /** For an approval, if you like: what the person should look at before deciding. */
     lookAt: string;
-    /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+    /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
     doneWhen: string;
     /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
     needs: {
@@ -9355,7 +9355,7 @@ export type ProposeSessionDraftResult = {
       name: string;
       note?: string;
     }[];
-    /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+    /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
     produces: string;
     /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
     origin: {
@@ -9363,7 +9363,7 @@ export type ProposeSessionDraftResult = {
       name?: string;
       [key: string]: unknown;
     };
-    /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+    /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
     source: {
       shelfId: string;
       version: number | null;
@@ -9402,9 +9402,9 @@ export type ProposeSessionDraftResult = {
         required: boolean;
       }[];
       elements: {
-        /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+        /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
         id: string;
-        /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+        /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
         kind: string;
         /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
         name: string;
@@ -9414,7 +9414,7 @@ export type ProposeSessionDraftResult = {
         ask: string;
         /** For an approval, if you like: what the person should look at before deciding. */
         lookAt: string;
-        /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+        /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
         doneWhen: string;
         /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
         needs: {
@@ -9422,7 +9422,7 @@ export type ProposeSessionDraftResult = {
           name: string;
           note?: string;
         }[];
-        /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+        /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
         produces: string;
         /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
         origin: {
@@ -9430,7 +9430,7 @@ export type ProposeSessionDraftResult = {
           name?: string;
           [key: string]: unknown;
         };
-        /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+        /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
         source: {
           shelfId: string;
           version: number | null;
@@ -9446,9 +9446,9 @@ export type ProposeSessionDraftResult = {
       };
     } | null;
     element: {
-      /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
+      /** Its ID inside its workflow. It stays the same when the step is edited, so that a run can tell which step it is on. You do not write it: it is made for you. */
       id: string;
-      /** What sort of element it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in an element is run by a computer. */
+      /** What sort of step it is: `instructions` (text an agent reads and follows) or `approval` (a place where the run stops until a person has decided). Nothing in a step is run by a computer. */
       kind: string;
       /** What it is called: one line of plain text, shown in lists, in the strip of a run and in terminals. */
       name: string;
@@ -9458,7 +9458,7 @@ export type ProposeSessionDraftResult = {
       ask: string;
       /** For an approval, if you like: what the person should look at before deciding. */
       lookAt: string;
-      /** One line: how to tell that the element is finished. The agent is told to report done when this is true. */
+      /** One line: how to tell that the step is finished. The agent is told to report done when this is true. */
       doneWhen: string;
       /** What whoever does it must have and Aubergine does not supply: an MCP server, a command, access to something. Shown before a run, with what the agent's setup has; nothing here is checked or installed. */
       needs: {
@@ -9466,7 +9466,7 @@ export type ProposeSessionDraftResult = {
         name: string;
         note?: string;
       }[];
-      /** What it hands over when it is done: `note` (a few words, which every element can hand over) or `checklist` (a list the next element and you can tick). */
+      /** What it hands over when it is done: `note` (a few words, which every step can hand over) or `checklist` (a list the next step and you can tick). */
       produces: string;
       /** Where it came from: made here, a template, a file, a draft an agent wrote, a repository. Kept for you to see; nothing is decided by it. */
       origin: {
@@ -9474,7 +9474,7 @@ export type ProposeSessionDraftResult = {
         name?: string;
         [key: string]: unknown;
       };
-      /** For a copy of a shelf element: which element and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for an element that is not such a copy. */
+      /** For a copy of a saved step: which step and which of its versions it was copied from, and a mark of the content as copied. From these the editor says whether the copy is unchanged, was changed here, or has a newer version on the shelf. Null for a step that is not such a copy. */
       source: {
         shelfId: string;
         version: number | null;
@@ -9918,13 +9918,13 @@ export interface Client {
    */
   reportRun(args: { runId: string; body: ReportRunBody } & CallOptions): Promise<ReportRunResult>;
   /**
-   * Approve the element a run waits on.
+   * Approve the step a run waits on.
    *
    * `POST /v1/runs/{runId}/approve`. Signed-in browser only: no API token may call this.
    */
   approveRun(args: { runId: string; body: ApproveRunBody } & CallOptions): Promise<ApproveRunResult>;
   /**
-   * Send a run that waits for approval back to an earlier element.
+   * Send a run that waits for approval back to an earlier step.
    *
    * `POST /v1/runs/{runId}/send-back`. Signed-in browser only: no API token may call this.
    */
@@ -9936,7 +9936,7 @@ export interface Client {
    */
   startRuns(args: { workflowId: string; body: StartRunsBody } & CallOptions): Promise<StartRunsResult>;
   /**
-   * The board: every run that is going, by workflow and element.
+   * The board: every run that is going, by workflow and step.
    *
    * `GET /v1/board`. Scope: `read`.
    */
@@ -9954,7 +9954,7 @@ export interface Client {
    */
   listDrafts(args?: { query?: ListDraftsQuery } & CallOptions): Promise<ListDraftsResult>;
   /**
-   * Propose a workflow or an element as a draft.
+   * Propose a workflow or a step as a draft.
    *
    * `POST /v1/drafts`. Scope: `workflows:write`.
    */
@@ -9996,7 +9996,7 @@ export interface Client {
    */
   listDraftRecords(args?: { query?: ListDraftRecordsQuery } & CallOptions): Promise<ListDraftRecordsResult>;
   /**
-   * Ask the agent in a session to write a workflow or an element.
+   * Ask the agent in a session to write a workflow or a step.
    *
    * `POST /v1/draft-requests`. Signed-in browser only: no API token may call this.
    */
@@ -10086,55 +10086,55 @@ export interface Client {
    */
   removeLibraryInstalled(args: { installedId: string } & CallOptions): Promise<void>;
   /**
-   * List the elements on the shelf.
+   * List the saved steps.
    *
    * `GET /v1/elements`. Scope: `read`.
    */
   listElements(args?: { query?: ListElementsQuery } & CallOptions): Promise<ListElementsResult>;
   /**
-   * Put an element on the shelf.
+   * Put a saved step.
    *
    * `POST /v1/elements`. Scope: `workflows:write`.
    */
   createElement(args: { body: CreateElementBody } & CallOptions): Promise<CreateElementResult>;
   /**
-   * Change an element on the shelf.
+   * Change a saved step.
    *
    * `PATCH /v1/elements/{elementId}`. Scope: `workflows:write`.
    */
   updateElement(args: { elementId: string; body: UpdateElementBody } & CallOptions): Promise<UpdateElementResult>;
   /**
-   * Take an element off the shelf.
+   * Take a step off the shelf.
    *
    * `DELETE /v1/elements/{elementId}`. Scope: `workflows:write`.
    */
   removeElement(args: { elementId: string } & CallOptions): Promise<void>;
   /**
-   * Duplicate an element on the shelf.
+   * Duplicate a saved step.
    *
    * `POST /v1/elements/{elementId}/copy`. Scope: `workflows:write`.
    */
   copyElement(args: { elementId: string } & CallOptions): Promise<CopyElementResult>;
   /**
-   * The versions of a shelf element.
+   * The versions of a saved step.
    *
    * `GET /v1/elements/{elementId}/versions`. Scope: `read`.
    */
   listElementVersions(args: { elementId: string; query?: ListElementVersionsQuery } & CallOptions): Promise<ListElementVersionsResult>;
   /**
-   * Where a shelf element is used.
+   * Where a saved step is used.
    *
    * `GET /v1/elements/{elementId}/usage`. Scope: `read`.
    */
   getElementUsage(args: { elementId: string } & CallOptions): Promise<GetElementUsageResult>;
   /**
-   * Retire a shelf element.
+   * Retire a saved step.
    *
    * `POST /v1/elements/{elementId}/retire`. Signed-in browser only: no API token may call this.
    */
   retireElement(args: { elementId: string; body?: RetireElementBody } & CallOptions): Promise<RetireElementResult>;
   /**
-   * Bring a retired shelf element back.
+   * Bring a retired saved step back.
    *
    * `POST /v1/elements/{elementId}/restore`. Signed-in browser only: no API token may call this.
    */
@@ -10146,13 +10146,13 @@ export interface Client {
    */
   updateFromShelf(args: { workflowId: string; elementId: string; body: UpdateFromShelfBody } & CallOptions): Promise<UpdateFromShelfResult>;
   /**
-   * Run one element by itself, on a session.
+   * Run one step by itself, on a session.
    *
    * `POST /v1/elements/{elementId}/run`. Scope: `runs:write`.
    */
   runElement(args: { elementId: string; body: RunElementBody } & CallOptions): Promise<RunElementResult>;
   /**
-   * Tick an item of what an element produced.
+   * Tick an item of what a step produced.
    *
    * `POST /v1/runs/{runId}/ticks`. Scope: `runs:write`.
    */

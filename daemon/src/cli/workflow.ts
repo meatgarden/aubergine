@@ -118,7 +118,7 @@ export function parseWorkflowCommand(words: readonly string[]): WorkflowCommand 
       const { value: comment, rest: after } = takeOption(afterTo, '--comment');
       const run = flagsOf(after, [], 'send-back').join(' ').trim();
       if (run === '') throw new UsageError('workflow send-back needs a run: its ID, or the name of its terminal. See: aubergine board');
-      if (to === null || to.trim() === '') throw new UsageError('workflow send-back needs --to <element>: the earlier element to do again, by name, ID or number');
+      if (to === null || to.trim() === '') throw new UsageError('workflow send-back needs --to <element>: the earlier step to do again, by name, ID or number');
       if (comment === null || comment.trim() === '') throw new UsageError('workflow send-back needs --comment "<what should change>": the agent is told it');
       return { action: 'send-back', run, to, comment };
     }
@@ -146,7 +146,7 @@ export function parseWorkflowCommand(words: readonly string[]): WorkflowCommand 
     }
     case 'goto': {
       const element = flagsOf(rest, [], 'goto').join(' ').trim();
-      if (element === '') throw new UsageError('workflow goto needs an element: its name, ID or number');
+      if (element === '') throw new UsageError('workflow goto needs a step: its name, ID or number');
       return { action: 'goto', element };
     }
     case 'pause':
@@ -190,7 +190,7 @@ function proposeFile(words: readonly string[], what: string): string {
 export function parseElementCommand(words: readonly string[]): WorkflowCommand {
   const [action, ...rest] = words;
   const name = (what: string, parts: readonly string[]): string => {
-    if (parts.join(' ').trim() === '') throw new UsageError(`element ${what} needs the name of an element`);
+    if (parts.join(' ').trim() === '') throw new UsageError(`element ${what} needs the name of a step`);
     return parts.join(' ');
   };
   switch (action) {
@@ -208,7 +208,7 @@ export function parseElementCommand(words: readonly string[]): WorkflowCommand {
       return { action: 'propose', kind: 'element', file: proposeFile(rest, 'element') };
     case 'run': {
       const run = parseWorkflowCommand(['run', ...rest]);
-      if (run.action !== 'run') throw new UsageError('element run needs the name of an element');
+      if (run.action !== 'run') throw new UsageError('element run needs the name of a step');
       return { action: 'element-run', query: run.query, session: run.session, inputs: run.inputs, replace: run.replace };
     }
     default:
@@ -243,7 +243,7 @@ export function resolveElement(elements: readonly { id: string; name: string }[]
   if (found) return found.id;
   const starts = elements.filter((e) => e.name.toLowerCase().startsWith(wanted));
   if (starts.length === 1 && starts[0]) return starts[0].id;
-  throw new UsageError(`No element matches "${query}". The elements are: ${elements.map((e, index) => `${index + 1}. ${e.name}`).join(', ')}`);
+  throw new UsageError(`No step matches "${query}". The steps are: ${elements.map((e, index) => `${index + 1}. ${e.name}`).join(', ')}`);
 }
 
 export function formatWorkflows(workflows: readonly WorkflowSummary[], liveRuns: ReadonlyMap<string, number>): string {
@@ -273,7 +273,7 @@ export function formatWorkflow(workflow: WorkflowDetail): string {
   const lines = [`${workflow.name} (version ${workflow.version})`];
   if (current.description) lines.push(current.description);
   lines.push('', `Inputs: ${current.inputs.length === 0 ? 'none' : current.inputs.map((i) => `${i.key} (${i.label}${i.required ? ', needed' : ''})`).join(', ')}`);
-  if (current.standing.trim()) lines.push('', 'For every element:', indent(current.standing.trim()));
+  if (current.standing.trim()) lines.push('', 'For every step:', indent(current.standing.trim()));
   current.elements.forEach((element, index) => {
     lines.push('', `${index + 1}. ${element.name}  [${element.id}]`);
     if (element.instructions.trim()) lines.push(indent(element.instructions.trim()));
@@ -394,11 +394,11 @@ export async function runWorkflowCommand(command: WorkflowCommand, deps: Workflo
           : client.createWorkflow({
               body: {
                 name: command.workflowName,
-                elements: [{ name: 'First element', instructions: 'The task: {{task}}\n\nSay here what to do.', doneWhen: 'Say here how to tell it is done.' }],
+                elements: [{ name: 'First step', instructions: 'The task: {{task}}\n\nSay here what to do.', doneWhen: 'Say here how to tell it is done.' }],
               },
             }),
       );
-      print(`Made the workflow "${made.name}" with ${made.elements.length === 1 ? 'one element' : `${made.elements.length} elements`}: ${made.elements.join(' → ')}.`);
+      print(`Made the workflow "${made.name}" with ${made.elements.length === 1 ? 'one step' : `${made.elements.length} steps`}: ${made.elements.join(' → ')}.`);
       print(`Change it with: aubergine workflow edit "${made.name}"   Run it with: aubergine workflow run "${made.name}" --input task="…"`);
       return 0;
     }
@@ -503,7 +503,7 @@ export async function runWorkflowCommand(command: WorkflowCommand, deps: Workflo
     case 'element-list': {
       const shelf = await owner((client) => collect(client.each.listElements()));
       if (shelf.length === 0) {
-        print('No elements on the shelf yet. Put one there from a workflow in the browser, or ask an agent for one.');
+        print('No saved steps yet. Put one there from a workflow in the browser, or ask an agent for one.');
         return 0;
       }
       const width = Math.max(...shelf.map((item) => item.element.name.length));
@@ -567,7 +567,7 @@ export async function runWorkflowCommand(command: WorkflowCommand, deps: Workflo
         if (command.action === 'approve') {
           const run = await owner((client) => client.approveRun({ runId: card.runId, body: { ...(card.elementId !== null ? { elementId: card.elementId } : {}), ...(command.comment !== null ? { comment: command.comment } : {}) } }));
           print(showControl(`Approved "${card.elementName}" on "${card.sessionName}". ${run.run.status === 'finished' ? 'The run is finished.' : `The run goes on: ${run.position}.`}`));
-          if (run.run.status === 'running') print(run.kickoffTyped ? 'The agent has been told to read its status.' : 'Nothing was typed into the terminal: no agent was seen in front there. It reads the new element with: aubergine workflow status');
+          if (run.run.status === 'running') print(run.kickoffTyped ? 'The agent has been told to read its status.' : 'Nothing was typed into the terminal: no agent was seen in front there. It reads the new step with: aubergine workflow status');
         } else {
           const detail = await owner((client) => client.getRun({ runId: card.runId }));
           const run = await owner((client) => client.sendBackRun({ runId: card.runId, body: { elementId: resolveElement(detail.elements, command.to), comment: command.comment } }));
@@ -606,7 +606,7 @@ async function runInSession(command: Extract<WorkflowCommand, { action: 'brief' 
         return 0;
       case 'propose': {
         const draft = await client.proposeSessionDraft({ sessionId, body: proposalFrom(command.kind, await deps.readText(command.file)) });
-        print(`Handed in ${command.kind === 'element' ? 'the element' : 'the workflow'} as a draft${draft.revision > 1 ? ` (version ${draft.revision})` : ''}. A person reads it before it can be used; it may come back with a comment, which \`aubergine workflow brief\` will then show.`);
+        print(`Handed in ${command.kind === 'element' ? 'the step' : 'the workflow'} as a draft${draft.revision > 1 ? ` (version ${draft.revision})` : ''}. A person reads it before it can be used; it may come back with a comment, which \`aubergine workflow brief\` will then show.`);
         return 0;
       }
       case 'status':

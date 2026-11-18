@@ -10,7 +10,8 @@ import { nodeMode, type NodeMode } from './culling';
 import { MoveToCanvas } from './MoveToCanvas';
 import { NotePanel } from './NotePanel';
 import { SnapshotView } from './SnapshotView';
-import { StatusBadges } from './StatusBadges';
+import { StatusBadges, TitleDot } from './StatusBadges';
+import { useUnseenNotes } from './notes-seen';
 import { currentLayout, useApp } from './store';
 import { TerminalView } from './TerminalView';
 import { colorClass, colorStyle } from './color';
@@ -100,6 +101,8 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
   const noteShown = noteOpen && (noteAsked || room === 'full');
   noteShownRef.current = noteShown;
   const hasNote = (session?.note ?? '') !== '';
+  // Entries added to its note log since the notes were last opened in this browser: said on the one button that opens them.
+  const unseen = useUnseenNotes(sessionId, session?.noteLog.length ?? 0);
 
   // Live only while on screen and large enough to read; see culling.ts.
   const modeRef = useRef<NodeMode>('live');
@@ -142,6 +145,7 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
         }
       />
       <header className="node-title" onDoubleClick={() => setDraft(name)}>
+        {session && <TitleDot session={session} focused={focused} />}
         {draft === null ? (
           <span className="node-name" title={hint('terminal.rename', 'Double-click to rename')} data-testid="node-name">
             {name}
@@ -162,15 +166,13 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
             }}
           />
         )}
-        {draft === null && !exited && session && session.attention.state !== 'none' && (
-          <span
-            className={`badge-attention is-${session.attention.state}`}
-            title={session.attention.message ?? undefined}
-            data-testid="badge-attention"
-          >
-            {session.attention.state === 'waiting' ? 'waiting for you' : session.attention.state === 'done' ? 'finished' : 'working'}
+        {draft === null && !exited && session && (session.attention.state === 'waiting' || session.attention.state === 'done') && (
+          // The state in words, where it is not the ordinary one. Working is said by the mark alone.
+          <span className={`badge-attention is-${session.attention.state}`} title={session.attention.message ?? undefined} data-testid="badge-attention">
+            {session.attention.state === 'waiting' ? 'waiting for you' : 'finished'}
           </span>
         )}
+        {draft === null && !exited && session && <StatusBadges session={session} />}
         {draft === null && <EnvironmentChip sessionId={sessionId} />}
         {draft === null && <ListMark sessionId={sessionId} variant="node" />}
         {draft === null && session?.typedBy && <TypedBy by={session.typedBy} />}
@@ -183,7 +185,6 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
             also on desktop
           </span>
         )}
-        {draft === null && !exited && session && <StatusBadges session={session} focused={focused} />}
         {draft === null && session && canResumeAgent(session) && (
           <button
             type="button"
@@ -206,7 +207,8 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
         )}
         {draft === null && (session?.tags.length ?? 0) > 0 && (
           <button type="button" className="ui-chip nodrag" title={hint('terminal.tags', `Tags: ${session?.tags.join(', ')}`)} aria-label={`Tags of ${name}: ${session?.tags.join(', ')}`} onClick={() => useApp.getState().request({ kind: 'tags', id: sessionId })} data-testid="node-tags">
-            #{session?.tags.length}
+            #{session?.tags[0]}
+            {(session?.tags.length ?? 0) > 1 ? ` +${(session?.tags.length ?? 1) - 1}` : ''}
           </button>
         )}
         <button
@@ -218,6 +220,11 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
           onClick={() => setNoteOpen(!noteShown)}
         >
           Note
+          {unseen > 0 && !noteShown && (
+            <span className="node-note-new" title={`${unseen} new in its note log`} data-testid="note-new">
+              {unseen}
+            </span>
+          )}
         </button>
         {/* The list of canvases to move to hangs from the title; its own button is not shown, the menu's line and the key ask for it. */}
         {draft === null && <MoveToCanvas sessionId={sessionId} name={name} />}
@@ -389,18 +396,6 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
       )}
       {noteShown && (mode === 'live' || exited) && (
         <NotePanel sessionId={sessionId} onClose={() => setNoteOpen(false)} takeKeyboard={noteAsked} />
-      )}
-      {noteOpen && (mode === 'live' || exited) && !noteAsked && room === 'tab' && (
-        <button
-          type="button"
-          className={`note-tab nodrag nopan${hasNote ? ' has-note' : ''}`}
-          title={hasNote ? 'Show the note (a terminal beside this one leaves no room to keep it open)' : 'Add a note'}
-          aria-label={`Show the note for ${name}`}
-          data-testid="note-tab"
-          onClick={() => setNoteOpen(true)}
-        >
-          Note
-        </button>
       )}
     </div>
   );

@@ -8,7 +8,7 @@ Every screen is made from one set of sizes, colours, spaces, shapes and controls
 | --- | --- |
 | `web/src/tokens.css` | The tokens: every size, weight, colour, space, corner, control height and layer, for both themes. |
 | `web/src/ui/ui.css` | The pieces: the one button, field, select, chip, tab, menu, card, heading. Outside any layer, so it decides. |
-| `web/src/ui/index.tsx` | The same pieces as components, for the kind of a thing (`Button`, `IconButton`, `TextField`, `Select`, `Segmented`, `Badge`, `Card`, `Row`, `SectionTitle`, `EmptyState`, `Menu`, `ScreenHead`). |
+| `web/src/ui/index.tsx` | The same pieces as components, for the kind of a thing (`Button`, `IconButton`, `TextField`, `Select`, `Segmented`, `Badge`, `StateDot`, `Card`, `Row`, `SectionTitle`, `EmptyState`, `Menu`, `ScreenHead`). |
 | `web/src/styles.css` | The screens' own rules: where things are put. In the layer `legacy`, below the pieces. |
 | `web/src/vendor.css` | The canvas library's and the terminal's own styles, in the lowest layer. |
 
@@ -81,10 +81,26 @@ Not to be pressed now, and busy, look the same everywhere (half as strong). One 
 
 One height (`--chip`, 20px), `--font-meta`, a pill. A count and a status are the same piece in different colours (`Badge` with a tone). A chip that can be pressed (a tag, a filter) is the same pill with a line round it.
 
+## One thing shouts
+
+The colour of waiting is filled in one place on the page: the count beside **For you** at the top, and only while something waits. Everything else that says the same says it quietly:
+
+- **A count on a tab** (a canvas, a part of the side panel) is a plain number in `--text-muted`. The number of what waits on the owner may be written in `--attention-text`; it is never filled.
+- **A state in words** (waiting for you, finished, exit 1) is a chip in the soft tint with coloured words, in a row, in a title, anywhere. Finished is `--ok`, not `--attention`.
+- **The mark of a state** is one dot (`StateDot`): 8px in a slot 16px wide, coloured by the state (waiting, finished, working, new output, failed, nothing new), hollow for what is put away or over. The list, a terminal's title and a card on the Board draw the same dot from the same function (`dotTone`), so they cannot disagree. Its word is its label for whoever cannot see the colour. No letters or signs stand for a state.
+- **A terminal's line** is one width (2px) in every state: `--border` ordinarily, `--attention` while it waits, `--accent` while it is selected or typed into. Selected wins the line; the chip in the title still says that it waits. Nothing is drawn outside the line.
+
+The browser test "calm canvas" counts what is filled with the colour of waiting and measures the lines and the dots.
+
+## Choice controls
+
+A tick box or a radio button is 16px, one gap (`--space-2`) from its words and level with their first line. A label that directly holds one lays the two out itself, so no screen sets that gap. "one look" measures it wherever it measures.
+
 ## Rows, cards, headings
 
-- **A row of a list:** a column 16px wide for its state, its name in `--text` on the first line, what is known about it in `--text-muted` on the second, its actions quiet at the right, shown while the pointer or the keyboard is on the row.
+- **A row of a list:** the dot of its state in a slot 16px wide, then its name in `--text` with the whole first line; on the second its state as a soft chip where that is not the ordinary one, then what is known about it in `--text-muted`; its one menu quiet at the right, shown while the pointer or the keyboard is on the row. Nothing else is on a row.
 - **A card:** `--gutter-card` inside, `--radius-surface`, a line round it.
+- **A heading inside a list** (a canvas's name over its terminals, Parked): strong words on the list's gutter with an arrow that folds it and a plain count. No fill, open or shut.
 - **The heading of a part** (`SectionTitle`): `--font-title`, strong, 24px above and 8px below.
 - **Nothing here yet** (`EmptyState`): a sentence and one thing to do.
 - **The head of a screen** (`ScreenHead`): its name in `--font-screen`, a line under it where one helps, Close at the right. It stays in view while the screen scrolls.

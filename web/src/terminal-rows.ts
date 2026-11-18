@@ -24,6 +24,48 @@ export const STATE_WORD: Record<RowState, string> = {
   ended: 'ended',
 };
 
+/**
+ * The one mark of a terminal: a dot of one size, coloured by what the terminal is doing. The list, a terminal's
+ * title and the Board draw the same dot from this, so they cannot disagree. `hollow` is a terminal that is put
+ * away or has ended. The word is what the dot says to whoever cannot see its colour.
+ */
+export type DotTone = 'waiting' | 'finished' | 'working' | 'unread' | 'failed' | 'ordinary' | 'hollow';
+export const DOT_WORD: Record<DotTone, string> = {
+  waiting: 'waiting for you',
+  finished: 'finished',
+  working: 'working',
+  unread: 'new output',
+  failed: 'the last command failed',
+  ordinary: 'nothing new',
+  hollow: 'put away',
+};
+
+export function dotTone(session: Session, parked = false): DotTone {
+  const state = rowState(session);
+  if (state === 'ended') return 'hollow';
+  if (state === 'waiting') return session.attention.state === 'done' ? 'finished' : 'waiting';
+  if (state === 'processing') return 'working';
+  if (state === 'failed') return 'failed';
+  if (parked) return 'hollow';
+  return state === 'unread' ? 'unread' : 'ordinary';
+}
+
+/**
+ * What a terminal runs, short enough to read at a glance: the program and the last part of the first path it was
+ * given ("sh demo-agent.sh"), never a quoted absolute path. The whole line is for a tooltip.
+ */
+export function shortCommand(line: string | null | undefined): string {
+  if (!line) return '';
+  // Only the first command of a line that holds several.
+  const words = ((line.trim().split(/\s*(?:;|&&|\|\|?)\s*/)[0] ?? '').match(/'[^']*'|"[^"]*"|\S+/g) ?? []).map((word) => word.replace(/^['"]|['"]$/g, ''));
+  const last = (word: string): string => word.replace(/\/+$/, '').split('/').at(-1) ?? word;
+  const program = last(words[0] ?? '');
+  const first = words.slice(1).find((word) => !word.startsWith('-'));
+  const rest = first === undefined ? '' : first.includes('/') ? last(first) : first;
+  const short = [program, rest].filter(Boolean).join(' ');
+  return short.length > 40 ? `${short.slice(0, 39)}…` : short;
+}
+
 export function rowState(session: Session): RowState {
   if (session.state === 'exited') return 'ended';
   if (needsUser(session.attention)) return 'waiting';

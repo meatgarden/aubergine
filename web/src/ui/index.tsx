@@ -56,6 +56,20 @@ export function Badge({ tone = 'neutral', className, ...rest }: HTMLAttributes<H
   return <span className={join('ui-badge', TONE_CLASS[tone], className)} {...rest} />;
 }
 
+export type DotTone = 'waiting' | 'finished' | 'working' | 'unread' | 'failed' | 'ordinary' | 'hollow';
+
+/**
+ * The one mark of a state: a dot of one size in a slot of one width, coloured by the state, hollow for what is put
+ * away. Its word is said to whoever cannot see the colour. The list, a terminal's title and the Board use this.
+ */
+export function StateDot({ tone, word, className, ...rest }: HTMLAttributes<HTMLSpanElement> & { tone: DotTone; word: string }) {
+  return (
+    <span className={join('ui-dot', `is-${tone}`, className)} role="img" aria-label={word} title={word} data-testid="state-dot" data-tone={tone} {...rest}>
+      <span aria-hidden="true" />
+    </span>
+  );
+}
+
 /** A few lines about one thing, set apart. */
 export function Card({ className, ...rest }: HTMLAttributes<HTMLDivElement>) {
   return <div className={join('ui-card', className)} {...rest} />;

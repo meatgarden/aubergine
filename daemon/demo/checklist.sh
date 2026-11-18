@@ -1,7 +1,7 @@
 #!/bin/sh
-# A stand-in for an agent that was given one element to do by itself, an
+# A stand-in for an agent that was given one step to do by itself, an
 # element that produces a checklist. It hands the list in, and then proposes
-# an element of its own for the owner to review.
+# a step of its own for the owner to review.
 aubergine="$AUBERGINE_BIN/aubergine"
 # shellcheck source=/dev/null
 . "$(dirname "$0")/lib.sh"
@@ -35,4 +35,4 @@ say "> aubergine element propose --file element.json"
 "$aubergine" element propose --file "$work/element.json" | head -2
 say ""
 say "The list is on this terminal's run: tick what is done."
-say "The element waits for you under Review: nothing an agent writes is used until you accept it."
+say "The step waits for you under Review: nothing an agent writes is used until you accept it."

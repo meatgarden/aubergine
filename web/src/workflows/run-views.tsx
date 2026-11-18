@@ -48,7 +48,7 @@ function Pipeline({ picture, elements, live, now }: RunViewProps) {
                 <Output value={entry.output} ticks={entry.ticks} onTick={(item, ticked) => void tickItem(run.id, segment.id, item, ticked)} />
               </div>
             )}
-            {shown && element && (Detail ? <Detail element={element} inputs={run.inputs} /> : <p className="sheet-note">This element is of a kind this version cannot show: {element.kind}.</p>)}
+            {shown && element && (Detail ? <Detail element={element} inputs={run.inputs} /> : <p className="sheet-note">This step is of a kind this version cannot show: {element.kind}.</p>)}
           </li>
         );
       })}

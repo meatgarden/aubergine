@@ -115,7 +115,7 @@ const COLLECT = {
 const LIST = { items: [{ text: 'Review the retry change' }, { text: 'Answer about the release date', detail: 'Asked twice.' }, { text: 'Book the room' }] };
 const FLOW = { name: 'Two steps', elements: [{ name: 'First', instructions: 'Do the first thing with {{task}}.' }, { name: 'Second', instructions: 'Do the second thing.' }] };
 
-describe('the example: an agent writes an element, the owner reads it, it is run by itself', () => {
+describe('the example: an agent writes a step, the owner reads it, it is run by itself', () => {
   it('goes from a request, through a draft sent back once, to a checklist ticked after a restart', async () => {
     const agent = agentSession('helper');
 
@@ -139,9 +139,9 @@ describe('the example: an agent writes an element, the owner reads it, it is run
     // The owner reads it: the whole text an agent would be told, and what it needs.
     const draftId = proposed.body.id as string;
     const read = await asOwner('GET', `/v1/drafts/${draftId}`);
-    expect(read.body.text).toContain('Element 1 of 1: Collect my to-dos');
-    expect(read.body.text).toContain('This element needs: an MCP server: team chat.');
-    expect(read.body.text).toContain('This element produces a checklist.');
+    expect(read.body.text).toContain('Step 1 of 1: Collect my to-dos');
+    expect(read.body.text).toContain('This step needs: an MCP server: team chat.');
+    expect(read.body.text).toContain('This step produces a checklist.');
     expect(read.body).toMatchObject({ previousText: null, needs: [{ kind: 'mcp', name: 'team chat' }] });
 
     // Sent back with a comment. Again only the fixed sentence is typed; the comment is in the brief.
@@ -184,7 +184,7 @@ describe('the example: an agent writes an element, the owner reads it, it is run
 
     // Done without a checklist is refused, with what is expected. With one, the run is finished.
     const status = await asSession(agent, 'GET', `/v1/sessions/${agent.id}/run`);
-    expect(status.body.text).toContain('This element produces a checklist.');
+    expect(status.body.text).toContain('This step produces a checklist.');
     const without = await asSession(agent, 'POST', `/v1/sessions/${agent.id}/run/report`, { type: 'done', note: 'done!' });
     expect(without.status).toBe(409);
     expect(without.body.error.message).toContain('produces a checklist, and none was handed in');
@@ -221,7 +221,7 @@ describe('the example: an agent writes an element, the owner reads it, it is run
     expect(hub.state.shelf).toHaveLength(1);
   });
 
-  it('passes a ticked checklist on to the next element of a workflow, and keeps ticks through a restart while the run is going', async () => {
+  it('passes a ticked checklist on to the next step of a workflow, and keeps ticks through a restart while the run is going', async () => {
     const worker = fakeSession('worker');
     const workflow = await asOwner('POST', '/v1/workflows', { name: 'To-dos', elements: [COLLECT, { name: 'Do them', instructions: 'Do the items the owner ticked.' }] });
     const run = await asOwner('POST', `/v1/sessions/${worker.id}/runs`, { workflowId: workflow.body.id, inputs: { task: 'today' } });
@@ -260,7 +260,7 @@ describe('a draft is inert until it is accepted', () => {
     for (const id of ids) {
       expect((await asOwner('POST', `/v1/sessions/${session.id}/runs`, { workflowId: id, inputs: { task: 'x' } })).status, 'as a workflow').toBe(404);
       expect((await asOwner('POST', '/v1/runs', { workflowId: id, inputs: { task: 'x' } })).status).toBe(404);
-      expect((await asOwner('POST', `/v1/elements/${id}/run`, { sessionId: session.id, inputs: {} })).status, 'as an element').toBe(404);
+      expect((await asOwner('POST', `/v1/elements/${id}/run`, { sessionId: session.id, inputs: {} })).status, 'as a step').toBe(404);
       expect((await asOwner('GET', `/v1/workflows/${id}`)).status).toBe(404);
       expect((await call(token, 'POST', `/v1/sessions/${session.id}/runs`, { workflowId: id, inputs: { task: 'x' } })).status).toBe(404);
     }
@@ -458,7 +458,7 @@ describe('who may do what with drafts', () => {
 });
 
 describe('the shelf', () => {
-  it('holds elements: create, change, duplicate, remove, and run one by itself on a plain shell', async () => {
+  it('holds steps: create, change, duplicate, remove, and run one by itself on a plain shell', async () => {
     const made = await asOwner('POST', '/v1/elements', COLLECT);
     expect(made.status).toBe(201);
     expect(made.body.element).toMatchObject({ id: 'collect-my-to-dos', name: 'Collect my to-dos', needs: [{ kind: 'mcp', name: 'team chat' }] });
@@ -490,7 +490,7 @@ describe('the shelf', () => {
     expect(state.version ?? 14).toBe(14);
   });
 
-  it('a workflow left over from running one element is cleared at the next start', async () => {
+  it('a workflow left over from running one step is cleared at the next start', async () => {
     const made = await asOwner('POST', '/v1/elements', { name: 'Alone', instructions: 'Do it.' });
     const shell = fakeSession('shell');
     const run = await asOwner('POST', `/v1/elements/${made.body.id}/run`, { sessionId: shell.id, inputs: {} });

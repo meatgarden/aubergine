@@ -20,7 +20,7 @@ export function draftOf(version: WorkflowVersion): Draft {
 export const sameDraft = (a: Draft, b: Draft): boolean => JSON.stringify(a) === JSON.stringify(b);
 
 /** A new element at the end. Its ID is made once, from its first name, and then stays: runs know elements by it. */
-export function addElement(draft: Draft, name = 'New element', kind = 'instructions'): Draft {
+export function addElement(draft: Draft, name = 'New step', kind = 'instructions'): Draft {
   const id = elementIdFor(name, draft.elements.map((e) => e.id));
   return { ...draft, elements: [...draft.elements, { id, kind, name, instructions: '', ask: '', lookAt: '', doneWhen: '', needs: [], produces: 'note', origin: { kind: 'local' }, source: null, extra: {} }] };
 }
@@ -57,8 +57,8 @@ export function draftProblems(draft: Draft, limits: WorkflowLimits): string[] {
     return parsed.error.issues.map((issue) => {
       const [where, index, field] = issue.path;
       if (where === 'name') return 'The workflow needs a name.';
-      if (where === 'elements' && typeof index !== 'number') return 'A workflow needs at least one element.';
-      if (where === 'elements' && field === 'name') return `Element ${Number(index) + 1} needs a name.`;
+      if (where === 'elements' && typeof index !== 'number') return 'A workflow needs at least one step.';
+      if (where === 'elements' && field === 'name') return `Step ${Number(index) + 1} needs a name.`;
       if (where === 'inputs' && field === 'key') return `Input ${Number(index) + 1}: ${issue.message}.`;
       if (where === 'inputs' && field === 'label') return `Input ${Number(index) + 1} needs a label.`;
       return `${issue.path.join('.')}: ${issue.message}`;

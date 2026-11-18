@@ -67,7 +67,7 @@ export function momentOf(event: ChangeEvent, memory: AwayMemory, at: string, wor
     case 'draft.changed': {
       if (event.draft.status !== 'waiting' || memory.drafts.has(event.draft.id)) return null;
       memory.drafts.add(event.draft.id);
-      return { at, kind: 'draft-arrived', sessionId: event.draft.sessionId, runId: null, detail: `${event.draft.sessionId ? 'handed in' : 'A program handed in'} ${event.draft.kind === 'element' ? 'an element' : 'a workflow'} for you to review.` };
+      return { at, kind: 'draft-arrived', sessionId: event.draft.sessionId, runId: null, detail: `${event.draft.sessionId ? 'handed in' : 'A program handed in'} ${event.draft.kind === 'element' ? 'a step' : 'a workflow'} for you to review.` };
     }
     case 'draft.removed':
       memory.drafts.delete(event.draftId);

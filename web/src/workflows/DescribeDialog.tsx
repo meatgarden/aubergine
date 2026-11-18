@@ -8,7 +8,7 @@ import { ScreenHead } from '../ui';
 const NEW_AGENT = 'new';
 
 /**
- * "Describe an element…" and "Describe a workflow…": say what is wanted, pick
+ * "Describe a step…" and "Describe a workflow…": say what is wanted, pick
  * a terminal with an agent, send. The agent is typed one fixed sentence; it
  * reads the description with a command, and what it writes comes back as a
  * draft to review.

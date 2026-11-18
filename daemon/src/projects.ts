@@ -259,22 +259,22 @@ registerSharedKind({
 });
 registerSharedKind({
   kind: 'element',
-  title: 'Shelf elements',
-  says: 'A shared element is on the shelf of every project. A schedule or a rule of another project that runs an element which becomes one project’s own stops, and says so once on your list.',
+  title: 'Saved steps',
+  says: 'A shared step is on the shelf of every project. A schedule or a rule of another project that runs a step which becomes one project’s own stops, and says so once on your list.',
   things: (state) => state.shelf.map((item) => ({ id: item.id, name: item.element.name, projectId: item.projectId })),
   move: (id, projectId, hub) => hub.emit({ type: 'sharing.moved', kind: 'element', id, projectId }),
 });
 registerSharedKind({
   kind: 'source',
   title: 'Library sources',
-  says: 'Where workflows and elements are read from. A shared source is listed in every project’s library.',
+  says: 'Where workflows and steps are read from. A shared source is listed in every project’s library.',
   things: (state) => state.library.sources.map((source) => ({ id: source.id, name: source.name || source.claims || source.address || source.kind, projectId: source.projectId })),
   move: (id, projectId, hub) => hub.emit({ type: 'sharing.moved', kind: 'source', id, projectId }),
 });
 registerSharedKind({
   kind: 'installed',
   title: 'Installed from the library',
-  says: 'What was installed from a source, with where it came from. Moving it here does not move the workflow or the element it became: those are in their own lists above.',
+  says: 'What was installed from a source, with where it came from. Moving it here does not move the workflow or the step it became: those are in their own lists above.',
   things: (state) => state.library.installed.map((item) => ({ id: item.id, name: item.name, projectId: item.projectId })),
   move: (id, projectId, hub) => hub.emit({ type: 'sharing.moved', kind: 'installed', id, projectId }),
 });

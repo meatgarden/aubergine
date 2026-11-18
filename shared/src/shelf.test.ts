@@ -25,7 +25,7 @@ const workflowOf = (elements: Element[], more: Partial<Workflow> = {}): Workflow
   ...more,
 });
 
-describe('a mark of what an element says', () => {
+describe('a mark of what a step says', () => {
   it('is the same for the same content, whatever else differs, and different when any part of the content does', () => {
     const base = element();
     expect(elementHash(base)).toMatch(/^[0-9a-f]{16}$/);
@@ -53,7 +53,7 @@ describe('what can be told about a copy', () => {
       ['copied from the newest of several', { shelfVersions: 3, copiedFrom: 3, changedHere: false, onShelf: true }, 'unchanged'],
       ['from before versions were kept, untouched', { shelfVersions: 4, copiedFrom: null, changedHere: false, onShelf: true }, 'unknown'],
       ['from before versions were kept, edited', { shelfVersions: 4, copiedFrom: null, changedHere: true, onShelf: true }, 'unknown'],
-      ['its shelf element was removed', { shelfVersions: 2, copiedFrom: 1, changedHere: false, onShelf: false }, 'gone'],
+      ['its saved step was removed', { shelfVersions: 2, copiedFrom: 1, changedHere: false, onShelf: false }, 'gone'],
     ];
     for (const [what, given, expected] of table) {
       const item = onShelf(given.shelfVersions);
@@ -76,7 +76,7 @@ describe('what can be told about a copy', () => {
     expect(copyWords(copyStatus(element(), []))).toBe('');
   });
 
-  it('says so when the source is retired, and which element to use when one was named', () => {
+  it('says so when the source is retired, and which step to use when one was named', () => {
     const better = onShelf(1, { element: element({ name: 'Tidy up, carefully' }) });
     const old = onShelf(1, { state: 'retired', replacedBy: better.id });
     const copy = { ...old.element, source: sourceOf(old) };
@@ -93,7 +93,7 @@ describe('deciding about a newer version', () => {
   const untouched: Element = { ...first.element, id: 'in-the-workflow', origin: { kind: 'shelf', shelfId: item.id }, source: { shelfId: item.id, version: 1, hash: elementHash(first.element) } };
   const edited: Element = { ...untouched, instructions: 'My own words.' };
 
-  it('taking it puts the shelf\'s content in place of the copy\'s, and keeps the element\'s ID', () => {
+  it('taking it puts the shelf\'s content in place of the copy\'s, and keeps the step\'s ID', () => {
     for (const copy of [untouched, edited]) {
       const taken = decideUpdate(copy, item, 'take');
       expect(contentOf(taken)).toEqual(contentOf(item.element));
@@ -124,7 +124,7 @@ describe('deciding about a newer version', () => {
 });
 
 describe('who says where a copy came from', () => {
-  it('for anyone but the owner an element keeps the mark it had, and a new one has none', () => {
+  it('for anyone but the owner a step keeps the mark it had, and a new one has none', () => {
     const mark = { shelfId: newId(), version: 2, hash: '0123456789abcdef' };
     const before = [element({ id: 'a', source: mark }), element({ id: 'b' })];
     const claimed = { shelfId: mark.shelfId, version: 9, hash: 'ffffffffffffffff' };
@@ -139,7 +139,7 @@ describe('who says where a copy came from', () => {
   });
 });
 
-describe('where a shelf element is used', () => {
+describe('where a saved step is used', () => {
   it('lists the workflows that hold a copy, what can be told of each copy, and the versions of the workflow that hold one', () => {
     const item = onShelf(2);
     const other = onShelf(1);
@@ -148,7 +148,7 @@ describe('where a shelf element is used', () => {
     const using = workflowOf([element({ id: 'own' }), behind, current], { name: 'Uses it' });
     using.versions = [{ ...using.versions[0]!, elements: [element({ id: 'own' })] }, { ...using.versions[0]!, number: 2 }, { ...using.versions[0]!, number: 3 }];
     const not = workflowOf([element({ id: 'own' }), { ...other.element, id: 'x', source: sourceOf(other) }], { name: 'Does not' });
-    const hidden = workflowOf([current], { name: 'Made to run one element', listed: false });
+    const hidden = workflowOf([current], { name: 'Made to run one step', listed: false });
     expect(usesOf(item.id, [not, using, hidden], [item, other])).toEqual([
       {
         workflowId: using.id,
@@ -174,7 +174,7 @@ describe('the versions that are kept', () => {
     expect(keptVersions(item.versions.slice(0, 3), new Set())).toHaveLength(3);
   });
 
-  it('what an element said before versions were kept is its version 1', () => {
+  it('what a step said before versions were kept is its version 1', () => {
     const { versions: _versions, ...old } = onShelf(1);
     const withFirst = withFirstVersion({ ...old, versions: [] });
     expect(withFirst.versions).toEqual([{ version: 1, element: old.element, at: old.updatedAt, by: { kind: 'person' }, note: '' }]);
@@ -208,7 +208,7 @@ describe('a workflow file', () => {
   });
 });
 
-describe('what is in an element', () => {
+describe('what is in a step', () => {
   it('is read from the schemas: every field has words, and the page lists them all', () => {
     const { element: fields, shelf } = elementReference();
     expect(fields.map((f) => f.field)).toEqual(['name', 'instructions', 'doneWhen', 'needs', 'produces', 'kind', 'ask', 'lookAt', 'origin', 'source', 'id', 'extra']);
@@ -218,6 +218,6 @@ describe('what is in an element', () => {
     expect(fields.filter((f) => f.written === 'by you').map((f) => f.field)).toEqual(['name', 'instructions', 'doneWhen', 'needs', 'produces', 'ask', 'lookAt']);
     const page = elementReferencePage();
     for (const field of [...fields, ...shelf]) expect(page).toContain(`| \`${field.field}\` |`);
-    expect(page.startsWith('# What is in an element')).toBe(true);
+    expect(page.startsWith('# What is in a step')).toBe(true);
   });
 });

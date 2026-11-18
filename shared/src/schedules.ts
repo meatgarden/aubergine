@@ -61,7 +61,7 @@ export const Schedule = z.object({
   name: PlainName.describe('What it is called. Shown in lists and beside what it hands in.'),
   time: TimeOfDay.describe("The time of day, on this computer's clock and in its time zone."),
   days: Days.describe('The days of the week it runs on.'),
-  what: ScheduleWhat.describe('What it runs: one element from the shelf, or a workflow.'),
+  what: ScheduleWhat.describe('What it runs: one saved step, or a workflow.'),
   where: ScheduleWhere.describe('Where: a terminal, or a new agent terminal on a canvas.'),
   folder: z.string().startsWith('/').max(4096).nullable().default(null).describe('For a new terminal: the folder it starts in. Null: the folder new terminals start in.'),
   environment: EnvironmentKindName.nullable().default(null).describe('For a new terminal: where it works. Null: a working copy of its own where the folder can have one.'),

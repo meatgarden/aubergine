@@ -124,7 +124,7 @@ export class Drafts {
       return { kind: 'element', workflow: null, element };
     }
     const workflow = body.workflow;
-    if (workflow === undefined) throw new BadInputError('Give a workflow or an element');
+    if (workflow === undefined) throw new BadInputError('Give a workflow or a step');
     const content = this.workflows.checked({ ...workflow, elements: withIds(workflow.elements) as ElementInput[] });
     return { kind: 'workflow', workflow: content, element: null };
   }
@@ -172,7 +172,7 @@ export class Drafts {
 
   private replace(draft: Draft, body: ProposeDraftRequest): Draft {
     const proposal = this.proposal(body);
-    if (proposal.kind !== draft.kind) throw new ConflictError(`This draft is ${draft.kind === 'element' ? 'an element' : 'a workflow'}; what was handed in is not.`);
+    if (proposal.kind !== draft.kind) throw new ConflictError(`This draft is ${draft.kind === 'element' ? 'a step' : 'a workflow'}; what was handed in is not.`);
     const had = draft.workflow !== null || draft.element !== null;
     return this.save({
       ...draft,
@@ -312,13 +312,13 @@ export class Drafts {
 
   shelfElement(elementId: string): ShelfElement {
     const item = this.hub.state.shelf.find((e) => e.id === elementId);
-    if (!item) throw new NotFoundError(`No element ${elementId} on the shelf`);
+    if (!item) throw new NotFoundError(`No step ${elementId} on the shelf`);
     return item;
   }
 
   /** A new element on the shelf: what it says is its version 1. Where a copy came from is not something a shelf element has. */
   addToShelf(input: Element, by: Actor = OWNER): ShelfElement {
-    if (this.hub.state.shelf.length >= SHELF_MAX) throw new ConflictError(`The shelf holds ${SHELF_MAX} elements; take some off first.`);
+    if (this.hub.state.shelf.length >= SHELF_MAX) throw new ConflictError(`The shelf holds ${SHELF_MAX} steps; take some off first.`);
     const at = new Date().toISOString();
     const element: Element = { ...input, source: null };
     const item: ShelfElement = { id: newId(), projectId: ownerOfNew(this.hub.state, 'element'), element, createdAt: at, updatedAt: at, version: 1, versions: [{ version: 1, element, at, by, note: '' }], state: 'current', replacedBy: null };
@@ -373,7 +373,7 @@ export class Drafts {
   retire(elementId: string, replacedBy: string | null): ShelfElement {
     const item = this.shelfElement(elementId);
     if (replacedBy !== null) {
-      if (replacedBy === elementId) throw new BadInputError('An element cannot be replaced by itself.');
+      if (replacedBy === elementId) throw new BadInputError('A step cannot be replaced by itself.');
       const other = this.shelfElement(replacedBy);
       if (other.state === 'retired') throw new ConflictError(`"${other.element.name}" is retired too. Name one that is in use, or none.`);
     }
@@ -395,7 +395,7 @@ export class Drafts {
   runnable(elementId: string, projectId: string = projectNow(this.hub.state)): Element {
     const item = this.shelfElement(elementId);
     // An element that is another project's own is, to this project, not there.
-    if (!visibleIn(item, projectId)) throw new NotFoundError(`No shelf element ${elementId}`);
+    if (!visibleIn(item, projectId)) throw new NotFoundError(`No saved step ${elementId}`);
     if (item.state === 'retired') {
       const other = item.replacedBy ? this.hub.state.shelf.find((e) => e.id === item.replacedBy) : undefined;
       throw new ConflictError(`"${item.element.name}" is retired and is not run by itself.${other ? ` Use "${other.element.name}".` : ''}`);

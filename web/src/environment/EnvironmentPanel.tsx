@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { bytesWords, countsWords, type Difference, type Ending, type EnvironmentDetail, type SessionEnvironment } from '@aubergine/shared';
 import { api } from '../api';
 import { useApp } from '../store';
@@ -63,7 +63,7 @@ export function Endings({ environment, onDone }: { environment: SessionEnvironme
         <ul>
           {endings.map((ending) => (
             <li key={ending.choice}>
-              <button type="button" className="quiet" disabled={busy || !ending.available} onClick={() => (ending.asksAgain !== null ? setAsking(ending) : void act(ending, false))} data-testid="copy-ending" data-choice={ending.choice}>
+              <button type="button" disabled={busy || !ending.available} onClick={() => (ending.asksAgain !== null ? setAsking(ending) : void act(ending, false))} data-testid="copy-ending" data-choice={ending.choice}>
                 {ending.label}
               </button>
               <span className="sheet-note">{ending.available ? ending.says : ending.reason}</span>
@@ -150,6 +150,12 @@ export function EnvironmentPanel() {
     };
   }, [id, file, detail]);
 
+  // The panel takes the keyboard when it opens, so that Escape closes it from wherever it was opened.
+  const panel = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (id) panel.current?.focus();
+  }, [id]);
+
   if (!id) return null;
   const close = (): void => useApp.getState().viewEnvironment(null);
   return (
@@ -165,7 +171,7 @@ export function EnvironmentPanel() {
         }
       }}
     >
-      <div className="dialog sheet copy-panel" role="dialog" aria-label="What changed" data-testid="copy-panel">
+      <div className="dialog sheet copy-panel" role="dialog" aria-label="What changed" data-testid="copy-panel" tabIndex={-1} ref={panel}>
         <header className="sheet-head">
           <h2>
             {environment ? environment.sessionName : 'Gone'}
@@ -254,8 +260,8 @@ export function EnvironmentPanel() {
                 <div className="copy-difference">{file === null ? <p className="sheet-note">Choose a file to read its difference from where the working copy started.</p> : difference ? <DifferenceText difference={difference} /> : <p className="sheet-note">Reading…</p>}</div>
               </div>
             )}
-            <div className="wf-label">What to do with it</div>
-            <p className="sheet-note">Nothing is ever merged, pushed or rebased by Aubergine, and the branch you have checked out is never changed.</p>
+            <h3>What to do with it</h3>
+            <p>Nothing is ever merged, pushed or rebased by Aubergine, and the branch you have checked out is never changed.</p>
             <Endings
               environment={environment}
               onDone={(removed, says) => {

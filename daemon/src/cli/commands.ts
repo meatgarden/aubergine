@@ -151,10 +151,10 @@ export const USAGE = `Usage: aubergine <command>
                              Make an API token for a program of yours. Its secret is printed once, on standard output
   token list                 The API tokens, with their scopes and when each was last used
   token revoke <name|id>     Revoke a token: it stops working at once
-  workflow list              The workflows, with how many elements each has and how many runs are going
-  workflow show <name>       One workflow in full: what every element says
+  workflow list              The workflows, with how many steps each has and how many runs are going
+  workflow show <name>       One workflow in full: what every step says
   workflow new <name> [--template <template>]
-                             Make a workflow, from a template or with one element to start from
+                             Make a workflow, from a template or with one step to start from
   workflow templates         The templates that come with Aubergine
   workflow edit <name>       Change a workflow in your editor ($VISUAL or $EDITOR); --file <path> takes it from a file
   workflow copy <name> [new name]
@@ -164,10 +164,10 @@ export const USAGE = `Usage: aubergine <command>
   workflow run <name> [--session <name|id>] [--input key=value …] [--replace]
                              Start a run on a session: this one, when typed inside a session
   workflow approve <run> [--comment <text>]
-                             Approve the element a run waits on. The run is its ID or the name of its terminal.
+                             Approve the step a run waits on. The run is its ID or the name of its terminal.
                              Only you can: no token and no agent's own command does this
   workflow send-back <run> --to <element> --comment <text>
-                             Send a run that waits for approval back to an earlier element; the agent is told your comment
+                             Send a run that waits for approval back to an earlier step; the agent is told your comment
   task add <title> [--details <text>] [--folder <folder>] [--workflow <name>] [--to any | <terminal> | new:<canvas>] [--label <word>]
                              Add a task to the queue for agents. Typed inside a canvas terminal it is a proposal, which waits for your yes
   task list | show <task>    The queue: what is at work, what is next, what waits for your yes
@@ -207,20 +207,20 @@ export const USAGE = `Usage: aubergine <command>
   schedule on | off | run | remove <schedule>
                              run: try it now, as one of its times. It goes through the queue
   board [--canvas <name>] [--workflow <name>] [--status <status>] [--tag <tag>]
-                             Every run that is going, by workflow and element: who waits for you, who is blocked
+                             Every run that is going, by workflow and step: who waits for you, who is blocked
   Inside a session that is on a run:
   workflow status            Where the run stands and what to do now
   workflow done [--note <text>] [--output <file>]
-                             The current element is finished; prints what comes next. --output hands in what the
-                             element produces when that is more than a note (a checklist); - reads standard input
-  workflow brief             Inside a session that was asked to write a workflow or an element: the request
+                             The current step is finished; prints what comes next. --output hands in what the
+                             step produces when that is more than a note (a checklist); - reads standard input
+  workflow brief             Inside a session that was asked to write a workflow or a step: the request
   workflow propose --file <file>   Hand a workflow in as a draft, for a person to read (- or nothing: standard input)
-  element propose --file <file>    The same for one element
-  element list | show <name> | remove <name>     The shelf of elements
+  element propose --file <file>    The same for one step
+  element list | show <name> | remove <name>     The saved steps
   element run <name> [--session <name|id>] [--input key=value …] [--replace]
-                             Run one element by itself on a session
+                             Run one step by itself on a session
   workflow blocked <reason>  You cannot go on without a person
-  workflow goto <element>    Jump to an element, by name, ID or number
+  workflow goto <element>    Jump to a step, by name, ID or number
   workflow pause | resume | stop
   screen <session>           What that terminal shows now, as text
   output <session> [--lines n]   What it printed recently
@@ -238,7 +238,7 @@ export const USAGE = `Usage: aubergine <command>
   library refresh [source]   Read a source again (all of them, with none named). The only thing that fetches
   library remove <source>    Remove a source. What was installed from it stays
   library export <workflow> --to <folder> [--element] [--version v] [--id id]
-                             Write a workflow (or, with --element, a shelf element) as a file into a folder and list
+                             Write a workflow (or, with --element, a saved step) as a file into a folder and list
                              it in that folder's index, so the folder can be a source. Never commits or pushes
   history [folder]           The agent's earlier conversations in a folder (this one, when none is given): name or first
                              prompt, when, how many turns, and whether a canvas terminal is on it now

@@ -2,7 +2,7 @@
 
 A library source is a folder, or a Git repository, with one index file at its root and one file per item. Aubergine reads the index and the files it names, and nothing else. Nothing in a source is ever run.
 
-The easiest way to make one is `aubergine library export <workflow> --to <folder>` (add `--element` for a shelf element): it writes the item's file and adds or updates its entry in the folder's index, making the index when there is none. It never commits or pushes; that is yours to do.
+The easiest way to make one is `aubergine library export <workflow> --to <folder>` (add `--element` for a saved step): it writes the item's file and adds or updates its entry in the folder's index, making the index when there is none. It never commits or pushes; that is yours to do.
 
 ## The index: `aubergine-library.json`
 
@@ -64,13 +64,13 @@ A **workflow** is the file `aubergine workflow export` writes:
 { "aubergine": "workflow", "format": 1, "workflow": { "name": "…", "description": "…", "standing": "…", "elements": [ { "name": "…", "instructions": "…", "doneWhen": "…" } ] } }
 ```
 
-An **element** is one element in the same spirit:
+A **step** is one step in the same spirit (its file says `element`, the word the files and the commands use):
 
 ```json
 { "aubergine": "element", "format": 1, "element": { "name": "…", "instructions": "…", "doneWhen": "…", "needs": [ { "kind": "mcp", "name": "team chat" } ], "produces": "note" } }
 ```
 
-What goes in an element is in [element.md](element.md). A file may be at most 512 KB. It must be a regular file inside the source: a symbolic link is not followed, wherever it points.
+What goes in a step is in [element.md](element.md). A file may be at most 512 KB. It must be a regular file inside the source: a symbolic link is not followed, wherever it points.
 
 ## What Aubergine does with a source
 

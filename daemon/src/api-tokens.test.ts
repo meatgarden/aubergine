@@ -856,7 +856,7 @@ describe('what the owner does from outside the browser', () => {
     expect((await asCommand('DELETE', publicPaths.token(made.body.token.id))).status).toBe(200);
     // Deciding about a draft.
     const writer = await makeToken('writer', ['workflows:write']);
-    const draft = await call(writer.secret, 'POST', '/v1/drafts', { element: { name: 'An element', instructions: 'Do it.' } });
+    const draft = await call(writer.secret, 'POST', '/v1/drafts', { element: { name: 'A step', instructions: 'Do it.' } });
     expect((await asCommand('POST', `/v1/drafts/${draft.body.draft.id}/accept`, {}, { 'x-aubergine-session': session.id })).status).toBe(200);
     const second = await call(writer.secret, 'POST', '/v1/drafts', { element: { name: 'Another', instructions: 'Do it.' } });
     expect((await asCommand('DELETE', `/v1/drafts/${second.body.draft.id}`)).status).toBe(204);
@@ -886,7 +886,7 @@ describe('what the owner does from outside the browser', () => {
   it('is not recorded when it is done in the browser, nor for reading, nor for ordinary work', async () => {
     // The page: the same calls with what a browser adds.
     const made = await asOwner('POST', publicPaths.tokens, { name: 'made in the browser', scopes: ['workflows:write'], reviewWorkflowChanges: false });
-    const draft = await call(made.body.secret, 'POST', '/v1/drafts', { element: { name: 'An element', instructions: 'Do it.' } });
+    const draft = await call(made.body.secret, 'POST', '/v1/drafts', { element: { name: 'A step', instructions: 'Do it.' } });
     expect((await asOwner('POST', `/v1/drafts/${draft.body.draft.id}/accept`)).status).toBe(200);
     // The command line: reading tokens and drafts, making a canvas, starting a workflow.
     await asCommand('GET', publicPaths.tokens);

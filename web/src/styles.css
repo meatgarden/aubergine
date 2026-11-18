@@ -627,18 +627,7 @@ code {
   font-size: var(--font-meta);
 }
 
-/* ---------- Node activity, minimap, picker ---------- */
-
-.node-status {
-  flex: none;
-  max-width: 60%;
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  min-width: 0;
-}
-.badge-unread,
-.badge-busy {
+.badge-unread {
   flex: none;
   width: 8px;
   height: 8px;
@@ -647,19 +636,14 @@ code {
 .badge-unread {
   background: var(--working);
 }
-.badge-busy {
-  background: var(--working);
-  animation: busy-pulse 1.2s ease-in-out infinite;
-}
+
 @keyframes busy-pulse {
   50% {
     opacity: 0.35;
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .badge-busy {
-    animation: none;
-  }
+
 }
 .badge-exit {
   flex: none;
@@ -846,27 +830,6 @@ code {
 .node-tool[aria-pressed='true'] {
   border-color: var(--border);
   background: var(--surface-raised);
-}
-
-/* ---------- Note panel ---------- */
-
-.note-tab {
-  position: absolute;
-  top: 0;
-  left: calc(100% + 8px);
-  width: 22px;
-  padding: var(--space-2) 0;
-  writing-mode: vertical-rl;
-  font-size: var(--font-meta);
-  color: var(--text-muted);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-control);
-  cursor: pointer;
-}
-.note-tab.has-note {
-  color: var(--text);
-  border-color: var(--accent, var(--border));
 }
 
 /* Beside the terminal, not over it: the terminal keeps all of its own room. */
@@ -1281,9 +1244,7 @@ kbd.kept {
   gap: var(--space-2);
   padding-top: var(--space-2);
 }
-.strip-open {
-  padding: 0 var(--space-2);
-}
+
 .strip-entry {
   display: flex;
   flex-direction: column;
@@ -1373,9 +1334,7 @@ kbd.kept {
   color: var(--on-attention);
   background: var(--attention);
 }
-.panel-collapse {
-  flex: none;
-}
+
 .panel-section {
   flex: 1;
   min-height: 0;
@@ -1674,9 +1633,6 @@ kbd.kept {
   font-size: var(--font-meta);
 }
 
-.list-spring {
-  flex: 1;
-}
 .list-detail {
   padding-left: 20px;
   color: var(--text-muted);
@@ -1698,23 +1654,16 @@ kbd.kept {
   flex: none;
   font-size: var(--font-meta);
 }
-.list-note,
 .list-more,
 .list-restore {
   flex: none;
 }
-.list-note.open,
-.list-note:hover,
 .list-more:hover,
 .list-restore {
   color: var(--text);
   border-color: var(--border);
 }
-.list-note-new {
-  margin-left: 2px;
-  font-size: var(--font-meta);
-  color: var(--attention-text);
-}
+
 .list-more {
   opacity: 0;
 }
@@ -1759,30 +1708,6 @@ kbd.kept {
 .list-resize:hover {
   background: var(--accent);
   opacity: 0.4;
-}
-.note-preview {
-  position: fixed;
-  z-index: var(--z-menu);
-  width: 280px;
-  max-height: 170px;
-  overflow: hidden;
-  padding: var(--space-2) var(--space-3);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-control);
-  box-shadow: 0 8px 24px var(--shadow);
-  font-size: var(--font-meta);
-  pointer-events: none;
-}
-.note-preview p {
-  margin: var(--space-1) 0 0;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-}
-.note-preview-entry {
-  padding-top: var(--space-1);
-  border-top: 1px solid var(--border);
-  color: var(--text-muted);
 }
 
 .tab:focus-visible {
@@ -2015,26 +1940,17 @@ tr[data-status='expired'] strong {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.run-count,
-.run-status,
-.run-quiet {
-  flex: none;
-  color: var(--text-muted);
-}
+
 .run-strip.status-blocked,
 .run-view-status.status-blocked {
   border-color: var(--danger);
   color: var(--danger);
 }
-.run-strip.status-blocked .run-status {
-  color: var(--danger);
-}
+
 .run-strip.status-paused {
   border-style: dashed;
 }
-.run-quiet {
-  font-style: italic;
-}
+
 .run-strip.is-quiet {
   border-style: dotted;
 }
@@ -3784,13 +3700,7 @@ tr[data-status='expired'] strong {
   flex: none;
   white-space: nowrap;
 }
-.run-banner-label {
-  padding: 0 var(--space-2);
-  font-size: var(--font-meta);
-  color: var(--text-muted);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-control);
-}
+
 .run-banner-name {
   flex: 0 1 auto;
   min-width: 40px;
@@ -3855,10 +3765,7 @@ tr[data-status='expired'] strong {
   flex: 1 1 120px;
   min-width: 120px;
 }
-.node-title .node-status {
-  flex: 0 1 auto;
-  max-width: 32%;
-}
+
 @container node-title (max-width: 660px) {
   .node-title .node-name {
     min-width: 60px;
@@ -3879,9 +3786,7 @@ tr[data-status='expired'] strong {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.list-row .list-spring {
-  flex: 0 0 0;
-}
+
 .list-detail .list-where {
   flex: 1 1 auto;
 }

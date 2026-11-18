@@ -1,3 +1,4 @@
+import type { DotTone } from '../ui';
 import type { ComponentType } from 'react';
 
 /** A small count with a word, shown on the collapsed strip under a section's icon. */
@@ -7,6 +8,8 @@ export interface SectionBadge {
   mark: string;
   count: number;
   title: string;
+  /** Where the badge counts terminals in one state: the state, so that the strip draws the same dot as the list. The mark is then not drawn. */
+  tone?: DotTone;
 }
 
 /** Something a section shows beside the panel for one of its rows, such as its notes. */

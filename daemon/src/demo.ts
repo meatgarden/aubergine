@@ -79,7 +79,7 @@ export class Demo {
     const run = state.runs.find((r) => r.id === parts.runId);
     const waiting = state.sessions.find((session) => session.id === parts.sessions.waiting);
     const ready =
-      // The first stand-in has reported its first element; the second has asked; the third has handed in its list and its draft.
+      // The first stand-in has reported its first step; the second has asked; the third has handed in its list and its draft.
       run !== undefined && run.elements.some((e) => e.state === 'done') && waiting !== undefined && needsUser(waiting.attention) && parts.checklistRunId !== null && !state.runs.some((r) => r.id === parts.checklistRunId) && parts.draftId !== null;
     return { present: true, ready, ...parts };
   }

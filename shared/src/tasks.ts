@@ -123,8 +123,8 @@ export const Task = z.object({
   title: PlainName.describe('What it is, in one line. Shown in lists and in terminals.'),
   details: PlainWords(TASK_DETAILS_MAX).default('').describe('What to do, for the agent that takes it. Plain text.'),
   folder: z.string().startsWith('/').max(4096).nullable().default(null).describe('The folder it is done in. For a new terminal: where it starts. Null: the folder new terminals start in.'),
-  workflowId: Id.nullable().default(null).describe('The workflow it goes through. Null: it is told as one element, with the details as its task.'),
-  elementId: Id.nullable().default(null).describe('The shelf element it runs, where it runs one and no workflow. Set by the server for what a schedule adds.'),
+  workflowId: Id.nullable().default(null).describe('The workflow it goes through. Null: it is told as one step, with the details as its task.'),
+  elementId: Id.nullable().default(null).describe('The saved step it runs, where it runs one and no workflow. Set by the server for what a schedule adds.'),
   unattended: z
     .boolean()
     .default(false)

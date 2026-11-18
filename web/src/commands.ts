@@ -1,3 +1,4 @@
+import { foldMap, mapFolded } from './map-fold';
 import { COMMAND_IDS, demoOf, sortedCanvases, type CommandId, type Session } from '@aubergine/shared';
 import { openOnDesktop } from './desktop';
 import { api } from './api';
@@ -268,7 +269,7 @@ export const COMMANDS: readonly Command[] = [
   {
     id: 'sharing.open',
     title: 'Sharing…',
-    description: 'What is shared between projects: for workflows, shelf elements, library sources and API tokens, whether a new one is shared with every project or belongs to the project it is made in, and where each existing one belongs.',
+    description: 'What is shared between projects: for workflows, saved steps, library sources and API tokens, whether a new one is shared with every project or belongs to the project it is made in, and where each existing one belongs.',
     group: 'Panels',
     available: always,
     run: (state) => state.togglePanel('sharing'),
@@ -522,6 +523,14 @@ export const COMMANDS: readonly Command[] = [
     run: () => canvasActions.get()?.resetZoom(),
   },
   {
+    id: 'view.map',
+    title: 'Show or hide the map',
+    description: 'Folds away the small map in the corner of the canvas, or brings it back. This browser remembers it.',
+    group: 'View',
+    available: withCanvas,
+    run: () => foldMap(!mapFolded()),
+  },
+  {
     id: 'parked.open',
     title: 'Open the parked list',
     description: 'Shows the terminals that are parked.',
@@ -636,7 +645,7 @@ export const COMMANDS: readonly Command[] = [
   {
     id: 'library.open',
     title: 'Library…',
-    description: 'Workflows and elements that others published: add a source, browse, read what an item would tell an agent, and ask for it to be installed. Nothing installs until you have read it in Review.',
+    description: 'Workflows and steps that others published: add a source, browse, read what an item would tell an agent, and ask for it to be installed. Nothing installs until you have read it in Review.',
     group: 'Panels',
     available: always,
     run: (state) => state.togglePanel('library'),
@@ -671,7 +680,7 @@ export const COMMANDS: readonly Command[] = [
   {
     id: 'workflow.view',
     title: 'Show the run of the terminal',
-    description: 'Opens the run the terminal is on: every element with its state, and the buttons that move it.',
+    description: 'Opens the run the terminal is on: every step with its state, and the buttons that move it.',
     group: 'Terminals',
     available: (state) => {
       const session = targetSession(state);
@@ -701,16 +710,16 @@ export const COMMANDS: readonly Command[] = [
   },
   {
     id: 'element.describe',
-    title: 'Describe an element…',
-    description: 'Asks an agent to write one element from your description. What it writes arrives as a draft for you to read.',
+    title: 'Describe a step…',
+    description: 'Asks an agent to write one step from your description. What it writes arrives as a draft for you to read.',
     group: 'Panels',
     available: always,
     run: (state) => state.describe('element'),
   },
   {
     id: 'element.run',
-    title: 'Run an element by itself… on the terminal',
-    description: 'Runs one element from the shelf on the terminal, without a workflow around it.',
+    title: 'Run a step by itself… on the terminal',
+    description: 'Runs one step from the shelf on the terminal, without a workflow around it.',
     group: 'Terminals',
     available: (state) => hasTarget(state) && (state.app?.shelf.length ?? 0) > 0,
     run: (state) => {
@@ -767,10 +776,11 @@ export const COMMANDS: readonly Command[] = [
     title: 'Close panels',
     description: 'Closes whatever panel is open; else returns the keyboard from a button to the canvas; else clears the selection.',
     group: 'Panels',
-    available: (state) => state.picker || state.choosingAgentTools || state.inventoryFor !== null || state.historyView !== null || state.describing !== null || state.editingElement !== null || state.viewingRun !== null || state.startingRun !== null || state.editingWorkflow !== null || state.panel !== null || state.drawer !== null || state.selected !== null || onControl(),
+    available: (state) => state.picker || state.choosingAgentTools || state.viewingEnvironment !== null || state.inventoryFor !== null || state.historyView !== null || state.describing !== null || state.editingElement !== null || state.viewingRun !== null || state.startingRun !== null || state.editingWorkflow !== null || state.panel !== null || state.drawer !== null || state.selected !== null || onControl(),
     run: (state) => {
       if (state.picker) state.setPicker(false);
       else if (state.choosingAgentTools) state.chooseAgentTools(false);
+      else if (state.viewingEnvironment !== null) state.viewEnvironment(null);
       else if (state.inventoryFor !== null) state.showInventory(null);
       else if (state.historyView !== null) state.openHistory(null);
       else if (state.describing !== null) state.describe(null);

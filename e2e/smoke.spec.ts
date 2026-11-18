@@ -54,9 +54,9 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   if ((process.env.SHELL ?? '').endsWith('/zsh')) {
     await page.keyboard.type('sleep 2; (exit 3)');
     await page.keyboard.press('Enter');
-    await expect(page.getByTestId('badge-busy')).toHaveCount(1);
+    await expect(page.locator('[data-testid="terminal-node"] [data-testid="state-dot"][data-busy="true"]')).toHaveCount(1);
     await expect(page.getByTestId('badge-exit')).toHaveText('exit 3', { timeout: 8000 });
-    await expect(page.getByTestId('badge-busy')).toHaveCount(0);
+    await expect(page.locator('[data-testid="terminal-node"] [data-testid="state-dot"][data-busy="true"]')).toHaveCount(0);
     await page.keyboard.type('clear; echo hello');
     await page.keyboard.press('Enter');
     await expect(page.getByTestId('badge-exit')).toHaveCount(0);
@@ -469,7 +469,7 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
 
   // Typing in a terminal is recorded, and the row says so.
   // One time on the row, the later of the two; both are behind it.
-  await expect(listRows.first().getByTestId('list-active')).toContainText('active');
+  await expect(listRows.first().getByTestId('list-active')).toHaveText(/^(just now|\d+[smhd] ago)$/);
   await expect(listRows.first().getByTestId('list-active')).toHaveAttribute('data-typed', /.+/);
   await expect(listRows.first().getByTestId('list-active')).toHaveAttribute('data-updated', /.+/);
 
@@ -573,7 +573,7 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await expect(page.getByRole('button', { name: /^Parked \(/ })).toHaveCount(0);
 });
 
-test('a workflow made from a template moves a terminal through its elements', async ({ page }) => {
+test('a workflow made from a template moves a terminal through its steps', async ({ page }) => {
   const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
   await page.goto(`/auth?token=${token}`);
   await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
@@ -597,7 +597,7 @@ test('a workflow made from a template moves a terminal through its elements', as
   await editor.locator('[data-element="build"] .editor-element-name').click();
   await editor.getByTestId('element-instructions').fill('Build it, and write the tests first.');
   await expect(editor.getByTestId('editor-preview')).toContainText('Workflow: Ship it');
-  await expect(editor.getByTestId('editor-preview')).toContainText('Element 2 of 3: Build');
+  await expect(editor.getByTestId('editor-preview')).toContainText('Step 2 of 3: Build');
   await expect(editor.getByTestId('editor-preview')).toContainText('Build it, and write the tests first.');
   // Reorder with the buttons, and back: the order is what is saved.
   await reveal(editor.locator('[data-element="check"]').getByTestId('element-up'), editor.locator('[data-element="check"]').getByTestId('element-more'));
@@ -620,8 +620,8 @@ test('a workflow made from a template moves a terminal through its elements', as
   await editor.getByTestId('element-add').click();
   await expect(editor.getByTestId('editor-problems')).toContainText('has no instructions');
   await expect(editor.getByTestId('editor-save')).toBeDisabled();
-  await reveal(editor.locator('[data-element="new-element"]').getByTestId('element-remove'), editor.locator('[data-element="new-element"]').getByTestId('element-more'));
-  await editor.locator('[data-element="new-element"]').getByTestId('element-remove').click();
+  await reveal(editor.locator('[data-element="new-step"]').getByTestId('element-remove'), editor.locator('[data-element="new-step"]').getByTestId('element-more'));
+  await editor.locator('[data-element="new-step"]').getByTestId('element-remove').click();
   await expect(editor.getByTestId('editor-problems')).toHaveCount(0);
   await editor.getByTestId('editor-save').click();
   await expect(editor.getByTestId('editor-saved')).toContainText('Saved as version 2');
@@ -640,7 +640,7 @@ test('a workflow made from a template moves a terminal through its elements', as
   await expect(dialog.getByTestId('run-start')).toBeDisabled();
   await dialog.getByTestId('run-input-task').fill('the login page rejects valid passwords');
   await expect(dialog.getByTestId('run-preview')).toContainText('The task: the login page rejects valid passwords');
-  await expect(dialog.getByTestId('run-preview')).toContainText('Element 1 of 3: Plan');
+  await expect(dialog.getByTestId('run-preview')).toContainText('Step 1 of 3: Plan');
   await dialog.getByTestId('run-start').click();
 
   // No agent is running in this shell, so nothing was typed: the run is shown instead, with its buttons.
@@ -654,7 +654,9 @@ test('a workflow made from a template moves a terminal through its elements', as
   const strip = page.getByTestId('run-strip');
   await expect(strip).toHaveAttribute('data-element', 'plan');
   await expect(strip).toContainText('Plan');
-  await expect(page.getByTestId('row-run')).toContainText('Plan');
+  // On its row: the step as a chip, and its name to whoever asks.
+  await expect(page.getByTestId('row-run')).toHaveText('Step 1 of 3');
+  await expect(page.getByTestId('row-run')).toHaveAttribute('title', /Plan/);
   // The Runs tab of the side panel says the same, and its tab says how many are going.
   await expect(page.locator('[data-testid="panel-tab"][data-section="workflows"]').getByTestId('section-count')).toHaveText('1');
   await page.locator('[data-testid="panel-tab"][data-section="workflows"]').click();
@@ -676,7 +678,7 @@ test('a workflow made from a template moves a terminal through its elements', as
   await page.keyboard.press('Enter');
   await expect(strip).toHaveAttribute('data-element', 'build', { timeout: 20_000 });
   await expect(strip).toContainText('Build');
-  await expect(page.getByTestId('row-run')).toContainText('Build');
+  await expect(page.getByTestId('row-run')).toHaveAttribute('title', /Build/);
   await page.locator('[data-testid="panel-tab"][data-section="workflows"]').click();
   await expect(page.getByTestId('runs-row')).toHaveAttribute('data-element', 'build');
   await page.locator('[data-testid="panel-tab"][data-section="terminals"]').click();
@@ -735,7 +737,7 @@ test('a workflow made from a template moves a terminal through its elements', as
   await expect(screen.getByTestId('workflow-row')).toHaveCount(1);
 });
 
-test('an element written by an agent is reviewed, accepted, run by itself, and its checklist ticked', async ({ page }) => {
+test('a step written by an agent is reviewed, accepted, run by itself, and its checklist ticked', async ({ page }) => {
   const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
   await page.goto(`/auth?token=${token}`);
   await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
@@ -782,18 +784,18 @@ test('an element written by an agent is reviewed, accepted, run by itself, and i
   await typeLine(`${aubergine} workflow brief | head -8`);
   await expect(page.locator('.xterm-rows')).toContainText('zebra-crossing', { timeout: 20_000 });
   await typeLine(`clear; ${aubergine} element propose --file ${path.join(work, 'first.json')}`);
-  await expect(page.locator('.xterm-rows')).toContainText('Handed in the element as a draft', { timeout: 20_000 });
+  await expect(page.locator('.xterm-rows')).toContainText('Handed in the step as a draft', { timeout: 20_000 });
 
   // It waits for the owner: read as an agent would be told it.
   await page.keyboard.press(process.platform === 'darwin' ? 'Control+Meta+.' : 'Control+Shift+.');
   await openReview(page);
   const review = page.getByTestId('review-screen');
   await expect(review.getByTestId('review-title')).toHaveText('Collect my to-dos');
-  await expect(review.getByTestId('review-origin')).toContainText('An element, from the agent in');
+  await expect(review.getByTestId('review-origin')).toContainText('A step, from the agent in');
   await expect(review.getByTestId('review-needs')).toContainText('an MCP server: team chat');
-  await expect(review.getByTestId('review-text')).toContainText('Element 1 of 1: Collect my to-dos');
+  await expect(review.getByTestId('review-text')).toContainText('Step 1 of 1: Collect my to-dos');
   await expect(review.getByTestId('review-text')).toContainText('at great length');
-  await expect(review.getByTestId('review-text')).toContainText('This element produces a checklist.');
+  await expect(review.getByTestId('review-text')).toContainText('This step produces a checklist.');
   // It is not a workflow, and not on the shelf: nothing can run it.
   const workflowNames = async (): Promise<string[]> => (await (await page.request.get('/v1/workflows')).json()).items.map((w: { name: string }) => w.name);
   const before = await workflowNames();
@@ -835,7 +837,7 @@ test('an element written by an agent is reviewed, accepted, run by itself, and i
   await shelfRow.getByTestId('shelf-run').click();
   const dialog = page.getByTestId('run-dialog');
   await expect(dialog.getByTestId('run-needs')).toContainText('an MCP server: team chat');
-  await expect(dialog.getByTestId('run-preview')).toContainText('This element produces a checklist.');
+  await expect(dialog.getByTestId('run-preview')).toContainText('This step produces a checklist.');
   await dialog.getByTestId('run-start').click();
   const strip = page.getByTestId('run-strip');
   await expect(strip).toHaveAttribute('data-element', 'collect-my-to-dos');
@@ -953,7 +955,7 @@ test('a workflow kept in a repository is reviewed before it can be run, and agai
   await expect(review.getByTestId('review-origin')).toContainText('A workflow file, from the repository');
   await expect(review.getByTestId('review-origin')).toContainText('release-checklist.json');
   await expect(review.getByTestId('review-text')).toContainText('Tag the release of (task).');
-  await expect(review.getByTestId('review-text')).toContainText('Element 2 of 2: Announce it');
+  await expect(review.getByTestId('review-text')).toContainText('Step 2 of 2: Announce it');
   await review.getByTestId('review-accept').click();
   await expect(review.getByTestId('review-empty')).toBeVisible();
   await review.getByTestId('review-close').click();
@@ -1254,10 +1256,10 @@ test('the tour: each step is done on the real thing, on the demo', async ({ page
   await expect(page.getByTestId('run-view')).toHaveCount(0);
 
   // 6. A checklist: tick an item.
-  // The list is on the terminal that made it, and on its row in the side list.
+  // The list is on the terminal that made it. Its row in the side list says its state and nothing more.
   await page.getByRole('button', { name: 'Fit' }).click();
   await expect(node('checklist').getByTestId('list-mark')).toHaveText('☑ list: 0 of 3 ticked');
-  await expect(page.locator(`[data-testid="list-row"][data-session="${demo.sessions.checklist}"]`).getByTestId('row-list-mark')).toHaveText('☑ list: 0 of 3 ticked');
+  await expect(page.locator(`[data-testid="list-row"][data-session="${demo.sessions.checklist}"]`).getByTestId('row-list-mark')).toHaveCount(0);
   // Said once: a second click on a zoomed-out terminal's mark, or on a terminal, says nothing more.
   await expect(page.getByTestId('full-size-hint')).toHaveCount(0, { timeout: 8000 });
   await node('checklist').getByTestId('list-mark').click();
@@ -1456,7 +1458,9 @@ test('what is switched on for an agent: names only, where each comes from, and w
   // The same panel from the side list's drawer, and from the palette.
   // The drawer is reached from a row that has notes: give this one a note.
   expect((await page.request.post(`/v1/sessions/${sessionId}/notes`, { headers: { origin }, data: { text: 'A note, so that the row offers its drawer.' } })).status()).toBe(201);
-  await page.getByTestId('list-note').click();
+  await page.getByTestId('list-row').first().hover();
+  await page.getByTestId('row-more').first().click();
+  await page.getByRole('menuitem', { name: 'Notes' }).click();
   await page.getByTestId('drawer-switched-on').getByRole('button', { name: /set up/ }).click();
   await expect(panel).toBeVisible();
   await page.keyboard.press('Escape');
@@ -1514,7 +1518,9 @@ test('a recap of a terminal: what is known, what its agent wrote, and what chang
   await expect(name).toHaveAttribute('title', /started a moment ago\.\n.*Last note \((you|its agent), a moment ago\): Found the cause: the cookie is set twice\./s);
 
   // In the drawer: the same, labelled as what Aubergine knows, and a way to ask the agent.
-  await page.getByTestId('list-note').click();
+  await page.locator(`[data-testid="list-row"][data-session="${sessionId}"]`).hover();
+  await page.locator(`[data-testid="list-row"][data-session="${sessionId}"]`).getByTestId('row-more').click();
+  await page.getByRole('menuitem', { name: 'Notes' }).click();
   const recap = page.getByTestId('recap');
   await expect(recap).toContainText('from what Aubergine knows');
   await expect(recap.getByTestId('recap-lines')).toContainText("Found the cause: the cookie is set twice.");
@@ -1738,7 +1744,8 @@ test('messages: the owner writes to a terminal, its agent reads and answers, and
   await expect(page.getByTestId('list-row')).toHaveCount(2);
   const ids = await page.getByTestId('list-row').evaluateAll((rows) => rows.map((row) => row.getAttribute('data-session') ?? ''));
   const second = ids.find((id) => id !== first) ?? '';
-  const row = (id: string) => page.locator(`[data-testid="list-row"][data-session="${id}"]`);
+  // A terminal's messages are said on its title; its row in the list says its state and nothing more.
+  const row = (id: string) => page.locator(`[data-testid="terminal-node"][data-session="${id}"]`);
   /** What an agent in a terminal would run there: typed at its shell prompt, waited for, its output read. */
   const inTerminal = async (id: string, command: string): Promise<string> => {
     const answer = await page.request.post(`/v1/sessions/${id}/run`, { headers: { origin }, data: { command: `"$AUBERGINE_BIN/aubergine" ${command}`, timeoutSeconds: 30 } });
@@ -1749,7 +1756,7 @@ test('messages: the owner writes to a terminal, its agent reads and answers, and
   await expect.poll(async () => (await inTerminal(first, 'guide --snippet')).includes('AUBERGINE_SESSION_ID'), { timeout: 30_000 }).toBe(true);
   await expect.poll(async () => (await inTerminal(second, 'guide --snippet')).includes('AUBERGINE_SESSION_ID'), { timeout: 30_000 }).toBe(true);
 
-  // The owner writes. Nothing is typed into the terminal; its row says a message waits.
+  // The owner writes. Nothing is typed into the terminal; its title says a message waits.
   const sent = await page.request.post(`/api/v1/sessions/${first}/messages`, { headers: { origin }, data: { text: 'Which branch should the fix go on? <b>not markup</b>' } });
   expect(sent.status()).toBe(201);
   const sentId = ((await sent.json()) as { id: string }).id;
@@ -1882,7 +1889,8 @@ test('the side panel shows one section at a time with all of its height, says ho
   await tab('terminals').click();
 
   // A tab's color is picked from a palette that is in sight, not cut off by the bar of tabs, and the tab wears it.
-  await page.locator('[data-testid="tab"][aria-selected="true"]').getByRole('button', { name: 'Pick a color for this tab' }).click();
+  await page.getByTestId('tab-more').click();
+  await page.getByTestId('tab-menu').getByRole('button', { name: 'Pick a color for this tab' }).click();
   expect(
     await page.evaluate(() => {
       const palette = document.querySelector('[data-testid="color-palette"]');
@@ -1912,7 +1920,7 @@ test('the side panel shows one section at a time with all of its height, says ho
   await expect(page.getByTestId('toolbar-new-menu')).toHaveCount(0);
 });
 
-test('a shelf element has a life: a copy says where it came from, a newer version is compared and taken, and a retired element is no longer offered', async ({ page }) => {
+test('a saved step has a life: a copy says where it came from, a newer version is compared and taken, and a retired step is no longer offered', async ({ page }) => {
   const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
   await page.goto(`/auth?token=${token}`);
   await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
@@ -1975,7 +1983,7 @@ test('a shelf element has a life: a copy says where it came from, a newer versio
   // What goes in an element: every field, in the words of the reference.
   await editor.getByTestId('element-reference').locator('summary').click();
   await expect(editor.getByTestId('reference-field')).toHaveCount(16);
-  await expect(editor.locator('[data-testid="reference-field"][data-field="doneWhen"]')).toContainText('how to tell that the element is finished');
+  await expect(editor.locator('[data-testid="reference-field"][data-field="doneWhen"]')).toContainText('how to tell that the step is finished');
   await editor.getByTestId('editor-close').click();
 
   // On the shelf: its version, where it is used, its versions with what changed, and retiring it.
@@ -2651,7 +2659,7 @@ test('the queue and For you: tasks start when the owner says and no more than th
   }
 });
 
-test('a schedule: the owner makes one for an element that hands in a list, runs it now, sees its task in the queue as from the schedule, and the list arrives on the owner\'s list naming it', async ({ page }) => {
+test('a schedule: the owner makes one for a step that hands in a list, runs it now, sees its task in the queue as from the schedule, and the list arrives on the owner\'s list naming it', async ({ page }) => {
   const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
   await page.goto(`/auth?token=${token}`);
   await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
@@ -2707,7 +2715,7 @@ test('a schedule: the owner makes one for an element that hands in a list, runs 
   const form = schedules.getByTestId('schedule-form');
   await form.getByTestId('schedule-name').fill('Schedule test morning');
   await form.getByTestId('schedule-time').fill('08:30');
-  await form.getByTestId('schedule-what').selectOption({ label: 'the element “Schedule test list”' });
+  await form.getByTestId('schedule-what').selectOption({ label: 'the step “Schedule test list”' });
   await form.getByTestId('schedule-where').selectOption({ label: 'on “schedule test terminal”' });
   await form.getByTestId('schedule-task').fill('letters and rooms');
   await expect(form.getByTestId('schedule-save')).toHaveText('Add: weekdays at 08:30');
@@ -3130,7 +3138,7 @@ const measureLook = (page: Page): Promise<string[]> =>
     };
     const says = (el: Element): string => `${el.tagName.toLowerCase()}.${[...el.classList].join('.')} "${(el.textContent ?? '').trim().slice(0, 24)}"`;
     // Drawn as a row, a card or a line of a menu: pressed as a whole, and as tall as what it holds.
-    const rows = '.ui-row,[role^=menuitem],[role=option],.runs-row,.history-row,.away-item,.strip-entry,.foryou-row,.list-group,.run-banner,.library-row,.review-row,.copy-file,.editor-element-name,.run-step-name,.note-tab';
+    const rows = '.ui-row,[role^=menuitem],[role=option],.runs-row,.history-row,.away-item,.strip-entry,.foryou-row,.list-group,.run-banner,.library-row,.review-row,.copy-file,.editor-element-name,.run-step-name';
     const chips = '.ui-chip,.list-tag,.list-chip,.list-filter,.list-clear,.run-strip,.list-mark,.copy-chip';
     const wrong: string[] = [];
     for (const el of document.querySelectorAll('button, input, select')) {
@@ -3145,6 +3153,27 @@ const measureLook = (page: Page): Promise<string[]> =>
       if (!el || !(walker.currentNode.textContent ?? '').trim() || el.closest('.xterm, .snapshot, .react-flow__attribution, .react-flow__minimap') || !shows(el)) continue;
       const size = getComputedStyle(el).fontSize;
       if (!['12px', '13px', '15px', '20px'].includes(size)) wrong.push(`text ${size}: ${says(el)}`);
+    }
+    // A tick box or a radio button stands one gap from its words.
+    for (const input of document.querySelectorAll('input[type=checkbox],input[type=radio]')) {
+      const label = input.closest('label');
+      if (!shows(input) || !label) continue;
+      const words = document.createTreeWalker(label, NodeFilter.SHOW_TEXT);
+      while (words.nextNode()) {
+        const text = words.currentNode;
+        const at = (text.textContent ?? '').search(/\S/);
+        if (at < 0 || !(input.compareDocumentPosition(text) & Node.DOCUMENT_POSITION_FOLLOWING)) continue;
+        const range = document.createRange();
+        range.setStart(text, at);
+        range.setEnd(text, at + 1);
+        // Words in a piece of their own (a name drawn as code, say) are measured by that piece's edge.
+        let piece: Element | null = text.parentElement;
+        while (piece && piece.parentElement !== label) piece = piece.parentElement;
+        const left = piece && piece !== label && text.parentElement !== label ? piece.getBoundingClientRect().left : range.getBoundingClientRect().left;
+        const gap = Math.round(left - input.getBoundingClientRect().right);
+        if (gap !== 8) wrong.push(`a choice ${gap}px from its words: ${says(label)}`);
+        break;
+      }
     }
     return [...new Set(wrong)];
   });
@@ -3288,6 +3317,64 @@ test('one look: the canvas page and every screen use the two control heights and
   expect(await measureLook(page), 'the More menu').toEqual([]);
   await page.keyboard.press('Escape');
 
+  // The note beside a terminal.
+  const noteButton = node.getByRole('button', { name: /^Note for/ });
+  if ((await noteButton.getAttribute('aria-pressed')) !== 'true') await noteButton.click();
+  await expect(node.getByTestId('note-panel')).toBeVisible();
+  expect(await measureLook(page), 'the note beside a terminal').toEqual([]);
+  await noteButton.click();
+  await expect(node.getByTestId('note-panel')).toHaveCount(0);
+
+  // How an agent is set up: for a terminal with an agent on record, in a folder of this test's own.
+  const origin = new URL(page.url()).origin;
+  const canvasId = page.url().split('/c/')[1] ?? '';
+  const { execFileSync } = await import('node:child_process');
+  const { realpathSync } = await import('node:fs');
+  const folder = realpathSync(mkdtempSync(path.join(tmpdir(), 'aubergine-e2e-look-')));
+  try {
+    const made = await page.request.post('/api/v1/sessions', { headers: { origin, 'sec-fetch-site': 'same-origin' }, data: { name: 'Look agent', cwd: folder, canvasId } });
+    expect(made.status()).toBe(201);
+    const agentId = ((await made.json()) as { session: { id: string } }).session.id;
+    expect((await page.request.put(`/v1/sessions/${agentId}/agent`, { headers: { origin }, data: { kind: 'claude-code', conversationId: null } })).status()).toBe(200);
+    const agentNode = page.locator(`[data-testid="terminal-node"][data-session="${agentId}"]`);
+    await look('how an agent is set up', 'inventory-panel', async () => {
+      await page.locator(`[data-testid="list-row"][data-session="${agentId}"]`).click();
+      await expect(agentNode).toBeInViewport();
+      await agentNode.getByTestId('node-more').click();
+      await agentNode.getByTestId('switched-on').click();
+      await expect(page.getByTestId('inventory-gaps')).toBeVisible();
+    });
+
+    // Where a terminal works: a small repository, and a terminal in a working copy of it with one file changed.
+    const git = (...args: string[]): string =>
+      execFileSync('git', args, { cwd: folder, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], env: { PATH: process.env.PATH ?? '', HOME: folder, GIT_CONFIG_GLOBAL: '/dev/null', GIT_CONFIG_SYSTEM: '/dev/null', GIT_AUTHOR_NAME: 'An Owner', GIT_AUTHOR_EMAIL: 'owner@example.com', GIT_COMMITTER_NAME: 'An Owner', GIT_COMMITTER_EMAIL: 'owner@example.com' } });
+    writeFileSync(path.join(folder, 'retry.js'), 'export const tries = 3;\n');
+    git('init', '--quiet', '--initial-branch=main');
+    git('add', '-A');
+    git('commit', '--quiet', '-m', 'First');
+    await page.getByTestId('toolbar-new-more').click();
+    await page.getByTestId('toolbar-new-in').click();
+    const start = page.getByTestId('start-dialog');
+    await start.getByTestId('where-folder').fill(folder);
+    const copyKind = start.locator('[data-testid="where-kind"][data-kind="working-copy"]');
+    await expect(copyKind).toHaveAttribute('data-available', 'true');
+    await copyKind.locator('input').check();
+    expect(await measureLook(page), 'the dialog that starts a terminal somewhere').toEqual([]);
+    await start.getByTestId('start-name').fill('Look copy');
+    await start.getByTestId('start-go').click();
+    await expect(start).toHaveCount(0);
+    const copyNode = page.getByTestId('terminal-node').filter({ has: page.getByTestId('copy-chip') });
+    await expect(copyNode).toHaveCount(1);
+    await copyNode.getByTestId('copy-chip').click();
+    await expect(page.getByTestId('copy-endings')).toBeVisible();
+    expect(await measureLook(page), 'where a terminal works').toEqual([]);
+    expect(await onTop(page, 'copy-panel'), 'where a terminal works is on top').toBe(true);
+    await page.getByTestId('copy-close').click();
+    await expect(page.getByTestId('copy-panel')).toHaveCount(0);
+  } finally {
+    rmSync(folder, { recursive: true, force: true });
+  }
+
   // The side panel's other parts.
   const tabs = page.getByTestId('panel-tab');
   for (let index = 0; index < (await tabs.count()); index += 1) {
@@ -3420,4 +3507,137 @@ test('simpler surfaces: the list starts near the top, a name is not cut, one pri
   await page.keyboard.press('Enter');
   await expect(starts.getByTestId('queue-limit')).toBeVisible();
   await expect(starts.getByTestId('queue-hold')).toBeVisible();
+});
+
+/** How many things on the page are filled with the colour of waiting, and what they are. */
+const filledWithAttention = (page: Page): Promise<string[]> =>
+  page.evaluate(() => {
+    const probe = document.createElement('span');
+    probe.style.background = 'var(--attention)';
+    document.body.append(probe);
+    const attention = getComputedStyle(probe).backgroundColor;
+    probe.remove();
+    const found: string[] = [];
+    for (const el of document.querySelectorAll('body *')) {
+      const box = el.getBoundingClientRect();
+      const style = getComputedStyle(el);
+      if (box.width === 0 || box.height === 0 || style.visibility === 'hidden' || Number(style.opacity) === 0 || el.closest('.xterm, .react-flow__minimap')) continue;
+      // A dot of a state is a mark, not a thing that shouts: it is eight pixels.
+      if (style.backgroundColor === attention && box.width > 10) found.push((el as HTMLElement).dataset.testid ?? el.className.toString());
+    }
+    return found;
+  });
+
+test('calm canvas: one thing is filled with the colour of waiting, a terminal has one width of line, a row reads in one pass and the mark of a state has one size', async ({ page }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  const origin = new URL(page.url()).origin;
+  // The tour is not this test's: it is put away before the demo is made.
+  await page.evaluate(() => localStorage.setItem('aubergine.tour', JSON.stringify({ status: 'dismissed', stepId: null })));
+  const demo = await (await page.request.post('/api/v1/demo', { headers: { origin }, data: {} })).json();
+  try {
+    await page.goto(`/c/${demo.canvasId}`);
+    await expect(page.getByTestId('terminal-node')).toHaveCount(4);
+    await expect.poll(async () => (await (await page.request.get('/api/v1/demo', { headers: { origin } })).json()).ready, { timeout: 45_000 }).toBe(true);
+    await expect(page.getByTestId('tour-card')).toHaveCount(0);
+    const waiting = page.locator(`[data-testid="terminal-node"][data-session="${demo.sessions.waiting}"]`);
+    await expect(waiting).toHaveAttribute('data-attention', 'waiting');
+    await expect(page.getByTestId('for-you')).not.toHaveAttribute('data-count', '0');
+
+    // 1. With things waiting on the demo, the count at the top is the one thing that is filled.
+    await page.getByRole('button', { name: 'Fit' }).click();
+    await expect(page.locator(`[data-testid="list-row"][data-session="${demo.sessions.waiting}"]`).getByTestId('list-badge')).toHaveText('waiting for you');
+    expect(await filledWithAttention(page)).toEqual(['for-you']);
+    // What has finished is said in the colour of what went well, not of waiting.
+    await expect(page.locator(`[data-testid="list-row"][data-session="${demo.sessions.checklist}"]`).getByTestId('list-badge')).toHaveClass(/is-ok/);
+
+    // 2. Every terminal has the same width of line and nothing drawn outside it, whatever its state; one that is selected too.
+    // Chosen with the keyboard and not typed into: looking into a terminal would end its waiting.
+    for (let presses = 0; presses < 8 && (await waiting.getAttribute('data-selected')) !== 'true'; presses += 1) {
+      await page.keyboard.press('Tab');
+      await page.waitForTimeout(150);
+    }
+    await expect(waiting).toHaveAttribute('data-selected', 'true');
+    await expect(waiting).toHaveAttribute('data-attention', 'waiting');
+    const lines = await page.evaluate(() =>
+      [...document.querySelectorAll<HTMLElement>('[data-testid="terminal-node"]')].map((el) => {
+        const style = getComputedStyle(el);
+        return `${style.borderTopWidth} ${style.borderTopStyle} outline:${style.outlineStyle === 'none' ? 'none' : style.outlineWidth} ring:${/\b0px 0px 0px [1-9]/.test(style.boxShadow) ? 'yes' : 'no'}`;
+      }),
+    );
+    expect(lines.length).toBe(4);
+    expect([...new Set(lines)]).toEqual(['2px solid outline:none ring:no']);
+    // Selected wins the line; its title still says that it waits.
+    const colours = await waiting.evaluate((el) => {
+      const probe = document.createElement('span');
+      probe.style.color = 'var(--accent)';
+      document.body.append(probe);
+      const accent = getComputedStyle(probe).color;
+      probe.remove();
+      return [getComputedStyle(el).borderTopColor, accent];
+    });
+    expect(colours[0]).toBe(colours[1]);
+    await expect(waiting.getByTestId('badge-attention')).toHaveText('waiting for you');
+
+    // 3. In the list at its usual width no name of the demo is cut, and no row says when it was last active twice.
+    const rows = await page.evaluate(() => {
+      const panel = document.querySelector('[data-testid="side-panel"]') as HTMLElement;
+      return {
+        width: panel.style.width,
+        rows: [...document.querySelectorAll<HTMLElement>('[data-testid="list-row"]')].map((row) => {
+          const name = row.querySelector('[data-testid="list-name"]') as HTMLElement;
+          return { name: name.textContent ?? '', cut: name.scrollWidth > name.clientWidth, times: ((row.textContent ?? '').match(/\d+[smhd] ago|just now/g) ?? []).length, marks: row.querySelectorAll('[data-testid="list-note"], [data-testid="message-mark"], [data-testid="row-list-mark"]').length };
+        }),
+      };
+    });
+    expect(rows.width).toBe('320px');
+    expect(rows.rows.length).toBeGreaterThanOrEqual(5);
+    expect(rows.rows.filter((row) => row.cut).map((row) => row.name)).toEqual([]);
+    expect(rows.rows.filter((row) => row.times > 1).map((row) => row.name)).toEqual([]);
+    expect(rows.rows.filter((row) => row.marks > 0).map((row) => row.name)).toEqual([]);
+
+    // 4. The mark of a state is one dot of one size in a slot of one width: in the list, in a terminal's title, on the Board.
+    const dots = (): Promise<string[]> =>
+      page.evaluate(() =>
+        [...document.querySelectorAll<HTMLElement>('.ui-dot')]
+          .filter((dot) => dot.offsetWidth > 0)
+          .map((dot) => `${dot.offsetWidth}x${dot.offsetHeight} ${(dot.firstElementChild as HTMLElement).offsetWidth}x${(dot.firstElementChild as HTMLElement).offsetHeight}`),
+      );
+    const onCanvas = await dots();
+    expect(await page.locator('[data-testid="list-row"] .ui-dot').count()).toBeGreaterThanOrEqual(5);
+    expect(await page.locator('[data-testid="terminal-node"] .node-title > .ui-dot').count()).toBe(4);
+    expect([...new Set(onCanvas)]).toEqual(['16x16 8x8']);
+    // The list and the title say the same of the same terminal.
+    for (const part of ['waiting', 'checklist']) {
+      const id = demo.sessions[part] as string;
+      const inList = await page.locator(`[data-testid="list-row"][data-session="${id}"] .ui-dot`).getAttribute('data-tone');
+      expect(await page.locator(`[data-testid="terminal-node"][data-session="${id}"] .node-title > .ui-dot`).getAttribute('data-tone')).toBe(inList);
+    }
+    await page.getByTestId('toolbar-board').click();
+    await expect(page.getByTestId('board-card').first()).toBeVisible();
+    expect(await page.locator('[data-testid="board-card"] .ui-dot').count()).toBeGreaterThanOrEqual(1);
+    expect([...new Set(await dots())]).toEqual(['16x16 8x8']);
+    await page.keyboard.press('Escape');
+
+    // 5. The handle that folds the panel is not among the tabs, and the map folds away and stays folded after a reload.
+    expect(await page.evaluate(() => document.querySelector('.panel-tabs-row')?.contains(document.querySelector('[data-testid="panel-fold"]')))).toBe(false);
+    await expect(page.locator('.react-flow__minimap')).toBeVisible();
+    await page.getByTestId('map-fold').click();
+    await expect(page.locator('.react-flow__minimap')).toHaveCount(0);
+    await page.reload();
+    await expect(page.getByTestId('terminal-node')).toHaveCount(4);
+    await expect(page.locator('.react-flow__minimap')).toHaveCount(0);
+    await page.getByTestId('map-fold').click();
+    await expect(page.locator('.react-flow__minimap')).toBeVisible();
+  } finally {
+    await page.request.delete('/api/v1/demo', { headers: { origin } });
+  }
+
+  // With nothing waiting anywhere, nothing at all is filled with that colour: the count at the top is a plain button.
+  await page.goto('/');
+  await expect(page.getByTestId('for-you')).toBeVisible();
+  const count = await page.getByTestId('for-you').getAttribute('data-count');
+  expect(await filledWithAttention(page)).toEqual(count === '0' ? [] : ['for-you']);
+  console.log(`Calm canvas: after the demo was removed ${count} thing(s) waited on the owner.`);
 });

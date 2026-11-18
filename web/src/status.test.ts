@@ -34,9 +34,10 @@ describe('timeAgo', () => {
 });
 
 describe('describeStatus', () => {
-  it('shows the full command line while busy', () => {
-    const session = { ...base, command: 'node', status: { ...NO_STATUS, state: 'busy' as const, commandLine: 'pnpm test --watch' } };
-    expect(describeStatus(session).text).toBe('pnpm test --watch · …/work/api');
+  it('says what runs in short while busy, and the whole line to whoever asks', () => {
+    const session = { ...base, command: 'node', status: { ...NO_STATUS, state: 'busy' as const, commandLine: "sh '/work/made up/demo-agent.sh' --fast" } };
+    expect(describeStatus(session).text).toBe('sh demo-agent.sh');
+    expect(describeStatus(session).title).toContain("sh '/work/made up/demo-agent.sh' --fast");
   });
 
   it('shows the foreground program and folder otherwise', () => {

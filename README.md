@@ -369,11 +369,11 @@ Each new tab makes a new session, so park or end the ones you no longer need.
 
 ### The demo and the tour
 
-`aubergine demo`, or **Show me around** on an empty canvas, makes a canvas named "Demo" with a small scene on it: a shell with some output, a stand-in agent part-way through the "Fix a bug" workflow, one that is waiting with a question, one that has handed in a checklist and proposed an element for you to review, and a parked terminal. A tour of eight steps points at each in turn and waits for you to try it.
+`aubergine demo`, or **Show me around** on an empty canvas, makes a canvas named "Demo" with a small scene on it: a shell with some output, a stand-in agent part-way through the "Fix a bug" workflow, one that is waiting with a question, one that has handed in a checklist and proposed a step for you to review, and a parked terminal. A tour of eight steps points at each in turn and waits for you to try it.
 
 - **Nothing in it is real.** The stand-ins are short scripts in `daemon/demo/`, labelled as stand-ins where they run. They use the same commands a real agent uses (`aubergine workflow`, `aubergine note`, the hooks), so they also show that those work. They react: answer the one that is waiting and it carries on and reports that it has finished; press Enter in the first one's terminal, or **Done** on its run, and the strip moves.
-- **It touches nothing of yours.** It adds a canvas and its terminals, working in a folder of its own inside Aubergine's data folder. No workflow, shelf element or token is added. Making it twice makes one.
-- **Removing it removes all of it and nothing else**: `aubergine demo --remove`, **Remove the demo** on its canvas, or the last step of the tour. The canvas, its terminals, their runs, the draft and the folder go; so does an element you accepted from a stand-in's draft. Its runs are no longer among the past runs, and what became of its draft is no longer under "Decided lately". A terminal of your own that you put on the demo's canvas is moved to another canvas, still running.
+- **It touches nothing of yours.** It adds a canvas and its terminals, working in a folder of its own inside Aubergine's data folder. No workflow, saved step or token is added. Making it twice makes one.
+- **Removing it removes all of it and nothing else**: `aubergine demo --remove`, **Remove the demo** on its canvas, or the last step of the tour. The canvas, its terminals, their runs, the draft and the folder go; so does a step you accepted from a stand-in's draft. Its runs are no longer among the past runs, and what became of its draft is no longer under "Decided lately". A terminal of your own that you put on the demo's canvas is moved to another canvas, still running.
 - **The tour** can be skipped step by step, put away ("Not now") and taken up again from the palette ("Take the tour") or from **?**, or put away for good. Whether you finished it is remembered in your browser only; nothing about it is sent anywhere or recorded.
 
 **?** in the toolbar lists the same eight things as one-line reminders. **Show me** beside a line points at the thing on the canvas you are looking at.
@@ -382,7 +382,7 @@ Each new tab makes a new session, so park or end the ones you no longer need.
 
 - **New terminal** (or `N`) adds a terminal in free space near the middle of the view, on the canvas you are looking at.
 - Drag a node by its title bar; resize it from its edges; double-click the title to rename it.
-- Drag the background to pan; scroll or pinch to zoom. **Fit** (or `F`) shows everything; the percentage (or `0`) returns to 100%. The minimap in the corner also pans and zooms.
+- Drag the background to pan; scroll or pinch to zoom. **Fit** (or `F`) shows everything; the percentage (or `0`) returns to 100%. The map in the corner also pans and zooms; **Hide map** above it folds it away, the browser remembers that, and it steps aside by itself while the terminal you are typing in lies under it.
 - **+ Frame** adds a labeled frame. Drag a frame by its label and the terminals inside it move along.
 - The dot in a title bar gives a node or frame a color: one of thirteen, or **Your own…** for any color.
 - The title bar shows the running command and current folder of each session.
@@ -396,23 +396,23 @@ One server can hold several projects. A project is a control room of its own: it
 - **Everything on screen is of the project you are in**: the tabs, the side panel, the Queue screen, the Board, schedules and rules. Where a screen can show more, it says so: the owner's list and the Board have **Every project**, and the terminal list has **All projects**; rows then name their project.
 - **Each project has its own address** (`/p/<project>/c/<canvas>`), so a browser tab or window can stay on one. Older addresses (`/c/<canvas>`) still lead to the right place. The browser remembers the canvas you last had open in each project.
 - **How tasks start is per project**: the limit, Hold and "Start by itself" of one project do not touch another.
-- **A canvas moves to another project** from its tab (**Options**, then **Move to another project**) or with `aubergine project move-canvas`. Its terminals go with it, with their runs and working copies, and so do the tasks that wait for one of its terminals. A task for "any free agent", rules and schedules stay where they were. The last canvas of a project does not move.
+- **A canvas moves to another project** from its tab (**⋯**, then **Move to another project**) or with `aubergine project move-canvas`. Its terminals go with it, with their runs and working copies, and so do the tasks that wait for one of its terminals. A task for "any free agent", rules and schedules stay where they were. The last canvas of a project does not move.
 - **Projects…** lists them: rename, color, folder, order; **Archive**, **Reopen**, **Remove for good**. An archived project is out of the switcher and starts nothing: no task, no schedule, no rule. Archiving a project whose terminals are running asks first whether to park them or end them. A project is removed only when it holds nothing, and the last open project stays.
 
 #### What is shared between projects
 
-Canvases, terminals, tasks, schedules and rules always belong to one project. Four kinds of thing are **shared with every project** unless you say otherwise: workflows, shelf elements, library sources (and what was installed from them), and API tokens. **Sharing…** in the switcher's menu is the page for it:
+Canvases, terminals, tasks, schedules and rules always belong to one project. Four kinds of thing are **shared with every project** unless you say otherwise: workflows, saved steps, library sources (and what was installed from them), and API tokens. **Sharing…** in the switcher's menu is the page for it:
 
 - For each kind, what a **new** one is: shared with every project, or of the project it is made in.
 - For each existing thing, where it belongs. Make a workflow one project's own and it is listed and run only there.
-- A run that is going is never stopped by moving anything. A new run does not start from a workflow or an element its project cannot see. A schedule or a rule that runs such an element stops, and says so once on your list.
+- A run that is going is never stopped by moving anything. A new run does not start from a workflow or a step its project cannot see. A schedule or a rule that runs such a step stops, and says so once on your list.
 - Settings are for the whole server, not for a project: the settings file, the keys, the limits.
 
 #### Sending a project to someone: a project as a file
 
 A project can be written out as a file and read in somewhere else: on a teammate's computer, or on another machine of yours. The file is **a copy of the project at one moment**. Nothing links the two afterwards; a change on one side does not reach the other.
 
-**What is in the file**: the project's name and color; its canvases with their tabs, frames and the layout of their terminals; for each terminal its name, tags, pinned note and where it starts; the project's rules and schedules; and the workflows and shelf elements they need.
+**What is in the file**: the project's name and color; its canvases with their tabs, frames and the layout of their terminals; for each terminal its name, tags, pinned note and where it starts; the project's rules and schedules; and the workflows and saved steps they need.
 
 **What is never in it**: tasks and what is on your list, runs and their notes, the log of notes, messages, tokens, settings, working copies, what a terminal showed or ran, and anything of your computer: no path, no user name, no ID. Folders are written as **named places** ("main", "docs"), with only the last part of the path as a hint.
 
@@ -420,7 +420,7 @@ The teammate case, from start to end:
 
 1. **You export.** Projects, then **Export…** on the project (or `aubergine project export "Garden site" garden.project.json`). The browser saves a file. If something could not be written (a parked terminal, a rule whose terminal is parked) the page says what.
 2. **You send the file** however you send files.
-3. **They read it in.** Projects, then **Read in a project file…** (or `aubergine project import garden.project.json`). The Review screen shows everything the file holds before anything is made: every workflow, element and schedule task in full, as an agent would be told it; how many canvases, terminals, rules and schedules it makes; which terminals were an agent's; what its elements say they need.
+3. **They read it in.** Projects, then **Read in a project file…** (or `aubergine project import garden.project.json`). The Review screen shows everything the file holds before anything is made: every workflow, step and schedule task in full, as an agent would be told it; how many canvases, terminals, rules and schedules it makes; which terminals were an agent's; what its steps say they need.
 4. **They choose**: the project's name (it must not be one they already have), where each place is on their computer (a folder that exists, or left unset), and whether what the file calls shared becomes shared with all their projects or the new project's own.
 5. **They accept**, and the project is there: the same canvases, frames, notes, workflows, rules and schedules.
 
@@ -437,7 +437,7 @@ A file is other people's instructions for agents. The review is where you read t
 **Templates** are the same file, marked as a template: **Save as template** on the Projects page keeps one (without the pinned notes) in `templates/` in the data folder, and **New project from a template…** in the switcher lists yours and the two that come with Aubergine:
 
 - **Feature work**: one piece of work on one repository. Two agent terminals (one builds, one reviews), a plain shell, a workflow that stops for your approval before finishing, and a rule that notifies you when a task needs you.
-- **Morning list**: a list of what is open for you every weekday at 08:30. One agent terminal, the element that gathers the list, and its schedule. The agent there needs whatever connections your list comes from; the template brings none.
+- **Morning list**: a list of what is open for you every weekday at 08:30. One agent terminal, the step that gathers the list, and its schedule. The agent there needs whatever connections your list comes from; the template brings none.
 
 A project from a template goes through the same review, and starts nothing either.
 
@@ -489,7 +489,7 @@ Everything you do often has a key, and **?** shows all of them for your system.
 
 **Focus.** Click a terminal to give it the keyboard. One click is enough at any zoom at which you can read it; text is sharpest at 100%. Only a terminal that is too small to read (under 45%) zooms in first. While a terminal has the keyboard, every key goes to the program in it, apart from the few chords in the first table below. Those are chosen so that no shell, editor or tmux can need them: Ctrl+C, Ctrl+R, Ctrl+A, Option with an arrow, Escape and the rest all reach the terminal.
 
-Leaving a terminal (⌃⌘. or a click on the background) keeps it **selected**, shown with a dashed ring. The single keys in the second table then act on the selected terminal, and Enter goes back into it.
+Leaving a terminal (⌃⌘. or a click on the background) keeps it **selected**, shown by its line in the accent colour. The single keys in the second table then act on the selected terminal, and Enter goes back into it.
 
 Work everywhere, inside a terminal too:
 
@@ -549,15 +549,15 @@ Reload the page to apply. If a key is set twice or cannot be read, the shortcut 
 
 The panel on the left shows one thing at a time, chosen by the tabs at its top: **Terminals**, **For you**, **Runs**, **Copies** and **Messages**. A tab says how many it holds, and **For you** stands out while something waits on you. The panel remembers which tab you chose.
 
-The top of the page says where you are and what waits for you: the name, the project, the screens of that project (**Queue**, **Board**, **Workflows**, **Library**), and at the right **For you**, with a count of everything that waits on you, and **Help**. The canvases have the row below it to themselves; the tab you are on has **Options** for what is done seldom (rename, messages between its terminals, moving it to another project, removing the demo). The bar over the canvas holds only what acts on that canvas: **+ New terminal** (with **▾** for everything else you can make), the view (**Go to…**, **Fit**, the zoom), and parked and outside terminals while there are any.
+The top of the page says where you are and what waits for you: the name, the project, the screens of that project (**Queue**, **Board**, **Workflows**, **Library**), and at the right **For you**, with a count of everything that waits on you, and **Help**. The canvases have the row below it to themselves; a tab has its name, a plain number while terminals on it wait for you, and, on the tab you are on or point at, one menu (**⋯**) for what is done seldom (rename, its colour, messages between its terminals, moving it to another project, removing the demo) and the mark that closes it. The bar over the canvas holds only what acts on that canvas: **+ New terminal** (with **▾** for everything else you can make), the view (**Go to…**, **Fit**, the zoom), and parked and outside terminals while there are any.
 
-The side panel has one row of tabs (**Terminals**, **For you**, **Runs**, and **More** for working copies and messages), a field to find a terminal with **Filter** at its end, and the list. A terminal's title is its name, what it runs, **Note**, and one menu (**⋯**) with the rest: tags, a workflow, a message, the desktop, moving it, its colour, people only, parking it.
+The side panel has one row of tabs (**Terminals**, **For you**, **Runs**, and **More** for working copies and messages), a field to find a terminal with **Filter** at its end, and the list. A row of the list is the terminal's name with the whole line, after a dot for its state; under it, in words where it is not the ordinary state (**waiting for you**, **finished**, how the last command failed, the step of a run), then its folder and when it was last active. The same dot begins a terminal's title and a card on the Board. A terminal's title is that dot, its name, its state in words where there is one, what it runs in short (the whole line when you point at it), its first tag, **Note**, and one menu (**⋯**) with the rest: tags, a workflow, a message, the desktop, moving it, its colour, people only, parking it.
 
-A terminal that is on a workflow says so in a line under its title: the workflow, which step of how many, and what it waits for. Click it for every step. On screen a workflow is made of steps and the ones you keep for reuse are saved steps; the commands, the API and the files call a step an element.
+A terminal that is on a workflow says so in a line under its title: the workflow, which step of how many, and what it waits for. Click it for every step. On screen a workflow is made of steps and the ones you keep for reuse are saved steps; the names of commands, options, fields and files say *element* for the same thing (`aubergine element list`, `--element`).
 
-In the terminal list, the three filters used every day (**Waiting for me**, **Busy**, **Unread**) are always there. **More** opens the rest, and how the list is grouped and ordered, and shows a number while any of those is in effect.
+In the terminal list, **Filter** holds where to look (this canvas, all canvases), the filters (**Waiting for me**, **Busy**, **Unread** and the rest) and how the list is grouped and ordered. It shows a number while any of those is in effect, and a filter that is on is also named in one line under it, with **Clear**.
 
-The whole panel collapses to a narrow strip that shows each tab's icon and counts (`B`, or the arrow at the top); click one there to open the panel on it. Drag its right edge to change the width. All of this is remembered by the browser.
+The whole panel collapses to a narrow strip that shows each tab's icon and counts (`B`, or the small handle on the panel's right edge, which is in the same place open or shut); click one there to open the panel on it. Drag its right edge to change the width. All of this is remembered by the browser.
 
 **Terminals** lists every session: the terminals on every canvas, and the parked ones.
 
@@ -604,7 +604,7 @@ The list costs nothing to keep open, also with hundreds of sessions: it is drawn
 
 A terminal on the canvas can also be open in a window of your terminal application. It is the same terminal in both places, not a copy: what you type in one shows in the other, and an agent running in it is the same agent. It is `aubergine attach` started for you in a new window.
 
-- **One terminal that is already running**: **⧉** in its title bar, or **Open on desktop** in its row's menu in the list. This works for a terminal with an agent in it too.
+- **One terminal that is already running**: **Open on desktop** in the menu (**⋯**) of its title, or in its row's menu in the list. This works for a terminal with an agent in it too.
 - **Every new terminal**: open the menu **▾** beside **+ New terminal** and tick **Also open new terminals on the desktop**. From then on each terminal you make in the page also opens a window. The dialogs that make a terminal show the same box, so you can decide for one terminal.
 - **Closing the window ends nothing.** The shell goes on, and the node on the canvas stays. Parking a node does not close the window either; ending the shell does.
 - **The two views share one size.** A terminal has one width and height, and the view you used last sets it. If your desktop window is larger than the node, then after you type in the window the node shows only the top-left part of the screen; after you click into the node again, the window shows the smaller screen with the rest left empty. Make the two about the same size if you use both.
@@ -639,7 +639,7 @@ How it works: a session starts zsh with `ZDOTDIR` pointing at a small folder ins
 **+ Claude Code** starts `claude` in a new session with a settings file that Aubergine generates in its data folder. Your own Claude Code configuration is not touched. The hooks in that file tell the canvas what the agent is doing:
 
 - when you submit a prompt, the prompt is added to the session's note log and the node shows **working**;
-- when the agent needs you (a permission question, or it is idle waiting for input), the node turns orange and shows **waiting for you**;
+- when the agent needs you (a permission question, or it is idle waiting for input), its line turns to the colour of waiting and its title and its row say **waiting for you**; the count beside **For you** at the top is the one thing on the page filled with that colour;
 - when the agent stops, the node shows **finished** and a line is added to the log.
 
 The toolbar shows **N waiting**; click it to go to the next waiting session. Looking at a node clears its state, and so does the agent starting to work again. **Notify** turns on desktop notifications for sessions that start waiting.
@@ -718,7 +718,7 @@ Under **Rules** on the same screen, or with `aubergine rule`. A rule is yours al
 - A rule has a switch: one that is **off** is kept and does nothing. Rules that came in a project file arrive off.
 - **Then**, one of two things:
   - **Notify me**: a notification from the open Aubergine page. The browser asks your permission when you press **Allow notifications**, not before. Nothing leaves your computer.
-  - **Run an element**: starts a run of one element from your shelf, on a terminal you name or a new one, with a short account of what happened as its task. This is how something outside gets called: write an element that says "put this in the calendar", and the agent does it with its own connectors. Aubergine holds no credential for any app and calls no address itself.
+  - **Run a step**: starts a run of one step from your shelf, on a terminal you name or a new one, with a short account of what happened as its task. This is how something outside gets called: write a step that says "put this in the calendar", and the agent does it with its own connectors. Aubergine holds no credential for any app and calls no address itself.
 
 A rule fires once for one event and at most six times a minute; what comes faster is dropped. Every firing is in the activity log, with which rule and how it ended, and without what the task said. What an agent does *because of* a run a rule started sets off no rule, so a rule cannot feed itself.
 
@@ -748,17 +748,17 @@ A schedule is a time of day, days of the week, something to run and somewhere to
 They are under **Schedules** on the Queue screen, and under `aubergine schedule`.
 
 - **When**: a time on this computer's clock, in its own time zone, and the days. Nothing more elaborate: no expressions, nothing more often than once a day.
-- **What**: one element from your shelf, or a workflow, with a task text of your own.
+- **What**: one step from your shelf, or a workflow, with a task text of your own.
 - **Where**: a terminal you name, or a new agent terminal on a canvas you name. A new terminal works in a [working copy](#working-copies-two-agents-on-one-repository) of its own where its folder is in a repository.
 - **On** or off. **Run now** tries it at once, by the same path as one of its times.
 
-Aubergine calls nothing itself and holds no credential for any app. A schedule only starts a run; the agent that takes it does the work with its own tools and connectors. **If the element needs a connector (for a chat, a calendar, mail), the agent on that terminal must have it**: the run dialog's need marks tell you what an element asks for, and a schedule does not check it.
+Aubergine calls nothing itself and holds no credential for any app. A schedule only starts a run; the agent that takes it does the work with its own tools and connectors. **If the step needs a connector (for a chat, a calendar, mail), the agent on that terminal must have it**: the run dialog's need marks tell you what a step asks for, and a schedule does not check it.
 
 ### An example: my to-do list, every weekday morning
 
-1. **Make the element.** Ask an agent for one ("a to-do list from what people asked me in the team chat since yesterday"), or write it on the Workflows screen. Give it the output **checklist**, read it, and save it to the shelf as *Morning list*.
-2. **Try it by hand** on a terminal whose agent has the connector for the chat: **Run…** on the shelf element. If the list that comes back is what you want, go on.
-3. **Make the schedule**: Queue, **Schedules**, **Add a schedule…**: the name *My morning list*, 08:30, Monday to Friday, the element *Morning list*, on a new agent terminal on your canvas. Or:
+1. **Make the step.** Ask an agent for one ("a to-do list from what people asked me in the team chat since yesterday"), or write it on the Workflows screen. Give it the output **checklist**, read it, and save it to the shelf as *Morning list*.
+2. **Try it by hand** on a terminal whose agent has the connector for the chat: **Run…** on the saved step. If the list that comes back is what you want, go on.
+3. **Make the schedule**: Queue, **Schedules**, **Add a schedule…**: the name *My morning list*, 08:30, Monday to Friday, the step *Morning list*, on a new agent terminal on your canvas. Or:
 
    ```sh
    aubergine schedule add "My morning list" --at 08:30 --days weekdays --element "Morning list" --new Main
@@ -772,7 +772,7 @@ Aubergine calls nothing itself and holds no credential for any app. A schedule o
 - **The computer must be awake and Aubergine running.** Nothing wakes the computer. A time that passed while it was asleep, or while the server was stopped, runs **once** when it is back, marked "late" with how late, if that time is less than six hours old (`schedules.lateWithinHours` in the [settings](#settings)). Older than that it does not run and the row says it was **missed**. Three missed mornings are one late run or one missed one, never three.
 - **The limit and Hold count.** A schedule's task waits in the queue while new starts are held or every place is taken, and starts when it may. It does not need **Start next** and does not need "Start by itself" switched on: you said when.
 - **One at a time.** While the task of its earlier time still waits or is at work, a schedule does not add another: the row says it was **skipped**, and why.
-- **Something it names is gone** (the terminal ended, the element was retired or removed, the canvas closed): it does not run, the row says why, and one item, "A schedule could not run", is on your list until you change the schedule, switch it off or remove it. One item, not one a day.
+- **Something it names is gone** (the terminal ended, the step was retired or removed, the canvas closed): it does not run, the row says why, and one item, "A schedule could not run", is on your list until you change the schedule, switch it off or remove it. One item, not one a day.
 - **Clocks that change.** On the day the clocks go forward, a time that does not exist runs at the next minute that does. On the day they go back, a time that comes twice runs once.
 - A schedule made, changed or switched on after its time today first runs at its next time.
 
@@ -859,9 +859,9 @@ An agent can ask where it is: `aubergine where` in its terminal, or the `where_a
 
 ## Workflows
 
-A workflow is an ordered list of **elements** that an agent goes through one at a time: it reads the current one, does it, reports it done, and is given the next. Each element is a name, some instructions, and one line saying how to tell it is finished. The canvas shows where every terminal stands.
+A workflow is an ordered list of **steps** that an agent goes through one at a time: it reads the current one, does it, reports it done, and is given the next. Each step is a name, some instructions, and one line saying how to tell it is finished. The canvas shows where every terminal stands.
 
-Nothing in a workflow is run by Aubergine. An element is text for whoever does the work, and what moves a run is a report: from the agent, by a command it runs in its terminal, or from you, with a button. So a workflow works with any agent that can run a command, and a plain shell can be on one too, with a person moving it.
+Nothing in a workflow is run by Aubergine. A step is text for whoever does the work, and what moves a run is a report: from the agent, by a command it runs in its terminal, or from you, with a button. So a workflow works with any agent that can run a command, and a plain shell can be on one too, with a person moving it.
 
 ### Make one
 
@@ -872,7 +872,7 @@ Nothing in a workflow is run by Aubergine. An element is text for whoever does t
 - **Review a change**: understand, look for problems, report
 - **Specify, design, then build**
 
-**Use** makes an ordinary workflow from a template and opens it in the editor. There you set its name, the text that holds **for every element**, what a run is given when it starts (one input, the task, unless you add more; write `{{task}}` in any text to use it), and the elements: add, remove, rename, and drag them into order. The right-hand side shows exactly what an agent will be told on the element you are editing.
+**Use** makes an ordinary workflow from a template and opens it in the editor. There you set its name, the text that holds **for every step**, what a run is given when it starts (one input, the task, unless you add more; write `{{task}}` in any text to use it), and the steps: add, remove, rename, and drag them into order. The right-hand side shows exactly what an agent will be told on the step you are editing.
 
 Saving makes a **new version**. A run keeps to the version it started on, so editing a workflow never moves or confuses a run that is going.
 
@@ -884,7 +884,7 @@ On a terminal: **Run a workflow…** in the menu (**⋯**) of its title, or ⌘K
 You are on an Aubergine workflow. Run `aubergine workflow status` to read your current element and follow it. When its "done when" is true, run `aubergine workflow done --note "<what you did>"` and follow what it prints.
 ```
 
-From there the agent drives itself: `status` prints the element, and `done` records it and prints the next one, with the note the element before handed over. If no agent is running there, nothing is typed (a shell would try to run the sentence); the run is shown with its buttons, and with that line to give an agent yourself.
+From there the agent drives itself: `status` prints the step, and `done` records it and prints the next one, with the note the step before handed over. If no agent is running there, nothing is typed (a shell would try to run the sentence); the run is shown with its buttons, and with that line to give an agent yourself.
 
 On a new agent: **Claude Code on a workflow…**, in the menu beside **+ New terminal**, starts a Claude Code session that is told about the run in its first prompt.
 
@@ -892,12 +892,12 @@ A terminal is on one run at a time. **Resume agent** on a terminal that is on a 
 
 ### Watch it
 
-- The terminal's title bar has a **strip**: one mark per element and the name of the current one. The same is on its row in the side panel.
+- Under the terminal's title is one line: the workflow, the step it is on of how many, a mark per step, and **All steps**. Its row in the side panel says the step as a chip (**Step 2 of 5**).
 - The side panel's **Runs** tab lists every run that is going, on whichever canvas, those that need someone first. The terminal list can be narrowed to terminals **on a workflow**, or by the state of their run.
-- Click a strip or a run for the **run view**: every element with its state, how long it took, who moved it (the agent, you, or a token) and the note handed in; the current element open with its text. Buttons: the current element **is done**, **Go to** any element (back to redo it, or forward, skipping what lies between), **Pause**, **Resume**, **Stop**.
-- A run the agent reports **blocked** puts its terminal in the waiting queue, naming the element and the reason. So does a run that **finishes**.
+- Click a strip or a run for the **run view**: every step with its state, how long it took, who moved it (the agent, you, or a token) and the note handed in; the current step open with its text. Buttons: the current step **is done**, **Go to** any step (back to redo it, or forward, skipping what lies between), **Pause**, **Resume**, **Stop**.
+- A run the agent reports **blocked** puts its terminal in the waiting queue, naming the step and the reason. So does a run that **finishes**.
 - **quiet** on a strip means the terminal has kept printing for five minutes since the last report, so the picture may be behind what is really going on: the agent may have moved on without saying so. The time is `workflows.quietAfterSeconds` in the settings.
-- When a run finishes, a summary (each element and its note) is added to the terminal's notes. Finished and stopped runs leave the list; they are kept in `runs.log` in the data folder and can be read with `GET /v1/runs?status=ended`.
+- When a run finishes, a summary (each step and its note) is added to the terminal's notes. Finished and stopped runs leave the list; they are kept in `runs.log` in the data folder and can be read with `GET /v1/runs?status=ended`.
 
 ### Approvals: where a run stops for you
 
@@ -907,8 +907,8 @@ When a run reaches an approval:
 
 - The run **waits for approval**. The agent is told to stop and that it cannot approve. If it reports done anyway, that is refused and the run does not move.
 - The terminal goes into the waiting queue ("Approval needed at …"), and the run is on the [board](#the-board) under what waits for you.
-- You read what was done, in the run view: the note of every element so far, any list handed in with its ticks, and how long each took.
-- Then you **Approve**, with a comment if you like, or **Send back…** to any earlier element with a comment saying what should change. The agent is told your comment as part of that element, marked as your words; that element and everything after it is done again, and the run comes back to you.
+- You read what was done, in the run view: the note of every step so far, any list handed in with its ticks, and how long each took.
+- Then you **Approve**, with a comment if you like, or **Send back…** to any earlier step with a comment saying what should change. The agent is told your comment as part of that step, marked as your words; that step and everything after it is done again, and the run comes back to you.
 
 After either, the agent is told to read its status again with the same fixed sentence that starts a run. Your comment is never typed into a terminal: the agent reads it with the command. Where no agent is seen in front of the terminal, nothing is typed, as with any run.
 
@@ -930,9 +930,9 @@ The run is named by its ID or by the name of its terminal.
 
 **Board** in the toolbar (or `Shift+B`) shows every run that is going, on every canvas, on one screen.
 
-- Runs are grouped by **workflow**. Where runs of one workflow are on different versions of it, each version has its own group, because the elements may differ. Runs of one element by itself share a group.
-- In a group the **columns** are the workflow's elements in order, and a **card** is one run on one terminal, in the column of the element it is on. A column where a run stops for you is marked *you decide*.
-- A card says the terminal and its canvas, how the run stands in words (working, waiting for approval, blocked, paused), how long it has been on this element, **quiet** where the terminal has printed for a while without a report, and why it is blocked. A run that waits for you has **Approve** and **Send back…** on the card.
+- Runs are grouped by **workflow**. Where runs of one workflow are on different versions of it, each version has its own group, because the steps may differ. Runs of one step by itself share a group.
+- In a group the **columns** are the workflow's steps in order, and a **card** is one run on one terminal, in the column of the step it is on. A column where a run stops for you is marked *you decide*.
+- A card says the terminal and its canvas, how the run stands in words (working, waiting for approval, blocked, paused), how long it has been on this step, **quiet** where the terminal has printed for a while without a report, and why it is blocked. A run that waits for you has **Approve** and **Send back…** on the card.
 - Click a card to go to that terminal on its canvas. **What it did** opens the run view.
 - At the top are the counts ("3 waiting for you, 2 blocked, 9 working") and filters by canvas, workflow, status and tag. The filters are remembered by this browser.
 - At the bottom are the runs that finished or were stopped in the last day, newest first, at most fifty.
@@ -944,7 +944,7 @@ The same picture is `aubergine board` in a terminal, `GET /v1/board` for a progr
 
 ### Let an agent write one
 
-**Describe an element…** and **Describe a workflow…** (on the Workflows screen, or ⌘K) ask an agent to write one for you. Say what you want, pick a terminal with an agent (or a new Claude Code session), and send.
+**Describe a step…** and **Describe a workflow…** (on the Workflows screen, or ⌘K) ask an agent to write one for you. Say what you want, pick a terminal with an agent (or a new Claude Code session), and send.
 
 Your description is **not typed into the terminal**. The agent is typed one fixed sentence that tells it to run `aubergine workflow brief`; that command prints your description, the format with an example, the limits, and how to hand the result in:
 
@@ -954,7 +954,7 @@ aubergine element propose --file to-dos.json     # or: aubergine workflow propos
 
 What an agent writes arrives as a **draft**. A draft cannot be run, is not among your workflows, and no agent is told any of it. **Review** (the toolbar shows "1 to review") is where you read it: the whole text exactly as an agent would be told it, what it needs, who it is from, and, for a second version, what changed. A text longer than the view is not accepted until you have asked to see all of it. Then:
 
-- **Accept**: an element goes on the shelf; a workflow becomes a workflow (or a new version, when the draft says which one it revises).
+- **Accept**: a step goes on the shelf; a workflow becomes a workflow (or a new version, when the draft says which one it revises).
 - **Edit, then accept**: change the text first.
 - **Send back with a comment**: the agent is typed the same fixed sentence, reads your comment with `aubergine workflow brief`, and hands in a new version.
 - **Discard**.
@@ -963,38 +963,38 @@ What became of each draft is kept in `drafts.log` in the data folder and shown a
 
 Programs can propose too: a token with `workflows:write` posts to `/v1/drafts`. A new token has **changes to workflows need my review** switched on, which closes the routes that create and change workflows to it and leaves it the draft route; switch it off, when you make the token in the browser, for one you trust to write workflows directly. No token, whatever its scopes, can accept, send back or discard a draft, and a session's own token can only propose drafts and read its own.
 
-### What an element needs, and what it produces
+### What a step needs, and what it produces
 
-An element can list what it **needs**: an MCP server, a command, access to something, or anything else, each with a short name. Aubergine does not supply or check these; the agent's own setup does. They are shown in the editor, before a run starts, and on the review screen, and the element tells the agent: *if you do not have one of these, report blocked and say which.*
+A step can list what it **needs**: an MCP server, a command, access to something, or anything else, each with a short name. Aubergine does not supply or check these; the agent's own setup does. They are shown in the editor, before a run starts, and on the review screen, and the step tells the agent: *if you do not have one of these, report blocked and say which.*
 
-An element also says what it **produces**. Every element can hand over a note. One that produces a **checklist** must hand in a list when it is done:
+A step also says what it **produces**. Every step can hand over a note. One that produces a **checklist** must hand in a list when it is done:
 
 ```sh
 aubergine workflow done --output list.json      # {"items": [{"text": "one line", "detail": "optional"}]}
 ```
 
-`done` without it is refused, with the format. In the run view the checklist is a list you can tick, also after the run is over (the side panel lists the runs that ended lately). Your ticks are kept with the run, with when you made them, and the next element is told the list with your choices marked, so "do the ones I ticked" works.
+`done` without it is refused, with the format. In the run view the checklist is a list you can tick, also after the run is over (the side panel lists the runs that ended lately). Your ticks are kept with the run, with when you made them, and the next step is told the list with your choices marked, so "do the ones I ticked" works.
 
-### The shelf, and running one element by itself
+### The shelf, and running one step by itself
 
-The **shelf** on the Workflows screen keeps elements for reuse. **Insert from shelf…** in the workflow editor puts a copy into a workflow (changing the shelf later does not change the workflow), and **Save to shelf** keeps a copy of an element you wrote in one.
+The **shelf** on the Workflows screen keeps steps for reuse. **Insert from shelf…** in the workflow editor puts a copy into a workflow (changing the shelf later does not change the workflow), and **Save to shelf** keeps a copy of a step you wrote in one.
 
-**Run…** on a shelf element (or ⌘K, `Run an element by itself`, or the command below) runs just that element on a terminal, with no workflow around it. It shows up as a run like any other, and nothing is added to your workflows for it.
+**Run…** on a saved step (or ⌘K, `Run a step by itself`, or the command below) runs just that step on a terminal, with no workflow around it. It shows up as a run like any other, and nothing is added to your workflows for it.
 
 ```sh
 aubergine element list
 aubergine element run "Collect my to-dos" --session helper
 ```
 
-An example, end to end: ask an agent for "a to-do list from what people asked me in the team chat". It proposes an element, *Collect my to-dos*, that needs an MCP server for the chat and produces a checklist. You read it, send it back once ("shorter"), accept the second version, and run it by itself on the agent's terminal. The agent hands in the list; you tick the items you will do.
+An example, end to end: ask an agent for "a to-do list from what people asked me in the team chat". It proposes a step, *Collect my to-dos*, that needs an MCP server for the chat and produces a checklist. You read it, send it back once ("shorter"), accept the second version, and run it by itself on the agent's terminal. The agent hands in the list; you tick the items you will do.
 
-### The life of a shelf element
+### The life of a saved step
 
-An element on the shelf is copied into workflows, never linked. What connects a copy to the shelf afterwards is what the copy remembers about where it came from, and you decide everything that follows from it.
+A step on the shelf is copied into workflows, never linked. What connects a copy to the shelf afterwards is what the copy remembers about where it came from, and you decide everything that follows from it.
 
-**Versions.** Saving a change to a shelf element adds a version; what it said before stays as it was. Each version has who saved it, when, and a line on what changed if you wrote one. The newest 30 are kept, and any version a copy in a workflow was made from. The shelf editor lists them, each with what it changed from the one before.
+**Versions.** Saving a change to a saved step adds a version; what it said before stays as it was. Each version has who saved it, when, and a line on what changed if you wrote one. The newest 30 are kept, and any version a copy in a workflow was made from. The shelf editor lists them, each with what it changed from the one before.
 
-**A copy knows its source.** An element inserted from the shelf records which shelf element it is a copy of, which version, and a mark of the content as it was copied. From those three the editor puts a small mark on the element:
+**A copy knows its source.** A step inserted from the shelf records which saved step it is a copy of, which version, and a mark of the content as it was copied. From those three the editor puts a small mark on the step:
 
 | Mark | What it means |
 |---|---|
@@ -1003,19 +1003,19 @@ An element on the shelf is copied into workflows, never linked. What connects a 
 | newer on the shelf | as it was copied, and the shelf has a newer version |
 | changed here, newer on the shelf | both |
 | from the shelf, cannot tell | a copy made before versions were kept: Aubergine does not know which version it came from, and never says it is behind |
-| its source was removed | its shelf element is not on the shelf: it was removed, or the workflow came from another computer |
+| its source was removed | its saved step is not on the shelf: it was removed, or the workflow came from another computer |
 
 **Taking a newer version.** When the shelf has a newer version, the editor shows what it changes (the same comparison the review screen uses) and offers **Take the shelf's version** or **Keep mine**. If the copy was also changed in the workflow, the three texts are shown side by side: as it was copied, yours now, the shelf's now. You pick one of the two; nothing is merged for you. To keep parts of both, take one and edit it. Saving then makes a new version of the workflow, as any edit does, and runs that are going keep to the version they started on. Nothing is ever updated by itself, no API token can do it (even one that may change workflows), and a draft cannot either: a token or a draft can change what a copy says, which then reads as "changed here", and cannot say that a copy was brought up to date.
 
-**From a workflow back to the shelf.** **Save to shelf** on an element that came from the shelf offers two things: a new element, or a new version of the one it came from. Other workflows that hold a copy are not changed; each says that a newer version is on the shelf.
+**From a workflow back to the shelf.** **Save to shelf** on a step that came from the shelf offers two things: a new step, or a new version of the one it came from. Other workflows that hold a copy are not changed; each says that a newer version is on the shelf.
 
-**Where it is used.** The shelf editor lists the workflows that hold a copy and what the mark on each copy is. Removing a shelf element that is used says so first; the copies stay as they are and say that their source was removed.
+**Where it is used.** The shelf editor lists the workflows that hold a copy and what the mark on each copy is. Removing a saved step that is used says so first; the copies stay as they are and say that their source was removed.
 
-**Retiring.** A shelf element is current, or **retired**: kept, and still working wherever a copy of it is, but not offered when inserting and not run by itself. Retired elements are under a fold on the Workflows screen. When you retire one you can name the element to use in its place, and the editor then says "retired: use …" on its copies. Retiring and bringing back are yours alone, like taking a newer version.
+**Retiring.** A saved step is current, or **retired**: kept, and still working wherever a copy of it is, but not offered when inserting and not run by itself. Retired steps are under a fold on the Workflows screen. When you retire one you can name the step to use in its place, and the editor then says "retired: use …" on its copies. Retiring and bringing back are yours alone, like taking a newer version.
 
-**What goes in an element.** The editor has a fold of that name beside the form, and the same list is in [docs/element.md](docs/element.md): every field an element has, whether you write it or it is kept for you, and what it is for. Both are made from the descriptions in the code, so they cannot say something else than it does.
+**What goes in a step.** The editor has a fold of that name beside the form, and the same list is in [docs/element.md](docs/element.md): every field a step has, whether you write it or it is kept for you, and what it is for. Both are made from the descriptions in the code, so they cannot say something else than it does.
 
-**In a file.** A workflow written as a file (`workflow export`, or saved to a repository) keeps where each copy came from, and a file without such marks is read as before. On a computer whose shelf does not have that element, the copy says its source is not on the shelf, and nothing else is claimed.
+**In a file.** A workflow written as a file (`workflow export`, or saved to a repository) keeps where each copy came from, and a file without such marks is read as before. On a computer whose shelf does not have that step, the copy says its source is not on the shelf, and nothing else is claimed.
 
 ```sh
 aubergine element list           # each with its version, and whether it is retired
@@ -1072,7 +1072,7 @@ Terminals that were already open when you updated keep the `PATH` they started w
 
 ### For programs
 
-Workflows, the shelf, drafts and runs are in the [API](docs/api.md): propose drafts, and with review switched off for the token create and change workflows and shelf elements (`workflows:write`); start runs, report on them and tick checklist items (`runs:write`); read all of it (`read`). Reporting on a run does not type into a terminal: a token that starts a run is given the line above in the answer, and nothing is typed. Limits on the size of a workflow are under `workflows` in the settings.
+Workflows, the shelf, drafts and runs are in the [API](docs/api.md): propose drafts, and with review switched off for the token create and change workflows and saved steps (`workflows:write`); start runs, report on them and tick checklist items (`runs:write`); read all of it (`read`). Reporting on a run does not type into a terminal: a token that starts a run is given the line above in the answer, and nothing is typed. Limits on the size of a workflow are under `workflows` in the settings.
 
 ## Updating from an older version
 
@@ -1118,7 +1118,7 @@ Create `config.json` in the data folder (the server prints its location at start
   Aubergine adds its own flags (`--settings <file>`, and `--continue` or `--resume <id>`) at the end. If your launcher needs them somewhere else, mark the place with `{flags}`, for example `"mytool run claude {flags} --then-something"`. The line is typed into your shell exactly as you wrote it, so quote it as you would on the command line.
 
 - `api`: limits on calls made with [API tokens](#api-tokens): calls per minute per token, the largest request body, and the size of the activity log. They apply when the server is next started.
-- `workflows`: how many elements a [workflow](#workflows) may have, how long the text of one element (and the text for every element) may be, and after how many seconds of output without a report a run is marked quiet. The two limits apply when the server is next started.
+- `workflows`: how many steps a [workflow](#workflows) may have, how long the text of one step (and the text for every step) may be, and after how many seconds of output without a report a run is marked quiet. The two limits apply when the server is next started.
 - `terminal`: [terminal access](#terminal-access) for API tokens: whether new terminals, and new agent sessions, start "people only"; the limits on typing; and `auditInput`, which keeps what tokens type in a file.
 - `library`: how long and how large a fetch of a [library](#the-library) source may be.
 - `desktop`: [the same terminal in your own terminal app](#the-same-terminal-in-your-own-terminal-app). `app` is `"terminal"`, `"iterm"` or `"command"` (`null`: Terminal on macOS); `command` is your own command line with `{file}`; `openNew` makes every terminal you make in the page also open on the desktop. They are read each time a window is opened.
@@ -1280,11 +1280,11 @@ Typed in a terminal, the other `aubergine` commands act as you, whoever types th
 
 ## The library
 
-The **Library** (in the toolbar, or ⌘K, `Library…`) is a place to browse workflows and elements that others published, or that you published on another computer, read what one contains, and install it. It is not a marketplace: there are no accounts, no ratings, and nothing is published from the app.
+The **Library** (in the toolbar, or ⌘K, `Library…`) is a place to browse workflows and steps that others published, or that you published on another computer, read what one contains, and install it. It is not a marketplace: there are no accounts, no ratings, and nothing is published from the app.
 
 **Sources.** A source is a place with an index of items:
 
-- **Comes with Aubergine**: a small library inside the app (four elements and two workflows, written in plain language). It needs no network and is why Browse is not empty the first time.
+- **Comes with Aubergine**: a small library inside the app (four steps and two workflows, written in plain language). It needs no network and is why Browse is not empty the first time.
 - **A folder** on this computer.
 - **A Git repository**, by its address: `https://…`, `ssh://…`, `user@host:path` or `file://…`.
 
@@ -1296,7 +1296,7 @@ Add one in the Library screen or with `aubergine library add <folder or address>
 
 **Browse and read.** Every item shows where it comes from, its version, and everything an agent would be told by it, as plain text. Read it there before you decide anything.
 
-**Installing is reading first.** **Read and install…** puts the item in **Review**, the same screen where you read what agents wrote. You see the whole text exactly as an agent would be told it, what it needs (with advice on whether the agents on your canvases have a thing of that name, where that can be read), where it comes from, at which version and commit. **Accept** installs exactly the file you were shown: if it changed in the meantime, nothing is installed and you are told to read it again. A workflow goes among your workflows; an element goes on your shelf.
+**Installing is reading first.** **Read and install…** puts the item in **Review**, the same screen where you read what agents wrote. You see the whole text exactly as an agent would be told it, what it needs (with advice on whether the agents on your canvases have a thing of that name, where that can be read), where it comes from, at which version and commit. **Accept** installs exactly the file you were shown: if it changed in the meantime, nothing is installed and you are told to read it again. A workflow goes among your workflows; a step goes on your shelf.
 
 A program with an API token that may propose workflows (`workflows:write`) can **ask** for an install. The request waits in Review like any other; no token can accept it.
 
@@ -1311,7 +1311,7 @@ A program with an API token that may propose workflows (`workflows:write`) can *
 
 **Offline.** Everything installed works with no source reachable. A source that cannot be reached shows when it was last read and why the last try failed.
 
-**Removing** an installed item says where it is used first. Copies of an element in your workflows stay as they are and say that their source was removed.
+**Removing** an installed item says where it is used first. Copies of a step in your workflows stay as they are and say that their source was removed.
 
 **Publishing your own.** A folder or repository of yours can be a source:
 
@@ -1355,11 +1355,11 @@ An agent in one terminal sometimes needs to tell the agent in another something:
 aubergine tell "api server" "Rebase on main before you go on."
 ```
 
-Nothing is typed into the terminal. Its tile and its row show "✉ 1 from you". If an agent is running there and is idle, Aubergine types one fixed sentence into it: "There is a message for this session in Aubergine. Run `aubergine inbox` to read it." That sentence is the same for every message; nothing of yours and no name is in it. It is typed at most once for a batch of unread messages, not again within two minutes, never into a plain shell (where it would be run as a command), only while the agent is seen to be the program in front of the terminal, never while the agent is working or is waiting on a question of its own, and not on top of something you typed a moment ago.
+Nothing is typed into the terminal. Its title shows "✉ 1 from you". If an agent is running there and is idle, Aubergine types one fixed sentence into it: "There is a message for this session in Aubergine. Run `aubergine inbox` to read it." That sentence is the same for every message; nothing of yours and no name is in it. It is typed at most once for a batch of unread messages, not again within two minutes, never into a plain shell (where it would be run as a command), only while the agent is seen to be the program in front of the terminal, never while the agent is working or is waiting on a question of its own, and not on top of something you typed a moment ago.
 
 **The agent reads and answers** with `aubergine inbox` (which prints each unread message between two marker lines, with who sent it, and marks it read) and `aubergine reply <id> "<answer>"`. An agent can always answer a message from you. Its answer shows on the terminal as "✉ 1 for you" and puts the terminal in the "waiting" queue.
 
-**One terminal to another: only where you switch it on.** Each canvas has a switch under **Options** on its tab, **Messages between terminals: off**. Click it, read what it says, and it is on: the terminals on that canvas may now message each other with `aubergine tell "<terminal>" "<message>"`. Off is how every canvas starts, and only you can change it: no API token and no agent can. With it on:
+**One terminal to another: only where you switch it on.** Each canvas has a switch under **⋯** on its tab, **Messages between terminals: off**. Click it, read what it says, and it is on: the terminals on that canvas may now message each other with `aubergine tell "<terminal>" "<message>"`. Off is how every canvas starts, and only you can change it: no API token and no agent can. With it on:
 
 - only terminals on the same canvas reach each other. Nothing passes between canvases in this version, and a parked terminal neither sends nor receives;
 - a terminal marked **people only** takes messages from you alone. Terminals that start an agent are people only from the start (`terminal.protectAgentSessions`), so with nothing else changed such a terminal can send and cannot receive. To let it receive, open its drawer (**✉** on the terminal) and tick that it takes messages while people only. That lets terminals message it where the canvas's switch is on, and nothing else: it stays closed to reading and typing, and to every program with a token. Only you can tick it;
@@ -1419,7 +1419,7 @@ curl -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/jso
 | `canvases:write` | create, rename, reorder and close canvases; move and resize nodes; frames; show a canvas in the browser |
 | `sessions:write` | start, rename, tag, move, park, restore and end sessions; show a session in the browser. By itself it starts plain shells and runs nothing: starting a session **with a command** also needs `terminal:input` with a reach that covers the new session (its canvas, its tags), and is refused where new sessions start people only |
 | `notes:write` | change a session's pinned note and add entries to its note log |
-| `workflows:write` | propose workflows and elements as drafts for you to review, and ask for an item of the [library](#the-library) to be installed (the request waits for you; no token can accept it). With review switched off for the token: create, change, copy and remove workflows and shelf elements directly |
+| `workflows:write` | propose workflows and steps as drafts for you to review, and ask for an item of the [library](#the-library) to be installed (the request waits for you; no token can accept it). With review switched off for the token: create, change, copy and remove workflows and saved steps directly |
 | `runs:write` | start runs of workflows on sessions and report on them (done, blocked, go to, pause, resume, stop). By itself it types nothing into a terminal; with `terminal:input` on that terminal, the one fixed kickoff sentence is typed |
 | `tasks:write` | propose tasks for the queue and ask you for something in writing; withdraw what it proposed. Both wait for you and start nothing. With review switched off for the token, its tasks are queued without your yes. It cannot accept, reorder or start tasks |
 | `terminal:read`, `terminal:input` | read what terminals show, and type into them. Not implied by anything above, and each token says which terminals it may reach. **With `terminal:input` a token can run any command as you.** See [Terminal access](#terminal-access) before granting either |
@@ -1582,7 +1582,7 @@ A file that is there but cannot be read, or is not in the form Aubergine was wri
 
 **Only you, in the browser.** No API token and no session can read this, and the MCP server has no tool for it.
 
-**What an element needs.** When you start a workflow on an agent's terminal, each thing its elements need that is an MCP server or a command gets a mark: **found** (something configured has a name like it; hover to see what), **not found**, or **cannot tell**. The marks compare names. They do not check that anything works, and they never stop a run.
+**What a step needs.** When you start a workflow on an agent's terminal, each thing its steps need that is an MCP server or a command gets a mark: **found** (something configured has a name like it; hover to see what), **not found**, or **cannot tell**. The marks compare names. They do not check that anything works, and they never stop a run.
 
 ## Recaps, and what changed while you were away
 

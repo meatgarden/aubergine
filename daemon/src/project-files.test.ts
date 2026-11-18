@@ -343,7 +343,7 @@ describe('a project written to a file', () => {
 });
 
 describe('a file read in on another server', () => {
-  it('gives the same canvases, layout, frames, notes, rules, schedules, workflows and elements, with new IDs and nothing pointing at the first server', async () => {
+  it('gives the same canvases, layout, frames, notes, rules, schedules, workflows and steps, with new IDs and nothing pointing at the first server', async () => {
     const { projectId, folder } = await fullProject();
     const before = state();
     const oldIds = new Set([...before.projects, ...before.canvases, ...before.sessions, ...before.workflows, ...before.shelf, ...before.queue.rules, ...before.schedules.items].map((thing) => thing.id));
@@ -363,7 +363,7 @@ describe('a file read in on another server', () => {
     const read = await reading(text);
     expect(read).toMatchObject({ name: 'Garden site', nameTaken: false, template: false, counts: { canvases: 2, terminals: 3, agents: 1, frames: 1, notes: 2, workflows: 1, elements: 1, rules: 2, schedules: 2 }, agents: ['builder'], shared: ['Morning list'], sharedDefault: 'shared' });
     expect(read.places).toEqual([{ name: 'docs', hint: 'docs', default: false, terminals: 1 }, { name: 'main', hint: 'made-up work folder', default: true, terminals: 1 }]);
-    expect(read.texts.map((t) => t.title)).toEqual(['The workflow “Build and look”', 'The element “Morning list”', 'The task of the schedule “Every morning”', 'The task of the schedule “Weekly build”']);
+    expect(read.texts.map((t) => t.title)).toEqual(['The workflow “Build and look”', 'The step “Morning list”', 'The task of the schedule “Every morning”', 'The task of the schedule “Weekly build”']);
     expect(read.texts[0]?.text).toContain('Build (task).');
     expect(read.texts[1]?.text).toContain('Gather: (task)');
     expect(read.needs).toEqual([{ of: 'Morning list', needs: ['mcp: chat'] }]);
@@ -511,8 +511,8 @@ describe('nothing is made', () => {
       ['a note with a control character', fileWith({ canvases: [canvas({ nodes: [node({ note: 'x\u0007y' })] })] }), /A note is plain text/],
       ['a place that is not listed', fileWith({ canvases: [canvas({ nodes: [node({ place: 'nowhere' })] })] }), /starts in a place, “nowhere”, that the file does not list/],
       ['two things with one reference', fileWith({ canvases: [canvas(), { ref: 'c1', name: 'Again', nodes: [] }] }), /Two things in this file have the reference c1/],
-      ['a terminal and an element with one reference', fileWith({ elements: [{ ref: 't1', element: { id: 'x', name: 'X', instructions: 'x' } }] }), /Two things in this file have the reference t1/],
-      ['a rule naming an element that is not there', fileWith({ rules: [{ event: 'task.done', action: { kind: 'run-element', element: 'e9', on: { terminal: 't1' } } }] }), /A rule runs an element that is not in the file/],
+      ['a terminal and a step with one reference', fileWith({ elements: [{ ref: 't1', element: { id: 'x', name: 'X', instructions: 'x' } }] }), /Two things in this file have the reference t1/],
+      ['a rule naming a step that is not there', fileWith({ rules: [{ event: 'task.done', action: { kind: 'run-element', element: 'e9', on: { terminal: 't1' } } }] }), /A rule runs a step that is not in the file/],
       ['a rule on a terminal that is not there', fileWith({ elements: [{ ref: 'e1', element: { id: 'x', name: 'X', instructions: 'x' } }], rules: [{ event: 'task.done', action: { kind: 'run-element', element: 'e1', on: { terminal: 't9' } } }] }), /A rule names a terminal that is not in the file/],
       ['a schedule running what is not there', fileWith({ schedules: [{ name: 'S', time: '08:30', days: ['mon'], what: { workflow: 'w9' }, where: { canvas: 'c1' } }] }), /The schedule “S” runs something that is not in the file/],
       ['a rule that does something else', fileWith({ rules: [{ event: 'task.done', action: { kind: 'call-an-address', url: 'http://example.invalid' } }] }), /rules\.0\.action/],
@@ -676,7 +676,7 @@ describe('the commands', () => {
     answers = ['n'];
     const refused = await typed_(['import', 'garden.project.json', '--place', `main=${here}`]);
     expect(refused.code).toBe(1);
-    for (const said of ['A project file: “Garden site”', 'It makes 2 canvases and 3 terminals. No shell is started unless you tick', "Were an agent's: builder", '“Morning list” says it needs: mcp: chat', `The place “main” (it was a folder called “made-up work folder”), where 1 terminal starts: ${here}`, 'The place “docs” (it was a folder called “docs”), where 1 terminal starts: not set; they start in your home folder.', '── The workflow “Build and look” ──', 'Build (task).', '── The element “Morning list” ──', 'Make the project “Garden site” from exactly this, starting nothing? [y/N]', 'Nothing was made.']) expect(refused.out, said).toContain(said);
+    for (const said of ['A project file: “Garden site”', 'It makes 2 canvases and 3 terminals. No shell is started unless you tick', "Were an agent's: builder", '“Morning list” says it needs: mcp: chat', `The place “main” (it was a folder called “made-up work folder”), where 1 terminal starts: ${here}`, 'The place “docs” (it was a folder called “docs”), where 1 terminal starts: not set; they start in your home folder.', '── The workflow “Build and look” ──', 'Build (task).', '── The step “Morning list” ──', 'Make the project “Garden site” from exactly this, starting nothing? [y/N]', 'Nothing was made.']) expect(refused.out, said).toContain(said);
     expect(state().projects).toHaveLength(1);
     // A yes makes it, and starts nothing.
     answers = ['y'];

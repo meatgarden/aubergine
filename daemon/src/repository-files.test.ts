@@ -149,7 +149,7 @@ describe('reading a repository\'s workflow files', () => {
     expect(reason('e-bad-name.json')).toContain('plain text');
   });
 
-  it('holds to the limits: so many files, so many bytes, so many elements', async () => {
+  it('holds to the limits: so many files, so many bytes, so many steps', async () => {
     const many: Record<string, string> = {};
     for (let n = 0; n < REPOSITORY_MAX_FILES + 5; n += 1) many[`w-${String(n).padStart(3, '0')}.json`] = fileOf(`Workflow ${n}`);
     const root = await repository(path.join(home, 'p'), many);
@@ -164,7 +164,7 @@ describe('reading a repository\'s workflow files', () => {
     expect(read.files[1]).toMatchObject({ file: 'ok.json', ok: true });
     const three = fileOf('Three', { elements: [1, 2, 3].map((n) => ({ name: `E${n}`, instructions: 'x' })) });
     const small = await repository(path.join(home, 'small'), { 'three.json': three });
-    expect((await readRepositoryFolder(small, { maxElements: 2, maxElementChars: 100 })).files[0]).toMatchObject({ ok: false, reason: 'It has 3 elements; at most 2 are allowed.' });
+    expect((await readRepositoryFolder(small, { maxElements: 2, maxElementChars: 100 })).files[0]).toMatchObject({ ok: false, reason: 'It has 3 steps; at most 2 are allowed.' });
   });
 
   it('reads one file only by a plain name in the folder', async () => {

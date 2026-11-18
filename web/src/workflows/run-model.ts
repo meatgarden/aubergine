@@ -68,7 +68,7 @@ export function pictureOf(
     segments,
     current,
     total: segments.length,
-    // A stopped run keeps the element it was stopped on.
+    // A stopped run keeps the step it was stopped on.
     position: !current ? STATUS_WORD[run.status] : run.status === 'stopped' ? `stopped at ${current.name}` : `${current.name} · ${current.number} of ${segments.length}`,
     quiet: isQuiet(run, lastOutputAt, quietAfterSeconds),
   };

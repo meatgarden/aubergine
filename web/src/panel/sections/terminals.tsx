@@ -6,16 +6,18 @@ import { SCOPE_FILTER, TAG_FILTER, TEXT_FILTER, listFilters } from '../../list-f
 import { listModel, listSource } from '../../list-model';
 import { NotePanel } from '../../NotePanel';
 import { RecapBlock, recapTitle } from '../../Recap';
-import { MessageMark, SessionMessages } from '../../Messages';
-import { markNotesSeen, useUnseenNotes } from '../../notes-seen';
+import { SessionMessages } from '../../Messages';
+import { markNotesSeen } from '../../notes-seen';
 import { shortFolder } from '../../search';
 import { hint } from '../../shortcuts';
 import { useApp } from '../../store';
 import {
   SORTS,
   SORT_LABEL,
+  DOT_WORD,
   STATE_MARK,
   STATE_WORD,
+  dotTone,
   ago,
   describeEmpty,
   filterChips,
@@ -28,14 +30,12 @@ import {
   type Sort,
 } from '../../terminal-rows';
 import { registerSection } from '../registry';
-import { Menu } from '../../ui';
-import { ListMark } from '../../workflows/ListMark';
+import { Menu, StateDot } from '../../ui';
 import { RunStrip } from '../../workflows/RunStrip';
 
 const SECTION = 'terminals';
 /** Relative times are brought up to date this often, by one timer for the whole list. */
 const CLOCK_MS = 5000;
-const PREVIEW_DELAY_MS = 350;
 
 function useModel() {
   // Of the project being looked at, or of every project, as the view says.
@@ -52,12 +52,10 @@ function TerminalsSection() {
   const canvasId = useApp((s) => s.canvasId);
   const current = useApp((s) => s.focus?.sessionId ?? s.selected);
   const focused = useApp((s) => s.focus?.sessionId ?? null);
-  const drawer = useApp((s) => s.drawer);
   const setView = useApp((s) => s.setListView);
   const canvasCount = useApp((s) => s.app?.canvases.length ?? 0);
   useApp((s) => s.settings.shortcuts);
   const [menu, setMenu] = useState<string | null>(null);
-  const [preview, setPreview] = useState<{ row: Row; top: number; left: number } | null>(null);
   const scroller = useRef<HTMLDivElement>(null);
   const search = useRef<HTMLInputElement>(null);
   const [scrollTop, setScrollTop] = useState(0);
@@ -142,7 +140,6 @@ function TerminalsSection() {
   };
 
   const openNotes = (sessionId: string): void => {
-    setPreview(null);
     const open = useApp.getState().drawer;
     const same = open?.section === SECTION && open.kind === 'notes' && open.id === sessionId;
     useApp.getState().openDrawer(same ? null : { section: SECTION, kind: 'notes', id: sessionId });
@@ -326,17 +323,12 @@ function TerminalsSection() {
               const style = { top: tops[index], height: itemHeight(item, view.density) };
               if (item.kind === 'group') {
                 return (
-                  <button key={`g:${item.id}`} type="button" className="list-group" style={style} aria-expanded={!item.collapsed} onClick={() => toggleGroup(item.id)} data-testid="list-group" data-group={item.id}>
-                    <span className="list-chevron">{item.collapsed ? '▸' : '▾'}</span>
-                    <span className="list-group-title">
-                      {view.everyProject ? `${projectOfGroup(item.id)}${item.title}` : item.title}
+                  <button key={`g:${item.id}`} type="button" className="list-group" style={style} aria-expanded={!item.collapsed} title={`${item.count} ${item.count === 1 ? 'terminal' : 'terminals'}${item.waiting > 0 ? `, ${item.waiting} waiting for you` : ''}`} onClick={() => toggleGroup(item.id)} data-testid="list-group" data-group={item.id}>
+                    <span className="list-chevron" aria-hidden="true">
+                      {item.collapsed ? '▸' : '▾'}
                     </span>
+                    <span className="list-group-title">{view.everyProject ? `${projectOfGroup(item.id)}${item.title}` : item.title}</span>
                     <span className="list-count">{item.count}</span>
-                    {item.waiting > 0 && (
-                      <span className="tab-waiting" title={`${item.waiting} waiting for you`}>
-                        {item.waiting}
-                      </span>
-                    )}
                   </button>
                 );
               }
@@ -360,7 +352,6 @@ function TerminalsSection() {
                   focused={id === focused}
                   here={row.canvasId === canvasId}
                   menuOpen={menu === id}
-                  notesOpen={drawer?.kind === 'notes' && drawer.id === id}
                   canMove={canvasCount > 1}
                   now={now}
                   onGo={go}
@@ -368,14 +359,12 @@ function TerminalsSection() {
                   onAct={act}
                   onNotes={openNotes}
                   onTag={addTag}
-                  onPreview={setPreview}
                 />
               );
             })}
           </div>
         )}
       </div>
-      {preview && <NotePreview row={preview.row} top={preview.top} left={preview.left} />}
     </div>
   );
 }
@@ -390,7 +379,6 @@ interface RowProps {
   /** On the canvas being looked at, so the node's commands can act on it. */
   here: boolean;
   menuOpen: boolean;
-  notesOpen: boolean;
   canMove: boolean;
   now: number;
   onGo: (sessionId: string) => void;
@@ -398,44 +386,29 @@ interface RowProps {
   onAct: (sessionId: string, command: CommandId) => void;
   onNotes: (sessionId: string) => void;
   onTag: (tag: string) => void;
-  onPreview: (preview: { row: Row; top: number; left: number } | null) => void;
 }
 
-/** The most telling word for a row: its state, said the way the node says it. */
-function badgeOf(row: Row): string | null {
+/** The state of a row in words, where it is not the ordinary one: what the chip on its second line says. */
+function chipOf(row: Row): { text: string; tone: 'attention' | 'ok' | 'danger' } | null {
   const { session, state } = row;
-  if (state === 'waiting') return session.attention.state === 'done' ? 'finished' : 'waiting for you';
-  if (state === 'failed') return `exit ${session.status.lastExit}`;
-  if (state === 'idle') return row.parked ? 'parked' : null;
-  return STATE_WORD[state];
+  if (state === 'waiting') return session.attention.state === 'done' ? { text: 'finished', tone: 'ok' } : { text: 'waiting for you', tone: 'attention' };
+  if (state === 'failed') return { text: `exit ${session.status.lastExit}`, tone: 'danger' };
+  return null;
 }
 
-const RowView = memo(function RowView({ row, style, density, indented, current, focused, here, menuOpen, notesOpen, canMove, now, onGo, onMenu, onAct, onNotes, onTag, onPreview }: RowProps) {
+const RowView = memo(function RowView({ row, style, density, indented, current, focused, here, menuOpen, canMove, now, onGo, onMenu, onAct, onNotes, onTag }: RowProps) {
   const { session, state } = row;
   const compact = density === 'compact';
-  const badge = badgeOf(row);
-  const detail = session.state === 'exited' ? 'ended' : [session.command, shortFolder(session.cwd)].filter(Boolean).join(' · ');
+  const chip = chipOf(row);
+  const tone = dotTone(session, row.parked);
   const typed = ago(session.lastInputAt, now);
   const updated = ago(session.lastOutputAt, now);
   // The later of the two times is the one the row says.
   const active = ago([session.lastInputAt, session.lastOutputAt].filter((t): t is string => typeof t === 'string').sort().at(-1) ?? null, now);
+  const said = (short: string): string => (short === 'now' ? 'just now' : `${short} ago`);
   const hasNotes = session.note !== '' || session.noteLog.length > 0;
-  const unseen = useUnseenNotes(session.id, session.noteLog.length);
-  const timer = useRef<number | undefined>(undefined);
-
-  const showPreview = (element: HTMLElement): void => {
-    // A preview is for a pointer that can hover, or the keyboard; never for touch.
-    window.clearTimeout(timer.current);
-    timer.current = window.setTimeout(() => {
-      const box = element.getBoundingClientRect();
-      onPreview({ row, top: box.top, left: box.right + 8 });
-    }, PREVIEW_DELAY_MS);
-  };
-  const hidePreview = (): void => {
-    window.clearTimeout(timer.current);
-    onPreview(null);
-  };
-  useEffect(() => () => window.clearTimeout(timer.current), []);
+  // Where it is, and what else is known that a row has room for. When it was last active is said once, after these.
+  const where = [session.state === 'exited' ? 'ended' : shortFolder(session.cwd), session.meantFor?.agent ? `was ${session.meantFor.agent}` : null, row.parked && session.state !== 'exited' ? 'parked' : null].filter(Boolean).join(' · ');
 
   return (
     <div
@@ -448,10 +421,9 @@ const RowView = memo(function RowView({ row, style, density, indented, current, 
       data-state={state}
       onClick={() => onGo(session.id)}
     >
+      {/* The first line is the name's: the mark of its state, then the name with all the room there is. */}
       <div className="list-main">
-        <span className="list-state" title={STATE_WORD[state]} aria-label={STATE_WORD[state]}>
-          {STATE_MARK[state]}
-        </span>
+        <StateDot tone={tone} word={tone === 'hollow' && state !== 'ended' ? 'parked' : tone === 'hollow' ? 'ended' : DOT_WORD[tone]} className="list-state" data-testid="list-state" />
         <span
           className="list-name"
           // The recap, on hover: worked out when the pointer arrives, so that drawing a row costs nothing more.
@@ -462,45 +434,22 @@ const RowView = memo(function RowView({ row, style, density, indented, current, 
         >
           {session.name}
         </span>
-        {/* At the right of the first line: what the terminal waits for, and the run it is on. Nothing when there is nothing. */}
-        {badge && !compact && (
-          <span className="list-badge" data-testid="list-badge" title={session.attention.message ?? session.status.commandLine ?? undefined}>
-            {badge}
-          </span>
-        )}
-        {!compact && <MessageMark session={session} />}
-        {!compact && <RunStrip sessionId={session.id} variant="row" />}
-        {!compact && <ListMark sessionId={session.id} variant="row" />}
-        {hasNotes && unseen > 0 && (
-          <button
-            type="button"
-            className={`list-note${notesOpen ? ' open' : ''}`}
-            aria-label={`Notes of ${session.name}, ${unseen} new`}
-            aria-expanded={notesOpen}
-            data-testid="list-note"
-            onClick={(event) => {
-              event.stopPropagation();
-              onNotes(session.id);
-            }}
-            onMouseEnter={(event) => window.matchMedia('(hover: hover)').matches && showPreview(event.currentTarget)}
-            onMouseLeave={hidePreview}
-            onFocus={(event) => event.currentTarget.matches(':focus-visible') && showPreview(event.currentTarget)}
-            onBlur={hidePreview}
-          >
-            ✎<span className="list-note-new">{unseen}</span>
-          </button>
-        )}
       </div>
+      {/* The second line: its state in words where that is not the ordinary one, the step it is on, then what is known about it. */}
       {!compact && (
         <div className="list-detail">
-          <span className="list-where">
-            {[detail, session.meantFor?.agent ? `was ${session.meantFor.agent}` : session.agent ? 'agent' : null, active ? (active === 'now' ? 'just now' : `${active} ago`) : null].filter(Boolean).join(' · ') || ' '}
-          </span>
+          {chip && (
+            <span className={`ui-badge is-${chip.tone} list-badge`} data-testid="list-badge" title={session.attention.message ?? session.status.commandLine ?? undefined}>
+              {chip.text}
+            </span>
+          )}
+          <RunStrip sessionId={session.id} variant="row" />
+          <span className="list-where">{where}</span>
           {session.meantFor?.agent && <span className="visually-hidden" data-testid="row-meant-for">was {session.meantFor.agent}</span>}
           {active && (
-            // The later of the two times is in the line; both are said in full to whoever asks.
-            <span className="visually-hidden" title={[typed ? `You last typed here ${typed === 'now' ? 'just now' : `${typed} ago`}` : null, updated ? `It last printed ${updated === 'now' ? 'just now' : `${updated} ago`}` : null].filter(Boolean).join('. ')} data-testid="list-active" data-typed={typed || undefined} data-updated={updated || undefined}>
-              active {active === 'now' ? 'just now' : `${active} ago`}
+            // The later of the two times, said once; both are said in full to whoever asks.
+            <span className="list-active" title={[typed ? `You last typed here ${said(typed)}` : null, updated ? `It last printed ${said(updated)}` : null].filter(Boolean).join('. ')} data-testid="list-active" data-typed={typed || undefined} data-updated={updated || undefined}>
+              {said(active)}
             </span>
           )}
           {session.peopleOnly && (
@@ -510,7 +459,7 @@ const RowView = memo(function RowView({ row, style, density, indented, current, 
           )}
           {session.typedBy && (
             <span className="list-time list-typed-by" title={`An API token typed into this terminal: ${new Date(session.typedBy.at).toLocaleString()}`} data-testid="list-typed-by">
-              typed by {session.typedBy.name} {ago(session.typedBy.at, now) === 'now' ? 'just now' : `${ago(session.typedBy.at, now)} ago`}
+              typed by {session.typedBy.name} {said(ago(session.typedBy.at, now))}
             </span>
           )}
           {/* Tags are on the row while the pointer or the keyboard is on it, and while the list is filtered by a tag. */}
@@ -592,27 +541,6 @@ const RowView = memo(function RowView({ row, style, density, indented, current, 
   );
 });
 
-/** A glance at a session's notes: the start of the pinned note and the newest log entry. Read-only; it never takes the keyboard. */
-function NotePreview({ row, top, left }: { row: Row; top: number; left: number }) {
-  const { session } = row;
-  const lines = session.note.split('\n').filter((line) => line.trim() !== '').slice(0, 4);
-  const entry = session.noteLog.at(-1);
-  return (
-    <div className="note-preview" role="tooltip" style={{ top: Math.min(top, window.innerHeight - 180), left }} data-testid="note-preview">
-      <strong>{session.name}</strong>
-      {lines.length > 0 ? lines.map((line, i) => <p key={i}>{line.slice(0, 160)}</p>) : <p className="note-empty">No pinned note.</p>}
-      {entry && (
-        <p className="note-preview-entry">
-          <span className="note-author">{entry.kind === 'prompt' ? 'prompt' : entry.author === 'agent' ? 'agent' : 'you'}</span>{' '}
-          <time dateTime={entry.at}>{new Date(entry.at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</time>
-          <br />
-          {entry.text.slice(0, 200)}
-        </p>
-      )}
-    </div>
-  );
-}
-
 /** The notes of one session beside the list: the same component the node uses. */
 function NotesDrawer({ id, onClose }: { id: string; onClose: () => void }) {
   const entries = useApp((s) => s.app?.sessions.find((x) => x.id === id)?.noteLog.length ?? 0);
@@ -652,7 +580,7 @@ registerSection({
   useCount: () => useModel().filtered.length,
   useBadges: () => {
     const counts = stateCounts(useModel().filtered);
-    return (['waiting', 'processing', 'unread', 'failed'] as const).map((state) => ({ key: state, mark: STATE_MARK[state], count: counts[state], title: STATE_WORD[state] }));
+    return (['waiting', 'processing', 'unread', 'failed'] as const).map((state) => ({ key: state, mark: STATE_MARK[state], tone: ({ waiting: 'waiting', processing: 'working', unread: 'unread', failed: 'failed' } as const)[state], count: counts[state], title: STATE_WORD[state] }));
   },
   Component: TerminalsSection,
   drawers: {

@@ -297,7 +297,7 @@ describe('JsonStore', () => {
     expect(await readFile(`${store.file}.v6.backup`, 'utf8')).toBe(fixture);
   });
 
-  it('loads a file from before shelf versions: what each shelf element says is its version 1, and a copy is marked as from a version nobody recorded', async () => {
+  it('loads a file from before shelf versions: what each saved step says is its version 1, and a copy is marked as from a version nobody recorded', async () => {
     const store = new JsonStore(dir);
     const fixture = await readFile(new URL('./fixtures/state-terminal-access-v7.json', import.meta.url), 'utf8');
     await mkdir(dir, { recursive: true });
@@ -426,7 +426,7 @@ describe('JsonStore', () => {
     expect(await readFile(`${store.file}.v11.backup`, 'utf8')).toBe(fixture);
   });
 
-  it('loads a file from before schedules: none, never looked at; its tasks run no shelf element and were not arranged beforehand; the older file is kept', async () => {
+  it('loads a file from before schedules: none, never looked at; its tasks run no saved step and were not arranged beforehand; the older file is kept', async () => {
     const store = new JsonStore(dir);
     const fixture = await readFile(new URL('./fixtures/state-queue-v12.json', import.meta.url), 'utf8');
     await mkdir(dir, { recursive: true });

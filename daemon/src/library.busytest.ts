@@ -224,10 +224,10 @@ describe('what comes with the app', () => {
     expect(fetcher.calls).toEqual([]);
     const items = await itemsOf(source!.id);
     expect(items.map((item) => [item.id, item.kindTitle, item.standing, item.problem])).toEqual([
-      ['say-what-changed', 'An element', 'available', null],
-      ['check-before-done', 'An element', 'available', null],
-      ['list-open-questions', 'An element', 'available', null],
-      ['hand-over', 'An element', 'available', null],
+      ['say-what-changed', 'A step', 'available', null],
+      ['check-before-done', 'A step', 'available', null],
+      ['list-open-questions', 'A step', 'available', null],
+      ['hand-over', 'A step', 'available', null],
       ['reproduce-fix-verify', 'A workflow', 'available', null],
       ['read-and-report', 'A workflow', 'available', null],
     ]);
@@ -334,7 +334,7 @@ describe('a source', () => {
       'through-a-link': 'A folder on its path is a link; links are not followed.',
       'wrong-kind': expect.stringMatching(/^Its file is not a workflow:/),
       'not-a-workflow': expect.stringMatching(/^Its file is not a workflow:/),
-      'not-json': expect.stringMatching(/^Its file is not an element:/),
+      'not-json': expect.stringMatching(/^Its file is not a step:/),
       huge: expect.stringMatching(/at most 524288 are read/),
       missing: 'There is no such file in the source.',
       'later-kind': 'It is of a kind this version of Aubergine does not know.',
@@ -869,7 +869,7 @@ describe('the commands', () => {
     const listed = (await library(['list'])).out;
     expect(listed).toMatch(/ship-a-change +a workflow, version 2, from "Mine": Ship a Change!\. Ships a change\.\n +not installed/);
     const shown = await library(['show', 'tidy-up']);
-    expect(shown.out).toMatch(/^An element: Tidy up\nFrom Mine \(.*my-library\), item tidy-up, version 1\nnot installed\n\n/);
+    expect(shown.out).toMatch(/^A step: Tidy up\nFrom Mine \(.*my-library\), item tidy-up, version 1\nnot installed\n\n/);
     expect(shown.out).toContain('Remove what is not needed.');
 
     // Installing shows all of it and asks. Without a yes, nothing is installed.

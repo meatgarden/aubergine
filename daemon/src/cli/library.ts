@@ -71,7 +71,7 @@ export function parseLibraryCommand(words: readonly string[]): LibraryCommand {
       const unknown = afterId.find((word) => word.startsWith('--') && word !== '--element');
       if (unknown) throw new UsageError(`library export does not know ${unknown}`);
       const names = afterId.filter((word) => word !== '--element');
-      if (names.length === 0 || to === null) throw new UsageError('library export needs the name of a workflow (or, with --element, of a shelf element) and --to <folder>');
+      if (names.length === 0 || to === null) throw new UsageError('library export needs the name of a workflow (or, with --element, of a saved step) and --to <folder>');
       if (version !== null && !PublisherVersion.safeParse(version).success) throw new UsageError('--version is letters, digits, ".", "+", "-" and "_", such as 2 or 1.3.0');
       if (id !== null && !LibraryItemId.safeParse(id).success) throw new UsageError('--id is lower-case letters, digits, ".", "-" and "_"');
       return { action: 'export', query: names.join(' '), to, element: afterId.includes('--element'), version, id };

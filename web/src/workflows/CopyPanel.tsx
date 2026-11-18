@@ -43,7 +43,7 @@ export function CopyPanel({ element, shelf, onDecide }: { element: Element; shel
       </p>
       {fromLibrary && (
         <p className="sheet-note" data-testid="copy-library">
-          The shelf element was installed from the library: {fromWords(fromLibrary.from)}.
+          The saved step was installed from the library: {fromWords(fromLibrary.from)}.
           {fromLibrary.atSource === 'retired' ? ` Its publisher has retired it${fromLibrary.useInstead ? `: use “${fromLibrary.useInstead}” in its place` : ''}.` : fromLibrary.atSource === 'gone' ? ' Its source no longer lists it.' : ''}
         </p>
       )}

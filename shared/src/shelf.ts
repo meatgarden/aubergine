@@ -116,7 +116,7 @@ export function copyWords(status: CopyStatus): string {
     case 'unknown':
       return `A copy of "${name}" from the shelf, made before versions were kept: it cannot be told whether it was changed or is behind.${retired}`;
     case 'gone':
-      return 'A copy of a shelf element whose source is not on the shelf: it was removed, or this workflow came from somewhere else.';
+      return 'A copy of a saved step whose source is not on the shelf: it was removed, or this workflow came from somewhere else.';
   }
 }
 
@@ -256,18 +256,18 @@ export function elementReferencePage(): string {
   const { element, shelf } = elementReference();
   const table = (rows: FieldNote[]): string[] => ['| Field | Written | What it is for |', '|---|---|---|', ...rows.map((row) => `| \`${row.field}\` | ${row.written} | ${row.what.replaceAll('|', '\\|')} |`)];
   return [
-    '# What is in an element',
+    '# What is in a step',
     '',
-    'An element is one piece of work for an agent: text it reads and follows, and a line saying how to tell that it is done. A workflow is a list of elements. Nothing in an element is run by a computer.',
+    'A step is one piece of work for an agent: text it reads and follows, and a line saying how to tell that it is done. A workflow is a list of steps. Nothing in a step is run by a computer.',
     '',
-    '## The fields of an element',
+    '## The fields of a step',
     '',
     ...table(element),
     '',
-    '## An element on the shelf also has',
+    '## A saved step also has',
     '',
     ...table(shelf),
     '',
-    'An element on the shelf is copied into a workflow, never linked: changing the shelf changes no workflow. A copy remembers where it came from (`source`), so the editor can say when a newer version is on the shelf, and you decide whether to take it.',
+    'A saved step is copied into a workflow, never linked: changing the shelf changes no workflow. A copy remembers where it came from (`source`), so the editor can say when a newer version is on the shelf, and you decide whether to take it.',
   ].join('\n');
 }
