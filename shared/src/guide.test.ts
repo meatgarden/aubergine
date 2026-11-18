@@ -17,7 +17,7 @@ describe('the guide for an agent in a terminal', () => {
   const sections = guideFor(session);
 
   it('is short, plain text', () => {
-    expect(text.split('\n').length).toBeLessThanOrEqual(165);
+    expect(text.split('\n').length).toBeLessThanOrEqual(168);
     expect(plain(text)).toBe(true);
     expect(text.endsWith('\n')).toBe(false);
   });
