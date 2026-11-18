@@ -1,6 +1,7 @@
 import { COMMANDS, type Command } from './commands';
 import { activeShortcuts, keyDetailsOf, platform, windowMode } from './shortcuts';
 import { useApp } from './store';
+import { ScreenHead } from './ui';
 
 const GROUPS: Command['group'][] = ['Terminals', 'Canvases', 'List', 'View', 'Panels'];
 
@@ -25,12 +26,7 @@ export function ShortcutSheet() {
       }}
     >
       <div className="dialog sheet" role="dialog" aria-label="Shortcuts" data-testid="shortcut-sheet">
-        <header className="sheet-head">
-          <h2>Shortcuts</h2>
-          <button type="button" className="quiet" onClick={close}>
-            Close
-          </button>
-        </header>
+        <ScreenHead title="Shortcuts" onClose={close} />
         <p className="sheet-note">
           Keys marked <span className="sheet-mark">●</span> work everywhere, inside a terminal too. The others work while no terminal or
           text field has the keyboard. Everything is also in the palette. These are the keys for{' '}

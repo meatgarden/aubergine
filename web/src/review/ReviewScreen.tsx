@@ -5,6 +5,7 @@ import { useApp } from '../store';
 import { DiffText } from './DiffText';
 import { ElementFields } from '../workflows/ElementFields';
 import { reviewSources, type ReviewDetail, type ReviewItem, type ReviewSource } from './registry';
+import { ScreenHead } from '../ui';
 
 /** The items of one source. A component of its own, because each source brings a hook. */
 function SourceItems({ source, selected, onSelect, onItems }: { source: ReviewSource; selected: string | null; onSelect: (key: string) => void; onItems: (source: string, items: ReviewItem[]) => void }) {
@@ -140,12 +141,7 @@ export function ReviewScreen() {
       }}
     >
       <div className="dialog sheet review-screen" role="dialog" aria-label="Review" data-testid="review-screen">
-        <header className="sheet-head">
-          <h2>Review</h2>
-          <button type="button" className="quiet" onClick={close} data-testid="review-close">
-            Close
-          </button>
-        </header>
+        <ScreenHead title="Review" onClose={close} closeTestid="review-close" />
         <p className="sheet-note">
           What an agent or a program wrote is read here before it can be used. Until you accept it, it cannot be run and no agent is told any of it.
         </p>

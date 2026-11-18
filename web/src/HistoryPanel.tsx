@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { ago, folded, showControl, type ConversationSummary, type HistoryList, type HistoryNote, type HistorySearch, type Transcript } from '@aubergine/shared';
 import { api } from './api';
 import { useApp } from './store';
+import { ScreenHead } from './ui';
 
 /**
  * Past conversations of the agent in a folder: the list, a search, and one
@@ -165,12 +166,7 @@ export function HistoryPanel() {
       }}
     >
       <div className="dialog sheet history-panel" role="dialog" aria-label="Past conversations" data-testid="history-panel">
-        <header className="sheet-head">
-          <h2>Past conversations</h2>
-          <button type="button" className="quiet" onClick={close} data-testid="history-close">
-            Close
-          </button>
-        </header>
+        <ScreenHead title="Past conversations" onClose={close} closeTestid="history-close" />
         {reading ? (
           <TranscriptView folder={reading.folder} id={reading.id} onBack={() => setReading(null)} />
         ) : (

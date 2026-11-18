@@ -3,6 +3,7 @@ import { latestVersion, needWords, usesOf, type Workflow, type WorkflowTemplate 
 import { runCommand } from '../commands';
 import { api } from '../api';
 import { useApp } from '../store';
+import { ScreenHead } from '../ui';
 
 /**
  * The workflows there are: make one from a template, change, duplicate,
@@ -143,12 +144,7 @@ export function WorkflowsScreen() {
       }}
     >
       <div className="dialog sheet workflows-screen" role="dialog" aria-label="Workflows" data-testid="workflows-screen">
-        <header className="sheet-head">
-          <h2>Workflows</h2>
-          <button type="button" className="quiet" onClick={close}>
-            Close
-          </button>
-        </header>
+        <ScreenHead title="Workflows" onClose={close} />
         <p className="sheet-note">
           A workflow is a list of elements an agent goes through one at a time: it reads the current one, does it, reports it done and is given the next. Nothing in a
           workflow is run by Aubergine; each element is text for whoever does the work, and a person can move a run with the buttons just as well.

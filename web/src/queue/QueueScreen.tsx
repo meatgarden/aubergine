@@ -7,6 +7,7 @@ import { useEndedRuns } from '../workflows/ended-runs';
 import { actionView } from './action-views';
 import { Schedules } from './Schedules';
 import { TaskForm, type TaskDraft } from './TaskForm';
+import { ScreenHead } from '../ui';
 
 /**
  * Two lists side by side. On the left, what waits on the owner: gathered by
@@ -345,12 +346,7 @@ export function QueueScreen() {
       }}
     >
       <div className="dialog sheet queue-screen" role="dialog" aria-label="Queue and For you" data-testid="queue-screen">
-        <header className="sheet-head">
-          <h2>For you, and the queue</h2>
-          <button type="button" className="quiet" onClick={close} data-testid="queue-close">
-            Close
-          </button>
-        </header>
+        <ScreenHead title="For you, and the queue" onClose={close} closeTestid="queue-close" />
         <div className="queue-columns">
           <section className="queue-foryou" aria-label="For you">
             <h3>

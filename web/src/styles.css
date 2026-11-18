@@ -357,7 +357,6 @@ code {
   font-size: var(--font-title);
   font-weight: var(--weight-strong);
   color: var(--accent);
-  letter-spacing: 0.02em;
   user-select: none;
 }
 .warning {
@@ -1049,8 +1048,6 @@ code {
   padding: var(--space-2) var(--space-2) var(--space-1);
   color: var(--text-muted);
   font-size: var(--font-meta);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
   border-top: 1px solid var(--border);
 }
 .picker-line {
@@ -1196,8 +1193,6 @@ kbd {
 .sheet-groups h3 {
   margin: 0 0 var(--space-1);
   font-size: var(--font-meta);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
   color: var(--text-muted);
 }
 .sheet-groups table {
@@ -1619,8 +1614,6 @@ kbd.kept {
   color: var(--text-muted);
   font-size: var(--font-meta);
   font-weight: var(--weight-strong);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1824,8 +1817,6 @@ kbd.kept {
 .token-screen h3 {
   margin: var(--space-4) 0 var(--space-2);
   font-size: var(--font-meta);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
   color: var(--text-muted);
 }
 .token-made {
@@ -1912,8 +1903,6 @@ kbd.kept {
   font-size: var(--font-meta);
 }
 .token-off {
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
 }
 tr[data-status='revoked'] strong,
 tr[data-status='expired'] strong {
@@ -2505,8 +2494,6 @@ tr[data-status='expired'] strong {
   padding: var(--space-2) var(--space-2) 2px;
   font-size: var(--font-meta);
   color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
 }
 
 .review-decided {
@@ -3850,8 +3837,6 @@ tr[data-status='expired'] strong {
 .run-banner-label {
   padding: 0 var(--space-2);
   font-size: var(--font-meta);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
   color: var(--text-muted);
   border: 1px solid var(--border);
   border-radius: var(--radius-control);

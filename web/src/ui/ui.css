@@ -836,3 +836,21 @@ button.color-dot:hover {
   isolation: isolate;
   z-index: var(--z-canvas);
 }
+
+/* ---------- The side panel: everything starts on its gutter ---------- */
+
+.panel-tabs-row {
+  padding: var(--space-2) var(--space-2) 0 var(--space-1);
+}
+.list-bar {
+  padding: var(--space-2) var(--gutter-panel);
+  gap: var(--space-2);
+}
+.list-row {
+  border-left: 0;
+  padding-right: var(--gutter-panel);
+}
+.list-row.current,
+.list-row.focused {
+  box-shadow: inset 2px 0 0 var(--accent);
+}

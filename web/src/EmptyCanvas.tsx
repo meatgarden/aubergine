@@ -21,6 +21,7 @@ export function EmptyCanvas() {
       <div className="empty-choices">
         <button
           type="button"
+          className="primary"
           disabled={busy}
           onClick={() => {
             setBusy(true);

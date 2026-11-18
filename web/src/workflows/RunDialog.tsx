@@ -8,6 +8,7 @@ import { useApp } from '../store';
 import { sampleInputs } from './editor-model';
 import { runOfSession } from './run-model';
 import { WhereFields, proposedFolder, type Where } from '../environment/WhereFields';
+import { ScreenHead } from '../ui';
 
 /** How a repository workflow is told apart from one of the owner's in the list of choices. */
 const REPO = 'repo:';
@@ -143,12 +144,7 @@ export function RunDialog() {
       }}
     >
       <div className="dialog sheet run-dialog" role="dialog" aria-label="Run a workflow" data-testid="run-dialog">
-        <header className="sheet-head">
-          <h2>{alone ? `Run “${shelfItem?.element.name ?? 'an element'}” by itself${onNewAgent ? ' on a new Claude Code session' : ` on “${session?.name ?? 'this terminal'}”`}` : onNewAgent ? 'New Claude Code session on a workflow' : `Run a workflow on “${session?.name ?? 'this terminal'}”`}</h2>
-          <button type="button" className="quiet" onClick={close}>
-            Close
-          </button>
-        </header>
+        <ScreenHead title={<>{alone ? `Run “${shelfItem?.element.name ?? 'an element'}” by itself${onNewAgent ? ' on a new Claude Code session' : ` on “${session?.name ?? 'this terminal'}”`}` : onNewAgent ? 'New Claude Code session on a workflow' : `Run a workflow on “${session?.name ?? 'this terminal'}”`}</>} onClose={close} />
 
         {!alone && list.length === 0 && offered.length === 0 ? (
           <>

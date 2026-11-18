@@ -3,6 +3,7 @@ import { BRIEF_LINE } from '@aubergine/shared';
 import { api } from '../api';
 import { canvasActions } from '../canvas-actions';
 import { useApp } from '../store';
+import { ScreenHead } from '../ui';
 
 const NEW_AGENT = 'new';
 
@@ -79,12 +80,7 @@ export function DescribeDialog() {
       }}
     >
       <div className="dialog sheet describe-dialog" role="dialog" aria-label={`Describe ${word}`} data-testid="describe-dialog">
-        <header className="sheet-head">
-          <h2>Describe {word}</h2>
-          <button type="button" className="quiet" onClick={close}>
-            Close
-          </button>
-        </header>
+        <ScreenHead title={<>Describe {word}</>} onClose={close} />
         <p className="sheet-note">
           Say what you want, and an agent writes it. What it writes is a draft: you read it, exactly as an agent would be told it, before it can be used.
         </p>

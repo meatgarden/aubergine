@@ -4,6 +4,7 @@ import { api } from '../api';
 import { useApp } from '../store';
 import { runsBySession } from '../workflows/run-model';
 import { agentInFront } from './board-model';
+import { ScreenHead } from '../ui';
 
 /**
  * One workflow on several terminals at once: pick the workflow, tick the
@@ -71,12 +72,7 @@ export function RunManyDialog({ onClose }: { onClose: () => void }) {
       }}
     >
       <div className="dialog sheet run-many" role="dialog" aria-label="Start on several terminals" data-testid="run-many">
-        <header className="sheet-head">
-          <h2>Start on several terminals</h2>
-          <button type="button" className="quiet" onClick={onClose} data-testid="run-many-close">
-            Close
-          </button>
-        </header>
+        <ScreenHead title="Start on several terminals" onClose={onClose} closeTestid="run-many-close" />
         {results ? (
           <>
             <ul className="run-many-results" data-testid="run-many-results">

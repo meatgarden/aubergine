@@ -6,6 +6,7 @@ import { colorClass, colorStyle } from './color';
 import { runCommand } from './commands';
 import { hint } from './shortcuts';
 import { useApp } from './store';
+import { IconButton } from './ui';
 
 /**
  * Where a tab dropped just before `target` should sit: between `target` and
@@ -246,9 +247,9 @@ export function TabBar() {
           </div>
         );
       })}
-      <button type="button" className="tab-add quiet" aria-label="New canvas" title={hint('canvas.new')} onClick={() => runCommand('canvas.new')}>
+      <IconButton className="tab-add" label="New canvas" title={hint('canvas.new')} onClick={() => runCommand('canvas.new')}>
         +
-      </button>
+      </IconButton>
       {error && <span className="warning">{error}</span>}
     </nav>
   );

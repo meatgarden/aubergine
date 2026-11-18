@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { FLAG_WORDS, sourceLabel, ago, fromWords, historyWords, needWords, showControl, type InstalledItem, type LibraryItemDetail, type LibrarySource, type ListedItem } from '@aubergine/shared';
 import { api } from '../api';
 import { useApp } from '../store';
+import { ScreenHead } from '../ui';
 
 /**
  * The library: sources of workflows and elements that others published, what
@@ -142,12 +143,7 @@ export function LibraryScreen() {
       }}
     >
       <div className="dialog sheet library-screen" role="dialog" aria-label="Library" data-testid="library-screen">
-        <header className="sheet-head">
-          <h2>Library</h2>
-          <button type="button" className="quiet" onClick={close} data-testid="library-close">
-            Close
-          </button>
-        </header>
+        <ScreenHead title="Library" onClose={close} closeTestid="library-close" />
         <p className="sheet-note">
           Workflows and elements that others published, to read and install. What a source lists was written by whoever published it. Nothing is fetched unless you press Refresh or add a source, and nothing is installed until you have read all of it
           in Review and accepted it.

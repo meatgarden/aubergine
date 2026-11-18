@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { openProjects, type SharingPage } from '@aubergine/shared';
 import { api } from '../api';
 import { useApp } from '../store';
+import { ScreenHead } from '../ui';
 
 /**
  * What is shared between projects. For each kind of thing that is shared or
@@ -47,12 +48,7 @@ export function SharingScreen() {
       }}
     >
       <div className="dialog sheet sharing-screen" role="dialog" aria-label="Sharing" data-testid="sharing-screen">
-        <header className="sheet-head">
-          <h2>What is shared between projects</h2>
-          <button type="button" className="quiet" onClick={close} data-testid="sharing-close">
-            Close
-          </button>
-        </header>
+        <ScreenHead title="What is shared between projects" onClose={close} closeTestid="sharing-close" />
         <p className="sheet-note">
           Canvases, terminals, tasks, schedules and rules always belong to one project. The kinds below are shared with every project unless you say that one belongs to a single project. A run that is going is never stopped by moving
           anything here.
