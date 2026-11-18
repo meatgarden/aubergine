@@ -533,14 +533,20 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   const idParam = (request: FastifyRequest, name: string): string =>
     parse(Id, (request.params as Record<string, string>)[name]);
 
-  app.get(paths.state, async (): Promise<StateResponse> => ({
-    protocolVersion: PROTOCOL_VERSION,
-    runtime: await sessions.status(),
-    settings: await options.settings(),
-    // A browser has no use for the hashes of token secrets, so they stay here.
-    state: { ...hub.state, tokens: hub.state.tokens.map((t) => ({ ...t, hash: '' })) },
-    defaultCanvasId: sessions.defaultCanvasId(),
-  }));
+  app.get(paths.state, async (): Promise<StateResponse> => {
+    const [runtimeNow, settingsNow] = [await sessions.status(), await options.settings()];
+    // The state and its number are read together, after everything that waits: a change cannot come between the two.
+    return {
+      protocolVersion: PROTOCOL_VERSION,
+      runtime: runtimeNow,
+      settings: settingsNow,
+      // A browser has no use for the hashes of token secrets, so they stay here.
+      state: { ...hub.state, tokens: hub.state.tokens.map((t) => ({ ...t, hash: '' })) },
+      epoch: hub.epoch,
+      revision: hub.revision,
+      defaultCanvasId: sessions.defaultCanvasId(),
+    };
+  });
 
   app.post(paths.sessions, async (request, reply): Promise<CreateSessionResponse> => {
     const { desktop: alsoOnDesktop, ...body } = parse(CreateSessionRequest, request.body ?? {});
@@ -836,8 +842,8 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     const send = (message: EventsServerMessage): void => {
       if (socket.readyState === socket.OPEN) socket.send(JSON.stringify(message));
     };
-    const unsubscribe = hub.subscribe((event) =>
-      send({ type: 'event', event: event.type === 'token.created' ? { ...event, token: { ...event.token, hash: '' } } : event }),
+    const unsubscribe = hub.subscribe((event, revision) =>
+      send({ type: 'event', revision, event: event.type === 'token.created' ? { ...event, token: { ...event.token, hash: '' } } : event }),
     );
     const viewer = viewers.add(send);
     const leave = (): void => {

@@ -271,7 +271,8 @@ export function socketUrl(path: string): string {
  */
 export function subscribeToEvents(handlers: {
   onReady: () => void;
-  onEvent: (event: ChangeEvent) => void;
+  /** `revision`: the change's number, as the server counts them. */
+  onEvent: (event: ChangeEvent, revision?: number) => void;
   /** The daemon asks this page to bring a session into view. */
   onShow: (sessionId: string) => void;
   /** Asked to switch to a canvas (by a program, through the public API). */
@@ -301,7 +302,7 @@ export function subscribeToEvents(handlers: {
       } else if (parsed.data.type === 'show') handlers.onShow(parsed.data.sessionId);
       else if (parsed.data.type === 'show-canvas') handlers.onShowCanvas(parsed.data.canvasId);
       else if (parsed.data.type === 'notify') handlers.onNotify?.(parsed.data.title, parsed.data.body);
-      else handlers.onEvent(parsed.data.event);
+      else handlers.onEvent(parsed.data.event, parsed.data.revision);
     };
     socket.onclose = () => {
       if (stopped) return;

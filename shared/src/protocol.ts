@@ -123,6 +123,10 @@ export const StateResponse = z.object({
   runtime: RuntimeStatus,
   settings: Settings,
   state: AppState,
+  /** Which run of the server `revision` counts in. Left out by a server from before changes were numbered. */
+  epoch: z.string().max(64).optional(),
+  /** The number of the last change that is in `state`. A whole state with a lower number than a follower already has, in the same epoch, is older than what it has. */
+  revision: z.number().int().min(0).optional(),
   /** Where new things go when no canvas is named: the canvas most recently looked at in a browser, else the first. */
   defaultCanvasId: Id,
 });
@@ -416,7 +420,8 @@ export type ErrorResponse = z.infer<typeof ErrorResponse>;
 
 export const EventsServerMessage = z.discriminatedUnion('type', [
   z.object({ type: z.literal('hello'), protocolVersion: z.literal(PROTOCOL_VERSION) }),
-  z.object({ type: z.literal('event'), event: ChangeEvent }),
+  /** A change, with its number in this run of the server: one more than the change before it. */
+  z.object({ type: z.literal('event'), event: ChangeEvent, revision: z.number().int().min(0).optional() }),
   /** Not a change of state: a request to bring a session into view and focus it. */
   z.object({ type: z.literal('show'), sessionId: Id }),
   /** Likewise: a request to switch to a canvas. */

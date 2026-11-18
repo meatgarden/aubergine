@@ -2785,6 +2785,13 @@ test('projects: a second project has its own tabs, terminals and queue; what wai
   await expect(tabs.first()).toBeVisible();
   const tabsBefore = await tabs.count();
 
+  // A workflow made while there is one project, by a request sent the moment the page has loaded. The page is then
+  // still loading the whole state a second time (it does when its stream becomes ready), and a page that let that
+  // older answer replace what the stream had already brought would never list it.
+  const flow = await page.request.post('/v1/workflows', { headers: { origin }, data: { name: 'Project test workflow', elements: [{ name: 'One', instructions: 'Do it.' }] } });
+  expect(flow.status()).toBe(201);
+  expect(((await flow.json()) as { projectId: string | null }).projectId).toBeNull();
+
   // A second project: the page goes there. It has one canvas, no terminal, and its own address.
   await switcher.click();
   // The menu is in sight and can be reached: nothing lies over it, and the tab bar does not cut it off.
@@ -2830,10 +2837,7 @@ test('projects: a second project has its own tabs, terminals and queue; what wai
   await queue.getByTestId('foryou-add').click();
   await expect(queue.locator('[data-testid="foryou-row"]').filter({ hasText: 'Project test: look at this' })).toHaveCount(1);
   await queue.getByTestId('queue-close').click();
-  // A workflow, made now that the page has long been following changes: shared with every project, so it is in this project's list too.
-  const flow = await page.request.post('/v1/workflows', { headers: { origin }, data: { name: 'Project test workflow', elements: [{ name: 'One', instructions: 'Do it.' }] } });
-  expect(flow.status()).toBe(201);
-  expect(((await flow.json()) as { projectId: string | null }).projectId).toBeNull();
+  // The shared workflow is in this project's list too.
   await page.getByTestId('toolbar-workflows').click();
   await expect(page.getByTestId('workflows-screen').locator('[data-testid="workflow-row"][data-workflow="Project test workflow"]')).toHaveCount(1);
   await page.keyboard.press('Escape');
