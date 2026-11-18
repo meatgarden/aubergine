@@ -1312,3 +1312,11 @@ button.color-dot:hover {
 .library-sources-fold > summary {
   font-weight: var(--weight-normal);
 }
+
+/* On a row the state is said by its mark; the word is added only where the terminal waits for the owner or failed. */
+.list-row:not(.state-waiting, .state-failed) .list-badge {
+  display: none;
+}
+.list-row .list-name {
+  min-width: 40%;
+}
