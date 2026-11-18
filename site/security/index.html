@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Security and privacy | Aubergine</title>
+<meta name="description" content="Aubergine runs only on your computer, listens on 127.0.0.1, checks every request, scopes every token, and says plainly what it does not protect against.">
+<link rel="canonical" href="https://meatgarden.github.io/aubergine/security/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="theme-color" content="#14151a">
+<link rel="icon" href="../icon.svg" type="image/svg+xml">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="Security and privacy | Aubergine">
+<meta property="og:description" content="Aubergine runs only on your computer, listens on 127.0.0.1, checks every request, scopes every token, and says plainly what it does not protect against.">
+<meta property="og:url" content="https://meatgarden.github.io/aubergine/security/">
+<meta property="og:image" content="https://meatgarden.github.io/aubergine/icon.svg">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Security and privacy | Aubergine">
+<meta name="twitter:description" content="Aubergine runs only on your computer, listens on 127.0.0.1, checks every request, scopes every token, and says plainly what it does not protect against.">
+<link rel="stylesheet" href="../style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/meatgarden#organization",
+      "name": "meatgarden",
+      "url": "https://github.com/meatgarden",
+      "logo": "https://meatgarden.github.io/aubergine/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://meatgarden.github.io/aubergine/security/#article",
+      "headline": "Security and privacy",
+      "description": "Aubergine runs only on your computer, listens on 127.0.0.1, checks every request, scopes every token, and says plainly what it does not protect against.",
+      "url": "https://meatgarden.github.io/aubergine/security/",
+      "mainEntityOfPage": "https://meatgarden.github.io/aubergine/security/",
+      "datePublished": "2026-11-18",
+      "dateModified": "2026-11-18",
+      "inLanguage": "en",
+      "author": {
+        "@id": "https://github.com/meatgarden#organization"
+      },
+      "publisher": {
+        "@id": "https://github.com/meatgarden#organization"
+      },
+      "isPartOf": {
+        "@id": "https://meatgarden.github.io/aubergine/#website"
+      },
+      "about": {
+        "@id": "https://meatgarden.github.io/aubergine/#software"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Aubergine",
+          "item": "https://meatgarden.github.io/aubergine/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Security",
+          "item": "https://meatgarden.github.io/aubergine/security/"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://meatgarden.github.io/aubergine/security/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does Aubergine send my terminals or code anywhere?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. The server listens on 127.0.0.1 only, so it is reachable from your computer and nowhere else. Aubergine calls no model and fetches nothing unless you add a library source yourself."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can an agent change Aubergine's settings or make itself a token?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Creating tokens, changing settings, reading the activity log and anything about terminals outside Aubergine are never allowed to a token, whatever scopes it has."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does an approval stop the owner's own agent from approving itself?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. An agent that runs as you can act as you. Approvals are recorded, not enforced against your own agent."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are working copies a sandbox?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. They keep work apart but do not keep an agent in. Agents run as you."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<div class="glow" aria-hidden="true"></div>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="../"><img src="../icon.svg" alt="" width="30" height="30">Aubergine</a>
+    <nav aria-label="Main"><a href="../install/">Install</a><a href="../guides/">Guides</a><a href="../security/">Security</a><a href="../roadmap/">Roadmap</a><a href="../faq/">FAQ</a><a href="https://github.com/meatgarden/aubergine">GitHub</a></nav>
+  </header>
+  <main class="prose">
+    <p class="crumbs"><a href="../">Aubergine</a> / <span aria-current="page">Security</span></p>
+    <h1>Security and privacy</h1>
+    <p class="lead">What Aubergine does to protect your terminals, and, just as important, what it does not. The short version: it is local, it asks before it acts for an agent, and agents still run as you.</p>
+    <h2>Everything stays on your computer</h2>
+    <ul>
+      <li>The server binds to <code>127.0.0.1</code> only. Every request, and every WebSocket upgrade, has its <code>Host</code> and <code>Origin</code> checked, and the browser must hold an access cookie.</li>
+      <li>Aubergine calls no model and starts no network request of its own. The one exception is fetching a library source (a Git address) when <em>you</em> ask for it.</li>
+      <li>Desktop notifications come from the open page. Nothing leaves your computer.</li>
+    </ul>
+    <h2>Three kinds of caller, each judged on its own</h2>
+    <p>Every request is checked against what the caller may do before anything is looked up, so a caller without the right learns nothing from the answer. The callers are you (signed in to the browser), an agent's session, and an API token.</p>
+    <ul>
+      <li><strong>API tokens have scopes.</strong> The secret is shown once and never stored; only a hash is kept. Calls made with a token go into an activity log: who, what and how it ended, never the secret and never what was sent.</li>
+      <li><strong>Some things no token can ever do:</strong> create or revoke tokens, read the activity log, change settings, and anything about terminals outside Aubergine.</li>
+      <li><strong>Terminal access is two separate scopes</strong>, one to read and one to type, each limited to the sessions you choose. You can mark a terminal <em>people only</em> to close it to every token.</li>
+      <li><strong>An agent's own credential is narrow.</strong> It can set its own attention, add to its own notes, report its own status and read the run it is on. It cannot reach other terminals, canvases or tokens.</li>
+    </ul>
+    <h2>What an agent cannot do alone</h2>
+    <ul>
+      <li>What an agent or program writes (a workflow, an element) arrives as a <strong>draft</strong> you review. Accepting is yours alone.</li>
+      <li>A step that waits for a person can be approved or sent back only by a person. Rules, schedules and the demo are yours alone.</li>
+      <li>Aubergine types only a few fixed sentences into an agent's terminal, such as “read your next step”. Nothing you stored, and nothing an agent wrote, is typed.</li>
+      <li>Installing from a library needs you to accept the exact content you were shown.</li>
+    </ul>
+    <h2>What this does not protect against</h2>
+    <div class="callout">
+      <p><strong>Agents run as you.</strong> An agent in a terminal can do anything you can do in that terminal, including running commands, reading files and, if it chooses, using your own browser session.</p>
+      <ul>
+        <li><strong>Approvals are not a lock.</strong> An agent that runs as you can decide as you. The decision is recorded, not prevented.</li>
+        <li><strong>Working copies are not a sandbox.</strong> They keep work apart and do not keep an agent in.</li>
+        <li><strong>The review screen is the control for library items.</strong> An item is instructions an agent will follow with everything that agent may do. Do not install what you have not read.</li>
+        <li><strong>The guide for agents is advice</strong>, not a lock.</li>
+      </ul>
+    </div>
+    <h2>The installer</h2>
+    <p>It changes two things: its own folder and one link named <code>aubergine</code>. No <code>sudo</code>, no edits to your shell startup files, and it never touches your data folder. <code>aubergine uninstall</code> removes only what it made.</p>
+    <h2>Report a problem</h2>
+    <p>Open an issue on <a href="https://github.com/meatgarden/aubergine/issues">GitHub</a>. Do not put secrets or tokens in it.</p>
+    <p>Related: <a href="../working-copies/">working copies</a> · <a href="../faq/">FAQ</a> · <a href="../roadmap/">roadmap</a> (approval modes and command policy are planned, not built)</p>
+  </main>
+  <footer>
+    <span>Aubergine is open source. <a href="https://github.com/meatgarden/aubergine">GitHub</a> · <a href="../llms.txt">llms.txt</a></span>
+    <span class="flinks"><a href="../install/">Install</a> · <a href="../guides/">Guides</a> · <a href="../run-multiple-coding-agents/">Run several agents</a> · <a href="../working-copies/">Working copies</a> · <a href="../queue-and-schedules/">Queue and schedules</a> · <a href="../security/">Security</a> · <a href="../roadmap/">Roadmap</a> · <a href="../faq/">FAQ</a></span>
+  </footer>
+</div>
+</body>
+</html>

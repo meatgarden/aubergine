@@ -8,6 +8,16 @@
 - [README](https://github.com/meatgarden/aubergine/blob/main/README.md): full reference
 - [Install script](https://raw.githubusercontent.com/meatgarden/aubergine/main/install.sh): one-line installer, changes only ~/.aubergine and one link
 
+## Pages
+
+- [Install](https://meatgarden.github.io/aubergine/install/): requirements, the installer, fixes
+- [Run several coding agents at once](https://meatgarden.github.io/aubergine/run-multiple-coding-agents/)
+- [Working copies](https://meatgarden.github.io/aubergine/working-copies/): an agent per checkout and branch
+- [The queue, For you and schedules](https://meatgarden.github.io/aubergine/queue-and-schedules/)
+- [Security and privacy](https://meatgarden.github.io/aubergine/security/): what is and is not protected
+- [FAQ](https://meatgarden.github.io/aubergine/faq/)
+- [Roadmap](https://meatgarden.github.io/aubergine/roadmap/): planned, not built
+
 ## For agents and programs
 
 - [Guide for agents](https://github.com/meatgarden/aubergine/blob/main/docs/for-agents.md)

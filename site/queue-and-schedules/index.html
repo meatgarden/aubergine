@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The queue, the For you list and schedules | Aubergine</title>
+<meta name="description" content="Write a task once and let a free agent take it, see everything that waits on you in one list, and run tasks at set times with schedules.">
+<link rel="canonical" href="https://meatgarden.github.io/aubergine/queue-and-schedules/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="theme-color" content="#14151a">
+<link rel="icon" href="../icon.svg" type="image/svg+xml">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="The queue, the For you list and schedules | Aubergine">
+<meta property="og:description" content="Write a task once and let a free agent take it, see everything that waits on you in one list, and run tasks at set times with schedules.">
+<meta property="og:url" content="https://meatgarden.github.io/aubergine/queue-and-schedules/">
+<meta property="og:image" content="https://meatgarden.github.io/aubergine/icon.svg">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="The queue, the For you list and schedules | Aubergine">
+<meta name="twitter:description" content="Write a task once and let a free agent take it, see everything that waits on you in one list, and run tasks at set times with schedules.">
+<link rel="stylesheet" href="../style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/meatgarden#organization",
+      "name": "meatgarden",
+      "url": "https://github.com/meatgarden",
+      "logo": "https://meatgarden.github.io/aubergine/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://meatgarden.github.io/aubergine/queue-and-schedules/#article",
+      "headline": "The queue, the For you list and schedules",
+      "description": "Write a task once and let a free agent take it, see everything that waits on you in one list, and run tasks at set times with schedules.",
+      "url": "https://meatgarden.github.io/aubergine/queue-and-schedules/",
+      "mainEntityOfPage": "https://meatgarden.github.io/aubergine/queue-and-schedules/",
+      "datePublished": "2026-11-18",
+      "dateModified": "2026-11-18",
+      "inLanguage": "en",
+      "author": {
+        "@id": "https://github.com/meatgarden#organization"
+      },
+      "publisher": {
+        "@id": "https://github.com/meatgarden#organization"
+      },
+      "isPartOf": {
+        "@id": "https://meatgarden.github.io/aubergine/#website"
+      },
+      "about": {
+        "@id": "https://meatgarden.github.io/aubergine/#software"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Aubergine",
+          "item": "https://meatgarden.github.io/aubergine/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Guides",
+          "item": "https://meatgarden.github.io/aubergine/guides/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Queue and schedules",
+          "item": "https://meatgarden.github.io/aubergine/queue-and-schedules/"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://meatgarden.github.io/aubergine/queue-and-schedules/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is the queue in Aubergine?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Work for agents. You write a task once, with a title, details and optionally a folder, a workflow and who may take it. A free agent takes it when you say so."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the For you list?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Everything that waits on a person in one place: terminals with a question, runs to approve, drafts to read, finished and failed tasks, and lists agents handed in."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can an agent start work on its own?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "An agent can propose a task or ask you something, but a proposal starts nothing until you accept it."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What happens to a schedule when my computer is asleep?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Nothing wakes the computer. A time that passed while it slept runs once when it is back, marked late, if it is less than six hours old. Older than that it is marked missed."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<div class="glow" aria-hidden="true"></div>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="../"><img src="../icon.svg" alt="" width="30" height="30">Aubergine</a>
+    <nav aria-label="Main"><a href="../install/">Install</a><a href="../guides/">Guides</a><a href="../security/">Security</a><a href="../roadmap/">Roadmap</a><a href="../faq/">FAQ</a><a href="https://github.com/meatgarden/aubergine">GitHub</a></nav>
+  </header>
+  <main class="prose">
+    <p class="crumbs"><a href="../">Aubergine</a> / <a href="../guides/">Guides</a> / <span aria-current="page">Queue and schedules</span></p>
+    <h1>The queue, “For you” and schedules</h1>
+    <p class="lead">Two lists that feed each other: the queue holds work for agents, and <em>For you</em> holds everything that waits on a person. Schedules add tasks to the queue at set times.</p>
+    <h2>The queue</h2>
+    <p>Open <strong>Queue</strong> (or press <code>Q</code>) and click <strong>+ Task</strong>. A task has a title, what to do, and optionally a folder, a workflow, and who may take it. By default any terminal where an agent is free may take it; you can name one terminal, or have a new agent terminal started for it, in a working copy of its own where the folder is in a repository.</p>
+    <ul>
+      <li><strong>Start next</strong> starts the first task that someone can take now. A plain shell is never given a task.</li>
+      <li><strong>At most N at once</strong>, three unless you change it. <strong>Hold</strong> stops new starts and touches nothing that is running.</li>
+      <li><strong>Start by itself</strong> is off until you switch it on. Nothing checks on a timer.</li>
+      <li>The order is yours: drag a task, or use the arrow keys.</li>
+      <li>A task follows its run: <em>needs you</em> while a run waits for approval, <em>done</em> when it finishes, <em>failed</em> with a sentence when it stops. Nothing is tried again by itself.</li>
+    </ul>
+    <h2>For you</h2>
+    <p>Terminals with a question, runs to approve or blocked, drafts and installs to read, tasks proposed for the queue, finished and failed tasks, lists an agent handed in, and working copies whose terminal is gone. The count at the top of the canvas and “next waiting” are the same list. Most of it is gathered, not written: an item goes when the thing itself is done.</p>
+    <p>An agent that finds work it should not do now can propose a task, and one that needs a person can ask you:</p>
+    <pre><code>aubergine task add "Add a test for the retry" --details "it should fail without the fix"
+aubergine ask "the staging key expires this week: rotate it, or say who can"</code></pre>
+    <p>Both land on your list. A proposal starts nothing until you accept it.</p>
+    <h2>Schedules</h2>
+    <p>A schedule is a time of day, days of the week, something to run and somewhere to run it. When its time comes it adds one task to the queue, and the queue starts it. Under <strong>Schedules</strong> on the Queue screen, or <code>aubergine schedule</code>. The time is on this computer's clock; there are no expressions and nothing more often than once a day.</p>
+    <pre><code>aubergine schedule add "My morning list" --at 08:30 --days weekdays \
+  --element "Morning list" --new Main
+aubergine schedule run "My morning list"     # try it now</code></pre>
+    <h3>When things are not as planned</h3>
+    <ul>
+      <li>The computer must be awake and Aubergine running. A time that passed while it slept runs <strong>once</strong> when it is back, marked late, if it is under six hours old. Otherwise it is marked <strong>missed</strong>.</li>
+      <li>While the previous task of a schedule still waits or is at work, it does not add another, and says it was skipped.</li>
+      <li>If something it names is gone (the terminal, the element, the canvas), it does not run, and one item on your list says so.</li>
+    </ul>
+    <h2>Rules</h2>
+    <p>Under <strong>Rules</strong>, you can say “when a task is done, failed or needs me, or a schedule fired or was missed, then notify me or run an element”. Rules are yours alone to write: no program and no agent can add or change one, and a rule cannot set itself off.</p>
+    <p>Aubergine calls no model and holds no credential for any app. A task or schedule only starts a run; the agent that takes it does the work with its own tools.</p>
+    <p>Related: <a href="../working-copies/">working copies</a> · <a href="../run-multiple-coding-agents/">run several coding agents at once</a></p>
+  </main>
+  <footer>
+    <span>Aubergine is open source. <a href="https://github.com/meatgarden/aubergine">GitHub</a> · <a href="../llms.txt">llms.txt</a></span>
+    <span class="flinks"><a href="../install/">Install</a> · <a href="../guides/">Guides</a> · <a href="../run-multiple-coding-agents/">Run several agents</a> · <a href="../working-copies/">Working copies</a> · <a href="../queue-and-schedules/">Queue and schedules</a> · <a href="../security/">Security</a> · <a href="../roadmap/">Roadmap</a> · <a href="../faq/">FAQ</a></span>
+  </footer>
+</div>
+</body>
+</html>
