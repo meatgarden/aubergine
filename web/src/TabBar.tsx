@@ -1,11 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { canvasCounts, openProjects, sortedCanvases, type Canvas } from '@aubergine/shared';
 import { api } from './api';
 import { ColorButton } from './ColorButton';
 import { colorClass, colorStyle } from './color';
 import { runCommand } from './commands';
 import { hint } from './shortcuts';
-import { ProjectSwitcher } from './projects/ProjectSwitcher';
 import { useApp } from './store';
 
 /**
@@ -31,6 +30,26 @@ export function TabBar() {
   const [renaming, setRenaming] = useState<{ id: string; text: string } | null>(null);
   const [dragging, setDragging] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  // The options of the tab being looked at, open at a place against the window.
+  const [menu, setMenu] = useState<{ left: number; top: number } | null>(null);
+  const menuRoot = useRef<HTMLSpanElement>(null);
+  useEffect(() => {
+    if (!menu) return;
+    const away = (event: PointerEvent): void => {
+      const target = event.target as Element | null;
+      if (!menuRoot.current?.contains(target) && !target?.closest('[data-testid="tab-more"]')) setMenu(null);
+    };
+    const key = (event: KeyboardEvent): void => {
+      if (event.key === 'Escape') setMenu(null);
+    };
+    window.addEventListener('pointerdown', away);
+    window.addEventListener('keydown', key);
+    return () => {
+      window.removeEventListener('pointerdown', away);
+      window.removeEventListener('keydown', key);
+    };
+  }, [menu]);
+  useEffect(() => setMenu(null), [current]);
 
   // Asked to rename a canvas (by a key or the palette).
   const ask = useApp((s) => (s.ask?.kind === 'rename-canvas' ? s.ask : null));
@@ -68,13 +87,10 @@ export function TabBar() {
 
   return (
     <nav className="tabbar" aria-label="Canvases" data-testid="tabbar">
-      <span className="brand" data-testid="brand">
-        Aubergine
-      </span>
-      <ProjectSwitcher />
       {canvases.map((canvas) => {
         const counts = canvasCounts(app, canvas);
         const active = canvas.id === current;
+        const messaging = canvas.messagesFrom.includes(canvas.id);
         return (
           <div
             key={canvas.id}
@@ -143,42 +159,77 @@ export function TabBar() {
             {active && (
               <span className="tab-tools" onClick={(e) => e.stopPropagation()} onDoubleClick={(e) => e.stopPropagation()}>
                 <ColorButton value={canvas.color} onChange={(color) => run(api.updateCanvas(canvas.id, { color }))} againstWindow title="Pick a color for this tab" />
-                {others.length > 0 && (
-                  <select
-                    className="tab-project"
-                    aria-label={`Move the canvas ${canvas.name} to another project`}
-                    title="Move this canvas to another project, with its terminals, their runs and what they work in"
-                    value=""
-                    onChange={(e) => e.target.value && run(api.moveCanvasToProject(canvas.id, e.target.value))}
-                    data-testid="tab-move-project"
-                  >
-                    <option value="">Move to…</option>
-                    {others.map((project) => (
-                      <option key={project.id} value={project.id}>
-                        {project.name}
-                      </option>
-                    ))}
-                  </select>
-                )}
                 <button
                   type="button"
-                  className="quiet tab-messaging"
-                  aria-pressed={canvas.messagesFrom.includes(canvas.id)}
-                  title={
-                    canvas.messagesFrom.includes(canvas.id)
-                      ? 'Terminals on this canvas may message each other. Click to switch that off.'
-                      : 'Terminals on this canvas may not message each other. Click to let them. You can always message any terminal yourself.'
-                  }
-                  onClick={() => {
-                    const on = canvas.messagesFrom.includes(canvas.id);
-                    // Switching it on is a decision: said in full before it is taken.
-                    if (!on && !window.confirm(`Let the terminals on “${canvas.name}” message each other?\n\nAn agent there will be able to send a message to another terminal on this canvas, and to be told that one waits. A message is never typed into a terminal. Every message is shown to you, a thread between two pauses after a few turns until you have looked, and terminals marked “people only” take messages from you alone. Terminals that start an agent are “people only” from the start unless you changed that: such a terminal can send, and receives only once you say so: open its drawer (✉ on the terminal) and tick that it takes messages while people only. That opens it to messages from terminals and to nothing else.`)) return;
-                    run(api.setCanvasMessaging(canvas.id, !on));
+                  className="quiet tab-more"
+                  aria-haspopup="menu"
+                  aria-expanded={menu !== null}
+                  aria-label={`Options for the canvas ${canvas.name}`}
+                  title="Options for this canvas: rename, messages between its terminals, move to another project"
+                  onClick={(e) => {
+                    // The bar of tabs scrolls sideways and cuts off what hangs below it: the menu is placed against the window.
+                    const box = e.currentTarget.getBoundingClientRect();
+                    setMenu(menu ? null : { left: Math.min(box.left, window.innerWidth - 330), top: box.bottom + 6 });
                   }}
-                  data-testid="tab-messaging"
+                  data-testid="tab-more"
                 >
-                  {canvas.messagesFrom.includes(canvas.id) ? '✉ on' : '✉ off'}
+                  Options ▾
                 </button>
+                {menu && (
+                  <span className="toolbar-menu tab-menu" role="menu" style={{ left: menu.left, top: menu.top }} ref={menuRoot} data-testid="tab-menu">
+                    <button
+                      type="button"
+                      role="menuitem"
+                      onClick={() => {
+                        setMenu(null);
+                        setRenaming({ id: canvas.id, text: canvas.name });
+                      }}
+                      data-testid="tab-rename"
+                    >
+                      Rename…
+                      <small>Double-clicking the name does the same.</small>
+                    </button>
+                    <button
+                      type="button"
+                      role="menuitemcheckbox"
+                      aria-checked={messaging}
+                      aria-pressed={messaging}
+                      onClick={() => {
+                        // Switching it on is a decision: said in full before it is taken.
+                        if (!messaging && !window.confirm(`Let the terminals on “${canvas.name}” message each other?\n\nAn agent there will be able to send a message to another terminal on this canvas, and to be told that one waits. A message is never typed into a terminal. Every message is shown to you, a thread between two pauses after a few turns until you have looked, and terminals marked “people only” take messages from you alone. Terminals that start an agent are “people only” from the start unless you changed that: such a terminal can send, and receives only once you say so: open its drawer (Message on the terminal) and tick that it takes messages while people only. That opens it to messages from terminals and to nothing else.`)) return;
+                        run(api.setCanvasMessaging(canvas.id, !messaging));
+                      }}
+                      data-testid="tab-messaging"
+                    >
+                      Messages between terminals: {messaging ? 'on' : 'off'}
+                      <small>{messaging ? 'Terminals on this canvas may message each other. Click to switch that off.' : 'Terminals on this canvas may not message each other. You can always message any terminal yourself.'}</small>
+                    </button>
+                    {others.length > 0 && (
+                      <label className="tab-menu-line">
+                        <span>Move to another project</span>
+                        <select
+                          className="tab-project"
+                          aria-label={`Move the canvas ${canvas.name} to another project`}
+                          title="Move this canvas to another project, with its terminals, their runs and what they work in"
+                          value=""
+                          onChange={(e) => {
+                            if (!e.target.value) return;
+                            setMenu(null);
+                            run(api.moveCanvasToProject(canvas.id, e.target.value));
+                          }}
+                          data-testid="tab-move-project"
+                        >
+                          <option value="">Choose…</option>
+                          {others.map((project) => (
+                            <option key={project.id} value={project.id}>
+                              {project.name}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+                    )}
+                  </span>
+                )}
                 {canvases.length > 1 && (
                   <button
                     type="button"

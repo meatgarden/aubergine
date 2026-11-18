@@ -401,6 +401,8 @@ const RowView = memo(function RowView({ row, style, density, indented, current, 
   const detail = session.state === 'exited' ? 'ended' : [session.command, shortFolder(session.cwd)].filter(Boolean).join(' · ');
   const typed = ago(session.lastInputAt, now);
   const updated = ago(session.lastOutputAt, now);
+  // The later of the two times is the one the row says.
+  const active = ago([session.lastInputAt, session.lastOutputAt].filter((t): t is string => typeof t === 'string').sort().at(-1) ?? null, now);
   const hasNotes = session.note !== '' || session.noteLog.length > 0;
   const unseen = useUnseenNotes(session.id, session.noteLog.length);
   const timer = useRef<number | undefined>(undefined);
@@ -520,14 +522,16 @@ const RowView = memo(function RowView({ row, style, density, indented, current, 
       {!compact && (
         <div className="list-detail">
           <span className="list-where">{detail || ' '}</span>
-          {typed && (
-            <span className="list-time" title={`Last typed into: ${new Date(session.lastInputAt ?? 0).toLocaleString()}`} data-testid="list-typed">
-              typed {typed === 'now' ? 'just now' : `${typed} ago`}
-            </span>
-          )}
-          {updated && (
-            <span className="list-time" title={`Last printed: ${new Date(session.lastOutputAt ?? 0).toLocaleString()}`} data-testid="list-updated">
-              updated {updated === 'now' ? 'just now' : `${updated} ago`}
+          {active && (
+            // One time, the later of the two; both are said in full when the pointer rests on it.
+            <span
+              className="list-time"
+              title={[typed ? `You last typed here ${typed === 'now' ? 'just now' : `${typed} ago`}` : null, updated ? `It last printed ${updated === 'now' ? 'just now' : `${updated} ago`}` : null].filter(Boolean).join('. ')}
+              data-testid="list-active"
+              data-typed={typed || undefined}
+              data-updated={updated || undefined}
+            >
+              {active === 'now' ? 'active just now' : `active ${active} ago`}
             </span>
           )}
           {session.typedBy && (

@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { ReactFlowProvider } from '@xyflow/react';
+import { AppBar } from './AppBar';
 import { Canvas } from './Canvas';
 import { CloseCanvasDialog } from './CloseCanvasDialog';
 import { CloseDialog } from './CloseDialog';
@@ -70,6 +71,7 @@ export function App() {
 
   return (
     <div className="app">
+      <AppBar />
       <TabBar />
       <div className="workspace">
         <SidePanel />

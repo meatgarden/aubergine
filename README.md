@@ -396,7 +396,7 @@ One server can hold several projects. A project is a control room of its own: it
 - **Everything on screen is of the project you are in**: the tabs, the side panel, the Queue screen, the Board, schedules and rules. Where a screen can show more, it says so: the owner's list and the Board have **Every project**, and the terminal list has **All projects**; rows then name their project.
 - **Each project has its own address** (`/p/<project>/c/<canvas>`), so a browser tab or window can stay on one. Older addresses (`/c/<canvas>`) still lead to the right place. The browser remembers the canvas you last had open in each project.
 - **How tasks start is per project**: the limit, Hold and "Start by itself" of one project do not touch another.
-- **A canvas moves to another project** from its tab (**Move to…**) or with `aubergine project move-canvas`. Its terminals go with it, with their runs and working copies, and so do the tasks that wait for one of its terminals. A task for "any free agent", rules and schedules stay where they were. The last canvas of a project does not move.
+- **A canvas moves to another project** from its tab (**Options**, then **Move to another project**) or with `aubergine project move-canvas`. Its terminals go with it, with their runs and working copies, and so do the tasks that wait for one of its terminals. A task for "any free agent", rules and schedules stay where they were. The last canvas of a project does not move.
 - **Projects…** lists them: rename, color, folder, order; **Archive**, **Reopen**, **Remove for good**. An archived project is out of the switcher and starts nothing: no task, no schedule, no rule. Archiving a project whose terminals are running asks first whether to park them or end them. A project is removed only when it holds nothing, and the last open project stays.
 
 #### What is shared between projects
@@ -549,7 +549,9 @@ Reload the page to apply. If a key is set twice or cannot be read, the shortcut 
 
 The panel on the left shows one thing at a time, chosen by the tabs at its top: **Terminals**, **For you**, **Runs**, **Copies** and **Messages**. A tab says how many it holds, and **For you** stands out while something waits on you. The panel remembers which tab you chose.
 
-The bar over the canvas has three groups: **+ New terminal** (with **▾** for everything else you can make: a Claude Code session, one with Aubergine tools, one on a workflow, a terminal in a folder or a working copy, a frame), the screens (**Queue**, **Board**, **Workflows**, **Library**), and the view (**Go to…**, **Fit**, the zoom). At its right is what needs you and what is elsewhere: sessions waiting, things to review, parked and outside terminals, and **?** for help. On a narrow window it wraps to a second line; nothing runs off the edge.
+The top of the page says where you are and what waits for you: the name, the project, the screens of that project (**For you and queue**, **Board**, **Workflows**, **Library**), and at the right the sessions waiting, things to review and **Help**. The canvases have the row below it to themselves; the tab you are on has **Options** for what is done seldom (rename, messages between its terminals, moving it to another project). The bar over the canvas holds only what acts on that canvas: **+ New terminal** (with **▾** for everything else you can make: a Claude Code session, one with Aubergine tools, one on a workflow, a terminal in a folder or a working copy, a frame), the view (**Go to…**, **Fit**, the zoom), and the terminals that are not on it (parked and outside). On a narrow window each bar wraps to a second line; nothing runs off the edge.
+
+A terminal that is on a workflow says so in a line under its title: the workflow, which step of how many, and what it waits for. Click it for every step.
 
 In the terminal list, the three filters used every day (**Waiting for me**, **Busy**, **Unread**) are always there. **More** opens the rest, and how the list is grouped and ordered, and shows a number while any of those is in effect.
 
@@ -672,7 +674,7 @@ A terminal is live only while it is on screen and large enough to read. Zoomed f
 
 ## The queue, and "For you"
 
-Two lists that feed each other. **Queue** in the toolbar (or `Q`) shows both.
+Two lists that feed each other. **For you and queue** at the top of the page (or `Q`) shows both.
 
 **The queue** is work for agents. You write a task once: a title, what to do, and if you like a folder, a workflow, and who may take it. A free agent takes it when you say so.
 
@@ -874,7 +876,7 @@ Saving makes a **new version**. A run keeps to the version it started on, so edi
 
 ### Run one
 
-On a terminal: the **⇶** button in its title bar, or ⌘K, `Run workflow`. Choose the workflow, fill in the task, read what the agent will be told first, and start. If an agent is running in that terminal, Aubergine types one line into it:
+On a terminal: **Workflow** in its title bar (**⇶** on a narrow terminal), or ⌘K, `Run workflow`. Choose the workflow, fill in the task, read what the agent will be told first, and start. If an agent is running in that terminal, Aubergine types one line into it:
 
 ```
 You are on an Aubergine workflow. Run `aubergine workflow status` to read your current element and follow it. When its "done when" is true, run `aubergine workflow done --note "<what you did>"` and follow what it prints.
@@ -882,7 +884,7 @@ You are on an Aubergine workflow. Run `aubergine workflow status` to read your c
 
 From there the agent drives itself: `status` prints the element, and `done` records it and prints the next one, with the note the element before handed over. If no agent is running there, nothing is typed (a shell would try to run the sentence); the run is shown with its buttons, and with that line to give an agent yourself.
 
-On a new agent: the **⇶** button beside **+ Claude Code** starts a Claude Code session that is told about the run in its first prompt.
+On a new agent: **Claude Code on a workflow…**, in the menu beside **+ New terminal**, starts a Claude Code session that is told about the run in its first prompt.
 
 A terminal is on one run at a time. **Resume agent** on a terminal that is on a run tells the agent about the run again, so it carries on where the run stands.
 
@@ -1355,7 +1357,7 @@ Nothing is typed into the terminal. Its tile and its row show "✉ 1 from you". 
 
 **The agent reads and answers** with `aubergine inbox` (which prints each unread message between two marker lines, with who sent it, and marks it read) and `aubergine reply <id> "<answer>"`. An agent can always answer a message from you. Its answer shows on the terminal as "✉ 1 for you" and puts the terminal in the "waiting" queue.
 
-**One terminal to another: only where you switch it on.** Each canvas has a switch on its tab, **✉ off**. Click it, read what it says, and it becomes **✉ on**: the terminals on that canvas may now message each other with `aubergine tell "<terminal>" "<message>"`. Off is how every canvas starts, and only you can change it: no API token and no agent can. With it on:
+**One terminal to another: only where you switch it on.** Each canvas has a switch under **Options** on its tab, **Messages between terminals: off**. Click it, read what it says, and it is on: the terminals on that canvas may now message each other with `aubergine tell "<terminal>" "<message>"`. Off is how every canvas starts, and only you can change it: no API token and no agent can. With it on:
 
 - only terminals on the same canvas reach each other. Nothing passes between canvases in this version, and a parked terminal neither sends nor receives;
 - a terminal marked **people only** takes messages from you alone. Terminals that start an agent are people only from the start (`terminal.protectAgentSessions`), so with nothing else changed such a terminal can send and cannot receive. To let it receive, open its drawer (**✉** on the terminal) and tick that it takes messages while people only. That lets terminals message it where the canvas's switch is on, and nothing else: it stays closed to reading and typing, and to every program with a token. Only you can tick it;

@@ -3934,3 +3934,344 @@ tr[data-status='expired'] strong {
 .schedule-form textarea {
   flex-basis: 100%;
 }
+
+/* ---------- The top of the page ---------- */
+
+/* Where you are and what waits for you. The canvases have the row below to themselves. */
+.appbar {
+  flex: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  min-height: 44px;
+  padding: 4px 12px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+}
+.appbar .brand {
+  margin: 0 4px 0 0;
+}
+.appbar button {
+  white-space: nowrap;
+  padding: 5px 10px;
+}
+.appbar button.quiet {
+  min-width: 0;
+  border-color: transparent;
+}
+.appbar button.quiet:hover:not(:disabled) {
+  color: var(--text);
+  background: var(--panel-hover);
+  border-color: transparent;
+}
+.appbar-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.appbar-group + .appbar-group {
+  padding-left: 10px;
+  border-left: 1px solid var(--border);
+}
+.appbar-status {
+  margin-left: auto;
+  border-left: none !important;
+}
+.tabbar {
+  background: var(--bg);
+  padding-top: 4px;
+  height: 38px;
+}
+.tab.active {
+  background: var(--panel);
+}
+.tab-more {
+  min-width: 0;
+  padding: 1px 6px;
+  font-size: 11px;
+  border-color: transparent;
+}
+.tab-menu {
+  position: fixed;
+  z-index: 60;
+  width: 320px;
+  cursor: default;
+}
+.tab-menu-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 7px 9px;
+  color: var(--text);
+}
+.tab-menu-line .tab-project {
+  max-width: 160px;
+  font-size: 12px;
+  padding: 3px 6px;
+}
+
+/* ---------- A workflow on a terminal ---------- */
+
+/* One line under the title, in words: which workflow, which step of how many, what it waits for. */
+.run-banner {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+  padding: 5px 10px;
+  font-size: 12px;
+  line-height: 18px;
+  text-align: left;
+  color: var(--text);
+  background: color-mix(in srgb, var(--accent) 10%, var(--panel));
+  border: none;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+  cursor: pointer;
+}
+.run-banner:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--accent) 18%, var(--panel));
+}
+.run-banner > * {
+  flex: none;
+  white-space: nowrap;
+}
+.run-banner-label {
+  padding: 0 6px;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+.run-banner-name {
+  flex: 0 1 auto;
+  min-width: 40px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--muted);
+}
+.run-banner .run-segment {
+  width: 14px;
+  height: 6px;
+}
+.run-banner-step {
+  flex: 0 1 auto;
+  min-width: 60px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.run-banner-step strong {
+  font-weight: 600;
+}
+.run-banner-says {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--muted);
+}
+.run-banner-open {
+  margin-left: auto;
+  color: var(--accent-strong);
+}
+.run-banner.status-awaiting {
+  background: color-mix(in srgb, #d98e56 22%, var(--panel));
+}
+.run-banner.status-awaiting .run-banner-says,
+.run-banner.status-awaiting .run-banner-open {
+  color: #e8a877;
+  font-weight: 600;
+}
+.run-banner.status-blocked {
+  background: color-mix(in srgb, var(--danger) 16%, var(--panel));
+}
+.run-banner.status-blocked .run-banner-says {
+  color: var(--danger);
+}
+.run-banner.status-paused,
+.run-banner.is-quiet {
+  border-bottom-style: dashed;
+}
+
+/* The tools of a terminal's title say what they are where there is room, and fall back to a sign where there is not. */
+.node-title {
+  container-type: inline-size;
+  container-name: node-title;
+}
+.tool-sign {
+  display: none;
+}
+.tool-count {
+  margin-left: 4px;
+}
+@container node-title (max-width: 660px) {
+  .tool-word {
+    display: none;
+  }
+  .tool-sign {
+    display: inline;
+  }
+  .tool-count {
+    margin-left: 0;
+  }
+}
+/* The name comes first and keeps its room; what the terminal runs gives way before the name does. */
+.node-title .node-name {
+  flex: 1 1 120px;
+  min-width: 120px;
+}
+.node-title .node-status {
+  flex: 0 1 auto;
+  max-width: 32%;
+}
+@container node-title (max-width: 660px) {
+  .node-title .node-name {
+    min-width: 60px;
+  }
+}
+
+/* ---------- The list of terminals: the name first ---------- */
+
+/* A row's name keeps its room; the marks beside it give way before the name is cut to nothing. */
+.list-row .list-name {
+  flex: 1 1 auto;
+  min-width: 96px;
+}
+.list-row .list-badge,
+.list-row .run-strip.is-row {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.list-row .list-spring {
+  flex: 0 0 0;
+}
+.list-detail .list-where {
+  flex: 1 1 auto;
+}
+/* Whatever a title holds, the way to put the terminal away stays in reach: it keeps to the right edge, over what does not fit. */
+.node-title > .node-close {
+  position: sticky;
+  right: 0;
+  z-index: 1;
+  background: var(--panel);
+}
+.node-title .node-name {
+  min-width: 72px;
+}
+.node-title .copy-chip {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---------- Screens: one shape for all of them ---------- */
+
+/* What is behind a dialog is plainly behind it. */
+.dialog-backdrop {
+  background: rgb(8 8 11 / 0.72);
+}
+/* A screen opens in the same place at the same width, whatever it holds: from under the top of the page, growing downwards. */
+.dialog-backdrop:has(> .dialog.sheet) {
+  place-items: start center;
+  padding: 56px 24px 24px;
+  box-sizing: border-box;
+}
+.dialog.sheet {
+  box-sizing: border-box;
+  max-height: calc(100vh - 80px);
+  padding: 0 24px 24px;
+  border-radius: 12px;
+}
+.dialog.sheet.queue-screen,
+.dialog.sheet.board-screen,
+.dialog.sheet.workflows-screen,
+.dialog.sheet.library-screen,
+.dialog.sheet.projects-screen,
+.dialog.sheet.sharing-screen,
+.dialog.sheet.review-screen {
+  width: min(1120px, calc(100vw - 48px));
+}
+/* Its name and the way out stay in view while what it holds scrolls. */
+.dialog.sheet > .sheet-head {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  margin: 0 -24px 16px;
+  padding: 16px 24px 12px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+}
+.dialog.sheet > :first-child:not(.sheet-head) {
+  margin-top: 20px;
+}
+.dialog.sheet > .sheet-head h2 {
+  margin: 0;
+  font-size: 18px;
+}
+.dialog.sheet h3 {
+  margin: 22px 0 8px;
+  font-size: 14px;
+}
+/* A paragraph that explains is as wide as a line can be read, not as wide as the screen. */
+.dialog.sheet > p,
+.dialog.sheet .sheet-note {
+  max-width: 82ch;
+  line-height: 1.55;
+}
+
+/* For you, and the queue: two lists, each in a box of its own with its name at the top. */
+.queue-columns {
+  gap: 20px;
+  align-items: start;
+}
+.queue-columns > section {
+  padding: 14px 16px 16px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.queue-columns > section > h3:first-child {
+  margin-top: 0;
+  font-size: 15px;
+}
+.queue-screen details {
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.queue-screen details > summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+/* The board: columns with room in them, and a card that reads as something to press. */
+.board-column {
+  min-height: 96px;
+  padding: 10px;
+}
+.board-group h3 {
+  font-size: 15px;
+}
+
+/* The library: the list beside what is read, each with room. */
+.library-row {
+  padding: 8px 10px;
+}
+.queue-columns > section {
+  min-width: 0;
+}
+.queue-columns .foryou-row {
+  box-sizing: border-box;
+  max-width: 100%;
+}

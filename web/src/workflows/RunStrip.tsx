@@ -3,8 +3,8 @@ import { useApp } from '../store';
 import { STATUS_MARK, STATUS_WORD, pictureOf, runsBySession, versionOfRun } from './run-model';
 
 /**
- * Where a session's run stands, in a few pixels: one mark per element and the
- * name of the current one. On the node's title bar and on the list row.
+ * Where a session's run stands. On a terminal: a line of its own under the title, in words
+ * (the workflow, the step and how many there are, what it waits for). On a list row: a few pixels.
  * It listens to its own run only, so a report redraws one strip.
  */
 export const RunStrip = memo(function RunStrip({ sessionId, variant }: { sessionId: string; variant: 'node' | 'row' }) {
@@ -24,31 +24,54 @@ export const RunStrip = memo(function RunStrip({ sessionId, variant }: { session
     .filter(Boolean)
     .join(' · ');
 
-  return (
-    <button
-      type="button"
-      className={`run-strip nodrag is-${variant} status-${run.status}${picture.quiet ? ' is-quiet' : ''}`}
-      title={title}
-      data-testid={variant === 'node' ? 'run-strip' : 'row-run'}
-      data-status={run.status}
-      data-element={picture.current?.id ?? ''}
-      data-quiet={picture.quiet ? 'true' : undefined}
-      onClick={(event) => {
-        event.stopPropagation();
-        useApp.getState().viewRun(run.id);
-      }}
-    >
-      {variant === 'node' && (
+  const open = (event: { stopPropagation(): void }): void => {
+    event.stopPropagation();
+    useApp.getState().viewRun(run.id);
+  };
+
+  if (variant === 'node') {
+    // On a terminal the run is said in a line of its own, in words: which workflow, which step of how many, and what it waits for.
+    const says = run.status === 'awaiting' ? 'Waiting for you to approve' : run.status === 'blocked' ? `Blocked${run.blockedReason ? `: ${run.blockedReason}` : ''}` : run.status === 'running' ? (picture.quiet ? 'No report for a while, so this may be behind' : null) : STATUS_WORD[run.status];
+    return (
+      <button type="button" className={`run-banner nodrag status-${run.status}${picture.quiet ? ' is-quiet' : ''}`} title={title} data-testid="run-strip" data-status={run.status} data-element={picture.current?.id ?? ''} data-quiet={picture.quiet ? 'true' : undefined} onClick={open}>
+        <span className="run-banner-label">Workflow</span>
+        <span className="run-banner-name" data-testid="run-workflow-name">
+          {picture.workflowName}
+        </span>
         <span className="run-segments" aria-hidden="true">
           {picture.segments.map((segment) => (
             <span key={segment.id} className={`run-segment is-${segment.state}`} />
           ))}
         </span>
-      )}
+        <span className="run-banner-step">
+          {picture.current ? `Step ${picture.current.number} of ${picture.total}: ` : ''}
+          <strong className="run-element" data-testid="run-element">
+            {picture.current ? picture.current.name : STATUS_WORD[run.status]}
+          </strong>
+        </span>
+        {says && picture.current && (
+          <span className="run-banner-says" data-testid="run-says">
+            {says}
+          </span>
+        )}
+        <span className="run-banner-open">{run.status === 'awaiting' ? 'Review and decide' : 'See all steps'} ›</span>
+      </button>
+    );
+  }
+
+  return (
+    <button
+      type="button"
+      className={`run-strip nodrag is-row status-${run.status}${picture.quiet ? ' is-quiet' : ''}`}
+      title={title}
+      data-testid="row-run"
+      data-status={run.status}
+      data-element={picture.current?.id ?? ''}
+      data-quiet={picture.quiet ? 'true' : undefined}
+      onClick={open}
+    >
       {run.status !== 'running' && <span className="run-mark">{STATUS_MARK[run.status]}</span>}
-      <span className="run-element" data-testid={variant === 'node' ? 'run-element' : undefined}>
-        {picture.current ? picture.current.name : STATUS_WORD[run.status]}
-      </span>
+      <span className="run-element">{picture.current ? picture.current.name : STATUS_WORD[run.status]}</span>
       {picture.current && (
         <span className="run-count">
           {picture.current.number}/{picture.total}

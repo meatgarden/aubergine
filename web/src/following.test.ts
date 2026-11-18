@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { applyEvent, createInitialState, type AppState, type ChangeEvent } from '@aubergine/shared';
-import { NOT_FOLLOWING, takeChange, takeWhole } from './following';
+import { NOT_FOLLOWING, behind, takeChange, takeWhole } from './following';
 
 /** A state, and three changes to it in order: each renames the one canvas. */
 const start = createInitialState(new Date('2026-06-01T09:00:00.000Z'));
@@ -51,6 +51,22 @@ describe('following the server without losing a change', () => {
     // Applying an older rename again would have put the old name back.
     expect(nameOf(takeChange(page, one, 1).whole)).toBe('Two');
     expect(nameOf(takeChange(page, three, 3).whole)).toBe('Three');
+  });
+
+  it('a change made before the stream was ready is not lost when later ones arrive before the whole state that holds it', () => {
+    // The page has the state at 0. Change 1 is made while its stream is not ready yet: it never arrives.
+    let page = takeWhole(NOT_FOLLOWING, start, EPOCH, 0);
+    // The stream becomes ready and the page asks again. Before that answer, changes 2 and 3 arrive.
+    page = takeChange(page, two, 2);
+    page = takeChange(page, three, 3);
+    // They are not applied over the gap, and the page knows it is behind.
+    expect(nameOf(page.whole)).toBe(nameOf(start));
+    expect(page.revision).toBe(0);
+    expect(behind(page)).toBe(true);
+    // The answer is the state after change 2. It is newer than what the page has, so it is taken; change 3 follows it.
+    page = takeWhole(page, after(one, two), EPOCH, 2);
+    expect([nameOf(page.whole), page.revision]).toEqual(['Three', 3]);
+    expect(behind(page)).toBe(false);
   });
 
   it('a newer whole state is taken, and the changes after it still apply', () => {
