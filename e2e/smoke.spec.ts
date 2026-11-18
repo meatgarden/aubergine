@@ -2846,16 +2846,20 @@ test('projects: a second project has its own tabs, terminals and queue; what wai
   // A canvas of this project, with a terminal on it, is moved to the second: the page follows it there, and its terminal is among the second's.
   await page.getByRole('button', { name: 'New canvas' }).click();
   await expect(tabs).toHaveCount(tabsBefore + 1);
-  // The list shows every canvas of this project: the new terminal is the one that was not there before.
-  const known = await rows.evaluateAll((all) => all.map((row) => row.getAttribute('data-session') ?? ''));
+  // The list is put back to the canvas being looked at, which is new and empty: its one terminal is the one made now.
+  await page.getByTestId('scope-this').click();
+  await expect(rows).toHaveCount(0);
   await page.getByTestId('toolbar-new-terminal').click();
-  await expect(rows).toHaveCount(known.length + 1);
-  const moved = (await rows.evaluateAll((all) => all.map((row) => row.getAttribute('data-session') ?? ''))).find((id) => !known.includes(id)) ?? '';
+  await expect(rows).toHaveCount(1);
+  const moved = (await rows.first().getAttribute('data-session')) ?? '';
   await page.locator('[data-testid="tab"][aria-selected="true"]').getByTestId('tab-move-project').selectOption({ label: 'Project test second' });
   await expect(page.getByTestId('project-name')).toHaveText('Project test second');
   await expect(tabs).toHaveCount(2);
   await expect(page.locator(`[data-testid="list-row"][data-session="${moved}"]`)).toHaveCount(1);
+  // With every canvas of this project listed, the terminal that was made here is beside it.
+  await page.getByTestId('scope-all').click();
   await expect(page.locator(`[data-testid="list-row"][data-session="${inSecond}"]`)).toHaveCount(1);
+  await expect(page.locator(`[data-testid="list-row"][data-session="${moved}"]`)).toHaveCount(1);
   // The old address of the second project still leads there.
   await page.goto(secondAddress);
   await expect(page.getByTestId('project-name')).toHaveText('Project test second');
