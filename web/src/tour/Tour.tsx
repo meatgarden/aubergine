@@ -31,19 +31,32 @@ function useRectOf(find: (() => Element | null) | null): DOMRect | null {
   return rect;
 }
 
-/** Whether a rectangle is that of something a dialog holds: it lies within the dialog's own box. */
-function isInside(rect: DOMRect, backdrop: Element): boolean {
-  const box = backdrop.querySelector('.dialog, .picker')?.getBoundingClientRect();
-  return !!box && rect.x >= box.x - 1 && rect.y >= box.y - 1 && rect.right <= box.right + 1 && rect.bottom <= box.bottom + 1;
+/**
+ * Whether a screen is open that does not hold what is being pointed at. While one is, the tour keeps out of its way:
+ * no ring over it and no card on it. Looked at on a timer, like the rectangle: a screen opens without anything here changing.
+ */
+function useBehindScreen(find: (() => Element | null) | null): boolean {
+  const [behind, setBehind] = useState(false);
+  useEffect(() => {
+    if (!find) {
+      setBehind(false);
+      return;
+    }
+    const look = (): void => {
+      const screens = [...document.querySelectorAll('.dialog-backdrop')];
+      const pointed = find();
+      setBehind(screens.length > 0 && !screens.some((screen) => pointed !== null && screen.contains(pointed)));
+    };
+    look();
+    const timer = setInterval(look, 200);
+    return () => clearInterval(timer);
+  }, [find]);
+  return behind;
 }
 
 /** A ring round what is being pointed at. It takes no clicks: what is under it stays usable. */
 function Ring({ rect }: { rect: DOMRect | null }) {
   if (!rect) return null;
-  // While a dialog is open and what is pointed at is behind it, no ring is drawn over the dialog.
-  const middle = document.elementFromPoint(rect.x + rect.width / 2, rect.y + rect.height / 2);
-  const dialog = middle?.closest('.dialog-backdrop');
-  if (dialog && !isInside(rect, dialog)) return null;
   const pad = 6;
   return <div className="tour-ring" aria-hidden="true" style={{ left: rect.x - pad, top: rect.y - pad, width: rect.width + pad * 2, height: rect.height + pad * 2 }} data-testid="tour-ring" />;
 }
@@ -158,8 +171,9 @@ export function Tour() {
   const rect = useRectOf(find);
   const cardRef = useRef<HTMLElement | null>(null);
   const corner = useCorner(cardRef, rect, current !== null);
+  const behind = useBehindScreen(find);
 
-  if (!current || step === null) return <Ring rect={rect} />;
+  if (!current || step === null) return behind ? null : <Ring rect={rect} />;
   const last = step === steps.length - 1;
   const done = doneStep === current.id;
   const go = (to: number): void => {
@@ -169,8 +183,8 @@ export function Tour() {
 
   return (
     <>
-      <Ring rect={rect} />
-      <section ref={cardRef} className={`tour-card at-${corner}`} role="region" aria-label="Tour" data-testid="tour-card" data-step={current.id} data-corner={corner} data-done={done ? 'true' : undefined}>
+      {!behind && <Ring rect={rect} />}
+      <section ref={cardRef} hidden={behind && doneStep !== current.id} className={`tour-card at-${corner}`} role="region" aria-label="Tour" data-testid="tour-card" data-step={current.id} data-corner={corner} data-done={done ? 'true' : undefined}>
         <div className="tour-count" data-testid="tour-count">
           {step + 1} of {steps.length}
         </div>

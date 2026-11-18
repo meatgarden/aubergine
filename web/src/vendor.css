@@ -1,0 +1,4 @@
+/* What the canvas and the terminal bring with them, in the lowest layer, so that the page's own rules decide. */
+@layer vendor, legacy;
+@import '@xyflow/react/dist/style.css' layer(vendor);
+@import '@xterm/xterm/css/xterm.css' layer(vendor);

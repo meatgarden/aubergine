@@ -285,6 +285,19 @@ These are the only abstractions in the code base. Each has exactly one implement
 - The launcher (`bin/aubergine.mjs`) passes signals on to the command it starts; keep it that way so stopping `aubergine start` stops the server.
 - Session IDs are the only user-influenced values that reach a tmux command line, and they are validated as UUIDv7 first. Keep it that way.
 
+### The look
+
+- **The look is in three places and nowhere else.** `web/src/tokens.css` has every size, weight, colour, space, corner, control height and layer. `web/src/ui/ui.css` has what a control, a chip, a tab, a menu and a card look like (`web/src/ui/index.tsx` has the same as components). `docs/design.md` says when to use which. A screen's rule in `styles.css` says where things are, never what a control looks like.
+- **No number where a token belongs.** A font size, a weight, a corner, a colour, a layer or a control's height written as a number, and a space off the grid of four, fail `web/src/ui/design.test.ts`. A new one is a change to the tokens and to `docs/design.md`, with its reason. The exceptions are a terminal's own text and the colours a person picks.
+- **Four sizes, two heights.** Text is 12, 13, 15 or 20px. A button, a field and a select are 32px, or 28px in the side panel, the bar over the canvas, a terminal's title and the tab bar; a chip is 20px. The browser test "one look" measures the page and each screen; a new screen is added to its list.
+- **The pieces decide.** `styles.css` is in the layer `legacy` and the canvas library's styles in `vendor`; `ui.css` is in none. Do not move a rule out of its layer to win, and do not use `!important` to beat a piece: change the piece.
+- **New screens are built from `web/src/ui`.** Plain elements with the piece's class are the same thing; a new class that restates a control is not.
+- **Muted is for what is known about a thing.** A name, a heading, a button's words and a paragraph are `--text`.
+- **One primary button on a surface at most.**
+- **Layers are the six tokens.** The tour keeps off a screen that does not hold what it points at.
+- **The light theme redefines colours and nothing else.** Every pair of text and background is tested for contrast in both.
+- **Only a control shows the focus ring.** A screen or panel the page focuses when it opens (`tabindex="-1"`) shows none.
+
 ### Canvas behaviour
 
 - A terminal takes input at any zoom at which it is drawn live, and only while it has focus. One click focuses it and moves nothing; only a node too small to read (below `READABLE_ZOOM`) zooms in first. An unfocused terminal is covered by a shield: the first click focuses it.
@@ -401,6 +414,8 @@ A terminal in the owner's terminal app: the opener with three kinds (`daemon/src
 Projects: several in one server, each with its own canvases, terminals, queue, owner's list, schedules and rules; what is shared and what is a project's own, on one page; a token's reach over projects; moving a canvas; archiving; `home` and `host` written down with one value each; `aubergine project`, `--project`; one MCP tool. State version 14. Code: `shared/src/projects.ts`; `daemon/src/projects.ts`, `project-reach.ts`, `project-context.ts`, `cli/project.ts`; `web/src/projects/`. Events also include `project.changed`, `project.removed`, `canvas.project`, `sharing.default` and `sharing.moved`. Nothing remote exists yet.
 
 The page no longer loses a change after loading (changes are numbered; `web/src/following.ts`). A project as a file: the format (`shared/src/project-file.ts`, `docs/project-file.md`), export, reading in through the review screen with places and choices (`daemon/src/project-files.ts`, `web/src/review/project-file-source.tsx`), templates (two that ship, in `templates/`), `aubergine project export | import | templates | new --template`, a switch on rules. New optional fields, no migration: `Rule.on`, `Session.meantFor`, `Project.fileExtra`. A file is a copy at one moment, not a link. Not built: a library source listing projects.
+
+The look: tokens for every size, colour, space, corner and layer in both themes (`web/src/tokens.css`), one anatomy for controls and the shared pieces (`web/src/ui/`), the old stylesheet in a layer below them, a test that fails on drift, a browser test that measures the page and each screen, `docs/design.md`. Most buttons are still plain elements rather than the components. Many dialogs and panels were measured or neither measured nor looked at; Safari and Firefox were not run.
 
 Not built yet: a packaged build without development dependencies, Linux tested, measured key tables for Safari, Firefox, Linux and Windows, publishing the client as a package, moving the remaining `/api/v1` routes onto `/v1`, the workflow library, the board of runs, approvals, branches, a pool of agents, a list of past runs in the browser, waiting for output, changing a token's reach, SQLite, an HTTP transport for the MCP server, presets, a finder agent, recording, bash or fish integration.
 

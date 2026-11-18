@@ -5,6 +5,7 @@ import { showMeAround } from './tour/actions';
 import { tourSteps } from './tour/registry';
 import './tour/steps';
 import { useTour } from './tour/tour-store';
+import { ScreenHead } from './ui';
 
 /**
  * Help: the things the tour shows, as one-line reminders. "Show me" points
@@ -26,12 +27,7 @@ export function HelpPanel() {
       }}
     >
       <div className="dialog sheet help-panel" role="dialog" aria-label="Help" data-testid="help-panel">
-        <header className="sheet-head">
-          <h2>What you can do here</h2>
-          <button type="button" className="quiet" onClick={close}>
-            Close
-          </button>
-        </header>
+        <ScreenHead title="What you can do here" onClose={close} />
         <ol className="help-list">
           {tourSteps().map((step) => {
             const there = step.target(context) !== null;

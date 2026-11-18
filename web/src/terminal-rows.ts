@@ -294,9 +294,10 @@ export function describeEmpty(view: ListView, total: number): string {
 
 /* ---------- Drawing only what is in view ---------- */
 
-export const ROW_HEIGHT: Record<Density, number> = { comfortable: 44, compact: 24 };
-export const GROUP_HEIGHT = 28;
-export const FRAME_HEIGHT = 22;
+/** The heights of what the list draws. They hold the controls of a row at the size controls have in the panel (see docs/design.md). */
+export const ROW_HEIGHT: Record<Density, number> = { comfortable: 56, compact: 32 };
+export const GROUP_HEIGHT = 32;
+export const FRAME_HEIGHT = 24;
 
 export function itemHeight(item: Item, density: Density): number {
   return item.kind === 'row' ? ROW_HEIGHT[density] : item.kind === 'group' ? GROUP_HEIGHT : FRAME_HEIGHT;

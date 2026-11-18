@@ -1,0 +1,861 @@
+/*
+ * The pieces every surface is made of: one anatomy for controls, one chip, one tab, one card, one heading.
+ * These rules are outside the layer the screens' own rules are in, so they decide wherever both speak.
+ * Every value is a token. docs/design.md says when to use which piece.
+ */
+
+/* ---------- Text ---------- */
+
+body {
+  font: var(--weight-normal) var(--font-body) / var(--leading) var(--font-sans);
+  color: var(--text);
+}
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  font-weight: var(--weight-strong);
+  line-height: var(--leading-heading);
+  color: var(--text);
+}
+h1,
+.sheet-head h2,
+.brand {
+  font-size: var(--font-screen);
+}
+h2,
+h3 {
+  font-size: var(--font-title);
+}
+h4 {
+  font-size: var(--font-body);
+}
+small,
+.ui-meta {
+  font-size: var(--font-meta);
+  color: var(--text-muted);
+}
+code,
+kbd,
+pre,
+samp {
+  font-family: var(--font-mono);
+  font-size: inherit;
+}
+strong,
+b {
+  font-weight: var(--weight-strong);
+}
+
+/* One section heading: the same room above and below it wherever it stands. */
+.ui-section-title,
+.dialog.sheet h3,
+.side-panel h3 {
+  margin: var(--space-6) 0 var(--space-2);
+  font-size: var(--font-title);
+  font-weight: var(--weight-strong);
+  line-height: var(--leading-heading);
+  color: var(--text);
+}
+.ui-section-title:first-child,
+.dialog.sheet section > h3:first-child {
+  margin-top: 0;
+}
+
+/* ---------- Where controls are compact ---------- */
+
+:root {
+  --control-h: var(--control);
+}
+.side-panel,
+.toolbar,
+.tabbar,
+.node-title,
+.note-panel,
+.frame {
+  --control-h: var(--control-compact);
+}
+
+/* ---------- Focus, the same on everything ---------- */
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* A screen or panel that is given focus by the page when it opens is not a control: it shows no ring. */
+[tabindex='-1']:focus-visible {
+  outline: none;
+}
+
+/* ---------- Controls: button, field, select ---------- */
+
+/* What is drawn as a row, a card, a tab or a chip is a button underneath, and has its own piece below. */
+button:not(
+    .ui-row,
+    .ui-chip,
+    .ui-tab,
+    [role='menuitem'],
+    [role='menuitemradio'],
+    [role='menuitemcheckbox'],
+    [role='option'],
+    [role='tab'],
+    .panel-tab,
+    .runs-row,
+    .history-row,
+    .away-item,
+    .strip-entry,
+    .foryou-row,
+    .list-group,
+    .run-banner,
+    .library-row,
+    .review-row,
+    .copy-file,
+    .editor-element-name,
+    .run-step-name,
+    .note-tab,
+    .list-tag,
+    .list-chip,
+    .list-filter,
+    .list-clear,
+    .run-strip,
+    .list-mark,
+    .copy-chip,
+    .color-dot
+  ),
+.ui-button {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  height: var(--control-h);
+  min-width: 0;
+  padding: 0 var(--space-3);
+  font: inherit;
+  font-size: var(--font-body);
+  font-weight: var(--weight-normal);
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--text);
+  background: transparent;
+  border: 1px solid var(--border-control);
+  border-radius: var(--radius-control);
+  cursor: pointer;
+  transition:
+    background var(--ease),
+    border-color var(--ease),
+    color var(--ease);
+}
+button:hover:not(:disabled, .ui-row, .ui-chip, .ui-tab, [role^='menuitem'], [role='option'], [role='tab'], .panel-tab, .color-dot),
+.ui-button:hover:not(:disabled) {
+  background: var(--surface-raised);
+  border-color: var(--border-control);
+}
+button:active:not(:disabled, .ui-row, [role^='menuitem'], [role='option'], [role='tab'], .panel-tab, .color-dot) {
+  background: var(--surface-active);
+}
+
+/* The one thing most people came to do, at most once on a surface. */
+button.primary,
+.ui-button.is-primary,
+.toolbar-new > button:first-child {
+  font-weight: var(--weight-strong);
+  color: var(--on-accent);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+button.primary:hover:not(:disabled),
+.ui-button.is-primary:hover:not(:disabled),
+.toolbar-new > button:first-child:hover:not(:disabled) {
+  color: var(--on-accent);
+  background: var(--accent-text);
+  border-color: var(--accent-text);
+}
+
+/* No border until the pointer or the keyboard is on it: bars, headers, the actions of a row. */
+button.quiet,
+button.node-tool,
+button.node-close,
+button.list-more,
+button.list-note,
+button.list-restore,
+.ui-button.is-quiet {
+  color: var(--text);
+  background: transparent;
+  border-color: transparent;
+}
+button.quiet:hover:not(:disabled),
+button.node-tool:hover:not(:disabled),
+button.node-close:hover:not(:disabled),
+button.list-more:hover:not(:disabled),
+button.list-note:hover:not(:disabled),
+button.list-restore:hover:not(:disabled),
+.ui-button.is-quiet:hover:not(:disabled) {
+  background: var(--surface-raised);
+  border-color: transparent;
+}
+button[aria-pressed='true']:not(.ui-chip, .list-filter, .list-chip, [role^='menuitem']),
+button[aria-expanded='true']:not([role^='menuitem'], .color-dot) {
+  background: var(--surface-active);
+  border-color: var(--border-strong);
+}
+
+button.danger,
+.ui-button.is-danger {
+  font-weight: var(--weight-strong);
+  color: var(--on-danger);
+  background: var(--danger);
+  border-color: var(--danger);
+}
+button.danger:hover:not(:disabled) {
+  color: var(--on-danger);
+  background: var(--danger-text);
+  border-color: var(--danger-text);
+}
+button.quiet.danger-text {
+  color: var(--danger-text);
+}
+
+/* What waits for the owner, where it is something to press. */
+button.attention-button {
+  font-weight: var(--weight-strong);
+  color: var(--on-attention);
+  background: var(--attention);
+  border-color: var(--attention);
+}
+button.attention-button:hover:not(:disabled) {
+  color: var(--on-attention);
+  background: var(--attention-text);
+  border-color: var(--attention-text);
+}
+
+/* Not to be pressed now, and busy: the same look everywhere. */
+button:disabled,
+input:disabled,
+select:disabled,
+textarea:disabled,
+[aria-busy='true'] {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* A button that is only a sign is a square. */
+button.node-close,
+button.tab-add,
+button.panel-collapse,
+button.list-more,
+button.list-note,
+button.toolbar-new-more,
+.ui-icon-button {
+  flex: none;
+  width: var(--control-h);
+  min-width: var(--control-h);
+  padding: 0;
+  font-size: var(--font-title);
+}
+button.list-note {
+  font-size: var(--font-body);
+}
+
+/* A field and a select: the height, text and corners of a button, so the two line up side by side. */
+input:not([type='checkbox'], [type='radio'], [type='color'], [type='file'], [type='range']),
+select,
+.ui-field {
+  box-sizing: border-box;
+  height: var(--control-h);
+  padding: 0 var(--space-3);
+  font: inherit;
+  font-size: var(--font-body);
+  line-height: 1;
+  color: var(--text);
+  background: var(--surface-raised);
+  border: 1px solid var(--border-control);
+  border-radius: var(--radius-control);
+  transition: border-color var(--ease);
+}
+select {
+  padding-right: var(--space-6);
+  cursor: pointer;
+}
+textarea,
+.ui-textarea {
+  box-sizing: border-box;
+  padding: var(--space-2) var(--space-3);
+  font: inherit;
+  font-size: var(--font-body);
+  line-height: var(--leading);
+  color: var(--text);
+  background: var(--surface-raised);
+  border: 1px solid var(--border-control);
+  border-radius: var(--radius-control);
+  transition: border-color var(--ease);
+}
+input:hover:not(:disabled, [type='checkbox'], [type='radio'], [type='color'], [type='file'], [type='range']),
+select:hover:not(:disabled),
+textarea:hover:not(:disabled) {
+  border-color: var(--text-muted);
+}
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-muted);
+  opacity: 1;
+}
+input[type='checkbox'],
+input[type='radio'] {
+  width: var(--space-4);
+  height: var(--space-4);
+  margin: 0;
+  accent-color: var(--accent);
+}
+/* A terminal's and a tab's name, while it is being changed, is still text on its line. */
+input.node-name-input,
+input.tab-input {
+  padding: 0 var(--space-2);
+}
+
+/* Two or three choices of which one holds: buttons joined into one control. */
+.ui-segmented,
+.list-scope {
+  display: inline-flex;
+}
+.ui-segmented > button,
+.list-scope > button {
+  flex: 1;
+  border-radius: 0;
+  margin-left: -1px;
+}
+.ui-segmented > button:first-child,
+.list-scope > button:first-child {
+  margin-left: 0;
+  border-radius: var(--radius-control) 0 0 var(--radius-control);
+}
+.ui-segmented > button:last-child,
+.list-scope > button:last-child {
+  border-radius: 0 var(--radius-control) var(--radius-control) 0;
+}
+.ui-segmented > button[aria-pressed='true'],
+.list-scope > button[aria-pressed='true'] {
+  position: relative;
+  font-weight: var(--weight-strong);
+  color: var(--accent-text);
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+
+/* The two halves of "new terminal": one control. */
+.toolbar-new > button:first-child {
+  border-radius: var(--radius-control) 0 0 var(--radius-control);
+}
+.toolbar-new > .toolbar-new-more {
+  margin-left: 1px;
+  color: var(--on-accent);
+  background: var(--accent);
+  border-color: var(--accent);
+  border-radius: 0 var(--radius-control) var(--radius-control) 0;
+  font-size: var(--font-meta);
+}
+.toolbar-new > .toolbar-new-more:hover:not(:disabled),
+.toolbar-new > .toolbar-new-more[aria-expanded='true'] {
+  color: var(--on-accent);
+  background: var(--accent-text);
+  border-color: var(--accent-text);
+}
+
+/* ---------- Chips and badges: one height ---------- */
+
+/* A count, a status, a tag: the same pill in different colours. One that can be pressed is a button underneath. */
+.ui-badge,
+.ui-chip,
+.tab-waiting,
+.panel-tab-count,
+.badge-attention,
+.badge-desktop,
+.badge-untold,
+.badge-typed,
+.badge-exit,
+.list-agent,
+.list-tag,
+.list-chip,
+.list-filter,
+.list-clear,
+.run-strip,
+.list-mark,
+.copy-chip,
+.run-view-status,
+.run-banner-label,
+.board-column-mark,
+.list-note-new {
+  box-sizing: border-box;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  height: var(--chip);
+  min-width: var(--chip);
+  padding: 0 var(--space-2);
+  font: inherit;
+  font-size: var(--font-meta);
+  font-weight: var(--weight-normal);
+  line-height: 1;
+  letter-spacing: 0;
+  text-transform: none;
+  white-space: nowrap;
+  color: var(--text);
+  background: var(--surface-raised);
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+}
+button.ui-chip,
+button.list-tag,
+button.list-chip,
+button.list-filter,
+button.list-clear,
+button.run-strip,
+button.list-mark,
+button.copy-chip {
+  cursor: pointer;
+  border-color: var(--border);
+  transition:
+    background var(--ease),
+    border-color var(--ease);
+}
+button.ui-chip:hover,
+button.list-tag:hover,
+button.list-chip:hover,
+button.list-filter:hover,
+button.list-clear:hover,
+button.run-strip:hover,
+button.list-mark:hover,
+button.copy-chip:hover {
+  background: var(--surface-active);
+  border-color: var(--border-strong);
+}
+button.list-filter[aria-pressed='true'],
+button.list-chip,
+.ui-chip.is-accent {
+  color: var(--accent-text);
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+button.list-clear {
+  background: transparent;
+  border-color: transparent;
+  text-decoration: underline;
+  color: var(--text-muted);
+}
+.tab-waiting,
+.badge-attention.is-waiting,
+.panel-tab.is-urgent .panel-tab-count,
+.ui-badge.is-attention {
+  justify-content: center;
+  font-weight: var(--weight-strong);
+  color: var(--on-attention);
+  background: var(--attention);
+}
+.badge-attention.is-done,
+.ui-badge.is-ok {
+  color: var(--ok-text);
+  background: var(--ok-soft);
+}
+.badge-attention.is-working,
+.ui-badge.is-working {
+  color: var(--working-text);
+  background: var(--working-soft);
+}
+.badge-untold,
+.badge-exit,
+.ui-badge.is-danger {
+  color: var(--danger-text);
+  background: var(--danger-soft);
+}
+.panel-tab-count,
+.list-note-new {
+  justify-content: center;
+  padding: 0 var(--space-1);
+  color: var(--text-muted);
+}
+.run-strip.status-blocked {
+  color: var(--danger-text);
+  border-color: var(--danger);
+}
+.run-strip.status-awaiting {
+  color: var(--attention-text);
+  border-color: var(--attention);
+}
+
+/* ---------- Tabs ---------- */
+
+.ui-tab,
+.panel-tab,
+.run-view-tabs button,
+.review-tabs button {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: var(--control-h);
+  padding: 0 var(--space-2);
+  font: inherit;
+  font-size: var(--font-body);
+  white-space: nowrap;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  cursor: pointer;
+  transition:
+    color var(--ease),
+    border-color var(--ease);
+}
+.ui-tab:hover,
+.panel-tab:hover,
+.run-view-tabs button:hover,
+.review-tabs button:hover {
+  color: var(--text);
+}
+.ui-tab[aria-selected='true'],
+.panel-tab[aria-selected='true'],
+.run-view-tabs button[aria-selected='true'],
+.review-tabs button[aria-selected='true'] {
+  font-weight: var(--weight-strong);
+  color: var(--text);
+  border-bottom-color: var(--accent);
+}
+
+/* ---------- Surfaces ---------- */
+
+/* A card: something that holds a few lines about one thing. */
+.ui-card {
+  padding: var(--gutter-card);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-surface);
+}
+
+/* A menu: lines to choose from, each a name and, where it helps, a line saying what it is. */
+.ui-menu,
+.toolbar-menu,
+.list-menu {
+  padding: var(--space-1);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-surface);
+  box-shadow: 0 8px 24px var(--shadow);
+}
+.ui-menu > button,
+.toolbar-menu > button,
+.list-menu > button {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  min-height: var(--control);
+  padding: var(--space-2) var(--space-3);
+  font: inherit;
+  font-size: var(--font-body);
+  text-align: left;
+  white-space: normal;
+  color: var(--text);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-control);
+  cursor: pointer;
+}
+.ui-menu > button:hover:not(:disabled),
+.toolbar-menu > button:hover:not(:disabled),
+.list-menu > button:hover:not(:disabled) {
+  background: var(--surface-raised);
+}
+.ui-menu small,
+.toolbar-menu small {
+  display: block;
+  margin-top: 2px;
+  font-size: var(--font-meta);
+  color: var(--text-muted);
+}
+
+/* A row that is pressed as a whole. */
+.ui-row {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  min-height: var(--control);
+  padding: var(--space-2) var(--space-3);
+  font: inherit;
+  font-size: var(--font-body);
+  text-align: left;
+  color: var(--text);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-control);
+  cursor: pointer;
+}
+.ui-row:hover {
+  background: var(--surface-raised);
+}
+
+/* Nothing here yet: a sentence and one thing to do. */
+.ui-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-4) 0;
+  color: var(--text-muted);
+}
+
+/* ---------- A screen ---------- */
+
+.dialog-backdrop {
+  z-index: var(--z-screen);
+  background: var(--scrim);
+}
+.dialog {
+  border-radius: var(--radius-surface);
+  box-shadow: 0 12px 40px var(--shadow);
+}
+.dialog h2 {
+  margin: 0 0 var(--space-2);
+  font-size: var(--font-title);
+}
+/* The head of a screen: its name, and the way out at the right. */
+.dialog.sheet > .sheet-head {
+  gap: var(--space-3);
+  margin: 0 calc(var(--gutter-screen) * -1) var(--space-4);
+  padding: var(--space-4) var(--gutter-screen) var(--space-3);
+}
+.dialog.sheet > .sheet-head h2 {
+  margin: 0;
+  font-size: var(--font-screen);
+}
+.dialog.sheet {
+  padding: 0 var(--gutter-screen) var(--gutter-screen);
+}
+
+/* ---------- The bars ---------- */
+
+.appbar {
+  min-height: 48px;
+  padding: var(--space-2) var(--space-4);
+  gap: var(--space-2) var(--space-3);
+}
+.brand {
+  font-weight: var(--weight-strong);
+  color: var(--accent-text);
+  letter-spacing: 0;
+}
+.tabbar {
+  align-items: flex-end;
+  height: 40px;
+  padding: 0 var(--space-3);
+  gap: var(--space-1);
+}
+.tab {
+  height: 36px;
+  padding: 0 var(--space-3);
+  gap: var(--space-2);
+  font-size: var(--font-body);
+  border-radius: var(--radius-control) var(--radius-control) 0 0;
+}
+.tab.active {
+  font-weight: var(--weight-strong);
+  color: var(--text);
+}
+.toolbar {
+  padding: var(--space-1);
+  gap: var(--space-1);
+  border-radius: var(--radius-surface);
+}
+
+/* ---------- A terminal on the canvas ---------- */
+
+.terminal-node {
+  border-radius: var(--radius-surface);
+}
+.node-title {
+  height: 36px;
+  padding: 0 var(--space-1) 0 var(--space-3);
+  gap: var(--space-1);
+}
+.node-name {
+  font-size: var(--font-title);
+  font-weight: var(--weight-strong);
+  color: var(--text);
+}
+.node-activity {
+  font-size: var(--font-meta);
+  color: var(--text-muted);
+}
+/* The colour of a terminal or a tab: a square to press, with the colour as a dot in it. */
+button.color-dot {
+  box-sizing: border-box;
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: var(--control-h);
+  height: var(--control-h);
+  padding: 0;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-control);
+  cursor: pointer;
+}
+button.color-dot::before {
+  content: '';
+  width: var(--space-3);
+  height: var(--space-3);
+  border-radius: var(--radius-pill);
+  background: var(--swatch);
+  border: 1px solid var(--border-strong);
+}
+button.color-dot.swatch-none::before {
+  background: transparent;
+  border-style: dashed;
+  border-color: var(--text-muted);
+}
+button.color-dot:hover {
+  background: var(--surface-raised);
+}
+/* In the palette the dots are the choices themselves, side by side. */
+.color-palette button.color-dot {
+  width: var(--space-6);
+  height: var(--space-6);
+}
+
+/* ---------- Layers ---------- */
+
+.side-panel {
+  z-index: var(--z-panel);
+}
+.toolbar-menu,
+.list-menu,
+.color-palette,
+.project-menu,
+.tab-menu {
+  z-index: var(--z-menu);
+}
+.tour-ring {
+  z-index: var(--z-tour);
+}
+.tour-card {
+  z-index: calc(var(--z-tour) + 1);
+}
+
+/* ---------- The list of terminals ---------- */
+
+/* One row: a column for its state, its name on the first line, what is known about it on the second, its actions at the right. */
+.list-row {
+  box-sizing: border-box;
+  padding: var(--space-1) var(--space-2) var(--space-1) var(--gutter-panel);
+}
+.list-row.compact {
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+.list-main {
+  height: var(--control-compact);
+  gap: var(--space-2);
+}
+.list-state {
+  flex: none;
+  width: var(--space-4);
+  text-align: center;
+}
+.list-name {
+  font-size: var(--font-body);
+  color: var(--text);
+}
+.list-row.current .list-name {
+  font-weight: var(--weight-strong);
+}
+.list-detail {
+  height: var(--chip);
+  padding-left: var(--space-6);
+  gap: var(--space-2);
+  font-size: var(--font-meta);
+  color: var(--text-muted);
+}
+.list-badge {
+  font-size: var(--font-meta);
+}
+.list-group {
+  height: var(--space-8);
+  padding: 0 var(--gutter-panel);
+  font-size: var(--font-meta);
+  font-weight: var(--weight-strong);
+  color: var(--text-muted);
+}
+/* The actions of a row are quiet until the pointer or the keyboard is on the row. */
+.list-row .list-more,
+.list-row .list-restore {
+  opacity: 0;
+}
+.list-row:hover .list-more,
+.list-row:focus-within .list-more,
+.list-row.current .list-more,
+.list-row .list-more[aria-expanded='true'],
+.list-row:hover .list-restore,
+.list-row:focus-within .list-restore,
+.list-row.current .list-restore {
+  opacity: 1;
+}
+
+/* A terminal's title holds many things: each takes a little less room at the sides. */
+.node-title button:not(.node-close, .color-dot) {
+  padding: 0 var(--space-2);
+}
+.node-title .node-name {
+  flex: 1 1 140px;
+  min-width: 96px;
+}
+
+/* What is hidden is hidden, whatever else is said of it. */
+[hidden] {
+  display: none !important;
+}
+
+/* Labels are written as sentences, never in capitals. */
+.picker-section,
+.sheet-groups h3,
+.run-banner-label {
+  text-transform: none;
+  letter-spacing: 0;
+}
+.picker-section {
+  font-size: var(--font-meta);
+  font-weight: var(--weight-strong);
+  color: var(--text-muted);
+}
+
+/* The one thing to do with an item of the owner's list is drawn as a button, on the item's own left edge. */
+.foryou-row button.quiet {
+  border-color: var(--border-control);
+}
+
+/* The canvas is a layer of its own: nothing on it, however it is raised there, comes above a menu, a screen or the tour. */
+.react-flow {
+  isolation: isolate;
+  z-index: var(--z-canvas);
+}
+
+/* ---------- The side panel: everything starts on its gutter ---------- */
+
+.panel-tabs-row {
+  padding: var(--space-2) var(--space-2) 0 var(--space-1);
+}
+.list-bar {
+  padding: var(--space-2) var(--gutter-panel);
+  gap: var(--space-2);
+}
+.list-row {
+  border-left: 0;
+  padding-right: var(--gutter-panel);
+}
+.list-row.current,
+.list-row.focused {
+  box-shadow: inset 2px 0 0 var(--accent);
+}

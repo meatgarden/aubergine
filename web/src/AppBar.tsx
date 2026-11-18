@@ -4,6 +4,7 @@ import { ProjectSwitcher } from './projects/ProjectSwitcher';
 import { itemsOfListing, useRepositoryListing } from './review/repository-source';
 import { hint } from './shortcuts';
 import { useApp } from './store';
+import { Button } from './ui';
 
 /** How many things written by agents, programs or kept in a repository wait to be read. */
 function DraftsWaiting() {
@@ -27,9 +28,9 @@ export function AppBar() {
   const live = useApp((s) => s.live);
   useApp((s) => s.settings.shortcuts);
   const screen = (command: Parameters<typeof runCommand>[0], words: string, title: string, testid: string): React.ReactElement => (
-    <button type="button" className="quiet" onClick={() => runCommand(command)} title={hint(command, title)} data-testid={testid}>
+    <Button kind="quiet" onClick={() => runCommand(command)} title={hint(command, title)} data-testid={testid}>
       {words}
-    </button>
+    </Button>
   );
   return (
     <header className="appbar" data-testid="appbar">

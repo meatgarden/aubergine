@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { INVENTORY_KINDS, STATE_WORD, inventoryText, searchInventory, sourceWord, type Inventory } from '@aubergine/shared';
 import { api } from './api';
 import { useApp } from './store';
+import { ScreenHead } from './ui';
 
 /**
  * What is switched on for the agent in one terminal: read from its
@@ -54,12 +55,7 @@ export function InventoryPanel() {
       }}
     >
       <div className="dialog sheet inventory-panel" role="dialog" aria-label="How this agent is set up" data-testid="inventory-panel">
-        <header className="sheet-head">
-          <h2>How “{name}” is set up</h2>
-          <button type="button" className="quiet" onClick={close} data-testid="inventory-close">
-            Close
-          </button>
-        </header>
+        <ScreenHead title={<>How “{name}” is set up</>} onClose={close} closeTestid="inventory-close" />
         <p className="sheet-note" data-testid="inventory-what">
           This is what the agent’s configuration files say, read just now. It is not a list of what the running agent has loaded, and no server was contacted: “configured” does
           not mean “working”. Only names are shown, never the values in those files.

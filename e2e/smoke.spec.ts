@@ -1156,6 +1156,17 @@ test('the tour: each step is done on the real thing, on the demo', async ({ page
   const settled = Date.now();
   // It points at the thing itself, and takes no clicks away from it.
   await expect(page.getByTestId('tour-ring')).toBeVisible();
+  // A screen that does not hold what the tour points at is not drawn over: no ring across it, no card on it.
+  // (The ring takes no clicks, so a hit test cannot see it: it must not be there at all.)
+  await page.getByTestId('toolbar-board').click();
+  await expect(page.getByTestId('board')).toBeVisible();
+  await expect(page.getByTestId('tour-ring')).toHaveCount(0);
+  await expect(card).toBeHidden();
+  expect(await onTop(page, 'board')).toBe(true);
+  await page.keyboard.press('Escape');
+  await expect(page.getByTestId('board')).toHaveCount(0);
+  await expect(page.getByTestId('tour-ring')).toBeVisible();
+  await expect(card).toBeVisible();
 
   // 1. A terminal: click it, then see all of them.
   await node('shell').getByTestId('node-body').click();
@@ -3018,4 +3029,118 @@ test('a project as a file: written out, read in under another name through the r
   await expect(page.getByTestId('row-meant-for')).toHaveText('was claude-code');
   const sessions = ((await (await page.request.get('/v1/sessions?projectId=all&limit=200', asOwner)).json()) as { items: { name: string; state: string; agent: unknown }[] }).items;
   expect(sessions.filter((s) => s.name === 'helper').map((s) => [s.state, s.agent])).toEqual([['exited', null]]);
+});
+
+/**
+ * What the page is measured for: every control that shows is one of the two heights (a chip is the height chips have),
+ * and every piece of text is one of the four sizes. A terminal's own text is the terminal's. Returns what is not so.
+ */
+const measureLook = (page: Page): Promise<string[]> =>
+  page.evaluate(() => {
+    const shows = (el: Element): boolean => {
+      const box = el.getBoundingClientRect();
+      const style = getComputedStyle(el);
+      return box.width > 0 && box.height > 0 && style.visibility !== 'hidden' && box.bottom > 0 && box.top < innerHeight && box.right > 0 && box.left < innerWidth;
+    };
+    const says = (el: Element): string => `${el.tagName.toLowerCase()}.${[...el.classList].join('.')} "${(el.textContent ?? '').trim().slice(0, 24)}"`;
+    // Drawn as a row, a card or a line of a menu: pressed as a whole, and as tall as what it holds.
+    const rows = '.ui-row,[role^=menuitem],[role=option],.runs-row,.history-row,.away-item,.strip-entry,.foryou-row,.list-group,.run-banner,.library-row,.review-row,.copy-file,.editor-element-name,.run-step-name,.note-tab';
+    const chips = '.ui-chip,.list-tag,.list-chip,.list-filter,.list-clear,.run-strip,.list-mark,.copy-chip';
+    const wrong: string[] = [];
+    for (const el of document.querySelectorAll('button, input, select')) {
+      if (!shows(el) || el.closest('.xterm') || el.matches('input[type=checkbox],input[type=radio],input[type=color],input[type=file],input[type=range]') || el.matches(rows)) continue;
+      const height = Math.round(el.getBoundingClientRect().height * 10) / 10;
+      const right = el.matches(chips) ? height === 20 : el.matches('.color-palette .color-dot') ? height === 24 : height === 28 || height === 32;
+      if (!right) wrong.push(`height ${height}: ${says(el)}`);
+    }
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    while (walker.nextNode()) {
+      const el = walker.currentNode.parentElement;
+      if (!el || !(walker.currentNode.textContent ?? '').trim() || el.closest('.xterm, .snapshot, .react-flow__attribution, .react-flow__minimap') || !shows(el)) continue;
+      const size = getComputedStyle(el).fontSize;
+      if (!['12px', '13px', '15px', '20px'].includes(size)) wrong.push(`text ${size}: ${says(el)}`);
+    }
+    return [...new Set(wrong)];
+  });
+
+/** Whether what is under the four corners and the middle of a screen is that screen: nothing else is drawn over it. */
+const onTop = (page: Page, testid: string): Promise<boolean> =>
+  page.evaluate((id) => {
+    const screen = document.querySelector(`[data-testid="${id}"]`);
+    if (!screen) return false;
+    const box = screen.getBoundingClientRect();
+    const points: [number, number][] = [
+      [box.left + 8, box.top + 8],
+      [box.right - 8, box.top + 8],
+      [box.left + 8, box.bottom - 8],
+      [box.right - 8, box.bottom - 8],
+      [box.left + box.width / 2, box.top + box.height / 2],
+    ];
+    return points.every(([x, y]) => screen.contains(document.elementFromPoint(x, Math.min(y, innerHeight - 2))));
+  }, testid);
+
+test('one look: the canvas page and every screen use the two control heights and the four text sizes, and a screen is on top of a selected terminal', async ({ page }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  // A canvas of its own, with a terminal that is selected and not typed into.
+  await page.getByRole('button', { name: 'New canvas' }).click();
+  await page.getByTestId('toolbar-new-terminal').click();
+  const node = page.getByTestId('terminal-node');
+  await expect(node).toHaveCount(1);
+  await expect(page.locator('.xterm-rows')).toContainText(/[$%#>]/, { timeout: 20_000 });
+  await page.getByTestId('node-body').click();
+  // The key that leaves a terminal: it stays selected.
+  const mac = await page.evaluate(() => navigator.platform.toLowerCase().includes('mac'));
+  await page.keyboard.press(`${mac ? 'Control+Meta' : 'Control+Shift'}+Period`);
+  await expect(node).toHaveAttribute('data-selected', 'true');
+
+  expect(await measureLook(page)).toEqual([]);
+  // The menus that hang from the bars.
+  await page.getByTestId('toolbar-new-more').click();
+  await expect(page.getByTestId('toolbar-new-menu')).toBeVisible();
+  expect(await measureLook(page)).toEqual([]);
+  await page.keyboard.press('Escape');
+  await page.getByTestId('tab-more').click();
+  await expect(page.getByTestId('tab-menu')).toBeVisible();
+  expect(await measureLook(page)).toEqual([]);
+  expect(await onTop(page, 'tab-menu')).toBe(true);
+  await page.keyboard.press('Escape');
+
+  // Every screen: measured, and under its own corners and middle with the selected terminal behind it.
+  const screens: [string, () => Promise<void>][] = [
+    ['queue-screen', () => page.getByTestId('toolbar-queue').click()],
+    ['board', () => page.getByTestId('toolbar-board').click()],
+    ['workflows-screen', () => page.getByTestId('toolbar-workflows').click()],
+    ['library-screen', () => page.getByTestId('toolbar-library').click()],
+    ['help-panel', () => page.getByTestId('toolbar-help').click()],
+    [
+      'projects-screen',
+      async () => {
+        await page.getByTestId('project-switcher').click();
+        await page.getByTestId('projects-open').click();
+      },
+    ],
+    [
+      'sharing-screen',
+      async () => {
+        await page.getByTestId('project-switcher').click();
+        await page.getByTestId('sharing-open').click();
+      },
+    ],
+  ];
+  for (const [testid, open] of screens) {
+    await open();
+    await expect(page.getByTestId(testid)).toBeVisible();
+    expect(await measureLook(page), testid).toEqual([]);
+    expect(await onTop(page, testid), `${testid} is on top`).toBe(true);
+    await page.keyboard.press('Escape');
+    await expect(page.getByTestId(testid)).toHaveCount(0);
+  }
+  // The side panel's other parts.
+  const tabs = page.getByTestId('panel-tab');
+  for (let index = 0; index < (await tabs.count()); index += 1) {
+    await tabs.nth(index).click();
+    expect(await measureLook(page), `panel part ${index}`).toEqual([]);
+  }
 });

@@ -5,6 +5,7 @@ import { ColorButton } from '../ColorButton';
 import { useApp } from '../store';
 import { readForReview, saveAs } from './file-store';
 import { goToProject, waitingIn } from './projects';
+import { ScreenHead } from '../ui';
 
 /**
  * The projects there are: rename, color, the folder new terminals start in,
@@ -75,12 +76,7 @@ export function ProjectsScreen() {
       }}
     >
       <div className="dialog sheet projects-screen" role="dialog" aria-label="Projects" data-testid="projects-screen">
-        <header className="sheet-head">
-          <h2>Projects</h2>
-          <button type="button" className="quiet" onClick={close} data-testid="projects-close">
-            Close
-          </button>
-        </header>
+        <ScreenHead title="Projects" onClose={close} closeTestid="projects-close" />
         <p className="sheet-note">
           Each project has its own canvases, terminals, queue, schedules and rules, in this one server. What is shared between them is on the{' '}
           <button type="button" className="quiet" onClick={() => useApp.getState().togglePanel('sharing')}>
