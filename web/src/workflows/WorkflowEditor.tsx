@@ -162,8 +162,8 @@ export function WorkflowEditor() {
               <input value={draft.description} maxLength={2000} onChange={(e) => change({ ...draft, description: e.target.value })} />
             </label>
             <label className="wf-field">
-              <span>For every element</span>
-              <textarea rows={3} value={draft.standing} placeholder="Rules that hold from start to finish. Added to what the agent is told on every element." onChange={(e) => change({ ...draft, standing: e.target.value })} data-testid="workflow-standing" />
+              <span>For every step</span>
+              <textarea rows={3} value={draft.standing} placeholder="Rules that hold from start to finish. Added to what the agent is told on every step." onChange={(e) => change({ ...draft, standing: e.target.value })} data-testid="workflow-standing" />
             </label>
 
             <div className="wf-label">
@@ -319,20 +319,20 @@ export function WorkflowEditor() {
                   <button
                     type="button"
                     className="quiet"
-                    title="Keep a copy of this element on the shelf, to use in other workflows or to run by itself"
+                    title="Keep a copy of this step among the saved steps, to use in other workflows or to run by itself"
                     onClick={() => {
                       const { id: _id, origin: _origin, extra: _extra, source: _source, ...fields } = element;
                       void api
                         .createElement(fields)
                         .then((saved) => {
                           useApp.getState().apply({ type: 'shelf.changed', item: saved as never });
-                          setSaved(`“${element.name}” is on the shelf.`);
+                          setSaved(`“${element.name}” is among the saved steps.`);
                         })
                         .catch((e: unknown) => setError((e as Error).message));
                     }}
                     data-testid="save-to-shelf"
                   >
-                    {copyStatus(element, shelf).shelf ? 'Save to shelf as a new element' : 'Save to shelf'}
+                    {copyStatus(element, shelf).shelf ? 'Save as a new saved step' : 'Save among the saved steps'}
                   </button>
                   {(() => {
                     // An element that came from the shelf can go back to it as a new version of what it came from.
@@ -342,7 +342,7 @@ export function WorkflowEditor() {
                       <button
                         type="button"
                         className="quiet"
-                        title={`Save what this element says now as version ${from.version + 1} of “${from.element.name}” on the shelf. Other workflows that hold a copy are not changed; they will say a newer version is there.`}
+                        title={`Save what this step says now as version ${from.version + 1} of “${from.element.name}” among the saved steps. Other workflows that hold a copy are not changed; they will say a newer version is there.`}
                         onClick={() => {
                           const { id: _id, origin: _origin, extra: _extra, source: _source, ...fields } = element;
                           void api
@@ -351,7 +351,7 @@ export function WorkflowEditor() {
                               useApp.getState().apply({ type: 'shelf.changed', item: saved as never });
                               // This copy is now an unchanged copy of the version just made.
                               change(changeElement(draft, element.id, { ...element, source: sourceOf(saved as never) }));
-                              setSaved(`Saved as version ${saved.version} of “${saved.element.name}” on the shelf.`);
+                              setSaved(`Saved as version ${saved.version} of “${saved.element.name}” among the saved steps.`);
                             })
                             .catch((e: unknown) => setError((e as Error).message));
                         }}
@@ -363,7 +363,7 @@ export function WorkflowEditor() {
                   })()}
                 </div>
                 <div className="wf-label">
-                  What an agent will be told on this element
+                  What an agent will be told on this step
                   {draft.inputs.slice(0, 1).map((input) => (
                     <input key={input.key} className="editor-sample" aria-label={`A sample ${input.label}`} placeholder={`try a ${input.label.toLowerCase()}`} value={typed[input.key] ?? ''} onChange={(e) => setTyped({ ...typed, [input.key]: e.target.value })} />
                   ))}

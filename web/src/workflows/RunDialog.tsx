@@ -209,7 +209,7 @@ export function RunDialog() {
                   )}
                   {alone && starting.elementId === '' && shelfItem && (
                     <label className="wf-field">
-                      <span>Element</span>
+                      <span>Step</span>
                       <select value={shelfItem.id} onChange={(e) => setElementId(e.target.value)} autoFocus data-testid="run-element">
                         {[...(shelf ?? [])]
                           .sort((a, b) => a.element.name.localeCompare(b.element.name))

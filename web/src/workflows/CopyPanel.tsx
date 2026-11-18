@@ -101,8 +101,8 @@ export function ElementReference() {
   const { element, shelf } = elementReference();
   return (
     <details className="element-reference" data-testid="element-reference">
-      <summary>What goes in an element</summary>
-      <p className="sheet-note">An element is one piece of work for an agent: text it reads and follows. Nothing in it is run by a computer.</p>
+      <summary>What goes in a step</summary>
+      <p className="sheet-note">A step is one piece of work for an agent: text it reads and follows. Nothing in it is run by a computer.</p>
       <dl>
         {element.map((field) => (
           <div key={field.field} data-testid="reference-field" data-field={field.field}>
@@ -113,7 +113,7 @@ export function ElementReference() {
           </div>
         ))}
       </dl>
-      <p className="sheet-note">On the shelf an element also has:</p>
+      <p className="sheet-note">A saved step also has:</p>
       <dl>
         {shelf.map((field) => (
           <div key={field.field} data-testid="reference-field" data-field={field.field}>

@@ -6,7 +6,7 @@ import { DiffText } from '../review/DiffText';
 import { ElementReference } from './CopyPanel';
 import { ElementFields } from './ElementFields';
 
-const BLANK: Element = { id: 'new-element', kind: 'instructions', name: 'New element', instructions: '', ask: '', lookAt: '', doneWhen: '', needs: [], produces: 'note', origin: { kind: 'local' }, source: null, extra: {} };
+const BLANK: Element = { id: 'new-element', kind: 'instructions', name: 'New step', instructions: '', ask: '', lookAt: '', doneWhen: '', needs: [], produces: 'note', origin: { kind: 'local' }, source: null, extra: {} };
 
 /** One element of the shelf, or a new one: the same fields as in a workflow, beside what an agent would be told. */
 export function ShelfEditor() {
@@ -47,7 +47,7 @@ export function ShelfEditor() {
   if (!editing || !element) return null;
   const close = (): void => useApp.getState().editElement(null);
   const proposal = versionOfProposal({ workflow: null, element });
-  const problems = !element.name.trim() ? ['The element needs a name.'] : proposal ? validateContent(proposal, limits) : [];
+  const problems = !element.name.trim() ? ['The step needs a name.'] : proposal ? validateContent(proposal, limits) : [];
   const badNeed = element.needs.some((need) => need.name.trim() === '');
 
   /** Something the owner does to it that is not a new version: retiring it, bringing it back. */
@@ -92,7 +92,7 @@ export function ShelfEditor() {
       <div className="dialog sheet workflow-editor" role="dialog" aria-label="Element" data-testid="shelf-editor">
         <header className="sheet-head">
           <h2>
-            {editing === 'new' ? 'New element' : 'Element on the shelf'}
+            {editing === 'new' ? 'New step' : 'Saved step'}
             {item && (
               <span className="sheet-note" data-testid="shelf-version">
                 {' '}

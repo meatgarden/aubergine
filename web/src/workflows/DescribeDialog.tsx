@@ -37,7 +37,7 @@ export function DescribeDialog() {
 
   if (!kind) return null;
   const close = (): void => useApp.getState().describe(null);
-  const word = kind === 'element' ? 'an element' : 'a workflow';
+  const word = kind === 'element' ? 'a step' : 'a workflow';
 
   const send = async (): Promise<void> => {
     setBusy(true);

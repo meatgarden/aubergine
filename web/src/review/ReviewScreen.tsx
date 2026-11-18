@@ -157,7 +157,7 @@ export function ReviewScreen() {
                 <ul className="review-decided" data-testid="review-decided">
                   {decided.map((record) => (
                     <li key={`${record.at} ${record.draftId}`} data-outcome={record.outcome}>
-                      {record.outcome === 'accepted' ? 'Accepted' : 'Discarded'}: {record.kind === 'element' ? 'an element' : 'a workflow'} from{' '}
+                      {record.outcome === 'accepted' ? 'Accepted' : 'Discarded'}: {record.kind === 'element' ? 'a step' : 'a workflow'} from{' '}
                       {record.proposedBy.kind === 'session' ? 'an agent' : record.proposedBy.kind === 'token' ? `the token “${record.proposedBy.name}”` : 'you'},{' '}
                       {new Date(record.at).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })}
                       {record.by.kind === 'owner-cli' ? ', from the command line' : ''}

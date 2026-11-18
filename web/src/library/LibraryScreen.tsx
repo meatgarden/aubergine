@@ -145,7 +145,7 @@ export function LibraryScreen() {
       <div className="dialog sheet library-screen" role="dialog" aria-label="Library" data-testid="library-screen">
         <ScreenHead title="Library" onClose={close} closeTestid="library-close" />
         <p className="sheet-note">
-          Workflows and elements that others published, to read and install. What a source lists was written by whoever published it. Nothing is fetched unless you press Refresh or add a source, and nothing is installed until you have read all of it
+          Workflows and steps that others published, to read and install. What a source lists was written by whoever published it. Nothing is fetched unless you press Refresh or add a source, and nothing is installed until you have read all of it
           in Review and accepted it.
         </p>
         {error && (

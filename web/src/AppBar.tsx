@@ -60,7 +60,7 @@ export function AppBar() {
         {screen('queue.open', 'Queue', 'The tasks for agents, and everything that waits on you', 'toolbar-queue')}
         {screen('board.open', 'Board', 'Every run that is going, by workflow and step; approve or send back from there', 'toolbar-board')}
         {screen('workflows.open', 'Workflows', 'Make, change and run workflows', 'toolbar-workflows')}
-        {screen('library.open', 'Library', 'Workflows and elements others published, to read and install', 'toolbar-library')}
+        {screen('library.open', 'Library', 'Workflows and steps others published, to read and install', 'toolbar-library')}
       </span>
       <span className="appbar-group appbar-status" role="group" aria-label="What needs you">
         {!live && <span className="warning">Reconnecting…</span>}

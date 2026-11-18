@@ -53,7 +53,7 @@ function Card({ card, single, now, onGo, onView, named }: { card: BoardCard; sin
         <span className="board-card-status" data-testid="board-card-status">
           {card.statusWords}
         </span>
-        {card.since && <span title="How long it has been on this element"> · {howLong(card.since, now)}</span>}
+        {card.since && <span title="How long it has been on this step"> · {howLong(card.since, now)}</span>}
         {card.quiet && <span title="The terminal has printed for a while with no report, so this may be behind"> · quiet</span>}
       </div>
       {card.blockedReason && <p className="board-card-reason">{card.blockedReason}</p>}

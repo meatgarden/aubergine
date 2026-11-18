@@ -894,7 +894,7 @@ test('an element written by an agent is reviewed, accepted, run by itself, and i
   expect(shelf).toContainEqual(['Summarise the week', 'The summary names what shipped.']);
   expect(shelf.map(([name]: [string]) => name)).not.toContain('Sumarise the weak');
   // What became of the drafts is on the screen: decided, not what they said.
-  await expect(review.getByTestId('review-decided').locator('li').first()).toContainText('Accepted: an element');
+  await expect(review.getByTestId('review-decided').locator('li').first()).toContainText('Accepted: a step');
   await expect(review.getByTestId('review-decided')).toContainText('Discarded: an element');
   await review.getByTestId('review-close').click();
   rmSync(work, { recursive: true, force: true });
@@ -2002,7 +2002,7 @@ test('a shelf element has a life: a copy says where it came from, a newer versio
   // From the workflow back to the shelf: what the copy says now becomes a new version of what it came from.
   await editor.getByTestId('editor-element').nth(1).locator('.editor-element-name').click();
   await editor.getByTestId('save-as-version').click();
-  await expect(editor.getByTestId('editor-saved')).toContainText('Saved as version 4 of “Check every link, twice” on the shelf.');
+  await expect(editor.getByTestId('editor-saved')).toContainText('Saved as version 4 of “Check every link, twice” among the saved steps.');
   await expect(editor.getByTestId('editor-element').nth(1).getByTestId('copy-mark')).toHaveAttribute('data-state', 'unchanged');
 });
 
