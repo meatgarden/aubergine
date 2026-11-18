@@ -33,25 +33,44 @@ function useRectOf(find: (() => Element | null) | null): DOMRect | null {
 
 /**
  * Whether a screen is open that does not hold what is being pointed at. While one is, the tour keeps out of its way:
- * no ring over it and no card on it. Looked at on a timer, like the rectangle: a screen opens without anything here changing.
+ * no ring over it and no card on it. Looked at when a screen is put into the page, and on a timer besides.
  */
-function useBehindScreen(find: (() => Element | null) | null): boolean {
+function useBehindScreen(find: (() => Element | null) | null): { behind: boolean; crossed: boolean } {
   const [behind, setBehind] = useState(false);
+  // A menu or the drawer lies across what is pointed at: the ring would be drawn over it, so it is not drawn. The card stays.
+  const [crossed, setCrossed] = useState(false);
   useEffect(() => {
     if (!find) {
       setBehind(false);
+      setCrossed(false);
       return;
     }
     const look = (): void => {
       const screens = [...document.querySelectorAll('.dialog-backdrop')];
       const pointed = find();
       setBehind(screens.length > 0 && !screens.some((screen) => pointed !== null && screen.contains(pointed)));
+      const box = pointed?.getBoundingClientRect();
+      setCrossed(
+        box !== undefined &&
+          [...document.querySelectorAll('[role="menu"]:not([hidden]), .panel-drawer')].some((over) => {
+            if (pointed !== null && over.contains(pointed)) return false;
+            const other = over.getBoundingClientRect();
+            return other.width > 0 && other.left < box.right + 8 && other.right > box.left - 8 && other.top < box.bottom + 8 && other.bottom > box.top - 8;
+          }),
+      );
     };
     look();
+    // A screen is added to one of three places in the page: looked at the moment one is, so that the ring and the
+    // card are never drawn over a screen while a timer is waited for. The timer stays, for what these do not see.
+    const watcher = new MutationObserver(look);
+    for (const place of document.querySelectorAll('.app, .workspace, .canvas, .tabbar, .side-panel')) watcher.observe(place, { childList: true, subtree: place.matches('.tabbar') });
     const timer = setInterval(look, 200);
-    return () => clearInterval(timer);
+    return () => {
+      watcher.disconnect();
+      clearInterval(timer);
+    };
   }, [find]);
-  return behind;
+  return { behind, crossed };
 }
 
 /** A ring round what is being pointed at. It takes no clicks: what is under it stays usable. */
@@ -171,9 +190,9 @@ export function Tour() {
   const rect = useRectOf(find);
   const cardRef = useRef<HTMLElement | null>(null);
   const corner = useCorner(cardRef, rect, current !== null);
-  const behind = useBehindScreen(find);
+  const { behind, crossed } = useBehindScreen(find);
 
-  if (!current || step === null) return behind ? null : <Ring rect={rect} />;
+  if (!current || step === null) return behind || crossed ? null : <Ring rect={rect} />;
   const last = step === steps.length - 1;
   const done = doneStep === current.id;
   const go = (to: number): void => {
@@ -183,7 +202,7 @@ export function Tour() {
 
   return (
     <>
-      {!behind && <Ring rect={rect} />}
+      {!behind && !crossed && <Ring rect={rect} />}
       <section ref={cardRef} hidden={behind && doneStep !== current.id} className={`tour-card at-${corner}`} role="region" aria-label="Tour" data-testid="tour-card" data-step={current.id} data-corner={corner} data-done={done ? 'true' : undefined}>
         <div className="tour-count" data-testid="tour-count">
           {step + 1} of {steps.length}

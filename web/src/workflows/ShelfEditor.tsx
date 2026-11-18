@@ -217,10 +217,10 @@ export function ShelfEditor() {
         )}
         {error && <p className="dialog-error">{error}</p>}
         <div className="dialog-actions">
-          <button type="button" className="quiet" onClick={close}>
+          <button type="button" onClick={close}>
             Cancel
           </button>
-          <button type="button" disabled={busy || problems.length > 0 || badNeed} onClick={() => void save()} data-testid="shelf-save">
+          <button type="button" className="primary" disabled={busy || problems.length > 0 || badNeed} onClick={() => void save()} data-testid="shelf-save">
             Save
           </button>
         </div>

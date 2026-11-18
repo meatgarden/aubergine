@@ -114,7 +114,7 @@ export function Schedules() {
         </p>
       )}
       {draft === null ? (
-        <button type="button" className="quiet" onClick={() => setDraft(BLANK)} data-testid="schedule-add">
+        <button type="button" className="primary" onClick={() => setDraft(BLANK)} data-testid="schedule-add">
           Add a schedule…
         </button>
       ) : (

@@ -101,7 +101,7 @@ export function TagDialog() {
           <button type="button" onClick={close}>
             Cancel
           </button>
-          <button type="button" onClick={save} data-testid="tag-save">
+          <button type="button" className="primary" onClick={save} data-testid="tag-save">
             Save
           </button>
         </div>

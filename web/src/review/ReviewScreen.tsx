@@ -287,6 +287,7 @@ export function ReviewScreen() {
                     {waiting && (
                       <button
                         type="button"
+                        className="primary"
                         disabled={!mayAccept}
                         title={long && !shownAll ? 'Show all of the text first' : undefined}
                         onClick={() => void act(() => current.source.accept(current.item.id, editing ? { ...(editing.workflow ? { workflow: editing.workflow } : {}), ...(editing.element ? { element: editing.element } : {}) } : undefined))}

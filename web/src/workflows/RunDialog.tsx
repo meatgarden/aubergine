@@ -99,6 +99,8 @@ export function RunDialog() {
   const needs = version ? needsOf(version.elements) : [];
   const given = version ? Object.fromEntries(version.inputs.flatMap((input) => ((inputs[input.key] ?? '').trim() ? [[input.key, (inputs[input.key] as string).trim()]] : []))) : {};
   const problems = version ? inputProblems(version, given) : [];
+  // The first field that is needed and still empty: said by its name on the form, not by its key.
+  const missing = version?.inputs.find((input) => input.required && (given[input.key] ?? '').trim() === '');
   const onNewAgent = starting.sessionId === null;
   const blockedByRun = existing !== null && !replace;
 
@@ -253,18 +255,20 @@ export function RunDialog() {
                     <p className="sheet-note">No agent is running in this terminal, so nothing will be typed into it. You can move the run with the buttons, or start an agent and give it the line shown with the run.</p>
                   )}
                 </div>
-                <div className="run-dialog-preview">
-                  <span className="wf-label">What the agent will be told first</span>
+                <details className="ui-fold run-dialog-preview" data-testid="run-preview-fold">
+                  <summary>
+                    What the agent will be told first <span className="ui-meta">read it before you start, if you like</span>
+                  </summary>
                   <pre data-testid="run-preview">{previewRun(version, sampleInputs(version.inputs, given))}</pre>
-                </div>
+                </details>
               </div>
               {error && <p className="dialog-error">{error}</p>}
               <div className="dialog-actions">
-                {problems.length > 0 && <span className="sheet-note run-dialog-problem">{problems[0]}</span>}
-                <button type="button" className="quiet" onClick={close}>
+                {problems.length > 0 && <span className="sheet-note run-dialog-problem" title={problems[0]}>{missing ? `Fill in “${missing.label}” to start.` : problems[0]}</span>}
+                <button type="button" onClick={close}>
                   Cancel
                 </button>
-                <button type="button" onClick={() => void start()} disabled={busy || problems.length > 0 || blockedByRun} data-testid="run-start">
+                <button type="button" className="primary" onClick={() => void start()} disabled={busy || problems.length > 0 || blockedByRun} data-testid="run-start">
                   {onNewAgent ? 'Start the session and the run' : 'Start'}
                 </button>
               </div>

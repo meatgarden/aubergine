@@ -19,13 +19,19 @@ export function ElementFields({ element, onChange }: { element: Element; onChang
   return (
     <>
       <label className="wf-field">
-        <span>Step</span>
+        <span>Name of the step</span>
         <input value={element.name} maxLength={120} onChange={(e) => onChange({ ...element, name: e.target.value })} data-testid="element-name" />
       </label>
       {Editor ? <Editor element={element} onChange={onChange} /> : <p className="sheet-note">This element is of a kind this version cannot edit: {element.kind}. It is kept as it is.</p>}
       {/* What an agent needs, and what it hands in, are not asked of an element a person decides. */}
       {!waitsForPerson(element.kind) && (
-        <>
+        <details className="ui-fold" data-testid="element-more-about">
+          <summary>
+            More about this step{' '}
+            <span className="ui-meta">
+              {element.needs.length === 0 ? 'needs nothing special' : `needs ${element.needs.length} ${element.needs.length === 1 ? 'thing' : 'things'}`} · produces {outputKind(element.produces)?.title.toLowerCase() ?? element.produces}
+            </span>
+          </summary>
       <div className="wf-label">
         It needs <span className="sheet-note">tools whoever does it must have; shown before a run, checked by nobody</span>
       </div>
@@ -61,7 +67,7 @@ export function ElementFields({ element, onChange }: { element: Element; onChang
           </select>
         </label>
       </div>
-        </>
+        </details>
       )}
     </>
   );
