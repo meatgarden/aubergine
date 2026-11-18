@@ -178,12 +178,12 @@ const filterCommands = FILTER_COMMANDS.map(([id, filter, words]): Command => ({
 }));
 
 /** The parts of the page that hold controls, in the order the keyboard visits them. */
-const CONTROL_REGIONS = ['.tour-card button', '.side-panel:not(.collapsed) .list-rows', '.toolbar button', '.tabbar [role="tab"], .tabbar button'];
+const CONTROL_REGIONS = ['.tour-card button', '.side-panel:not(.collapsed) .list-rows', '.toolbar button', '.tabbar [role="tab"], .tabbar button', '.appbar button'];
 
 function focusNextControls(): void {
   const active = document.activeElement;
   const regions = CONTROL_REGIONS.map((selector) => document.querySelector<HTMLElement>(selector)).filter((el): el is HTMLElement => el !== null);
-  const containers = ['.tour-card', '.side-panel', '.toolbar', '.tabbar'];
+  const containers = ['.tour-card', '.side-panel', '.toolbar', '.tabbar', '.appbar'];
   const at = containers.findIndex((selector) => active?.closest(selector));
   const current = at < 0 ? -1 : regions.findIndex((el) => el.closest(containers[at] as string));
   const next = regions[current + 1];

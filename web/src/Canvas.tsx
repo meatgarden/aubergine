@@ -25,7 +25,6 @@ import {
   type LayoutNode,
 } from '@aubergine/shared';
 import { api } from './api';
-import { AttentionQueue } from './AttentionQueue';
 import { OutsidePanel } from './OutsidePanel';
 import { ParkedList } from './ParkedList';
 import { Picker } from './Picker';
@@ -61,7 +60,6 @@ import { EnvironmentPanel } from './environment/EnvironmentPanel';
 import './panel/sections/copies';
 import './panel/sections/for-you';
 import { QueueScreen } from './queue/QueueScreen';
-import { itemsOfListing, useRepositoryListing } from './review/repository-source';
 import { DescribeDialog } from './workflows/DescribeDialog';
 import { ShelfEditor } from './workflows/ShelfEditor';
 import './workflows/output-views';
@@ -102,19 +100,6 @@ function toFrameNode(frame: Frame, previous: CanvasNode | undefined): FrameFlowN
     // Frames sit behind the terminals.
     zIndex: -1,
   };
-}
-
-/** Shown only when something an agent or a program wrote is waiting to be read. */
-function DraftsWaiting() {
-  const drafts = useApp((s) => (s.app?.drafts ?? []).filter((d) => d.status === 'waiting').length);
-  // Workflow files in repositories that were never accepted, or changed since.
-  const waiting = drafts + itemsOfListing(useRepositoryListing()).length;
-  if (waiting === 0) return null;
-  return (
-    <button type="button" className="attention-button" onClick={() => runCommand('drafts.review')} title="Written by agents or programs, or kept in a repository: waiting for you to read them" data-testid="drafts-waiting">
-      {waiting} to review
-    </button>
-  );
 }
 
 /**
@@ -194,7 +179,6 @@ export function Canvas() {
   const layout = useApp((s) => currentLayout(s).nodes);
   // This component is mounted afresh for each canvas, so this is read once per canvas.
   const [initialViewport] = useState(() => loadViewport(canvasId ?? ''));
-  const live = useApp((s) => s.live);
   const theme = useApp((s) => s.settings.theme);
   const focusSession = useApp((s) => s.focusSession);
   const notice = useApp((s) => s.notice);
@@ -522,20 +506,6 @@ export function Canvas() {
           <span className="toolbar-group" role="group" aria-label="Make something new">
             <NewMenu adding={adding} />
           </span>
-          <span className="toolbar-group" role="group" aria-label="Screens">
-            <button type="button" className="quiet" onClick={() => runCommand('queue.open')} title={hint('queue.open', 'For you, and the queue: everything that waits on you, and tasks for agents')} data-testid="toolbar-queue">
-              Queue
-            </button>
-            <button type="button" className="quiet" onClick={() => runCommand('board.open')} title={hint('board.open', 'Board: every run that is going, by workflow and element; approve or send back from there')} data-testid="toolbar-board">
-              Board
-            </button>
-            <button type="button" className="quiet" onClick={() => runCommand('workflows.open')} title={hint('workflows.open', 'Workflows: make, change and run them')} data-testid="toolbar-workflows">
-              Workflows
-            </button>
-            <button type="button" className="quiet" onClick={() => runCommand('library.open')} title={hint('library.open', 'Library: workflows and elements others published, to read and install')} data-testid="toolbar-library">
-              Library
-            </button>
-          </span>
           <span className="toolbar-group" role="group" aria-label="The view">
             <button
               type="button"
@@ -559,20 +529,14 @@ export function Canvas() {
               {percent}
             </button>
           </span>
-          <span className="toolbar-group toolbar-status" role="group" aria-label="What needs you, and what is elsewhere">
-            <AttentionQueue />
-            <DraftsWaiting />
+          <span className="toolbar-group toolbar-status" role="group" aria-label="Terminals that are not on this canvas">
             <ParkedList />
             <OutsidePanel />
-            {!live && <span className="warning">Reconnecting…</span>}
             {onDemo && (
               <button type="button" className="quiet" onClick={() => runCommand('demo.remove')} title="Take away everything the demo made. Nothing else is touched." data-testid="remove-demo">
                 Remove the demo
               </button>
             )}
-            <button type="button" className="quiet" aria-label="Help" onClick={() => runCommand('help.show')} title={hint('help.show', 'Help: what you can do here, and the keyboard shortcuts')} data-testid="toolbar-help">
-              ?
-            </button>
           </span>
           {notice && <span className="warning">{notice}</span>}
         </Panel>

@@ -153,7 +153,6 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
             {session.attention.state === 'waiting' ? 'waiting for you' : session.attention.state === 'done' ? 'finished' : 'working'}
           </span>
         )}
-        {draft === null && !exited && <RunStrip sessionId={sessionId} variant="node" />}
         {draft === null && <EnvironmentChip sessionId={sessionId} />}
         {draft === null && <ListMark sessionId={sessionId} variant="node" />}
         {draft === null && session?.typedBy && <TypedBy by={session.typedBy} />}
@@ -221,7 +220,9 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
             title={hint('terminal.tags', (session?.tags.length ?? 0) > 0 ? `Tags: ${session?.tags.join(', ')}` : 'Add tags')}
             onClick={() => useApp.getState().request({ kind: 'tags', id: sessionId })}
           >
-            #{(session?.tags.length ?? 0) > 0 ? session?.tags.length : ''}
+            <span className="tool-word">Tags</span>
+            <span className="tool-sign" aria-hidden="true">#</span>
+            {(session?.tags.length ?? 0) > 0 ? <span className="tool-count">{session?.tags.length}</span> : null}
           </button>
         )}
         {draft === null && !exited && (
@@ -236,7 +237,8 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
               runCommand('workflow.run');
             }}
           >
-            ⇶
+            <span className="tool-word">Workflow</span>
+            <span className="tool-sign" aria-hidden="true">⇶</span>
           </button>
         )}
         {draft === null && !exited && (
@@ -251,7 +253,8 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
               runCommand('terminal.message');
             }}
           >
-            ✉
+            <span className="tool-word">Message</span>
+            <span className="tool-sign" aria-hidden="true">✉</span>
           </button>
         )}
         {draft === null && !exited && (
@@ -266,7 +269,8 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
               runCommand('terminal.openOnDesktop');
             }}
           >
-            ⧉
+            <span className="tool-word">Desktop</span>
+            <span className="tool-sign" aria-hidden="true">⧉</span>
           </button>
         )}
         {draft === null && <MoveToCanvas sessionId={sessionId} name={name} />}
@@ -298,6 +302,7 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
           ×
         </button>
       </header>
+      {!exited && <RunStrip sessionId={sessionId} variant="node" />}
       {exited ? (
         <div className="node-body node-ended nodrag" data-testid="node-ended">
           {session?.meantFor ? (

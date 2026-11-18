@@ -13,7 +13,9 @@ import { applyEvent, type AppState, type ChangeEvent } from '@aubergine/shared';
  * - a whole state older than what the page has is not taken;
  * - a change the whole state already holds is not applied again;
  * - a change that arrives before any whole state is kept, and applied after
- *   the whole state it belongs after.
+ *   the whole state it belongs after;
+ * - a change that is not the next one (one before it was missed) is kept the
+ *   same way, and the page asks for the whole state again.
  *
  * Pure: the store keeps one of these and passes what arrives through it.
  */
@@ -56,5 +58,14 @@ export function takeChange(now: Following, event: ChangeEvent, revision?: number
   if (now.whole === null) return { ...now, waiting: [...now.waiting, { revision, event }].slice(-5000) };
   // Already in the whole state the page has.
   if (revision <= now.revision) return now;
+  // Not the next one: a change between was made while the page was not listening (before its stream was ready).
+  // Applying this one would leave that one out for good, and make the whole state that holds it look older than
+  // what the page has. It waits for that whole state instead; `behind` tells the caller to ask for one.
+  if (revision > now.revision + 1 || now.waiting.length > 0) return { ...now, waiting: [...now.waiting, { revision, event }].slice(-5000) };
   return { ...now, whole: applyEvent(now.whole, event), revision };
+}
+
+/** The page knows it missed a change: it holds later ones that wait for a whole state. The caller asks for one. */
+export function behind(now: Following): boolean {
+  return now.whole !== null && now.waiting.length > 0;
 }

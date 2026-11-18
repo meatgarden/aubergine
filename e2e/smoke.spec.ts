@@ -455,9 +455,9 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
     page.evaluate(() => {
       const el = document.activeElement;
       if (!el || el === document.body) return 'canvas';
-      return el.closest('.side-panel') ? 'list' : el.closest('.toolbar') ? 'toolbar' : el.closest('.tabbar') ? 'tabs' : 'other';
+      return el.closest('.side-panel') ? 'list' : el.closest('.toolbar') ? 'toolbar' : el.closest('.tabbar') ? 'tabs' : el.closest('.appbar') ? 'top' : 'other';
     });
-  for (const expected of ['list', 'toolbar', 'tabs', 'canvas']) {
+  for (const expected of ['list', 'toolbar', 'tabs', 'top', 'canvas']) {
     await page.keyboard.press('F6');
     expect(await keyboardIn()).toBe(expected);
   }
@@ -1726,7 +1726,8 @@ test('messages: the owner writes to a terminal, its agent reads and answers, and
   await expect(row(first).getByTestId('message-mark')).toHaveText('✉ 1 from you');
 
   // One terminal to another: refused while the canvas's switch is off, which is how it starts.
-  await expect(page.getByTestId('tab-messaging')).toHaveText('✉ off');
+  await page.getByTestId('tab-more').click();
+  await expect(page.getByTestId('tab-messaging')).toContainText('Messages between terminals: off');
   expect(await inTerminal(first, `tell ${second} "Are you there?"`)).toMatch(/only on a canvas where the owner switched that on/);
   await expect(row(second).getByTestId('message-mark')).toHaveCount(0);
   // The owner switches it on, after being told what that means.
@@ -1735,7 +1736,8 @@ test('messages: the owner writes to a terminal, its agent reads and answers, and
     void dialog.accept();
   });
   await page.getByTestId('tab-messaging').click();
-  await expect(page.getByTestId('tab-messaging')).toHaveText('✉ on');
+  await expect(page.getByTestId('tab-messaging')).toContainText('Messages between terminals: on');
+  await page.keyboard.press('Escape');
   expect(await inTerminal(first, `tell ${second} "Are you there?"`)).toContain('nothing was typed into any terminal');
   await expect(row(second).getByTestId('message-mark')).toContainText('✉ 1 from ');
 
@@ -1816,8 +1818,10 @@ test('the side panel shows one section at a time with all of its height, says ho
   ).toBe(true);
   await page.getByTestId('color-palette').getByRole('menuitemradio', { name: 'teal' }).click();
   await expect(page.locator('[data-testid="tab"][aria-selected="true"]')).toHaveClass(/color-teal/);
-  // The name is at the start of the bar of tabs, and not in the bar over the canvas.
-  await expect(page.getByTestId('tabbar').getByTestId('brand')).toHaveText('Aubergine');
+  // The name is at the top of the page with the project, in a row of its own: not among the tabs, and not in the bar over the canvas.
+  await expect(page.getByTestId('appbar').getByTestId('brand')).toHaveText('Aubergine');
+  await expect(page.getByTestId('appbar').getByTestId('project-switcher')).toBeVisible();
+  await expect(page.getByTestId('tabbar')).not.toContainText('Aubergine');
   await expect(page.locator('.toolbar')).not.toContainText('Aubergine');
 
   // The bar over the canvas: nothing in it is a bare sign, and nothing runs off the edge.
@@ -2104,7 +2108,7 @@ test('an approval and the board: a run stops for the owner, shows on the board a
 
   // The run stops at the approval. The agent was told so by what its own command printed.
   await expect(strip).toHaveAttribute('data-status', 'awaiting', { timeout: 20_000 });
-  await expect(strip).toContainText('waiting for approval');
+  await expect(strip).toContainText('Waiting for you to approve');
   await expect(page.locator('.xterm-rows')).toContainText('STOP and wait. A person has to approve before this run goes on.');
   // It cannot approve: done is refused, and the owner's command does nothing in a canvas terminal.
   await type('clear; "$AUBERGINE_BIN/aubergine" workflow done --note "approved by me"');
@@ -2885,6 +2889,7 @@ test('projects: a second project has its own tabs, terminals and queue; what wai
   await page.getByTestId('toolbar-new-terminal').click();
   await expect(rows).toHaveCount(1);
   const moved = (await rows.first().getAttribute('data-session')) ?? '';
+  await page.locator('[data-testid="tab"][aria-selected="true"]').getByTestId('tab-more').click();
   await page.locator('[data-testid="tab"][aria-selected="true"]').getByTestId('tab-move-project').selectOption({ label: 'Project test second' });
   await expect(page.getByTestId('project-name')).toHaveText('Project test second');
   await expect(tabs).toHaveCount(2);

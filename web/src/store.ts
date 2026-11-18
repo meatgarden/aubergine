@@ -14,7 +14,7 @@ import {
   stateOf,
 } from '@aubergine/shared';
 import { ApiError, api, askAbout, lookAt, subscribeToEvents } from './api';
-import { NOT_FOLLOWING, takeChange, takeWhole, type Following } from './following';
+import { NOT_FOLLOWING, behind, takeChange, takeWhole, type Following } from './following';
 import { canvasIdFromPath, chooseCanvas, rememberCanvas, rememberedCanvas, sessionFromAddress, writeAddress } from './address';
 import { announcement, notificationsWanted } from './attention';
 import { clampPanelWidth, loadPanelPrefs, savePanelPrefs, type PanelPrefs } from './panel/registry';
@@ -237,8 +237,10 @@ export const useApp = create<AppStore>((set, get) => ({
     if (after === before) return;
     const app = before.whole;
     if (!app || after.whole === null || after.whole === app) {
-      // Before the first whole state: kept for when it arrives.
+      // Before the first whole state, or after a change that was missed: kept for when the whole state arrives.
       set({ following: after });
+      // A change was missed: the whole state is asked for, once, and what waits is applied after it.
+      if (behind(after) && !behind(before)) void get().load();
       return;
     }
     // A session has just started waiting: say so on the desktop, if the user asked for that
