@@ -150,6 +150,10 @@ To read the queue: queue_read.
 
 To read everything that waits on the owner: for_you_read. Nothing on that list can be decided by a tool.
 
+(Needs the terminal's own credential, or an API token with the scope read.)
+
+Your terminal belongs to one project, and what you see here is that project: its queue, its runs, its terminals. Other projects on the same server are not yours to see or to reach: projects_list.
+
 (Needs an API token with the scope read.)
 
 To read the schedules, with when each is next and how its latest time ended: schedules_read. A schedule is made and run by the owner alone.
@@ -253,7 +257,7 @@ A terminal marked "people only" is closed to every program, and a token reaches 
 
 ## What is your owner's alone
 
-No command and no tool of yours does these, and none of them is missing by mistake: making, listing or revoking credentials; reading the record of what credentials did; changing settings; stopping a program outside Aubergine; terminals that are not on a canvas; accepting, sending back or discarding a draft; accepting a workflow kept in a repository; saving a workflow into a repository; marking a terminal "people only", or opening it again; making or removing the demo; reading how an agent is set up; asking an agent for a recap; the list of what changed while the owner was away; an agent's past conversations; deciding which terminals may message each other, and pausing or stopping a thread; retiring a shelf element or bringing it back, and taking a newer version of one into a workflow; adding, removing or refreshing a library source, accepting an install or an update, and removing what was installed; approving a run that waits for a person, or sending it back; removing or discarding a working copy; accepting, declining, reordering or starting tasks, and changing how many run at once; writing or removing a rule; making, changing, switching, removing or running a schedule; opening a terminal in a window of the owner's own terminal application.
+No command and no tool of yours does these, and none of them is missing by mistake: making, listing or revoking credentials; reading the record of what credentials did; changing settings; stopping a program outside Aubergine; terminals that are not on a canvas; accepting, sending back or discarding a draft; accepting a workflow kept in a repository; saving a workflow into a repository; marking a terminal "people only", or opening it again; making or removing the demo; reading how an agent is set up; asking an agent for a recap; the list of what changed while the owner was away; an agent's past conversations; deciding which terminals may message each other, and pausing or stopping a thread; retiring a shelf element or bringing it back, and taking a newer version of one into a workflow; adding, removing or refreshing a library source, accepting an install or an update, and removing what was installed; approving a run that waits for a person, or sending it back; removing or discarding a working copy; accepting, declining, reordering or starting tasks, and changing how many run at once; writing or removing a rule; making, changing, switching, removing or running a schedule; opening a terminal in a window of the owner's own terminal application; making, changing, archiving or removing a project, and moving a canvas to another project; saying what is shared between projects.
 
 (Needs an Aubergine terminal.)
 

@@ -1,9 +1,9 @@
 import { memo, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import type { CommandId } from '@aubergine/shared';
+import { openProjects, projectName, type CommandId } from '@aubergine/shared';
 import { canvasActions } from '../../canvas-actions';
 import { runCommand } from '../../commands';
 import { SCOPE_FILTER, TAG_FILTER, TEXT_FILTER, listFilters } from '../../list-filters';
-import { listModel } from '../../list-model';
+import { listModel, listSource } from '../../list-model';
 import { NotePanel } from '../../NotePanel';
 import { RecapBlock, recapTitle } from '../../Recap';
 import { MessageMark, SessionMessages } from '../../Messages';
@@ -37,7 +37,8 @@ const CLOCK_MS = 5000;
 const PREVIEW_DELAY_MS = 350;
 
 function useModel() {
-  const app = useApp((s) => s.app);
+  // Of the project being looked at, or of every project, as the view says.
+  const app = useApp((s) => listSource(s));
   const view = useApp((s) => s.listView);
   const canvasId = useApp((s) => s.canvasId);
   return useMemo(() => listModel(app, view, canvasId), [app, view, canvasId]);
@@ -154,6 +155,13 @@ function TerminalsSection() {
     setView({ collapsedGroups: view.collapsedGroups.includes(id) ? view.collapsedGroups.filter((g) => g !== id) : [...view.collapsedGroups, id] });
 
   const scoped = view.filters.includes(SCOPE_FILTER);
+  const whole = useApp((s) => s.whole);
+  const severalProjects = (whole ? openProjects(whole).length : 0) > 1;
+  /** In the view of every project a group says which project its canvas is in. */
+  const projectOfGroup = (groupId: string): string => {
+    const projectId = whole?.canvases.find((c) => c.id === groupId)?.projectId;
+    return projectId && whole ? `${projectName(whole, projectId)} · ` : '';
+  };
   const toggles = listFilters().filter((filter) => ![SCOPE_FILTER, TEXT_FILTER, TAG_FILTER].includes(filter.id));
   const chips = filterChips(view);
   // The three filters used every day are always there; the rest, and how the list is laid out, are behind "More".
@@ -186,9 +194,14 @@ function TerminalsSection() {
           <button type="button" aria-pressed={scoped} title={hint('list.scope.toggle', 'Only the canvas you are looking at')} onClick={() => !scoped && runCommand('list.scope.toggle')} data-testid="scope-this">
             This canvas
           </button>
-          <button type="button" aria-pressed={!scoped} title={hint('list.scope.toggle', 'Every canvas')} onClick={() => scoped && runCommand('list.scope.toggle')} data-testid="scope-all">
+          <button type="button" aria-pressed={!scoped && !view.everyProject} title={hint('list.scope.toggle', 'Every canvas of this project')} onClick={() => (view.everyProject ? setView({ everyProject: false }) : scoped && runCommand('list.scope.toggle'))} data-testid="scope-all">
             All canvases
           </button>
+          {severalProjects && (
+            <button type="button" aria-pressed={view.everyProject === true} title="The terminals of every project; each group names its project" onClick={() => setView({ everyProject: true, filters: view.filters.filter((id) => id !== SCOPE_FILTER) })} data-testid="scope-projects">
+              All projects
+            </button>
+          )}
         </div>
         <input
           ref={search}
@@ -299,7 +312,9 @@ function TerminalsSection() {
                 return (
                   <button key={`g:${item.id}`} type="button" className="list-group" style={style} aria-expanded={!item.collapsed} onClick={() => toggleGroup(item.id)} data-testid="list-group" data-group={item.id}>
                     <span className="list-chevron">{item.collapsed ? '▸' : '▾'}</span>
-                    <span className="list-group-title">{item.title}</span>
+                    <span className="list-group-title">
+                      {view.everyProject ? `${projectOfGroup(item.id)}${item.title}` : item.title}
+                    </span>
                     <span className="list-count">{item.count}</span>
                     {item.waiting > 0 && (
                       <span className="tab-waiting" title={`${item.waiting} waiting for you`}>

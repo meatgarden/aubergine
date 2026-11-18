@@ -29,7 +29,7 @@ describe('the names made for a working copy', () => {
 });
 
 describe('what a session is told about where it works', () => {
-  const copy: SessionEnvironment = { id: ID, kind: 'working-copy', title: 'In its own working copy', words: 'Kept apart.', sessionId: ID, sessionName: 'one', projectFolder: '/home/someone/project', folder: '/home/someone/data/copies/one-9a1b2c', startFolder: '/home/someone/data/copies/one-9a1b2c', branch: 'aubergine/one-9a1b2c', startCommit: 'ab12'.repeat(10), createdAt: '2026-05-01T10:00:00.000Z', changes: { changed: 2, added: 1, removed: 0, commits: 1, uncommitted: 1, at: '2026-05-01T10:05:00.000Z' }, broken: null };
+  const copy: SessionEnvironment = { id: ID, projectId: ID, kind: 'working-copy', title: 'In its own working copy', words: 'Kept apart.', sessionId: ID, sessionName: 'one', projectFolder: '/home/someone/project', folder: '/home/someone/data/copies/one-9a1b2c', startFolder: '/home/someone/data/copies/one-9a1b2c', branch: 'aubergine/one-9a1b2c', startCommit: 'ab12'.repeat(10), createdAt: '2026-05-01T10:00:00.000Z', changes: { changed: 2, added: 1, removed: 0, commits: 1, uncommitted: 1, at: '2026-05-01T10:05:00.000Z' }, broken: null };
   const detail = (environment: SessionEnvironment | null): EnvironmentDetail => ({ kind: environment?.kind ?? 'full', title: environment?.title ?? 'In the folder itself', words: 'x', environment, files: [], filesCut: false, onBranch: null, note: null });
 
   it('says, for a working copy, where it is, its branch, to commit there, and what to leave alone', () => {

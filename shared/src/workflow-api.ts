@@ -32,6 +32,7 @@ import {
 /** A workflow in a list: what it is, without its text. */
 export const WorkflowSummary = z.object({
   id: Id,
+  projectId: Id.nullable().describe('The project it belongs to. Null: shared with every project.'),
   name: z.string(),
   description: z.string(),
   labels: WorkflowLabels,
@@ -51,7 +52,7 @@ export type WorkflowDetail = z.infer<typeof WorkflowDetail>;
 
 export function summaryOfWorkflow(workflow: Workflow): WorkflowSummary {
   const current = latestVersion(workflow);
-  const { versions: _versions, projectId: _projectId, listed: _listed, ...rest } = workflow;
+  const { versions: _versions, listed: _listed, ...rest } = workflow;
   return { ...rest, version: current.number, elements: current.elements.map((e) => e.name) };
 }
 export const detailOfWorkflow = (workflow: Workflow): WorkflowDetail => ({ ...summaryOfWorkflow(workflow), current: latestVersion(workflow) });

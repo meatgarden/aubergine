@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { needsUser, type AppState, type Session } from './entities';
 import { messagesWantOwner } from './messages';
 import { outputKind } from './outputs';
+import { stateOf, type ProjectScope } from './projects';
 import { addedByWords, sourceWords, taskSource } from './tasks';
 import { versionOf, type ArchivedRun, type Run } from './workflows';
 
@@ -34,6 +35,7 @@ export const ForYouItem = z.object({
   taskId: z.string().nullable(),
   askId: z.string().nullable(),
   environmentId: z.string().nullable(),
+  projectId: z.string().nullable().describe('The project it is in. Null for what is of no one project.'),
   /** For a checklist: the element that handed it in. */
   elementId: z.string().nullable(),
 });
@@ -259,12 +261,24 @@ function sessionName(state: AppState, sessionId: string | null): string | null {
 }
 
 /** Everything that waits on the owner, the kinds in their order, the oldest first within a kind. */
-export function forYou(state: AppState, now: number, ended: readonly ArchivedRun[] = []): ForYou {
+export function forYou(whole: AppState, now: number, endedAll: readonly ArchivedRun[] = [], projectId: ProjectScope = null): ForYou {
+  // One project's list is the same function over what that project has; every project's is over everything.
+  const state = stateOf(whole, projectId);
+  const ended = endedAll.filter((entry) => projectId === null || entry.run.projectId === undefined || entry.run.projectId === projectId);
+  /** The project of an item, from what it is about. */
+  const projectOf = (item: Made): string | null =>
+    (item.sessionId ? state.sessions.find((s) => s.id === item.sessionId)?.projectId : undefined) ??
+    (item.taskId ? state.queue.tasks.find((t) => t.id === item.taskId)?.projectId : undefined) ??
+    (item.askId ? state.queue.asks.find((a) => a.id === item.askId)?.projectId : undefined) ??
+    (item.environmentId ? state.environments.find((e) => e.id === item.environmentId)?.projectId : undefined) ??
+    (item.act.startsWith('schedule:') ? state.schedules.items.find((s) => s.id === item.act.slice(9))?.projectId : undefined) ??
+    (item.runId ? (state.runs.find((r) => r.id === item.runId)?.projectId ?? ended.find((e) => e.run.id === item.runId)?.run.projectId) : undefined) ??
+    null;
   const items: ForYouItem[] = [];
   for (const kind of forYouKinds()) {
     const made = kind.items({ state, now, ended });
     made.sort((a, b) => (a.at ?? '').localeCompare(b.at ?? '') || a.id.localeCompare(b.id));
-    for (const item of made) items.push({ kind: kind.kind, title: kind.title, at: null, waits: false, written: false, sessionId: null, runId: null, taskId: null, askId: null, environmentId: null, elementId: null, ...item });
+    for (const item of made) items.push({ kind: kind.kind, title: kind.title, at: null, waits: false, written: false, sessionId: null, runId: null, taskId: null, askId: null, environmentId: null, elementId: null, projectId: projectOf(item), ...item });
   }
   const waiting = items.filter((item) => item.waits).length;
   return { items, waiting, summary: items.length === 0 ? 'Nothing waits for you.' : `${items.length} ${items.length === 1 ? 'thing waits' : 'things wait'} for you${waiting > 0 ? `, ${waiting} of them ${waiting === 1 ? 'a terminal' : 'terminals'}` : ''}.` };

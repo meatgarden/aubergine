@@ -41,7 +41,8 @@ export class Repositories {
 
   /** The repository a session's folder is in, when it has one. */
   private async rootOf(sessionId: string): Promise<string | null> {
-    const { cwd } = this.sessions.get(sessionId);
+    // A folder is read on this computer only: a session that runs elsewhere has none here.
+    const { cwd } = this.sessions.here(sessionId);
     return cwd ? findRepository(cwd, this.home) : null;
   }
 

@@ -150,7 +150,7 @@ export class Environments {
    * Prepares the place a new session will work in, and says which folder its shell starts in. For the kind that
    * prepares nothing, that is the folder itself and no record is kept.
    */
-  async prepare(kindName: string, session: { id: string; name: string; folder: string | null }): Promise<{ cwd: string | null }> {
+  async prepare(kindName: string, session: { id: string; name: string; folder: string | null; projectId: string }): Promise<{ cwd: string | null }> {
     const kind = environmentKind(kindName);
     if (!kind) throw new BadInputError(`A session works in one of: ${environmentKinds().map((k) => k.kind).join(', ')}.`);
     if (kind.nothingPrepared) return { cwd: session.folder };
@@ -164,7 +164,7 @@ export class Environments {
       if (error instanceof GitProblem) throw new ConflictError(error.message);
       throw error;
     }
-    const environment: SessionEnvironment = { id, kind: kind.kind, title: kind.title, words: kind.words, sessionId: session.id, sessionName: session.name.slice(0, 120), ...made, createdAt: new Date().toISOString(), changes: null, broken: null };
+    const environment: SessionEnvironment = { id, projectId: session.projectId, kind: kind.kind, title: kind.title, words: kind.words, sessionId: session.id, sessionName: session.name.slice(0, 120), ...made, createdAt: new Date().toISOString(), changes: null, broken: null };
     this.hub.emit({ type: 'environment.changed', environment });
     return { cwd: made.startFolder };
   }
@@ -267,8 +267,9 @@ export class Environments {
   }
 
   /** Every environment, newest first, with what its folder takes on disk. */
-  async list(query: { limit: number; cursor?: string | undefined }): Promise<{ items: ListedEnvironment[]; nextCursor: string | null }> {
-    const sorted = [...this.all].sort((a, b) => b.createdAt.localeCompare(a.createdAt) || a.id.localeCompare(b.id));
+  /** The working copies of one project; null: of every project. */
+  async list(query: { limit: number; cursor?: string | undefined }, projectId: string | null = null): Promise<{ items: ListedEnvironment[]; nextCursor: string | null }> {
+    const sorted = this.all.filter((environment) => projectId === null || environment.projectId === projectId).sort((a, b) => b.createdAt.localeCompare(a.createdAt) || a.id.localeCompare(b.id));
     const page = paginate(sorted, (e) => e.id, query);
     const items: ListedEnvironment[] = [];
     for (const found of page.items) {

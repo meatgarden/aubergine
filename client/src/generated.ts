@@ -53,6 +53,10 @@ export type GetDescriptionResult = {
 
 export interface ListCanvasesQuery {
   /**
+   * Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project.
+   */
+  projectId?: string | "all";
+  /**
    * How many items to return at most.
    */
   limit?: number;
@@ -84,6 +88,8 @@ export type ListCanvasesResult = {
 };
 
 export type CreateCanvasBody = {
+  /** The project it is made in. Left out: the first project the caller reaches. */
+  projectId?: string;
   /** The name on its tab. */
   name: string;
   /** The color of its tab. */
@@ -228,6 +234,10 @@ export type ShowCanvasResult = {
 
 export interface ListCanvasSessionsQuery {
   /**
+   * Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project.
+   */
+  projectId?: string | "all";
+  /**
    * How many items to return at most.
    */
   limit?: number;
@@ -241,6 +251,10 @@ export type ListCanvasSessionsResult = {
   items: {
     id: string;
     projectId: string;
+    host?: {
+      kind: string;
+      [key: string]: unknown;
+    };
     name: string;
     createdAt: string;
     state: "open" | "parked" | "exited";
@@ -336,6 +350,10 @@ export type StartSessionResult = {
   session: {
     id: string;
     projectId: string;
+    host?: {
+      kind: string;
+      [key: string]: unknown;
+    };
     name: string;
     createdAt: string;
     state: "open" | "parked" | "exited";
@@ -418,6 +436,10 @@ export type StartSessionResult = {
 
 export interface ListSessionsQuery {
   /**
+   * Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project.
+   */
+  projectId?: string | "all";
+  /**
    * How many items to return at most.
    */
   limit?: number;
@@ -435,6 +457,10 @@ export type ListSessionsResult = {
   items: {
     id: string;
     projectId: string;
+    host?: {
+      kind: string;
+      [key: string]: unknown;
+    };
     name: string;
     createdAt: string;
     state: "open" | "parked" | "exited";
@@ -509,6 +535,10 @@ export type ListSessionsResult = {
 export type GetSessionResult = {
   id: string;
   projectId: string;
+  host?: {
+    kind: string;
+    [key: string]: unknown;
+  };
   name: string;
   createdAt: string;
   state: "open" | "parked" | "exited";
@@ -587,6 +617,10 @@ export type UpdateSessionBody = {
 export type UpdateSessionResult = {
   id: string;
   projectId: string;
+  host?: {
+    kind: string;
+    [key: string]: unknown;
+  };
   name: string;
   createdAt: string;
   state: "open" | "parked" | "exited";
@@ -670,6 +704,10 @@ export type MoveSessionResult = {
   session: {
     id: string;
     projectId: string;
+    host?: {
+      kind: string;
+      [key: string]: unknown;
+    };
     name: string;
     createdAt: string;
     state: "open" | "parked" | "exited";
@@ -753,6 +791,10 @@ export type MoveSessionResult = {
 export type ParkSessionResult = {
   id: string;
   projectId: string;
+  host?: {
+    kind: string;
+    [key: string]: unknown;
+  };
   name: string;
   createdAt: string;
   state: "open" | "parked" | "exited";
@@ -831,6 +873,10 @@ export type RestoreSessionResult = {
   session: {
     id: string;
     projectId: string;
+    host?: {
+      kind: string;
+      [key: string]: unknown;
+    };
     name: string;
     createdAt: string;
     state: "open" | "parked" | "exited";
@@ -1006,6 +1052,10 @@ export type UpdateFrameResult = {
 
 export interface ListWorkflowsQuery {
   /**
+   * Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project.
+   */
+  projectId?: string | "all";
+  /**
    * How many items to return at most.
    */
   limit?: number;
@@ -1018,6 +1068,8 @@ export interface ListWorkflowsQuery {
 export type ListWorkflowsResult = {
   items: {
     id: string;
+    /** The project it belongs to. Null: shared with every project. */
+    projectId: string | null;
     name: string;
     description: string;
     labels: {
@@ -1109,6 +1161,8 @@ export type CreateWorkflowBody = {
 
 export type CreateWorkflowResult = {
   id: string;
+  /** The project it belongs to. Null: shared with every project. */
+  projectId: string | null;
   name: string;
   description: string;
   labels: {
@@ -1183,6 +1237,8 @@ export type CreateWorkflowResult = {
 
 export type GetWorkflowResult = {
   id: string;
+  /** The project it belongs to. Null: shared with every project. */
+  projectId: string | null;
   name: string;
   description: string;
   labels: {
@@ -1318,6 +1374,8 @@ export type UpdateWorkflowBody = {
 
 export type UpdateWorkflowResult = {
   id: string;
+  /** The project it belongs to. Null: shared with every project. */
+  projectId: string | null;
   name: string;
   description: string;
   labels: {
@@ -1397,6 +1455,8 @@ export type CopyWorkflowBody = {
 
 export type CopyWorkflowResult = {
   id: string;
+  /** The project it belongs to. Null: shared with every project. */
+  projectId: string | null;
   name: string;
   description: string;
   labels: {
@@ -1471,6 +1531,10 @@ export type CopyWorkflowResult = {
 
 export interface ListWorkflowVersionsQuery {
   /**
+   * Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project.
+   */
+  projectId?: string | "all";
+  /**
    * How many items to return at most.
    */
   limit?: number;
@@ -1541,6 +1605,10 @@ export type ListWorkflowVersionsResult = {
 };
 
 export interface ListWorkflowTemplatesQuery {
+  /**
+   * Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project.
+   */
+  projectId?: string | "all";
   /**
    * How many items to return at most.
    */
@@ -1621,6 +1689,8 @@ export type UseWorkflowTemplateBody = {
 
 export type UseWorkflowTemplateResult = {
   id: string;
+  /** The project it belongs to. Null: shared with every project. */
+  projectId: string | null;
   name: string;
   description: string;
   labels: {
@@ -1695,6 +1765,10 @@ export type UseWorkflowTemplateResult = {
 
 export interface ListRunsQuery {
   /**
+   * Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project.
+   */
+  projectId?: string | "all";
+  /**
    * How many items to return at most.
    */
   limit?: number;
@@ -1723,6 +1797,7 @@ export type ListRunsResult = {
       workflowId: string;
       workflowVersion: number;
       sessionId: string | null;
+      projectId?: string;
       inputs: {
         [key: string]: string;
       };
@@ -1810,6 +1885,7 @@ export type StartRunResult = {
     workflowId: string;
     workflowVersion: number;
     sessionId: string | null;
+    projectId?: string;
     inputs: {
       [key: string]: string;
     };
@@ -1884,6 +1960,7 @@ export type GetRunResult = {
     workflowId: string;
     workflowVersion: number;
     sessionId: string | null;
+    projectId?: string;
     inputs: {
       [key: string]: string;
     };
@@ -1980,6 +2057,7 @@ export type ReportRunResult = {
     workflowId: string;
     workflowVersion: number;
     sessionId: string | null;
+    projectId?: string;
     inputs: {
       [key: string]: string;
     };
@@ -2061,6 +2139,7 @@ export type ApproveRunResult = {
     workflowId: string;
     workflowVersion: number;
     sessionId: string | null;
+    projectId?: string;
     inputs: {
       [key: string]: string;
     };
@@ -2142,6 +2221,7 @@ export type SendBackRunResult = {
     workflowId: string;
     workflowVersion: number;
     sessionId: string | null;
+    projectId?: string;
     inputs: {
       [key: string]: string;
     };
@@ -2240,6 +2320,7 @@ export type StartRunsResult = {
         workflowId: string;
         workflowVersion: number;
         sessionId: string | null;
+        projectId?: string;
         inputs: {
           [key: string]: string;
         };
@@ -2329,6 +2410,10 @@ export interface GetBoardQuery {
    * Only runs whose terminal has this tag.
    */
   tag?: string;
+  /**
+   * Only runs of this project; `all`: of every project. Left out: the first project the caller reaches.
+   */
+  projectId?: string | "all";
 }
 
 export type GetBoardResult = {
@@ -2355,6 +2440,8 @@ export type GetBoardResult = {
     /** Runs that wait for a terminal. */
     queued: {
       runId: string;
+      /** The project it runs in. Null where that is not known. */
+      projectId: string | null;
       workflowId: string;
       /** The terminal doing the run. Null for a run that is queued. */
       sessionId: string | null;
@@ -2386,6 +2473,8 @@ export type GetBoardResult = {
       waitsForPerson: boolean;
       cards: {
         runId: string;
+        /** The project it runs in. Null where that is not known. */
+        projectId: string | null;
         workflowId: string;
         /** The terminal doing the run. Null for a run that is queued. */
         sessionId: string | null;
@@ -2414,6 +2503,8 @@ export type GetBoardResult = {
   /** Runs that finished or were stopped in the last day, newest first, at most a set number. */
   ended: {
     runId: string;
+    /** The project it runs in. Null where that is not known. */
+    projectId: string | null;
     workflowId: string;
     /** The terminal doing the run. Null for a run that is queued. */
     sessionId: string | null;
@@ -2461,6 +2552,7 @@ export type StartSessionRunResult = {
     workflowId: string;
     workflowVersion: number;
     sessionId: string | null;
+    projectId?: string;
     inputs: {
       [key: string]: string;
     };
@@ -2530,6 +2622,10 @@ export type StartSessionRunResult = {
 };
 
 export interface ListDraftsQuery {
+  /**
+   * Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project.
+   */
+  projectId?: string | "all";
   /**
    * How many items to return at most.
    */
@@ -3958,6 +4054,10 @@ export type ReturnDraftResult = {
 
 export interface ListDraftRecordsQuery {
   /**
+   * Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project.
+   */
+  projectId?: string | "all";
+  /**
    * How many items to return at most.
    */
   limit?: number;
@@ -4219,9 +4319,17 @@ export type RequestDraftResult = {
   line: string;
 };
 
+export interface ListLibrarySourcesQuery {
+  /**
+   * Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project.
+   */
+  projectId?: string | "all";
+}
+
 export type ListLibrarySourcesResult = {
   sources: {
     id: string;
+    projectId: string | null;
     kind: string;
     address: string;
     name: string;
@@ -4262,6 +4370,7 @@ export type AddLibrarySourceBody = {
 
 export type AddLibrarySourceResult = {
   id: string;
+  projectId: string | null;
   kind: string;
   address: string;
   name: string;
@@ -4292,6 +4401,7 @@ export type AddLibrarySourceResult = {
 
 export type RefreshLibrarySourceResult = {
   id: string;
+  projectId: string | null;
   kind: string;
   address: string;
   name: string;
@@ -4510,6 +4620,7 @@ export type AcceptLibraryRequestBody = {
 
 export type AcceptLibraryRequestResult = {
   id: string;
+  projectId: string | null;
   kind: string;
   name: string;
   from: {
@@ -4534,6 +4645,7 @@ export type AcceptLibraryRequestResult = {
 export type ListLibraryInstalledResult = {
   installed: {
     id: string;
+    projectId: string | null;
     kind: string;
     name: string;
     from: {
@@ -4563,6 +4675,10 @@ export type GetLibraryInstalledUsageResult = {
 
 export interface ListElementsQuery {
   /**
+   * Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project.
+   */
+  projectId?: string | "all";
+  /**
    * How many items to return at most.
    */
   limit?: number;
@@ -4575,6 +4691,7 @@ export interface ListElementsQuery {
 export type ListElementsResult = {
   items: {
     id: string;
+    projectId: string | null;
     element: {
       /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id: string;
@@ -4720,6 +4837,7 @@ export type CreateElementBody = {
 
 export type CreateElementResult = {
   id: string;
+  projectId: string | null;
   element: {
     /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
     id: string;
@@ -4839,6 +4957,7 @@ export type UpdateElementBody = {
 
 export type UpdateElementResult = {
   id: string;
+  projectId: string | null;
   element: {
     /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
     id: string;
@@ -4941,6 +5060,7 @@ export type UpdateElementResult = {
 
 export type CopyElementResult = {
   id: string;
+  projectId: string | null;
   element: {
     /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
     id: string;
@@ -5043,6 +5163,10 @@ export type CopyElementResult = {
 
 export interface ListElementVersionsQuery {
   /**
+   * Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project.
+   */
+  projectId?: string | "all";
+  /**
    * How many items to return at most.
    */
   limit?: number;
@@ -5130,6 +5254,7 @@ export type RetireElementBody = {
 
 export type RetireElementResult = {
   id: string;
+  projectId: string | null;
   element: {
     /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
     id: string;
@@ -5232,6 +5357,7 @@ export type RetireElementResult = {
 
 export type RestoreElementResult = {
   id: string;
+  projectId: string | null;
   element: {
     /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
     id: string;
@@ -5339,6 +5465,8 @@ export type UpdateFromShelfBody = {
 
 export type UpdateFromShelfResult = {
   id: string;
+  /** The project it belongs to. Null: shared with every project. */
+  projectId: string | null;
   name: string;
   description: string;
   labels: {
@@ -5430,6 +5558,7 @@ export type RunElementResult = {
     workflowId: string;
     workflowVersion: number;
     sessionId: string | null;
+    projectId?: string;
     inputs: {
       [key: string]: string;
     };
@@ -5513,6 +5642,7 @@ export type TickRunItemResult = {
     workflowId: string;
     workflowVersion: number;
     sessionId: string | null;
+    projectId?: string;
     inputs: {
       [key: string]: string;
     };
@@ -5582,6 +5712,10 @@ export type TickRunItemResult = {
 };
 
 export interface ListRepositoryWorkflowsQuery {
+  /**
+   * Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project.
+   */
+  projectId?: string | "all";
   /**
    * How many items to return at most.
    */
@@ -5747,6 +5881,7 @@ export type RunRepositoryWorkflowResult = {
     workflowId: string;
     workflowVersion: number;
     sessionId: string | null;
+    projectId?: string;
     inputs: {
       [key: string]: string;
     };
@@ -5817,6 +5952,10 @@ export type RunRepositoryWorkflowResult = {
 
 export interface ListTasksQuery {
   /**
+   * Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project.
+   */
+  projectId?: string | "all";
+  /**
    * How many items to return at most.
    */
   limit?: number;
@@ -5833,6 +5972,8 @@ export interface ListTasksQuery {
 export type ListTasksResult = {
   items: {
     id: string;
+    /** The project it belongs to. Set by the server from where it was made. */
+    projectId: string;
     /** What it is, in one line. Shown in lists and in terminals. */
     title: string;
     /** What to do, for the agent that takes it. Plain text. */
@@ -5885,6 +6026,8 @@ export type ListTasksResult = {
 };
 
 export type AddTaskBody = {
+  /** The project it is added to. Left out: the first project the caller reaches. The workflow, the terminal or the canvas it names must be of that project. */
+  projectId?: string;
   /** What it is, in one line. */
   title: string;
   /** What to do, for the agent that takes it. Plain text. */
@@ -5916,6 +6059,8 @@ export type AddTaskBody = {
 
 export type AddTaskResult = {
   id: string;
+  /** The project it belongs to. Set by the server from where it was made. */
+  projectId: string;
   /** What it is, in one line. Shown in lists and in terminals. */
   title: string;
   /** What to do, for the agent that takes it. Plain text. */
@@ -5967,6 +6112,8 @@ export type AddTaskResult = {
 
 export type GetTaskResult = {
   id: string;
+  /** The project it belongs to. Set by the server from where it was made. */
+  projectId: string;
   /** What it is, in one line. Shown in lists and in terminals. */
   title: string;
   /** What to do, for the agent that takes it. Plain text. */
@@ -6043,6 +6190,8 @@ export type ChangeTaskBody = {
 
 export type ChangeTaskResult = {
   id: string;
+  /** The project it belongs to. Set by the server from where it was made. */
+  projectId: string;
   /** What it is, in one line. Shown in lists and in terminals. */
   title: string;
   /** What to do, for the agent that takes it. Plain text. */
@@ -6094,6 +6243,8 @@ export type ChangeTaskResult = {
 
 export type WithdrawTaskResult = {
   id: string;
+  /** The project it belongs to. Set by the server from where it was made. */
+  projectId: string;
   /** What it is, in one line. Shown in lists and in terminals. */
   title: string;
   /** What to do, for the agent that takes it. Plain text. */
@@ -6145,6 +6296,8 @@ export type WithdrawTaskResult = {
 
 export type AcceptTaskResult = {
   id: string;
+  /** The project it belongs to. Set by the server from where it was made. */
+  projectId: string;
   /** What it is, in one line. Shown in lists and in terminals. */
   title: string;
   /** What to do, for the agent that takes it. Plain text. */
@@ -6196,6 +6349,8 @@ export type AcceptTaskResult = {
 
 export type DeclineTaskResult = {
   id: string;
+  /** The project it belongs to. Set by the server from where it was made. */
+  projectId: string;
   /** What it is, in one line. Shown in lists and in terminals. */
   title: string;
   /** What to do, for the agent that takes it. Plain text. */
@@ -6247,6 +6402,8 @@ export type DeclineTaskResult = {
 
 export type RetryTaskResult = {
   id: string;
+  /** The project it belongs to. Set by the server from where it was made. */
+  projectId: string;
   /** What it is, in one line. Shown in lists and in terminals. */
   title: string;
   /** What to do, for the agent that takes it. Plain text. */
@@ -6298,6 +6455,8 @@ export type RetryTaskResult = {
 
 export type ClearTaskResult = {
   id: string;
+  /** The project it belongs to. Set by the server from where it was made. */
+  projectId: string;
   /** What it is, in one line. Shown in lists and in terminals. */
   title: string;
   /** What to do, for the agent that takes it. Plain text. */
@@ -6353,6 +6512,8 @@ export type ReorderTasksBody = {
 };
 
 export type ReorderTasksResult = {
+  /** The project these are of. */
+  projectId: string;
   /** How many tasks may be at work at once. */
   limit: number;
   /** True: no new task is started. What is running is not touched. */
@@ -6366,6 +6527,8 @@ export type ReorderTasksResult = {
 export type StartTasksBody = {
   /** The task to start. Without one: the next in order that can be taken now. */
   taskId?: string;
+  /** Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project. */
+  projectId?: string | "all";
 };
 
 export type StartTasksResult = {
@@ -6379,7 +6542,16 @@ export type StartTasksResult = {
   says: string;
 };
 
+export interface GetQueueQuery {
+  /**
+   * Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project.
+   */
+  projectId?: string | "all";
+}
+
 export type GetQueueResult = {
+  /** The project these are of. */
+  projectId: string;
   /** How many tasks may be at work at once. */
   limit: number;
   /** True: no new task is started. What is running is not touched. */
@@ -6391,6 +6563,8 @@ export type GetQueueResult = {
 };
 
 export type ChangeQueueBody = {
+  /** The project whose tasks these are about. Left out: the first project. */
+  projectId?: string;
   /** How many tasks may be at work at once. */
   limit?: number;
   hold?: boolean;
@@ -6398,6 +6572,8 @@ export type ChangeQueueBody = {
 };
 
 export type ChangeQueueResult = {
+  /** The project these are of. */
+  projectId: string;
   /** How many tasks may be at work at once. */
   limit: number;
   /** True: no new task is started. What is running is not touched. */
@@ -6407,6 +6583,13 @@ export type ChangeQueueResult = {
   /** The counts in one line. */
   summary: string;
 };
+
+export interface GetForYouQuery {
+  /**
+   * Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project.
+   */
+  projectId?: string | "all";
+}
 
 export type GetForYouResult = {
   items: {
@@ -6432,6 +6615,8 @@ export type GetForYouResult = {
     taskId: string | null;
     askId: string | null;
     environmentId: string | null;
+    /** The project it is in. Null for what is of no one project. */
+    projectId: string | null;
     elementId: string | null;
   }[];
   waiting: number;
@@ -6439,6 +6624,8 @@ export type GetForYouResult = {
 };
 
 export type AddAskBody = {
+  /** The project whose list it is written on. Left out: the first project the caller reaches. */
+  projectId?: string;
   /** What is asked, in plain text. */
   text: string;
   source?: {
@@ -6449,6 +6636,8 @@ export type AddAskBody = {
 
 export type AddAskResult = {
   id: string;
+  /** The project it belongs to. Set by the server from where it was made. */
+  projectId: string;
   text: string;
   addedBy: {
     kind: "agent" | "person" | "token";
@@ -6465,6 +6654,8 @@ export type AddAskResult = {
 
 export type FinishAskResult = {
   id: string;
+  /** The project it belongs to. Set by the server from where it was made. */
+  projectId: string;
   text: string;
   addedBy: {
     kind: "agent" | "person" | "token";
@@ -6481,6 +6672,8 @@ export type FinishAskResult = {
 
 export type DismissAskResult = {
   id: string;
+  /** The project it belongs to. Set by the server from where it was made. */
+  projectId: string;
   text: string;
   addedBy: {
     kind: "agent" | "person" | "token";
@@ -6495,9 +6688,18 @@ export type DismissAskResult = {
   createdAt: string;
 };
 
+export interface ListRulesQuery {
+  /**
+   * Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project.
+   */
+  projectId?: string | "all";
+}
+
 export type ListRulesResult = {
   rules: {
     id: string;
+    /** The project it belongs to. Set by the server from where it was made. */
+    projectId: string;
     event: "task.done" | "task.failed" | "task.needs-owner" | "ask.added" | "schedule.fired" | "schedule.failed";
     action: {
       kind: string;
@@ -6516,6 +6718,8 @@ export type ListRulesResult = {
 };
 
 export type AddRuleBody = {
+  /** The project the rule is of. Left out: the first project. */
+  projectId?: string;
   /** What sets it off. */
   event: "task.done" | "task.failed" | "task.needs-owner" | "ask.added" | "schedule.fired" | "schedule.failed";
   /** What it does: `{"kind":"notify"}`, or `{"kind":"run-element","elementId":"…","on":{"kind":"session","sessionId":"…"}}`. */
@@ -6528,6 +6732,8 @@ export type AddRuleBody = {
 export type AddRuleResult = {
   rules: {
     id: string;
+    /** The project it belongs to. Set by the server from where it was made. */
+    projectId: string;
     event: "task.done" | "task.failed" | "task.needs-owner" | "ask.added" | "schedule.fired" | "schedule.failed";
     action: {
       kind: string;
@@ -6545,7 +6751,365 @@ export type AddRuleResult = {
   }[];
 };
 
+export interface ListProjectsQuery {
+  /**
+   * Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project.
+   */
+  projectId?: string | "all";
+  /**
+   * How many items to return at most.
+   */
+  limit?: number;
+  /**
+   * The `nextCursor` of the page before. Opaque: do not build or change it.
+   */
+  cursor?: string;
+}
+
+export type ListProjectsResult = {
+  items: {
+    id: string;
+    workspaceId: string;
+    name: string;
+    /** A named color, or `#rrggbb`. */
+    color: string;
+    /** Its place among the projects; lower comes first. */
+    order: number;
+    labels: {
+      [key: string]: string;
+    };
+    /** The folders its work is in. May be empty. */
+    folders: string[];
+    /** One of its folders: where a new terminal starts when it names no folder. Null: where new terminals start anyway. */
+    defaultFolder: string | null;
+    /** Which server owns its record. Set by the server. */
+    home: {
+      kind: string;
+      [key: string]: unknown;
+    };
+    state: "open" | "archived";
+    createdAt: string;
+    canvases: number;
+    /** Its terminals whose shell is running. */
+    sessions: number;
+    /** How many things wait on the owner in it. */
+    waiting: number;
+  }[];
+  nextCursor: string | null;
+};
+
+export type AddProjectBody = {
+  /** What it is called. */
+  name: string;
+  /** A named color, or `#rrggbb`. */
+  color?: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
+  /** The folders its work is in. */
+  folders?: string[];
+  /** Where a new terminal starts when it names no folder. It is added to the folders when it is not among them. */
+  defaultFolder?: string | null;
+  /** The name of its first canvas. Left out: Main. */
+  canvasName?: string;
+};
+
+export type AddProjectResult = {
+  id: string;
+  workspaceId: string;
+  name: string;
+  /** A named color, or `#rrggbb`. */
+  color: string;
+  /** Its place among the projects; lower comes first. */
+  order: number;
+  labels: {
+    [key: string]: string;
+  };
+  /** The folders its work is in. May be empty. */
+  folders: string[];
+  /** One of its folders: where a new terminal starts when it names no folder. Null: where new terminals start anyway. */
+  defaultFolder: string | null;
+  /** Which server owns its record. Set by the server. */
+  home: {
+    kind: string;
+    [key: string]: unknown;
+  };
+  state: "open" | "archived";
+  createdAt: string;
+  canvases: number;
+  /** Its terminals whose shell is running. */
+  sessions: number;
+  /** How many things wait on the owner in it. */
+  waiting: number;
+};
+
+export type GetProjectResult = {
+  id: string;
+  workspaceId: string;
+  name: string;
+  /** A named color, or `#rrggbb`. */
+  color: string;
+  /** Its place among the projects; lower comes first. */
+  order: number;
+  labels: {
+    [key: string]: string;
+  };
+  /** The folders its work is in. May be empty. */
+  folders: string[];
+  /** One of its folders: where a new terminal starts when it names no folder. Null: where new terminals start anyway. */
+  defaultFolder: string | null;
+  /** Which server owns its record. Set by the server. */
+  home: {
+    kind: string;
+    [key: string]: unknown;
+  };
+  state: "open" | "archived";
+  createdAt: string;
+  canvases: number;
+  /** Its terminals whose shell is running. */
+  sessions: number;
+  /** How many things wait on the owner in it. */
+  waiting: number;
+};
+
+export type ChangeProjectBody = {
+  name?: string;
+  color?: ("none" | "red" | "orange" | "yellow" | "lime" | "green" | "teal" | "cyan" | "blue" | "indigo" | "purple" | "pink" | "brown" | "gray") | string;
+  folders?: string[];
+  defaultFolder?: string | null;
+  labels?: {
+    [key: string]: string;
+  };
+  /** Put it before this project in the order; null puts it last. */
+  before?: string | null;
+};
+
+export type ChangeProjectResult = {
+  id: string;
+  workspaceId: string;
+  name: string;
+  /** A named color, or `#rrggbb`. */
+  color: string;
+  /** Its place among the projects; lower comes first. */
+  order: number;
+  labels: {
+    [key: string]: string;
+  };
+  /** The folders its work is in. May be empty. */
+  folders: string[];
+  /** One of its folders: where a new terminal starts when it names no folder. Null: where new terminals start anyway. */
+  defaultFolder: string | null;
+  /** Which server owns its record. Set by the server. */
+  home: {
+    kind: string;
+    [key: string]: unknown;
+  };
+  state: "open" | "archived";
+  createdAt: string;
+  canvases: number;
+  /** Its terminals whose shell is running. */
+  sessions: number;
+  /** How many things wait on the owner in it. */
+  waiting: number;
+};
+
+export type MoveCanvasToProjectBody = {
+  /** The project it moves to. */
+  projectId: string;
+};
+
+export type MoveCanvasToProjectResult = {
+  id: string;
+  workspaceId: string;
+  name: string;
+  /** A named color, or `#rrggbb`. */
+  color: string;
+  /** Its place among the projects; lower comes first. */
+  order: number;
+  labels: {
+    [key: string]: string;
+  };
+  /** The folders its work is in. May be empty. */
+  folders: string[];
+  /** One of its folders: where a new terminal starts when it names no folder. Null: where new terminals start anyway. */
+  defaultFolder: string | null;
+  /** Which server owns its record. Set by the server. */
+  home: {
+    kind: string;
+    [key: string]: unknown;
+  };
+  state: "open" | "archived";
+  createdAt: string;
+  canvases: number;
+  /** Its terminals whose shell is running. */
+  sessions: number;
+  /** How many things wait on the owner in it. */
+  waiting: number;
+};
+
+export type ArchiveProjectBody = {
+  /** `park`: its terminals leave their canvases and keep running. `end`: their shells are ended for good. */
+  sessions?: "park" | "end";
+};
+
+export type ArchiveProjectResult = {
+  id: string;
+  workspaceId: string;
+  name: string;
+  /** A named color, or `#rrggbb`. */
+  color: string;
+  /** Its place among the projects; lower comes first. */
+  order: number;
+  labels: {
+    [key: string]: string;
+  };
+  /** The folders its work is in. May be empty. */
+  folders: string[];
+  /** One of its folders: where a new terminal starts when it names no folder. Null: where new terminals start anyway. */
+  defaultFolder: string | null;
+  /** Which server owns its record. Set by the server. */
+  home: {
+    kind: string;
+    [key: string]: unknown;
+  };
+  state: "open" | "archived";
+  createdAt: string;
+  canvases: number;
+  /** Its terminals whose shell is running. */
+  sessions: number;
+  /** How many things wait on the owner in it. */
+  waiting: number;
+};
+
+export type ReopenProjectResult = {
+  id: string;
+  workspaceId: string;
+  name: string;
+  /** A named color, or `#rrggbb`. */
+  color: string;
+  /** Its place among the projects; lower comes first. */
+  order: number;
+  labels: {
+    [key: string]: string;
+  };
+  /** The folders its work is in. May be empty. */
+  folders: string[];
+  /** One of its folders: where a new terminal starts when it names no folder. Null: where new terminals start anyway. */
+  defaultFolder: string | null;
+  /** Which server owns its record. Set by the server. */
+  home: {
+    kind: string;
+    [key: string]: unknown;
+  };
+  state: "open" | "archived";
+  createdAt: string;
+  canvases: number;
+  /** Its terminals whose shell is running. */
+  sessions: number;
+  /** How many things wait on the owner in it. */
+  waiting: number;
+};
+
+export type GetSharingResult = {
+  kinds: {
+    kind: string;
+    title: string;
+    /** What the kind is, in a sentence. */
+    says: string;
+    /** What a new thing of this kind is: shared with every project, or of the project it is made in. */
+    default: "shared" | "project";
+    things: {
+      id: string;
+      name: string;
+      /** Null: shared with every project. */
+      projectId: string | null;
+    }[];
+  }[];
+  /** What is neither shared nor owned because there is one of it for the whole server. */
+  perServer: string;
+};
+
+export type ChangeSharingBody = {
+  kind: string;
+  default: "shared" | "project";
+};
+
+export type ChangeSharingResult = {
+  kinds: {
+    kind: string;
+    title: string;
+    /** What the kind is, in a sentence. */
+    says: string;
+    /** What a new thing of this kind is: shared with every project, or of the project it is made in. */
+    default: "shared" | "project";
+    things: {
+      id: string;
+      name: string;
+      /** Null: shared with every project. */
+      projectId: string | null;
+    }[];
+  }[];
+  /** What is neither shared nor owned because there is one of it for the whole server. */
+  perServer: string;
+};
+
+export type MoveSharedThingBody = {
+  kind: string;
+  id: string;
+  /** The project it belongs to from now on. Null: shared with every project. */
+  projectId: string | null;
+};
+
+export type MoveSharedThingResult = {
+  kinds: {
+    kind: string;
+    title: string;
+    /** What the kind is, in a sentence. */
+    says: string;
+    /** What a new thing of this kind is: shared with every project, or of the project it is made in. */
+    default: "shared" | "project";
+    things: {
+      id: string;
+      name: string;
+      /** Null: shared with every project. */
+      projectId: string | null;
+    }[];
+  }[];
+  /** What is neither shared nor owned because there is one of it for the whole server. */
+  perServer: string;
+};
+
+export type GetSessionProjectResult = {
+  id: string;
+  workspaceId: string;
+  name: string;
+  /** A named color, or `#rrggbb`. */
+  color: string;
+  /** Its place among the projects; lower comes first. */
+  order: number;
+  labels: {
+    [key: string]: string;
+  };
+  /** The folders its work is in. May be empty. */
+  folders: string[];
+  /** One of its folders: where a new terminal starts when it names no folder. Null: where new terminals start anyway. */
+  defaultFolder: string | null;
+  /** Which server owns its record. Set by the server. */
+  home: {
+    kind: string;
+    [key: string]: unknown;
+  };
+  state: "open" | "archived";
+  createdAt: string;
+  canvases: number;
+  /** Its terminals whose shell is running. */
+  sessions: number;
+  /** How many things wait on the owner in it. */
+  waiting: number;
+};
+
 export interface ListSchedulesQuery {
+  /**
+   * Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project.
+   */
+  projectId?: string | "all";
   /**
    * How many items to return at most.
    */
@@ -6559,6 +7123,8 @@ export interface ListSchedulesQuery {
 export type ListSchedulesResult = {
   items: {
     id: string;
+    /** The project it belongs to. Set by the server from where it was made. */
+    projectId: string;
     /** What it is called. Shown in lists and beside what it hands in. */
     name: string;
     /** The time of day, on this computer's clock and in its time zone. */
@@ -6623,6 +7189,8 @@ export type ListSchedulesResult = {
 };
 
 export type AddScheduleBody = {
+  /** The project the schedule is of. Left out: the first project. */
+  projectId?: string;
   /** What it is called. Shown in lists and beside what it hands in. */
   name: string;
   /** The time of day, on this computer's clock and in its time zone. */
@@ -6657,6 +7225,8 @@ export type AddScheduleBody = {
 
 export type AddScheduleResult = {
   id: string;
+  /** The project it belongs to. Set by the server from where it was made. */
+  projectId: string;
   /** What it is called. Shown in lists and beside what it hands in. */
   name: string;
   /** The time of day, on this computer's clock and in its time zone. */
@@ -6753,6 +7323,8 @@ export type ChangeScheduleBody = {
 
 export type ChangeScheduleResult = {
   id: string;
+  /** The project it belongs to. Set by the server from where it was made. */
+  projectId: string;
   /** What it is called. Shown in lists and beside what it hands in. */
   name: string;
   /** The time of day, on this computer's clock and in its time zone. */
@@ -6817,6 +7389,8 @@ export type ChangeScheduleResult = {
 export type RunScheduleResult = {
   schedule: {
     id: string;
+    /** The project it belongs to. Set by the server from where it was made. */
+    projectId: string;
     /** What it is called. Shown in lists and beside what it hands in. */
     name: string;
     /** The time of day, on this computer's clock and in its time zone. */
@@ -6894,6 +7468,8 @@ export type ProposeSessionTaskBody = {
 
 export type ProposeSessionTaskResult = {
   id: string;
+  /** The project it belongs to. Set by the server from where it was made. */
+  projectId: string;
   /** What it is, in one line. Shown in lists and in terminals. */
   title: string;
   /** What to do, for the agent that takes it. Plain text. */
@@ -6944,12 +7520,16 @@ export type ProposeSessionTaskResult = {
 };
 
 export type AddSessionAskBody = {
+  /** The project whose list it is written on. Left out: the first project the caller reaches. */
+  projectId?: string;
   /** What is asked, in plain text. */
   text: string;
 };
 
 export type AddSessionAskResult = {
   id: string;
+  /** The project it belongs to. Set by the server from where it was made. */
+  projectId: string;
   text: string;
   addedBy: {
     kind: "agent" | "person" | "token";
@@ -6974,6 +7554,8 @@ export type GetSessionQueueResult = {
   /** What this session asked of its owner and that still waits. */
   asks: {
     id: string;
+    /** The project it belongs to. Set by the server from where it was made. */
+    projectId: string;
     text: string;
     addedBy: {
       kind: "agent" | "person" | "token";
@@ -7014,6 +7596,10 @@ export type GetEnvironmentOffersResult = {
 
 export interface ListEnvironmentsQuery {
   /**
+   * Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project.
+   */
+  projectId?: string | "all";
+  /**
    * How many items to return at most.
    */
   limit?: number;
@@ -7026,6 +7612,8 @@ export interface ListEnvironmentsQuery {
 export type ListEnvironmentsResult = {
   items: {
     id: string;
+    /** The project it was made in: its session's. Kept when the session is gone. */
+    projectId: string;
     kind: string;
     /** What the kind is called, as it was when this was made: `Its own working copy`. */
     title: string;
@@ -7078,6 +7666,8 @@ export type GetEnvironmentResult = {
   /** Null for a session that works in the folder it was started in: nothing was prepared for it. */
   environment: {
     id: string;
+    /** The project it was made in: its session's. Kept when the session is gone. */
+    projectId: string;
     kind: string;
     /** What the kind is called, as it was when this was made: `Its own working copy`. */
     title: string;
@@ -7185,6 +7775,8 @@ export type GetSessionEnvironmentResult = {
   /** Null for a session that works in the folder it was started in: nothing was prepared for it. */
   environment: {
     id: string;
+    /** The project it was made in: its session's. Kept when the session is gone. */
+    projectId: string;
     kind: string;
     /** What the kind is called, as it was when this was made: `Its own working copy`. */
     title: string;
@@ -7330,6 +7922,7 @@ export type GetSessionRunResult = {
     workflowId: string;
     workflowVersion: number;
     sessionId: string | null;
+    projectId?: string;
     inputs: {
       [key: string]: string;
     };
@@ -7421,6 +8014,10 @@ export type ProtectSessionBody = {
 export type ProtectSessionResult = {
   id: string;
   projectId: string;
+  host?: {
+    kind: string;
+    [key: string]: unknown;
+  };
   name: string;
   createdAt: string;
   state: "open" | "parked" | "exited";
@@ -7498,6 +8095,10 @@ export type SetTakesMessagesBody = {
 export type SetTakesMessagesResult = {
   id: string;
   projectId: string;
+  host?: {
+    kind: string;
+    [key: string]: unknown;
+  };
   name: string;
   createdAt: string;
   state: "open" | "parked" | "exited";
@@ -7581,6 +8182,10 @@ export type StreamEventsEvent = {
 
 export interface ListTokensQuery {
   /**
+   * Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project.
+   */
+  projectId?: string | "all";
+  /**
    * How many items to return at most.
    */
   limit?: number;
@@ -7609,6 +8214,13 @@ export type ListTokensResult = {
       kind: "tag";
       tag: string;
     } | null;
+    projects: {
+      kind: "all";
+    } | {
+      kind: "projects";
+      projectIds: string[];
+    };
+    projectId: string | null;
     sessionId: string | null;
   }[];
   nextCursor: string | null;
@@ -7625,6 +8237,13 @@ export type CreateTokenBody = {
   expiresInDays?: number;
   /** Changes to workflows need your review: with `workflows:write` the token may propose drafts, and may not create or change workflows directly. On unless you switch it off. */
   reviewWorkflowChanges?: boolean;
+  /** Which projects it reaches, for every scope, reading included: `{"kind":"all"}` (the default) or `{"kind":"projects","projectIds":[…]}`. Things shared with every project are seen either way. */
+  projects?: {
+    kind: "all";
+  } | {
+    kind: "projects";
+    projectIds: string[];
+  };
   /** Which sessions the terminal scopes and the message scopes apply to: all, those on named canvases, or those with a tag. Required when `terminal:read`, `terminal:input`, `messages:read` or `messages:write` is asked for; there is no default. */
   reach?: {
     kind: "all";
@@ -7656,6 +8275,13 @@ export type CreateTokenResult = {
       kind: "tag";
       tag: string;
     } | null;
+    projects: {
+      kind: "all";
+    } | {
+      kind: "projects";
+      projectIds: string[];
+    };
+    projectId: string | null;
     sessionId: string | null;
   };
   secret: string;
@@ -7679,10 +8305,21 @@ export type RevokeTokenResult = {
     kind: "tag";
     tag: string;
   } | null;
+  projects: {
+    kind: "all";
+  } | {
+    kind: "projects";
+    projectIds: string[];
+  };
+  projectId: string | null;
   sessionId: string | null;
 };
 
 export interface ListActivityQuery {
+  /**
+   * Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project.
+   */
+  projectId?: string | "all";
   /**
    * How many items to return at most.
    */
@@ -7725,6 +8362,10 @@ export type ListActivityResult = {
 };
 
 export interface ListSessionMessagesQuery {
+  /**
+   * Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project.
+   */
+  projectId?: string | "all";
   /**
    * How many items to return at most.
    */
@@ -7974,6 +8615,7 @@ export type ReportSessionRunResult = {
     workflowId: string;
     workflowVersion: number;
     sessionId: string | null;
+    projectId?: string;
     inputs: {
       [key: string]: string;
     };
@@ -8049,6 +8691,10 @@ export type GetSessionBriefResult = {
 };
 
 export interface ListSessionDraftsQuery {
+  /**
+   * Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project.
+   */
+  projectId?: string | "all";
   /**
    * How many items to return at most.
    */
@@ -8723,6 +9369,18 @@ export const OPERATIONS = {
   listRules: { method: 'GET', path: '/v1/rules', params: [], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   addRule: { method: 'POST', path: '/v1/rules', params: [], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   removeRule: { method: 'DELETE', path: '/v1/rules/{ruleId}', params: ["ruleId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  listProjects: { method: 'GET', path: '/v1/projects', params: [], hasBody: false, paged: true, idempotent: false, stream: false, access: { who: 'token', scope: "read" } },
+  addProject: { method: 'POST', path: '/v1/projects', params: [], hasBody: true, paged: false, idempotent: true, stream: false, access: { who: 'browser', scope: null } },
+  getProject: { method: 'GET', path: '/v1/projects/{projectId}', params: ["projectId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "read" } },
+  changeProject: { method: 'PATCH', path: '/v1/projects/{projectId}', params: ["projectId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  removeProject: { method: 'DELETE', path: '/v1/projects/{projectId}', params: ["projectId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  moveCanvasToProject: { method: 'POST', path: '/v1/canvases/{canvasId}/project', params: ["canvasId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  archiveProject: { method: 'POST', path: '/v1/projects/{projectId}/archive', params: ["projectId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  reopenProject: { method: 'POST', path: '/v1/projects/{projectId}/reopen', params: ["projectId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  getSharing: { method: 'GET', path: '/v1/sharing', params: [], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  changeSharing: { method: 'PUT', path: '/v1/sharing', params: [], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  moveSharedThing: { method: 'POST', path: '/v1/sharing/move', params: [], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  getSessionProject: { method: 'GET', path: '/v1/sessions/{sessionId}/project', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: null } },
   listSchedules: { method: 'GET', path: '/v1/schedules', params: [], hasBody: false, paged: true, idempotent: false, stream: false, access: { who: 'token', scope: "read" } },
   addSchedule: { method: 'POST', path: '/v1/schedules', params: [], hasBody: true, paged: false, idempotent: true, stream: false, access: { who: 'browser', scope: null } },
   changeSchedule: { method: 'PATCH', path: '/v1/schedules/{scheduleId}', params: ["scheduleId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
@@ -9088,7 +9746,7 @@ export interface Client {
    *
    * `GET /v1/library/sources`. Scope: `read`.
    */
-  listLibrarySources(args?: CallOptions): Promise<ListLibrarySourcesResult>;
+  listLibrarySources(args?: { query?: ListLibrarySourcesQuery } & CallOptions): Promise<ListLibrarySourcesResult>;
   /**
    * Add a source.
    *
@@ -9340,7 +9998,7 @@ export interface Client {
    *
    * `GET /v1/queue`. Scope: `read`.
    */
-  getQueue(args?: CallOptions): Promise<GetQueueResult>;
+  getQueue(args?: { query?: GetQueueQuery } & CallOptions): Promise<GetQueueResult>;
   /**
    * Change the limit, hold new starts, or switch automatic starting.
    *
@@ -9352,7 +10010,7 @@ export interface Client {
    *
    * `GET /v1/for-you`. Scope: `read`.
    */
-  getForYou(args?: CallOptions): Promise<GetForYouResult>;
+  getForYou(args?: { query?: GetForYouQuery } & CallOptions): Promise<GetForYouResult>;
   /**
    * Ask the owner for something, in writing.
    *
@@ -9376,7 +10034,7 @@ export interface Client {
    *
    * `GET /v1/rules`. Signed-in browser only: no API token may call this.
    */
-  listRules(args?: CallOptions): Promise<ListRulesResult>;
+  listRules(args?: { query?: ListRulesQuery } & CallOptions): Promise<ListRulesResult>;
   /**
    * Write a rule.
    *
@@ -9389,6 +10047,78 @@ export interface Client {
    * `DELETE /v1/rules/{ruleId}`. Signed-in browser only: no API token may call this.
    */
   removeRule(args: { ruleId: string } & CallOptions): Promise<void>;
+  /**
+   * List the projects.
+   *
+   * `GET /v1/projects`. Scope: `read`.
+   */
+  listProjects(args?: { query?: ListProjectsQuery } & CallOptions): Promise<ListProjectsResult>;
+  /**
+   * Make a project.
+   *
+   * `POST /v1/projects`. Signed-in browser only: no API token may call this.
+   */
+  addProject(args: { body: AddProjectBody } & CallOptions): Promise<AddProjectResult>;
+  /**
+   * One project.
+   *
+   * `GET /v1/projects/{projectId}`. Scope: `read`.
+   */
+  getProject(args: { projectId: string } & CallOptions): Promise<GetProjectResult>;
+  /**
+   * Change a project: its name, color, folders, or its place in the order.
+   *
+   * `PATCH /v1/projects/{projectId}`. Signed-in browser only: no API token may call this.
+   */
+  changeProject(args: { projectId: string; body: ChangeProjectBody } & CallOptions): Promise<ChangeProjectResult>;
+  /**
+   * Remove a project for good.
+   *
+   * `DELETE /v1/projects/{projectId}`. Signed-in browser only: no API token may call this.
+   */
+  removeProject(args: { projectId: string } & CallOptions): Promise<void>;
+  /**
+   * Move a canvas to another project.
+   *
+   * `POST /v1/canvases/{canvasId}/project`. Signed-in browser only: no API token may call this.
+   */
+  moveCanvasToProject(args: { canvasId: string; body: MoveCanvasToProjectBody } & CallOptions): Promise<MoveCanvasToProjectResult>;
+  /**
+   * Archive a project.
+   *
+   * `POST /v1/projects/{projectId}/archive`. Signed-in browser only: no API token may call this.
+   */
+  archiveProject(args: { projectId: string; body?: ArchiveProjectBody } & CallOptions): Promise<ArchiveProjectResult>;
+  /**
+   * Reopen an archived project.
+   *
+   * `POST /v1/projects/{projectId}/reopen`. Signed-in browser only: no API token may call this.
+   */
+  reopenProject(args: { projectId: string } & CallOptions): Promise<ReopenProjectResult>;
+  /**
+   * What is shared between projects.
+   *
+   * `GET /v1/sharing`. Signed-in browser only: no API token may call this.
+   */
+  getSharing(args?: CallOptions): Promise<GetSharingResult>;
+  /**
+   * Say what a new thing of a kind is: shared, or of the project it is made in.
+   *
+   * `PUT /v1/sharing`. Signed-in browser only: no API token may call this.
+   */
+  changeSharing(args: { body: ChangeSharingBody } & CallOptions): Promise<ChangeSharingResult>;
+  /**
+   * Make one thing belong to a project, or to all.
+   *
+   * `POST /v1/sharing/move`. Signed-in browser only: no API token may call this.
+   */
+  moveSharedThing(args: { body: MoveSharedThingBody } & CallOptions): Promise<MoveSharedThingResult>;
+  /**
+   * The project this session is in.
+   *
+   * `GET /v1/sessions/{sessionId}/project`. A session's own token.
+   */
+  getSessionProject(args: { sessionId: string } & CallOptions): Promise<GetSessionProjectResult>;
   /**
    * List the schedules.
    *
@@ -9695,6 +10425,10 @@ export interface Client {
      * Every item of `listTasks`, fetched a page at a time as they are asked for.
      */
     listTasks(args?: { query?: ListTasksQuery } & CallOptions): AsyncGenerator<ListTasksResult['items'][number], void, void>;
+    /**
+     * Every item of `listProjects`, fetched a page at a time as they are asked for.
+     */
+    listProjects(args?: { query?: ListProjectsQuery } & CallOptions): AsyncGenerator<ListProjectsResult['items'][number], void, void>;
     /**
      * Every item of `listSchedules`, fetched a page at a time as they are asked for.
      */

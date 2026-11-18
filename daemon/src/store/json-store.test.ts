@@ -22,7 +22,7 @@ function withSession(state: AppState, name: string): AppState {
     canvasId: state.canvases[0]!.id,
     session: {
       id: sessionId,
-      projectId: state.project.id,
+      projectId: state.projects[0]!.id,
       name,
       createdAt: new Date().toISOString(),
       state: 'open',
@@ -49,7 +49,7 @@ describe('JsonStore', () => {
     const state = await new JsonStore(dir).load();
     expect(state.sessions).toEqual([]);
     expect(state.canvases.map((c) => [c.name, c.layout.nodes.length])).toEqual([['Main', 0]]);
-    expect(state.project.workspaceId).toBe(state.workspace.id);
+    expect(state.projects[0]!.workspaceId).toBe(state.workspace.id);
     expect(state.workspace.organizationId).toBe(state.organization.id);
   });
 
@@ -65,7 +65,7 @@ describe('JsonStore', () => {
     const state = withSession(await store.load(), 'one');
     await store.save(state);
     const raw = JSON.parse(await readFile(store.file, 'utf8'));
-    expect(raw.version).toBe(13);
+    expect(raw.version).toBe(14);
     expect(raw.sessions[0]).not.toHaveProperty('x');
     expect(raw.sessions[0]).not.toHaveProperty('width');
     expect(raw.canvases[0].layout.nodes[0].sessionId).toBe(raw.sessions[0].id);
@@ -145,7 +145,7 @@ describe('JsonStore', () => {
 
     expect(state.canvases).toHaveLength(1);
     const [main] = state.canvases;
-    expect(main).toMatchObject({ name: 'Main', projectId: state.project.id, order: 0, color: 'none', labels: {} });
+    expect(main).toMatchObject({ name: 'Main', projectId: state.projects[0]!.id, order: 0, color: 'none', labels: {} });
     expect(main?.layout.frames.map((f) => f.label)).toEqual(['Backend']);
     // Open and ended sessions keep their nodes, exactly where they were.
     const byName = (name: string) => state.sessions.find((s) => s.name === name)!;
@@ -167,7 +167,7 @@ describe('JsonStore', () => {
     // Saving writes the current shape, which loads back the same.
     await store.save(state);
     const raw = JSON.parse(await readFile(store.file, 'utf8'));
-    expect(raw.version).toBe(13);
+    expect(raw.version).toBe(14);
     expect(raw.layout).toBeUndefined();
     expect(await new JsonStore(dir).load()).toEqual(state);
 
@@ -194,7 +194,7 @@ describe('JsonStore', () => {
 
     await store.save(state);
     const raw = JSON.parse(await readFile(store.file, 'utf8'));
-    expect(raw.version).toBe(13);
+    expect(raw.version).toBe(14);
     expect(raw.tokens).toEqual([]);
     expect(await new JsonStore(dir).load()).toEqual(state);
     // The file as it was, byte for byte, is beside the new one.
@@ -219,7 +219,7 @@ describe('JsonStore', () => {
 
     await store.save(state);
     const raw = JSON.parse(await readFile(store.file, 'utf8'));
-    expect(raw.version).toBe(13);
+    expect(raw.version).toBe(14);
     expect(raw.workflows).toEqual([]);
     expect(raw.runs).toEqual([]);
     expect(await new JsonStore(dir).load()).toEqual(state);
@@ -250,7 +250,7 @@ describe('JsonStore', () => {
 
     await store.save(state);
     const raw = JSON.parse(await readFile(store.file, 'utf8'));
-    expect(raw.version).toBe(13);
+    expect(raw.version).toBe(14);
     expect(await new JsonStore(dir).load()).toEqual(state);
     expect(await readFile(`${store.file}.v4.backup`, 'utf8')).toBe(fixture);
   });
@@ -270,7 +270,7 @@ describe('JsonStore', () => {
 
     await store.save(state);
     const raw = JSON.parse(await readFile(store.file, 'utf8'));
-    expect(raw.version).toBe(13);
+    expect(raw.version).toBe(14);
     expect(raw.repositoryAccepted).toEqual([]);
     expect(await new JsonStore(dir).load()).toEqual(state);
     expect(await readFile(`${store.file}.v5.backup`, 'utf8')).toBe(fixture);
@@ -292,7 +292,7 @@ describe('JsonStore', () => {
 
     await store.save(state);
     const raw = JSON.parse(await readFile(store.file, 'utf8'));
-    expect(raw.version).toBe(13);
+    expect(raw.version).toBe(14);
     expect(await new JsonStore(dir).load()).toEqual(state);
     expect(await readFile(`${store.file}.v6.backup`, 'utf8')).toBe(fixture);
   });
@@ -333,7 +333,7 @@ describe('JsonStore', () => {
 
     await store.save(state);
     const raw = JSON.parse(await readFile(store.file, 'utf8'));
-    expect(raw.version).toBe(13);
+    expect(raw.version).toBe(14);
     expect(await new JsonStore(dir).load()).toEqual(state);
     expect(await readFile(`${store.file}.v7.backup`, 'utf8')).toBe(fixture);
   });
@@ -349,12 +349,13 @@ describe('JsonStore', () => {
     expect(state.library).toEqual({ sources: [], installed: [], requests: [] });
     // Everything the file said is still said; elements have gained two empty fields since.
     expect(state.shelf).toMatchObject(before.shelf);
-    expect(state.workflows).toMatchObject(before.workflows);
+    // What was the one project's workflow is shared with every project now; nothing else about it changed.
+    expect(state.workflows).toMatchObject(before.workflows.map((workflow: object) => ({ ...workflow, projectId: null })));
     expect(state.sessions.length).toBe(before.sessions.length);
 
     await store.save(state);
     const raw = JSON.parse(await readFile(store.file, 'utf8'));
-    expect(raw.version).toBe(13);
+    expect(raw.version).toBe(14);
     expect(raw.library).toEqual({ sources: [], installed: [], requests: [] });
     expect(await new JsonStore(dir).load()).toEqual(state);
     expect(await readFile(`${store.file}.v8.backup`, 'utf8')).toBe(fixture);
@@ -378,7 +379,7 @@ describe('JsonStore', () => {
 
     await store.save(state);
     const raw = JSON.parse(await readFile(store.file, 'utf8'));
-    expect(raw.version).toBe(13);
+    expect(raw.version).toBe(14);
     expect(await new JsonStore(dir).load()).toEqual(state);
     expect(await readFile(`${store.file}.v9.backup`, 'utf8')).toBe(fixture);
   });
@@ -398,7 +399,7 @@ describe('JsonStore', () => {
 
     await store.save(state);
     const raw = JSON.parse(await readFile(store.file, 'utf8'));
-    expect(raw.version).toBe(13);
+    expect(raw.version).toBe(14);
     expect(raw.environments).toEqual([]);
     expect(await new JsonStore(dir).load()).toEqual(state);
     expect(await readFile(`${store.file}.v10.backup`, 'utf8')).toBe(fixture);
@@ -412,15 +413,15 @@ describe('JsonStore', () => {
     const before = JSON.parse(fixture);
 
     const state = await store.load();
-    expect(state.queue).toEqual({ tasks: [], asks: [], rules: [], limit: 3, hold: false, automatic: false, ruleRuns: [] });
+    expect(state.queue).toEqual({ tasks: [], asks: [], rules: [], settings: {}, ruleRuns: [] });
     expect(state.environments).toMatchObject(before.environments);
     expect(state.runs).toMatchObject(before.runs);
     expect(state.sessions.length).toBe(before.sessions.length);
 
     await store.save(state);
     const raw = JSON.parse(await readFile(store.file, 'utf8'));
-    expect(raw.version).toBe(13);
-    expect(raw.queue.automatic).toBe(false);
+    expect(raw.version).toBe(14);
+    expect(raw.queue.settings).toEqual({});
     expect(await new JsonStore(dir).load()).toEqual(state);
     expect(await readFile(`${store.file}.v11.backup`, 'utf8')).toBe(fixture);
   });
@@ -438,23 +439,78 @@ describe('JsonStore', () => {
       ['Write the release notes', 'queued', null, false],
       ['Add a test for the retry', 'proposed', null, false],
     ]);
-    expect(state.queue).toMatchObject({ limit: 2, hold: true, automatic: false, asks: before.queue.asks, rules: before.queue.rules });
+    expect(state.queue).toMatchObject({ settings: { [before.project.id]: { limit: 2, hold: true, automatic: false } }, asks: before.queue.asks, rules: before.queue.rules });
     expect(state.environments).toMatchObject(before.environments);
     expect(state.sessions.length).toBe(before.sessions.length);
 
     await store.save(state);
     const raw = JSON.parse(await readFile(store.file, 'utf8'));
-    expect(raw.version).toBe(13);
+    expect(raw.version).toBe(14);
     expect(raw.schedules).toEqual({ items: [], checkedAt: null });
     expect(await new JsonStore(dir).load()).toEqual(state);
     expect(await readFile(`${store.file}.v12.backup`, 'utf8')).toBe(fixture);
+  });
+
+  it('loads a file from before projects: everything goes into the one project it has, which keeps its ID and its name; nothing is lost, renamed or duplicated', async () => {
+    const store = new JsonStore(dir);
+    const fixture = await readFile(new URL('./fixtures/state-schedules-v13.json', import.meta.url), 'utf8');
+    await mkdir(dir, { recursive: true });
+    await writeFile(store.file, fixture);
+    const before = JSON.parse(fixture);
+    const one = before.project.id as string;
+
+    const state = await store.load();
+    // One project: the one there was, by its ID and by the name its owner gave it; open, kept by this server, with no folders yet.
+    expect(state.projects).toEqual([{ ...before.project, color: 'none', order: 0, labels: {}, folders: [], defaultFolder: null, home: { kind: 'local' }, state: 'open' }]);
+    expect(state.sharing).toEqual({});
+    // Every kind of thing is there as often as it was, under the names it had.
+    const ids = (things: { id: string }[]): string[] => things.map((thing) => thing.id).sort();
+    const names = (things: { name?: string; title?: string }[]): (string | undefined)[] => things.map((thing) => thing.name ?? thing.title);
+    for (const [now, was] of [
+      [state.sessions, before.sessions],
+      [state.canvases, before.canvases],
+      [state.tokens, before.tokens],
+      [state.workflows, before.workflows],
+      [state.runs, before.runs],
+      [state.drafts, before.drafts],
+      [state.shelf, before.shelf],
+      [state.library.sources, before.library.sources],
+      [state.library.installed, before.library.installed],
+      [state.environments, before.environments],
+      [state.queue.tasks, before.queue.tasks],
+      [state.queue.asks, before.queue.asks],
+      [state.queue.rules, before.queue.rules],
+      [state.schedules.items, before.schedules.items],
+    ] as const) {
+      expect(ids(now as { id: string }[])).toEqual(ids(was));
+      expect(new Set(ids(now as { id: string }[])).size).toBe(was.length);
+      expect(names(now as { name?: string }[])).toEqual(names(was));
+    }
+    expect(state.repositoryAccepted).toHaveLength(before.repositoryAccepted.length);
+    // What belongs to a project says so: the one project.
+    for (const thing of [...state.sessions, ...state.canvases, ...state.runs, ...state.environments, ...state.queue.tasks, ...state.queue.asks, ...state.queue.rules, ...state.schedules.items]) expect(thing.projectId).toBe(one);
+    // How tasks are started is that project's.
+    expect(state.queue.settings).toEqual({ [one]: { limit: before.queue.limit, hold: before.queue.hold, automatic: before.queue.automatic } });
+    // What can be shared is shared with every project, and tokens reach every project.
+    for (const thing of [...state.workflows, ...state.shelf, ...state.library.sources, ...state.library.installed, ...state.tokens]) expect(thing.projectId).toBeNull();
+    for (const token of state.tokens) expect(token.projects).toEqual({ kind: 'all' });
+    // The layout, a canvas's place among the tabs and what a terminal is called are as they were.
+    expect(state.canvases.map((canvas) => [canvas.id, canvas.name, canvas.order, canvas.layout.nodes.length])).toEqual(before.canvases.map((canvas: { id: string; name: string; order: number; layout: { nodes: unknown[] } }) => [canvas.id, canvas.name, canvas.order, canvas.layout.nodes.length]));
+
+    await store.save(state);
+    const raw = JSON.parse(await readFile(store.file, 'utf8'));
+    expect(raw.version).toBe(14);
+    expect(raw.project).toBeUndefined();
+    expect(raw.projects).toHaveLength(1);
+    expect(await new JsonStore(dir).load()).toEqual(state);
+    expect(await readFile(`${store.file}.v13.backup`, 'utf8')).toBe(fixture);
   });
 
   it('keeps a working copy whose session is no longer in the file, and says its session is gone', async () => {
     const store = new JsonStore(dir);
     const state = withSession(await store.load(), 'one');
     const sessionId = state.sessions[0]!.id;
-    const copy = (id: string, of: string | null) => ({ id, kind: 'working-copy', title: 'In its own working copy', words: 'Kept apart.', sessionId: of, sessionName: 'one', projectFolder: '/home/someone/project', folder: '/home/someone/data/copies/one-0a1b2c', startFolder: '/home/someone/data/copies/one-0a1b2c', branch: 'aubergine/one-0a1b2c', startCommit: 'a'.repeat(40), createdAt: '2026-05-01T10:00:00.000Z', changes: null, broken: null });
+    const copy = (id: string, of: string | null) => ({ id, projectId: state.projects[0]!.id, kind: 'working-copy', title: 'In its own working copy', words: 'Kept apart.', sessionId: of, sessionName: 'one', projectFolder: '/home/someone/project', folder: '/home/someone/data/copies/one-0a1b2c', startFolder: '/home/someone/data/copies/one-0a1b2c', branch: 'aubergine/one-0a1b2c', startCommit: 'a'.repeat(40), createdAt: '2026-05-01T10:00:00.000Z', changes: null, broken: null });
     await store.save({ ...state, environments: [copy(newId(), sessionId), copy(newId(), newId())] });
     const loaded = await new JsonStore(dir).load();
     expect(loaded.environments.map((e) => e.sessionId)).toEqual([sessionId, null]);

@@ -1,3 +1,4 @@
+import { PROJECT_HEADER } from '@aubergine/shared';
 import { z, type ZodType } from 'zod';
 import { createClient } from '@aubergine/client';
 import {
@@ -52,7 +53,9 @@ export class ApiError extends Error {
 }
 
 /** The public API (/v1), as the page calls it: with its own cookie. */
-const v1 = createClient({ useCookie: true });
+/** Sent with every call: which project the page is looking at, so that what it lists and what it makes are that project's unless a call says otherwise. */
+const pageHeaders: Record<string, string> = {};
+const v1 = createClient({ useCookie: true, headers: pageHeaders });
 
 async function call<T>(schema: ZodType<T> | null, method: string, path: string, body?: unknown): Promise<T> {
   let response: Response;
@@ -79,6 +82,22 @@ async function call<T>(schema: ZodType<T> | null, method: string, path: string, 
 
 const AskedRecap = z.object({ asked: z.boolean(), line: z.string() });
 const OpenedConversation = z.object({ session: Session });
+
+/** Which project the page is looking at, as the store says; asked at each call. */
+let lookingAt: () => string | null = () => null;
+export function askAbout(project: () => string | null): void {
+  lookingAt = project;
+}
+/** Called when the project being looked at changes. */
+export function lookAt(projectId: string | null): void {
+  if (projectId) pageHeaders[PROJECT_HEADER] = projectId;
+  else delete pageHeaders[PROJECT_HEADER];
+}
+/** The project to name in a request: the one being looked at. */
+const here = (): { projectId?: string } => {
+  const projectId = lookingAt();
+  return projectId ? { projectId } : {};
+};
 
 export const api = {
   getState: () => call(StateResponse, 'GET', paths.state),
@@ -122,7 +141,16 @@ export const api = {
   outsideAdd: (request: OutsideAddRequest) => call(OutsideResult, 'POST', paths.outsideAdd, request),
   outsideMove: (request: OutsideMoveRequest) => call(OutsideResult, 'POST', paths.outsideMove, request),
   // What follows goes through the public API, with the client generated from its description.
-  createCanvas: (request: CreateCanvasRequest) => v1.createCanvas({ body: request }),
+  createCanvas: (request: CreateCanvasRequest) => v1.createCanvas({ body: { ...here(), ...request } }),
+  addProject: (body: Parameters<typeof v1.addProject>[0]['body']) => v1.addProject({ body }),
+  changeProject: (projectId: string, body: Parameters<typeof v1.changeProject>[0]['body']) => v1.changeProject({ projectId, body }),
+  archiveProject: (projectId: string, sessions?: 'park' | 'end') => v1.archiveProject({ projectId, body: sessions ? { sessions } : {} }),
+  reopenProject: (projectId: string) => v1.reopenProject({ projectId }),
+  removeProject: (projectId: string) => v1.removeProject({ projectId }),
+  moveCanvasToProject: (canvasId: string, projectId: string) => v1.moveCanvasToProject({ canvasId, body: { projectId } }),
+  getSharing: () => v1.getSharing(),
+  changeSharing: (kind: string, value: 'shared' | 'project') => v1.changeSharing({ body: { kind, default: value } }),
+  moveSharedThing: (kind: string, id: string, projectId: string | null) => v1.moveSharedThing({ body: { kind, id, projectId } }),
   updateCanvas: (canvasId: string, request: UpdateCanvasRequest) => v1.updateCanvas({ canvasId, body: request }),
   /** Closes a canvas. Its sessions are moved to `to`, or parked when `to` is null. */
   closeCanvas: (canvasId: string, to: string | null) => v1.closeCanvas({ canvasId, query: to ? { sessions: 'move', to } : { sessions: 'park' } }),
@@ -149,10 +177,11 @@ export const api = {
   startRuns: (workflowId: string, body: { sessionIds: string[]; inputs: Record<string, string>; inputsBySession?: Record<string, Record<string, string>>; replace?: boolean }) =>
     v1.startRuns({ workflowId, body: { replace: false, kickoff: true, ...body } }),
   /** Runs that ended lately, for the board: newest first, a bounded number. */
-  listEndedRunsPage: (limit: number) => v1.listRuns({ query: { status: 'ended', limit } }),
+  // Of every project: what is shown of them is chosen by whoever shows it.
+  listEndedRunsPage: (limit: number) => v1.listRuns({ query: { projectId: 'all', status: 'ended', limit } }),
   getRun: (runId: string) => v1.getRun({ runId }),
   /** The runs that ended most recently, from the archive. */
-  listEndedRuns: (limit: number) => v1.listRuns({ query: { status: 'ended', limit } }),
+  listEndedRuns: (limit: number) => v1.listRuns({ query: { projectId: 'all', status: 'ended', limit } }),
   tickRunItem: (runId: string, body: { elementId: string; item: number; ticked: boolean }) => v1.tickRunItem({ runId, body }),
   getDraft: (draftId: string) => v1.getDraft({ draftId }),
   acceptDraft: (draftId: string, body: Parameters<typeof v1.acceptDraft>[0]['body'] = {}) => v1.acceptDraft({ draftId, body }),
@@ -178,22 +207,22 @@ export const api = {
   environmentDifference: (environmentId: string, file: string) => v1.getEnvironmentDifference({ environmentId, query: { file } }),
   environmentEndings: (environmentId: string) => v1.getEnvironmentEndings({ environmentId }),
   endEnvironment: (environmentId: string, choice: string, confirm: boolean) => v1.endEnvironment({ environmentId, body: { choice, confirm } }),
-  listEnvironments: () => v1.listEnvironments({ query: { limit: 200 } }),
-  addTask: (body: Parameters<typeof v1.addTask>[0]['body']) => v1.addTask({ body }),
+  listEnvironments: () => v1.listEnvironments({ query: { ...here(), limit: 200 } }),
+  addTask: (body: Parameters<typeof v1.addTask>[0]['body']) => v1.addTask({ body: { ...here(), ...body } }),
   taskDo: (taskId: string, what: 'accept' | 'decline' | 'withdraw' | 'again' | 'clear') =>
     what === 'accept' ? v1.acceptTask({ taskId }) : what === 'decline' ? v1.declineTask({ taskId }) : what === 'withdraw' ? v1.withdrawTask({ taskId }) : what === 'again' ? v1.retryTask({ taskId }) : v1.clearTask({ taskId }),
   reorderTasks: (taskIds: string[]) => v1.reorderTasks({ body: { taskIds } }),
-  startTasks: (taskId?: string) => v1.startTasks({ body: taskId ? { taskId } : {} }),
-  changeQueue: (body: { limit?: number; hold?: boolean; automatic?: boolean }) => v1.changeQueue({ body }),
+  startTasks: (taskId?: string) => v1.startTasks({ body: taskId ? { taskId } : here() }),
+  changeQueue: (body: { limit?: number; hold?: boolean; automatic?: boolean }) => v1.changeQueue({ body: { ...here(), ...body } }),
   /** Tasks that were put away, newest first: for "finished today". */
-  endedTasks: () => v1.listTasks({ query: { state: 'ended', limit: 100 } }),
-  addAsk: (text: string) => v1.addAsk({ body: { text } }),
+  endedTasks: () => v1.listTasks({ query: { ...here(), state: 'ended', limit: 100 } }),
+  addAsk: (text: string) => v1.addAsk({ body: { ...here(), text } }),
   askDo: (askId: string, what: 'done' | 'dismiss') => (what === 'done' ? v1.finishAsk({ askId }) : v1.dismissAsk({ askId })),
-  listRules: () => v1.listRules(),
-  addRule: (body: Parameters<typeof v1.addRule>[0]['body']) => v1.addRule({ body }),
+  listRules: () => v1.listRules({ query: here() }),
+  addRule: (body: Parameters<typeof v1.addRule>[0]['body']) => v1.addRule({ body: { ...here(), ...body } }),
   removeRule: (ruleId: string) => v1.removeRule({ ruleId }),
-  listSchedules: async () => (await v1.listSchedules({ query: { limit: 200 } })).items,
-  addSchedule: (body: Parameters<typeof v1.addSchedule>[0]['body']) => v1.addSchedule({ body }),
+  listSchedules: async () => (await v1.listSchedules({ query: { ...here(), limit: 200 } })).items,
+  addSchedule: (body: Parameters<typeof v1.addSchedule>[0]['body']) => v1.addSchedule({ body: { ...here(), ...body } }),
   changeSchedule: (scheduleId: string, body: Parameters<typeof v1.changeSchedule>[0]['body']) => v1.changeSchedule({ scheduleId, body }),
   removeSchedule: (scheduleId: string) => v1.removeSchedule({ scheduleId }),
   runSchedule: (scheduleId: string) => v1.runSchedule({ scheduleId }),

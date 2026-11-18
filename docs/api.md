@@ -119,6 +119,18 @@ How to create a token, what the scopes mean, the limits and the activity log are
 | [`GET /v1/rules`](#listrules) | List the rules | browser only |
 | [`POST /v1/rules`](#addrule) | Write a rule | browser only |
 | [`DELETE /v1/rules/{ruleId}`](#removerule) | Remove a rule | browser only |
+| [`GET /v1/projects`](#listprojects) | List the projects | `read` |
+| [`POST /v1/projects`](#addproject) | Make a project | browser only |
+| [`GET /v1/projects/{projectId}`](#getproject) | One project | `read` |
+| [`PATCH /v1/projects/{projectId}`](#changeproject) | Change a project: its name, color, folders, or its place in the order | browser only |
+| [`DELETE /v1/projects/{projectId}`](#removeproject) | Remove a project for good | browser only |
+| [`POST /v1/canvases/{canvasId}/project`](#movecanvastoproject) | Move a canvas to another project | browser only |
+| [`POST /v1/projects/{projectId}/archive`](#archiveproject) | Archive a project | browser only |
+| [`POST /v1/projects/{projectId}/reopen`](#reopenproject) | Reopen an archived project | browser only |
+| [`GET /v1/sharing`](#getsharing) | What is shared between projects | browser only |
+| [`PUT /v1/sharing`](#changesharing) | Say what a new thing of a kind is: shared, or of the project it is made in | browser only |
+| [`POST /v1/sharing/move`](#movesharedthing) | Make one thing belong to a project, or to all | browser only |
+| [`GET /v1/sessions/{sessionId}/project`](#getsessionproject) | The project this session is in | session's own token |
 | [`GET /v1/schedules`](#listschedules) | List the schedules | `read` |
 | [`POST /v1/schedules`](#addschedule) | Make a schedule | browser only |
 | [`PATCH /v1/schedules/{scheduleId}`](#changeschedule) | Change a schedule, or switch it on or off | browser only |
@@ -271,6 +283,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
 
 | Parameter | In | Type | Required | |
 |---|---|---|---|---|
+| `projectId` | query | `string \| "all"` | no | Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project. |
 | `limit` | query | `number` | no | How many items to return at most. |
 | `cursor` | query | `string` | no | The `nextCursor` of the page before. Opaque: do not build or change it. |
 
@@ -320,6 +333,7 @@ An API token needs the scope `canvases:write`.
 
 | Field | Type | Required | |
 |---|---|---|---|
+| `projectId` | `string` | no | The project it is made in. Left out: the first project the caller reaches. |
 | `name` | `string` | yes | The name on its tab. |
 | `color` | `("none" \| "red" \| "orange" \| "yellow" \| "lime" \| "green" \| "teal" \|…` | no | The color of its tab. |
 | `labels` | `{ [key: string]: string; }` | no | Pairs of key and value for tools of your own to give meaning to. |
@@ -561,6 +575,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
 | Parameter | In | Type | Required | |
 |---|---|---|---|---|
 | `canvasId` | path | `string` | yes | An ID. |
+| `projectId` | query | `string \| "all"` | no | Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project. |
 | `limit` | query | `number` | no | How many items to return at most. |
 | `cursor` | query | `string` | no | The `nextCursor` of the page before. Opaque: do not build or change it. |
 
@@ -571,6 +586,10 @@ A list: it answers a page at a time, see `limit` and `cursor`.
   items: {
     id: string;
     projectId: string;
+    host?: {
+      kind: string;
+      [key: string]: unknown;
+    };
     name: string;
     createdAt: string;
     state: "open" | "parked" | "exited";
@@ -681,6 +700,10 @@ An API token needs the scope `sessions:write`. Sending `command` needs `terminal
   session: {
     id: string;
     projectId: string;
+    host?: {
+      kind: string;
+      [key: string]: unknown;
+    };
     name: string;
     createdAt: string;
     state: "open" | "parked" | "exited";
@@ -782,6 +805,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
 
 | Parameter | In | Type | Required | |
 |---|---|---|---|---|
+| `projectId` | query | `string \| "all"` | no | Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project. |
 | `limit` | query | `number` | no | How many items to return at most. |
 | `cursor` | query | `string` | no | The `nextCursor` of the page before. Opaque: do not build or change it. |
 | `state` | query | `"open" \| "parked" \| "exited"` | no | Only sessions in this state. |
@@ -793,6 +817,10 @@ A list: it answers a page at a time, see `limit` and `cursor`.
   items: {
     id: string;
     projectId: string;
+    host?: {
+      kind: string;
+      [key: string]: unknown;
+    };
     name: string;
     createdAt: string;
     state: "open" | "parked" | "exited";
@@ -888,6 +916,10 @@ An API token needs the scope `read`.
 {
   id: string;
   projectId: string;
+  host?: {
+    kind: string;
+    [key: string]: unknown;
+  };
   name: string;
   createdAt: string;
   state: "open" | "parked" | "exited";
@@ -991,6 +1023,10 @@ An API token needs the scope `sessions:write`. Sending `note` needs `notes:write
 {
   id: string;
   projectId: string;
+  host?: {
+    kind: string;
+    [key: string]: unknown;
+  };
   name: string;
   createdAt: string;
   state: "open" | "parked" | "exited";
@@ -1116,6 +1152,10 @@ An API token needs the scope `sessions:write`.
   session: {
     id: string;
     projectId: string;
+    host?: {
+      kind: string;
+      [key: string]: unknown;
+    };
     name: string;
     createdAt: string;
     state: "open" | "parked" | "exited";
@@ -1223,6 +1263,10 @@ An API token needs the scope `sessions:write`.
 {
   id: string;
   projectId: string;
+  host?: {
+    kind: string;
+    [key: string]: unknown;
+  };
   name: string;
   createdAt: string;
   state: "open" | "parked" | "exited";
@@ -1325,6 +1369,10 @@ An API token needs the scope `sessions:write`.
   session: {
     id: string;
     projectId: string;
+    host?: {
+      kind: string;
+      [key: string]: unknown;
+    };
     name: string;
     createdAt: string;
     state: "open" | "parked" | "exited";
@@ -1710,6 +1758,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
 
 | Parameter | In | Type | Required | |
 |---|---|---|---|---|
+| `projectId` | query | `string \| "all"` | no | Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project. |
 | `limit` | query | `number` | no | How many items to return at most. |
 | `cursor` | query | `string` | no | The `nextCursor` of the page before. Opaque: do not build or change it. |
 
@@ -1719,6 +1768,8 @@ A list: it answers a page at a time, see `limit` and `cursor`.
 {
   items: {
     id: string;
+    /** The project it belongs to. Null: shared with every project. */
+    projectId: string | null;
     name: string;
     description: string;
     labels: {
@@ -1775,6 +1826,8 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
 ```ts
 {
   id: string;
+  /** The project it belongs to. Null: shared with every project. */
+  projectId: string | null;
   name: string;
   description: string;
   labels: {
@@ -1873,6 +1926,8 @@ An API token needs the scope `read`.
 ```ts
 {
   id: string;
+  /** The project it belongs to. Null: shared with every project. */
+  projectId: string | null;
   name: string;
   description: string;
   labels: {
@@ -1981,6 +2036,8 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
 ```ts
 {
   id: string;
+  /** The project it belongs to. Null: shared with every project. */
+  projectId: string | null;
   name: string;
   description: string;
   labels: {
@@ -2107,6 +2164,8 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
 ```ts
 {
   id: string;
+  /** The project it belongs to. Null: shared with every project. */
+  projectId: string | null;
   name: string;
   description: string;
   labels: {
@@ -2201,6 +2260,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
 | Parameter | In | Type | Required | |
 |---|---|---|---|---|
 | `workflowId` | path | `string` | yes | An ID. |
+| `projectId` | query | `string \| "all"` | no | Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project. |
 | `limit` | query | `number` | no | How many items to return at most. |
 | `cursor` | query | `string` | no | The `nextCursor` of the page before. Opaque: do not build or change it. |
 
@@ -2285,6 +2345,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
 
 | Parameter | In | Type | Required | |
 |---|---|---|---|---|
+| `projectId` | query | `string \| "all"` | no | Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project. |
 | `limit` | query | `number` | no | How many items to return at most. |
 | `cursor` | query | `string` | no | The `nextCursor` of the page before. Opaque: do not build or change it. |
 
@@ -2386,6 +2447,8 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
 ```ts
 {
   id: string;
+  /** The project it belongs to. Null: shared with every project. */
+  projectId: string | null;
   name: string;
   description: string;
   labels: {
@@ -2481,6 +2544,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
 
 | Parameter | In | Type | Required | |
 |---|---|---|---|---|
+| `projectId` | query | `string \| "all"` | no | Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project. |
 | `limit` | query | `number` | no | How many items to return at most. |
 | `cursor` | query | `string` | no | The `nextCursor` of the page before. Opaque: do not build or change it. |
 | `status` | query | `"queued" \| "running" \| "paused" \| "blocked" \| "awaiting" \| "finishe…` | no | `live` (the default): runs still going. `ended`: finished and stopped runs, newest first, from the archive. Or one status. |
@@ -2497,6 +2561,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
       workflowId: string;
       workflowVersion: number;
       sessionId: string | null;
+      projectId?: string;
       inputs: {
         [key: string]: string;
       };
@@ -2602,6 +2667,7 @@ An API token needs the scope `runs:write`.
     workflowId: string;
     workflowVersion: number;
     sessionId: string | null;
+    projectId?: string;
     inputs: {
       [key: string]: string;
     };
@@ -2700,6 +2766,7 @@ An API token needs the scope `read`.
     workflowId: string;
     workflowVersion: number;
     sessionId: string | null;
+    projectId?: string;
     inputs: {
       [key: string]: string;
     };
@@ -2799,6 +2866,7 @@ An API token needs the scope `runs:write`.
     workflowId: string;
     workflowVersion: number;
     sessionId: string | null;
+    projectId?: string;
     inputs: {
       [key: string]: string;
     };
@@ -2904,6 +2972,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
     workflowId: string;
     workflowVersion: number;
     sessionId: string | null;
+    projectId?: string;
     inputs: {
       [key: string]: string;
     };
@@ -3003,6 +3072,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
     workflowId: string;
     workflowVersion: number;
     sessionId: string | null;
+    projectId?: string;
     inputs: {
       [key: string]: string;
     };
@@ -3110,6 +3180,7 @@ An API token needs the scope `runs:write`.
         workflowId: string;
         workflowVersion: number;
         sessionId: string | null;
+        projectId?: string;
         inputs: {
           [key: string]: string;
         };
@@ -3205,6 +3276,7 @@ An API token needs the scope `read`.
 | `workflowId` | query | `string` | no | Only runs of this workflow. |
 | `status` | query | `"queued" \| "running" \| "paused" \| "blocked" \| "awaiting" \| "finishe…` | no | Only runs with this status. |
 | `tag` | query | `string` | no | Only runs whose terminal has this tag. |
+| `projectId` | query | `string \| "all"` | no | Only runs of this project; `all`: of every project. Left out: the first project the caller reaches. |
 
 **Answer** `200`:
 
@@ -3233,6 +3305,8 @@ An API token needs the scope `read`.
     /** Runs that wait for a terminal. */
     queued: {
       runId: string;
+      /** The project it runs in. Null where that is not known. */
+      projectId: string | null;
       workflowId: string;
       /** The terminal doing the run. Null for a run that is queued. */
       sessionId: string | null;
@@ -3264,6 +3338,8 @@ An API token needs the scope `read`.
       waitsForPerson: boolean;
       cards: {
         runId: string;
+        /** The project it runs in. Null where that is not known. */
+        projectId: string | null;
         workflowId: string;
         /** The terminal doing the run. Null for a run that is queued. */
         sessionId: string | null;
@@ -3292,6 +3368,8 @@ An API token needs the scope `read`.
   /** Runs that finished or were stopped in the last day, newest first, at most a set number. */
   ended: {
     runId: string;
+    /** The project it runs in. Null where that is not known. */
+    projectId: string | null;
     workflowId: string;
     /** The terminal doing the run. Null for a run that is queued. */
     sessionId: string | null;
@@ -3357,6 +3435,7 @@ An API token needs the scope `runs:write`.
     workflowId: string;
     workflowVersion: number;
     sessionId: string | null;
+    projectId?: string;
     inputs: {
       [key: string]: string;
     };
@@ -3448,6 +3527,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
 
 | Parameter | In | Type | Required | |
 |---|---|---|---|---|
+| `projectId` | query | `string \| "all"` | no | Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project. |
 | `limit` | query | `number` | no | How many items to return at most. |
 | `cursor` | query | `string` | no | The `nextCursor` of the page before. Opaque: do not build or change it. |
 
@@ -4728,6 +4808,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
 
 | Parameter | In | Type | Required | |
 |---|---|---|---|---|
+| `projectId` | query | `string \| "all"` | no | Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project. |
 | `limit` | query | `number` | no | How many items to return at most. |
 | `cursor` | query | `string` | no | The `nextCursor` of the page before. Opaque: do not build or change it. |
 
@@ -5012,12 +5093,17 @@ Each with when it was last read, the commit that was read for a Git source, why 
 
 An API token needs the scope `read`.
 
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `projectId` | query | `string \| "all"` | no | Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project. |
+
 **Answer** `200`:
 
 ```ts
 {
   sources: {
     id: string;
+    projectId: string | null;
     kind: string;
     address: string;
     name: string;
@@ -5076,6 +5162,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 ```ts
 {
   id: string;
+  projectId: string | null;
   kind: string;
   address: string;
   name: string;
@@ -5140,6 +5227,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 ```ts
 {
   id: string;
+  projectId: string | null;
   kind: string;
   address: string;
   name: string;
@@ -5488,6 +5576,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 ```ts
 {
   id: string;
+  projectId: string | null;
   kind: string;
   name: string;
   from: {
@@ -5526,6 +5615,7 @@ An API token needs the scope `read`.
 {
   installed: {
     id: string;
+    projectId: string | null;
     kind: string;
     name: string;
     from: {
@@ -5610,6 +5700,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
 
 | Parameter | In | Type | Required | |
 |---|---|---|---|---|
+| `projectId` | query | `string \| "all"` | no | Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project. |
 | `limit` | query | `number` | no | How many items to return at most. |
 | `cursor` | query | `string` | no | The `nextCursor` of the page before. Opaque: do not build or change it. |
 
@@ -5619,6 +5710,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
 {
   items: {
     id: string;
+    projectId: string | null;
     element: {
       /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
       id: string;
@@ -5761,6 +5853,7 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
 ```ts
 {
   id: string;
+  projectId: string | null;
   element: {
     /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
     id: string;
@@ -5901,6 +5994,7 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
 ```ts
 {
   id: string;
+  projectId: string | null;
   element: {
     /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
     id: string;
@@ -6045,6 +6139,7 @@ An API token needs the scope `workflows:write`. A token whose changes to workflo
 ```ts
 {
   id: string;
+  projectId: string | null;
   element: {
     /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
     id: string;
@@ -6166,6 +6261,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
 | Parameter | In | Type | Required | |
 |---|---|---|---|---|
 | `elementId` | path | `string` | yes | An ID. |
+| `projectId` | query | `string \| "all"` | no | Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project. |
 | `limit` | query | `number` | no | How many items to return at most. |
 | `cursor` | query | `string` | no | The `nextCursor` of the page before. Opaque: do not build or change it. |
 
@@ -6297,6 +6393,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 ```ts
 {
   id: string;
+  projectId: string | null;
   element: {
     /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
     id: string;
@@ -6417,6 +6514,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 ```ts
 {
   id: string;
+  projectId: string | null;
   element: {
     /** Its ID inside its workflow. It stays the same when the element is edited, so that a run can tell which element it is on. You do not write it: it is made for you. */
     id: string;
@@ -6544,6 +6642,8 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 ```ts
 {
   id: string;
+  /** The project it belongs to. Null: shared with every project. */
+  projectId: string | null;
   name: string;
   description: string;
   labels: {
@@ -6650,6 +6750,7 @@ An API token needs the scope `runs:write`.
     workflowId: string;
     workflowVersion: number;
     sessionId: string | null;
+    projectId?: string;
     inputs: {
       [key: string]: string;
     };
@@ -6758,6 +6859,7 @@ An API token needs the scope `runs:write`.
     workflowId: string;
     workflowVersion: number;
     sessionId: string | null;
+    projectId?: string;
     inputs: {
       [key: string]: string;
     };
@@ -6849,6 +6951,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
 
 | Parameter | In | Type | Required | |
 |---|---|---|---|---|
+| `projectId` | query | `string \| "all"` | no | Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project. |
 | `limit` | query | `number` | no | How many items to return at most. |
 | `cursor` | query | `string` | no | The `nextCursor` of the page before. Opaque: do not build or change it. |
 
@@ -7069,6 +7172,7 @@ An API token needs the scope `runs:write`.
     workflowId: string;
     workflowVersion: number;
     sessionId: string | null;
+    projectId?: string;
     inputs: {
       [key: string]: string;
     };
@@ -7160,6 +7264,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
 
 | Parameter | In | Type | Required | |
 |---|---|---|---|---|
+| `projectId` | query | `string \| "all"` | no | Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project. |
 | `limit` | query | `number` | no | How many items to return at most. |
 | `cursor` | query | `string` | no | The `nextCursor` of the page before. Opaque: do not build or change it. |
 | `state` | query | `"proposed" \| "queued" \| "taken" \| "working" \| "needs-owner" \| "done…` | no | `live` (the default): every task that is not over, and those that are over and not yet looked at. `ended`: tasks that are over and were put away, newest first, from the archive. Or one state. |
@@ -7170,6 +7275,8 @@ A list: it answers a page at a time, see `limit` and `cursor`.
 {
   items: {
     id: string;
+    /** The project it belongs to. Set by the server from where it was made. */
+    projectId: string;
     /** What it is, in one line. Shown in lists and in terminals. */
     title: string;
     /** What to do, for the agent that takes it. Plain text. */
@@ -7245,6 +7352,7 @@ An API token needs the scope `tasks:write`.
 
 | Field | Type | Required | |
 |---|---|---|---|
+| `projectId` | `string` | no | The project it is added to. Left out: the first project the caller reaches. The workflow, the terminal or the canvas it names must be of that project. |
 | `title` | `string` | yes | What it is, in one line. |
 | `details` | `string` | no | What to do, for the agent that takes it. Plain text. |
 | `folder` | `string \| null` | no | The folder it is done in. Null: the folder new terminals start in. |
@@ -7259,6 +7367,8 @@ An API token needs the scope `tasks:write`.
 ```ts
 {
   id: string;
+  /** The project it belongs to. Set by the server from where it was made. */
+  projectId: string;
   /** What it is, in one line. Shown in lists and in terminals. */
   title: string;
   /** What to do, for the agent that takes it. Plain text. */
@@ -7334,6 +7444,8 @@ An API token needs the scope `read`.
 ```ts
 {
   id: string;
+  /** The project it belongs to. Set by the server from where it was made. */
+  projectId: string;
   /** What it is, in one line. Shown in lists and in terminals. */
   title: string;
   /** What to do, for the agent that takes it. Plain text. */
@@ -7420,6 +7532,8 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 ```ts
 {
   id: string;
+  /** The project it belongs to. Set by the server from where it was made. */
+  projectId: string;
   /** What it is, in one line. Shown in lists and in terminals. */
   title: string;
   /** What to do, for the agent that takes it. Plain text. */
@@ -7489,6 +7603,8 @@ An API token needs the scope `tasks:write`.
 ```ts
 {
   id: string;
+  /** The project it belongs to. Set by the server from where it was made. */
+  projectId: string;
   /** What it is, in one line. Shown in lists and in terminals. */
   title: string;
   /** What to do, for the agent that takes it. Plain text. */
@@ -7563,6 +7679,8 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 ```ts
 {
   id: string;
+  /** The project it belongs to. Set by the server from where it was made. */
+  projectId: string;
   /** What it is, in one line. Shown in lists and in terminals. */
   title: string;
   /** What to do, for the agent that takes it. Plain text. */
@@ -7632,6 +7750,8 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 ```ts
 {
   id: string;
+  /** The project it belongs to. Set by the server from where it was made. */
+  projectId: string;
   /** What it is, in one line. Shown in lists and in terminals. */
   title: string;
   /** What to do, for the agent that takes it. Plain text. */
@@ -7701,6 +7821,8 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 ```ts
 {
   id: string;
+  /** The project it belongs to. Set by the server from where it was made. */
+  projectId: string;
   /** What it is, in one line. Shown in lists and in terminals. */
   title: string;
   /** What to do, for the agent that takes it. Plain text. */
@@ -7770,6 +7892,8 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 ```ts
 {
   id: string;
+  /** The project it belongs to. Set by the server from where it was made. */
+  projectId: string;
   /** What it is, in one line. Shown in lists and in terminals. */
   title: string;
   /** What to do, for the agent that takes it. Plain text. */
@@ -7840,6 +7964,8 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 
 ```ts
 {
+  /** The project these are of. */
+  projectId: string;
   /** How many tasks may be at work at once. */
   limit: number;
   /** True: no new task is started. What is running is not touched. */
@@ -7866,6 +7992,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 | Field | Type | Required | |
 |---|---|---|---|
 | `taskId` | `string` | no | The task to start. Without one: the next in order that can be taken now. |
+| `projectId` | `string \| "all"` | no | Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project. |
 
 **Answer** `200`:
 
@@ -7892,10 +8019,16 @@ The limit, whether new starts are held, whether tasks start by themselves, and t
 
 An API token needs the scope `read`.
 
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `projectId` | query | `string \| "all"` | no | Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project. |
+
 **Answer** `200`:
 
 ```ts
 {
+  /** The project these are of. */
+  projectId: string;
   /** How many tasks may be at work at once. */
   limit: number;
   /** True: no new task is started. What is running is not touched. */
@@ -7926,6 +8059,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 
 | Field | Type | Required | |
 |---|---|---|---|
+| `projectId` | `string` | no | The project whose tasks these are about. Left out: the first project. |
 | `limit` | `number` | no | How many tasks may be at work at once. |
 | `hold` | `boolean` | no |  |
 | `automatic` | `boolean` | no |  |
@@ -7934,6 +8068,8 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 
 ```ts
 {
+  /** The project these are of. */
+  projectId: string;
   /** How many tasks may be at work at once. */
   limit: number;
   /** True: no new task is started. What is running is not touched. */
@@ -7954,6 +8090,10 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 Everything that waits on a person, in one list: terminals that wait, runs to approve, drafts and installs to read, proposed tasks, tasks that are done or failed, lists handed in, working copies to decide about, and what was asked in writing. Gathered from what the caller can already read elsewhere, plus what was written on the list.
 
 An API token needs the scope `read`.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `projectId` | query | `string \| "all"` | no | Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project. |
 
 **Answer** `200`:
 
@@ -7982,6 +8122,8 @@ An API token needs the scope `read`.
     taskId: string | null;
     askId: string | null;
     environmentId: string | null;
+    /** The project it is in. Null for what is of no one project. */
+    projectId: string | null;
     elementId: string | null;
   }[];
   waiting: number;
@@ -8012,6 +8154,7 @@ An API token needs the scope `tasks:write`.
 
 | Field | Type | Required | |
 |---|---|---|---|
+| `projectId` | `string` | no | The project whose list it is written on. Left out: the first project the caller reaches. |
 | `text` | `string` | yes | What is asked, in plain text. |
 | `source` | `{ kind: string; [key: string]: unknown; }` | no |  |
 
@@ -8020,6 +8163,8 @@ An API token needs the scope `tasks:write`.
 ```ts
 {
   id: string;
+  /** The project it belongs to. Set by the server from where it was made. */
+  projectId: string;
   text: string;
   addedBy: {
     kind: "agent" | "person" | "token";
@@ -8060,6 +8205,8 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 ```ts
 {
   id: string;
+  /** The project it belongs to. Set by the server from where it was made. */
+  projectId: string;
   text: string;
   addedBy: {
     kind: "agent" | "person" | "token";
@@ -8094,6 +8241,8 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 ```ts
 {
   id: string;
+  /** The project it belongs to. Set by the server from where it was made. */
+  projectId: string;
   text: string;
   addedBy: {
     kind: "agent" | "person" | "token";
@@ -8119,12 +8268,18 @@ For the owner only: no token and no session can do this, whatever its scopes. A 
 
 For the signed-in browser only. No API token may call this, whatever its scopes.
 
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `projectId` | query | `string \| "all"` | no | Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project. |
+
 **Answer** `200`:
 
 ```ts
 {
   rules: {
     id: string;
+    /** The project it belongs to. Set by the server from where it was made. */
+    projectId: string;
     event: "task.done" | "task.failed" | "task.needs-owner" | "ask.added" | "schedule.fired" | "schedule.failed";
     action: {
       kind: string;
@@ -8157,6 +8312,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 
 | Field | Type | Required | |
 |---|---|---|---|
+| `projectId` | `string` | no | The project the rule is of. Left out: the first project. |
 | `event` | `"task.done" \| "task.failed" \| "task.needs-owner" \| "ask.added" \| "s…` | yes | What sets it off. |
 | `action` | `{ kind: string; [key: string]: unknown; }` | yes | What it does: `{"kind":"notify"}`, or `{"kind":"run-element","elementId":"…","on":{"kind":"session","sessionId":"…"}}`. |
 
@@ -8166,6 +8322,8 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 {
   rules: {
     id: string;
+    /** The project it belongs to. Set by the server from where it was made. */
+    projectId: string;
     event: "task.done" | "task.failed" | "task.needs-owner" | "ask.added" | "schedule.fired" | "schedule.failed";
     action: {
       kind: string;
@@ -8202,6 +8360,569 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 
 **Errors:** 400, 401, 403, 404, 413, 429.
 
+## Projects
+
+### listProjects
+
+`GET /v1/projects`: List the projects.
+
+A project has its own canvases, terminals, queue, schedules and rules. A token sees the projects it reaches; each row says how many canvases and running terminals it has and how many things wait on the owner in it. Archived projects are listed too, and say so.
+
+An API token needs the scope `read`.
+
+A list: it answers a page at a time, see `limit` and `cursor`.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `projectId` | query | `string \| "all"` | no | Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project. |
+| `limit` | query | `number` | no | How many items to return at most. |
+| `cursor` | query | `string` | no | The `nextCursor` of the page before. Opaque: do not build or change it. |
+
+**Answer** `200`:
+
+```ts
+{
+  items: {
+    id: string;
+    workspaceId: string;
+    name: string;
+    /** A named color, or `#rrggbb`. */
+    color: string;
+    /** Its place among the projects; lower comes first. */
+    order: number;
+    labels: {
+      [key: string]: string;
+    };
+    /** The folders its work is in. May be empty. */
+    folders: string[];
+    /** One of its folders: where a new terminal starts when it names no folder. Null: where new terminals start anyway. */
+    defaultFolder: string | null;
+    /** Which server owns its record. Set by the server. */
+    home: {
+      kind: string;
+      [key: string]: unknown;
+    };
+    state: "open" | "archived";
+    createdAt: string;
+    canvases: number;
+    /** Its terminals whose shell is running. */
+    sessions: number;
+    /** How many things wait on the owner in it. */
+    waiting: number;
+  }[];
+  nextCursor: string | null;
+}
+```
+
+**Errors:** 400, 401, 403, 413, 429.
+
+```sh
+curl -H "Authorization: Bearer $TOKEN" \
+     http://127.0.0.1:4600/v1/projects
+```
+
+### addProject
+
+`POST /v1/projects`: Make a project.
+
+For the owner only: no token and no session can do this, whatever its scopes. It starts with one empty canvas. It is kept by this server; no caller says otherwise.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `idempotency-key` | header | `string` | no | A key of your choosing (1 to 128 visible ASCII characters). Sending the same request again with the same key returns the first answer and creates nothing more. |
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `name` | `string` | yes | What it is called. |
+| `color` | `("none" \| "red" \| "orange" \| "yellow" \| "lime" \| "green" \| "teal" \|…` | no | A named color, or `#rrggbb`. |
+| `folders` | `string[]` | no | The folders its work is in. |
+| `defaultFolder` | `string \| null` | no | Where a new terminal starts when it names no folder. It is added to the folders when it is not among them. |
+| `canvasName` | `string` | no | The name of its first canvas. Left out: Main. |
+
+**Answer** `201`:
+
+```ts
+{
+  id: string;
+  workspaceId: string;
+  name: string;
+  /** A named color, or `#rrggbb`. */
+  color: string;
+  /** Its place among the projects; lower comes first. */
+  order: number;
+  labels: {
+    [key: string]: string;
+  };
+  /** The folders its work is in. May be empty. */
+  folders: string[];
+  /** One of its folders: where a new terminal starts when it names no folder. Null: where new terminals start anyway. */
+  defaultFolder: string | null;
+  /** Which server owns its record. Set by the server. */
+  home: {
+    kind: string;
+    [key: string]: unknown;
+  };
+  state: "open" | "archived";
+  createdAt: string;
+  canvases: number;
+  /** Its terminals whose shell is running. */
+  sessions: number;
+  /** How many things wait on the owner in it. */
+  waiting: number;
+}
+```
+
+**Errors:** 400, 401, 403, 409, 413, 429.
+
+### getProject
+
+`GET /v1/projects/{projectId}`: One project.
+
+An API token needs the scope `read`.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `projectId` | path | `string` | yes | An ID. |
+
+**Answer** `200`:
+
+```ts
+{
+  id: string;
+  workspaceId: string;
+  name: string;
+  /** A named color, or `#rrggbb`. */
+  color: string;
+  /** Its place among the projects; lower comes first. */
+  order: number;
+  labels: {
+    [key: string]: string;
+  };
+  /** The folders its work is in. May be empty. */
+  folders: string[];
+  /** One of its folders: where a new terminal starts when it names no folder. Null: where new terminals start anyway. */
+  defaultFolder: string | null;
+  /** Which server owns its record. Set by the server. */
+  home: {
+    kind: string;
+    [key: string]: unknown;
+  };
+  state: "open" | "archived";
+  createdAt: string;
+  canvases: number;
+  /** Its terminals whose shell is running. */
+  sessions: number;
+  /** How many things wait on the owner in it. */
+  waiting: number;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+```sh
+curl -H "Authorization: Bearer $TOKEN" \
+     http://127.0.0.1:4600/v1/projects/<projectId>
+```
+
+### changeProject
+
+`PATCH /v1/projects/{projectId}`: Change a project: its name, color, folders, or its place in the order.
+
+For the owner only: no token and no session can do this, whatever its scopes. What is left out stays as it was.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `projectId` | path | `string` | yes | An ID. |
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `name` | `string` | no |  |
+| `color` | `("none" \| "red" \| "orange" \| "yellow" \| "lime" \| "green" \| "teal" \|…` | no |  |
+| `folders` | `string[]` | no |  |
+| `defaultFolder` | `string \| null` | no |  |
+| `labels` | `{ [key: string]: string; }` | no |  |
+| `before` | `string \| null` | no | Put it before this project in the order; null puts it last. |
+
+**Answer** `200`:
+
+```ts
+{
+  id: string;
+  workspaceId: string;
+  name: string;
+  /** A named color, or `#rrggbb`. */
+  color: string;
+  /** Its place among the projects; lower comes first. */
+  order: number;
+  labels: {
+    [key: string]: string;
+  };
+  /** The folders its work is in. May be empty. */
+  folders: string[];
+  /** One of its folders: where a new terminal starts when it names no folder. Null: where new terminals start anyway. */
+  defaultFolder: string | null;
+  /** Which server owns its record. Set by the server. */
+  home: {
+    kind: string;
+    [key: string]: unknown;
+  };
+  state: "open" | "archived";
+  createdAt: string;
+  canvases: number;
+  /** Its terminals whose shell is running. */
+  sessions: number;
+  /** How many things wait on the owner in it. */
+  waiting: number;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+### removeProject
+
+`DELETE /v1/projects/{projectId}`: Remove a project for good.
+
+For the owner only: no token and no session can do this, whatever its scopes. Only an archived project that holds nothing: no terminal, task, rule, schedule, working copy, or thing of its own on the sharing page. The answer to a refusal says what it still holds.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `projectId` | path | `string` | yes | An ID. |
+
+**Answer** `204`, with nothing in it.
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+### moveCanvasToProject
+
+`POST /v1/canvases/{canvasId}/project`: Move a canvas to another project.
+
+For the owner only: no token and no session can do this, whatever its scopes. Its terminals go with it, with their runs and what they work in, and the tasks that wait for one of its terminals. A task for any free agent, rules and schedules stay. Refused for the last canvas of a project.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `canvasId` | path | `string` | yes | An ID. |
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `projectId` | `string` | yes | The project it moves to. |
+
+**Answer** `200`:
+
+```ts
+{
+  id: string;
+  workspaceId: string;
+  name: string;
+  /** A named color, or `#rrggbb`. */
+  color: string;
+  /** Its place among the projects; lower comes first. */
+  order: number;
+  labels: {
+    [key: string]: string;
+  };
+  /** The folders its work is in. May be empty. */
+  folders: string[];
+  /** One of its folders: where a new terminal starts when it names no folder. Null: where new terminals start anyway. */
+  defaultFolder: string | null;
+  /** Which server owns its record. Set by the server. */
+  home: {
+    kind: string;
+    [key: string]: unknown;
+  };
+  state: "open" | "archived";
+  createdAt: string;
+  canvases: number;
+  /** Its terminals whose shell is running. */
+  sessions: number;
+  /** How many things wait on the owner in it. */
+  waiting: number;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+### archiveProject
+
+`POST /v1/projects/{projectId}/archive`: Archive a project.
+
+For the owner only: no token and no session can do this, whatever its scopes. An archived project is in no switcher and starts nothing: no task, no schedule, no rule. Refused with 409 while it has terminals that are running, unless `sessions` says to park them or end them. The last open project is not archived.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `projectId` | path | `string` | yes | An ID. |
+
+**Body** (JSON, may be left out):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `sessions` | `"park" \| "end"` | no | `park`: its terminals leave their canvases and keep running. `end`: their shells are ended for good. |
+
+**Answer** `200`:
+
+```ts
+{
+  id: string;
+  workspaceId: string;
+  name: string;
+  /** A named color, or `#rrggbb`. */
+  color: string;
+  /** Its place among the projects; lower comes first. */
+  order: number;
+  labels: {
+    [key: string]: string;
+  };
+  /** The folders its work is in. May be empty. */
+  folders: string[];
+  /** One of its folders: where a new terminal starts when it names no folder. Null: where new terminals start anyway. */
+  defaultFolder: string | null;
+  /** Which server owns its record. Set by the server. */
+  home: {
+    kind: string;
+    [key: string]: unknown;
+  };
+  state: "open" | "archived";
+  createdAt: string;
+  canvases: number;
+  /** Its terminals whose shell is running. */
+  sessions: number;
+  /** How many things wait on the owner in it. */
+  waiting: number;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+### reopenProject
+
+`POST /v1/projects/{projectId}/reopen`: Reopen an archived project.
+
+For the owner only: no token and no session can do this, whatever its scopes. A time of one of its schedules that passed while it was archived does not run.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `projectId` | path | `string` | yes | An ID. |
+
+**Answer** `200`:
+
+```ts
+{
+  id: string;
+  workspaceId: string;
+  name: string;
+  /** A named color, or `#rrggbb`. */
+  color: string;
+  /** Its place among the projects; lower comes first. */
+  order: number;
+  labels: {
+    [key: string]: string;
+  };
+  /** The folders its work is in. May be empty. */
+  folders: string[];
+  /** One of its folders: where a new terminal starts when it names no folder. Null: where new terminals start anyway. */
+  defaultFolder: string | null;
+  /** Which server owns its record. Set by the server. */
+  home: {
+    kind: string;
+    [key: string]: unknown;
+  };
+  state: "open" | "archived";
+  createdAt: string;
+  canvases: number;
+  /** Its terminals whose shell is running. */
+  sessions: number;
+  /** How many things wait on the owner in it. */
+  waiting: number;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+### getSharing
+
+`GET /v1/sharing`: What is shared between projects.
+
+For the owner only: no token and no session can do this, whatever its scopes. For each kind of thing that is shared or owned (workflows, shelf elements, library sources and installed items, API tokens): what a new one is, and where each existing one belongs.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+**Answer** `200`:
+
+```ts
+{
+  kinds: {
+    kind: string;
+    title: string;
+    /** What the kind is, in a sentence. */
+    says: string;
+    /** What a new thing of this kind is: shared with every project, or of the project it is made in. */
+    default: "shared" | "project";
+    things: {
+      id: string;
+      name: string;
+      /** Null: shared with every project. */
+      projectId: string | null;
+    }[];
+  }[];
+  /** What is neither shared nor owned because there is one of it for the whole server. */
+  perServer: string;
+}
+```
+
+**Errors:** 400, 401, 403, 413, 429.
+
+### changeSharing
+
+`PUT /v1/sharing`: Say what a new thing of a kind is: shared, or of the project it is made in.
+
+For the owner only: no token and no session can do this, whatever its scopes.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `kind` | `string` | yes |  |
+| `default` | `"shared" \| "project"` | yes |  |
+
+**Answer** `200`:
+
+```ts
+{
+  kinds: {
+    kind: string;
+    title: string;
+    /** What the kind is, in a sentence. */
+    says: string;
+    /** What a new thing of this kind is: shared with every project, or of the project it is made in. */
+    default: "shared" | "project";
+    things: {
+      id: string;
+      name: string;
+      /** Null: shared with every project. */
+      projectId: string | null;
+    }[];
+  }[];
+  /** What is neither shared nor owned because there is one of it for the whole server. */
+  perServer: string;
+}
+```
+
+**Errors:** 400, 401, 403, 413, 429.
+
+### moveSharedThing
+
+`POST /v1/sharing/move`: Make one thing belong to a project, or to all.
+
+For the owner only: no token and no session can do this, whatever its scopes. A run that is going keeps going. A new run does not start from a workflow or an element the project cannot see, and a schedule or a rule that runs one stops and says so.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `kind` | `string` | yes |  |
+| `id` | `string` | yes |  |
+| `projectId` | `string \| null` | yes | The project it belongs to from now on. Null: shared with every project. |
+
+**Answer** `200`:
+
+```ts
+{
+  kinds: {
+    kind: string;
+    title: string;
+    /** What the kind is, in a sentence. */
+    says: string;
+    /** What a new thing of this kind is: shared with every project, or of the project it is made in. */
+    default: "shared" | "project";
+    things: {
+      id: string;
+      name: string;
+      /** Null: shared with every project. */
+      projectId: string | null;
+    }[];
+  }[];
+  /** What is neither shared nor owned because there is one of it for the whole server. */
+  perServer: string;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+## For a session itself
+
+### getSessionProject
+
+`GET /v1/sessions/{sessionId}/project`: The project this session is in.
+
+For a session's own token, about that session. No API token may call this.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `sessionId` | path | `string` | yes | An ID. |
+
+**Answer** `200`:
+
+```ts
+{
+  id: string;
+  workspaceId: string;
+  name: string;
+  /** A named color, or `#rrggbb`. */
+  color: string;
+  /** Its place among the projects; lower comes first. */
+  order: number;
+  labels: {
+    [key: string]: string;
+  };
+  /** The folders its work is in. May be empty. */
+  folders: string[];
+  /** One of its folders: where a new terminal starts when it names no folder. Null: where new terminals start anyway. */
+  defaultFolder: string | null;
+  /** Which server owns its record. Set by the server. */
+  home: {
+    kind: string;
+    [key: string]: unknown;
+  };
+  state: "open" | "archived";
+  createdAt: string;
+  canvases: number;
+  /** Its terminals whose shell is running. */
+  sessions: number;
+  /** How many things wait on the owner in it. */
+  waiting: number;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+```sh
+curl -H "Authorization: Bearer $AUBERGINE_TOKEN" \
+     $AUBERGINE_URL/v1/sessions/<sessionId>/project
+```
+
+## Queue
+
 ### listSchedules
 
 `GET /v1/schedules`: List the schedules.
@@ -8214,6 +8935,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
 
 | Parameter | In | Type | Required | |
 |---|---|---|---|---|
+| `projectId` | query | `string \| "all"` | no | Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project. |
 | `limit` | query | `number` | no | How many items to return at most. |
 | `cursor` | query | `string` | no | The `nextCursor` of the page before. Opaque: do not build or change it. |
 
@@ -8223,6 +8945,8 @@ A list: it answers a page at a time, see `limit` and `cursor`.
 {
   items: {
     id: string;
+    /** The project it belongs to. Set by the server from where it was made. */
+    projectId: string;
     /** What it is called. Shown in lists and beside what it hands in. */
     name: string;
     /** The time of day, on this computer's clock and in its time zone. */
@@ -8310,6 +9034,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 
 | Field | Type | Required | |
 |---|---|---|---|
+| `projectId` | `string` | no | The project the schedule is of. Left out: the first project. |
 | `name` | `string` | yes | What it is called. Shown in lists and beside what it hands in. |
 | `time` | `string` | yes | The time of day, on this computer's clock and in its time zone. |
 | `days` | `("mon" \| "tue" \| "wed" \| "thu" \| "fri" \| "sat" \| "sun")[]` | yes | The days of the week it runs on. |
@@ -8325,6 +9050,8 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 ```ts
 {
   id: string;
+  /** The project it belongs to. Set by the server from where it was made. */
+  projectId: string;
   /** What it is called. Shown in lists and beside what it hands in. */
   name: string;
   /** The time of day, on this computer's clock and in its time zone. */
@@ -8420,6 +9147,8 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 ```ts
 {
   id: string;
+  /** The project it belongs to. Set by the server from where it was made. */
+  projectId: string;
   /** What it is called. Shown in lists and beside what it hands in. */
   name: string;
   /** The time of day, on this computer's clock and in its time zone. */
@@ -8518,6 +9247,8 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 {
   schedule: {
     id: string;
+    /** The project it belongs to. Set by the server from where it was made. */
+    projectId: string;
     /** What it is called. Shown in lists and beside what it hands in. */
     name: string;
     /** The time of day, on this computer's clock and in its time zone. */
@@ -8614,6 +9345,8 @@ For a session's own token, about that session. No API token may call this.
 ```ts
 {
   id: string;
+  /** The project it belongs to. Set by the server from where it was made. */
+  projectId: string;
   /** What it is, in one line. Shown in lists and in terminals. */
   title: string;
   /** What to do, for the agent that takes it. Plain text. */
@@ -8688,6 +9421,7 @@ For a session's own token, about that session. No API token may call this.
 
 | Field | Type | Required | |
 |---|---|---|---|
+| `projectId` | `string` | no | The project whose list it is written on. Left out: the first project the caller reaches. |
 | `text` | `string` | yes | What is asked, in plain text. |
 
 **Answer** `201`:
@@ -8695,6 +9429,8 @@ For a session's own token, about that session. No API token may call this.
 ```ts
 {
   id: string;
+  /** The project it belongs to. Set by the server from where it was made. */
+  projectId: string;
   text: string;
   addedBy: {
     kind: "agent" | "person" | "token";
@@ -8743,6 +9479,8 @@ For a session's own token, about that session. No API token may call this.
   /** What this session asked of its owner and that still waits. */
   asks: {
     id: string;
+    /** The project it belongs to. Set by the server from where it was made. */
+    projectId: string;
     text: string;
     addedBy: {
       kind: "agent" | "person" | "token";
@@ -8814,6 +9552,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
 
 | Parameter | In | Type | Required | |
 |---|---|---|---|---|
+| `projectId` | query | `string \| "all"` | no | Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project. |
 | `limit` | query | `number` | no | How many items to return at most. |
 | `cursor` | query | `string` | no | The `nextCursor` of the page before. Opaque: do not build or change it. |
 
@@ -8823,6 +9562,8 @@ A list: it answers a page at a time, see `limit` and `cursor`.
 {
   items: {
     id: string;
+    /** The project it was made in: its session's. Kept when the session is gone. */
+    projectId: string;
     kind: string;
     /** What the kind is called, as it was when this was made: `Its own working copy`. */
     title: string;
@@ -8898,6 +9639,8 @@ An API token needs the scope `read`.
   /** Null for a session that works in the folder it was started in: nothing was prepared for it. */
   environment: {
     id: string;
+    /** The project it was made in: its session's. Kept when the session is gone. */
+    projectId: string;
     kind: string;
     /** What the kind is called, as it was when this was made: `Its own working copy`. */
     title: string;
@@ -9076,6 +9819,8 @@ For a session's own token, about that session; or an API token with the scope `r
   /** Null for a session that works in the folder it was started in: nothing was prepared for it. */
   environment: {
     id: string;
+    /** The project it was made in: its session's. Kept when the session is gone. */
+    projectId: string;
     kind: string;
     /** What the kind is called, as it was when this was made: `Its own working copy`. */
     title: string;
@@ -9337,6 +10082,7 @@ For a session's own token, about that session; or an API token with the scope `r
     workflowId: string;
     workflowVersion: number;
     sessionId: string | null;
+    projectId?: string;
     inputs: {
       [key: string]: string;
     };
@@ -9478,6 +10224,10 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 {
   id: string;
   projectId: string;
+  host?: {
+    kind: string;
+    [key: string]: unknown;
+  };
   name: string;
   createdAt: string;
   state: "open" | "parked" | "exited";
@@ -9576,6 +10326,10 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 {
   id: string;
   projectId: string;
+  host?: {
+    kind: string;
+    [key: string]: unknown;
+  };
   name: string;
   createdAt: string;
   state: "open" | "parked" | "exited";
@@ -9692,6 +10446,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
 
 | Parameter | In | Type | Required | |
 |---|---|---|---|---|
+| `projectId` | query | `string \| "all"` | no | Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project. |
 | `limit` | query | `number` | no | How many items to return at most. |
 | `cursor` | query | `string` | no | The `nextCursor` of the page before. Opaque: do not build or change it. |
 
@@ -9717,6 +10472,13 @@ A list: it answers a page at a time, see `limit` and `cursor`.
       kind: "tag";
       tag: string;
     } | null;
+    projects: {
+      kind: "all";
+    } | {
+      kind: "projects";
+      projectIds: string[];
+    };
+    projectId: string | null;
     sessionId: string | null;
   }[];
   nextCursor: string | null;
@@ -9742,6 +10504,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 | `expiresAt` | `string` | no | When it stops working. Never, when neither this nor `expiresInDays` is given. |
 | `expiresInDays` | `number` | no | In how many days it stops working. |
 | `reviewWorkflowChanges` | `boolean` | no | Changes to workflows need your review: with `workflows:write` the token may propose drafts, and may not create or change workflows directly. On unless you switch it off. |
+| `projects` | `{ kind: "all"; } \| { kind: "projects"; projectIds: string[]; }` | no | Which projects it reaches, for every scope, reading included: `{"kind":"all"}` (the default) or `{"kind":"projects","projectIds":[…]}`. Things shared with every project are seen either way. |
 | `reach` | `{ kind: "all"; } \| { kind: "canvases"; canvasIds: string[]; } \| { k…` | no | Which sessions the terminal scopes and the message scopes apply to: all, those on named canvases, or those with a tag. Required when `terminal:read`, `terminal:input`, `messages:read` or `messages:write` is asked for; there is no default. |
 
 **Answer** `201`:
@@ -9766,6 +10529,13 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
       kind: "tag";
       tag: string;
     } | null;
+    projects: {
+      kind: "all";
+    } | {
+      kind: "projects";
+      projectIds: string[];
+    };
+    projectId: string | null;
     sessionId: string | null;
   };
   secret: string;
@@ -9807,6 +10577,13 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
     kind: "tag";
     tag: string;
   } | null;
+  projects: {
+    kind: "all";
+  } | {
+    kind: "projects";
+    projectIds: string[];
+  };
+  projectId: string | null;
   sessionId: string | null;
 }
 ```
@@ -9825,6 +10602,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
 
 | Parameter | In | Type | Required | |
 |---|---|---|---|---|
+| `projectId` | query | `string \| "all"` | no | Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project. |
 | `limit` | query | `number` | no | How many items to return at most. |
 | `cursor` | query | `string` | no | The `nextCursor` of the page before. Opaque: do not build or change it. |
 | `tokenId` | query | `string` | no | Only calls made with this token. |
@@ -9872,6 +10650,7 @@ An API token needs the scope `messages:read`.
 | Parameter | In | Type | Required | |
 |---|---|---|---|---|
 | `sessionId` | path | `string` | yes | An ID. |
+| `projectId` | query | `string \| "all"` | no | Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project. |
 | `limit` | query | `number` | no | How many items to return at most. |
 | `cursor` | query | `string` | no | The `nextCursor` of the page before. Opaque: do not build or change it. |
 
@@ -10270,6 +11049,7 @@ For a session's own token, about that session; or an API token with the scope `r
     workflowId: string;
     workflowVersion: number;
     sessionId: string | null;
+    projectId?: string;
     inputs: {
       [key: string]: string;
     };
@@ -10389,6 +11169,7 @@ A list: it answers a page at a time, see `limit` and `cursor`.
 | Parameter | In | Type | Required | |
 |---|---|---|---|---|
 | `sessionId` | path | `string` | yes | An ID. |
+| `projectId` | query | `string \| "all"` | no | Which project: its ID, or `all`. Left out: the first project the caller reaches. A request that names a thing of a project (a session, a canvas, a task) is about that project. |
 | `limit` | query | `number` | no | How many items to return at most. |
 | `cursor` | query | `string` | no | The `nextCursor` of the page before. Opaque: do not build or change it. |
 

@@ -6,7 +6,7 @@ import { canvasActions } from './canvas-actions';
 import { neighbour, type Box, type Direction } from './spatial';
 import { currentLayout, useApp, type AppStore } from './store';
 import { SCOPE_FILTER } from './list-filters';
-import { listModel } from './list-model';
+import { listModel, listSource } from './list-model';
 import { SORTS } from './terminal-rows';
 import { runOfSession } from './workflows/run-model';
 import { removeDemo, showMeAround } from './tour/actions';
@@ -137,9 +137,9 @@ const stepCommands = ([1, -1] as const).map((by): Command => ({
   title: by === 1 ? 'Select the next terminal' : 'Select the previous terminal',
   description: `Selects the ${by === 1 ? 'next' : 'previous'} terminal in the terminal list as it is filtered and ordered, wrapping at the ends. With every canvas in scope it switches canvas on the way.`,
   group: 'Terminals',
-  available: (state) => listModel(state.app, state.listView, state.canvasId).order.length > 0,
+  available: (state) => listModel(listSource(state), state.listView, state.canvasId).order.length > 0,
   run: (state) => {
-    const { order } = listModel(state.app, state.listView, state.canvasId);
+    const { order } = listModel(listSource(state), state.listView, state.canvasId);
     if (order.length === 0) return;
     const from = state.focus?.sessionId ?? state.selected;
     const at = order.findIndex((step) => step.sessionId === from);
@@ -234,6 +234,33 @@ export const COMMANDS: readonly Command[] = [
     group: 'Panels',
     available: always,
     run: (state) => state.togglePanel('queue'),
+  },
+  {
+    id: 'projects.open',
+    title: 'Projects…',
+    description: 'The projects there are, each with its own canvases, terminals, queue, schedules and rules: rename, color, the folder new terminals start in, order; archive, reopen, remove; and make a new one.',
+    group: 'Panels',
+    available: always,
+    run: (state) => state.togglePanel('projects'),
+  },
+  {
+    id: 'project.new',
+    title: 'New project…',
+    description: 'Makes a project of its own in this server: its own canvases, terminals, queue, schedules and rules.',
+    group: 'Panels',
+    available: always,
+    run: (state) => {
+      if (state.panel !== 'projects') state.togglePanel('projects');
+      state.request({ kind: 'new-project', id: '' });
+    },
+  },
+  {
+    id: 'sharing.open',
+    title: 'Sharing…',
+    description: 'What is shared between projects: for workflows, shelf elements, library sources and API tokens, whether a new one is shared with every project or belongs to the project it is made in, and where each existing one belongs.',
+    group: 'Panels',
+    available: always,
+    run: (state) => state.togglePanel('sharing'),
   },
   {
     id: 'terminal.newIn',
@@ -425,9 +452,10 @@ export const COMMANDS: readonly Command[] = [
     title: 'Go to the next waiting session',
     description: 'Goes to the next session that is waiting for you, on whichever canvas it is.',
     group: 'Terminals',
-    available: (state) => nextWaiting(state.app?.sessions ?? [], state.focus?.sessionId ?? null, state.app?.runs ?? []) !== null,
+    available: (state) => nextWaiting(state.whole?.sessions ?? [], state.focus?.sessionId ?? null, state.whole?.runs ?? []) !== null,
     run: (state) => {
-      const next = nextWaiting(state.app?.sessions ?? [], state.focus?.sessionId ?? null, state.app?.runs ?? []);
+      // In whichever project it is: the page goes there.
+      const next = nextWaiting(state.whole?.sessions ?? [], state.focus?.sessionId ?? null, state.whole?.runs ?? []);
       if (next) state.showSession(next.id);
     },
   },
@@ -512,7 +540,11 @@ export const COMMANDS: readonly Command[] = [
     description: 'Switches the terminal list between the canvas being looked at and every canvas. Tab follows the list.',
     group: 'List',
     available: always,
-    run: (state) => toggleFilter(state, SCOPE_FILTER),
+    run: (state) => {
+      // Back to one project's terminals, whichever of the two it then shows.
+      if (state.listView.everyProject) state.setListView({ everyProject: false });
+      toggleFilter(state, SCOPE_FILTER);
+    },
   },
   {
     id: 'list.search',

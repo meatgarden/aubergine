@@ -1,3 +1,4 @@
+import { PROJECT_HEADER, isLocalHost } from '@aubergine/shared';
 import { existsSync } from 'node:fs';
 import type { AddressInfo } from 'node:net';
 import cookie from '@fastify/cookie';
@@ -51,6 +52,7 @@ import {
   UpdateFrameRequest,
   UpdateNodeRequest,
   canvasAddress,
+  projectCanvasAddress,
   paths,
   placeOfSession,
   type AppendNoteResponse,
@@ -72,7 +74,7 @@ import type { Histories } from './agents/history';
 import { NotAnAgentError, type Inventories } from './agents/inventory';
 import { Away } from './away';
 import { Demo } from './demo';
-import { authorize, bearerOf, peopleOnlyRefusal, reachRefusal, principalFromBearer, type Action, type Principal, type Resource } from './auth';
+import { authorize, bearerOf, peopleOnlyRefusal, projectRefusal, reachRefusal, principalFromBearer, type Action, type Principal, type Resource } from './auth';
 import { RateLimiter } from './rate-limit';
 import { TokenNotFoundError, Tokens } from './tokens';
 import { BadCursorError } from './public-api';
@@ -96,6 +98,8 @@ import { MessageRefusal, Messages } from './messages';
 import { Library } from './library';
 import { Environments } from './environments';
 import { Desktop } from './desktop';
+import { inProject } from './project-context';
+import { Projects } from './projects';
 import type { DesktopOpener } from './desktop/open';
 import { Queue } from './queue';
 import { REAL_CLOCK, Schedules, ownZone, type ScheduleClock } from './schedules';
@@ -249,6 +253,8 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   // The queue of tasks, the owner's list and the rules. A rule's notification goes to the pages that are open, and nowhere else.
   const queue = new Queue(hub, sessions, workflows, drafts, environments, options.taskArchive ?? new MemoryTaskArchive(), { notify: (title, body) => viewers.notify(title, body), activity, onError: (error) => console.error('Could not start a task:', error) });
   await queue.reconcile();
+  // Projects: several in the one server, and what is shared between them. Changing any of it is the owner's alone.
+  const projects = new Projects(hub, sessions);
   // A terminal in a window of the owner's own terminal application: the owner's alone to ask for.
   const desktop = new Desktop(hub, sessions, { opener: options.desktop ?? null, setOpenNew: options.setDesktopOpenNew ?? null, openNew: async () => (await options.settings()).desktop.openNew, onError: (error) => console.error('Could not open a terminal on the desktop:', error) });
   await desktop.sweep();
@@ -269,7 +275,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   const resourceOf = (sessionId: string): Resource => {
     const session = hub.state.sessions.find((s) => s.id === sessionId);
     if (!session) return { sessionId };
-    return { sessionId, session: { canvasId: placeOfSession(hub.state, sessionId)?.canvas.id ?? null, tags: session.tags, peopleOnly: session.peopleOnly, takesMessages: session.takesMessages } };
+    return { sessionId, projectId: session.projectId, session: { canvasId: placeOfSession(hub.state, sessionId)?.canvas.id ?? null, tags: session.tags, peopleOnly: session.peopleOnly, takesMessages: session.takesMessages } };
   };
 
   const routes: PublicRoute[] = [];
@@ -302,6 +308,8 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     if (!principal || !authorize(principal, action, resource)) {
       // One clear answer for a token that would otherwise have been allowed: the owner closed this session to programs.
       if (principal && peopleOnlyRefusal(principal, action, resource)) throw new HttpError(403, 'people_only', 'This session is marked "people only": no token may read it, type into it or message it.');
+      // Of a project this token does not reach: answered as for a thing that is not there.
+      if (principal && projectRefusal(principal, resource)) throw new HttpError(404, 'not_found', 'Not found');
       if (principal && reachRefusal(principal, action, resource)) throw new HttpError(403, 'out_of_reach', "This token's reach does not cover that session.");
       throw new HttpError(403, 'forbidden', 'These credentials may not do that');
     }
@@ -439,7 +447,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
               .send(errorBody('rate_limited', `Too many calls with this token. Try again in ${turn.retryAfterSeconds} s.`));
           }
           tokens.touch(found.token.id);
-          principals.set(request, { kind: 'token', tokenId: found.token.id, name: found.token.name, scopes: found.token.scopes, reviewWorkflows: found.token.reviewWorkflowChanges, reach: found.token.reach });
+          principals.set(request, { kind: 'token', tokenId: found.token.id, name: found.token.name, scopes: found.token.scopes, reviewWorkflows: found.token.reviewWorkflowChanges, reach: found.token.reach, projects: found.token.projects });
           return;
         }
         const principal = principalFromBearer(token, request.headers.authorization);
@@ -537,7 +545,9 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   app.post(paths.sessions, async (request, reply): Promise<CreateSessionResponse> => {
     const { desktop: alsoOnDesktop, ...body } = parse(CreateSessionRequest, request.body ?? {});
     reply.code(201);
-    const created = await sessions.create(body);
+    // Where it names no canvas: of the project the caller means (a command line says so in a header), else the first.
+    const meant = request.headers[PROJECT_HEADER];
+    const created = await (typeof meant === 'string' && hub.state.projects.some((p) => p.id === meant) ? inProject(meant, () => sessions.create(body)) : sessions.create(body));
     // Only here, on the owner's own route, and only when the request says so: a session a token, a task or a schedule
     // makes goes through other code and never opens a window. The session is made whether or not the window opens.
     return alsoOnDesktop === true ? { ...created, desktop: await desktop.openNew(created.session.id) } : created;
@@ -802,6 +812,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     queue,
     schedules,
     desktop,
+    projects,
     may: (principal, action, resource) => authorize(principal, action, resource),
     resourceOf,
     trace: (request, trace) => void traces.set(request, trace),
@@ -907,7 +918,8 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     };
 
     void (async () => {
-      if (!sessions.isRunning(sessionId)) return sessionEnded();
+      // A viewer is attached to a shell on this computer; one that runs elsewhere has nothing here to attach to.
+      if (!sessions.isRunning(sessionId) || !isLocalHost(sessions.get(sessionId))) return sessionEnded();
       let attached: Attachment;
       try {
         attached = await runtime.attach(sessionId, size.data);
@@ -956,6 +968,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     await app.register(fastifyStatic, { root: options.webDist });
     // The address of a canvas is a page of the same web app.
     app.get(canvasAddress(':canvasId'), async (_request, reply) => reply.sendFile('index.html'));
+    app.get(projectCanvasAddress(':projectId', ':canvasId'), async (_request, reply) => reply.sendFile('index.html'));
   } else {
     app.get('/', async (_request, reply) =>
       reply

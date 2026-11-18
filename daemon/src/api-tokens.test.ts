@@ -326,6 +326,7 @@ describe('every route has a rule', () => {
     // What a session proposes for the queue and asks of its owner, and what it reads back of them: no token speaks as a session.
     'POST /v1/sessions/:sessionId/tasks',
     'POST /v1/sessions/:sessionId/asks',
+    'GET /v1/sessions/:sessionId/project',
     'GET /v1/sessions/:sessionId/queue',
     // A session's own inbox, and what it sends: no token may take a session's messages or speak as it.
     'POST /v1/sessions/:sessionId/inbox',
@@ -376,6 +377,15 @@ describe('every route has a rule', () => {
     'POST /v1/rules',
     'DELETE /v1/rules/:ruleId',
     'POST /v1/schedules',
+    'POST /v1/projects',
+    'PATCH /v1/projects/:projectId',
+    'DELETE /v1/projects/:projectId',
+    'POST /v1/projects/:projectId/archive',
+    'POST /v1/projects/:projectId/reopen',
+    'POST /v1/canvases/:canvasId/project',
+    'GET /v1/sharing',
+    'PUT /v1/sharing',
+    'POST /v1/sharing/move',
     'POST /v1/sessions/:sessionId/desktop',
     'PUT /v1/settings/desktop',
     'PATCH /v1/schedules/:scheduleId',
@@ -507,6 +517,7 @@ describe('every route has a rule', () => {
       'GET /v1/sessions/:sessionId/drafts',
       // Where it works itself, and which of its own files changed: names and counts.
       'GET /v1/sessions/:sessionId/environment',
+      'GET /v1/sessions/:sessionId/project',
       'GET /v1/sessions/:sessionId/queue',
       'GET /v1/sessions/:sessionId/repository-workflows',
       'GET /v1/sessions/:sessionId/run',
@@ -807,7 +818,7 @@ describe('the secret', () => {
 
     // The hash is what is stored, and it is not sent to the page.
     const state = JSON.parse(await readFile(path.join(dir, 'state.json'), 'utf8'));
-    expect(state.version).toBe(13);
+    expect(state.version).toBe(14);
     expect(state.tokens.map((t: { hash: string }) => t.hash)).toEqual([expect.stringMatching(/^[0-9a-f]{64}$/), expect.stringMatching(/^[0-9a-f]{64}$/)]);
   });
 

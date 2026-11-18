@@ -131,6 +131,8 @@ export interface ListView {
   /** Groups (canvas ids, or `parked`) that are folded away. */
   collapsedGroups: string[];
   density: Density;
+  /** The terminals of every project, not only of the one being looked at. Each group then names its project. */
+  everyProject?: boolean;
 }
 
 /** Only the canvas being looked at, so that Tab does not jump between canvases by surprise. */
@@ -151,6 +153,7 @@ export function parseView(saved: unknown): ListView {
     sort: SORTS.includes(v.sort as Sort) ? (v.sort as Sort) : 'canvas',
     collapsedGroups: strings(v.collapsedGroups) ?? [],
     density: v.density === 'compact' ? 'compact' : 'comfortable',
+    ...(v.everyProject === true ? { everyProject: true } : {}),
   };
 }
 

@@ -13,7 +13,8 @@ export interface TaskArchive {
   append(task: Task): Promise<void>;
   get(taskId: string): Promise<Task | null>;
   /** Newest first, a page at a time. */
-  read(query: { limit: number; cursor?: string | undefined }): Promise<{ items: Task[]; nextCursor: string | null }>;
+  /** `projectId`: the tasks of one project; null or left out: of every project. */
+  read(query: { limit: number; cursor?: string | undefined }, projectId?: string | null): Promise<{ items: Task[]; nextCursor: string | null }>;
 }
 
 const newestFirst = (tasks: Task[]): Task[] => [...tasks].sort((a, b) => (b.endedAt ?? b.updatedAt).localeCompare(a.endedAt ?? a.updatedAt) || a.id.localeCompare(b.id));
@@ -27,8 +28,8 @@ export class MemoryTaskArchive implements TaskArchive {
   async get(taskId: string): Promise<Task | null> {
     return this.tasks.find((task) => task.id === taskId) ?? null;
   }
-  async read(query: { limit: number; cursor?: string | undefined }): Promise<{ items: Task[]; nextCursor: string | null }> {
-    return paginate(newestFirst(this.tasks), (task) => task.id, query);
+  async read(query: { limit: number; cursor?: string | undefined }, projectId: string | null = null): Promise<{ items: Task[]; nextCursor: string | null }> {
+    return paginate(newestFirst(this.tasks.filter((task) => projectId === null || task.projectId === projectId)), (task) => task.id, query);
   }
 }
 
@@ -40,7 +41,11 @@ export class FileTaskArchive implements TaskArchive {
   private readonly file: string;
   private queue: Promise<void> = Promise.resolve();
 
-  constructor(dir: string) {
+  /** `projectBefore`: the project a line from before projects is of: the one project there was then. */
+  constructor(
+    dir: string,
+    private readonly projectBefore: () => string | null = () => null,
+  ) {
     this.file = path.join(dir, TASK_ARCHIVE_FILE);
   }
 
@@ -64,7 +69,9 @@ export class FileTaskArchive implements TaskArchive {
     for (const line of text.split('\n')) {
       if (line.trim() === '') continue;
       try {
-        const parsed = Task.safeParse(JSON.parse(line));
+        const raw = JSON.parse(line) as Record<string, unknown>;
+        // A line from before projects does not say which project: it was the one there was.
+        const parsed = Task.safeParse(raw !== null && typeof raw === 'object' && raw.projectId === undefined ? { ...raw, projectId: this.projectBefore() ?? undefined } : raw);
         if (parsed.success) tasks.push(parsed.data);
       } catch {
         // A line that cannot be read is passed over.
@@ -77,7 +84,7 @@ export class FileTaskArchive implements TaskArchive {
     return (await this.all()).find((task) => task.id === taskId) ?? null;
   }
 
-  async read(query: { limit: number; cursor?: string | undefined }): Promise<{ items: Task[]; nextCursor: string | null }> {
-    return paginate(newestFirst(await this.all()), (task) => task.id, query);
+  async read(query: { limit: number; cursor?: string | undefined }, projectId: string | null = null): Promise<{ items: Task[]; nextCursor: string | null }> {
+    return paginate(newestFirst((await this.all()).filter((task) => projectId === null || task.projectId === projectId)), (task) => task.id, query);
   }
 }

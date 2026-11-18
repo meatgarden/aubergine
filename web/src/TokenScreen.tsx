@@ -1,8 +1,11 @@
-import { useCallback, useEffect, useState } from 'react';
+import { openProjects, type Project } from '@aubergine/shared';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { GRANTABLE_SCOPES, RESERVED_SCOPES, SCOPE_MEANING, REACH_SCOPES, tokenStatus, type ActivityEntry, type Reach, type Scope, type TokenView } from '@aubergine/shared';
 import { api } from './api';
 import { runCommand } from './commands';
 import { useApp } from './store';
+
+const NO_PROJECTS: Project[] = [];
 
 /** The scopes that reach into terminals: shown with their warnings, and they need a reach. */
 const TERMINAL: readonly string[] = REACH_SCOPES;
@@ -34,6 +37,10 @@ export function TokenScreen() {
   const [reachKind, setReachKind] = useState<'all' | 'canvases' | 'tag' | null>(null);
   const [reachCanvases, setReachCanvases] = useState<string[]>([]);
   const [reachTag, setReachTag] = useState('');
+  /** The projects it reaches; empty: every project. */
+  const [onlyProjects, setOnlyProjects] = useState<string[]>([]);
+  const allProjects = useApp((s) => s.whole?.projects ?? NO_PROJECTS);
+  const projects = useMemo(() => openProjects({ projects: allProjects }), [allProjects]);
   const canvasList = useApp((s) => s.app?.canvases);
   const canvases = [...(canvasList ?? [])].sort((a, b) => a.order - b.order);
   const terminal = scopes.some((scope) => TERMINAL.includes(scope));
@@ -67,7 +74,7 @@ export function TokenScreen() {
     setBusy(true);
     setError(null);
     try {
-      const created = await api.createToken({ name, scopes, reviewWorkflowChanges: review, ...(terminal && reach ? { reach } : {}), ...(days === null ? {} : { expiresInDays: days }) });
+      const created = await api.createToken({ name, scopes, reviewWorkflowChanges: review, ...(terminal && reach ? { reach } : {}), ...(onlyProjects.length > 0 ? { projects: { kind: 'projects' as const, projectIds: onlyProjects } } : {}), ...(days === null ? {} : { expiresInDays: days }) });
       useApp.getState().apply({ type: 'token.created', token: { ...created.token, hash: '' } });
       setMade({ name: created.token.name, secret: created.secret });
       setCopied(false);
@@ -204,6 +211,22 @@ export function TokenScreen() {
               </label>
             </fieldset>
           )}
+          {projects.length > 1 && (
+            <fieldset className="token-reach" data-testid="token-projects">
+              <legend>Which projects it reaches</legend>
+              <label>
+                <input type="radio" name="token-projects" checked={onlyProjects.length === 0} onChange={() => setOnlyProjects([])} data-testid="token-projects-all" />
+                <span>Every project, also ones made later</span>
+              </label>
+              {projects.map((project) => (
+                <label key={project.id}>
+                  <input type="checkbox" checked={onlyProjects.includes(project.id)} onChange={(e) => setOnlyProjects(e.target.checked ? [...onlyProjects, project.id] : onlyProjects.filter((id) => id !== project.id))} data-testid="token-project" />
+                  <span>Only: {project.name}</span>
+                </label>
+              ))}
+              <p className="sheet-note">A token limited to some projects sees and hears nothing of the others, whatever its scopes. What is shared with every project it sees. This cannot be widened afterwards.</p>
+            </fieldset>
+          )}
           <label className="token-field">
             <span>Expires</span>
             <select aria-label="Expires" value={days ?? ''} onChange={(e) => setDays(e.target.value === '' ? null : Number(e.target.value))}>
@@ -239,6 +262,11 @@ export function TokenScreen() {
                   <td>
                     <strong>{token.name}</strong>
                     <div className="sheet-note">{token.scopes.join(', ')}</div>
+                    {token.projects.kind === 'projects' && (
+                      <div className="sheet-note" data-testid="token-only-projects">
+                        Only in: {token.projects.projectIds.map((id) => allProjects.find((p) => p.id === id)?.name ?? 'a project that is gone').join(', ')}
+                      </div>
+                    )}
                     {token.sessionId && (
                       <div className="sheet-note" data-testid="token-for-session">
                         Made for the agent in {sessionName(token.sessionId)}. Revoked when that session is ended for good.

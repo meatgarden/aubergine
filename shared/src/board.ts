@@ -15,6 +15,7 @@ import { RUN_STATUS_WORDS, RunStatus, isQuiet, versionOf, waitsForPerson, type A
 /** One run on one terminal. */
 export const BoardCard = z.object({
   runId: Id,
+  projectId: Id.nullable().describe('The project it runs in. Null where that is not known.'),
   workflowId: Id,
   sessionId: Id.nullable().describe('The terminal doing the run. Null for a run that is queued.'),
   sessionName: z.string().describe('The name of that terminal; empty for a queued run.'),
@@ -71,6 +72,7 @@ export const BoardFilters = z.object({
   workflowId: Id.optional().describe('Only runs of this workflow.'),
   status: RunStatus.optional().describe('Only runs with this status.'),
   tag: z.string().max(64).optional().describe('Only runs whose terminal has this tag.'),
+  projectId: z.union([Id, z.literal('all')]).optional().describe('Only runs of this project; `all`: of every project. Left out: the first project the caller reaches.'),
 });
 export type BoardFilters = z.infer<typeof BoardFilters>;
 
@@ -118,6 +120,7 @@ export function boardOf(input: BoardInput): Board {
     const element = names.find((e) => e.id === run.currentElementId);
     return {
       runId: run.id,
+      projectId: session?.projectId ?? run.projectId ?? null,
       workflowId: run.workflowId,
       sessionId: run.sessionId,
       sessionName: session?.name ?? '',
@@ -143,11 +146,14 @@ export function boardOf(input: BoardInput): Board {
 
   // Which versions of each workflow have live runs: the version is said only where there are two.
   const versionsLive = new Map<string, Set<number>>();
-  for (const run of input.runs) versionsLive.set(run.workflowId, (versionsLive.get(run.workflowId) ?? new Set()).add(run.workflowVersion));
+  for (const run of input.runs.filter((r) => filters.projectId === undefined || filters.projectId === 'all' || ((r.sessionId !== null ? sessions.get(r.sessionId)?.projectId : undefined) ?? r.projectId) === filters.projectId)) versionsLive.set(run.workflowId, (versionsLive.get(run.workflowId) ?? new Set()).add(run.workflowVersion));
 
+  // One project's runs, where one is asked for: a run is of its terminal's project.
+  const inProject = (run: Run): boolean => filters.projectId === undefined || filters.projectId === 'all' || ((run.sessionId !== null ? sessions.get(run.sessionId)?.projectId : undefined) ?? run.projectId) === filters.projectId;
   const groups = new Map<string, BoardGroup>();
   const counts: BoardCounts = { waitingForYou: 0, blocked: 0, working: 0, paused: 0, queued: 0, total: 0 };
   for (const run of input.runs) {
+    if (!inProject(run)) continue;
     const workflow = workflows.get(run.workflowId);
     const version = workflow ? versionOf(workflow, run.workflowVersion) : null;
     const elements = version?.elements ?? [];
@@ -187,7 +193,7 @@ export function boardOf(input: BoardInput): Board {
 
   const since = input.now - BOARD_ENDED_HOURS * 3600 * 1000;
   const recent = (input.ended ?? [])
-    .filter((entry) => entry.run.finishedAt !== null && Date.parse(entry.run.finishedAt) >= since)
+    .filter((entry) => entry.run.finishedAt !== null && Date.parse(entry.run.finishedAt) >= since && inProject(entry.run))
     // A stopped run keeps the element it was stopped on.
     .map((entry) => ({ ...cardOf(entry.run, entry.elements), workflowName: entry.workflowName }))
     .filter(shown)

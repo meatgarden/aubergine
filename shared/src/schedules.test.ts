@@ -10,7 +10,7 @@ const HOURS = 3600 * 1000;
 const at = (iso: string): number => Date.parse(iso);
 
 function schedule(time: string, days: Weekday[], since: string, more: Partial<Schedule> = {}): Schedule {
-  return Schedule.parse({ id: newId(), name: 'Morning list', time, days, what: { kind: 'element', elementId: newId() }, where: { kind: 'new', canvasId: newId() }, since, createdAt: since, updatedAt: since, ...more });
+  return Schedule.parse({ id: newId(), projectId: newId(), name: 'Morning list', time, days, what: { kind: 'element', elementId: newId() }, where: { kind: 'new', canvasId: newId() }, since, createdAt: since, updatedAt: since, ...more });
 }
 const EVERY: Weekday[] = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 const WEEKDAYS: Weekday[] = ['mon', 'tue', 'wed', 'thu', 'fri'];

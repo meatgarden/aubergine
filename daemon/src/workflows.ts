@@ -1,3 +1,4 @@
+import { ownerOfNew, projectNow } from './project-context';
 import {
   WORKFLOW_TEMPLATES,
   WORKFLOW_VERSIONS_KEPT,
@@ -46,6 +47,10 @@ import {
   carrySources,
   copyStatus,
   decideUpdate,
+  isOpenProject,
+  projectOfRun,
+  visibleIn,
+  type ProjectScope,
 } from '@aubergine/shared';
 import { paginate } from './public-api';
 import type { RunArchive } from './run-archive';
@@ -117,8 +122,8 @@ export class Workflows {
   /* ---------- Workflows ---------- */
 
   /** The workflows there are. One made only to run an element by itself is not among them. */
-  list(): Workflow[] {
-    return [...this.hub.state.workflows].filter((w) => w.listed).sort((a, b) => a.name.localeCompare(b.name) || a.id.localeCompare(b.id));
+  list(projectId: ProjectScope = null): Workflow[] {
+    return [...this.hub.state.workflows].filter((w) => w.listed && visibleIn(w, projectId)).sort((a, b) => a.name.localeCompare(b.name) || a.id.localeCompare(b.id));
   }
 
   get(workflowId: string, unlisted = false): Workflow {
@@ -185,11 +190,12 @@ export class Workflows {
     return this.update(workflowId, { elements });
   }
 
-  private add(content: WorkflowContent, labels: Record<string, string>, origin: Origin, listed = true): Workflow {
+  private add(content: WorkflowContent, labels: Record<string, string>, origin: Origin, listed = true, forProject?: string): Workflow {
     const at = new Date().toISOString();
     const workflow: Workflow = {
       id: newId(),
-      projectId: this.hub.state.project.id,
+      // One made only to run an element is in no list, and is of the project its run is in: it says what that run is about.
+      projectId: listed ? ownerOfNew(this.hub.state, 'workflow') : (forProject ?? projectNow(this.hub.state)),
       name: content.name,
       description: content.description,
       labels,
@@ -311,6 +317,11 @@ export class Workflows {
     const version = latestVersion(workflow);
     const session = input.sessionId !== undefined ? this.sessions.get(input.sessionId) : null;
     if (session?.state === 'exited') throw new ConflictError('This shell has ended; restart it first');
+    // A run is of its terminal's project. It starts only from a workflow that project may see, in a project that is open, on a shell that runs here.
+    const projectId = session?.projectId ?? projectNow(this.hub.state);
+    if (!visibleIn(workflow, projectId)) throw new NotFoundError(`No workflow ${input.workflowId}`);
+    if (!isOpenProject(this.hub.state, projectId)) throw new ConflictError('This project is archived: nothing is started in it. Reopen it first.');
+    if (session) this.sessions.here(session.id);
     const problems = inputProblems(version, input.inputs);
     if (problems.length > 0) throw new BadInputError(problems.join(' '));
 
@@ -320,7 +331,7 @@ export class Workflows {
       await this.apply(existing, { type: 'stop' }, by);
     }
 
-    const run = newRun(version, { id: newId(), workflowId: workflow.id, sessionId: session?.id ?? null, inputs: input.inputs, by, at: new Date().toISOString() });
+    const run: Run = { ...newRun(version, { id: newId(), workflowId: workflow.id, sessionId: session?.id ?? null, inputs: input.inputs, by, at: new Date().toISOString() }), projectId };
     this.hub.emit({ type: 'run.started', run });
 
     // The line is the server's own words; it is typed only where an agent is there to read it.
@@ -419,7 +430,7 @@ export class Workflows {
   }
 
   private async startUnlisted(content: WorkflowContent, input: Omit<StartRun, 'workflowId'>, by: Actor, origin: Origin): Promise<RunDetail> {
-    const workflow = this.add(content, {}, origin, false);
+    const workflow = this.add(content, {}, origin, false, input.sessionId !== undefined ? this.sessions.get(input.sessionId).projectId : undefined);
     try {
       return await this.start({ ...input, workflowId: workflow.id }, by, true);
     } catch (error) {
@@ -464,13 +475,19 @@ export class Workflows {
     return this.detailOfArchived(archived);
   }
 
-  async listRuns(query: RunsQuery): Promise<{ items: RunRecord[]; nextCursor: string | null }> {
+  /** Whether this is the project there was before there were several: records that name no project are its. */
+  private isFirstMade(projectId: string): boolean {
+    return [...this.hub.state.projects].sort((a, b) => a.createdAt.localeCompare(b.createdAt) || a.id.localeCompare(b.id))[0]?.id === projectId;
+  }
+
+  /** The runs of one project; null: of every project. A run is of its terminal's project. */
+  async listRuns(query: RunsQuery, projectId: ProjectScope = null): Promise<{ items: RunRecord[]; nextCursor: string | null }> {
     const { status, sessionId, workflowId, limit, cursor } = query;
     if (status === 'ended' || status === 'finished' || status === 'stopped') {
-      return this.archive.read({ sessionId, workflowId, status: status === 'ended' ? undefined : status, limit, cursor });
+      return this.archive.read({ sessionId, workflowId, status: status === 'ended' ? undefined : status, limit, cursor, ...(projectId !== null ? { projectId, orUnmarked: this.isFirstMade(projectId) } : {}) });
     }
     const wanted = this.hub.state.runs.filter(
-      (r) => (status === 'live' || r.status === status) && (sessionId === undefined || r.sessionId === sessionId) && (workflowId === undefined || r.workflowId === workflowId),
+      (r) => (projectId === null || projectOfRun(this.hub.state, r) === projectId) && (status === 'live' || r.status === status) && (sessionId === undefined || r.sessionId === sessionId) && (workflowId === undefined || r.workflowId === workflowId),
     );
     const page = paginate(wanted, (r) => r.id, { limit, cursor });
     return { items: page.items.map((run) => this.record(run)), nextCursor: page.nextCursor };

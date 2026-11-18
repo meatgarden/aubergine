@@ -6,6 +6,8 @@ export type Command =
   | { name: 'new'; sessionName: string | null; canvas: string | null; copy: boolean; folder: string | null }
   /** `task …`, `todo …`, `ask …`, `rule …`: their own words, parsed by the queue commands. */
   | { name: 'queue'; which: 'task' | 'todo' | 'ask' | 'rule'; words: string[] }
+  /** `project …`: its own words, parsed by the project commands. */
+  | { name: 'project'; words: string[] }
   /** `schedule …`: its own words, parsed by the schedule commands. */
   | { name: 'schedule'; words: string[] }
   /** `copies …`: its own words, parsed by the working-copy commands. */
@@ -144,7 +146,7 @@ export const USAGE = `Usage: aubergine <command>
                              (default)     start a copy of the conversation; the original keeps running
                              --stop        ask an idle original to exit, then resume the same conversation
                              --dry-run, --yes, --force, --no-open
-  token create <name> --scope <scope> [--scope …] [--expires 30d | <date>] [--no-review]
+  token create <name> --scope <scope> [--scope …] [--expires 30d | <date>] [--no-review] [--project <name>]
                              [--reach all | canvas:<name> | tag:<tag>]   which sessions the terminal scopes and the message scopes reach
                              Make an API token for a program of yours. Its secret is printed once, on standard output
   token list                 The API tokens, with their scopes and when each was last used
@@ -181,6 +183,15 @@ export const USAGE = `Usage: aubergine <command>
   rule add --when <event> --run <shelf element> (--on <terminal> | --new <canvas>)
                              For example: aubergine rule add --when task.done --notify
   rule remove <rule>
+  project list               The projects: each has its own canvases, terminals, queue, schedules and rules
+  project new "<name>" [--folder <path>] [--color <color>]
+                             For example: aubergine project new "Garden site" --folder ~/work/garden
+  project use <project>      Which project commands mean when they name none (for the command line)
+  project rename <project> --to "<name>"
+  project archive <project> [--park | --end]     Out of the switcher; it starts nothing. Its terminals are parked or ended
+  project reopen | remove <project>              remove: only an archived project that holds nothing
+  project move-canvas <canvas> --to <project>    With its terminals, their runs and what they work in
+  --project <name>           On list, new, canvas, task, todo, rule, schedule and board: that project instead
   schedule list              The schedules: at these times, run this there. Only you make and run them
   schedule add "<name>" --at <08:30> --days <weekdays | every day | mon,wed,fri>
                (--element <shelf element> | --workflow <workflow>) (--on <terminal> | --new <canvas>)
@@ -258,7 +269,7 @@ export const USAGE = `Usage: aubergine <command>
 new, here and import take --canvas <name>. Without it they use the canvas you looked at most recently
 in a browser, or the first one when no browser is open.
 
-The server must be running for list, new, canvas, copies, task, todo, ask, rule, schedule, token, workflow, element, library, board, screen, output, send, run, protect, attach, here, scan, import, move, tell, inbox, reply, note, attention and open.
+The server must be running for list, new, canvas, copies, project, task, todo, ask, rule, schedule, token, workflow, element, library, board, screen, output, send, run, protect, attach, here, scan, import, move, tell, inbox, reply, note, attention and open.
 guide works without it, and then prints every part.`;
 
 export class UsageError extends Error {}
@@ -449,6 +460,9 @@ export function parseCommand(argv: readonly string[]): Command {
     case 'schedule':
     case 'schedules':
       return { name: 'schedule', words: rest };
+    case 'project':
+    case 'projects':
+      return { name: 'project', words: rest };
     case 'copies':
     case 'copy':
       return { name: 'copies', words: rest };

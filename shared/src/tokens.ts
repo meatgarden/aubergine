@@ -53,6 +53,12 @@ const Scopes = z
   .overwrite((scopes) => GRANTABLE_SCOPES.filter((scope) => scopes.includes(scope)));
 
 /** A token as it is stored. `hash` is the SHA-256 of the secret; the secret itself is never stored. */
+/** Which projects a token reaches. It narrows every scope, reading included. Things shared with every project are seen either way. */
+export const ProjectReach = z.discriminatedUnion('kind', [z.object({ kind: z.literal('all') }), z.object({ kind: z.literal('projects'), projectIds: z.array(Id).min(1).max(50) })]);
+export type ProjectReach = z.infer<typeof ProjectReach>;
+/** Whether a reach covers a project. A thing that is shared (null) is covered by every reach. */
+export const reachesProject = (reach: ProjectReach | null | undefined, projectId: string | null | undefined): boolean => projectId === null || projectId === undefined || reach === null || reach === undefined || reach.kind === 'all' || reach.projectIds.includes(projectId);
+
 export const ApiToken = z.object({
   id: Id,
   name: TokenName,
@@ -67,6 +73,10 @@ export const ApiToken = z.object({
   reviewWorkflowChanges: z.boolean().default(false),
   /** Which sessions its terminal scopes apply to. Null for a token without those scopes: it reaches no terminal. */
   reach: Reach.nullable().default(null),
+  /** Which projects it reaches at all, for every scope: all of them, or the ones named. */
+  projects: ProjectReach.default({ kind: 'all' }),
+  /** The project it belongs to on the sharing page. Null: shared with every project. This is where it is listed, not what it reaches. */
+  projectId: Id.nullable().default(null),
   /** For a token made for one agent's session: that session. It is revoked when the session is ended for good. */
   sessionId: Id.nullable().default(null),
 });
@@ -102,6 +112,7 @@ export const CreateTokenRequest = z
       .boolean()
       .default(true)
       .describe('Changes to workflows need your review: with `workflows:write` the token may propose drafts, and may not create or change workflows directly. On unless you switch it off.'),
+    projects: ProjectReach.optional().describe('Which projects it reaches, for every scope, reading included: `{"kind":"all"}` (the default) or `{"kind":"projects","projectIds":[…]}`. Things shared with every project are seen either way.'),
     reach: Reach.optional().describe('Which sessions the terminal scopes and the message scopes apply to: all, those on named canvases, or those with a tag. Required when `terminal:read`, `terminal:input`, `messages:read` or `messages:write` is asked for; there is no default.'),
   })
   .refine((body) => body.reach !== undefined || !body.scopes.some((scope) => (REACH_SCOPES as readonly string[]).includes(scope)), 'A token with a terminal scope or a message scope must say which sessions it may reach: give `reach`')

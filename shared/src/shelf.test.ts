@@ -9,7 +9,7 @@ const element = (more: Partial<Element> = {}): Element => Element.parse({ id: 't
 /** A shelf element with this many versions; each says a little more than the one before. */
 function onShelf(versions = 1, more: Partial<ShelfElement> = {}): ShelfElement {
   const all: ShelfVersion[] = Array.from({ length: versions }, (_, index) => ({ version: index + 1, element: element({ instructions: `Remove what is not needed.${' And check.'.repeat(index)}` }), at, by: { kind: 'person' }, note: index === 0 ? '' : `change ${index}` }));
-  return { id: newId(), element: all.at(-1)!.element, createdAt: at, updatedAt: at, version: versions, versions: all, state: 'current', replacedBy: null, ...more };
+  return { id: newId(), projectId: null, element: all.at(-1)!.element, createdAt: at, updatedAt: at, version: versions, versions: all, state: 'current', replacedBy: null, ...more };
 }
 const workflowOf = (elements: Element[], more: Partial<Workflow> = {}): Workflow => ({
   id: newId(),

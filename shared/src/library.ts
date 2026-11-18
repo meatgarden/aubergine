@@ -239,6 +239,8 @@ export type LibraryItem = z.infer<typeof LibraryItem>;
 
 export const LibrarySource = z.object({
   id: Id,
+  /** The project it belongs to. Null: shared with every project. */
+  projectId: Id.nullable().default(null),
   kind: SourceKind,
   /** A folder's path, a Git address; empty for what ships with the app. Never holds a password. */
   address: z.string().max(2000),
@@ -305,6 +307,8 @@ export type InstalledFrom = z.infer<typeof InstalledFrom>;
 
 export const InstalledItem = z.object({
   id: Id,
+  /** The project it belongs to. Null: shared with every project. */
+  projectId: Id.nullable().default(null),
   kind: z.string(),
   name: z.string(),
   from: InstalledFrom,

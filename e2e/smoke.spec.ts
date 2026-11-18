@@ -1805,6 +1805,21 @@ test('the side panel shows one section at a time with all of its height, says ho
   await expect(page.getByTestId('messages-section')).toBeVisible();
   await tab('terminals').click();
 
+  // A tab's color is picked from a palette that is in sight, not cut off by the bar of tabs, and the tab wears it.
+  await page.locator('[data-testid="tab"][aria-selected="true"]').getByRole('button', { name: 'Pick a color for this tab' }).click();
+  expect(
+    await page.evaluate(() => {
+      const palette = document.querySelector('[data-testid="color-palette"]');
+      const box = palette?.getBoundingClientRect();
+      return !!palette && !!box && palette.contains(document.elementFromPoint(box.left + 12, box.top + 12)) && palette.contains(document.elementFromPoint(box.right - 6, box.bottom - 6));
+    }),
+  ).toBe(true);
+  await page.getByTestId('color-palette').getByRole('menuitemradio', { name: 'teal' }).click();
+  await expect(page.locator('[data-testid="tab"][aria-selected="true"]')).toHaveClass(/color-teal/);
+  // The name is at the start of the bar of tabs, and not in the bar over the canvas.
+  await expect(page.getByTestId('tabbar').getByTestId('brand')).toHaveText('Aubergine');
+  await expect(page.locator('.toolbar')).not.toContainText('Aubergine');
+
   // The bar over the canvas: nothing in it is a bare sign, and nothing runs off the edge.
   const bar = await page.evaluate(() => {
     const toolbar = document.querySelector('.toolbar') as HTMLElement;
@@ -2756,4 +2771,139 @@ test('a terminal on the desktop: the line in the menu makes new terminals open t
     if (settingsBefore === null) rmSync(settingsFile, { force: true });
     else writeFileSync(settingsFile, settingsBefore);
   }
+});
+
+test('projects: a second project has its own tabs, terminals and queue; what waits in it shows on the switcher; a workflow is made one project\'s own; a canvas moves across with its terminal', async ({ page }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  const origin = new URL(page.url()).origin;
+  const switcher = page.getByTestId('project-switcher');
+  const firstName = (await page.getByTestId('project-name').textContent()) ?? '';
+  const tabs = page.getByTestId('tab');
+  const rows = page.getByTestId('list-row');
+  await expect(tabs.first()).toBeVisible();
+  const tabsBefore = await tabs.count();
+
+  // A second project: the page goes there. It has one canvas, no terminal, and its own address.
+  await switcher.click();
+  // The menu is in sight and can be reached: nothing lies over it, and the tab bar does not cut it off.
+  await expect(page.getByTestId('project-menu')).toBeVisible();
+  expect(
+    await page.evaluate(() => {
+      const menu = document.querySelector('[data-testid="project-menu"]');
+      const box = menu?.getBoundingClientRect();
+      if (!menu || !box) return false;
+      const corners = [
+        [box.left + 4, box.top + 4],
+        [box.right - 4, box.bottom - 4],
+      ] as const;
+      return corners.every(([x, y]) => menu.contains(document.elementFromPoint(x, y)));
+    }),
+  ).toBe(true);
+  await page.getByTestId('project-new').click();
+  const projects = page.getByTestId('projects-screen');
+  await projects.getByTestId('project-new-name').fill('Project test second');
+  await projects.getByTestId('project-new-add').click();
+  await expect(projects).toHaveCount(0);
+  await expect(page.getByTestId('project-name')).toHaveText('Project test second');
+  await expect(tabs).toHaveCount(1);
+  await expect(page).toHaveURL(/\/p\/[0-9a-f-]+\/c\/[0-9a-f-]+$/);
+  const secondAddress = page.url();
+  await page.getByTestId('scope-all').click();
+  await expect(rows).toHaveCount(0);
+
+  // A terminal and a task there.
+  await page.getByTestId('toolbar-new-terminal').click();
+  await expect(rows).toHaveCount(1);
+  const inSecond = (await rows.first().getAttribute('data-session')) ?? '';
+  await page.getByTestId('toolbar-queue').click();
+  const queue = page.getByTestId('queue-screen');
+  // Nothing of the first project's queue is here.
+  await expect(queue.getByTestId('task-row')).toHaveCount(0);
+  await queue.getByTestId('queue-add').click();
+  await page.getByTestId('task-form').getByTestId('task-title').fill('Project test task');
+  await page.getByTestId('task-form').getByTestId('task-add').click();
+  await expect(queue.locator('[data-testid="task-row"]').filter({ hasText: 'Project test task' })).toHaveAttribute('data-state', 'queued');
+  // Something that waits on the owner, in this project.
+  await queue.getByTestId('foryou-write').fill('Project test: look at this');
+  await queue.getByTestId('foryou-add').click();
+  await expect(queue.locator('[data-testid="foryou-row"]').filter({ hasText: 'Project test: look at this' })).toHaveCount(1);
+  await queue.getByTestId('queue-close').click();
+  // A workflow, made now that the page has long been following changes: shared with every project, so it is in this project's list too.
+  const flow = await page.request.post('/v1/workflows', { headers: { origin }, data: { name: 'Project test workflow', elements: [{ name: 'One', instructions: 'Do it.' }] } });
+  expect(flow.status()).toBe(201);
+  expect(((await flow.json()) as { projectId: string | null }).projectId).toBeNull();
+  await page.getByTestId('toolbar-workflows').click();
+  await expect(page.getByTestId('workflows-screen').locator('[data-testid="workflow-row"][data-workflow="Project test workflow"]')).toHaveCount(1);
+  await page.keyboard.press('Escape');
+
+  // Back in the first project: its own tabs, and neither the terminal nor the task of the second.
+  await switcher.click();
+  await page.locator('[data-testid="project-row"]').filter({ hasText: firstName }).first().click();
+  await expect(page.getByTestId('project-name')).toHaveText(firstName);
+  await expect(tabs).toHaveCount(tabsBefore);
+  await expect(page.locator(`[data-testid="list-row"][data-session="${inSecond}"]`)).toHaveCount(0);
+  await page.getByTestId('toolbar-queue').click();
+  await expect(queue.locator('[data-testid="task-row"]').filter({ hasText: 'Project test task' })).toHaveCount(0);
+  await expect(queue.locator('[data-testid="foryou-row"]').filter({ hasText: 'Project test: look at this' })).toHaveCount(0);
+  // The owner's list has a view of every project: there it is, naming its project.
+  await queue.getByTestId('foryou-every-project').click();
+  const elsewhere = queue.locator('[data-testid="foryou-row"]').filter({ hasText: 'Project test: look at this' });
+  await expect(elsewhere).toHaveCount(1);
+  await expect(elsewhere.getByTestId('foryou-project')).toHaveText('Project test second · ');
+  await queue.getByTestId('queue-close').click();
+  // What waits in the other project is said on the switcher, and beside that project in its menu.
+  await expect(page.getByTestId('project-elsewhere')).toHaveText(/^[1-9]\d*$/);
+  await switcher.click();
+  await expect(page.locator('[data-testid="project-row"]').filter({ hasText: 'Project test second' }).getByTestId('project-waiting')).toHaveText(/^[1-9]\d*$/);
+
+  // The sharing page: the workflow is made the second project's own, and is gone from this project's list.
+  await page.getByTestId('sharing-open').click();
+  const sharing = page.getByTestId('sharing-screen');
+  await expect(sharing.getByTestId('sharing-server')).toContainText('Settings are for the whole server');
+  const thing = sharing.locator('[data-testid="sharing-kind"][data-kind="workflow"] [data-testid="sharing-thing"][data-name="Project test workflow"]');
+  await expect(thing.getByTestId('sharing-where')).toHaveValue('');
+  await thing.getByTestId('sharing-where').selectOption({ label: 'Project test second only' });
+  await expect(thing.getByTestId('sharing-where')).not.toHaveValue('');
+  await sharing.getByTestId('sharing-close').click();
+  await page.getByTestId('toolbar-workflows').click();
+  await expect(page.getByTestId('workflows-screen')).toBeVisible();
+  await expect(page.getByTestId('workflows-screen').locator('[data-testid="workflow-row"][data-workflow="Project test workflow"]')).toHaveCount(0);
+  await page.keyboard.press('Escape');
+
+  // A canvas of this project, with a terminal on it, is moved to the second: the page follows it there, and its terminal is among the second's.
+  await page.getByRole('button', { name: 'New canvas' }).click();
+  await expect(tabs).toHaveCount(tabsBefore + 1);
+  // The list is put back to the canvas being looked at, which is new and empty: its one terminal is the one made now.
+  await page.getByTestId('scope-this').click();
+  await expect(rows).toHaveCount(0);
+  await page.getByTestId('toolbar-new-terminal').click();
+  await expect(rows).toHaveCount(1);
+  const moved = (await rows.first().getAttribute('data-session')) ?? '';
+  await page.locator('[data-testid="tab"][aria-selected="true"]').getByTestId('tab-move-project').selectOption({ label: 'Project test second' });
+  await expect(page.getByTestId('project-name')).toHaveText('Project test second');
+  await expect(tabs).toHaveCount(2);
+  await expect(page.locator(`[data-testid="list-row"][data-session="${moved}"]`)).toHaveCount(1);
+  // With every canvas of this project listed, the terminal that was made here is beside it.
+  await page.getByTestId('scope-all').click();
+  await expect(page.locator(`[data-testid="list-row"][data-session="${inSecond}"]`)).toHaveCount(1);
+  await expect(page.locator(`[data-testid="list-row"][data-session="${moved}"]`)).toHaveCount(1);
+  // The old address of the second project still leads there.
+  await page.goto(secondAddress);
+  await expect(page.getByTestId('project-name')).toHaveText('Project test second');
+
+  // A token limited to the first project sees nothing of the second.
+  const first = ((await (await page.request.get('/v1/projects', { headers: { origin } })).json()) as { items: { id: string; name: string }[] }).items;
+  const firstId = first.find((p) => p.name === firstName)?.id ?? '';
+  const made = await page.request.post('/v1/tokens', { headers: { origin }, data: { name: 'project test program', scopes: ['read'], projects: { kind: 'projects', projectIds: [firstId] } } });
+  expect(made.status()).toBe(201);
+  const as = { authorization: `Bearer ${((await made.json()) as { secret: string }).secret}` };
+  for (const url of ['/v1/projects', '/v1/sessions?limit=200', '/v1/tasks', '/v1/for-you', '/v1/workflows?limit=200', '/v1/canvases']) {
+    const answer = await fetch(`${origin}${url}`, { headers: as });
+    expect(answer.status, url).toBe(200);
+    const text = await answer.text();
+    for (const of of ['Project test second', 'Project test task', 'Project test: look at this', 'Project test workflow', inSecond, moved]) expect(text.includes(of), `${url} holds “${of}”`).toBe(false);
+  }
+  expect((await fetch(`${origin}/v1/sessions/${inSecond}`, { headers: as })).status).toBe(404);
 });

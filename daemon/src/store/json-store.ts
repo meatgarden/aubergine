@@ -23,7 +23,7 @@ import {
   Workspace,
   createInitialState,
   newCanvas,
-  type AppState,
+  AppState,
   type ParkedPlace,
 } from '@aubergine/shared';
 import type { Store } from './store';
@@ -87,8 +87,16 @@ const StateFileV12 = StateFileV11.extend({ version: z.literal(12), queue: QueueS
 /** The same, with schedules. An older file has none, and its tasks say neither that they run an element nor that they were arranged beforehand. */
 const StateFileV13 = StateFileV12.extend({ version: z.literal(13), schedules: SchedulesState.prefault({}) });
 
-const StateFile = z.discriminatedUnion('version', [StateFileV1, StateFileV2, StateFileV3, StateFileV4, StateFileV5, StateFileV6, StateFileV7, StateFileV8, StateFileV9, StateFileV10, StateFileV11, StateFileV12, StateFileV13]);
-const CURRENT_VERSION = 13;
+/**
+ * The same, with projects: several where there was one. Everything an older file holds goes into the one project it
+ * has, which keeps its ID and its name. Tasks, what is asked of the owner, rules, schedules, runs and working copies
+ * say which project they are of; how tasks are started is kept per project; workflows, shelf elements, library
+ * sources, installed items and tokens are shared with every project; tokens reach every project.
+ */
+const StateFileV14 = StateFileV13.omit({ project: true }).extend({ version: z.literal(14), projects: AppState.shape.projects, sharing: AppState.shape.sharing });
+
+const StateFile = z.discriminatedUnion('version', [StateFileV1, StateFileV2, StateFileV3, StateFileV4, StateFileV5, StateFileV6, StateFileV7, StateFileV8, StateFileV9, StateFileV10, StateFileV11, StateFileV12, StateFileV13, StateFileV14]);
+const CURRENT_VERSION = 14;
 type StateFile = z.infer<typeof StateFile>;
 
 /**
@@ -123,7 +131,9 @@ function withoutAddressNames(library: LibraryState): LibraryState {
  * layout becomes one canvas named "Main" holding it. Pure.
  */
 export function migrate(file: StateFile): AppState {
-  const { organization, workspace, project, sessions } = file;
+  const { organization, workspace, sessions } = file;
+  const projects = 'projects' in file ? file.projects : [file.project];
+  const project = projects[0] as AppState['projects'][number];
   const canvases: Canvas[] =
     file.version === 1
       ? [{ ...newCanvas(project.id, FIRST_CANVAS_NAME, 0, new Date(project.createdAt)), layout: file.layout }]
@@ -131,11 +141,13 @@ export function migrate(file: StateFile): AppState {
   return tidy({
     organization,
     workspace,
-    project,
+    projects,
+    sharing: 'sharing' in file ? file.sharing : {},
     sessions,
     canvases,
     tokens: file.version >= 3 && 'tokens' in file ? file.tokens : [],
-    workflows: (file.version >= 4 && 'workflows' in file ? file.workflows : []).map((workflow) => (file.version < 8 ? withSourceMarks(workflow) : workflow)),
+    // Before projects every workflow carried the one project's ID. They are shared with every project now.
+    workflows: (file.version >= 4 && 'workflows' in file ? file.workflows : []).map((workflow) => (file.version < 8 ? withSourceMarks(workflow) : workflow)).map((workflow) => (file.version < 14 ? { ...workflow, projectId: null } : workflow)),
     runs: file.version >= 4 && 'runs' in file ? file.runs : [],
     drafts: file.version >= 5 && 'drafts' in file ? file.drafts : [],
     shelf: (file.version >= 5 && 'shelf' in file ? file.shelf : []).map(withFirstVersion),
@@ -145,6 +157,27 @@ export function migrate(file: StateFile): AppState {
     queue: file.version >= 12 && 'queue' in file ? file.queue : QueueState.parse({}),
     schedules: file.version >= 13 && 'schedules' in file ? file.schedules : SchedulesState.parse({}),
   });
+}
+
+/**
+ * A file from before projects, as it was read and before it is checked: the things that now say which project they
+ * are of are given the one project the file has, and how tasks are started moves under that project. Nothing else
+ * is touched, and a file that already has projects is returned as it is.
+ */
+export function intoOneProject(raw: unknown): unknown {
+  if (raw === null || typeof raw !== 'object') return raw;
+  const file = raw as Record<string, unknown>;
+  const projectId = (file.project as { id?: unknown } | undefined)?.id;
+  if (typeof file.version !== 'number' || file.version >= 14 || typeof projectId !== 'string') return raw;
+  const ofIt = (things: unknown): unknown => (Array.isArray(things) ? things.map((thing: unknown) => (thing !== null && typeof thing === 'object' && !('projectId' in thing) ? { ...thing, projectId } : thing)) : things);
+  const next: Record<string, unknown> = { ...file, runs: ofIt(file.runs), environments: ofIt(file.environments) };
+  if (file.queue !== null && typeof file.queue === 'object') {
+    const { limit, hold, automatic, ...queue } = file.queue as Record<string, unknown>;
+    const changed = limit !== undefined || hold !== undefined || automatic !== undefined;
+    next.queue = { ...queue, tasks: ofIt(queue.tasks), asks: ofIt(queue.asks), rules: ofIt(queue.rules), ...(changed ? { settings: { [projectId]: { ...(limit !== undefined ? { limit } : {}), ...(hold !== undefined ? { hold } : {}), ...(automatic !== undefined ? { automatic } : {}) } } } : {}) };
+  }
+  if (file.schedules !== null && typeof file.schedules === 'object') next.schedules = { ...(file.schedules as object), items: ofIt((file.schedules as { items?: unknown }).items) };
+  return next;
 }
 
 /**
@@ -219,7 +252,7 @@ export class JsonStore implements Store {
 
     let parsed: StateFile;
     try {
-      parsed = StateFile.parse(JSON.parse(text));
+      parsed = StateFile.parse(intoOneProject(JSON.parse(text)));
     } catch (error) {
       // Never overwrite a file we could not read: set it aside and start fresh.
       const aside = `${this.file}.unreadable-${Date.now()}`;

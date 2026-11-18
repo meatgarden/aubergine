@@ -114,7 +114,7 @@ describe('aubergine guide', () => {
     const { fetch: fetchWith, asked } = server();
     const text = await guideText(plain, inTerminal, fetchWith);
     expect(text).toBe(renderGuide({ reader: { session: true, scopes: [] } }));
-    expect(text.split('\n').length).toBeLessThanOrEqual(165);
+    expect(text.split('\n').length).toBeLessThanOrEqual(168);
     // It asked who the caller is, and nothing else.
     expect(asked).toEqual([`GET ${URL}/v1`]);
   });

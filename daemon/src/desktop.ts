@@ -53,7 +53,8 @@ export class Desktop {
 
   /** Opens a running session in the owner's terminal application. Says what it did, or why it could not. */
   async open(sessionId: string): Promise<OpenedOnDesktop> {
-    const session = this.sessions.get(sessionId);
+    // A window is opened on this computer, for a shell that runs on it.
+    const session = this.sessions.here(sessionId);
     if (session.state === 'exited') throw new ConflictError('This shell has ended: there is nothing to show. Restart it first.');
     const opener = this.options.opener;
     if (opener === null) return { opened: false, says: 'This server cannot open a terminal on the desktop.' };

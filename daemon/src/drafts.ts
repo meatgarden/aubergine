@@ -1,3 +1,4 @@
+import { ownerOfNew, projectNow } from './project-context';
 import {
   BRIEF_LINE,
   Element,
@@ -29,6 +30,7 @@ import {
   type Actor,
   type ShelfUsage,
   type ShelfVersion,
+  visibleIn,
 } from '@aubergine/shared';
 import { MemoryDraftLog, type DraftLog } from './draft-log';
 import { BadInputError, ConflictError, NotFoundError, type Sessions } from './sessions';
@@ -319,7 +321,7 @@ export class Drafts {
     if (this.hub.state.shelf.length >= SHELF_MAX) throw new ConflictError(`The shelf holds ${SHELF_MAX} elements; take some off first.`);
     const at = new Date().toISOString();
     const element: Element = { ...input, source: null };
-    const item: ShelfElement = { id: newId(), element, createdAt: at, updatedAt: at, version: 1, versions: [{ version: 1, element, at, by, note: '' }], state: 'current', replacedBy: null };
+    const item: ShelfElement = { id: newId(), projectId: ownerOfNew(this.hub.state, 'element'), element, createdAt: at, updatedAt: at, version: 1, versions: [{ version: 1, element, at, by, note: '' }], state: 'current', replacedBy: null };
     this.hub.emit({ type: 'shelf.changed', item });
     return item;
   }
@@ -390,8 +392,10 @@ export class Drafts {
   }
 
   /** The element to run by itself. A retired one is not run. */
-  runnable(elementId: string): Element {
+  runnable(elementId: string, projectId: string = projectNow(this.hub.state)): Element {
     const item = this.shelfElement(elementId);
+    // An element that is another project's own is, to this project, not there.
+    if (!visibleIn(item, projectId)) throw new NotFoundError(`No shelf element ${elementId}`);
     if (item.state === 'retired') {
       const other = item.replacedBy ? this.hub.state.shelf.find((e) => e.id === item.replacedBy) : undefined;
       throw new ConflictError(`"${item.element.name}" is retired and is not run by itself.${other ? ` Use "${other.element.name}".` : ''}`);

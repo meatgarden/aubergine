@@ -1,7 +1,8 @@
-import { SHOW_PARAM, canvasAddress } from '@aubergine/shared';
+import { SHOW_PARAM, canvasAddress, projectCanvasAddress } from '@aubergine/shared';
 
 /**
- * Which canvas a browser tab shows is carried by its address (`/c/<id>`), so
+ * Which canvas a browser tab shows is carried by its address (`/p/<project>/c/<canvas>`;
+ * the older `/c/<canvas>` still leads to the same canvas, whatever project it is in), so
  * tabs inside the page and separate browser tabs or windows both work, and
  * back and forward move between canvases.
  */
@@ -10,7 +11,8 @@ const LAST_CANVAS_KEY = 'aubergine.canvas';
 
 /** The canvas named by an address path, if it names one. */
 export function canvasIdFromPath(pathname: string): string | null {
-  const match = /^\/c\/([^/]+)\/?$/.exec(pathname);
+  // The canvas is what counts: a canvas that moved to another project is found under its old address too.
+  const match = /^(?:\/p\/[^/]+)?\/c\/([^/]+)\/?$/.exec(pathname);
   return match?.[1] ?? null;
 }
 
@@ -30,17 +32,20 @@ export function chooseCanvas(options: {
   return options.fallback;
 }
 
-export function rememberedCanvas(): string | null {
+/** The canvas this browser looked at last: in one project, or (with none named) at all. */
+export function rememberedCanvas(projectId?: string): string | null {
   try {
-    return localStorage.getItem(LAST_CANVAS_KEY);
+    return localStorage.getItem(projectId ? `${LAST_CANVAS_KEY}.${projectId}` : LAST_CANVAS_KEY);
   } catch {
     return null;
   }
 }
 
-export function rememberCanvas(canvasId: string): void {
+export function rememberCanvas(canvasId: string, projectId?: string): void {
   try {
     localStorage.setItem(LAST_CANVAS_KEY, canvasId);
+    // Per project too, so that coming back to a project comes back to the canvas that was open in it.
+    if (projectId) localStorage.setItem(`${LAST_CANVAS_KEY}.${projectId}`, canvasId);
   } catch {
     // Not remembering is harmless.
   }
@@ -52,8 +57,8 @@ export function sessionFromAddress(search: string): string | null {
 }
 
 /** Puts a canvas in the address bar. `push` adds a history step; otherwise the current one is replaced. */
-export function writeAddress(canvasId: string, push: boolean): void {
-  const target = canvasAddress(canvasId);
+export function writeAddress(canvasId: string, push: boolean, projectId?: string | null): void {
+  const target = projectId ? projectCanvasAddress(projectId, canvasId) : canvasAddress(canvasId);
   if (location.pathname === target && location.search === '') return;
   if (push) history.pushState(null, '', target);
   else history.replaceState(null, '', target);

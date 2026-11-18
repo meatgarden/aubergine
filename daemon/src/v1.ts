@@ -2,6 +2,14 @@ import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import type { ZodType } from 'zod';
 import {
   FEATURES,
+  PROJECT_HEADER,
+  firstProject,
+  ofProject,
+  openProjects,
+  reachesProject,
+  sortedProjects,
+  visibleIn,
+  type ProjectScope,
   GRANTABLE_SCOPES,
   KnownScope,
   NODE_DEFAULT_HEIGHT,
@@ -49,6 +57,9 @@ import type { Library } from './library';
 import type { Environments } from './environments';
 import type { Asker, Queue } from './queue';
 import type { Desktop } from './desktop';
+import { inProject } from './project-context';
+import { ProjectMemory, namesOutOfReach, projectOfId, withinReach } from './project-reach';
+import type { Projects } from './projects';
 import type { Schedules } from './schedules';
 import { fingerprintOf } from './terminal-access';
 
@@ -66,6 +77,7 @@ export interface PublicRouteDeps {
   queue: Queue;
   schedules: Schedules;
   desktop: Desktop;
+  projects: Projects;
   activity: ActivityLog;
   viewers: Viewers;
   limiter: RateLimiter;
@@ -92,7 +104,12 @@ export interface PublicRouteDeps {
 }
 
 /** What a handler is given: the route's input, already checked, and who is asking. */
-type Context<I extends RouteId> = RouteInput<I> & { principal: Principal; request: FastifyRequest; reply: FastifyReply };
+/** The project a request is about: `id` is where a new thing goes; `scope` is what a list shows (null: every project). */
+export interface RequestProject {
+  id: string;
+  scope: ProjectScope;
+}
+type Context<I extends RouteId> = RouteInput<I> & { principal: Principal; request: FastifyRequest; reply: FastifyReply; project: RequestProject };
 type Handlers = { [I in RouteId]: (context: Context<I>) => RouteOutput<I> | Promise<RouteOutput<I>> };
 
 /**
@@ -121,7 +138,8 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
 
   const { messages, library, environments, queue, schedules } = deps;
   /** Who adds to one of the two lists. Only the owner, and a token the owner made with review switched off, add without waiting for a yes. */
-  const askerOf = (principal: Principal): Asker =>
+  const askerOf = (principal: Principal, projectId: string): Asker => ({ ...askerIn(principal), projectId });
+  const askerIn = (principal: Principal): Omit<Asker, 'projectId'> =>
     principal.kind === 'user'
       ? { by: { kind: 'person' }, trusted: true, owner: true }
       : principal.kind === 'token'
@@ -142,6 +160,32 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
   const detail = (canvas: Canvas): CanvasDetail => ({ ...summary(canvas), nodes: canvas.layout.nodes, frames: canvas.layout.frames });
 
   /** Who is asking, for keeping one caller's idempotency keys apart from another's. */
+  /**
+   * The project a request is made in, and which projects its lists show. A session: its own, always. Otherwise the
+   * project of what the address names; else the one the request names (`all`: every project, for a caller that
+   * reaches every project); else the first project the caller reaches.
+   */
+  const projectFor = (principal: Principal, named: string | undefined, asked: unknown): RequestProject => {
+    const state = hub.state;
+    if (principal.kind === 'session') {
+      const own = state.sessions.find((s) => s.id === principal.sessionId)?.projectId ?? firstProject(state).id;
+      return { id: own, scope: own };
+    }
+    const reach = principal.kind === 'token' ? (principal.projects ?? null) : null;
+    const reachable = openProjects(state).filter((p) => reachesProject(reach, p.id));
+    const first = (reachable[0] ?? sortedProjects(state).find((p) => reachesProject(reach, p.id)) ?? firstProject(state)).id;
+    if (named !== undefined) return { id: named, scope: named };
+    if (asked === 'all') {
+      if (reach !== null && reach.kind !== 'all' && reach.projectIds.length > 1) throw deps.fail(400, 'bad_request', 'This token reaches some projects, not all: name one of them with projectId.');
+      return { id: first, scope: reach !== null && reach.kind !== 'all' ? first : null };
+    }
+    if (typeof asked === 'string') {
+      if (!state.projects.some((p) => p.id === asked)) throw deps.fail(404, 'not_found', `No project ${asked}`);
+      return { id: asked, scope: asked };
+    }
+    return { id: first, scope: first };
+  };
+
   const caller = (principal: Principal): string =>
     principal.kind === 'user' ? 'user' : principal.kind === 'token' ? `token:${principal.tokenId}` : `session:${principal.sessionId}`;
 
@@ -170,12 +214,12 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
 
     /* ---------- Canvases ---------- */
 
-    listCanvases: ({ query }) => {
-      const page = paginate(sessions.listCanvases(), (c) => c.id, query);
+    listCanvases: ({ query, project }) => {
+      const page = paginate(sessions.listCanvases().filter((c) => ofProject(c, project.scope)), (c) => c.id, query);
       return { items: page.items.map(summary), nextCursor: page.nextCursor };
     },
 
-    createCanvas: ({ body }) => detail(sessions.createCanvas(body)),
+    createCanvas: ({ body, project }) => detail(sessions.createCanvas(body, project.id)),
 
     getCanvas: ({ params }) => detail(sessions.getCanvas(params.canvasId)),
 
@@ -222,8 +266,8 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
       return { session: created.session, canvasId: params.canvasId, node: created.node };
     },
 
-    listSessions: ({ query }) => {
-      const wanted = query.state === undefined ? hub.state.sessions : hub.state.sessions.filter((s) => s.state === query.state);
+    listSessions: ({ query, project }) => {
+      const wanted = hub.state.sessions.filter((s) => ofProject(s, project.scope) && (query.state === undefined || s.state === query.state));
       return paginate(wanted, (s) => s.id, query);
     },
 
@@ -303,8 +347,8 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
 
     /* ---------- Workflows ---------- */
 
-    listWorkflows: ({ query }) => {
-      const page = paginate(workflows.list(), (w) => w.id, query);
+    listWorkflows: ({ query, project }) => {
+      const page = paginate(workflows.list(project.scope), (w) => w.id, query);
       return { items: page.items.map(summaryOfWorkflow), nextCursor: page.nextCursor };
     },
 
@@ -331,44 +375,60 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
 
     /* ---------- The queue, the owner's list, rules ---------- */
 
-    listTasks: ({ query }) => queue.list(query),
-    addTask: ({ body, principal }) => queue.add(body, askerOf(principal)),
+    listTasks: ({ query, project }) => queue.list(query, project.scope),
+    addTask: ({ body, principal, project }) => queue.add(body, askerOf(principal, project.id)),
     getTask: ({ params }) => queue.get(params.taskId),
     // Everything from here to the rules that changes what was decided is the owner's: `authorize` has refused everyone else.
     changeTask: ({ params, body }) => queue.change(params.taskId, body),
-    withdrawTask: ({ params, principal }) => queue.withdraw(params.taskId, askerOf(principal)),
+    withdrawTask: ({ params, principal, project }) => queue.withdraw(params.taskId, askerOf(principal, project.id)),
     acceptTask: ({ params }) => queue.accept(params.taskId),
     declineTask: ({ params }) => queue.decline(params.taskId),
     retryTask: ({ params }) => queue.again(params.taskId),
     clearTask: ({ params }) => queue.clear(params.taskId),
     reorderTasks: ({ body }) => queue.reorder(body.taskIds),
-    startTasks: ({ body }) => queue.start(body?.taskId),
-    getQueue: () => queue.settings(),
-    changeQueue: ({ body }) => queue.changeSettings(body),
-    getForYou: () => queue.forYou(),
-    addAsk: ({ body, principal }) => queue.addAsk(body, askerOf(principal)),
+    startTasks: ({ body, project }) => queue.start(body?.taskId, project.id),
+    getQueue: ({ project }) => queue.settings(project.id),
+    changeQueue: ({ body: { projectId: _of, ...change }, project }) => queue.changeSettings(project.id, change),
+    getForYou: ({ project }) => queue.forYou(project.scope),
+    addAsk: ({ body, principal, project }) => queue.addAsk(body, askerOf(principal, project.id)),
     finishAsk: ({ params }) => queue.removeAsk(params.askId),
     dismissAsk: ({ params }) => queue.removeAsk(params.askId),
-    listRules: () => queue.rules(),
-    addRule: ({ body }) => queue.addRule(body),
+    listRules: ({ project }) => queue.rules(project.scope),
+    addRule: ({ body, project }) => queue.addRule(body, project.id),
     removeRule: ({ params }) => queue.removeRule(params.ruleId),
     // A window on the owner's desktop, and the one setting about it: `authorize` has refused everyone but the owner.
     openSessionOnDesktop: ({ params }) => deps.desktop.open(params.sessionId),
     changeDesktopSettings: ({ body }) => deps.desktop.setOpenNew(body.openNew),
-    listSchedules: ({ query }) => schedules.list(query),
-    addSchedule: ({ body }) => schedules.add(body),
+    /* ---------- Projects, and what is shared between them ---------- */
+
+    // Which projects there are: the ones the caller reaches. Everything that changes one is the owner's alone.
+    listProjects: ({ query, principal }) => paginate(deps.projects.list((projectId) => principal.kind !== 'token' || reachesProject(principal.projects, projectId)), (p) => p.id, query),
+    getProject: ({ params }) => deps.projects.get(params.projectId),
+    addProject: ({ body }) => deps.projects.add(body),
+    changeProject: ({ params, body }) => deps.projects.change(params.projectId, body),
+    moveCanvasToProject: ({ params, body }) => deps.projects.moveCanvas(params.canvasId, body.projectId),
+    archiveProject: ({ params, body }) => deps.projects.archive(params.projectId, body ?? {}),
+    reopenProject: ({ params }) => deps.projects.reopen(params.projectId),
+    removeProject: ({ params }) => deps.projects.remove(params.projectId),
+    getSharing: () => deps.projects.sharing(),
+    changeSharing: ({ body }) => deps.projects.setDefault(body.kind, body.default),
+    moveSharedThing: ({ body }) => deps.projects.moveThing(body.kind, body.id, body.projectId),
+    // A session, about itself: the project its terminal is in.
+    getSessionProject: ({ params }) => deps.projects.get(sessions.get(params.sessionId).projectId),
+    listSchedules: ({ query, project }) => schedules.list(query, project.scope),
+    addSchedule: ({ body, project }) => schedules.add(body, project.id),
     changeSchedule: ({ params, body }) => schedules.change(params.scheduleId, body),
     removeSchedule: ({ params }) => schedules.remove(params.scheduleId),
     runSchedule: ({ params }) => schedules.runNow(params.scheduleId),
     // A session, about itself: what it proposes waits for its owner, and it reads only what is its own of the owner's list.
-    proposeSessionTask: ({ params, body }) => queue.add(body, { by: { kind: 'agent', name: sessions.get(params.sessionId).name.slice(0, 120), sessionId: params.sessionId }, trusted: false, owner: false }),
-    addSessionAsk: ({ params, body }) => queue.addAsk(body, { by: { kind: 'agent', name: sessions.get(params.sessionId).name.slice(0, 120), sessionId: params.sessionId }, trusted: false, owner: false }),
+    proposeSessionTask: ({ params, body }) => queue.add(body, { by: { kind: 'agent', name: sessions.get(params.sessionId).name.slice(0, 120), sessionId: params.sessionId }, trusted: false, owner: false, projectId: sessions.get(params.sessionId).projectId }),
+    addSessionAsk: ({ params, body }) => queue.addAsk(body, { by: { kind: 'agent', name: sessions.get(params.sessionId).name.slice(0, 120), sessionId: params.sessionId }, trusted: false, owner: false, projectId: sessions.get(params.sessionId).projectId }),
     getSessionQueue: ({ params }) => queue.ownQueue(params.sessionId),
 
     /* ---------- Environments ---------- */
 
     getEnvironmentOffers: ({ query }) => environments.offers(query.folder),
-    listEnvironments: ({ query }) => environments.list(query),
+    listEnvironments: ({ query, project }) => environments.list(query, project.scope),
     getEnvironment: ({ params }) => environments.detail(params.environmentId),
     // The owner's own: `authorize` has refused everyone else. For an environment whose session is gone, this is the only way to its text.
     getEnvironmentDifference: ({ params, query }) => environments.difference(params.environmentId, query.file),
@@ -384,7 +444,7 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
       return environments.differenceForSession(params.sessionId, query.file);
     },
 
-    listRuns: ({ query }) => workflows.listRuns(query),
+    listRuns: ({ query, project }) => workflows.listRuns(query, project.scope),
 
     // The line that tells an agent about its run is typed for the owner only: typing into a terminal is not something a token may cause.
     startRun: ({ body, principal }) => workflows.start({ ...body, typeKickoff: body.kickoff && mayKickoff(principal, body.sessionId) }, actorOf(principal)),
@@ -402,7 +462,7 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
 
     startRuns: ({ params, body, principal }) => workflows.startMany(params.workflowId, body, actorOf(principal), (sessionId) => mayKickoff(principal, sessionId)),
 
-    getBoard: ({ query }) => workflows.board(query),
+    getBoard: ({ query, project }) => workflows.board({ ...query, projectId: project.scope ?? 'all' }),
 
     /* ---------- Drafts ---------- */
 
@@ -430,7 +490,7 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
 
     /* ---------- The library ---------- */
 
-    listLibrarySources: () => ({ sources: library.sources() }),
+    listLibrarySources: ({ project }) => ({ sources: library.sources().filter((source) => visibleIn(source, project.scope)) }),
 
     // The owner's alone, and with `refreshLibrarySource` the only two things that can fetch.
     addLibrarySource: ({ body }) => library.addSource(body),
@@ -471,7 +531,7 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
 
     /* ---------- The shelf ---------- */
 
-    listElements: ({ query }) => paginate(drafts.shelf(), (e) => e.id, query),
+    listElements: ({ query, project }) => paginate(drafts.shelf().filter((item) => visibleIn(item, project.scope)), (e) => e.id, query),
 
     createElement: ({ body, principal }) => drafts.createOnShelf(body, actorOf(principal)),
 
@@ -495,9 +555,11 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
 
     copyElement: ({ params, principal }) => drafts.copyOnShelf(params.elementId, actorOf(principal)),
 
-    runElement: ({ params, body, principal }) => {
+    runElement: ({ params, body, principal, project }) => {
       const { kickoff, ...rest } = body;
-      return workflows.startElement(drafts.runnable(params.elementId), { ...rest, typeKickoff: kickoff && mayKickoff(principal, rest.sessionId) }, actorOf(principal));
+      // An element is run in the project of the terminal it runs on: one that is another project's own is not there for it.
+      const inProjectOf = (rest.sessionId ? hub.state.sessions.find((s) => s.id === rest.sessionId)?.projectId : undefined) ?? project.id;
+      return workflows.startElement(drafts.runnable(params.elementId, inProjectOf), { ...rest, typeKickoff: kickoff && mayKickoff(principal, rest.sessionId) }, actorOf(principal));
     },
 
     tickRunItem: ({ params, body, principal }) => workflows.tick(params.runId, body, actorOf(principal)),
@@ -568,9 +630,23 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
       const out = reply.raw;
       out.writeHead(200, { 'content-type': 'text/event-stream; charset=utf-8', 'cache-control': 'no-store', connection: 'keep-alive', 'x-accel-buffering': 'no' });
       out.write(': connected\n\n');
-      const unsubscribe = hub.subscribe((event) => {
+      // A token limited to some projects hears nothing of another. What each ID was of is remembered from the start,
+      // so that a change which only says "this was removed" can still be told apart.
+      const limited = principal.kind === 'token' && principal.projects && principal.projects.kind !== 'all' ? principal.projects : null;
+      const memory = limited ? new ProjectMemory(() => hub.state) : null;
+      memory?.note(hub.state);
+      const unsubscribe = hub.subscribe((whole) => {
         // Tokens and what they did are the owner's business, not a stream's.
-        if (event.type.startsWith('token.')) return;
+        if (whole.type.startsWith('token.')) return;
+        let event = whole;
+        if (limited && memory) {
+          memory.note(whole);
+          // Projects themselves, and what is shared, are not for a limited token to follow change by change.
+          if (whole.type.startsWith('project.') || whole.type.startsWith('sharing.') || whole.type === 'canvas.project') return;
+          const within = withinReach(whole, limited, (id) => memory.of(id));
+          if (within === null) return;
+          event = within;
+        }
         if (canvasId !== undefined && !concerns(hub.state, event, canvasId)) return;
         // What a terminal shows is not for a caller that may not read that terminal.
         const about = 'sessionId' in event ? event.sessionId : 'session' in event ? event.session.id : null;
@@ -692,8 +768,21 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
 
         // Who may: decided before the query or the body is looked at closely, and before anything is looked up.
         // For a session: what decides about its terminal is handed to `authorize` with the question, not looked up after it.
-        const resource: Resource = { ...(params.sessionId ? deps.resourceOf(params.sessionId) : {}), ...(params.canvasId ? { canvasId: params.canvasId } : {}) };
+        // Which project the request is about: the one of a thing it names in its address, else the one it names itself.
+        // Looked at as it was sent; worked out before anyone is let in, so that `authorize` is asked about that project.
+        const state = hub.state;
+        const named = Object.values(params)
+          .map((value) => projectOfId(state, value))
+          .find((found) => typeof found === 'string') as string | undefined;
+        const sent = (from: unknown): unknown => (from !== null && typeof from === 'object' ? (from as Record<string, unknown>).projectId : undefined);
+        // In its query, in its body, or (for a client that means one project for everything it asks) in a header.
+        const inHeader = request.headers[PROJECT_HEADER];
+        const asked = sent(request.query) ?? sent(request.body) ?? (typeof inHeader === 'string' && inHeader !== '' ? inHeader : undefined);
+        const askedId = typeof asked === 'string' && asked !== 'all' ? asked : undefined;
+        const resource: Resource = { ...(params.sessionId ? deps.resourceOf(params.sessionId) : {}), ...(params.canvasId ? { canvasId: params.canvasId } : {}), ...(named !== undefined ? { projectId: named } : askedId !== undefined ? { projectId: askedId } : {}) };
         let principal = deps.principalOf(request);
+        // A token limited to some projects: anything its body or its query names must be within them, whatever the route does with it.
+        if (principal?.kind === 'token' && principal.projects && principal.projects.kind !== 'all' && namesOutOfReach([request.body, request.query, asked], principal.projects, (id) => projectOfId(state, id))) throw deps.fail(404, 'not_found', 'Not found');
         for (const action of actionsFor(spec, request.body)) principal = deps.allow(request, action, resource);
         // A field that needs a further permission: asked as well, about the session this call would make.
         for (const [field, action] of Object.entries(spec.fieldAlso ?? {})) {
@@ -711,14 +800,20 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
 
         const query = spec.query ? parse(spec.query, request.query) : undefined;
         const body = spec.body ? parse(spec.body, request.body ?? (spec.bodyOptional ? {} : undefined)) : undefined;
-        const context = { params, query, body, principal, request, reply };
+        const project = projectFor(principal, named, asked);
+        const context = { params, query, body, principal, request, reply, project };
 
-        if (spec.stream) return handle(context);
+        if (spec.stream) return inProject(project.id, () => handle(context));
 
         const checked = async (): Promise<unknown> => {
-          const answer = await handle(context);
-          // A token is not given terminal content of sessions whose terminal it may not read, whatever the route.
+          // Run as a request made in that project: what it makes is made there.
+          const answered = await inProject(project.id, () => handle(context));
           const caller = principal;
+          // A token limited to some projects is given nothing of another, whatever the route: what a handler let through is taken out here.
+          const limited = caller.kind === 'token' && caller.projects && caller.projects.kind !== 'all' ? caller.projects : null;
+          const answer = limited ? withinReach(answered, limited, (id) => projectOfId(hub.state, id)) : answered;
+          if (limited && answer === null && answered !== null && answered !== undefined) throw deps.fail(404, 'not_found', 'Not found');
+          // A token is not given terminal content of sessions whose terminal it may not read, whatever the route.
           const result = caller.kind === 'user' ? answer : withoutTerminalContent(answer, (sessionId) => mayReadTerminal(caller, sessionId));
           // A handler that answers with something its route does not declare is a bug: say so at once, in tests.
           if (deps.validateResponses && spec.response) {

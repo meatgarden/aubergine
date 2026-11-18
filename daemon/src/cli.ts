@@ -11,6 +11,8 @@ import {
   Id,
   SESSION_ENV,
   SESSION_HEADER,
+  PROJECT_HEADER,
+  firstProject,
   HistoryList,
   RECAP_MAX,
   RECAP_WANTED,
@@ -50,6 +52,8 @@ import { guideText } from './cli/guide';
 import { parseLibraryCommand, runLibraryCommand } from './cli/library';
 import { parseCopiesCommand, runCopiesCommand } from './cli/copies';
 import { parseAskCommand, parseRuleCommand, parseTaskCommand, parseTodoCommand, runQueueCommand } from './cli/queue';
+import { expandHome } from './settings';
+import { INSIDE_ITS_OWN, TAKES_PROJECT, parseProjectCommand, pickProject, runProjectCommand, takeProject } from './cli/project';
 import { parseScheduleCommand, runScheduleCommand } from './cli/schedule';
 
 /** What `--copy` asks for, by the name its kind is registered under. The server says whether the folder can have one. */
@@ -82,6 +86,39 @@ import { cookieName } from './server';
 import { daemonServiceSpec, installService, launchAgentPath, uninstallService } from './service/launchd';
 
 /** Talks to the running daemon the same way the web app does: through the wire protocol. */
+/** The project this command is about, when it is about one: named with --project, chosen with `project use`, or the project of the terminal it is typed in. Sent with every call. */
+let meantProject: string | null = null;
+/** The project named with --project on this very command, and not one remembered from before: a token is limited only when the owner said so here. */
+let namedProject: string | null = null;
+const REMEMBERED_PROJECT = 'cli-project';
+
+/** Works out which project the command means, once, before it runs. Failing to find out is not an error: the server then means the first project. */
+async function meanProject(config: Config, named: string | null, commandName: string): Promise<void> {
+  const insideId = process.env[SESSION_ENV.sessionId];
+  if (insideId && process.env[SESSION_ENV.token]) {
+    // In a terminal on a canvas the project is that terminal's own.
+    if (named !== null) throw new UsageError(INSIDE_ITS_OWN);
+    if (!TAKES_PROJECT.includes(commandName)) return;
+    meantProject = await ownerClient(config)
+      .then((client) => client.getSession({ sessionId: insideId }))
+      .then((session) => session.projectId, () => null);
+    return;
+  }
+  if (named === null && !TAKES_PROJECT.includes(commandName)) return;
+  const remembered = named === null ? await readFile(path.join(config.dataDir, REMEMBERED_PROJECT), 'utf8').then((text) => text.trim(), () => '') : '';
+  if (named === null && remembered === '') return;
+  const projects: Awaited<ReturnType<Client['getProject']>>[] = [];
+  try {
+    for await (const project of (await ownerClient(config)).each.listProjects()) projects.push(project);
+  } catch (error) {
+    if (named !== null) throw error instanceof AubergineError ? new UsageError(error.code === 'network' ? `The Aubergine server is not answering on http://127.0.0.1:${config.port}. Is it running?` : error.message) : error;
+    return;
+  }
+  if (named !== null) meantProject = namedProject = pickProject(projects, named).id;
+  // One that was chosen earlier and is gone or archived since is forgotten quietly.
+  else meantProject = projects.find((project) => project.id === remembered && project.state === 'open')?.id ?? null;
+}
+
 async function call(config: Config, method: string, urlPath: string, body?: unknown, timeoutMs = 15_000): Promise<unknown> {
   const origin = `http://127.0.0.1:${config.port}`;
   let token: string;
@@ -97,6 +134,7 @@ async function call(config: Config, method: string, urlPath: string, body?: unkn
       headers: {
         origin,
         cookie: `${cookieName(config.port)}=${token}`,
+        ...(meantProject ? { [PROJECT_HEADER]: meantProject } : {}),
         ...(body === undefined ? {} : { 'content-type': 'application/json' }),
       },
       ...(body === undefined ? {} : { body: JSON.stringify(body) }),
@@ -131,7 +169,7 @@ async function ownerClient(config: Config): Promise<Client> {
   }
   // A command typed inside a session says which: the server records that beside the few things only the owner may do.
   const inside = process.env[SESSION_ENV.sessionId];
-  return createClient({ baseUrl: origin, headers: { origin, cookie: `${cookieName(config.port)}=${token}`, ...(inside ? { [SESSION_HEADER]: inside } : {}) } });
+  return createClient({ baseUrl: origin, headers: { origin, cookie: `${cookieName(config.port)}=${token}`, ...(inside ? { [SESSION_HEADER]: inside } : {}), ...(meantProject ? { [PROJECT_HEADER]: meantProject } : {}) } });
 }
 
 /** Runs calls made with the client, saying what the server said in the words this command uses. */
@@ -275,7 +313,9 @@ async function runHook(event: HookEvent): Promise<number> {
 }
 
 async function main(): Promise<number> {
-  const command = parseCommand(process.argv.slice(2));
+  // `--project <name>` is taken out first: it says which project the command is about, for the commands that take it.
+  const typed = takeProject(process.argv.slice(2));
+  const command = parseCommand(typed.rest);
   if (command.name === 'hook') return runHook(command.event);
   // Before anything is read or printed: this command speaks a protocol on standard output, and never uses the owner's sign-in.
   if (command.name === 'mcp') return (await import('@aubergine/mcp')).runMcp(command.words, process.env);
@@ -293,6 +333,7 @@ async function main(): Promise<number> {
     return 0;
   }
   const config = loadConfig();
+  await meanProject(config, typed.project, typed.rest[0] ?? '');
 
   switch (command.name) {
     case 'help':
@@ -347,7 +388,9 @@ async function main(): Promise<number> {
 
     case 'list': {
       const { state } = StateResponse.parse(await call(config, 'GET', paths.state));
-      console.log(formatSessions(state.sessions));
+      // Of the project the command means; of the first project where it means none.
+      const of = meantProject ?? firstProject(state).id;
+      console.log(formatSessions(state.sessions.filter((session) => session.projectId === of)));
       return 0;
     }
 
@@ -598,6 +641,16 @@ async function main(): Promise<number> {
       return runQueueCommand(parsed, { owner: (work) => v1(config, work), env: process.env, print: (text) => console.log(text) });
     }
 
+    case 'project':
+      return runProjectCommand(parseProjectCommand(command.words), {
+        owner: (work) => v1(config, work),
+        env: process.env,
+        print: (text) => console.log(text),
+        remember: async (projectId) => (projectId === null ? rm(path.join(config.dataDir, REMEMBERED_PROJECT), { force: true }) : writeFile(path.join(config.dataDir, REMEMBERED_PROJECT), `${projectId}\n`, { mode: 0o600 })),
+        remembered: () => readFile(path.join(config.dataDir, REMEMBERED_PROJECT), 'utf8').then((text) => text.trim() || null, () => null),
+        expandFolder: (folder) => path.resolve(expandHome(folder)),
+      });
+
     case 'schedule':
       return runScheduleCommand(parseScheduleCommand(command.words), { owner: (work) => v1(config, work), env: process.env, print: (text) => console.log(text) });
 
@@ -736,7 +789,9 @@ async function main(): Promise<number> {
     case 'token-create': {
       // The scopes are as typed; whether each is one a token can have is for the server to say.
       const body = { name: command.tokenName, scopes: command.scopes as CreateTokenBody['scopes'], reviewWorkflowChanges: command.review, ...expiryFromOption(command.expires), ...(await reachFromOption(config, command.reach)) };
-      const created = await v1(config, (client) => client.createToken({ body }));
+      // With --project: a token that reaches that project and no other, for everything it may do.
+      const created = await v1(config, (client) => client.createToken({ body: { ...body, ...(namedProject ? { projects: { kind: 'projects' as const, projectIds: [namedProject] } } : {}) } }));
+      if (namedProject) console.error('It reaches one project only: it sees and hears nothing of the others.');
       // The secret, alone, on standard output, so that it can be captured: TOKEN=$(aubergine token create …).
       // Everything said about it goes to standard error. It is not written anywhere else.
       console.error(

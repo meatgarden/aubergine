@@ -20,7 +20,47 @@ export type Organization = z.infer<typeof Organization>;
 export const Workspace = z.object({ id: Id, organizationId: Id, name: Name, createdAt: Timestamp });
 export type Workspace = z.infer<typeof Workspace>;
 
-export const Project = z.object({ id: Id, workspaceId: Id, name: Name, createdAt: Timestamp });
+const PlaceKind = z.string().regex(/^[a-z][a-z0-9-]{0,39}$/);
+/**
+ * Which server owns a project's record. Today there is one answer, "this server", set by the server and never by a
+ * caller. Nothing looks at it but `isLocalHome`, which everything asks before it touches a folder or reads a file
+ * for a project. Open on purpose: a later kind adds its own fields.
+ */
+export const ProjectHome = z.looseObject({ kind: PlaceKind });
+export type ProjectHome = z.infer<typeof ProjectHome>;
+export const LOCAL_HOME: ProjectHome = { kind: 'local' };
+/** Whether this server owns the project's record, and may touch its folders and files. */
+export const isLocalHome = (thing: { home?: ProjectHome | undefined }): boolean => (thing.home ?? LOCAL_HOME).kind === 'local';
+
+/**
+ * Which machine a session's shell runs on. Today there is one answer, "this computer", set by the server and never
+ * by a caller. Nothing looks at it but `isLocalHost`, which everything asks before it starts a shell, types into
+ * one or reads its files.
+ */
+export const SessionHost = z.looseObject({ kind: PlaceKind });
+export type SessionHost = z.infer<typeof SessionHost>;
+export const LOCAL_HOST: SessionHost = { kind: 'local' };
+/** Whether the session's shell runs on this computer. */
+export const isLocalHost = (thing: { host?: SessionHost | undefined }): boolean => (thing.host ?? LOCAL_HOST).kind === 'local';
+
+export const PROJECTS_MAX = 50;
+export const PROJECT_FOLDERS_MAX = 20;
+const Folder = z.string().startsWith('/').max(4096);
+
+/** A project: its own canvases, terminals, queue, schedules and rules. A control room of its own in the one server. */
+export const Project = z.object({
+  id: Id,
+  workspaceId: Id,
+  name: Name.regex(/^[^\p{Cc}\u202a-\u202e\u2066-\u2069]*$/u, 'A name is one line of plain text'),
+  color: z.string().max(20).default('none').describe('A named color, or `#rrggbb`.'),
+  order: z.number().finite().default(0).describe('Its place among the projects; lower comes first.'),
+  labels: z.record(z.string().max(63), z.string().max(256)).default({}),
+  folders: z.array(Folder).max(PROJECT_FOLDERS_MAX).default([]).describe('The folders its work is in. May be empty.'),
+  defaultFolder: Folder.nullable().default(null).describe('One of its folders: where a new terminal starts when it names no folder. Null: where new terminals start anyway.'),
+  home: ProjectHome.default(LOCAL_HOME).describe('Which server owns its record. Set by the server.'),
+  state: z.enum(['open', 'archived']).default('open'),
+  createdAt: Timestamp,
+});
 export type Project = z.infer<typeof Project>;
 
 export const SessionName = Name;
@@ -210,6 +250,8 @@ export const SHELL_NAMES: readonly string[] = ['zsh', 'bash', 'fish', 'sh', 'das
 export const Session = z.object({
   id: Id,
   projectId: Id,
+  /** Which machine its shell runs on. Set by the server; today always this computer. */
+  host: SessionHost.optional(),
   name: SessionName,
   createdAt: Timestamp,
   state: SessionState.default('open'),
@@ -338,7 +380,10 @@ export type Canvas = z.infer<typeof Canvas>;
 export const AppState = z.object({
   organization: Organization,
   workspace: Workspace,
-  project: Project,
+  /** The projects, at least one. Everything on a canvas, in the queue or on a schedule belongs to one. */
+  projects: z.array(Project).min(1).max(PROJECTS_MAX),
+  /** For each kind of thing that can be shared: whether a new one is shared with every project, or belongs to the project it is made in. */
+  sharing: z.record(z.string().max(40), z.enum(['shared', 'project'])).default({}),
   sessions: z.array(Session),
   canvases: z.array(Canvas).min(1),
   /** API tokens. Their hashes are blanked before the state is sent to a browser. */
@@ -390,8 +435,8 @@ export function createInitialState(now: Date = new Date()): AppState {
     name: 'Default',
     createdAt,
   };
-  const project: Project = { id: newId(), workspaceId: workspace.id, name: 'Default', createdAt };
-  return { organization, workspace, project, sessions: [], canvases: [newCanvas(project.id, FIRST_CANVAS_NAME, 0, now)], tokens: [], workflows: [], runs: [], drafts: [], shelf: [], repositoryAccepted: [], library: { sources: [], installed: [], requests: [] }, environments: [], queue: QueueState.parse({}), schedules: SchedulesState.parse({}) };
+  const project: Project = { id: newId(), workspaceId: workspace.id, name: 'Default', color: 'none', order: 0, labels: {}, folders: [], defaultFolder: null, home: LOCAL_HOME, state: 'open', createdAt };
+  return { organization, workspace, projects: [project], sharing: {}, sessions: [], canvases: [newCanvas(project.id, FIRST_CANVAS_NAME, 0, now)], tokens: [], workflows: [], runs: [], drafts: [], shelf: [], repositoryAccepted: [], library: { sources: [], installed: [], requests: [] }, environments: [], queue: QueueState.parse({}), schedules: SchedulesState.parse({}) };
 }
 
 /** Canvases in tab order. */

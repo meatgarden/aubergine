@@ -58,7 +58,7 @@ function sample() {
   const builder = session('builder', { status: { ...NO_STATUS, state: 'idle', lastExit: 2 }, lastOutputAt: '2026-01-01T00:07:00.000Z' });
   const old = session('old', { state: 'parked' });
   const main = base.canvases[0]!;
-  const deploys = newCanvas(base.project.id, 'Deploys', 1, new Date(at));
+  const deploys = newCanvas(base.projects[0]!.id, 'Deploys', 1, new Date(at));
   const app: AppState = {
     ...base,
     sessions: [web, old, builder, db, api],
@@ -303,7 +303,7 @@ describe('drawing only what is in view', () => {
 
 describe('a thousand sessions', () => {
   const base = createInitialState(new Date(at));
-  const canvases = Array.from({ length: 10 }, (_, c) => (c === 0 ? base.canvases[0]! : newCanvas(base.project.id, `Canvas ${c + 1}`, c, new Date(at))));
+  const canvases = Array.from({ length: 10 }, (_, c) => (c === 0 ? base.canvases[0]! : newCanvas(base.projects[0]!.id, `Canvas ${c + 1}`, c, new Date(at))));
   const sessions: Session[] = [];
   const big: AppState = {
     ...base,

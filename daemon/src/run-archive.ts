@@ -7,6 +7,10 @@ export interface ArchiveQuery {
   sessionId?: string | undefined;
   workflowId?: string | undefined;
   status?: 'finished' | 'stopped' | undefined;
+  /** Only runs of this project. */
+  projectId?: string | undefined;
+  /** With `projectId`: also runs that do not say their project, which are from before there were several. For the project there was then. */
+  orUnmarked?: boolean | undefined;
   limit: number;
   cursor?: string | undefined;
 }
@@ -54,6 +58,7 @@ function pageOf(entries: readonly ArchivedRun[], query: ArchiveQuery): { items: 
     if (query.sessionId !== undefined && entry.run.sessionId !== query.sessionId) continue;
     if (query.workflowId !== undefined && entry.run.workflowId !== query.workflowId) continue;
     if (query.status !== undefined && entry.run.status !== query.status) continue;
+    if (query.projectId !== undefined && entry.run.projectId !== query.projectId && !(entry.run.projectId === undefined && query.orUnmarked)) continue;
     items.push(entry);
   }
   const last = entries[index - 1];

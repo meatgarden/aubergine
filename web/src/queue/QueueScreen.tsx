@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
-import { BUSY_STATES, QUEUE_LIMIT_MAX, RULE_EVENT_WORDS, RuleEvent, TASK_STATE_WORDS, addedByWords, forYou, queueWords, sourceWords, waitingTasks, type ForYouItem, type RuleAction, type RuleList, type Run, type Task } from '@aubergine/shared';
+import { openProjects, queueSettingsOf, stateOf, BUSY_STATES, QUEUE_LIMIT_MAX, RULE_EVENT_WORDS, RuleEvent, TASK_STATE_WORDS, addedByWords, forYou, queueWords, sourceWords, waitingTasks, type ForYouItem, type RuleAction, type RuleList, type Run, type Task } from '@aubergine/shared';
 import { api } from '../api';
 import { notificationsWanted, setNotificationsWanted } from '../attention';
-import { useApp } from '../store';
+import { currentProjectId, useApp } from '../store';
 import { useEndedRuns } from '../workflows/ended-runs';
 import { actionView } from './action-views';
 import { Schedules } from './Schedules';
@@ -37,9 +37,11 @@ function tickedLines(run: Run | undefined, elementId: string | null): { item: nu
   return entry.ticks.flatMap((tick) => (typeof items[tick.item]?.text === 'string' ? [{ item: tick.item, text: items[tick.item]?.text as string }] : []));
 }
 
-function ForYouRow({ item, onSend }: { item: ForYouItem; onSend: (draft: TaskDraft) => void }) {
-  const task = useApp((s) => (item.taskId ? s.app?.queue.tasks.find((t) => t.id === item.taskId) : undefined));
-  const liveRun = useApp((s) => (item.runId ? s.app?.runs.find((r) => r.id === item.runId) : undefined));
+function ForYouRow({ item, onSend, named }: { item: ForYouItem; onSend: (draft: TaskDraft) => void; named: boolean }) {
+  // Looked up among everything: in the view of every project a row may be about another project's task or run.
+  const task = useApp((s) => (item.taskId ? s.whole?.queue.tasks.find((t) => t.id === item.taskId) : undefined));
+  const liveRun = useApp((s) => (item.runId ? s.whole?.runs.find((r) => r.id === item.runId) : undefined));
+  const project = useApp((s) => (named && item.projectId ? s.whole?.projects.find((p) => p.id === item.projectId)?.name : undefined));
   const endedRun = useEndedRuns((e) => (item.runId ? e.items.find((entry) => entry.run.id === item.runId)?.run : undefined));
   const [busy, setBusy] = useState(false);
   const act = async (work: () => Promise<unknown>): Promise<void> => {
@@ -57,7 +59,9 @@ function ForYouRow({ item, onSend }: { item: ForYouItem; onSend: (draft: TaskDra
     <li className={`foryou-row${item.waits ? ' waits' : ''}`} data-testid="foryou-row" data-kind={item.kind}>
       <div className="foryou-head">
         <span className="foryou-kind">{item.title}</span>
-        <span className="foryou-from">from {item.from}</span>
+        <span className="foryou-from">
+          {project ? <span data-testid="foryou-project">{project} · </span> : null}from {item.from}
+        </span>
       </div>
       <p className="foryou-sentence">{item.sentence}</p>
       <div className="foryou-actions">
@@ -274,7 +278,10 @@ export function QueueScreen() {
   const [put, setPut] = useState<Task[]>([]);
   const [said, setSaid] = useState<string | null>(null);
 
-  const queue = app?.queue;
+  // Of the project being looked at: its tasks, its list, and how its tasks are started.
+  const projectId = useApp(currentProjectId);
+  const view = useMemo(() => (app && projectId ? stateOf(app, projectId) : null), [app, projectId]);
+  const queue = view && projectId ? { ...view.queue, ...queueSettingsOf(view.queue, projectId) } : undefined;
   // Tasks that were put away, for "finished today": read when the screen opens and when the number of tasks changes.
   const taskCount = queue?.tasks.length ?? 0;
   useEffect(() => {
@@ -292,7 +299,11 @@ export function QueueScreen() {
     if (open) setSaid(null);
   }, [open]);
 
-  const list = useMemo(() => (open && app ? forYou(app, Date.now(), ended) : null), [open, app, ended]);
+  // The owner's list has two views: this project, and everything. In the second, each row names its project.
+  const whole = useApp((s) => s.whole);
+  const [everywhere, setEverywhere] = useState(false);
+  const severalProjects = (whole ? openProjects(whole).length : 0) > 1;
+  const list = useMemo(() => (open && app && whole ? forYou(whole, Date.now(), ended, everywhere && severalProjects ? null : projectId) : null), [open, app, whole, ended, projectId, everywhere, severalProjects]);
   if (!open || !app || !queue || !list) return null;
   const close = (): void => useApp.getState().togglePanel(null);
   const busy = queue.tasks.filter((task) => BUSY_STATES.includes(task.state)).sort((a, b) => a.updatedAt.localeCompare(b.updatedAt));
@@ -342,6 +353,16 @@ export function QueueScreen() {
             <h3>
               For you <span className="board-summary" data-testid="foryou-summary">{list.summary}</span>
             </h3>
+            {severalProjects && (
+              <div className="list-scope" role="group" aria-label="Which projects">
+                <button type="button" aria-pressed={!everywhere} onClick={() => setEverywhere(false)} data-testid="foryou-this-project">
+                  This project
+                </button>
+                <button type="button" aria-pressed={everywhere} onClick={() => setEverywhere(true)} data-testid="foryou-every-project">
+                  Every project
+                </button>
+              </div>
+            )}
             <div className="queue-write">
               <input value={written} maxLength={1000} placeholder="Write something to do yourself…" aria-label="Write on your list" onChange={(e) => setWritten(e.target.value)} data-testid="foryou-write" />
               <button
@@ -358,7 +379,7 @@ export function QueueScreen() {
             {list.items.length === 0 && <p className="list-empty">Nothing waits for you.</p>}
             <ul className="foryou-list">
               {list.items.map((item) => (
-                <ForYouRow key={item.id} item={item} onSend={setDraft} />
+                <ForYouRow key={item.id} item={item} onSend={setDraft} named={everywhere && severalProjects} />
               ))}
             </ul>
           </section>

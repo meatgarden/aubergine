@@ -91,6 +91,8 @@ export type ShelfState = z.infer<typeof ShelfState>;
 
 export const ShelfElement = z.object({
   id: Id,
+  /** The project it belongs to. Null: shared with every project. */
+  projectId: Id.nullable().default(null),
   /** The newest version's content, here too so that lists need not open versions. */
   element: Element,
   createdAt: Timestamp,

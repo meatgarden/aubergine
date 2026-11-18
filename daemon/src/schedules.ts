@@ -1,6 +1,13 @@
 import {
   OVER_STATES,
   SCHEDULES_MAX,
+  isLocalHome,
+  isOpenProject,
+  ofProject,
+  projectById,
+  queueSettingsOf,
+  stateOf,
+  type ProjectScope,
   TASK_STATE_WORDS,
   dueSchedules,
   lastWords,
@@ -133,7 +140,12 @@ export class Schedules {
       .then(async () => {
         if (this.closed) return;
         const checked = this.hub.state.schedules.checkedAt;
-        const due = dueSchedules(this.items, checked === null ? null : Date.parse(checked), now, this.options.zone, this.options.lateWithinMs);
+        // An archived project's schedules are not looked at: they fire nothing and say nothing. Nor are those of a project this server does not keep.
+        const live = this.items.filter((schedule) => {
+          const project = projectById(this.hub.state, schedule.projectId);
+          return project !== undefined && project.state === 'open' && isLocalHome(project);
+        });
+        const due = dueSchedules(live, checked === null ? null : Date.parse(checked), now, this.options.zone, this.options.lateWithinMs);
         if (due.length === 0) return;
         this.hub.emit({ type: 'schedules.checked', at: new Date(now).toISOString() });
         for (const one of due) {
@@ -148,15 +160,17 @@ export class Schedules {
   /* ---------- Answering for a time ---------- */
 
   /** Why a schedule cannot run as it is written: something it names is gone. Null when it can. */
-  private problemOf(schedule: Pick<Schedule, 'what' | 'where'>, state: AppState): string | null {
+  private problemOf(schedule: Pick<Schedule, 'what' | 'where'>, whole: AppState, projectId: string): string | null {
     const { what, where } = schedule;
+    // What it names is looked for in its own project and in what is shared with it. A thing of another project is, to it, not there.
+    const state = stateOf(whole, projectId);
     if (what.kind === 'element') {
       const item = state.shelf.find((e) => e.id === what.elementId);
-      if (!item) return 'The element it runs is no longer on the shelf.';
+      if (!item) return whole.shelf.some((e) => e.id === what.elementId) ? 'The element it runs now belongs to another project.' : 'The element it runs is no longer on the shelf.';
       if (item.state === 'retired') return `The element it runs, “${item.element.name}”, was retired.`;
-    } else if (!state.workflows.some((w) => w.id === what.workflowId && w.listed)) return 'The workflow it runs is gone.';
-    if (where.kind === 'session' && !state.sessions.some((s) => s.id === where.sessionId)) return 'The terminal it runs on is gone.';
-    if (where.kind === 'new' && !state.canvases.some((c) => c.id === where.canvasId)) return 'The canvas its new terminal was to start on was closed.';
+    } else if (!state.workflows.some((w) => w.id === what.workflowId && w.listed)) return whole.workflows.some((w) => w.id === what.workflowId && w.listed) ? 'The workflow it runs now belongs to another project.' : 'The workflow it runs is gone.';
+    if (where.kind === 'session' && !state.sessions.some((s) => s.id === where.sessionId)) return whole.sessions.some((s) => s.id === where.sessionId) ? 'The terminal it runs on is in another project now.' : 'The terminal it runs on is gone.';
+    if (where.kind === 'new' && !state.canvases.some((c) => c.id === where.canvasId)) return whole.canvases.some((c) => c.id === where.canvasId) ? 'The canvas its new terminal was to start on is in another project now.' : 'The canvas its new terminal was to start on was closed.';
     return null;
   }
 
@@ -172,7 +186,7 @@ export class Schedules {
   }
 
   private tell(event: RuleEvent, schedule: Schedule, last: ScheduleLast, sentence: string): void {
-    this.queue.happened({ id: `${event} ${schedule.id} ${last.due ?? last.at}`, event, sentence: sentence.slice(0, 500), taskId: last.taskId, askId: null });
+    this.queue.happened({ id: `${event} ${schedule.id} ${last.due ?? last.at}`, event, sentence: sentence.slice(0, 500), taskId: last.taskId, askId: null, projectId: schedule.projectId });
   }
 
   /** It did not run: the row says why. Where something it names is gone, the owner's list says so too, once, for as long as that lasts. */
@@ -190,7 +204,7 @@ export class Schedules {
 
   /** Adds the task of one firing to the queue. The queue starts it when it may: the limit and the hold count for it. */
   private async fire(schedule: Schedule, due: string | null, lateMinutes: number, now: number): Promise<{ schedule: Schedule; taskId: string | null }> {
-    const problem = this.problemOf(schedule, this.hub.state);
+    const problem = this.problemOf(schedule, this.hub.state, schedule.projectId);
     if (problem !== null) return { schedule: this.didNot(schedule, 'could-not-run', problem, due, now), taskId: null };
     const byHand = due === null;
     let taskId: string;
@@ -205,7 +219,7 @@ export class Schedules {
           taker: schedule.where,
           source: { kind: 'schedule', scheduleId: schedule.id, name: schedule.name, ...(byHand ? { byHand: true } : lateMinutes > 0 ? { lateMinutes } : {}) },
         },
-        OWNER,
+        { ...OWNER, projectId: schedule.projectId },
         { elementId: schedule.what.kind === 'element' ? schedule.what.elementId : null },
       );
       taskId = task.id;
@@ -255,8 +269,9 @@ export class Schedules {
     };
   }
 
-  list(query: PageQuery): { items: ScheduleRow[]; nextCursor: string | null } {
-    const sorted = [...this.items].sort((a, b) => a.createdAt.localeCompare(b.createdAt) || a.id.localeCompare(b.id));
+  /** The schedules of one project; null: of every project. */
+  list(query: PageQuery, projectId: ProjectScope = null): { items: ScheduleRow[]; nextCursor: string | null } {
+    const sorted = this.items.filter((schedule) => ofProject(schedule, projectId)).sort((a, b) => a.createdAt.localeCompare(b.createdAt) || a.id.localeCompare(b.id));
     const page = paginate(sorted, (schedule) => schedule.id, query);
     return { items: page.items.map((schedule) => this.row(schedule)), nextCursor: page.nextCursor };
   }
@@ -269,13 +284,15 @@ export class Schedules {
 
   /* ---------- The owner's: making, changing, removing, running now ---------- */
 
-  add(body: AddScheduleRequest): ScheduleRow {
+  /** A schedule is its project's: what it runs and where are looked for there, and it fires into that project's queue. */
+  add(body: Omit<AddScheduleRequest, 'projectId'>, projectId: string): ScheduleRow {
     if (this.items.length >= SCHEDULES_MAX) throw new ConflictError(`There are ${SCHEDULES_MAX} schedules; remove one first.`);
-    const problem = this.problemOf(body, this.hub.state);
+    const problem = this.problemOf(body, this.hub.state, projectId);
     if (problem !== null) throw new BadInputError(problem);
     const at = new Date(this.options.clock.now()).toISOString();
     const schedule: Schedule = {
       id: newId(),
+      projectId,
       name: body.name,
       time: body.time,
       days: body.days,
@@ -301,7 +318,7 @@ export class Schedules {
     const schedule = this.find(scheduleId);
     const given = Object.fromEntries(Object.entries(body).filter(([, value]) => value !== undefined)) as ChangeScheduleRequest;
     const next: Schedule = { ...schedule, ...given };
-    const problem = this.problemOf(next, this.hub.state);
+    const problem = this.problemOf(next, this.hub.state, schedule.projectId);
     // Switching off, and nothing else, is always possible: also for one that names something that is gone.
     if (problem !== null && !(Object.keys(given).length === 1 && given.on === false)) throw new BadInputError(problem);
     const at = new Date(this.options.clock.now()).toISOString();
@@ -323,10 +340,11 @@ export class Schedules {
     this.working = this.working.then(async () => {
       try {
         const schedule = this.find(scheduleId);
+        if (!isOpenProject(this.hub.state, schedule.projectId)) throw new ConflictError('Its project is archived: nothing is started in it. Reopen the project first.');
         const earlier = this.earlier(schedule);
         if (earlier) throw new ConflictError(`Its earlier task is not over: it ${earlier.state === 'queued' ? 'still waits to start' : `is ${TASK_STATE_WORDS[earlier.state]}`}.`);
         const fired = await this.fire(schedule, null, 0, this.options.clock.now());
-        const queue = this.hub.state.queue;
+        const queue = queueSettingsOf(this.hub.state.queue, schedule.projectId);
         result = {
           schedule: this.row(fired.schedule),
           taskId: fired.taskId,

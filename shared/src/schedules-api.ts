@@ -23,6 +23,7 @@ const fields = {
 
 /** Body of making a schedule. */
 export const AddScheduleRequest = z.object({
+  projectId: Id.optional().describe('The project the schedule is of. Left out: the first project.'),
   name: fields.name,
   time: fields.time,
   days: fields.days,
@@ -36,7 +37,7 @@ export const AddScheduleRequest = z.object({
 export type AddScheduleRequest = z.infer<typeof AddScheduleRequest>;
 
 /** Body of changing a schedule. What is left out stays as it was. */
-export const ChangeScheduleRequest = AddScheduleRequest.partial();
+export const ChangeScheduleRequest = AddScheduleRequest.omit({ projectId: true }).partial();
 export type ChangeScheduleRequest = z.infer<typeof ChangeScheduleRequest>;
 
 /** A schedule as it is listed: with what it is in words, and when it is next. */

@@ -119,6 +119,7 @@ export const TaskLabel = z.string().trim().min(1).max(32).regex(/^[^\p{Cc}‪-�
 
 export const Task = z.object({
   id: Id,
+  projectId: Id.describe('The project it belongs to. Set by the server from where it was made.'),
   title: PlainName.describe('What it is, in one line. Shown in lists and in terminals.'),
   details: PlainWords(TASK_DETAILS_MAX).default('').describe('What to do, for the agent that takes it. Plain text.'),
   folder: z.string().startsWith('/').max(4096).nullable().default(null).describe('The folder it is done in. For a new terminal: where it starts. Null: the folder new terminals start in.'),
@@ -285,6 +286,7 @@ export const ASKS_WAITING_MAX = 10;
 /** Something written on the owner's list: by the owner, or asked of them by a session or a program. */
 export const Ask = z.object({
   id: Id,
+  projectId: Id.describe('The project it belongs to. Set by the server from where it was made.'),
   text: PlainWords(WRITTEN_MAX).min(1),
   addedBy: AddedBy,
   source: ItemSource.default({ kind: 'hand' }),
@@ -315,6 +317,7 @@ export type RuleAction = z.infer<typeof RuleAction>;
 /** "When this happens, do that." Written by the owner alone. */
 export const Rule = z.object({
   id: Id,
+  projectId: Id.describe('The project it belongs to. Set by the server from where it was made.'),
   event: RuleEvent,
   action: RuleAction,
   createdAt: Timestamp,
@@ -329,26 +332,38 @@ export interface Occasion {
   sentence: string;
   taskId: string | null;
   askId: string | null;
+  /** The project it happened in. A rule hears only what happens in its own. */
+  projectId: string;
 }
 
 /** The sentence for something that happened to a task. */
 export function occasionOfTask(task: Task, event: 'task.done' | 'task.failed' | 'task.needs-owner'): Occasion {
   const what = event === 'task.done' ? 'is done' : event === 'task.failed' ? `failed${task.reason ? `: ${task.reason}` : ''}` : `needs you${task.reason ? `: ${task.reason}` : ''}`;
-  return { id: `${event} ${task.id} ${task.updatedAt}`, event, sentence: `The task “${task.title}” ${what}`.slice(0, 500), taskId: task.id, askId: null };
+  return { id: `${event} ${task.id} ${task.updatedAt}`, event, sentence: `The task “${task.title}” ${what}`.slice(0, 500), taskId: task.id, askId: null, projectId: task.projectId };
 }
 
 /* ---------- The queue, as the state keeps it ---------- */
 
-export const QueueState = z.object({
-  tasks: z.array(Task).max(TASKS_MAX).default([]),
-  asks: z.array(Ask).max(ASKS_MAX).default([]),
-  rules: z.array(Rule).max(RULES_MAX).default([]),
+/** How one project's tasks are started. */
+export const QueueProjectSettings = z.object({
   /** How many tasks may hold a place at once. */
   limit: z.number().int().min(1).max(QUEUE_LIMIT_MAX).default(3),
   /** No new task is started while this is on. What is running is not touched. */
   hold: z.boolean().default(false),
   /** Tasks start by themselves when a place is free. Off unless the owner switched it on. */
   automatic: z.boolean().default(false),
+});
+export type QueueProjectSettings = z.infer<typeof QueueProjectSettings>;
+export const QUEUE_SETTINGS_AT_FIRST: QueueProjectSettings = { limit: 3, hold: false, automatic: false };
+/** How a project's tasks are started. */
+export const queueSettingsOf = (queue: { settings: Record<string, QueueProjectSettings> }, projectId: string): QueueProjectSettings => queue.settings[projectId] ?? QUEUE_SETTINGS_AT_FIRST;
+
+export const QueueState = z.object({
+  tasks: z.array(Task).max(TASKS_MAX).default([]),
+  asks: z.array(Ask).max(ASKS_MAX).default([]),
+  rules: z.array(Rule).max(RULES_MAX).default([]),
+  /** How tasks are started, for each project that changed it. A project that is not here has the settings every project starts with. */
+  settings: z.record(z.string(), QueueProjectSettings).default({}),
   /** Runs a rule started and that are still going: what happens because of one of them sets off no rule. */
   ruleRuns: z.array(Id).max(200).default([]),
 });

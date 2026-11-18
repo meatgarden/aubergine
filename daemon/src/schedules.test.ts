@@ -2,7 +2,7 @@ import { mkdtemp, rm, writeFile } from 'node:fs/promises';
 import type { AddressInfo } from 'node:net';
 import os from 'node:os';
 import path from 'node:path';
-import { GRANTABLE_SCOPES, KICKOFF_LINE, NO_ATTENTION, NO_STATUS, newId, type ChangeEvent, type ForYou, type QueueState, type Schedule, type ScheduleRow, type Scope, type Session, type Task } from '@aubergine/shared';
+import { GRANTABLE_SCOPES, KICKOFF_LINE, NO_ATTENTION, NO_STATUS, newId, queueSettingsOf, type ChangeEvent, type ForYou, type QueueState, type Schedule, type ScheduleRow, type Scope, type Session, type Task } from '@aubergine/shared';
 import type { FastifyInstance } from 'fastify';
 import { createClient } from '@aubergine/client';
 import { SESSION_ENV } from '@aubergine/shared';
@@ -176,7 +176,7 @@ async function makeToken(name: string, scopes: Scope[], more: object = {}): Prom
 }
 
 function fakeSession(name: string, more: Partial<Session> = {}): Session {
-  const session: Session = { id: newId(), projectId: hub.state.project.id, name, createdAt: new Date().toISOString(), state: 'open', cwd: null, command: null, note: '', status: NO_STATUS, attention: NO_ATTENTION, noteLog: [], agent: null, lastInputAt: null, lastOutputAt: null, tags: [], parkedFrom: null, peopleOnly: false, typedBy: null,
+  const session: Session = { id: newId(), projectId: hub.state.projects[0]!.id, name, createdAt: new Date().toISOString(), state: 'open', cwd: null, command: null, note: '', status: NO_STATUS, attention: NO_ATTENTION, noteLog: [], agent: null, lastInputAt: null, lastOutputAt: null, tags: [], parkedFrom: null, peopleOnly: false, typedBy: null,
     recap: null, takesMessages: false, untold: null, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null }, ...more };
   hub.emit({ type: 'session.created', session, canvasId: hub.state.canvases[0]!.id, node: { id: newId(), sessionId: session.id, x: 0, y: 0, width: 640, height: 400, color: 'none' } });
   return session;
@@ -236,7 +236,7 @@ describe('a schedule', () => {
     const first = fromSchedule()[0] as Task;
     expect(first).toMatchObject({ title: 'My morning list', unattended: true, source: { kind: 'schedule', scheduleId: made.id, name: 'My morning list' }, addedBy: { kind: 'person' }, taker: { kind: 'session', sessionId: worker.id } });
     // It starts without anyone pressing Start next, though automatic starting is off: the owner said when.
-    expect(queueNow().automatic).toBe(false);
+    expect(queueSettingsOf(queueNow(), hub.state.projects[0]!.id).automatic).toBe(false);
     await until(() => working(first));
     expect(typed).toEqual([[worker.id, KICKOFF_LINE]]);
     expect(scheduleNow(made.id).last).toMatchObject({ result: 'fired', due: '2026-06-15T12:30:00.000Z', taskId: first.id });

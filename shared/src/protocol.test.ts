@@ -38,7 +38,7 @@ function fixture(): { state: AppState; session: Session; node: LayoutNode } {
   const state = createInitialState(new Date('2026-01-01T00:00:00Z'));
   const session: Session = {
     id: newId(),
-    projectId: state.project.id,
+    projectId: state.projects[0]!.id,
     name: 'build',
     createdAt: '2026-01-01T00:00:00.000Z',
     state: 'open',
@@ -79,7 +79,7 @@ describe('entities', () => {
     const state = createInitialState();
     expect(AppState.safeParse(state).success).toBe(true);
     expect(state.workspace.organizationId).toBe(state.organization.id);
-    expect(state.project.workspaceId).toBe(state.workspace.id);
+    expect(state.projects[0]!.workspaceId).toBe(state.workspace.id);
   });
 
   it('requires a projectId on sessions', () => {
@@ -304,7 +304,7 @@ describe('applyEvent', () => {
   it('adds, changes and orders canvases', () => {
     const { state } = fixture();
     expect(state.canvases.map((c) => c.name)).toEqual(['Main']);
-    const second = newCanvas(state.project.id, 'Deploys', 1);
+    const second = newCanvas(state.projects[0]!.id, 'Deploys', 1);
     let current = applyEvent(state, { type: 'canvas.created', canvas: second });
     expect(applyEvent(current, { type: 'canvas.created', canvas: second })).toEqual(current);
     current = applyEvent(current, {
@@ -319,7 +319,7 @@ describe('applyEvent', () => {
 
   it('moves a session between canvases, keeping it on exactly one', () => {
     const { state, session, node } = fixture();
-    const second = newCanvas(state.project.id, 'Deploys', 1);
+    const second = newCanvas(state.projects[0]!.id, 'Deploys', 1);
     let current = applyEvent(state, { type: 'session.created', canvasId: main(state).id, session, node });
     current = applyEvent(current, { type: 'canvas.created', canvas: second });
     const there = { ...node, x: 900 };
@@ -335,7 +335,7 @@ describe('applyEvent', () => {
 
   it('parks whatever is still on a canvas when it is removed, and never removes the last one', () => {
     const { state, session, node } = fixture();
-    const second = newCanvas(state.project.id, 'Deploys', 1);
+    const second = newCanvas(state.projects[0]!.id, 'Deploys', 1);
     let current = applyEvent(state, { type: 'canvas.created', canvas: second });
     current = applyEvent(current, { type: 'session.created', canvasId: second.id, session, node });
     current = applyEvent(current, { type: 'canvas.removed', canvasId: second.id });
@@ -356,7 +356,7 @@ describe('applyEvent', () => {
       node: { ...node, id: newId(), sessionId: unread.id },
     });
     expect(canvasCounts(current, main(current))).toEqual({ sessions: 2, waiting: 1, unread: 1 });
-    const empty = newCanvas(state.project.id, 'Empty', 1);
+    const empty = newCanvas(state.projects[0]!.id, 'Empty', 1);
     expect(canvasCounts(current, empty)).toEqual({ sessions: 0, waiting: 0, unread: 0 });
   });
 
