@@ -1281,3 +1281,34 @@ button.color-dot:hover {
 .node-title > .move-to > button {
   display: none;
 }
+
+/* ---------- The board ---------- */
+
+/* Its filters are one menu at the left; the columns share the width, so up to five need no sideways scroll. */
+.board-filter > .ui-menu-under {
+  left: 0;
+  right: auto;
+  min-width: 320px;
+}
+.board-filter .ui-menu-line {
+  padding-left: var(--space-3);
+}
+.board-columns {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(176px, 1fr);
+  gap: var(--space-2);
+}
+.board-column {
+  min-width: 0;
+}
+
+/* ---------- The library: the list has a proper width, and what is read has the rest ---------- */
+
+.library-browse {
+  grid-template-columns: minmax(280px, 2fr) minmax(0, 3fr);
+  gap: var(--space-6);
+}
+.library-sources-fold > summary {
+  font-weight: var(--weight-normal);
+}

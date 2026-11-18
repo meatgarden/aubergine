@@ -895,7 +895,7 @@ test('an element written by an agent is reviewed, accepted, run by itself, and i
   expect(shelf.map(([name]: [string]) => name)).not.toContain('Sumarise the weak');
   // What became of the drafts is on the screen: decided, not what they said.
   await expect(review.getByTestId('review-decided').locator('li').first()).toContainText('Accepted: a step');
-  await expect(review.getByTestId('review-decided')).toContainText('Discarded: an element');
+  await expect(review.getByTestId('review-decided')).toContainText('Discarded: a step');
   await review.getByTestId('review-close').click();
   rmSync(work, { recursive: true, force: true });
 });
@@ -2038,6 +2038,7 @@ test('the library: a Git source is added, browsed and read; an item is installed
     await expect(library.locator('[data-testid="library-item"][data-item="check-before-done"]')).toBeVisible();
 
     // A Git source: added, fetched once, listed with the commit that was read.
+    await reveal(library.getByTestId('source-address'), page.getByTestId('library-sources-fold').locator('summary'));
     await library.getByTestId('source-address').fill(`file://${root}`);
     await library.getByTestId('source-add').click();
     const source = library.locator('[data-testid="library-source"][data-kind="git"]');
@@ -2083,6 +2084,7 @@ test('the library: a Git source is added, browsed and read; an item is installed
     git('add', '-A');
     git('commit', '--quiet', '-m', 'Version 2');
     await expect(library.locator('[data-testid="library-item"][data-item="release-notes"]')).toHaveAttribute('data-standing', 'installed');
+    await reveal(source.getByTestId('source-refresh'), page.getByTestId('library-sources-fold').locator('summary'));
     await source.getByTestId('source-refresh').click();
     await expect(library.locator('[data-testid="library-item"][data-item="release-notes"]')).toHaveAttribute('data-standing', 'update');
     await expect(library.locator('[data-testid="library-item"][data-item="release-notes"]').getByTestId('library-marks')).toContainText('update available');
@@ -2195,6 +2197,7 @@ test('an approval and the board: a run stops for the owner, shows on the board a
   // The board: the run in its column, counted as waiting for the owner.
   await page.getByTestId('toolbar-board').click();
   const board = page.getByTestId('board');
+  await reveal(board.getByTestId('board-filter-workflow'), board.getByTestId('board-filter-open'));
   await board.getByTestId('board-filter-workflow').selectOption({ label: 'Careful change' });
   await expect(board.getByTestId('board-summary')).toHaveText('1 waiting for you');
   const group = board.getByTestId('board-group');
@@ -3217,4 +3220,96 @@ test('one look: the canvas page and every screen use the two control heights and
     await tabs.nth(index).click();
     expect(await measureLook(page), `panel part ${index}`).toEqual([]);
   }
+});
+
+test('simpler surfaces: the list starts near the top, a name is not cut, one primary at most, what moved is reached by keyboard, and everything is on its gutter', async ({ page }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  await page.getByRole('button', { name: 'New canvas' }).click();
+  await page.getByTestId('toolbar-new-terminal').click();
+  const node = page.getByTestId('terminal-node');
+  await expect(node).toHaveCount(1);
+  await expect(page.locator('.xterm-rows')).toContainText(/[$%#>]/, { timeout: 20_000 });
+  const mac = await page.evaluate(() => navigator.platform.toLowerCase().includes('mac'));
+  await page.getByTestId('node-body').click();
+  await page.keyboard.press(`${mac ? 'Control+Meta' : 'Control+Shift'}+Period`);
+
+  // Three rows of controls at most above the first terminal of the list.
+  const first = await page.evaluate(() => {
+    const panel = document.querySelector('[data-testid="side-panel"]') as HTMLElement;
+    const row = document.querySelector('[data-testid="list-row"]') as HTMLElement;
+    return Math.round(row.getBoundingClientRect().top - panel.getBoundingClientRect().top);
+  });
+  expect(first).toBeLessThanOrEqual(140);
+
+  // A terminal's name is whole at the width a new terminal has.
+  const name = await node.getByTestId('node-name').evaluate((el) => ({ node: Math.round((el.closest('[data-testid="terminal-node"]') as HTMLElement).getBoundingClientRect().width), cut: el.scrollWidth > el.clientWidth + 1 }));
+  expect(name.node).toBeLessThanOrEqual(720);
+  expect(name.cut).toBe(false);
+
+  // What left a terminal's title is in its one menu, and the keyboard gets there: the menu's button, then each line.
+  const reached = async (opener: Locator, ids: string[], scope: Locator): Promise<void> => {
+    await opener.focus();
+    await page.keyboard.press('Enter');
+    for (const id of ids) {
+      const line = scope.locator(`[data-testid="${id}"], [data-filter="${id}"], [data-section="${id}"]`).first();
+      await expect(line, id).toBeVisible();
+      expect(await line.evaluate((el) => (el as HTMLElement).tabIndex >= 0 && !(el as HTMLButtonElement).disabled), id).toBe(true);
+    }
+    await page.keyboard.press('Escape');
+  };
+  await reached(node.getByTestId('node-more'), ['node-run-workflow', 'node-message', 'node-open-desktop', 'node-move', 'people-only'], node);
+  await expect(node.getByRole('menuitem', { name: /^Park / })).toHaveCount(0);
+  await reached(page.getByTestId('list-more'), ['scope-this', 'scope-all', 'waiting', 'busy', 'unread', 'list-grouping', 'list-density'], page.getByTestId('list-more-filters'));
+  await reached(page.getByTestId('panel-more'), ['copies', 'messages'], page.getByTestId('panel-more-menu'));
+  await reached(page.getByTestId('tab-more'), ['tab-rename', 'tab-messaging'], page.getByTestId('tab-menu'));
+  await reached(page.getByTestId('row-more'), ['row-open-desktop'], page.getByTestId('list-row'));
+
+  /** How many primary buttons show in a surface. */
+  const primaries = (selector: string): Promise<number> =>
+    page.evaluate((sel) => [...document.querySelectorAll(`${sel} button.primary, ${sel} .toolbar-new > button:first-child`)].filter((el) => (el as HTMLElement).offsetParent !== null).length, selector);
+  /** The left edges, from the surface's own left edge, of what it holds directly: each must be the gutter. */
+  const edges = (selector: string): Promise<number[]> =>
+    page.evaluate((sel) => {
+      const surface = document.querySelector(sel) as HTMLElement;
+      const left = surface.getBoundingClientRect().left + surface.clientLeft;
+      return [...new Set([...surface.children].filter((el) => !el.matches('.sheet-head, .list-resize, .list-rows, .panel-section') && (el as HTMLElement).offsetParent !== null && el.getBoundingClientRect().width > 0).map((el) => Math.round(el.getBoundingClientRect().left - left)))];
+    }, selector);
+
+  expect(await primaries('.appbar')).toBe(0);
+  expect(await primaries('.toolbar')).toBe(1);
+  expect(await primaries('.side-panel')).toBe(0);
+  // The side panel: the field and the state column of a row start on its gutter of 12.
+  expect(await page.evaluate(() => ['.list-find', '.list-state'].map((sel) => Math.round((document.querySelector(sel) as HTMLElement).getBoundingClientRect().left)))).toEqual([12, 12]);
+
+  const screens: [string, () => Promise<void>][] = [
+    ['queue-screen', () => page.getByTestId('toolbar-queue').click()],
+    ['board', () => page.getByTestId('toolbar-board').click()],
+    ['workflows-screen', () => page.getByTestId('toolbar-workflows').click()],
+    ['library-screen', () => page.getByTestId('toolbar-library').click()],
+    ['help-panel', () => page.getByTestId('toolbar-help').click()],
+  ];
+  for (const [testid, open] of screens) {
+    await open();
+    await expect(page.getByTestId(testid)).toBeVisible();
+    expect(await primaries(`[data-testid="${testid}"]`), `${testid}: one primary at most`).toBeLessThanOrEqual(1);
+    // A screen's gutter is 24: everything it holds directly starts there.
+    expect(await edges(`[data-testid="${testid}"]`), `${testid}: on the gutter`).toEqual([24]);
+    await page.keyboard.press('Escape');
+    await expect(page.getByTestId(testid)).toHaveCount(0);
+  }
+  // In the Workflows screen what is made is behind the one primary; in the queue, how it starts things is one fold-out.
+  await page.getByTestId('toolbar-workflows').click();
+  await reached(page.getByTestId('workflow-new'), ['describe-workflow', 'workflow-empty'], page.getByTestId('workflow-new-menu'));
+  await page.getByTestId('steps-tab').click();
+  await reached(page.getByTestId('step-new'), ['shelf-new', 'describe-element'], page.getByTestId('step-new-menu'));
+  await page.keyboard.press('Escape');
+  await page.getByTestId('toolbar-queue').click();
+  const starts = page.getByTestId('queue-starts');
+  await expect(starts.getByTestId('queue-starts-says')).toContainText(/Up to \d+ at once/);
+  await starts.locator('summary').focus();
+  await page.keyboard.press('Enter');
+  await expect(starts.getByTestId('queue-limit')).toBeVisible();
+  await expect(starts.getByTestId('queue-hold')).toBeVisible();
 });

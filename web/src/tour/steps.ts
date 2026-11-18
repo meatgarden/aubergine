@@ -1,4 +1,3 @@
-import { waitingQueue } from '../attention';
 import { registerTourStep, type TourContext } from './registry';
 
 /**
@@ -17,7 +16,7 @@ registerTourStep({
   order: 10,
   title: 'This is a terminal',
   text: 'Click it to type in it. Then click “Fit” at the top to see all of them at once.',
-  reminder: 'Click a terminal to use it; zoom out to see them all. ⧉ on one opens it on your desktop too.',
+  reminder: 'Click a terminal to use it; zoom out to see them all. The menu in its title has the rest.',
   target: (c) => nodeOf(c.demo?.sessions.shell) ?? find('[data-testid="terminal-node"]'),
   done: (c) => c.signals.has('terminal.focused') && c.signals.has('canvas.zoomed-out'),
 });
@@ -26,14 +25,14 @@ registerTourStep({
   id: 'waiting',
   order: 20,
   title: 'Something needs you',
-  text: 'One terminal has a question for you. Click “waiting” (or the terminal itself), type an answer and press Enter.',
-  reminder: '“waiting” at the top takes you to what waits; “Queue” lists all of it, and tasks for agents.',
+  text: 'One terminal has a question for you. Click it, type an answer and press Enter.',
+  reminder: '“For you” at the top counts and lists what waits on you; “Queue” has the tasks for agents.',
   // The button goes to whoever has waited longest, on any canvas. When that is not the demo's terminal, or it has
   // been looked at already, the terminal itself is pointed at instead, so that the step never leads away.
   target: (c) => {
     const mine = c.demo?.sessions.waiting;
-    const head = waitingQueue(c.app.sessions, c.app.runs)[0];
-    return (head !== undefined && head.id === mine ? find('[data-testid="attention-queue"]') : null) ?? nodeOf(mine) ?? find('[data-testid="attention-queue"]');
+    // The terminal itself is pointed at; the count at the top when it is not in sight.
+    return nodeOf(mine) ?? find('[data-testid="for-you"]');
   },
   done: (c) => noted(c, c.demo?.sessions.waiting, 'Answered:'),
 });
@@ -52,7 +51,7 @@ registerTourStep({
   id: 'list',
   order: 40,
   title: 'Every terminal, in one list',
-  text: 'The list on the left has every terminal on every canvas. Switch on “Waiting for me” to see only those.',
+  text: 'The list on the left has this canvas’s terminals. Open “Filter” and choose “Waiting for me” to see only those.',
   reminder: 'The list on the left has every terminal; its filters narrow it.',
   target: () => find('.list-filter[data-filter="waiting"]') ?? find('[data-testid="side-panel"]'),
   done: (c) => c.state.listView.filters.includes('waiting'),
@@ -89,9 +88,9 @@ registerTourStep({
   id: 'review',
   order: 70,
   title: 'Something an agent wrote for you',
-  text: 'Click “to review” and read it. Nothing an agent writes is used until you accept it; accept or discard this one.',
-  reminder: 'What agents write waits under “to review” until you accept it.',
-  target: () => find('[data-testid="review-screen"] .review-main') ?? find('[data-testid="drafts-waiting"]'),
+  text: 'Click “For you” at the top, then “Review”. Nothing an agent writes is used until you accept it: accept or discard this one.',
+  reminder: 'What agents write waits under “For you” until you have read and accepted it.',
+  target: () => find('[data-testid="review-screen"] .review-main') ?? find('[data-testid="review-open"]') ?? find('[data-testid="for-you"]'),
   done: (c) => c.demo !== null && c.demo.draftId === null,
   arrive: (c) => {
     if (c.state.viewingRun !== null) c.state.viewRun(null);

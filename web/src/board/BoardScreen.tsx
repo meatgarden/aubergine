@@ -5,6 +5,7 @@ import { currentProjectId, useApp } from '../store';
 import { ApprovalControls } from '../workflows/ApprovalControls';
 import { liveFilters, loadFilters, nextCard, saveFilters, type Box } from './board-model';
 import { RunManyDialog } from './RunManyDialog';
+import { MenuButton } from '../ui';
 
 /**
  * The board: every run that is going, on every canvas, by workflow and by
@@ -178,6 +179,7 @@ export function BoardScreen() {
     cards.find((el) => el.dataset.boardCard === next)?.focus();
   };
 
+  const chosen = [shownFilters.canvasId, shownFilters.workflowId, shownFilters.status, shownFilters.tag].filter(Boolean).length;
   return (
     <div
       className="dialog-backdrop"
@@ -214,46 +216,59 @@ export function BoardScreen() {
           </span>
         </header>
         <div className="board-filters" data-testid="board-filters">
-          <select aria-label="Canvas" value={shownFilters.canvasId ?? ''} onChange={(e) => set('canvasId', e.target.value)} data-testid="board-filter-canvas">
-            <option value="">Every canvas</option>
-            {(canvases ?? []).map((canvas) => (
-              <option key={canvas.id} value={canvas.id}>
-                {canvas.name}
-              </option>
-            ))}
-          </select>
-          <select aria-label="Workflow" value={shownFilters.workflowId ?? ''} onChange={(e) => set('workflowId', e.target.value)} data-testid="board-filter-workflow">
-            <option value="">Every workflow</option>
-            {choices.workflows.map((workflow) => (
-              <option key={workflow.id} value={workflow.id}>
-                {workflow.name}
-              </option>
-            ))}
-          </select>
-          <select aria-label="Status" value={shownFilters.status ?? ''} onChange={(e) => set('status', e.target.value)} data-testid="board-filter-status">
-            <option value="">Every status</option>
-            {[...new Set([...choices.statuses, ...(shownFilters.status ? [shownFilters.status] : [])])].map((status) => (
-              <option key={status} value={status}>
-                {RUN_STATUS_WORDS[status]}
-              </option>
-            ))}
-          </select>
-          <select aria-label="Tag" value={shownFilters.tag ?? ''} onChange={(e) => set('tag', e.target.value)} data-testid="board-filter-tag">
-            <option value="">Every tag</option>
-            {[...new Set([...choices.tags, ...(shownFilters.tag ? [shownFilters.tag] : [])])].map((tag) => (
-              <option key={tag} value={tag}>
-                #{tag}
-              </option>
-            ))}
-          </select>
+          <MenuButton label={`Filter${chosen > 0 ? ` · ${chosen}` : ''}`} testid="board-filter-open" menuTestid="board-filter-menu" className="board-filter">
+            <label className="ui-menu-line">
+              <span>Canvas</span>
+              <select aria-label="Canvas" value={shownFilters.canvasId ?? ''} onChange={(e) => set('canvasId', e.target.value)} data-testid="board-filter-canvas">
+              <option value="">Every canvas</option>
+              {(canvases ?? []).map((canvas) => (
+                <option key={canvas.id} value={canvas.id}>
+                  {canvas.name}
+                </option>
+              ))}
+            </select>
+            </label>
+            <label className="ui-menu-line">
+              <span>Workflow</span>
+              <select aria-label="Workflow" value={shownFilters.workflowId ?? ''} onChange={(e) => set('workflowId', e.target.value)} data-testid="board-filter-workflow">
+              <option value="">Every workflow</option>
+              {choices.workflows.map((workflow) => (
+                <option key={workflow.id} value={workflow.id}>
+                  {workflow.name}
+                </option>
+              ))}
+            </select>
+            </label>
+            <label className="ui-menu-line">
+              <span>Status</span>
+              <select aria-label="Status" value={shownFilters.status ?? ''} onChange={(e) => set('status', e.target.value)} data-testid="board-filter-status">
+              <option value="">Every status</option>
+              {[...new Set([...choices.statuses, ...(shownFilters.status ? [shownFilters.status] : [])])].map((status) => (
+                <option key={status} value={status}>
+                  {RUN_STATUS_WORDS[status]}
+                </option>
+              ))}
+            </select>
+            </label>
+            <label className="ui-menu-line">
+              <span>Tag</span>
+              <select aria-label="Tag" value={shownFilters.tag ?? ''} onChange={(e) => set('tag', e.target.value)} data-testid="board-filter-tag">
+              <option value="">Every tag</option>
+              {[...new Set([...choices.tags, ...(shownFilters.tag ? [shownFilters.tag] : [])])].map((tag) => (
+                <option key={tag} value={tag}>
+                  #{tag}
+                </option>
+              ))}
+            </select>
+            </label>
+          </MenuButton>
           {filtered && (
             <button type="button" className="quiet" onClick={() => change({})} data-testid="board-filters-clear">
               Show everything
             </button>
           )}
-          <span className="sheet-note">Arrows move between cards; Enter goes to the terminal.</span>
         </div>
-        <div className="board-body" ref={body}>
+        <div className="board-body" ref={body} title="Arrows move between cards; Enter goes to the terminal.">
           {board.groups.length === 0 && (
             <p className="list-empty" data-testid="board-empty">
               {filtered ? 'No run matches these filters.' : 'No runs are going. Put a terminal on a workflow with “Run workflow…”, or start one on several terminals from here.'}

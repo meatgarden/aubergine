@@ -56,13 +56,15 @@ export function placeOf(target: EventTarget | null): KeyPlace {
 /**
  * Whether a plain key belongs to the control that has the keyboard rather
  * than to the canvas: Enter and Space press a focused button, and inside a
- * panel only Escape is the canvas's (it closes the panel).
+ * panel only Escape is the canvas's (it closes the panel), unless a menu is open: then it closes the menu.
  */
 export function belongsToControl(target: EventTarget | null, key: string): boolean {
   if (!(target instanceof Element)) return false;
   // Tab walks through terminals only while nothing else has the keyboard; from a button it
   // goes on to the next button, as it does everywhere.
   if (key === 'Tab') return target !== document.body;
+  // An open menu is closed by Escape before anything behind it is: the key is the menu's, not the canvas's or a panel's.
+  if (key === 'Escape' && document.querySelector('[role="menu"]:not([hidden])') !== null) return true;
   if (target.closest('[role="dialog"], [role="alertdialog"]')) return key !== 'Escape';
   return (key === 'Enter' || key === ' ') && target.closest('button, a[href], summary, [role="button"], [role="tab"]') !== null;
 }
