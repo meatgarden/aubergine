@@ -32,6 +32,8 @@ import { Picker } from './Picker';
 import { currentLayout, useApp } from './store';
 import { canvasActions } from './canvas-actions';
 import { runCommand } from './commands';
+import { ProjectsScreen } from './projects/ProjectsScreen';
+import { SharingScreen } from './projects/SharingScreen';
 import { afterOpening, setOpenNew } from './desktop';
 import { hint } from './shortcuts';
 import { ShortcutSheet } from './ShortcutSheet';
@@ -466,7 +468,9 @@ export function Canvas() {
         store.apply({ type: 'session.restored', sessionId: session.id, canvasId, node: restored.node });
       }
       const app = useApp.getState().app;
-      const place = app ? placeOfSession(app, show.sessionId) : null;
+      // Looked for among everything: a terminal that is asked for may be in another project, and the page goes there.
+      const everything = useApp.getState().whole ?? app;
+      const place = everything ? placeOfSession(everything, show.sessionId) : null;
       if (cancelled) return;
       if (!place) return done();
       if (place.canvas.id !== canvasId) {
@@ -596,6 +600,8 @@ export function Canvas() {
       <ReviewScreen />
       <LibraryScreen />
       <QueueScreen />
+      <ProjectsScreen />
+      <SharingScreen />
       <BoardScreen />
       <StartDialog />
       <EnvironmentPanel />

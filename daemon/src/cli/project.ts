@@ -13,7 +13,7 @@ import { UsageError, takeOption } from './commands';
 
 export const PROJECT_NEW_EXAMPLE = 'aubergine project new "Garden site" --folder ~/work/garden';
 /** The commands that take `--project <name>`. */
-export const TAKES_PROJECT: readonly string[] = ['list', 'ls', 'new', 'canvas', 'canvases', 'task', 'tasks', 'todo', 'rule', 'rules', 'schedule', 'schedules', 'board'];
+export const TAKES_PROJECT: readonly string[] = ['list', 'ls', 'new', 'canvas', 'canvases', 'task', 'tasks', 'todo', 'rule', 'rules', 'schedule', 'schedules', 'board', 'token'];
 export const INSIDE_ITS_OWN = 'Inside a terminal on a canvas the project is that terminal\'s own, and no option changes it. Leave --project out here.';
 
 /** `--project <name>` taken out of what was typed, for the commands that take it. The rest is the command as it was. */

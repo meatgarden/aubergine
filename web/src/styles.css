@@ -283,6 +283,86 @@ code {
 .toolbar-menu button:hover:not(:disabled) {
   background: var(--panel-hover);
 }
+.project-switcher {
+  position: relative;
+  display: inline-flex;
+  margin-right: 6px;
+}
+.project-current {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  max-width: 240px;
+  font-weight: 600;
+}
+.project-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.project-row-name {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+}
+.tab-project {
+  max-width: 96px;
+  font-size: 11px;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+}
+.project-list,
+.sharing-things {
+  list-style: none;
+  margin: 0 0 10px;
+  padding: 0;
+}
+.project-item,
+.sharing-things li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--border);
+}
+.project-item input,
+.project-new-form input,
+.sharing-screen select {
+  font: inherit;
+  font-size: 13px;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 3px 6px;
+}
+.project-item-name {
+  width: 180px;
+  font-weight: 600;
+}
+.project-item-folder {
+  flex: 1;
+  min-width: 160px;
+}
+.project-item-actions {
+  display: inline-flex;
+  gap: 4px;
+  margin-left: auto;
+}
+.project-deciding {
+  flex-basis: 100%;
+  margin: 2px 0;
+}
+.sharing-things li span {
+  flex: 1;
+}
+.sharing-kind h3 {
+  margin: 12px 0 2px;
+  font-size: 14px;
+}
 .toolbar-menu-check {
   display: flex;
   gap: 7px;

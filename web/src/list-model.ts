@@ -23,6 +23,9 @@ const EMPTY: ListModel = { rows: [], filtered: [], items: [], order: [] };
  * answer is remembered: it is worked out again only when the rows, the view
  * or the canvas being looked at has changed.
  */
+/** What the list is made from: the project being looked at, or everything, as the view says. The list and the commands that walk it both ask here. */
+export const listSource = (state: { app: AppState | null; whole: AppState | null; listView: ListView }): AppState | null => (state.listView.everyProject ? state.whole : state.app);
+
 export function listModel(app: AppState | null, view: ListView, canvasId: string | null): ListModel {
   if (!app) return EMPTY;
   const rows = selectRows(app);

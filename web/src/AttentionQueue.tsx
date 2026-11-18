@@ -12,12 +12,13 @@ import { useApp } from './store';
  * the daemon the user has looked.
  */
 export function AttentionQueue() {
-  const sessions = useApp((s) => s.app?.sessions);
+  // Everything that waits, in every project: nothing that waits is out of sight because another project is open.
+  const sessions = useApp((s) => s.whole?.sessions);
   const app = useApp((s) => s.app);
   const canvasId = useApp((s) => s.canvasId);
   const [notify, setNotify] = useState(notificationsWanted);
 
-  const runs = useApp((s) => s.app?.runs);
+  const runs = useApp((s) => s.whole?.runs);
   const queue = waitingQueue(sessions ?? [], runs ?? []);
 
   return (

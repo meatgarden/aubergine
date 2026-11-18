@@ -146,7 +146,7 @@ export const USAGE = `Usage: aubergine <command>
                              (default)     start a copy of the conversation; the original keeps running
                              --stop        ask an idle original to exit, then resume the same conversation
                              --dry-run, --yes, --force, --no-open
-  token create <name> --scope <scope> [--scope …] [--expires 30d | <date>] [--no-review]
+  token create <name> --scope <scope> [--scope …] [--expires 30d | <date>] [--no-review] [--project <name>]
                              [--reach all | canvas:<name> | tag:<tag>]   which sessions the terminal scopes and the message scopes reach
                              Make an API token for a program of yours. Its secret is printed once, on standard output
   token list                 The API tokens, with their scopes and when each was last used

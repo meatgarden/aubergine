@@ -12,8 +12,9 @@ import {
   type RuntimeStatus,
   type Settings,
   firstProject,
+  stateOf,
 } from '@aubergine/shared';
-import { ApiError, api, askAbout, subscribeToEvents } from './api';
+import { ApiError, api, askAbout, lookAt, subscribeToEvents } from './api';
 import { canvasIdFromPath, chooseCanvas, rememberCanvas, rememberedCanvas, sessionFromAddress, writeAddress } from './address';
 import { announcement, notificationsWanted } from './attention';
 import { clampPanelWidth, loadPanelPrefs, savePanelPrefs, type PanelPrefs } from './panel/registry';
@@ -32,7 +33,13 @@ export interface AppStore {
   runtime: RuntimeStatus | null;
   /** User settings from the daemon's settings file. */
   settings: Settings;
+  /**
+   * What the page shows: the project being looked at, with what is shared with it. Every list on screen is made from
+   * this, so that everything on screen is of that project unless it says otherwise.
+   */
   app: AppState | null;
+  /** Everything, of every project: for the switcher, for what waits anywhere, and for the views that say "all projects". */
+  whole: AppState | null;
   /** The canvas this page is showing. */
   canvasId: string | null;
   /** False while the live event stream is down after having been up. */
@@ -133,9 +140,9 @@ export interface AppStore {
 /** The longest a terminal is waited for after it was asked to take the keyboard. */
 const SETTLE_MS = 700;
 
-export type Panel = 'parked' | 'outside' | 'shortcuts' | 'tokens' | 'activity' | 'workflows' | 'review' | 'help' | 'library' | 'board' | 'queue';
+export type Panel = 'parked' | 'outside' | 'shortcuts' | 'tokens' | 'activity' | 'workflows' | 'review' | 'help' | 'library' | 'board' | 'queue' | 'projects' | 'sharing';
 export interface Ask {
-  kind: 'rename-session' | 'rename-canvas' | 'note' | 'move' | 'tags' | 'list-search';
+  kind: 'rename-session' | 'rename-canvas' | 'note' | 'move' | 'tags' | 'list-search' | 'new-project';
   /** The session or canvas it is about. */
   id: string;
   tick: number;
@@ -146,6 +153,7 @@ export const useApp = create<AppStore>((set, get) => ({
   runtime: null,
   settings: DEFAULT_SETTINGS,
   app: null,
+  whole: null,
   canvasId: null,
   live: true,
   focus: null,
@@ -189,7 +197,7 @@ export const useApp = create<AppStore>((set, get) => ({
       const response = await api.getState();
       const exists = (id: string): boolean => response.state.canvases.some((c) => c.id === id);
       const current = get().canvasId;
-      set({ phase: 'ready', runtime: response.runtime, settings: response.settings, app: response.state });
+      set({ phase: 'ready', runtime: response.runtime, settings: response.settings, whole: response.state, app: viewOf(response.state, current, get().app) });
       // Keep looking at the same canvas. On opening the page, or if that canvas is gone: the one
       // in the address, else the one this browser looked at last, else the server's default.
       if (!current || !exists(current)) {
@@ -200,7 +208,7 @@ export const useApp = create<AppStore>((set, get) => ({
           exists,
         });
         // An address that asks for a session is left for that to deal with.
-        if (sessionFromAddress(location.search)) set({ canvasId: chosen, focus: null });
+        if (sessionFromAddress(location.search)) set({ canvasId: chosen, focus: null, app: viewOf(response.state, chosen, get().app) });
         else get().setCanvas(chosen, { push: false });
       }
     } catch (error) {
@@ -213,7 +221,8 @@ export const useApp = create<AppStore>((set, get) => ({
   },
 
   apply: (event) => {
-    const app = get().app;
+    // Changes are applied to everything; what is shown is worked out from that again.
+    const app = get().whole;
     if (!app) return;
     // A session has just started waiting: say so on the desktop, if the user asked for that
     // and is not already looking at it.
@@ -225,7 +234,8 @@ export const useApp = create<AppStore>((set, get) => ({
         // Notifications are a nicety; never let one break an update.
       }
     }
-    const next: Partial<AppStore> = { app: applyEvent(app, event) };
+    const whole = applyEvent(app, event);
+    const next: Partial<AppStore> = { whole, app: viewOf(whole, get().canvasId, get().app) };
     if (event.type === 'session.closed') {
       if (get().closing === event.sessionId) next.closing = null;
     }
@@ -239,7 +249,8 @@ export const useApp = create<AppStore>((set, get) => ({
     set(next);
     if (event.type === 'canvas.removed' && get().canvasId === event.canvasId) {
       // The canvas this page was showing is gone: show the first of what is left.
-      const first = sortedCanvases(get().app ?? app)[0];
+      // The first of what is left in the project being looked at; of everything, when that project went with it.
+      const first = sortedCanvases(get().app ?? app)[0] ?? sortedCanvases(get().whole ?? app)[0];
       if (first) get().setCanvas(first.id, { push: false });
     }
   },
@@ -276,9 +287,12 @@ export const useApp = create<AppStore>((set, get) => ({
   askToCloseCanvas: (canvasId) => set({ closingCanvas: canvasId }),
   setPicker: (open) => set({ picker: open }),
   setCanvas: (canvasId, options) => {
-    if (get().canvasId !== canvasId) set({ canvasId, focus: null, selected: null, settleUntil: 0 });
-    writeAddress(canvasId, options?.push !== false);
-    rememberCanvas(canvasId);
+    // Another canvas may be of another project: what is shown follows it.
+    const everything = get().whole;
+    if (get().canvasId !== canvasId) set({ canvasId, focus: null, selected: null, settleUntil: 0, ...(everything ? { app: viewOf(everything, canvasId, get().app) } : {}) });
+    const projectId = everything?.canvases.find((c) => c.id === canvasId)?.projectId ?? null;
+    writeAddress(canvasId, options?.push !== false, projectId);
+    rememberCanvas(canvasId, projectId ?? undefined);
     events?.viewing(canvasId);
   },
   showSession: (sessionId) => set((state) => ({ show: { sessionId, tick: (state.show?.tick ?? 0) + 1 }, settleUntil: Date.now() + SETTLE_MS })),
@@ -287,6 +301,35 @@ export const useApp = create<AppStore>((set, get) => ({
 }));
 
 const noLayout: Layout = { nodes: [], frames: [] };
+
+/** A list as it was, where nothing in it changed: so that what did not change is not drawn again. */
+function same<T>(before: readonly T[] | undefined, now: T[]): T[] {
+  return before !== undefined && before.length === now.length && before.every((item, index) => item === now[index]) ? (before as T[]) : now;
+}
+
+/**
+ * What is shown, out of everything: the project of the canvas being looked at, with what is shared with it. With one
+ * project that is everything, as it is. The lists that did not change are kept as they were.
+ */
+export function viewOf(whole: AppState, canvasId: string | null, previous: AppState | null): AppState {
+  if (whole.projects.length <= 1) return whole;
+  const projectId = whole.canvases.find((c) => c.id === canvasId)?.projectId ?? firstProject(whole).id;
+  const view = stateOf(whole, projectId);
+  if (previous === null) return view;
+  return {
+    ...view,
+    sessions: same(previous.sessions, view.sessions),
+    canvases: same(previous.canvases, view.canvases),
+    runs: same(previous.runs, view.runs),
+    drafts: same(previous.drafts, view.drafts),
+    workflows: same(previous.workflows, view.workflows),
+    shelf: same(previous.shelf, view.shelf),
+    environments: same(previous.environments, view.environments),
+    library: { ...view.library, sources: same(previous.library.sources, view.library.sources), installed: same(previous.library.installed, view.library.installed) },
+    queue: { ...view.queue, tasks: same(previous.queue.tasks, view.queue.tasks), asks: same(previous.queue.asks, view.queue.asks), rules: same(previous.queue.rules, view.queue.rules) },
+    schedules: { ...view.schedules, items: same(previous.schedules.items, view.schedules.items) },
+  };
+}
 
 /** The canvas this page is showing. */
 export function currentCanvas(state: Pick<AppStore, 'app' | 'canvasId'>): Canvas | null {
@@ -300,6 +343,7 @@ export function currentProjectId(state: Pick<AppStore, 'app' | 'canvasId'>): str
 }
 // What the page asks the server is asked about the project being looked at.
 askAbout(() => currentProjectId(useApp.getState()));
+useApp.subscribe((state) => lookAt(currentProjectId(state)));
 
 export function currentLayout(state: Pick<AppStore, 'app' | 'canvasId'>): Layout {
   return currentCanvas(state)?.layout ?? noLayout;
@@ -322,7 +366,7 @@ export function startSync(): () => void {
     // on whichever canvas it is, and let that put the canvas in the address.
     const wanted = sessionFromAddress(location.search);
     if (wanted) {
-      const place = store.app ? placeOfSession(store.app, wanted) : null;
+      const place = store.whole ? placeOfSession(store.whole, wanted) : null;
       const canvasId = place?.canvas.id ?? store.canvasId;
       if (canvasId) store.setCanvas(canvasId, { push: false });
       store.showSession(wanted);
@@ -342,7 +386,7 @@ export function startSync(): () => void {
       },
       onShowCanvas: (canvasId) => {
         const store = useApp.getState();
-        if (store.app?.canvases.some((c) => c.id === canvasId)) store.setCanvas(canvasId);
+        if (store.whole?.canvases.some((c) => c.id === canvasId)) store.setCanvas(canvasId);
       },
       onDown: () => useApp.setState({ live: false }),
     });
@@ -355,9 +399,9 @@ export function startSync(): () => void {
   const onPopState = (): void => {
     const id = canvasIdFromPath(location.pathname);
     const store = useApp.getState();
-    if (id && store.app?.canvases.some((c) => c.id === id) && id !== store.canvasId) {
-      useApp.setState({ canvasId: id, focus: null, selected: null });
-      rememberCanvas(id);
+    if (id && store.whole?.canvases.some((c) => c.id === id) && id !== store.canvasId) {
+      useApp.setState({ canvasId: id, focus: null, selected: null, app: viewOf(store.whole, id, store.app) });
+      rememberCanvas(id, store.whole.canvases.find((c) => c.id === id)?.projectId);
       events?.viewing(id);
     }
   };

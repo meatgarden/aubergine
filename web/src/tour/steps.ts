@@ -43,7 +43,7 @@ registerTourStep({
   order: 30,
   title: 'Find a terminal by what it printed',
   text: 'Open “Go to…” and type: redirects twice. Choose the line it finds.',
-  reminder: '“Go to…” finds a terminal by its name, or by anything it printed.',
+  reminder: '“Go to…” finds a terminal by its name, or by anything it printed. Projects are at the top left.',
   target: () => find('.picker') ?? find('[data-testid="toolbar-goto"]'),
   done: (c) => c.signals.has('picker.output'),
 });

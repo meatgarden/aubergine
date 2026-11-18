@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import { canvasCounts, sortedCanvases, type Canvas } from '@aubergine/shared';
+import { canvasCounts, openProjects, sortedCanvases, type Canvas } from '@aubergine/shared';
 import { api } from './api';
 import { ColorButton } from './ColorButton';
 import { colorClass, colorStyle } from './color';
 import { runCommand } from './commands';
 import { hint } from './shortcuts';
+import { ProjectSwitcher } from './projects/ProjectSwitcher';
 import { useApp } from './store';
 
 /**
@@ -22,6 +23,7 @@ export function orderBefore(canvases: readonly Canvas[], targetId: string): numb
 /** One tab per canvas: switch, add, rename (double-click), reorder (drag), color, close. */
 export function TabBar() {
   const app = useApp((s) => s.app);
+  const whole = useApp((s) => s.whole);
   const current = useApp((s) => s.canvasId);
   const setCanvas = useApp((s) => s.setCanvas);
   useApp((s) => s.settings.shortcuts);
@@ -40,7 +42,10 @@ export function TabBar() {
   }, [ask]);
 
   if (!app) return null;
+  // The tabs are the canvases of the project being looked at.
   const canvases = sortedCanvases(app);
+  const here = canvases.find((c) => c.id === current)?.projectId;
+  const others = whole ? openProjects(whole).filter((project) => project.id !== here) : [];
 
   const run = (work: Promise<unknown>): void => {
     setError(null);
@@ -63,6 +68,7 @@ export function TabBar() {
 
   return (
     <nav className="tabbar" aria-label="Canvases" data-testid="tabbar">
+      <ProjectSwitcher />
       {canvases.map((canvas) => {
         const counts = canvasCounts(app, canvas);
         const active = canvas.id === current;
@@ -134,6 +140,23 @@ export function TabBar() {
             {active && (
               <span className="tab-tools" onClick={(e) => e.stopPropagation()} onDoubleClick={(e) => e.stopPropagation()}>
                 <ColorButton value={canvas.color} onChange={(color) => run(api.updateCanvas(canvas.id, { color }))} />
+                {others.length > 0 && (
+                  <select
+                    className="tab-project"
+                    aria-label={`Move the canvas ${canvas.name} to another project`}
+                    title="Move this canvas to another project, with its terminals, their runs and what they work in"
+                    value=""
+                    onChange={(e) => e.target.value && run(api.moveCanvasToProject(canvas.id, e.target.value))}
+                    data-testid="tab-move-project"
+                  >
+                    <option value="">Move to…</option>
+                    {others.map((project) => (
+                      <option key={project.id} value={project.id}>
+                        {project.name}
+                      </option>
+                    ))}
+                  </select>
+                )}
                 <button
                   type="button"
                   className="quiet tab-messaging"

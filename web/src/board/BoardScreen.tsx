@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { BOARD_ENDED_MAX, RUN_STATUS_WORDS, boardOf, howLong, isLive, versionOf, type ArchivedRun, type BoardCard, type BoardFilters, type RunStatus } from '@aubergine/shared';
+import { openProjects, projectName, BOARD_ENDED_MAX, RUN_STATUS_WORDS, boardOf, howLong, isLive, versionOf, type ArchivedRun, type BoardCard, type BoardFilters, type RunStatus } from '@aubergine/shared';
 import { api } from '../api';
-import { useApp } from '../store';
+import { currentProjectId, useApp } from '../store';
 import { ApprovalControls } from '../workflows/ApprovalControls';
 import { liveFilters, loadFilters, nextCard, saveFilters, type Box } from './board-model';
 import { RunManyDialog } from './RunManyDialog';
@@ -16,10 +16,11 @@ import { RunManyDialog } from './RunManyDialog';
 
 const ARROWS: Record<string, 'left' | 'right' | 'up' | 'down'> = { ArrowLeft: 'left', ArrowRight: 'right', ArrowUp: 'up', ArrowDown: 'down' };
 
-function Card({ card, single, now, onGo, onView }: { card: BoardCard; single: boolean; now: number; onGo: (card: BoardCard) => void; onView: (runId: string) => void }) {
-  const run = useApp((s) => s.app?.runs.find((r) => r.id === card.runId));
+function Card({ card, single, now, onGo, onView, named }: { card: BoardCard; single: boolean; now: number; onGo: (card: BoardCard) => void; onView: (runId: string) => void; named: ((projectId: string) => string) | null }) {
+  // Looked up among everything: in the view of every project a card may be of another project.
+  const run = useApp((s) => s.whole?.runs.find((r) => r.id === card.runId));
   const elements = useApp((s) => {
-    const workflow = run ? s.app?.workflows.find((w) => w.id === run.workflowId) : undefined;
+    const workflow = run ? s.whole?.workflows.find((w) => w.id === run.workflowId) : undefined;
     return workflow && run ? (versionOf(workflow, run.workflowVersion)?.elements ?? null) : null;
   });
   return (
@@ -41,7 +42,10 @@ function Card({ card, single, now, onGo, onView }: { card: BoardCard; single: bo
       data-session={card.sessionId ?? ''}
     >
       <div className="board-card-head">
-        <span className="board-card-name">{card.sessionName || 'no terminal yet'}</span>
+        <span className="board-card-name">
+          {named && card.projectId ? <span data-testid="board-card-project">{named(card.projectId)} · </span> : null}
+          {card.sessionName || 'no terminal yet'}
+        </span>
         {card.canvasName && <span className="board-card-canvas">{card.canvasName}</span>}
       </div>
       {single && <div className="board-card-element">{card.elementName}</div>}
@@ -71,7 +75,12 @@ function Card({ card, single, now, onGo, onView }: { card: BoardCard; single: bo
 
 export function BoardScreen() {
   const open = useApp((s) => s.panel === 'board');
-  const app = useApp((s) => s.app);
+  // This project's runs, or every project's: in the second view a card names its project.
+  const [everywhere, setEverywhere] = useState(false);
+  const app = useApp((s) => (everywhere ? s.whole : s.app));
+  const whole = useApp((s) => s.whole);
+  const here = useApp(currentProjectId);
+  const severalProjects = (whole ? openProjects(whole).length : 0) > 1;
   const quietAfter = useApp((s) => s.settings.workflows.quietAfterSeconds);
   const [filters, setFilters] = useState<BoardFilters>(loadFilters);
   const [ended, setEnded] = useState<ArchivedRun[]>([]);
@@ -111,8 +120,8 @@ export function BoardScreen() {
   const canvases = app?.canvases;
   const shownFilters = useMemo(() => liveFilters(filters, { canvasIds: (canvases ?? []).map((c) => c.id), workflowIds: (workflows ?? []).map((w) => w.id) }), [filters, canvases, workflows]);
   const board = useMemo(
-    () => (open && runs && workflows && sessions && canvases ? boardOf({ runs, workflows, sessions, canvases, ended: ended.filter((entry) => !isLive(entry.run.status)), now, quietAfterSeconds: quietAfter, filters: shownFilters }) : null),
-    [open, runs, workflows, sessions, canvases, ended, now, quietAfter, shownFilters],
+    () => (open && runs && workflows && sessions && canvases ? boardOf({ runs, workflows, sessions, canvases, ended: ended.filter((entry) => !isLive(entry.run.status)), now, quietAfterSeconds: quietAfter, filters: { ...shownFilters, ...(everywhere || !here ? {} : { projectId: here }) } }) : null),
+    [open, runs, workflows, sessions, canvases, ended, now, quietAfter, shownFilters, everywhere, here],
   );
   // The choices of each filter: what the runs there are could be filtered by.
   const choices = useMemo(() => {
@@ -184,6 +193,16 @@ export function BoardScreen() {
             <span className="board-summary" data-testid="board-summary">
               {board.summary}
             </span>
+            {severalProjects && (
+              <span className="list-scope" role="group" aria-label="Which projects">
+                <button type="button" aria-pressed={!everywhere} onClick={() => setEverywhere(false)} data-testid="board-this-project">
+                  This project
+                </button>
+                <button type="button" aria-pressed={everywhere} onClick={() => setEverywhere(true)} data-testid="board-every-project">
+                  Every project
+                </button>
+              </span>
+            )}
           </h2>
           <span>
             <button type="button" className="quiet" onClick={() => setMany(true)} data-testid="board-start-many">
@@ -250,7 +269,7 @@ export function BoardScreen() {
                 <div className="board-queued">
                   <span className="wf-label">Waiting for a terminal</span>
                   {group.queued.map((card) => (
-                    <Card key={card.runId} card={card} single={group.single} now={now} onGo={go} onView={view} />
+                    <Card key={card.runId} card={card} single={group.single} now={now} onGo={go} onView={view} named={everywhere && whole ? (projectId) => projectName(whole, projectId) : null} />
                   ))}
                 </div>
               )}
@@ -263,7 +282,7 @@ export function BoardScreen() {
                       <span className="board-column-count">{column.cards.length > 0 ? column.cards.length : ''}</span>
                     </div>
                     {column.cards.map((card) => (
-                      <Card key={card.runId} card={card} single={group.single} now={now} onGo={go} onView={view} />
+                      <Card key={card.runId} card={card} single={group.single} now={now} onGo={go} onView={view} named={everywhere && whole ? (projectId) => projectName(whole, projectId) : null} />
                     ))}
                   </div>
                 ))}

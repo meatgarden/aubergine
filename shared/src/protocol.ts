@@ -435,6 +435,8 @@ export type EventsClientMessage = z.infer<typeof EventsClientMessage>;
 
 /** The address of a canvas in the browser: `/c/<canvas id>`. */
 export const canvasAddress = (canvasId: string): string => `/c/${canvasId}`;
+/** The address of a canvas with its project: `/p/<project id>/c/<canvas id>`. The shorter one keeps working and leads to the same place. */
+export const projectCanvasAddress = (projectId: string, canvasId: string): string => `/p/${projectId}/c/${canvasId}`;
 
 /* ---------- Terminal WebSocket ---------- */
 

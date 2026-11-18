@@ -52,6 +52,7 @@ import {
   UpdateFrameRequest,
   UpdateNodeRequest,
   canvasAddress,
+  projectCanvasAddress,
   paths,
   placeOfSession,
   type AppendNoteResponse,
@@ -967,6 +968,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     await app.register(fastifyStatic, { root: options.webDist });
     // The address of a canvas is a page of the same web app.
     app.get(canvasAddress(':canvasId'), async (_request, reply) => reply.sendFile('index.html'));
+    app.get(projectCanvasAddress(':projectId', ':canvasId'), async (_request, reply) => reply.sendFile('index.html'));
   } else {
     app.get('/', async (_request, reply) =>
       reply

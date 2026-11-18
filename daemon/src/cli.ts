@@ -88,6 +88,8 @@ import { daemonServiceSpec, installService, launchAgentPath, uninstallService } 
 /** Talks to the running daemon the same way the web app does: through the wire protocol. */
 /** The project this command is about, when it is about one: named with --project, chosen with `project use`, or the project of the terminal it is typed in. Sent with every call. */
 let meantProject: string | null = null;
+/** The project named with --project on this very command, and not one remembered from before: a token is limited only when the owner said so here. */
+let namedProject: string | null = null;
 const REMEMBERED_PROJECT = 'cli-project';
 
 /** Works out which project the command means, once, before it runs. Failing to find out is not an error: the server then means the first project. */
@@ -112,7 +114,7 @@ async function meanProject(config: Config, named: string | null, commandName: st
     if (named !== null) throw error instanceof AubergineError ? new UsageError(error.code === 'network' ? `The Aubergine server is not answering on http://127.0.0.1:${config.port}. Is it running?` : error.message) : error;
     return;
   }
-  if (named !== null) meantProject = pickProject(projects, named).id;
+  if (named !== null) meantProject = namedProject = pickProject(projects, named).id;
   // One that was chosen earlier and is gone or archived since is forgotten quietly.
   else meantProject = projects.find((project) => project.id === remembered && project.state === 'open')?.id ?? null;
 }
@@ -787,7 +789,9 @@ async function main(): Promise<number> {
     case 'token-create': {
       // The scopes are as typed; whether each is one a token can have is for the server to say.
       const body = { name: command.tokenName, scopes: command.scopes as CreateTokenBody['scopes'], reviewWorkflowChanges: command.review, ...expiryFromOption(command.expires), ...(await reachFromOption(config, command.reach)) };
-      const created = await v1(config, (client) => client.createToken({ body }));
+      // With --project: a token that reaches that project and no other, for everything it may do.
+      const created = await v1(config, (client) => client.createToken({ body: { ...body, ...(namedProject ? { projects: { kind: 'projects' as const, projectIds: [namedProject] } } : {}) } }));
+      if (namedProject) console.error('It reaches one project only: it sees and hears nothing of the others.');
       // The secret, alone, on standard output, so that it can be captured: TOKEN=$(aubergine token create …).
       // Everything said about it goes to standard error. It is not written anywhere else.
       console.error(

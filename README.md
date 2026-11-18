@@ -387,6 +387,46 @@ Each new tab makes a new session, so park or end the ones you no longer need.
 - The dot in a title bar gives a node or frame a color: one of thirteen, or **Your own…** for any color.
 - The title bar shows the running command and current folder of each session.
 
+### Projects
+
+One server can hold several projects. A project is a control room of its own: its own canvases (the tabs), its own terminals, its own queue and "For you" list, its own schedules and rules. Use one per piece of work you want to keep apart: a client, a product, a side project.
+
+- **The switcher** is at the top left, before the tabs. It names the project you are looking at; its menu lists the others, each with the number of things that wait on you there, so nothing that waits is out of sight. The count beside "waiting" at the top of the canvas is for every project, and "next waiting" takes you to whichever project it is in.
+- **New project…** asks for a name and, if you like, the folder its terminals start in. A new project has one empty canvas. With a folder set, a new terminal, a task that gets a terminal of its own and a working copy start there unless they name another.
+- **Everything on screen is of the project you are in**: the tabs, the side panel, the Queue screen, the Board, schedules and rules. Where a screen can show more, it says so: the owner's list and the Board have **Every project**, and the terminal list has **All projects**; rows then name their project.
+- **Each project has its own address** (`/p/<project>/c/<canvas>`), so a browser tab or window can stay on one. Older addresses (`/c/<canvas>`) still lead to the right place. The browser remembers the canvas you last had open in each project.
+- **How tasks start is per project**: the limit, Hold and "Start by itself" of one project do not touch another.
+- **A canvas moves to another project** from its tab (**Move to…**) or with `aubergine project move-canvas`. Its terminals go with it, with their runs and working copies, and so do the tasks that wait for one of its terminals. A task for "any free agent", rules and schedules stay where they were. The last canvas of a project does not move.
+- **Projects…** lists them: rename, color, folder, order; **Archive**, **Reopen**, **Remove for good**. An archived project is out of the switcher and starts nothing: no task, no schedule, no rule. Archiving a project whose terminals are running asks first whether to park them or end them. A project is removed only when it holds nothing, and the last open project stays.
+
+#### What is shared between projects
+
+Canvases, terminals, tasks, schedules and rules always belong to one project. Four kinds of thing are **shared with every project** unless you say otherwise: workflows, shelf elements, library sources (and what was installed from them), and API tokens. **Sharing…** in the switcher's menu is the page for it:
+
+- For each kind, what a **new** one is: shared with every project, or of the project it is made in.
+- For each existing thing, where it belongs. Make a workflow one project's own and it is listed and run only there.
+- A run that is going is never stopped by moving anything. A new run does not start from a workflow or an element its project cannot see. A schedule or a rule that runs such an element stops, and says so once on your list.
+- Settings are for the whole server, not for a project: the settings file, the keys, the limits.
+
+#### Projects and API tokens
+
+A token reaches every project unless you limit it when you make it (`"projects": {"kind": "projects", "projectIds": […]}`, or `aubergine token create … --project <name>`). A limited token is kept to those projects for every scope, reading included: it does not see another project's canvases, terminals, tasks, rules, schedules or runs, nor things that are another project's own, and it hears nothing of them on the stream of changes. Things shared with every project it sees. To it, a thing of another project is simply not there. An agent's own credential sees its own project.
+
+Making, changing, archiving and removing a project, moving a canvas, and what is shared are yours alone: no token and no agent can do any of it.
+
+#### From the command line
+
+```sh
+aubergine project list
+aubergine project new "Garden site" --folder ~/work/garden
+aubergine project use "Garden site"          # commands that name no project mean this one from now on
+aubergine task list --project "Garden site"  # or say it once for one command
+aubergine project move-canvas "Main" --to "Garden site"
+aubergine project archive "Garden site" --park
+```
+
+`--project <name>` works on `list`, `new`, `canvas`, `task`, `todo`, `rule`, `schedule` and `board`. Without it, and without `project use`, a command means the first project. Typed inside a terminal on a canvas, a command is about that terminal's project and `--project` is refused.
+
 ### Canvases
 
 You can have several canvases, shown as tabs along the top: one per project, say, or one for long-running jobs. You start with one, named Main.
@@ -1102,6 +1142,7 @@ aubergine todo [add <text> | done <item>]      what waits on you
 aubergine ask <text>           inside a session: ask your owner for something only a person can do
 aubergine rule list | add | remove      when something happens, do something
 aubergine schedule list | add | change | on | off | run | remove      at these times, run this there
+aubergine project list | new | rename | use | archive | reopen | remove | move-canvas      several projects in one server
 aubergine here --copy [--claude]   the same as here, in a working copy of its own
 aubergine copies               the working copies there are; `copies show`, `keep-branch`, `keep`, `discard`, `forget` <copy>
 aubergine where                inside a session: whether it works in a working copy, its branch, and what to leave alone

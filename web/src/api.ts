@@ -1,3 +1,4 @@
+import { PROJECT_HEADER } from '@aubergine/shared';
 import { z, type ZodType } from 'zod';
 import { createClient } from '@aubergine/client';
 import {
@@ -52,7 +53,9 @@ export class ApiError extends Error {
 }
 
 /** The public API (/v1), as the page calls it: with its own cookie. */
-const v1 = createClient({ useCookie: true });
+/** Sent with every call: which project the page is looking at, so that what it lists and what it makes are that project's unless a call says otherwise. */
+const pageHeaders: Record<string, string> = {};
+const v1 = createClient({ useCookie: true, headers: pageHeaders });
 
 async function call<T>(schema: ZodType<T> | null, method: string, path: string, body?: unknown): Promise<T> {
   let response: Response;
@@ -84,6 +87,11 @@ const OpenedConversation = z.object({ session: Session });
 let lookingAt: () => string | null = () => null;
 export function askAbout(project: () => string | null): void {
   lookingAt = project;
+}
+/** Called when the project being looked at changes. */
+export function lookAt(projectId: string | null): void {
+  if (projectId) pageHeaders[PROJECT_HEADER] = projectId;
+  else delete pageHeaders[PROJECT_HEADER];
 }
 /** The project to name in a request: the one being looked at. */
 const here = (): { projectId?: string } => {
@@ -133,7 +141,16 @@ export const api = {
   outsideAdd: (request: OutsideAddRequest) => call(OutsideResult, 'POST', paths.outsideAdd, request),
   outsideMove: (request: OutsideMoveRequest) => call(OutsideResult, 'POST', paths.outsideMove, request),
   // What follows goes through the public API, with the client generated from its description.
-  createCanvas: (request: CreateCanvasRequest) => v1.createCanvas({ body: request }),
+  createCanvas: (request: CreateCanvasRequest) => v1.createCanvas({ body: { ...here(), ...request } }),
+  addProject: (body: Parameters<typeof v1.addProject>[0]['body']) => v1.addProject({ body }),
+  changeProject: (projectId: string, body: Parameters<typeof v1.changeProject>[0]['body']) => v1.changeProject({ projectId, body }),
+  archiveProject: (projectId: string, sessions?: 'park' | 'end') => v1.archiveProject({ projectId, body: sessions ? { sessions } : {} }),
+  reopenProject: (projectId: string) => v1.reopenProject({ projectId }),
+  removeProject: (projectId: string) => v1.removeProject({ projectId }),
+  moveCanvasToProject: (canvasId: string, projectId: string) => v1.moveCanvasToProject({ canvasId, body: { projectId } }),
+  getSharing: () => v1.getSharing(),
+  changeSharing: (kind: string, value: 'shared' | 'project') => v1.changeSharing({ body: { kind, default: value } }),
+  moveSharedThing: (kind: string, id: string, projectId: string | null) => v1.moveSharedThing({ body: { kind, id, projectId } }),
   updateCanvas: (canvasId: string, request: UpdateCanvasRequest) => v1.updateCanvas({ canvasId, body: request }),
   /** Closes a canvas. Its sessions are moved to `to`, or parked when `to` is null. */
   closeCanvas: (canvasId: string, to: string | null) => v1.closeCanvas({ canvasId, query: to ? { sessions: 'move', to } : { sessions: 'park' } }),
@@ -160,10 +177,11 @@ export const api = {
   startRuns: (workflowId: string, body: { sessionIds: string[]; inputs: Record<string, string>; inputsBySession?: Record<string, Record<string, string>>; replace?: boolean }) =>
     v1.startRuns({ workflowId, body: { replace: false, kickoff: true, ...body } }),
   /** Runs that ended lately, for the board: newest first, a bounded number. */
-  listEndedRunsPage: (limit: number) => v1.listRuns({ query: { status: 'ended', limit } }),
+  // Of every project: what is shown of them is chosen by whoever shows it.
+  listEndedRunsPage: (limit: number) => v1.listRuns({ query: { projectId: 'all', status: 'ended', limit } }),
   getRun: (runId: string) => v1.getRun({ runId }),
   /** The runs that ended most recently, from the archive. */
-  listEndedRuns: (limit: number) => v1.listRuns({ query: { status: 'ended', limit } }),
+  listEndedRuns: (limit: number) => v1.listRuns({ query: { projectId: 'all', status: 'ended', limit } }),
   tickRunItem: (runId: string, body: { elementId: string; item: number; ticked: boolean }) => v1.tickRunItem({ runId, body }),
   getDraft: (draftId: string) => v1.getDraft({ draftId }),
   acceptDraft: (draftId: string, body: Parameters<typeof v1.acceptDraft>[0]['body'] = {}) => v1.acceptDraft({ draftId, body }),
