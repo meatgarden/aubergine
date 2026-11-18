@@ -549,9 +549,17 @@ export class Queue {
     const problem = kind.problem(body.action, stateOf(this.hub.state, projectId));
     if (problem) throw new BadInputError(problem);
     if (this.queue.rules.length >= RULES_MAX) throw new ConflictError(`There are ${RULES_MAX} rules; remove one first.`);
-    const rule: Rule = { id: newId(), projectId, event: body.event, action: body.action, createdAt: new Date().toISOString() };
+    const rule: Rule = { id: newId(), projectId, event: body.event, action: body.action, on: true, createdAt: new Date().toISOString() };
     this.hub.emit({ type: 'rule.changed', rule });
     return this.rules(projectId);
+  }
+
+  /** Switches a rule on or off. One that is off is kept and does nothing. */
+  switchRule(ruleId: string, on: boolean): RuleList {
+    const rule = this.queue.rules.find((r) => r.id === ruleId);
+    if (!rule) throw new NotFoundError(`No rule ${ruleId}`);
+    if (rule.on !== on) this.hub.emit({ type: 'rule.changed', rule: { ...rule, on } });
+    return this.rules(rule.projectId);
   }
 
   removeRule(ruleId: string): void {
@@ -594,7 +602,7 @@ export class Queue {
     if ((source as { viaRule?: unknown }).viaRule === true) return;
     // A rule hears what happens in its own project, and nothing of another's. An archived project's rules are silent.
     if (!isOpenProject(this.hub.state, occasion.projectId)) return;
-    for (const rule of this.queue.rules.filter((r) => r.event === occasion.event && r.projectId === occasion.projectId)) {
+    for (const rule of this.queue.rules.filter((r) => r.on && r.event === occasion.event && r.projectId === occasion.projectId)) {
       const key = `${rule.id} ${occasion.id}`;
       if (this.fired.has(key)) continue;
       this.fired.add(key);

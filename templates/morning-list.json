@@ -1,0 +1,26 @@
+{
+  "aubergine": "project",
+  "format": 1,
+  "template": true,
+  "name": "Morning list",
+  "description": "A list of what is open for you, every weekday morning. One agent terminal, one element that gathers the list, and a schedule that runs it at 08:30. The agent on that terminal needs whatever connections the list is to be gathered from (a chat, a calendar, mail): the template brings none.",
+  "color": "yellow",
+  "places": [],
+  "canvases": [
+    {
+      "ref": "c1",
+      "name": "Desk",
+      "color": "yellow",
+      "frames": [],
+      "nodes": [
+        { "x": 60, "y": 60, "width": 720, "height": 440, "color": "yellow", "terminal": { "ref": "t1", "name": "helper", "tags": ["agent"], "agent": "claude-code", "note": "Start an agent here that has the connections your list comes from. The schedule “My morning list” runs on this terminal." } }
+      ]
+    }
+  ],
+  "workflows": [],
+  "elements": [
+    { "ref": "e1", "shared": false, "element": { "id": "morning-list", "name": "Morning list", "instructions": "Gather what is open for your owner today: {{task}}\nLook where you have a connection: messages that ask them for something, meetings today, things they said they would do. Leave out what is only for information.", "doneWhen": "A list is handed in: one line for each thing, with who asked and by when if that is known. An empty list if there is nothing.", "produces": "checklist", "needs": [{ "kind": "other", "name": "connections to where your day is", "note": "A chat, a calendar or mail that the agent on this terminal can read." }] } }
+  ],
+  "rules": [{ "event": "schedule.failed", "action": { "kind": "notify" } }],
+  "schedules": [{ "name": "My morning list", "time": "08:30", "days": ["mon", "tue", "wed", "thu", "fri"], "what": { "element": "e1" }, "where": { "terminal": "t1" }, "task": "since yesterday evening" }]
+}

@@ -31,6 +31,7 @@ export * from './board';
 export * from './environment';
 export * from './environment-api';
 export * from './projects';
+export * from './project-file';
 export * from './tasks';
 export * from './for-you';
 export * from './tasks-api';

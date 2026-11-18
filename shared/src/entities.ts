@@ -59,6 +59,8 @@ export const Project = z.object({
   defaultFolder: Folder.nullable().default(null).describe('One of its folders: where a new terminal starts when it names no folder. Null: where new terminals start anyway.'),
   home: ProjectHome.default(LOCAL_HOME).describe('Which server owns its record. Set by the server.'),
   state: z.enum(['open', 'archived']).default('open'),
+  /** Fields of the file it was read from that this version does not know: written out again when it is written to a file. */
+  fileExtra: z.record(z.string(), z.unknown()).optional(),
   createdAt: Timestamp,
 });
 export type Project = z.infer<typeof Project>;
@@ -252,6 +254,11 @@ export const Session = z.object({
   projectId: Id,
   /** Which machine its shell runs on. Set by the server; today always this computer. */
   host: SessionHost.optional(),
+  /**
+   * For a terminal that came in a project file and whose shell was not started with it: what it was where the file
+   * was written. Said on the terminal until its shell is started; nothing is done because of it.
+   */
+  meantFor: z.object({ agent: z.string().max(40).nullable(), environment: z.string().max(40).nullable(), placeUnset: z.boolean() }).optional(),
   name: SessionName,
   createdAt: Timestamp,
   state: SessionState.default('open'),

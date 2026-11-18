@@ -121,6 +121,7 @@ async function main(): Promise<void> {
     messageLog: new FileMessageLog(config.dataDir, () => settings.value.messages.logMaxBytes, (error) => console.warn(`Could not write the file of messages: ${String(error)}`)),
     draftLog: new FileDraftLog(config.dataDir, (error) => console.warn(`Could not write the record of drafts: ${String(error)}`)),
     taskArchive: new FileTaskArchive(config.dataDir),
+    templatesDir: path.join(config.dataDir, 'templates'),
     // A window of the owner's terminal application for a session: a script in the data folder that runs this copy's `aubergine attach`.
     desktop: new FileDesktopOpener({
       dataDir: config.dataDir,

@@ -118,6 +118,7 @@ How to create a token, what the scopes mean, the limits and the activity log are
 | [`POST /v1/asks/{askId}/dismiss`](#dismissask) | Take something written off the list without doing it | browser only |
 | [`GET /v1/rules`](#listrules) | List the rules | browser only |
 | [`POST /v1/rules`](#addrule) | Write a rule | browser only |
+| [`PATCH /v1/rules/{ruleId}`](#switchrule) | Switch a rule on or off | browser only |
 | [`DELETE /v1/rules/{ruleId}`](#removerule) | Remove a rule | browser only |
 | [`GET /v1/projects`](#listprojects) | List the projects | `read` |
 | [`POST /v1/projects`](#addproject) | Make a project | browser only |
@@ -127,6 +128,12 @@ How to create a token, what the scopes mean, the limits and the activity log are
 | [`POST /v1/canvases/{canvasId}/project`](#movecanvastoproject) | Move a canvas to another project | browser only |
 | [`POST /v1/projects/{projectId}/archive`](#archiveproject) | Archive a project | browser only |
 | [`POST /v1/projects/{projectId}/reopen`](#reopenproject) | Reopen an archived project | browser only |
+| [`GET /v1/projects/{projectId}/file`](#exportproject) | Write a project out as a file | browser only |
+| [`POST /v1/project-files/read`](#readprojectfile) | Read a project file, and make nothing | browser only |
+| [`POST /v1/project-files/import`](#importprojectfile) | Make a project from a file that was read | browser only |
+| [`GET /v1/project-templates`](#listprojecttemplates) | List the templates a project can be made from | browser only |
+| [`GET /v1/project-templates/{templateId}`](#getprojecttemplate) | A template's file, as text | browser only |
+| [`POST /v1/projects/{projectId}/template`](#saveprojecttemplate) | Save a project as a template | browser only |
 | [`GET /v1/sharing`](#getsharing) | What is shared between projects | browser only |
 | [`PUT /v1/sharing`](#changesharing) | Say what a new thing of a kind is: shared, or of the project it is made in | browser only |
 | [`POST /v1/sharing/move`](#movesharedthing) | Make one thing belong to a project, or to all | browser only |
@@ -590,6 +597,11 @@ A list: it answers a page at a time, see `limit` and `cursor`.
       kind: string;
       [key: string]: unknown;
     };
+    meantFor?: {
+      agent: string | null;
+      environment: string | null;
+      placeUnset: boolean;
+    };
     name: string;
     createdAt: string;
     state: "open" | "parked" | "exited";
@@ -703,6 +715,11 @@ An API token needs the scope `sessions:write`. Sending `command` needs `terminal
     host?: {
       kind: string;
       [key: string]: unknown;
+    };
+    meantFor?: {
+      agent: string | null;
+      environment: string | null;
+      placeUnset: boolean;
     };
     name: string;
     createdAt: string;
@@ -821,6 +838,11 @@ A list: it answers a page at a time, see `limit` and `cursor`.
       kind: string;
       [key: string]: unknown;
     };
+    meantFor?: {
+      agent: string | null;
+      environment: string | null;
+      placeUnset: boolean;
+    };
     name: string;
     createdAt: string;
     state: "open" | "parked" | "exited";
@@ -919,6 +941,11 @@ An API token needs the scope `read`.
   host?: {
     kind: string;
     [key: string]: unknown;
+  };
+  meantFor?: {
+    agent: string | null;
+    environment: string | null;
+    placeUnset: boolean;
   };
   name: string;
   createdAt: string;
@@ -1026,6 +1053,11 @@ An API token needs the scope `sessions:write`. Sending `note` needs `notes:write
   host?: {
     kind: string;
     [key: string]: unknown;
+  };
+  meantFor?: {
+    agent: string | null;
+    environment: string | null;
+    placeUnset: boolean;
   };
   name: string;
   createdAt: string;
@@ -1156,6 +1188,11 @@ An API token needs the scope `sessions:write`.
       kind: string;
       [key: string]: unknown;
     };
+    meantFor?: {
+      agent: string | null;
+      environment: string | null;
+      placeUnset: boolean;
+    };
     name: string;
     createdAt: string;
     state: "open" | "parked" | "exited";
@@ -1267,6 +1304,11 @@ An API token needs the scope `sessions:write`.
     kind: string;
     [key: string]: unknown;
   };
+  meantFor?: {
+    agent: string | null;
+    environment: string | null;
+    placeUnset: boolean;
+  };
   name: string;
   createdAt: string;
   state: "open" | "parked" | "exited";
@@ -1372,6 +1414,11 @@ An API token needs the scope `sessions:write`.
     host?: {
       kind: string;
       [key: string]: unknown;
+    };
+    meantFor?: {
+      agent: string | null;
+      environment: string | null;
+      placeUnset: boolean;
     };
     name: string;
     createdAt: string;
@@ -8285,6 +8332,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
       kind: string;
       [key: string]: unknown;
     };
+    on: boolean;
     createdAt: string;
     /** The rule in a sentence. */
     says: string;
@@ -8329,6 +8377,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
       kind: string;
       [key: string]: unknown;
     };
+    on: boolean;
     createdAt: string;
     /** The rule in a sentence. */
     says: string;
@@ -8343,6 +8392,53 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 ```
 
 **Errors:** 400, 401, 403, 409, 413, 429.
+
+### switchRule
+
+`PATCH /v1/rules/{ruleId}`: Switch a rule on or off.
+
+For the owner only: no token and no session can do this, whatever its scopes. A rule that is off is kept and does nothing. A rule that came in a project file arrives off.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `ruleId` | path | `string` | yes | An ID. |
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `on` | `boolean` | yes |  |
+
+**Answer** `200`:
+
+```ts
+{
+  rules: {
+    id: string;
+    /** The project it belongs to. Set by the server from where it was made. */
+    projectId: string;
+    event: "task.done" | "task.failed" | "task.needs-owner" | "ask.added" | "schedule.fired" | "schedule.failed";
+    action: {
+      kind: string;
+      [key: string]: unknown;
+    };
+    on: boolean;
+    createdAt: string;
+    /** The rule in a sentence. */
+    says: string;
+  }[];
+  /** The kinds of action there are. */
+  actions: {
+    kind: string;
+    title: string;
+    says: string;
+  }[];
+}
+```
+
+**Errors:** 400, 401, 403, 404, 413, 429.
 
 ### removeRule
 
@@ -8403,6 +8499,9 @@ A list: it answers a page at a time, see `limit` and `cursor`.
       [key: string]: unknown;
     };
     state: "open" | "archived";
+    fileExtra?: {
+      [key: string]: unknown;
+    };
     createdAt: string;
     canvases: number;
     /** Its terminals whose shell is running. */
@@ -8467,6 +8566,9 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
     [key: string]: unknown;
   };
   state: "open" | "archived";
+  fileExtra?: {
+    [key: string]: unknown;
+  };
   createdAt: string;
   canvases: number;
   /** Its terminals whose shell is running. */
@@ -8512,6 +8614,9 @@ An API token needs the scope `read`.
     [key: string]: unknown;
   };
   state: "open" | "archived";
+  fileExtra?: {
+    [key: string]: unknown;
+  };
   createdAt: string;
   canvases: number;
   /** Its terminals whose shell is running. */
@@ -8575,6 +8680,9 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
     [key: string]: unknown;
   };
   state: "open" | "archived";
+  fileExtra?: {
+    [key: string]: unknown;
+  };
   createdAt: string;
   canvases: number;
   /** Its terminals whose shell is running. */
@@ -8644,6 +8752,9 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
     [key: string]: unknown;
   };
   state: "open" | "archived";
+  fileExtra?: {
+    [key: string]: unknown;
+  };
   createdAt: string;
   canvases: number;
   /** Its terminals whose shell is running. */
@@ -8697,6 +8808,9 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
     [key: string]: unknown;
   };
   state: "open" | "archived";
+  fileExtra?: {
+    [key: string]: unknown;
+  };
   createdAt: string;
   canvases: number;
   /** Its terminals whose shell is running. */
@@ -8744,6 +8858,9 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
     [key: string]: unknown;
   };
   state: "open" | "archived";
+  fileExtra?: {
+    [key: string]: unknown;
+  };
   createdAt: string;
   canvases: number;
   /** Its terminals whose shell is running. */
@@ -8754,6 +8871,243 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 ```
 
 **Errors:** 400, 401, 403, 404, 413, 429.
+
+### exportProject
+
+`GET /v1/projects/{projectId}/file`: Write a project out as a file.
+
+For the owner only: no token and no session can do this, whatever its scopes. The file is a copy of the project at this moment: its canvases and their layout, the terminals to make there, pinned notes, rules, schedules, and the workflows and elements they need. It holds nothing that ran (no task, run, log or message), no credential or setting, and no path or ID of this computer: folders are written as named places. The format is in docs/project-file.md.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `projectId` | path | `string` | yes | An ID. |
+| `template` | query | `"true" \| "false"` | no | `true`: write it as a template, without pinned notes unless `notes` is true. |
+| `notes` | query | `"true" \| "false"` | no |  |
+| `description` | query | `string` | no |  |
+
+**Answer** `200`:
+
+```ts
+{
+  /** The file, as text. */
+  text: string;
+  digest: string;
+  fileName: string;
+  leftOut: string[];
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+### readProjectFile
+
+`POST /v1/project-files/read`: Read a project file, and make nothing.
+
+For the owner only: no token and no session can do this, whatever its scopes. What the file holds, for reading before it is taken in: everything an agent would be told, what would be made, its places, and a digest that names exactly this text. A file that is wrong in any way is refused with a sentence.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `text` | `string` | yes | The text of the file. |
+
+**Answer** `200`:
+
+```ts
+{
+  /** Names exactly this text. Reading it in names it again: a text that changed since is not read in. */
+  digest: string;
+  template: boolean;
+  name: string;
+  description: string;
+  /** True when a project here already has that name: another must be chosen. */
+  nameTaken: boolean;
+  places: {
+    name: string;
+    hint: string;
+    default: boolean;
+    terminals: number;
+  }[];
+  counts: {
+    canvases: number;
+    terminals: number;
+    agents: number;
+    frames: number;
+    notes: number;
+    workflows: number;
+    elements: number;
+    rules: number;
+    schedules: number;
+  };
+  /** What will be made and what will not be started, each in a sentence. */
+  says: string[];
+  /** The terminals that were an agent’s, by name. Each is made as a plain shell. */
+  agents: string[];
+  /** What its elements say they need, by element. */
+  needs: {
+    of: string;
+    needs: string[];
+  }[];
+  /** Everything an agent would be told: every workflow, element, and the task of every schedule, in full. */
+  texts: {
+    title: string;
+    text: string;
+  }[];
+  /** The workflows and elements that were shared with every project where the file was written, by name. */
+  shared: string[];
+  /** What they become here unless the owner says otherwise. */
+  sharedDefault: "shared" | "project";
+  leftOut: string[];
+}
+```
+
+**Errors:** 400, 401, 403, 413, 429.
+
+### importProjectFile
+
+`POST /v1/project-files/import`: Make a project from a file that was read.
+
+For the owner only: no token and no session can do this, whatever its scopes. The digest names the text that was read and shown; another text is refused with 409. Everything is made in one step, or nothing is. No shell is started unless `start` is true, and never an agent. Schedules and rules arrive switched off. No path from the file is used: where each place is, is what `places` says.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `text` | `string` | yes |  |
+| `digest` | `string` | yes | The digest of the text that was read and shown. A text that is not exactly that one is refused. |
+| `name` | `string` | no | The name of the new project. Left out: the name in the file. |
+| `places` | `{ [key: string]: string \| null; }` | no | Where each place is on this computer: a folder that exists, or null to leave it unset. |
+| `shared` | `"shared" \| "project"` | no | What the file's shared workflows and elements become: shared with every project here, or the new project's own. |
+| `start` | `boolean` | no | Start a fresh shell in each terminal. Off: each is made as a terminal whose shell has not started, with a button to start it. An agent is never started. |
+
+**Answer** `201`:
+
+```ts
+{
+  project: {
+    id: string;
+    workspaceId: string;
+    name: string;
+    /** A named color, or `#rrggbb`. */
+    color: string;
+    /** Its place among the projects; lower comes first. */
+    order: number;
+    labels: {
+      [key: string]: string;
+    };
+    /** The folders its work is in. May be empty. */
+    folders: string[];
+    /** One of its folders: where a new terminal starts when it names no folder. Null: where new terminals start anyway. */
+    defaultFolder: string | null;
+    /** Which server owns its record. Set by the server. */
+    home: {
+      kind: string;
+      [key: string]: unknown;
+    };
+    state: "open" | "archived";
+    fileExtra?: {
+      [key: string]: unknown;
+    };
+    createdAt: string;
+    canvases: number;
+    /** Its terminals whose shell is running. */
+    sessions: number;
+    /** How many things wait on the owner in it. */
+    waiting: number;
+  };
+  says: string;
+  started: number;
+}
+```
+
+**Errors:** 400, 401, 403, 409, 413, 429.
+
+### listProjectTemplates
+
+`GET /v1/project-templates`: List the templates a project can be made from.
+
+For the owner only: no token and no session can do this, whatever its scopes. The ones that come with the app, and the ones saved here. A template is a project file.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+**Answer** `200`:
+
+```ts
+{
+  templates: {
+    id: string;
+    name: string;
+    description: string;
+    from: "app" | "yours";
+    canvases: number;
+    terminals: number;
+  }[];
+}
+```
+
+**Errors:** 400, 401, 403, 413, 429.
+
+### getProjectTemplate
+
+`GET /v1/project-templates/{templateId}`: A template's file, as text.
+
+For the owner only: no token and no session can do this, whatever its scopes. To be read and taken in like any project file.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `templateId` | path | `string` | yes | An ID. |
+
+**Answer** `200`:
+
+```ts
+{
+  text: string;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+### saveProjectTemplate
+
+`POST /v1/projects/{projectId}/template`: Save a project as a template.
+
+For the owner only: no token and no session can do this, whatever its scopes. Written into the templates folder in the data folder, replacing a template of the same name. Without the pinned notes unless `notes` is true.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `projectId` | path | `string` | yes | An ID. |
+
+**Body** (JSON, may be left out):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `notes` | `boolean` | no | Keep the pinned notes in the template. |
+| `description` | `string` | no |  |
+
+**Answer** `201`:
+
+```ts
+{
+  id: string;
+  name: string;
+  description: string;
+  from: "app" | "yours";
+  canvases: number;
+  terminals: number;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
 
 ### getSharing
 
@@ -8905,6 +9259,9 @@ For a session's own token, about that session. No API token may call this.
     [key: string]: unknown;
   };
   state: "open" | "archived";
+  fileExtra?: {
+    [key: string]: unknown;
+  };
   createdAt: string;
   canvases: number;
   /** Its terminals whose shell is running. */
@@ -10228,6 +10585,11 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
     kind: string;
     [key: string]: unknown;
   };
+  meantFor?: {
+    agent: string | null;
+    environment: string | null;
+    placeUnset: boolean;
+  };
   name: string;
   createdAt: string;
   state: "open" | "parked" | "exited";
@@ -10329,6 +10691,11 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
   host?: {
     kind: string;
     [key: string]: unknown;
+  };
+  meantFor?: {
+    agent: string | null;
+    environment: string | null;
+    placeUnset: boolean;
   };
   name: string;
   createdAt: string;

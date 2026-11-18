@@ -191,6 +191,12 @@ export const USAGE = `Usage: aubergine <command>
   project archive <project> [--park | --end]     Out of the switcher; it starts nothing. Its terminals are parked or ended
   project reopen | remove <project>              remove: only an archived project that holds nothing
   project move-canvas <canvas> --to <project>    With its terminals, their runs and what they work in
+  project export <project> [file] [--template]   Write a project out as a file: a copy to send to someone
+  project import <file> [--name "<name>"] [--place <name>=<folder>]… [--start]
+                             Read one in: prints all it holds and asks first. Starts nothing without --start
+                             For example: aubergine project import garden-site.project.json --place main=~/work/garden
+  project templates          The templates a project can be made from
+  project new "<name>" --template "<template>" [--place <name>=<folder>]… [--start]
   --project <name>           On list, new, canvas, task, todo, rule, schedule and board: that project instead
   schedule list              The schedules: at these times, run this there. Only you make and run them
   schedule add "<name>" --at <08:30> --days <weekdays | every day | mon,wed,fri>

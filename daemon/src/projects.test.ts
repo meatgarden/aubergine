@@ -750,7 +750,7 @@ describe('the commands', () => {
     const printed: string[] = [];
     const owner = createClient({ baseUrl: origin, headers: { origin, cookie: `${cookieName(port)}=${ownerToken}` } });
     const env = inside ? { [SESSION_ENV.url]: origin, [SESSION_ENV.sessionId]: inside.id, [SESSION_ENV.token]: sessionToken(ownerToken, inside.id) } : {};
-    const code = await runProjectCommand(parseProjectCommand(words), { owner: (work) => work(owner), env, print: (text) => printed.push(text), remember: async (id) => void (chosen = id), remembered: async () => chosen, expandFolder: (folder) => folder });
+    const code = await runProjectCommand(parseProjectCommand(words), { owner: (work) => work(owner), env, print: (text) => printed.push(text), remember: async (id) => void (chosen = id), remembered: async () => chosen, expandFolder: (folder) => folder, ask: async () => 'n', readFile: async () => '', writeNew: async () => {} });
     return { code, out: printed.join('\n') };
   };
 
@@ -794,7 +794,7 @@ describe('the commands', () => {
     expect(() => parseProjectCommand(['new', 'x', '--color', 'no-such-color'])).toThrow(/--color takes a named color/);
     expect(() => parseProjectCommand(['archive', 'x', '--park', '--end'])).toThrow(/not both/);
     expect(() => parseProjectCommand(['move-canvas', 'Main'])).toThrow(/needs a canvas and where it goes/);
-    expect(() => parseProjectCommand(['delete', 'x'])).toThrow(/It knows: list, new, rename, use, archive, reopen, remove, move-canvas/);
+    expect(() => parseProjectCommand(['delete', 'x'])).toThrow(/It knows: list, new, rename, use, archive, reopen, remove, move-canvas, export, import, templates/);
     expect(parseProjectCommand(['archive', 'Garden', 'site', '--end'])).toEqual({ action: 'archive', query: 'Garden site', sessions: 'end' });
     expect(USAGE).toContain(`For example: ${PROJECT_NEW_EXAMPLE}`);
     expect(INSIDE_ITS_OWN).toContain('no option changes it');

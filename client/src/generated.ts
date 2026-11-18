@@ -255,6 +255,11 @@ export type ListCanvasSessionsResult = {
       kind: string;
       [key: string]: unknown;
     };
+    meantFor?: {
+      agent: string | null;
+      environment: string | null;
+      placeUnset: boolean;
+    };
     name: string;
     createdAt: string;
     state: "open" | "parked" | "exited";
@@ -353,6 +358,11 @@ export type StartSessionResult = {
     host?: {
       kind: string;
       [key: string]: unknown;
+    };
+    meantFor?: {
+      agent: string | null;
+      environment: string | null;
+      placeUnset: boolean;
     };
     name: string;
     createdAt: string;
@@ -461,6 +471,11 @@ export type ListSessionsResult = {
       kind: string;
       [key: string]: unknown;
     };
+    meantFor?: {
+      agent: string | null;
+      environment: string | null;
+      placeUnset: boolean;
+    };
     name: string;
     createdAt: string;
     state: "open" | "parked" | "exited";
@@ -538,6 +553,11 @@ export type GetSessionResult = {
   host?: {
     kind: string;
     [key: string]: unknown;
+  };
+  meantFor?: {
+    agent: string | null;
+    environment: string | null;
+    placeUnset: boolean;
   };
   name: string;
   createdAt: string;
@@ -620,6 +640,11 @@ export type UpdateSessionResult = {
   host?: {
     kind: string;
     [key: string]: unknown;
+  };
+  meantFor?: {
+    agent: string | null;
+    environment: string | null;
+    placeUnset: boolean;
   };
   name: string;
   createdAt: string;
@@ -708,6 +733,11 @@ export type MoveSessionResult = {
       kind: string;
       [key: string]: unknown;
     };
+    meantFor?: {
+      agent: string | null;
+      environment: string | null;
+      placeUnset: boolean;
+    };
     name: string;
     createdAt: string;
     state: "open" | "parked" | "exited";
@@ -795,6 +825,11 @@ export type ParkSessionResult = {
     kind: string;
     [key: string]: unknown;
   };
+  meantFor?: {
+    agent: string | null;
+    environment: string | null;
+    placeUnset: boolean;
+  };
   name: string;
   createdAt: string;
   state: "open" | "parked" | "exited";
@@ -876,6 +911,11 @@ export type RestoreSessionResult = {
     host?: {
       kind: string;
       [key: string]: unknown;
+    };
+    meantFor?: {
+      agent: string | null;
+      environment: string | null;
+      placeUnset: boolean;
     };
     name: string;
     createdAt: string;
@@ -6705,6 +6745,7 @@ export type ListRulesResult = {
       kind: string;
       [key: string]: unknown;
     };
+    on: boolean;
     createdAt: string;
     /** The rule in a sentence. */
     says: string;
@@ -6739,6 +6780,34 @@ export type AddRuleResult = {
       kind: string;
       [key: string]: unknown;
     };
+    on: boolean;
+    createdAt: string;
+    /** The rule in a sentence. */
+    says: string;
+  }[];
+  /** The kinds of action there are. */
+  actions: {
+    kind: string;
+    title: string;
+    says: string;
+  }[];
+};
+
+export type SwitchRuleBody = {
+  on: boolean;
+};
+
+export type SwitchRuleResult = {
+  rules: {
+    id: string;
+    /** The project it belongs to. Set by the server from where it was made. */
+    projectId: string;
+    event: "task.done" | "task.failed" | "task.needs-owner" | "ask.added" | "schedule.fired" | "schedule.failed";
+    action: {
+      kind: string;
+      [key: string]: unknown;
+    };
+    on: boolean;
     createdAt: string;
     /** The rule in a sentence. */
     says: string;
@@ -6788,6 +6857,9 @@ export type ListProjectsResult = {
       [key: string]: unknown;
     };
     state: "open" | "archived";
+    fileExtra?: {
+      [key: string]: unknown;
+    };
     createdAt: string;
     canvases: number;
     /** Its terminals whose shell is running. */
@@ -6832,6 +6904,9 @@ export type AddProjectResult = {
     [key: string]: unknown;
   };
   state: "open" | "archived";
+  fileExtra?: {
+    [key: string]: unknown;
+  };
   createdAt: string;
   canvases: number;
   /** Its terminals whose shell is running. */
@@ -6861,6 +6936,9 @@ export type GetProjectResult = {
     [key: string]: unknown;
   };
   state: "open" | "archived";
+  fileExtra?: {
+    [key: string]: unknown;
+  };
   createdAt: string;
   canvases: number;
   /** Its terminals whose shell is running. */
@@ -6902,6 +6980,9 @@ export type ChangeProjectResult = {
     [key: string]: unknown;
   };
   state: "open" | "archived";
+  fileExtra?: {
+    [key: string]: unknown;
+  };
   createdAt: string;
   canvases: number;
   /** Its terminals whose shell is running. */
@@ -6936,6 +7017,9 @@ export type MoveCanvasToProjectResult = {
     [key: string]: unknown;
   };
   state: "open" | "archived";
+  fileExtra?: {
+    [key: string]: unknown;
+  };
   createdAt: string;
   canvases: number;
   /** Its terminals whose shell is running. */
@@ -6970,6 +7054,9 @@ export type ArchiveProjectResult = {
     [key: string]: unknown;
   };
   state: "open" | "archived";
+  fileExtra?: {
+    [key: string]: unknown;
+  };
   createdAt: string;
   canvases: number;
   /** Its terminals whose shell is running. */
@@ -6999,12 +7086,165 @@ export type ReopenProjectResult = {
     [key: string]: unknown;
   };
   state: "open" | "archived";
+  fileExtra?: {
+    [key: string]: unknown;
+  };
   createdAt: string;
   canvases: number;
   /** Its terminals whose shell is running. */
   sessions: number;
   /** How many things wait on the owner in it. */
   waiting: number;
+};
+
+export interface ExportProjectQuery {
+  /**
+   * `true`: write it as a template, without pinned notes unless `notes` is true.
+   */
+  template?: "true" | "false";
+  notes?: "true" | "false";
+  description?: string;
+}
+
+export type ExportProjectResult = {
+  /** The file, as text. */
+  text: string;
+  digest: string;
+  fileName: string;
+  leftOut: string[];
+};
+
+export type ReadProjectFileBody = {
+  /** The text of the file. */
+  text: string;
+};
+
+export type ReadProjectFileResult = {
+  /** Names exactly this text. Reading it in names it again: a text that changed since is not read in. */
+  digest: string;
+  template: boolean;
+  name: string;
+  description: string;
+  /** True when a project here already has that name: another must be chosen. */
+  nameTaken: boolean;
+  places: {
+    name: string;
+    hint: string;
+    default: boolean;
+    terminals: number;
+  }[];
+  counts: {
+    canvases: number;
+    terminals: number;
+    agents: number;
+    frames: number;
+    notes: number;
+    workflows: number;
+    elements: number;
+    rules: number;
+    schedules: number;
+  };
+  /** What will be made and what will not be started, each in a sentence. */
+  says: string[];
+  /** The terminals that were an agent’s, by name. Each is made as a plain shell. */
+  agents: string[];
+  /** What its elements say they need, by element. */
+  needs: {
+    of: string;
+    needs: string[];
+  }[];
+  /** Everything an agent would be told: every workflow, element, and the task of every schedule, in full. */
+  texts: {
+    title: string;
+    text: string;
+  }[];
+  /** The workflows and elements that were shared with every project where the file was written, by name. */
+  shared: string[];
+  /** What they become here unless the owner says otherwise. */
+  sharedDefault: "shared" | "project";
+  leftOut: string[];
+};
+
+export type ImportProjectFileBody = {
+  text: string;
+  /** The digest of the text that was read and shown. A text that is not exactly that one is refused. */
+  digest: string;
+  /** The name of the new project. Left out: the name in the file. */
+  name?: string;
+  /** Where each place is on this computer: a folder that exists, or null to leave it unset. */
+  places?: {
+    [key: string]: string | null;
+  };
+  /** What the file's shared workflows and elements become: shared with every project here, or the new project's own. */
+  shared?: "shared" | "project";
+  /** Start a fresh shell in each terminal. Off: each is made as a terminal whose shell has not started, with a button to start it. An agent is never started. */
+  start?: boolean;
+};
+
+export type ImportProjectFileResult = {
+  project: {
+    id: string;
+    workspaceId: string;
+    name: string;
+    /** A named color, or `#rrggbb`. */
+    color: string;
+    /** Its place among the projects; lower comes first. */
+    order: number;
+    labels: {
+      [key: string]: string;
+    };
+    /** The folders its work is in. May be empty. */
+    folders: string[];
+    /** One of its folders: where a new terminal starts when it names no folder. Null: where new terminals start anyway. */
+    defaultFolder: string | null;
+    /** Which server owns its record. Set by the server. */
+    home: {
+      kind: string;
+      [key: string]: unknown;
+    };
+    state: "open" | "archived";
+    fileExtra?: {
+      [key: string]: unknown;
+    };
+    createdAt: string;
+    canvases: number;
+    /** Its terminals whose shell is running. */
+    sessions: number;
+    /** How many things wait on the owner in it. */
+    waiting: number;
+  };
+  says: string;
+  started: number;
+};
+
+export type ListProjectTemplatesResult = {
+  templates: {
+    id: string;
+    name: string;
+    description: string;
+    from: "app" | "yours";
+    canvases: number;
+    terminals: number;
+  }[];
+};
+
+export type GetProjectTemplateResult = {
+  text: string;
+};
+
+export type SaveProjectTemplateBody = {
+  /** Keep the pinned notes in the template. */
+  notes?: boolean;
+  description?: string;
+};
+
+export type SaveProjectTemplateResult = {
+  id: string;
+  name: string;
+  description: string;
+  from: "app" | "yours";
+  canvases: number;
+  terminals: number;
 };
 
 export type GetSharingResult = {
@@ -7097,6 +7337,9 @@ export type GetSessionProjectResult = {
     [key: string]: unknown;
   };
   state: "open" | "archived";
+  fileExtra?: {
+    [key: string]: unknown;
+  };
   createdAt: string;
   canvases: number;
   /** Its terminals whose shell is running. */
@@ -8018,6 +8261,11 @@ export type ProtectSessionResult = {
     kind: string;
     [key: string]: unknown;
   };
+  meantFor?: {
+    agent: string | null;
+    environment: string | null;
+    placeUnset: boolean;
+  };
   name: string;
   createdAt: string;
   state: "open" | "parked" | "exited";
@@ -8098,6 +8346,11 @@ export type SetTakesMessagesResult = {
   host?: {
     kind: string;
     [key: string]: unknown;
+  };
+  meantFor?: {
+    agent: string | null;
+    environment: string | null;
+    placeUnset: boolean;
   };
   name: string;
   createdAt: string;
@@ -9368,6 +9621,7 @@ export const OPERATIONS = {
   dismissAsk: { method: 'POST', path: '/v1/asks/{askId}/dismiss', params: ["askId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   listRules: { method: 'GET', path: '/v1/rules', params: [], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   addRule: { method: 'POST', path: '/v1/rules', params: [], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  switchRule: { method: 'PATCH', path: '/v1/rules/{ruleId}', params: ["ruleId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   removeRule: { method: 'DELETE', path: '/v1/rules/{ruleId}', params: ["ruleId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   listProjects: { method: 'GET', path: '/v1/projects', params: [], hasBody: false, paged: true, idempotent: false, stream: false, access: { who: 'token', scope: "read" } },
   addProject: { method: 'POST', path: '/v1/projects', params: [], hasBody: true, paged: false, idempotent: true, stream: false, access: { who: 'browser', scope: null } },
@@ -9377,6 +9631,12 @@ export const OPERATIONS = {
   moveCanvasToProject: { method: 'POST', path: '/v1/canvases/{canvasId}/project', params: ["canvasId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   archiveProject: { method: 'POST', path: '/v1/projects/{projectId}/archive', params: ["projectId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   reopenProject: { method: 'POST', path: '/v1/projects/{projectId}/reopen', params: ["projectId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  exportProject: { method: 'GET', path: '/v1/projects/{projectId}/file', params: ["projectId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  readProjectFile: { method: 'POST', path: '/v1/project-files/read', params: [], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  importProjectFile: { method: 'POST', path: '/v1/project-files/import', params: [], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  listProjectTemplates: { method: 'GET', path: '/v1/project-templates', params: [], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  getProjectTemplate: { method: 'GET', path: '/v1/project-templates/{templateId}', params: ["templateId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  saveProjectTemplate: { method: 'POST', path: '/v1/projects/{projectId}/template', params: ["projectId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   getSharing: { method: 'GET', path: '/v1/sharing', params: [], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   changeSharing: { method: 'PUT', path: '/v1/sharing', params: [], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   moveSharedThing: { method: 'POST', path: '/v1/sharing/move', params: [], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
@@ -10042,6 +10302,12 @@ export interface Client {
    */
   addRule(args: { body: AddRuleBody } & CallOptions): Promise<AddRuleResult>;
   /**
+   * Switch a rule on or off.
+   *
+   * `PATCH /v1/rules/{ruleId}`. Signed-in browser only: no API token may call this.
+   */
+  switchRule(args: { ruleId: string; body: SwitchRuleBody } & CallOptions): Promise<SwitchRuleResult>;
+  /**
    * Remove a rule.
    *
    * `DELETE /v1/rules/{ruleId}`. Signed-in browser only: no API token may call this.
@@ -10095,6 +10361,42 @@ export interface Client {
    * `POST /v1/projects/{projectId}/reopen`. Signed-in browser only: no API token may call this.
    */
   reopenProject(args: { projectId: string } & CallOptions): Promise<ReopenProjectResult>;
+  /**
+   * Write a project out as a file.
+   *
+   * `GET /v1/projects/{projectId}/file`. Signed-in browser only: no API token may call this.
+   */
+  exportProject(args: { projectId: string; query?: ExportProjectQuery } & CallOptions): Promise<ExportProjectResult>;
+  /**
+   * Read a project file, and make nothing.
+   *
+   * `POST /v1/project-files/read`. Signed-in browser only: no API token may call this.
+   */
+  readProjectFile(args: { body: ReadProjectFileBody } & CallOptions): Promise<ReadProjectFileResult>;
+  /**
+   * Make a project from a file that was read.
+   *
+   * `POST /v1/project-files/import`. Signed-in browser only: no API token may call this.
+   */
+  importProjectFile(args: { body: ImportProjectFileBody } & CallOptions): Promise<ImportProjectFileResult>;
+  /**
+   * List the templates a project can be made from.
+   *
+   * `GET /v1/project-templates`. Signed-in browser only: no API token may call this.
+   */
+  listProjectTemplates(args?: CallOptions): Promise<ListProjectTemplatesResult>;
+  /**
+   * A template's file, as text.
+   *
+   * `GET /v1/project-templates/{templateId}`. Signed-in browser only: no API token may call this.
+   */
+  getProjectTemplate(args: { templateId: string } & CallOptions): Promise<GetProjectTemplateResult>;
+  /**
+   * Save a project as a template.
+   *
+   * `POST /v1/projects/{projectId}/template`. Signed-in browser only: no API token may call this.
+   */
+  saveProjectTemplate(args: { projectId: string; body?: SaveProjectTemplateBody } & CallOptions): Promise<SaveProjectTemplateResult>;
   /**
    * What is shared between projects.
    *

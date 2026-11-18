@@ -22,6 +22,8 @@ export class StateHub {
   /** Changes that were made and not yet told to the listeners, in order. */
   private readonly untold: { event: ChangeEvent; revision: number }[] = [];
   private telling = false;
+  /** The changes of a step that is being made and is not whole yet; null outside one. */
+  private step: { event: ChangeEvent; revision: number }[] | null = null;
 
   constructor(
     initial: AppState,
@@ -40,14 +42,52 @@ export class StateHub {
     return this.changes;
   }
 
+  /**
+   * Several changes as one step that either wholly happens or leaves nothing. While `work` runs, each change it
+   * makes is applied, so that what it does next sees what it did before, and nobody is told and nothing is saved.
+   * When it returns, the whole is saved once and the listeners are told of each change in order. When it throws, the
+   * state is as it was before, and nobody ever hears of any of it. `work` must not wait for anything.
+   */
+  atomically<T>(work: () => T): T {
+    if (this.step !== null) return work();
+    const before = { state: this.current, changes: this.changes };
+    this.step = [];
+    let made: { event: ChangeEvent; revision: number }[];
+    let result: T;
+    try {
+      result = work();
+      if (result instanceof Promise) throw new Error('A step that either wholly happens or not cannot wait for anything');
+      made = this.step;
+    } catch (error) {
+      this.current = before.state;
+      this.changes = before.changes;
+      this.step = null;
+      throw error;
+    }
+    this.step = null;
+    if (made.length === 0) return result;
+    this.lastSave = this.store.save(this.current).catch(this.onSaveError);
+    this.tell(made);
+    return result;
+  }
+
   emit(event: ChangeEvent): void {
     this.current = applyEvent(this.current, event);
     this.changes += 1;
+    if (this.step !== null) {
+      // Part of a step that is not whole yet: applied, and told when the step is.
+      this.step.push({ event, revision: this.changes });
+      return;
+    }
     this.lastSave = this.store.save(this.current).catch(this.onSaveError);
     // Told in the order the changes were made. A listener that makes a change of its own while it is being told of one
     // would otherwise have that later change reach the listeners after it before the earlier one did, and whoever
     // follows by number would take the earlier one for something it already has.
-    this.untold.push({ event, revision: this.changes });
+    this.tell([{ event, revision: this.changes }]);
+  }
+
+  private tell(made: readonly { event: ChangeEvent; revision: number }[]): void {
+    this.untold.push(...made);
     if (this.telling) return;
     this.telling = true;
     try {

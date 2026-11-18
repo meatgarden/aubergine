@@ -649,6 +649,10 @@ async function main(): Promise<number> {
         remember: async (projectId) => (projectId === null ? rm(path.join(config.dataDir, REMEMBERED_PROJECT), { force: true }) : writeFile(path.join(config.dataDir, REMEMBERED_PROJECT), `${projectId}\n`, { mode: 0o600 })),
         remembered: () => readFile(path.join(config.dataDir, REMEMBERED_PROJECT), 'utf8').then((text) => text.trim() || null, () => null),
         expandFolder: (folder) => path.resolve(expandHome(folder)),
+        ask,
+        readFile: (file) => readFile(path.resolve(file), 'utf8'),
+        // Never over a file that is there: the owner names another, or removes it first.
+        writeNew: (file, text) => writeFile(path.resolve(file), text, { flag: 'wx', mode: 0o600 }),
       });
 
     case 'schedule':
