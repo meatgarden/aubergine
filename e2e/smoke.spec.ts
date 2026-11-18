@@ -1805,6 +1805,21 @@ test('the side panel shows one section at a time with all of its height, says ho
   await expect(page.getByTestId('messages-section')).toBeVisible();
   await tab('terminals').click();
 
+  // A tab's color is picked from a palette that is in sight, not cut off by the bar of tabs, and the tab wears it.
+  await page.locator('[data-testid="tab"][aria-selected="true"]').getByRole('button', { name: 'Pick a color for this tab' }).click();
+  expect(
+    await page.evaluate(() => {
+      const palette = document.querySelector('[data-testid="color-palette"]');
+      const box = palette?.getBoundingClientRect();
+      return !!palette && !!box && palette.contains(document.elementFromPoint(box.left + 12, box.top + 12)) && palette.contains(document.elementFromPoint(box.right - 6, box.bottom - 6));
+    }),
+  ).toBe(true);
+  await page.getByTestId('color-palette').getByRole('menuitemradio', { name: 'teal' }).click();
+  await expect(page.locator('[data-testid="tab"][aria-selected="true"]')).toHaveClass(/color-teal/);
+  // The name is at the start of the bar of tabs, and not in the bar over the canvas.
+  await expect(page.getByTestId('tabbar').getByTestId('brand')).toHaveText('Aubergine');
+  await expect(page.locator('.toolbar')).not.toContainText('Aubergine');
+
   // The bar over the canvas: nothing in it is a bare sign, and nothing runs off the edge.
   const bar = await page.evaluate(() => {
     const toolbar = document.querySelector('.toolbar') as HTMLElement;
@@ -2772,6 +2787,20 @@ test('projects: a second project has its own tabs, terminals and queue; what wai
 
   // A second project: the page goes there. It has one canvas, no terminal, and its own address.
   await switcher.click();
+  // The menu is in sight and can be reached: nothing lies over it, and the tab bar does not cut it off.
+  await expect(page.getByTestId('project-menu')).toBeVisible();
+  expect(
+    await page.evaluate(() => {
+      const menu = document.querySelector('[data-testid="project-menu"]');
+      const box = menu?.getBoundingClientRect();
+      if (!menu || !box) return false;
+      const corners = [
+        [box.left + 4, box.top + 4],
+        [box.right - 4, box.bottom - 4],
+      ] as const;
+      return corners.every(([x, y]) => menu.contains(document.elementFromPoint(x, y)));
+    }),
+  ).toBe(true);
   await page.getByTestId('project-new').click();
   const projects = page.getByTestId('projects-screen');
   await projects.getByTestId('project-new-name').fill('Project test second');

@@ -68,6 +68,9 @@ export function TabBar() {
 
   return (
     <nav className="tabbar" aria-label="Canvases" data-testid="tabbar">
+      <span className="brand" data-testid="brand">
+        Aubergine
+      </span>
       <ProjectSwitcher />
       {canvases.map((canvas) => {
         const counts = canvasCounts(app, canvas);
@@ -139,7 +142,7 @@ export function TabBar() {
             {counts.unread > 0 && !active && <span className="badge-unread" title="New output" data-testid="tab-unread" />}
             {active && (
               <span className="tab-tools" onClick={(e) => e.stopPropagation()} onDoubleClick={(e) => e.stopPropagation()}>
-                <ColorButton value={canvas.color} onChange={(color) => run(api.updateCanvas(canvas.id, { color }))} />
+                <ColorButton value={canvas.color} onChange={(color) => run(api.updateCanvas(canvas.id, { color }))} againstWindow title="Pick a color for this tab" />
                 {others.length > 0 && (
                   <select
                     className="tab-project"

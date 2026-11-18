@@ -15,6 +15,8 @@ export function ProjectSwitcher() {
   const projectId = useApp(currentProjectId);
   const [open, setOpen] = useState(false);
   const root = useRef<HTMLSpanElement>(null);
+  const button = useRef<HTMLButtonElement>(null);
+  const [at, setAt] = useState({ left: 8, top: 42 });
   useEffect(() => {
     if (!open) return;
     const away = (event: MouseEvent): void => {
@@ -48,7 +50,13 @@ export function ProjectSwitcher() {
         aria-haspopup="menu"
         aria-expanded={open}
         title="The project you are looking at. Each project has its own canvases, terminals, queue, schedules and rules."
-        onClick={() => setOpen((v) => !v)}
+        ref={button}
+        onClick={() => {
+          // The tab bar scrolls sideways and cuts off what hangs below it, so the menu is placed against the window.
+          const box = button.current?.getBoundingClientRect();
+          if (box) setAt({ left: box.left, top: box.bottom + 6 });
+          setOpen((v) => !v);
+        }}
         data-testid="project-switcher"
       >
         <span className="project-name" data-testid="project-name">
@@ -62,7 +70,7 @@ export function ProjectSwitcher() {
         <span aria-hidden="true">▾</span>
       </button>
       {open && (
-        <span className="toolbar-menu project-menu" role="menu" data-testid="project-menu">
+        <span className="toolbar-menu project-menu" role="menu" style={{ left: at.left, top: at.top }} data-testid="project-menu">
           {rows.map(({ project, waiting }) => (
             <button
               key={project.id}

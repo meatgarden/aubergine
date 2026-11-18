@@ -3,8 +3,21 @@ import { NAMED_COLORS, isNamedColor, type NodeColor } from '@aubergine/shared';
 import { colorClass, colorStyle } from './color';
 
 /** A dot that opens a small palette: the named colors, and one of your own. */
-export function ColorButton({ value, onChange }: { value: NodeColor; onChange: (color: NodeColor) => void }) {
+export function ColorButton({
+  value,
+  onChange,
+  againstWindow = false,
+  title = 'Color',
+}: {
+  value: NodeColor;
+  onChange: (color: NodeColor) => void;
+  /** Place the palette against the window, for a dot that sits in something that scrolls and would cut the palette off (the tab bar). Not for a dot on the canvas, which is drawn scaled. */
+  againstWindow?: boolean;
+  title?: string;
+}) {
   const [open, setOpen] = useState(false);
+  const dot = useRef<HTMLButtonElement>(null);
+  const [at, setAt] = useState<{ left: number; top: number } | null>(null);
   const root = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
@@ -39,12 +52,17 @@ export function ColorButton({ value, onChange }: { value: NodeColor; onChange: (
         type="button"
         className={`color-dot ${colorClass(value, 'swatch')}`}
         style={colorStyle(value)}
-        aria-label="Color"
-        title="Color"
-        onClick={() => setOpen((v) => !v)}
+        ref={dot}
+        aria-label={title}
+        title={title}
+        onClick={() => {
+          const box = againstWindow ? dot.current?.getBoundingClientRect() : undefined;
+          setAt(box ? { left: Math.max(8, Math.min(box.left - 8, window.innerWidth - 180)), top: box.bottom + 8 } : null);
+          setOpen((v) => !v);
+        }}
       />
       {open && (
-        <span className="color-palette nowheel" role="menu" data-testid="color-palette">
+        <span className="color-palette nowheel" role="menu" style={at ? { position: 'fixed', left: at.left, top: at.top, right: 'auto', zIndex: 60 } : undefined} data-testid="color-palette">
           {NAMED_COLORS.map((color) => (
             <button
               key={color}
