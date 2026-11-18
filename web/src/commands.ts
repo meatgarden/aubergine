@@ -214,7 +214,7 @@ export const COMMANDS: readonly Command[] = [
   },
   {
     id: 'agent.new',
-    title: 'New Claude Code session',
+    title: 'New Claude Code terminal',
     description: 'Starts a terminal running Claude Code, with hooks that report to this canvas.',
     group: 'Terminals',
     available: withCanvas,
@@ -222,8 +222,8 @@ export const COMMANDS: readonly Command[] = [
   },
   {
     id: 'agent.newWithTools',
-    title: 'New Claude Code session with Aubergine tools…',
-    description: 'Asks first which Aubergine tools the agent gets: none, those for its own work, or more, with a token made for that session.',
+    title: 'New Claude Code terminal with Aubergine tools…',
+    description: 'Asks first which Aubergine tools the agent gets: none, those for its own work, or more, with a token made for that terminal.',
     group: 'Terminals',
     available: withCanvas,
     run: (state) => state.chooseAgentTools(true),
@@ -319,7 +319,7 @@ export const COMMANDS: readonly Command[] = [
   {
     id: 'agent.askRecap',
     title: 'Ask this agent for a recap',
-    description: 'Types one fixed sentence into the terminal asking its agent to write what the session is about and where it stands. It shows with the terminal\'s notes.',
+    description: 'Types one fixed sentence into the terminal asking its agent to write what the terminal is about and where it stands. It shows with the terminal\'s notes.',
     group: 'Terminals',
     available: (state) => targetSession(state)?.agent != null,
     run: (state) => {
@@ -334,12 +334,12 @@ export const COMMANDS: readonly Command[] = [
   {
     id: 'terminal.message',
     title: 'Message this terminal…',
-    description: 'Opens the terminal\'s drawer, where you can write a message for the agent in it and see every message to and from it. A message is kept for the agent to read; it is never typed.',
+    description: 'Opens the terminal\'s details on its messages, where you can write a message for the agent in it and see every message to and from it. A message is kept for the agent to read; it is never typed.',
     group: 'Terminals',
     available: (state) => targetSession(state) != null,
     run: (state) => {
       const session = targetSession(state);
-      if (session) state.openDrawer({ section: 'terminals', kind: 'notes', id: session.id });
+      if (session) state.openDrawer({ section: 'terminals', kind: 'notes', id: session.id, part: 'messages' });
     },
   },
   {
@@ -441,8 +441,8 @@ export const COMMANDS: readonly Command[] = [
   },
   {
     id: 'notes.toggle',
-    title: 'Open or close the notes',
-    description: 'Shows or hides the notes of the terminal: beside the side panel when that is open, else on the terminal itself.',
+    title: 'Open or close the details of the terminal',
+    description: 'Shows or hides the details of the terminal beside the side panel: what it asks of you, what is known about it, its note and its messages. With the side panel folded away: the note beside the terminal itself.',
     group: 'Terminals',
     available: hasTarget,
     run: (state) => {
@@ -469,8 +469,8 @@ export const COMMANDS: readonly Command[] = [
   },
   {
     id: 'attention.next',
-    title: 'Go to the next waiting session',
-    description: 'Goes to the next session that is waiting for you, on whichever canvas it is.',
+    title: 'Go to the next waiting terminal',
+    description: 'Goes to the next terminal that is waiting for you, on whichever canvas it is.',
     group: 'Terminals',
     available: (state) => nextWaiting(state.whole?.sessions ?? [], state.focus?.sessionId ?? null, state.whole?.runs ?? []) !== null,
     run: (state) => {
@@ -679,7 +679,7 @@ export const COMMANDS: readonly Command[] = [
   },
   {
     id: 'workflow.runOnAgent',
-    title: 'New Claude Code session on a workflow…',
+    title: 'New Claude Code terminal on a workflow…',
     description: 'Starts a terminal running Claude Code and puts it on a workflow from its first prompt.',
     group: 'Terminals',
     available: withCanvas,

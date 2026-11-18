@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { openProjects, queueSettingsOf, stateOf, BUSY_STATES, QUEUE_LIMIT_MAX, RULE_EVENT_WORDS, RuleEvent, TASK_STATE_WORDS, addedByWords, forYou, queueWords, sourceWords, waitingTasks, type ForYouItem, type RuleAction, type RuleList, type Run, type Task } from '@aubergine/shared';
+import { openProjects, queueSettingsOf, stateOf, BUSY_STATES, QUEUE_LIMIT_MAX, RULE_EVENT_WORDS, RuleEvent, TASK_STATE_WORDS, addedByWords, forYou, queueWords, sourceWords, waitingTasks, type RuleAction, type RuleList, type Task } from '@aubergine/shared';
 import { api } from '../api';
 import { notificationsWanted, setNotificationsWanted } from '../attention';
 import { currentProjectId, useApp } from '../store';
@@ -7,10 +7,13 @@ import { useEndedRuns } from '../workflows/ended-runs';
 import { actionView } from './action-views';
 import { Schedules } from './Schedules';
 import { TaskForm, type TaskDraft } from './TaskForm';
-import { Badge, Banner, Page, Tabs } from '../ui';
-import { timeAgo } from '../StatusBadges';
+import { Banner, EmptyState, Page, Tabs } from '../ui';
+import { ForYouRow } from './ForYouRow';
+import { goTo } from './go-to';
 import { itemsOfListing, useRepositoryListing } from '../review/repository-source';
 import { runCommand } from '../commands';
+import { toReadWords } from '../review/to-read';
+import { useShallow } from 'zustand/react/shallow';
 
 /**
  * Two lists side by side. On the left, what waits on the owner: gathered by
@@ -19,127 +22,6 @@ import { runCommand } from '../commands';
  * a timer, and nothing here knows a kind of item, of source or of action by
  * name: a row shows what its item says, and offers what its item allows.
  */
-
-/** Where one acts on an item: its address, understood here and by the command line alike. */
-export function goTo(act: string): void {
-  const [what, id] = act.split(':');
-  const store = useApp.getState();
-  if (what === 'run' && id) store.viewRun(id);
-  else if (what === 'session' && id) {
-    store.showPage(null);
-    store.showSession(id);
-  } else if (what === 'copy' && id) store.viewEnvironment(id);
-  else if (what === 'review') store.togglePanel('review');
-  else store.showPage('queue');
-}
-
-/** The lines of a list a run handed in that the owner ticked. */
-function tickedLines(run: Run | undefined, elementId: string | null): { item: number; text: string }[] {
-  const entry = run?.elements.find((e) => e.elementId === elementId);
-  const items = (entry?.output as { items?: { text?: unknown }[] } | null | undefined)?.items;
-  if (!entry || !Array.isArray(items)) return [];
-  return entry.ticks.flatMap((tick) => (typeof items[tick.item]?.text === 'string' ? [{ item: tick.item, text: items[tick.item]?.text as string }] : []));
-}
-
-function ForYouRow({ item, onSend, named }: { item: ForYouItem; onSend: (draft: TaskDraft) => void; named: boolean }) {
-  // Looked up among everything: in the view of every project a row may be about another project's task or run.
-  const task = useApp((s) => (item.taskId ? s.whole?.queue.tasks.find((t) => t.id === item.taskId) : undefined));
-  const liveRun = useApp((s) => (item.runId ? s.whole?.runs.find((r) => r.id === item.runId) : undefined));
-  const project = useApp((s) => (named && item.projectId ? s.whole?.projects.find((p) => p.id === item.projectId)?.name : undefined));
-  const endedRun = useEndedRuns((e) => (item.runId ? e.items.find((entry) => entry.run.id === item.runId)?.run : undefined));
-  const [busy, setBusy] = useState(false);
-  const act = async (work: () => Promise<unknown>): Promise<void> => {
-    setBusy(true);
-    try {
-      await work();
-    } catch (e) {
-      useApp.getState().setNotice((e as Error).message);
-    } finally {
-      setBusy(false);
-    }
-  };
-  const ticked = item.elementId ? tickedLines(liveRun ?? endedRun, item.elementId) : [];
-  const opens = item.askId === null && !(task && (task.state === 'proposed' || task.state === 'done' || task.state === 'failed'));
-  return (
-    <li
-      className={`foryou-row${item.waits ? ' waits' : ''}${opens ? ' is-pressed' : ''}`}
-      // Where the one thing to do is to go and look, the card is pressed as a whole.
-      role={opens ? 'button' : undefined}
-      tabIndex={opens ? 0 : undefined}
-      // A control inside the card does its own thing and nothing more.
-      onClick={opens ? (e) => !(e.target as HTMLElement).closest('button, a, input, select, textarea, label') && goTo(item.act) : undefined}
-      onKeyDown={opens ? (e) => e.target === e.currentTarget && (e.key === 'Enter' || e.key === ' ') && goTo(item.act) : undefined}
-      data-testid="foryou-row"
-      data-kind={item.kind}
-      data-opens={opens ? 'true' : undefined}
-    >
-      {/* One line: what kind of thing it is as a chip, what waits in a sentence, and since when. */}
-      <div className="foryou-head">
-        <Badge tone={item.tone} className="foryou-kind">
-          {item.title}
-        </Badge>
-        <span className="foryou-sentence">{item.sentence}</span>
-        {item.at && (
-          <time className="foryou-when" dateTime={item.at} title={new Date(item.at).toLocaleString()}>
-            {timeAgo(item.at)}
-          </time>
-        )}
-      </div>
-      {/* Where it came from, unless the sentence has already named it. */}
-      {(project || !item.sentence.includes(item.from)) && (
-        <div className="foryou-from">
-          {project ? <span data-testid="foryou-project">{project} · </span> : null}from {item.from}
-        </div>
-      )}
-      <div className="foryou-actions">
-        {/* What was written is ticked off by the owner; what was gathered is opened where one acts on it. */}
-        {item.askId !== null ? (
-          <>
-            <button type="button" disabled={busy} onClick={() => void act(() => api.askDo(item.askId as string, 'done'))} data-testid="ask-done">
-              Done
-            </button>
-            <button type="button" className="quiet" disabled={busy} onClick={() => onSend({ titles: [item.sentence.split('\n')[0]?.slice(0, 120) ?? ''], details: item.sentence.split('\n').slice(1).join('\n').trim(), sources: [{ kind: 'hand' }], after: () => api.askDo(item.askId as string, 'done').then(() => {}) })} data-testid="ask-to-queue">
-              To the queue…
-            </button>
-            <button type="button" className="quiet" disabled={busy} onClick={() => void act(() => api.askDo(item.askId as string, 'dismiss'))} data-testid="ask-dismiss">
-              Dismiss
-            </button>
-          </>
-        ) : task && task.state === 'proposed' ? (
-          <>
-            <button type="button" disabled={busy} onClick={() => void act(() => api.taskDo(task.id, 'accept'))} data-testid="task-accept">
-              Accept
-            </button>
-            <button type="button" className="quiet" disabled={busy} onClick={() => void act(() => api.taskDo(task.id, 'decline'))} data-testid="task-decline">
-              Decline
-            </button>
-          </>
-        ) : task && (task.state === 'done' || task.state === 'failed') ? (
-          <>
-            {item.runId && (
-              <button type="button" className="quiet" onClick={() => goTo(`run:${item.runId}`)} data-testid="foryou-open">
-                What it did
-              </button>
-            )}
-            {task.state === 'failed' && (
-              <button type="button" className="quiet" disabled={busy} onClick={() => void act(() => api.taskDo(task.id, 'again'))} data-testid="task-again">
-                Put it back in the queue
-              </button>
-            )}
-            <button type="button" disabled={busy} onClick={() => void act(() => api.taskDo(task.id, 'clear'))} data-testid="task-clear">
-              Looked at
-            </button>
-          </>
-        ) : null}
-        {ticked.length > 0 && (
-          <button type="button" className="quiet" onClick={() => onSend({ titles: ticked.map((line) => line.text.slice(0, 120)), details: '', sources: ticked.map((line) => ({ kind: 'checklist', from: item.from, runId: item.runId, elementId: item.elementId, item: line.item })) })} data-testid="checklist-to-queue">
-            Send {ticked.length} ticked {ticked.length === 1 ? 'line' : 'lines'} to the queue…
-          </button>
-        )}
-      </div>
-    </li>
-  );
-}
 
 function TaskRow({ task, waiting, onMove, onDropOn }: { task: Task; waiting: boolean; onMove?: (by: -1 | 1) => void; onDropOn?: (draggedId: string) => void }) {
   const session = useApp((s) => (task.sessionId ? s.app?.sessions.find((x) => x.id === task.sessionId) : undefined));
@@ -297,13 +179,15 @@ function Rules() {
 
 /** What waits to be read before it can be used: said in a line of the owner's list, with the way to the review. */
 function ReviewLine() {
-  const drafts = useApp((s) => (s.app?.drafts ?? []).filter((d) => d.status === 'waiting').length);
+  const waiting = useApp(useShallow((s) => (s.app?.drafts ?? []).filter((d) => d.status === 'waiting').map((d) => d.sessionId !== null)));
+  const installs = useApp((s) => s.app?.library.requests.length ?? 0);
   // Workflow files in repositories that were never accepted, or changed since.
   const files = itemsOfListing(useRepositoryListing()).length;
-  if (drafts + files === 0) return null;
+  const words = toReadWords({ agentDrafts: waiting.filter(Boolean).length, programDrafts: waiting.filter((byAgent) => !byAgent).length, installs, files });
+  if (words === '') return null;
   return (
     <Banner action="Review" onAction={() => runCommand('drafts.review')} testid="drafts-waiting" actionTestid="review-open">
-      {drafts + files} written by an agent or a program {drafts + files === 1 ? 'waits' : 'wait'} to be read before {drafts + files === 1 ? 'it' : 'they'} can be used.
+      {words}
     </Banner>
   );
 }
@@ -404,7 +288,7 @@ export function QueueScreen() {
                 Start next
               </button>
               <button type="button" className="primary" onClick={() => setDraft({ titles: [''], details: '', sources: [{ kind: 'hand' }] })} data-testid="queue-add">
-                + Task
+                Add task
               </button>
             </span>
           )
@@ -430,7 +314,7 @@ export function QueueScreen() {
               </div>
             )}
             <div className="queue-write">
-              <input value={written} maxLength={1000} placeholder="Write something to do yourself…" aria-label="Write on your list" onChange={(e) => setWritten(e.target.value)} data-testid="foryou-write" />
+              <input value={written} maxLength={1000} placeholder="Add a to-do for yourself…" aria-label="Add a to-do for yourself" onChange={(e) => setWritten(e.target.value)} data-testid="foryou-write" />
               <button
                 type="button"
                 disabled={written.trim() === ''}
@@ -454,10 +338,9 @@ export function QueueScreen() {
             </h3>
             <details className="ui-fold queue-starts" data-testid="queue-starts">
               <summary>
-                How the queue starts things{' '}
+                Starting tasks{' '}
                 <span className="ui-meta" data-testid="queue-starts-says">
-                  Up to {queue.limit} at once · {queue.automatic ? 'starts by itself' : 'starts when you press'}
-                  {queue.hold ? ' · held' : ''}
+                  {queue.limit} at a time · {queue.hold ? 'on hold' : queue.automatic ? 'the next one starts by itself' : 'you start each one'}
                 </span>
               </summary>
               <div className="queue-settings">
@@ -481,7 +364,18 @@ export function QueueScreen() {
                 {said}
               </p>
             )}
-            {busy.length + next.length + finished.length === 0 && <p className="list-empty">No task yet. Add one with “+ Task”, then press Start next.</p>}
+            {busy.length + next.length + finished.length === 0 && (
+              <EmptyState
+                data-testid="queue-empty"
+                action={
+                  <button type="button" onClick={() => setDraft({ titles: [''], details: '', sources: [{ kind: 'hand' }] })} data-testid="queue-empty-add">
+                    Add task
+                  </button>
+                }
+              >
+                Tasks you give to agents will be listed here.
+              </EmptyState>
+            )}
             {busy.length > 0 && <div className="wf-label">At work</div>}
             <ul className="task-list" data-testid="queue-working">
               {busy.map((task) => (

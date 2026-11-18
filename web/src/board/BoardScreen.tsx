@@ -6,7 +6,7 @@ import { ApprovalControls } from '../workflows/ApprovalControls';
 import { liveFilters, loadFilters, nextCard, saveFilters, type Box } from './board-model';
 import { RunManyDialog } from './RunManyDialog';
 import { DOT_WORD, dotTone } from '../terminal-rows';
-import { MenuButton, Page, StateDot } from '../ui';
+import { EmptyState, MenuButton, Page, StateDot } from '../ui';
 
 /**
  * The board: every run that is going, on every canvas, by workflow and by
@@ -276,11 +276,23 @@ export function BoardScreen() {
           )}
         </div>
         <div className="board-body" ref={body} title="Arrows move between cards; Enter goes to the terminal.">
-          {board.groups.length === 0 && (
-            <p className="list-empty" data-testid="board-empty">
-              {filtered ? 'No run matches these filters.' : 'No runs are going. Put a terminal on a workflow with “Run workflow…”, or start one on several terminals from here.'}
-            </p>
-          )}
+          {board.groups.length === 0 &&
+            (filtered ? (
+              <p className="list-empty" data-testid="board-empty">
+                No run matches these filters.
+              </p>
+            ) : (
+              <EmptyState
+                data-testid="board-empty"
+                action={
+                  <button type="button" onClick={() => setMany(true)} data-testid="board-empty-start">
+                    Start a workflow…
+                  </button>
+                }
+              >
+                Workflows that are running will be shown here, step by step.
+              </EmptyState>
+            ))}
           {board.groups.map((group) => (
             <section key={group.key} className="board-group" data-testid="board-group" data-workflow={group.workflowId ?? 'single'}>
               <h3>

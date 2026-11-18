@@ -66,7 +66,7 @@ export function SidePanel() {
         <Fold open />
         <div className="list-resize" role="separator" aria-orientation="vertical" aria-label="Resize the side panel" onPointerDown={startResize} data-testid="panel-resize" />
       </aside>
-      <Drawer left={prefs.width} />
+      <Drawer />
     </>
   );
 }
@@ -212,36 +212,62 @@ function StripEntry({ section }: { section: PanelSection }) {
 }
 
 /**
- * The drawer beside the panel: a section's detail for one of its rows. It
- * lies over the edge of the canvas and moves nothing; the list stays in use
- * while it is open.
+ * The drawer beside the panel: a section's detail for one of its rows. It stands between the panel and the
+ * canvas, under the bar of tabs: the canvas is narrower while it is open, and nothing lies over the bar of the
+ * canvas. The list stays in use while it is open.
  */
-function Drawer({ left }: { left: number }) {
+function Drawer() {
   const drawer = useApp((s) => s.drawer);
   const definition = drawer ? sectionById(drawer.section)?.drawers?.[drawer.kind] : undefined;
+  const root = useRef<HTMLElement>(null);
+  const shown = drawer && definition ? `${drawer.section}:${drawer.kind}` : null;
+  // It takes the keyboard when it opens, so that Escape closes it from wherever it was opened.
+  useEffect(() => {
+    if (shown) root.current?.focus();
+  }, [shown]);
+  // When it closes, however it was closed, the keyboard goes back to where it was opened from: unless something
+  // else has taken the keyboard meanwhile, or the drawer now shows another thing.
+  const openId = drawer && definition ? drawer.id : null;
+  useEffect(() => {
+    if (!openId || !definition?.returnTo) return;
+    const returnTo = definition.returnTo;
+    return () => {
+      window.setTimeout(() => {
+        if (useApp.getState().drawer !== null) return;
+        const active = document.activeElement;
+        if (active && active !== document.body && active.isConnected) return;
+        returnTo(openId)?.focus();
+      }, 0);
+    };
+  }, [openId, definition]);
   if (!drawer || !definition) return null;
   const close = (): void => useApp.getState().openDrawer(null);
   return (
     <aside
       className="panel-drawer"
-      style={{ left }}
       aria-label="Details"
+      tabIndex={-1}
+      ref={root}
       data-testid="panel-drawer"
       onKeyDown={(event) => {
-        if (event.key === 'Escape') {
+        if (event.key === 'Escape' && !event.defaultPrevented) {
           event.stopPropagation();
           close();
         }
       }}
     >
-      <header className="panel-drawer-head sheet-head">
-        <h2>
-          <DrawerTitle id={drawer.id} useTitle={definition.useTitle} />
-        </h2>
-        <button type="button" className="quiet" aria-label="Close the drawer" title="Close (Esc)" onClick={close}>
-          Close
-        </button>
-      </header>
+      {definition.Head ? (
+        <definition.Head key={`head:${drawer.kind}:${drawer.id}`} id={drawer.id} onClose={close} />
+      ) : (
+        <header className="panel-drawer-head sheet-head">
+          <h2>
+            <DrawerTitle id={drawer.id} useTitle={definition.useTitle} />
+          </h2>
+          <button type="button" className="quiet" aria-label="Close the drawer" title="Close (Esc)" onClick={close}>
+            Close
+          </button>
+        </header>
+      )}
       <definition.Component key={`${drawer.kind}:${drawer.id}`} id={drawer.id} onClose={close} />
     </aside>
   );

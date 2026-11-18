@@ -61,6 +61,9 @@ export interface Recap {
   list: { total: number; ticked: number } | null;
   /** The newest entries of its note log, oldest first. */
   notes: { at: string; author: string; text: string }[];
+  /** When it was last typed into or last printed, whichever is later. */
+  activeAt: string | null;
+  tags: string[];
   agent: boolean;
   /** What its agent wrote when asked, and whether the terminal has printed since. */
   written: (WrittenRecap & { stale: boolean }) | null;
@@ -113,6 +116,8 @@ export function recapOf(session: Session, runs: { live: RecapRun | null; ended: 
     run,
     list,
     notes: session.noteLog.slice(-NOTES).map((entry) => ({ at: entry.at, author: entry.author, text: entry.text })),
+    activeAt: [session.lastInputAt, session.lastOutputAt].filter((t): t is string => typeof t === 'string').sort().at(-1) ?? null,
+    tags: session.tags,
     agent: session.agent !== null,
     // Out of date once the terminal has printed after it was written.
     written: written ? { ...written, stale: session.lastOutputAt !== null && session.lastOutputAt > written.at } : null,
@@ -168,4 +173,64 @@ export function outsideRecap(agent: { firstPrompt?: string | null; lastPrompt?: 
   if (agent.firstPrompt) lines.push(`began with: ${cut(agent.firstPrompt, 160)}`);
   if (agent.lastPrompt && agent.lastPrompt !== agent.firstPrompt) lines.push(`last asked: ${cut(agent.lastPrompt, 160)}`);
   return lines;
+}
+
+/** A folder, short enough for a line: its last two parts. The whole path is for a tooltip. */
+export function shortFolder(path: string | null): string {
+  if (!path) return '';
+  const parts = path.split('/').filter(Boolean);
+  return parts.length <= 2 ? path : `…/${parts.slice(-2).join('/')}`;
+}
+
+/**
+ * What a terminal runs, short enough to read at a glance: the program and the last part of the first path it was
+ * given ("sh demo-agent.sh"), never a quoted absolute path. The whole line is for a tooltip.
+ */
+export function shortCommand(line: string | null | undefined): string {
+  if (!line) return '';
+  // Only the first command of a line that holds several.
+  const words = ((line.trim().split(/\s*(?:;|&&|\|\|?)\s*/)[0] ?? '').match(/'[^']*'|"[^"]*"|\S+/g) ?? []).map((word) => word.replace(/^['"]|['"]$/g, ''));
+  const last = (word: string): string => word.replace(/\/+$/, '').split('/').at(-1) ?? word;
+  const program = last(words[0] ?? '');
+  const first = words.slice(1).find((word) => !word.startsWith('-'));
+  const rest = first === undefined ? '' : first.includes('/') ? last(first) : first;
+  const short = [program, rest].filter(Boolean).join(' ');
+  return short.length > 40 ? `${short.slice(0, 39)}…` : short;
+}
+
+/** One thing that is known about a terminal: what it is called, what it is, and the whole of it where the value is cut short. */
+export interface RecapFact {
+  key: string;
+  label: string;
+  value: string;
+  title?: string;
+}
+
+/**
+ * The same recap as a list of facts, for a place that has room for a label beside each: where it is, what it runs,
+ * since when, the run it is on. Not sentences. What it asks of the owner is not among them: that is said first, by
+ * whoever draws this. No whole path is in a value: a folder and a command are cut short, with the whole in `title`.
+ */
+export function recapFacts(recap: Recap, now: Date): RecapFact[] {
+  const facts: RecapFact[] = [];
+  const add = (key: string, label: string, value: string, title?: string): void => void (value !== '' && facts.push({ key, label, value, ...(title && title !== value ? { title } : {}) }));
+  add('where', 'Where', shortFolder(recap.folder), recap.folder ?? undefined);
+  if (recap.state === 'parked') add('state', 'State', 'parked: off the canvas, still running');
+  if (recap.state === 'exited') add('state', 'State', 'its shell has ended');
+  if (recap.command?.running) add('running', 'Running', shortCommand(recap.command.line) || 'a command', recap.command.line ? showControl(recap.command.line) : undefined);
+  add('started', 'Started', `${ago(recap.createdAt, now)} ago`, new Date(recap.createdAt).toLocaleString());
+  if (recap.activeAt) add('active', 'Last active', `${ago(recap.activeAt, now)} ago`, new Date(recap.activeAt).toLocaleString());
+  if (recap.command && !recap.command.running && recap.command.exit !== null) add('command', 'Last command', `${recap.command.exit === 0 ? 'ended well' : `failed (exit ${recap.command.exit})`}${recap.command.at ? `, ${ago(recap.command.at, now)} ago` : ''}`);
+  if (recap.tags.length > 0) add('tags', 'Tags', recap.tags.map((tag) => `#${tag}`).join(' '));
+  if (recap.run) {
+    add('run', recap.run.over ? 'Last workflow' : 'Workflow', recap.run.over ? `${cut(recap.run.workflowName, 60)}, ${recap.run.status}` : cut(recap.run.workflowName, 60));
+    if (!recap.run.over) add('step', 'Step', `${cut(recap.run.position, 80)}${recap.run.status !== 'running' ? `, ${recap.run.status}` : ''}`);
+    if (recap.run.blockedReason) add('blocked', 'Blocked', cut(recap.run.blockedReason, 160));
+    const last = recap.run.notes.at(-1);
+    if (last) add('run-note', 'Last report', `${cut(last.element, 40)}: ${cut(last.note, 160)}`);
+  }
+  if (recap.list) add('list', 'List handed in', `${recap.list.ticked} of ${recap.list.total} ticked`);
+  const note = recap.notes.at(-1);
+  if (note) add('note', 'Last log entry', `${cut(note.text, 200)} (${note.author === 'agent' ? 'its agent' : 'you'}, ${ago(note.at, now)} ago)`);
+  return facts;
 }

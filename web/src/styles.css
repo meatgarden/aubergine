@@ -1369,15 +1369,7 @@ kbd.kept {
   font-size: var(--font-meta);
   color: var(--attention-text);
 }
-.foryou-says {
-  font-size: var(--font-body);
-  line-height: var(--leading);
-  overflow-wrap: anywhere;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
+
 .foryou-from {
   font-size: var(--font-meta);
   color: var(--text-muted);
@@ -2648,12 +2640,7 @@ tr[data-status='expired'] strong {
   font-weight: var(--weight-normal);
   opacity: 0.7;
 }
-.recap-lines {
-  margin: 0 0 var(--space-2);
-  padding-left: var(--space-4);
-  font-size: var(--font-meta);
-  line-height: var(--leading);
-}
+
 .recap-written {
   padding: var(--space-1) var(--space-2);
   border-left: 2px solid var(--accent);
@@ -3078,13 +3065,6 @@ tr[data-status='expired'] strong {
   margin: var(--space-1) 0;
 }
 
-/* The board: every live run, by workflow and element. */
-.dialog.sheet.board-screen {
-  width: min(1280px, 96vw);
-  max-height: 92vh;
-  display: flex;
-  flex-direction: column;
-}
 .board-summary {
   margin-left: var(--space-3);
   font-size: var(--font-body);
@@ -3465,13 +3445,6 @@ tr[data-status='expired'] strong {
   margin-top: var(--space-2);
 }
 
-/* For you, and the queue of tasks. */
-.dialog.sheet.queue-screen {
-  width: min(1240px, 96vw);
-  max-height: 92vh;
-  display: flex;
-  flex-direction: column;
-}
 .queue-columns {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
@@ -3542,7 +3515,6 @@ tr[data-status='expired'] strong {
   outline: 2px solid var(--accent);
   outline-offset: 1px;
 }
-.foryou-head,
 .task-head {
   display: flex;
   gap: var(--space-2);
@@ -3569,7 +3541,6 @@ tr[data-status='expired'] strong {
   min-width: 0;
   text-align: right;
 }
-.foryou-sentence,
 .task-reason {
   margin: 2px 0 var(--space-1);
   white-space: pre-wrap;
@@ -3825,10 +3796,6 @@ tr[data-status='expired'] strong {
   padding: 0 var(--space-6) var(--space-6);
   border-radius: var(--radius-surface);
 }
-.dialog.sheet.queue-screen,
-.dialog.sheet.board-screen,
-.dialog.sheet.workflows-screen,
-.dialog.sheet.library-screen,
 .dialog.sheet.projects-screen,
 .dialog.sheet.sharing-screen,
 .dialog.sheet.review-screen {

@@ -28,6 +28,10 @@
   --gutter-screen: var(--space-6);
   /* The column of a page: one width for every page, so that they are laid out the same. */
   --page-width: 1120px;
+  /* The details of one thing, beside the side panel. */
+  --drawer-width: 380px;
+  /* The column a kind's chip stands in, in a list of what waits: the same for every row, so that the words after it line up. */
+  --kind-column: 116px;
   /* The row at the top of a page that holds its name. */
   --page-head: 72px;
 

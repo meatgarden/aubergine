@@ -235,7 +235,7 @@ export function LibraryScreen() {
         </form>
         </details>
 
-        <HowThisWorks line="Nothing is fetched or installed unless you ask.">
+        <HowThisWorks line="You choose what is fetched and what is installed.">
           What a source lists was written by whoever published it. Nothing is fetched unless you press Refresh or add a source, and nothing is installed until you have read all of it in Review and accepted it.
         </HowThisWorks>
 
@@ -266,7 +266,7 @@ export function LibraryScreen() {
                 );
               })}
             </ul>
-            {shownItems.length === 0 && <p className="list-empty">{items.length === 0 ? 'No source lists anything.' : 'Nothing matches.'}</p>}
+            {shownItems.length === 0 && <p className="list-empty">{items.length === 0 ? 'What your sources publish will be listed here.' : 'Nothing matches your search.'}</p>}
           </div>
           <div className="library-main">
             {current ? (
@@ -282,7 +282,7 @@ export function LibraryScreen() {
                 }
               />
             ) : (
-              <p className="ui-empty" data-testid="library-none-picked">Pick one at the left to read what it would tell an agent, before anything is installed.</p>
+              <p className="ui-empty" data-testid="library-none-picked">Pick one to read what it would tell an agent.</p>
             )}
           </div>
         </div>

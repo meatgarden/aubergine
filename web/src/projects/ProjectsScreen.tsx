@@ -152,7 +152,7 @@ export function ProjectsScreen() {
                 </span>
                 {deciding === project.id && (
                   <p className="project-deciding" role="alert" data-testid="project-deciding">
-                    This project still has sessions: say whether to park them or end them.{' '}
+                    This project still has terminals: say whether to park them or end them.{' '}
                     <button type="button" onClick={() => archive(project, 'park')} data-testid="project-archive-park">
                       Park them
                     </button>{' '}

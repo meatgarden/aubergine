@@ -312,13 +312,13 @@ export class Drafts {
 
   shelfElement(elementId: string): ShelfElement {
     const item = this.hub.state.shelf.find((e) => e.id === elementId);
-    if (!item) throw new NotFoundError(`No step ${elementId} on the shelf`);
+    if (!item) throw new NotFoundError(`No saved step ${elementId}`);
     return item;
   }
 
   /** A new element on the shelf: what it says is its version 1. Where a copy came from is not something a shelf element has. */
   addToShelf(input: Element, by: Actor = OWNER): ShelfElement {
-    if (this.hub.state.shelf.length >= SHELF_MAX) throw new ConflictError(`The shelf holds ${SHELF_MAX} steps; take some off first.`);
+    if (this.hub.state.shelf.length >= SHELF_MAX) throw new ConflictError(`There are ${SHELF_MAX} saved steps already; remove some first.`);
     const at = new Date().toISOString();
     const element: Element = { ...input, source: null };
     const item: ShelfElement = { id: newId(), projectId: ownerOfNew(this.hub.state, 'element'), element, createdAt: at, updatedAt: at, version: 1, versions: [{ version: 1, element, at, by, note: '' }], state: 'current', replacedBy: null };

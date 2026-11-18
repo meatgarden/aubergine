@@ -205,7 +205,7 @@ describe('filters', () => {
     expect(chips[2]?.remove).toEqual({ text: '' });
     expect(chips[4]?.remove).toEqual({ tags: ['backend'] });
     expect(describeEmpty(narrowed, 5)).toBe('No terminal matches This canvas + Waiting for me + “api” + #backend + #data. 5 are hidden.');
-    expect(describeEmpty(view(), 0)).toBe('No terminals yet.');
+    expect(describeEmpty(view(), 0)).toBe('Terminals you start will be listed here.');
   });
 });
 

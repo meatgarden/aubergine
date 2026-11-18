@@ -6640,8 +6640,14 @@ export type GetForYouResult = {
     title: string;
     /** How its kind is to be drawn: `attention` for what waits on the owner to go on, `ok` for what ended well, `neutral` for the rest. */
     tone: "attention" | "ok" | "neutral";
-    /** What waits, in a sentence. Where part of it was written by an agent or a program, it is their words. */
+    /** What waits, in a sentence that stands by itself. Where part of it was written by an agent or a program, it is their words. */
     sentence: string;
+    /** Whose it is, for the first line of a row: the name of the terminal, or of whoever sent it. */
+    who: string;
+    /** What waits, in its own words, for the second line of a row: the question itself, the draft's name, how much of a list is left. */
+    what: string;
+    /** The one thing to do with it, as the words of a button: `Go to terminal`, `Read`. Null where the item has buttons of its own (accept or decline, done or dismiss). */
+    action: string | null;
     /** Where it came from: a terminal by name, a program, the library. */
     from: string;
     /** Since when, when that is known. */

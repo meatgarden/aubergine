@@ -127,7 +127,7 @@ function NewMenu({ adding }: { adding: boolean }) {
   return (
     <span className="toolbar-new" ref={root}>
       <button type="button" onClick={() => runCommand('terminal.new')} disabled={adding} title={hint('terminal.new')} data-testid="toolbar-new-terminal">
-        + New terminal
+        New terminal
       </button>
       <button type="button" className="toolbar-new-more" aria-haspopup="menu" aria-expanded={open} aria-label="More to make: an agent, a terminal somewhere else, a frame" title="More to make: an agent, a terminal somewhere else, a frame" onClick={() => setOpen((v) => !v)} data-testid="toolbar-new-more">
         ▾
@@ -519,7 +519,7 @@ export function Canvas() {
               type="button"
               className="quiet"
               onClick={() => runCommand('palette.toggle')}
-              title={hint('palette.toggle', 'Go to a session or canvas, or run a command')}
+              title={hint('palette.toggle', 'Go to a terminal or canvas, or run a command')}
               data-testid="toolbar-goto"
             >
               Go to…

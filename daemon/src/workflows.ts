@@ -184,7 +184,7 @@ export class Workflows {
     if (!element) throw new NotFoundError(`This workflow has no step ${elementId}`);
     const status = copyStatus(element, this.hub.state.shelf);
     if (status.state === 'none') throw new ConflictError('This step is not a copy of a saved step.');
-    if (status.shelf === null) throw new ConflictError('Its source is not on the shelf any more, so there is no newer version to take.');
+    if (status.shelf === null) throw new ConflictError('Its source is not among the saved steps any more, so there is no newer version to take.');
     const item = status.shelf;
     const elements = latestVersion(workflow).elements.map((e) => (e.id === elementId ? decideUpdate(e, item, decision) : e));
     return this.update(workflowId, { elements });
@@ -576,8 +576,7 @@ export class Workflows {
     const sessionId = run.sessionId;
     if (sessionId === null || !this.sessions.has(sessionId)) return;
     if (run.status === 'finished') {
-      const last = version.elements.at(-1)?.name ?? '';
-      this.sessions.setAttention(sessionId, 'done', `Workflow "${version.name}" finished after "${last}"`.slice(0, 500));
+      this.sessions.setAttention(sessionId, 'done', `It finished the workflow “${version.name}”.`.slice(0, 500));
     } else if (OURS(this.sessions.get(sessionId).attention.message)) {
       this.sessions.setAttention(sessionId, 'none');
     }

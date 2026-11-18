@@ -354,7 +354,7 @@ describe('runs', () => {
     // The session's notes have the summary, and the session asks for the owner.
     const after = hub.state.sessions.find((s) => s.id === session.id)!;
     expect(after.noteLog.at(-1)).toMatchObject({ kind: 'event', text: 'Workflow "Three steps" finished.\n- Plan: Planned it.\n- Build: Built it.\n- Check: All green.' });
-    expect(after.attention).toMatchObject({ state: 'done', message: 'Workflow "Three steps" finished after "Check"' });
+    expect(after.attention).toMatchObject({ state: 'done', message: 'It finished the workflow “Three steps”.' });
 
     // Nothing more can be reported on it, and the session is on no run.
     expect((await asOwner('POST', `/v1/runs/${run.run.id}/report`, { type: 'resume' })).status).toBe(409);

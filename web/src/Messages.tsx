@@ -33,7 +33,8 @@ export function MessageMark({ session }: { session: Session }) {
       title={mark.title}
       onClick={(event) => {
         event.stopPropagation();
-        useApp.getState().openDrawer({ section: 'terminals', kind: 'notes', id: session.id });
+        // The messages are what was asked for: the details open on them.
+        useApp.getState().openDrawer({ section: 'terminals', kind: 'notes', id: session.id, part: 'messages' });
       }}
       data-testid="message-mark"
     >
@@ -251,6 +252,7 @@ export function SessionMessages({ sessionId }: { sessionId: string }) {
   const takesMessages = useApp((s) => s.app?.sessions.find((x) => x.id === sessionId)?.takesMessages ?? false);
   return (
     <div className="drawer-section session-messages" data-testid="session-messages">
+      <ThreadList sessionId={sessionId} />
       <form
         className="thread-reply"
         onSubmit={(event) => {
@@ -271,7 +273,7 @@ export function SessionMessages({ sessionId }: { sessionId: string }) {
           value={text}
           maxLength={4000}
           rows={2}
-          placeholder="A message for the agent in this terminal. It is kept for it to read; it is never typed."
+          placeholder="A message for the agent in this terminal"
           aria-label="Message this terminal"
           onChange={(event) => setText(event.target.value)}
           data-testid="message-text"
@@ -280,6 +282,7 @@ export function SessionMessages({ sessionId }: { sessionId: string }) {
           Send
         </button>
       </form>
+      <p className="ui-meta" data-testid="message-help">The agent reads this when it next checks; nothing is typed into the terminal.</p>
       {peopleOnly && (
         <label className="sheet-note takes-messages" data-testid="takes-messages">
           <input
@@ -293,7 +296,6 @@ export function SessionMessages({ sessionId }: { sessionId: string }) {
         </label>
       )}
       {error && <p className="dialog-error">{error}</p>}
-      <ThreadList sessionId={sessionId} />
     </div>
   );
 }

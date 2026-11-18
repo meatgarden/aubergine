@@ -88,16 +88,16 @@ describe('the board', () => {
     expect(boardOf({ ...input, filters: { tag: 'api', canvasId: ID(50) } }).counts.total).toBe(1);
     // With one version left among what is live, the version is still said: it is about the runs there are, not the ones shown.
     expect(boardOf({ ...input, filters: { tag: 'web' } }).groups.map((g) => g.version)).toEqual([2]);
-    expect(boardOf({ ...input, filters: { tag: 'nothing has this' } })).toMatchObject({ groups: [], summary: 'No runs are going.' });
+    expect(boardOf({ ...input, filters: { tag: 'nothing has this' } })).toMatchObject({ groups: [], summary: 'Nothing is running.' });
   });
 
   it('is empty when nothing runs', () => {
     const board = boardOf({ ...input, runs: [] });
     expect(board.groups).toEqual([]);
     expect(board.counts.total).toBe(0);
-    expect(board.summary).toBe('No runs are going.');
+    expect(board.summary).toBe('Nothing is running.');
     expect(board.ended).toEqual([]);
-    expect(boardText(board, NOW)).toBe('No runs are going.');
+    expect(boardText(board, NOW)).toBe('Nothing is running.');
   });
 
   it('lists what ended in the last day, newest first, with a bound, and says when it was cut', () => {

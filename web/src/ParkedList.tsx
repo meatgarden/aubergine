@@ -45,7 +45,7 @@ export function ParkedList() {
         Parked ({parked.length})
       </button>
       {open && (
-        <div className="parked-panel" role="dialog" aria-label="Parked sessions">
+        <div className="parked-panel" role="dialog" aria-label="Parked terminals">
           {parked.map((session) => (
             <div
               className="parked-row"

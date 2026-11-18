@@ -1036,20 +1036,7 @@ button.color-dot:hover {
   left: auto;
   min-width: 240px;
 }
-/* The parts of a screen and the one thing to do there, on one line: the parts at the left, the action at the right. */
-.ui-bar {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: var(--space-3);
-  margin: var(--space-3) 0 var(--space-4);
-  border-bottom: 1px solid var(--border);
-  padding-bottom: 0;
-}
-.ui-bar > .ui-menu-button,
-.ui-bar > button {
-  margin-bottom: var(--space-2);
-}
+
 .ui-tabs {
   display: flex;
   gap: var(--space-4);
@@ -1078,19 +1065,7 @@ button.color-dot:hover {
   margin-top: var(--space-2);
   line-height: var(--leading);
 }
-.ui-notice {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  margin: 0 0 var(--space-3);
-  padding: var(--space-2) var(--space-3);
-  color: var(--text);
-  background: var(--attention-soft);
-  border-radius: var(--radius-control);
-}
-.dialog .ui-notice {
-  color: var(--text);
-}
+
 .ui-cards {
   display: flex;
   flex-direction: column;
@@ -1155,11 +1130,6 @@ button.color-dot:hover {
   margin: 0 0 var(--space-4);
 }
 
-/* ---------- The queue ---------- */
-
-.dialog.sheet > p.ui-notice {
-  max-width: none;
-}
 .queue-columns > section.ui-card > h3:first-child {
   margin-top: 0;
 }
@@ -1943,23 +1913,12 @@ label:is(.wf-inline, .ui-check, .schedule-days label, .toolbar-menu-check):has(>
 .ui-page .foryou-row.is-pressed:focus-visible {
   background: var(--surface-raised);
 }
-.ui-page .foryou-head {
-  display: flex;
-  align-items: baseline;
-  gap: var(--space-2);
-}
+
 .ui-page .foryou-kind {
   flex: none;
   font-weight: var(--weight-normal);
 }
-.ui-page .foryou-sentence {
-  flex: 1 1 auto;
-  min-width: 0;
-  margin: 0;
-  color: var(--text);
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-}
+
 .ui-page .foryou-when {
   flex: none;
   font-size: var(--font-meta);
@@ -2109,4 +2068,347 @@ label:is(.wf-inline, .ui-check, .schedule-days label, .toolbar-menu-check):has(>
   margin-right: calc(-1 * var(--space-2));
   padding-left: var(--space-2);
   padding-right: var(--space-2);
+}
+
+/* ---------- The details of one thing, beside the side panel ---------- */
+
+/* It stands between the panel and the canvas, under the bar of tabs: the canvas is narrower while it is open, and nothing of it lies over the canvas's bar. */
+.panel-drawer {
+  --control-h: var(--control-compact);
+  position: static;
+  flex: none;
+  box-sizing: border-box;
+  width: var(--drawer-width);
+  max-width: 50vw;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  box-shadow: none;
+  outline: 0;
+}
+/* The head: what it is, the one thing to do with it, the rest behind a menu, and the way out. */
+.details-head {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+.details-head > .ui-dot {
+  margin-left: calc(-1 * var(--space-1));
+}
+.details-head > h2 {
+  flex: 1 1 0;
+  min-width: 0;
+  margin: 0;
+  font-size: var(--font-title);
+  font-weight: var(--weight-strong);
+  line-height: var(--leading-heading);
+  color: var(--text);
+}
+.details-head-actions {
+  flex: 1 0 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.details-head-actions > :last-child {
+  margin-left: auto;
+}
+.details {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+.panel-drawer > .details {
+  padding-left: 0;
+  padding-right: 0;
+}
+.details > * {
+  box-sizing: border-box;
+  padding-left: var(--space-4);
+  padding-right: var(--space-4);
+}
+/* What it asks of you comes first: its own words in the text size, on the soft tint of its kind, and under them how to answer. */
+.details-asks {
+  margin: var(--space-4) var(--space-4) 0;
+  padding: var(--space-3);
+  border-radius: var(--radius-surface);
+  background: var(--attention-soft);
+}
+.details-asks.is-ok {
+  background: var(--ok-soft);
+}
+.details-asks-words {
+  margin: 0;
+  font-size: var(--font-body);
+  color: var(--text);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.details-asks-how {
+  margin: var(--space-2) 0 0;
+  font-size: var(--font-meta);
+  color: var(--text);
+}
+.details .recap {
+  margin: 0;
+  padding-top: var(--space-4);
+}
+/* What is known about a thing, as a quiet list in two columns: what it is called, and what it is. */
+.ui-facts {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: var(--space-1) var(--space-4);
+  margin: 0;
+  font-size: var(--font-meta);
+}
+.ui-facts > div {
+  display: contents;
+}
+.ui-facts dt {
+  color: var(--text-muted);
+}
+.ui-facts dd {
+  margin: 0;
+  min-width: 0;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+.details-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--space-2);
+  padding-top: var(--space-2);
+}
+.details-tabs {
+  margin-top: var(--space-4);
+  border-bottom: 1px solid var(--border);
+}
+.details-tabs .ui-tabs {
+  margin: 0;
+  border-bottom: 0;
+}
+.details .session-messages {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-top: var(--space-3);
+  padding-bottom: var(--space-4);
+}
+
+/* ---------- A terminal's note: the same beside the terminal and in its details ---------- */
+
+.note-panel .note-part {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-3) var(--space-3) 0;
+}
+.note-panel .note-log-part {
+  flex: 1;
+  min-height: 0;
+  padding-bottom: var(--space-3);
+}
+.note-panel.embedded .note-part {
+  padding-left: var(--space-4);
+  padding-right: var(--space-4);
+}
+.note-label {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+  font-size: var(--font-body);
+  color: var(--text);
+}
+.note-label .note-status {
+  flex: none;
+  font-size: var(--font-meta);
+  color: var(--text-muted);
+}
+.note-help {
+  margin: 0;
+  font-size: var(--font-meta);
+  color: var(--text-muted);
+}
+.note-panel textarea.note-summary {
+  flex: none;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 96px;
+  resize: vertical;
+}
+/* While the log is being added to, the summary is read: the same box, without the line of a field. */
+button.note-summary-read {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  height: auto;
+  min-height: var(--control-h);
+  padding: var(--space-2) var(--space-3);
+  text-align: left;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  color: var(--text);
+  background: var(--surface-raised);
+  border: 1px solid transparent;
+}
+.note-panel .note-log {
+  padding: 0;
+}
+.note-panel input.note-add {
+  box-sizing: border-box;
+  width: 100%;
+}
+button.note-add-open {
+  align-self: flex-start;
+  margin-left: calc(-1 * var(--space-3));
+}
+
+/* ---------- What waits for you: one row shape, on the Queue page and in the side panel ---------- */
+
+.foryou-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--border);
+}
+.foryou-list:empty {
+  border-top: 0;
+}
+.foryou-list > .foryou-row,
+.ui-page .foryou-list > .foryou-row {
+  position: relative;
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+  padding: var(--space-2) 0;
+  text-align: left;
+  color: var(--text);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+}
+.side-panel .foryou-list > .foryou-row {
+  padding-left: var(--gutter-panel);
+  padding-right: var(--gutter-panel);
+}
+.foryou-row.is-pressed {
+  cursor: pointer;
+}
+.foryou-row.is-pressed:hover,
+.foryou-row.is-pressed:focus-visible {
+  background: var(--surface-raised);
+}
+/* Whose it is, and since when. */
+.foryou-first {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  min-width: 0;
+}
+.foryou-who {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--font-body);
+  font-weight: var(--weight-strong);
+  color: var(--text);
+}
+.foryou-first .foryou-from {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin: 0;
+  text-align: left;
+  font-size: var(--font-meta);
+  color: var(--text-muted);
+}
+.foryou-when {
+  flex: none;
+  margin-left: auto;
+  font-size: var(--font-meta);
+  color: var(--text-muted);
+}
+/* Its kind, in a column of one width, then what waits in its own words: the words begin at one place down the list. */
+.foryou-second {
+  display: grid;
+  grid-template-columns: var(--kind-column) minmax(0, 1fr);
+  align-items: baseline;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+}
+.foryou-second > .foryou-kind {
+  justify-self: start;
+  max-width: 100%;
+  overflow: hidden;
+  font-weight: var(--weight-normal);
+}
+.foryou-what {
+  min-width: 0;
+  font-size: var(--font-body);
+  color: var(--text);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.side-panel .foryou-what {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+/* What can be done with it is at the row's end. The one thing its kind names shows while the pointer or the keyboard is on the row. */
+.foryou-row > .foryou-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  margin: 0;
+}
+.foryou-row > .foryou-actions:not(:empty) {
+  margin-top: var(--space-2);
+}
+.foryou-row > .foryou-actions:has(> .foryou-act:only-child) {
+  position: absolute;
+  right: var(--space-2);
+  bottom: var(--space-2);
+  margin: 0;
+}
+.side-panel .foryou-row > .foryou-actions:has(> .foryou-act:only-child) {
+  right: var(--gutter-panel);
+}
+button.foryou-act {
+  background: var(--surface);
+}
+.foryou-row:not(:hover, :focus-within) .foryou-act {
+  opacity: 0;
+  pointer-events: none;
+}
+/* In the details the note's parts are on the details' own gutter. */
+.details > .note-panel.embedded {
+  padding-left: 0;
+  padding-right: 0;
+}
+/* Beside a terminal the note's head has its name at one end and the way to hide it at the other. */
+.note-panel > header > .node-close {
+  margin-left: auto;
 }

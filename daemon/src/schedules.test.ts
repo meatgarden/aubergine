@@ -529,7 +529,7 @@ describe('a schedule that cannot run', () => {
     expect(queueNow().tasks).toEqual([]);
     expect(Object.fromEntries(schedulesNow().map((s) => [s.name, s.problem]))).toEqual({
       Retired: 'The step it runs, “Morning list”, was retired.',
-      Removed: 'The step it runs is no longer on the shelf.',
+      Removed: 'The step it runs is no longer among the saved steps.',
       Closed: 'The canvas its new terminal was to start on was closed.',
     });
     expect((await forYouNow()).items.filter((item) => item.kind === 'schedule')).toHaveLength(3);
@@ -561,7 +561,7 @@ describe('run now', () => {
     expect((await asSession(worker, 'POST', `/v1/sessions/${worker.id}/run/report`, { type: 'done', output: { items: [{ text: 'Answer the letter' }, { text: 'Book the room' }] } })).status).toBe(200);
     await until(() => taskNow(task.id).state === 'done');
     const list = (await forYouNow()).items.filter((item) => item.kind === 'checklist');
-    expect(list.map((item) => [item.sentence, item.from])).toEqual([['A list was handed in by “Morning list” of “Morning list”: 0 of 2 ticked.', 'worker, from the schedule “My morning list”, run by hand']]);
+    expect(list.map((item) => [item.sentence, item.from])).toEqual([['worker handed in a list (Morning list): 2 of 2 left to tick.', 'worker, from the schedule “My morning list”, run by hand']]);
     await until(() => notified.length > 0);
     expect(notified).toEqual(['The schedule “My morning list” fired, run by hand.']);
     expect(record()).toEqual([['schedule.by-hand', 'by hand', 200]]);

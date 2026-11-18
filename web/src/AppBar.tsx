@@ -17,16 +17,17 @@ import { Button } from './ui';
 function ForYou() {
   const whole = useApp((s) => s.whole);
   const ended = useEndedRuns((e) => e.items);
-  const count = useMemo(() => (whole ? forYou(whole, Date.now(), ended).items.length : 0), [whole, ended]);
-  // Workflow files in repositories that were never accepted, or changed since: read from the Workflows screen.
-  const files = itemsOfListing(useRepositoryListing()).length;
+  // One number from one source: the items of the owner's list, over every project. The Queue's list is the same function.
+  const list = useMemo(() => (whole ? forYou(whole, Date.now(), ended) : null), [whole, ended]);
+  const total = list?.items.length ?? 0;
   const waiting = useWaitingWords();
   // Said apart for whoever asks: how many terminals wait, and how many things wait to be read.
   const waitingCount = useApp((s) => waitingQueue(s.whole?.sessions ?? [], s.whole?.runs ?? []).length);
   const reviews = useApp((s) => (s.whole?.drafts ?? []).filter((d) => d.status === 'waiting').length);
-  const total = count + files;
+  // Workflow files in repositories that were never accepted, or changed since: they are read from the Workflows page, and are not items of the list.
+  const files = itemsOfListing(useRepositoryListing()).length;
   return (
-    <button type="button" className={total > 0 ? 'attention-button' : 'quiet'} onClick={() => runCommand('queue.open')} title={hint('queue.open', [`Everything that waits on you${total > 0 ? `: ${total}` : ''}`, waiting, files > 0 ? `${files} workflow ${files === 1 ? 'file' : 'files'} to read, on the Workflows screen` : ''].filter(Boolean).join('. '))} data-testid="for-you" data-count={total} data-waiting={waitingCount} data-review={reviews + files}>
+    <button type="button" className={total > 0 ? 'attention-button' : 'quiet'} onClick={() => runCommand('queue.open')} title={hint('queue.open', [`Everything that waits on you${total > 0 ? `: ${total}` : ''}`, waiting].filter(Boolean).join('. '))} data-testid="for-you" data-count={total} data-waiting={waitingCount} data-review={reviews + files}>
       For you
       {total > 0 && (
         <span className="for-you-count" data-testid="for-you-count">

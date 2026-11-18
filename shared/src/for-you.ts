@@ -25,7 +25,10 @@ export const ForYouItem = z.object({
   kind: z.string(),
   title: z.string().describe("What its kind is called, short enough for a chip: `Approval`, `Draft to read`."),
   tone: z.enum(['attention', 'ok', 'neutral']).default('neutral').describe('How its kind is to be drawn: `attention` for what waits on the owner to go on, `ok` for what ended well, `neutral` for the rest.'),
-  sentence: z.string().describe('What waits, in a sentence. Where part of it was written by an agent or a program, it is their words.'),
+  sentence: z.string().describe('What waits, in a sentence that stands by itself. Where part of it was written by an agent or a program, it is their words.'),
+  who: z.string().default('').describe('Whose it is, for the first line of a row: the name of the terminal, or of whoever sent it.'),
+  what: z.string().default('').describe("What waits, in its own words, for the second line of a row: the question itself, the draft's name, how much of a list is left."),
+  action: z.string().nullable().default(null).describe('The one thing to do with it, as the words of a button: `Go to terminal`, `Read`. Null where the item has buttons of its own (accept or decline, done or dismiss).'),
   from: z.string().describe('Where it came from: a terminal by name, a program, the library.'),
   at: z.iso.datetime().nullable().describe('Since when, when that is known.'),
   act: z.string().describe('Where one acts on it: `run:<id>`, `session:<id>`, `task:<id>`, `ask:<id>`, `copy:<id>`, `schedule:<id>`, `review`.'),
@@ -57,7 +60,7 @@ export interface ForYouInput {
   ended: readonly ArchivedRun[];
 }
 
-type Made = Partial<ForYouItem> & Pick<ForYouItem, 'id' | 'sentence' | 'from' | 'act'>;
+type Made = Partial<ForYouItem> & Pick<ForYouItem, 'id' | 'sentence' | 'who' | 'what' | 'from' | 'act'>;
 
 /**
  * A kind of thing that waits on the owner. A later stage adds one by
@@ -66,6 +69,8 @@ type Made = Partial<ForYouItem> & Pick<ForYouItem, 'id' | 'sentence' | 'from' | 
 export interface ForYouKind {
   kind: string;
   title: string;
+  /** The one thing to do with an item of this kind, as the words of a button. Null: its row has buttons of its own. */
+  action: string | null;
   /** How its chip is drawn. Left out: `attention` for an item that waits, `neutral` otherwise. */
   tone?: 'attention' | 'ok' | 'neutral';
   /** Lower numbers come first. */
@@ -120,73 +125,80 @@ export function sessionsWaiting(sessions: readonly Session[], runs: readonly Run
   return found.sort((a, b) => (a.at ?? '').localeCompare(b.at ?? '') || a.session.id.localeCompare(b.session.id));
 }
 
-const terminalKind = (kind: string, title: string, order: number, why: WaitingFor, sentence: (w: WaitingSession) => string, tone?: ForYouKind['tone']): void =>
+const terminalKind = (kind: string, title: string, order: number, why: WaitingFor, action: string, what: (w: WaitingSession) => string, tone?: ForYouKind['tone']): void =>
   registerForYouKind({
     kind,
     title,
+    action,
     tone,
     order,
     items: ({ state }) =>
       sessionsWaiting(state.sessions, state.runs)
         .filter((w) => w.why === why)
-        .map((w) => ({ id: `${kind}:${w.session.id}`, sentence: sentence(w), from: w.session.name, at: w.at, act: w.run && (why === 'approval' || why === 'blocked') ? `run:${w.run.id}` : `session:${w.session.id}`, waits: true, sessionId: w.session.id, runId: w.run?.id ?? null })),
+        .map((w) => ({ id: `${kind}:${w.session.id}`, sentence: `${w.session.name}: ${what(w)}`, who: w.session.name, what: what(w), from: w.session.name, at: w.at, act: w.run && (why === 'approval' || why === 'blocked') ? `run:${w.run.id}` : `session:${w.session.id}`, waits: true, sessionId: w.session.id, runId: w.run?.id ?? null })),
   });
 
-terminalKind('approval', 'Approval', 10, 'approval', (w) => `“${w.session.name}” waits for your approval${w.session.attention.message ? `: ${w.session.attention.message}` : '.'}`);
-terminalKind('blocked', 'Blocked', 11, 'blocked', (w) => `“${w.session.name}” is blocked${w.run?.blockedReason ? `: ${w.run.blockedReason}` : '.'}`);
-terminalKind('question', 'Question', 12, 'question', (w) => `“${w.session.name}” waits for you${w.session.attention.message ? `: ${w.session.attention.message}` : '.'}`);
-terminalKind('message', 'Message', 13, 'message', (w) => (w.session.messages.paused > 0 ? `“${w.session.name}” and another terminal have exchanged many messages. Continue?` : `“${w.session.name}” has a message for you.`));
-terminalKind('finished', 'Finished', 30, 'finished', (w) => `“${w.session.name}” has finished${w.session.attention.message ? `: ${w.session.attention.message}` : '.'}`, 'ok');
+terminalKind('approval', 'Approval', 10, 'approval', 'Review and decide', (w) => w.session.attention.message ?? 'Its run waits for your approval.');
+terminalKind('blocked', 'Blocked', 11, 'blocked', 'See why', (w) => w.run?.blockedReason ?? 'Its run is blocked.');
+terminalKind('question', 'Question', 12, 'question', 'Go to terminal', (w) => w.session.attention.message ?? 'It waits for your answer.');
+terminalKind('message', 'Message', 13, 'message', 'Read', (w) => (w.session.messages.paused > 0 ? 'It and another terminal have exchanged many messages. Let them go on?' : 'It sent you a message.'));
+terminalKind('finished', 'Finished', 30, 'finished', 'See what it did', (w) => w.session.attention.message ?? 'It has finished.', 'ok');
 
 /* ---------- The other kinds there are today ---------- */
 
 registerForYouKind({
   kind: 'proposal',
   title: 'Proposed task',
+  action: null,
   order: 20,
   items: ({ state }) =>
-    state.queue.tasks.filter((task) => task.state === 'proposed').map((task) => ({ id: `proposal:${task.id}`, sentence: `Proposed for the queue: “${task.title}”.`, from: `${addedByWords(task.addedBy)}, ${sourceWords(task.source)}`, at: task.createdAt, act: `task:${task.id}`, taskId: task.id })),
+    state.queue.tasks.filter((task) => task.state === 'proposed').map((task) => ({ id: `proposal:${task.id}`, sentence: `Proposed for the queue: ${task.title}`, who: capital(addedByWords(task.addedBy)), what: task.title, from: `${addedByWords(task.addedBy)}, ${sourceWords(task.source)}`, at: task.createdAt, act: `task:${task.id}`, taskId: task.id })),
 });
 
 registerForYouKind({
   kind: 'ask',
   title: 'Asked of you',
+  action: null,
   order: 21,
-  items: ({ state }) => state.queue.asks.map((ask) => ({ id: `ask:${ask.id}`, sentence: ask.text, from: `${addedByWords(ask.addedBy)}, ${sourceWords(ask.source)}`, at: ask.createdAt, act: `ask:${ask.id}`, written: true, askId: ask.id })),
+  items: ({ state }) => state.queue.asks.map((ask) => ({ id: `ask:${ask.id}`, sentence: ask.text, who: capital(addedByWords(ask.addedBy)), what: ask.text, from: `${addedByWords(ask.addedBy)}, ${sourceWords(ask.source)}`, at: ask.createdAt, act: `ask:${ask.id}`, written: true, askId: ask.id })),
 });
 
 registerForYouKind({
   kind: 'task-failed',
   title: 'Task failed',
+  action: 'See why',
   order: 22,
   items: ({ state }) =>
-    state.queue.tasks.filter((task) => task.state === 'failed').map((task) => ({ id: `task-failed:${task.id}`, sentence: `The task “${task.title}” failed${task.reason ? `: ${task.reason}` : '.'}`, from: sessionName(state, task.sessionId) ?? 'the queue', at: task.endedAt, act: `task:${task.id}`, taskId: task.id, runId: task.runId })),
+    state.queue.tasks.filter((task) => task.state === 'failed').map((task) => ({ id: `task-failed:${task.id}`, sentence: `The task “${task.title}” failed${task.reason ? `: ${task.reason}` : '.'}`, who: task.title, what: task.reason ?? 'It failed.', from: sessionName(state, task.sessionId) ?? 'the queue', at: task.endedAt, act: `task:${task.id}`, taskId: task.id, runId: task.runId })),
 });
 
 registerForYouKind({
   kind: 'task-done',
   title: 'Task done',
+  action: 'See what it did',
   tone: 'ok',
   order: 23,
   items: ({ state }) =>
-    state.queue.tasks.filter((task) => task.state === 'done').map((task) => ({ id: `task-done:${task.id}`, sentence: `The task “${task.title}” is done. Look at what was made.`, from: sessionName(state, task.sessionId) ?? 'the queue', at: task.endedAt, act: `task:${task.id}`, taskId: task.id, runId: task.runId, sessionId: task.sessionId })),
+    state.queue.tasks.filter((task) => task.state === 'done').map((task) => ({ id: `task-done:${task.id}`, sentence: `The task “${task.title}” is done.`, who: task.title, what: 'It is done.', from: sessionName(state, task.sessionId) ?? 'the queue', at: task.endedAt, act: `task:${task.id}`, taskId: task.id, runId: task.runId, sessionId: task.sessionId })),
 });
 
 registerForYouKind({
   kind: 'draft',
   title: 'Draft to read',
+  action: 'Read',
   order: 24,
   items: ({ state }) =>
     state.drafts
       .filter((draft) => draft.status === 'waiting')
-      .map((draft) => ({ id: `draft:${draft.id}`, sentence: `A draft of ${draft.kind === 'workflow' ? 'a workflow' : 'a step'} waits to be read: “${draft.workflow?.name ?? draft.element?.name ?? 'unnamed'}”.`, from: sessionName(state, draft.sessionId) ?? 'a program', at: draft.updatedAt, act: 'review' })),
+      .map((draft) => ({ id: `draft:${draft.id}`, sentence: `A ${draft.kind === 'workflow' ? 'workflow' : 'step'} to read before it can be used: ${draft.workflow?.name ?? draft.element?.name ?? 'unnamed'}`, who: sessionName(state, draft.sessionId) ?? 'A program', what: `${draft.kind === 'workflow' ? 'A workflow' : 'A step'}: ${draft.workflow?.name ?? draft.element?.name ?? 'unnamed'}`, from: sessionName(state, draft.sessionId) ?? 'a program', at: draft.updatedAt, act: 'review' })),
 });
 
 registerForYouKind({
   kind: 'library',
   title: 'Install to read',
+  action: 'Read',
   order: 25,
-  items: ({ state }) => state.library.requests.map((request) => ({ id: `library:${request.id}`, sentence: `An item of the library waits to be read before it is installed: “${request.itemId}”.`, from: 'the library', at: request.at, act: 'review' })),
+  items: ({ state }) => state.library.requests.map((request) => ({ id: `library:${request.id}`, sentence: `From the library, to read before it is installed: ${request.itemId}`, who: 'The library', what: request.itemId, from: 'the library', at: request.at, act: 'review' })),
 });
 
 /** The latest list a run handed in, with how far the owner has got through it. */
@@ -204,6 +216,7 @@ function listOf(run: Run, elements: readonly { id: string; name: string; produce
 registerForYouKind({
   kind: 'checklist',
   title: 'List handed in',
+  action: 'Open list',
   order: 26,
   items: ({ state, ended, now }) => {
     const made: Made[] = [];
@@ -211,7 +224,9 @@ registerForYouKind({
       const list = listOf(run, elements);
       // A list with every line ticked has been dealt with.
       if (!list || list.ticked >= list.total) return;
-      made.push({ id: `checklist:${run.id}`, sentence: `A list was handed in by “${list.name}” of “${workflowName}”: ${list.ticked} of ${list.total} ticked.`, from: `${sessionName(state, run.sessionId) ?? 'a terminal that is gone'}${cameFrom(state, run.id)}`, at: run.updatedAt, act: `run:${run.id}`, runId: run.id, sessionId: run.sessionId, elementId: list.elementId });
+      const left = `${list.total - list.ticked} of ${list.total} left to tick`;
+      const by = sessionName(state, run.sessionId) ?? 'A terminal that is gone';
+      made.push({ id: `checklist:${run.id}`, sentence: `${by} handed in a list (${list.name === workflowName ? list.name : `${list.name}, ${workflowName}`}): ${left}.`, who: by, what: `${list.name === workflowName ? list.name : `${workflowName}, ${list.name}`}: ${left}`, from: `${sessionName(state, run.sessionId) ?? 'a terminal that is gone'}${cameFrom(state, run.id)}`, at: run.updatedAt, act: `run:${run.id}`, runId: run.id, sessionId: run.sessionId, elementId: list.elementId });
     };
     for (const run of state.runs) {
       const workflow = state.workflows.find((w) => w.id === run.workflowId);
@@ -227,6 +242,7 @@ registerForYouKind({
 registerForYouKind({
   kind: 'copy',
   title: 'Working copy',
+  action: 'Decide',
   order: 40,
   items: ({ state }) => {
     const done = new Set(state.queue.tasks.flatMap((task) => (task.state === 'done' && task.sessionId ? [task.sessionId] : [])));
@@ -235,6 +251,8 @@ registerForYouKind({
       .map((environment) => ({
         id: `copy:${environment.id}`,
         sentence: environment.sessionId === null ? `The terminal of “${environment.sessionName}” is gone and what it worked in is still there${environment.branch ? `, on the branch ${environment.branch}` : ''}.` : `The task of “${environment.sessionName}” is done. Decide what becomes of what it worked in${environment.branch ? `, on the branch ${environment.branch}` : ''}.`,
+        who: environment.sessionName,
+        what: `${environment.sessionId === null ? 'Its terminal is gone and what it worked in is still there' : 'Its task is done: decide what becomes of what it worked in'}${environment.branch ? `, on the branch ${environment.branch}` : ''}.`,
         from: environment.sessionName,
         at: environment.changes?.at ?? environment.createdAt,
         act: `copy:${environment.id}`,
@@ -253,13 +271,16 @@ function cameFrom(state: AppState, runId: string): string {
 registerForYouKind({
   kind: 'schedule',
   title: 'A schedule could not run',
+  action: 'See why',
   order: 27,
   // One item for a schedule for as long as it cannot run as it is written: not one for each of its times.
   items: ({ state }) =>
     state.schedules.items
       .filter((schedule) => schedule.on && schedule.problem !== null)
-      .map((schedule) => ({ id: `schedule:${schedule.id}`, sentence: `The schedule “${schedule.name}” could not run: ${schedule.problem ?? ''}`, from: 'a schedule', at: schedule.last?.at ?? schedule.updatedAt, act: `schedule:${schedule.id}` })),
+      .map((schedule) => ({ id: `schedule:${schedule.id}`, sentence: `The schedule “${schedule.name}” could not run: ${schedule.problem ?? ''}`, who: schedule.name, what: schedule.problem ?? 'It could not run.', from: 'a schedule', at: schedule.last?.at ?? schedule.updatedAt, act: `schedule:${schedule.id}` })),
 });
+
+const capital = (words: string): string => words.replace(/^./, (c) => c.toUpperCase());
 
 function sessionName(state: AppState, sessionId: string | null): string | null {
   return sessionId ? (state.sessions.find((s) => s.id === sessionId)?.name ?? null) : null;
@@ -283,7 +304,7 @@ export function forYou(whole: AppState, now: number, endedAll: readonly Archived
   for (const kind of forYouKinds()) {
     const made = kind.items({ state, now, ended });
     made.sort((a, b) => (a.at ?? '').localeCompare(b.at ?? '') || a.id.localeCompare(b.id));
-    for (const item of made) items.push({ kind: kind.kind, title: kind.title, tone: kind.tone ?? (item.waits ? 'attention' : 'neutral'), at: null, waits: false, written: false, sessionId: null, runId: null, taskId: null, askId: null, environmentId: null, elementId: null, projectId: projectOf(item), ...item });
+    for (const item of made) items.push({ kind: kind.kind, title: kind.title, action: kind.action, tone: kind.tone ?? (item.waits ? 'attention' : 'neutral'), at: null, waits: false, written: false, sessionId: null, runId: null, taskId: null, askId: null, environmentId: null, elementId: null, projectId: projectOf(item), ...item });
   }
   const waiting = items.filter((item) => item.waits).length;
   return { items, waiting, summary: items.length === 0 ? 'Nothing waits for you.' : `${items.length} ${items.length === 1 ? 'thing waits' : 'things wait'} for you${waiting > 0 ? `, ${waiting} of them ${waiting === 1 ? 'a terminal' : 'terminals'}` : ''}.` };

@@ -101,7 +101,7 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
 
   // The picker finds the session by its folder and focuses it.
   await page.keyboard.press(process.platform === 'darwin' ? 'Meta+k' : 'Control+Shift+K');
-  await page.getByRole('textbox', { name: 'Search sessions' }).fill('tmp');
+  await page.getByRole('textbox', { name: 'Search terminals' }).fill('tmp');
   await expect(page.getByTestId('picker-row')).toHaveCount(1);
   await page.keyboard.press('Enter');
   await expect(page.getByTestId('node-shield')).toHaveCount(0);
@@ -112,7 +112,7 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   // A note is saved with the session, and the picker finds the session by its text.
   // The note is beside the terminal from the start, and does not take the keyboard by being there.
   await expect(page.getByTestId('note-panel')).toBeVisible();
-  await page.getByRole('textbox', { name: 'Session note' }).fill('# Fixing the invoice rounding bug');
+  await page.getByRole('textbox', { name: 'Summary of this terminal' }).fill('# Fixing the invoice rounding bug');
   await expect(page.getByTestId('note-panel')).toContainText('Saved');
 
   // A program inside the session adds to the note log, and the entry appears live.
@@ -145,7 +145,7 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
 
   await page.reload();
   await page.getByRole('button', { name: 'Go to…' }).click();
-  await page.getByRole('textbox', { name: 'Search sessions' }).fill('rounding');
+  await page.getByRole('textbox', { name: 'Search terminals' }).fill('rounding');
   await expect(page.getByTestId('picker-row')).toContainText('Fixing the invoice rounding bug');
   await page.keyboard.press('Enter');
   await expect(page.getByTestId('node-shield')).toHaveCount(0);
@@ -166,7 +166,7 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await page.getByRole('menuitem', { name: /^Park Terminal/ }).click();
   await expect(node).toHaveCount(0);
   await page.getByRole('button', { name: 'Parked (1)' }).click();
-  await page.getByRole('dialog', { name: 'Parked sessions' }).getByRole('button', { name: 'Restore' }).click();
+  await page.getByRole('dialog', { name: 'Parked terminals' }).getByRole('button', { name: 'Restore' }).click();
   await expect(node).toHaveCount(1);
   await expect(outputLine(page, 'picked-44')).toHaveCount(1);
 
@@ -187,7 +187,7 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await page.getByRole('menuitem', { name: /^Park / }).click();
   await expect(node).toHaveCount(0);
   await page.getByRole('button', { name: 'Go to…' }).click();
-  await page.getByRole('textbox', { name: 'Search sessions' }).fill('picked-44');
+  await page.getByRole('textbox', { name: 'Search terminals' }).fill('picked-44');
   await expect(page.getByTestId('picker-output-row').first()).toContainText('picked-44');
   await page.getByTestId('picker-output-row').first().click();
   await expect(node).toHaveCount(1);
@@ -738,7 +738,7 @@ test('a workflow made from a template moves a terminal through its steps', async
   await page.locator('[data-testid="panel-tab"][data-section="workflows"]').click();
   await expect(page.getByTestId('runs-row')).toHaveCount(0);
   await page.locator('[data-testid="panel-tab"][data-section="terminals"]').click();
-  await expect(page.getByTestId('badge-attention')).toHaveAttribute('title', 'Workflow "Ship it" finished after "Check"');
+  await expect(page.getByTestId('badge-attention')).toHaveAttribute('title', 'It finished the workflow “Ship it”.');
   const runs = await (await page.request.get('/v1/runs?status=ended')).json();
   expect(runs.items).toHaveLength(1);
   expect(runs.items[0].run.elements.map((e: { note: string }) => e.note)[0]).toBe('planned: change one file');
@@ -1190,7 +1190,7 @@ test('an empty canvas says how to begin, and stops saying it with the first term
   const empty = page.getByTestId('empty-canvas');
   await expect(empty).toBeVisible();
   // Three ways to begin, and nothing else.
-  await expect(empty.getByRole('button')).toHaveText(['Show me around', '+ New terminal', 'Bring in a terminal I already have open']);
+  await expect(empty.getByRole('button')).toHaveText(['Show me around', 'New terminal', 'Bring in a terminal I already have open']);
   await expect(empty.getByTestId('empty-bring-line')).toHaveCount(0);
   await empty.getByTestId('empty-bring').click();
   await expect(empty.getByTestId('empty-bring-line')).toContainText('aubergine here');
@@ -1487,7 +1487,7 @@ test('what is switched on for an agent: names only, where each comes from, and w
   expect((await page.request.post(`/v1/sessions/${sessionId}/notes`, { headers: { origin }, data: { text: 'A note, so that the row offers its drawer.' } })).status()).toBe(201);
   await page.getByTestId('list-row').first().hover();
   await page.getByTestId('row-more').first().click();
-  await page.getByRole('menuitem', { name: 'Notes' }).click();
+  await page.getByRole('menuitem', { name: 'Details' }).click();
   await page.getByTestId('drawer-switched-on').getByRole('button', { name: /set up/ }).click();
   await expect(panel).toBeVisible();
   await page.keyboard.press('Escape');
@@ -1547,10 +1547,12 @@ test('a recap of a terminal: what is known, what its agent wrote, and what chang
   // In the drawer: the same, labelled as what Aubergine knows, and a way to ask the agent.
   await page.locator(`[data-testid="list-row"][data-session="${sessionId}"]`).hover();
   await page.locator(`[data-testid="list-row"][data-session="${sessionId}"]`).getByTestId('row-more').click();
-  await page.getByRole('menuitem', { name: 'Notes' }).click();
+  await page.getByRole('menuitem', { name: 'Details' }).click();
   const recap = page.getByTestId('recap');
-  await expect(recap).toContainText('from what Aubergine knows');
-  await expect(recap.getByTestId('recap-lines')).toContainText("Found the cause: the cookie is set twice.");
+  // What is known about it, as facts with their labels.
+  await expect(recap.locator('[data-fact="where"] dt')).toHaveText('Where');
+  // Its last entry is in the log under the facts, not said twice.
+  await expect(page.getByTestId('panel-drawer').getByTestId('note-entry').last()).toContainText('Found the cause: the cookie is set twice.');
   await expect(recap.getByTestId('recap-written')).toHaveCount(0);
 
   // With a shell in front, the sentence is not typed (it would be run as a command), and the terminal says why.
@@ -1584,8 +1586,8 @@ test('a recap of a terminal: what is known, what its agent wrote, and what chang
   await page.keyboard.press('Enter');
   const written = recap.getByTestId('recap-written');
   await expect(written).toContainText('The goal is to fix the login redirect. The cause is found. The test is left.', { timeout: 20_000 });
-  await expect(written).toContainText('What its agent wrote');
-  await expect(recap.getByTestId('recap-ask')).toHaveText('Ask for a new recap');
+  await expect(written).toContainText('Recap from its agent');
+  await expect(recap.getByTestId('recap-ask')).toHaveText('Ask its agent for a new recap');
   // Once the terminal has printed again, the recap says it may be out of date. (When a terminal last printed is noted
   // every few seconds, not on every line: print again a little later.)
   await expect(written.getByTestId('recap-stale')).toHaveCount(0);
@@ -2611,7 +2613,8 @@ test('the queue and For you: tasks start when the owner says and no more than th
   const firstRun = tasks.find((task) => task.title === 'Queue test one')?.runId ?? '';
   expect((await page.request.post(`/v1/runs/${firstRun}/report`, { headers: { origin }, data: { type: 'done', elementId: 'task', note: 'Did it.' } })).status()).toBe(200);
   const done = screen.locator('[data-testid="foryou-row"][data-kind="task-done"]').filter({ hasText: 'Queue test one' });
-  await expect(done).toContainText('The task “Queue test one” is done. Look at what was made.');
+  await expect(done.getByTestId('foryou-who')).toHaveText('Queue test one');
+  await expect(done.getByTestId('foryou-what')).toHaveText('It is done.');
   await expect.poll(() => page.evaluate(() => (window as unknown as { shownNotifications: string[] }).shownNotifications)).toContain('The task “Queue test one” is done');
   await page.waitForTimeout(400);
   await expect(mine('Queue test three')).toHaveAttribute('data-state', 'queued');
@@ -2644,7 +2647,7 @@ test('the queue and For you: tasks start when the owner says and no more than th
   const run = (await (await page.request.post('/v1/runs', { headers: { origin }, data: { workflowId: flow.id, sessionId: plain, inputs: { task: 'the code' }, kickoff: false } })).json()) as { run: { id: string } };
   expect((await page.request.post(`/v1/runs/${run.run.id}/report`, { headers: { origin }, data: { type: 'done', elementId: 'find', output: { items: [{ text: 'Queue line: rename the flag' }, { text: 'Queue line: not this one' }, { text: 'Queue line: remove the old test' }] } } })).status()).toBe(200);
   const list = screen.locator('[data-testid="foryou-row"][data-kind="checklist"]').filter({ hasText: 'Queue test review' });
-  await expect(list).toContainText('0 of 3 ticked');
+  await expect(list).toContainText('3 of 3 left to tick');
   // The card is pressed as a whole.
   await list.click({ position: { x: 12, y: 12 } });
   const view = page.getByTestId('run-view');
@@ -2654,7 +2657,7 @@ test('the queue and For you: tasks start when the owner says and no more than th
     await expect(view.getByTestId('checklist-item').nth(line)).toHaveAttribute('data-ticked', 'true');
   }
   await view.getByTestId('run-view-close').click();
-  await expect(list).toContainText('2 of 3 ticked');
+  await expect(list).toContainText('1 of 3 left to tick');
   await list.getByTestId('checklist-to-queue').click();
   await expect(form.getByTestId('task-title')).toHaveCount(2);
   await expect(form.getByTestId('task-title').nth(0)).toHaveValue('Queue line: rename the flag');
@@ -2778,8 +2781,8 @@ test('a schedule: the owner makes one for a step that hands in a list, runs it n
   // It is on the owner's list, and says which schedule it came from.
   await screen.getByTestId('queue-tab-queue').click();
   const list = screen.locator('[data-testid="foryou-row"][data-kind="checklist"]').filter({ hasText: 'Schedule test list' });
-  await expect(list).toContainText('0 of 2 ticked');
-  await expect(list.locator('.foryou-from')).toHaveText('from schedule test terminal, from the schedule “Schedule test morning”, run by hand');
+  await expect(list).toContainText('2 of 2 left to tick');
+  await expect(list.locator('.foryou-from')).toHaveText('from the schedule “Schedule test morning”, run by hand');
   await expect(mine).toHaveAttribute('data-state', 'done');
 
   // Switched off, it says so; and no program makes or runs one.
@@ -3356,10 +3359,10 @@ test('one look: the canvas page and every screen use the two control heights and
   // The detail drawer beside the panel, and the menu of the less used parts.
   await page.getByTestId('list-row').first().hover();
   await page.getByTestId('row-more').first().click();
-  await page.getByRole('menuitem', { name: 'Notes' }).click();
+  await page.getByRole('menuitem', { name: 'Details' }).click();
   await expect(page.getByTestId('panel-drawer')).toBeVisible();
   expect(await measureLook(page), 'the drawer').toEqual([]);
-  await page.getByRole('button', { name: 'Close the drawer' }).click();
+  await page.getByTestId('details-close').click();
   await page.getByTestId('panel-more').click();
   await expect(page.getByTestId('panel-more-menu')).toBeVisible();
   expect(await measureLook(page), 'the More menu').toEqual([]);
@@ -3555,7 +3558,7 @@ test('simpler surfaces: the list starts near the top, a name is not cut, one pri
   await page.keyboard.press('Escape');
   await page.getByTestId('toolbar-queue').click();
   const starts = page.getByTestId('queue-starts');
-  await expect(starts.getByTestId('queue-starts-says')).toContainText(/Up to \d+ at once/);
+  await expect(starts.getByTestId('queue-starts-says')).toContainText(/\d+ at a time/);
   await starts.locator('summary').focus();
   await page.keyboard.press('Enter');
   await expect(starts.getByTestId('queue-limit')).toBeVisible();
@@ -3789,6 +3792,49 @@ test('screens are pages: each is a place under the top bar with an address, and 
     await expect(page.getByTestId(testid)).toHaveCount(0);
   }
 
+  // The mark never says Canvas while a page is on screen, however the page was opened: watched from inside the page, at every change.
+  await page.evaluate(() => {
+    const seen: string[] = [];
+    (window as unknown as { lagSeen: string[] }).lagSeen = seen;
+    const look = (): void => {
+      const shown = document.querySelector('.ui-page')?.getAttribute('data-page') ?? 'canvas';
+      const marked = document.querySelector('[data-testid="appbar"] [aria-current="page"]')?.getAttribute('data-testid') ?? 'none';
+      if (marked !== `toolbar-${shown}`) seen.push(`${shown} shown, ${marked} marked`);
+    };
+    new MutationObserver(look).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['aria-current'] });
+    const again = (): void => {
+      look();
+      requestAnimationFrame(again);
+    };
+    again();
+  });
+  const lag = (): Promise<string[]> => page.evaluate(() => (window as unknown as { lagSeen: string[] }).lagSeen);
+  // By For you in the top bar.
+  await page.getByTestId('for-you').click();
+  await expect(page.getByTestId('queue-screen')).toBeVisible();
+  expect(await current()).toEqual(['toolbar-queue']);
+  await page.keyboard.press('Escape');
+  await expect(page.locator('.ui-page')).toHaveCount(0);
+  // By its key, from the canvas, and from one page to another.
+  await page.keyboard.press('q');
+  await expect(page.getByTestId('queue-screen')).toBeVisible();
+  await page.keyboard.press('Shift+B');
+  await expect(page.getByTestId('board')).toBeVisible();
+  await expect(page.getByTestId('queue-screen')).toHaveCount(0);
+  expect(await current()).toEqual(['toolbar-board']);
+  await page.keyboard.press('q');
+  await expect(page.getByTestId('queue-screen')).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(page.locator('.ui-page')).toHaveCount(0);
+  expect(await lag(), 'the mark and the page, watched').toEqual([]);
+  // By its address.
+  await page.goto(`${canvasAddress}/library`);
+  await expect(page.getByTestId('library-screen')).toBeVisible();
+  expect(await current()).toEqual(['toolbar-library']);
+  await page.getByTestId('toolbar-canvas').click();
+  await expect(page.locator('.ui-page')).toHaveCount(0);
+  await expect(node).toHaveCount(1);
+
   // From one page straight to another: one place is marked at a time, and one step back is the canvas.
   await page.getByTestId('toolbar-queue').click();
   await page.getByTestId('toolbar-board').click();
@@ -3818,4 +3864,219 @@ test('screens are pages: each is a place under the top bar with an address, and 
   await expect(page).toHaveURL(canvasAddress);
   await expect(node).toHaveCount(1);
   await expect(page.locator('.xterm-rows')).toContainText(/[$%#>]/, { timeout: 20_000 });
+});
+
+test('the drawer: what a terminal asks comes first, one thing to type into, beside the panel and under the bars', async ({ page }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  const origin = new URL(page.url()).origin;
+  await page.evaluate(() => localStorage.setItem('aubergine.tour', JSON.stringify({ status: 'dismissed', stepId: null })));
+  const demo = await (await page.request.post('/api/v1/demo', { headers: { origin }, data: {} })).json();
+  try {
+    await page.goto(`/c/${demo.canvasId}`);
+    await expect(page.getByTestId('terminal-node')).toHaveCount(4);
+    await expect.poll(async () => (await (await page.request.get('/api/v1/demo', { headers: { origin } })).json()).ready, { timeout: 45_000 }).toBe(true);
+    const waiting = demo.sessions.waiting as string;
+    const row = (id: string) => page.locator(`[data-testid="list-row"][data-session="${id}"]`);
+    await expect(row(waiting).getByTestId('list-badge')).toHaveText('waiting for you');
+    const drawer = page.getByTestId('panel-drawer');
+    /** Opens the details from a row's menu, whose first line it is. */
+    const open = async (id: string): Promise<void> => {
+      await row(id).hover();
+      await row(id).getByTestId('row-more').click();
+      const lines = page.locator('.list-menu [role="menuitem"]');
+      await expect(lines.first()).toHaveText('Details');
+      await lines.first().click();
+      await expect(drawer).toBeVisible();
+      await expect(page.locator('.list-menu')).toHaveCount(0);
+    };
+    /** The text boxes of the drawer that are in view. */
+    const boxes = (): Promise<number> =>
+      drawer.evaluate((el) => [...el.querySelectorAll('textarea, input:not([type=checkbox], [type=radio], [type=hidden])')].filter((box) => { const r = box.getBoundingClientRect(); return r.width > 0 && r.height > 0 && r.bottom > 0 && r.top < innerHeight; }).length);
+
+    // A terminal that waits: its question is the first thing under the head, in its own words, with the way to answer.
+    await open(waiting);
+    await expect(drawer.getByTestId('details-name')).toHaveText(/has a question/);
+    await expect(drawer.getByTestId('details-chip')).toHaveText('waiting for you');
+    const asks = drawer.getByTestId('details-asks');
+    await expect(asks).toContainText('Which branch should I fix it on');
+    await expect(asks).toContainText('Go to the terminal and type your answer there.');
+    expect(await drawer.evaluate((el) => el.querySelector('[data-testid="details"]')?.firstElementChild?.getAttribute('data-testid'))).toBe('details-asks');
+    // What is known: a list of facts, with no whole path in it and none of the words that were never a person's.
+    await expect(drawer.locator('[data-fact="where"] dd')).toHaveText(/^…\//);
+    await expect(drawer.locator('[data-fact="where"] dd')).toHaveAttribute('title', /^\//);
+    const text = (await drawer.innerText()).replace(/\s+/g, ' ');
+    expect(text).not.toMatch(/(^|[\s'"“(])\/[\w.-]+\/[\w.-]+\/[\w.-]+/);
+    for (const word of ['session', 'Session', 'pinned', 'Pinned', 'Markdown']) expect(text, word).not.toContain(word);
+    for (const box of await drawer.locator('textarea, input').all()) expect(await box.getAttribute('placeholder'), 'a placeholder').not.toMatch(/session|[Pp]inned|Markdown/);
+
+    // One thing to type into is in view at a time: the summary; the box that adds to the log once asked for; the message box on its own tab.
+    expect(await boxes()).toBe(1);
+    await expect(drawer.getByRole('textbox', { name: 'Summary of this terminal' })).toBeVisible();
+    await drawer.getByTestId('note-add-open').click();
+    await expect(drawer.getByTestId('note-add')).toBeFocused();
+    expect(await boxes()).toBe(1);
+    await page.keyboard.type('Looked at it.');
+    await page.keyboard.press('Enter');
+    await expect(drawer.getByTestId('note-entry')).toContainText('Looked at it.');
+    await drawer.getByTestId('note-summary-read').click();
+    expect(await boxes()).toBe(1);
+    await drawer.getByTestId('details-tab-messages').click();
+    await expect(drawer.getByTestId('message-help')).toHaveText('The agent reads this when it next checks; nothing is typed into the terminal.');
+    await expect(drawer.getByTestId('message-text')).toBeVisible();
+    expect(await boxes()).toBe(1);
+    await drawer.getByTestId('details-tab-note').click();
+
+    // It stands beside the side panel, under the bar of tabs, and nothing of it lies over the bar of the canvas.
+    const places = await page.evaluate(() => {
+      const box = (sel: string): DOMRect => (document.querySelector(sel) as HTMLElement).getBoundingClientRect();
+      const d = box('[data-testid="panel-drawer"]');
+      const over = (other: DOMRect): boolean => d.left < other.right - 1 && d.right > other.left + 1 && d.top < other.bottom - 1 && d.bottom > other.top + 1;
+      return { besidePanel: Math.round(d.left - box('[data-testid="side-panel"]').right), underTabs: d.top >= box('[data-testid="tabbar"]').bottom - 1, overCanvasBar: over(box('.toolbar')), overTabs: over(box('[data-testid="tabbar"]')), overCanvas: over(box('.react-flow')), width: Math.round(d.width) };
+    });
+    expect(places).toEqual({ besidePanel: 0, underTabs: true, overCanvasBar: false, overTabs: false, overCanvas: false, width: 380 });
+
+    // Go to terminal selects it and closes nothing.
+    await page.getByTestId('panel-tab').first().focus();
+    await drawer.getByTestId('details-go').click();
+    const node = page.locator(`[data-testid="terminal-node"][data-session="${waiting}"]`);
+    await expect(node).toBeInViewport();
+    await expect.poll(async () => (await node.getAttribute('data-focused')) === 'true' || (await node.getAttribute('data-selected')) === 'true').toBe(true);
+    await expect(drawer).toBeVisible();
+
+    // Escape closes it and the keyboard is back on the row it was opened from.
+    await drawer.getByTestId('details-name').click();
+    await drawer.focus();
+    await page.keyboard.press('Escape');
+    await expect(drawer).toHaveCount(0);
+    await expect.poll(() => page.evaluate(() => document.activeElement?.closest('[data-testid="list-row"]')?.getAttribute('data-session') ?? `on ${document.activeElement?.tagName}.${document.activeElement?.className}`)).toBe(waiting);
+
+    // A terminal that asks nothing has no such part: its facts come first. One on a run names its workflow and its step.
+    await open(demo.sessions.shell as string);
+    await expect(drawer.getByTestId('details-asks')).toHaveCount(0);
+    expect(await drawer.evaluate((el) => el.querySelector('[data-testid="details"]')?.firstElementChild?.getAttribute('data-testid'))).toBe('recap');
+    await drawer.getByTestId('details-close').click();
+    await open(demo.sessions.fixing as string);
+    await expect(drawer.locator('[data-fact="run"] dd')).toContainText('Fix a bug');
+    await expect(drawer.locator('[data-fact="step"] dd')).toContainText('2 of 5');
+    // The same menu as the row, without the line that opened this.
+    await drawer.getByTestId('details-more').click();
+    await expect(page.getByTestId('details-menu').getByRole('menuitem')).toHaveText(['Rename', 'Tags…', 'Open on desktop', 'Move to canvas…', 'Park']);
+    await page.keyboard.press('Escape');
+    await drawer.getByTestId('details-close').click();
+
+    // The note beside a terminal is the same component with the same words.
+    const shell = page.locator(`[data-testid="terminal-node"][data-session="${demo.sessions.shell}"]`);
+    await row(demo.sessions.shell as string).click();
+    await expect(shell).toBeInViewport();
+    const noteButton = shell.getByRole('button', { name: /^Note for/ });
+    if ((await noteButton.getAttribute('aria-pressed')) !== 'true') await noteButton.click();
+    const beside = shell.getByTestId('note-panel');
+    await expect(beside).toContainText('Summary');
+    await expect(beside).toContainText('Kept at the top. You or the agent can change it.');
+    await expect(beside).toContainText('Log');
+    await expect(beside.getByTestId('note-add-open')).toHaveText('Add to the log');
+  } finally {
+    await page.request.delete('/api/v1/demo', { headers: { origin } });
+  }
+});
+
+test('For you rows: the same two lines in the Queue and in the side panel, words under each other, one action from the kind', async ({ page }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  const origin = new URL(page.url()).origin;
+  await page.evaluate(() => localStorage.setItem('aubergine.tour', JSON.stringify({ status: 'dismissed', stepId: null })));
+  const demo = await (await page.request.post('/api/v1/demo', { headers: { origin }, data: {} })).json();
+  try {
+    await page.goto(`/c/${demo.canvasId}`);
+    await expect(page.getByTestId('terminal-node')).toHaveCount(4);
+    await expect.poll(async () => (await (await page.request.get('/api/v1/demo', { headers: { origin } })).json()).ready, { timeout: 45_000 }).toBe(true);
+    // What the kinds say: read from the server's own list, so that the page is compared with the kinds and not with words written here.
+    const listed = ((await (await page.request.get('/v1/for-you', { headers: { origin } })).json()) as { items: { id: string; kind: string; who: string; what: string; action: string | null }[] }).items;
+    expect(listed.length).toBeGreaterThanOrEqual(4);
+    expect(listed.find((item) => item.kind === 'question')).toMatchObject({ what: expect.stringContaining('Which branch should I fix it on'), action: 'Go to terminal' });
+    for (const item of listed) expect(item.who, item.kind).not.toBe('');
+
+    /** Each row of a list: its two lines, where the words of the second begin, and its one action. */
+    const read = (rows: string): Promise<{ kind: string; who: string; what: string; x: number; action: string | null; under: boolean }[]> =>
+      page.evaluate((sel) => [...document.querySelectorAll<HTMLElement>(sel)].map((row) => {
+        const who = row.querySelector('[data-testid="foryou-who"]') as HTMLElement;
+        const what = row.querySelector('[data-testid="foryou-what"]') as HTMLElement;
+        return { kind: row.dataset.kind ?? '', who: who.textContent ?? '', what: what.textContent ?? '', x: Math.round(what.getBoundingClientRect().left - row.getBoundingClientRect().left - parseFloat(getComputedStyle(row).paddingLeft)), action: row.querySelector('[data-testid="foryou-open"]')?.textContent ?? null, under: what.getBoundingClientRect().top >= who.getBoundingClientRect().bottom - 1 };
+      }), rows);
+    const check = (rows: Awaited<ReturnType<typeof read>>, where: string): void => {
+      expect(rows.map((row) => row.kind).sort(), where).toEqual(listed.map((item) => item.kind).sort());
+      for (const row of rows) {
+        const item = listed.find((entry) => entry.kind === row.kind && entry.who === row.who && entry.what === row.what);
+        expect(item, `${where}: ${row.kind} ${row.who}`).toBeDefined();
+        // A name line and a what line, the second under the first; its one action is the kind's own.
+        expect(row.under, `${where}: ${row.kind}`).toBe(true);
+        expect(row.action, `${where}: ${row.kind}`).toBe(item?.action ?? null);
+        // No quoting of the name inside a sentence, and no "waits for you": the list is called For you.
+        expect(row.what, where).not.toContain('waits for you');
+        expect(row.what.includes(`“${row.who}”`), where).toBe(false);
+      }
+      // The words of the second line begin at one place down the list.
+      const xs = rows.map((row) => row.x);
+      expect(Math.max(...xs) - Math.min(...xs), `${where}: ${xs.join(' ')}`).toBeLessThanOrEqual(1);
+    };
+
+    // The side panel.
+    await page.locator('[data-testid="panel-tab"][data-section="for-you"]').click();
+    const inPanel = '[data-testid="foryou-section"] [data-testid="foryou-section-row"]';
+    await expect(page.locator(inPanel)).toHaveCount(listed.length);
+    check(await read(inPanel), 'the side panel');
+    // The side panel's count is the number of its rows.
+    await expect(page.locator('[data-testid="panel-tab"][data-section="for-you"]').getByTestId('section-count')).toHaveText(String(listed.length));
+
+    // Pressing a row does what its button does: for a question, it goes to the terminal.
+    const question = page.locator(`${inPanel}[data-kind="question"]`);
+    await question.hover();
+    await expect(question.getByTestId('foryou-open')).toBeVisible();
+    await expect(question.getByTestId('foryou-open')).toHaveText('Go to terminal');
+    await question.getByTestId('foryou-who').click();
+    const node = page.locator(`[data-testid="terminal-node"][data-session="${demo.sessions.waiting}"]`);
+    await expect(node).toBeInViewport();
+    await expect(node).toHaveAttribute('data-focused', 'true');
+
+    // The Queue page: the same rows, the same shape.
+    await page.getByTestId('for-you').click();
+    const queue = page.getByTestId('queue-screen');
+    await expect(queue).toBeVisible();
+    const inQueue = '[data-testid="queue-screen"] [data-testid="foryou-row"]';
+    // Looking into the terminal a moment ago ended its question: the list is read again, and the two places agree with it.
+    const now = ((await (await page.request.get('/v1/for-you', { headers: { origin } })).json()) as { items: typeof listed }).items;
+    listed.splice(0, listed.length, ...now);
+    await expect(page.locator(inQueue)).toHaveCount(listed.length);
+    check(await read(inQueue), 'the Queue page');
+    // The count in the top bar is the number of rows: one number from one source. It is over every project, so where
+    // other tests left a second project it is compared with the list of every project.
+    if ((await queue.getByTestId('foryou-every-project').count()) > 0) await queue.getByTestId('foryou-every-project').click();
+    await expect.poll(async () => String(await page.locator(inQueue).count())).toBe((await page.getByTestId('for-you').getAttribute('data-count')) ?? '');
+    await expect(page.getByTestId('for-you-count')).toHaveText(String(await page.locator(inQueue).count()));
+    if ((await queue.getByTestId('foryou-this-project').count()) > 0) await queue.getByTestId('foryou-this-project').click();
+    // A draft is read: its row's button says so, and both the button and the row open Review on it.
+    const draft = page.locator(`${inQueue}[data-kind="draft"]`).filter({ hasText: 'Check the sign-in page by hand' }).first();
+    await draft.hover();
+    await expect(draft.getByTestId('foryou-open')).toHaveText('Read');
+    await draft.getByTestId('foryou-open').click();
+    await expect(page.getByTestId('review-screen')).toBeVisible();
+    await page.getByTestId('review-screen').getByTestId('review-close').click();
+    await draft.getByTestId('foryou-what').click();
+    await expect(page.getByTestId('review-screen')).toBeVisible();
+    await page.getByTestId('review-screen').getByTestId('review-close').click();
+    // The banner names what waits as what it is.
+    await expect(queue.getByTestId('drafts-waiting')).toContainText('1 draft from an agent to read before it can be used.');
+    // With the keyboard: a row takes it, and Enter does the same as its button.
+    const list = page.locator(`${inQueue}[data-kind="checklist"]`).filter({ hasText: 'List what is left' }).first();
+    await list.focus();
+    await expect(list.getByTestId('foryou-open')).toBeVisible();
+    await expect(list.getByTestId('foryou-open')).toHaveText('Open list');
+    await page.keyboard.press('Enter');
+    await expect(page.getByTestId('run-view')).toBeVisible();
+  } finally {
+    await page.request.delete('/api/v1/demo', { headers: { origin } });
+  }
 });

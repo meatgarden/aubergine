@@ -487,7 +487,7 @@ describe('workflow commands against a server', () => {
     expect(hub.state.workflows).toEqual([]);
 
     answers = ['y'];
-    expect((await runElement(['remove', 'collect'])).out).toBe('Took "Collect my to-dos" off the shelf.');
+    expect((await runElement(['remove', 'collect'])).out).toBe('Removed "Collect my to-dos" from your saved steps.');
   });
 });
 

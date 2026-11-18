@@ -53,12 +53,7 @@ function noteText(session: Session): string {
   return [session.note, ...session.noteLog.map((entry) => entry.text)].join('\n');
 }
 
-/** A short form of a folder path for tight spaces: its last two parts. */
-export function shortFolder(path: string | null): string {
-  if (!path) return '';
-  const parts = path.split('/').filter(Boolean);
-  return parts.length <= 2 ? path : `…/${parts.slice(-2).join('/')}`;
-}
+export { shortFolder } from '@aubergine/shared';
 
 /** The name of the canvas a session is on; null when it is parked, or on the canvas being looked at. */
 export function canvasLabel(app: AppState | null, sessionId: string, currentCanvasId: string | null): string | null {

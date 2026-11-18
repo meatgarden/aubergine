@@ -16,7 +16,7 @@ function describe(terminal: OutsideTerminal): string {
     case 'command':
       return terminal.running ?? 'running a command';
     case 'view':
-      return 'already a view of a canvas session';
+      return 'already a view of a terminal on a canvas';
     case 'agent': {
       const state = terminal.agent?.status ?? 'state unknown';
       const name = terminal.agent?.known ? (terminal.agent.name ?? 'unnamed conversation') : 'conversation not readable';
