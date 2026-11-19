@@ -349,6 +349,17 @@ These are the only abstractions in the code base. Each has exactly one implement
 - **The browser tests run as a system set to dark**, and a test that changes the theme puts it back.
 - **A throwaway server is started only by a script that sets its port, data folder and socket first.** Never `pnpm start` by hand in a shell that may not have them.
 
+- **Every pressable piece draws hover, pressed, focus and disabled, from tokens.** Hover is one step of surface and pressed one more; nothing moves or grows under the pointer or a press. The browser test "states" tries each piece in both themes; a new piece is added to its list.
+- **Motion is the tokens.** `--motion-quick` for a change of state, `--motion-open` for what opens, one curve; `--motion-busy` is a busy button's beat and nothing else's. What opens fades in with `--motion-travel` from the edge it hangs from; closing is at once; nothing bounces. For someone who asked for less motion nothing travels. No time or curve is written outside a token.
+- **A shadow is a layer's token**: `--shadow-bar`, `--shadow-node`, `--shadow-menu`, `--shadow-dialog`, each defined in both themes. In the light theme a surface is told from the page by a line or a shadow; grey is what disabled looks like, and a field is `--field`.
+- **Changing the theme is at once.** `applyTheme` switches every transition off for that moment; keep the test that finds none running 50ms later.
+- **A button that started something slow says so with `aria-busy`** and cannot be pressed again until the answer is here.
+- **What just happened is said in one place**: `say` in the store, drawn by `Toast`, with Undo where the action has one. Never a secret, never an error.
+- **Help is groups of one-line reminders from the tour's registry.** A step says its `group`; a line that is Help's alone says `helpOnly`. Do not write a line into `HelpPanel.tsx`.
+- **The menu beside "New terminal" begins with what the button does.** Shells first, agents under their heading, a line, then Frame. Nothing in it is a setting.
+- **A person reads "color".** One spelling in the page, the README and the docs.
+- **The browser tests run as a system that asked for less motion**; a test of motion asks for it.
+
 ### Canvas behaviour
 
 - A terminal takes input at any zoom at which it is drawn live, and only while it has focus. One click focuses it and moves nothing; only a node too small to read (below `READABLE_ZOOM`) zooms in first. An unfocused terminal is covered by a shield: the first click focuses it.
