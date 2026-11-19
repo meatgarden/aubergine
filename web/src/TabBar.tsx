@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { canvasHref, openInNewTab } from './address';
 import { DEMO_LABEL, canvasCounts, openProjects, sortedCanvases, type Canvas } from '@aubergine/shared';
 import { api } from './api';
 import { ColorButton } from './ColorButton';
@@ -139,8 +140,17 @@ export function TabBar() {
                 if (!active) setCanvas(canvas.id);
               }
             }}
-            onClick={() => {
+            onClick={(e) => {
+              // Clicked the way a link is opened in a new tab: this canvas opens in a new browser tab, and this one stays.
+              if (e.metaKey || e.ctrlKey || e.shiftKey) return openInNewTab(canvasHref(canvas.id, canvas.projectId));
               if (!active) setCanvas(canvas.id);
+            }}
+            onMouseDown={(e) => {
+              // The middle button would otherwise start the browser's scrolling.
+              if (e.button === 1) e.preventDefault();
+            }}
+            onAuxClick={(e) => {
+              if (e.button === 1) openInNewTab(canvasHref(canvas.id, canvas.projectId));
             }}
             onDoubleClick={() => setRenaming({ id: canvas.id, text: canvas.name })}
           >
@@ -204,6 +214,18 @@ export function TabBar() {
                     >
                       Rename…
                       <small>Double-clicking the name does the same.</small>
+                    </button>
+                    <button
+                      type="button"
+                      role="menuitem"
+                      onClick={() => {
+                        setMenu(null);
+                        openInNewTab(canvasHref(canvas.id, canvas.projectId));
+                      }}
+                      data-testid="tab-open-tab"
+                    >
+                      Open in new tab
+                      <small>This canvas in a new browser tab, beside this one.</small>
                     </button>
                     <button
                       type="button"

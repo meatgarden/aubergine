@@ -433,6 +433,52 @@ code {
   height: 100%;
   overflow: hidden;
 }
+/* One terminal by itself in a tab of its own: a head of one row, and the terminal under it to the foot of the window. */
+.terminal-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: var(--terminal-bg);
+}
+.terminal-page-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--control);
+  padding: 0 var(--space-2) 0 var(--space-4);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow-bar);
+}
+.terminal-page-name {
+  margin: 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--font-body);
+  font-weight: var(--weight-strong);
+}
+.terminal-page-command {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-muted);
+  font-size: var(--font-meta);
+}
+.terminal-page-back {
+  margin-left: auto;
+  flex: none;
+}
+.terminal-page-body {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+.terminal-page-ended {
+  margin: var(--space-4);
+}
 .term-note {
   position: absolute;
   right: 8px;

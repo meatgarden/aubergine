@@ -302,6 +302,21 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
                   Open on desktop
                 </button>
               )}
+              {draft === null && !exited && (
+                <button
+                  type="button"
+                  role="menuitem"
+                  aria-label={`Open ${name} in a new tab`}
+                  title={hint('terminal.openInNewTab', 'Open in new tab: this same terminal by itself in a new browser tab. Closing the tab ends nothing.')}
+                  data-testid="node-open-tab"
+                  onClick={() => {
+                    useApp.getState().select(sessionId);
+                    runCommand('terminal.openInNewTab');
+                  }}
+                >
+                  Open in new tab
+                </button>
+              )}
               <button
                 type="button"
                 role="menuitem"

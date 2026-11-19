@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { canvasIdFromPath, chooseCanvas, sessionFromAddress, pageFromPath } from './address';
+import { canvasHref, canvasIdFromPath, chooseCanvas, sessionFromAddress, pageFromPath, terminalFromPath, terminalOnCanvasHref } from './address';
 
 describe('canvas addresses', () => {
   it('reads the canvas from /c/<id>', () => {
@@ -36,5 +36,29 @@ describe('canvas addresses', () => {
   it('reads the session an older address asks for', () => {
     expect(sessionFromAddress('?session=abc')).toBe('abc');
     expect(sessionFromAddress('')).toBeNull();
+  });
+});
+
+describe('the address of one terminal', () => {
+  it('names the terminal, and only at /t/<id>', () => {
+    expect(terminalFromPath('/t/0190aaaa-bbbb-7ccc-8ddd-eeeeeeeeeeee')).toBe('0190aaaa-bbbb-7ccc-8ddd-eeeeeeeeeeee');
+    expect(terminalFromPath('/t/abc/')).toBe('abc');
+    expect(terminalFromPath('/t/')).toBeNull();
+    expect(terminalFromPath('/t/abc/more')).toBeNull();
+    expect(terminalFromPath('/c/abc')).toBeNull();
+  });
+
+  it('is not the address of a canvas', () => {
+    expect(canvasIdFromPath('/t/abc')).toBeNull();
+    expect(pageFromPath('/t/abc')).toBeNull();
+  });
+
+  it('goes back to the canvas through the address that shows a session', () => {
+    expect(sessionFromAddress(new URL(terminalOnCanvasHref('abc'), 'http://x').search)).toBe('abc');
+  });
+
+  it('links a canvas with its project where it has one', () => {
+    expect(canvasHref('c1', 'p1')).toBe('/p/p1/c/c1');
+    expect(canvasHref('c1', null)).toBe('/c/c1');
   });
 });

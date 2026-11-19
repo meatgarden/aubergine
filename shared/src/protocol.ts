@@ -448,6 +448,12 @@ export const canvasAddress = (canvasId: string): string => `/c/${canvasId}`;
 export const projectCanvasAddress = (projectId: string, canvasId: string): string => `/p/${projectId}/c/${canvasId}`;
 
 /**
+ * The address of one terminal by itself in the browser: `/t/<session id>`. It shows the same running terminal as its
+ * node on a canvas, attached as one more viewer; it names no canvas, so it stays right when the terminal is moved.
+ */
+export const terminalAddress = (sessionId: string): string => `/t/${sessionId}`;
+
+/**
  * The screens that are pages of the web app, each about a whole project: they have an address of their own, the
  * address of the canvas they were opened from with their name after it (`/p/<project>/c/<canvas>/queue`), so that a
  * reload stays on the page and the browser's back button returns to the canvas.

@@ -5,7 +5,8 @@ import { Canvas } from './Canvas';
 import { CloseCanvasDialog } from './CloseCanvasDialog';
 import { CloseDialog } from './CloseDialog';
 import { startShortcuts } from './shortcuts';
-import { startSync, useApp } from './store';
+import { startSync, terminalPage, useApp } from './store';
+import { TerminalPage } from './TerminalPage';
 import { TabBar } from './TabBar';
 import { SidePanel } from './panel/SidePanel';
 import { Away } from './Away';
@@ -22,7 +23,8 @@ export function App() {
   const page = useApp((s) => s.page);
 
   useEffect(() => startSync(), []);
-  useEffect(() => startShortcuts(), []);
+  // A tab that shows one terminal by itself has no canvas for the keys of the canvas to act on.
+  useEffect(() => (terminalPage === null ? startShortcuts() : undefined), []);
 
   // The theme that was chosen, or the system's for "match the system": put on the page as soon as either changes.
   const setting = useApp((s) => s.settings.theme);
@@ -73,6 +75,15 @@ export function App() {
           or <code>apt install tmux</code>. This page continues by itself once tmux is found.
         </p>
       </Message>
+    );
+  }
+
+  if (terminalPage !== null) {
+    return (
+      <>
+        <TerminalPage sessionId={terminalPage} />
+        <Toast />
+      </>
     );
   }
 

@@ -4072,7 +4072,7 @@ test('the drawer: what a terminal asks comes first, one thing to type into, besi
     await expect(drawer.locator('[data-fact="step"] dd')).toContainText('2 of 5');
     // The same menu as the row, without the line that opened this.
     await drawer.getByTestId('details-more').click();
-    await expect(page.getByTestId('details-menu').getByRole('menuitem')).toHaveText(['Rename', 'Tags…', 'Open on desktop', 'Move to canvas…', 'Park']);
+    await expect(page.getByTestId('details-menu').getByRole('menuitem')).toHaveText(['Rename', 'Tags…', 'Open on desktop', 'Open in new tab', 'Move to canvas…', 'Park']);
     await page.keyboard.press('Escape');
     await drawer.getByTestId('details-close').click();
 
@@ -4690,6 +4690,97 @@ test('tabs and panel: a new browser has the panel folded to a rail, the bar of t
   } finally {
     await context.close();
   }
+});
+
+test('new browser tabs: a canvas opens in one from its tab, and a running terminal opens by itself in one, the same terminal in both', async ({ page }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  const selected = page.locator('[data-testid="tab"][aria-selected="true"]');
+  const first = (await selected.getAttribute('data-canvas')) ?? '';
+  await page.getByRole('button', { name: 'New canvas' }).click();
+  await expect(selected).not.toHaveAttribute('data-canvas', first);
+  await expect(page.getByTestId('list-row')).toHaveCount(0);
+  const canvasId = (await selected.getAttribute('data-canvas')) ?? '';
+  expect(canvasId).not.toBe('');
+  await expect(page).toHaveURL(new RegExp(`/c/${canvasId}$`));
+
+  // 1. The canvas, from the line in its tab's menu: a new tab on the same canvas, and this one stays where it was.
+  const here = page.url();
+  await selected.getByTestId('tab-more').click();
+  const [canvasTab] = await Promise.all([page.context().waitForEvent('page'), page.getByTestId('tab-open-tab').click()]);
+  await canvasTab.waitForLoadState();
+  await expect(canvasTab).toHaveURL(new RegExp(`/c/${canvasId}$`));
+  await expect(canvasTab.locator('[data-testid="tab"][aria-selected="true"]')).toHaveAttribute('data-canvas', canvasId);
+  expect(page.url()).toBe(here);
+  await canvasTab.close();
+  // And from the tab itself, clicked with the middle button.
+  const [middleTab] = await Promise.all([page.context().waitForEvent('page'), page.locator(`[data-testid="tab"][data-canvas="${canvasId}"]`).click({ button: 'middle' })]);
+  await middleTab.waitForLoadState();
+  await expect(middleTab).toHaveURL(new RegExp(`/c/${canvasId}$`));
+  await middleTab.close();
+  expect(page.url()).toBe(here);
+
+  // 2. A terminal that is running on the canvas, with something on its screen.
+  await page.getByTestId('toolbar-new-terminal').click();
+  const node = page.getByTestId('terminal-node');
+  await expect(node).toHaveCount(1);
+  const sessionId = (await node.getAttribute('data-session')) ?? '';
+  await expect(page.getByTestId('terminal')).toHaveAttribute('data-link', 'open');
+  await expect(page.locator('.xterm-rows')).toHaveText(/\S/);
+  await page.getByTestId('node-body').click();
+  await page.keyboard.type('echo "before-$((40 + 2))"');
+  await page.keyboard.press('Enter');
+  await expect(outputLine(page, 'before-42')).toHaveCount(1);
+
+  // Opened by itself from its title's menu: the same terminal, with what it showed already.
+  await reveal(node.getByTestId('node-open-tab'), node.getByTestId('node-more'));
+  const [alone] = await Promise.all([page.context().waitForEvent('page'), node.getByTestId('node-open-tab').click()]);
+  await alone.waitForLoadState();
+  await expect(alone).toHaveURL(new RegExp(`/t/${sessionId}$`));
+  await expect(alone.getByTestId('terminal-page')).toHaveAttribute('data-session', sessionId);
+  await expect(alone.getByTestId('terminal')).toHaveAttribute('data-link', 'open');
+  await expect(outputLine(alone, 'before-42')).toHaveCount(1);
+  // Nothing of the canvas is in that tab, and its title is the terminal's name.
+  await expect(alone.getByTestId('tabbar')).toHaveCount(0);
+  await expect(alone.getByTestId('terminal-node')).toHaveCount(0);
+  // It is drawn with the same pieces and sizes as every other screen ("one look").
+  expect(await measureLook(alone), 'the terminal by itself').toEqual([]);
+  await expect(alone).toHaveTitle(new RegExp(((await alone.getByTestId('terminal-page-name').textContent()) ?? '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
+
+  // It takes the keyboard by itself, and what is typed there is seen on the canvas: one shell, two views.
+  await expect.poll(() => alone.evaluate(() => document.activeElement?.closest('[data-testid="terminal"]') !== null)).toBe(true);
+  await alone.keyboard.type('echo "from-tab-$((20 + 3))"');
+  await alone.keyboard.press('Enter');
+  await expect(outputLine(alone, 'from-tab-23')).toHaveCount(1);
+  await expect(outputLine(page, 'from-tab-23')).toHaveCount(1);
+
+  // Closing the tab ends nothing.
+  await alone.close();
+  await expect(node).toHaveCount(1);
+  await page.getByTestId('node-body').click();
+  await page.keyboard.type('echo "still-$((1 + 1))"');
+  await page.keyboard.press('Enter');
+  await expect(outputLine(page, 'still-2')).toHaveCount(1);
+
+  // From the row's menu in the list too.
+  const row = page.locator(`[data-testid="list-row"][data-session="${sessionId}"]`);
+  await row.hover();
+  await row.locator('.list-more').click();
+  const [fromRow] = await Promise.all([page.context().waitForEvent('page'), page.getByTestId('row-open-tab').click()]);
+  await fromRow.waitForLoadState();
+  await expect(fromRow).toHaveURL(new RegExp(`/t/${sessionId}$`));
+  // "Show on its canvas" leaves the tab for the canvas the terminal is on.
+  await fromRow.getByTestId('terminal-page-canvas').click();
+  await expect(fromRow).toHaveURL(new RegExp(`/c/${canvasId}$`));
+  await expect(fromRow.locator(`[data-testid="terminal-node"][data-session="${sessionId}"]`)).toHaveCount(1);
+  await fromRow.close();
+
+  // An address of a terminal that is not there says so, and offers the canvas.
+  const missing = await page.context().newPage();
+  await missing.goto('/t/0190aaaa-bbbb-7ccc-8ddd-eeeeeeeeeeee');
+  await expect(missing.getByTestId('terminal-page-missing')).toBeVisible();
+  await missing.close();
 });
 
 test('links: an address is a chip wherever it is, added by hand or by the terminal\'s own command; the owner\'s words win; twelve stay in groups', async ({ page, context }) => {
