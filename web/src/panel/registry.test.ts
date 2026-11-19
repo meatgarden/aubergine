@@ -6,6 +6,7 @@ const dummy = (id: string, order: number, extra: Partial<PanelSection> = {}): Pa
   title: `Section ${id}`,
   order,
   icon: id.slice(0, 1).toUpperCase(),
+  says: `What section ${id} shows.`,
   Component: () => null,
   ...extra,
 });
@@ -58,7 +59,10 @@ describe('the section registry', () => {
 
 describe('what the panel remembers', () => {
   it('reads saved preferences and repairs odd ones', () => {
-    expect(parsePanelPrefs(null)).toEqual({ open: true, width: PANEL_DEFAULT_WIDTH, folded: [], tab: null });
+    // With nothing remembered the panel is folded; whatever a person left it as is kept.
+    expect(parsePanelPrefs(null)).toEqual({ open: false, width: PANEL_DEFAULT_WIDTH, folded: [], tab: null });
+    expect(parsePanelPrefs({ open: true }).open).toBe(true);
+    expect(parsePanelPrefs({ width: 300 }).open).toBe(true);
     expect(parsePanelPrefs({ open: false, width: 9000, folded: ['terminals', 7] })).toEqual({ open: false, width: 560, folded: ['terminals'], tab: null });
     expect(parsePanelPrefs({ tab: 'for-you' }).tab).toBe('for-you');
     expect(parsePanelPrefs({ tab: 7 }).tab).toBeNull();

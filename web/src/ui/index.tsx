@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent, type ButtonHTMLAttributes, type HTMLAttributes, type InputHTMLAttributes, type ReactNode, type SelectHTMLAttributes } from 'react';
+import { useEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent, type ButtonHTMLAttributes, type CSSProperties, type HTMLAttributes, type InputHTMLAttributes, type ReactNode, type SelectHTMLAttributes } from 'react';
 
 /**
  * The pieces every surface is made of. Each is a thin name for one anatomy in ui.css and uses only tokens;
@@ -207,6 +207,70 @@ export function MenuButton({ label, children, kind = 'default', more = false, te
       </button>
       {open && (
         <span className="ui-menu toolbar-menu ui-menu-under" role="menu" onClick={(event) => (event.target as HTMLElement).closest('[role^="menuitem"]') && setOpen(false)} data-testid={menuTestid}>
+          {children}
+        </span>
+      )}
+    </span>
+  );
+}
+
+/**
+ * The control that says which of several things is being looked at, and opens the list of them: a word for what it
+ * is, the name of the one shown, what there is to know at a glance, and a small arrow. The project at the top and the
+ * side panel's sections are both this. Its menu is placed against the window, so nothing that scrolls cuts it off; it
+ * closes when a line is chosen, when something else is pressed, and on Escape, which goes no further.
+ */
+export function Switcher({ label, name, extra, title, testid, nameTestid, menuTestid, className, buttonClassName, style, fill = false, children }: { label?: string; name: ReactNode; extra?: ReactNode; title?: string; testid?: string; nameTestid?: string; menuTestid?: string; className?: string; buttonClassName?: string; style?: CSSProperties; fill?: boolean; children: ReactNode }) {
+  const [open, setOpen] = useState(false);
+  const root = useRef<HTMLSpanElement>(null);
+  const button = useRef<HTMLButtonElement>(null);
+  const [at, setAt] = useState({ left: 8, top: 42, width: 0 });
+  useEffect(() => {
+    if (!open) return;
+    const away = (event: PointerEvent): void => {
+      if (!root.current?.contains(event.target as Node)) setOpen(false);
+    };
+    const key = (event: KeyboardEvent): void => {
+      if (event.key !== 'Escape') return;
+      event.stopPropagation();
+      setOpen(false);
+      button.current?.focus();
+    };
+    window.addEventListener('pointerdown', away, true);
+    window.addEventListener('keydown', key, true);
+    return () => {
+      window.removeEventListener('pointerdown', away, true);
+      window.removeEventListener('keydown', key, true);
+    };
+  }, [open]);
+  return (
+    <span className={join('ui-switcher', fill && 'is-fill', className)} ref={root}>
+      <button
+        type="button"
+        className={join('ui-switcher-button', buttonClassName)}
+        style={style}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        title={title}
+        ref={button}
+        onClick={() => {
+          const box = button.current?.getBoundingClientRect();
+          if (box) setAt({ left: box.left, top: box.bottom + 6, width: box.width });
+          setOpen((v) => !v);
+        }}
+        data-testid={testid}
+      >
+        {label && <span className="ui-switcher-label">{label}</span>}
+        <span className="ui-switcher-name" data-testid={nameTestid}>
+          {name}
+        </span>
+        {extra}
+        <span className="ui-switcher-arrow" aria-hidden="true">
+          ▾
+        </span>
+      </button>
+      {open && (
+        <span className="ui-menu toolbar-menu ui-switcher-menu" role="menu" style={{ left: at.left, top: at.top, minWidth: fill ? at.width : undefined }} onClick={(event) => (event.target as HTMLElement).closest('[role^="menuitem"]') && setOpen(false)} data-testid={menuTestid}>
           {children}
         </span>
       )}

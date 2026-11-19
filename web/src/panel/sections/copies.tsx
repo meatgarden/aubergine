@@ -59,10 +59,9 @@ function CopiesSection() {
 }
 
 registerSection({
-  more: true,
   id: 'copies',
   title: 'Working copies',
-  tab: 'Copies',
+  says: 'Where terminals work apart, and what changed there.',
   order: 25,
   icon: '⑂',
   useCount: () => useApp((s) => s.app?.environments.length ?? 0) || null,

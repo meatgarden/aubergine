@@ -82,6 +82,7 @@ registerSection({
   id: 'workflows',
   title: 'Workflows',
   tab: 'Runs',
+  says: 'Workflows that are going, and those just over.',
   order: 20,
   icon: '⇶',
   useCount: () => useApp((s) => s.app?.runs.length ?? 0) || null,

@@ -38,6 +38,7 @@ function ForYouSection() {
 registerSection({
   id: 'for-you',
   title: 'For you',
+  says: 'What waits on you: questions, drafts, what was handed in.',
   urgent: true,
   order: 15,
   icon: '☑',

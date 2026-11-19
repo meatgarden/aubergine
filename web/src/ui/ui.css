@@ -93,7 +93,7 @@ b {
 
 /* What is drawn as a row, a card, a tab or a chip is a button underneath, and has its own piece below. */
 button:not(
-    .ui-row, .ui-chip, .ui-tab, [role='menuitem'], [role='menuitemradio'], [role='menuitemcheckbox'], [role='option'], [role='tab'], .panel-tab, .runs-row, .history-row, .away-item, .strip-entry, .foryou-row, .list-group, .run-banner, .library-row, .review-row, .copy-file, .editor-element-name, .run-step-name, .list-tag, .list-chip, .list-clear, .run-strip, .list-mark, .copy-chip, .color-dot
+    .ui-row, .ui-chip, .ui-tab, [role='menuitem'], [role='menuitemradio'], [role='menuitemcheckbox'], [role='option'], [role='tab'], .runs-row, .history-row, .away-item, .foryou-row, .list-group, .run-banner, .library-row, .review-row, .copy-file, .editor-element-name, .run-step-name, .list-tag, .list-chip, .list-clear, .run-strip, .list-mark, .copy-chip, .color-dot
   ),
 .ui-button {
   box-sizing: border-box;
@@ -119,12 +119,12 @@ button:not(
     border-color var(--motion-quick) var(--motion-ease),
     color var(--motion-quick) var(--motion-ease);
 }
-button:hover:not(:disabled, .ui-row, .ui-chip, .ui-tab, [role^='menuitem'], [role='option'], [role='tab'], .panel-tab, .color-dot),
+button:hover:not(:disabled, .ui-row, .ui-chip, .ui-tab, [role^='menuitem'], [role='option'], [role='tab'], .color-dot),
 .ui-button:hover:not(:disabled) {
   background: var(--surface-raised);
   border-color: var(--border-control);
 }
-button:active:not(:disabled, .ui-row, [role^='menuitem'], [role='option'], [role='tab'], .panel-tab, .color-dot) {
+button:active:not(:disabled, .ui-row, [role^='menuitem'], [role='option'], [role='tab'], .color-dot) {
   background: var(--surface-active);
 }
 
@@ -334,7 +334,6 @@ input.tab-input {
 .ui-badge,
 .ui-chip,
 .tab-waiting,
-.panel-tab-count,
 .badge-attention,
 .badge-desktop,
 .badge-untold,
@@ -419,11 +418,7 @@ button.list-clear {
   color: var(--danger-text);
   background: var(--danger-soft);
 }
-.panel-tab-count {
-  justify-content: center;
-  padding: 0 var(--space-1);
-  color: var(--text-muted);
-}
+
 .run-strip.status-blocked {
   color: var(--danger-text);
   border-color: var(--danger);
@@ -436,7 +431,6 @@ button.list-clear {
 /* ---------- Tabs ---------- */
 
 .ui-tab,
-.panel-tab,
 .run-view-tabs button {
   box-sizing: border-box;
   display: inline-flex;
@@ -458,12 +452,10 @@ button.list-clear {
     border-color var(--motion-quick) var(--motion-ease);
 }
 .ui-tab:hover,
-.panel-tab:hover,
 .run-view-tabs button:hover {
   color: var(--text);
 }
 .ui-tab[aria-selected='true'],
-.panel-tab[aria-selected='true'],
 .run-view-tabs button[aria-selected='true'] {
   font-weight: var(--weight-strong);
   color: var(--text);
@@ -679,7 +671,6 @@ button.color-dot:hover {
 .toolbar-menu,
 .list-menu,
 .color-palette,
-.project-menu,
 .tab-menu {
   z-index: var(--z-menu);
 }
@@ -783,11 +774,6 @@ button.color-dot:hover {
   z-index: var(--z-canvas);
 }
 
-/* ---------- The side panel: everything starts on its gutter ---------- */
-
-.panel-tabs-row {
-  padding: var(--space-2) var(--space-2) 0 var(--space-1);
-}
 .list-bar {
   padding: var(--space-2) var(--gutter-panel);
   gap: var(--space-2);
@@ -839,30 +825,6 @@ button.color-dot:hover {
   margin-left: calc(var(--space-3) * -1);
 }
 
-/* ---------- The side panel: tabs, a field with Filter, the list ---------- */
-
-.panel-tabs {
-  flex-wrap: nowrap;
-  gap: var(--space-1);
-  min-width: 0;
-}
-.panel-more {
-  position: relative;
-  display: inline-flex;
-}
-.panel-more-menu {
-  position: absolute;
-  top: calc(100% + var(--space-1));
-  right: 0;
-  left: auto;
-  min-width: 180px;
-}
-.panel-more-menu > button {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
-}
 .list-bar {
   position: relative;
   display: flex;
@@ -1010,18 +972,6 @@ button.color-dot:hover {
 }
 .node-menu-colour .color-button {
   position: relative;
-}
-
-/* One row of tabs: each takes little at its sides, and a count is said only where something is counted. */
-.panel-tab {
-  padding: 0 var(--space-1);
-}
-.panel-tabs-row {
-  padding-left: var(--space-2);
-}
-
-.panel-tabs {
-  gap: 0;
 }
 
 /* ---------- More pieces: a button with a menu, the parts of a screen, cards in a list ---------- */
@@ -1334,8 +1284,7 @@ p > button.quiet:first-child,
   border-top: 0;
 }
 /* A menu that hangs from a tab is not written in the tab's own weight. */
-.tab-menu,
-.panel-more-menu {
+.tab-menu {
   font-weight: var(--weight-normal);
 }
 /* The drawer: everything in it starts on one gutter. */
@@ -1411,9 +1360,6 @@ p > button.quiet:first-child,
 
 /* A count on a tab is a plain number. What waits is in the colour of waiting as words, never filled. */
 .tab-waiting,
-.panel-tab-count,
-.panel-tab.is-urgent .panel-tab-count,
-.panel-tab-count.is-urgent,
 .node-note-new {
   min-width: 0;
   height: auto;
@@ -1423,10 +1369,6 @@ p > button.quiet:first-child,
   color: var(--text-muted);
   background: transparent;
   border: 0;
-}
-.panel-tab.is-urgent .panel-tab-count,
-.panel-tab-count.is-urgent {
-  color: var(--attention-text);
 }
 
 /* A state in words is the soft tint with coloured words, in a row, in a title and everywhere else. */
@@ -1545,9 +1487,6 @@ button.panel-fold:hover:not(:disabled),
 button.panel-fold:focus-visible {
   color: var(--text);
   background: var(--surface-raised);
-}
-.panel-tabs-row {
-  padding-right: var(--space-2);
 }
 
 /* ---------- A tab of a canvas ---------- */
@@ -1699,20 +1638,7 @@ label:is(.wf-inline, .ui-check, .schedule-days label):has(> input:is([type='chec
   display: inline-flex;
 }
 
-/* Where the panel is too narrow for its tabs in one row, they take a second: none is cut off. */
-.panel-tabs-row {
-  container-type: inline-size;
-}
-@container (max-width: 280px) {
-  .panel-tabs {
-    flex-wrap: wrap;
-  }
-}
-/* On the folded strip a count of terminals in one state has the same dot before it. */
-.strip-badge {
-  align-items: center;
-  gap: 0;
-}
+
 /* A line of a tab's menu that holds a control begins where the lines that are pressed begin. */
 .tab-menu .tab-menu-line {
   padding: var(--space-2) var(--space-3);
@@ -2530,11 +2456,6 @@ button.foryou-act {
   margin: var(--space-2) 0 0;
   font-size: var(--font-body);
 }
-/* The project's button says what it is before its name. */
-.project-label {
-  font-weight: var(--weight-normal);
-  color: var(--text-muted);
-}
 
 /* What the browser draws itself (a tick box not yet ticked, a scroll bar, the list of a select) is in the theme that is drawn, not the system's. */
 :root {
@@ -2556,7 +2477,6 @@ button.node-close:active:not(:disabled),
 button.list-more:active:not(:disabled),
 .ui-icon-button:active:not(:disabled),
 .ui-tab:active:not(:disabled),
-.panel-tab:active:not(:disabled),
 .ui-row:active:not(:disabled),
 button.library-row:active,
 [role^='menuitem']:active:not(:disabled),
@@ -2923,4 +2843,187 @@ button.ui-link:active:not(:disabled) {
 /* The switch between this project and every project stands clear of the field under it. */
 .ui-page .queue-foryou > .list-scope {
   margin-bottom: var(--space-2);
+}
+
+/* ---------- The switcher: which of several is shown, and the list of them ---------- */
+
+/* A word for what it is, the name of the one shown, what there is to know at a glance, an arrow. The project at the top and the side panel's sections are this one piece. */
+.ui-switcher {
+  position: relative;
+  display: inline-flex;
+  min-width: 0;
+}
+.ui-switcher.is-fill {
+  display: flex;
+  width: 100%;
+}
+button.ui-switcher-button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  max-width: 240px;
+  min-width: 0;
+  font-weight: var(--weight-strong);
+}
+.ui-switcher.is-fill > button.ui-switcher-button {
+  flex: 1;
+  max-width: none;
+  justify-content: flex-start;
+}
+.ui-switcher-label {
+  font-weight: var(--weight-normal);
+  color: var(--text-muted);
+}
+.ui-switcher-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ui-switcher.is-fill .ui-switcher-arrow {
+  margin-left: auto;
+}
+/* Its menu is placed against the window: nothing that scrolls cuts it off. */
+.ui-switcher-menu {
+  position: fixed;
+  z-index: var(--z-menu);
+}
+
+/* ---------- The side panel: one menu of sections for a head, and a rail to fold to ---------- */
+
+/* As tall as the bar of canvas tabs beside it, with the same line under it: the two lines are one. */
+.panel-head {
+  --control-h: var(--control);
+  flex: none;
+  display: flex;
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--border);
+}
+/* A count is a plain number; where it counts what waits on the owner it is in the color of waiting, as text. */
+.panel-count {
+  font-size: var(--font-meta);
+  font-weight: var(--weight-normal);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+}
+.panel-count.is-urgent {
+  font-weight: var(--weight-strong);
+  color: var(--attention-text);
+}
+/* Something waits in a section that is not shown: one small mark on the head, never two. */
+.panel-waits ~ .panel-waits {
+  display: none;
+}
+/* A line of the menu: the name and its count on one line, what it shows under them. */
+.ui-switcher-menu > button.panel-line {
+  display: block;
+}
+.panel-line-name {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+/* Folded, the panel is a narrow rail with the same edge: the button that opens it, and the mark of each terminal. */
+.side-panel.collapsed {
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) 0;
+}
+.rail-dots {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+button.rail-dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--control-compact);
+  min-width: 0;
+  height: var(--control-compact);
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-control);
+  cursor: pointer;
+}
+button.rail-dot:hover {
+  background: var(--surface-raised);
+}
+button.rail-dot:active {
+  background: var(--surface-active);
+}
+
+/* ---------- The bar of canvas tabs: the canvas's own, on its own surface ---------- */
+
+/* The tabs and the canvas are one column, beside the panel and its drawer. */
+.canvas-column {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+/* Air above the tabs, a line under the whole bar; the first tab begins where the bar over the canvas does. */
+.tabbar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  height: auto;
+  padding: var(--space-2) var(--space-4);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  overflow: visible;
+}
+.tabbar-tabs {
+  flex: 0 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+/* A tab is a control of the ordinary height. The one being looked at is a filled pill inside the bar: it does not open into the canvas. */
+.tab {
+  --control-h: var(--control-compact);
+  box-sizing: border-box;
+  height: var(--control);
+  border: 1px solid transparent;
+  border-radius: var(--radius-control);
+  box-shadow: none;
+}
+.tab:hover {
+  background: var(--surface-raised);
+}
+.tab.active {
+  background: var(--surface-active);
+  border-color: transparent;
+}
+/* A tab with a color wears it as a wash behind its name, stronger on the one being looked at. */
+.tab:not(.color-none) {
+  box-shadow: none;
+  background: color-mix(in srgb, var(--swatch) 16%, transparent);
+}
+.tab.active:not(.color-none) {
+  background: color-mix(in srgb, var(--swatch) 32%, var(--surface-active));
+}
+.tabbar > .tab-add {
+  flex: none;
+  width: var(--control);
+  height: var(--control);
+}
+.tab:active {
+  background: var(--surface-active);
+}
+/* The bar over the canvas begins on the same line as the first tab above it. */
+.react-flow__panel.toolbar {
+  margin-left: var(--space-4);
 }

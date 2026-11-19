@@ -43,6 +43,31 @@ function useModel() {
   return useMemo(() => listModel(app, view, canvasId), [app, view, canvasId]);
 }
 
+/**
+ * On the rail the panel folds to: the mark of each terminal's state, in the list's own order. Its name is a tooltip
+ * and a press goes to it. A terminal that is put away has no mark here: there is nowhere on the canvas to go to.
+ */
+function TerminalsRail() {
+  const model = useModel();
+  const byId = useMemo(() => new Map(model.filtered.map((row) => [row.session.id, row])), [model.filtered]);
+  const rows = model.order.map((entry) => byId.get(entry.sessionId)).filter((row): row is Row => row !== undefined && !row.parked);
+  return (
+    <div className="rail-dots" role="list" aria-label="Terminals" data-testid="rail-dots">
+      {rows.map((row) => {
+        const tone = dotTone(row.session, row.parked);
+        const word = tone === 'hollow' ? 'ended' : DOT_WORD[tone];
+        return (
+          <span role="listitem" key={row.session.id}>
+            <button type="button" className="rail-dot" aria-label={`${row.session.name}: ${word}`} title={`${row.session.name}: ${word}`} onClick={() => useApp.getState().showSession(row.session.id)} data-testid="rail-dot" data-session={row.session.id}>
+              <StateDot tone={tone} word={word} title={undefined} aria-hidden="true" />
+            </button>
+          </span>
+        );
+      })}
+    </div>
+  );
+}
+
 /** Every terminal on every canvas and the parked ones, filtered, grouped and sorted as the user chose. */
 function TerminalsSection() {
   const model = useModel();
@@ -544,7 +569,9 @@ const RowView = memo(function RowView({ row, style, density, indented, current, 
 registerSection({
   id: SECTION,
   title: 'Terminals',
+  says: 'Every terminal, with what it is doing.',
   order: 10,
+  Rail: TerminalsRail,
   icon: '▤',
   useCount: () => useModel().filtered.length,
   useBadges: () => {
