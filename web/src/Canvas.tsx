@@ -49,6 +49,7 @@ import { FrameNode, type FrameFlowNode } from './FrameNode';
 import { TerminalNode, type TerminalFlowNode } from './TerminalNode';
 import { isFullZoom, loadViewport, saveViewport, useZoomToNode } from './viewport';
 import { READABLE_ZOOM } from './culling';
+import { useBarKeptOpen } from './bar-open';
 
 const nodeTypes = { terminal: TerminalNode, frame: FrameNode };
 type CanvasNode = TerminalFlowNode | FrameFlowNode;
@@ -328,6 +329,7 @@ export function Canvas() {
   const [adding, setAdding] = useState(false);
   // The canvas is narrow (the details are open beside the panel, say): the bar keeps to one row, and what is used seldom is in its menu.
   const narrow = useStore((s) => s.width > 0 && s.width < NARROW_CANVAS);
+  const barOpen = useBarKeptOpen();
   const [fullSizeHint, setFullSizeHint] = useState<{ x: number; y: number } | null>(null);
   const setError = useApp((s) => s.setNotice);
 
@@ -525,10 +527,12 @@ export function Canvas() {
             <EmptyCanvas />
           </Panel>
         )}
-        <Panel position="top-left" className={`toolbar${narrow ? ' is-narrow' : ''}`}>
+        {/* Folded to "New terminal" unless kept open in Settings: the rest shows while the pointer or the keyboard is in the bar. */}
+        <Panel position="top-left" className={`toolbar${narrow ? ' is-narrow' : ''}${barOpen ? '' : ' is-folded'}`} data-testid="canvas-bar">
           <span className="toolbar-group" role="group" aria-label="Make something new">
             <NewMenu adding={adding} narrow={narrow} />
           </span>
+          <span className="toolbar-rest" data-testid="toolbar-rest">
           <span className="toolbar-group" role="group" aria-label="The view">
             <button
               type="button"
@@ -555,6 +559,7 @@ export function Canvas() {
           <span className="toolbar-group toolbar-status" role="group" aria-label="Terminals that are not on this canvas">
             <ParkedList />
             <OutsidePanel />
+          </span>
           </span>
           {notice && <span className="warning">{notice}</span>}
         </Panel>

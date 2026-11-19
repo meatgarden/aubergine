@@ -171,10 +171,21 @@ code {
   align-items: center;
   gap: 2px;
 }
-.toolbar-group + .toolbar-group {
+.toolbar-group + .toolbar-group,
+.toolbar-group + .toolbar-rest > .toolbar-group:first-child {
   margin-left: var(--space-1);
   padding-left: var(--space-2);
   border-left: 1px solid var(--border);
+}
+/*
+ * Everything after "New terminal" is laid out as if it were not wrapped. Folded, it is not drawn until the pointer or
+ * the keyboard is in the bar, or while something hangs from it: one of its menus, or the tour pointing into it.
+ */
+.toolbar-rest {
+  display: contents;
+}
+.toolbar.is-folded:not(:hover, :focus-within, :has([aria-expanded='true'], [data-tour-pointed])) > .toolbar-rest {
+  display: none;
 }
 .toolbar-status {
   margin-left: auto;

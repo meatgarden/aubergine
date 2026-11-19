@@ -15,8 +15,18 @@ function useRectOf(find: (() => Element | null) | null): DOMRect | null {
       setRect(null);
       return;
     }
+    // What is pointed at says so, so that what folds (the bar over the canvas) stays open while it is pointed into.
+    let marked: Element | null = null;
+    const mark = (element: Element | null): void => {
+      if (element === marked) return;
+      marked?.removeAttribute('data-tour-pointed');
+      element?.setAttribute('data-tour-pointed', '');
+      marked = element;
+    };
     const measure = (): void => {
-      const next = find()?.getBoundingClientRect() ?? null;
+      const found = find();
+      mark(found);
+      const next = found?.getBoundingClientRect() ?? null;
       setRect((before) => (before && next && before.x === next.x && before.y === next.y && before.width === next.width && before.height === next.height ? before : next && next.width > 0 ? next : null));
     };
     measure();
@@ -26,6 +36,7 @@ function useRectOf(find: (() => Element | null) | null): DOMRect | null {
     return () => {
       clearInterval(timer);
       window.removeEventListener('resize', measure);
+      mark(null);
     };
   }, [find]);
   return rect;

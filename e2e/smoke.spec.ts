@@ -39,12 +39,15 @@ const openPage = async (page: Page, name: 'queue' | 'board' | 'workflows' | 'lib
 };
 
 /** Shows a control that is behind a menu, a tab or a fold-out, where it is not showing yet: each opener is pressed in turn. */
-// The side panel begins folded in a browser that remembers nothing. These tests are of a browser in which it was
-// opened once, which is what it then remembers; the test of the fold itself starts from a browser of its own.
+// The side panel begins folded in a browser that remembers nothing, and so does the bar over the canvas. These tests
+// are of a browser in which both were opened once, which is what it then remembers; the tests of the folds themselves
+// start from a browser of their own.
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => {
     try {
       if (localStorage.getItem('aubergine.panel') === null) localStorage.setItem('aubergine.panel', JSON.stringify({ open: true }));
+      // The bar over the canvas is folded to "New terminal" in a new browser; these tests are of one that keeps it open.
+      if (localStorage.getItem('aubergine.bar') === null) localStorage.setItem('aubergine.bar', 'open');
     } catch {
       // No storage on this page: nothing to remember.
     }
@@ -5019,5 +5022,76 @@ test('links: an address is a chip wherever it is, added by hand or by the termin
     await page.getByTestId('settings-close').click();
   } finally {
     rmSync(folder, { recursive: true, force: true });
+  }
+});
+
+test('the bar over the canvas: a new browser sees only "New terminal", the rest shows while pointed at or reached by keyboard, and Settings keeps it open', async ({ page, browser }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  const context = await browser.newContext({ viewport: { width: 1280, height: 800 }, baseURL: new URL(page.url()).origin, colorScheme: 'dark', reducedMotion: 'reduce' });
+  try {
+    const fresh = await context.newPage();
+    await fresh.goto(`/auth?token=${token}`);
+    await expect(fresh).toHaveURL(/\/c\/[0-9a-f-]+$/);
+    const bar = fresh.getByTestId('canvas-bar');
+    const goto = fresh.getByTestId('toolbar-goto');
+    await expect(fresh.getByTestId('toolbar-new-terminal')).toBeVisible();
+    await expect(fresh.getByTestId('toolbar-new-more')).toBeVisible();
+
+    // 1. Folded: "New terminal" and its arrow, and nothing else of the bar.
+    await fresh.mouse.move(700, 600);
+    await expect(goto).toBeHidden();
+    await expect(fresh.getByTestId('zoom-level')).toBeHidden();
+    const folded = await bar.evaluate((el) => Math.round(el.getBoundingClientRect().width));
+
+    // 2. Pointed at, all of it shows; the pointer gone, it folds again.
+    await fresh.getByTestId('toolbar-new-terminal').hover();
+    await expect(goto).toBeVisible();
+    await expect(fresh.getByTestId('zoom-level')).toBeVisible();
+    expect(await bar.evaluate((el) => Math.round(el.getBoundingClientRect().width))).toBeGreaterThan(folded);
+    // The pointer can travel along the open bar to what it shows.
+    await goto.hover();
+    await expect(goto).toBeVisible();
+    await fresh.mouse.move(700, 600);
+    await expect(goto).toBeHidden();
+
+    // 3. Reached with the keyboard: from "New terminal" the next stop is in the bar, and it shows.
+    await fresh.getByTestId('toolbar-new-terminal').focus();
+    await expect(goto).toBeVisible();
+    await fresh.keyboard.press('Tab');
+    await fresh.keyboard.press('Tab');
+    expect(await fresh.evaluate(() => document.activeElement?.closest('[data-testid="toolbar-rest"]') !== null)).toBe(true);
+    await expect(goto).toBeVisible();
+    await fresh.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
+    await expect(goto).toBeHidden();
+
+    // 4. A menu that hangs from it keeps it open while the pointer is elsewhere.
+    await fresh.getByTestId('toolbar-new-more').click();
+    await expect(fresh.getByTestId('toolbar-new-menu')).toBeVisible();
+    await fresh.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
+    await fresh.mouse.move(700, 600);
+    await expect(goto).toBeVisible();
+    // Closed, it folds once the pointer and the keyboard have left.
+    await fresh.keyboard.press('Escape');
+    await expect(fresh.getByTestId('toolbar-new-menu')).toHaveCount(0);
+    await fresh.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
+    await fresh.mouse.move(700, 650);
+    await expect(goto).toBeHidden();
+
+    // 5. Settings keeps it open, in this browser, after a reload too.
+    await fresh.getByTestId('toolbar-settings').click();
+    const line = fresh.getByTestId('settings-bar-open');
+    await expect(line).not.toBeChecked();
+    await line.check();
+    await fresh.getByTestId('settings-close').click();
+    await fresh.mouse.move(700, 600);
+    await expect(goto).toBeVisible();
+    await fresh.reload();
+    await fresh.mouse.move(700, 600);
+    await expect(fresh.getByTestId('toolbar-goto')).toBeVisible();
+    expect(await fresh.evaluate(() => localStorage.getItem('aubergine.bar'))).toBe('open');
+  } finally {
+    await context.close();
   }
 });
