@@ -85,12 +85,12 @@ Every command is listed under [Command line](#command-line). These are the every
 
 | Command | What it does |
 |---|---|
-| `aubergine list` | Every session with its state, command and folder |
+| `aubergine list` | Every terminal with its state, command and folder |
 | `aubergine new [name]` | Start a new terminal on a canvas |
 | `aubergine here` | Put the terminal you are in on the canvas (`--claude` starts Claude Code in it) |
 | `aubergine scan` | List open terminals that are not on the canvas yet |
-| `aubergine attach <name>` | Open a canvas session in this terminal |
-| `aubergine note "…"` | Inside a session: add a line to its notes |
+| `aubergine attach <name>` | Show one of the canvas's terminals in this window of your terminal application |
+| `aubergine note "…"` | Inside a terminal: add a line to its notes |
 
 **Workflows**
 
@@ -98,7 +98,7 @@ Every command is listed under [Command line](#command-line). These are the every
 |---|---|
 | `aubergine workflow list` | The workflows you have |
 | `aubergine workflow new <name>` | Make one (`--template <template>` starts from a template) |
-| `aubergine workflow run <name>` | Start a run on a session |
+| `aubergine workflow run <name>` | Start a run on a terminal |
 | `aubergine board` | Every run that is going |
 | `aubergine library list` | What the library offers |
 
@@ -108,7 +108,7 @@ Every command is listed under [Command line](#command-line). These are the every
 |---|---|
 | `N` / `C` | New terminal / new Claude Code terminal |
 | `⌘K` | Palette: go to anything, run any command |
-| `W` | Next session that is waiting for you |
+| `W` | Next terminal that is waiting for you |
 | `B` | Show or hide the side panel |
 | `Q` | The queue and "For you" |
 | `P` / `U` | Park the selected terminal / bring back the last parked one |
@@ -290,7 +290,7 @@ and make sure that folder is on your `PATH` (add `export PATH="$HOME/.local/bin:
 ### Stopping, restarting and updating
 
 - **Stop the server** with Ctrl+C in the terminal where it runs. Your terminals on the canvas keep running; start the server again (`aubergine start`) and reload the page to get them back. If you start it while it is already running, it says so and gives you the address instead of failing.
-- **End every session for good** with `tmux -L aubergine kill-server`. The canvas layout is kept, and each session gets a fresh shell the next time the server starts.
+- **End every terminal for good** with `tmux -L aubergine kill-server`. The canvas layout is kept, and each terminal gets a fresh shell the next time the server starts.
 - **Update** to the latest version, then restart the server:
 
   ```sh
@@ -311,7 +311,7 @@ and make sure that folder is on your `PATH` (add `export PATH="$HOME/.local/bin:
 | The server will not start because the port is taken | Use another port: `AUBERGINE_PORT=4700 pnpm start`. |
 | `aubergine: command not found` | The command is not linked onto your `PATH` yet: do step 6 above, or run `node bin/aubergine.mjs` from this folder. |
 | "The web app has not been built yet" | Run `pnpm build`, then `pnpm start` again; `start` serves the built web app. |
-| A terminal shows no status badges | Status needs zsh, and a session created before an update keeps its old shell. Park it and start a new one, or restart its shell. |
+| A terminal shows no status badges | Status needs zsh, and a terminal created before an update keeps its old shell. Park it and start a new one, or restart its shell. |
 
 The server listens on `127.0.0.1` only, so it is reachable from this computer and nowhere else.
 
@@ -319,7 +319,7 @@ In a Chromium-based browser you can install the page as an app window (address b
 
 ## Moving your existing terminals over
 
-You probably have terminal tabs open already, some of them running agents. One thing cannot be done, by this or any tool: **a program that is already running in another terminal cannot be moved into an Aubergine session.** So moving over means three things: give each tab a canvas session in the same folder, carry agent conversations on inside those sessions, and make new tabs land on the canvas from now on.
+You probably have terminal tabs open already, some of them running agents. One thing cannot be done, by this or any tool: **a program that is already running in another terminal cannot be moved into an Aubergine terminal.** So moving over means three things: give each tab a terminal on the canvas in the same folder, carry agent conversations on inside those terminals, and make new tabs land on the canvas from now on.
 
 Nothing here edits your dotfiles, and with one exception nothing stops, signals or changes a program you have running. The exception is **Stop and resume**, which asks one Claude Code agent to exit, only when you choose it for that agent and only after you confirm.
 
@@ -329,7 +329,7 @@ The quickest way is the **Outside** button in the canvas toolbar. It lists every
 
 Each row has its own action, so you bring terminals over one at a time:
 
-- **Add to canvas**, for a shell at its prompt or one running a command: a canvas session in the same folder. A command that is running stays where it is; start it again in the new session if you need it there.
+- **Add to canvas**, for a shell at its prompt or one running a command: a terminal on the canvas in the same folder. A command that is running stays where it is; start it again in the new terminal if you need it there.
 - **Fork to canvas**, for a Claude Code tab: a copy of the conversation starts on the canvas, and the original keeps running until you exit it.
 - **Stop and resume here**, for a Claude Code tab whose agent is idle: the original is asked to exit and the same conversation carries on on the canvas. It asks you first, and it is switched off, with the reason shown, while the agent is busy.
 
@@ -352,7 +352,7 @@ In that tab:
 aubergine here
 ```
 
-This creates a session in the tab's current folder, named after the folder, puts it on the canvas, and turns the tab into a view of that session. The tab and the canvas now show the same shell. Close the tab whenever you like; the session stays on the canvas.
+This creates a terminal in the tab's current folder, named after the folder, puts it on the canvas, and turns the tab into a view of that terminal. The tab and the canvas now show the same shell. Close the tab whenever you like; the terminal stays on the canvas.
 
 If the canvas is open in a browser, it pans to the new terminal and focuses it. If it is not open anywhere, your default browser opens on it. `--no-open` skips that.
 
@@ -362,13 +362,13 @@ Give it a name, or a command to start with, if you want:
 aubergine here "api server" -- npm run dev
 ```
 
-`aubergine here` starts a new shell; variables and shell history that only existed in the old shell's memory do not come along. The old shell is still underneath the view: if the session ends while the tab is open, you are back in it. Use `exec aubergine here` to replace the old shell completely.
+`aubergine here` starts a new shell; variables and shell history that only existed in the old shell's memory do not come along. The old shell is still underneath the view: if the terminal ends while the tab is open, you are back in it. Use `exec aubergine here` to replace the old shell completely.
 
 ### A tab with a command still running
 
-Leave it alone until the command finishes, or stop it yourself when it suits you. Then run `aubergine here` in that tab, adding the command after `--` if you want it started again in the new session.
+Leave it alone until the command finishes, or stop it yourself when it suits you. Then run `aubergine here` in that tab, adding the command after `--` if you want it started again in the new terminal.
 
-A running server or watcher cannot be carried over; it has to be started again inside the session.
+A running server or watcher cannot be carried over; it has to be started again inside the terminal.
 
 ### A tab running Claude Code
 
@@ -388,9 +388,9 @@ aubergine move --all
 
 There are two ways to move, and the default is the careful one.
 
-**Copy (the default).** A new canvas session starts in the same folder with a copy of the conversation. The original tab is not touched and keeps running. Exit the original (`/exit`) when you are ready; until you do, two agents with the same history are working in the same folder, so do not give both of them work.
+**Copy (the default).** A new terminal on the canvas starts in the same folder with a copy of the conversation. The original tab is not touched and keeps running. Exit the original (`/exit`) when you are ready; until you do, two agents with the same history are working in the same folder, so do not give both of them work.
 
-**Stop and resume (`--stop`).** The original agent is asked to exit, and the same conversation carries on in a new canvas session:
+**Stop and resume (`--stop`).** The original agent is asked to exit, and the same conversation carries on in a new terminal on the canvas:
 
 ```sh
 aubergine move ttys004 --stop
@@ -401,7 +401,7 @@ aubergine move ttys004 --stop
 - It asks the original process to exit once, politely, waits, and checks that it has gone. It is never forced. If it does not exit, nothing is started on the canvas for it and you are told.
 - It only ever signals the exact processes you chose, each checked to still be the same Claude Code process.
 
-Either way, the old tab cannot be turned into a view of the new session from outside. After `--stop` the tab is back at its shell prompt; run `aubergine attach "<name>"` there if you want it to show the session, or just close it.
+Either way, the old tab cannot be turned into a view of the new terminal from outside. After `--stop` the tab is back at its shell prompt; run `aubergine attach "<name>"` there if you want it to show the terminal, or just close it.
 
 `aubergine move` finds each conversation in the records Claude Code keeps for its running processes. That is an internal detail of Claude Code that may change; if a record cannot be read, the copy falls back to the most recent conversation in the folder and says so, and `--stop` is refused for that tab.
 
@@ -415,7 +415,7 @@ Either way, the old tab cannot be turned into a view of the new session from out
    aubergine here --claude
    ```
 
-This starts Claude Code in a new canvas session with `--continue`, so the conversation carries on where it stopped, now with its status on the canvas (working, waiting for you, finished).
+This starts Claude Code in a new terminal on the canvas with `--continue`, so the conversation carries on where it stopped, now with its status on the canvas (working, waiting for you, finished).
 
 The limit: `--continue` picks the **most recent** conversation for that folder. If two agents were working in the same folder, only the first `aubergine here --claude` gets the right one by itself. For the other, name the conversation yourself. Anything after `--` goes to the agent in place of `--continue`:
 
@@ -445,7 +445,7 @@ aubergine import --dry-run
 aubergine import
 ```
 
-creates one canvas session per folder, grouped in a frame named "Imported", and prints what to do in each original tab: attach it if it is idle, or wait for its command or agent first. `--dry-run` shows the plan and changes nothing. Folders that already have a session are skipped; `--all` gives every tab its own session anyway. Your tabs are left exactly as they are.
+creates one terminal on the canvas per folder, grouped in a frame named "Imported", and prints what to do in each original tab: attach it if it is idle, or wait for its command or agent first. `--dry-run` shows the plan and changes nothing. Folders that already have a terminal are skipped; `--all` gives every tab its own terminal anyway. Your tabs are left exactly as they are.
 
 ### New tabs from now on
 
@@ -453,20 +453,20 @@ creates one canvas session per folder, grouped in a frame named "Imported", and 
 aubergine shell-hook print
 ```
 
-prints a few lines for your `.zshrc`. Add them yourself, at the end of the file. From then on a new terminal tab starts inside a new canvas session, and closing the tab only detaches from it.
+prints a few lines for your `.zshrc`. Add them yourself, at the end of the file. From then on a new tab of your terminal application starts inside a new terminal on the canvas, and closing the tab only detaches from it.
 
 The lines cannot leave you without a shell. They do nothing inside Aubergine or tmux or in a non-interactive shell, and if the server is stopped, slow to answer, or anything else fails, the normal shell starts as usual (after a moment's wait, at most a few seconds).
 
 For one plain tab on purpose, run `AUBERGINE_DISABLE=1 zsh`, or set `AUBERGINE_DISABLE=1` in the environment of a terminal profile.
 
-Each new tab makes a new session, so park or end the ones you no longer need.
+Each new tab makes a new terminal, so park or end the ones you no longer need.
 
 ### Going back
 
 - Remove the lines between the two `aubergine` markers from your `.zshrc`; new tabs are plain again.
 - `AUBERGINE_DISABLE=1` switches the lines off without removing them.
 - Sessions are ordinary tmux sessions on their own socket. With the server stopped you can still reach every one: `tmux -L aubergine ls`, then `tmux -L aubergine attach -t <id>` with an ID from that list.
-- Ending the sessions (from the canvas, or `tmux -L aubergine kill-server`) leaves nothing running.
+- Ending the terminals (from the canvas, or `tmux -L aubergine kill-server`) leaves nothing running.
 
 ## Use
 
@@ -488,7 +488,7 @@ Each new tab makes a new session, so park or end the ones you no longer need.
 - Drag the background to pan; scroll or pinch to zoom. **Fit** (or `F`) shows everything; the percentage (or `0`) returns to 100%. The map in the corner also pans and zooms; **Hide map** above it folds it away, the browser remembers that, and it steps aside by itself while the terminal you are typing in lies under it.
 - **+ Frame** adds a labeled frame. Drag a frame by its label and the terminals inside it move along.
 - The dot in a title bar gives a node or frame a color: one of thirteen, or **Your own…** for any color.
-- The title bar shows the running command and current folder of each session.
+- The title bar shows the running command and current folder of each terminal.
 
 ### Projects
 
@@ -580,9 +580,9 @@ You can have several canvases, shown as tabs along the top: one per project, say
 - Each canvas has its own address (`/c/<id>`), so you can bookmark one, or keep two browser windows on two canvases. Opening the plain address returns to the canvas you looked at last. Each canvas remembers its own pan and zoom in each browser.
 - A terminal is on one canvas at a time. **Move** in its title bar puts it on another canvas; the shell is not touched.
 - Only the canvas you are looking at keeps live terminals. Shells on the others keep running all the same.
-- A tab shows how many of its sessions are waiting for you, and a dot when one has output you have not seen. The waiting queue, the palette (⌘K) and the Parked list cover every canvas, say which canvas a session is on, and take you there.
+- A tab shows how many of its terminals are waiting for you, and a dot when one has output you have not seen. The waiting queue, the palette (⌘K) and the Parked list cover every canvas, say which canvas a terminal is on, and take you there.
 - **×** on a tab closes the canvas. That never ends a shell: if terminals are on it you choose between moving them to another canvas and parking them. The last canvas cannot be closed.
-- A parked session is on no canvas. Restoring it puts it on the canvas you are looking at, in its old spot if that was on this canvas and is still free.
+- A parked terminal is on no canvas. Restoring it puts it on the canvas you are looking at, in its old spot if that was on this canvas and is still free.
 
 From a terminal, `aubergine canvas list` and `aubergine canvas new <name>` do the same, and `new`, `here` and `import` take `--canvas <name>`; see [Command line](#command-line).
 
@@ -598,13 +598,13 @@ Work everywhere, inside a terminal too:
 
 | | macOS | Linux, Windows |
 |---|---|---|
-| Palette: go to a session or canvas, run any command | ⌘K | Ctrl+Shift+K |
+| Palette: go to a terminal or canvas, run any command | ⌘K | Ctrl+Shift+K |
 | Terminal to the left, right, above, below | ⌃⌘← ⌃⌘→ ⌃⌘↑ ⌃⌘↓ | Ctrl+Shift+arrows |
 | Previous, next canvas | ⌃⌘[ ⌃⌘] | Ctrl+Shift+[ Ctrl+Shift+] |
 | Previous, next canvas, in an app window (see below) | ⌃⇧Tab ⌃Tab, ⇧⌘[ ⇧⌘], ⌥⌘← ⌥⌘→ | Ctrl+Shift+Tab, Ctrl+Tab |
 | Canvas by number, in an app window | ⌘1–⌘9 | |
 | Leave the terminal | ⌃⌘. | Ctrl+Shift+. |
-| Next session that is waiting for you | ⌃⌘J | (palette) |
+| Next terminal that is waiting for you | ⌃⌘J | (palette) |
 
 Work while no terminal or text field has the keyboard:
 
@@ -616,7 +616,7 @@ Work while no terminal or text field has the keyboard:
 | `P`, `U`, `Shift+P` | park the selected terminal, bring back the last parked one, open the parked list |
 | `R`, `M`, `E`, `#` | rename the terminal, move it to another canvas, open or close its notes, edit its tags |
 | `T`, `[` `]`, `1`–`9`, `Shift+R` | new canvas, previous and next canvas, go to a canvas, rename the canvas |
-| `W` | next session that is waiting for you |
+| `W` | next terminal that is waiting for you |
 | `F`, `0` | zoom to fit, zoom to 100% |
 | `Shift+B` | the [board](#the-board): every run that is going |
 | `Q` | the [queue and For you](#the-queue-and-for-you) |
@@ -628,7 +628,7 @@ Work while no terminal or text field has the keyboard:
 
 **The keys browsers use for their own tabs** switch canvases too: Ctrl+Tab and Ctrl+Shift+Tab, Ctrl+PageDown and Ctrl+PageUp, on macOS also ⇧⌘] ⇧⌘[, ⌥⌘→ ⌥⌘← and ⌘1–⌘9, elsewhere Ctrl+1–Ctrl+9. They are meant for Aubergine installed as an app with a window of its own, where there are no browser tabs. In an ordinary browser tab the browser usually takes these keys for itself before the page sees them, so do not count on them there; the shortcut sheet shows them with a dashed outline when they are not expected to work in the window you are in. Which of them a given browser lets through has not been measured. The route that works everywhere is ⌘K followed by `]`, `[` or a digit.
 
-**The palette** (⌘K) lists sessions, canvases and every command with its key. Type part of a name, folder, command or note and press Enter. `>` in front shows commands only. With nothing typed, `1`–`9` goes to that canvas and `[` and `]` to the previous and next one: this needs no special chord, so it works in every browser. Anything that has no key of its own can always be run from here.
+**The palette** (⌘K) lists terminals, canvases and every command with its key. Type part of a name, folder, command or note and press Enter. `>` in front shows commands only. With nothing typed, `1`–`9` goes to that canvas and `[` and `]` to the previous and next one: this needs no special chord, so it works in every browser. Anything that has no key of its own can always be run from here.
 
 **Changing keys.** Add `shortcuts` to `config.json` (see [Settings](#settings)): a command name with a chord, a list of chords, or `null` for no key. The names are in the tooltip of each row of the shortcut sheet, and the palette finds a command by its name.
 
@@ -654,6 +654,8 @@ The panel on the left shows one thing at a time, chosen by the tabs at its top: 
 
 The top of the page says where you are and what waits for you: the name, the project, the places of that project (**Canvas**, **Queue**, **Board**, **Workflows**, **Library**, the one you are in marked), and at the right **For you**, with a count of everything that waits on you, and **Help**. The canvases have the row below it to themselves; a tab has its name, a plain number while terminals on it wait for you, and, on the tab you are on or point at, one menu (**⋯**) for what is done seldom (rename, its colour, messages between its terminals, moving it to another project, removing the demo) and the mark that closes it. The bar over the canvas holds only what acts on that canvas: **New terminal** (with **▾** for everything else you can make), the view (**Go to…**, **Fit**, the zoom), and parked and outside terminals while there are any.
 
+**Settings**, beside Help, is the one place for what you change about the page itself. **Appearance** has three choices: **Light**, **Dark**, and **Match the system**, which is how a new install starts and follows the system when it changes while the page is open. The choice applies at once to the page and to every terminal, without a reload, and is kept in the settings file (`theme`), so every browser and the next start agree. The palette has the same three as commands ("Theme: light", "Theme: dark", "Theme: match the system"). **Notifications** has the switch for being told on the desktop when a terminal starts waiting.
+
 **Queue**, **Board**, **Workflows** and **Library** are pages: each takes the place of the canvas under the top bar and is laid out the same way, with its name and what is done most at the top, its tabs under that, and its content below. A page has no Close: **Canvas** in the top bar, the page's own name pressed again, `Esc` or the browser's back button lead back to the canvas exactly as you left it (the same tab, the same view, the same terminal selected; the terminals keep running meanwhile). Each page has an address (the canvas's, with `/queue`, `/board`, `/workflows` or `/library` after it), so a reload stays on it. What is a question about one thing (running a workflow, describing one, tags, API tokens, Review, the editors) still opens as a dialog, over a page or over the canvas alike.
 
 The side panel has one row of tabs (**Terminals**, **For you**, **Runs**, and **More** for working copies and messages), a field to find a terminal with **Filter** at its end, and the list. A row of the list is the terminal's name with the whole line, after a dot for its state; under it, in words where it is not the ordinary state (**waiting for you**, **finished**, how the last command failed, the step of a run), then its folder and when it was last active. The same dot begins a terminal's title and a card on the Board. A terminal's title is that dot, its name, its state in words where there is one, what it runs in short (the whole line when you point at it), its first tag, **Note**, and one menu (**⋯**) with the rest: tags, a workflow, a message, the desktop, moving it, its colour, people only, parking it.
@@ -664,9 +666,9 @@ In the terminal list, **Filter** holds where to look (this canvas, all canvases)
 
 The whole panel collapses to a narrow strip that shows each tab's icon and counts (`B`, or the small handle on the panel's right edge, which is in the same place open or shut); click one there to open the panel on it. Drag its right edge to change the width. All of this is remembered by the browser.
 
-**Terminals** lists every session: the terminals on every canvas, and the parked ones.
+**Terminals** lists every terminal: the terminals on every canvas, and the parked ones.
 
-- **This canvas / All canvases** at the top chooses the scope. It starts on *This canvas*. Parked sessions are on no canvas and are listed in both.
+- **This canvas / All canvases** at the top chooses the scope. It starts on *This canvas*. Parked terminals are on no canvas and are listed in both.
 - **Filters** narrow the list: waiting for me, busy, unread, has an agent, parked, the text box (name, folder, command, note, tags; every word must match), and tags. They combine: a row must pass all that are on. Each one in effect shows as a chip you can remove, **Clear** removes them all, and the count beside the section title is the number of rows shown. If nothing is left, the list says which filters are hiding everything.
 - **Grouping**: by canvas, in tab order, each canvas a heading that folds and shows its waiting count, with frames as sub-headings and the terminals in the order they read on the canvas (top to bottom, then left to right); or one flat list, ordered by canvas, last updated, last typed in, or name.
 - **Compact** shows one line per terminal instead of two.
@@ -679,13 +681,13 @@ Filters, grouping, order, density and what is folded are remembered by the brows
 - the name, and *agent* when an agent runs there;
 - on the second line the running command and folder, **typed … ago**, **updated … ago**, and the tags.
 
-*Typed* is when input last reached the session, *updated* when it last printed. Both are recorded at most once every five seconds, so they can lag by that much. Input is seen when it passes through Aubergine: typing in the browser, or a line Aubergine types for you. What you type in a view opened elsewhere with `aubergine attach` does not pass through the server; for that the start of each command is used, which is the best signal available, so text typed there but not yet run does not count.
+*Typed* is when input last reached the terminal, *updated* when it last printed. Both are recorded at most once every five seconds, so they can lag by that much. Input is seen when it passes through Aubergine: typing in the browser, or a line Aubergine types for you. What you type in a view opened elsewhere with `aubergine attach` does not pass through the server; for that the start of each command is used, which is the best signal available, so text typed there but not yet run does not count.
 
 Click a row to go to that terminal at 100% and give it the keyboard, switching canvas if needed; a parked row has **Restore**. **⋯** on a row of the canvas you are looking at has the node's actions: rename, notes, tags, move to another canvas, park.
 
-**Tags** are short words of your own on a session (up to 12, each up to 32 characters; `Api` and `api` are the same tag). Edit them from **⋯**, from the `#` button on the node, or with `#` on the selected terminal. Click a tag on a row to show only the terminals with that tag; several chosen tags show the terminals with any of them.
+**Tags** are short words of your own on a terminal (up to 12, each up to 32 characters; `Api` and `api` are the same tag). Edit them from **⋯**, from the `#` button on the node, or with `#` on the selected terminal. Click a tag on a row to show only the terminals with that tag; several chosen tags show the terminals with any of them.
 
-**Notes from the list.** A row has a pencil mark when its session has a note or log entries, with the number of entries added since you last opened them.
+**Notes from the list.** A row has a pencil mark when its terminal has a note or log entries, with the number of entries added since you last opened them.
 
 - Rest the pointer on the mark (or reach it with the keyboard) for a glance: the first lines of the pinned note and the newest log entry. It is read-only and never takes the keyboard.
 - **Details** (the first line of a row's menu, or `E`) opens the details of a terminal beside the panel, under the tabs; the canvas is narrower while they are open, and nothing lies over its bar. At the top: its state, its name, **Go to terminal**, and the same menu as its row. Then what it asks of you, if anything, in its own words, with how to answer. Then what is known about it as a short list (where, what runs, since when, its workflow and step). Then two tabs, **Note** and **Messages**, so that one thing is typed into at a time. `Esc` closes them and the keyboard is back on the row.
@@ -693,7 +695,7 @@ Click a row to go to that terminal at 100% and give it the keyboard, switching c
 
 **Keyboard.** `Tab` and `Shift+Tab` move through the rows exactly as the list shows them, filters and order included. With *This canvas* they stay on the canvas; with *All canvases* they go on into the next canvas, switching as they go. That is why the list starts on *This canvas*: Tab does not jump between canvases unless you ask for it. `S` switches the scope and `/` puts the keyboard in the text box. With the keyboard in the list (`F6`), the arrows move through the rows, `Enter` goes into the terminal and `Esc` returns to the canvas. The filters, grouping and order are commands too, so they are in the palette (type `list`) and can be given keys.
 
-The list costs nothing to keep open, also with hundreds of sessions: it is drawn from what the page already knows, only the rows in view are drawn, no terminal is attached for it and nothing is fetched.
+The list costs nothing to keep open, also with hundreds of terminals: it is drawn from what the page already knows, only the rows in view are drawn, no terminal is attached for it and nothing is fetched.
 
 ### Scrolling, copy and paste
 
@@ -703,7 +705,7 @@ The list costs nothing to keep open, also with hundreds of sessions: it is drawn
 
 ### Parking, and shells that end
 
-- × on a node **parks** the session: the node leaves the canvas but the shell keeps running. **Parked (n)** in the toolbar lists parked sessions; restore one, or end it for good (this asks first).
+- × on a node **parks** the terminal: the node leaves the canvas but the shell keeps running. **Parked (n)** in the toolbar lists parked terminals; restore one, or end it for good (this asks first).
 - When a shell exits by itself, its node stays and offers **Restart here** (a new shell in the same folder) and **Remove**.
 
 ### The same terminal in your own terminal app
@@ -734,37 +736,37 @@ With zsh, each node's title bar shows what its shell is doing:
 
 - a pulsing dot and the full command line while a command runs;
 - a red `exit N` badge when the last command failed (hover for when it finished);
-- a blue dot when the session has printed something since you last looked at it.
+- a blue dot when the terminal has printed something since you last looked at it.
 
-These work for parked and off-screen sessions too. Other shells run normally but report no command status yet.
+These work for parked and off-screen terminals too. Other shells run normally but report no command status yet.
 
-How it works: a session starts zsh with `ZDOTDIR` pointing at a small folder inside the data folder. The files there load your own `.zshenv`, `.zprofile`, `.zshrc` and `.zlogin` exactly as usual and then add two hooks. Your dotfiles are never edited, and `ZDOTDIR` is back to your own value once the shell has started.
+How it works: a terminal starts zsh with `ZDOTDIR` pointing at a small folder inside the data folder. The files there load your own `.zshenv`, `.zprofile`, `.zshrc` and `.zlogin` exactly as usual and then add two hooks. Your dotfiles are never edited, and `ZDOTDIR` is back to your own value once the shell has started.
 
 ### Agents: who is waiting for you?
 
-**+ Claude Code** starts `claude` in a new session with a settings file that Aubergine generates in its data folder. Your own Claude Code configuration is not touched. The hooks in that file tell the canvas what the agent is doing:
+**+ Claude Code** starts `claude` in a new terminal with a settings file that Aubergine generates in its data folder. Your own Claude Code configuration is not touched. The hooks in that file tell the canvas what the agent is doing:
 
-- when you submit a prompt, the prompt is added to the session's note log and the node shows **working**;
+- when you submit a prompt, the prompt is added to the terminal's note log and the node shows **working**;
 - when the agent needs you (a permission question, or it is idle waiting for input), its line turns to the colour of waiting and its title and its row say **waiting for you**; the count beside **For you** at the top is the one thing on the page filled with that colour;
 - when the agent stops, the node shows **finished** and a line is added to the log.
 
-The toolbar shows **N waiting**; click it to go to the next waiting session. Looking at a node clears its state, and so does the agent starting to work again. **Notify** turns on desktop notifications for sessions that start waiting.
+The toolbar shows **N waiting**; click it to go to the next waiting terminal. Looking at a node clears its state, and so does the agent starting to work again. **Notify** turns on desktop notifications for terminals that start waiting.
 
-Aubergine remembers which conversation an agent session was in. When its shell is back at a prompt (you exited the agent, or the computer was restarted), the node's title bar offers **Resume agent**, which starts the agent again in that conversation.
+Aubergine remembers which conversation an agent terminal was in. When its shell is back at a prompt (you exited the agent, or the computer was restarted), the node's title bar offers **Resume agent**, which starts the agent again in that conversation.
 
-To use the hooks in sessions you start yourself, print them and add them to your own Claude Code settings by hand:
+To use the hooks in terminals you start yourself, print them and add them to your own Claude Code settings by hand:
 
 ```sh
 aubergine hooks print
 ```
 
-They do nothing outside an Aubergine session.
+They do nothing outside an Aubergine terminal.
 
 Prompts can contain secrets. To keep them out of the note log, set `"agents": { "logPrompts": false }` in `config.json`.
 
 ### Notes
 
-A session's notes sit beside its terminal, to the right, and are open unless you closed them (**Note** in the title bar, or the × on the notes, hides and shows them; this browser remembers which you closed). They are a pinned Markdown summary that you edit freely and that is saved as you type, above a log that only grows. Each log entry has an author (you, or the agent in that session) and a time. Add an entry in the panel, or from inside the session:
+A terminal's notes sit beside its terminal, to the right, and are open unless you closed them (**Note** in the title bar, or the × on the notes, hides and shows them; this browser remembers which you closed). They are a pinned Markdown summary that you edit freely and that is saved as you type, above a log that only grows. Each log entry has an author (you, or the agent in that terminal) and a time. Add an entry in the panel, or from inside the terminal:
 
 ```sh
 aubergine note "migrations done, starting the backfill"
@@ -774,9 +776,9 @@ The palette searches both the summary and the log.
 
 ### Searching terminal output
 
-The palette (⌘K) also searches what terminals have printed, in a **Terminal output** section at the end of its list. Choosing a result opens that session scrolled back to the match; press `q` to return to the bottom. It reads each running session's history when you search, parked sessions included. Nothing is indexed or recorded, so it only reaches as far back as the history tmux keeps (50,000 lines) and does not cover sessions that have ended.
+The palette (⌘K) also searches what terminals have printed, in a **Terminal output** section at the end of its list. Choosing a result opens that terminal scrolled back to the match; press `q` to return to the bottom. It reads each running session's history when you search, parked sessions included. Nothing is indexed or recorded, so it only reaches as far back as the history tmux keeps (50,000 lines) and does not cover sessions that have ended.
 
-### Many sessions
+### Many terminals
 
 A terminal is live only while it is on screen and large enough to read. Zoomed far out, a node shows a plain-text picture of its screen, refreshed about once a second; off screen it costs nothing. Either way the shell keeps running.
 
@@ -824,7 +826,7 @@ Under **Rules** on the same screen, or with `aubergine rule`. A rule is yours al
 - A rule has a switch: one that is **off** is kept and does nothing. Rules that came in a project file arrive off.
 - **Then**, one of two things:
   - **Notify me**: a notification from the open Aubergine page. The browser asks your permission when you press **Allow notifications**, not before. Nothing leaves your computer.
-  - **Run a step**: starts a run of one step from your shelf, on a terminal you name or a new one, with a short account of what happened as its task. This is how something outside gets called: write a step that says "put this in the calendar", and the agent does it with its own connectors. Aubergine holds no credential for any app and calls no address itself.
+  - **Run a step**: starts a run of one of your saved steps, on a terminal you name or a new one, with a short account of what happened as its task. This is how something outside gets called: write a step that says "put this in the calendar", and the agent does it with its own connectors. Aubergine holds no credential for any app and calls no address itself.
 
 A rule fires once for one event and at most six times a minute; what comes faster is dropped. Every firing is in the activity log, with which rule and how it ended, and without what the task said. What an agent does *because of* a run a rule started sets off no rule, so a rule cannot feed itself.
 
@@ -854,7 +856,7 @@ A schedule is a time of day, days of the week, something to run and somewhere to
 They are under **Schedules** on the Queue screen, and under `aubergine schedule`.
 
 - **When**: a time on this computer's clock, in its own time zone, and the days. Nothing more elaborate: no expressions, nothing more often than once a day.
-- **What**: one step from your shelf, or a workflow, with a task text of your own.
+- **What**: one of your saved steps, or a workflow, with a task text of your own.
 - **Where**: a terminal you name, or a new agent terminal on a canvas you name. A new terminal works in a [working copy](#working-copies-two-agents-on-one-repository) of its own where its folder is in a repository.
 - **On** or off. **Run now** tries it at once, by the same path as one of its times.
 
@@ -906,7 +908,7 @@ Every terminal works in your real folder. Two agents in one repository then edit
 
 ### Starting a terminal in one
 
-- **▾** beside **New terminal** in the toolbar, then **Terminal in a folder or a working copy…** (or "New terminal in a folder, or in a working copy…" in the palette): give the folder, and choose **In its own working copy**. The dialog for a Claude Code session with tools, and the one for a run on a new agent, have the same choice.
+- **▾** beside **New terminal** in the toolbar, then **Terminal in a folder or a working copy…** (or "New terminal in a folder, or in a working copy…" in the palette): give the folder, and choose **In its own working copy**. The dialog for a Claude Code terminal with tools, and the one for a run on a new agent, have the same choice.
 - From a terminal: `aubergine here --copy` in a folder of the repository (add `--claude` to start Claude Code in it), or `aubergine new "name" --copy --in <folder>`.
 
 The choice is offered only where it can be had, and says why where it cannot: the folder is not in a Git repository, the repository is a bare one, or it has no commit yet.
@@ -1060,14 +1062,14 @@ aubergine element propose --file to-dos.json     # or: aubergine workflow propos
 
 What an agent writes arrives as a **draft**. A draft cannot be run, is not among your workflows, and no agent is told any of it. **Review** (the toolbar shows "1 to review") is where you read it: the whole text exactly as an agent would be told it, what it needs, who it is from, and, for a second version, what changed. A text longer than the view is not accepted until you have asked to see all of it. Then:
 
-- **Accept**: a step goes on the shelf; a workflow becomes a workflow (or a new version, when the draft says which one it revises).
+- **Accept**: a step goes among your saved steps; a workflow becomes a workflow (or a new version, when the draft says which one it revises).
 - **Edit, then accept**: change the text first.
 - **Send back with a comment**: the agent is typed the same fixed sentence, reads your comment with `aubergine workflow brief`, and hands in a new version.
 - **Discard**.
 
 What became of each draft is kept in `drafts.log` in the data folder and shown at the foot of Review ("Decided lately"): who proposed it, what kind it was, whether it was accepted or discarded, when, and whether that was done in the browser or from the command line. Not what the draft said.
 
-Programs can propose too: a token with `workflows:write` posts to `/v1/drafts`. A new token has **changes to workflows need my review** switched on, which closes the routes that create and change workflows to it and leaves it the draft route; switch it off, when you make the token in the browser, for one you trust to write workflows directly. No token, whatever its scopes, can accept, send back or discard a draft, and a session's own token can only propose drafts and read its own.
+Programs can propose too: a token with `workflows:write` posts to `/v1/drafts`. A new token has **changes to workflows need my review** switched on, which closes the routes that create and change workflows to it and leaves it the draft route; switch it off, when you make the token in the browser, for one you trust to write workflows directly. No token, whatever its scopes, can accept, send back or discard a draft, and a terminal's own token can only propose drafts and read its own.
 
 ### What a step needs, and what it produces
 
@@ -1081,9 +1083,9 @@ aubergine workflow done --output list.json      # {"items": [{"text": "one line"
 
 `done` without it is refused, with the format. In the run view the checklist is a list you can tick, also after the run is over (the side panel lists the runs that ended lately). Your ticks are kept with the run, with when you made them, and the next step is told the list with your choices marked, so "do the ones I ticked" works.
 
-### The shelf, and running one step by itself
+### Saved steps, and running one by itself
 
-The **shelf** on the Workflows screen keeps steps for reuse. **Add a saved step…** in the workflow editor puts a copy into a workflow (changing the shelf later does not change the workflow), and **Save to shelf** keeps a copy of a step you wrote in one.
+**Saved steps** on the Workflows page are steps kept for reuse. **Add a saved step…** in the workflow editor puts a copy into a workflow (changing a saved step later does not change the workflow), and **Save to shelf** keeps a copy of a step you wrote in one.
 
 **Run…** on a saved step (or ⌘K, `Run a step by itself`, or the command below) runs just that step on a terminal, with no workflow around it. It shows up as a run like any other, and nothing is added to your workflows for it.
 
@@ -1096,32 +1098,32 @@ An example, end to end: ask an agent for "a to-do list from what people asked me
 
 ### The life of a saved step
 
-A step on the shelf is copied into workflows, never linked. What connects a copy to the shelf afterwards is what the copy remembers about where it came from, and you decide everything that follows from it.
+A saved step is copied into workflows, never linked. What connects a copy to its saved step afterwards is what the copy remembers about where it came from, and you decide everything that follows from it.
 
-**Versions.** Saving a change to a saved step adds a version; what it said before stays as it was. Each version has who saved it, when, and a line on what changed if you wrote one. The newest 30 are kept, and any version a copy in a workflow was made from. The shelf editor lists them, each with what it changed from the one before.
+**Versions.** Saving a change to a saved step adds a version; what it said before stays as it was. Each version has who saved it, when, and a line on what changed if you wrote one. The newest 30 are kept, and any version a copy in a workflow was made from. The saved step's editor lists them, each with what it changed from the one before.
 
-**A copy knows its source.** A step inserted from the shelf records which saved step it is a copy of, which version, and a mark of the content as it was copied. From those three the editor puts a small mark on the step:
+**A copy knows its source.** A step added from your saved steps records which saved step it is a copy of, which version, and a mark of the content as it was copied. From those three the editor puts a small mark on the step:
 
 | Mark | What it means |
 |---|---|
 | a saved step | as it was copied, and that is the newest version |
-| changed here | you changed it in this workflow since it was copied; the shelf has nothing newer |
+| changed here | you changed it in this workflow since it was copied; no newer version is saved |
 | a newer version is saved | as it was copied, and there is a newer saved version |
 | changed here, a newer version is saved | both |
 | a saved step, cannot tell | a copy made before versions were kept: Aubergine does not know which version it came from, and never says it is behind |
-| its source was removed | its saved step is not on the shelf: it was removed, or the workflow came from another computer |
+| its source was removed | its saved step is not among your saved steps: it was removed, or the workflow came from another computer |
 
-**Taking a newer version.** When the shelf has a newer version, the editor shows what it changes (the same comparison the review screen uses) and offers **Take the saved version** or **Keep mine**. If the copy was also changed in the workflow, the three texts are shown side by side: as it was copied, yours now, the shelf's now. You pick one of the two; nothing is merged for you. To keep parts of both, take one and edit it. Saving then makes a new version of the workflow, as any edit does, and runs that are going keep to the version they started on. Nothing is ever updated by itself, no API token can do it (even one that may change workflows), and a draft cannot either: a token or a draft can change what a copy says, which then reads as "changed here", and cannot say that a copy was brought up to date.
+**Taking a newer version.** When a newer version is saved, the editor shows what it changes (the same comparison the review screen uses) and offers **Take the saved version** or **Keep mine**. If the copy was also changed in the workflow, the three texts are shown side by side: as it was copied, yours now, the shelf's now. You pick one of the two; nothing is merged for you. To keep parts of both, take one and edit it. Saving then makes a new version of the workflow, as any edit does, and runs that are going keep to the version they started on. Nothing is ever updated by itself, no API token can do it (even one that may change workflows), and a draft cannot either: a token or a draft can change what a copy says, which then reads as "changed here", and cannot say that a copy was brought up to date.
 
-**From a workflow back to the shelf.** **Save as a new saved step** on a step that came from your saved steps offers two things: a new step, or a new version of the one it came from. Other workflows that hold a copy are not changed; each says that a newer version is saved.
+**From a workflow back to your saved steps.** **Save as a new saved step** on a step that came from your saved steps offers two things: a new step, or a new version of the one it came from. Other workflows that hold a copy are not changed; each says that a newer version is saved.
 
-**Where it is used.** The shelf editor lists the workflows that hold a copy and what the mark on each copy is. Removing a saved step that is used says so first; the copies stay as they are and say that their source was removed.
+**Where it is used.** The saved step's editor lists the workflows that hold a copy and what the mark on each copy is. Removing a saved step that is used says so first; the copies stay as they are and say that their source was removed.
 
 **Retiring.** A saved step is current, or **retired**: kept, and still working wherever a copy of it is, but not offered when inserting and not run by itself. Retired steps are under a fold on the Workflows screen. When you retire one you can name the step to use in its place, and the editor then says "retired: use …" on its copies. Retiring and bringing back are yours alone, like taking a newer version.
 
 **What goes in a step.** The editor has a fold of that name beside the form, and the same list is in [docs/element.md](docs/element.md): every field a step has, whether you write it or it is kept for you, and what it is for. Both are made from the descriptions in the code, so they cannot say something else than it does.
 
-**In a file.** A workflow written as a file (`workflow export`, or saved to a repository) keeps where each copy came from, and a file without such marks is read as before. On a computer whose shelf does not have that step, the copy says its source is not on the shelf, and nothing else is claimed.
+**In a file.** A workflow written as a file (`workflow export`, or saved to a repository) keeps where each copy came from, and a file without such marks is read as before. On a computer whose saved steps does not have that step, the copy says its source is not on the shelf, and nothing else is claimed.
 
 ```sh
 aubergine element list           # each with its version, and whether it is retired
@@ -1147,7 +1149,7 @@ How the files are found and read:
 - Only regular files directly in `.aubergine/workflows/` are read: at most 50, each at most 512 KiB and within the limits on workflows. A symbolic link is never followed; it is listed as skipped. A file that is not a workflow is listed with the reason and does not stop the others.
 - Nothing is remembered about the files between readings. What is remembered is what you accepted: the repository's folder, the file's name and a hash of its content.
 
-**Aubergine does not write there by itself.** **Save to the repository…** in the workflow editor, and `aubergine workflow export <name> --to-repository` typed inside a terminal, write one file into that folder, named after the workflow (`Fix a bug` becomes `fix-a-bug.json`; lower-case letters, digits and dashes only). A file of that name is not replaced unless you say so (`--overwrite`, or the second button). Committing it is yours to do. Only you can do this: no token and no session's own token can write into a repository or accept a file from one.
+**Aubergine does not write there by itself.** **Save to the repository…** in the workflow editor, and `aubergine workflow export <name> --to-repository` typed inside a terminal, write one file into that folder, named after the workflow (`Fix a bug` becomes `fix-a-bug.json`; lower-case letters, digits and dashes only). A file of that name is not replaced unless you say so (`--overwrite`, or the second button). Committing it is yours to do. Only you can do this: no token and no terminal's own token can write into a repository or accept a file from one.
 
 ### From the command line
 
@@ -1158,7 +1160,7 @@ aubergine workflow run "Hotfix" --session api --input task="the login page rejec
 
 `workflow list`, `show`, `edit`, `copy`, `remove`, `export` and `import` do what they say; see [Command line](#command-line). `export` writes one workflow as a JSON file to pass on, and `import` makes a workflow from such a file. The file has a format number, and fields a version does not know are kept and written out again.
 
-Inside a session that is on a run:
+Inside a terminal that is on a run:
 
 ```sh
 aubergine workflow status              # where the run stands and what to do now
@@ -1178,7 +1180,7 @@ Terminals that were already open when you updated keep the `PATH` they started w
 
 ### For programs
 
-Workflows, the shelf, drafts and runs are in the [API](docs/api.md): propose drafts, and with review switched off for the token create and change workflows and saved steps (`workflows:write`); start runs, report on them and tick checklist items (`runs:write`); read all of it (`read`). Reporting on a run does not type into a terminal: a token that starts a run is given the line above in the answer, and nothing is typed. Limits on the size of a workflow are under `workflows` in the settings.
+Workflows, saved steps, drafts and runs are in the [API](docs/api.md): propose drafts, and with review switched off for the token create and change workflows and saved steps (`workflows:write`); start runs, report on them and tick checklist items (`runs:write`); read all of it (`read`). Reporting on a run does not type into a terminal: a token that starts a run is given the line above in the answer, and nothing is typed. Limits on the size of a workflow are under `workflows` in the settings.
 
 ## Updating from an older version
 
@@ -1186,7 +1188,7 @@ When a newer version changes how the canvas is saved, the server updates `state.
 
 ## After a reboot
 
-A reboot ends the shells. The next time the server starts, every session gets a fresh shell in its last known folder, in the same place on the canvas. Nothing is re-run.
+A reboot ends the shells. The next time the server starts, every terminal gets a fresh shell in its last known folder, in the same place on the canvas. Nothing is re-run.
 
 ## Settings
 
@@ -1225,7 +1227,7 @@ Create `config.json` in the data folder (the server prints its location at start
 
 - `api`: limits on calls made with [API tokens](#api-tokens): calls per minute per token, the largest request body, and the size of the activity log. They apply when the server is next started.
 - `workflows`: how many steps a [workflow](#workflows) may have, how long the text of one step (and the text for every step) may be, and after how many seconds of output without a report a run is marked quiet. The two limits apply when the server is next started.
-- `terminal`: [terminal access](#terminal-access) for API tokens: whether new terminals, and new agent sessions, start "people only"; the limits on typing; and `auditInput`, which keeps what tokens type in a file.
+- `terminal`: [terminal access](#terminal-access) for API tokens: whether new terminals, and new agent terminals, start "people only"; the limits on typing; and `auditInput`, which keeps what tokens type in a file.
 - `library`: how long and how large a fetch of a [library](#the-library) source may be.
 - `desktop`: [the same terminal in your own terminal app](#the-same-terminal-in-your-own-terminal-app). `app` is `"terminal"`, `"iterm"` or `"command"` (`null`: Terminal on macOS); `command` is your own command line with `{file}`; `openNew` makes every terminal you make in the page also open on the desktop. They are read each time a window is opened.
 - `schedules.lateWithinHours`: a time of a [schedule](#schedules-at-these-times-run-this-there) that passed while the computer was asleep or the server stopped still runs, marked late, when it is at most this many hours old. Default 6; 0 means never. It applies from the next start of the server.
@@ -1236,7 +1238,7 @@ Font, theme and keys apply when you reload the page; shell and folder apply to t
 
 ## Shell environment
 
-Every session starts your shell as a **login shell**, so your own profile files build its environment (`PATH` and the rest) no matter how the server was started: from a terminal, or at login with no terminal at all. The server passes on its own environment as the base, without the variables that belong to the tool that launched it, and fills in `HOME`, `USER`, `LOGNAME`, `SHELL` and `LANG` when they are missing.
+Every terminal starts your shell as a **login shell**, so your own profile files build its environment (`PATH` and the rest) no matter how the server was started: from a terminal, or at login with no terminal at all. The server passes on its own environment as the base, without the variables that belong to the tool that launched it, and fills in `HOME`, `USER`, `LOGNAME`, `SHELL` and `LANG` when they are missing.
 
 One thing to know: tmux fixes that base environment when its server first starts. A variable you export later in some other terminal does not appear in existing or new sessions until all sessions have ended.
 
@@ -1330,27 +1332,27 @@ aubergine service install      start the Aubergine server at login (macOS)
 aubergine service uninstall    stop starting it at login
 ```
 
-`attach` and `here` show the very same session as the canvas, so both views stay in step. Close the terminal window to detach; the session keeps running. See [Moving your existing terminals over](#moving-your-existing-terminals-over) for `here`, `move`, `scan`, `import` and `shell-hook`.
+`attach` and `here` show the very same terminal as the canvas, so both views stay in step. Close the terminal window to detach; the terminal keeps running. See [Moving your existing terminals over](#moving-your-existing-terminals-over) for `here`, `move`, `scan`, `import` and `shell-hook`.
 
-`new`, `here` and `import` take `--canvas <name>`: the name, the start of it if that is unambiguous, or the canvas's ID. Capitals do not matter. Without it the session goes to the canvas you looked at most recently in a browser, or to the first canvas if the server has not seen a browser since it started. `canvas list` marks that canvas with `*`.
+`new`, `here` and `import` take `--canvas <name>`: the name, the start of it if that is unambiguous, or the canvas's ID. Capitals do not matter. Without it the terminal goes to the canvas you looked at most recently in a browser, or to the first canvas if the server has not seen a browser since it started. `canvas list` marks that canvas with `*`.
 
 `service install` writes a per-user launchd agent that runs the server from the copy the command belongs to (an installed copy or a checkout alike), with the port and data folder in effect when you ran it. The web app must be built: the installer does that, and `aubergine start` does it on first use; for a manual install run `pnpm build` first.
 
 `open --print` prints an address that signs a browser in. Treat it like a password: anyone who can open it on this computer can use your terminals.
 
-## For programs inside a session
+## For programs inside a terminal
 
-Every session's shell has these variables:
+Every terminal's shell has these variables:
 
 | Variable | Meaning |
 |---|---|
 | `AUBERGINE_URL` | Address of the server |
-| `AUBERGINE_SESSION_ID` | This session's ID |
-| `AUBERGINE_TOKEN` | A token that is valid for this session only |
+| `AUBERGINE_SESSION_ID` | This terminal's ID |
+| `AUBERGINE_TOKEN` | A token that is valid for this terminal only |
 | `AUBERGINE_BIN` | The folder with the `aubergine` command, also at the end of `PATH` |
-| `AUBERGINE_PORT`, `AUBERGINE_DATA_DIR` | The port and data folder of the server the session belongs to, so that `aubergine` typed in it talks to that server |
+| `AUBERGINE_PORT`, `AUBERGINE_DATA_DIR` | The port and data folder of the server the terminal belongs to, so that `aubergine` typed in it talks to that server |
 
-With the token as a bearer credential, a program may do these things, all for its own session and no other:
+With the token as a bearer credential, a program may do these things, all for its own terminal and no other:
 
 ```
 PUT  /v1/sessions/<id>/attention    {"state": "working" | "waiting" | "done" | "none", "message": "..."}
@@ -1366,7 +1368,7 @@ POST /v1/sessions/<id>/messages/<message>/reply   {"text": "..."} answer a messa
 POST /v1/sessions/<id>/tell         {"to": "<name or ID>", "text": "..."} message another terminal, where you allowed that
 ```
 
-Everything else is refused: it cannot list runs or workflows, start a run, reach another session's run, read a draft it did not propose, accept anything, or run a repository workflow nobody accepted. `aubergine note`, `aubergine attention`, `aubergine inbox`, `aubergine reply`, `aubergine tell`, `aubergine hook` and the in-session `aubergine workflow` commands are thin wrappers around these calls. This token is made for the session by Aubergine and is separate from the [API tokens](#api-tokens) you create yourself, which can do more.
+Everything else is refused: it cannot list runs or workflows, start a run, reach another terminal's run, read a draft it did not propose, accept anything, or run a repository workflow nobody accepted. `aubergine note`, `aubergine attention`, `aubergine inbox`, `aubergine reply`, `aubergine tell`, `aubergine hook` and the in-terminal `aubergine workflow` commands are thin wrappers around these calls. This token is made for the terminal by Aubergine and is separate from the [API tokens](#api-tokens) you create yourself, which can do more.
 
 ## A guide for agents
 
@@ -1461,7 +1463,7 @@ An agent in one terminal sometimes needs to tell the agent in another something:
 aubergine tell "api server" "Rebase on main before you go on."
 ```
 
-Nothing is typed into the terminal. Its title shows "✉ 1 from you". If an agent is running there and is idle, Aubergine types one fixed sentence into it: "There is a message for this session in Aubergine. Run `aubergine inbox` to read it." That sentence is the same for every message; nothing of yours and no name is in it. It is typed at most once for a batch of unread messages, not again within two minutes, never into a plain shell (where it would be run as a command), only while the agent is seen to be the program in front of the terminal, never while the agent is working or is waiting on a question of its own, and not on top of something you typed a moment ago.
+Nothing is typed into the terminal. Its title shows "✉ 1 from you". If an agent is running there and is idle, Aubergine types one fixed sentence into it: "There is a message for this terminal in Aubergine. Run `aubergine inbox` to read it." That sentence is the same for every message; nothing of yours and no name is in it. It is typed at most once for a batch of unread messages, not again within two minutes, never into a plain shell (where it would be run as a command), only while the agent is seen to be the program in front of the terminal, never while the agent is working or is waiting on a question of its own, and not on top of something you typed a moment ago.
 
 **The agent reads and answers** with `aubergine inbox` (which prints each unread message between two marker lines, with who sent it, and marks it read) and `aubergine reply <id> "<answer>"`. An agent can always answer a message from you. Its answer shows on the terminal as "✉ 1 for you" and puts the terminal in the "waiting" queue.
 
@@ -1521,12 +1523,12 @@ curl -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/jso
 
 | Scope | Allows |
 |---|---|
-| `read` | see canvases, sessions, layout and notes; follow changes |
+| `read` | see canvases, terminals, layout and notes; follow changes |
 | `canvases:write` | create, rename, reorder and close canvases; move and resize nodes; frames; show a canvas in the browser |
-| `sessions:write` | start, rename, tag, move, park, restore and end sessions; show a session in the browser. By itself it starts plain shells and runs nothing: starting a session **with a command** also needs `terminal:input` with a reach that covers the new session (its canvas, its tags), and is refused where new sessions start people only |
-| `notes:write` | change a session's pinned note and add entries to its note log |
+| `sessions:write` | start, rename, tag, move, park, restore and end terminals; show a terminal in the browser. By itself it starts plain shells and runs nothing: starting a terminal **with a command** also needs `terminal:input` with a reach that covers the new terminal (its canvas, its tags), and is refused where new terminals start people only |
+| `notes:write` | change a terminal's pinned note and add entries to its note log |
 | `workflows:write` | propose workflows and steps as drafts for you to review, and ask for an item of the [library](#the-library) to be installed (the request waits for you; no token can accept it). With review switched off for the token: create, change, copy and remove workflows and saved steps directly |
-| `runs:write` | start runs of workflows on sessions and report on them (done, blocked, go to, pause, resume, stop). By itself it types nothing into a terminal; with `terminal:input` on that terminal, the one fixed kickoff sentence is typed |
+| `runs:write` | start runs of workflows on terminals and report on them (done, blocked, go to, pause, resume, stop). By itself it types nothing into a terminal; with `terminal:input` on that terminal, the one fixed kickoff sentence is typed |
 | `tasks:write` | propose tasks for the queue and ask you for something in writing; withdraw what it proposed. Both wait for you and start nothing. With review switched off for the token, its tasks are queued without your yes. It cannot accept, reorder or start tasks |
 | `terminal:read`, `terminal:input` | read what terminals show, and type into them. Not implied by anything above, and each token says which terminals it may reach. **With `terminal:input` a token can run any command as you.** See [Terminal access](#terminal-access) before granting either |
 
@@ -1534,7 +1536,7 @@ Neither terminal scope is implied by any other, `read` included.
 
 **What no token can do, whatever its scopes:** create, list or revoke tokens; read the activity log; change settings; see, bring in or stop terminals outside Aubergine. Those stay with you, in the signed-in browser and the `aubergine` command.
 
-**The routes** are in [docs/api.md](docs/api.md): one section for each, with the scope it needs, its parameters, what it takes and gives, and an example with curl. In short: canvases (list, create, read, change, close, show), sessions (list, start, read, change, end, move, park, restore, show), notes, layout (nodes and frames), and a stream of changes.
+**The routes** are in [docs/api.md](docs/api.md): one section for each, with the scope it needs, its parameters, what it takes and gives, and an example with curl. In short: canvases (list, create, read, change, close, show), terminals (list, start, read, change, end, move, park, restore, show), notes, layout (nodes and frames), and a stream of changes.
 
 That reference is not written by hand. Every route is declared once in the code; the server registers its handlers from those declarations and describes them, as an OpenAPI 3.1 document, at:
 
@@ -1595,7 +1597,7 @@ A program with an API token can read what your terminals show and type into them
 
 - **The two scopes**, `terminal:read` and `terminal:input`. Both are off unless you tick them.
 - **Which terminals.** A token with either scope must be told when it is made: only terminals on certain canvases, only terminals with a certain tag, or every terminal. There is no default. The limit is checked on every call, so a terminal moved onto a canvas, or given the tag, comes within reach, and one that leaves is out.
-- **People only.** The lock in a terminal's title bar (or `aubergine protect <session>`) closes that terminal to every token, whatever its scopes and reach: no reading, no typing, and its matches are left out of searches. Only you can switch it, in the browser or from the command line; no token can, and neither can the terminal's own programs. **New Claude Code sessions start people only**: a program typing into an agent is the riskiest case. Change that, or make every new terminal start people only, under `terminal` in the settings.
+- **People only.** The lock in a terminal's title bar (or `aubergine protect <session>`) closes that terminal to every token, whatever its scopes and reach: no reading, no typing, and its matches are left out of searches. Only you can switch it, in the browser or from the command line; no token can, and neither can the terminal's own programs. **New Claude Code terminals start people only**: a program typing into an agent is the riskiest case. Change that, or make every new terminal start people only, under `terminal` in the settings.
 
 ```sh
 aubergine token create "deploy bot" --scope terminal:read --scope terminal:input --reach tag:deploy
@@ -1628,11 +1630,11 @@ POST /v1/sessions/<id>/run     {"command": "pnpm test", "timeoutSeconds": 120}
 - **Whatever has the keyboard receives it.** Typed into a shell, text with Enter is a command that runs. Typed into an agent, it is a prompt.
 - **`run`** types one command into a shell that is at its prompt, waits until the shell says the command finished, and answers with the exit code, what the terminal showed meanwhile and how long it took. It is refused when a program or an agent has the keyboard (`not_at_prompt`), when the shell does not report when commands finish (`no_shell_integration`; today that means any shell but zsh), and when another run is being waited for there (`run_in_progress`). When the time is up it answers `"finished": false` and leaves the command running: it never stops anything. A token with `terminal:input` but not `terminal:read` gets the exit code without the output.
 
-A session that is people only answers every one of these with `403` and the code `people_only`. A session outside a token's reach answers `403` with the code `out_of_reach`, in the same words whether or not there is such a session.
+A terminal that is people only answers every one of these with `403` and the code `people_only`. A terminal outside a token's reach answers `403` with the code `out_of_reach`, in the same words whether or not there is such a terminal.
 
 With `runs:write` and `terminal:input` on a terminal, a token that starts a workflow run there has the one fixed kickoff sentence typed for it, so `workflow run` works with no browser open. Without input on that terminal the run starts and nothing is typed, as before.
 
-What a `read` token no longer sees: the command line a terminal is running (`status.commandLine`) and the prompts in a session's note log are terminal content, and are given only to a token that may read that terminal.
+What a `read` token no longer sees: the command line a terminal is running (`status.commandLine`) and the prompts in a terminal's note log are terminal content, and are given only to a token that may read that terminal.
 
 ### What you see
 
@@ -1673,7 +1675,7 @@ You start an agent and want to know what it has been given: which MCP servers (c
 | your organization | settings files your organization put on this computer |
 | your account | comes with your account at the agent's maker, not from a file |
 
-and whether it is on, off, waiting for your approval in the agent, or simply configured. Where the same MCP server is set in two places, the one that wins is shown and the other is marked as not used. A line at the top says what Aubergine added for this session: its hooks, the tools you chose for it (none, its own work only, or more), and the one sentence it types to start a workflow.
+and whether it is on, off, waiting for your approval in the agent, or simply configured. Where the same MCP server is set in two places, the one that wins is shown and the other is marked as not used. A line at the top says what Aubergine added for this terminal: its hooks, the tools you chose for it (none, its own work only, or more), and the one sentence it types to start a workflow.
 
 **Names only.** These files can hold secrets: tokens in an MCP server's environment, in its arguments, in an address, in a header, in a hook's command. The panel shows the name of the program a server or a hook runs, the host of an address, and the names of environment variables and headers. It never shows a value, an argument, the rest of a command line, or the text of a permission rule beyond its tool and program. **Copy as text** gives the same list for a bug report, with the same rule. Nothing that is read is kept: not in Aubergine's state, not in a log.
 
@@ -1686,7 +1688,7 @@ and whether it is on, off, waiting for your approval in the agent, or simply con
 
 A file that is there but cannot be read, or is not in the form Aubergine was written to read, is named at the top of the panel as making the list incomplete. It is never shown as "nothing is on".
 
-**Only you, in the browser.** No API token and no session can read this, and the MCP server has no tool for it.
+**Only you, in the browser.** No API token and no terminal can read this, and the MCP server has no tool for it.
 
 **What a step needs.** When you start a workflow on an agent's terminal, each thing its steps need that is an MCP server or a command gets a mark: **found** (something configured has a name like it; hover to see what), **not found**, or **cannot tell**. The marks compare names. They do not check that anything works, and they never stop a run.
 
@@ -1721,7 +1723,7 @@ On the command line: `aubergine history [folder]` lists them, and `aubergine his
 
 **What this is careful about.** A conversation holds everything you and the agent said, including anything you pasted and any file it read.
 
-- **Only you, in the browser or on the command line.** No API token and no session can list, read, search or open conversations through Aubergine. An agent cannot read conversations through Aubergine, not even its own. The MCP server has no tool for it.
+- **Only you, in the browser or on the command line.** No API token and no terminal can list, read, search or open conversations through Aubergine. An agent cannot read conversations through Aubergine, not even its own. The MCP server has no tool for it.
 - **Nothing is kept.** A list, a transcript or a search is read from the agent's own records when you ask and is gone when you close it. Nothing of it is in Aubergine's state or in any log.
 - **Nothing is changed.** Aubergine never deletes, renames or edits a conversation.
 - **Shown as text.** What was said is shown as plain text, control characters made visible; nothing is drawn as markup and an address is not made into a link.
@@ -1742,8 +1744,8 @@ It needs two things, both from its environment:
 
 | | |
 |---|---|
-| Where the server is | `AUBERGINE_URL`, which every Aubergine session has; or `--url http://127.0.0.1:4600` |
-| A credential | `AUBERGINE_API_TOKEN`, the secret of an API token; when that is not set, the session's own `AUBERGINE_TOKEN` |
+| Where the server is | `AUBERGINE_URL`, which every Aubergine terminal has; or `--url http://127.0.0.1:4600` |
+| A credential | `AUBERGINE_API_TOKEN`, the secret of an API token; when that is not set, the terminal's own `AUBERGINE_TOKEN` |
 
 It never reads your sign-in, and it has no tool for what only you may do: making or revoking tokens, settings, "people only", accepting or discarding drafts, accepting a repository's workflows, the activity log.
 
@@ -1751,7 +1753,7 @@ It never reads your sign-in, and it has no tool for what only you may do: making
 
 | With | Tools |
 |---|---|
-| a session's own token | `workflow_status`, `workflow_done`, `workflow_blocked`, `workflow_goto`, `note_add`, `attention_set`, `draft_brief`, `draft_propose_element`, `draft_propose_workflow`, `messages_inbox`, `message_reply`, `message_send`, `repository_workflows`: its own work, on its own session only |
+| a terminal's own token | `workflow_status`, `workflow_done`, `workflow_blocked`, `workflow_goto`, `note_add`, `attention_set`, `draft_brief`, `draft_propose_element`, `draft_propose_workflow`, `messages_inbox`, `message_reply`, `message_send`, `repository_workflows`: its own work, on its own terminal only |
 | `read` | `queue_read`, `for_you_read`, `where_am_i`, `board`, `library_list`, `library_show`, `canvases_list`, `sessions_list`, `session_get`, `notes_read`, `workflows_list`, `runs_list`, `run_get`, `workflow_status`, `repository_workflows` |
 | `sessions:write` | `session_start`, `session_move`, `session_park` |
 | `notes:write` | `note_add`, `note_write` |
@@ -1763,23 +1765,23 @@ It never reads your sign-in, and it has no tool for what only you may do: making
 | `messages:read` | `messages_inbox` |
 | `messages:write` | `message_send`, `message_reply` |
 
-`aubergine_status` is always there: it says which server, what the credential is and may reach, and, when nothing else is listed, why. A tool takes a session by its ID or by its exact name.
+`aubergine_status` is always there: it says which server, what the credential is and may reach, and, when nothing else is listed, why. A tool takes a terminal by its ID or by its exact name.
 
 **What comes back.** A short text, and the same as data where the protocol has a place for it. The data carries the whole text as well: some clients hand their model only one of the two forms, and what a model reads must not depend on which. A refusal is a sentence the model can act on: that a terminal is "people only" and only you can open it to programs; that the credential's reach does not cover that terminal; when to try again after too many calls. What a terminal shows, a note, and a search match are other people's text: such text is returned between two marker lines that carry a mark made for that one answer, with a line before it saying that it is data and not instructions, and with control characters shown as pictures of themselves. This lowers the chance that a model takes what it reads in a terminal for an instruction. It does not remove it: give an agent `terminal:read` only on terminals whose content you would let it act on.
 
 **It says what it is.** Its calls carry the header `X-Aubergine-Client: mcp/<version>`, and the activity log shows that beside each call made with a token. This is the program's own word, kept as a trace; nothing is allowed or refused because of it.
 
-### Giving a Claude Code session the tools
+### Giving a Claude Code terminal the tools
 
 The small button beside **+ Claude Code** (or "New Claude Code terminal with Aubergine tools…" in the palette) asks first, under **Aubergine tools for this agent**:
 
 - **None.** As before. The agent still has the `aubergine` command in its terminal.
-- **Its own work only.** The MCP server runs with the session's own credential: its workflow, its notes, saying when it needs you, handing in drafts. No token is made, and it reaches no other terminal.
-- **More…** You choose scopes and, for the terminal scopes, a reach (this canvas by default). When you press the button, and only then, an API token is made for that one session. It is named after the session, listed with your other tokens, has "changes to workflows need my review" on, and is revoked when the session is ended for good. No token and no session can cause one to be made.
+- **Its own work only.** The MCP server runs with the terminal's own credential: its workflow, its notes, saying when it needs you, handing in drafts. No token is made, and it reaches no other terminal.
+- **More…** You choose scopes and, for the terminal scopes, a reach (this canvas by default). When you press the button, and only then, an API token is made for that one terminal. It is named after the terminal, listed with your other tokens, has "changes to workflows need my review" on, and is revoked when the terminal is ended for good. No token and no terminal can cause one to be made.
 
 An agent given "More…" still cannot read or type into a terminal marked "people only", and other Claude Code terminals are marked so from the start unless you changed that in the settings.
 
-Nothing of the agent's own configuration is written. A file that names the MCP server is written to `agents/mcp/` in the data folder, readable by you only, and passed to the agent on its launch line (`--mcp-config`), as the hook settings are. For "More…", the token's secret is in that one file and nowhere else: not in the state (only its hash is), not on the launch line, not in a log. The file is removed when the session is ended for good, when you revoke the token, and, for whatever a crash left behind, when the server next starts.
+Nothing of the agent's own configuration is written. A file that names the MCP server is written to `agents/mcp/` in the data folder, readable by you only, and passed to the agent on its launch line (`--mcp-config`), as the hook settings are. For "More…", the token's secret is in that one file and nowhere else: not in the state (only its hash is), not on the launch line, not in a log. The file is removed when the terminal is ended for good, when you revoke the token, and, for whatever a crash left behind, when the server next starts.
 
 ### Other MCP clients
 
@@ -1806,7 +1808,7 @@ aubergine token create "my MCP client" --scope read --scope notes:write
 aubergine token create "CI helper" --scope read --scope terminal:read --scope terminal:input --reach tag:ci
 ```
 
-The secret is printed once. A client started inside an Aubergine session needs neither `--url` nor a token for the session's own work: it finds both in its environment.
+The secret is printed once. A client started inside an Aubergine terminal needs neither `--url` nor a token for the terminal's own work: it finds both in its environment.
 
 The server speaks the current revision of the protocol and the earlier one that opens with a handshake, over standard input and output only. It writes nothing but protocol messages to standard output; what it has to say about itself goes to standard error, and never includes a credential.
 

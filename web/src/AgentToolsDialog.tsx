@@ -91,7 +91,7 @@ export function AgentToolsDialog() {
       }}
     >
       <div className="dialog agent-tools" role="dialog" aria-modal="true" aria-labelledby="agent-tools-title" data-testid="agent-tools-dialog">
-        <h2 id="agent-tools-title">New Claude Code session</h2>
+        <h2 id="agent-tools-title">New Claude Code terminal</h2>
         <WhereFields where={where} onChange={setWhere} />
         <fieldset className="token-scopes">
           <legend>Aubergine tools for this agent</legend>

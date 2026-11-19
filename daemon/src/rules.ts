@@ -71,7 +71,7 @@ const RunElement = z.object({
 registerActionKind({
   kind: 'run-element',
   title: 'Run a step',
-  says: 'Starts a run of one step from your shelf, on a terminal you name or a new one, with a short account of what happened as its task. The agent there does the rest with its own tools; Aubergine holds no credential for any app.',
+  says: 'Starts a run of one of your saved steps, on a terminal you name or a new one, with a short account of what happened as its task. The agent there does the rest with its own tools; Aubergine holds no credential for any app.',
   problem: (action, state) => {
     const parsed = RunElement.safeParse(action);
     if (!parsed.success) return 'Say which saved step to run, and on which terminal or on a new one on which canvas.';

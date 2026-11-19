@@ -27,17 +27,17 @@ export const KnownScope = z.enum([...GRANTABLE_SCOPES, ...RESERVED_SCOPES]);
 export type KnownScope = z.infer<typeof KnownScope>;
 
 export const SCOPE_MEANING: Record<KnownScope, string> = {
-  read: 'See canvases, sessions, layout and notes, and follow changes. See the sources of the library, with their addresses, and what they list.',
+  read: 'See canvases, terminals, layout and notes, and follow changes. See the sources of the library, with their addresses, and what they list.',
   'canvases:write': 'Create, rename, reorder and close canvases; move and resize nodes; add and change frames; show a canvas in the browser.',
-  'sessions:write': 'Start, rename, tag, move, park, restore and end sessions; show a session in the browser. By itself it starts plain shells: starting a session with a command also needs terminal:input.',
-  'notes:write': 'Change the pinned note of a session and add entries to its note log.',
+  'sessions:write': 'Start, rename, tag, move, park, restore and end terminals; show a terminal in the browser. By itself it starts plain shells: starting a terminal with a command also needs terminal:input.',
+  'notes:write': 'Change the summary of a terminal’s note and add entries to its log.',
   'terminal:read': 'Read what the terminals it may reach show and have printed, and search that. Whatever is on those screens, secrets included, is readable to this token.',
   'terminal:input': 'Type into the terminals it may reach, press keys there and run commands. This scope can run any command on this computer as you, in any terminal it may reach.',
-  'messages:read': 'Read the messages to and from the sessions it may reach, the ones you sent among them. Reading does not mark them read.',
-  'messages:write': 'Send messages to the sessions it may reach, under the name of the token. A message is never typed into a terminal. By itself this scope types nothing at all; with terminal:input on that terminal, one fixed sentence saying that a message waits is typed where an agent is idle.',
+  'messages:read': 'Read the messages to and from the terminals it may reach, the ones you sent among them. Reading does not mark them read.',
+  'messages:write': 'Send messages to the terminals it may reach, under the name of the token. A message is never typed into a terminal. By itself this scope types nothing at all; with terminal:input on that terminal, one fixed sentence saying that a message waits is typed where an agent is idle.',
   'workflows:write': 'Propose workflows and steps as drafts for you to review, and ask for an item of the library to be installed, which waits for you in the same way. With review switched off for the token: create, change, copy and remove workflows and saved steps directly.',
   'tasks:write': 'Propose tasks for the queue and ask you for something in writing; both wait for you, and a proposal starts nothing. Withdraw what it proposed. With review switched off for the token, a task it adds is queued without waiting for your yes. It cannot accept, reorder or start tasks.',
-  'runs:write': 'Start runs of workflows on sessions, and report on them: done, blocked, go to, pause, resume, stop. By itself it types nothing into a terminal; with terminal:input on that terminal, the one fixed kickoff sentence is typed.',
+  'runs:write': 'Start runs of workflows on terminals, and report on them: done, blocked, go to, pause, resume, stop. By itself it types nothing into a terminal; with terminal:input on that terminal, the one fixed kickoff sentence is typed.',
 };
 
 /** Every secret starts with this, so that one found in a file or a log can be recognised for what it is. */

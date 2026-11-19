@@ -36,6 +36,7 @@ How to create a token, what the scopes mean, the limits and the activity log are
 | [`POST /v1/sessions/{sessionId}/show`](#showsession) | Bring a session up in an open browser | `sessions:write` |
 | [`POST /v1/sessions/{sessionId}/desktop`](#opensessionondesktop) | Open a session in the owner's terminal application | browser only |
 | [`PUT /v1/settings/desktop`](#changedesktopsettings) | Say whether new terminals made in the page also open on the desktop | browser only |
+| [`PUT /v1/settings/appearance`](#changeappearance) | Choose how the page looks: light, dark, or matching the system | browser only |
 | [`POST /v1/sessions/{sessionId}/notes`](#appendnote) | Add an entry to a session's note log | session's own token, or `notes:write` |
 | [`PATCH /v1/canvases/{canvasId}/nodes/{nodeId}`](#updatenode) | Move, resize or color a node | `canvases:write` |
 | [`POST /v1/canvases/{canvasId}/frames`](#createframe) | Add a frame | `canvases:write` |
@@ -1581,6 +1582,31 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 {
   /** New terminals made in the page also open on the desktop. */
   openNew: boolean;
+}
+```
+
+**Errors:** 400, 401, 403, 409, 413, 429.
+
+### changeAppearance
+
+`PUT /v1/settings/appearance`: Choose how the page looks: light, dark, or matching the system.
+
+For the owner only: no token and no session can do this, whatever its scopes. It writes one key, `theme`, into the settings file and leaves the rest of the file as it was. Every browser has the choice from its next load.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `theme` | `"light" \| "dark" \| "system"` | yes | `light`, `dark`, or `system` to match the system. |
+
+**Answer** `200`:
+
+```ts
+{
+  /** `light`, `dark`, or `system` for whichever the system is set to. */
+  theme: "light" | "dark" | "system";
 }
 ```
 

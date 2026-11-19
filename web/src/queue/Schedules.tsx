@@ -76,7 +76,7 @@ export function Schedules() {
   };
   return (
     <section className="queue-part queue-schedules" data-testid="queue-schedules">
-      <p className="ui-meta">At these times, run this there.</p>
+      <p className="ui-meta">Run a saved step or a workflow at set times.</p>
       <ul>
         {rows.map((row) => (
           <li key={row.id} className="schedule-row" data-testid="schedule-row" data-on={row.on} data-result={row.last?.result ?? 'none'}>
@@ -164,7 +164,7 @@ export function Schedules() {
           </select>
           <textarea value={draft.task} rows={2} maxLength={4000} placeholder="What the agent is told to do, as the task of what it runs (optional)" aria-label="The task it is given" onChange={(e) => setDraft({ ...draft, task: e.target.value })} data-testid="schedule-task" />
           <button type="button" onClick={save} data-testid="schedule-save">
-            {draft.id === null ? `Add: ${daysWords(draft.days)} at ${draft.time}` : 'Save the change'}
+            {draft.id === null ? `Add schedule: ${daysWords(draft.days)} at ${draft.time}` : 'Save changes'}
           </button>
           <button type="button" className="quiet" onClick={() => setDraft(null)}>
             Cancel
@@ -172,8 +172,7 @@ export function Schedules() {
         </div>
       )}
       <p className="sheet-note">
-        Times are on this computer’s clock. Each time becomes a task of the queue: the limit and Hold count for it. The agent that takes it uses its own tools and connections; Aubergine calls nothing itself. The computer must be awake and Aubergine running: a
-        time that passed while it was not runs late, once, if it was not long ago, and is otherwise said to be missed.
+        Times are on this computer’s clock, and it must be awake with Aubergine running. Each time adds a task to the queue; a time that passed while it was off runs once, late, or is said to be missed.
       </p>
       {error && <p className="dialog-error">{error}</p>}
     </section>

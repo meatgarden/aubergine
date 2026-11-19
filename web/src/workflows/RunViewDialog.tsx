@@ -120,11 +120,11 @@ export function RunViewDialog() {
                 Blocked on “{picture.current?.name}”: {run.blockedReason}
               </p>
             )}
-            {picture.quiet && <p className="run-view-alert">Quiet: this terminal has been printing for a while without a report, so the picture here may be behind what is really going on.</p>}
+            {picture.quiet && <p className="run-view-alert">Quiet for a while: the terminal has printed without saying a step is done, so the step shown may be out of date.</p>}
             {Object.keys(run.inputs).length > 0 && (
               <p className="sheet-note">
                 {Object.entries(run.inputs)
-                  .map(([key, value]) => `${key}: ${value}`)
+                  .map(([key, value]) => `${key.replace(/^./, (c) => c.toUpperCase())}: ${value}`)
                   .join(' · ')}
               </p>
             )}
@@ -165,7 +165,7 @@ export function RunViewDialog() {
                       onClick={() => void reportRun(run.id, { type: 'done', elementId: picture.current?.id ?? '', ...(note.trim() ? { note: note.trim() } : {}) })}
                       data-testid="run-done"
                     >
-                      “{picture.current.name}” is done
+                      Mark “{picture.current.name}” done
                     </button>
                   </>
                 )}

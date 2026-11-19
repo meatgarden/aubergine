@@ -59,6 +59,8 @@ export function ProjectSwitcher() {
         }}
         data-testid="project-switcher"
       >
+        {/* Said in a word, so that a name alone is not taken for something else. */}
+        <span className="project-label">Project</span>
         <span className="project-name" data-testid="project-name">
           {current?.name ?? 'Project'}
         </span>

@@ -25,7 +25,7 @@ import {
 import { ActivityEntry, AgentToolsChoice, TokenView } from './tokens';
 import { CanvasChanges, ChangeEvent } from './events';
 import { Id } from './ids';
-import { Settings } from './settings';
+import { Settings, ThemeSetting } from './settings';
 
 /**
  * The wire protocol between the browser and the daemon. Bump the version and
@@ -143,6 +143,10 @@ export const DesktopSettingsAnswer = z.object({ openNew: z.boolean().describe('N
 export type DesktopSettingsAnswer = z.infer<typeof DesktopSettingsAnswer>;
 export const ChangeDesktopSettingsRequest = z.object({ openNew: z.boolean().describe('Whether new terminals made in the page also open on the desktop.') });
 export type ChangeDesktopSettingsRequest = z.infer<typeof ChangeDesktopSettingsRequest>;
+export const AppearanceAnswer = z.object({ theme: ThemeSetting.describe('`light`, `dark`, or `system` for whichever the system is set to.') });
+export type AppearanceAnswer = z.infer<typeof AppearanceAnswer>;
+export const ChangeAppearanceRequest = z.object({ theme: ThemeSetting.describe('`light`, `dark`, or `system` to match the system.') });
+export type ChangeAppearanceRequest = z.infer<typeof ChangeAppearanceRequest>;
 
 export const CreateSessionRequest = z.object({
   name: SessionName.optional(),

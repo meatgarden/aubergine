@@ -33,6 +33,8 @@ export default defineConfig({
   use: {
     baseURL: `http://127.0.0.1:${e2e.port}`,
     viewport: { width: 1400, height: 900 },
+    // The page matches the system unless told otherwise: the tests run as a system set to dark, and choose light where they mean to.
+    colorScheme: 'dark',
     trace: 'retain-on-failure',
     // An action that cannot happen fails by itself, naming the step, instead of using up the whole test.
     actionTimeout: 15_000,

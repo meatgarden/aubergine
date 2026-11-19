@@ -25,7 +25,7 @@ export function useWaitingWords(): string {
     .join(', ')}`;
 }
 
-/** Whether the desktop is told when a terminal starts waiting: a switch, kept with Help. */
+/** Whether the desktop is told when a terminal starts waiting: a switch, kept in Settings. */
 export function NotifySwitch() {
   const [notify, setNotify] = useState(notificationsWanted);
   return (

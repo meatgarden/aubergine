@@ -69,6 +69,7 @@ export function AppBar() {
       <span className="appbar-group appbar-status" role="group" aria-label="What needs you">
         {!live && <span className="warning">Reconnecting…</span>}
         <ForYou />
+        {screen('settings.show', 'Settings', 'How the page looks, and notifications', 'toolbar-settings')}
         {screen('help.show', 'Help', 'What you can do here, and the keyboard shortcuts', 'toolbar-help')}
       </span>
     </header>

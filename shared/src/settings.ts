@@ -7,6 +7,14 @@ export const DEFAULT_FONT_FAMILY = 'Menlo, Monaco, "DejaVu Sans Mono", Consolas,
  * User settings, kept as `config.json` in the data folder. Every field is
  * optional in the file; anything left out takes its default.
  */
+/** The three choices of how the page looks. */
+export const THEMES = ['light', 'dark', 'system'] as const;
+export const ThemeSetting = z.enum(THEMES);
+export type ThemeSetting = z.infer<typeof ThemeSetting>;
+export const THEME_WORDS: Record<ThemeSetting, string> = { light: 'Light', dark: 'Dark', system: 'Match the system' };
+/** The theme that is drawn: the one chosen, or for "match the system" the one the system has. */
+export const themeShown = (setting: ThemeSetting, systemIsLight: boolean): 'light' | 'dark' => (setting === 'system' ? (systemIsLight ? 'light' : 'dark') : setting);
+
 export const Settings = z.object({
   font: z
     .object({
@@ -16,7 +24,8 @@ export const Settings = z.object({
       size: z.number().int().min(8).max(32).default(13),
     })
     .prefault({}),
-  theme: z.enum(['dark', 'light']).default('dark'),
+  /** Light, dark, or whichever the system is set to (and following it when that changes). A file that says dark or light keeps meaning that. */
+  theme: ThemeSetting.default('system'),
   /** Absolute path of the shell to start. `null` means the user's own `$SHELL`. */
   shell: z.string().startsWith('/').nullable().default(null),
   /** Folder new terminals start in (`~` is allowed). `null` means the home folder. */

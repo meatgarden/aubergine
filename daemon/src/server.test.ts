@@ -1219,7 +1219,7 @@ describe('unread output', () => {
 describe('settings', () => {
   it('serves the settings file with the state and applies shell and folder to new sessions', async () => {
     const initial = StateResponse.parse((await request('GET', paths.state)).json());
-    expect(initial.settings.theme).toBe('dark');
+    expect(initial.settings.theme).toBe('system');
 
     const folder = await realpath(dir);
     await writeFile(
