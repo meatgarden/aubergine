@@ -1,5 +1,6 @@
 import { THEMES, THEME_WORDS } from '@aubergine/shared';
 import { NotifySwitch } from './AttentionQueue';
+import { api } from './api';
 import { setOpenNew } from './desktop';
 import { useApp } from './store';
 import { chooseTheme, useThemeShown } from './theme';
@@ -14,6 +15,7 @@ export function SettingsDialog() {
   const theme = useApp((s) => s.settings.theme);
   const shown = useThemeShown();
   const openNew = useApp((s) => s.settings.desktop.openNew);
+  const remind = useApp((s) => s.settings.describe.remind);
   if (!open) return null;
   const close = (): void => useApp.getState().togglePanel(null);
   return (
@@ -53,6 +55,27 @@ export function SettingsDialog() {
             </label>
           </p>
           <p className="ui-meta">The window shows the same terminal as the canvas, and the two share one size.</p>
+        </section>
+        <section>
+          <h3>Agents</h3>
+          <p className="help-setting">
+            <label className="ui-check">
+              <input
+                type="checkbox"
+                checked={remind}
+                onChange={(e) => {
+                  const next = e.target.checked;
+                  void api.setDescribing(next).then(
+                    (now) => useApp.getState().setDescribeRemind(now.remind),
+                    (error: unknown) => useApp.getState().setNotice(`The setting was not changed: ${(error as Error).message}`),
+                  );
+                }}
+                data-testid="settings-describe-remind"
+              />
+              <span>Remind agents to describe their terminal</span>
+            </label>
+          </p>
+          <p className="ui-meta">An agent Aubergine starts is told to name its terminal, keep its summary true and add its links; where it stops without a name or a summary it is told once more.</p>
         </section>
         <section>
           <h3>Notifications</h3>

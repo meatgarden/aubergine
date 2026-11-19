@@ -1,4 +1,5 @@
 import { NEVER_BY_TOKEN, accessOf, type Action } from './access';
+import { DESCRIBE_STEPS } from './links';
 
 /**
  * The guide for agents: what Aubergine is to an agent in one of its
@@ -75,6 +76,7 @@ export const OWNERS_ALONE: Record<(typeof NEVER_BY_TOKEN)[number], string> = {
   'projects.manage': 'making, changing, archiving or removing a project, and moving a canvas to another project',
   'sharing.manage': 'saying what is shared between projects',
   'desktop.open': "opening a terminal in a window of the owner's own terminal application",
+  'describe.manage': "keeping a link that was only seen in a terminal, or putting what an agent suggested in place of the owner's own words",
 };
 
 const ownersAlone = (): string => [...new Set(NEVER_BY_TOKEN.map((action) => OWNERS_ALONE[action]))].join('; ');
@@ -137,6 +139,22 @@ export const GUIDE: readonly GuideSection[] = [
       { needs: ['note.append'], text: ['Each terminal has a note log with times, which your owner reads. Add an entry when something is worth knowing later: a decision, a result, where you stopped. Plain text. Never put a secret in a note.'] },
       { needs: ['note.append'], inTerminal: true, text: ['    aubergine note "Tests pass on the branch. The migration is not written yet."'] },
       { needs: ['note.append'], text: ['As a tool: note_add.'], tools: ['note_add'] },
+    ],
+  },
+  {
+    id: 'describing',
+    title: 'Describing your terminal',
+    parts: [
+      {
+        needs: ['describe.own', 'links.write'],
+        text: [
+          'Your owner tells terminals apart by what each says about itself: its name, its summary, and the links of its work (http or https addresses; what kind one is, is told from the address, and nothing is fetched). Keep these true.',
+          'What your owner wrote in their own hand is not replaced by yours: yours is kept beside it as a suggestion. That is not an error, and not something to get round.',
+        ],
+      },
+      { needs: ['describe.own', 'links.write'], inTerminal: true, text: DESCRIBE_STEPS.flatMap((step) => [`${step.say}:`, `    ${step.command}`]) },
+      { needs: ['describe.own'], text: ['As a tool: describe_self.'], tools: ['describe_self'] },
+      { needs: ['links.write', 'links.read'], text: ['As tools: link_add, links_read, link_remove.'], tools: ['link_add', 'links_read', 'link_remove'] },
     ],
   },
   {

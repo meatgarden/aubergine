@@ -327,6 +327,60 @@ export type ListCanvasSessionsResult = {
       paused: number;
       at: string | null;
     };
+    links: {
+      id: string;
+      /** The address, kept and opened exactly as given. Only http and https. */
+      url: string;
+      /** What it is, told from the address unless someone said otherwise. */
+      kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+      /** A few plain words for it. */
+      label: string;
+      /** Who added it: the owner, the agent (or a program), or the server by looking. */
+      source: "owner" | "agent" | "found";
+      by?: string;
+      /** When it was added. */
+      at: string;
+      ownerSet?: boolean;
+      suggested?: {
+        label: string;
+        kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+        at: string;
+      };
+      fromTerminal?: boolean;
+    }[];
+    written: {
+      name?: {
+        by: "owner" | "agent" | "found";
+        at: string;
+      };
+      summary?: {
+        by: "owner" | "agent" | "found";
+        at: string;
+      };
+    };
+    suggested: {
+      name?: {
+        value: string;
+        at: string;
+      };
+      summary?: {
+        value: string;
+        at: string;
+      };
+    };
+    found: {
+      branch: string | null;
+      repository: string | null;
+      repositoryUrl: string | null;
+      pullRequest: {
+        /** The address, kept and opened exactly as given. Only http and https. */
+        url: string;
+        number: number;
+        title: string;
+        state: "open" | "merged" | "closed" | "draft";
+      } | null;
+      at: string;
+    } | null;
   }[];
   nextCursor: string | null;
 };
@@ -431,6 +485,60 @@ export type StartSessionResult = {
       paused: number;
       at: string | null;
     };
+    links: {
+      id: string;
+      /** The address, kept and opened exactly as given. Only http and https. */
+      url: string;
+      /** What it is, told from the address unless someone said otherwise. */
+      kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+      /** A few plain words for it. */
+      label: string;
+      /** Who added it: the owner, the agent (or a program), or the server by looking. */
+      source: "owner" | "agent" | "found";
+      by?: string;
+      /** When it was added. */
+      at: string;
+      ownerSet?: boolean;
+      suggested?: {
+        label: string;
+        kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+        at: string;
+      };
+      fromTerminal?: boolean;
+    }[];
+    written: {
+      name?: {
+        by: "owner" | "agent" | "found";
+        at: string;
+      };
+      summary?: {
+        by: "owner" | "agent" | "found";
+        at: string;
+      };
+    };
+    suggested: {
+      name?: {
+        value: string;
+        at: string;
+      };
+      summary?: {
+        value: string;
+        at: string;
+      };
+    };
+    found: {
+      branch: string | null;
+      repository: string | null;
+      repositoryUrl: string | null;
+      pullRequest: {
+        /** The address, kept and opened exactly as given. Only http and https. */
+        url: string;
+        number: number;
+        title: string;
+        state: "open" | "merged" | "closed" | "draft";
+      } | null;
+      at: string;
+    } | null;
   };
   canvasId: string;
   node: {
@@ -543,6 +651,60 @@ export type ListSessionsResult = {
       paused: number;
       at: string | null;
     };
+    links: {
+      id: string;
+      /** The address, kept and opened exactly as given. Only http and https. */
+      url: string;
+      /** What it is, told from the address unless someone said otherwise. */
+      kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+      /** A few plain words for it. */
+      label: string;
+      /** Who added it: the owner, the agent (or a program), or the server by looking. */
+      source: "owner" | "agent" | "found";
+      by?: string;
+      /** When it was added. */
+      at: string;
+      ownerSet?: boolean;
+      suggested?: {
+        label: string;
+        kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+        at: string;
+      };
+      fromTerminal?: boolean;
+    }[];
+    written: {
+      name?: {
+        by: "owner" | "agent" | "found";
+        at: string;
+      };
+      summary?: {
+        by: "owner" | "agent" | "found";
+        at: string;
+      };
+    };
+    suggested: {
+      name?: {
+        value: string;
+        at: string;
+      };
+      summary?: {
+        value: string;
+        at: string;
+      };
+    };
+    found: {
+      branch: string | null;
+      repository: string | null;
+      repositoryUrl: string | null;
+      pullRequest: {
+        /** The address, kept and opened exactly as given. Only http and https. */
+        url: string;
+        number: number;
+        title: string;
+        state: "open" | "merged" | "closed" | "draft";
+      } | null;
+      at: string;
+    } | null;
   }[];
   nextCursor: string | null;
 };
@@ -626,6 +788,60 @@ export type GetSessionResult = {
     paused: number;
     at: string | null;
   };
+  links: {
+    id: string;
+    /** The address, kept and opened exactly as given. Only http and https. */
+    url: string;
+    /** What it is, told from the address unless someone said otherwise. */
+    kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+    /** A few plain words for it. */
+    label: string;
+    /** Who added it: the owner, the agent (or a program), or the server by looking. */
+    source: "owner" | "agent" | "found";
+    by?: string;
+    /** When it was added. */
+    at: string;
+    ownerSet?: boolean;
+    suggested?: {
+      label: string;
+      kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+      at: string;
+    };
+    fromTerminal?: boolean;
+  }[];
+  written: {
+    name?: {
+      by: "owner" | "agent" | "found";
+      at: string;
+    };
+    summary?: {
+      by: "owner" | "agent" | "found";
+      at: string;
+    };
+  };
+  suggested: {
+    name?: {
+      value: string;
+      at: string;
+    };
+    summary?: {
+      value: string;
+      at: string;
+    };
+  };
+  found: {
+    branch: string | null;
+    repository: string | null;
+    repositoryUrl: string | null;
+    pullRequest: {
+      /** The address, kept and opened exactly as given. Only http and https. */
+      url: string;
+      number: number;
+      title: string;
+      state: "open" | "merged" | "closed" | "draft";
+    } | null;
+    at: string;
+  } | null;
 };
 
 export type UpdateSessionBody = {
@@ -713,6 +929,60 @@ export type UpdateSessionResult = {
     paused: number;
     at: string | null;
   };
+  links: {
+    id: string;
+    /** The address, kept and opened exactly as given. Only http and https. */
+    url: string;
+    /** What it is, told from the address unless someone said otherwise. */
+    kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+    /** A few plain words for it. */
+    label: string;
+    /** Who added it: the owner, the agent (or a program), or the server by looking. */
+    source: "owner" | "agent" | "found";
+    by?: string;
+    /** When it was added. */
+    at: string;
+    ownerSet?: boolean;
+    suggested?: {
+      label: string;
+      kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+      at: string;
+    };
+    fromTerminal?: boolean;
+  }[];
+  written: {
+    name?: {
+      by: "owner" | "agent" | "found";
+      at: string;
+    };
+    summary?: {
+      by: "owner" | "agent" | "found";
+      at: string;
+    };
+  };
+  suggested: {
+    name?: {
+      value: string;
+      at: string;
+    };
+    summary?: {
+      value: string;
+      at: string;
+    };
+  };
+  found: {
+    branch: string | null;
+    repository: string | null;
+    repositoryUrl: string | null;
+    pullRequest: {
+      /** The address, kept and opened exactly as given. Only http and https. */
+      url: string;
+      number: number;
+      title: string;
+      state: "open" | "merged" | "closed" | "draft";
+    } | null;
+    at: string;
+  } | null;
 };
 
 export type MoveSessionBody = {
@@ -805,6 +1075,60 @@ export type MoveSessionResult = {
       paused: number;
       at: string | null;
     };
+    links: {
+      id: string;
+      /** The address, kept and opened exactly as given. Only http and https. */
+      url: string;
+      /** What it is, told from the address unless someone said otherwise. */
+      kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+      /** A few plain words for it. */
+      label: string;
+      /** Who added it: the owner, the agent (or a program), or the server by looking. */
+      source: "owner" | "agent" | "found";
+      by?: string;
+      /** When it was added. */
+      at: string;
+      ownerSet?: boolean;
+      suggested?: {
+        label: string;
+        kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+        at: string;
+      };
+      fromTerminal?: boolean;
+    }[];
+    written: {
+      name?: {
+        by: "owner" | "agent" | "found";
+        at: string;
+      };
+      summary?: {
+        by: "owner" | "agent" | "found";
+        at: string;
+      };
+    };
+    suggested: {
+      name?: {
+        value: string;
+        at: string;
+      };
+      summary?: {
+        value: string;
+        at: string;
+      };
+    };
+    found: {
+      branch: string | null;
+      repository: string | null;
+      repositoryUrl: string | null;
+      pullRequest: {
+        /** The address, kept and opened exactly as given. Only http and https. */
+        url: string;
+        number: number;
+        title: string;
+        state: "open" | "merged" | "closed" | "draft";
+      } | null;
+      at: string;
+    } | null;
   };
   canvasId: string;
   node: {
@@ -897,6 +1221,60 @@ export type ParkSessionResult = {
     paused: number;
     at: string | null;
   };
+  links: {
+    id: string;
+    /** The address, kept and opened exactly as given. Only http and https. */
+    url: string;
+    /** What it is, told from the address unless someone said otherwise. */
+    kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+    /** A few plain words for it. */
+    label: string;
+    /** Who added it: the owner, the agent (or a program), or the server by looking. */
+    source: "owner" | "agent" | "found";
+    by?: string;
+    /** When it was added. */
+    at: string;
+    ownerSet?: boolean;
+    suggested?: {
+      label: string;
+      kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+      at: string;
+    };
+    fromTerminal?: boolean;
+  }[];
+  written: {
+    name?: {
+      by: "owner" | "agent" | "found";
+      at: string;
+    };
+    summary?: {
+      by: "owner" | "agent" | "found";
+      at: string;
+    };
+  };
+  suggested: {
+    name?: {
+      value: string;
+      at: string;
+    };
+    summary?: {
+      value: string;
+      at: string;
+    };
+  };
+  found: {
+    branch: string | null;
+    repository: string | null;
+    repositoryUrl: string | null;
+    pullRequest: {
+      /** The address, kept and opened exactly as given. Only http and https. */
+      url: string;
+      number: number;
+      title: string;
+      state: "open" | "merged" | "closed" | "draft";
+    } | null;
+    at: string;
+  } | null;
 };
 
 export type RestoreSessionBody = {
@@ -984,6 +1362,60 @@ export type RestoreSessionResult = {
       paused: number;
       at: string | null;
     };
+    links: {
+      id: string;
+      /** The address, kept and opened exactly as given. Only http and https. */
+      url: string;
+      /** What it is, told from the address unless someone said otherwise. */
+      kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+      /** A few plain words for it. */
+      label: string;
+      /** Who added it: the owner, the agent (or a program), or the server by looking. */
+      source: "owner" | "agent" | "found";
+      by?: string;
+      /** When it was added. */
+      at: string;
+      ownerSet?: boolean;
+      suggested?: {
+        label: string;
+        kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+        at: string;
+      };
+      fromTerminal?: boolean;
+    }[];
+    written: {
+      name?: {
+        by: "owner" | "agent" | "found";
+        at: string;
+      };
+      summary?: {
+        by: "owner" | "agent" | "found";
+        at: string;
+      };
+    };
+    suggested: {
+      name?: {
+        value: string;
+        at: string;
+      };
+      summary?: {
+        value: string;
+        at: string;
+      };
+    };
+    found: {
+      branch: string | null;
+      repository: string | null;
+      repositoryUrl: string | null;
+      pullRequest: {
+        /** The address, kept and opened exactly as given. Only http and https. */
+        url: string;
+        number: number;
+        title: string;
+        state: "open" | "merged" | "closed" | "draft";
+      } | null;
+      at: string;
+    } | null;
   };
   canvasId: string;
   node: {
@@ -8351,6 +8783,60 @@ export type ProtectSessionResult = {
     paused: number;
     at: string | null;
   };
+  links: {
+    id: string;
+    /** The address, kept and opened exactly as given. Only http and https. */
+    url: string;
+    /** What it is, told from the address unless someone said otherwise. */
+    kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+    /** A few plain words for it. */
+    label: string;
+    /** Who added it: the owner, the agent (or a program), or the server by looking. */
+    source: "owner" | "agent" | "found";
+    by?: string;
+    /** When it was added. */
+    at: string;
+    ownerSet?: boolean;
+    suggested?: {
+      label: string;
+      kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+      at: string;
+    };
+    fromTerminal?: boolean;
+  }[];
+  written: {
+    name?: {
+      by: "owner" | "agent" | "found";
+      at: string;
+    };
+    summary?: {
+      by: "owner" | "agent" | "found";
+      at: string;
+    };
+  };
+  suggested: {
+    name?: {
+      value: string;
+      at: string;
+    };
+    summary?: {
+      value: string;
+      at: string;
+    };
+  };
+  found: {
+    branch: string | null;
+    repository: string | null;
+    repositoryUrl: string | null;
+    pullRequest: {
+      /** The address, kept and opened exactly as given. Only http and https. */
+      url: string;
+      number: number;
+      title: string;
+      state: "open" | "merged" | "closed" | "draft";
+    } | null;
+    at: string;
+  } | null;
 };
 
 export type SetTakesMessagesBody = {
@@ -8437,6 +8923,60 @@ export type SetTakesMessagesResult = {
     paused: number;
     at: string | null;
   };
+  links: {
+    id: string;
+    /** The address, kept and opened exactly as given. Only http and https. */
+    url: string;
+    /** What it is, told from the address unless someone said otherwise. */
+    kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+    /** A few plain words for it. */
+    label: string;
+    /** Who added it: the owner, the agent (or a program), or the server by looking. */
+    source: "owner" | "agent" | "found";
+    by?: string;
+    /** When it was added. */
+    at: string;
+    ownerSet?: boolean;
+    suggested?: {
+      label: string;
+      kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+      at: string;
+    };
+    fromTerminal?: boolean;
+  }[];
+  written: {
+    name?: {
+      by: "owner" | "agent" | "found";
+      at: string;
+    };
+    summary?: {
+      by: "owner" | "agent" | "found";
+      at: string;
+    };
+  };
+  suggested: {
+    name?: {
+      value: string;
+      at: string;
+    };
+    summary?: {
+      value: string;
+      at: string;
+    };
+  };
+  found: {
+    branch: string | null;
+    repository: string | null;
+    repositoryUrl: string | null;
+    pullRequest: {
+      /** The address, kept and opened exactly as given. Only http and https. */
+      url: string;
+      number: number;
+      title: string;
+      state: "open" | "merged" | "closed" | "draft";
+    } | null;
+    at: string;
+  } | null;
 };
 
 export interface StreamEventsQuery {
@@ -8856,6 +9396,257 @@ export type WriteRecapBody = {
 export type WriteRecapResult = {
   text: string;
   at: string;
+};
+
+export type ListLinksResult = {
+  /** The links of the terminal, in the order they are drawn. */
+  links: {
+    id: string;
+    /** The address, kept and opened exactly as given. Only http and https. */
+    url: string;
+    /** What it is, told from the address unless someone said otherwise. */
+    kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+    /** A few plain words for it. */
+    label: string;
+    /** Who added it: the owner, the agent (or a program), or the server by looking. */
+    source: "owner" | "agent" | "found";
+    by?: string;
+    /** When it was added. */
+    at: string;
+    ownerSet?: boolean;
+    suggested?: {
+      label: string;
+      kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+      at: string;
+    };
+    fromTerminal?: boolean;
+  }[];
+};
+
+export type AddLinkBody = {
+  /** The address, kept and opened exactly as given. Only http and https. */
+  url: string;
+  /** A few plain words for it. Left out: told from the address. */
+  label?: string;
+  /** What it is. Left out: told from the address. */
+  kind?: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+};
+
+export type AddLinkResult = {
+  link: {
+    id: string;
+    /** The address, kept and opened exactly as given. Only http and https. */
+    url: string;
+    /** What it is, told from the address unless someone said otherwise. */
+    kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+    /** A few plain words for it. */
+    label: string;
+    /** Who added it: the owner, the agent (or a program), or the server by looking. */
+    source: "owner" | "agent" | "found";
+    by?: string;
+    /** When it was added. */
+    at: string;
+    ownerSet?: boolean;
+    suggested?: {
+      label: string;
+      kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+      at: string;
+    };
+    fromTerminal?: boolean;
+  };
+  /** False where the owner had set this link in their own words: what was sent is kept beside it as a suggestion, and the link is as it was. */
+  kept: boolean;
+};
+
+export type ChangeLinkBody = {
+  /** Its new label. Left out: as it was. */
+  label?: string;
+  /** Its new kind. Left out: as it was. */
+  kind?: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+};
+
+export type ChangeLinkResult = {
+  link: {
+    id: string;
+    /** The address, kept and opened exactly as given. Only http and https. */
+    url: string;
+    /** What it is, told from the address unless someone said otherwise. */
+    kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+    /** A few plain words for it. */
+    label: string;
+    /** Who added it: the owner, the agent (or a program), or the server by looking. */
+    source: "owner" | "agent" | "found";
+    by?: string;
+    /** When it was added. */
+    at: string;
+    ownerSet?: boolean;
+    suggested?: {
+      label: string;
+      kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+      at: string;
+    };
+    fromTerminal?: boolean;
+  };
+  /** False where the owner had set this link in their own words: what was sent is kept beside it as a suggestion, and the link is as it was. */
+  kept: boolean;
+};
+
+export type RemoveLinkResult = {
+  /** The links of the terminal, in the order they are drawn. */
+  links: {
+    id: string;
+    /** The address, kept and opened exactly as given. Only http and https. */
+    url: string;
+    /** What it is, told from the address unless someone said otherwise. */
+    kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+    /** A few plain words for it. */
+    label: string;
+    /** Who added it: the owner, the agent (or a program), or the server by looking. */
+    source: "owner" | "agent" | "found";
+    by?: string;
+    /** When it was added. */
+    at: string;
+    ownerSet?: boolean;
+    suggested?: {
+      label: string;
+      kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+      at: string;
+    };
+    fromTerminal?: boolean;
+  }[];
+};
+
+export type ListSeenLinksResult = {
+  /** Addresses seen in what the terminal showed and not kept as links: the last twenty, newest last. Held in memory only. */
+  seen: {
+    /** The address, kept and opened exactly as given. Only http and https. */
+    url: string;
+    kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+    label: string;
+  }[];
+};
+
+export type KeepSeenLinkBody = {
+  /** An address from the list of those seen in this terminal. */
+  url: string;
+};
+
+export type KeepSeenLinkResult = {
+  link: {
+    id: string;
+    /** The address, kept and opened exactly as given. Only http and https. */
+    url: string;
+    /** What it is, told from the address unless someone said otherwise. */
+    kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+    /** A few plain words for it. */
+    label: string;
+    /** Who added it: the owner, the agent (or a program), or the server by looking. */
+    source: "owner" | "agent" | "found";
+    by?: string;
+    /** When it was added. */
+    at: string;
+    ownerSet?: boolean;
+    suggested?: {
+      label: string;
+      kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+      at: string;
+    };
+    fromTerminal?: boolean;
+  };
+  /** False where the owner had set this link in their own words: what was sent is kept beside it as a suggestion, and the link is as it was. */
+  kept: boolean;
+};
+
+export type DescribeSessionBody = {
+  /** A name for the terminal, after the work. */
+  name?: string;
+  /** What is being done here, in a few lines. It replaces the summary of the note. */
+  summary?: string;
+};
+
+export type DescribeSessionResult = {
+  /** The name the terminal has now. */
+  name: string;
+  /** The summary it has now. */
+  summary: string;
+  /** For each that was sent: whether it was put in place. False where the owner wrote their own: what was sent is kept as a suggestion. */
+  kept: {
+    name: boolean;
+    summary: boolean;
+  };
+  /** What is still missing from the terminal’s description of itself. */
+  missing: ("name" | "summary")[];
+};
+
+export type CheckDescribedBody = {
+  event: "start" | "stop" | "tool";
+  /** For `stop`: the agent is stopping after having been told once already in this turn. */
+  again?: boolean;
+};
+
+export type CheckDescribedResult = {
+  /** What the agent is to be told, or null for nothing. Fixed sentences: nothing stored is in them. */
+  say: string | null;
+  /** For `stop`: whether the agent is asked to go on for one more turn and set what is missing. Never twice in a turn. */
+  hold: boolean;
+};
+
+export type LookAgainResult = {
+  /** What was found about the terminal’s folder, or null where nothing is known. */
+  found: {
+    branch: string | null;
+    repository: string | null;
+    repositoryUrl: string | null;
+    pullRequest: {
+      /** The address, kept and opened exactly as given. Only http and https. */
+      url: string;
+      number: number;
+      title: string;
+      state: "open" | "merged" | "closed" | "draft";
+    } | null;
+    at: string;
+  } | null;
+};
+
+export type UseSuggestionBody = {
+  what: "name" | "summary" | "link";
+  /** For `link`: which one. */
+  linkId?: string;
+};
+
+export type UseSuggestionResult = {
+  /** The links of the terminal, in the order they are drawn. */
+  links: {
+    id: string;
+    /** The address, kept and opened exactly as given. Only http and https. */
+    url: string;
+    /** What it is, told from the address unless someone said otherwise. */
+    kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+    /** A few plain words for it. */
+    label: string;
+    /** Who added it: the owner, the agent (or a program), or the server by looking. */
+    source: "owner" | "agent" | "found";
+    by?: string;
+    /** When it was added. */
+    at: string;
+    ownerSet?: boolean;
+    suggested?: {
+      label: string;
+      kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+      at: string;
+    };
+    fromTerminal?: boolean;
+  }[];
+};
+
+export type ChangeDescribingBody = {
+  /** Whether agents are reminded to describe their terminal. */
+  remind: boolean;
+};
+
+export type ChangeDescribingResult = {
+  /** Whether agents are reminded to describe their terminal. */
+  remind: boolean;
 };
 
 export type ReportSessionRunBody = {
@@ -9696,6 +10487,17 @@ export const OPERATIONS = {
   sendFromSession: { method: 'POST', path: '/v1/sessions/{sessionId}/tell', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: null } },
   setAttention: { method: 'PUT', path: '/v1/sessions/{sessionId}/attention', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: null } },
   writeRecap: { method: 'PUT', path: '/v1/sessions/{sessionId}/recap', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: null } },
+  listLinks: { method: 'GET', path: '/v1/sessions/{sessionId}/links', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: "read" } },
+  addLink: { method: 'POST', path: '/v1/sessions/{sessionId}/links', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: "notes:write" } },
+  changeLink: { method: 'PATCH', path: '/v1/sessions/{sessionId}/links/{linkId}', params: ["sessionId", "linkId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: "notes:write" } },
+  removeLink: { method: 'DELETE', path: '/v1/sessions/{sessionId}/links/{linkId}', params: ["sessionId", "linkId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: "notes:write" } },
+  listSeenLinks: { method: 'GET', path: '/v1/sessions/{sessionId}/links/seen', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "terminal:read" } },
+  keepSeenLink: { method: 'POST', path: '/v1/sessions/{sessionId}/links/keep', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  describeSession: { method: 'PUT', path: '/v1/sessions/{sessionId}/described', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: null } },
+  checkDescribed: { method: 'POST', path: '/v1/sessions/{sessionId}/described/check', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: null } },
+  lookAgain: { method: 'POST', path: '/v1/sessions/{sessionId}/found', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  useSuggestion: { method: 'POST', path: '/v1/sessions/{sessionId}/described/use', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  changeDescribing: { method: 'PUT', path: '/v1/settings/describing', params: [], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   reportSessionRun: { method: 'POST', path: '/v1/sessions/{sessionId}/run/report', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: "runs:write" } },
   getSessionBrief: { method: 'GET', path: '/v1/sessions/{sessionId}/brief', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: null } },
   listSessionDrafts: { method: 'GET', path: '/v1/sessions/{sessionId}/drafts', params: ["sessionId"], hasBody: false, paged: true, idempotent: false, stream: false, access: { who: 'session', scope: null } },
@@ -10662,6 +11464,72 @@ export interface Client {
    * `PUT /v1/sessions/{sessionId}/recap`. A session's own token.
    */
   writeRecap(args: { sessionId: string; body: WriteRecapBody } & CallOptions): Promise<WriteRecapResult>;
+  /**
+   * A session's links.
+   *
+   * `GET /v1/sessions/{sessionId}/links`. A session's own token, or an API token with `read`.
+   */
+  listLinks(args: { sessionId: string } & CallOptions): Promise<ListLinksResult>;
+  /**
+   * Add a link to a session.
+   *
+   * `POST /v1/sessions/{sessionId}/links`. A session's own token, or an API token with `notes:write`.
+   */
+  addLink(args: { sessionId: string; body: AddLinkBody } & CallOptions): Promise<AddLinkResult>;
+  /**
+   * Change the label or the kind of a link.
+   *
+   * `PATCH /v1/sessions/{sessionId}/links/{linkId}`. A session's own token, or an API token with `notes:write`.
+   */
+  changeLink(args: { sessionId: string; linkId: string; body: ChangeLinkBody } & CallOptions): Promise<ChangeLinkResult>;
+  /**
+   * Remove a link from a session.
+   *
+   * `DELETE /v1/sessions/{sessionId}/links/{linkId}`. A session's own token, or an API token with `notes:write`.
+   */
+  removeLink(args: { sessionId: string; linkId: string } & CallOptions): Promise<RemoveLinkResult>;
+  /**
+   * Addresses seen in a terminal and not kept.
+   *
+   * `GET /v1/sessions/{sessionId}/links/seen`. Scope: `terminal:read`.
+   */
+  listSeenLinks(args: { sessionId: string } & CallOptions): Promise<ListSeenLinksResult>;
+  /**
+   * Keep an address that was seen in the terminal as a link.
+   *
+   * `POST /v1/sessions/{sessionId}/links/keep`. Signed-in browser only: no API token may call this.
+   */
+  keepSeenLink(args: { sessionId: string; body: KeepSeenLinkBody } & CallOptions): Promise<KeepSeenLinkResult>;
+  /**
+   * Name the session after its work, and say what it is doing.
+   *
+   * `PUT /v1/sessions/{sessionId}/described`. A session's own token.
+   */
+  describeSession(args: { sessionId: string; body: DescribeSessionBody } & CallOptions): Promise<DescribeSessionResult>;
+  /**
+   * Report a moment of an agent’s work, and learn what it is to be told.
+   *
+   * `POST /v1/sessions/{sessionId}/described/check`. A session's own token.
+   */
+  checkDescribed(args: { sessionId: string; body: CheckDescribedBody } & CallOptions): Promise<CheckDescribedResult>;
+  /**
+   * Look again at what can be found about a session.
+   *
+   * `POST /v1/sessions/{sessionId}/found`. Signed-in browser only: no API token may call this.
+   */
+  lookAgain(args: { sessionId: string } & CallOptions): Promise<LookAgainResult>;
+  /**
+   * Use what the agent suggested in place of the owner’s own words.
+   *
+   * `POST /v1/sessions/{sessionId}/described/use`. Signed-in browser only: no API token may call this.
+   */
+  useSuggestion(args: { sessionId: string; body: UseSuggestionBody } & CallOptions): Promise<UseSuggestionResult>;
+  /**
+   * Say whether agents are reminded to describe their terminal.
+   *
+   * `PUT /v1/settings/describing`. Signed-in browser only: no API token may call this.
+   */
+  changeDescribing(args: { body: ChangeDescribingBody } & CallOptions): Promise<ChangeDescribingResult>;
   /**
    * Report on the run a session is on.
    *

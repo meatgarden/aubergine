@@ -2,6 +2,7 @@ import { FileTaskArchive } from './task-archive';
 import { mkdir, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { SESSION_ENV, paths } from '@aubergine/shared';
+import { ghFinder } from './found/pull-request';
 import { AgentTools } from './agents/agent-tools';
 import { claudeLaunchLine, claudeSettingsFile, writeClaudeSettings } from './agents/claude-code';
 import { ClaudeHistory } from './agents/claude-history';
@@ -130,6 +131,8 @@ async function main(): Promise<void> {
     }),
     setDesktopOpenNew: (value) => settings.setDesktopOpenNew(value),
     setTheme: (value) => settings.setTheme(value),
+    setDescribeRemind: (value) => settings.setDescribeRemind(value),
+    pullRequests: ghFinder(),
     runArchive: new FileRunArchive(config.dataDir, (error) => console.warn(`Could not write the archive of runs: ${String(error)}`)),
     version: versionInfo(installRoot(), config).version,
   });

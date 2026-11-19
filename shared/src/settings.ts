@@ -101,6 +101,15 @@ export const Settings = z.object({
       logMaxBytes: z.number().int().min(4096).max(1024 * 1024 * 1024).default(4 * 1024 * 1024),
     })
     .prefault({}),
+  /** What a terminal says about itself. */
+  describe: z
+    .object({
+      /** Whether an agent that stops with its terminal not named, or with no summary, is told once to set them. The page changes this one. */
+      remind: z.boolean().default(true),
+      /** Whether the pull request of a terminal's branch is asked of the `gh` tool, where that is installed and signed in. Written by hand. */
+      pullRequests: z.boolean().default(true),
+    })
+    .prefault({}),
   /** Opening a canvas terminal in the owner's own terminal application. */
   desktop: z
     .object({

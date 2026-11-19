@@ -31,10 +31,13 @@ describe('hookActions', () => {
   it('marks the session as done and logs a short line when the agent stops', () => {
     const actions = hookActions('stop', { last_assistant_message: 'All 12 tests pass now.\nI changed two files.' });
     expect(actions).toEqual([
+      // First the server is asked whether the terminal is described.
+      { do: 'check', event: 'stop' },
       { do: 'attention', state: 'done' },
       { do: 'note', kind: 'event', text: 'Finished: All 12 tests pass now.' },
     ]);
     expect(hookActions('stop', {})).toEqual([
+      { do: 'check', event: 'stop' },
       { do: 'attention', state: 'done' },
       { do: 'note', kind: 'event', text: 'Finished.' },
     ]);
@@ -60,12 +63,14 @@ describe('hookActions', () => {
 });
 
 describe('generated settings', () => {
-  it('attaches one command hook to each of the four events', () => {
+  it('attaches one command hook to each of the five events', () => {
     const settings = claudeHooksSettings('aubergine');
-    expect(Object.keys(settings.hooks).sort()).toEqual(['Notification', 'SessionStart', 'Stop', 'UserPromptSubmit']);
+    expect(Object.keys(settings.hooks).sort()).toEqual(['Notification', 'PostToolUse', 'SessionStart', 'Stop', 'UserPromptSubmit']);
+    // After a tool: only the tool that runs commands.
+    expect(settings.hooks.PostToolUse).toEqual([{ matcher: 'Bash', hooks: [{ type: 'command', command: 'aubergine hook tool', timeout: 10 }] }]);
     expect(settings.hooks.SessionStart).toEqual([{ hooks: [{ type: 'command', command: 'aubergine hook start', timeout: 10 }] }]);
     // The start of a conversation says which conversation it is, and nothing else.
-    expect(hookActions('start', { session_id: '0190aaaa-bbbb-7ccc-8ddd-eeeeeeeeeeee', source: 'startup' })).toEqual([{ do: 'agent', conversationId: '0190aaaa-bbbb-7ccc-8ddd-eeeeeeeeeeee' }]);
+    expect(hookActions('start', { session_id: '0190aaaa-bbbb-7ccc-8ddd-eeeeeeeeeeee', source: 'startup' })).toEqual([{ do: 'agent', conversationId: '0190aaaa-bbbb-7ccc-8ddd-eeeeeeeeeeee' }, { do: 'check', event: 'start' }]);
     expect(settings.hooks.UserPromptSubmit).toEqual([
       { hooks: [{ type: 'command', command: 'aubergine hook prompt', timeout: 10 }] },
     ]);

@@ -98,6 +98,14 @@ export class SettingsFile {
     await this.reload();
   }
 
+  /** Writes `describe.remind`: whether agents are reminded to describe their terminal. It names a yes or a no and nothing that is run. */
+  async setDescribeRemind(value: boolean): Promise<void> {
+    await this.write((whole) => {
+      const describe = whole.describe !== null && typeof whole.describe === 'object' && !Array.isArray(whole.describe) ? (whole.describe as Record<string, unknown>) : {};
+      return { ...whole, describe: { ...describe, remind: value } };
+    });
+  }
+
   /** Writes `desktop.openNew`: one of the two keys the page changes. */
   async setDesktopOpenNew(value: boolean): Promise<void> {
     await this.write((whole) => {

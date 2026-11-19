@@ -1,4 +1,4 @@
-import { PROJECT_HEADER, type ThemeSetting } from '@aubergine/shared';
+import { PROJECT_HEADER, type LinkKind, type ThemeSetting } from '@aubergine/shared';
 import { z, type ZodType } from 'zod';
 import { createClient } from '@aubergine/client';
 import {
@@ -106,6 +106,15 @@ export const api = {
   openOnDesktop: (sessionId: string) => v1.openSessionOnDesktop({ sessionId }),
   setDesktopOpenNew: (openNew: boolean) => v1.changeDesktopSettings({ body: { openNew } }),
   setTheme: (theme: ThemeSetting) => v1.changeAppearance({ body: { theme } }),
+  setDescribing: (remind: boolean) => v1.changeDescribing({ body: { remind } }),
+  // What a terminal says about itself: its links, what was seen in it, what is found by looking.
+  addLink: (sessionId: string, body: { url: string; label?: string; kind?: LinkKind }) => v1.addLink({ sessionId, body }),
+  changeLink: (sessionId: string, linkId: string, body: { label?: string; kind?: LinkKind }) => v1.changeLink({ sessionId, linkId, body }),
+  removeLink: (sessionId: string, linkId: string) => v1.removeLink({ sessionId, linkId }),
+  seenLinks: (sessionId: string) => v1.listSeenLinks({ sessionId }),
+  keepSeen: (sessionId: string, url: string) => v1.keepSeenLink({ sessionId, body: { url } }),
+  lookAgain: (sessionId: string) => v1.lookAgain({ sessionId }),
+  useSuggestion: (sessionId: string, body: { what: 'name' | 'summary' | 'link'; linkId?: string }) => v1.useSuggestion({ sessionId, body }),
   updateSession: (sessionId: string, request: UpdateSessionRequest) =>
     call(Session, 'PATCH', paths.session(sessionId), request),
   parkSession: (sessionId: string) => call(Session, 'POST', paths.parkSession(sessionId), {}),

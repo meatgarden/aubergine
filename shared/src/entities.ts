@@ -11,6 +11,8 @@ import { AcceptedRepositoryWorkflow } from './repository';
 import { TypedBy } from './terminal';
 import { Run, Workflow } from './workflows';
 
+import { Found, LINKS_MAX, SessionLink, Suggested, Written } from './links';
+
 export const Timestamp = z.iso.datetime();
 const Name = z.string().trim().min(1).max(80);
 
@@ -308,6 +310,14 @@ export const Session = z.object({
   untold: Untold.nullable().default(null),
   /** Counts about its messages, for a mark on the canvas. The messages themselves are not state. */
   messages: SessionMessages.prefault({}),
+  /** The links that belong to its work: each with its kind, a short label, who added it and when. */
+  links: z.array(SessionLink).max(LINKS_MAX).default([]),
+  /** Who last wrote its name and its summary. Nothing for the name means it is still the one it was made with. */
+  written: Written.prefault({}),
+  /** What the agent would have written where the owner's own words stand: a suggestion, used only when the owner says. */
+  suggested: Suggested.prefault({}),
+  /** What the server found about its folder by looking: the branch, the repository, the pull request of that branch. */
+  found: Found.nullable().default(null),
 });
 export type Session = z.infer<typeof Session>;
 
