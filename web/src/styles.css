@@ -166,7 +166,7 @@ code {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-surface);
-  box-shadow: 0 4px 16px var(--shadow);
+  box-shadow: var(--shadow-bar);
 }
 .toolbar button.quiet:hover:not(:disabled) {
   color: var(--text);
@@ -206,7 +206,7 @@ code {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-surface);
-  box-shadow: 0 8px 24px var(--shadow);
+  box-shadow: var(--shadow-menu);
 }
 .toolbar-menu button {
   display: flex;
@@ -321,21 +321,6 @@ code {
   margin: var(--space-3) 0 2px;
   font-size: var(--font-body);
 }
-.toolbar-menu-check {
-  display: flex;
-  gap: var(--space-2);
-  align-items: flex-start;
-  margin-top: var(--space-1);
-  padding: var(--space-2) var(--space-2) var(--space-2);
-  border-top: 1px solid var(--border);
-  font-size: var(--font-body);
-  cursor: pointer;
-}
-.toolbar-menu-check span {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-}
 .badge-desktop {
   padding: 0 var(--space-2);
   font-size: var(--font-meta);
@@ -383,7 +368,7 @@ code {
   border: 1px solid var(--border);
   border-radius: var(--radius-surface);
   overflow: hidden;
-  box-shadow: 0 6px 20px var(--shadow);
+  box-shadow: var(--shadow-node);
 }
 .terminal-node.selected {
   border-color: var(--border-strong);
@@ -392,7 +377,7 @@ code {
   border-color: var(--accent);
   box-shadow: 
     0 0 0 1px var(--accent),
-    0 6px 20px var(--shadow);
+    var(--shadow-node);
 }
 
 .node-title {
@@ -500,7 +485,7 @@ code {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-surface);
-  box-shadow: 0 12px 40px var(--shadow);
+  box-shadow: var(--shadow-dialog);
 }
 /* A dialog with a long form: it never grows past the window, and scrolls inside itself with its buttons kept in view. */
 .dialog.agent-tools {
@@ -534,33 +519,6 @@ code {
   gap: var(--space-2);
 }
 
-.message {
-  display: grid;
-  place-items: center;
-  height: 100%;
-  padding: var(--space-4);
-  box-sizing: border-box;
-}
-.message-card {
-  max-width: 520px;
-  padding: 28px var(--space-8);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-surface);
-  font-size: var(--font-body);
-  line-height: var(--leading);
-}
-.message-card h1 {
-  margin: 0 0 var(--space-3);
-  font-size: var(--font-screen);
-}
-.message-card p {
-  margin: 0 0 var(--space-3);
-  color: var(--text-muted);
-}
-.message-card p:last-child {
-  margin-bottom: 0;
-}
 
 /* ---------- Ended shell ---------- */
 
@@ -601,7 +559,7 @@ code {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-surface);
-  box-shadow: 0 8px 24px var(--shadow);
+  box-shadow: var(--shadow-menu);
 }
 .parked-row {
   display: flex;
@@ -637,14 +595,6 @@ code {
   background: var(--working);
 }
 
-@keyframes busy-pulse {
-  50% {
-    opacity: 0.35;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-
-}
 .badge-exit {
   flex: none;
   padding: 0 var(--space-2);
@@ -683,7 +633,7 @@ code {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-surface);
-  box-shadow: 0 12px 40px var(--shadow);
+  box-shadow: var(--shadow-dialog);
   overflow: hidden;
 }
 .picker-input {
@@ -795,7 +745,7 @@ code {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-surface);
-  box-shadow: 0 6px 18px var(--shadow);
+  box-shadow: var(--shadow-node);
 }
 
 .color-own {
@@ -976,13 +926,13 @@ code {
   border-color: var(--attention);
   box-shadow: 
     0 0 0 2px var(--attention),
-    0 6px 20px var(--shadow);
+    var(--shadow-node);
 }
 .terminal-node[data-attention='done'] {
   border-color: var(--ok);
   box-shadow: 
     0 0 0 1px var(--ok),
-    0 6px 20px var(--shadow);
+    var(--shadow-node);
 }
 .badge-attention {
   flex: none;
@@ -1040,7 +990,7 @@ code {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-surface);
-  box-shadow: 0 8px 24px var(--shadow);
+  box-shadow: var(--shadow-menu);
 }
 .outside-panel > header {
   display: flex;
@@ -1100,7 +1050,7 @@ code {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-surface);
-  box-shadow: 0 6px 18px var(--shadow);
+  box-shadow: var(--shadow-node);
 }
 .move-menu button {
   text-align: left;
@@ -1384,7 +1334,6 @@ kbd.kept {
   flex-direction: column;
   background: var(--surface);
   border-right: 1px solid var(--border);
-  box-shadow: 8px 0 24px var(--shadow);
 }
 .panel-drawer-head {
   flex: none;
@@ -1676,7 +1625,7 @@ kbd.kept {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-control);
-  box-shadow: 0 8px 24px var(--shadow);
+  box-shadow: var(--shadow-menu);
 }
 .list-menu button {
   text-align: left;
@@ -2419,7 +2368,11 @@ tr[data-status='expired'] strong {
   border-radius: var(--radius-surface);
   box-shadow: 0 0 0 4px var(--ring);
   pointer-events: none;
-  transition: left 0.15s, top 0.15s, width 0.15s, height 0.15s;
+  transition:
+    left var(--motion-quick) var(--motion-ease),
+    top var(--motion-quick) var(--motion-ease),
+    width var(--motion-quick) var(--motion-ease),
+    height var(--motion-quick) var(--motion-ease);
 }
 .tour-card {
   position: fixed;
@@ -2429,7 +2382,7 @@ tr[data-status='expired'] strong {
   background: var(--surface);
   border: 1px solid var(--accent);
   border-radius: var(--radius-surface);
-  box-shadow: 0 12px 40px var(--shadow);
+  box-shadow: var(--shadow-dialog);
 }
 /* It sits in whichever corner covers least of what is needed just now. */
 .tour-card.at-bottom-right {
@@ -2510,16 +2463,6 @@ tr[data-status='expired'] strong {
   border-radius: var(--radius-control);
   background: var(--surface-raised);
 }
-.help-list {
-  margin: 0 0 var(--space-4);
-  padding-left: var(--space-6);
-}
-.help-list li {
-  margin-bottom: var(--space-2);
-}
-.help-list li button {
-  margin-left: var(--space-2);
-}
 
 /* A list an agent handed in, on the terminal that made it. */
 .list-mark {
@@ -2551,7 +2494,7 @@ tr[data-status='expired'] strong {
   background: var(--surface);
   border: 1px solid var(--accent);
   border-radius: var(--radius-surface);
-  box-shadow: 0 6px 20px var(--shadow);
+  box-shadow: var(--shadow-node);
   pointer-events: none;
 }
 
@@ -2681,7 +2624,7 @@ tr[data-status='expired'] strong {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-surface);
-  box-shadow: 0 12px 40px var(--shadow);
+  box-shadow: var(--shadow-dialog);
 }
 .away-panel header {
   display: flex;

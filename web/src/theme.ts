@@ -30,6 +30,13 @@ export function useThemeShown(): 'light' | 'dark' {
 
 /** Puts the theme on the page, and keeps a copy of the choice in this browser for the next load's first paint. */
 export function applyTheme(setting: ThemeSetting, shown: 'light' | 'dark'): void {
+  const root = document.documentElement;
+  if (root.dataset.theme !== shown) {
+    // The change is at once: for this moment nothing on the page takes time to change colour, so that no part of it
+    // is caught half-way between the two themes.
+    root.classList.add('theme-changing');
+    window.setTimeout(() => root.classList.remove('theme-changing'), 60);
+  }
   document.documentElement.dataset.theme = shown;
   document.documentElement.dataset.themeSetting = setting;
   document.querySelector('meta[name="theme-color"]')?.setAttribute('content', getComputedStyle(document.documentElement).getPropertyValue('--surface').trim() || '#17181c');

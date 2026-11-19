@@ -76,6 +76,7 @@ export function WorkflowEditor() {
     try {
       const result = await api.updateWorkflow(workflow.id, draft);
       setSaved(`Saved as version ${result.version}. Runs already going keep to the version they started on.`);
+      useApp.getState().say(`Saved “${draft.name}” as version ${result.version}.`);
       setLeaving(false);
     } catch (e) {
       setError((e as Error).message);
@@ -429,7 +430,7 @@ export function WorkflowEditor() {
           <button type="button" onClick={tryClose} data-testid="editor-cancel">
             Cancel
           </button>
-          <button type="button" className="primary" onClick={() => void save()} disabled={busy || !changed || problems.length > 0} data-testid="editor-save">
+          <button type="button" className="primary" onClick={() => void save()} disabled={busy || !changed || problems.length > 0} title={problems[0] ?? (!changed ? 'Nothing has changed since it was saved.' : undefined)} aria-busy={busy || undefined} data-testid="editor-save">
             Save
           </button>
         </div>

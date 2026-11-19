@@ -119,7 +119,7 @@ export function CloseDialog() {
             Cancel
           </button>
           <button type="button" className="danger" disabled={busy || held} onClick={() => void confirm()} data-testid="close-confirm">
-            End session
+            End terminal
           </button>
         </div>
       </div>

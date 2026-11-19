@@ -3,7 +3,7 @@ import { demoOf } from '@aubergine/shared';
 import { useApp } from '../store';
 import { removeDemo } from './actions';
 import { bestCorner, type Corner, type Obstacle } from './placement';
-import { tourSteps, type TourContext, type TourStep } from './registry';
+import { helpLines, tourSteps, type TourContext, type TourStep } from './registry';
 import './steps';
 import { neverShown, remembered, resumeAt, useTour } from './tour-store';
 
@@ -178,7 +178,7 @@ export function Tour() {
     return () => clearTimeout(timer);
   }, [pointing]);
 
-  const pointed = pointing ? (steps.find((s) => s.id === pointing.stepId) ?? null) : null;
+  const pointed = pointing ? (helpLines().find((s) => s.id === pointing.stepId) ?? null) : null;
   const shown = current ?? pointed;
   const find = useMemo(() => {
     if (!shown) return null;

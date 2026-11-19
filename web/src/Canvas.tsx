@@ -31,8 +31,8 @@ import { ParkedList } from './ParkedList';
 import { currentLayout, useApp } from './store';
 import { canvasActions } from './canvas-actions';
 import { runCommand } from './commands';
-import { afterOpening, setOpenNew } from './desktop';
-import { hint } from './shortcuts';
+import { afterOpening } from './desktop';
+import { hint, keysOf } from './shortcuts';
 import { useEndedRuns } from './workflows/ended-runs';
 import { EmptyCanvas } from './EmptyCanvas';
 import { FULL_SIZE_HINT, shouldSayFullSize } from './full-size-hint';
@@ -111,8 +111,7 @@ function NewMenu({ adding, narrow }: { adding: boolean; narrow: boolean }) {
       window.removeEventListener('keydown', key, true);
     };
   }, [open]);
-  const openNew = useApp((state) => state.settings.desktop.openNew);
-  const item = (command: Parameters<typeof runCommand>[0], label: string, says: string, testid?: string) => (
+  const item = (command: Parameters<typeof runCommand>[0], label: string, says: string, testid?: string, withKey = false) => (
     <button
       type="button"
       role="menuitem"
@@ -125,6 +124,7 @@ function NewMenu({ adding, narrow }: { adding: boolean; narrow: boolean }) {
       }}
     >
       {label}
+      {withKey && keysOf(command)[0] && <kbd className="toolbar-menu-key">{keysOf(command)[0]}</kbd>}
       <small>{says}</small>
     </button>
   );
@@ -138,21 +138,21 @@ function NewMenu({ adding, narrow }: { adding: boolean; narrow: boolean }) {
       </button>
       {open && (
         <span className="toolbar-menu" role="menu" data-testid="toolbar-new-menu">
+          {/* The first line is what the button does, with its key. */}
+          {item('terminal.new', 'Shell', 'A plain terminal on this canvas.', 'toolbar-new-shell', true)}
+          {item('terminal.newIn', 'Shell in a folder or a working copy…', 'Somewhere you choose, or kept apart on its own branch.', 'toolbar-new-in')}
+          <span className="toolbar-menu-heading" role="presentation">
+            Agents
+          </span>
           {item('agent.new', 'Claude Code', 'An agent that reports to this canvas.', 'toolbar-new-agent')}
           {item('agent.newWithTools', 'Claude Code with Aubergine tools…', 'Choose what it may do here first.', 'agent-with-tools')}
           {item('workflow.runOnAgent', 'Claude Code on a workflow…', 'Choose the workflow first.', 'agent-on-workflow')}
-          {item('terminal.newIn', 'Terminal in a folder or a working copy…', 'Somewhere you choose, or kept apart on its own branch.', 'toolbar-new-in')}
+          <span className="ui-menu-divider" role="separator" />
           {item('frame.new', 'Frame', 'A box to group terminals in.', 'toolbar-new-frame')}
           {/* Where the bar has no room for them, what is used seldom is here. */}
-          {narrow && parked > 0 && item('parked.open', `Parked terminals (${parked})…`, 'Put away, still running: bring one back.', 'toolbar-menu-parked')}
-          {narrow && item('outside.open', 'Terminals outside the canvas…', 'Open in your terminal application: bring them in.', 'toolbar-menu-outside')}
-          <label className="toolbar-menu-check" role="menuitemcheckbox" aria-checked={openNew} title="Every terminal you make here also opens in a window of your terminal application, showing the same terminal. Which application is in the settings file (desktop.app).">
-            <input type="checkbox" checked={openNew} onChange={(e) => void setOpenNew(e.target.checked)} data-testid="toolbar-desktop-new" />
-            <span>
-              Also open new terminals on the desktop
-              <small>A window of your terminal app, on the same terminal.</small>
-            </span>
-          </label>
+          {narrow && <span className="ui-menu-divider" role="separator" />}
+          {narrow && parked > 0 && item('parked.open', `Parked terminals: ${parked}…`, 'Put away, still running: bring one back.', 'toolbar-menu-parked')}
+          {narrow && item('outside.open', 'Terminals open elsewhere…', 'In your terminal application: bring one in.', 'toolbar-menu-outside')}
         </span>
       )}
     </span>
@@ -519,6 +519,12 @@ export function Canvas() {
       >
         <Background variant={BackgroundVariant.Dots} gap={24} size={1} />
         <CanvasMap />
+        {/* Before the bar in the page, so that a menu hanging from the bar lies over it. */}
+        {layout.length === 0 && frames.length === 0 && (
+          <Panel position="top-center" className="empty">
+            <EmptyCanvas />
+          </Panel>
+        )}
         <Panel position="top-left" className={`toolbar${narrow ? ' is-narrow' : ''}`}>
           <span className="toolbar-group" role="group" aria-label="Make something new">
             <NewMenu adding={adding} narrow={narrow} />
@@ -552,11 +558,6 @@ export function Canvas() {
           </span>
           {notice && <span className="warning">{notice}</span>}
         </Panel>
-        {layout.length === 0 && frames.length === 0 && (
-          <Panel position="top-center" className="empty">
-            <EmptyCanvas />
-          </Panel>
-        )}
       </ReactFlow>
       {fullSizeHint && (
         <div className="full-size-hint" role="status" style={{ left: Math.max(8, Math.min(fullSizeHint.x + 12, window.innerWidth - 340)), top: Math.max(8, fullSizeHint.y - 44) }} data-testid="full-size-hint">

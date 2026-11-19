@@ -165,7 +165,7 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await page.getByTestId('node-more').click();
   await page.getByRole('menuitem', { name: /^Park Terminal/ }).click();
   await expect(node).toHaveCount(0);
-  await page.getByRole('button', { name: 'Parked (1)' }).click();
+  await page.getByTestId('toolbar-parked').filter({ hasText: 'Parked 1' }).click();
   await page.getByRole('dialog', { name: 'Parked terminals' }).getByRole('button', { name: 'Restore' }).click();
   await expect(node).toHaveCount(1);
   await expect(outputLine(page, 'picked-44')).toHaveCount(1);
@@ -203,7 +203,7 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   };
   const standIn = nodePty.spawn('/bin/sh', [], { name: 'xterm-256color', cols: 80, rows: 24, cwd: outsideFolder, env: { PATH: process.env.PATH ?? '/usr/bin:/bin', HOME: process.env.HOME ?? '/' } });
   try {
-    await page.getByRole('button', { name: /^Outside terminals/ }).click();
+    await page.getByRole('button', { name: /^Terminals open elsewhere/ }).click();
     const row = page.getByTestId('outside-row').filter({ hasText: path.basename(outsideFolder) });
     await expect(row).toHaveCount(1, { timeout: 15_000 });
     await row.getByRole('button', { name: 'Add to canvas' }).click();
@@ -214,14 +214,14 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
     // The canvas glides to the new node; wait for that before touching anything, since a click interrupts it.
     const parkNew = page.getByTestId('terminal-node').filter({ hasText: path.basename(outsideFolder) }).getByTestId('node-more');
     await expect(parkNew).toBeInViewport({ ratio: 1 });
-    await page.getByRole('button', { name: /^Outside terminals/ }).click(); // close the panel, which lies over the node
+    await page.getByRole('button', { name: /^Terminals open elsewhere/ }).click(); // close the panel, which lies over the node
     await expect(page.getByTestId('outside-panel')).toHaveCount(0);
     await parkNew.click();
     await page.getByRole('menuitem', { name: new RegExp(`^Park ${path.basename(outsideFolder)}`) }).click();
-    await page.getByRole('button', { name: 'Parked (1)' }).click();
+    await page.getByTestId('toolbar-parked').filter({ hasText: 'Parked 1' }).click();
     await page.getByRole('button', { name: 'End', exact: true }).click();
-    await page.getByRole('button', { name: 'End session' }).click();
-    await expect(page.getByRole('button', { name: /^Parked \(/ })).toHaveCount(0);
+    await page.getByRole('button', { name: 'End terminal' }).click();
+    await expect(page.getByTestId('toolbar-parked')).toHaveCount(0);
   } finally {
     standIn.kill();
     rmSync(outsideFolder, { recursive: true, force: true });
@@ -305,11 +305,11 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await page.getByRole('button', { name: 'Close canvas', exact: true }).click();
   await expect(tabs).toHaveCount(1);
   await expect(node).toHaveCount(1);
-  await page.getByRole('button', { name: 'Parked (1)' }).click();
+  await page.getByTestId('toolbar-parked').filter({ hasText: 'Parked 1' }).click();
   await expect(page.getByTestId('parked-row')).toContainText(movedName ?? '');
   await page.getByRole('button', { name: 'End', exact: true }).click();
-  await page.getByRole('button', { name: 'End session' }).click();
-  await expect(page.getByRole('button', { name: /^Parked \(/ })).toHaveCount(0);
+  await page.getByRole('button', { name: 'End terminal' }).click();
+  await expect(page.getByTestId('toolbar-parked')).toHaveCount(0);
   await expect(node).toHaveCount(1);
 
   // When the shell exits, the node says so and offers a restart.
@@ -322,14 +322,14 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
 
   // Ending a parked session for good asks first.
   await page.getByRole('menuitem', { name: /^Park Terminal/, includeHidden: true }).dispatchEvent('click'); // it is in the terminal's menu, and the terminal may sit under the minimap, so no aiming at a point
-  await page.getByRole('button', { name: 'Parked (1)' }).click();
+  await page.getByTestId('toolbar-parked').filter({ hasText: 'Parked 1' }).click();
   await page.getByRole('button', { name: 'End', exact: true }).click();
   await expect(page.getByRole('alertdialog')).toContainText('ends the shell');
   await page.getByRole('button', { name: 'Cancel' }).click();
-  await page.getByRole('button', { name: 'Parked (1)' }).click();
+  await page.getByTestId('toolbar-parked').filter({ hasText: 'Parked 1' }).click();
   await page.getByRole('button', { name: 'End', exact: true }).click();
-  await page.getByRole('button', { name: 'End session' }).click();
-  await expect(page.getByRole('button', { name: /^Parked \(/ })).toHaveCount(0);
+  await page.getByRole('button', { name: 'End terminal' }).click();
+  await expect(page.getByTestId('toolbar-parked')).toHaveCount(0);
   await expect(node).toHaveCount(0);
 
   // A whole pass without the mouse: a canvas, two terminals, moving between them, switching
@@ -442,7 +442,7 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await expect(page.locator('[data-testid="terminal-node"][data-selected="true"]')).toHaveCount(1);
   await page.keyboard.press('p');
   await expect(node).toHaveCount(1);
-  await expect(page.getByRole('button', { name: 'Parked (1)' })).toBeVisible();
+  await expect(page.getByTestId('toolbar-parked')).toHaveText('Parked 1');
 
   // The list on the left, by keyboard: scope, the text filter, tags, the collapsed strip.
   const listRows = page.locator('.list-rows [data-testid="list-row"]');
@@ -590,7 +590,7 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await expect(page.getByTestId('picker-row')).toHaveCount(0);
   await page.keyboard.press('Enter');
   await expect(node).toHaveCount(2);
-  await expect(page.getByRole('button', { name: /^Parked \(/ })).toHaveCount(0);
+  await expect(page.getByTestId('toolbar-parked')).toHaveCount(0);
 });
 
 test('a workflow made from a template moves a terminal through its steps', async ({ page }) => {
@@ -1392,8 +1392,10 @@ test('the tour can be skipped, put away and taken up again, and put away for goo
   // Help: the same eight things as reminders, and "show me" points at what is on this canvas.
   await page.getByTestId('toolbar-help').click();
   const help = page.getByTestId('help-panel');
-  await expect(help.getByTestId('help-item')).toHaveCount(8);
-  await expect(help.locator('[data-step="workflow"]')).toContainText('A strip shows the step an agent is on; click it for the run. “Board” shows every run at once.');
+  // Every step of the tour has its line, and Help has a few of its own beside them.
+  await expect(help.locator('[data-testid="help-item"]:not([data-step^="help-"])')).toHaveCount(8);
+  expect(await help.getByTestId('help-item').count()).toBeGreaterThan(8);
+  await expect(help.locator('[data-step="workflow"]')).toContainText('A strip on a terminal shows the step its agent is on; click it for the run.');
   await expect(page.getByTestId('tour-ring')).toHaveCount(0);
   await help.locator('[data-step="workflow"]').getByTestId('help-show').click();
   await expect(help).toHaveCount(0);
@@ -2494,7 +2496,7 @@ test("working copies: two terminals on one repository change the same file apart
     await expect(nodeOf('three').getByTestId('node-more')).toBeInViewport({ ratio: 1 });
     await nodeOf('three').getByTestId('node-more').click();
     await nodeOf('three').getByRole('menuitem', { name: /^Park three/ }).click();
-    await page.getByRole('button', { name: /^Parked \(/ }).click();
+    await page.getByTestId('toolbar-parked').click();
     await page.locator('.parked-row, li, div').filter({ has: page.getByText('three', { exact: true }) }).getByRole('button', { name: 'End', exact: true }).last().click();
     const closing = page.getByTestId('close-copy');
     await expect(closing).toContainText('Ending the terminal removes nothing of it.');
@@ -2820,10 +2822,14 @@ test('a terminal on the desktop: the line in the menu makes new terminals open t
     const newest = async (known: string[]): Promise<string> => (await rows.evaluateAll((all) => all.map((row) => row.getAttribute('data-session') ?? ''))).find((id) => !known.includes(id)) ?? '';
 
     // Off to begin with: a new terminal opens nothing on the desktop.
+    // The tick box is in Settings, not in the menu beside "New terminal".
     await page.getByTestId('toolbar-new-more').click();
-    const line = page.getByTestId('toolbar-desktop-new');
-    await expect(line).not.toBeChecked();
+    await expect(page.getByTestId('toolbar-new-menu').locator('input')).toHaveCount(0);
     await page.keyboard.press('Escape');
+    await page.getByTestId('toolbar-settings').click();
+    const line = page.getByTestId('settings-desktop-new');
+    await expect(line).not.toBeChecked();
+    await page.getByTestId('settings-close').click();
     await page.getByTestId('toolbar-new-terminal').click();
     await expect(rows).toHaveCount(1);
     const first = await newest([]);
@@ -2843,7 +2849,7 @@ test('a terminal on the desktop: the line in the menu makes new terminals open t
     await expect(page.locator('.warning')).toContainText('they share one size: the view you used last sets it');
 
     // The line in the menu: ticked, it is kept in the settings file, and the next new terminal opens on the desktop too.
-    if (!(await page.getByTestId('toolbar-new-menu').isVisible())) await page.getByTestId('toolbar-new-more').click();
+    await page.getByTestId('toolbar-settings').click();
     await line.click();
     await expect(line).toBeChecked();
     expect((JSON.parse(readFileSync(settingsFile, 'utf8')) as { desktop: object }).desktop).toEqual({ app: 'command', command: '/usr/bin/touch {file}.asked', openNew: true });
@@ -2901,7 +2907,7 @@ test('a terminal on the desktop: the line in the menu makes new terminals open t
     expect((await fetch(`${origin}/v1/settings/desktop`, { method: 'PUT', headers: as, body: '{"openNew":false}' })).status).toBe(403);
 
     // Unticked again: kept, and the rest of the file is as it was.
-    await page.getByTestId('toolbar-new-more').click();
+    await page.getByTestId('toolbar-settings').click();
     await line.click();
     await expect(line).not.toBeChecked();
     expect((JSON.parse(readFileSync(settingsFile, 'utf8')) as { desktop: { openNew: boolean } }).desktop.openNew).toBe(false);
@@ -3078,7 +3084,10 @@ test('a project as a file: written out, read in under another name through the r
   await page.getByTestId('projects-open').click();
   const projects = page.getByTestId('projects-screen');
   const download = page.waitForEvent('download');
-  await projects.locator('[data-testid="project-item"]').filter({ has: page.locator('input[value="File test source"]') }).getByTestId('project-export').click();
+  // What is done seldom to a project is in its menu.
+  const source = projects.locator('[data-testid="project-item"]').filter({ has: page.locator('input[value="File test source"]') });
+  await source.getByTestId('project-more').click();
+  await source.getByTestId('project-export').click();
   const saved = await download;
   expect(saved.suggestedFilename()).toBe('file-test-source.project.json');
   const text = readFileSync((await saved.path()) ?? '', 'utf8');
@@ -4237,8 +4246,23 @@ test('theme: light, dark or the system\'s, chosen in Settings, at once and witho
     await expect(html).toHaveAttribute('data-theme', 'light');
     await expect(settings.getByTestId('theme-says')).toContainText('The system is set to light now');
     await expect.poll(terminalIsLight).toBe(true);
+    // The change is at once: 50ms after the theme has changed, no colour anywhere on the page is still on its way.
+    const onTheirWay = page.evaluate(
+      () =>
+        new Promise<string[]>((resolve) => {
+          const root = document.documentElement;
+          const was = root.dataset.theme;
+          const watch = new MutationObserver(() => {
+            if (root.dataset.theme === was) return;
+            watch.disconnect();
+            setTimeout(() => resolve(document.getAnimations().filter((a) => 'transitionProperty' in a && a.playState === 'running').map((a) => (a as CSSTransition).transitionProperty)), 50);
+          });
+          watch.observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+        }),
+    );
     await page.emulateMedia({ colorScheme: 'dark' });
     await expect(html).toHaveAttribute('data-theme', 'dark');
+    expect(await onTheirWay).toEqual([]);
     await expect.poll(terminalIsLight).toBe(false);
     await expect.poll(saved).toBe('system');
     // And on a reload the system's own theme is the first and only one drawn.
@@ -4248,5 +4272,195 @@ test('theme: light, dark or the system\'s, chosen in Settings, at once and witho
   } finally {
     // As a new install has it, for the tests that follow.
     await page.request.put('/v1/settings/appearance', { headers: { origin: new URL(page.url()).origin, 'sec-fetch-site': 'same-origin' }, data: { theme: 'system' } });
+  }
+});
+
+test('states: every piece draws hover, pressed, focus and disabled differently from rest in both themes, nothing moves under the pointer, and what opens travels only where motion is wanted', async ({ page }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  await expect(page.getByTestId('appbar')).toBeVisible();
+  // One of each piece, drawn by the page's own stylesheets.
+  await page.evaluate(() => {
+    const host = document.createElement('div');
+    host.id = 'gallery';
+    host.style.cssText = 'position:fixed;left:8px;top:8px;z-index:99999;display:flex;flex-direction:column;gap:12px;padding:16px;background:var(--surface);width:420px';
+    host.innerHTML = `
+      <button data-piece="button">Default</button>
+      <button class="primary" data-piece="primary">Primary</button>
+      <button class="quiet" data-piece="quiet">Quiet</button>
+      <button class="danger" data-piece="danger">Danger</button>
+      <button class="quiet ui-icon-button" data-piece="icon button">+</button>
+      <input data-piece="text field" placeholder="field" />
+      <select data-piece="select"><option>one</option></select>
+      <div class="ui-segmented"><button data-piece="segmented part">One</button><button aria-pressed="true">Two</button></div>
+      <div class="ui-tabs" role="tablist"><button class="ui-tab" role="tab" data-piece="tab">Tab</button><button class="ui-tab" role="tab" aria-selected="true">Now</button></div>
+      <button class="ui-row" data-piece="row">A row</button>
+      <div class="ui-card is-pressed" role="button" tabindex="0" data-piece="card">A card</div>
+      <span class="ui-menu" role="menu" style="position:static"><button role="menuitem" data-piece="menu item">A line</button></span>
+      <button class="ui-chip" data-piece="chip">chip</button>
+      <p class="ui-banner"><span>Waits.</span><button data-piece="banner button">Review</button></p>
+      <button class="ui-link" data-piece="link">A link</button>
+      <header class="node-title" style="--control-h:var(--control-compact)"><button class="node-tool" data-piece="title control">Note</button></header>`;
+    document.body.append(host);
+  });
+  const look = (el: Locator): Promise<{ drawn: string; box: string }> =>
+    el.evaluate((e) => {
+      const s = getComputedStyle(e);
+      const r = e.getBoundingClientRect();
+      return { drawn: [s.backgroundColor, s.borderTopColor, s.color, s.outlineStyle === 'none' ? 'none' : s.outlineColor + s.outlineWidth, s.opacity, s.boxShadow, s.cursor, s.textDecorationLine].join(' | '), box: [r.x, r.y, r.width, r.height, s.transform].join(' ') };
+    });
+  const pieces = page.locator('#gallery [data-piece]');
+  const names = await pieces.evaluateAll((all) => all.map((el) => el.getAttribute('data-piece') ?? ''));
+  expect(names).toHaveLength(16);
+  const missing: string[] = [];
+  for (const scheme of ['dark', 'light'] as const) {
+    await page.emulateMedia({ colorScheme: scheme, reducedMotion: 'reduce' });
+    await expect(page.locator('html')).toHaveAttribute('data-theme', scheme);
+    await page.evaluate(() => document.querySelectorAll('#gallery [data-piece]').forEach((el) => { if (el.matches('button, input, select')) (el as HTMLButtonElement).disabled = false; el.removeAttribute('aria-disabled'); }));
+    for (const [index, name] of names.entries()) {
+      const el = pieces.nth(index);
+      await page.mouse.move(900, 700);
+      await page.waitForTimeout(160);
+      const rest = await look(el);
+      await el.hover();
+      await page.waitForTimeout(160);
+      const hover = await look(el);
+      await page.mouse.down();
+      await page.waitForTimeout(160);
+      const pressed = await look(el);
+      await page.mouse.up();
+      await page.mouse.move(900, 700);
+      // Focus as the keyboard gives it: a key first, so that the ring is the keyboard's.
+      await page.keyboard.press('Tab');
+      await el.focus();
+      await page.waitForTimeout(160);
+      const focus = await look(el);
+      await el.evaluate((e) => {
+        (e as HTMLElement).blur();
+        if (e.matches('button, input, select')) (e as HTMLButtonElement).disabled = true;
+        else e.setAttribute('aria-disabled', 'true');
+      });
+      await page.waitForTimeout(160);
+      const disabled = await look(el);
+      if (hover.drawn === rest.drawn) missing.push(`${scheme} ${name}: hover`);
+      if (pressed.drawn === hover.drawn) missing.push(`${scheme} ${name}: pressed`);
+      if (focus.drawn === rest.drawn) missing.push(`${scheme} ${name}: focus`);
+      if (disabled.drawn === rest.drawn) missing.push(`${scheme} ${name}: disabled`);
+      // Nothing moves or grows under the pointer or a press.
+      if (hover.box !== rest.box || pressed.box !== rest.box) missing.push(`${scheme} ${name}: moves`);
+    }
+  }
+  expect(missing).toEqual([]);
+  await page.evaluate(() => document.getElementById('gallery')?.remove());
+  await page.emulateMedia({ colorScheme: 'dark', reducedMotion: 'reduce' });
+
+  // What opens: a menu and a dialog fade in and travel a few pixels; with less motion asked for they only fade.
+  const opening = async (opener: string, opened: string): Promise<{ name: string; travels: boolean; ms: number }> => {
+    await page.getByTestId(opener).click();
+    const found = await page.locator(opened).first().evaluate((el) => {
+      const animations = el.getAnimations().filter((a) => 'animationName' in a) as CSSAnimation[];
+      const first = animations[0];
+      const frames = first ? ((first.effect as KeyframeEffect).getKeyframes() as { transform?: string }[]) : [];
+      return { name: first?.animationName ?? getComputedStyle(el).animationName, travels: frames.some((frame) => frame.transform !== undefined && frame.transform !== 'none'), ms: Number((first?.effect as KeyframeEffect | undefined)?.getTiming().duration ?? 0) };
+    });
+    await page.keyboard.press('Escape');
+    await expect(page.locator(opened)).toHaveCount(0);
+    return found;
+  };
+  expect(await opening('toolbar-new-more', '[data-testid="toolbar-new-menu"]')).toEqual({ name: 'ui-fade', travels: false, ms: 120 });
+  expect(await opening('toolbar-help', '[data-testid="help-panel"]')).toEqual({ name: 'ui-fade', travels: false, ms: 120 });
+  await page.emulateMedia({ colorScheme: 'dark', reducedMotion: 'no-preference' });
+  expect(await opening('toolbar-new-more', '[data-testid="toolbar-new-menu"]')).toEqual({ name: 'ui-open-down', travels: true, ms: 180 });
+  expect(await opening('toolbar-help', '[data-testid="help-panel"]')).toEqual({ name: 'ui-open-up', travels: true, ms: 180 });
+  await page.emulateMedia({ colorScheme: 'dark', reducedMotion: 'reduce' });
+
+  // What just happened is said in one place: parking a terminal says so, with the way back.
+  await page.getByRole('button', { name: 'New canvas' }).click();
+  await page.getByTestId('toolbar-new-terminal').click();
+  const node = page.getByTestId('terminal-node');
+  await expect(node).toHaveCount(1);
+  await page.keyboard.press('Escape');
+  await node.getByTestId('node-more').click();
+  await page.getByRole('menuitem', { name: /^Park / }).click();
+  await expect(node).toHaveCount(0);
+  const toast = page.getByTestId('toast');
+  await expect(toast).toContainText('Parked');
+  await toast.getByTestId('toast-undo').click();
+  await expect(node).toHaveCount(1);
+  await expect(toast).toHaveCount(0);
+});
+
+test('rough surfaces: the menu beside "New terminal" begins with the shell, Help is short groups, and the sign-in card is in the middle', async ({ page, browser }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  await page.getByRole('button', { name: 'New canvas' }).click();
+  const rows = page.getByTestId('list-row');
+  await expect(rows).toHaveCount(0);
+
+  // The first line of the menu is what the button does, with its key; then the agents under a heading; then a line and Frame.
+  await page.getByTestId('toolbar-new-more').click();
+  const menu = page.getByTestId('toolbar-new-menu');
+  const lines = await menu.evaluate((el) => [...el.children].map((child) => (child.getAttribute('role') === 'separator' ? '—' : child.classList.contains('toolbar-menu-heading') ? `# ${child.textContent?.trim()}` : (child.childNodes[0]?.textContent ?? '').trim())));
+  expect(lines[0]).toBe('Shell');
+  expect(lines.indexOf('# Agents')).toBeGreaterThan(0);
+  expect(lines.slice(-2)).toEqual(['—', 'Frame']);
+  expect(lines.slice(lines.indexOf('# Agents') + 1, -2).every((line) => line !== '—' && !line.startsWith('#'))).toBe(true);
+  await expect(menu.getByTestId('toolbar-new-shell').locator('kbd')).toHaveText(/\S/);
+  // No tick box in it: that is in Settings.
+  await expect(menu.locator('input')).toHaveCount(0);
+  // Making one from the menu is making one with the button.
+  await menu.getByTestId('toolbar-new-shell').click();
+  await expect(rows).toHaveCount(1);
+  await page.keyboard.press('Escape');
+  await page.getByTestId('toolbar-new-terminal').click();
+  await expect(rows).toHaveCount(2);
+  const made = await page.request.get('/api/v1/state');
+  const { state } = (await made.json()) as { state: { sessions: { id: string; command?: string | null; agent?: unknown; cwd?: string | null }[] } };
+  const ids = await rows.evaluateAll((all) => all.map((row) => row.getAttribute('data-session')));
+  const [fromMenu, fromButton] = ids.map((id) => state.sessions.find((s) => s.id === id));
+  expect(fromMenu && fromButton).toBeTruthy();
+  expect(fromMenu?.agent ?? null).toBe(null);
+  expect(fromButton?.agent ?? null).toBe(null);
+  expect(fromMenu?.cwd ?? null).toBe(fromButton?.cwd ?? null);
+  await page.keyboard.press('Escape');
+  await page.getByTestId('toolbar-settings').click();
+  await expect(page.getByTestId('settings-dialog').getByTestId('settings-desktop-new')).toBeVisible();
+  await page.getByTestId('settings-close').click();
+
+  // The bar names what its two lists are, with counts as plain numbers.
+  expect(await page.locator('.react-flow__panel.toolbar').innerText()).not.toMatch(/\(\d+\)/);
+
+  // Help: four short groups with headings, the tour and the shortcuts at the top, an ordinary dialog's width.
+  await page.getByTestId('toolbar-help').click();
+  const help = page.getByTestId('help-panel');
+  await expect(help.getByTestId('help-group').locator('h3')).toHaveText(['Terminals', 'What waits for you', 'Workflows', 'Projects']);
+  for (const group of await help.getByTestId('help-group').all()) expect(await group.getByTestId('help-item').count()).toBeGreaterThan(0);
+  const shape = await help.evaluate((el) => {
+    const top = (id: string): number => el.querySelector(`[data-testid="${id}"]`)?.getBoundingClientRect().top ?? -1;
+    return { width: el.getBoundingClientRect().width, tour: top('help-tour'), shortcuts: top('help-shortcuts'), first: el.querySelector('[data-testid="help-group"]')?.getBoundingClientRect().top ?? 0, inside: el.getBoundingClientRect().bottom <= window.innerHeight };
+  });
+  expect(shape.width).toBeLessThanOrEqual(560);
+  expect(shape.tour).toBe(shape.shortcuts);
+  expect(shape.tour).toBeLessThan(shape.first);
+  expect(shape.inside).toBe(true);
+  // One line a thing: no line of Help is longer than two lines of text.
+  expect(await help.getByTestId('help-item').evaluateAll((all) => all.filter((li) => (li.querySelector('span')?.getBoundingClientRect().height ?? 0) > 44).length)).toBe(0);
+  await page.keyboard.press('Escape');
+
+  // A browser that has not signed in: one card in the middle at every width, with the command that prints the link again.
+  for (const width of [800, 1280, 1440]) {
+    const context = await browser.newContext({ viewport: { width, height: 800 }, baseURL: new URL(page.url()).origin });
+    const stranger = await context.newPage();
+    await stranger.goto('/');
+    const card = stranger.getByTestId('message-card');
+    await expect(card).toContainText('This browser is not signed in yet');
+    await expect(stranger.getByTestId('sign-in-command')).toHaveText('aubergine open --print');
+    const box = await card.evaluate((el) => { const r = el.getBoundingClientRect(); return { left: r.left, right: window.innerWidth - r.right, top: r.top, bottom: window.innerHeight - r.bottom, sentences: el.querySelectorAll('p').length }; });
+    expect(Math.abs(box.left - box.right)).toBeLessThanOrEqual(1);
+    expect(Math.abs(box.top - box.bottom)).toBeLessThanOrEqual(1);
+    expect(box.sentences).toBe(1);
+    await context.close();
   }
 });

@@ -306,7 +306,7 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
 
               {node && (
                 <span className="ui-menu-line node-menu-colour">
-                  <span>Colour</span>
+                  <span>Color</span>
                   <ColorButton
                     value={color}
                     onChange={(next) =>

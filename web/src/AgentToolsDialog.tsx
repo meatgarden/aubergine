@@ -141,7 +141,7 @@ export function AgentToolsDialog() {
                 </label>
                 <label>
                   <input type="radio" name="agent-reach" checked={reachKind === 'all'} onChange={() => setReachKind('all')} />
-                  <span className="token-warning">Every terminal, on every canvas, also ones started later</span>
+                  <span className="token-warning">Every terminal on every canvas, including ones started later</span>
                 </label>
               </fieldset>
             )}

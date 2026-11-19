@@ -106,17 +106,17 @@ export function OutsidePanel() {
         type="button"
         className="quiet"
         aria-expanded={open}
-        aria-label={`Outside terminals${terminals ? ` (${actionable.length})` : ''}`}
-        title={hint('outside.open', 'Terminals you have open outside the canvas')}
+        aria-label={`Terminals open elsewhere${terminals ? `: ${actionable.length}` : ''}`}
+        title={hint('outside.open', 'Terminals open in your terminal application and not here. One can be brought onto the canvas.')}
         onClick={() => runCommand('outside.open')}
       >
-        Outside{terminals ? ` (${actionable.length})` : ''}
+        Open elsewhere{terminals ? ` ${actionable.length}` : ''}
       </button>
       )}
       {open && (
-        <div className="outside-panel nowheel" role="dialog" aria-label="Outside terminals" data-testid="outside-panel">
+        <div className="outside-panel nowheel" role="dialog" aria-label="Terminals open elsewhere" data-testid="outside-panel">
           <header>
-            <span>Terminals open outside the canvas</span>
+            <span>Terminals open in your terminal application</span>
             <button type="button" className="quiet" onClick={() => void refresh()} disabled={loading}>
               {loading ? 'Looking…' : 'Refresh'}
             </button>

@@ -104,7 +104,7 @@ export function DescribeDialog() {
                 The agent in “{s.name}”
               </option>
             ))}
-            <option value={NEW_AGENT}>A new Claude Code session</option>
+            <option value={NEW_AGENT}>A new Claude Code terminal</option>
           </select>
         </label>
         <p className="sheet-note">Your description is not typed into the terminal. The agent is told to run a command, and reads it there.</p>

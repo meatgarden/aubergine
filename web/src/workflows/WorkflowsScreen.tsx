@@ -246,6 +246,7 @@ export function WorkflowsScreen() {
                                   void attempt(async () => {
                                     await api.removeWorkflow(workflow.id);
                                     useApp.getState().apply({ type: 'workflow.removed', workflowId: workflow.id });
+                                    useApp.getState().say(`Removed “${workflow.name}”.`);
                                     setRemoving(null);
                                   })
                                 }

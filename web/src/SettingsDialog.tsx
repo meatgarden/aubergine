@@ -1,17 +1,19 @@
 import { THEMES, THEME_WORDS } from '@aubergine/shared';
 import { NotifySwitch } from './AttentionQueue';
+import { setOpenNew } from './desktop';
 import { useApp } from './store';
 import { chooseTheme, useThemeShown } from './theme';
 import { ScreenHead } from './ui';
 
 /**
- * Settings: the one place for what a person changes about the page itself. How it looks, and whether the desktop
- * is told when a terminal starts waiting. Everything else is written in the settings file by hand.
+ * Settings: the one place for what a person changes about the page itself. How it looks, whether a new terminal
+ * also opens on the desktop, and whether the desktop is told when a terminal starts waiting. Everything else is written in the settings file by hand.
  */
 export function SettingsDialog() {
   const open = useApp((s) => s.panel === 'settings');
   const theme = useApp((s) => s.settings.theme);
   const shown = useThemeShown();
+  const openNew = useApp((s) => s.settings.desktop.openNew);
   if (!open) return null;
   const close = (): void => useApp.getState().togglePanel(null);
   return (
@@ -41,6 +43,16 @@ export function SettingsDialog() {
           <p className="ui-meta" data-testid="theme-says">
             {theme === 'system' ? `The system is set to ${shown} now; the page follows it when that changes.` : 'It changes at once, and is the same in every browser you open this in.'}
           </p>
+        </section>
+        <section>
+          <h3>New terminals</h3>
+          <p className="help-setting">
+            <label className="ui-check" title="Which application, or a command of your own, is written in the settings file.">
+              <input type="checkbox" checked={openNew} onChange={(e) => void setOpenNew(e.target.checked)} data-testid="settings-desktop-new" />
+              <span>Also open each new terminal in a window of your terminal application</span>
+            </label>
+          </p>
+          <p className="ui-meta">The window shows the same terminal as the canvas, and the two share one size.</p>
         </section>
         <section>
           <h3>Notifications</h3>

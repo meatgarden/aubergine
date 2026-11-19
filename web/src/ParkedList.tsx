@@ -1,3 +1,4 @@
+import { shortCommand, shortFolder } from '@aubergine/shared';
 import { useEffect, useRef } from 'react';
 import { runCommand } from './commands';
 import { hint } from './shortcuts';
@@ -41,8 +42,8 @@ export function ParkedList() {
 
   return (
     <div className="parked" ref={root}>
-      <button type="button" className="quiet" aria-expanded={open} title={hint('parked.open')} onClick={() => runCommand('parked.open')}>
-        Parked ({parked.length})
+      <button type="button" className="quiet" aria-expanded={open} title={hint('parked.open', 'Terminals put away from the canvas. Their shells keep running; one can be brought back.')} onClick={() => runCommand('parked.open')} data-testid="toolbar-parked">
+        Parked {parked.length}
       </button>
       {open && (
         <div className="parked-panel" role="dialog" aria-label="Parked terminals">
@@ -59,7 +60,7 @@ export function ParkedList() {
               <div className="parked-info">
                 <div>{session.name}</div>
                 <div className="parked-detail">
-                  {[fromCanvas(session.parkedFrom?.canvasId), session.command, session.cwd].filter(Boolean).join(' · ') || 'running'}
+                  {[fromCanvas(session.parkedFrom?.canvasId), session.command ? shortCommand(session.command) : null, shortFolder(session.cwd)].filter(Boolean).join(' · ') || 'running'}
                 </div>
               </div>
               <button type="button" onClick={() => restore(session.id)}>

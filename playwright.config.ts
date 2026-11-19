@@ -35,6 +35,9 @@ export default defineConfig({
     viewport: { width: 1400, height: 900 },
     // The page matches the system unless told otherwise: the tests run as a system set to dark, and choose light where they mean to.
     colorScheme: 'dark',
+    // What opens travels a few pixels as it fades in. The tests measure where things are the moment they are there, so they run
+    // as a system that asked for reduced motion (a fade, no travel); the test of motion itself asks for the full one.
+    contextOptions: { reducedMotion: 'reduce' },
     trace: 'retain-on-failure',
     // An action that cannot happen fails by itself, naming the step, instead of using up the whole test.
     actionTimeout: 15_000,

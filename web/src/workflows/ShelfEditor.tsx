@@ -71,6 +71,7 @@ export function ShelfEditor() {
       // Saving one that is on the shelf adds a version: what it said before stays, and no copy in a workflow is changed.
       const saved = editing === 'new' ? await api.createElement(fields) : await api.updateElement(editing, { ...fields, ...(note.trim() ? { note: note.trim() } : {}) });
       useApp.getState().apply({ type: 'shelf.changed', item: saved as never });
+      useApp.getState().say(`Saved the step “${element.name}”.`);
       close();
     } catch (e) {
       setError((e as Error).message);
@@ -220,7 +221,7 @@ export function ShelfEditor() {
           <button type="button" onClick={close}>
             Cancel
           </button>
-          <button type="button" className="primary" disabled={busy || problems.length > 0 || badNeed} onClick={() => void save()} data-testid="shelf-save">
+          <button type="button" className="primary" disabled={busy || problems.length > 0 || badNeed} title={problems[0] ?? (badNeed ? 'A need has no name yet.' : undefined)} aria-busy={busy || undefined} onClick={() => void save()} data-testid="shelf-save">
             Save
           </button>
         </div>

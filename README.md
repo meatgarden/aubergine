@@ -43,7 +43,7 @@ Something not right? Run `aubergine doctor`, or see [If something goes wrong](#i
 | 5. See who needs you | The count at the top shows who is waiting. Press `W` to go to the next one |
 | 6. Find anything | Press `⌘K` and type part of a name, folder, note or output |
 
-Already have terminals open elsewhere? Click **Outside** in the toolbar (or press `O`) and bring them in one at a time: [Moving your existing terminals over](#moving-your-existing-terminals-over).
+Already have terminals open elsewhere? Click **Open elsewhere** in the toolbar (or press `O`) and bring them in one at a time: [Moving your existing terminals over](#moving-your-existing-terminals-over).
 
 ---
 
@@ -306,7 +306,7 @@ and make sure that folder is on your `PATH` (add `export PATH="$HOME/.local/bin:
 
 | What you see | What to do |
 |---|---|
-| "This browser is not signed in yet" | Open the `/auth?token=…` link that the server printed when it started. |
+| "This browser is not signed in yet" | Open the sign-in link once in that browser. `aubergine open --print` prints it again. |
 | A page saying tmux is missing or too old | Install or upgrade tmux (`brew install tmux`), then restart the server. |
 | The server will not start because the port is taken | Use another port: `AUBERGINE_PORT=4700 pnpm start`. |
 | `aubergine: command not found` | The command is not linked onto your `PATH` yet: do step 6 above, or run `node bin/aubergine.mjs` from this folder. |
@@ -325,7 +325,7 @@ Nothing here edits your dotfiles, and with one exception nothing stops, signals 
 
 ### From the canvas
 
-The quickest way is the **Outside** button in the canvas toolbar. It lists every terminal you have open outside the canvas: the terminal's name, its folder, what is running in it, and for a Claude Code tab the conversation's name and whether the agent is idle or busy. **Refresh** looks again; nothing is looked up while the panel is closed.
+The quickest way is the **Open elsewhere** button in the canvas toolbar. It lists every terminal you have open in your terminal application and not in Aubergine: the terminal's name, its folder, what is running in it, and for a Claude Code tab the conversation's name and whether the agent is idle or busy. **Refresh** looks again; nothing is looked up while the panel is closed.
 
 Each row has its own action, so you bring terminals over one at a time:
 
@@ -506,7 +506,7 @@ One server can hold several projects. A project is a control room of its own: it
 
 Canvases, terminals, tasks, schedules and rules always belong to one project. Four kinds of thing are **shared with every project** unless you say otherwise: workflows, saved steps, library sources (and what was installed from them), and API tokens. **Sharing…** in the switcher's menu is the page for it:
 
-- For each kind, what a **new** one is: shared with every project, or of the project it is made in.
+- For each kind, what **new ones** are: shared with every project, or kept to the project they are made in.
 - For each existing thing, where it belongs. Make a workflow one project's own and it is listed and run only there.
 - A run that is going is never stopped by moving anything. A new run does not start from a workflow or a step its project cannot see. A schedule or a rule that runs such a step stops, and says so once on your list.
 - Settings are for the whole server, not for a project: the settings file, the keys, the limits.
@@ -592,7 +592,7 @@ Everything you do often has a key, and **?** shows all of them for your system.
 
 **Focus.** Click a terminal to give it the keyboard. One click is enough at any zoom at which you can read it; text is sharpest at 100%. Only a terminal that is too small to read (under 45%) zooms in first. While a terminal has the keyboard, every key goes to the program in it, apart from the few chords in the first table below. Those are chosen so that no shell, editor or tmux can need them: Ctrl+C, Ctrl+R, Ctrl+A, Option with an arrow, Escape and the rest all reach the terminal.
 
-Leaving a terminal (⌃⌘. or a click on the background) keeps it **selected**, shown by its line in the accent colour. The single keys in the second table then act on the selected terminal, and Enter goes back into it.
+Leaving a terminal (⌃⌘. or a click on the background) keeps it **selected**, shown by its line in the accent color. The single keys in the second table then act on the selected terminal, and Enter goes back into it.
 
 Work everywhere, inside a terminal too:
 
@@ -622,7 +622,7 @@ Work while no terminal or text field has the keyboard:
 | `Q` | the [queue and For you](#the-queue-and-for-you) |
 | `B`, `S`, `/` | show or hide the side panel; list this canvas or all canvases; filter the list by text |
 | `F6` | move the keyboard to the list, the toolbar, the tabs, and back |
-| `O`, `?`, `Esc` | Outside terminals, the shortcut sheet, close a panel or clear the selection |
+| `O`, `?`, `Esc` | Terminals open elsewhere, the shortcut sheet, close a panel or clear the selection |
 
 **Tab.** While the canvas has the keyboard, Tab does not walk through the buttons: it selects the next terminal in the list on the left, moving the view only if that terminal is off screen. Inside a terminal, Tab and Shift+Tab always go to the program, so completion works as usual. To reach the buttons from the keyboard press `F6`: it moves the keyboard to the terminal list, then the toolbar, then the canvas tabs, then back to the canvas, and inside each of those Tab moves from control to control as it does on any page. `Esc` returns to the canvas.
 
@@ -652,13 +652,13 @@ Reload the page to apply. If a key is set twice or cannot be read, the shortcut 
 
 The panel on the left shows one thing at a time, chosen by the tabs at its top: **Terminals**, **For you**, **Runs**, **Copies** and **Messages**. A tab says how many it holds, and **For you** stands out while something waits on you. The panel remembers which tab you chose.
 
-The top of the page says where you are and what waits for you: the name, the project, the places of that project (**Canvas**, **Queue**, **Board**, **Workflows**, **Library**, the one you are in marked), and at the right **For you**, with a count of everything that waits on you, and **Help**. The canvases have the row below it to themselves; a tab has its name, a plain number while terminals on it wait for you, and, on the tab you are on or point at, one menu (**⋯**) for what is done seldom (rename, its colour, messages between its terminals, moving it to another project, removing the demo) and the mark that closes it. The bar over the canvas holds only what acts on that canvas: **New terminal** (with **▾** for everything else you can make), the view (**Go to…**, **Fit**, the zoom), and parked and outside terminals while there are any.
+The top of the page says where you are and what waits for you: the name, the project, the places of that project (**Canvas**, **Queue**, **Board**, **Workflows**, **Library**, the one you are in marked), and at the right **For you**, with a count of everything that waits on you, and **Help**. The canvases have the row below it to themselves; a tab has its name, a plain number while terminals on it wait for you, and, on the tab you are on or point at, one menu (**⋯**) for what is done seldom (rename, its color, messages between its terminals, moving it to another project, removing the demo) and the mark that closes it. The bar over the canvas holds only what acts on that canvas: **New terminal** (with **▾** for everything else you can make), the view (**Go to…**, **Fit**, the zoom), and parked and outside terminals while there are any.
 
 **Settings**, beside Help, is the one place for what you change about the page itself. **Appearance** has three choices: **Light**, **Dark**, and **Match the system**, which is how a new install starts and follows the system when it changes while the page is open. The choice applies at once to the page and to every terminal, without a reload, and is kept in the settings file (`theme`), so every browser and the next start agree. The palette has the same three as commands ("Theme: light", "Theme: dark", "Theme: match the system"). **Notifications** has the switch for being told on the desktop when a terminal starts waiting.
 
 **Queue**, **Board**, **Workflows** and **Library** are pages: each takes the place of the canvas under the top bar and is laid out the same way, with its name and what is done most at the top, its tabs under that, and its content below. A page has no Close: **Canvas** in the top bar, the page's own name pressed again, `Esc` or the browser's back button lead back to the canvas exactly as you left it (the same tab, the same view, the same terminal selected; the terminals keep running meanwhile). Each page has an address (the canvas's, with `/queue`, `/board`, `/workflows` or `/library` after it), so a reload stays on it. What is a question about one thing (running a workflow, describing one, tags, API tokens, Review, the editors) still opens as a dialog, over a page or over the canvas alike.
 
-The side panel has one row of tabs (**Terminals**, **For you**, **Runs**, and **More** for working copies and messages), a field to find a terminal with **Filter** at its end, and the list. A row of the list is the terminal's name with the whole line, after a dot for its state; under it, in words where it is not the ordinary state (**waiting for you**, **finished**, how the last command failed, the step of a run), then its folder and when it was last active. The same dot begins a terminal's title and a card on the Board. A terminal's title is that dot, its name, its state in words where there is one, what it runs in short (the whole line when you point at it), its first tag, **Note**, and one menu (**⋯**) with the rest: tags, a workflow, a message, the desktop, moving it, its colour, people only, parking it.
+The side panel has one row of tabs (**Terminals**, **For you**, **Runs**, and **More** for working copies and messages), a field to find a terminal with **Filter** at its end, and the list. A row of the list is the terminal's name with the whole line, after a dot for its state; under it, in words where it is not the ordinary state (**waiting for you**, **finished**, how the last command failed, the step of a run), then its folder and when it was last active. The same dot begins a terminal's title and a card on the Board. A terminal's title is that dot, its name, its state in words where there is one, what it runs in short (the whole line when you point at it), its first tag, **Note**, and one menu (**⋯**) with the rest: tags, a workflow, a message, the desktop, moving it, its color, people only, parking it.
 
 A terminal that is on a workflow says so in a line under its title: the workflow, which step of how many, and what it waits for. Click it for every step. On screen a workflow is made of steps and the ones you keep for reuse are saved steps; the names of commands, options, fields and files say *element* for the same thing (`aubergine element list`, `--element`).
 
@@ -705,7 +705,7 @@ The list costs nothing to keep open, also with hundreds of terminals: it is draw
 
 ### Parking, and shells that end
 
-- × on a node **parks** the terminal: the node leaves the canvas but the shell keeps running. **Parked (n)** in the toolbar lists parked terminals; restore one, or end it for good (this asks first).
+- × on a node **parks** the terminal: the node leaves the canvas but the shell keeps running. **Parked** in the toolbar, with their number, lists parked terminals; restore one, or end it for good (this asks first).
 - When a shell exits by itself, its node stays and offers **Restart here** (a new shell in the same folder) and **Remove**.
 
 ### The same terminal in your own terminal app
@@ -713,7 +713,7 @@ The list costs nothing to keep open, also with hundreds of terminals: it is draw
 A terminal on the canvas can also be open in a window of your terminal application. It is the same terminal in both places, not a copy: what you type in one shows in the other, and an agent running in it is the same agent. It is `aubergine attach` started for you in a new window.
 
 - **One terminal that is already running**: **Open on desktop** in the menu (**⋯**) of its title, or in its row's menu in the list. This works for a terminal with an agent in it too.
-- **Every new terminal**: open the menu **▾** beside **New terminal** and tick **Also open new terminals on the desktop**. From then on each terminal you make in the page also opens a window. The dialogs that make a terminal show the same box, so you can decide for one terminal.
+- **Every new terminal**: open **Settings** and tick **Also open each new terminal in a window of your terminal application**. From then on each terminal you make in the page also opens a window. The dialogs that make a terminal show the same box, so you can decide for one terminal.
 - **Closing the window ends nothing.** The shell goes on, and the node on the canvas stays. Parking a node does not close the window either; ending the shell does.
 - **The two views share one size.** A terminal has one width and height, and the view you used last sets it. If your desktop window is larger than the node, then after you type in the window the node shows only the top-left part of the screen; after you click into the node again, the window shows the smaller screen with the rest left empty. Make the two about the same size if you use both.
 - A node says **also on desktop** while something outside the page is attached to its terminal. Aubergine counts those viewers; it cannot tell which program each is, so anything else attached to that terminal shows the same mark. It appears and goes within a couple of seconds.
@@ -747,7 +747,7 @@ How it works: a terminal starts zsh with `ZDOTDIR` pointing at a small folder in
 **+ Claude Code** starts `claude` in a new terminal with a settings file that Aubergine generates in its data folder. Your own Claude Code configuration is not touched. The hooks in that file tell the canvas what the agent is doing:
 
 - when you submit a prompt, the prompt is added to the terminal's note log and the node shows **working**;
-- when the agent needs you (a permission question, or it is idle waiting for input), its line turns to the colour of waiting and its title and its row say **waiting for you**; the count beside **For you** at the top is the one thing on the page filled with that colour;
+- when the agent needs you (a permission question, or it is idle waiting for input), its line turns to the color of waiting and its title and its row say **waiting for you**; the count beside **For you** at the top is the one thing on the page filled with that color;
 - when the agent stops, the node shows **finished** and a line is added to the log.
 
 The toolbar shows **N waiting**; click it to go to the next waiting terminal. Looking at a node clears its state, and so does the agent starting to work again. **Notify** turns on desktop notifications for terminals that start waiting.
@@ -908,7 +908,7 @@ Every terminal works in your real folder. Two agents in one repository then edit
 
 ### Starting a terminal in one
 
-- **▾** beside **New terminal** in the toolbar, then **Terminal in a folder or a working copy…** (or "New terminal in a folder, or in a working copy…" in the palette): give the folder, and choose **In its own working copy**. The dialog for a Claude Code terminal with tools, and the one for a run on a new agent, have the same choice.
+- **▾** beside **New terminal** in the toolbar, then **Shell in a folder or a working copy…** (or "New terminal in a folder, or in a working copy…" in the palette): give the folder, and choose **In its own working copy**. The dialog for a Claude Code terminal with tools, and the one for a run on a new agent, have the same choice.
 - From a terminal: `aubergine here --copy` in a folder of the repository (add `--claude` to start Claude Code in it), or `aubergine new "name" --copy --in <folder>`.
 
 The choice is offered only where it can be had, and says why where it cannot: the folder is not in a Git repository, the repository is a bare one, or it has no commit yet.
@@ -1069,7 +1069,7 @@ What an agent writes arrives as a **draft**. A draft cannot be run, is not among
 
 What became of each draft is kept in `drafts.log` in the data folder and shown at the foot of Review ("Decided lately"): who proposed it, what kind it was, whether it was accepted or discarded, when, and whether that was done in the browser or from the command line. Not what the draft said.
 
-Programs can propose too: a token with `workflows:write` posts to `/v1/drafts`. A new token has **changes to workflows need my review** switched on, which closes the routes that create and change workflows to it and leaves it the draft route; switch it off, when you make the token in the browser, for one you trust to write workflows directly. No token, whatever its scopes, can accept, send back or discard a draft, and a terminal's own token can only propose drafts and read its own.
+Programs can propose too: a token with `workflows:write` posts to `/v1/drafts`. A new token has **Review its changes to workflows** switched on, which closes the routes that create and change workflows to it and leaves it the draft route; switch it off, when you make the token in the browser, for one you trust to write workflows directly. No token, whatever its scopes, can accept, send back or discard a draft, and a terminal's own token can only propose drafts and read its own.
 
 ### What a step needs, and what it produces
 

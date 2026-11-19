@@ -95,7 +95,10 @@ export function InventoryPanel() {
                 className="quiet"
                 onClick={() =>
                   void navigator.clipboard.writeText(inventoryText(inventory, name)).then(
-                    () => setCopied(true),
+                    () => {
+                      setCopied(true);
+                      useApp.getState().say('Copied as text.');
+                    },
                     () => setError('Could not copy.'),
                   )
                 }

@@ -167,7 +167,7 @@ export function TabBar() {
                   aria-haspopup="menu"
                   aria-expanded={menu?.id === canvas.id}
                   aria-label={`Options for the canvas ${canvas.name}`}
-                  title="Options for this canvas: rename, colour, messages between its terminals, move to another project"
+                  title="Options for this canvas: rename, color, messages between its terminals, move to another project"
                   onClick={(e) => {
                     // The bar of tabs scrolls sideways and cuts off what hangs below it: the menu is placed against the window.
                     const box = e.currentTarget.getBoundingClientRect();
@@ -207,7 +207,7 @@ export function TabBar() {
                       <small>{messaging ? 'Terminals on this canvas may message each other. Click to switch that off.' : 'Terminals on this canvas may not message each other. You can always message any terminal yourself.'}</small>
                     </button>
                     <span className="tab-menu-line tab-menu-colour">
-                      <span>Colour</span>
+                      <span>Color</span>
                       <ColorButton value={canvas.color} onChange={(color) => run(api.updateCanvas(canvas.id, { color }))} againstWindow title="Pick a color for this tab" />
                     </span>
                     {canvas.labels[DEMO_LABEL] !== undefined && (

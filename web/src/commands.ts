@@ -56,7 +56,21 @@ function nextTo(state: AppStore, direction: Direction): string | null {
 export function parkSession(sessionId: string): void {
   const session = useApp.getState().app?.sessions.find((s) => s.id === sessionId);
   if (!session) return;
-  attempt(session.state === 'exited' ? api.closeSession(sessionId) : api.parkSession(sessionId), `Could not park "${session.name}"`);
+  if (session.state === 'exited') {
+    attempt(api.closeSession(sessionId), `Could not close "${session.name}"`);
+    return;
+  }
+  const canvasId = useApp.getState().canvasId;
+  attempt(
+    api.parkSession(sessionId).then(() =>
+      // Parking takes a terminal off the canvas and its shell keeps running: it is said, with the way back.
+      useApp.getState().say(`Parked “${session.name}”. Its shell keeps running.`, {
+        label: 'Undo',
+        run: () => attempt(api.restoreSession(sessionId, canvasId), `Could not put "${session.name}" back`),
+      }),
+    ),
+    `Could not park "${session.name}"`,
+  );
 }
 
 function addCanvas(state: AppStore): void {

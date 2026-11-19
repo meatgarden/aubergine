@@ -48,20 +48,19 @@ export function SharingScreen() {
       }}
     >
       <div className="dialog sheet sharing-screen" role="dialog" aria-label="Sharing" data-testid="sharing-screen">
-        <ScreenHead title="What is shared between projects" onClose={close} closeTestid="sharing-close" />
+        <ScreenHead title="Sharing" onClose={close} closeTestid="sharing-close" />
         <p className="sheet-note">
-          Canvases, terminals, tasks, schedules and rules always belong to one project. The kinds below are shared with every project unless you say that one belongs to a single project. A run that is going is never stopped by moving
-          anything here.
+          What is listed here can be shared with every project or kept to one. Canvases, terminals, tasks, schedules and rules are always one project’s. Moving something here never stops a run that is going.
         </p>
         {(page?.kinds ?? []).map((kind) => (
           <section key={kind.kind} className="sharing-kind" data-testid="sharing-kind" data-kind={kind.kind}>
             <h3>{kind.title}</h3>
             <p className="sheet-note">{kind.says}</p>
             <label className="wf-inline">
-              <span>A new one is</span>
-              <select value={kind.default} aria-label={`What a new one of ${kind.title} is`} onChange={(e) => doing(api.changeSharing(kind.kind, e.target.value as 'shared' | 'project'))} data-testid="sharing-default">
+              <span>New ones are</span>
+              <select value={kind.default} aria-label={`${kind.title}: what new ones are`} onChange={(e) => doing(api.changeSharing(kind.kind, e.target.value as 'shared' | 'project'))} data-testid="sharing-default">
                 <option value="shared">shared with every project</option>
-                <option value="project">of the project it is made in</option>
+                <option value="project">kept to the project they are made in</option>
               </select>
             </label>
             <ul className="sharing-things">
