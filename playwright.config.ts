@@ -44,7 +44,8 @@ export default defineConfig({
   },
   webServer: {
     // Every run has a data folder and tmux socket of its own, so it starts from nothing.
-    command: 'pnpm build && pnpm start',
+    // `pnpm serve`, not `pnpm start`: the server only, without opening a browser on the developer's desktop.
+    command: 'pnpm build && pnpm serve',
     url: `http://127.0.0.1:${e2e.port}/`,
     reuseExistingServer: false,
     timeout: 120_000,

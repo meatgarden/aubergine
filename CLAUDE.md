@@ -350,6 +350,7 @@ These are the only abstractions in the code base. Each has exactly one implement
 - **The bar over the canvas is one row at any width.** Under `NARROW_CANVAS` what is used seldom is in its menu.
 - **The browser tests run as a system set to dark**, and a test that changes the theme puts it back.
 - **A throwaway server is started only by a script that sets its port, data folder and socket first.** Never `pnpm start` by hand in a shell that may not have them.
+- **Only `pnpm start` opens a browser.** It runs the server with `--open`, which opens the sign-in link once the server listens. `pnpm serve`, `aubergine start` without `--open`, the login service and the browser tests (`pnpm serve`) never do; `start-scripts.test.ts` keeps it so.
 
 - **Every pressable piece draws hover, pressed, focus and disabled, from tokens.** Hover is one step of surface and pressed one more; nothing moves or grows under the pointer or a press. The browser test "states" tries each piece in both themes; a new piece is added to its list.
 - **Motion is the tokens.** `--motion-quick` for a change of state, `--motion-open` for what opens, one curve; `--motion-busy` is a busy button's beat and nothing else's. What opens fades in with `--motion-travel` from the edge it hangs from; closing is at once; nothing bounces. For someone who asked for less motion nothing travels. No time or curve is written outside a token.
@@ -426,7 +427,7 @@ runs, in order: type checking, lint, shellcheck on `install.sh` where it is inst
 
 Single steps: `pnpm typecheck`, `pnpm lint`, `pnpm test`, `pnpm e2e`, `pnpm generate` (and `pnpm generate --check`, which `pnpm check` runs first).
 
-`pnpm dev` starts the daemon (port 4600, restarts on change) and the Vite dev server (port 5173, proxies `/api`, `/auth` and `/ws` to the daemon).
+`pnpm start` serves the built web app and opens the browser signed in; `pnpm serve` is the same without the browser. `pnpm dev` starts the daemon (port 4600, restarts on change) and the Vite dev server (port 5173, proxies `/api`, `/auth` and `/ws` to the daemon).
 
 `pnpm load-canvas` fills three throwaway canvases with 90 sessions between them for judging scale by hand. It is not part of `pnpm check`.
 

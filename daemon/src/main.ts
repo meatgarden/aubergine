@@ -17,6 +17,7 @@ import { StateHub } from './state-hub';
 import { loadConfig } from './config';
 import { TmuxRuntime, shellEnvironment } from './runtime/tmux-runtime';
 import { buildServer } from './server';
+import { openBrowser } from './cli/open-browser';
 import { readClaudeSession } from './migrate/claude-sessions';
 import { systemProcesses } from './migrate/move';
 import { Outside } from './migrate/outside';
@@ -34,6 +35,9 @@ import { FileInputAudit } from './input-audit';
 import { FileRunArchive } from './run-archive';
 import { JsonStore } from './store/json-store';
 import { loadOrCreateToken } from './token';
+
+/** The argument that has the server open the browser, signed in, once it is listening. */
+const OPEN_FLAG = '--open';
 
 async function main(): Promise<void> {
   const config = loadConfig();
@@ -161,6 +165,13 @@ async function main(): Promise<void> {
   console.log(`Aubergine is running at ${base}`);
   console.log(`Data folder: ${config.dataDir}`);
   console.log(`First visit in a browser? Open this link once:\n  ${base}${paths.auth}?token=${token}`);
+  // Started with `--open` (as `pnpm start` does): the browser is opened on that link, signed in. Never otherwise:
+  // the login service, `aubergine start` and the browser tests start this file without it.
+  if (process.argv.slice(2).includes(OPEN_FLAG)) {
+    void openBrowser(`${base}${paths.auth}?token=${token}`).then((opened) => {
+      if (!opened) console.warn('Could not open a browser. Open the link above yourself.');
+    });
+  }
 
   // Folder and command of each session, and shells that ended unwatched.
   const poll = setInterval(() => {

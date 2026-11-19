@@ -193,7 +193,7 @@ pnpm build
 pnpm start
 ```
 
-**4. Open the sign-in link.** The server prints something like this:
+**4. Sign in.** `pnpm start` opens your browser on the sign-in link by itself. To start the server without opening a browser, use `pnpm serve`. Either way the server prints the link, something like this:
 
 ```
 Aubergine is running at http://127.0.0.1:4600
