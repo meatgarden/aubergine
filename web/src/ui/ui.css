@@ -212,7 +212,6 @@ textarea:disabled,
 
 /* A button that is only a sign is a square. */
 button.node-close,
-button.tab-add,
 button.list-more,
 button.toolbar-new-more,
 .ui-icon-button {
@@ -2991,12 +2990,15 @@ button.rail-dot:active {
   overflow-x: auto;
   scrollbar-width: none;
 }
-/* A tab is a control of the ordinary height. The one being looked at is a filled pill inside the bar: it does not open into the canvas. */
+/*
+ * A tab is a control of the ordinary height, with a button's edge: each one not being looked at is plainly a thing to
+ * press. The one being looked at is a filled pill inside the bar, with no edge: it does not open into the canvas.
+ */
 .tab {
   --control-h: var(--control-compact);
   box-sizing: border-box;
   height: var(--control);
-  border: 1px solid transparent;
+  border: 1px solid var(--border-control);
   border-radius: var(--radius-control);
   box-shadow: none;
 }
@@ -3015,9 +3017,11 @@ button.rail-dot:active {
 .tab.active:not(.color-none) {
   background: color-mix(in srgb, var(--swatch) 32%, var(--surface-active));
 }
-.tabbar > .tab-add {
+/* "New canvas" stands after the row of tabs, at the height of a tab, and does not give way to them. */
+.tabbar > .tabbar-new {
   flex: none;
-  width: var(--control);
+}
+.tabbar-new > button {
   height: var(--control);
 }
 .tab:active {

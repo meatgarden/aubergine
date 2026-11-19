@@ -45,6 +45,7 @@ export const COMMAND_IDS = [
   'canvas.go.9',
   'canvas.rename',
   'canvas.openInNewTab',
+  'canvas.newInNewTab',
   'focus.left',
   'focus.right',
   'focus.up',

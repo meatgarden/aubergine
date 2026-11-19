@@ -74,18 +74,46 @@ export function parkSession(sessionId: string): void {
   );
 }
 
-function addCanvas(state: AppStore): void {
+/** Makes a canvas with the next free name, and puts it in this page's state at once. */
+async function makeCanvas(state: AppStore): Promise<{ id: string; projectId: string }> {
   const canvases = state.app ? sortedCanvases(state.app) : [];
   const names = new Set(canvases.map((c) => c.name));
   let n = canvases.length + 1;
   while (names.has(`Canvas ${n}`)) n += 1;
+  const created = await api.createCanvas({ name: `Canvas ${n}` });
+  const { nodes: _nodes, frames: _frames, counts: _counts, ...canvas } = created;
+  useApp.getState().apply({ type: 'canvas.created', canvas: { ...canvas, layout: { nodes: [], frames: [] } } });
+  return created;
+}
+
+function addCanvas(state: AppStore): void {
   attempt(
-    api.createCanvas({ name: `Canvas ${n}` }).then((created) => {
-      const { nodes: _nodes, frames: _frames, counts: _counts, ...canvas } = created;
-      const store = useApp.getState();
-      store.apply({ type: 'canvas.created', canvas: { ...canvas, layout: { nodes: [], frames: [] } } });
-      store.setCanvas(created.id);
-    }),
+    makeCanvas(state).then((created) => useApp.getState().setCanvas(created.id)),
+    'Could not add a canvas',
+  );
+}
+
+/**
+ * Makes a canvas and shows it in a new browser tab; this tab stays on the canvas it shows. The tab is opened at once,
+ * while the click or key that asked for it still counts, and is sent to the canvas once it exists: a tab opened only
+ * after an answer from the server is one a browser may refuse to open.
+ */
+function addCanvasInNewTab(state: AppStore): void {
+  const tab = window.open('', '_blank');
+  // It is this app's own page; it is given no way back into this one.
+  if (tab) tab.opener = null;
+  attempt(
+    makeCanvas(state).then(
+      (created) => {
+        const href = canvasHref(created.id, created.projectId);
+        if (tab && !tab.closed) tab.location.href = href;
+        else openInNewTab(href);
+      },
+      (error: unknown) => {
+        tab?.close();
+        throw error;
+      },
+    ),
     'Could not add a canvas',
   );
 }
@@ -516,6 +544,14 @@ export const COMMANDS: readonly Command[] = [
     group: 'Canvases',
     available: (state) => state.app !== null,
     run: addCanvas,
+  },
+  {
+    id: 'canvas.newInNewTab',
+    title: 'New canvas in a new tab',
+    description: 'Adds a canvas and shows it in a new browser tab. This tab stays on the canvas it shows.',
+    group: 'Canvases',
+    available: (state) => state.app !== null,
+    run: addCanvasInNewTab,
   },
   {
     id: 'canvas.next',

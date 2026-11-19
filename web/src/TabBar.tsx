@@ -7,7 +7,6 @@ import { colorClass, colorStyle } from './color';
 import { runCommand } from './commands';
 import { hint } from './shortcuts';
 import { useApp } from './store';
-import { IconButton } from './ui';
 
 /**
  * Where a tab dropped just before `target` should sit: between `target` and
@@ -303,10 +302,80 @@ export function TabBar() {
         );
       })}
       </div>
-      <IconButton className="tab-add" label="New canvas" title={hint('canvas.new')} onClick={() => runCommand('canvas.new')}>
-        +
-      </IconButton>
+      <NewCanvas />
       {error && <span className="warning">{error}</span>}
     </nav>
+  );
+}
+
+/**
+ * "New canvas" and the arrow beside it: one control, the one primary of the bar of tabs. Its menu begins with what the
+ * button does. The bar scrolls sideways, so the menu is placed against the window, under the button.
+ */
+function NewCanvas() {
+  const [menu, setMenu] = useState<{ left: number; top: number } | null>(null);
+  const root = useRef<HTMLSpanElement>(null);
+  const list = useRef<HTMLSpanElement>(null);
+  useEffect(() => {
+    if (!menu) return;
+    const away = (event: PointerEvent): void => {
+      const target = event.target as globalThis.Node | null;
+      if (!root.current?.contains(target) && !list.current?.contains(target)) setMenu(null);
+    };
+    const key = (event: KeyboardEvent): void => {
+      if (event.key !== 'Escape') return;
+      // The menu's own Escape: it goes no further.
+      event.stopPropagation();
+      setMenu(null);
+    };
+    window.addEventListener('pointerdown', away, true);
+    window.addEventListener('keydown', key, true);
+    return () => {
+      window.removeEventListener('pointerdown', away, true);
+      window.removeEventListener('keydown', key, true);
+    };
+  }, [menu]);
+  const item = (command: 'canvas.new' | 'canvas.newInNewTab', label: string, says: string, testid: string) => (
+    <button
+      type="button"
+      role="menuitem"
+      title={hint(command)}
+      data-testid={testid}
+      onClick={() => {
+        setMenu(null);
+        runCommand(command);
+      }}
+    >
+      {label}
+      <small>{says}</small>
+    </button>
+  );
+  return (
+    <span className="toolbar-new tabbar-new" ref={root}>
+      <button type="button" onClick={() => runCommand('canvas.new')} title={hint('canvas.new')} data-testid="tabbar-new-canvas">
+        New canvas
+      </button>
+      <button
+        type="button"
+        className="toolbar-new-more"
+        aria-haspopup="menu"
+        aria-expanded={menu !== null}
+        aria-label="More ways to add a canvas"
+        title="More ways to add a canvas: in a new browser tab"
+        onClick={(e) => {
+          const box = (root.current ?? e.currentTarget).getBoundingClientRect();
+          setMenu(menu ? null : { left: Math.max(4, Math.min(box.left, window.innerWidth - 324)), top: box.bottom + 6 });
+        }}
+        data-testid="tabbar-new-more"
+      >
+        ▾
+      </button>
+      {menu && (
+        <span className="toolbar-menu tabbar-new-menu" role="menu" style={{ left: menu.left, top: menu.top }} ref={list} data-testid="tabbar-new-menu">
+          {item('canvas.new', 'New canvas', 'Added here, and shown in this tab.', 'tabbar-new-here')}
+          {item('canvas.newInNewTab', 'New canvas in a new browser tab', 'Added, and shown in a tab of its own. This one stays as it is.', 'tabbar-new-tab')}
+        </span>
+      )}
+    </span>
   );
 }

@@ -138,11 +138,6 @@ code {
   align-items: center;
   gap: var(--space-1);
 }
-.tab-add {
-  flex: none;
-  align-self: center;
-  width: 26px;
-}
 .dialog-choice {
   display: flex;
   align-items: center;
@@ -3500,6 +3495,11 @@ tr[data-status='expired'] strong {
 }
 .tab.active {
   background: var(--surface);
+}
+/* The menu of "New canvas" hangs from the window, under the button: the bar of tabs would cut it off. */
+.tabbar-new-menu {
+  position: fixed;
+  width: 320px;
 }
 .tab-menu {
   position: fixed;
