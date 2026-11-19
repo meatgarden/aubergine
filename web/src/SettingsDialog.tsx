@@ -1,6 +1,7 @@
 import { THEMES, THEME_WORDS } from '@aubergine/shared';
 import { NotifySwitch } from './AttentionQueue';
 import { api } from './api';
+import { keepBarOpen, useBarKeptOpen } from './bar-open';
 import { setOpenNew } from './desktop';
 import { useApp } from './store';
 import { chooseTheme, useThemeShown } from './theme';
@@ -16,6 +17,7 @@ export function SettingsDialog() {
   const shown = useThemeShown();
   const openNew = useApp((s) => s.settings.desktop.openNew);
   const remind = useApp((s) => s.settings.describe.remind);
+  const barOpen = useBarKeptOpen();
   if (!open) return null;
   const close = (): void => useApp.getState().togglePanel(null);
   return (
@@ -45,6 +47,16 @@ export function SettingsDialog() {
           <p className="ui-meta" data-testid="theme-says">
             {theme === 'system' ? `The system is set to ${shown} now; the page follows it when that changes.` : 'It changes at once, and is the same in every browser you open this in.'}
           </p>
+        </section>
+        <section>
+          <h3>Canvas</h3>
+          <p className="help-setting">
+            <label className="ui-check">
+              <input type="checkbox" checked={barOpen} onChange={(e) => keepBarOpen(e.target.checked)} data-testid="settings-bar-open" />
+              <span>Keep the whole bar over the canvas open</span>
+            </label>
+          </p>
+          <p className="ui-meta">Otherwise it shows only New terminal, and the rest when you point at it or reach it with the keyboard. This browser remembers it.</p>
         </section>
         <section>
           <h3>New terminals</h3>
