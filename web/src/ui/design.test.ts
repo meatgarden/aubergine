@@ -109,7 +109,39 @@ describe('the stylesheets keep to the tokens', () => {
     // The light theme redefines colours and nothing else, and every colour it redefines is one the dark theme has.
     const lightNames = [...light.matchAll(/(--[a-z0-9-]+):/g)].map((m) => m[1] ?? '');
     expect(lightNames.filter((name) => !defined.has(name))).toEqual([]);
-    expect(lightNames.filter((name) => /^--(font|weight|leading|space|gutter|radius|control|chip|ease|z)/.test(name))).toEqual([]);
+    expect(lightNames.filter((name) => /^--(font|weight|leading|space|gutter|radius|control|chip|motion|z)/.test(name))).toEqual([]);
+  });
+
+  it('motion is the tokens: a quick one, one for what opens, one easing, and the slow beat of a busy button', () => {
+    const [dark = ''] = tokens.split(":root[data-theme='light']");
+    expect([...dark.matchAll(/(--motion-[a-z]+):/g)].map((m) => m[1])).toEqual(['--motion-quick', '--motion-open', '--motion-ease', '--motion-busy', '--motion-travel']);
+    const timed = all.filter((d) => /^(transition|animation)(-duration|-timing-function|-delay)?$/.test(d.property) && d.value !== 'none' && !d.value.startsWith('none '));
+    expect(timed.length).toBeGreaterThan(8);
+    // No time and no curve is written as a number or by name: each is a token.
+    const drift = timed.filter((d) => /\d(ms|s)\b|cubic-bezier|\b(ease|ease-in|ease-out|ease-in-out|linear|steps)\b/.test(d.value.replace(/var\(--motion-[a-z]+\)/g, '')));
+    expect(drift.map(where)).toEqual([]);
+    // What opens and what changes use the two durations; only a busy button uses the slow beat.
+    const durations = (d: Declaration): string[] => [...d.value.matchAll(/var\(--motion-(quick|open|busy)\)/g)].map((m) => m[1] ?? '');
+    expect(timed.filter((d) => durations(d).includes('busy')).map((d) => d.selector)).toEqual(["button[aria-busy='true']"]);
+    expect(timed.filter((d) => d.property === 'transition' && durations(d).some((name) => name !== 'quick')).map(where)).toEqual([]);
+  });
+
+  it('nothing travels for someone who asked for less motion, and nothing grows or moves under the pointer', () => {
+    const plain = uiText.replace(/\/\*[\s\S]*?\*\//g, '');
+    // Every keyframe that travels is named, and the reduced-motion block replaces each of them by the fade.
+    const travelling = [...plain.matchAll(/@keyframes ([a-z-]+) \{([\s\S]*?)\n\}/g)].filter((m) => /transform/.test(m[2] ?? '')).map((m) => m[1] ?? '');
+    expect(travelling.sort()).toEqual(['ui-open-down', 'ui-open-side', 'ui-open-up']);
+    const reduced = plain.slice(plain.indexOf('@media (prefers-reduced-motion: reduce)'));
+    expect(reduced).toContain('animation-name: ui-fade');
+    const users = all.filter((d) => d.property === 'animation' && travelling.some((name) => d.value.startsWith(`${name} `))).flatMap((d) => d.selector.split(',').map((part) => part.trim()));
+    expect(users.length).toBeGreaterThan(5);
+    expect(users.filter((selector) => !reduced.includes(selector))).toEqual([]);
+    // Hover and pressed change a surface or a colour, never a size or a place.
+    // (A rule that names the rest state beside the hover says the same for both, and changes nothing.)
+    const moving = all.filter((d) => d.selector.split(',').every((part) => /:(hover|active)/.test(part)) && /^(transform|width|height|padding|margin|font-size|scale|translate)/.test(d.property));
+    expect(moving.map(where)).toEqual([]);
+    // No transition animates a transform, anywhere.
+    expect(all.filter((d) => d.property === 'transition' && /transform|all\b/.test(d.value)).map(where)).toEqual([]);
   });
 });
 

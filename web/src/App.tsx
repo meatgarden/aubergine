@@ -11,6 +11,7 @@ import { SidePanel } from './panel/SidePanel';
 import { Away } from './Away';
 import { TagDialog } from './TagDialog';
 import { Tour } from './tour/Tour';
+import { Toast } from './Toast';
 import { applyTheme, useThemeShown } from './theme';
 import { Pages, Screens } from './Screens';
 
@@ -45,11 +46,10 @@ export function App() {
   if (phase === 'unauthorized') {
     return (
       <Message title="This browser is not signed in yet">
-        <p>
-          When the Aubergine server starts, it prints a sign-in link that ends in{' '}
-          <code>/auth?token=…</code>. Open that link once in this browser. After that, this
-          address works on its own.
-        </p>
+        <p>Open the sign-in link once in this browser. This command prints it again:</p>
+        <pre className="message-command" data-testid="sign-in-command">
+          <code>aubergine open --print</code>
+        </pre>
       </Message>
     );
   }
@@ -98,6 +98,7 @@ export function App() {
       <CloseCanvasDialog />
       <TagDialog />
       <Tour />
+      <Toast />
       <Away />
     </div>
   );
@@ -106,7 +107,7 @@ export function App() {
 function Message({ title, children }: { title: string; children?: React.ReactNode }) {
   return (
     <main className="message" data-testid="message">
-      <div className="message-card">
+      <div className="message-card" data-testid="message-card">
         <h1>{title}</h1>
         {children}
       </div>

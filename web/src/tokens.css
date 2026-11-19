@@ -44,7 +44,16 @@
   --control: 32px;
   --control-compact: 28px;
   --chip: 20px;
-  --ease: 120ms;
+  /*
+   * Motion: two durations and one easing. Quick is for what answers the pointer (hover, press, focus); open is for
+   * what comes into view (a menu, a dialog, the drawer, a page, a fold). A thing that loops while something is busy
+   * has its own, slower beat. Nothing bounces, and with reduced motion nothing travels.
+   */
+  --motion-quick: 120ms;
+  --motion-open: 180ms;
+  --motion-ease: cubic-bezier(0.2, 0, 0, 1);
+  --motion-busy: 1200ms;
+  --motion-travel: 6px;
 
   /* Layers, lowest first. */
   --z-canvas: 0;
@@ -58,6 +67,8 @@
   --bg: #17181c;
   --surface: #23252b;
   --surface-raised: #2d3038;
+  /* What a text field, a select and a text box are filled with. */
+  --field: #2d3038;
   --surface-active: #3a3d48;
   --border: #383b45;
   --border-strong: #5a5e6b;
@@ -84,6 +95,17 @@
   --on-danger: #17181c;
   --scrim: rgb(8 8 11 / 0.72);
   --shadow: rgb(0 0 0 / 0.45);
+  /* One step further than hover on a filled button: while it is held down. */
+  --accent-pressed: #e4c9df;
+  --attention-pressed: #f5d3a3;
+  --danger-pressed: #f5b3b8;
+  /* What floats has one shadow for its layer: the bar over the canvas, a terminal, a menu, a dialog. On dark they are deep; a line does most of the telling apart. */
+  --shadow-bar: 0 4px 16px rgb(0 0 0 / 0.4);
+  --shadow-node: 0 6px 20px rgb(0 0 0 / 0.45);
+  --shadow-menu: 0 8px 24px rgb(0 0 0 / 0.5);
+  --shadow-dialog: 0 16px 48px rgb(0 0 0 / 0.55);
+  /* What is selected in text, and the scroll bar's thumb. */
+  --selection: #5b4a66;
   --ring: rgb(180 142 173 / 0.3);
 
   /* The terminal's own theme, and the canvas it lies on. */
@@ -100,6 +122,7 @@
   --bg: #eceef2;
   --surface: #ffffff;
   --surface-raised: #f1f3f6;
+  --field: #ffffff;
   --surface-active: #e2e5ec;
   --border: #d3d7df;
   --border-strong: #9aa0ad;
@@ -126,6 +149,15 @@
   --on-danger: #ffffff;
   --scrim: rgb(30 32 40 / 0.5);
   --shadow: rgb(30 32 40 / 0.22);
+  --accent-pressed: #5e3359;
+  --attention-pressed: #6f3c02;
+  --danger-pressed: #86222c;
+  /* On light a shadow is soft and wide: with the line round a surface it is what lifts it off the page, not a grey fill. */
+  --shadow-bar: 0 1px 2px rgb(30 32 40 / 0.1), 0 4px 12px rgb(30 32 40 / 0.1);
+  --shadow-node: 0 1px 2px rgb(30 32 40 / 0.08), 0 6px 18px rgb(30 32 40 / 0.12);
+  --shadow-menu: 0 2px 4px rgb(30 32 40 / 0.08), 0 10px 28px rgb(30 32 40 / 0.16);
+  --shadow-dialog: 0 4px 8px rgb(30 32 40 / 0.08), 0 20px 56px rgb(30 32 40 / 0.22);
+  --selection: #e3cfe0;
   --ring: rgb(128 80 122 / 0.28);
   --terminal-bg: #fbfbfc;
   --canvas-dot: #c5c9d2;

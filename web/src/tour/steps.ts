@@ -13,6 +13,7 @@ const noted = (context: TourContext, sessionId: string | undefined, start: strin
 
 registerTourStep({
   id: 'terminal',
+  group: 'terminals',
   order: 10,
   title: 'This is a terminal',
   text: 'Click it to type in it. Then click “Fit” at the top to see all of them at once.',
@@ -23,10 +24,11 @@ registerTourStep({
 
 registerTourStep({
   id: 'waiting',
+  group: 'waiting',
   order: 20,
   title: 'Something needs you',
   text: 'One terminal has a question for you. Click it, type an answer and press Enter.',
-  reminder: '“For you” at the top counts and lists what waits on you; “Queue” has the tasks for agents.',
+  reminder: '“For you” at the top counts and lists what waits on you.',
   // The button goes to whoever has waited longest, on any canvas. When that is not the demo's terminal, or it has
   // been looked at already, the terminal itself is pointed at instead, so that the step never leads away.
   target: (c) => {
@@ -39,16 +41,18 @@ registerTourStep({
 
 registerTourStep({
   id: 'find',
+  group: 'terminals',
   order: 30,
   title: 'Find a terminal by what it printed',
   text: 'Open “Go to…” and type: redirects twice. Choose the line it finds.',
-  reminder: '“Go to…” finds a terminal by its name, or by anything it printed. Projects are at the top left.',
+  reminder: '“Go to…” finds a terminal by its name, or by anything it printed.',
   target: () => find('.picker') ?? find('[data-testid="toolbar-goto"]'),
   done: (c) => c.signals.has('picker.output'),
 });
 
 registerTourStep({
   id: 'list',
+  group: 'terminals',
   order: 40,
   title: 'Every terminal, in one list',
   text: 'The list on the left has this canvas’s terminals. Open “Filter” and choose “Waiting for me” to see only those.',
@@ -63,16 +67,18 @@ registerTourStep({
 
 registerTourStep({
   id: 'workflow',
+  group: 'workflows',
   order: 50,
   title: 'An agent on a workflow',
   text: 'The strip on this terminal shows its agent’s step; click it for the whole run. “Board” above shows every run at once.',
-  reminder: 'A strip shows the step an agent is on; click it for the run. “Board” shows every run at once.',
+  reminder: 'A strip on a terminal shows the step its agent is on; click it for the run.',
   target: (c) => find('[data-testid="run-view"]') ?? nodeOf(c.demo?.sessions.fixing)?.querySelector('[data-testid="run-strip"]') ?? find('[data-testid="run-strip"]'),
   done: (c) => c.demo !== null && c.demo.runId !== null && c.state.viewingRun === c.demo.runId,
 });
 
 registerTourStep({
   id: 'checklist',
+  group: 'waiting',
   order: 60,
   title: 'A list an agent made for you',
   text: 'This terminal’s agent handed in a list. Click “list” on it, and tick an item.',
@@ -86,6 +92,7 @@ registerTourStep({
 
 registerTourStep({
   id: 'review',
+  group: 'waiting',
   order: 70,
   title: 'Something an agent wrote for you',
   text: 'Click “For you” at the top, then “Review”. Nothing an agent writes is used until you accept it: accept or discard this one.',
@@ -99,9 +106,21 @@ registerTourStep({
 
 registerTourStep({
   id: 'your-own',
+  group: 'terminals',
   order: 80,
   title: 'Now bring in your own',
   text: 'Type “aubergine here” in any terminal you already have open, or use “New terminal”. Then remove the demo.',
-  reminder: '“aubergine here” brings a terminal in. A project can be sent as a file: Projects, then Export.',
+  reminder: '“aubergine here”, typed in a terminal that is open elsewhere, brings it onto the canvas.',
   target: () => find('[data-testid="toolbar-new-terminal"]'),
 });
+
+// Lines that are Help's alone: the tour does not walk through them, and Help points at each as it does at a step.
+const helpLine = (id: string, group: 'terminals' | 'waiting' | 'workflows' | 'projects', order: number, reminder: string, selector: string): void =>
+  registerTourStep({ id, group, order, helpOnly: true, title: '', text: '', reminder, target: () => find(selector) });
+
+helpLine('help-queue', 'waiting', 25, '“Queue” has the tasks for agents: add one, and start the next.', '[data-testid="toolbar-queue"]');
+helpLine('help-workflows', 'workflows', 62, '“Workflows” has what an agent can be given to do, step by step, and your saved steps.', '[data-testid="toolbar-workflows"]');
+helpLine('help-board', 'workflows', 72, '“Board” shows every run at once; approve or send back from there.', '[data-testid="toolbar-board"]');
+helpLine('help-library', 'workflows', 73, '“Library” has workflows and steps others have written, to read and install.', '[data-testid="toolbar-library"]');
+helpLine('help-projects', 'projects', 110, 'The name at the top left is the project; each has its own canvases, queue and list.', '[data-testid="project-switcher"]');
+helpLine('help-project-file', 'projects', 111, 'A project can be sent as a file: Projects, then Export.', '[data-testid="project-switcher"]');

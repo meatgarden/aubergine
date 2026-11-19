@@ -5,10 +5,11 @@ import { ColorButton } from '../ColorButton';
 import { useApp } from '../store';
 import { readForReview, saveAs } from './file-store';
 import { goToProject, waitingIn } from './projects';
-import { ScreenHead } from '../ui';
+import { colorClass, colorStyle } from '../color';
+import { MenuButton, MenuItem, ScreenHead } from '../ui';
 
 /**
- * The projects there are: rename, color, the folder new terminals start in,
+ * The projects there are: rename, colour, the folder new terminals start in,
  * order; archive, reopen, remove. And a new one. Everything here is drawn
  * from the page's own state, which follows the change events.
  */
@@ -22,6 +23,7 @@ export function ProjectsScreen() {
   /** The project whose running terminals need a decision before it is archived. */
   const [deciding, setDeciding] = useState<string | null>(null);
   const [said, setSaid] = useState<string | null>(null);
+  const [dragging, setDragging] = useState<string | null>(null);
   const [templates, setTemplates] = useState<ProjectTemplate[]>([]);
   const loadTemplates = (): void => void api.projectTemplates().then(setTemplates, () => {});
   useEffect(() => {
@@ -43,6 +45,9 @@ export function ProjectsScreen() {
     void work.catch((e: unknown) => setError((e as Error).message));
   };
   const projects = sortedProjects(whole);
+  const last = projects.length - 1;
+  /** Puts a project before the one that stands at `at` now, or at the end. */
+  const move = (id: string, at: number): void => doing(api.changeProject(id, { before: projects[at]?.id ?? null }));
   const add = (): void => {
     const called = name.trim();
     if (called === '') return setError('A project needs a name.');
@@ -78,11 +83,10 @@ export function ProjectsScreen() {
       <div className="dialog sheet projects-screen" role="dialog" aria-label="Projects" data-testid="projects-screen">
         <ScreenHead title="Projects" onClose={close} closeTestid="projects-close" />
         <p className="sheet-note">
-          Each project has its own canvases, terminals, queue, schedules and rules, in this one server. What is shared between them is on the{' '}
-          <button type="button" className="quiet" onClick={() => useApp.getState().togglePanel('sharing')}>
+          Each project has its own canvases, terminals, queue, schedules and rules. Workflows, saved steps and the library can be shared between them.{' '}
+          <button type="button" className="ui-link" onClick={() => useApp.getState().togglePanel('sharing')} data-testid="projects-sharing">
             Sharing
-          </button>{' '}
-          page.
+          </button>
         </p>
         <ul className="project-list">
           {projects.map((project, index) => {
@@ -90,7 +94,39 @@ export function ProjectsScreen() {
             const running = whole.sessions.filter((s) => s.projectId === project.id && s.state !== 'exited').length;
             const waiting = project.state === 'open' ? waitingIn(whole, project.id) : 0;
             return (
-              <li key={project.id} className="project-item" data-testid="project-item" data-project={project.id} data-state={project.state}>
+              <li
+                key={project.id}
+                className={`project-item${dragging === project.id ? ' dragging' : ''}`}
+                data-testid="project-item"
+                data-project={project.id}
+                data-state={project.state}
+                onDragOver={(e) => {
+                  if (dragging && dragging !== project.id) e.preventDefault();
+                }}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  const moved = dragging;
+                  setDragging(null);
+                  // Dropped on a project, it goes before it; dropped on one further down, after it.
+                  if (moved && moved !== project.id) move(moved, projects.findIndex((p) => p.id === moved) < index ? index + 1 : index);
+                }}
+              >
+                <span
+                  className="project-grip"
+                  draggable
+                  aria-hidden="true"
+                  title="Drag to change the order"
+                  onDragStart={(e) => {
+                    e.dataTransfer.effectAllowed = 'move';
+                    e.dataTransfer.setData('text/plain', project.name);
+                    setDragging(project.id);
+                  }}
+                  onDragEnd={() => setDragging(null)}
+                  data-testid="project-grip"
+                >
+                  ⠿
+                </span>
+                <span className={`color-dot project-dot ${colorClass(project.color, 'swatch')}`} style={colorStyle(project.color)} aria-hidden="true" />
                 <input
                   className="project-item-name"
                   defaultValue={project.name}
@@ -101,7 +137,6 @@ export function ProjectsScreen() {
                   onKeyDown={(e) => e.key === 'Enter' && e.currentTarget.blur()}
                   data-testid="project-item-name"
                 />
-                <ColorButton value={project.color as never} onChange={(color) => doing(api.changeProject(project.id, { color }))} />
                 <input
                   className="project-item-folder"
                   defaultValue={project.defaultFolder ?? ''}
@@ -122,21 +157,32 @@ export function ProjectsScreen() {
                       <button type="button" className="quiet" onClick={() => (close(), goToProject(project.id))} data-testid="project-go">
                         Go to
                       </button>
-                      <button type="button" className="quiet" disabled={index === 0} aria-label={`Move ${project.name} up`} onClick={() => doing(api.changeProject(project.id, { before: projects[index - 1]?.id ?? null }))}>
-                        ↑
-                      </button>
-                      <button type="button" className="quiet" disabled={index === projects.length - 1} aria-label={`Move ${project.name} down`} onClick={() => doing(api.changeProject(project.id, { before: projects[index + 2]?.id ?? null }))}>
-                        ↓
-                      </button>
-                      <button type="button" className="quiet" title="Write this project out as a file: a copy to send to someone, or to keep. Nothing that ran, no credential and no path of this computer is in it." onClick={() => doing(api.exportProject(project.id).then((out) => (saveAs(out.fileName, out.text), setSaid(`“${project.name}” was written to ${out.fileName}.${out.leftOut.length > 0 ? ` Not in it: ${out.leftOut.join(' ')}` : ''}`))))} data-testid="project-export">
-                        Export…
-                      </button>
-                      <button type="button" className="quiet" title="Keep it as a template to start other projects from. Its pinned notes are left out." onClick={() => doing(api.saveProjectTemplate(project.id, false).then((made) => (setSaid(`Saved as the template “${made.name}”.`), loadTemplates())))} data-testid="project-save-template">
-                        Save as template
-                      </button>
-                      <button type="button" className="quiet" onClick={() => archive(project)} data-testid="project-archive">
-                        Archive
-                      </button>
+                      <MenuButton label={`More for ${project.name}`} more testid="project-more" menuTestid="project-more-menu">
+                        <span className="ui-menu-line project-colour">
+                          <span>Color</span>
+                          <ColorButton value={project.color as never} onChange={(color) => doing(api.changeProject(project.id, { color }))} againstWindow title="Pick a color for this project" />
+                        </span>
+                        <MenuItem disabled={index === 0} title={index === 0 ? 'It is the first already.' : undefined} onClick={() => move(project.id, index - 1)} data-testid="project-up">
+                          Move up
+                        </MenuItem>
+                        <MenuItem disabled={index === last} title={index === last ? 'It is the last already.' : undefined} onClick={() => move(project.id, index + 2)} data-testid="project-down">
+                          Move down
+                        </MenuItem>
+                        <span className="ui-menu-divider" role="separator" />
+                        <MenuItem
+                          hint="A copy to send or keep. Nothing that ran, no credential and no path of this computer is in it."
+                          onClick={() => doing(api.exportProject(project.id).then((out) => (saveAs(out.fileName, out.text), setSaid(`“${project.name}” was written to ${out.fileName}.${out.leftOut.length > 0 ? ` Not in it: ${out.leftOut.join(' ')}` : ''}`))))}
+                          data-testid="project-export"
+                        >
+                          Export…
+                        </MenuItem>
+                        <MenuItem hint="To start other projects from. Its pinned notes are left out." onClick={() => doing(api.saveProjectTemplate(project.id, false).then((made) => (setSaid(`Saved as the template “${made.name}”.`), loadTemplates())))} data-testid="project-save-template">
+                          Save as template
+                        </MenuItem>
+                        <MenuItem onClick={() => archive(project)} data-testid="project-archive">
+                          Archive
+                        </MenuItem>
+                      </MenuButton>
                     </>
                   )}
                   {project.state === 'archived' && (

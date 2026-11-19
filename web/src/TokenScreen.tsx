@@ -123,8 +123,8 @@ export function TokenScreen() {
           </span>
         </header>
         <p className="sheet-note">
-          A token lets a program of yours call the API on this computer, with the scopes you give it and nothing more. No token can create or
-          revoke tokens, change settings, or reach terminals outside Aubergine: those stay with you, here.
+          A token lets one of your programs use the API on this computer, within the scopes you tick and nothing more. No token can make or
+          revoke tokens, change settings, or reach a terminal that is not in Aubergine: those stay yours.
         </p>
 
         {made && (
@@ -136,7 +136,10 @@ export function TokenScreen() {
                 type="button"
                 onClick={() =>
                   void navigator.clipboard.writeText(made.secret).then(
-                    () => setCopied(true),
+                    () => {
+                      setCopied(true);
+                      useApp.getState().say('Copied the secret.');
+                    },
                     () => setError('Could not copy. Select the secret and copy it by hand.'),
                   )
                 }
@@ -164,7 +167,7 @@ export function TokenScreen() {
             <input value={name} maxLength={80} placeholder="What will use it, for example: build script" aria-label="Token name" onChange={(e) => setName(e.target.value)} />
           </label>
           <fieldset className="token-scopes">
-            <legend>Scopes</legend>
+            <legend>What it may do</legend>
             {GRANTABLE_SCOPES.map((scope) => (
               <label key={scope}>
                 <input
@@ -207,7 +210,7 @@ export function TokenScreen() {
               </label>
               <label>
                 <input type="radio" name="reach" checked={reachKind === 'all'} onChange={() => setReachKind('all')} data-testid="reach-all" />
-                <span className="token-warning">Every terminal, on every canvas, also ones started later</span>
+                <span className="token-warning">Every terminal on every canvas, including ones started later</span>
               </label>
             </fieldset>
           )}
@@ -216,7 +219,7 @@ export function TokenScreen() {
               <legend>Which projects it reaches</legend>
               <label>
                 <input type="radio" name="token-projects" checked={onlyProjects.length === 0} onChange={() => setOnlyProjects([])} data-testid="token-projects-all" />
-                <span>Every project, also ones made later</span>
+                <span>Every project, including ones made later</span>
               </label>
               {projects.map((project) => (
                 <label key={project.id}>
@@ -224,7 +227,7 @@ export function TokenScreen() {
                   <span>Only: {project.name}</span>
                 </label>
               ))}
-              <p className="sheet-note">A token limited to some projects sees and hears nothing of the others, whatever its scopes. What is shared with every project it sees. This cannot be widened afterwards.</p>
+              <p className="sheet-note">A token limited to some projects sees nothing of the others, whatever it may do, apart from what is shared with every project. Its projects cannot be widened afterwards.</p>
             </fieldset>
           )}
           <label className="token-field">
@@ -240,7 +243,7 @@ export function TokenScreen() {
           {scopes.includes('workflows:write') && (
             <label className="wf-check token-review">
               <input type="checkbox" checked={review} onChange={(e) => setReview(e.target.checked)} data-testid="token-review" />
-              <span>Changes to workflows need my review: this token proposes drafts, and I read them before they can be used.</span>
+              <span>Review its changes to workflows: it proposes drafts, and you read them before they can be used.</span>
             </label>
           )}
           <div className="dialog-actions">
@@ -282,7 +285,7 @@ export function TokenScreen() {
                       <span className="token-off">{status}</span>
                     ) : revoking === token.id ? (
                       <>
-                        <span>Stops working at once.</span>
+                        <span>It stops working at once.</span>
                         <button type="button" className="danger" onClick={() => void revoke(token)} data-testid="token-revoke-confirm">
                           Revoke
                         </button>
@@ -395,7 +398,7 @@ export function ActivityScreen() {
           </button>
         </div>
         {error && <p className="dialog-error">{error}</p>}
-        {entries.length === 0 && !loading && <p className="sheet-note">Nothing yet.</p>}
+        {entries.length === 0 && !loading && <p className="sheet-note">No calls yet.</p>}
         <table className="token-table activity-table">
           <tbody>
             {entries.map((entry, i) => (

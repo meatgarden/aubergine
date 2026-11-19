@@ -19,8 +19,21 @@ export interface TourContext {
   signals: ReadonlySet<string>;
 }
 
+/** The groups Help lists its lines under, in this order, with the heading a person reads. */
+export const HELP_GROUPS = [
+  ['terminals', 'Terminals'],
+  ['waiting', 'What waits for you'],
+  ['workflows', 'Workflows'],
+  ['projects', 'Projects'],
+] as const;
+export type HelpGroup = (typeof HELP_GROUPS)[number][0];
+
 export interface TourStep {
   id: string;
+  /** Which group of Help its reminder is listed under. */
+  group: HelpGroup;
+  /** A line of Help only: the tour does not walk through it. Help can still point at it. */
+  helpOnly?: boolean;
   /** Lower numbers come first. */
   order: number;
   /** A few words. */
@@ -39,14 +52,25 @@ export interface TourStep {
 
 const registry = new Map<string, TourStep>();
 let snapshot: TourStep[] = [];
+let lines: TourStep[] = [];
+
+function sorted(): void {
+  lines = [...registry.values()].sort((a, b) => a.order - b.order || a.id.localeCompare(b.id));
+  snapshot = lines.filter((step) => !step.helpOnly);
+}
 
 export function registerTourStep(step: TourStep): void {
   registry.set(step.id, step);
-  snapshot = [...registry.values()].sort((a, b) => a.order - b.order || a.id.localeCompare(b.id));
+  sorted();
 }
 
 export function unregisterTourStep(id: string): void {
-  if (registry.delete(id)) snapshot = [...registry.values()].sort((a, b) => a.order - b.order || a.id.localeCompare(b.id));
+  if (registry.delete(id)) sorted();
+}
+
+/** Everything Help lists: the steps of the tour and the lines that are Help's alone, in order. */
+export function helpLines(): TourStep[] {
+  return lines;
 }
 
 /** The registered steps in the order they are taken. The same array until the registry changes. */

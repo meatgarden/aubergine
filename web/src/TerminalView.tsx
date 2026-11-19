@@ -26,7 +26,7 @@ interface Props {
 function terminalTheme(theme: 'light' | 'dark') {
   return theme === 'light'
     ? { background: '#fbfbfc', foreground: '#24262b', cursor: '#24262b', selectionBackground: '#c9d3e6' }
-    : { background: '#101114', foreground: '#d7dae0', cursor: '#d7dae0' };
+    : { background: '#101114', foreground: '#d7dae0', cursor: '#d7dae0', selectionBackground: '#3f4f73' };
 }
 
 type Link = 'connecting' | 'open' | 'reconnecting' | 'ended';

@@ -27,7 +27,7 @@ function sourceAbout(source: LibrarySource): string {
   return `${where} · ${read}${source.commit ? ` · commit ${source.commit.slice(0, 12)}` : ''}`;
 }
 
-function ItemDetail({ item, onAsk, busy }: { item: ListedItem; onAsk: (item: ListedItem) => void; busy: boolean }) {
+function ItemDetail({ item, onAsk, busy, working }: { item: ListedItem; onAsk: (item: ListedItem) => void; busy: boolean; working: boolean }) {
   const [detail, setDetail] = useState<LibraryItemDetail | null>(null);
   const [error, setError] = useState<string | null>(null);
   useEffect(() => {
@@ -68,6 +68,7 @@ function ItemDetail({ item, onAsk, busy }: { item: ListedItem; onAsk: (item: Lis
           disabled={busy || item.problem !== null || item.standing === 'installed' || item.requested}
           title={item.problem ?? 'Asks for it to be installed. It then waits in Review, where you read all of it before anything is installed.'}
           onClick={() => onAsk(item)}
+          aria-busy={working || undefined}
           data-testid="library-install"
         >
           {item.requested ? 'Waits in Review' : item.standing === 'update' ? 'Read the update…' : item.standing === 'installed' ? 'Installed' : 'Read and install…'}
@@ -90,6 +91,8 @@ export function LibraryScreen() {
   const [selected, setSelected] = useState<string | null>(null);
   const [address, setAddress] = useState('');
   const [busy, setBusy] = useState(false);
+  // Which button started what is going on, so that it alone shows it.
+  const [busyOn, setBusyOn] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [removing, setRemoving] = useState<{ id: string; uses: string[]; liveRuns: number } | null>(null);
 
@@ -116,8 +119,9 @@ export function LibraryScreen() {
 
   if (!open) return null;
   const close = (): void => useApp.getState().showPage(null);
-  const act = async (what: () => Promise<unknown>): Promise<void> => {
+  const act = async (what: () => Promise<unknown>, on: string | null = null): Promise<void> => {
     setBusy(true);
+    setBusyOn(on);
     setError(null);
     try {
       await what();
@@ -125,6 +129,7 @@ export function LibraryScreen() {
       setError((e as Error).message);
     } finally {
       setBusy(false);
+      setBusyOn(null);
     }
   };
   const apply = useApp.getState().apply;
@@ -184,7 +189,8 @@ export function LibraryScreen() {
                   className="quiet"
                   disabled={busy}
                   title={source.kind === 'git' ? 'Fetch it again from its address. This is the only thing that reaches the network for it.' : 'Read it again'}
-                  onClick={() => void act(async () => apply({ type: 'library.source.changed', source: (await api.refreshLibrarySource(source.id)) as never }))}
+                  onClick={() => void act(async () => apply({ type: 'library.source.changed', source: (await api.refreshLibrarySource(source.id)) as never }), `refresh ${source.id}`)}
+                  aria-busy={busyOn === `refresh ${source.id}` || undefined}
                   data-testid="source-refresh"
                 >
                   Refresh
@@ -273,12 +279,13 @@ export function LibraryScreen() {
               <ItemDetail
                 item={current}
                 busy={busy}
+                working={busyOn === 'install'}
                 onAsk={(item) =>
                   void act(async () => {
                     apply({ type: 'library.request.changed', request: (await api.requestLibraryInstall(item.sourceId, item.id)) as never });
                     // Straight to where it is read: nothing is installed until it is accepted there.
                     useApp.getState().togglePanel('review');
-                  })
+                  }, 'install')
                 }
               />
             ) : (

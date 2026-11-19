@@ -19,7 +19,7 @@ type Row =
   | { kind: 'command'; command: Command; available: boolean }
   | { kind: 'output'; hit: SearchHit };
 
-const SECTION: Record<Row['kind'], string> = { session: 'Sessions', canvas: 'Canvases', command: 'Commands', output: 'Terminal output' };
+const SECTION: Record<Row['kind'], string> = { session: 'Terminals', canvas: 'Canvases', command: 'Commands', output: 'Terminal output' };
 
 /**
  * The palette: type to find sessions (names, folders, commands, notes, and

@@ -201,7 +201,7 @@ export class Projects {
     const state = this.state;
     return {
       kinds: sharedKinds().map((kind) => ({ kind: kind.kind, title: kind.title, says: kind.says, default: state.sharing[kind.kind] ?? 'shared', things: kind.things(state).sort((a, b) => a.name.localeCompare(b.name) || a.id.localeCompare(b.id)) })),
-      perServer: 'Settings are for the whole server, not for a project: the settings file, the keys, the limits, the terminal application. There is one of each.',
+      perServer: 'Settings are for the whole server, not a project: the settings file, the keys, the limits and the terminal application.',
     };
   }
 
@@ -250,7 +250,7 @@ export const sharedKinds = (): SharedKind[] => [...kinds.values()];
 registerSharedKind({
   kind: 'workflow',
   title: 'Workflows',
-  says: 'A shared workflow can be run in every project. One that is a project’s own is listed and run only there. A run that is going keeps going wherever its workflow is moved.',
+  says: 'A shared workflow can be run in any project. One kept to a project is listed and run only there. Moving a workflow does not stop its runs.',
   things: (state) => state.workflows.filter((workflow) => workflow.listed).map((workflow) => ({ id: workflow.id, name: workflow.name, projectId: workflow.projectId })),
   move: (id, projectId, hub) => {
     const workflow = hub.state.workflows.find((w) => w.id === id);
@@ -260,28 +260,28 @@ registerSharedKind({
 registerSharedKind({
   kind: 'element',
   title: 'Saved steps',
-  says: 'A shared step is among the saved steps of every project. A schedule or a rule of another project that runs a step which becomes one project’s own stops, and says so once on your list.',
+  says: 'A shared step is among every project’s saved steps. When a step is kept to one project, a schedule or a rule of another project that ran it stops, and says so once on your list.',
   things: (state) => state.shelf.map((item) => ({ id: item.id, name: item.element.name, projectId: item.projectId })),
   move: (id, projectId, hub) => hub.emit({ type: 'sharing.moved', kind: 'element', id, projectId }),
 });
 registerSharedKind({
   kind: 'source',
   title: 'Library sources',
-  says: 'Where workflows and steps are read from. A shared source is listed in every project’s library.',
+  says: 'Where workflows and steps are read from. A shared source is in every project’s library.',
   things: (state) => state.library.sources.map((source) => ({ id: source.id, name: source.name || source.claims || source.address || source.kind, projectId: source.projectId })),
   move: (id, projectId, hub) => hub.emit({ type: 'sharing.moved', kind: 'source', id, projectId }),
 });
 registerSharedKind({
   kind: 'installed',
   title: 'Installed from the library',
-  says: 'What was installed from a source, with where it came from. Moving it here does not move the workflow or the step it became: those are in their own lists above.',
+  says: 'What was installed from a source, and where it came from. Moving one does not move the workflow or the step it became: move those in their own lists above.',
   things: (state) => state.library.installed.map((item) => ({ id: item.id, name: item.name, projectId: item.projectId })),
   move: (id, projectId, hub) => hub.emit({ type: 'sharing.moved', kind: 'installed', id, projectId }),
 });
 registerSharedKind({
   kind: 'token',
   title: 'API tokens',
-  says: 'Where a token is listed. This is not what it may reach: which projects a token reaches is said when it is made, and a token cannot be given more afterwards.',
+  says: 'Where a token is listed, not what it may reach. The projects a token reaches are chosen when it is made and cannot be widened afterwards.',
   things: (state) => state.tokens.filter((token) => token.revokedAt === null || token.revokedAt === undefined).map((token) => ({ id: token.id, name: token.name, projectId: token.projectId })),
   move: (id, projectId, hub) => hub.emit({ type: 'sharing.moved', kind: 'token', id, projectId }),
 });

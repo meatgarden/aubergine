@@ -2,15 +2,14 @@ import { demoOf } from '@aubergine/shared';
 import { runCommand } from './commands';
 import { useApp } from './store';
 import { showMeAround } from './tour/actions';
-import { tourSteps } from './tour/registry';
+import { HELP_GROUPS, helpLines } from './tour/registry';
 import './tour/steps';
 import { useTour } from './tour/tour-store';
 import { ScreenHead } from './ui';
 
 /**
- * Help: the things the tour shows, as one-line reminders. "Show me" points
- * at the thing on the page being looked at, where it is there to point at.
- * The lines come from the tour's steps, so the two cannot drift apart.
+ * Help: short groups, one line a thing, each with "Show me" where the thing is on the page being looked at. The tour and
+ * the shortcuts are two buttons at the top. The lines come from the tour's registry, so the two cannot drift apart.
  */
 export function HelpPanel() {
   const open = useApp((s) => s.panel === 'help');
@@ -27,34 +26,10 @@ export function HelpPanel() {
       }}
     >
       <div className="dialog sheet help-panel" role="dialog" aria-label="Help" data-testid="help-panel">
-        <ScreenHead title="What you can do here" onClose={close} />
-        <ol className="help-list">
-          {tourSteps().map((step) => {
-            const there = step.target(context) !== null;
-            return (
-              <li key={step.id} data-testid="help-item" data-step={step.id}>
-                <span>{step.reminder}</span>
-                {there && (
-                  <button
-                    type="button"
-                    className="quiet"
-                    onClick={() => {
-                      close();
-                      useTour.getState().point(step.id);
-                    }}
-                    data-testid="help-show"
-                  >
-                    Show me
-                  </button>
-                )}
-              </li>
-            );
-          })}
-        </ol>
-        <div className="dialog-actions">
+        <ScreenHead title="Help" onClose={close} />
+        <div className="help-top">
           <button
             type="button"
-            className="quiet"
             onClick={() => {
               close();
               void showMeAround();
@@ -63,10 +38,40 @@ export function HelpPanel() {
           >
             Take the tour
           </button>
-          <button type="button" className="quiet" onClick={() => runCommand('shortcuts.show')} data-testid="help-shortcuts">
+          <button type="button" onClick={() => runCommand('shortcuts.show')} data-testid="help-shortcuts">
             Keyboard shortcuts
           </button>
         </div>
+        {HELP_GROUPS.map(([group, heading]) => (
+          <section key={group} className="help-group" data-testid="help-group" data-group={group}>
+            <h3 className="ui-section-title">{heading}</h3>
+            <ul className="help-list">
+              {helpLines()
+                .filter((line) => line.group === group)
+                .map((line) => {
+                  const there = line.target(context) !== null;
+                  return (
+                    <li key={line.id} data-testid="help-item" data-step={line.id}>
+                      <span>{line.reminder}</span>
+                      {there && (
+                        <button
+                          type="button"
+                          className="quiet"
+                          onClick={() => {
+                            close();
+                            useTour.getState().point(line.id);
+                          }}
+                          data-testid="help-show"
+                        >
+                          Show me
+                        </button>
+                      )}
+                    </li>
+                  );
+                })}
+            </ul>
+          </section>
+        ))}
       </div>
     </div>
   );

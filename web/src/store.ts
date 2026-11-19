@@ -144,6 +144,9 @@ export interface AppStore {
   wantReview: (key: string | null) => void;
   /** The one setting the page changes: whether new terminals also open on the desktop. */
   setDesktopOpenNew: (openNew: boolean) => void;
+  /** What just happened, said in one line that goes by itself: with the way to take it back where there is one. */
+  said: { text: string; undo?: { label: string; run: () => void }; tick: number } | null;
+  say: (text: string | null, undo?: { label: string; run: () => void }) => void;
   /** How the page looks, as it was just chosen: the page follows at once; the file is written by whoever chose. */
   setTheme: (theme: ThemeSetting) => void;
   setSide: (change: Partial<PanelPrefs>) => void;
@@ -323,6 +326,8 @@ export const useApp = create<AppStore>((set, get) => ({
   setNotice: (notice) => set({ notice }),
   reviewWanted: null,
   wantReview: (key) => set({ reviewWanted: key }),
+  said: null,
+  say: (text, undo) => set((state) => ({ said: text === null ? null : { text, undo, tick: (state.said?.tick ?? 0) + 1 } })),
   setDesktopOpenNew: (openNew) => set((state) => ({ settings: { ...state.settings, desktop: { ...state.settings.desktop, openNew } } })),
   setTheme: (theme) => set((state) => ({ settings: { ...state.settings, theme } })),
   setSide: (change) => {

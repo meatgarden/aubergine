@@ -115,9 +115,9 @@ button:not(
   border-radius: var(--radius-control);
   cursor: pointer;
   transition:
-    background var(--ease),
-    border-color var(--ease),
-    color var(--ease);
+    background var(--motion-quick) var(--motion-ease),
+    border-color var(--motion-quick) var(--motion-ease),
+    color var(--motion-quick) var(--motion-ease);
 }
 button:hover:not(:disabled, .ui-row, .ui-chip, .ui-tab, [role^='menuitem'], [role='option'], [role='tab'], .panel-tab, .color-dot),
 .ui-button:hover:not(:disabled) {
@@ -234,10 +234,10 @@ select,
   font-size: var(--font-body);
   line-height: 1;
   color: var(--text);
-  background: var(--surface-raised);
+  background: var(--field);
   border: 1px solid var(--border-control);
   border-radius: var(--radius-control);
-  transition: border-color var(--ease);
+  transition: border-color var(--motion-quick) var(--motion-ease);
 }
 select {
   padding-right: var(--space-6);
@@ -251,10 +251,10 @@ textarea,
   font-size: var(--font-body);
   line-height: var(--leading);
   color: var(--text);
-  background: var(--surface-raised);
+  background: var(--field);
   border: 1px solid var(--border-control);
   border-radius: var(--radius-control);
-  transition: border-color var(--ease);
+  transition: border-color var(--motion-quick) var(--motion-ease);
 }
 input:hover:not(:disabled, [type='checkbox'], [type='radio'], [type='color'], [type='file'], [type='range']),
 select:hover:not(:disabled),
@@ -378,8 +378,8 @@ button.copy-chip {
   cursor: pointer;
   border-color: var(--border);
   transition:
-    background var(--ease),
-    border-color var(--ease);
+    background var(--motion-quick) var(--motion-ease),
+    border-color var(--motion-quick) var(--motion-ease);
 }
 button.ui-chip:hover,
 button.list-tag:hover,
@@ -454,8 +454,8 @@ button.list-clear {
   border-radius: 0;
   cursor: pointer;
   transition:
-    color var(--ease),
-    border-color var(--ease);
+    color var(--motion-quick) var(--motion-ease),
+    border-color var(--motion-quick) var(--motion-ease);
 }
 .ui-tab:hover,
 .panel-tab:hover,
@@ -488,7 +488,7 @@ button.list-clear {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-surface);
-  box-shadow: 0 8px 24px var(--shadow);
+  box-shadow: var(--shadow-menu);
 }
 .ui-menu > button,
 .toolbar-menu > button,
@@ -561,7 +561,7 @@ button.list-clear {
 }
 .dialog {
   border-radius: var(--radius-surface);
-  box-shadow: 0 12px 40px var(--shadow);
+  box-shadow: var(--shadow-dialog);
 }
 .dialog h2 {
   margin: 0 0 var(--space-2);
@@ -1083,7 +1083,7 @@ button.color-dot:hover {
 }
 .ui-card.is-pressed {
   cursor: pointer;
-  transition: border-color var(--ease);
+  transition: border-color var(--motion-quick) var(--motion-ease);
 }
 .ui-card.is-pressed:hover {
   border-color: var(--border-strong);
@@ -1451,7 +1451,7 @@ button.list-chip {
 .terminal-node[data-attention='done'] {
   border: 2px solid var(--border);
   outline: 0;
-  box-shadow: 0 6px 20px var(--shadow);
+  box-shadow: var(--shadow-node);
 }
 .terminal-node[data-attention='waiting'] {
   border-color: var(--attention);
@@ -1695,7 +1695,7 @@ label:has(> input:is([type='checkbox'], [type='radio']):first-child) > input {
   margin-top: calc((1lh - var(--space-4)) / 2);
 }
 /* The ones that stand in a line with other things stay in that line. */
-label:is(.wf-inline, .ui-check, .schedule-days label, .toolbar-menu-check):has(> input:is([type='checkbox'], [type='radio']):first-child) {
+label:is(.wf-inline, .ui-check, .schedule-days label):has(> input:is([type='checkbox'], [type='radio']):first-child) {
   display: inline-flex;
 }
 
@@ -2542,4 +2542,385 @@ button.foryou-act {
 }
 :root[data-theme='light'] {
   color-scheme: light;
+}
+
+/* ---------- States: every pressable thing answers the same way ---------- */
+
+/*
+ * Rest, hover, pressed, focus, disabled. Hover is one step of surface, pressed is one more; nothing moves or grows.
+ * A filled button goes one step of its own colour each time. The ring of focus is the piece's, above.
+ */
+button.quiet:active:not(:disabled),
+button.node-tool:active:not(:disabled),
+button.node-close:active:not(:disabled),
+button.list-more:active:not(:disabled),
+.ui-icon-button:active:not(:disabled),
+.ui-tab:active:not(:disabled),
+.panel-tab:active:not(:disabled),
+.ui-row:active:not(:disabled),
+button.library-row:active,
+[role^='menuitem']:active:not(:disabled),
+:is(.ui-menu, .toolbar-menu, .list-menu) > button:active:not(:disabled),
+.ui-card.is-pressed:active,
+.foryou-row.is-pressed:active,
+.appbar button.quiet:active:not(:disabled) {
+  background: var(--surface-active);
+}
+/* A chip that is pressed is filled a step further under the pointer already: pressed, its line goes a step further too. */
+button.ui-chip:active:not(:disabled),
+button.list-tag:active,
+button.list-chip:active,
+button.list-clear:active,
+button.run-strip:active,
+button.list-mark:active,
+button.copy-chip:active {
+  background: var(--surface-active);
+  border-color: var(--text-muted);
+}
+button.primary:active:not(:disabled),
+.ui-button.is-primary:active:not(:disabled),
+.toolbar-new > button:active:not(:disabled) {
+  background: var(--accent-pressed);
+  border-color: var(--accent-pressed);
+}
+button.danger:active:not(:disabled) {
+  background: var(--danger-pressed);
+  border-color: var(--danger-pressed);
+}
+button.attention-button:active:not(:disabled) {
+  background: var(--attention-pressed);
+  border-color: var(--attention-pressed);
+}
+/* Not to be pressed now looks the same whatever it is: half as strong, and it takes no press. */
+[aria-disabled='true'] {
+  opacity: 0.5;
+  cursor: default;
+  pointer-events: none;
+}
+/* Busy: it started something slow. It cannot be pressed again, and it says so by a slow beat, not by moving. */
+button[aria-busy='true'] {
+  opacity: 1;
+  cursor: progress;
+  animation: busy-pulse var(--motion-busy) var(--motion-ease) infinite;
+}
+@keyframes busy-pulse {
+  50% {
+    opacity: 0.45;
+  }
+}
+
+/* ---------- Motion: what opens, opens the same way ---------- */
+
+/* A short fade, and a few pixels of travel for what comes from an edge. No bounce. Closing is at once. */
+@keyframes ui-fade {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes ui-open-down {
+  from {
+    opacity: 0;
+    transform: translateY(calc(-1 * var(--motion-travel)));
+  }
+}
+@keyframes ui-open-up {
+  from {
+    opacity: 0;
+    transform: translateY(var(--motion-travel));
+  }
+}
+@keyframes ui-open-side {
+  from {
+    opacity: 0;
+    transform: translateX(calc(-1 * var(--motion-travel)));
+  }
+}
+/* A menu hangs from its button: it comes down from it. */
+.ui-menu:not([hidden]),
+.toolbar-menu,
+.list-menu,
+.color-palette,
+.parked-panel,
+.outside-panel {
+  animation: ui-open-down var(--motion-open) var(--motion-ease);
+}
+/* A dialog and the tour's card come up a little; the scrim behind a dialog only fades. */
+.dialog,
+.tour-card,
+.ui-toast {
+  animation: ui-open-up var(--motion-open) var(--motion-ease);
+}
+.dialog-backdrop,
+.ui-page,
+.ui-banner,
+details[open] > :not(summary) {
+  animation: ui-fade var(--motion-open) var(--motion-ease);
+}
+/* The details come from the side panel's edge. */
+.panel-drawer {
+  animation: ui-open-side var(--motion-open) var(--motion-ease);
+}
+/* With reduced motion nothing travels: a quick fade is all. */
+@media (prefers-reduced-motion: reduce) {
+  .ui-menu:not([hidden]),
+  .toolbar-menu,
+  .list-menu,
+  .color-palette,
+  .parked-panel,
+  .outside-panel,
+  .dialog,
+  .tour-card,
+  .ui-toast,
+  .panel-drawer {
+    animation-name: ui-fade;
+    animation-duration: var(--motion-quick);
+  }
+  .dialog-backdrop,
+  .ui-page,
+  .ui-banner,
+  details[open] > :not(summary) {
+    animation-duration: var(--motion-quick);
+  }
+  button[aria-busy='true'] {
+    animation: none;
+    opacity: 0.6;
+  }
+}
+/* Changing the theme is at once: for that moment no colour takes time to change. */
+:root.theme-changing,
+:root.theme-changing * {
+  transition: none !important;
+}
+
+/* ---------- What floats, and what sits on the page ---------- */
+
+/* One shadow for each layer that floats. */
+.toolbar {
+  box-shadow: var(--shadow-bar);
+}
+.ui-menu,
+.toolbar-menu,
+.list-menu,
+.color-palette,
+.parked-panel,
+.outside-panel {
+  box-shadow: var(--shadow-menu);
+}
+.dialog,
+.tour-card {
+  box-shadow: var(--shadow-dialog);
+}
+
+/* ---------- Selection, the caret, scroll bars ---------- */
+
+::selection {
+  color: var(--text);
+  background: var(--selection);
+}
+input,
+textarea {
+  caret-color: var(--accent-text);
+}
+* {
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+/* ---------- What just happened ---------- */
+
+/* One line, in one place, that goes by itself; with the way to take it back where there is one. */
+.ui-toast {
+  position: fixed;
+  left: 50%;
+  bottom: var(--space-6);
+  z-index: var(--z-toast);
+  translate: -50% 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  max-width: min(560px, calc(100vw - 2 * var(--space-6)));
+  padding: var(--space-2) var(--space-2) var(--space-2) var(--space-4);
+  font-size: var(--font-body);
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-surface);
+  box-shadow: var(--shadow-menu);
+}
+.ui-toast > span {
+  padding: var(--space-1) var(--space-2) var(--space-1) 0;
+}
+
+/* ---------- Help ---------- */
+
+/* An ordinary dialog's width: short groups, each a heading and one line a thing, with what shows it at the line's end. */
+.dialog.sheet.help-panel {
+  width: min(560px, calc(100vw - 2 * var(--space-4)));
+}
+.help-top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.help-group {
+  margin-top: var(--space-4);
+}
+.help-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.help-list li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: var(--control);
+  padding: var(--space-1) 0;
+  border-top: 1px solid var(--border);
+}
+.help-list li > span {
+  flex: 1;
+  min-width: 0;
+}
+.help-list li > button {
+  flex: none;
+}
+
+/* ---------- A menu's parts ---------- */
+
+/* A small heading over a group of a menu's lines, a hairline between groups, and a line's key at its end. */
+.toolbar-menu-heading {
+  display: block;
+  padding: var(--space-2) var(--space-3) var(--space-1);
+  font-size: var(--font-meta);
+  font-weight: var(--weight-strong);
+  color: var(--text-muted);
+}
+.ui-menu-divider {
+  display: block;
+  height: 1px;
+  margin: var(--space-1) 0;
+  background: var(--border);
+}
+.toolbar-menu-key {
+  float: right;
+  margin-left: var(--space-3);
+  font: inherit;
+  font-size: var(--font-meta);
+  color: var(--text-muted);
+}
+
+/* ---------- The page that says why there is no canvas ---------- */
+
+/* One card in the middle of the window at every width: a title, a sentence and, where there is one, the command to type. */
+.message {
+  box-sizing: border-box;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  padding: var(--space-4);
+}
+.message-card {
+  box-sizing: border-box;
+  width: min(480px, 100%);
+  padding: var(--space-6);
+  font-size: var(--font-body);
+  line-height: var(--leading);
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-surface);
+  box-shadow: var(--shadow-dialog);
+}
+.message-card h1 {
+  margin: 0 0 var(--space-3);
+  font-size: var(--font-screen);
+  font-weight: var(--weight-strong);
+}
+.message-card p {
+  margin: 0 0 var(--space-3);
+}
+.message-card > :last-child {
+  margin-bottom: 0;
+}
+.message-command {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--font-body);
+  white-space: pre-wrap;
+  user-select: all;
+  background: var(--surface-raised);
+  border-radius: var(--radius-control);
+}
+
+/* ---------- A link among words ---------- */
+
+/* A button that reads as a link: it leads to another screen and stands after the sentence it belongs to. */
+button.ui-link {
+  min-height: 0;
+  padding: 0;
+  font: inherit;
+  color: var(--accent-text);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  background: none;
+  border: none;
+  border-radius: var(--radius-control);
+  cursor: pointer;
+}
+button.ui-link:hover:not(:disabled) {
+  color: var(--text);
+  background: none;
+}
+button.ui-link:active:not(:disabled) {
+  color: var(--text-muted);
+  background: none;
+}
+
+/* ---------- Projects ---------- */
+
+/* A project's row: the grip that orders it, its color, its name and folder, what is known, and one menu. */
+.project-grip {
+  flex: none;
+  width: var(--space-4);
+  text-align: center;
+  color: var(--text-muted);
+  cursor: grab;
+  user-select: none;
+}
+.project-grip:hover {
+  color: var(--text);
+}
+.project-item.dragging {
+  opacity: 0.5;
+}
+.project-item .project-dot {
+  flex: none;
+}
+.project-item-actions {
+  align-items: center;
+}
+/* The color line of a menu begins where the menu's other lines do. */
+.ui-menu-line:is(.node-menu-colour, .project-colour) {
+  padding-left: var(--space-3);
+}
+/* A chip of no tone has a line round it: on the page's own grey its fill alone is not seen. */
+.ui-badge:not(.is-ok, .is-attention, .is-working, .is-danger) {
+  border-color: var(--border);
+}
+/* In a dialog that starts a terminal each choice has a line to itself, in the body size and the text color. */
+.dialog.agent-tools > label.wf-inline:has(> input:first-child) {
+  display: flex;
+  margin-top: var(--space-2);
+  font-size: var(--font-body);
+  color: var(--text);
+}
+/* On a page a card is a surface of its own, as a card of the Board is: told from the page by its fill and its line, not by a line alone. */
+.ui-page .ui-card {
+  background: var(--surface);
+}
+/* The switch between this project and every project stands clear of the field under it. */
+.ui-page .queue-foryou > .list-scope {
+  margin-bottom: var(--space-2);
 }
