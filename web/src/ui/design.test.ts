@@ -137,6 +137,13 @@ describe('the colours can be read', () => {
       ['--text', surface],
       ['--text-muted', surface],
     ]),
+    // A sentence on a soft tint (a banner, what a terminal asks) is the text colour, and a help line under it the muted one.
+    ['--text', '--attention-soft'],
+    ['--text', '--ok-soft'],
+    ['--text', '--accent-soft'],
+    ['--text', '--danger-soft'],
+    ['--text', '--working-soft'],
+    ['--text-muted', '--terminal-bg'],
     ['--accent-text', '--surface'],
     ['--accent-text', '--surface-raised'],
     ['--accent-text', '--accent-soft'],

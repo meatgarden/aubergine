@@ -11,6 +11,7 @@ import { SidePanel } from './panel/SidePanel';
 import { Away } from './Away';
 import { TagDialog } from './TagDialog';
 import { Tour } from './tour/Tour';
+import { applyTheme, useThemeShown } from './theme';
 import { Pages, Screens } from './Screens';
 
 export function App() {
@@ -22,10 +23,14 @@ export function App() {
   useEffect(() => startSync(), []);
   useEffect(() => startShortcuts(), []);
 
-  const theme = useApp((s) => s.settings.theme);
+  // The theme that was chosen, or the system's for "match the system": put on the page as soon as either changes.
+  const setting = useApp((s) => s.settings.theme);
+  const settled = useApp((s) => s.phase === 'ready');
+  const shown = useThemeShown();
   useEffect(() => {
-    document.documentElement.dataset.theme = theme;
-  }, [theme]);
+    // Until the settings have been read the page keeps what it was drawn with before first paint.
+    if (settled) applyTheme(setting, shown);
+  }, [setting, shown, settled]);
 
   if (phase === 'loading') return <Message title="Loading…" />;
 

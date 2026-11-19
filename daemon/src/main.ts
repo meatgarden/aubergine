@@ -129,6 +129,7 @@ async function main(): Promise<void> {
       settings: async () => (await settings.reload()).desktop,
     }),
     setDesktopOpenNew: (value) => settings.setDesktopOpenNew(value),
+    setTheme: (value) => settings.setTheme(value),
     runArchive: new FileRunArchive(config.dataDir, (error) => console.warn(`Could not write the archive of runs: ${String(error)}`)),
     version: versionInfo(installRoot(), config).version,
   });

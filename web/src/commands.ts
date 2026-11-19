@@ -1,5 +1,6 @@
 import { foldMap, mapFolded } from './map-fold';
-import { COMMAND_IDS, demoOf, sortedCanvases, type CommandId, type Session } from '@aubergine/shared';
+import { COMMAND_IDS, THEMES, THEME_WORDS, demoOf, sortedCanvases, type CommandId, type Session } from '@aubergine/shared';
+import { chooseTheme } from './theme';
 import { openOnDesktop } from './desktop';
 import { api } from './api';
 import { nextWaiting } from './attention';
@@ -763,6 +764,22 @@ export const COMMANDS: readonly Command[] = [
     available: (state) => state.app !== null && demoOf(state.app) !== null,
     run: () => void removeDemo(),
   },
+  {
+    id: 'settings.show',
+    title: 'Settings…',
+    description: 'What you change about the page itself: how it looks (light, dark, or matching the system) and whether the desktop is told when a terminal starts waiting.',
+    group: 'Panels',
+    available: always,
+    run: (state) => state.togglePanel('settings'),
+  },
+  ...THEMES.map((theme): Command => ({
+    id: `theme.${theme}` as const,
+    title: `Theme: ${THEME_WORDS[theme].toLowerCase()}`,
+    description: theme === 'system' ? 'The page is light or dark as the system is, and follows it when that changes. Kept in the settings file.' : `The page is ${theme}, whatever the system is set to. Kept in the settings file.`,
+    group: 'View',
+    available: always,
+    run: () => chooseTheme(theme),
+  })),
   {
     id: 'help.show',
     title: 'Help: what you can do here',

@@ -38,6 +38,8 @@ import {
   type RouteInput,
   type RouteOutput,
   type RouteSpec,
+  type AppearanceAnswer,
+  type ThemeSetting,
 } from '@aubergine/shared';
 import type { ActivityLog } from './activity';
 import type { Principal, Resource } from './auth';
@@ -78,6 +80,8 @@ export interface PublicRouteDeps {
   queue: Queue;
   schedules: Schedules;
   desktop: Desktop;
+  /** Writes the one key that says how the page looks, and answers with what the settings say afterwards. */
+  changeTheme: (theme: ThemeSetting) => Promise<AppearanceAnswer>;
   projects: Projects;
   projectFiles: ProjectFiles;
   activity: ActivityLog;
@@ -402,6 +406,7 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
     // A window on the owner's desktop, and the one setting about it: `authorize` has refused everyone but the owner.
     openSessionOnDesktop: ({ params }) => deps.desktop.open(params.sessionId),
     changeDesktopSettings: ({ body }) => deps.desktop.setOpenNew(body.openNew),
+    changeAppearance: ({ body }) => deps.changeTheme(body.theme),
     /* ---------- Projects, and what is shared between them ---------- */
 
     // Which projects there are: the ones the caller reaches. Everything that changes one is the owner's alone.

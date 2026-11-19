@@ -1018,6 +1018,16 @@ export type ChangeDesktopSettingsResult = {
   openNew: boolean;
 };
 
+export type ChangeAppearanceBody = {
+  /** `light`, `dark`, or `system` to match the system. */
+  theme: "light" | "dark" | "system";
+};
+
+export type ChangeAppearanceResult = {
+  /** `light`, `dark`, or `system` for whichever the system is set to. */
+  theme: "light" | "dark" | "system";
+};
+
 export type AppendNoteBody = {
   text: string;
   kind?: "note" | "prompt" | "event";
@@ -9547,6 +9557,7 @@ export const OPERATIONS = {
   showSession: { method: 'POST', path: '/v1/sessions/{sessionId}/show', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "sessions:write" } },
   openSessionOnDesktop: { method: 'POST', path: '/v1/sessions/{sessionId}/desktop', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   changeDesktopSettings: { method: 'PUT', path: '/v1/settings/desktop', params: [], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
+  changeAppearance: { method: 'PUT', path: '/v1/settings/appearance', params: [], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   appendNote: { method: 'POST', path: '/v1/sessions/{sessionId}/notes', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: "notes:write" } },
   updateNode: { method: 'PATCH', path: '/v1/canvases/{canvasId}/nodes/{nodeId}', params: ["canvasId", "nodeId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "canvases:write" } },
   createFrame: { method: 'POST', path: '/v1/canvases/{canvasId}/frames', params: ["canvasId"], hasBody: true, paged: false, idempotent: true, stream: false, access: { who: 'token', scope: "canvases:write" } },
@@ -9817,6 +9828,12 @@ export interface Client {
    * `PUT /v1/settings/desktop`. Signed-in browser only: no API token may call this.
    */
   changeDesktopSettings(args: { body: ChangeDesktopSettingsBody } & CallOptions): Promise<ChangeDesktopSettingsResult>;
+  /**
+   * Choose how the page looks: light, dark, or matching the system.
+   *
+   * `PUT /v1/settings/appearance`. Signed-in browser only: no API token may call this.
+   */
+  changeAppearance(args: { body: ChangeAppearanceBody } & CallOptions): Promise<ChangeAppearanceResult>;
   /**
    * Add an entry to a session's note log.
    *

@@ -1,10 +1,10 @@
+import { useThemeShown } from './theme';
 import { useEffect, useRef, useState } from 'react';
 import { FitAddon } from '@xterm/addon-fit';
 import { Terminal } from '@xterm/xterm';
 import {
   TerminalServerMessage,
   paths,
-  type Settings,
   type TerminalClientMessage,
 } from '@aubergine/shared';
 import { socketUrl } from './api';
@@ -23,7 +23,7 @@ interface Props {
   interactive: boolean;
 }
 
-function terminalTheme(theme: Settings['theme']) {
+function terminalTheme(theme: 'light' | 'dark') {
   return theme === 'light'
     ? { background: '#fbfbfc', foreground: '#24262b', cursor: '#24262b', selectionBackground: '#c9d3e6' }
     : { background: '#101114', foreground: '#d7dae0', cursor: '#d7dae0' };
@@ -57,7 +57,7 @@ export function TerminalView({ sessionId, interactive, zoom }: Props) {
       scrollback: 0,
       macOptionClickForcesSelection: true,
       disableStdin: !interactiveRef.current,
-      theme: terminalTheme(settings.theme),
+      theme: terminalTheme(document.documentElement.dataset.theme === 'light' ? 'light' : 'dark'),
     });
     const fit = new FitAddon();
     term.loadAddon(fit);
@@ -164,7 +164,8 @@ export function TerminalView({ sessionId, interactive, zoom }: Props) {
 
   // Follow changes to the settings file.
   const font = useApp((s) => s.settings.font);
-  const theme = useApp((s) => s.settings.theme);
+  // The theme that is drawn now: a terminal's colours are its own, and follow it at once.
+  const theme = useThemeShown();
   useEffect(() => {
     const term = terminal.current;
     if (!term) return;

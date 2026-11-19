@@ -1,4 +1,4 @@
-import { PROJECT_HEADER } from '@aubergine/shared';
+import { PROJECT_HEADER, type ThemeSetting } from '@aubergine/shared';
 import { z, type ZodType } from 'zod';
 import { createClient } from '@aubergine/client';
 import {
@@ -105,6 +105,7 @@ export const api = {
     call(CreateSessionResponse, 'POST', paths.sessions, request),
   openOnDesktop: (sessionId: string) => v1.openSessionOnDesktop({ sessionId }),
   setDesktopOpenNew: (openNew: boolean) => v1.changeDesktopSettings({ body: { openNew } }),
+  setTheme: (theme: ThemeSetting) => v1.changeAppearance({ body: { theme } }),
   updateSession: (sessionId: string, request: UpdateSessionRequest) =>
     call(Session, 'PATCH', paths.session(sessionId), request),
   parkSession: (sessionId: string) => call(Session, 'POST', paths.parkSession(sessionId), {}),

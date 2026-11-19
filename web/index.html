@@ -8,6 +8,19 @@
     <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="icon" href="/icon.svg" type="image/svg+xml" />
     <title>Aubergine</title>
+    <script>
+      // Before anything is drawn: the theme that was chosen (the server writes it on this page; a copy is kept in this
+      // browser for when it does not), or for "match the system" the one the system has. So no other theme is seen first.
+      (function () {
+        var root = document.documentElement;
+        var setting = root.getAttribute('data-theme-setting');
+        try {
+          if (!setting) setting = localStorage.getItem('aubergine.theme');
+        } catch (e) {}
+        if (setting !== 'dark' && setting !== 'light') setting = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+        root.setAttribute('data-theme', setting);
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

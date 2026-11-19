@@ -1,5 +1,7 @@
-import { PROJECT_HEADER, isLocalHost } from '@aubergine/shared';
+import { PROJECT_HEADER, ThemeSetting, isLocalHost } from '@aubergine/shared';
 import { existsSync } from 'node:fs';
+import { readFile } from 'node:fs/promises';
+import { SettingsUnreadableError } from './settings';
 import type { AddressInfo } from 'node:net';
 import cookie from '@fastify/cookie';
 import fastifyStatic from '@fastify/static';
@@ -145,6 +147,8 @@ export interface ServerOptions {
   desktop?: DesktopOpener;
   /** Writes `desktop.openNew` into the settings file. Left out: the page cannot change it. */
   setDesktopOpenNew?: (value: boolean) => Promise<void>;
+  /** Writes `theme` into the settings file. Left out: the page cannot change it. */
+  setTheme?: (value: ThemeSetting) => Promise<void>;
   /** The clock and the timer schedules use. A test passes its own. */
   scheduleClock?: ScheduleClock;
   /** The time zone schedules are written in. Left out: this computer's own. */
@@ -831,6 +835,17 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     queue,
     schedules,
     desktop,
+    // How the page looks: the one key is written, and the answer is what the file says afterwards.
+    changeTheme: async (theme) => {
+      if (!options.setTheme) throw new ConflictError('This server has no settings file to write.');
+      try {
+        await options.setTheme(theme);
+      } catch (error) {
+        if (error instanceof SettingsUnreadableError) throw new ConflictError(error.message);
+        throw error;
+      }
+      return { theme: (await options.settings()).theme };
+    },
     projects,
     projectFiles,
     may: (principal, action, resource) => authorize(principal, action, resource),
@@ -985,14 +1000,27 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   /* ---------- The web app ---------- */
 
   if (existsSync(options.webDist)) {
-    await app.register(fastifyStatic, { root: options.webDist });
+    await app.register(fastifyStatic, { root: options.webDist, index: false });
+    // The page is sent with the theme that is chosen already written on it, so that it is never drawn in the other
+    // one first. Only that one word of the settings is in it. Never kept by a browser: the choice may change.
+    const pageFile = path.join(options.webDist, 'index.html');
+    const sendPage = async (_request: unknown, reply: FastifyReply): Promise<FastifyReply> => {
+      const html = await readFile(pageFile, 'utf8');
+      const theme = ThemeSetting.safeParse((await options.settings()).theme);
+      return reply
+        .type('text/html; charset=utf-8')
+        .header('cache-control', 'no-cache')
+        .send(html.replace('<html lang="en"', `<html lang="en" data-theme-setting="${theme.success ? theme.data : 'system'}"`));
+    };
+    app.get('/', sendPage);
+    app.get('/index.html', sendPage);
     // The address of a canvas is a page of the same web app.
-    app.get(canvasAddress(':canvasId'), async (_request, reply) => reply.sendFile('index.html'));
-    app.get(projectCanvasAddress(':projectId', ':canvasId'), async (_request, reply) => reply.sendFile('index.html'));
+    app.get(canvasAddress(':canvasId'), sendPage);
+    app.get(projectCanvasAddress(':projectId', ':canvasId'), sendPage);
     // And so is the address of each page that is about a whole project.
     for (const page of PAGE_NAMES) {
-      app.get(pageAddress(canvasAddress(':canvasId'), page), async (_request, reply) => reply.sendFile('index.html'));
-      app.get(pageAddress(projectCanvasAddress(':projectId', ':canvasId'), page), async (_request, reply) => reply.sendFile('index.html'));
+      app.get(pageAddress(canvasAddress(':canvasId'), page), sendPage);
+      app.get(pageAddress(projectCanvasAddress(':projectId', ':canvasId'), page), sendPage);
     }
   } else {
     app.get('/', async (_request, reply) =>

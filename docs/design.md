@@ -22,7 +22,7 @@ Four sizes and two weights. Nothing else, anywhere outside a terminal's own text
 
 | Token | Size | For |
 | --- | --- | --- |
-| `--font-meta` | 12px | What is known about a thing: time, folder, counts, hints. Chips and badges. |
+| `--font-meta` | 12px | A time, a count, a chip, a badge, and the second line of a row in a list. Never what a person reads to decide: in the details of a thing nothing longer than three words is this size, except a time. |
 | `--font-body` | 13px | Everything by default: rows, buttons, fields, paragraphs. |
 | `--font-title` | 15px | The heading of a part of a surface, a terminal's name on its node, the title of a dialog. |
 | `--font-screen` | 20px | The name of a screen, and the name of the product. |
@@ -40,7 +40,9 @@ Named by what it is for.
 
 No colour is written outside the tokens, with two exceptions that are not the system's to decide: the colours a person picks for a terminal, a tab or a frame (`--swatch`), and the terminal's own theme.
 
-The light theme gives the same names other values and changes nothing else. The contrast of every pair above is tested in both themes.
+The light theme gives the same names other values and changes nothing else. The contrast of every pair above is tested in both themes: text and muted text are at least 4.5 to 1 on every surface and on every soft tint.
+
+Which theme is drawn is a setting with three choices (light, dark, match the system), changed in Settings and written to the settings file. The page is sent with the choice on it and a few lines before first paint put the theme on the page, so it is never drawn in the other one first. Whatever draws colours of its own (a terminal) reads the theme that is drawn (`useThemeShown`) and follows at once.
 
 ## Space
 
@@ -106,7 +108,7 @@ A tick box or a radio button is 16px, one gap (`--space-2`) from its words and l
 - **What is a page and what is a dialog:** a page is a place you go to and stay in, about the whole project, with no one thing it is about. A dialog is a question about one thing (run this, describe that, these tags, this draft) that ends with a decision; it opens over a page or the canvas alike.
 - **A part of a page** is a title and rows or cards on the page's own surface. A card is never inside a card. Items of a list are rows with a hairline between them, pressed as a whole where the one thing to do is to open them; an item is a card only where it stands alone with actions of its own (a workflow). Not both in one list, and no item has an edge of another colour: what kind it is, is a dot or a soft chip.
 - **A banner** (`Banner`): what waits to be read or decided, said once at the top of a page: the soft attention tint, one sentence, one button. It is not the filled thing of "One thing shouts".
-- **The details of one thing** (the drawer beside the side panel): `--drawer-width` (380px) wide, between the panel and the canvas and under the bar of tabs, so that nothing of it lies over the canvas's bar. In this order: what the thing is and the one thing to do with it (the primary), with the rest behind the same menu as its row; what it asks of the owner, in its own words, on the soft tint, with how to answer; what is known about it as a list of facts (`.ui-facts`: a label and a value, never a whole path); then its parts as tabs, so that one thing is typed into at a time.
+- **The details of one thing** (the drawer beside the side panel): `--drawer-width` (420px) wide, with the ordinary controls and the body size (what it asks is in the title size; a fact is a row of at least 28px), between the panel and the canvas and under the bar of tabs, so that nothing of it lies over the canvas's bar. In this order: what the thing is and the one thing to do with it (the primary), with the rest behind the same menu as its row; what it asks of the owner, in its own words, on the soft tint, with how to answer; what is known about it as a list of facts (`.ui-facts`: a label and a value, never a whole path); then its parts as tabs, so that one thing is typed into at a time.
 - **A row of what waits** (`ForYouRow`): the same on the Queue page and in the side panel. Line 1: whose it is in the strong weight, and when at the right. Line 2: its kind as a chip in a column of one width (`--kind-column`), then what waits in its own words, so that the words stand under each other. Its kind names the one thing to do with it; that is the button at the row's end, shown while the pointer or the keyboard is on the row, and pressing the row does the same.
 - **Nothing here yet** is one sentence saying what will be here, and one button that makes the first one where there is one to make.
 - **The head of a dialog** (`ScreenHead`): its name in `--font-screen`, a line under it where one helps, Close at the right. It stays in view while the screen scrolls.

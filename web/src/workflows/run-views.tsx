@@ -33,7 +33,7 @@ function Pipeline({ picture, elements, live, now }: RunViewProps) {
               </span>
               {live && !current && (
                 <button type="button" className="quiet" title={`Jump to "${segment.name}"`} onClick={() => void reportRun(run.id, { type: 'goto', elementId: segment.id })} data-testid="run-goto">
-                  Go to
+                  Go to this step
                 </button>
               )}
             </div>

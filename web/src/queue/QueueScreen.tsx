@@ -162,7 +162,7 @@ function Rules() {
           }}
           data-testid="rule-add"
         >
-          Add the rule
+          Add rule
         </button>
       </div>
       <p className="sheet-note">{list?.actions.find((kind) => kind.kind === action.kind)?.says}</p>

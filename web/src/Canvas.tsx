@@ -86,7 +86,11 @@ function toFrameNode(frame: Frame, previous: CanvasNode | undefined): FrameFlowN
  * The one button for the commonest thing, a new terminal, and beside it a menu of everything else
  * that can be made, each said in words: no control here is a bare sign.
  */
-function NewMenu({ adding }: { adding: boolean }) {
+/** Under this width the bar over the canvas has no room for everything in one row. */
+const NARROW_CANVAS = 680;
+
+function NewMenu({ adding, narrow }: { adding: boolean; narrow: boolean }) {
+  const parked = useApp((s) => (s.app?.sessions ?? []).filter((session) => session.state === 'parked').length);
   const [open, setOpen] = useState(false);
   const root = useRef<HTMLSpanElement>(null);
   useEffect(() => {
@@ -139,6 +143,9 @@ function NewMenu({ adding }: { adding: boolean }) {
           {item('workflow.runOnAgent', 'Claude Code on a workflow…', 'Choose the workflow first.', 'agent-on-workflow')}
           {item('terminal.newIn', 'Terminal in a folder or a working copy…', 'Somewhere you choose, or kept apart on its own branch.', 'toolbar-new-in')}
           {item('frame.new', 'Frame', 'A box to group terminals in.', 'toolbar-new-frame')}
+          {/* Where the bar has no room for them, what is used seldom is here. */}
+          {narrow && parked > 0 && item('parked.open', `Parked terminals (${parked})…`, 'Put away, still running: bring one back.', 'toolbar-menu-parked')}
+          {narrow && item('outside.open', 'Terminals outside the canvas…', 'Open in your terminal application: bring them in.', 'toolbar-menu-outside')}
           <label className="toolbar-menu-check" role="menuitemcheckbox" aria-checked={openNew} title="Every terminal you make here also opens in a window of your terminal application, showing the same terminal. Which application is in the settings file (desktop.app).">
             <input type="checkbox" checked={openNew} onChange={(e) => void setOpenNew(e.target.checked)} data-testid="toolbar-desktop-new" />
             <span>
@@ -319,6 +326,8 @@ export function Canvas() {
   }, [liveRuns]);
 
   const [adding, setAdding] = useState(false);
+  // The canvas is narrow (the details are open beside the panel, say): the bar keeps to one row, and what is used seldom is in its menu.
+  const narrow = useStore((s) => s.width > 0 && s.width < NARROW_CANVAS);
   const [fullSizeHint, setFullSizeHint] = useState<{ x: number; y: number } | null>(null);
   const setError = useApp((s) => s.setNotice);
 
@@ -510,9 +519,9 @@ export function Canvas() {
       >
         <Background variant={BackgroundVariant.Dots} gap={24} size={1} />
         <CanvasMap />
-        <Panel position="top-left" className="toolbar">
+        <Panel position="top-left" className={`toolbar${narrow ? ' is-narrow' : ''}`}>
           <span className="toolbar-group" role="group" aria-label="Make something new">
-            <NewMenu adding={adding} />
+            <NewMenu adding={adding} narrow={narrow} />
           </span>
           <span className="toolbar-group" role="group" aria-label="The view">
             <button

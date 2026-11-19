@@ -286,7 +286,8 @@ input.tab-input {
 }
 .ui-segmented > button,
 .list-scope > button {
-  flex: 1;
+  /* Each part is at least as wide as its words. */
+  flex: 1 0 auto;
   border-radius: 0;
   margin-left: -1px;
 }
@@ -2411,4 +2412,134 @@ button.foryou-act {
 /* Beside a terminal the note's head has its name at one end and the way to hide it at the other. */
 .note-panel > header > .node-close {
   margin-left: auto;
+}
+
+/* ---------- The details and the note are read, not glanced at: the body size, the ordinary controls ---------- */
+
+/* What a person reads to decide is never in the size of a time or a count. */
+.panel-drawer {
+  --control-h: var(--control);
+}
+.details-head {
+  padding: var(--space-4);
+  gap: var(--space-2) var(--space-2);
+}
+/* The name has its line to itself and is not cut while there is room: it takes a second line before that. */
+.details-head > h2 {
+  white-space: normal;
+  overflow: visible;
+  overflow-wrap: anywhere;
+}
+.details-head-actions > .ui-badge {
+  margin-left: var(--space-1);
+}
+.details-asks {
+  padding: var(--space-4);
+}
+.details-asks-words {
+  font-size: var(--font-title);
+  line-height: var(--leading-heading);
+}
+.details-asks-how {
+  font-size: var(--font-body);
+}
+/* A fact is a row with room: its label in the muted colour, what it is in the body size. */
+.ui-facts {
+  gap: 0 var(--space-4);
+  font-size: var(--font-body);
+}
+.ui-facts dt,
+.ui-facts dd {
+  min-height: var(--control-compact);
+  box-sizing: border-box;
+  padding: var(--space-1) 0;
+  line-height: 20px;
+}
+.details .recap {
+  padding-top: var(--space-4);
+}
+.details-links {
+  padding-top: var(--space-4);
+}
+.details-tabs {
+  margin-top: var(--space-6);
+}
+.details .ui-tab {
+  font-size: var(--font-body);
+}
+.note-panel .note-part {
+  gap: var(--space-2);
+  padding-top: var(--space-4);
+}
+.note-help,
+.note-panel .note-empty,
+.note-entry p,
+.note-author {
+  font-size: var(--font-body);
+}
+.note-panel .note-entry {
+  margin: 0 0 var(--space-3);
+}
+.note-entry header {
+  align-items: baseline;
+}
+/* The summary shows four lines at least. */
+.note-panel textarea.note-summary {
+  min-height: 112px;
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--font-body);
+  line-height: var(--leading);
+}
+.details .session-messages .ui-meta,
+.details .thread-about {
+  font-size: var(--font-body);
+}
+/* Beside a terminal the note has the ordinary controls too. */
+.note-panel {
+  --control-h: var(--control);
+}
+
+/* The handle that folds the side panel does not lie over the details: while they are open it is not there. */
+.side-panel:has(+ .panel-drawer) > .panel-fold {
+  display: none;
+}
+
+/* A row of the terminal list: its name is what a person reads, in the body size and the strong weight. */
+.list-row .list-name {
+  font-weight: var(--weight-strong);
+}
+
+/* Where the canvas is narrow the bar keeps to one row: what is used seldom is in its menu, and its own buttons are not drawn. */
+.toolbar.is-narrow .toolbar-status .parked > button,
+.toolbar.is-narrow .toolbar-status .outside > button {
+  display: none;
+}
+.toolbar.is-narrow .toolbar-status {
+  padding: 0;
+  border: 0;
+}
+.toolbar.is-narrow {
+  flex-wrap: nowrap;
+}
+
+/* Settings: a part is a heading, the control, and one line under it. */
+.settings-dialog > section {
+  margin-top: var(--space-6);
+}
+.settings-dialog > section > .ui-meta {
+  margin: var(--space-2) 0 0;
+  font-size: var(--font-body);
+}
+/* The project's button says what it is before its name. */
+.project-label {
+  font-weight: var(--weight-normal);
+  color: var(--text-muted);
+}
+
+/* What the browser draws itself (a tick box not yet ticked, a scroll bar, the list of a select) is in the theme that is drawn, not the system's. */
+:root {
+  color-scheme: dark;
+}
+:root[data-theme='light'] {
+  color-scheme: light;
 }

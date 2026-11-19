@@ -4,7 +4,7 @@ import { DEFAULT_SETTINGS, Settings } from './settings';
 describe('Settings', () => {
   it('fills in defaults for everything left out', () => {
     expect(Settings.parse({})).toEqual(DEFAULT_SETTINGS);
-    expect(DEFAULT_SETTINGS).toMatchObject({ theme: 'dark', shell: null, defaultFolder: null });
+    expect(DEFAULT_SETTINGS).toMatchObject({ theme: 'system', shell: null, defaultFolder: null });
     expect(DEFAULT_SETTINGS.font.size).toBe(13);
     expect(DEFAULT_SETTINGS.agents.logPrompts).toBe(true);
     expect(DEFAULT_SETTINGS.agents.claudeCommand).toBe('claude');

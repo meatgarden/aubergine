@@ -32,16 +32,17 @@ export function DetailsHead({ id, onClose }: { id: string; onClose: () => void }
       <h2 className="panel-drawer-title" data-testid="details-name">
         {found.name}
       </h2>
-      {chip && (
-        <span className={`ui-badge is-${chip.tone}`} data-testid="details-chip">
-          {chip.text}
-        </span>
-      )}
       <span className="details-head-actions">
         {/* Shows the terminal and makes it the selected one. The details stay open. */}
         <button type="button" className="primary" onClick={() => useApp.getState().showSession(id)} title={parked ? 'Brings it back onto this canvas and goes to it' : 'Shows the terminal on its canvas and selects it'} data-testid="details-go">
           Go to terminal
         </button>
+        {/* Its state in words stands with the buttons, so that the name has its line to itself. */}
+        {chip && (
+          <span className={`ui-badge is-${chip.tone}`} data-testid="details-chip">
+            {chip.text}
+          </span>
+        )}
         <MenuButton more label={`More for ${found.name}`} testid="details-more" menuTestid="details-menu">
           {terminalActions(found, { here, parked, canMove, hasNotes: true })
             .filter((action) => action.command !== undefined)

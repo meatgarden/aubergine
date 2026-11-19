@@ -1,7 +1,7 @@
 import { mkdir, readFile, rename, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import { DEFAULT_SETTINGS, Settings, resolveShortcuts, type Platform } from '@aubergine/shared';
+import { DEFAULT_SETTINGS, Settings, resolveShortcuts, type Platform, type ThemeSetting } from '@aubergine/shared';
 
 export const SETTINGS_FILE = 'config.json';
 
@@ -77,10 +77,10 @@ export class SettingsFile {
   }
 
   /**
-   * Writes `desktop.openNew` into the file and leaves everything else in it as it was: the file is the owner's, and
-   * this is the one key the page changes. A file that is not JSON is not touched: the owner is told to mend it.
+   * Changes the file by what `change` makes of it and leaves everything else in it as it was: the file is the
+   * owner's. A file that is not JSON is not touched: the owner is told to mend it.
    */
-  async setDesktopOpenNew(value: boolean): Promise<void> {
+  private async write(change: (whole: Record<string, unknown>) => Record<string, unknown>): Promise<void> {
     const file = path.join(this.dir, SETTINGS_FILE);
     let whole: Record<string, unknown> = {};
     try {
@@ -91,13 +91,24 @@ export class SettingsFile {
       if (error instanceof SyntaxError) throw new SettingsUnreadableError(file);
       if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
     }
-    const desktop = whole.desktop !== null && typeof whole.desktop === 'object' && !Array.isArray(whole.desktop) ? (whole.desktop as Record<string, unknown>) : {};
-    const next = { ...whole, desktop: { ...desktop, openNew: value } };
     await mkdir(this.dir, { recursive: true });
     const tmp = `${file}.${process.pid}.tmp`;
-    await writeFile(tmp, `${JSON.stringify(next, null, 2)}\n`);
+    await writeFile(tmp, `${JSON.stringify(change(whole), null, 2)}\n`);
     await rename(tmp, file);
     await this.reload();
+  }
+
+  /** Writes `desktop.openNew`: one of the two keys the page changes. */
+  async setDesktopOpenNew(value: boolean): Promise<void> {
+    await this.write((whole) => {
+      const desktop = whole.desktop !== null && typeof whole.desktop === 'object' && !Array.isArray(whole.desktop) ? (whole.desktop as Record<string, unknown>) : {};
+      return { ...whole, desktop: { ...desktop, openNew: value } };
+    });
+  }
+
+  /** Writes `theme`: the other key the page changes. It names one of three choices and nothing that is run. */
+  async setTheme(value: ThemeSetting): Promise<void> {
+    await this.write((whole) => ({ ...whole, theme: value }));
   }
 
   async reload(): Promise<Settings> {

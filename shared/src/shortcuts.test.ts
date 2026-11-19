@@ -138,7 +138,7 @@ describe('settings', () => {
   it('load with shortcuts left out, and keep a wrong entry for reporting instead of failing', () => {
     expect(Settings.parse({}).shortcuts).toEqual({});
     const parsed = Settings.parse({ shortcuts: { 'terminal.park': 12, nonsense: 'X' } });
-    expect(parsed.theme).toBe('dark');
+    expect(parsed.theme).toBe('system');
     expect(resolveShortcuts({ platform: 'mac', mode: 'tab', shortcuts: parsed.shortcuts }).problems).toHaveLength(2);
     expect(parseChord('Ctrl+Meta+.')).toBeTruthy();
   });

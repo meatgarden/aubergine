@@ -172,7 +172,7 @@ export function ProjectsScreen() {
           <input value={name} maxLength={80} placeholder="A new project’s name" aria-label="Name of the new project" autoFocus={wantsNew !== null} onChange={(e) => setName(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && add()} data-testid="project-new-name" />
           <input value={folder} placeholder="Folder its terminals start in (optional)" aria-label="Folder of the new project" onChange={(e) => setFolder(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && add()} data-testid="project-new-folder" />
           <button type="button" onClick={add} data-testid="project-new-add">
-            Add the project
+            Add project
           </button>
         </div>
         <h3 className="projects-heading">From a file, or from a template</h3>

@@ -1,4 +1,4 @@
-import { mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
@@ -38,7 +38,7 @@ describe('settings file', () => {
   it('picks up edits on reload and warns once per problem', async () => {
     const warnings: string[] = [];
     const file = new SettingsFile(dir, (m) => warnings.push(m));
-    expect((await file.reload()).theme).toBe('dark');
+    expect((await file.reload()).theme).toBe('system');
     await writeFile(path.join(dir, SETTINGS_FILE), JSON.stringify({ theme: 'light' }));
     expect((await file.reload()).theme).toBe('light');
     expect(file.value.theme).toBe('light');
@@ -97,3 +97,29 @@ describe('keys in the settings file', () => {
     expect(shortcutProblems(DEFAULT_SETTINGS, 'other')).toEqual([]);
   });
 });
+
+describe('the theme', () => {
+  it('matches the system on a new install, and a file that says dark or light keeps meaning that', async () => {
+    expect(DEFAULT_SETTINGS.theme).toBe('system');
+    expect(Settings.parse({ theme: 'dark' }).theme).toBe('dark');
+    expect(Settings.parse({ theme: 'light' }).theme).toBe('light');
+    expect(Settings.safeParse({ theme: 'sepia' }).success).toBe(false);
+  });
+
+  it('is written as one key, and everything else in the file is left as it was', async () => {
+    const file = new SettingsFile(dir);
+    // No file yet: one is made, holding the one key.
+    await file.setTheme('light');
+    expect(JSON.parse(await readFile(path.join(dir, SETTINGS_FILE), 'utf8'))).toEqual({ theme: 'light' });
+    expect(file.value.theme).toBe('light');
+    // A file of the owner's: what the server does not know, and what it does, stay.
+    await writeFile(path.join(dir, SETTINGS_FILE), JSON.stringify({ theme: 'light', font: { size: 15 }, desktop: { app: 'command', command: 'made-up {file}' }, somethingOfMine: [1, 2] }));
+    await file.setTheme('system');
+    expect(JSON.parse(await readFile(path.join(dir, SETTINGS_FILE), 'utf8'))).toEqual({ theme: 'system', font: { size: 15 }, desktop: { app: 'command', command: 'made-up {file}' }, somethingOfMine: [1, 2] });
+    // A file that cannot be read as settings is not touched.
+    await writeFile(path.join(dir, SETTINGS_FILE), 'not json');
+    await expect(file.setTheme('dark')).rejects.toThrow(/Mend it by hand/);
+    expect(await readFile(path.join(dir, SETTINGS_FILE), 'utf8')).toBe('not json');
+  });
+});
+

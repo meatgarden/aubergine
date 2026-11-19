@@ -2748,7 +2748,7 @@ test('a schedule: the owner makes one for a step that hands in a list, runs it n
   await form.getByTestId('schedule-what').selectOption({ label: 'the step “Schedule test list”' });
   await form.getByTestId('schedule-where').selectOption({ label: 'on “schedule test terminal”' });
   await form.getByTestId('schedule-task').fill('letters and rooms');
-  await expect(form.getByTestId('schedule-save')).toHaveText('Add: weekdays at 08:30');
+  await expect(form.getByTestId('schedule-save')).toHaveText('Add schedule: weekdays at 08:30');
   await form.getByTestId('schedule-save').click();
   await expect(form).toHaveCount(0);
   const row = schedules.getByTestId('schedule-row').filter({ hasText: 'Schedule test morning' });
@@ -3426,6 +3426,25 @@ test('one look: the canvas page and every screen use the two control heights and
     rmSync(folder, { recursive: true, force: true });
   }
 
+  // The same in the light theme: the canvas page, the four pages and Settings. The choice is put back afterwards.
+  await page.getByTestId('toolbar-settings').click();
+  await page.getByTestId('theme-light').click();
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+  expect(await measureLook(page), 'Settings, light').toEqual([]);
+  expect(await onTop(page, 'settings-dialog'), 'Settings is on top').toBe(true);
+  await page.keyboard.press('Escape');
+  await expect(page.getByTestId('settings-dialog')).toHaveCount(0);
+  expect(await measureLook(page), 'the canvas page, light').toEqual([]);
+  for (const name of ['queue', 'board', 'workflows', 'library'] as const) {
+    await openPage(page, name);
+    expect(await measureLook(page), `${name}, light`).toEqual([]);
+    await toCanvas(page);
+  }
+  await page.getByTestId('toolbar-settings').click();
+  await page.getByTestId('theme-system').click();
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+  await page.keyboard.press('Escape');
+
   // The side panel's other parts.
   const tabs = page.getByTestId('panel-tab');
   for (let index = 0; index < (await tabs.count()); index += 1) {
@@ -3935,7 +3954,54 @@ test('the drawer: what a terminal asks comes first, one thing to type into, besi
       const over = (other: DOMRect): boolean => d.left < other.right - 1 && d.right > other.left + 1 && d.top < other.bottom - 1 && d.bottom > other.top + 1;
       return { besidePanel: Math.round(d.left - box('[data-testid="side-panel"]').right), underTabs: d.top >= box('[data-testid="tabbar"]').bottom - 1, overCanvasBar: over(box('.toolbar')), overTabs: over(box('[data-testid="tabbar"]')), overCanvas: over(box('.react-flow')), width: Math.round(d.width) };
     });
-    expect(places).toEqual({ besidePanel: 0, underTabs: true, overCanvasBar: false, overTabs: false, overCanvas: false, width: 380 });
+    expect(places).toEqual({ besidePanel: 0, underTabs: true, overCanvasBar: false, overTabs: false, overCanvas: false, width: 420 });
+
+    // It is read, not glanced at: the ordinary controls, the question in the title size, facts in the body size with room, and
+    // nothing longer than three words under the body size except a time.
+    const sizes = await drawer.evaluate((el) => {
+      const px = (node: Element | null): string => (node ? getComputedStyle(node).fontSize : 'none');
+      const small: string[] = [];
+      const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+      while (walker.nextNode()) {
+        const parent = walker.currentNode.parentElement;
+        const words = (walker.currentNode.textContent ?? '').trim();
+        if (!parent || words === '' || parent.getClientRects().length === 0 || parent.closest('time')) continue;
+        if (parseFloat(getComputedStyle(parent).fontSize) < 13 && words.split(/\s+/).length > 3) small.push(words.slice(0, 40));
+      }
+      const fact = el.querySelector('.ui-facts dd') as HTMLElement;
+      return {
+        controls: [...new Set([...el.querySelectorAll('button, input')].filter((c) => c.getClientRects().length > 0 && !c.matches('.note-summary-read')).map((c) => Math.round(c.getBoundingClientRect().height)))],
+        question: px(el.querySelector('.details-asks-words')),
+        name: px(el.querySelector('[data-testid="details-name"]')),
+        nameCut: (() => { const name = el.querySelector('[data-testid="details-name"]') as HTMLElement; return name.scrollWidth > name.clientWidth + 1; })(),
+        label: px(el.querySelector('.ui-facts dt')),
+        value: px(fact),
+        row: Math.round(fact.getBoundingClientRect().height) >= 28,
+        tab: px(el.querySelector('[data-testid="details-tab-note"]')),
+        help: px(el.querySelector('.note-help')),
+        summaryLines: Math.floor(((el.querySelector('textarea.note-summary') as HTMLElement).clientHeight - 16) / parseFloat(getComputedStyle(el.querySelector('textarea.note-summary') as HTMLElement).lineHeight)),
+        gutter: Math.round((el.querySelector('.ui-facts') as HTMLElement).getBoundingClientRect().left - el.getBoundingClientRect().left),
+        small,
+      };
+    });
+    expect(sizes).toEqual({ controls: [32], question: '15px', name: '15px', nameCut: false, label: '13px', value: '13px', row: true, tab: '13px', help: '13px', summaryLines: expect.any(Number), gutter: 16, small: [] });
+    expect(sizes.summaryLines).toBeGreaterThanOrEqual(4);
+    // The handle that folds the side panel does not lie over it, and at 1280 wide the bar over the canvas is still one row.
+    await page.setViewportSize({ width: 1280, height: 900 });
+    expect(await page.evaluate(() => {
+      const handle = document.querySelector('[data-testid="panel-fold"]') as HTMLElement | null;
+      const d = (document.querySelector('[data-testid="panel-drawer"]') as HTMLElement).getBoundingClientRect();
+      const h = handle?.getBoundingClientRect();
+      const handleOver = !!h && h.width > 0 && h.left < d.right && h.right > d.left && h.top < d.bottom && h.bottom > d.top;
+      const bar = document.querySelector('.toolbar') as HTMLElement;
+      const tops = [...new Set([...bar.querySelectorAll('button')].filter((b) => b.getClientRects().length > 0).map((b) => Math.round(b.getBoundingClientRect().top)))];
+      return { handleOver, rows: tops.length, barInCanvas: bar.getBoundingClientRect().right <= (document.querySelector('.react-flow') as HTMLElement).getBoundingClientRect().right + 1 };
+    })).toEqual({ handleOver: false, rows: 1, barInCanvas: true });
+    // What the bar has no room for is in its menu.
+    await page.getByTestId('toolbar-new-more').click();
+    await expect(page.getByTestId('toolbar-menu-outside')).toBeVisible();
+    await page.keyboard.press('Escape');
+    await page.setViewportSize({ width: 1400, height: 900 });
 
     // Go to terminal selects it and closes nothing.
     await page.getByTestId('panel-tab').first().focus();
@@ -4078,5 +4144,109 @@ test('For you rows: the same two lines in the Queue and in the side panel, words
     await expect(page.getByTestId('run-view')).toBeVisible();
   } finally {
     await page.request.delete('/api/v1/demo', { headers: { origin } });
+  }
+});
+
+test('theme: light, dark or the system\'s, chosen in Settings, at once and without a reload, and never the other one first', async ({ page }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  // Every value the page's theme has, from before anything is drawn: none may be the other theme.
+  await page.addInitScript(() => {
+    const seen: string[] = [];
+    (window as unknown as { themesSeen: string[] }).themesSeen = seen;
+    const note = (): void => {
+      const now = document.documentElement?.getAttribute('data-theme') ?? null;
+      // Before the page's first lines have run there is no theme yet, and nothing is drawn.
+      if (now !== null && seen.at(-1) !== now) seen.push(now);
+    };
+    // The document itself is watched: its root element may not be there yet when this runs.
+    new MutationObserver(note).observe(document, { attributes: true, subtree: true, attributeFilter: ['data-theme'] });
+    document.addEventListener('DOMContentLoaded', note);
+    requestAnimationFrame(note);
+  });
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  const saved = (): string => (existsSync(path.join(e2e.dataDir, 'config.json')) ? ((JSON.parse(readFileSync(path.join(e2e.dataDir, 'config.json'), 'utf8')) as { theme?: string }).theme ?? 'none') : 'none');
+  const before = page.url();
+  await page.getByRole('button', { name: 'New canvas' }).click();
+  await expect(page).not.toHaveURL(before);
+  await page.getByTestId('toolbar-new-terminal').click();
+  await expect(page.locator('.xterm-rows')).toContainText(/[$%#>]/, { timeout: 20_000 });
+  const html = page.locator('html');
+  /** The background a terminal is drawn on, as a brightness: its own colours, not the page's. */
+  const terminalIsLight = (): Promise<boolean> =>
+    page.evaluate(() => {
+      for (const el of document.querySelectorAll('.xterm .xterm-viewport, .xterm .xterm-scrollable-element, .xterm .xterm-screen, .xterm')) {
+        const c = getComputedStyle(el).backgroundColor.match(/\d+(\.\d+)?/g);
+        if (c && (c.length < 4 || Number(c[3]) > 0)) return Number(c[0]) + Number(c[1]) + Number(c[2]) > 380;
+      }
+      throw new Error('no background on a terminal');
+    });
+  const pageIsLight = (): Promise<boolean> => page.evaluate(() => { const c = getComputedStyle(document.body).backgroundColor.match(/\d+/g) ?? []; return Number(c[0]) + Number(c[1]) + Number(c[2]) > 380; });
+  try {
+    // A new install matches the system: here a system set to dark.
+    await expect(html).toHaveAttribute('data-theme', 'dark');
+    expect(await terminalIsLight()).toBe(false);
+    await page.evaluate(() => ((window as unknown as { stillHere: boolean }).stillHere = true));
+
+    // Found from the top bar in two presses: Settings, then the theme.
+    await page.getByTestId('toolbar-settings').click();
+    const settings = page.getByTestId('settings-dialog');
+    await expect(settings.getByRole('heading', { name: 'Appearance' })).toBeVisible();
+    await expect(settings.getByTestId('theme-switch').getByRole('radio')).toHaveText(['Light', 'Dark', 'Match the system']);
+    await expect(settings.getByTestId('theme-system')).toHaveAttribute('aria-checked', 'true');
+    // The notification switch is here too, and no longer in Help: one place.
+    await expect(settings.getByTestId('notify-switch')).toBeVisible();
+    await settings.getByTestId('theme-light').click();
+    // At once: the page, a terminal's own colours, the map; and the page was not loaded again.
+    await expect(html).toHaveAttribute('data-theme', 'light');
+    await expect.poll(terminalIsLight).toBe(true);
+    expect(await pageIsLight()).toBe(true);
+    expect(await page.evaluate(() => (window as unknown as { stillHere?: boolean }).stillHere)).toBe(true);
+    await expect.poll(saved).toBe('light');
+    await page.keyboard.press('Escape');
+    await page.getByTestId('toolbar-help').click();
+    await expect(page.getByTestId('help-panel').getByTestId('notify-switch')).toHaveCount(0);
+    await page.keyboard.press('Escape');
+
+    // It survives a reload, and the page is never drawn in the other theme first: the server writes the choice on the page it sends.
+    expect(await (await page.request.get(page.url())).text()).toContain('data-theme-setting="light"');
+    await page.reload();
+    await expect(page.getByTestId('appbar')).toBeVisible();
+    await expect(html).toHaveAttribute('data-theme', 'light');
+    expect(await page.evaluate(() => (window as unknown as { themesSeen: string[] }).themesSeen)).toEqual(['light']);
+    await expect(page.locator('.xterm-rows')).toContainText(/[$%#>]/, { timeout: 20_000 });
+    expect(await terminalIsLight()).toBe(true);
+
+    // Dark, from the palette: the same choice by another way.
+    const mac = await page.evaluate(() => navigator.platform.toLowerCase().includes('mac'));
+    await page.keyboard.press(mac ? 'Meta+k' : 'Control+Shift+K');
+    await page.keyboard.type('>Theme: dark');
+    await expect(page.getByTestId('picker-command-row').first()).toContainText('Theme: dark');
+    await page.keyboard.press('Enter');
+    await expect(html).toHaveAttribute('data-theme', 'dark');
+    await expect.poll(terminalIsLight).toBe(false);
+    await expect.poll(saved).toBe('dark');
+    // Dark stays dark whatever the system says.
+    await page.emulateMedia({ colorScheme: 'light' });
+    await page.waitForTimeout(200);
+    await expect(html).toHaveAttribute('data-theme', 'dark');
+
+    // Match the system: it follows the system as that changes, while the page is open.
+    await page.getByTestId('toolbar-settings').click();
+    await settings.getByTestId('theme-system').click();
+    await expect(html).toHaveAttribute('data-theme', 'light');
+    await expect(settings.getByTestId('theme-says')).toContainText('The system is set to light now');
+    await expect.poll(terminalIsLight).toBe(true);
+    await page.emulateMedia({ colorScheme: 'dark' });
+    await expect(html).toHaveAttribute('data-theme', 'dark');
+    await expect.poll(terminalIsLight).toBe(false);
+    await expect.poll(saved).toBe('system');
+    // And on a reload the system's own theme is the first and only one drawn.
+    await page.reload();
+    await expect(page.getByTestId('appbar')).toBeVisible();
+    expect(await page.evaluate(() => (window as unknown as { themesSeen: string[] }).themesSeen)).toEqual(['dark']);
+  } finally {
+    // As a new install has it, for the tests that follow.
+    await page.request.put('/v1/settings/appearance', { headers: { origin: new URL(page.url()).origin, 'sec-fetch-site': 'same-origin' }, data: { theme: 'system' } });
   }
 });

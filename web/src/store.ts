@@ -1,6 +1,7 @@
 import { showNotification } from './attention';
 import { create } from 'zustand';
 import {
+  type ThemeSetting,
   isPageName,
   type PageName,
   DEFAULT_SETTINGS,
@@ -143,6 +144,8 @@ export interface AppStore {
   wantReview: (key: string | null) => void;
   /** The one setting the page changes: whether new terminals also open on the desktop. */
   setDesktopOpenNew: (openNew: boolean) => void;
+  /** How the page looks, as it was just chosen: the page follows at once; the file is written by whoever chose. */
+  setTheme: (theme: ThemeSetting) => void;
   setSide: (change: Partial<PanelPrefs>) => void;
   setListView: (change: Partial<ListView>) => void;
   /** Opens a section's drawer for a row; `null` closes whatever is open. */
@@ -159,7 +162,7 @@ export interface AppStore {
 /** The longest a terminal is waited for after it was asked to take the keyboard. */
 const SETTLE_MS = 700;
 
-export type Panel = 'parked' | 'outside' | 'shortcuts' | 'tokens' | 'activity' | 'workflows' | 'review' | 'help' | 'library' | 'board' | 'queue' | 'projects' | 'sharing';
+export type Panel = 'settings' | 'parked' | 'outside' | 'shortcuts' | 'tokens' | 'activity' | 'workflows' | 'review' | 'help' | 'library' | 'board' | 'queue' | 'projects' | 'sharing';
 export interface Ask {
   kind: 'rename-session' | 'rename-canvas' | 'note' | 'move' | 'tags' | 'list-search' | 'new-project' | 'project-from-template';
   /** The session or canvas it is about. */
@@ -321,6 +324,7 @@ export const useApp = create<AppStore>((set, get) => ({
   reviewWanted: null,
   wantReview: (key) => set({ reviewWanted: key }),
   setDesktopOpenNew: (openNew) => set((state) => ({ settings: { ...state.settings, desktop: { ...state.settings.desktop, openNew } } })),
+  setTheme: (theme) => set((state) => ({ settings: { ...state.settings, theme } })),
   setSide: (change) => {
     const side = { ...get().side, ...change };
     side.width = clampPanelWidth(side.width);
