@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { WithLinks } from '../links/LinkChip';
 import type { ForYouItem, Run } from '@aubergine/shared';
 import { api } from '../api';
 import { timeAgo } from '../StatusBadges';
@@ -82,7 +83,8 @@ export function ForYouRow({ item, named = false, onSend, testid = 'foryou-row' }
           {item.title}
         </Badge>
         <span className="foryou-what" data-testid="foryou-what">
-          {item.what}
+          {/* An address in what it says is a chip, as everywhere. */}
+          <WithLinks text={item.what} />
         </span>
       </div>
       <div className="foryou-actions">

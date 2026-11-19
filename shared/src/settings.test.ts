@@ -29,6 +29,7 @@ describe('Settings', () => {
       desktop: { app: 'command', command: 'a-terminal -e {file}', openNew: true },
       shortcuts: { 'terminal.park': 'X', 'view.fit': null },
       shortcutsInAppWindow: { 'canvas.go.1': ['Meta+1'] },
+      describe: { remind: false, pullRequests: false },
     };
     expect(Settings.parse(full)).toEqual(full);
   });

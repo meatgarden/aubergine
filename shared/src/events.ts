@@ -2,6 +2,7 @@ import { Ask, QUEUE_LIMIT_MAX, Rule, Task } from './tasks';
 import { Schedule } from './schedules';
 import { SessionEnvironment } from './environment';
 import { z } from 'zod';
+import { Found, LINKS_MAX, SessionLink, Suggested, Written } from './links';
 import {
   AgentInfo,
   Untold,
@@ -69,6 +70,12 @@ export const ChangeEvent = z.discriminatedUnion('type', [
     command: z.string().nullable(),
   }),
   z.object({ type: z.literal('session.noted'), sessionId: Id, note: SessionNote }),
+  /** What a terminal says about itself changed: its links, who wrote its name or summary, what was suggested, what was found. Only what is sent changes. */
+  z.object({
+    type: z.literal('session.described'),
+    sessionId: Id,
+    change: z.object({ links: z.array(SessionLink).max(LINKS_MAX).optional(), written: Written.optional(), suggested: Suggested.optional(), found: Found.nullable().optional() }),
+  }),
   /** When the session was last typed into, or last printed. Sent at most once every few seconds per session. */
   z.object({
     type: z.literal('session.times'),
@@ -293,6 +300,13 @@ export function applyEvent(state: AppState, event: ChangeEvent): AppState {
       return patchSession(state, event.sessionId, { status: event.status });
     case 'session.noted':
       return patchSession(state, event.sessionId, { note: event.note });
+    case 'session.described':
+      return patchSession(state, event.sessionId, {
+        ...(event.change.links !== undefined ? { links: event.change.links } : {}),
+        ...(event.change.written !== undefined ? { written: event.change.written } : {}),
+        ...(event.change.suggested !== undefined ? { suggested: event.change.suggested } : {}),
+        ...(event.change.found !== undefined ? { found: event.change.found } : {}),
+      });
     case 'session.closed':
       return { ...withoutNodeOf(state, event.sessionId), sessions: state.sessions.filter((s) => s.id !== event.sessionId) };
     case 'node.updated':

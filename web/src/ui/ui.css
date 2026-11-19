@@ -2179,7 +2179,7 @@ label:is(.wf-inline, .ui-check, .schedule-days label):has(> input:is([type='chec
   resize: vertical;
 }
 /* While the log is being added to, the summary is read: the same box, without the line of a field. */
-button.note-summary-read {
+.note-summary-read {
   display: block;
   box-sizing: border-box;
   width: 100%;
@@ -3026,4 +3026,191 @@ button.rail-dot:active {
 /* The bar over the canvas begins on the same line as the first tab above it. */
 .react-flow__panel.toolbar {
   margin-left: var(--space-4);
+}
+
+/* ---------- Links: an address is a chip, never text ---------- */
+
+/* The chip of a link: the two letters of its kind, a short label, and nothing of the address. It is pressed to open it. */
+a.link-chip {
+  max-width: 100%;
+  min-width: 0;
+  gap: var(--space-1);
+  padding-left: var(--space-1);
+  text-decoration: none;
+  color: var(--text);
+  border-color: var(--border);
+  cursor: pointer;
+  vertical-align: middle;
+}
+a.link-chip:hover {
+  background: var(--surface-active);
+  border-color: var(--border-strong);
+}
+a.link-chip:active {
+  border-color: var(--text-muted);
+}
+a.link-chip:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.link-mark {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--chip);
+  height: var(--space-4);
+  padding: 0 var(--space-1);
+  font-family: var(--font-mono);
+  font-size: var(--font-meta);
+  font-weight: var(--weight-strong);
+  color: var(--accent-text);
+  background: var(--accent-soft);
+  border-radius: var(--radius-control);
+}
+.link-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* How a pull request stands, in a word. */
+.link-state {
+  flex: none;
+  color: var(--text-muted);
+}
+.link-state.is-open {
+  color: var(--ok-text);
+}
+.link-state.is-merged {
+  color: var(--accent-text);
+}
+.link-state.is-closed {
+  color: var(--danger-text);
+}
+/* In a terminal's title a link is its mark alone. */
+a.link-chip.is-mark {
+  padding: 0 var(--space-1);
+  background: transparent;
+  border-color: transparent;
+}
+a.link-chip.is-mark:hover {
+  background: var(--surface-active);
+}
+.node-link {
+  flex: none;
+  display: inline-flex;
+}
+/* A fact that is copied when pressed: a branch's name, a conversation's id. */
+button.fact-copy {
+  max-width: 100%;
+  font-family: var(--font-mono);
+  border-color: var(--border);
+  cursor: pointer;
+}
+button.fact-copy:hover {
+  background: var(--surface-active);
+}
+
+/* The Links part of the details: chips that wrap, under quiet headings where there are many. */
+.links-part {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+.links-title {
+  margin: 0;
+  font-size: var(--font-body);
+  font-weight: var(--weight-strong);
+  color: var(--text);
+}
+.links-none {
+  margin: 0;
+  color: var(--text-muted);
+}
+/* A group is its quiet heading and, under it, its chips with the whole width to wrap in: twelve links are a few short rows. */
+.links-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+.links-group-title {
+  font-size: var(--font-meta);
+  color: var(--text-muted);
+}
+.links-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-2);
+  min-width: 0;
+}
+.links-item {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  min-width: 0;
+  min-height: var(--space-6);
+}
+.links-item > .link-menu > button {
+  width: var(--space-4);
+  min-width: 0;
+  height: var(--space-6);
+  padding: 0;
+  color: var(--text-muted);
+}
+.links-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}
+.links-form > input {
+  flex: 1 1 160px;
+  min-width: 0;
+}
+.links-part > button.links-add {
+  align-self: flex-start;
+}
+.links-seen > .links-chips {
+  margin-top: var(--space-2);
+}
+/* What the agent suggested where the owner's own words stand, and the quiet word that a terminal is not described. */
+.details-suggested > p,
+.details-undescribed {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin: var(--space-2) 0 0;
+  font-size: var(--font-body);
+  color: var(--text);
+}
+.details-undescribed {
+  color: var(--text-muted);
+}
+/* A summary that is read: its addresses are chips among its words. */
+div.note-summary-read {
+  cursor: text;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+/* With many facts and links the details scroll as one column: nothing in them is squeezed to make room. */
+.panel-drawer > .details {
+  overflow-y: auto;
+}
+.panel-drawer > .details > * {
+  flex-shrink: 0;
+}
+/* The note keeps the height of what it holds, and takes what room is left over. */
+.panel-drawer > .details > .note-panel.embedded,
+.panel-drawer > .details > .messages-panel {
+  flex: 1 0 auto;
+}
+/* A menu placed against the window: its button stands in something that scrolls. */
+.ui-menu-fixed {
+  position: fixed;
+  right: auto;
+  z-index: var(--z-menu);
+  min-width: 240px;
 }

@@ -179,8 +179,9 @@ export function Banner({ children, action, onAction, testid, actionTestid }: { c
  * A button that opens a menu under itself, and the menu. It closes when a line is chosen, when something else is
  * pressed, and on Escape. `more` draws the button as the sign for "everything else that can be done with this".
  */
-export function MenuButton({ label, children, kind = 'default', more = false, testid, menuTestid, className, title }: { label: string; children: ReactNode; kind?: ButtonKind; more?: boolean; testid?: string; menuTestid?: string; className?: string; title?: string }) {
+export function MenuButton({ label, children, kind = 'default', more = false, testid, menuTestid, className, title, againstWindow = false }: { label: string; children: ReactNode; kind?: ButtonKind; more?: boolean; testid?: string; menuTestid?: string; className?: string; title?: string ; /** Place the menu against the window, for a button inside something that scrolls and would cut the menu off. */ againstWindow?: boolean }) {
   const [open, setOpen] = useState(false);
+  const [at, setAt] = useState<{ left: number; top: number } | null>(null);
   const root = useRef<HTMLSpanElement>(null);
   useEffect(() => {
     if (!open) return;
@@ -201,12 +202,22 @@ export function MenuButton({ label, children, kind = 'default', more = false, te
   }, [open]);
   return (
     <span className={join('ui-menu-button', className)} ref={root} onClick={(event) => event.stopPropagation()}>
-      <button type="button" className={join(more ? 'quiet ui-icon-button' : KIND_CLASS[kind])} aria-haspopup="menu" aria-expanded={open} aria-label={more ? label : undefined} title={title ?? (more ? label : undefined)} onClick={() => setOpen((v) => !v)} data-testid={testid}>
+      <button type="button" className={join(more ? 'quiet ui-icon-button' : KIND_CLASS[kind])} aria-haspopup="menu" aria-expanded={open} aria-label={more ? label : undefined} title={title ?? (more ? label : undefined)}
+        onClick={(event) => {
+          if (againstWindow) {
+            // Under the button, kept inside the window: what it stands in may scroll, and would cut the menu off.
+            const box = event.currentTarget.getBoundingClientRect();
+            setAt({ left: Math.max(8, Math.min(box.left, window.innerWidth - 256)), top: box.bottom + 4 });
+          }
+          setOpen((v) => !v);
+        }}
+        data-testid={testid}
+      >
         {more ? '⋯' : label}
         {!more && <span aria-hidden="true">▾</span>}
       </button>
       {open && (
-        <span className="ui-menu toolbar-menu ui-menu-under" role="menu" onClick={(event) => (event.target as HTMLElement).closest('[role^="menuitem"]') && setOpen(false)} data-testid={menuTestid}>
+        <span className={join('ui-menu toolbar-menu', againstWindow ? 'ui-menu-fixed' : 'ui-menu-under')} role="menu" style={againstWindow && at ? { left: at.left, top: at.top } : undefined} onClick={(event) => (event.target as HTMLElement).closest('[role^="menuitem"]') && setOpen(false)} data-testid={menuTestid}>
           {children}
         </span>
       )}

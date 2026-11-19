@@ -1,5 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
-import { sessionsWaiting, type WaitingSession } from '@aubergine/shared';
+import { sessionsWaiting, shortId, showControl, undescribed, type Session, type WaitingSession } from '@aubergine/shared';
+import { api } from '../../api';
+import { LinkChip } from '../../links/LinkChip';
+import { LinksPart } from '../../links/LinksPart';
 import { NotePanel } from '../../NotePanel';
 import { RecapBlock } from '../../Recap';
 import { SessionMessages } from '../../Messages';
@@ -16,6 +19,36 @@ import { actOnTerminal, chipOf, terminalActions } from './terminals';
  */
 
 const session = (id: string) => (s: ReturnType<typeof useApp.getState>) => s.app?.sessions.find((x) => x.id === id);
+
+/** What was found about its folder, and the conversation its agent is in, as facts: each a chip, or a short id that is copied whole. */
+function foundFacts(found: Session): { key: string; label: string; value: React.ReactNode }[] {
+  const facts: { key: string; label: string; value: React.ReactNode }[] = [];
+  const at = found.found;
+  if (at?.repository) facts.push({ key: 'repository', label: 'Repository', value: at.repositoryUrl ? <LinkChip url={at.repositoryUrl} kind="repository" label={at.repository} about="Found in its folder" testid="fact-repository" /> : showControl(at.repository) });
+  if (at?.branch)
+    facts.push({
+      key: 'branch',
+      label: 'Branch',
+      value: (
+        <button type="button" className="ui-chip fact-copy" title={`${showControl(at.branch)}\nPress to copy`} onClick={() => void navigator.clipboard.writeText(at.branch ?? '').then(() => useApp.getState().say('Copied the branch’s name.'), () => {})} data-testid="fact-branch">
+          {showControl(at.branch)}
+        </button>
+      ),
+    });
+  if (at?.pullRequest) facts.push({ key: 'pull-request', label: 'Pull request', value: <LinkChip url={at.pullRequest.url} kind="pull-request" label={`PR ${at.pullRequest.number}`} about={showControl(at.pullRequest.title)} state={at.pullRequest.state} testid="fact-pull-request" /> });
+  const conversation = found.agent?.conversationId;
+  if (conversation)
+    facts.push({
+      key: 'conversation',
+      label: 'Conversation',
+      value: (
+        <button type="button" className="ui-chip fact-copy" title={`${conversation}\nPress to copy its id`} onClick={() => void navigator.clipboard.writeText(conversation).then(() => useApp.getState().say('Copied the conversation’s id.'), () => {})} data-testid="fact-conversation">
+          {shortId(conversation)}
+        </button>
+      ),
+    });
+  return facts;
+}
 
 /** The head: the same mark and chip as the row, Go to terminal, the row's own menu, and the way out. */
 export function DetailsHead({ id, onClose }: { id: string; onClose: () => void }) {
@@ -95,6 +128,9 @@ export function Details({ id, onClose }: { id: string; onClose: () => void }) {
   useEffect(() => {
     if (asked === 'messages') setTab('messages');
   }, [asked]);
+  // The details have one text box in view at a time: while a link is added or changed, the note's summary is read.
+  const [linking, setLinking] = useState(false);
+  const missing = found ? undescribed(found) : [];
   const entries = found?.noteLog.length ?? 0;
   const unseen = useUnseenNotes(id, entries);
   const forOwner = found?.messages.forOwner ?? 0;
@@ -109,7 +145,37 @@ export function Details({ id, onClose }: { id: string; onClose: () => void }) {
   return (
     <div className="details" data-testid="details">
       {waiting && <Asks waiting={waiting} onMessages={() => setTab('messages')} />}
-      <RecapBlock sessionId={id} omit={['note']} />
+      <RecapBlock sessionId={id} omit={['note']} more={foundFacts(found)} />
+      {/* What its agent would have written where your own words stand: yours stay until you say otherwise. */}
+      {(found.suggested.name || found.suggested.summary) && (
+        <div className="details-suggested" data-testid="details-suggested">
+          {found.suggested.name && (
+            <p>
+              <span>
+                The agent would name it <strong>{showControl(found.suggested.name.value)}</strong>.
+              </span>
+              <button type="button" className="quiet" onClick={() => void api.useSuggestion(id, { what: 'name' }).catch(() => {})} data-testid="use-name">
+                Use this
+              </button>
+            </p>
+          )}
+          {found.suggested.summary && (
+            <p>
+              <span title={showControl(found.suggested.summary.value)}>The agent wrote a summary of its own: “{showControl(found.suggested.summary.value).split('\n')[0]?.slice(0, 120)}”</span>
+              <button type="button" className="quiet" onClick={() => void api.useSuggestion(id, { what: 'summary' }).catch(() => {})} data-testid="use-summary">
+                Use this
+              </button>
+            </p>
+          )}
+        </div>
+      )}
+      {/* Quietly: its agent has not described it. Nothing is wrong; the name and the summary can be filled in by hand. */}
+      {found.agent != null && missing.length > 0 && (
+        <p className="details-undescribed" data-testid="details-undescribed">
+          Not described by its agent yet: {missing.map((what) => (what === 'name' ? 'it has the name it was made with' : 'it has no summary, or an old one')).join(', and ')}. You can fill these in yourself.
+        </p>
+      )}
+      <LinksPart sessionId={id} typing={linking} onTyping={setLinking} />
       {found.agent != null && (
         <div className="details-links" data-testid="drawer-switched-on">
           <button type="button" className="quiet" onClick={() => useApp.getState().openHistory({ folder: found.cwd ?? null, query: '' })} data-testid="drawer-history">
@@ -131,7 +197,7 @@ export function Details({ id, onClose }: { id: string; onClose: () => void }) {
           ]}
         />
       </div>
-      {tab === 'note' ? <NotePanel sessionId={id} onClose={onClose} embedded /> : <SessionMessages sessionId={id} />}
+      {tab === 'note' ? <NotePanel sessionId={id} onClose={onClose} embedded reading={linking} onTyping={() => setLinking(false)} /> : <SessionMessages sessionId={id} />}
     </div>
   );
 }

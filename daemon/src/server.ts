@@ -103,6 +103,9 @@ import { MessageRefusal, Messages } from './messages';
 import { Library } from './library';
 import { Environments } from './environments';
 import { Desktop } from './desktop';
+import { Described } from './described';
+import type { PullRequestFinder } from './found/pull-request';
+import type { FolderFacts } from './found/folder';
 import { inProject } from './project-context';
 import { ProjectFiles } from './project-files';
 import { Projects } from './projects';
@@ -149,6 +152,12 @@ export interface ServerOptions {
   setDesktopOpenNew?: (value: boolean) => Promise<void>;
   /** Writes `theme` into the settings file. Left out: the page cannot change it. */
   setTheme?: (value: ThemeSetting) => Promise<void>;
+  /** Writes `describe.remind` into the settings file. Left out: the page cannot change it. */
+  setDescribeRemind?: (value: boolean) => Promise<void>;
+  /** Asks a signed-in local tool for a branch's pull request. Left out: none is ever asked for. */
+  pullRequests?: PullRequestFinder | null;
+  /** The branch and repository of a folder. Left out: Git is asked. A test passes its own. */
+  folderFacts?: (folder: string) => Promise<FolderFacts>;
   /** The clock and the timer schedules use. A test passes its own. */
   scheduleClock?: ScheduleClock;
   /** The time zone schedules are written in. Left out: this computer's own. */
@@ -270,6 +279,9 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   // A terminal in a window of the owner's own terminal application: the owner's alone to ask for.
   const desktop = new Desktop(hub, sessions, { opener: options.desktop ?? null, setOpenNew: options.setDesktopOpenNew ?? null, openNew: async () => (await options.settings()).desktop.openNew, onError: (error) => console.error('Could not open a terminal on the desktop:', error) });
   await desktop.sweep();
+  // What a terminal says about itself: its links, who wrote its name and summary, what is found by looking.
+  const described = new Described(hub, sessions, { runtime: options.runtime, finder: options.pullRequests ?? null, ...(options.folderFacts ? { facts: options.folderFacts } : {}), settings: options.settings, onError: (error) => console.error('Could not look at a terminal\u2019s folder:', error) });
+  described.start();
   // Schedules, and the one timer that starts something. It is on only while a schedule is switched on.
   const schedules = new Schedules(hub, queue, {
     clock: options.scheduleClock ?? REAL_CLOCK,
@@ -835,6 +847,17 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     queue,
     schedules,
     desktop,
+    described,
+    changeDescribing: async (remind) => {
+      if (!options.setDescribeRemind) throw new ConflictError('This server has no settings file to write.');
+      try {
+        await options.setDescribeRemind(remind);
+      } catch (error) {
+        if (error instanceof SettingsUnreadableError) throw new ConflictError(error.message);
+        throw error;
+      }
+      return { remind: (await options.settings()).describe.remind };
+    },
     // How the page looks: the one key is written, and the answer is what the file says afterwards.
     changeTheme: async (theme) => {
       if (!options.setTheme) throw new ConflictError('This server has no settings file to write.');

@@ -23,4 +23,15 @@ pause
 pause
 pause
 say "Done."
-printf '%s' '{"last_assistant_message":"Fixed on the branch you chose. The tests pass."}' | "$aubergine" hook stop
+# Stopping: the same hook an agent's stop goes through. Where this terminal is not described yet, the hook answers
+# with a request to go on once and say what was done; the stand-in does as an agent would, and stops again.
+held=$(printf '%s' '{"last_assistant_message":"Fixed on the branch you chose. The tests pass."}' | "$aubergine" hook stop)
+case "$held" in
+*decision*)
+  say ""
+  say "Aubergine reminds it, once: this terminal is not described yet."
+  say "> aubergine describe --summary \"Fixed the double redirect.\""
+  "$aubergine" describe --name "Stand-in agent · has a question" --summary "Fixed the double redirect on \"$answer\". The tests pass." >/dev/null 2>&1
+  printf '%s' '{"stop_hook_active":true,"last_assistant_message":"Fixed on the branch you chose. The tests pass."}' | "$aubergine" hook stop
+  ;;
+esac

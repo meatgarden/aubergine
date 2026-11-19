@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { NoteEntry } from '@aubergine/shared';
 import { api } from './api';
 import { useApp } from './store';
+import { WithLinks, hasAddress } from './links/LinkChip';
 
 const SAVE_DELAY_MS = 500;
 const noEntries: NoteEntry[] = [];
@@ -15,18 +16,24 @@ export function NotePanel({
   sessionId,
   onClose,
   embedded = false,
-  takeKeyboard = false,
-}: {
+  takeKeyboard = false, reading = false, onTyping }: {
   sessionId: string;
   onClose: () => void;
   /** Shown inside something that has its own frame and close button (the side panel's drawer), not on a node. */
   embedded?: boolean;
   /** Whether the note takes the keyboard when it appears: yes when it was just asked for, no when it is simply there. */
   takeKeyboard?: boolean;
+  /** Another part of the details has the one text box: the summary is read, not typed into. */
+  reading?: boolean;
+  /** The note asks for the text box back. */
+  onTyping?: () => void;
 }) {
   const saved = useApp((s) => s.app?.sessions.find((x) => x.id === sessionId)?.note ?? '');
   const [text, setText] = useState(saved);
   const [status, setStatus] = useState<'saved' | 'unsaved' | 'failed'>('saved');
+  // Whether the summary is being changed: one with an address in it is read as chips otherwise.
+  const [editing, setEditing] = useState(false);
+  const asChips = hasAddress(text);
   const dirty = useRef(false);
   const latest = useRef(text);
   const timer = useRef<number | undefined>(undefined);
@@ -99,16 +106,37 @@ export function NotePanel({
           <span className="note-status">{status === 'saved' ? 'Saved' : status === 'failed' ? 'Not saved' : 'Saving…'}</span>
         </div>
         <p className="note-help">Kept at the top. You or the agent can change it.</p>
-        {adding ? (
-          // While the log is being added to, the summary is read, not typed into; pressing it goes back to it.
-          <button type="button" className="note-summary-read" title="Change the summary" onClick={() => setAdding(false)} data-testid="note-summary-read">
-            {text.trim() === '' ? 'No summary yet.' : text}
-          </button>
+        {adding || reading || (asChips && !editing) ? (
+          // While the log is being added to, or another part has the text box, the summary is read, not typed into; pressing it goes back
+          // to it. A summary with an address in it is read too, the address as a chip, until it is pressed to change it.
+          <div
+            role="button"
+            tabIndex={0}
+            className="note-summary-read"
+            title="Change the summary"
+            onClick={(event) => {
+              // A chip in it is pressed for itself.
+              if ((event.target as HTMLElement).closest('a')) return;
+              setAdding(false);
+              setEditing(true);
+              onTyping?.();
+            }}
+            onKeyDown={(event) => {
+              if (event.target !== event.currentTarget || (event.key !== 'Enter' && event.key !== ' ')) return;
+              event.preventDefault();
+              setAdding(false);
+              setEditing(true);
+              onTyping?.();
+            }}
+            data-testid="note-summary-read"
+          >
+            {text.trim() === '' ? 'No summary yet.' : <WithLinks text={text} />}
+          </div>
         ) : (
           <textarea
             className="note-summary"
             aria-label="Summary of this terminal"
-            autoFocus={!embedded && takeKeyboard}
+            autoFocus={editing || (!embedded && takeKeyboard)}
             placeholder="What this terminal is for, in a few lines…"
             spellCheck={false}
             value={text}
@@ -120,7 +148,10 @@ export function NotePanel({
               window.clearTimeout(timer.current);
               timer.current = window.setTimeout(save, SAVE_DELAY_MS);
             }}
-            onBlur={save}
+            onBlur={() => {
+              save();
+              setEditing(false);
+            }}
           />
         )}
       </div>
@@ -139,7 +170,9 @@ export function NotePanel({
                   {new Date(entry.at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </time>
               </header>
-              <p>{entry.text}</p>
+              <p>
+                <WithLinks text={entry.text} />
+              </p>
             </article>
           ))}
           <div ref={logEnd} />

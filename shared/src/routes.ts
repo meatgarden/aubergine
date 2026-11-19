@@ -39,6 +39,7 @@ import {
 import { Capabilities, CreateTokenRequest, CreatedToken, TokenView } from './tokens';
 import { Draft, ShelfElement } from './drafts';
 import { WriteRecapRequest, WrittenRecap } from './recap';
+import { AddLinkRequest, ChangeLinkRequest, DescribeCheckAnswer, DescribeCheckRequest, DescribeRequest, DescribedAnswer, DescribingSettings, FoundAnswer, KeepSeenRequest, LinkAnswer, LinksAnswer, SeenLinksAnswer, UseSuggestionRequest } from './links-api';
 import { InputRequest, InputResponse, OutputQuery, OutputResponse, ProtectRequest, RunCommandRequest, TakesMessagesRequest, RunCommandResponse, ScreenResponse, TerminalSearchQuery, TerminalSearchResponse } from './terminal';
 import {
   AcceptRepositoryWorkflowRequest,
@@ -115,7 +116,7 @@ const ProjectList = pageOf(ProjectRow);
 /** For a route that is not a list and is about one project. */
 const ProjectQuery = z.object({ projectId: ProjectAsked });
 
-export const ROUTE_TAGS = ['Server', 'Canvases', 'Sessions', 'Notes', 'Layout', 'Workflows', 'Runs', 'Drafts', 'Elements', 'Library', 'Environments', 'Queue', 'Projects', 'Repository workflows', 'Terminals', 'Messages', 'Events', 'Tokens', 'For a session itself'] as const;
+export const ROUTE_TAGS = ['Server', 'Canvases', 'Sessions', 'Notes', 'Links', 'Layout', 'Workflows', 'Runs', 'Drafts', 'Elements', 'Library', 'Environments', 'Queue', 'Projects', 'Repository workflows', 'Terminals', 'Messages', 'Events', 'Tokens', 'For a session itself'] as const;
 export type RouteTag = (typeof ROUTE_TAGS)[number];
 
 export interface RouteSpec {
@@ -168,6 +169,7 @@ const route = <const S extends RouteSpec>(spec: S): S => spec;
 
 const canvasId = z.object({ canvasId: Id });
 const sessionId = z.object({ sessionId: Id });
+const linkOfSession = z.object({ sessionId: Id, linkId: z.string().min(1).max(64) });
 const workflowId = z.object({ workflowId: Id });
 const runId = z.object({ runId: Id });
 const draftId = z.object({ draftId: Id });
@@ -2184,6 +2186,145 @@ export const ROUTES = {
     response: WrittenRecap,
     status: 200,
     errors: [404],
+  }),
+  /* ---------- What a terminal says about itself ---------- */
+  listLinks: route({
+    method: 'GET',
+    path: '/v1/sessions/:sessionId/links',
+    tag: 'Links',
+    summary: "A session's links",
+    description: 'The links that belong to the work in a terminal: each an address with a kind, a short label, who added it (`owner`, `agent` or `found`) and when. A link that was seen in what the terminal showed is left out for a caller who may not read that terminal. The server never fetches an address to find out what it is: kind and label are told from the address alone. A session may read its own.',
+    action: 'links.read',
+    params: sessionId,
+    response: LinksAnswer,
+    status: 200,
+    errors: [404],
+  }),
+  addLink: route({
+    method: 'POST',
+    path: '/v1/sessions/:sessionId/links',
+    tag: 'Links',
+    summary: 'Add a link to a session',
+    description: 'Only http and https addresses. The kind and the label are told from the address unless sent. Adding an address that is there already says again what it is. Where the owner set a link in their own words, what a program sends is kept beside it as a suggestion and `kept` is false. A session may add to its own; a token needs `notes:write`.',
+    action: 'links.write',
+    params: sessionId,
+    body: AddLinkRequest,
+    response: LinkAnswer,
+    status: 201,
+    errors: [404, 409],
+  }),
+  changeLink: route({
+    method: 'PATCH',
+    path: '/v1/sessions/:sessionId/links/:linkId',
+    tag: 'Links',
+    summary: 'Change the label or the kind of a link',
+    description: 'The address itself is never changed: remove the link and add another. Where the owner set the link, a program\u2019s change is kept as a suggestion.',
+    action: 'links.write',
+    params: linkOfSession,
+    body: ChangeLinkRequest,
+    response: LinkAnswer,
+    status: 200,
+    errors: [404, 409],
+  }),
+  removeLink: route({
+    method: 'DELETE',
+    path: '/v1/sessions/:sessionId/links/:linkId',
+    tag: 'Links',
+    summary: 'Remove a link from a session',
+    description: 'A link the owner added or set is the owner\u2019s to remove: a program is refused with 409.',
+    action: 'links.write',
+    params: linkOfSession,
+    response: LinksAnswer,
+    status: 200,
+    errors: [404, 409],
+  }),
+  listSeenLinks: route({
+    method: 'GET',
+    path: '/v1/sessions/:sessionId/links/seen',
+    tag: 'Links',
+    summary: 'Addresses seen in a terminal and not kept',
+    description: 'The last twenty distinct http and https addresses seen in what was typed into the terminal and in what it printed, less those that are links already. This is terminal content: it needs `terminal:read` reaching the session. It is held in memory, read from the screen when a command ends and when this is asked; nothing is recorded.',
+    action: 'terminal.read',
+    params: sessionId,
+    response: SeenLinksAnswer,
+    status: 200,
+    errors: [404],
+  }),
+  keepSeenLink: route({
+    method: 'POST',
+    path: '/v1/sessions/:sessionId/links/keep',
+    tag: 'Links',
+    summary: 'Keep an address that was seen in the terminal as a link',
+    description: 'For the owner only. The address must be one of those seen in this terminal.',
+    action: 'describe.manage',
+    params: sessionId,
+    body: KeepSeenRequest,
+    response: LinkAnswer,
+    status: 201,
+    errors: [404, 409],
+  }),
+  describeSession: route({
+    method: 'PUT',
+    path: '/v1/sessions/:sessionId/described',
+    tag: 'For a session itself',
+    summary: 'Name the session after its work, and say what it is doing',
+    description: "For the agent inside a session, with that session's own token. `name` renames the terminal; `summary` replaces the summary of its note. Whatever the owner wrote in their own hand is not replaced: what was sent is kept as a suggestion the owner can use, and `kept` says so.",
+    action: 'describe.own',
+    params: sessionId,
+    body: DescribeRequest,
+    response: DescribedAnswer,
+    status: 200,
+    errors: [404],
+  }),
+  checkDescribed: route({
+    method: 'POST',
+    path: '/v1/sessions/:sessionId/described/check',
+    tag: 'For a session itself',
+    summary: 'Report a moment of an agent\u2019s work, and learn what it is to be told',
+    description: "Called by the hooks of the agent in a session, with that session's own token. At `start` the answer is three fixed lines on describing the terminal. At `stop`, where the terminal has no name of its own or no summary, the answer asks the agent to go on once and set them; never twice in a turn. At `tool` the server looks at the folder's branch and pull request again. With the reminder switched off in the settings the answer says nothing.",
+    action: 'describe.own',
+    params: sessionId,
+    body: DescribeCheckRequest,
+    response: DescribeCheckAnswer,
+    status: 200,
+    errors: [404],
+  }),
+  lookAgain: route({
+    method: 'POST',
+    path: '/v1/sessions/:sessionId/found',
+    tag: 'Links',
+    summary: 'Look again at what can be found about a session',
+    description: 'For the owner only, when a terminal\u2019s details are opened: the branch and the repository of its folder, the pull request of that branch where the `gh` tool is installed and signed in (asked at most once a minute), and the addresses on its screen. Nothing is asked of a network by the server itself.',
+    action: 'describe.manage',
+    params: sessionId,
+    response: FoundAnswer,
+    status: 200,
+    errors: [404],
+  }),
+  useSuggestion: route({
+    method: 'POST',
+    path: '/v1/sessions/:sessionId/described/use',
+    tag: 'Links',
+    summary: 'Use what the agent suggested in place of the owner\u2019s own words',
+    description: 'For the owner only: for the name, the summary, or one link.',
+    action: 'describe.manage',
+    params: sessionId,
+    body: UseSuggestionRequest,
+    response: LinksAnswer,
+    status: 200,
+    errors: [404, 409],
+  }),
+  changeDescribing: route({
+    method: 'PUT',
+    path: '/v1/settings/describing',
+    tag: 'Sessions',
+    summary: 'Say whether agents are reminded to describe their terminal',
+    description: 'For the owner only: no token and no session can do this, whatever its scopes. It writes one key, `describe.remind`, into the settings file and leaves the rest of the file as it was.',
+    action: 'settings.write',
+    body: DescribingSettings,
+    response: DescribingSettings,
+    status: 200,
+    errors: [409],
   }),
   getSessionRun: route({
     method: 'GET',

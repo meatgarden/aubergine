@@ -59,6 +59,8 @@ import type { Library } from './library';
 import type { Environments } from './environments';
 import type { Asker, Queue } from './queue';
 import type { Desktop } from './desktop';
+import type { Described } from './described';
+import type { DescribingSettings } from '@aubergine/shared';
 import { inProject } from './project-context';
 import { ProjectMemory, namesOutOfReach, projectOfId, withinReach } from './project-reach';
 import type { ProjectFiles } from './project-files';
@@ -80,6 +82,9 @@ export interface PublicRouteDeps {
   queue: Queue;
   schedules: Schedules;
   desktop: Desktop;
+  described: Described;
+  /** Writes the one key that says whether agents are reminded to describe their terminal. */
+  changeDescribing: (remind: boolean) => Promise<DescribingSettings>;
   /** Writes the one key that says how the page looks, and answers with what the settings say afterwards. */
   changeTheme: (theme: ThemeSetting) => Promise<AppearanceAnswer>;
   projects: Projects;
@@ -139,6 +144,8 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
   const mayKickoff = (principal: Principal, sessionId: string | undefined): boolean =>
     principal.kind === 'user' || (sessionId !== undefined && principal.kind === 'token' && deps.may(principal, 'terminal.input', deps.resourceOf(sessionId)));
   /** Whether a caller may be given what a session's terminal shows. */
+  /** Who is writing about a terminal: the owner in the browser, or a program (the agent in it, or one with a token, by its name). */
+  const writerOf = (principal: Principal): { source: 'owner' | 'agent'; by?: string } => (principal.kind === 'user' ? { source: 'owner' } : principal.kind === 'token' ? { source: 'agent', by: principal.name } : { source: 'agent' });
   const mayReadTerminal = (principal: Principal, sessionId: string): boolean => principal.kind === 'user' || deps.may(principal, 'terminal.read', deps.resourceOf(sessionId));
   const remembered = new IdempotencyStore();
 
@@ -283,7 +290,12 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
       return session;
     },
 
-    updateSession: ({ params, body }) => sessions.update(params.sessionId, body),
+    // A name or a summary says who wrote it: the owner's own words are not replaced by a program's, which are kept as a suggestion.
+    updateSession: ({ params, body, principal }) => {
+      const { name, note, ...rest } = body;
+      if (name !== undefined || note !== undefined) deps.described.describe(params.sessionId, { ...(name !== undefined ? { name } : {}), ...(note !== undefined ? { summary: note } : {}) }, principal.kind === 'user' ? 'owner' : 'agent');
+      return sessions.update(params.sessionId, rest);
+    },
 
     endSession: async ({ params }) => {
       await sessions.close(params.sessionId);
@@ -740,6 +752,22 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
 
     // What the session's agent wrote when asked for a recap. Kept as its words; nothing is typed or run for it.
     writeRecap: ({ params, body }) => sessions.writeRecap(params.sessionId, body.text),
+
+    /* ---------- What a terminal says about itself ---------- */
+
+    // A link that was seen on the terminal's screen is terminal content: left out for a caller who may not read that terminal.
+    listLinks: ({ params, principal }) => ({ links: deps.described.links(params.sessionId).filter((link) => link.fromTerminal !== true || mayReadTerminal(principal, params.sessionId)) }),
+    addLink: ({ params, body, principal }) => deps.described.add(params.sessionId, body, writerOf(principal)),
+    changeLink: ({ params, body, principal }) => deps.described.change(params.sessionId, params.linkId, body, writerOf(principal).source),
+    removeLink: ({ params, principal }) => ({ links: deps.described.remove(params.sessionId, params.linkId, writerOf(principal).source).filter((link) => link.fromTerminal !== true || mayReadTerminal(principal, params.sessionId)) }),
+    listSeenLinks: async ({ params }) => ({ seen: await deps.described.seen(params.sessionId) }),
+    keepSeenLink: ({ params, body }) => deps.described.keep(params.sessionId, body.url),
+    // A session's own: the address names the session, and `authorize` has made sure its token is that session's.
+    describeSession: ({ params, body }) => deps.described.describe(params.sessionId, body, 'agent'),
+    checkDescribed: ({ params, body }) => deps.described.check(params.sessionId, body),
+    lookAgain: async ({ params }) => ({ found: await deps.described.lookAgain(params.sessionId) }),
+    useSuggestion: ({ params, body }) => ({ links: deps.described.use(params.sessionId, body) }),
+    changeDescribing: ({ body }) => deps.changeDescribing(body.remind),
 
     // The run a session is on. The address names the session, and `authorize` has already
     // made sure a session's token is that session's own: there is no way from here to another run.

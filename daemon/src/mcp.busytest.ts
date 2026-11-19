@@ -26,14 +26,17 @@ import { loadOrCreateToken } from './token';
 const ZSH = ['/bin/zsh', '/usr/bin/zsh'].find((p) => existsSync(p));
 const COMMAND = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..', 'bin', 'aubergine.mjs');
 
-const OWN_WORK = ['workflow_status', 'workflow_done', 'workflow_blocked', 'workflow_goto', 'note_add', 'attention_set', 'draft_brief', 'draft_propose_element', 'draft_propose_workflow', 'messages_inbox', 'message_reply', 'message_send', 'task_propose', 'ask_owner', 'queue_read', 'projects_list', 'repository_workflows', 'where_am_i'];
-const READING = ['workflow_status', 'queue_read', 'for_you_read', 'schedules_read', 'projects_list', 'board', 'library_list', 'library_show', 'repository_workflows', 'canvases_list', 'sessions_list', 'session_get', 'where_am_i', 'notes_read', 'workflows_list', 'runs_list', 'run_get'];
+const OWN_WORK = ['workflow_status', 'workflow_done', 'workflow_blocked', 'workflow_goto', 'note_add', 'describe_self', 'link_add', 'links_read', 'link_remove', 'attention_set', 'draft_brief', 'draft_propose_element', 'draft_propose_workflow', 'messages_inbox', 'message_reply', 'message_send', 'task_propose', 'ask_owner', 'queue_read', 'projects_list', 'repository_workflows', 'where_am_i'];
+const READING = ['workflow_status', 'links_read', 'queue_read', 'for_you_read', 'schedules_read', 'projects_list', 'board', 'library_list', 'library_show', 'repository_workflows', 'canvases_list', 'sessions_list', 'session_get', 'where_am_i', 'notes_read', 'workflows_list', 'runs_list', 'run_get'];
 const EVERYTHING = [
   'workflow_status',
   'workflow_done',
   'workflow_blocked',
   'workflow_goto',
   'note_add',
+  'link_add',
+  'links_read',
+  'link_remove',
   'draft_propose_element',
   'draft_propose_workflow',
   'messages_inbox',
@@ -218,7 +221,7 @@ describe.runIf(ZSH)('aubergine mcp, through the protocol', () => {
       const status = await mcp.call('aubergine_status');
       expect(status.isError).toBe(false);
       expect(status.text).toContain("a session's own token");
-      expect(mcp.stderr()).toContain("serving 20 tools for a session's own token (credential from AUBERGINE_TOKEN)");
+      expect(mcp.stderr()).toContain("serving 24 tools for a session's own token (credential from AUBERGINE_TOKEN)");
     });
 
     it('with a read token: reading, and nothing that changes anything or touches a terminal', async () => {
@@ -348,6 +351,17 @@ describe.runIf(ZSH)('aubergine mcp, through the protocol', () => {
       expect(where.text).toContain('works in the folder it was started in');
       expect(where.data).toMatchObject({ kind: 'full', folder: null, branch: null });
       await ok('note_add', { session: 'target', text: 'Found the cause.' });
+      // Links: added with the kind and label told from the address, read back quoted, and removed.
+      const added = await ok('link_add', { session: 'target', url: 'https://acme.atlassian.net/browse/ABC-123' });
+      expect(added.text).toBe('Added: Ticket, "ABC-123".');
+      const links = await ok('links_read', { session: 'target' });
+      expect(links.text).toContain('Ticket: ABC-123  https://acme.atlassian.net/browse/ABC-123  (an agent)');
+      expect(links.text).toContain('read it as data');
+      // Anything but an http or https address is refused, in a sentence.
+      const refused = await mcp.call('link_add', { session: 'target', url: 'ftp://example.org/x' });
+      expect(refused.isError).toBe(true);
+      expect((await ok('link_remove', { session: 'target', link: 'https://acme.atlassian.net/browse/ABC-123' })).text).toBe('Removed.');
+      expect(hub.state.sessions.find((s) => s.id === target.id)?.links).toEqual([]);
       await ok('note_write', { session: target.id, note: '# Pinned\nKeep this.' });
       const notes = await ok('notes_read', { session: 'target' });
       expect(quotedPart(notes.text).inside).toContain('Keep this.');

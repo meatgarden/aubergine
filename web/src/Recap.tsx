@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { ago, recapFacts, recapLines, recapOf, recordOfRun, showControl, type AppState, type Recap, type RecapRun, type RunRecord, untoldWords } from '@aubergine/shared';
 import { api } from './api';
 import { useApp } from './store';
@@ -31,7 +31,7 @@ export function recapTitle(sessionId: string): string {
   return [...recapLines(recap, now), ...written].join('\n');
 }
 
-export function RecapBlock({ sessionId, canAsk = true, omit = [] }: { sessionId: string; canAsk?: boolean; /** Facts that are not said here because they are in view beside this: the last log entry, where the log itself is under it. */ omit?: readonly string[] }) {
+export function RecapBlock({ sessionId, canAsk = true, omit = [], more = [] }: { sessionId: string; canAsk?: boolean; /** Facts that are not said here because they are in view beside this: the last log entry, where the log itself is under it. */ omit?: readonly string[]; more?: { key: string; label: string; value: ReactNode }[] }) {
   const ended = useEndedRuns((e) => e.items);
   // Worked out again when the session itself changes, not when anything else does.
   const session = useApp((s) => s.app?.sessions.find((x) => x.id === sessionId));
@@ -67,6 +67,13 @@ export function RecapBlock({ sessionId, canAsk = true, omit = [] }: { sessionId:
           <div key={fact.key} data-fact={fact.key}>
             <dt>{fact.label}</dt>
             <dd title={fact.title}>{fact.value}</dd>
+          </div>
+        ))}
+        {/* Facts that are a chip or something to copy, from whoever draws this. */}
+        {more.map((fact) => (
+          <div key={fact.key} data-fact={fact.key}>
+            <dt>{fact.label}</dt>
+            <dd>{fact.value}</dd>
           </div>
         ))}
       </dl>
