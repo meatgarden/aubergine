@@ -2,10 +2,11 @@ import { THEMES, THEME_WORDS } from '@aubergine/shared';
 import { NotifySwitch } from './AttentionQueue';
 import { api } from './api';
 import { keepBarOpen, useBarKeptOpen } from './bar-open';
+import { BAR_PLACES, BAR_PLACE_WORDS, placeBar, placeFrom, useBarPlace } from './bar-place';
 import { setOpenNew } from './desktop';
 import { useApp } from './store';
 import { chooseTheme, useThemeShown } from './theme';
-import { ScreenHead } from './ui';
+import { ScreenHead, Select } from './ui';
 
 /**
  * Settings: the one place for what a person changes about the page itself. How it looks, whether a new terminal
@@ -18,6 +19,7 @@ export function SettingsDialog() {
   const openNew = useApp((s) => s.settings.desktop.openNew);
   const remind = useApp((s) => s.settings.describe.remind);
   const barOpen = useBarKeptOpen();
+  const barAt = useBarPlace();
   if (!open) return null;
   const close = (): void => useApp.getState().togglePanel(null);
   return (
@@ -57,6 +59,17 @@ export function SettingsDialog() {
             </label>
           </p>
           <p className="ui-meta">Otherwise it shows only New terminal, and the rest when you point at it or reach it with the keyboard. This browser remembers it.</p>
+          <p className="help-setting settings-line">
+            <label htmlFor="settings-bar-place">Where the bar stands</label>
+            <Select id="settings-bar-place" value={barAt} onChange={(e) => placeBar(placeFrom(e.target.value))} data-testid="settings-bar-place">
+              {BAR_PLACES.map((place) => (
+                <option key={place} value={place}>
+                  {BAR_PLACE_WORDS[place]}
+                </option>
+              ))}
+            </Select>
+          </p>
+          <p className="ui-meta">The bottom right corner is the map&rsquo;s. This browser remembers it.</p>
         </section>
         <section>
           <h3>New terminals</h3>

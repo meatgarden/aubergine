@@ -50,6 +50,7 @@ import { TerminalNode, type TerminalFlowNode } from './TerminalNode';
 import { isFullZoom, loadViewport, saveViewport, useZoomToNode } from './viewport';
 import { READABLE_ZOOM } from './culling';
 import { useBarKeptOpen } from './bar-open';
+import { opensUp, useBarPlace } from './bar-place';
 
 const nodeTypes = { terminal: TerminalNode, frame: FrameNode };
 type CanvasNode = TerminalFlowNode | FrameFlowNode;
@@ -330,6 +331,7 @@ export function Canvas() {
   // The canvas is narrow (the details are open beside the panel, say): the bar keeps to one row, and what is used seldom is in its menu.
   const narrow = useStore((s) => s.width > 0 && s.width < NARROW_CANVAS);
   const barOpen = useBarKeptOpen();
+  const barAt = useBarPlace();
   const [fullSizeHint, setFullSizeHint] = useState<{ x: number; y: number } | null>(null);
   const setError = useApp((s) => s.setNotice);
 
@@ -528,7 +530,8 @@ export function Canvas() {
           </Panel>
         )}
         {/* Folded to "New terminal" unless kept open in Settings: the rest shows while the pointer or the keyboard is in the bar. */}
-        <Panel position="top-left" className={`toolbar${narrow ? ' is-narrow' : ''}${barOpen ? '' : ' is-folded'}`} data-testid="canvas-bar">
+        {/* It stands where this browser chose in Settings; at the foot of the canvas what hangs from it opens upward. */}
+        <Panel position={barAt} className={`toolbar${narrow ? ' is-narrow' : ''}${barOpen ? '' : ' is-folded'}${opensUp(barAt) ? ' opens-up' : ''}${barAt.endsWith('-right') ? ' at-right' : ''}`} data-place={barAt} data-testid="canvas-bar">
           <span className="toolbar-group" role="group" aria-label="Make something new">
             <NewMenu adding={adding} narrow={narrow} />
           </span>

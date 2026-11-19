@@ -3028,8 +3028,16 @@ button.rail-dot:active {
   background: var(--surface-active);
 }
 /* The bar over the canvas begins on the same line as the first tab above it. */
-.react-flow__panel.toolbar {
+.react-flow__panel.toolbar.left {
   margin-left: var(--space-4);
+}
+/* At the foot of the canvas what hangs from the bar opens upward, from the edge it hangs from. With less motion it only fades. */
+@media (prefers-reduced-motion: no-preference) {
+  .toolbar.opens-up .toolbar-menu,
+  .toolbar.opens-up .parked-panel,
+  .toolbar.opens-up .outside-panel {
+    animation-name: ui-open-up;
+  }
 }
 
 /* ---------- Links: an address is a chip, never text ---------- */

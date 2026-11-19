@@ -5100,3 +5100,71 @@ test('the bar over the canvas: a new browser sees only "New terminal", the rest 
     await context.close();
   }
 });
+
+test('where the bar over the canvas stands: chosen in Settings, remembered in this browser, its menu opening on the page wherever it is', async ({ page }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  const bar = page.getByTestId('canvas-bar');
+  await expect(bar).toHaveAttribute('data-place', 'top-left');
+
+  const choose = async (place: string): Promise<void> => {
+    await page.getByTestId('toolbar-settings').click();
+    await page.getByTestId('settings-bar-place').selectOption(place);
+    await page.getByTestId('settings-close').click();
+    await expect(bar).toHaveAttribute('data-place', place);
+  };
+  /** Where the bar is in the canvas, and where its menu of things to make opens. */
+  const where = async (): Promise<{ top: number; bottom: number; left: number; right: number; middle: number; menuAbove: boolean; menuInside: boolean }> => {
+    await page.getByTestId('toolbar-new-more').click();
+    await expect(page.getByTestId('toolbar-new-menu')).toBeVisible();
+    expect(await onTop(page, 'toolbar-new-menu')).toBe(true);
+    const seen = await page.evaluate(() => {
+      const pane = (document.querySelector('.react-flow') as HTMLElement).getBoundingClientRect();
+      const box = (document.querySelector('[data-testid="canvas-bar"]') as HTMLElement).getBoundingClientRect();
+      const menu = (document.querySelector('[data-testid="toolbar-new-menu"]') as HTMLElement).getBoundingClientRect();
+      return {
+        top: Math.round(box.top - pane.top),
+        bottom: Math.round(pane.bottom - box.bottom),
+        left: Math.round(box.left - pane.left),
+        right: Math.round(pane.right - box.right),
+        middle: Math.round(Math.abs(box.left + box.width / 2 - (pane.left + pane.width / 2))),
+        menuAbove: menu.bottom <= box.top,
+        menuInside: menu.left >= 0 && menu.right <= window.innerWidth && menu.top >= 0 && menu.bottom <= window.innerHeight,
+      };
+    });
+    await page.keyboard.press('Escape');
+    await expect(page.getByTestId('toolbar-new-menu')).toHaveCount(0);
+    return seen;
+  };
+
+  // The usual place: top left, its menu below it.
+  const usual = await where();
+  expect(usual.top).toBeLessThan(40);
+  expect(usual.menuAbove).toBe(false);
+  expect(usual.menuInside).toBe(true);
+
+  // At the foot in the middle: its menu opens upward, and still on the page.
+  await choose('bottom-center');
+  const foot = await where();
+  expect(foot.bottom).toBeLessThan(40);
+  expect(foot.middle).toBeLessThanOrEqual(2);
+  expect(foot.menuAbove).toBe(true);
+  expect(foot.menuInside).toBe(true);
+  // Remembered in this browser.
+  await page.reload();
+  await expect(bar).toHaveAttribute('data-place', 'bottom-center');
+
+  // Top right: against the right edge, its menu on the page.
+  await choose('top-right');
+  const right = await where();
+  expect(right.right).toBeLessThan(40);
+  expect(right.menuInside).toBe(true);
+
+  // The map's corner is not offered.
+  await page.getByTestId('toolbar-settings').click();
+  expect(await page.getByTestId('settings-bar-place').locator('option').evaluateAll((all) => all.map((o) => (o as HTMLOptionElement).value))).toEqual(['top-left', 'top-center', 'top-right', 'bottom-left', 'bottom-center']);
+  await page.getByTestId('settings-bar-place').selectOption('top-left');
+  await page.getByTestId('settings-close').click();
+  await expect(bar).toHaveAttribute('data-place', 'top-left');
+});

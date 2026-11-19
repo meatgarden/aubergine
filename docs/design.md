@@ -64,7 +64,7 @@ One gutter for each kind of surface, and everything in it starts on that gutter'
 
 A button, a field, a select and the parts of a segmented switch have one anatomy: the same height, text, corner and padding at the sides, so two of them side by side line up.
 
-- **Two heights.** `--control` (32px) in screens and dialogs and in the bar at the top. `--control-compact` (28px) in the side panel's lists, the bar over the canvas and a terminal's title. A canvas tab and the side panel's head are 32px. The bar over the canvas shows only "New terminal" until the pointer or the keyboard is in it, or one of its menus is open; then it opens to its whole row in place, nothing else moving. A surface says which by setting `--control-h`; nothing sets a height on a control.
+- **Two heights.** `--control` (32px) in screens and dialogs and in the bar at the top. `--control-compact` (28px) in the side panel's lists, the bar over the canvas and a terminal's title. A canvas tab and the side panel's head are 32px. The bar over the canvas shows only "New terminal" until the pointer or the keyboard is in it, or one of its menus is open; then it opens to its whole row in place, nothing else moving. Where it stands is chosen in Settings; at the foot of the canvas its menus open upward, from the edge they hang from. A surface says which by setting `--control-h`; nothing sets a height on a control.
 - **A button that is only a sign** is a square of that height, and always says in words what it does (`IconButton`).
 - **A text area** has the padding and corner of a field.
 

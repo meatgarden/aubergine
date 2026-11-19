@@ -338,6 +338,28 @@ code {
 .warning {
   color: var(--attention-text);
 }
+/* A line of Settings with a choice: its words, then the choice. */
+.settings-line {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+/* The bar where this browser put it: what hangs from it opens upward at the foot, and lines up with its right edge on the right. */
+.toolbar.opens-up .toolbar-menu {
+  top: auto;
+  bottom: calc(100% + 6px);
+}
+.toolbar.opens-up .parked-panel,
+.toolbar.opens-up .outside-panel {
+  top: auto;
+  bottom: calc(100% + 10px);
+}
+.toolbar.at-right .toolbar-menu,
+.toolbar.at-right .parked-panel,
+.toolbar.at-right .outside-panel {
+  left: auto;
+  right: 0;
+}
 /* The middle of an empty canvas. The panel itself takes no clicks, so that nothing near it (the toolbar above) is covered; the card inside does. */
 .react-flow__panel.empty {
   top: 16vh;
