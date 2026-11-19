@@ -18,7 +18,7 @@ import {
 } from '@aubergine/shared';
 import { ApiError, api, askAbout, lookAt, subscribeToEvents } from './api';
 import { NOT_FOLLOWING, behind, takeChange, takeWhole, type Following } from './following';
-import { canvasIdFromPath, chooseCanvas, openedHere, pageFromPath, rememberCanvas, rememberedCanvas, sessionFromAddress, writeAddress } from './address';
+import { canvasIdFromPath, chooseCanvas, openedHere, pageFromPath, rememberCanvas, rememberedCanvas, sessionFromAddress, terminalFromPath, writeAddress } from './address';
 import { announcement, notificationsWanted } from './attention';
 import { clampPanelWidth, loadPanelPrefs, savePanelPrefs, type PanelPrefs } from './panel/registry';
 import { loadView, saveView, type ListView } from './terminal-rows';
@@ -229,6 +229,8 @@ export const useApp = create<AppStore>((set, get) => ({
       const exists = (id: string): boolean => everything.canvases.some((c) => c.id === id);
       const current = get().canvasId;
       set({ phase: 'ready', runtime: response.runtime, settings: response.settings, following, whole: everything, app: viewOf(everything, current, get().app) });
+      // A tab that shows one terminal by itself looks at no canvas, and keeps its own address.
+      if (terminalPage !== null) return;
       // Keep looking at the same canvas. On opening the page, or if that canvas is gone: the one
       // in the address, else the one this browser looked at last, else the server's default.
       if (!current || !exists(current)) {
@@ -410,12 +412,35 @@ export function currentLayout(state: Pick<AppStore, 'app' | 'canvasId'>): Layout
   return currentCanvas(state)?.layout ?? noLayout;
 }
 
+/** The terminal this browser tab shows by itself (`/t/<session id>`), or null for the app with its canvases. */
+export const terminalPage: string | null = typeof location === 'undefined' ? null : terminalFromPath(location.pathname);
+
+/**
+ * A tab that shows one terminal by itself reads the state, and reads it again when it is used again or while the
+ * server is away. It does not join the stream of changes: a tab on the stream is one the server may ask to show a
+ * terminal or a canvas, and this one can show neither. The terminal itself is live over its own socket.
+ */
+function startTerminalPageSync(load: () => Promise<void>): () => void {
+  void load();
+  const onFocus = (): void => void load();
+  window.addEventListener('focus', onFocus);
+  const poll = window.setInterval(() => {
+    const { phase, runtime } = useApp.getState();
+    if (phase !== 'ready' || runtime?.status !== 'ok') void load();
+  }, 3000);
+  return () => {
+    window.removeEventListener('focus', onFocus);
+    window.clearInterval(poll);
+  };
+}
+
 /** Loads state, keeps it live, and keeps retrying while the daemon is away. */
 /** The live connection to the daemon, once there is one. */
 let events: ReturnType<typeof subscribeToEvents> | null = null;
 
 export function startSync(): () => void {
   const { load, apply } = useApp.getState();
+  if (terminalPage !== null) return startTerminalPageSync(load);
   let stopped = false;
 
   // The event stream needs the access cookie, so it starts after the first successful load.

@@ -1,4 +1,4 @@
-import { PAGE_NAMES, SHOW_PARAM, canvasAddress, isPageName, pageAddress, projectCanvasAddress, type PageName } from '@aubergine/shared';
+import { PAGE_NAMES, SHOW_PARAM, canvasAddress, isPageName, pageAddress, projectCanvasAddress, terminalAddress, type PageName } from '@aubergine/shared';
 
 /**
  * Which canvas a browser tab shows is carried by its address (`/p/<project>/c/<canvas>`;
@@ -76,4 +76,28 @@ export function writeAddress(canvasId: string, push: boolean, projectId?: string
   const state = page && (push || openedHere()) ? OPENED : null;
   if (push) history.pushState(state, '', target);
   else history.replaceState(state, '', target);
+}
+
+/** The terminal an address shows by itself (`/t/<session id>`), if it is the address of one. */
+export function terminalFromPath(pathname: string): string | null {
+  return /^\/t\/([^/]+)\/?$/.exec(pathname)?.[1] ?? null;
+}
+
+/** Where a canvas is, as a link: with its project where it has one. */
+export const canvasHref = (canvasId: string, projectId?: string | null): string =>
+  projectId ? projectCanvasAddress(projectId, canvasId) : canvasAddress(canvasId);
+
+/** Where a terminal is by itself, as a link. */
+export const terminalHref = (sessionId: string): string => terminalAddress(sessionId);
+
+/** Where a terminal is on its canvas, as a link: the page goes to its canvas and brings it into view. */
+export const terminalOnCanvasHref = (sessionId: string): string => `/?${new URLSearchParams({ [SHOW_PARAM]: sessionId }).toString()}`;
+
+/**
+ * Opens one of this app's own addresses in a new browser tab. Asked from a click or a key, so the browser allows it.
+ * With `noopener` the new tab is a page of its own that cannot reach back into this one; the browser then answers
+ * nothing about it, so nothing here can say whether it opened.
+ */
+export function openInNewTab(href: string): void {
+  window.open(href, '_blank', 'noopener');
 }

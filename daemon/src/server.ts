@@ -57,6 +57,7 @@ import {
   projectCanvasAddress,
   PAGE_NAMES,
   pageAddress,
+  terminalAddress,
   paths,
   placeOfSession,
   type AppendNoteResponse,
@@ -1017,6 +1018,8 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     // The address of a canvas is a page of the same web app.
     app.get(canvasAddress(':canvasId'), sendPage);
     app.get(projectCanvasAddress(':projectId', ':canvasId'), sendPage);
+    // And the address of one terminal by itself, shown as one more viewer of the same running terminal.
+    app.get(terminalAddress(':sessionId'), sendPage);
     // And so is the address of each page that is about a whole project.
     for (const page of PAGE_NAMES) {
       app.get(pageAddress(canvasAddress(':canvasId'), page), sendPage);

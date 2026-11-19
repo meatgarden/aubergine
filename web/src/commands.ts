@@ -2,11 +2,12 @@ import { foldMap, mapFolded } from './map-fold';
 import { COMMAND_IDS, THEMES, THEME_WORDS, demoOf, sortedCanvases, type CommandId, type Session } from '@aubergine/shared';
 import { chooseTheme } from './theme';
 import { openOnDesktop } from './desktop';
+import { canvasHref, openInNewTab, terminalHref } from './address';
 import { api } from './api';
 import { nextWaiting } from './attention';
 import { canvasActions } from './canvas-actions';
 import { neighbour, type Box, type Direction } from './spatial';
-import { currentLayout, useApp, type AppStore } from './store';
+import { currentCanvas, currentLayout, useApp, type AppStore } from './store';
 import { SCOPE_FILTER } from './list-filters';
 import { listModel, listSource } from './list-model';
 import { SORTS } from './terminal-rows';
@@ -372,6 +373,20 @@ export const COMMANDS: readonly Command[] = [
     },
   },
   {
+    id: 'terminal.openInNewTab',
+    title: 'Open in new tab',
+    description: 'Opens this terminal by itself in a new browser tab. Both show the same terminal, an agent\'s too, and you can type in either; they share one size, the size of the one typed into last. Closing the tab ends nothing.',
+    group: 'Terminals',
+    available: (state) => {
+      const session = targetSession(state);
+      return session != null && session.state !== 'exited';
+    },
+    run: (state) => {
+      const session = targetSession(state);
+      if (session && session.state !== 'exited') openInNewTab(terminalHref(session.id));
+    },
+  },
+  {
     id: 'history.open',
     title: 'Past conversations…',
     description: 'Lists the agent\'s earlier conversations in this terminal\'s folder: read one, open it on the canvas, or open a copy. Type @ in the palette to search them.',
@@ -527,6 +542,17 @@ export const COMMANDS: readonly Command[] = [
     available: (state) => state.canvasId !== null,
     run: (state) => {
       if (state.canvasId) state.request({ kind: 'rename-canvas', id: state.canvasId });
+    },
+  },
+  {
+    id: 'canvas.openInNewTab',
+    title: 'Open the canvas in a new tab',
+    description: 'Opens this canvas in a new browser tab, beside this one. Each tab can then show a canvas of its own. Clicking a tab the way you open a link in a new tab does the same.',
+    group: 'Canvases',
+    available: (state) => state.canvasId !== null,
+    run: (state) => {
+      const canvas = currentCanvas(state);
+      if (canvas) openInNewTab(canvasHref(canvas.id, canvas.projectId));
     },
   },
   {

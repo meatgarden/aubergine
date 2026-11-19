@@ -21,6 +21,11 @@ interface Props {
   sessionId: string;
   /** False while the terminal only shows output and takes no input. */
   interactive: boolean;
+  /**
+   * False where no canvas is around it (a terminal by itself in its own tab): no chord is kept back for the canvas,
+   * and every key but the paste chord goes to the program.
+   */
+  chords?: boolean;
 }
 
 function terminalTheme(theme: 'light' | 'dark') {
@@ -35,10 +40,12 @@ type Link = 'connecting' | 'open' | 'reconnecting' | 'ended';
  * One terminal and its own WebSocket: opened when this mounts, closed when
  * it unmounts. The shell lives on in the daemon's runtime either way.
  */
-export function TerminalView({ sessionId, interactive, zoom }: Props) {
+export function TerminalView({ sessionId, interactive, zoom, chords = true }: Props) {
   const host = useRef<HTMLDivElement>(null);
   const terminal = useRef<Terminal | null>(null);
   const interactiveRef = useRef(interactive);
+  const chordsRef = useRef(chords);
+  chordsRef.current = chords;
   const zoomRef = useRef(zoom);
   zoomRef.current = zoom;
   const [link, setLink] = useState<Link>('connecting');
@@ -71,7 +78,7 @@ export function TerminalView({ sessionId, interactive, zoom }: Props) {
     // Returning false hands the key back to the browser and the canvas.
     // Chords that belong to the canvas, and the paste chord, are never passed to the program.
     term.attachCustomKeyEventHandler(
-      (event) => !pickBinding(event, activeShortcuts().bindings, 'terminal') && !isPasteChord(event, mac),
+      (event) => !(chordsRef.current && pickBinding(event, activeShortcuts().bindings, 'terminal')) && !isPasteChord(event, mac),
     );
     // The wheel scrolls this terminal's history only while it has focus;
     // otherwise it belongs to the canvas.
