@@ -610,7 +610,7 @@ export const COMMANDS: readonly Command[] = [
   {
     id: 'view.map',
     title: 'Show or hide the map',
-    description: 'Folds away the small map in the corner of the canvas, or brings it back. This browser remembers it.',
+    description: 'Shows the small map in the corner of the canvas, or folds it away again. It begins folded; this browser remembers what you chose.',
     group: 'View',
     available: withCanvas,
     run: () => foldMap(!mapFolded()),

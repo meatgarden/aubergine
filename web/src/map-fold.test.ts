@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { MAP_ROOM, underMap } from './map-fold';
+import { MAP_ROOM, foldedFrom, underMap } from './map-fold';
 
 describe('the map steps aside', () => {
   const pane = { width: 1000, height: 800 };
@@ -22,5 +22,15 @@ describe('the map steps aside', () => {
     expect(underMap(rect, 0, { x: 0, y: 0, zoom: 0.5 }, pane)).toBe(false);
     // Off the page altogether.
     expect(underMap(rect, 0, { x: 600, y: 600, zoom: 1 }, pane)).toBe(false);
+  });
+});
+
+describe('the map begins folded', () => {
+  it('where this browser remembers nothing, and stays as this browser chose', () => {
+    expect(foldedFrom(null)).toBe(true);
+    expect(foldedFrom('yes')).toBe(true);
+    expect(foldedFrom('no')).toBe(false);
+    // Anything else is not a choice that was made here.
+    expect(foldedFrom('')).toBe(true);
   });
 });
