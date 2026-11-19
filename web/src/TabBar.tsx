@@ -54,6 +54,7 @@ export function TabBar() {
   useEffect(() => setMenu(null), [current]);
   // The tab being looked at is kept in sight: with many tabs the row scrolls sideways to it.
   const row = useRef<HTMLDivElement>(null);
+  const tabCount = useApp((state) => state.app?.canvases.length ?? 0);
   useEffect(() => {
     const tab = row.current?.querySelector<HTMLElement>('.tab.active');
     const box = row.current?.getBoundingClientRect();
@@ -61,7 +62,8 @@ export function TabBar() {
     const at = tab.getBoundingClientRect();
     if (at.left < box.left) row.current.scrollLeft -= box.left - at.left;
     else if (at.right > box.right) row.current.scrollLeft += at.right - box.right;
-  }, [current]);
+    // Also when a tab is added or goes: the one being looked at may only now be in the row.
+  }, [current, tabCount]);
 
   // Asked to rename a canvas (by a key or the palette).
   const ask = useApp((s) => (s.ask?.kind === 'rename-canvas' ? s.ask : null));

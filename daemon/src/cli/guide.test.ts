@@ -20,12 +20,13 @@ function parsed(line: string): string {
   if (command.name === 'workflow') return `workflow ${parseWorkflowCommand(command.words).action}`;
   if (command.name === 'element') return `element ${parseElementCommand(command.words).action}`;
   if (command.name === 'recap') return command.write ? 'recap --write' : 'recap';
+  if (command.name === 'link-add') return 'link add';
   if (command.name === 'queue') return command.which === 'task' ? `task ${command.words[0] ?? 'list'}` : command.which;
   return command.name;
 }
 
 /** The commands that use the terminal's own credential and never the owner's sign-in. */
-const OWN_COMMANDS = new Set(['task add', 'task list', 'ask', 'where', 'attention', 'note', 'inbox', 'reply', 'tell', 'recap --write', 'guide', 'mcp', 'workflow status', 'workflow done', 'workflow blocked', 'workflow goto', 'workflow pause', 'workflow resume', 'workflow stop', 'workflow brief', 'workflow propose', 'element propose']);
+const OWN_COMMANDS = new Set(['describe', 'link add', 'task add', 'task list', 'ask', 'where', 'attention', 'note', 'inbox', 'reply', 'tell', 'recap --write', 'guide', 'mcp', 'workflow status', 'workflow done', 'workflow blocked', 'workflow goto', 'workflow pause', 'workflow resume', 'workflow stop', 'workflow brief', 'workflow propose', 'element propose']);
 /** The tools that are there for every connection. */
 const ALWAYS = ['aubergine_status', 'aubergine_guide'];
 
@@ -114,7 +115,7 @@ describe('aubergine guide', () => {
     const { fetch: fetchWith, asked } = server();
     const text = await guideText(plain, inTerminal, fetchWith);
     expect(text).toBe(renderGuide({ reader: { session: true, scopes: [] } }));
-    expect(text.split('\n').length).toBeLessThanOrEqual(168);
+    expect(text.split('\n').length).toBeLessThanOrEqual(187);
     // It asked who the caller is, and nothing else.
     expect(asked).toEqual([`GET ${URL}/v1`]);
   });
@@ -168,7 +169,8 @@ describe('aubergine guide', () => {
       for (const secret of [OWN, API, 'aubs_', 'aubt_', '/made-up', SESSION_ID, URL, 'bot']) expect(text).not.toContain(secret);
       // No path at all but the two the guide names itself: the folder a repository keeps workflows in, and where the command is.
       const paths = [...text.matchAll(/(?<![A-Za-z$_.])\/[A-Za-z][\w./-]*/g)].map((match) => match[0]);
-      expect(paths.filter((found) => found !== '/aubergine' && found !== '/workflows/')).toEqual([]);
+      // And the one example of an address, on a host that is nobody's: an address, not a path of this computer.
+      expect(paths.filter((found) => found !== '/aubergine' && found !== '/workflows/' && found !== '/tickets.example.com/browse/ABC-123')).toEqual([]);
       expect(showControl(text)).toBe(text);
     }
   });

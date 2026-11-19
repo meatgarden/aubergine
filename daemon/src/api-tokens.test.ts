@@ -317,6 +317,9 @@ describe('a token that should not work', () => {
 describe('every route has a rule', () => {
   /** The routes only a session may use, for itself. */
   const SESSION_ONLY = [
+    // Naming its own terminal, and the checks its hooks make: a session's own, and no token's.
+    'PUT /v1/sessions/:sessionId/described',
+    'POST /v1/sessions/:sessionId/described/check',
     'PUT /v1/sessions/:sessionId/attention',
     'PUT /v1/sessions/:sessionId/recap',
     'PUT /v1/sessions/:sessionId/agent',
@@ -335,6 +338,11 @@ describe('every route has a rule', () => {
   ];
   /** The routes no token may use, whatever its scopes. */
   const NEVER = [
+    // Keeping a link that was only seen, using what an agent suggested, looking again, and the reminder's switch.
+    'POST /v1/sessions/:sessionId/links/keep',
+    'POST /v1/sessions/:sessionId/described/use',
+    'POST /v1/sessions/:sessionId/found',
+    'PUT /v1/settings/describing',
     'GET /v1/tokens',
     'POST /v1/tokens',
     'DELETE /v1/tokens/:tokenId',
@@ -519,20 +527,26 @@ describe('every route has a rule', () => {
       }
     }
     expect(allowed.sort()).toEqual([
+      // What it says about itself: its own links, its own name and summary, and the checks its hooks make.
+      'DELETE /v1/sessions/:sessionId/links/:linkId',
       'GET /v1',
       'GET /v1/openapi.json',
       'GET /v1/sessions/:sessionId/brief',
       'GET /v1/sessions/:sessionId/drafts',
       // Where it works itself, and which of its own files changed: names and counts.
       'GET /v1/sessions/:sessionId/environment',
+      'GET /v1/sessions/:sessionId/links',
       'GET /v1/sessions/:sessionId/project',
       'GET /v1/sessions/:sessionId/queue',
       'GET /v1/sessions/:sessionId/repository-workflows',
       'GET /v1/sessions/:sessionId/run',
+      'PATCH /v1/sessions/:sessionId/links/:linkId',
       'POST /v1/sessions/:sessionId/asks',
+      'POST /v1/sessions/:sessionId/described/check',
       'POST /v1/sessions/:sessionId/drafts',
       // Messages: its own inbox, an answer, and a message of its own. Exactly these three.
       'POST /v1/sessions/:sessionId/inbox',
+      'POST /v1/sessions/:sessionId/links',
       'POST /v1/sessions/:sessionId/messages/:messageId/reply',
       'POST /v1/sessions/:sessionId/notes',
       'POST /v1/sessions/:sessionId/run/report',
@@ -540,6 +554,7 @@ describe('every route has a rule', () => {
       'POST /v1/sessions/:sessionId/tell',
       'PUT /v1/sessions/:sessionId/agent',
       'PUT /v1/sessions/:sessionId/attention',
+      'PUT /v1/sessions/:sessionId/described',
       'PUT /v1/sessions/:sessionId/recap',
     ]);
     // Session tokens are not recorded in the activity log: it is the record of API tokens.

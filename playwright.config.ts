@@ -56,6 +56,8 @@ export default defineConfig({
       // The server's Git reads the owner's configuration. In a test run that is nobody's: never the developer's own.
       GIT_CONFIG_GLOBAL: '/dev/null',
       GIT_CONFIG_SYSTEM: '/dev/null',
+      // The tool that is asked for a branch's pull request is a stand-in that reaches no network: never the developer's own.
+      AUBERGINE_GH_BIN: path.join(root, 'e2e', 'gh-stand-in.sh'),
     },
   },
 });

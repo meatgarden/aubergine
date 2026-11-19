@@ -4012,7 +4012,9 @@ test('the drawer: what a terminal asks comes first, one thing to type into, besi
       }
       const fact = el.querySelector('.ui-facts dd') as HTMLElement;
       return {
-        controls: [...new Set([...el.querySelectorAll('button, input')].filter((c) => c.getClientRects().length > 0 && !c.matches('.note-summary-read')).map((c) => Math.round(c.getBoundingClientRect().height)))],
+        controls: [...new Set([...el.querySelectorAll('button, input')].filter((c) => c.getClientRects().length > 0 && !c.matches('.note-summary-read, .ui-chip')).map((c) => Math.round(c.getBoundingClientRect().height)))],
+        // A chip that is pressed (a fact that is copied) has the chip's own height.
+        chips: [...new Set([...el.querySelectorAll('button.ui-chip, a.ui-chip')].filter((c) => c.getClientRects().length > 0).map((c) => Math.round(c.getBoundingClientRect().height)))],
         question: px(el.querySelector('.details-asks-words')),
         name: px(el.querySelector('[data-testid="details-name"]')),
         nameCut: (() => { const name = el.querySelector('[data-testid="details-name"]') as HTMLElement; return name.scrollWidth > name.clientWidth + 1; })(),
@@ -4026,7 +4028,7 @@ test('the drawer: what a terminal asks comes first, one thing to type into, besi
         small,
       };
     });
-    expect(sizes).toEqual({ controls: [32], question: '15px', name: '15px', nameCut: false, label: '13px', value: '13px', row: true, tab: '13px', help: '13px', summaryLines: expect.any(Number), gutter: 16, small: [] });
+    expect(sizes).toEqual({ controls: [32], chips: expect.any(Array), question: '15px', name: '15px', nameCut: false, label: '13px', value: '13px', row: true, tab: '13px', help: '13px', summaryLines: expect.any(Number), gutter: 16, small: [] });
     expect(sizes.summaryLines).toBeGreaterThanOrEqual(4);
     // The handle that folds the side panel does not lie over it, and at 1280 wide the bar over the canvas is still one row.
     await page.setViewportSize({ width: 1280, height: 900 });
@@ -4779,4 +4781,213 @@ test('new browser tabs: a canvas opens in one from its tab, and a running termin
   await missing.goto('/t/0190aaaa-bbbb-7ccc-8ddd-eeeeeeeeeeee');
   await expect(missing.getByTestId('terminal-page-missing')).toBeVisible();
   await missing.close();
+});
+
+test('links: an address is a chip wherever it is, added by hand or by the terminal\'s own command; the owner\'s words win; twelve stay in groups', async ({ page, context }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  const origin = new URL(page.url()).origin;
+  const was = page.url();
+  await page.getByRole('button', { name: 'New canvas' }).click();
+  await expect(page).not.toHaveURL(was);
+  // A terminal in a folder made for this test, so that nothing of the developer's is looked at.
+  const folder = mkdtempSync(path.join(tmpdir(), 'aubergine-links-'));
+  try {
+    await page.getByTestId('toolbar-new-more').click();
+    await page.getByTestId('toolbar-new-in').click();
+    const start = page.getByTestId('start-dialog');
+    await start.getByTestId('where-folder').fill(folder);
+    await start.getByTestId('start-go').click();
+    await expect(start).toHaveCount(0);
+    const node = page.getByTestId('terminal-node');
+    await expect(node).toHaveCount(1);
+    await expect(page.locator('.xterm-rows')).toContainText(/[$%#>]/, { timeout: 20_000 });
+    const sessionId = (await node.getAttribute('data-session')) ?? '';
+    const stored = async (): Promise<{ links: { url: string; label: string; kind: string; source: string }[]; name: string; note: string }> => (await (await page.request.get(`/v1/sessions/${sessionId}`, { headers: { origin } })).json()) as never;
+
+    // The details: with no links the part is one line and the way to add one.
+    await page.getByTestId('list-row').first().hover();
+    await page.getByTestId('row-more').first().click();
+    await page.getByRole('menuitem', { name: 'Details' }).click();
+    const drawer = page.getByTestId('panel-drawer');
+    const part = drawer.getByTestId('links-part');
+    await expect(part).toBeVisible();
+    await expect(part.getByTestId('link-chip')).toHaveCount(0);
+    await expect(part.locator('.links-none')).toHaveCount(1);
+    // It stands between the facts and the tabs.
+    expect(await drawer.evaluate((el) => { const top = (id: string): number => (el.querySelector(id) as HTMLElement).getBoundingClientRect().top; return top('[data-testid="recap"]') < top('[data-testid="links-part"]') && top('[data-testid="links-part"]') < top('.details-tabs'); })).toBe(true);
+
+    /** Adds a link by hand: the field is asked for, the address typed, and the field goes again. */
+    const addByHand = async (address: string): Promise<void> => {
+      await part.getByTestId('link-add-open').click();
+      await part.getByTestId('link-address').fill(address);
+      await part.getByTestId('link-add').click();
+      await expect(part.getByTestId('link-address')).toHaveCount(0);
+    };
+    // 1. Pasted in: it becomes a chip of the right kind, with a short label and nothing of the address.
+    await addByHand('https://acme.atlassian.net/browse/ABC-123');
+    const chips = part.getByTestId('link-chip');
+    await expect(chips).toHaveCount(1);
+    await expect(chips.first()).toHaveAttribute('data-kind', 'ticket');
+    await expect(chips.first().locator('.link-label')).toHaveText('ABC-123');
+    await expect(chips.first()).toHaveAttribute('href', 'https://acme.atlassian.net/browse/ABC-123');
+    await expect(chips.first()).toHaveAttribute('target', '_blank');
+    await expect(chips.first()).toHaveAttribute('rel', 'noopener noreferrer');
+    await expect(chips.first()).toHaveAttribute('title', /Ticket: ABC-123\nAdded by you, .*\nhttps:\/\/acme\.atlassian\.net\/browse\/ABC-123/);
+    // One text box in view while the field is there: the note's summary is read meanwhile.
+    await part.getByTestId('link-add-open').click();
+    expect(await drawer.evaluate((el) => [...el.querySelectorAll('textarea, input:not([type=checkbox], [type=radio], [type=hidden])')].filter((box) => { const r = box.getBoundingClientRect(); return r.width > 0 && r.height > 0; }).length)).toBe(1);
+    // Anything that is not an http or https address is refused with one sentence, and nothing is added.
+    await part.getByTestId('link-address').fill('ftp://example.org/file');
+    await part.getByTestId('link-add').click();
+    await expect(part.getByTestId('link-problem')).toHaveText('Only addresses that begin with https:// or http:// can be links.');
+    await part.getByRole('button', { name: 'Cancel' }).click();
+    await expect(part.getByTestId('link-address')).toHaveCount(0);
+    await expect(chips).toHaveCount(1);
+
+    // 2. The terminal's own command adds one, and it appears without a reload.
+    await page.evaluate(() => ((window as unknown as { stillHere: boolean }).stillHere = true));
+    await node.getByTestId('node-body').click();
+    await page.keyboard.type('aubergine link add https://www.figma.com/file/AbCdEf123/Canvas-redesign && aubergine describe --name "Links test terminal" --summary "See https://example.org/guides/setup for how."');
+    await page.keyboard.press('Enter');
+    await expect(chips).toHaveCount(2);
+    await expect(part.locator('[data-testid="link-chip"][data-kind="design"] .link-label')).toHaveText('Canvas redesign');
+    await expect(part.locator('[data-testid="link-chip"][data-kind="design"]')).toHaveAttribute('title', /Added by the agent/);
+    await expect(drawer.getByTestId('details-name')).toHaveText('Links test terminal');
+    expect(await page.evaluate(() => (window as unknown as { stillHere?: boolean }).stillHere)).toBe(true);
+    // The summary it wrote has an address in it: it is read as words and a chip, and the stored text is as it was written.
+    const summary = drawer.getByTestId('note-summary-read');
+    await expect(summary.getByTestId('inline-link')).toHaveCount(1);
+    await expect(summary.getByTestId('inline-link')).toHaveAttribute('href', 'https://example.org/guides/setup');
+    await expect(summary).toContainText('See');
+    expect((await stored()).note).toBe('See https://example.org/guides/setup for how.');
+
+    // 3. The owner's words win. The owner changes the label; the terminal's command says otherwise; the owner's stays, with the other beside it.
+    const design = part.locator('[data-testid="links-item"]').filter({ has: page.locator('[data-kind="design"]') });
+    await design.getByTestId('link-more').click();
+    await page.getByTestId('link-edit').click();
+    await part.getByTestId('link-label').fill('The new canvas');
+    await part.getByTestId('link-save').click();
+    await expect(design.locator('.link-label')).toHaveText('The new canvas');
+    await node.getByTestId('node-body').click();
+    await page.keyboard.type('aubergine link add https://www.figma.com/file/AbCdEf123/Canvas-redesign --label "Redesign file"');
+    await page.keyboard.press('Enter');
+    await expect(page.locator('.xterm-rows')).toContainText('own words');
+    await expect(design.locator('.link-label')).toHaveText('The new canvas');
+    expect((await stored()).links.find((link) => link.kind === 'design')?.label).toBe('The new canvas');
+    // The owner can take the other after all, from the chip's menu.
+    await design.getByTestId('link-more').click();
+    await expect(page.getByTestId('link-use')).toContainText('Redesign file');
+    await page.keyboard.press('Escape');
+    // The same for the name: the owner renames by hand, the agent's is a suggestion with "Use this".
+    await page.request.patch(`/v1/sessions/${sessionId}`, { headers: { origin, 'sec-fetch-site': 'same-origin' }, data: { name: 'Mine' } });
+    await expect(drawer.getByTestId('details-name')).toHaveText('Mine');
+    await node.getByTestId('node-body').click();
+    await page.keyboard.type('aubergine describe --name "Named by the agent"');
+    await page.keyboard.press('Enter');
+    await expect(drawer.getByTestId('details-suggested')).toContainText('Named by the agent');
+    await expect(drawer.getByTestId('details-name')).toHaveText('Mine');
+    await drawer.getByTestId('use-name').click();
+    await expect(drawer.getByTestId('details-name')).toHaveText('Named by the agent');
+    await expect(drawer.getByTestId('details-suggested')).toHaveCount(0);
+
+    // 4. Copy, and remove (with the way back).
+    await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+    const ticket = part.locator('[data-testid="links-item"]').filter({ has: page.locator('[data-kind="ticket"]') });
+    await ticket.getByTestId('link-more').click();
+    await page.getByTestId('link-copy').click();
+    expect(await page.evaluate(() => navigator.clipboard.readText())).toBe('https://acme.atlassian.net/browse/ABC-123');
+    await ticket.getByTestId('link-more').click();
+    await page.getByTestId('link-remove').click();
+    await expect(chips).toHaveCount(1);
+    await page.getByTestId('toast-undo').click();
+    await expect(chips).toHaveCount(2);
+
+    // 5. The terminal's title shows the marks of its links, the ticket first, and a mark opens the address.
+    const marks = node.getByTestId('node-link');
+    await expect(marks).toHaveCount(2);
+    expect(await marks.evaluateAll((all) => all.map((mark) => mark.getAttribute('data-kind')))).toEqual(['ticket', 'design']);
+    await expect(marks.first()).toHaveText('TK');
+    await page.route('https://acme.atlassian.net/**', (route) => route.fulfill({ status: 200, contentType: 'text/html', body: '<title>stand-in</title>' }));
+    await context.route('https://acme.atlassian.net/**', (route) => route.fulfill({ status: 200, contentType: 'text/html', body: '<title>stand-in</title>' }));
+    const opened = context.waitForEvent('page');
+    await marks.first().click();
+    const tab = await opened;
+    expect(tab.url()).toBe('https://acme.atlassian.net/browse/ABC-123');
+    await tab.close();
+    // The list's row shows none.
+    await expect(page.getByTestId('list-row').first().locator('a')).toHaveCount(0);
+
+    // 6. An address in the note's log and in a row of the owner's list is the same chip.
+    await page.request.post(`/v1/sessions/${sessionId}/notes`, { headers: { origin, 'sec-fetch-site': 'same-origin' }, data: { text: 'Design is at https://www.figma.com/file/ZzZ/Tabs-and-panel now.' } });
+    await expect(drawer.getByTestId('note-log').getByTestId('inline-link')).toHaveCount(1);
+    await expect(drawer.getByTestId('note-log').getByTestId('inline-link').locator('.link-label')).toHaveText('Tabs and panel');
+    await page.request.post('/v1/asks', { headers: { origin, 'sec-fetch-site': 'same-origin' }, data: { text: 'Read https://docs.example.com/Launch-notes before Friday' } });
+    await showSection(page, 'for-you');
+    const row = page.locator('.side-panel .foryou-row').filter({ hasText: 'before Friday' });
+    await expect(row.getByTestId('inline-link')).toHaveCount(1);
+    await expect(row.getByTestId('inline-link').locator('.link-label')).toHaveText('Launch notes');
+    /** The text nodes under a part of the page that hold an address as text. */
+    const addressesAsText = (selector: string): Promise<string[]> =>
+      page.evaluate((sel) => {
+        const found: string[] = [];
+        for (const root of document.querySelectorAll(sel)) {
+          const walk = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+          for (let at = walk.nextNode(); at; at = walk.nextNode()) if (/https?:/.test(at.textContent ?? '')) found.push((at.textContent ?? '').slice(0, 80));
+        }
+        return found;
+      }, selector);
+    expect(await addressesAsText('[data-testid="panel-drawer"]')).toEqual([]);
+    expect(await addressesAsText('.side-panel .foryou-row')).toEqual([]);
+    expect(await addressesAsText('[data-testid="terminal-node"] .node-title')).toEqual([]);
+    await showSection(page, 'terminals');
+
+    // 7. Twelve links: under the three headings, every chip inside the drawer's width, the facts above still calm.
+    for (const url of [
+      'https://github.com/acme-co/widgets/pull/54',
+      'https://github.com/acme-co/widgets/tree/feature/a-very-long-branch-name-for-the-sign-in-redirect-fix',
+      'https://github.com/acme-co/widgets/issues/12',
+      'https://github.com/acme-co/widgets/commit/1a2b3c4d5e6f',
+      'https://github.com/acme-co/widgets/actions/runs/99',
+      'https://github.com/acme-co/widgets',
+      'https://www.notion.so/acme/Remote-access-plan-0123456789abcdef0123456789abcdef',
+      'https://docs.google.com/document/d/1AbCdEfGhIjK/edit',
+      'https://acme.slack.com/archives/C0123ABCD/p1700000000000100',
+      'https://example.org/guides/getting-started.html',
+    ])
+      expect((await page.request.post(`/v1/sessions/${sessionId}/links`, { headers: { origin, 'sec-fetch-site': 'same-origin' }, data: { url } })).status()).toBe(201);
+    await expect(chips).toHaveCount(12);
+    expect(await part.getByTestId('links-group').evaluateAll((all) => all.map((group) => [group.getAttribute('data-group'), group.querySelectorAll('[data-testid="link-chip"]').length]))).toEqual([
+      ['work', 6],
+      ['reference', 5],
+      ['conversation', 1],
+    ]);
+    const fit = await drawer.evaluate((el) => {
+      const box = el.getBoundingClientRect();
+      const all = [...el.querySelectorAll<HTMLElement>('[data-testid="link-chip"], [data-testid="links-item"]')];
+      return { width: Math.round(box.width), outside: all.filter((chip) => chip.getBoundingClientRect().right > box.right - 15 || chip.getBoundingClientRect().left < box.left + 15).length, heights: [...new Set(all.filter((chip) => chip.matches('a')).map((chip) => Math.round(chip.getBoundingClientRect().height)))], scrollsSideways: el.scrollWidth > el.clientWidth + 1 };
+    });
+    expect(fit).toEqual({ width: 420, outside: 0, heights: [20], scrollsSideways: false });
+    // A long label is cut in the middle: its start and its end are both there.
+    await expect(part.locator('[data-kind="branch"] .link-label')).toHaveText(/^feature\/a-ver.*….*redirect-fix$/);
+    // The title still shows three marks at most: the ticket, the pull request and the branch.
+    expect(await marks.evaluateAll((all) => all.map((mark) => mark.getAttribute('data-kind')))).toEqual(['ticket', 'pull-request', 'branch']);
+
+    // 8. The reminder's switch is in Settings, on to begin with, and is kept in the settings file.
+    await page.getByTestId('details-close').click();
+    await page.getByTestId('toolbar-settings').click();
+    const remind = page.getByTestId('settings-describe-remind');
+    await expect(remind).toBeChecked();
+    // The box follows what the settings file says after the change, a moment later.
+    await remind.click();
+    await expect(remind).not.toBeChecked();
+    await expect.poll(() => (existsSync(path.join(e2e.dataDir, 'config.json')) ? (JSON.parse(readFileSync(path.join(e2e.dataDir, 'config.json'), 'utf8')) as { describe?: { remind?: boolean } }).describe?.remind : undefined)).toBe(false);
+    await remind.click();
+    await expect(remind).toBeChecked();
+    await expect.poll(() => (JSON.parse(readFileSync(path.join(e2e.dataDir, 'config.json'), 'utf8')) as { describe?: { remind?: boolean } }).describe?.remind).toBe(true);
+    await page.getByTestId('settings-close').click();
+  } finally {
+    rmSync(folder, { recursive: true, force: true });
+  }
 });

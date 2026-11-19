@@ -51,6 +51,7 @@ function fixture(): { state: AppState; session: Session; node: LayoutNode } {
     agent: null,
     parkedFrom: null, peopleOnly: false, typedBy: null,
     recap: null, takesMessages: false, untold: null, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null },
+    links: [], written: {}, suggested: {}, found: null,
     lastInputAt: null,
     lastOutputAt: null,
     tags: [],

@@ -175,6 +175,17 @@ How to create a token, what the scopes mean, the limits and the activity log are
 | [`POST /v1/sessions/{sessionId}/tell`](#sendfromsession) | Send a message from the session to another terminal | session's own token |
 | [`PUT /v1/sessions/{sessionId}/attention`](#setattention) | Say whether the session wants the user | session's own token |
 | [`PUT /v1/sessions/{sessionId}/recap`](#writerecap) | Hand in a recap of the session | session's own token |
+| [`GET /v1/sessions/{sessionId}/links`](#listlinks) | A session's links | session's own token, or `read` |
+| [`POST /v1/sessions/{sessionId}/links`](#addlink) | Add a link to a session | session's own token, or `notes:write` |
+| [`PATCH /v1/sessions/{sessionId}/links/{linkId}`](#changelink) | Change the label or the kind of a link | session's own token, or `notes:write` |
+| [`DELETE /v1/sessions/{sessionId}/links/{linkId}`](#removelink) | Remove a link from a session | session's own token, or `notes:write` |
+| [`GET /v1/sessions/{sessionId}/links/seen`](#listseenlinks) | Addresses seen in a terminal and not kept | `terminal:read` |
+| [`POST /v1/sessions/{sessionId}/links/keep`](#keepseenlink) | Keep an address that was seen in the terminal as a link | browser only |
+| [`PUT /v1/sessions/{sessionId}/described`](#describesession) | Name the session after its work, and say what it is doing | session's own token |
+| [`POST /v1/sessions/{sessionId}/described/check`](#checkdescribed) | Report a moment of an agent’s work, and learn what it is to be told | session's own token |
+| [`POST /v1/sessions/{sessionId}/found`](#lookagain) | Look again at what can be found about a session | browser only |
+| [`POST /v1/sessions/{sessionId}/described/use`](#usesuggestion) | Use what the agent suggested in place of the owner’s own words | browser only |
+| [`PUT /v1/settings/describing`](#changedescribing) | Say whether agents are reminded to describe their terminal | browser only |
 | [`POST /v1/sessions/{sessionId}/run/report`](#reportsessionrun) | Report on the run a session is on | session's own token, or `runs:write` |
 | [`GET /v1/sessions/{sessionId}/brief`](#getsessionbrief) | What a session was asked to write | session's own token |
 | [`GET /v1/sessions/{sessionId}/drafts`](#listsessiondrafts) | The drafts a session proposed or was asked for | session's own token |
@@ -670,6 +681,60 @@ A list: it answers a page at a time, see `limit` and `cursor`.
       paused: number;
       at: string | null;
     };
+    links: {
+      id: string;
+      /** The address, kept and opened exactly as given. Only http and https. */
+      url: string;
+      /** What it is, told from the address unless someone said otherwise. */
+      kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+      /** A few plain words for it. */
+      label: string;
+      /** Who added it: the owner, the agent (or a program), or the server by looking. */
+      source: "owner" | "agent" | "found";
+      by?: string;
+      /** When it was added. */
+      at: string;
+      ownerSet?: boolean;
+      suggested?: {
+        label: string;
+        kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+        at: string;
+      };
+      fromTerminal?: boolean;
+    }[];
+    written: {
+      name?: {
+        by: "owner" | "agent" | "found";
+        at: string;
+      };
+      summary?: {
+        by: "owner" | "agent" | "found";
+        at: string;
+      };
+    };
+    suggested: {
+      name?: {
+        value: string;
+        at: string;
+      };
+      summary?: {
+        value: string;
+        at: string;
+      };
+    };
+    found: {
+      branch: string | null;
+      repository: string | null;
+      repositoryUrl: string | null;
+      pullRequest: {
+        /** The address, kept and opened exactly as given. Only http and https. */
+        url: string;
+        number: number;
+        title: string;
+        state: "open" | "merged" | "closed" | "draft";
+      } | null;
+      at: string;
+    } | null;
   }[];
   nextCursor: string | null;
 }
@@ -789,6 +854,60 @@ An API token needs the scope `sessions:write`. Sending `command` needs `terminal
       paused: number;
       at: string | null;
     };
+    links: {
+      id: string;
+      /** The address, kept and opened exactly as given. Only http and https. */
+      url: string;
+      /** What it is, told from the address unless someone said otherwise. */
+      kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+      /** A few plain words for it. */
+      label: string;
+      /** Who added it: the owner, the agent (or a program), or the server by looking. */
+      source: "owner" | "agent" | "found";
+      by?: string;
+      /** When it was added. */
+      at: string;
+      ownerSet?: boolean;
+      suggested?: {
+        label: string;
+        kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+        at: string;
+      };
+      fromTerminal?: boolean;
+    }[];
+    written: {
+      name?: {
+        by: "owner" | "agent" | "found";
+        at: string;
+      };
+      summary?: {
+        by: "owner" | "agent" | "found";
+        at: string;
+      };
+    };
+    suggested: {
+      name?: {
+        value: string;
+        at: string;
+      };
+      summary?: {
+        value: string;
+        at: string;
+      };
+    };
+    found: {
+      branch: string | null;
+      repository: string | null;
+      repositoryUrl: string | null;
+      pullRequest: {
+        /** The address, kept and opened exactly as given. Only http and https. */
+        url: string;
+        number: number;
+        title: string;
+        state: "open" | "merged" | "closed" | "draft";
+      } | null;
+      at: string;
+    } | null;
   };
   canvasId: string;
   node: {
@@ -911,6 +1030,60 @@ A list: it answers a page at a time, see `limit` and `cursor`.
       paused: number;
       at: string | null;
     };
+    links: {
+      id: string;
+      /** The address, kept and opened exactly as given. Only http and https. */
+      url: string;
+      /** What it is, told from the address unless someone said otherwise. */
+      kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+      /** A few plain words for it. */
+      label: string;
+      /** Who added it: the owner, the agent (or a program), or the server by looking. */
+      source: "owner" | "agent" | "found";
+      by?: string;
+      /** When it was added. */
+      at: string;
+      ownerSet?: boolean;
+      suggested?: {
+        label: string;
+        kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+        at: string;
+      };
+      fromTerminal?: boolean;
+    }[];
+    written: {
+      name?: {
+        by: "owner" | "agent" | "found";
+        at: string;
+      };
+      summary?: {
+        by: "owner" | "agent" | "found";
+        at: string;
+      };
+    };
+    suggested: {
+      name?: {
+        value: string;
+        at: string;
+      };
+      summary?: {
+        value: string;
+        at: string;
+      };
+    };
+    found: {
+      branch: string | null;
+      repository: string | null;
+      repositoryUrl: string | null;
+      pullRequest: {
+        /** The address, kept and opened exactly as given. Only http and https. */
+        url: string;
+        number: number;
+        title: string;
+        state: "open" | "merged" | "closed" | "draft";
+      } | null;
+      at: string;
+    } | null;
   }[];
   nextCursor: string | null;
 }
@@ -1015,6 +1188,60 @@ An API token needs the scope `read`.
     paused: number;
     at: string | null;
   };
+  links: {
+    id: string;
+    /** The address, kept and opened exactly as given. Only http and https. */
+    url: string;
+    /** What it is, told from the address unless someone said otherwise. */
+    kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+    /** A few plain words for it. */
+    label: string;
+    /** Who added it: the owner, the agent (or a program), or the server by looking. */
+    source: "owner" | "agent" | "found";
+    by?: string;
+    /** When it was added. */
+    at: string;
+    ownerSet?: boolean;
+    suggested?: {
+      label: string;
+      kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+      at: string;
+    };
+    fromTerminal?: boolean;
+  }[];
+  written: {
+    name?: {
+      by: "owner" | "agent" | "found";
+      at: string;
+    };
+    summary?: {
+      by: "owner" | "agent" | "found";
+      at: string;
+    };
+  };
+  suggested: {
+    name?: {
+      value: string;
+      at: string;
+    };
+    summary?: {
+      value: string;
+      at: string;
+    };
+  };
+  found: {
+    branch: string | null;
+    repository: string | null;
+    repositoryUrl: string | null;
+    pullRequest: {
+      /** The address, kept and opened exactly as given. Only http and https. */
+      url: string;
+      number: number;
+      title: string;
+      state: "open" | "merged" | "closed" | "draft";
+    } | null;
+    at: string;
+  } | null;
 }
 ```
 
@@ -1127,6 +1354,60 @@ An API token needs the scope `sessions:write`. Sending `note` needs `notes:write
     paused: number;
     at: string | null;
   };
+  links: {
+    id: string;
+    /** The address, kept and opened exactly as given. Only http and https. */
+    url: string;
+    /** What it is, told from the address unless someone said otherwise. */
+    kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+    /** A few plain words for it. */
+    label: string;
+    /** Who added it: the owner, the agent (or a program), or the server by looking. */
+    source: "owner" | "agent" | "found";
+    by?: string;
+    /** When it was added. */
+    at: string;
+    ownerSet?: boolean;
+    suggested?: {
+      label: string;
+      kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+      at: string;
+    };
+    fromTerminal?: boolean;
+  }[];
+  written: {
+    name?: {
+      by: "owner" | "agent" | "found";
+      at: string;
+    };
+    summary?: {
+      by: "owner" | "agent" | "found";
+      at: string;
+    };
+  };
+  suggested: {
+    name?: {
+      value: string;
+      at: string;
+    };
+    summary?: {
+      value: string;
+      at: string;
+    };
+  };
+  found: {
+    branch: string | null;
+    repository: string | null;
+    repositoryUrl: string | null;
+    pullRequest: {
+      /** The address, kept and opened exactly as given. Only http and https. */
+      url: string;
+      number: number;
+      title: string;
+      state: "open" | "merged" | "closed" | "draft";
+    } | null;
+    at: string;
+  } | null;
 }
 ```
 
@@ -1261,6 +1542,60 @@ An API token needs the scope `sessions:write`.
       paused: number;
       at: string | null;
     };
+    links: {
+      id: string;
+      /** The address, kept and opened exactly as given. Only http and https. */
+      url: string;
+      /** What it is, told from the address unless someone said otherwise. */
+      kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+      /** A few plain words for it. */
+      label: string;
+      /** Who added it: the owner, the agent (or a program), or the server by looking. */
+      source: "owner" | "agent" | "found";
+      by?: string;
+      /** When it was added. */
+      at: string;
+      ownerSet?: boolean;
+      suggested?: {
+        label: string;
+        kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+        at: string;
+      };
+      fromTerminal?: boolean;
+    }[];
+    written: {
+      name?: {
+        by: "owner" | "agent" | "found";
+        at: string;
+      };
+      summary?: {
+        by: "owner" | "agent" | "found";
+        at: string;
+      };
+    };
+    suggested: {
+      name?: {
+        value: string;
+        at: string;
+      };
+      summary?: {
+        value: string;
+        at: string;
+      };
+    };
+    found: {
+      branch: string | null;
+      repository: string | null;
+      repositoryUrl: string | null;
+      pullRequest: {
+        /** The address, kept and opened exactly as given. Only http and https. */
+        url: string;
+        number: number;
+        title: string;
+        state: "open" | "merged" | "closed" | "draft";
+      } | null;
+      at: string;
+    } | null;
   };
   canvasId: string;
   node: {
@@ -1377,6 +1712,60 @@ An API token needs the scope `sessions:write`.
     paused: number;
     at: string | null;
   };
+  links: {
+    id: string;
+    /** The address, kept and opened exactly as given. Only http and https. */
+    url: string;
+    /** What it is, told from the address unless someone said otherwise. */
+    kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+    /** A few plain words for it. */
+    label: string;
+    /** Who added it: the owner, the agent (or a program), or the server by looking. */
+    source: "owner" | "agent" | "found";
+    by?: string;
+    /** When it was added. */
+    at: string;
+    ownerSet?: boolean;
+    suggested?: {
+      label: string;
+      kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+      at: string;
+    };
+    fromTerminal?: boolean;
+  }[];
+  written: {
+    name?: {
+      by: "owner" | "agent" | "found";
+      at: string;
+    };
+    summary?: {
+      by: "owner" | "agent" | "found";
+      at: string;
+    };
+  };
+  suggested: {
+    name?: {
+      value: string;
+      at: string;
+    };
+    summary?: {
+      value: string;
+      at: string;
+    };
+  };
+  found: {
+    branch: string | null;
+    repository: string | null;
+    repositoryUrl: string | null;
+    pullRequest: {
+      /** The address, kept and opened exactly as given. Only http and https. */
+      url: string;
+      number: number;
+      title: string;
+      state: "open" | "merged" | "closed" | "draft";
+    } | null;
+    at: string;
+  } | null;
 }
 ```
 
@@ -1488,6 +1877,60 @@ An API token needs the scope `sessions:write`.
       paused: number;
       at: string | null;
     };
+    links: {
+      id: string;
+      /** The address, kept and opened exactly as given. Only http and https. */
+      url: string;
+      /** What it is, told from the address unless someone said otherwise. */
+      kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+      /** A few plain words for it. */
+      label: string;
+      /** Who added it: the owner, the agent (or a program), or the server by looking. */
+      source: "owner" | "agent" | "found";
+      by?: string;
+      /** When it was added. */
+      at: string;
+      ownerSet?: boolean;
+      suggested?: {
+        label: string;
+        kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+        at: string;
+      };
+      fromTerminal?: boolean;
+    }[];
+    written: {
+      name?: {
+        by: "owner" | "agent" | "found";
+        at: string;
+      };
+      summary?: {
+        by: "owner" | "agent" | "found";
+        at: string;
+      };
+    };
+    suggested: {
+      name?: {
+        value: string;
+        at: string;
+      };
+      summary?: {
+        value: string;
+        at: string;
+      };
+    };
+    found: {
+      branch: string | null;
+      repository: string | null;
+      repositoryUrl: string | null;
+      pullRequest: {
+        /** The address, kept and opened exactly as given. Only http and https. */
+        url: string;
+        number: number;
+        title: string;
+        state: "open" | "merged" | "closed" | "draft";
+      } | null;
+      at: string;
+    } | null;
   };
   canvasId: string;
   node: {
@@ -10691,6 +11134,60 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
     paused: number;
     at: string | null;
   };
+  links: {
+    id: string;
+    /** The address, kept and opened exactly as given. Only http and https. */
+    url: string;
+    /** What it is, told from the address unless someone said otherwise. */
+    kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+    /** A few plain words for it. */
+    label: string;
+    /** Who added it: the owner, the agent (or a program), or the server by looking. */
+    source: "owner" | "agent" | "found";
+    by?: string;
+    /** When it was added. */
+    at: string;
+    ownerSet?: boolean;
+    suggested?: {
+      label: string;
+      kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+      at: string;
+    };
+    fromTerminal?: boolean;
+  }[];
+  written: {
+    name?: {
+      by: "owner" | "agent" | "found";
+      at: string;
+    };
+    summary?: {
+      by: "owner" | "agent" | "found";
+      at: string;
+    };
+  };
+  suggested: {
+    name?: {
+      value: string;
+      at: string;
+    };
+    summary?: {
+      value: string;
+      at: string;
+    };
+  };
+  found: {
+    branch: string | null;
+    repository: string | null;
+    repositoryUrl: string | null;
+    pullRequest: {
+      /** The address, kept and opened exactly as given. Only http and https. */
+      url: string;
+      number: number;
+      title: string;
+      state: "open" | "merged" | "closed" | "draft";
+    } | null;
+    at: string;
+  } | null;
 }
 ```
 
@@ -10798,6 +11295,60 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
     paused: number;
     at: string | null;
   };
+  links: {
+    id: string;
+    /** The address, kept and opened exactly as given. Only http and https. */
+    url: string;
+    /** What it is, told from the address unless someone said otherwise. */
+    kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+    /** A few plain words for it. */
+    label: string;
+    /** Who added it: the owner, the agent (or a program), or the server by looking. */
+    source: "owner" | "agent" | "found";
+    by?: string;
+    /** When it was added. */
+    at: string;
+    ownerSet?: boolean;
+    suggested?: {
+      label: string;
+      kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+      at: string;
+    };
+    fromTerminal?: boolean;
+  }[];
+  written: {
+    name?: {
+      by: "owner" | "agent" | "found";
+      at: string;
+    };
+    summary?: {
+      by: "owner" | "agent" | "found";
+      at: string;
+    };
+  };
+  suggested: {
+    name?: {
+      value: string;
+      at: string;
+    };
+    summary?: {
+      value: string;
+      at: string;
+    };
+  };
+  found: {
+    branch: string | null;
+    repository: string | null;
+    repositoryUrl: string | null;
+    pullRequest: {
+      /** The address, kept and opened exactly as given. Only http and https. */
+      url: string;
+      number: number;
+      title: string;
+      state: "open" | "merged" | "closed" | "draft";
+    } | null;
+    at: string;
+  } | null;
 }
 ```
 
@@ -11426,6 +11977,505 @@ curl -X PUT -H "Authorization: Bearer $AUBERGINE_TOKEN" \
      -H "Content-Type: application/json" -d '{"text":"text"}' \
      $AUBERGINE_URL/v1/sessions/<sessionId>/recap
 ```
+
+## Links
+
+### listLinks
+
+`GET /v1/sessions/{sessionId}/links`: A session's links.
+
+The links that belong to the work in a terminal: each an address with a kind, a short label, who added it (`owner`, `agent` or `found`) and when. A link that was seen in what the terminal showed is left out for a caller who may not read that terminal. The server never fetches an address to find out what it is: kind and label are told from the address alone. A session may read its own.
+
+For a session's own token, about that session; or an API token with the scope `read`, about any session.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `sessionId` | path | `string` | yes | An ID. |
+
+**Answer** `200`:
+
+```ts
+{
+  /** The links of the terminal, in the order they are drawn. */
+  links: {
+    id: string;
+    /** The address, kept and opened exactly as given. Only http and https. */
+    url: string;
+    /** What it is, told from the address unless someone said otherwise. */
+    kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+    /** A few plain words for it. */
+    label: string;
+    /** Who added it: the owner, the agent (or a program), or the server by looking. */
+    source: "owner" | "agent" | "found";
+    by?: string;
+    /** When it was added. */
+    at: string;
+    ownerSet?: boolean;
+    suggested?: {
+      label: string;
+      kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+      at: string;
+    };
+    fromTerminal?: boolean;
+  }[];
+}
+```
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+```sh
+curl -H "Authorization: Bearer $TOKEN" \
+     http://127.0.0.1:4600/v1/sessions/<sessionId>/links
+```
+
+### addLink
+
+`POST /v1/sessions/{sessionId}/links`: Add a link to a session.
+
+Only http and https addresses. The kind and the label are told from the address unless sent. Adding an address that is there already says again what it is. Where the owner set a link in their own words, what a program sends is kept beside it as a suggestion and `kept` is false. A session may add to its own; a token needs `notes:write`.
+
+For a session's own token, about that session; or an API token with the scope `notes:write`, about any session.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `sessionId` | path | `string` | yes | An ID. |
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `url` | `string` | yes | The address, kept and opened exactly as given. Only http and https. |
+| `label` | `string` | no | A few plain words for it. Left out: told from the address. |
+| `kind` | `"pull-request" \| "issue" \| "branch" \| "commit" \| "repository" \| "ti…` | no | What it is. Left out: told from the address. |
+
+**Answer** `201`:
+
+```ts
+{
+  link: {
+    id: string;
+    /** The address, kept and opened exactly as given. Only http and https. */
+    url: string;
+    /** What it is, told from the address unless someone said otherwise. */
+    kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+    /** A few plain words for it. */
+    label: string;
+    /** Who added it: the owner, the agent (or a program), or the server by looking. */
+    source: "owner" | "agent" | "found";
+    by?: string;
+    /** When it was added. */
+    at: string;
+    ownerSet?: boolean;
+    suggested?: {
+      label: string;
+      kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+      at: string;
+    };
+    fromTerminal?: boolean;
+  };
+  /** False where the owner had set this link in their own words: what was sent is kept beside it as a suggestion, and the link is as it was. */
+  kept: boolean;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+```sh
+curl -X POST -H "Authorization: Bearer $TOKEN" \
+     -H "Content-Type: application/json" -d '{"url":"text"}' \
+     http://127.0.0.1:4600/v1/sessions/<sessionId>/links
+```
+
+### changeLink
+
+`PATCH /v1/sessions/{sessionId}/links/{linkId}`: Change the label or the kind of a link.
+
+The address itself is never changed: remove the link and add another. Where the owner set the link, a program’s change is kept as a suggestion.
+
+For a session's own token, about that session; or an API token with the scope `notes:write`, about any session.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `sessionId` | path | `string` | yes | An ID. |
+| `linkId` | path | `string` | yes | An ID. |
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `label` | `string` | no | Its new label. Left out: as it was. |
+| `kind` | `"pull-request" \| "issue" \| "branch" \| "commit" \| "repository" \| "ti…` | no | Its new kind. Left out: as it was. |
+
+**Answer** `200`:
+
+```ts
+{
+  link: {
+    id: string;
+    /** The address, kept and opened exactly as given. Only http and https. */
+    url: string;
+    /** What it is, told from the address unless someone said otherwise. */
+    kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+    /** A few plain words for it. */
+    label: string;
+    /** Who added it: the owner, the agent (or a program), or the server by looking. */
+    source: "owner" | "agent" | "found";
+    by?: string;
+    /** When it was added. */
+    at: string;
+    ownerSet?: boolean;
+    suggested?: {
+      label: string;
+      kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+      at: string;
+    };
+    fromTerminal?: boolean;
+  };
+  /** False where the owner had set this link in their own words: what was sent is kept beside it as a suggestion, and the link is as it was. */
+  kept: boolean;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+```sh
+curl -X PATCH -H "Authorization: Bearer $TOKEN" \
+     -H "Content-Type: application/json" -d '{"label":"text"}' \
+     http://127.0.0.1:4600/v1/sessions/<sessionId>/links/<linkId>
+```
+
+### removeLink
+
+`DELETE /v1/sessions/{sessionId}/links/{linkId}`: Remove a link from a session.
+
+A link the owner added or set is the owner’s to remove: a program is refused with 409.
+
+For a session's own token, about that session; or an API token with the scope `notes:write`, about any session.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `sessionId` | path | `string` | yes | An ID. |
+| `linkId` | path | `string` | yes | An ID. |
+
+**Answer** `200`:
+
+```ts
+{
+  /** The links of the terminal, in the order they are drawn. */
+  links: {
+    id: string;
+    /** The address, kept and opened exactly as given. Only http and https. */
+    url: string;
+    /** What it is, told from the address unless someone said otherwise. */
+    kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+    /** A few plain words for it. */
+    label: string;
+    /** Who added it: the owner, the agent (or a program), or the server by looking. */
+    source: "owner" | "agent" | "found";
+    by?: string;
+    /** When it was added. */
+    at: string;
+    ownerSet?: boolean;
+    suggested?: {
+      label: string;
+      kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+      at: string;
+    };
+    fromTerminal?: boolean;
+  }[];
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+```sh
+curl -X DELETE -H "Authorization: Bearer $TOKEN" \
+     http://127.0.0.1:4600/v1/sessions/<sessionId>/links/<linkId>
+```
+
+### listSeenLinks
+
+`GET /v1/sessions/{sessionId}/links/seen`: Addresses seen in a terminal and not kept.
+
+The last twenty distinct http and https addresses seen in what was typed into the terminal and in what it printed, less those that are links already. This is terminal content: it needs `terminal:read` reaching the session. It is held in memory, read from the screen when a command ends and when this is asked; nothing is recorded.
+
+An API token needs the scope `terminal:read`.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `sessionId` | path | `string` | yes | An ID. |
+
+**Answer** `200`:
+
+```ts
+{
+  /** Addresses seen in what the terminal showed and not kept as links: the last twenty, newest last. Held in memory only. */
+  seen: {
+    /** The address, kept and opened exactly as given. Only http and https. */
+    url: string;
+    kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+    label: string;
+  }[];
+}
+```
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+```sh
+curl -H "Authorization: Bearer $TOKEN" \
+     http://127.0.0.1:4600/v1/sessions/<sessionId>/links/seen
+```
+
+### keepSeenLink
+
+`POST /v1/sessions/{sessionId}/links/keep`: Keep an address that was seen in the terminal as a link.
+
+For the owner only. The address must be one of those seen in this terminal.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `sessionId` | path | `string` | yes | An ID. |
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `url` | `string` | yes | An address from the list of those seen in this terminal. |
+
+**Answer** `201`:
+
+```ts
+{
+  link: {
+    id: string;
+    /** The address, kept and opened exactly as given. Only http and https. */
+    url: string;
+    /** What it is, told from the address unless someone said otherwise. */
+    kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+    /** A few plain words for it. */
+    label: string;
+    /** Who added it: the owner, the agent (or a program), or the server by looking. */
+    source: "owner" | "agent" | "found";
+    by?: string;
+    /** When it was added. */
+    at: string;
+    ownerSet?: boolean;
+    suggested?: {
+      label: string;
+      kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+      at: string;
+    };
+    fromTerminal?: boolean;
+  };
+  /** False where the owner had set this link in their own words: what was sent is kept beside it as a suggestion, and the link is as it was. */
+  kept: boolean;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+## For a session itself
+
+### describeSession
+
+`PUT /v1/sessions/{sessionId}/described`: Name the session after its work, and say what it is doing.
+
+For the agent inside a session, with that session's own token. `name` renames the terminal; `summary` replaces the summary of its note. Whatever the owner wrote in their own hand is not replaced: what was sent is kept as a suggestion the owner can use, and `kept` says so.
+
+For a session's own token, about that session. No API token may call this.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `sessionId` | path | `string` | yes | An ID. |
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `name` | `string` | no | A name for the terminal, after the work. |
+| `summary` | `string` | no | What is being done here, in a few lines. It replaces the summary of the note. |
+
+**Answer** `200`:
+
+```ts
+{
+  /** The name the terminal has now. */
+  name: string;
+  /** The summary it has now. */
+  summary: string;
+  /** For each that was sent: whether it was put in place. False where the owner wrote their own: what was sent is kept as a suggestion. */
+  kept: {
+    name: boolean;
+    summary: boolean;
+  };
+  /** What is still missing from the terminal’s description of itself. */
+  missing: ("name" | "summary")[];
+}
+```
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+```sh
+curl -X PUT -H "Authorization: Bearer $AUBERGINE_TOKEN" \
+     -H "Content-Type: application/json" -d '{"name":"example"}' \
+     $AUBERGINE_URL/v1/sessions/<sessionId>/described
+```
+
+### checkDescribed
+
+`POST /v1/sessions/{sessionId}/described/check`: Report a moment of an agent’s work, and learn what it is to be told.
+
+Called by the hooks of the agent in a session, with that session's own token. At `start` the answer is three fixed lines on describing the terminal. At `stop`, where the terminal has no name of its own or no summary, the answer asks the agent to go on once and set them; never twice in a turn. At `tool` the server looks at the folder's branch and pull request again. With the reminder switched off in the settings the answer says nothing.
+
+For a session's own token, about that session. No API token may call this.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `sessionId` | path | `string` | yes | An ID. |
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `event` | `"start" \| "stop" \| "tool"` | yes |  |
+| `again` | `boolean` | no | For `stop`: the agent is stopping after having been told once already in this turn. |
+
+**Answer** `200`:
+
+```ts
+{
+  /** What the agent is to be told, or null for nothing. Fixed sentences: nothing stored is in them. */
+  say: string | null;
+  /** For `stop`: whether the agent is asked to go on for one more turn and set what is missing. Never twice in a turn. */
+  hold: boolean;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+```sh
+curl -X POST -H "Authorization: Bearer $AUBERGINE_TOKEN" \
+     -H "Content-Type: application/json" -d '{"event":"start"}' \
+     $AUBERGINE_URL/v1/sessions/<sessionId>/described/check
+```
+
+## Links
+
+### lookAgain
+
+`POST /v1/sessions/{sessionId}/found`: Look again at what can be found about a session.
+
+For the owner only, when a terminal’s details are opened: the branch and the repository of its folder, the pull request of that branch where the `gh` tool is installed and signed in (asked at most once a minute), and the addresses on its screen. Nothing is asked of a network by the server itself.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `sessionId` | path | `string` | yes | An ID. |
+
+**Answer** `200`:
+
+```ts
+{
+  /** What was found about the terminal’s folder, or null where nothing is known. */
+  found: {
+    branch: string | null;
+    repository: string | null;
+    repositoryUrl: string | null;
+    pullRequest: {
+      /** The address, kept and opened exactly as given. Only http and https. */
+      url: string;
+      number: number;
+      title: string;
+      state: "open" | "merged" | "closed" | "draft";
+    } | null;
+    at: string;
+  } | null;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+### useSuggestion
+
+`POST /v1/sessions/{sessionId}/described/use`: Use what the agent suggested in place of the owner’s own words.
+
+For the owner only: for the name, the summary, or one link.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `sessionId` | path | `string` | yes | An ID. |
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `what` | `"name" \| "summary" \| "link"` | yes |  |
+| `linkId` | `string` | no | For `link`: which one. |
+
+**Answer** `200`:
+
+```ts
+{
+  /** The links of the terminal, in the order they are drawn. */
+  links: {
+    id: string;
+    /** The address, kept and opened exactly as given. Only http and https. */
+    url: string;
+    /** What it is, told from the address unless someone said otherwise. */
+    kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+    /** A few plain words for it. */
+    label: string;
+    /** Who added it: the owner, the agent (or a program), or the server by looking. */
+    source: "owner" | "agent" | "found";
+    by?: string;
+    /** When it was added. */
+    at: string;
+    ownerSet?: boolean;
+    suggested?: {
+      label: string;
+      kind: "pull-request" | "issue" | "branch" | "commit" | "repository" | "ticket" | "chat" | "design" | "document" | "run" | "link";
+      at: string;
+    };
+    fromTerminal?: boolean;
+  }[];
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+## Sessions
+
+### changeDescribing
+
+`PUT /v1/settings/describing`: Say whether agents are reminded to describe their terminal.
+
+For the owner only: no token and no session can do this, whatever its scopes. It writes one key, `describe.remind`, into the settings file and leaves the rest of the file as it was.
+
+For the signed-in browser only. No API token may call this, whatever its scopes.
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `remind` | `boolean` | yes | Whether agents are reminded to describe their terminal. |
+
+**Answer** `200`:
+
+```ts
+{
+  /** Whether agents are reminded to describe their terminal. */
+  remind: boolean;
+}
+```
+
+**Errors:** 400, 401, 403, 409, 413, 429.
+
+## For a session itself
 
 ### reportSessionRun
 

@@ -40,10 +40,12 @@ import {
   paths,
   type NodeRect,
   type OutsideTerminal,
+  KIND_WORDS,
 } from '@aubergine/shared';
 import {
   claudeHooksSettings,
   hookActions,
+  hookOutput,
   shellJoin,
   type HookEvent,
 } from './agents/claude-code';
@@ -286,9 +288,11 @@ function attachTo(config: Config, sessionId: string): number {
 }
 
 /**
- * Runs for an agent's hook. It must never disturb the agent: it prints
- * nothing (some hooks feed their output back to the agent), gives up quickly,
- * and always succeeds, including outside an Aubergine session.
+ * Runs for an agent's hook. It must never get in the agent's way: it gives up
+ * quickly and always succeeds, including outside an Aubergine session. It
+ * prints nothing of its own: the one thing it may print is what the server
+ * answers a check with, fixed sentences for the agent (three lines when it
+ * begins; once in a turn, what its terminal still lacks when it stops).
  */
 async function runHook(event: HookEvent): Promise<number> {
   try {
@@ -303,7 +307,14 @@ async function runHook(event: HookEvent): Promise<number> {
     }
     for (const action of hookActions(event, input)) {
       if (action.do === 'agent') await client.reportAgent('claude-code', action.conversationId).catch(() => {});
-      else if (action.do === 'attention') await client.setAttention(action.state, action.message);
+      else if (action.do === 'check') {
+        // The one thing a hook may print: what the server says the agent is to be told. A check that fails says nothing.
+        const answer = await client.check(action.event, action.again).catch(() => null);
+        const out = answer ? hookOutput(action.event, answer) : null;
+        if (out !== null) process.stdout.write(`${out}\n`);
+        // The agent was asked to go on: it has not finished, and nothing more is reported of this stop.
+        if (answer?.hold) break;
+      } else if (action.do === 'attention') await client.setAttention(action.state, action.message);
       else await client.appendNote(action.text, action.kind);
     }
   } catch {
@@ -777,6 +788,42 @@ async function main(): Promise<number> {
     case 'attention': {
       await agentClient().setAttention(command.state, command.message ?? undefined);
       console.log(command.state === 'waiting' ? 'Your owner has been told that this terminal waits for them.' : command.state === 'none' ? 'Cleared.' : `This terminal now shows "${command.state}".`);
+      return 0;
+    }
+
+    case 'describe': {
+      const client = agentClient();
+      const answer = await client.describe({ ...(command.newName !== null ? { name: command.newName } : {}), ...(command.summary !== null ? { summary: command.summary } : {}) });
+      if (command.newName !== null) console.log(answer.kept.name ? `This terminal is named "${showControl(answer.name)}".` : `Your owner named this terminal "${showControl(answer.name)}" in their own hand: it keeps that name, and yours is beside it as a suggestion.`);
+      if (command.summary !== null) console.log(answer.kept.summary ? 'The summary is set.' : 'Your owner wrote the summary in their own hand: it stays, and yours is beside it as a suggestion.');
+      if (command.newName === null && command.summary === null) {
+        console.log(`Name: ${showControl(answer.name)}`);
+        console.log(answer.summary.trim() === '' ? 'Summary: none yet.' : `Summary:\n${showControl(answer.summary)}`);
+      }
+      if (answer.missing.length > 0) console.log(`Still missing: ${answer.missing.map((what) => (what === 'name' ? 'a name after the work (--name)' : 'a summary of what is being done (--summary)')).join(', ')}.`);
+      return 0;
+    }
+
+    case 'link-add': {
+      const answer = await agentClient().addLink({ url: command.url, ...(command.label !== null ? { label: command.label } : {}), ...(command.kind !== null ? { kind: command.kind } : {}) });
+      console.log(answer.kept ? `Added: ${KIND_WORDS[answer.link.kind].name}, "${showControl(answer.link.label)}".` : `Your owner set this link in their own words ("${showControl(answer.link.label)}"): it stays so, and yours is beside it as a suggestion.`);
+      return 0;
+    }
+
+    case 'link-list': {
+      const links = await agentClient().links();
+      if (links.length === 0) console.log('This terminal has no links yet. Add one with: aubergine link add <address>');
+      for (const link of links) console.log(`${KIND_WORDS[link.kind].name.padEnd(13)} ${showControl(link.label)}  ${showControl(link.url)}  (${link.source === 'owner' ? 'the owner' : link.source === 'agent' ? 'an agent' : 'found'})`);
+      return 0;
+    }
+
+    case 'link-remove': {
+      const client = agentClient();
+      const links = await client.links();
+      const found = links.filter((link) => link.url === command.which || link.id === command.which || link.label === command.which);
+      if (found.length !== 1) throw new UsageError(found.length === 0 ? 'No link of this terminal has that address or label. See them with: aubergine link list' : 'More than one link has that label: name it by its address.');
+      await client.removeLink(found[0]!.id);
+      console.log(`Removed "${showControl(found[0]!.label)}".`);
       return 0;
     }
 

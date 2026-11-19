@@ -1,4 +1,6 @@
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
+import { TITLE_LINKS, sortedLinks } from '@aubergine/shared';
+import { LinkChip } from './links/LinkChip';
 import { NodeResizer, useStore, useStoreApi, type Node, type NodeProps } from '@xyflow/react';
 import { NODE_MIN_HEIGHT, NODE_MIN_WIDTH } from '@aubergine/shared';
 import { api } from './api';
@@ -205,6 +207,15 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
             people only
           </span>
         )}
+        {/* The marks of at most three of its links, the ticket and the pull request first: pressed to open. */}
+        {draft === null &&
+          sortedLinks(session?.links ?? [])
+            .slice(0, TITLE_LINKS)
+            .map((link) => (
+              <span key={link.id} className="nodrag node-link">
+                <LinkChip url={link.url} kind={link.kind} label={link.label} markOnly testid="node-link" />
+              </span>
+            ))}
         {draft === null && (session?.tags.length ?? 0) > 0 && (
           <button type="button" className="ui-chip nodrag" title={hint('terminal.tags', `Tags: ${session?.tags.join(', ')}`)} aria-label={`Tags of ${name}: ${session?.tags.join(', ')}`} onClick={() => useApp.getState().request({ kind: 'tags', id: sessionId })} data-testid="node-tags">
             #{session?.tags[0]}

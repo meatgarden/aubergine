@@ -149,6 +149,7 @@ export interface AppStore {
   say: (text: string | null, undo?: { label: string; run: () => void }) => void;
   /** How the page looks, as it was just chosen: the page follows at once; the file is written by whoever chose. */
   setTheme: (theme: ThemeSetting) => void;
+  setDescribeRemind: (remind: boolean) => void;
   setSide: (change: Partial<PanelPrefs>) => void;
   setListView: (change: Partial<ListView>) => void;
   /** Opens a section's drawer for a row; `null` closes whatever is open. */
@@ -332,6 +333,7 @@ export const useApp = create<AppStore>((set, get) => ({
   say: (text, undo) => set((state) => ({ said: text === null ? null : { text, undo, tick: (state.said?.tick ?? 0) + 1 } })),
   setDesktopOpenNew: (openNew) => set((state) => ({ settings: { ...state.settings, desktop: { ...state.settings.desktop, openNew } } })),
   setTheme: (theme) => set((state) => ({ settings: { ...state.settings, theme } })),
+  setDescribeRemind: (remind) => set((state) => ({ settings: { ...state.settings, describe: { ...state.settings.describe, remind } } })),
   setSide: (change) => {
     const side = { ...get().side, ...change };
     side.width = clampPanelWidth(side.width);

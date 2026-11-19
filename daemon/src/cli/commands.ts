@@ -1,4 +1,4 @@
-import { ago, type CanvasSummary, type HistoryList, type Session } from '@aubergine/shared';
+import { LINK_KINDS, addressProblem, ago, type CanvasSummary, type HistoryList, type LinkKind, type Session } from '@aubergine/shared';
 import { HOOK_EVENTS, type HookEvent } from '../agents/claude-code';
 
 export type Command =
@@ -62,6 +62,12 @@ export type Command =
   /** Inside a session: say whether its owner is needed. */
   /** `where`: inside a session, where it works. */
   | { name: 'where' }
+  /** Inside a session: name the terminal after the work and say what is being done; with nothing, say how it stands. */
+  | { name: 'describe'; newName: string | null; summary: string | null }
+  /** Inside a session: the links that belong to its work. */
+  | { name: 'link-add'; url: string; label: string | null; kind: LinkKind | null }
+  | { name: 'link-remove'; which: string }
+  | { name: 'link-list' }
   | { name: 'attention'; state: 'none' | 'working' | 'waiting' | 'done'; message: string | null }
   /** The guide for agents: for whoever asks, in full, or the few lines for an instructions file. */
   | { name: 'guide'; all: boolean; snippet: boolean }
@@ -254,6 +260,14 @@ export const USAGE = `Usage: aubergine <command>
   inbox                      Inside a session: the unread messages for it, which are then read
   reply <id> <text>          Inside a session: answer a message it received
   note <text>                Inside a session: add an entry to that session's note log
+  describe [--name "<a few words>"] [--summary "<what is being done>"]
+                             Inside a session: name its terminal after the work and keep its summary true. With
+                             nothing: how it stands, and what is missing. What the owner wrote in their own hand
+                             is not replaced: yours is kept beside it as a suggestion
+  link add <address> [--label "<words>"] [--kind <kind>] | remove <address or label> | list
+                             Inside a session: the links that belong to its work (a ticket, a thread, a design, a
+                             document, a branch, a pull request). Only http and https addresses; what kind one is
+                             is told from the address, and nothing is fetched
   where                      Inside a session: whether it works in a working copy of its own, on which branch, and what to leave alone
   attention waiting [what you need] | working | done | none
                              Inside a session: say whether its owner is needed. An agent Aubergine started reports this
@@ -527,6 +541,28 @@ export function parseCommand(argv: readonly string[]): Command {
     case 'where':
       if (rest.length > 0) throw new UsageError('where takes no arguments');
       return { name: 'where' };
+    case 'describe': {
+      const { value: newName, rest: afterName } = takeOption(rest, '--name');
+      const { value: summary, rest: left } = takeOption(afterName, '--summary');
+      if (left.length > 0) throw new UsageError(`describe does not know "${left[0]}". It takes --name "<a few words>" and --summary "<what is being done>".`);
+      if (newName !== null && (newName.trim() === '' || newName.trim().length > 80)) throw new UsageError('A name is a few words: at most 80 characters.');
+      return { name: 'describe', newName: newName?.trim() ?? null, summary };
+    }
+    case 'link': {
+      const [action, ...words] = rest;
+      if (action === 'list' && words.length === 0) return { name: 'link-list' };
+      if (action === 'add') {
+        const { value: label, rest: afterLabel } = takeOption(words, '--label');
+        const { value: kind, rest: left } = takeOption(afterLabel, '--kind');
+        if (left.length !== 1 || left[0]?.startsWith('--')) throw new UsageError('link add needs one address: link add <address> [--label "<words>"] [--kind <kind>]');
+        const problem = addressProblem(left[0] ?? '');
+        if (problem) throw new UsageError(problem);
+        if (kind !== null && !(LINK_KINDS as readonly string[]).includes(kind)) throw new UsageError(`A kind is one of: ${LINK_KINDS.join(', ')}.`);
+        return { name: 'link-add', url: left[0] ?? '', label: label?.trim() || null, kind: kind as LinkKind | null };
+      }
+      if (action === 'remove' && words.length === 1) return { name: 'link-remove', which: words[0] ?? '' };
+      throw new UsageError('link needs one of: add <address> [--label "<words>"] [--kind <kind>], remove <address or label>, list');
+    }
     case 'attention': {
       const [state, ...words] = rest;
       if (state !== 'none' && state !== 'working' && state !== 'waiting' && state !== 'done') throw new UsageError('attention needs one of: waiting, working, done, none. With waiting, say what you need: aubergine attention waiting "<what you need>"');

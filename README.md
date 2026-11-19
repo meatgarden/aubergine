@@ -785,6 +785,25 @@ aubergine note "migrations done, starting the backfill"
 
 The palette searches both the summary and the log.
 
+### What a terminal says about itself: links
+
+A terminal that runs an agent describes itself, so that many of them can be followed at a glance: a **name** after the work, a **summary**, and the **links** of the work (the ticket, the chat thread, the design, the document, the branch, the pull request). Three sources fill one record, and each item says where it came from:
+
+- **Found by Aubergine, with no one asked:** the agent's conversation id, the branch and the repository of the terminal's folder, the pull request of that branch (only if the `gh` tool is installed and signed in), and addresses seen in the terminal.
+- **Written by the agent:** `aubergine describe --name "…" --summary "…"` and `aubergine link add <address>` in its terminal, or the same as MCP tools. An agent Aubergine starts is told to do this when it begins, and is reminded once when it stops with no name of its own or no summary. Switch the reminder off in **Settings**.
+- **Written by you, always:** in a terminal's details, the name, the summary, **Add a link**, and each link's menu (**Copy address**, **Edit…**, **Remove**). Your own words win: what an agent says about the same thing is kept beside yours with **Use this**, and never replaces it.
+
+A link is never drawn as an address. It is a chip: two letters for its kind, and a short label ("PR 54", "ABC-123", "Canvas redesign"), with the whole address in the tooltip; press it to open it in a new tab. The kind and the label are told from the address alone. **Aubergine never fetches an address**: no request leaves your computer because a link was added or shown. The same chips stand in a terminal's title (at most three), in its note and in **For you**, wherever an address is written.
+
+Everything about this, including exactly what is looked at and when, is in [docs/describing.md](docs/describing.md).
+
+```sh
+aubergine describe --name "Fix the double redirect" --summary "Reproduced; finding the cause."
+aubergine link add https://tickets.example.com/browse/ABC-123
+aubergine link add https://code.example.com/acme/app/pull/54 --label "The fix"
+aubergine link list
+```
+
 ### Searching terminal output
 
 The palette (⌘K) also searches what terminals have printed, in a **Terminal output** section at the end of its list. Choosing a result opens that terminal scrolled back to the match; press `q` to return to the bottom. It reads each running session's history when you search, parked sessions included. Nothing is indexed or recorded, so it only reaches as far back as the history tmux keeps (50,000 lines) and does not cover sessions that have ended.
@@ -1331,6 +1350,10 @@ aubergine tell <session> <text>   send a message to a terminal, for its agent to
 aubergine inbox                inside a session: its unread messages, which are then read
 aubergine reply <id> <text>    inside a session: answer a message it received
 aubergine note <text>          inside a session: add an entry to its note log
+aubergine describe [--name "…"] [--summary "…"]
+                               inside a session: name its terminal after the work and keep its summary true
+aubergine link add <address> [--label "…"] [--kind <kind>] | remove <address or label> | list
+                               inside a session: the links that belong to its work
 aubergine attention waiting [what is needed] | working | done | none
                                inside a session: say whether you are needed there
 aubergine guide                for agents: what an agent can do here, for whoever asks (--all, --snippet)

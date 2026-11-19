@@ -9,6 +9,16 @@ aubergine="$AUBERGINE_BIN/aubergine"
 banner "It is on a workflow: watch the strip above this terminal."
 wait_for_run || exit 0
 
+# It describes its own terminal, as an agent is asked to: a name after the work, a summary, and the links of the work.
+# The addresses are on hosts kept for examples: they point at nobody's project.
+say "> aubergine describe --summary \"Fixing the double redirect on sign-in.\""
+"$aubergine" describe --name "Stand-in agent · fixing a bug" --summary "Fixing the double redirect on sign-in. Reproduced; finding the cause." >/dev/null 2>&1
+say "> aubergine link add https://tickets.example.com/browse/DEMO-12"
+"$aubergine" link add "https://tickets.example.com/browse/DEMO-12" >/dev/null 2>&1
+"$aubergine" link add "https://code.example.com/demo/project/tree/fix-double-redirect" >/dev/null 2>&1
+"$aubergine" link add "https://code.example.com/demo/project/pull/7" >/dev/null 2>&1
+say ""
+
 say "> aubergine workflow status"
 "$aubergine" workflow status | head -6
 say ""

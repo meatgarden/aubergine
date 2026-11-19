@@ -3,7 +3,8 @@
  * a caller that may not read that terminal:
  *
  * - `status.commandLine`: the command line being run;
- * - note-log entries of kind `prompt`: what was typed to an agent.
+ * - note-log entries of kind `prompt`: what was typed to an agent;
+ * - links marked `fromTerminal`: addresses the server saw on the terminal's screen.
  *
  * Everything else about a session (its name, folder, the name of the program
  * in front, whether it is busy, its notes) is not what the terminal shows.
@@ -22,6 +23,8 @@ export function withoutTerminalContent<T>(value: T, mayRead: (sessionId: string)
     for (const [key, child] of Object.entries(record)) {
       if (closed && key === 'commandLine' && isStatus(record)) out[key] = null;
       else if (closed && key === 'noteLog' && Array.isArray(child)) out[key] = child.filter((entry) => !isPrompt(entry));
+      // A link that was seen in what the terminal showed is terminal content too.
+      else if (closed && key === 'links' && Array.isArray(child)) out[key] = child.filter((link) => !isSeenLink(link));
       else out[key] = walk(child, own);
     }
     return out;
@@ -36,4 +39,5 @@ export function isTerminalContentEvent(event: { type: string; entry?: unknown })
 
 const isStatus = (record: Record<string, unknown>): boolean => 'commandLine' in record && 'lastExit' in record;
 const isSession = (record: Record<string, unknown>): boolean => typeof record.id === 'string' && typeof record.status === 'object' && record.status !== null && 'noteLog' in record;
+const isSeenLink = (link: unknown): boolean => typeof link === 'object' && link !== null && (link as { fromTerminal?: unknown }).fromTerminal === true;
 const isPrompt = (entry: unknown): boolean => typeof entry === 'object' && entry !== null && (entry as { kind?: unknown }).kind === 'prompt';
