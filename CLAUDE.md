@@ -236,7 +236,7 @@ These are the only abstractions in the code base. Each has exactly one implement
 - **The script holds nothing a caller chose.** `scriptFor`: one command, the session's ID parsed again as an ID, and this server's own port, folders and socket, each through `shQuote`. No name, title or folder of a session. The file is mode 700 in `desktop/` in the data folder, removed when the session's shell ends, and swept at start.
 - **A command of the owner's is started without a shell.** Split once by `splitCommand`, the file put where `{file}` is as part of one argument. Do not add expansion or escapes.
 - **Opening on the desktop is the owner's.** `desktop.open` is in `NEVER_BY_TOKEN` and is not a session action. A session made by a token, a task, a schedule or a rule never opens a window: only the cookie-only create route does, and only when the request says `desktop: true`. The server does not decide that from the setting; the page does.
-- **The page writes one setting.** `PUT /v1/settings/desktop` changes `desktop.openNew` and nothing else in the settings file. Which application, and a command line, are written by hand. Do not add a route that writes a command the server will start.
+- **The page writes two settings, each by its own route and each one key.** `PUT /v1/settings/desktop` changes `desktop.openNew`; `PUT /v1/settings/appearance` changes `theme`. Both leave the rest of the file as it was. Which application, and a command line, are written by hand. Do not add a route that writes a command the server will start, and do not add a third key without a rule for it.
 - **"Also on desktop" is counted, not guessed.** `outsideViewers` comes from the runtime: the clients of a session less the ones the runtime attached. It says that something outside is attached, never which program. Do not set it from having asked for a window.
 - **A window that could not be opened never fails the terminal.** The terminal is made and the answer says why.
 - **Sizing is the runtime's.** Two views of a session share one size (`window-size latest`). Change it in the runtime's configuration and nowhere else, and change what the page says about size with it.
@@ -341,6 +341,13 @@ These are the only abstractions in the code base. Each has exactly one implement
 - **A task is an agent's; a to-do is the owner's. A draft is written; a task is proposed. A step hands in a report; a terminal has a note.**
 - **On a page the keys of the places still work**; no other canvas key does.
 - **A terminal's note is a Summary and a Log**, in one component beside the terminal and in its details. The words pinned and Markdown are not said.
+
+- **The theme is a setting with three choices**: light, dark, system. `themeShown` says which is drawn. The page is sent with the choice on it (`data-theme-setting`), and the lines in `index.html` put the theme on the page before the first paint: do not move that into a module. Whatever draws colours of its own reads `useThemeShown`.
+- **Settings is the one place for what a person changes about the page.** A new such switch goes there, not in Help or a menu.
+- **The details of a thing are in the body size with the ordinary controls.** The meta size is for a time, a count, a chip and the second line of a row. "the drawer" fails on text longer than three words under the body size.
+- **The bar over the canvas is one row at any width.** Under `NARROW_CANVAS` what is used seldom is in its menu.
+- **The browser tests run as a system set to dark**, and a test that changes the theme puts it back.
+- **A throwaway server is started only by a script that sets its port, data folder and socket first.** Never `pnpm start` by hand in a shell that may not have them.
 
 ### Canvas behaviour
 
