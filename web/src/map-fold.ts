@@ -1,17 +1,22 @@
 import { useSyncExternalStore } from 'react';
 
 /**
- * Whether the small map of the canvas is folded away. A convenience of this browser only: shown unless it was
- * folded here before. Where that cannot be remembered it still folds, for as long as the page is open.
+ * Whether the small map of the canvas is folded away. A convenience of this browser only: folded unless it was
+ * shown here before. Where that cannot be remembered it still shows, for as long as the page is open.
  */
 const KEY = 'aubergine.map.folded';
 const listeners = new Set<() => void>();
 
+/** What this browser remembers, read as folded or not: folded where nothing, or nothing readable, is remembered. */
+export function foldedFrom(remembered: string | null): boolean {
+  return remembered !== 'no';
+}
+
 function load(): boolean {
   try {
-    return localStorage.getItem(KEY) === 'yes';
+    return foldedFrom(localStorage.getItem(KEY));
   } catch {
-    return false;
+    return true;
   }
 }
 
@@ -25,8 +30,8 @@ export function foldMap(next: boolean): void {
   if (folded === next) return;
   folded = next;
   try {
-    if (next) localStorage.setItem(KEY, 'yes');
-    else localStorage.removeItem(KEY);
+    // Both are kept: folded is the default, and shown is what this browser chose.
+    localStorage.setItem(KEY, next ? 'yes' : 'no');
   } catch {
     // Not being able to remember this is harmless.
   }

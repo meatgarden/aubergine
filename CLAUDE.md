@@ -321,7 +321,7 @@ These are the only abstractions in the code base. Each has exactly one implement
 - **A row of the list is the name's.** The dot and the name on the first line; on the second the state in words where it is not ordinary, the step of a run, the folder and one time. Nothing else is put on a row: it goes in the title or the drawer.
 - **What a terminal runs is said short** (`shortCommand`), with the whole line in the tooltip. Never a quoted absolute path in a title.
 - **A choice control is laid out by its label.** No screen sets the gap between a tick box or a radio button and its words; "one look" measures it.
-- **The map never lies over the terminal in use.** It steps aside, button and all (`underMap`), and folds away for good in this browser.
+- **The map never lies over the terminal in use.** It steps aside, button and all (`underMap`). It begins folded; shown or folded is remembered in this browser (`map-fold.ts`), and nothing remembered means folded.
 - **A filter that is on keeps its one line with Clear**, in plain chips; the count on the Filter button is the one coloured sign.
 
 - **A page is a place, a dialog is a question.** Queue, Board, Workflows and Library are pages (`Page` in `web/src/ui`): shown under the top bar in place of the canvas, laid out the same, with no way out of their own. Anything about one thing that ends with a decision is a dialog and opens over a page or the canvas alike. A new place in the top bar is a page; do not make a dialog of it.

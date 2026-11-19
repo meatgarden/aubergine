@@ -485,7 +485,7 @@ Each new tab makes a new terminal, so park or end the ones you no longer need.
 
 - **New terminal** (or `N`) adds a terminal in free space near the middle of the view, on the canvas you are looking at.
 - Drag a node by its title bar; resize it from its edges; double-click the title to rename it.
-- Drag the background to pan; scroll or pinch to zoom. **Fit** (or `F`) shows everything; the percentage (or `0`) returns to 100%. The map in the corner also pans and zooms; **Hide map** above it folds it away, the browser remembers that, and it steps aside by itself while the terminal you are typing in lies under it.
+- Drag the background to pan; scroll or pinch to zoom. **Fit** (or `F`) shows everything; the percentage (or `0`) returns to 100%. The map in the corner also pans and zooms. It starts folded: **Map** in the corner brings it out and **Hide map** folds it away again, and the browser remembers which. While shown, it steps aside by itself when the terminal you are typing in lies under it.
 - **+ Frame** adds a labeled frame. Drag a frame by its label and the terminals inside it move along.
 - The dot in a title bar gives a node or frame a color: one of thirteen, or **Your own…** for any color.
 - The title bar shows the running command and current folder of each terminal.

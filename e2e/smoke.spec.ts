@@ -3750,16 +3750,21 @@ test('calm canvas: one thing is filled with the colour of waiting, a terminal ha
     expect([...new Set(await dots())]).toEqual(['16x16 8x8']);
     await page.keyboard.press('Escape');
 
-    // 5. The handle that folds the panel is not in the panel's head, and the map folds away and stays folded after a reload.
+    // 5. The handle that folds the panel is not in the panel's head. The map begins folded; shown, it stays shown after a
+    // reload, and folded again it stays folded.
     expect(await page.evaluate(() => document.querySelector('.panel-head') !== null && document.querySelector('.panel-head')?.contains(document.querySelector('[data-testid="panel-fold"]')))).toBe(false);
+    await expect(page.locator('.react-flow__minimap')).toHaveCount(0);
+    await expect(page.getByTestId('map-fold')).toHaveAttribute('aria-expanded', 'false');
+    await page.getByTestId('map-fold').click();
+    await expect(page.locator('.react-flow__minimap')).toBeVisible();
+    await page.reload();
+    await expect(page.getByTestId('terminal-node')).toHaveCount(4);
     await expect(page.locator('.react-flow__minimap')).toBeVisible();
     await page.getByTestId('map-fold').click();
     await expect(page.locator('.react-flow__minimap')).toHaveCount(0);
     await page.reload();
     await expect(page.getByTestId('terminal-node')).toHaveCount(4);
     await expect(page.locator('.react-flow__minimap')).toHaveCount(0);
-    await page.getByTestId('map-fold').click();
-    await expect(page.locator('.react-flow__minimap')).toBeVisible();
   } finally {
     await page.request.delete('/api/v1/demo', { headers: { origin } });
   }
