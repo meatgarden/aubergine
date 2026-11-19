@@ -25,8 +25,8 @@ export interface SectionDrawer {
 
 /**
  * A section of the side panel. The panel knows nothing about what a section
- * shows: it draws a tab for whatever is registered, in `order`, and the one
- * section whose tab is chosen, with all of the panel's height to itself.
+ * shows: its head is one menu of whatever is registered, in `order`, and the one
+ * section that is chosen has all of the panel's height to itself.
  * Adding something to the panel is adding one module under
  * `panel/sections/` that calls `registerSection`.
  */
@@ -35,14 +35,16 @@ export interface PanelSection {
   title: string;
   /** Lower numbers come first. */
   order: number;
-  /** A shorter name for its tab, where the title is long. */
+  /** The name it has in the panel's head and its menu, where the title would be taken for something else. */
   tab?: string;
-  /** Used less often: it is under “More” at the end of the tabs, so that the tabs fit one row. */
-  more?: boolean;
-  /** Whether its count is of things that wait on the owner: the tab then stands out while it is not zero. */
+  /** What it shows, in one line, for the menu of sections. */
+  says: string;
+  /** Whether its count is of things that wait on the owner: it is then said in the colour of waiting while it is not zero. */
   urgent?: boolean;
-  /** One or two characters for the collapsed strip. */
+  /** One or two characters that stand for it. */
   icon: string;
+  /** What it puts on the rail the panel folds to. The shell draws it under the button that opens the panel, and adds nothing. */
+  Rail?: ComponentType;
   /** A hook giving the number shown beside the title, or null for none. */
   useCount?: () => number | null;
   /** A hook giving what the collapsed strip shows under the icon. */
@@ -90,7 +92,7 @@ export function subscribeToSections(listener: () => void): () => void {
 export const PANEL_MIN_WIDTH = 180;
 export const PANEL_MAX_WIDTH = 560;
 export const PANEL_DEFAULT_WIDTH = 320;
-export const PANEL_STRIP_WIDTH = 34;
+export const PANEL_STRIP_WIDTH = 40;
 
 export interface PanelPrefs {
   /** False when the panel is collapsed to its strip. */
@@ -102,7 +104,8 @@ export interface PanelPrefs {
   tab: string | null;
 }
 
-export const DEFAULT_PANEL: PanelPrefs = { open: true, width: PANEL_DEFAULT_WIDTH, folded: [], tab: null };
+/** With nothing remembered the panel is folded to its rail: the canvas has the room. Once a person opens or folds it, that is kept. */
+export const DEFAULT_PANEL: PanelPrefs = { open: false, width: PANEL_DEFAULT_WIDTH, folded: [], tab: null };
 
 export function clampPanelWidth(width: number): number {
   return Math.round(Math.min(PANEL_MAX_WIDTH, Math.max(PANEL_MIN_WIDTH, width)));

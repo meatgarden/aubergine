@@ -64,7 +64,7 @@ One gutter for each kind of surface, and everything in it starts on that gutter'
 
 A button, a field, a select and the parts of a segmented switch have one anatomy: the same height, text, corner and padding at the sides, so two of them side by side line up.
 
-- **Two heights.** `--control` (32px) in screens and dialogs and in the bar at the top. `--control-compact` (28px) in the side panel, the bar over the canvas, a terminal's title and the bar of tabs. A surface says which by setting `--control-h`; nothing sets a height on a control.
+- **Two heights.** `--control` (32px) in screens and dialogs and in the bar at the top. `--control-compact` (28px) in the side panel's lists, the bar over the canvas and a terminal's title. A canvas tab and the side panel's head are 32px. A surface says which by setting `--control-h`; nothing sets a height on a control.
 - **A button that is only a sign** is a square of that height, and always says in words what it does (`IconButton`).
 - **A text area** has the padding and corner of a field.
 
@@ -110,6 +110,16 @@ One shadow for each layer that floats, each defined for both themes: `--shadow-b
 Something that was done and shows nowhere else by itself is said in one place, one way: a short line at the foot of the window (`say` in the store, drawn by `Toast`), which goes by itself, with Undo where the action has one. A mistake is not said there: it stays where it was made.
 
 The text a person selects, the caret and the scroll bars follow the theme (`--selection`); a terminal has its own selection color in each.
+
+## The switcher
+
+`Switcher` in `web/src/ui` says which of several things is being looked at and opens the list of them: a word for what it is where the name alone would be taken for something else, the name, what there is to know at a glance, an arrow. The project at the top and the side panel's sections are both this piece. Its menu is placed against the window, each line is a name with one quiet line under it, and what is counted is at the line's right. Escape closes the menu and nothing behind it.
+
+## The canvas's columns
+
+Under the top bar there are two groups of columns. The side panel and the drawer of what it lists are one, from the top bar to the foot of the window. The bar of canvas tabs and the canvas are the other: the bar begins where the canvas does, has the surface color and a line under its whole width, 8px of air above and below its tabs, and its first tab begins where the bar over the canvas begins. The tab being looked at is a filled pill inside the bar; it does not open into the canvas. The way to add a canvas stands directly after the last tab, and stays in sight while the tabs scroll sideways. The side panel's head is as tall as the bar of tabs and has the same line under it.
+
+Folded, the side panel is a rail (40px) with the same edge: the button that opens it, and what a section puts there (the terminals' section puts the mark of each terminal on this canvas). With nothing remembered, the panel is folded.
 
 ## Chips and badges
 

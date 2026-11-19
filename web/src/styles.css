@@ -227,23 +227,8 @@ code {
   display: inline-flex;
   margin-right: var(--space-2);
 }
-/* Placed against the window: the tab bar it belongs to scrolls sideways and would cut it off. */
-.project-menu {
-  position: fixed;
-  z-index: var(--z-menu);
-}
-.project-current {
-  display: inline-flex;
-  gap: var(--space-2);
-  align-items: center;
-  max-width: 240px;
-  font-weight: var(--weight-strong);
-}
-.project-name {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
+
+
 .project-row-name {
   display: inline-flex;
   gap: var(--space-2);
@@ -518,7 +503,6 @@ code {
   justify-content: flex-end;
   gap: var(--space-2);
 }
-
 
 /* ---------- Ended shell ---------- */
 
@@ -1188,101 +1172,6 @@ kbd.kept {
   background: var(--surface);
   border-right: 1px solid var(--border);
   font-size: var(--font-body);
-}
-.side-panel.collapsed {
-  align-items: center;
-  gap: var(--space-2);
-  padding-top: var(--space-2);
-}
-
-.strip-entry {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-  width: 100%;
-  padding: var(--space-2) 0;
-  background: none;
-  border: none;
-  color: var(--text);
-  font-size: var(--font-meta);
-}
-.strip-entry:hover {
-  background: var(--surface-raised);
-}
-.strip-icon {
-  font-size: var(--font-title);
-}
-.strip-count {
-  color: var(--text-muted);
-}
-.strip-badge {
-  display: inline-flex;
-  gap: 2px;
-  font-size: var(--font-meta);
-  color: var(--text-muted);
-}
-.strip-badge.is-waiting {
-  color: var(--attention-text);
-  font-weight: var(--weight-strong);
-}
-.strip-badge.is-processing {
-  color: var(--working-text);
-}
-.strip-badge.is-failed {
-  color: var(--danger);
-}
-/* One section shows at a time and has all of the panel's height; the tabs say what else there is, and how much. */
-.panel-tabs-row {
-  flex: none;
-  display: flex;
-  align-items: flex-start;
-  gap: var(--space-1);
-  padding: var(--space-2) var(--space-2) 0 var(--space-2);
-  border-bottom: 1px solid var(--border);
-}
-.panel-tabs {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2px 2px;
-}
-.panel-tab {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  padding: var(--space-1) var(--space-2) var(--space-2);
-  font-size: var(--font-meta);
-  white-space: nowrap;
-  color: var(--text-muted);
-  background: transparent;
-  border: none;
-  border-bottom: 2px solid transparent;
-  border-radius: var(--radius-control) var(--radius-control) 0 0;
-}
-.panel-tab:hover:not(:disabled) {
-  color: var(--text);
-  background: var(--surface-raised);
-}
-.panel-tab[aria-selected='true'] {
-  color: var(--text);
-  border-bottom-color: var(--accent);
-}
-.panel-tab-count {
-  min-width: 16px;
-  padding: 0 var(--space-1);
-  font-size: var(--font-meta);
-  line-height: 16px;
-  text-align: center;
-  font-variant-numeric: tabular-nums;
-  color: var(--text-muted);
-  background: var(--surface-raised);
-  border-radius: var(--radius-surface);
-}
-.panel-tab.is-urgent .panel-tab-count {
-  color: var(--on-attention);
-  background: var(--attention);
 }
 
 .panel-section {

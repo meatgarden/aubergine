@@ -1,16 +1,15 @@
-import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { useEffect, useRef, useSyncExternalStore } from 'react';
 import { runCommand } from '../commands';
 import { hint } from '../shortcuts';
 import { useApp } from '../store';
 import { PANEL_STRIP_WIDTH, panelSections, sectionById, subscribeToSections, type PanelSection } from './registry';
-import { StateDot } from '../ui';
+import { IconButton, StateDot, Switcher } from '../ui';
 import './sections';
 
 /**
- * The panel down the left side. It is only a shell: a tab for each registered
- * section, the one section that is chosen with all of the height to itself,
- * a strip to collapse to, a width to drag, and a section's drawer beside it.
- * What the sections contain is their own business.
+ * The panel down the left side, from under the top bar to the foot of the window. It is only a shell: one menu of the
+ * registered sections for a head, the one section that is chosen with all of the height to itself, a rail to fold
+ * to, a width to drag, and a section's drawer beside it. What the sections contain is their own business.
  */
 export function SidePanel() {
   const prefs = useApp((s) => s.side);
@@ -20,10 +19,10 @@ export function SidePanel() {
   if (!prefs.open) {
     return (
       <aside className="side-panel collapsed" style={{ width: PANEL_STRIP_WIDTH }} aria-label="Side panel" data-testid="side-panel">
-        <Fold open={false} />
-        {sections.map((section) => (
-          <StripEntry key={section.id} section={section} />
-        ))}
+        <IconButton className="rail-open" label="Show the side panel" aria-expanded={false} title={hint('panel.toggle', 'Show the side panel')} onClick={() => runCommand('panel.toggle')} data-testid="panel-fold">
+          ›
+        </IconButton>
+        {sections.map((section) => section.Rail && <section.Rail key={section.id} />)}
       </aside>
     );
   }
@@ -46,24 +45,37 @@ export function SidePanel() {
   return (
     <>
       <aside className="side-panel" style={{ width: prefs.width }} aria-label="Side panel" data-testid="side-panel">
-        <header className="panel-tabs-row">
-          <div className="panel-tabs" role="tablist" aria-label="What the panel shows">
-            {sections
-              .filter((section) => !section.more)
-              .map((section) => (
-                <Tab key={section.id} section={section} selected={section === active} />
+        <header className="panel-head">
+          {active && (
+            <Switcher
+              fill
+              name={active.tab ?? active.title}
+              title="What the panel shows. Press for the others."
+              testid="panel-switcher"
+              nameTestid="panel-switcher-name"
+              menuTestid="panel-menu"
+              extra={
+                <>
+                  {/* Keyed by the section: each has hooks of its own for its count. */}
+                  <Count key={active.id} section={active} testid="panel-switcher-count" />
+                  {sections.map((section) => section !== active && <Waits key={section.id} section={section} />)}
+                </>
+              }
+            >
+              {sections.map((section) => (
+                <Line key={section.id} section={section} selected={section === active} />
               ))}
-            <MoreTabs sections={sections.filter((section) => section.more)} active={active} />
-          </div>
+            </Switcher>
+          )}
         </header>
         {active ? (
-          <section key={active.id} className="panel-section" role="tabpanel" data-section={active.id} aria-label={active.title}>
+          <section key={active.id} className="panel-section" data-section={active.id} aria-label={active.title}>
             <active.Component />
           </section>
         ) : (
           <p className="list-empty">Nothing to show here yet.</p>
         )}
-        <Fold open />
+        <Fold />
         <div className="list-resize" role="separator" aria-orientation="vertical" aria-label="Resize the side panel" onPointerDown={startResize} data-testid="panel-resize" />
       </aside>
       <Drawer />
@@ -71,150 +83,50 @@ export function SidePanel() {
   );
 }
 
-/**
- * The one control that folds the panel away and brings it back: a handle on the panel's own edge, in the same place
- * whether the panel is open or not, so that it is never taken for one of the tabs.
- */
-function Fold({ open }: { open: boolean }) {
-  const words = open ? 'Hide the side panel' : 'Show the side panel';
+/** The handle on the open panel's own edge that folds it to its rail. */
+function Fold() {
   return (
-    <button type="button" className="panel-fold" aria-label={words} aria-expanded={open} title={hint('panel.toggle', words)} onClick={() => runCommand('panel.toggle')} data-testid="panel-fold">
-      <span aria-hidden="true">{open ? '‹' : '›'}</span>
+    <button type="button" className="panel-fold" aria-label="Hide the side panel" aria-expanded title={hint('panel.toggle', 'Hide the side panel')} onClick={() => runCommand('panel.toggle')} data-testid="panel-fold">
+      <span aria-hidden="true">‹</span>
     </button>
   );
 }
 
-/** One section's tab: its name and, where it has one, its count. */
-function Tab({ section, selected }: { section: PanelSection; selected: boolean }) {
+/** A section's count: a plain number, in the colour of waiting as text while it counts what waits on the owner. */
+function Count({ section, testid }: { section: PanelSection; testid: string }) {
   const count = section.useCount?.() ?? null;
+  if (count === null) return null;
   return (
-    <button
-      type="button"
-      role="tab"
-      className={`panel-tab${section.urgent && count ? ' is-urgent' : ''}`}
-      aria-selected={selected}
-      title={section.title}
-      onClick={() => useApp.getState().setSide({ tab: section.id })}
-      data-testid="panel-tab"
-      data-section={section.id}
-    >
-      {section.tab ?? section.title}
-      {count !== null && (
-        <span className="panel-tab-count" data-testid="section-count">
-          {count}
-        </span>
-      )}
-    </button>
-  );
-}
-
-/** The parts that are used less often: one tab that opens a list of them, so that the tabs fit one row. */
-function MoreTabs({ sections, active }: { sections: PanelSection[]; active: PanelSection | undefined }) {
-  const [open, setOpen] = useState(false);
-  const root = useRef<HTMLSpanElement>(null);
-  useEffect(() => {
-    if (!open) return;
-    const away = (event: PointerEvent): void => {
-      if (!root.current?.contains(event.target as Node)) setOpen(false);
-    };
-    const key = (event: KeyboardEvent): void => {
-      if (event.key === 'Escape') setOpen(false);
-    };
-    window.addEventListener('pointerdown', away);
-    window.addEventListener('keydown', key, true);
-    return () => {
-      window.removeEventListener('pointerdown', away);
-      window.removeEventListener('keydown', key, true);
-    };
-  }, [open]);
-  if (sections.length === 0) return null;
-  const chosen = sections.find((section) => section === active);
-  return (
-    <span className="panel-more" ref={root}>
-      <button type="button" role="tab" className="panel-tab" aria-selected={chosen !== undefined} aria-haspopup="menu" aria-expanded={open} title={`More: ${sections.map((section) => section.title).join(', ')}`} onClick={() => setOpen((v) => !v)} data-testid="panel-more">
-        {chosen ? (chosen.tab ?? chosen.title) : 'More'}
-        {sections.map((section) => (
-          <MoreCount key={section.id} section={section} />
-        ))}
-        <span aria-hidden="true">▾</span>
-      </button>
-      {open && (
-        <span className="ui-menu toolbar-menu panel-more-menu" role="menu" data-testid="panel-more-menu">
-          {sections.map((section) => (
-            <MoreItem key={section.id} section={section} selected={section === active} onChoose={() => setOpen(false)} />
-          ))}
-        </span>
-      )}
-    </span>
-  );
-}
-
-/** On “More”: the count of a part under it, while that part has something waiting on the owner. */
-function MoreCount({ section }: { section: PanelSection }) {
-  const count = section.useCount?.() ?? null;
-  if (!section.urgent || !count) return null;
-  return (
-    <span className="panel-tab-count is-urgent" data-testid="more-count">
+    <span className={`panel-count${section.urgent && count > 0 ? ' is-urgent' : ''}`} data-testid={testid}>
       {count}
     </span>
   );
 }
 
-function MoreItem({ section, selected, onChoose }: { section: PanelSection; selected: boolean; onChoose: () => void }) {
+/** On the head, while another section is shown: a small mark that something waits on the owner in this one. */
+function Waits({ section }: { section: PanelSection }) {
   const count = section.useCount?.() ?? null;
-  return (
-    <button
-      type="button"
-      role="menuitemradio"
-      aria-checked={selected}
-      onClick={() => {
-        useApp.getState().setSide({ tab: section.id });
-        onChoose();
-      }}
-      data-testid="panel-tab"
-      data-section={section.id}
-    >
-      {section.title}
-      {count !== null && count > 0 && (
-        <span className="panel-tab-count" data-testid="section-count">
-          {count}
-        </span>
-      )}
-    </button>
-  );
+  if (!section.urgent || !count) return null;
+  return <StateDot tone="waiting" word={`${count} waiting in ${section.title}`} className="panel-waits" data-testid="panel-waits" />;
 }
 
-/** A section on the collapsed strip: its icon, its count, and its badges. */
-function StripEntry({ section }: { section: PanelSection }) {
-  const count = section.useCount?.() ?? null;
-  const badges = section.useBadges?.() ?? [];
-  const open = (): void => {
-    const { setSide } = useApp.getState();
-    setSide({ open: true, tab: section.id });
-  };
+/** One section in the menu: its name, what it shows in a line, and its count at the right. */
+function Line({ section, selected }: { section: PanelSection; selected: boolean }) {
   return (
-    <button type="button" className="strip-entry" title={`${section.title}${count === null ? '' : `: ${count}`}`} onClick={open} data-testid="strip-entry" data-section={section.id}>
-      <span className="strip-icon" aria-hidden="true">
-        {section.icon}
+    <button type="button" role="menuitemradio" aria-checked={selected} className="panel-line" onClick={() => useApp.getState().setSide({ tab: section.id })} data-testid="panel-tab" data-section={section.id}>
+      <span className="panel-line-name">
+        {section.tab ?? section.title}
+        <Count section={section} testid="section-count" />
       </span>
-      {count !== null && <span className="strip-count">{count}</span>}
-      {badges
-        .filter((badge) => badge.count > 0)
-        .map((badge) => (
-          <span key={badge.key} className={`strip-badge is-${badge.key}`} title={`${badge.count} ${badge.title}`} data-testid="strip-badge" data-badge={badge.key}>
-            {badge.tone ? <StateDot tone={badge.tone} word={badge.title} /> : <span aria-hidden="true">{badge.mark}</span>}
-            {badge.count}
-            <span className="visually-hidden"> {badge.title}</span>
-          </span>
-        ))}
+      <small>{section.says}</small>
     </button>
   );
 }
 
 /**
  * The drawer beside the panel: a section's detail for one of its rows. It stands between the panel and the
- * canvas, under the bar of tabs: the canvas is narrower while it is open, and nothing lies over the bar of the
- * canvas. The list stays in use while it is open.
+ * canvas with its bar of tabs: the two are one group of columns, the tabs and the canvas another, which is narrower
+ * while the drawer is open. The list stays in use while it is open.
  */
 function Drawer() {
   const drawer = useApp((s) => s.drawer);

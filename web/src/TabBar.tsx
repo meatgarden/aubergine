@@ -51,6 +51,16 @@ export function TabBar() {
     };
   }, [menu]);
   useEffect(() => setMenu(null), [current]);
+  // The tab being looked at is kept in sight: with many tabs the row scrolls sideways to it.
+  const row = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const tab = row.current?.querySelector<HTMLElement>('.tab.active');
+    const box = row.current?.getBoundingClientRect();
+    if (!tab || !box || !row.current) return;
+    const at = tab.getBoundingClientRect();
+    if (at.left < box.left) row.current.scrollLeft -= box.left - at.left;
+    else if (at.right > box.right) row.current.scrollLeft += at.right - box.right;
+  }, [current]);
 
   // Asked to rename a canvas (by a key or the palette).
   const ask = useApp((s) => (s.ask?.kind === 'rename-canvas' ? s.ask : null));
@@ -88,6 +98,8 @@ export function TabBar() {
 
   return (
     <nav className="tabbar" aria-label="Canvases" data-testid="tabbar">
+      {/* The tabs scroll sideways by themselves, so that the way to add one is never pushed out of sight. */}
+      <div className="tabbar-tabs" role="tablist" aria-label="Canvases" ref={row} data-testid="tabbar-tabs">
       {canvases.map((canvas) => {
         const counts = canvasCounts(app, canvas);
         const active = canvas.id === current;
@@ -266,6 +278,7 @@ export function TabBar() {
           </div>
         );
       })}
+      </div>
       <IconButton className="tab-add" label="New canvas" title={hint('canvas.new')} onClick={() => runCommand('canvas.new')}>
         +
       </IconButton>

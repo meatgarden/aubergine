@@ -18,9 +18,9 @@ function MessagesSection() {
 }
 
 registerSection({
-  more: true,
   id: 'messages',
   title: 'Messages',
+  says: 'Between you, the terminals and their agents.',
   order: 30,
   icon: '✉',
   useCount: () => useApp((s) => (s.app?.sessions ?? []).filter((session) => messagesWantOwner(session.messages)).length) || null,

@@ -59,6 +59,8 @@ export function HelpPanel() {
                           className="quiet"
                           onClick={() => {
                             close();
+                            // What it points at is brought into view first: a line about the list opens the side panel.
+                            line.arrive?.(context);
                             useTour.getState().point(line.id);
                           }}
                           data-testid="help-show"

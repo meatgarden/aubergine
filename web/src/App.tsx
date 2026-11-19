@@ -82,14 +82,18 @@ export function App() {
       <div className="app-under">
         {/* The canvas page stays as it is while a page is shown in its place: not drawn, not reachable, its terminals running. */}
         <div className="app-canvas" inert={page !== null} data-testid="app-canvas">
-          <TabBar />
           <div className="workspace">
+            {/* The panel and its drawer are one group of columns, from under the top bar down. */}
             <SidePanel />
-            {/* Keyed by canvas: each canvas gets a fresh view, with its own pan, zoom and live terminals. */}
-            <ReactFlowProvider key={canvasId ?? 'none'}>
-              <Canvas />
-              <CloseDialog />
-            </ReactFlowProvider>
+            {/* The bar of tabs belongs to the canvas: it begins where the canvas does. */}
+            <div className="canvas-column" data-testid="canvas-column">
+              <TabBar />
+              {/* Keyed by canvas: each canvas gets a fresh view, with its own pan, zoom and live terminals. */}
+              <ReactFlowProvider key={canvasId ?? 'none'}>
+                <Canvas />
+                <CloseDialog />
+              </ReactFlowProvider>
+            </div>
           </div>
         </div>
         <Pages />
