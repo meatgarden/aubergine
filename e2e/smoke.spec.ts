@@ -3294,6 +3294,13 @@ test('one look: the canvas page and every screen use the two control heights and
   expect(await measureLook(page)).toEqual([]);
   expect(await onTop(page, 'tab-menu')).toBe(true);
   await page.keyboard.press('Escape');
+  // The menu of "New canvas" hangs over the bar over the canvas, not under it.
+  await page.getByTestId('tabbar-new-more').click();
+  await expect(page.getByTestId('tabbar-new-menu')).toBeVisible();
+  expect(await measureLook(page)).toEqual([]);
+  expect(await onTop(page, 'tabbar-new-menu')).toBe(true);
+  await page.keyboard.press('Escape');
+  await expect(page.getByTestId('tabbar-new-menu')).toHaveCount(0);
 
   // Every screen: measured, and under its own corners and middle with the selected terminal behind it.
   const screens: [string, () => Promise<void>][] = [
@@ -3534,6 +3541,7 @@ test('simpler surfaces: the list starts near the top, a name is not cut, one pri
   };
   await reached(node.getByTestId('node-more'), ['node-run-workflow', 'node-message', 'node-open-desktop', 'node-move', 'people-only'], node);
   await expect(node.getByRole('menuitem', { name: /^Park / })).toHaveCount(0);
+  await reached(page.getByTestId('tabbar-new-more'), ['tabbar-new-here', 'tabbar-new-tab'], page.getByTestId('tabbar-new-menu'));
   await reached(page.getByTestId('list-more'), ['scope-this', 'scope-all', 'waiting', 'busy', 'unread', 'list-grouping', 'list-density'], page.getByTestId('list-more-filters'));
   await reached(page.getByTestId('panel-switcher'), ['terminals', 'for-you', 'workflows', 'copies', 'messages'], page.getByTestId('panel-menu'));
   await reached(page.getByTestId('tab-more'), ['tab-rename', 'tab-messaging'], page.getByTestId('tab-menu'));
@@ -3578,6 +3586,8 @@ test('simpler surfaces: the list starts near the top, a name is not cut, one pri
 
   expect(await primaries('.appbar')).toBe(0);
   expect(await primaries('.toolbar')).toBe(1);
+  // The bar of tabs is a surface of its own, and "New canvas" is its one primary.
+  expect(await primaries('.tabbar')).toBe(1);
   expect(await primaries('.side-panel')).toBe(0);
   // The side panel: the field and the state column of a row start on its gutter of 12.
   expect(await page.evaluate(() => ['.list-find', '.list-state'].map((sel) => Math.round((document.querySelector(sel) as HTMLElement).getBoundingClientRect().left)))).toEqual([12, 12]);
@@ -4590,7 +4600,7 @@ test('tabs and panel: a new browser has the panel folded to a rail, the bar of t
   await fresh.getByTestId('details-close').click();
 
   // 3. Air above the tabs, a line under the whole bar, and the tab being looked at is a filled pill that ends above the line.
-  const bar = async (): Promise<{ air: number; line: string; lineWidth: number; barWidth: number; canvasWidth: number; tabBottom: number; lineTop: number; tabHeight: number; plusHeight: number; filled: boolean; opensIntoCanvas: boolean; sameSurfaceAsCanvas: boolean }> =>
+  const bar = async (): Promise<{ air: number; line: string; lineWidth: number; barWidth: number; canvasWidth: number; tabBottom: number; lineTop: number; tabHeight: number; plusHeight: number; otherEdge: string; currentEdge: string; buttonEdge: string; filled: boolean; opensIntoCanvas: boolean; sameSurfaceAsCanvas: boolean }> =>
     fresh.evaluate(() => {
       const el = document.querySelector('[data-testid="tabbar"]') as HTMLElement;
       const style = getComputedStyle(el);
@@ -4607,7 +4617,11 @@ test('tabs and panel: a new browser has the panel folded to a rail, the bar of t
         tabBottom: tab.bottom,
         lineTop: box.bottom - Number.parseFloat(style.borderBottomWidth),
         tabHeight: Math.round(tab.height),
-        plusHeight: Math.round((el.querySelector('.tab-add') as HTMLElement).getBoundingClientRect().height),
+        plusHeight: Math.round((el.querySelector('[data-testid="tabbar-new-canvas"]') as HTMLElement).getBoundingClientRect().height),
+        // A tab not being looked at has a button's edge; the one being looked at has none.
+        otherEdge: other ? getComputedStyle(other).borderTopWidth + ' ' + (getComputedStyle(other).borderTopColor !== 'rgba(0, 0, 0, 0)') : 'none',
+        currentEdge: getComputedStyle(current).borderTopColor,
+        buttonEdge: getComputedStyle(document.querySelector('[data-testid="toolbar-new-more"]') ?? el).borderTopWidth,
         filled: getComputedStyle(current).backgroundColor !== (other ? getComputedStyle(other).backgroundColor : 'none') && getComputedStyle(current).backgroundColor !== 'rgba(0, 0, 0, 0)',
         opensIntoCanvas: getComputedStyle(current).borderBottomLeftRadius === '0px',
         sameSurfaceAsCanvas: style.backgroundColor === getComputedStyle(document.querySelector('.react-flow') as HTMLElement).backgroundColor,
@@ -4624,6 +4638,8 @@ test('tabs and panel: a new browser has the panel folded to a rail, the bar of t
     expect(seen.tabBottom, scheme).toBeLessThan(seen.lineTop);
     expect(seen.tabHeight, scheme).toBe(32);
     expect(seen.plusHeight, scheme).toBe(32);
+    expect(seen.otherEdge, scheme).toBe(`${seen.buttonEdge} true`);
+    expect(seen.currentEdge, scheme).toBe('rgba(0, 0, 0, 0)');
     expect(seen.filled, scheme).toBe(true);
     expect(seen.opensIntoCanvas, scheme).toBe(false);
   }
@@ -4674,7 +4690,7 @@ test('tabs and panel: a new browser has the panel folded to a rail, the bar of t
     await expect(fresh.getByTestId('tab')).toHaveCount(before + made);
   }
   const many = await fresh.evaluate(() => {
-    const plus = (document.querySelector('.tabbar > .tab-add') as HTMLElement).getBoundingClientRect();
+    const plus = (document.querySelector('.tabbar > .tabbar-new') as HTMLElement).getBoundingClientRect();
     const tabs = (document.querySelector('[data-testid="tabbar-tabs"]') as HTMLElement).getBoundingClientRect();
     const barBox = (document.querySelector('[data-testid="tabbar"]') as HTMLElement).getBoundingClientRect();
     return { plusInView: plus.left >= barBox.left && plus.right <= Math.min(window.innerWidth, barBox.right), after: Math.round(plus.left - tabs.right), scrolls: (document.querySelector('[data-testid="tabbar-tabs"]') as HTMLElement).scrollWidth > tabs.width + 1, pageScrolls: document.documentElement.scrollWidth > window.innerWidth };
@@ -4720,6 +4736,20 @@ test('new browser tabs: a canvas opens in one from its tab, and a running termin
   await expect(middleTab).toHaveURL(new RegExp(`/c/${canvasId}$`));
   await middleTab.close();
   expect(page.url()).toBe(here);
+
+  // A new canvas made straight into a new browser tab, from the arrow beside "New canvas": this tab stays where it was.
+  const tabsBefore = await page.getByTestId('tab').count();
+  await page.getByTestId('tabbar-new-more').click();
+  await expect(page.getByTestId('tabbar-new-menu').getByRole('menuitem')).toHaveText([/^New canvas/, /^New canvas in a new browser tab/]);
+  const [madeTab] = await Promise.all([page.context().waitForEvent('page'), page.getByTestId('tabbar-new-tab').click()]);
+  await expect(page.getByTestId('tab')).toHaveCount(tabsBefore + 1);
+  await expect(madeTab).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  const made = /\/c\/([0-9a-f-]+)$/.exec(madeTab.url())?.[1] ?? '';
+  expect(made).not.toBe(canvasId);
+  await expect(madeTab.locator('[data-testid="tab"][aria-selected="true"]')).toHaveAttribute('data-canvas', made);
+  await expect(selected).toHaveAttribute('data-canvas', canvasId);
+  expect(page.url()).toBe(here);
+  await madeTab.close();
 
   // 2. A terminal that is running on the canvas, with something on its screen.
   await page.getByTestId('toolbar-new-terminal').click();
