@@ -4615,7 +4615,8 @@ test('tabs and panel: a new browser has the panel folded to a rail, the bar of t
         canvas: Math.round(box('.react-flow').left),
         left: Math.round((drawer ?? document.querySelector('[data-testid="side-panel"]') as Element).getBoundingClientRect().right),
         // Where the first tab is with the row of tabs at its start: with many tabs the row may have scrolled to the one being looked at.
-        firstTab: Math.round(box('[data-testid="tab"]').left + (document.querySelector('[data-testid="tabbar-tabs"]') as HTMLElement).scrollLeft),
+        // The bar's first control: the button that shows the canvases as tabs or as a list.
+        firstTab: Math.round(box('[data-testid="tabbar-view"]').left),
         canvasBar: Math.round(box('.react-flow__panel.toolbar').left),
         panelTop: Math.round(box('[data-testid="side-panel"]').top),
         headerBottom: Math.round(box('[data-testid="appbar"]').bottom),
@@ -5696,4 +5697,73 @@ test('a row of the list is a box: the terminal\'s own color then its name, its s
   await expect(menu).toBeVisible();
   expect(await menu.evaluate((el) => [...el.querySelectorAll('[role="menuitem"]')].slice(0, 3).map((item) => { const r = item.getBoundingClientRect(); return el.contains(document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2)); }))).toEqual([true, true, true]);
   await page.keyboard.press('Escape');
+});
+
+test('the canvases as a list: the button at the start of the bar switches between tabs and one list, which this browser remembers', async ({ page }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  const view = page.getByTestId('tabbar-view');
+  // Tabs unless this browser chose otherwise; the button comes first in the bar.
+  await expect(page.getByTestId('tabbar')).toHaveAttribute('data-view', 'tabs');
+  await expect(view).toHaveAttribute('aria-pressed', 'false');
+  expect(await page.evaluate(() => (document.querySelector('[data-testid="tabbar"]') as HTMLElement).firstElementChild?.getAttribute('data-testid'))).toBe('tabbar-view');
+  const selected = page.locator('[data-testid="tab"][aria-selected="true"]');
+  const before = (await selected.getAttribute('data-canvas')) ?? '';
+  await page.getByRole('button', { name: 'New canvas' }).click();
+  await expect(selected).not.toHaveAttribute('data-canvas', before);
+  const made = (await selected.getAttribute('data-canvas')) ?? '';
+  await selected.getByTestId('tab-more').click();
+  await page.getByTestId('tab-rename').click();
+  await page.getByLabel('Canvas name').fill('Listed here');
+  await page.getByLabel('Canvas name').press('Enter');
+  const count = await page.getByTestId('tab').count();
+  expect(count).toBeGreaterThan(1);
+
+  // As a list: no tabs, the name of the canvas being looked at, the options beside it.
+  await view.click();
+  await expect(page.getByTestId('tabbar')).toHaveAttribute('data-view', 'list');
+  await expect(view).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.getByTestId('tab')).toHaveCount(0);
+  await expect(page.getByTestId('tabbar-list-name')).toHaveText('Listed here');
+  await expect(page.getByTestId('tab-more')).toBeVisible();
+  // The same heights as the tabs had, and the bar over the canvas still begins under the bar's first control.
+  const sizes = await page.evaluate(() => {
+    const box = (sel: string): DOMRect => (document.querySelector(sel) as HTMLElement).getBoundingClientRect();
+    return { button: Math.round(box('[data-testid="tabbar-list-button"]').height), view: Math.round(box('[data-testid="tabbar-view"]').height), viewLeft: Math.round(box('[data-testid="tabbar-view"]').left), canvasBar: Math.round(box('.react-flow__panel.toolbar').left) };
+  });
+  expect(sizes).toEqual({ button: 32, view: 32, viewLeft: sizes.canvasBar, canvasBar: sizes.canvasBar });
+
+  // Its menu lists every canvas, the one being looked at ticked, placed against the window and on top.
+  await page.getByTestId('tabbar-list-button').click();
+  const rows = page.getByTestId('tabbar-list-row');
+  await expect(rows).toHaveCount(count);
+  await expect(page.locator(`[data-testid="tabbar-list-row"][data-canvas="${made}"]`)).toHaveAttribute('aria-checked', 'true');
+  const menu = page.getByTestId('tabbar-list-menu');
+  expect(await menu.evaluate((el) => getComputedStyle(el).position)).toBe('fixed');
+  expect(await rows.first().evaluate((el) => { const r = el.getBoundingClientRect(); return el.contains(document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2)); })).toBe(true);
+  // Choosing another canvas goes there and closes the menu.
+  const other = page.locator(`[data-testid="tabbar-list-row"]:not([data-canvas="${made}"])`).first();
+  const otherId = (await other.getAttribute('data-canvas')) ?? '';
+  await other.click();
+  await expect(menu).toHaveCount(0);
+  await expect(page).toHaveURL(new RegExp(`/c/${otherId}$`));
+  await expect(page.getByTestId('tabbar-list-name')).not.toHaveText('Listed here');
+  // Escape closes it, and it is reached from the keyboard.
+  await page.getByTestId('tabbar-list-button').focus();
+  await page.keyboard.press('Enter');
+  await expect(menu).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(menu).toHaveCount(0);
+
+  // Remembered in this browser.
+  await page.reload();
+  await expect(page.getByTestId('tabbar')).toHaveAttribute('data-view', 'list');
+  await expect(page.getByTestId('tab')).toHaveCount(0);
+
+  // And back to tabs.
+  await view.click();
+  await expect(page.getByTestId('tabbar')).toHaveAttribute('data-view', 'tabs');
+  await expect(page.getByTestId('tab')).toHaveCount(count);
+  await expect(page.locator('[data-testid="tab"][aria-selected="true"]')).toHaveAttribute('data-canvas', otherId);
 });

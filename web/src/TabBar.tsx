@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { canvasHref, openInNewTab } from './address';
 import { DEMO_LABEL, canvasCounts, openProjects, sortedCanvases, type Canvas } from '@aubergine/shared';
 import { api } from './api';
@@ -7,6 +7,8 @@ import { colorClass, colorStyle } from './color';
 import { runCommand } from './commands';
 import { hint } from './shortcuts';
 import { useApp } from './store';
+import { useCanvasView } from './canvas-view';
+import { IconButton, Switcher } from './ui';
 
 /**
  * Where a tab dropped just before `target` should sit: between `target` and
@@ -28,6 +30,7 @@ export function TabBar() {
   const setCanvas = useApp((s) => s.setCanvas);
   useApp((s) => s.settings.shortcuts);
   const askToCloseCanvas = useApp((s) => s.askToCloseCanvas);
+  const view = useCanvasView();
   const [renaming, setRenaming] = useState<{ id: string; text: string } | null>(null);
   const [dragging, setDragging] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -62,7 +65,7 @@ export function TabBar() {
     if (at.left < box.left) row.current.scrollLeft -= box.left - at.left;
     else if (at.right > box.right) row.current.scrollLeft += at.right - box.right;
     // Also when a tab is added or goes: the one being looked at may only now be in the row.
-  }, [current, tabCount]);
+  }, [current, tabCount, view]);
 
   // Asked to rename a canvas (by a key or the palette).
   const ask = useApp((s) => (s.ask?.kind === 'rename-canvas' ? s.ask : null));
@@ -98,14 +101,148 @@ export function TabBar() {
     else run(api.closeCanvas(canvas.id, null));
   };
 
+  /** The options and the close button of a canvas: on each tab, and beside the list's name. */
+  const tools = (canvas: Canvas, active: boolean) => {
+    const messaging = canvas.messagesFrom.includes(canvas.id);
+    return (
+          // The same two things on every tab, shown on the one being looked at and where the pointer or the keyboard is.
+          <span className="tab-tools" onClick={(e) => e.stopPropagation()} onDoubleClick={(e) => e.stopPropagation()}>
+            <button
+              type="button"
+              className="quiet tab-more"
+              aria-haspopup="menu"
+              aria-expanded={menu?.id === canvas.id}
+              aria-label={`Options for the canvas ${canvas.name}`}
+              title="Options for this canvas: rename, color, messages between its terminals, move to another project"
+              onClick={(e) => {
+                // The bar of tabs scrolls sideways and cuts off what hangs below it: the menu is placed against the window.
+                const box = e.currentTarget.getBoundingClientRect();
+                setMenu(menu?.id === canvas.id ? null : { id: canvas.id, left: Math.min(box.left, window.innerWidth - 330), top: box.bottom + 6 });
+              }}
+              data-testid={active ? 'tab-more' : 'tab-more-other'}
+            >
+              ⋯
+            </button>
+            {menu?.id === canvas.id && (
+              <span className="toolbar-menu tab-menu" role="menu" style={{ left: menu.left, top: menu.top }} ref={menuRoot} data-testid="tab-menu">
+                <button
+                  type="button"
+                  role="menuitem"
+                  onClick={() => {
+                    setMenu(null);
+                    setRenaming({ id: canvas.id, text: canvas.name });
+                  }}
+                  data-testid="tab-rename"
+                >
+                  Rename…
+                  <small>Double-clicking the name does the same.</small>
+                </button>
+                <button
+                  type="button"
+                  role="menuitem"
+                  onClick={() => {
+                    setMenu(null);
+                    openInNewTab(canvasHref(canvas.id, canvas.projectId));
+                  }}
+                  data-testid="tab-open-tab"
+                >
+                  Open in new browser tab
+                  <small>This canvas in a browser tab of its own, beside this one.</small>
+                </button>
+                <button
+                  type="button"
+                  role="menuitemcheckbox"
+                  aria-checked={messaging}
+                  aria-pressed={messaging}
+                  onClick={() => {
+                    // Switching it on is a decision: said in full before it is taken.
+                    if (!messaging && !window.confirm(`Let the terminals on “${canvas.name}” message each other?\n\nAn agent there will be able to send a message to another terminal on this canvas, and to be told that one waits. A message is never typed into a terminal. Every message is shown to you, a thread between two pauses after a few turns until you have looked, and terminals marked “people only” take messages from you alone. Terminals that start an agent are “people only” from the start unless you changed that: such a terminal can send, and receives only once you say so: open its drawer (Message on the terminal) and tick that it takes messages while people only. That opens it to messages from terminals and to nothing else.`)) return;
+                    run(api.setCanvasMessaging(canvas.id, !messaging));
+                  }}
+                  data-testid="tab-messaging"
+                >
+                  Messages between terminals: {messaging ? 'on' : 'off'}
+                  <small>{messaging ? 'Terminals on this canvas may message each other. Click to switch that off.' : 'Terminals on this canvas may not message each other. You can always message any terminal yourself.'}</small>
+                </button>
+                <span className="tab-menu-line tab-menu-colour">
+                  <span>Color</span>
+                  <ColorButton value={canvas.color} onChange={(color) => run(api.updateCanvas(canvas.id, { color }))} againstWindow title="Pick a color for this tab" />
+                </span>
+                {canvas.labels[DEMO_LABEL] !== undefined && (
+                  <button
+                    type="button"
+                    role="menuitem"
+                    onClick={() => {
+                      setMenu(null);
+                      runCommand('demo.remove');
+                    }}
+                    data-testid="remove-demo"
+                  >
+                    Remove the demo
+                    <small>Take away everything the demo made. Nothing else is touched.</small>
+                  </button>
+                )}
+                {others.length > 0 && (
+                  <label className="tab-menu-line">
+                    <span>Move to another project</span>
+                    <select
+                      className="tab-project"
+                      aria-label={`Move the canvas ${canvas.name} to another project`}
+                      title="Move this canvas to another project, with its terminals, their runs and what they work in"
+                      value=""
+                      onChange={(e) => {
+                        if (!e.target.value) return;
+                        setMenu(null);
+                        run(api.moveCanvasToProject(canvas.id, e.target.value));
+                      }}
+                      data-testid="tab-move-project"
+                    >
+                      <option value="">Choose…</option>
+                      {others.map((project) => (
+                        <option key={project.id} value={project.id}>
+                          {project.name}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                )}
+              </span>
+            )}
+            {canvases.length > 1 && (
+              <button
+                type="button"
+                className="node-close"
+                aria-label={`Close canvas ${canvas.name}`}
+                title="Close this canvas (its terminals are moved or parked, never ended)"
+                onClick={() => close(canvas)}
+              >
+                ×
+              </button>
+            )}
+          </span>
+    );
+  };
+
   return (
-    <nav className="tabbar" aria-label="Canvases" data-testid="tabbar">
+    <nav className={`tabbar is-${view}`} aria-label="Canvases" data-testid="tabbar" data-view={view}>
+      <ViewSwitch view={view} />
+      {view === 'list' ? (
+        <CanvasList
+          canvases={canvases}
+          current={current}
+          renaming={renaming}
+          setRenaming={setRenaming}
+          commitName={commitName}
+          setCanvas={setCanvas}
+          tools={tools}
+        />
+      ) : (
+      <>
       {/* The tabs scroll sideways by themselves, so that the way to add one is never pushed out of sight. */}
       <div className="tabbar-tabs" role="tablist" aria-label="Canvases" ref={row} data-testid="tabbar-tabs">
       {canvases.map((canvas) => {
         const counts = canvasCounts(app, canvas);
         const active = canvas.id === current;
-        const messaging = canvas.messagesFrom.includes(canvas.id);
         return (
           <div
             key={canvas.id}
@@ -181,127 +318,13 @@ export function TabBar() {
               </span>
             )}
             {counts.unread > 0 && !active && <span className="badge-unread" title="New output" data-testid="tab-unread" />}
-            {renaming?.id !== canvas.id && (
-              // The same two things on every tab, shown on the one being looked at and where the pointer or the keyboard is.
-              <span className="tab-tools" onClick={(e) => e.stopPropagation()} onDoubleClick={(e) => e.stopPropagation()}>
-                <button
-                  type="button"
-                  className="quiet tab-more"
-                  aria-haspopup="menu"
-                  aria-expanded={menu?.id === canvas.id}
-                  aria-label={`Options for the canvas ${canvas.name}`}
-                  title="Options for this canvas: rename, color, messages between its terminals, move to another project"
-                  onClick={(e) => {
-                    // The bar of tabs scrolls sideways and cuts off what hangs below it: the menu is placed against the window.
-                    const box = e.currentTarget.getBoundingClientRect();
-                    setMenu(menu?.id === canvas.id ? null : { id: canvas.id, left: Math.min(box.left, window.innerWidth - 330), top: box.bottom + 6 });
-                  }}
-                  data-testid={active ? 'tab-more' : 'tab-more-other'}
-                >
-                  ⋯
-                </button>
-                {menu?.id === canvas.id && (
-                  <span className="toolbar-menu tab-menu" role="menu" style={{ left: menu.left, top: menu.top }} ref={menuRoot} data-testid="tab-menu">
-                    <button
-                      type="button"
-                      role="menuitem"
-                      onClick={() => {
-                        setMenu(null);
-                        setRenaming({ id: canvas.id, text: canvas.name });
-                      }}
-                      data-testid="tab-rename"
-                    >
-                      Rename…
-                      <small>Double-clicking the name does the same.</small>
-                    </button>
-                    <button
-                      type="button"
-                      role="menuitem"
-                      onClick={() => {
-                        setMenu(null);
-                        openInNewTab(canvasHref(canvas.id, canvas.projectId));
-                      }}
-                      data-testid="tab-open-tab"
-                    >
-                      Open in new browser tab
-                      <small>This canvas in a browser tab of its own, beside this one.</small>
-                    </button>
-                    <button
-                      type="button"
-                      role="menuitemcheckbox"
-                      aria-checked={messaging}
-                      aria-pressed={messaging}
-                      onClick={() => {
-                        // Switching it on is a decision: said in full before it is taken.
-                        if (!messaging && !window.confirm(`Let the terminals on “${canvas.name}” message each other?\n\nAn agent there will be able to send a message to another terminal on this canvas, and to be told that one waits. A message is never typed into a terminal. Every message is shown to you, a thread between two pauses after a few turns until you have looked, and terminals marked “people only” take messages from you alone. Terminals that start an agent are “people only” from the start unless you changed that: such a terminal can send, and receives only once you say so: open its drawer (Message on the terminal) and tick that it takes messages while people only. That opens it to messages from terminals and to nothing else.`)) return;
-                        run(api.setCanvasMessaging(canvas.id, !messaging));
-                      }}
-                      data-testid="tab-messaging"
-                    >
-                      Messages between terminals: {messaging ? 'on' : 'off'}
-                      <small>{messaging ? 'Terminals on this canvas may message each other. Click to switch that off.' : 'Terminals on this canvas may not message each other. You can always message any terminal yourself.'}</small>
-                    </button>
-                    <span className="tab-menu-line tab-menu-colour">
-                      <span>Color</span>
-                      <ColorButton value={canvas.color} onChange={(color) => run(api.updateCanvas(canvas.id, { color }))} againstWindow title="Pick a color for this tab" />
-                    </span>
-                    {canvas.labels[DEMO_LABEL] !== undefined && (
-                      <button
-                        type="button"
-                        role="menuitem"
-                        onClick={() => {
-                          setMenu(null);
-                          runCommand('demo.remove');
-                        }}
-                        data-testid="remove-demo"
-                      >
-                        Remove the demo
-                        <small>Take away everything the demo made. Nothing else is touched.</small>
-                      </button>
-                    )}
-                    {others.length > 0 && (
-                      <label className="tab-menu-line">
-                        <span>Move to another project</span>
-                        <select
-                          className="tab-project"
-                          aria-label={`Move the canvas ${canvas.name} to another project`}
-                          title="Move this canvas to another project, with its terminals, their runs and what they work in"
-                          value=""
-                          onChange={(e) => {
-                            if (!e.target.value) return;
-                            setMenu(null);
-                            run(api.moveCanvasToProject(canvas.id, e.target.value));
-                          }}
-                          data-testid="tab-move-project"
-                        >
-                          <option value="">Choose…</option>
-                          {others.map((project) => (
-                            <option key={project.id} value={project.id}>
-                              {project.name}
-                            </option>
-                          ))}
-                        </select>
-                      </label>
-                    )}
-                  </span>
-                )}
-                {canvases.length > 1 && (
-                  <button
-                    type="button"
-                    className="node-close"
-                    aria-label={`Close canvas ${canvas.name}`}
-                    title="Close this canvas (its terminals are moved or parked, never ended)"
-                    onClick={() => close(canvas)}
-                  >
-                    ×
-                  </button>
-                )}
-              </span>
-            )}
+            {renaming?.id !== canvas.id && tools(canvas, active)}
           </div>
         );
       })}
       </div>
+      </>
+      )}
       <NewCanvas />
       {error && <span className="warning">{error}</span>}
     </nav>
@@ -376,6 +399,139 @@ function NewCanvas() {
           {item('canvas.newInNewTab', 'New canvas in a new browser tab', 'Added, and shown in a tab of its own. This one stays as it is.', 'tabbar-new-tab')}
         </span>
       )}
+    </span>
+  );
+}
+
+/** The button at the start of the bar: the canvases as a row of tabs, or as one list that opens. */
+function ViewSwitch({ view }: { view: 'tabs' | 'list' }) {
+  const asList = view === 'list';
+  return (
+    <IconButton
+      className="tabbar-view"
+      label="Show the canvases as a list"
+      title={asList ? 'The canvases are shown as a list. Press to show them as tabs.' : 'The canvases are shown as tabs. Press to show them as one list.'}
+      aria-pressed={asList}
+      onClick={() => runCommand('canvas.switchView')}
+      data-testid="tabbar-view"
+    >
+      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        {asList ? (
+          // A list that opens: what pressing gives back is the tabs, so the tabs are drawn.
+          <>
+            <path d="M4 18v-8a1.5 1.5 0 0 1 1.5-1.5h5A1.5 1.5 0 0 1 12 10v8" />
+            <path d="M14 18v-5a1.5 1.5 0 0 1 1.5-1.5h3A1.5 1.5 0 0 1 20 13v5" />
+            <path d="M2 18h20" />
+          </>
+        ) : (
+          // Tabs: what pressing gives is one list that opens, so a list under a name is drawn.
+          <>
+            <rect x="3" y="4" width="18" height="6" rx="1.5" />
+            <path d="M15 6.5l1.5 1.5 1.5-1.5" />
+            <path d="M5 14h14M5 18h10" />
+          </>
+        )}
+      </svg>
+    </IconButton>
+  );
+}
+
+/**
+ * The canvases as one list: the canvas being looked at by its name, the others in its menu, each with what waits
+ * there. Its options and its close button stand beside it, as they do on its tab.
+ */
+function CanvasList({
+  canvases,
+  current,
+  renaming,
+  setRenaming,
+  commitName,
+  setCanvas,
+  tools,
+}: {
+  canvases: readonly Canvas[];
+  current: string | null;
+  renaming: { id: string; text: string } | null;
+  setRenaming: (next: { id: string; text: string } | null) => void;
+  commitName: () => void;
+  setCanvas: (id: string) => void;
+  tools: (canvas: Canvas, active: boolean) => ReactNode;
+}) {
+  const app = useApp((s) => s.app);
+  const canvas = canvases.find((c) => c.id === current);
+  if (!app || !canvas) return null;
+  const waitingElsewhere = canvases.filter((c) => c.id !== canvas.id).reduce((sum, c) => sum + canvasCounts(app, c).waiting, 0);
+  return (
+    <span className="tabbar-list" data-testid="tabbar-list">
+      {renaming?.id === canvas.id ? (
+        <input
+          className="tab-input"
+          aria-label="Canvas name"
+          value={renaming.text}
+          maxLength={80}
+          autoFocus
+          onFocus={(e) => e.currentTarget.select()}
+          onChange={(e) => setRenaming({ id: canvas.id, text: e.target.value })}
+          onBlur={commitName}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') commitName();
+            if (e.key === 'Escape') setRenaming(null);
+          }}
+        />
+      ) : (
+        <Switcher
+          className="tabbar-list-switcher"
+          buttonClassName={`tabbar-list-current ${colorClass(canvas.color)}`}
+          style={colorStyle(canvas.color)}
+          label="Canvas"
+          name={canvas.name}
+          nameTestid="tabbar-list-name"
+          title={`The canvas you are looking at, of ${canvases.length}. Choose another from the list.`}
+          testid="tabbar-list-button"
+          menuTestid="tabbar-list-menu"
+          extra={
+            // What waits on the canvases not being looked at, as the project's control says it of other projects; what waits here is on the canvas.
+            waitingElsewhere > 0 && (
+              <span className="tab-waiting" title={`${waitingElsewhere} waiting for you on other canvases`} data-testid="tabbar-list-elsewhere">
+                {waitingElsewhere}
+              </span>
+            )
+          }
+        >
+          {canvases.map((c) => {
+            const counts = canvasCounts(app, c);
+            const active = c.id === current;
+            return (
+              <button
+                key={c.id}
+                type="button"
+                role="menuitemradio"
+                aria-checked={active}
+                data-testid="tabbar-list-row"
+                data-canvas={c.id}
+                onClick={(e) => {
+                  // As on a tab: a click the way a link opens in a new tab opens this canvas in a new browser tab.
+                  if (e.metaKey || e.ctrlKey || e.shiftKey) return openInNewTab(canvasHref(c.id, c.projectId));
+                  if (!active) setCanvas(c.id);
+                }}
+              >
+                <span className="tabbar-list-row">
+                  <span className={`tabbar-list-color ${colorClass(c.color, 'swatch')}`} style={colorStyle(c.color)} aria-hidden="true" />
+                  <span className="tabbar-list-row-name">{c.name}</span>
+                  {counts.waiting > 0 && (
+                    <span className="tab-waiting" title={`${counts.waiting} waiting for you`}>
+                      {counts.waiting}
+                    </span>
+                  )}
+                  {counts.unread > 0 && !active && <span className="badge-unread" title="New output" />}
+                </span>
+                <small>{active ? 'You are here.' : `${c.layout.nodes.length} terminal${c.layout.nodes.length === 1 ? '' : 's'}`}</small>
+              </button>
+            );
+          })}
+        </Switcher>
+      )}
+      {renaming?.id !== canvas.id && tools(canvas, true)}
     </span>
   );
 }

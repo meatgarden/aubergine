@@ -1,4 +1,5 @@
 import { foldMap, mapFolded } from './map-fold';
+import { canvasView, setCanvasView } from './canvas-view';
 import { COMMAND_IDS, THEMES, THEME_WORDS, demoOf, sortedCanvases, type CommandId, type Session } from '@aubergine/shared';
 import { chooseTheme } from './theme';
 import { openOnDesktop } from './desktop';
@@ -606,6 +607,14 @@ export const COMMANDS: readonly Command[] = [
       const canvas = currentCanvas(state);
       if (canvas) openInNewTab(canvasHref(canvas.id, canvas.projectId));
     },
+  },
+  {
+    id: 'canvas.switchView',
+    title: 'Show the canvases as tabs or as a list',
+    description: 'Switches the canvases over the canvas between a row of tabs and one list that opens. This browser remembers the choice.',
+    group: 'Canvases',
+    available: () => true,
+    run: () => setCanvasView(canvasView() === 'tabs' ? 'list' : 'tabs'),
   },
   {
     id: 'view.fit',
