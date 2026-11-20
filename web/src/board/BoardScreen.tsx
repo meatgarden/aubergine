@@ -6,7 +6,8 @@ import { ApprovalControls } from '../workflows/ApprovalControls';
 import { liveFilters, loadFilters, nextCard, saveFilters, type Box } from './board-model';
 import { RunManyDialog } from './RunManyDialog';
 import { DOT_WORD, dotTone } from '../terminal-rows';
-import { EmptyState, MenuButton, Page, StateDot } from '../ui';
+import { FirstSteps, MenuButton, Page, StateDot } from '../ui';
+import { PageFlow } from '../page-flow';
 
 /**
  * The board: every run that is going, on every canvas, by workflow and by
@@ -193,12 +194,13 @@ export function BoardScreen() {
       <Page
         name="board"
         title="Board"
+        line="Every run that is going: the step each terminal is on, and the ones waiting for you."
+        flow={<PageFlow here="board" />}
         summary={
           <span className="board-summary" data-testid="board-summary">
             {board.summary}
           </span>
         }
-        line="Every run that is going, by workflow and step."
         label="Board"
         testid="board"
         className="board-screen"
@@ -282,16 +284,16 @@ export function BoardScreen() {
                 No run matches these filters.
               </p>
             ) : (
-              <EmptyState
-                data-testid="board-empty"
+              <FirstSteps
+                testid="board-empty"
+                title="The board shows runs as they go."
+                steps={['Start a workflow on a terminal that runs an agent: that is a run.', 'Each run is a card, in the column of the step it is on.', 'A step that waits for you says so: approve it, or send it back.']}
                 action={
                   <button type="button" onClick={() => setMany(true)} data-testid="board-empty-start">
                     Start a workflow…
                   </button>
                 }
-              >
-                Workflows that are running will be shown here, step by step.
-              </EmptyState>
+              />
             ))}
           {board.groups.map((group) => (
             <section key={group.key} className="board-group" data-testid="board-group" data-workflow={group.workflowId ?? 'single'}>

@@ -3648,3 +3648,57 @@ div.note-summary-read {
   border-radius: var(--radius-control) 0 0 var(--radius-control);
   white-space: nowrap;
 }
+
+/* ---------- How the four pages fit together, and what an empty one is for ---------- */
+
+/* Under a page's name: the four in the order work goes through them, the one being looked at marked as the places in the top bar are. */
+.ui-page-flow {
+  padding-bottom: var(--space-3);
+}
+.page-flow > ol {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.page-flow li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+.page-flow-arrow {
+  color: var(--text-muted);
+}
+.page-flow-step {
+  gap: var(--space-2);
+}
+.page-flow-name {
+  color: var(--text);
+}
+.page-flow-says {
+  font-size: var(--font-meta);
+  color: var(--text-muted);
+}
+.page-flow-step[aria-current='page'] {
+  background: var(--accent-soft);
+}
+.page-flow-step[aria-current='page'] .page-flow-name {
+  font-weight: var(--weight-strong);
+  color: var(--accent-text);
+}
+/* An empty place said to someone new: a sentence, numbered steps, one button. */
+.ui-first-steps > strong {
+  font-size: var(--font-title);
+  color: var(--text);
+}
+.ui-first-steps > ol {
+  margin: 0;
+  padding-left: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  color: var(--text);
+}

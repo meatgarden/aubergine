@@ -4,7 +4,8 @@ import { runCommand } from '../commands';
 import { api } from '../api';
 import { useApp } from '../store';
 import { toReadWords } from '../review/to-read';
-import { Banner, EmptyState, HowThisWorks, MenuButton, MenuItem, Page, Tabs } from '../ui';
+import { Banner, EmptyState, FirstSteps, HowThisWorks, MenuButton, MenuItem, Page, Tabs } from '../ui';
+import { PageFlow } from '../page-flow';
 
 /**
  * The workflows there are: make one from a template, change, duplicate,
@@ -152,7 +153,8 @@ export function WorkflowsScreen() {
     <Page
       name="workflows"
       title="Workflows"
-      line="A workflow is a list of steps an agent goes through one at a time."
+      line="Recipes of steps an agent goes through one at a time. Start one on a terminal, and it runs on the Board."
+      flow={<PageFlow here="workflows" />}
       label="Workflows"
       testid="workflows-screen"
       className="workflows-screen"
@@ -218,6 +220,18 @@ export function WorkflowsScreen() {
           <section data-testid="workflows-part">
             {list.length === 0 ? (
               <>
+                <FirstSteps
+                  testid="workflows-empty"
+                  title="A workflow is a recipe an agent follows, one step at a time."
+                  steps={['Make one: from a recipe below, or empty.', 'Start it on a terminal that runs an agent: that is a run.', 'The agent reports each step done and is given the next; watch it on the Board.']}
+                  action={
+                    templates.some((t) => t.name === 'fix-a-bug') && (
+                      <button type="button" disabled={busy} onClick={() => void make(() => api.workflowFromTemplate('fix-a-bug'))} data-testid="workflows-empty-try">
+                        Try “Fix a bug”
+                      </button>
+                    )
+                  }
+                />
                 <h3>Start from one of these</h3>
                 {templateCards}
               </>
