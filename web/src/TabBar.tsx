@@ -223,8 +223,8 @@ export function TabBar() {
                       }}
                       data-testid="tab-open-tab"
                     >
-                      Open in new tab
-                      <small>This canvas in a new browser tab, beside this one.</small>
+                      Open in new browser tab
+                      <small>This canvas in a browser tab of its own, beside this one.</small>
                     </button>
                     <button
                       type="button"

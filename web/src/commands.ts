@@ -418,7 +418,7 @@ export const COMMANDS: readonly Command[] = [
   },
   {
     id: 'terminal.openInNewTab',
-    title: 'Open in new tab',
+    title: 'Open in new browser tab',
     description: 'Opens this terminal by itself in a new browser tab. Both show the same terminal, an agent\'s too, and you can type in either; they share one size, the size of the one typed into last. Closing the tab ends nothing.',
     group: 'Terminals',
     available: (state) => {
@@ -563,7 +563,7 @@ export const COMMANDS: readonly Command[] = [
   },
   {
     id: 'canvas.newInNewTab',
-    title: 'New canvas in a new tab',
+    title: 'New canvas in a new browser tab',
     description: 'Adds a canvas and shows it in a new browser tab. This tab stays on the canvas it shows.',
     group: 'Canvases',
     available: (state) => state.app !== null,
@@ -598,7 +598,7 @@ export const COMMANDS: readonly Command[] = [
   },
   {
     id: 'canvas.openInNewTab',
-    title: 'Open the canvas in a new tab',
+    title: 'Open the canvas in a new browser tab',
     description: 'Opens this canvas in a new browser tab, beside this one. Each tab can then show a canvas of its own. Clicking a tab the way you open a link in a new tab does the same.',
     group: 'Canvases',
     available: (state) => state.canvasId !== null,
