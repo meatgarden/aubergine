@@ -92,7 +92,13 @@ export function NewTerminal({ compact = false }: { compact?: boolean }) {
         }}
         data-testid="toolbar-new-more"
       >
-        ▾
+        {compact ? (
+          '▾'
+        ) : (
+          <svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M4 6l4 4 4-4" />
+          </svg>
+        )}
       </button>
       {menu && (
         <span className="toolbar-menu new-terminal-menu" role="menu" style={{ left: menu.left, top: menu.top }} data-testid="toolbar-new-menu">
