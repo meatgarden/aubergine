@@ -2989,6 +2989,9 @@ button.rail-dot:active {
   gap: var(--space-1);
   overflow-x: auto;
   scrollbar-width: none;
+  /* Room under the tabs for the line under the one being looked at, which the row would otherwise cut off; taken back, so the bar keeps its height. */
+  padding-bottom: var(--space-2);
+  margin-bottom: calc(-1 * var(--space-2));
 }
 /*
  * A tab is a control of the ordinary height, with a button's edge: each one not being looked at is plainly a thing to
@@ -3016,6 +3019,21 @@ button.rail-dot:active {
 }
 .tab.active:not(.color-none) {
   background: color-mix(in srgb, var(--swatch) 32%, var(--surface-active));
+}
+/* The tab being looked at has a line under it, apart from the pill by a step of the grid. */
+.tab {
+  position: relative;
+}
+.tab.active::after {
+  content: '';
+  position: absolute;
+  left: var(--space-2);
+  right: var(--space-2);
+  bottom: calc(-1 * var(--space-1) - 2px);
+  height: 2px;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  pointer-events: none;
 }
 /* "New canvas" stands after the row of tabs, at the height of a tab, and does not give way to them. */
 .tabbar > .tabbar-new {
