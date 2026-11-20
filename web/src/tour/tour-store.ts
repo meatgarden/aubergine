@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import type { TourName } from './registry';
 
 /**
  * Where the tour stands. Whether it was finished or put away is remembered
@@ -52,13 +53,15 @@ export function resumeAt(value: Remembered | null, stepIds: readonly string[]): 
 }
 
 interface TourStore {
+  /** Which tour is up: the canvas's, or a page's. Only the canvas's is remembered. */
+  tour: TourName;
   /** The step being shown, by its place in the list; null while the tour is not up. */
   step: number | null;
   /** What the person did since this step began. */
   signals: ReadonlySet<string>;
   /** Something being pointed at from the help panel, for a few seconds. */
   pointing: { stepId: string; until: number } | null;
-  start: (step: number, stepId: string) => void;
+  start: (step: number, stepId: string, tour?: TourName) => void;
   go: (step: number, stepId: string) => void;
   /** Puts it away for now (it can be taken up again), for good, or as finished. */
   end: (how: 'paused' | 'dismissed' | 'finished', stepId: string | null) => void;
@@ -67,19 +70,21 @@ interface TourStore {
 }
 
 export const useTour = create<TourStore>((set, get) => ({
+  tour: 'canvas',
   step: null,
   signals: new Set(),
   pointing: null,
-  start: (step, stepId) => {
-    remember({ status: 'active', step: stepId });
-    set({ step, signals: new Set(), pointing: null });
+  // A page's tour is short and started by hand each time: nothing about it is remembered, and it leaves the canvas's tour as it was.
+  start: (step, stepId, tour = 'canvas') => {
+    if (tour === 'canvas') remember({ status: 'active', step: stepId });
+    set({ tour, step, signals: new Set(), pointing: null });
   },
   go: (step, stepId) => {
-    remember({ status: 'active', step: stepId });
+    if (get().tour === 'canvas') remember({ status: 'active', step: stepId });
     set({ step, signals: new Set() });
   },
   end: (how, stepId) => {
-    remember({ status: how, step: how === 'paused' ? stepId : null });
+    if (get().tour === 'canvas') remember({ status: how, step: how === 'paused' ? stepId : null });
     set({ step: null, signals: new Set() });
   },
   signal: (name) => {

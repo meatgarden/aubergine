@@ -4,8 +4,9 @@ import type { Run } from '@aubergine/shared';
 import { shouldSayFullSize } from '../full-size-hint';
 import { handedIn, handedInWords } from '../workflows/run-model';
 import { bestCorner, cornerBox, overlap } from './placement';
-import { tourSteps } from './registry';
+import { helpLines, tourSteps } from './registry';
 import './steps';
+import './page-steps';
 import { neverShown, parseRemembered, resumeAt } from './tour-store';
 
 describe('the steps of the tour', () => {
@@ -37,6 +38,31 @@ describe('the steps of the tour', () => {
 
   it('do not ask for a key a browser may keep: no step names a key combination', () => {
     for (const step of steps) expect(`${step.text} ${step.reminder}`).not.toMatch(/⌘|Ctrl\s*\+|Cmd|Alt\s*\+|F\d/);
+  });
+});
+
+describe('the short tour of each page', () => {
+  const pages = ['library', 'workflows', 'queue', 'board'] as const;
+
+  it('has a few steps for each of the four pages, said the same way as the canvas\'s', () => {
+    for (const page of pages) {
+      const steps = tourSteps(page);
+      expect(steps.length, page).toBeGreaterThanOrEqual(3);
+      expect(steps.length, page).toBeLessThanOrEqual(4);
+      for (const step of steps) {
+        const sentences = step.text.split(/(?<=[.!?])\s+/).filter((part) => part.trim() !== '');
+        expect(sentences.length, step.id).toBeLessThanOrEqual(2);
+        expect(step.text.length, step.id).toBeLessThanOrEqual(140);
+        expect(step.title.length, step.id).toBeLessThanOrEqual(40);
+        expect(step.text, step.id).not.toMatch(/⌘|Ctrl\s*\+|Cmd|Alt\s*\+|F\d/);
+      }
+    }
+  });
+
+  it('is kept apart: not in the canvas\'s tour, and not in Help', () => {
+    const pageIds = new Set(pages.flatMap((page) => tourSteps(page).map((step) => step.id)));
+    expect(tourSteps().some((step) => pageIds.has(step.id))).toBe(false);
+    expect(helpLines().some((step) => pageIds.has(step.id))).toBe(false);
   });
 });
 

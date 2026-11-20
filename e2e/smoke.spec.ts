@@ -5907,3 +5907,38 @@ test('the four pages say what they are for and where they stand: Library, Workfl
   await expect(page).toHaveURL(/\/board$/);
   await page.keyboard.press('Escape');
 });
+
+test('a page shows itself in a short tour of its own: started from under its name, moved on by the real action, over when the page is left', async ({ page }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  const before = await page.evaluate(() => localStorage.getItem('aubergine.tour'));
+  await page.getByTestId('toolbar-library').click();
+  const card = page.getByTestId('tour-card');
+  await page.getByTestId('library-screen').getByTestId('page-tour').click();
+  await expect(card).toHaveAttribute('data-step', 'library-items');
+  await expect(page.getByTestId('tour-count')).toHaveText('1 of 3');
+  // Reading an item is the step's own action: done, and on to the next.
+  await page.getByTestId('library-item').first().click();
+  await expect(page.getByTestId('tour-done')).toBeVisible();
+  await expect(card).toHaveAttribute('data-step', 'library-install', { timeout: 5000 });
+  // A step that only tells says Next, not Skip.
+  await expect(page.getByTestId('tour-next')).toHaveText('Next');
+  await page.getByTestId('tour-next').click();
+  await expect(card).toHaveAttribute('data-step', 'library-sources');
+  await expect(page.getByTestId('tour-finish')).toBeVisible();
+  await expect(page.getByTestId('tour-dismiss')).toHaveCount(0);
+  await expect(page.getByTestId('tour-remove-demo')).toHaveCount(0);
+  await page.getByTestId('tour-finish').click();
+  await expect(card).toHaveCount(0);
+
+  // Left half-way, it is over: it belongs to its page.
+  await page.getByTestId('library-screen').getByTestId('page-flow-step').and(page.locator('[data-page="queue"]')).click();
+  await page.getByTestId('queue-screen').getByTestId('page-tour').click();
+  await expect(card).toHaveAttribute('data-step', 'queue-foryou');
+  await page.getByTestId('queue-screen').getByTestId('page-flow-step').and(page.locator('[data-page="board"]')).click();
+  await expect(card).toHaveCount(0);
+  // Nothing about a page's tour is remembered: the canvas's tour is as it was.
+  expect(await page.evaluate(() => localStorage.getItem('aubergine.tour'))).toBe(before);
+  await page.keyboard.press('Escape');
+});

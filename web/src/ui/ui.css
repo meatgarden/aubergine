@@ -3655,6 +3655,12 @@ div.note-summary-read {
 .ui-page-flow {
   padding-bottom: var(--space-3);
 }
+.page-flow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-6);
+}
 .page-flow > ol {
   display: flex;
   flex-wrap: wrap;
