@@ -2408,7 +2408,17 @@ button.foryou-act {
 .note-entry header {
   align-items: baseline;
 }
-/* The summary shows four lines at least. */
+/*
+ * The summary shows four lines at least, read or being changed: the same box either way, so that pressing it or
+ * leaving it does not move what is under it. Beside a terminal both stop at a share of the note and scroll there.
+ */
+.note-panel .note-summary-read {
+  min-height: 112px;
+}
+.note-panel:not(.embedded) :is(textarea.note-summary, .note-summary-read) {
+  max-height: 40%;
+  overflow-y: auto;
+}
 .note-panel textarea.note-summary {
   min-height: 112px;
   padding: var(--space-2) var(--space-3);

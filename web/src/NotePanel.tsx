@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { NoteEntry } from '@aubergine/shared';
 import { api } from './api';
 import { useApp } from './store';
@@ -88,10 +88,29 @@ export function NotePanel({
   useEffect(() => {
     if (adding) entryBox.current?.focus();
   }, [adding]);
+  // The box grows with what is in it, as the summary does when it is read, so that the note keeps its height when
+  // the summary is pressed to change it and when it is left. Beside a terminal both stop at a share of the note's
+  // height and scroll there (the stylesheet says how much).
+  const box = useRef<HTMLTextAreaElement>(null);
+  useLayoutEffect(() => {
+    const element = box.current;
+    if (!element) return;
+    element.style.height = 'auto';
+    const edges = element.offsetHeight - element.clientHeight;
+    element.style.height = `${element.scrollHeight + edges}px`;
+  }, [text, editing, embedded, adding, reading]);
   const who = (entry: NoteEntry): string => (entry.kind === 'prompt' ? 'you asked' : entry.author === 'agent' ? 'agent' : 'you');
 
   return (
-    <aside className={`note-panel nodrag nopan nowheel${embedded ? ' embedded' : ''}`} data-testid={embedded ? 'note-drawer' : 'note-panel'}>
+    <aside
+      className={`note-panel nodrag nopan nowheel${embedded ? ' embedded' : ''}`}
+      // The note has the keyboard now: no terminal is on record as having it, or the next time that terminal is drawn
+      // again it would take the keyboard back from the note in the middle of typing. The selection stays.
+      onFocus={() => {
+        if (useApp.getState().focus) useApp.getState().focusSession(null);
+      }}
+      data-testid={embedded ? 'note-drawer' : 'note-panel'}
+    >
       {!embedded && (
         <header>
           <span>Note</span>
@@ -134,6 +153,7 @@ export function NotePanel({
           </div>
         ) : (
           <textarea
+            ref={box}
             className="note-summary"
             aria-label="Summary of this terminal"
             autoFocus={editing || (!embedded && takeKeyboard)}
