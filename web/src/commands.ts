@@ -376,6 +376,22 @@ export const COMMANDS: readonly Command[] = [
     },
   },
   {
+    id: 'terminal.details',
+    title: 'Details of this terminal',
+    description: 'Opens the terminal\'s details beside the side panel: what it asks of you, what is known about it, its note and its messages. Asked again for the same terminal, it closes them.',
+    group: 'Terminals',
+    available: (state) => targetSession(state) != null,
+    run: (state) => {
+      const session = targetSession(state);
+      if (!session) return;
+      const open = state.drawer;
+      if (open?.section === 'terminals' && open.kind === 'notes' && open.id === session.id) return state.openDrawer(null);
+      // The details stand beside the side panel, so a folded panel is opened for them.
+      if (!state.side.open) state.setSide({ open: true });
+      state.openDrawer({ section: 'terminals', kind: 'notes', id: session.id });
+    },
+  },
+  {
     id: 'terminal.message',
     title: 'Message this terminal…',
     description: 'Opens the terminal\'s details on its messages, where you can write a message for the agent in it and see every message to and from it. A message is kept for the agent to read; it is never typed.',

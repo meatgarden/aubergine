@@ -4091,7 +4091,32 @@ test('the drawer: what a terminal asks comes first, one thing to type into, besi
     // The same menu as the row, without the line that opened this.
     await drawer.getByTestId('details-more').click();
     await expect(page.getByTestId('details-menu').getByRole('menuitem')).toHaveText(['Rename', 'Tags…', 'Open on desktop', 'Open in new tab', 'Move to canvas…', 'Park']);
+    // It lies over everything, the side panel beside the drawer too, and is wholly in the window.
+    expect(await onTop(page, 'details-menu')).toBe(true);
+    expect(await page.getByTestId('details-menu').evaluate((el) => { const r = el.getBoundingClientRect(); return r.left >= 0 && r.right <= window.innerWidth && r.bottom <= window.innerHeight; })).toBe(true);
     await page.keyboard.press('Escape');
+    await expect(page.getByTestId('details-menu')).toHaveCount(0);
+    await drawer.getByTestId('details-close').click();
+
+    // A terminal's title has Details beside Note: it opens these details, pressed while they are open, and closes them.
+    const fixing = page.locator(`[data-testid="terminal-node"][data-session="${demo.sessions.fixing}"]`);
+    await row(demo.sessions.fixing as string).click();
+    await expect(fixing).toBeInViewport();
+    const details = fixing.getByTestId('node-details');
+    expect(await fixing.evaluate((el) => { const note = el.querySelector('[aria-label^="Note for"]'); return note?.nextElementSibling?.getAttribute('data-testid'); })).toBe('node-details');
+    await details.click();
+    await expect(drawer).toBeVisible();
+    await expect(drawer.getByTestId('details-name')).toHaveText((await fixing.getByTestId('node-name').textContent()) ?? '');
+    await expect(details).toHaveAttribute('aria-pressed', 'true');
+    await details.click();
+    await expect(drawer).toHaveCount(0);
+    await expect(details).toHaveAttribute('aria-pressed', 'false');
+    // With the side panel folded, it opens the panel for them.
+    await page.getByTestId('panel-fold').click();
+    await expect(page.locator('.side-panel.collapsed')).toHaveCount(1);
+    await details.click();
+    await expect(page.locator('.side-panel.collapsed')).toHaveCount(0);
+    await expect(drawer.getByTestId('details-name')).toBeVisible();
     await drawer.getByTestId('details-close').click();
 
     // The note beside a terminal is the same component with the same words.

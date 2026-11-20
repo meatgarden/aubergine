@@ -25,6 +25,7 @@ export const COMMAND_IDS = [
   'agent.askRecap',
   'history.open',
   'terminal.message',
+  'terminal.details',
   'terminal.openOnDesktop',
   'terminal.openInNewTab',
   'tour.start',
