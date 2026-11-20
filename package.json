@@ -21,6 +21,7 @@
     "e2e": "playwright test",
     "load-canvas": "pnpm --filter @aubergine/daemon exec tsx scripts/load-canvas.ts",
     "shellcheck": "node scripts/shellcheck.mjs",
+    "npm-package": "node scripts/npm-package.mjs",
     "generate": "pnpm --filter @aubergine/daemon exec tsx scripts/generate-api.ts",
     "test:install": "pnpm --filter @aubergine/daemon test:install",
     "check": "pnpm typecheck && pnpm lint && pnpm shellcheck && pnpm generate --check && pnpm test && pnpm test:install && pnpm e2e"
@@ -29,6 +30,7 @@
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.65.0",
     "@types/node": "^26.6.6",
+    "esbuild": "0.28.2",
     "eslint": "^10.14.0",
     "eslint-plugin-react-hooks": "^7.1.1",
     "globals": "^17.14.0",

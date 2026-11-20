@@ -1,6 +1,6 @@
+import { packageRoot } from './package-root';
 import { cp, mkdir, rm } from 'node:fs/promises';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { DEMO_CANVAS_NAME, DEMO_LABEL, DEMO_PARTS, Element, NODE_DEFAULT_HEIGHT, NODE_DEFAULT_WIDTH, WORKFLOW_TEMPLATES, demoLabel, demoOf, needsUser, type DemoPart, type DemoStatus, type OwnerCaller } from '@aubergine/shared';
 import type { Drafts } from './drafts';
 import { ConflictError, type Sessions } from './sessions';
@@ -46,7 +46,7 @@ function shellQuote(value: string): string {
 
 /** Where the stand-ins and the made-up project are, in this checkout. */
 export function demoSource(): string {
-  return path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', 'demo');
+  return path.join(packageRoot(), 'daemon', 'demo');
 }
 
 export interface DemoOptions {

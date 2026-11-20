@@ -168,6 +168,20 @@ First visit in a browser? Open this link once:
 
 If something is not right, `aubergine doctor` checks everything Aubergine needs, one line per check.
 
+### Install with npm
+
+Aubergine can also be built as an npm package: plain JavaScript and the built web app, with no development tools and no pnpm. It is not published yet; the package name below is the one the build uses unless told another (`--name`).
+
+```sh
+brew install tmux          # npm cannot install tmux; 3.2 or newer
+npm install -g @meatgarden/aubergine
+aubergine start --open
+```
+
+Node.js 22 or newer is needed. `aubergine update` and `aubergine uninstall` say the npm command to run (`npm install -g @meatgarden/aubergine@latest`, `npm uninstall -g @meatgarden/aubergine`); `uninstall` still removes start at login, and nothing of your data or terminals. Some versions of npm do not run a package's install scripts unless you allow them; Aubergine does not need its own, since the terminal library ships ready-made binaries for macOS and Linux.
+
+**Building the package** from a checkout: `pnpm npm-package` writes it to `dist/npm`, and `pnpm npm-package --pack` also writes the `.tgz` to `dist/`, which `npm install -g ./dist/<file>.tgz` installs. Publishing is `npm publish dist/npm --access public` with your own npm account; nothing here publishes.
+
 ### Manual install
 
 The same result by hand, if you would rather not run the installer, or want the code somewhere of your own choosing to work on it.

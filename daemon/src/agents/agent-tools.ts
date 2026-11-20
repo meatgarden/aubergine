@@ -1,6 +1,6 @@
+import { packageRoot } from '../package-root';
 import { chmod, mkdir, readdir, rm, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { Id, type AgentToolsChoice, type ApiToken } from '@aubergine/shared';
 import { stableNodePath } from '../node-path';
 import type { StateHub } from '../state-hub';
@@ -29,8 +29,7 @@ const FOLDER = path.join('agents', 'mcp');
 
 /** The command that starts `aubergine mcp` from this checkout, with a Node that survives an upgrade. */
 function mcpCommand(): { command: string; args: string[] } {
-  const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
-  return { command: stableNodePath(), args: [path.join(root, 'bin', 'aubergine.mjs'), 'mcp'] };
+  return { command: stableNodePath(), args: [path.join(packageRoot(), 'bin', 'aubergine.mjs'), 'mcp'] };
 }
 
 /** What the file says. Without a secret, the MCP server uses the session's own token from its environment. */

@@ -48,7 +48,8 @@ e2e/      Playwright smoke test
 install.sh  the one-line installer; its commands are in daemon/src/cli/install.ts (start, open,
           update, version, uninstall, doctor), its tests in daemon/src/install/*.installtest.ts,
           and scripts/shellcheck.mjs lints it
-bin/      the `aubergine` command (a launcher for daemon/src/cli.ts)
+bin/      the `aubergine` command (a launcher for daemon/src/cli.ts, or the compiled dist/cli.mjs in the npm package)
+scripts/npm-package.mjs  builds the npm package into dist/npm (`pnpm npm-package [--name …] [--pack]`); it never publishes
 ```
 
 ## The four seams
@@ -282,6 +283,8 @@ These are the only abstractions in the code base. Each has exactly one implement
 - **The shell snippet must always fall through to a normal shell.** Any change to it needs the tests for server up, stopped, hanging and command missing to pass. `here --from-shell-hook` is quiet and reports failure only by exit code.
 - **Generated files that start Node** (the shell snippet, the login service, agent settings) take the path from `stableNodePath()` in `daemon/src/node-path.ts`, never `process.execPath`, so they survive a Node upgrade.
 - **The installer changes two things only**: the install folder (`~/.aubergine`, or `AUBERGINE_HOME`) and one link named `aubergine`. It never uses `sudo`, never writes a shell startup file, never installs Node, pnpm or tmux, never touches the data folder, and replaces nothing at the link's place that is not its own link. It stays POSIX `sh`, with its whole body in a function called on the last line. Every check runs before anything is changed.
+- **Where this copy is, is `packageRoot()`** (`daemon/src/package-root.ts`): the nearest folder above the module with `bin/aubergine.mjs`. Every path to the copy's own files (the web app, templates, the library, the demo, the tmux configuration, the command) is worked out from it, never from a module's depth, because the npm package runs compiled files at another depth. `entryArguments` (and `bin/aubergine.mjs`) run `dist/<name>.mjs` where it exists, else the source through tsx.
+- **The npm package keeps the layout of a checkout** and is built by `scripts/npm-package.mjs` alone; a file the code reads at run time is copied there. It holds `.installed-from-npm`, so `update` and `uninstall` leave the code and the command to npm and say the npm command. Nothing in this repository publishes it.
 - **`uninstall` removes only what the installer made**: links that point at this copy, and the copy's folder only when `.installed-by-installer` is beside it. Never a checkout someone made, never the data folder, never a session.
 - **`open` does not print the access token** unless asked with `--print`.
 - The launcher (`bin/aubergine.mjs`) passes signals on to the command it starts; keep it that way so stopping `aubergine start` stops the server.
@@ -512,7 +515,9 @@ The look: tokens for every size, colour, space, corner and layer in both themes 
 
 Simpler surfaces: one row of panel tabs with More, one Filter menu, 44px rows, a terminal's title with one menu, one For you count in the top bar, Workflows as cards with two tabs, the Queue with three tabs, the Library's sources folded, the Board's filters in one menu, new pieces in `web/src/ui` (`MenuButton`, `MenuItem`, `Tabs`, `HowThisWorks`). The workflow editor, the saved-step editor and the run dialog are one column with steps changed in place. The inventory panel, the working-copy panel and the note panel beside a terminal were not looked at after these changes.
 
-Not built yet: a packaged build without development dependencies, Linux tested, measured key tables for Safari, Firefox, Linux and Windows, publishing the client as a package, moving the remaining `/api/v1` routes onto `/v1`, the workflow library, the board of runs, approvals, branches, a pool of agents, a list of past runs in the browser, waiting for output, changing a token's reach, SQLite, an HTTP transport for the MCP server, presets, a finder agent, recording, bash or fish integration.
+An npm package: `scripts/npm-package.mjs` compiles the server and the command with esbuild and copies what is read at run time; `packageRoot()` replaced paths worked out from a module's depth; `aubergine version`, `update`, `uninstall` and `doctor` know a copy installed with npm. Installed from the packed file into a temporary prefix and run on macOS (start, the demo, live terminals, `mcp`); not published, and not tried on Linux.
+
+Not built yet: publishing the npm package, Linux tested, measured key tables for Safari, Firefox, Linux and Windows, publishing the client as a package, moving the remaining `/api/v1` routes onto `/v1`, the workflow library, the board of runs, approvals, branches, a pool of agents, a list of past runs in the browser, waiting for output, changing a token's reach, SQLite, an HTTP transport for the MCP server, presets, a finder agent, recording, bash or fish integration.
 
 ## Working in this repo
 

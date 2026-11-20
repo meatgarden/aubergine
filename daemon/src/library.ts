@@ -1,7 +1,7 @@
+import { packageRoot } from './package-root';
 import { ownerOfNew } from './project-context';
 import { realpath, stat } from 'node:fs/promises';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import {
   sourceLabel,
   FLAG_WORDS,
@@ -96,7 +96,7 @@ export function registerSourceKind(kind: SourceKindOf): void {
 }
 
 /** The folder of the library that ships with the app: `library/` at the top of this copy. */
-export const builtinFolder = (): string => path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..', 'library');
+export const builtinFolder = (): string => path.join(packageRoot(), 'library');
 
 registerSourceKind({
   kind: 'builtin',

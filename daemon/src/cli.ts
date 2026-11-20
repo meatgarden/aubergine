@@ -79,7 +79,7 @@ import {
   resolveSession,
   resolveToken,
 } from './cli/commands';
-import { doctor, ensureBuilt, formatChecks, formatVersion, installRoot, linkFolders, removeCopy, serve, serverAddress, signInAddress, uninstallPlan, update, versionInfo, whoAnswers } from './cli/install';
+import { copyKind, doctor, ensureBuilt, npmLine, formatChecks, formatVersion, installRoot, linkFolders, removeCopy, serve, serverAddress, signInAddress, uninstallPlan, update, versionInfo, whoAnswers } from './cli/install';
 import { loadConfig, type Config } from './config';
 import { zshHookSnippet } from './migrate/shell-hook';
 import { importLayout, planImport } from './migrate/shells';
@@ -939,10 +939,12 @@ async function main(): Promise<number> {
       const root = installRoot();
       const plan = uninstallPlan(root, linkFolders(), launchAgentPath());
       console.log('This will remove:');
+      const byNpm = copyKind(root) === 'npm';
       for (const link of plan.links) console.log(`  the command      ${link}`);
-      if (plan.links.length === 0) console.log('  (no link to this copy was found on your PATH)');
+      if (plan.links.length === 0 && !byNpm) console.log('  (no link to this copy was found on your PATH)');
       if (plan.service) console.log(`  start at login   ${plan.service}`);
       if (plan.folder) console.log(`  the code         ${plan.folder}`);
+      else if (byNpm) console.log(`  (not the command or the code: npm installed them, so remove them afterwards with: ${npmLine(root, 'uninstall').trim()})`);
       else console.log(`  (not the code in ${root}: the installer did not put it there, so it is yours to keep or delete)`);
       console.log(`It will not touch your data in ${config.dataDir}, and your terminals keep running.`);
       if (!command.yes) {
