@@ -117,7 +117,7 @@ The text a person selects, the caret and the scroll bars follow the theme (`--se
 
 ## The canvas's columns
 
-"New terminal" is the first line of the list of terminals, drawn as a line of it (the plus where a row has its dot, the words where a row has its name, ▾ at the end) and not as a primary; the bar over the canvas does not have it, and folds to **Go to…** and the map's button. Its usual place is the map's corner, the bottom right, with the map over it when shown.
+"New terminal" is the side panel's one primary: the filled button with its ▾ at the top of the list of terminals, as wide as the rows, with no line between it and them; the bar over the canvas does not have it, and folds to **Go to…** and the map's button. Its usual place is the map's corner, the bottom right, with the map over it when shown.
 
 **A page says where it stands.** Under the name of Library, Workflows and Runs, one line says what the page is for, and one strip shows them in the order work goes through them, the page being looked at marked as the places in the top bar are. An empty place a newcomer meets is `FirstSteps`: one sentence in the title size, at most three numbered steps in body text, one ordinary button that makes the first real thing.
 

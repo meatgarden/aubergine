@@ -25,7 +25,7 @@ function useAdding(): boolean {
 
 /**
  * The one button for the commonest thing, a new terminal, and beside it a menu of everything else that can be made,
- * each said in words. It is the first line of the list of terminals, drawn as a line of the list. On the rail the panel folds to it is a plus, and
+ * each said in words. It stands at the top of the list of terminals, as wide as the list, with nothing between it and the terminals. On the rail the panel folds to it is a plus, and
  * it opens out to the whole button while the pointer or the keyboard is on it, or while its menu is open. The menu is
  * placed against the window: the list scrolls, and the rail is narrow.
  */
@@ -69,17 +69,19 @@ export function NewTerminal({ compact = false }: { compact?: boolean }) {
     </button>
   );
   const control = (
-    // On the rail it is the accent control that "New terminal" always was; in the list it is a line of the list.
-    <span className={compact ? 'toolbar-new new-terminal' : 'new-terminal is-row'} ref={root} data-testid="new-terminal">
-      <button type="button" className={compact ? undefined : 'quiet'} onClick={() => runCommand('terminal.new')} disabled={busy} aria-busy={busy} aria-label={compact ? 'New terminal' : undefined} title={hint('terminal.new')} data-testid="toolbar-new-terminal">
-        <span className="new-terminal-plus" aria-hidden="true">
-          +
-        </span>
+    // The accent control "New terminal" always was, with its arrow: as wide as the list at its top, a plus on the rail.
+    <span className={compact ? 'toolbar-new new-terminal' : 'toolbar-new new-terminal in-list'} ref={root} data-testid="new-terminal">
+      <button type="button" onClick={() => runCommand('terminal.new')} disabled={busy} aria-busy={busy} aria-label={compact ? 'New terminal' : undefined} title={hint('terminal.new')} data-testid="toolbar-new-terminal">
+        {compact && (
+          <span className="new-terminal-plus" aria-hidden="true">
+            +
+          </span>
+        )}
         <span className="new-terminal-words">New terminal</span>
       </button>
       <button
         type="button"
-        className={compact ? 'toolbar-new-more' : 'quiet ui-icon-button new-terminal-more'}
+        className="toolbar-new-more"
         aria-haspopup="menu"
         aria-expanded={menu !== null}
         aria-label="More to make: an agent, a terminal somewhere else, a frame"

@@ -3550,28 +3550,14 @@ div.note-summary-read {
 
 /* ---------- "New terminal": the first line of the list of terminals, and a plus on the rail ---------- */
 
-/*
- * In the list it is its first line: as wide as a row and on the list's gutter, the plus in the accent where a row has
- * its color, the words in the body size, the arrow for the menu at the end. A line under it, as under the list's bar.
- */
-.terminal-list > .new-terminal.is-row {
+/* At the top of the list: the filled button and its arrow, as wide as a row, with no line between it and the terminals. */
+.terminal-list > .new-terminal.in-list {
   flex: none;
   display: flex;
-  align-items: center;
-  padding: var(--space-1);
-  border-bottom: 1px solid var(--border);
+  margin: var(--space-2) var(--space-2) var(--space-1) var(--space-1);
 }
-/* The plus stands where a row has the dot of its state, and the words where a row has its name. */
-.new-terminal.is-row > button:first-child {
+.new-terminal.in-list > button:first-child {
   flex: 1;
-  justify-content: flex-start;
-  gap: var(--space-2);
-  margin-left: 0;
-  padding: 0 var(--space-2);
-  font-weight: var(--weight-strong);
-}
-.new-terminal.is-row .new-terminal-plus {
-  color: var(--accent-text);
 }
 .new-terminal-menu {
   position: fixed;
