@@ -682,23 +682,61 @@ button.color-dot:hover {
 
 /* ---------- The list of terminals ---------- */
 
-/* One row: a column for its state, its name on the first line, what is known about it on the second, its actions at the right. */
+/*
+ * One row is a box: the terminal's color and its name on the first line; the mark of its state, its state in words,
+ * its step and one time on the second; its actions at the right. The box is drawn behind the row, inset from the
+ * row's own place, so the gaps between boxes are part of each row's height. Selected, its edge is the accent;
+ * with the keyboard on its terminal, the edge is solid and the box a step raised.
+ */
 .list-row {
   box-sizing: border-box;
-  padding: var(--space-1) var(--space-2) var(--space-1) var(--gutter-panel);
+  isolation: isolate;
+  padding: var(--space-2) var(--space-3) var(--space-2) var(--gutter-panel);
 }
-.list-row.compact {
-  padding-top: 2px;
-  padding-bottom: 2px;
+.list-row::before {
+  content: '';
+  position: absolute;
+  inset: 2px var(--space-2) 2px var(--space-1);
+  z-index: -1;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  background: var(--surface);
+  pointer-events: none;
+}
+.list-row:hover::before {
+  background: var(--surface-raised);
+}
+.list-row.current::before {
+  border-color: var(--accent-text);
+  background: var(--surface-active);
+}
+.list-row.focused::before {
+  border-color: var(--accent);
+}
+.list-row.indented {
+  padding-left: var(--space-6);
+}
+.list-row.indented::before {
+  left: var(--space-4);
 }
 .list-main {
   height: var(--control-compact);
   gap: var(--space-2);
 }
+/* The terminal's own color, as on its node; a terminal without one has the plain swatch. */
+.list-color {
+  flex: none;
+  width: var(--space-2);
+  height: var(--space-2);
+  border-radius: var(--radius-pill);
+  background: var(--swatch);
+}
 .list-state {
   flex: none;
-  width: var(--space-4);
-  text-align: center;
+}
+.list-working {
+  flex: none;
+  color: var(--working-text);
 }
 .list-name {
   font-size: var(--font-body);
@@ -709,7 +747,7 @@ button.color-dot:hover {
 }
 .list-detail {
   height: var(--chip);
-  padding-left: var(--space-6);
+  padding-left: var(--space-4);
   gap: var(--space-2);
   font-size: var(--font-meta);
   color: var(--text-muted);
@@ -779,11 +817,7 @@ button.color-dot:hover {
 }
 .list-row {
   border-left: 0;
-  padding-right: var(--gutter-panel);
-}
-.list-row.current,
-.list-row.focused {
-  box-shadow: inset 2px 0 0 var(--accent);
+  padding-right: var(--space-8);
 }
 
 /* ---------- Menus: what is chosen, headings and lines with a control ---------- */
@@ -852,10 +886,17 @@ button.color-dot:hover {
   align-items: center;
   gap: var(--space-1);
 }
+/* How many agents and shells are listed: said after the pills, quietly, at the right. */
+.list-counts {
+  margin-left: auto;
+  font-size: var(--font-meta);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
 
 /* A row: its state, its name with the whole line, one muted line under it. What it waits for is a chip at the right. */
 .list-row {
-  padding: var(--space-1) var(--space-8) var(--space-1) var(--gutter-panel);
+  padding: var(--space-2) var(--space-8) var(--space-2) var(--gutter-panel);
 }
 .list-row .list-main {
   height: var(--chip);
@@ -902,11 +943,11 @@ button.color-dot:hover {
 .list-row > .list-more {
   position: absolute;
   top: var(--space-2);
-  right: var(--space-1);
+  right: var(--space-3);
   opacity: 0;
 }
 .list-row.compact > .list-more {
-  top: 2px;
+  top: var(--space-1);
 }
 .list-row:hover > .list-more,
 .list-row:focus-within > .list-more,
@@ -1435,12 +1476,6 @@ button.list-chip {
 .list-where:not(:empty) + .list-active::before,
 .list-where:not(:empty) + .visually-hidden + .list-active::before {
   content: '· ';
-}
-/* The row that is chosen: one fill and one line at its start. */
-.list-row.current,
-.list-row.focused {
-  background: var(--surface-active);
-  box-shadow: inset 2px 0 0 var(--accent);
 }
 /* A heading of the list is a title on the panel's gutter with an arrow that folds it: no fill, open or shut. */
 button.list-group,

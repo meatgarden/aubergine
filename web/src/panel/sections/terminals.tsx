@@ -5,7 +5,7 @@ import { runCommand } from '../../commands';
 import { SCOPE_FILTER, TAG_FILTER, TEXT_FILTER, listFilters } from '../../list-filters';
 import { listModel, listSource } from '../../list-model';
 import { recapTitle } from '../../Recap';
-import { shortFolder } from '../../search';
+import { colorClass, colorStyle } from '../../color';
 import { hint } from '../../shortcuts';
 import { currentCanvas, useApp } from '../../store';
 import {
@@ -19,6 +19,8 @@ import {
   describeEmpty,
   filterChips,
   itemHeight,
+  kindCounts,
+  kindWords,
   measureItems,
   stateCounts,
   visibleRange,
@@ -102,6 +104,7 @@ function TerminalsSection() {
   }, []);
 
   const { tops, total } = useMemo(() => measureItems(model.items, view.density), [model.items, view.density]);
+  const counts = useMemo(() => kindWords(kindCounts(model.filtered)), [model.filtered]);
   const [from, to] = visibleRange(tops, total, scrollTop, viewport);
 
   // Keep the row of the selected terminal in view.
@@ -340,6 +343,11 @@ function TerminalsSection() {
                 {chip.label} <span aria-hidden="true">×</span>
               </button>
             ))}
+          {counts && (
+            <span className="list-counts" title="Terminals listed: those that run an agent, and plain shells. Ended ones are not counted." data-testid="list-counts">
+              {counts}
+            </span>
+          )}
           {chips.length > 0 && (
             <button type="button" className="list-clear" title="Back to the terminals of this canvas, all of them" onClick={() => setView({ filters: [SCOPE_FILTER], text: '', tags: [], everyProject: false })} data-testid="list-clear">
               Clear
@@ -495,8 +503,9 @@ const RowView = memo(function RowView({ row, style, density, indented, current, 
   const active = ago([session.lastInputAt, session.lastOutputAt].filter((t): t is string => typeof t === 'string').sort().at(-1) ?? null, now);
   const said = (short: string): string => (short === 'now' ? 'just now' : `${short} ago`);
   const hasNotes = session.note !== '' || session.noteLog.length > 0;
-  // Where it is, and what else is known that a row has room for. When it was last active is said once, after these.
-  const where = [session.state === 'exited' ? 'ended' : shortFolder(session.cwd), session.meantFor?.agent ? `was ${session.meantFor.agent}` : null, row.parked && session.state !== 'exited' ? 'parked' : null].filter(Boolean).join(' · ');
+  // What else is known that a row has room for. The folder is not said here: it is in the details and in the recap on hover.
+  const where = [session.state === 'exited' ? 'ended' : null, session.meantFor?.agent ? `was ${session.meantFor.agent}` : null, row.parked && session.state !== 'exited' ? 'parked' : null].filter(Boolean).join(' · ');
+  const stateWord = tone === 'hollow' && state !== 'ended' ? 'parked' : tone === 'hollow' ? 'ended' : DOT_WORD[tone];
 
   return (
     <div
@@ -514,9 +523,11 @@ const RowView = memo(function RowView({ row, style, density, indented, current, 
         onDetails(session.id);
       }}
     >
-      {/* The first line is the name's: the mark of its state, then the name with all the room there is. */}
+      {/* The first line is the name's: the terminal's own color, then the name with all the room there is. */}
       <div className="list-main">
-        <StateDot tone={tone} word={tone === 'hollow' && state !== 'ended' ? 'parked' : tone === 'hollow' ? 'ended' : DOT_WORD[tone]} className="list-state" data-testid="list-state" />
+        <span className={`list-color ${colorClass(row.color, 'swatch')}`} style={colorStyle(row.color)} aria-hidden="true" data-testid="list-color" data-color={row.color} />
+        {/* Compact, there is no second line: the mark of its state stands beside the color. */}
+        {compact && <StateDot tone={tone} word={stateWord} className="list-state" data-testid="list-state" />}
         <span
           className="list-name"
           // The recap, on hover: worked out when the pointer arrives, so that drawing a row costs nothing more.
@@ -531,13 +542,16 @@ const RowView = memo(function RowView({ row, style, density, indented, current, 
       {/* The second line: its state in words where that is not the ordinary one, the step it is on, then what is known about it. */}
       {!compact && (
         <div className="list-detail">
+          {/* The mark of its state begins the second line, and its state in words follows where that is not the ordinary one. */}
+          <StateDot tone={tone} word={stateWord} className="list-state" data-testid="list-state" />
+          {!chip && state === 'processing' && <span className="list-working" data-testid="list-working">working</span>}
           {chip && (
             <span className={`ui-badge is-${chip.tone} list-badge`} data-testid="list-badge" title={session.attention.message ?? session.status.commandLine ?? undefined}>
               {chip.text}
             </span>
           )}
           <RunStrip sessionId={session.id} variant="row" />
-          <span className="list-where">{where}</span>
+          {where && <span className="list-where">{where}</span>}
           {session.meantFor?.agent && <span className="visually-hidden" data-testid="row-meant-for">was {session.meantFor.agent}</span>}
           {active && (
             // The later of the two times, said once; both are said in full to whoever asks.
