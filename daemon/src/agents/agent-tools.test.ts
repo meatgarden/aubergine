@@ -267,14 +267,15 @@ describe('tools for an agent', () => {
     await settled();
     expect(tokensNow()[0]?.revokedAt).not.toBeNull();
     expect((await withBearer(secret, 'GET', '/v1')).status).toBe(401);
-    expect(await mcpFiles()).toEqual([`${own.body.session.id}.json`]);
+    // Removing the file follows the answer: waited for, not read at once (a busy machine is slower).
+    await expect.poll(mcpFiles).toEqual([`${own.body.session.id}.json`]);
     // Nothing in the data folder holds the secret any more.
     await hub.flush();
     for (const text of (await everyFile()).values()) expect(text.includes(secret)).toBe(false);
 
     expect((await asOwner('DELETE', `/v1/sessions/${own.body.session.id}`)).status).toBe(204);
     await settled();
-    expect(await mcpFiles()).toEqual([]);
+    await expect.poll(mcpFiles).toEqual([]);
   });
 
   it('loses its file when the owner revokes the token by hand', async () => {
