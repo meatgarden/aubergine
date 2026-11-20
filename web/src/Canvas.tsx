@@ -51,6 +51,7 @@ import { isFullZoom, loadViewport, saveViewport, useZoomToNode } from './viewpor
 import { READABLE_ZOOM } from './culling';
 import { useBarKeptOpen } from './bar-open';
 import { opensUp, useBarPlace } from './bar-place';
+import { BarSettings } from './BarSettings';
 
 const nodeTypes = { terminal: TerminalNode, frame: FrameNode };
 type CanvasNode = TerminalFlowNode | FrameFlowNode;
@@ -562,6 +563,9 @@ export function Canvas() {
           <span className="toolbar-group toolbar-status" role="group" aria-label="Terminals that are not on this canvas">
             <ParkedList />
             <OutsidePanel />
+          </span>
+          <span className="toolbar-group" role="group" aria-label="This bar">
+            <BarSettings />
           </span>
           </span>
           {notice && <span className="warning">{notice}</span>}

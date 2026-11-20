@@ -5202,6 +5202,35 @@ test('where the bar over the canvas stands: chosen in Settings, remembered in th
   expect(right.right).toBeLessThan(40);
   expect(right.menuInside).toBe(true);
 
+  // The settings at the end of the bar: pointed at, the places, with the one in use ticked; one press moves the bar.
+  const gear = page.getByTestId('bar-settings');
+  const places = page.getByTestId('bar-settings-menu');
+  await expect(gear).toHaveAccessibleName('Settings');
+  await gear.hover();
+  await expect(places).toBeVisible();
+  expect(await onTop(page, 'bar-settings-menu')).toBe(true);
+  await expect(places.getByRole('menuitemradio', { checked: true })).toHaveText('Top right');
+  await places.getByTestId('bar-place-bottom-left').hover();
+  await places.getByTestId('bar-place-bottom-left').click();
+  await expect(bar).toHaveAttribute('data-place', 'bottom-left');
+  // Moved to the foot, its menu opens upward and stays on the page.
+  await page.mouse.move(700, 400);
+  await expect(places).toHaveCount(0);
+  await gear.hover();
+  await expect(places).toBeVisible();
+  expect(await places.evaluate((el) => { const r = el.getBoundingClientRect(); const b = (document.querySelector('[data-testid="canvas-bar"]') as HTMLElement).getBoundingClientRect(); return r.bottom <= b.top && r.top >= 0 && r.left >= 0 && r.right <= window.innerWidth; })).toBe(true);
+  await page.mouse.move(700, 400);
+  await expect(places).toHaveCount(0);
+  // Reached with the keyboard, the places show too, and Escape puts them away.
+  await gear.focus();
+  await expect(places).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(places).toHaveCount(0);
+  // Pressed, it opens Settings.
+  await gear.click();
+  await expect(page.getByTestId('settings-dialog')).toBeVisible();
+  await page.getByTestId('settings-close').click();
+
   // The map's corner is not offered.
   await page.getByTestId('toolbar-settings').click();
   expect(await page.getByTestId('settings-bar-place').locator('option').evaluateAll((all) => all.map((o) => (o as HTMLOptionElement).value))).toEqual(['top-left', 'top-center', 'top-right', 'bottom-left', 'bottom-center']);
