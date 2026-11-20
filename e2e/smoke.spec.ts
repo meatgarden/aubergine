@@ -5466,3 +5466,59 @@ test('the details are resized by their edge like the side panel: dragged, with t
   expect((await widths()).drawer).toBe(left);
   await drawer.getByTestId('details-close').click();
 });
+
+test('typing from the details: a line is typed into the terminal and run, Enter can be left unpressed, a key is pressed by name, and what is not text is refused before anything is sent', async ({ page }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  const selectedTab = page.locator('[data-testid="tab"][aria-selected="true"]');
+  const before = (await selectedTab.getAttribute('data-canvas')) ?? '';
+  await page.getByRole('button', { name: 'New canvas' }).click();
+  await expect(selectedTab).not.toHaveAttribute('data-canvas', before);
+  const rows = page.getByTestId('list-row');
+  await page.getByTestId('toolbar-new-terminal').click();
+  await expect(rows).toHaveCount(1);
+  // The shell must be at its prompt: a shell drops what is typed while it starts.
+  await expect(page.locator('.xterm-rows')).toHaveText(/\S/);
+
+  await rows.first().dblclick({ position: { x: 60, y: 12 } });
+  const drawer = page.getByTestId('panel-drawer');
+  await expect(drawer).toBeVisible();
+  await drawer.getByTestId('details-tab-type').click();
+  const box = drawer.getByTestId('terminal-input-text');
+  await expect(box).toBeVisible();
+
+  // Enter in the box sends it, and Enter is pressed in the terminal: the shell runs it.
+  await box.fill('printf "typed-%s\\n" $((40+2))');
+  await box.press('Enter');
+  await expect(outputLine(page, 'typed-42')).toHaveCount(1);
+  await expect(box).toHaveValue('');
+  await expect(drawer.getByTestId('terminal-input-done')).toContainText('pressed Enter');
+  // The box keeps the keyboard, so the next line can be typed straight away; the up arrow brings back the last one.
+  await expect(box).toBeFocused();
+  await box.press('ArrowUp');
+  await expect(box).toHaveValue('printf "typed-%s\\n" $((40+2))');
+  await box.fill('');
+
+  // Without Enter, the text waits at the prompt; the Enter key then runs it.
+  await drawer.getByTestId('terminal-input-enter').uncheck();
+  await box.fill('echo held-$((6*7))');
+  await drawer.getByTestId('terminal-input-send').click();
+  await expect(page.locator('.xterm-rows')).toContainText('echo held-$((6*7))');
+  await expect(outputLine(page, 'held-42')).toHaveCount(0);
+  await drawer.getByTestId('terminal-input-key-Enter').click();
+  await expect(outputLine(page, 'held-42')).toHaveCount(1);
+
+  // What is not plain text is refused here, by the server's own rule, and nothing is typed.
+  await drawer.getByTestId('terminal-input-enter').check();
+  await box.fill('echo bell\u0007');
+  await box.press('Enter');
+  await expect(drawer.getByTestId('terminal-input-error')).toContainText('control character');
+  await expect(box).toHaveValue('echo bell\u0007');
+  await expect(outputLine(page, 'bell')).toHaveCount(0);
+
+  // The note and its messages are still a tab away, and only one text box is in view at a time.
+  await drawer.getByTestId('details-tab-note').click();
+  await expect(drawer.getByTestId('terminal-input')).toHaveCount(0);
+  await drawer.getByTestId('details-close').click();
+});

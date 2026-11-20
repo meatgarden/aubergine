@@ -107,6 +107,8 @@ export const api = {
   setDesktopOpenNew: (openNew: boolean) => v1.changeDesktopSettings({ body: { openNew } }),
   setTheme: (theme: ThemeSetting) => v1.changeAppearance({ body: { theme } }),
   setDescribing: (remind: boolean) => v1.changeDescribing({ body: { remind } }),
+  // Typing into a terminal from its details: the same route a program uses, as the owner.
+  sendInput: (sessionId: string, body: Parameters<typeof v1.sendInput>[0]['body']) => v1.sendInput({ sessionId, body }),
   // What a terminal says about itself: its links, what was seen in it, what is found by looking.
   addLink: (sessionId: string, body: { url: string; label?: string; kind?: LinkKind }) => v1.addLink({ sessionId, body }),
   changeLink: (sessionId: string, linkId: string, body: { label?: string; kind?: LinkKind }) => v1.changeLink({ sessionId, linkId, body }),
