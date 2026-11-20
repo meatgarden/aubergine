@@ -505,7 +505,16 @@ const RowView = memo(function RowView({ row, style, density, indented, current, 
   const hasNotes = session.note !== '' || session.noteLog.length > 0;
   // What else is known that a row has room for. The folder is not said here: it is in the details and in the recap on hover.
   const where = [session.state === 'exited' ? 'ended' : null, session.meantFor?.agent ? `was ${session.meantFor.agent}` : null, row.parked && session.state !== 'exited' ? 'parked' : null].filter(Boolean).join(' · ');
-  const stateWord = tone === 'hollow' && state !== 'ended' ? 'parked' : tone === 'hollow' ? 'ended' : DOT_WORD[tone];
+  // Its state in words, plain text in the color of the state; nothing for the ordinary state.
+  const stateWords = chip ? (
+    <span className={`list-said is-${chip.tone} list-badge`} data-testid="list-badge" data-tone={tone} title={session.attention.message ?? session.status.commandLine ?? undefined}>
+      {chip.text}
+    </span>
+  ) : state === 'processing' ? (
+    <span className="list-said list-working" data-testid="list-working" data-tone={tone}>
+      working
+    </span>
+  ) : null;
 
   return (
     <div
@@ -526,8 +535,8 @@ const RowView = memo(function RowView({ row, style, density, indented, current, 
       {/* The first line is the name's: the terminal's own color, then the name with all the room there is. */}
       <div className="list-main">
         <span className={`list-color ${colorClass(row.color, 'swatch')}`} style={colorStyle(row.color)} aria-hidden="true" data-testid="list-color" data-color={row.color} />
-        {/* Compact, there is no second line: the mark of its state stands beside the color. */}
-        {compact && <StateDot tone={tone} word={stateWord} className="list-state" data-testid="list-state" />}
+        {/* Compact, there is no second line: its state in words follows the name, where it is not the ordinary one. */}
+        {compact && stateWords}
         <span
           className="list-name"
           // The recap, on hover: worked out when the pointer arrives, so that drawing a row costs nothing more.
@@ -542,14 +551,8 @@ const RowView = memo(function RowView({ row, style, density, indented, current, 
       {/* The second line: its state in words where that is not the ordinary one, the step it is on, then what is known about it. */}
       {!compact && (
         <div className="list-detail">
-          {/* The mark of its state begins the second line, and its state in words follows where that is not the ordinary one. */}
-          <StateDot tone={tone} word={stateWord} className="list-state" data-testid="list-state" />
-          {!chip && state === 'processing' && <span className="list-working" data-testid="list-working">working</span>}
-          {chip && (
-            <span className={`ui-badge is-${chip.tone} list-badge`} data-testid="list-badge" title={session.attention.message ?? session.status.commandLine ?? undefined}>
-              {chip.text}
-            </span>
-          )}
+          {/* Words only on the second line: its state where that is not the ordinary one, then its step and one time. */}
+          {stateWords}
           <RunStrip sessionId={session.id} variant="row" />
           {where && <span className="list-where">{where}</span>}
           {session.meantFor?.agent && <span className="visually-hidden" data-testid="row-meant-for">was {session.meantFor.agent}</span>}
