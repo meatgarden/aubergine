@@ -3073,8 +3073,10 @@ button.rail-dot:active {
   margin-bottom: calc(-1 * var(--space-3));
 }
 /*
- * A tab is a control of the ordinary height, with a button's edge: each one not being looked at is plainly a thing to
- * press. The one being looked at is a filled pill inside the bar, with no edge: it does not open into the canvas.
+ * A tab is a control of the ordinary height with an edge: each one not being looked at is plainly a thing to press,
+ * and quieter than the one being looked at (a faint edge, words a step below muted, full when pointed at), as the
+ * places in the top bar are. The one being looked at is a filled pill inside the bar, with no edge: it does not open
+ * into the canvas.
  */
 .tab {
   --control-h: var(--control-compact);
@@ -3087,6 +3089,13 @@ button.rail-dot:active {
 .tab:hover {
   background: var(--surface-raised);
 }
+.tab:not(.active) {
+  border-color: var(--border);
+  color: color-mix(in srgb, var(--text-muted) 80%, var(--surface));
+}
+.tab:not(.active):hover {
+  color: var(--text);
+}
 .tab.active {
   background: var(--surface-active);
   border-color: transparent;
@@ -3094,7 +3103,7 @@ button.rail-dot:active {
 /* A tab with a color wears it as a wash behind its name, stronger on the one being looked at. */
 .tab:not(.color-none) {
   box-shadow: none;
-  background: color-mix(in srgb, var(--swatch) 16%, transparent);
+  background: color-mix(in srgb, var(--swatch) 12%, transparent);
 }
 .tab.active:not(.color-none) {
   background: color-mix(in srgb, var(--swatch) 32%, var(--surface-active));
