@@ -191,9 +191,22 @@ export function TerminalView({ sessionId, interactive, zoom, chords = true }: Pr
   }, [interactive]);
 
   // Take keyboard focus when asked to, as soon as the terminal is usable.
+  // A request that arrives after something else began to be typed into (a note, a field) is out of date: going to a
+  // terminal asks for its keyboard when the glide ends, and the person may already be typing in its note by then.
+  // The keyboard stays where it is and the request is dropped.
   useEffect(() => {
-    if (focus > 0 && interactive) terminal.current?.focus();
-  }, [focus, interactive]);
+    if (!(focus > 0 && interactive)) return;
+    const active = document.activeElement;
+    // A terminal's own text box (xterm's hidden textarea) is not a field being typed in: moving from one terminal to
+    // another goes on as it did.
+    const typingElsewhere =
+      active instanceof HTMLElement && !host.current?.contains(active) && !active.closest('.xterm') && active.matches('input, textarea, select, [contenteditable="true"]');
+    if (typingElsewhere) {
+      if (useApp.getState().focus?.sessionId === sessionId) useApp.getState().focusSession(null);
+      return;
+    }
+    terminal.current?.focus();
+  }, [focus, interactive, sessionId]);
 
   return (
     <div className="term-view" data-testid="terminal" data-link={link}>

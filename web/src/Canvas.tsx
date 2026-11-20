@@ -269,7 +269,8 @@ export function Canvas() {
   const onNodeClick = useCallback(
     (event: React.MouseEvent, node: Node) => {
       if (node.type !== 'terminal') return;
-      if ((event.target as HTMLElement).closest('input, button, textarea')) return;
+      // A control, and the note beside the terminal, keep the click: the terminal does not take the keyboard from them.
+      if ((event.target as HTMLElement).closest('input, button, textarea, a, [role="button"], .note-panel')) return;
       // A click gives the terminal the keyboard where it is. Only when it is too small to read
       // does the view zoom in first; that is said once, where it happens.
       if (flow.getViewport().zoom < READABLE_ZOOM) {

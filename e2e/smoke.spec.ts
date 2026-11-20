@@ -5290,3 +5290,95 @@ test('opening a terminal\'s details marks its row in the list, in view, whatever
   await expect(opened).toHaveURL(new RegExp(`/t/${second}$`));
   await opened.close();
 });
+
+test('a note takes typing: beside a terminal the terminal does not take the keyboard from it, and in the details it does not shrink when changed; a double click on a row opens the details', async ({ page }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  const origin = new URL(page.url()).origin;
+  const selectedTab = page.locator('[data-testid="tab"][aria-selected="true"]');
+  const before = (await selectedTab.getAttribute('data-canvas')) ?? '';
+  await page.getByRole('button', { name: 'New canvas' }).click();
+  await expect(selectedTab).not.toHaveAttribute('data-canvas', before);
+  const rows = page.getByTestId('list-row');
+  await expect(rows).toHaveCount(0);
+  await page.getByTestId('toolbar-new-terminal').click();
+  await expect(rows).toHaveCount(1);
+  const id = (await rows.first().getAttribute('data-session')) ?? '';
+  const node = page.locator(`[data-testid="terminal-node"][data-session="${id}"]`);
+  await expect(node.getByTestId('terminal')).toHaveAttribute('data-link', 'open');
+  const noteOf = async (): Promise<string> => ((await (await page.request.get(`/v1/sessions/${id}`, { headers: { origin } })).json()) as { note: string }).note;
+
+  // A summary with an address in it is read, the address a chip, until it is pressed (below the chip, which opens the address).
+  const lines = Array.from({ length: 12 }, (_, i) => `Line ${i + 1} of what this terminal is for.`);
+  const summary = `Plan at https://example.com/plan\n${lines.join('\n')}`;
+  expect((await page.request.patch(`/v1/sessions/${id}`, { headers: { origin }, data: { note: summary } })).status()).toBe(200);
+
+  // 1. Beside the terminal: pressing the summary gives its box the keyboard, and keeps it there to type, also when the
+  // terminal had the keyboard just before and is drawn again meanwhile.
+  const beside = node.getByTestId('note-panel');
+  if ((await beside.count()) === 0) await node.getByRole('button', { name: /^Note for/ }).click();
+  await expect(page.locator('.xterm-rows')).toHaveText(/\S/);
+  await node.getByTestId('node-body').click();
+  await expect.poll(() => node.evaluate((el) => el.querySelector('[data-testid="terminal"]')?.contains(document.activeElement) ?? false)).toBe(true);
+  await expect(beside.getByTestId('note-summary-read')).toBeVisible();
+  await beside.getByTestId('note-summary-read').click({ position: { x: 40, y: 100 } });
+  const box = beside.locator('textarea.note-summary');
+  await expect(box).toBeFocused();
+  // The view is zoomed with the wheel over empty canvas, out and back, so that the terminal is drawn again: the note keeps the keyboard.
+  const pane = await page.locator('.react-flow__pane').boundingBox();
+  if (pane) {
+    await page.mouse.move(pane.x + 40, pane.y + pane.height - 40);
+    await page.mouse.wheel(0, 400);
+    await page.waitForTimeout(400);
+    await page.mouse.wheel(0, -400);
+    await page.waitForTimeout(400);
+  }
+  await expect(box).toBeFocused();
+  await page.waitForTimeout(300);
+  await expect(box).toBeFocused();
+  await page.keyboard.press('End');
+  await page.keyboard.type(' Beside.');
+  await expect.poll(noteOf).toContain('Beside.');
+  // Once the log is being added to, pressing the summary goes back to it, and it still keeps the keyboard.
+  await beside.getByTestId('note-add-open').click();
+  await expect(beside.getByTestId('note-add')).toBeFocused();
+  await beside.getByTestId('note-summary-read').click({ position: { x: 40, y: 100 } });
+  await expect(box).toBeFocused();
+  await page.waitForTimeout(300);
+  await expect(box).toBeFocused();
+  await page.keyboard.press('End');
+  await page.keyboard.type(' Again.');
+  await expect.poll(noteOf).toContain('Again.');
+  await page.keyboard.press('Tab');
+
+  // 2. A double click on its row opens its details.
+  const drawer = page.getByTestId('panel-drawer');
+  await expect(drawer).toHaveCount(0);
+  await rows.first().dblclick({ position: { x: 60, y: 12 } });
+  await expect(drawer.getByTestId('details-name')).toHaveText((await node.getByTestId('node-name').textContent()) ?? '');
+  // Again: they stay open.
+  await rows.first().dblclick({ position: { x: 60, y: 12 } });
+  await expect(drawer).toBeVisible();
+
+  // 3. In the details, the summary is no shorter when it is pressed to change it.
+  const inDrawer = drawer.getByTestId('note-drawer');
+  await expect(inDrawer.getByTestId('note-summary-read')).toBeVisible();
+  const read = await inDrawer.getByTestId('note-summary-read').evaluate((el) => Math.round(el.getBoundingClientRect().height));
+  expect(read).toBeGreaterThan(200);
+  await inDrawer.getByTestId('note-summary-read').click({ position: { x: 40, y: 100 } });
+  const drawerBox = inDrawer.locator('textarea.note-summary');
+  await expect(drawerBox).toBeFocused();
+  const editing = await drawerBox.evaluate((el) => ({ height: Math.round(el.getBoundingClientRect().height), scrolls: el.scrollHeight > el.clientHeight + 1 }));
+  expect(editing.height).toBeGreaterThanOrEqual(read - 4);
+  expect(editing.scrolls).toBe(false);
+  // Typing a line more makes it taller, not a box that scrolls.
+  await page.keyboard.press('Control+End');
+  await page.keyboard.press('Meta+ArrowDown');
+  await page.keyboard.type('\nOne line more.');
+  await expect.poll(noteOf).toContain('One line more.');
+  const grown = await drawerBox.evaluate((el) => ({ height: Math.round(el.getBoundingClientRect().height), scrolls: el.scrollHeight > el.clientHeight + 1 }));
+  expect(grown.height).toBeGreaterThan(editing.height);
+  expect(grown.scrolls).toBe(false);
+  await drawer.getByTestId('details-close').click();
+});

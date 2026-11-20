@@ -169,6 +169,10 @@ function TerminalsSection() {
     actOnTerminal(sessionId, command);
   };
 
+  const showDetails = (sessionId: string): void => {
+    setMenu(null);
+    useApp.getState().openDrawer({ section: SECTION, kind: 'notes', id: sessionId });
+  };
   const openNotes = (sessionId: string): void => {
     setMenu(null);
     const open = useApp.getState().drawer;
@@ -389,6 +393,7 @@ function TerminalsSection() {
                   onMenu={setMenu}
                   onAct={act}
                   onNotes={openNotes}
+                  onDetails={showDetails}
                   onTag={addTag}
                 />
               );
@@ -416,6 +421,8 @@ interface RowProps {
   onMenu: (sessionId: string | null) => void;
   onAct: (sessionId: string, command: CommandId) => void;
   onNotes: (sessionId: string) => void;
+  /** Opens a terminal's details, and leaves them open when they already are: what a double click on a row does. */
+  onDetails: (sessionId: string) => void;
   onTag: (tag: string) => void;
 }
 
@@ -455,7 +462,7 @@ export function chipOf(row: Pick<Row, 'session' | 'state'>): { text: string; ton
   return null;
 }
 
-const RowView = memo(function RowView({ row, style, density, indented, current, focused, here, menuOpen, canMove, now, onGo, onMenu, onAct, onNotes, onTag }: RowProps) {
+const RowView = memo(function RowView({ row, style, density, indented, current, focused, here, menuOpen, canMove, now, onGo, onMenu, onAct, onNotes, onDetails, onTag }: RowProps) {
   const { session, state } = row;
   const compact = density === 'compact';
   const chip = chipOf(row);
@@ -479,6 +486,11 @@ const RowView = memo(function RowView({ row, style, density, indented, current, 
       data-session={session.id}
       data-state={state}
       onClick={() => onGo(session.id)}
+      // A double click opens its details: the clicks before it went to the terminal, so it is in view beside them.
+      onDoubleClick={(event) => {
+        if ((event.target as HTMLElement).closest('button, a, input')) return;
+        onDetails(session.id);
+      }}
     >
       {/* The first line is the name's: the mark of its state, then the name with all the room there is. */}
       <div className="list-main">
