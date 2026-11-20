@@ -4700,7 +4700,7 @@ test('tabs and panel: a new browser has the panel folded to a rail, the bar of t
     await fresh.emulateMedia({ colorScheme: scheme, reducedMotion: 'reduce' });
     await expect(fresh.locator('html')).toHaveAttribute('data-theme', scheme);
     const seen = await bar();
-    expect(seen.air, scheme).toBeGreaterThanOrEqual(8);
+    expect(seen.air, scheme).toBeGreaterThanOrEqual(12);
     expect(seen.line, scheme).toBe('solid');
     expect(seen.lineWidth, scheme).toBe(1);
     expect(seen.barWidth, scheme).toBe(seen.canvasWidth);
@@ -4709,7 +4709,7 @@ test('tabs and panel: a new browser has the panel folded to a rail, the bar of t
     expect(seen.plusHeight, scheme).toBe(32);
     expect(seen.otherEdge, scheme).toBe(`${seen.buttonEdge} true`);
     expect(seen.currentEdge, scheme).toBe('rgba(0, 0, 0, 0)');
-    expect(seen.underline, scheme).toEqual({ height: '2px', colour: true, gap: 6, inRow: true, aboveLine: true });
+    expect(seen.underline, scheme).toEqual({ height: '2px', colour: true, gap: 10, inRow: true, aboveLine: true });
     expect(seen.otherUnderline, scheme).toBe('none');
     expect(seen.filled, scheme).toBe(true);
     expect(seen.opensIntoCanvas, scheme).toBe(false);

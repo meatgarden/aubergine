@@ -424,7 +424,8 @@ describe('terminal WebSocket', () => {
     }, 'folder noticed');
 
     view.socket.send(JSON.stringify({ t: 'input', data: 'exit\r' }));
-    await waitFor(() => view.closeCode !== null, 'close');
+    // The shell's end is noticed by the runtime; on a busy machine that has taken longer than the usual wait.
+    await waitFor(() => view.closeCode !== null, 'close', 20_000);
     expect(view.closeCode).toBe(CLOSE_SESSION_ENDED);
     expect(view.control).toContainEqual({ t: 'exit', reason: 'session_ended' });
     // The node stays, marked as ended.
