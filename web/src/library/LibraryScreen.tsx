@@ -136,29 +136,11 @@ export function LibraryScreen() {
   };
   const apply = useApp.getState().apply;
   const looksLikeFolder = (text: string): boolean => text.startsWith('/') || text.startsWith('~');
-
-  return (
-    <Page
-      name="library"
-      title="Library"
-      line="Workflows and steps that others published. Read one, install it, and it is yours under Workflows."
-      flow={<PageFlow here="library" />}
-      label="Library"
-      testid="library-screen"
-      className="library-screen"
-      onKeyDown={(e) => {
-        if (e.key === 'Escape') {
-          e.stopPropagation();
-          close();
-        }
-      }}
-    >
-        {error && (
-          <p className="dialog-error" role="alert" data-testid="library-error">
-            {error}
-          </p>
-        )}
-
+  // Someone who has installed nothing and added no source of their own is shown what there is first: where it comes
+  // from, and how to add a source, are at the foot of the page until either has happened. Nothing is taken away.
+  const newcomer = (library?.installed.length ?? 0) === 0 && sources.every((source) => source.kind === 'builtin');
+  const sourcesPart = (
+      <>
         <details className="ui-fold library-sources-fold" data-testid="library-sources-fold">
           <summary>
             <span className="ui-meta">
@@ -247,6 +229,32 @@ export function LibraryScreen() {
         <HowThisWorks line="You choose what is fetched and what is installed.">
           What a source lists was written by whoever published it. Nothing is fetched unless you press Refresh or add a source, and nothing is installed until you have read all of it in Review and accepted it.
         </HowThisWorks>
+      </>
+  );
+
+  return (
+    <Page
+      name="library"
+      title="Library"
+      line="Workflows and steps that others published. Read one, install it, and it is yours under Workflows."
+      flow={<PageFlow here="library" />}
+      label="Library"
+      testid="library-screen"
+      className="library-screen"
+      onKeyDown={(e) => {
+        if (e.key === 'Escape') {
+          e.stopPropagation();
+          close();
+        }
+      }}
+    >
+        {error && (
+          <p className="dialog-error" role="alert" data-testid="library-error">
+            {error}
+          </p>
+        )}
+
+        {!newcomer && sourcesPart}
 
         <div className="library-browse">
           <div className="library-list">
@@ -349,6 +357,12 @@ export function LibraryScreen() {
                 </li>
               ))}
           </ul>
+        )}
+        {newcomer && (
+          <section className="library-foot" data-testid="library-foot">
+            <h3>Where these come from</h3>
+            {sourcesPart}
+          </section>
         )}
     </Page>
   );

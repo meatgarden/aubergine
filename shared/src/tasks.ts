@@ -22,6 +22,8 @@ export const TASKS_MAX = 500;
 export const PROPOSALS_WAITING_MAX = 10;
 export const TASK_LABELS_MAX = 8;
 export const QUEUE_LIMIT_MAX = 20;
+/** How many tasks may be at work at once until the owner says otherwise. */
+export const QUEUE_LIMIT_DEFAULT = 3;
 
 /** Text a person or an agent wrote for someone to read: several lines, no control characters, nothing that reverses direction. */
 export const PlainWords = (max: number) =>
@@ -349,7 +351,7 @@ export function occasionOfTask(task: Task, event: 'task.done' | 'task.failed' | 
 /** How one project's tasks are started. */
 export const QueueProjectSettings = z.object({
   /** How many tasks may hold a place at once. */
-  limit: z.number().int().min(1).max(QUEUE_LIMIT_MAX).default(3),
+  limit: z.number().int().min(1).max(QUEUE_LIMIT_MAX).default(QUEUE_LIMIT_DEFAULT),
   /** No new task is started while this is on. What is running is not touched. */
   hold: z.boolean().default(false),
   /** Tasks start by themselves when a place is free. Off unless the owner switched it on. */
