@@ -345,7 +345,8 @@ export function describeEmpty(view: ListView, total: number): string {
 /* ---------- Drawing only what is in view ---------- */
 
 /** The heights of what the list draws. They hold the controls of a row at the size controls have in the panel (see docs/design.md). */
-export const ROW_HEIGHT: Record<Density, number> = { comfortable: 52, compact: 36 };
+/** Each row's box with 8px between one box and the next (the box is inset 4px at the top and the bottom). */
+export const ROW_HEIGHT: Record<Density, number> = { comfortable: 56, compact: 40 };
 export const GROUP_HEIGHT = 32;
 export const FRAME_HEIGHT = 24;
 
