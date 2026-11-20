@@ -592,7 +592,7 @@ button.list-clear {
 }
 .tab {
   height: 36px;
-  padding: 0 var(--space-3);
+  padding: 0 var(--space-4);
   gap: var(--space-2);
   font-size: var(--font-body);
   border-radius: var(--radius-control) var(--radius-control) 0 0;
@@ -3030,7 +3030,7 @@ button.rail-dot:active {
 .tab.active:not(.color-none) {
   background: color-mix(in srgb, var(--swatch) 32%, var(--surface-active));
 }
-/* The tab being looked at has a line under it, apart from the pill by a step of the grid. */
+/* The tab being looked at has a line under it, resting on the bar's own line, apart from the pill. */
 .tab {
   position: relative;
 }
@@ -3039,7 +3039,7 @@ button.rail-dot:active {
   position: absolute;
   left: var(--space-2);
   right: var(--space-2);
-  bottom: calc(-1 * var(--space-1) - 2px);
+  bottom: calc(-1 * var(--space-2));
   height: 2px;
   border-radius: var(--radius-pill);
   background: var(--accent);
