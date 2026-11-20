@@ -15,9 +15,11 @@ import { StateHub } from '../state-hub';
 import { JsonStore } from '../store/json-store';
 import { destroyTmuxServer, testSocketName } from '../test-support';
 import { loadOrCreateToken } from '../token';
+import { entryArguments, packageRoot } from '../package-root';
 import {
   ARCHIVE_MARK,
   INSTALLER_MARK,
+  NPM_MARK,
   commandOnPath,
   copyKind,
   ensureBuilt,
@@ -497,4 +499,58 @@ describe('aubergine start', () => {
       rmSync(home, { recursive: true, force: true, maxRetries: 5, retryDelay: 50 });
     }
   }, 60_000);
+});
+
+/** A stand-in of the npm package: its own package.json, the mark, and the compiled files. */
+function fakeNpmCopy(base: string): string {
+  const root = path.join(base, 'lib', 'node_modules', '@someone', 'aubergine');
+  mkdirSync(path.join(root, 'bin'), { recursive: true });
+  mkdirSync(path.join(root, 'dist', 'chunks'), { recursive: true });
+  writeFileSync(path.join(root, 'bin', 'aubergine.mjs'), '#!/usr/bin/env node\n');
+  writeFileSync(path.join(root, 'dist', 'cli.mjs'), '');
+  writeFileSync(path.join(root, 'dist', 'main.mjs'), '');
+  writeFileSync(path.join(root, 'package.json'), JSON.stringify({ name: '@someone/aubergine', version: '1.2.3' }));
+  writeFileSync(path.join(root, NPM_MARK), '');
+  return root;
+}
+
+describe('a copy installed with npm', () => {
+  it('is found from its compiled files, at another depth than the source', () => {
+    const root = fakeNpmCopy(dir);
+    expect(packageRoot(path.join(root, 'dist'))).toBe(root);
+    expect(packageRoot(path.join(root, 'dist', 'chunks'))).toBe(root);
+    // This checkout is found from its source.
+    expect(existsSync(path.join(packageRoot(), 'daemon', 'src', 'cli.ts'))).toBe(true);
+  });
+
+  it('runs its compiled files, while a checkout runs its source through tsx', () => {
+    const root = fakeNpmCopy(dir);
+    expect(entryArguments(root, 'main')).toEqual([path.join(root, 'dist', 'main.mjs')]);
+    expect(entryArguments(root, 'cli')).toEqual([path.join(root, 'dist', 'cli.mjs')]);
+    const here = entryArguments(packageRoot(), 'main');
+    expect(here[0]).toMatch(/tsx/);
+    expect(here[1]).toBe(path.join(packageRoot(), 'daemon', 'src', 'main.ts'));
+  });
+
+  it('says its own version and that npm installed it', () => {
+    const root = fakeNpmCopy(dir);
+    expect(copyKind(root)).toBe('npm');
+    expect(formatVersion(versionInfo(root, { dataDir: '/d' }))).toBe(`Aubergine 1.2.3 (installed with npm)\nInstalled in: ${root}\nData folder:  /d`);
+  });
+
+  it('leaves updating and removing the code to npm, by the package\'s own name', () => {
+    const root = fakeNpmCopy(dir);
+    const updated = update(root, () => {
+      throw new Error('nothing is run for an npm copy');
+    });
+    expect(updated.ok).toBe(false);
+    expect(updated.lines.join('\n')).toContain('npm install -g @someone/aubergine@latest');
+    // npm made the link to the command: uninstall removes neither it nor the folder.
+    const bin = path.join(dir, 'bin');
+    mkdirSync(bin);
+    symlinkSync(path.join(root, 'bin', 'aubergine.mjs'), path.join(bin, 'aubergine'));
+    const service = path.join(dir, 'agent.plist');
+    writeFileSync(service, `<string>${path.join(root, 'dist')}/main.mjs</string>`);
+    expect(uninstallPlan(root, [bin], service)).toEqual({ links: [], folder: null, service });
+  });
 });

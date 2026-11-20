@@ -1,6 +1,6 @@
+import { packageRoot } from './package-root';
 import { chmod, mkdir, rename, writeFile } from 'node:fs/promises';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { stableNodePath } from './node-path';
 
 /**
@@ -26,7 +26,7 @@ export function commandLauncher(node: string, launcher: string): string {
 }
 
 /** Writes the launcher into the data folder and returns the folder to put on the PATH. */
-export async function writeCommandLauncher(dataDir: string, root: string = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..')): Promise<string> {
+export async function writeCommandLauncher(dataDir: string, root: string = packageRoot()): Promise<string> {
   const folder = path.join(dataDir, COMMAND_FOLDER);
   await mkdir(folder, { recursive: true, mode: 0o700 });
   const file = path.join(folder, 'aubergine');

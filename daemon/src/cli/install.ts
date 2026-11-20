@@ -1,12 +1,11 @@
+import { entryArguments, packageRoot } from '../package-root';
 import { GIT_MINIMUM, gitNewEnough } from '../git/copies';
 import { gitVersion } from '../git/run';
 import { spawn, spawnSync } from 'node:child_process';
 import { existsSync, lstatSync, readFileSync, readdirSync, readlinkSync, realpathSync, rmSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
-import { createRequire } from 'node:module';
 import os from 'node:os';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import type { Config } from '../config';
 import { parseTmuxVersion } from '../runtime/tmux-runtime';
 
@@ -20,20 +19,39 @@ import { parseTmuxVersion } from '../runtime/tmux-runtime';
 
 /** The folder this command's code is in: the checkout, or the installer's `app` folder. */
 export function installRoot(): string {
-  return path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
+  return packageRoot();
 }
 
 /** The file the installer leaves beside the `app` folder, to say that it made it. */
 export const INSTALLER_MARK = '.installed-by-installer';
 /** The file an archive install has inside it, in place of a git folder. */
 export const ARCHIVE_MARK = '.installed-from-archive';
+/** The file the npm package has inside it (written by `scripts/npm-package.mjs`). */
+export const NPM_MARK = '.installed-from-npm';
 
-export type CopyKind = 'git' | 'archive' | 'folder';
+export type CopyKind = 'git' | 'archive' | 'npm' | 'folder';
 
 export function copyKind(root: string): CopyKind {
   if (existsSync(path.join(root, '.git'))) return 'git';
+  if (existsSync(path.join(root, NPM_MARK))) return 'npm';
   return existsSync(path.join(root, ARCHIVE_MARK)) ? 'archive' : 'folder';
 }
+
+/** The name and version a copy gives itself: the npm package's own, else the daemon's. */
+function nameAndVersion(root: string): { name: string | null; version: string | null } {
+  for (const file of [path.join(root, 'package.json'), path.join(root, 'daemon', 'package.json')]) {
+    try {
+      const parsed = JSON.parse(readFileSync(file, 'utf8')) as { name?: unknown; version?: unknown };
+      if (typeof parsed.version === 'string') return { name: typeof parsed.name === 'string' ? parsed.name : null, version: parsed.version };
+    } catch {
+      // An incomplete copy: try the next file.
+    }
+  }
+  return { name: null, version: null };
+}
+
+/** What a person types to change an npm install, with the package's own name. */
+export const npmLine = (root: string, verb: 'install' | 'uninstall'): string => `  npm ${verb} -g ${nameAndVersion(root).name ?? 'aubergine'}${verb === 'install' ? '@latest' : ''}`;
 
 /** Whether the installer made this copy (as opposed to someone cloning it themselves). */
 export function madeByInstaller(root: string): boolean {
@@ -54,19 +72,16 @@ export interface VersionInfo {
 }
 
 export function versionInfo(root: string, config: Pick<Config, 'dataDir'>): VersionInfo {
-  let version = 'unknown';
-  try {
-    version = (JSON.parse(readFileSync(path.join(root, 'daemon', 'package.json'), 'utf8')) as { version?: string }).version ?? 'unknown';
-  } catch {
-    // An incomplete copy: say what can be said.
-  }
+  const version = nameAndVersion(root).version ?? 'unknown';
   const kind = copyKind(root);
   const head = kind === 'git' ? git(root, ['rev-parse', '--short', 'HEAD']) : null;
   return { version, commit: head?.ok ? head.out : null, kind, root, dataDir: config.dataDir };
 }
 
+const KIND_WORDS: Record<Exclude<CopyKind, 'git'>, string> = { archive: 'installed from an archive', npm: 'installed with npm', folder: 'not a git checkout' };
+
 export function formatVersion(info: VersionInfo): string {
-  const from = info.kind === 'git' ? `commit ${info.commit ?? 'unknown'}` : info.kind === 'archive' ? 'installed from an archive' : 'not a git checkout';
+  const from = info.kind === 'git' ? `commit ${info.commit ?? 'unknown'}` : KIND_WORDS[info.kind];
   return [`Aubergine ${info.version} (${from})`, `Installed in: ${info.root}`, `Data folder:  ${info.dataDir}`].join('\n');
 }
 
@@ -115,9 +130,7 @@ export function ensureBuilt(root: string, say: (line: string) => void, run: Run 
  * exit code when it ends. `whenUp` is called once it answers.
  */
 export function serve(root: string, config: Pick<Config, 'port'>, whenUp?: () => void): Promise<number> {
-  const daemonDir = path.join(root, 'daemon');
-  const require = createRequire(path.join(daemonDir, 'package.json'));
-  const child = spawn(process.execPath, [require.resolve('tsx/cli'), path.join(daemonDir, 'src', 'main.ts')], { cwd: daemonDir, stdio: 'inherit' });
+  const child = spawn(process.execPath, entryArguments(root, 'main'), { cwd: root, stdio: 'inherit' });
   // Ctrl-C reaches the server by itself (same terminal); a signal sent to this command is passed on.
   const pass = (signal: NodeJS.Signals) => () => child.kill(signal);
   const onTerm = pass('SIGTERM');
@@ -158,6 +171,9 @@ export interface UpdateResult {
  */
 export function update(root: string, run: Run = runShown): UpdateResult {
   const kind = copyKind(root);
+  if (kind === 'npm') {
+    return { ok: false, lines: [`The copy in ${root} was installed with npm, so npm updates it:`, npmLine(root, 'install'), 'Then restart the server. Your terminals keep running.'] };
+  }
   if (kind !== 'git') {
     return {
       ok: false,
@@ -249,10 +265,14 @@ export interface UninstallPlan {
 export function uninstallPlan(root: string, folders: readonly string[], serviceFile: string): UninstallPlan {
   let service: string | null = null;
   try {
-    if (readFileSync(serviceFile, 'utf8').includes(path.join(root, 'daemon'))) service = serviceFile;
+    // The service runs this copy's server: the source in a checkout, the compiled file in the npm package.
+    const text = readFileSync(serviceFile, 'utf8');
+    if (text.includes(path.join(root, 'daemon') + path.sep) || text.includes(path.join(root, 'dist') + path.sep)) service = serviceFile;
   } catch {
     // No login service.
   }
+  // npm made the command and the folder of an npm install, so npm removes them (`npmLine`).
+  if (copyKind(root) === 'npm') return { links: [], folder: null, service };
   return { links: findLinks(root, folders), folder: madeByInstaller(root) ? root : null, service };
 }
 
@@ -292,8 +312,11 @@ export async function doctor(root: string, config: Config, env: NodeJS.ProcessEn
   const node = Number(process.versions.node.split('.')[0]);
   checks.push({ ok: node >= 22, text: `Node.js ${process.versions.node}${node >= 22 ? '' : ': version 22 or newer is needed'}` });
 
-  const pnpm = toolVersion('pnpm', ['--version']);
-  checks.push({ ok: pnpm !== null, text: pnpm ? `pnpm ${pnpm}` : 'pnpm is not installed (needed to install and update)' });
+  const kind = copyKind(root);
+  if (kind !== 'npm') {
+    const pnpm = toolVersion('pnpm', ['--version']);
+    checks.push({ ok: pnpm !== null, text: pnpm ? `pnpm ${pnpm}` : 'pnpm is not installed (needed to install and update)' });
+  }
 
   const tmuxText = toolVersion(config.tmuxBin, ['-V']);
   const tmux = tmuxText ? parseTmuxVersion(tmuxText) : null;
@@ -306,7 +329,7 @@ export async function doctor(root: string, config: Config, env: NodeJS.ProcessEn
 
   const gitThere = has('git');
   const archive = has('curl') && has('tar');
-  checks.push({ ok: gitThere || archive, text: gitThere ? 'git, for updates' : archive ? 'curl and tar, for updates by archive (no git)' : 'neither git nor curl with tar: updates are not possible' });
+  if (kind !== 'npm') checks.push({ ok: gitThere || archive, text: gitThere ? 'git, for updates' : archive ? 'curl and tar, for updates by archive (no git)' : 'neither git nor curl with tar: updates are not possible' });
 
   // Working copies and library sources start Git. Without it, or with an old one, everything else still works.
   const git = await gitVersion();
@@ -319,8 +342,8 @@ export async function doctor(root: string, config: Config, env: NodeJS.ProcessEn
   );
 
   const info = versionInfo(root, config);
-  checks.push({ ok: null, text: `this copy: ${info.root} (${info.kind === 'git' ? `commit ${info.commit ?? 'unknown'}` : info.kind === 'archive' ? 'from an archive' : 'not a git checkout'})` });
-  checks.push({ ok: existsSync(path.join(root, 'node_modules')), text: existsSync(path.join(root, 'node_modules')) ? 'dependencies are installed' : 'dependencies are not installed: run pnpm install in that folder, or aubergine update' });
+  checks.push({ ok: null, text: `this copy: ${info.root} (${info.kind === 'git' ? `commit ${info.commit ?? 'unknown'}` : KIND_WORDS[info.kind]})` });
+  if (kind !== 'npm') checks.push({ ok: existsSync(path.join(root, 'node_modules')), text: existsSync(path.join(root, 'node_modules')) ? 'dependencies are installed' : 'dependencies are not installed: run pnpm install in that folder, or aubergine update' });
   checks.push({ ok: webIsBuilt(root), text: webIsBuilt(root) ? 'the web app is built' : 'the web app is not built: aubergine start builds it' });
 
   const command = commandOnPath(root, env);

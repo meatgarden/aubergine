@@ -1,9 +1,8 @@
+import { entryArguments, packageRoot } from '../package-root';
 import { execFile } from 'node:child_process';
 import { mkdir, rm, writeFile } from 'node:fs/promises';
-import { createRequire } from 'node:module';
 import os from 'node:os';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import type { Config } from '../config';
 import { shellEnvironment } from '../runtime/tmux-runtime';
 import { stableNodePath } from '../node-path';
@@ -74,8 +73,7 @@ export function launchAgentPath(label: string = SERVICE_LABEL, home: string = os
 
 /** How to run this checkout's daemon as a service, with the settings in use now. */
 export function daemonServiceSpec(config: Config, env: NodeJS.ProcessEnv = process.env): ServiceSpec {
-  const daemonDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
-  const require = createRequire(path.join(daemonDir, 'package.json'));
+  const root = packageRoot();
   const environment: Record<string, string> = { PATH: shellEnvironment(env).PATH ?? '/usr/bin:/bin' };
   // Keep the choices made on the command line that installed the service.
   for (const key of ['AUBERGINE_PORT', 'AUBERGINE_DATA_DIR', 'AUBERGINE_TMUX_SOCKET', 'AUBERGINE_TMUX_BIN']) {
@@ -85,8 +83,8 @@ export function daemonServiceSpec(config: Config, env: NodeJS.ProcessEnv = proce
   return {
     label: SERVICE_LABEL,
     // An absolute Node path, because launchd does not search the user's PATH.
-    programArguments: [stableNodePath(), require.resolve('tsx/cli'), path.join(daemonDir, 'src', 'main.ts')],
-    workingDirectory: daemonDir,
+    programArguments: [stableNodePath(), ...entryArguments(root, 'main')],
+    workingDirectory: root,
     environment,
     logFile: path.join(config.dataDir, 'daemon.log'),
   };

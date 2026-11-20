@@ -1,8 +1,8 @@
+import { packageRoot } from '../package-root';
 import { execFile } from 'node:child_process';
 import { randomBytes } from 'node:crypto';
 import os from 'node:os';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { setTimeout as sleep } from 'node:timers/promises';
 import pty from 'node-pty';
 import { Id, type RuntimeStatus } from '@aubergine/shared';
@@ -22,7 +22,8 @@ import {
 
 export const MIN_TMUX_VERSION = '3.2';
 
-const CONFIG_FILE = fileURLToPath(new URL('./tmux.conf', import.meta.url));
+// The npm package keeps this file at the same place as the checkout does.
+const CONFIG_FILE = path.join(packageRoot(), 'daemon', 'src', 'runtime', 'tmux.conf');
 
 /** Reads "tmux 3.3a", "tmux next-3.4" and the like. */
 export function parseTmuxVersion(output: string): { major: number; minor: number; text: string } | null {

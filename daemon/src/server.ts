@@ -1,3 +1,4 @@
+import { packageRoot } from './package-root';
 import { PROJECT_HEADER, ThemeSetting, isLocalHost } from '@aubergine/shared';
 import { existsSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
@@ -99,7 +100,6 @@ import { noInputAudit, type InputAudit } from './input-audit';
 import { TerminalAccess, TerminalRefusal, type TerminalTrace } from './terminal-access';
 import os from 'node:os';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { MessageRefusal, Messages } from './messages';
 import { Library } from './library';
 import { Environments } from './environments';
@@ -294,7 +294,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   // A project as a file, and templates: the ones that come with this copy, and the owner's own in the data folder.
   const projectFiles = new ProjectFiles(hub, sessions, workflows, drafts, queue, schedules, projects, {
     templatesDir: options.templatesDir ?? null,
-    appTemplatesDir: options.appTemplatesDir === undefined ? path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..', 'templates') : options.appTemplatesDir,
+    appTemplatesDir: options.appTemplatesDir === undefined ? path.join(packageRoot(), 'templates') : options.appTemplatesDir,
   });
   // The library that ships with the app is read from this copy's own files. Nothing is fetched at start, or ever without the owner asking.
   await library.start();

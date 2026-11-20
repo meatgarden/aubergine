@@ -1,3 +1,4 @@
+import { packageRoot } from './package-root';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { dataDir } from './paths';
@@ -36,6 +37,6 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
     tmuxSocket,
     tmuxBin: env.AUBERGINE_TMUX_BIN || 'tmux',
     devOrigin,
-    webDist: path.resolve(here, '..', '..', 'web', 'dist'),
+    webDist: path.join(packageRoot(here), 'web', 'dist'),
   };
 }
