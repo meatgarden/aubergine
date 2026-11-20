@@ -5533,55 +5533,75 @@ test('typing from the details: a line is typed into the terminal and run, Enter 
   await drawer.getByTestId('details-close').click();
 });
 
-test('the places in the top bar stand on one line from Canvas to Library, and the stretch under the one being looked at is the accent', async ({ page }) => {
+test('the places in the top bar are a row of tabs: a short 2px line under each with a gap between, the accent under the one being looked at as wide as it and no fill, the others quieter', async ({ page }) => {
   const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
   await page.goto(`/auth?token=${token}`);
   await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
-  const measure = (): Promise<{ line: { left: number; right: number; bottom: number }; places: { id: string; left: number; right: number; mark: { top: number; bottom: number; color: string } | null }[]; accent: string }> =>
+  const measure = () =>
     page.evaluate(() => {
-      const nav = document.querySelector('.appbar-places') as HTMLElement;
-      const box = nav.getBoundingClientRect();
-      const probe = document.createElement('span');
-      probe.style.color = 'var(--accent)';
-      document.body.append(probe);
-      const accent = getComputedStyle(probe).color;
-      probe.remove();
+      const colorOf = (value: string): string => {
+        const probe = document.createElement('span');
+        probe.style.color = value;
+        document.body.append(probe);
+        const color = getComputedStyle(probe).color;
+        probe.remove();
+        return color;
+      };
+      const places = [...document.querySelectorAll<HTMLElement>('.appbar-places .appbar-place')];
       return {
-        line: { left: Math.round(box.left), right: Math.round(box.right), bottom: Math.round(box.bottom) },
-        accent,
-        places: [...nav.querySelectorAll<HTMLElement>('.appbar-place')].map((place) => {
+        accent: colorOf('var(--accent)'),
+        text: colorOf('var(--text)'),
+        places: places.map((place) => {
           const rect = place.getBoundingClientRect();
-          const after = getComputedStyle(place, '::after');
-          const marked = after.content !== 'none' && after.content !== 'normal';
-          const top = rect.bottom - parseFloat(after.bottom) - parseFloat(after.height);
+          const line = getComputedStyle(place, '::after');
+          const style = getComputedStyle(place);
           return {
             id: place.dataset.testid ?? '',
+            current: place.getAttribute('aria-current') === 'page',
             left: Math.round(rect.left),
             right: Math.round(rect.right),
-            mark: marked ? { top: Math.round(top), bottom: Math.round(top + parseFloat(after.height)), color: after.backgroundColor } : null,
+            lineLeft: Math.round(rect.left + Number.parseFloat(line.left)),
+            lineRight: Math.round(rect.right - Number.parseFloat(line.right)),
+            lineHeight: line.height,
+            lineColor: line.backgroundColor,
+            color: style.color,
+            fill: style.backgroundColor,
           };
         }),
       };
     });
 
-  const onCanvas = await measure();
-  // One line from the first place to the last.
-  expect(onCanvas.places.map((p) => p.id)).toEqual(['toolbar-canvas', 'toolbar-queue', 'toolbar-board', 'toolbar-workflows', 'toolbar-library']);
-  expect(onCanvas.line.left).toBe(onCanvas.places[0]?.left);
-  expect(onCanvas.line.right).toBe(onCanvas.places.at(-1)?.right);
-  const borderBottom = await page.locator('.appbar-places').evaluate((el) => getComputedStyle(el).borderBottomStyle);
-  expect(borderBottom).toBe('solid');
-  // Only the place being looked at is marked, in the accent, on the line and as wide as the place.
-  const marked = onCanvas.places.filter((p) => p.mark !== null);
-  expect(marked.map((p) => p.id)).toEqual(['toolbar-canvas']);
-  expect(marked[0]?.mark?.color).toBe(onCanvas.accent);
-  expect(marked[0]?.mark?.top).toBeLessThanOrEqual(onCanvas.line.bottom - 1);
-  expect(marked[0]?.mark?.bottom).toBeGreaterThanOrEqual(onCanvas.line.bottom);
+  // Away from the bar, so that nothing is pointed at.
+  await page.mouse.move(600, 500);
+  const seen = await measure();
+  expect(seen.places.map((p) => p.id)).toEqual(['toolbar-canvas', 'toolbar-queue', 'toolbar-board', 'toolbar-workflows', 'toolbar-library']);
+  for (const place of seen.places) {
+    // Each has its own line, 2px, as wide as the place.
+    expect(place.lineHeight).toBe('2px');
+    expect([place.lineLeft, place.lineRight]).toEqual([place.left, place.right]);
+  }
+  // A small gap between one line and the next.
+  for (let i = 1; i < seen.places.length; i += 1) expect((seen.places[i]?.left ?? 0) - (seen.places[i - 1]?.right ?? 0)).toBeGreaterThan(0);
+  const [current, ...others] = [seen.places.find((p) => p.current), ...seen.places.filter((p) => !p.current)];
+  expect(current?.id).toBe('toolbar-canvas');
+  expect(current?.lineColor).toBe(seen.accent);
+  expect(current?.fill).toBe('rgba(0, 0, 0, 0)');
+  expect(current?.color).toBe(seen.text);
+  for (const other of others) {
+    expect(other?.lineColor).not.toBe(seen.accent);
+    expect(other?.color).not.toBe(seen.text);
+  }
 
-  // On another page the mark moves with it.
+  // Pointed at, a quieter place's words come up to full.
+  await page.getByTestId('toolbar-queue').hover();
+  await expect.poll(() => page.getByTestId('toolbar-queue').evaluate((el) => getComputedStyle(el).color)).toBe(seen.text);
+
+  // On another page the accent moves with it.
   await page.getByTestId('toolbar-board').click();
   await expect(page.getByTestId('toolbar-board')).toHaveAttribute('aria-current', 'page');
-  expect((await measure()).places.filter((p) => p.mark !== null).map((p) => p.id)).toEqual(['toolbar-board']);
+  await page.mouse.move(600, 500);
+  const board = await measure();
+  expect(board.places.filter((p) => p.lineColor === board.accent).map((p) => p.id)).toEqual(['toolbar-board']);
   await page.getByTestId('toolbar-canvas').click();
   await expect(page.getByTestId('toolbar-canvas')).toHaveAttribute('aria-current', 'page');
 });

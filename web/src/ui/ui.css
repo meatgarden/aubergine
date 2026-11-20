@@ -1702,37 +1702,44 @@ label:is(.wf-inline, .ui-check, .schedule-days label):has(> input:is([type='chec
 .app-canvas[inert] {
   visibility: hidden;
 }
-/* The place being looked at is marked in the top bar. */
-.appbar .appbar-place[aria-current='page'] {
-  font-weight: var(--weight-strong);
-  color: var(--text);
-  background: var(--surface-active);
-}
-.appbar .appbar-place:not([aria-current='page']) {
-  color: var(--text-muted);
-}
 /*
- * The places stand on one line, from the first to the last, like a row of tabs. The stretch of it under the place
- * being looked at is the accent, as under the canvas tab in use.
+ * The places in the top bar are a row of tabs: each stands on a short line of its own, 2px, with a small gap between
+ * one line and the next. The place being looked at has no fill: its line is the accent, as wide as its button, and its
+ * words are full and strong. The others are quieter: a faint line, and words a step below muted, which come up to
+ * full when pointed at.
  */
 .appbar .appbar-places {
-  position: relative;
-  padding-bottom: var(--space-1);
-  border-bottom: 1px solid var(--border);
+  gap: var(--space-1);
 }
 .appbar .appbar-place {
   position: relative;
 }
-.appbar .appbar-place[aria-current='page']::after {
+.appbar .appbar-place::after {
   content: '';
   position: absolute;
   left: 0;
   right: 0;
-  bottom: calc(-1 * var(--space-1) - 1px);
+  bottom: calc(-1 * var(--space-1) - 2px);
   height: 2px;
   border-radius: var(--radius-pill);
-  background: var(--accent);
+  background: var(--border);
   pointer-events: none;
+}
+.appbar .appbar-place[aria-current='page'] {
+  font-weight: var(--weight-strong);
+  color: var(--text);
+}
+.appbar .appbar-place[aria-current='page']:not(:hover, :active) {
+  background: transparent;
+}
+.appbar .appbar-place[aria-current='page']::after {
+  background: var(--accent);
+}
+.appbar .appbar-place:not([aria-current='page']) {
+  color: color-mix(in srgb, var(--text-muted) 80%, var(--surface));
+}
+.appbar .appbar-place:not([aria-current='page']):hover {
+  color: var(--text);
 }
 
 /*
