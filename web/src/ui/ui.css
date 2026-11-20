@@ -3525,3 +3525,69 @@ div.note-summary-read {
 .list-row .list-detail {
   gap: var(--space-1);
 }
+
+/* ---------- "New terminal": the first line of the list of terminals, and a plus on the rail ---------- */
+
+/*
+ * In the list it is its first line: as wide as a row and on the list's gutter, the plus in the accent where a row has
+ * its color, the words in the body size, the arrow for the menu at the end. A line under it, as under the list's bar.
+ */
+.terminal-list > .new-terminal.is-row {
+  flex: none;
+  display: flex;
+  align-items: center;
+  padding: var(--space-1);
+  border-bottom: 1px solid var(--border);
+}
+/* The plus stands where a row has the dot of its state, and the words where a row has its name. */
+.new-terminal.is-row > button:first-child {
+  flex: 1;
+  justify-content: flex-start;
+  gap: var(--space-2);
+  margin-left: 0;
+  padding: 0 var(--space-2);
+  font-weight: var(--weight-strong);
+}
+.new-terminal.is-row .new-terminal-plus {
+  color: var(--accent-text);
+}
+.new-terminal-menu {
+  position: fixed;
+  top: auto;
+}
+/*
+ * On the rail: a place as large as a rail button, and the plus in it. Pointed at, reached with the keyboard, or with
+ * its menu open, the whole control opens out from there over what is beside the rail, its words beside the plus.
+ */
+.new-terminal-rail {
+  position: relative;
+  flex: none;
+  width: var(--control-compact);
+  height: var(--control-compact);
+}
+.new-terminal-rail > .new-terminal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: var(--z-menu);
+}
+.new-terminal-rail .toolbar-new > button:first-child {
+  min-width: var(--control-compact);
+  padding: 0;
+  justify-content: center;
+  gap: var(--space-2);
+  border-radius: var(--radius-control);
+}
+.new-terminal-plus {
+  font-size: var(--font-title);
+  font-weight: var(--weight-strong);
+}
+.new-terminal-rail .new-terminal:not(:hover, :focus-within, :has([aria-expanded='true'])) .new-terminal-words,
+.new-terminal-rail .new-terminal:not(:hover, :focus-within, :has([aria-expanded='true'])) > .toolbar-new-more {
+  display: none;
+}
+.new-terminal-rail .new-terminal:is(:hover, :focus-within, :has([aria-expanded='true'])) > button:first-child {
+  padding: 0 var(--space-3) 0 var(--space-2);
+  border-radius: var(--radius-control) 0 0 var(--radius-control);
+  white-space: nowrap;
+}
