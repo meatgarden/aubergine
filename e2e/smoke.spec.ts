@@ -5209,3 +5209,55 @@ test('where the bar over the canvas stands: chosen in Settings, remembered in th
   await page.getByTestId('settings-close').click();
   await expect(bar).toHaveAttribute('data-place', 'top-left');
 });
+
+test('opening a terminal\'s details marks its row in the list, in view, whatever was showing in the panel and whichever terminal had the keyboard', async ({ page }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  const selectedTab = page.locator('[data-testid="tab"][aria-selected="true"]');
+  const before = (await selectedTab.getAttribute('data-canvas')) ?? '';
+  await page.getByRole('button', { name: 'New canvas' }).click();
+  await expect(selectedTab).not.toHaveAttribute('data-canvas', before);
+  const rows = page.getByTestId('list-row');
+  await expect(rows).toHaveCount(0);
+  await page.getByTestId('toolbar-new-terminal').click();
+  await expect(rows).toHaveCount(1);
+  await page.getByTestId('toolbar-new-terminal').click();
+  await expect(rows).toHaveCount(2);
+  const [first, second] = await rows.evaluateAll((all) => all.map((row) => row.getAttribute('data-session') ?? ''));
+  const node = (id: string | undefined) => page.locator(`[data-testid="terminal-node"][data-session="${id}"]`);
+  const row = (id: string | undefined) => page.locator(`[data-testid="list-row"][data-session="${id}"]`);
+  const drawer = page.getByTestId('panel-drawer');
+
+  // The first terminal has the keyboard, and another section shows in the panel.
+  await expect(node(first).getByTestId('terminal')).toHaveAttribute('data-link', 'open');
+  await node(first).getByTestId('node-body').click();
+  await expect(row(first)).toHaveAttribute('aria-selected', 'true');
+  await showSection(page, 'messages');
+  await expect(page.locator('.panel-section[data-section="terminals"]')).toHaveCount(0);
+
+  // Details of the second, from its title: the panel shows the terminals, and its row is the one chosen, in view.
+  await node(second).getByTestId('node-details').click();
+  await expect(drawer.getByTestId('details-name')).toHaveText((await node(second).getByTestId('node-name').textContent()) ?? '');
+  await expect(page.locator('.panel-section[data-section="terminals"]')).toBeVisible();
+  await expect(row(second)).toHaveAttribute('aria-selected', 'true');
+  await expect(row(second)).toHaveClass(/\bcurrent\b/);
+  await expect(row(first)).toHaveAttribute('aria-selected', 'false');
+  await expect(row(second)).toBeInViewport();
+
+  // Back to the first, from its title: the mark follows.
+  await node(first).getByTestId('node-details').click();
+  await expect(drawer.getByTestId('details-name')).toHaveText((await node(first).getByTestId('node-name').textContent()) ?? '');
+  await expect(row(first)).toHaveAttribute('aria-selected', 'true');
+  await expect(row(second)).toHaveAttribute('aria-selected', 'false');
+  await drawer.getByTestId('details-close').click();
+  await expect(drawer).toHaveCount(0);
+
+  // A line of a terminal's menu acts on that terminal, also while another one has the keyboard.
+  await node(first).getByTestId('node-body').click();
+  await expect(row(first)).toHaveAttribute('aria-selected', 'true');
+  await node(second).getByTestId('node-more').click();
+  const [opened] = await Promise.all([page.context().waitForEvent('page'), node(second).getByTestId('node-open-tab').click()]);
+  await expect(opened).toHaveURL(new RegExp(`/t/${second}$`));
+  await opened.close();
+});

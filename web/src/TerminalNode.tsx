@@ -2,7 +2,7 @@ import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { TITLE_LINKS, sortedLinks } from '@aubergine/shared';
 import { LinkChip } from './links/LinkChip';
 import { NodeResizer, useStore, useStoreApi, type Node, type NodeProps } from '@xyflow/react';
-import { NODE_MIN_HEIGHT, NODE_MIN_WIDTH } from '@aubergine/shared';
+import { NODE_MIN_HEIGHT, NODE_MIN_WIDTH, type CommandId } from '@aubergine/shared';
 import { api } from './api';
 import { canResumeAgent } from './attention';
 import { ColorButton } from './ColorButton';
@@ -101,6 +101,17 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
     return me ? noteRoom(me, nodes.filter((n) => n.id !== id)) : 'full';
   });
   const noteShown = noteOpen && (noteAsked || room === 'full');
+  /**
+   * Runs a command on this terminal from its title or its menu. A command acts on the terminal that has the keyboard
+   * before the selected one, so another terminal that has the keyboard is let go of first: otherwise the command
+   * would act on that one.
+   */
+  const actHere = (command: CommandId): void => {
+    const store = useApp.getState();
+    if (store.focus && store.focus.sessionId !== sessionId) store.focusSession(null);
+    store.select(sessionId);
+    runCommand(command);
+  };
   // Whether this terminal's details are open beside the side panel: its button is pressed while they are.
   const detailsShown = useApp((st) => st.drawer?.section === 'terminals' && st.drawer.kind === 'notes' && st.drawer.id === sessionId);
   noteShownRef.current = noteShown;
@@ -247,8 +258,7 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
             aria-pressed={detailsShown}
             title={hint('terminal.details', 'Details: what it asks, what is known about it, its note and messages, beside the side panel')}
             onClick={() => {
-              useApp.getState().select(sessionId);
-              runCommand('terminal.details');
+              actHere('terminal.details');
             }}
             data-testid="node-details"
           >
@@ -283,8 +293,7 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
                   title={hint('workflow.run', 'Run a workflow on this terminal')}
                   data-testid="node-run-workflow"
                   onClick={() => {
-                    useApp.getState().select(sessionId);
-                    runCommand('workflow.run');
+                    actHere('workflow.run');
                   }}
                 >
                   Run a workflow…
@@ -298,8 +307,7 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
                   title={hint('terminal.message', 'Message the agent in this terminal, and see every message to and from it')}
                   data-testid="node-message"
                   onClick={() => {
-                    useApp.getState().select(sessionId);
-                    runCommand('terminal.message');
+                    actHere('terminal.message');
                   }}
                 >
                   Message…
@@ -313,8 +321,7 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
                   title={hint('terminal.openOnDesktop', 'Open on desktop: a window of your terminal application on this same terminal. Closing the window ends nothing.')}
                   data-testid="node-open-desktop"
                   onClick={() => {
-                    useApp.getState().select(sessionId);
-                    runCommand('terminal.openOnDesktop');
+                    actHere('terminal.openOnDesktop');
                   }}
                 >
                   Open on desktop
@@ -328,8 +335,7 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
                   title={hint('terminal.openInNewTab', 'Open in new tab: this same terminal by itself in a new browser tab. Closing the tab ends nothing.')}
                   data-testid="node-open-tab"
                   onClick={() => {
-                    useApp.getState().select(sessionId);
-                    runCommand('terminal.openInNewTab');
+                    actHere('terminal.openInNewTab');
                   }}
                 >
                   Open in new tab
@@ -341,8 +347,7 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
                 title={hint('terminal.moveToCanvas', 'Move this terminal to another canvas')}
                 data-testid="node-move"
                 onClick={() => {
-                  useApp.getState().select(sessionId);
-                  runCommand('terminal.moveToCanvas');
+                  actHere('terminal.moveToCanvas');
                 }}
               >
                 Move to canvas…
@@ -369,8 +374,7 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
                   title={hint('terminal.peopleOnly', session.peopleOnly ? 'People only: no API token may read this terminal or type into it. Click to open it to tokens again.' : 'People only is off: API tokens that have the scope and the reach may read this terminal and type into it. Click to make it people only.')}
                   data-testid="people-only"
                   onClick={() => {
-                    useApp.getState().select(sessionId);
-                    runCommand('terminal.peopleOnly');
+                    actHere('terminal.peopleOnly');
                   }}
                 >
                   People only
