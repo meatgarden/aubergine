@@ -592,6 +592,7 @@ aubergine project archive "Garden site" --park
 You can have several canvases, shown as tabs along the top: one per project, say, or one for long-running jobs. You start with one, named Main.
 
 - **New canvas** adds a canvas and shows it. The arrow beside it has **New canvas in a new browser tab**, which shows the new canvas in a tab of its own and leaves this one as it is. Double-click a tab to rename it, drag it to reorder, and use its dot to give it a color.
+- **The button at the start of the bar** shows the canvases as one list instead of tabs: the name of the canvas you are looking at, which opens a list of every canvas with what waits on each. Press it again for tabs. Your browser remembers the choice; the palette has it too (**Show the canvases as tabs or as a list**).
 - Each canvas has its own address (`/c/<id>`), so you can bookmark one, or keep two browser windows on two canvases. Opening the plain address returns to the canvas you looked at last. Each canvas remembers its own pan and zoom in each browser.
 - A terminal is on one canvas at a time. **Move** in its title bar puts it on another canvas; the shell is not touched.
 - Only the canvas you are looking at keeps live terminals. Shells on the others keep running all the same.

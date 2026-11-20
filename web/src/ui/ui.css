@@ -3136,6 +3136,52 @@ button.rail-dot:active {
   background: var(--accent);
   pointer-events: none;
 }
+/* The button at the start of the bar switches the canvases between tabs and one list; pressed while they are a list. */
+.tabbar > .tabbar-view {
+  height: var(--control);
+  width: var(--control);
+  min-width: var(--control);
+  font-size: var(--font-body);
+}
+.tabbar > .tabbar-view > svg {
+  flex: none;
+  width: var(--space-4);
+  height: var(--space-4);
+}
+.tabbar > .tabbar-view[aria-pressed='true'] {
+  background: var(--surface-active);
+}
+/* The canvases as a list: the name of the one being looked at, then its options, where the first tab would be. */
+.tabbar-list {
+  flex: 0 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+.tabbar-list .ui-switcher-button {
+  height: var(--control);
+  max-width: 100%;
+}
+.tabbar-list-current:not(.color-none) {
+  background: color-mix(in srgb, var(--swatch) 32%, var(--surface-active));
+}
+.tabbar-list .tab-tools {
+  display: inline-flex;
+  align-items: center;
+}
+.tabbar-list-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.tabbar-list-color {
+  flex: none;
+  width: var(--space-2);
+  height: var(--space-2);
+  border-radius: var(--radius-pill);
+  background: var(--swatch);
+}
 /* "New canvas" stands after the row of tabs, at the height of a tab, and does not give way to them. */
 .tabbar > .tabbar-new {
   flex: none;
