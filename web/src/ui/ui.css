@@ -3270,6 +3270,47 @@ button.rail-dot:active {
 .tabbar.is-column > .tabbar-new > button:first-child {
   flex: 1;
 }
+/* The head's last button folds the column to a rail. */
+.tabbar-head > .tabbar-fold {
+  margin-left: auto;
+}
+/*
+ * Folded, the column is a rail as wide as the side panel's: the button that opens it, a dot for each canvas in its
+ * color (the one being looked at with the accent line down its left edge), and a
+ * plus for a new canvas.
+ */
+.tabbar.is-column.is-folded {
+  box-sizing: border-box;
+  width: calc(var(--control-compact) + var(--space-3));
+  align-items: center;
+  padding: var(--space-2) 0;
+}
+.tabbar.is-folded > .tabbar-rail {
+  flex: 0 1 auto;
+}
+.tabbar-rail-canvas {
+  position: relative;
+}
+.tabbar-rail-canvas .tabbar-list-color {
+  width: var(--space-3);
+  height: var(--space-3);
+}
+.tabbar-rail-canvas.active {
+  background: var(--surface-active);
+}
+.tabbar-rail-canvas.active::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: var(--space-1);
+  bottom: var(--space-1);
+  width: 2px;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+}
+.tabbar-rail-new {
+  flex: none;
+}
 /* "New canvas" stands after the row of tabs, at the height of a tab, and does not give way to them. */
 .tabbar > .tabbar-new {
   flex: none;

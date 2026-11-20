@@ -5854,6 +5854,28 @@ test('the canvases as a column: tabs one under another at the left of the window
   await page.getByTestId('tabbar-new-canvas').click();
   await expect(page.getByTestId('tab')).toHaveCount(count + 1);
   await expect(selected).not.toHaveAttribute('data-canvas', otherId);
+  // Folded to a rail: the button that opens it, a dot for each canvas, the one being looked at selected, and a plus.
+  const now = (await selected.getAttribute('data-canvas')) ?? '';
+  await page.getByTestId('tabbar-fold').click();
+  await expect(bar).toHaveAttribute('data-folded', 'true');
+  await expect(page.getByTestId('tab')).toHaveCount(0);
+  const dots = page.getByTestId('tabbar-rail-canvas');
+  await expect(dots).toHaveCount(count + 1);
+  await expect(page.locator(`[data-testid="tabbar-rail-canvas"][data-canvas="${now}"]`)).toHaveAttribute('aria-selected', 'true');
+  expect(await bar.evaluate((el) => Math.round(el.getBoundingClientRect().width))).toBe(40);
+  expect(await bar.evaluate((el) => [...el.querySelectorAll('button')].map((b) => b.getAttribute('data-testid')))).toEqual(['tabbar-fold', ...Array(count + 1).fill('tabbar-rail-canvas'), 'tabbar-rail-new']);
+  // A dot goes to its canvas; the plus makes one.
+  await page.locator(`[data-testid="tabbar-rail-canvas"][data-canvas="${otherId}"]`).click();
+  await expect(page).toHaveURL(new RegExp(`/c/${otherId}$`));
+  await page.getByTestId('tabbar-rail-new').click();
+  await expect(dots).toHaveCount(count + 2);
+  // Remembered in this browser, and opened again.
+  await page.reload();
+  await expect(bar).toHaveAttribute('data-folded', 'true');
+  await page.getByTestId('tabbar-fold').click();
+  await expect(page.getByTestId('tab')).toHaveCount(count + 2);
+  expect(await page.evaluate(() => localStorage.getItem('aubergine.canvasColumn.folded'))).toBeNull();
+
   // Remembered in this browser, and back to tabs over the canvas.
   await page.reload();
   await expect(bar).toHaveAttribute('data-view', 'column');

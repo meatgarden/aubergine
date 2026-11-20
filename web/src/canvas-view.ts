@@ -55,3 +55,47 @@ export function useCanvasView(): CanvasView {
     return () => listeners.delete(listener);
   }, canvasView);
 }
+
+/**
+ * Whether the column of canvases is folded to a rail: the button that opens it, a dot for each canvas and a plus for
+ * a new one. A convenience of this browser only; nothing remembered means open.
+ */
+const FOLD_KEY = 'aubergine.canvasColumn.folded';
+const foldListeners = new Set<() => void>();
+
+export function columnFoldedFrom(remembered: string | null): boolean {
+  return remembered === 'yes';
+}
+
+function loadFolded(): boolean {
+  try {
+    return columnFoldedFrom(localStorage.getItem(FOLD_KEY));
+  } catch {
+    return false;
+  }
+}
+
+let folded = loadFolded();
+
+export function canvasColumnFolded(): boolean {
+  return folded;
+}
+
+export function setCanvasColumnFolded(next: boolean): void {
+  if (folded === next) return;
+  folded = next;
+  try {
+    if (next) localStorage.setItem(FOLD_KEY, 'yes');
+    else localStorage.removeItem(FOLD_KEY);
+  } catch {
+    // Not being able to remember this is harmless: it holds while the page is open.
+  }
+  for (const listener of foldListeners) listener();
+}
+
+export function useCanvasColumnFolded(): boolean {
+  return useSyncExternalStore((listener) => {
+    foldListeners.add(listener);
+    return () => foldListeners.delete(listener);
+  }, canvasColumnFolded);
+}
