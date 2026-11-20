@@ -133,6 +133,14 @@ function Drawer() {
   const definition = drawer ? sectionById(drawer.section)?.drawers?.[drawer.kind] : undefined;
   const root = useRef<HTMLElement>(null);
   const shown = drawer && definition ? `${drawer.section}:${drawer.kind}` : null;
+  // The panel shows the section a drawer belongs to, so that the row it is about is in view beside it.
+  const owner = drawer && definition ? drawer.section : null;
+  useEffect(() => {
+    if (!owner) return;
+    const { side } = useApp.getState();
+    const showing = panelSections().find((section) => section.id === side.tab) ?? panelSections()[0];
+    if (showing?.id !== owner) useApp.getState().setSide({ tab: owner });
+  }, [owner, drawer?.id]);
   // It takes the keyboard when it opens, so that Escape closes it from wherever it was opened.
   useEffect(() => {
     if (shown) root.current?.focus();

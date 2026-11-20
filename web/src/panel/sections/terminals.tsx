@@ -117,6 +117,16 @@ function TerminalsSection() {
     else if (bottom > element.scrollTop + element.clientHeight) element.scrollTop = bottom - element.clientHeight;
   }, [current, model.items, tops, view.density]);
 
+  // A terminal whose details are opened, from anywhere, becomes the one chosen in the list: its row is marked and
+  // brought into view. A terminal that had the keyboard keeps it only if it is that one.
+  const opened = useApp((s) => (s.drawer?.section === SECTION && s.drawer.kind === 'notes' ? s.drawer.id : null));
+  useEffect(() => {
+    if (!opened) return;
+    const store = useApp.getState();
+    if (store.focus && store.focus.sessionId !== opened) store.focusSession(null);
+    if (store.selected !== opened) store.select(opened);
+  }, [opened]);
+
   // An open notes drawer follows the selection, so the list can be used to read through notes.
   // It follows a change of selection, not the selection as it happened to be when it was opened.
   const followed = useRef(current);
