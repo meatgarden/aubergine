@@ -4093,6 +4093,8 @@ test('the drawer: what a terminal asks comes first, one thing to type into, besi
     expect(sizes.summaryLines).toBeGreaterThanOrEqual(4);
     // The handle that folds the side panel does not lie over it, and at 1280 wide the bar over the canvas is still one row.
     await page.setViewportSize({ width: 1280, height: 900 });
+    // The canvas learns its new width after the window's: wait for the bar to follow.
+    await expect(page.locator('.toolbar')).toHaveClass(/is-narrow/);
     expect(await page.evaluate(() => {
       const handle = document.querySelector('[data-testid="panel-fold"]') as HTMLElement | null;
       const d = (document.querySelector('[data-testid="panel-drawer"]') as HTMLElement).getBoundingClientRect();
@@ -4639,7 +4641,8 @@ test('tabs and panel: a new browser has the panel folded to a rail, the bar of t
         // Where the first tab is with the row of tabs at its start: with many tabs the row may have scrolled to the one being looked at.
         // The bar's first control: the button that shows the canvases as tabs or as a list.
         firstTab: Math.round(box('[data-testid="tabbar-view"]').left),
-        canvasBar: Math.round(box('.react-flow__panel.toolbar').left),
+        // Where the bar over the canvas begins when it stands at the left: the canvas's gutter.
+        canvasBar: Math.round(box('.react-flow').left + 24),
         panelTop: Math.round(box('[data-testid="side-panel"]').top),
         headerBottom: Math.round(box('[data-testid="appbar"]').bottom),
       };
@@ -5170,9 +5173,11 @@ test('the bar over the canvas: a new browser sees only "Go to…", the rest show
     await fresh.mouse.move(700, 600);
     await expect(zoom).toBeHidden();
 
-    // 3. Reached with the keyboard: from "Go to…" the next stop is in the bar, and it shows.
+    // 3. Reached with the keyboard: from "Go to…" and the map's button the next stop is in the bar, and it shows.
     await goto.focus();
     await expect(zoom).toBeVisible();
+    await fresh.keyboard.press('Tab');
+    await expect(fresh.getByTestId('map-fold')).toBeFocused();
     await fresh.keyboard.press('Tab');
     expect(await fresh.evaluate(() => document.activeElement?.closest('[data-testid="toolbar-rest"]') !== null)).toBe(true);
     await expect(zoom).toBeVisible();
@@ -5211,7 +5216,9 @@ test('where the bar over the canvas stands: chosen in Settings, remembered in th
   await page.goto(`/auth?token=${token}`);
   await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
   const bar = page.getByTestId('canvas-bar');
-  await expect(bar).toHaveAttribute('data-place', 'top-left');
+  // The usual place is the map's corner, the bottom right, with "Go to…" and the map's button.
+  await expect(bar).toHaveAttribute('data-place', 'bottom-right');
+  await expect(bar.getByTestId('map-fold')).toBeVisible();
 
   const choose = async (place: string): Promise<void> => {
     await page.getByTestId('toolbar-settings').click();
@@ -5239,16 +5246,33 @@ test('where the bar over the canvas stands: chosen in Settings, remembered in th
         menuInside: menu.left >= 0 && menu.right <= window.innerWidth && menu.top >= 0 && menu.bottom <= window.innerHeight,
       };
     });
-    await page.mouse.move(700, 400);
+    // Nothing of the bar keeps the keyboard (Settings gives it back to what opened it), and the pointer leaves.
+    // Away to the left edge of the canvas, half way down: the menu, longer now that every place is offered, is never there.
+    await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
+    const away = await page.evaluate(() => { const r = (document.querySelector('.react-flow') as HTMLElement).getBoundingClientRect(); return { x: r.left + 8, y: r.top + r.height / 2 }; });
+    await page.mouse.move(away.x, away.y);
     await expect(page.getByTestId('bar-settings-menu')).toHaveCount(0);
     return seen;
   };
 
-  // The usual place: top left, its menu below it.
+  // The usual place: bottom right, its menu above it, and the map, when shown, over the bar.
   const usual = await where();
-  expect(usual.top).toBeLessThan(40);
-  expect(usual.menuAbove).toBe(false);
+  expect(usual.bottom).toBeLessThan(40);
+  expect(usual.right).toBeLessThan(40);
+  expect(usual.menuAbove).toBe(true);
   expect(usual.menuInside).toBe(true);
+  await bar.getByTestId('map-fold').click();
+  await expect(page.locator('.react-flow__minimap')).toBeVisible();
+  expect(await page.evaluate(() => (document.querySelector('.react-flow__minimap') as HTMLElement).getBoundingClientRect().bottom <= (document.querySelector('[data-testid="canvas-bar"]') as HTMLElement).getBoundingClientRect().top)).toBe(true);
+  await bar.getByTestId('map-fold').click();
+  await expect(page.locator('.react-flow__minimap')).toHaveCount(0);
+
+  // Top left, its menu below it.
+  await choose('top-left');
+  const left = await where();
+  expect(left.top).toBeLessThan(40);
+  expect(left.menuAbove).toBe(false);
+  expect(left.menuInside).toBe(true);
 
   // At the foot in the middle: its menu opens upward, and still on the page.
   await choose('bottom-center');
@@ -5296,12 +5320,12 @@ test('where the bar over the canvas stands: chosen in Settings, remembered in th
   await expect(page.getByTestId('settings-dialog')).toBeVisible();
   await page.getByTestId('settings-close').click();
 
-  // The map's corner is not offered.
+  // Every place is offered, the map's corner too, and back to the usual one.
   await page.getByTestId('toolbar-settings').click();
-  expect(await page.getByTestId('settings-bar-place').locator('option').evaluateAll((all) => all.map((o) => (o as HTMLOptionElement).value))).toEqual(['top-left', 'top-center', 'top-right', 'bottom-left', 'bottom-center']);
-  await page.getByTestId('settings-bar-place').selectOption('top-left');
+  expect(await page.getByTestId('settings-bar-place').locator('option').evaluateAll((all) => all.map((o) => (o as HTMLOptionElement).value))).toEqual(['top-left', 'top-center', 'top-right', 'bottom-left', 'bottom-center', 'bottom-right']);
+  await page.getByTestId('settings-bar-place').selectOption('bottom-right');
   await page.getByTestId('settings-close').click();
-  await expect(bar).toHaveAttribute('data-place', 'top-left');
+  await expect(bar).toHaveAttribute('data-place', 'bottom-right');
 });
 
 test('opening a terminal\'s details marks its row in the list, in view, whatever was showing in the panel and whichever terminal had the keyboard', async ({ page }) => {
@@ -5751,7 +5775,7 @@ test('the canvases as a list: the button at the start of the bar switches betwee
   // The same heights as the tabs had, and the bar over the canvas still begins under the bar's first control.
   const sizes = await page.evaluate(() => {
     const box = (sel: string): DOMRect => (document.querySelector(sel) as HTMLElement).getBoundingClientRect();
-    return { button: Math.round(box('[data-testid="tabbar-list-button"]').height), view: Math.round(box('[data-testid="tabbar-view"]').height), viewLeft: Math.round(box('[data-testid="tabbar-view"]').left), canvasBar: Math.round(box('.react-flow__panel.toolbar').left) };
+    return { button: Math.round(box('[data-testid="tabbar-list-button"]').height), view: Math.round(box('[data-testid="tabbar-view"]').height), viewLeft: Math.round(box('[data-testid="tabbar-view"]').left), canvasBar: Math.round(box('.react-flow').left + 24) };
   });
   expect(sizes).toEqual({ button: 32, view: 32, viewLeft: sizes.canvasBar, canvasBar: sizes.canvasBar });
 

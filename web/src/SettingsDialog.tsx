@@ -69,7 +69,7 @@ export function SettingsDialog() {
               ))}
             </Select>
           </p>
-          <p className="ui-meta">The bottom right corner is the map&rsquo;s. This browser remembers it.</p>
+          <p className="ui-meta">At the bottom right the map stands over it. This browser remembers it.</p>
         </section>
         <section>
           <h3>New terminals</h3>
