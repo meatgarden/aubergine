@@ -62,10 +62,10 @@ export function AppBar() {
       {/* One line under all of the places, from the first to the last; the stretch under the one being looked at is the accent. */}
       <nav className="appbar-group appbar-places" aria-label="Places of this project">
         {screen('canvas.show', 'Canvas', 'The canvas, as you left it', 'toolbar-canvas', null)}
-        {screen('queue.open', 'Queue', 'The tasks for agents, and everything that waits on you', 'toolbar-queue', 'queue')}
-        {screen('board.open', 'Board', 'Every run that is going, by workflow and step; approve or send back from there', 'toolbar-board', 'board')}
-        {screen('workflows.open', 'Workflows', 'Make, change and run workflows', 'toolbar-workflows', 'workflows')}
+        {/* In the order work goes through them, as the strip under each page's name says. */}
         {screen('library.open', 'Library', 'Workflows and steps others published, to read and install', 'toolbar-library', 'library')}
+        {screen('workflows.open', 'Workflows', 'Make, change and run workflows', 'toolbar-workflows', 'workflows')}
+        {screen('queue.open', 'Runs', 'Work for agents, from waiting to done, and everything that waits on you', 'toolbar-runs', 'runs')}
       </nav>
       <span className="appbar-group appbar-status" role="group" aria-label="What needs you">
         {!live && <span className="warning">Reconnecting…</span>}

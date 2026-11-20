@@ -90,81 +90,49 @@ registerTourStep({
   target: () => find('[data-testid="workflow-run"]') ?? find('[data-testid="page-flow-step"][data-page="board"]'),
 });
 
-// The Queue.
+// Runs.
 registerTourStep({
-  tour: 'queue',
-  id: 'queue-foryou',
+  tour: 'runs',
+  id: 'runs-lanes',
   group: 'waiting',
   order: 10,
-  title: 'What waits on you',
-  text: 'Questions from agents, steps to approve and your own to-dos are listed here. Each row has the one thing to do.',
+  title: 'From waiting to done',
+  text: 'Work moves left to right: waiting to start, running, waiting for you, done. A task stays one row all the way.',
   reminder: '',
-  target: () => find('.queue-foryou'),
-  // The two lists are on the page's first tab: shown, if another tab was open.
+  target: () => find('[data-testid="runs-lanes"]') ?? find('[data-testid="queue-empty"]'),
+  // The columns are on the page's first tab: shown, if another tab was open.
   arrive: () => {
     const tab = find('[data-testid="queue-tab-queue"]');
     if (tab instanceof HTMLElement && tab.getAttribute('aria-selected') !== 'true') tab.click();
   },
 });
 registerTourStep({
-  tour: 'queue',
-  id: 'queue-tasks',
+  tour: 'runs',
+  id: 'runs-you',
   group: 'waiting',
   order: 20,
-  title: 'Tasks for agents',
-  text: 'A task is one sentence of what to do. When an agent is free, it takes the next one, as a run of a workflow.',
+  title: 'What waits for you',
+  text: 'Questions from agents, steps to approve and your own to-dos. Each row has the one thing to do.',
   reminder: '',
-  target: () => find('.queue-tasks'),
+  target: () => find('[data-testid="runs-lane"][data-lane="you"]'),
 });
 registerTourStep({
-  tour: 'queue',
-  id: 'queue-start',
+  tour: 'runs',
+  id: 'runs-start',
   group: 'waiting',
   order: 30,
   title: 'You say when',
-  text: '“Start next” gives the next task to a free agent. Nothing starts by itself unless you switch that on.',
+  text: '“Add task” lines one up; “Start next” gives it to a free agent. Nothing starts by itself unless you switch that on.',
   reminder: '',
-  target: () => find('[data-testid="queue-start-next"]'),
+  target: () => find('[data-testid="queue-bar"]'),
 });
 registerTourStep({
-  tour: 'queue',
-  id: 'queue-later',
-  group: 'waiting',
+  tour: 'runs',
+  id: 'runs-by-workflow',
+  group: 'workflows',
   order: 40,
-  title: 'Schedules and rules',
-  text: 'A schedule adds a task at a time of day. A rule adds one when something happens.',
+  title: 'By step',
+  text: 'This tab shows each workflow with a column for each of its steps. Schedules and rules are the tabs beside it.',
   reminder: '',
-  target: () => find('[data-testid="queue-tab-schedules"]')?.parentElement ?? null,
-});
-
-// The Board.
-registerTourStep({
-  tour: 'board',
-  id: 'board-card',
-  group: 'workflows',
-  order: 10,
-  title: 'This is a run',
-  text: 'Each card is one terminal on one workflow, in the column of the step it is on. Click it to go to that terminal.',
-  reminder: '',
-  target: () => find('[data-testid="board-card"]') ?? find('[data-testid="board-empty"]'),
-});
-registerTourStep({
-  tour: 'board',
-  id: 'board-waits',
-  group: 'workflows',
-  order: 20,
-  title: 'A step that waits for you',
-  text: 'A column marked “you decide” stops a run until you approve it or send it back. What waits also shows under For you.',
-  reminder: '',
-  target: () => find('.board-column-mark')?.closest('[data-testid="board-column"]') ?? find('[data-testid="board-column"]') ?? find('[data-testid="for-you"]'),
-});
-registerTourStep({
-  tour: 'board',
-  id: 'board-start',
-  group: 'workflows',
-  order: 30,
-  title: 'Start one',
-  text: 'Start a workflow on one terminal, or on several at once.',
-  reminder: '',
-  target: () => find('[data-testid="board-start-many"]') ?? find('[data-testid="board-empty-start"]'),
+  target: () => find('[data-testid="runs-tab-workflow"]')?.parentElement ?? null,
 });

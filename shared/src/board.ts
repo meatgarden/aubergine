@@ -240,3 +240,25 @@ export function boardText(board: Board, now: number): string {
   }
   return lines.join('\n');
 }
+
+/**
+ * The runs page's columns of runs that no task stands for. A run started for a task is shown as its task, in the
+ * queue's own lists; every other run is a card here, by where it stands: waiting for a terminal, running, or over in
+ * the last day. A run that waits for a person, or is blocked, is not here: it is on the owner's list (`forYou`), the
+ * column of what waits for you. Laid out from what `boardOf` returned, so the two never disagree.
+ */
+export interface RunLanes {
+  waiting: BoardCard[];
+  running: BoardCard[];
+  ended: Board['ended'];
+}
+
+export function runLanesOf(board: Board, taskRunIds: ReadonlySet<string>): RunLanes {
+  const free = (card: BoardCard): boolean => !taskRunIds.has(card.runId);
+  const live = board.groups.flatMap((group) => group.columns.flatMap((column) => column.cards));
+  return {
+    waiting: board.groups.flatMap((group) => group.queued).filter(free),
+    running: live.filter((card) => free(card) && !card.waitsForPerson && card.status !== 'blocked'),
+    ended: board.ended.filter(free),
+  };
+}

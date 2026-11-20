@@ -455,10 +455,11 @@ export const terminalAddress = (sessionId: string): string => `/t/${sessionId}`;
 
 /**
  * The screens that are pages of the web app, each about a whole project: they have an address of their own, the
- * address of the canvas they were opened from with their name after it (`/p/<project>/c/<canvas>/queue`), so that a
- * reload stays on the page and the browser's back button returns to the canvas.
+ * address of the canvas they were opened from with their name after it (`/p/<project>/c/<canvas>/runs`), so that a
+ * reload stays on the page and the browser's back button returns to the canvas. The Queue and the Board became one
+ * page, Runs: their addresses are kept, and open Runs on the matching tab.
  */
-export const PAGE_NAMES = ['queue', 'board', 'workflows', 'library'] as const;
+export const PAGE_NAMES = ['queue', 'board', 'workflows', 'library', 'runs'] as const;
 export type PageName = (typeof PAGE_NAMES)[number];
 export const isPageName = (name: string | undefined): name is PageName => (PAGE_NAMES as readonly string[]).includes(name ?? '');
 /** The address of a page, given the address of the canvas it is over. */

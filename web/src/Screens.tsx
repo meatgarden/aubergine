@@ -1,6 +1,5 @@
 import { ActivityScreen, TokenScreen } from './TokenScreen';
 import { AgentToolsDialog } from './AgentToolsDialog';
-import { BoardScreen } from './board/BoardScreen';
 import { DescribeDialog } from './workflows/DescribeDialog';
 import { EnvironmentPanel } from './environment/EnvironmentPanel';
 import { HelpPanel } from './HelpPanel';
@@ -9,7 +8,7 @@ import { InventoryPanel } from './InventoryPanel';
 import { LibraryScreen } from './library/LibraryScreen';
 import { Picker } from './Picker';
 import { ProjectsScreen } from './projects/ProjectsScreen';
-import { QueueScreen } from './queue/QueueScreen';
+import { RunsScreen } from './runs/RunsScreen';
 import { ReviewScreen } from './review/ReviewScreen';
 import { RunDialog } from './workflows/RunDialog';
 import { RunViewDialog } from './workflows/RunViewDialog';
@@ -28,8 +27,7 @@ import { WorkflowsScreen } from './workflows/WorkflowsScreen';
 export function Pages() {
   return (
     <>
-      <QueueScreen />
-      <BoardScreen />
+      <RunsScreen />
       <WorkflowsScreen />
       <LibraryScreen />
     </>

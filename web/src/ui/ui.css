@@ -1142,9 +1142,6 @@ button.color-dot:hover {
   margin: 0 0 var(--space-4);
 }
 
-.queue-columns > section.ui-card > h3:first-child {
-  margin-top: 0;
-}
 .queue-bar {
   display: flex;
   gap: var(--space-2);
@@ -1880,34 +1877,6 @@ label:is(.wf-inline, .ui-check, .schedule-days label):has(> input:is([type='chec
 
 /* ---------- The Queue ---------- */
 
-/* Two parts on the page's own surface: side by side where there is room, one after the other where there is not. */
-.ui-page .queue-columns {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: var(--space-8);
-  align-items: start;
-}
-@media (max-width: 1040px) {
-  .ui-page .queue-columns {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
-.ui-page .queue-columns > section {
-  min-width: 0;
-  padding: 0;
-  background: transparent;
-  border: 0;
-}
-.ui-page .queue-columns h3 {
-  display: flex;
-  align-items: baseline;
-  gap: var(--space-3);
-}
-.ui-page .queue-columns h3 > span {
-  font-size: var(--font-meta);
-  font-weight: var(--weight-normal);
-  color: var(--text-muted);
-}
 .ui-page .queue-write {
   margin: 0 0 var(--space-2);
 }
@@ -2947,10 +2916,6 @@ button.ui-link:active:not(:disabled) {
 .ui-page .ui-card {
   background: var(--surface);
 }
-/* The switch between this project and every project stands clear of the field under it. */
-.ui-page .queue-foryou > .list-scope {
-  margin-bottom: var(--space-2);
-}
 
 /* ---------- The switcher: which of several is shown, and the list of them ---------- */
 
@@ -3707,4 +3672,61 @@ div.note-summary-read {
   flex-direction: column;
   gap: var(--space-1);
   color: var(--text);
+}
+
+/* ---------- Runs: four columns, from waiting to done ---------- */
+
+/* Work moves left to right; each column is a title and what is in it, on the page's own surface. */
+.runs-lanes {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-6);
+  align-items: start;
+}
+.runs-lane {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.runs-lane > h3 {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  margin: 0 0 var(--space-1);
+}
+.runs-lane > h3 > span {
+  font-size: var(--font-meta);
+  font-weight: var(--weight-normal);
+  color: var(--text-muted);
+}
+.runs-lane .foryou-row {
+  box-sizing: border-box;
+  max-width: 100%;
+}
+.runs-lane .task-list,
+.runs-lane .foryou-list,
+.runs-done {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.runs-lane .task-list:empty,
+.runs-done:empty {
+  display: none;
+}
+@media (max-width: 1100px) {
+  .runs-lanes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+/* A line of what is done wraps in its column, its words on the gutter like a row's. */
+.runs-done button {
+  height: auto;
+  min-height: var(--control-h);
+  white-space: normal;
+  text-align: left;
 }

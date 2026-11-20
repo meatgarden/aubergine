@@ -18,7 +18,7 @@ import {
 } from '@aubergine/shared';
 import { ApiError, api, askAbout, lookAt, subscribeToEvents } from './api';
 import { NOT_FOLLOWING, behind, takeChange, takeWhole, type Following } from './following';
-import { canvasIdFromPath, chooseCanvas, openedHere, pageFromPath, rememberCanvas, rememberedCanvas, sessionFromAddress, terminalFromPath, writeAddress } from './address';
+import { canvasIdFromPath, chooseCanvas, openedHere, pageFromPath, rememberCanvas, rememberedCanvas, sessionFromAddress, shownPage, terminalFromPath, writeAddress, type RunsTab } from './address';
 import { announcement, notificationsWanted } from './attention';
 import { clampDrawerWidth, clampPanelWidth, loadPanelPrefs, savePanelPrefs, type PanelPrefs } from './panel/registry';
 import { loadView, saveView, type ListView } from './terminal-rows';
@@ -67,6 +67,9 @@ export interface AppStore {
    * was underneath, and a panel or a dialog opens over a page as it does over the canvas. Its name is in the address.
    */
   page: PageName | null;
+  /** The tab the Runs page shows. */
+  runsTab: RunsTab;
+  setRunsTab: (tab: RunsTab) => void;
   /** Something a component was asked to start: renaming, a note, the move menu. Used once. */
   ask: Ask | null;
   /** The last thing that went wrong, shown in the toolbar. */
@@ -174,6 +177,12 @@ export interface Ask {
   tick: number;
 }
 
+/** The page and the tab of Runs the address names when the page loads. */
+function startPage(): { page: PageName | null; tab: RunsTab | null } {
+  const found = pageFromPath(location.pathname);
+  return found ? shownPage(found) : { page: null, tab: null };
+}
+
 export const useApp = create<AppStore>((set, get) => ({
   phase: 'loading',
   runtime: null,
@@ -190,7 +199,9 @@ export const useApp = create<AppStore>((set, get) => ({
   selected: null,
   panel: null,
   // A page whose address the browser was opened at is shown from the start.
-  page: typeof location === 'undefined' ? null : pageFromPath(location.pathname),
+  page: typeof location === 'undefined' ? null : startPage().page,
+  runsTab: typeof location === 'undefined' ? 'runs' : (startPage().tab ?? 'runs'),
+  setRunsTab: (runsTab) => set({ runsTab }),
   ask: null,
   notice: null,
   parkedHere: [],
@@ -309,11 +320,19 @@ export const useApp = create<AppStore>((set, get) => ({
   select: (sessionId) => set({ selected: sessionId }),
   togglePanel: (panel) => {
     const state = get();
-    if (panel !== null && isPageName(panel)) return state.showPage(state.page === panel ? null : panel);
+    if (panel !== null && isPageName(panel)) {
+      // The Queue and the Board are tabs of Runs: pressing one while its tab is shown leads back to the canvas.
+      const shown = shownPage(panel);
+      const here = state.page === shown.page && (shown.tab === null || state.runsTab === shown.tab);
+      return state.showPage(here ? null : panel);
+    }
     if (panel === null && state.panel === null) return state.showPage(null);
     set({ panel: panel === null || state.panel === panel ? null : panel });
   },
-  showPage: (page) => {
+  showPage: (asked) => {
+    const shown = asked === null ? null : shownPage(asked);
+    if (shown?.tab) set({ runsTab: shown.tab });
+    const page = shown?.page ?? null;
     const state = get();
     if (state.page === page) return;
     set({ page });
@@ -489,7 +508,10 @@ export function startSync(): () => void {
     const id = canvasIdFromPath(location.pathname);
     const store = useApp.getState();
     // And between a page and the canvas it was opened from.
-    const page = pageFromPath(location.pathname);
+    const found = pageFromPath(location.pathname);
+    const shown = found ? shownPage(found) : null;
+    if (shown?.tab) useApp.setState({ runsTab: shown.tab });
+    const page = shown?.page ?? null;
     if (page !== store.page) useApp.setState({ page });
     if (id && store.whole?.canvases.some((c) => c.id === id) && id !== store.canvasId) {
       useApp.setState({ canvasId: id, focus: null, selected: null, app: viewOf(store.whole, id, store.app) });

@@ -15,7 +15,7 @@ function outputLine(page: Page, text: string) {
 /** To the review screen, from the one thing in the top bar that counts what waits: the owner's list, then what is to be read. */
 const openReview = async (page: Page): Promise<void> => {
   await page.getByTestId('for-you').click();
-  await page.getByTestId('queue-screen').getByTestId('review-open').click();
+  await page.getByTestId('runs-screen').getByTestId('review-open').click();
 };
 
 /** Closes Review, and leaves the page it was opened from (the Queue) for the canvas, where the tests go on. */
@@ -31,12 +31,21 @@ const toCanvas = async (page: Page): Promise<void> => {
   await expect(page.locator('.ui-page')).toHaveCount(0);
 };
 
-/** Shows a page from the top bar, where it is not the one shown already (pressing its name again would leave it). */
-const openPage = async (page: Page, name: 'queue' | 'board' | 'workflows' | 'library'): Promise<void> => {
-  const item = page.getByTestId(`toolbar-${name}`);
+/**
+ * Shows a page from the top bar, where it is not the one shown already (pressing its name again would leave it). The
+ * Queue and the Board are the Runs page: its columns, and its view by step.
+ */
+const openPage = async (page: Page, name: 'queue' | 'board' | 'runs' | 'workflows' | 'library'): Promise<void> => {
+  const shown = name === 'queue' || name === 'board' ? 'runs' : name;
+  const item = page.getByTestId(`toolbar-${shown}`);
   if ((await item.getAttribute('aria-current')) !== 'page') await item.click();
-  await expect(page.locator(`.ui-page[data-page="${name}"]`)).toBeVisible();
+  await expect(page.locator(`.ui-page[data-page="${shown}"]`)).toBeVisible();
+  if (name === 'board') await page.getByTestId('runs-tab-workflow').click();
+  if (name === 'queue') await page.getByTestId('queue-tab-queue').click();
 };
+
+/** The Board as it was: the Runs page's view by step. */
+const openBoard = (page: Page): Promise<void> => openPage(page, 'board');
 
 /** Shows a control that is behind a menu, a tab or a fold-out, where it is not showing yet: each opener is pressed in turn. */
 // The side panel begins folded in a browser that remembers nothing, and so does the bar over the canvas. These tests
@@ -1294,14 +1303,14 @@ test('the tour: each step is done on the real thing, on the demo', async ({ page
   await expect(page.getByTestId('tour-ring')).toBeVisible();
   // A screen that does not hold what the tour points at is not drawn over: no ring across it, no card on it.
   // (The ring takes no clicks, so a hit test cannot see it: it must not be there at all.)
-  await page.getByTestId('toolbar-board').click();
-  await expect(page.getByTestId('board')).toBeVisible();
+  await openBoard(page);
+  await expect(page.getByTestId('runs-screen')).toBeVisible();
   // At once, not when a timer next looks: asked one time, a moment after the screen is there, with no waiting for it to become so.
   await page.waitForTimeout(60);
   expect(await page.evaluate(() => ({ ring: document.querySelectorAll('[data-testid="tour-ring"]').length, card: (document.querySelector('[data-testid="tour-card"]') as HTMLElement).hidden }))).toEqual({ ring: 0, card: true });
-  expect(await onTop(page, 'board')).toBe(true);
+  expect(await onTop(page, 'runs-screen')).toBe(true);
   await page.keyboard.press('Escape');
-  await expect(page.getByTestId('board')).toHaveCount(0);
+  await expect(page.getByTestId('runs-screen')).toHaveCount(0);
   await expect(page.getByTestId('tour-ring')).toBeVisible();
   await expect(card).toBeVisible();
 
@@ -2309,8 +2318,8 @@ test('an approval and the board: a run stops for the owner, shows on the board a
   await expect(page.getByTestId('for-you')).toHaveAttribute('title', /Approval needed at "Look it over" of "Careful change"/);
 
   // The board: the run in its column, counted as waiting for the owner.
-  await page.getByTestId('toolbar-board').click();
-  const board = page.getByTestId('board');
+  await openBoard(page);
+  const board = page.getByTestId('runs-screen');
   await reveal(board.getByTestId('board-filter-workflow'), board.getByTestId('board-filter-open'));
   await board.getByTestId('board-filter-workflow').selectOption({ label: 'Careful change' });
   await expect(board.getByTestId('board-summary')).toHaveText('1 waiting for you');
@@ -2351,7 +2360,7 @@ test('an approval and the board: a run stops for the owner, shows on the board a
   await expect(strip).toHaveAttribute('data-status', 'awaiting', { timeout: 20_000 });
 
   // Approved from the board, reached with the keyboard: an arrow to the card, then the button; Enter on the card goes to the terminal.
-  await page.getByTestId('toolbar-board').click();
+  await openBoard(page);
   await expect(board.getByTestId('board-summary')).toHaveText('1 waiting for you');
   await page.keyboard.press('ArrowDown');
   await expect(card).toBeFocused();
@@ -2376,7 +2385,7 @@ test('an approval and the board: a run stops for the owner, shows on the board a
   const firstId = (await node.first().getAttribute('data-session')) ?? '';
   await page.getByTestId('toolbar-new-terminal').click();
   await expect(node).toHaveCount(2);
-  await page.getByTestId('toolbar-board').click();
+  await openBoard(page);
   await board.getByTestId('board-start-many').click();
   const many = page.getByTestId('run-many');
   await many.getByTestId('run-many-workflow').selectOption({ label: 'Careful change' });
@@ -2635,8 +2644,8 @@ test('the queue and For you: tasks start when the owner says and no more than th
   }
 
   // The screen: nothing waits, nothing is queued. A limit of two.
-  await page.getByTestId('toolbar-queue').click();
-  const screen = page.getByTestId('queue-screen');
+  await page.getByTestId('toolbar-runs').click();
+  const screen = page.getByTestId('runs-screen');
   const mine = (title: string) => screen.locator('[data-testid="task-row"]').filter({ hasText: title });
   // How tasks start is not shown until there is a task to start.
   await expect(screen.getByTestId('queue-starts')).toHaveCount(0);
@@ -2652,8 +2661,9 @@ test('the queue and For you: tasks start when the owner says and no more than th
   await reveal(screen.getByTestId('queue-limit'), screen.getByTestId('queue-starts').locator('summary'));
   await screen.getByTestId('queue-limit').fill('2');
   await expect(screen.getByTestId('queue-automatic')).not.toBeChecked();
-  // Every row says who added it. Adding started nothing.
+  // Every row says who added it. Adding started nothing: all three wait to start, in the first column.
   await expect(mine('Queue test one')).toContainText('added by you, written by hand');
+  await expect(screen.locator('[data-testid="runs-lane"][data-lane="waiting"] [data-testid="task-row"]').filter({ hasText: 'Queue test' })).toHaveCount(3);
   await expect(screen.getByTestId('queue-working').getByTestId('task-row')).toHaveCount(0);
 
   // A rule, written by the owner: when a task is done, notify. The browser is asked for permission at this click, not before.
@@ -2672,6 +2682,9 @@ test('the queue and For you: tasks start when the owner says and no more than th
   await expect(mine('Queue test two')).toHaveAttribute('data-state', 'working');
   await expect(screen.getByTestId('queue-working').getByTestId('task-row')).toHaveCount(2);
   await expect(mine('Queue test three')).toHaveAttribute('data-state', 'queued');
+  // The same rows, moved along: two running, one still waiting to start.
+  await expect(screen.locator('[data-testid="runs-lane"][data-lane="running"] [data-testid="task-row"]').filter({ hasText: 'Queue test' })).toHaveCount(2);
+  await expect(screen.locator('[data-testid="runs-lane"][data-lane="waiting"] [data-testid="task-row"]').filter({ hasText: 'Queue test' })).toHaveCount(1);
   await screen.getByTestId('queue-start-next').click();
   await expect(screen.getByTestId('queue-said')).toHaveText('2 tasks are at work, and the limit is 2. Nothing was started.');
   await expect(mine('Queue test three')).toHaveAttribute('data-state', 'queued');
@@ -2796,8 +2809,8 @@ test('a schedule: the owner makes one for a step that hands in a list, runs it n
   expect(element.status()).toBe(201);
 
   // The Queue screen. Earlier tests left tasks at work: room for one more, and nothing held.
-  await page.getByTestId('toolbar-queue').click();
-  const screen = page.getByTestId('queue-screen');
+  await page.getByTestId('toolbar-runs').click();
+  const screen = page.getByTestId('runs-screen');
   await reveal(screen.getByTestId('queue-limit'), screen.getByTestId('queue-starts').locator('summary'));
   await screen.getByTestId('queue-limit').fill('20');
   if (await screen.getByTestId('queue-hold').isChecked()) {
@@ -3039,8 +3052,8 @@ test('projects: a second project has its own tabs, terminals and queue; what wai
   await page.getByTestId('toolbar-new-terminal').click();
   await expect(rows).toHaveCount(1);
   const inSecond = (await rows.first().getAttribute('data-session')) ?? '';
-  await page.getByTestId('toolbar-queue').click();
-  const queue = page.getByTestId('queue-screen');
+  await page.getByTestId('toolbar-runs').click();
+  const queue = page.getByTestId('runs-screen');
   // Nothing of the first project's queue is here.
   await expect(queue.getByTestId('task-row')).toHaveCount(0);
   await queue.getByTestId('queue-add').click();
@@ -3063,7 +3076,7 @@ test('projects: a second project has its own tabs, terminals and queue; what wai
   await expect(page.getByTestId('project-name')).toHaveText(firstName);
   await expect(tabs).toHaveCount(tabsBefore);
   await expect(page.locator(`[data-testid="list-row"][data-session="${inSecond}"]`)).toHaveCount(0);
-  await page.getByTestId('toolbar-queue').click();
+  await page.getByTestId('toolbar-runs').click();
   await expect(queue.locator('[data-testid="task-row"]').filter({ hasText: 'Project test task' })).toHaveCount(0);
   await expect(queue.locator('[data-testid="foryou-row"]').filter({ hasText: 'Project test: look at this' })).toHaveCount(0);
   // The owner's list has a view of every project: there it is, naming its project.
@@ -3203,8 +3216,8 @@ test('a project as a file: written out, read in under another name through the r
   await expect(node.getByTestId('node-not-started')).toContainText('Not started yet.');
   await expect(node.getByTestId('node-not-started')).toContainText('Its place was not set: it starts in your home folder.');
   // Its schedule arrived switched off.
-  await page.getByTestId('toolbar-queue').click();
-  const queue = page.getByTestId('queue-screen');
+  await page.getByTestId('toolbar-runs').click();
+  const queue = page.getByTestId('runs-screen');
   await queue.getByTestId('queue-tab-schedules').click();
   const schedule = queue.getByTestId('schedule-row').filter({ hasText: 'File test morning' });
   await expect(schedule).toHaveAttribute('data-on', 'false');
@@ -3342,8 +3355,8 @@ test('one look: the canvas page and every screen use the two control heights and
 
   // Every screen: measured, and under its own corners and middle with the selected terminal behind it.
   const screens: [string, () => Promise<void>][] = [
-    ['queue-screen', () => page.getByTestId('toolbar-queue').click()],
-    ['board', () => page.getByTestId('toolbar-board').click()],
+    ['runs-screen', () => openPage(page, 'queue')],
+    ['runs-screen', () => openBoard(page)],
     ['workflows-screen', () => page.getByTestId('toolbar-workflows').click()],
     ['library-screen', () => page.getByTestId('toolbar-library').click()],
     ['help-panel', () => page.getByTestId('toolbar-help').click()],
@@ -3372,7 +3385,7 @@ test('one look: the canvas page and every screen use the two control heights and
   }
   // The four pages are laid out the same: the row of the name as tall, the name as large, on the same gutter, in a column of the same width.
   const laidOut: Record<string, string> = {};
-  for (const name of ['queue', 'board', 'workflows', 'library'] as const) {
+  for (const name of ['runs', 'workflows', 'library'] as const) {
     await openPage(page, name);
     laidOut[name] = await page.evaluate(() => {
       const root = document.querySelector('.ui-page') as HTMLElement;
@@ -3384,11 +3397,10 @@ test('one look: the canvas page and every screen use the two control heights and
     });
     await toCanvas(page);
   }
-  expect(laidOut.queue).toBe('head 72, name 20px at 24, gutter 24px, content at 24, from the top ' + (laidOut.queue?.split('from the top ')[1]?.split(',')[0] ?? '') + ', width 1120px');
-  expect(laidOut.workflows).toBe(laidOut.queue);
-  expect(laidOut.library).toBe(laidOut.queue);
-  // The Board is columns itself: it has all the width, and is otherwise the same.
-  expect(laidOut.board).toBe(laidOut.queue?.replace('width 1120px', 'wide'));
+  expect(laidOut.workflows).toBe('head 72, name 20px at 24, gutter 24px, content at 24, from the top ' + (laidOut.workflows?.split('from the top ')[1]?.split(',')[0] ?? '') + ', width 1120px');
+  expect(laidOut.library).toBe(laidOut.workflows);
+  // Runs is columns itself: it has all the width, and is otherwise the same.
+  expect(laidOut.runs).toBe(laidOut.workflows?.replace('width 1120px', 'wide'));
 
   // The surfaces where the work on a workflow is done, and the smaller ones that are reached from a menu or the palette.
   const look = async (name: string, testid: string, open: () => Promise<void>): Promise<void> => {
@@ -3638,8 +3650,8 @@ test('simpler surfaces: the list starts near the top, a name is not cut, one pri
   expect(await page.evaluate(() => ['.list-find', '.list-color'].map((sel) => Math.round((document.querySelector(sel) as HTMLElement).getBoundingClientRect().left)))).toEqual([12, 12]);
 
   const screens: [string, () => Promise<void>][] = [
-    ['queue-screen', () => page.getByTestId('toolbar-queue').click()],
-    ['board', () => page.getByTestId('toolbar-board').click()],
+    ['runs-screen', () => openPage(page, 'queue')],
+    ['runs-screen', () => openBoard(page)],
     ['workflows-screen', () => page.getByTestId('toolbar-workflows').click()],
     ['library-screen', () => page.getByTestId('toolbar-library').click()],
     ['help-panel', () => page.getByTestId('toolbar-help').click()],
@@ -3655,14 +3667,16 @@ test('simpler surfaces: the list starts near the top, a name is not cut, one pri
     if (testid === 'library-screen') await expect(page.getByTestId('library-screen').locator('.library-row').first()).toBeVisible();
     if (testid === 'library-screen') expect(await wordEdges('[data-testid="library-screen"]', '.library-row'), 'library rows').toEqual([33]); // a row begins with the chip of its kind, which stands on the gutter: its word is inside its padding and its line
     if (testid === 'library-screen') expect(await page.evaluate(() => [...new Set([...document.querySelectorAll('[data-testid="library-screen"] .library-row .library-kind')].map((chip) => Math.round(chip.getBoundingClientRect().left)))])).toEqual([24]);
-    if (testid === 'board') expect(await wordEdges('[data-testid="board"]', '[data-testid="board-ended-row"]:first-child, .board-group > h3, .board-filters > .ui-menu-button > button'), 'board lines').toEqual(expect.arrayContaining([37]));
+    const byWorkflow = testid === 'runs-screen' && (await page.locator('.board-filters').count()) > 0;
+    const inLanes = testid === 'runs-screen' && (await page.locator('.runs-lanes').count()) > 0;
+    if (byWorkflow) expect(await wordEdges('[data-testid="runs-screen"]', '.board-group > h3, .board-filters > .ui-menu-button > button'), 'board lines').toEqual(expect.arrayContaining([37]));
     // (A heading and a line of the last day, where there are any, begin at 24; the Filter button's words are inside its own line and padding.)
-    if (testid === 'board') expect((await wordEdges('[data-testid="board"]', '[data-testid="board-ended-row"]:first-child, .board-group > h3')).filter((x) => x !== 24), 'board headings and lines').toEqual([]);
+    if (byWorkflow) expect((await wordEdges('[data-testid="runs-screen"]', '.board-group > h3')).filter((x) => x !== 24), 'board headings').toEqual([]);
     if (testid === 'workflows-screen') await expect(page.getByTestId('workflows-screen').locator('.ui-card').first()).toBeVisible();
     if (testid === 'workflows-screen') expect(await wordEdges('[data-testid="workflows-screen"]', '.ui-card > .ui-card-text > strong'), 'workflow cards').toEqual([41]);
-    // The Queue's two parts are on the page's own surface: the first begins on the gutter, and neither is a card.
-    if (testid === 'queue-screen') expect(await wordEdges('[data-testid="queue-screen"]', '.queue-columns > section > h3'), 'the queue parts').toContain(24);
-    if (testid === 'queue-screen') await expect(page.locator('[data-testid="queue-screen"] .queue-columns > .ui-card')).toHaveCount(0);
+    // The four columns are on the page's own surface: the first begins on the gutter, and none is a card.
+    if (inLanes) expect(await wordEdges('[data-testid="runs-screen"]', '.runs-lanes > section > h3'), 'the columns').toContain(24);
+    if (inLanes) await expect(page.locator('[data-testid="runs-screen"] .runs-lanes > .ui-card')).toHaveCount(0);
     await page.keyboard.press('Escape');
     await expect(page.getByTestId(testid)).toHaveCount(0);
   }
@@ -3672,7 +3686,7 @@ test('simpler surfaces: the list starts near the top, a name is not cut, one pri
   await page.getByTestId('steps-tab').click();
   await reached(page.getByTestId('step-new'), ['shelf-new', 'describe-element'], page.getByTestId('step-new-menu'));
   await page.keyboard.press('Escape');
-  await page.getByTestId('toolbar-queue').click();
+  await page.getByTestId('toolbar-runs').click();
   const starts = page.getByTestId('queue-starts');
   await expect(starts.getByTestId('queue-starts-says')).toContainText(/\d+ at a time/);
   await starts.locator('summary').focus();
@@ -3789,7 +3803,7 @@ test('calm canvas: one thing is filled with the colour of waiting, a terminal ha
       const inList = await page.locator(`[data-testid="list-row"][data-session="${id}"] [data-testid="list-badge"]`).getAttribute('data-tone');
       expect(await page.locator(`[data-testid="terminal-node"][data-session="${id}"] .node-title > .ui-dot`).getAttribute('data-tone')).toBe(inList);
     }
-    await page.getByTestId('toolbar-board').click();
+    await openBoard(page);
     await expect(page.getByTestId('board-card').first()).toBeVisible();
     expect(await page.locator('[data-testid="board-card"] .ui-dot').count()).toBeGreaterThanOrEqual(1);
     expect([...new Set(await dots())]).toEqual(['16x16 8x8']);
@@ -3853,9 +3867,8 @@ test('screens are pages: each is a place under the top bar with an address, and 
   const current = (): Promise<(string | null)[]> => page.evaluate(() => [...document.querySelectorAll('[data-testid="appbar"] [aria-current="page"]')].map((el) => el.getAttribute('data-testid')));
   expect(await current()).toEqual(['toolbar-canvas']);
 
-  const pages: [name: 'queue' | 'board' | 'workflows' | 'library', testid: string][] = [
-    ['queue', 'queue-screen'],
-    ['board', 'board'],
+  const pages: [name: 'runs' | 'workflows' | 'library', testid: string][] = [
+    ['runs', 'runs-screen'],
     ['workflows', 'workflows-screen'],
     ['library', 'library-screen'],
   ];
@@ -3935,19 +3948,19 @@ test('screens are pages: each is a place under the top bar with an address, and 
   const lag = (): Promise<string[]> => page.evaluate(() => (window as unknown as { lagSeen: string[] }).lagSeen);
   // By For you in the top bar.
   await page.getByTestId('for-you').click();
-  await expect(page.getByTestId('queue-screen')).toBeVisible();
-  expect(await current()).toEqual(['toolbar-queue']);
+  await expect(page.getByTestId('runs-screen')).toBeVisible();
+  expect(await current()).toEqual(['toolbar-runs']);
   await page.keyboard.press('Escape');
   await expect(page.locator('.ui-page')).toHaveCount(0);
-  // By its key, from the canvas, and from one page to another.
+  // By its key, from the canvas, and from one tab to the other: Q is the columns, Shift+B the view by step.
   await page.keyboard.press('q');
-  await expect(page.getByTestId('queue-screen')).toBeVisible();
+  await expect(page.getByTestId('runs-lanes')).toBeVisible();
   await page.keyboard.press('Shift+B');
-  await expect(page.getByTestId('board')).toBeVisible();
-  await expect(page.getByTestId('queue-screen')).toHaveCount(0);
-  expect(await current()).toEqual(['toolbar-board']);
+  await expect(page.getByTestId('board-filters')).toBeVisible();
+  await expect(page.getByTestId('runs-lanes')).toHaveCount(0);
+  expect(await current()).toEqual(['toolbar-runs']);
   await page.keyboard.press('q');
-  await expect(page.getByTestId('queue-screen')).toBeVisible();
+  await expect(page.getByTestId('runs-lanes')).toBeVisible();
   await page.keyboard.press('Escape');
   await expect(page.locator('.ui-page')).toHaveCount(0);
   expect(await lag(), 'the mark and the page, watched').toEqual([]);
@@ -3960,31 +3973,36 @@ test('screens are pages: each is a place under the top bar with an address, and 
   await expect(node).toHaveCount(1);
 
   // From one page straight to another: one place is marked at a time, and one step back is the canvas.
-  await page.getByTestId('toolbar-queue').click();
-  await page.getByTestId('toolbar-board').click();
-  await expect(page.getByTestId('board')).toBeVisible();
-  await expect(page.getByTestId('queue-screen')).toHaveCount(0);
-  expect(await current()).toEqual(['toolbar-board']);
+  await page.getByTestId('toolbar-runs').click();
+  await page.getByTestId('toolbar-workflows').click();
+  await expect(page.getByTestId('workflows-screen')).toBeVisible();
+  await expect(page.getByTestId('runs-screen')).toHaveCount(0);
+  expect(await current()).toEqual(['toolbar-workflows']);
   await page.goBack();
   await expect(page.locator('.ui-page')).toHaveCount(0);
   await expect(page).toHaveURL(canvasAddress);
 
   // A dialog opens over a page as it does over the canvas, and closing it leaves the page.
-  await page.getByTestId('toolbar-queue').click();
+  await page.getByTestId('toolbar-runs').click();
   await page.getByTestId('toolbar-help').click();
   await expect(page.getByTestId('help-panel')).toBeVisible();
-  await expect(page.getByTestId('queue-screen')).toBeVisible();
+  await expect(page.getByTestId('runs-screen')).toBeVisible();
   await page.keyboard.press('Escape');
   await expect(page.getByTestId('help-panel')).toHaveCount(0);
-  await expect(page.getByTestId('queue-screen')).toBeVisible();
+  await expect(page.getByTestId('runs-screen')).toBeVisible();
 
   // A reload on a page stays on it, and the canvas it was opened over is still the one to go back to.
   await page.reload();
-  await expect(page.getByTestId('queue-screen')).toBeVisible();
-  await expect(page).toHaveURL(`${canvasAddress}/queue`);
-  expect(await current()).toEqual(['toolbar-queue']);
+  await expect(page.getByTestId('runs-screen')).toBeVisible();
+  await expect(page).toHaveURL(`${canvasAddress}/runs`);
+  expect(await current()).toEqual(['toolbar-runs']);
+  // The old addresses of the Queue and the Board lead to Runs, on the matching tab.
+  await page.goto(`${canvasAddress}/board`);
+  await expect(page.getByTestId('board-filters')).toBeVisible();
+  await page.goto(`${canvasAddress}/queue`);
+  await expect(page.getByTestId('runs-lanes')).toBeVisible();
   await page.getByTestId('toolbar-canvas').click();
-  await expect(page.getByTestId('queue-screen')).toHaveCount(0);
+  await expect(page.getByTestId('runs-screen')).toHaveCount(0);
   await expect(page).toHaveURL(canvasAddress);
   await expect(node).toHaveCount(1);
   await expect(page.locator('.xterm-rows')).toContainText(/[$%#>]/, { timeout: 20_000 });
@@ -4244,9 +4262,9 @@ test('For you rows: the same two lines in the Queue and in the side panel, words
 
     // The Queue page: the same rows, the same shape.
     await page.getByTestId('for-you').click();
-    const queue = page.getByTestId('queue-screen');
+    const queue = page.getByTestId('runs-screen');
     await expect(queue).toBeVisible();
-    const inQueue = '[data-testid="queue-screen"] [data-testid="foryou-row"]';
+    const inQueue = '[data-testid="runs-screen"] [data-testid="foryou-row"]';
     // Looking into the terminal a moment ago ended its question: the list is read again, and the two places agree with it.
     const now = ((await (await page.request.get('/v1/for-you', { headers: { origin } })).json()) as { items: typeof listed }).items;
     listed.splice(0, listed.length, ...now);
@@ -4812,8 +4830,8 @@ test('tabs and panel: a new browser has the panel folded to a rail, the bar of t
   expect(await fresh.evaluate(() => { const tab = (document.querySelector('[data-testid="tab"][aria-selected="true"]') as HTMLElement).getBoundingClientRect(); const row = (document.querySelector('[data-testid="tabbar-tabs"]') as HTMLElement).getBoundingClientRect(); return tab.left >= row.left - 1 && tab.right <= row.right + 1; })).toBe(true);
 
   // While a page is open nothing of the bar shows.
-  await fresh.getByTestId('toolbar-queue').click();
-  await expect(fresh.getByTestId('queue-screen')).toBeVisible();
+  await fresh.getByTestId('toolbar-runs').click();
+  await expect(fresh.getByTestId('runs-screen')).toBeVisible();
   await expect(fresh.getByTestId('tabbar')).not.toBeVisible();
   } finally {
     await context.close();
@@ -5634,7 +5652,7 @@ test('the places in the top bar are a row of tabs: a short 2px line under each w
   // Away from the bar, so that nothing is pointed at.
   await page.mouse.move(600, 500);
   const seen = await measure();
-  expect(seen.places.map((p) => p.id)).toEqual(['toolbar-canvas', 'toolbar-queue', 'toolbar-board', 'toolbar-workflows', 'toolbar-library']);
+  expect(seen.places.map((p) => p.id)).toEqual(['toolbar-canvas', 'toolbar-library', 'toolbar-workflows', 'toolbar-runs']);
   for (const place of seen.places) {
     // Each has its own line, 2px, as wide as the place.
     expect(place.lineHeight).toBe('2px');
@@ -5653,15 +5671,15 @@ test('the places in the top bar are a row of tabs: a short 2px line under each w
   }
 
   // Pointed at, a quieter place's words come up to full.
-  await page.getByTestId('toolbar-queue').hover();
-  await expect.poll(() => page.getByTestId('toolbar-queue').evaluate((el) => getComputedStyle(el).color)).toBe(seen.text);
+  await page.getByTestId('toolbar-runs').hover();
+  await expect.poll(() => page.getByTestId('toolbar-runs').evaluate((el) => getComputedStyle(el).color)).toBe(seen.text);
 
   // On another page the accent moves with it.
-  await page.getByTestId('toolbar-board').click();
-  await expect(page.getByTestId('toolbar-board')).toHaveAttribute('aria-current', 'page');
+  await openBoard(page);
+  await expect(page.getByTestId('toolbar-runs')).toHaveAttribute('aria-current', 'page');
   await page.mouse.move(600, 500);
   const board = await measure();
-  expect(board.places.filter((p) => p.lineColor === board.accent).map((p) => p.id)).toEqual(['toolbar-board']);
+  expect(board.places.filter((p) => p.lineColor === board.accent).map((p) => p.id)).toEqual(['toolbar-runs']);
   await page.getByTestId('toolbar-canvas').click();
   await expect(page.getByTestId('toolbar-canvas')).toHaveAttribute('aria-current', 'page');
 });
@@ -5887,11 +5905,11 @@ test('the canvases as a column: tabs one under another at the left of the window
   await expect(page.locator('[data-testid="canvas-column"] [data-testid="tabbar"]')).toHaveCount(1);
 });
 
-test('the four pages say what they are for and where they stand: Library, Workflows, Queue, Board, each opening the next', async ({ page }) => {
+test('the pages say what they are for and where they stand: Library, Workflows, Runs, each opening the next', async ({ page }) => {
   const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
   await page.goto(`/auth?token=${token}`);
   await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
-  const screens = { library: 'library-screen', workflows: 'workflows-screen', queue: 'queue-screen', board: 'board' } as const;
+  const screens = { library: 'library-screen', workflows: 'workflows-screen', runs: 'runs-screen' } as const;
   await page.getByTestId('toolbar-library').click();
   for (const [name, testid] of Object.entries(screens)) {
     const screen = page.getByTestId(testid);
@@ -5900,13 +5918,13 @@ test('the four pages say what they are for and where they stand: Library, Workfl
     await expect(screen.locator('.ui-page-head .ui-meta').first()).not.toBeEmpty();
     // The same four, in the order work goes through them, this one marked.
     const steps = screen.getByTestId('page-flow-step');
-    expect(await steps.evaluateAll((all) => all.map((el) => el.getAttribute('data-page')))).toEqual(['library', 'workflows', 'queue', 'board']);
+    expect(await steps.evaluateAll((all) => all.map((el) => el.getAttribute('data-page')))).toEqual(['library', 'workflows', 'runs']);
     await expect(screen.locator('[data-testid="page-flow-step"][aria-current="page"]')).toHaveAttribute('data-page', name);
     // The next one opens from here.
-    const next = { library: 'workflows', workflows: 'queue', queue: 'board', board: null }[name];
+    const next = { library: 'workflows', workflows: 'runs', runs: null }[name];
     if (next) await screen.locator(`[data-testid="page-flow-step"][data-page="${next}"]`).click();
   }
-  await expect(page).toHaveURL(/\/board$/);
+  await expect(page).toHaveURL(/\/runs$/);
   await page.keyboard.press('Escape');
 });
 
@@ -5935,10 +5953,10 @@ test('a page shows itself in a short tour of its own: started from under its nam
   await expect(card).toHaveCount(0);
 
   // Left half-way, it is over: it belongs to its page.
-  await page.getByTestId('library-screen').getByTestId('page-flow-step').and(page.locator('[data-page="queue"]')).click();
-  await page.getByTestId('queue-screen').getByTestId('page-tour').click();
-  await expect(card).toHaveAttribute('data-step', 'queue-foryou');
-  await page.getByTestId('queue-screen').getByTestId('page-flow-step').and(page.locator('[data-page="board"]')).click();
+  await page.getByTestId('library-screen').getByTestId('page-flow-step').and(page.locator('[data-page="runs"]')).click();
+  await page.getByTestId('runs-screen').getByTestId('page-tour').click();
+  await expect(card).toHaveAttribute('data-step', 'runs-lanes');
+  await page.getByTestId('runs-screen').getByTestId('page-flow-step').and(page.locator('[data-page="workflows"]')).click();
   await expect(card).toHaveCount(0);
   // Nothing about a page's tour is remembered: the canvas's tour is as it was.
   expect(await page.evaluate(() => localStorage.getItem('aubergine.tour'))).toBe(before);

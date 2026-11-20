@@ -101,3 +101,16 @@ export const terminalOnCanvasHref = (sessionId: string): string => `/?${new URLS
 export function openInNewTab(href: string): void {
   window.open(href, '_blank', 'noopener');
 }
+
+/** The tabs of the Runs page. */
+export type RunsTab = 'runs' | 'workflow' | 'schedules' | 'rules';
+
+/**
+ * The page a name is shown as, and the tab of Runs it opens on. The Queue and the Board became one page, Runs: their
+ * names are kept for old addresses, keys and commands, and open Runs on its columns or by step.
+ */
+export function shownPage(page: PageName): { page: PageName; tab: RunsTab | null } {
+  if (page === 'queue') return { page: 'runs', tab: 'runs' };
+  if (page === 'board') return { page: 'runs', tab: 'workflow' };
+  return { page, tab: null };
+}
