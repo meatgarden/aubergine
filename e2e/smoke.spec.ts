@@ -4111,7 +4111,7 @@ test('the drawer: what a terminal asks comes first, one thing to type into, besi
     await expect(drawer.locator('[data-fact="step"] dd')).toContainText('2 of 5');
     // The same menu as the row, without the line that opened this.
     await drawer.getByTestId('details-more').click();
-    await expect(page.getByTestId('details-menu').getByRole('menuitem')).toHaveText(['Rename', 'Tags…', 'Open on desktop', 'Open in new tab', 'Move to canvas…', 'Park']);
+    await expect(page.getByTestId('details-menu').getByRole('menuitem')).toHaveText(['Rename', 'Tags…', 'Open on desktop', 'Open in new browser tab', 'Move to canvas…', 'Park']);
     // It lies over everything, the side panel beside the drawer too, and is wholly in the window.
     expect(await onTop(page, 'details-menu')).toBe(true);
     expect(await page.getByTestId('details-menu').evaluate((el) => { const r = el.getBoundingClientRect(); return r.left >= 0 && r.right <= window.innerWidth && r.bottom <= window.innerHeight; })).toBe(true);
@@ -4863,6 +4863,15 @@ test('new browser tabs: a canvas opens in one from its tab, and a running termin
   await page.keyboard.type('echo "still-$((1 + 1))"');
   await page.keyboard.press('Enter');
   await expect(outputLine(page, 'still-2')).toHaveCount(1);
+
+  // From the button beside Details in its title, which says it is a browser tab; its menu's line says so in words.
+  await expect(node.getByTestId('node-details').locator('xpath=following-sibling::button[1]')).toHaveAttribute('data-testid', 'node-browser-tab');
+  await expect(node.getByTestId('node-browser-tab')).toHaveAttribute('aria-label', /new browser tab/);
+  await expect(node.getByTestId('node-open-tab')).toHaveText('Open in new browser tab');
+  const [beside] = await Promise.all([page.context().waitForEvent('page'), node.getByTestId('node-browser-tab').click()]);
+  await beside.waitForLoadState();
+  await expect(beside).toHaveURL(new RegExp(`/t/${sessionId}$`));
+  await beside.close();
 
   // From the row's menu in the list too.
   const row = page.locator(`[data-testid="list-row"][data-session="${sessionId}"]`);

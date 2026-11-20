@@ -470,7 +470,7 @@ export function terminalActions(session: Row['session'], where: { here: boolean;
     { key: 'details', label: 'Details' },
     { key: 'rename', label: 'Rename', command: 'terminal.rename' },
     { key: 'tags', label: 'Tags…', command: 'terminal.tags' },
-    ...(exited ? [] : [{ key: 'desktop', label: 'Open on desktop', testid: 'row-open-desktop', command: 'terminal.openOnDesktop' as const }, { key: 'tab', label: 'Open in new tab', testid: 'row-open-tab', command: 'terminal.openInNewTab' as const }]),
+    ...(exited ? [] : [{ key: 'desktop', label: 'Open on desktop', testid: 'row-open-desktop', command: 'terminal.openOnDesktop' as const }, { key: 'tab', label: 'Open in new browser tab', testid: 'row-open-tab', command: 'terminal.openInNewTab' as const }]),
     ...(where.canMove ? [{ key: 'move', label: 'Move to canvas…', command: 'terminal.moveToCanvas' as const }] : []),
     { key: 'park', label: exited ? 'Remove' : 'Park', command: 'terminal.park' },
   ];

@@ -265,6 +265,21 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
             Details
           </button>
         )}
+        {/* Beside Details: this same terminal by itself in a tab of the browser. Its menu says the same in words. */}
+        {draft === null && !exited && (
+          <button
+            type="button"
+            className="node-tool nodrag"
+            aria-label={`Open ${name} in a new browser tab`}
+            title={hint('terminal.openInNewTab', 'Open in new browser tab: this same terminal by itself in a tab of your browser. Closing the tab ends nothing.')}
+            onClick={() => {
+              actHere('terminal.openInNewTab');
+            }}
+            data-testid="node-browser-tab"
+          >
+            Tab ↗
+          </button>
+        )}
         {/* The list of canvases to move to hangs from the title; its own button is not shown, the menu's line and the key ask for it. */}
         {draft === null && <MoveToCanvas sessionId={sessionId} name={name} />}
         {draft === null && (
@@ -331,14 +346,14 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
                 <button
                   type="button"
                   role="menuitem"
-                  aria-label={`Open ${name} in a new tab`}
-                  title={hint('terminal.openInNewTab', 'Open in new tab: this same terminal by itself in a new browser tab. Closing the tab ends nothing.')}
+                  aria-label={`Open ${name} in a new browser tab`}
+                  title={hint('terminal.openInNewTab', 'Open in new browser tab: this same terminal by itself in a tab of your browser. Closing the tab ends nothing.')}
                   data-testid="node-open-tab"
                   onClick={() => {
                     actHere('terminal.openInNewTab');
                   }}
                 >
-                  Open in new tab
+                  Open in new browser tab
                 </button>
               )}
               <button

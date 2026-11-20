@@ -498,7 +498,7 @@ One server can hold several projects. A project is a control room of its own: it
 - **New project…** asks for a name and, if you like, the folder its terminals start in. A new project has one empty canvas. With a folder set, a new terminal, a task that gets a terminal of its own and a working copy start there unless they name another.
 - **Everything on screen is of the project you are in**: the tabs, the side panel, the Queue screen, the Board, schedules and rules. Where a screen can show more, it says so: the owner's list and the Board have **Every project**, and the terminal list has **All projects**; rows then name their project.
 - **Each project has its own address** (`/p/<project>/c/<canvas>`), so a browser tab or window can stay on one. Older addresses (`/c/<canvas>`) still lead to the right place. The browser remembers the canvas you last had open in each project.
-- **A canvas opens in a new browser tab** from its tab: **⋯**, then **Open in new tab**, or click the tab the way you open a link in a new tab (with the middle button, or with ⌘ or Ctrl held). Each browser tab can then show a canvas of its own. The palette has the same as **Open the canvas in a new tab**.
+- **A canvas opens in a new browser tab** from its tab: **⋯**, then **Open in new browser tab**, or click the tab the way you open a link in a new tab (with the middle button, or with ⌘ or Ctrl held). Each browser tab can then show a canvas of its own. The palette has the same as **Open the canvas in a new browser tab**.
 - **How tasks start is per project**: the limit, Hold and "Start by itself" of one project do not touch another.
 - **A canvas moves to another project** from its tab (**⋯**, then **Move to another project**) or with `aubergine project move-canvas`. Its terminals go with it, with their runs and working copies, and so do the tasks that wait for one of its terminals. A task for "any free agent", rules and schedules stay where they were. The last canvas of a project does not move.
 - **Projects…** lists them: rename, color, folder, order; **Archive**, **Reopen**, **Remove for good**. An archived project is out of the switcher and starts nothing: no task, no schedule, no rule. Archiving a project whose terminals are running asks first whether to park them or end them. A project is removed only when it holds nothing, and the last open project stays.
@@ -711,7 +711,7 @@ The list costs nothing to keep open, also with hundreds of terminals: it is draw
 
 ### One terminal by itself in a browser tab
 
-A terminal that is running on a canvas can also be open by itself in a browser tab, filling the window: **Open in new tab** in the menu (**⋯**) of its title, in its row's menu in the list, or in the palette. Its address is `/t/<terminal>`.
+A terminal that is running on a canvas can also be open by itself in a browser tab, filling the window: **Tab ↗** in its title beside **Details**, **Open in new browser tab** in the menu (**⋯**) of its title, in its row's menu in the list, or in the palette. Its address is `/t/<terminal>`.
 
 - **It is the same terminal, not a copy.** Whatever runs in it, an agent too, goes on; what was on its screen is there in the new tab, and what you type in either shows in both.
 - **Closing the tab ends nothing.** The terminal stays on its canvas.
