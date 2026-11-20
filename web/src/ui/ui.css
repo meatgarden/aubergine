@@ -1613,19 +1613,35 @@ button.run-banner.status-blocked:hover:not(:disabled) {
 
 /* ---------- The map of the canvas ---------- */
 
-/* One button folds it away and brings it back; it stands over the map's corner, and alone in the corner when the map is folded. */
-.react-flow__panel.map-fold {
-  --control-h: var(--control-compact);
-  margin: var(--space-4);
-  bottom: 150px;
+/* Its button is in the bar over the canvas, beside "Go to…". Where the bar stands in the map's corner, the map stands over the bar. */
+.react-flow__minimap.above-bar {
+  margin-bottom: calc(var(--control-compact) + var(--space-8));
 }
-.react-flow__panel.map-fold.is-folded {
-  bottom: 0;
+/* Drawn small, as the other signs in the bar are. */
+.toolbar .map-fold > svg {
+  flex: none;
+  width: var(--space-4);
+  height: var(--space-4);
 }
-.map-fold > button,
-.map-fold > button:hover:not(:disabled) {
-  background: var(--surface);
-  border-color: var(--border);
+/*
+ * At the right of the canvas the bar opens out to its left: "Go to…" and the map's button keep their place at its
+ * right end, and what shows when it opens comes before them.
+ */
+.toolbar.at-right > .toolbar-first {
+  order: 2;
+  margin-left: var(--space-1);
+  padding-left: var(--space-2);
+  border-left: 1px solid var(--border);
+}
+.toolbar.at-right > .toolbar-first + .toolbar-rest > .toolbar-group:first-child {
+  margin-left: 0;
+  padding-left: 0;
+  border-left: 0;
+}
+.toolbar.is-folded.at-right:not(:hover, :focus-within, :has([aria-expanded='true'], [data-tour-pointed])) > .toolbar-first {
+  margin-left: 0;
+  padding-left: 0;
+  border-left: 0;
 }
 
 /* ---------- The panels about one terminal: how its agent is set up, where it works, its note ---------- */

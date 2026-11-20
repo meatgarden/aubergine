@@ -2,17 +2,19 @@ import { useSyncExternalStore } from 'react';
 
 /**
  * Where the bar over the canvas stands: a corner or the middle of an edge, chosen in Settings and remembered in this
- * browser only. The bottom right corner is the map's, so the bar is never put there.
+ * browser only. The map's button is in the bar, so the usual place is the map's corner, the bottom right, with the
+ * map over the bar.
  */
-export const BAR_PLACES = ['top-left', 'top-center', 'top-right', 'bottom-left', 'bottom-center'] as const;
+export const BAR_PLACES = ['top-left', 'top-center', 'top-right', 'bottom-left', 'bottom-center', 'bottom-right'] as const;
 export type BarPlace = (typeof BAR_PLACES)[number];
-export const DEFAULT_BAR_PLACE: BarPlace = 'top-left';
+export const DEFAULT_BAR_PLACE: BarPlace = 'bottom-right';
 export const BAR_PLACE_WORDS: Record<BarPlace, string> = {
   'top-left': 'Top left',
   'top-center': 'Top center',
   'top-right': 'Top right',
   'bottom-left': 'Bottom left',
   'bottom-center': 'Bottom center',
+  'bottom-right': 'Bottom right, under the map',
 };
 
 const KEY = 'aubergine.bar.place';

@@ -34,7 +34,7 @@ import { runCommand } from './commands';
 import { afterOpening } from './desktop';
 import { hint } from './shortcuts';
 import { setAdding } from './NewTerminal';
-import { MenuButton } from './ui';
+import { IconButton, MenuButton } from './ui';
 import { useEndedRuns } from './workflows/ended-runs';
 import { EmptyCanvas } from './EmptyCanvas';
 import { FULL_SIZE_HINT, shouldSayFullSize } from './full-size-hint';
@@ -88,7 +88,7 @@ function toFrameNode(frame: Frame, previous: CanvasNode | undefined): FrameFlowN
 }
 
 /** Under this width the bar over the canvas has no room for everything in one row. */
-const NARROW_CANVAS = 560;
+const NARROW_CANVAS = 640;
 
 /**
  * Where the bar over the canvas has no room for them, what is used seldom is in one menu at its end: the terminals
@@ -114,28 +114,30 @@ function NarrowMenu() {
  * The small map in the corner, with the one button that folds it away. It steps aside while the terminal in use
  * (typed into, or selected), or the note beside it, lies under it, so that it never covers what is being used.
  */
-function CanvasMap() {
+function CanvasMap({ aboveBar }: { aboveBar: boolean }) {
   const folded = useMapFolded();
-  useApp((s) => s.settings.shortcuts);
   // The terminal in use: the one that has the keyboard, or the one that is selected (its note may have the keyboard).
   const focused = useApp((s) => {
     const id = s.focus?.sessionId ?? s.selected;
     return id ? (currentLayout(s).nodes.find((n) => n.sessionId === id) ?? null) : null;
   });
   const aside = useStore((s) => focused !== null && underMap(focused, NOTE_GAP + NOTE_WIDTH, { x: s.transform[0], y: s.transform[1], zoom: s.transform[2] }, { width: s.width, height: s.height }));
+  // Where the bar stands in the map's corner, the map stands over it.
+  return !folded && !aside ? <MiniMap pannable zoomable position="bottom-right" className={`minimap${aboveBar ? ' above-bar' : ''}`} /> : null;
+}
+
+/** The button that folds the map away and brings it back: a picture of a map, in the bar beside "Go to…". */
+function MapButton() {
+  const folded = useMapFolded();
+  useApp((s) => s.settings.shortcuts);
   const words = folded ? 'Show the map of this canvas' : 'Hide the map of this canvas';
   return (
-    <>
-      {!folded && !aside && <MiniMap pannable zoomable position="bottom-right" className="minimap" />}
-      {/* While the map has stepped aside its button does too: nothing of it lies over what is being used. */}
-      {!(aside && !folded) && (
-        <Panel position="bottom-right" className={`map-fold${folded ? ' is-folded' : ''}`}>
-          <button type="button" className="quiet" aria-expanded={!folded} title={hint('view.map', words)} onClick={() => runCommand('view.map')} data-testid="map-fold">
-            {folded ? 'Map' : 'Hide map'}
-          </button>
-        </Panel>
-      )}
-    </>
+    <IconButton className="quiet map-fold" label={words} aria-expanded={!folded} title={hint('view.map', words)} onClick={() => runCommand('view.map')} data-testid="map-fold">
+      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M9 4 3.5 6v14L9 18l6 2 5.5-2V4L15 6 9 4z" />
+        <path d="M9 4v14M15 6v14" />
+      </svg>
+    </IconButton>
   );
 }
 
@@ -471,17 +473,17 @@ export function Canvas() {
         nodeDragThreshold={2}
       >
         <Background variant={BackgroundVariant.Dots} gap={24} size={1} />
-        <CanvasMap />
+        <CanvasMap aboveBar={barAt === 'bottom-right'} />
         {/* Before the bar in the page, so that a menu hanging from the bar lies over it. */}
         {layout.length === 0 && frames.length === 0 && (
           <Panel position="top-center" className="empty">
             <EmptyCanvas />
           </Panel>
         )}
-        {/* Folded to "Go to…" unless kept open in Settings: the rest shows while the pointer or the keyboard is in the bar. "New terminal" is at the top of the list of terminals. */}
+        {/* Folded to "Go to…" and the map's button unless kept open in Settings: the rest shows while the pointer or the keyboard is in the bar. "New terminal" is at the top of the list of terminals. */}
         {/* It stands where this browser chose in Settings; at the foot of the canvas what hangs from it opens upward. */}
         <Panel position={barAt} className={`toolbar${narrow ? ' is-narrow' : ''}${barOpen ? '' : ' is-folded'}${opensUp(barAt) ? ' opens-up' : ''}${barAt.endsWith('-right') ? ' at-right' : ''}`} data-place={barAt} data-testid="canvas-bar">
-          <span className="toolbar-group" role="group" aria-label="Go to">
+          <span className="toolbar-group toolbar-first" role="group" aria-label="Go to, and the map">
             <button
               type="button"
               className="quiet"
@@ -491,6 +493,7 @@ export function Canvas() {
             >
               Go to…
             </button>
+            <MapButton />
           </span>
           <span className="toolbar-rest" data-testid="toolbar-rest">
           <span className="toolbar-group" role="group" aria-label="The view">
