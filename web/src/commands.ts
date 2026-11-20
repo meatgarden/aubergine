@@ -1,5 +1,5 @@
 import { foldMap, mapFolded } from './map-fold';
-import { canvasView, setCanvasView } from './canvas-view';
+import { canvasView, nextCanvasView, setCanvasView } from './canvas-view';
 import { COMMAND_IDS, THEMES, THEME_WORDS, demoOf, sortedCanvases, type CommandId, type Session } from '@aubergine/shared';
 import { chooseTheme } from './theme';
 import { openOnDesktop } from './desktop';
@@ -610,11 +610,11 @@ export const COMMANDS: readonly Command[] = [
   },
   {
     id: 'canvas.switchView',
-    title: 'Show the canvases as tabs or as a list',
-    description: 'Switches the canvases over the canvas between a row of tabs and one list that opens. This browser remembers the choice.',
+    title: 'Show the canvases as tabs, a list or a column',
+    description: 'Goes to the next way of showing the canvases: a row of tabs over the canvas, one list that opens, or a column of tabs at the left of the window. This browser remembers the choice.',
     group: 'Canvases',
     available: () => true,
-    run: () => setCanvasView(canvasView() === 'tabs' ? 'list' : 'tabs'),
+    run: () => setCanvasView(nextCanvasView(canvasView())),
   },
   {
     id: 'view.fit',

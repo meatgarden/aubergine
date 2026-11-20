@@ -7,7 +7,7 @@ import { colorClass, colorStyle } from './color';
 import { runCommand } from './commands';
 import { hint } from './shortcuts';
 import { useApp } from './store';
-import { useCanvasView } from './canvas-view';
+import { CANVAS_VIEWS, setCanvasView, useCanvasView, type CanvasView } from './canvas-view';
 import { IconButton, Switcher } from './ui';
 
 /**
@@ -64,6 +64,9 @@ export function TabBar() {
     const at = tab.getBoundingClientRect();
     if (at.left < box.left) row.current.scrollLeft -= box.left - at.left;
     else if (at.right > box.right) row.current.scrollLeft += at.right - box.right;
+    // As a column the tabs scroll up and down instead.
+    if (at.top < box.top) row.current.scrollTop -= box.top - at.top;
+    else if (at.bottom > box.bottom) row.current.scrollTop += at.bottom - box.bottom;
     // Also when a tab is added or goes: the one being looked at may only now be in the row.
   }, [current, tabCount, view]);
 
@@ -223,9 +226,18 @@ export function TabBar() {
     );
   };
 
+  const column = view === 'column';
   return (
     <nav className={`tabbar is-${view}`} aria-label="Canvases" data-testid="tabbar" data-view={view}>
-      <ViewSwitch view={view} />
+      {column ? (
+        // As a column, the button stands in a head of the column's own, with the word for what is under it.
+        <div className="tabbar-head">
+          <ViewSwitch view={view} />
+          <span className="tabbar-title">Canvases</span>
+        </div>
+      ) : (
+        <ViewSwitch view={view} />
+      )}
       {view === 'list' ? (
         <CanvasList
           canvases={canvases}
@@ -239,13 +251,14 @@ export function TabBar() {
       ) : (
       <>
       {/* The tabs scroll sideways by themselves, so that the way to add one is never pushed out of sight. */}
-      <div className="tabbar-tabs" role="tablist" aria-label="Canvases" ref={row} data-testid="tabbar-tabs">
+      <div className="tabbar-tabs" role="tablist" aria-label="Canvases" aria-orientation={column ? 'vertical' : 'horizontal'} ref={row} data-testid="tabbar-tabs">
       {canvases.map((canvas) => {
         const counts = canvasCounts(app, canvas);
         const active = canvas.id === current;
         return (
           <div
             key={canvas.id}
+            title={column ? `${canvas.name}: ${canvas.layout.nodes.length} terminal${canvas.layout.nodes.length === 1 ? '' : 's'}` : undefined}
             style={colorStyle(canvas.color)}
             className={`tab ${colorClass(canvas.color)}${active ? ' active' : ''}${dragging === canvas.id ? ' dragging' : ''}`}
             role="tab"
@@ -290,6 +303,7 @@ export function TabBar() {
             }}
             onDoubleClick={() => setRenaming({ id: canvas.id, text: canvas.name })}
           >
+            {column && <span className={`tabbar-list-color ${colorClass(canvas.color, 'swatch')}`} style={colorStyle(canvas.color)} aria-hidden="true" />}
             {renaming?.id === canvas.id ? (
               <input
                 className="tab-input"
@@ -403,36 +417,106 @@ function NewCanvas() {
   );
 }
 
-/** The button at the start of the bar: the canvases as a row of tabs, or as one list that opens. */
-function ViewSwitch({ view }: { view: 'tabs' | 'list' }) {
-  const asList = view === 'list';
+const VIEW_WORDS: Record<CanvasView, { label: string; says: string }> = {
+  tabs: { label: 'Tabs', says: 'A row of tabs over the canvas.' },
+  list: { label: 'One list', says: 'The name of the canvas you are on, and the others in its menu.' },
+  column: { label: 'A column on the left', says: 'The tabs one under another at the left of the window, as a browser can show them.' },
+};
+
+/** What each way of showing the canvases looks like, drawn small. */
+function ViewIcon({ view }: { view: CanvasView }) {
   return (
-    <IconButton
-      className="tabbar-view"
-      label="Show the canvases as a list"
-      title={asList ? 'The canvases are shown as a list. Press to show them as tabs.' : 'The canvases are shown as tabs. Press to show them as one list.'}
-      aria-pressed={asList}
-      onClick={() => runCommand('canvas.switchView')}
-      data-testid="tabbar-view"
-    >
-      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        {asList ? (
-          // A list that opens: what pressing gives back is the tabs, so the tabs are drawn.
-          <>
-            <path d="M4 18v-8a1.5 1.5 0 0 1 1.5-1.5h5A1.5 1.5 0 0 1 12 10v8" />
-            <path d="M14 18v-5a1.5 1.5 0 0 1 1.5-1.5h3A1.5 1.5 0 0 1 20 13v5" />
-            <path d="M2 18h20" />
-          </>
-        ) : (
-          // Tabs: what pressing gives is one list that opens, so a list under a name is drawn.
-          <>
-            <rect x="3" y="4" width="18" height="6" rx="1.5" />
-            <path d="M15 6.5l1.5 1.5 1.5-1.5" />
-            <path d="M5 14h14M5 18h10" />
-          </>
-        )}
-      </svg>
-    </IconButton>
+    <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      {view === 'tabs' && (
+        <>
+          <path d="M4 18v-8a1.5 1.5 0 0 1 1.5-1.5h5A1.5 1.5 0 0 1 12 10v8" />
+          <path d="M14 18v-5a1.5 1.5 0 0 1 1.5-1.5h3A1.5 1.5 0 0 1 20 13v5" />
+          <path d="M2 18h20" />
+        </>
+      )}
+      {view === 'list' && (
+        <>
+          <rect x="3" y="4" width="18" height="6" rx="1.5" />
+          <path d="M15 6.5l1.5 1.5 1.5-1.5" />
+          <path d="M5 14h14M5 18h10" />
+        </>
+      )}
+      {view === 'column' && (
+        <>
+          <rect x="3" y="4" width="18" height="16" rx="1.5" />
+          <path d="M9 4v16" />
+          <path d="M5 8h2M5 12h2M5 16h2" />
+        </>
+      )}
+    </svg>
+  );
+}
+
+/**
+ * The button at the start of the bar: what it draws is how the canvases are shown now, and its menu gives the three
+ * ways, the one in use ticked. The menu is placed against the window: the bar may scroll, and a column is narrow.
+ */
+function ViewSwitch({ view }: { view: CanvasView }) {
+  const [menu, setMenu] = useState<{ left: number; top: number } | null>(null);
+  const root = useRef<HTMLSpanElement>(null);
+  useEffect(() => {
+    if (!menu) return;
+    const away = (event: PointerEvent): void => {
+      if (!root.current?.contains(event.target as globalThis.Node)) setMenu(null);
+    };
+    const key = (event: KeyboardEvent): void => {
+      if (event.key !== 'Escape') return;
+      // The menu's own Escape: it goes no further.
+      event.stopPropagation();
+      setMenu(null);
+    };
+    window.addEventListener('pointerdown', away, true);
+    window.addEventListener('keydown', key, true);
+    return () => {
+      window.removeEventListener('pointerdown', away, true);
+      window.removeEventListener('keydown', key, true);
+    };
+  }, [menu]);
+  return (
+    <span className="tabbar-view-root" ref={root}>
+      <IconButton
+        className="tabbar-view"
+        label="How the canvases are shown"
+        title={`The canvases are shown as: ${VIEW_WORDS[view].label.toLowerCase()}. Press to choose another way.`}
+        aria-haspopup="menu"
+        aria-expanded={menu !== null}
+        onClick={(e) => {
+          const box = e.currentTarget.getBoundingClientRect();
+          setMenu(menu ? null : { left: Math.max(4, Math.min(box.left, window.innerWidth - 324)), top: box.bottom + 6 });
+        }}
+        data-testid="tabbar-view"
+      >
+        <ViewIcon view={view} />
+      </IconButton>
+      {menu && (
+        <span className="ui-menu ui-menu-fixed toolbar-menu tabbar-view-menu" role="menu" style={{ left: menu.left, top: menu.top }} data-testid="tabbar-view-menu">
+          {CANVAS_VIEWS.map((way) => (
+            <button
+              key={way}
+              type="button"
+              role="menuitemradio"
+              aria-checked={way === view}
+              data-testid={`tabbar-view-${way}`}
+              onClick={() => {
+                setMenu(null);
+                setCanvasView(way);
+              }}
+            >
+              <span className="tabbar-view-line">
+                <ViewIcon view={way} />
+                {VIEW_WORDS[way].label}
+              </span>
+              <small>{VIEW_WORDS[way].says}</small>
+            </button>
+          ))}
+        </span>
+      )}
+    </span>
   );
 }
 

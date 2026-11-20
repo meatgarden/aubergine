@@ -8,6 +8,7 @@ import { startShortcuts } from './shortcuts';
 import { startSync, terminalPage, useApp } from './store';
 import { TerminalPage } from './TerminalPage';
 import { TabBar } from './TabBar';
+import { useCanvasView } from './canvas-view';
 import { SidePanel } from './panel/SidePanel';
 import { Away } from './Away';
 import { TagDialog } from './TagDialog';
@@ -21,6 +22,7 @@ export function App() {
   const runtime = useApp((s) => s.runtime);
   const canvasId = useApp((s) => s.canvasId);
   const page = useApp((s) => s.page);
+  const canvasView = useCanvasView();
 
   useEffect(() => startSync(), []);
   // A tab that shows one terminal by itself has no canvas for the keys of the canvas to act on.
@@ -94,11 +96,13 @@ export function App() {
         {/* The canvas page stays as it is while a page is shown in its place: not drawn, not reachable, its terminals running. */}
         <div className="app-canvas" inert={page !== null} data-testid="app-canvas">
           <div className="workspace">
+            {/* Shown as a column, the canvases come first, at the left of the window, as a browser's vertical tabs do. */}
+            {canvasView === 'column' && <TabBar />}
             {/* The panel and its drawer are one group of columns, from under the top bar down. */}
             <SidePanel />
             {/* The bar of tabs belongs to the canvas: it begins where the canvas does. */}
             <div className="canvas-column" data-testid="canvas-column">
-              <TabBar />
+              {canvasView !== 'column' && <TabBar />}
               {/* Keyed by canvas: each canvas gets a fresh view, with its own pan, zoom and live terminals. */}
               <ReactFlowProvider key={canvasId ?? 'none'}>
                 <Canvas />

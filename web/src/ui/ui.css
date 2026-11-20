@@ -3137,19 +3137,33 @@ button.rail-dot:active {
   pointer-events: none;
 }
 /* The button at the start of the bar switches the canvases between tabs and one list; pressed while they are a list. */
-.tabbar > .tabbar-view {
+.tabbar-view-root {
+  flex: none;
+  display: inline-flex;
+}
+.tabbar .tabbar-view {
   height: var(--control);
   width: var(--control);
   min-width: var(--control);
   font-size: var(--font-body);
 }
-.tabbar > .tabbar-view > svg {
+.tabbar .tabbar-view > svg,
+.tabbar-view-line > svg {
   flex: none;
   width: var(--space-4);
   height: var(--space-4);
 }
-.tabbar > .tabbar-view[aria-pressed='true'] {
+.tabbar .tabbar-view[aria-expanded='true'] {
   background: var(--surface-active);
+}
+/* A way in the button's menu: its picture and its name on one line, what it is under them. */
+.tabbar-view-line {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.tabbar-view-line > svg {
+  flex: none;
 }
 /* The canvases as a list: the name of the one being looked at, then its options, where the first tab would be. */
 .tabbar-list {
@@ -3181,6 +3195,64 @@ button.rail-dot:active {
   height: var(--space-2);
   border-radius: var(--radius-pill);
   background: var(--swatch);
+}
+/*
+ * The canvases as a column: tabs one under another at the left of the window, before the side panel, from under the
+ * top bar to the foot, as a browser's vertical tabs are. Its head is as tall as the side panel's; the tab being looked
+ * at has its accent line down its left edge instead of under it; "New canvas" follows the last tab.
+ */
+.tabbar.is-column {
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-2);
+  width: var(--canvas-column-width);
+  min-height: 0;
+  padding: var(--space-3);
+  border-bottom: none;
+  border-right: 1px solid var(--border);
+}
+.tabbar-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.tabbar-title {
+  font-weight: var(--weight-strong);
+}
+.tabbar.is-column .tabbar-tabs {
+  flex: 0 1 auto;
+  flex-direction: column;
+  align-items: stretch;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 0;
+  margin: 0;
+}
+.tabbar.is-column .tab {
+  flex: none;
+  justify-content: flex-start;
+  border-radius: var(--radius-control);
+}
+.tabbar.is-column .tab-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tabbar.is-column .tab.active::after {
+  top: var(--space-1);
+  bottom: var(--space-1);
+  left: 0;
+  right: auto;
+  width: 2px;
+  height: auto;
+}
+.tabbar.is-column > .tabbar-new {
+  display: flex;
+}
+.tabbar.is-column > .tabbar-new > button:first-child {
+  flex: 1;
 }
 /* "New canvas" stands after the row of tabs, at the height of a tab, and does not give way to them. */
 .tabbar > .tabbar-new {
