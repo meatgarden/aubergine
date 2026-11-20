@@ -2963,7 +2963,7 @@ button.ui-switcher-button {
   --control-h: var(--control);
   flex: none;
   display: flex;
-  padding: var(--space-2) var(--space-3);
+  padding: var(--space-3);
   border-bottom: 1px solid var(--border);
 }
 /* A count is a plain number; where it counts what waits on the owner it is in the color of waiting, as text. */
@@ -3044,7 +3044,7 @@ button.rail-dot:active {
   align-items: center;
   gap: var(--space-1);
   height: auto;
-  padding: var(--space-2) var(--space-4);
+  padding: var(--space-3) var(--space-6);
   background: var(--surface);
   border-bottom: 1px solid var(--border);
   overflow: visible;
@@ -3058,8 +3058,8 @@ button.rail-dot:active {
   overflow-x: auto;
   scrollbar-width: none;
   /* Room under the tabs for the line under the one being looked at, which the row would otherwise cut off; taken back, so the bar keeps its height. */
-  padding-bottom: var(--space-2);
-  margin-bottom: calc(-1 * var(--space-2));
+  padding-bottom: var(--space-3);
+  margin-bottom: calc(-1 * var(--space-3));
 }
 /*
  * A tab is a control of the ordinary height, with a button's edge: each one not being looked at is plainly a thing to
@@ -3097,7 +3097,7 @@ button.rail-dot:active {
   position: absolute;
   left: var(--space-2);
   right: var(--space-2);
-  bottom: calc(-1 * var(--space-2));
+  bottom: calc(-1 * var(--space-3));
   height: 2px;
   border-radius: var(--radius-pill);
   background: var(--accent);
@@ -3115,7 +3115,7 @@ button.rail-dot:active {
 }
 /* The bar over the canvas begins on the same line as the first tab above it. */
 .react-flow__panel.toolbar.left {
-  margin-left: var(--space-4);
+  margin-left: var(--space-6);
 }
 /* At the foot of the canvas what hangs from the bar opens upward, from the edge it hangs from. With less motion it only fades. */
 @media (prefers-reduced-motion: no-preference) {
