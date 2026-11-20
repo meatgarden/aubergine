@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { canvasViewFrom, nextCanvasView } from './canvas-view';
+import { canvasViewFrom, columnFoldedFrom, nextCanvasView } from './canvas-view';
 
 describe('how the canvases are shown', () => {
   it('is tabs unless this browser chose the list', () => {
@@ -15,5 +15,12 @@ describe('how the canvases are shown', () => {
     expect(nextCanvasView('tabs')).toBe('list');
     expect(nextCanvasView('list')).toBe('column');
     expect(nextCanvasView('column')).toBe('tabs');
+  });
+
+  it('the column is open unless this browser folded it', () => {
+    expect(columnFoldedFrom(null)).toBe(false);
+    expect(columnFoldedFrom('yes')).toBe(true);
+    expect(columnFoldedFrom('no')).toBe(false);
+    expect(columnFoldedFrom('')).toBe(false);
   });
 });

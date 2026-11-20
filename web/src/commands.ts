@@ -1,5 +1,5 @@
 import { foldMap, mapFolded } from './map-fold';
-import { canvasView, nextCanvasView, setCanvasView } from './canvas-view';
+import { canvasColumnFolded, canvasView, nextCanvasView, setCanvasColumnFolded, setCanvasView } from './canvas-view';
 import { COMMAND_IDS, THEMES, THEME_WORDS, demoOf, sortedCanvases, type CommandId, type Session } from '@aubergine/shared';
 import { chooseTheme } from './theme';
 import { openOnDesktop } from './desktop';
@@ -615,6 +615,14 @@ export const COMMANDS: readonly Command[] = [
     group: 'Canvases',
     available: () => true,
     run: () => setCanvasView(nextCanvasView(canvasView())),
+  },
+  {
+    id: 'canvas.foldColumn',
+    title: 'Fold or unfold the column of canvases',
+    description: 'With the canvases shown as a column on the left: folds it to a narrow rail with a dot for each canvas, or opens it again. This browser remembers it.',
+    group: 'Canvases',
+    available: () => canvasView() === 'column',
+    run: () => setCanvasColumnFolded(!canvasColumnFolded()),
   },
   {
     id: 'view.fit',

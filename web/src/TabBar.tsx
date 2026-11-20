@@ -7,7 +7,7 @@ import { colorClass, colorStyle } from './color';
 import { runCommand } from './commands';
 import { hint } from './shortcuts';
 import { useApp } from './store';
-import { CANVAS_VIEWS, setCanvasView, useCanvasView, type CanvasView } from './canvas-view';
+import { CANVAS_VIEWS, setCanvasView, useCanvasColumnFolded, useCanvasView, type CanvasView } from './canvas-view';
 import { IconButton, Switcher } from './ui';
 
 /**
@@ -31,6 +31,7 @@ export function TabBar() {
   useApp((s) => s.settings.shortcuts);
   const askToCloseCanvas = useApp((s) => s.askToCloseCanvas);
   const view = useCanvasView();
+  const columnFolded = useCanvasColumnFolded();
   const [renaming, setRenaming] = useState<{ id: string; text: string } | null>(null);
   const [dragging, setDragging] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -227,6 +228,7 @@ export function TabBar() {
   };
 
   const column = view === 'column';
+  if (column && columnFolded) return <FoldedColumn canvases={canvases} current={current} setCanvas={setCanvas} />;
   return (
     <nav className={`tabbar is-${view}`} aria-label="Canvases" data-testid="tabbar" data-view={view}>
       {column ? (
@@ -234,6 +236,9 @@ export function TabBar() {
         <div className="tabbar-head">
           <ViewSwitch view={view} />
           <span className="tabbar-title">Canvases</span>
+          <IconButton className="quiet tabbar-fold" label="Fold the column of canvases" aria-expanded={true} title={hint('canvas.foldColumn', 'Fold the column of canvases to a rail')} onClick={() => runCommand('canvas.foldColumn')} data-testid="tabbar-fold">
+            ‹
+          </IconButton>
         </div>
       ) : (
         <ViewSwitch view={view} />
@@ -617,5 +622,51 @@ function CanvasList({
       )}
       {renaming?.id !== canvas.id && tools(canvas, true)}
     </span>
+  );
+}
+
+/**
+ * The column of canvases folded to a rail, as the side panel folds: the button that opens it, then a dot in each
+ * canvas's color, pressed to go there (its name and what waits there are its tooltip, as only the count at the top is filled with the color of waiting; the one being looked at marked
+ * by the accent line), and a plus for a new canvas.
+ */
+function FoldedColumn({ canvases, current, setCanvas }: { canvases: readonly Canvas[]; current: string | null; setCanvas: (id: string) => void }) {
+  const app = useApp((s) => s.app);
+  if (!app) return null;
+  return (
+    <nav className="tabbar is-column is-folded" aria-label="Canvases" data-testid="tabbar" data-view="column" data-folded="true">
+      <IconButton className="rail-open" label="Show the column of canvases" aria-expanded={false} title={hint('canvas.foldColumn', 'Show the column of canvases')} onClick={() => runCommand('canvas.foldColumn')} data-testid="tabbar-fold">
+        ›
+      </IconButton>
+      <div className="rail-dots tabbar-rail" role="tablist" aria-orientation="vertical" aria-label="Canvases" data-testid="tabbar-rail">
+        {canvases.map((canvas) => {
+          const counts = canvasCounts(app, canvas);
+          const active = canvas.id === current;
+          const said = `${canvas.name}${counts.waiting > 0 ? `: ${counts.waiting} waiting for you` : ''}`;
+          return (
+            <button
+              key={canvas.id}
+              type="button"
+              role="tab"
+              aria-selected={active}
+              className={`rail-dot tabbar-rail-canvas${active ? ' active' : ''}`}
+              aria-label={said}
+              title={said}
+              onClick={(e) => {
+                if (e.metaKey || e.ctrlKey || e.shiftKey) return openInNewTab(canvasHref(canvas.id, canvas.projectId));
+                if (!active) setCanvas(canvas.id);
+              }}
+              data-testid="tabbar-rail-canvas"
+              data-canvas={canvas.id}
+            >
+              <span className={`tabbar-list-color ${colorClass(canvas.color, 'swatch')}`} style={colorStyle(canvas.color)} aria-hidden="true" />
+            </button>
+          );
+        })}
+      </div>
+      <IconButton className="quiet tabbar-rail-new" label="New canvas" title={hint('canvas.new')} onClick={() => runCommand('canvas.new')} data-testid="tabbar-rail-new">
+        +
+      </IconButton>
+    </nav>
   );
 }
