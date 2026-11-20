@@ -1672,6 +1672,29 @@ label:is(.wf-inline, .ui-check, .schedule-days label):has(> input:is([type='chec
 .appbar .appbar-place:not([aria-current='page']) {
   color: var(--text-muted);
 }
+/*
+ * The places stand on one line, from the first to the last, like a row of tabs. The stretch of it under the place
+ * being looked at is the accent, as under the canvas tab in use.
+ */
+.appbar .appbar-places {
+  position: relative;
+  padding-bottom: var(--space-1);
+  border-bottom: 1px solid var(--border);
+}
+.appbar .appbar-place {
+  position: relative;
+}
+.appbar .appbar-place[aria-current='page']::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(-1 * var(--space-1) - 1px);
+  height: 2px;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  pointer-events: none;
+}
 
 /*
  * Every page is laid out the same: a head that stays, its tabs under that, then its content in one column on the

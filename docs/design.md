@@ -119,6 +119,8 @@ The text a person selects, the caret and the scroll bars follow the theme (`--se
 
 Under the top bar there are two groups of columns. The side panel and the drawer of what it lists are one, from the top bar to the foot of the window. The bar of canvas tabs and the canvas are the other: the bar begins where the canvas does, has the surface color and a line under its whole width, 8px of air above and below its tabs, and its first tab begins where the bar over the canvas begins. The tab being looked at is a filled pill inside the bar, with no edge and a short line of the accent under it, resting on the bar's own line; it does not open into the canvas. Every other tab has the edge a button has, so it reads as something to press. "New canvas" stands directly after the last tab, and stays in sight while the tabs scroll sideways: it is the bar's one primary, a button with an arrow beside it like "New terminal", and its menu hangs from the window. The side panel's head is as tall as the bar of tabs and has the same line under it.
 
+The places in the top bar (Canvas, Queue, Board, Workflows, Library) stand on one line, from the first to the last, like a row of tabs. The place being looked at is filled, and the stretch of the line under it is the accent; the others are muted words on the plain line.
+
 Folded, the side panel is a rail (40px) with the same edge: the button that opens it, and what a section puts there (the terminals' section puts the mark of each terminal on this canvas). With nothing remembered, the panel is folded.
 
 ## Chips and badges
