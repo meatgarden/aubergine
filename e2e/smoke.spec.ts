@@ -4633,7 +4633,7 @@ test('tabs and panel: a new browser has the panel folded to a rail, the bar of t
   await fresh.getByTestId('details-close').click();
 
   // 3. Air above the tabs, a line under the whole bar, and the tab being looked at is a filled pill that ends above the line.
-  const bar = async (): Promise<{ air: number; line: string; lineWidth: number; barWidth: number; canvasWidth: number; tabBottom: number; lineTop: number; tabHeight: number; plusHeight: number; otherEdge: string; currentEdge: string; buttonEdge: string; filled: boolean; opensIntoCanvas: boolean; sameSurfaceAsCanvas: boolean }> =>
+  const bar = async (): Promise<{ air: number; line: string; lineWidth: number; barWidth: number; canvasWidth: number; tabBottom: number; lineTop: number; tabHeight: number; plusHeight: number; otherEdge: string; currentEdge: string; buttonEdge: string; underline: { height: string; colour: boolean; gap: number; inRow: boolean; aboveLine: boolean }; otherUnderline: string; filled: boolean; opensIntoCanvas: boolean; sameSurfaceAsCanvas: boolean }> =>
     fresh.evaluate(() => {
       const el = document.querySelector('[data-testid="tabbar"]') as HTMLElement;
       const style = getComputedStyle(el);
@@ -4655,6 +4655,20 @@ test('tabs and panel: a new browser has the panel folded to a rail, the bar of t
         otherEdge: other ? getComputedStyle(other).borderTopWidth + ' ' + (getComputedStyle(other).borderTopColor !== 'rgba(0, 0, 0, 0)') : 'none',
         currentEdge: getComputedStyle(current).borderTopColor,
         buttonEdge: getComputedStyle(document.querySelector('[data-testid="toolbar-new-more"]') ?? el).borderTopWidth,
+        // The tab being looked at has a line under it, apart from it, in the accent, not cut off by the row, above the bar's own line.
+        underline: (() => {
+          const line = getComputedStyle(current, '::after');
+          const height = Number.parseFloat(line.height);
+          const bottom = tab.bottom - Number.parseFloat(line.bottom);
+          const accent = document.createElement('span');
+          accent.style.color = 'var(--accent)';
+          document.body.append(accent);
+          const colour = getComputedStyle(accent).color === line.backgroundColor;
+          accent.remove();
+          const row = (document.querySelector('[data-testid="tabbar-tabs"]') as HTMLElement).getBoundingClientRect();
+          return { height: line.height, colour, gap: Math.round(bottom - height - tab.bottom), inRow: bottom <= row.bottom, aboveLine: bottom <= box.bottom - Number.parseFloat(style.borderBottomWidth) };
+        })(),
+        otherUnderline: other ? getComputedStyle(other, '::after').content : 'none',
         filled: getComputedStyle(current).backgroundColor !== (other ? getComputedStyle(other).backgroundColor : 'none') && getComputedStyle(current).backgroundColor !== 'rgba(0, 0, 0, 0)',
         opensIntoCanvas: getComputedStyle(current).borderBottomLeftRadius === '0px',
         sameSurfaceAsCanvas: style.backgroundColor === getComputedStyle(document.querySelector('.react-flow') as HTMLElement).backgroundColor,
@@ -4673,6 +4687,8 @@ test('tabs and panel: a new browser has the panel folded to a rail, the bar of t
     expect(seen.plusHeight, scheme).toBe(32);
     expect(seen.otherEdge, scheme).toBe(`${seen.buttonEdge} true`);
     expect(seen.currentEdge, scheme).toBe('rgba(0, 0, 0, 0)');
+    expect(seen.underline, scheme).toEqual({ height: '2px', colour: true, gap: 4, inRow: true, aboveLine: true });
+    expect(seen.otherUnderline, scheme).toBe('none');
     expect(seen.filled, scheme).toBe(true);
     expect(seen.opensIntoCanvas, scheme).toBe(false);
   }
