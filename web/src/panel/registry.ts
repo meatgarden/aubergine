@@ -93,6 +93,10 @@ export const PANEL_MIN_WIDTH = 180;
 export const PANEL_MAX_WIDTH = 560;
 export const PANEL_DEFAULT_WIDTH = 320;
 export const PANEL_STRIP_WIDTH = 40;
+/** The details beside the panel: dragged by their edge between these, and never more than half the window (the stylesheet). */
+export const DRAWER_MIN_WIDTH = 320;
+export const DRAWER_MAX_WIDTH = 720;
+export const DRAWER_DEFAULT_WIDTH = 420;
 
 export interface PanelPrefs {
   /** False when the panel is collapsed to its strip. */
@@ -102,13 +106,19 @@ export interface PanelPrefs {
   folded: string[];
   /** The section that is showing. Null, or one that is no longer registered, means the first. */
   tab: string | null;
+  /** How wide the drawer beside the panel is. */
+  drawerWidth: number;
 }
 
 /** With nothing remembered the panel is folded to its rail: the canvas has the room. Once a person opens or folds it, that is kept. */
-export const DEFAULT_PANEL: PanelPrefs = { open: false, width: PANEL_DEFAULT_WIDTH, folded: [], tab: null };
+export const DEFAULT_PANEL: PanelPrefs = { open: false, width: PANEL_DEFAULT_WIDTH, folded: [], tab: null, drawerWidth: DRAWER_DEFAULT_WIDTH };
 
 export function clampPanelWidth(width: number): number {
   return Math.round(Math.min(PANEL_MAX_WIDTH, Math.max(PANEL_MIN_WIDTH, width)));
+}
+
+export function clampDrawerWidth(width: number): number {
+  return Math.round(Math.min(DRAWER_MAX_WIDTH, Math.max(DRAWER_MIN_WIDTH, width)));
 }
 
 export function parsePanelPrefs(saved: unknown): PanelPrefs {
@@ -119,6 +129,7 @@ export function parsePanelPrefs(saved: unknown): PanelPrefs {
     width: typeof p.width === 'number' && Number.isFinite(p.width) ? clampPanelWidth(p.width) : PANEL_DEFAULT_WIDTH,
     folded: Array.isArray(p.folded) ? p.folded.filter((id): id is string => typeof id === 'string') : [],
     tab: typeof p.tab === 'string' ? p.tab : null,
+    drawerWidth: typeof p.drawerWidth === 'number' && Number.isFinite(p.drawerWidth) ? clampDrawerWidth(p.drawerWidth) : DRAWER_DEFAULT_WIDTH,
   };
 }
 

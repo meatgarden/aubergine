@@ -1642,6 +1642,20 @@ kbd.kept {
   cursor: col-resize;
   z-index: calc(var(--z-panel) + 1);
 }
+/* The drawer's edge: a strip between the details and the canvas, standing over both and taking no room of its own. */
+.drawer-resize {
+  flex: none;
+  align-self: stretch;
+  width: 4px;
+  margin: 0 -2px;
+  cursor: col-resize;
+  z-index: calc(var(--z-panel) + 1);
+}
+.drawer-resize:hover,
+.drawer-resize:focus-visible {
+  background: var(--accent);
+  opacity: 0.4;
+}
 .list-resize:hover {
   background: var(--accent);
   opacity: 0.4;

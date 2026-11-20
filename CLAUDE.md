@@ -310,6 +310,7 @@ These are the only abstractions in the code base. Each has exactly one implement
 - **A menu takes Escape before what is behind it.** Menus listen in the capture phase, and `belongsToControl` gives Escape to an open menu.
 - **What hangs from a terminal's title is not clipped by the terminal's box.**
 - **A menu in the drawer is placed against the window** (`againstWindow`): under its button it would lie under the side panel beside the drawer. The browser test "the drawer" checks that it is on top.
+- **The drawer is resized by its edge, like the panel.** `DrawerResize` in `SidePanel.tsx`: dragged, or the arrow keys on it (Shift for larger steps), between `DRAWER_MIN_WIDTH` and `DRAWER_MAX_WIDTH` and never over half the window; the width is `drawerWidth` in the panel's remembered settings of this browser.
 - **A drawer shows its section.** When a drawer opens, the side panel shows the section it belongs to. A terminal whose details open becomes the selected one in the list (and a different terminal that had the keyboard lets it go), so its row is marked and in view.
 - **A terminal's title and menu act on that terminal** (`actHere` in `TerminalNode.tsx`): a command acts on the terminal with the keyboard before the selected one, so another terminal that has the keyboard is let go of first.
 - **Details in a terminal's title is `terminal.details`**: it opens that terminal's details, opening a folded side panel first, and closes them when they are its own.

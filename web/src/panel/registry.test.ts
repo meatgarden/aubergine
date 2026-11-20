@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { PANEL_DEFAULT_WIDTH, clampPanelWidth, panelSections, parsePanelPrefs, registerSection, sectionById, subscribeToSections, unregisterSection, type PanelSection } from './registry';
+import { DRAWER_DEFAULT_WIDTH, PANEL_DEFAULT_WIDTH, clampPanelWidth, panelSections, parsePanelPrefs, registerSection, sectionById, subscribeToSections, unregisterSection, type PanelSection } from './registry';
 
 const dummy = (id: string, order: number, extra: Partial<PanelSection> = {}): PanelSection => ({
   id,
@@ -60,10 +60,14 @@ describe('the section registry', () => {
 describe('what the panel remembers', () => {
   it('reads saved preferences and repairs odd ones', () => {
     // With nothing remembered the panel is folded; whatever a person left it as is kept.
-    expect(parsePanelPrefs(null)).toEqual({ open: false, width: PANEL_DEFAULT_WIDTH, folded: [], tab: null });
+    expect(parsePanelPrefs(null)).toEqual({ open: false, width: PANEL_DEFAULT_WIDTH, folded: [], tab: null, drawerWidth: DRAWER_DEFAULT_WIDTH });
     expect(parsePanelPrefs({ open: true }).open).toBe(true);
     expect(parsePanelPrefs({ width: 300 }).open).toBe(true);
-    expect(parsePanelPrefs({ open: false, width: 9000, folded: ['terminals', 7] })).toEqual({ open: false, width: 560, folded: ['terminals'], tab: null });
+    expect(parsePanelPrefs({ open: false, width: 9000, folded: ['terminals', 7] })).toEqual({ open: false, width: 560, folded: ['terminals'], tab: null, drawerWidth: DRAWER_DEFAULT_WIDTH });
+    // The drawer's width is kept between its bounds; one remembered from before it could be changed is the usual one.
+    expect(parsePanelPrefs({ drawerWidth: 9000 }).drawerWidth).toBe(720);
+    expect(parsePanelPrefs({ drawerWidth: 10 }).drawerWidth).toBe(320);
+    expect(parsePanelPrefs({ drawerWidth: 'wide' }).drawerWidth).toBe(DRAWER_DEFAULT_WIDTH);
     expect(parsePanelPrefs({ tab: 'for-you' }).tab).toBe('for-you');
     expect(parsePanelPrefs({ tab: 7 }).tab).toBeNull();
     expect(parsePanelPrefs({ width: 'wide' }).width).toBe(PANEL_DEFAULT_WIDTH);

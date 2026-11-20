@@ -2,7 +2,7 @@ import { useEffect, useRef, useSyncExternalStore } from 'react';
 import { runCommand } from '../commands';
 import { hint } from '../shortcuts';
 import { useApp } from '../store';
-import { PANEL_STRIP_WIDTH, panelSections, sectionById, subscribeToSections, type PanelSection } from './registry';
+import { DRAWER_MAX_WIDTH, DRAWER_MIN_WIDTH, PANEL_STRIP_WIDTH, panelSections, sectionById, subscribeToSections, type PanelSection } from './registry';
 import { IconButton, StateDot, Switcher } from '../ui';
 import './sections';
 
@@ -160,11 +160,14 @@ function Drawer() {
       }, 0);
     };
   }, [openId, definition]);
+  const width = useApp((s) => s.side.drawerWidth);
   if (!drawer || !definition) return null;
   const close = (): void => useApp.getState().openDrawer(null);
   return (
+    <>
     <aside
       className="panel-drawer"
+      style={{ width }}
       aria-label="Details"
       tabIndex={-1}
       ref={root}
@@ -190,9 +193,54 @@ function Drawer() {
       )}
       <definition.Component key={`${drawer.kind}:${drawer.id}`} id={drawer.id} onClose={close} />
     </aside>
+    <DrawerResize width={width} />
+    </>
   );
 }
 
 function DrawerTitle({ id, useTitle }: { id: string; useTitle: (id: string) => string }) {
   return <span className="panel-drawer-title">{useTitle(id)}</span>;
+}
+
+/**
+ * The drawer's edge, like the panel's: dragged to make the details wider or narrower, or moved with the arrow keys
+ * once it has the keyboard. The width is remembered in this browser.
+ */
+function DrawerResize({ width }: { width: number }) {
+  const set = (next: number): void => useApp.getState().setSide({ drawerWidth: next });
+  const start = (event: React.PointerEvent): void => {
+    event.preventDefault();
+    const startX = event.clientX;
+    const startWidth = width;
+    const move = (e: PointerEvent): void => set(startWidth + e.clientX - startX);
+    const stop = (): void => {
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', stop);
+    };
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', stop);
+  };
+  return (
+    <div
+      className="drawer-resize"
+      role="separator"
+      aria-orientation="vertical"
+      aria-label="Resize the details"
+      aria-valuemin={DRAWER_MIN_WIDTH}
+      aria-valuemax={DRAWER_MAX_WIDTH}
+      aria-valuenow={width}
+      tabIndex={0}
+      title="Drag to make the details wider or narrower"
+      onPointerDown={start}
+      onKeyDown={(event) => {
+        const step = event.shiftKey ? 64 : 16;
+        if (event.key === 'ArrowLeft') set(width - step);
+        else if (event.key === 'ArrowRight') set(width + step);
+        else return;
+        event.preventDefault();
+        event.stopPropagation();
+      }}
+      data-testid="drawer-resize"
+    />
+  );
 }
