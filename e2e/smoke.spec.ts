@@ -4655,7 +4655,7 @@ test('tabs and panel: a new browser has the panel folded to a rail, the bar of t
   await fresh.getByTestId('details-close').click();
 
   // 3. Air above the tabs, a line under the whole bar, and the tab being looked at is a filled pill that ends above the line.
-  const bar = async (): Promise<{ air: number; line: string; lineWidth: number; barWidth: number; canvasWidth: number; tabBottom: number; lineTop: number; tabHeight: number; plusHeight: number; otherEdge: string; currentEdge: string; buttonEdge: string; underline: { height: string; colour: boolean; gap: number; inRow: boolean; aboveLine: boolean }; otherUnderline: string; otherQuiet: boolean; otherEdgeFaint: boolean; filled: boolean; opensIntoCanvas: boolean; sameSurfaceAsCanvas: boolean }> =>
+  const bar = async (): Promise<{ air: number; line: string; lineWidth: number; barWidth: number; canvasWidth: number; tabBottom: number; lineTop: number; tabHeight: number; plusHeight: number; otherEdge: string; currentEdge: string; buttonEdge: string; underline: { height: string; colour: boolean; gap: number; inRow: boolean; aboveLine: boolean; asWide: boolean }; otherUnderline: string; otherQuiet: boolean; otherEdgeFaint: boolean; filled: boolean; opensIntoCanvas: boolean; sameSurfaceAsCanvas: boolean }> =>
     fresh.evaluate(() => {
       const el = document.querySelector('[data-testid="tabbar"]') as HTMLElement;
       const style = getComputedStyle(el);
@@ -4688,7 +4688,7 @@ test('tabs and panel: a new browser has the panel folded to a rail, the bar of t
           const colour = getComputedStyle(accent).color === line.backgroundColor;
           accent.remove();
           const row = (document.querySelector('[data-testid="tabbar-tabs"]') as HTMLElement).getBoundingClientRect();
-          return { height: line.height, colour, gap: Math.round(bottom - height - tab.bottom), inRow: bottom <= row.bottom, aboveLine: bottom <= box.bottom - Number.parseFloat(style.borderBottomWidth) };
+          return { height: line.height, colour, gap: Math.round(bottom - height - tab.bottom), inRow: bottom <= row.bottom, aboveLine: bottom <= box.bottom - Number.parseFloat(style.borderBottomWidth), asWide: Math.round(tab.width - Number.parseFloat(line.left) - Number.parseFloat(line.right)) === Math.round(tab.width) };
         })(),
         otherUnderline: other ? getComputedStyle(other, '::after').content : 'none',
         // A tab not being looked at is quieter than the one being looked at: its words are not the full text color, its edge is the plain line.
@@ -4720,7 +4720,7 @@ test('tabs and panel: a new browser has the panel folded to a rail, the bar of t
     expect(seen.plusHeight, scheme).toBe(32);
     expect(seen.otherEdge, scheme).toBe(`${seen.buttonEdge} true`);
     expect(seen.currentEdge, scheme).toBe('rgba(0, 0, 0, 0)');
-    expect(seen.underline, scheme).toEqual({ height: '2px', colour: true, gap: 10, inRow: true, aboveLine: true });
+    expect(seen.underline, scheme).toEqual({ height: '2px', colour: true, gap: 10, inRow: true, aboveLine: true, asWide: true });
     expect(seen.otherUnderline, scheme).toBe('none');
     expect(seen.otherQuiet, scheme).toBe(true);
     expect(seen.otherEdgeFaint, scheme).toBe(true);
@@ -5670,6 +5670,21 @@ test('a row of the list is a box: the terminal\'s own color then its name, its s
     return color;
   });
   expect(colors).toBe(swatch);
+
+  // The selected row is inverted: its box is the text color, its name the surface's.
+  await page.locator(`[data-testid="list-row"][data-session="${sessionId}"]`).getByTestId('list-name').click();
+  await expect(page.locator(`[data-testid="list-row"][data-session="${sessionId}"]`)).toHaveAttribute('aria-selected', 'true');
+  const inverted = await page.locator(`[data-testid="list-row"][data-session="${sessionId}"]`).evaluate((el) => {
+    const probe = document.createElement('span');
+    probe.style.color = 'var(--text)';
+    probe.style.backgroundColor = 'var(--surface)';
+    document.body.append(probe);
+    const text = getComputedStyle(probe).color;
+    const surface = getComputedStyle(probe).backgroundColor;
+    probe.remove();
+    return { box: getComputedStyle(el, '::before').backgroundColor === text, name: getComputedStyle(el.querySelector('.list-name') as HTMLElement).color === surface };
+  });
+  expect(inverted).toEqual({ box: true, name: true });
 
   // Over the list: two plain shells.
   await expect(page.getByTestId('list-counts')).toHaveText('2 shells');
