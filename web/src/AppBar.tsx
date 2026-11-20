@@ -59,7 +59,8 @@ export function AppBar() {
         Aubergine
       </span>
       <ProjectSwitcher />
-      <nav className="appbar-group" aria-label="Places of this project">
+      {/* One line under all of the places, from the first to the last; the stretch under the one being looked at is the accent. */}
+      <nav className="appbar-group appbar-places" aria-label="Places of this project">
         {screen('canvas.show', 'Canvas', 'The canvas, as you left it', 'toolbar-canvas', null)}
         {screen('queue.open', 'Queue', 'The tasks for agents, and everything that waits on you', 'toolbar-queue', 'queue')}
         {screen('board.open', 'Board', 'Every run that is going, by workflow and step; approve or send back from there', 'toolbar-board', 'board')}
