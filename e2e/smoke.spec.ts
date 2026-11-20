@@ -5403,3 +5403,66 @@ test('a note takes typing: beside a terminal the terminal does not take the keyb
   expect(grown.scrolls).toBe(false);
   await drawer.getByTestId('details-close').click();
 });
+
+test('the details are resized by their edge like the side panel: dragged, with the arrow keys, kept between bounds, and remembered in this browser', async ({ page }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  const selectedTab = page.locator('[data-testid="tab"][aria-selected="true"]');
+  const before = (await selectedTab.getAttribute('data-canvas')) ?? '';
+  await page.getByRole('button', { name: 'New canvas' }).click();
+  await expect(selectedTab).not.toHaveAttribute('data-canvas', before);
+  const rows = page.getByTestId('list-row');
+  await page.getByTestId('toolbar-new-terminal').click();
+  await expect(rows).toHaveCount(1);
+  const drawer = page.getByTestId('panel-drawer');
+  const handle = page.getByTestId('drawer-resize');
+  const openIt = async (): Promise<void> => {
+    await rows.first().dblclick({ position: { x: 60, y: 12 } });
+    await expect(drawer).toBeVisible();
+  };
+  const widths = (): Promise<{ drawer: number; canvas: number }> =>
+    page.evaluate(() => ({
+      drawer: Math.round((document.querySelector('[data-testid="panel-drawer"]') as HTMLElement).getBoundingClientRect().width),
+      canvas: Math.round((document.querySelector('[data-testid="canvas-column"]') as HTMLElement).getBoundingClientRect().width),
+    }));
+
+  await openIt();
+  const usual = await widths();
+  expect(usual.drawer).toBe(420);
+
+  // Dragged by its edge: wider, and the canvas narrower by as much.
+  const box = await handle.boundingBox();
+  if (!box) throw new Error('no handle');
+  await page.mouse.move(box.x + box.width / 2, box.y + 200);
+  await page.mouse.down();
+  await page.mouse.move(box.x + box.width / 2 + 100, box.y + 200, { steps: 5 });
+  await page.mouse.up();
+  const wider = await widths();
+  expect(wider.drawer).toBe(520);
+  expect(usual.canvas - wider.canvas).toBe(100);
+
+  // With the keyboard on the edge, the arrows move it.
+  await handle.focus();
+  await page.keyboard.press('ArrowLeft');
+  expect((await widths()).drawer).toBe(504);
+  await page.keyboard.press('Shift+ArrowRight');
+  expect((await widths()).drawer).toBe(568);
+  await expect(handle).toHaveAttribute('aria-valuenow', '568');
+
+  // Never narrower than its least, never wider than its most.
+  for (let i = 0; i < 20; i += 1) await page.keyboard.press('Shift+ArrowLeft');
+  expect((await widths()).drawer).toBe(320);
+  for (let i = 0; i < 30; i += 1) await page.keyboard.press('Shift+ArrowRight');
+  expect((await widths()).drawer).toBeLessThanOrEqual(720);
+  expect((await widths()).drawer).toBeGreaterThan(568);
+
+  // Remembered in this browser: after a reload the details open at the width they were left at.
+  await page.keyboard.press('Shift+ArrowLeft');
+  const left = (await widths()).drawer;
+  await page.reload();
+  await expect(rows).toHaveCount(1);
+  await openIt();
+  expect((await widths()).drawer).toBe(left);
+  await drawer.getByTestId('details-close').click();
+});

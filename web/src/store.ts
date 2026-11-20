@@ -20,7 +20,7 @@ import { ApiError, api, askAbout, lookAt, subscribeToEvents } from './api';
 import { NOT_FOLLOWING, behind, takeChange, takeWhole, type Following } from './following';
 import { canvasIdFromPath, chooseCanvas, openedHere, pageFromPath, rememberCanvas, rememberedCanvas, sessionFromAddress, terminalFromPath, writeAddress } from './address';
 import { announcement, notificationsWanted } from './attention';
-import { clampPanelWidth, loadPanelPrefs, savePanelPrefs, type PanelPrefs } from './panel/registry';
+import { clampDrawerWidth, clampPanelWidth, loadPanelPrefs, savePanelPrefs, type PanelPrefs } from './panel/registry';
 import { loadView, saveView, type ListView } from './terminal-rows';
 
 export type Phase =
@@ -337,6 +337,7 @@ export const useApp = create<AppStore>((set, get) => ({
   setSide: (change) => {
     const side = { ...get().side, ...change };
     side.width = clampPanelWidth(side.width);
+    side.drawerWidth = clampDrawerWidth(side.drawerWidth);
     savePanelPrefs(side);
     // A collapsed panel has nowhere to show a drawer.
     set(side.open ? { side } : { side, drawer: null });
