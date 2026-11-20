@@ -5640,4 +5640,12 @@ test('a row of the list is a box: the terminal\'s own color then its name, its s
 
   // Over the list: two plain shells.
   await expect(page.getByTestId('list-counts')).toHaveText('2 shells');
+
+  // A row's menu lies over the rows after it: the first lines of the menu are what is under the pointer there, not the next row.
+  await rows.first().hover();
+  await rows.first().locator('.list-more').click();
+  const menu = rows.first().locator('.list-menu');
+  await expect(menu).toBeVisible();
+  expect(await menu.evaluate((el) => [...el.querySelectorAll('[role="menuitem"]')].slice(0, 3).map((item) => { const r = item.getBoundingClientRect(); return el.contains(document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2)); }))).toEqual([true, true, true]);
+  await page.keyboard.press('Escape');
 });
