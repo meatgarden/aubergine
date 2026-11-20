@@ -1012,7 +1012,7 @@ An agent can ask where it is: `aubergine where` in its terminal, or the `where_a
 
 ## Workflows
 
-Four pages hold the work, and each shows the same strip under its name, in the order work goes through them: **Library** (find a workflow someone published) → **Workflows** (your recipes) → **Queue** (tasks waiting for a free agent) → **Board** (runs going now). Press one to go there. A page with nothing on it yet says in three steps how it goes, with one button to make the first thing: on Workflows, **Try “Fix a bug”**.
+Four pages hold the work, and each shows the same strip under its name, in the order work goes through them: **Library** (find a workflow someone published) → **Workflows** (your recipes) → **Queue** (tasks waiting for a free agent) → **Board** (runs going now). Press one to go there; **Show me around** at the end of the strip points out what is on that page in three or four steps. A page with nothing on it yet says in three steps how it goes, with one button to make the first thing: on Workflows, **Try “Fix a bug”**.
 
 A workflow is an ordered list of **steps** that an agent goes through one at a time: it reads the current one, does it, reports it done, and is given the next. Each step is a name, some instructions, and one line saying how to tell it is finished. The canvas shows where every terminal stands.
 

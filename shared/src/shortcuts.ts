@@ -49,6 +49,7 @@ export const COMMAND_IDS = [
   'canvas.newInNewTab',
   'canvas.switchView',
   'canvas.foldColumn',
+  'tour.page',
   'focus.left',
   'focus.right',
   'focus.up',

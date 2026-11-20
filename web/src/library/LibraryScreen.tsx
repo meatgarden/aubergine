@@ -4,6 +4,7 @@ import { api } from '../api';
 import { useApp } from '../store';
 import { Badge, HowThisWorks, Page } from '../ui';
 import { PageFlow } from '../page-flow';
+import { tourSignal } from '../tour/tour-store';
 
 /**
  * The library: sources of workflows and elements that others published, what
@@ -256,7 +257,10 @@ export function LibraryScreen() {
                 const marks = [STANDING[item.standing], item.requested ? 'waits in Review' : '', item.retired ? 'retired by its publisher' : '', ...item.flags.filter((flag) => flag === 'changed-without-version' || flag === 'gone').map((flag) => (flag === 'gone' ? 'no longer listed' : 'changed without a new version')), item.problem ? 'cannot be installed' : ''].filter(Boolean);
                 return (
                   <li key={key}>
-                    <button type="button" className={`library-row${selected === key ? ' is-selected' : ''}`} aria-pressed={selected === key} onClick={() => setSelected(key)} title={[item.problem, ...item.flags.map((flag) => FLAG_WORDS[flag])].filter(Boolean).join(' ')} data-testid="library-item" data-item={item.id} data-standing={item.standing}>
+                    <button type="button" className={`library-row${selected === key ? ' is-selected' : ''}`} aria-pressed={selected === key} onClick={() => {
+                        setSelected(key);
+                        tourSignal('library.read');
+                      }} title={[item.problem, ...item.flags.map((flag) => FLAG_WORDS[flag])].filter(Boolean).join(' ')} data-testid="library-item" data-item={item.id} data-standing={item.standing}>
                       <span className="library-row-head">
                         <Badge className="library-kind">{item.kindTitle.replace(/^An? /, '').replace(/^./, (c) => c.toUpperCase())}</Badge>
                         <span className="library-name">{showControl(item.name)}</span>

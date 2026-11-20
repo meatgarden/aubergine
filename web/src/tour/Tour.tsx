@@ -5,6 +5,7 @@ import { removeDemo } from './actions';
 import { bestCorner, type Corner, type Obstacle } from './placement';
 import { helpLines, tourSteps, type TourContext, type TourStep } from './registry';
 import './steps';
+import './page-steps';
 import { neverShown, remembered, resumeAt, useTour } from './tour-store';
 
 /** Where something is on the page, looked at again every so often: things move as the canvas pans and panels open. */
@@ -132,31 +133,39 @@ function contextNow(signals: ReadonlySet<string>): TourContext | null {
  */
 export function Tour() {
   const step = useTour((s) => s.step);
+  const tour = useTour((s) => s.tour);
+  const page = useApp((s) => s.page);
   const signals = useTour((s) => s.signals);
   const pointing = useTour((s) => s.pointing);
   const app = useApp((s) => s.app);
   const canvasId = useApp((s) => s.canvasId);
   const viewingRun = useApp((s) => s.viewingRun);
   const filters = useApp((s) => s.listView.filters);
-  const steps = tourSteps();
+  const steps = tourSteps(tour);
+  const canvasSteps = tourSteps('canvas');
   const current: TourStep | null = step === null ? null : (steps[step] ?? null);
   const demo = useMemo(() => (app ? demoOf(app) : null), [app]);
   const [doneStep, setDoneStep] = useState<string | null>(null);
 
   // It begins by itself once: on the demo's canvas, in a browser that has never been shown it. Left half-way, it is taken up again there.
   useEffect(() => {
-    if (step !== null || !demo || canvasId !== demo.canvasId) return;
+    if (step !== null || !demo || canvasId !== demo.canvasId || page !== null) return;
     const before = remembered();
     if (!neverShown(before) && before?.status !== 'active') return;
-    const at = resumeAt(before, steps.map((s) => s.id));
-    const first = steps[at];
+    const at = resumeAt(before, canvasSteps.map((s) => s.id));
+    const first = canvasSteps[at];
     if (first) useTour.getState().start(at, first.id);
-  }, [step, demo, canvasId, steps]);
+  }, [step, demo, canvasId, canvasSteps, page]);
 
-  // Without the demo there is nothing to point at: the tour steps aside.
+  // Without the demo there is nothing to point at: the canvas's tour steps aside.
   useEffect(() => {
-    if (step !== null && app && !demo) useTour.getState().end('paused', current?.id ?? null);
-  }, [step, app, demo, current]);
+    if (step !== null && tour === 'canvas' && app && !demo) useTour.getState().end('paused', current?.id ?? null);
+  }, [step, tour, app, demo, current]);
+
+  // A page's tour is about that page: it ends when the page is left.
+  useEffect(() => {
+    if (step !== null && tour !== 'canvas' && page !== tour) useTour.getState().end('paused', null);
+  }, [step, tour, page]);
 
   // Reaching a step may bring its thing into view.
   useEffect(() => {
@@ -225,7 +234,7 @@ export function Tour() {
             ✓ That is it.
           </p>
         )}
-        {!rect && !done && <p className="tour-hint">It is not on screen just now: it is on the “Demo” canvas.</p>}
+        {!rect && !done && <p className="tour-hint">{tour === 'canvas' ? 'It is not on screen just now: it is on the “Demo” canvas.' : 'It is not on this page just now.'}</p>}
         <div className="tour-actions">
           {step > 0 && (
             <button type="button" className="quiet" onClick={() => go(step - 1)} data-testid="tour-back">
@@ -233,11 +242,12 @@ export function Tour() {
             </button>
           )}
           {!last && (
-            <button type="button" className={done ? '' : 'quiet'} onClick={() => go(step + 1)} data-testid="tour-next">
-              {done ? 'Next' : 'Skip this'}
+            // A step that only tells has nothing to skip.
+            <button type="button" className={done || !current.done ? '' : 'quiet'} onClick={() => go(step + 1)} data-testid="tour-next">
+              {done || !current.done ? 'Next' : 'Skip this'}
             </button>
           )}
-          {last && demo && (
+          {last && demo && tour === 'canvas' && (
             <button type="button" className="quiet" onClick={() => void removeDemo()} data-testid="tour-remove-demo">
               Remove the demo
             </button>
@@ -248,10 +258,10 @@ export function Tour() {
             </button>
           )}
           <span className="tour-spacer" />
-          <button type="button" className="quiet" onClick={() => useTour.getState().end('paused', current.id)} title="Put the tour away. “Take the tour” in the palette, or under ?, brings it back where you left it." data-testid="tour-later">
-            Not now
+          <button type="button" className="quiet" onClick={() => useTour.getState().end('paused', current.id)} title={tour === 'canvas' ? 'Put the tour away. “Take the tour” in the palette, or under ?, brings it back where you left it.' : 'Put this page’s tour away. “Show me around” under its name starts it again.'} data-testid="tour-later">
+            {tour === 'canvas' ? 'Not now' : 'Close'}
           </button>
-          {!last && (
+          {!last && tour === 'canvas' && (
             <button type="button" className="quiet" onClick={() => useTour.getState().end('dismissed', null)} title="Put the tour away for good in this browser." data-testid="tour-dismiss">
               Don’t show again
             </button>

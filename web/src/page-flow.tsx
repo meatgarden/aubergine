@@ -1,4 +1,6 @@
 import type { PageName } from '@aubergine/shared';
+import { runCommand } from './commands';
+import { hint } from './shortcuts';
 import { useApp } from './store';
 
 /**
@@ -38,6 +40,10 @@ export function PageFlow({ here }: { here: PageName }) {
           </li>
         ))}
       </ol>
+      {/* The page's own short tour, from its first step. */}
+      <button type="button" className="quiet page-flow-tour" title={hint('tour.page', 'A few steps pointing at what is on this page')} onClick={() => runCommand('tour.page')} data-testid="page-tour">
+        Show me around
+      </button>
     </nav>
   );
 }

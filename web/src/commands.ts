@@ -14,6 +14,7 @@ import { listModel, listSource } from './list-model';
 import { SORTS } from './terminal-rows';
 import { runOfSession } from './workflows/run-model';
 import { removeDemo, showMeAround } from './tour/actions';
+import { startPageTour } from './tour/page-steps';
 
 /**
  * The commands: everything that can be done from a button, a key, or the
@@ -864,6 +865,16 @@ export const COMMANDS: readonly Command[] = [
     group: 'Panels',
     available: always,
     run: () => void showMeAround(),
+  },
+  {
+    id: 'tour.page',
+    title: 'Show me around this page',
+    description: 'On Library, Workflows, Queue or Board: a few steps pointing at what is on the page and how it leads to the next.',
+    group: 'Panels',
+    available: (state) => state.page !== null,
+    run: (state) => {
+      if (state.page) startPageTour(state.page);
+    },
   },
   {
     id: 'demo.remove',
