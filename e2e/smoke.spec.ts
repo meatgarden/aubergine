@@ -3565,13 +3565,13 @@ test('simpler surfaces: the list starts near the top, a name is not cut, one pri
   await page.getByTestId('node-body').click();
   await page.keyboard.press(`${mac ? 'Control+Meta' : 'Control+Shift'}+Period`);
 
-  // "New terminal" and three rows of controls at most above the first terminal of the list.
+  // "New terminal", with room above and below it, and three rows of controls at most above the first terminal of the list.
   const first = await page.evaluate(() => {
     const panel = document.querySelector('[data-testid="side-panel"]') as HTMLElement;
     const row = document.querySelector('[data-testid="list-row"]') as HTMLElement;
     return Math.round(row.getBoundingClientRect().top - panel.getBoundingClientRect().top);
   });
-  expect(first).toBeLessThanOrEqual(176);
+  expect(first).toBeLessThanOrEqual(196);
 
   // A terminal's name is whole at the width a new terminal has.
   const name = await node.getByTestId('node-name').evaluate((el) => ({ node: Math.round((el.closest('[data-testid="terminal-node"]') as HTMLElement).getBoundingClientRect().width), cut: el.scrollWidth > el.clientWidth + 1 }));
@@ -3688,11 +3688,17 @@ test('simpler surfaces: the list starts near the top, a name is not cut, one pri
   await page.keyboard.press('Escape');
   await page.getByTestId('toolbar-runs').click();
   const starts = page.getByTestId('queue-starts');
-  await expect(starts.getByTestId('queue-starts-says')).toContainText(/\d+ at a time/);
-  await starts.locator('summary').focus();
-  await page.keyboard.press('Enter');
-  await expect(starts.getByTestId('queue-limit')).toBeVisible();
-  await expect(starts.getByTestId('queue-hold')).toBeVisible();
+  // How tasks start shows once there is a task: run by itself, with no earlier test's tasks, the queue is empty and says how to begin.
+  await expect(starts.or(page.getByTestId('queue-empty')).first()).toBeVisible();
+  if ((await starts.count()) === 0) {
+    await expect(page.getByTestId('queue-empty-add')).toBeVisible();
+  } else {
+    await expect(starts.getByTestId('queue-starts-says')).toContainText(/\d+ at a time/);
+    await starts.locator('summary').focus();
+    await page.keyboard.press('Enter');
+    await expect(starts.getByTestId('queue-limit')).toBeVisible();
+    await expect(starts.getByTestId('queue-hold')).toBeVisible();
+  }
 });
 
 /** How many things on the page are filled with the colour of waiting, and what they are. */
@@ -4722,7 +4728,7 @@ test('tabs and panel: a new browser has the panel folded to a rail, the bar of t
         // A tab not being looked at has a button's edge; the one being looked at has none.
         otherEdge: other ? getComputedStyle(other).borderTopWidth + ' ' + (getComputedStyle(other).borderTopColor !== 'rgba(0, 0, 0, 0)') : 'none',
         currentEdge: getComputedStyle(current).borderTopColor,
-        buttonEdge: getComputedStyle(document.querySelector('[data-testid="toolbar-new-more"]') ?? el).borderTopWidth,
+        buttonEdge: getComputedStyle(document.querySelector('[data-testid="tabbar-new-more"]') ?? el).borderTopWidth,
         // The tab being looked at has a line under it, apart from it, in the accent, not cut off by the row, above the bar's own line.
         underline: (() => {
           const line = getComputedStyle(current, '::after');
