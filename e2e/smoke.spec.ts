@@ -5884,3 +5884,26 @@ test('the canvases as a column: tabs one under another at the left of the window
   await expect(bar).toHaveAttribute('data-view', 'tabs');
   await expect(page.locator('[data-testid="canvas-column"] [data-testid="tabbar"]')).toHaveCount(1);
 });
+
+test('the four pages say what they are for and where they stand: Library, Workflows, Queue, Board, each opening the next', async ({ page }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  const screens = { library: 'library-screen', workflows: 'workflows-screen', queue: 'queue-screen', board: 'board' } as const;
+  await page.getByTestId('toolbar-library').click();
+  for (const [name, testid] of Object.entries(screens)) {
+    const screen = page.getByTestId(testid);
+    await expect(screen).toBeVisible();
+    // A line under the name says what the page is for.
+    await expect(screen.locator('.ui-page-head .ui-meta').first()).not.toBeEmpty();
+    // The same four, in the order work goes through them, this one marked.
+    const steps = screen.getByTestId('page-flow-step');
+    expect(await steps.evaluateAll((all) => all.map((el) => el.getAttribute('data-page')))).toEqual(['library', 'workflows', 'queue', 'board']);
+    await expect(screen.locator('[data-testid="page-flow-step"][aria-current="page"]')).toHaveAttribute('data-page', name);
+    // The next one opens from here.
+    const next = { library: 'workflows', workflows: 'queue', queue: 'board', board: null }[name];
+    if (next) await screen.locator(`[data-testid="page-flow-step"][data-page="${next}"]`).click();
+  }
+  await expect(page).toHaveURL(/\/board$/);
+  await page.keyboard.press('Escape');
+});

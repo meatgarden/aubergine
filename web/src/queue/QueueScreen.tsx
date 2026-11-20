@@ -7,7 +7,8 @@ import { useEndedRuns } from '../workflows/ended-runs';
 import { actionView } from './action-views';
 import { Schedules } from './Schedules';
 import { TaskForm, type TaskDraft } from './TaskForm';
-import { Banner, EmptyState, Page, Tabs } from '../ui';
+import { Banner, FirstSteps, Page, Tabs } from '../ui';
+import { PageFlow } from '../page-flow';
 import { ForYouRow } from './ForYouRow';
 import { goTo } from './go-to';
 import { itemsOfListing, useRepositoryListing } from '../review/repository-source';
@@ -259,7 +260,8 @@ export function QueueScreen() {
       <Page
         name="queue"
         title="Queue"
-        line="What waits on you, and the tasks for agents."
+        line="Tasks waiting for a free agent, and what waits on you. A task starts as a run when an agent takes it."
+        flow={<PageFlow here="queue" />}
         label="Queue and For you"
         testid="queue-screen"
         className="queue-screen"
@@ -365,16 +367,16 @@ export function QueueScreen() {
               </p>
             )}
             {busy.length + next.length + finished.length === 0 && (
-              <EmptyState
-                data-testid="queue-empty"
+              <FirstSteps
+                testid="queue-empty"
+                title="The queue lines up work for agents."
+                steps={['Add a task: one sentence of what to do.', 'When an agent is free, it takes the next task, which starts as a run of a workflow.', 'Watch it on the Board; what needs you comes to For you.']}
                 action={
-                  <button type="button" onClick={() => setDraft({ titles: [''], details: '', sources: [{ kind: 'hand' }] })} data-testid="queue-empty-add">
-                    Add task
+                  <button type="button" onClick={() => setDraft({ titles: ['Write a short README for this folder'], details: '', sources: [{ kind: 'hand' }] })} data-testid="queue-empty-add">
+                    Add a task
                   </button>
                 }
-              >
-                Tasks you give to agents will be listed here.
-              </EmptyState>
+              />
             )}
             {busy.length > 0 && <div className="wf-label">At work</div>}
             <ul className="task-list" data-testid="queue-working">

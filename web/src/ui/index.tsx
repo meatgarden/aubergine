@@ -99,6 +99,24 @@ export function EmptyState({ children, action, className, ...rest }: HTMLAttribu
   );
 }
 
+/**
+ * What an empty place is for, said to someone who has never used it: a sentence, at most three short numbered steps of
+ * how it goes, and one button that makes the first real thing.
+ */
+export function FirstSteps({ title, steps, action, testid }: { title: ReactNode; steps: readonly ReactNode[]; action?: ReactNode; testid?: string }) {
+  return (
+    <div className="ui-empty ui-first-steps" data-testid={testid}>
+      <strong>{title}</strong>
+      <ol>
+        {steps.map((step, i) => (
+          <li key={i}>{step}</li>
+        ))}
+      </ol>
+      {action}
+    </div>
+  );
+}
+
 /** Lines to choose from. Each child is a button: a name and, where it helps, a `<small>` line saying what it is. */
 export function Menu({ className, ...rest }: HTMLAttributes<HTMLSpanElement>) {
   return <span className={join('ui-menu toolbar-menu', className)} role="menu" {...rest} />;
@@ -130,7 +148,7 @@ export function ScreenHead({ title, subtitle, onClose, closeTestid, children }: 
  * out of its own: the top bar, Escape and the browser's back button lead back to the canvas. It takes the keyboard
  * when it opens and gives it back to whatever had it.
  */
-export function Page({ name, title, summary, line, actions, tabs, wide = false, label, testid, className, onKeyDown, children }: { name: string; title: ReactNode; summary?: ReactNode; line?: ReactNode; actions?: ReactNode; tabs?: ReactNode; wide?: boolean; label: string; testid: string; className?: string; onKeyDown?: (event: ReactKeyboardEvent<HTMLElement>) => void; children: ReactNode }) {
+export function Page({ name, title, summary, line, actions, flow, tabs, wide = false, label, testid, className, onKeyDown, children }: { name: string; title: ReactNode; summary?: ReactNode; line?: ReactNode; actions?: ReactNode; /** Where this page stands among the others, under its name. */ flow?: ReactNode; tabs?: ReactNode; wide?: boolean; label: string; testid: string; className?: string; onKeyDown?: (event: ReactKeyboardEvent<HTMLElement>) => void; children: ReactNode }) {
   const root = useRef<HTMLElement>(null);
   useEffect(() => {
     const had = document.activeElement instanceof HTMLElement ? document.activeElement : null;
@@ -151,6 +169,7 @@ export function Page({ name, title, summary, line, actions, tabs, wide = false, 
           </div>
           {actions && <span className="ui-head-actions">{actions}</span>}
         </div>
+        {flow && <div className="ui-page-column ui-page-flow">{flow}</div>}
         {tabs && <div className="ui-page-column ui-page-tabs">{tabs}</div>}
       </header>
       <div className="ui-page-body">

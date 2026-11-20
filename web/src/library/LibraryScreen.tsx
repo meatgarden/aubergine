@@ -3,6 +3,7 @@ import { FLAG_WORDS, sourceLabel, ago, fromWords, historyWords, needWords, showC
 import { api } from '../api';
 import { useApp } from '../store';
 import { Badge, HowThisWorks, Page } from '../ui';
+import { PageFlow } from '../page-flow';
 
 /**
  * The library: sources of workflows and elements that others published, what
@@ -139,7 +140,8 @@ export function LibraryScreen() {
     <Page
       name="library"
       title="Library"
-      line="Workflows and steps that others published, to read and install."
+      line="Workflows and steps that others published. Read one, install it, and it is yours under Workflows."
+      flow={<PageFlow here="library" />}
       label="Library"
       testid="library-screen"
       className="library-screen"
