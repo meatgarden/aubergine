@@ -32,7 +32,9 @@ import { currentLayout, useApp } from './store';
 import { canvasActions } from './canvas-actions';
 import { runCommand } from './commands';
 import { afterOpening } from './desktop';
-import { hint, keysOf } from './shortcuts';
+import { hint } from './shortcuts';
+import { setAdding } from './NewTerminal';
+import { MenuButton } from './ui';
 import { useEndedRuns } from './workflows/ended-runs';
 import { EmptyCanvas } from './EmptyCanvas';
 import { FULL_SIZE_HINT, shouldSayFullSize } from './full-size-hint';
@@ -85,80 +87,26 @@ function toFrameNode(frame: Frame, previous: CanvasNode | undefined): FrameFlowN
   };
 }
 
-/**
- * The one button for the commonest thing, a new terminal, and beside it a menu of everything else
- * that can be made, each said in words: no control here is a bare sign.
- */
 /** Under this width the bar over the canvas has no room for everything in one row. */
-const NARROW_CANVAS = 680;
+const NARROW_CANVAS = 560;
 
-function NewMenu({ adding, narrow }: { adding: boolean; narrow: boolean }) {
+/**
+ * Where the bar over the canvas has no room for them, what is used seldom is in one menu at its end: the terminals
+ * that are not on this canvas.
+ */
+function NarrowMenu() {
   const parked = useApp((s) => (s.app?.sessions ?? []).filter((session) => session.state === 'parked').length);
-  const [open, setOpen] = useState(false);
-  const root = useRef<HTMLSpanElement>(null);
-  useEffect(() => {
-    if (!open) return;
-    const away = (event: PointerEvent): void => {
-      if (!root.current?.contains(event.target as globalThis.Node)) setOpen(false);
-    };
-    const key = (event: KeyboardEvent): void => {
-      if (event.key !== 'Escape') return;
-      // The menu's own Escape: it goes no further, so that it does not also leave a terminal or close something behind.
-      event.stopPropagation();
-      setOpen(false);
-    };
-    window.addEventListener('pointerdown', away, true);
-    window.addEventListener('keydown', key, true);
-    return () => {
-      window.removeEventListener('pointerdown', away, true);
-      window.removeEventListener('keydown', key, true);
-    };
-  }, [open]);
-  const item = (command: Parameters<typeof runCommand>[0], label: string, says: string, testid?: string, withKey = false) => (
-    <button
-      type="button"
-      role="menuitem"
-      disabled={adding}
-      title={hint(command)}
-      data-testid={testid}
-      onClick={() => {
-        setOpen(false);
-        runCommand(command);
-      }}
-    >
-      {label}
-      {withKey && keysOf(command)[0] && <kbd className="toolbar-menu-key">{keysOf(command)[0]}</kbd>}
-      <small>{says}</small>
-    </button>
-  );
   return (
-    <span className="toolbar-new" ref={root}>
-      <button type="button" onClick={() => runCommand('terminal.new')} disabled={adding} title={hint('terminal.new')} data-testid="toolbar-new-terminal">
-        New terminal
-      </button>
-      <button type="button" className="toolbar-new-more" aria-haspopup="menu" aria-expanded={open} aria-label="More to make: an agent, a terminal somewhere else, a frame" title="More to make: an agent, a terminal somewhere else, a frame" onClick={() => setOpen((v) => !v)} data-testid="toolbar-new-more">
-        ▾
-      </button>
-      {open && (
-        <span className="toolbar-menu" role="menu" data-testid="toolbar-new-menu">
-          {/* The first line is what the button does, with its key. */}
-          {item('terminal.new', 'Shell', 'A plain terminal on this canvas.', 'toolbar-new-shell', true)}
-          {item('terminal.newIn', 'Shell in a folder or a working copy…', 'Somewhere you choose, or kept apart on its own branch.', 'toolbar-new-in')}
-          <span className="toolbar-menu-heading" role="presentation">
-            Agents
-          </span>
-          {item('agent.new', 'Claude Code', 'An agent that reports to this canvas.', 'toolbar-new-agent')}
-          {item('agent.newWithTools', 'Claude Code with Aubergine tools…', 'Choose what it may do here first.', 'agent-with-tools')}
-          {item('workflow.runOnAgent', 'Claude Code on a workflow…', 'Choose the workflow first.', 'agent-on-workflow')}
-          <span className="ui-menu-divider" role="separator" />
-          {item('frame.new', 'Frame', 'A box to group terminals in.', 'toolbar-new-frame')}
-          {/* Where the bar has no room for them, what is used seldom is here. */}
-          {narrow && <span className="ui-menu-divider" role="separator" />}
-          {narrow && parked > 0 && item('parked.open', `Parked terminals: ${parked}…`, 'Put away, still running: bring one back.', 'toolbar-menu-parked')}
-          {narrow && item('outside.open', 'Terminals open elsewhere…', 'In your terminal application: bring one in.', 'toolbar-menu-outside')}
-        </span>
+    <MenuButton label="More" more testid="toolbar-more" menuTestid="toolbar-more-menu" className="toolbar-more">
+      {parked > 0 && (
+        <button type="button" role="menuitem" title={hint('parked.open')} onClick={() => runCommand('parked.open')} data-testid="toolbar-menu-parked">
+          Parked terminals: {parked}…<small>Put away, still running: bring one back.</small>
+        </button>
       )}
-    </span>
+      <button type="button" role="menuitem" title={hint('outside.open')} onClick={() => runCommand('outside.open')} data-testid="toolbar-menu-outside">
+        Terminals open elsewhere…<small>In your terminal application: bring one in.</small>
+      </button>
+    </MenuButton>
   );
 }
 
@@ -329,7 +277,6 @@ export function Canvas() {
     void useEndedRuns.getState().refresh();
   }, [liveRuns]);
 
-  const [adding, setAdding] = useState(false);
   // The canvas is narrow (the details are open beside the panel, say): the bar keeps to one row, and what is used seldom is in its menu.
   const narrow = useStore((s) => s.width > 0 && s.width < NARROW_CANVAS);
   const barOpen = useBarKeptOpen();
@@ -531,14 +478,10 @@ export function Canvas() {
             <EmptyCanvas />
           </Panel>
         )}
-        {/* Folded to "New terminal" unless kept open in Settings: the rest shows while the pointer or the keyboard is in the bar. */}
+        {/* Folded to "Go to…" unless kept open in Settings: the rest shows while the pointer or the keyboard is in the bar. "New terminal" is at the top of the list of terminals. */}
         {/* It stands where this browser chose in Settings; at the foot of the canvas what hangs from it opens upward. */}
         <Panel position={barAt} className={`toolbar${narrow ? ' is-narrow' : ''}${barOpen ? '' : ' is-folded'}${opensUp(barAt) ? ' opens-up' : ''}${barAt.endsWith('-right') ? ' at-right' : ''}`} data-place={barAt} data-testid="canvas-bar">
-          <span className="toolbar-group" role="group" aria-label="Make something new">
-            <NewMenu adding={adding} narrow={narrow} />
-          </span>
-          <span className="toolbar-rest" data-testid="toolbar-rest">
-          <span className="toolbar-group" role="group" aria-label="The view">
+          <span className="toolbar-group" role="group" aria-label="Go to">
             <button
               type="button"
               className="quiet"
@@ -548,6 +491,9 @@ export function Canvas() {
             >
               Go to…
             </button>
+          </span>
+          <span className="toolbar-rest" data-testid="toolbar-rest">
+          <span className="toolbar-group" role="group" aria-label="The view">
             <button type="button" className="quiet" onClick={() => runCommand('view.fit')} title={hint('view.fit', 'Zoom to fit everything')}>
               Fit
             </button>
@@ -564,6 +510,7 @@ export function Canvas() {
           <span className="toolbar-group toolbar-status" role="group" aria-label="Terminals that are not on this canvas">
             <ParkedList />
             <OutsidePanel />
+            {narrow && <NarrowMenu />}
           </span>
           <span className="toolbar-group" role="group" aria-label="This bar">
             <BarSettings />

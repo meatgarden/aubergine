@@ -552,10 +552,20 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await expect(listRows.first().getByTestId('list-active')).toHaveAttribute('data-updated', /.+/);
 
   await page.keyboard.press('b');
-  // Folded, the panel is a rail: the button that opens it and the mark of each terminal that is on the canvas, and nothing else.
+  // Folded, the panel is a rail: the button that opens it, "New terminal" as a plus, and the mark of each terminal that is on the canvas, and nothing else.
   expect(await page.getByTestId('terminal-node').count()).toBeGreaterThan(0);
   await expect(page.getByTestId('rail-dot')).toHaveCount(await page.getByTestId('terminal-node').count());
-  expect(await page.getByTestId('side-panel').locator('button').evaluateAll((all) => [...new Set(all.map((b) => b.getAttribute('data-testid')))])).toEqual(['panel-fold', 'rail-dot']);
+  expect(await page.getByTestId('side-panel').locator('button').evaluateAll((all) => [...new Set(all.map((b) => b.getAttribute('data-testid')))])).toEqual(['panel-fold', 'toolbar-new-terminal', 'toolbar-new-more', 'rail-dot']);
+  // The plus alone, until it is pointed at: then the whole button, words and arrow, over what is beside the rail.
+  const plus = page.getByTestId('toolbar-new-terminal');
+  await page.mouse.move(700, 500);
+  await expect(page.getByTestId('side-panel').getByTestId('toolbar-new-more')).toBeHidden();
+  const small = await plus.evaluate((el) => Math.round(el.getBoundingClientRect().width));
+  await plus.hover();
+  await expect(page.getByTestId('side-panel').getByTestId('toolbar-new-more')).toBeVisible();
+  expect(await plus.evaluate((el) => Math.round(el.getBoundingClientRect().width))).toBeGreaterThan(small);
+  await expect(plus).toContainText('New terminal');
+  await page.mouse.move(700, 500);
   await expect(listRows).toHaveCount(0);
   await page.keyboard.press('b');
   await expect(listRows).toHaveCount(2);
@@ -2540,8 +2550,8 @@ test("working copies: two terminals on one repository change the same file apart
     expect(ownerNow()).toEqual(ownerBefore);
 
     // Ending a terminal for good asks what becomes of its working copy, and removes nothing unasked.
-    await page.getByTestId('toolbar-new-more').click();
-    await page.getByTestId('toolbar-new-in').click();
+    // The section of working copies is shown, so its own line makes it ("New terminal" is at the top of the list of terminals).
+    await page.getByTestId('copies-new').click();
     await dialog.getByTestId('where-folder').fill(repo);
     await expect(copyKind).toHaveAttribute('data-available', 'true');
     await copyKind.locator('input').check();
@@ -3019,6 +3029,9 @@ test('projects: a second project has its own tabs, terminals and queue; what wai
   await reveal(page.getByTestId('scope-all'), page.getByTestId('list-more'));
   await page.getByTestId('scope-all').click();
   await expect(rows).toHaveCount(0);
+  // The filter menu lies over the first line of the list while it is open.
+  await page.keyboard.press('Escape');
+  await expect(page.getByTestId('list-more-filters')).toBeHidden();
 
   // A terminal and a task there.
   await page.getByTestId('toolbar-new-terminal').click();
@@ -3083,6 +3096,8 @@ test('projects: a second project has its own tabs, terminals and queue; what wai
   await reveal(page.getByTestId('scope-this'), page.getByTestId('list-more'));
   await page.getByTestId('scope-this').click();
   await expect(rows).toHaveCount(0);
+  await page.keyboard.press('Escape');
+  await expect(page.getByTestId('list-more-filters')).toBeHidden();
   await page.getByTestId('toolbar-new-terminal').click();
   await expect(rows).toHaveCount(1);
   const moved = (await rows.first().getAttribute('data-session')) ?? '';
@@ -3536,13 +3551,13 @@ test('simpler surfaces: the list starts near the top, a name is not cut, one pri
   await page.getByTestId('node-body').click();
   await page.keyboard.press(`${mac ? 'Control+Meta' : 'Control+Shift'}+Period`);
 
-  // Three rows of controls at most above the first terminal of the list.
+  // "New terminal" and three rows of controls at most above the first terminal of the list.
   const first = await page.evaluate(() => {
     const panel = document.querySelector('[data-testid="side-panel"]') as HTMLElement;
     const row = document.querySelector('[data-testid="list-row"]') as HTMLElement;
     return Math.round(row.getBoundingClientRect().top - panel.getBoundingClientRect().top);
   });
-  expect(first).toBeLessThanOrEqual(140);
+  expect(first).toBeLessThanOrEqual(176);
 
   // A terminal's name is whole at the width a new terminal has.
   const name = await node.getByTestId('node-name').evaluate((el) => ({ node: Math.round((el.closest('[data-testid="terminal-node"]') as HTMLElement).getBoundingClientRect().width), cut: el.scrollWidth > el.clientWidth + 1 }));
@@ -3606,10 +3621,17 @@ test('simpler surfaces: the list starts near the top, a name is not cut, one pri
     );
 
   expect(await primaries('.appbar')).toBe(0);
-  expect(await primaries('.toolbar')).toBe(1);
+  // "New terminal" is not in the bar over the canvas: it is the first line of the list, drawn as a line of it.
+  expect(await primaries('.toolbar')).toBe(0);
   // The bar of tabs is a surface of its own, and "New canvas" is its one primary.
   expect(await primaries('.tabbar')).toBe(1);
   expect(await primaries('.side-panel')).toBe(0);
+  // Its plus stands where a row has its dot, its words near where a row has its name.
+  const line = await page.evaluate(() => {
+    const left = (sel: string): number => Math.round((document.querySelector(sel) as HTMLElement).getBoundingClientRect().left);
+    return { inList: document.querySelector('[data-testid="terminal-list"] > [data-testid="new-terminal"]') !== null, words: Math.abs(left('[data-testid="terminal-list"] .new-terminal-words') - left('[data-testid="list-row"] .list-name')) <= 4 };
+  });
+  expect(line).toEqual({ inList: true, words: true });
   // The side panel: the field and the color of a row start on its gutter of 12.
   expect(await page.evaluate(() => ['.list-find', '.list-color'].map((sel) => Math.round((document.querySelector(sel) as HTMLElement).getBoundingClientRect().left)))).toEqual([12, 12]);
 
@@ -4081,7 +4103,7 @@ test('the drawer: what a terminal asks comes first, one thing to type into, besi
       return { handleOver, rows: tops.length, barInCanvas: bar.getBoundingClientRect().right <= (document.querySelector('.react-flow') as HTMLElement).getBoundingClientRect().right + 1 };
     })).toEqual({ handleOver: false, rows: 1, barInCanvas: true });
     // What the bar has no room for is in its menu.
-    await page.getByTestId('toolbar-new-more').click();
+    await page.getByTestId('toolbar-more').click();
     await expect(page.getByTestId('toolbar-menu-outside')).toBeVisible();
     await page.keyboard.press('Escape');
     await page.setViewportSize({ width: 1400, height: 900 });
@@ -4591,9 +4613,9 @@ test('tabs and panel: a new browser has the panel folded to a rail, the bar of t
   const panel = fresh.getByTestId('side-panel');
   await expect(panel).toHaveClass(/collapsed/);
   await expect(fresh.getByTestId('list-row')).toHaveCount(0);
-  // The rail holds the button that opens the panel and the mark of each terminal, and nothing else.
+  // The rail holds the button that opens the panel, "New terminal" as a plus, and the mark of each terminal, and nothing else.
   await expect(fresh.getByTestId('rail-dot')).toHaveCount(2);
-  expect(await panel.evaluate((el) => [...el.querySelectorAll('button')].map((b) => b.getAttribute('data-testid')))).toEqual(['panel-fold', 'rail-dot', 'rail-dot']);
+  expect(await panel.evaluate((el) => [...el.querySelectorAll('button')].map((b) => b.getAttribute('data-testid')))).toEqual(['panel-fold', 'toolbar-new-terminal', 'toolbar-new-more', 'rail-dot', 'rail-dot']);
   const dots = fresh.getByTestId('rail-dot');
   expect((await dots.evaluateAll((all) => all.map((d) => d.getAttribute('data-session') ?? ''))).sort()).toEqual([...ids].sort());
   await expect(dots.first()).toHaveAttribute('title', /^Terminal \d+: /);
@@ -5116,7 +5138,7 @@ test('links: an address is a chip wherever it is, added by hand or by the termin
   }
 });
 
-test('the bar over the canvas: a new browser sees only "New terminal", the rest shows while pointed at or reached by keyboard, and Settings keeps it open', async ({ page, browser }) => {
+test('the bar over the canvas: a new browser sees only "Go to…", the rest shows while pointed at or reached by keyboard, and Settings keeps it open', async ({ page, browser }) => {
   const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
   await page.goto(`/auth?token=${token}`);
   await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
@@ -5127,48 +5149,45 @@ test('the bar over the canvas: a new browser sees only "New terminal", the rest 
     await expect(fresh).toHaveURL(/\/c\/[0-9a-f-]+$/);
     const bar = fresh.getByTestId('canvas-bar');
     const goto = fresh.getByTestId('toolbar-goto');
-    await expect(fresh.getByTestId('toolbar-new-terminal')).toBeVisible();
-    await expect(fresh.getByTestId('toolbar-new-more')).toBeVisible();
+    const zoom = fresh.getByTestId('zoom-level');
+    // "New terminal" is not in the bar: it is at the top of the list, here on the rail.
+    await expect(bar.getByTestId('toolbar-new-terminal')).toHaveCount(0);
+    await expect(fresh.getByTestId('side-panel').getByTestId('toolbar-new-terminal')).toBeVisible();
 
-    // 1. Folded: "New terminal" and its arrow, and nothing else of the bar.
+    // 1. Folded: "Go to…", and nothing else of the bar.
     await fresh.mouse.move(700, 600);
-    await expect(goto).toBeHidden();
-    await expect(fresh.getByTestId('zoom-level')).toBeHidden();
+    await expect(goto).toBeVisible();
+    await expect(zoom).toBeHidden();
     const folded = await bar.evaluate((el) => Math.round(el.getBoundingClientRect().width));
 
     // 2. Pointed at, all of it shows; the pointer gone, it folds again.
-    await fresh.getByTestId('toolbar-new-terminal').hover();
-    await expect(goto).toBeVisible();
-    await expect(fresh.getByTestId('zoom-level')).toBeVisible();
+    await goto.hover();
+    await expect(zoom).toBeVisible();
     expect(await bar.evaluate((el) => Math.round(el.getBoundingClientRect().width))).toBeGreaterThan(folded);
     // The pointer can travel along the open bar to what it shows.
-    await goto.hover();
-    await expect(goto).toBeVisible();
+    await zoom.hover();
+    await expect(zoom).toBeVisible();
     await fresh.mouse.move(700, 600);
-    await expect(goto).toBeHidden();
+    await expect(zoom).toBeHidden();
 
-    // 3. Reached with the keyboard: from "New terminal" the next stop is in the bar, and it shows.
-    await fresh.getByTestId('toolbar-new-terminal').focus();
-    await expect(goto).toBeVisible();
-    await fresh.keyboard.press('Tab');
+    // 3. Reached with the keyboard: from "Go to…" the next stop is in the bar, and it shows.
+    await goto.focus();
+    await expect(zoom).toBeVisible();
     await fresh.keyboard.press('Tab');
     expect(await fresh.evaluate(() => document.activeElement?.closest('[data-testid="toolbar-rest"]') !== null)).toBe(true);
-    await expect(goto).toBeVisible();
+    await expect(zoom).toBeVisible();
     await fresh.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
-    await expect(goto).toBeHidden();
+    await expect(zoom).toBeHidden();
 
-    // 4. A menu that hangs from it keeps it open while the pointer is elsewhere.
-    await fresh.getByTestId('toolbar-new-more').click();
-    await expect(fresh.getByTestId('toolbar-new-menu')).toBeVisible();
-    await fresh.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
-    await fresh.mouse.move(700, 600);
-    await expect(goto).toBeVisible();
+    // 4. Something that hangs from it keeps it open while the pointer is elsewhere.
+    await goto.hover();
+    await fresh.getByTestId('bar-settings').hover();
+    await expect(fresh.getByTestId('bar-settings-menu')).toBeVisible();
     // Closed, it folds once the pointer and the keyboard have left.
-    await fresh.keyboard.press('Escape');
-    await expect(fresh.getByTestId('toolbar-new-menu')).toHaveCount(0);
     await fresh.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
     await fresh.mouse.move(700, 650);
-    await expect(goto).toBeHidden();
+    await expect(fresh.getByTestId('bar-settings-menu')).toHaveCount(0);
+    await expect(zoom).toBeHidden();
 
     // 5. Settings keeps it open, in this browser, after a reload too.
     await fresh.getByTestId('toolbar-settings').click();
@@ -5177,10 +5196,10 @@ test('the bar over the canvas: a new browser sees only "New terminal", the rest 
     await line.check();
     await fresh.getByTestId('settings-close').click();
     await fresh.mouse.move(700, 600);
-    await expect(goto).toBeVisible();
+    await expect(zoom).toBeVisible();
     await fresh.reload();
     await fresh.mouse.move(700, 600);
-    await expect(fresh.getByTestId('toolbar-goto')).toBeVisible();
+    await expect(fresh.getByTestId('zoom-level')).toBeVisible();
     expect(await fresh.evaluate(() => localStorage.getItem('aubergine.bar'))).toBe('open');
   } finally {
     await context.close();
@@ -5200,15 +5219,16 @@ test('where the bar over the canvas stands: chosen in Settings, remembered in th
     await page.getByTestId('settings-close').click();
     await expect(bar).toHaveAttribute('data-place', place);
   };
-  /** Where the bar is in the canvas, and where its menu of things to make opens. */
+  /** Where the bar is in the canvas, and where what hangs from it (the places, from the gear at its end) opens. */
   const where = async (): Promise<{ top: number; bottom: number; left: number; right: number; middle: number; menuAbove: boolean; menuInside: boolean }> => {
-    await page.getByTestId('toolbar-new-more').click();
-    await expect(page.getByTestId('toolbar-new-menu')).toBeVisible();
-    expect(await onTop(page, 'toolbar-new-menu')).toBe(true);
+    await page.getByTestId('toolbar-goto').hover();
+    await page.getByTestId('bar-settings').hover();
+    await expect(page.getByTestId('bar-settings-menu')).toBeVisible();
+    expect(await onTop(page, 'bar-settings-menu')).toBe(true);
     const seen = await page.evaluate(() => {
       const pane = (document.querySelector('.react-flow') as HTMLElement).getBoundingClientRect();
       const box = (document.querySelector('[data-testid="canvas-bar"]') as HTMLElement).getBoundingClientRect();
-      const menu = (document.querySelector('[data-testid="toolbar-new-menu"]') as HTMLElement).getBoundingClientRect();
+      const menu = (document.querySelector('[data-testid="bar-settings-menu"]') as HTMLElement).getBoundingClientRect();
       return {
         top: Math.round(box.top - pane.top),
         bottom: Math.round(pane.bottom - box.bottom),
@@ -5219,8 +5239,8 @@ test('where the bar over the canvas stands: chosen in Settings, remembered in th
         menuInside: menu.left >= 0 && menu.right <= window.innerWidth && menu.top >= 0 && menu.bottom <= window.innerHeight,
       };
     });
-    await page.keyboard.press('Escape');
-    await expect(page.getByTestId('toolbar-new-menu')).toHaveCount(0);
+    await page.mouse.move(700, 400);
+    await expect(page.getByTestId('bar-settings-menu')).toHaveCount(0);
     return seen;
   };
 

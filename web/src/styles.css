@@ -178,7 +178,7 @@ code {
   border-left: 1px solid var(--border);
 }
 /*
- * Everything after "New terminal" is laid out as if it were not wrapped. Folded, it is not drawn until the pointer or
+ * Everything after "Go to…" is laid out as if it were not wrapped. Folded, it is not drawn until the pointer or
  * the keyboard is in the bar, or while something hangs from it: one of its menus, or the tour pointing into it.
  */
 .toolbar-rest {

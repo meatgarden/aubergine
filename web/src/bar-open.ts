@@ -1,7 +1,7 @@
 import { useSyncExternalStore } from 'react';
 
 /**
- * Whether the bar over the canvas is kept open. It is folded to "New terminal" unless the pointer or the keyboard is
+ * Whether the bar over the canvas is kept open. It is folded to "Go to…" unless the pointer or the keyboard is
  * in it; kept open, all of it shows all the time. A convenience of this browser only, chosen in Settings. Where that
  * cannot be remembered it is kept open for as long as the page is open.
  */

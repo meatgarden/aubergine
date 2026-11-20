@@ -58,7 +58,7 @@ export function SettingsDialog() {
               <span>Keep the whole bar over the canvas open</span>
             </label>
           </p>
-          <p className="ui-meta">Otherwise it shows only New terminal, and the rest when you point at it or reach it with the keyboard. This browser remembers it.</p>
+          <p className="ui-meta">Otherwise it shows only Go to…, and the rest when you point at it or reach it with the keyboard. This browser remembers it.</p>
           <p className="help-setting settings-line">
             <label htmlFor="settings-bar-place">Where the bar stands</label>
             <Select id="settings-bar-place" value={barAt} onChange={(e) => placeBar(placeFrom(e.target.value))} data-testid="settings-bar-place">

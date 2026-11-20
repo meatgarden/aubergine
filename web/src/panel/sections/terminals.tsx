@@ -29,6 +29,7 @@ import {
   type Sort,
 } from '../../terminal-rows';
 import { registerSection } from '../registry';
+import { NewTerminal } from '../../NewTerminal';
 import { Details, DetailsHead } from './terminal-details';
 import { Menu, StateDot } from '../../ui';
 import { RunStrip } from '../../workflows/RunStrip';
@@ -54,6 +55,9 @@ function TerminalsRail() {
   const byId = useMemo(() => new Map(model.filtered.map((row) => [row.session.id, row])), [model.filtered]);
   const rows = model.order.map((entry) => byId.get(entry.sessionId)).filter((row): row is Row => row !== undefined && !row.parked);
   return (
+    <>
+    {/* What the list begins with is on the rail too: a plus, that opens out to "New terminal" when pointed at. */}
+    <NewTerminal compact />
     <div className="rail-dots" role="list" aria-label="Terminals" data-testid="rail-dots">
       {rows.map((row) => {
         const tone = dotTone(row.session, row.parked);
@@ -67,6 +71,7 @@ function TerminalsRail() {
         );
       })}
     </div>
+    </>
   );
 }
 
@@ -356,6 +361,8 @@ function TerminalsSection() {
         </div>
       </div>
 
+      {/* The first line of the list makes another terminal. It stays where it is while the rows scroll under it. */}
+      <NewTerminal />
       <div
         className="list-rows"
         role="listbox"
