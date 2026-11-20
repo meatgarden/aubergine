@@ -2858,6 +2858,16 @@ tr[data-status='expired'] strong {
   min-width: 0;
   resize: vertical;
 }
+.terminal-input {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.terminal-input-keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
 .messages-section {
   padding: var(--space-1) var(--space-2) var(--space-2);
 }

@@ -6,6 +6,7 @@ import { LinksPart } from '../../links/LinksPart';
 import { NotePanel } from '../../NotePanel';
 import { RecapBlock } from '../../Recap';
 import { SessionMessages } from '../../Messages';
+import { TerminalInput } from '../../TerminalInput';
 import { markNotesSeen, useUnseenNotes } from '../../notes-seen';
 import { useApp } from '../../store';
 import { DOT_WORD, dotTone, rowState } from '../../terminal-rows';
@@ -15,7 +16,8 @@ import { actOnTerminal, chipOf, terminalActions } from './terminals';
 /**
  * The details of one terminal, beside the list. In this order: what the terminal is (its mark, its name, its state)
  * with the one thing most people came to do, going to it; then what it asks of the owner, if anything, and how to
- * answer; then what is known about it, as a list of facts; then its note and its messages, one of them at a time.
+ * answer; then what is known about it, as a list of facts; then its note, its messages and a box that types into it,
+ * one of them at a time.
  */
 
 const session = (id: string) => (s: ReturnType<typeof useApp.getState>) => s.app?.sessions.find((x) => x.id === id);
@@ -125,7 +127,7 @@ export function Details({ id, onClose }: { id: string; onClose: () => void }) {
   const waiting = useMemo(() => (found ? (sessionsWaiting([found], run ? [run] : [])[0] ?? null) : null), [found, run]);
   // On its messages where those were asked for, or are what it waits with; on its note otherwise.
   const asked = useApp((s) => (s.drawer?.id === id ? s.drawer.part : undefined));
-  const [tab, setTab] = useState<'note' | 'messages'>(asked === 'messages' ? 'messages' : 'note');
+  const [tab, setTab] = useState<'note' | 'messages' | 'type'>(asked === 'messages' ? 'messages' : 'note');
   useEffect(() => {
     if (asked === 'messages') setTab('messages');
   }, [asked]);
@@ -189,16 +191,17 @@ export function Details({ id, onClose }: { id: string; onClose: () => void }) {
       )}
       <div className="details-tabs">
         <Tabs
-          label="The note and the messages of this terminal"
+          label="The note, the messages and typing into this terminal"
           value={tab}
           onChange={setTab}
           tabs={[
             { value: 'note', label: `Note${tab !== 'note' && unseen > 0 ? ` ${unseen}` : ''}`, testid: 'details-tab-note' },
             { value: 'messages', label: `Messages${forOwner > 0 ? ` ${forOwner}` : ''}`, testid: 'details-tab-messages' },
+            { value: 'type', label: 'Type', testid: 'details-tab-type' },
           ]}
         />
       </div>
-      {tab === 'note' ? <NotePanel sessionId={id} onClose={onClose} embedded reading={linking} onTyping={() => setLinking(false)} /> : <SessionMessages sessionId={id} />}
+      {tab === 'note' ? <NotePanel sessionId={id} onClose={onClose} embedded reading={linking} onTyping={() => setLinking(false)} /> : tab === 'messages' ? <SessionMessages sessionId={id} /> : <TerminalInput sessionId={id} reading={linking} onTyping={() => setLinking(false)} />}
     </div>
   );
 }
