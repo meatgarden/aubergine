@@ -52,6 +52,24 @@ export function dotTone(session: Session, parked = false): DotTone {
 
 export { shortCommand } from '@aubergine/shared';
 
+/** How many of the rows listed run an agent and how many are plain shells. Ended terminals are neither. */
+export function kindCounts(rows: readonly Pick<Row, 'session'>[]): { agents: number; shells: number } {
+  let agents = 0;
+  let shells = 0;
+  for (const { session } of rows) {
+    if (session.state === 'exited') continue;
+    if (session.agent) agents += 1;
+    else shells += 1;
+  }
+  return { agents, shells };
+}
+
+/** The counts in words, as the line over the list says them; nothing when there is nothing. */
+export function kindWords({ agents, shells }: { agents: number; shells: number }): string {
+  const parts = [agents > 0 ? `${agents} ${agents === 1 ? 'agent' : 'agents'}` : null, shells > 0 ? `${shells} ${shells === 1 ? 'shell' : 'shells'}` : null];
+  return parts.filter(Boolean).join(' · ');
+}
+
 export function rowState(session: Session): RowState {
   if (session.state === 'exited') return 'ended';
   if (needsUser(session.attention)) return 'waiting';
@@ -69,6 +87,8 @@ export interface Row {
   /** The label of the frame it lies in, if any. */
   frame: { id: string; label: string } | null;
   parked: boolean;
+  /** The terminal's own color: of its node, or of the place it was parked from; `none` when it has none. */
+  color: string;
   state: RowState;
   /** Its place in the natural order: canvases in tab order, each in reading order, parked last. */
   index: number;
@@ -77,6 +97,7 @@ export interface Row {
 interface Placement {
   sessionId: string;
   frame: { id: string; label: string } | null;
+  color: string;
 }
 
 const placements = new WeakMap<Layout, Placement[]>();
@@ -86,7 +107,7 @@ function placementsOf(layout: Layout): Placement[] {
   let known = placements.get(layout);
   if (!known) {
     known = listGroups(layout).flatMap((group) =>
-      group.nodes.map((node) => ({ sessionId: node.sessionId, frame: group.frame ? { id: group.frame.id, label: group.frame.label || 'Frame' } : null })),
+      group.nodes.map((node) => ({ sessionId: node.sessionId, frame: group.frame ? { id: group.frame.id, label: group.frame.label || 'Frame' } : null, color: node.color })),
     );
     placements.set(layout, known);
   }
@@ -108,7 +129,7 @@ export function createRowSelector(): (app: AppState) => Row[] {
     const sessions = new Map(app.sessions.map((s) => [s.id, s]));
     const next = new Map<string, Row>();
     const rows: Row[] = [];
-    const add = (session: Session, canvas: Canvas | null, frame: Placement['frame']): void => {
+    const add = (session: Session, canvas: Canvas | null, frame: Placement['frame'], color: string): void => {
       const index = rows.length;
       const before = byId.get(session.id);
       const same =
@@ -118,21 +139,22 @@ export function createRowSelector(): (app: AppState) => Row[] {
         before.canvasId === (canvas?.id ?? null) &&
         before.canvasName === (canvas?.name ?? null) &&
         before.frame?.id === frame?.id &&
-        before.frame?.label === frame?.label;
+        before.frame?.label === frame?.label &&
+        before.color === color;
       const row: Row = same
         ? before
-        : { session, canvasId: canvas?.id ?? null, canvasName: canvas?.name ?? null, frame, parked: canvas === null, state: rowState(session), index };
+        : { session, canvasId: canvas?.id ?? null, canvasName: canvas?.name ?? null, frame, parked: canvas === null, color, state: rowState(session), index };
       next.set(session.id, row);
       rows.push(row);
     };
     for (const canvas of sortedCanvases(app)) {
       for (const placement of placementsOf(canvas.layout)) {
         const session = sessions.get(placement.sessionId);
-        if (session) add(session, canvas, placement.frame);
+        if (session) add(session, canvas, placement.frame, placement.color);
       }
     }
     for (const session of app.sessions) {
-      if (session.state === 'parked') add(session, null, null);
+      if (session.state === 'parked') add(session, null, null, session.parkedFrom?.color ?? 'none');
     }
     byId = next;
     last = { sessions: app.sessions, canvases: app.canvases, rows };
@@ -323,7 +345,7 @@ export function describeEmpty(view: ListView, total: number): string {
 /* ---------- Drawing only what is in view ---------- */
 
 /** The heights of what the list draws. They hold the controls of a row at the size controls have in the panel (see docs/design.md). */
-export const ROW_HEIGHT: Record<Density, number> = { comfortable: 44, compact: 32 };
+export const ROW_HEIGHT: Record<Density, number> = { comfortable: 52, compact: 36 };
 export const GROUP_HEIGHT = 32;
 export const FRAME_HEIGHT = 24;
 

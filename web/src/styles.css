@@ -1500,28 +1500,8 @@ kbd.kept {
   white-space: nowrap;
 }
 .list-row {
-  padding: var(--space-1) var(--space-2) 0 var(--space-2);
-  border-left: 2px solid transparent;
   cursor: pointer;
   overflow: visible;
-}
-.list-row.compact {
-  padding-top: 2px;
-}
-.list-row.indented {
-  padding-left: var(--space-4);
-}
-.list-row:hover {
-  background: var(--surface-raised);
-}
-.list-row.current {
-  background: var(--surface-raised);
-  border-left-color: var(--accent-text);
-  border-left-style: dashed;
-}
-.list-row.focused {
-  border-left-style: solid;
-  border-left-color: var(--accent);
 }
 .list-main,
 .list-detail {
@@ -1571,7 +1551,6 @@ kbd.kept {
 }
 
 .list-detail {
-  padding-left: 20px;
   color: var(--text-muted);
   font-size: var(--font-meta);
   overflow: hidden;

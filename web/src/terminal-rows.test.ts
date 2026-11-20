@@ -10,6 +10,9 @@ import {
   ago,
   buildItems,
   createRowSelector,
+  kindCounts,
+  kindWords,
+  type Row,
   dotTone,
   shortCommand,
   describeEmpty,
@@ -394,5 +397,17 @@ describe('what a terminal runs, in short', () => {
     expect(shortCommand('git status --short')).toBe('git status');
     expect(shortCommand('sleep 5; exit 3')).toBe('sleep 5');
     expect(shortCommand(`x ${'y'.repeat(80)}`).length).toBe(40);
+  });
+});
+
+describe('kindCounts', () => {
+  const of = (agent: boolean, state: 'running' | 'exited' = 'running') => ({ session: { agent: agent ? { kind: 'claude-code' } : null, state } as unknown as Row['session'] });
+  it('counts agents and shells, and leaves ended terminals out', () => {
+    expect(kindCounts([of(true), of(false), of(false), of(true, 'exited')])).toEqual({ agents: 1, shells: 2 });
+  });
+  it('says the counts in words, singular and plural, and nothing for none', () => {
+    expect(kindWords({ agents: 1, shells: 2 })).toBe('1 agent · 2 shells');
+    expect(kindWords({ agents: 3, shells: 0 })).toBe('3 agents');
+    expect(kindWords({ agents: 0, shells: 0 })).toBe('');
   });
 });

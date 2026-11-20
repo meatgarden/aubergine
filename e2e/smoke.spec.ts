@@ -3610,8 +3610,8 @@ test('simpler surfaces: the list starts near the top, a name is not cut, one pri
   // The bar of tabs is a surface of its own, and "New canvas" is its one primary.
   expect(await primaries('.tabbar')).toBe(1);
   expect(await primaries('.side-panel')).toBe(0);
-  // The side panel: the field and the state column of a row start on its gutter of 12.
-  expect(await page.evaluate(() => ['.list-find', '.list-state'].map((sel) => Math.round((document.querySelector(sel) as HTMLElement).getBoundingClientRect().left)))).toEqual([12, 12]);
+  // The side panel: the field and the color of a row start on its gutter of 12.
+  expect(await page.evaluate(() => ['.list-find', '.list-color'].map((sel) => Math.round((document.querySelector(sel) as HTMLElement).getBoundingClientRect().left)))).toEqual([12, 12]);
 
   const screens: [string, () => Promise<void>][] = [
     ['queue-screen', () => page.getByTestId('toolbar-queue').click()],
@@ -4121,7 +4121,8 @@ test('the drawer: what a terminal asks comes first, one thing to type into, besi
 
     // A terminal's title has Details beside Note: it opens these details, pressed while they are open, and closes them.
     const fixing = page.locator(`[data-testid="terminal-node"][data-session="${demo.sessions.fixing}"]`);
-    await row(demo.sessions.fixing as string).click();
+    // On its name: the second line holds the run's strip, which opens the run.
+    await row(demo.sessions.fixing as string).getByTestId('list-name').click();
     await expect(fixing).toBeInViewport();
     const details = fixing.getByTestId('node-details');
     expect(await fixing.evaluate((el) => { const note = el.querySelector('[aria-label^="Note for"]'); return note?.nextElementSibling?.getAttribute('data-testid'); })).toBe('node-details');
@@ -5574,4 +5575,60 @@ test('the places in the top bar stand on one line from Canvas to Library, and th
   expect((await measure()).places.filter((p) => p.mark !== null).map((p) => p.id)).toEqual(['toolbar-board']);
   await page.getByTestId('toolbar-canvas').click();
   await expect(page.getByTestId('toolbar-canvas')).toHaveAttribute('aria-current', 'page');
+});
+
+test('a row of the list is a box: the terminal\'s own color then its name, its state on the second line without its folder, and how many agents and shells are listed', async ({ page }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  const selectedTab = page.locator('[data-testid="tab"][aria-selected="true"]');
+  const before = (await selectedTab.getAttribute('data-canvas')) ?? '';
+  await page.getByRole('button', { name: 'New canvas' }).click();
+  await expect(selectedTab).not.toHaveAttribute('data-canvas', before);
+  const rows = page.getByTestId('list-row');
+  await page.getByTestId('toolbar-new-terminal').click();
+  await expect(rows).toHaveCount(1);
+  await page.getByTestId('toolbar-new-terminal').click();
+  await expect(rows).toHaveCount(2);
+  const row = rows.first();
+
+  // A box: an edge all round, inside the panel.
+  const box = await row.evaluate((el) => {
+    const before = getComputedStyle(el, '::before');
+    return { content: before.content, border: before.borderTopWidth, radius: before.borderTopLeftRadius };
+  });
+  expect(box.content).not.toBe('none');
+  expect(box.border).toBe('1px');
+  expect(box.radius).not.toBe('0px');
+
+  // The first line is the terminal's color, then its name; the state's mark is on the second line.
+  await expect(row.locator('.list-main > :first-child')).toHaveAttribute('data-testid', 'list-color');
+  await expect(row.locator('.list-main').getByTestId('list-state')).toHaveCount(0);
+  await expect(row.locator('.list-detail').getByTestId('list-state')).toHaveCount(1);
+  await expect(row.getByTestId('list-color')).toHaveAttribute('data-color', 'none');
+  // The folder is not on the row: it starts in the data folder's parent, whose name would show.
+  await expect(row.locator('.list-detail')).not.toContainText('~');
+  await expect(row.locator('.list-detail')).not.toContainText('/');
+
+  // Given a color on the canvas, its row's mark takes it.
+  const sessionId = (await row.getAttribute('data-session')) ?? '';
+  const node = page.locator(`[data-testid="terminal-node"][data-session="${sessionId}"]`);
+  await node.getByTestId('node-more').click();
+  await node.locator('.node-menu .color-button > .color-dot').click();
+  await page.getByTestId('color-palette').getByRole('menuitemradio', { name: 'teal' }).click();
+  await expect(page.locator(`[data-testid="list-row"][data-session="${sessionId}"]`).getByTestId('list-color')).toHaveAttribute('data-color', 'teal');
+  const colors = await page.locator(`[data-testid="list-row"][data-session="${sessionId}"] [data-testid="list-color"]`).evaluate((el) => getComputedStyle(el).backgroundColor);
+  const swatch = await page.evaluate(() => {
+    const probe = document.createElement('span');
+    probe.className = 'swatch-teal';
+    probe.style.background = 'var(--swatch)';
+    document.body.append(probe);
+    const color = getComputedStyle(probe).backgroundColor;
+    probe.remove();
+    return color;
+  });
+  expect(colors).toBe(swatch);
+
+  // Over the list: two plain shells.
+  await expect(page.getByTestId('list-counts')).toHaveText('2 shells');
 });
