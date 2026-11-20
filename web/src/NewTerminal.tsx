@@ -25,7 +25,7 @@ function useAdding(): boolean {
 
 /**
  * The one button for the commonest thing, a new terminal, and beside it a menu of everything else that can be made,
- * each said in words. It stands at the top of the list of terminals, as wide as the list, with nothing between it and the terminals. On the rail the panel folds to it is a plus, and
+ * each said in words. It stands at the top of the list of terminals, as wide as its words, with nothing between it and the terminals. On the rail the panel folds to it is a plus, and
  * it opens out to the whole button while the pointer or the keyboard is on it, or while its menu is open. The menu is
  * placed against the window: the list scrolls, and the rail is narrow.
  */
@@ -69,7 +69,7 @@ export function NewTerminal({ compact = false }: { compact?: boolean }) {
     </button>
   );
   const control = (
-    // The accent control "New terminal" always was, with its arrow: as wide as the list at its top, a plus on the rail.
+    // The accent control "New terminal" always was, with its arrow: as wide as its words at the top of the list, a plus on the rail.
     <span className={compact ? 'toolbar-new new-terminal' : 'toolbar-new new-terminal in-list'} ref={root} data-testid="new-terminal">
       <button type="button" onClick={() => runCommand('terminal.new')} disabled={busy} aria-busy={busy} aria-label={compact ? 'New terminal' : undefined} title={hint('terminal.new')} data-testid="toolbar-new-terminal">
         {compact && (
