@@ -76,7 +76,8 @@ export function DetailsHead({ id, onClose }: { id: string; onClose: () => void }
             {chip.text}
           </span>
         )}
-        <MenuButton more label={`More for ${found.name}`} testid="details-more" menuTestid="details-menu">
+        {/* Against the window: under the button inside the drawer, the menu would lie under the side panel beside it. */}
+        <MenuButton more againstWindow label={`More for ${found.name}`} testid="details-more" menuTestid="details-menu">
           {terminalActions(found, { here, parked, canMove, hasNotes: true })
             .filter((action) => action.command !== undefined)
             .map((action) => (

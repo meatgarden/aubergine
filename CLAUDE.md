@@ -309,6 +309,8 @@ These are the only abstractions in the code base. Each has exactly one implement
 - **A person reads "step" and "saved step" everywhere:** the page, a command's output, what an agent is told, the guide and the docs. "Element" is only a name: of the command, an option, a field, a route, a kind in a file. The guide says so once.
 - **A menu takes Escape before what is behind it.** Menus listen in the capture phase, and `belongsToControl` gives Escape to an open menu.
 - **What hangs from a terminal's title is not clipped by the terminal's box.**
+- **A menu in the drawer is placed against the window** (`againstWindow`): under its button it would lie under the side panel beside the drawer. The browser test "the drawer" checks that it is on top.
+- **Details in a terminal's title is `terminal.details`**: it opens that terminal's details, opening a folded side panel first, and closes them when they are its own.
 
 - **A step is changed where it stands.** In the editor a step is a card: its name opens it in place, one menu holds what is done to it (move, insert before, duplicate, remove), and what is seldom set is folded with a one-line summary. Save is the one primary.
 - **Words begin on the gutter.** A quiet button that begins a line and a row pressed as a whole hang left by their padding; this is in the piece, not in a screen's rule. "simpler surfaces" measures the first letter of rows, cards and headings.

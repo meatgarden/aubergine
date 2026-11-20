@@ -101,6 +101,8 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
     return me ? noteRoom(me, nodes.filter((n) => n.id !== id)) : 'full';
   });
   const noteShown = noteOpen && (noteAsked || room === 'full');
+  // Whether this terminal's details are open beside the side panel: its button is pressed while they are.
+  const detailsShown = useApp((st) => st.drawer?.section === 'terminals' && st.drawer.kind === 'notes' && st.drawer.id === sessionId);
   noteShownRef.current = noteShown;
   const hasNote = (session?.note ?? '') !== '';
   // Entries added to its note log since the notes were last opened in this browser: said on the one button that opens them.
@@ -237,6 +239,22 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
             </span>
           )}
         </button>
+        {draft === null && (
+          <button
+            type="button"
+            className="node-tool nodrag"
+            aria-label={`Details of ${name}`}
+            aria-pressed={detailsShown}
+            title={hint('terminal.details', 'Details: what it asks, what is known about it, its note and messages, beside the side panel')}
+            onClick={() => {
+              useApp.getState().select(sessionId);
+              runCommand('terminal.details');
+            }}
+            data-testid="node-details"
+          >
+            Details
+          </button>
+        )}
         {/* The list of canvases to move to hangs from the title; its own button is not shown, the menu's line and the key ask for it. */}
         {draft === null && <MoveToCanvas sessionId={sessionId} name={name} />}
         {draft === null && (
