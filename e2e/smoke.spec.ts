@@ -3635,17 +3635,17 @@ test('simpler surfaces: the list starts near the top, a name is not cut, one pri
     );
 
   expect(await primaries('.appbar')).toBe(0);
-  // "New terminal" is not in the bar over the canvas: it is the first line of the list, drawn as a line of it.
+  // "New terminal" is not in the bar over the canvas: it is the side panel's one primary, at the top of the list.
   expect(await primaries('.toolbar')).toBe(0);
   // The bar of tabs is a surface of its own, and "New canvas" is its one primary.
   expect(await primaries('.tabbar')).toBe(1);
-  expect(await primaries('.side-panel')).toBe(0);
-  // Its plus stands where a row has its dot, its words near where a row has its name.
+  expect(await primaries('.side-panel')).toBe(1);
+  // It is in the list, at its top, and nothing is drawn between it and the terminals.
   const line = await page.evaluate(() => {
-    const left = (sel: string): number => Math.round((document.querySelector(sel) as HTMLElement).getBoundingClientRect().left);
-    return { inList: document.querySelector('[data-testid="terminal-list"] > [data-testid="new-terminal"]') !== null, words: Math.abs(left('[data-testid="terminal-list"] .new-terminal-words') - left('[data-testid="list-row"] .list-name')) <= 4 };
+    const button = document.querySelector('[data-testid="terminal-list"] > [data-testid="new-terminal"]') as HTMLElement | null;
+    return { inList: button !== null, between: button ? getComputedStyle(button).borderBottomWidth : '' };
   });
-  expect(line).toEqual({ inList: true, words: true });
+  expect(line).toEqual({ inList: true, between: '0px' });
   // The side panel: the field and the color of a row start on its gutter of 12.
   expect(await page.evaluate(() => ['.list-find', '.list-color'].map((sel) => Math.round((document.querySelector(sel) as HTMLElement).getBoundingClientRect().left)))).toEqual([12, 12]);
 
