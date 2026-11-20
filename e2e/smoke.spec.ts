@@ -5706,8 +5706,7 @@ test('the canvases as a list: the button at the start of the bar switches betwee
   const view = page.getByTestId('tabbar-view');
   // Tabs unless this browser chose otherwise; the button comes first in the bar.
   await expect(page.getByTestId('tabbar')).toHaveAttribute('data-view', 'tabs');
-  await expect(view).toHaveAttribute('aria-pressed', 'false');
-  expect(await page.evaluate(() => (document.querySelector('[data-testid="tabbar"]') as HTMLElement).firstElementChild?.getAttribute('data-testid'))).toBe('tabbar-view');
+  expect(await page.evaluate(() => (document.querySelector('[data-testid="tabbar"]') as HTMLElement).firstElementChild?.querySelector('[data-testid="tabbar-view"]') !== null)).toBe(true);
   const selected = page.locator('[data-testid="tab"][aria-selected="true"]');
   const before = (await selected.getAttribute('data-canvas')) ?? '';
   await page.getByRole('button', { name: 'New canvas' }).click();
@@ -5720,10 +5719,12 @@ test('the canvases as a list: the button at the start of the bar switches betwee
   const count = await page.getByTestId('tab').count();
   expect(count).toBeGreaterThan(1);
 
-  // As a list: no tabs, the name of the canvas being looked at, the options beside it.
+  // As a list: no tabs, the name of the canvas being looked at, the options beside it. The button's menu gives the three ways, the one in use ticked.
   await view.click();
+  await expect(page.getByTestId('tabbar-view-tabs')).toHaveAttribute('aria-checked', 'true');
+  await page.getByTestId('tabbar-view-list').click();
+  await expect(page.getByTestId('tabbar-view-menu')).toHaveCount(0);
   await expect(page.getByTestId('tabbar')).toHaveAttribute('data-view', 'list');
-  await expect(view).toHaveAttribute('aria-pressed', 'true');
   await expect(page.getByTestId('tab')).toHaveCount(0);
   await expect(page.getByTestId('tabbar-list-name')).toHaveText('Listed here');
   await expect(page.getByTestId('tab-more')).toBeVisible();
@@ -5763,7 +5764,57 @@ test('the canvases as a list: the button at the start of the bar switches betwee
 
   // And back to tabs.
   await view.click();
+  await page.getByTestId('tabbar-view-tabs').click();
   await expect(page.getByTestId('tabbar')).toHaveAttribute('data-view', 'tabs');
   await expect(page.getByTestId('tab')).toHaveCount(count);
   await expect(page.locator('[data-testid="tab"][aria-selected="true"]')).toHaveAttribute('data-canvas', otherId);
+});
+
+test('the canvases as a column: tabs one under another at the left of the window, before the side panel', async ({ page }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  // Two canvases at least, so that there is another to go to.
+  const selected = page.locator('[data-testid="tab"][aria-selected="true"]');
+  const first = (await selected.getAttribute('data-canvas')) ?? '';
+  await page.getByTestId('tabbar-new-canvas').click();
+  await expect(selected).not.toHaveAttribute('data-canvas', first);
+  const count = await page.getByTestId('tab').count();
+  const here = (await selected.getAttribute('data-canvas')) ?? '';
+  await page.getByTestId('tabbar-view').click();
+  await page.getByTestId('tabbar-view-column').click();
+  const bar = page.getByTestId('tabbar');
+  await expect(bar).toHaveAttribute('data-view', 'column');
+  await expect(page.getByTestId('tab')).toHaveCount(count);
+  await expect(selected).toHaveAttribute('data-canvas', here);
+  await expect(page.getByTestId('tabbar-tabs')).toHaveAttribute('aria-orientation', 'vertical');
+  // At the left of the window, before the side panel, from under the top bar to the foot; the canvas has no bar of tabs over it.
+  const at = await page.evaluate(() => {
+    const box = (sel: string): DOMRect => (document.querySelector(sel) as HTMLElement).getBoundingClientRect();
+    const tabs = [...document.querySelectorAll('[data-testid="tab"]')].map((el) => el.getBoundingClientRect());
+    return {
+      left: Math.round(box('[data-testid="tabbar"]').left),
+      beforePanel: box('[data-testid="tabbar"]').right <= box('[data-testid="side-panel"]').left + 1,
+      toTheFoot: Math.round(box('[data-testid="tabbar"]').bottom) === window.innerHeight,
+      inCanvasColumn: document.querySelector('[data-testid="canvas-column"] [data-testid="tabbar"]') !== null,
+      underEachOther: tabs.every((r, i) => i === 0 || r.top >= tabs[i - 1]!.bottom),
+      sameLeft: new Set(tabs.map((r) => Math.round(r.left))).size === 1,
+    };
+  });
+  expect(at).toEqual({ left: 0, beforePanel: true, toTheFoot: true, inCanvasColumn: false, underEachOther: true, sameLeft: true });
+  // A tab there does what a tab does: another canvas is shown, and "New canvas" adds one under the last.
+  const other = page.locator(`[data-testid="tab"]:not([data-canvas="${here}"])`).first();
+  const otherId = (await other.getAttribute('data-canvas')) ?? '';
+  await other.click();
+  await expect(page).toHaveURL(new RegExp(`/c/${otherId}$`));
+  await page.getByTestId('tabbar-new-canvas').click();
+  await expect(page.getByTestId('tab')).toHaveCount(count + 1);
+  await expect(selected).not.toHaveAttribute('data-canvas', otherId);
+  // Remembered in this browser, and back to tabs over the canvas.
+  await page.reload();
+  await expect(bar).toHaveAttribute('data-view', 'column');
+  await page.getByTestId('tabbar-view').click();
+  await page.getByTestId('tabbar-view-tabs').click();
+  await expect(bar).toHaveAttribute('data-view', 'tabs');
+  await expect(page.locator('[data-testid="canvas-column"] [data-testid="tabbar"]')).toHaveCount(1);
 });
