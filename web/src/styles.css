@@ -338,6 +338,27 @@ code {
 .warning {
   color: var(--attention-text);
 }
+/* The settings at the end of the bar: a square button; its menu of places hangs from it like the bar's other menus. */
+.bar-settings {
+  position: relative;
+  display: inline-flex;
+}
+.bar-settings-button {
+  width: var(--control-h);
+  padding: 0;
+}
+.bar-settings-button > svg {
+  flex: none;
+  width: 16px;
+  height: 16px;
+}
+.bar-settings-menu {
+  min-width: 200px;
+}
+.toolbar:not(.at-right) .bar-settings-menu {
+  left: auto;
+  right: 0;
+}
 /* A line of Settings with a choice: its words, then the choice. */
 .settings-line {
   display: flex;
