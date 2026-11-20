@@ -7,7 +7,7 @@ import { listModel, listSource } from '../../list-model';
 import { recapTitle } from '../../Recap';
 import { shortFolder } from '../../search';
 import { hint } from '../../shortcuts';
-import { useApp } from '../../store';
+import { currentCanvas, useApp } from '../../store';
 import {
   SORTS,
   SORT_LABEL,
@@ -196,11 +196,20 @@ function TerminalsSection() {
     return projectId && whole ? `${projectName(whole, projectId)} · ` : '';
   };
   const toggles = listFilters().filter((filter) => ![SCOPE_FILTER, TEXT_FILTER, TAG_FILTER].includes(filter.id));
-  // What is on beyond the default. The default is the canvas being looked at and nothing else: it is not said.
-  const chips = [
-    ...filterChips(view).filter((chip) => chip.key !== SCOPE_FILTER),
-    ...(scoped ? [] : [{ key: 'everywhere', label: view.everyProject ? 'All projects' : 'All canvases', remove: { everyProject: false, filters: [...view.filters.filter((id) => id !== SCOPE_FILTER), SCOPE_FILTER] } }]),
-  ];
+  // Where the list looks is always said, first: the canvas being looked at by its name, or every canvas, or every
+  // project. Its × flips between the two: the canvas widens to every canvas, and every canvas (or project) goes
+  // back to this one.
+  const canvasName = useApp((s) => currentCanvas(s)?.name ?? 'This canvas');
+  const scopeChip = scoped
+    ? { key: SCOPE_FILTER, label: canvasName, title: 'Showing this canvas. Press to show every canvas.', remove: { everyProject: false, filters: view.filters.filter((id) => id !== SCOPE_FILTER) } }
+    : {
+        key: 'everywhere',
+        label: view.everyProject ? 'All projects' : 'All canvases',
+        title: `Showing ${view.everyProject ? 'every project' : 'every canvas'}. Press to show this canvas only.`,
+        remove: { everyProject: false, filters: [...view.filters.filter((id) => id !== SCOPE_FILTER), SCOPE_FILTER] },
+      };
+  // What is on beyond the default (this canvas, nothing else): counted on Filter, and what Clear takes away.
+  const chips = [...filterChips(view).filter((chip) => chip.key !== SCOPE_FILTER), ...(scoped ? [] : [scopeChip])];
   const laidOut = view.grouping !== 'canvas' || view.density === 'compact';
   const chosen = chips.length + (laidOut ? 1 : 0);
   const [moreAsked, setMoreAsked] = useState(false);
@@ -312,18 +321,31 @@ function TerminalsSection() {
             </button>
           </Menu>
         )}
-        {chips.length > 0 && (
-          <div className="list-chips" data-testid="list-chips">
-            {chips.map((chip) => (
+        <div className="list-chips" data-testid="list-chips">
+          <button
+            type="button"
+            className="list-chip list-scope-chip"
+            title={scopeChip.title}
+            aria-label={`${scopeChip.label}: ${scopeChip.title}`}
+            onClick={() => setView(scopeChip.remove)}
+            data-testid="list-scope-chip"
+            data-scope={scoped ? 'canvas' : view.everyProject ? 'projects' : 'canvases'}
+          >
+            <span className="list-chip-label">{scopeChip.label}</span> <span aria-hidden="true">×</span>
+          </button>
+          {chips
+            .filter((chip) => chip.key !== scopeChip.key)
+            .map((chip) => (
               <button key={chip.key} type="button" className="list-chip" title={`Remove the filter ${chip.label}`} aria-label={`Remove the filter ${chip.label}`} onClick={() => setView(chip.remove)} data-testid="list-chip">
                 {chip.label} <span aria-hidden="true">×</span>
               </button>
             ))}
+          {chips.length > 0 && (
             <button type="button" className="list-clear" title="Back to the terminals of this canvas, all of them" onClick={() => setView({ filters: [SCOPE_FILTER], text: '', tags: [], everyProject: false })} data-testid="list-clear">
               Clear
             </button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       <div

@@ -489,15 +489,31 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await expect(listRows).toHaveCount(2); // the terminal on this canvas and the parked one
   await expect.poll(() => sectionCount(page, 'terminals')).toBe('2');
   await expect(page.getByTestId('list-group')).toHaveCount(1); // only "Parked": one canvas is in scope
+  // Where the list looks is said first: the canvas being looked at, by its name.
+  const scopeChip = page.getByTestId('list-scope-chip');
+  const canvasName = ((await page.locator('[data-testid="tab"][aria-selected="true"] .tab-name').textContent()) ?? '').trim();
+  await expect(scopeChip).toHaveAttribute('data-scope', 'canvas');
+  await expect(scopeChip.locator('.list-chip-label')).toHaveText(canvasName);
+  await expect(page.getByTestId('list-clear')).toHaveCount(0);
   await page.keyboard.press('s');
-  // Beyond the default, the one line under the field says what is on.
-  await expect(page.getByTestId('list-chip')).toHaveText(/All canvases/);
+  // Beyond the default, the line under the field says what is on.
+  await expect(scopeChip).toHaveAttribute('data-scope', 'canvases');
+  await expect(scopeChip).toHaveText(/All canvases/);
   await expect(page.getByTestId('list-more')).toHaveText('Filter · 1');
   await expect(page.getByTestId('list-group')).toHaveCount(2); // this canvas by name, and "Parked"
   await page.keyboard.press('s');
-  // The canvas being looked at is the default: nothing is said of it.
-  await expect(page.getByTestId('list-chips')).toHaveCount(0);
+  // The canvas being looked at is the default: said by its name, with nothing to clear.
+  await expect(scopeChip).toHaveAttribute('data-scope', 'canvas');
+  await expect(page.getByTestId('list-clear')).toHaveCount(0);
   await expect(page.getByTestId('list-more')).toHaveText('Filter');
+  // Its × widens to every canvas, and the × of every canvas comes back to this one.
+  await scopeChip.click();
+  await expect(scopeChip).toHaveAttribute('data-scope', 'canvases');
+  await expect(page.getByTestId('list-group')).toHaveCount(2);
+  await scopeChip.click();
+  await expect(scopeChip).toHaveAttribute('data-scope', 'canvas');
+  await expect(scopeChip.locator('.list-chip-label')).toHaveText(canvasName);
+  await expect(page.getByTestId('list-group')).toHaveCount(1);
 
   await page.keyboard.press('/');
   await expect(page.getByTestId('list-search')).toBeFocused();
@@ -524,7 +540,9 @@ test('a terminal on the canvas survives a reload with its output', async ({ page
   await expect(page.getByTestId('list-chip').last()).toContainText('#e2e-tag');
   // Clear goes back to where the list starts: this canvas, and nothing else chosen.
   await page.getByTestId('list-clear').click();
-  await expect(page.getByTestId('list-chips')).toHaveCount(0);
+  await expect(page.getByTestId('list-clear')).toHaveCount(0);
+  await expect(page.getByTestId('list-chip')).toHaveCount(0);
+  await expect(scopeChip).toHaveAttribute('data-scope', 'canvas');
   await expect(listRows).toHaveCount(2);
 
   // Typing in a terminal is recorded, and the row says so.
@@ -3684,9 +3702,12 @@ test('calm canvas: one thing is filled with the colour of waiting, a terminal ha
 
     // 2. Every terminal has the same width of line and nothing drawn outside it, whatever its state; one that is selected too.
     // Chosen with the keyboard and not typed into: looking into a terminal would end its waiting.
-    for (let presses = 0; presses < 8 && (await waiting.getAttribute('data-selected')) !== 'true'; presses += 1) {
+    // Each press is waited for: the selection moves (on a busy machine a fixed pause was too short).
+    const selectedNow = (): Promise<string | null> => page.locator('[data-testid="list-row"][aria-selected="true"]').first().getAttribute('data-session', { timeout: 200 }).catch(() => null);
+    for (let presses = 0; presses < 12 && (await waiting.getAttribute('data-selected')) !== 'true'; presses += 1) {
+      const before = await selectedNow();
       await page.keyboard.press('Tab');
-      await page.waitForTimeout(150);
+      await expect.poll(selectedNow, { timeout: 2000 }).not.toBe(before).catch(() => {});
     }
     await expect(waiting).toHaveAttribute('data-selected', 'true');
     await expect(waiting).toHaveAttribute('data-attention', 'waiting');
@@ -4687,7 +4708,7 @@ test('tabs and panel: a new browser has the panel folded to a rail, the bar of t
     expect(seen.plusHeight, scheme).toBe(32);
     expect(seen.otherEdge, scheme).toBe(`${seen.buttonEdge} true`);
     expect(seen.currentEdge, scheme).toBe('rgba(0, 0, 0, 0)');
-    expect(seen.underline, scheme).toEqual({ height: '2px', colour: true, gap: 4, inRow: true, aboveLine: true });
+    expect(seen.underline, scheme).toEqual({ height: '2px', colour: true, gap: 6, inRow: true, aboveLine: true });
     expect(seen.otherUnderline, scheme).toBe('none');
     expect(seen.filled, scheme).toBe(true);
     expect(seen.opensIntoCanvas, scheme).toBe(false);

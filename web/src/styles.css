@@ -1403,6 +1403,18 @@ kbd.kept {
   align-items: center;
 }
 
+/* The pill that says where the list looks gives way to the rest of its line: a long canvas name is cut with an ellipsis, never the ×. */
+.list-scope-chip {
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 100%;
+}
+.list-scope-chip .list-chip-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .list-chip,
 .list-tag {
   padding: 0 var(--space-2);
