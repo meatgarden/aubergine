@@ -284,8 +284,8 @@ export const COMMANDS: readonly Command[] = [
   },
   {
     id: 'queue.open',
-    title: 'Queue and For you…',
-    description: 'A page with two parts. First, everything that waits on you: terminals, approvals, drafts, proposed tasks, tasks that are done or failed, what was asked of you. Then the queue of tasks for agents: add one, say how many run at once, start the next.',
+    title: 'Runs…',
+    description: 'Work for agents from waiting to done, in four columns: tasks waiting to start, runs going now, everything that waits on you (terminals, approvals, drafts, proposed tasks, what was asked of you), and what is done. Add a task, say how many run at once, start the next.',
     group: 'Panels',
     available: always,
     run: (state) => state.togglePanel('queue'),
@@ -771,8 +771,8 @@ export const COMMANDS: readonly Command[] = [
   },
   {
     id: 'board.open',
-    title: 'Board…',
-    description: 'Every run that is going, on every canvas, by workflow and element: who is waiting for you, who is blocked, who is working. Approve or send back from there, or start one workflow on several terminals.',
+    title: 'Runs by step…',
+    description: 'Every run that is going, on every canvas, by workflow and step: who is waiting for you, who is blocked, who is working. Approve or send back from there, or start one workflow on several terminals.',
     group: 'Panels',
     available: always,
     run: (state) => state.togglePanel('board'),

@@ -3387,22 +3387,6 @@ tr[data-status='expired'] strong {
   margin-top: var(--space-2);
 }
 
-.queue-columns {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
-  gap: var(--space-4);
-  min-height: 0;
-  overflow: auto;
-}
-@media (max-width: 900px) {
-  .queue-columns {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
-.queue-columns h3 {
-  margin: 0 0 var(--space-2);
-  font-size: var(--font-body);
-}
 .queue-write,
 .queue-bar,
 .queue-rule-form {
@@ -3776,29 +3760,14 @@ tr[data-status='expired'] strong {
   line-height: var(--leading);
 }
 
-/* For you, and the queue: two lists, each in a box of its own with its name at the top. */
-.queue-columns {
-  gap: 20px;
-  align-items: start;
-}
-.queue-columns > section {
-  padding: var(--space-4) var(--space-4) var(--space-4);
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-surface);
-}
-.queue-columns > section > h3:first-child {
-  margin-top: 0;
-  font-size: var(--font-title);
-}
-.queue-screen details {
+.runs-screen details {
   margin-top: var(--space-3);
   padding: var(--space-3) var(--space-4);
   background: var(--bg);
   border: 1px solid var(--border);
   border-radius: var(--radius-surface);
 }
-.queue-screen details > summary {
+.runs-screen details > summary {
   cursor: pointer;
   font-weight: var(--weight-strong);
 }
@@ -3815,13 +3784,6 @@ tr[data-status='expired'] strong {
 /* The library: the list beside what is read, each with room. */
 .library-row {
   padding: var(--space-2) var(--space-3);
-}
-.queue-columns > section {
-  min-width: 0;
-}
-.queue-columns .foryou-row {
-  box-sizing: border-box;
-  max-width: 100%;
 }
 
 }

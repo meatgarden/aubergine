@@ -42,9 +42,9 @@ describe('the steps of the tour', () => {
 });
 
 describe('the short tour of each page', () => {
-  const pages = ['library', 'workflows', 'queue', 'board'] as const;
+  const pages = ['library', 'workflows', 'runs'] as const;
 
-  it('has a few steps for each of the four pages, said the same way as the canvas\'s', () => {
+  it('has a few steps for each page, said the same way as the canvas\'s', () => {
     for (const page of pages) {
       const steps = tourSteps(page);
       expect(steps.length, page).toBeGreaterThanOrEqual(3);

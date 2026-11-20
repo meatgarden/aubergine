@@ -4,15 +4,14 @@ import { hint } from './shortcuts';
 import { useApp } from './store';
 
 /**
- * How the four pages fit together, in the order work goes through them: a workflow is found in the Library, kept in
- * Workflows, lined up in the Queue, and watched on the Board while it runs. Drawn under each page's name, the same on
- * all four, the page being looked at marked; each opens its page.
+ * How the pages fit together, in the order work goes through them: a workflow is found in the Library, kept in
+ * Workflows, and run in Runs, from waiting to start to done. Drawn under each page's name, the same on every page,
+ * the page being looked at marked; each opens its page.
  */
 const FLOW: readonly { page: PageName; name: string; says: string }[] = [
   { page: 'library', name: 'Library', says: 'find a workflow' },
   { page: 'workflows', name: 'Workflows', says: 'your recipes' },
-  { page: 'queue', name: 'Queue', says: 'waiting to start' },
-  { page: 'board', name: 'Board', says: 'running now' },
+  { page: 'runs', name: 'Runs', says: 'from waiting to done' },
 ];
 
 export function PageFlow({ here }: { here: PageName }) {

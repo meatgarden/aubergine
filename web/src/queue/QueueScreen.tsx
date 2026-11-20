@@ -1,15 +1,10 @@
-import { useEffect, useMemo, useState } from 'react';
-import { openProjects, queueSettingsOf, stateOf, BUSY_STATES, QUEUE_LIMIT_DEFAULT, QUEUE_LIMIT_MAX, RULE_EVENT_WORDS, RuleEvent, TASK_STATE_WORDS, addedByWords, forYou, queueWords, sourceWords, waitingTasks, type RuleAction, type RuleList, type Task } from '@aubergine/shared';
+import { useEffect, useState } from 'react';
+import { BUSY_STATES, RULE_EVENT_WORDS, RuleEvent, TASK_STATE_WORDS, addedByWords, sourceWords, type RuleAction, type RuleList, type Task } from '@aubergine/shared';
 import { api } from '../api';
 import { notificationsWanted, setNotificationsWanted } from '../attention';
-import { currentProjectId, useApp } from '../store';
-import { useEndedRuns } from '../workflows/ended-runs';
+import { useApp } from '../store';
 import { actionView } from './action-views';
-import { Schedules } from './Schedules';
-import { TaskForm, type TaskDraft } from './TaskForm';
-import { Banner, FirstSteps, Page, Tabs } from '../ui';
-import { PageFlow } from '../page-flow';
-import { ForYouRow } from './ForYouRow';
+import { Banner } from '../ui';
 import { goTo } from './go-to';
 import { itemsOfListing, useRepositoryListing } from '../review/repository-source';
 import { runCommand } from '../commands';
@@ -17,14 +12,13 @@ import { toReadWords } from '../review/to-read';
 import { useShallow } from 'zustand/react/shallow';
 
 /**
- * Two lists side by side. On the left, what waits on the owner: gathered by
- * `forYou` from the page's own state, which follows the change events. On
- * the right, the queue of tasks for agents. Nothing here asks the server on
- * a timer, and nothing here knows a kind of item, of source or of action by
- * name: a row shows what its item says, and offers what its item allows.
+ * The parts of the Runs page that are about the queue: a task's row, the
+ * rules, and the line of what waits to be read. Nothing here knows a kind of
+ * item, of source or of action by name: a row shows what its item says, and
+ * offers what its item allows.
  */
 
-function TaskRow({ task, waiting, onMove, onDropOn }: { task: Task; waiting: boolean; onMove?: (by: -1 | 1) => void; onDropOn?: (draggedId: string) => void }) {
+export function TaskRow({ task, waiting, onMove, onDropOn }: { task: Task; waiting: boolean; onMove?: (by: -1 | 1) => void; onDropOn?: (draggedId: string) => void }) {
   const session = useApp((s) => (task.sessionId ? s.app?.sessions.find((x) => x.id === task.sessionId) : undefined));
   const [busy, setBusy] = useState(false);
   const act = async (work: () => Promise<unknown>): Promise<void> => {
@@ -103,7 +97,7 @@ function TaskRow({ task, waiting, onMove, onDropOn }: { task: Task; waiting: boo
   );
 }
 
-function Rules() {
+export function Rules() {
   const count = useApp((s) => s.app?.queue.rules.length ?? 0);
   const [list, setList] = useState<RuleList | null>(null);
   const [event, setEvent] = useState<RuleEvent>('task.done');
@@ -179,7 +173,7 @@ function Rules() {
 }
 
 /** What waits to be read before it can be used: said in a line of the owner's list, with the way to the review. */
-function ReviewLine() {
+export function ReviewLine() {
   const waiting = useApp(useShallow((s) => (s.app?.drafts ?? []).filter((d) => d.status === 'waiting').map((d) => d.sessionId !== null)));
   const installs = useApp((s) => s.app?.library.requests.length ?? 0);
   // Workflow files in repositories that were never accepted, or changed since.
@@ -190,224 +184,5 @@ function ReviewLine() {
     <Banner action="Review" onAction={() => runCommand('drafts.review')} testid="drafts-waiting" actionTestid="review-open">
       {words}
     </Banner>
-  );
-}
-
-export function QueueScreen() {
-  const open = useApp((s) => s.page === 'queue');
-  const app = useApp((s) => s.app);
-  const ended = useEndedRuns((e) => e.items);
-  const [draft, setDraft] = useState<TaskDraft | null>(null);
-  const [written, setWritten] = useState('');
-  const [put, setPut] = useState<Task[]>([]);
-  const [said, setSaid] = useState<string | null>(null);
-  const [part, setPart] = useState<'queue' | 'schedules' | 'rules'>('queue');
-  const scheduleCount = useApp((s) => s.app?.schedules.items.length ?? 0);
-  const ruleCount = useApp((s) => s.app?.queue.rules.length ?? 0);
-
-  // Of the project being looked at: its tasks, its list, and how its tasks are started.
-  const projectId = useApp(currentProjectId);
-  const view = useMemo(() => (app && projectId ? stateOf(app, projectId) : null), [app, projectId]);
-  const queue = view && projectId ? { ...view.queue, ...queueSettingsOf(view.queue, projectId) } : undefined;
-  // Tasks that were put away, for "finished today": read when the screen opens and when the number of tasks changes.
-  const taskCount = queue?.tasks.length ?? 0;
-  useEffect(() => {
-    if (!open) return;
-    let cancelled = false;
-    void api.endedTasks().then(
-      (page) => !cancelled && setPut(page.items as Task[]),
-      () => {},
-    );
-    return () => {
-      cancelled = true;
-    };
-  }, [open, taskCount]);
-  useEffect(() => {
-    if (open) setSaid(null);
-  }, [open]);
-
-  // The owner's list has two views: this project, and everything. In the second, each row names its project.
-  const whole = useApp((s) => s.whole);
-  const [everywhere, setEverywhere] = useState(false);
-  const severalProjects = (whole ? openProjects(whole).length : 0) > 1;
-  const list = useMemo(() => (open && app && whole ? forYou(whole, Date.now(), ended, everywhere && severalProjects ? null : projectId) : null), [open, app, whole, ended, projectId, everywhere, severalProjects]);
-  if (!open || !app || !queue || !list) return null;
-  const close = (): void => useApp.getState().showPage(null);
-  const busy = queue.tasks.filter((task) => BUSY_STATES.includes(task.state)).sort((a, b) => a.updatedAt.localeCompare(b.updatedAt));
-  const next = waitingTasks(queue.tasks);
-  const today = new Date().toDateString();
-  const finished = [...queue.tasks.filter((task) => task.state === 'done' || task.state === 'failed'), ...put.filter((task) => task.endedAt !== null && new Date(task.endedAt).toDateString() === today && !queue.tasks.some((t) => t.id === task.id))].sort((a, b) => (b.endedAt ?? '').localeCompare(a.endedAt ?? ''));
-  const say = (work: Promise<{ says?: string } | unknown>): void => void work.then((answer) => setSaid((answer as { says?: string }).says ?? null), (e: unknown) => setSaid((e as Error).message));
-  const move = (task: Task, by: -1 | 1): void => {
-    const ids = next.map((t) => t.id);
-    const at = ids.indexOf(task.id);
-    const to = at + by;
-    if (at < 0 || to < 0 || to >= ids.length) return;
-    ids.splice(at, 1);
-    ids.splice(to, 0, task.id);
-    say(api.reorderTasks(ids));
-  };
-  const dropOn = (target: Task, draggedId: string): void => {
-    const ids = next.map((t) => t.id).filter((id) => id !== draggedId);
-    const at = ids.indexOf(target.id);
-    if (at < 0 || draggedId === target.id) return;
-    ids.splice(at, 0, draggedId);
-    say(api.reorderTasks(ids));
-  };
-
-  return (
-    <>
-      <Page
-        name="queue"
-        title="Queue"
-        line="Tasks waiting for a free agent, and what waits on you. A task starts as a run when an agent takes it."
-        flow={<PageFlow here="queue" />}
-        label="Queue and For you"
-        testid="queue-screen"
-        className="queue-screen"
-        onKeyDown={(e) => {
-          if (e.key === 'Escape') {
-            e.stopPropagation();
-            close();
-          }
-        }}
-        tabs={
-          <Tabs
-            label="What this page shows"
-            value={part}
-            onChange={setPart}
-            tabs={[
-              { value: 'queue', label: 'Queue', testid: 'queue-tab-queue' },
-              { value: 'schedules', label: `Schedules${scheduleCount > 0 ? ` ${scheduleCount}` : ''}`, testid: 'queue-tab-schedules' },
-              { value: 'rules', label: `Rules${ruleCount > 0 ? ` ${ruleCount}` : ''}`, testid: 'queue-tab-rules' },
-            ]}
-          />
-        }
-        actions={
-          part === 'queue' && (
-            <span className="queue-bar" data-testid="queue-bar">
-              <button type="button" disabled={queue.hold} onClick={() => say(api.startTasks())} data-testid="queue-start-next">
-                Start next
-              </button>
-              <button type="button" className="primary" onClick={() => setDraft({ titles: [''], details: '', sources: [{ kind: 'hand' }] })} data-testid="queue-add">
-                Add task
-              </button>
-            </span>
-          )
-        }
-      >
-        {part === 'schedules' && <Schedules />}
-        {part === 'rules' && <Rules />}
-        {part === 'queue' && <ReviewLine />}
-        {part === 'queue' && (
-        <div className="queue-columns">
-          <section className="queue-foryou" aria-label="For you">
-            <h3>
-              For you <span className="board-summary" data-testid="foryou-summary">{list.summary}</span>
-            </h3>
-            {severalProjects && (
-              <div className="list-scope" role="group" aria-label="Which projects">
-                <button type="button" aria-pressed={!everywhere} onClick={() => setEverywhere(false)} data-testid="foryou-this-project">
-                  This project
-                </button>
-                <button type="button" aria-pressed={everywhere} onClick={() => setEverywhere(true)} data-testid="foryou-every-project">
-                  Every project
-                </button>
-              </div>
-            )}
-            <div className="queue-write">
-              <input value={written} maxLength={1000} placeholder="Add a to-do for yourself…" aria-label="Add a to-do for yourself" onChange={(e) => setWritten(e.target.value)} data-testid="foryou-write" />
-              <button
-                type="button"
-                disabled={written.trim() === ''}
-                onClick={() => {
-                  void api.addAsk(written.trim()).then(() => setWritten(''), (e: unknown) => setSaid((e as Error).message));
-                }}
-                data-testid="foryou-add"
-              >
-                Add
-              </button>
-            </div>
-            <ul className="foryou-list">
-              {list.items.map((item) => (
-                <ForYouRow key={item.id} item={item} onSend={setDraft} named={everywhere && severalProjects} />
-              ))}
-            </ul>
-          </section>
-          <section className="queue-tasks" aria-label="Queue">
-            <h3>
-              Tasks for agents <span className="board-summary" data-testid="queue-summary">{queueWords(queue.tasks)}</span>
-            </h3>
-            {/* How tasks start matters once there is one: shown from the first task on, or as soon as any of it was changed. */}
-            {(busy.length + next.length + finished.length > 0 || queue.hold || queue.automatic || queue.limit !== QUEUE_LIMIT_DEFAULT) && (
-            <details className="ui-fold queue-starts" data-testid="queue-starts">
-              <summary>
-                Starting tasks{' '}
-                <span className="ui-meta" data-testid="queue-starts-says">
-                  {queue.limit} at a time · {queue.hold ? 'on hold' : queue.automatic ? 'the next one starts by itself' : 'you start each one'}
-                </span>
-              </summary>
-              <div className="queue-settings">
-                <label className="wf-inline">
-                  <span>At most</span>
-                  <input type="number" min={1} max={QUEUE_LIMIT_MAX} value={queue.limit} onChange={(e) => Number(e.target.value) >= 1 && say(api.changeQueue({ limit: Math.min(QUEUE_LIMIT_MAX, Math.round(Number(e.target.value))) }))} aria-label="How many at once" data-testid="queue-limit" />
-                  <span>at once</span>
-                </label>
-                <label className="wf-inline" title="No new task is started while this is on. What is running is not touched.">
-                  <input type="checkbox" checked={queue.hold} onChange={(e) => say(api.changeQueue({ hold: e.target.checked }))} data-testid="queue-hold" />
-                  <span>Hold: start nothing new</span>
-                </label>
-                <label className="wf-inline" title="A task starts by itself when a place is free and someone can take it. Off: nothing starts until you press Start next.">
-                  <input type="checkbox" checked={queue.automatic} onChange={(e) => say(api.changeQueue({ automatic: e.target.checked }))} data-testid="queue-automatic" />
-                  <span>Start by itself when a place is free</span>
-                </label>
-              </div>
-            </details>
-            )}
-            {said && (
-              <p className="sheet-note" role="status" data-testid="queue-said">
-                {said}
-              </p>
-            )}
-            {busy.length + next.length + finished.length === 0 && (
-              <FirstSteps
-                testid="queue-empty"
-                title="The queue lines up work for agents."
-                steps={['Add a task: one sentence of what to do.', 'When an agent is free, it takes the next task, which starts as a run of a workflow.', 'Watch it on the Board; what needs you comes to For you.']}
-                action={
-                  <button type="button" onClick={() => setDraft({ titles: ['Write a short README for this folder'], details: '', sources: [{ kind: 'hand' }] })} data-testid="queue-empty-add">
-                    Add a task
-                  </button>
-                }
-              />
-            )}
-            {busy.length > 0 && <div className="wf-label">At work</div>}
-            <ul className="task-list" data-testid="queue-working">
-              {busy.map((task) => (
-                <TaskRow key={task.id} task={task} waiting={false} />
-              ))}
-            </ul>
-            {next.length > 0 && (
-              <div className="wf-label">
-                Next <span className="sheet-note">in this order; drag, or Alt with an arrow on a row, to change it</span>
-              </div>
-            )}
-            <ul className="task-list" data-testid="queue-next">
-              {next.map((task) => (
-                <TaskRow key={task.id} task={task} waiting onMove={(by) => move(task, by)} onDropOn={(dragged) => dropOn(task, dragged)} />
-              ))}
-            </ul>
-            {finished.length > 0 && <div className="wf-label">Finished today</div>}
-            <ul className="task-list" data-testid="queue-finished">
-              {finished.map((task) => (
-                <TaskRow key={task.id} task={task} waiting={false} />
-              ))}
-            </ul>
-          </section>
-        </div>
-        )}
-      </Page>
-      {draft && <TaskForm draft={draft} onClose={() => setDraft(null)} />}
-    </>
   );
 }
