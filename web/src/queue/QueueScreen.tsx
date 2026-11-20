@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { openProjects, queueSettingsOf, stateOf, BUSY_STATES, QUEUE_LIMIT_MAX, RULE_EVENT_WORDS, RuleEvent, TASK_STATE_WORDS, addedByWords, forYou, queueWords, sourceWords, waitingTasks, type RuleAction, type RuleList, type Task } from '@aubergine/shared';
+import { openProjects, queueSettingsOf, stateOf, BUSY_STATES, QUEUE_LIMIT_DEFAULT, QUEUE_LIMIT_MAX, RULE_EVENT_WORDS, RuleEvent, TASK_STATE_WORDS, addedByWords, forYou, queueWords, sourceWords, waitingTasks, type RuleAction, type RuleList, type Task } from '@aubergine/shared';
 import { api } from '../api';
 import { notificationsWanted, setNotificationsWanted } from '../attention';
 import { currentProjectId, useApp } from '../store';
@@ -338,6 +338,8 @@ export function QueueScreen() {
             <h3>
               Tasks for agents <span className="board-summary" data-testid="queue-summary">{queueWords(queue.tasks)}</span>
             </h3>
+            {/* How tasks start matters once there is one: shown from the first task on, or as soon as any of it was changed. */}
+            {(busy.length + next.length + finished.length > 0 || queue.hold || queue.automatic || queue.limit !== QUEUE_LIMIT_DEFAULT) && (
             <details className="ui-fold queue-starts" data-testid="queue-starts">
               <summary>
                 Starting tasks{' '}
@@ -361,6 +363,7 @@ export function QueueScreen() {
                 </label>
               </div>
             </details>
+            )}
             {said && (
               <p className="sheet-note" role="status" data-testid="queue-said">
                 {said}

@@ -2638,9 +2638,8 @@ test('the queue and For you: tasks start when the owner says and no more than th
   await page.getByTestId('toolbar-queue').click();
   const screen = page.getByTestId('queue-screen');
   const mine = (title: string) => screen.locator('[data-testid="task-row"]').filter({ hasText: title });
-  await reveal(screen.getByTestId('queue-limit'), screen.getByTestId('queue-starts').locator('summary'));
-  await screen.getByTestId('queue-limit').fill('2');
-  await expect(screen.getByTestId('queue-automatic')).not.toBeChecked();
+  // How tasks start is not shown until there is a task to start.
+  await expect(screen.getByTestId('queue-starts')).toHaveCount(0);
   const form = page.getByTestId('task-form');
   for (const title of ['Queue test one', 'Queue test two', 'Queue test three']) {
     await screen.getByTestId('queue-add').click();
@@ -2650,6 +2649,9 @@ test('the queue and For you: tasks start when the owner says and no more than th
     await expect(form).toHaveCount(0);
     await expect(mine(title)).toHaveAttribute('data-state', 'queued');
   }
+  await reveal(screen.getByTestId('queue-limit'), screen.getByTestId('queue-starts').locator('summary'));
+  await screen.getByTestId('queue-limit').fill('2');
+  await expect(screen.getByTestId('queue-automatic')).not.toBeChecked();
   // Every row says who added it. Adding started nothing.
   await expect(mine('Queue test one')).toContainText('added by you, written by hand');
   await expect(screen.getByTestId('queue-working').getByTestId('task-row')).toHaveCount(0);

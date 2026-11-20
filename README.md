@@ -831,7 +831,7 @@ A terminal is live only while it is on screen and large enough to read. Zoomed f
 
 Two lists that feed each other. **Queue** at the top of the page (or `Q`) shows both.
 
-**The queue** is work for agents. You write a task once: a title, what to do, and if you like a folder, a workflow, and who may take it. A free agent takes it when you say so.
+**The queue** is work for agents. You write a task once: a title, what to do, and if you like a folder, a workflow, and who may take it. A free agent takes it when you say so. How tasks start (how many at once, **Hold**, **Start by itself**) is under **Starting tasks**, which shows once there is a task.
 
 **For you** is everything that waits on a person, in one place: terminals with a question, runs to approve and runs that are blocked, drafts and installs to read, tasks proposed for the queue, tasks that are done (to look at) or failed (with why), lists handed in by a run, working copies whose terminal is gone, and anything written on the list. The count at the top of the canvas and "next waiting" are the same list: the terminals among its items. The side panel has its first few items.
 
@@ -1439,7 +1439,7 @@ Typed in a terminal, the other `aubergine` commands act as you, whoever types th
 
 ## The library
 
-The **Library** (in the toolbar, or ⌘K, `Library…`) is a place to browse workflows and steps that others published, or that you published on another computer, read what one contains, and install it. It is not a marketplace: there are no accounts, no ratings, and nothing is published from the app.
+The **Library** (in the toolbar, or ⌘K, `Library…`) is a place to browse workflows and steps that others published, or that you published on another computer, read what one contains, and install it. It is not a marketplace: there are no accounts, no ratings, and nothing is published from the app. Until you have installed something or added a source of your own, the sources (and how to add one) are at the foot of the page, under **Where these come from**, so that the list comes first.
 
 **Sources.** A source is a place with an index of items:
 
