@@ -3748,7 +3748,7 @@ test('calm canvas: one thing is filled with the colour of waiting, a terminal ha
     expect(rows.rows.filter((row) => row.times > 1).map((row) => row.name)).toEqual([]);
     expect(rows.rows.filter((row) => row.marks > 0).map((row) => row.name)).toEqual([]);
 
-    // 4. The mark of a state is one dot of one size in a slot of one width: in the list, in a terminal's title, on the Board.
+    // 4. The mark of a state is one dot of one size in a slot of one width: in a terminal's title and on the Board. The list says it in words.
     const dots = (): Promise<string[]> =>
       page.evaluate(() =>
         [...document.querySelectorAll<HTMLElement>('.ui-dot')]
@@ -3756,13 +3756,13 @@ test('calm canvas: one thing is filled with the colour of waiting, a terminal ha
           .map((dot) => `${dot.offsetWidth}x${dot.offsetHeight} ${(dot.firstElementChild as HTMLElement).offsetWidth}x${(dot.firstElementChild as HTMLElement).offsetHeight}`),
       );
     const onCanvas = await dots();
-    expect(await page.locator('[data-testid="list-row"] .ui-dot').count()).toBeGreaterThanOrEqual(5);
+    expect(await page.locator('[data-testid="list-row"] .ui-dot').count()).toBe(0);
     expect(await page.locator('[data-testid="terminal-node"] .node-title > .ui-dot').count()).toBe(4);
     expect([...new Set(onCanvas)]).toEqual(['16x16 8x8']);
     // The list and the title say the same of the same terminal.
     for (const part of ['waiting', 'checklist']) {
       const id = demo.sessions[part] as string;
-      const inList = await page.locator(`[data-testid="list-row"][data-session="${id}"] .ui-dot`).getAttribute('data-tone');
+      const inList = await page.locator(`[data-testid="list-row"][data-session="${id}"] [data-testid="list-badge"]`).getAttribute('data-tone');
       expect(await page.locator(`[data-testid="terminal-node"][data-session="${id}"] .node-title > .ui-dot`).getAttribute('data-tone')).toBe(inList);
     }
     await page.getByTestId('toolbar-board').click();
@@ -5645,8 +5645,8 @@ test('a row of the list is a box: the terminal\'s own color then its name, its s
 
   // The first line is the terminal's color, then its name; the state's mark is on the second line.
   await expect(row.locator('.list-main > :first-child')).toHaveAttribute('data-testid', 'list-color');
-  await expect(row.locator('.list-main').getByTestId('list-state')).toHaveCount(0);
-  await expect(row.locator('.list-detail').getByTestId('list-state')).toHaveCount(1);
+  // No dot for its state: the second line is words only, and nothing on it is a pill.
+  await expect(row.getByTestId('list-state')).toHaveCount(0);
   await expect(row.getByTestId('list-color')).toHaveAttribute('data-color', 'none');
   // The folder is not on the row: it starts in the data folder's parent, whose name would show.
   await expect(row.locator('.list-detail')).not.toContainText('~');

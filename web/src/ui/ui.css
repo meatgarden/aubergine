@@ -1482,7 +1482,6 @@ button.list-chip {
 .list-row .list-detail > .ui-badge,
 .list-row .list-detail > .run-strip {
   flex: none;
-  margin-right: var(--space-1);
 }
 .list-row .run-strip.is-row {
   overflow: visible;
@@ -1494,10 +1493,7 @@ button.list-chip {
 .list-active {
   flex: none;
 }
-.list-where:not(:empty) + .list-active::before,
-.list-where:not(:empty) + .visually-hidden + .list-active::before {
-  content: '· ';
-}
+
 /* A heading of the list is a title on the panel's gutter with an arrow that folds it: no fill, open or shut. */
 button.list-group,
 button.list-group[aria-expanded='true'],
@@ -3348,4 +3344,66 @@ div.note-summary-read {
   right: auto;
   z-index: var(--z-menu);
   min-width: 240px;
+}
+
+/*
+ * A row's second line is words only: no dot, no pill. Its state is plain text in the color of that state; the step of
+ * a run and its tags are plain text that can be pressed (underlined when pointed at). On the selected row, which is
+ * inverted, all of it takes the row's own color.
+ */
+.list-row .list-said {
+  flex: none;
+  font-size: var(--font-meta);
+}
+.list-row .list-said.is-attention {
+  color: var(--attention-text);
+  font-weight: var(--weight-strong);
+}
+.list-row .list-said.is-ok {
+  color: var(--ok-text);
+}
+.list-row .list-said.is-danger {
+  color: var(--danger-text);
+}
+.list-row .list-said.list-working {
+  color: var(--working-text);
+}
+.list-row .list-detail button.run-strip,
+.list-row .list-detail button.list-tag {
+  height: var(--chip);
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  font-size: var(--font-meta);
+  gap: 0;
+}
+.list-row .list-detail button.run-strip:hover,
+.list-row .list-detail button.list-tag:hover,
+.list-row .list-detail button.run-strip:active,
+.list-row .list-detail button.list-tag:active {
+  background: transparent;
+  text-decoration: underline;
+  color: var(--text);
+}
+.list-row.current .list-detail .list-said,
+.list-row.current .list-detail button.run-strip,
+.list-row.current .list-detail button.list-tag,
+.list-row.current .list-main .list-said {
+  color: var(--surface);
+}
+/* Between the words of the second line, a quiet dot; tags are pressed apart and need none. */
+.list-row .list-detail > :not(:first-child, .visually-hidden, .list-tags, .list-tag)::before {
+  content: '·';
+  margin-right: var(--space-1);
+  color: var(--text-muted);
+  text-decoration: none;
+  display: inline-block;
+}
+.list-row.current .list-detail > :not(:first-child)::before {
+  color: inherit;
+}
+.list-row .list-detail {
+  gap: var(--space-1);
 }
