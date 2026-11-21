@@ -1,6 +1,7 @@
 {
   "name": "@aubergine/client",
   "version": "0.1.0",
+  "license": "MIT",
   "private": true,
   "type": "module",
   "description": "A typed client for the Aubergine API, generated from the server's own description of it.",

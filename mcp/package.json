@@ -1,6 +1,7 @@
 {
   "name": "@aubergine/mcp",
   "version": "0.1.0",
+  "license": "MIT",
   "private": true,
   "type": "module",
   "description": "An MCP server for Aubergine: the public API as tools, over standard input and output. It decides nothing about who may do what; it asks the server.",
