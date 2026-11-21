@@ -57,6 +57,8 @@ test.beforeEach(async ({ page }) => {
       if (localStorage.getItem('aubergine.panel') === null) localStorage.setItem('aubergine.panel', JSON.stringify({ open: true }));
       // The bar over the canvas is folded to "New terminal" in a new browser; these tests are of one that keeps it open.
       if (localStorage.getItem('aubergine.bar') === null) localStorage.setItem('aubergine.bar', 'open');
+      // A new browser shows the canvases as a column on the left; these tests are of one that chose tabs over the canvas.
+      if (localStorage.getItem('aubergine.canvasView') === null) localStorage.setItem('aubergine.canvasView', 'tabs');
     } catch {
       // No storage on this page: nothing to remember.
     }
@@ -4646,6 +4648,13 @@ test('tabs and panel: a new browser has the panel folded to a rail, the bar of t
   try {
   await fresh.goto(`/auth?token=${token}`);
   await fresh.goto(address);
+  // A new browser shows the canvases as a column on the left, open, before the side panel.
+  await expect(fresh.getByTestId('tabbar')).toHaveAttribute('data-view', 'column');
+  await expect(fresh.getByTestId('tabbar')).not.toHaveAttribute('data-folded', 'true');
+  // What follows is about the bar of tabs over the canvas: this browser chooses tabs.
+  await fresh.evaluate(() => localStorage.setItem('aubergine.canvasView', 'tabs'));
+  await fresh.reload();
+  await expect(fresh.getByTestId('tabbar')).toHaveAttribute('data-view', 'tabs');
   const panel = fresh.getByTestId('side-panel');
   await expect(panel).toHaveClass(/collapsed/);
   await expect(fresh.getByTestId('list-row')).toHaveCount(0);
