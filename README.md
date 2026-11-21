@@ -1899,3 +1899,9 @@ Environment variables, all optional:
 | `AUBERGINE_TMUX_BIN` | `tmux` | tmux binary to use |
 
 Sessions are ordinary tmux sessions on that socket, so `tmux -L aubergine ls` lists them.
+
+---
+
+## License
+
+[MIT](LICENSE). Free to use, change and share, including in commercial products; keep the copyright notice.

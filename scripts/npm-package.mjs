@@ -82,6 +82,7 @@ copy('daemon/demo');
 copy('daemon/src/runtime/tmux.conf');
 copy('scripts/fix-node-pty.mjs');
 copy('README.md');
+copy('LICENSE');
 // What `aubergine version`, `update`, `uninstall` and `doctor` look for (NPM_MARK in daemon/src/cli/install.ts).
 writeFileSync(path.join(out, '.installed-from-npm'), 'This copy of Aubergine was installed with npm; npm updates and removes it.\n');
 
@@ -91,7 +92,7 @@ const manifest = {
   version: daemon.version,
   description: 'A local, browser-based canvas of terminals, where each terminal session is a node you can arrange and use.',
   type: 'module',
-  license: 'UNLICENSED',
+  license: 'MIT',
   repository: { type: 'git', url: 'git+https://github.com/meatgarden/aubergine.git' },
   bin: { aubergine: 'bin/aubergine.mjs' },
   engines: readJson('package.json').engines,
