@@ -735,6 +735,10 @@ test('a workflow made from a template moves a terminal through its steps', async
   await expect(node).toHaveCount(1);
   await expect(page.locator('.xterm-rows')).toHaveText(/\S/);
   await expect(page.getByTestId('run-strip')).toHaveCount(0);
+  // A second plain shell, parked so that it is not a second node here: it is one to choose in the dialog.
+  const origin = new URL(page.url()).origin;
+  const spare = ((await (await page.request.post('/api/v1/sessions', { headers: { origin, 'sec-fetch-site': 'same-origin' }, data: { cwd: mkdtempSync(path.join(tmpdir(), 'aubergine-e2e-spare-')), canvasId: page.url().split('/c/')[1] ?? '' } })).json()) as { session: { id: string } }).session.id;
+  expect((await page.request.post(`/api/v1/sessions/${spare}/park`, { headers: { origin, 'sec-fetch-site': 'same-origin' } })).status()).toBe(200);
   await reveal(page.getByTestId('node-run-workflow'), page.getByTestId('node-more'));
   await page.getByTestId('node-run-workflow').click();
   const dialog = page.getByTestId('run-dialog');
@@ -743,6 +747,19 @@ test('a workflow made from a template moves a terminal through its steps', async
   // A plain shell: the dialog says no agent is seen, and the terminal can be changed without losing what was typed.
   const here = await dialog.getByTestId('run-terminal').inputValue();
   expect(here).not.toBe('');
+  // Only terminals where an agent is seen are offered, and the plain shell it was opened on is still chosen.
+  await expect(dialog.getByTestId('run-only-agents')).toBeChecked();
+  await expect(dialog.getByTestId('run-hidden-count')).toBeVisible();
+  await expect(dialog.getByTestId('run-terminal').locator(`option[value="${spare}"]`)).toHaveCount(0);
+  await dialog.getByTestId('run-input-task').fill('typed before the tick box');
+  await dialog.getByTestId('run-only-agents').uncheck();
+  await expect(dialog.getByTestId('run-terminal').locator(`option[value="${spare}"]`)).toHaveCount(1);
+  await expect(dialog.getByTestId('run-terminal')).toHaveValue(here);
+  await expect(dialog.getByTestId('run-input-task')).toHaveValue('typed before the tick box');
+  await dialog.getByTestId('run-only-agents').check();
+  await expect(dialog.getByTestId('run-terminal').locator(`option[value="${spare}"]`)).toHaveCount(0);
+  await expect(dialog.getByTestId('run-terminal')).toHaveValue(here);
+  await expect(dialog.getByTestId('run-input-task')).toHaveValue('typed before the tick box');
   await expect(dialog.getByTestId('run-no-agent')).toContainText('No agent is seen in this terminal');
   await dialog.getByTestId('run-input-task').fill('keep this text');
   await dialog.getByTestId('run-use-new').click();

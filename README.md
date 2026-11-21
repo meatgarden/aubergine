@@ -1054,7 +1054,7 @@ Saving makes a **new version**. A run keeps to the version it started on, so edi
 
 ### Run one
 
-On a terminal: **Run a workflow…** in the menu (**⋯**) of its title, or ⌘K, `Run workflow`. Choose the terminal (or a new Claude Code terminal), choose the workflow, fill in the task, read what the agent will be told first, and start. Changing the terminal keeps what you chose and typed. If an agent is seen in that terminal, Aubergine types one line into it:
+On a terminal: **Run a workflow…** in the menu (**⋯**) of its title, or ⌘K, `Run workflow`. Choose the terminal (or a new Claude Code terminal), choose the workflow, fill in the task, read what the agent will be told first, and start. Changing the terminal keeps what you chose and typed. The list starts with only the terminals where an agent is seen; the tick box under it shows the rest. If an agent is seen in that terminal, Aubergine types one line into it:
 
 ```
 You are on an Aubergine workflow. Run `aubergine workflow status` to read your current step and follow it. When its "done when" is true, run `aubergine workflow done --note "<what you did>"` and follow what it prints.

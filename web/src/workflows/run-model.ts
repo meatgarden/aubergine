@@ -28,6 +28,22 @@ export function notSeenWords(session: Pick<Session, 'agent' | 'status'>): string
     : 'The agent in this terminal is not running now, so nothing will be typed into it.';
 }
 
+/**
+ * The terminals the run dialog offers, in two groups. Exited ones are left out and the rest sorted by name.
+ * With `onlySeen`, a terminal where no agent is seen is left out and counted in `hidden`, unless its id is in `keep`.
+ */
+export function terminalChoices<T extends Pick<Session, 'id' | 'name' | 'state' | 'agent' | 'status'>>(
+  sessions: readonly T[],
+  options: { onlySeen: boolean; keep: readonly (string | null)[] },
+): { seen: T[]; notSeen: T[]; hidden: number } {
+  const kept = (s: T): boolean => options.keep.includes(s.id);
+  const listed = sessions.filter((s) => s.state !== 'exited' || kept(s)).sort((a, b) => a.name.localeCompare(b.name));
+  const seen = listed.filter((s) => agentSeen(s));
+  const rest = listed.filter((s) => !agentSeen(s));
+  const notSeen = options.onlySeen ? rest.filter(kept) : rest;
+  return { seen, notSeen, hidden: rest.length - notSeen.length };
+}
+
 export const runOfSession = (app: AppState | null, sessionId: string): Run | null => (app ? (runsBySession(app.runs).get(sessionId) ?? null) : null);
 
 /** The version of its workflow a run goes through, or null when it cannot be found. */
