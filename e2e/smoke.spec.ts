@@ -760,6 +760,8 @@ test('a workflow made from a template moves a terminal through its steps', async
   await expect(dialog.getByTestId('run-terminal').locator(`option[value="${spare}"]`)).toHaveCount(0);
   await expect(dialog.getByTestId('run-terminal')).toHaveValue(here);
   await expect(dialog.getByTestId('run-input-task')).toHaveValue('typed before the tick box');
+  // Later tests share this server and expect one terminal in the list: the spare one ends here.
+  expect((await page.request.delete(`/api/v1/sessions/${spare}`, { headers: { origin } })).status()).toBeLessThan(300);
   await expect(dialog.getByTestId('run-no-agent')).toContainText('No agent is seen in this terminal');
   await dialog.getByTestId('run-input-task').fill('keep this text');
   await dialog.getByTestId('run-use-new').click();
