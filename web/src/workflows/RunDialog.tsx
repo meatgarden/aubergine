@@ -6,7 +6,7 @@ import { canvasActions } from '../canvas-actions';
 import { runCommand } from '../commands';
 import { useApp } from '../store';
 import { sampleInputs } from './editor-model';
-import { agentSeen, notSeenWords, runOfSession } from './run-model';
+import { notSeenWords, runOfSession, terminalChoices } from './run-model';
 import { WhereFields, proposedFolder, type Where } from '../environment/WhereFields';
 import { ScreenHead } from '../ui';
 
@@ -34,6 +34,8 @@ export function RunDialog() {
   const [workflowId, setWorkflowId] = useState<string | null>(null);
   const [inputs, setInputs] = useState<Record<string, string>>({});
   const [replace, setReplace] = useState(false);
+  /** Whether the list of terminals is narrowed to those where an agent is seen. Ticked each time the dialog opens. */
+  const [onlyAgents, setOnlyAgents] = useState(true);
   /** For a run on a new agent session: where that session works. */
   const [where, setWhere] = useState<Where>({ folder: '', kind: null });
   const [busy, setBusy] = useState(false);
@@ -76,6 +78,7 @@ export function RunDialog() {
   useEffect(() => {
     if (!starting) return;
     setPicked(undefined);
+    setOnlyAgents(true);
     setWorkflowId(starting.workflowId ?? null);
     setElementId(null);
     setInputs({});
@@ -107,9 +110,7 @@ export function RunDialog() {
   // The first field that is needed and still empty: said by its name on the form, not by its key.
   const missing = version?.inputs.find((input) => input.required && (given[input.key] ?? '').trim() === '');
   const onNewAgent = pickedId === null;
-  const terminals = (sessions ?? []).filter((x) => x.state !== 'exited' || x.id === pickedId).sort((a, b) => a.name.localeCompare(b.name));
-  const seen = terminals.filter((x) => agentSeen(x));
-  const notSeen = terminals.filter((x) => !agentSeen(x));
+  const { seen, notSeen, hidden } = terminalChoices(sessions ?? [], { onlySeen: onlyAgents, keep: [starting.sessionId, pickedId] });
   const noAgentWords = session && !onNewAgent ? notSeenWords(session) : null;
   const pickTerminal = (id: string | null): void => {
     setPicked(id);
@@ -206,6 +207,20 @@ export function RunDialog() {
                         </optgroup>
                       )}
                     </select>
+                  </label>
+                  <label className="wf-check">
+                    <input type="checkbox" checked={onlyAgents} onChange={(e) => setOnlyAgents(e.target.checked)} data-testid="run-only-agents" />
+                    <span>
+                      Only terminals where an agent is seen
+                      {onlyAgents && hidden > 0 && (
+                        <>
+                          {' '}
+                          <span className="ui-meta" data-testid="run-hidden-count">
+                            {hidden} not shown
+                          </span>
+                        </>
+                      )}
+                    </span>
                   </label>
                   {!alone && (
                     <>
