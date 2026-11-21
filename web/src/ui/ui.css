@@ -710,29 +710,25 @@ button.color-dot:hover {
 .list-row:hover::before {
   background: var(--surface-raised);
 }
-.list-row.focused::before {
-  border-color: var(--accent);
-}
 /*
- * The selected row is drawn inverted, as a menu on a television marks where you are: its box is the text color and
- * its words the page's. Its marks (the color, the state, the chips) keep their own colors.
+ * The selected row, and the one being typed into, are marked as the canvas being looked at is: a soft fill and a line
+ * of the accent down the left edge of the box, nothing round the whole of it. Its words and marks keep their colors.
  */
-.list-row.current::before {
-  background: var(--text);
-  border-color: var(--text);
+.list-row.current::before,
+.list-row.focused::before {
+  background: var(--surface-active);
 }
-.list-row.current .list-name,
-.list-row.current .list-detail,
-.list-row.current .list-working,
-.list-row.current .list-active,
-.list-row.current .list-where,
-.list-row.current .list-typed-by,
-.list-row.current .list-lock,
-.list-row.current > .list-more {
-  color: var(--surface);
-}
-.list-row.current:hover::before {
-  background: var(--text);
+.list-row.current::after,
+.list-row.focused::after {
+  content: '';
+  position: absolute;
+  top: var(--space-2);
+  bottom: var(--space-2);
+  left: var(--space-1);
+  width: 2px;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  pointer-events: none;
 }
 .list-row.indented {
   padding-left: var(--space-6);
@@ -3221,6 +3217,24 @@ button.rail-dot:active {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+/*
+ * In the column the keyboard on a canvas is shown the same way as the one being looked at, a line down its left edge,
+ * not a ring round the whole box: a canvas that was just pressed keeps the keyboard, and a ring there read as a second mark.
+ */
+.tabbar.is-column .tab:focus-visible {
+  outline: none;
+}
+.tabbar.is-column .tab:focus-visible:not(.active)::after {
+  content: '';
+  position: absolute;
+  top: var(--space-1);
+  bottom: var(--space-1);
+  left: 0;
+  width: 2px;
+  border-radius: var(--radius-pill);
+  background: var(--border-strong);
+  pointer-events: none;
+}
 .tabbar.is-column .tab.active::after {
   top: var(--space-1);
   bottom: var(--space-1);
@@ -3527,12 +3541,6 @@ div.note-summary-read {
   text-decoration: underline;
   color: var(--text);
 }
-.list-row.current .list-detail .list-said,
-.list-row.current .list-detail button.run-strip,
-.list-row.current .list-detail button.list-tag,
-.list-row.current .list-main .list-said {
-  color: var(--surface);
-}
 /* Between the words of the second line, a quiet dot; tags are pressed apart and need none. */
 .list-row .list-detail > :not(:first-child, .visually-hidden, .list-tags, .list-tag)::before {
   content: '·';
@@ -3540,9 +3548,6 @@ div.note-summary-read {
   color: var(--text-muted);
   text-decoration: none;
   display: inline-block;
-}
-.list-row.current .list-detail > :not(:first-child)::before {
-  color: inherit;
 }
 .list-row .list-detail {
   gap: var(--space-1);
