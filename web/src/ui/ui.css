@@ -3550,13 +3550,14 @@ div.note-summary-read {
 
 /* ---------- "New terminal": the first line of the list of terminals, and a plus on the rail ---------- */
 
-/* At the top of the list: the filled button and its arrow, as wide as its words, in the middle, with room above and below and no line between it and the terminals. */
+/* At the top of the list: the filled button and its arrow, as wide as the rows, with room above and below and no line between it and the terminals. */
 .terminal-list > .new-terminal.in-list {
-  /* The ordinary height, not the list's compact one: more room between its words and its edges. */
-  --control-h: var(--control);
+  /* Taller than the list's other controls: room above and below its words. */
+  --control-h: var(--control-large);
   flex: none;
-  align-self: center;
-  margin: var(--space-4) 0 var(--space-3);
+  display: flex;
+  /* 8px to the first row's box, as between one box and the next (a box is inset 4px in its row); 8px above it too. */
+  margin: var(--space-2) var(--space-2) var(--space-1) var(--space-1);
   /* One rounded control: the two halves share its corners, with a faint line between them in place of a seam. */
   border-radius: var(--radius-control);
   overflow: hidden;
@@ -3567,10 +3568,11 @@ div.note-summary-read {
   border-radius: 0;
 }
 .new-terminal.in-list > button:first-child {
-  padding: 0 var(--space-4) 0 var(--space-6);
+  flex: 1;
+  padding: 0 var(--space-4);
 }
 .new-terminal.in-list > .toolbar-new-more {
-  width: var(--control);
+  width: var(--control-large);
   border-left: 1px solid color-mix(in srgb, var(--on-accent) 22%, transparent);
 }
 .new-terminal.in-list > .toolbar-new-more > svg {
@@ -3734,4 +3736,14 @@ div.note-summary-read {
   min-height: var(--control-h);
   white-space: normal;
   text-align: left;
+}
+
+/* A name too long for its room is cut off where the room ends, with no "…": a terminal's, in the list, its title, a card and its own page; a canvas's on its tab. */
+.list-name,
+.node-name,
+.board-card-name,
+.terminal-page-name,
+.panel-drawer-title,
+.tab-name {
+  text-overflow: clip;
 }

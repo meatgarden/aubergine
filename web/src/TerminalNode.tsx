@@ -285,7 +285,7 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
         {draft === null && (
           <span className="node-more nodrag" ref={moreRoot}>
             <button type="button" className="node-tool" aria-haspopup="menu" aria-expanded={more} aria-label={`More for ${name}`} title="More: tags, a workflow, a message, the desktop, move, colour, park" onClick={() => setMore((v) => !v)} data-testid="node-more">
-              ⋯
+              ⋮
             </button>
             {/* Kept in the page while closed: what a key or the palette asks for (move, colour) is answered from here. */}
             <span className="ui-menu toolbar-menu node-menu" role="menu" hidden={!more} onClick={(event) => (event.target as HTMLElement).closest('[role^="menuitem"]') && !(event.target as HTMLElement).closest('.move-to, .color-button') && setMore(false)} data-testid="node-menu">

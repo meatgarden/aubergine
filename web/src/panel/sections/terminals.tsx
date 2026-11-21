@@ -612,7 +612,7 @@ const RowView = memo(function RowView({ row, style, density, indented, current, 
         }}
         data-testid="row-more"
       >
-        ⋯
+        ⋮
       </button>
       {menuOpen && (
         <div className="list-menu" role="menu" aria-label={`Actions for ${session.name}`} onClick={(event) => event.stopPropagation()}>
