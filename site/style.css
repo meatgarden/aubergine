@@ -119,3 +119,11 @@ footer a{color:var(--mute)}
 .prose .grp-sub{margin:0 0 14px}
 .rm-list{list-style:none;padding:0;margin:10px 0 0;color:var(--mute);font-size:.93rem}
 .rm-list li{margin:3px 0}
+
+/* screenshots */
+.shot{margin:0}
+.shot img{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:12px;box-shadow:0 30px 80px -40px rgba(0,0,0,.55)}
+.shot figcaption{margin-top:10px;font-size:.9rem;color:var(--mute)}
+.shot figcaption b{color:var(--fg);font-weight:600}
+.shot.wide{margin-bottom:28px}
+.shots{display:grid;gap:24px;grid-template-columns:repeat(auto-fit,minmax(20rem,1fr))}
