@@ -147,6 +147,16 @@ The rest of this page is the reference: every section below stands on its own.
 
 You need macOS with [tmux](https://github.com/tmux/tmux) 3.2 or newer, Node.js 22 or newer, and pnpm. Linux should work the same way but has not been tested yet. With [Homebrew](https://brew.sh) on macOS, `brew install tmux node pnpm` gets all three.
 
+**The Node.js version.** 22 is the lowest that works; anything newer is fine, and nothing older is. `node -v` says which one a terminal has. If you use [nvm](https://github.com/nvm-sh/nvm), that is the version nvm has chosen for that terminal, which may be older than the newest you have installed:
+
+```sh
+node -v                  # v22 or higher is fine
+nvm install 22           # or a newer one, if this one is older
+nvm alias default 22     # so new terminals use it too
+```
+
+The installer and `aubergine doctor` both check this and say so when the version is too old.
+
 **1. Install Aubergine** with one line:
 
 ```sh
@@ -316,7 +326,7 @@ and make sure that folder is on your `PATH` (add `export PATH="$HOME/.local/bin:
 
 | Tool | Without admin rights |
 |---|---|
-| Node.js | Install it into your home folder with a version manager. |
+| Node.js | Install it into your home folder with a version manager such as nvm (`nvm install 22`, or newer). |
 | pnpm | Its standalone installer puts it in your home folder. |
 | tmux | The hard one: it has no per-user installer of its own. Ask your IT department for it, use a per-user package manager your company allows, or build it from source into your home folder. If `tmux` is somewhere unusual, point Aubergine at it with `AUBERGINE_TMUX_BIN`. |
 
