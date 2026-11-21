@@ -1,4 +1,4 @@
-import { RUN_STATUS_WORDS, isQuiet, outputKind, versionOf, type Actor, type AppState, type ElementState, type Run, type RunRecord, type RunStatus, type WorkflowVersion } from '@aubergine/shared';
+import { RUN_STATUS_WORDS, isQuiet, outputKind, versionOf, type Actor, type AppState, type ElementState, type Run, type RunRecord, type RunStatus, type Session, type WorkflowVersion } from '@aubergine/shared';
 
 /**
  * Runs as the page shows them: pure functions of the page's state. The
@@ -15,6 +15,17 @@ export function runsBySession(runs: readonly Run[]): Map<string, Run> {
     bySession.set(runs, known);
   }
   return known;
+}
+
+/** Whether Aubergine sees an agent working in the terminal: the test the server makes before it types the kickoff line. */
+export const agentSeen = (session: Pick<Session, 'agent' | 'status'>): boolean => session.agent !== null && session.status.state !== 'idle';
+
+/** Why nothing will be typed into a terminal, in words; null where an agent is seen. */
+export function notSeenWords(session: Pick<Session, 'agent' | 'status'>): string | null {
+  if (agentSeen(session)) return null;
+  return session.agent === null
+    ? 'No agent is seen in this terminal, so nothing will be typed into it. Aubergine sees an agent that was started from New terminal → Claude Code; one started by typing its command is not seen.'
+    : 'The agent in this terminal is not running now, so nothing will be typed into it.';
 }
 
 export const runOfSession = (app: AppState | null, sessionId: string): Run | null => (app ? (runsBySession(app.runs).get(sessionId) ?? null) : null);

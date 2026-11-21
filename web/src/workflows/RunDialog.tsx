@@ -6,7 +6,7 @@ import { canvasActions } from '../canvas-actions';
 import { runCommand } from '../commands';
 import { useApp } from '../store';
 import { sampleInputs } from './editor-model';
-import { runOfSession } from './run-model';
+import { agentSeen, notSeenWords, runOfSession } from './run-model';
 import { WhereFields, proposedFolder, type Where } from '../environment/WhereFields';
 import { ScreenHead } from '../ui';
 
@@ -21,8 +21,12 @@ const REPO = 'repo:';
 export function RunDialog() {
   const starting = useApp((s) => s.startingRun);
   const workflows = useApp((s) => s.app?.workflows);
-  const session = useApp((s) => (starting?.sessionId ? (s.app?.sessions.find((x) => x.id === starting.sessionId) ?? null) : null));
-  const existing = useApp((s) => (starting?.sessionId ? runOfSession(s.app, starting.sessionId) : null));
+  const sessions = useApp((s) => s.app?.sessions);
+  /** The terminal chosen in the dialog; `undefined` until chosen, then it is the one the dialog was opened with. */
+  const [picked, setPicked] = useState<string | null | undefined>(undefined);
+  const pickedId = picked === undefined ? (starting?.sessionId ?? null) : picked;
+  const session = useApp((s) => (pickedId ? (s.app?.sessions.find((x) => x.id === pickedId) ?? null) : null));
+  const existing = useApp((s) => (pickedId ? runOfSession(s.app, pickedId) : null));
   const shelf = useApp((s) => s.app?.shelf);
   const [elementId, setElementId] = useState<string | null>(null);
   // One element by itself: the one named, or the one chosen here when none was.
@@ -39,7 +43,7 @@ export function RunDialog() {
   /** The content of the repository workflow that is chosen, as it was accepted. */
   const [fromFile, setFromFile] = useState<{ file: string; content: WorkflowContent } | null>(null);
 
-  const startingSession = starting?.sessionId ?? null;
+  const startingSession = pickedId;
   useEffect(() => {
     setOffer(null);
     if (!startingSession) return;
@@ -71,6 +75,7 @@ export function RunDialog() {
   const list = useMemo(() => [...(workflows ?? [])].filter((w) => w.listed).sort((a, b) => a.name.localeCompare(b.name)), [workflows]);
   useEffect(() => {
     if (!starting) return;
+    setPicked(undefined);
     setWorkflowId(starting.workflowId ?? null);
     setElementId(null);
     setInputs({});
@@ -101,7 +106,17 @@ export function RunDialog() {
   const problems = version ? inputProblems(version, given) : [];
   // The first field that is needed and still empty: said by its name on the form, not by its key.
   const missing = version?.inputs.find((input) => input.required && (given[input.key] ?? '').trim() === '');
-  const onNewAgent = starting.sessionId === null;
+  const onNewAgent = pickedId === null;
+  const terminals = (sessions ?? []).filter((x) => x.state !== 'exited' || x.id === pickedId).sort((a, b) => a.name.localeCompare(b.name));
+  const seen = terminals.filter((x) => agentSeen(x));
+  const notSeen = terminals.filter((x) => !agentSeen(x));
+  const noAgentWords = session && !onNewAgent ? notSeenWords(session) : null;
+  const pickTerminal = (id: string | null): void => {
+    setPicked(id);
+    setReplace(false);
+    // A workflow from a repository belongs to the repository of the terminal it was offered for.
+    if (workflowId?.startsWith(REPO)) setWorkflowId(null);
+  };
   const blockedByRun = existing !== null && !replace;
 
   const start = async (): Promise<void> => {
@@ -109,7 +124,7 @@ export function RunDialog() {
     setBusy(true);
     setError(null);
     try {
-      let sessionId = starting.sessionId;
+      let sessionId = pickedId;
       if (sessionId === null) {
         // A new agent session is told about the run in its first prompt; nothing needs typing afterwards.
         const folder = where.folder.trim();
@@ -168,6 +183,30 @@ export function RunDialog() {
             <>
               <div className="run-dialog-grid">
                 <div className="run-dialog-form">
+                  <label className="wf-field">
+                    <span>Terminal</span>
+                    <select value={pickedId ?? ''} onChange={(e) => pickTerminal(e.target.value || null)} data-testid="run-terminal">
+                      <option value="">A new Claude Code terminal</option>
+                      {seen.length > 0 && (
+                        <optgroup label="An agent is seen">
+                          {seen.map((x) => (
+                            <option key={x.id} value={x.id}>
+                              {x.name}
+                            </option>
+                          ))}
+                        </optgroup>
+                      )}
+                      {notSeen.length > 0 && (
+                        <optgroup label="No agent seen">
+                          {notSeen.map((x) => (
+                            <option key={x.id} value={x.id}>
+                              {x.name}
+                            </option>
+                          ))}
+                        </optgroup>
+                      )}
+                    </select>
+                  </label>
                   {!alone && (
                     <>
                       <label className="wf-field">
@@ -226,7 +265,7 @@ export function RunDialog() {
                   {needs.length > 0 && (
                     <p className="run-needs" data-testid="run-needs">
                       <span className="wf-label">Whoever does this needs</span>
-                      <NeedMarks needs={needs} sessionId={starting.sessionId} isAgent={session?.agent != null} />
+                      <NeedMarks needs={needs} sessionId={pickedId} isAgent={session?.agent != null} />
                     </p>
                   )}
                   {version.inputs.map((input) => (
@@ -251,8 +290,13 @@ export function RunDialog() {
                       <span>This terminal is already on a run. Stop that run and start this one.</span>
                     </label>
                   )}
-                  {session && !onNewAgent && (session.agent === null || session.status.state === 'idle') && (
-                    <p className="sheet-note">No agent is running in this terminal, so nothing will be typed into it. You can move the run with the buttons, or start an agent and give it the line shown with the run.</p>
+                  {noAgentWords && (
+                    <p className="sheet-note" data-testid="run-no-agent">
+                      {noAgentWords} Or start the run here and give the agent the line shown with it.{' '}
+                      <button type="button" className="quiet" onClick={() => pickTerminal(null)} data-testid="run-use-new">
+                        Use a new Claude Code terminal
+                      </button>
+                    </p>
                   )}
                 </div>
                 <details className="ui-fold run-dialog-preview" data-testid="run-preview-fold">
