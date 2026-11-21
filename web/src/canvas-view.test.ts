@@ -2,13 +2,13 @@ import { describe, expect, it } from 'vitest';
 import { canvasViewFrom, columnFoldedFrom, nextCanvasView } from './canvas-view';
 
 describe('how the canvases are shown', () => {
-  it('is tabs unless this browser chose the list', () => {
-    expect(canvasViewFrom(null)).toBe('tabs');
+  it('is the column unless this browser chose tabs or the list', () => {
+    expect(canvasViewFrom(null)).toBe('column');
     expect(canvasViewFrom('tabs')).toBe('tabs');
     expect(canvasViewFrom('list')).toBe('list');
     expect(canvasViewFrom('column')).toBe('column');
-    expect(canvasViewFrom('dropdown')).toBe('tabs');
-    expect(canvasViewFrom('')).toBe('tabs');
+    expect(canvasViewFrom('dropdown')).toBe('column');
+    expect(canvasViewFrom('')).toBe('column');
   });
 
   it('the command goes through the three in turn', () => {
