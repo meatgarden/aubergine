@@ -48,4 +48,6 @@ jobs:
       # Builds the web app and the package into dist/npm (scripts/npm-package.mjs); it never publishes by itself.
       - run: node scripts/npm-package.mjs
 
-      - run: npm publish dist/npm --access public
+      # From inside the folder: given "dist/npm" as an argument, npm reads it as a GitHub repository, not a folder.
+      - run: npm publish --access public
+        working-directory: dist/npm
