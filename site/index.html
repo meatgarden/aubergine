@@ -147,6 +147,11 @@
         },
         {
           "@type": "Question",
+          "name": "What if I start Claude Code myself in a terminal?",
+          "acceptedAnswer": { "@type": "Answer", "text": "It works like any program. But Aubergine only knows an agent is there when it started the agent itself, from New terminal and then Claude Code, because it adds small hooks that report what the agent is doing. Started by hand, the terminal shows as busy running claude: it is not marked as waiting for you, and nothing is typed for it when a workflow starts there. Tell it yourself to run aubergine workflow status, or start the agent from the New terminal menu." }
+        },
+        {
+          "@type": "Question",
           "name": "Does it work with any coding agent?",
           "acceptedAnswer": { "@type": "Answer", "text": "Aubergine runs ordinary terminals, so any command-line agent can run in one. Agents can also report their status through a command and a local API, and can use an MCP server that lists only what their token allows." }
         },
@@ -219,6 +224,25 @@
         <figcaption style="position:absolute;left:-9999px">Four terminals on a canvas: one busy, one waiting with a question, one idle, one awaiting approval.</figcaption>
       </figure>
     </div>
+
+    <section id="screens" aria-labelledby="screens-h">
+      <p class="kicker">See it</p>
+      <h2 id="screens-h">What it looks like</h2>
+      <p class="sub">Screenshots of the demo that comes with Aubergine: stand-in agents, no real ones.</p>
+      <figure class="shot wide">
+        <picture>
+          <source srcset="screenshots/canvas-light.png" media="(prefers-color-scheme: light)">
+          <img src="screenshots/canvas-dark.png" width="2160" height="1350" loading="lazy" alt="The Aubergine canvas: canvases in a column on the left, the list of terminals with their state in words, and four live terminals on the canvas, one of them waiting for you.">
+        </picture>
+        <figcaption>The canvas. Canvases on the left, every terminal in the list with what it is doing, and the terminals themselves, live. The one with a question waits for you.</figcaption>
+      </figure>
+      <div class="shots">
+        <figure class="shot"><img src="screenshots/runs.png" width="2160" height="1350" loading="lazy" alt="The Runs page: four columns, waiting to start, running, waiting for you, and done."><figcaption><b>Runs.</b> Work moves left to right: waiting to start, running, waiting for you, done.</figcaption></figure>
+        <figure class="shot"><img src="screenshots/by-step.png" width="2160" height="1350" loading="lazy" alt="Runs by step: one workflow with a column for each of its five steps, and a run on the second."><figcaption><b>By step.</b> Each workflow with a column for each step, and every run where it stands.</figcaption></figure>
+        <figure class="shot"><img src="screenshots/workflows.png" width="2160" height="1350" loading="lazy" alt="The Workflows page: workflows as cards, each with its steps in order."><figcaption><b>Workflows.</b> Lists of steps an agent goes through, one at a time.</figcaption></figure>
+        <figure class="shot"><img src="screenshots/library.png" width="2160" height="1350" loading="lazy" alt="The Library: workflows and steps that come with Aubergine, one of them open with the text an agent would be told."><figcaption><b>Library.</b> Read exactly what an agent would be told before you install anything.</figcaption></figure>
+      </div>
+    </section>
 
     <section id="how" aria-labelledby="how-h">
       <p class="kicker">How it works</p>
@@ -297,6 +321,7 @@
       <details><summary>Does Aubergine send my terminals or code anywhere?</summary><p>No. Everything runs on your own computer. The server listens on 127.0.0.1 only and checks the Host and Origin of every request.</p></details>
       <details><summary>What do I need to run Aubergine?</summary><p>macOS with tmux 3.2 or newer, Node.js 22 or newer, and pnpm. Linux should work but has not been tested yet.</p></details>
       <details><summary>What happens to my terminals when I close the browser?</summary><p>They keep running. Each session is a tmux session that outlives both the browser and the Aubergine server.</p></details>
+      <details><summary>What if I start Claude Code myself in a terminal?</summary><p>It works like any program: you type to it as usual. But Aubergine only knows an agent is there when it started the agent itself (New terminal, then Claude Code), because it adds a few small hooks that report what the agent is doing. Started by hand, the terminal just shows as busy running <code>claude</code>: it is not marked as waiting for you when it asks something, and when you start a workflow there, nothing is typed for it. Tell it yourself to run <code>aubergine workflow status</code>, which still works from inside, or start the agent from the New terminal menu instead.</p></details>
       <details><summary>Does it work with any coding agent?</summary><p>Aubergine runs ordinary terminals, so any command-line agent can run in one. Agents can also report their status through a command and a local API, and can use an MCP server that lists only what their token allows.</p></details>
       <details><summary>Will Aubergine support several people or agents in the cloud?</summary><p>Both are planned and neither is built. Planned work includes multiplayer, where several people share a canvas with their agents, and sandboxed agents running in the cloud. Today everything runs on one computer.</p></details>
       <details><summary>Is Aubergine free?</summary><p>Yes. It is free and its source is on GitHub.</p></details>

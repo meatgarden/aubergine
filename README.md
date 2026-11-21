@@ -6,7 +6,23 @@
 - Terminals keep running when you close the browser or restart Aubergine.
 - Works with plain shells and with agents.
 
-<!-- A recording of the tour goes here. -->
+<picture>
+  <source srcset="site/screenshots/canvas-light.png" media="(prefers-color-scheme: light)">
+  <img src="site/screenshots/canvas-dark.png" alt="The Aubergine canvas: canvases in a column on the left, the list of terminals with what each is doing, and four live terminals, one waiting for you.">
+</picture>
+
+<sub>The demo that comes with Aubergine: stand-in agents, no real ones. More in <a href="#what-it-looks-like">What it looks like</a>.</sub>
+
+---
+
+## What it looks like
+
+| | |
+|---|---|
+| ![Runs: four columns, waiting to start, running, waiting for you, done](site/screenshots/runs.png) | ![By step: each workflow with a column for each step](site/screenshots/by-step.png) |
+| **Runs.** Work moves left to right: waiting to start, running, waiting for you, done. | **By step.** Each workflow with a column for each step, and every run where it stands. |
+| ![Workflows: lists of steps as cards](site/screenshots/workflows.png) | ![Library: what an agent would be told, read before installing](site/screenshots/library.png) |
+| **Workflows.** Lists of steps an agent goes through, one at a time. | **Library.** Read exactly what an agent would be told before you install anything. |
 
 ---
 
@@ -44,6 +60,8 @@ Something not right? Run `aubergine doctor`, or see [If something goes wrong](#i
 | 6. Find anything | Press `⌘K` and type part of a name, folder, note or output |
 
 Already have terminals open elsewhere? Click **Open elsewhere** in the toolbar (or press `O`) and bring them in one at a time: [Moving your existing terminals over](#moving-your-existing-terminals-over).
+
+**Start agents from Aubergine, not by typing `claude`.** Use **New terminal ▾ → Claude Code** (or press `C`). Aubergine then starts Claude Code with a few small hooks that tell it what the agent is doing, which is how a terminal shows **waiting for you** and how a workflow's agent is told to begin. If you type `claude` yourself in a plain terminal, it works like any program, but Aubergine sees only a shell busy running `claude`: no "waiting for you", and nothing is typed for it when you start a workflow there (the terminal says so). You can still tell it yourself to run `aubergine workflow status`, which works from inside any terminal here.
 
 ---
 
