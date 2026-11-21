@@ -125,3 +125,11 @@ footer a{color:var(--mute)}
 .shot img{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:12px;box-shadow:0 30px 80px -40px rgba(0,0,0,.55)}
 .shot figcaption{margin-top:10px;font-size:.9rem;color:var(--mute)}
 .shot figcaption b{color:var(--fg);font-weight:600}
+
+/* phones: nothing is wider than the screen */
+nav{display:flex;flex-wrap:wrap;gap:4px 18px}
+nav a{margin-left:0}
+.cmd{white-space:pre-wrap;overflow-wrap:anywhere}
+.prose pre{white-space:pre-wrap;overflow-wrap:anywhere}
+code{overflow-wrap:anywhere}
+img{max-width:100%;height:auto}
