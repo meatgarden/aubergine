@@ -25,7 +25,13 @@
 
 ## Start in two minutes
 
-**1. Install** (macOS with tmux, Node.js and pnpm; `brew install tmux node pnpm` gets all three)
+**1. Install** (macOS with tmux 3.2 or newer and Node.js 22 or newer; `brew install tmux node` gets both)
+
+```sh
+npm install -g @meatgarden/aubergine
+```
+
+Or with the installer, which also needs pnpm and builds from the source:
 
 ```sh
 curl -fsSL https://raw.githubusercontent.com/meatgarden/aubergine/main/install.sh | sh
@@ -185,7 +191,7 @@ If something is not right, `aubergine doctor` checks everything Aubergine needs,
 
 ### Install with npm
 
-Aubergine can also be built as an npm package: plain JavaScript and the built web app, with no development tools and no pnpm. It is not published yet; the package name below is the one the build uses unless told another (`--name`).
+Aubergine is on npm as [`@meatgarden/aubergine`](https://www.npmjs.com/package/@meatgarden/aubergine): plain JavaScript and the built web app, with no development tools and no pnpm.
 
 ```sh
 brew install tmux          # npm cannot install tmux; 3.2 or newer
@@ -195,7 +201,7 @@ aubergine start --open
 
 Node.js 22 or newer is needed. `aubergine update` and `aubergine uninstall` say the npm command to run (`npm install -g @meatgarden/aubergine@latest`, `npm uninstall -g @meatgarden/aubergine`); `uninstall` still removes start at login, and nothing of your data or terminals. Some versions of npm do not run a package's install scripts unless you allow them; Aubergine does not need its own, since the terminal library ships ready-made binaries for macOS and Linux.
 
-**Building the package** from a checkout: `pnpm npm-package` writes it to `dist/npm`, and `pnpm npm-package --pack` also writes the `.tgz` to `dist/`, which `npm install -g ./dist/<file>.tgz` installs. Publishing is `npm publish dist/npm --access public` with your own npm account; nothing here publishes.
+**Building the package** from a checkout: `pnpm npm-package` writes it to `dist/npm`, and `pnpm npm-package --pack` also writes the `.tgz` to `dist/`, which `npm install -g ./dist/<file>.tgz` installs. **Releasing:** bump `version` in `daemon/package.json`, merge it, then push a tag `v<version>` (`git tag v0.1.1`, `git push origin v0.1.1`). The workflow `.github/workflows/publish.yml` builds the package from that tag and publishes it; npm trusts that workflow (trusted publishing), so no npm token is stored anywhere. Nothing else publishes.
 
 ### Manual install
 

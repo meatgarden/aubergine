@@ -1,0 +1,51 @@
+name: Publish to npm
+
+# A pushed tag v<version> publishes @meatgarden/aubergine at that version, built from that tag. npm trusts this
+# workflow (trusted publishing, set on the package's settings on npmjs.com), so no npm token is stored anywhere:
+# GitHub proves to npm that the release came from this file in this repository.
+#
+# A release: bump "version" in daemon/package.json, merge it, then `git tag v<version>` and `git push origin v<version>`.
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: npm-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      # Trusted publishing needs a newer npm than Node 22 comes with.
+      - run: npm install -g npm@latest
+
+      - name: The tag names the version being published
+        run: |
+          version="$(node -p "require('./daemon/package.json').version")"
+          if [ "${GITHUB_REF_NAME}" != "v${version}" ]; then
+            echo "The tag ${GITHUB_REF_NAME} does not match daemon/package.json (${version}). Tag v${version}, or change the version first."
+            exit 1
+          fi
+
+      - run: pnpm install --frozen-lockfile
+
+      # Builds the web app and the package into dist/npm (scripts/npm-package.mjs); it never publishes by itself.
+      - run: node scripts/npm-package.mjs
+
+      - run: npm publish dist/npm --access public
