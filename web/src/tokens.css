@@ -45,6 +45,8 @@
   /* Controls: two heights, one chip. */
   --control: 32px;
   --control-compact: 28px;
+  /* The side panel's one primary, New terminal: its words need room above and below. */
+  --control-large: 40px;
   --chip: 20px;
   /*
    * Motion: two durations and one easing. Quick is for what answers the pointer (hover, press, focus); open is for

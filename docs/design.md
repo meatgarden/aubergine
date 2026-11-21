@@ -64,7 +64,8 @@ One gutter for each kind of surface, and everything in it starts on that gutter'
 
 A button, a field, a select and the parts of a segmented switch have one anatomy: the same height, text, corner and padding at the sides, so two of them side by side line up.
 
-- **Two heights.** `--control` (32px) in screens and dialogs and in the bar at the top. `--control-compact` (28px) in the side panel's lists, the bar over the canvas and a terminal's title. A canvas tab and the side panel's head are 32px. The bar over the canvas shows only "New terminal" until the pointer or the keyboard is in it, or one of its menus is open; then it opens to its whole row in place, nothing else moving. Where it stands is chosen in Settings; at the foot of the canvas its menus open upward, from the edge they hang from. A surface says which by setting `--control-h`; nothing sets a height on a control.
+- **Two heights.** `--control` (32px) in screens and dialogs and in the bar at the top. `--control-compact` (28px) in the side panel's lists, the bar over the canvas and a terminal's title. A canvas tab and the side panel's head are 32px. The bar over the canvas shows only "New terminal" until the pointer or the keyboard is in it, or one of its menus is open; then it opens to its whole row in place, nothing else moving. Where it stands is chosen in Settings; at the foot of the canvas its menus open upward, from the edge they hang from. A surface says which by setting `--control-h`; nothing sets a height on a control. One exception: `--control-large` (40px) for New terminal at the top of the list of terminals, the side panel's one primary, whose words need room above and below.
+- **A name too long for its room is cut off** where the room ends, with no "…": a terminal's name in the list, in its title, on a card and on its own page, and a canvas's on its tab.
 - **A button that is only a sign** is a square of that height, and always says in words what it does (`IconButton`).
 - **A text area** has the padding and corner of a field.
 
@@ -117,7 +118,7 @@ The text a person selects, the caret and the scroll bars follow the theme (`--se
 
 ## The canvas's columns
 
-"New terminal" is the side panel's one primary: the filled button with its ▾ at the top of the list of terminals, as wide as its words and in the middle, with room above and below and no line between it and them; the bar over the canvas does not have it, and folds to **Go to…** and the map's button. Its usual place is the map's corner, the bottom right, with the map over it when shown.
+"New terminal" is the side panel's one primary: the filled button with its ▾ at the top of the list of terminals, as wide as the rows, with room above and below and no line between it and them; the bar over the canvas does not have it, and folds to **Go to…** and the map's button. Its usual place is the map's corner, the bottom right, with the map over it when shown.
 
 **A page says where it stands.** Under the name of Library, Workflows and Runs, one line says what the page is for, and one strip shows them in the order work goes through them, the page being looked at marked as the places in the top bar are. An empty place a newcomer meets is `FirstSteps`: one sentence in the title size, at most three numbered steps in body text, one ordinary button that makes the first real thing.
 

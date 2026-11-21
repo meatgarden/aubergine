@@ -3268,7 +3268,7 @@ const measureLook = (page: Page): Promise<string[]> =>
     for (const el of document.querySelectorAll('button, input, select')) {
       if (!shows(el) || el.closest('.xterm') || el.matches('input[type=checkbox],input[type=radio],input[type=color],input[type=file],input[type=range]') || el.matches(rows)) continue;
       const height = Math.round(el.getBoundingClientRect().height * 10) / 10;
-      const right = el.matches(chips) ? height === 20 : el.matches('.color-palette .color-dot') ? height === 24 : height === 28 || height === 32;
+      const right = el.matches(chips) ? height === 20 : el.matches('.color-palette .color-dot') ? height === 24 : el.matches('.new-terminal.in-list > button') ? height === 40 : height === 28 || height === 32;
       if (!right) wrong.push(`height ${height}: ${says(el)}`);
     }
     const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
@@ -3318,7 +3318,7 @@ const onTop = (page: Page, testid: string): Promise<boolean> =>
     return points.every(([x, y]) => screen.contains(document.elementFromPoint(x, Math.min(y, innerHeight - 2))));
   }, testid);
 
-test('one look: the canvas page and every screen use the two control heights and the four text sizes, and a screen is on top of a selected terminal', async ({ page }) => {
+test('one look: the canvas page and every screen use the two control heights (and New terminal its own) and the four text sizes, and a screen is on top of a selected terminal', async ({ page }) => {
   const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
   await page.goto(`/auth?token=${token}`);
   await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
@@ -3571,7 +3571,7 @@ test('simpler surfaces: the list starts near the top, a name is not cut, one pri
     const row = document.querySelector('[data-testid="list-row"]') as HTMLElement;
     return Math.round(row.getBoundingClientRect().top - panel.getBoundingClientRect().top);
   });
-  expect(first).toBeLessThanOrEqual(196);
+  expect(first).toBeLessThanOrEqual(204);
 
   // A terminal's name is whole at the width a new terminal has.
   const name = await node.getByTestId('node-name').evaluate((el) => ({ node: Math.round((el.closest('[data-testid="terminal-node"]') as HTMLElement).getBoundingClientRect().width), cut: el.scrollWidth > el.clientWidth + 1 }));
@@ -3643,9 +3643,17 @@ test('simpler surfaces: the list starts near the top, a name is not cut, one pri
   // It is in the list, at its top, and nothing is drawn between it and the terminals.
   const line = await page.evaluate(() => {
     const button = document.querySelector('[data-testid="terminal-list"] > [data-testid="new-terminal"]') as HTMLElement | null;
-    return { inList: button !== null, between: button ? getComputedStyle(button).borderBottomWidth : '' };
+    // A row's box is inset 4px in the row: the gap to the first box is the gap between two boxes.
+    const box = (row: Element | undefined): { top: number; bottom: number } => {
+      const r = (row as HTMLElement).getBoundingClientRect();
+      return { top: r.top + 4, bottom: r.bottom - 4 };
+    };
+    const rows = [...document.querySelectorAll('[data-testid="list-row"]')];
+    const gap = button && rows.length > 0 ? Math.round(box(rows[0]).top - button.getBoundingClientRect().bottom) : -1;
+    const between = rows.length > 1 ? Math.round(box(rows[1]).top - box(rows[0]).bottom) : gap;
+    return { inList: button !== null, line: button ? getComputedStyle(button).borderBottomWidth : '', sameGap: gap === between };
   });
-  expect(line).toEqual({ inList: true, between: '0px' });
+  expect(line).toEqual({ inList: true, line: '0px', sameGap: true });
   // The side panel: the field and the color of a row start on its gutter of 12.
   expect(await page.evaluate(() => ['.list-find', '.list-color'].map((sel) => Math.round((document.querySelector(sel) as HTMLElement).getBoundingClientRect().left)))).toEqual([12, 12]);
 
