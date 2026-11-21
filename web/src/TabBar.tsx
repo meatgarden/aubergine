@@ -243,6 +243,8 @@ export function TabBar() {
       ) : (
         <ViewSwitch view={view} />
       )}
+      {/* As a column, "New canvas" comes first, under the head, where it is found without looking past every canvas. */}
+      {column && <NewCanvas />}
       {view === 'list' ? (
         <CanvasList
           canvases={canvases}
@@ -344,7 +346,7 @@ export function TabBar() {
       </div>
       </>
       )}
-      <NewCanvas />
+      {!column && <NewCanvas />}
       {error && <span className="warning">{error}</span>}
     </nav>
   );

@@ -3180,7 +3180,7 @@ button.rail-dot:active {
 /*
  * The canvases as a column: tabs one under another at the left of the window, before the side panel, from under the
  * top bar to the foot, as a browser's vertical tabs are. Its head is as tall as the side panel's; the tab being looked
- * at has its accent line down its left edge instead of under it; "New canvas" follows the last tab.
+ * at has its accent line down its left edge instead of under it; "New canvas" comes first, under the head.
  */
 .tabbar.is-column {
   flex-direction: column;
