@@ -5889,7 +5889,7 @@ test('the canvases as a column: tabs one under another at the left of the window
     };
   });
   expect(at).toEqual({ left: 0, beforePanel: true, toTheFoot: true, inCanvasColumn: false, underEachOther: true, sameLeft: true });
-  // A tab there does what a tab does: another canvas is shown, and "New canvas" adds one under the last.
+  // A tab there does what a tab does: another canvas is shown; "New canvas", first under the head, adds one.
   const other = page.locator(`[data-testid="tab"]:not([data-canvas="${here}"])`).first();
   const otherId = (await other.getAttribute('data-canvas')) ?? '';
   await other.click();
