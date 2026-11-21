@@ -740,6 +740,18 @@ test('a workflow made from a template moves a terminal through its steps', async
   const dialog = page.getByTestId('run-dialog');
   await expect(dialog.getByTestId('run-workflow')).toContainText('Ship it');
   await expect(dialog.getByTestId('run-start')).toBeDisabled();
+  // A plain shell: the dialog says no agent is seen, and the terminal can be changed without losing what was typed.
+  const here = await dialog.getByTestId('run-terminal').inputValue();
+  expect(here).not.toBe('');
+  await expect(dialog.getByTestId('run-no-agent')).toContainText('No agent is seen in this terminal');
+  await dialog.getByTestId('run-input-task').fill('keep this text');
+  await dialog.getByTestId('run-use-new').click();
+  await expect(dialog.getByTestId('run-terminal').locator('option:checked')).toHaveText('A new Claude Code terminal');
+  await expect(dialog.getByTestId('run-input-task')).toHaveValue('keep this text');
+  await expect(dialog.getByTestId('run-workflow')).toContainText('Ship it');
+  await expect(dialog.getByTestId('run-no-agent')).toHaveCount(0);
+  await dialog.getByTestId('run-terminal').selectOption(here);
+  await expect(dialog.getByTestId('run-no-agent')).toBeVisible();
   await dialog.getByTestId('run-input-task').fill('the login page rejects valid passwords');
   await expect(dialog.getByTestId('run-preview')).toContainText('The task: the login page rejects valid passwords');
   await expect(dialog.getByTestId('run-preview')).toContainText('Step 1 of 3: Plan');
@@ -1589,7 +1601,7 @@ test('what is switched on for an agent: names only, where each comes from, and w
   await page.keyboard.type('>run workflow');
   await page.keyboard.press('Enter');
   const run = page.getByTestId('run-dialog');
-  await run.locator('select').first().selectOption(workflow.id);
+  await run.getByTestId('run-workflow').selectOption(workflow.id);
   const needs = run.getByTestId('need');
   await expect(needs).toHaveCount(4);
   await expect(needs.nth(0)).toHaveAttribute('data-match', 'found');
@@ -1606,7 +1618,7 @@ test('what is switched on for an agent: names only, where each comes from, and w
   await page.keyboard.press(process.platform === 'darwin' ? 'Meta+k' : 'Control+Shift+K');
   await page.keyboard.type('>run workflow');
   await page.keyboard.press('Enter');
-  await run.locator('select').first().selectOption(workflow.id);
+  await run.getByTestId('run-workflow').selectOption(workflow.id);
   await expect(run.getByTestId('need').nth(1)).toHaveAttribute('data-match', 'not-found');
   await page.keyboard.press('Escape');
 });
