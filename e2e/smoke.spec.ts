@@ -741,7 +741,8 @@ test('a workflow made from a template moves a terminal through its steps', async
   await expect(dialog.getByTestId('run-workflow')).toContainText('Ship it');
   await expect(dialog.getByTestId('run-start')).toBeDisabled();
   // A plain shell: the dialog says no agent is seen, and the terminal can be changed without losing what was typed.
-  await expect(dialog.getByTestId('run-terminal').locator('option:checked')).not.toHaveText('A new Claude Code terminal');
+  const here = await dialog.getByTestId('run-terminal').inputValue();
+  expect(here).not.toBe('');
   await expect(dialog.getByTestId('run-no-agent')).toContainText('No agent is seen in this terminal');
   await dialog.getByTestId('run-input-task').fill('keep this text');
   await dialog.getByTestId('run-use-new').click();
@@ -749,7 +750,7 @@ test('a workflow made from a template moves a terminal through its steps', async
   await expect(dialog.getByTestId('run-input-task')).toHaveValue('keep this text');
   await expect(dialog.getByTestId('run-workflow')).toContainText('Ship it');
   await expect(dialog.getByTestId('run-no-agent')).toHaveCount(0);
-  await dialog.getByTestId('run-terminal').selectOption({ index: 1 });
+  await dialog.getByTestId('run-terminal').selectOption(here);
   await expect(dialog.getByTestId('run-no-agent')).toBeVisible();
   await dialog.getByTestId('run-input-task').fill('the login page rejects valid passwords');
   await expect(dialog.getByTestId('run-preview')).toContainText('The task: the login page rejects valid passwords');
