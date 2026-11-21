@@ -98,15 +98,14 @@
       "totalTime": "PT5M",
       "tool": [
         { "@type": "HowToTool", "name": "tmux 3.2 or newer" },
-        { "@type": "HowToTool", "name": "Node.js 22 or newer" },
-        { "@type": "HowToTool", "name": "pnpm" }
+        { "@type": "HowToTool", "name": "Node.js 22 or newer" }
       ],
       "step": [
         {
           "@type": "HowToStep",
           "position": 1,
           "name": "Install Aubergine",
-          "text": "Run: curl -fsSL https://raw.githubusercontent.com/meatgarden/aubergine/main/install.sh | sh"
+          "text": "Run: npm install -g @meatgarden/aubergine"
         },
         {
           "@type": "HowToStep",
@@ -194,7 +193,7 @@
       <p class="lead">Aubergine puts your terminals side by side on a canvas in your browser. Queue work for your coding agents, keep each one in its own copy of the code, and answer only the ones that are waiting.</p>
       <a class="btn" href="#install">Install in one line</a>
       <a class="btn alt" href="https://github.com/meatgarden/aubergine">View on GitHub</a>
-      <div><code class="cmd"><b>$</b> curl -fsSL https://raw.githubusercontent.com/meatgarden/aubergine/main/install.sh | sh</code></div>
+      <div><code class="cmd"><b>$</b> npm install -g @meatgarden/aubergine</code></div>
 
       <figure class="stage" style="margin-bottom:0" aria-label="An illustration of the Aubergine canvas with four terminals">
         <div class="stage-top" aria-hidden="true">
@@ -297,9 +296,9 @@
     <section id="install" aria-labelledby="install-h">
       <p class="kicker">Install</p>
       <h2 id="install-h">Up and running in five minutes</h2>
-      <p class="sub">You need macOS with tmux 3.2 or newer, Node.js 22 or newer, and pnpm.</p>
+      <p class="sub">You need macOS with tmux 3.2 or newer and Node.js 22 or newer. <code>brew install tmux node</code> gets both.</p>
       <ol class="steps">
-        <li><h3>Install</h3><p><code>curl -fsSL https://raw.githubusercontent.com/meatgarden/aubergine/main/install.sh | sh</code></p></li>
+        <li><h3>Install</h3><p><code>npm install -g @meatgarden/aubergine</code></p><p>Or the <a href="install/">installer</a>, which builds from the source with pnpm.</p></li>
         <li><h3>Start and open</h3><p><code>aubergine start --open</code> starts the server and opens your browser, signed in.</p></li>
         <li><h3>Take the tour</h3><p>Click <strong>Show me around</strong> on the empty canvas. It makes a Demo canvas of stand-in agents and walks you through eight short steps. <code>aubergine demo --remove</code> takes it away.</p></li>
       </ol>

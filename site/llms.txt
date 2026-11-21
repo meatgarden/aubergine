@@ -1,12 +1,13 @@
 # Aubergine
 
-> A local, browser-based canvas of terminal sessions for running several coding agents at once. It shows which agent is waiting for you, queues and schedules tasks, gives each agent its own working copy of a repository, and groups work in projects; sessions keep running when the browser closes. Everything runs on your own computer (127.0.0.1 only). Free and open source. Needs macOS, tmux 3.2+, Node.js 22+, pnpm.
+> A local, browser-based canvas of terminal sessions for running several coding agents at once. It shows which agent is waiting for you, queues and schedules tasks, gives each agent its own working copy of a repository, and groups work in projects; sessions keep running when the browser closes. Everything runs on your own computer (127.0.0.1 only). Free and open source (MIT). Needs macOS, tmux 3.2+, Node.js 22+. Install: npm install -g @meatgarden/aubergine.
 
 ## Start here
 
 - [Landing page](https://meatgarden.github.io/aubergine/): what it does, install, FAQ
 - [README](https://github.com/meatgarden/aubergine/blob/main/README.md): full reference
-- [Install script](https://raw.githubusercontent.com/meatgarden/aubergine/main/install.sh): one-line installer, changes only ~/.aubergine and one link
+- [npm package](https://www.npmjs.com/package/@meatgarden/aubergine): `npm install -g @meatgarden/aubergine`
+- [Install script](https://raw.githubusercontent.com/meatgarden/aubergine/main/install.sh): one-line installer that builds from the source (also needs pnpm), changes only ~/.aubergine and one link
 
 ## Pages
 

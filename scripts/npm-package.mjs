@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Builds the npm package of Aubergine into dist/npm, ready for `npm pack` or
-// `npm publish`. It never publishes: that is the owner's, with their own npm
-// account.
+// `npm publish`. It never publishes: a pushed tag v<version> does, through
+// .github/workflows/publish.yml.
 //
 //   node scripts/npm-package.mjs [--name @scope/aubergine] [--pack]
 //
