@@ -6,10 +6,7 @@
 - Terminals keep running when you close the browser or restart Aubergine.
 - Works with plain shells and with agents.
 
-<picture>
-  <source srcset="site/screenshots/canvas-light.png" media="(prefers-color-scheme: light)">
-  <img src="site/screenshots/canvas-dark.png" alt="The Aubergine canvas: three canvases in a column on the left, and six live terminals, four of them in colors of their own, one waiting for you.">
-</picture>
+<img src="site/screenshots/canvas.png" alt="The Aubergine canvas: three canvases in a column on the left, the list of terminals with what each is doing, and six live terminals, four in colors of their own, one waiting for an answer.">
 
 <sub>The demo that comes with Aubergine: stand-in agents, no real ones. More in <a href="#what-it-looks-like">What it looks like</a>.</sub>
 
