@@ -5759,20 +5759,21 @@ test('a row of the list is a box: the terminal\'s own color then its name, its s
   });
   expect(colors).toBe(swatch);
 
-  // The selected row is inverted: its box is the text color, its name the surface's.
+  // The selected row is marked by a line of the accent down the left edge of its box, and nothing round the whole box.
   await page.locator(`[data-testid="list-row"][data-session="${sessionId}"]`).getByTestId('list-name').click();
   await expect(page.locator(`[data-testid="list-row"][data-session="${sessionId}"]`)).toHaveAttribute('aria-selected', 'true');
-  const inverted = await page.locator(`[data-testid="list-row"][data-session="${sessionId}"]`).evaluate((el) => {
+  const marked = await page.locator(`[data-testid="list-row"][data-session="${sessionId}"]`).evaluate((el) => {
     const probe = document.createElement('span');
-    probe.style.color = 'var(--text)';
-    probe.style.backgroundColor = 'var(--surface)';
+    probe.style.color = 'var(--accent)';
+    probe.style.borderColor = 'var(--border)';
     document.body.append(probe);
-    const text = getComputedStyle(probe).color;
-    const surface = getComputedStyle(probe).backgroundColor;
+    const accent = getComputedStyle(probe).color;
+    const border = getComputedStyle(probe).borderTopColor;
     probe.remove();
-    return { box: getComputedStyle(el, '::before').backgroundColor === text, name: getComputedStyle(el.querySelector('.list-name') as HTMLElement).color === surface };
+    const line = getComputedStyle(el, '::after');
+    return { line: line.backgroundColor === accent && line.width === '2px', box: getComputedStyle(el, '::before').borderTopColor === border };
   });
-  expect(inverted).toEqual({ box: true, name: true });
+  expect(marked).toEqual({ line: true, box: true });
 
   // Over the list: two plain shells.
   await expect(page.getByTestId('list-counts')).toHaveText('2 shells');

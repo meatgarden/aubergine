@@ -176,4 +176,4 @@ Lowest first: `--z-canvas`, `--z-panel`, `--z-menu`, `--z-screen`, `--z-tour`, `
 
 Use a piece. If nothing fits and the same thing is wanted in three places, add a piece to `ui.css` and `index.tsx` and a line here. A new size, color or height is a change to the tokens and to this page, with its reason, not a number in a screen's rule: the test of the stylesheets fails on the number.
 
-The selected row of the list of terminals is drawn inverted, as a menu on a television marks where you are: its box is the text color and its words the surface color. Its marks (its color, its state, its chips) keep their own colors.
+The selected row of the list of terminals, and the one being typed into, are marked as the canvas being looked at is in the column of canvases: a soft fill and a 2px line of the accent down the left edge of the box, nothing round the whole box. Its words and marks keep their own colors. A canvas that has the keyboard in the column shows the same line, in `--border-strong`, rather than a focus ring.
