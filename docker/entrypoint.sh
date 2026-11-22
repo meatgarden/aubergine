@@ -1,6 +1,6 @@
 #!/bin/sh
-# Runs before the server in the container (docker/Dockerfile). WRITTEN, NOT RUN: see "In a
-# container" in docs/remote.md.
+# Runs before the server in the container (docker/Dockerfile). Run once, on a Mac with Colima: see
+# "In a container" in docs/remote.md.
 #
 # It does two things, each only when the thing is missing, and never replaces a file:
 #   1. ~/.zshrc, empty but for a comment, when there is none.

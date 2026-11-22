@@ -713,6 +713,13 @@ export function startSync(): () => void {
         if (store.whole?.canvases.some((c) => c.id === canvasId)) store.setCanvas(canvasId);
       },
       onDown: () => useApp.setState({ live: false }),
+      // The device was revoked: the state is asked for once more, so that the own server's refusal shows the sign-in,
+      // and a linked server's is said where every such refusal is said.
+      onRevoked: () => {
+        const server = useApp.getState().server;
+        if (server !== null) leaveServer(server, 'refused');
+        else void load();
+      },
     });
     const current = useApp.getState().canvasId;
     if (current) events.viewing(current);

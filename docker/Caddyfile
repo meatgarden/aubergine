@@ -1,4 +1,5 @@
-# The web server in front of Aubergine (docker/compose.yaml). WRITTEN, NOT RUN.
+# The web server in front of Aubergine (docker/compose.yaml). Run once, on a Mac under
+# aubergine.localhost; a public certificate has not been tried. See "In a container" in docs/remote.md.
 #
 # For a real name, Caddy gets a public certificate by itself: ports 80 and 443 must reach this
 # machine, and the name must point at it. For a name ending in .localhost it uses a certificate of
@@ -6,7 +7,6 @@
 #
 # Requests are passed on with their Host header as the browser sent it; Aubergine tells where a
 # request came in from that header alone. Do not add anything here that changes Host.
-
 {
 	# Caddy's own admin address listens on 127.0.0.1, which is shared with Aubergine's
 	# terminals. Switched off, so that nothing run in a terminal can reconfigure the web server;

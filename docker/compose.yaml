@@ -1,7 +1,9 @@
 # Aubergine and a web server for HTTPS, in two containers that share one network.
 #
-# WRITTEN, NOT RUN: these files were written from the code on a computer without Docker. See
-# "In a container" in docs/remote.md for the steps and what to send back when something fails.
+# Run once on 2026-11-22, on an Apple-silicon Mac with Docker in Colima (linux/arm64), under
+# https://aubergine.localhost with the web server's own certificate. Not tried: a real name with a
+# public certificate, a cloud machine, linux/amd64. See "In a container" in docs/remote.md.
+# The steps, and what to send back when something fails, are there too.
 #
 #   cd docker
 #   cp .env.example .env        # then set AUBERGINE_HOST in it
@@ -17,7 +19,8 @@
 # network loses it when that other one is restarted, and has to be restarted too. The terminals
 # live in the `aubergine` container, so the web server can be restarted (after a change to the
 # Caddyfile, say) without ending them. When the `aubergine` container is restarted by Docker itself
-# after a failure, restart the web server too: docker compose restart proxy
+# after a failure, restart the web server too: docker compose restart proxy (this was seen: until
+# then the page cannot be reached). Compose's own restart and `up` restart it by themselves.
 
 name: aubergine
 

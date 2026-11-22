@@ -85,7 +85,7 @@ Already have terminals open elsewhere? Click **Open elsewhere** in the toolbar (
 | Run something every morning | A schedule | [Schedules](#schedules-at-these-times-run-this-there) |
 | Run two agents on one repository | A working copy for each | [Working copies](#working-copies-two-agents-on-one-repository) |
 | Let agents talk to each other | Messages | [Messages between terminals](#messages-between-terminals) |
-| Run it on a server, in a container | An image and a web server for HTTPS in `docker/`, written and not yet run | [In a container](docs/remote.md#in-a-container) |
+| Run it on a server, in a container | An image and a web server for HTTPS in `docker/`, run once on a Mac with Colima | [In a container](docs/remote.md#in-a-container) |
 | Use it from my phone or another computer | Off by default: an SSH tunnel, a private network, or a name and a proxy, then pair each browser | [Using Aubergine from elsewhere](docs/remote.md) |
 | Let a script or agent use Aubergine | An API token, and the MCP server | [API tokens](#api-tokens), [Terminal access](#terminal-access), [MCP server](#tools-for-agents-the-mcp-server) |
 
@@ -213,7 +213,7 @@ npm install -g @meatgarden/aubergine
 aubergine start --open
 ```
 
-Node.js 22 or newer is needed. `aubergine update` and `aubergine uninstall` say the npm command to run (`npm install -g @meatgarden/aubergine@latest`, `npm uninstall -g @meatgarden/aubergine`); `uninstall` still removes start at login, and nothing of your data or terminals. Some versions of npm do not run a package's install scripts unless you allow them; Aubergine does not need its own. On macOS the terminal library (node-pty) comes ready-made. On Linux it has nothing ready-made and is compiled when it is installed, which needs its install script allowed, and Python 3, make and a C++ compiler. Linux has not been tried. A container image built from a checkout is in [`docker/`](docker), written and not yet run: see [In a container](docs/remote.md#in-a-container).
+Node.js 22 or newer is needed. `aubergine update` and `aubergine uninstall` say the npm command to run (`npm install -g @meatgarden/aubergine@latest`, `npm uninstall -g @meatgarden/aubergine`); `uninstall` still removes start at login, and nothing of your data or terminals. Some versions of npm do not run a package's install scripts unless you allow them; Aubergine does not need its own. On macOS the terminal library (node-pty) comes ready-made. On Linux it has nothing ready-made and is compiled when it is installed, which needs its install script allowed, and Python 3, make and a C++ compiler. Linux has been run only in that container image, built from a checkout, in [`docker/`](docker), where node-pty was compiled this way: see [In a container](docs/remote.md#in-a-container).
 
 **Building the package** from a checkout: `pnpm npm-package` writes it to `dist/npm`, and `pnpm npm-package --pack` also writes the `.tgz` to `dist/`, which `npm install -g ./dist/<file>.tgz` installs. **Releasing:** bump `version` in `daemon/package.json`, merge it, then push a tag `v<version>` (`git tag v0.1.1`, `git push origin v0.1.1`). The workflow `.github/workflows/publish.yml` builds the package from that tag and publishes it; npm trusts that workflow (trusted publishing), so no npm token is stored anywhere. Nothing else publishes.
 
@@ -1334,7 +1334,7 @@ One thing to know: tmux fixes that base environment when its server first starts
 
 **[Using Aubergine from elsewhere](docs/remote.md)** is the full guide: what the words mean, which way suits you (an SSH tunnel, a private network, or a name of your own and a proxy), the difference between the server on your laptop and on a cloud instance, getting a name, using an IP address, containers, and what to do when it does not work.
 
-**In a container:** [`docker/`](docker) has an image built from this checkout and a web server for HTTPS beside it, sharing its network, for running Aubergine on a server with Docker Compose. It was written from the code and has not been run yet. The steps are in [In a container](docs/remote.md#in-a-container).
+**In a container:** [`docker/`](docker) has an image built from this checkout and a web server for HTTPS beside it, sharing its network, for running Aubergine on a server with Docker Compose. It was run once, on 2026-11-22, on an Apple-silicon Mac with Docker in Colima (linux/arm64), under `https://aubergine.localhost`; a real name, a cloud machine and linux/amd64 were not tried. The steps are in [In a container](docs/remote.md#in-a-container).
 
 **A device is the whole owner.** Whoever has a paired device has what you have at this computer: every terminal, so a shell on this computer as you. Pair only browsers you would hand your keyboard to.
 

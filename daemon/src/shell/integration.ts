@@ -1,6 +1,21 @@
 import { watch, type FSWatcher } from 'node:fs';
 import { mkdir, readFile, rm, stat, writeFile } from 'node:fs/promises';
+import os from 'node:os';
 import path from 'node:path';
+
+/**
+ * The user's shell when no shell is named in the settings: `$SHELL`, else the one in the password database, which is
+ * the one tmux starts. A server started without `$SHELL` (by a service manager, in a container) still knows it is zsh.
+ */
+export function userShell(env: NodeJS.ProcessEnv = process.env, fromDatabase: () => string | null = () => os.userInfo().shell): string {
+  if (env.SHELL) return env.SHELL;
+  try {
+    return fromDatabase() ?? '';
+  } catch {
+    // No password-database entry (some containers).
+    return '';
+  }
+}
 
 /** What a shell says about itself. */
 export interface ShellReport {

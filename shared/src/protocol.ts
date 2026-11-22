@@ -522,6 +522,8 @@ export type TerminalServerMessage = z.infer<typeof TerminalServerMessage>;
 /** WebSocket close codes used by the daemon. */
 export const CLOSE_SESSION_ENDED = 4001;
 export const CLOSE_BAD_MESSAGE = 4002;
+/** A socket whose device was revoked: a policy refusal. A page that is told this is signed out, and does not connect again. */
+export const CLOSE_DEVICE_REVOKED = 1008;
 
 /* ====================================================================
  * The public API, under /v1.

@@ -1,7 +1,8 @@
 # Aubergine in a container: the server, its terminals and the `aubergine` command.
 #
-# WRITTEN, NOT RUN. This file was written from the code on a computer without Docker, and
-# Aubergine has not been tried on Linux. See "In a container" in docs/remote.md.
+# Run once on 2026-11-22, on an Apple-silicon Mac with Docker in Colima (linux/arm64), under
+# https://aubergine.localhost with the web server's own certificate. Not tried: a real name with a
+# public certificate, a cloud machine, linux/amd64. See "In a container" in docs/remote.md.
 #
 # Built from this checkout (the build context is the repository's root, see docker/compose.yaml),
 # by the repository's own package script, scripts/npm-package.mjs: not from the npm registry,
@@ -98,7 +99,10 @@ RUN userdel --remove node \
  && useradd --uid 1000 --gid 1000 --create-home --home-dir /home/aubergine --shell /bin/zsh aubergine \
  && install -d -o aubergine -g aubergine -m 755 /home/aubergine/.npm-global /home/aubergine/.npm-global/bin
 
-COPY --chmod=755 docker/entrypoint.sh /usr/local/bin/aubergine-entrypoint
+# Made executable by a RUN of its own, not with COPY --chmod: that option needs BuildKit, and
+# Compose without the buildx plugin builds with the classic builder, which refuses it.
+COPY docker/entrypoint.sh /usr/local/bin/aubergine-entrypoint
+RUN chmod 755 /usr/local/bin/aubergine-entrypoint
 
 ENV SHELL=/bin/zsh
 # `npm install -g` as this user (an agent's command, say) lands in the home volume, without root.

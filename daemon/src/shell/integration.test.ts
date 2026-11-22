@@ -8,7 +8,21 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { newId } from '@aubergine/shared';
 import { TmuxRuntime } from '../runtime/tmux-runtime';
 import { destroyTmuxServer, testSocketName } from '../test-support';
-import { ZshIntegration, parseStatusLine, type ShellReport } from './integration';
+import { ZshIntegration, parseStatusLine, userShell, type ShellReport } from './integration';
+
+describe('userShell', () => {
+  it('is $SHELL, else the password database, else nothing', () => {
+    expect(userShell({ SHELL: '/bin/bash' }, () => '/bin/zsh')).toBe('/bin/bash');
+    // A server started without $SHELL: by a service manager, or in a container.
+    expect(userShell({}, () => '/usr/bin/zsh')).toBe('/usr/bin/zsh');
+    expect(userShell({ SHELL: '' }, () => null)).toBe('');
+    expect(
+      userShell({}, () => {
+        throw new Error('no entry for this uid');
+      }),
+    ).toBe('');
+  });
+});
 
 describe('parseStatusLine', () => {
   it('reads a busy line with its command', () => {

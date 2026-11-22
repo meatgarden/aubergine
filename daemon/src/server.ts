@@ -41,6 +41,7 @@ import {
   type OwnerCaller,
   AppendNoteRequest,
   CLOSE_BAD_MESSAGE,
+  CLOSE_DEVICE_REVOKED,
   CLOSE_SESSION_ENDED,
   CreateFrameRequest,
   CreateSessionRequest,
@@ -222,9 +223,6 @@ export function publicRoutesOf(app: FastifyInstance): PublicRoute[] {
 
 /** Pause reading from a terminal when this much output is waiting to be sent. */
 const HIGH_WATER = 1024 * 1024;
-/** The close code of a socket whose device was revoked: a policy refusal. */
-const CLOSE_DEVICE_REVOKED = 1008;
-
 /** Closes a socket whose device was revoked, and cuts it if the other end does not answer the close within a second. */
 function closeAtOnce(socket: { close: (code: number, reason: string) => void; terminate: () => void }): void {
   socket.close(CLOSE_DEVICE_REVOKED, 'Device revoked');
