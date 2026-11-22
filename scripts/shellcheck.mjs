@@ -2,7 +2,7 @@
 // Where shellcheck is not installed this is skipped, and says so.
 import { spawnSync } from 'node:child_process';
 
-const scripts = ['install.sh', 'daemon/demo/lib.sh', 'daemon/demo/fixing.sh', 'daemon/demo/waiting.sh', 'daemon/demo/checklist.sh', 'daemon/demo/project/run-tests.sh'];
+const scripts = ['install.sh', 'daemon/demo/lib.sh', 'daemon/demo/fixing.sh', 'daemon/demo/waiting.sh', 'daemon/demo/checklist.sh', 'daemon/demo/project/run-tests.sh', 'docker/entrypoint.sh'];
 const found = spawnSync('shellcheck', ['--version'], { stdio: 'ignore' });
 if (found.error || found.status !== 0) {
   console.log(`shellcheck is not installed: skipping the check of ${scripts.join(', ')}.`);
