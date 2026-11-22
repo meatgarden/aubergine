@@ -73,6 +73,30 @@ describe('the container files', () => {
     expect(body.filter((line) => line.trim() !== '').at(-1)?.trim()).toBe('exec "$@"');
   });
 
+  it('use the published image or build from the checkout, and only the release workflow pushes it', () => {
+    const aubergine = service(read('compose.yaml'), 'aubergine');
+    expect(aubergine).toMatch(/^\s+image: ghcr\.io\/[a-z0-9-]+\/aubergine:\$\{AUBERGINE_TAG:-latest\}$/m);
+    expect(aubergine).toMatch(/^\s+build:\n\s+context: \.\.\n\s+dockerfile: docker\/Dockerfile$/m);
+
+    const workflows = path.join(packageRoot(), '.github', 'workflows');
+    const workflow = code(readFileSync(path.join(workflows, 'publish-image.yml'), 'utf8'));
+    expect(workflow).toMatch(/^on:\n {2}push:\n {4}tags: \["v\*"\]\n {2}workflow_dispatch:$/m);
+    // Read only, but for the one job that pushes, which runs on a tag alone and after both platforms were tried.
+    expect(workflow).toMatch(/^permissions:\n {2}contents: read\n\n/m);
+    expect([...workflow.matchAll(/packages: write/g)].length).toBe(1);
+    expect(service(workflow, 'publish')).toMatch(/packages: write/);
+    expect(service(workflow, 'publish')).toMatch(/^\s+if: github\.event_name == 'push'$/m);
+    expect(service(workflow, 'publish')).toMatch(/^\s+needs: \[version, build, check\]$/m);
+    for (const job of ['version', 'build', 'check']) expect(service(workflow, job), job).not.toMatch(/docker\/login-action|skopeo copy|imagetools create|push: true/);
+    // The run's own token, and no stored secret.
+    expect([...workflow.matchAll(/secrets\.(\w+)/g)].map((match) => match[1])).toEqual(['GITHUB_TOKEN']);
+    expect(service(workflow, 'version')).toMatch(/"\$\{GITHUB_REF_NAME\}" != "v\$\{version\}"/);
+    // Nothing else pushes an image.
+    for (const name of readdirSync(workflows).filter((file) => file !== 'publish-image.yml')) {
+      expect(readFileSync(path.join(workflows, name), 'utf8'), name).not.toMatch(/ghcr\.io|docker\/login-action|packages: write/);
+    }
+  });
+
   it('pass requests on to 127.0.0.1 and leave Host as it came', () => {
     const caddyfile = code(read('Caddyfile'));
     expect(caddyfile).toMatch(/reverse_proxy 127\.0\.0\.1:4600/);
