@@ -12,6 +12,8 @@ export type Command =
   | { name: 'schedule'; words: string[] }
   /** `copies …`: its own words, parsed by the working-copy commands. */
   | { name: 'copies'; words: string[] }
+  /** `device …`: its own words, parsed by the device commands. */
+  | { name: 'device'; words: string[] }
   | { name: 'canvas-list' }
   | { name: 'canvas-new'; canvasName: string }
   | { name: 'attach'; query: string }
@@ -157,6 +159,10 @@ export const USAGE = `Usage: aubergine <command>
                              Make an API token for a program of yours. Its secret is printed once, on standard output
   token list                 The API tokens, with their scopes and when each was last used
   token revoke <name|id>     Revoke a token: it stops working at once
+  device add [--name <name>] Pair another device: prints a code that works once, for three minutes, with the
+                             address to open on it (and a QR of it) for each outside address in the settings
+  device list                The paired devices: when each was added and last used, and its state
+  device revoke <name|id>    Sign a device out at once and close what it has open; asks first unless --yes
   workflow list              The workflows, with how many steps each has and how many runs are going
   workflow show <name>       One workflow in full: what every step says
   workflow new <name> [--template <template>]
@@ -289,7 +295,7 @@ export const USAGE = `Usage: aubergine <command>
 new, here and import take --canvas <name>. Without it they use the canvas you looked at most recently
 in a browser, or the first one when no browser is open.
 
-The server must be running for list, new, canvas, copies, project, task, todo, ask, rule, schedule, token, workflow, element, library, board, screen, output, send, run, protect, attach, here, scan, import, move, tell, inbox, reply, note, attention and open.
+The server must be running for list, new, canvas, copies, project, task, todo, ask, rule, schedule, token, device, workflow, element, library, board, screen, output, send, run, protect, attach, here, scan, import, move, tell, inbox, reply, note, attention and open.
 guide works without it, and then prints every part.`;
 
 export class UsageError extends Error {}
@@ -486,6 +492,9 @@ export function parseCommand(argv: readonly string[]): Command {
     case 'copies':
     case 'copy':
       return { name: 'copies', words: rest };
+    case 'device':
+    case 'devices':
+      return { name: 'device', words: rest };
     case 'board': {
       const canvas = takeOption(rest, '--canvas');
       const workflow = takeOption(canvas.rest, '--workflow');

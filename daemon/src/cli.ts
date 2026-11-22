@@ -53,6 +53,7 @@ import { agentClient } from './cli/agent';
 import { guideText } from './cli/guide';
 import { parseLibraryCommand, runLibraryCommand } from './cli/library';
 import { parseCopiesCommand, runCopiesCommand } from './cli/copies';
+import { parseDeviceCommand, runDeviceCommand } from './cli/device';
 import { parseAskCommand, parseRuleCommand, parseTaskCommand, parseTodoCommand, runQueueCommand } from './cli/queue';
 import { expandHome } from './settings';
 import { INSIDE_ITS_OWN, TAKES_PROJECT, parseProjectCommand, pickProject, runProjectCommand, takeProject } from './cli/project';
@@ -152,6 +153,29 @@ async function call(config: Config, method: string, urlPath: string, body?: unkn
     throw new Error(`The server answered HTTP ${response.status}: ${text}`);
   }
   return response.json();
+}
+
+/** One call as the owner, as `call` makes it, that gives back whatever the server answered instead of failing on a refusal. */
+async function answerOf(config: Config, method: string, urlPath: string, body?: unknown): Promise<{ status: number; body: unknown }> {
+  const origin = `http://127.0.0.1:${config.port}`;
+  let token: string;
+  try {
+    token = (await readFile(path.join(config.dataDir, 'token'), 'utf8')).trim();
+  } catch {
+    throw new UsageError(`No access token in ${config.dataDir}. Start the Aubergine server first.`);
+  }
+  let response: Response;
+  try {
+    response = await fetch(origin + urlPath, {
+      method,
+      headers: { origin, cookie: `${cookieName(config.port)}=${token}`, ...(body === undefined ? {} : { 'content-type': 'application/json' }) },
+      ...(body === undefined ? {} : { body: JSON.stringify(body) }),
+      signal: AbortSignal.timeout(15_000),
+    });
+  } catch {
+    throw new UsageError(`The Aubergine server is not answering on ${origin}. Is it running?`);
+  }
+  return { status: response.status, body: safeJson(await response.text()) };
 }
 
 /**
@@ -668,6 +692,14 @@ async function main(): Promise<number> {
 
     case 'schedule':
       return runScheduleCommand(parseScheduleCommand(command.words), { owner: (work) => v1(config, work), env: process.env, print: (text) => console.log(text) });
+
+    case 'device':
+      return runDeviceCommand(parseDeviceCommand(command.words), {
+        request: (method, url, body) => answerOf(config, method, url, body),
+        print: (text) => console.log(text),
+        ask,
+        interactive: process.stdin.isTTY === true && process.stdout.isTTY === true,
+      });
 
     case 'copies':
       return runCopiesCommand(parseCopiesCommand(command.words), { owner: (work) => v1(config, work), print: (text) => console.log(text), ask });
