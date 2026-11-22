@@ -462,7 +462,7 @@ describe.runIf(ZSH)('aubergine mcp, through the protocol', () => {
       const activity = (await asOwner('GET', '/v1/activity?limit=200')).body.items as { tokenName: string; client: string | null; action: string }[];
       const mine = activity.filter((entry) => entry.tokenName === 'caller');
       expect(mine.length).toBeGreaterThan(20);
-      expect(new Set(mine.map((entry) => entry.client))).toEqual(new Set(['mcp/0.1.1']));
+      expect(new Set(mine.map((entry) => entry.client))).toEqual(new Set(['mcp/0.2.0']));
     });
 
     it("with a session's own token", async () => {

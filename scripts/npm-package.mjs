@@ -93,7 +93,7 @@ const manifest = {
   description: 'A local, browser-based canvas of terminals, where each terminal session is a node you can arrange and use.',
   type: 'module',
   license: 'MIT',
-  repository: { type: 'git', url: 'git+https://github.com/meatgarden/aubergine.git' },
+  repository: { type: 'git', url: 'git+https://github.com/thirstyeggplant/aubergine.git' },
   bin: { aubergine: 'bin/aubergine.mjs' },
   engines: readJson('package.json').engines,
   os: ['darwin', 'linux'],

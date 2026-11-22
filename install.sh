@@ -1,7 +1,7 @@
 #!/bin/sh
 # Installs Aubergine for the current user:
 #
-#   curl -fsSL https://raw.githubusercontent.com/meatgarden/aubergine/main/install.sh | sh
+#   curl -fsSL https://raw.githubusercontent.com/thirstyeggplant/aubergine/main/install.sh | sh
 #
 # It needs Node.js 22 or newer, pnpm, tmux 3.2 or newer, and git (or curl and
 # tar). It does not install those. It never uses sudo, never edits your shell
@@ -38,7 +38,7 @@ main() {
     esac
   done
 
-  REPO="${AUBERGINE_REPO:-https://github.com/meatgarden/aubergine}"
+  REPO="${AUBERGINE_REPO:-https://github.com/thirstyeggplant/aubergine}"
   REF="${AUBERGINE_REF:-main}"
   BASE="${AUBERGINE_HOME:-$HOME/.aubergine}"
   APP="$BASE/app"
@@ -176,7 +176,7 @@ check_tools() {
   if [ "$problems" -gt 0 ]; then
     say ""
     say "No admin rights on this computer? See \"Without admin rights\" in the README:"
-    say "  https://github.com/meatgarden/aubergine#without-admin-rights"
+    say "  https://github.com/thirstyeggplant/aubergine#without-admin-rights"
     say ""
     fail "Nothing was installed or changed. Install what is missing above and run this again."
   fi
