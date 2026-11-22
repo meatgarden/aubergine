@@ -1,5 +1,11 @@
 # Aubergine
 
+[![npm](https://img.shields.io/npm/v/@meatgarden/aubergine?label=npm)](https://www.npmjs.com/package/@meatgarden/aubergine)
+[![Check](https://github.com/thirstyeggplant/aubergine/actions/workflows/check.yml/badge.svg)](https://github.com/thirstyeggplant/aubergine/actions/workflows/check.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+![macOS](https://img.shields.io/badge/macOS-yes-success)
+![Linux](https://img.shields.io/badge/Linux-not%20yet%20tested-lightgrey)
+
 **All your terminals on one canvas in your browser.** Run several coding agents side by side and see at a glance which one is waiting for you, which step each is on, and what each has written for you.
 
 - Runs on your own computer, and nowhere else.
@@ -9,6 +15,25 @@
 <img src="site/screenshots/canvas.png" alt="The Aubergine canvas: three canvases in a column on the left, the list of terminals with what each is doing, and six live terminals, four in colors of their own, one waiting for an answer.">
 
 <sub>The demo that comes with Aubergine: stand-in agents, no real ones. More in <a href="#what-it-looks-like">What it looks like</a>.</sub>
+
+---
+
+## Why a canvas?
+
+Running two or three agents in terminal tabs works until one of them asks a question in a tab you are not looking at. Aubergine is for that moment.
+
+| | Tabs or tmux panes | Aubergine |
+|---|---|---|
+| Which agent is waiting for me? | Look in each tab | A count at the top, and `W` goes to the next one |
+| What is each one doing? | Read its screen | Its state, its step and its note beside it, and one list of all of them |
+| Close the window | The shells may go with it | Terminals keep running; open the browser again and they are there |
+| Two agents on one repository | Two checkouts by hand | A working copy for each, with what changed |
+| Give agents a list of steps | Paste it in | Workflows, a queue and schedules, with you approving where you choose |
+| Your own shells and tools | Yes | Yes: they are ordinary tmux sessions, on your computer only |
+
+It is not a new terminal emulator, an IDE or a hosted service, and it does not call any model: the agents are the ones you already use, started in your shell.
+
+**Linux:** it should work the same way but has not been tried outside the container in [`docker/`](docker). If you try it, please [say how it went](https://github.com/thirstyeggplant/aubergine/issues/new?template=platform.yml).
 
 ---
 
@@ -2004,6 +2029,12 @@ Environment variables, all optional:
 | `AUBERGINE_TMUX_BIN` | `tmux` | tmux binary to use |
 
 Sessions are ordinary tmux sessions on that socket, so `tmux -L aubergine ls` lists them.
+
+---
+
+## Contributing
+
+Bug reports, reports from Linux and other browsers, and small pull requests are welcome: see [CONTRIBUTING.md](CONTRIBUTING.md). Security problems go privately through the Security tab ([SECURITY.md](SECURITY.md)). What changed in each version is in [CHANGELOG.md](CHANGELOG.md).
 
 ---
 
