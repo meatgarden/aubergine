@@ -98,8 +98,8 @@ export interface PublicRouteDeps {
   validateResponses: boolean;
   /** Who a request was found to be, when the checks let it through. */
   principalOf(request: FastifyRequest): Principal | null;
-  /** Where a request came in: under this computer's own name, or an outside address. */
-  cameIn(request: FastifyRequest): 'here' | 'outside';
+  /** Whether a request was made at this computer: under its own name, and not from a linked page. */
+  atThisComputer(request: FastifyRequest): boolean;
   /** Keeps what is held open for a request (a stream) to be closed at once if the device it came from is revoked. Returns what lets it go. */
   holdOpen(request: FastifyRequest, close: () => void): () => void;
   /** Asks `authorize`, without refusing: for an answer that depends on what else the caller may do. */
@@ -422,7 +422,7 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
     // A window on the owner's desktop, and the one setting about it: `authorize` has refused everyone but the owner.
     openSessionOnDesktop: ({ params, request }) => {
       // Never for a request from another device: a window on this computer's desktop is for someone at this computer.
-      if (deps.cameIn(request) !== 'here') throw deps.fail(403, 'forbidden', 'A terminal is opened on this computer\u2019s desktop only for a request made at this computer, not from another device.');
+      if (!deps.atThisComputer(request)) throw deps.fail(403, 'forbidden', 'A terminal is opened on this computer\u2019s desktop only for a request made at this computer, not from another device.');
       return deps.desktop.open(params.sessionId);
     },
     changeDesktopSettings: ({ body }) => deps.desktop.setOpenNew(body.openNew),
@@ -663,9 +663,14 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
 
       reply.hijack();
       const out = reply.raw;
-      // Written by hand: what the request's checks put on the answer (that an outside address is HTTPS) goes too.
-      const hsts = reply.getHeader('strict-transport-security');
-      out.writeHead(200, { 'content-type': 'text/event-stream; charset=utf-8', 'cache-control': 'no-store', connection: 'keep-alive', 'x-accel-buffering': 'no', ...(hsts !== undefined ? { 'strict-transport-security': String(hsts) } : {}) });
+      // Written by hand: what the request's checks put on the answer (that an outside address is HTTPS, which linked page may read it) goes too.
+      const checked = Object.fromEntries(
+        ['strict-transport-security', 'access-control-allow-origin', 'access-control-expose-headers', 'vary'].flatMap((name) => {
+          const value = reply.getHeader(name);
+          return value === undefined ? [] : [[name, String(value)]];
+        }),
+      );
+      out.writeHead(200, { 'content-type': 'text/event-stream; charset=utf-8', 'cache-control': 'no-store', connection: 'keep-alive', 'x-accel-buffering': 'no', ...checked });
       out.write(': connected\n\n');
       // A token limited to some projects hears nothing of another. What each ID was of is remembered from the start,
       // so that a change which only says "this was removed" can still be told apart.

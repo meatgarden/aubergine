@@ -25,7 +25,7 @@ export const PAIRING_CODES_WAITING = 3;
 
 const Timestamp = z.iso.datetime();
 
-/** `browser`: a browser signed in with a cookie. `page`: a page elsewhere that shows this server; not made yet. */
+/** `browser`: a browser signed in with a cookie. `page`: the page of another Aubergine that shows this server, signed in with a bearer credential from its own origin. */
 export const DeviceKind = z.enum(['browser', 'page']);
 export type DeviceKind = z.infer<typeof DeviceKind>;
 
@@ -74,11 +74,21 @@ export const viewOfDevice = (device: Device, now: number, currentId: string | nu
 export const DeviceList = z.object({ devices: z.array(DeviceView) });
 export type DeviceList = z.infer<typeof DeviceList>;
 
-/** Asking for a pairing code. Only browsers can be paired so far. */
-export const PairingCodeRequest = z.object({
-  name: DeviceName.describe('What the device will be called: "Phone".'),
-  kind: z.literal('browser').describe('Only browsers can be paired so far.'),
-});
+/**
+ * Asking for a pairing code. `browser`: a browser at an outside address, which is given a cookie. `page`: the page of
+ * another Aubergine, at `origin`, which is given a credential to send itself; the origin must be in `access.pages`.
+ */
+export const PairingCodeRequest = z.discriminatedUnion('kind', [
+  z.object({
+    name: DeviceName.describe('What the device will be called: "Phone".'),
+    kind: z.literal('browser').describe('A browser at an outside address.'),
+  }),
+  z.object({
+    name: DeviceName.describe('What the linked page will be called: "Laptop".'),
+    kind: z.literal('page').describe('The page of another Aubergine, which shows this server.'),
+    origin: z.string().max(300).describe('The origin of that page, exactly as written in access.pages.'),
+  }),
+]);
 export type PairingCodeRequest = z.infer<typeof PairingCodeRequest>;
 
 /** A pairing code. Shown once; it works once, until `expiresAt`. */
@@ -93,6 +103,25 @@ export type PairingCodeAnswer = z.infer<typeof PairingCodeAnswer>;
 /** What a new browser sends to become a device. */
 export const PairRequest = z.object({ code: z.string().max(64) });
 export type PairRequest = z.infer<typeof PairRequest>;
+
+/**
+ * What a linked page is answered when its code was right: its credential, to send as `Authorization: Bearer` from
+ * its own origin and from nowhere else. The credential exists once, in this answer; the server keeps its hash.
+ */
+export const PairedPage = z.object({
+  credential: z.string(),
+  device: z.object({ id: Id, name: DeviceName }),
+  protocolVersion: z.number().int(),
+});
+export type PairedPage = z.infer<typeof PairedPage>;
+
+/** How long a socket ticket works, and how many may wait for one device. */
+export const SOCKET_TICKET_SECONDS = 30;
+export const SOCKET_TICKETS_WAITING = 50;
+
+/** A ticket for one WebSocket of a linked page, which cannot put a header on one: it goes in the address as `?ticket=`, and works once. */
+export const SocketTicket = z.object({ ticket: z.string(), expiresAt: Timestamp });
+export type SocketTicket = z.infer<typeof SocketTicket>;
 
 /** The answer to revoking: the device as it now is. */
 export const RevokedDevice = z.object({ device: DeviceView });
