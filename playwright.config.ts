@@ -25,6 +25,16 @@ export const e2e = {
   outsideAddress: 'https://aubergine.example.test',
 };
 
+/**
+ * A second server of the run, for the test of one page showing two servers: its own port, data folder and tmux
+ * socket, from the same run ID. Its settings list the first server's page under access.pages, and nothing else.
+ */
+export const second = {
+  port: 40000 + (Number.parseInt(run.split('-')[1] ?? '0', 16) % 20000),
+  dataDir: path.join(root, `.e2e-data-${run}-second`),
+  tmuxSocket: `aubergine-e2e-${run}-second`,
+};
+
 // The test server also answers under an outside address, read when it starts, so that a sign-in code can be made for
 // a device. Nothing answers under that name on this machine; every test reaches the server under its local name.
 // Written once, by the run itself (not by each worker), before the server is started.
@@ -32,6 +42,23 @@ if (process.env.TEST_WORKER_INDEX === undefined && !existsSync(path.join(e2e.dat
   mkdirSync(e2e.dataDir, { recursive: true });
   writeFileSync(path.join(e2e.dataDir, 'config.json'), JSON.stringify({ access: { addresses: [e2e.outsideAddress] } }));
 }
+if (process.env.TEST_WORKER_INDEX === undefined && !existsSync(path.join(second.dataDir, 'config.json'))) {
+  mkdirSync(second.dataDir, { recursive: true });
+  writeFileSync(path.join(second.dataDir, 'config.json'), JSON.stringify({ access: { pages: [`http://127.0.0.1:${e2e.port}`] } }));
+}
+
+/** What a server of the test run is started with: its own port, data folder and socket, and nothing of the developer's. */
+const serverEnv = (where: { port: number; dataDir: string; tmuxSocket: string }): Record<string, string> => ({
+  AUBERGINE_PORT: String(where.port),
+  AUBERGINE_DATA_DIR: where.dataDir,
+  AUBERGINE_TMUX_SOCKET: where.tmuxSocket,
+  CLAUDE_CONFIG_DIR: path.join(where.dataDir, 'stand-in-agent-config'),
+  // The server's Git reads the owner's configuration. In a test run that is nobody's: never the developer's own.
+  GIT_CONFIG_GLOBAL: '/dev/null',
+  GIT_CONFIG_SYSTEM: '/dev/null',
+  // The tool that is asked for a branch's pull request is a stand-in that reaches no network: never the developer's own.
+  AUBERGINE_GH_BIN: path.join(root, 'e2e', 'gh-stand-in.sh'),
+});
 
 export default defineConfig({
   testDir: 'e2e',
@@ -53,23 +80,23 @@ export default defineConfig({
     // An action that cannot happen fails by itself, naming the step, instead of using up the whole test.
     actionTimeout: 15_000,
   },
-  webServer: {
-    // Every run has a data folder and tmux socket of its own, so it starts from nothing.
-    // `pnpm serve`, not `pnpm start`: the server only, without opening a browser on the developer's desktop.
-    command: 'pnpm build && pnpm serve',
-    url: `http://127.0.0.1:${e2e.port}/`,
-    reuseExistingServer: false,
-    timeout: 120_000,
-    env: {
-      AUBERGINE_PORT: String(e2e.port),
-      AUBERGINE_DATA_DIR: e2e.dataDir,
-      AUBERGINE_TMUX_SOCKET: e2e.tmuxSocket,
-      CLAUDE_CONFIG_DIR: e2e.agentConfigDir,
-      // The server's Git reads the owner's configuration. In a test run that is nobody's: never the developer's own.
-      GIT_CONFIG_GLOBAL: '/dev/null',
-      GIT_CONFIG_SYSTEM: '/dev/null',
-      // The tool that is asked for a branch's pull request is a stand-in that reaches no network: never the developer's own.
-      AUBERGINE_GH_BIN: path.join(root, 'e2e', 'gh-stand-in.sh'),
+  webServer: [
+    {
+      // Every run has a data folder and tmux socket of its own, so it starts from nothing.
+      // `pnpm serve`, not `pnpm start`: the server only, without opening a browser on the developer's desktop.
+      command: 'pnpm build && pnpm serve',
+      url: `http://127.0.0.1:${e2e.port}/`,
+      reuseExistingServer: false,
+      timeout: 120_000,
+      env: serverEnv(e2e),
     },
-  },
+    {
+      // The second server: the browser reaches it only from the first server's page, across origins.
+      command: 'pnpm serve',
+      url: `http://127.0.0.1:${second.port}/`,
+      reuseExistingServer: false,
+      timeout: 120_000,
+      env: serverEnv(second),
+    },
+  ],
 });
