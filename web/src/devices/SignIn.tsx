@@ -1,4 +1,4 @@
-import { readPairingCode } from '@aubergine/shared';
+import { readPairingCode, showPairingCode } from '@aubergine/shared';
 import { useEffect, useRef, useState } from 'react';
 import { ApiError, api } from '../api';
 import { signedIn } from '../store';
@@ -47,7 +47,7 @@ export function SignIn() {
       field.current?.focus();
       return;
     }
-    setCode(waiting);
+    setCode(showPairingCode(waiting));
     void attempt(waiting);
   }, []);
 

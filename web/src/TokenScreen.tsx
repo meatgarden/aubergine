@@ -376,8 +376,8 @@ export function ActivityScreen() {
         </header>
         <p className="sheet-note">
           Every call made with an API token: when, which token, what it asked for and how it ended. Also the few things only you may do (deciding about a draft or a
-          repository workflow, making or revoking a token) when they were done as you from outside this browser, such as from the command line. What was sent is not
-          kept. The file is <code>activity.log</code> in the data folder.
+          repository workflow, making or revoking a token) when they were done as you from outside this browser, such as from the command line. And every try at a
+          sign-in code, every code made and every device revoked, with who did it. What was sent is not kept. The file is <code>activity.log</code> in the data folder.
         </p>
         <div className="token-field">
           <select aria-label="Token" value={tokenId} onChange={(e) => setTokenId(e.target.value)} data-testid="activity-filter">

@@ -1,4 +1,4 @@
-import { DeviceName, deviceStatus, showPairingCode, type Device, type PairingCodeAnswer } from '@aubergine/shared';
+import { DeviceName, deviceStatus, readPairingCode, showPairingCode, type Device, type PairingCodeAnswer } from '@aubergine/shared';
 import { useEffect, useRef, useState } from 'react';
 import { ApiError, api } from '../api';
 import { runCommand } from '../commands';
@@ -120,6 +120,7 @@ function AddDevice({ close }: { close: () => void }) {
   const [ranOut, setRanOut] = useState(false);
   const [now, setNow] = useState(() => Date.now());
   const field = useRef<HTMLInputElement>(null);
+  const box = useRef<HTMLDivElement>(null);
   const valid = DeviceName.safeParse(name.trim()).success;
 
   useEffect(() => field.current?.focus(), []);
@@ -144,6 +145,8 @@ function AddDevice({ close }: { close: () => void }) {
       const answer = await api.makePairingCode(name.trim());
       setNow(Date.now());
       setMade(answer);
+      // The form it was typed in is gone: the dialog keeps the keyboard, so that Escape still closes it.
+      window.setTimeout(() => box.current?.focus(), 0);
     } catch (e) {
       setError(e instanceof ApiError ? e.message : (e as Error).message);
     } finally {
@@ -164,7 +167,7 @@ function AddDevice({ close }: { close: () => void }) {
         }
       }}
     >
-      <div className="dialog sheet add-device" role="dialog" aria-label="Add a device" data-testid="add-device-dialog">
+      <div className="dialog sheet add-device" role="dialog" aria-label="Add a device" tabIndex={-1} ref={box} data-testid="add-device-dialog">
         <ScreenHead title="Add a device" onClose={close} closeTestid="add-device-close" />
         {error ? (
           <p className="dialog-error" role="alert" data-testid="add-device-error">
@@ -174,7 +177,8 @@ function AddDevice({ close }: { close: () => void }) {
           <div className="add-device-code" data-testid="add-device-made">
             <p>On the other device, scan the code or open the address, then type this code if it is asked for:</p>
             <p className="device-code" data-testid="device-code">
-              {showPairingCode(made.code)}
+              {/* The server sends it as it is shown; drawn the same whichever way it came. */}
+              {showPairingCode(readPairingCode(made.code) ?? made.code)}
             </p>
             <p className="ui-meta" role="timer" data-testid="device-code-left">
               {left?.words}

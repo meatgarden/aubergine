@@ -947,7 +947,7 @@ export const COMMANDS: readonly Command[] = [
     title: 'Close panels',
     description: 'Closes whatever panel is open; else returns the keyboard from a button to the canvas; else clears the selection.',
     group: 'Panels',
-    available: (state) => state.picker || state.page !== null || state.choosingAgentTools || state.viewingEnvironment !== null || state.inventoryFor !== null || state.historyView !== null || state.describing !== null || state.editingElement !== null || state.viewingRun !== null || state.startingRun !== null || state.editingWorkflow !== null || state.panel !== null || state.drawer !== null || state.selected !== null || onControl(),
+    available: (state) => state.picker || state.page !== null || state.choosingAgentTools || state.viewingEnvironment !== null || state.inventoryFor !== null || state.historyView !== null || state.describing !== null || state.editingElement !== null || state.viewingRun !== null || state.startingRun !== null || state.editingWorkflow !== null || state.addingDevice || state.panel !== null || state.drawer !== null || state.selected !== null || onControl(),
     run: (state) => {
       if (state.picker) state.setPicker(false);
       else if (state.choosingAgentTools) state.chooseAgentTools(false);
@@ -959,6 +959,8 @@ export const COMMANDS: readonly Command[] = [
       else if (state.startingRun !== null) state.startRun(null);
       else if (state.viewingRun !== null) state.viewRun(null);
       else if (state.editingWorkflow !== null) state.editWorkflow(null);
+      // Adding a device opens over Settings: Escape closes it, and Settings stays.
+      else if (state.addingDevice) state.addDevice(false);
       else if (state.panel !== null) state.togglePanel(null);
       else if (state.page !== null) state.showPage(null);
       else if (state.drawer !== null) state.openDrawer(null);

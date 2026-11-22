@@ -28,10 +28,14 @@ export function SettingsDialog() {
   // Asked to show a part (Devices, from its command): brought into view once, and what is done there first has the keyboard.
   useEffect(() => {
     if (!open || at === null) return;
-    useApp.setState({ settingsAt: null });
-    const part = document.querySelector<HTMLElement>(`[data-testid="settings-${at}"]`);
-    part?.scrollIntoView({ block: 'nearest' });
-    part?.querySelector<HTMLElement>('button')?.focus();
+    // A moment later: what opened Settings (the palette, a menu) gives the keyboard back as it closes.
+    const timer = window.setTimeout(() => {
+      useApp.setState({ settingsAt: null });
+      const part = document.querySelector<HTMLElement>(`[data-testid="settings-${at}"]`);
+      part?.scrollIntoView({ block: 'nearest' });
+      part?.querySelector<HTMLElement>('button')?.focus();
+    }, 0);
+    return () => window.clearTimeout(timer);
   }, [open, at]);
   if (!open) return null;
   const close = (): void => useApp.getState().togglePanel(null);
