@@ -35,7 +35,7 @@ npm install -g @meatgarden/aubergine
 Or with the installer, which also needs pnpm and builds from the source:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/meatgarden/aubergine/main/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/thirstyeggplant/aubergine/main/install.sh | sh
 ```
 
 **2. Start it and open your browser**
@@ -164,13 +164,13 @@ The installer and `aubergine doctor` both check this and say so when the version
 **1. Install Aubergine** with one line:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/meatgarden/aubergine/main/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/thirstyeggplant/aubergine/main/install.sh | sh
 ```
 
 Prefer to read a script before running it? The same thing in two steps:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/meatgarden/aubergine/main/install.sh -o install.sh
+curl -fsSL https://raw.githubusercontent.com/thirstyeggplant/aubergine/main/install.sh -o install.sh
 less install.sh        # read it; sh install.sh --dry-run shows what it would do and changes nothing
 sh install.sh
 ```
@@ -230,7 +230,7 @@ brew install tmux node pnpm
 **2. Get the code and its dependencies:**
 
 ```sh
-git clone https://github.com/meatgarden/aubergine.git
+git clone https://github.com/thirstyeggplant/aubergine.git
 cd aubergine
 pnpm install
 ```

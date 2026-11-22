@@ -32,11 +32,11 @@
   "@graph": [
     {
       "@type": "Organization",
-      "@id": "https://github.com/meatgarden#organization",
-      "name": "meatgarden",
-      "url": "https://github.com/meatgarden",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
       "logo": "https://thirstyeggplant.com/icon.svg",
-      "sameAs": ["https://github.com/meatgarden"]
+      "sameAs": ["https://github.com/thirstyeggplant"]
     },
     {
       "@type": "WebSite",
@@ -44,7 +44,7 @@
       "url": "https://thirstyeggplant.com/",
       "name": "Aubergine",
       "inLanguage": "en",
-      "publisher": { "@id": "https://github.com/meatgarden#organization" }
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" }
     },
     {
       "@type": "WebPage",
@@ -67,8 +67,8 @@
       "operatingSystem": "macOS",
       "softwareRequirements": "tmux 3.2 or newer, Node.js 22 or newer, pnpm",
       "url": "https://thirstyeggplant.com/",
-      "installUrl": "https://raw.githubusercontent.com/meatgarden/aubergine/main/install.sh",
-      "codeRepository": "https://github.com/meatgarden/aubergine",
+      "installUrl": "https://raw.githubusercontent.com/thirstyeggplant/aubergine/main/install.sh",
+      "codeRepository": "https://github.com/thirstyeggplant/aubergine",
       "image": "https://thirstyeggplant.com/og.png",
       "isAccessibleForFree": true,
       "license": "https://opensource.org/licenses/MIT",
@@ -87,8 +87,8 @@
         "Search terminal output, recaps and past conversations",
         "Runs only on 127.0.0.1"
       ],
-      "author": { "@id": "https://github.com/meatgarden#organization" },
-      "publisher": { "@id": "https://github.com/meatgarden#organization" }
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" }
     },
     {
       "@type": "HowTo",
@@ -183,7 +183,7 @@
 <div class="wrap">
   <header class="top">
     <a class="brand" href="./"><img src="icon.svg" alt="" width="30" height="30">Aubergine</a>
-    <nav aria-label="Main"><a href="#features">Features</a><a href="install/">Install</a><a href="guides/">Guides</a><a href="security/">Security</a><a href="roadmap/">Roadmap</a><a href="faq/">FAQ</a><a href="https://github.com/meatgarden/aubergine">GitHub</a></nav>
+    <nav aria-label="Main"><a href="#features">Features</a><a href="install/">Install</a><a href="guides/">Guides</a><a href="security/">Security</a><a href="roadmap/">Roadmap</a><a href="faq/">FAQ</a><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></nav>
   </header>
 
   <main>
@@ -192,7 +192,7 @@
       <h1>Run many agents. <em>See</em> which one needs you.</h1>
       <p class="lead">Aubergine puts your terminals side by side on a canvas in your browser. Queue work for your coding agents, keep each one in its own copy of the code, and answer only the ones that are waiting.</p>
       <a class="btn" href="#install">Install in one line</a>
-      <a class="btn alt" href="https://github.com/meatgarden/aubergine">View on GitHub</a>
+      <a class="btn alt" href="https://github.com/thirstyeggplant/aubergine">View on GitHub</a>
       <div><code class="cmd"><b>$</b> npm install -g @meatgarden/aubergine</code></div>
 
       <figure class="stage" style="margin-bottom:0" aria-label="An illustration of the Aubergine canvas with four terminals">
@@ -315,19 +315,19 @@
       <details><summary>What if I start Claude Code myself in a terminal?</summary><p>It works like any program: you type to it as usual. But Aubergine only knows an agent is there when it started the agent itself (New terminal, then Claude Code), because it adds a few small hooks that report what the agent is doing. Started by hand, the terminal just shows as busy running <code>claude</code>: it is not marked as waiting for you when it asks something, and when you start a workflow there, nothing is typed for it. Tell it yourself to run <code>aubergine workflow status</code>, which still works from inside, or start the agent from the New terminal menu instead.</p></details>
       <details><summary>Does it work with any coding agent?</summary><p>Aubergine runs ordinary terminals, so any command-line agent can run in one. Agents can also report their status through a command and a local API, and can use an MCP server that lists only what their token allows.</p></details>
       <details><summary>Will Aubergine support several people or agents in the cloud?</summary><p>Both are planned and neither is built. Planned work includes multiplayer, where several people share a canvas with their agents, and sandboxed agents running in the cloud. Today everything runs on one computer.</p></details>
-      <details><summary>Is Aubergine free?</summary><p>Yes. It is free and open source under the <a href="https://github.com/meatgarden/aubergine/blob/main/LICENSE">MIT license</a>, and its source is on GitHub.</p></details>
+      <details><summary>Is Aubergine free?</summary><p>Yes. It is free and open source under the <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT license</a>, and its source is on GitHub.</p></details>
       <details><summary>What does the installer change on my computer?</summary><p>Two things: the install folder (~/.aubergine) and one link named aubergine. It never uses sudo, never edits your shell startup files and never installs Node.js, pnpm or tmux. <code>aubergine uninstall</code> removes what it made.</p></details>
     </section>
 
     <section class="final" aria-labelledby="final-h">
       <h2 id="final-h">Stop hunting for the terminal that needs you</h2>
       <a class="btn" href="#install">Install Aubergine</a>
-      <a class="btn alt" href="https://github.com/meatgarden/aubergine">Star on GitHub</a>
+      <a class="btn alt" href="https://github.com/thirstyeggplant/aubergine">Star on GitHub</a>
     </section>
   </main>
 
   <footer>
-    <span>Aubergine is open source under the <a href="https://github.com/meatgarden/aubergine/blob/main/LICENSE">MIT license</a>. <a href="https://github.com/meatgarden/aubergine">GitHub</a> · <a href="llms.txt">llms.txt</a></span>
+    <span>Aubergine is open source under the <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT license</a>. <a href="https://github.com/thirstyeggplant/aubergine">GitHub</a> · <a href="llms.txt">llms.txt</a></span>
     <span class="flinks"><a href="install/">Install</a> · <a href="guides/">Guides</a> · <a href="run-multiple-coding-agents/">Run several agents</a> · <a href="working-copies/">Working copies</a> · <a href="queue-and-schedules/">Queue and schedules</a> · <a href="security/">Security</a> · <a href="roadmap/">Roadmap</a> · <a href="faq/">FAQ</a></span>
   </footer>
 </div>
