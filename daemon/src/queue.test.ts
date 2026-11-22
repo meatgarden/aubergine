@@ -603,8 +603,8 @@ describe('the owner\'s list', () => {
     await asOwner('POST', '/v1/rules', { event: 'task.failed', action: { kind: 'notify' } });
     const before = JSON.stringify(queueNow());
     await stop();
-    // The file says version 14.
-    expect(JSON.parse(await readFile(path.join(dir, 'state.json'), 'utf8')).version).toBe(14);
+    // The file says version 15.
+    expect(JSON.parse(await readFile(path.join(dir, 'state.json'), 'utf8')).version).toBe(15);
     await start();
     expect(JSON.stringify(queueNow())).toBe(before);
     expect(taskNow(task.id)).toMatchObject({ state: 'working', sessionId: one.id });

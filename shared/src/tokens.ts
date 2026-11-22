@@ -162,8 +162,16 @@ export const ActivityEntry = z.object({
    * (the command line, a script), recorded for the few things only the owner may do.
    * `rule`: not a call at all, but a rule of the owner's that fired: which rule, for what event, and how it ended.
    * `schedule`: not a call either, but a time of a schedule of the owner's: which schedule, the time, and how it ended.
+   * `owner`: the owner at this computer, in the page, for what is recorded about devices.
+   * `device`: the owner on a paired device (`byDeviceId`), for what is recorded about devices.
+   * `pairing`: a browser that is not signed in, trying a pairing code: whether it became a device, never what it sent.
    */
-  caller: z.enum(['token', 'owner-cli', 'rule', 'schedule']).default('token'),
+  caller: z.enum(['token', 'owner-cli', 'rule', 'schedule', 'owner', 'device', 'pairing']).default('token'),
+  /** For a call made from a paired device: that device. */
+  byDeviceId: Id.nullable().optional(),
+  /** For a line about one device (paired, revoked): which, by its ID and name. Never its secret, never a code. */
+  deviceId: Id.nullable().optional(),
+  deviceName: z.string().max(120).nullable().optional(),
   /** The token; null for a call that was not made with one. */
   tokenId: Id.nullable(),
   tokenName: z.string(),

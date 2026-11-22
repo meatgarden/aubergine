@@ -100,6 +100,7 @@ describe('HTTP schemas', () => {
       settings: DEFAULT_SETTINGS,
       state,
       defaultCanvasId: main(state).id,
+      here: true,
     };
     expect(StateResponse.safeParse(body).success).toBe(true);
     expect(StateResponse.safeParse({ ...body, protocolVersion: 2 }).success).toBe(false);

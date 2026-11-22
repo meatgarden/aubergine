@@ -158,6 +158,20 @@ export const Settings = z.object({
     })
     .prefault({}),
   /**
+   * Reaching this server from another device. Written by hand and read when the server starts; no route writes
+   * them. An entry that is wrong is reported and skipped (`accessProblem`); a list that is not a list is reported
+   * and taken as empty, and the rest of the file still counts.
+   */
+  access: z
+    .object({
+      /** HTTPS origins this server also answers under, through something on this computer that carries HTTPS to it. */
+      addresses: z.array(z.unknown()).max(20).catch([]).default([]),
+      /** Origins of pages that may show this server. Not used yet. */
+      pages: z.array(z.unknown()).max(20).catch([]).default([]),
+    })
+    .catch({ addresses: [], pages: [] })
+    .prefault({}),
+  /**
    * Keys: command name to a chord (`"Ctrl+Meta+J"`), a list of chords, or
    * `null` for no key. Entries that are wrong are reported and skipped.
    */

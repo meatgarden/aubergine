@@ -102,6 +102,14 @@ export const paths = {
   outsideAdd: '/api/v1/outside/add',
   /** POST: move the agent conversation of one of those terminals onto the canvas. */
   outsideMove: '/api/v1/outside/move',
+  /** POST `{ code }`: a browser at an outside address becomes a device. Needs no sign-in. */
+  pair: '/auth/pair',
+  /** GET: the devices paired with this server. The owner's alone. */
+  devices: '/api/v1/devices',
+  /** DELETE: revoke a device. Its open sockets are closed at once. The owner's alone. */
+  device: (deviceId: string) => `/api/v1/devices/${deviceId}`,
+  /** POST `{ name, kind }`: make a pairing code. It works once, for a few minutes. The owner's alone. */
+  pairingCodes: '/api/v1/pairing-codes',
   /** WebSocket: stream of change events. */
   events: '/ws/v1/events',
   /** WebSocket: one terminal viewer. Query: `cols`, `rows`. */
@@ -129,6 +137,8 @@ export const StateResponse = z.object({
   revision: z.number().int().min(0).optional(),
   /** Where new things go when no canvas is named: the canvas most recently looked at in a browser, else the first. */
   defaultCanvasId: Id,
+  /** True when the request came in under this computer's own name; false from an outside address, where nothing is opened on this computer's desktop. */
+  here: z.boolean(),
 });
 export type StateResponse = z.infer<typeof StateResponse>;
 
