@@ -153,6 +153,7 @@ You need macOS with [tmux](https://github.com/tmux/tmux) 3.2 or newer, Node.js 2
 node -v                  # v22 or higher is fine
 nvm install 22           # or a newer one, if this one is older
 nvm alias default 22     # so new terminals use it too
+npm install -g @meatgarden/aubergine
 ```
 
 The installer and `aubergine doctor` both check this and say so when the version is too old.
