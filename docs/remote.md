@@ -434,7 +434,7 @@ Signing an agent in, and giving Git its credentials (an SSH key, a credential he
 
 ### What is different from a laptop
 
-- **The terminals end when the container stops** or is made again, at an update. Expect the same when the web server's container is made again: they share its network. When the server starts again, every terminal gets a fresh shell in its last known folder, in the same place on the canvas. Nothing is re-run. This is what a laptop does after a reboot.
+- **The terminals end when the container stops** or is made again, at an update. Restarting the web server's container does not end them: the network the two share is the `aubergine` container's. If Docker itself restarts the `aubergine` container after a failure, restart the web server too (`docker compose restart proxy`), since it had joined the network that is gone. When the server starts again, every terminal gets a fresh shell in its last known folder, in the same place on the canvas. Nothing is re-run. This is what a laptop does after a reboot.
 - **Nothing opens on a desktop.** There is none: **Open on desktop** is left out under an outside address anyway.
 - **Start at login does not apply.** The containers' restart policy (`unless-stopped`) starts them again with Docker.
 - **The terminals run zsh.** Command status in a terminal's title comes from the zsh integration; another shell would work but show none.

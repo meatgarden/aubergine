@@ -8,10 +8,16 @@
 #   docker compose up -d --build
 #
 # Why the network is shared: Aubergine listens on 127.0.0.1 only, and that does not change. A port
-# published from its own container would reach nothing. So the `aubergine` container joins the
-# network namespace of `proxy`, where 127.0.0.1 is the same for both, and only the web server's
-# ports 80 and 443 are published. Never publish Aubergine's own port (4600), and never add
-# `ports` to the `aubergine` service.
+# published for it would reach nothing. So `proxy` joins the network namespace of the `aubergine`
+# container, where 127.0.0.1 is the same for both, and only the web server's ports 80 and 443 are
+# published. They are written on the `aubergine` service because the network is that container's;
+# what listens on them is the web server. Never publish Aubergine's own port (4600).
+#
+# Why the network is Aubergine's and not the web server's: a container that joined another's
+# network loses it when that other one is restarted, and has to be restarted too. The terminals
+# live in the `aubergine` container, so the web server can be restarted (after a change to the
+# Caddyfile, say) without ending them. When the `aubergine` container is restarted by Docker itself
+# after a failure, restart the web server too: docker compose restart proxy
 
 name: aubergine
 
@@ -19,10 +25,13 @@ services:
   proxy:
     image: caddy:2
     restart: unless-stopped
-    ports:
-      - "80:80"
-      - "443:443"
-      - "443:443/udp"
+    # Aubergine's network: the web server's 127.0.0.1 is Aubergine's 127.0.0.1.
+    network_mode: "service:aubergine"
+    depends_on:
+      aubergine:
+        condition: service_started
+        # Restarted with it when Compose restarts or makes `aubergine` again: its network is gone otherwise.
+        restart: true
     environment:
       AUBERGINE_HOST: ${AUBERGINE_HOST:?Set AUBERGINE_HOST in docker/.env to the name other devices will open, such as aubergine.example.net}
     volumes:
@@ -35,10 +44,11 @@ services:
     build:
       context: ..
       dockerfile: docker/Dockerfile
-    # The proxy's network: Aubergine's 127.0.0.1 is the proxy's 127.0.0.1. No `ports` here.
-    network_mode: "service:proxy"
-    depends_on:
-      - proxy
+    # The web server's ports, on the network the two share. Aubergine's own port is not among them.
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
     # tmux and the shells are children of the server that must be reaped.
     init: true
     restart: unless-stopped

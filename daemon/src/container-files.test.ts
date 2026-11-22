@@ -22,10 +22,18 @@ function service(compose: string, name: string): string {
 }
 
 describe('the container files', () => {
-  it('give the aubergine service no ports, and the network of the proxy', () => {
-    const aubergine = service(read('compose.yaml'), 'aubergine');
-    expect(aubergine).toMatch(/^\s+network_mode: "service:proxy"$/m);
-    expect(aubergine).not.toMatch(/^\s+(ports|expose):/m);
+  it("publish the web server's ports and never Aubergine's, on a network the web server joins", () => {
+    const compose = read('compose.yaml');
+    const aubergine = service(compose, 'aubergine');
+    const proxy = service(compose, 'proxy');
+    // The network is the container's that holds the terminals: the web server can be restarted without ending them.
+    expect(proxy).toMatch(/^\s+network_mode: "service:aubergine"$/m);
+    expect(aubergine).not.toMatch(/^\s+network_mode:/m);
+    expect(proxy).not.toMatch(/^\s+(ports|expose):/m);
+    expect(aubergine).not.toMatch(/^\s+expose:/m);
+    // Every published port in the file: 80 and 443, and nothing else.
+    const published = [...code(compose).matchAll(/^\s+- "([^"]+)"$/gm)].map((match) => match[1] ?? '').filter((entry) => /^\d/.test(entry));
+    expect(published.sort()).toEqual(['443:443', '443:443/udp', '80:80']);
     expect(aubergine).toMatch(/^\s+init: true$/m);
     // Named volumes only: no folder of the host is handed to the terminals.
     const mounts = [...aubergine.matchAll(/^\s+- ([^:\s]+):\//gm)].map((match) => match[1] ?? '');
