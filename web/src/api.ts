@@ -1,4 +1,4 @@
-import { PROJECT_HEADER, type LinkKind, type ThemeSetting } from '@aubergine/shared';
+import { CLOSE_DEVICE_REVOKED, PROJECT_HEADER, type LinkKind, type ThemeSetting } from '@aubergine/shared';
 import { z, type ZodType } from 'zod';
 import { createClient } from '@aubergine/client';
 import {
@@ -543,6 +543,8 @@ export function subscribeToEvents(handlers: {
   /** A rule of the owner's asks this page to notify them. */
   onNotify?: (title: string, body: string) => void;
   onDown: () => void;
+  /** The server closed the stream because this page's device was revoked: it is not opened again. */
+  onRevoked?: () => void;
 }): { stop: () => void; viewing: (canvasId: string) => void } {
   let socket: WebSocket | null = null;
   let timer: number | undefined;
@@ -578,9 +580,11 @@ export function subscribeToEvents(handlers: {
           else if (parsed.data.type === 'notify') handlers.onNotify?.(parsed.data.title, parsed.data.body);
           else handlers.onEvent(parsed.data.event, parsed.data.revision);
         };
-        opened.onclose = () => {
+        opened.onclose = (closed?: { code?: number }) => {
           if (stopped || !socketIsCurrent(opened)) return;
           handlers.onDown();
+          // Signed out: trying again would be refused every second for as long as the page is open.
+          if (closed?.code === CLOSE_DEVICE_REVOKED) return handlers.onRevoked?.();
           timer = window.setTimeout(connect, 1000);
         };
       },

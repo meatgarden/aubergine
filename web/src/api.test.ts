@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { createInitialState, DEFAULT_SETTINGS, PROTOCOL_VERSION, paths } from '@aubergine/shared';
+import { CLOSE_DEVICE_REVOKED, createInitialState, DEFAULT_SETTINGS, PROTOCOL_VERSION, paths } from '@aubergine/shared';
 import { NotUnderstood, Superseded, api, openSocket, pairWith, requestFor, showTarget, socketAddress, subscribeToEvents, whenRefused, type LinkedTarget } from './api';
 
 /**
@@ -179,6 +179,22 @@ describe('sockets', () => {
     socket.onclose?.();
     expect(heard).toEqual(['ready']);
     expect(socket.closed).toBe(true);
+    subscription.stop();
+  });
+
+  it('closed because the device was revoked: told, and not opened again; any other close is tried again', async () => {
+    const timers: unknown[] = [];
+    vi.stubGlobal('window', { setTimeout: (run: unknown) => timers.push(run), clearTimeout: () => undefined });
+    const heard: string[] = [];
+    const subscription = subscribeToEvents({ onReady: () => heard.push('ready'), onEvent: () => heard.push('event'), onShow: () => heard.push('show'), onShowCanvas: () => heard.push('show-canvas'), onDown: () => heard.push('down'), onRevoked: () => heard.push('revoked') });
+    await vi.waitFor(() => expect(StandInSocket.made).toHaveLength(1));
+    const onclose = StandInSocket.made[0]!.onclose as ((closed: { code: number }) => void) | null;
+    onclose?.({ code: 1006 });
+    expect(heard).toEqual(['down']);
+    expect(timers).toHaveLength(1);
+    onclose?.({ code: CLOSE_DEVICE_REVOKED });
+    expect(heard).toEqual(['down', 'down', 'revoked']);
+    expect(timers).toHaveLength(1);
     subscription.stop();
   });
 
