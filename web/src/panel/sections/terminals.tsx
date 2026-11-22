@@ -7,7 +7,7 @@ import { listModel, listSource } from '../../list-model';
 import { recapTitle } from '../../Recap';
 import { colorClass, colorStyle } from '../../color';
 import { hint } from '../../shortcuts';
-import { currentCanvas, useApp } from '../../store';
+import { atThisComputer, currentCanvas, useApp } from '../../store';
 import {
   SORTS,
   SORT_LABEL,
@@ -470,14 +470,19 @@ export interface TerminalAction {
   testid?: string;
   command?: CommandId;
 }
-export function terminalActions(session: Row['session'], where: { here: boolean; parked: boolean; canMove: boolean; hasNotes: boolean }): TerminalAction[] {
+/**
+ * What can be done with a terminal from its row and its details. `here`: it is on the canvas being looked at.
+ * `desktop`: the page is at the computer Aubergine runs on (`atThisComputer`); elsewhere "Open on desktop" is left out.
+ */
+export function terminalActions(session: Row['session'], where: { here: boolean; parked: boolean; canMove: boolean; hasNotes: boolean; desktop: boolean }): TerminalAction[] {
   const exited = session.state === 'exited';
   if (!where.here) return [{ key: 'details', label: 'Details' }, { key: 'go', label: where.parked ? 'Restore to this canvas' : 'Go to it', testid: 'row-restore' }];
   return [
     { key: 'details', label: 'Details' },
     { key: 'rename', label: 'Rename', command: 'terminal.rename' },
     { key: 'tags', label: 'Tags…', command: 'terminal.tags' },
-    ...(exited ? [] : [{ key: 'desktop', label: 'Open on desktop', testid: 'row-open-desktop', command: 'terminal.openOnDesktop' as const }, { key: 'tab', label: 'Open in new browser tab', testid: 'row-open-tab', command: 'terminal.openInNewTab' as const }]),
+    ...(exited || !where.desktop ? [] : [{ key: 'desktop', label: 'Open on desktop', testid: 'row-open-desktop', command: 'terminal.openOnDesktop' as const }]),
+    ...(exited ? [] : [{ key: 'tab', label: 'Open in new browser tab', testid: 'row-open-tab', command: 'terminal.openInNewTab' as const }]),
     ...(where.canMove ? [{ key: 'move', label: 'Move to canvas…', command: 'terminal.moveToCanvas' as const }] : []),
     { key: 'park', label: exited ? 'Remove' : 'Park', command: 'terminal.park' },
   ];
@@ -501,6 +506,7 @@ export function chipOf(row: Pick<Row, 'session' | 'state'>): { text: string; ton
 
 const RowView = memo(function RowView({ row, style, density, indented, current, focused, here, menuOpen, canMove, now, onGo, onMenu, onAct, onNotes, onDetails, onTag }: RowProps) {
   const { session, state } = row;
+  const desktop = useApp(atThisComputer);
   const compact = density === 'compact';
   const chip = chipOf(row);
   const tone = dotTone(session, row.parked);
@@ -616,7 +622,7 @@ const RowView = memo(function RowView({ row, style, density, indented, current, 
       </button>
       {menuOpen && (
         <div className="list-menu" role="menu" aria-label={`Actions for ${session.name}`} onClick={(event) => event.stopPropagation()}>
-          {terminalActions(session, { here, parked: row.parked, canMove, hasNotes }).map((action) => (
+          {terminalActions(session, { here, parked: row.parked, canMove, hasNotes, desktop }).map((action) => (
             <button
               key={action.key}
               type="button"

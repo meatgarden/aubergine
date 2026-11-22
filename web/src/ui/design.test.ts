@@ -190,6 +190,8 @@ describe('the colours can be read', () => {
     ['--danger-text', '--surface'],
     ['--danger-text', '--danger-soft'],
     ['--on-danger', '--danger'],
+    // A QR code is dark modules on a light ground in both themes, as a scanner needs.
+    ['--qr-dark', '--qr-light'],
   ];
   const lines: [string, string][] = [
     ['--border-control', '--bg'],

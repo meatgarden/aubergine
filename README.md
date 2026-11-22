@@ -1356,7 +1356,9 @@ At this computer, or in a terminal on the machine Aubergine runs on:
 aubergine device add --name "Phone"
 ```
 
-It prints a code, and for each address a link with the code in it and a QR of that link. Open the link on the other device, or scan the QR. The code works once, for three minutes, and is kept nowhere but in the server's memory. A few wrong codes withdraw every code that waits; make a new one then.
+It prints a code, and for each address a link with the code in it and a QR of that link. Open the link on the other device, or scan the QR: the page takes the code out of the address before it asks the server anything, and signs that browser in. Or open the address itself and type the code into the one field the page shows a browser that is not signed in (with or without the dash, in either case). The code works once, for three minutes, and is kept nowhere but in the server's memory; the page never stores it. A few wrong codes withdraw every code that waits; make a new one then.
+
+In the page the same is under **Settings → Devices** (or **Devices…** in the palette): the list of devices, when each was added and last used, and which is the browser you are using; **Add a device**, which asks for a name and shows the code, how long it still works, and for each address its QR code and the link; and **Revoke** on each, which asks first. Revoking the browser you are using signs it out at once, and it asks for a code again.
 
 ```sh
 aubergine device list            # the devices: their kind, when each was added and last used, and its state
@@ -1365,7 +1367,7 @@ aubergine device revoke "Phone"  # signed out at once; what it has open is close
 
 A device that is not used for 90 days stops working. A device can be revoked from another device, or from itself.
 
-A window on this computer's desktop is never opened for a request from another device: **Open on desktop** is refused there, and a new terminal made there does not open one.
+A window on this computer's desktop is never opened for a request from another device: **Open on desktop** is refused there, and a new terminal made there does not open one. The page on another device leaves out what acts on this computer's desktop: **Open on desktop**, the box for it in the dialogs, its setting, and the terminals open outside the canvas.
 
 ### Letting another Aubergine's page show this server
 
@@ -1389,8 +1391,6 @@ The page's side, which shows a linked server, is not built yet: so far only this
 
 ### Not done yet
 
-- The page does not take the code yet: the link opens it, signed out. The server side of pairing is in place (`POST /auth/pair`); the page's side comes next.
-- There is no page for devices in Settings yet: they are listed, paired and revoked from the command line.
 - The page is not laid out for a phone; it works as it does in a narrow window.
 - Linux has not been tried.
 

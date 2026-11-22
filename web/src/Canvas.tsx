@@ -28,7 +28,7 @@ import {
 import { api } from './api';
 import { OutsidePanel } from './OutsidePanel';
 import { ParkedList } from './ParkedList';
-import { currentLayout, useApp } from './store';
+import { atThisComputer, currentLayout, useApp } from './store';
 import { canvasActions } from './canvas-actions';
 import { runCommand } from './commands';
 import { afterOpening } from './desktop';
@@ -96,6 +96,8 @@ const NARROW_CANVAS = 640;
  */
 function NarrowMenu() {
   const parked = useApp((s) => (s.app?.sessions ?? []).filter((session) => session.state === 'parked').length);
+  const here = useApp(atThisComputer);
+  if (!here && parked === 0) return null;
   return (
     <MenuButton label="More" more testid="toolbar-more" menuTestid="toolbar-more-menu" className="toolbar-more">
       {parked > 0 && (
@@ -103,9 +105,11 @@ function NarrowMenu() {
           Parked terminals: {parked}…<small>Put away, still running: bring one back.</small>
         </button>
       )}
-      <button type="button" role="menuitem" title={hint('outside.open')} onClick={() => runCommand('outside.open')} data-testid="toolbar-menu-outside">
-        Terminals open elsewhere…<small>In your terminal application: bring one in.</small>
-      </button>
+      {here && (
+        <button type="button" role="menuitem" title={hint('outside.open')} onClick={() => runCommand('outside.open')} data-testid="toolbar-menu-outside">
+          Terminals open elsewhere…<small>In your terminal application: bring one in.</small>
+        </button>
+      )}
     </MenuButton>
   );
 }
@@ -281,6 +285,8 @@ export function Canvas() {
 
   // The canvas is narrow (the details are open beside the panel, say): the bar keeps to one row, and what is used seldom is in its menu.
   const narrow = useStore((s) => s.width > 0 && s.width < NARROW_CANVAS);
+  // The terminals open outside the canvas are on the computer Aubergine runs on: not offered from another device.
+  const here = useApp(atThisComputer);
   const barOpen = useBarKeptOpen();
   const barAt = useBarPlace();
   const [fullSizeHint, setFullSizeHint] = useState<{ x: number; y: number } | null>(null);
@@ -309,7 +315,7 @@ export function Canvas() {
       const rect = findFreeRect(taken, center, { width: NODE_DEFAULT_WIDTH, height: NODE_DEFAULT_HEIGHT });
       if (!canvasId) return null;
       // Every way of making a terminal in the page comes through here: the setting decides, unless a dialog said otherwise for this one.
-      const created = await api.createSession({ rect, canvasId, ...(agent ? { agent } : {}), ...(agent && agentArgs ? { agentArgs } : {}), ...(agent && agentTools ? { agentTools } : {}), ...(where?.cwd ? { cwd: where.cwd } : {}), ...(where?.environment ? { environment: where.environment } : {}), ...(where?.name ? { name: where.name, uniqueName: true } : {}) , desktop: where?.desktop ?? useApp.getState().settings.desktop.openNew });
+      const created = await api.createSession({ rect, canvasId, ...(agent ? { agent } : {}), ...(agent && agentArgs ? { agentArgs } : {}), ...(agent && agentTools ? { agentTools } : {}), ...(where?.cwd ? { cwd: where.cwd } : {}), ...(where?.environment ? { environment: where.environment } : {}), ...(where?.name ? { name: where.name, uniqueName: true } : {}) , desktop: atThisComputer(useApp.getState()) && (where?.desktop ?? useApp.getState().settings.desktop.openNew) });
       useApp.getState().apply({ type: 'session.created', canvasId, ...created });
       goToNode(created.node.id, created.session.id);
       // The terminal is made either way; why its window could not be opened is said.
@@ -512,7 +518,7 @@ export function Canvas() {
           </span>
           <span className="toolbar-group toolbar-status" role="group" aria-label="Terminals that are not on this canvas">
             <ParkedList />
-            <OutsidePanel />
+            {here && <OutsidePanel />}
             {narrow && <NarrowMenu />}
           </span>
           <span className="toolbar-group" role="group" aria-label="This bar">

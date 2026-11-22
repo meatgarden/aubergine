@@ -8,7 +8,7 @@ import { api } from './api';
 import { nextWaiting } from './attention';
 import { canvasActions } from './canvas-actions';
 import { neighbour, type Box, type Direction } from './spatial';
-import { currentCanvas, currentLayout, useApp, type AppStore } from './store';
+import { atThisComputer, currentCanvas, currentLayout, useApp, type AppStore } from './store';
 import { SCOPE_FILTER } from './list-filters';
 import { listModel, listSource } from './list-model';
 import { SORTS } from './terminal-rows';
@@ -29,7 +29,15 @@ export interface Command {
   /** Whether it can run right now. A command that cannot is shown greyed out and does nothing. */
   available: (state: AppStore) => boolean;
   run: (state: AppStore) => void;
+  /** It acts on the desktop of the computer Aubergine runs on: not offered on another device (`atThisComputer`). */
+  atThisComputerOnly?: true;
 }
+
+/** Said when such a command is asked for on another device. */
+export const NOT_AT_THIS_COMPUTER = 'Not available on this device: it acts on the desktop of the computer Aubergine runs on.';
+
+/** Whether a command is offered at all where the page is: everything at that computer, all but what acts on its desktop elsewhere. */
+export const offeredHere = (command: Pick<Command, 'atThisComputerOnly'>, state: Pick<AppStore, 'here'>): boolean => !command.atThisComputerOnly || atThisComputer(state);
 
 /** Runs something that talks to the server, and shows why if it fails. */
 function attempt(work: Promise<unknown>, what: string): void {
@@ -409,9 +417,10 @@ export const COMMANDS: readonly Command[] = [
     title: 'Open on desktop',
     description: 'Opens this terminal in a window of your own terminal application. Both show the same terminal, an agent\'s too, and you can type in either. Closing the window ends nothing. Which application is in the settings file.',
     group: 'Terminals',
+    atThisComputerOnly: true,
     available: (state) => {
       const session = targetSession(state);
-      return session != null && session.state !== 'exited';
+      return atThisComputer(state) && session != null && session.state !== 'exited';
     },
     run: (state) => {
       const session = targetSession(state);
@@ -662,7 +671,8 @@ export const COMMANDS: readonly Command[] = [
     title: 'Open Outside terminals',
     description: 'Shows the terminals you have open outside the canvas.',
     group: 'Panels',
-    available: always,
+    atThisComputerOnly: true,
+    available: atThisComputer,
     run: (state) => state.togglePanel('outside'),
   },
   {
@@ -892,6 +902,22 @@ export const COMMANDS: readonly Command[] = [
     available: always,
     run: (state) => state.togglePanel('settings'),
   },
+  {
+    id: 'devices.show',
+    title: 'Devices…',
+    description: 'The browsers on your other devices that are signed in to this Aubergine with a code, in Settings: when each was added and last used, and Revoke.',
+    group: 'Panels',
+    available: always,
+    run: (state) => state.showSettings('devices'),
+  },
+  {
+    id: 'devices.add',
+    title: 'Add a device…',
+    description: 'Makes a code that signs in a browser on another device, once, for a few minutes, with the address to open and its QR code.',
+    group: 'Panels',
+    available: always,
+    run: (state) => state.addDevice(true),
+  },
   ...THEMES.map((theme): Command => ({
     id: `theme.${theme}` as const,
     title: `Theme: ${THEME_WORDS[theme].toLowerCase()}`,
@@ -921,7 +947,7 @@ export const COMMANDS: readonly Command[] = [
     title: 'Close panels',
     description: 'Closes whatever panel is open; else returns the keyboard from a button to the canvas; else clears the selection.',
     group: 'Panels',
-    available: (state) => state.picker || state.page !== null || state.choosingAgentTools || state.viewingEnvironment !== null || state.inventoryFor !== null || state.historyView !== null || state.describing !== null || state.editingElement !== null || state.viewingRun !== null || state.startingRun !== null || state.editingWorkflow !== null || state.panel !== null || state.drawer !== null || state.selected !== null || onControl(),
+    available: (state) => state.picker || state.page !== null || state.choosingAgentTools || state.viewingEnvironment !== null || state.inventoryFor !== null || state.historyView !== null || state.describing !== null || state.editingElement !== null || state.viewingRun !== null || state.startingRun !== null || state.editingWorkflow !== null || state.addingDevice || state.panel !== null || state.drawer !== null || state.selected !== null || onControl(),
     run: (state) => {
       if (state.picker) state.setPicker(false);
       else if (state.choosingAgentTools) state.chooseAgentTools(false);
@@ -933,6 +959,8 @@ export const COMMANDS: readonly Command[] = [
       else if (state.startingRun !== null) state.startRun(null);
       else if (state.viewingRun !== null) state.viewRun(null);
       else if (state.editingWorkflow !== null) state.editWorkflow(null);
+      // Adding a device opens over Settings: Escape closes it, and Settings stays.
+      else if (state.addingDevice) state.addDevice(false);
       else if (state.panel !== null) state.togglePanel(null);
       else if (state.page !== null) state.showPage(null);
       else if (state.drawer !== null) state.openDrawer(null);
@@ -954,6 +982,10 @@ export function commandById(id: CommandId): Command {
 export function runCommand(id: CommandId): boolean {
   const state = useApp.getState();
   const command = commandById(id);
+  if (!offeredHere(command, state)) {
+    state.setNotice(NOT_AT_THIS_COMPUTER);
+    return false;
+  }
   if (!command.available(state)) return false;
   command.run(state);
   return true;

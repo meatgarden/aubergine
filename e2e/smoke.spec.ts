@@ -2502,10 +2502,11 @@ test("working copies: two terminals on one repository change the same file apart
     await expect(node).toHaveCount(2);
 
     // Each terminal says on itself that it is kept apart, and on which branch.
-    const nodeOf = (name: string) => node.filter({ hasText: name });
+    // By the name in a terminal's title, exactly: a terminal prints its folder, and the checkout's own path may hold "one" or "two".
+    const nodeOf = (name: string) => node.filter({ has: page.getByTestId('node-name').getByText(name, { exact: true }) });
     await expect(nodeOf('one').getByTestId('copy-chip')).toHaveAttribute('title', /In its own working copy\. Kept apart: its own copy of the files, on its own branch\. Not a lock/);
     await expect(nodeOf('one').getByTestId('copy-chip')).toContainText(/one-[0-9a-f]{6}/);
-    const rowOf = (name: string) => page.getByTestId('list-row').filter({ hasText: name });
+    const rowOf = (name: string) => page.getByTestId('list-row').filter({ has: page.getByTestId('list-name').getByText(name, { exact: true }) });
     const one = (await rowOf('one').getAttribute('data-session')) ?? '';
     const two = (await rowOf('two').getAttribute('data-session')) ?? '';
     /** What an agent in a terminal would run there: typed at its shell prompt, waited for, its output read. */
@@ -2553,7 +2554,7 @@ test("working copies: two terminals on one repository change the same file apart
   await showSection(page, 'copies');
     const section = page.getByTestId('copies-section');
     await expect(section.getByTestId('copies-row')).toHaveCount(2);
-    await section.getByTestId('copies-row').filter({ hasText: 'two' }).click();
+    await section.getByTestId('copies-row').filter({ has: page.locator('.runs-name').getByText('two', { exact: true }) }).click();
     await panel.getByTestId('copy-refresh').click();
     await expect(panel.getByTestId('copy-counts')).toHaveText('1 changed, 1 added · 2 not committed');
     await panel.getByTestId('copy-file').filter({ hasText: 'retry.js' }).click();
@@ -3488,6 +3489,7 @@ test('one look: the canvas page and every screen use the two control heights (an
   await look('the tags dialog', 'tag-dialog', () => command('Edit the tags'));
   await look('API tokens', 'token-screen', () => command('API tokens'));
   await look('API activity', 'activity-screen', () => command('API activity'));
+  await look('adding a device', 'add-device-dialog', () => command('Add a device'));
   await look('past conversations', 'history-panel', () => command('Past conversations'));
   // The detail drawer beside the panel, and the menu of the less used parts.
   await page.getByTestId('list-row').first().hover();
@@ -3696,6 +3698,15 @@ test('simpler surfaces: the list starts near the top, a name is not cut, one pri
     ['workflows-screen', () => page.getByTestId('toolbar-workflows').click()],
     ['library-screen', () => page.getByTestId('toolbar-library').click()],
     ['help-panel', () => page.getByTestId('toolbar-help').click()],
+    [
+      'add-device-dialog',
+      async () => {
+        await page.keyboard.press(mac ? 'Meta+k' : 'Control+Shift+K');
+        await page.keyboard.type('>Add a device');
+        await expect(page.getByTestId('picker-command-row').first()).toBeVisible();
+        await page.keyboard.press('Enter');
+      },
+    ],
   ];
   for (const [testid, open] of screens) {
     await open();
@@ -4654,6 +4665,120 @@ test('rough surfaces: the menu beside "New terminal" begins with the shell, Help
     expect(Math.abs(box.left - box.right)).toBeLessThanOrEqual(1);
     expect(Math.abs(box.top - box.bottom)).toBeLessThanOrEqual(1);
     expect(box.sentences).toBe(1);
+    await context.close();
+  }
+});
+
+test('devices: Settings → Devices from the keyboard and the mouse, empty with one sentence and one button; Add a device shows a code, a QR code and the address, and closing makes no device', async ({ page }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  const origin = new URL(page.url()).origin;
+  const mac = await page.evaluate(() => navigator.platform.toLowerCase().includes('mac'));
+  const devicesNow = async (): Promise<number> => ((await (await page.request.get('/api/v1/devices', { headers: { origin } })).json()) as { devices: unknown[] }).devices.length;
+  // Nothing in this run pairs a device: a code works only from an outside address, and nothing answers under one here.
+  expect(await devicesNow()).toBe(0);
+
+  // From the keyboard: the palette's command opens Settings on its Devices part, with Add a device holding the keyboard.
+  await page.keyboard.press(mac ? 'Meta+k' : 'Control+Shift+K');
+  await page.keyboard.type('>Devices');
+  await expect(page.getByTestId('picker-command-row').first()).toContainText('Devices…');
+  await page.keyboard.press('Enter');
+  const part = page.getByTestId('settings-devices');
+  await expect(part).toBeInViewport();
+  await expect(part.getByRole('heading', { name: 'Devices' })).toBeVisible();
+  const empty = part.getByTestId('devices-empty');
+  await expect(empty).toContainText('No device has been added yet.');
+  await expect(empty.locator('button')).toHaveCount(1);
+  await expect(part.getByTestId('device-row')).toHaveCount(0);
+  const add = part.getByTestId('devices-add');
+  await expect(add).toBeFocused();
+  await page.keyboard.press('Enter');
+
+  // A name, then a code, how long it lasts, and for the one outside address its QR code and the address as text.
+  const dialog = page.getByTestId('add-device-dialog');
+  await expect(dialog).toBeVisible();
+  const name = dialog.getByTestId('add-device-name');
+  await expect(name).toHaveValue('Phone');
+  await expect(name).toBeFocused();
+  expect(await page.evaluate(() => [...document.querySelectorAll('[data-testid="add-device-dialog"] button.primary')].length)).toBe(1);
+  await page.keyboard.press('Enter');
+  const code = dialog.getByTestId('device-code');
+  await expect(code).toHaveText(/^[0-9A-HJKMNP-TV-Z]{5}-[0-9A-HJKMNP-TV-Z]{5}$/);
+  await expect(dialog.getByTestId('device-code-left')).toHaveText(/^Works once, for [0-3]:\d\d more$/);
+  const qr = dialog.getByRole('img', { name: 'QR code of the sign-in address' });
+  await expect(qr).toHaveCount(1);
+  expect(await qr.evaluate((el) => ({ tag: el.tagName.toLowerCase(), paths: el.querySelectorAll('path').length, other: el.querySelectorAll(':not(path)').length }))).toEqual({ tag: 'svg', paths: 1, other: 0 });
+  // The code as it is shown, after the #: a page that opens it reads it with or without the dash.
+  await expect(dialog.getByTestId('device-address-text')).toHaveText(`${e2e.outsideAddress}/#pair=${await code.innerText()}`);
+  // Dark modules on a light ground, in the dark theme too.
+  const ground = await qr.evaluate((el) => [getComputedStyle(el).backgroundColor, getComputedStyle(el.querySelector('path') as Element).fill]);
+  expect(ground).toEqual(['rgb(255, 255, 255)', 'rgb(17, 18, 20)']);
+  expect(await measureLook(page)).toEqual([]);
+  expect(await onTop(page, 'add-device-dialog')).toBe(true);
+  // Closed: the code is gone with it, Settings is still open, and no device was made.
+  await page.keyboard.press('Escape');
+  await expect(dialog).toHaveCount(0);
+  await expect(page.getByTestId('settings-dialog')).toBeVisible();
+  expect(await devicesNow()).toBe(0);
+  await page.getByTestId('settings-close').click();
+  await expect(page.getByTestId('settings-dialog')).toHaveCount(0);
+
+  // With the mouse: Settings from the bar, then Add a device, which asks for a name again; Close.
+  await page.getByTestId('toolbar-settings').click();
+  await page.getByTestId('settings-devices').getByTestId('devices-add').click();
+  await expect(dialog.getByTestId('add-device-name')).toHaveValue('Phone');
+  await expect(dialog.getByTestId('device-code')).toHaveCount(0);
+  await dialog.getByTestId('add-device-close').click();
+  await expect(dialog).toHaveCount(0);
+  await page.getByTestId('settings-close').click();
+  expect(await devicesNow()).toBe(0);
+});
+
+test('signing in with a code: a browser with no cookie is asked for one, a wrong one is answered with the server\'s sentence, and a code in the address is taken out of it at once', async ({ page, browser }) => {
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  const origin = new URL(page.url()).origin;
+  // A browser of its own, with no cookie. At the server's local name a code never works (codes are taken only from an
+  // outside address), so what is seen here is the surface and the refusal, never a sign-in.
+  const context = await browser.newContext({ viewport: { width: 1280, height: 800 }, baseURL: origin, colorScheme: 'dark', reducedMotion: 'reduce' });
+  const stranger = await context.newPage();
+  try {
+    await stranger.goto('/');
+    const card = stranger.getByTestId('message-card');
+    await expect(card).toContainText('This browser is not signed in yet');
+    await expect(card).toContainText('aubergine device add');
+    await expect(card).toContainText('Settings → Devices');
+    await expect(card.locator('input')).toHaveCount(1);
+    expect(await card.locator('button.primary').count()).toBe(1);
+    const field = card.getByTestId('sign-in-code');
+    await expect(field).toBeFocused();
+    expect(await field.evaluate((el) => [el.getAttribute('autocapitalize'), el.getAttribute('autocomplete'), el.getAttribute('inputmode'), el.getAttribute('spellcheck')])).toEqual(['characters', 'one-time-code', 'text', 'false']);
+    expect(await measureLook(stranger)).toEqual([]);
+
+    await field.fill('aaaaa-aaaaa');
+    await card.getByTestId('sign-in-go').click();
+    const said = card.getByTestId('sign-in-said');
+    await expect(said).toContainText('That code did not work.');
+    await expect(card.getByTestId('sign-in-go')).not.toHaveAttribute('aria-busy', 'true');
+    expect(await measureLook(stranger)).toEqual([]);
+
+    // A code in the address: gone from it before anything was asked, put in the field and tried once.
+    // Opened afresh, as an address from a QR code is: going to a fragment of the page that is open would only scroll.
+    await stranger.goto('about:blank');
+    await stranger.goto('/#pair=AAAAA-AAAAA');
+    await expect(stranger.getByTestId('sign-in-said')).toContainText('That code did not work.');
+    expect(await stranger.evaluate(() => [location.hash, location.href.includes('pair')])).toEqual(['', false]);
+    await expect(stranger.getByTestId('sign-in-code')).toHaveValue('AAAAA-AAAAA');
+    // Something that is not a code is taken out all the same, and nothing is tried.
+    await stranger.goto('about:blank');
+    await stranger.goto('/#pair=<b>x</b>');
+    await expect(stranger.getByTestId('sign-in-code')).toBeFocused();
+    expect(await stranger.evaluate(() => location.hash)).toBe('');
+    await expect(stranger.getByTestId('sign-in-said')).toHaveCount(0);
+    await expect(stranger.getByTestId('sign-in-code')).toHaveValue('');
+  } finally {
     await context.close();
   }
 });
