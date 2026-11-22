@@ -669,6 +669,8 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
 
   /** The requests a code was already tried for: a failure while answering one is not tried again. */
   const pairingTried = new WeakSet<FastifyRequest>();
+  /** When a try refused for being one too many was last written to the activity log. */
+  let limitedSaidAt = Number.NEGATIVE_INFINITY;
   /** One line in the activity log about devices and codes. Who, what and how it ended: never a code, never a secret, never a body. */
   const recordDevices = (request: FastifyRequest, line: { caller: 'owner' | 'owner-cli' | 'device' | 'pairing'; action: string; status: number; outcome: 'ok' | 'denied' | 'limited'; device?: { id: string; name: string } }): void => {
     void activity.append({
@@ -701,7 +703,11 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     void reply.header('cache-control', 'no-store');
     const tried = pairing.try(code, { accept: place === 'outside', kinds: ['browser'] });
     if (tried.result === 'limited') {
-      recordDevices(request, { caller: 'pairing', action: 'devices.pair', status: 429, outcome: 'limited' });
+      // Needs no sign-in, so anyone can be refused here as often as they like: one line a minute says so, not one a try.
+      if (clock() - limitedSaidAt >= 60_000) {
+        limitedSaidAt = clock();
+        recordDevices(request, { caller: 'pairing', action: 'devices.pair', status: 429, outcome: 'limited' });
+      }
       return reply.code(429).header('retry-after', String(tried.retryAfterSeconds)).send(errorBody('rate_limited', `Too many tries at a code in a minute. Try again in ${tried.retryAfterSeconds} s.`));
     }
     if (tried.result === 'wrong') {
