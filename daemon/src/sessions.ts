@@ -48,7 +48,7 @@ import {
 } from '@aubergine/shared';
 import type { StateHub } from './state-hub';
 import type { HistorySearch, RuntimeSession, SessionRuntime } from './runtime/runtime';
-import { noIntegration, type ShellIntegration, type ShellReport } from './shell/integration';
+import { noIntegration, userShell, type ShellIntegration, type ShellReport } from './shell/integration';
 
 /** The fixed sentences, by what each is for. Nothing else is typed for an agent. */
 const SENTENCES: Record<ToldKind, string> = { kickoff: KICKOFF_LINE, brief: BRIEF_LINE, recap: RECAP_LINE, inbox: INBOX_LINE };
@@ -565,7 +565,7 @@ export class Sessions {
 
   private async startShell(sessionId: string, folder: string | null): Promise<RuntimeSession> {
     const shell = this.shell();
-    const env = await this.integration.environment(sessionId, shell ?? process.env.SHELL ?? '');
+    const env = await this.integration.environment(sessionId, shell ?? userShell());
     return this.runtime.create({
       id: sessionId,
       cwd: this.startFolder(folder),
