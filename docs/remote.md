@@ -330,8 +330,28 @@ The two share a network because the server listens on `127.0.0.1` only, inside i
 **What you need:**
 
 - Docker, with Compose.
-- A copy of this repository on the machine. The image is built from it, by the same script that builds the npm package.
+- A copy of this repository on the machine: the Compose file and the web server's settings are in `docker/`, and the image is built from it, by the same script that builds the npm package, unless you use [the published image](#the-published-image).
 - A name that points at the machine, with ports 80 and 443 reaching it. See [Getting a name](#getting-a-name). To try it on your own computer first, you need no name: see [Trying it on your own computer first](#trying-it-on-your-own-computer-first).
+
+### The published image
+
+A pushed release tag also publishes the image to GitHub's container registry, as `ghcr.io/thirstyeggplant/aubergine`, tagged with the version (`0.3.0`, say) and `latest`; each platform also has a tag of its own (`0.3.0-amd64`, `0.3.0-arm64`). It is one name for two platforms, linux/amd64 and linux/arm64; Docker takes the one for its machine. The workflow `.github/workflows/publish-image.yml` builds it from the tag with the same `docker/Dockerfile`, each platform on a machine of its own kind, and starts and tries each (the command answers, the terminal library runs a program, the server starts and makes a terminal) before anything is pushed: if either fails, neither is pushed.
+
+```sh
+docker pull ghcr.io/thirstyeggplant/aubergine:latest
+```
+
+**The image alone is not enough.** The server in it listens on `127.0.0.1` inside its container, so it needs the web server for HTTPS beside it on its network, and a browser still has to be paired. Use it through `docker/compose.yaml`, as in the steps below: `docker compose pull` fetches it, and `AUBERGINE_TAG` in `.env` picks a version (`latest` when it is not set).
+
+**What has been tried, and what not.** Releases up to 0.2.0 were made before this workflow, so no image is published for them; the first is published with the next release. A new package on the registry starts private, and its owner sets it to public once, by hand; until then a pull is refused, and `docker compose up` builds from the checkout instead. The workflow's trial run, which builds and tries both platforms and pushes nothing, is the only run so far. Not tried: pushing to the registry, pulling the published image, and running it under Compose. Everything in the steps below was run with an image built from the checkout on linux/arm64.
+
+**How Compose treats the two.** The service has both `image` (the published name) and `build` (this checkout). With no `pull_policy` set, Compose does this:
+
+- `docker compose up -d` uses the image of that name already on the machine. When there is none, it pulls it, and when the pull fails it builds from the checkout.
+- `docker compose up -d --build` builds from the checkout either way, and gives the result the published name. When no image of that name is on the machine yet, it first tries to pull one, then builds anyway; `docker compose build` and then `docker compose up -d` skips that pull.
+- `docker compose pull` fetches the published image and puts it under that name, in place of one built here.
+
+So the name holds whichever came last, a build or a pull. Choose one way and keep to it.
 
 ### The steps
 
@@ -351,6 +371,16 @@ The two share a network because the server listens on `127.0.0.1` only, inside i
 
    ```sh
    docker compose up -d --build
+   ```
+
+   Or, with [the published image](#the-published-image) in place of a build, fetch it and start both:
+
+   ```sh
+   docker compose pull
+   ```
+
+   ```sh
+   docker compose up -d
    ```
 
    The first build takes a few minutes (about five on that Mac); the image is about 680 MB. Built without BuildKit, each build also leaves the build stage behind as an untagged image (listed at about 2.6 GB, most of it shared with the `node` image it starts from): `docker image ls --filter dangling=true` lists such images, and `docker image rm <ID>` removes one.
@@ -391,7 +421,17 @@ The two share a network because the server listens on `127.0.0.1` only, inside i
    docker compose up -d --build
    ```
 
-   This makes a new container, so the terminals end and come back as fresh shells (see below). `aubergine update` inside the container is not the way: it names an npm command, and the image is built from this checkout.
+   With the published image, change `AUBERGINE_TAG` in `.env` if you named a version, then fetch it and start again:
+
+   ```sh
+   docker compose pull
+   ```
+
+   ```sh
+   docker compose up -d
+   ```
+
+   Either makes a new container, so the terminals end and come back as fresh shells (see below). `aubergine update` inside the container is not the way: it names an npm command, and the image is built from this checkout or pulled.
 
 8. To stop both containers:
 
@@ -419,7 +459,7 @@ Ports 80 and 443 on your computer must be free for this. With Colima on a Mac th
 
 | What | Where | Kept when |
 |---|---|---|
-| The image: Node.js, tmux, zsh, git and Aubergine | Built from this checkout | Replaced at each `--build` |
+| The image: Node.js, tmux, zsh, git and Aubergine | Built from this checkout, or pulled from the registry | Replaced at each `--build` or `pull` |
 | Your home folder: your clones, the agents you install, their sign-ins | The volume `aubergine-home`, at `/home/aubergine` | Until you remove the volumes |
 | Aubergine's data folder: the state, the access token, the paired devices, `config.json` | Inside that volume, at `/home/aubergine/.local/share/aubergine` | The same |
 | The web server's certificates | The volumes `caddy-data` and `caddy-config` | The same |

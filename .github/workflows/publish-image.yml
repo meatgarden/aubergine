@@ -1,0 +1,234 @@
+name: Publish the container image
+
+# A pushed tag v<version> publishes the image built from docker/Dockerfile to GitHub's container registry, as
+# ghcr.io/<this repository's owner>/aubergine:<version> and :latest, one image for linux/amd64 and linux/arm64.
+# The registry takes the run's own GITHUB_TOKEN, given `packages: write` in the one job that pushes, so no token
+# is stored anywhere: the credential exists for this run only and ends with it.
+#
+# A release is the same as for npm (publish.yml), which runs on the same tag: bump "version" in
+# daemon/package.json, merge it, then `git tag v<version>` and `git push origin v<version>`.
+#
+# Run by hand (workflow_dispatch), it builds and tries both platforms and pushes nothing: the trial run.
+#
+# Each platform is built on a runner of its own kind, not under emulation: the build compiles node-pty and builds
+# the web app. Each is started and tried before anything is pushed; if either fails, nothing is pushed for either.
+# The image that was tried is the one pushed (saved with `docker save`, never built again), then the two are
+# joined under one name.
+#
+# A new package on the registry starts private. The owner sets it to public once, by hand, in the package's
+# settings on GitHub; nothing here changes its visibility.
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: image-publish
+  cancel-in-progress: false
+
+jobs:
+  version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      image: ${{ steps.version.outputs.image }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: The tag names the version being published
+        id: version
+        run: |
+          version="$(node -p "require('./daemon/package.json').version")"
+          if [ "${GITHUB_EVENT_NAME}" = "push" ] && [ "${GITHUB_REF_NAME}" != "v${version}" ]; then
+            echo "The tag ${GITHUB_REF_NAME} does not match daemon/package.json (${version}). Tag v${version}, or change the version first."
+            exit 1
+          fi
+          # The registry's names are lower case.
+          image="ghcr.io/$(printf '%s' "${GITHUB_REPOSITORY_OWNER}" | tr '[:upper:]' '[:lower:]')/aubergine"
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+          echo "image=${image}" >> "$GITHUB_OUTPUT"
+          echo "Version ${version}, image ${image}."
+
+  build:
+    needs: version
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - platform: linux/amd64
+            arch: amd64
+            runner: ubuntu-latest
+          - platform: linux/arm64
+            arch: arm64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: docker/setup-buildx-action@v4
+
+      # Into this runner's Docker only (load), for this runner's own platform. No cache: a release is built whole.
+      - name: Build for ${{ matrix.platform }}
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: docker/Dockerfile
+          platforms: ${{ matrix.platform }}
+          load: true
+          push: false
+          provenance: false
+          tags: aubergine:trial
+          # The source label links the package on the registry to this repository.
+          labels: |
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.version=${{ needs.version.outputs.version }}
+            org.opencontainers.image.title=Aubergine
+            org.opencontainers.image.licenses=MIT
+
+      # The server's sign-in link holds its access token, and this log is public: lines with one are left out of
+      # what is printed, although the container is thrown away.
+      - name: Try the image
+        env:
+          PLATFORM: ${{ matrix.platform }}
+        run: |
+          set -eu
+          image=aubergine:trial
+          made="$(docker image inspect --format '{{.Os}}/{{.Architecture}}' "$image")"
+          echo "Built for ${made}."
+          if [ "$made" != "$PLATFORM" ]; then
+            echo "The image is for ${made}, not ${PLATFORM}."
+            exit 1
+          fi
+
+          echo "--- aubergine version"
+          docker run --rm --init "$image" aubergine version
+
+          echo "--- node-pty loads and runs a program in a pseudo-terminal"
+          docker run --rm --init "$image" node -e "
+            const pty = require('node:module').createRequire('/opt/aubergine/lib/node_modules/@meatgarden/aubergine/package.json')('node-pty');
+            const p = pty.spawn('/bin/sh', ['-c', 'echo pty-ok'], { cols: 80, rows: 24 });
+            let out = '';
+            p.onData((d) => { out += d; });
+            p.onExit(({ exitCode }) => {
+              if (exitCode !== 0 || !out.includes('pty-ok')) { console.error('node-pty: exit ' + exitCode + ', saw ' + JSON.stringify(out)); process.exit(1); }
+              console.log('node-pty ran a program.');
+            });
+            setTimeout(() => { console.error('node-pty: no exit in 10 s'); process.exit(1); }, 10000);
+          "
+
+          echo "--- the server starts and makes a terminal"
+          cid="$(docker run -d --init "$image")"
+          trap 'docker rm -f "$cid" >/dev/null 2>&1 || true' EXIT
+          show_logs() { docker logs "$cid" 2>&1 | grep -v 'token=' || true; }
+          up=no
+          for _ in $(seq 1 45); do
+            if docker exec "$cid" node -e "fetch('http://127.0.0.1:4600/', { signal: AbortSignal.timeout(2000) }).then((r) => process.exit(r.ok ? 0 : 1), () => process.exit(1))"; then
+              up=yes
+              break
+            fi
+            if [ "$(docker inspect --format '{{.State.Running}}' "$cid")" != "true" ]; then
+              break
+            fi
+            sleep 2
+          done
+          if [ "$up" != "yes" ]; then
+            echo "The server did not answer within 90 seconds. Its log, without the sign-in link:"
+            show_logs
+            exit 1
+          fi
+          echo "The server answers."
+          docker exec "$cid" aubergine new trial
+          sleep 2
+          listed="$(docker exec "$cid" aubergine list)"
+          printf '%s\n' "$listed"
+          if ! printf '%s\n' "$listed" | grep -q trial; then
+            echo "The terminal that was made is not listed. The server's log, without the sign-in link:"
+            show_logs
+            exit 1
+          fi
+          echo "--- aubergine doctor (printed, not judged)"
+          docker exec "$cid" aubergine doctor || true
+
+      - name: Keep the image that was tried
+        run: docker save aubergine:trial -o aubergine-${{ matrix.arch }}.tar
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: image-${{ matrix.arch }}
+          path: aubergine-${{ matrix.arch }}.tar
+          retention-days: 1
+          if-no-files-found: error
+
+  # Reads both saved images as the push will, with the same tool, on both events. Pushes nothing.
+  check:
+    needs: [version, build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          pattern: image-*
+          merge-multiple: true
+
+      - name: Both saved images are readable, each for its platform
+        run: |
+          set -eu
+          skopeo --version
+          for arch in amd64 arm64; do
+            seen="$(skopeo inspect --format '{{.Os}}/{{.Architecture}}' "docker-archive:aubergine-${arch}.tar")"
+            echo "aubergine-${arch}.tar: ${seen}"
+            if [ "$seen" != "linux/${arch}" ]; then
+              echo "aubergine-${arch}.tar is for ${seen}, not linux/${arch}."
+              exit 1
+            fi
+          done
+
+  publish:
+    if: github.event_name == 'push'
+    needs: [version, build, check]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    env:
+      IMAGE: ${{ needs.version.outputs.image }}
+      VERSION: ${{ needs.version.outputs.version }}
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          pattern: image-*
+          merge-multiple: true
+
+      - uses: docker/setup-buildx-action@v4
+
+      - uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Each platform under a tag of its own (<version>-amd64, <version>-arm64), then one name for both.
+      # skopeo reads the credential login-action wrote.
+      - name: Push the images that were tried
+        run: |
+          set -eu
+          for arch in amd64 arm64; do
+            skopeo copy --dest-authfile "$HOME/.docker/config.json" \
+              "docker-archive:aubergine-${arch}.tar" "docker://${IMAGE}:${VERSION}-${arch}"
+          done
+
+      - name: One name for both platforms
+        run: |
+          set -eu
+          docker buildx imagetools create \
+            --annotation "index:org.opencontainers.image.source=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}" \
+            --annotation "index:org.opencontainers.image.description=Aubergine: terminals on a canvas, in a browser." \
+            --annotation "index:org.opencontainers.image.licenses=MIT" \
+            --tag "${IMAGE}:${VERSION}" \
+            --tag "${IMAGE}:latest" \
+            "${IMAGE}:${VERSION}-amd64" "${IMAGE}:${VERSION}-arm64"
+          docker buildx imagetools inspect "${IMAGE}:${VERSION}"
