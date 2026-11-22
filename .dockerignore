@@ -1,0 +1,24 @@
+# What the image's build (docker/Dockerfile, context: the repository's root) does not read.
+# scripts/npm-package.mjs reads the sources, the package manifests, bin/, web/, templates/,
+# library/, daemon/demo, the tmux configuration, scripts/fix-node-pty.mjs, README.md and LICENSE;
+# it reads nothing from .git.
+**/node_modules
+dist
+**/dist
+.git
+.github
+.claude
+# Local settings and secrets, here and in docker/.
+.env
+.env.*
+**/.env
+# Results and data of local runs.
+test-results
+playwright-report
+coverage
+.e2e-data*
+.load-data
+site
+**/*.log
+**/.DS_Store
+**/*.tsbuildinfo

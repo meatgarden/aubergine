@@ -1,0 +1,60 @@
+# Aubergine and a web server for HTTPS, in two containers that share one network.
+#
+# WRITTEN, NOT RUN: these files were written from the code on a computer without Docker. See
+# "In a container" in docs/remote.md for the steps and what to send back when something fails.
+#
+#   cd docker
+#   cp .env.example .env        # then set AUBERGINE_HOST in it
+#   docker compose up -d --build
+#
+# Why the network is shared: Aubergine listens on 127.0.0.1 only, and that does not change. A port
+# published from its own container would reach nothing. So the `aubergine` container joins the
+# network namespace of `proxy`, where 127.0.0.1 is the same for both, and only the web server's
+# ports 80 and 443 are published. Never publish Aubergine's own port (4600), and never add
+# `ports` to the `aubergine` service.
+
+name: aubergine
+
+services:
+  proxy:
+    image: caddy:2
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      AUBERGINE_HOST: ${AUBERGINE_HOST:?Set AUBERGINE_HOST in docker/.env to the name other devices will open, such as aubergine.example.net}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      # The web server's certificates and its own state.
+      - caddy-data:/data
+      - caddy-config:/config
+
+  aubergine:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    # The proxy's network: Aubergine's 127.0.0.1 is the proxy's 127.0.0.1. No `ports` here.
+    network_mode: "service:proxy"
+    depends_on:
+      - proxy
+    # tmux and the shells are children of the server that must be reaped.
+    init: true
+    restart: unless-stopped
+    # The server stops within a few seconds of being asked; this leaves it room.
+    stop_grace_period: 20s
+    security_opt:
+      - "no-new-privileges:true"
+    environment:
+      # Written into config.json by the entrypoint on the first start only, when there is none.
+      AUBERGINE_ADDRESS: https://${AUBERGINE_HOST:?Set AUBERGINE_HOST in docker/.env}
+    volumes:
+      # The home folder: your clones, the agents you install, and Aubergine's data folder
+      # (~/.local/share/aubergine: the state, the access token, the paired devices).
+      - aubergine-home:/home/aubergine
+
+volumes:
+  aubergine-home:
+  caddy-data:
+  caddy-config:
