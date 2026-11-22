@@ -1,0 +1,52 @@
+name: Something is not right
+description: A bug, a crash, or something that does not do what the README says.
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: How to make it happen again
+      placeholder: |
+        1. aubergine start --open
+        2. New terminal
+        3. ...
+  - type: textarea
+    id: doctor
+    attributes:
+      label: Output of `aubergine doctor`
+      description: One line per check. Remove anything you would rather not share (names of folders, addresses).
+      render: text
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: "`aubergine version`"
+      placeholder: 0.1.1
+    validations:
+      required: true
+  - type: dropdown
+    id: installed
+    attributes:
+      label: Installed with
+      options: [npm, the installer (install.sh), a checkout, the container in docker/]
+    validations:
+      required: true
+  - type: input
+    id: system
+    attributes:
+      label: Computer and browser
+      placeholder: macOS 26 on Apple silicon, Chrome 150
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: Please do not paste an access token, an API token, a pairing code or a device's credential. A security problem goes to the Security tab, not here.

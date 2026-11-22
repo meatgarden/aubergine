@@ -1,0 +1,74 @@
+name: Check
+
+# Runs `pnpm check` (type checking, lint, shellcheck, generated files, unit tests, the installer tests and the browser
+# smoke test) on every push to main and every pull request. The badge in the README shows the result for main.
+#
+# Linux, not macOS: the unit tests are known to pass on Linux where the user has a ~/.zshrc and the sources are a Git
+# checkout, so both are arranged here. The tests start their own tmux servers on test sockets.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: check-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: tmux, zsh and shellcheck
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y tmux zsh shellcheck
+          tmux -V
+
+      # The shell integration tests start a login zsh; an empty ~/.zshrc keeps it from asking its first-run question.
+      - name: A login shell with a startup file
+        run: |
+          touch ~/.zshrc
+          echo "SHELL=$(command -v zsh)" >> "$GITHUB_ENV"
+
+      # Some tests make Git commits in temporary repositories.
+      - name: A Git identity for the tests
+        run: |
+          git config --global user.name "Aubergine CI"
+          git config --global user.email "ci@example.invalid"
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      # node-pty has no ready-made binary for Linux, so its install script compiles it with node-gyp, which this pnpm
+      # does not bring with it.
+      - run: npm install -g node-gyp
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: A browser for the smoke test
+        run: pnpm exec playwright install --with-deps chromium
+
+      - run: pnpm check
+
+      - name: Keep the browser test's report when it fails
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-results
+          path: |
+            test-results*/
+            playwright-report*/
+          if-no-files-found: ignore
+          retention-days: 7

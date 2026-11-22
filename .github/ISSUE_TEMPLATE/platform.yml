@@ -1,0 +1,25 @@
+name: It works (or not) on my machine
+description: A report from Linux, Safari, Firefox, another terminal app, or anything not tried yet.
+labels: [platform]
+body:
+  - type: input
+    id: system
+    attributes:
+      label: Computer, system and browser
+      placeholder: Fedora 43 on x86_64, Firefox 150
+    validations:
+      required: true
+  - type: textarea
+    id: worked
+    attributes:
+      label: What worked
+  - type: textarea
+    id: failed
+    attributes:
+      label: What did not
+  - type: textarea
+    id: keys
+    attributes:
+      label: Keys measured (optional)
+      description: If you ran the key tester from docs/keys.md, paste its result here.
+      render: text
