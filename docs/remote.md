@@ -51,7 +51,7 @@ In every example, **`aubergine.example.net` is a placeholder** for a name of you
 | Sign-in | At the laptop: the access token, as always. From elsewhere: paired devices only. | Through an SSH tunnel: the access token. Under an outside address: paired devices only. |
 | Left out when you are not at the computer | Under an outside address the page leaves out what acts on that computer's desktop: **Open on desktop**, the box for it in the dialogs, its setting, and the terminals open outside the canvas. | Under an outside address, the same. Through an SSH tunnel nothing is left out, but an instance usually has no desktop for it to use. |
 | Cost and upkeep | Nothing extra | You pay for the instance each month, and you keep its system up to date |
-| How well it has been tried | macOS is used every day | Linux has not been tried |
+| How well it has been tried | macOS is used every day | Linux has been run once, in the container below, on a Mac; never on a cloud instance |
 
 **A window on the desktop is never opened for a request from another device.** **Open on desktop** is refused there, and a new terminal made there does not open one.
 
@@ -145,7 +145,7 @@ The private network's serving must pass the `Host` header through unchanged; see
 
 For: a browser on any device, with nothing installed on it, reaching Aubergine on a cloud instance under a name of your own.
 
-This is the worked example from nothing. It assumes a Linux instance that you can reach with SSH, with Aubergine installed. Linux has not been tried; see [What to count on, and what not](#what-to-count-on-and-what-not).
+This is the worked example from nothing. It assumes a Linux instance that you can reach with SSH, with Aubergine installed. Linux has been run only in the container in [`docker/`](../docker), on a Mac, and not on a cloud instance; see [What to count on, and what not](#what-to-count-on-and-what-not).
 
 **Read this first: an address anyone on the internet can open puts the sign-in in front of everyone.** Without a code nobody gets in, and codes are hard to guess, but they would be guessing at a shell. Put a private network, or your organisation's own sign-in, in front of the address if you can.
 
@@ -319,7 +319,7 @@ The browser sends the code to that server itself and is answered with a credenti
 
 ## In a container
 
-**Written, not run.** These files were written from the code on a computer without Docker, and Aubergine itself has not been tried on Linux. Expect to fix something on the first run. When something fails, send back the output of `docker compose logs aubergine` and of `docker compose exec aubergine aubergine doctor`.
+**Run once, on one computer.** On 2026-11-22 these steps were followed as written on an Apple-silicon Mac, with Docker in Colima (linux/arm64), under `https://aubergine.localhost` with the web server's own certificate, and a browser (Chromium) went the whole way: paired with a code, made terminals, typed into them, saw command status from the zsh integration, and was signed out when its device was revoked. Three things were fixed on that run: the build without BuildKit, a revoked page that kept trying to reconnect, and command status for a server started without `$SHELL`. **Not tried:** a real name with a public certificate, a cloud machine, linux/amd64, Docker with BuildKit (Compose there used the classic builder), a phone, and an agent inside the container. When something fails, send back the output of `docker compose logs aubergine` and of `docker compose exec aubergine aubergine doctor`.
 
 The files are in [`docker/`](../docker) in the repository.
 
@@ -353,6 +353,8 @@ The two share a network because the server listens on `127.0.0.1` only, inside i
    docker compose up -d --build
    ```
 
+   The first build takes a few minutes (about five on that Mac); the image is about 680 MB. Built without BuildKit, each build also leaves the build stage behind as an untagged image (listed at about 2.6 GB, most of it shared with the `node` image it starts from): `docker image ls --filter dangling=true` lists such images, and `docker image rm <ID>` removes one.
+
    On its first start, the container writes `https://` and your name into `config.json` in the data folder, as `access.addresses`. It does that only when there is no `config.json` yet. Later, the file is yours to change by hand, and the container never changes it again; if the name in `.env` changes, it says in its log what to add.
 
 4. Check what the server sees:
@@ -376,6 +378,8 @@ The two share a network because the server listens on `127.0.0.1` only, inside i
    ```sh
    docker compose logs -f aubergine
    ```
+
+   Its first lines name a sign-in link at `http://127.0.0.1:4600`, as `aubergine start` does anywhere. It is of no use from outside the container, and it holds the access token: do not paste the log where others read it. Sign in with a code as in step 5.
 
 7. To update, get the new code and build again:
 
@@ -409,7 +413,7 @@ Write `AUBERGINE_HOST=aubergine.localhost` in `.env`, start it as in step 3, and
 
 The browser warns about the certificate: for a name ending in `.localhost`, the web server makes a certificate itself, and no browser trusts it. Some browsers find a name ending in `.localhost` on this computer by themselves; if yours does not, it cannot open the address.
 
-Ports 80 and 443 on your computer must be free for this.
+Ports 80 and 443 on your computer must be free for this. With Colima on a Mac they were published as they are, with nothing else to set. Chromium and `curl` found `aubergine.localhost` by themselves.
 
 ### What lives where
 
@@ -434,7 +438,7 @@ Signing an agent in, and giving Git its credentials (an SSH key, a credential he
 
 ### What is different from a laptop
 
-- **The terminals end when the container stops** or is made again, at an update. Restarting the web server's container does not end them: the network the two share is the `aubergine` container's. If Docker itself restarts the `aubergine` container after a failure, restart the web server too (`docker compose restart proxy`), since it had joined the network that is gone. When the server starts again, every terminal gets a fresh shell in its last known folder, in the same place on the canvas. Nothing is re-run. This is what a laptop does after a reboot.
+- **The terminals end when the container stops** or is made again, at an update. Restarting the web server's container does not end them: the network the two share is the `aubergine` container's. If Docker itself restarts the `aubergine` container after a failure, restart the web server too (`docker compose restart proxy`), since it had joined the network that is gone: until then the page cannot be reached at all. `docker compose restart aubergine` and `docker compose up -d` restart the web server by themselves. When the server starts again, every terminal gets a fresh shell in its last known folder, in the same place on the canvas. Nothing is re-run. This is what a laptop does after a reboot.
 - **Nothing opens on a desktop.** There is none: **Open on desktop** is left out under an outside address anyway.
 - **Start at login does not apply.** The containers' restart policy (`unless-stopped`) starts them again with Docker.
 - **The terminals run zsh.** Command status in a terminal's title comes from the zsh integration; another shell would work but show none.
@@ -469,4 +473,4 @@ Signing an agent in, and giving Git its credentials (an SSH key, a credential he
 - **An address anyone can open puts that field in front of everyone.** They would be guessing at a shell. A private network, or your organisation's own sign-in, in front of the address is recommended.
 - **A device, and a linked page, is the whole owner.** Pair and link only what you would hand your keyboard to.
 - **The page is not laid out for a phone.** It works as it does in a narrow window.
-- **Not tried:** a real proxy, a real phone, two separate machines, Linux, and the container setup in `docker/`. What this guide says comes from the code and its tests, not from a setup someone has run.
+- **Tried once:** the container setup in `docker/`, on one Mac (Colima, linux/arm64), with Caddy in front under `aubergine.localhost`, and a browser on the same Mac. **Not tried:** a real name with a public certificate, a cloud machine, Linux outside that container, linux/amd64, a real phone, and two separate machines. The rest of what this guide says comes from the code and its tests, not from a setup someone has run.
