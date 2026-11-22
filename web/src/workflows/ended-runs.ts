@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import type { RunRecord } from '@aubergine/shared';
-import { api } from '../api';
+import { api, forgetOnSwitch } from '../api';
 
 /**
  * The last runs that are over. The page holds live runs only; these are
@@ -31,3 +31,9 @@ export const useEndedRuns = create<EndedRuns>((set) => ({
     }
   },
 }));
+
+// Read from the server shown: another server's are not these.
+forgetOnSwitch(() => {
+  asked += 1;
+  useEndedRuns.setState({ items: [] });
+});

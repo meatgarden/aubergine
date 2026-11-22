@@ -59,6 +59,7 @@ import {
   UpdateNodeRequest,
   canvasAddress,
   projectCanvasAddress,
+  linkedAddress,
   PAGE_NAMES,
   pageAddress,
   terminalAddress,
@@ -1349,6 +1350,16 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     for (const page of PAGE_NAMES) {
       app.get(pageAddress(canvasAddress(':canvasId'), page), sendPage);
       app.get(pageAddress(projectCanvasAddress(':projectId', ':canvasId'), page), sendPage);
+    }
+    // The same addresses after `/s/<link>`: the page showing a server this browser linked. The server is told nothing
+    // by them: what `<link>` names is known to that browser alone, and the page is the same page.
+    app.get(linkedAddress(':link', ''), sendPage);
+    app.get(linkedAddress(':link', canvasAddress(':canvasId')), sendPage);
+    app.get(linkedAddress(':link', projectCanvasAddress(':projectId', ':canvasId')), sendPage);
+    app.get(linkedAddress(':link', terminalAddress(':sessionId')), sendPage);
+    for (const page of PAGE_NAMES) {
+      app.get(linkedAddress(':link', pageAddress(canvasAddress(':canvasId'), page)), sendPage);
+      app.get(linkedAddress(':link', pageAddress(projectCanvasAddress(':projectId', ':canvasId'), page)), sendPage);
     }
   } else {
     app.get('/', async (_request, reply) =>

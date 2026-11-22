@@ -1,4 +1,4 @@
-import { PAGE_NAMES, SHOW_PARAM, canvasAddress, isPageName, pageAddress, projectCanvasAddress, terminalAddress, type PageName } from '@aubergine/shared';
+import { PAGE_NAMES, SHOW_PARAM, canvasAddress, isPageName, linkedAddress, pageAddress, projectCanvasAddress, terminalAddress, type PageName } from '@aubergine/shared';
 
 /**
  * Which canvas a browser tab shows is carried by its address (`/p/<project>/c/<canvas>`;
@@ -9,17 +9,41 @@ import { PAGE_NAMES, SHOW_PARAM, canvasAddress, isPageName, pageAddress, project
 
 const LAST_CANVAS_KEY = 'aubergine.canvas';
 
+/**
+ * A linked server's things are at the same addresses after `/s/<link>`, where `<link>` is this browser's own short
+ * name for it. The name as it is in an address, whatever it is: whether this browser knows it is for the store to
+ * say. Null for an address of the page's own server.
+ */
+export function linkFromPath(pathname: string): string | null {
+  return /^\/s\/([^/]*)(?:\/|$)/.exec(pathname)?.[1] ?? null;
+}
+
+/** An address with its `/s/<link>` taken off: what it names on the server it is of. */
+export function ofItsServer(pathname: string): string {
+  if (linkFromPath(pathname) === null) return pathname;
+  const rest = pathname.replace(/^\/s\/[^/]*/, '');
+  return rest === '' ? '/' : rest;
+}
+
+/** The linked server shown, as the store says: every address written while it is shown carries it. */
+let linkShown: string | null = null;
+export function writeAddressesFor(link: string | null): void {
+  linkShown = link;
+}
+/** An address of the server shown: as it is for the own server, after `/s/<link>` for a linked one. */
+export const shownAddress = (address: string, link: string | null = linkShown): string => (link === null ? address : linkedAddress(link, address === '/' ? '' : address));
+
 /** The canvas named by an address path, if it names one. */
 export function canvasIdFromPath(pathname: string): string | null {
   // The canvas is what counts: a canvas that moved to another project is found under its old address too.
   // After it may come the name of a page that is shown over it, and nothing else.
-  const match = new RegExp(`^(?:/p/[^/]+)?/c/([^/]+)(?:/(?:${PAGE_NAMES.join('|')}))?/?$`).exec(pathname);
+  const match = new RegExp(`^(?:/p/[^/]+)?/c/([^/]+)(?:/(?:${PAGE_NAMES.join('|')}))?/?$`).exec(ofItsServer(pathname));
   return match?.[1] ?? null;
 }
 
 /** The page named by an address path, after its canvas: `/c/<canvas>/queue`. Null for the canvas itself. */
 export function pageFromPath(pathname: string): PageName | null {
-  const name = /^(?:\/p\/[^/]+)?\/c\/[^/]+\/([a-z]+)\/?$/.exec(pathname)?.[1];
+  const name = /^(?:\/p\/[^/]+)?\/c\/[^/]+\/([a-z]+)\/?$/.exec(ofItsServer(pathname))?.[1];
   return isPageName(name) ? name : null;
 }
 
@@ -70,7 +94,7 @@ export function sessionFromAddress(search: string): string | null {
 /** Puts a canvas in the address bar. `push` adds a history step; otherwise the current one is replaced. */
 export function writeAddress(canvasId: string, push: boolean, projectId?: string | null, page: PageName | null = null): void {
   const canvas = projectId ? projectCanvasAddress(projectId, canvasId) : canvasAddress(canvasId);
-  const target = page ? pageAddress(canvas, page) : canvas;
+  const target = shownAddress(page ? pageAddress(canvas, page) : canvas);
   if (location.pathname === target && location.search === '') return;
   // A step that opens a page over the canvas says so, and a step that only changes what the page is over keeps saying it.
   const state = page && (push || openedHere()) ? OPENED : null;
@@ -80,18 +104,18 @@ export function writeAddress(canvasId: string, push: boolean, projectId?: string
 
 /** The terminal an address shows by itself (`/t/<session id>`), if it is the address of one. */
 export function terminalFromPath(pathname: string): string | null {
-  return /^\/t\/([^/]+)\/?$/.exec(pathname)?.[1] ?? null;
+  return /^\/t\/([^/]+)\/?$/.exec(ofItsServer(pathname))?.[1] ?? null;
 }
 
 /** Where a canvas is, as a link: with its project where it has one. */
 export const canvasHref = (canvasId: string, projectId?: string | null): string =>
-  projectId ? projectCanvasAddress(projectId, canvasId) : canvasAddress(canvasId);
+  shownAddress(projectId ? projectCanvasAddress(projectId, canvasId) : canvasAddress(canvasId));
 
 /** Where a terminal is by itself, as a link. */
-export const terminalHref = (sessionId: string): string => terminalAddress(sessionId);
+export const terminalHref = (sessionId: string): string => shownAddress(terminalAddress(sessionId));
 
 /** Where a terminal is on its canvas, as a link: the page goes to its canvas and brings it into view. */
-export const terminalOnCanvasHref = (sessionId: string): string => `/?${new URLSearchParams({ [SHOW_PARAM]: sessionId }).toString()}`;
+export const terminalOnCanvasHref = (sessionId: string): string => `${shownAddress('/')}?${new URLSearchParams({ [SHOW_PARAM]: sessionId }).toString()}`;
 
 /**
  * Opens one of this app's own addresses in a new browser tab. Asked from a click or a key, so the browser allows it.

@@ -7,7 +7,7 @@ import {
   paths,
   type TerminalClientMessage,
 } from '@aubergine/shared';
-import { socketUrl } from './api';
+import { isRefusal, isSuperseded, openSocket, socketIsCurrent } from './api';
 import { decodeOsc52 } from './clipboard';
 import { isMac, isPasteChord } from './keys';
 import { activeShortcuts, pickBinding } from './shortcuts';
@@ -114,33 +114,55 @@ export function TerminalView({ sessionId, interactive, zoom, chords = true }: Pr
 
     const connect = (): void => {
       const query = `?cols=${term.cols}&rows=${term.rows}`;
-      const ws = new WebSocket(socketUrl(paths.terminal(sessionId) + query));
-      ws.binaryType = 'arraybuffer';
-      socket = ws;
+      // At a linked server a socket is opened with a fresh ticket each time: asked for here, on every (re)connection.
+      void openSocket(paths.terminal(sessionId) + query).then(
+        (ws) => {
+          if (disposed) return ws.close();
+          ws.binaryType = 'arraybuffer';
+          socket = ws;
 
-      ws.onopen = () => {
-        attempts = 0;
-        // Start from a clean screen: the daemon redraws the whole terminal on attach.
-        term.reset();
-        setLink('open');
-        send({ t: 'resize', cols: term.cols, rows: term.rows });
-        outbox.opened();
-      };
-      ws.onmessage = (message) => {
-        if (typeof message.data !== 'string') {
-          term.write(new Uint8Array(message.data as ArrayBuffer));
-          return;
-        }
-        const control = TerminalServerMessage.safeParse(JSON.parse(message.data));
-        if (control.success && control.data.reason === 'session_ended') ended = true;
-      };
-      ws.onclose = () => {
-        if (disposed) return;
-        if (ended) return setLink('ended');
-        setLink('reconnecting');
-        attempts += 1;
-        retry = window.setTimeout(connect, Math.min(250 * attempts, 2000));
-      };
+          ws.onopen = () => {
+            attempts = 0;
+            // Start from a clean screen: the daemon redraws the whole terminal on attach.
+            term.reset();
+            setLink('open');
+            send({ t: 'resize', cols: term.cols, rows: term.rows });
+            outbox.opened();
+          };
+          ws.onmessage = (message) => {
+            // Opened for a server that is no longer shown: nothing it sends is drawn.
+            if (!socketIsCurrent(ws)) return ws.close();
+            if (typeof message.data !== 'string') {
+              term.write(new Uint8Array(message.data as ArrayBuffer));
+              return;
+            }
+            let data: unknown;
+            try {
+              data = JSON.parse(message.data);
+            } catch {
+              return;
+            }
+            const control = TerminalServerMessage.safeParse(data);
+            if (control.success && control.data.reason === 'session_ended') ended = true;
+          };
+          ws.onclose = () => {
+            if (disposed || !socketIsCurrent(ws)) return;
+            if (ended) return setLink('ended');
+            again();
+          };
+        },
+        (error: unknown) => {
+          if (disposed || isSuperseded(error)) return;
+          // The linked server no longer takes this page's credential: the store has been told, and asking again would not help.
+          if (isRefusal(error)) return setLink('ended');
+          again();
+        },
+      );
+    };
+    const again = (): void => {
+      setLink('reconnecting');
+      attempts += 1;
+      retry = window.setTimeout(connect, Math.min(250 * attempts, 2000));
     };
     connect();
 

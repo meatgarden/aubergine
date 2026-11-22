@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import type { ProjectFileReading } from '@aubergine/shared';
-import { api } from '../api';
+import { api, forgetOnSwitch } from '../api';
 import { useApp } from '../store';
 
 /**
@@ -35,6 +35,9 @@ export const useProjectFiles = create<FileStore>((set) => ({
   change: (id, change) => set((state) => ({ pending: state.pending.map((p) => (p.id === id ? { ...p, ...change } : p)) })),
   remove: (id) => set((state) => ({ pending: state.pending.filter((p) => p.id !== id) })),
 }));
+
+// A file read by one server is accepted by that server: not by another shown later.
+forgetOnSwitch(() => useProjectFiles.setState({ pending: [] }));
 
 let count = 0;
 

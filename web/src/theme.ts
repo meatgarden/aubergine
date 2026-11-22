@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from 'react';
 import { themeShown, type ThemeSetting } from '@aubergine/shared';
-import { api } from './api';
+import { ownApi } from './api';
 import { useApp } from './store';
 
 /**
@@ -56,7 +56,7 @@ export function chooseTheme(theme: ThemeSetting): void {
   const was = store.settings.theme;
   if (was === theme) return;
   store.setTheme(theme);
-  void api.setTheme(theme).catch((error: unknown) => {
+  void ownApi.setTheme(theme).catch((error: unknown) => {
     useApp.getState().setTheme(was);
     useApp.getState().setNotice(`The theme could not be saved: ${(error as Error).message}`);
   });

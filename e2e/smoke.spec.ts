@@ -1,9 +1,10 @@
+import { execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { expect, test, type Locator, type Page } from '@playwright/test';
-import { e2e } from '../playwright.config';
+import { e2e, second } from '../playwright.config';
 
 const repoRoot = path.resolve(e2e.dataDir, '..');
 
@@ -3490,6 +3491,7 @@ test('one look: the canvas page and every screen use the two control heights (an
   await look('API tokens', 'token-screen', () => command('API tokens'));
   await look('API activity', 'activity-screen', () => command('API activity'));
   await look('adding a device', 'add-device-dialog', () => command('Add a device'));
+  await look('linking a server', 'link-server-dialog', () => command('Link a server'));
   await look('past conversations', 'history-panel', () => command('Past conversations'));
   // The detail drawer beside the panel, and the menu of the less used parts.
   await page.getByTestId('list-row').first().hover();
@@ -3703,6 +3705,15 @@ test('simpler surfaces: the list starts near the top, a name is not cut, one pri
       async () => {
         await page.keyboard.press(mac ? 'Meta+k' : 'Control+Shift+K');
         await page.keyboard.type('>Add a device');
+        await expect(page.getByTestId('picker-command-row').first()).toBeVisible();
+        await page.keyboard.press('Enter');
+      },
+    ],
+    [
+      'link-server-dialog',
+      async () => {
+        await page.keyboard.press(mac ? 'Meta+k' : 'Control+Shift+K');
+        await page.keyboard.type('>Link a server');
         await expect(page.getByTestId('picker-command-row').first()).toBeVisible();
         await page.keyboard.press('Enter');
       },
@@ -6141,4 +6152,183 @@ test('a page shows itself in a short tour of its own: started from under its nam
   // Nothing about a page's tour is remembered: the canvas's tour is as it was.
   expect(await page.evaluate(() => localStorage.getItem('aubergine.tour'))).toBe(before);
   await page.keyboard.press('Escape');
+});
+
+/** The `aubergine` command, run against the second server of the run: its port, data folder and socket, nothing of the developer's. */
+const atSecond = (...args: string[]): string => {
+  return execFileSync(process.execPath, [path.join(repoRoot, 'bin', 'aubergine.mjs'), ...args], {
+    encoding: 'utf8',
+    env: { PATH: process.env.PATH ?? '', HOME: second.dataDir, AUBERGINE_PORT: String(second.port), AUBERGINE_DATA_DIR: second.dataDir, AUBERGINE_TMUX_SOCKET: second.tmuxSocket },
+  });
+};
+
+test('two servers in one page: a server is linked with a code from its own command, its projects are in the project menu, its terminals work in the page and in a tab of their own, and the page\'s own server is told nothing of it', async ({ page, context }) => {
+  test.setTimeout(150_000);
+  const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
+  await page.goto(`/auth?token=${token}`);
+  await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
+  const origin = new URL(page.url()).origin;
+  const secondOrigin = `http://127.0.0.1:${second.port}`;
+  const ownCanvas = page.url();
+
+  // Every request the page and its tabs make, with every header, and every socket they open.
+  const seen: Promise<{ url: string; headers: Record<string, string>; body: string }>[] = [];
+  const sockets: string[] = [];
+  const watch = (target: Page): void => {
+    target.on('request', (request) => seen.push(request.allHeaders().then((headers) => ({ url: request.url(), headers, body: request.postData() ?? '' }))));
+    target.on('websocket', (socket) => sockets.push(socket.url()));
+  };
+  watch(page);
+  context.on('page', watch);
+
+  // Nothing is linked yet: the first server's state as it is now, to compare with after unlinking.
+  await page.waitForTimeout(1500);
+  const stateFile = path.join(e2e.dataDir, 'state.json');
+  const stateBefore = readFileSync(stateFile, 'utf8');
+
+  const switcher = page.getByTestId('project-switcher');
+  const menu = page.getByTestId('project-menu');
+  await switcher.click();
+  await menu.getByTestId('server-link').click();
+  const dialog = page.getByTestId('link-server-dialog');
+  await expect(dialog).toBeVisible();
+  // This page's own address, to write on the other server, and the command to run there.
+  await expect(dialog.getByTestId('link-server-origin')).toHaveText(origin);
+  await expect(dialog.getByTestId('link-server-command')).toHaveText(`aubergine device add --page ${origin}`);
+  expect(await page.evaluate(() => document.querySelectorAll('[data-testid="link-server-dialog"] button.primary').length)).toBe(1);
+  expect(await measureLook(page)).toEqual([]);
+  expect(await onTop(page, 'link-server-dialog')).toBe(true);
+
+  // A wrong code first: the other server's own sentence.
+  await dialog.getByTestId('link-server-address').fill(secondOrigin);
+  await dialog.getByTestId('link-server-label').fill('Cloud');
+  await dialog.getByTestId('link-server-code').fill('AAAAA-AAAAA');
+  await dialog.getByTestId('link-server-go').click();
+  await expect(dialog.getByTestId('link-server-said')).toContainText('That code did not work.');
+  await expect(dialog.getByTestId('link-server-go')).not.toHaveAttribute('aria-busy', 'true');
+
+  // The real code, from the other server's own command.
+  const printed = atSecond('device', 'add', '--page', origin, '--name', 'Laptop');
+  const code = /Pairing code for the page "Laptop": (\S+)/.exec(printed)?.[1] ?? '';
+  expect(code).toMatch(/^[0-9A-Z]{5}-?[0-9A-Z]{5}$/);
+  await dialog.getByTestId('link-server-code').fill(code);
+  await dialog.getByTestId('link-server-go').click();
+  await expect(dialog).toHaveCount(0);
+
+  // The other server is shown: its canvas, under an address of this browser's own name for it.
+  await expect(page).toHaveURL(/\/s\/[a-z0-9]{8}\/p\/[0-9a-f-]+\/c\/[0-9a-f-]+$/);
+  const link = /\/s\/([a-z0-9]{8})\//.exec(page.url())?.[1] ?? '';
+  await expect(page.getByTestId('project-name')).toHaveText(/^Cloud · /);
+  const credential = await page.evaluate(() => (JSON.parse(localStorage.getItem('aubergine.servers') ?? '[]') as { credential: string }[])[0]?.credential ?? '');
+  expect(credential).toMatch(/^aubd_/);
+  // Its own Settings say what they are about.
+  await page.getByTestId('toolbar-settings').click();
+  await expect(page.getByTestId('settings-server')).toContainText('“Cloud” at 127.0.0.1:');
+  await page.getByTestId('settings-close').click();
+
+  // The menu: the server shown first, under its label; this page's own server after it, with its projects.
+  await switcher.click();
+  await expect(menu.locator('[data-testid="server-heading"]').first()).toHaveText('Cloud');
+  await expect(menu.locator('[data-testid="server-heading"][data-server="own"]')).toHaveText('This page’s server');
+  await expect(menu.locator('[data-testid="project-row"][data-server="own"]').first()).toBeVisible();
+  expect(await measureLook(page)).toEqual([]);
+  expect(await onTop(page, 'project-menu')).toBe(true);
+  await page.keyboard.press('Escape');
+
+  // A terminal there, typed into from this page: across origins, with the bearer, a ticket and the terminal's socket.
+  await page.getByTestId('toolbar-new-terminal').click();
+  await expect(page.getByTestId('terminal-node')).toHaveCount(1);
+  await expect(page.getByTestId('terminal')).toHaveAttribute('data-link', 'open');
+  await expect(page.locator('.xterm-rows')).toContainText(/[$%#>]/, { timeout: 20_000 });
+  await page.getByTestId('node-body').click();
+  await page.keyboard.type('echo linked-$((40 + 2))');
+  await page.keyboard.press('Enter');
+  await expect(outputLine(page, 'linked-42')).toHaveCount(1);
+  const sessionId = (await page.getByTestId('list-row').first().getAttribute('data-session')) ?? '';
+  expect(sessionId).toMatch(/^[0-9a-f-]{36}$/);
+  // The terminal is the second server's, not the first's.
+  expect(readFileSync(path.join(second.dataDir, 'state.json'), 'utf8')).toContain(sessionId);
+  expect(readFileSync(stateFile, 'utf8')).not.toContain(sessionId);
+
+  // A reload stays on that server and that canvas.
+  const linkedCanvas = page.url();
+  await page.reload();
+  await expect(page).toHaveURL(linkedCanvas);
+  await expect(page.getByTestId('project-name')).toHaveText(/^Cloud · /);
+  await expect(outputLine(page, 'linked-42')).toHaveCount(1, { timeout: 10_000 });
+
+  // The terminal in a browser tab of its own: the address carries the link, and it works there too.
+  const opened = context.waitForEvent('page');
+  await page.keyboard.press('Escape');
+  await page.getByTestId('list-row').first().hover();
+  await page.getByTestId('row-more').first().click();
+  await page.getByRole('menuitem', { name: 'Open in new browser tab' }).click();
+  const tab = await opened;
+  await expect(tab).toHaveURL(`${origin}/s/${link}/t/${sessionId}`);
+  await expect(tab.getByTestId('terminal')).toHaveAttribute('data-link', 'open');
+  await tab.locator('.xterm-helper-textarea').focus();
+  await tab.keyboard.type('echo tab-$((5 * 5))');
+  await tab.keyboard.press('Enter');
+  await expect(outputLine(tab, 'tab-25')).toHaveCount(1);
+  await tab.close();
+
+  // An own project: this page's own server, and its address.
+  await switcher.click();
+  await menu.locator('[data-testid="project-row"][data-server="own"]').first().click();
+  await expect(page).toHaveURL(/^http:\/\/127\.0\.0\.1:\d+\/(p\/[0-9a-f-]+\/)?c\/[0-9a-f-]+$/);
+  await expect(page.getByTestId('project-name')).not.toHaveText(/Cloud/);
+  await expect(page.getByTestId('terminal-node').filter({ has: page.locator(`[data-session="${sessionId}"]`) })).toHaveCount(0);
+  // And back, from the menu: the linked server's project, under its label.
+  await switcher.click();
+  await expect(menu.locator(`[data-testid="server-heading"][data-server="${link}"]`)).toHaveText('Cloud');
+  await menu.locator(`[data-testid="project-row"][data-server="${link}"]`).first().click();
+  await expect(page).toHaveURL(new RegExp(`/s/${link}/p/`));
+  await expect(outputLine(page, 'linked-42')).toHaveCount(1, { timeout: 10_000 });
+  // Back to the own server, and the back button leads to the linked one again.
+  await page.goBack();
+  await expect(page).not.toHaveURL(/\/s\//);
+  await expect(page.getByTestId('project-name')).not.toHaveText(/Cloud/);
+
+  // Unlinking: asked first, then gone from the menu, and the device is revoked on the other server.
+  await switcher.click();
+  await menu.locator(`[data-testid="server-unlink"][data-server="${link}"]`).click();
+  await expect(page.getByTestId('unlink-server-dialog')).toBeVisible();
+  await page.getByTestId('unlink-server-go').click();
+  await expect(page.getByTestId('unlink-server-dialog')).toHaveCount(0);
+  await expect(page.getByTestId('toast')).toContainText('“Cloud” is unlinked, and its device there is revoked.');
+  await switcher.click();
+  await expect(menu.getByTestId('server-heading')).toHaveCount(0);
+  await page.keyboard.press('Escape');
+  expect(await page.evaluate(() => localStorage.getItem('aubergine.servers'))).toBeNull();
+  expect(atSecond('device', 'list')).toMatch(/Laptop\s+page http:\/\/127\.0\.0\.1:\d+\s+revoked/);
+  // An address of the server that is gone says so, and shows this page's own server.
+  await page.goto(`/s/${link}/c/${sessionId}`);
+  await expect(page.getByTestId('toast')).toContainText('This browser has no server linked under that address');
+  await expect(page).not.toHaveURL(/\/s\//);
+
+  // Nothing about the other server reached this page's own: not its address, not the credential; and no cookie went to the other.
+  const requests = await Promise.all(seen);
+  const toOwn = requests.filter((r) => new URL(r.url).origin === origin);
+  const toSecond = requests.filter((r) => new URL(r.url).origin === secondOrigin);
+  expect(toOwn.length).toBeGreaterThan(0);
+  expect(toSecond.length).toBeGreaterThan(0);
+  for (const request of toOwn) {
+    const all = `${request.url}\n${JSON.stringify(request.headers)}\n${request.body}`;
+    expect(all, request.url).not.toContain(String(second.port));
+    expect(all, request.url).not.toContain(credential);
+    expect(all, request.url).not.toContain('Cloud');
+  }
+  for (const request of toSecond) {
+    expect(request.headers.cookie, request.url).toBeUndefined();
+    expect(request.url).not.toContain(credential);
+  }
+  for (const url of sockets) {
+    expect(url).not.toContain(credential);
+    if (new URL(url).port === String(second.port)) expect(url).toContain('ticket=');
+    else expect(url).not.toContain(String(second.port));
+  }
+  // The first server's state is as it was before linking.
+  await page.waitForTimeout(1500);
+  expect(readFileSync(stateFile, 'utf8')).toBe(stateBefore);
+  expect(ownCanvas).toContain(origin);
 });

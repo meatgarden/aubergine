@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { shortCommand } from '@aubergine/shared';
-import { terminalOnCanvasHref } from './address';
+import { shownAddress, terminalOnCanvasHref } from './address';
 import { useApp } from './store';
 import { TerminalView } from './TerminalView';
 import { DOT_WORD, dotTone } from './terminal-rows';
@@ -31,7 +31,7 @@ export function TerminalPage({ sessionId }: { sessionId: string }) {
         <div className="message-card">
           <h1>This terminal is not here</h1>
           <p>It may have been ended, or the address is not one of a terminal on this server.</p>
-          <Button onClick={() => location.assign('/')}>Open the canvas</Button>
+          <Button onClick={() => location.assign(shownAddress('/'))}>Open the canvas</Button>
         </div>
       </main>
     );

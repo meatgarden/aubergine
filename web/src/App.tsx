@@ -24,6 +24,8 @@ export function App() {
   const canvasId = useApp((s) => s.canvasId);
   const page = useApp((s) => s.page);
   const canvasView = useCanvasView();
+  // Everything drawn is of the server shown: drawn afresh for another, so that nothing of the one before is left.
+  const server = useApp((s) => s.server);
 
   useEffect(() => startSync(), []);
   // A tab that shows one terminal by itself has no canvas for the keys of the canvas to act on.
@@ -76,14 +78,14 @@ export function App() {
   if (terminalPage !== null) {
     return (
       <>
-        <TerminalPage sessionId={terminalPage} />
+        <TerminalPage key={server ?? 'own'} sessionId={terminalPage} />
         <Toast />
       </>
     );
   }
 
   return (
-    <div className="app">
+    <div className="app" key={server ?? 'own'}>
       <AppBar />
       <div className="app-under">
         {/* The canvas page stays as it is while a page is shown in its place: not drawn, not reachable, its terminals running. */}

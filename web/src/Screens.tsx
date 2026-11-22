@@ -16,6 +16,7 @@ import { SharingScreen } from './projects/SharingScreen';
 import { ShelfEditor } from './workflows/ShelfEditor';
 import { SettingsDialog } from './SettingsDialog';
 import { AddDeviceDialog } from './devices/Devices';
+import { LinkServerDialog, UnlinkServerDialog } from './linking/LinkDialog';
 import { ShortcutSheet } from './ShortcutSheet';
 import { StartDialog } from './environment/StartDialog';
 import { WorkflowEditor } from './workflows/WorkflowEditor';
@@ -47,6 +48,8 @@ export function Screens() {
       <HelpPanel />
       <SettingsDialog />
       <AddDeviceDialog />
+      <LinkServerDialog />
+      <UnlinkServerDialog />
       <InventoryPanel />
       <HistoryPanel />
       <TokenScreen />

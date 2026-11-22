@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { BUSY_STATES, RULE_EVENT_WORDS, RuleEvent, TASK_STATE_WORDS, addedByWords, sourceWords, type RuleAction, type RuleList, type Task } from '@aubergine/shared';
-import { api } from '../api';
+import { api, isSuperseded } from '../api';
 import { notificationsWanted, setNotificationsWanted } from '../attention';
 import { useApp } from '../store';
 import { actionView } from './action-views';
@@ -26,7 +26,7 @@ export function TaskRow({ task, waiting, onMove, onDropOn }: { task: Task; waiti
     try {
       await work();
     } catch (e) {
-      useApp.getState().setNotice((e as Error).message);
+      if (!isSuperseded(e)) useApp.getState().setNotice((e as Error).message);
     } finally {
       setBusy(false);
     }

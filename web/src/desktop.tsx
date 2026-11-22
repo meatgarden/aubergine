@@ -1,4 +1,4 @@
-import { api } from './api';
+import { api, isSuperseded } from './api';
 import { atThisComputer, useApp } from './store';
 
 /**
@@ -44,6 +44,7 @@ export async function openOnDesktop(sessionId: string): Promise<void> {
   try {
     setNotice(afterOpening(await api.openOnDesktop(sessionId)));
   } catch (error) {
+    if (isSuperseded(error)) return;
     setNotice(`Not opened on the desktop: ${(error as Error).message}`);
   }
 }
@@ -56,6 +57,7 @@ export async function setOpenNew(value: boolean): Promise<void> {
     state.setDesktopOpenNew(now.openNew);
     if (now.openNew && shouldSayDesktopSize()) state.setNotice(`New terminals will also open on the desktop. ${DESKTOP_SIZE_HINT}`);
   } catch (error) {
+    if (isSuperseded(error)) return;
     state.setNotice(`The setting was not changed: ${(error as Error).message}`);
   }
 }

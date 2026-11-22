@@ -16,9 +16,10 @@ import {
   firstProject,
   stateOf,
 } from '@aubergine/shared';
-import { ApiError, api, askAbout, lookAt, subscribeToEvents } from './api';
+import { ApiError, NotUnderstood, api, askAbout, isRefusal, isSuperseded, lookAt, ownApi, showTarget, subscribeToEvents, whenRefused } from './api';
+import { findServer, loadServers, withPageSettings, type LinkedServer } from './servers';
 import { NOT_FOLLOWING, behind, takeChange, takeWhole, type Following } from './following';
-import { canvasIdFromPath, chooseCanvas, openedHere, pageFromPath, rememberCanvas, rememberedCanvas, sessionFromAddress, shownPage, terminalFromPath, writeAddress, type RunsTab } from './address';
+import { canvasIdFromPath, chooseCanvas, linkFromPath, openedHere, pageFromPath, rememberCanvas, rememberedCanvas, sessionFromAddress, shownPage, terminalFromPath, writeAddress, writeAddressesFor, type RunsTab } from './address';
 import { announcement, notificationsWanted } from './attention';
 import { clampDrawerWidth, clampPanelWidth, loadPanelPrefs, savePanelPrefs, type PanelPrefs } from './panel/registry';
 import { loadView, saveView, type ListView } from './terminal-rows';
@@ -31,10 +32,40 @@ export type Phase =
   | 'unreachable'
   | 'ready';
 
+/** Where the page goes once another server is shown: a canvas of it, or a project of it. */
+export interface ShowWhere {
+  canvasId?: string;
+  projectId?: string;
+  /** False where the address is already the one to go to (back and forward); otherwise going there is a step in the history. */
+  push?: boolean;
+}
+
 export interface AppStore {
   phase: Phase;
+  /**
+   * The server shown: null for the one that served the page, or the short name of a server this browser linked.
+   * Everything below that names things (canvases, terminals, runs) is of that server. Changed by `showServer` alone.
+   */
+  server: LinkedServer['id'] | null;
+  /**
+   * Shows another server: the own one (null) or a linked one. Stops following the server shown, forgets everything of
+   * it, follows the other, and goes to the canvas or project asked for, else to that server's default. The one way the
+   * server shown changes.
+   */
+  showServer: (server: LinkedServer['id'] | null, then?: ShowWhere) => void;
+  /** The settings of the own server: what is about the page itself (the theme, the fonts, the keys) is taken from these whatever is shown. */
+  ownSettings: Settings | null;
+  /** The dialog that links a server is open. */
+  linking: boolean;
+  linkServer: (open: boolean) => void;
+  /** The linked server whose unlinking waits for a yes. */
+  unlinking: string | null;
+  askToUnlink: (server: string | null) => void;
   runtime: RuntimeStatus | null;
-  /** User settings from the daemon's settings file. */
+  /**
+   * Settings from the settings file of the server shown, but for what is about the page itself, which is the own
+   * server's (`withPageSettings`).
+   */
   settings: Settings;
   /**
    * What the page shows: the project being looked at, with what is shared with it. Every list on screen is made from
@@ -197,6 +228,13 @@ function startPage(): { page: PageName | null; tab: RunsTab | null } {
 
 export const useApp = create<AppStore>((set, get) => ({
   phase: 'loading',
+  server: null,
+  ownSettings: null,
+  linking: false,
+  linkServer: (linking) => set({ linking }),
+  unlinking: null,
+  askToUnlink: (unlinking) => set({ unlinking }),
+  showServer: (server, then) => showServer(server, then),
   runtime: null,
   settings: DEFAULT_SETTINGS,
   app: null,
@@ -253,30 +291,59 @@ export const useApp = create<AppStore>((set, get) => ({
   viewRun: (viewingRun) => set({ viewingRun }),
 
   load: async () => {
+    const server = get().server;
     try {
+      // A linked server shown from the start: what is about the page itself is the own server's, read first.
+      if (server !== null && get().ownSettings === null) {
+        let own: Settings;
+        try {
+          own = (await ownApi.getState()).settings;
+        } catch {
+          // The own server is not there or does not take this page: that is said as it always is, by showing it.
+          if (get().server === server) get().showServer(null);
+          return;
+        }
+        if (get().server !== server) return;
+        set({ ownSettings: own });
+      }
       const response = await api.getState();
       // Taken unless it is older than what the stream has already brought; what the stream brought before it is applied after it.
       const following = takeWhole(get().following, response.state, response.epoch ?? 'unnumbered', response.revision ?? 0);
       const everything = following.whole ?? response.state;
       const exists = (id: string): boolean => everything.canvases.some((c) => c.id === id);
       const current = get().canvasId;
-      set({ phase: 'ready', runtime: response.runtime, settings: response.settings, here: response.here, following, whole: everything, app: viewOf(everything, current, get().app) });
+      const ownSettings = server === null ? response.settings : get().ownSettings;
+      set({ phase: 'ready', runtime: response.runtime, settings: withPageSettings(response.settings, ownSettings), ownSettings, here: response.here, following, whole: everything, app: viewOf(everything, current, get().app) });
       // A tab that shows one terminal by itself looks at no canvas, and keeps its own address.
       if (terminalPage !== null) return;
-      // Keep looking at the same canvas. On opening the page, or if that canvas is gone: the one
-      // in the address, else the one this browser looked at last, else the server's default.
+      // Keep looking at the same canvas. On opening the page, or if that canvas is gone: the one asked for on
+      // showing this server, else the one in the address, else the one this browser looked at last, else the server's default.
       if (!current || !exists(current)) {
+        const wanted = goingTo;
+        goingTo = null;
+        const inProject = wanted?.projectId ? everything.canvases.filter((c) => c.projectId === wanted.projectId) : [];
+        const remembered = wanted?.projectId ? rememberedCanvas(wanted.projectId) : null;
         const chosen = chooseCanvas({
-          fromAddress: canvasIdFromPath(location.pathname),
+          fromAddress: wanted?.canvasId ?? (wanted?.projectId ? (inProject.find((c) => c.id === remembered) ?? inProject[0])?.id ?? null : canvasIdFromPath(location.pathname)),
           remembered: rememberedCanvas(),
           fallback: response.defaultCanvasId,
           exists,
         });
         // An address that asks for a session is left for that to deal with.
         if (sessionFromAddress(location.search)) set({ canvasId: chosen, focus: null, app: viewOf(everything, chosen, get().app) });
-        else get().setCanvas(chosen, { push: false });
+        else get().setCanvas(chosen, { push: wanted?.push ?? false });
       }
     } catch (error) {
+      // An answer for a server no longer shown: nothing to do, and nothing to say.
+      if (isSuperseded(error) || get().server !== server) return;
+      if (server !== null) {
+        // The linked server no longer takes this page's credential: said once, where every such refusal is said.
+        if (isRefusal(error)) return;
+        // Not shown yet, or another version: the own server is shown instead, and the page says why.
+        if (error instanceof NotUnderstood) return leaveServer(server, 'version');
+        if (get().phase !== 'ready') return leaveServer(server, 'unreachable');
+        return;
+      }
       if (error instanceof ApiError && error.code === 'unauthorized') {
         set({ phase: 'unauthorized' });
       } else if (get().phase !== 'ready') {
@@ -371,7 +438,7 @@ export const useApp = create<AppStore>((set, get) => ({
   said: null,
   say: (text, undo) => set((state) => ({ said: text === null ? null : { text, undo, tick: (state.said?.tick ?? 0) + 1 } })),
   setDesktopOpenNew: (openNew) => set((state) => ({ settings: { ...state.settings, desktop: { ...state.settings.desktop, openNew } } })),
-  setTheme: (theme) => set((state) => ({ settings: { ...state.settings, theme } })),
+  setTheme: (theme) => set((state) => ({ settings: { ...state.settings, theme }, ...(state.ownSettings ? { ownSettings: { ...state.ownSettings, theme } } : {}) })),
   setDescribeRemind: (remind) => set((state) => ({ settings: { ...state.settings, describe: { ...state.settings.describe, remind } } })),
   setSide: (change) => {
     const side = { ...get().side, ...change };
@@ -463,6 +530,8 @@ export const terminalPage: string | null = typeof location === 'undefined' ? nul
  * terminal or a canvas, and this one can show neither. The terminal itself is live over its own socket.
  */
 function startTerminalPageSync(load: () => Promise<void>): () => void {
+  // Showing another server (the own one, when a linked one could not be shown) reads it as a first load does.
+  syncNow = load;
   void load();
   const onFocus = (): void => void load();
   window.addEventListener('focus', onFocus);
@@ -471,6 +540,7 @@ function startTerminalPageSync(load: () => Promise<void>): () => void {
     if (phase !== 'ready' || runtime?.status !== 'ok') void load();
   }, 3000);
   return () => {
+    syncNow = null;
     window.removeEventListener('focus', onFocus);
     window.clearInterval(poll);
   };
@@ -493,8 +563,121 @@ export function signedIn(): void {
   void syncNow?.();
 }
 
+/** Where to go once the server being shown has been read: asked for by `showServer`, used by the next load. */
+let goingTo: ShowWhere | null = null;
+
+/** What the page says about leaving a linked server for the own one. One sentence each, with the label as this browser has it. */
+export function leavingWords(label: string, why: 'version' | 'refused' | 'unreachable' | 'unknown'): string {
+  if (why === 'unknown') return 'This browser has no server linked under that address, so this page’s own server is shown.';
+  if (why === 'version') return `“${label}” runs another version of Aubergine than this page, and both must be the same to show it here; this page’s own server is shown.`;
+  if (why === 'refused') return `“${label}” no longer takes this page’s sign-in: its device there was revoked or went unused. Link it again or unlink it from the project menu.`;
+  return `“${label}” could not be reached, so this page’s own server is shown.`;
+}
+
+/** The own server is shown in place of a linked one, and the page says why. */
+function leaveServer(server: string, why: 'version' | 'refused' | 'unreachable'): void {
+  const store = useApp.getState();
+  if (store.server !== server) return;
+  const label = findServer(loadServers(), server)?.label ?? 'The linked server';
+  store.showServer(null);
+  useApp.getState().say(leavingWords(label, why));
+}
+// A linked server that refuses the credential on any call or socket: once, for the server shown.
+whenRefused(() => {
+  const server = useApp.getState().server;
+  if (server !== null) leaveServer(server, 'refused');
+});
+
+/** What names something of the server shown, set back as it is before anything is read: nothing of one server is left for the next. */
+const NOTHING_OF_A_SERVER = {
+  runtime: null,
+  whole: null,
+  app: null,
+  following: NOT_FOLLOWING,
+  canvasId: null,
+  live: true,
+  focus: null,
+  selected: null,
+  closing: null,
+  closingCanvas: null,
+  picker: false,
+  panel: null,
+  page: null,
+  ask: null,
+  notice: null,
+  drawer: null,
+  parkedHere: [],
+  show: null,
+  settleUntil: 0,
+  editingWorkflow: null,
+  startingRun: null,
+  describing: null,
+  editingElement: null,
+  viewingRun: null,
+  historyView: null,
+  inventoryFor: null,
+  choosingAgentTools: false,
+  startingTerminal: false,
+  viewingEnvironment: null,
+  reviewWanted: null,
+  addingDevice: false,
+  settingsAt: null,
+  linking: false,
+  unlinking: null,
+} satisfies Partial<AppStore>;
+
+function showServer(server: string | null, then?: ShowWhere): void {
+  const store = useApp.getState();
+  const entry = server === null ? null : findServer(loadServers(), server);
+  if (server !== null && entry === null) {
+    if (store.server !== null) showServer(null);
+    useApp.getState().say(leavingWords('', 'unknown'));
+    return;
+  }
+  if (store.server === server) {
+    // The server is shown already: only where to go on it.
+    const whole = store.whole;
+    const canvas = then?.canvasId ? whole?.canvases.find((c) => c.id === then.canvasId) : undefined;
+    if (canvas) store.setCanvas(canvas.id);
+    return;
+  }
+  // Stop following the server shown, so that nothing more of it arrives; anything already on its way is dropped
+  // (`Superseded`, and a socket opened before this is not listened to).
+  events?.stop();
+  events = null;
+  showTarget(entry === null ? null : { id: entry.id, address: entry.address, credential: entry.credential });
+  writeAddressesFor(entry?.id ?? null);
+  goingTo = { ...then, push: then?.push ?? true };
+  useApp.setState({
+    ...NOTHING_OF_A_SERVER,
+    server,
+    phase: 'loading',
+    // Until the other server has said, nothing is offered that acts on the desktop where Aubergine runs.
+    here: entry === null,
+    // What is the page's own stays as it is meanwhile: the own server's.
+    settings: store.ownSettings ?? store.settings,
+  });
+  void syncNow?.();
+}
+
+/** Shows from the start the server the address names (`/s/<link>/…`): before anything is asked of any server. */
+function serverFromAddress(): void {
+  if (typeof location === 'undefined') return;
+  const link = linkFromPath(location.pathname);
+  if (link === null) return;
+  const entry = findServer(loadServers(), link);
+  if (entry === null) {
+    useApp.getState().say(leavingWords('', 'unknown'));
+    return;
+  }
+  showTarget({ id: entry.id, address: entry.address, credential: entry.credential });
+  writeAddressesFor(entry.id);
+  useApp.setState({ server: entry.id, here: false });
+}
+
 export function startSync(): () => void {
   const { load, apply } = useApp.getState();
+  serverFromAddress();
   if (terminalPage !== null) return startTerminalPageSync(load);
   let stopped = false;
 
@@ -541,6 +724,14 @@ export function startSync(): () => void {
   const onPopState = (): void => {
     const id = canvasIdFromPath(location.pathname);
     const store = useApp.getState();
+    // A step back or forward to another server's address shows that server, and that canvas on it.
+    const link = linkFromPath(location.pathname);
+    if (link !== store.server) {
+      const found = pageFromPath(location.pathname);
+      store.showServer(link, { ...(id ? { canvasId: id } : {}), push: false });
+      if (found) useApp.setState({ page: shownPage(found).page, ...(shownPage(found).tab ? { runsTab: shownPage(found).tab! } : {}) });
+      return;
+    }
     // And between a page and the canvas it was opened from.
     const found = pageFromPath(location.pathname);
     const shown = found ? shownPage(found) : null;
