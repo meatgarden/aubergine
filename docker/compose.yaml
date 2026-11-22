@@ -9,6 +9,19 @@
 #   cp .env.example .env        # then set AUBERGINE_HOST in it
 #   docker compose up -d --build
 #
+# That builds the image from this checkout. To use the published image instead (linux/amd64 and
+# linux/arm64, from a release tag; AUBERGINE_TAG in .env picks the version, latest by default):
+#
+#   docker compose pull
+#   docker compose up -d
+#
+# How Compose treats `image` and `build` together, as it does with no pull_policy set: `up` uses the
+# image of that name already on the machine; when there is none, it pulls it, and builds from the
+# checkout when the pull fails. `up --build` builds from the checkout either way and gives the result
+# that name (when no image of that name is on the machine yet, it first tries to pull one; `docker
+# compose build` and then `up -d` does not). `pull` puts the published image under that name, in
+# place of one built here. So the name holds whichever came last.
+#
 # Why the network is shared: Aubergine listens on 127.0.0.1 only, and that does not change. A port
 # published for it would reach nothing. So `proxy` joins the network namespace of the `aubergine`
 # container, where 127.0.0.1 is the same for both, and only the web server's ports 80 and 443 are
@@ -44,6 +57,8 @@ services:
       - caddy-config:/config
 
   aubergine:
+    # The published image, and the name a build from this checkout is given (see above).
+    image: ghcr.io/thirstyeggplant/aubergine:${AUBERGINE_TAG:-latest}
     build:
       context: ..
       dockerfile: docker/Dockerfile
