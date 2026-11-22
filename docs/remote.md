@@ -319,13 +319,132 @@ The browser sends the code to that server itself and is answered with a credenti
 
 ## In a container
 
-Nothing for this ships with Aubergine, and it has not been tried. If you try, know this:
+**Written, not run.** These files were written from the code on a computer without Docker, and Aubergine itself has not been tried on Linux. Expect to fix something on the first run. When something fails, send back the output of `docker compose logs aubergine` and of `docker compose exec aubergine aubergine doctor`.
 
-- **The server listens on `127.0.0.1` only, inside the container.** Publishing a port of the container does not reach it. The proxy has to be in the same container, or share its network namespace.
-- **The terminals are processes inside the container.** They end when the container ends.
-- **The image needs** tmux 3.2 or newer, Node.js 22 or newer, zsh (command status in a terminal's title comes from the zsh integration; other shells work but show none), git (working copies and the library use it), and the agents you mean to run.
-- **The data folder must be a volume** that outlives the container. It holds the state, the access token and the paired devices. Set `AUBERGINE_DATA_DIR` to the volume's path.
-- Linux itself has not been tried.
+The files are in [`docker/`](../docker) in the repository.
+
+**What you get:** two containers that share one network. One runs the server, its terminals and the `aubergine` command. The other runs a web server (Caddy) that accepts HTTPS under your name and passes each request on to the server at `127.0.0.1`. Your work and Aubergine's data are in one volume: the home folder of the user the terminals run as.
+
+The two share a network because the server listens on `127.0.0.1` only, inside its container, and that does not change. A port published from its own container would reach nothing. Only the web server's ports 80 and 443 are published. Never publish Aubergine's own port.
+
+**What you need:**
+
+- Docker, with Compose.
+- A copy of this repository on the machine. The image is built from it, by the same script that builds the npm package.
+- A name that points at the machine, with ports 80 and 443 reaching it. See [Getting a name](#getting-a-name). To try it on your own computer first, you need no name: see [Trying it on your own computer first](#trying-it-on-your-own-computer-first).
+
+### The steps
+
+1. Go to the folder with the files:
+
+   ```sh
+   cd docker
+   ```
+
+2. Copy the example settings, and write your name in `.env` in place of `aubergine.example.net`, without `https://`:
+
+   ```sh
+   cp .env.example .env
+   ```
+
+3. Build the image and start both containers:
+
+   ```sh
+   docker compose up -d --build
+   ```
+
+   On its first start, the container writes `https://` and your name into `config.json` in the data folder, as `access.addresses`. It does that only when there is no `config.json` yet. Later, the file is yours to change by hand, and the container never changes it again; if the name in `.env` changes, it says in its log what to add.
+
+4. Check what the server sees:
+
+   ```sh
+   docker compose exec aubergine aubergine doctor
+   ```
+
+   Its `outside addresses:` line should show your name with `https://` in front.
+
+5. Make a pairing code:
+
+   ```sh
+   docker compose exec aubergine aubergine device add --name "My laptop"
+   ```
+
+   It prints a code, a link with the code in it and a QR code of that link. Open the link, or open `https://` and your name and type the code. See [Pairing a browser](#pairing-a-browser): everything there holds here.
+
+6. Follow what the server says:
+
+   ```sh
+   docker compose logs -f aubergine
+   ```
+
+7. To update, get the new code and build again:
+
+   ```sh
+   git pull
+   ```
+
+   ```sh
+   docker compose up -d --build
+   ```
+
+   This makes a new container, so the terminals end and come back as fresh shells (see below). `aubergine update` inside the container is not the way: it names an npm command, and the image is built from this checkout.
+
+8. To stop both containers:
+
+   ```sh
+   docker compose down
+   ```
+
+   The volumes stay, and `docker compose up -d` starts again where you were.
+
+**Removing everything, which deletes your work.** This removes the volumes as well: the home folder with your clones and anything you installed, Aubergine's data with its state and paired devices, and the web server's certificates. It cannot be undone.
+
+```sh
+docker compose down --volumes
+```
+
+### Trying it on your own computer first
+
+Write `AUBERGINE_HOST=aubergine.localhost` in `.env`, start it as in step 3, and open `https://aubergine.localhost` in a browser on the same computer. Aubergine takes `https://aubergine.localhost` as an outside address: only `127.0.0.1`, `localhost` and `[::1]` themselves are refused.
+
+The browser warns about the certificate: for a name ending in `.localhost`, the web server makes a certificate itself, and no browser trusts it. Some browsers find a name ending in `.localhost` on this computer by themselves; if yours does not, it cannot open the address.
+
+Ports 80 and 443 on your computer must be free for this.
+
+### What lives where
+
+| What | Where | Kept when |
+|---|---|---|
+| The image: Node.js, tmux, zsh, git and Aubergine | Built from this checkout | Replaced at each `--build` |
+| Your home folder: your clones, the agents you install, their sign-ins | The volume `aubergine-home`, at `/home/aubergine` | Until you remove the volumes |
+| Aubergine's data folder: the state, the access token, the paired devices, `config.json` | Inside that volume, at `/home/aubergine/.local/share/aubergine` | The same |
+| The web server's certificates | The volumes `caddy-data` and `caddy-config` | The same |
+
+### Agents and tools
+
+None are in the image. Install the one you use as the `aubergine` user, inside the container:
+
+```sh
+docker compose exec aubergine npm install -g <the agent's npm package>
+```
+
+It goes into the home volume (`~/.npm-global`), so it is kept when the image is built again. Or build an image of your own that starts `FROM` this one.
+
+Signing an agent in, and giving Git its credentials (an SSH key, a credential helper), are done inside the container, in a terminal on the canvas or with `docker compose exec aubergine zsh`. They are kept in the home volume.
+
+### What is different from a laptop
+
+- **The terminals end when the container stops** or is made again, at an update. Expect the same when the web server's container is made again: they share its network. When the server starts again, every terminal gets a fresh shell in its last known folder, in the same place on the canvas. Nothing is re-run. This is what a laptop does after a reboot.
+- **Nothing opens on a desktop.** There is none: **Open on desktop** is left out under an outside address anyway.
+- **Start at login does not apply.** The containers' restart policy (`unless-stopped`) starts them again with Docker.
+- **The terminals run zsh.** Command status in a terminal's title comes from the zsh integration; another shell would work but show none.
+
+### What to know before putting it on the internet
+
+- **Ports 80 and 443 are open to whoever can reach the machine,** so the field for a pairing code is in front of them. Limit who can reach those ports with the provider's firewall, or put a private network in front.
+- **A device is the whole owner,** here as anywhere: it has a shell in the container, with everything in the home volume.
+- A container keeps the terminals' files apart from the machine's own files. This guide makes no promise beyond that.
+- **Never mount the Docker socket or the machine's home folder into the container.** Either would hand the terminals the machine itself.
 
 ## When it does not work
 
@@ -350,4 +469,4 @@ Nothing for this ships with Aubergine, and it has not been tried. If you try, kn
 - **An address anyone can open puts that field in front of everyone.** They would be guessing at a shell. A private network, or your organisation's own sign-in, in front of the address is recommended.
 - **A device, and a linked page, is the whole owner.** Pair and link only what you would hand your keyboard to.
 - **The page is not laid out for a phone.** It works as it does in a narrow window.
-- **Not tried:** a real proxy, a real phone, two separate machines, and Linux. What this guide says comes from the code and its tests, not from a setup someone has run.
+- **Not tried:** a real proxy, a real phone, two separate machines, Linux, and the container setup in `docker/`. What this guide says comes from the code and its tests, not from a setup someone has run.
