@@ -246,8 +246,8 @@ describe('where a request came in', () => {
     expect((await asOwnerHere('GET', paths.state)).headers['strict-transport-security']).toBeUndefined();
   });
 
-  it('never lets the page be framed, here or from outside', async () => {
-    for (const answer of [await send('GET', '/', { host: `127.0.0.1:${port}` }), await fromOutside('GET', '/'), await fromOutside('GET', `/c/${newId()}`), await fromOutside('GET', '/index.html')]) {
+  it('never lets the page be framed, here or from outside, at a linked server\'s addresses in it too', async () => {
+    for (const answer of [await send('GET', '/', { host: `127.0.0.1:${port}` }), await fromOutside('GET', '/'), await fromOutside('GET', `/c/${newId()}`), await fromOutside('GET', '/index.html'), await send('GET', `/s/abcd1234/p/${newId()}/c/${newId()}/runs`, { host: `127.0.0.1:${port}` }), await fromOutside('GET', `/s/abcd1234/t/${newId()}`), await fromOutside('GET', '/s/abcd1234')]) {
       expect(answer.status).toBe(200);
       expect(answer.headers['content-security-policy']).toBe("frame-ancestors 'none'");
       expect(answer.headers['x-frame-options']).toBe('DENY');

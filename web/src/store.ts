@@ -530,6 +530,8 @@ export const terminalPage: string | null = typeof location === 'undefined' ? nul
  * terminal or a canvas, and this one can show neither. The terminal itself is live over its own socket.
  */
 function startTerminalPageSync(load: () => Promise<void>): () => void {
+  // Showing another server (the own one, when a linked one could not be shown) reads it as a first load does.
+  syncNow = load;
   void load();
   const onFocus = (): void => void load();
   window.addEventListener('focus', onFocus);
@@ -538,6 +540,7 @@ function startTerminalPageSync(load: () => Promise<void>): () => void {
     if (phase !== 'ready' || runtime?.status !== 'ok') void load();
   }, 3000);
   return () => {
+    syncNow = null;
     window.removeEventListener('focus', onFocus);
     window.clearInterval(poll);
   };
