@@ -75,6 +75,7 @@ export const OWNERS_ALONE: Record<(typeof NEVER_BY_TOKEN)[number], string> = {
   'schedules.manage': 'making, changing, switching, removing or running a schedule',
   'projects.manage': 'making, changing, archiving or removing a project, and moving a canvas to another project',
   'sharing.manage': 'saying what is shared between projects',
+  'devices.manage': 'pairing another device with this server, and revoking one',
   'desktop.open': "opening a terminal in a window of the owner's own terminal application",
   'describe.manage': "keeping a link that was only seen in a terminal, or putting what an agent suggested in place of the owner's own words",
 };

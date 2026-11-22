@@ -3,7 +3,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DEFAULT_SETTINGS, Settings } from '@aubergine/shared';
-import { SETTINGS_FILE, SettingsFile, expandHome, loadSettings, shortcutProblems } from './settings';
+import { SETTINGS_FILE, SettingsFile, accessReport, expandHome, loadSettings, shortcutProblems } from './settings';
 
 let dir: string;
 beforeEach(async () => {
@@ -123,3 +123,29 @@ describe('the theme', () => {
   });
 });
 
+describe('outside addresses in the settings', () => {
+  it('reports a wrong entry once and skips it, and keeps the rest of the file', async () => {
+    await writeFile(path.join(dir, SETTINGS_FILE), JSON.stringify({ theme: 'light', access: { addresses: ['https://aubergine.example.test', 'http://plain.example.test', 'https://owner:pw@x.example.test'] } }));
+    const warnings: string[] = [];
+    const file = new SettingsFile(dir, (m) => warnings.push(m));
+    const settings = await file.reload();
+    await file.reload();
+    expect(settings.theme).toBe('light');
+    expect(warnings).toHaveLength(2);
+    expect(warnings[0]).toMatch(/access\.addresses: "http:\/\/plain\.example\.test" is not https.*It is skipped\.$/);
+    // The password is in the file; the sentence does not repeat the entry beyond saying what is wrong with it.
+    expect(warnings[1]).toMatch(/user name or a password/);
+    expect(warnings.join('\n')).not.toContain('pw');
+    expect(await accessReport(dir)).toEqual({ addresses: ['https://aubergine.example.test'], problems: [expect.stringMatching(/not https/), expect.stringMatching(/user name or a password/)] });
+  });
+
+  it('says so of a list that is not a list, and starts all the same', async () => {
+    await writeFile(path.join(dir, SETTINGS_FILE), JSON.stringify({ theme: 'dark', access: { addresses: 'https://aubergine.example.test' } }));
+    const warnings: string[] = [];
+    const settings = await loadSettings(dir, (m) => warnings.push(m));
+    expect(settings.theme).toBe('dark');
+    expect(settings.access.addresses).toEqual([]);
+    expect(warnings).toEqual([expect.stringMatching(/access\.addresses: is not a list/)]);
+    expect(await accessReport(path.join(dir, 'nothing-here'))).toEqual({ addresses: [], problems: [] });
+  });
+});

@@ -456,6 +456,20 @@ describe('the commands, against a running server', () => {
     expect(bare.code).toBe(1);
   });
 
+  it('doctor lists the outside addresses, and each wrong entry as a thing to fix', async () => {
+    expect((await aubergine(['doctor'])).out).toContain('-   outside addresses: none (another device cannot reach this server)');
+    const file = path.join(home, 'data', 'config.json');
+    writeFileSync(file, JSON.stringify({ access: { addresses: ['https://aubergine.example.test', 'http://plain.example.test'] } }));
+    try {
+      const result = await aubergine(['doctor']);
+      expect(result.out).toContain('-   outside addresses: https://aubergine.example.test');
+      expect(result.out).toMatch(/^x {3}access\.addresses: "http:\/\/plain\.example\.test" is not https/m);
+      expect(result.code).toBe(1);
+    } finally {
+      rmSync(file, { force: true });
+    }
+  });
+
   it('uninstall will not remove anything without being asked, when nobody can answer', async () => {
     const result = await aubergine(['uninstall']);
     expect(result.code).toBe(2);

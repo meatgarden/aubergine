@@ -9152,7 +9152,10 @@ export interface ListActivityQuery {
 export type ListActivityResult = {
   items: {
     at: string;
-    caller: "token" | "owner-cli" | "rule" | "schedule";
+    caller: "token" | "owner-cli" | "rule" | "schedule" | "owner" | "device" | "pairing";
+    byDeviceId?: string | null;
+    deviceId?: string | null;
+    deviceName?: string | null;
     tokenId: string | null;
     tokenName: string;
     fromSessionId: string | null;

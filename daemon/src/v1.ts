@@ -98,6 +98,10 @@ export interface PublicRouteDeps {
   validateResponses: boolean;
   /** Who a request was found to be, when the checks let it through. */
   principalOf(request: FastifyRequest): Principal | null;
+  /** Where a request came in: under this computer's own name, or an outside address. */
+  cameIn(request: FastifyRequest): 'here' | 'outside';
+  /** Keeps what is held open for a request (a stream) to be closed at once if the device it came from is revoked. Returns what lets it go. */
+  holdOpen(request: FastifyRequest, close: () => void): () => void;
   /** Asks `authorize`, without refusing: for an answer that depends on what else the caller may do. */
   may(principal: Principal, action: Action, resource: Resource): boolean;
   /** What `authorize` needs to know about a session to decide about its terminal. */
@@ -416,7 +420,11 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
     switchRule: ({ params, body }) => queue.switchRule(params.ruleId, body.on),
     removeRule: ({ params }) => queue.removeRule(params.ruleId),
     // A window on the owner's desktop, and the one setting about it: `authorize` has refused everyone but the owner.
-    openSessionOnDesktop: ({ params }) => deps.desktop.open(params.sessionId),
+    openSessionOnDesktop: ({ params, request }) => {
+      // Never for a request from another device: a window on this computer's desktop is for someone at this computer.
+      if (deps.cameIn(request) !== 'here') throw deps.fail(403, 'forbidden', 'A terminal is opened on this computer\u2019s desktop only for a request made at this computer, not from another device.');
+      return deps.desktop.open(params.sessionId);
+    },
     changeDesktopSettings: ({ body }) => deps.desktop.setOpenNew(body.openNew),
     changeAppearance: ({ body }) => deps.changeTheme(body.theme),
     /* ---------- Projects, and what is shared between them ---------- */
@@ -655,7 +663,9 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
 
       reply.hijack();
       const out = reply.raw;
-      out.writeHead(200, { 'content-type': 'text/event-stream; charset=utf-8', 'cache-control': 'no-store', connection: 'keep-alive', 'x-accel-buffering': 'no' });
+      // Written by hand: what the request's checks put on the answer (that an outside address is HTTPS) goes too.
+      const hsts = reply.getHeader('strict-transport-security');
+      out.writeHead(200, { 'content-type': 'text/event-stream; charset=utf-8', 'cache-control': 'no-store', connection: 'keep-alive', 'x-accel-buffering': 'no', ...(hsts !== undefined ? { 'strict-transport-security': String(hsts) } : {}) });
       out.write(': connected\n\n');
       // A token limited to some projects hears nothing of another. What each ID was of is remembered from the start,
       // so that a change which only says "this was removed" can still be told apart.
@@ -663,8 +673,8 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
       const memory = limited ? new ProjectMemory(() => hub.state) : null;
       memory?.note(hub.state);
       const unsubscribe = hub.subscribe((whole) => {
-        // Tokens and what they did are the owner's business, not a stream's.
-        if (whole.type.startsWith('token.')) return;
+        // Tokens, devices and what they did are the owner's business, not a stream's.
+        if (whole.type.startsWith('token.') || whole.type.startsWith('device.')) return;
         let event = whole;
         if (limited && memory) {
           memory.note(whole);
@@ -681,9 +691,14 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
         out.write(`data: ${JSON.stringify(withoutTerminalContent(event, (sessionId) => mayReadTerminal(principal, sessionId)))}\n\n`);
       });
       const beat = setInterval(() => out.write(': still here\n\n'), 25_000);
+      const release = deps.holdOpen(request, () => {
+        end();
+        out.end();
+      });
       const end = (): void => {
         clearInterval(beat);
         unsubscribe();
+        release();
       };
       request.raw.on('close', end);
       out.on('error', end);

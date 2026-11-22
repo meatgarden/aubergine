@@ -3,6 +3,7 @@ import path from 'node:path';
 import { z } from 'zod';
 import {
   ApiToken,
+  Device,
   AcceptedRepositoryWorkflow,
   Canvas,
   Draft,
@@ -95,8 +96,11 @@ const StateFileV13 = StateFileV12.extend({ version: z.literal(13), schedules: Sc
  */
 const StateFileV14 = StateFileV13.omit({ project: true }).extend({ version: z.literal(14), projects: AppState.shape.projects, sharing: AppState.shape.sharing });
 
-const StateFile = z.discriminatedUnion('version', [StateFileV1, StateFileV2, StateFileV3, StateFileV4, StateFileV5, StateFileV6, StateFileV7, StateFileV8, StateFileV9, StateFileV10, StateFileV11, StateFileV12, StateFileV13, StateFileV14]);
-const CURRENT_VERSION = 14;
+/** The same, with devices: browsers paired from an outside address, each with a hash of its secret. An older file has none. */
+const StateFileV15 = StateFileV14.extend({ version: z.literal(15), devices: z.array(Device) });
+
+const StateFile = z.discriminatedUnion('version', [StateFileV1, StateFileV2, StateFileV3, StateFileV4, StateFileV5, StateFileV6, StateFileV7, StateFileV8, StateFileV9, StateFileV10, StateFileV11, StateFileV12, StateFileV13, StateFileV14, StateFileV15]);
+const CURRENT_VERSION = 15;
 type StateFile = z.infer<typeof StateFile>;
 
 /**
@@ -146,6 +150,7 @@ export function migrate(file: StateFile): AppState {
     sessions,
     canvases,
     tokens: file.version >= 3 && 'tokens' in file ? file.tokens : [],
+    devices: file.version >= 15 && 'devices' in file ? file.devices : [],
     // Before projects every workflow carried the one project's ID. They are shared with every project now.
     workflows: (file.version >= 4 && 'workflows' in file ? file.workflows : []).map((workflow) => (file.version < 8 ? withSourceMarks(workflow) : workflow)).map((workflow) => (file.version < 14 ? { ...workflow, projectId: null } : workflow)),
     runs: file.version >= 4 && 'runs' in file ? file.runs : [],

@@ -29,6 +29,7 @@ import {
   type Layout,
 } from './entities';
 import { ApiToken } from './tokens';
+import { Device } from './devices';
 import { Id } from './ids';
 import { SessionMessages } from './messages';
 import { InstallRequest, InstalledItem, LibrarySource } from './library';
@@ -159,6 +160,11 @@ export const ChangeEvent = z.discriminatedUnion('type', [
   z.object({ type: z.literal('token.revoked'), tokenId: Id, at: Timestamp }),
   /** Recorded at most about once a minute per token. */
   z.object({ type: z.literal('token.used'), tokenId: Id, at: Timestamp }),
+  /** A browser was paired. Its hash is blanked before this is sent to a browser, and the stream for programs never carries it. */
+  z.object({ type: z.literal('device.added'), device: Device }),
+  z.object({ type: z.literal('device.revoked'), deviceId: Id, at: Timestamp }),
+  /** Recorded at most about once a minute per device. */
+  z.object({ type: z.literal('device.used'), deviceId: Id, at: Timestamp }),
   /** A workflow was created, or saved as a new version. */
   z.object({ type: z.literal('workflow.changed'), workflow: Workflow }),
   z.object({ type: z.literal('workflow.removed'), workflowId: Id }),
@@ -402,6 +408,12 @@ export function applyEvent(state: AppState, event: ChangeEvent): AppState {
       return { ...state, tokens: state.tokens.map((t) => (t.id === event.tokenId && t.revokedAt === null ? { ...t, revokedAt: event.at } : t)) };
     case 'token.used':
       return { ...state, tokens: state.tokens.map((t) => (t.id === event.tokenId ? { ...t, lastUsedAt: event.at } : t)) };
+    case 'device.added':
+      return { ...state, devices: [...state.devices.filter((d) => d.id !== event.device.id), event.device] };
+    case 'device.revoked':
+      return { ...state, devices: state.devices.map((d) => (d.id === event.deviceId && d.revokedAt === null ? { ...d, revokedAt: event.at } : d)) };
+    case 'device.used':
+      return { ...state, devices: state.devices.map((d) => (d.id === event.deviceId ? { ...d, lastUsedAt: event.at } : d)) };
     case 'workflow.changed':
       return { ...state, workflows: [...state.workflows.filter((w) => w.id !== event.workflow.id), event.workflow] };
     case 'workflow.removed':

@@ -1,7 +1,7 @@
 import { mkdir, readFile, rename, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import { DEFAULT_SETTINGS, Settings, resolveShortcuts, type Platform, type ThemeSetting } from '@aubergine/shared';
+import { DEFAULT_SETTINGS, Settings, accessEntries, resolveShortcuts, type Platform, type ThemeSetting } from '@aubergine/shared';
 
 export const SETTINGS_FILE = 'config.json';
 
@@ -20,8 +20,10 @@ export async function loadSettings(dir: string, onWarning: (message: string) => 
     throw error;
   }
   try {
-    const settings = Settings.parse(JSON.parse(text));
+    const raw: unknown = JSON.parse(text);
+    const settings = Settings.parse(raw);
     for (const problem of shortcutProblems(settings)) onWarning(`${file}: ${problem}`);
+    for (const problem of accessProblems(raw, settings)) onWarning(`${file}: ${problem} It is skipped.`);
     return settings;
   } catch (error) {
     const detail =
@@ -47,6 +49,36 @@ export function shortcutProblems(settings: Settings, platform: Platform = proces
   // The app-window keys are checked as they apply there; what is already reported is not repeated.
   const inApp = resolveShortcuts({ platform, mode: 'app', shortcuts, shortcutsInAppWindow }).problems.map((p) => p.message);
   return [...new Set([...inTab, ...inApp])];
+}
+
+/**
+ * What is wrong with `access` in the settings: each entry that is not an origin that can be used, and a list that is
+ * not a list at all (which is then taken as empty). `raw` is the file as it was read, before defaults were applied.
+ */
+export function accessProblems(raw: unknown, settings: Settings): string[] {
+  const problems: string[] = [];
+  const access = raw !== null && typeof raw === 'object' ? (raw as { access?: unknown }).access : undefined;
+  if (access !== undefined && (access === null || typeof access !== 'object' || Array.isArray(access))) problems.push('access: is not an object with "addresses" and "pages".');
+  for (const kind of ['addresses', 'pages'] as const) {
+    const list = access !== null && typeof access === 'object' ? (access as Record<string, unknown>)[kind] : undefined;
+    if (list !== undefined && (!Array.isArray(list) || list.length > 20)) problems.push(`access.${kind}: is not a list of at most 20 origins.`);
+    problems.push(...accessEntries(kind, settings.access[kind]).problems);
+  }
+  return problems;
+}
+
+/** The outside addresses the settings file names, as the server takes them at its start, and what is wrong with `access`. For `aubergine doctor`. */
+export async function accessReport(dir: string): Promise<{ addresses: string[]; problems: string[] }> {
+  let raw: unknown;
+  try {
+    raw = JSON.parse(await readFile(path.join(dir, SETTINGS_FILE), 'utf8'));
+  } catch {
+    // No file, or one that is not JSON: the server starts with the defaults, and so no outside address.
+    return { addresses: [], problems: [] };
+  }
+  const settings = Settings.safeParse(raw);
+  if (!settings.success) return { addresses: [], problems: [] };
+  return { addresses: accessEntries('addresses', settings.data.access.addresses).entries.map((entry) => entry.origin), problems: accessProblems(raw, settings.data) };
 }
 
 /** Expands a leading `~` to the home folder. */

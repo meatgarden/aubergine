@@ -1,5 +1,7 @@
 import { packageRoot } from './package-root';
-import { PROJECT_HEADER, ThemeSetting, isLocalHost } from '@aubergine/shared';
+import { DEVICE_UNUSED_DAYS, PROJECT_HEADER, PairRequest, PairingCodeRequest, ThemeSetting, accessEntries, isLocalHost, viewOfDevice, type DeviceList, type OpenedOnDesktop, type PairingCodeAnswer, type RevokedDevice } from '@aubergine/shared';
+import { DeviceNotFoundError, Devices } from './devices';
+import { Pairing } from './pairing';
 import { existsSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import { SettingsUnreadableError } from './settings';
@@ -187,7 +189,15 @@ export interface ServerOptions {
   version?: string;
   /** Check every /v1 answer against the shape its route declares. On by default under the test runner. */
   validateResponses?: boolean;
+  /** The clock devices and pairing codes are judged by. A test passes its own, so that it never waits. */
+  now?: () => number;
 }
+
+/** Where a request came in, worked out from its `Host` alone: under this computer's own name, or an outside address. */
+export type CameIn = 'here' | 'outside';
+
+/** Said where a window on this computer's desktop was asked for from another device. */
+export const NOT_AT_THIS_COMPUTER = 'Not opened: this was asked for from another device, and a window is opened on this computer only for a request made at this computer.';
 
 /** A route of the public API, as the tests walk them. */
 export interface PublicRoute {
@@ -196,6 +206,12 @@ export interface PublicRoute {
 }
 
 const routeLists = new WeakMap<FastifyInstance, PublicRoute[]>();
+const everyRouteLists = new WeakMap<FastifyInstance, PublicRoute[]>();
+
+/** Every route a server has, under any address: for the walk that tries each one as a stranger from outside. */
+export function everyRouteOf(app: FastifyInstance): PublicRoute[] {
+  return everyRouteLists.get(app) ?? [];
+}
 
 /** Every route under /v1 that a server has, so that a test can try each one and none is forgotten. */
 export function publicRoutesOf(app: FastifyInstance): PublicRoute[] {
@@ -204,6 +220,14 @@ export function publicRoutesOf(app: FastifyInstance): PublicRoute[] {
 
 /** Pause reading from a terminal when this much output is waiting to be sent. */
 const HIGH_WATER = 1024 * 1024;
+/** The close code of a socket whose device was revoked: a policy refusal. */
+const CLOSE_DEVICE_REVOKED = 1008;
+
+/** Closes a socket whose device was revoked, and cuts it if the other end does not answer the close within a second. */
+function closeAtOnce(socket: { close: (code: number, reason: string) => void; terminate: () => void }): void {
+  socket.close(CLOSE_DEVICE_REVOKED, 'Device revoked');
+  setTimeout(() => socket.terminate(), 1000).unref();
+}
 const LOW_WATER = 128 * 1024;
 
 class HttpError extends Error {
@@ -233,6 +257,14 @@ export function cookieName(port: number): string {
   return `aubergine_token_${port}`;
 }
 
+/** The cookie a paired device signs in with. Never the access token's name, so that neither is taken for the other. */
+export function deviceCookieName(port: number): string {
+  return `aubergine_device_${port}`;
+}
+
+/** The one answer to every code that did not work, whatever the reason. */
+const PAIRING_REFUSED = errorBody('unauthorized', 'That code did not work. A code works once, for three minutes: make a new one where Aubergine runs, with aubergine device add.');
+
 /** For a server that was given no fetcher: it fetches nothing, and says so. */
 const NO_FETCHER: LibraryFetcher = {
   fetch: async () => {
@@ -247,6 +279,12 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   const limits = (await options.settings()).api;
   const app = Fastify({ logger: false, bodyLimit: limits.maxBodyBytes });
   const tokens = new Tokens(hub);
+  const clock = options.now ?? Date.now;
+  // The outside addresses, read once, when the server starts. A wrong entry was reported where the settings were read, and is skipped.
+  const outsideAddresses = accessEntries('addresses', (await options.settings()).access.addresses).entries;
+  const outsideByHost = new Map(outsideAddresses.map((entry) => [entry.host, entry.origin]));
+  const devices = new Devices(hub, clock);
+  const pairing = new Pairing(clock);
   const limiter = new RateLimiter(limits.rateLimitPerMinute);
   const activity = options.activity ?? new MemoryActivityLog();
   const workflowSettings = (await options.settings()).workflows;
@@ -310,7 +348,12 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
 
   const routes: PublicRoute[] = [];
   routeLists.set(app, routes);
+  const everyRoute: PublicRoute[] = [];
+  everyRouteLists.set(app, everyRoute);
   app.addHook('onRoute', (route) => {
+    for (const method of [route.method].flat()) {
+      if (method !== 'HEAD' && method !== 'OPTIONS') everyRoute.push({ method, url: route.url });
+    }
     if (route.url !== '/v1' && !route.url.startsWith('/v1/')) return;
     for (const method of [route.method].flat()) {
       if (method !== 'HEAD' && method !== 'OPTIONS') routes.push({ method, url: route.url });
@@ -428,24 +471,82 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   await app.register(cookie);
   await app.register(websocket, { options: { maxPayload: 2 * 1024 * 1024 } });
 
+  /** Where each request came in, and the device it was signed in with, when it was. */
+  const cameIn = new WeakMap<FastifyRequest, CameIn>();
+  const deviceOf = new WeakMap<FastifyRequest, string>();
+  /** What closes what each device holds open: its sockets and streams, closed at once when it is revoked. */
+  const heldOpen = new Map<string, Set<() => void>>();
+  const holdOpen = (request: FastifyRequest, close: () => void): (() => void) => {
+    const deviceId = deviceOf.get(request);
+    if (deviceId === undefined) return () => undefined;
+    const held = heldOpen.get(deviceId) ?? new Set<() => void>();
+    heldOpen.set(deviceId, held);
+    held.add(close);
+    return () => void held.delete(close);
+  };
+  const stopClosing = hub.subscribe((event) => {
+    if (event.type !== 'device.revoked') return;
+    const held = heldOpen.get(event.deviceId);
+    heldOpen.delete(event.deviceId);
+    for (const close of held ?? []) close();
+  });
+  app.addHook('onClose', async () => stopClosing());
+
+  /** Gives a device its cookie: the secret's one way out of the server. */
+  const setDeviceCookie = (reply: FastifyReply, secret: string, place: CameIn): void => {
+    void reply.setCookie(deviceCookieName(port()), secret, {
+      httpOnly: true,
+      sameSite: 'strict',
+      path: '/',
+      // From outside the address is HTTPS: the cookie is never sent over anything else.
+      secure: place === 'outside',
+      maxAge: DEVICE_UNUSED_DAYS * 24 * 60 * 60,
+    });
+  };
+
+  /**
+   * Whether a request from outside carries the cookie of a device that may sign in: a browser, not revoked, used
+   * within the last 90 days. Nothing else signs in from outside. Noting that it was used is written at most once a
+   * minute, and then the cookie is given again, so that a device in use keeps it.
+   */
+  const deviceSignedIn = (request: FastifyRequest, reply: FastifyReply, isUpgrade: boolean): boolean => {
+    const secret = request.cookies[deviceCookieName(port())];
+    if (secret === undefined) return false;
+    const found = devices.authenticate(secret);
+    if (!found || found.status !== 'active' || found.device.kind !== 'browser') return false;
+    deviceOf.set(request, found.device.id);
+    if (devices.touch(found.device.id) && !isUpgrade) setDeviceCookie(reply, secret, 'outside');
+    return true;
+  };
+
   // Every request, including WebSocket upgrades, passes these checks.
   app.addHook('onRequest', async (request, reply) => {
     const { hosts, origins } = allowed();
 
-    // A page on another site can only reach this server under a different
-    // Host name (DNS rebinding) or with a foreign Origin. Refuse both.
-    if (!request.headers.host || !hosts.has(request.headers.host)) {
+    // Where the request came in, from Host alone: this computer's own name, or one of the outside addresses written
+    // in the settings. No forwarded header is believed, for this or anything else. A page on another site can only
+    // reach this server under a different Host name (DNS rebinding) or with a foreign Origin. Refuse both.
+    const host = request.headers.host;
+    const outsideOrigin = host === undefined ? undefined : outsideByHost.get(host.toLowerCase());
+    const place: CameIn | null = host !== undefined && hosts.has(host) ? 'here' : outsideOrigin !== undefined ? 'outside' : null;
+    if (place === null) {
       return reply.code(403).send(errorBody('forbidden', 'Host not allowed'));
     }
+    cameIn.set(request, place);
+    // An outside address is HTTPS: every answer under it says so, refusals included.
+    if (place === 'outside') void reply.header('strict-transport-security', 'max-age=31536000');
     const origin = request.headers.origin;
-    if (origin !== undefined && !origins.has(origin)) {
+    // Here: one of this computer's own origins, as before. From outside: exactly the address it came in under.
+    if (origin !== undefined && !(place === 'here' ? origins.has(origin) : origin === outsideOrigin)) {
       return reply.code(403).send(errorBody('forbidden', 'Origin not allowed'));
     }
     const pathname = request.url.split('?')[0] ?? '';
 
     const isUpgrade = request.headers.upgrade?.toLowerCase() === 'websocket';
     const isSafeMethod = request.method === 'GET' || request.method === 'HEAD';
-    const signedIn = tokensMatch(token, request.cookies[cookieName(port())]);
+    // The owner's sign-in. Here: the access token's cookie, and nothing else. From outside: a device's cookie, and
+    // nothing else; the access token is never accepted there, in any form. Looked at only where it is needed.
+    const ownerSignedIn = (): boolean => (place === 'here' ? tokensMatch(token, request.cookies[cookieName(port())]) : deviceSignedIn(request, reply, isUpgrade));
 
     // The public API. Three kinds of caller, and exactly one per request:
     // a program with an API token the owner made; a program inside a session,
@@ -480,12 +581,14 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
           principals.set(request, { kind: 'token', tokenId: found.token.id, name: found.token.name, scopes: found.token.scopes, reviewWorkflows: found.token.reviewWorkflowChanges, reach: found.token.reach, projects: found.token.projects });
           return;
         }
+        // A session's own token. The access token itself is not a bearer credential, here or from outside:
+        // this gives a session principal or nothing, never the owner.
         const principal = principalFromBearer(token, request.headers.authorization);
-        if (!principal) return reply.code(401).send(errorBody('unauthorized', 'Missing or wrong bearer token'));
+        if (!principal || principal.kind !== 'session') return reply.code(401).send(errorBody('unauthorized', 'Missing or wrong bearer token'));
         principals.set(request, principal);
         return;
       }
-      if (!signedIn) return reply.code(401).send(errorBody('unauthorized', 'Not signed in'));
+      if (!ownerSignedIn()) return reply.code(401).send(errorBody('unauthorized', 'Not signed in'));
       if (origin === undefined && !isSafeMethod) {
         return reply.code(403).send(errorBody('forbidden', 'Origin header required'));
       }
@@ -498,20 +601,22 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     }
 
     if (pathname.startsWith('/api/') || pathname.startsWith('/ws/')) {
-      if (!signedIn) return reply.code(401).send(errorBody('unauthorized', 'Missing or wrong access token'));
-      // Only the cookie opens these, so the caller is the owner.
+      if (!ownerSignedIn()) return reply.code(401).send(errorBody('unauthorized', 'Missing or wrong access token'));
+      // Only the owner's sign-in opens these, so the caller is the owner: at this computer, or on a paired device.
       principals.set(request, { kind: 'user' });
     }
   });
 
-  app.setErrorHandler((error, _request, reply) => {
+  app.setErrorHandler((error, request, reply) => {
+    // A body that could not even be read is, on the route for codes, one more code that did not work: the same answer.
+    if (request.routeOptions?.url === paths.pair && request.method === 'POST' && !pairingTried.has(request)) return tryPairing(request, reply, undefined);
     if (error instanceof HttpError) {
       return reply.code(error.statusCode).send(errorBody(error.code, error.message));
     }
     if ((error as { code?: string }).code === 'FST_ERR_CTP_BODY_TOO_LARGE' || (error as { statusCode?: number }).statusCode === 413) {
       return reply.code(413).send(errorBody('too_large', `The request body is larger than this server accepts (${limits.maxBodyBytes} bytes).`));
     }
-    if (error instanceof NotFoundError || error instanceof SessionNotFoundError || error instanceof TokenNotFoundError) {
+    if (error instanceof NotFoundError || error instanceof SessionNotFoundError || error instanceof TokenNotFoundError || error instanceof DeviceNotFoundError) {
       return reply.code(404).send(errorBody('not_found', error.message));
     }
     if (error instanceof BadInputError || error instanceof BadCursorError || error instanceof BadActivityCursorError) {
@@ -542,6 +647,8 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   /* ---------- Token → cookie ---------- */
 
   app.get(paths.auth, async (request, reply) => {
+    // From outside, there is no such address: the access token is never taken there, and is not even compared.
+    if (cameIn.get(request) !== 'here') return reply.code(404).send(errorBody('not_found', 'Not found'));
     const given = (request.query as { token?: string }).token;
     if (!tokensMatch(token, given)) {
       return reply.code(401).send(errorBody('unauthorized', 'Wrong access token'));
@@ -558,12 +665,101 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
       .redirect('/');
   });
 
+  /* ---------- Devices: pairing, and the owner's list ---------- */
+
+  /** The requests a code was already tried for: a failure while answering one is not tried again. */
+  const pairingTried = new WeakSet<FastifyRequest>();
+  /** When a try refused for being one too many was last written to the activity log. */
+  let limitedSaidAt = Number.NEGATIVE_INFINITY;
+  /** One line in the activity log about devices and codes. Who, what and how it ended: never a code, never a secret, never a body. */
+  const recordDevices = (request: FastifyRequest, line: { caller: 'owner' | 'owner-cli' | 'device' | 'pairing'; action: string; status: number; outcome: 'ok' | 'denied' | 'limited'; device?: { id: string; name: string } }): void => {
+    void activity.append({
+      at: new Date(clock()).toISOString(),
+      caller: line.caller,
+      tokenId: null,
+      tokenName: '',
+      byDeviceId: line.caller === 'device' ? (deviceOf.get(request) ?? null) : null,
+      deviceId: line.device?.id ?? null,
+      deviceName: line.device?.name ?? null,
+      client: clientOf(request),
+      action: line.action,
+      resource: {},
+      method: request.method,
+      route: request.routeOptions?.url ?? '(no such route)',
+      status: line.status,
+      outcome: line.outcome,
+    });
+  };
+  /** Who the owner is, for that log: on a device, at this computer in the page, or from a command line. */
+  const ownerOnDevices = (request: FastifyRequest): 'owner' | 'owner-cli' | 'device' => (deviceOf.has(request) ? 'device' : ownerCaller(request).kind === 'owner-cli' ? 'owner-cli' : 'owner');
+
+  /**
+   * Tries a pairing code. Only from outside can one be spent: from here the comparisons are made all the same and
+   * the answer is that it did not work, since a device's cookie is not taken here. Every failure is one answer.
+   */
+  function tryPairing(request: FastifyRequest, reply: FastifyReply, code: unknown): FastifyReply {
+    pairingTried.add(request);
+    const place = cameIn.get(request) ?? 'here';
+    void reply.header('cache-control', 'no-store');
+    const tried = pairing.try(code, { accept: place === 'outside', kinds: ['browser'] });
+    if (tried.result === 'limited') {
+      // Needs no sign-in, so anyone can be refused here as often as they like: one line a minute says so, not one a try.
+      if (clock() - limitedSaidAt >= 60_000) {
+        limitedSaidAt = clock();
+        recordDevices(request, { caller: 'pairing', action: 'devices.pair', status: 429, outcome: 'limited' });
+      }
+      return reply.code(429).header('retry-after', String(tried.retryAfterSeconds)).send(errorBody('rate_limited', `Too many tries at a code in a minute. Try again in ${tried.retryAfterSeconds} s.`));
+    }
+    if (tried.result === 'wrong') {
+      recordDevices(request, { caller: 'pairing', action: 'devices.pair', status: 401, outcome: 'denied' });
+      return reply.code(401).send(PAIRING_REFUSED);
+    }
+    const { device, secret } = devices.create({ name: tried.name, kind: tried.kind });
+    recordDevices(request, { caller: 'pairing', action: 'devices.pair', status: 204, outcome: 'ok', device: { id: device.id, name: device.name } });
+    setDeviceCookie(reply, secret, place);
+    return reply.code(204).send();
+  }
+
+  // Needs no sign-in: a code is the sign-in. The hook has checked Host and Origin as for every request.
+  app.post(paths.pair, async (request, reply) => {
+    const body = PairRequest.safeParse(request.body);
+    return tryPairing(request, reply, body.success ? body.data.code : undefined);
+  });
+
+  app.get(paths.devices, async (request): Promise<DeviceList> => {
+    allowOn(request, 'devices.manage', {});
+    const now = clock();
+    return { devices: devices.list().map((device) => viewOfDevice(device, now, deviceOf.get(request) ?? null)) };
+  });
+
+  app.post(paths.pairingCodes, async (request, reply): Promise<PairingCodeAnswer> => {
+    allowOn(request, 'devices.manage', {});
+    const body = parse(PairingCodeRequest, request.body);
+    if (outsideAddresses.length === 0) throw new HttpError(409, 'conflict', 'No outside address is written in the settings, so a code could not be used anywhere. Write one in access.addresses in config.json, start the server again, and ask for a code then.');
+    const made = pairing.make(body.name, body.kind);
+    recordDevices(request, { caller: ownerOnDevices(request), action: 'devices.manage', status: 201, outcome: 'ok' });
+    // Shown once, and never kept anywhere on the way.
+    void reply.code(201).header('cache-control', 'no-store');
+    return { code: made.code, expiresAt: new Date(made.expiresAt).toISOString(), addresses: outsideAddresses.map((entry) => entry.origin) };
+  });
+
+  app.delete(paths.device(':deviceId'), async (request): Promise<RevokedDevice> => {
+    allowOn(request, 'devices.manage', {});
+    const deviceId = parse(Id, (request.params as { deviceId?: string }).deviceId);
+    // Who asked, before the device is revoked: a device may revoke itself.
+    const caller = ownerOnDevices(request);
+    // Its sockets and streams are closed by the change itself (above), whoever revoked it.
+    const device = devices.revoke(deviceId);
+    recordDevices(request, { caller, action: 'devices.manage', status: 200, outcome: 'ok', device: { id: device.id, name: device.name } });
+    return { device: viewOfDevice(device, clock(), deviceOf.get(request) ?? null) };
+  });
+
   /* ---------- HTTP API ---------- */
 
   const idParam = (request: FastifyRequest, name: string): string =>
     parse(Id, (request.params as Record<string, string>)[name]);
 
-  app.get(paths.state, async (): Promise<StateResponse> => {
+  app.get(paths.state, async (request): Promise<StateResponse> => {
     const [runtimeNow, settingsNow] = [await sessions.status(), await options.settings()];
     // The state and its number are read together, after everything that waits: a change cannot come between the two.
     return {
@@ -571,10 +767,11 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
       runtime: runtimeNow,
       settings: settingsNow,
       // A browser has no use for the hashes of token secrets, so they stay here.
-      state: { ...hub.state, tokens: hub.state.tokens.map((t) => ({ ...t, hash: '' })) },
+      state: { ...hub.state, tokens: hub.state.tokens.map((t) => ({ ...t, hash: '' })), devices: hub.state.devices.map((d) => ({ ...d, hash: '' })) },
       epoch: hub.epoch,
       revision: hub.revision,
       defaultCanvasId: sessions.defaultCanvasId(),
+      here: cameIn.get(request) === 'here',
     };
   });
 
@@ -586,7 +783,10 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     const created = await (typeof meant === 'string' && hub.state.projects.some((p) => p.id === meant) ? inProject(meant, () => sessions.create(body)) : sessions.create(body));
     // Only here, on the owner's own route, and only when the request says so: a session a token, a task or a schedule
     // makes goes through other code and never opens a window. The session is made whether or not the window opens.
-    return alsoOnDesktop === true ? { ...created, desktop: await desktop.openNew(created.session.id) } : created;
+    // Never from another device: a window on this computer's desktop is for someone at this computer.
+    if (alsoOnDesktop !== true) return created;
+    const notHere: OpenedOnDesktop = { opened: false, says: NOT_AT_THIS_COMPUTER };
+    return { ...created, desktop: cameIn.get(request) === 'here' ? await desktop.openNew(created.session.id) : notHere };
   });
 
   app.patch(paths.session(':sessionId'), async (request) => {
@@ -882,6 +1082,8 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     // In tests every answer is held against what its route declares.
     validateResponses: options.validateResponses ?? process.env.VITEST !== undefined,
     principalOf: (request) => principals.get(request) ?? null,
+    cameIn: (request) => cameIn.get(request) ?? 'outside',
+    holdOpen,
     recordNow: (request) => record(request, 200),
     ownerCaller,
     allow: allowOn,
@@ -891,17 +1093,20 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
 
   /* ---------- WebSocket: change events ---------- */
 
-  app.get(paths.events, { websocket: true }, (socket) => {
+  app.get(paths.events, { websocket: true }, (socket, request) => {
     const send = (message: EventsServerMessage): void => {
       if (socket.readyState === socket.OPEN) socket.send(JSON.stringify(message));
     };
     const unsubscribe = hub.subscribe((event, revision) =>
-      send({ type: 'event', revision, event: event.type === 'token.created' ? { ...event, token: { ...event.token, hash: '' } } : event }),
+      send({ type: 'event', revision, event: event.type === 'token.created' ? { ...event, token: { ...event.token, hash: '' } } : event.type === 'device.added' ? { ...event, device: { ...event.device, hash: '' } } : event }),
     );
     const viewer = viewers.add(send);
+    // Closed at once if the device it was opened with is revoked.
+    const release = holdOpen(request, () => closeAtOnce(socket));
     const leave = (): void => {
       unsubscribe();
       viewers.remove(viewer);
+      release();
     };
     socket.on('close', leave);
     socket.on('error', leave);
@@ -962,7 +1167,9 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
       handle(message);
     });
 
+    const release = holdOpen(request, () => closeAtOnce(socket));
     const cleanup = (): void => {
+      release();
       socketClosed = true;
       if (drainTimer) clearInterval(drainTimer);
       attachment?.close();
@@ -1034,6 +1241,9 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
       return reply
         .type('text/html; charset=utf-8')
         .header('cache-control', 'no-cache')
+        // The page is never shown inside another page.
+        .header('content-security-policy', "frame-ancestors 'none'")
+        .header('x-frame-options', 'DENY')
         .send(html.replace('<html lang="en"', `<html lang="en" data-theme-setting="${theme.success ? theme.data : 'system'}"`));
     };
     app.get('/', sendPage);
@@ -1052,6 +1262,8 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     app.get('/', async (_request, reply) =>
       reply
         .type('text/plain; charset=utf-8')
+        .header('content-security-policy', "frame-ancestors 'none'")
+        .header('x-frame-options', 'DENY')
         .send(
           options.devOrigin
             ? `The web app is served by the development server at ${options.devOrigin}\n`

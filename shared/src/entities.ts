@@ -3,6 +3,7 @@ import { QueueState } from './tasks';
 import { SessionEnvironment } from './environment';
 import { z } from 'zod';
 import { ApiToken } from './tokens';
+import { Device } from './devices';
 import { Id, newId } from './ids';
 import { SessionMessages } from './messages';
 import { LibraryState } from './library';
@@ -405,6 +406,8 @@ export const AppState = z.object({
   canvases: z.array(Canvas).min(1),
   /** API tokens. Their hashes are blanked before the state is sent to a browser. */
   tokens: z.array(ApiToken).default([]),
+  /** Browsers paired from an outside address. The server's, of no project. Their hashes are blanked before the state is sent to a browser. */
+  devices: z.array(Device).default([]),
   workflows: z.array(Workflow).default([]),
   /** Runs that are still going. One that finishes or is stopped leaves for the archive. */
   runs: z.array(Run).default([]),
@@ -453,7 +456,7 @@ export function createInitialState(now: Date = new Date()): AppState {
     createdAt,
   };
   const project: Project = { id: newId(), workspaceId: workspace.id, name: 'Default', color: 'none', order: 0, labels: {}, folders: [], defaultFolder: null, home: LOCAL_HOME, state: 'open', createdAt };
-  return { organization, workspace, projects: [project], sharing: {}, sessions: [], canvases: [newCanvas(project.id, FIRST_CANVAS_NAME, 0, now)], tokens: [], workflows: [], runs: [], drafts: [], shelf: [], repositoryAccepted: [], library: { sources: [], installed: [], requests: [] }, environments: [], queue: QueueState.parse({}), schedules: SchedulesState.parse({}) };
+  return { organization, workspace, projects: [project], sharing: {}, sessions: [], canvases: [newCanvas(project.id, FIRST_CANVAS_NAME, 0, now)], tokens: [], devices: [], workflows: [], runs: [], drafts: [], shelf: [], repositoryAccepted: [], library: { sources: [], installed: [], requests: [] }, environments: [], queue: QueueState.parse({}), schedules: SchedulesState.parse({}) };
 }
 
 /** Canvases in tab order. */
