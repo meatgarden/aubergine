@@ -1,4 +1,5 @@
 import { randomBytes } from 'node:crypto';
+import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from '@playwright/test';
@@ -20,7 +21,17 @@ export const e2e = {
   tmuxSocket: `aubergine-e2e-${run}`,
   // A folder that stands in for the agent's own configuration folder, so that the test never reads the developer's.
   agentConfigDir: path.join(root, `.e2e-data-${run}`, 'stand-in-agent-config'),
+  // An outside address of the test server, written in its settings. Nothing answers under it here.
+  outsideAddress: 'https://aubergine.example.test',
 };
+
+// The test server also answers under an outside address, read when it starts, so that a sign-in code can be made for
+// a device. Nothing answers under that name on this machine; every test reaches the server under its local name.
+// Written once, by the run itself (not by each worker), before the server is started.
+if (process.env.TEST_WORKER_INDEX === undefined && !existsSync(path.join(e2e.dataDir, 'config.json'))) {
+  mkdirSync(e2e.dataDir, { recursive: true });
+  writeFileSync(path.join(e2e.dataDir, 'config.json'), JSON.stringify({ access: { addresses: [e2e.outsideAddress] } }));
+}
 
 export default defineConfig({
   testDir: 'e2e',

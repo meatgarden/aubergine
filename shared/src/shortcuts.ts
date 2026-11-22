@@ -91,6 +91,8 @@ export const COMMAND_IDS = [
   'activity.show',
   'canvas.show',
   'settings.show',
+  'devices.show',
+  'devices.add',
   'theme.light',
   'theme.dark',
   'theme.system',

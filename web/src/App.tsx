@@ -16,6 +16,7 @@ import { Tour } from './tour/Tour';
 import { Toast } from './Toast';
 import { applyTheme, useThemeShown } from './theme';
 import { Pages, Screens } from './Screens';
+import { SignIn } from './devices/SignIn';
 
 export function App() {
   const phase = useApp((s) => s.phase);
@@ -47,16 +48,8 @@ export function App() {
     );
   }
 
-  if (phase === 'unauthorized') {
-    return (
-      <Message title="This browser is not signed in yet">
-        <p>Open the sign-in link once in this browser. This command prints it again:</p>
-        <pre className="message-command" data-testid="sign-in-command">
-          <code>aubergine open --print</code>
-        </pre>
-      </Message>
-    );
-  }
+  // One field for a code made where Aubergine runs, and the command that signs in a browser at that computer.
+  if (phase === 'unauthorized') return <SignIn />;
 
   if (runtime && runtime.status !== 'ok') {
     return (

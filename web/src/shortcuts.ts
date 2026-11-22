@@ -10,7 +10,7 @@ import {
   type Settings,
   type WindowMode,
 } from '@aubergine/shared';
-import { commandById } from './commands';
+import { NOT_AT_THIS_COMPUTER, commandById, offeredHere } from './commands';
 import { isMac, isTypingTarget } from './keys';
 import { useApp } from './store';
 
@@ -136,6 +136,12 @@ export function handleKey(event: KeyboardEvent): boolean {
     return true;
   }
   const command = commandById(binding.command);
+  if (!offeredHere(command, state)) {
+    // Asked for on another device: what acts on the desktop of the computer Aubergine runs on is not there.
+    event.preventDefault();
+    state.setNotice(NOT_AT_THIS_COMPUTER);
+    return true;
+  }
   const available = command.available(state);
   // A chord that works inside terminals is always ours: it must not reach the shell even when
   // there is nothing for it to do. A plain key with nothing to do is left alone.

@@ -8,7 +8,7 @@ import { RecapBlock } from '../../Recap';
 import { SessionMessages } from '../../Messages';
 import { TerminalInput } from '../../TerminalInput';
 import { markNotesSeen, useUnseenNotes } from '../../notes-seen';
-import { useApp } from '../../store';
+import { atThisComputer, useApp } from '../../store';
 import { DOT_WORD, dotTone, rowState } from '../../terminal-rows';
 import { MenuButton, MenuItem, StateDot, Tabs } from '../../ui';
 import { actOnTerminal, chipOf, terminalActions } from './terminals';
@@ -58,6 +58,7 @@ export function DetailsHead({ id, onClose }: { id: string; onClose: () => void }
   const parked = found?.state === 'parked';
   const here = useApp((s) => (s.app ? s.app.canvases.find((c) => c.id === s.canvasId)?.layout.nodes.some((n) => n.sessionId === id) === true : false));
   const canMove = useApp((s) => (s.app?.canvases.length ?? 0) > 1);
+  const desktop = useApp(atThisComputer);
   if (!found) return null;
   const tone = dotTone(found, parked);
   const chip = chipOf({ session: found, state: rowState(found) });
@@ -80,7 +81,7 @@ export function DetailsHead({ id, onClose }: { id: string; onClose: () => void }
         )}
         {/* Against the window: under the button inside the drawer, the menu would lie under the side panel beside it. */}
         <MenuButton more againstWindow label={`More for ${found.name}`} testid="details-more" menuTestid="details-menu">
-          {terminalActions(found, { here, parked, canMove, hasNotes: true })
+          {terminalActions(found, { here, parked, canMove, hasNotes: true, desktop })
             .filter((action) => action.command !== undefined)
             .map((action) => (
               <MenuItem key={action.key} onClick={() => action.command && actOnTerminal(id, action.command)}>

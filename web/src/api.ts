@@ -50,6 +50,8 @@ export class ApiError extends Error {
     readonly status: number,
     readonly code: ErrorCode | 'network',
     message: string,
+    /** From `Retry-After`, where the server said how long to wait. */
+    readonly retryAfterSeconds: number | null = null,
   ) {
     super(message);
   }
@@ -75,7 +77,8 @@ async function call<T>(schema: ZodType<T> | null, method: string, path: string, 
   }
   if (!response.ok) {
     const parsed = ErrorResponse.safeParse(await response.json().catch(() => null));
-    if (parsed.success) throw new ApiError(response.status, parsed.data.error.code, parsed.data.error.message);
+    const wait = Number.parseInt(response.headers.get('retry-after') ?? '', 10);
+    if (parsed.success) throw new ApiError(response.status, parsed.data.error.code, parsed.data.error.message, Number.isFinite(wait) && wait >= 0 ? wait : null);
     // No well-formed error body: the daemon itself did not answer (for example a proxy did).
     throw new ApiError(response.status, 'network', `HTTP ${response.status}`);
   }
@@ -155,7 +158,9 @@ export const api = {
   getOutside: () => call(OutsideResponse, 'GET', paths.outside),
   outsideAdd: (request: OutsideAddRequest) => call(OutsideResult, 'POST', paths.outsideAdd, request),
   outsideMove: (request: OutsideMoveRequest) => call(OutsideResult, 'POST', paths.outsideMove, request),
-  // Devices paired from an outside address: the owner's alone. No screen uses these yet.
+  /** Signs this browser in with a code (204), or says why not. The code is sent in the body only, never in an address. */
+  pair: (code: string) => call(null, 'POST', paths.pair, { code }),
+  // Devices paired from an outside address: the owner's alone.
   listDevices: () => call(DeviceList, 'GET', paths.devices),
   makePairingCode: (name: string) => call(PairingCodeAnswer, 'POST', paths.pairingCodes, { name, kind: 'browser' }),
   revokeDevice: (deviceId: string) => call(RevokedDevice, 'DELETE', paths.device(deviceId)),

@@ -15,6 +15,7 @@ import { RunViewDialog } from './workflows/RunViewDialog';
 import { SharingScreen } from './projects/SharingScreen';
 import { ShelfEditor } from './workflows/ShelfEditor';
 import { SettingsDialog } from './SettingsDialog';
+import { AddDeviceDialog } from './devices/Devices';
 import { ShortcutSheet } from './ShortcutSheet';
 import { StartDialog } from './environment/StartDialog';
 import { WorkflowEditor } from './workflows/WorkflowEditor';
@@ -45,6 +46,7 @@ export function Screens() {
       <ShortcutSheet />
       <HelpPanel />
       <SettingsDialog />
+      <AddDeviceDialog />
       <InventoryPanel />
       <HistoryPanel />
       <TokenScreen />

@@ -1,16 +1,19 @@
 import { THEMES, THEME_WORDS } from '@aubergine/shared';
+import { useEffect } from 'react';
 import { NotifySwitch } from './AttentionQueue';
 import { api } from './api';
 import { keepBarOpen, useBarKeptOpen } from './bar-open';
 import { BAR_PLACES, BAR_PLACE_WORDS, placeBar, placeFrom, useBarPlace } from './bar-place';
 import { setOpenNew } from './desktop';
-import { useApp } from './store';
+import { DevicesPart } from './devices/Devices';
+import { atThisComputer, useApp } from './store';
 import { chooseTheme, useThemeShown } from './theme';
 import { ScreenHead, Select } from './ui';
 
 /**
  * Settings: the one place for what a person changes about the page itself. How it looks, whether a new terminal
- * also opens on the desktop, and whether the desktop is told when a terminal starts waiting. Everything else is written in the settings file by hand.
+ * also opens on the desktop (only at the computer Aubergine runs on), whether the desktop is told when a terminal starts
+ * waiting, and the devices signed in with a code. Everything else is written in the settings file by hand.
  */
 export function SettingsDialog() {
   const open = useApp((s) => s.panel === 'settings');
@@ -20,6 +23,20 @@ export function SettingsDialog() {
   const remind = useApp((s) => s.settings.describe.remind);
   const barOpen = useBarKeptOpen();
   const barAt = useBarPlace();
+  const here = useApp(atThisComputer);
+  const at = useApp((s) => s.settingsAt);
+  // Asked to show a part (Devices, from its command): brought into view once, and what is done there first has the keyboard.
+  useEffect(() => {
+    if (!open || at === null) return;
+    // A moment later: what opened Settings (the palette, a menu) gives the keyboard back as it closes.
+    const timer = window.setTimeout(() => {
+      useApp.setState({ settingsAt: null });
+      const part = document.querySelector<HTMLElement>(`[data-testid="settings-${at}"]`);
+      part?.scrollIntoView({ block: 'nearest' });
+      part?.querySelector<HTMLElement>('button')?.focus();
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [open, at]);
   if (!open) return null;
   const close = (): void => useApp.getState().togglePanel(null);
   return (
@@ -71,6 +88,7 @@ export function SettingsDialog() {
           </p>
           <p className="ui-meta">At the bottom right the map stands over it. This browser remembers it.</p>
         </section>
+        {here && (
         <section>
           <h3>New terminals</h3>
           <p className="help-setting">
@@ -81,6 +99,7 @@ export function SettingsDialog() {
           </p>
           <p className="ui-meta">The window shows the same terminal as the canvas, and the two share one size.</p>
         </section>
+        )}
         <section>
           <h3>Agents</h3>
           <p className="help-setting">
@@ -108,6 +127,7 @@ export function SettingsDialog() {
             <NotifySwitch />
           </p>
         </section>
+        <DevicesPart />
       </div>
     </div>
   );
