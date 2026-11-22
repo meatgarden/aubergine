@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { sortedCanvases, type Canvas, type SearchHit } from '@aubergine/shared';
 import { api } from './api';
-import { COMMANDS, commandById, type Command } from './commands';
+import { COMMANDS, commandById, offeredHere, type Command } from './commands';
 import { paletteStep, parseQuery, searchCanvases, searchCommands } from './palette';
 import { canvasLabel, searchSessions, shortFolder, type SessionMatch } from './search';
 import { keysOf } from './shortcuts';
@@ -109,7 +109,7 @@ export function Picker() {
     : [
     ...matches.map((match): Row => ({ kind: 'session', match })),
     ...(commandsOnly ? [] : searchCanvases(canvases, wanted)).map((canvas): Row => ({ kind: 'canvas', canvas, number: canvases.indexOf(canvas) + 1 })),
-    ...searchCommands(COMMANDS, wanted).map((command): Row => ({ kind: 'command', command, available: command.available(state) })),
+    ...searchCommands(COMMANDS.filter((command) => offeredHere(command, state)), wanted).map((command): Row => ({ kind: 'command', command, available: command.available(state) })),
     ...hits.map((hit): Row => ({ kind: 'output', hit })),
   ];
   const selected = Math.min(index, Math.max(0, rows.length - 1));

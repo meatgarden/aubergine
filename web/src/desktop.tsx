@@ -1,5 +1,5 @@
 import { api } from './api';
-import { useApp } from './store';
+import { atThisComputer, useApp } from './store';
 
 /**
  * Opening a terminal in the owner's own terminal application, as the page
@@ -62,6 +62,9 @@ export async function setOpenNew(value: boolean): Promise<void> {
 
 /** The box a dialog that makes a terminal shows: ticked or not by the setting, and changed there for that one terminal. */
 export function DesktopBox({ checked, onChange }: { checked: boolean; onChange: (checked: boolean) => void }) {
+  // On another device there is no desktop of this computer to open it on.
+  const here = useApp(atThisComputer);
+  if (!here) return null;
   return (
     <label className="wf-inline" title="A window of your terminal application that shows this same terminal. Closing the window ends nothing.">
       <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} data-testid="desktop-box" />

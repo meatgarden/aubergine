@@ -14,7 +14,7 @@ import { NotePanel } from './NotePanel';
 import { SnapshotView } from './SnapshotView';
 import { StatusBadges, TitleDot } from './StatusBadges';
 import { useUnseenNotes } from './notes-seen';
-import { currentLayout, useApp } from './store';
+import { atThisComputer, currentLayout, useApp } from './store';
 import { TerminalView } from './TerminalView';
 import { colorClass, colorStyle } from './color';
 import { noteRoom, noteStartsOpen, rememberNoteOpen } from './note-open';
@@ -31,6 +31,8 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
   const session = useApp((s) => s.app?.sessions.find((x) => x.id === sessionId));
   const name = session?.name ?? '';
   const exited = session?.state === 'exited';
+  // "Open on desktop" is for the computer Aubergine runs on, not another device.
+  const here = useApp(atThisComputer);
   const [draft, setDraft] = useState<string | null>(null);
   // The one menu of the title: everything that is done seldom.
   const [more, setMore] = useState(false);
@@ -328,7 +330,7 @@ export const TerminalNode = memo(function TerminalNode({ id, data, selected }: N
                   Message…
                 </button>
               )}
-              {draft === null && !exited && (
+              {draft === null && !exited && here && (
                 <button
                   type="button"
                   role="menuitem"
