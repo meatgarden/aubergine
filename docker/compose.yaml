@@ -2,7 +2,8 @@
 #
 # Run once on 2026-11-22, on an Apple-silicon Mac with Docker in Colima (linux/arm64), under
 # https://aubergine.localhost with the web server's own certificate. Not tried: a real name with a
-# public certificate, a cloud machine, linux/amd64. See "In a container" in docs/remote.md.
+# public certificate, a cloud machine, linux/amd64 beyond the release workflow's trial (built, the server
+# started and made a terminal, on a GitHub runner). See "In a container" in docs/remote.md.
 # The steps, and what to send back when something fails, are there too.
 #
 #   cd docker
