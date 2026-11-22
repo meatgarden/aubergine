@@ -28,6 +28,7 @@
 **1. Install** (macOS with tmux 3.2 or newer and Node.js 22 or newer; `brew install tmux node` gets both)
 
 ```sh
+# Node.js 22 or newer
 npm install -g @meatgarden/aubergine
 ```
 
