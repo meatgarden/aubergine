@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { WithLinks } from '../links/LinkChip';
 import type { ForYouItem, Run } from '@aubergine/shared';
-import { api } from '../api';
+import { api, isSuperseded } from '../api';
 import { timeAgo } from '../StatusBadges';
 import { useApp } from '../store';
 import { Badge } from '../ui';
@@ -38,7 +38,7 @@ export function ForYouRow({ item, named = false, onSend, testid = 'foryou-row' }
     try {
       await work();
     } catch (e) {
-      useApp.getState().setNotice((e as Error).message);
+      if (!isSuperseded(e)) useApp.getState().setNotice((e as Error).message);
     } finally {
       setBusy(false);
     }

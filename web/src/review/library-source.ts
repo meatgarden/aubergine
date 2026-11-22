@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { Element, InstallRequestDetail, WorkflowContent } from '@aubergine/shared';
-import { api } from '../api';
+import { api, forgetOnSwitch } from '../api';
 import { useApp } from '../store';
 import { registerReviewSource, type ReviewItem } from './registry';
 
@@ -15,6 +15,7 @@ type Waiting = Pick<InstallRequestDetail, 'request' | 'item' | 'what' | 'from' |
 
 /** The digest of each waiting install's file as it was when it was last shown: what an acceptance is of. */
 const shown = new Map<string, string>();
+forgetOnSwitch(() => shown.clear());
 
 /** A waiting install as the review screen lists it. Pure. */
 export function itemOfRequest(waiting: Waiting): ReviewItem {

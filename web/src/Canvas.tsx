@@ -25,7 +25,7 @@ import {
   type Frame,
   type LayoutNode,
 } from '@aubergine/shared';
-import { api } from './api';
+import { api, isSuperseded } from './api';
 import { OutsidePanel } from './OutsidePanel';
 import { ParkedList } from './ParkedList';
 import { atThisComputer, currentLayout, useApp } from './store';
@@ -322,6 +322,7 @@ export function Canvas() {
       if (created.desktop) setError(afterOpening(created.desktop));
       return created.session.id;
     } catch (e) {
+      if (isSuperseded(e)) return null;
       setError(`Could not start a terminal: ${(e as Error).message}`);
       return null;
     } finally {
@@ -354,6 +355,7 @@ export function Canvas() {
       const frame = await api.createFrame({ rect: { x, y, width, height }, canvasId });
       useApp.getState().apply({ type: 'frame.created', canvasId, frame });
     } catch (e) {
+      if (isSuperseded(e)) return;
       setError(`Could not add a frame: ${(e as Error).message}`);
     }
   }, [flow, canvasId, setError]);

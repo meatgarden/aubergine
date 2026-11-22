@@ -1,5 +1,5 @@
 import { isLive, type ReportRunRequest } from '@aubergine/shared';
-import { api } from '../api';
+import { api, isSuperseded } from '../api';
 import { useApp } from '../store';
 import { tourSignal } from '../tour/tour-store';
 import { useEndedRuns } from './ended-runs';
@@ -13,6 +13,7 @@ export async function reportRun(runId: string, report: ReportRunRequest): Promis
     useApp.getState().apply(isLive(next.run.status) ? { type: 'run.moved', run: next.run } : { type: 'run.finished', run: next.run });
     return true;
   } catch (error) {
+    if (isSuperseded(error)) return false;
     useApp.getState().setNotice(`Could not move the run: ${(error as Error).message}`);
     return false;
   }
@@ -26,6 +27,7 @@ export async function decideRun(runId: string, decision: { approve: { elementId?
     useApp.getState().apply(isLive(next.run.status) ? { type: 'run.moved', run: next.run as never } : { type: 'run.finished', run: next.run as never });
     return true;
   } catch (error) {
+    if (isSuperseded(error)) return false;
     useApp.getState().setNotice(`Could not do that: ${(error as Error).message}`);
     return false;
   }
@@ -42,6 +44,7 @@ export async function tickItem(runId: string, elementId: string, item: number, t
     if (isLive(next.run.status)) useApp.getState().apply({ type: 'run.ticked', run: next.run as never });
     else window.dispatchEvent(new CustomEvent('aubergine:run-read', { detail: next }));
   } catch (error) {
+    if (isSuperseded(error)) return;
     useApp.getState().setNotice(`Could not tick that: ${(error as Error).message}`);
   }
 }

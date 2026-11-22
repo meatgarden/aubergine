@@ -250,7 +250,7 @@ export function MenuButton({ label, children, kind = 'default', more = false, te
  * side panel's sections are both this. Its menu is placed against the window, so nothing that scrolls cuts it off; it
  * closes when a line is chosen, when something else is pressed, and on Escape, which goes no further.
  */
-export function Switcher({ label, name, extra, title, testid, nameTestid, menuTestid, className, buttonClassName, style, fill = false, children }: { label?: string; name: ReactNode; extra?: ReactNode; title?: string; testid?: string; nameTestid?: string; menuTestid?: string; className?: string; buttonClassName?: string; style?: CSSProperties; fill?: boolean; children: ReactNode }) {
+export function Switcher({ label, name, extra, title, testid, nameTestid, menuTestid, className, buttonClassName, style, fill = false, onOpen, children }: { label?: string; name: ReactNode; extra?: ReactNode; title?: string; testid?: string; nameTestid?: string; menuTestid?: string; className?: string; buttonClassName?: string; style?: CSSProperties; fill?: boolean; /** Called each time the menu opens: for what is read only then. */ onOpen?: () => void; children: ReactNode }) {
   const [open, setOpen] = useState(false);
   const root = useRef<HTMLSpanElement>(null);
   const button = useRef<HTMLButtonElement>(null);
@@ -286,6 +286,7 @@ export function Switcher({ label, name, extra, title, testid, nameTestid, menuTe
         onClick={() => {
           const box = button.current?.getBoundingClientRect();
           if (box) setAt({ left: box.left, top: box.bottom + 6, width: box.width });
+          if (!open) onOpen?.();
           setOpen((v) => !v);
         }}
         data-testid={testid}

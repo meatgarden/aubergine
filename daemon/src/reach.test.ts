@@ -576,7 +576,7 @@ describe('what only the owner may do about devices', () => {
 
 describe('a stranger from outside', () => {
   it('gets nothing from any route but the page and the one for a code', async () => {
-    const isPage = (url: string): boolean => url === '/' || url === '/index.html' || url === '/*' || /^\/(c|p|t)\//.test(url);
+    const isPage = (url: string): boolean => url === '/' || url === '/index.html' || url === '/*' || /^\/(c|p|t|s)\//.test(url);
     const filled = (url: string): string => url.replace('/*', '/assets/app.js').replace(/:[A-Za-z]+/g, () => newId());
     const routes = everyRouteOf(app);
     // Every kind of route is there to be tried: a walk of nothing would pass.

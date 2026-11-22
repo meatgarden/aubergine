@@ -93,6 +93,8 @@ export const COMMAND_IDS = [
   'settings.show',
   'devices.show',
   'devices.add',
+  'server.link',
+  'server.unlink',
   'theme.light',
   'theme.dark',
   'theme.system',

@@ -1,13 +1,14 @@
 import { THEMES, THEME_WORDS } from '@aubergine/shared';
 import { useEffect } from 'react';
 import { NotifySwitch } from './AttentionQueue';
-import { api } from './api';
+import { api, isSuperseded } from './api';
 import { keepBarOpen, useBarKeptOpen } from './bar-open';
 import { BAR_PLACES, BAR_PLACE_WORDS, placeBar, placeFrom, useBarPlace } from './bar-place';
 import { setOpenNew } from './desktop';
 import { DevicesPart } from './devices/Devices';
 import { atThisComputer, useApp } from './store';
 import { chooseTheme, useThemeShown } from './theme';
+import { findServer, hostOf, loadServers } from './servers';
 import { ScreenHead, Select } from './ui';
 
 /**
@@ -25,6 +26,9 @@ export function SettingsDialog() {
   const barAt = useBarPlace();
   const here = useApp(atThisComputer);
   const at = useApp((s) => s.settingsAt);
+  // A linked server shown: what is not about the page itself is about that server.
+  const server = useApp((s) => s.server);
+  const shownServer = server === null ? null : findServer(loadServers(), server);
   // Asked to show a part (Devices, from its command): brought into view once, and what is done there first has the keyboard.
   useEffect(() => {
     if (!open || at === null) return;
@@ -54,6 +58,11 @@ export function SettingsDialog() {
     >
       <div className="dialog sheet settings-dialog" role="dialog" aria-label="Settings" data-testid="settings-dialog">
         <ScreenHead title="Settings" onClose={close} closeTestid="settings-close" />
+        {shownServer && (
+          <p data-testid="settings-server">
+            The appearance, the bar and notifications are this page’s own. Everything else here is about “{shownServer.label}” at {hostOf(shownServer)}, the server shown.
+          </p>
+        )}
         <section>
           <h3>Appearance</h3>
           <div className="ui-segmented" role="radiogroup" aria-label="Theme" data-testid="theme-switch">
@@ -111,7 +120,7 @@ export function SettingsDialog() {
                   const next = e.target.checked;
                   void api.setDescribing(next).then(
                     (now) => useApp.getState().setDescribeRemind(now.remind),
-                    (error: unknown) => useApp.getState().setNotice(`The setting was not changed: ${(error as Error).message}`),
+                    (error: unknown) => !isSuperseded(error) && useApp.getState().setNotice(`The setting was not changed: ${(error as Error).message}`),
                   );
                 }}
                 data-testid="settings-describe-remind"

@@ -4,7 +4,7 @@ import { COMMAND_IDS, THEMES, THEME_WORDS, demoOf, sortedCanvases, type CommandI
 import { chooseTheme } from './theme';
 import { openOnDesktop } from './desktop';
 import { canvasHref, openInNewTab, terminalHref } from './address';
-import { api } from './api';
+import { api, isSuperseded } from './api';
 import { nextWaiting } from './attention';
 import { canvasActions } from './canvas-actions';
 import { neighbour, type Box, type Direction } from './spatial';
@@ -42,7 +42,8 @@ export const offeredHere = (command: Pick<Command, 'atThisComputerOnly'>, state:
 /** Runs something that talks to the server, and shows why if it fails. */
 function attempt(work: Promise<unknown>, what: string): void {
   useApp.getState().setNotice(null);
-  work.catch((error: unknown) => useApp.getState().setNotice(`${what}: ${(error as Error).message}`));
+  // An answer about a server no longer shown is not said.
+  work.catch((error: unknown) => !isSuperseded(error) && useApp.getState().setNotice(`${what}: ${(error as Error).message}`));
 }
 
 const onCanvas = (state: AppStore, sessionId: string | null | undefined): boolean =>
@@ -381,7 +382,7 @@ export const COMMANDS: readonly Command[] = [
       if (!session?.agent) return;
       void api.askRecap(session.id).then(
         () => state.openDrawer({ section: 'terminals', kind: 'notes', id: session.id }),
-        (error: unknown) => state.setNotice(`Could not ask for a recap: ${(error as Error).message}`),
+        (error: unknown) => !isSuperseded(error) && state.setNotice(`Could not ask for a recap: ${(error as Error).message}`),
       );
     },
   },
@@ -917,6 +918,22 @@ export const COMMANDS: readonly Command[] = [
     group: 'Panels',
     available: always,
     run: (state) => state.addDevice(true),
+  },
+  {
+    id: 'server.link',
+    title: 'Link a server…',
+    description: 'Shows the projects of another Aubergine in this page: its address, a name for it here, and a code made there for this page.',
+    group: 'Panels',
+    available: always,
+    run: (state) => state.linkServer(true),
+  },
+  {
+    id: 'server.unlink',
+    title: 'Unlink the server shown…',
+    description: 'Asks first. This browser forgets the linked server it shows, and that server is asked to revoke this page’s device.',
+    group: 'Panels',
+    available: (state) => state.server !== null,
+    run: (state) => state.server !== null && state.askToUnlink(state.server),
   },
   ...THEMES.map((theme): Command => ({
     id: `theme.${theme}` as const,

@@ -1,5 +1,5 @@
 import { demoOf } from '@aubergine/shared';
-import { api } from '../api';
+import { api, isSuperseded } from '../api';
 import { useApp } from '../store';
 import { tourSteps } from './registry';
 import { remembered, resumeAt, useTour } from './tour-store';
@@ -19,6 +19,7 @@ export async function showMeAround(): Promise<void> {
     const step = steps[at];
     if (step) useTour.getState().start(at, step.id);
   } catch (error) {
+    if (isSuperseded(error)) return;
     state.setNotice(`Could not make the demo: ${(error as Error).message}`);
   }
 }
@@ -31,6 +32,7 @@ export async function removeDemo(): Promise<void> {
   try {
     await api.removeDemo();
   } catch (error) {
+    if (isSuperseded(error)) return;
     useApp.getState().setNotice(`Could not remove the demo: ${(error as Error).message}`);
   }
 }

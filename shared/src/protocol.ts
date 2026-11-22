@@ -477,6 +477,20 @@ export const isPageName = (name: string | undefined): name is PageName => (PAGE_
 /** The address of a page, given the address of the canvas it is over. */
 export const pageAddress = (canvas: string, page: PageName): string => `${canvas}/${page}`;
 
+/**
+ * A linked server's short name in this page's addresses: eight lowercase letters and digits, chosen by the browser
+ * that linked it, and known to that browser alone. It names nothing else: not the server's address, its label or its
+ * credential.
+ */
+export const LINK_NAME = /^[a-z0-9]{8}$/;
+export const isLinkName = (name: unknown): name is string => typeof name === 'string' && LINK_NAME.test(name);
+/**
+ * Where something of a linked server is in this page: its own address after `/s/<link>`, so
+ * `/s/<link>/p/<project>/c/<canvas>`, `/s/<link>/c/<canvas>`, `/s/<link>/t/<session>`, and a page's name after a
+ * canvas as everywhere.
+ */
+export const linkedAddress = (link: string, address: string): string => `/s/${link}${address}`;
+
 /* ---------- Terminal WebSocket ---------- */
 
 export const TerminalSize = z.object({

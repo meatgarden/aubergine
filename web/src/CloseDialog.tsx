@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Ending } from '@aubergine/shared';
-import { api } from './api';
+import { api, isSuperseded } from './api';
 import { useApp } from './store';
 
 /** Ending a session kills its shell, so it always asks first. */
@@ -51,6 +51,7 @@ export function CloseDialog() {
         try {
           await api.endEnvironment(environment.id, chosen.choice, chosen.asksAgain !== null);
         } catch (e) {
+          if (isSuperseded(e)) return;
           // Still there, then: its panel says what can be done.
           useApp.getState().setNotice(`The terminal is ended. Its working copy is as it was: ${(e as Error).message}`);
           useApp.getState().viewEnvironment(environment.id);

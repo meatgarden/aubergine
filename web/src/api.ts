@@ -25,6 +25,10 @@ import {
   OutsideResponse,
   OutsideResult,
   DeviceList,
+  PairedPage,
+  ProjectRow,
+  SocketTicket,
+  TICKET_PARAM,
   PairingCodeAnswer,
   RevokedDevice,
   SearchResponse,
@@ -43,7 +47,15 @@ import {
   type UpdateSessionRequest,
 } from '@aubergine/shared';
 
-/** Everything the web app says to the daemon goes through this module. */
+/**
+ * Everything the web app says to a server goes through this module.
+ *
+ * The page talks to one server at a time, the *server shown*: the one that served the page (the *own* server: paths
+ * relative to the page, the page's own cookie), or one this browser linked (absolute addresses at its origin, its
+ * credential as a bearer, no cookie, no redirect followed). `api` goes to the server shown; `ownApi` goes to the own
+ * server whatever is shown, for what a person set about the page itself. Nothing about a linked server is ever sent
+ * to the own server.
+ */
 
 export class ApiError extends Error {
   constructor(
@@ -57,23 +69,101 @@ export class ApiError extends Error {
   }
 }
 
-/** The public API (/v1), as the page calls it: with its own cookie. */
+/**
+ * The answer to a call asked of a server that is no longer the one shown: dropped. It is not a failure to show
+ * anyone; wherever a failure is said, this one is not (`isSuperseded`).
+ */
+export class Superseded extends Error {
+  override readonly name = 'Superseded';
+  constructor() {
+    super('Asked of a server that is no longer shown.');
+  }
+}
+export const isSuperseded = (error: unknown): error is Superseded => error instanceof Superseded;
+
+/** The server answered with something this page does not understand: another version of Aubergine, most likely. */
+export class NotUnderstood extends Error {
+  override readonly name = 'NotUnderstood';
+  constructor() {
+    super('The server answered with something this page does not understand.');
+  }
+}
+
+/** A linked server, as a target of requests: its origin and the credential that is sent there and nowhere else. */
+export interface LinkedTarget {
+  id: string;
+  address: string;
+  credential: string;
+}
+
+/** The server shown: null for the own one. */
+let shown: LinkedTarget | null = null;
+/** Changes on every switch: a call notes it when it starts, and an answer that comes back under another is dropped. */
+let generation = 0;
+
+/** Makes a linked server the one shown, or (null) the own one. Called by the store's `showServer` and nothing else. */
+export function showTarget(target: LinkedTarget | null): void {
+  shown = target === null ? null : { id: target.id, address: target.address, credential: target.credential };
+  generation += 1;
+  // What a module kept of the server shown before (a list read from it, digests it showed) is about that server.
+  for (const forget of forgetters) forget();
+}
+const forgetters = new Set<() => void>();
+/** For a module that keeps something read from the server shown, outside the store: forgotten when another server is shown. */
+export function forgetOnSwitch(forget: () => void): void {
+  forgetters.add(forget);
+}
+/** The short name of the linked server shown; null for the own one. */
+export const shownLink = (): string | null => shown?.id ?? null;
+export const targetGeneration = (): number => generation;
+
+/**
+ * The one place a request is made: for the own server, a path relative to the page with the page's cookie; for a
+ * linked server, an absolute address at its origin with its credential, no cookie and no redirect. The credential
+ * goes to a request whose origin is exactly that server's address, and to nothing else: anything else throws.
+ */
+export function requestFor(target: LinkedTarget | null, path: string, init: RequestInit = {}): { url: string; init: RequestInit } {
+  if (!path.startsWith('/') || path.startsWith('//')) throw new Error('A request names a path of the server, beginning with one /.');
+  if (target === null) {
+    const headers = new Headers(init.headers);
+    headers.delete('authorization');
+    return { url: path, init: { ...init, headers, credentials: 'same-origin' } };
+  }
+  const url = new URL(path, target.address);
+  if (url.origin !== target.address) throw new Error('A request to a linked server went somewhere else; nothing was sent.');
+  const headers = new Headers(init.headers);
+  headers.set('authorization', `Bearer ${target.credential}`);
+  return { url: url.href, init: { ...init, headers, credentials: 'omit', redirect: 'error', mode: 'cors', referrerPolicy: 'no-referrer' } };
+}
+
+/** `fetch`, at a target, through the one place above. */
+const fetchAt = (target: LinkedTarget | null) => (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
+  const made = requestFor(target, typeof input === 'string' ? input : input instanceof URL ? input.href : input.url, init);
+  return fetch(made.url, made.init);
+};
+
+/** The public API (/v1), at the server shown. */
 /** Sent with every call: which project the page is looking at, so that what it lists and what it makes are that project's unless a call says otherwise. */
 const pageHeaders: Record<string, string> = {};
-const v1 = createClient({ useCookie: true, headers: pageHeaders });
+// One client: each request is made through `requestFor` with the server shown as it is when the call starts.
+const v1 = createClient({ useCookie: true, headers: pageHeaders, fetch: (input, init) => fetchAt(shown)(input, init) });
+/** The public API at the own server, whatever is shown: for what is the page's own. No project is named. */
+const ownV1 = createClient({ useCookie: true, fetch: fetchAt(null) });
+/** The public API at one linked server, shown or not: for the project menu, and for unlinking. */
+const v1At = (target: LinkedTarget) => createClient({ fetch: fetchAt(target) });
 
-async function call<T>(schema: ZodType<T> | null, method: string, path: string, body?: unknown): Promise<T> {
+async function callAt<T>(target: LinkedTarget | null, schema: ZodType<T> | null, method: string, path: string, body?: unknown): Promise<T> {
   let response: Response;
   try {
-    response = await fetch(path, {
+    const made = requestFor(target, path, {
       method,
-      credentials: 'same-origin',
       ...(body === undefined
         ? {}
         : { headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) }),
     });
+    response = await fetch(made.url, made.init);
   } catch (error) {
-    throw new ApiError(0, 'network', (error as Error).message);
+    throw new ApiError(0, 'network', target === null ? (error as Error).message : 'The server could not be reached.');
   }
   if (!response.ok) {
     const parsed = ErrorResponse.safeParse(await response.json().catch(() => null));
@@ -83,7 +173,43 @@ async function call<T>(schema: ZodType<T> | null, method: string, path: string, 
     throw new ApiError(response.status, 'network', `HTTP ${response.status}`);
   }
   if (!schema) return undefined as T;
-  return schema.parse(await response.json());
+  const read = schema.safeParse(await response.json().catch(() => undefined));
+  if (!read.success) throw new NotUnderstood();
+  return read.data;
+}
+
+/** A call at the server shown, as it is when the call starts. */
+const call = <T>(schema: ZodType<T> | null, method: string, path: string, body?: unknown): Promise<T> => callAt(shown, schema, method, path, body);
+
+/** Told when the server shown no longer takes this page's credential: the device was revoked there, or went unused. */
+let refused: () => void = () => {};
+export function whenRefused(listener: () => void): void {
+  refused = listener;
+}
+
+/**
+ * A call that belongs to the server shown when it started: an answer, or a failure, that arrives after another server
+ * was shown is `Superseded`, and lands nowhere. A linked server that refuses the credential is said once, to the store.
+ */
+function guarded<A extends unknown[], R>(work: (...args: A) => Promise<R>): (...args: A) => Promise<R> {
+  return async (...args: A): Promise<R> => {
+    const at = generation;
+    const linked = shown !== null;
+    try {
+      const answer = await work(...args);
+      if (at !== generation) throw new Superseded();
+      return answer;
+    } catch (error) {
+      if (at !== generation || error instanceof Superseded) throw new Superseded();
+      if (linked && (error as { status?: unknown }).status === 401) refused();
+      throw error;
+    }
+  };
+}
+
+type Guarded<T> = { [K in keyof T]: T[K] extends (...args: infer A) => Promise<infer R> ? (...args: A) => Promise<R> : T[K] };
+function guardAll<T extends Record<string, (...args: never[]) => Promise<unknown>>>(calls: T): Guarded<T> {
+  return Object.fromEntries(Object.entries(calls).map(([name, work]) => [name, guarded(work as (...args: unknown[]) => Promise<unknown>)])) as Guarded<T>;
 }
 
 const AskedRecap = z.object({ asked: z.boolean(), line: z.string() });
@@ -105,13 +231,12 @@ const here = (): { projectId?: string } => {
   return projectId ? { projectId } : {};
 };
 
-export const api = {
+export const api = guardAll({
   getState: () => call(StateResponse, 'GET', paths.state),
   createSession: (request: CreateSessionRequest) =>
     call(CreateSessionResponse, 'POST', paths.sessions, request),
   openOnDesktop: (sessionId: string) => v1.openSessionOnDesktop({ sessionId }),
   setDesktopOpenNew: (openNew: boolean) => v1.changeDesktopSettings({ body: { openNew } }),
-  setTheme: (theme: ThemeSetting) => v1.changeAppearance({ body: { theme } }),
   setDescribing: (remind: boolean) => v1.changeDescribing({ body: { remind } }),
   // Typing into a terminal from its details: the same route a program uses, as the owner.
   sendInput: (sessionId: string, body: Parameters<typeof v1.sendInput>[0]['body']) => v1.sendInput({ sessionId, body }),
@@ -159,7 +284,7 @@ export const api = {
   outsideAdd: (request: OutsideAddRequest) => call(OutsideResult, 'POST', paths.outsideAdd, request),
   outsideMove: (request: OutsideMoveRequest) => call(OutsideResult, 'POST', paths.outsideMove, request),
   /** Signs this browser in with a code (204), or says why not. The code is sent in the body only, never in an address. */
-  pair: (code: string) => call(null, 'POST', paths.pair, { code }),
+  pair: (code: string) => callAt(null, null, 'POST', paths.pair, { code }),
   // Devices paired from an outside address: the owner's alone.
   listDevices: () => call(DeviceList, 'GET', paths.devices),
   makePairingCode: (name: string) => call(PairingCodeAnswer, 'POST', paths.pairingCodes, { name, kind: 'browser' }),
@@ -288,11 +413,115 @@ export const api = {
   updateFrame: (frameId: string, request: UpdateFrameRequest) =>
     call(Frame, 'PUT', paths.frame(frameId), request),
   removeFrame: (frameId: string) => call<void>(null, 'DELETE', paths.frame(frameId)),
+});
+
+/**
+ * The own server, whatever is shown: what a person set about the page itself (the theme), the settings the page is
+ * drawn with, and its projects for the menu. Nothing about a linked server is in any of these.
+ */
+export const ownApi = {
+  getState: () => callAt(null, StateResponse, 'GET', paths.state),
+  setTheme: (theme: ThemeSetting) => ownV1.changeAppearance({ body: { theme } }),
+  projects: async () => z.array(ProjectRow).parse((await ownV1.listProjects({ query: { limit: 200 } })).items),
 };
 
-export function socketUrl(path: string): string {
-  const scheme = location.protocol === 'https:' ? 'wss:' : 'ws:';
-  return `${scheme}//${location.host}${path}`;
+/* ---------- Linked servers that are not (or not yet) shown ---------- */
+
+/** Its projects, read when the project menu opens: memory only. A failure is an ApiError (401: not taken any more), or NotUnderstood. */
+export async function projectsAt(target: LinkedTarget): Promise<ProjectRow[]> {
+  let answer: unknown;
+  try {
+    answer = await v1At(target).listProjects({ query: { limit: 200 } });
+  } catch (error) {
+    const failed = error as { status?: number; code?: string; message?: string };
+    throw new ApiError(failed.status ?? 0, failed.status === 0 || failed.status === undefined ? 'network' : ((failed.code ?? 'network') as ErrorCode), failed.status === 0 ? 'The server could not be reached.' : (failed.message ?? ''));
+  }
+  const read = z.object({ items: z.array(ProjectRow) }).safeParse(answer);
+  if (!read.success) throw new NotUnderstood();
+  return read.data.items;
+}
+
+/** Asks a linked server to revoke this page's device there: unlinking. Best effort; true when it was done. */
+export async function revokeAt(target: LinkedTarget, deviceId: string): Promise<boolean> {
+  try {
+    await callAt(target, null, 'DELETE', paths.device(deviceId));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Turns a code into a page device at another Aubergine: across origins, with no credential, no cookie and no
+ * redirect. The code goes in the body only. Fails with an ApiError: the server's own sentence, or `network` where
+ * no answer could be read (not reachable, or the browser refused it because that server does not list this page).
+ */
+export async function pairWith(address: string, code: string): Promise<PairedPage> {
+  const url = new URL(paths.pair, address);
+  if (url.origin !== address) throw new ApiError(0, 'network', 'That is not an address of a server.');
+  let response: Response;
+  try {
+    response = await fetch(url.href, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ code }), credentials: 'omit', redirect: 'error', mode: 'cors', referrerPolicy: 'no-referrer', cache: 'no-store' });
+  } catch {
+    throw new ApiError(0, 'network', 'No answer.');
+  }
+  if (!response.ok) {
+    const parsed = ErrorResponse.safeParse(await response.json().catch(() => null));
+    const wait = Number.parseInt(response.headers.get('retry-after') ?? '', 10);
+    if (parsed.success) throw new ApiError(response.status, parsed.data.error.code, parsed.data.error.message, Number.isFinite(wait) && wait >= 0 ? wait : null);
+    throw new ApiError(response.status, 'network', `HTTP ${response.status}`);
+  }
+  const read = PairedPage.safeParse(await response.json().catch(() => null));
+  if (!read.success) throw new NotUnderstood();
+  return read.data;
+}
+
+/* ---------- Sockets ---------- */
+
+/** The address of a socket at a linked server: its own origin, `ws` for plain http, with the ticket beside any query the path has. Pure. */
+export function socketAddress(address: string, path: string, ticket: string): string {
+  if (!path.startsWith('/') || path.startsWith('//')) throw new Error('A socket names a path of the server, beginning with one /.');
+  const url = new URL(path, address);
+  if (url.origin !== address) throw new Error('A socket to a linked server went somewhere else; nothing was opened.');
+  url.protocol = url.protocol === 'https:' ? 'wss:' : 'ws:';
+  url.searchParams.set(TICKET_PARAM, ticket);
+  return url.href;
+}
+
+/** The generation each socket was opened under: one opened for a server no longer shown is closed, and what it says is ignored. */
+const openedUnder = new WeakMap<WebSocket, number>();
+export const socketIsCurrent = (socket: WebSocket): boolean => openedUnder.get(socket) === generation;
+
+/** A socket could not be had because the linked server does not take this page's credential: trying again will not help. */
+export const isRefusal = (error: unknown): boolean => error instanceof ApiError && error.status === 401;
+
+/**
+ * Opens a socket at the server shown. At the own server, with the page's cookie. At a linked server, which cannot be
+ * sent a header on a socket, with a ticket asked for first: a fresh one for every connection, since a ticket works once.
+ */
+export async function openSocket(path: string): Promise<WebSocket> {
+  const at = generation;
+  const target = shown;
+  let url: string;
+  if (target === null) {
+    const scheme = location.protocol === 'https:' ? 'wss:' : 'ws:';
+    if (!path.startsWith('/') || path.startsWith('//')) throw new Error('A socket names a path of the server, beginning with one /.');
+    url = `${scheme}//${location.host}${path}`;
+  } else {
+    let ticket: string;
+    try {
+      ticket = (await callAt(target, SocketTicket, 'POST', paths.socketTickets, {})).ticket;
+    } catch (error) {
+      if (at !== generation) throw new Superseded();
+      if (isRefusal(error)) refused();
+      throw error;
+    }
+    if (at !== generation) throw new Superseded();
+    url = socketAddress(target.address, path, ticket);
+  }
+  const socket = new WebSocket(url);
+  openedUnder.set(socket, at);
+  return socket;
 }
 
 /**
@@ -322,24 +551,43 @@ export function subscribeToEvents(handlers: {
   };
 
   const connect = (): void => {
-    socket = new WebSocket(socketUrl(paths.events));
-    socket.onmessage = (message) => {
-      const parsed = EventsServerMessage.safeParse(JSON.parse(String(message.data)));
-      if (!parsed.success) return;
-      if (parsed.data.type === 'hello') {
-        // Tell a fresh connection which canvas this page is showing.
-        if (canvasId) say({ type: 'viewing', canvasId });
-        handlers.onReady();
-      } else if (parsed.data.type === 'show') handlers.onShow(parsed.data.sessionId);
-      else if (parsed.data.type === 'show-canvas') handlers.onShowCanvas(parsed.data.canvasId);
-      else if (parsed.data.type === 'notify') handlers.onNotify?.(parsed.data.title, parsed.data.body);
-      else handlers.onEvent(parsed.data.event, parsed.data.revision);
-    };
-    socket.onclose = () => {
-      if (stopped) return;
-      handlers.onDown();
-      timer = window.setTimeout(connect, 1000);
-    };
+    void openSocket(paths.events).then(
+      (opened) => {
+        if (stopped) return opened.close();
+        socket = opened;
+        opened.onmessage = (message) => {
+          // Opened for a server that is no longer shown: what it says is not about what is shown now.
+          if (!socketIsCurrent(opened)) return opened.close();
+          let data: unknown;
+          try {
+            data = JSON.parse(String(message.data));
+          } catch {
+            return;
+          }
+          const parsed = EventsServerMessage.safeParse(data);
+          if (!parsed.success) return;
+          if (parsed.data.type === 'hello') {
+            // Tell a fresh connection which canvas this page is showing.
+            if (canvasId) say({ type: 'viewing', canvasId });
+            handlers.onReady();
+          } else if (parsed.data.type === 'show') handlers.onShow(parsed.data.sessionId);
+          else if (parsed.data.type === 'show-canvas') handlers.onShowCanvas(parsed.data.canvasId);
+          else if (parsed.data.type === 'notify') handlers.onNotify?.(parsed.data.title, parsed.data.body);
+          else handlers.onEvent(parsed.data.event, parsed.data.revision);
+        };
+        opened.onclose = () => {
+          if (stopped || !socketIsCurrent(opened)) return;
+          handlers.onDown();
+          timer = window.setTimeout(connect, 1000);
+        };
+      },
+      (error: unknown) => {
+        if (stopped || isSuperseded(error)) return;
+        handlers.onDown();
+        // A linked server that no longer takes the credential has been told to the store; asking again would not help.
+        if (!isRefusal(error)) timer = window.setTimeout(connect, 1000);
+      },
+    );
   };
   connect();
 

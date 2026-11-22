@@ -1,6 +1,6 @@
 import { useEffect, useSyncExternalStore } from 'react';
 import type { RepositoryListing, WorkflowContent } from '@aubergine/shared';
-import { api } from '../api';
+import { api, forgetOnSwitch } from '../api';
 import { useApp } from '../store';
 import { registerReviewSource, type ReviewItem } from './registry';
 
@@ -15,6 +15,12 @@ let listing: Listing = [];
 const listeners = new Set<() => void>();
 /** The hash of each file as it was when it was last read for review: what an acceptance is of. */
 const read = new Map<string, string>();
+// What was read from the server shown before is not what this one offers.
+forgetOnSwitch(() => {
+  listing = [];
+  read.clear();
+  for (const listener of listeners) listener();
+});
 
 const DECLINED = 'aubergine.repository.declined';
 function declined(): Set<string> {

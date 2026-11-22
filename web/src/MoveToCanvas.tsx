@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { sortedCanvases } from '@aubergine/shared';
-import { api } from './api';
+import { api, isSuperseded } from './api';
 import { hint } from './shortcuts';
 import { useApp } from './store';
 
@@ -39,7 +39,7 @@ export function MoveToCanvas({ sessionId, name }: { sessionId: string; name: str
 
   const move = (canvasId: string): void => {
     setOpen(false);
-    void api.moveSession(sessionId, canvasId).catch((error: unknown) => useApp.getState().setNotice(`Could not move "${name}": ${(error as Error).message}`));
+    void api.moveSession(sessionId, canvasId).catch((error: unknown) => !isSuperseded(error) && useApp.getState().setNotice(`Could not move "${name}": ${(error as Error).message}`));
   };
 
   const others = app ? sortedCanvases(app).filter((c) => c.id !== current) : [];

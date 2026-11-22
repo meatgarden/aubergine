@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ApiError, api } from '../api';
 import { runCommand } from '../commands';
 import { useApp } from '../store';
+import { revokedHere } from '../linking/linking';
 import { Badge, Button, EmptyState, ScreenHead } from '../ui';
 import { QrCode } from './QrCode';
 import { countdownWords, deviceWords, devicesInOrder, signInAddress } from './words';
@@ -40,6 +41,8 @@ export function DevicesPart() {
       const { device: after } = await api.revokeDevice(device.id);
       if (after.revokedAt) useApp.getState().apply({ type: 'device.revoked', deviceId: device.id, at: after.revokedAt });
       setRevoking(null);
+      // This page's own device at a linked server it shows: that is unlinking it, done there.
+      if (device.id === currentId && useApp.getState().server !== null) return revokedHere();
       // This browser was the device: it is signed out, and the page asks for a code.
       if (device.id === currentId) useApp.setState({ phase: 'unauthorized', panel: null, addingDevice: false });
     } catch (e) {
