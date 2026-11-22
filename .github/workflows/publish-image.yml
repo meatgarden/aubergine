@@ -117,6 +117,7 @@ jobs:
             p.onExit(({ exitCode }) => {
               if (exitCode !== 0 || !out.includes('pty-ok')) { console.error('node-pty: exit ' + exitCode + ', saw ' + JSON.stringify(out)); process.exit(1); }
               console.log('node-pty ran a program.');
+              process.exit(0);
             });
             setTimeout(() => { console.error('node-pty: no exit in 10 s'); process.exit(1); }, 10000);
           "
