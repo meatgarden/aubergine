@@ -27,6 +27,10 @@ describe('the container files', () => {
     expect(aubergine).toMatch(/^\s+network_mode: "service:proxy"$/m);
     expect(aubergine).not.toMatch(/^\s+(ports|expose):/m);
     expect(aubergine).toMatch(/^\s+init: true$/m);
+    // Named volumes only: no folder of the host is handed to the terminals.
+    const mounts = [...aubergine.matchAll(/^\s+- ([^:\s]+):\//gm)].map((match) => match[1] ?? '');
+    expect(mounts.length).toBeGreaterThan(0);
+    expect(mounts.filter((source) => /^[./~$]/.test(source))).toEqual([]);
   });
 
   it('never bind elsewhere, run privileged or reach the Docker socket', () => {
