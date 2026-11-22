@@ -3,8 +3,10 @@ name: Check
 # Runs `pnpm check` (type checking, lint, shellcheck, generated files, unit tests, the installer tests and the browser
 # smoke test) on every push to main and every pull request. The badge in the README shows the result for main.
 #
-# Linux, not macOS: the unit tests are known to pass on Linux where the user has a ~/.zshrc and the sources are a Git
-# checkout, so both are arranged here. The tests start their own tmux servers on test sockets.
+# On macOS, the platform Aubergine supports and where the whole check is known to pass. Linux is not yet: there the
+# installer's end-to-end test needs node-gyp for node-pty, and the installer tests' PATH of single tools does not hold
+# everything the installer runs. A Linux job belongs here once those pass. The tests start their own tmux servers on
+# test sockets.
 
 on:
   push:
@@ -21,15 +23,15 @@ concurrency:
 
 jobs:
   check:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
 
-      - name: tmux, zsh and shellcheck
+      # zsh comes with macOS.
+      - name: tmux and shellcheck
         run: |
-          sudo apt-get update
-          sudo apt-get install -y tmux zsh shellcheck
+          brew install tmux shellcheck
           tmux -V
 
       # The shell integration tests start a login zsh; an empty ~/.zshrc keeps it from asking its first-run question.
@@ -51,14 +53,10 @@ jobs:
           node-version: 22
           cache: pnpm
 
-      # node-pty has no ready-made binary for Linux, so its install script compiles it with node-gyp, which this pnpm
-      # does not bring with it.
-      - run: npm install -g node-gyp
-
       - run: pnpm install --frozen-lockfile
 
       - name: A browser for the smoke test
-        run: pnpm exec playwright install --with-deps chromium
+        run: pnpm exec playwright install chromium
 
       - run: pnpm check
 

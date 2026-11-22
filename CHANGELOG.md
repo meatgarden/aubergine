@@ -26,7 +26,7 @@ What changed in each version of Aubergine. The newest is first. The npm package 
 - The README says which Node.js version is needed, and how to get it with nvm.
 - Repository links point at [thirstyeggplant/aubergine](https://github.com/thirstyeggplant/aubergine); the npm
   package keeps its name.
-- Contributor guide, security policy, code of conduct, issue templates, and a check that runs on every pull request.
+- Contributor guide, security policy, code of conduct, issue templates, and a check that runs on every pull request (on macOS).
 
 ## 0.1.1 — 2026-11-20
 
