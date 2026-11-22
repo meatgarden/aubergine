@@ -1,3 +1,4 @@
+import { execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
@@ -6145,7 +6146,6 @@ test('a page shows itself in a short tour of its own: started from under its nam
 
 /** The `aubergine` command, run against the second server of the run: its port, data folder and socket, nothing of the developer's. */
 const atSecond = (...args: string[]): string => {
-  const { execFileSync } = createRequire(import.meta.url)('node:child_process') as typeof import('node:child_process');
   return execFileSync(process.execPath, [path.join(repoRoot, 'bin', 'aubergine.mjs'), ...args], {
     encoding: 'utf8',
     env: { PATH: process.env.PATH ?? '', HOME: second.dataDir, AUBERGINE_PORT: String(second.port), AUBERGINE_DATA_DIR: second.dataDir, AUBERGINE_TMUX_SOCKET: second.tmuxSocket },

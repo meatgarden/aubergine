@@ -123,7 +123,7 @@ export const targetGeneration = (): number => generation;
  * goes to a request whose origin is exactly that server's address, and to nothing else: anything else throws.
  */
 export function requestFor(target: LinkedTarget | null, path: string, init: RequestInit = {}): { url: string; init: RequestInit } {
-  if (!path.startsWith('/') || path.startsWith('//')) throw new Error('A request names a path of the server, beginning with one /.');
+  if (!isServerPath(path)) throw new Error('A request names a path of the server, beginning with one /.');
   if (target === null) {
     const headers = new Headers(init.headers);
     headers.delete('authorization');
@@ -135,6 +135,9 @@ export function requestFor(target: LinkedTarget | null, path: string, init: Requ
   headers.set('authorization', `Bearer ${target.credential}`);
   return { url: url.href, init: { ...init, headers, credentials: 'omit', redirect: 'error', mode: 'cors', referrerPolicy: 'no-referrer' } };
 }
+
+/** A path of a server: one `/`, then not another nor a backslash (which a browser reads as one), so never another host. */
+const isServerPath = (path: string): boolean => /^\/(?![/\\])/.test(path);
 
 /** `fetch`, at a target, through the one place above. */
 const fetchAt = (target: LinkedTarget | null) => (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
@@ -480,7 +483,7 @@ export async function pairWith(address: string, code: string): Promise<PairedPag
 
 /** The address of a socket at a linked server: its own origin, `ws` for plain http, with the ticket beside any query the path has. Pure. */
 export function socketAddress(address: string, path: string, ticket: string): string {
-  if (!path.startsWith('/') || path.startsWith('//')) throw new Error('A socket names a path of the server, beginning with one /.');
+  if (!isServerPath(path)) throw new Error('A socket names a path of the server, beginning with one /.');
   const url = new URL(path, address);
   if (url.origin !== address) throw new Error('A socket to a linked server went somewhere else; nothing was opened.');
   url.protocol = url.protocol === 'https:' ? 'wss:' : 'ws:';
@@ -505,7 +508,7 @@ export async function openSocket(path: string): Promise<WebSocket> {
   let url: string;
   if (target === null) {
     const scheme = location.protocol === 'https:' ? 'wss:' : 'ws:';
-    if (!path.startsWith('/') || path.startsWith('//')) throw new Error('A socket names a path of the server, beginning with one /.');
+    if (!isServerPath(path)) throw new Error('A socket names a path of the server, beginning with one /.');
     url = `${scheme}//${location.host}${path}`;
   } else {
     let ticket: string;
