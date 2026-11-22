@@ -49,7 +49,7 @@ web/      Vite + React + @xyflow/react + @xterm/xterm, Zustand for state; the ta
           Add a device; words.ts; qr.ts and QrCode.tsx: a QR code drawn from its matrix);
           servers.ts (the linked servers of this browser, and which settings are the page's own),
           linking/ (linking.ts: linking, unlinking, the menu's words; LinkDialog.tsx: Link a server… and Unlink)
-docs/     keys.md: what is known about which keys reach a page; api.md: the API reference (generated); for-agents.md (generated); element.md (generated)
+docs/     keys.md: what is known about which keys reach a page; api.md: the API reference (generated); for-agents.md (generated); element.md (generated); remote.md: reaching a server from elsewhere
 e2e/      Playwright smoke test
 install.sh  the one-line installer; its commands are in daemon/src/cli/install.ts (start, open,
           update, version, uninstall, doctor), its tests in daemon/src/install/*.installtest.ts,

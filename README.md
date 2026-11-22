@@ -85,6 +85,7 @@ Already have terminals open elsewhere? Click **Open elsewhere** in the toolbar (
 | Run something every morning | A schedule | [Schedules](#schedules-at-these-times-run-this-there) |
 | Run two agents on one repository | A working copy for each | [Working copies](#working-copies-two-agents-on-one-repository) |
 | Let agents talk to each other | Messages | [Messages between terminals](#messages-between-terminals) |
+| Use it from my phone or another computer | Off by default: an SSH tunnel, a private network, or a name and a proxy, then pair each browser | [Using Aubergine from elsewhere](docs/remote.md) |
 | Let a script or agent use Aubergine | An API token, and the MCP server | [API tokens](#api-tokens), [Terminal access](#terminal-access), [MCP server](#tools-for-agents-the-mcp-server) |
 
 ---
@@ -360,7 +361,7 @@ and make sure that folder is on your `PATH` (add `export PATH="$HOME/.local/bin:
 | "The web app has not been built yet" | Run `pnpm build`, then `pnpm start` again; `start` serves the built web app. |
 | A terminal shows no status badges | Status needs zsh, and a terminal created before an update keeps its old shell. Park it and start a new one, or restart its shell. |
 
-The server listens on `127.0.0.1` only, so it is reachable from this computer and nowhere else.
+The server listens on `127.0.0.1` only, so it is reachable from this computer and nowhere else until you set up [use from another device](#from-another-device).
 
 In a Chromium-based browser you can install the page as an app window (address bar → install), which lets more keyboard shortcuts reach the canvas.
 
@@ -1315,7 +1316,7 @@ Create `config.json` in the data folder (the server prints its location at start
 - `desktop`: [the same terminal in your own terminal app](#the-same-terminal-in-your-own-terminal-app). `app` is `"terminal"`, `"iterm"` or `"command"` (`null`: Terminal on macOS); `command` is your own command line with `{file}`; `openNew` makes every terminal you make in the page also open on the desktop. They are read each time a window is opened.
 - `schedules.lateWithinHours`: a time of a [schedule](#schedules-at-these-times-run-this-there) that passed while the computer was asleep or the server stopped still runs, marked late, when it is at most this many hours old. Default 6; 0 means never. It applies from the next start of the server.
 - `messages`: the limits on [messages between terminals](#messages-between-terminals). They apply from the next start of the server.
-- `access.addresses`: the HTTPS addresses this server also answers under, for [another device](#from-another-device). Read when the server starts; written by hand only. `access.pages`: the origins of pages of another Aubergine that may [show this server](#letting-another-aubergines-page-show-this-server), read and written the same way.
+- `access.addresses`: the HTTPS addresses this server also answers under, for [another device](#from-another-device). Read when the server starts; written by hand only. `access.pages`: the origins of pages of another Aubergine that may [show this server](#letting-another-aubergines-page-show-this-server), read and written the same way. Both are explained in [Using Aubergine from elsewhere](docs/remote.md).
 - `shortcuts`, `shortcutsInAppWindow`: your own keys; see [Keyboard](#keyboard).
 
 Font, theme and keys apply when you reload the page; shell and folder apply to the next new terminal.
@@ -1328,25 +1329,26 @@ One thing to know: tmux fixes that base environment when its server first starts
 
 ## From another device
 
-Aubergine listens on `127.0.0.1` only, and that does not change. To use it from a phone or another computer, something on the same machine carries HTTPS to it, and you tell Aubergine the address that is used. Each browser you sign in on that way is a **device**, with a sign-in of its own that you can revoke.
+**It is off by default.** Aubergine listens on `127.0.0.1` only, and that does not change: a fresh install answers on the computer it runs on and nowhere else. To use it from a phone or another computer, something on the same machine carries HTTPS to it under a name, you tell Aubergine that name, and you pair each browser with a one-time code. Each browser paired that way is a **device**, with a sign-in of its own that you can revoke.
+
+**[Using Aubergine from elsewhere](docs/remote.md)** is the full guide: what the words mean, which way suits you (an SSH tunnel, a private network, or a name of your own and a proxy), the difference between the server on your laptop and on a cloud instance, getting a name, using an IP address, containers, and what to do when it does not work.
 
 **A device is the whole owner.** Whoever has a paired device has what you have at this computer: every terminal, so a shell on this computer as you. Pair only browsers you would hand your keyboard to.
 
-### What to set up
+The minimum, once HTTPS reaches `http://127.0.0.1:<port>` (4600 unless you chose another) with the `Host` header passed through unchanged:
 
-1. Something on this computer that serves HTTPS under a name and passes it on to `http://127.0.0.1:<port>` (4600 unless you chose another). It must pass the `Host` header through unchanged: Aubergine tells where a request came in from that header alone. A private network's own HTTPS serving does this, as does a web server you run on a cloud machine.
-2. The address in `config.json` in the data folder:
+1. Write the address in `config.json` in the data folder, and start the server again (the addresses are read when it starts):
 
    ```json
    { "access": { "addresses": ["https://aubergine.example.net"] } }
    ```
 
-   Only `https`, only the origin: no path, no user name. A wrong entry is reported when the server starts and skipped. `aubergine doctor` lists the addresses and what is wrong with any of them.
-3. Start the server again. The addresses are read when it starts, and no page or program can change them.
+   `aubergine.example.net` stands for a name of your own. `aubergine doctor` lists the addresses and what is wrong with any of them.
+2. Pair each browser: see [Pairing a device](#pairing-a-device).
 
-**An address anyone on the internet can open puts the sign-in in front of everyone.** Without a code nobody gets in, and codes are hard to guess, but they would be guessing at a shell. Put a private network, or your organisation's own sign-in, in front of the address.
+**An address anyone on the internet can open puts the sign-in in front of everyone.** Without a code nobody gets in, but they would be guessing at a shell. Put a private network, or your organisation's own sign-in, in front of the address.
 
-Under that address the access token never signs in: not the link `aubergine open` prints, not the cookie, not as a bearer. Only a device's own sign-in works there, and a device's sign-in works nowhere else. API tokens and terminals' own credentials work on `/v1` from there as they do here.
+Under that address the access token never signs in: only a device's own sign-in works there. The page there leaves out what acts on this computer's desktop: **Open on desktop**, the box for it in the dialogs, its setting, and the terminals open outside the canvas.
 
 ### Pairing a device
 
@@ -1356,69 +1358,47 @@ At this computer, or in a terminal on the machine Aubergine runs on:
 aubergine device add --name "Phone"
 ```
 
-It prints a code, and for each address a link with the code in it and a QR of that link. Open the link on the other device, or scan the QR: the page takes the code out of the address before it asks the server anything, and signs that browser in. Or open the address itself and type the code into the one field the page shows a browser that is not signed in (with or without the dash, in either case). The code works once, for three minutes, and is kept nowhere but in the server's memory; the page never stores it. A few wrong codes withdraw every code that waits; make a new one then.
-
-In the page the same is under **Settings → Devices** (or **Devices…** in the palette): the list of devices, when each was added and last used, and which is the browser you are using; **Add a device**, which asks for a name and shows the code, how long it still works, and for each address its QR code and the link; and **Revoke** on each, which asks first. Revoking the browser you are using signs it out at once, and it asks for a code again.
+It prints a code, and for each address a link with the code in it and a QR code of that link. Scan it or open the link on the other device, or open the address and type the code. The code works once, for three minutes. In the page the same is under **Settings → Devices → Add a device**.
 
 ```sh
 aubergine device list            # the devices: their kind, when each was added and last used, and its state
 aubergine device revoke "Phone"  # signed out at once; what it has open is closed (asks first unless --yes)
 ```
 
-A device that is not used for 90 days stops working. A device can be revoked from another device, or from itself.
-
-A window on this computer's desktop is never opened for a request from another device: **Open on desktop** is refused there, and a new terminal made there does not open one. The page on another device leaves out what acts on this computer's desktop: **Open on desktop**, the box for it in the dialogs, its setting, and the terminals open outside the canvas.
+A device that is not used for 90 days stops working. More in [Pairing a browser](docs/remote.md#pairing-a-browser).
 
 ### Letting another Aubergine's page show this server
 
-The page of another Aubergine (one on your laptop, say) can be allowed to show this server's projects. Write that page's origin in `config.json` here, and start the server again:
+The page of another Aubergine (one on your laptop, say) can be allowed to show this server's projects: write that page's origin under `access.pages` in `config.json` here, start the server again, and make a code for that page:
 
 ```json
 { "access": { "pages": ["http://127.0.0.1:4600"] } }
 ```
 
-An origin is `https`, or plain `http` only on this computer's own names. Two servers on one computer can link this way without any outside address. Then make a code for that page:
-
 ```sh
 aubergine device add --page http://127.0.0.1:4600 --name "Laptop"
 ```
 
-Type the code into **Link a server…** in the page at that origin. It works once, for three minutes. The page is then a device here (`aubergine device list` shows it as `page` with its origin) and can be revoked like any other.
+Type the code into **Link a server…** in the page at that origin. See [Two servers in one page](#two-servers-in-one-page).
 
-**Whoever is the owner in that browser is the owner here.** The page keeps this server's credential in its own storage; whoever can run a script on that page's origin has a shell on this computer. The credential works only from that origin, only as the page sends it itself: no cookie is taken from another page, and API tokens and terminals' credentials are refused from it.
-
-In that page the server is then one more part of the project menu: see [Two servers in one page](#two-servers-in-one-page).
+**Whoever is the owner in that browser is the owner here.** The page keeps this server's credential in its own storage; whoever can run a script on that page's origin has a shell on this computer. The credential works only from that origin.
 
 ### Not done yet
 
 - The page is not laid out for a phone; it works as it does in a narrow window.
-- Linux has not been tried.
+- None of this has been tried with a real proxy, a real phone, two machines, or on Linux.
 
 ## Two servers in one page
 
-The page of one Aubergine (on your laptop, say) can also show the projects of another (on a cloud machine, or a second server on the same computer). The other one is a **linked server**. The page shows one server at a time: everything on it, from the canvases and terminals to the queue, the runs, the tokens and the devices, is that server's, as if it had served the page. The project menu lists the projects of the server shown first, then this page's own server and each linked server under its name and host, with their projects; choosing one shows that server. Its canvases have addresses of their own in this page, `/s/<link>/p/<project>/c/<canvas>`, where `<link>` is a short name this browser chose; the address names nothing else, so a reload, the back button and a terminal opened in a browser tab of its own stay on that server.
+The page of one Aubergine (on your laptop, say) can also show the projects of another (on a cloud machine, or a second server on the same computer). The other one is a **linked server**. It is off until you link one. The page shows one server at a time, and the project menu lists every server with its projects.
 
-### Linking one
+To link one, the other server must already be reachable over HTTPS, or be on the same computer. Then:
 
-On the other server:
-
-1. Write this page's origin (shown in the dialog, for example `http://127.0.0.1:4600`) under `access.pages` in its `config.json`, and start it again. See [Letting another Aubergine's page show this server](#letting-another-aubergines-page-show-this-server).
+1. On the other server, write this page's origin (the start of its address, for example `http://127.0.0.1:4600`; the dialog shows it) under `access.pages` in its `config.json`, and start it again.
 2. Run `aubergine device add --page <that origin>` there. It prints a code.
+3. In this page, choose **Link a server…** at the foot of the project menu, and give the other Aubergine's address, a name for it here, and the code.
 
-Then, in this page, **Link a server…** at the foot of the project menu (or in the palette): the address of the other Aubergine, a name for it here, and the code. The browser sends the code to that server itself and is answered with a credential; the other server is shown at once. A wrong code is answered with that server's own sentence. Where no answer comes at all, either the server cannot be reached at that address or it does not list this page's origin yet; the dialog says both.
-
-**Unlink…**, in that server's part of the menu (or **Unlink the server shown…** in the palette), asks first, then forgets the server in this browser and asks it to revoke this page's device. If it cannot be told, the page says so: the device is still listed there, and can be revoked from that server's Settings → Devices or with `aubergine device revoke`.
-
-### What stays this page's own
-
-How the page looks (the theme, and the terminals' font) and the keys are this page's own server's settings whatever is shown; changing the theme writes it there. What this browser remembers (the side panel, the bar, the tour) is this browser's. Settings says, while a linked server is shown, which server everything else in it is about.
-
-### What it does not do
-
-- No canvas holds terminals of both servers, and a canvas does not move between servers.
-- What waits for you is counted for the server shown only.
-- A server of another version of Aubergine is not shown: the page says that both must be the same.
-- This page's own server is never told that a linked server exists, and never calls one: the browser does.
+**Unlink…**, in that server's part of the menu, forgets it in this browser and asks it to revoke this page's device. Everything else (what you see afterwards, what stays this page's own, what it does not do) is in [Two servers in one page](docs/remote.md#two-servers-in-one-page) in the guide.
 
 **The credential is kept in this browser's storage, for this page's address. Whoever is the owner on this computer is the owner on every server linked from it.** Unlinking revokes the credential on the other server.
 
