@@ -63,6 +63,18 @@ export interface AppStore {
   /** The one panel that is open, if any. */
   panel: Panel | null;
   /**
+   * Whether the page came in under this computer's own name, as the server said with the state. False on another
+   * device, at an outside address: there nothing is offered that acts on the desktop of the computer Aubergine runs
+   * on. Ask `atThisComputer`, not this.
+   */
+  here: boolean;
+  /** Whether the dialog that adds a device is open. What it shows (the code) is the dialog's own, and nobody else's. */
+  addingDevice: boolean;
+  /** The part of Settings to bring into view when it opens; used once. */
+  settingsAt: 'devices' | null;
+  addDevice: (open: boolean) => void;
+  showSettings: (at: 'devices' | null) => void;
+  /**
    * The page that is shown in place of the canvas, if any: Queue, Board, Workflows or Library. The canvas stays as it
    * was underneath, and a panel or a dialog opens over a page as it does over the canvas. Its name is in the address.
    */
@@ -198,6 +210,14 @@ export const useApp = create<AppStore>((set, get) => ({
   picker: false,
   selected: null,
   panel: null,
+  here: true,
+  addingDevice: false,
+  settingsAt: null,
+  addDevice: (addingDevice) => set({ addingDevice }),
+  showSettings: (settingsAt) => {
+    if (get().panel !== 'settings') get().togglePanel('settings');
+    set({ settingsAt });
+  },
   // A page whose address the browser was opened at is shown from the start.
   page: typeof location === 'undefined' ? null : startPage().page,
   runsTab: typeof location === 'undefined' ? 'runs' : (startPage().tab ?? 'runs'),
@@ -240,7 +260,7 @@ export const useApp = create<AppStore>((set, get) => ({
       const everything = following.whole ?? response.state;
       const exists = (id: string): boolean => everything.canvases.some((c) => c.id === id);
       const current = get().canvasId;
-      set({ phase: 'ready', runtime: response.runtime, settings: response.settings, following, whole: everything, app: viewOf(everything, current, get().app) });
+      set({ phase: 'ready', runtime: response.runtime, settings: response.settings, here: response.here, following, whole: everything, app: viewOf(everything, current, get().app) });
       // A tab that shows one terminal by itself looks at no canvas, and keeps its own address.
       if (terminalPage !== null) return;
       // Keep looking at the same canvas. On opening the page, or if that canvas is gone: the one
@@ -460,6 +480,19 @@ function startTerminalPageSync(load: () => Promise<void>): () => void {
 /** The live connection to the daemon, once there is one. */
 let events: ReturnType<typeof subscribeToEvents> | null = null;
 
+/**
+ * Whether what acts on the desktop of the computer Aubergine runs on is offered: "Open on desktop", the box in the
+ * dialogs that make a terminal, the setting for new terminals, and the terminals open outside the canvas. Not on
+ * another device. The server refuses them from there anyway; this only keeps the page from offering them.
+ */
+export const atThisComputer = (state: Pick<AppStore, 'here'>): boolean => state.here;
+
+/** What `startSync` does at its start, done again at once: after this browser was signed in with a code. */
+let syncNow: (() => Promise<void>) | null = null;
+export function signedIn(): void {
+  void syncNow?.();
+}
+
 export function startSync(): () => void {
   const { load, apply } = useApp.getState();
   if (terminalPage !== null) return startTerminalPageSync(load);
@@ -501,6 +534,7 @@ export function startSync(): () => void {
     const current = useApp.getState().canvasId;
     if (current) events.viewing(current);
   };
+  syncNow = sync;
   void sync();
 
   // Back and forward move between canvases.
@@ -539,6 +573,7 @@ export function startSync(): () => void {
 
   return () => {
     stopped = true;
+    syncNow = null;
     events?.stop();
     events = null;
     window.removeEventListener('popstate', onPopState);

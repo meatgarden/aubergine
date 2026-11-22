@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { GRANTABLE_SCOPES, RESERVED_SCOPES, SCOPE_MEANING, REACH_SCOPES, tokenStatus, type ActivityEntry, type Reach, type Scope, type TokenView } from '@aubergine/shared';
 import { api } from './api';
 import { runCommand } from './commands';
+import { aboutDevice, callerWords } from './devices/words';
 import { useApp } from './store';
 
 const NO_PROJECTS: Project[] = [];
@@ -319,6 +320,8 @@ export function ActivityScreen() {
   const [sessionFilter, setSessionFilter] = useState('');
   const sessions = useApp((s) => s.app?.sessions);
   const sessionNames = new Map((sessions ?? []).map((s) => [s.id, s.name]));
+  const devices = useApp((s) => s.whole?.devices);
+  const deviceName = (id: string): string | null => devices?.find((d) => d.id === id)?.name ?? null;
   const [entries, setEntries] = useState<ActivityEntry[]>([]);
   const [cursor, setCursor] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -405,9 +408,7 @@ export function ActivityScreen() {
               <tr key={`${entry.at}:${i}`} data-testid="activity-row" data-outcome={entry.outcome}>
                 <td className="sheet-note">{when(entry.at)}</td>
                 <td data-caller={entry.caller ?? 'token'}>
-                  {entry.caller === 'owner-cli'
-                    ? `you, from the command line${entry.fromSessionId ? ` (it says: inside “${sessionNames.get(entry.fromSessionId) ?? 'a terminal that is gone'}”)` : ''}`
-                    : entry.tokenName}
+                  {callerWords(entry, deviceName, (id) => sessionNames.get(id) ?? null)}
                 </td>
                 <td>
                   <code>
@@ -417,6 +418,7 @@ export function ActivityScreen() {
                     <div className="sheet-note">
                       {entry.action}
                       {entry.resource.sessionId ? ` · ${sessionNames.get(entry.resource.sessionId) ?? 'a terminal that is gone'}` : ''}
+                      {aboutDevice(entry, deviceName) ? ` · ${aboutDevice(entry, deviceName)}` : ''}
                       {typeof entry.chars === 'number' ? ` · ${entry.chars} characters` : ''}
                       {entry.fingerprint ? ` · ${entry.fingerprint}` : ''}
                     </div>
