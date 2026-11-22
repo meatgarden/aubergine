@@ -38,6 +38,8 @@ Named by what it is for.
 - **Text:** `--text` and `--text-muted`. Muted is for what is known about a thing only: a time, a folder, a count, a hint. A name, a heading, a button's words and a paragraph are `--text`.
 - **Meaning:** `--accent` (the product, what is chosen, the one primary button, the focus ring), `--attention` (it waits for the owner), `--working` (busy, running), `--ok`, `--danger`. Each has `-soft` (a background) and `-text` (words that are 4.5 to 1 on that background and on a surface). `--on-accent`, `--on-attention` and `--on-danger` are the words on the full color.
 
+- **A QR code:** `--qr-dark` on `--qr-light`, near black on white, the same in both themes: a scanner reads dark modules on a light ground, and a code drawn in the dark theme's colors would be light on dark. Nothing else uses them.
+
 No color is written outside the tokens, with two exceptions that are not the system's to decide: the colors a person picks for a terminal, a tab or a frame (`--swatch`), and the terminal's own theme.
 
 The light theme gives the same names other values and changes nothing else. The contrast of every pair above is tested in both themes: text and muted text are at least 4.5 to 1 on every surface and on every soft tint.

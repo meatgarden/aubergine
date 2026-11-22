@@ -118,6 +118,10 @@
   --minimap-mask: rgb(10 10 12 / 0.6);
   --minimap-node: #4a4e5a;
 
+  /* A QR code: near black on white in both themes, since a scanner reads dark modules on a light ground and not the other way round. */
+  --qr-dark: #111214;
+  --qr-light: #ffffff;
+
   font: var(--weight-normal) var(--font-body) / var(--leading) var(--font-sans);
   color: var(--text);
 }
@@ -167,4 +171,6 @@
   --canvas-dot: #c5c9d2;
   --minimap-mask: rgb(200 204 214 / 0.6);
   --minimap-node: #a9aebb;
+  --qr-dark: #111214;
+  --qr-light: #ffffff;
 }
