@@ -2,7 +2,8 @@
 #
 # Run once on 2026-11-22, on an Apple-silicon Mac with Docker in Colima (linux/arm64), under
 # https://aubergine.localhost with the web server's own certificate. Not tried: a real name with a
-# public certificate, a cloud machine, linux/amd64. See "In a container" in docs/remote.md.
+# public certificate, a cloud machine, linux/amd64 beyond the release workflow's trial (built, the server
+# started and made a terminal, on a GitHub runner). See "In a container" in docs/remote.md.
 #
 # Built from this checkout (the build context is the repository's root, see docker/compose.yaml),
 # by the repository's own package script, scripts/npm-package.mjs: not from the npm registry,
