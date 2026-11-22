@@ -1315,7 +1315,7 @@ Create `config.json` in the data folder (the server prints its location at start
 - `desktop`: [the same terminal in your own terminal app](#the-same-terminal-in-your-own-terminal-app). `app` is `"terminal"`, `"iterm"` or `"command"` (`null`: Terminal on macOS); `command` is your own command line with `{file}`; `openNew` makes every terminal you make in the page also open on the desktop. They are read each time a window is opened.
 - `schedules.lateWithinHours`: a time of a [schedule](#schedules-at-these-times-run-this-there) that passed while the computer was asleep or the server stopped still runs, marked late, when it is at most this many hours old. Default 6; 0 means never. It applies from the next start of the server.
 - `messages`: the limits on [messages between terminals](#messages-between-terminals). They apply from the next start of the server.
-- `access.addresses`: the HTTPS addresses this server also answers under, for [another device](#from-another-device). Read when the server starts; written by hand only. `access.pages` is not used yet.
+- `access.addresses`: the HTTPS addresses this server also answers under, for [another device](#from-another-device). Read when the server starts; written by hand only. `access.pages`: the origins of pages of another Aubergine that may [show this server](#letting-another-aubergines-page-show-this-server), read and written the same way.
 - `shortcuts`, `shortcutsInAppWindow`: your own keys; see [Keyboard](#keyboard).
 
 Font, theme and keys apply when you reload the page; shell and folder apply to the next new terminal.
@@ -1387,12 +1387,40 @@ Type the code into **Link a server…** in the page at that origin. It works onc
 
 **Whoever is the owner in that browser is the owner here.** The page keeps this server's credential in its own storage; whoever can run a script on that page's origin has a shell on this computer. The credential works only from that origin, only as the page sends it itself: no cookie is taken from another page, and API tokens and terminals' credentials are refused from it.
 
-The page's side, which shows a linked server, is not built yet: so far only this server's side is.
+In that page the server is then one more part of the project menu: see [Two servers in one page](#two-servers-in-one-page).
 
 ### Not done yet
 
 - The page is not laid out for a phone; it works as it does in a narrow window.
 - Linux has not been tried.
+
+## Two servers in one page
+
+The page of one Aubergine (on your laptop, say) can also show the projects of another (on a cloud machine, or a second server on the same computer). The other one is a **linked server**. The page shows one server at a time: everything on it, from the canvases and terminals to the queue, the runs, the tokens and the devices, is that server's, as if it had served the page. The project menu lists the projects of the server shown first, then this page's own server and each linked server under its name and host, with their projects; choosing one shows that server. Its canvases have addresses of their own in this page, `/s/<link>/p/<project>/c/<canvas>`, where `<link>` is a short name this browser chose; the address names nothing else, so a reload, the back button and a terminal opened in a browser tab of its own stay on that server.
+
+### Linking one
+
+On the other server:
+
+1. Write this page's origin (shown in the dialog, for example `http://127.0.0.1:4600`) under `access.pages` in its `config.json`, and start it again. See [Letting another Aubergine's page show this server](#letting-another-aubergines-page-show-this-server).
+2. Run `aubergine device add --page <that origin>` there. It prints a code.
+
+Then, in this page, **Link a server…** at the foot of the project menu (or in the palette): the address of the other Aubergine, a name for it here, and the code. The browser sends the code to that server itself and is answered with a credential; the other server is shown at once. A wrong code is answered with that server's own sentence. Where no answer comes at all, either the server cannot be reached at that address or it does not list this page's origin yet; the dialog says both.
+
+**Unlink…**, in that server's part of the menu (or **Unlink the server shown…** in the palette), asks first, then forgets the server in this browser and asks it to revoke this page's device. If it cannot be told, the page says so: the device is still listed there, and can be revoked from that server's Settings → Devices or with `aubergine device revoke`.
+
+### What stays this page's own
+
+How the page looks (the theme, and the terminals' font) and the keys are this page's own server's settings whatever is shown; changing the theme writes it there. What this browser remembers (the side panel, the bar, the tour) is this browser's. Settings says, while a linked server is shown, which server everything else in it is about.
+
+### What it does not do
+
+- No canvas holds terminals of both servers, and a canvas does not move between servers.
+- What waits for you is counted for the server shown only.
+- A server of another version of Aubergine is not shown: the page says that both must be the same.
+- This page's own server is never told that a linked server exists, and never calls one: the browser does.
+
+**The credential is kept in this browser's storage, for this page's address. Whoever is the owner on this computer is the owner on every server linked from it.** Unlinking revokes the credential on the other server.
 
 ## Command line
 

@@ -3491,6 +3491,7 @@ test('one look: the canvas page and every screen use the two control heights (an
   await look('API tokens', 'token-screen', () => command('API tokens'));
   await look('API activity', 'activity-screen', () => command('API activity'));
   await look('adding a device', 'add-device-dialog', () => command('Add a device'));
+  await look('linking a server', 'link-server-dialog', () => command('Link a server'));
   await look('past conversations', 'history-panel', () => command('Past conversations'));
   // The detail drawer beside the panel, and the menu of the less used parts.
   await page.getByTestId('list-row').first().hover();
@@ -3704,6 +3705,15 @@ test('simpler surfaces: the list starts near the top, a name is not cut, one pri
       async () => {
         await page.keyboard.press(mac ? 'Meta+k' : 'Control+Shift+K');
         await page.keyboard.type('>Add a device');
+        await expect(page.getByTestId('picker-command-row').first()).toBeVisible();
+        await page.keyboard.press('Enter');
+      },
+    ],
+    [
+      'link-server-dialog',
+      async () => {
+        await page.keyboard.press(mac ? 'Meta+k' : 'Control+Shift+K');
+        await page.keyboard.type('>Link a server');
         await expect(page.getByTestId('picker-command-row').first()).toBeVisible();
         await page.keyboard.press('Enter');
       },
