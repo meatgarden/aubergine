@@ -1290,6 +1290,7 @@ Create `config.json` in the data folder (the server prints its location at start
   "schedules": { "lateWithinHours": 6 },
   "desktop": { "app": null, "command": null, "openNew": false },
   "messages": { "perSenderPerMinute": 6, "perPairPerHour": 30, "pauseAfter": 6, "maxUnread": 20, "nudgeIntervalSeconds": 120, "keepDays": 30 },
+  "access": { "addresses": [], "pages": [] },
   "shortcuts": {},
   "shortcutsInAppWindow": {}
 }
@@ -1314,6 +1315,7 @@ Create `config.json` in the data folder (the server prints its location at start
 - `desktop`: [the same terminal in your own terminal app](#the-same-terminal-in-your-own-terminal-app). `app` is `"terminal"`, `"iterm"` or `"command"` (`null`: Terminal on macOS); `command` is your own command line with `{file}`; `openNew` makes every terminal you make in the page also open on the desktop. They are read each time a window is opened.
 - `schedules.lateWithinHours`: a time of a [schedule](#schedules-at-these-times-run-this-there) that passed while the computer was asleep or the server stopped still runs, marked late, when it is at most this many hours old. Default 6; 0 means never. It applies from the next start of the server.
 - `messages`: the limits on [messages between terminals](#messages-between-terminals). They apply from the next start of the server.
+- `access.addresses`: the HTTPS addresses this server also answers under, for [another device](#from-another-device). Read when the server starts; written by hand only. `access.pages` is not used yet.
 - `shortcuts`, `shortcutsInAppWindow`: your own keys; see [Keyboard](#keyboard).
 
 Font, theme and keys apply when you reload the page; shell and folder apply to the next new terminal.
@@ -1323,6 +1325,54 @@ Font, theme and keys apply when you reload the page; shell and folder apply to t
 Every terminal starts your shell as a **login shell**, so your own profile files build its environment (`PATH` and the rest) no matter how the server was started: from a terminal, or at login with no terminal at all. The server passes on its own environment as the base, without the variables that belong to the tool that launched it, and fills in `HOME`, `USER`, `LOGNAME`, `SHELL` and `LANG` when they are missing.
 
 One thing to know: tmux fixes that base environment when its server first starts. A variable you export later in some other terminal does not appear in existing or new sessions until all sessions have ended.
+
+## From another device
+
+Aubergine listens on `127.0.0.1` only, and that does not change. To use it from a phone or another computer, something on the same machine carries HTTPS to it, and you tell Aubergine the address that is used. Each browser you sign in on that way is a **device**, with a sign-in of its own that you can revoke.
+
+**A device is the whole owner.** Whoever has a paired device has what you have at this computer: every terminal, so a shell on this computer as you. Pair only browsers you would hand your keyboard to.
+
+### What to set up
+
+1. Something on this computer that serves HTTPS under a name and passes it on to `http://127.0.0.1:<port>` (4600 unless you chose another). It must pass the `Host` header through unchanged: Aubergine tells where a request came in from that header alone. A private network's own HTTPS serving does this, as does a web server you run on a cloud machine.
+2. The address in `config.json` in the data folder:
+
+   ```json
+   { "access": { "addresses": ["https://aubergine.example.net"] } }
+   ```
+
+   Only `https`, only the origin: no path, no user name. A wrong entry is reported when the server starts and skipped. `aubergine doctor` lists the addresses and what is wrong with any of them.
+3. Start the server again. The addresses are read when it starts, and no page or program can change them.
+
+**An address anyone on the internet can open puts the sign-in in front of everyone.** Without a code nobody gets in, and codes are hard to guess, but they would be guessing at a shell. Put a private network, or your organisation's own sign-in, in front of the address.
+
+Under that address the access token never signs in: not the link `aubergine open` prints, not the cookie, not as a bearer. Only a device's own sign-in works there, and a device's sign-in works nowhere else. API tokens and terminals' own credentials work on `/v1` from there as they do here.
+
+### Pairing a device
+
+At this computer, or in a terminal on the machine Aubergine runs on:
+
+```sh
+aubergine device add --name "Phone"
+```
+
+It prints a code, and for each address a link with the code in it and a QR of that link. Open the link on the other device, or scan the QR. The code works once, for three minutes, and is kept nowhere but in the server's memory. A few wrong codes withdraw every code that waits; make a new one then.
+
+```sh
+aubergine device list            # the devices: when each was added and last used, and its state
+aubergine device revoke "Phone"  # signed out at once; what it has open is closed (asks first unless --yes)
+```
+
+A device that is not used for 90 days stops working. A device can be revoked from another device, or from itself.
+
+A window on this computer's desktop is never opened for a request from another device: **Open on desktop** is refused there, and a new terminal made there does not open one.
+
+### Not done yet
+
+- The page does not take the code yet: the link opens it, signed out. The server side of pairing is in place (`POST /auth/pair`); the page's side comes next.
+- There is no page for devices in Settings yet: they are listed, paired and revoked from the command line.
+- The page is not laid out for a phone; it works as it does in a narrow window.
+- Linux has not been tried.
 
 ## Command line
 
@@ -1361,6 +1411,9 @@ aubergine token create <name> --scope <scope>…   make an API token; its secret
                                --reach all | canvas:<name> | tag:<tag>   which terminals the terminal scopes and the message scopes reach
 aubergine token list           the API tokens, their scopes and when each was last used
 aubergine token revoke <name>  revoke a token; it stops working at once
+aubergine device add [--name <name>]   pair another device: a code that works once, for three minutes, with a link and a QR
+aubergine device list          the paired devices, when each was added and last used, and its state
+aubergine device revoke <name|id>   sign a device out at once (--yes: do not ask)
 aubergine workflow list        the workflows, with their steps and how many runs are going
 aubergine workflow show <name> one workflow in full
 aubergine workflow new <name> [--template <template>]   make one; `workflow templates` lists the templates
