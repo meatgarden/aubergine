@@ -372,21 +372,22 @@ describe('TmuxRuntime', () => {
       execFileSync('tmux', ['-L', SOCKET, 'send-keys', '-t', `=${id}:`, 'Enter']);
     };
     // Enough output to push the interesting line off the visible screen and into the history.
-    send(one, 'echo "needle-""in-history"; seq 1 200');
-    send(two, 'echo "nothing to see"; seq 1 5');
-    await waitUntil(async () => (await runtime.snapshot(one)).includes('200'));
+    // The lines are marked, so that a search does not also find the prompt: zsh's shows the host's name, which may hold digits.
+    send(one, 'echo "needle-""in-history"; seq -f "row-%g" 1 200');
+    send(two, 'echo "nothing to see"; seq -f "row-%g" 1 5');
+    await waitUntil(async () => (await runtime.snapshot(one)).includes('row-200'));
     expect(await runtime.snapshot(one)).not.toContain('needle-in-history');
 
     const found = await runtime.search([two, one], 'NEEDLE-IN-HISTORY');
     expect(found.truncated).toBe(false);
     expect(found.hits).toHaveLength(1);
-    expect(found.hits[0]).toMatchObject({ sessionId: one, text: 'needle-in-history', after: ['1'] });
+    expect(found.hits[0]).toMatchObject({ sessionId: one, text: 'needle-in-history', after: ['row-1'] });
 
     // Newest first, capped per session and overall.
-    const many = await runtime.search([one, two], '1', { perSession: 3, limit: 4 });
+    const many = await runtime.search([one, two], 'row-1', { perSession: 3, limit: 4 });
     expect(many.truncated).toBe(true);
     expect(many.hits.filter((h) => h.sessionId === one)).toHaveLength(3);
-    expect(many.hits.find((h) => h.sessionId === one)?.text).toBe('199');
+    expect(many.hits.find((h) => h.sessionId === one)?.text).toBe('row-199');
     expect(many.hits).toHaveLength(4);
 
     expect((await runtime.search([one, newId()], 'needle-in-history')).hits).toHaveLength(1);
