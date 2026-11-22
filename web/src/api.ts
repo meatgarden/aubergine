@@ -24,6 +24,9 @@ import {
   LayoutNode,
   OutsideResponse,
   OutsideResult,
+  DeviceList,
+  PairingCodeAnswer,
+  RevokedDevice,
   SearchResponse,
   Session,
   SnapshotResponse,
@@ -152,6 +155,10 @@ export const api = {
   getOutside: () => call(OutsideResponse, 'GET', paths.outside),
   outsideAdd: (request: OutsideAddRequest) => call(OutsideResult, 'POST', paths.outsideAdd, request),
   outsideMove: (request: OutsideMoveRequest) => call(OutsideResult, 'POST', paths.outsideMove, request),
+  // Devices paired from an outside address: the owner's alone. No screen uses these yet.
+  listDevices: () => call(DeviceList, 'GET', paths.devices),
+  makePairingCode: (name: string) => call(PairingCodeAnswer, 'POST', paths.pairingCodes, { name, kind: 'browser' }),
+  revokeDevice: (deviceId: string) => call(RevokedDevice, 'DELETE', paths.device(deviceId)),
   // What follows goes through the public API, with the client generated from its description.
   createCanvas: (request: CreateCanvasRequest) => v1.createCanvas({ body: { ...here(), ...request } }),
   addProject: (body: Parameters<typeof v1.addProject>[0]['body']) => v1.addProject({ body }),
