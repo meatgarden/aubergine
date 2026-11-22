@@ -5,9 +5,9 @@
 ## Start here
 
 - [Landing page](https://thirstyeggplant.com/): what it does, install, FAQ
-- [README](https://github.com/meatgarden/aubergine/blob/main/README.md): full reference
+- [README](https://github.com/thirstyeggplant/aubergine/blob/main/README.md): full reference
 - [npm package](https://www.npmjs.com/package/@meatgarden/aubergine): `npm install -g @meatgarden/aubergine`
-- [Install script](https://raw.githubusercontent.com/meatgarden/aubergine/main/install.sh): one-line installer that builds from the source (also needs pnpm), changes only ~/.aubergine and one link
+- [Install script](https://raw.githubusercontent.com/thirstyeggplant/aubergine/main/install.sh): one-line installer that builds from the source (also needs pnpm), changes only ~/.aubergine and one link
 
 ## Pages
 
@@ -21,8 +21,8 @@
 
 ## For agents and programs
 
-- [Guide for agents](https://github.com/meatgarden/aubergine/blob/main/docs/for-agents.md)
-- [API reference](https://github.com/meatgarden/aubergine/blob/main/docs/api.md)
+- [Guide for agents](https://github.com/thirstyeggplant/aubergine/blob/main/docs/for-agents.md)
+- [API reference](https://github.com/thirstyeggplant/aubergine/blob/main/docs/api.md)
 
 ## Planned, not built yet
 

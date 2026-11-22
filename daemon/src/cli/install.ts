@@ -181,7 +181,7 @@ export function update(root: string, run: Run = runShown): UpdateResult {
       lines: [
         `The copy in ${root} is not a git checkout, so it cannot update itself.`,
         'Run the installer again; it replaces the copy and keeps your data:',
-        '  curl -fsSL https://raw.githubusercontent.com/meatgarden/aubergine/main/install.sh | sh',
+        '  curl -fsSL https://raw.githubusercontent.com/thirstyeggplant/aubergine/main/install.sh | sh',
       ],
     };
   }
