@@ -6,7 +6,6 @@
 #
 # Requests are passed on with their Host header as the browser sent it; Aubergine tells where a
 # request came in from that header alone. Do not add anything here that changes Host.
-
 {
 	# Caddy's own admin address listens on 127.0.0.1, which is shared with Aubergine's
 	# terminals. Switched off, so that nothing run in a terminal can reconfigure the web server;
