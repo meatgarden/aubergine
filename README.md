@@ -1359,13 +1359,33 @@ aubergine device add --name "Phone"
 It prints a code, and for each address a link with the code in it and a QR of that link. Open the link on the other device, or scan the QR. The code works once, for three minutes, and is kept nowhere but in the server's memory. A few wrong codes withdraw every code that waits; make a new one then.
 
 ```sh
-aubergine device list            # the devices: when each was added and last used, and its state
+aubergine device list            # the devices: their kind, when each was added and last used, and its state
 aubergine device revoke "Phone"  # signed out at once; what it has open is closed (asks first unless --yes)
 ```
 
 A device that is not used for 90 days stops working. A device can be revoked from another device, or from itself.
 
 A window on this computer's desktop is never opened for a request from another device: **Open on desktop** is refused there, and a new terminal made there does not open one.
+
+### Letting another Aubergine's page show this server
+
+The page of another Aubergine (one on your laptop, say) can be allowed to show this server's projects. Write that page's origin in `config.json` here, and start the server again:
+
+```json
+{ "access": { "pages": ["http://127.0.0.1:4600"] } }
+```
+
+An origin is `https`, or plain `http` only on this computer's own names. Two servers on one computer can link this way without any outside address. Then make a code for that page:
+
+```sh
+aubergine device add --page http://127.0.0.1:4600 --name "Laptop"
+```
+
+Type the code into **Link a server…** in the page at that origin. It works once, for three minutes. The page is then a device here (`aubergine device list` shows it as `page` with its origin) and can be revoked like any other.
+
+**Whoever is the owner in that browser is the owner here.** The page keeps this server's credential in its own storage; whoever can run a script on that page's origin has a shell on this computer. The credential works only from that origin, only as the page sends it itself: no cookie is taken from another page, and API tokens and terminals' credentials are refused from it.
+
+The page's side, which shows a linked server, is not built yet: so far only this server's side is.
 
 ### Not done yet
 
@@ -1412,7 +1432,8 @@ aubergine token create <name> --scope <scope>…   make an API token; its secret
 aubergine token list           the API tokens, their scopes and when each was last used
 aubergine token revoke <name>  revoke a token; it stops working at once
 aubergine device add [--name <name>]   pair another device: a code that works once, for three minutes, with a link and a QR
-aubergine device list          the paired devices, when each was added and last used, and its state
+aubergine device add --page <origin> [--name <name>]   let another Aubergine's page at that origin (in access.pages) show this server
+aubergine device list          the paired devices and linked pages: their kind, when each was added and last used, and its state
 aubergine device revoke <name|id>   sign a device out at once (--yes: do not ask)
 aubergine workflow list        the workflows, with their steps and how many runs are going
 aubergine workflow show <name> one workflow in full

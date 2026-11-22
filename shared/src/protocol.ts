@@ -110,6 +110,8 @@ export const paths = {
   device: (deviceId: string) => `/api/v1/devices/${deviceId}`,
   /** POST `{ name, kind }`: make a pairing code. It works once, for a few minutes. The owner's alone. */
   pairingCodes: '/api/v1/pairing-codes',
+  /** POST: a ticket for one WebSocket, for a linked page signed in with its credential. Works once, for 30 seconds. */
+  socketTickets: '/api/v1/socket-tickets',
   /** WebSocket: stream of change events. */
   events: '/ws/v1/events',
   /** WebSocket: one terminal viewer. Query: `cols`, `rows`. */
@@ -550,6 +552,12 @@ export const publicPaths = {
 /** Header a client may send with a create, to make repeating it safe. */
 export const IDEMPOTENCY_HEADER = 'idempotency-key';
 export const IdempotencyKey = z.string().regex(/^[\x21-\x7e]{1,128}$/);
+
+/** The query parameter a linked page's WebSocket carries its ticket in: a browser cannot put a header on a WebSocket. */
+export const TICKET_PARAM = 'ticket';
+
+/** The request headers a linked page may send across origins: what the web app and the client send, and nothing more. */
+export const LINKED_PAGE_HEADERS = ['authorization', 'content-type', IDEMPOTENCY_HEADER, PROJECT_HEADER, CLIENT_HEADER] as const;
 
 export const PAGE_DEFAULT = 100;
 export const PAGE_MAX = 500;

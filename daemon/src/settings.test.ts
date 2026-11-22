@@ -136,7 +136,7 @@ describe('outside addresses in the settings', () => {
     // The password is in the file; the sentence does not repeat the entry beyond saying what is wrong with it.
     expect(warnings[1]).toMatch(/user name or a password/);
     expect(warnings.join('\n')).not.toContain('pw');
-    expect(await accessReport(dir)).toEqual({ addresses: ['https://aubergine.example.test'], problems: [expect.stringMatching(/not https/), expect.stringMatching(/user name or a password/)] });
+    expect(await accessReport(dir)).toEqual({ addresses: ['https://aubergine.example.test'], pages: [], problems: [expect.stringMatching(/not https/), expect.stringMatching(/user name or a password/)] });
   });
 
   it('says so of a list that is not a list, and starts all the same', async () => {
@@ -146,6 +146,6 @@ describe('outside addresses in the settings', () => {
     expect(settings.theme).toBe('dark');
     expect(settings.access.addresses).toEqual([]);
     expect(warnings).toEqual([expect.stringMatching(/access\.addresses: is not a list/)]);
-    expect(await accessReport(path.join(dir, 'nothing-here'))).toEqual({ addresses: [], problems: [] });
+    expect(await accessReport(path.join(dir, 'nothing-here'))).toEqual({ addresses: [], pages: [], problems: [] });
   });
 });

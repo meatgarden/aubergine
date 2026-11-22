@@ -9,10 +9,12 @@ import { UsageError } from './commands';
  * and kept nowhere: the server holds it, as a hash, for three minutes.
  */
 
-export type DeviceCommand = { action: 'add'; name: string } | { action: 'list' } | { action: 'revoke'; query: string; yes: boolean };
+export type DeviceCommand = { action: 'add'; name: string; page?: string } | { action: 'list' } | { action: 'revoke'; query: string; yes: boolean };
 
 /** What a new device is called when no name is given. */
 export const DEFAULT_DEVICE_NAME = 'Another device';
+/** What a linked page is called when no name is given. */
+export const DEFAULT_PAGE_NAME = 'Linked page';
 
 export function parseDeviceCommand(words: readonly string[]): DeviceCommand {
   const [action, ...rest] = words;
@@ -22,16 +24,23 @@ export function parseDeviceCommand(words: readonly string[]): DeviceCommand {
   }
   if (action === 'add' || action === 'pair') {
     let name: string | null = null;
+    let page: string | null = null;
     for (let index = 0; index < rest.length; index += 1) {
       const word = rest[index] as string;
+      if (word === '--page' || word.startsWith('--page=')) {
+        const origin = word === '--page' ? rest[(index += 1)] : word.slice('--page='.length);
+        if (origin === undefined || origin.trim() === '' || origin.startsWith('--')) throw new UsageError('--page needs the origin of the page, like http://127.0.0.1:4600');
+        page = origin;
+        continue;
+      }
       const given = word === '--name' ? rest[(index += 1)] : word.startsWith('--name=') ? word.slice('--name='.length) : null;
       if (given === null) throw new UsageError(`device add does not know ${word}`);
       if (given === undefined || given.trim() === '' || given.startsWith('--')) throw new UsageError('--name needs a name');
       name = given;
     }
-    const checked = DeviceName.safeParse(name ?? DEFAULT_DEVICE_NAME);
+    const checked = DeviceName.safeParse(name ?? (page === null ? DEFAULT_DEVICE_NAME : DEFAULT_PAGE_NAME));
     if (!checked.success) throw new UsageError('A device’s name is one line of plain text, at most 80 characters.');
-    return { action: 'add', name: checked.data };
+    return page === null ? { action: 'add', name: checked.data } : { action: 'add', name: checked.data, page };
   }
   if (action === 'revoke' || action === 'remove') {
     const unknown = rest.find((word) => word.startsWith('--') && word !== '--yes');
@@ -40,7 +49,7 @@ export function parseDeviceCommand(words: readonly string[]): DeviceCommand {
     if (query === '') throw new UsageError('device revoke needs the name or the ID of one device (see: aubergine device list)');
     return { action: 'revoke', query, yes: rest.includes('--yes') };
   }
-  throw new UsageError('device needs "add [--name <name>]", "list" or "revoke <name|id>"');
+  throw new UsageError('device needs "add [--name <name>] [--page <origin>]", "list" or "revoke <name|id>"');
 }
 
 export interface DeviceCommandDeps {
@@ -75,7 +84,9 @@ const day = (iso: string | null): string => (iso === null ? 'never' : iso.slice(
 /** The list as a table. Names were typed by whoever paired: control characters are shown, not sent to the terminal. */
 export function formatDevices(devices: readonly DeviceView[]): string {
   if (devices.length === 0) return 'No devices. Pair one with: aubergine device add --name <name>';
-  const rows = [['NAME', 'STATE', 'ADDED', 'LAST USED', 'ID'], ...devices.map((device) => [showControl(device.name) + (device.current ? ' (this one)' : ''), device.status === 'unused' ? 'unused 90 days' : device.status, day(device.createdAt), day(device.lastUsedAt), device.id])];
+  // A page's origin was checked against the settings when it was paired; shown through showControl all the same.
+  const kindOf = (device: DeviceView): string => (device.kind === 'page' ? `page ${showControl(device.origin ?? '?')}` : device.kind);
+  const rows = [['NAME', 'KIND', 'STATE', 'ADDED', 'LAST USED', 'ID'], ...devices.map((device) => [showControl(device.name) + (device.current ? ' (this one)' : ''), kindOf(device), device.status === 'unused' ? 'unused 90 days' : device.status, day(device.createdAt), day(device.lastUsedAt), device.id])];
   const widths = rows[0]!.map((_, column) => Math.max(...rows.map((row) => (row[column] ?? '').length)));
   return rows.map((row) => row.map((cell, column) => (column === row.length - 1 ? cell : cell.padEnd(widths[column] ?? 0))).join('  ')).join('\n');
 }
@@ -90,6 +101,21 @@ async function qrOf(text: string, interactive: boolean): Promise<string> {
 
 export async function runDeviceCommand(command: DeviceCommand, deps: DeviceCommandDeps): Promise<number> {
   const { request, print } = deps;
+  if (command.action === 'add' && command.page !== undefined) {
+    const answer = await request('POST', paths.pairingCodes, { name: command.name, kind: 'page', origin: command.page });
+    if (answer.status === 409) {
+      print(refusal(answer));
+      print('For example, in config.json in the data folder:\n  "access": { "pages": ["http://127.0.0.1:4600"] }\nSee "Letting another Aubergine\u2019s page show this server" in the README.');
+      return 1;
+    }
+    if (answer.status !== 201) throw new UsageError(refusal(answer));
+    const made = PairingCodeAnswer.parse(answer.body);
+    const until = new Date(made.expiresAt);
+    print(`Pairing code for the page "${showControl(command.name)}": ${made.code}`);
+    print(`It works once, for three minutes (until ${until.toTimeString().slice(0, 5)}). Whoever has it can sign in as you, with a shell on this computer.`);
+    print(`\nIn the page at ${showControl(command.page)}, choose "Link a server\u2026" and type this code there.`);
+    return 0;
+  }
   if (command.action === 'add') {
     const answer = await request('POST', paths.pairingCodes, { name: command.name, kind: 'browser' });
     if (answer.status === 409) {

@@ -1,7 +1,8 @@
 import { packageRoot } from './package-root';
-import { DEVICE_UNUSED_DAYS, PROJECT_HEADER, PairRequest, PairingCodeRequest, ThemeSetting, accessEntries, isLocalHost, viewOfDevice, type DeviceList, type OpenedOnDesktop, type PairingCodeAnswer, type RevokedDevice } from '@aubergine/shared';
+import { DEVICE_UNUSED_DAYS, LINKED_PAGE_HEADERS, PROJECT_HEADER, PairRequest, PairingCodeRequest, TICKET_PARAM, ThemeSetting, accessEntries, accessProblem, deviceStatus, isLocalHost, viewOfDevice, type DeviceList, type OpenedOnDesktop, type PairedPage, type PairingCodeAnswer, type RevokedDevice, type SocketTicket } from '@aubergine/shared';
 import { DeviceNotFoundError, Devices } from './devices';
 import { Pairing } from './pairing';
+import { SocketTickets } from './socket-tickets';
 import { existsSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import { SettingsUnreadableError } from './settings';
@@ -283,8 +284,12 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   // The outside addresses, read once, when the server starts. A wrong entry was reported where the settings were read, and is skipped.
   const outsideAddresses = accessEntries('addresses', (await options.settings()).access.addresses).entries;
   const outsideByHost = new Map(outsideAddresses.map((entry) => [entry.host, entry.origin]));
+  // The origins of linked pages: pages of another Aubergine that may show this server. Read once, at start, like the addresses.
+  const pageOrigins = new Set(accessEntries('pages', (await options.settings()).access.pages).entries.map((entry) => entry.origin));
+  const outsideOrigins = new Set(outsideAddresses.map((entry) => entry.origin));
   const devices = new Devices(hub, clock);
   const pairing = new Pairing(clock);
+  const tickets = new SocketTickets(clock);
   const limiter = new RateLimiter(limits.rateLimitPerMinute);
   const activity = options.activity ?? new MemoryActivityLog();
   const workflowSettings = (await options.settings()).workflows;
@@ -425,15 +430,18 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     if (!call) {
       const what = asked.get(request);
       if (principals.get(request)?.kind !== 'user' || !what || !(WATCHED_READS.includes(what.action) || (WATCHED.includes(what.action) && request.method !== 'GET')) || ownerLogged.has(request)) return;
+      // Through a linked page the owner is a device: said so, with which one. Otherwise only a call from outside the page is written.
+      const viaPage = fromLinkedPage.has(request) ? deviceOf.get(request) : undefined;
       const caller = ownerCaller(request);
-      if (caller.kind !== 'owner-cli') return;
+      if (viaPage === undefined && caller.kind !== 'owner-cli') return;
       ownerLogged.add(request);
       void activity.append({
         at: new Date().toISOString(),
-        caller: 'owner-cli',
+        caller: viaPage !== undefined ? 'device' : 'owner-cli',
+        ...(viaPage !== undefined ? { byDeviceId: viaPage } : {}),
         tokenId: null,
         tokenName: '',
-        fromSessionId: caller.sessionId,
+        fromSessionId: viaPage !== undefined ? null : caller.sessionId,
         client: clientOf(request),
         chars: traces.get(request)?.chars ?? null,
         fingerprint: traces.get(request)?.fingerprint ?? null,
@@ -474,6 +482,10 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   /** Where each request came in, and the device it was signed in with, when it was. */
   const cameIn = new WeakMap<FastifyRequest, CameIn>();
   const deviceOf = new WeakMap<FastifyRequest, string>();
+  /** The requests that came from a linked page: whatever their Host, never at this computer. */
+  const fromLinkedPage = new WeakSet<FastifyRequest>();
+  /** Whether a request was made by someone at this computer: under its own name, and not from a linked page. */
+  const atThisComputer = (request: FastifyRequest): boolean => cameIn.get(request) === 'here' && !fromLinkedPage.has(request);
   /** What closes what each device holds open: its sockets and streams, closed at once when it is revoked. */
   const heldOpen = new Map<string, Set<() => void>>();
   const holdOpen = (request: FastifyRequest, close: () => void): (() => void) => {
@@ -536,13 +548,62 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     // An outside address is HTTPS: every answer under it says so, refusals included.
     if (place === 'outside') void reply.header('strict-transport-security', 'max-age=31536000');
     const origin = request.headers.origin;
+    const pathname = request.url.split('?')[0] ?? '';
+    const isUpgrade = request.headers.upgrade?.toLowerCase() === 'websocket';
+
+    // A linked page: the page of another Aubergine, at an origin written in access.pages (and not one of this server's
+    // own), calling across origins with a credential it holds itself. Judged by that credential alone, whatever the Host
+    // and whatever cookie came with it: no cookie is looked at, none is set, and no other kind of credential is taken.
+    if (origin !== undefined && pageOrigins.has(origin) && !origins.has(origin) && !outsideOrigins.has(origin)) {
+      fromLinkedPage.add(request);
+      // That exact origin, on every answer: never "*", never "credentials allowed".
+      void reply.header('access-control-allow-origin', origin).header('vary', 'Origin');
+      // A preflight carries no credential and reaches no route: it is answered here, for every path alike.
+      if (request.method === 'OPTIONS' && request.headers['access-control-request-method'] !== undefined) {
+        return reply
+          .code(204)
+          .header('access-control-allow-methods', 'GET, POST, PUT, PATCH, DELETE')
+          .header('access-control-allow-headers', LINKED_PAGE_HEADERS.join(', '))
+          .header('access-control-max-age', '600')
+          .send();
+      }
+      void reply.header('access-control-expose-headers', 'retry-after');
+      // A code is the sign-in: the route takes only a code made for this very origin.
+      if (pathname === paths.pair) return;
+      // A WebSocket cannot carry a header: a ticket in its address, made for a page device of this origin, spent here.
+      if (pathname.startsWith('/ws/')) {
+        const offered = isUpgrade ? new URLSearchParams(request.url.slice(pathname.length)).get(TICKET_PARAM) : null;
+        const deviceId = offered === null ? null : tickets.spend(offered, origin);
+        const device = deviceId === null ? undefined : devices.find(deviceId);
+        if (!device || device.kind !== 'page' || device.origin !== origin || deviceStatus(device, clock()) !== 'active') {
+          return reply.code(401).send(errorBody('unauthorized', 'Missing or wrong socket ticket'));
+        }
+        deviceOf.set(request, device.id);
+        devices.touch(device.id);
+        principals.set(request, { kind: 'user' });
+        return;
+      }
+      if (pathname === '/v1' || pathname.startsWith('/v1/') || pathname.startsWith('/api/')) {
+        // A page device's credential, from the origin it was paired from, and nothing else: not an API token, not a
+        // session's token, not a browser device's secret. A wrong one is refused, never tried as anything else.
+        const bearer = bearerOf(request.headers.authorization);
+        const found = bearer === null ? null : devices.authenticate(bearer);
+        if (!found || found.status !== 'active' || found.device.kind !== 'page' || found.device.origin !== origin) {
+          return reply.code(401).send(errorBody('unauthorized', 'Missing or wrong credential for a linked page'));
+        }
+        deviceOf.set(request, found.device.id);
+        devices.touch(found.device.id);
+        principals.set(request, { kind: 'user' });
+        return;
+      }
+      return reply.code(403).send(errorBody('forbidden', 'A linked page reaches /v1, /api, /ws and pairing, and nothing else.'));
+    }
+
     // Here: one of this computer's own origins, as before. From outside: exactly the address it came in under.
     if (origin !== undefined && !(place === 'here' ? origins.has(origin) : origin === outsideOrigin)) {
       return reply.code(403).send(errorBody('forbidden', 'Origin not allowed'));
     }
-    const pathname = request.url.split('?')[0] ?? '';
 
-    const isUpgrade = request.headers.upgrade?.toLowerCase() === 'websocket';
     const isSafeMethod = request.method === 'GET' || request.method === 'HEAD';
     // The owner's sign-in. Here: the access token's cookie, and nothing else. From outside: a device's cookie, and
     // nothing else; the access token is never accepted there, in any form. Looked at only where it is needed.
@@ -694,14 +755,17 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   const ownerOnDevices = (request: FastifyRequest): 'owner' | 'owner-cli' | 'device' => (deviceOf.has(request) ? 'device' : ownerCaller(request).kind === 'owner-cli' ? 'owner-cli' : 'owner');
 
   /**
-   * Tries a pairing code. Only from outside can one be spent: from here the comparisons are made all the same and
-   * the answer is that it did not work, since a device's cookie is not taken here. Every failure is one answer.
+   * Tries a pairing code. A browser's code is spent only from outside, with the address's own Origin: from here the
+   * comparisons are made all the same and the answer is that it did not work, since a device's cookie is not taken
+   * here. A page's code is spent only from a linked page at the origin it was made for, whatever the Host. Every
+   * failure is one answer.
    */
   function tryPairing(request: FastifyRequest, reply: FastifyReply, code: unknown): FastifyReply {
     pairingTried.add(request);
     const place = cameIn.get(request) ?? 'here';
     void reply.header('cache-control', 'no-store');
-    const tried = pairing.try(code, { accept: place === 'outside', kinds: ['browser'] });
+    const page = fromLinkedPage.has(request) ? (request.headers.origin ?? null) : null;
+    const tried = pairing.try(code, page !== null ? { accept: true, kinds: ['page'], origin: page } : { accept: place === 'outside', kinds: ['browser'] });
     if (tried.result === 'limited') {
       // Needs no sign-in, so anyone can be refused here as often as they like: one line a minute says so, not one a try.
       if (clock() - limitedSaidAt >= 60_000) {
@@ -713,6 +777,13 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     if (tried.result === 'wrong') {
       recordDevices(request, { caller: 'pairing', action: 'devices.pair', status: 401, outcome: 'denied' });
       return reply.code(401).send(PAIRING_REFUSED);
+    }
+    if (tried.kind === 'page') {
+      const { device, secret } = devices.create({ name: tried.name, kind: 'page', origin: tried.origin });
+      recordDevices(request, { caller: 'pairing', action: 'devices.pair', status: 200, outcome: 'ok', device: { id: device.id, name: device.name } });
+      // The credential's one way out of the server: in this answer, never in a cookie, never again.
+      const paired: PairedPage = { credential: secret, device: { id: device.id, name: device.name }, protocolVersion: PROTOCOL_VERSION };
+      return reply.code(200).send(paired);
     }
     const { device, secret } = devices.create({ name: tried.name, kind: tried.kind });
     recordDevices(request, { caller: 'pairing', action: 'devices.pair', status: 204, outcome: 'ok', device: { id: device.id, name: device.name } });
@@ -735,12 +806,33 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   app.post(paths.pairingCodes, async (request, reply): Promise<PairingCodeAnswer> => {
     allowOn(request, 'devices.manage', {});
     const body = parse(PairingCodeRequest, request.body);
-    if (outsideAddresses.length === 0) throw new HttpError(409, 'conflict', 'No outside address is written in the settings, so a code could not be used anywhere. Write one in access.addresses in config.json, start the server again, and ask for a code then.');
-    const made = pairing.make(body.name, body.kind);
+    let made: { code: string; expiresAt: number };
+    if (body.kind === 'page') {
+      // Only a page at an origin the owner wrote down can use it. Two servers on one computer link under their own names, so no outside address is needed.
+      const checked = accessProblem('pages', body.origin);
+      if (!checked.ok || !pageOrigins.has(checked.origin)) throw new HttpError(409, 'conflict', 'That origin is not written in access.pages in config.json, so a page there could not use a code. Write it there, start the server again, and ask for a code then.');
+      made = pairing.make(body.name, 'page', checked.origin);
+    } else {
+      if (outsideAddresses.length === 0) throw new HttpError(409, 'conflict', 'No outside address is written in the settings, so a code could not be used anywhere. Write one in access.addresses in config.json, start the server again, and ask for a code then.');
+      made = pairing.make(body.name, 'browser');
+    }
     recordDevices(request, { caller: ownerOnDevices(request), action: 'devices.manage', status: 201, outcome: 'ok' });
     // Shown once, and never kept anywhere on the way.
     void reply.code(201).header('cache-control', 'no-store');
     return { code: made.code, expiresAt: new Date(made.expiresAt).toISOString(), addresses: outsideAddresses.map((entry) => entry.origin) };
+  });
+
+  // A linked page cannot put its credential on a WebSocket: it asks for a ticket here, and puts that in the socket's address.
+  app.post(paths.socketTickets, async (request, reply): Promise<SocketTicket> => {
+    allowOn(request, 'devices.manage', {});
+    const deviceId = deviceOf.get(request);
+    const origin = request.headers.origin;
+    if (!fromLinkedPage.has(request) || deviceId === undefined || origin === undefined) {
+      throw new HttpError(403, 'forbidden', 'Only a linked page needs a ticket for a socket: a page this server served opens its sockets with its own sign-in.');
+    }
+    const made = tickets.make(deviceId, origin);
+    void reply.code(201).header('cache-control', 'no-store');
+    return { ticket: made.ticket, expiresAt: new Date(made.expiresAt).toISOString() };
   });
 
   app.delete(paths.device(':deviceId'), async (request): Promise<RevokedDevice> => {
@@ -771,7 +863,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
       epoch: hub.epoch,
       revision: hub.revision,
       defaultCanvasId: sessions.defaultCanvasId(),
-      here: cameIn.get(request) === 'here',
+      here: atThisComputer(request),
     };
   });
 
@@ -786,7 +878,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     // Never from another device: a window on this computer's desktop is for someone at this computer.
     if (alsoOnDesktop !== true) return created;
     const notHere: OpenedOnDesktop = { opened: false, says: NOT_AT_THIS_COMPUTER };
-    return { ...created, desktop: cameIn.get(request) === 'here' ? await desktop.openNew(created.session.id) : notHere };
+    return { ...created, desktop: atThisComputer(request) ? await desktop.openNew(created.session.id) : notHere };
   });
 
   app.patch(paths.session(':sessionId'), async (request) => {
@@ -1082,7 +1174,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     // In tests every answer is held against what its route declares.
     validateResponses: options.validateResponses ?? process.env.VITEST !== undefined,
     principalOf: (request) => principals.get(request) ?? null,
-    cameIn: (request) => cameIn.get(request) ?? 'outside',
+    atThisComputer,
     holdOpen,
     recordNow: (request) => record(request, 200),
     ownerCaller,
