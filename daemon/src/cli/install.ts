@@ -364,6 +364,7 @@ export async function doctor(root: string, config: Config, env: NodeJS.ProcessEn
   // Outside addresses, as the server takes them when it starts. Each wrong entry is one thing to fix.
   const access = await accessReport(config.dataDir);
   checks.push({ ok: null, text: access.addresses.length === 0 ? 'outside addresses: none (another device cannot reach this server)' : `outside addresses: ${access.addresses.join(', ')}` });
+  checks.push({ ok: null, text: access.pages.length === 0 ? 'linked pages: none (no other Aubergine\u2019s page may show this server)' : `linked pages: ${access.pages.join(', ')}` });
   for (const problem of access.problems) checks.push({ ok: false, text: problem });
   return checks;
 }

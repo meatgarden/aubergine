@@ -161,7 +161,11 @@ export const USAGE = `Usage: aubergine <command>
   token revoke <name|id>     Revoke a token: it stops working at once
   device add [--name <name>] Pair another device: prints a code that works once, for three minutes, with the
                              address to open on it (and a QR of it) for each outside address in the settings
-  device list                The paired devices: when each was added and last used, and its state
+  device add --page <origin> [--name <name>]
+                             Let the page of another Aubergine at that origin (listed in access.pages) show this
+                             server: prints a code to type into "Link a server…" in that page
+  device list                The paired devices and linked pages: their kind, when each was added and last used,
+                             and its state
   device revoke <name|id>    Sign a device out at once and close what it has open; asks first unless --yes
   workflow list              The workflows, with how many steps each has and how many runs are going
   workflow show <name>       One workflow in full: what every step says

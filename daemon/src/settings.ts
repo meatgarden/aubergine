@@ -67,18 +67,22 @@ export function accessProblems(raw: unknown, settings: Settings): string[] {
   return problems;
 }
 
-/** The outside addresses the settings file names, as the server takes them at its start, and what is wrong with `access`. For `aubergine doctor`. */
-export async function accessReport(dir: string): Promise<{ addresses: string[]; problems: string[] }> {
+/** The outside addresses and linked pages the settings file names, as the server takes them at its start, and what is wrong with `access`. For `aubergine doctor`. */
+export async function accessReport(dir: string): Promise<{ addresses: string[]; pages: string[]; problems: string[] }> {
   let raw: unknown;
   try {
     raw = JSON.parse(await readFile(path.join(dir, SETTINGS_FILE), 'utf8'));
   } catch {
     // No file, or one that is not JSON: the server starts with the defaults, and so no outside address.
-    return { addresses: [], problems: [] };
+    return { addresses: [], pages: [], problems: [] };
   }
   const settings = Settings.safeParse(raw);
-  if (!settings.success) return { addresses: [], problems: [] };
-  return { addresses: accessEntries('addresses', settings.data.access.addresses).entries.map((entry) => entry.origin), problems: accessProblems(raw, settings.data) };
+  if (!settings.success) return { addresses: [], pages: [], problems: [] };
+  return {
+    addresses: accessEntries('addresses', settings.data.access.addresses).entries.map((entry) => entry.origin),
+    pages: accessEntries('pages', settings.data.access.pages).entries.map((entry) => entry.origin),
+    problems: accessProblems(raw, settings.data),
+  };
 }
 
 /** Expands a leading `~` to the home folder. */

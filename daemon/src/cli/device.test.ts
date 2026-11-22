@@ -16,12 +16,13 @@ import { JsonStore } from '../store/json-store';
 import { destroyTmuxServer, testSocketName } from '../test-support';
 import { loadOrCreateToken } from '../token';
 import { UsageError, parseCommand } from './commands';
-import { DEFAULT_DEVICE_NAME, formatDevices, pairingLink, parseDeviceCommand, resolveDevice } from './device';
+import { DEFAULT_DEVICE_NAME, DEFAULT_PAGE_NAME, formatDevices, pairingLink, parseDeviceCommand, resolveDevice } from './device';
 
 const run = promisify(execFile);
 const SOCKET = testSocketName('cli-device');
 const COMMAND = fileURLToPath(new URL('../../../bin/aubergine.mjs', import.meta.url));
 const OUTSIDE = 'https://aubergine.example.test';
+const PAGE = 'http://127.0.0.1:4600';
 
 describe('parsing the device commands', () => {
   it('reads add, list and revoke', () => {
@@ -31,6 +32,9 @@ describe('parsing the device commands', () => {
     expect(parseDeviceCommand(['add'])).toEqual({ action: 'add', name: DEFAULT_DEVICE_NAME });
     expect(parseDeviceCommand(['add', '--name', 'My phone'])).toEqual({ action: 'add', name: 'My phone' });
     expect(parseDeviceCommand(['add', '--name=Tablet'])).toEqual({ action: 'add', name: 'Tablet' });
+    expect(parseDeviceCommand(['add', '--page', 'http://127.0.0.1:4600'])).toEqual({ action: 'add', name: DEFAULT_PAGE_NAME, page: 'http://127.0.0.1:4600' });
+    expect(parseDeviceCommand(['add', '--page=https://other.example.test', '--name', 'Laptop'])).toEqual({ action: 'add', name: 'Laptop', page: 'https://other.example.test' });
+    expect(() => parseDeviceCommand(['add', '--page'])).toThrow(/--page needs the origin/);
     expect(parseDeviceCommand(['revoke', 'My', 'phone'])).toEqual({ action: 'revoke', query: 'My phone', yes: false });
     expect(parseDeviceCommand(['revoke', 'phone', '--yes'])).toEqual({ action: 'revoke', query: 'phone', yes: true });
   });
@@ -56,9 +60,11 @@ describe('parsing the device commands', () => {
     expect(() => resolveDevice(devices, 'tablet')).toThrow(/2 devices are named "tablet"/);
     expect(() => resolveDevice(devices, 'laptop')).toThrow(/No device named "laptop"/);
     const table = formatDevices(devices).split('\n');
-    expect(table[0]).toMatch(/^NAME +STATE +ADDED +LAST USED +ID$/);
-    expect(table[1]).toMatch(/^Phone +active +2026-03-01 +2026-03-02 +01900000/);
-    expect(table[2]).toMatch(/^Tablet \(this one\) +unused 90 days +2026-03-01 +never /);
+    expect(table[0]).toMatch(/^NAME +KIND +STATE +ADDED +LAST USED +ID$/);
+    expect(table[1]).toMatch(/^Phone +browser +active +2026-03-01 +2026-03-02 +01900000/);
+    expect(table[2]).toMatch(/^Tablet \(this one\) +browser +unused 90 days +2026-03-01 +never /);
+    const page = { ...devices[0]!, name: 'Laptop', kind: 'page' as const, origin: 'http://127.0.0.1:4600' };
+    expect(formatDevices([page]).split('\n')[1]).toMatch(/^Laptop +page http:\/\/127\.0\.0\.1:4600 +active /);
     expect(formatDevices([])).toContain('aubergine device add');
     expect(pairingLink(OUTSIDE, 'ABCDE-FGHJK')).toBe('https://aubergine.example.test/#pair=ABCDE-FGHJK');
   });
@@ -70,12 +76,12 @@ describe('aubergine device', () => {
   let dir: string;
   const servers: { app: FastifyInstance; hub: StateHub; port: number; env: NodeJS.ProcessEnv }[] = [];
 
-  const serve = async (name: string, addresses: string[]): Promise<(typeof servers)[number]> => {
+  const serve = async (name: string, addresses: string[], pages: string[] = []): Promise<(typeof servers)[number]> => {
     const data = path.join(dir, name);
     const token = await loadOrCreateToken(data);
     const store = new JsonStore(data);
     const hub = new StateHub(await store.load(), store);
-    const app = await buildServer({ hub, sessions: new Sessions(hub, runtime), runtime, settings: async () => Settings.parse({ access: { addresses } }), token, devOrigin: null, webDist: path.join(dir, 'no-web') });
+    const app = await buildServer({ hub, sessions: new Sessions(hub, runtime), runtime, settings: async () => Settings.parse({ access: { addresses, pages } }), token, devOrigin: null, webDist: path.join(dir, 'no-web') });
     await app.listen({ host: '127.0.0.1', port: 0 });
     const port = (app.server.address() as AddressInfo).port;
     const { TMUX: _tmux, ...outside } = process.env;
@@ -139,8 +145,8 @@ describe('aubergine device', () => {
       expect(await pair(server, /: ([0-9A-Z]{5}-[0-9A-Z]{5})/.exec(made.out)![1]!)).toBe(204);
     }
     const listed = await aubergine(server.env, 'device', 'list');
-    expect(listed.out).toMatch(/^NAME +STATE +ADDED +LAST USED +ID$/m);
-    expect(listed.out).toMatch(/^Phone +active /m);
+    expect(listed.out).toMatch(/^NAME +KIND +STATE +ADDED +LAST USED +ID$/m);
+    expect(listed.out).toMatch(/^Phone +browser +active /m);
     for (const device of server.hub.state.devices) expect(listed.out).not.toContain(device.hash);
 
     const ambiguous = await aubergine(server.env, 'device', 'revoke', 'tablet', '--yes');
@@ -157,6 +163,28 @@ describe('aubergine device', () => {
     expect(server.hub.state.devices.filter((d) => d.revokedAt !== null).map((d) => d.id).sort()).toEqual([server.hub.state.devices.find((d) => d.name === 'Phone')!.id, tablet.id].sort());
     // With one of the two revoked, the name means the other.
     expect((await aubergine(server.env, 'device', 'revoke', 'tablet', '--yes')).out).toContain('Revoked "Tablet"');
-    expect((await aubergine(server.env, 'device', 'list')).out).toMatch(/^Phone +revoked /m);
+    expect((await aubergine(server.env, 'device', 'list')).out).toMatch(/^Phone +browser +revoked /m);
   }, 120_000);
+
+  it('makes a code for a linked page at an origin in access.pages, and refuses one that is not', async () => {
+    const server = await serve('pages', [], [PAGE]);
+    const refused = await aubergine(server.env, 'device', 'add', '--page', 'https://unlisted.example.test');
+    expect(refused.code).toBe(1);
+    expect(refused.out).toContain('access.pages');
+    expect(refused.out).not.toMatch(/[0-9A-Z]{5}-[0-9A-Z]{5}/);
+
+    const added = await aubergine(server.env, 'device', 'add', '--page', PAGE, '--name', 'Laptop');
+    expect(added.code, added.err).toBe(0);
+    const code = /Pairing code for the page "Laptop": ([0-9A-Z]{5}-[0-9A-Z]{5})/.exec(added.out)?.[1];
+    expect(code).toBeDefined();
+    expect(added.out).toContain('It works once, for three minutes');
+    expect(added.out).toContain(`In the page at ${PAGE}, choose "Link a server\u2026" and type this code there.`);
+    // No address with the code in it, and no QR.
+    expect(added.out).not.toContain('#pair=');
+    expect(added.out).not.toMatch(/[█▀▄]{7}/);
+    const paired = await server.app.inject({ method: 'POST', url: paths.pair, headers: { host: `127.0.0.1:${server.port}`, origin: PAGE }, payload: { code } });
+    expect(paired.statusCode).toBe(200);
+    const listed = await aubergine(server.env, 'device', 'list');
+    expect(listed.out).toMatch(new RegExp(`^Laptop +page ${PAGE.replace(/[.]/g, '\\.')} +active `, 'm'));
+  }, 60_000);
 });

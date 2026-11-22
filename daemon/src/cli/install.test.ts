@@ -470,6 +470,19 @@ describe('the commands, against a running server', () => {
     }
   });
 
+  it('doctor lists the linked pages too', async () => {
+    expect((await aubergine(['doctor'])).out).toContain('-   linked pages: none');
+    const file = path.join(home, 'data', 'config.json');
+    writeFileSync(file, JSON.stringify({ access: { pages: ['http://127.0.0.1:4600', 'http://plain.example.test'] } }));
+    try {
+      const result = await aubergine(['doctor']);
+      expect(result.out).toContain('-   linked pages: http://127.0.0.1:4600');
+      expect(result.out).toMatch(/^x {3}access\.pages: "http:\/\/plain\.example\.test" is plain http/m);
+    } finally {
+      rmSync(file, { force: true });
+    }
+  });
+
   it('uninstall will not remove anything without being asked, when nobody can answer', async () => {
     const result = await aubergine(['uninstall']);
     expect(result.code).toBe(2);
