@@ -482,24 +482,34 @@ code {
   height: 100%;
   overflow: hidden;
 }
-/* One terminal by itself in a tab of its own: a head of one row, and the terminal under it to the foot of the window. */
+/*
+ * One terminal by itself in a tab of its own, the focus view: a head of one row, and under it a row of columns to the
+ * foot of the window: the canvases, the details, the terminal, the note. The terminal has the room the others leave.
+ */
 .terminal-page {
   display: flex;
   flex-direction: column;
   height: 100vh;
   background: var(--terminal-bg);
 }
+/* One row at any width: the command gives way first, then the name is cut; the buttons keep their words. */
 .terminal-page-head {
   display: flex;
+  flex-wrap: nowrap;
   align-items: center;
   gap: var(--space-2);
   min-height: var(--control);
-  padding: 0 var(--space-2) 0 var(--space-4);
+  padding: 0 var(--space-2);
   background: var(--surface);
   border-bottom: 1px solid var(--border);
   box-shadow: var(--shadow-bar);
 }
+.terminal-page-head > .terminal-page-toggle,
+.terminal-page-actions > * {
+  flex: none;
+}
 .terminal-page-name {
+  flex: 0 1 auto;
   margin: 0;
   min-width: 0;
   overflow: hidden;
@@ -509,6 +519,7 @@ code {
   font-weight: var(--weight-strong);
 }
 .terminal-page-command {
+  flex: 0 100000 auto;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -516,14 +527,48 @@ code {
   color: var(--text-muted);
   font-size: var(--font-meta);
 }
-.terminal-page-back {
-  margin-left: auto;
+.terminal-page-actions {
   flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-left: auto;
+}
+.terminal-page-columns {
+  flex: 1;
+  min-height: 0;
+  display: flex;
 }
 .terminal-page-body {
   position: relative;
   flex: 1;
+  min-width: 0;
   min-height: 0;
+}
+/* The canvases: the column of canvas tabs, at the left, to the foot of the window. */
+.terminal-page-columns > .focus-canvases {
+  flex: none;
+  min-height: 0;
+}
+/* The details: the drawer, standing in the row. */
+.terminal-page-columns > .focus-details {
+  min-height: 0;
+}
+/* The note: the note beside a node, standing at the right as a column of the page, with a line at its left and no box. */
+.focus-note {
+  flex: none;
+  display: flex;
+  width: 280px;
+  min-height: 0;
+}
+.focus-note > .note-panel {
+  position: static;
+  flex: 1;
+  width: auto;
+  min-width: 0;
+  border: 0;
+  border-left: 1px solid var(--border);
+  border-radius: 0;
 }
 .terminal-page-ended {
   margin: var(--space-4);

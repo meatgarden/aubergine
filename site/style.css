@@ -122,6 +122,7 @@ footer a{color:var(--mute)}
 
 /* screenshots */
 .shot{margin:0}
+.shot+.shot{margin-top:40px}
 .shot img{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:12px;box-shadow:0 30px 80px -40px rgba(0,0,0,.55)}
 .shot figcaption{margin-top:10px;font-size:.9rem;color:var(--mute)}
 .shot figcaption b{color:var(--fg);font-weight:600}

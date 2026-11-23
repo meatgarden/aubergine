@@ -781,13 +781,15 @@ The list costs nothing to keep open, also with hundreds of terminals: it is draw
 
 ### One terminal by itself in a browser tab
 
-A terminal that is running on a canvas can also be open by itself in a browser tab, filling the window: **Tab ↗** in its title beside **Details**, **Open in new browser tab** in the menu (**⋯**) of its title, in its row's menu in the list, or in the palette. Its address is `/t/<terminal>`.
+A terminal that is running on a canvas can also be open by itself in a browser tab, filling the window: **Tab ↗** in its title beside **Details**, **Open in new browser tab** in the menu (**⋯**) of its title, in its row's menu in the list, or in the palette. Its address is `/t/<terminal>`. We call this the focus view.
 
 - **It is the same terminal, not a copy.** Whatever runs in it, an agent too, goes on; what was on its screen is there in the new tab, and what you type in either shows in both.
 - **Closing the tab ends nothing.** The terminal stays on its canvas.
-- **The tab is the terminal and nothing else.** No canvas, no side panel, and no keys of the canvas: every key goes to the program, except the one that pastes. **Show on its canvas** opens the canvas it is on, with it in view.
+- **The terminal, and beside it what you ask for.** No canvas and no side panel. The head has three buttons that each open a column: **Canvases** at the left, the canvases of the terminal's project, each a link to that canvas, with the one the terminal is on marked and a number where terminals wait for you; **Details**, the same details as beside the side panel; **Note**, the terminal's note at the right. Each is closed until you press it, and this browser remembers which are open. The terminal takes the room that is left.
+- **The details there leave out what needs the canvas page**: the dialog of a run that waits for your decision (they say it is decided on its canvas), past conversations, how an agent is set up, and the **Type** tab, since the terminal is right beside them. **Show on its canvas** opens the canvas the terminal is on, with it in view, and all of that is there.
+- **No keys of the canvas.** Every key typed into the terminal goes to the program, except the one that pastes.
 - **The two views share one size**, as with a window on the desktop below: the one you typed into last sets it.
-- The tab reads the terminal's name and state when it opens and when you come back to it; it does not follow every change as the canvas does.
+- **It follows changes as the canvas does**: a new name, its state, its details and its note change while you look. Aubergine never asks this tab to show another terminal or a canvas; that goes to a tab that shows a canvas.
 
 ### The same terminal in your own terminal app
 

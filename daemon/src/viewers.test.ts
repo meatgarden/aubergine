@@ -58,4 +58,35 @@ describe('Viewers', () => {
     viewers.remove(a.viewer);
     expect(viewers.lastViewedCanvasId).toBe('canvas-2');
   });
+
+  it('never asks a tab that has not said which canvas it shows, and does not count it as asked', () => {
+    const viewers = new Viewers();
+    const alone = tab(viewers);
+    // Nothing but that tab: nobody is asked.
+    expect(viewers.show('session-x', 'canvas-1')).toBe(0);
+    expect(viewers.show('session-x', null)).toBe(0);
+    expect(viewers.showCanvas('canvas-1')).toBe(0);
+    expect(alone.got).toEqual([]);
+    // Beside a tab on another canvas, used longer ago: that one is asked, the other still not.
+    const canvas = tab(viewers);
+    viewers.viewing(canvas.viewer, 'canvas-2');
+    alone.viewer.activeAt = Date.now() + 1000;
+    expect(viewers.show('session-x', 'canvas-1')).toBe(1);
+    expect(viewers.showCanvas('canvas-3')).toBe(1);
+    expect(canvas.got).toEqual([
+      { type: 'show', sessionId: 'session-x' },
+      { type: 'show-canvas', canvasId: 'canvas-3' },
+    ]);
+    expect(alone.got).toEqual([]);
+  });
+
+  it('tells every tab of a notification, also one that has not said which canvas it shows', () => {
+    const viewers = new Viewers();
+    const alone = tab(viewers);
+    const canvas = tab(viewers);
+    viewers.viewing(canvas.viewer, 'canvas-1');
+    expect(viewers.notify('Title', 'Body')).toBe(2);
+    expect(alone.got).toEqual([{ type: 'notify', title: 'Title', body: 'Body' }]);
+    expect(canvas.got).toHaveLength(1);
+  });
 });
