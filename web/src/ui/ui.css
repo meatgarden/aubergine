@@ -2497,6 +2497,63 @@ button.foryou-act {
   --control-h: var(--control);
 }
 
+/* ---------- The note and the details as they are used: what is long, what is empty, what is added ---------- */
+
+/*
+ * Beside a terminal the summary stops at a share of the note's own height. The note is the container that share is
+ * of: a percentage would be of the part the summary stands in, whose height comes from the summary itself, so the
+ * part kept the room of the whole summary and the log under it was pushed out of the note.
+ */
+.note-panel:not(.embedded) {
+  container-type: size;
+}
+.note-panel:not(.embedded) :is(textarea.note-summary, .note-summary-read) {
+  max-height: 40cqh;
+}
+/* The summary's box grows with what is in it: it has no handle to drag, which the next key pressed would undo. */
+.note-panel textarea.note-summary {
+  resize: none;
+}
+/* Where the log is added to: one row under the log, the button on the gutter or the field as wide as the note. */
+.note-add-row {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+}
+/*
+ * In the details the log is as tall as its entries and the row follows its last one: with no entries there is no gap
+ * to the foot of the window. With many, the row stays at the foot of the details while the log is in view, so that
+ * adding to a long log needs no scrolling to its end.
+ */
+.note-panel.embedded {
+  overflow: visible;
+}
+.note-panel.embedded .note-log-part {
+  flex: none;
+  padding-bottom: 0;
+}
+.note-panel.embedded .note-add-row {
+  position: sticky;
+  bottom: 0;
+  padding: var(--space-2) 0 var(--space-4);
+  background: var(--surface);
+}
+/* An entry written here is brought into view above that row, not under it. */
+.note-panel.embedded .note-log-end {
+  scroll-margin-bottom: calc(var(--control) + var(--space-6));
+}
+/*
+ * The head of the details: the name and the way out on one line, as the note beside a terminal has them; under them
+ * the one thing to do, its state in words, and the rest behind the menu at the end of the row.
+ */
+.details-head > .details-close {
+  order: 1;
+  margin-right: calc(-1 * var(--space-2));
+}
+.details-head > .details-head-actions {
+  order: 2;
+}
+
 /* The handle that folds the side panel does not lie over the details: while they are open it is not there. */
 .side-panel:has(+ .panel-drawer) > .panel-fold {
   display: none;

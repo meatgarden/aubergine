@@ -10,7 +10,7 @@ import { TerminalInput } from '../../TerminalInput';
 import { markNotesSeen, useUnseenNotes } from '../../notes-seen';
 import { atThisComputer, useApp } from '../../store';
 import { DOT_WORD, dotTone, rowState } from '../../terminal-rows';
-import { MenuButton, MenuItem, StateDot, Tabs } from '../../ui';
+import { IconButton, MenuButton, MenuItem, StateDot, Tabs } from '../../ui';
 import { actOnTerminal, chipOf, terminalActions } from './terminals';
 
 /**
@@ -52,7 +52,7 @@ function foundFacts(found: Session): { key: string; label: string; value: React.
   return facts;
 }
 
-/** The head: the same mark and chip as the row, Go to terminal, the row's own menu, and the way out. */
+/** The head: the same mark as the row, the name and the way out on one line; under them Go to terminal, its state in words and the row's own menu. */
 export function DetailsHead({ id, onClose }: { id: string; onClose: () => void }) {
   const found = useApp(session(id));
   const parked = found?.state === 'parked';
@@ -89,10 +89,11 @@ export function DetailsHead({ id, onClose }: { id: string; onClose: () => void }
               </MenuItem>
             ))}
         </MenuButton>
-        <button type="button" className="quiet" aria-label="Close the details" title="Close (Esc)" onClick={onClose} data-testid="details-close">
-          Close
-        </button>
       </span>
+      {/* The way out: drawn at the end of the name's line, where the note beside a terminal has its own; reached last with the keyboard. */}
+      <IconButton className="details-close" label="Close the details" title="Close (Esc)" onClick={onClose} data-testid="details-close">
+        ×
+      </IconButton>
     </header>
   );
 }
