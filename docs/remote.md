@@ -504,7 +504,7 @@ Signing an agent in, and giving Git its credentials (an SSH key, a credential he
 | **Link a server…** says "No answer came." | The other server does not list this page's origin under `access.pages`, was not started again after it was written, or is not reachable at that address | Check the origin is exactly the one in this page's address bar, start the other server again, and open the other server's address in a browser tab to see that it answers |
 | "That origin is not written in access.pages in config.json…" | `aubergine device add --page` was given an origin that is not in the other server's `access.pages`, or the server was not started again | Write it there exactly, start the server again, and make the code then |
 | A linked server "no longer takes this page's sign-in" | Its device for this page was revoked there, or went unused for 90 days | Link it again, or unlink it, from the project menu |
-| "runs another version of Aubergine" | The two servers run different versions | Update both (`aubergine update`) and start them again |
+| "runs another version of Aubergine" | The two servers run different versions | Update both (`npm install -g @meatgarden/aubergine@latest`, or `aubergine update` for a copy from the installer) and start them again |
 | The phone loses the page when the laptop sleeps | A sleeping laptop answers nothing | Keep the laptop awake, or run the server on a cloud instance |
 
 ## What to count on, and what not

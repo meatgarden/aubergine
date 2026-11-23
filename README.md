@@ -102,7 +102,7 @@ Every command is listed under [Command line](#command-line). These are the every
 | `aubergine start --open` | Start the server and open the browser, signed in |
 | `aubergine open` | Open the browser when the server is already running |
 | `aubergine doctor` | Check everything Aubergine needs, one line per check |
-| `aubergine update` | Get the latest version. Restart the server afterwards |
+| `aubergine update` | Get the latest version (installed with npm: it prints the npm command). Restart the server afterwards |
 | `aubergine demo` | Make the demo canvas (`--remove` takes it away) |
 
 **Terminals**
@@ -214,6 +214,12 @@ aubergine start --open
 ```
 
 Node.js 22 or newer is needed. `aubergine update` and `aubergine uninstall` say the npm command to run (`npm install -g @meatgarden/aubergine@latest`, `npm uninstall -g @meatgarden/aubergine`); `uninstall` still removes start at login, and nothing of your data or terminals. Some versions of npm do not run a package's install scripts unless you allow them; Aubergine does not need its own. On macOS the terminal library (node-pty) comes ready-made. On Linux it has nothing ready-made and is compiled when it is installed, which needs its install script allowed, and Python 3, make and a C++ compiler. Linux has been run only in that container image, built from a checkout, in [`docker/`](docker), where node-pty was compiled this way: see [In a container](docs/remote.md#in-a-container).
+
+**Updating** an npm install is npm's, then restart the server; the steps are under [Stopping, restarting and updating](#stopping-restarting-and-updating).
+
+```sh
+npm install -g @meatgarden/aubergine@latest
+```
 
 **Building the package** from a checkout: `pnpm npm-package` writes it to `dist/npm`, and `pnpm npm-package --pack` also writes the `.tgz` to `dist/`, which `npm install -g ./dist/<file>.tgz` installs. **Releasing:** bump `version` in `daemon/package.json`, merge it, then push a tag `v<version>` (`git tag v0.1.1`, `git push origin v0.1.1`). The workflow `.github/workflows/publish.yml` builds the package from that tag and publishes it; npm trusts that workflow (trusted publishing), so no npm token is stored anywhere. The same tag runs `.github/workflows/publish-image.yml`, which builds the container image for linux/amd64 and linux/arm64, tries each, and pushes it to GitHub's container registry as `ghcr.io/thirstyeggplant/aubergine` (the version and `latest`), signed in with the run's own token: no secret is stored for that either. Run by hand, that workflow builds and tries both and pushes nothing. Nothing else publishes either of them.
 
@@ -340,13 +346,27 @@ and make sure that folder is on your `PATH` (add `export PATH="$HOME/.local/bin:
 
 - **Stop the server** with Ctrl+C in the terminal where it runs. Your terminals on the canvas keep running; start the server again (`aubergine start`) and reload the page to get them back. If you start it while it is already running, it says so and gives you the address instead of failing.
 - **End every terminal for good** with `tmux -L aubergine kill-server`. The canvas layout is kept, and each terminal gets a fresh shell the next time the server starts.
-- **Update** to the latest version, then restart the server:
+- **Update** to the latest version. How depends on how you installed it.
+
+  Installed with npm: npm updates it.
+
+  ```sh
+  npm install -g @meatgarden/aubergine@latest
+  ```
+
+  `aubergine update` changes nothing on an npm install; it only prints that line. On Linux the update compiles the terminal library again, so it needs the same build tools as the first install (see [Install with npm](#install-with-npm)).
+
+  Installed with the installer, or a checkout:
 
   ```sh
   aubergine update
   ```
 
   It fetches the new code, installs dependencies and builds the web app. It refuses if you have changed the code in that folder. Running the installer again does the same, and is the way to update a copy that was installed without git. For a manual install you can equally run `git pull`, `pnpm install`, `pnpm build` yourself.
+
+  Either way, the server that is running is still the old code. Restart it: Ctrl+C where it runs, then `aubergine start`, then reload the page. Your terminals keep running through this. If it starts at login, run `aubergine service install` again instead: it stops the old server and starts the new one. Run it with the same `AUBERGINE_PORT` and `AUBERGINE_DATA_DIR`, if you set them, as when you first installed it, since it keeps the ones in effect. A terminal made before the update keeps its old shell integration until its shell is restarted (see [If something goes wrong](#if-something-goes-wrong)).
+
+  `aubergine version` says which version is installed; `npm view @meatgarden/aubergine version` says the latest published.
 - **See what is installed**: `aubergine version` prints the version, the commit, where the code is and where your data is.
 - **Start at login** so you only ever open the browser: see `aubergine service install` under [Command line](#command-line).
 - **Uninstall** with `aubergine uninstall`. It removes the link and, after asking, the copy the installer made (and start at login, if it starts this copy). It never removes a folder you cloned yourself, never removes your data, and never ends your terminals; it prints the two commands that do those by hand, should you want that.
