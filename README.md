@@ -783,6 +783,13 @@ The list costs nothing to keep open, also with hundreds of terminals: it is draw
 
 A terminal that is running on a canvas can also be open by itself in a browser tab, filling the window: **Tab ↗** in its title beside **Details**, **Open in new browser tab** in the menu (**⋯**) of its title, in its row's menu in the list, or in the palette. Its address is `/t/<terminal>`. We call this the focus view.
 
+| | |
+|---|---|
+| ![The focus view with nothing open beside it: the terminal's name and three buttons in the head, the live terminal filling the window](site/screenshots/focus-closed.png) | ![The focus view with all three columns open: the canvases of its project at the left, its details, the live terminal, its note at the right](site/screenshots/focus.png) |
+| **Just the terminal.** Nothing beside it until you ask. | **Everything open.** Canvases, Details and Note, each opened by its button in the head. |
+
+Each column closes again with the same button in the head; Details and Note also close with the × in their own head.
+
 - **It is the same terminal, not a copy.** Whatever runs in it, an agent too, goes on; what was on its screen is there in the new tab, and what you type in either shows in both.
 - **Closing the tab ends nothing.** The terminal stays on its canvas.
 - **The terminal, and beside it what you ask for.** No canvas and no side panel. The head has three buttons that each open a column: **Canvases** at the left, the canvases of the terminal's project, each a link to that canvas, with the one the terminal is on marked and a number where terminals wait for you; **Details**, the same details as beside the side panel; **Note**, the terminal's note at the right. Each is closed until you press it, and this browser remembers which are open. The terminal takes the room that is left.
