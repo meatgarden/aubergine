@@ -504,6 +504,13 @@ code {
   border-bottom: 1px solid var(--border);
   box-shadow: var(--shadow-bar);
 }
+/* The head is the terminal's title: it carries the terminal's color as the node's title does on the canvas. */
+.terminal-page-head:not(.color-none) {
+  box-shadow:
+    inset 0 3px 0 var(--swatch),
+    var(--shadow-bar);
+  background: color-mix(in srgb, var(--swatch) 16%, var(--surface));
+}
 .terminal-page-head > .terminal-page-toggle,
 .terminal-page-actions > * {
   flex: none;

@@ -785,13 +785,14 @@ A terminal that is running on a canvas can also be open by itself in a browser t
 
 | | |
 |---|---|
-| ![The focus view with nothing open beside it: the terminal's name and three buttons in the head, the live terminal filling the window](site/screenshots/focus-closed.png) | ![The focus view with all three columns open: the canvases of its project at the left, its details, the live terminal, its note at the right](site/screenshots/focus.png) |
-| **Just the terminal.** Nothing beside it until you ask. | **Everything open.** Canvases, Details and Note, each opened by its button in the head. |
+| ![The focus view in a browser tab of its own, beside the canvas's tab, its address ending in /t/ and the terminal's ID: the head tinted in the terminal's purple with its name and the buttons, the live terminal filling the rest of the window](site/screenshots/focus-closed.png) | ![The same browser tab with all three columns open: the canvases of its project at the left, its details, the live terminal, its note at the right, under the head in the terminal's purple](site/screenshots/focus.png) |
+| **Just the terminal, in a tab of its own.** Nothing beside it until you ask; the head has the terminal's color. | **Everything open.** Canvases, Details and Note, each opened by its button in the head. |
 
 Each column closes again with the same button in the head; Details and Note also close with the × in their own head.
 
 - **It is the same terminal, not a copy.** Whatever runs in it, an agent too, goes on; what was on its screen is there in the new tab, and what you type in either shows in both.
 - **Closing the tab ends nothing.** The terminal stays on its canvas.
+- **Its head has the terminal's color**, as its title has on the canvas: give the terminal a color there, and the head of its tab shows it at once.
 - **The terminal, and beside it what you ask for.** No canvas and no side panel. The head has three buttons that each open a column: **Canvases** at the left, the canvases of the terminal's project, each a link to that canvas, with the one the terminal is on marked and a number where terminals wait for you; **Details**, the same details as beside the side panel; **Note**, the terminal's note at the right. Each is closed until you press it, and this browser remembers which are open. The terminal takes the room that is left.
 - **The details there leave out what needs the canvas page**: the dialog of a run that waits for your decision (they say it is decided on its canvas), past conversations, how an agent is set up, and the **Type** tab, since the terminal is right beside them. **Show on its canvas** opens the canvas the terminal is on, with it in view, and all of that is there.
 - **No keys of the canvas.** Every key typed into the terminal goes to the program, except the one that pastes.

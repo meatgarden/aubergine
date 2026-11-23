@@ -5,8 +5,12 @@ import { FocusCanvases, FocusDetails, FocusNote } from './FocusColumns';
 import { setFocusColumns, useFocusColumns } from './focus-view';
 import { useApp } from './store';
 import { TerminalView } from './TerminalView';
-import { DOT_WORD, dotTone } from './terminal-rows';
+import { colorClass, colorStyle } from './color';
+import { createRowSelector, DOT_WORD, dotTone } from './terminal-rows';
 import { Button, StateDot } from './ui';
+
+/** The rows of the whole state: a terminal's color comes from where a list row's does, its node's or the place it was parked from. */
+const selectRows = createRowSelector();
 
 /**
  * One terminal by itself, filling a browser tab of its own (`/t/<session id>`): the focus view. It is the same running
@@ -18,6 +22,8 @@ import { Button, StateDot } from './ui';
 export function TerminalPage({ sessionId }: { sessionId: string }) {
   const session = useApp((s) => s.whole?.sessions.find((x) => x.id === sessionId) ?? null);
   const name = session?.name ?? null;
+  // The head carries the terminal's color as its node's title does on its canvas.
+  const color = useApp((s) => (s.whole ? (selectRows(s.whole).find((row) => row.session.id === sessionId)?.color ?? 'none') : 'none'));
 
   useEffect(() => {
     document.title = name ? `${name} · Aubergine` : 'Aubergine';
@@ -55,7 +61,7 @@ export function TerminalPage({ sessionId }: { sessionId: string }) {
   const tone = dotTone(session, session.state === 'parked');
   return (
     <main className="terminal-page" data-testid="terminal-page" data-session={sessionId}>
-      <header className="terminal-page-head">
+      <header className={`terminal-page-head ${colorClass(color)}`} style={colorStyle(color)} data-color={color} data-testid="terminal-page-head">
         <Button
           kind="quiet"
           className="terminal-page-toggle"
