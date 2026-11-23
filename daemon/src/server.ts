@@ -1069,7 +1069,7 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
   app.post(paths.showSession(':sessionId'), async (request): Promise<ShowResponse> => {
     const sessionId = idParam(request, 'sessionId');
     if (!sessions.has(sessionId)) throw new HttpError(404, 'not_found', `No session ${sessionId}`);
-    // A tab already on the session's canvas if there is one; otherwise the tab used most recently.
+    // A tab already on the session's canvas if there is one; otherwise the tab used most recently. Only tabs that show a canvas.
     return { viewers: viewers.show(sessionId, placeOfSession(hub.state, sessionId)?.canvas.id ?? null) };
   });
 

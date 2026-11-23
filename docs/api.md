@@ -558,7 +558,7 @@ curl -X DELETE -H "Authorization: Bearer $TOKEN" \
 
 `POST /v1/canvases/{canvasId}/show`: Switch an open browser to a canvas.
 
-Asks the browser tab used most recently to show this canvas, unless one already does. `shown` is how many tabs show it or were asked; 0 when no browser is open.
+Asks the browser tab used most recently to show this canvas, unless one already does. Only a tab that shows a canvas is asked: a terminal by itself in a tab never is. `shown` is how many tabs show it or were asked; 0 when no browser shows a canvas.
 
 An API token needs the scope `canvases:write`.
 
@@ -1957,7 +1957,7 @@ curl -X POST -H "Authorization: Bearer $TOKEN" \
 
 `POST /v1/sessions/{sessionId}/show`: Bring a session up in an open browser.
 
-A tab already on its canvas if there is one, else the tab used most recently. `shown` is how many tabs were asked; 0 when no browser is open.
+A tab already on its canvas if there is one, else the tab used most recently. Only a tab that shows a canvas is asked: a terminal by itself in a tab never is. `shown` is how many tabs were asked; 0 when no browser shows a canvas.
 
 An API token needs the scope `sessions:write`.
 

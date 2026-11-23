@@ -11,7 +11,9 @@ interface Viewer {
 /**
  * The browser tabs that are connected, and which canvas each is showing.
  * Used to send things to the right tab, and to know which canvas the user
- * looked at last.
+ * looked at last. Only a tab that has said which canvas it shows is ever asked
+ * to show something: a tab that has not (a terminal by itself, the focus view)
+ * is told of changes and notifications and nothing else.
  */
 export class Viewers {
   private readonly viewers = new Set<Viewer>();
@@ -43,13 +45,19 @@ export class Viewers {
     return this.viewers.size;
   }
 
+  /** The tabs that have said which canvas they show: the only ones that can be asked to show something. */
+  private showing(): Viewer[] {
+    return [...this.viewers].filter((viewer) => viewer.canvasId !== null);
+  }
+
   /**
    * Asks the right tabs to bring a session into view: every tab already
    * showing its canvas; when there is none, the tab used most recently, which
-   * switches canvas. Returns how many tabs were asked.
+   * switches canvas. A tab that has not said which canvas it shows is never
+   * asked. Returns how many tabs were asked.
    */
   show(sessionId: string, canvasId: string | null): number {
-    const all = [...this.viewers];
+    const all = this.showing();
     const onCanvas = canvasId === null ? [] : all.filter((v) => v.canvasId === canvasId);
     const mostRecent = all.sort((a, b) => b.activeAt - a.activeAt)[0];
     const chosen = onCanvas.length > 0 ? onCanvas : mostRecent ? [mostRecent] : [];
@@ -65,10 +73,11 @@ export class Viewers {
 
   /**
    * Asks the tab used most recently to switch to a canvas, unless a tab is
-   * already showing it. Returns how many tabs are now showing or were asked.
+   * already showing it. A tab that has not said which canvas it shows is never
+   * asked. Returns how many tabs are now showing or were asked.
    */
   showCanvas(canvasId: string): number {
-    const all = [...this.viewers];
+    const all = this.showing();
     const already = all.filter((v) => v.canvasId === canvasId);
     if (already.length > 0) return already.length;
     const mostRecent = all.sort((a, b) => b.activeAt - a.activeAt)[0];

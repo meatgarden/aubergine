@@ -1445,7 +1445,7 @@ describe('terminals outside the canvas', () => {
 });
 
 describe('showing a session', () => {
-  it('tells every open canvas, and says how many there are', async () => {
+  it('tells every open canvas, and says how many there are; a tab that shows no canvas is not asked', async () => {
     const { session } = await createSession();
     const none = await request('POST', paths.showSession(session.id), { body: {} });
     expect(none.json()).toEqual({ viewers: 0 });
@@ -1455,7 +1455,16 @@ describe('showing a session', () => {
     socket.on('message', (data) => messages.push(EventsServerMessage.parse(JSON.parse(data.toString()))));
     await waitFor(() => messages.length === 1, 'hello');
 
-    const one = await request('POST', paths.showSession(session.id), { body: {} });
+    // A tab that has not said which canvas it shows (a terminal by itself) is not asked.
+    expect((await request('POST', paths.showSession(session.id), { body: {} })).json()).toEqual({ viewers: 0 });
+    socket.send(JSON.stringify({ type: 'viewing', canvasId: hub.state.canvases[0]!.id }));
+
+    // Once it has said, it is: asked until the server has read what it said.
+    let one = await request('POST', paths.showSession(session.id), { body: {} });
+    for (let tries = 0; one.json<{ viewers: number }>().viewers === 0 && tries < 100; tries++) {
+      await sleep(20);
+      one = await request('POST', paths.showSession(session.id), { body: {} });
+    }
     expect(one.json()).toEqual({ viewers: 1 });
     await waitFor(() => messages.length === 2, 'show');
     expect(messages[1]).toEqual({ type: 'show', sessionId: session.id });
