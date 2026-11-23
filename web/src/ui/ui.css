@@ -3267,6 +3267,10 @@ button.rail-dot:active {
   justify-content: flex-start;
   border-radius: var(--radius-control);
 }
+/* A tab that is a link (the canvases beside a terminal by itself) reads as the tab it is. */
+a.tab {
+  text-decoration: none;
+}
 .tabbar.is-column .tab-name {
   flex: 1;
   min-width: 0;

@@ -5064,7 +5064,7 @@ test('tabs and panel: a new browser has the panel folded to a rail, the bar of t
   }
 });
 
-test('new browser tabs: a canvas opens in one from its tab, and a running terminal opens by itself in one, the same terminal in both', async ({ page }) => {
+test('new browser tabs: a canvas opens in one from its tab, and a running terminal opens by itself in one, the same terminal in both, with its canvases, details and note beside it when asked for', async ({ page, browser }) => {
   const token = readFileSync(path.join(e2e.dataDir, 'token'), 'utf8').trim();
   await page.goto(`/auth?token=${token}`);
   await expect(page).toHaveURL(/\/c\/[0-9a-f-]+$/);
@@ -5140,6 +5140,127 @@ test('new browser tabs: a canvas opens in one from its tab, and a running termin
   await alone.keyboard.press('Enter');
   await expect(outputLine(alone, 'from-tab-23')).toHaveCount(1);
   await expect(outputLine(page, 'from-tab-23')).toHaveCount(1);
+
+  // 3. The focus view. Its three columns are closed until asked for, and the terminal is as wide as the window.
+  const origin = new URL(page.url()).origin;
+  const columnsOf = alone.locator('[data-testid="focus-canvases"], [data-testid="focus-details"], [data-testid="focus-note"]');
+  await expect(columnsOf).toHaveCount(0);
+  for (const toggle of ['focus-details-toggle', 'focus-note-toggle']) await expect(alone.getByTestId(toggle)).toHaveAttribute('aria-pressed', 'false');
+  await expect(alone.getByTestId('focus-canvases-toggle')).toHaveAttribute('aria-expanded', 'false');
+  const body = alone.getByTestId('terminal-page-body');
+  const box = async (locator: Locator): Promise<{ x: number; y: number; width: number; height: number }> => {
+    const found = await locator.boundingBox();
+    expect(found).not.toBeNull();
+    return found!;
+  };
+  const windowWidth = await alone.evaluate(() => innerWidth);
+  expect((await box(body)).width).toBe(windowWidth);
+  const screenWidth = (await box(alone.locator('.xterm-screen'))).width;
+
+  // Details: the terminal's facts in a column beside it, not over it, and the terminal narrower, fitted again to its room.
+  await alone.getByTestId('focus-details-toggle').click();
+  await expect(alone.getByTestId('focus-details-toggle')).toHaveAttribute('aria-pressed', 'true');
+  const details = alone.getByTestId('focus-details');
+  await expect(details).toBeVisible();
+  await expect(details.getByTestId('recap-lines')).toBeVisible();
+  await expect(details.getByRole('heading', { name: 'Details' })).toBeVisible();
+  // What needs the canvas page's screens is not there: the box that types (the terminal is beside it) among them.
+  await expect(details.getByTestId('details-tab-type')).toHaveCount(0);
+  await expect(details.getByTestId('drawer-history')).toHaveCount(0);
+  await expect.poll(async () => (await box(body)).width).toBeLessThan(windowWidth);
+  expect((await box(details)).x + (await box(details)).width).toBeLessThanOrEqual((await box(body)).x + 1);
+  await expect.poll(async () => (await box(alone.locator('.xterm-screen'))).width).toBeLessThan(screenWidth);
+  expect((await box(alone.locator('.xterm-screen'))).width).toBeLessThanOrEqual((await box(body)).width);
+  // An entry added to the log there is listed; one added from outside is too, without a reload: the view follows changes.
+  await details.getByTestId('note-add-open').click();
+  await details.getByTestId('note-add').fill('Written in the focus view.');
+  await details.getByTestId('note-add').press('Enter');
+  await expect(details.getByTestId('note-entry').filter({ hasText: 'Written in the focus view.' })).toHaveCount(1);
+  expect((await page.request.post(`/v1/sessions/${sessionId}/notes`, { headers: { origin }, data: { text: 'Written by a program.' } })).status()).toBe(201);
+  await expect(details.getByTestId('note-entry').filter({ hasText: 'Written by a program.' })).toHaveCount(1);
+  // Renamed through the API: the head says the new name, without a reload.
+  expect((await page.request.patch(`/v1/sessions/${sessionId}`, { headers: { origin }, data: { name: 'Renamed from outside' } })).status()).toBe(200);
+  await expect(alone.getByTestId('terminal-page-name')).toHaveText('Renamed from outside');
+  // Escape inside the column closes it.
+  await details.getByTestId('details-tab-messages').focus();
+  await alone.keyboard.press('Escape');
+  await expect(details).toHaveCount(0);
+  await expect(alone.getByTestId('focus-details-toggle')).toHaveAttribute('aria-pressed', 'false');
+  await alone.getByTestId('focus-details-toggle').click();
+  await expect(details).toBeVisible();
+
+  // Note: at the right, the note beside a node, with its summary and its log inside its rectangle.
+  await alone.getByTestId('focus-note-toggle').click();
+  await expect(alone.getByTestId('focus-note-toggle')).toHaveAttribute('aria-pressed', 'true');
+  const note = alone.getByTestId('focus-note');
+  await expect(note).toBeVisible();
+  const noteBox = await box(note);
+  expect(Math.round(noteBox.x + noteBox.width)).toBe(windowWidth);
+  expect(noteBox.x).toBeGreaterThanOrEqual((await box(body)).x + (await box(body)).width - 1);
+  for (const part of [note.getByText('Summary', { exact: true }), note.getByTestId('note-log'), note.getByTestId('note-add-open')]) {
+    const inside = await box(part);
+    expect(inside.x).toBeGreaterThanOrEqual(noteBox.x);
+    expect(inside.y).toBeGreaterThanOrEqual(noteBox.y);
+    expect(inside.x + inside.width).toBeLessThanOrEqual(noteBox.x + noteBox.width + 0.5);
+    expect(inside.y + inside.height).toBeLessThanOrEqual(noteBox.y + noteBox.height + 0.5);
+  }
+  await expect(note.getByTestId('note-entry').filter({ hasText: 'Written by a program.' })).toHaveCount(1);
+
+  // Canvases: every canvas of the project, each a link to its canvas, the terminal's own marked.
+  await alone.getByTestId('focus-canvases-toggle').click();
+  await expect(alone.getByTestId('focus-canvases-toggle')).toHaveAttribute('aria-expanded', 'true');
+  const canvasLinks = alone.getByTestId('focus-canvases').getByTestId('focus-canvas');
+  const listed = (await (await page.request.get('/v1/canvases', { headers: { origin } })).json()) as { items: { id: string; name: string; projectId: string }[] };
+  await expect(canvasLinks).toHaveCount(listed.items.length);
+  for (const canvas of listed.items) {
+    const link = alone.locator(`[data-testid="focus-canvas"][data-canvas="${canvas.id}"]`);
+    await expect(link).toHaveAttribute('href', new RegExp(`/c/${canvas.id}$`));
+    await expect(link).toContainText(canvas.name);
+  }
+  await expect(alone.locator('[data-testid="focus-canvas"][aria-current="page"]')).toHaveAttribute('data-canvas', canvasId);
+  await expect(alone.locator('[data-testid="focus-canvas"][aria-current="page"]')).toHaveCount(1);
+  // The columns are in their order, and the terminal has the room they leave.
+  const order = await alone.locator('.terminal-page-columns > *').evaluateAll((all) => all.map((el) => el.getAttribute('data-testid') ?? el.className));
+  expect(order).toEqual(['focus-canvases', 'focus-details', 'drawer-resize', 'terminal-page-body', 'focus-note']);
+  expect(await measureLook(alone), 'the focus view with its columns').toEqual([]);
+
+  // The choices are remembered in this browser, over a reload.
+  await alone.reload();
+  await expect(alone.getByTestId('focus-canvases')).toBeVisible();
+  await expect(alone.getByTestId('focus-details')).toBeVisible();
+  await expect(alone.getByTestId('focus-note')).toBeVisible();
+
+  // The head is one row, also at 900 pixels wide.
+  await alone.setViewportSize({ width: 900, height: 700 });
+  const head = await box(alone.locator('.terminal-page-head'));
+  for (const id of ['focus-canvases-toggle', 'terminal-page-name', 'focus-details-toggle', 'focus-note-toggle', 'terminal-page-canvas']) {
+    const part = await box(alone.getByTestId(id));
+    expect(part.y, id).toBeGreaterThanOrEqual(head.y);
+    expect(part.y + part.height, id).toBeLessThanOrEqual(head.y + head.height);
+    expect(part.x + part.width, id).toBeLessThanOrEqual(900);
+  }
+  expect(head.height).toBeLessThan(48);
+  await alone.setViewportSize({ width: 1400, height: 900 });
+
+  // A browser that remembers nothing has all three closed.
+  const freshContext = await browser.newContext({ viewport: { width: 1280, height: 800 }, baseURL: origin, colorScheme: 'dark', reducedMotion: 'reduce' });
+  try {
+    const fresh = await freshContext.newPage();
+    await fresh.goto(`/auth?token=${token}`);
+    await fresh.goto(`/t/${sessionId}`);
+    await expect(fresh.getByTestId('terminal-page')).toBeVisible();
+    await expect(fresh.locator('[data-testid="focus-canvases"], [data-testid="focus-details"], [data-testid="focus-note"]')).toHaveCount(0);
+  } finally {
+    await freshContext.close();
+  }
+
+  // With a canvas tab and the focus tab both open, the server asks the canvas tab alone to show the terminal.
+  await page.locator('.react-flow__pane').click({ position: { x: 5, y: 300 } });
+  await expect(page.getByTestId('node-shield')).toHaveCount(1);
+  const shown = (await (await page.request.post(`/v1/sessions/${sessionId}/show`, { headers: { origin } })).json()) as { shown: number };
+  expect(shown.shown).toBe(1);
+  await expect(page.getByTestId('node-shield')).toHaveCount(0);
+  await expect(alone).toHaveURL(new RegExp(`/t/${sessionId}$`));
 
   // Closing the tab ends nothing.
   await alone.close();

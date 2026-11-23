@@ -204,9 +204,9 @@ function DrawerTitle({ id, useTitle }: { id: string; useTitle: (id: string) => s
 
 /**
  * The drawer's edge, like the panel's: dragged to make the details wider or narrower, or moved with the arrow keys
- * once it has the keyboard. The width is remembered in this browser.
+ * once it has the keyboard. The width is remembered in this browser. The details in the focus view have the same edge.
  */
-function DrawerResize({ width }: { width: number }) {
+export function DrawerResize({ width }: { width: number }) {
   const set = (next: number): void => useApp.getState().setSide({ drawerWidth: next });
   const start = (event: React.PointerEvent): void => {
     event.preventDefault();

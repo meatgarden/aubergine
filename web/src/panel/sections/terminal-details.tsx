@@ -98,16 +98,20 @@ export function DetailsHead({ id, onClose }: { id: string; onClose: () => void }
   );
 }
 
-/** What a terminal asks of the owner, in its own words, and the way to answer said plainly. Nothing where it asks nothing. */
-function Asks({ waiting, onMessages }: { waiting: WaitingSession; onMessages: () => void }) {
+/**
+ * What a terminal asks of the owner, in its own words, and the way to answer said plainly. Nothing where it asks
+ * nothing. Standalone (the focus view) a run's dialog cannot open, so it says where that is decided instead, and going
+ * to the terminal gives it the keyboard where it is.
+ */
+function Asks({ waiting, onMessages, standalone }: { waiting: WaitingSession; onMessages: () => void; standalone: boolean }) {
   const { session: found, run, why } = waiting;
-  const go = (): void => useApp.getState().showSession(found.id);
+  const go = (): void => (standalone ? useApp.getState().focusSession(found.id) : useApp.getState().showSession(found.id));
   const said = found.attention.message;
   const [words, how]: [string, React.ReactNode] =
     why === 'question'
       ? [said ?? 'It waits for your answer.', <>Go to the terminal and type your answer there.</>]
       : why === 'approval'
-        ? [said ?? 'Its run waits for your approval.', run ? <button type="button" onClick={() => useApp.getState().viewRun(run.id)} data-testid="details-decide">Review and decide</button> : null]
+        ? [said ?? 'Its run waits for your approval.', run ? standalone ? <>Its run is decided on its canvas.</> : <button type="button" onClick={() => useApp.getState().viewRun(run.id)} data-testid="details-decide">Review and decide</button> : null]
         : why === 'blocked'
           ? [run?.blockedReason ?? 'Its run is blocked.', <>Go to the terminal to help it on, or see its run.</>]
           : why === 'message'
@@ -121,7 +125,12 @@ function Asks({ waiting, onMessages }: { waiting: WaitingSession; onMessages: ()
   );
 }
 
-export function Details({ id, onClose }: { id: string; onClose: () => void }) {
+/**
+ * `standalone`: shown in the focus view, where none of the canvas page's screens and dialogs are. What needs them (a
+ * run's dialog, past conversations, how the agent is set up) and the Type tab are left out; "Show on its canvas" leads
+ * to them.
+ */
+export function Details({ id, onClose, standalone = false }: { id: string; onClose: () => void; standalone?: boolean }) {
   const found = useApp(session(id));
   const exists = found !== undefined;
   const run = useApp((s) => s.app?.runs.find((r) => r.sessionId === id));
@@ -149,7 +158,7 @@ export function Details({ id, onClose }: { id: string; onClose: () => void }) {
   if (!found) return null;
   return (
     <div className="details" data-testid="details">
-      {waiting && <Asks waiting={waiting} onMessages={() => setTab('messages')} />}
+      {waiting && <Asks waiting={waiting} onMessages={() => setTab('messages')} standalone={standalone} />}
       <RecapBlock sessionId={id} omit={['note']} more={foundFacts(found)} />
       {/* What its agent would have written where your own words stand: yours stay until you say otherwise. */}
       {(found.suggested.name || found.suggested.summary) && (
@@ -181,7 +190,7 @@ export function Details({ id, onClose }: { id: string; onClose: () => void }) {
         </p>
       )}
       <LinksPart sessionId={id} typing={linking} onTyping={setLinking} />
-      {found.agent != null && (
+      {found.agent != null && !standalone && (
         <div className="details-links" data-testid="drawer-switched-on">
           <button type="button" className="quiet" onClick={() => useApp.getState().openHistory({ folder: found.cwd ?? null, query: '' })} data-testid="drawer-history">
             Past conversations in this folder…
@@ -193,13 +202,13 @@ export function Details({ id, onClose }: { id: string; onClose: () => void }) {
       )}
       <div className="details-tabs">
         <Tabs
-          label="The note, the messages and typing into this terminal"
+          label={standalone ? 'The note and the messages of this terminal' : 'The note, the messages and typing into this terminal'}
           value={tab}
           onChange={setTab}
           tabs={[
             { value: 'note', label: `Note${tab !== 'note' && unseen > 0 ? ` ${unseen}` : ''}`, testid: 'details-tab-note' },
             { value: 'messages', label: `Messages${forOwner > 0 ? ` ${forOwner}` : ''}`, testid: 'details-tab-messages' },
-            { value: 'type', label: 'Type', testid: 'details-tab-type' },
+            ...(standalone ? [] : [{ value: 'type' as const, label: 'Type', testid: 'details-tab-type' }]),
           ]}
         />
       </div>
