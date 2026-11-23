@@ -5181,6 +5181,26 @@ test('new browser tabs: a canvas opens in one from its tab, and a running termin
   // Renamed through the API: the head says the new name, without a reload.
   expect((await page.request.patch(`/v1/sessions/${sessionId}`, { headers: { origin }, data: { name: 'Renamed from outside' } })).status()).toBe(200);
   await expect(alone.getByTestId('terminal-page-name')).toHaveText('Renamed from outside');
+  // The head carries the terminal's color as its node's title does: none at first, so it looks as it always did.
+  const focusHead = alone.getByTestId('terminal-page-head');
+  await expect(focusHead).toHaveAttribute('data-color', 'none');
+  const headLook = (): Promise<string> => focusHead.evaluate((el) => `${getComputedStyle(el).backgroundColor} ${getComputedStyle(el).boxShadow}`);
+  const plainLook = await headLook();
+  // Colored through the route the canvas uses for a node's color: the head follows, without a reload.
+  const stateNow = (await (await page.request.get('/api/v1/state')).json()) as { state: { canvases: { layout: { nodes: { id: string; sessionId: string; x: number; y: number; width: number; height: number }[] } }[] } };
+  const placed = stateNow.state.canvases.flatMap((c) => c.layout.nodes).find((n) => n.sessionId === sessionId)!;
+  const recolor = async (color: string): Promise<void> => {
+    const answer = await page.request.put(`/api/v1/nodes/${placed.id}`, { headers: { origin }, data: { x: placed.x, y: placed.y, width: placed.width, height: placed.height, color } });
+    expect(answer.status()).toBe(200);
+  };
+  await recolor('purple');
+  await expect(focusHead).toHaveAttribute('data-color', 'purple');
+  await expect(node).toHaveClass(/\bcolor-purple\b/);
+  await expect.poll(headLook).not.toBe(plainLook);
+  // Back to none: the head is as it was.
+  await recolor('none');
+  await expect(focusHead).toHaveAttribute('data-color', 'none');
+  await expect.poll(headLook).toBe(plainLook);
   // Escape inside the column closes it.
   await details.getByTestId('details-tab-messages').focus();
   await alone.keyboard.press('Escape');
