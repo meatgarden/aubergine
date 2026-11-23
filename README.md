@@ -785,8 +785,8 @@ A terminal that is running on a canvas can also be open by itself in a browser t
 
 | | |
 |---|---|
-| ![The focus view with nothing open beside it: the terminal's name and three buttons in the head, the live terminal filling the window](site/screenshots/focus-closed.png) | ![The focus view with all three columns open: the canvases of its project at the left, its details, the live terminal, its note at the right](site/screenshots/focus.png) |
-| **Just the terminal.** Nothing beside it until you ask. | **Everything open.** Canvases, Details and Note, each opened by its button in the head. |
+| ![The focus view in a browser tab of its own, beside the canvas's tab, its address ending in /t/ and the terminal's ID: the head tinted in the terminal's purple with its name and the buttons, the live terminal filling the rest of the window](site/screenshots/focus-closed.png) | ![The same browser tab with all three columns open: the canvases of its project at the left, its details, the live terminal, its note at the right, under the head in the terminal's purple](site/screenshots/focus.png) |
+| **Just the terminal, in a tab of its own.** Nothing beside it until you ask; the head has the terminal's color. | **Everything open.** Canvases, Details and Note, each opened by its button in the head. |
 
 Each column closes again with the same button in the head; Details and Note also close with the × in their own head.
 
