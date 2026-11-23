@@ -68,18 +68,33 @@ export function NotePanel({
 
   const log = useApp((s) => s.app?.sessions.find((x) => x.id === sessionId)?.noteLog ?? noEntries);
   const [draft, setDraft] = useState('');
+  const logBox = useRef<HTMLDivElement>(null);
   const logEnd = useRef<HTMLDivElement>(null);
+  // Whether the entry that arrives next is one written here just now.
+  const wroteOne = useRef(false);
 
-  // Keep the newest entry in view as entries arrive.
+  // Beside a terminal the log scrolls by itself, and the newest entry is kept in view as entries arrive: only the log
+  // is moved, never what the note stands in. In the details the log is part of the one column that is read from the
+  // top, so nothing moves by itself there: only an entry written here is brought into view.
   useEffect(() => {
-    logEnd.current?.scrollIntoView({ block: 'nearest' });
-  }, [log.length]);
+    if (!embedded) {
+      const element = logBox.current;
+      if (element) element.scrollTop = element.scrollHeight;
+    } else if (wroteOne.current) {
+      wroteOne.current = false;
+      logEnd.current?.scrollIntoView({ block: 'nearest' });
+    }
+  }, [log.length, embedded]);
 
   const addEntry = (): void => {
     const entry = draft.trim();
     if (!entry) return;
     setDraft('');
-    void api.appendNote(sessionId, entry).catch(() => setDraft(entry));
+    wroteOne.current = true;
+    void api.appendNote(sessionId, entry).catch(() => {
+      wroteOne.current = false;
+      setDraft(entry);
+    });
   };
 
   // One thing to type into at a time: the summary, or, once asked for, the box that adds to the log.
@@ -100,6 +115,12 @@ export function NotePanel({
     element.style.height = `${element.scrollHeight + edges}px`;
   }, [text, editing, embedded, adding, reading]);
   const who = (entry: NoteEntry): string => (entry.kind === 'prompt' ? 'you asked' : entry.author === 'agent' ? 'agent' : 'you');
+  // The time of an entry of today; the day too of one that is older, so that last week's is not taken for this morning's.
+  const when = (at: string): string => {
+    const date = new Date(at);
+    const time = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    return date.toDateString() === new Date().toDateString() ? time : `${date.toLocaleDateString([], { month: 'short', day: 'numeric' })}, ${time}`;
+  };
 
   return (
     <aside
@@ -180,14 +201,14 @@ export function NotePanel({
           <strong>Log</strong>
           <span className="note-status">{log.length === 0 ? '' : `${log.length} ${log.length === 1 ? 'entry' : 'entries'}`}</span>
         </div>
-        <div className="note-log" data-testid="note-log" aria-label="Log">
+        <div className="note-log" ref={logBox} data-testid="note-log" aria-label="Log">
           {log.length === 0 && <p className="note-empty">Entries from you or the agent will be listed here.</p>}
           {log.map((entry) => (
             <article key={entry.id} className={`note-entry kind-${entry.kind}`} data-testid="note-entry">
               <header>
                 <span className="note-author">{who(entry)}</span>
                 <time dateTime={entry.at} title={new Date(entry.at).toLocaleString()}>
-                  {new Date(entry.at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  {when(entry.at)}
                 </time>
               </header>
               <p>
@@ -195,8 +216,10 @@ export function NotePanel({
               </p>
             </article>
           ))}
-          <div ref={logEnd} />
+          <div ref={logEnd} className="note-log-end" />
         </div>
+        {/* Where the log is added to: under its last entry, and kept in view at the foot while the log is longer than its room. */}
+        <div className="note-add-row">
         {adding ? (
           <input
             ref={entryBox}
@@ -219,6 +242,7 @@ export function NotePanel({
             Add to the log
           </button>
         )}
+        </div>
       </div>
     </aside>
   );

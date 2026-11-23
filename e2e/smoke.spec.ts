@@ -4180,6 +4180,34 @@ test('the drawer: what a terminal asks comes first, one thing to type into, besi
     });
     expect(sizes).toEqual({ controls: [32], chips: expect.any(Array), question: '15px', name: '15px', nameCut: false, label: '13px', value: '13px', row: true, tab: '13px', help: '13px', summaryLines: expect.any(Number), gutter: 16, small: [] });
     expect(sizes.summaryLines).toBeGreaterThanOrEqual(4);
+    // The way out is at the end of the name's line, to the right of the name; the one thing to do is on the line under them.
+    // "Add a link" begins on the gutter, where the facts do: its words, not its box, since a quiet button hangs left by its padding.
+    const head = await drawer.evaluate((el) => {
+      const box = (sel: string): DOMRect => (el.querySelector(sel) as HTMLElement).getBoundingClientRect();
+      const name = box('[data-testid="details-name"]');
+      const close = box('[data-testid="details-close"]');
+      const actions = box('.details-head-actions');
+      const add = el.querySelector('[data-testid="link-add-open"]') as HTMLElement;
+      const walker = document.createTreeWalker(add, NodeFilter.SHOW_TEXT);
+      let letter: number | null = null;
+      for (let node = walker.nextNode(); node && letter === null; node = walker.nextNode()) {
+        if (!(node.textContent ?? '').trim()) continue;
+        const range = document.createRange();
+        range.selectNodeContents(node);
+        letter = range.getBoundingClientRect().left;
+      }
+      return {
+        closeOffName: Math.abs((close.top + close.bottom) / 2 - (name.top + name.bottom) / 2),
+        closeRightOfName: close.left >= name.right - 1,
+        closeInHead: close.right <= box('.details-head').right + 1,
+        actionsUnder: actions.top >= close.bottom - 1,
+        addLetterOffGutter: letter === null ? null : Math.abs(letter - box('.ui-facts').left),
+      };
+    });
+    expect(head.closeOffName).toBeLessThanOrEqual(3);
+    expect(head).toMatchObject({ closeRightOfName: true, closeInHead: true, actionsUnder: true });
+    expect(head.addLetterOffGutter).not.toBeNull();
+    expect(head.addLetterOffGutter).toBeLessThanOrEqual(1);
     // The handle that folds the side panel does not lie over it, and at 1280 wide the bar over the canvas is still one row.
     await page.setViewportSize({ width: 1280, height: 900 });
     // The canvas learns its new width after the window's: wait for the bar to follow.
@@ -4215,9 +4243,17 @@ test('the drawer: what a terminal asks comes first, one thing to type into, besi
     await expect.poll(() => page.evaluate(() => document.activeElement?.closest('[data-testid="list-row"]')?.getAttribute('data-session') ?? `on ${document.activeElement?.tagName}.${document.activeElement?.className}`)).toBe(waiting);
 
     // A terminal that asks nothing has no such part: its facts come first. One on a run names its workflow and its step.
+    // Its log is long: the details still open at their top, on what is known, and the way to add to the log is at their foot.
+    for (let i = 1; i <= 12; i += 1) {
+      expect((await page.request.post(`/v1/sessions/${demo.sessions.shell}/notes`, { headers: { origin }, data: { text: `Entry ${i} of a long log.` } })).status()).toBe(201);
+    }
     await open(demo.sessions.shell as string);
     await expect(drawer.getByTestId('details-asks')).toHaveCount(0);
     expect(await drawer.evaluate((el) => el.querySelector('[data-testid="details"]')?.firstElementChild?.getAttribute('data-testid'))).toBe('recap');
+    await expect(drawer.getByTestId('note-entry').filter({ hasText: 'Entry 12 of a long log.' })).toHaveCount(1);
+    expect(await page.evaluate(() => { const scroller = document.querySelector('.panel-drawer > .details') as HTMLElement; return { top: scroller.scrollTop, scrolls: scroller.scrollHeight > scroller.clientHeight + 1 }; })).toEqual({ top: 0, scrolls: true });
+    await expect(drawer.locator('.ui-facts dt').first()).toBeInViewport();
+    await expect(drawer.getByTestId('note-add-open')).toBeInViewport({ ratio: 1 });
     await drawer.getByTestId('details-close').click();
     await open(demo.sessions.fixing as string);
     await expect(drawer.locator('[data-fact="run"] dd')).toContainText('Fix a bug');
@@ -5621,6 +5657,26 @@ test('a note takes typing: beside a terminal the terminal does not take the keyb
   await node.getByTestId('node-body').click();
   await expect.poll(() => node.evaluate((el) => el.querySelector('[data-testid="terminal"]')?.contains(document.activeElement) ?? false)).toBe(true);
   await expect(beside.getByTestId('note-summary-read')).toBeVisible();
+  // A summary longer than its share of the note, and an empty log: the summary stops at its share of the note, the Log
+  // follows it with no gap, and the log and the button that adds to it are wholly inside the note.
+  await expect(beside.getByTestId('note-summary-read')).toContainText('Line 12 of what this terminal is for.');
+  const fits = await beside.evaluate((el) => {
+    const box = (sel: string): DOMRect => (el.querySelector(sel) as HTMLElement).getBoundingClientRect();
+    const note = el.getBoundingClientRect();
+    const inside = (r: DOMRect): boolean => r.top >= note.top - 1 && r.bottom <= note.bottom + 1 && r.left >= note.left - 1 && r.right <= note.right + 1;
+    const read = el.querySelector('[data-testid="note-summary-read"]') as HTMLElement;
+    const summary = read.getBoundingClientRect();
+    return {
+      capped: read.scrollHeight > read.clientHeight + 1,
+      share: summary.height <= note.height * 0.4 + 1,
+      gap: Math.round(box('.note-log-part .note-label').top - summary.bottom),
+      log: inside(box('[data-testid="note-log"]')),
+      add: inside(box('[data-testid="note-add-open"]')),
+    };
+  });
+  expect(fits).toMatchObject({ capped: true, share: true, log: true, add: true });
+  expect(fits.gap).toBeGreaterThanOrEqual(0);
+  expect(fits.gap).toBeLessThanOrEqual(24);
   await beside.getByTestId('note-summary-read').click({ position: { x: 40, y: 100 } });
   const box = beside.locator('textarea.note-summary');
   await expect(box).toBeFocused();
@@ -5663,6 +5719,9 @@ test('a note takes typing: beside a terminal the terminal does not take the keyb
   // 3. In the details, the summary is no shorter when it is pressed to change it.
   const inDrawer = drawer.getByTestId('note-drawer');
   await expect(inDrawer.getByTestId('note-summary-read')).toBeVisible();
+  // With nothing in the log, the button that adds to it follows the log's box, with no gap down to the foot of the window.
+  await expect(inDrawer.getByTestId('note-entry')).toHaveCount(0);
+  expect(await inDrawer.evaluate((el) => Math.round((el.querySelector('[data-testid="note-add-open"]') as HTMLElement).getBoundingClientRect().top - (el.querySelector('[data-testid="note-log"]') as HTMLElement).getBoundingClientRect().bottom))).toBeLessThanOrEqual(24);
   const read = await inDrawer.getByTestId('note-summary-read').evaluate((el) => Math.round(el.getBoundingClientRect().height));
   expect(read).toBeGreaterThan(200);
   await inDrawer.getByTestId('note-summary-read').click({ position: { x: 40, y: 100 } });

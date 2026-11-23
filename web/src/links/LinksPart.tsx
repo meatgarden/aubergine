@@ -158,7 +158,7 @@ export function LinksPart({ sessionId, typing, onTyping }: { sessionId: string; 
         !editing && (
           <button
             type="button"
-            className="quiet links-add"
+            className="quiet ui-start links-add"
             onClick={() => {
               setMode({ kind: 'add' });
               setProblem(null);
