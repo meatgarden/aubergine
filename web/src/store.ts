@@ -465,7 +465,7 @@ export const useApp = create<AppStore>((set, get) => ({
     const projectId = everything?.canvases.find((c) => c.id === canvasId)?.projectId ?? null;
     writeAddress(canvasId, options?.push !== false, projectId, get().page);
     rememberCanvas(canvasId, projectId ?? undefined);
-    events?.viewing(canvasId);
+    sayViewing(canvasId);
   },
   showSession: (sessionId) => set((state) => ({ show: { sessionId, tick: (state.show?.tick ?? 0) + 1 }, settleUntil: Date.now() + SETTLE_MS })),
   settled: () => set({ settleUntil: 0 }),
@@ -483,9 +483,10 @@ function same<T>(before: readonly T[] | undefined, now: T[]): T[] {
  * What is shown, out of everything: the project of the canvas being looked at, with what is shared with it. With one
  * project that is everything, as it is. The lists that did not change are kept as they were.
  */
-export function viewOf(whole: AppState, canvasId: string | null, previous: AppState | null): AppState {
+export function viewOf(whole: AppState, canvasId: string | null, previous: AppState | null, alone: string | null = terminalPage): AppState {
   if (whole.projects.length <= 1) return whole;
-  const projectId = whole.canvases.find((c) => c.id === canvasId)?.projectId ?? firstProject(whole).id;
+  // The focus view looks at no canvas: it shows its terminal's project.
+  const projectId = (alone !== null ? whole.sessions.find((s) => s.id === alone)?.projectId : undefined) ?? whole.canvases.find((c) => c.id === canvasId)?.projectId ?? firstProject(whole).id;
   const view = stateOf(whole, projectId);
   if (previous === null) return view;
   return {
@@ -511,7 +512,9 @@ export function currentCanvas(state: Pick<AppStore, 'app' | 'canvasId'>): Canvas
 /** The nodes and frames of the canvas this page is showing. */
 /** The project being looked at: the one of the canvas that is shown. */
 export function currentProjectId(state: Pick<AppStore, 'app' | 'canvasId'>): string | null {
-  return currentCanvas(state)?.projectId ?? (state.app ? firstProject(state.app).id : null);
+  // The focus view: its terminal's project.
+  const alone = terminalPage !== null ? state.app?.sessions.find((s) => s.id === terminalPage)?.projectId : undefined;
+  return alone ?? currentCanvas(state)?.projectId ?? (state.app ? firstProject(state.app).id : null);
 }
 // What the page asks the server is asked about the project being looked at.
 askAbout(() => currentProjectId(useApp.getState()));
@@ -525,25 +528,65 @@ export function currentLayout(state: Pick<AppStore, 'app' | 'canvasId'>): Layout
 export const terminalPage: string | null = typeof location === 'undefined' ? null : terminalFromPath(location.pathname);
 
 /**
- * A tab that shows one terminal by itself reads the state, and reads it again when it is used again or while the
- * server is away. It does not join the stream of changes: a tab on the stream is one the server may ask to show a
- * terminal or a canvas, and this one can show neither. The terminal itself is live over its own socket.
+ * A tab that shows one terminal by itself (the focus view) reads the state, and follows its changes on the stream as
+ * the canvas does, so that its name, its state, its details and its note are live. It never says which canvas it shows
+ * (`viewing`): it shows none, so the server never asks it to show a terminal or a canvas. Asked all the same, it gives
+ * its own terminal the keyboard and does nothing else. It reads the state again when it is used again or while the
+ * server is away. The terminal itself is live over its own socket.
  */
-function startTerminalPageSync(load: () => Promise<void>): () => void {
+function startTerminalPageSync(sessionId: string): () => void {
+  const { load, apply } = useApp.getState();
+  let stopped = false;
+  // The stream needs the sign-in, so it starts after the first load that worked; again after another server was shown.
+  const sync = async (): Promise<void> => {
+    await load();
+    if (stopped || events || useApp.getState().phase !== 'ready') return;
+    events = subscribeToEvents({
+      onReady: () => {
+        useApp.setState({ live: true });
+        void load();
+      },
+      onEvent: apply,
+      // Asked to show its own terminal (the server does not ask a tab that shows no canvas, but an older one might): it takes the keyboard here.
+      onShow: (shown) => {
+        if (shown === sessionId) useApp.getState().focusSession(sessionId);
+      },
+      onNotify: (title, body) => {
+        useApp.getState().setNotice(body);
+        showNotification(title, body);
+      },
+      // A tab that shows no canvas cannot switch to one.
+      onShowCanvas: () => {},
+      onDown: () => useApp.setState({ live: false }),
+      onRevoked: () => {
+        const server = useApp.getState().server;
+        if (server !== null) leaveServer(server, 'refused');
+        else void load();
+      },
+    });
+  };
   // Showing another server (the own one, when a linked one could not be shown) reads it as a first load does.
-  syncNow = load;
-  void load();
+  syncNow = sync;
+  void sync();
   const onFocus = (): void => void load();
   window.addEventListener('focus', onFocus);
   const poll = window.setInterval(() => {
     const { phase, runtime } = useApp.getState();
-    if (phase !== 'ready' || runtime?.status !== 'ok') void load();
+    if (phase !== 'ready' || runtime?.status !== 'ok') void sync();
   }, 3000);
   return () => {
+    stopped = true;
     syncNow = null;
+    events?.stop();
+    events = null;
     window.removeEventListener('focus', onFocus);
     window.clearInterval(poll);
   };
+}
+
+/** Says which canvas this page shows, on the stream: never from the focus view, which shows none. */
+function sayViewing(canvasId: string): void {
+  if (terminalPage === null) events?.viewing(canvasId);
 }
 
 /** Loads state, keeps it live, and keeps retrying while the daemon is away. */
@@ -678,7 +721,7 @@ function serverFromAddress(): void {
 export function startSync(): () => void {
   const { load, apply } = useApp.getState();
   serverFromAddress();
-  if (terminalPage !== null) return startTerminalPageSync(load);
+  if (terminalPage !== null) return startTerminalPageSync(terminalPage);
   let stopped = false;
 
   // The event stream needs the access cookie, so it starts after the first successful load.
@@ -722,7 +765,7 @@ export function startSync(): () => void {
       },
     });
     const current = useApp.getState().canvasId;
-    if (current) events.viewing(current);
+    if (current) sayViewing(current);
   };
   syncNow = sync;
   void sync();
@@ -748,7 +791,7 @@ export function startSync(): () => void {
     if (id && store.whole?.canvases.some((c) => c.id === id) && id !== store.canvasId) {
       useApp.setState({ canvasId: id, focus: null, selected: null, app: viewOf(store.whole, id, store.app) });
       rememberCanvas(id, store.whole.canvases.find((c) => c.id === id)?.projectId);
-      events?.viewing(id);
+      sayViewing(id);
     }
   };
   window.addEventListener('popstate', onPopState);
@@ -758,7 +801,7 @@ export function startSync(): () => void {
     const id = useApp.getState().canvasId;
     if (id) {
       rememberCanvas(id);
-      events?.viewing(id);
+      sayViewing(id);
     }
   };
   window.addEventListener('focus', onFocus);
