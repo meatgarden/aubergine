@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { GROUP_LINKS_OVER, KIND_WORDS, LINK_KINDS, LINK_LABEL_MAX, addressProblem, ago, groupedLinks, showControl, sortedLinks, tellLink, type LinkKind, type SeenLink, type SessionLink } from '@aubergine/shared';
 import { api } from '../api';
 import { useApp } from '../store';
-import { MenuButton, MenuItem } from '../ui';
+import { FoldHeading, MenuButton, MenuItem } from '../ui';
 import { LinkChip } from './LinkChip';
 
 /** Who added a link and when, in words, for its tooltip. */
@@ -14,9 +14,10 @@ function addedBy(link: SessionLink, now: number): string {
 /**
  * The links of a terminal, in its details: chips, under three quiet headings where there are more than four, each
  * with a small menu; then the way to add one by hand, and, folded, the addresses that were only seen in the terminal.
- * `typing` says whether this part has the one text box of the details; asking for it is `onTyping`.
+ * `typing` says whether this part has the one text box of the details; asking for it is `onTyping`. Its heading folds
+ * it (`folded`, `onFold`); folded, it says how many links there are and draws none of them.
  */
-export function LinksPart({ sessionId, typing, onTyping }: { sessionId: string; typing: boolean; onTyping: (on: boolean) => void }) {
+export function LinksPart({ sessionId, typing, onTyping, folded = false, onFold }: { sessionId: string; typing: boolean; onTyping: (on: boolean) => void; folded?: boolean; onFold?: () => void }) {
   const links = useApp((s) => s.app?.sessions.find((x) => x.id === sessionId)?.links) ?? NO_LINKS;
   const [mode, setMode] = useState<{ kind: 'add' } | { kind: 'edit'; id: string } | null>(null);
   const [address, setAddress] = useState('');
@@ -39,10 +40,16 @@ export function LinksPart({ sessionId, typing, onTyping }: { sessionId: string; 
       live = false;
     };
   }, [sessionId]);
-  // Another part of the details took the text box: this one puts its field away.
+  // Another part of the details took the text box, or the part was folded: this one puts its field away.
   useEffect(() => {
     if (!typing) setMode(null);
   }, [typing]);
+  useEffect(() => {
+    if (folded) {
+      setMode(null);
+      setProblem(null);
+    }
+  }, [folded]);
   const close = (): void => {
     setMode(null);
     setProblem(null);
@@ -100,9 +107,13 @@ export function LinksPart({ sessionId, typing, onTyping }: { sessionId: string; 
   const kept = new Set(links.map((link) => link.url));
   const unkept = seen.filter((one) => !kept.has(one.url));
   return (
-    <section className="links-part" aria-label="Links" data-testid="links-part">
-      <h3 className="links-title">Links</h3>
-      {links.length === 0 && <p className="links-none">Tickets, threads, designs, documents and pull requests of this work will be listed here.</p>}
+    <section className="links-part details-part" aria-label="Links" data-testid="links-part">
+      <FoldHeading folded={folded} onToggle={() => onFold?.()} controls={`links-${sessionId}`} count={links.length} testid="details-fold-links">
+        Links
+      </FoldHeading>
+      {!folded && (
+      <div className="links-body" id={`links-${sessionId}`}>
+      {links.length === 0 && <p className="links-none">No links yet: tickets, pull requests and documents of this work go here.</p>}
       {links.length > GROUP_LINKS_OVER ? (
         groupedLinks(links).map((group) => (
           <div className="links-group" key={group.group} data-testid="links-group" data-group={group.group}>
@@ -189,6 +200,8 @@ export function LinksPart({ sessionId, typing, onTyping }: { sessionId: string; 
             ))}
           </span>
         </details>
+      )}
+      </div>
       )}
     </section>
   );

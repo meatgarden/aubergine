@@ -2228,16 +2228,10 @@ label:is(.wf-inline, .ui-check, .schedule-days label):has(> input:is([type='chec
   font-size: var(--font-meta);
   color: var(--text-muted);
 }
-.note-help {
-  margin: 0;
-  font-size: var(--font-meta);
-  color: var(--text-muted);
-}
 .note-panel textarea.note-summary {
   flex: none;
   box-sizing: border-box;
   width: 100%;
-  min-height: 96px;
   resize: vertical;
 }
 /* While the log is being added to, the summary is read: the same box, without the line of a field. */
@@ -2459,7 +2453,6 @@ button.foryou-act {
   gap: var(--space-2);
   padding-top: var(--space-4);
 }
-.note-help,
 .note-panel .note-empty,
 .note-entry p,
 .note-author {
@@ -2472,18 +2465,16 @@ button.foryou-act {
   align-items: baseline;
 }
 /*
- * The summary shows four lines at least, read or being changed: the same box either way, so that pressing it or
- * leaving it does not move what is under it. Beside a terminal both stop at a share of the note and scroll there.
+ * Beside a terminal the summary shows four lines at least, read or being changed: the same box either way, so that
+ * pressing it or leaving it does not move what is under it, and both stop at a share of the note and scroll there. In
+ * the details it is as tall as its words, and the box that changes it is made no shorter than that (`NotePanel`).
  */
-.note-panel .note-summary-read {
-  min-height: 112px;
-}
 .note-panel:not(.embedded) :is(textarea.note-summary, .note-summary-read) {
+  min-height: 112px;
   max-height: 40%;
   overflow-y: auto;
 }
 .note-panel textarea.note-summary {
-  min-height: 112px;
   padding: var(--space-2) var(--space-3);
   font-size: var(--font-body);
   line-height: var(--leading);
@@ -3465,12 +3456,6 @@ button.fact-copy:hover {
   gap: var(--space-2);
   margin-top: var(--space-4);
 }
-.links-title {
-  margin: 0;
-  font-size: var(--font-body);
-  font-weight: var(--weight-strong);
-  color: var(--text);
-}
 .links-none {
   margin: 0;
   color: var(--text-muted);
@@ -3515,7 +3500,12 @@ button.fact-copy:hover {
   flex: 1 1 160px;
   min-width: 0;
 }
-.links-part > button.links-add {
+.links-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.links-body > button.links-add {
   align-self: flex-start;
 }
 .links-seen > .links-chips {
@@ -3812,4 +3802,121 @@ div.note-summary-read {
 .panel-drawer-title,
 .tab-name {
   text-overflow: clip;
+}
+
+/* ---------- A terminal's details, read in order: what it asks, what it is for, what is known, its links ---------- */
+
+/* The heading of a part that folds: its words on the gutter, in the weight of a heading, and a quiet sign of which way it goes. */
+.ui-fold-heading {
+  margin: 0;
+  font-size: var(--font-body);
+}
+.ui-fold-heading > button {
+  font-weight: var(--weight-strong);
+  color: var(--text);
+}
+/* Open is not pressed: the heading is drawn as words until it is pointed at. */
+.ui-fold-heading > button[aria-expanded] {
+  background: transparent;
+  border-color: transparent;
+}
+.ui-fold-heading > button[aria-expanded]:hover:not(:disabled) {
+  background: var(--surface-raised);
+}
+.ui-fold-heading > button[aria-expanded]:active:not(:disabled) {
+  background: var(--surface-active);
+}
+.ui-fold-heading > button::after {
+  content: '▾' / '';
+  margin-left: var(--space-2);
+  color: var(--text-muted);
+}
+.ui-fold-heading > button[aria-expanded='false']::after {
+  content: '▸' / '';
+}
+.ui-fold-count {
+  font-weight: var(--weight-normal);
+}
+/* What is known and the links: a heading, and under it what it folds. */
+.details-part {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-top: var(--space-4);
+}
+.details .details-known > div > .recap {
+  padding-top: 0;
+}
+/* The summary stands under what it asks, read as words until it is pressed: no field's box, as tall as its words. */
+.details > .note-panel.embedded.is-summary {
+  flex: none;
+  margin-top: var(--space-4);
+}
+.note-panel.is-summary .note-part {
+  padding-top: 0;
+  gap: var(--space-1);
+}
+.note-panel.embedded .note-summary-read {
+  min-height: 0;
+  margin-left: calc(var(--space-3) * -1 - 1px);
+  width: calc(100% + var(--space-3) + 1px);
+  background: transparent;
+  border-radius: var(--radius-control);
+  font-size: var(--font-body);
+  line-height: var(--leading);
+}
+.note-panel.embedded .note-summary-read:hover {
+  background: var(--surface-raised);
+}
+.note-panel.embedded .note-summary-read.is-empty {
+  color: var(--text-muted);
+}
+/* The box that changes it stands where the words stood, and is as tall as they were (`NotePanel`): nothing under it moves. */
+.note-panel.embedded textarea.note-summary {
+  min-height: 0;
+  margin-left: calc(var(--space-3) * -1 - 1px);
+  width: calc(100% + var(--space-3) + 1px);
+}
+/* Whether a change is saved: at the end of the summary, in the room under it, so that saying it moves nothing. */
+.note-panel.is-summary .note-part {
+  position: relative;
+}
+.note-panel.is-summary .note-status {
+  position: absolute;
+  top: 100%;
+  right: var(--space-4);
+  margin: 0;
+  font-size: var(--font-meta);
+  line-height: 16px;
+  color: var(--text-muted);
+  text-align: right;
+}
+/* Facts in groups: room between the groups, and no headings. */
+.ui-facts > .ui-facts-group > :is(dt, dd) {
+  margin-top: var(--space-3);
+}
+/* The times: one quiet line at the end of what is known. */
+.recap-times {
+  margin: var(--space-3) 0 0;
+  font-size: var(--font-body);
+  color: var(--text-muted);
+}
+/* The log, told by day: a quiet heading for each. */
+.note-day-head {
+  margin: 0 0 var(--space-2);
+  font-size: var(--font-meta);
+  font-weight: var(--weight-normal);
+  color: var(--text-muted);
+}
+.note-day + .note-day {
+  margin-top: var(--space-4);
+}
+/* With the note beside the details, their one part left is named, not drawn as a row of one tab. */
+.details-tabs.is-one {
+  border-bottom: 0;
+}
+.details-tabs.is-one > .details-one-part {
+  margin: 0;
+  font-size: var(--font-body);
+  font-weight: var(--weight-strong);
 }

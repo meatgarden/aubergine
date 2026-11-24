@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { placeOfSession, sessionsWaiting, sortedCanvases } from '@aubergine/shared';
 import { canvasHref } from './address';
 import { colorClass, colorStyle } from './color';
-import { setFocusColumns } from './focus-view';
+import { setFocusColumns, useFocusColumns } from './focus-view';
 import { NotePanel } from './NotePanel';
 import { DrawerResize } from './panel/SidePanel';
 import { Details } from './panel/sections/terminal-details';
@@ -68,9 +68,13 @@ export function FocusCanvases({ sessionId }: { sessionId: string }) {
   );
 }
 
-/** The terminal's details: the drawer's own, standalone, as wide as the drawer is in this browser and resized the same way. */
+/**
+ * The terminal's details: the drawer's own, standalone, as wide as the drawer is in this browser and resized the same
+ * way. While the Note column is open the note is there, once: the details leave out its summary and its log.
+ */
 export function FocusDetails({ sessionId }: { sessionId: string }) {
   const width = useApp((s) => s.side.drawerWidth);
+  const noteOpen = useFocusColumns().note;
   const close = (): void => {
     setFocusColumns({ details: false });
     backToTerminal(sessionId);
@@ -95,7 +99,7 @@ export function FocusDetails({ sessionId }: { sessionId: string }) {
             ×
           </IconButton>
         </header>
-        <Details id={sessionId} onClose={stay} standalone />
+        <Details id={sessionId} onClose={stay} standalone noteElsewhere={noteOpen} />
       </aside>
       <DrawerResize width={width} />
     </>
