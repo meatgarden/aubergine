@@ -294,6 +294,13 @@ export type ListCanvasSessionsResult = {
     lastInputAt: string | null;
     lastOutputAt: string | null;
     tags: string[];
+    /** The fields of the terminal, in order: at most 12, each label once. */
+    fields: {
+      /** What the value is, in a few words: one line of plain text, without a colon. */
+      label: unknown & unknown;
+      /** The value: one line of plain text. An address in it is shown as a link. */
+      value: string;
+    }[];
     parkedFrom: {
       canvasId: string;
       rect: {
@@ -452,6 +459,13 @@ export type StartSessionResult = {
     lastInputAt: string | null;
     lastOutputAt: string | null;
     tags: string[];
+    /** The fields of the terminal, in order: at most 12, each label once. */
+    fields: {
+      /** What the value is, in a few words: one line of plain text, without a colon. */
+      label: unknown & unknown;
+      /** The value: one line of plain text. An address in it is shown as a link. */
+      value: string;
+    }[];
     parkedFrom: {
       canvasId: string;
       rect: {
@@ -618,6 +632,13 @@ export type ListSessionsResult = {
     lastInputAt: string | null;
     lastOutputAt: string | null;
     tags: string[];
+    /** The fields of the terminal, in order: at most 12, each label once. */
+    fields: {
+      /** What the value is, in a few words: one line of plain text, without a colon. */
+      label: unknown & unknown;
+      /** The value: one line of plain text. An address in it is shown as a link. */
+      value: string;
+    }[];
     parkedFrom: {
       canvasId: string;
       rect: {
@@ -755,6 +776,13 @@ export type GetSessionResult = {
   lastInputAt: string | null;
   lastOutputAt: string | null;
   tags: string[];
+  /** The fields of the terminal, in order: at most 12, each label once. */
+  fields: {
+    /** What the value is, in a few words: one line of plain text, without a colon. */
+    label: unknown & unknown;
+    /** The value: one line of plain text. An address in it is shown as a link. */
+    value: string;
+  }[];
   parkedFrom: {
     canvasId: string;
     rect: {
@@ -848,6 +876,13 @@ export type UpdateSessionBody = {
   name?: string;
   tags?: string[];
   note?: string;
+  /** The fields of the terminal, in order: at most 12, each label once. */
+  fields?: {
+    /** What the value is, in a few words: one line of plain text, without a colon. */
+    label: unknown & unknown;
+    /** The value: one line of plain text. An address in it is shown as a link. */
+    value: string;
+  }[];
 };
 
 export type UpdateSessionResult = {
@@ -896,6 +931,13 @@ export type UpdateSessionResult = {
   lastInputAt: string | null;
   lastOutputAt: string | null;
   tags: string[];
+  /** The fields of the terminal, in order: at most 12, each label once. */
+  fields: {
+    /** What the value is, in a few words: one line of plain text, without a colon. */
+    label: unknown & unknown;
+    /** The value: one line of plain text. An address in it is shown as a link. */
+    value: string;
+  }[];
   parkedFrom: {
     canvasId: string;
     rect: {
@@ -1042,6 +1084,13 @@ export type MoveSessionResult = {
     lastInputAt: string | null;
     lastOutputAt: string | null;
     tags: string[];
+    /** The fields of the terminal, in order: at most 12, each label once. */
+    fields: {
+      /** What the value is, in a few words: one line of plain text, without a colon. */
+      label: unknown & unknown;
+      /** The value: one line of plain text. An address in it is shown as a link. */
+      value: string;
+    }[];
     parkedFrom: {
       canvasId: string;
       rect: {
@@ -1188,6 +1237,13 @@ export type ParkSessionResult = {
   lastInputAt: string | null;
   lastOutputAt: string | null;
   tags: string[];
+  /** The fields of the terminal, in order: at most 12, each label once. */
+  fields: {
+    /** What the value is, in a few words: one line of plain text, without a colon. */
+    label: unknown & unknown;
+    /** The value: one line of plain text. An address in it is shown as a link. */
+    value: string;
+  }[];
   parkedFrom: {
     canvasId: string;
     rect: {
@@ -1329,6 +1385,13 @@ export type RestoreSessionResult = {
     lastInputAt: string | null;
     lastOutputAt: string | null;
     tags: string[];
+    /** The fields of the terminal, in order: at most 12, each label once. */
+    fields: {
+      /** What the value is, in a few words: one line of plain text, without a colon. */
+      label: unknown & unknown;
+      /** The value: one line of plain text. An address in it is shown as a link. */
+      value: string;
+    }[];
     parkedFrom: {
       canvasId: string;
       rect: {
@@ -8750,6 +8813,13 @@ export type ProtectSessionResult = {
   lastInputAt: string | null;
   lastOutputAt: string | null;
   tags: string[];
+  /** The fields of the terminal, in order: at most 12, each label once. */
+  fields: {
+    /** What the value is, in a few words: one line of plain text, without a colon. */
+    label: unknown & unknown;
+    /** The value: one line of plain text. An address in it is shown as a link. */
+    value: string;
+  }[];
   parkedFrom: {
     canvasId: string;
     rect: {
@@ -8890,6 +8960,13 @@ export type SetTakesMessagesResult = {
   lastInputAt: string | null;
   lastOutputAt: string | null;
   tags: string[];
+  /** The fields of the terminal, in order: at most 12, each label once. */
+  fields: {
+    /** What the value is, in a few words: one line of plain text, without a colon. */
+    label: unknown & unknown;
+    /** The value: one line of plain text. An address in it is shown as a link. */
+    value: string;
+  }[];
   parkedFrom: {
     canvasId: string;
     rect: {
@@ -10586,7 +10663,7 @@ export interface Client {
    */
   getSession(args: { sessionId: string } & CallOptions): Promise<GetSessionResult>;
   /**
-   * Rename or tag a session, or change its pinned note.
+   * Rename or tag a session, change its fields, or change its pinned note.
    *
    * `PATCH /v1/sessions/{sessionId}`. Scope: `sessions:write`.
    */

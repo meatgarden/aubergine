@@ -3483,7 +3483,8 @@ button.fact-copy:hover {
   min-width: 0;
   min-height: var(--space-6);
 }
-.links-item > .link-menu > button {
+.links-item > .link-menu > button,
+.fields-value > .link-menu > button {
   width: var(--space-4);
   min-width: 0;
   height: var(--space-6);
@@ -3510,6 +3511,28 @@ button.fact-copy:hover {
 }
 .links-seen > .links-chips {
   margin-top: var(--space-2);
+}
+/* The Fields part of the details: rows of the list of facts, each value with its small menu at the end of its line. */
+.fields-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.fields-body > button.fields-add {
+  align-self: flex-start;
+}
+.fields-none {
+  margin: 0;
+  color: var(--text-muted);
+}
+.ui-facts > div > dd.fields-value {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+.fields-text {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 /* What the agent suggested where the owner's own words stand, and the quiet word that a terminal is not described. */
 .details-suggested > p,

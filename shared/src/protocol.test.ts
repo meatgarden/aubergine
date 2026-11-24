@@ -55,6 +55,7 @@ function fixture(): { state: AppState; session: Session; node: LayoutNode } {
     lastInputAt: null,
     lastOutputAt: null,
     tags: [],
+    fields: [],
   };
   const node: LayoutNode = {
     id: newId(),

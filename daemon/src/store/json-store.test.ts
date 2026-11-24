@@ -37,7 +37,7 @@ function withSession(state: AppState, name: string): AppState {
     recap: null, takesMessages: false, untold: null, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null }, links: [], written: {}, suggested: {}, found: null,
     lastInputAt: null,
     lastOutputAt: null,
-    tags: [],
+    tags: [], fields: [],
     },
     node: { id: newId(), sessionId, x: 0, y: 0, width: 720, height: 440, color: 'none' },
   };
@@ -515,7 +515,10 @@ describe('JsonStore', () => {
 
     const state = await store.load();
     expect(state.devices).toEqual([]);
-    expect({ ...state, devices: undefined }).toEqual({ ...before, devices: undefined });
+    // Fields came later still, with a default and no new version: each terminal of the file has none.
+    expect(state.sessions.map((session) => session.fields)).toEqual(before.sessions.map(() => []));
+    const sessionsBefore = (before.sessions as object[]).map((session) => ({ ...session, fields: [] }));
+    expect({ ...state, devices: undefined }).toEqual({ ...before, sessions: sessionsBefore, devices: undefined });
 
     await store.save(state);
     const raw = JSON.parse(await readFile(store.file, 'utf8'));

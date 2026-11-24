@@ -174,7 +174,7 @@ async function makeToken(name: string, scopes: Scope[], more: object = {}): Prom
 }
 
 function fakeSession(name: string, more: Partial<Session> = {}): Session {
-  const session: Session = { id: newId(), projectId: hub.state.projects[0]!.id, name, createdAt: new Date().toISOString(), state: 'open', cwd: null, command: null, note: '', status: NO_STATUS, attention: NO_ATTENTION, noteLog: [], agent: null, lastInputAt: null, lastOutputAt: null, tags: [], parkedFrom: null, peopleOnly: false, typedBy: null,
+  const session: Session = { id: newId(), projectId: hub.state.projects[0]!.id, name, createdAt: new Date().toISOString(), state: 'open', cwd: null, command: null, note: '', status: NO_STATUS, attention: NO_ATTENTION, noteLog: [], agent: null, lastInputAt: null, lastOutputAt: null, tags: [], fields: [], parkedFrom: null, peopleOnly: false, typedBy: null,
     recap: null, takesMessages: false, untold: null, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null }, links: [], written: {}, suggested: {}, found: null, ...more };
   hub.emit({ type: 'session.created', session, canvasId: hub.state.canvases[0]!.id, node: { id: newId(), sessionId: session.id, x: 0, y: 0, width: 640, height: 400, color: 'none' } });
   return session;
@@ -281,6 +281,7 @@ async function fullProject(): Promise<{ projectId: string; folder: string; secre
   await asOwner('POST', '/v1/tasks', { projectId, title: 'A secret task title', details: 'secret task details' });
   await asOwner('POST', '/v1/asks', { projectId, text: 'A secret thing written on the list' });
   await asOwner('POST', `/v1/sessions/${builder.id}/notes`, { text: 'A secret entry in the note log' });
+  expect((await asOwner('PATCH', `/v1/sessions/${builder.id}`, { fields: [{ label: 'Ticket', value: 'a secret field value' }] })).status).toBe(200);
   const run = await asOwner('POST', '/v1/runs', { workflowId: flow.body.id, sessionId: builder.id, inputs: { task: 'a secret run input' } });
   expect(run.status, all(run.body)).toBe(201);
   await asSession(builder, 'POST', `/v1/sessions/${builder.id}/run/report`, { type: 'done', note: 'A secret note of a run' });
@@ -297,7 +298,7 @@ describe('a project written to a file', () => {
     const { text, leftOut } = await exportOf(projectId);
     const s = state();
     // By what was said: nothing that ran, nothing written on the list, no log, no token, no setting.
-    for (const never of ['secret', 'Secret', 'aubergine/', 'copies', 'launcher', 'a-secret-terminal', ownerToken, secret, 'Not used by the project', 'tokens', 'noteLog', 'attention', 'status', 'peopleOnly', '"home"', '"host"', 'recap', 'lastInputAt', 'conversationId', 'commandLine']) expect(text.includes(never), `the file holds “${never}”`).toBe(false);
+    for (const never of ['secret', 'Secret', 'aubergine/', 'copies', 'launcher', 'a-secret-terminal', ownerToken, secret, 'Not used by the project', 'tokens', 'noteLog', 'attention', 'status', 'peopleOnly', '"home"', '"host"', 'recap', 'lastInputAt', 'conversationId', 'commandLine', 'fields', 'Ticket']) expect(text.includes(never), `the file holds “${never}”`).toBe(false);
     // By where it was written: no path of this computer, not the data folder, not the user's name or home.
     for (const never of [dir, folder, os.homedir(), os.userInfo().username, os.tmpdir(), '/somewhere/else', '/Users/', '/home/', 'made-up work folder/']) expect(text.includes(never), `the file holds the path “${never}”`).toBe(false);
     // By what is this server's: no ID of anything here.

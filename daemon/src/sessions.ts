@@ -248,6 +248,7 @@ export class Sessions {
     if (changes.name !== undefined) this.hub.emit({ type: 'session.renamed', sessionId, name: changes.name });
     if (changes.note !== undefined) this.hub.emit({ type: 'session.noted', sessionId, note: changes.note });
     if (changes.tags !== undefined) this.hub.emit({ type: 'session.tagged', sessionId, tags: changes.tags });
+    if (changes.fields !== undefined) this.hub.emit({ type: 'session.fields', sessionId, fields: changes.fields });
     return this.find(sessionId);
   }
 
@@ -843,7 +844,7 @@ export class Sessions {
     recap: null, takesMessages: false, untold: null, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null }, links: [], written: {}, suggested: {}, found: null,
       lastInputAt: null,
       lastOutputAt: null,
-      tags,
+      tags, fields: [],
     };
     const node: LayoutNode = { id: newId(), sessionId: id, color: 'none', ...(rect ?? this.freeSpot(canvas)) };
     this.hub.emit({ type: 'session.created', session, canvasId: canvas.id, node });

@@ -145,7 +145,7 @@ function fakeSession(name: string, more: Partial<Session> = {}, canvasId = hub.s
     agent: { kind: 'claude-code', conversationId: null, program: 'the-agent' },
     lastInputAt: null,
     lastOutputAt: null,
-    tags: [],
+    tags: [], fields: [],
     parkedFrom: null,
     peopleOnly: false,
     typedBy: null,

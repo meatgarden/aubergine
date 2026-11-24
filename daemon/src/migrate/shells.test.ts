@@ -114,7 +114,7 @@ function session(cwd: string, state: Session['state'] = 'open'): Session {
     recap: null, takesMessages: false, untold: null, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null }, links: [], written: {}, suggested: {}, found: null,
     lastInputAt: null,
     lastOutputAt: null,
-    tags: [],
+    tags: [], fields: [],
   };
 }
 

@@ -1,22 +1,24 @@
 import { useSyncExternalStore } from 'react';
 
 /**
- * Which parts of a terminal's details are folded: what is known about it, and its links. The same for every terminal,
- * remembered in this browser as one entry; nothing remembered means both open. Where that cannot be remembered the
+ * Which parts of a terminal's details are folded: what is known about it, its fields and its links. The same for every
+ * terminal, remembered in this browser as one entry; nothing remembered means all open. Where that cannot be remembered the
  * choice lasts as long as the page is open.
  */
 export interface DetailsFolds {
   /** What is known about it, the recap from its agent and the way to ask for one. True is folded. */
   known: boolean;
+  /** Its fields. True is folded. An entry remembered before fields existed has none: they are open. */
+  fields: boolean;
   /** Its links. True is folded. */
   links: boolean;
 }
 
 const KEY = 'aubergine.detailsFolds';
-const OPEN: DetailsFolds = { known: false, links: false };
+const OPEN: DetailsFolds = { known: false, fields: false, links: false };
 const listeners = new Set<() => void>();
 
-/** What this browser remembers, read as the parts that are folded: both open where nothing, or nothing readable, is remembered. */
+/** What this browser remembers, read as the parts that are folded: all open where nothing, or nothing readable, is remembered. */
 export function foldsFrom(remembered: string | null): DetailsFolds {
   if (remembered === null) return OPEN;
   let saved: unknown;
@@ -26,9 +28,9 @@ export function foldsFrom(remembered: string | null): DetailsFolds {
     return OPEN;
   }
   if (typeof saved !== 'object' || saved === null || Array.isArray(saved)) return OPEN;
-  const { known, links } = saved as Record<string, unknown>;
+  const { known, fields, links } = saved as Record<string, unknown>;
   if (typeof known !== 'boolean' || typeof links !== 'boolean') return OPEN;
-  return { known, links };
+  return { known, fields: typeof fields === 'boolean' ? fields : false, links };
 }
 
 function load(): DetailsFolds {
@@ -48,7 +50,7 @@ export function detailsFolds(): DetailsFolds {
 /** Folds or opens parts, and remembers what is folded now. */
 export function setDetailsFolds(change: Partial<DetailsFolds>): void {
   const next = { ...folds, ...change };
-  if (next.known === folds.known && next.links === folds.links) return;
+  if (next.known === folds.known && next.fields === folds.fields && next.links === folds.links) return;
   folds = next;
   try {
     localStorage.setItem(KEY, JSON.stringify(next));

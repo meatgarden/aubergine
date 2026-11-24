@@ -3764,11 +3764,16 @@ test('simpler surfaces: the list starts near the top, a name is not cut, one pri
   }  await page.getByTestId('toolbar-canvas').click();
   // A terminal's details: the headings that fold, the summary read, the facts, the times, the way to add a link, the
   // tabs and the way to add to the log all begin their words on the details' gutter of 16.
+  // Its fields too: a terminal with one, so that a field's row is measured beside the way to add another.
+  const firstRow = (await page.getByTestId('list-row').first().getAttribute('data-session')) ?? '';
+  expect((await page.request.patch(`/v1/sessions/${firstRow}`, { headers: { origin: new URL(page.url()).origin }, data: { fields: [{ label: 'Ticket', value: 'DEMO-12' }] } })).status()).toBe(200);
   await page.getByTestId('list-row').first().dblclick({ position: { x: 60, y: 12 } });
   await expect(page.getByTestId('details')).toBeVisible();
+  await expect(page.getByTestId('field-row')).toHaveCount(1);
   // (A quiet button's words are a pixel in, inside its line, as everywhere a quiet button begins a line.)
-  for (const edge of await wordEdges('[data-testid="details"]', '.ui-fold-heading > button, [data-testid="details-summary"] .note-summary-read, .ui-facts dt, .recap-times, .links-body > *, .details-tabs .ui-tab:first-child, .note-add-open')) expect(Math.abs(edge - 16), `the details: ${edge}`).toBeLessThanOrEqual(1);
+  for (const edge of await wordEdges('[data-testid="details"]', '.ui-fold-heading > button, [data-testid="details-summary"] .note-summary-read, .ui-facts dt, .recap-times, .fields-body > *, .links-body > *, .details-tabs .ui-tab:first-child, .note-add-open')) expect(Math.abs(edge - 16), `the details: ${edge}`).toBeLessThanOrEqual(1);
   await page.getByTestId('details-close').click();
+  expect((await page.request.patch(`/v1/sessions/${firstRow}`, { headers: { origin: new URL(page.url()).origin }, data: { fields: [] } })).status()).toBe(200);
 });
 
 /** How many things on the page are filled with the colour of waiting, and what they are. */
@@ -4121,8 +4126,8 @@ test('the drawer: what a terminal asks comes first, one thing to type into, besi
     await expect(asks).toContainText('Which branch should I fix it on');
     await expect(asks).toContainText('Go to the terminal and type your answer there.');
     expect(await drawer.evaluate((el) => el.querySelector('[data-testid="details"]')?.firstElementChild?.getAttribute('data-testid'))).toBe('details-asks');
-    // Then, in this order: what it is for (its summary), what is known, its links, its parts as tabs.
-    const tops = await drawer.evaluate((el) => ['[data-testid="details-asks"]', '[data-testid="details-summary"]', '[data-testid="details-known"]', '[data-testid="links-part"]', '.details-tabs'].map((sel) => Math.round((el.querySelector(sel) as HTMLElement).getBoundingClientRect().top)));
+    // Then, in this order: what it is for (its summary), what is known, its fields, its links, its parts as tabs.
+    const tops = await drawer.evaluate((el) => ['[data-testid="details-asks"]', '[data-testid="details-summary"]', '[data-testid="details-known"]', '[data-testid="fields-part"]', '[data-testid="links-part"]', '.details-tabs'].map((sel) => Math.round((el.querySelector(sel) as HTMLElement).getBoundingClientRect().top)));
     expect(tops).toEqual([...tops].sort((a, b) => a - b));
     expect(new Set(tops).size).toBe(tops.length);
     // What is known: a list of facts, with no whole path in it and none of the words that were never a person's.
@@ -4281,7 +4286,7 @@ test('the drawer: what a terminal asks comes first, one thing to type into, besi
       const letter = letterOf('[data-testid="link-add-open"]');
       return {
         // The headings that fold, the summary and the log begin on the gutter too.
-        others: ['[data-testid="details-fold-known"]', '[data-testid="details-fold-links"]', '[data-testid="details-summary"] .note-summary-read', '[data-testid="note-day"]', '[data-testid="recap-times"]'].map((sel) => (off(sel) ?? 99) <= 1 ? 'on' : `${sel} off by ${off(sel)}`),
+        others: ['[data-testid="details-fold-known"]', '[data-testid="details-fold-fields"]', '[data-testid="fields-none"]', '[data-testid="field-add-open"]', '[data-testid="details-fold-links"]', '[data-testid="details-summary"] .note-summary-read', '[data-testid="note-day"]', '[data-testid="recap-times"]'].map((sel) => (off(sel) ?? 99) <= 1 ? 'on' : `${sel} off by ${off(sel)}`),
         closeOffName: Math.abs((close.top + close.bottom) / 2 - (name.top + name.bottom) / 2),
         closeRightOfName: close.left >= name.right - 1,
         closeInHead: close.right <= box('.details-head').right + 1,
@@ -4293,7 +4298,7 @@ test('the drawer: what a terminal asks comes first, one thing to type into, besi
     expect(head).toMatchObject({ closeRightOfName: true, closeInHead: true, actionsUnder: true });
     expect(head.addLetterOffGutter).not.toBeNull();
     expect(head.addLetterOffGutter).toBeLessThanOrEqual(1);
-    expect(head.others).toEqual(['on', 'on', 'on', 'on', 'on']);
+    expect(head.others).toEqual(['on', 'on', 'on', 'on', 'on', 'on', 'on', 'on']);
     // The handle that folds the side panel does not lie over it, and at 1280 wide the bar over the canvas is still one row.
     await page.setViewportSize({ width: 1280, height: 900 });
     // The canvas learns its new width after the window's: wait for the bar to follow.
@@ -4360,6 +4365,122 @@ test('the drawer: what a terminal asks comes first, one thing to type into, besi
     await foldLinks.click();
     await expect(drawer.getByTestId('recap')).toBeVisible();
     await expect(drawer.getByTestId('link-add-open')).toBeVisible();
+    await drawer.getByTestId('details-close').click();
+
+    // Fields: the owner's own, a part between Known and Links. Empty, it says so in one sentence with the way to add one.
+    const fixingId = demo.sessions.fixing as string;
+    await open(fixingId);
+    const fieldsPart = drawer.getByTestId('fields-part');
+    const fieldRows = drawer.getByTestId('field-row');
+    const labels = (): Promise<string[]> => fieldRows.evaluateAll((rows) => rows.map((r) => r.getAttribute('data-field') ?? ''));
+    const fieldsOnServer = async (): Promise<{ label: string; value: string }[]> => (await (await page.request.get(`/v1/sessions/${fixingId}`, { headers: { origin } })).json()).fields;
+    await expect(drawer.getByTestId('fields-none')).toHaveText('No fields yet: a ticket, an owner, an environment, whatever you track about this terminal.');
+    await expect(fieldRows).toHaveCount(0);
+    expect(await boxes()).toBe(0);
+    const line = drawer.getByTestId('field-line');
+    const addField = async (text: string): Promise<void> => {
+      await drawer.getByTestId('field-add-open').click();
+      await expect(line).toBeFocused();
+      await line.fill(text);
+      await page.keyboard.press('Enter');
+    };
+    // One box, with Add held back while it is empty.
+    await drawer.getByTestId('field-add-open').click();
+    await expect(line).toBeFocused();
+    await expect(line).toHaveAttribute('placeholder', 'Ticket: DEMO-12');
+    await expect(line).toHaveAttribute('aria-label', 'A field: its label, a colon, its value');
+    await expect(drawer.getByTestId('field-save')).toBeDisabled();
+    expect(await boxes()).toBe(1);
+    // A line without a colon says what is wrong under the box, and nothing is sent.
+    await line.fill('Ticket DEMO-12');
+    await page.keyboard.press('Enter');
+    await expect(drawer.getByTestId('field-problem')).toContainText('a colon');
+    await expect(line).toBeFocused();
+    await expect(line).toHaveValue('Ticket DEMO-12');
+    expect(await fieldsOnServer()).toEqual([]);
+    // The summary takes the one box, and the field gives way; asking for a field again takes it back.
+    await summaryPart.getByTestId('note-summary-read').click();
+    await expect(summaryBox).toBeFocused();
+    await expect(line).toHaveCount(0);
+    expect(await boxes()).toBe(1);
+    await addField('Ticket: https://example.com/t/DEMO-12');
+    await expect(summaryBox).toHaveCount(0);
+    // A row of the same list of facts, its value an address drawn as a chip; the box is put away.
+    await expect(fieldRows).toHaveCount(1);
+    await expect(fieldsPart.locator('[data-fact="field"][data-field="Ticket"] dt')).toHaveText('Ticket');
+    await expect(fieldsPart.locator('[data-field="Ticket"] dd [data-testid="inline-link"]')).toHaveAttribute('href', 'https://example.com/t/DEMO-12');
+    await expect(line).toHaveCount(0);
+    expect(await boxes()).toBe(0);
+    await expect(drawer.getByTestId('fields-none')).toHaveCount(0);
+    // It is in a second page of the same terminal without a reload: its focus view, with the details open.
+    const second = await page.context().newPage();
+    try {
+      await second.goto(`/t/${fixingId}`);
+      await second.getByTestId('focus-details-toggle').click();
+      const there = second.getByTestId('focus-details').getByTestId('field-row');
+      await expect(there).toHaveCount(1);
+      await addField('Owner: Sam');
+      await expect(fieldRows).toHaveCount(2);
+      await expect(there).toHaveCount(2);
+      await expect(second.getByTestId('focus-details').locator('[data-field="Owner"] [data-testid="field-value"]')).toHaveText('Sam');
+      // A label there already, whatever its capitals, is refused; Escape puts the box away and leaves the details open.
+      await addField('ticket: another');
+      await expect(drawer.getByTestId('field-problem')).toContainText('There is a field “Ticket” already');
+      expect(await boxes()).toBe(1);
+      await page.keyboard.press('Escape');
+      await expect(line).toHaveCount(0);
+      await expect(drawer).toBeVisible();
+      expect(await labels()).toEqual(['Ticket', 'Owner']);
+      // Edit puts the field's line in the same box.
+      await fieldsPart.locator('[data-field="Owner"]').getByTestId('field-more').click();
+      const fieldMenu = page.getByTestId('field-menu');
+      expect(await onTop(page, 'field-menu')).toBe(true);
+      await expect(fieldMenu.getByRole('menuitem')).toHaveText(['Edit…', 'Move up', 'Remove']);
+      await fieldMenu.getByTestId('field-edit').click();
+      await expect(line).toBeFocused();
+      await expect(line).toHaveValue('Owner: Sam');
+      expect(await boxes()).toBe(1);
+      await line.fill('Owner: Alex');
+      await page.keyboard.press('Enter');
+      await expect(fieldsPart.locator('[data-field="Owner"] [data-testid="field-value"]')).toHaveText('Alex');
+      await expect(second.getByTestId('focus-details').locator('[data-field="Owner"] [data-testid="field-value"]')).toHaveText('Alex');
+      // Move changes the order, here and there.
+      await fieldsPart.locator('[data-field="Owner"]').getByTestId('field-more').click();
+      await page.getByTestId('field-menu').getByTestId('field-up').click();
+      await expect.poll(labels).toEqual(['Owner', 'Ticket']);
+      await expect.poll(() => there.evaluateAll((rows) => rows.map((r) => r.getAttribute('data-field')))).toEqual(['Owner', 'Ticket']);
+      await fieldsPart.locator('[data-field="Owner"]').getByTestId('field-more').click();
+      await expect(page.getByTestId('field-menu').getByRole('menuitem')).toHaveText(['Edit…', 'Move down', 'Remove']);
+      await page.keyboard.press('Escape');
+      await expect(page.getByTestId('field-menu')).toHaveCount(0);
+      await expect(drawer).toBeVisible();
+      // Set through the API, the list appears in the page as it was sent.
+      expect((await page.request.patch(`/v1/sessions/${fixingId}`, { headers: { origin }, data: { fields: [{ label: 'Owner', value: 'Alex' }, { label: 'Ticket', value: 'https://example.com/t/DEMO-12' }, { label: 'Environment', value: 'staging' }] } })).status()).toBe(200);
+      await expect.poll(labels).toEqual(['Owner', 'Ticket', 'Environment']);
+      await expect(there).toHaveCount(3);
+      // Remove takes it away.
+      await fieldsPart.locator('[data-field="Environment"]').getByTestId('field-more').click();
+      await page.getByTestId('field-menu').getByTestId('field-remove').click();
+      await expect.poll(labels).toEqual(['Owner', 'Ticket']);
+      await expect(there).toHaveCount(2);
+      expect((await fieldsOnServer()).map((f) => f.label)).toEqual(['Owner', 'Ticket']);
+    } finally {
+      await second.close();
+    }
+    // Folded, it says how many and draws none; folded is remembered in this browser.
+    const foldFields = drawer.getByTestId('details-fold-fields');
+    await expect(foldFields).toHaveAttribute('aria-expanded', 'true');
+    await foldFields.click();
+    await expect(foldFields).toHaveAttribute('aria-expanded', 'false');
+    await expect(foldFields).toHaveText(/^Fields · 2$/);
+    await expect(fieldRows).toHaveCount(0);
+    await expect(drawer.getByTestId('field-add-open')).toHaveCount(0);
+    await page.reload();
+    await expect(page.getByTestId('terminal-node')).toHaveCount(4);
+    await open(fixingId);
+    await expect(foldFields).toHaveAttribute('aria-expanded', 'false');
+    await foldFields.click();
+    await expect(fieldRows).toHaveCount(2);
     await drawer.getByTestId('details-close').click();
 
     // A terminal that asks nothing has no such part: its summary comes first, then its facts. One on a run names its workflow and its step.
