@@ -9,7 +9,10 @@ import {
   newId,
   rememberSeen,
   removeLink,
+  removeOwnField,
+  setOwnField,
   sortedLinks,
+  useSuggestedField,
   tellLink,
   undescribed,
   useSuggestedLink,
@@ -25,11 +28,12 @@ import {
   type Session,
   type SessionLink,
   type Settings,
+  type TerminalField,
   type UseSuggestionRequest,
 } from '@aubergine/shared';
 import { folderFacts, type FolderFacts } from './found/folder';
 import type { PullRequestFinder } from './found/pull-request';
-import { ConflictError, NotFoundError, type Sessions } from './sessions';
+import { BadInputError, ConflictError, NotFoundError, type Sessions } from './sessions';
 import type { StateHub } from './state-hub';
 import type { SessionRuntime } from './runtime/runtime';
 
@@ -134,6 +138,29 @@ export class Described {
     return sortedLinks(result.links);
   }
 
+  /** A terminal's fields, each saying who set it. */
+  fields(sessionId: string): TerminalField[] {
+    return this.sessions.get(sessionId).fields;
+  }
+
+  /** The agent in a terminal sets one of its fields: `setOwnField` decides, and the owner's win. */
+  setField(sessionId: string, label: string, value: string): { field: TerminalField; kept: boolean } {
+    const session = this.sessions.get(sessionId);
+    const result = setOwnField(session.fields, label, value, this.stamp());
+    if ('problem' in result) throw result.reason === 'input' ? new BadInputError(result.problem) : new ConflictError(result.problem);
+    if (JSON.stringify(result.fields) !== JSON.stringify(session.fields)) this.hub.emit({ type: 'session.fields', sessionId, fields: result.fields });
+    return { field: result.field, kept: result.kept };
+  }
+
+  /** The agent in a terminal removes one of its own fields; the owner's stay. */
+  removeField(sessionId: string, label: string): TerminalField[] {
+    const session = this.sessions.get(sessionId);
+    const result = removeOwnField(session.fields, label);
+    if ('problem' in result) throw result.reason === 'none' ? new NotFoundError(result.problem) : new ConflictError(result.problem);
+    this.hub.emit({ type: 'session.fields', sessionId, fields: result.fields });
+    return result.fields;
+  }
+
   /** The addresses seen in the terminal that are not links of it, newest last. Read again first. */
   async seen(sessionId: string): Promise<SeenLink[]> {
     await this.read(sessionId);
@@ -192,10 +219,16 @@ export class Described {
     return { name: after.name, summary: after.note, kept, missing: undescribed(after) };
   }
 
-  /** The owner uses what was suggested, for the name, the summary or one link. */
+  /** The owner uses what was suggested, for the name, the summary, one link or one field. */
   use(sessionId: string, body: UseSuggestionRequest): SessionLink[] {
     const session = this.sessions.get(sessionId);
     const at = this.stamp();
+    if (body.what === 'field') {
+      const result = useSuggestedField(session.fields, body.label ?? '');
+      if ('problem' in result) throw new ConflictError(result.problem);
+      this.hub.emit({ type: 'session.fields', sessionId, fields: result.fields });
+      return this.links(sessionId);
+    }
     if (body.what === 'link') {
       if (!session.links.some((link) => link.id === body.linkId && link.suggested)) throw new ConflictError('Nothing was suggested for that link.');
       this.emit(sessionId, { links: useSuggestedLink(session.links, body.linkId ?? '') });

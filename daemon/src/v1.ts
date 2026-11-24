@@ -780,6 +780,10 @@ export function registerPublicRoutes(app: FastifyInstance, deps: PublicRouteDeps
     addLink: ({ params, body, principal }) => deps.described.add(params.sessionId, body, writerOf(principal)),
     changeLink: ({ params, body, principal }) => deps.described.change(params.sessionId, params.linkId, body, writerOf(principal).source),
     removeLink: ({ params, principal }) => ({ links: deps.described.remove(params.sessionId, params.linkId, writerOf(principal).source).filter((link) => link.fromTerminal !== true || mayReadTerminal(principal, params.sessionId)) }),
+    // A session's own fields, by its own address: `authorize` has made sure the credential is that session's (or the owner's). Always the agent's words.
+    listOwnFields: ({ params }) => ({ fields: deps.described.fields(params.sessionId) }),
+    setOwnField: ({ params, body }) => deps.described.setField(params.sessionId, body.label, body.value),
+    removeOwnField: ({ params }) => ({ fields: deps.described.removeField(params.sessionId, params.label) }),
     listSeenLinks: async ({ params }) => ({ seen: await deps.described.seen(params.sessionId) }),
     keepSeenLink: ({ params, body }) => deps.described.keep(params.sessionId, body.url),
     // A session's own: the address names the session, and `authorize` has made sure its token is that session's.

@@ -25,7 +25,7 @@ import {
 import { ActivityEntry, AgentToolsChoice, TokenView } from './tokens';
 import { CanvasChanges, ChangeEvent } from './events';
 import { Id } from './ids';
-import { TerminalFields } from './fields';
+import { FieldsInput } from './fields';
 import { Settings, ThemeSetting } from './settings';
 
 /**
@@ -205,7 +205,7 @@ export type CreateSessionResponse = z.infer<typeof CreateSessionResponse>;
 
 /** PATCH body: any of the fields the user can edit. */
 export const UpdateSessionRequest = z
-  .object({ name: SessionName, note: SessionNote, tags: Tags, fields: TerminalFields })
+  .object({ name: SessionName, note: SessionNote, tags: Tags, fields: FieldsInput })
   .partial()
   .refine((body) => body.name !== undefined || body.note !== undefined || body.tags !== undefined || body.fields !== undefined, 'Nothing to update');
 export type UpdateSessionRequest = z.infer<typeof UpdateSessionRequest>;
@@ -658,7 +658,7 @@ export type StartSessionRequest = z.infer<typeof StartSessionRequest>;
 
 /** Body of changing a session: any of its name, its tags and its fields. `tags` and `fields` each replace the whole list. */
 export const PatchSessionRequest = z
-  .object({ name: SessionName, tags: Tags, note: SessionNote, fields: TerminalFields })
+  .object({ name: SessionName, tags: Tags, note: SessionNote, fields: FieldsInput })
   .partial()
   .refine((body) => body.name !== undefined || body.tags !== undefined || body.note !== undefined || body.fields !== undefined, 'Nothing to update');
 export type PatchSessionRequest = z.infer<typeof PatchSessionRequest>;

@@ -265,7 +265,7 @@ describe('canvases', () => {
 
 describe('an option a command does not know', () => {
   // Every command, with something made up after it. Free text (a note) may hold anything.
-  const lines = ['list', 'new x', 'canvas list', 'canvas new x', 'attach x', 'here', 'scan', 'move', 'import', 'hook stop', 'hooks print', 'shell-hook print', 'token list', 'token create x --scope read', 'token revoke x', 'start', 'open', 'update', 'version', 'doctor', 'uninstall', 'service install', 'screen x', 'output x', 'protect x', 'unprotect x'];
+  const lines = ['field list', 'field remove', 'list', 'new x', 'canvas list', 'canvas new x', 'attach x', 'here', 'scan', 'move', 'import', 'hook stop', 'hooks print', 'shell-hook print', 'token list', 'token create x --scope read', 'token revoke x', 'start', 'open', 'update', 'version', 'doctor', 'uninstall', 'service install', 'screen x', 'output x', 'protect x', 'unprotect x'];
   it.each(lines)('is refused in one sentence that names it: %s', (line) => {
     let thrown: unknown;
     try {
@@ -280,6 +280,23 @@ describe('an option a command does not know', () => {
   it('is named where the command can tell which word it was', () => {
     expect(() => parseCommand(['new', 'w1', '--no-attach'])).toThrow('new does not know --no-attach');
     expect(() => parseCommand(['attach', 'api', '--now'])).toThrow('attach does not know --now');
+  });
+});
+
+describe('field', () => {
+  it('sets one with a label and the rest as its value, removes one by its label, and lists them', () => {
+    expect(parseCommand(['field', 'set', 'Branch', 'fix-session-time'])).toEqual({ name: 'field-set', label: 'Branch', value: 'fix-session-time' });
+    expect(parseCommand(['field', 'set', 'Build status', 'green', 'on', 'main'])).toEqual({ name: 'field-set', label: 'Build status', value: 'green on main' });
+    expect(parseCommand(['field', 'remove', 'Build', 'status'])).toEqual({ name: 'field-remove', label: 'Build status' });
+    expect(parseCommand(['field', 'list'])).toEqual({ name: 'field-list' });
+    // A value is free text, as a note is.
+    expect(parseCommand(['field', 'set', 'Flags', '--verbose'])).toEqual({ name: 'field-set', label: 'Flags', value: '--verbose' });
+  });
+
+  it('says what is missing or unknown in one sentence', () => {
+    for (const words of [['field'], ['field', 'set', 'Branch'], ['field', 'remove'], ['field', 'list', 'more'], ['field', 'add', 'x', 'y']]) expect(() => parseCommand(words), words.join(' ')).toThrow(/^field needs one of/);
+    expect(() => parseCommand(['field', 'set', '--label', 'x'])).toThrow('field set does not know --label.');
+    expect(() => parseCommand(['field', 'remove', 'x', '--all'])).toThrow('field remove does not know --all.');
   });
 });
 

@@ -100,7 +100,7 @@ describe('authorize', () => {
   it('keeps a session token to what it reports about itself and the run it is on, for itself only', () => {
     const session: Principal = { kind: 'session', sessionId: SESSION };
     const own = ACTIONS.filter((action) => authorize(session, action, { sessionId: SESSION }));
-    expect([...own].sort()).toEqual(['agent.report', 'ask.own.add', 'attention.set', 'describe.own', 'draft.own.propose', 'draft.own.read', 'environment.own.read', 'links.read', 'links.write', 'message.own.read', 'message.own.send', 'note.append', 'project.own.read', 'queue.own.read', 'recap.own.write', 'repository.own.read', 'run.own.read', 'run.own.report', 'task.own.propose']);
+    expect([...own].sort()).toEqual(['agent.report', 'ask.own.add', 'attention.set', 'describe.own', 'draft.own.propose', 'draft.own.read', 'environment.own.read', 'fields.own', 'links.read', 'links.write', 'message.own.read', 'message.own.send', 'note.append', 'project.own.read', 'queue.own.read', 'recap.own.write', 'repository.own.read', 'run.own.read', 'run.own.report', 'task.own.propose']);
     for (const action of ACTIONS) {
       expect(authorize(session, action, { sessionId: OTHER }), `${action} on another session`).toBe(false);
       expect(authorize(session, action, {}), `${action} on nothing`).toBe(false);

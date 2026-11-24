@@ -300,6 +300,14 @@ export type ListCanvasSessionsResult = {
       label: unknown & unknown;
       /** The value: one line of plain text. An address in it is shown as a link. */
       value: string;
+      /** Who set it: `owner` (the owner, or a program that may change the session) or `agent` (the agent in the terminal, with its own credential). Set by the server. */
+      source: "owner" | "agent" | "found";
+      /** What the agent in the terminal would set this field to, where the owner set it: kept beside the owner’s value until the owner uses it or changes the field. */
+      suggested?: {
+        /** The value: one line of plain text. An address in it is shown as a link. */
+        value: string;
+        at: string;
+      };
     }[];
     parkedFrom: {
       canvasId: string;
@@ -465,6 +473,14 @@ export type StartSessionResult = {
       label: unknown & unknown;
       /** The value: one line of plain text. An address in it is shown as a link. */
       value: string;
+      /** Who set it: `owner` (the owner, or a program that may change the session) or `agent` (the agent in the terminal, with its own credential). Set by the server. */
+      source: "owner" | "agent" | "found";
+      /** What the agent in the terminal would set this field to, where the owner set it: kept beside the owner’s value until the owner uses it or changes the field. */
+      suggested?: {
+        /** The value: one line of plain text. An address in it is shown as a link. */
+        value: string;
+        at: string;
+      };
     }[];
     parkedFrom: {
       canvasId: string;
@@ -638,6 +654,14 @@ export type ListSessionsResult = {
       label: unknown & unknown;
       /** The value: one line of plain text. An address in it is shown as a link. */
       value: string;
+      /** Who set it: `owner` (the owner, or a program that may change the session) or `agent` (the agent in the terminal, with its own credential). Set by the server. */
+      source: "owner" | "agent" | "found";
+      /** What the agent in the terminal would set this field to, where the owner set it: kept beside the owner’s value until the owner uses it or changes the field. */
+      suggested?: {
+        /** The value: one line of plain text. An address in it is shown as a link. */
+        value: string;
+        at: string;
+      };
     }[];
     parkedFrom: {
       canvasId: string;
@@ -782,6 +806,14 @@ export type GetSessionResult = {
     label: unknown & unknown;
     /** The value: one line of plain text. An address in it is shown as a link. */
     value: string;
+    /** Who set it: `owner` (the owner, or a program that may change the session) or `agent` (the agent in the terminal, with its own credential). Set by the server. */
+    source: "owner" | "agent" | "found";
+    /** What the agent in the terminal would set this field to, where the owner set it: kept beside the owner’s value until the owner uses it or changes the field. */
+    suggested?: {
+      /** The value: one line of plain text. An address in it is shown as a link. */
+      value: string;
+      at: string;
+    };
   }[];
   parkedFrom: {
     canvasId: string;
@@ -876,7 +908,7 @@ export type UpdateSessionBody = {
   name?: string;
   tags?: string[];
   note?: string;
-  /** The fields of the terminal, in order: at most 12, each label once. */
+  /** The fields of the terminal, in order: at most 12, each label once. Who set each is the server’s to say: what is sent is the owner’s, except a field sent exactly as it stood, which keeps who set it. */
   fields?: {
     /** What the value is, in a few words: one line of plain text, without a colon. */
     label: unknown & unknown;
@@ -937,6 +969,14 @@ export type UpdateSessionResult = {
     label: unknown & unknown;
     /** The value: one line of plain text. An address in it is shown as a link. */
     value: string;
+    /** Who set it: `owner` (the owner, or a program that may change the session) or `agent` (the agent in the terminal, with its own credential). Set by the server. */
+    source: "owner" | "agent" | "found";
+    /** What the agent in the terminal would set this field to, where the owner set it: kept beside the owner’s value until the owner uses it or changes the field. */
+    suggested?: {
+      /** The value: one line of plain text. An address in it is shown as a link. */
+      value: string;
+      at: string;
+    };
   }[];
   parkedFrom: {
     canvasId: string;
@@ -1090,6 +1130,14 @@ export type MoveSessionResult = {
       label: unknown & unknown;
       /** The value: one line of plain text. An address in it is shown as a link. */
       value: string;
+      /** Who set it: `owner` (the owner, or a program that may change the session) or `agent` (the agent in the terminal, with its own credential). Set by the server. */
+      source: "owner" | "agent" | "found";
+      /** What the agent in the terminal would set this field to, where the owner set it: kept beside the owner’s value until the owner uses it or changes the field. */
+      suggested?: {
+        /** The value: one line of plain text. An address in it is shown as a link. */
+        value: string;
+        at: string;
+      };
     }[];
     parkedFrom: {
       canvasId: string;
@@ -1243,6 +1291,14 @@ export type ParkSessionResult = {
     label: unknown & unknown;
     /** The value: one line of plain text. An address in it is shown as a link. */
     value: string;
+    /** Who set it: `owner` (the owner, or a program that may change the session) or `agent` (the agent in the terminal, with its own credential). Set by the server. */
+    source: "owner" | "agent" | "found";
+    /** What the agent in the terminal would set this field to, where the owner set it: kept beside the owner’s value until the owner uses it or changes the field. */
+    suggested?: {
+      /** The value: one line of plain text. An address in it is shown as a link. */
+      value: string;
+      at: string;
+    };
   }[];
   parkedFrom: {
     canvasId: string;
@@ -1391,6 +1447,14 @@ export type RestoreSessionResult = {
       label: unknown & unknown;
       /** The value: one line of plain text. An address in it is shown as a link. */
       value: string;
+      /** Who set it: `owner` (the owner, or a program that may change the session) or `agent` (the agent in the terminal, with its own credential). Set by the server. */
+      source: "owner" | "agent" | "found";
+      /** What the agent in the terminal would set this field to, where the owner set it: kept beside the owner’s value until the owner uses it or changes the field. */
+      suggested?: {
+        /** The value: one line of plain text. An address in it is shown as a link. */
+        value: string;
+        at: string;
+      };
     }[];
     parkedFrom: {
       canvasId: string;
@@ -8819,6 +8883,14 @@ export type ProtectSessionResult = {
     label: unknown & unknown;
     /** The value: one line of plain text. An address in it is shown as a link. */
     value: string;
+    /** Who set it: `owner` (the owner, or a program that may change the session) or `agent` (the agent in the terminal, with its own credential). Set by the server. */
+    source: "owner" | "agent" | "found";
+    /** What the agent in the terminal would set this field to, where the owner set it: kept beside the owner’s value until the owner uses it or changes the field. */
+    suggested?: {
+      /** The value: one line of plain text. An address in it is shown as a link. */
+      value: string;
+      at: string;
+    };
   }[];
   parkedFrom: {
     canvasId: string;
@@ -8966,6 +9038,14 @@ export type SetTakesMessagesResult = {
     label: unknown & unknown;
     /** The value: one line of plain text. An address in it is shown as a link. */
     value: string;
+    /** Who set it: `owner` (the owner, or a program that may change the session) or `agent` (the agent in the terminal, with its own credential). Set by the server. */
+    source: "owner" | "agent" | "found";
+    /** What the agent in the terminal would set this field to, where the owner set it: kept beside the owner’s value until the owner uses it or changes the field. */
+    suggested?: {
+      /** The value: one line of plain text. An address in it is shown as a link. */
+      value: string;
+      at: string;
+    };
   }[];
   parkedFrom: {
     canvasId: string;
@@ -9596,6 +9676,69 @@ export type RemoveLinkResult = {
   }[];
 };
 
+export type ListOwnFieldsResult = {
+  /** The fields of the terminal, in order, each saying who set it. */
+  fields: {
+    /** What the value is, in a few words: one line of plain text, without a colon. */
+    label: unknown & unknown;
+    /** The value: one line of plain text. An address in it is shown as a link. */
+    value: string;
+    /** Who set it: `owner` (the owner, or a program that may change the session) or `agent` (the agent in the terminal, with its own credential). Set by the server. */
+    source: "owner" | "agent" | "found";
+    /** What the agent in the terminal would set this field to, where the owner set it: kept beside the owner’s value until the owner uses it or changes the field. */
+    suggested?: {
+      /** The value: one line of plain text. An address in it is shown as a link. */
+      value: string;
+      at: string;
+    };
+  }[];
+};
+
+export type SetOwnFieldBody = {
+  /** What the value is, in a few words: one line of plain text, without a colon, at most 40 characters. A label that is there already, whatever its capitals, is that field. */
+  label: string;
+  /** The value: one line of plain text, at most 200 characters. */
+  value: string;
+};
+
+export type SetOwnFieldResult = {
+  /** One field: a label and its value, and who set it. */
+  field: {
+    /** What the value is, in a few words: one line of plain text, without a colon. */
+    label: unknown & unknown;
+    /** The value: one line of plain text. An address in it is shown as a link. */
+    value: string;
+    /** Who set it: `owner` (the owner, or a program that may change the session) or `agent` (the agent in the terminal, with its own credential). Set by the server. */
+    source: "owner" | "agent" | "found";
+    /** What the agent in the terminal would set this field to, where the owner set it: kept beside the owner’s value until the owner uses it or changes the field. */
+    suggested?: {
+      /** The value: one line of plain text. An address in it is shown as a link. */
+      value: string;
+      at: string;
+    };
+  };
+  /** False where the owner set this label: the owner’s value stays, and what was sent is kept on it as a suggestion. */
+  kept: boolean;
+};
+
+export type RemoveOwnFieldResult = {
+  /** The fields of the terminal, in order, each saying who set it. */
+  fields: {
+    /** What the value is, in a few words: one line of plain text, without a colon. */
+    label: unknown & unknown;
+    /** The value: one line of plain text. An address in it is shown as a link. */
+    value: string;
+    /** Who set it: `owner` (the owner, or a program that may change the session) or `agent` (the agent in the terminal, with its own credential). Set by the server. */
+    source: "owner" | "agent" | "found";
+    /** What the agent in the terminal would set this field to, where the owner set it: kept beside the owner’s value until the owner uses it or changes the field. */
+    suggested?: {
+      /** The value: one line of plain text. An address in it is shown as a link. */
+      value: string;
+      at: string;
+    };
+  }[];
+};
+
 export type ListSeenLinksResult = {
   /** Addresses seen in what the terminal showed and not kept as links: the last twenty, newest last. Held in memory only. */
   seen: {
@@ -9689,9 +9832,11 @@ export type LookAgainResult = {
 };
 
 export type UseSuggestionBody = {
-  what: "name" | "summary" | "link";
+  what: "name" | "summary" | "link" | "field";
   /** For `link`: which one. */
   linkId?: string;
+  /** For `field`: the label of the field. */
+  label?: string;
 };
 
 export type UseSuggestionResult = {
@@ -10571,6 +10716,9 @@ export const OPERATIONS = {
   addLink: { method: 'POST', path: '/v1/sessions/{sessionId}/links', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: "notes:write" } },
   changeLink: { method: 'PATCH', path: '/v1/sessions/{sessionId}/links/{linkId}', params: ["sessionId", "linkId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: "notes:write" } },
   removeLink: { method: 'DELETE', path: '/v1/sessions/{sessionId}/links/{linkId}', params: ["sessionId", "linkId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: "notes:write" } },
+  listOwnFields: { method: 'GET', path: '/v1/sessions/{sessionId}/fields', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: null } },
+  setOwnField: { method: 'PUT', path: '/v1/sessions/{sessionId}/fields', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: null } },
+  removeOwnField: { method: 'DELETE', path: '/v1/sessions/{sessionId}/fields/{label}', params: ["sessionId", "label"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: null } },
   listSeenLinks: { method: 'GET', path: '/v1/sessions/{sessionId}/links/seen', params: ["sessionId"], hasBody: false, paged: false, idempotent: false, stream: false, access: { who: 'token', scope: "terminal:read" } },
   keepSeenLink: { method: 'POST', path: '/v1/sessions/{sessionId}/links/keep', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'browser', scope: null } },
   describeSession: { method: 'PUT', path: '/v1/sessions/{sessionId}/described', params: ["sessionId"], hasBody: true, paged: false, idempotent: false, stream: false, access: { who: 'session', scope: null } },
@@ -11568,6 +11716,24 @@ export interface Client {
    * `DELETE /v1/sessions/{sessionId}/links/{linkId}`. A session's own token, or an API token with `notes:write`.
    */
   removeLink(args: { sessionId: string; linkId: string } & CallOptions): Promise<RemoveLinkResult>;
+  /**
+   * A session's fields.
+   *
+   * `GET /v1/sessions/{sessionId}/fields`. A session's own token.
+   */
+  listOwnFields(args: { sessionId: string } & CallOptions): Promise<ListOwnFieldsResult>;
+  /**
+   * Set one field of the session, as its agent.
+   *
+   * `PUT /v1/sessions/{sessionId}/fields`. A session's own token.
+   */
+  setOwnField(args: { sessionId: string; body: SetOwnFieldBody } & CallOptions): Promise<SetOwnFieldResult>;
+  /**
+   * Remove one field of the session, as its agent.
+   *
+   * `DELETE /v1/sessions/{sessionId}/fields/{label}`. A session's own token.
+   */
+  removeOwnField(args: { sessionId: string; label: string } & CallOptions): Promise<RemoveOwnFieldResult>;
   /**
    * Addresses seen in a terminal and not kept.
    *

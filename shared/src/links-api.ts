@@ -62,8 +62,9 @@ export const DescribeCheckAnswer = z.object({
 export type DescribeCheckAnswer = z.infer<typeof DescribeCheckAnswer>;
 
 export const UseSuggestionRequest = z.object({
-  what: z.enum(['name', 'summary', 'link']),
+  what: z.enum(['name', 'summary', 'link', 'field']),
   linkId: z.string().max(64).optional().describe('For `link`: which one.'),
+  label: z.string().max(200).optional().describe('For `field`: the label of the field.'),
 });
 export type UseSuggestionRequest = z.infer<typeof UseSuggestionRequest>;
 

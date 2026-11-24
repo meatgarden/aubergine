@@ -6,8 +6,8 @@ import type { Scope } from './tokens';
  * description of the API reads, so that the two say the same thing.
  */
 
-/** What a session may do, to itself only. */
-export const SESSION_ACTIONS = ['attention.set', 'note.append', 'agent.report', 'run.own.read', 'run.own.report', 'draft.own.read', 'draft.own.propose', 'repository.own.read', 'recap.own.write', 'message.own.read', 'message.own.send', 'environment.own.read', 'task.own.propose', 'ask.own.add', 'queue.own.read', 'project.own.read', 'links.read', 'links.write', 'describe.own'] as const;
+/** What a session may do, to itself only. Those not in `SCOPE_OF` below (`fields.own` among them) no token may do: no token takes a session's place. */
+export const SESSION_ACTIONS = ['attention.set', 'note.append', 'agent.report', 'run.own.read', 'run.own.report', 'draft.own.read', 'draft.own.propose', 'repository.own.read', 'recap.own.write', 'message.own.read', 'message.own.send', 'environment.own.read', 'task.own.propose', 'ask.own.add', 'queue.own.read', 'project.own.read', 'links.read', 'links.write', 'describe.own', 'fields.own'] as const;
 
 /** For a token, each of these needs the scope beside it. */
 export const SCOPE_OF = {

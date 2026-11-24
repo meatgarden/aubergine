@@ -3,6 +3,7 @@ import { existsSync, statSync } from 'node:fs';
 import os from 'node:os';
 import {
   Id,
+  ownerSetFields,
   NO_ATTENTION,
   NO_STATUS,
   NODE_DEFAULT_HEIGHT,
@@ -248,7 +249,8 @@ export class Sessions {
     if (changes.name !== undefined) this.hub.emit({ type: 'session.renamed', sessionId, name: changes.name });
     if (changes.note !== undefined) this.hub.emit({ type: 'session.noted', sessionId, note: changes.note });
     if (changes.tags !== undefined) this.hub.emit({ type: 'session.tagged', sessionId, tags: changes.tags });
-    if (changes.fields !== undefined) this.hub.emit({ type: 'session.fields', sessionId, fields: changes.fields });
+    // What is sent is the owner's, except a field sent as it stood, which keeps who set it.
+    if (changes.fields !== undefined) this.hub.emit({ type: 'session.fields', sessionId, fields: ownerSetFields(this.find(sessionId).fields, changes.fields) });
     return this.find(sessionId);
   }
 

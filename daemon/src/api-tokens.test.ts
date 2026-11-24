@@ -323,6 +323,10 @@ describe('every route has a rule', () => {
     'PUT /v1/sessions/:sessionId/attention',
     'PUT /v1/sessions/:sessionId/recap',
     'PUT /v1/sessions/:sessionId/agent',
+    // Its own terminal's fields: a session's own, and no token's.
+    'GET /v1/sessions/:sessionId/fields',
+    'PUT /v1/sessions/:sessionId/fields',
+    'DELETE /v1/sessions/:sessionId/fields/:label',
     'GET /v1/sessions/:sessionId/brief',
     'GET /v1/sessions/:sessionId/drafts',
     'POST /v1/sessions/:sessionId/drafts',
@@ -528,6 +532,8 @@ describe('every route has a rule', () => {
     }
     expect(allowed.sort()).toEqual([
       // What it says about itself: its own links, its own name and summary, and the checks its hooks make.
+      // Its own terminal's fields: set, removed and read, its own only.
+      'DELETE /v1/sessions/:sessionId/fields/:label',
       'DELETE /v1/sessions/:sessionId/links/:linkId',
       'GET /v1',
       'GET /v1/openapi.json',
@@ -535,6 +541,7 @@ describe('every route has a rule', () => {
       'GET /v1/sessions/:sessionId/drafts',
       // Where it works itself, and which of its own files changed: names and counts.
       'GET /v1/sessions/:sessionId/environment',
+      'GET /v1/sessions/:sessionId/fields',
       'GET /v1/sessions/:sessionId/links',
       'GET /v1/sessions/:sessionId/project',
       'GET /v1/sessions/:sessionId/queue',
@@ -555,6 +562,7 @@ describe('every route has a rule', () => {
       'PUT /v1/sessions/:sessionId/agent',
       'PUT /v1/sessions/:sessionId/attention',
       'PUT /v1/sessions/:sessionId/described',
+      'PUT /v1/sessions/:sessionId/fields',
       'PUT /v1/sessions/:sessionId/recap',
     ]);
     // Session tokens are not recorded in the activity log: it is the record of API tokens.

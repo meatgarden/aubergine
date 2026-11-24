@@ -49,7 +49,7 @@ import {
   shellJoin,
   type HookEvent,
 } from './agents/claude-code';
-import { agentClient } from './cli/agent';
+import { agentClient, fieldCommand } from './cli/agent';
 import { guideText } from './cli/guide';
 import { parseLibraryCommand, runLibraryCommand } from './cli/library';
 import { parseCopiesCommand, runCopiesCommand } from './cli/copies';
@@ -856,6 +856,13 @@ async function main(): Promise<number> {
       if (found.length !== 1) throw new UsageError(found.length === 0 ? 'No link of this terminal has that address or label. See them with: aubergine link list' : 'More than one link has that label: name it by its address.');
       await client.removeLink(found[0]!.id);
       console.log(`Removed "${showControl(found[0]!.label)}".`);
+      return 0;
+    }
+
+    case 'field-set':
+    case 'field-remove':
+    case 'field-list': {
+      for (const line of await fieldCommand(command, agentClient())) console.log(line);
       return 0;
     }
 

@@ -81,6 +81,10 @@ As a tool: describe_self.
 
 As tools: link_add, links_read, link_remove.
 
+(Needs the terminal's own credential.)
+
+Your terminal also has fields, short pairs of a label and a value in its details (a build, an environment): set what is true of your work with `aubergine field set <label> <value>`, remove what no longer is with `aubergine field remove <label>`, and see them with `aubergine field list`. A field your owner set stays theirs: what you set for its label is offered to them, and you remove only your own.
+
 ## Workflows
 
 (Needs the terminal's own credential, or an API token with one of the scopes read, runs:write.)

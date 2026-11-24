@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { MAX_FIELDS, fieldFromLine, lineOfField, showControl, type TerminalField } from '@aubergine/shared';
+import { MAX_FIELDS, fieldFromLine, lineOfField, showControl, type FieldInput, type TerminalField } from '@aubergine/shared';
 import { api, isSuperseded } from '../api';
 import { WithLinks } from '../links/LinkChip';
 import { useApp } from '../store';
@@ -47,7 +47,7 @@ export function FieldsPart({ sessionId, typing, onTyping, folded = false, onFold
     onTyping(true);
   };
   /** Sends the whole new list. What was typed stays where it was until the answer says it was kept. */
-  const save = (next: TerminalField[], then?: () => void): void => {
+  const save = (next: FieldInput[], then?: () => void): void => {
     setProblem(null);
     setBusy(true);
     api.updateSession(sessionId, { fields: next }).then(
