@@ -4,31 +4,33 @@ import { api } from '../../api';
 import { LinkChip } from '../../links/LinkChip';
 import { LinksPart } from '../../links/LinksPart';
 import { NotePanel } from '../../NotePanel';
-import { RecapBlock } from '../../Recap';
+import { RecapBlock, type MoreFact } from '../../Recap';
+import { setDetailsFolds, useDetailsFolds } from '../../details-folds';
 import { SessionMessages } from '../../Messages';
 import { TerminalInput } from '../../TerminalInput';
 import { markNotesSeen, useUnseenNotes } from '../../notes-seen';
 import { atThisComputer, useApp } from '../../store';
 import { DOT_WORD, dotTone, rowState } from '../../terminal-rows';
-import { IconButton, MenuButton, MenuItem, StateDot, Tabs } from '../../ui';
+import { FoldHeading, IconButton, MenuButton, MenuItem, SectionTitle, StateDot, Tabs } from '../../ui';
 import { actOnTerminal, chipOf, terminalActions } from './terminals';
 
 /**
  * The details of one terminal, beside the list. In this order: what the terminal is (its mark, its name, its state)
  * with the one thing most people came to do, going to it; then what it asks of the owner, if anything, and how to
- * answer; then what is known about it, as a list of facts; then its note, its messages and a box that types into it,
- * one of them at a time.
+ * answer; then what it is for, its summary; then what is known about it, as facts in groups; then its links; then its
+ * log, its messages and a box that types into it, one of them at a time. What is known and the links fold.
  */
 
 const session = (id: string) => (s: ReturnType<typeof useApp.getState>) => s.app?.sessions.find((x) => x.id === id);
 
 /** What was found about its folder, and the conversation its agent is in, as facts: each a chip, or a short id that is copied whole. */
-function foundFacts(found: Session): { key: string; label: string; value: React.ReactNode }[] {
-  const facts: { key: string; label: string; value: React.ReactNode }[] = [];
+function foundFacts(found: Session): MoreFact[] {
+  const facts: MoreFact[] = [];
   const at = found.found;
-  if (at?.repository) facts.push({ key: 'repository', label: 'Repository', value: at.repositoryUrl ? <LinkChip url={at.repositoryUrl} kind="repository" label={at.repository} about="Found in its folder" testid="fact-repository" /> : showControl(at.repository) });
+  if (at?.repository) facts.push({ group: 'place', key: 'repository', label: 'Repository', value: at.repositoryUrl ? <LinkChip url={at.repositoryUrl} kind="repository" label={at.repository} about="Found in its folder" testid="fact-repository" /> : showControl(at.repository) });
   if (at?.branch)
     facts.push({
+      group: 'place',
       key: 'branch',
       label: 'Branch',
       value: (
@@ -37,10 +39,11 @@ function foundFacts(found: Session): { key: string; label: string; value: React.
         </button>
       ),
     });
-  if (at?.pullRequest) facts.push({ key: 'pull-request', label: 'Pull request', value: <LinkChip url={at.pullRequest.url} kind="pull-request" label={`PR ${at.pullRequest.number}`} about={showControl(at.pullRequest.title)} state={at.pullRequest.state} testid="fact-pull-request" /> });
+  if (at?.pullRequest) facts.push({ group: 'place', key: 'pull-request', label: 'Pull request', value: <LinkChip url={at.pullRequest.url} kind="pull-request" label={`PR ${at.pullRequest.number}`} about={showControl(at.pullRequest.title)} state={at.pullRequest.state} testid="fact-pull-request" /> });
   const conversation = found.agent?.conversationId;
   if (conversation)
     facts.push({
+      group: 'about',
       key: 'conversation',
       label: 'Conversation',
       value: (
@@ -125,30 +128,43 @@ function Asks({ waiting, onMessages, standalone }: { waiting: WaitingSession; on
   );
 }
 
+/** Which part of the details has the one text box, if one has asked for it. */
+type TextBox = 'summary' | 'log' | 'link' | null;
+
 /**
  * `standalone`: shown in the focus view, where none of the canvas page's screens and dialogs are. What needs them (a
  * run's dialog, past conversations, how the agent is set up) and the Type tab are left out; "Show on its canvas" leads
- * to them.
+ * to them. `noteElsewhere`: the note is drawn beside these details (the focus view's Note column), so the summary and
+ * the Log tab are left out here.
  */
-export function Details({ id, onClose, standalone = false }: { id: string; onClose: () => void; standalone?: boolean }) {
+export function Details({ id, onClose, standalone = false, noteElsewhere = false }: { id: string; onClose: () => void; standalone?: boolean; noteElsewhere?: boolean }) {
   const found = useApp(session(id));
   const exists = found !== undefined;
   const run = useApp((s) => s.app?.runs.find((r) => r.sessionId === id));
   // Why it waits for the owner, if it does: the same function the owner's list is made with.
   const waiting = useMemo(() => (found ? (sessionsWaiting([found], run ? [run] : [])[0] ?? null) : null), [found, run]);
-  // On its messages where those were asked for, or are what it waits with; on its note otherwise.
+  // On its messages where those were asked for, or are what it waits with; on its log otherwise.
   const asked = useApp((s) => (s.drawer?.id === id ? s.drawer.part : undefined));
-  const [tab, setTab] = useState<'note' | 'messages' | 'type'>(asked === 'messages' ? 'messages' : 'note');
+  const [chosen, setChosen] = useState<'note' | 'messages' | 'type'>(asked === 'messages' ? 'messages' : 'note');
   useEffect(() => {
-    if (asked === 'messages') setTab('messages');
+    if (asked === 'messages') setChosen('messages');
   }, [asked]);
-  // The details have one text box in view at a time: while a link is added or changed, the note's summary is read.
-  const [linking, setLinking] = useState(false);
+  // With the note beside these details, Messages is the one part left.
+  const tab = noteElsewhere ? 'messages' : chosen;
+  // The details have one text box in view at a time: the part that asked for it last has it, and the others give way.
+  const [box, setBox] = useState<TextBox>(null);
+  const takes = (part: Exclude<TextBox, null>) => (on: boolean): void => setBox((now) => (on ? part : now === part ? null : now));
+  const setTab = (next: 'note' | 'messages' | 'type'): void => {
+    // The log's field goes with its tab.
+    setBox((now) => (now === 'log' ? null : now));
+    setChosen(next);
+  };
+  const folds = useDetailsFolds();
   const missing = found ? undescribed(found) : [];
   const entries = found?.noteLog.length ?? 0;
   const unseen = useUnseenNotes(id, entries);
   const forOwner = found?.messages.forOwner ?? 0;
-  // The note's entries are seen once its tab has been looked at.
+  // The log's entries are seen once its tab has been looked at.
   useEffect(() => {
     if (tab === 'note') markNotesSeen(id, entries);
   }, [id, entries, tab]);
@@ -156,10 +172,12 @@ export function Details({ id, onClose, standalone = false }: { id: string; onClo
     if (!exists) onClose();
   }, [exists, onClose]);
   if (!found) return null;
+  const messages = <SessionMessages sessionId={id} reading={box !== null} onTyping={() => setBox(null)} />;
   return (
     <div className="details" data-testid="details">
       {waiting && <Asks waiting={waiting} onMessages={() => setTab('messages')} standalone={standalone} />}
-      <RecapBlock sessionId={id} omit={['note']} more={foundFacts(found)} />
+      {/* What it is for: read under what it asks, and pressed to change it. */}
+      {!noteElsewhere && <NotePanel sessionId={id} onClose={onClose} embedded parts="summary" reading={box !== null && box !== 'summary'} onTyping={takes('summary')} />}
       {/* What its agent would have written where your own words stand: yours stay until you say otherwise. */}
       {(found.suggested.name || found.suggested.summary) && (
         <div className="details-suggested" data-testid="details-suggested">
@@ -189,7 +207,17 @@ export function Details({ id, onClose, standalone = false }: { id: string; onClo
           Not described by its agent yet: {missing.map((what) => (what === 'name' ? 'it has the name it was made with' : 'it has no summary, or an old one')).join(', and ')}. You can fill these in yourself.
         </p>
       )}
-      <LinksPart sessionId={id} typing={linking} onTyping={setLinking} />
+      <section className="details-part details-known" aria-label="Known" data-testid="details-known">
+        <FoldHeading folded={folds.known} onToggle={() => setDetailsFolds({ known: !folds.known })} controls={`details-known-${id}`} testid="details-fold-known">
+          Known
+        </FoldHeading>
+        {!folds.known && (
+          <div id={`details-known-${id}`}>
+            <RecapBlock sessionId={id} omit={['note']} more={foundFacts(found)} />
+          </div>
+        )}
+      </section>
+      <LinksPart sessionId={id} typing={box === 'link'} onTyping={takes('link')} folded={folds.links} onFold={() => setDetailsFolds({ links: !folds.links })} />
       {found.agent != null && !standalone && (
         <div className="details-links" data-testid="drawer-switched-on">
           <button type="button" className="quiet" onClick={() => useApp.getState().openHistory({ folder: found.cwd ?? null, query: '' })} data-testid="drawer-history">
@@ -200,19 +228,26 @@ export function Details({ id, onClose, standalone = false }: { id: string; onClo
           </button>
         </div>
       )}
-      <div className="details-tabs">
-        <Tabs
-          label={standalone ? 'The note and the messages of this terminal' : 'The note, the messages and typing into this terminal'}
-          value={tab}
-          onChange={setTab}
-          tabs={[
-            { value: 'note', label: `Note${tab !== 'note' && unseen > 0 ? ` ${unseen}` : ''}`, testid: 'details-tab-note' },
-            { value: 'messages', label: `Messages${forOwner > 0 ? ` ${forOwner}` : ''}`, testid: 'details-tab-messages' },
-            ...(standalone ? [] : [{ value: 'type' as const, label: 'Type', testid: 'details-tab-type' }]),
-          ]}
-        />
-      </div>
-      {tab === 'note' ? <NotePanel sessionId={id} onClose={onClose} embedded reading={linking} onTyping={() => setLinking(false)} /> : tab === 'messages' ? <SessionMessages sessionId={id} /> : <TerminalInput sessionId={id} reading={linking} onTyping={() => setLinking(false)} />}
+      {noteElsewhere ? (
+        // One part is left: it is named, not drawn as a row of one tab.
+        <div className="details-tabs is-one">
+          <SectionTitle className="details-one-part" data-testid="details-messages-title">{`Messages${forOwner > 0 ? ` ${forOwner}` : ''}`}</SectionTitle>
+        </div>
+      ) : (
+        <div className="details-tabs">
+          <Tabs
+            label={standalone ? 'The log and the messages of this terminal' : 'The log, the messages and typing into this terminal'}
+            value={tab}
+            onChange={setTab}
+            tabs={[
+              { value: 'note', label: `Log${tab !== 'note' && unseen > 0 ? ` ${unseen}` : ''}`, testid: 'details-tab-note' },
+              { value: 'messages', label: `Messages${forOwner > 0 ? ` ${forOwner}` : ''}`, testid: 'details-tab-messages' },
+              ...(standalone ? [] : [{ value: 'type' as const, label: 'Type', testid: 'details-tab-type' }]),
+            ]}
+          />
+        </div>
+      )}
+      {tab === 'note' ? <NotePanel sessionId={id} onClose={onClose} embedded parts="log" reading={box !== null && box !== 'log'} onTyping={takes('log')} /> : tab === 'messages' ? messages : <TerminalInput sessionId={id} reading={box !== null} onTyping={() => setBox(null)} />}
     </div>
   );
 }

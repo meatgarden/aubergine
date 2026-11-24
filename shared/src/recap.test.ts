@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { Session } from './entities';
-import { RECAP_MAX, RECAP_WANTED, RecapText, ago, recapFacts, recapLines, recapOf, type RecapRun } from './recap';
+import { RECAP_FACT_GROUPS, RECAP_MAX, RECAP_WANTED, RecapText, ago, recapFacts, recapLines, recapOf, type RecapRun } from './recap';
 import { BRIEF_LINE, KICKOFF_LINE, RECAP_LINE, type Run } from './workflows';
 
 const NOW = new Date('2026-03-10T12:00:00.000Z');
@@ -160,4 +160,36 @@ describe('the recap as facts', () => {
     expect(of('started')?.value).toMatch(/ ago$/);
     for (const fact of facts) expect(fact.value, fact.key).not.toMatch(/(^|\s|')\/\w+\/\w+\/\w+/);
   });
+
+  it('says the group of each fact, and lists them in the order of the groups: the run, the place, what it is about, the times', () => {
+    const facts = recapFacts(
+      recapOf(session({ tags: ['api'], lastInputAt: '2026-03-10T11:58:00.000Z', noteLog: [{ id: ID, at: '2026-03-10T11:00:00.000Z', author: 'agent', kind: 'note', text: 'Looked.' }], status: { ...session().status, state: 'idle', lastExit: 1, lastFinishedAt: '2026-03-10T11:50:00.000Z' } }), { live: run({ blockedReason: 'needs a key' }), ended: null }),
+      NOW,
+    );
+    expect(facts.map((fact) => [fact.key, fact.group])).toEqual([
+      ['run', 'run'],
+      ['step', 'run'],
+      ['blocked', 'run'],
+      ['run-note', 'run'],
+      ['list', 'run'],
+      ['where', 'place'],
+      ['command', 'place'],
+      ['tags', 'about'],
+      ['note', 'about'],
+      ['started', 'time'],
+      ['active', 'time'],
+    ]);
+    const order = facts.map((fact) => RECAP_FACT_GROUPS.indexOf(fact.group));
+    expect(order).toEqual([...order].sort((a, b) => a - b));
+    // A time carries the moment itself, for a <time> element, and the whole date for its tooltip.
+    expect(facts.find((fact) => fact.key === 'started')).toMatchObject({ at: '2026-03-08T12:00:00.000Z', value: '2 days ago' });
+    expect(facts.find((fact) => fact.key === 'active')?.at).toBe('2026-03-10T11:58:00.000Z');
+    expect(facts.filter((fact) => fact.group !== 'time').every((fact) => fact.at === undefined)).toBe(true);
+  });
+
+  it('puts a parked or ended terminal\'s state and what it runs with where it is', () => {
+    const parked = recapFacts(recapOf(session({ state: 'parked', status: { ...session().status, state: 'busy', commandLine: 'make test' } }), { live: null, ended: null }), NOW);
+    expect(parked.filter((fact) => fact.group === 'place').map((fact) => fact.key)).toEqual(['where', 'state', 'running']);
+  });
 });
+

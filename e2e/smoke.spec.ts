@@ -3761,7 +3761,14 @@ test('simpler surfaces: the list starts near the top, a name is not cut, one pri
     await page.keyboard.press('Enter');
     await expect(starts.getByTestId('queue-limit')).toBeVisible();
     await expect(starts.getByTestId('queue-hold')).toBeVisible();
-  }
+  }  await page.getByTestId('toolbar-canvas').click();
+  // A terminal's details: the headings that fold, the summary read, the facts, the times, the way to add a link, the
+  // tabs and the way to add to the log all begin their words on the details' gutter of 16.
+  await page.getByTestId('list-row').first().dblclick({ position: { x: 60, y: 12 } });
+  await expect(page.getByTestId('details')).toBeVisible();
+  // (A quiet button's words are a pixel in, inside its line, as everywhere a quiet button begins a line.)
+  for (const edge of await wordEdges('[data-testid="details"]', '.ui-fold-heading > button, [data-testid="details-summary"] .note-summary-read, .ui-facts dt, .recap-times, .links-body > *, .details-tabs .ui-tab:first-child, .note-add-open')) expect(Math.abs(edge - 16), `the details: ${edge}`).toBeLessThanOrEqual(1);
+  await page.getByTestId('details-close').click();
 });
 
 /** How many things on the page are filled with the colour of waiting, and what they are. */
@@ -4114,6 +4121,10 @@ test('the drawer: what a terminal asks comes first, one thing to type into, besi
     await expect(asks).toContainText('Which branch should I fix it on');
     await expect(asks).toContainText('Go to the terminal and type your answer there.');
     expect(await drawer.evaluate((el) => el.querySelector('[data-testid="details"]')?.firstElementChild?.getAttribute('data-testid'))).toBe('details-asks');
+    // Then, in this order: what it is for (its summary), what is known, its links, its parts as tabs.
+    const tops = await drawer.evaluate((el) => ['[data-testid="details-asks"]', '[data-testid="details-summary"]', '[data-testid="details-known"]', '[data-testid="links-part"]', '.details-tabs'].map((sel) => Math.round((el.querySelector(sel) as HTMLElement).getBoundingClientRect().top)));
+    expect(tops).toEqual([...tops].sort((a, b) => a - b));
+    expect(new Set(tops).size).toBe(tops.length);
     // What is known: a list of facts, with no whole path in it and none of the words that were never a person's.
     await expect(drawer.locator('[data-fact="where"] dd')).toHaveText(/^…\//);
     await expect(drawer.locator('[data-fact="where"] dd')).toHaveAttribute('title', /^\//);
@@ -4121,23 +4132,82 @@ test('the drawer: what a terminal asks comes first, one thing to type into, besi
     expect(text).not.toMatch(/(^|[\s'"“(])\/[\w.-]+\/[\w.-]+\/[\w.-]+/);
     for (const word of ['session', 'Session', 'pinned', 'Pinned', 'Markdown']) expect(text, word).not.toContain(word);
     for (const box of await drawer.locator('textarea, input').all()) expect(await box.getAttribute('placeholder'), 'a placeholder').not.toMatch(/session|[Pp]inned|Markdown/);
+    // The facts are in groups, in the order the run, the place, what it is about, with more room between the groups than
+    // between the facts of one, and no headings; the times are one quiet line at the end, each a <time> with its whole date.
+    const grouped = await drawer.evaluate((el) => {
+      const rows = [...el.querySelectorAll<HTMLElement>('[data-testid="recap-lines"] > div')];
+      const bottom = (row: HTMLElement): number => Math.max(...[...row.children].map((c) => c.getBoundingClientRect().bottom));
+      const top = (row: HTMLElement): number => Math.min(...[...row.children].map((c) => c.getBoundingClientRect().top));
+      const gaps = rows.slice(1).map((row, i) => ({ apart: row.dataset.group !== rows[i]?.dataset.group, gap: Math.round(top(row) - bottom(rows[i] as HTMLElement)) }));
+      const times = el.querySelector('[data-testid="recap-times"]') as HTMLElement;
+      return {
+        groups: rows.map((row) => row.dataset.group),
+        between: gaps.filter((g) => g.apart).map((g) => g.gap),
+        within: gaps.filter((g) => !g.apart).map((g) => g.gap),
+        headings: el.querySelectorAll('[data-testid="recap"] h3, [data-testid="recap"] h4').length - el.querySelectorAll('[data-testid="recap-written"] h3').length,
+        times: times.textContent,
+        // In the muted colour of a label, directly after the facts.
+        timesMuted: getComputedStyle(times).color === getComputedStyle(el.querySelector('.ui-facts dt') as HTMLElement).color,
+        timesLast: times.previousElementSibling === el.querySelector('[data-testid="recap-lines"]'),
+        timeElements: [...times.querySelectorAll('[data-fact] time')].map((t) => ({ fact: t.closest('[data-fact]')?.getAttribute('data-fact'), at: !Number.isNaN(Date.parse(t.getAttribute('datetime') ?? '')), title: (t.getAttribute('title') ?? '') !== '' })),
+      };
+    });
+    const order = ['run', 'place', 'about'];
+    expect(grouped.groups.map((group) => order.indexOf(group ?? ''))).toEqual([...grouped.groups.map((group) => order.indexOf(group ?? ''))].sort((a, b) => a - b));
+    expect(grouped.groups).not.toContain('time');
+    expect(grouped.between.length).toBeGreaterThan(0);
+    for (const gap of grouped.between) expect(gap).toBeGreaterThan(Math.max(...grouped.within));
+    expect(grouped.headings).toBe(0);
+    expect(grouped.times).toMatch(/^Started .+ ago · last active .+ ago$/);
+    expect(grouped).toMatchObject({ timesMuted: true, timesLast: true, timeElements: [{ fact: 'started', at: true, title: true }, { fact: 'active', at: true, title: true }] });
 
-    // One thing to type into is in view at a time: the summary; the box that adds to the log once asked for; the message box on its own tab.
+    // One thing to type into is in view at a time, and none until one is asked for: the summary is read until it is
+    // pressed; the box that adds to the log is there once asked for; the message box is on its own tab.
+    const summaryPart = drawer.getByTestId('details-summary');
+    const summaryBox = drawer.getByRole('textbox', { name: 'Summary of this terminal' });
+    await expect(summaryPart.getByTestId('note-summary-read')).toBeVisible();
+    expect(await boxes()).toBe(0);
+    // No word on whether it is saved, and no line that explains the summary, until something is changed here.
+    await expect(drawer.getByTestId('note-status')).toHaveCount(0);
+    await expect(drawer).not.toContainText('Kept at the top');
+    await summaryPart.getByTestId('note-summary-read').click();
+    await expect(summaryBox).toBeFocused();
     expect(await boxes()).toBe(1);
-    await expect(drawer.getByRole('textbox', { name: 'Summary of this terminal' })).toBeVisible();
+    await expect(summaryBox).toHaveAttribute('placeholder', 'What this terminal is for. You or its agent can change it.');
+    await page.keyboard.press('Control+End');
+    await page.keyboard.type(' Seen.');
+    await expect(drawer.getByTestId('note-status')).toHaveText('Saved');
+    // Leaving it reads it again, with what was written.
+    await expect(drawer.getByTestId('details-tab-note')).toHaveText('Log');
     await drawer.getByTestId('note-add-open').click();
     await expect(drawer.getByTestId('note-add')).toBeFocused();
+    await expect(summaryBox).toHaveCount(0);
+    await expect(summaryPart.getByTestId('note-summary-read')).toContainText('Seen.');
     expect(await boxes()).toBe(1);
     await page.keyboard.type('Looked at it.');
     await page.keyboard.press('Enter');
     await expect(drawer.getByTestId('note-entry')).toContainText('Looked at it.');
-    await drawer.getByTestId('note-summary-read').click();
+    // The log is told by day: a quiet heading, and each entry says who and the time of day only.
+    await expect(drawer.getByTestId('note-day').last()).toHaveText('Today');
+    await expect(drawer.getByTestId('note-entry').last().locator('header time')).toHaveText(/^\d{1,2}:\d{2}(\s?[AP]M)?$/);
+    await summaryPart.getByTestId('note-summary-read').click();
+    await expect(summaryBox).toBeFocused();
+    await expect(drawer.getByTestId('note-add')).toHaveCount(0);
     expect(await boxes()).toBe(1);
     await drawer.getByTestId('details-tab-messages').click();
     await expect(drawer.getByTestId('message-help')).toHaveText('The agent reads this when it next checks; nothing is typed into the terminal.');
     await expect(drawer.getByTestId('message-text')).toBeVisible();
     expect(await boxes()).toBe(1);
+    // The summary pressed on the Messages tab: the message box gives way, and comes back when it is asked for.
+    await summaryPart.getByTestId('note-summary-read').click();
+    await expect(summaryBox).toBeFocused();
+    await expect(drawer.getByTestId('message-text')).toHaveCount(0);
+    expect(await boxes()).toBe(1);
+    await drawer.getByTestId('message-resume').click();
+    await expect(drawer.getByTestId('message-text')).toBeVisible();
+    expect(await boxes()).toBe(1);
     await drawer.getByTestId('details-tab-note').click();
+    expect(await boxes()).toBe(0);
 
     // It stands beside the side panel, under the top bar and beside the bar of tabs, and nothing of it lies over the tabs or the bar of the canvas.
     const places = await page.evaluate(() => {
@@ -4172,14 +4242,24 @@ test('the drawer: what a terminal asks comes first, one thing to type into, besi
         value: px(fact),
         row: Math.round(fact.getBoundingClientRect().height) >= 28,
         tab: px(el.querySelector('[data-testid="details-tab-note"]')),
-        help: px(el.querySelector('.note-help')),
-        summaryLines: Math.floor(((el.querySelector('textarea.note-summary') as HTMLElement).clientHeight - 16) / parseFloat(getComputedStyle(el.querySelector('textarea.note-summary') as HTMLElement).lineHeight)),
+        fold: px(el.querySelector('[data-testid="details-fold-known"]')),
+        summary: px(el.querySelector('[data-testid="details-summary"] .note-summary-read')),
+        times: px(el.querySelector('[data-testid="recap-times"]')),
+        // The summary read is as tall as its words: its height less its padding and its edges, less its lines of words.
+        summarySlack: (() => {
+          const read = el.querySelector('[data-testid="details-summary"] .note-summary-read') as HTMLElement;
+          const style = getComputedStyle(read);
+          const range = document.createRange();
+          range.selectNodeContents(read);
+          const lines = new Set([...range.getClientRects()].map((r) => Math.round(r.top))).size;
+          return Math.round(read.clientHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom) - lines * parseFloat(style.lineHeight));
+        })(),
         gutter: Math.round((el.querySelector('.ui-facts') as HTMLElement).getBoundingClientRect().left - el.getBoundingClientRect().left),
         small,
       };
     });
-    expect(sizes).toEqual({ controls: [32], chips: expect.any(Array), question: '15px', name: '15px', nameCut: false, label: '13px', value: '13px', row: true, tab: '13px', help: '13px', summaryLines: expect.any(Number), gutter: 16, small: [] });
-    expect(sizes.summaryLines).toBeGreaterThanOrEqual(4);
+    expect(sizes).toEqual({ controls: [32], chips: expect.any(Array), question: '15px', name: '15px', nameCut: false, label: '13px', value: '13px', row: true, tab: '13px', fold: '13px', summary: '13px', times: '13px', summarySlack: expect.any(Number), gutter: 16, small: [] });
+    expect(Math.abs(sizes.summarySlack)).toBeLessThanOrEqual(2);
     // The way out is at the end of the name's line, to the right of the name; the one thing to do is on the line under them.
     // "Add a link" begins on the gutter, where the facts do: its words, not its box, since a quiet button hangs left by its padding.
     const head = await drawer.evaluate((el) => {
@@ -4187,16 +4267,21 @@ test('the drawer: what a terminal asks comes first, one thing to type into, besi
       const name = box('[data-testid="details-name"]');
       const close = box('[data-testid="details-close"]');
       const actions = box('.details-head-actions');
-      const add = el.querySelector('[data-testid="link-add-open"]') as HTMLElement;
-      const walker = document.createTreeWalker(add, NodeFilter.SHOW_TEXT);
-      let letter: number | null = null;
-      for (let node = walker.nextNode(); node && letter === null; node = walker.nextNode()) {
-        if (!(node.textContent ?? '').trim()) continue;
-        const range = document.createRange();
-        range.selectNodeContents(node);
-        letter = range.getBoundingClientRect().left;
-      }
+      const letterOf = (sel: string): number | null => {
+        const walker = document.createTreeWalker(el.querySelector(sel) as HTMLElement, NodeFilter.SHOW_TEXT);
+        for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+          if (!(node.textContent ?? '').trim()) continue;
+          const range = document.createRange();
+          range.selectNodeContents(node);
+          return range.getBoundingClientRect().left;
+        }
+        return null;
+      };
+      const off = (sel: string): number | null => { const letter = letterOf(sel); return letter === null ? null : Math.abs(letter - box('.ui-facts').left); };
+      const letter = letterOf('[data-testid="link-add-open"]');
       return {
+        // The headings that fold, the summary and the log begin on the gutter too.
+        others: ['[data-testid="details-fold-known"]', '[data-testid="details-fold-links"]', '[data-testid="details-summary"] .note-summary-read', '[data-testid="note-day"]', '[data-testid="recap-times"]'].map((sel) => (off(sel) ?? 99) <= 1 ? 'on' : `${sel} off by ${off(sel)}`),
         closeOffName: Math.abs((close.top + close.bottom) / 2 - (name.top + name.bottom) / 2),
         closeRightOfName: close.left >= name.right - 1,
         closeInHead: close.right <= box('.details-head').right + 1,
@@ -4208,6 +4293,7 @@ test('the drawer: what a terminal asks comes first, one thing to type into, besi
     expect(head).toMatchObject({ closeRightOfName: true, closeInHead: true, actionsUnder: true });
     expect(head.addLetterOffGutter).not.toBeNull();
     expect(head.addLetterOffGutter).toBeLessThanOrEqual(1);
+    expect(head.others).toEqual(['on', 'on', 'on', 'on', 'on']);
     // The handle that folds the side panel does not lie over it, and at 1280 wide the bar over the canvas is still one row.
     await page.setViewportSize({ width: 1280, height: 900 });
     // The canvas learns its new width after the window's: wait for the bar to follow.
@@ -4242,14 +4328,49 @@ test('the drawer: what a terminal asks comes first, one thing to type into, besi
     await expect(drawer).toHaveCount(0);
     await expect.poll(() => page.evaluate(() => document.activeElement?.closest('[data-testid="list-row"]')?.getAttribute('data-session') ?? `on ${document.activeElement?.tagName}.${document.activeElement?.className}`)).toBe(waiting);
 
-    // A terminal that asks nothing has no such part: its facts come first. One on a run names its workflow and its step.
+    // What is known and the links fold, each by its heading: folded, what they hold is not drawn, and a folded Links
+    // says how many there are. Folded or open is remembered in this browser, for every terminal alike.
+    await open(demo.sessions.fixing as string);
+    const foldKnown = drawer.getByTestId('details-fold-known');
+    const foldLinks = drawer.getByTestId('details-fold-links');
+    await expect(foldKnown).toHaveAttribute('aria-expanded', 'true');
+    const knownId = (await foldKnown.getAttribute('aria-controls')) ?? '';
+    await expect(drawer.locator(`[id="${knownId}"]`)).toContainText('Workflow');
+    const linkCount = await drawer.getByTestId('links-item').count();
+    expect(linkCount).toBeGreaterThan(0);
+    await foldKnown.click();
+    await expect(foldKnown).toHaveAttribute('aria-expanded', 'false');
+    await expect(drawer.getByTestId('recap')).toHaveCount(0);
+    await expect(drawer.getByTestId('recap-ask')).toHaveCount(0);
+    await foldLinks.click();
+    await expect(foldLinks).toHaveAttribute('aria-expanded', 'false');
+    await expect(foldLinks).toHaveText(new RegExp(`^Links · ${linkCount}$`));
+    await expect(drawer.getByTestId('links-item')).toHaveCount(0);
+    await expect(drawer.getByTestId('link-add-open')).toHaveCount(0);
+    // What it asks, its summary and its tabs do not fold.
+    await expect(drawer.getByTestId('details-summary')).toBeVisible();
+    await expect(drawer.getByTestId('details-tab-note')).toBeVisible();
+    await page.reload();
+    await expect(page.getByTestId('terminal-node')).toHaveCount(4);
+    await open(demo.sessions.shell as string);
+    await expect(foldKnown).toHaveAttribute('aria-expanded', 'false');
+    await expect(foldLinks).toHaveAttribute('aria-expanded', 'false');
+    await expect(drawer.getByTestId('recap')).toHaveCount(0);
+    await foldKnown.click();
+    await foldLinks.click();
+    await expect(drawer.getByTestId('recap')).toBeVisible();
+    await expect(drawer.getByTestId('link-add-open')).toBeVisible();
+    await drawer.getByTestId('details-close').click();
+
+    // A terminal that asks nothing has no such part: its summary comes first, then its facts. One on a run names its workflow and its step.
     // Its log is long: the details still open at their top, on what is known, and the way to add to the log is at their foot.
     for (let i = 1; i <= 12; i += 1) {
       expect((await page.request.post(`/v1/sessions/${demo.sessions.shell}/notes`, { headers: { origin }, data: { text: `Entry ${i} of a long log.` } })).status()).toBe(201);
     }
     await open(demo.sessions.shell as string);
     await expect(drawer.getByTestId('details-asks')).toHaveCount(0);
-    expect(await drawer.evaluate((el) => el.querySelector('[data-testid="details"]')?.firstElementChild?.getAttribute('data-testid'))).toBe('recap');
+    expect(await drawer.evaluate((el) => el.querySelector('[data-testid="details"]')?.firstElementChild?.getAttribute('data-testid'))).toBe('details-summary');
+    await expect(drawer.getByTestId('details-summary')).toHaveText('No summary yet. Press to write what this terminal is for.');
     await expect(drawer.getByTestId('note-entry').filter({ hasText: 'Entry 12 of a long log.' })).toHaveCount(1);
     expect(await page.evaluate(() => { const scroller = document.querySelector('.panel-drawer > .details') as HTMLElement; return { top: scroller.scrollTop, scrolls: scroller.scrollHeight > scroller.clientHeight + 1 }; })).toEqual({ top: 0, scrolls: true });
     await expect(drawer.locator('.ui-facts dt').first()).toBeInViewport();
@@ -4298,8 +4419,13 @@ test('the drawer: what a terminal asks comes first, one thing to type into, besi
     if ((await noteButton.getAttribute('aria-pressed')) !== 'true') await noteButton.click();
     const beside = shell.getByTestId('note-panel');
     await expect(beside).toContainText('Summary');
-    await expect(beside).toContainText('Kept at the top. You or the agent can change it.');
+    // No line explains the summary: its placeholder does. Nothing is said about saving until something is changed.
+    await expect(beside).not.toContainText('Kept at the top');
+    await expect(beside).not.toContainText('Saved');
+    await expect(beside.getByRole('textbox', { name: 'Summary of this terminal' })).toHaveAttribute('placeholder', 'What this terminal is for. You or its agent can change it.');
     await expect(beside).toContainText('Log');
+    // Its log is told by day too.
+    await expect(beside.getByTestId('note-day')).toHaveText(['Today']);
     await expect(beside.getByTestId('note-add-open')).toHaveText('Add to the log');
   } finally {
     await page.request.delete('/api/v1/demo', { headers: { origin } });
@@ -4549,7 +4675,7 @@ test('states: every piece draws hover, pressed, focus and disabled differently f
       <span class="ui-menu" role="menu" style="position:static"><button role="menuitem" data-piece="menu item">A line</button></span>
       <button class="ui-chip" data-piece="chip">chip</button>
       <p class="ui-banner"><span>Waits.</span><button data-piece="banner button">Review</button></p>
-      <button class="ui-link" data-piece="link">A link</button>
+      <div style="display:flex;gap:12px;align-items:center"><button class="ui-link" data-piece="link">A link</button><h3 class="ui-fold-heading"><button class="quiet ui-start" aria-expanded="true" data-piece="fold heading">Known</button></h3></div>
       <span class="ui-switcher"><button class="ui-switcher-button" data-piece="switcher"><span class="ui-switcher-name">Terminals</span><span class="ui-switcher-arrow">▾</span></button></span>
       <nav class="tabbar"><div class="tab color-none" role="tab" tabindex="0" data-piece="canvas tab"><span class="tab-name">Main</span></div></nav>
       <header class="node-title" style="--control-h:var(--control-compact)"><button class="node-tool" data-piece="title control">Note</button></header>`;
@@ -4563,7 +4689,7 @@ test('states: every piece draws hover, pressed, focus and disabled differently f
     });
   const pieces = page.locator('#gallery [data-piece]');
   const names = await pieces.evaluateAll((all) => all.map((el) => el.getAttribute('data-piece') ?? ''));
-  expect(names).toHaveLength(18);
+  expect(names).toHaveLength(19);
   const missing: string[] = [];
   for (const scheme of ['dark', 'light'] as const) {
     await page.emulateMedia({ colorScheme: scheme, reducedMotion: 'reduce' });
@@ -5164,6 +5290,9 @@ test('new browser tabs: a canvas opens in one from its tab, and a running termin
   await expect(details).toBeVisible();
   await expect(details.getByTestId('recap-lines')).toBeVisible();
   await expect(details.getByRole('heading', { name: 'Details' })).toBeVisible();
+  // With the Note column closed the details hold the note: its summary, and its log as a tab.
+  await expect(details.getByTestId('details-summary')).toBeVisible();
+  await expect(details.getByTestId('details-tab-note')).toHaveText('Log');
   // What needs the canvas page's screens is not there: the box that types (the terminal is beside it) among them.
   await expect(details.getByTestId('details-tab-type')).toHaveCount(0);
   await expect(details.getByTestId('drawer-history')).toHaveCount(0);
@@ -5225,6 +5354,21 @@ test('new browser tabs: a canvas opens in one from its tab, and a running termin
     expect(inside.y + inside.height).toBeLessThanOrEqual(noteBox.y + noteBox.height + 0.5);
   }
   await expect(note.getByTestId('note-entry').filter({ hasText: 'Written by a program.' })).toHaveCount(1);
+  // The note is in the view once: with its column open the details leave out the summary and the Log tab, and name
+  // Messages, their one part left; with it closed they have both again.
+  await expect(details.getByTestId('details-summary')).toHaveCount(0);
+  await expect(details.getByTestId('details-tab-note')).toHaveCount(0);
+  await expect(details.getByTestId('note-entry')).toHaveCount(0);
+  await expect(details.getByTestId('details-messages-title')).toHaveText('Messages');
+  await expect(details.getByTestId('session-messages')).toBeVisible();
+  await alone.getByTestId('focus-note-toggle').click();
+  await expect(note).toHaveCount(0);
+  await expect(details.getByTestId('details-summary')).toBeVisible();
+  await expect(details.getByTestId('details-tab-note')).toBeVisible();
+  await expect(details.getByTestId('details-messages-title')).toHaveCount(0);
+  await alone.getByTestId('focus-note-toggle').click();
+  await expect(note).toBeVisible();
+  await expect(details.getByTestId('details-summary')).toHaveCount(0);
 
   // Canvases: every canvas of the project, each a link to its canvas, the terminal's own marked.
   await alone.getByTestId('focus-canvases-toggle').click();
@@ -5857,19 +6001,23 @@ test('a note takes typing: beside a terminal the terminal does not take the keyb
   await rows.first().dblclick({ position: { x: 60, y: 12 } });
   await expect(drawer).toBeVisible();
 
-  // 3. In the details, the summary is no shorter when it is pressed to change it.
+  // 3. In the details, the summary is read until it is pressed, as tall as its words; the box that changes it is no
+  // shorter than what was read, and grows with what is typed.
   const inDrawer = drawer.getByTestId('note-drawer');
-  await expect(inDrawer.getByTestId('note-summary-read')).toBeVisible();
+  const summaryPart = drawer.getByTestId('details-summary');
+  await expect(summaryPart.getByTestId('note-summary-read')).toBeVisible();
+  await expect(summaryPart.locator('textarea')).toHaveCount(0);
   // With nothing in the log, the button that adds to it follows the log's box, with no gap down to the foot of the window.
   await expect(inDrawer.getByTestId('note-entry')).toHaveCount(0);
   expect(await inDrawer.evaluate((el) => Math.round((el.querySelector('[data-testid="note-add-open"]') as HTMLElement).getBoundingClientRect().top - (el.querySelector('[data-testid="note-log"]') as HTMLElement).getBoundingClientRect().bottom))).toBeLessThanOrEqual(24);
-  const read = await inDrawer.getByTestId('note-summary-read').evaluate((el) => Math.round(el.getBoundingClientRect().height));
-  expect(read).toBeGreaterThan(200);
-  await inDrawer.getByTestId('note-summary-read').click({ position: { x: 40, y: 100 } });
-  const drawerBox = inDrawer.locator('textarea.note-summary');
+  const read = await summaryPart.getByTestId('note-summary-read').evaluate((el) => ({ height: Math.round(el.getBoundingClientRect().height), cut: el.scrollHeight > el.clientHeight + 1 }));
+  expect(read.height).toBeGreaterThan(200);
+  expect(read.cut).toBe(false);
+  await summaryPart.getByTestId('note-summary-read').click({ position: { x: 40, y: 100 } });
+  const drawerBox = summaryPart.locator('textarea.note-summary');
   await expect(drawerBox).toBeFocused();
   const editing = await drawerBox.evaluate((el) => ({ height: Math.round(el.getBoundingClientRect().height), scrolls: el.scrollHeight > el.clientHeight + 1 }));
-  expect(editing.height).toBeGreaterThanOrEqual(read - 4);
+  expect(editing.height).toBeGreaterThanOrEqual(read.height - 1);
   expect(editing.scrolls).toBe(false);
   // Typing a line more makes it taller, not a box that scrolls.
   await page.keyboard.press('Control+End');
@@ -5879,6 +6027,20 @@ test('a note takes typing: beside a terminal the terminal does not take the keyb
   const grown = await drawerBox.evaluate((el) => ({ height: Math.round(el.getBoundingClientRect().height), scrolls: el.scrollHeight > el.clientHeight + 1 }));
   expect(grown.height).toBeGreaterThan(editing.height);
   expect(grown.scrolls).toBe(false);
+  // Left, it is read again, as tall as its words: one line taller than before.
+  await drawer.getByTestId('details-tab-messages').click();
+  await expect(drawerBox).toHaveCount(0);
+  const again = await summaryPart.getByTestId('note-summary-read').evaluate((el) => Math.round(el.getBoundingClientRect().height));
+  expect(again).toBeGreaterThan(read.height);
+  // An empty summary is one quiet line, and the box that writes one is no shorter.
+  expect((await page.request.patch(`/v1/sessions/${id}`, { headers: { origin }, data: { note: '' } })).status()).toBe(200);
+  await expect(summaryPart.getByTestId('note-summary-read')).toHaveText('No summary yet. Press to write what this terminal is for.');
+  const empty = await summaryPart.getByTestId('note-summary-read').evaluate((el) => ({ height: Math.round(el.getBoundingClientRect().height), muted: getComputedStyle(el).color !== getComputedStyle(document.querySelector('[data-testid="details-name"]') as HTMLElement).color }));
+  expect(empty.height).toBeLessThan(48);
+  expect(empty.muted).toBe(true);
+  await summaryPart.getByTestId('note-summary-read').press('Enter');
+  await expect(drawerBox).toBeFocused();
+  expect(await drawerBox.evaluate((el) => Math.round(el.getBoundingClientRect().height))).toBeGreaterThanOrEqual(empty.height - 1);
   await drawer.getByTestId('details-close').click();
 });
 

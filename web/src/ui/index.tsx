@@ -332,6 +332,21 @@ export function Tabs<T extends string>({ value, tabs, onChange, label }: { value
   );
 }
 
+/**
+ * The heading of a part that folds: pressed to fold it or open it, its words on the gutter. Folded it may say how many
+ * things are in the part, as a plain number. Whoever draws it leaves the part's content out while it is folded.
+ */
+export function FoldHeading({ folded, onToggle, controls, count, testid, children }: { folded: boolean; onToggle: () => void; /** The id of what it folds. */ controls: string; count?: number; testid?: string; children: ReactNode }) {
+  return (
+    <h3 className="ui-fold-heading">
+      <button type="button" className="quiet ui-start" aria-expanded={!folded} aria-controls={controls} onClick={onToggle} data-testid={testid}>
+        {children}
+        {folded && count !== undefined && <span className="ui-fold-count"> · {count}</span>}
+      </button>
+    </h3>
+  );
+}
+
 /** Something that is explained in a line, with the rest behind "How this works". */
 export function HowThisWorks({ line, children }: { line: ReactNode; children: ReactNode }) {
   return (

@@ -244,7 +244,7 @@ export function ThreadList({ sessionId }: { sessionId?: string }) {
 }
 
 /** In a terminal's drawer: a message from the owner to it, and its threads. */
-export function SessionMessages({ sessionId }: { sessionId: string }) {
+export function SessionMessages({ sessionId, reading = false, onTyping }: { sessionId: string; /** Another text box of the details is in use: this one gives way. */ reading?: boolean; onTyping?: () => void }) {
   const [text, setText] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -253,6 +253,14 @@ export function SessionMessages({ sessionId }: { sessionId: string }) {
   return (
     <div className="drawer-section session-messages" data-testid="session-messages">
       <ThreadList sessionId={sessionId} />
+      {/* The details have one text box in view: while another part is typed into, this one waits behind a button. */}
+      {reading ? (
+        <p>
+          <button type="button" className="quiet" onClick={() => onTyping?.()} data-testid="message-resume">
+            Write a message
+          </button>
+        </p>
+      ) : (
       <form
         className="thread-reply"
         onSubmit={(event) => {
@@ -282,6 +290,7 @@ export function SessionMessages({ sessionId }: { sessionId: string }) {
           Send
         </button>
       </form>
+      )}
       <p className="ui-meta" data-testid="message-help">The agent reads this when it next checks; nothing is typed into the terminal.</p>
       {peopleOnly && (
         <label className="sheet-note takes-messages" data-testid="takes-messages">
