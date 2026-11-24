@@ -28,7 +28,7 @@ How to create a token, what the scopes mean, the limits and the activity log are
 | [`POST /v1/canvases/{canvasId}/sessions`](#startsession) | Start a session on a canvas | `sessions:write` |
 | [`GET /v1/sessions`](#listsessions) | List every session | `read` |
 | [`GET /v1/sessions/{sessionId}`](#getsession) | One session | `read` |
-| [`PATCH /v1/sessions/{sessionId}`](#updatesession) | Rename or tag a session, or change its pinned note | `sessions:write` |
+| [`PATCH /v1/sessions/{sessionId}`](#updatesession) | Rename or tag a session, change its fields, or change its pinned note | `sessions:write` |
 | [`DELETE /v1/sessions/{sessionId}`](#endsession) | End a session | `sessions:write` |
 | [`POST /v1/sessions/{sessionId}/move`](#movesession) | Move a session to another canvas | `sessions:write` |
 | [`POST /v1/sessions/{sessionId}/park`](#parksession) | Park a session | `sessions:write` |
@@ -648,6 +648,13 @@ A list: it answers a page at a time, see `limit` and `cursor`.
     lastInputAt: string | null;
     lastOutputAt: string | null;
     tags: string[];
+    /** The fields of the terminal, in order: at most 12, each label once. */
+    fields: {
+      /** What the value is, in a few words: one line of plain text, without a colon. */
+      label: unknown & unknown;
+      /** The value: one line of plain text. An address in it is shown as a link. */
+      value: string;
+    }[];
     parkedFrom: {
       canvasId: string;
       rect: {
@@ -821,6 +828,13 @@ An API token needs the scope `sessions:write`. Sending `command` needs `terminal
     lastInputAt: string | null;
     lastOutputAt: string | null;
     tags: string[];
+    /** The fields of the terminal, in order: at most 12, each label once. */
+    fields: {
+      /** What the value is, in a few words: one line of plain text, without a colon. */
+      label: unknown & unknown;
+      /** The value: one line of plain text. An address in it is shown as a link. */
+      value: string;
+    }[];
     parkedFrom: {
       canvasId: string;
       rect: {
@@ -997,6 +1011,13 @@ A list: it answers a page at a time, see `limit` and `cursor`.
     lastInputAt: string | null;
     lastOutputAt: string | null;
     tags: string[];
+    /** The fields of the terminal, in order: at most 12, each label once. */
+    fields: {
+      /** What the value is, in a few words: one line of plain text, without a colon. */
+      label: unknown & unknown;
+      /** The value: one line of plain text. An address in it is shown as a link. */
+      value: string;
+    }[];
     parkedFrom: {
       canvasId: string;
       rect: {
@@ -1155,6 +1176,13 @@ An API token needs the scope `read`.
   lastInputAt: string | null;
   lastOutputAt: string | null;
   tags: string[];
+  /** The fields of the terminal, in order: at most 12, each label once. */
+  fields: {
+    /** What the value is, in a few words: one line of plain text, without a colon. */
+    label: unknown & unknown;
+    /** The value: one line of plain text. An address in it is shown as a link. */
+    value: string;
+  }[];
   parkedFrom: {
     canvasId: string;
     rect: {
@@ -1254,9 +1282,9 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 ### updateSession
 
-`PATCH /v1/sessions/{sessionId}`: Rename or tag a session, or change its pinned note.
+`PATCH /v1/sessions/{sessionId}`: Rename or tag a session, change its fields, or change its pinned note.
 
-Send any of `name`, `tags`, `note`. `tags` replaces the whole list. The pinned note is a note, not a property of the session, so it needs the scope for notes.
+Send any of `name`, `tags`, `fields`, `note`. `tags` and `fields` each replace the whole list; what is not sent stays as it was. The pinned note is a note, not a property of the session, so it needs the scope for notes.
 
 An API token needs the scope `sessions:write`. Sending `note` needs `notes:write` instead, or as well when other fields are sent.
 
@@ -1271,6 +1299,7 @@ An API token needs the scope `sessions:write`. Sending `note` needs `notes:write
 | `name` | `string` | no |  |
 | `tags` | `string[]` | no |  |
 | `note` | `string` | no |  |
+| `fields` | `{ /** What the value is, in a few words: one line of plain text, wi…` | no | The fields of the terminal, in order: at most 12, each label once. |
 
 **Answer** `200`:
 
@@ -1321,6 +1350,13 @@ An API token needs the scope `sessions:write`. Sending `note` needs `notes:write
   lastInputAt: string | null;
   lastOutputAt: string | null;
   tags: string[];
+  /** The fields of the terminal, in order: at most 12, each label once. */
+  fields: {
+    /** What the value is, in a few words: one line of plain text, without a colon. */
+    label: unknown & unknown;
+    /** The value: one line of plain text. An address in it is shown as a link. */
+    value: string;
+  }[];
   parkedFrom: {
     canvasId: string;
     rect: {
@@ -1509,6 +1545,13 @@ An API token needs the scope `sessions:write`.
     lastInputAt: string | null;
     lastOutputAt: string | null;
     tags: string[];
+    /** The fields of the terminal, in order: at most 12, each label once. */
+    fields: {
+      /** What the value is, in a few words: one line of plain text, without a colon. */
+      label: unknown & unknown;
+      /** The value: one line of plain text. An address in it is shown as a link. */
+      value: string;
+    }[];
     parkedFrom: {
       canvasId: string;
       rect: {
@@ -1679,6 +1722,13 @@ An API token needs the scope `sessions:write`.
   lastInputAt: string | null;
   lastOutputAt: string | null;
   tags: string[];
+  /** The fields of the terminal, in order: at most 12, each label once. */
+  fields: {
+    /** What the value is, in a few words: one line of plain text, without a colon. */
+    label: unknown & unknown;
+    /** The value: one line of plain text. An address in it is shown as a link. */
+    value: string;
+  }[];
   parkedFrom: {
     canvasId: string;
     rect: {
@@ -1844,6 +1894,13 @@ An API token needs the scope `sessions:write`.
     lastInputAt: string | null;
     lastOutputAt: string | null;
     tags: string[];
+    /** The fields of the terminal, in order: at most 12, each label once. */
+    fields: {
+      /** What the value is, in a few words: one line of plain text, without a colon. */
+      label: unknown & unknown;
+      /** The value: one line of plain text. An address in it is shown as a link. */
+      value: string;
+    }[];
     parkedFrom: {
       canvasId: string;
       rect: {
@@ -11101,6 +11158,13 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
   lastInputAt: string | null;
   lastOutputAt: string | null;
   tags: string[];
+  /** The fields of the terminal, in order: at most 12, each label once. */
+  fields: {
+    /** What the value is, in a few words: one line of plain text, without a colon. */
+    label: unknown & unknown;
+    /** The value: one line of plain text. An address in it is shown as a link. */
+    value: string;
+  }[];
   parkedFrom: {
     canvasId: string;
     rect: {
@@ -11262,6 +11326,13 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
   lastInputAt: string | null;
   lastOutputAt: string | null;
   tags: string[];
+  /** The fields of the terminal, in order: at most 12, each label once. */
+  fields: {
+    /** What the value is, in a few words: one line of plain text, without a colon. */
+    label: unknown & unknown;
+    /** The value: one line of plain text. An address in it is shown as a link. */
+    value: string;
+  }[];
   parkedFrom: {
     canvasId: string;
     rect: {

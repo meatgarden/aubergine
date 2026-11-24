@@ -34,12 +34,15 @@ export const WORKFLOW_VERSIONS_KEPT = 30;
  * because a name is printed in terminals and shown beside buttons, and such
  * a character there changes what a person sees or what a terminal does.
  */
+/** One line of ordinary text: no control characters (a line break among them) and no characters that reverse the direction of text. */
+export const PLAIN_LINE = /^[^\p{Cc}\u202a-\u202e\u2066-\u2069]*$/u;
+
 export const PlainName = z
   .string()
   .trim()
   .min(1)
   .max(120)
-  .regex(/^[^\p{Cc}\u202a-\u202e\u2066-\u2069]*$/u, 'A name is one line of plain text, without control characters');
+  .regex(PLAIN_LINE, 'A name is one line of plain text, without control characters');
 
 /** Where a workflow or an element came from. Open on purpose: later sources add their own fields. */
 export const Origin = z.looseObject({
@@ -70,7 +73,7 @@ export const Need = z.object({
     .string()
     .trim()
     .max(200)
-    .regex(/^[^\p{Cc}\u202a-\u202e\u2066-\u2069]*$/u, 'A note on a need is one line of plain text')
+    .regex(PLAIN_LINE, 'A note on a need is one line of plain text')
     .optional(),
 });
 export type Need = z.infer<typeof Need>;
@@ -330,7 +333,7 @@ export const RunComment = z
   .string()
   .trim()
   .max(RUN_COMMENT_MAX)
-  .regex(/^[^\p{Cc}\u202a-\u202e\u2066-\u2069]*$/u, 'A comment is plain text on one line, without control characters');
+  .regex(PLAIN_LINE, 'A comment is plain text on one line, without control characters');
 
 /** A decision a person made on a run, kept on the run. */
 export const RunDecision = z.object({

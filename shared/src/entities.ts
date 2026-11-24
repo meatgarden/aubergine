@@ -11,6 +11,7 @@ import { Draft, ShelfElement } from './drafts';
 import { AcceptedRepositoryWorkflow } from './repository';
 import { TypedBy } from './terminal';
 import { Run, Workflow } from './workflows';
+import { TerminalFields } from './fields';
 
 import { Found, LINKS_MAX, SessionLink, Suggested, Written } from './links';
 
@@ -285,6 +286,8 @@ export const Session = z.object({
   /** When the session last printed something. Recorded at most once every few seconds. */
   lastOutputAt: Timestamp.nullable().default(null),
   tags: Tags.default([]),
+  /** The owner's own fields about it, in order: a label and a value each. Changed like tags; nothing an agent sends becomes one. */
+  fields: TerminalFields.default([]),
   /** For a parked session: the canvas it came from and where it sat there. */
   parkedFrom: ParkedPlace.nullable().default(null),
   /** "People only": no token may read this terminal or type into it, whatever its scopes. Only the owner changes this. */

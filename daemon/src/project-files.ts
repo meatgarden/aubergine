@@ -367,7 +367,7 @@ export class ProjectFiles {
             agent: null,
             lastInputAt: null,
             lastOutputAt: null,
-            tags: terminal.tags,
+            tags: terminal.tags, fields: [],
             parkedFrom: null,
             links: [],
             written: {},

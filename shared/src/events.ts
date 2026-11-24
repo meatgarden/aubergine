@@ -31,6 +31,7 @@ import {
 import { ApiToken } from './tokens';
 import { Device } from './devices';
 import { Id } from './ids';
+import { TerminalFields } from './fields';
 import { SessionMessages } from './messages';
 import { InstallRequest, InstalledItem, LibrarySource } from './library';
 import { Draft, ShelfElement } from './drafts';
@@ -85,6 +86,8 @@ export const ChangeEvent = z.discriminatedUnion('type', [
     lastOutputAt: Timestamp.optional(),
   }),
   z.object({ type: z.literal('session.tagged'), sessionId: Id, tags: Tags }),
+  /** The owner's fields of the session were replaced, as a whole list. */
+  z.object({ type: z.literal('session.fields'), sessionId: Id, fields: TerminalFields }),
   /** "People only" was switched on or off. */
   z.object({ type: z.literal('session.protected'), sessionId: Id, peopleOnly: z.boolean() }),
   /** The owner changed whether the session takes messages from other terminals while it is "people only". */
@@ -275,6 +278,8 @@ export function applyEvent(state: AppState, event: ChangeEvent): AppState {
       });
     case 'session.tagged':
       return patchSession(state, event.sessionId, { tags: event.tags });
+    case 'session.fields':
+      return patchSession(state, event.sessionId, { fields: event.fields });
     case 'session.untold':
       return patchSession(state, event.sessionId, { untold: event.untold });
     case 'session.takesMessages':

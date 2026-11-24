@@ -145,7 +145,7 @@ function fakeSession(name: string, more: Partial<Session> = {}): Session {
     agent: null,
     lastInputAt: null,
     lastOutputAt: null,
-    tags: [],
+    tags: [], fields: [],
     parkedFrom: null, peopleOnly: false, typedBy: null,
     recap: null, takesMessages: false, untold: null, messages: { unread: 0, from: null, forOwner: 0, paused: 0, at: null }, links: [], written: {}, suggested: {}, found: null,
     ...more,
