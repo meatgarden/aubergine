@@ -7,10 +7,12 @@ import { FoldHeading, MenuButton, MenuItem } from '../ui';
 import { fieldsAfter, moved } from './fields-model';
 
 /**
- * The owner's own fields of a terminal, in its details between Known and Links: rows of the same list of facts, each
- * with a small menu, and one box that adds or changes one as `Label: value`. `typing` says whether this part has the
- * one text box of the details; asking for it is `onTyping`. Its heading folds it (`folded`, `onFold`); folded, it
- * says how many fields there are and draws none of them. Every change sends the whole new list.
+ * The fields of a terminal, in its details between Known and Links: rows of the same list of facts, each with a small
+ * menu right after its value, one from the agent saying so in a quiet word, one the agent would set otherwise saying
+ * that under it with **Use this**; and one box that adds or changes one as `Label: value`. `typing` says whether this
+ * part has the one text box of the details; asking for it is `onTyping`. Its heading folds it (`folded`, `onFold`);
+ * folded, it says how many fields there are and draws none of them. Every change sends the whole new list; the
+ * server keeps who set each one that is sent as it stood.
  */
 export function FieldsPart({ sessionId, typing, onTyping, folded = false, onFold }: { sessionId: string; typing: boolean; onTyping: (on: boolean) => void; folded?: boolean; onFold?: () => void }) {
   const fields = useApp((s) => s.app?.sessions.find((x) => x.id === sessionId)?.fields) ?? NO_FIELDS;
@@ -71,12 +73,26 @@ export function FieldsPart({ sessionId, typing, onTyping, folded = false, onFold
     save(next.fields, close);
   };
   const full = fields.length >= MAX_FIELDS;
+  const takeSuggestion = (field: TerminalField): void => {
+    setProblem(null);
+    api.useSuggestion(sessionId, { what: 'field', label: field.label }).catch((error: unknown) => {
+      if (!isSuperseded(error)) setProblem(`Could not use it: ${(error as Error).message}`);
+    });
+  };
   const row = (field: TerminalField, index: number) => (
-    <div key={field.label} data-fact="field" data-field={field.label} data-testid="field-row">
+    <div key={field.label} data-fact="field" data-field={field.label} data-source={field.source} data-testid="field-row">
       <dt>{showControl(field.label)}</dt>
       <dd className="fields-value">
         <span className="fields-text" data-testid="field-value">
           <WithLinks text={showControl(field.value)} />
+          {field.source === 'agent' && (
+            <>
+              {' '}
+              <small className="fields-source" data-testid="field-source">
+                from its agent
+              </small>
+            </>
+          )}
         </span>
         <MenuButton more label={`More for ${showControl(field.label)}`} testid="field-more" menuTestid="field-menu" className="link-menu" againstWindow>
           <MenuItem onClick={() => open({ kind: 'edit', label: field.label }, lineOfField(field))} data-testid="field-edit">
@@ -105,6 +121,16 @@ export function FieldsPart({ sessionId, typing, onTyping, folded = false, onFold
             Remove
           </MenuItem>
         </MenuButton>
+        {field.suggested && (
+          <p className="fields-suggested" data-testid="field-suggested">
+            <span>
+              The agent would set it to <strong>{showControl(field.suggested.value)}</strong>.
+            </span>
+            <button type="button" className="quiet" onClick={() => takeSuggestion(field)} data-testid="use-field">
+              Use this
+            </button>
+          </p>
+        )}
       </dd>
     </div>
   );
@@ -161,15 +187,12 @@ export function FieldsPart({ sessionId, typing, onTyping, folded = false, onFold
                 Cancel
               </button>
             </form>
+          ) : full ? (
+            <p className="fields-full" data-testid="fields-full">
+              A terminal has at most {MAX_FIELDS} fields: remove one to add another.
+            </p>
           ) : (
-            <button
-              type="button"
-              className="quiet ui-start fields-add"
-              disabled={full}
-              title={full ? `A terminal has at most ${MAX_FIELDS} fields. Remove one to add another.` : undefined}
-              onClick={() => open({ kind: 'add' }, '')}
-              data-testid="field-add-open"
-            >
+            <button type="button" className="quiet ui-start fields-add" onClick={() => open({ kind: 'add' }, '')} data-testid="field-add-open">
               Add a field
             </button>
           )}

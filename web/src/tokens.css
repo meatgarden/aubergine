@@ -32,6 +32,8 @@
   --canvas-column-width: 208px;
   /* The details of one thing, beside the side panel. */
   --drawer-width: 420px;
+  /* The label column of every list of facts in the details: the longest of Known's own labels at the body size. */
+  --facts-label: 96px;
   /* The column a kind's chip stands in, in a list of what waits: the same for every row, so that the words after it line up. */
   --kind-column: 116px;
   /* The row at the top of a page that holds its name. */

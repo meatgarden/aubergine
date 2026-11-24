@@ -1,4 +1,5 @@
 import { execFileSync } from 'node:child_process';
+import { createHmac } from 'node:crypto';
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
@@ -4481,6 +4482,72 @@ test('the drawer: what a terminal asks comes first, one thing to type into, besi
     await expect(foldFields).toHaveAttribute('aria-expanded', 'false');
     await foldFields.click();
     await expect(fieldRows).toHaveCount(2);
+
+    // What the agent in the terminal says about itself, with the terminal's own credential: no cookie is looked at beside it.
+    const own = `aub1.${fixingId}.${createHmac('sha256', token).update(`session:${fixingId}`).digest('hex')}`;
+    const asAgent = (label: string, value: string) => page.request.put(`/v1/sessions/${fixingId}/fields`, { headers: { authorization: `Bearer ${own}` }, data: { label, value } });
+    const fieldRow = (label: string): Locator => fieldsPart.locator(`[data-testid="field-row"][data-field="${label}"]`);
+    expect((await asAgent('Branch', 'fix-session-time')).status()).toBe(200);
+    // It appears as it is set, marked in a quiet word as its agent's; the owner's are not.
+    await expect(fieldRow('Branch')).toHaveAttribute('data-source', 'agent');
+    await expect(fieldRow('Branch').getByTestId('field-source')).toHaveText('from its agent');
+    await expect(fieldRow('Owner').getByTestId('field-source')).toHaveCount(0);
+    expect(await labels()).toEqual(['Owner', 'Ticket', 'Branch']);
+    expect(await boxes()).toBe(0);
+    // Its menu follows its value, as a link's follows its chip, and is not pushed to the drawer's right edge.
+    for (const label of ['Owner', 'Branch']) {
+      const at = await fieldRow(label).evaluate((el) => {
+        const value = (el.querySelector('[data-testid="field-value"]') as HTMLElement).getBoundingClientRect();
+        const menu = (el.querySelector('[data-testid="field-more"]') as HTMLElement).getBoundingClientRect();
+        const dd = (el.querySelector('dd') as HTMLElement).getBoundingClientRect();
+        return { gap: menu.left - value.right, room: dd.right - menu.right };
+      });
+      expect(at.gap, label).toBeGreaterThanOrEqual(0);
+      expect(at.gap, label).toBeLessThanOrEqual(6);
+      expect(at.room, label).toBeGreaterThan(16);
+    }
+    // One label column: what is known and the fields begin their values at the same x.
+    const valueLefts = (): Promise<number[]> => drawer.evaluate((el) => [...el.querySelectorAll('[data-testid="details-known"] .ui-facts dd, [data-testid="fields-part"] .ui-facts dd')].map((dd) => Math.round(dd.getBoundingClientRect().left)));
+    const lefts = await valueLefts();
+    expect(lefts.length).toBeGreaterThan(3);
+    expect(Math.max(...lefts) - Math.min(...lefts)).toBeLessThanOrEqual(1);
+    // A label of forty characters takes a second line, and moves no value.
+    const long = 'The environment this branch deploys into';
+    expect(long).toHaveLength(40);
+    expect((await page.request.patch(`/v1/sessions/${fixingId}`, { headers: { origin }, data: { fields: [...(await fieldsOnServer()).map(({ label, value }) => ({ label, value })), { label: long, value: 'staging' }] } })).status()).toBe(200);
+    await expect(fieldRow(long)).toHaveCount(1);
+    const after = await valueLefts();
+    expect(Math.max(...after) - Math.min(...after)).toBeLessThanOrEqual(1);
+    expect(after[0]).toBe(lefts[0]);
+    const lines = await fieldRow(long).evaluate((el) => { const dt = el.querySelector('dt') as HTMLElement; return Math.round(dt.getBoundingClientRect().height / parseFloat(getComputedStyle(dt).lineHeight)); });
+    expect(lines).toBeGreaterThanOrEqual(2);
+    // Sent back as it stood with the rest, the agent's field is still the agent's.
+    await expect(fieldRow('Branch')).toHaveAttribute('data-source', 'agent');
+    // On a label the owner set, the owner's value stays; what the agent sent is offered under it, and Use this takes it.
+    expect((await asAgent('owner', 'Sam')).status()).toBe(200);
+    const suggested = fieldRow('Owner').getByTestId('field-suggested');
+    await expect(suggested).toHaveText('The agent would set it to Sam.Use this');
+    await expect(fieldRow('Owner').getByTestId('field-value')).toHaveText('Alex');
+    await expect(fieldRow('Owner')).toHaveAttribute('data-source', 'owner');
+    expect(await boxes()).toBe(0);
+    await suggested.getByTestId('use-field').click();
+    await expect(fieldRow('Owner').getByTestId('field-value')).toHaveText('Sam');
+    await expect(fieldRow('Owner').getByTestId('field-suggested')).toHaveCount(0);
+    await expect(fieldRow('Owner')).toHaveAttribute('data-source', 'owner');
+    // At the most a terminal can have, a sentence stands where the button was; nothing is held back disabled.
+    const twelve = Array.from({ length: 12 }, (_, i) => ({ label: `Field ${i + 1}`, value: `value ${i + 1}` }));
+    expect((await page.request.patch(`/v1/sessions/${fixingId}`, { headers: { origin }, data: { fields: twelve } })).status()).toBe(200);
+    await expect(fieldRows).toHaveCount(12);
+    await expect(drawer.getByTestId('fields-full')).toHaveText('A terminal has at most 12 fields: remove one to add another.');
+    await expect(drawer.getByTestId('field-add-open')).toHaveCount(0);
+    expect(await drawer.evaluate((el) => el.querySelector('[data-testid="fields-full"]')?.previousElementSibling?.getAttribute('data-testid'))).toBe('fields-list');
+    expect(await boxes()).toBe(0);
+    // The agent is refused a thirteenth, and the page shows what it showed.
+    expect((await asAgent('Another', 'one')).status()).toBe(409);
+    await expect(fieldRows).toHaveCount(12);
+    expect((await page.request.patch(`/v1/sessions/${fixingId}`, { headers: { origin }, data: { fields: [{ label: 'Owner', value: 'Alex' }, { label: 'Ticket', value: 'https://example.com/t/DEMO-12' }] } })).status()).toBe(200);
+    await expect(fieldRows).toHaveCount(2);
+    await expect(drawer.getByTestId('field-add-open')).toBeVisible();
     await drawer.getByTestId('details-close').click();
 
     // A terminal that asks nothing has no such part: its summary comes first, then its facts. One on a run names its workflow and its step.

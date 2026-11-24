@@ -250,7 +250,7 @@ export const api = guardAll({
   seenLinks: (sessionId: string) => v1.listSeenLinks({ sessionId }),
   keepSeen: (sessionId: string, url: string) => v1.keepSeenLink({ sessionId, body: { url } }),
   lookAgain: (sessionId: string) => v1.lookAgain({ sessionId }),
-  useSuggestion: (sessionId: string, body: { what: 'name' | 'summary' | 'link'; linkId?: string }) => v1.useSuggestion({ sessionId, body }),
+  useSuggestion: (sessionId: string, body: { what: 'name' | 'summary' | 'link' | 'field'; linkId?: string; label?: string }) => v1.useSuggestion({ sessionId, body }),
   updateSession: (sessionId: string, request: UpdateSessionRequest) =>
     call(Session, 'PATCH', paths.session(sessionId), request),
   parkSession: (sessionId: string) => call(Session, 'POST', paths.parkSession(sessionId), {}),
