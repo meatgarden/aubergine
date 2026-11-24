@@ -168,7 +168,33 @@ export type Grouping = 'canvas' | 'flat';
 export type Sort = 'canvas' | 'updated' | 'typed' | 'name';
 export type Density = 'comfortable' | 'compact';
 export const SORTS: readonly Sort[] = ['canvas', 'updated', 'typed', 'name'];
-export const SORT_LABEL: Record<Sort, string> = { canvas: 'Canvas order', updated: 'Last updated', typed: 'Last typed in', name: 'Name' };
+
+/** How the list is laid out, as one choice: by canvas, or the flat list in one of its orders. */
+export interface ListLayout {
+  id: string;
+  label: string;
+  grouping: Grouping;
+  /** The order of the flat list; left out by "By canvas", which keeps the order that was chosen last. */
+  sort?: Sort;
+}
+const FLAT_LABEL: Record<Sort, string> = { canvas: 'Flat, canvas order', updated: 'Flat, last updated', typed: 'Flat, last typed in', name: 'Flat, by name' };
+/** By canvas first, then the flat list in each order, in the order of `SORTS`. */
+export const LAYOUTS: readonly ListLayout[] = [
+  { id: 'canvas', label: 'By canvas', grouping: 'canvas' },
+  ...SORTS.map((sort): ListLayout => ({ id: `flat-${sort}`, label: FLAT_LABEL[sort], grouping: 'flat', sort })),
+];
+
+/** The id of the layout that is chosen. */
+export function layoutOf(view: Pick<ListView, 'grouping' | 'sort'>): string {
+  return view.grouping === 'flat' ? `flat-${view.sort}` : 'canvas';
+}
+
+/** What changes in the view when a layout is chosen; an unknown id changes nothing. */
+export function withLayout(view: Pick<ListView, 'grouping' | 'sort'>, id: string): Pick<ListView, 'grouping' | 'sort'> {
+  const layout = LAYOUTS.find((l) => l.id === id);
+  if (!layout) return { grouping: view.grouping, sort: view.sort };
+  return { grouping: layout.grouping, sort: layout.sort ?? view.sort };
+}
 
 export interface ListView {
   /** The ids of the filters that are switched on. */

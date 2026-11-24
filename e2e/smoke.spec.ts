@@ -2022,12 +2022,78 @@ test('the side panel shows one section at a time with all of its height, says ho
   await expect(page.getByTestId('list-more')).toContainText('1');
   await page.getByTestId('list-clear').click();
 
+  // How the list is laid out is one choice among lines, with no dropdown in the menu: by canvas, or the flat list in
+  // each of its orders. Two terminals: the new one comes first on the canvas, and the other is typed into last.
+  const mac = await page.evaluate(() => navigator.platform.toLowerCase().includes('mac'));
+  const older = (await page.getByTestId('list-row').first().getAttribute('data-session')) ?? '';
+  await page.getByTestId('toolbar-new-terminal').click();
+  await expect(page.getByTestId('list-row')).toHaveCount(2);
+  const newer = (await page.locator(`[data-testid="terminal-node"]:not([data-session="${older}"])`).getAttribute('data-session')) ?? '';
+  for (const id of [newer, older]) {
+    const typed = page.locator(`[data-testid="terminal-node"][data-session="${id}"]`);
+    await expect(typed.locator('.xterm-rows')).toContainText(/[$%#>]/, { timeout: 20_000 });
+    await expect(typed).toBeInViewport();
+    await typed.getByTestId('node-body').click();
+    await page.keyboard.type('true');
+    await page.keyboard.press('Enter');
+  }
+  await page.keyboard.press(mac ? 'Control+Meta+Period' : 'Control+Shift+Period');
+  await expect(page.getByTestId('list-row').first()).toHaveAttribute('data-session', newer);
+  const layoutLines = ['layout-canvas', 'layout-flat-canvas', 'layout-flat-updated', 'layout-flat-typed', 'layout-flat-name'];
+  const filterMenu = page.getByTestId('list-more-filters');
+  const menuLines = (): Promise<string[]> => filterMenu.locator('button, .ui-menu-label').evaluateAll((all) => all.map((el) => (el as HTMLElement).dataset.testid ?? (el as HTMLElement).dataset.filter ?? (el.textContent ?? '')));
+  const checkedLayout = filterMenu.locator('[data-testid^="layout-"][aria-checked="true"]');
+  await page.getByTestId('list-more').click();
+  await expect(filterMenu.locator('select')).toHaveCount(0);
+  expect(await filterMenu.locator('[data-testid^="layout-"]').evaluateAll((all) => all.map((el) => [(el as HTMLElement).dataset.testid, el.getAttribute('role'), el.textContent]))).toEqual([
+    ['layout-canvas', 'menuitemradio', 'By canvas'],
+    ['layout-flat-canvas', 'menuitemradio', 'Flat, canvas order'],
+    ['layout-flat-updated', 'menuitemradio', 'Flat, last updated'],
+    ['layout-flat-typed', 'menuitemradio', 'Flat, last typed in'],
+    ['layout-flat-name', 'menuitemradio', 'Flat, by name'],
+  ]);
+  // "One line per terminal" comes after them.
+  expect((await menuLines()).slice(-6)).toEqual([...layoutLines, 'list-density']);
+  await expect(checkedLayout).toHaveCount(1);
+  await expect(checkedLayout).toHaveAttribute('data-testid', 'layout-canvas');
+  const linesBefore = await menuLines();
+  await filterMenu.getByTestId('layout-flat-typed').click();
+  // The menu stays as it was, as with the lines of Where: nothing appears or goes, and one line is checked.
+  await expect(filterMenu).toBeVisible();
+  await expect(checkedLayout).toHaveCount(1);
+  await expect(checkedLayout).toHaveAttribute('data-testid', 'layout-flat-typed');
+  expect(await menuLines()).toEqual(linesBefore);
+  await expect(page.getByTestId('list-group')).toHaveCount(0);
+  await expect(page.getByTestId('list-row').first()).toHaveAttribute('data-session', older);
+  await page.keyboard.press('Escape');
+  await expect(filterMenu).toHaveCount(0);
+
   // The tab that was chosen is still chosen after a reload.
   await showSection(page, 'messages');
   await page.reload();
   await expect(page.getByTestId('panel-switcher-name')).toHaveText('Messages');
   await expect(page.getByTestId('messages-section')).toBeVisible();
   await showSection(page, 'terminals');
+  // So is the layout of the list: flat, the terminal last typed in first.
+  await expect(page.getByTestId('list-row')).toHaveCount(2);
+  await expect(page.getByTestId('list-row').first()).toHaveAttribute('data-session', older);
+  await page.getByTestId('list-more').click();
+  await expect(checkedLayout).toHaveAttribute('data-testid', 'layout-flat-typed');
+  await page.keyboard.press('Escape');
+  // The command that changes the order moves the check to the next flat line; the one that groups, to By canvas.
+  for (const [command, line] of [
+    ['>change the order of the flat list', 'layout-flat-name'],
+    ['>by canvas, or one flat list', 'layout-canvas'],
+  ] as const) {
+    await page.keyboard.press(mac ? 'Meta+k' : 'Control+Shift+K');
+    await page.keyboard.type(command);
+    await expect(page.getByTestId('picker-command-row')).toHaveCount(1);
+    await page.keyboard.press('Enter');
+    await page.getByTestId('list-more').click();
+    await expect(checkedLayout).toHaveCount(1);
+    await expect(checkedLayout).toHaveAttribute('data-testid', line);
+    await page.keyboard.press('Escape');
+  }
 
   // A tab's color is picked from a palette that is in sight, not cut off by the bar of tabs, and the tab wears it.
   await page.getByTestId('tab-more').click();
@@ -3630,7 +3696,7 @@ test('simpler surfaces: the list starts near the top, a name is not cut, one pri
   await reached(node.getByTestId('node-more'), ['node-run-workflow', 'node-message', 'node-open-desktop', 'node-move', 'people-only'], node);
   await expect(node.getByRole('menuitem', { name: /^Park / })).toHaveCount(0);
   await reached(page.getByTestId('tabbar-new-more'), ['tabbar-new-here', 'tabbar-new-tab'], page.getByTestId('tabbar-new-menu'));
-  await reached(page.getByTestId('list-more'), ['scope-this', 'scope-all', 'waiting', 'busy', 'unread', 'list-grouping', 'list-density'], page.getByTestId('list-more-filters'));
+  await reached(page.getByTestId('list-more'), ['scope-this', 'scope-all', 'waiting', 'busy', 'unread', 'layout-canvas', 'layout-flat-canvas', 'layout-flat-updated', 'layout-flat-typed', 'layout-flat-name', 'list-density'], page.getByTestId('list-more-filters'));
   await reached(page.getByTestId('panel-switcher'), ['terminals', 'for-you', 'workflows', 'copies', 'messages'], page.getByTestId('panel-menu'));
   await reached(page.getByTestId('tab-more'), ['tab-rename', 'tab-messaging'], page.getByTestId('tab-menu'));
   await reached(page.getByTestId('row-more'), ['row-open-desktop'], page.getByTestId('list-row'));

@@ -741,7 +741,7 @@ In a browser that remembers nothing the panel starts folded, to a narrow rail: o
 
 - **This canvas / All canvases** at the top chooses the scope. It starts on *This canvas*. Parked terminals are on no canvas and are listed in both.
 - **Filters** narrow the list: waiting for me, busy, unread, has an agent, parked, the text box (name, folder, command, note, tags; every word must match), and tags. They combine: a row must pass all that are on. Each one in effect shows as a chip you can remove, **Clear** removes them all, and the count beside the section title is the number of rows shown. If nothing is left, the list says which filters are hiding everything.
-- **Grouping**: by canvas, in tab order, each canvas a heading that folds and shows its waiting count, with frames as sub-headings and the terminals in the order they read on the canvas (top to bottom, then left to right); or one flat list, ordered by canvas, last updated, last typed in, or name.
+- **How the list is laid out** is one choice among lines in **Filter**: **By canvas**, in tab order, each canvas a heading that folds and shows its waiting count, with frames as sub-headings and the terminals in the order they read on the canvas (top to bottom, then left to right); or one flat list in one of its orders, **Flat, canvas order**, **Flat, last updated**, **Flat, last typed in** or **Flat, by name**.
 - **Compact** shows one line per terminal instead of two.
 
 Filters, grouping, order, density and what is folded are remembered by the browser.
