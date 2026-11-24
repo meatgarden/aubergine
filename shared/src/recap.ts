@@ -198,39 +198,50 @@ export function shortCommand(line: string | null | undefined): string {
   return short.length > 40 ? `${short.slice(0, 39)}…` : short;
 }
 
+/** Which group a fact is drawn in: the run it is on, where it is and what it runs, what it is about, and when. */
+export type RecapFactGroup = 'run' | 'place' | 'about' | 'time';
+/** The order the groups are drawn in. */
+export const RECAP_FACT_GROUPS: readonly RecapFactGroup[] = ['run', 'place', 'about', 'time'];
+
 /** One thing that is known about a terminal: what it is called, what it is, and the whole of it where the value is cut short. */
 export interface RecapFact {
   key: string;
   label: string;
   value: string;
   title?: string;
+  /** Which group it is drawn in. Whoever adds a fact says it; nothing sorts facts by their key. */
+  group: RecapFactGroup;
+  /** For a time: the moment itself, as an ISO time. */
+  at?: string;
 }
 
 /**
- * The same recap as a list of facts, for a place that has room for a label beside each: where it is, what it runs,
- * since when, the run it is on. Not sentences. What it asks of the owner is not among them: that is said first, by
- * whoever draws this. No whole path is in a value: a folder and a command are cut short, with the whole in `title`.
+ * The same recap as a list of facts, for a place that has room for a label beside each: the run it is on, where it is
+ * and what it runs, what it is about, since when. Not sentences. What it asks of the owner is not among them: that is
+ * said first, by whoever draws this. No whole path is in a value: a folder and a command are cut short, with the whole
+ * in `title`. In the order of their groups.
  */
 export function recapFacts(recap: Recap, now: Date): RecapFact[] {
   const facts: RecapFact[] = [];
-  const add = (key: string, label: string, value: string, title?: string): void => void (value !== '' && facts.push({ key, label, value, ...(title && title !== value ? { title } : {}) }));
-  add('where', 'Where', shortFolder(recap.folder), recap.folder ?? undefined);
-  if (recap.state === 'parked') add('state', 'State', 'parked: off the canvas, still running');
-  if (recap.state === 'exited') add('state', 'State', 'its shell has ended');
-  if (recap.command?.running) add('running', 'Running', shortCommand(recap.command.line) || 'a command', recap.command.line ? showControl(recap.command.line) : undefined);
-  add('started', 'Started', `${ago(recap.createdAt, now)} ago`, new Date(recap.createdAt).toLocaleString());
-  if (recap.activeAt) add('active', 'Last active', `${ago(recap.activeAt, now)} ago`, new Date(recap.activeAt).toLocaleString());
-  if (recap.command && !recap.command.running && recap.command.exit !== null) add('command', 'Last command', `${recap.command.exit === 0 ? 'ended well' : `failed (exit ${recap.command.exit})`}${recap.command.at ? `, ${ago(recap.command.at, now)} ago` : ''}`);
-  if (recap.tags.length > 0) add('tags', 'Tags', recap.tags.map((tag) => `#${tag}`).join(' '));
+  const add = (group: RecapFactGroup, key: string, label: string, value: string, title?: string, at?: string): void =>
+    void (value !== '' && facts.push({ key, label, value, group, ...(title && title !== value ? { title } : {}), ...(at ? { at } : {}) }));
   if (recap.run) {
-    add('run', recap.run.over ? 'Last workflow' : 'Workflow', recap.run.over ? `${cut(recap.run.workflowName, 60)}, ${recap.run.status}` : cut(recap.run.workflowName, 60));
-    if (!recap.run.over) add('step', 'Step', `${cut(recap.run.position, 80)}${recap.run.status !== 'running' ? `, ${recap.run.status}` : ''}`);
-    if (recap.run.blockedReason) add('blocked', 'Blocked', cut(recap.run.blockedReason, 160));
+    add('run', 'run', recap.run.over ? 'Last workflow' : 'Workflow', recap.run.over ? `${cut(recap.run.workflowName, 60)}, ${recap.run.status}` : cut(recap.run.workflowName, 60));
+    if (!recap.run.over) add('run', 'step', 'Step', `${cut(recap.run.position, 80)}${recap.run.status !== 'running' ? `, ${recap.run.status}` : ''}`);
+    if (recap.run.blockedReason) add('run', 'blocked', 'Blocked', cut(recap.run.blockedReason, 160));
     const last = recap.run.notes.at(-1);
-    if (last) add('run-note', 'Last report', `${cut(last.element, 40)}: ${cut(last.note, 160)}`);
+    if (last) add('run', 'run-note', 'Last report', `${cut(last.element, 40)}: ${cut(last.note, 160)}`);
   }
-  if (recap.list) add('list', 'List handed in', `${recap.list.ticked} of ${recap.list.total} ticked`);
+  if (recap.list) add('run', 'list', 'List handed in', `${recap.list.ticked} of ${recap.list.total} ticked`);
+  add('place', 'where', 'Where', shortFolder(recap.folder), recap.folder ?? undefined);
+  if (recap.state === 'parked') add('place', 'state', 'State', 'parked: off the canvas, still running');
+  if (recap.state === 'exited') add('place', 'state', 'State', 'its shell has ended');
+  if (recap.command?.running) add('place', 'running', 'Running', shortCommand(recap.command.line) || 'a command', recap.command.line ? showControl(recap.command.line) : undefined);
+  if (recap.command && !recap.command.running && recap.command.exit !== null) add('place', 'command', 'Last command', `${recap.command.exit === 0 ? 'ended well' : `failed (exit ${recap.command.exit})`}${recap.command.at ? `, ${ago(recap.command.at, now)} ago` : ''}`);
+  if (recap.tags.length > 0) add('about', 'tags', 'Tags', recap.tags.map((tag) => `#${tag}`).join(' '));
   const note = recap.notes.at(-1);
-  if (note) add('note', 'Last log entry', `${cut(note.text, 200)} (${note.author === 'agent' ? 'its agent' : 'you'}, ${ago(note.at, now)} ago)`);
+  if (note) add('about', 'note', 'Last log entry', `${cut(note.text, 200)} (${note.author === 'agent' ? 'its agent' : 'you'}, ${ago(note.at, now)} ago)`);
+  add('time', 'started', 'Started', `${ago(recap.createdAt, now)} ago`, new Date(recap.createdAt).toLocaleString(), recap.createdAt);
+  if (recap.activeAt) add('time', 'active', 'Last active', `${ago(recap.activeAt, now)} ago`, new Date(recap.activeAt).toLocaleString(), recap.activeAt);
   return facts;
 }
