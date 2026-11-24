@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { sessionsWaiting, shortId, showControl, undescribed, type Session, type WaitingSession } from '@aubergine/shared';
 import { api } from '../../api';
+import { FieldsPart } from '../../fields/FieldsPart';
 import { LinkChip } from '../../links/LinkChip';
 import { LinksPart } from '../../links/LinksPart';
 import { NotePanel } from '../../NotePanel';
@@ -17,8 +18,9 @@ import { actOnTerminal, chipOf, terminalActions } from './terminals';
 /**
  * The details of one terminal, beside the list. In this order: what the terminal is (its mark, its name, its state)
  * with the one thing most people came to do, going to it; then what it asks of the owner, if anything, and how to
- * answer; then what it is for, its summary; then what is known about it, as facts in groups; then its links; then its
- * log, its messages and a box that types into it, one of them at a time. What is known and the links fold.
+ * answer; then what it is for, its summary; then what is known about it, as facts in groups; then the owner's own
+ * fields; then its links; then its log, its messages and a box that types into it, one of them at a time. What is
+ * known, the fields and the links fold.
  */
 
 const session = (id: string) => (s: ReturnType<typeof useApp.getState>) => s.app?.sessions.find((x) => x.id === id);
@@ -129,7 +131,7 @@ function Asks({ waiting, onMessages, standalone }: { waiting: WaitingSession; on
 }
 
 /** Which part of the details has the one text box, if one has asked for it. */
-type TextBox = 'summary' | 'log' | 'link' | null;
+type TextBox = 'summary' | 'log' | 'field' | 'link' | null;
 
 /**
  * `standalone`: shown in the focus view, where none of the canvas page's screens and dialogs are. What needs them (a
@@ -217,6 +219,7 @@ export function Details({ id, onClose, standalone = false, noteElsewhere = false
           </div>
         )}
       </section>
+      <FieldsPart sessionId={id} typing={box === 'field'} onTyping={takes('field')} folded={folds.fields} onFold={() => setDetailsFolds({ fields: !folds.fields })} />
       <LinksPart sessionId={id} typing={box === 'link'} onTyping={takes('link')} folded={folds.links} onFold={() => setDetailsFolds({ links: !folds.links })} />
       {found.agent != null && !standalone && (
         <div className="details-links" data-testid="drawer-switched-on">
