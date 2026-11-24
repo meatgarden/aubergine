@@ -9,9 +9,8 @@ import { colorClass, colorStyle } from '../../color';
 import { hint } from '../../shortcuts';
 import { atThisComputer, currentCanvas, useApp } from '../../store';
 import {
-  SORTS,
-  SORT_LABEL,
   DOT_WORD,
+  LAYOUTS,
   STATE_MARK,
   STATE_WORD,
   dotTone,
@@ -21,12 +20,13 @@ import {
   itemHeight,
   kindCounts,
   kindWords,
+  layoutOf,
   measureItems,
   stateCounts,
   visibleRange,
+  withLayout,
   type Density,
   type Row,
-  type Sort,
 } from '../../terminal-rows';
 import { registerSection } from '../registry';
 import { NewTerminal } from '../../NewTerminal';
@@ -37,6 +37,13 @@ import { RunStrip } from '../../workflows/RunStrip';
 const SECTION = 'terminals';
 /** Relative times are brought up to date this often, by one timer for the whole list. */
 const CLOCK_MS = 5000;
+/** What each flat layout's line says when pointed at. */
+const LAYOUT_TITLE: Record<string, string> = {
+  'flat-canvas': 'One flat list, in the order of the canvases',
+  'flat-updated': 'One flat list, the terminal updated last first',
+  'flat-typed': 'One flat list, the terminal last typed in first',
+  'flat-name': 'One flat list, by name',
+};
 
 function useModel() {
   // Of the project being looked at, or of every project, as the view says.
@@ -299,31 +306,23 @@ function TerminalsSection() {
             <span className="ui-menu-label">Only those that are</span>
             {toggles.map(toggle)}
             <span className="ui-menu-label">How the list is laid out</span>
-            <label className="ui-menu-line">
-              <span>Grouping</span>
-              <select value={view.grouping} aria-label="Grouping" title={hint('list.grouping.toggle', 'Group by canvas, or one flat list')} onChange={(e) => {
-                  setView({ grouping: e.target.value === 'flat' ? 'flat' : 'canvas' });
-                  e.currentTarget.blur();
-                }} data-testid="list-grouping">
-                <option value="canvas">By canvas</option>
-                <option value="flat">Flat list</option>
-              </select>
-            </label>
-            {view.grouping === 'flat' && (
-              <label className="ui-menu-line">
-                <span>Order</span>
-                <select value={view.sort} aria-label="Order" title={hint('list.sort.cycle', 'Order of the flat list')} onChange={(e) => {
-                    setView({ sort: e.target.value as Sort });
-                    e.currentTarget.blur();
-                  }} data-testid="list-sort">
-                  {SORTS.map((sort) => (
-                    <option key={sort} value={sort}>
-                      {SORT_LABEL[sort]}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            )}
+            {LAYOUTS.map((layout) => {
+              const on = layoutOf(view) === layout.id;
+              return (
+                <button
+                  key={layout.id}
+                  type="button"
+                  role="menuitemradio"
+                  aria-checked={on}
+                  aria-pressed={on}
+                  title={layout.grouping === 'canvas' ? hint('list.grouping.toggle', 'Grouped by canvas') : hint('list.sort.cycle', LAYOUT_TITLE[layout.id] ?? layout.label)}
+                  onClick={() => setView(withLayout(view, layout.id))}
+                  data-testid={`layout-${layout.id}`}
+                >
+                  {layout.label}
+                </button>
+              );
+            })}
             <button type="button" role="menuitemcheckbox" aria-checked={view.density === 'compact'} aria-pressed={view.density === 'compact'} title={hint('list.density.toggle', 'One line per terminal')} onClick={() => runCommand('list.density.toggle')} data-testid="list-density">
               One line per terminal
             </button>

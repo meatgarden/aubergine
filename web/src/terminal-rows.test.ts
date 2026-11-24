@@ -12,6 +12,9 @@ import {
   createRowSelector,
   kindCounts,
   kindWords,
+  LAYOUTS,
+  layoutOf,
+  withLayout,
   type Row,
   dotTone,
   shortCommand,
@@ -280,6 +283,35 @@ describe('a saved view', () => {
     });
     // The default looks at this canvas only.
     expect(DEFAULT_VIEW.filters).toEqual([SCOPE_FILTER]);
+  });
+});
+
+describe('how the list is laid out', () => {
+  it('is by canvas, then the flat list in each order', () => {
+    expect(LAYOUTS.map((l) => [l.id, l.label, l.grouping, l.sort])).toEqual([
+      ['canvas', 'By canvas', 'canvas', undefined],
+      ['flat-canvas', 'Flat, canvas order', 'flat', 'canvas'],
+      ['flat-updated', 'Flat, last updated', 'flat', 'updated'],
+      ['flat-typed', 'Flat, last typed in', 'flat', 'typed'],
+      ['flat-name', 'Flat, by name', 'flat', 'name'],
+    ]);
+  });
+
+  it('says which one is chosen: by canvas whatever the order, else the flat list in its order', () => {
+    expect(layoutOf(DEFAULT_VIEW)).toBe('canvas');
+    expect(layoutOf({ grouping: 'canvas', sort: 'typed' })).toBe('canvas');
+    expect(layoutOf({ grouping: 'flat', sort: 'canvas' })).toBe('flat-canvas');
+    expect(layoutOf({ grouping: 'flat', sort: 'typed' })).toBe('flat-typed');
+    expect(layoutOf({ grouping: 'flat', sort: 'name' })).toBe('flat-name');
+  });
+
+  it('sets the grouping and the order together, and by canvas keeps the order', () => {
+    expect(withLayout(DEFAULT_VIEW, 'flat-typed')).toEqual({ grouping: 'flat', sort: 'typed' });
+    expect(withLayout({ grouping: 'flat', sort: 'name' }, 'canvas')).toEqual({ grouping: 'canvas', sort: 'name' });
+    expect(withLayout({ grouping: 'canvas', sort: 'updated' }, 'flat-canvas')).toEqual({ grouping: 'flat', sort: 'canvas' });
+    expect(withLayout({ grouping: 'flat', sort: 'name' }, 'sideways')).toEqual({ grouping: 'flat', sort: 'name' });
+    // Every line chooses itself.
+    for (const layout of LAYOUTS) expect(layoutOf(withLayout(DEFAULT_VIEW, layout.id))).toBe(layout.id);
   });
 });
 
