@@ -7,7 +7,7 @@ Each terminal carries a small record of the work in it, so that it can be follow
 | Source | What | How |
 | --- | --- | --- |
 | **Found** by the server, with no one asked | The agent's conversation id; the folder; the branch and the repository of that folder; the pull request of that branch; addresses seen in the terminal | See "What is looked at, and when" below |
-| **The agent** in the terminal | The terminal's name, its summary, and links it was given or made | `aubergine describe --name … --summary …`, `aubergine link add <address>`, and the same as MCP tools (`describe_self`, `link_add`, `links_read`, `link_remove`) |
+| **The agent** in the terminal | The terminal's name, its summary, links it was given or made, and fields of its own (a label and a value) | `aubergine describe --name … --summary …`, `aubergine link add <address>`, `aubergine field set <label> <value>`; the first two also as MCP tools (`describe_self`, `link_add`, `links_read`, `link_remove`). Fields have no MCP tool. |
 | **You**, by hand, always | All of the above | In a terminal's details: the name, the summary, **Add a link**, and each chip's menu (Copy address, Edit…, Remove) |
 
 **Your own words win.** Where you named a terminal, wrote its summary, or set a link's label or kind, nothing an agent or a program sends replaces it. What it sent is kept beside yours as a suggestion, with **Use this** in the details (for a link: **Use the agent's words** in the chip's menu). An agent is told so in plain words when this happens. A link you added or set is yours to remove: a program is refused.

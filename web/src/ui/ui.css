@@ -3521,21 +3521,45 @@ button.fact-copy:hover {
 .fields-body > button.fields-add {
   align-self: flex-start;
 }
-.fields-none {
+.fields-none,
+.fields-full {
   margin: 0;
   color: var(--text-muted);
 }
+/* A value, then the quiet word that its agent set it, then its menu right after them, as a link's follows its chip. */
 .ui-facts > div > dd.fields-value {
   display: flex;
+  flex-wrap: wrap;
   align-items: flex-start;
-  gap: var(--space-2);
+  gap: 0 var(--space-1);
 }
 .fields-text {
-  flex: 1 1 auto;
+  flex: 0 1 auto;
   min-width: 0;
+}
+.fields-source {
+  font-size: var(--font-meta);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+/* What the agent would set a field to, where the owner set it: under its row, on a line of its own. */
+.ui-facts > div > dd.fields-value > .fields-suggested {
+  flex: 1 0 100%;
+}
+/* In the details every list of facts has one label column: Known and Fields line up, and a long label takes a second line. */
+.details .ui-facts {
+  grid-template-columns: var(--facts-label) minmax(0, 1fr);
+}
+.details .ui-facts dt {
+  overflow-wrap: anywhere;
+}
+/* A menu open in the drawer lies over the drawer's edge too, which otherwise stands over the drawer: while one is open, the drawer stands over its edge. */
+.panel-drawer:has(.ui-menu-fixed) {
+  z-index: calc(var(--z-panel) + 2);
 }
 /* What the agent suggested where the owner's own words stand, and the quiet word that a terminal is not described. */
 .details-suggested > p,
+.fields-suggested,
 .details-undescribed {
   display: flex;
   align-items: baseline;

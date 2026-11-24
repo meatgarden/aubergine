@@ -286,7 +286,7 @@ export const Session = z.object({
   /** When the session last printed something. Recorded at most once every few seconds. */
   lastOutputAt: Timestamp.nullable().default(null),
   tags: Tags.default([]),
-  /** The owner's own fields about it, in order: a label and a value each. Changed like tags; nothing an agent sends becomes one. */
+  /** Its fields, in order: a label and a value each, and who set it (the owner, or the agent in it). The owner's win. */
   fields: TerminalFields.default([]),
   /** For a parked session: the canvas it came from and where it sat there. */
   parkedFrom: ParkedPlace.nullable().default(null),

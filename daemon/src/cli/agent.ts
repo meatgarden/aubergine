@@ -1,4 +1,4 @@
-import { AppendNoteResponse, DescribeCheckAnswer, DescribedAnswer, LinkAnswer, LinksAnswer, SESSION_ENV, paths, type AgentKind, type AttentionState, type LinkKind, type NoteEntry, type SessionLink } from '@aubergine/shared';
+import { AppendNoteResponse, DescribeCheckAnswer, DescribedAnswer, LinkAnswer, LinksAnswer, OwnFieldAnswer, OwnFieldsAnswer, SESSION_ENV, paths, showControl, type AgentKind, type AttentionState, type LinkKind, type NoteEntry, type SessionLink, type TerminalField } from '@aubergine/shared';
 import { UsageError } from './commands';
 
 /**
@@ -16,6 +16,9 @@ export interface AgentClient {
   links(): Promise<SessionLink[]>;
   addLink(input: { url: string; label?: string; kind?: LinkKind }): Promise<LinkAnswer>;
   removeLink(linkId: string): Promise<SessionLink[]>;
+  fields(): Promise<TerminalField[]>;
+  setField(label: string, value: string): Promise<OwnFieldAnswer>;
+  removeField(label: string): Promise<TerminalField[]>;
 }
 
 export function agentClient(env: NodeJS.ProcessEnv = process.env, timeoutMs = 5000): AgentClient {
@@ -64,8 +67,27 @@ export function agentClient(env: NodeJS.ProcessEnv = process.env, timeoutMs = 50
     links: async () => LinksAnswer.parse(await send('GET', `/v1/sessions/${sessionId}/links`, undefined)).links,
     addLink: async (input) => LinkAnswer.parse(await send('POST', `/v1/sessions/${sessionId}/links`, input)),
     removeLink: async (linkId) => LinksAnswer.parse(await send('DELETE', `/v1/sessions/${sessionId}/links/${encodeURIComponent(linkId)}`, undefined)).links,
+    fields: async () => OwnFieldsAnswer.parse(await send('GET', `/v1/sessions/${sessionId}/fields`, undefined)).fields,
+    setField: async (label, value) => OwnFieldAnswer.parse(await send('PUT', `/v1/sessions/${sessionId}/fields`, { label, value })),
+    removeField: async (label) => OwnFieldsAnswer.parse(await send('DELETE', `/v1/sessions/${sessionId}/fields/${encodeURIComponent(label)}`, undefined)).fields,
     setAttention: async (state, message) => {
       await send('PUT', paths.agent.attention(sessionId), { state, ...(message ? { message } : {}) });
     },
   };
+}
+
+/** What `aubergine field …` prints, through the terminal's own routes only. Everything stored is printed through `showControl`. */
+export async function fieldCommand(command: { name: 'field-set'; label: string; value: string } | { name: 'field-remove'; label: string } | { name: 'field-list' }, client: Pick<AgentClient, 'fields' | 'setField' | 'removeField'>): Promise<string[]> {
+  if (command.name === 'field-set') {
+    const answer = await client.setField(command.label, command.value);
+    const { label, value } = answer.field;
+    return [answer.kept ? `Set: ${showControl(label)}: ${showControl(value)}.` : `Your owner set "${showControl(label)}" themselves ("${showControl(value)}"): it stays so, and yours is offered to them beside it.`];
+  }
+  if (command.name === 'field-remove') {
+    await client.removeField(command.label);
+    return [`Removed "${showControl(command.label)}".`];
+  }
+  const fields = await client.fields();
+  if (fields.length === 0) return ['This terminal has no fields yet. Set one with: aubergine field set <label> <value>'];
+  return fields.map((field) => `${showControl(field.label)}: ${showControl(field.value)}  (${field.source === 'agent' ? 'yours' : 'the owner\u2019s'}${field.suggested ? `; you suggested "${showControl(field.suggested.value)}"` : ''})`);
 }

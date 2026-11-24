@@ -156,6 +156,11 @@ export const GUIDE: readonly GuideSection[] = [
       { needs: ['describe.own', 'links.write'], inTerminal: true, text: DESCRIBE_STEPS.flatMap((step) => [`${step.say}:`, `    ${step.command}`]) },
       { needs: ['describe.own'], text: ['As a tool: describe_self.'], tools: ['describe_self'] },
       { needs: ['links.write', 'links.read'], text: ['As tools: link_add, links_read, link_remove.'], tools: ['link_add', 'links_read', 'link_remove'] },
+      {
+        needs: ['fields.own'],
+        inTerminal: true,
+        text: ['Your terminal also has fields, short pairs of a label and a value in its details (a build, an environment): set what is true of your work with `aubergine field set <label> <value>`, remove what no longer is with `aubergine field remove <label>`, and see them with `aubergine field list`. A field your owner set stays theirs: what you set for its label is offered to them, and you remove only your own.'],
+      },
     ],
   },
   {

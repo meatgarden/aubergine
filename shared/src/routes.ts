@@ -40,6 +40,7 @@ import { Capabilities, CreateTokenRequest, CreatedToken, TokenView } from './tok
 import { Draft, ShelfElement } from './drafts';
 import { WriteRecapRequest, WrittenRecap } from './recap';
 import { AddLinkRequest, ChangeLinkRequest, DescribeCheckAnswer, DescribeCheckRequest, DescribeRequest, DescribedAnswer, DescribingSettings, FoundAnswer, KeepSeenRequest, LinkAnswer, LinksAnswer, SeenLinksAnswer, UseSuggestionRequest } from './links-api';
+import { OwnFieldAnswer, OwnFieldsAnswer, SetOwnFieldRequest } from './fields';
 import { InputRequest, InputResponse, OutputQuery, OutputResponse, ProtectRequest, RunCommandRequest, TakesMessagesRequest, RunCommandResponse, ScreenResponse, TerminalSearchQuery, TerminalSearchResponse } from './terminal';
 import {
   AcceptRepositoryWorkflowRequest,
@@ -2238,6 +2239,43 @@ export const ROUTES = {
     status: 200,
     errors: [404, 409],
   }),
+  listOwnFields: route({
+    method: 'GET',
+    path: '/v1/sessions/:sessionId/fields',
+    tag: 'For a session itself',
+    summary: "A session's fields",
+    description: "For the agent inside a session, with that session's own token: the terminal's fields, each a label and a value saying who set it (`owner` or `agent`), and what the agent suggested for one the owner set. No API token may call this; a token with `read` sees fields on the session itself.",
+    action: 'fields.own',
+    params: sessionId,
+    response: OwnFieldsAnswer,
+    status: 200,
+    errors: [404],
+  }),
+  setOwnField: route({
+    method: 'PUT',
+    path: '/v1/sessions/:sessionId/fields',
+    tag: 'For a session itself',
+    summary: 'Set one field of the session, as its agent',
+    description: "For the agent inside a session, with that session's own token. A label nobody set is added at the end as the agent's; the agent's own is replaced. Where the owner set that label, the owner's value stays: what was sent is kept on it as a suggestion the owner can use, and `kept` is false. A terminal has at most 12 fields, counting the owner's: a new label beyond that is refused with 409. Setting the same value again changes nothing, so this needs no `Idempotency-Key`. No API token may call this.",
+    action: 'fields.own',
+    params: sessionId,
+    body: SetOwnFieldRequest,
+    response: OwnFieldAnswer,
+    status: 200,
+    errors: [404, 409],
+  }),
+  removeOwnField: route({
+    method: 'DELETE',
+    path: '/v1/sessions/:sessionId/fields/:label',
+    tag: 'For a session itself',
+    summary: 'Remove one field of the session, as its agent',
+    description: "For the agent inside a session, with that session's own token: only a field its agent set. One the owner set is the owner's to remove: refused with 409. 404 when there is no field with that label. No API token may call this.",
+    action: 'fields.own',
+    params: z.object({ sessionId: Id, label: z.string().min(1).max(200).describe('The label of the field, whatever its capitals.') }),
+    response: OwnFieldsAnswer,
+    status: 200,
+    errors: [404, 409],
+  }),
   listSeenLinks: route({
     method: 'GET',
     path: '/v1/sessions/:sessionId/links/seen',
@@ -2306,7 +2344,7 @@ export const ROUTES = {
     path: '/v1/sessions/:sessionId/described/use',
     tag: 'Links',
     summary: 'Use what the agent suggested in place of the owner\u2019s own words',
-    description: 'For the owner only: for the name, the summary, or one link.',
+    description: 'For the owner only: for the name, the summary, one link, or one field (`what: field` with its `label`), which is then the owner\u2019s. The answer is the links, as they are after it.',
     action: 'describe.manage',
     params: sessionId,
     body: UseSuggestionRequest,

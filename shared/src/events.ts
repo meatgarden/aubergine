@@ -86,7 +86,7 @@ export const ChangeEvent = z.discriminatedUnion('type', [
     lastOutputAt: Timestamp.optional(),
   }),
   z.object({ type: z.literal('session.tagged'), sessionId: Id, tags: Tags }),
-  /** The owner's fields of the session were replaced, as a whole list. */
+  /** The fields of the session were replaced, as a whole list: by the owner, or one of them by the agent in it. */
   z.object({ type: z.literal('session.fields'), sessionId: Id, fields: TerminalFields }),
   /** "People only" was switched on or off. */
   z.object({ type: z.literal('session.protected'), sessionId: Id, peopleOnly: z.boolean() }),

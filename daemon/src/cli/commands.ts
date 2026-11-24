@@ -70,6 +70,10 @@ export type Command =
   | { name: 'link-add'; url: string; label: string | null; kind: LinkKind | null }
   | { name: 'link-remove'; which: string }
   | { name: 'link-list' }
+  /** Inside a session: the fields its agent sets on its terminal. The owner's stay the owner's. */
+  | { name: 'field-set'; label: string; value: string }
+  | { name: 'field-remove'; label: string }
+  | { name: 'field-list' }
   | { name: 'attention'; state: 'none' | 'working' | 'waiting' | 'done'; message: string | null }
   /** The guide for agents: for whoever asks, in full, or the few lines for an instructions file. */
   | { name: 'guide'; all: boolean; snippet: boolean }
@@ -278,6 +282,10 @@ export const USAGE = `Usage: aubergine <command>
                              Inside a session: the links that belong to its work (a ticket, a thread, a design, a
                              document, a branch, a pull request). Only http and https addresses; what kind one is
                              is told from the address, and nothing is fetched
+  field set <label> <value> | remove <label> | list
+                             Inside a session: its terminal's fields, short pairs of a label and a value (a build, an
+                             environment). A field your owner set stays theirs: what you set for its label is offered
+                             to them. You remove only your own
   where                      Inside a session: whether it works in a working copy of its own, on which branch, and what to leave alone
   attention waiting [what you need] | working | done | none
                              Inside a session: say whether its owner is needed. An agent Aubergine started reports this
@@ -575,6 +583,15 @@ export function parseCommand(argv: readonly string[]): Command {
       }
       if (action === 'remove' && words.length === 1) return { name: 'link-remove', which: words[0] ?? '' };
       throw new UsageError('link needs one of: add <address> [--label "<words>"] [--kind <kind>], remove <address or label>, list');
+    }
+    case 'field': {
+      const [action, ...words] = rest;
+      const option = words.find((word) => word.startsWith('--'));
+      if (action === 'list' && words.length === 0) return { name: 'field-list' };
+      if (action === 'set' && words.length >= 2 && !words[0]!.startsWith('--')) return { name: 'field-set', label: words[0]!, value: words.slice(1).join(' ') };
+      if (action === 'remove' && words.length >= 1 && option === undefined) return { name: 'field-remove', label: words.join(' ') };
+      if (option !== undefined && (action === 'set' || action === 'remove' || action === 'list')) throw new UsageError(`field ${action} does not know ${option}.`);
+      throw new UsageError('field needs one of: set <label> <value>, remove <label>, list. A label of several words goes in quotes.');
     }
     case 'attention': {
       const [state, ...words] = rest;

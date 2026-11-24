@@ -179,6 +179,9 @@ How to create a token, what the scopes mean, the limits and the activity log are
 | [`POST /v1/sessions/{sessionId}/links`](#addlink) | Add a link to a session | session's own token, or `notes:write` |
 | [`PATCH /v1/sessions/{sessionId}/links/{linkId}`](#changelink) | Change the label or the kind of a link | session's own token, or `notes:write` |
 | [`DELETE /v1/sessions/{sessionId}/links/{linkId}`](#removelink) | Remove a link from a session | session's own token, or `notes:write` |
+| [`GET /v1/sessions/{sessionId}/fields`](#listownfields) | A session's fields | session's own token |
+| [`PUT /v1/sessions/{sessionId}/fields`](#setownfield) | Set one field of the session, as its agent | session's own token |
+| [`DELETE /v1/sessions/{sessionId}/fields/{label}`](#removeownfield) | Remove one field of the session, as its agent | session's own token |
 | [`GET /v1/sessions/{sessionId}/links/seen`](#listseenlinks) | Addresses seen in a terminal and not kept | `terminal:read` |
 | [`POST /v1/sessions/{sessionId}/links/keep`](#keepseenlink) | Keep an address that was seen in the terminal as a link | browser only |
 | [`PUT /v1/sessions/{sessionId}/described`](#describesession) | Name the session after its work, and say what it is doing | session's own token |
@@ -654,6 +657,14 @@ A list: it answers a page at a time, see `limit` and `cursor`.
       label: unknown & unknown;
       /** The value: one line of plain text. An address in it is shown as a link. */
       value: string;
+      /** Who set it: `owner` (the owner, or a program that may change the session) or `agent` (the agent in the terminal, with its own credential). Set by the server. */
+      source: "owner" | "agent" | "found";
+      /** What the agent in the terminal would set this field to, where the owner set it: kept beside the owner’s value until the owner uses it or changes the field. */
+      suggested?: {
+        /** The value: one line of plain text. An address in it is shown as a link. */
+        value: string;
+        at: string;
+      };
     }[];
     parkedFrom: {
       canvasId: string;
@@ -834,6 +845,14 @@ An API token needs the scope `sessions:write`. Sending `command` needs `terminal
       label: unknown & unknown;
       /** The value: one line of plain text. An address in it is shown as a link. */
       value: string;
+      /** Who set it: `owner` (the owner, or a program that may change the session) or `agent` (the agent in the terminal, with its own credential). Set by the server. */
+      source: "owner" | "agent" | "found";
+      /** What the agent in the terminal would set this field to, where the owner set it: kept beside the owner’s value until the owner uses it or changes the field. */
+      suggested?: {
+        /** The value: one line of plain text. An address in it is shown as a link. */
+        value: string;
+        at: string;
+      };
     }[];
     parkedFrom: {
       canvasId: string;
@@ -1017,6 +1036,14 @@ A list: it answers a page at a time, see `limit` and `cursor`.
       label: unknown & unknown;
       /** The value: one line of plain text. An address in it is shown as a link. */
       value: string;
+      /** Who set it: `owner` (the owner, or a program that may change the session) or `agent` (the agent in the terminal, with its own credential). Set by the server. */
+      source: "owner" | "agent" | "found";
+      /** What the agent in the terminal would set this field to, where the owner set it: kept beside the owner’s value until the owner uses it or changes the field. */
+      suggested?: {
+        /** The value: one line of plain text. An address in it is shown as a link. */
+        value: string;
+        at: string;
+      };
     }[];
     parkedFrom: {
       canvasId: string;
@@ -1182,6 +1209,14 @@ An API token needs the scope `read`.
     label: unknown & unknown;
     /** The value: one line of plain text. An address in it is shown as a link. */
     value: string;
+    /** Who set it: `owner` (the owner, or a program that may change the session) or `agent` (the agent in the terminal, with its own credential). Set by the server. */
+    source: "owner" | "agent" | "found";
+    /** What the agent in the terminal would set this field to, where the owner set it: kept beside the owner’s value until the owner uses it or changes the field. */
+    suggested?: {
+      /** The value: one line of plain text. An address in it is shown as a link. */
+      value: string;
+      at: string;
+    };
   }[];
   parkedFrom: {
     canvasId: string;
@@ -1299,7 +1334,7 @@ An API token needs the scope `sessions:write`. Sending `note` needs `notes:write
 | `name` | `string` | no |  |
 | `tags` | `string[]` | no |  |
 | `note` | `string` | no |  |
-| `fields` | `{ /** What the value is, in a few words: one line of plain text, wi…` | no | The fields of the terminal, in order: at most 12, each label once. |
+| `fields` | `{ /** What the value is, in a few words: one line of plain text, wi…` | no | The fields of the terminal, in order: at most 12, each label once. Who set each is the server’s to say: what is sent is the owner’s, except a field sent exactly as it stood, which keeps who set it. |
 
 **Answer** `200`:
 
@@ -1356,6 +1391,14 @@ An API token needs the scope `sessions:write`. Sending `note` needs `notes:write
     label: unknown & unknown;
     /** The value: one line of plain text. An address in it is shown as a link. */
     value: string;
+    /** Who set it: `owner` (the owner, or a program that may change the session) or `agent` (the agent in the terminal, with its own credential). Set by the server. */
+    source: "owner" | "agent" | "found";
+    /** What the agent in the terminal would set this field to, where the owner set it: kept beside the owner’s value until the owner uses it or changes the field. */
+    suggested?: {
+      /** The value: one line of plain text. An address in it is shown as a link. */
+      value: string;
+      at: string;
+    };
   }[];
   parkedFrom: {
     canvasId: string;
@@ -1551,6 +1594,14 @@ An API token needs the scope `sessions:write`.
       label: unknown & unknown;
       /** The value: one line of plain text. An address in it is shown as a link. */
       value: string;
+      /** Who set it: `owner` (the owner, or a program that may change the session) or `agent` (the agent in the terminal, with its own credential). Set by the server. */
+      source: "owner" | "agent" | "found";
+      /** What the agent in the terminal would set this field to, where the owner set it: kept beside the owner’s value until the owner uses it or changes the field. */
+      suggested?: {
+        /** The value: one line of plain text. An address in it is shown as a link. */
+        value: string;
+        at: string;
+      };
     }[];
     parkedFrom: {
       canvasId: string;
@@ -1728,6 +1779,14 @@ An API token needs the scope `sessions:write`.
     label: unknown & unknown;
     /** The value: one line of plain text. An address in it is shown as a link. */
     value: string;
+    /** Who set it: `owner` (the owner, or a program that may change the session) or `agent` (the agent in the terminal, with its own credential). Set by the server. */
+    source: "owner" | "agent" | "found";
+    /** What the agent in the terminal would set this field to, where the owner set it: kept beside the owner’s value until the owner uses it or changes the field. */
+    suggested?: {
+      /** The value: one line of plain text. An address in it is shown as a link. */
+      value: string;
+      at: string;
+    };
   }[];
   parkedFrom: {
     canvasId: string;
@@ -1900,6 +1959,14 @@ An API token needs the scope `sessions:write`.
       label: unknown & unknown;
       /** The value: one line of plain text. An address in it is shown as a link. */
       value: string;
+      /** Who set it: `owner` (the owner, or a program that may change the session) or `agent` (the agent in the terminal, with its own credential). Set by the server. */
+      source: "owner" | "agent" | "found";
+      /** What the agent in the terminal would set this field to, where the owner set it: kept beside the owner’s value until the owner uses it or changes the field. */
+      suggested?: {
+        /** The value: one line of plain text. An address in it is shown as a link. */
+        value: string;
+        at: string;
+      };
     }[];
     parkedFrom: {
       canvasId: string;
@@ -11164,6 +11231,14 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
     label: unknown & unknown;
     /** The value: one line of plain text. An address in it is shown as a link. */
     value: string;
+    /** Who set it: `owner` (the owner, or a program that may change the session) or `agent` (the agent in the terminal, with its own credential). Set by the server. */
+    source: "owner" | "agent" | "found";
+    /** What the agent in the terminal would set this field to, where the owner set it: kept beside the owner’s value until the owner uses it or changes the field. */
+    suggested?: {
+      /** The value: one line of plain text. An address in it is shown as a link. */
+      value: string;
+      at: string;
+    };
   }[];
   parkedFrom: {
     canvasId: string;
@@ -11332,6 +11407,14 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
     label: unknown & unknown;
     /** The value: one line of plain text. An address in it is shown as a link. */
     value: string;
+    /** Who set it: `owner` (the owner, or a program that may change the session) or `agent` (the agent in the terminal, with its own credential). Set by the server. */
+    source: "owner" | "agent" | "found";
+    /** What the agent in the terminal would set this field to, where the owner set it: kept beside the owner’s value until the owner uses it or changes the field. */
+    suggested?: {
+      /** The value: one line of plain text. An address in it is shown as a link. */
+      value: string;
+      at: string;
+    };
   }[];
   parkedFrom: {
     canvasId: string;
@@ -12267,6 +12350,144 @@ curl -X DELETE -H "Authorization: Bearer $TOKEN" \
      http://127.0.0.1:4600/v1/sessions/<sessionId>/links/<linkId>
 ```
 
+## For a session itself
+
+### listOwnFields
+
+`GET /v1/sessions/{sessionId}/fields`: A session's fields.
+
+For the agent inside a session, with that session's own token: the terminal's fields, each a label and a value saying who set it (`owner` or `agent`), and what the agent suggested for one the owner set. No API token may call this; a token with `read` sees fields on the session itself.
+
+For a session's own token, about that session. No API token may call this.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `sessionId` | path | `string` | yes | An ID. |
+
+**Answer** `200`:
+
+```ts
+{
+  /** The fields of the terminal, in order, each saying who set it. */
+  fields: {
+    /** What the value is, in a few words: one line of plain text, without a colon. */
+    label: unknown & unknown;
+    /** The value: one line of plain text. An address in it is shown as a link. */
+    value: string;
+    /** Who set it: `owner` (the owner, or a program that may change the session) or `agent` (the agent in the terminal, with its own credential). Set by the server. */
+    source: "owner" | "agent" | "found";
+    /** What the agent in the terminal would set this field to, where the owner set it: kept beside the owner’s value until the owner uses it or changes the field. */
+    suggested?: {
+      /** The value: one line of plain text. An address in it is shown as a link. */
+      value: string;
+      at: string;
+    };
+  }[];
+}
+```
+
+**Errors:** 400, 401, 403, 404, 413, 429.
+
+```sh
+curl -H "Authorization: Bearer $AUBERGINE_TOKEN" \
+     $AUBERGINE_URL/v1/sessions/<sessionId>/fields
+```
+
+### setOwnField
+
+`PUT /v1/sessions/{sessionId}/fields`: Set one field of the session, as its agent.
+
+For the agent inside a session, with that session's own token. A label nobody set is added at the end as the agent's; the agent's own is replaced. Where the owner set that label, the owner's value stays: what was sent is kept on it as a suggestion the owner can use, and `kept` is false. A terminal has at most 12 fields, counting the owner's: a new label beyond that is refused with 409. Setting the same value again changes nothing, so this needs no `Idempotency-Key`. No API token may call this.
+
+For a session's own token, about that session. No API token may call this.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `sessionId` | path | `string` | yes | An ID. |
+
+**Body** (JSON):
+
+| Field | Type | Required | |
+|---|---|---|---|
+| `label` | `string` | yes | What the value is, in a few words: one line of plain text, without a colon, at most 40 characters. A label that is there already, whatever its capitals, is that field. |
+| `value` | `string` | yes | The value: one line of plain text, at most 200 characters. |
+
+**Answer** `200`:
+
+```ts
+{
+  /** One field: a label and its value, and who set it. */
+  field: {
+    /** What the value is, in a few words: one line of plain text, without a colon. */
+    label: unknown & unknown;
+    /** The value: one line of plain text. An address in it is shown as a link. */
+    value: string;
+    /** Who set it: `owner` (the owner, or a program that may change the session) or `agent` (the agent in the terminal, with its own credential). Set by the server. */
+    source: "owner" | "agent" | "found";
+    /** What the agent in the terminal would set this field to, where the owner set it: kept beside the owner’s value until the owner uses it or changes the field. */
+    suggested?: {
+      /** The value: one line of plain text. An address in it is shown as a link. */
+      value: string;
+      at: string;
+    };
+  };
+  /** False where the owner set this label: the owner’s value stays, and what was sent is kept on it as a suggestion. */
+  kept: boolean;
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+```sh
+curl -X PUT -H "Authorization: Bearer $AUBERGINE_TOKEN" \
+     -H "Content-Type: application/json" -d '{"label":"text","value":"text"}' \
+     $AUBERGINE_URL/v1/sessions/<sessionId>/fields
+```
+
+### removeOwnField
+
+`DELETE /v1/sessions/{sessionId}/fields/{label}`: Remove one field of the session, as its agent.
+
+For the agent inside a session, with that session's own token: only a field its agent set. One the owner set is the owner's to remove: refused with 409. 404 when there is no field with that label. No API token may call this.
+
+For a session's own token, about that session. No API token may call this.
+
+| Parameter | In | Type | Required | |
+|---|---|---|---|---|
+| `sessionId` | path | `string` | yes | An ID. |
+| `label` | path | `string` | yes | The label of the field, whatever its capitals. |
+
+**Answer** `200`:
+
+```ts
+{
+  /** The fields of the terminal, in order, each saying who set it. */
+  fields: {
+    /** What the value is, in a few words: one line of plain text, without a colon. */
+    label: unknown & unknown;
+    /** The value: one line of plain text. An address in it is shown as a link. */
+    value: string;
+    /** Who set it: `owner` (the owner, or a program that may change the session) or `agent` (the agent in the terminal, with its own credential). Set by the server. */
+    source: "owner" | "agent" | "found";
+    /** What the agent in the terminal would set this field to, where the owner set it: kept beside the owner’s value until the owner uses it or changes the field. */
+    suggested?: {
+      /** The value: one line of plain text. An address in it is shown as a link. */
+      value: string;
+      at: string;
+    };
+  }[];
+}
+```
+
+**Errors:** 400, 401, 403, 404, 409, 413, 429.
+
+```sh
+curl -X DELETE -H "Authorization: Bearer $AUBERGINE_TOKEN" \
+     $AUBERGINE_URL/v1/sessions/<sessionId>/fields/<label>
+```
+
+## Links
+
 ### listSeenLinks
 
 `GET /v1/sessions/{sessionId}/links/seen`: Addresses seen in a terminal and not kept.
@@ -12476,7 +12697,7 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 
 `POST /v1/sessions/{sessionId}/described/use`: Use what the agent suggested in place of the owner’s own words.
 
-For the owner only: for the name, the summary, or one link.
+For the owner only: for the name, the summary, one link, or one field (`what: field` with its `label`), which is then the owner’s. The answer is the links, as they are after it.
 
 For the signed-in browser only. No API token may call this, whatever its scopes.
 
@@ -12488,8 +12709,9 @@ For the signed-in browser only. No API token may call this, whatever its scopes.
 
 | Field | Type | Required | |
 |---|---|---|---|
-| `what` | `"name" \| "summary" \| "link"` | yes |  |
+| `what` | `"name" \| "summary" \| "link" \| "field"` | yes |  |
 | `linkId` | `string` | no | For `link`: which one. |
+| `label` | `string` | no | For `field`: the label of the field. |
 
 **Answer** `200`:
 
