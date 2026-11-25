@@ -120,8 +120,8 @@
     "from": "620bab21c0b6"
   },
   "home.meta.description": {
-    "text": "Aubergine menempatkan semua terminal Anda berdampingan di satu kanvas di browser. Jalankan sebanyak yang Anda mau, dengan agen dan model yang sudah Anda pakai, dan lihat mana yang membutuhkan Anda. Gratis, lokal, open source.",
-    "from": "71a14cde3a05"
+    "text": "Perkuat terminal Anda: Aubergine menempatkan semua terminal Anda berdampingan di satu kanvas di browser. Jalankan sebanyak yang Anda mau, dengan agen dan model yang sudah Anda pakai, dan lihat mana yang membutuhkan Anda. Gratis, lokal, open source.",
+    "from": "10a391e12690"
   },
   "home.ld.category": {
     "text": "Multiplexer terminal dan ruang kerja agen",
@@ -132,8 +132,8 @@
     "from": "6fadbd03c20d"
   },
   "home.hero.kicker": {
-    "text": "Gratis · Open source · Berjalan di komputer Anda",
-    "from": "28742c2f94e7"
+    "text": "Perkuat terminal Anda · Gratis · Open source · Berjalan di komputer Anda",
+    "from": "a61d5f4f3b3a"
   },
   "home.hero.title": {
     "text": "Semua terminal Anda, berjajar. Lihat agen mana yang <em>butuh Anda</em>.",
@@ -158,6 +158,38 @@
   "home.canvas.caption": {
     "text": "Ilustrasi, bukan tangkapan layar: lima terminal di sebuah kanvas, dan satu yang menunggu Anda.",
     "from": "413e282f8a9d"
+  },
+  "home.powers.title": {
+    "text": "Beri terminal Anda kekuatan super",
+    "from": "588a8ab51054"
+  },
+  "home.powers.lead": {
+    "text": "Terminal yang sudah Anda pakai, dengan yang selama ini kurang: tempat untuk berdampingan, ingatan, dan cara memberi tahu Anda saat mereka membutuhkan Anda.",
+    "from": "5431ad2f0a64"
+  },
+  "home.powers.fast.name": {
+    "text": "Tingkatkan produktivitas Anda",
+    "from": "eac23b7b23fd"
+  },
+  "home.powers.fast.text": {
+    "text": "Beberapa agen bekerja sekaligus, masing-masing di terminalnya sendiri. Anda menjawab yang menunggu dan membiarkan sisanya berjalan.",
+    "from": "6e0a0a36e2e9"
+  },
+  "home.powers.dx.name": {
+    "text": "Pengalaman developer yang lebih baik",
+    "from": "5c707d9f81af"
+  },
+  "home.powers.dx.text": {
+    "text": "Setiap terminal punya nama, warna, catatan, dan tempatnya di kanvas. Tutup browser atau mulai ulang Aubergine: semuanya masih ada.",
+    "from": "3c91e1e0d942"
+  },
+  "home.powers.own.name": {
+    "text": "Tidak perlu pindah alat",
+    "from": "888a5a188e5e"
+  },
+  "home.powers.own.text": {
+    "text": "Shell, alat, agen, dan model Anda, apa adanya. Aubergine menambahkan kanvas di sekelilingnya dan tidak punya model sendiri.",
+    "from": "081fb5676d49"
   },
   "home.see.title": {
     "text": "Seperti apa tampilannya",

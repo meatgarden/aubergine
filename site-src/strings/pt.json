@@ -120,8 +120,8 @@
     "from": "620bab21c0b6"
   },
   "home.meta.description": {
-    "text": "O Aubergine coloca todos os seus terminais lado a lado em um só canvas, no seu navegador. Rode quantos quiser, com os agentes e modelos que você já usa, e veja qual precisa de você. Grátis, local e de código aberto.",
-    "from": "71a14cde3a05"
+    "text": "Turbine seu terminal: O Aubergine coloca todos os seus terminais lado a lado em um só canvas, no seu navegador. Rode quantos quiser, com os agentes e modelos que você já usa, e veja qual precisa de você. Grátis, local e de código aberto.",
+    "from": "10a391e12690"
   },
   "home.ld.category": {
     "text": "Multiplexador de terminais e espaço de trabalho para agentes",
@@ -132,8 +132,8 @@
     "from": "6fadbd03c20d"
   },
   "home.hero.kicker": {
-    "text": "Grátis · Código aberto · Roda no seu computador",
-    "from": "28742c2f94e7"
+    "text": "Turbine seu terminal · Grátis · Código aberto · Roda no seu computador",
+    "from": "a61d5f4f3b3a"
   },
   "home.hero.title": {
     "text": "Todos os seus terminais, lado a lado. Veja qual agente <em>precisa de você</em>.",
@@ -158,6 +158,38 @@
   "home.canvas.caption": {
     "text": "Uma ilustração, não uma captura: cinco terminais em um canvas, e o que está esperando por você.",
     "from": "413e282f8a9d"
+  },
+  "home.powers.title": {
+    "text": "Dê superpoderes aos seus terminais",
+    "from": "588a8ab51054"
+  },
+  "home.powers.lead": {
+    "text": "Os terminais que você já usa, com o que faltava a eles: um lugar para ficarem lado a lado, uma memória e um jeito de avisar quando precisam de você.",
+    "from": "5431ad2f0a64"
+  },
+  "home.powers.fast.name": {
+    "text": "Aumente sua produtividade",
+    "from": "eac23b7b23fd"
+  },
+  "home.powers.fast.text": {
+    "text": "Vários agentes trabalham ao mesmo tempo, cada um no seu próprio terminal. Você responde ao que espera e deixa os outros rodando.",
+    "from": "6e0a0a36e2e9"
+  },
+  "home.powers.dx.name": {
+    "text": "Uma experiência de desenvolvimento melhor",
+    "from": "5c707d9f81af"
+  },
+  "home.powers.dx.text": {
+    "text": "Cada terminal tem um nome, uma cor, uma nota e seu lugar no canvas. Feche o navegador ou reinicie o Aubergine: eles continuam lá.",
+    "from": "3c91e1e0d942"
+  },
+  "home.powers.own.name": {
+    "text": "Nada para migrar",
+    "from": "888a5a188e5e"
+  },
+  "home.powers.own.text": {
+    "text": "Seu shell, suas ferramentas, seus agentes e seus modelos, do jeito que estão. O Aubergine põe o canvas em volta deles e não tem modelo próprio.",
+    "from": "081fb5676d49"
   },
   "home.see.title": {
     "text": "Como é",
