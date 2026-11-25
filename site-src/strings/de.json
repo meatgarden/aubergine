@@ -2008,7 +2008,7 @@
     "from": "d74085e1bab8"
   },
   "alive.does.end": {
-    "text": "<strong>Eine Shell endgültig zu beenden fragt vorher.</strong> <strong>End</strong> (beenden) in der Liste der geparkten beendet ein Terminal erst, wenn du Ja sagst.",
+    "text": "<strong>Eine Shell endgültig zu beenden fragt vorher.</strong> <strong>End</strong> (beenden) in der Liste der geparkten Terminals beendet ein Terminal erst, wenn du Ja sagst.",
     "from": "297bbff16a9b"
   },
   "alive.does.views": {
@@ -2800,7 +2800,7 @@
     "from": "3fecb39df4a9"
   },
   "phone.does.owner": {
-    "text": "<strong>Ein gekoppeltes Gerät ist der ganze Besitzer.</strong> Es kann alles, was du am Rechner kannst: jedes Terminal, also eine Shell auf diesem Rechner als du. Kopple nur Browser, denen du deine Tastatur überlassen würdest. Was auf dem eigenen Desktop des Rechners wirkt, <strong>Open on desktop</strong>, fehlt dort auf der Seite und wird abgelehnt.",
+    "text": "<strong>Ein gekoppeltes Gerät ist voll und ganz der Besitzer.</strong> Es kann alles, was du am Rechner kannst: jedes Terminal, also eine Shell auf diesem Rechner als du. Kopple nur Browser, denen du deine Tastatur überlassen würdest. Was auf dem eigenen Desktop des Rechners wirkt, <strong>Open on desktop</strong>, fehlt dort auf der Seite und wird abgelehnt.",
     "from": "77b677da358b"
   },
   "phone.see.title": {
@@ -2828,7 +2828,7 @@
     "from": "216b7430b645"
   },
   "phone.not.public": {
-    "text": "<strong>Kein Schutz für eine Adresse, die jeder öffnen kann.</strong> Ohne Code kommt niemand hinein, und Codes sind schwer zu erraten, aber Fremde würden versuchen, eine Shell zu erraten. Stell ein privates Netz oder die eigene Anmeldung deiner Organisation davor, und nutze nie den Modus eines privaten Netzes, der eine Maschine im ganzen Internet veröffentlicht.",
+    "text": "<strong>Kein Schutz für eine Adresse, die jeder öffnen kann.</strong> Ohne Code kommt niemand hinein, und Codes sind schwer zu erraten, aber Fremde würden am Zugang zu einer Shell herumraten. Stell ein privates Netz oder die eigene Anmeldung deiner Organisation davor, und nutze nie den Modus eines privaten Netzes, der eine Maschine im ganzen Internet veröffentlicht.",
     "from": "c027919da51a"
   },
   "phone.not.layout": {

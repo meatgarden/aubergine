@@ -2132,7 +2132,7 @@
     "from": "acf3f5da99c1"
   },
   "notify.does.start": {
-    "text": "<strong>Aubergine에서 Claude Code를 시작하세요</strong>. 터미널 목록 맨 위의 <strong>New terminal ▾ → Claude Code</strong>, 또는 <code>C</code>. Aubergine은 자체 데이터 폴더에 만든 설정 파일을 명령줄에 지정해 <code>claude</code>를 시작합니다. 여러분의 Claude Code 설정은 건드리지 않습니다. 그 파일의 훅이 에이전트가 하는 일을 페이지에 알립니다.",
+    "text": "<strong>Aubergine에서 Claude Code를 시작하세요</strong>. 터미널 목록 맨 위의 <strong>New terminal ▾ → Claude Code</strong>를 누르거나 <code>C</code>를 누릅니다. Aubergine은 자체 데이터 폴더에 만든 설정 파일을 명령줄에 지정해 <code>claude</code>를 시작합니다. 여러분의 Claude Code 설정은 건드리지 않습니다. 그 파일의 훅이 에이전트가 하는 일을 페이지에 알립니다.",
     "from": "3369bd01dcea"
   },
   "notify.does.working": {
@@ -2796,11 +2796,11 @@
     "from": "e461217bf7e4"
   },
   "phone.does.revoke": {
-    "text": "<strong>기기는 폐기할 수 있습니다.</strong> <code>aubergine device revoke \"Phone\"</code> 또는 <strong>Settings → Devices</strong>의 <strong>Revoke…</strong>(폐기)는 그 기기를 즉시 로그아웃시키고 열려 있는 것을 닫습니다. 90일 동안 쓰지 않은 기기는 동작을 멈춥니다.",
+    "text": "<strong>기기는 폐기할 수 있습니다.</strong> <code>aubergine device revoke \"Phone\"</code> 또는 <strong>Settings → Devices</strong>의 <strong>Revoke…</strong>(폐기)는 그 기기를 즉시 로그아웃시키고 열려 있는 것을 닫습니다. 90일 동안 쓰지 않은 기기는 더 이상 쓸 수 없게 됩니다.",
     "from": "3fecb39df4a9"
   },
   "phone.does.owner": {
-    "text": "<strong>페어링된 기기는 온전한 소유자입니다.</strong> 여러분이 컴퓨터 앞에서 할 수 있는 모든 것을 할 수 있습니다. 모든 터미널, 즉 그 컴퓨터에서 여러분으로 실행되는 셸까지. 키보드를 넘겨줄 만한 브라우저만 페어링하세요. 컴퓨터 자체의 데스크톱에서 동작하는 것, 즉 <strong>Open on desktop</strong>은 그 페이지에서 빠지며 요청해도 거부됩니다.",
+    "text": "<strong>페어링된 기기는 소유자와 똑같은 권한을 가집니다.</strong> 여러분이 컴퓨터 앞에서 할 수 있는 모든 것을 할 수 있습니다. 모든 터미널, 곧 그 컴퓨터에서 여러분의 권한으로 실행되는 셸도 쓸 수 있습니다. 키보드를 넘겨줄 만한 브라우저만 페어링하세요. 컴퓨터 자체의 데스크톱에서 동작하는 것, 즉 <strong>Open on desktop</strong>은 그 페이지에서 빠지며 요청해도 거부됩니다.",
     "from": "77b677da358b"
   },
   "phone.see.title": {
@@ -2840,7 +2840,7 @@
     "from": "b6ed7ed61e98"
   },
   "phone.q.check.a": {
-    "text": "Aubergine에 HTTPS로 접속할 수 있고 휴대폰 브라우저가 페어링되면, 휴대폰에 같은 페이지가 보입니다. 어느 터미널이 기다리는지, 대기 목록, 그리고 각 터미널. 같은 Mac의 브라우저로 실행해 봤고, 실제 휴대폰에서는 아직입니다.",
+    "text": "Aubergine에 HTTPS로 접속할 수 있고 휴대폰 브라우저가 페어링되면, 휴대폰에 같은 페이지가 보입니다. 어느 터미널이 기다리는지, 대기 목록, 그리고 각 터미널. 같은 Mac의 브라우저로 실행해 봤고, 실제 휴대폰에서는 아직 실행해 보지 않았습니다.",
     "from": "25e4fa5804eb"
   },
   "phone.q.pair.q": {

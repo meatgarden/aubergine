@@ -2032,7 +2032,7 @@
     "from": "7abee1496908"
   },
   "alive.not.sleep": {
-    "text": "<strong>它不会让电脑保持唤醒。</strong>笔记本睡眠时会暂停其中的程序，这些也一样；醒来后它们会继续。",
+    "text": "<strong>它不会让电脑保持唤醒。</strong>笔记本睡眠时，程序会暂停，这里的终端也不例外；醒来后它们会继续。",
     "from": "866d9035e322"
   },
   "alive.not.service": {
@@ -2660,7 +2660,7 @@
     "from": "82419f3b337f"
   },
   "tmux.does.scroll": {
-    "text": "<strong>滚轮往回滚动</strong>占着键盘的那个终端；在画布的其他地方，滚轮用于缩放。",
+    "text": "在占着键盘的终端里，<strong>滚轮会往回滚动</strong>；在画布的其他地方，滚轮用于缩放。",
     "from": "c1901de45a17"
   },
   "tmux.does.copy": {

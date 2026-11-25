@@ -163,7 +163,7 @@
 
     <h2>Aubergine 做什么</h2>
     <p><strong>自己的套接字和自己的配置。</strong>Aubergine 在它自己的、名为 <code>aubergine</code> 的套接字上启动 tmux，用的是它自己的配置文件而不是你的：没有状态栏，没有前缀键，开启鼠标，50,000 行历史。每个终端是一个 tmux 会话，里面是一个 shell，也就是你的登录 shell。你自己的 tmux、它的会话和你的 <code>~/.tmux.conf</code> 都不会被改动。</p>
-    <p><strong>滚轮往回滚动</strong>占着键盘的那个终端；在画布的其他地方，滚轮用于缩放。</p>
+    <p>在占着键盘的终端里，<strong>滚轮会往回滚动</strong>；在画布的其他地方，滚轮用于缩放。</p>
     <p><strong>用鼠标选中，松开时就复制</strong>到你的剪贴板：tmux 用 OSC 52（终端用于剪贴板的转义序列）把选中的内容交给页面，由页面放进剪贴板。用 <code>⌘V</code> 粘贴（macOS 之外用 <code>Ctrl+Shift+V</code>）。多行粘贴会加上括号粘贴标记，所以 shell 不会逐行执行它。</p>
     <p><strong>拖动来调整大小：</strong>在画布上拖动终端的边缘，shell 就会得到新的尺寸。同时在两处打开的终端只有一个尺寸，由你最后输入的那个视图决定。</p>
     <p><strong>底层仍然是 tmux。</strong><code>aubergine attach &lt;name&gt;</code> 会在你的终端应用窗口中显示一个终端，终端菜单中的 <strong>Open on desktop</strong>（在桌面上打开）会替你做这件事（macOS 上用 Terminal 或 iTerm；Linux 上用你设置的命令行）。服务器停止时，<code>tmux -L aubergine ls</code> 和 <code>tmux -L aubergine attach -t &lt;id&gt;</code> 依然能连到每个 shell。</p>

@@ -2536,7 +2536,7 @@
     "from": "bcdecc549d07"
   },
   "tmux.who": {
-    "text": "Untuk orang yang menginginkan apa yang diberikan tmux, yaitu shell yang bertahan lebih lama dari jendelanya, tanpa tombol dan konfigurasinya. Jika Anda sudah terbiasa hidup di tmux, tetap pakai: Aubergine tidak mengusik tmux Anda.",
+    "text": "Untuk orang yang menginginkan apa yang diberikan tmux, yaitu shell yang bertahan lebih lama dari jendelanya, tanpa tombol dan konfigurasinya. Jika Anda sudah memakai tmux sehari-hari, tetap pakai: Aubergine tidak mengusik tmux Anda.",
     "from": "67d7b78bd967"
   },
   "tmux.usual.title": {
@@ -2784,7 +2784,7 @@
     "from": "acf3f5da99c1"
   },
   "phone.does.off": {
-    "text": "<strong>Fitur ini mati secara bawaan, dan tetap terikat ke komputer ini.</strong> Server hanya mendengarkan di <code>127.0.0.1</code>, dan itu tidak berubah. Sesuatu di komputer yang sama meneruskan HTTPS kepadanya dengan sebuah nama, misalnya layanan HTTPS milik jaringan privat atau web server seperti Caddy. Aubergine sendiri tidak pernah berbicara HTTPS.",
+    "text": "<strong>Fitur ini mati secara bawaan, dan tetap terikat ke komputer ini.</strong> Server hanya mendengarkan di <code>127.0.0.1</code>, dan itu tidak berubah. Sesuatu di komputer yang sama meneruskan HTTPS kepadanya dengan sebuah nama, misalnya layanan HTTPS milik jaringan privat atau web server seperti Caddy. Aubergine sendiri tidak pernah menangani HTTPS.",
     "from": "69ebb44f3dfc"
   },
   "phone.does.address": {

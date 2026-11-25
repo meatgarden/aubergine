@@ -122,7 +122,7 @@
       "@type": "FAQPage",
       "@id": "https://thirstyeggplant.com/ko/check-agents-from-your-phone/#faq",
       "mainEntity": [
-        { "@type": "Question", "name": "휴대폰에서 코딩 에이전트를 확인할 수 있나요?", "acceptedAnswer": { "@type": "Answer", "text": "Aubergine에 HTTPS로 접속할 수 있고 휴대폰 브라우저가 페어링되면, 휴대폰에 같은 페이지가 보입니다. 어느 터미널이 기다리는지, 대기 목록, 그리고 각 터미널. 같은 Mac의 브라우저로 실행해 봤고, 실제 휴대폰에서는 아직입니다." } },
+        { "@type": "Question", "name": "휴대폰에서 코딩 에이전트를 확인할 수 있나요?", "acceptedAnswer": { "@type": "Answer", "text": "Aubergine에 HTTPS로 접속할 수 있고 휴대폰 브라우저가 페어링되면, 휴대폰에 같은 페이지가 보입니다. 어느 터미널이 기다리는지, 대기 목록, 그리고 각 터미널. 같은 Mac의 브라우저로 실행해 봤고, 실제 휴대폰에서는 아직 실행해 보지 않았습니다." } },
         { "@type": "Question", "name": "휴대폰을 Aubergine과 어떻게 페어링하나요?", "acceptedAnswer": { "@type": "Answer", "text": "컴퓨터에서 aubergine device add --name \"Phone\"을 실행하거나 Settings → Devices → Add a device를 쓰세요. 3분 안에 QR 코드를 스캔하거나, 링크를 열거나, 휴대폰의 로그인 페이지에 코드를 입력하세요." } },
         { "@type": "Question", "name": "휴대폰을 잃어버리면 어떻게 하나요?", "acceptedAnswer": { "@type": "Answer", "text": "컴퓨터에서 폐기하세요. aubergine device revoke \"Phone\", 또는 Settings → Devices의 Revoke…. 즉시 로그아웃되고, 열려 있던 것은 닫힙니다." } },
         { "@type": "Question", "name": "Aubergine을 인터넷에 공개해도 안전한가요?", "acceptedAnswer": { "@type": "Answer", "text": "누구나 열 수 있는 주소는 로그인 화면을 모든 사람 앞에 내놓는 것이고, 페어링된 기기는 여러분 컴퓨터의 셸을 가집니다. 사설 네트워크를 쓰거나, 주소 앞에 조직 자체의 로그인을 두는 쪽을 택하세요." } },
@@ -149,8 +149,8 @@
     <p><strong>기본적으로 꺼져 있고, 이 컴퓨터에 묶여 있습니다.</strong> 서버는 <code>127.0.0.1</code>에서만 수신하며, 이는 바뀌지 않습니다. 같은 컴퓨터의 무언가, 예를 들어 사설 네트워크 자체의 HTTPS 제공 기능이나 Caddy 같은 웹 서버가 이름을 붙여 HTTPS를 서버로 전달합니다. Aubergine 자신은 HTTPS를 처리하지 않습니다.</p>
     <p><strong>주소는 여러분이 설정에 적습니다.</strong> <code>access.addresses</code> 항목으로 <code>config.json</code>에 들어가며, 서버가 시작할 때 읽습니다. 어떤 페이지나 프로그램도 이를 바꿀 수 없습니다. <code>aubergine doctor</code>가 주소들과 각각의 문제를 나열합니다.</p>
     <p><strong>기기마다 일회용 코드로 페어링합니다.</strong> 컴퓨터에서 <code>aubergine device add --name "Phone"</code>을 실행하거나, 로그인된 브라우저에서 <strong>Settings → Devices → Add a device</strong>(기기 추가)를 누르면 코드가 나오고, 주소마다 코드가 담긴 링크의 QR 코드가 나옵니다. 스캔하거나, 링크를 열거나, 휴대폰의 로그인 페이지에 코드를 입력하세요. 코드는 한 번, 3분 동안만 유효합니다.</p>
-    <p><strong>기기는 폐기할 수 있습니다.</strong> <code>aubergine device revoke "Phone"</code> 또는 <strong>Settings → Devices</strong>의 <strong>Revoke…</strong>(폐기)는 그 기기를 즉시 로그아웃시키고 열려 있는 것을 닫습니다. 90일 동안 쓰지 않은 기기는 동작을 멈춥니다.</p>
-    <p><strong>페어링된 기기는 온전한 소유자입니다.</strong> 여러분이 컴퓨터 앞에서 할 수 있는 모든 것을 할 수 있습니다. 모든 터미널, 즉 그 컴퓨터에서 여러분으로 실행되는 셸까지. 키보드를 넘겨줄 만한 브라우저만 페어링하세요. 컴퓨터 자체의 데스크톱에서 동작하는 것, 즉 <strong>Open on desktop</strong>은 그 페이지에서 빠지며 요청해도 거부됩니다.</p>
+    <p><strong>기기는 폐기할 수 있습니다.</strong> <code>aubergine device revoke "Phone"</code> 또는 <strong>Settings → Devices</strong>의 <strong>Revoke…</strong>(폐기)는 그 기기를 즉시 로그아웃시키고 열려 있는 것을 닫습니다. 90일 동안 쓰지 않은 기기는 더 이상 쓸 수 없게 됩니다.</p>
+    <p><strong>페어링된 기기는 소유자와 똑같은 권한을 가집니다.</strong> 여러분이 컴퓨터 앞에서 할 수 있는 모든 것을 할 수 있습니다. 모든 터미널, 곧 그 컴퓨터에서 여러분의 권한으로 실행되는 셸도 쓸 수 있습니다. 키보드를 넘겨줄 만한 브라우저만 페어링하세요. 컴퓨터 자체의 데스크톱에서 동작하는 것, 즉 <strong>Open on desktop</strong>은 그 페이지에서 빠지며 요청해도 거부됩니다.</p>
 
     <h2>보게 되는 것</h2>
     <p>컴퓨터 앞에서와 같은 페이지입니다. 캔버스와 그 터미널, <strong>For you</strong> 옆의 숫자와 대기 목록, 그리고 <code>/t/&lt;terminal&gt;</code>에서 세부 정보와 노트와 함께 따로 열리는 터미널 하나. 휴대폰에 맞춰 배치되어 있지 않으며, 좁은 창에서와 같이 동작합니다.</p>
@@ -167,7 +167,7 @@
 
     <h2>질문</h2>
     <div class="questions">
-      <details><summary>휴대폰에서 코딩 에이전트를 확인할 수 있나요?</summary><p>Aubergine에 HTTPS로 접속할 수 있고 휴대폰 브라우저가 페어링되면, 휴대폰에 같은 페이지가 보입니다. 어느 터미널이 기다리는지, 대기 목록, 그리고 각 터미널. 같은 Mac의 브라우저로 실행해 봤고, 실제 휴대폰에서는 아직입니다.</p></details>
+      <details><summary>휴대폰에서 코딩 에이전트를 확인할 수 있나요?</summary><p>Aubergine에 HTTPS로 접속할 수 있고 휴대폰 브라우저가 페어링되면, 휴대폰에 같은 페이지가 보입니다. 어느 터미널이 기다리는지, 대기 목록, 그리고 각 터미널. 같은 Mac의 브라우저로 실행해 봤고, 실제 휴대폰에서는 아직 실행해 보지 않았습니다.</p></details>
       <details><summary>휴대폰을 Aubergine과 어떻게 페어링하나요?</summary><p>컴퓨터에서 <code>aubergine device add --name "Phone"</code>을 실행하거나 <strong>Settings → Devices → Add a device</strong>를 쓰세요. 3분 안에 QR 코드를 스캔하거나, 링크를 열거나, 휴대폰의 로그인 페이지에 코드를 입력하세요.</p></details>
       <details><summary>휴대폰을 잃어버리면 어떻게 하나요?</summary><p>컴퓨터에서 폐기하세요. <code>aubergine device revoke "Phone"</code>, 또는 <strong>Settings → Devices</strong>의 <strong>Revoke…</strong>. 즉시 로그아웃되고, 열려 있던 것은 닫힙니다.</p></details>
       <details><summary>Aubergine을 인터넷에 공개해도 안전한가요?</summary><p>누구나 열 수 있는 주소는 로그인 화면을 모든 사람 앞에 내놓는 것이고, 페어링된 기기는 여러분 컴퓨터의 셸을 가집니다. 사설 네트워크를 쓰거나, 주소 앞에 조직 자체의 로그인을 두는 쪽을 택하세요.</p></details>
