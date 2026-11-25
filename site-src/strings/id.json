@@ -1327,6 +1327,54 @@
     "text": "Apa yang dipertahankan saat browser ditutup, saat Aubergine dimulai ulang, dan saat komputer dimulai ulang, serta cara melanjutkan dari tempat Anda berhenti.",
     "from": "396ced3608bc"
   },
+  "guides.alive.name": {
+    "text": "Menjaga proses tetap berjalan setelah terminal ditutup",
+    "from": "0a69e88f3c29"
+  },
+  "guides.alive.text": {
+    "text": "Tutup tab, jendela, atau browser dan tidak ada yang berakhir: apa yang diberikan tmux, tanpa belajar tmux.",
+    "from": "fc7a604b47b9"
+  },
+  "guides.notify.name": {
+    "text": "Tahu kapan Claude Code selesai atau menunggu",
+    "from": "3cd5aea79b1d"
+  },
+  "guides.notify.text": {
+    "text": "Working, waiting for you, dan finished di setiap terminal, angka For you, tombol ke terminal berikutnya yang menunggu, dan notifikasi di halaman yang terbuka.",
+    "from": "6cbbad6859df"
+  },
+  "guides.resume.name": {
+    "text": "Melanjutkan percakapan Claude Code",
+    "from": "92e5ad9c0015"
+  },
+  "guides.resume.text": {
+    "text": "Resume agent di terminal tempat ia berjalan, percakapan sebelumnya di sebuah folder, dan apa yang memberi tahu Anda sampai mana ia.",
+    "from": "0058e15394a7"
+  },
+  "guides.many.name": {
+    "text": "Menemukan terminal yang tepat saat terminal terlalu banyak",
+    "from": "9d8e670c6407"
+  },
+  "guides.many.text": {
+    "text": "Kanvas, satu daftar semua terminal dengan statusnya dalam kata-kata, filter, tag, dan pencarian apa yang dicetak terminal.",
+    "from": "789065caea35"
+  },
+  "guides.tmux.name": {
+    "text": "tmux tanpa belajar tmux",
+    "from": "c661725dc167"
+  },
+  "guides.tmux.text": {
+    "text": "Shell yang bertahan lebih lama dari jendelanya, tanpa tombol prefiks dan tanpa konfigurasi, dan tmux Anda sendiri tidak disentuh.",
+    "from": "6875107241dd"
+  },
+  "guides.phone.name": {
+    "text": "Memantau agen dari ponsel Anda",
+    "from": "c92463ac8872"
+  },
+  "guides.phone.text": {
+    "text": "Menjangkau Aubergine dari perangkat lain, masing-masing dipasangkan dengan kode. Dijalankan sekali di satu Mac; belum dicoba di ponsel sungguhan.",
+    "from": "fbe08c88ab0c"
+  },
   "guides.queue.name": {
     "text": "Antrean, For you, dan jadwal",
     "from": "61c48ccc941d"
@@ -1639,6 +1687,18 @@
     "text": "Bukan. Ia memisahkan pekerjaan; ia tidak mengurung agen. Agen berjalan sebagai Anda dan tetap bisa membaca serta mengubah setiap file yang bisa Anda akses.",
     "from": "8b760eb225ac"
   },
+  "keep.table.browserShort": {
+    "text": "Browser ditutup",
+    "from": "6a63c6750f2a"
+  },
+  "keep.table.serverShort": {
+    "text": "Aubergine dimulai ulang",
+    "from": "88d2ef622400"
+  },
+  "keep.table.computerShort": {
+    "text": "Komputer dimulai ulang",
+    "from": "515aa3442054"
+  },
   "keep.meta.title": {
     "text": "Menjaga terminal setelah crash, mulai ulang, atau pembaruan | Aubergine",
     "from": "d0521ba83d02"
@@ -1682,18 +1742,6 @@
   "keep.table.computer": {
     "text": "Komputer crash, dimulai ulang, atau memasang pembaruan",
     "from": "321c23263fa9"
-  },
-  "keep.table.browserShort": {
-    "text": "Browser ditutup",
-    "from": "6a63c6750f2a"
-  },
-  "keep.table.serverShort": {
-    "text": "Aubergine dimulai ulang",
-    "from": "88d2ef622400"
-  },
-  "keep.table.computerShort": {
-    "text": "Komputer dimulai ulang",
-    "from": "515aa3442054"
   },
   "keep.row.running": {
     "text": "Program dan agen yang berjalan",
@@ -1894,6 +1942,942 @@
   "keep.related": {
     "text": "Terkait: <a href=\"/claude/\">Claude Code di Aubergine</a> · <a href=\"/queue-and-schedules/\">antrean dan jadwal</a> · <a href=\"/working-copies/\">salinan kerja</a>",
     "from": "730944daab4e"
+  },
+  "alive.meta.title": {
+    "text": "Menjaga proses tetap berjalan setelah terminal ditutup | Aubergine",
+    "from": "b6893102f4dc"
+  },
+  "alive.meta.description": {
+    "text": "Menutup jendela terminal mengakhiri apa yang berjalan di dalamnya. Jawaban yang biasa adalah nohup, disown, screen, dan tmux; Aubergine menjalankan setiap terminal di tmux untuk Anda, jadi menutup browser tidak mengakhiri apa pun.",
+    "from": "91fc698775ac"
+  },
+  "alive.crumb": {
+    "text": "Tetap berjalan",
+    "from": "18b04919677d"
+  },
+  "alive.title": {
+    "text": "Menjaga proses tetap berjalan setelah terminal ditutup",
+    "from": "0a69e88f3c29"
+  },
+  "alive.lead": {
+    "text": "Anda memulai build, server, atau agen coding, dan menutup jendelanya akan mengakhirinya. Di Aubergine menutup jendela tidak mengakhiri apa pun: setiap terminal berjalan terpisah dari browser, dan apa yang dicetaknya masih ada saat Anda kembali.",
+    "from": "08c79722641c"
+  },
+  "alive.usual.title": {
+    "text": "Yang biasanya dilakukan orang",
+    "from": "30e09240a39b"
+  },
+  "alive.usual.text": {
+    "text": "Menutup jendela terminal mengakhiri shell di dalamnya, dan bersama itu apa yang dimulai shell tersebut. Cara standar untuk menghindarinya:",
+    "from": "4915c1c5f12a"
+  },
+  "alive.usual.nohup": {
+    "text": "<code>nohup</code> memulai perintah yang mengabaikan sinyal hang-up yang dikirim saat terminal ditutup. Output-nya masuk ke sebuah file (<code>nohup.out</code> kecuali Anda mengirimnya ke tempat lain).",
+    "from": "07104e43d084"
+  },
+  "alive.usual.disown": {
+    "text": "<code>disown</code>, di bash dan zsh, melepas job yang sudah Anda mulai, sehingga shell tidak meneruskan hang-up kepadanya. Setelah itu Anda tidak bisa kembali ke job itu di terminal.",
+    "from": "cff93689c505"
+  },
+  "alive.usual.mux": {
+    "text": "<code>screen</code> dan <code>tmux</code> menjalankan shell di dalam server milik mereka sendiri. Anda melepas (detach), menutup jendela, lalu menyambung lagi (attach) nanti ke shell yang sama beserta output-nya. Keduanya jawaban yang bisa diandalkan, dan untuk memakainya Anda harus mempelajari tombol dan perintahnya.",
+    "from": "8033fa82aabc"
+  },
+  "alive.usual.after": {
+    "text": "Aubergine dibangun di atas yang terakhir. Ia menjalankan tmux untuk Anda, jadi Anda mendapat jawabannya tanpa perlu tombol-tombolnya.",
+    "from": "c5965cfc20f2"
+  },
+  "alive.does.title": {
+    "text": "Apa yang dilakukan Aubergine",
+    "from": "acf3f5da99c1"
+  },
+  "alive.does.text": {
+    "text": "Setiap terminal di Aubergine adalah shell di sesi tmux-nya sendiri, di socket tmux milik Aubergine. tmux berjalan terpisah dari browser dan dari server Aubergine, sehingga:",
+    "from": "98b70e7d0d29"
+  },
+  "alive.does.browser": {
+    "text": "<strong>Menutup tab, jendela, atau seluruh browser tidak mengakhiri apa pun.</strong> Buka lagi halamannya (<code>aubergine open</code> membukanya dalam keadaan masuk) dan setiap terminal digambar dari tmux seperti keadaannya sekarang, dengan apa yang dicetaknya selama itu ada di scrollback-nya.",
+    "from": "41a2df93d059"
+  },
+  "alive.does.server": {
+    "text": "<strong>Menghentikan Aubergine juga tidak mengakhiri apa pun.</strong> Ctrl+C di tempat <code>aubergine start</code> berjalan, server yang crash, atau pembaruan menghentikan server dan tidak ada yang lain. Mulai lagi dan muat ulang halamannya.",
+    "from": "b9ce1197f495"
+  },
+  "alive.does.park": {
+    "text": "<strong>Menutup terminal di kanvas berarti menyimpannya.</strong> Tanda × di judulnya mengeluarkannya dari kanvas dan shell-nya tetap berjalan. <strong>Parked</strong> (disimpan) di bilah di atas kanvas mendaftar terminal yang disimpan, dan <strong>Restore</strong> (pulihkan) mengembalikan salah satunya.",
+    "from": "d74085e1bab8"
+  },
+  "alive.does.end": {
+    "text": "<strong>Mengakhiri shell untuk selamanya selalu bertanya dulu.</strong> <strong>End</strong> (akhiri) di daftar terminal yang disimpan mengakhiri terminal hanya setelah Anda menjawab ya.",
+    "from": "297bbff16a9b"
+  },
+  "alive.does.views": {
+    "text": "<strong>Tampilan lain dari terminal juga tidak mengakhiri apa pun.</strong> <strong>Tab ↗</strong> di judul terminal membukanya sendirian di tab browser, dan <code>aubergine attach &lt;name&gt;</code> menampilkannya di jendela aplikasi terminal Anda. Masing-masing adalah terminal yang sama, bukan salinan; menutup tab atau jendela itu membiarkannya tetap berjalan.",
+    "from": "620a7de6d140"
+  },
+  "alive.does.scroll": {
+    "text": "Selama shell berjalan, tmux menyimpan 50.000 baris terakhir yang dicetaknya. Roda mouse menggulir kembali baris-baris itu di terminal yang memegang keyboard, dan palet (<code>⌘K</code>) mencarinya.",
+    "from": "6bfb58743356"
+  },
+  "alive.pic.caption": {
+    "text": "Daftar ini menunjukkan apa yang sedang dikerjakan setiap terminal. Yang disimpan di bagian bawah tidak ada di kanvas, dan shell-nya masih berjalan.",
+    "from": "4bafddfa442e"
+  },
+  "alive.not.title": {
+    "text": "Apa yang tidak dilakukannya",
+    "from": "b3a53baf5dfd"
+  },
+  "alive.not.reboot": {
+    "text": "<strong>Ia tidak bertahan saat komputer dimulai ulang.</strong> Mulai ulang, komputer yang crash, atau pembaruan yang memulai ulang komputer mengakhiri setiap shell dan apa yang berjalan di dalamnya. Aubergine mengembalikan semua yang ada di sekitarnya, setiap terminal sebagai shell baru di folder terakhirnya, dan tidak memulai apa pun lagi dengan sendirinya. Lihat <a href=\"/keep-terminals-after-restart/\">Menjaga terminal setelah komputer dimulai ulang</a>.",
+    "from": "7abee1496908"
+  },
+  "alive.not.sleep": {
+    "text": "<strong>Ia tidak menjaga komputer tetap terjaga.</strong> Laptop yang tidur menjeda program-programnya, termasuk yang ini; semuanya berlanjut saat laptop bangun.",
+    "from": "866d9035e322"
+  },
+  "alive.not.service": {
+    "text": "<strong>Ia bukan pengelola layanan.</strong> Pekerjaan yang harus kembali sendiri setelah mulai ulang sebaiknya ada di layanan sistem Anda.",
+    "from": "6d5fa1f2b3ca"
+  },
+  "alive.not.adopt": {
+    "text": "<strong>Ia tidak bisa mengambil alih program yang sudah berjalan di tempat lain.</strong> Tidak ada alat yang bisa memindahkan program yang sedang berjalan ke terminal lain. <code>aubergine here</code> di tab aplikasi terminal Anda memberi folder itu sebuah terminal di kanvas; program yang berjalan di tab itu tetap di sana, dan harus dimulai lagi di dalam terminal baru.",
+    "from": "b16b06abf9b4"
+  },
+  "alive.ssh.title": {
+    "text": "Di mesin lain, lewat SSH",
+    "from": "e88f17341af2"
+  },
+  "alive.ssh.text": {
+    "text": "Aubergine berjalan di komputer Anda sendiri: servernya mendengarkan di <code>127.0.0.1</code>, dan terminalnya adalah shell di komputer itu. Jika yang ingin Anda pertahankan adalah proses di server jarak jauh yang Anda jangkau lewat SSH, <code>tmux</code> atau <code>screen</code> di server itu tetap jawabannya.",
+    "from": "dffecd1ee615"
+  },
+  "alive.ssh.remote": {
+    "text": "Aubergine sendiri bisa berjalan di mesin lain dan dipakai dari browser Anda, lewat tunnel SSH, jaringan privat, atau sebuah nama dan proxy: langkah-langkahnya ada di <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md\">Memakai Aubergine dari tempat lain</a>. Lewat tunnel SSH, menutup jendela SSH yang menjalankan <code>aubergine start</code> menghentikan server, dan terminalnya tetap berjalan. Linux baru dijalankan di dalam kontainer, dan belum pernah di mesin cloud.",
+    "from": "6471fa20654e"
+  },
+  "alive.q.close.q": {
+    "text": "Apakah menutup browser menghentikan terminal saya?",
+    "from": "6ddd7e6edce7"
+  },
+  "alive.q.close.a": {
+    "text": "Tidak. Setiap terminal adalah shell di tmux, yang berjalan terpisah dari browser. Tutup tab, jendela, atau browser, buka lagi halamannya, dan setiap terminal seperti keadaannya sekarang, masih berjalan, dengan apa yang dicetaknya selama itu.",
+    "from": "598cd7c22733"
+  },
+  "alive.q.ssh.q": {
+    "text": "Bagaimana menjaga proses tetap berjalan setelah SSH terputus?",
+    "from": "960447871eb8"
+  },
+  "alive.q.ssh.a": {
+    "text": "Di mesin jarak jauh, mulai proses itu di dalam <code>tmux</code> atau <code>screen</code>, atau dengan <code>nohup</code>. Aubergine menjaga terminal di komputer tempat ia berjalan. Ia juga bisa berjalan di mesin jarak jauh, dipakai lewat tunnel SSH atau proxy, tetapi itu baru dijalankan di dalam kontainer, belum pernah di mesin cloud.",
+    "from": "0d887b52c097"
+  },
+  "alive.q.nohup.q": {
+    "text": "Sebaiknya saya pakai nohup atau tmux?",
+    "from": "2d8a44cabbd2"
+  },
+  "alive.q.nohup.a": {
+    "text": "<code>nohup</code> cocok untuk satu perintah yang output-nya boleh masuk ke file. <code>tmux</code> cocok untuk shell yang ingin Anda datangi lagi dan ketik di dalamnya. Aubergine memberi setiap terminal yang kedua, di halaman browser, tanpa tombol-tombol tmux.",
+    "from": "bdd99e8d4444"
+  },
+  "alive.q.output.q": {
+    "text": "Bisakah saya melihat output setelah terminal ditutup?",
+    "from": "d50697ee7ca6"
+  },
+  "alive.q.output.a": {
+    "text": "Ya, selama shell berjalan: tmux menyimpan 50.000 baris terakhir setiap terminal, dan halaman menampilkannya saat Anda kembali. Aubergine sendiri tidak merekam apa pun, jadi setelah komputer dimulai ulang output itu hilang.",
+    "from": "4e7c9512f7a4"
+  },
+  "alive.q.reboot.q": {
+    "text": "Apakah ia tetap berjalan setelah reboot?",
+    "from": "a133b0a14fb2"
+  },
+  "alive.q.reboot.a": {
+    "text": "Tidak. Memulai ulang komputer mengakhiri setiap program. Aubergine mengembalikan setiap terminal sebagai shell baru di folder terakhirnya, dengan tempat, nama, dan catatannya, dan tidak menjalankan apa pun lagi.",
+    "from": "a486f307279a"
+  },
+  "alive.related": {
+    "text": "Terkait: <a href=\"/keep-terminals-after-restart/\">Menjaga terminal setelah komputer dimulai ulang</a> · <a href=\"/tmux-without-learning-tmux/\">tmux tanpa belajar tmux</a> · <a href=\"/claude-code-notifications/\">Tahu kapan Claude Code menunggu</a>",
+    "from": "4a361e122188"
+  },
+  "notify.meta.title": {
+    "text": "Tahu kapan Claude Code selesai atau menunggu Anda | Aubergine",
+    "from": "6298f70cc7f8"
+  },
+  "notify.meta.description": {
+    "text": "Lihat sekilas terminal Claude Code mana yang sedang bekerja, menunggu Anda, atau selesai: hook yang dibuat Aubergine, angka For you, tombol ke terminal berikutnya yang menunggu, dan notifikasi dari halaman yang terbuka.",
+    "from": "ec167ae38aa3"
+  },
+  "notify.crumb": {
+    "text": "Selesai atau menunggu",
+    "from": "9cd75bf0227a"
+  },
+  "notify.title": {
+    "text": "Tahu kapan Claude Code selesai atau menunggu Anda",
+    "from": "d69b035c67c4"
+  },
+  "notify.lead": {
+    "text": "Anda memberi Claude Code sebuah tugas, beralih ke hal lain, dan kembali dua puluh menit kemudian hanya untuk mendapati ia sudah menunggu jawaban ya sejak menit kedua. Aubergine menunjukkan terminal mana yang sedang bekerja, mana yang menunggu Anda, dan mana yang sudah selesai, di satu halaman.",
+    "from": "33187b7b48cc"
+  },
+  "notify.usual.title": {
+    "text": "Yang biasanya dilakukan orang",
+    "from": "30e09240a39b"
+  },
+  "notify.usual.text": {
+    "text": "Claude Code menjalankan hook, yaitu perintah buatan Anda sendiri, pada momen seperti saat ia berhenti (<code>Stop</code>) atau mengirim notifikasi (<code>Notification</code>). Jawaban yang biasa adalah hook di pengaturan Claude Code Anda yang memutar suara atau menampilkan notifikasi desktop. Itu berfungsi, dan skripnya Anda tulis dan rawat sendiri.",
+    "from": "68ee553e9f31"
+  },
+  "notify.does.title": {
+    "text": "Apa yang dilakukan Aubergine",
+    "from": "acf3f5da99c1"
+  },
+  "notify.does.start": {
+    "text": "<strong>Jalankan Claude Code dari Aubergine</strong>: <strong>New terminal ▾ → Claude Code</strong> di bagian atas daftar terminal, atau <code>C</code>. Aubergine menjalankan <code>claude</code> dengan file pengaturan yang dibuatnya di folder datanya sendiri dan disebut di command line. Konfigurasi Claude Code Anda sendiri tidak disentuh. Hook di file itu memberi tahu halaman apa yang dikerjakan agen:",
+    "from": "3369bd01dcea"
+  },
+  "notify.does.working": {
+    "text": "saat Anda mengirim prompt, terminal menampilkan <strong>working</strong>, dan prompt itu ditambahkan ke log catatannya;",
+    "from": "155df7c224c8"
+  },
+  "notify.does.waiting": {
+    "text": "saat agen membutuhkan Anda (pertanyaan izin, atau ia diam menunggu input), garisnya berganti ke warna menunggu, dan judul serta barisnya di daftar bertuliskan <strong>waiting for you</strong>;",
+    "from": "de3a60706385"
+  },
+  "notify.does.finished": {
+    "text": "saat berhenti, terminal menampilkan <strong>finished</strong>.",
+    "from": "4fa6541012c0"
+  },
+  "notify.does.count": {
+    "text": "<strong>Angka di samping For you</strong>, di kanan atas halaman, adalah semua yang menunggu Anda, di semua proyek: terminal yang punya pertanyaan, serta run yang perlu disetujui, draf untuk dibaca, dan tugas yang diusulkan. Menekannya membuka <strong>Runs</strong>, yang kolom <strong>Waiting for you</strong>-nya adalah daftar itu. Tab sebuah kanvas menunjukkan berapa terminalnya yang menunggu.",
+    "from": "7a2b8019e903"
+  },
+  "notify.does.next": {
+    "text": "<strong>Terminal berikutnya yang menunggu.</strong> <code>W</code> pindah ke terminal berikutnya yang menunggu Anda saat tidak ada terminal yang memegang keyboard; di macOS <code>⌃⌘J</code> melakukannya juga dari dalam terminal. Di tempat lain, ini ada di palet.",
+    "from": "19a40372e53f"
+  },
+  "notify.does.desktop": {
+    "text": "<strong>Notifikasi dari halaman yang terbuka.</strong> <strong>Settings → Notifications</strong> berisi <strong>Notify me on the desktop when a terminal starts waiting</strong> (beri tahu saya di desktop saat terminal mulai menunggu). Jika dinyalakan, halaman menampilkan notifikasi browser Anda saat sebuah terminal mulai menunggu atau agennya selesai, kecuali Anda sedang melihat terminal itu. Browser meminta izin Anda sekali.",
+    "from": "a6b031774f7c"
+  },
+  "notify.does.rules": {
+    "text": "<strong>Aturan.</strong> Di tab <strong>Rules</strong> pada <strong>Runs</strong>, sebuah aturan bisa <strong>Notify me</strong> (memberi tahu Anda) saat tugas selesai, tugas gagal, tugas membutuhkan Anda, ada yang diminta dari Anda, atau jadwal berjalan atau tidak bisa berjalan: notifikasi dari halaman yang terbuka, dengan satu kalimat tentang apa yang terjadi.",
+    "from": "8902ebd28ab4"
+  },
+  "notify.pic.caption": {
+    "text": "Daftar yang menunggu, di samping For you: pertanyaan agen pengganti lebih dulu, lalu langkah untuk dibaca dan daftar yang diserahkan.",
+    "from": "ec342d97a2eb"
+  },
+  "notify.other.title": {
+    "text": "Agen lain, dan claude yang Anda ketik sendiri",
+    "from": "7ee8ea823560"
+  },
+  "notify.other.text": {
+    "text": "Aubergine tidak membaca output terminal untuk menebak. Agen lain mana pun, atau program apa pun, menyampaikan hal yang sama sendiri dengan <code>aubergine attention waiting \"what it needs\"</code>, <code>aubergine attention working</code> dan <code>aubergine attention done</code> di terminalnya. <code>aubergine guide --snippet</code> mencetak lima baris untuk file yang dibaca agen Anda di awal percakapan; baris itu menyuruhnya menjalankan <code>aubergine guide</code>, yang menjelaskan perintah-perintah ini.",
+    "from": "f65f5b133ea7"
+  },
+  "notify.other.typed": {
+    "text": "Claude Code yang Anda jalankan dengan mengetik <code>claude</code> di terminal biasa, bagi Aubergine, adalah shell yang sibuk menjalankan sebuah program: tidak ada <strong>waiting for you</strong>. Jalankan dari menu saja, atau tambahkan sendiri hook yang dicetak <code>aubergine hooks print</code> ke pengaturan Anda; hook itu tidak melakukan apa-apa di luar terminal Aubergine.",
+    "from": "66303f76feaf"
+  },
+  "notify.not.title": {
+    "text": "Apa yang tidak dilakukannya",
+    "from": "b3a53baf5dfd"
+  },
+  "notify.not.sound": {
+    "text": "<strong>Tidak ada suara sendiri.</strong> Aubergine tidak memutar suara apa pun. Notifikasi bersuara hanya jika browser atau sistem Anda membuat notifikasi bersuara.",
+    "from": "2d61c4c47cc8"
+  },
+  "notify.not.closed": {
+    "text": "<strong>Tidak ada apa-apa saat tidak ada halaman yang terbuka.</strong> Notifikasi datang dari halaman Aubergine yang terbuka di browser Anda; server tidak mengirim apa pun sendiri. Saat semua halaman tertutup, terminal tetap bertuliskan <strong>waiting for you</strong>, dan angkanya ada saat Anda membuka halaman.",
+    "from": "4b12da4bf501"
+  },
+  "notify.not.phone": {
+    "text": "<strong>Tidak ada push ke ponsel.</strong> Tidak ada aplikasi dan tidak ada layanan push. Browser ponsel bisa dipasangkan untuk membuka halaman yang sama; lihat <a href=\"/check-agents-from-your-phone/\">Memantau agen dari ponsel Anda</a>, yang belum dicoba di ponsel sungguhan.",
+    "from": "b5b776d76082"
+  },
+  "notify.not.tried": {
+    "text": "<strong>Apa yang diperiksa.</strong> Uji browser memeriksa notifikasi terhadap pengganti notifikasi milik browser. Seperti apa notifikasi sungguhan, dan apakah ia ditampilkan sama sekali, bergantung pada browser Anda dan pengaturan sistem Anda untuknya.",
+    "from": "3df89b5e7759"
+  },
+  "notify.q.done.q": {
+    "text": "Bagaimana mendapat notifikasi saat Claude Code selesai?",
+    "from": "61d334cfbe8e"
+  },
+  "notify.q.done.a": {
+    "text": "Jalankan Claude Code dari Aubergine, lalu nyalakan <strong>Notify me on the desktop when a terminal starts waiting</strong> di <strong>Settings → Notifications</strong>. Halaman yang terbuka lalu menampilkan notifikasi browser saat sebuah terminal mulai menunggu Anda atau agennya selesai. Tanpa notifikasi pun, terminal bertuliskan <strong>finished</strong>.",
+    "from": "2e338730d3a7"
+  },
+  "notify.q.sound.q": {
+    "text": "Bisakah Claude Code memutar suara saat membutuhkan input?",
+    "from": "06e5fcebba16"
+  },
+  "notify.q.sound.a": {
+    "text": "Aubergine tidak memutar suara. Notifikasi bersuara jika browser atau sistem Anda membuatnya bersuara. Hook buatan Anda sendiri di pengaturan Claude Code bisa memutar suara; Aubergine tidak pernah menulis ke pengaturan itu.",
+    "from": "9bfa64c7c661"
+  },
+  "notify.q.several.q": {
+    "text": "Bagaimana melihat sesi Claude Code mana yang menunggu saat saya menjalankan beberapa?",
+    "from": "1574988945ec"
+  },
+  "notify.q.several.a": {
+    "text": "Di Aubergine garis dan status terminal yang menunggu berwarna menunggu, barisnya di daftar bertuliskan <strong>waiting for you</strong>, dan angka di samping <strong>For you</strong> menunjukkan berapa banyak yang menunggu. <code>W</code> pindah ke yang berikutnya.",
+    "from": "5afc5b2282ae"
+  },
+  "notify.q.closed.q": {
+    "text": "Apakah saya mendapat notifikasi saat browser ditutup?",
+    "from": "14556b0165d5"
+  },
+  "notify.q.closed.a": {
+    "text": "Tidak. Notifikasi datang dari halaman Aubergine yang terbuka. Statusnya disimpan, jadi terminal yang menunggu sudah ditandai saat Anda membuka halaman lagi.",
+    "from": "0c60b9069220"
+  },
+  "notify.q.other.q": {
+    "text": "Apakah ini berfungsi dengan agen selain Claude Code?",
+    "from": "c3bc48693c0a"
+  },
+  "notify.q.other.a": {
+    "text": "Tidak dengan sendirinya: hook-nya dibuat untuk Claude Code. Agen lain mana pun bisa melaporkan hal yang sama dengan <code>aubergine attention waiting</code>, <code>working</code> dan <code>done</code> saat instruksinya sendiri menyuruhnya begitu; <code>aubergine guide --snippet</code> mencetak baris untuk instruksi itu.",
+    "from": "d74216df16d6"
+  },
+  "notify.related": {
+    "text": "Terkait: <a href=\"/claude/\">Claude Code di Aubergine</a> · <a href=\"/resume-claude-code-session/\">Melanjutkan percakapan Claude Code</a> · <a href=\"/too-many-terminal-tabs/\">Terminal terlalu banyak</a>",
+    "from": "60204a04f28a"
+  },
+  "resume.meta.title": {
+    "text": "Melanjutkan percakapan Claude Code setelah mulai ulang | Aubergine",
+    "from": "25d7c94055ab"
+  },
+  "resume.meta.description": {
+    "text": "claude --continue dan --resume mengembalikan percakapan jika Anda berada di folder yang benar. Aubergine mengingat percakapan mana tempat setiap terminal berada, menawarkan Resume agent, dan mendaftar percakapan sebelumnya per folder.",
+    "from": "9c3fb52f17de"
+  },
+  "resume.crumb": {
+    "text": "Melanjutkan percakapan",
+    "from": "d0b8459148c0"
+  },
+  "resume.title": {
+    "text": "Melanjutkan percakapan Claude Code setelah mulai ulang",
+    "from": "087ff07774c9"
+  },
+  "resume.lead": {
+    "text": "Komputer dimulai ulang, atau Anda menutup terminal, dan percakapan Claude Code tampak hilang. Claude Code menyimpannya. Aubergine mengingat percakapan mana tempat setiap terminal berada dan mengembalikannya dengan satu tombol.",
+    "from": "f122ebc08ba6"
+  },
+  "resume.usual.title": {
+    "text": "Yang biasanya dilakukan orang",
+    "from": "30e09240a39b"
+  },
+  "resume.usual.text": {
+    "text": "Di terminal, di folder tempat percakapan itu berlangsung: <code>claude --continue</code> melanjutkan percakapan terbaru di sana, dan <code>claude --resume</code> membiarkan Anda memilih dari daftar, atau menerima ID percakapan. Masalahnya ada pada folder dan pilihan: dengan beberapa agen di satu folder, yang terbaru belum tentu yang Anda maksud.",
+    "from": "0c7e58df6940"
+  },
+  "resume.does.title": {
+    "text": "Apa yang dilakukan Aubergine",
+    "from": "acf3f5da99c1"
+  },
+  "resume.does.remember": {
+    "text": "<strong>Terminal mengingat percakapannya.</strong> Jika Claude Code dijalankan dari Aubergine (<strong>New terminal ▾ → Claude Code</strong>, atau <code>C</code>), hook-nya memberi tahu Aubergine percakapan mana yang sedang berlangsung, dan Aubergine menyimpan ID itu bersama terminal.",
+    "from": "25fb3e43a297"
+  },
+  "resume.does.button": {
+    "text": "<strong>Resume agent</strong> (lanjutkan agen) ditawarkan di bilah judul terminal begitu shell-nya kembali ke prompt: Anda keluar dari agen, atau komputer dimulai ulang dan terminal kembali sebagai shell baru di folder terakhirnya. Ia menjalankan Claude Code lagi dengan <code>--resume</code> dan ID itu, memakai perintah peluncur dari pengaturan Anda (<code>agents.claudeCommand</code>, bawaannya <code>claude</code>).",
+    "from": "059cfe143e66"
+  },
+  "resume.does.run": {
+    "text": "<strong>Pada sebuah run workflow</strong>, <strong>Resume agent</strong> juga memberi tahu agen tentang run itu lagi, sehingga agen melanjutkan dari langkah tempat run berada.",
+    "from": "03de06981f61"
+  },
+  "resume.does.past": {
+    "text": "<strong>Past conversations…</strong> (percakapan sebelumnya) di palet (<code>⌘K</code>), atau “Past conversations in this folder…” di detail terminal, mendaftar percakapan Claude Code sebelumnya di sebuah folder: nama atau hal pertama yang Anda katakan, kapan terakhir aktif, berapa kali Anda berbicara, dan apakah ada terminal di kanvas yang sedang memakainya. <strong>Read</strong> menampilkannya, hanya-baca. <strong>Open on the canvas</strong> menjalankan terminal baru di folder itu yang melanjutkan percakapan tersebut, dan <strong>Open a copy</strong> memulai cabangnya dan membiarkan aslinya seperti semula. Jika sudah ada terminal di percakapan itu, Anda ditanya dulu.",
+    "from": "05c3b631a2d7"
+  },
+  "resume.does.search": {
+    "text": "<strong>Pencarian.</strong> Ketik <code>@</code> dan beberapa kata di palet untuk mencari percakapan sebelumnya di folder-folder terminal di kanvas Anda. Catatannya dibaca saat Anda meminta, dalam batas tertentu, dan ia mengatakan jika pencarian terpotong. Di command line, <code>aubergine history</code> mendaftarnya dan <code>aubergine history open &lt;id&gt;</code> membuka salah satunya.",
+    "from": "f1e8e8bbabc6"
+  },
+  "resume.does.stood": {
+    "text": "<strong>Sampai mana ia.</strong> Catatan terminal menyimpan ringkasan dan log, dan setiap prompt yang Anda kirim ditambahkan ke log. <strong>Ask its agent for a recap</strong> (minta rekap ke agennya) di detailnya membuat agen menulis posisinya dengan <code>aubergine recap --write</code>, disimpan bersama terminal. Saat Anda kembali setelah lebih dari 30 menit, <strong>While you were away</strong> (selama Anda pergi) mendaftar apa yang berubah sementara itu.",
+    "from": "449c1f6289f7"
+  },
+  "resume.pic.caption": {
+    "text": "Detail sebuah terminal: langkah run-nya dan laporan terakhirnya, folder, dan field-nya. Semua itu disimpan bersama terminal, siap untuk saat agennya dilanjutkan.",
+    "from": "5c63f8e4cb58"
+  },
+  "resume.outside.title": {
+    "text": "Percakapan di terminal di luar Aubergine",
+    "from": "43ceaae0c27a"
+  },
+  "resume.outside.text": {
+    "text": "Di tab aplikasi terminal Anda, keluar dari agen, lalu jalankan <code>aubergine here --claude</code> di folder yang sama: terminal baru di kanvas menjalankan Claude Code dengan <code>--continue</code>, kini dengan statusnya ditampilkan. <code>aubergine move</code> mendaftar tab Claude Code Anda dan menjalankan salinan setiap percakapan di kanvas; dengan <code>--stop</code> ia meminta agen yang diam untuk keluar dulu, setelah Anda mengonfirmasi.",
+    "from": "7682f25de863"
+  },
+  "resume.not.title": {
+    "text": "Apa yang tidak dilakukannya",
+    "from": "b3a53baf5dfd"
+  },
+  "resume.not.format": {
+    "text": "<strong>Ia membaca catatan milik Claude Code sendiri, dalam format yang bukan milik Aubergine.</strong> Claude Code menyebut format file itu internal, dan format itu berubah antarversi. Melanjutkan memakai <code>--resume</code> milik Claude Code sendiri dengan ID-nya; nama, hitungan, dan transkrip adalah hasil Aubergine membaca file-file itu, dan bisa hilang atau lebih sedikit setelah Claude Code diperbarui. Catatan yang tidak bisa dibaca dinyatakan begitu, bukan ditampilkan sebagai percakapan kosong.",
+    "from": "a2210e214a34"
+  },
+  "resume.not.store": {
+    "text": "<strong>Tidak ada yang disalin atau disimpan.</strong> Daftar, transkrip, atau pencarian dibaca saat Anda meminta dan dibuang saat Anda menutupnya. Aubergine tidak pernah mengubah, mengganti nama, atau menghapus percakapan, dan tidak ada agen atau token yang bisa membaca percakapan lewat Aubergine.",
+    "from": "9224f8f7033a"
+  },
+  "resume.not.work": {
+    "text": "<strong>Pekerjaan yang sedang berjalan tidak diulang.</strong> Apa yang sedang dikerjakan agen saat berhenti tidak dimulai lagi sampai Anda memintanya.",
+    "from": "a0dfad245abc"
+  },
+  "resume.not.other": {
+    "text": "<strong>Tidak ada Resume agent untuk agen lain.</strong> Aubergine tidak mengetahui percakapan agen lain, dan tidak mendaftar percakapan sebelumnya untuknya. Jalankan lagi di terminal yang sama dengan cara melanjutkan milik agen itu sendiri, dan baca catatannya untuk memberi tahu sampai mana ia.",
+    "from": "032fed640b8d"
+  },
+  "resume.not.typed": {
+    "text": "<strong><code>claude</code> yang Anda ketik sendiri tidak diingat</strong>, kecuali Anda menambahkan hook yang dicetak <code>aubergine hooks print</code> ke pengaturan Claude Code Anda sendiri.",
+    "from": "7cabc8e39014"
+  },
+  "resume.not.tried": {
+    "text": "<strong>Apa yang diperiksa.</strong> Pembacaan catatan percakapan diuji dengan catatan buatan. Belum diperiksa dengan setiap versi Claude Code.",
+    "from": "636831c9e7f8"
+  },
+  "resume.q.closed.q": {
+    "text": "Bagaimana melanjutkan sesi Claude Code setelah menutup terminal?",
+    "from": "6af39953e8a8"
+  },
+  "resume.q.closed.a": {
+    "text": "Di folder yang sama, <code>claude --continue</code> mengambil percakapan terbaru dan <code>claude --resume</code> membiarkan Anda memilih. Di Aubergine, menutup browser tidak mengakhiri apa pun, dan terminal yang agennya Anda tutup menawarkan <strong>Resume agent</strong> di bilah judulnya.",
+    "from": "1ed7fbcc4b38"
+  },
+  "resume.q.reboot.q": {
+    "text": "Bagaimana melanjutkan percakapan Claude Code setelah reboot?",
+    "from": "31f50552b3a5"
+  },
+  "resume.q.reboot.a": {
+    "text": "Setelah mulai ulang, setiap terminal Aubergine kembali sebagai shell baru di folder terakhirnya. Jika Claude Code dijalankan dari Aubergine, <strong>Resume agent</strong> di bilah judul menjalankannya lagi di percakapan tempat terminal itu berada.",
+    "from": "a7935b5285f1"
+  },
+  "resume.q.find.q": {
+    "text": "Bagaimana menemukan percakapan Claude Code yang lama?",
+    "from": "230753fac68b"
+  },
+  "resume.q.find.a": {
+    "text": "<strong>Past conversations…</strong> di palet mendaftarnya untuk sebuah folder, dengan transkrip hanya-baca; <code>@</code> dan beberapa kata di palet mencarinya. Hanya yang masih disimpan Claude Code yang terdaftar.",
+    "from": "cf90c4bc8021"
+  },
+  "resume.q.diff.q": {
+    "text": "Apa bedanya claude --continue dan claude --resume?",
+    "from": "4f56d2ee9cff"
+  },
+  "resume.q.diff.a": {
+    "text": "<code>--continue</code> melanjutkan percakapan terbaru di folder itu; <code>--resume</code> mengambil yang Anda pilih, atau sebuah ID. <strong>Resume agent</strong> memakai <code>--resume</code> dengan ID yang diingat terminal, jadi ia tidak bergantung pada percakapan mana yang terbaru.",
+    "from": "5c3f2b16669e"
+  },
+  "resume.q.two.q": {
+    "text": "Bisakah dua terminal melanjutkan percakapan Claude Code yang sama?",
+    "from": "825906c9167b"
+  },
+  "resume.q.two.a": {
+    "text": "Aubergine tidak membuka satu percakapan dua kali tanpa bertanya: dua agen di satu percakapan saling kehilangan pesan. Anda ditawari terminal yang sudah ada di percakapan itu, atau salinan, yang membuat cabang percakapan.",
+    "from": "b8424d8787fc"
+  },
+  "resume.related": {
+    "text": "Terkait: <a href=\"/keep-terminals-after-restart/\">Menjaga terminal setelah komputer dimulai ulang</a> · <a href=\"/claude-code-notifications/\">Tahu kapan Claude Code menunggu</a> · <a href=\"/claude/\">Claude Code di Aubergine</a>",
+    "from": "82d3fe458522"
+  },
+  "many.meta.title": {
+    "text": "Menemukan terminal yang tepat saat tab terlalu banyak | Aubergine",
+    "from": "710b13634a0f"
+  },
+  "many.meta.description": {
+    "text": "Terlalu banyak tab terminal, semuanya bernama zsh? Aubergine menaruh setiap terminal di kanvas dan di satu daftar dengan statusnya dalam kata-kata, filter, tag, pencarian output terminal, dan satu terminal sendirian di tab browser.",
+    "from": "0d77fee497f4"
+  },
+  "many.crumb": {
+    "text": "Terminal terlalu banyak",
+    "from": "1d2e7e29f20b"
+  },
+  "many.title": {
+    "text": "Menemukan terminal yang tepat saat terminal terlalu banyak",
+    "from": "9d8e670c6407"
+  },
+  "many.lead": {
+    "text": "Dua puluh tab, kebanyakan bernama zsh, tiga di antaranya menjalankan agen, satu dari tiga itu menunggu Anda. Aubergine menaruh setiap terminal di kanvas dan di satu daftar yang menunjukkan apa yang dikerjakan masing-masing, jadi Anda menemukan terminal dari apa isinya, bukan dari di mana Anda meninggalkannya.",
+    "from": "1d5167ffd4b4"
+  },
+  "many.usual.title": {
+    "text": "Yang biasanya dilakukan orang",
+    "from": "30e09240a39b"
+  },
+  "many.usual.text": {
+    "text": "Memberi nama tab atau jendela (sebagian besar aplikasi terminal mengizinkannya), membagi jendela menjadi panel, memakai sesi dan jendela tmux yang diberi nama, atau membiarkan window manager tiling menatanya. Cara-cara ini membantu menata terminal; menemukan yang membutuhkan Anda tetap berarti harus mencari.",
+    "from": "ad6ff5b0d6e6"
+  },
+  "many.does.title": {
+    "text": "Apa yang dilakukan Aubergine",
+    "from": "acf3f5da99c1"
+  },
+  "many.does.canvas": {
+    "text": "<strong>Kanvas.</strong> Terminal berdampingan, masing-masing hidup. Seret lewat judulnya, ubah ukurannya dari tepinya, klik dua kali judulnya untuk mengganti nama. Titik di judul memberinya warna; frame (<strong>New terminal ▾ → Frame</strong>, atau <code>G</code>) mengelompokkan terminal di bawah satu label dan memindahkannya bersama.",
+    "from": "adf948fb2094"
+  },
+  "many.does.canvases": {
+    "text": "<strong>Kanvas dan proyek.</strong> Beberapa kanvas, ditampilkan sebagai tab, satu daftar, atau kolom di kiri, masing-masing dengan alamatnya sendiri. Sebuah proyek punya kanvas, terminal, antrean, dan daftar yang menunggu miliknya sendiri; pengalih di kiri atas berpindah antarproyek.",
+    "from": "3e3ff8bc43f4"
+  },
+  "many.does.list": {
+    "text": "<strong>Satu daftar semua terminal.</strong> <strong>Terminals</strong> di panel samping mendaftar masing-masing dengan statusnya dalam kata-kata (<strong>working</strong>, <strong>waiting for you</strong>, <strong>finished</strong>, perintah yang gagal), langkah run-nya, dan kapan terakhir aktif, untuk kanvas ini atau semua kanvas. Kolom isian di atasnya menemukan terminal dari nama, folder, perintah, catatan, atau tag.",
+    "from": "f7361c6e0119"
+  },
+  "many.does.filter": {
+    "text": "<strong>Filter</strong> berisi filter (menunggu saya, sibuk, belum dibaca, ada agennya, disimpan, tag) dan cara daftar ditata: per kanvas, atau satu daftar datar menurut urutan kanvas, terakhir diperbarui, terakhir diketik, atau nama.",
+    "from": "6e69fcb25a25"
+  },
+  "many.does.goto": {
+    "text": "<strong>Go to…</strong> di atas kanvas, atau <code>⌘K</code>, adalah palet: ketik sebagian nama, folder, perintah, atau catatan. Bagian <strong>Terminal output</strong>-nya mencari apa yang dicetak terminal (50.000 baris terakhir yang disimpan tmux untuk masing-masing), dan sebuah hasil membuka terminal itu dalam keadaan tergulir ke sana.",
+    "from": "cc786240ec50"
+  },
+  "many.does.map": {
+    "text": "<strong>Peta</strong>, dengan tombolnya di samping <strong>Go to…</strong>, menampilkan seluruh kanvas dalam ukuran kecil dan menggesernya. <strong>Fit</strong> (<code>F</code>) menampilkan semuanya sekaligus.",
+    "from": "fc5776ecfbcb"
+  },
+  "many.does.about": {
+    "text": "<strong>Untuk apa sebuah terminal.</strong> Masing-masing punya catatan di sebelahnya (ringkasan dan log), dan di detailnya tag, link, dan field seperti <code>Ticket: DEMO-12</code>. Agen bisa menulis nama, ringkasan, dan field terminalnya sendiri dengan perintah <code>aubergine</code>.",
+    "from": "1d11da3800ef"
+  },
+  "many.does.alone": {
+    "text": "<strong>Satu terminal sendirian.</strong> <strong>Tab ↗</strong> di judulnya membukanya di tab browser tersendiri, di <code>/t/&lt;terminal&gt;</code>, dengan detail dan catatannya hanya sejauh satu tombol.",
+    "from": "43aca22cfd80"
+  },
+  "many.does.keys": {
+    "text": "<code>Tab</code> dan <code>Shift+Tab</code> menelusuri terminal sesuai urutan yang ditampilkan daftar, dan <code>W</code> pindah ke terminal berikutnya yang menunggu Anda.",
+    "from": "31d2188a40a6"
+  },
+  "many.not.title": {
+    "text": "Apa yang tidak dilakukannya",
+    "from": "b3a53baf5dfd"
+  },
+  "many.not.arrange": {
+    "text": "<strong>Ia tidak menata untuk Anda.</strong> Terminal berdiri di tempat Anda menaruhnya (terminal baru masuk ke ruang kosong dekat tengah tampilan), dan mempertahankan nama yang diberikan oleh Anda atau agennya.",
+    "from": "f9831e413ca7"
+  },
+  "many.not.number": {
+    "text": "<strong>Ia tidak menjanjikan angka.</strong> Hanya kanvas yang sedang Anda lihat yang menjaga terminal hidup: saat diperkecil jauh, terminal menampilkan gambar layarnya, dan di luar layar ia tidak membebani halaman sama sekali. Setiap terminal tetaplah shell di komputer Anda. Daftar diuji dengan 1.000 terminal dalam uji unit (mendaftar, memfilter, dan hanya menggambar satu layar), dan sebuah skrip mengisi tiga kanvas dengan 90 terminal untuk dinilai secara manual. Tidak satu pun dari keduanya adalah janji tentang komputer Anda.",
+    "from": "0b99155f7203"
+  },
+  "many.not.others": {
+    "text": "<strong>Tab aplikasi terminal Anda tidak ditampilkan.</strong> <strong>Open elsewhere</strong> (<code>O</code>) mendaftar terminal yang terbuka di sana dan membawanya satu per satu, sebagai terminal baru di folder yang sama. Program yang berjalan di sebuah tab tetap di tab itu.",
+    "from": "342f90ca0c87"
+  },
+  "many.q.organize.q": {
+    "text": "Bagaimana menata banyak jendela terminal?",
+    "from": "ff12c1f905b9"
+  },
+  "many.q.organize.a": {
+    "text": "Di Aubergine: satu kanvas per pekerjaan, terminal berdampingan dengan nama dan warna, frame di sekeliling yang saling berkaitan, dan satu daftar semuanya dengan apa yang dikerjakan masing-masing.",
+    "from": "b8784c8ec007"
+  },
+  "many.q.which.q": {
+    "text": "Bagaimana menemukan terminal mana yang menjalankan sebuah perintah?",
+    "from": "17eb8a719d39"
+  },
+  "many.q.which.a": {
+    "text": "Kolom isian di atas daftar mencocokkan nama, folder, perintah, catatan, dan tag terminal, dan palet (<code>⌘K</code>) melakukan hal yang sama di semua kanvas. Judul terminal menunjukkan apa yang dijalankannya.",
+    "from": "da1e57276527"
+  },
+  "many.q.search.q": {
+    "text": "Bisakah saya mencari output semua terminal saya?",
+    "from": "a58d20e4b8f9"
+  },
+  "many.q.search.a": {
+    "text": "Ya, untuk yang masih berjalan: bagian <strong>Terminal output</strong> di palet membaca riwayat setiap terminal saat Anda mencari, termasuk yang disimpan, sejauh yang disimpan tmux (50.000 baris). Tidak ada yang diindeks atau direkam.",
+    "from": "886e87fdb066"
+  },
+  "many.q.count.q": {
+    "text": "Berapa banyak terminal yang bisa ditangani Aubergine?",
+    "from": "316b2352e931"
+  },
+  "many.q.count.a": {
+    "text": "Tidak ada batas yang ditetapkan. Daftar diuji dengan 1.000 terminal dan tiga kanvas berisi 90 sudah dilihat secara manual; setiap terminal tetaplah shell, jadi apa yang sanggup dijalankan komputer Anda yang menentukan.",
+    "from": "ee69bd158d20"
+  },
+  "many.q.name.q": {
+    "text": "Bisakah saya memberi nama dan warna pada terminal?",
+    "from": "8288c9dbf63e"
+  },
+  "many.q.name.a": {
+    "text": "Ya. Klik dua kali judul terminal untuk mengganti namanya, dan pakai titik di judulnya untuk salah satu dari tiga belas warna atau warna Anda sendiri. Kanvas juga punya nama dan warna.",
+    "from": "42ae6580f04b"
+  },
+  "many.related": {
+    "text": "Terkait: <a href=\"/claude-code-notifications/\">Tahu kapan Claude Code menunggu</a> · <a href=\"/keep-process-running-after-closing-terminal/\">Menjaga proses tetap berjalan</a> · <a href=\"/run-multiple-coding-agents/\">Menjalankan beberapa agen coding</a>",
+    "from": "da55f7278a1a"
+  },
+  "tmux.meta.title": {
+    "text": "tmux tanpa belajar tmux | Aubergine",
+    "from": "a731849612b9"
+  },
+  "tmux.meta.description": {
+    "text": "Shell yang bertahan lebih lama dari jendelanya, tanpa tombol prefiks atau .tmux.conf. Aubergine menjalankan tmux untuk Anda di socket-nya sendiri, dengan roda mouse, salin dan tempel, serta pengubahan ukuran yang berfungsi seperti di terminal mana pun.",
+    "from": "d876f30b4bcb"
+  },
+  "tmux.crumb": {
+    "text": "tmux tanpa tmux",
+    "from": "089511f9df35"
+  },
+  "tmux.title": {
+    "text": "tmux tanpa belajar tmux",
+    "from": "c661725dc167"
+  },
+  "tmux.lead": {
+    "text": "tmux menjaga shell Anda tetap berjalan saat jendela ditutup. tmux juga meminta Anda mempelajari tombol prefiks, mode salin, dan file konfigurasi. Aubergine menjalankan tmux untuk Anda, dan Anda memakai setiap terminal di halaman browser seperti terminal lainnya.",
+    "from": "c92cbb7d944a"
+  },
+  "tmux.who.title": {
+    "text": "Untuk siapa",
+    "from": "bcdecc549d07"
+  },
+  "tmux.who": {
+    "text": "Untuk orang yang menginginkan apa yang diberikan tmux, yaitu shell yang bertahan lebih lama dari jendelanya, tanpa tombol dan konfigurasinya. Jika Anda sudah terbiasa hidup di tmux, tetap pakai: Aubergine tidak mengusik tmux Anda.",
+    "from": "67d7b78bd967"
+  },
+  "tmux.usual.title": {
+    "text": "Yang biasanya dilakukan orang",
+    "from": "30e09240a39b"
+  },
+  "tmux.usual.text": {
+    "text": "Belajar tmux: tombol prefiks (<code>Ctrl+B</code> kecuali Anda mengubahnya) sebelum setiap perintah, <code>tmux attach</code> untuk kembali, dan beberapa baris di <code>~/.tmux.conf</code> untuk mouse dan clipboard. Atau <code>screen</code>, alat sejenis yang lebih tua. Inilah setiap hal sehari-hari di tmux bawaan dan di Aubergine:",
+    "from": "94c03879479b"
+  },
+  "tmux.table.thing": {
+    "text": "Untuk",
+    "from": "f4b06ef6d3c8"
+  },
+  "tmux.table.tmux": {
+    "text": "Di tmux",
+    "from": "a1ab6023b141"
+  },
+  "tmux.table.here": {
+    "text": "Di Aubergine",
+    "from": "c6dcdd25687b"
+  },
+  "tmux.table.tmuxShort": {
+    "text": "tmux",
+    "from": "adb519257aeb"
+  },
+  "tmux.table.hereShort": {
+    "text": "Aubergine",
+    "from": "b72370707186"
+  },
+  "tmux.row.leave": {
+    "text": "Membiarkan shell berjalan",
+    "from": "ba2cbd204ae7"
+  },
+  "tmux.row.back": {
+    "text": "Kembali ke sana",
+    "from": "9a861e7d13a6"
+  },
+  "tmux.row.scroll": {
+    "text": "Menggulir ke belakang",
+    "from": "fb2c3707ff8c"
+  },
+  "tmux.row.copy": {
+    "text": "Menyalin",
+    "from": "e21f935f11d7"
+  },
+  "tmux.row.paste": {
+    "text": "Menempel",
+    "from": "f3380f7b44bd"
+  },
+  "tmux.row.several": {
+    "text": "Melihat beberapa shell",
+    "from": "37cb2e73ff45"
+  },
+  "tmux.row.name": {
+    "text": "Memberi nama",
+    "from": "6f2f4dd0bb35"
+  },
+  "tmux.cell.leave.tmux": {
+    "text": "<code>Ctrl+B</code> lalu <code>d</code> untuk detach",
+    "from": "0aabfdad59cc"
+  },
+  "tmux.cell.leave.here": {
+    "text": "Tutup tab",
+    "from": "820a72b24e4e"
+  },
+  "tmux.cell.back.tmux": {
+    "text": "<code>tmux attach</code>",
+    "from": "6c4afca4cfa5"
+  },
+  "tmux.cell.back.here": {
+    "text": "Buka halamannya",
+    "from": "911fa06e14a1"
+  },
+  "tmux.cell.scroll.tmux": {
+    "text": "Mode salin, <code>Ctrl+B</code> lalu <code>[</code>",
+    "from": "15276f527f80"
+  },
+  "tmux.cell.scroll.here": {
+    "text": "Roda mouse",
+    "from": "65317915ff3a"
+  },
+  "tmux.cell.copy.tmux": {
+    "text": "Pilih di mode salin",
+    "from": "55ae66ca2a46"
+  },
+  "tmux.cell.copy.here": {
+    "text": "Pilih dengan mouse",
+    "from": "13b782465243"
+  },
+  "tmux.cell.paste.tmux": {
+    "text": "<code>Ctrl+B</code> lalu <code>]</code>",
+    "from": "927f106565e1"
+  },
+  "tmux.cell.paste.here": {
+    "text": "<code>⌘V</code>, atau <code>Ctrl+Shift+V</code>",
+    "from": "79285d2dbfdd"
+  },
+  "tmux.cell.several.tmux": {
+    "text": "Jendela dan panel",
+    "from": "f2a69ea1d42f"
+  },
+  "tmux.cell.several.here": {
+    "text": "Terminal berdampingan di kanvas",
+    "from": "dc6bdd73da8a"
+  },
+  "tmux.cell.name.tmux": {
+    "text": "<code>Ctrl+B</code> lalu <code>,</code>",
+    "from": "fe31dbab067c"
+  },
+  "tmux.cell.name.here": {
+    "text": "Klik dua kali judulnya",
+    "from": "52bfa2dda0c6"
+  },
+  "tmux.does.title": {
+    "text": "Apa yang dilakukan Aubergine",
+    "from": "acf3f5da99c1"
+  },
+  "tmux.does.own": {
+    "text": "<strong>Socket sendiri dan konfigurasi sendiri.</strong> Aubergine memulai tmux di socket miliknya sendiri, bernama <code>aubergine</code>, dengan file konfigurasi miliknya sendiri alih-alih milik Anda: tanpa baris status, tanpa tombol prefiks, mouse menyala, riwayat 50.000 baris. Setiap terminal adalah satu sesi tmux dengan satu shell, yaitu login shell Anda. tmux Anda sendiri, sesi-sesinya, dan <code>~/.tmux.conf</code> Anda tidak disentuh.",
+    "from": "82419f3b337f"
+  },
+  "tmux.does.scroll": {
+    "text": "<strong>Roda mouse menggulir ke belakang</strong> di terminal yang memegang keyboard; di tempat lain di kanvas, roda mouse memperbesar dan memperkecil.",
+    "from": "c1901de45a17"
+  },
+  "tmux.does.copy": {
+    "text": "<strong>Pilih dengan mouse dan teks itu tersalin</strong> ke clipboard Anda saat tombol dilepas: tmux menyerahkan apa yang dipilih ke halaman dengan OSC 52, escape sequence yang dipakai terminal untuk clipboard, dan halaman menaruhnya di sana. Tempel dengan <code>⌘V</code> (<code>Ctrl+Shift+V</code> di luar macOS). Tempelan beberapa baris diberi bracket, sehingga shell tidak menjalankannya baris demi baris.",
+    "from": "b5991d05ed04"
+  },
+  "tmux.does.size": {
+    "text": "<strong>Ubah ukuran dengan menyeret</strong> tepi terminal di kanvas, dan shell mendapat ukuran barunya. Terminal yang terbuka di dua tempat sekaligus punya satu ukuran, yang ditentukan oleh tampilan tempat Anda terakhir mengetik.",
+    "from": "15e6a34e7ef7"
+  },
+  "tmux.does.still": {
+    "text": "<strong>Di bawahnya tetap tmux.</strong> <code>aubergine attach &lt;name&gt;</code> menampilkan terminal di jendela aplikasi terminal Anda, dan <strong>Open on desktop</strong> (buka di desktop) di menu terminal melakukannya untuk Anda (di macOS di Terminal atau iTerm; di Linux dengan command line yang Anda atur). Saat server berhenti, <code>tmux -L aubergine ls</code> dan <code>tmux -L aubergine attach -t &lt;id&gt;</code> tetap menjangkau setiap shell.",
+    "from": "189355cb23f9"
+  },
+  "tmux.need.title": {
+    "text": "Yang Anda butuhkan",
+    "from": "e17c85cc990b"
+  },
+  "tmux.need.text": {
+    "text": "tmux 3.2 atau lebih baru, dipasang oleh Anda sendiri: <code>brew install tmux</code> di macOS, paket sistem Anda di Linux. Aubergine tidak memasangnya, dan menampilkan halaman yang mengatakannya jika tmux tidak ada atau terlalu lama. Judul terminal menunjukkan perintah yang berjalan dan bagaimana perintah terakhir berakhir dengan zsh; shell lain berjalan tanpa itu.",
+    "from": "1ed9bf484beb"
+  },
+  "tmux.not.title": {
+    "text": "Apa yang bukan dirinya",
+    "from": "9516c425aeb2"
+  },
+  "tmux.not.ssh": {
+    "text": "<strong>Bukan tmux di server jarak jauh.</strong> tmux milik Aubergine berjalan di komputer tempat servernya berjalan. Untuk shell di mesin yang Anda jangkau lewat SSH, tmux di mesin itu tetap alatnya. Aubergine sendiri bisa berjalan di mesin lain (<a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md\">Memakai Aubergine dari tempat lain</a>); itu baru dijalankan di dalam kontainer.",
+    "from": "97db800d695c"
+  },
+  "tmux.not.yours": {
+    "text": "<strong>Sesi tmux Anda sendiri tidak ditampilkan.</strong> Kanvas hanya berisi terminal Aubergine. <code>aubergine scan</code> mendaftar shell interaktif yang terbuka di komputer ini di luar Aubergine, dan <code>aubergine import</code> atau <code>aubergine here</code> memberi salah satunya terminal baru di kanvas di folder yang sama; program yang berjalan di yang lama tetap di sana. Baris yang ditawarkan <code>aubergine shell-hook print</code> untuk <code>.zshrc</code> Anda tidak melakukan apa-apa di dalam tmux.",
+    "from": "b5696d4f2c3b"
+  },
+  "tmux.not.keys": {
+    "text": "<strong>Tanpa tombol tmux dan tanpa panel.</strong> Tidak ada tombol prefiks, dan binding tmux Anda sendiri tidak berlaku. Selama terminal memegang keyboard, setiap tombol masuk ke program di dalamnya, kecuali beberapa kombinasi yang dipilih agar tidak dibutuhkan shell, editor, atau tmux mana pun.",
+    "from": "22984bbf9c68"
+  },
+  "tmux.not.windows": {
+    "text": "<strong>Tidak di Windows sendiri.</strong> Ia membutuhkan tmux dan shell Unix; di Windows ia berjalan di dalam WSL 2. Lihat <a href=\"/windows/\">Windows dengan WSL</a>.",
+    "from": "b6d2899a3b38"
+  },
+  "tmux.q.shortcuts.q": {
+    "text": "Bisakah saya memakai tmux tanpa mempelajari pintasannya?",
+    "from": "b9c488ac4210"
+  },
+  "tmux.q.shortcuts.a": {
+    "text": "Ya. Aubergine menjalankan tmux tanpa tombol prefiks dan tanpa baris status, jadi Anda tidak pernah mengetik perintah tmux: tutup tab untuk pergi, buka halaman untuk kembali, gulir dengan roda mouse, salin dengan memilih.",
+    "from": "3a236c2882a1"
+  },
+  "tmux.q.config.q": {
+    "text": "Apakah Aubergine mengubah konfigurasi tmux saya?",
+    "from": "72dfacba61b2"
+  },
+  "tmux.q.config.a": {
+    "text": "Tidak. Ia menjalankan tmux di socket miliknya sendiri, <code>aubergine</code>, dengan file konfigurasi miliknya sendiri. Server tmux Anda, sesi-sesinya, dan <code>~/.tmux.conf</code> Anda dibiarkan seperti semula.",
+    "from": "7a93ca8432a8"
+  },
+  "tmux.q.copy.q": {
+    "text": "Bagaimana menggulir dan menyalin di terminal Aubergine?",
+    "from": "1f32bd561f38"
+  },
+  "tmux.q.copy.a": {
+    "text": "Klik terminal untuk memberinya keyboard, lalu pakai roda mouse untuk menggulir ke belakang. Pilih teks dengan mouse: teks itu ada di clipboard Anda saat tombol dilepas. Tempel dengan <code>⌘V</code>, atau <code>Ctrl+Shift+V</code> di luar macOS.",
+    "from": "a7f3123832de"
+  },
+  "tmux.q.attach.q": {
+    "text": "Bisakah saya menyambung ke terminal Aubergine dari aplikasi terminal saya sendiri?",
+    "from": "f9fcae450958"
+  },
+  "tmux.q.attach.a": {
+    "text": "Ya: <code>aubergine attach &lt;name&gt;</code>, atau <strong>Open on desktop</strong> di menu terminal. Di kedua tempat itu terminalnya sama; apa yang Anda ketik di satu tempat terlihat di tempat lain.",
+    "from": "7efa052d1074"
+  },
+  "tmux.q.ssh.q": {
+    "text": "Bisakah Aubergine menggantikan tmux di server yang saya masuki lewat SSH?",
+    "from": "6795b9483c23"
+  },
+  "tmux.q.ssh.a": {
+    "text": "Tidak begitu saja: terminalnya ada di mesin tempat servernya berjalan. Ia bisa berjalan di server dan dipakai dari browser Anda lewat tunnel SSH atau proxy, yang baru dijalankan di dalam kontainer, belum pernah di mesin cloud.",
+    "from": "502062297ccb"
+  },
+  "tmux.related": {
+    "text": "Terkait: <a href=\"/keep-process-running-after-closing-terminal/\">Menjaga proses tetap berjalan</a> · <a href=\"/keep-terminals-after-restart/\">Menjaga terminal setelah komputer dimulai ulang</a> · <a href=\"/too-many-terminal-tabs/\">Terminal terlalu banyak</a>",
+    "from": "d827d8a7918e"
+  },
+  "phone.meta.title": {
+    "text": "Memantau agen coding dari ponsel Anda | Aubergine",
+    "from": "5e05181dcbf3"
+  },
+  "phone.meta.description": {
+    "text": "Menjangkau Aubergine dari browser ponsel: HTTPS di komputer yang sama, alamat di pengaturan, setiap perangkat dipasangkan dengan kode sekali pakai atau kode QR, dan dicabut kapan pun Anda mau. Dijalankan sekali di satu Mac; belum dicoba di ponsel.",
+    "from": "4f87f330c4d4"
+  },
+  "phone.crumb": {
+    "text": "Dari ponsel",
+    "from": "624fe9a9d5bf"
+  },
+  "phone.title": {
+    "text": "Memantau agen dari ponsel Anda",
+    "from": "c92463ac8872"
+  },
+  "phone.lead": {
+    "text": "Anda meninggalkan tiga agen bekerja dan pergi keluar. Apakah salah satunya sedang menunggu jawaban ya? Setelah Anda menyiapkannya, Aubergine bisa dibuka di browser ponsel: halaman yang sama dan terminal yang sama, setiap perangkat dipasangkan dengan kode sekali pakai.",
+    "from": "5ff340d9bfd5"
+  },
+  "phone.tried": {
+    "text": "<strong>Apa yang sudah dicoba, dan apa yang belum.</strong> Pemakaian dari perangkat lain dijalankan sekali, pada 22 November 2026: penyiapan kontainer di <code>docker/</code> di satu Mac, dengan Caddy di depannya di <code>https://aubergine.localhost</code> dan Chromium di Mac yang sama, yang dipasangkan dengan kode, mengetik ke terminal, dan dikeluarkan saat perangkatnya dicabut. <strong>Belum dicoba:</strong> ponsel sungguhan, memindai kode QR dengan ponsel, nama sungguhan dengan sertifikat publik, jaringan privat, mesin cloud, dua mesin terpisah. Halamannya belum ditata untuk lebar ponsel. Selebihnya berasal dari kode dan ujinya. Anggap ini sesuatu untuk dicoba, bukan sesuatu yang dijanjikan.",
+    "from": "335a569f7582"
+  },
+  "phone.usual.title": {
+    "text": "Yang biasanya dilakukan orang",
+    "from": "30e09240a39b"
+  },
+  "phone.usual.text": {
+    "text": "Aplikasi SSH di ponsel, masuk ke komputer, lalu <code>tmux attach</code> ke sesi tempat agen berjalan. Atau tunnel, atau jaringan privat yang membuat komputer bisa dijangkau dari ponsel. Keduanya berfungsi; memantau beberapa agen dengan cara itu berarti menyambung ke masing-masing bergantian dengan keyboard kecil.",
+    "from": "db5b6a60eb84"
+  },
+  "phone.does.title": {
+    "text": "Apa yang dilakukan Aubergine",
+    "from": "acf3f5da99c1"
+  },
+  "phone.does.off": {
+    "text": "<strong>Fitur ini mati secara bawaan, dan tetap terikat ke komputer ini.</strong> Server hanya mendengarkan di <code>127.0.0.1</code>, dan itu tidak berubah. Sesuatu di komputer yang sama meneruskan HTTPS kepadanya dengan sebuah nama, misalnya layanan HTTPS milik jaringan privat atau web server seperti Caddy. Aubergine sendiri tidak pernah berbicara HTTPS.",
+    "from": "69ebb44f3dfc"
+  },
+  "phone.does.address": {
+    "text": "<strong>Anda menulis alamatnya di pengaturan.</strong> Alamat itu masuk di bawah <code>access.addresses</code> di <code>config.json</code>, dan dibaca saat server dimulai; tidak ada halaman atau program yang bisa mengubahnya. <code>aubergine doctor</code> mendaftar alamat-alamat itu dan apa yang salah pada masing-masing.",
+    "from": "4d586d2378b3"
+  },
+  "phone.does.pair": {
+    "text": "<strong>Setiap perangkat dipasangkan dengan kode sekali pakai.</strong> <code>aubergine device add --name \"Phone\"</code> di komputer, atau <strong>Settings → Devices → Add a device</strong> (tambah perangkat) di browser yang sudah masuk, menampilkan sebuah kode dan, untuk setiap alamat, kode QR dari link yang berisi kode itu. Pindai, buka link-nya, atau ketik kodenya di halaman masuk ponsel. Sebuah kode berlaku sekali, selama tiga menit.",
+    "from": "e461217bf7e4"
+  },
+  "phone.does.revoke": {
+    "text": "<strong>Perangkat bisa dicabut.</strong> <code>aubergine device revoke \"Phone\"</code>, atau <strong>Revoke…</strong> (cabut) di <strong>Settings → Devices</strong>, mengeluarkannya seketika dan menutup apa yang dibukanya. Perangkat yang tidak dipakai selama 90 hari berhenti berfungsi.",
+    "from": "3fecb39df4a9"
+  },
+  "phone.does.owner": {
+    "text": "<strong>Perangkat yang dipasangkan adalah pemilik sepenuhnya.</strong> Ia bisa melakukan semua yang bisa Anda lakukan di komputer: setiap terminal, berarti shell di komputer itu sebagai Anda. Pasangkan hanya browser yang Anda percaya untuk memegang keyboard Anda. Apa yang bertindak di desktop komputer itu sendiri, <strong>Open on desktop</strong>, tidak ada di halaman di sana dan ditolak.",
+    "from": "77b677da358b"
+  },
+  "phone.see.title": {
+    "text": "Apa yang akan Anda lihat",
+    "from": "7ad31245b77f"
+  },
+  "phone.see.text": {
+    "text": "Halaman yang sama seperti di komputer: kanvas dan terminalnya, angka di samping <strong>For you</strong> dan daftar yang menunggu, serta satu terminal sendirian di <code>/t/&lt;terminal&gt;</code> dengan detail dan catatannya. Halaman ini tidak ditata untuk ponsel; ia berfungsi seperti di jendela yang sempit.",
+    "from": "e8260cebb287"
+  },
+  "phone.see.steps": {
+    "text": "Tiga cara menyiapkannya (tunnel SSH, jaringan privat, nama milik Anda sendiri dan proxy), pemasangan, dan apa yang harus dilakukan jika tidak berfungsi ada di <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md\">Memakai Aubergine dari tempat lain</a>. Tunnel SSH sama sekali tidak butuh pengaturan, tetapi merepotkan di ponsel.",
+    "from": "cdc64dbda345"
+  },
+  "phone.not.title": {
+    "text": "Apa yang tidak dilakukannya",
+    "from": "b3a53baf5dfd"
+  },
+  "phone.not.push": {
+    "text": "<strong>Tidak ada aplikasi dan tidak ada push.</strong> Ini adalah halaman di browser ponsel, selalu terbaru selama terbuka. Tidak ada yang dikirim ke ponsel yang halamannya tertutup.",
+    "from": "6f40d9a4fbaf"
+  },
+  "phone.not.awake": {
+    "text": "<strong>Tidak ada jawaban dari laptop yang sedang tidur.</strong> Jika server ada di laptop, ponsel hanya bisa menjangkaunya selama laptop terjaga. Mesin yang selalu menyala adalah pilihan lainnya.",
+    "from": "216b7430b645"
+  },
+  "phone.not.public": {
+    "text": "<strong>Tidak ada perlindungan untuk alamat yang bisa dibuka siapa saja.</strong> Tanpa kode tidak ada yang bisa masuk, dan kode sulit ditebak, tetapi orang asing akan menebak-nebak demi sebuah shell. Taruh jaringan privat, atau sistem masuk milik organisasi Anda sendiri, di depannya, dan jangan pernah memakai mode jaringan privat yang memublikasikan mesin ke seluruh internet.",
+    "from": "c027919da51a"
+  },
+  "phone.not.layout": {
+    "text": "<strong>Tidak ada tata letak untuk ponsel.</strong> Halaman berfungsi seperti di jendela yang sempit. Membaca terminal dan menjawab pertanyaan bisa dilakukan begitu; menata kanvas sebaiknya di layar yang lebih besar.",
+    "from": "715e130ed7cc"
+  },
+  "phone.q.check.q": {
+    "text": "Bisakah saya memantau agen coding dari ponsel?",
+    "from": "b6ed7ed61e98"
+  },
+  "phone.q.check.a": {
+    "text": "Setelah Aubergine bisa dijangkau lewat HTTPS dan browser ponsel dipasangkan, ponsel menampilkan halaman yang sama: terminal mana yang menunggu, daftar yang menunggu, dan setiap terminal. Ini sudah dijalankan dengan browser di Mac yang sama, belum di ponsel sungguhan.",
+    "from": "25e4fa5804eb"
+  },
+  "phone.q.pair.q": {
+    "text": "Bagaimana memasangkan ponsel saya dengan Aubergine?",
+    "from": "2d255e8c0d6d"
+  },
+  "phone.q.pair.a": {
+    "text": "Jalankan <code>aubergine device add --name \"Phone\"</code> di komputer, atau pakai <strong>Settings → Devices → Add a device</strong>. Pindai kode QR, buka link-nya, atau ketik kodenya di halaman masuk ponsel dalam tiga menit.",
+    "from": "238eafc4e16e"
+  },
+  "phone.q.lost.q": {
+    "text": "Bagaimana jika ponsel saya hilang?",
+    "from": "4cfecc2cfc43"
+  },
+  "phone.q.lost.a": {
+    "text": "Cabut dari komputer: <code>aubergine device revoke \"Phone\"</code>, atau <strong>Revoke…</strong> di <strong>Settings → Devices</strong>. Ia dikeluarkan seketika, dan apa yang dibukanya ditutup.",
+    "from": "f3431f64e453"
+  },
+  "phone.q.internet.q": {
+    "text": "Apakah aman menaruh Aubergine di internet?",
+    "from": "b626ae8c3d99"
+  },
+  "phone.q.internet.a": {
+    "text": "Alamat yang bisa dibuka siapa saja menaruh halaman masuk di depan semua orang, dan perangkat yang dipasangkan punya shell di komputer Anda. Lebih baik pakai jaringan privat, atau sistem masuk milik organisasi Anda sendiri di depan alamat itu.",
+    "from": "a99827304604"
+  },
+  "phone.q.asleep.q": {
+    "text": "Apakah ini berfungsi saat laptop saya tidur?",
+    "from": "40db9086b18b"
+  },
+  "phone.q.asleep.a": {
+    "text": "Tidak. Laptop yang tidur tidak menjawab apa pun, dan terminalnya berhenti sejenak sampai ia bangun. Untuk menjangkau agen kapan saja, server harus berjalan di mesin yang tetap terjaga.",
+    "from": "57372d76c37c"
+  },
+  "phone.related": {
+    "text": "Terkait: <a href=\"/claude-code-notifications/\">Tahu kapan Claude Code menunggu</a> · <a href=\"/keep-process-running-after-closing-terminal/\">Menjaga proses tetap berjalan</a> · <a href=\"/security/\">Keamanan dan privasi</a>",
+    "from": "2c9ecf2e9214"
   },
   "queue.meta.title": {
     "text": "Antrean, daftar For you, dan jadwal | Aubergine",

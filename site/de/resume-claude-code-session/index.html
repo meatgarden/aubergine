@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Resume a Claude Code conversation after a restart | Aubergine</title>
-<meta name="description" content="claude --continue and --resume bring back a conversation if you are in the right folder. Aubergine remembers which conversation each terminal was in, offers Resume agent, and lists past conversations by folder.">
+<title>Eine Claude-Code-Unterhaltung nach einem Neustart fortsetzen | Aubergine</title>
+<meta name="description" content="claude --continue und --resume holen eine Unterhaltung zurück, wenn du im richtigen Ordner bist. Aubergine merkt sich, in welcher Unterhaltung jedes Terminal war, bietet Resume agent an und listet frühere Unterhaltungen nach Ordner.">
 <link rel="canonical" href="https://thirstyeggplant.com/de/resume-claude-code-session/">
 <link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/resume-claude-code-session/">
 <link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/resume-claude-code-session/">
@@ -27,8 +27,8 @@
 <link rel="stylesheet" href="../../style.css">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Aubergine">
-<meta property="og:title" content="Resume a Claude Code conversation after a restart | Aubergine">
-<meta property="og:description" content="claude --continue and --resume bring back a conversation if you are in the right folder. Aubergine remembers which conversation each terminal was in, offers Resume agent, and lists past conversations by folder.">
+<meta property="og:title" content="Eine Claude-Code-Unterhaltung nach einem Neustart fortsetzen | Aubergine">
+<meta property="og:description" content="claude --continue und --resume holen eine Unterhaltung zurück, wenn du im richtigen Ordner bist. Aubergine merkt sich, in welcher Unterhaltung jedes Terminal war, bietet Resume agent an und listet frühere Unterhaltungen nach Ordner.">
 <meta property="og:url" content="https://thirstyeggplant.com/de/resume-claude-code-session/">
 <meta property="og:image" content="https://thirstyeggplant.com/og.png">
 <meta property="og:image:width" content="1200">
@@ -37,8 +37,8 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
 <meta name="twitter:image:alt" content="Aubergine: ein Canvas voller Terminals, eines beschäftigt und eines, das auf dich wartet">
-<meta name="twitter:title" content="Resume a Claude Code conversation after a restart | Aubergine">
-<meta name="twitter:description" content="claude --continue and --resume bring back a conversation if you are in the right folder. Aubergine remembers which conversation each terminal was in, offers Resume agent, and lists past conversations by folder.">
+<meta name="twitter:title" content="Eine Claude-Code-Unterhaltung nach einem Neustart fortsetzen | Aubergine">
+<meta name="twitter:description" content="claude --continue und --resume holen eine Unterhaltung zurück, wenn du im richtigen Ordner bist. Aubergine merkt sich, in welcher Unterhaltung jedes Terminal war, bietet Resume agent an und listet frühere Unterhaltungen nach Ordner.">
 <link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
 </head>
 <body>
@@ -98,8 +98,8 @@
     {
       "@type": "TechArticle",
       "@id": "https://thirstyeggplant.com/de/resume-claude-code-session/#article",
-      "headline": "Resume a Claude Code conversation after a restart",
-      "description": "claude --continue and --resume bring back a conversation if you are in the right folder. Aubergine remembers which conversation each terminal was in, offers Resume agent, and lists past conversations by folder.",
+      "headline": "Eine Claude-Code-Unterhaltung nach einem Neustart fortsetzen",
+      "description": "claude --continue und --resume holen eine Unterhaltung zurück, wenn du im richtigen Ordner bist. Aubergine merkt sich, in welcher Unterhaltung jedes Terminal war, bietet Resume agent an und listet frühere Unterhaltungen nach Ordner.",
       "url": "https://thirstyeggplant.com/de/resume-claude-code-session/",
       "mainEntityOfPage": "https://thirstyeggplant.com/de/resume-claude-code-session/",
       "datePublished": "2026-11-25",
@@ -115,18 +115,18 @@
       "itemListElement": [
         { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
         { "@type": "ListItem", "position": 2, "name": "Anleitungen", "item": "https://thirstyeggplant.com/guides/" },
-        { "@type": "ListItem", "position": 3, "name": "Resume a conversation", "item": "https://thirstyeggplant.com/de/resume-claude-code-session/" }
+        { "@type": "ListItem", "position": 3, "name": "Unterhaltung fortsetzen", "item": "https://thirstyeggplant.com/de/resume-claude-code-session/" }
       ]
     },
     {
       "@type": "FAQPage",
       "@id": "https://thirstyeggplant.com/de/resume-claude-code-session/#faq",
       "mainEntity": [
-        { "@type": "Question", "name": "How do I resume a Claude Code session after closing the terminal?", "acceptedAnswer": { "@type": "Answer", "text": "In the same folder, claude --continue takes the most recent conversation and claude --resume lets you choose. In Aubergine, closing the browser ends nothing, and a terminal whose agent you exited offers Resume agent in its title bar." } },
-        { "@type": "Question", "name": "How do I resume a Claude Code conversation after a reboot?", "acceptedAnswer": { "@type": "Answer", "text": "After a restart each Aubergine terminal comes back as a fresh shell in its last folder. Where Claude Code was started from Aubergine, Resume agent in the title bar starts it again in the conversation that terminal was in." } },
-        { "@type": "Question", "name": "How do I find an old Claude Code conversation?", "acceptedAnswer": { "@type": "Answer", "text": "Past conversations… in the palette lists them for a folder, with a read-only transcript; @ and some words in the palette searches them. Only what Claude Code still keeps is listed." } },
-        { "@type": "Question", "name": "What is the difference between claude --continue and claude --resume?", "acceptedAnswer": { "@type": "Answer", "text": "--continue carries on the most recent conversation in the folder; --resume takes the one you choose, or an ID. Resume agent uses --resume with the ID the terminal remembered, so it does not depend on which conversation was most recent." } },
-        { "@type": "Question", "name": "Can two terminals continue the same Claude Code conversation?", "acceptedAnswer": { "@type": "Answer", "text": "Aubergine does not open one twice without asking: two agents in one conversation lose each other's messages. You are offered the terminal already on it, or a copy, which branches the conversation." } }
+        { "@type": "Question", "name": "Wie setze ich eine Claude-Code-Session fort, nachdem ich das Terminal geschlossen habe?", "acceptedAnswer": { "@type": "Answer", "text": "Im selben Ordner nimmt claude --continue die neueste Unterhaltung, und claude --resume lässt dich wählen. In Aubergine beendet das Schließen des Browsers nichts, und ein Terminal, dessen Agenten du beendet hast, bietet in seiner Titelleiste Resume agent an." } },
+        { "@type": "Question", "name": "Wie setze ich eine Claude-Code-Unterhaltung nach einem Neustart fort?", "acceptedAnswer": { "@type": "Answer", "text": "Nach einem Neustart kommt jedes Aubergine-Terminal als frische Shell in seinem letzten Ordner zurück. Wo Claude Code aus Aubergine gestartet wurde, startet Resume agent in der Titelleiste es wieder in der Unterhaltung, in der dieses Terminal war." } },
+        { "@type": "Question", "name": "Wie finde ich eine alte Claude-Code-Unterhaltung?", "acceptedAnswer": { "@type": "Answer", "text": "Past conversations… in der Palette listet sie für einen Ordner, mit einem Verlauf nur zum Lesen; @ und ein paar Wörter in der Palette durchsuchen sie. Gelistet wird nur, was Claude Code noch aufbewahrt." } },
+        { "@type": "Question", "name": "Was ist der Unterschied zwischen claude --continue und claude --resume?", "acceptedAnswer": { "@type": "Answer", "text": "--continue setzt die neueste Unterhaltung im Ordner fort; --resume nimmt die, die du wählst, oder eine ID. Resume agent nutzt --resume mit der ID, die sich das Terminal gemerkt hat, und hängt also nicht davon ab, welche Unterhaltung die neueste war." } },
+        { "@type": "Question", "name": "Können zwei Terminals dieselbe Claude-Code-Unterhaltung fortsetzen?", "acceptedAnswer": { "@type": "Answer", "text": "Aubergine öffnet eine nicht ohne Nachfrage zweimal: Zwei Agenten in einer Unterhaltung verlieren die Nachrichten des anderen. Dir wird das Terminal angeboten, das schon daran ist, oder eine Kopie, die die Unterhaltung verzweigt." } }
       ]
     }
   ]
@@ -134,47 +134,47 @@
 </script>
 <header class="page-head">
   <div class="wrap">
-    <nav class="crumbs" aria-label="Wo du bist"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">Anleitungen</a></li><li><span lang="en" dir="ltr">Resume a conversation</span></li></ol></nav>
-    <h1><span lang="en" dir="ltr">Resume a Claude Code conversation after a restart</span></h1>
-    <p class="lead"><span lang="en" dir="ltr">The computer restarted, or you closed the terminal, and Claude Code's conversation looks gone. Claude Code keeps it. Aubergine remembers which conversation each terminal was in and brings it back with one button.</span></p>
+    <nav class="crumbs" aria-label="Wo du bist"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">Anleitungen</a></li><li>Unterhaltung fortsetzen</li></ol></nav>
+    <h1>Eine Claude-Code-Unterhaltung nach einem Neustart fortsetzen</h1>
+    <p class="lead">Der Rechner ist neu gestartet, oder du hast das Terminal geschlossen, und die Unterhaltung mit Claude Code scheint weg. Claude Code behält sie. Aubergine merkt sich, in welcher Unterhaltung jedes Terminal war, und holt sie mit einem Knopf zurück.</p>
   </div>
 </header>
 <div class="wrap page-body">
   <div class="prose">
-    <h2><span lang="en" dir="ltr">What people usually do</span></h2>
-    <p><span lang="en" dir="ltr">In a terminal, in the folder the conversation was in: <code>claude --continue</code> carries on the most recent conversation there, and <code>claude --resume</code> lets you pick one from a list, or takes a conversation's ID. The catch is the folder and the choice: with several agents in one folder, the most recent is not always the one you meant.</span></p>
+    <h2>Was man üblicherweise tut</h2>
+    <p>In einem Terminal, im Ordner, in dem die Unterhaltung war: <code>claude --continue</code> setzt die neueste Unterhaltung dort fort, und <code>claude --resume</code> lässt dich eine aus einer Liste wählen oder nimmt die ID einer Unterhaltung. Der Haken sind der Ordner und die Wahl: Mit mehreren Agenten in einem Ordner ist die neueste nicht immer die, die du meintest.</p>
 
-    <h2><span lang="en" dir="ltr">What Aubergine does</span></h2>
-    <p><span lang="en" dir="ltr"><strong>A terminal remembers its conversation.</strong> When Claude Code was started from Aubergine (<strong>New terminal ▾ → Claude Code</strong>, or <code>C</code>), its hooks tell Aubergine which conversation it is in, and Aubergine keeps that ID with the terminal.</span></p>
-    <p><span lang="en" dir="ltr"><strong>Resume agent</strong> is offered in the terminal's title bar once its shell is back at a prompt: you exited the agent, or the computer restarted and the terminal came back as a fresh shell in its last folder. It starts Claude Code again with <code>--resume</code> and that ID, with the launch command from your settings (<code>agents.claudeCommand</code>, <code>claude</code> by default).</span></p>
-    <p><span lang="en" dir="ltr"><strong>On a run of a workflow</strong>, <strong>Resume agent</strong> also tells the agent about the run again, so it carries on from the step the run is at.</span></p>
-    <p><span lang="en" dir="ltr"><strong>Past conversations…</strong> in the palette (<code>⌘K</code>), or “Past conversations in this folder…” in a terminal's details, lists Claude Code's earlier conversations in a folder: the name or the first thing you said, when it was last active, how many times you spoke, and whether a terminal on a canvas is on it now. <strong>Read</strong> shows it, read only. <strong>Open on the canvas</strong> starts a new terminal in that folder resumed in it, and <strong>Open a copy</strong> starts a branch of it and leaves the original as it is. If a terminal is on that conversation already, you are asked first.</span></p>
-    <p><span lang="en" dir="ltr"><strong>Search.</strong> Type <code>@</code> and some words in the palette to search past conversations in the folders of the terminals on your canvases. It reads the records when you ask, within limits, and says when it was cut short. On the command line, <code>aubergine history</code> lists them and <code>aubergine history open &lt;id&gt;</code> opens one.</span></p>
-    <p><span lang="en" dir="ltr"><strong>Where it stood.</strong> The terminal's note keeps its summary and a log, and each prompt you send is added to the log. <strong>Ask its agent for a recap</strong> in its details has the agent write where it stands with <code>aubergine recap --write</code>, kept with the terminal. When you come back after more than 30 minutes, <strong>While you were away</strong> lists what changed meanwhile.</span></p>
-    <figure class="frame"><a href="../../screenshots/focus-part.png" class="frame-pic"><img src="../../screenshots/focus-part.png" width="1344" height="1172" loading="lazy" alt="Ein Terminal allein in einem Browser-Tab: sein Name im Kopf, seine Details mit dem Workflow-Schritt, dem Ordner und den Feldern, und das laufende Terminal daneben."></a><figcaption><span lang="en" dir="ltr">A terminal's details: its run's step and last report, its folder and its fields. They are kept with the terminal, ready for when its agent is resumed.</span></figcaption></figure>
+    <h2>Was Aubergine tut</h2>
+    <p><strong>Ein Terminal merkt sich seine Unterhaltung.</strong> Wenn Claude Code aus Aubergine gestartet wurde (<strong>New terminal ▾ → Claude Code</strong>, oder <code>C</code>), sagen seine Hooks Aubergine, in welcher Unterhaltung es ist, und Aubergine behält diese ID beim Terminal.</p>
+    <p><strong>Resume agent</strong> (Agent fortsetzen) erscheint in der Titelleiste des Terminals, sobald seine Shell wieder am Prompt ist: Du hast den Agenten beendet, oder der Rechner ist neu gestartet und das Terminal kam als frische Shell in seinem letzten Ordner zurück. Es startet Claude Code wieder mit <code>--resume</code> und dieser ID, mit dem Startbefehl aus deinen Einstellungen (<code>agents.claudeCommand</code>, standardmäßig <code>claude</code>).</p>
+    <p><strong>Bei einem Lauf eines Workflows</strong> erzählt <strong>Resume agent</strong> dem Agenten auch noch einmal vom Lauf, damit er bei dem Schritt weitermacht, an dem der Lauf steht.</p>
+    <p><strong>Past conversations…</strong> (frühere Unterhaltungen) in der Palette (<code>⌘K</code>) oder „Past conversations in this folder…“ in den Details eines Terminals listet die früheren Unterhaltungen von Claude Code in einem Ordner: den Namen oder das Erste, was du gesagt hast, wann sie zuletzt aktiv war, wie oft du etwas gesagt hast und ob gerade ein Terminal auf einem Canvas an ihr ist. <strong>Read</strong> (lesen) zeigt sie, nur zum Lesen. <strong>Open on the canvas</strong> (auf dem Canvas öffnen) startet ein neues Terminal in diesem Ordner, das sie fortsetzt, und <strong>Open a copy</strong> (eine Kopie öffnen) startet einen Zweig davon und lässt das Original, wie es ist. Ist schon ein Terminal an dieser Unterhaltung, wirst du vorher gefragt.</p>
+    <p><strong>Suche.</strong> Tipp <code>@</code> und ein paar Wörter in die Palette, um frühere Unterhaltungen in den Ordnern der Terminals auf deinen Canvases zu durchsuchen. Sie liest die Aufzeichnungen, wenn du fragst, in Grenzen, und sagt, wenn sie abgebrochen wurde. Auf der Befehlszeile listet <code>aubergine history</code> sie, und <code>aubergine history open &lt;id&gt;</code> öffnet eine.</p>
+    <p><strong>Wo sie stand.</strong> Die Notiz des Terminals hält seine Zusammenfassung und ein Log, und jeder Prompt, den du schickst, kommt ins Log. <strong>Ask its agent for a recap</strong> (den Agenten um eine Zusammenfassung bitten) in seinen Details lässt den Agenten mit <code>aubergine recap --write</code> aufschreiben, wo er steht, und das bleibt beim Terminal. Kommst du nach mehr als 30 Minuten zurück, listet <strong>While you were away</strong> (während du weg warst), was sich inzwischen geändert hat.</p>
+    <figure class="frame"><a href="../../screenshots/focus-part.png" class="frame-pic"><img src="../../screenshots/focus-part.png" width="1344" height="1172" loading="lazy" alt="Ein Terminal allein in einem Browser-Tab: sein Name im Kopf, seine Details mit dem Workflow-Schritt, dem Ordner und den Feldern, und das laufende Terminal daneben."></a><figcaption>Die Details eines Terminals: der Schritt seines Laufs und sein letzter Bericht, sein Ordner und seine Felder. Sie bleiben beim Terminal, bereit für den Moment, in dem sein Agent fortgesetzt wird.</figcaption></figure>
 
-    <h2><span lang="en" dir="ltr">A conversation in a terminal outside Aubergine</span></h2>
-    <p><span lang="en" dir="ltr">In a tab of your terminal app, exit the agent, then run <code>aubergine here --claude</code> in the same folder: a new terminal on the canvas starts Claude Code with <code>--continue</code>, now with its state shown. <code>aubergine move</code> lists your Claude Code tabs and starts a copy of each conversation on the canvas; with <code>--stop</code> it asks an idle agent to exit first, after you confirm.</span></p>
+    <h2>Eine Unterhaltung in einem Terminal außerhalb von Aubergine</h2>
+    <p>Beende in einem Tab deiner Terminal-App den Agenten und führ dann im selben Ordner <code>aubergine here --claude</code> aus: Ein neues Terminal auf dem Canvas startet Claude Code mit <code>--continue</code>, jetzt mit sichtbarem Zustand. <code>aubergine move</code> listet deine Claude-Code-Tabs und startet eine Kopie jeder Unterhaltung auf dem Canvas; mit <code>--stop</code> bittet es einen untätigen Agenten zuerst, sich zu beenden, nachdem du bestätigt hast.</p>
 
-    <h2><span lang="en" dir="ltr">What it does not do</span></h2>
+    <h2>Was es nicht tut</h2>
     <ul>
-      <li><span lang="en" dir="ltr"><strong>It reads Claude Code's own records, in a form that is not Aubergine's.</strong> Claude Code calls the form of those files internal, and it changes between versions. Resuming uses Claude Code's own <code>--resume</code> with the ID; names, counts and transcripts are Aubergine's reading of the files, and may be missing or thinner after an update of Claude Code. A record it cannot read is said to be so, not shown as an empty conversation.</span></li>
-      <li><span lang="en" dir="ltr"><strong>Nothing is copied or kept.</strong> A list, a transcript or a search is read when you ask and dropped when you close it. Aubergine never changes, renames or deletes a conversation, and no agent or token can read conversations through it.</span></li>
-      <li><span lang="en" dir="ltr"><strong>The work in progress is not redone.</strong> What the agent was doing when it stopped is not started again until you ask it.</span></li>
-      <li><span lang="en" dir="ltr"><strong>No Resume agent for another agent.</strong> Aubergine does not know another agent's conversation, and lists no past conversations for it. Start it again in the same terminal with that agent's own way of resuming, and read the note to tell it where it stood.</span></li>
-      <li><span lang="en" dir="ltr"><strong>A <code>claude</code> you typed yourself is not remembered</strong>, unless you added the hooks that <code>aubergine hooks print</code> prints to your own Claude Code settings.</span></li>
-      <li><span lang="en" dir="ltr"><strong>What was checked.</strong> The reading of conversation records is tested against made-up records. It has not been checked against every version of Claude Code.</span></li>
+      <li><strong>Es liest die eigenen Aufzeichnungen von Claude Code, in einem Format, das nicht das von Aubergine ist.</strong> Claude Code nennt das Format dieser Dateien intern, und es ändert sich zwischen Versionen. Das Fortsetzen nutzt das eigene <code>--resume</code> von Claude Code mit der ID; Namen, Zählungen und Verläufe sind Aubergines Lesart der Dateien und können nach einem Update von Claude Code fehlen oder dünner sein. Eine Aufzeichnung, die es nicht lesen kann, wird als solche benannt, nicht als leere Unterhaltung gezeigt.</li>
+      <li><strong>Nichts wird kopiert oder behalten.</strong> Eine Liste, ein Verlauf oder eine Suche wird gelesen, wenn du fragst, und verworfen, wenn du sie schließt. Aubergine ändert, benennt oder löscht nie eine Unterhaltung, und kein Agent und kein Token kann über Aubergine Unterhaltungen lesen.</li>
+      <li><strong>Die laufende Arbeit wird nicht wiederholt.</strong> Was der Agent tat, als er anhielt, wird erst wieder begonnen, wenn du ihn darum bittest.</li>
+      <li><strong>Kein Resume agent für einen anderen Agenten.</strong> Aubergine kennt die Unterhaltung eines anderen Agenten nicht und listet für ihn keine früheren Unterhaltungen. Starte ihn im selben Terminal mit der eigenen Fortsetzen-Funktion dieses Agenten wieder und lies die Notiz, um ihm zu sagen, wo er stand.</li>
+      <li><strong>Ein <code>claude</code>, das du selbst getippt hast, wird nicht gemerkt</strong>, außer du hast die Hooks, die <code>aubergine hooks print</code> ausgibt, in deine eigenen Claude-Code-Einstellungen eingetragen.</li>
+      <li><strong>Was geprüft wurde.</strong> Das Lesen der Aufzeichnungen von Unterhaltungen wird an erfundenen Aufzeichnungen getestet. Es wurde nicht mit jeder Version von Claude Code geprüft.</li>
     </ul>
 
     <h2>Fragen</h2>
     <div class="questions">
-      <details><summary><span lang="en" dir="ltr">How do I resume a Claude Code session after closing the terminal?</span></summary><p><span lang="en" dir="ltr">In the same folder, <code>claude --continue</code> takes the most recent conversation and <code>claude --resume</code> lets you choose. In Aubergine, closing the browser ends nothing, and a terminal whose agent you exited offers <strong>Resume agent</strong> in its title bar.</span></p></details>
-      <details><summary><span lang="en" dir="ltr">How do I resume a Claude Code conversation after a reboot?</span></summary><p><span lang="en" dir="ltr">After a restart each Aubergine terminal comes back as a fresh shell in its last folder. Where Claude Code was started from Aubergine, <strong>Resume agent</strong> in the title bar starts it again in the conversation that terminal was in.</span></p></details>
-      <details><summary><span lang="en" dir="ltr">How do I find an old Claude Code conversation?</span></summary><p><span lang="en" dir="ltr"><strong>Past conversations…</strong> in the palette lists them for a folder, with a read-only transcript; <code>@</code> and some words in the palette searches them. Only what Claude Code still keeps is listed.</span></p></details>
-      <details><summary><span lang="en" dir="ltr">What is the difference between claude --continue and claude --resume?</span></summary><p><span lang="en" dir="ltr"><code>--continue</code> carries on the most recent conversation in the folder; <code>--resume</code> takes the one you choose, or an ID. <strong>Resume agent</strong> uses <code>--resume</code> with the ID the terminal remembered, so it does not depend on which conversation was most recent.</span></p></details>
-      <details><summary><span lang="en" dir="ltr">Can two terminals continue the same Claude Code conversation?</span></summary><p><span lang="en" dir="ltr">Aubergine does not open one twice without asking: two agents in one conversation lose each other's messages. You are offered the terminal already on it, or a copy, which branches the conversation.</span></p></details>
+      <details><summary>Wie setze ich eine Claude-Code-Session fort, nachdem ich das Terminal geschlossen habe?</summary><p>Im selben Ordner nimmt <code>claude --continue</code> die neueste Unterhaltung, und <code>claude --resume</code> lässt dich wählen. In Aubergine beendet das Schließen des Browsers nichts, und ein Terminal, dessen Agenten du beendet hast, bietet in seiner Titelleiste <strong>Resume agent</strong> an.</p></details>
+      <details><summary>Wie setze ich eine Claude-Code-Unterhaltung nach einem Neustart fort?</summary><p>Nach einem Neustart kommt jedes Aubergine-Terminal als frische Shell in seinem letzten Ordner zurück. Wo Claude Code aus Aubergine gestartet wurde, startet <strong>Resume agent</strong> in der Titelleiste es wieder in der Unterhaltung, in der dieses Terminal war.</p></details>
+      <details><summary>Wie finde ich eine alte Claude-Code-Unterhaltung?</summary><p><strong>Past conversations…</strong> in der Palette listet sie für einen Ordner, mit einem Verlauf nur zum Lesen; <code>@</code> und ein paar Wörter in der Palette durchsuchen sie. Gelistet wird nur, was Claude Code noch aufbewahrt.</p></details>
+      <details><summary>Was ist der Unterschied zwischen claude --continue und claude --resume?</summary><p><code>--continue</code> setzt die neueste Unterhaltung im Ordner fort; <code>--resume</code> nimmt die, die du wählst, oder eine ID. <strong>Resume agent</strong> nutzt <code>--resume</code> mit der ID, die sich das Terminal gemerkt hat, und hängt also nicht davon ab, welche Unterhaltung die neueste war.</p></details>
+      <details><summary>Können zwei Terminals dieselbe Claude-Code-Unterhaltung fortsetzen?</summary><p>Aubergine öffnet eine nicht ohne Nachfrage zweimal: Zwei Agenten in einer Unterhaltung verlieren die Nachrichten des anderen. Dir wird das Terminal angeboten, das schon daran ist, oder eine Kopie, die die Unterhaltung verzweigt.</p></details>
     </div>
-    <p><span lang="en" dir="ltr">Related: <a href="../keep-terminals-after-restart/">Keep your terminals after a restart</a> · <a href="../claude-code-notifications/">Know when Claude Code is waiting</a> · <a href="../claude/">Claude Code in Aubergine</a></span></p>
+    <p>Siehe auch: <a href="../keep-terminals-after-restart/">Terminals nach einem Neustart behalten</a> · <a href="../claude-code-notifications/">Wissen, wann Claude Code wartet</a> · <a href="../claude/">Claude Code in Aubergine</a></p>
     <p class="note">Aubergine ist nicht mit Anthropic verbunden. Claude und Claude Code sind Marken von Anthropic.</p>
   </div>
 </div>

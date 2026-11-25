@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Keep a process running after you close the terminal | Aubergine</title>
-<meta name="description" content="Closing a terminal window ends what runs in it. The usual answers are nohup, disown, screen and tmux; Aubergine runs every terminal in tmux for you, so closing the browser ends nothing.">
+<title>关闭终端后让进程继续运行 | Aubergine</title>
+<meta name="description" content="关闭终端窗口会结束其中运行的东西。常见的办法是 nohup、disown、screen 和 tmux；Aubergine 替你把每个终端都放在 tmux 里运行，所以关掉浏览器不会结束任何东西。">
 <link rel="canonical" href="https://thirstyeggplant.com/zh/keep-process-running-after-closing-terminal/">
 <link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/keep-process-running-after-closing-terminal/">
 <link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/keep-process-running-after-closing-terminal/">
@@ -27,8 +27,8 @@
 <link rel="stylesheet" href="../../style.css">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Aubergine">
-<meta property="og:title" content="Keep a process running after you close the terminal | Aubergine">
-<meta property="og:description" content="Closing a terminal window ends what runs in it. The usual answers are nohup, disown, screen and tmux; Aubergine runs every terminal in tmux for you, so closing the browser ends nothing.">
+<meta property="og:title" content="关闭终端后让进程继续运行 | Aubergine">
+<meta property="og:description" content="关闭终端窗口会结束其中运行的东西。常见的办法是 nohup、disown、screen 和 tmux；Aubergine 替你把每个终端都放在 tmux 里运行，所以关掉浏览器不会结束任何东西。">
 <meta property="og:url" content="https://thirstyeggplant.com/zh/keep-process-running-after-closing-terminal/">
 <meta property="og:image" content="https://thirstyeggplant.com/og.png">
 <meta property="og:image:width" content="1200">
@@ -37,8 +37,8 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
 <meta name="twitter:image:alt" content="Aubergine：一张摆满终端的画布，一个正在忙，一个在等你">
-<meta name="twitter:title" content="Keep a process running after you close the terminal | Aubergine">
-<meta name="twitter:description" content="Closing a terminal window ends what runs in it. The usual answers are nohup, disown, screen and tmux; Aubergine runs every terminal in tmux for you, so closing the browser ends nothing.">
+<meta name="twitter:title" content="关闭终端后让进程继续运行 | Aubergine">
+<meta name="twitter:description" content="关闭终端窗口会结束其中运行的东西。常见的办法是 nohup、disown、screen 和 tmux；Aubergine 替你把每个终端都放在 tmux 里运行，所以关掉浏览器不会结束任何东西。">
 <link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
 </head>
 <body>
@@ -98,8 +98,8 @@
     {
       "@type": "TechArticle",
       "@id": "https://thirstyeggplant.com/zh/keep-process-running-after-closing-terminal/#article",
-      "headline": "Keep a process running after you close the terminal",
-      "description": "Closing a terminal window ends what runs in it. The usual answers are nohup, disown, screen and tmux; Aubergine runs every terminal in tmux for you, so closing the browser ends nothing.",
+      "headline": "关闭终端后让进程继续运行",
+      "description": "关闭终端窗口会结束其中运行的东西。常见的办法是 nohup、disown、screen 和 tmux；Aubergine 替你把每个终端都放在 tmux 里运行，所以关掉浏览器不会结束任何东西。",
       "url": "https://thirstyeggplant.com/zh/keep-process-running-after-closing-terminal/",
       "mainEntityOfPage": "https://thirstyeggplant.com/zh/keep-process-running-after-closing-terminal/",
       "datePublished": "2026-11-25",
@@ -115,18 +115,18 @@
       "itemListElement": [
         { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
         { "@type": "ListItem", "position": 2, "name": "指南", "item": "https://thirstyeggplant.com/guides/" },
-        { "@type": "ListItem", "position": 3, "name": "Keep it running", "item": "https://thirstyeggplant.com/zh/keep-process-running-after-closing-terminal/" }
+        { "@type": "ListItem", "position": 3, "name": "保持运行", "item": "https://thirstyeggplant.com/zh/keep-process-running-after-closing-terminal/" }
       ]
     },
     {
       "@type": "FAQPage",
       "@id": "https://thirstyeggplant.com/zh/keep-process-running-after-closing-terminal/#faq",
       "mainEntity": [
-        { "@type": "Question", "name": "Does closing the browser stop my terminal?", "acceptedAnswer": { "@type": "Answer", "text": "No. Every terminal is a shell in tmux, which runs apart from the browser. Close the tab, the window or the browser, open the page again, and each terminal is as it is now, still running, with what it printed meanwhile." } },
-        { "@type": "Question", "name": "How do I keep a process running after SSH disconnects?", "acceptedAnswer": { "@type": "Answer", "text": "On the remote machine, start it inside tmux or screen, or with nohup. Aubergine keeps terminals on the computer it runs on. It can run on a remote machine too, used through an SSH tunnel or a proxy, but that has been run in containers only, never on a cloud machine." } },
-        { "@type": "Question", "name": "Should I use nohup or tmux?", "acceptedAnswer": { "@type": "Answer", "text": "nohup suits one command whose output can go to a file. tmux suits a shell you want to come back to and type into. Aubergine gives every terminal the second, in a browser page, without tmux's keys." } },
-        { "@type": "Question", "name": "Can I see the output after I close the terminal?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, while the shell runs: tmux keeps the last 50,000 lines of each terminal, and the page shows them when you come back. Aubergine records nothing itself, so after a restart of the computer that output is gone." } },
-        { "@type": "Question", "name": "Will it keep running after a reboot?", "acceptedAnswer": { "@type": "Answer", "text": "No. A restart of the computer ends every program. Aubergine brings each terminal back as a fresh shell in its last folder, with its place, name and note, and runs nothing again." } }
+        { "@type": "Question", "name": "关闭浏览器会停止我的终端吗？", "acceptedAnswer": { "@type": "Answer", "text": "不会。每个终端都是 tmux 中的一个 shell，独立于浏览器运行。关掉标签页、窗口或浏览器，再重新打开页面，每个终端都是当前的样子，仍在运行，期间输出的内容也都在。" } },
+        { "@type": "Question", "name": "SSH 断开后如何让进程继续运行？", "acceptedAnswer": { "@type": "Answer", "text": "在远程机器上，把它放在 tmux 或 screen 里启动，或者用 nohup。Aubergine 只保留它所运行的那台电脑上的终端。它也可以运行在远程机器上，通过 SSH 隧道或代理来用，但这只在容器中运行过，从未在云服务器上运行。" } },
+        { "@type": "Question", "name": "该用 nohup 还是 tmux？", "acceptedAnswer": { "@type": "Answer", "text": "nohup 适合输出可以写进文件的单条命令。tmux 适合你想回去继续输入的 shell。Aubergine 给每个终端的都是后者，放在浏览器页面里，不用 tmux 的按键。" } },
+        { "@type": "Question", "name": "关闭终端后还能看到输出吗？", "acceptedAnswer": { "@type": "Answer", "text": "能，只要 shell 还在运行：tmux 为每个终端保留最后 50,000 行，你回来时页面会显示它们。Aubergine 自己不记录任何东西，所以电脑重启后那些输出就没了。" } },
+        { "@type": "Question", "name": "重启之后它还会继续运行吗？", "acceptedAnswer": { "@type": "Answer", "text": "不会。电脑重启会结束所有程序。Aubergine 会把每个终端带回来，成为位于最后所在文件夹的新 shell，保留位置、名称和笔记，但不会重新运行任何东西。" } }
       ]
     }
   ]
@@ -134,55 +134,55 @@
 </script>
 <header class="page-head">
   <div class="wrap">
-    <nav class="crumbs" aria-label="当前位置"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">指南</a></li><li><span lang="en" dir="ltr">Keep it running</span></li></ol></nav>
-    <h1><span lang="en" dir="ltr">Keep a process running after you close the terminal</span></h1>
-    <p class="lead"><span lang="en" dir="ltr">You started a build, a server or a coding agent, and closing the window would end it. In Aubergine closing the window ends nothing: every terminal runs apart from the browser, and what it printed is there when you come back.</span></p>
+    <nav class="crumbs" aria-label="当前位置"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">指南</a></li><li>保持运行</li></ol></nav>
+    <h1>关闭终端后让进程继续运行</h1>
+    <p class="lead">你启动了一次构建、一个服务器或一个编程智能体，而关掉窗口就会结束它。在 Aubergine 里，关掉窗口不会结束任何东西：每个终端都独立于浏览器运行，你回来时它输出过的内容都还在。</p>
   </div>
 </header>
 <div class="wrap page-body">
   <div class="prose">
-    <h2><span lang="en" dir="ltr">What people usually do</span></h2>
-    <p><span lang="en" dir="ltr">Closing a terminal window ends the shell in it, and with it what that shell started. The standard ways round that:</span></p>
+    <h2>通常的做法</h2>
+    <p>关闭终端窗口会结束其中的 shell，以及这个 shell 启动的东西。绕开这一点的标准办法有：</p>
     <ul>
-      <li><span lang="en" dir="ltr"><code>nohup</code> starts a command that ignores the hang-up sent when the terminal closes. Its output goes to a file (<code>nohup.out</code> unless you send it elsewhere).</span></li>
-      <li><span lang="en" dir="ltr"><code>disown</code>, in bash and zsh, lets go of a job you already started, so the shell does not pass the hang-up on to it. You cannot get back to it in a terminal afterwards.</span></li>
-      <li><span lang="en" dir="ltr"><code>screen</code> and <code>tmux</code> run the shell inside a server of their own. You detach, close the window, and attach again later to the same shell with its output. They are the dependable answer, and you learn their keys and commands to use them.</span></li>
+      <li><code>nohup</code> 启动的命令会忽略终端关闭时发出的挂断信号。它的输出会写进一个文件（除非你指定别处，否则是 <code>nohup.out</code>）。</li>
+      <li><code>disown</code>（bash 和 zsh 中）会放开一个已经启动的作业，这样 shell 就不会把挂断信号传给它。之后你就无法在终端里回到它了。</li>
+      <li><code>screen</code> 和 <code>tmux</code> 在它们自己的服务器里运行 shell。你可以分离、关掉窗口，之后再重新连接到同一个 shell，输出也都在。它们是可靠的答案，但要用它们就得学它们的按键和命令。</li>
     </ul>
-    <p><span lang="en" dir="ltr">Aubergine is built on the last of these. It runs tmux for you, so you get its answer without its keys.</span></p>
+    <p>Aubergine 就建立在最后这一种之上。它替你运行 tmux，所以你不用学按键就能得到它的答案。</p>
 
-    <h2><span lang="en" dir="ltr">What Aubergine does</span></h2>
-    <p><span lang="en" dir="ltr">Every terminal in Aubergine is a shell in a tmux session of its own, on a tmux socket of Aubergine's. tmux runs apart from the browser and from Aubergine's server, so:</span></p>
+    <h2>Aubergine 做什么</h2>
+    <p>Aubergine 中的每个终端都是一个 shell，位于它自己的 tmux 会话中，在 Aubergine 专用的 tmux 套接字上。tmux 独立于浏览器和 Aubergine 的服务器运行，所以：</p>
     <ul>
-      <li><span lang="en" dir="ltr"><strong>Closing the tab, the window or the whole browser ends nothing.</strong> Open the page again (<code>aubergine open</code> opens it signed in) and each terminal is drawn from tmux as it is now, with what it printed meanwhile in its scrollback.</span></li>
-      <li><span lang="en" dir="ltr"><strong>Stopping Aubergine ends nothing either.</strong> Ctrl+C where <code>aubergine start</code> runs, a crash of the server or an update stops the server and nothing else. Start it again and reload the page.</span></li>
-      <li><span lang="en" dir="ltr"><strong>Closing a terminal on the canvas parks it.</strong> The × in its title takes it off the canvas and its shell keeps running. <strong>Parked</strong> in the bar over the canvas lists parked terminals, and <strong>Restore</strong> brings one back.</span></li>
-      <li><span lang="en" dir="ltr"><strong>Ending a shell for good asks first.</strong> <strong>End</strong> in the parked list ends a terminal only after you say yes.</span></li>
-      <li><span lang="en" dir="ltr"><strong>Other views of it end nothing.</strong> <strong>Tab ↗</strong> in a terminal's title opens it by itself in a browser tab, and <code>aubergine attach &lt;name&gt;</code> shows it in a window of your terminal app. Each is the same terminal, not a copy; closing that tab or window leaves it running.</span></li>
+      <li><strong>关掉标签页、窗口或整个浏览器，什么都不会结束。</strong>重新打开页面（<code>aubergine open</code> 会以登录状态打开），每个终端都会按 tmux 中的当前状态绘制，期间输出的内容都在它的回滚记录里。</li>
+      <li><strong>停止 Aubergine 也不会结束任何东西。</strong>在运行 <code>aubergine start</code> 的地方按 Ctrl+C、服务器崩溃或更新，停止的都只是服务器。再启动它并重新加载页面即可。</li>
+      <li><strong>在画布上关闭终端会把它停放起来。</strong>标题里的 × 把它从画布上拿走，它的 shell 继续运行。画布上方工具栏中的 <strong>Parked</strong>（已停放）列出停放的终端，<strong>Restore</strong>（恢复）可以把一个拿回来。</li>
+      <li><strong>彻底结束一个 shell 之前会先问你。</strong>停放列表中的 <strong>End</strong>（结束）只有在你确认之后才会结束终端。</li>
+      <li><strong>关掉它的其他视图也不会结束任何东西。</strong>终端标题中的 <strong>Tab ↗</strong> 会在一个浏览器标签页中单独打开它，<code>aubergine attach &lt;name&gt;</code> 会在你的终端应用窗口中显示它。它们都是同一个终端，不是副本；关掉那个标签页或窗口，它照样运行。</li>
     </ul>
-    <p><span lang="en" dir="ltr">While a shell runs, tmux keeps the last 50,000 lines it printed. The wheel scrolls back through them in the terminal that has the keyboard, and the palette (<code>⌘K</code>) searches them.</span></p>
-    <figure class="frame"><a href="../../screenshots/list.png" class="frame-pic"><img src="../../screenshots/list.png" width="1440" height="1008" loading="lazy" alt="侧边栏列出五个终端，并用文字写出各自的状态（working、waiting for you、finished、parked），旁边是画布的一部分，其中有一个实时的 shell。"></a><figcaption><span lang="en" dir="ltr">The list says what each terminal is doing. The parked one at the foot is off the canvas, and its shell is still running.</span></figcaption></figure>
+    <p>shell 运行期间，tmux 会保留它最后输出的 50,000 行。在占着键盘的终端里，滚轮可以往回翻看这些内容，命令面板（<code>⌘K</code>）可以搜索它们。</p>
+    <figure class="frame"><a href="../../screenshots/list.png" class="frame-pic"><img src="../../screenshots/list.png" width="1440" height="1008" loading="lazy" alt="侧边栏列出五个终端，并用文字写出各自的状态（working、waiting for you、finished、parked），旁边是画布的一部分，其中有一个实时的 shell。"></a><figcaption>列表写明每个终端在做什么。底部那个停放的终端不在画布上，它的 shell 仍在运行。</figcaption></figure>
 
-    <h2><span lang="en" dir="ltr">What it does not do</span></h2>
+    <h2>它不做什么</h2>
     <ul>
-      <li><span lang="en" dir="ltr"><strong>It does not survive the computer restarting.</strong> A restart, a crash of the computer, or an update that restarts it, ends every shell and what runs in it. Aubergine brings back everything around them, each terminal as a fresh shell in its last folder, and starts nothing again by itself. See <a href="../keep-terminals-after-restart/">Keep your terminals after a restart</a>.</span></li>
-      <li><span lang="en" dir="ltr"><strong>It does not keep the computer awake.</strong> A laptop that sleeps pauses its programs, these too; they carry on when it wakes.</span></li>
-      <li><span lang="en" dir="ltr"><strong>It is not a service manager.</strong> A job that must come back by itself after a restart belongs in your system's services.</span></li>
-      <li><span lang="en" dir="ltr"><strong>It cannot take over a program already running elsewhere.</strong> No tool can move a running program into another terminal. <code>aubergine here</code> in a tab of your terminal app gives that folder a terminal on the canvas; a program running in the tab stays there, and has to be started again inside the new terminal.</span></li>
+      <li><strong>它撑不过电脑重启。</strong>重启、电脑崩溃或需要重启的更新，会结束所有 shell 以及其中运行的东西。Aubergine 会把它们周围的一切带回来，每个终端都成为位于最后所在文件夹的新 shell，但不会自行重新启动任何东西。参见<a href="../keep-terminals-after-restart/">重启之后保留你的终端</a>。</li>
+      <li><strong>它不会让电脑保持唤醒。</strong>笔记本睡眠时会暂停其中的程序，这些也一样；醒来后它们会继续。</li>
+      <li><strong>它不是服务管理器。</strong>必须在重启后自己恢复的任务，应当交给你系统的服务。</li>
+      <li><strong>它无法接管已经在别处运行的程序。</strong>没有任何工具能把正在运行的程序搬进另一个终端。在终端应用的标签页里运行 <code>aubergine here</code>，会在画布上为那个文件夹创建一个终端；标签页里正在运行的程序留在原处，需要在新终端中重新启动。</li>
     </ul>
 
-    <h2><span lang="en" dir="ltr">On another machine, over SSH</span></h2>
-    <p><span lang="en" dir="ltr">Aubergine runs on your own computer: its server listens on <code>127.0.0.1</code>, and its terminals are shells on that computer. If what you want kept is a process on a remote server you reach with SSH, <code>tmux</code> or <code>screen</code> on that server is still the answer.</span></p>
-    <p><span lang="en" dir="ltr">Aubergine itself can run on another machine and be used from your browser, through an SSH tunnel, a private network, or a name and a proxy: <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md">Using Aubergine from elsewhere</a> has the steps. Through an SSH tunnel, closing the SSH window that runs <code>aubergine start</code> stops the server, and the terminals keep running. Linux has been run in containers only, and never on a cloud machine.</span></p>
+    <h2>通过 SSH 在另一台机器上</h2>
+    <p>Aubergine 运行在你自己的电脑上：它的服务器监听 <code>127.0.0.1</code>，它的终端是那台电脑上的 shell。如果你想保住的是一台通过 SSH 连接的远程服务器上的进程，答案仍然是在那台服务器上用 <code>tmux</code> 或 <code>screen</code>。</p>
+    <p>Aubergine 本身也可以运行在另一台机器上，并通过 SSH 隧道、私有网络，或一个域名加代理从你的浏览器使用：步骤见 <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md">Using Aubergine from elsewhere</a>。使用 SSH 隧道时，关掉运行 <code>aubergine start</code> 的 SSH 窗口会停止服务器，而终端会继续运行。Linux 只在容器中运行过，从未在云服务器上运行。</p>
 
     <h2>常见问题</h2>
     <div class="questions">
-      <details><summary><span lang="en" dir="ltr">Does closing the browser stop my terminal?</span></summary><p><span lang="en" dir="ltr">No. Every terminal is a shell in tmux, which runs apart from the browser. Close the tab, the window or the browser, open the page again, and each terminal is as it is now, still running, with what it printed meanwhile.</span></p></details>
-      <details><summary><span lang="en" dir="ltr">How do I keep a process running after SSH disconnects?</span></summary><p><span lang="en" dir="ltr">On the remote machine, start it inside <code>tmux</code> or <code>screen</code>, or with <code>nohup</code>. Aubergine keeps terminals on the computer it runs on. It can run on a remote machine too, used through an SSH tunnel or a proxy, but that has been run in containers only, never on a cloud machine.</span></p></details>
-      <details><summary><span lang="en" dir="ltr">Should I use nohup or tmux?</span></summary><p><span lang="en" dir="ltr"><code>nohup</code> suits one command whose output can go to a file. <code>tmux</code> suits a shell you want to come back to and type into. Aubergine gives every terminal the second, in a browser page, without tmux's keys.</span></p></details>
-      <details><summary><span lang="en" dir="ltr">Can I see the output after I close the terminal?</span></summary><p><span lang="en" dir="ltr">Yes, while the shell runs: tmux keeps the last 50,000 lines of each terminal, and the page shows them when you come back. Aubergine records nothing itself, so after a restart of the computer that output is gone.</span></p></details>
-      <details><summary><span lang="en" dir="ltr">Will it keep running after a reboot?</span></summary><p><span lang="en" dir="ltr">No. A restart of the computer ends every program. Aubergine brings each terminal back as a fresh shell in its last folder, with its place, name and note, and runs nothing again.</span></p></details>
+      <details><summary>关闭浏览器会停止我的终端吗？</summary><p>不会。每个终端都是 tmux 中的一个 shell，独立于浏览器运行。关掉标签页、窗口或浏览器，再重新打开页面，每个终端都是当前的样子，仍在运行，期间输出的内容也都在。</p></details>
+      <details><summary>SSH 断开后如何让进程继续运行？</summary><p>在远程机器上，把它放在 <code>tmux</code> 或 <code>screen</code> 里启动，或者用 <code>nohup</code>。Aubergine 只保留它所运行的那台电脑上的终端。它也可以运行在远程机器上，通过 SSH 隧道或代理来用，但这只在容器中运行过，从未在云服务器上运行。</p></details>
+      <details><summary>该用 nohup 还是 tmux？</summary><p><code>nohup</code> 适合输出可以写进文件的单条命令。<code>tmux</code> 适合你想回去继续输入的 shell。Aubergine 给每个终端的都是后者，放在浏览器页面里，不用 tmux 的按键。</p></details>
+      <details><summary>关闭终端后还能看到输出吗？</summary><p>能，只要 shell 还在运行：tmux 为每个终端保留最后 50,000 行，你回来时页面会显示它们。Aubergine 自己不记录任何东西，所以电脑重启后那些输出就没了。</p></details>
+      <details><summary>重启之后它还会继续运行吗？</summary><p>不会。电脑重启会结束所有程序。Aubergine 会把每个终端带回来，成为位于最后所在文件夹的新 shell，保留位置、名称和笔记，但不会重新运行任何东西。</p></details>
     </div>
-    <p><span lang="en" dir="ltr">Related: <a href="../keep-terminals-after-restart/">Keep your terminals after a restart</a> · <a href="../tmux-without-learning-tmux/">tmux without learning tmux</a> · <a href="../claude-code-notifications/">Know when Claude Code is waiting</a></span></p>
+    <p>相关：<a href="../keep-terminals-after-restart/">重启之后保留你的终端</a> · <a href="../tmux-without-learning-tmux/">不学 tmux 也能用 tmux</a> · <a href="../claude-code-notifications/">知道 Claude Code 何时在等待</a></p>
   </div>
 </div>
 
@@ -192,7 +192,7 @@
     <div class="close-do">
       <p>你需要 macOS，以及 tmux 3.2 或更高版本和 Node.js 22 或更高版本。<code>brew install tmux node</code> 可以一次装好两者。</p>
       <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="已复制" aria-live="polite" hidden>复制</button></p>
-      <p class="actions"><a class="button" href="../install/">安装</a><a class="button button-quiet" href="../tmux-without-learning-tmux/"><span lang="en" dir="ltr">tmux without learning tmux</span></a></p>
+      <p class="actions"><a class="button" href="../install/">安装</a><a class="button button-quiet" href="../tmux-without-learning-tmux/">不学 tmux 也能用 tmux</a></p>
     </div>
   </div>
 </section>

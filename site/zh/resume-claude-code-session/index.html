@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Resume a Claude Code conversation after a restart | Aubergine</title>
-<meta name="description" content="claude --continue and --resume bring back a conversation if you are in the right folder. Aubergine remembers which conversation each terminal was in, offers Resume agent, and lists past conversations by folder.">
+<title>重启后恢复 Claude Code 对话 | Aubergine</title>
+<meta name="description" content="只要你在正确的文件夹里，claude --continue 和 --resume 就能找回对话。Aubergine 记得每个终端处于哪个对话，提供 Resume agent，并按文件夹列出过去的对话。">
 <link rel="canonical" href="https://thirstyeggplant.com/zh/resume-claude-code-session/">
 <link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/resume-claude-code-session/">
 <link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/resume-claude-code-session/">
@@ -27,8 +27,8 @@
 <link rel="stylesheet" href="../../style.css">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Aubergine">
-<meta property="og:title" content="Resume a Claude Code conversation after a restart | Aubergine">
-<meta property="og:description" content="claude --continue and --resume bring back a conversation if you are in the right folder. Aubergine remembers which conversation each terminal was in, offers Resume agent, and lists past conversations by folder.">
+<meta property="og:title" content="重启后恢复 Claude Code 对话 | Aubergine">
+<meta property="og:description" content="只要你在正确的文件夹里，claude --continue 和 --resume 就能找回对话。Aubergine 记得每个终端处于哪个对话，提供 Resume agent，并按文件夹列出过去的对话。">
 <meta property="og:url" content="https://thirstyeggplant.com/zh/resume-claude-code-session/">
 <meta property="og:image" content="https://thirstyeggplant.com/og.png">
 <meta property="og:image:width" content="1200">
@@ -37,8 +37,8 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
 <meta name="twitter:image:alt" content="Aubergine：一张摆满终端的画布，一个正在忙，一个在等你">
-<meta name="twitter:title" content="Resume a Claude Code conversation after a restart | Aubergine">
-<meta name="twitter:description" content="claude --continue and --resume bring back a conversation if you are in the right folder. Aubergine remembers which conversation each terminal was in, offers Resume agent, and lists past conversations by folder.">
+<meta name="twitter:title" content="重启后恢复 Claude Code 对话 | Aubergine">
+<meta name="twitter:description" content="只要你在正确的文件夹里，claude --continue 和 --resume 就能找回对话。Aubergine 记得每个终端处于哪个对话，提供 Resume agent，并按文件夹列出过去的对话。">
 <link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
 </head>
 <body>
@@ -98,8 +98,8 @@
     {
       "@type": "TechArticle",
       "@id": "https://thirstyeggplant.com/zh/resume-claude-code-session/#article",
-      "headline": "Resume a Claude Code conversation after a restart",
-      "description": "claude --continue and --resume bring back a conversation if you are in the right folder. Aubergine remembers which conversation each terminal was in, offers Resume agent, and lists past conversations by folder.",
+      "headline": "重启后恢复 Claude Code 对话",
+      "description": "只要你在正确的文件夹里，claude --continue 和 --resume 就能找回对话。Aubergine 记得每个终端处于哪个对话，提供 Resume agent，并按文件夹列出过去的对话。",
       "url": "https://thirstyeggplant.com/zh/resume-claude-code-session/",
       "mainEntityOfPage": "https://thirstyeggplant.com/zh/resume-claude-code-session/",
       "datePublished": "2026-11-25",
@@ -115,18 +115,18 @@
       "itemListElement": [
         { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
         { "@type": "ListItem", "position": 2, "name": "指南", "item": "https://thirstyeggplant.com/guides/" },
-        { "@type": "ListItem", "position": 3, "name": "Resume a conversation", "item": "https://thirstyeggplant.com/zh/resume-claude-code-session/" }
+        { "@type": "ListItem", "position": 3, "name": "恢复对话", "item": "https://thirstyeggplant.com/zh/resume-claude-code-session/" }
       ]
     },
     {
       "@type": "FAQPage",
       "@id": "https://thirstyeggplant.com/zh/resume-claude-code-session/#faq",
       "mainEntity": [
-        { "@type": "Question", "name": "How do I resume a Claude Code session after closing the terminal?", "acceptedAnswer": { "@type": "Answer", "text": "In the same folder, claude --continue takes the most recent conversation and claude --resume lets you choose. In Aubergine, closing the browser ends nothing, and a terminal whose agent you exited offers Resume agent in its title bar." } },
-        { "@type": "Question", "name": "How do I resume a Claude Code conversation after a reboot?", "acceptedAnswer": { "@type": "Answer", "text": "After a restart each Aubergine terminal comes back as a fresh shell in its last folder. Where Claude Code was started from Aubergine, Resume agent in the title bar starts it again in the conversation that terminal was in." } },
-        { "@type": "Question", "name": "How do I find an old Claude Code conversation?", "acceptedAnswer": { "@type": "Answer", "text": "Past conversations… in the palette lists them for a folder, with a read-only transcript; @ and some words in the palette searches them. Only what Claude Code still keeps is listed." } },
-        { "@type": "Question", "name": "What is the difference between claude --continue and claude --resume?", "acceptedAnswer": { "@type": "Answer", "text": "--continue carries on the most recent conversation in the folder; --resume takes the one you choose, or an ID. Resume agent uses --resume with the ID the terminal remembered, so it does not depend on which conversation was most recent." } },
-        { "@type": "Question", "name": "Can two terminals continue the same Claude Code conversation?", "acceptedAnswer": { "@type": "Answer", "text": "Aubergine does not open one twice without asking: two agents in one conversation lose each other's messages. You are offered the terminal already on it, or a copy, which branches the conversation." } }
+        { "@type": "Question", "name": "关闭终端后如何恢复 Claude Code 会话？", "acceptedAnswer": { "@type": "Answer", "text": "在同一个文件夹中，claude --continue 接着最近的一次对话，claude --resume 让你来选。在 Aubergine 中，关掉浏览器不会结束任何东西；你退出了智能体的终端会在标题栏提供 Resume agent。" } },
+        { "@type": "Question", "name": "重启后如何恢复 Claude Code 对话？", "acceptedAnswer": { "@type": "Answer", "text": "重启后，每个 Aubergine 终端都会作为位于最后所在文件夹的新 shell 回来。如果 Claude Code 是从 Aubergine 启动的，标题栏中的 Resume agent 会在那个终端原来的对话中再次启动它。" } },
+        { "@type": "Question", "name": "如何找到以前的 Claude Code 对话？", "acceptedAnswer": { "@type": "Answer", "text": "命令面板中的 Past conversations… 按文件夹列出它们，并提供只读的对话记录；在命令面板中输入 @ 和一些词可以搜索它们。只会列出 Claude Code 仍然保存着的内容。" } },
+        { "@type": "Question", "name": "claude --continue 和 claude --resume 有什么区别？", "acceptedAnswer": { "@type": "Answer", "text": "--continue 接着文件夹中最近的一次对话；--resume 接受你选的那个，或一个 ID。Resume agent 用的是 --resume 加终端记住的 ID，所以不取决于哪个对话最近。" } },
+        { "@type": "Question", "name": "两个终端能接着同一个 Claude Code 对话吗？", "acceptedAnswer": { "@type": "Answer", "text": "Aubergine 不会不问就把一个对话打开两次：一个对话里有两个智能体，会丢失彼此的消息。你可以选择已经处于这个对话的终端，或者开一个副本，让对话分支。" } }
       ]
     }
   ]
@@ -134,47 +134,47 @@
 </script>
 <header class="page-head">
   <div class="wrap">
-    <nav class="crumbs" aria-label="当前位置"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">指南</a></li><li><span lang="en" dir="ltr">Resume a conversation</span></li></ol></nav>
-    <h1><span lang="en" dir="ltr">Resume a Claude Code conversation after a restart</span></h1>
-    <p class="lead"><span lang="en" dir="ltr">The computer restarted, or you closed the terminal, and Claude Code's conversation looks gone. Claude Code keeps it. Aubergine remembers which conversation each terminal was in and brings it back with one button.</span></p>
+    <nav class="crumbs" aria-label="当前位置"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">指南</a></li><li>恢复对话</li></ol></nav>
+    <h1>重启后恢复 Claude Code 对话</h1>
+    <p class="lead">电脑重启了，或者你关掉了终端，Claude Code 的对话看起来没了。其实 Claude Code 保存着它。Aubergine 记得每个终端处于哪个对话，一个按钮就能把它找回来。</p>
   </div>
 </header>
 <div class="wrap page-body">
   <div class="prose">
-    <h2><span lang="en" dir="ltr">What people usually do</span></h2>
-    <p><span lang="en" dir="ltr">In a terminal, in the folder the conversation was in: <code>claude --continue</code> carries on the most recent conversation there, and <code>claude --resume</code> lets you pick one from a list, or takes a conversation's ID. The catch is the folder and the choice: with several agents in one folder, the most recent is not always the one you meant.</span></p>
+    <h2>通常的做法</h2>
+    <p>在终端中，进入对话所在的文件夹：<code>claude --continue</code> 接着那里最近的一次对话，<code>claude --resume</code> 让你从列表里选一个，或者接受一个对话 ID。麻烦在于文件夹和选择：一个文件夹里有好几个智能体时，最近的那次不一定是你想要的。</p>
 
-    <h2><span lang="en" dir="ltr">What Aubergine does</span></h2>
-    <p><span lang="en" dir="ltr"><strong>A terminal remembers its conversation.</strong> When Claude Code was started from Aubergine (<strong>New terminal ▾ → Claude Code</strong>, or <code>C</code>), its hooks tell Aubergine which conversation it is in, and Aubergine keeps that ID with the terminal.</span></p>
-    <p><span lang="en" dir="ltr"><strong>Resume agent</strong> is offered in the terminal's title bar once its shell is back at a prompt: you exited the agent, or the computer restarted and the terminal came back as a fresh shell in its last folder. It starts Claude Code again with <code>--resume</code> and that ID, with the launch command from your settings (<code>agents.claudeCommand</code>, <code>claude</code> by default).</span></p>
-    <p><span lang="en" dir="ltr"><strong>On a run of a workflow</strong>, <strong>Resume agent</strong> also tells the agent about the run again, so it carries on from the step the run is at.</span></p>
-    <p><span lang="en" dir="ltr"><strong>Past conversations…</strong> in the palette (<code>⌘K</code>), or “Past conversations in this folder…” in a terminal's details, lists Claude Code's earlier conversations in a folder: the name or the first thing you said, when it was last active, how many times you spoke, and whether a terminal on a canvas is on it now. <strong>Read</strong> shows it, read only. <strong>Open on the canvas</strong> starts a new terminal in that folder resumed in it, and <strong>Open a copy</strong> starts a branch of it and leaves the original as it is. If a terminal is on that conversation already, you are asked first.</span></p>
-    <p><span lang="en" dir="ltr"><strong>Search.</strong> Type <code>@</code> and some words in the palette to search past conversations in the folders of the terminals on your canvases. It reads the records when you ask, within limits, and says when it was cut short. On the command line, <code>aubergine history</code> lists them and <code>aubergine history open &lt;id&gt;</code> opens one.</span></p>
-    <p><span lang="en" dir="ltr"><strong>Where it stood.</strong> The terminal's note keeps its summary and a log, and each prompt you send is added to the log. <strong>Ask its agent for a recap</strong> in its details has the agent write where it stands with <code>aubergine recap --write</code>, kept with the terminal. When you come back after more than 30 minutes, <strong>While you were away</strong> lists what changed meanwhile.</span></p>
-    <figure class="frame"><a href="../../screenshots/focus-part.png" class="frame-pic"><img src="../../screenshots/focus-part.png" width="1344" height="1172" loading="lazy" alt="浏览器标签页中单独的一个终端：顶部是名称，详情里有工作流步骤、文件夹和字段，旁边是实时终端。"></a><figcaption><span lang="en" dir="ltr">A terminal's details: its run's step and last report, its folder and its fields. They are kept with the terminal, ready for when its agent is resumed.</span></figcaption></figure>
+    <h2>Aubergine 做什么</h2>
+    <p><strong>终端记得自己的对话。</strong>从 Aubergine 启动 Claude Code 时（<strong>New terminal ▾ → Claude Code</strong>，或按 <code>C</code>），它的钩子会告诉 Aubergine 它处于哪个对话，Aubergine 会把这个 ID 和终端一起保存。</p>
+    <p>一旦终端的 shell 回到提示符，标题栏就会提供 <strong>Resume agent</strong>（恢复智能体）：可能是你退出了智能体，也可能是电脑重启后终端作为位于最后所在文件夹的新 shell 回来了。它会带上 <code>--resume</code> 和那个 ID 再次启动 Claude Code，使用你设置中的启动命令（<code>agents.claudeCommand</code>，默认是 <code>claude</code>）。</p>
+    <p><strong>在工作流的运行中</strong>，<strong>Resume agent</strong> 还会再次把这次运行告诉智能体，让它从运行所在的步骤继续。</p>
+    <p><strong>Past conversations…</strong>（过去的对话，在命令面板 <code>⌘K</code> 中），或终端详情中的“Past conversations in this folder…”，会列出某个文件夹里 Claude Code 以前的对话：名称或你说的第一句话、最后活跃的时间、你说了几次话，以及画布上现在是否有终端正处于这个对话。<strong>Read</strong> 以只读方式显示它。<strong>Open on the canvas</strong> 在那个文件夹中启动一个新终端并恢复这个对话，<strong>Open a copy</strong> 则开出它的一个分支，原件保持不变。如果已有终端处于这个对话，会先问你。</p>
+    <p><strong>搜索。</strong>在命令面板中输入 <code>@</code> 和一些词，可以搜索你画布上各终端所在文件夹里的过去对话。它在你要求时、在限定范围内读取记录，被截断时会说明。在命令行中，<code>aubergine history</code> 列出它们，<code>aubergine history open &lt;id&gt;</code> 打开其中一个。</p>
+    <p><strong>它进行到哪里。</strong>终端的笔记保存着它的摘要和日志，你发送的每条提示词都会加入日志。详情中的 <strong>Ask its agent for a recap</strong>（请它的智能体写回顾）会让智能体用 <code>aubergine recap --write</code> 写下现状，并和终端一起保存。离开超过 30 分钟后回来，<strong>While you were away</strong>（你不在时）会列出这期间发生的变化。</p>
+    <figure class="frame"><a href="../../screenshots/focus-part.png" class="frame-pic"><img src="../../screenshots/focus-part.png" width="1344" height="1172" loading="lazy" alt="浏览器标签页中单独的一个终端：顶部是名称，详情里有工作流步骤、文件夹和字段，旁边是实时终端。"></a><figcaption>终端的详情：它所在运行的步骤和最后一份报告、它的文件夹和字段。这些和终端一起保存，等着恢复它的智能体时使用。</figcaption></figure>
 
-    <h2><span lang="en" dir="ltr">A conversation in a terminal outside Aubergine</span></h2>
-    <p><span lang="en" dir="ltr">In a tab of your terminal app, exit the agent, then run <code>aubergine here --claude</code> in the same folder: a new terminal on the canvas starts Claude Code with <code>--continue</code>, now with its state shown. <code>aubergine move</code> lists your Claude Code tabs and starts a copy of each conversation on the canvas; with <code>--stop</code> it asks an idle agent to exit first, after you confirm.</span></p>
+    <h2>Aubergine 之外的终端里的对话</h2>
+    <p>在终端应用的标签页里退出智能体，然后在同一个文件夹中运行 <code>aubergine here --claude</code>：画布上的一个新终端会用 <code>--continue</code> 启动 Claude Code，这次会显示它的状态。<code>aubergine move</code> 会列出你的 Claude Code 标签页，并在画布上为每个对话启动一个副本；加上 <code>--stop</code>，它会在你确认后先请空闲的智能体退出。</p>
 
-    <h2><span lang="en" dir="ltr">What it does not do</span></h2>
+    <h2>它不做什么</h2>
     <ul>
-      <li><span lang="en" dir="ltr"><strong>It reads Claude Code's own records, in a form that is not Aubergine's.</strong> Claude Code calls the form of those files internal, and it changes between versions. Resuming uses Claude Code's own <code>--resume</code> with the ID; names, counts and transcripts are Aubergine's reading of the files, and may be missing or thinner after an update of Claude Code. A record it cannot read is said to be so, not shown as an empty conversation.</span></li>
-      <li><span lang="en" dir="ltr"><strong>Nothing is copied or kept.</strong> A list, a transcript or a search is read when you ask and dropped when you close it. Aubergine never changes, renames or deletes a conversation, and no agent or token can read conversations through it.</span></li>
-      <li><span lang="en" dir="ltr"><strong>The work in progress is not redone.</strong> What the agent was doing when it stopped is not started again until you ask it.</span></li>
-      <li><span lang="en" dir="ltr"><strong>No Resume agent for another agent.</strong> Aubergine does not know another agent's conversation, and lists no past conversations for it. Start it again in the same terminal with that agent's own way of resuming, and read the note to tell it where it stood.</span></li>
-      <li><span lang="en" dir="ltr"><strong>A <code>claude</code> you typed yourself is not remembered</strong>, unless you added the hooks that <code>aubergine hooks print</code> prints to your own Claude Code settings.</span></li>
-      <li><span lang="en" dir="ltr"><strong>What was checked.</strong> The reading of conversation records is tested against made-up records. It has not been checked against every version of Claude Code.</span></li>
+      <li><strong>它读取的是 Claude Code 自己的记录，格式不属于 Aubergine。</strong>Claude Code 称这些文件的格式为内部格式，并且会随版本变化。恢复时用的是 Claude Code 自己的 <code>--resume</code> 加上 ID；名称、次数和对话记录是 Aubergine 对这些文件的解读，Claude Code 更新后可能缺失或变得不完整。读不了的记录会明确说读不了，不会显示成空对话。</li>
+      <li><strong>不复制，也不保留任何东西。</strong>列表、对话记录或搜索都是在你要求时读取，关闭时丢弃。Aubergine 从不修改、重命名或删除对话，任何智能体或令牌都无法通过它读取对话。</li>
+      <li><strong>进行中的工作不会重做。</strong>智能体停下时正在做的事，在你要求之前不会重新开始。</li>
+      <li><strong>其他智能体没有 Resume agent。</strong>Aubergine 不知道其他智能体的对话，也不会列出它们过去的对话。请在同一个终端里用那个智能体自己的恢复方式重新启动它，并读一读笔记，告诉它进行到哪里了。</li>
+      <li><strong>你自己输入的 <code>claude</code> 不会被记住</strong>，除非你把 <code>aubergine hooks print</code> 打印出的钩子加到了你自己的 Claude Code 设置中。</li>
+      <li><strong>检查过什么。</strong>对话记录的读取是拿虚构的记录测试的。没有对照 Claude Code 的每个版本检查过。</li>
     </ul>
 
     <h2>常见问题</h2>
     <div class="questions">
-      <details><summary><span lang="en" dir="ltr">How do I resume a Claude Code session after closing the terminal?</span></summary><p><span lang="en" dir="ltr">In the same folder, <code>claude --continue</code> takes the most recent conversation and <code>claude --resume</code> lets you choose. In Aubergine, closing the browser ends nothing, and a terminal whose agent you exited offers <strong>Resume agent</strong> in its title bar.</span></p></details>
-      <details><summary><span lang="en" dir="ltr">How do I resume a Claude Code conversation after a reboot?</span></summary><p><span lang="en" dir="ltr">After a restart each Aubergine terminal comes back as a fresh shell in its last folder. Where Claude Code was started from Aubergine, <strong>Resume agent</strong> in the title bar starts it again in the conversation that terminal was in.</span></p></details>
-      <details><summary><span lang="en" dir="ltr">How do I find an old Claude Code conversation?</span></summary><p><span lang="en" dir="ltr"><strong>Past conversations…</strong> in the palette lists them for a folder, with a read-only transcript; <code>@</code> and some words in the palette searches them. Only what Claude Code still keeps is listed.</span></p></details>
-      <details><summary><span lang="en" dir="ltr">What is the difference between claude --continue and claude --resume?</span></summary><p><span lang="en" dir="ltr"><code>--continue</code> carries on the most recent conversation in the folder; <code>--resume</code> takes the one you choose, or an ID. <strong>Resume agent</strong> uses <code>--resume</code> with the ID the terminal remembered, so it does not depend on which conversation was most recent.</span></p></details>
-      <details><summary><span lang="en" dir="ltr">Can two terminals continue the same Claude Code conversation?</span></summary><p><span lang="en" dir="ltr">Aubergine does not open one twice without asking: two agents in one conversation lose each other's messages. You are offered the terminal already on it, or a copy, which branches the conversation.</span></p></details>
+      <details><summary>关闭终端后如何恢复 Claude Code 会话？</summary><p>在同一个文件夹中，<code>claude --continue</code> 接着最近的一次对话，<code>claude --resume</code> 让你来选。在 Aubergine 中，关掉浏览器不会结束任何东西；你退出了智能体的终端会在标题栏提供 <strong>Resume agent</strong>。</p></details>
+      <details><summary>重启后如何恢复 Claude Code 对话？</summary><p>重启后，每个 Aubergine 终端都会作为位于最后所在文件夹的新 shell 回来。如果 Claude Code 是从 Aubergine 启动的，标题栏中的 <strong>Resume agent</strong> 会在那个终端原来的对话中再次启动它。</p></details>
+      <details><summary>如何找到以前的 Claude Code 对话？</summary><p>命令面板中的 <strong>Past conversations…</strong> 按文件夹列出它们，并提供只读的对话记录；在命令面板中输入 <code>@</code> 和一些词可以搜索它们。只会列出 Claude Code 仍然保存着的内容。</p></details>
+      <details><summary>claude --continue 和 claude --resume 有什么区别？</summary><p><code>--continue</code> 接着文件夹中最近的一次对话；<code>--resume</code> 接受你选的那个，或一个 ID。<strong>Resume agent</strong> 用的是 <code>--resume</code> 加终端记住的 ID，所以不取决于哪个对话最近。</p></details>
+      <details><summary>两个终端能接着同一个 Claude Code 对话吗？</summary><p>Aubergine 不会不问就把一个对话打开两次：一个对话里有两个智能体，会丢失彼此的消息。你可以选择已经处于这个对话的终端，或者开一个副本，让对话分支。</p></details>
     </div>
-    <p><span lang="en" dir="ltr">Related: <a href="../keep-terminals-after-restart/">Keep your terminals after a restart</a> · <a href="../claude-code-notifications/">Know when Claude Code is waiting</a> · <a href="../claude/">Claude Code in Aubergine</a></span></p>
+    <p>相关：<a href="../keep-terminals-after-restart/">重启之后保留你的终端</a> · <a href="../claude-code-notifications/">知道 Claude Code 何时在等待</a> · <a href="../claude/">Aubergine 中的 Claude Code</a></p>
     <p class="note">Aubergine 与 Anthropic 没有关联。Claude 和 Claude Code 是 Anthropic 的商标。</p>
   </div>
 </div>

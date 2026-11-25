@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Keep a process running after you close the terminal | Aubergine</title>
-<meta name="description" content="Closing a terminal window ends what runs in it. The usual answers are nohup, disown, screen and tmux; Aubergine runs every terminal in tmux for you, so closing the browser ends nothing.">
+<title>Mantenha um processo rodando depois de fechar o terminal | Aubergine</title>
+<meta name="description" content="Fechar uma janela de terminal encerra o que roda nela. As respostas de sempre são nohup, disown, screen e tmux; o Aubergine roda cada terminal no tmux para você, então fechar o navegador não encerra nada.">
 <link rel="canonical" href="https://thirstyeggplant.com/pt/keep-process-running-after-closing-terminal/">
 <link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/keep-process-running-after-closing-terminal/">
 <link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/keep-process-running-after-closing-terminal/">
@@ -27,8 +27,8 @@
 <link rel="stylesheet" href="../../style.css">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Aubergine">
-<meta property="og:title" content="Keep a process running after you close the terminal | Aubergine">
-<meta property="og:description" content="Closing a terminal window ends what runs in it. The usual answers are nohup, disown, screen and tmux; Aubergine runs every terminal in tmux for you, so closing the browser ends nothing.">
+<meta property="og:title" content="Mantenha um processo rodando depois de fechar o terminal | Aubergine">
+<meta property="og:description" content="Fechar uma janela de terminal encerra o que roda nela. As respostas de sempre são nohup, disown, screen e tmux; o Aubergine roda cada terminal no tmux para você, então fechar o navegador não encerra nada.">
 <meta property="og:url" content="https://thirstyeggplant.com/pt/keep-process-running-after-closing-terminal/">
 <meta property="og:image" content="https://thirstyeggplant.com/og.png">
 <meta property="og:image:width" content="1200">
@@ -37,8 +37,8 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
 <meta name="twitter:image:alt" content="Aubergine: um canvas de terminais, um ocupado e outro esperando por você">
-<meta name="twitter:title" content="Keep a process running after you close the terminal | Aubergine">
-<meta name="twitter:description" content="Closing a terminal window ends what runs in it. The usual answers are nohup, disown, screen and tmux; Aubergine runs every terminal in tmux for you, so closing the browser ends nothing.">
+<meta name="twitter:title" content="Mantenha um processo rodando depois de fechar o terminal | Aubergine">
+<meta name="twitter:description" content="Fechar uma janela de terminal encerra o que roda nela. As respostas de sempre são nohup, disown, screen e tmux; o Aubergine roda cada terminal no tmux para você, então fechar o navegador não encerra nada.">
 <link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
 </head>
 <body>
@@ -98,8 +98,8 @@
     {
       "@type": "TechArticle",
       "@id": "https://thirstyeggplant.com/pt/keep-process-running-after-closing-terminal/#article",
-      "headline": "Keep a process running after you close the terminal",
-      "description": "Closing a terminal window ends what runs in it. The usual answers are nohup, disown, screen and tmux; Aubergine runs every terminal in tmux for you, so closing the browser ends nothing.",
+      "headline": "Mantenha um processo rodando depois de fechar o terminal",
+      "description": "Fechar uma janela de terminal encerra o que roda nela. As respostas de sempre são nohup, disown, screen e tmux; o Aubergine roda cada terminal no tmux para você, então fechar o navegador não encerra nada.",
       "url": "https://thirstyeggplant.com/pt/keep-process-running-after-closing-terminal/",
       "mainEntityOfPage": "https://thirstyeggplant.com/pt/keep-process-running-after-closing-terminal/",
       "datePublished": "2026-11-25",
@@ -115,18 +115,18 @@
       "itemListElement": [
         { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
         { "@type": "ListItem", "position": 2, "name": "Guias", "item": "https://thirstyeggplant.com/guides/" },
-        { "@type": "ListItem", "position": 3, "name": "Keep it running", "item": "https://thirstyeggplant.com/pt/keep-process-running-after-closing-terminal/" }
+        { "@type": "ListItem", "position": 3, "name": "Mantenha rodando", "item": "https://thirstyeggplant.com/pt/keep-process-running-after-closing-terminal/" }
       ]
     },
     {
       "@type": "FAQPage",
       "@id": "https://thirstyeggplant.com/pt/keep-process-running-after-closing-terminal/#faq",
       "mainEntity": [
-        { "@type": "Question", "name": "Does closing the browser stop my terminal?", "acceptedAnswer": { "@type": "Answer", "text": "No. Every terminal is a shell in tmux, which runs apart from the browser. Close the tab, the window or the browser, open the page again, and each terminal is as it is now, still running, with what it printed meanwhile." } },
-        { "@type": "Question", "name": "How do I keep a process running after SSH disconnects?", "acceptedAnswer": { "@type": "Answer", "text": "On the remote machine, start it inside tmux or screen, or with nohup. Aubergine keeps terminals on the computer it runs on. It can run on a remote machine too, used through an SSH tunnel or a proxy, but that has been run in containers only, never on a cloud machine." } },
-        { "@type": "Question", "name": "Should I use nohup or tmux?", "acceptedAnswer": { "@type": "Answer", "text": "nohup suits one command whose output can go to a file. tmux suits a shell you want to come back to and type into. Aubergine gives every terminal the second, in a browser page, without tmux's keys." } },
-        { "@type": "Question", "name": "Can I see the output after I close the terminal?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, while the shell runs: tmux keeps the last 50,000 lines of each terminal, and the page shows them when you come back. Aubergine records nothing itself, so after a restart of the computer that output is gone." } },
-        { "@type": "Question", "name": "Will it keep running after a reboot?", "acceptedAnswer": { "@type": "Answer", "text": "No. A restart of the computer ends every program. Aubergine brings each terminal back as a fresh shell in its last folder, with its place, name and note, and runs nothing again." } }
+        { "@type": "Question", "name": "Fechar o navegador para o meu terminal?", "acceptedAnswer": { "@type": "Answer", "text": "Não. Cada terminal é um shell no tmux, que roda separado do navegador. Feche a aba, a janela ou o navegador, abra a página de novo, e cada terminal está como está agora, ainda rodando, com o que imprimiu nesse meio-tempo." } },
+        { "@type": "Question", "name": "Como mantenho um processo rodando depois que o SSH cai?", "acceptedAnswer": { "@type": "Answer", "text": "Na máquina remota, inicie-o dentro do tmux ou do screen, ou com nohup. O Aubergine mantém terminais no computador em que roda. Ele também pode rodar em uma máquina remota, usado por um túnel SSH ou um proxy, mas isso só foi executado em contêineres, nunca em uma máquina na nuvem." } },
+        { "@type": "Question", "name": "Devo usar nohup ou tmux?", "acceptedAnswer": { "@type": "Answer", "text": "nohup serve para um comando cuja saída pode ir para um arquivo. tmux serve para um shell ao qual você quer voltar e no qual quer digitar. O Aubergine dá a segunda opção a cada terminal, em uma página do navegador, sem as teclas do tmux." } },
+        { "@type": "Question", "name": "Consigo ver a saída depois de fechar o terminal?", "acceptedAnswer": { "@type": "Answer", "text": "Sim, enquanto o shell roda: o tmux guarda as últimas 50.000 linhas de cada terminal, e a página as mostra quando você volta. O Aubergine não grava nada por conta própria, então depois de reiniciar o computador essa saída se perde." } },
+        { "@type": "Question", "name": "Ele continua rodando depois de reiniciar o computador?", "acceptedAnswer": { "@type": "Answer", "text": "Não. Uma reinicialização do computador encerra todos os programas. O Aubergine traz cada terminal de volta como um shell novo na última pasta, com lugar, nome e nota, e não roda nada de novo." } }
       ]
     }
   ]
@@ -134,55 +134,55 @@
 </script>
 <header class="page-head">
   <div class="wrap">
-    <nav class="crumbs" aria-label="Onde você está"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">Guias</a></li><li><span lang="en" dir="ltr">Keep it running</span></li></ol></nav>
-    <h1><span lang="en" dir="ltr">Keep a process running after you close the terminal</span></h1>
-    <p class="lead"><span lang="en" dir="ltr">You started a build, a server or a coding agent, and closing the window would end it. In Aubergine closing the window ends nothing: every terminal runs apart from the browser, and what it printed is there when you come back.</span></p>
+    <nav class="crumbs" aria-label="Onde você está"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">Guias</a></li><li>Mantenha rodando</li></ol></nav>
+    <h1>Mantenha um processo rodando depois de fechar o terminal</h1>
+    <p class="lead">Você iniciou um build, um servidor ou um agente de programação, e fechar a janela o encerraria. No Aubergine fechar a janela não encerra nada: cada terminal roda separado do navegador, e o que ele imprimiu está lá quando você volta.</p>
   </div>
 </header>
 <div class="wrap page-body">
   <div class="prose">
-    <h2><span lang="en" dir="ltr">What people usually do</span></h2>
-    <p><span lang="en" dir="ltr">Closing a terminal window ends the shell in it, and with it what that shell started. The standard ways round that:</span></p>
+    <h2>O que as pessoas costumam fazer</h2>
+    <p>Fechar uma janela de terminal encerra o shell dentro dela, e com ele o que esse shell iniciou. Os jeitos de sempre de contornar isso:</p>
     <ul>
-      <li><span lang="en" dir="ltr"><code>nohup</code> starts a command that ignores the hang-up sent when the terminal closes. Its output goes to a file (<code>nohup.out</code> unless you send it elsewhere).</span></li>
-      <li><span lang="en" dir="ltr"><code>disown</code>, in bash and zsh, lets go of a job you already started, so the shell does not pass the hang-up on to it. You cannot get back to it in a terminal afterwards.</span></li>
-      <li><span lang="en" dir="ltr"><code>screen</code> and <code>tmux</code> run the shell inside a server of their own. You detach, close the window, and attach again later to the same shell with its output. They are the dependable answer, and you learn their keys and commands to use them.</span></li>
+      <li><code>nohup</code> inicia um comando que ignora o sinal de desligamento (hang-up) enviado quando o terminal fecha. A saída dele vai para um arquivo (<code>nohup.out</code>, a menos que você a mande para outro lugar).</li>
+      <li><code>disown</code>, no bash e no zsh, solta um job que você já iniciou, para que o shell não repasse a ele o sinal de desligamento. Depois disso, você não consegue voltar a ele em um terminal.</li>
+      <li><code>screen</code> e <code>tmux</code> rodam o shell dentro de um servidor próprio. Você se desconecta (detach), fecha a janela e depois se conecta de novo (attach) ao mesmo shell, com a saída dele. São a resposta confiável, e para usá-los você aprende as teclas e os comandos deles.</li>
     </ul>
-    <p><span lang="en" dir="ltr">Aubergine is built on the last of these. It runs tmux for you, so you get its answer without its keys.</span></p>
+    <p>O Aubergine é construído sobre o último deles. Ele roda o tmux para você, então você tem a resposta dele sem as teclas dele.</p>
 
-    <h2><span lang="en" dir="ltr">What Aubergine does</span></h2>
-    <p><span lang="en" dir="ltr">Every terminal in Aubergine is a shell in a tmux session of its own, on a tmux socket of Aubergine's. tmux runs apart from the browser and from Aubergine's server, so:</span></p>
+    <h2>O que o Aubergine faz</h2>
+    <p>Cada terminal no Aubergine é um shell em uma sessão do tmux só dele, em um socket do tmux do Aubergine. O tmux roda separado do navegador e do servidor do Aubergine, então:</p>
     <ul>
-      <li><span lang="en" dir="ltr"><strong>Closing the tab, the window or the whole browser ends nothing.</strong> Open the page again (<code>aubergine open</code> opens it signed in) and each terminal is drawn from tmux as it is now, with what it printed meanwhile in its scrollback.</span></li>
-      <li><span lang="en" dir="ltr"><strong>Stopping Aubergine ends nothing either.</strong> Ctrl+C where <code>aubergine start</code> runs, a crash of the server or an update stops the server and nothing else. Start it again and reload the page.</span></li>
-      <li><span lang="en" dir="ltr"><strong>Closing a terminal on the canvas parks it.</strong> The × in its title takes it off the canvas and its shell keeps running. <strong>Parked</strong> in the bar over the canvas lists parked terminals, and <strong>Restore</strong> brings one back.</span></li>
-      <li><span lang="en" dir="ltr"><strong>Ending a shell for good asks first.</strong> <strong>End</strong> in the parked list ends a terminal only after you say yes.</span></li>
-      <li><span lang="en" dir="ltr"><strong>Other views of it end nothing.</strong> <strong>Tab ↗</strong> in a terminal's title opens it by itself in a browser tab, and <code>aubergine attach &lt;name&gt;</code> shows it in a window of your terminal app. Each is the same terminal, not a copy; closing that tab or window leaves it running.</span></li>
+      <li><strong>Fechar a aba, a janela ou o navegador inteiro não encerra nada.</strong> Abra a página de novo (<code>aubergine open</code> a abre já com login) e cada terminal é desenhado a partir do tmux como está agora, com o que imprimiu nesse meio-tempo no histórico de rolagem.</li>
+      <li><strong>Parar o Aubergine também não encerra nada.</strong> Ctrl+C onde <code>aubergine start</code> roda, uma falha do servidor ou uma atualização param o servidor e nada mais. Inicie-o de novo e recarregue a página.</li>
+      <li><strong>Fechar um terminal no canvas o estaciona.</strong> O × no título dele o tira do canvas, e o shell continua rodando. <strong>Parked</strong> (estacionados), na barra sobre o canvas, lista os terminais estacionados, e <strong>Restore</strong> (restaurar) traz um de volta.</li>
+      <li><strong>Encerrar um shell de vez pergunta antes.</strong> <strong>End</strong> (encerrar), na lista de estacionados, encerra um terminal só depois que você diz sim.</li>
+      <li><strong>Outras visões dele não encerram nada.</strong> <strong>Tab ↗</strong> no título de um terminal o abre sozinho em uma aba do navegador, e <code>aubergine attach &lt;name&gt;</code> o mostra em uma janela do seu app de terminal. Cada uma é o mesmo terminal, não uma cópia; fechar essa aba ou janela o deixa rodando.</li>
     </ul>
-    <p><span lang="en" dir="ltr">While a shell runs, tmux keeps the last 50,000 lines it printed. The wheel scrolls back through them in the terminal that has the keyboard, and the palette (<code>⌘K</code>) searches them.</span></p>
-    <figure class="frame"><a href="../../screenshots/list.png" class="frame-pic"><img src="../../screenshots/list.png" width="1440" height="1008" loading="lazy" alt="O painel lateral listando cinco terminais com o estado em palavras (working, waiting for you, finished, parked), ao lado de parte do canvas com um shell ao vivo."></a><figcaption><span lang="en" dir="ltr">The list says what each terminal is doing. The parked one at the foot is off the canvas, and its shell is still running.</span></figcaption></figure>
+    <p>Enquanto um shell roda, o tmux guarda as últimas 50.000 linhas que ele imprimiu. A roda do mouse volta por elas no terminal que está com o teclado, e a paleta (<code>⌘K</code>) busca nelas.</p>
+    <figure class="frame"><a href="../../screenshots/list.png" class="frame-pic"><img src="../../screenshots/list.png" width="1440" height="1008" loading="lazy" alt="O painel lateral listando cinco terminais com o estado em palavras (working, waiting for you, finished, parked), ao lado de parte do canvas com um shell ao vivo."></a><figcaption>A lista diz o que cada terminal está fazendo. O estacionado, no rodapé, está fora do canvas, e o shell dele continua rodando.</figcaption></figure>
 
-    <h2><span lang="en" dir="ltr">What it does not do</span></h2>
+    <h2>O que ele não faz</h2>
     <ul>
-      <li><span lang="en" dir="ltr"><strong>It does not survive the computer restarting.</strong> A restart, a crash of the computer, or an update that restarts it, ends every shell and what runs in it. Aubergine brings back everything around them, each terminal as a fresh shell in its last folder, and starts nothing again by itself. See <a href="../keep-terminals-after-restart/">Keep your terminals after a restart</a>.</span></li>
-      <li><span lang="en" dir="ltr"><strong>It does not keep the computer awake.</strong> A laptop that sleeps pauses its programs, these too; they carry on when it wakes.</span></li>
-      <li><span lang="en" dir="ltr"><strong>It is not a service manager.</strong> A job that must come back by itself after a restart belongs in your system's services.</span></li>
-      <li><span lang="en" dir="ltr"><strong>It cannot take over a program already running elsewhere.</strong> No tool can move a running program into another terminal. <code>aubergine here</code> in a tab of your terminal app gives that folder a terminal on the canvas; a program running in the tab stays there, and has to be started again inside the new terminal.</span></li>
+      <li><strong>Não sobrevive a uma reinicialização do computador.</strong> Uma reinicialização, uma falha do computador ou uma atualização que o reinicia encerra todos os shells e o que roda neles. O Aubergine traz de volta tudo ao redor deles, cada terminal como um shell novo na última pasta, e não inicia nada de novo sozinho. Veja <a href="../keep-terminals-after-restart/">Mantenha seus terminais depois de reiniciar</a>.</li>
+      <li><strong>Não mantém o computador acordado.</strong> Um notebook suspenso pausa os programas, estes também; eles continuam quando ele acorda.</li>
+      <li><strong>Não é um gerenciador de serviços.</strong> Um trabalho que precisa voltar sozinho depois de uma reinicialização pertence aos serviços do seu sistema.</li>
+      <li><strong>Não consegue assumir um programa que já roda em outro lugar.</strong> Nenhuma ferramenta consegue mover um programa em execução para outro terminal. <code>aubergine here</code> em uma aba do seu app de terminal dá àquela pasta um terminal no canvas; um programa rodando na aba fica lá, e precisa ser iniciado de novo dentro do terminal novo.</li>
     </ul>
 
-    <h2><span lang="en" dir="ltr">On another machine, over SSH</span></h2>
-    <p><span lang="en" dir="ltr">Aubergine runs on your own computer: its server listens on <code>127.0.0.1</code>, and its terminals are shells on that computer. If what you want kept is a process on a remote server you reach with SSH, <code>tmux</code> or <code>screen</code> on that server is still the answer.</span></p>
-    <p><span lang="en" dir="ltr">Aubergine itself can run on another machine and be used from your browser, through an SSH tunnel, a private network, or a name and a proxy: <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md">Using Aubergine from elsewhere</a> has the steps. Through an SSH tunnel, closing the SSH window that runs <code>aubergine start</code> stops the server, and the terminals keep running. Linux has been run in containers only, and never on a cloud machine.</span></p>
+    <h2>Em outra máquina, por SSH</h2>
+    <p>O Aubergine roda no seu próprio computador: o servidor dele escuta em <code>127.0.0.1</code>, e os terminais dele são shells desse computador. Se o que você quer manter é um processo em um servidor remoto que você acessa por SSH, <code>tmux</code> ou <code>screen</code> nesse servidor continuam sendo a resposta.</p>
+    <p>O próprio Aubergine pode rodar em outra máquina e ser usado pelo seu navegador, por um túnel SSH, uma rede privada, ou um nome e um proxy: <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md">Usar o Aubergine de outro lugar</a> tem os passos. Por um túnel SSH, fechar a janela de SSH em que <code>aubergine start</code> roda para o servidor, e os terminais continuam rodando. No Linux ele só foi executado em contêineres, e nunca em uma máquina na nuvem.</p>
 
     <h2>Perguntas</h2>
     <div class="questions">
-      <details><summary><span lang="en" dir="ltr">Does closing the browser stop my terminal?</span></summary><p><span lang="en" dir="ltr">No. Every terminal is a shell in tmux, which runs apart from the browser. Close the tab, the window or the browser, open the page again, and each terminal is as it is now, still running, with what it printed meanwhile.</span></p></details>
-      <details><summary><span lang="en" dir="ltr">How do I keep a process running after SSH disconnects?</span></summary><p><span lang="en" dir="ltr">On the remote machine, start it inside <code>tmux</code> or <code>screen</code>, or with <code>nohup</code>. Aubergine keeps terminals on the computer it runs on. It can run on a remote machine too, used through an SSH tunnel or a proxy, but that has been run in containers only, never on a cloud machine.</span></p></details>
-      <details><summary><span lang="en" dir="ltr">Should I use nohup or tmux?</span></summary><p><span lang="en" dir="ltr"><code>nohup</code> suits one command whose output can go to a file. <code>tmux</code> suits a shell you want to come back to and type into. Aubergine gives every terminal the second, in a browser page, without tmux's keys.</span></p></details>
-      <details><summary><span lang="en" dir="ltr">Can I see the output after I close the terminal?</span></summary><p><span lang="en" dir="ltr">Yes, while the shell runs: tmux keeps the last 50,000 lines of each terminal, and the page shows them when you come back. Aubergine records nothing itself, so after a restart of the computer that output is gone.</span></p></details>
-      <details><summary><span lang="en" dir="ltr">Will it keep running after a reboot?</span></summary><p><span lang="en" dir="ltr">No. A restart of the computer ends every program. Aubergine brings each terminal back as a fresh shell in its last folder, with its place, name and note, and runs nothing again.</span></p></details>
+      <details><summary>Fechar o navegador para o meu terminal?</summary><p>Não. Cada terminal é um shell no tmux, que roda separado do navegador. Feche a aba, a janela ou o navegador, abra a página de novo, e cada terminal está como está agora, ainda rodando, com o que imprimiu nesse meio-tempo.</p></details>
+      <details><summary>Como mantenho um processo rodando depois que o SSH cai?</summary><p>Na máquina remota, inicie-o dentro do <code>tmux</code> ou do <code>screen</code>, ou com <code>nohup</code>. O Aubergine mantém terminais no computador em que roda. Ele também pode rodar em uma máquina remota, usado por um túnel SSH ou um proxy, mas isso só foi executado em contêineres, nunca em uma máquina na nuvem.</p></details>
+      <details><summary>Devo usar nohup ou tmux?</summary><p><code>nohup</code> serve para um comando cuja saída pode ir para um arquivo. <code>tmux</code> serve para um shell ao qual você quer voltar e no qual quer digitar. O Aubergine dá a segunda opção a cada terminal, em uma página do navegador, sem as teclas do tmux.</p></details>
+      <details><summary>Consigo ver a saída depois de fechar o terminal?</summary><p>Sim, enquanto o shell roda: o tmux guarda as últimas 50.000 linhas de cada terminal, e a página as mostra quando você volta. O Aubergine não grava nada por conta própria, então depois de reiniciar o computador essa saída se perde.</p></details>
+      <details><summary>Ele continua rodando depois de reiniciar o computador?</summary><p>Não. Uma reinicialização do computador encerra todos os programas. O Aubergine traz cada terminal de volta como um shell novo na última pasta, com lugar, nome e nota, e não roda nada de novo.</p></details>
     </div>
-    <p><span lang="en" dir="ltr">Related: <a href="../keep-terminals-after-restart/">Keep your terminals after a restart</a> · <a href="../tmux-without-learning-tmux/">tmux without learning tmux</a> · <a href="../claude-code-notifications/">Know when Claude Code is waiting</a></span></p>
+    <p>Relacionado: <a href="../keep-terminals-after-restart/">Mantenha seus terminais depois de reiniciar</a> · <a href="../tmux-without-learning-tmux/">tmux sem aprender tmux</a> · <a href="../claude-code-notifications/">Saiba quando o Claude Code está esperando</a></p>
   </div>
 </div>
 
@@ -192,7 +192,7 @@
     <div class="close-do">
       <p>Você precisa de macOS com tmux 3.2 ou mais recente e Node.js 22 ou mais recente. <code>brew install tmux node</code> instala os dois.</p>
       <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Copiado" aria-live="polite" hidden>Copiar</button></p>
-      <p class="actions"><a class="button" href="../install/">Instalar</a><a class="button button-quiet" href="../tmux-without-learning-tmux/"><span lang="en" dir="ltr">tmux without learning tmux</span></a></p>
+      <p class="actions"><a class="button" href="../install/">Instalar</a><a class="button button-quiet" href="../tmux-without-learning-tmux/">tmux sem aprender tmux</a></p>
     </div>
   </div>
 </section>

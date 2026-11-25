@@ -1327,6 +1327,54 @@
     "text": "Ce que gardent la fermeture du navigateur, un redémarrage d’Aubergine et un redémarrage de l’ordinateur, et comment reprendre là où vous en étiez.",
     "from": "396ced3608bc"
   },
+  "guides.alive.name": {
+    "text": "Garder un processus en marche après avoir fermé le terminal",
+    "from": "0a69e88f3c29"
+  },
+  "guides.alive.text": {
+    "text": "Fermez l’onglet, la fenêtre ou le navigateur, et rien ne s’arrête : ce que donne tmux, sans apprendre tmux.",
+    "from": "fc7a604b47b9"
+  },
+  "guides.notify.name": {
+    "text": "Savoir quand Claude Code a fini ou vous attend",
+    "from": "3cd5aea79b1d"
+  },
+  "guides.notify.text": {
+    "text": "Les états working, waiting for you et finished sur chaque terminal, le compteur For you, la touche du prochain qui attend et les notifications de la page ouverte.",
+    "from": "6cbbad6859df"
+  },
+  "guides.resume.name": {
+    "text": "Reprendre une conversation Claude Code",
+    "from": "92e5ad9c0015"
+  },
+  "guides.resume.text": {
+    "text": "Resume agent sur le terminal où elle tournait, les conversations passées d’un dossier, et ce qui vous dit où elle en était.",
+    "from": "0058e15394a7"
+  },
+  "guides.many.name": {
+    "text": "Trouver le bon terminal quand vous en avez trop",
+    "from": "9d8e670c6407"
+  },
+  "guides.many.text": {
+    "text": "Un canevas, une liste de tous les terminaux avec leur état en toutes lettres, des filtres, des étiquettes et la recherche dans ce que les terminaux ont affiché.",
+    "from": "789065caea35"
+  },
+  "guides.tmux.name": {
+    "text": "tmux sans apprendre tmux",
+    "from": "c661725dc167"
+  },
+  "guides.tmux.text": {
+    "text": "Des shells qui survivent à la fenêtre, sans touche de préfixe ni configuration, et votre propre tmux laissé tel quel.",
+    "from": "6875107241dd"
+  },
+  "guides.phone.name": {
+    "text": "Surveiller vos agents depuis votre téléphone",
+    "from": "c92463ac8872"
+  },
+  "guides.phone.text": {
+    "text": "Accéder à Aubergine depuis un autre appareil, chacun appairé avec un code. Lancé une fois sur un Mac ; pas essayé sur un vrai téléphone.",
+    "from": "fbe08c88ab0c"
+  },
   "guides.queue.name": {
     "text": "La file d’attente, For you et les planifications",
     "from": "61c48ccc941d"
@@ -1639,6 +1687,18 @@
     "text": "Non. Elle garde le travail séparé ; elle n’enferme pas un agent. L’agent tourne en votre nom et peut toujours lire et modifier tous les fichiers que vous pouvez lire et modifier.",
     "from": "8b760eb225ac"
   },
+  "keep.table.browserShort": {
+    "text": "Navigateur fermé",
+    "from": "6a63c6750f2a"
+  },
+  "keep.table.serverShort": {
+    "text": "Aubergine redémarré",
+    "from": "88d2ef622400"
+  },
+  "keep.table.computerShort": {
+    "text": "Ordinateur redémarré",
+    "from": "515aa3442054"
+  },
   "keep.meta.title": {
     "text": "Garder vos terminaux après un plantage, un redémarrage ou une mise à jour | Aubergine",
     "from": "d0521ba83d02"
@@ -1682,18 +1742,6 @@
   "keep.table.computer": {
     "text": "L’ordinateur plante, redémarre ou installe une mise à jour",
     "from": "321c23263fa9"
-  },
-  "keep.table.browserShort": {
-    "text": "Navigateur fermé",
-    "from": "6a63c6750f2a"
-  },
-  "keep.table.serverShort": {
-    "text": "Aubergine redémarré",
-    "from": "88d2ef622400"
-  },
-  "keep.table.computerShort": {
-    "text": "Ordinateur redémarré",
-    "from": "515aa3442054"
   },
   "keep.row.running": {
     "text": "Programmes et agents en cours",
@@ -1894,6 +1942,942 @@
   "keep.related": {
     "text": "À lire aussi : <a href=\"/claude/\">Claude Code dans Aubergine</a> · <a href=\"/queue-and-schedules/\">la file et les planifications</a> · <a href=\"/working-copies/\">les copies de travail</a>",
     "from": "730944daab4e"
+  },
+  "alive.meta.title": {
+    "text": "Garder un processus en marche après avoir fermé le terminal | Aubergine",
+    "from": "b6893102f4dc"
+  },
+  "alive.meta.description": {
+    "text": "Fermer une fenêtre de terminal arrête ce qui y tourne. Les réponses habituelles sont nohup, disown, screen et tmux ; Aubergine fait tourner chaque terminal dans tmux pour vous, si bien que fermer le navigateur n’arrête rien.",
+    "from": "91fc698775ac"
+  },
+  "alive.crumb": {
+    "text": "Garder en marche",
+    "from": "18b04919677d"
+  },
+  "alive.title": {
+    "text": "Garder un processus en marche après avoir fermé le terminal",
+    "from": "0a69e88f3c29"
+  },
+  "alive.lead": {
+    "text": "Vous avez lancé une compilation, un serveur ou un agent de code, et fermer la fenêtre l’arrêterait. Dans Aubergine, fermer la fenêtre n’arrête rien : chaque terminal tourne à part du navigateur, et ce qu’il a affiché est là quand vous revenez.",
+    "from": "08c79722641c"
+  },
+  "alive.usual.title": {
+    "text": "Ce que l’on fait d’habitude",
+    "from": "30e09240a39b"
+  },
+  "alive.usual.text": {
+    "text": "Fermer une fenêtre de terminal arrête le shell qu’elle contient, et avec lui ce que ce shell a lancé. Les façons habituelles de l’éviter :",
+    "from": "4915c1c5f12a"
+  },
+  "alive.usual.nohup": {
+    "text": "<code>nohup</code> lance une commande qui ignore le signal de raccrochage envoyé quand le terminal se ferme. Sa sortie va dans un fichier (<code>nohup.out</code>, sauf si vous l’envoyez ailleurs).",
+    "from": "07104e43d084"
+  },
+  "alive.usual.disown": {
+    "text": "<code>disown</code>, dans bash et zsh, lâche une tâche déjà lancée, pour que le shell ne lui transmette pas le signal de raccrochage. Vous ne pouvez plus y revenir dans un terminal ensuite.",
+    "from": "cff93689c505"
+  },
+  "alive.usual.mux": {
+    "text": "<code>screen</code> et <code>tmux</code> font tourner le shell dans un serveur à eux. Vous vous détachez, fermez la fenêtre, et vous rattachez plus tard au même shell avec sa sortie. C’est la réponse fiable, et il faut apprendre leurs touches et leurs commandes pour s’en servir.",
+    "from": "8033fa82aabc"
+  },
+  "alive.usual.after": {
+    "text": "Aubergine repose sur la dernière. Il fait tourner tmux pour vous : vous avez sa réponse sans ses touches.",
+    "from": "c5965cfc20f2"
+  },
+  "alive.does.title": {
+    "text": "Ce que fait Aubergine",
+    "from": "acf3f5da99c1"
+  },
+  "alive.does.text": {
+    "text": "Chaque terminal d’Aubergine est un shell dans sa propre session tmux, sur un socket tmux propre à Aubergine. tmux tourne à part du navigateur et du serveur d’Aubergine, donc :",
+    "from": "98b70e7d0d29"
+  },
+  "alive.does.browser": {
+    "text": "<strong>Fermer l’onglet, la fenêtre ou tout le navigateur n’arrête rien.</strong> Rouvrez la page (<code>aubergine open</code> l’ouvre connectée) et chaque terminal est dessiné depuis tmux tel qu’il est maintenant, avec ce qu’il a affiché entre-temps dans son historique de défilement.",
+    "from": "41a2df93d059"
+  },
+  "alive.does.server": {
+    "text": "<strong>Arrêter Aubergine n’arrête rien non plus.</strong> Ctrl+C là où tourne <code>aubergine start</code>, un plantage du serveur ou une mise à jour arrête le serveur et rien d’autre. Relancez-le et rechargez la page.",
+    "from": "b9ce1197f495"
+  },
+  "alive.does.park": {
+    "text": "<strong>Fermer un terminal sur le canevas le met de côté.</strong> Le × de son titre le retire du canevas, et son shell continue de tourner. <strong>Parked</strong> (mis de côté), dans la barre au-dessus du canevas, liste les terminaux mis de côté, et <strong>Restore</strong> (restaurer) en ramène un.",
+    "from": "d74085e1bab8"
+  },
+  "alive.does.end": {
+    "text": "<strong>Terminer un shell pour de bon demande d’abord.</strong> <strong>End</strong> (terminer), dans la liste des terminaux mis de côté, ne termine un terminal qu’après votre oui.",
+    "from": "297bbff16a9b"
+  },
+  "alive.does.views": {
+    "text": "<strong>Les autres vues d’un terminal n’arrêtent rien.</strong> <strong>Tab ↗</strong> dans le titre d’un terminal l’ouvre seul dans un onglet du navigateur, et <code>aubergine attach &lt;name&gt;</code> l’affiche dans une fenêtre de votre application de terminal. C’est chaque fois le même terminal, pas une copie ; fermer cet onglet ou cette fenêtre le laisse tourner.",
+    "from": "620a7de6d140"
+  },
+  "alive.does.scroll": {
+    "text": "Tant qu’un shell tourne, tmux garde les 50 000 dernières lignes qu’il a affichées. La molette les fait défiler dans le terminal qui a le clavier, et la palette (<code>⌘K</code>) y cherche.",
+    "from": "6bfb58743356"
+  },
+  "alive.pic.caption": {
+    "text": "La liste dit ce que fait chaque terminal. Celui mis de côté, en bas, n’est plus sur le canevas, et son shell tourne toujours.",
+    "from": "4bafddfa442e"
+  },
+  "alive.not.title": {
+    "text": "Ce qu’il ne fait pas",
+    "from": "b3a53baf5dfd"
+  },
+  "alive.not.reboot": {
+    "text": "<strong>Il ne survit pas au redémarrage de l’ordinateur.</strong> Un redémarrage, un plantage de l’ordinateur ou une mise à jour qui le redémarre arrête chaque shell et ce qui y tourne. Aubergine ramène tout ce qui les entoure, chaque terminal sous la forme d’un nouveau shell dans son dernier dossier, et ne relance rien de lui-même. Voir <a href=\"/keep-terminals-after-restart/\">Garder vos terminaux après un redémarrage</a>.",
+    "from": "7abee1496908"
+  },
+  "alive.not.sleep": {
+    "text": "<strong>Il ne garde pas l’ordinateur éveillé.</strong> Un portable en veille met ses programmes en pause, ceux-ci compris ; ils reprennent à son réveil.",
+    "from": "866d9035e322"
+  },
+  "alive.not.service": {
+    "text": "<strong>Ce n’est pas un gestionnaire de services.</strong> Une tâche qui doit revenir d’elle-même après un redémarrage a sa place dans les services de votre système.",
+    "from": "6d5fa1f2b3ca"
+  },
+  "alive.not.adopt": {
+    "text": "<strong>Il ne peut pas reprendre un programme qui tourne déjà ailleurs.</strong> Aucun outil ne peut déplacer un programme en cours dans un autre terminal. <code>aubergine here</code>, dans un onglet de votre application de terminal, donne à ce dossier un terminal sur le canevas ; un programme qui tourne dans l’onglet y reste, et doit être relancé dans le nouveau terminal.",
+    "from": "b16b06abf9b4"
+  },
+  "alive.ssh.title": {
+    "text": "Sur une autre machine, par SSH",
+    "from": "e88f17341af2"
+  },
+  "alive.ssh.text": {
+    "text": "Aubergine tourne sur votre propre ordinateur : son serveur écoute sur <code>127.0.0.1</code>, et ses terminaux sont des shells de cet ordinateur. Si ce que vous voulez garder est un processus sur un serveur distant que vous joignez par SSH, <code>tmux</code> ou <code>screen</code> sur ce serveur reste la réponse.",
+    "from": "dffecd1ee615"
+  },
+  "alive.ssh.remote": {
+    "text": "Aubergine lui-même peut tourner sur une autre machine et s’utiliser depuis votre navigateur, par un tunnel SSH, un réseau privé, ou un nom et un proxy : les étapes sont dans <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md\">Using Aubergine from elsewhere</a>. Avec un tunnel SSH, fermer la fenêtre SSH où tourne <code>aubergine start</code> arrête le serveur, et les terminaux continuent de tourner. Linux n’a été lancé que dans des conteneurs, jamais sur une machine dans le cloud.",
+    "from": "6471fa20654e"
+  },
+  "alive.q.close.q": {
+    "text": "Fermer le navigateur arrête-t-il mon terminal ?",
+    "from": "6ddd7e6edce7"
+  },
+  "alive.q.close.a": {
+    "text": "Non. Chaque terminal est un shell dans tmux, qui tourne à part du navigateur. Fermez l’onglet, la fenêtre ou le navigateur, rouvrez la page, et chaque terminal est tel qu’il est maintenant, toujours en marche, avec ce qu’il a affiché entre-temps.",
+    "from": "598cd7c22733"
+  },
+  "alive.q.ssh.q": {
+    "text": "Comment garder un processus en marche après une déconnexion SSH ?",
+    "from": "960447871eb8"
+  },
+  "alive.q.ssh.a": {
+    "text": "Sur la machine distante, lancez-le dans <code>tmux</code> ou <code>screen</code>, ou avec <code>nohup</code>. Aubergine garde les terminaux de l’ordinateur où il tourne. Il peut aussi tourner sur une machine distante, utilisé par un tunnel SSH ou un proxy, mais cela n’a été lancé que dans des conteneurs, jamais sur une machine dans le cloud.",
+    "from": "0d887b52c097"
+  },
+  "alive.q.nohup.q": {
+    "text": "Faut-il utiliser nohup ou tmux ?",
+    "from": "2d8a44cabbd2"
+  },
+  "alive.q.nohup.a": {
+    "text": "<code>nohup</code> convient à une commande dont la sortie peut aller dans un fichier. <code>tmux</code> convient à un shell auquel vous voulez revenir et dans lequel vous voulez taper. Aubergine donne la seconde solution à chaque terminal, dans une page du navigateur, sans les touches de tmux.",
+    "from": "bdd99e8d4444"
+  },
+  "alive.q.output.q": {
+    "text": "Puis-je voir la sortie après avoir fermé le terminal ?",
+    "from": "d50697ee7ca6"
+  },
+  "alive.q.output.a": {
+    "text": "Oui, tant que le shell tourne : tmux garde les 50 000 dernières lignes de chaque terminal, et la page les affiche quand vous revenez. Aubergine n’enregistre rien lui-même : après un redémarrage de l’ordinateur, cette sortie est perdue.",
+    "from": "4e7c9512f7a4"
+  },
+  "alive.q.reboot.q": {
+    "text": "Continuera-t-il de tourner après un redémarrage ?",
+    "from": "a133b0a14fb2"
+  },
+  "alive.q.reboot.a": {
+    "text": "Non. Un redémarrage de l’ordinateur arrête tous les programmes. Aubergine ramène chaque terminal sous la forme d’un nouveau shell dans son dernier dossier, avec sa place, son nom et sa note, et ne relance rien.",
+    "from": "a486f307279a"
+  },
+  "alive.related": {
+    "text": "À lire aussi : <a href=\"/keep-terminals-after-restart/\">Garder vos terminaux après un redémarrage</a> · <a href=\"/tmux-without-learning-tmux/\">tmux sans apprendre tmux</a> · <a href=\"/claude-code-notifications/\">Savoir quand Claude Code attend</a>",
+    "from": "4a361e122188"
+  },
+  "notify.meta.title": {
+    "text": "Savoir quand Claude Code a fini ou vous attend | Aubergine",
+    "from": "6298f70cc7f8"
+  },
+  "notify.meta.description": {
+    "text": "Voyez d’un coup d’œil quel terminal Claude Code travaille, vous attend ou a fini : des hooks générés par Aubergine, le compteur For you, une touche vers le prochain terminal qui attend, et des notifications de la page ouverte.",
+    "from": "ec167ae38aa3"
+  },
+  "notify.crumb": {
+    "text": "Fini ou en attente",
+    "from": "9cd75bf0227a"
+  },
+  "notify.title": {
+    "text": "Savoir quand Claude Code a fini ou vous attend",
+    "from": "d69b035c67c4"
+  },
+  "notify.lead": {
+    "text": "Vous confiez une tâche à Claude Code, passez à autre chose, et revenez vingt minutes plus tard pour découvrir qu’il attend un oui depuis la deuxième minute. Aubergine montre, sur une seule page, quel terminal travaille, lequel vous attend et lequel a fini.",
+    "from": "33187b7b48cc"
+  },
+  "notify.usual.title": {
+    "text": "Ce que l’on fait d’habitude",
+    "from": "30e09240a39b"
+  },
+  "notify.usual.text": {
+    "text": "Claude Code exécute des hooks, des commandes à vous, à certains moments, par exemple quand il s’arrête (<code>Stop</code>) ou envoie une notification (<code>Notification</code>). La réponse habituelle est un hook dans vos réglages de Claude Code qui joue un son ou affiche une notification sur le bureau. Ça marche, et ces scripts sont à écrire et à entretenir vous-même.",
+    "from": "68ee553e9f31"
+  },
+  "notify.does.title": {
+    "text": "Ce que fait Aubergine",
+    "from": "acf3f5da99c1"
+  },
+  "notify.does.start": {
+    "text": "<strong>Lancez Claude Code depuis Aubergine</strong> : <strong>New terminal ▾ → Claude Code</strong> en haut de la liste des terminaux, ou <code>C</code>. Aubergine lance <code>claude</code> avec un fichier de réglages qu’il génère dans son propre dossier de données et qu’il nomme sur la ligne de commande. Votre propre configuration de Claude Code n’est pas touchée. Les hooks de ce fichier indiquent à la page ce que fait l’agent :",
+    "from": "3369bd01dcea"
+  },
+  "notify.does.working": {
+    "text": "quand vous envoyez un prompt, le terminal affiche <strong>working</strong> (au travail), et le prompt est ajouté au journal de sa note ;",
+    "from": "155df7c224c8"
+  },
+  "notify.does.waiting": {
+    "text": "quand l’agent a besoin de vous (une question d’autorisation, ou il attend une saisie), son contour prend la couleur de l’attente, et son titre et sa ligne dans la liste indiquent <strong>waiting for you</strong> (vous attend) ;",
+    "from": "de3a60706385"
+  },
+  "notify.does.finished": {
+    "text": "quand il s’arrête, le terminal affiche <strong>finished</strong> (fini).",
+    "from": "4fa6541012c0"
+  },
+  "notify.does.count": {
+    "text": "<strong>Le compteur à côté de For you</strong>, en haut à droite de la page, compte tout ce qui vous attend, sur tous les projets : les terminaux qui posent une question, mais aussi les exécutions à approuver, les brouillons à lire et les tâches proposées. Cliquer dessus ouvre <strong>Runs</strong>, dont la colonne <strong>Waiting for you</strong> est cette liste. L’onglet d’un canevas indique combien de ses terminaux attendent.",
+    "from": "7a2b8019e903"
+  },
+  "notify.does.next": {
+    "text": "<strong>Le prochain qui attend.</strong> <code>W</code> va au prochain terminal qui vous attend tant qu’aucun terminal n’a le clavier ; sous macOS, <code>⌃⌘J</code> le fait aussi depuis un terminal. Ailleurs, c’est dans la palette.",
+    "from": "19a40372e53f"
+  },
+  "notify.does.desktop": {
+    "text": "<strong>Des notifications de la page ouverte.</strong> <strong>Settings → Notifications</strong> contient <strong>Notify me on the desktop when a terminal starts waiting</strong> (me prévenir sur le bureau quand un terminal se met à attendre). Une fois cette option activée, la page affiche une notification de votre navigateur quand un terminal se met à attendre ou que son agent a fini, sauf si vous regardez ce terminal. Le navigateur vous demande l’autorisation une fois.",
+    "from": "a6b031774f7c"
+  },
+  "notify.does.rules": {
+    "text": "<strong>Les règles.</strong> Dans l’onglet <strong>Rules</strong> de <strong>Runs</strong>, une règle peut, avec <strong>Notify me</strong> (me prévenir), vous avertir quand une tâche est terminée, qu’une tâche a échoué, qu’une tâche a besoin de vous, que l’on vous demande quelque chose, ou qu’une planification s’est déclenchée ou n’a pas pu s’exécuter : une notification de la page ouverte, avec une phrase sur ce qui s’est passé.",
+    "from": "8902ebd28ab4"
+  },
+  "notify.pic.caption": {
+    "text": "La liste de ce qui attend, à côté de For you : d’abord la question d’un agent de démonstration, puis une étape à lire et une liste remise.",
+    "from": "ec342d97a2eb"
+  },
+  "notify.other.title": {
+    "text": "Les autres agents, et un claude tapé à la main",
+    "from": "7ee8ea823560"
+  },
+  "notify.other.text": {
+    "text": "Aubergine ne lit pas la sortie d’un terminal pour deviner. Tout autre agent, ou tout programme, dit la même chose de lui-même avec <code>aubergine attention waiting \"what it needs\"</code>, <code>aubergine attention working</code> et <code>aubergine attention done</code> dans son terminal. <code>aubergine guide --snippet</code> affiche cinq lignes pour le fichier que votre agent lit au début d’une conversation ; elles lui disent de lancer <code>aubergine guide</code>, qui explique ces commandes.",
+    "from": "f65f5b133ea7"
+  },
+  "notify.other.typed": {
+    "text": "Un Claude Code que vous avez lancé en tapant <code>claude</code> dans un terminal ordinaire n’est, pour Aubergine, qu’un shell occupé par un programme : pas de <strong>waiting for you</strong>. Lancez-le plutôt depuis le menu, ou ajoutez à la main à vos propres réglages les hooks qu’affiche <code>aubergine hooks print</code> ; ils ne font rien en dehors d’un terminal Aubergine.",
+    "from": "66303f76feaf"
+  },
+  "notify.not.title": {
+    "text": "Ce qu’il ne fait pas",
+    "from": "b3a53baf5dfd"
+  },
+  "notify.not.sound": {
+    "text": "<strong>Aucun son à lui.</strong> Aubergine n’en joue aucun. Une notification ne fait du bruit que si votre navigateur ou votre système en fait pour les notifications.",
+    "from": "2d61c4c47cc8"
+  },
+  "notify.not.closed": {
+    "text": "<strong>Rien tant qu’aucune page n’est ouverte.</strong> Les notifications viennent d’une page Aubergine ouverte dans votre navigateur ; le serveur n’en envoie aucune de lui-même. Toutes les pages fermées, le terminal indique toujours <strong>waiting for you</strong>, et le compteur est là quand vous ouvrez la page.",
+    "from": "4b12da4bf501"
+  },
+  "notify.not.phone": {
+    "text": "<strong>Pas de notification push sur un téléphone.</strong> Il n’y a ni application ni service de push. Le navigateur d’un téléphone peut être appairé pour ouvrir la même page ; voir <a href=\"/check-agents-from-your-phone/\">Surveiller vos agents depuis votre téléphone</a>, ce qui n’a pas été essayé sur un vrai téléphone.",
+    "from": "b5b776d76082"
+  },
+  "notify.not.tried": {
+    "text": "<strong>Ce qui a été vérifié.</strong> Les tests dans le navigateur vérifient les notifications auprès d’un substitut de celles du navigateur. L’aspect d’une vraie notification, et si elle s’affiche seulement, dépendent de votre navigateur et des réglages de votre système à ce sujet.",
+    "from": "3df89b5e7759"
+  },
+  "notify.q.done.q": {
+    "text": "Comment recevoir une notification quand Claude Code a fini ?",
+    "from": "61d334cfbe8e"
+  },
+  "notify.q.done.a": {
+    "text": "Lancez Claude Code depuis Aubergine, puis activez <strong>Notify me on the desktop when a terminal starts waiting</strong> sous <strong>Settings → Notifications</strong>. La page ouverte affiche alors une notification du navigateur quand un terminal se met à vous attendre ou que son agent a fini. Sans notification, le terminal indique <strong>finished</strong>.",
+    "from": "2e338730d3a7"
+  },
+  "notify.q.sound.q": {
+    "text": "Claude Code peut-il jouer un son quand il a besoin d’une saisie ?",
+    "from": "06e5fcebba16"
+  },
+  "notify.q.sound.a": {
+    "text": "Aubergine ne joue aucun son. Une notification sonne si votre navigateur ou votre système la fait sonner. Un hook à vous dans vos réglages de Claude Code peut en jouer un ; Aubergine n’écrit jamais dans ces réglages.",
+    "from": "9bfa64c7c661"
+  },
+  "notify.q.several.q": {
+    "text": "Comment voir quelle session Claude Code attend quand j’en fais tourner plusieurs ?",
+    "from": "1574988945ec"
+  },
+  "notify.q.several.a": {
+    "text": "Dans Aubergine, le contour et l’état du terminal qui attend sont dans la couleur de l’attente, sa ligne dans la liste indique <strong>waiting for you</strong>, et le compteur à côté de <strong>For you</strong> dit combien de choses attendent. <code>W</code> va au suivant.",
+    "from": "5afc5b2282ae"
+  },
+  "notify.q.closed.q": {
+    "text": "Suis-je prévenu quand le navigateur est fermé ?",
+    "from": "14556b0165d5"
+  },
+  "notify.q.closed.a": {
+    "text": "Non. Les notifications viennent d’une page Aubergine ouverte. L’état est gardé : les terminaux qui attendent sont marqués quand vous rouvrez la page.",
+    "from": "0c60b9069220"
+  },
+  "notify.q.other.q": {
+    "text": "Est-ce que ça marche avec d’autres agents que Claude Code ?",
+    "from": "c3bc48693c0a"
+  },
+  "notify.q.other.a": {
+    "text": "Pas de lui-même : les hooks sont faits pour Claude Code. Tout autre agent peut signaler la même chose avec <code>aubergine attention waiting</code>, <code>working</code> et <code>done</code> quand ses propres instructions le lui disent ; <code>aubergine guide --snippet</code> affiche les lignes à mettre dans ces instructions.",
+    "from": "d74216df16d6"
+  },
+  "notify.related": {
+    "text": "À lire aussi : <a href=\"/claude/\">Claude Code dans Aubergine</a> · <a href=\"/resume-claude-code-session/\">Reprendre une conversation Claude Code</a> · <a href=\"/too-many-terminal-tabs/\">Trop de terminaux</a>",
+    "from": "60204a04f28a"
+  },
+  "resume.meta.title": {
+    "text": "Reprendre une conversation Claude Code après un redémarrage | Aubergine",
+    "from": "25d7c94055ab"
+  },
+  "resume.meta.description": {
+    "text": "claude --continue et --resume ramènent une conversation si vous êtes dans le bon dossier. Aubergine se souvient de la conversation de chaque terminal, propose Resume agent, et liste les conversations passées par dossier.",
+    "from": "9c3fb52f17de"
+  },
+  "resume.crumb": {
+    "text": "Reprendre une conversation",
+    "from": "d0b8459148c0"
+  },
+  "resume.title": {
+    "text": "Reprendre une conversation Claude Code après un redémarrage",
+    "from": "087ff07774c9"
+  },
+  "resume.lead": {
+    "text": "L’ordinateur a redémarré, ou vous avez fermé le terminal, et la conversation de Claude Code semble perdue. Claude Code la garde. Aubergine se souvient de la conversation où était chaque terminal et la ramène d’un seul bouton.",
+    "from": "f122ebc08ba6"
+  },
+  "resume.usual.title": {
+    "text": "Ce que l’on fait d’habitude",
+    "from": "30e09240a39b"
+  },
+  "resume.usual.text": {
+    "text": "Dans un terminal, dans le dossier où était la conversation : <code>claude --continue</code> poursuit la conversation la plus récente de ce dossier, et <code>claude --resume</code> vous en fait choisir une dans une liste, ou prend l’ID d’une conversation. Le piège, c’est le dossier et le choix : avec plusieurs agents dans un même dossier, la plus récente n’est pas toujours celle que vous vouliez.",
+    "from": "0c7e58df6940"
+  },
+  "resume.does.title": {
+    "text": "Ce que fait Aubergine",
+    "from": "acf3f5da99c1"
+  },
+  "resume.does.remember": {
+    "text": "<strong>Un terminal se souvient de sa conversation.</strong> Quand Claude Code a été lancé depuis Aubergine (<strong>New terminal ▾ → Claude Code</strong>, ou <code>C</code>), ses hooks indiquent à Aubergine dans quelle conversation il est, et Aubergine garde cet ID avec le terminal.",
+    "from": "25fb3e43a297"
+  },
+  "resume.does.button": {
+    "text": "<strong>Resume agent</strong> (reprendre l’agent) est proposé dans la barre de titre du terminal dès que son shell est revenu à l’invite : vous avez quitté l’agent, ou l’ordinateur a redémarré et le terminal est revenu sous la forme d’un nouveau shell dans son dernier dossier. Il relance Claude Code avec <code>--resume</code> et cet ID, avec la commande de lancement de vos réglages (<code>agents.claudeCommand</code>, <code>claude</code> par défaut).",
+    "from": "059cfe143e66"
+  },
+  "resume.does.run": {
+    "text": "<strong>Sur une exécution d’un workflow</strong>, <strong>Resume agent</strong> informe aussi de nouveau l’agent de l’exécution, pour qu’il reprenne à l’étape où elle en est.",
+    "from": "03de06981f61"
+  },
+  "resume.does.past": {
+    "text": "<strong>Past conversations…</strong> (conversations passées) dans la palette (<code>⌘K</code>), ou « Past conversations in this folder… » dans les détails d’un terminal, liste les conversations précédentes de Claude Code dans un dossier : le nom ou la première chose que vous avez dite, quand elle a été active pour la dernière fois, combien de fois vous avez parlé, et si un terminal d’un canevas y est en ce moment. <strong>Read</strong> (lire) l’affiche, en lecture seule. <strong>Open on the canvas</strong> (ouvrir sur le canevas) lance un nouveau terminal dans ce dossier qui reprend cette conversation, et <strong>Open a copy</strong> (ouvrir une copie) en lance une branche et laisse l’originale telle quelle. Si un terminal est déjà sur cette conversation, on vous demande d’abord.",
+    "from": "05c3b631a2d7"
+  },
+  "resume.does.search": {
+    "text": "<strong>La recherche.</strong> Tapez <code>@</code> et quelques mots dans la palette pour chercher dans les conversations passées des dossiers des terminaux de vos canevas. Elle lit les fichiers quand vous le demandez, dans certaines limites, et dit quand elle a été écourtée. En ligne de commande, <code>aubergine history</code> les liste et <code>aubergine history open &lt;id&gt;</code> en ouvre une.",
+    "from": "f1e8e8bbabc6"
+  },
+  "resume.does.stood": {
+    "text": "<strong>Où elle en était.</strong> La note du terminal garde son résumé et un journal, et chaque prompt que vous envoyez est ajouté au journal. <strong>Ask its agent for a recap</strong> (demander un récapitulatif à son agent), dans ses détails, fait écrire à l’agent où il en est avec <code>aubergine recap --write</code>, gardé avec le terminal. Quand vous revenez après plus de 30 minutes, <strong>While you were away</strong> (pendant votre absence) liste ce qui a changé entre-temps.",
+    "from": "449c1f6289f7"
+  },
+  "resume.pic.caption": {
+    "text": "Les détails d’un terminal : l’étape de son exécution et son dernier rapport, son dossier et ses champs. Ils sont gardés avec le terminal, prêts pour le moment où son agent reprendra.",
+    "from": "5c63f8e4cb58"
+  },
+  "resume.outside.title": {
+    "text": "Une conversation dans un terminal hors d’Aubergine",
+    "from": "43ceaae0c27a"
+  },
+  "resume.outside.text": {
+    "text": "Dans un onglet de votre application de terminal, quittez l’agent, puis lancez <code>aubergine here --claude</code> dans le même dossier : un nouveau terminal sur le canevas lance Claude Code avec <code>--continue</code>, désormais avec son état affiché. <code>aubergine move</code> liste vos onglets Claude Code et lance une copie de chaque conversation sur le canevas ; avec <code>--stop</code>, il demande d’abord à un agent inactif de quitter, après votre confirmation.",
+    "from": "7682f25de863"
+  },
+  "resume.not.title": {
+    "text": "Ce qu’il ne fait pas",
+    "from": "b3a53baf5dfd"
+  },
+  "resume.not.format": {
+    "text": "<strong>Il lit les fichiers propres à Claude Code, dans un format qui n’est pas celui d’Aubergine.</strong> Claude Code dit que le format de ces fichiers est interne, et il change d’une version à l’autre. La reprise utilise le <code>--resume</code> de Claude Code lui-même avec l’ID ; les noms, les décomptes et les transcriptions sont la lecture qu’Aubergine fait des fichiers, et peuvent manquer ou être plus pauvres après une mise à jour de Claude Code. Un fichier qu’il ne sait pas lire est signalé comme tel, pas affiché comme une conversation vide.",
+    "from": "a2210e214a34"
+  },
+  "resume.not.store": {
+    "text": "<strong>Rien n’est copié ni gardé.</strong> Une liste, une transcription ou une recherche est lue quand vous la demandez et oubliée quand vous la fermez. Aubergine ne modifie, ne renomme ni ne supprime jamais une conversation, et aucun agent ni aucun jeton ne peut lire de conversations par son intermédiaire.",
+    "from": "9224f8f7033a"
+  },
+  "resume.not.work": {
+    "text": "<strong>Le travail en cours n’est pas refait.</strong> Ce que faisait l’agent au moment où il s’est arrêté n’est pas relancé tant que vous ne le lui demandez pas.",
+    "from": "a0dfad245abc"
+  },
+  "resume.not.other": {
+    "text": "<strong>Pas de Resume agent pour un autre agent.</strong> Aubergine ne connaît pas la conversation d’un autre agent, et ne liste pas de conversations passées pour lui. Relancez-le dans le même terminal avec la façon de reprendre propre à cet agent, et lisez la note pour lui dire où il en était.",
+    "from": "032fed640b8d"
+  },
+  "resume.not.typed": {
+    "text": "<strong>Un <code>claude</code> que vous avez tapé vous-même n’est pas retenu</strong>, sauf si vous avez ajouté à vos propres réglages de Claude Code les hooks qu’affiche <code>aubergine hooks print</code>.",
+    "from": "7cabc8e39014"
+  },
+  "resume.not.tried": {
+    "text": "<strong>Ce qui a été vérifié.</strong> La lecture des fichiers de conversation est testée sur des fichiers inventés. Elle n’a pas été vérifiée avec toutes les versions de Claude Code.",
+    "from": "636831c9e7f8"
+  },
+  "resume.q.closed.q": {
+    "text": "Comment reprendre une session Claude Code après avoir fermé le terminal ?",
+    "from": "6af39953e8a8"
+  },
+  "resume.q.closed.a": {
+    "text": "Dans le même dossier, <code>claude --continue</code> prend la conversation la plus récente et <code>claude --resume</code> vous laisse choisir. Dans Aubergine, fermer le navigateur n’arrête rien, et un terminal dont vous avez quitté l’agent propose <strong>Resume agent</strong> dans sa barre de titre.",
+    "from": "1ed7fbcc4b38"
+  },
+  "resume.q.reboot.q": {
+    "text": "Comment reprendre une conversation Claude Code après un redémarrage ?",
+    "from": "31f50552b3a5"
+  },
+  "resume.q.reboot.a": {
+    "text": "Après un redémarrage, chaque terminal Aubergine revient sous la forme d’un nouveau shell dans son dernier dossier. Là où Claude Code a été lancé depuis Aubergine, <strong>Resume agent</strong> dans la barre de titre le relance dans la conversation où était ce terminal.",
+    "from": "a7935b5285f1"
+  },
+  "resume.q.find.q": {
+    "text": "Comment retrouver une ancienne conversation Claude Code ?",
+    "from": "230753fac68b"
+  },
+  "resume.q.find.a": {
+    "text": "<strong>Past conversations…</strong> dans la palette les liste pour un dossier, avec une transcription en lecture seule ; <code>@</code> et quelques mots dans la palette y cherchent. Seul ce que Claude Code garde encore est listé.",
+    "from": "cf90c4bc8021"
+  },
+  "resume.q.diff.q": {
+    "text": "Quelle est la différence entre claude --continue et claude --resume ?",
+    "from": "4f56d2ee9cff"
+  },
+  "resume.q.diff.a": {
+    "text": "<code>--continue</code> poursuit la conversation la plus récente du dossier ; <code>--resume</code> prend celle que vous choisissez, ou un ID. <strong>Resume agent</strong> utilise <code>--resume</code> avec l’ID dont le terminal s’est souvenu : il ne dépend donc pas de la conversation la plus récente.",
+    "from": "5c3f2b16669e"
+  },
+  "resume.q.two.q": {
+    "text": "Deux terminaux peuvent-ils poursuivre la même conversation Claude Code ?",
+    "from": "825906c9167b"
+  },
+  "resume.q.two.a": {
+    "text": "Aubergine n’en ouvre pas une deux fois sans demander : deux agents dans une même conversation perdent les messages l’un de l’autre. On vous propose le terminal qui y est déjà, ou une copie, qui crée une branche de la conversation.",
+    "from": "b8424d8787fc"
+  },
+  "resume.related": {
+    "text": "À lire aussi : <a href=\"/keep-terminals-after-restart/\">Garder vos terminaux après un redémarrage</a> · <a href=\"/claude-code-notifications/\">Savoir quand Claude Code attend</a> · <a href=\"/claude/\">Claude Code dans Aubergine</a>",
+    "from": "82d3fe458522"
+  },
+  "many.meta.title": {
+    "text": "Trouver le bon terminal quand vous avez trop d’onglets | Aubergine",
+    "from": "710b13634a0f"
+  },
+  "many.meta.description": {
+    "text": "Trop d’onglets de terminal, tous nommés zsh ? Aubergine met chaque terminal sur un canevas et dans une seule liste avec son état en toutes lettres, des filtres, des étiquettes, la recherche dans la sortie des terminaux et un terminal seul dans un onglet du navigateur.",
+    "from": "0d77fee497f4"
+  },
+  "many.crumb": {
+    "text": "Trop de terminaux",
+    "from": "1d2e7e29f20b"
+  },
+  "many.title": {
+    "text": "Trouver le bon terminal quand vous en avez trop",
+    "from": "9d8e670c6407"
+  },
+  "many.lead": {
+    "text": "Vingt onglets, la plupart nommés zsh, trois avec un agent, dont un qui vous attend. Aubergine met chaque terminal sur un canevas et dans une seule liste qui dit ce que fait chacun : vous trouvez un terminal à ce qu’il est, pas à l’endroit où vous l’avez laissé.",
+    "from": "1d5167ffd4b4"
+  },
+  "many.usual.title": {
+    "text": "Ce que l’on fait d’habitude",
+    "from": "30e09240a39b"
+  },
+  "many.usual.text": {
+    "text": "Nommer les onglets ou les fenêtres (la plupart des applications de terminal le permettent), diviser les fenêtres en volets, utiliser des sessions et des fenêtres tmux nommées, ou laisser un gestionnaire de fenêtres en mosaïque les placer. Cela aide à placer les terminaux ; trouver celui qui a besoin de vous oblige toujours à chercher des yeux.",
+    "from": "ad6ff5b0d6e6"
+  },
+  "many.does.title": {
+    "text": "Ce que fait Aubergine",
+    "from": "acf3f5da99c1"
+  },
+  "many.does.canvas": {
+    "text": "<strong>Un canevas.</strong> Des terminaux côte à côte, chacun en direct. Faites-en glisser un par son titre, redimensionnez-le par ses bords, double-cliquez sur le titre pour le renommer. La pastille d’un titre lui donne une couleur ; un cadre (<strong>New terminal ▾ → Frame</strong>, ou <code>G</code>) regroupe des terminaux sous un libellé et les déplace ensemble.",
+    "from": "adf948fb2094"
+  },
+  "many.does.canvases": {
+    "text": "<strong>Canevas et projets.</strong> Plusieurs canevas, affichés en onglets, en liste ou en colonne à gauche, chacun avec sa propre adresse. Un projet a ses propres canevas, terminaux, file d’attente et liste de ce qui attend ; le sélecteur en haut à gauche passe d’un projet à l’autre.",
+    "from": "3e3ff8bc43f4"
+  },
+  "many.does.list": {
+    "text": "<strong>Une seule liste de tous les terminaux.</strong> La section <strong>Terminals</strong> du panneau latéral liste chacun avec son état en toutes lettres (<strong>working</strong>, <strong>waiting for you</strong>, <strong>finished</strong>, une commande qui a échoué), l’étape de son exécution et sa dernière activité, pour ce canevas ou pour tous. Le champ en haut trouve un terminal par son nom, son dossier, sa commande, sa note ou ses étiquettes.",
+    "from": "f7361c6e0119"
+  },
+  "many.does.filter": {
+    "text": "<strong>Filter</strong> (filtrer) contient les filtres (en attente de moi, occupé, non lu, avec un agent, mis de côté, étiquettes) et la disposition de la liste : par canevas, ou une liste à plat dans l’ordre des canevas, par dernière mise à jour, par dernière saisie ou par nom.",
+    "from": "6e69fcb25a25"
+  },
+  "many.does.goto": {
+    "text": "<strong>Go to…</strong> (aller à) au-dessus du canevas, ou <code>⌘K</code>, c’est la palette : tapez une partie d’un nom, d’un dossier, d’une commande ou d’une note. Sa section <strong>Terminal output</strong> (sortie des terminaux) cherche dans ce que les terminaux ont affiché (les 50 000 dernières lignes que tmux garde pour chacun), et un résultat ouvre le terminal, remonté jusqu’à lui.",
+    "from": "cc786240ec50"
+  },
+  "many.does.map": {
+    "text": "<strong>La carte</strong>, dont le bouton est à côté de <strong>Go to…</strong>, montre tout le canevas en petit et le fait défiler. <strong>Fit</strong> (ajuster, <code>F</code>) montre tout d’un coup.",
+    "from": "fc5776ecfbcb"
+  },
+  "many.does.about": {
+    "text": "<strong>À quoi sert un terminal.</strong> Chacun a une note à côté de lui (un résumé et un journal), et dans ses détails des étiquettes, des liens et des champs comme <code>Ticket: DEMO-12</code>. Un agent peut écrire le nom, le résumé et les champs de son propre terminal avec les commandes <code>aubergine</code>.",
+    "from": "1d11da3800ef"
+  },
+  "many.does.alone": {
+    "text": "<strong>Un terminal seul.</strong> <strong>Tab ↗</strong> dans son titre l’ouvre dans un onglet du navigateur à lui seul, à <code>/t/&lt;terminal&gt;</code>, avec ses détails et sa note à un bouton de là.",
+    "from": "43aca22cfd80"
+  },
+  "many.does.keys": {
+    "text": "<code>Tab</code> et <code>Shift+Tab</code> parcourent les terminaux dans l’ordre de la liste, et <code>W</code> va au prochain qui vous attend.",
+    "from": "31d2188a40a6"
+  },
+  "many.not.title": {
+    "text": "Ce qu’il ne fait pas",
+    "from": "b3a53baf5dfd"
+  },
+  "many.not.arrange": {
+    "text": "<strong>Il ne range rien à votre place.</strong> Un terminal reste là où vous l’avez mis (un nouveau va dans un espace libre près du centre de la vue), et garde le nom que vous ou son agent lui avez donné.",
+    "from": "f9831e413ca7"
+  },
+  "many.not.number": {
+    "text": "<strong>Il ne promet aucun nombre.</strong> Seul le canevas que vous regardez garde des terminaux en direct : très dézoomé, un terminal montre une image de son écran, et hors de l’écran il ne coûte rien à la page. Chaque terminal reste un shell sur votre ordinateur. La liste est testée avec 1 000 terminaux dans un test unitaire (lister, filtrer et ne dessiner qu’un écran), et un script remplit trois canevas avec 90 terminaux pour juger à l’œil. Ni l’un ni l’autre n’est une promesse pour votre ordinateur.",
+    "from": "0b99155f7203"
+  },
+  "many.not.others": {
+    "text": "<strong>Les onglets de votre application de terminal ne sont pas affichés.</strong> <strong>Open elsewhere</strong> (ouverts ailleurs, <code>O</code>) liste les terminaux ouverts là-bas et les ramène un par un, sous la forme d’un nouveau terminal dans le même dossier. Un programme qui tourne dans un onglet reste dans cet onglet.",
+    "from": "342f90ca0c87"
+  },
+  "many.q.organize.q": {
+    "text": "Comment organiser beaucoup de fenêtres de terminal ?",
+    "from": "ff12c1f905b9"
+  },
+  "many.q.organize.a": {
+    "text": "Dans Aubergine : un canevas par chantier, des terminaux côte à côte avec des noms et des couleurs, des cadres autour de ceux qui vont ensemble, et une seule liste de tous, avec ce que fait chacun.",
+    "from": "b8784c8ec007"
+  },
+  "many.q.which.q": {
+    "text": "Comment trouver quel terminal exécute une commande ?",
+    "from": "17eb8a719d39"
+  },
+  "many.q.which.a": {
+    "text": "Le champ au-dessus de la liste cherche dans le nom, le dossier, la commande, la note et les étiquettes d’un terminal, et la palette (<code>⌘K</code>) fait de même sur tous les canevas. Le titre d’un terminal montre ce qu’il exécute.",
+    "from": "da1e57276527"
+  },
+  "many.q.search.q": {
+    "text": "Puis-je chercher dans la sortie de tous mes terminaux ?",
+    "from": "a58d20e4b8f9"
+  },
+  "many.q.search.a": {
+    "text": "Oui, de ceux qui tournent encore : la section <strong>Terminal output</strong> de la palette lit l’historique de chaque terminal quand vous cherchez, ceux mis de côté compris, aussi loin que tmux le garde (50 000 lignes). Rien n’est indexé ni enregistré.",
+    "from": "886e87fdb066"
+  },
+  "many.q.count.q": {
+    "text": "Combien de terminaux Aubergine peut-il gérer ?",
+    "from": "316b2352e931"
+  },
+  "many.q.count.a": {
+    "text": "Il n’y a pas de limite fixe. La liste est testée avec 1 000 terminaux, et trois canevas de 90 ont été regardés à l’œil ; chaque terminal reste un shell, c’est donc ce que votre ordinateur peut faire tourner qui décide.",
+    "from": "ee69bd158d20"
+  },
+  "many.q.name.q": {
+    "text": "Puis-je nommer et colorer mes terminaux ?",
+    "from": "8288c9dbf63e"
+  },
+  "many.q.name.a": {
+    "text": "Oui. Double-cliquez sur le titre d’un terminal pour le renommer, et utilisez la pastille de son titre pour l’une des treize couleurs ou la vôtre. Les canevas ont aussi des noms et des couleurs.",
+    "from": "42ae6580f04b"
+  },
+  "many.related": {
+    "text": "À lire aussi : <a href=\"/claude-code-notifications/\">Savoir quand Claude Code attend</a> · <a href=\"/keep-process-running-after-closing-terminal/\">Garder un processus en marche</a> · <a href=\"/run-multiple-coding-agents/\">Faire tourner plusieurs agents de code</a>",
+    "from": "da55f7278a1a"
+  },
+  "tmux.meta.title": {
+    "text": "tmux sans apprendre tmux | Aubergine",
+    "from": "a731849612b9"
+  },
+  "tmux.meta.description": {
+    "text": "Des shells qui survivent à la fenêtre, sans touche de préfixe ni .tmux.conf. Aubergine fait tourner tmux pour vous sur son propre socket, avec la molette, le copier-coller et le redimensionnement qui marchent comme dans n’importe quel terminal.",
+    "from": "d876f30b4bcb"
+  },
+  "tmux.crumb": {
+    "text": "tmux sans tmux",
+    "from": "089511f9df35"
+  },
+  "tmux.title": {
+    "text": "tmux sans apprendre tmux",
+    "from": "c661725dc167"
+  },
+  "tmux.lead": {
+    "text": "tmux garde vos shells en marche quand la fenêtre se ferme. Il vous demande aussi d’apprendre une touche de préfixe, un mode copie et un fichier de configuration. Aubergine fait tourner tmux pour vous, et vous utilisez chaque terminal dans une page du navigateur comme n’importe quel terminal.",
+    "from": "c92cbb7d944a"
+  },
+  "tmux.who.title": {
+    "text": "Pour qui",
+    "from": "bcdecc549d07"
+  },
+  "tmux.who": {
+    "text": "Pour qui veut ce que donne tmux, des shells qui survivent à la fenêtre, sans ses touches ni sa configuration. Si vous vivez déjà dans tmux, gardez-le : Aubergine laisse votre tmux tranquille.",
+    "from": "67d7b78bd967"
+  },
+  "tmux.usual.title": {
+    "text": "Ce que l’on fait d’habitude",
+    "from": "30e09240a39b"
+  },
+  "tmux.usual.text": {
+    "text": "Apprendre tmux : une touche de préfixe (<code>Ctrl+B</code>, sauf si vous la changez) avant chaque commande, <code>tmux attach</code> pour revenir, et des lignes dans <code>~/.tmux.conf</code> pour la souris et le presse-papiers. Ou <code>screen</code>, un outil plus ancien du même genre. Voici chaque geste courant dans tmux par défaut et dans Aubergine :",
+    "from": "94c03879479b"
+  },
+  "tmux.table.thing": {
+    "text": "Pour",
+    "from": "f4b06ef6d3c8"
+  },
+  "tmux.table.tmux": {
+    "text": "Dans tmux",
+    "from": "a1ab6023b141"
+  },
+  "tmux.table.here": {
+    "text": "Dans Aubergine",
+    "from": "c6dcdd25687b"
+  },
+  "tmux.table.tmuxShort": {
+    "text": "tmux",
+    "from": "adb519257aeb"
+  },
+  "tmux.table.hereShort": {
+    "text": "Aubergine",
+    "from": "b72370707186"
+  },
+  "tmux.row.leave": {
+    "text": "Laisser un shell tourner",
+    "from": "ba2cbd204ae7"
+  },
+  "tmux.row.back": {
+    "text": "Y revenir",
+    "from": "9a861e7d13a6"
+  },
+  "tmux.row.scroll": {
+    "text": "Remonter dans l’historique",
+    "from": "fb2c3707ff8c"
+  },
+  "tmux.row.copy": {
+    "text": "Copier",
+    "from": "e21f935f11d7"
+  },
+  "tmux.row.paste": {
+    "text": "Coller",
+    "from": "f3380f7b44bd"
+  },
+  "tmux.row.several": {
+    "text": "Voir plusieurs shells",
+    "from": "37cb2e73ff45"
+  },
+  "tmux.row.name": {
+    "text": "En nommer un",
+    "from": "6f2f4dd0bb35"
+  },
+  "tmux.cell.leave.tmux": {
+    "text": "<code>Ctrl+B</code> puis <code>d</code> pour se détacher",
+    "from": "0aabfdad59cc"
+  },
+  "tmux.cell.leave.here": {
+    "text": "Fermer l’onglet",
+    "from": "820a72b24e4e"
+  },
+  "tmux.cell.back.tmux": {
+    "text": "<code>tmux attach</code>",
+    "from": "6c4afca4cfa5"
+  },
+  "tmux.cell.back.here": {
+    "text": "Ouvrir la page",
+    "from": "911fa06e14a1"
+  },
+  "tmux.cell.scroll.tmux": {
+    "text": "Mode copie, <code>Ctrl+B</code> puis <code>[</code>",
+    "from": "15276f527f80"
+  },
+  "tmux.cell.scroll.here": {
+    "text": "La molette",
+    "from": "65317915ff3a"
+  },
+  "tmux.cell.copy.tmux": {
+    "text": "Sélectionner en mode copie",
+    "from": "55ae66ca2a46"
+  },
+  "tmux.cell.copy.here": {
+    "text": "Sélectionner à la souris",
+    "from": "13b782465243"
+  },
+  "tmux.cell.paste.tmux": {
+    "text": "<code>Ctrl+B</code> puis <code>]</code>",
+    "from": "927f106565e1"
+  },
+  "tmux.cell.paste.here": {
+    "text": "<code>⌘V</code>, ou <code>Ctrl+Shift+V</code>",
+    "from": "79285d2dbfdd"
+  },
+  "tmux.cell.several.tmux": {
+    "text": "Fenêtres et volets",
+    "from": "f2a69ea1d42f"
+  },
+  "tmux.cell.several.here": {
+    "text": "Des terminaux côte à côte sur un canevas",
+    "from": "dc6bdd73da8a"
+  },
+  "tmux.cell.name.tmux": {
+    "text": "<code>Ctrl+B</code> puis <code>,</code>",
+    "from": "fe31dbab067c"
+  },
+  "tmux.cell.name.here": {
+    "text": "Double-cliquer sur son titre",
+    "from": "52bfa2dda0c6"
+  },
+  "tmux.does.title": {
+    "text": "Ce que fait Aubergine",
+    "from": "acf3f5da99c1"
+  },
+  "tmux.does.own": {
+    "text": "<strong>Son propre socket et sa propre configuration.</strong> Aubergine lance tmux sur un socket à lui, nommé <code>aubergine</code>, avec un fichier de configuration à lui au lieu du vôtre : pas de barre d’état, pas de touche de préfixe, la souris activée, 50 000 lignes d’historique. Chaque terminal est une session tmux avec un shell, votre shell de connexion. Votre propre tmux, ses sessions et votre <code>~/.tmux.conf</code> ne sont pas touchés.",
+    "from": "82419f3b337f"
+  },
+  "tmux.does.scroll": {
+    "text": "<strong>La molette remonte l’historique</strong> du terminal qui a le clavier ; partout ailleurs sur le canevas, elle zoome.",
+    "from": "c1901de45a17"
+  },
+  "tmux.does.copy": {
+    "text": "<strong>Sélectionnez à la souris et c’est copié</strong> dans votre presse-papiers quand vous relâchez : tmux transmet la sélection à la page avec OSC 52, la séquence d’échappement qu’utilisent les terminaux pour le presse-papiers, et la page l’y met. Collez avec <code>⌘V</code> (<code>Ctrl+Shift+V</code> hors de macOS). Un collage de plusieurs lignes est encadré, pour qu’un shell ne l’exécute pas ligne par ligne.",
+    "from": "b5991d05ed04"
+  },
+  "tmux.does.size": {
+    "text": "<strong>Redimensionnez en faisant glisser</strong> les bords d’un terminal sur le canevas, et le shell reçoit sa nouvelle taille. Un terminal ouvert à deux endroits à la fois a une seule taille, fixée par la vue dans laquelle vous avez tapé en dernier.",
+    "from": "15e6a34e7ef7"
+  },
+  "tmux.does.still": {
+    "text": "<strong>C’est toujours tmux en dessous.</strong> <code>aubergine attach &lt;name&gt;</code> affiche un terminal dans une fenêtre de votre application de terminal, et <strong>Open on desktop</strong> (ouvrir sur le bureau), dans le menu d’un terminal, le fait pour vous (sous macOS dans Terminal ou iTerm ; sous Linux avec une ligne de commande que vous définissez). Serveur arrêté, <code>tmux -L aubergine ls</code> et <code>tmux -L aubergine attach -t &lt;id&gt;</code> atteignent toujours chaque shell.",
+    "from": "189355cb23f9"
+  },
+  "tmux.need.title": {
+    "text": "Ce qu’il vous faut",
+    "from": "e17c85cc990b"
+  },
+  "tmux.need.text": {
+    "text": "tmux 3.2 ou plus récent, installé par vous : <code>brew install tmux</code> sous macOS, le paquet de votre système sous Linux. Aubergine ne l’installe pas, et affiche une page qui le dit quand il manque ou qu’il est trop ancien. Avec zsh, le titre d’un terminal montre la commande en cours et comment la dernière s’est terminée ; les autres shells tournent sans cela.",
+    "from": "1ed9bf484beb"
+  },
+  "tmux.not.title": {
+    "text": "Ce qu’il n’est pas",
+    "from": "9516c425aeb2"
+  },
+  "tmux.not.ssh": {
+    "text": "<strong>Pas tmux sur un serveur distant.</strong> Le tmux d’Aubergine tourne sur l’ordinateur où tourne son serveur. Pour un shell sur une machine que vous joignez par SSH, tmux sur cette machine reste l’outil. Aubergine lui-même peut tourner sur une autre machine (<a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md\">Using Aubergine from elsewhere</a>) ; cela n’a été lancé que dans des conteneurs.",
+    "from": "97db800d695c"
+  },
+  "tmux.not.yours": {
+    "text": "<strong>Vos propres sessions tmux ne sont pas affichées.</strong> Le canevas ne contient que les terminaux d’Aubergine. <code>aubergine scan</code> liste les shells interactifs ouverts sur cet ordinateur hors d’Aubergine, et <code>aubergine import</code> ou <code>aubergine here</code> donne à l’un d’eux un nouveau terminal sur le canevas dans le même dossier ; un programme qui tourne dans l’ancien y reste. Les lignes que propose <code>aubergine shell-hook print</code> pour votre <code>.zshrc</code> ne font rien dans tmux.",
+    "from": "b5696d4f2c3b"
+  },
+  "tmux.not.keys": {
+    "text": "<strong>Ni touches tmux ni volets.</strong> Il n’y a pas de touche de préfixe, et vos propres raccourcis tmux ne s’appliquent pas. Tant qu’un terminal a le clavier, chaque touche va au programme qui y tourne, sauf quelques combinaisons choisies pour qu’aucun shell, éditeur ni tmux n’en ait besoin.",
+    "from": "22984bbf9c68"
+  },
+  "tmux.not.windows": {
+    "text": "<strong>Pas sous Windows lui-même.</strong> Il faut tmux et un shell Unix ; sous Windows, il tourne dans WSL 2. Voir <a href=\"/windows/\">Windows avec WSL</a>.",
+    "from": "b6d2899a3b38"
+  },
+  "tmux.q.shortcuts.q": {
+    "text": "Puis-je utiliser tmux sans apprendre les raccourcis ?",
+    "from": "b9c488ac4210"
+  },
+  "tmux.q.shortcuts.a": {
+    "text": "Oui. Aubergine fait tourner tmux sans touche de préfixe ni barre d’état : vous ne tapez jamais de commande tmux. Fermez l’onglet pour partir, ouvrez la page pour revenir, faites défiler avec la molette, copiez en sélectionnant.",
+    "from": "3a236c2882a1"
+  },
+  "tmux.q.config.q": {
+    "text": "Aubergine modifie-t-il ma configuration tmux ?",
+    "from": "72dfacba61b2"
+  },
+  "tmux.q.config.a": {
+    "text": "Non. Il fait tourner tmux sur un socket à lui, <code>aubergine</code>, avec un fichier de configuration à lui. Votre serveur tmux, ses sessions et votre <code>~/.tmux.conf</code> restent tels quels.",
+    "from": "7a93ca8432a8"
+  },
+  "tmux.q.copy.q": {
+    "text": "Comment faire défiler et copier dans les terminaux d’Aubergine ?",
+    "from": "1f32bd561f38"
+  },
+  "tmux.q.copy.a": {
+    "text": "Cliquez sur un terminal pour lui donner le clavier, puis remontez avec la molette. Sélectionnez du texte à la souris : il est dans votre presse-papiers quand vous relâchez. Collez avec <code>⌘V</code>, ou <code>Ctrl+Shift+V</code> hors de macOS.",
+    "from": "a7f3123832de"
+  },
+  "tmux.q.attach.q": {
+    "text": "Puis-je me rattacher à un terminal Aubergine depuis ma propre application de terminal ?",
+    "from": "f9fcae450958"
+  },
+  "tmux.q.attach.a": {
+    "text": "Oui : <code>aubergine attach &lt;name&gt;</code>, ou <strong>Open on desktop</strong> dans le menu du terminal. C’est le même terminal aux deux endroits ; ce que vous tapez dans l’un s’affiche dans l’autre.",
+    "from": "7efa052d1074"
+  },
+  "tmux.q.ssh.q": {
+    "text": "Aubergine peut-il remplacer tmux sur un serveur où je me connecte par SSH ?",
+    "from": "6795b9483c23"
+  },
+  "tmux.q.ssh.a": {
+    "text": "Pas tel quel : ses terminaux sont sur la machine où tourne son serveur. Il peut tourner sur un serveur et s’utiliser depuis votre navigateur par un tunnel SSH ou un proxy, ce qui n’a été lancé que dans des conteneurs, jamais sur une machine dans le cloud.",
+    "from": "502062297ccb"
+  },
+  "tmux.related": {
+    "text": "À lire aussi : <a href=\"/keep-process-running-after-closing-terminal/\">Garder un processus en marche</a> · <a href=\"/keep-terminals-after-restart/\">Garder vos terminaux après un redémarrage</a> · <a href=\"/too-many-terminal-tabs/\">Trop de terminaux</a>",
+    "from": "d827d8a7918e"
+  },
+  "phone.meta.title": {
+    "text": "Surveiller vos agents de code depuis votre téléphone | Aubergine",
+    "from": "5e05181dcbf3"
+  },
+  "phone.meta.description": {
+    "text": "Accéder à Aubergine depuis le navigateur d’un téléphone : HTTPS sur le même ordinateur, une adresse dans les réglages, chaque appareil appairé avec un code à usage unique ou un code QR, et révoqué quand vous le voulez. Lancé une fois sur un Mac ; pas essayé sur un téléphone.",
+    "from": "4f87f330c4d4"
+  },
+  "phone.crumb": {
+    "text": "Depuis votre téléphone",
+    "from": "624fe9a9d5bf"
+  },
+  "phone.title": {
+    "text": "Surveiller vos agents depuis votre téléphone",
+    "from": "c92463ac8872"
+  },
+  "phone.lead": {
+    "text": "Vous avez laissé trois agents au travail et vous êtes sorti. L’un d’eux attend-il un oui ? Une fois configuré, Aubergine peut s’ouvrir dans le navigateur d’un téléphone : la même page et les mêmes terminaux, chaque appareil appairé avec un code à usage unique.",
+    "from": "5ff340d9bfd5"
+  },
+  "phone.tried": {
+    "text": "<strong>Ce qui a été essayé, et ce qui ne l’a pas été.</strong> L’usage depuis un autre appareil a été lancé une fois, le 22 novembre 2026 : la configuration en conteneur de <code>docker/</code> sur un Mac, avec Caddy devant, sous <code>https://aubergine.localhost</code>, et Chromium sur le même Mac, qui s’est appairé avec un code, a tapé dans des terminaux et a été déconnecté quand son appareil a été révoqué. <strong>Pas essayé :</strong> un vrai téléphone, le scan du code QR avec un téléphone, un vrai nom avec un certificat public, un réseau privé, une machine dans le cloud, deux machines distinctes. La page n’est pas mise en page pour la largeur d’un téléphone. Le reste vient du code et de ses tests. Voyez-y quelque chose à essayer, pas une promesse.",
+    "from": "335a569f7582"
+  },
+  "phone.usual.title": {
+    "text": "Ce que l’on fait d’habitude",
+    "from": "30e09240a39b"
+  },
+  "phone.usual.text": {
+    "text": "Une application SSH sur le téléphone, vers l’ordinateur, puis <code>tmux attach</code> à la session où tourne un agent. Ou un tunnel, ou un réseau privé qui rend l’ordinateur joignable depuis le téléphone. Les deux marchent ; surveiller plusieurs agents ainsi veut dire se rattacher à chacun tour à tour sur un petit clavier.",
+    "from": "db5b6a60eb84"
+  },
+  "phone.does.title": {
+    "text": "Ce que fait Aubergine",
+    "from": "acf3f5da99c1"
+  },
+  "phone.does.off": {
+    "text": "<strong>C’est désactivé par défaut, et cela reste lié à cet ordinateur.</strong> Le serveur n’écoute que sur <code>127.0.0.1</code>, et cela ne change pas. Quelque chose sur le même ordinateur lui achemine le HTTPS sous un nom, comme le service HTTPS propre à un réseau privé ou un serveur web tel que Caddy. Aubergine ne parle jamais HTTPS lui-même.",
+    "from": "69ebb44f3dfc"
+  },
+  "phone.does.address": {
+    "text": "<strong>Vous écrivez l’adresse dans les réglages.</strong> Elle va sous <code>access.addresses</code> dans <code>config.json</code>, et elle est lue au démarrage du serveur ; aucune page ni aucun programme ne peut la changer. <code>aubergine doctor</code> liste les adresses et ce qui ne va pas avec chacune.",
+    "from": "4d586d2378b3"
+  },
+  "phone.does.pair": {
+    "text": "<strong>Chaque appareil est appairé avec un code à usage unique.</strong> <code>aubergine device add --name \"Phone\"</code> sur l’ordinateur, ou <strong>Settings → Devices → Add a device</strong> (ajouter un appareil) dans un navigateur connecté, affiche un code et, pour chaque adresse, le code QR d’un lien qui contient le code. Scannez-le, ouvrez le lien, ou tapez le code sur la page de connexion du téléphone. Un code ne marche qu’une fois, pendant trois minutes.",
+    "from": "e461217bf7e4"
+  },
+  "phone.does.revoke": {
+    "text": "<strong>Un appareil peut être révoqué.</strong> <code>aubergine device revoke \"Phone\"</code>, ou <strong>Revoke…</strong> (révoquer) sous <strong>Settings → Devices</strong>, le déconnecte aussitôt et ferme ce qu’il a d’ouvert. Un appareil inutilisé pendant 90 jours cesse de fonctionner.",
+    "from": "3fecb39df4a9"
+  },
+  "phone.does.owner": {
+    "text": "<strong>Un appareil appairé, c’est le propriétaire tout entier.</strong> Il peut faire tout ce que vous pouvez faire devant l’ordinateur : chaque terminal, donc un shell sur cet ordinateur, en votre nom. N’appairez que des navigateurs à qui vous confieriez votre clavier. Ce qui agit sur le bureau de l’ordinateur lui-même, <strong>Open on desktop</strong>, est absent de la page sur l’appareil, et refusé.",
+    "from": "77b677da358b"
+  },
+  "phone.see.title": {
+    "text": "Ce que vous verriez",
+    "from": "7ad31245b77f"
+  },
+  "phone.see.text": {
+    "text": "La même page que devant l’ordinateur : le canevas et ses terminaux, le compteur à côté de <strong>For you</strong> et la liste de ce qui attend, et un terminal seul à <code>/t/&lt;terminal&gt;</code> avec ses détails et sa note. Elle n’est pas mise en page pour un téléphone ; elle fonctionne comme dans une fenêtre étroite.",
+    "from": "e8260cebb287"
+  },
+  "phone.see.steps": {
+    "text": "Les trois façons de le configurer (un tunnel SSH, un réseau privé, un nom à vous et un proxy), l’appairage, et que faire quand ça ne marche pas sont dans <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md\">Using Aubergine from elsewhere</a>. Un tunnel SSH ne demande aucun réglage, et il est peu pratique sur un téléphone.",
+    "from": "cdc64dbda345"
+  },
+  "phone.not.title": {
+    "text": "Ce qu’il ne fait pas",
+    "from": "b3a53baf5dfd"
+  },
+  "phone.not.push": {
+    "text": "<strong>Ni application ni push.</strong> C’est une page dans le navigateur du téléphone, à jour tant qu’elle est ouverte. Rien n’est envoyé à un téléphone dont la page est fermée.",
+    "from": "6f40d9a4fbaf"
+  },
+  "phone.not.awake": {
+    "text": "<strong>Pas de réponse d’un portable en veille.</strong> Avec le serveur sur un portable, le téléphone ne le joint que tant que le portable est éveillé. Une machine qui reste allumée est l’autre option.",
+    "from": "216b7430b645"
+  },
+  "phone.not.public": {
+    "text": "<strong>Aucune protection pour une adresse que tout le monde peut ouvrir.</strong> Sans code personne n’entre, et les codes sont difficiles à deviner, mais des inconnus essaieraient de deviner l’accès à un shell. Mettez devant un réseau privé, ou la connexion propre à votre organisation, et n’utilisez jamais le mode d’un réseau privé qui publie une machine sur tout Internet.",
+    "from": "c027919da51a"
+  },
+  "phone.not.layout": {
+    "text": "<strong>Pas de mise en page pour un téléphone.</strong> La page fonctionne comme dans une fenêtre étroite. Lire un terminal et répondre à une question marchent ainsi ; arranger un canevas, c’est pour un plus grand écran.",
+    "from": "715e130ed7cc"
+  },
+  "phone.q.check.q": {
+    "text": "Puis-je surveiller mes agents de code depuis mon téléphone ?",
+    "from": "b6ed7ed61e98"
+  },
+  "phone.q.check.a": {
+    "text": "Une fois Aubergine joignable en HTTPS et le navigateur du téléphone appairé, le téléphone affiche la même page : quel terminal attend, la liste de ce qui attend, et chaque terminal. Cela a été lancé avec un navigateur sur le même Mac, pas encore sur un vrai téléphone.",
+    "from": "25e4fa5804eb"
+  },
+  "phone.q.pair.q": {
+    "text": "Comment appairer mon téléphone avec Aubergine ?",
+    "from": "2d255e8c0d6d"
+  },
+  "phone.q.pair.a": {
+    "text": "Lancez <code>aubergine device add --name \"Phone\"</code> sur l’ordinateur, ou utilisez <strong>Settings → Devices → Add a device</strong>. Scannez le code QR, ouvrez le lien, ou tapez le code sur la page de connexion du téléphone dans les trois minutes.",
+    "from": "238eafc4e16e"
+  },
+  "phone.q.lost.q": {
+    "text": "Et si je perds mon téléphone ?",
+    "from": "4cfecc2cfc43"
+  },
+  "phone.q.lost.a": {
+    "text": "Révoquez-le depuis l’ordinateur : <code>aubergine device revoke \"Phone\"</code>, ou <strong>Revoke…</strong> sous <strong>Settings → Devices</strong>. Il est déconnecté aussitôt, et ce qu’il avait d’ouvert est fermé.",
+    "from": "f3431f64e453"
+  },
+  "phone.q.internet.q": {
+    "text": "Est-il sûr de mettre Aubergine sur Internet ?",
+    "from": "b626ae8c3d99"
+  },
+  "phone.q.internet.a": {
+    "text": "Une adresse que tout le monde peut ouvrir met la page de connexion devant tout le monde, et un appareil appairé a un shell sur votre ordinateur. Préférez un réseau privé, ou la connexion propre à votre organisation devant l’adresse.",
+    "from": "a99827304604"
+  },
+  "phone.q.asleep.q": {
+    "text": "Est-ce que ça marche quand mon portable est en veille ?",
+    "from": "40db9086b18b"
+  },
+  "phone.q.asleep.a": {
+    "text": "Non. Un portable en veille ne répond à rien, et ses terminaux sont en pause jusqu’à son réveil. Pour joindre vos agents à toute heure, le serveur doit tourner sur une machine qui reste éveillée.",
+    "from": "57372d76c37c"
+  },
+  "phone.related": {
+    "text": "À lire aussi : <a href=\"/claude-code-notifications/\">Savoir quand Claude Code attend</a> · <a href=\"/keep-process-running-after-closing-terminal/\">Garder un processus en marche</a> · <a href=\"/security/\">Sécurité et confidentialité</a>",
+    "from": "2c9ecf2e9214"
   },
   "queue.meta.title": {
     "text": "La file d’attente, la liste For you et les planifications | Aubergine",

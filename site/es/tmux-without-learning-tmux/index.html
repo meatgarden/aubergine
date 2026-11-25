@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>tmux without learning tmux | Aubergine</title>
-<meta name="description" content="Shells that outlive the window, without a prefix key or a .tmux.conf. Aubergine runs tmux for you on its own socket, with the wheel, copy and paste and resizing working as in any terminal.">
+<title>tmux sin aprender tmux | Aubergine</title>
+<meta name="description" content="Shells que sobreviven a la ventana, sin tecla de prefijo ni .tmux.conf. Aubergine ejecuta tmux por ti en su propio socket, con la rueda, copiar y pegar y el cambio de tamaño funcionando como en cualquier terminal.">
 <link rel="canonical" href="https://thirstyeggplant.com/es/tmux-without-learning-tmux/">
 <link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/tmux-without-learning-tmux/">
 <link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/tmux-without-learning-tmux/">
@@ -27,8 +27,8 @@
 <link rel="stylesheet" href="../../style.css">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Aubergine">
-<meta property="og:title" content="tmux without learning tmux | Aubergine">
-<meta property="og:description" content="Shells that outlive the window, without a prefix key or a .tmux.conf. Aubergine runs tmux for you on its own socket, with the wheel, copy and paste and resizing working as in any terminal.">
+<meta property="og:title" content="tmux sin aprender tmux | Aubergine">
+<meta property="og:description" content="Shells que sobreviven a la ventana, sin tecla de prefijo ni .tmux.conf. Aubergine ejecuta tmux por ti en su propio socket, con la rueda, copiar y pegar y el cambio de tamaño funcionando como en cualquier terminal.">
 <meta property="og:url" content="https://thirstyeggplant.com/es/tmux-without-learning-tmux/">
 <meta property="og:image" content="https://thirstyeggplant.com/og.png">
 <meta property="og:image:width" content="1200">
@@ -37,8 +37,8 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
 <meta name="twitter:image:alt" content="Aubergine: un lienzo de terminales, una ocupada y otra esperándote">
-<meta name="twitter:title" content="tmux without learning tmux | Aubergine">
-<meta name="twitter:description" content="Shells that outlive the window, without a prefix key or a .tmux.conf. Aubergine runs tmux for you on its own socket, with the wheel, copy and paste and resizing working as in any terminal.">
+<meta name="twitter:title" content="tmux sin aprender tmux | Aubergine">
+<meta name="twitter:description" content="Shells que sobreviven a la ventana, sin tecla de prefijo ni .tmux.conf. Aubergine ejecuta tmux por ti en su propio socket, con la rueda, copiar y pegar y el cambio de tamaño funcionando como en cualquier terminal.">
 <link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
 </head>
 <body>
@@ -98,8 +98,8 @@
     {
       "@type": "TechArticle",
       "@id": "https://thirstyeggplant.com/es/tmux-without-learning-tmux/#article",
-      "headline": "tmux without learning tmux",
-      "description": "Shells that outlive the window, without a prefix key or a .tmux.conf. Aubergine runs tmux for you on its own socket, with the wheel, copy and paste and resizing working as in any terminal.",
+      "headline": "tmux sin aprender tmux",
+      "description": "Shells que sobreviven a la ventana, sin tecla de prefijo ni .tmux.conf. Aubergine ejecuta tmux por ti en su propio socket, con la rueda, copiar y pegar y el cambio de tamaño funcionando como en cualquier terminal.",
       "url": "https://thirstyeggplant.com/es/tmux-without-learning-tmux/",
       "mainEntityOfPage": "https://thirstyeggplant.com/es/tmux-without-learning-tmux/",
       "datePublished": "2026-11-25",
@@ -115,18 +115,18 @@
       "itemListElement": [
         { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
         { "@type": "ListItem", "position": 2, "name": "Guías", "item": "https://thirstyeggplant.com/guides/" },
-        { "@type": "ListItem", "position": 3, "name": "tmux without tmux", "item": "https://thirstyeggplant.com/es/tmux-without-learning-tmux/" }
+        { "@type": "ListItem", "position": 3, "name": "tmux sin tmux", "item": "https://thirstyeggplant.com/es/tmux-without-learning-tmux/" }
       ]
     },
     {
       "@type": "FAQPage",
       "@id": "https://thirstyeggplant.com/es/tmux-without-learning-tmux/#faq",
       "mainEntity": [
-        { "@type": "Question", "name": "Can I use tmux without learning the shortcuts?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Aubergine runs tmux with no prefix key and no status line, so you never type a tmux command: close the tab to leave, open the page to come back, scroll with the wheel, copy by selecting." } },
-        { "@type": "Question", "name": "Does Aubergine change my tmux configuration?", "acceptedAnswer": { "@type": "Answer", "text": "No. It runs tmux on a socket of its own, aubergine, with a configuration file of its own. Your tmux server, its sessions and your ~/.tmux.conf are left as they are." } },
-        { "@type": "Question", "name": "How do I scroll and copy in Aubergine's terminals?", "acceptedAnswer": { "@type": "Answer", "text": "Click a terminal to give it the keyboard, then use the wheel to scroll back. Select text with the mouse: it is on your clipboard when you let go. Paste with ⌘V, or Ctrl+Shift+V outside macOS." } },
-        { "@type": "Question", "name": "Can I attach to an Aubergine terminal from my own terminal app?", "acceptedAnswer": { "@type": "Answer", "text": "Yes: aubergine attach \u003cname\u003e, or Open on desktop in the terminal's menu. It is the same terminal in both places; what you type in one shows in the other." } },
-        { "@type": "Question", "name": "Can Aubergine replace tmux on a server I SSH into?", "acceptedAnswer": { "@type": "Answer", "text": "Not as such: its terminals are on the machine its server runs on. It can run on a server and be used from your browser through an SSH tunnel or a proxy, which has been run in containers only, never on a cloud machine." } }
+        { "@type": "Question", "name": "¿Puedo usar tmux sin aprender los atajos?", "acceptedAnswer": { "@type": "Answer", "text": "Sí. Aubergine ejecuta tmux sin tecla de prefijo ni línea de estado, así que nunca escribes un comando de tmux: cierra la pestaña para salir, abre la página para volver, desplázate con la rueda, copia seleccionando." } },
+        { "@type": "Question", "name": "¿Cambia Aubergine mi configuración de tmux?", "acceptedAnswer": { "@type": "Answer", "text": "No. Ejecuta tmux en un socket propio, aubergine, con un archivo de configuración propio. Tu servidor de tmux, sus sesiones y tu ~/.tmux.conf se quedan como están." } },
+        { "@type": "Question", "name": "¿Cómo me desplazo y copio en las terminales de Aubergine?", "acceptedAnswer": { "@type": "Answer", "text": "Haz clic en una terminal para darle el teclado y usa la rueda para desplazarte hacia atrás. Selecciona texto con el ratón: está en tu portapapeles al soltar. Pega con ⌘V, o Ctrl+Shift+V fuera de macOS." } },
+        { "@type": "Question", "name": "¿Puedo conectarme a una terminal de Aubergine desde mi propia aplicación de terminal?", "acceptedAnswer": { "@type": "Answer", "text": "Sí: aubergine attach \u003cname\u003e, o Open on desktop en el menú de la terminal. Es la misma terminal en los dos sitios; lo que escribes en uno se ve en el otro." } },
+        { "@type": "Question", "name": "¿Puede Aubergine sustituir a tmux en un servidor al que entro por SSH?", "acceptedAnswer": { "@type": "Answer", "text": "No como tal: sus terminales están en la máquina donde se ejecuta su servidor. Puede ejecutarse en un servidor y usarse desde tu navegador a través de un túnel SSH o un proxy, algo que solo se ha ejecutado en contenedores, nunca en una máquina en la nube." } }
       ]
     }
   ]
@@ -134,60 +134,60 @@
 </script>
 <header class="page-head">
   <div class="wrap">
-    <nav class="crumbs" aria-label="Dónde estás"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">Guías</a></li><li><span lang="en" dir="ltr">tmux without tmux</span></li></ol></nav>
-    <h1><span lang="en" dir="ltr">tmux without learning tmux</span></h1>
-    <p class="lead"><span lang="en" dir="ltr">tmux keeps your shells running when the window closes. It also asks you to learn a prefix key, copy mode and a configuration file. Aubergine runs tmux for you, and you use each terminal in a browser page as you would any terminal.</span></p>
+    <nav class="crumbs" aria-label="Dónde estás"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">Guías</a></li><li>tmux sin tmux</li></ol></nav>
+    <h1>tmux sin aprender tmux</h1>
+    <p class="lead">tmux mantiene tus shells en marcha cuando se cierra la ventana. También te pide aprender una tecla de prefijo, el modo copia y un archivo de configuración. Aubergine ejecuta tmux por ti, y usas cada terminal en una página del navegador como usarías cualquier terminal.</p>
   </div>
 </header>
 <div class="wrap page-body">
   <div class="prose">
-    <h2><span lang="en" dir="ltr">Who it is for</span></h2>
-    <p><span lang="en" dir="ltr">For people who want what tmux gives, shells that outlive the window, without its keys and its configuration. If you already live in tmux, keep it: Aubergine leaves your tmux alone.</span></p>
+    <h2>Para quién es</h2>
+    <p>Para quien quiere lo que da tmux, shells que sobreviven a la ventana, sin sus teclas ni su configuración. Si ya vives en tmux, sigue con él: Aubergine no toca tu tmux.</p>
 
-    <h2><span lang="en" dir="ltr">What people usually do</span></h2>
-    <p><span lang="en" dir="ltr">Learn tmux: a prefix key (<code>Ctrl+B</code> unless you change it) before each command, <code>tmux attach</code> to come back, and lines in <code>~/.tmux.conf</code> for the mouse and the clipboard. Or <code>screen</code>, an older tool of the same kind. Here is what each everyday thing is in tmux by default and in Aubergine:</span></p>
+    <h2>Lo que se suele hacer</h2>
+    <p>Aprender tmux: una tecla de prefijo (<code>Ctrl+B</code> salvo que la cambies) antes de cada comando, <code>tmux attach</code> para volver, y líneas en <code>~/.tmux.conf</code> para el ratón y el portapapeles. O <code>screen</code>, una herramienta más antigua del mismo tipo. Esto es cada cosa cotidiana en tmux por defecto y en Aubergine:</p>
     <div class="table">
       <table class="table-stack">
-        <thead><tr><th><span lang="en" dir="ltr">To</span></th><th><span lang="en" dir="ltr">In tmux</span></th><th><span lang="en" dir="ltr">In Aubergine</span></th></tr></thead>
+        <thead><tr><th>Para</th><th>En tmux</th><th>En Aubergine</th></tr></thead>
         <tbody>
-          <tr><td><span lang="en" dir="ltr">Leave a shell running</span></td><td data-label="tmux"><span lang="en" dir="ltr"><code>Ctrl+B</code> then <code>d</code> to detach</span></td><td data-label="Aubergine"><span lang="en" dir="ltr">Close the tab</span></td></tr>
-          <tr><td><span lang="en" dir="ltr">Come back to it</span></td><td data-label="tmux"><span lang="en" dir="ltr"><code>tmux attach</code></span></td><td data-label="Aubergine"><span lang="en" dir="ltr">Open the page</span></td></tr>
-          <tr><td><span lang="en" dir="ltr">Scroll back</span></td><td data-label="tmux"><span lang="en" dir="ltr">Copy mode, <code>Ctrl+B</code> then <code>[</code></span></td><td data-label="Aubergine"><span lang="en" dir="ltr">The wheel</span></td></tr>
-          <tr><td><span lang="en" dir="ltr">Copy</span></td><td data-label="tmux"><span lang="en" dir="ltr">Select in copy mode</span></td><td data-label="Aubergine"><span lang="en" dir="ltr">Select with the mouse</span></td></tr>
-          <tr><td><span lang="en" dir="ltr">Paste</span></td><td data-label="tmux"><span lang="en" dir="ltr"><code>Ctrl+B</code> then <code>]</code></span></td><td data-label="Aubergine"><span lang="en" dir="ltr"><code>⌘V</code>, or <code>Ctrl+Shift+V</code></span></td></tr>
-          <tr><td><span lang="en" dir="ltr">See several shells</span></td><td data-label="tmux"><span lang="en" dir="ltr">Windows and panes</span></td><td data-label="Aubergine"><span lang="en" dir="ltr">Terminals side by side on a canvas</span></td></tr>
-          <tr><td><span lang="en" dir="ltr">Name one</span></td><td data-label="tmux"><span lang="en" dir="ltr"><code>Ctrl+B</code> then <code>,</code></span></td><td data-label="Aubergine"><span lang="en" dir="ltr">Double-click its title</span></td></tr>
+          <tr><td>Dejar un shell en marcha</td><td data-label="tmux"><code>Ctrl+B</code> y luego <code>d</code> para desconectarte</td><td data-label="Aubergine">Cerrar la pestaña</td></tr>
+          <tr><td>Volver a él</td><td data-label="tmux"><code>tmux attach</code></td><td data-label="Aubergine">Abrir la página</td></tr>
+          <tr><td>Desplazarse hacia atrás</td><td data-label="tmux">Modo copia, <code>Ctrl+B</code> y luego <code>[</code></td><td data-label="Aubergine">La rueda</td></tr>
+          <tr><td>Copiar</td><td data-label="tmux">Seleccionar en modo copia</td><td data-label="Aubergine">Seleccionar con el ratón</td></tr>
+          <tr><td>Pegar</td><td data-label="tmux"><code>Ctrl+B</code> y luego <code>]</code></td><td data-label="Aubergine"><code>⌘V</code>, o <code>Ctrl+Shift+V</code></td></tr>
+          <tr><td>Ver varios shells</td><td data-label="tmux">Ventanas y paneles</td><td data-label="Aubergine">Terminales una al lado de otra en un lienzo</td></tr>
+          <tr><td>Ponerle nombre a uno</td><td data-label="tmux"><code>Ctrl+B</code> y luego <code>,</code></td><td data-label="Aubergine">Doble clic en su título</td></tr>
         </tbody>
       </table>
     </div>
 
-    <h2><span lang="en" dir="ltr">What Aubergine does</span></h2>
-    <p><span lang="en" dir="ltr"><strong>Its own socket and its own configuration.</strong> Aubergine starts tmux on a socket of its own, named <code>aubergine</code>, with a configuration file of its own instead of yours: no status line, no prefix key, the mouse on, 50,000 lines of history. Each terminal is one tmux session with one shell, your login shell. Your own tmux, its sessions and your <code>~/.tmux.conf</code> are not touched.</span></p>
-    <p><span lang="en" dir="ltr"><strong>The wheel scrolls back</strong> through the terminal that has the keyboard; anywhere else on the canvas it zooms.</span></p>
-    <p><span lang="en" dir="ltr"><strong>Select with the mouse and it is copied</strong> to your clipboard when you let go: tmux hands what was selected to the page with OSC 52, the escape sequence terminals use for the clipboard, and the page puts it there. Paste with <code>⌘V</code> (<code>Ctrl+Shift+V</code> outside macOS). A paste of several lines is bracketed, so a shell does not run it line by line.</span></p>
-    <p><span lang="en" dir="ltr"><strong>Resize by dragging</strong> a terminal's edges on the canvas, and the shell gets its new size. A terminal open in two places at once has one size, set by the view you typed into last.</span></p>
-    <p><span lang="en" dir="ltr"><strong>It is still tmux underneath.</strong> <code>aubergine attach &lt;name&gt;</code> shows a terminal in a window of your terminal app, and <strong>Open on desktop</strong> in a terminal's menu does that for you (on macOS in Terminal or iTerm; on Linux with a command line you set). With the server stopped, <code>tmux -L aubergine ls</code> and <code>tmux -L aubergine attach -t &lt;id&gt;</code> still reach every shell.</span></p>
+    <h2>Lo que hace Aubergine</h2>
+    <p><strong>Su propio socket y su propia configuración.</strong> Aubergine inicia tmux en un socket propio, llamado <code>aubergine</code>, con un archivo de configuración propio en lugar del tuyo: sin línea de estado, sin tecla de prefijo, con el ratón activado y 50.000 líneas de historial. Cada terminal es una sesión de tmux con un shell, tu shell de inicio de sesión. Tu propio tmux, sus sesiones y tu <code>~/.tmux.conf</code> no se tocan.</p>
+    <p><strong>La rueda desplaza hacia atrás</strong> la terminal que tiene el teclado; en cualquier otro punto del lienzo hace zoom.</p>
+    <p><strong>Selecciona con el ratón y se copia</strong> a tu portapapeles al soltar: tmux pasa lo seleccionado a la página con OSC 52, la secuencia de escape que usan las terminales para el portapapeles, y la página lo pone ahí. Pega con <code>⌘V</code> (<code>Ctrl+Shift+V</code> fuera de macOS). Un pegado de varias líneas va delimitado (bracketed paste), para que un shell no lo ejecute línea por línea.</p>
+    <p><strong>Cambia el tamaño arrastrando</strong> los bordes de una terminal en el lienzo, y el shell recibe su nuevo tamaño. Una terminal abierta en dos sitios a la vez tiene un solo tamaño, el de la vista en la que escribiste por última vez.</p>
+    <p><strong>Por debajo sigue siendo tmux.</strong> <code>aubergine attach &lt;name&gt;</code> muestra una terminal en una ventana de tu aplicación de terminal, y <strong>Open on desktop</strong> (abrir en el escritorio), en el menú de una terminal, lo hace por ti (en macOS en Terminal o iTerm; en Linux con una línea de comandos que tú defines). Con el servidor detenido, <code>tmux -L aubergine ls</code> y <code>tmux -L aubergine attach -t &lt;id&gt;</code> siguen llegando a cada shell.</p>
 
-    <h2><span lang="en" dir="ltr">What you need</span></h2>
-    <p><span lang="en" dir="ltr">tmux 3.2 or newer, installed by you: <code>brew install tmux</code> on macOS, your system's package on Linux. Aubergine does not install it, and shows a page saying so when it is missing or older. A terminal's title shows the command running and how the last one ended with zsh; other shells run without that.</span></p>
+    <h2>Lo que necesitas</h2>
+    <p>tmux 3.2 o más reciente, instalado por ti: <code>brew install tmux</code> en macOS, el paquete de tu sistema en Linux. Aubergine no lo instala, y muestra una página que lo dice cuando falta o es más antiguo. Con zsh, el título de una terminal muestra el comando en marcha y cómo terminó el último; otros shells funcionan sin eso.</p>
 
-    <h2><span lang="en" dir="ltr">What it is not</span></h2>
+    <h2>Lo que no es</h2>
     <ul>
-      <li><span lang="en" dir="ltr"><strong>Not tmux on a remote server.</strong> Aubergine's tmux runs on the computer its server runs on. For a shell on a machine you reach with SSH, tmux on that machine is still the tool. Aubergine itself can run on another machine (<a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md">Using Aubergine from elsewhere</a>); that has been run in containers only.</span></li>
-      <li><span lang="en" dir="ltr"><strong>Your own tmux sessions are not shown.</strong> The canvas holds Aubergine's terminals only. <code>aubergine scan</code> lists the interactive shells open on this computer outside Aubergine, and <code>aubergine import</code> or <code>aubergine here</code> gives one a new terminal on the canvas in the same folder; a program running in the old one stays there. The lines that <code>aubergine shell-hook print</code> offers for your <code>.zshrc</code> do nothing inside tmux.</span></li>
-      <li><span lang="en" dir="ltr"><strong>No tmux keys and no panes.</strong> There is no prefix key, and your own tmux bindings do not apply. While a terminal has the keyboard every key goes to the program in it, except a few chords chosen so that no shell, editor or tmux needs them.</span></li>
-      <li><span lang="en" dir="ltr"><strong>Not on Windows itself.</strong> It needs tmux and a Unix shell; on Windows it runs inside WSL 2. See <a href="../windows/">Windows with WSL</a>.</span></li>
+      <li><strong>No es tmux en un servidor remoto.</strong> El tmux de Aubergine se ejecuta en el ordenador donde se ejecuta su servidor. Para un shell en una máquina a la que llegas por SSH, tmux en esa máquina sigue siendo la herramienta. Aubergine mismo puede ejecutarse en otra máquina (<a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md">Usar Aubergine desde otro sitio</a>); eso solo se ha ejecutado en contenedores.</li>
+      <li><strong>Tus propias sesiones de tmux no se muestran.</strong> El lienzo solo contiene las terminales de Aubergine. <code>aubergine scan</code> lista los shells interactivos abiertos en este ordenador fuera de Aubergine, y <code>aubergine import</code> o <code>aubergine here</code> le da a uno una terminal nueva en el lienzo en la misma carpeta; un programa que se ejecuta en la antigua se queda ahí. Las líneas que <code>aubergine shell-hook print</code> ofrece para tu <code>.zshrc</code> no hacen nada dentro de tmux.</li>
+      <li><strong>Sin teclas de tmux y sin paneles.</strong> No hay tecla de prefijo, y tus propios atajos de tmux no se aplican. Mientras una terminal tiene el teclado, cada tecla va al programa que hay en ella, salvo unas pocas combinaciones elegidas para que ningún shell, editor ni tmux las necesite.</li>
+      <li><strong>No en Windows directamente.</strong> Necesita tmux y un shell de Unix; en Windows se ejecuta dentro de WSL 2. Consulta <a href="../windows/">Windows con WSL</a>.</li>
     </ul>
 
     <h2>Preguntas</h2>
     <div class="questions">
-      <details><summary><span lang="en" dir="ltr">Can I use tmux without learning the shortcuts?</span></summary><p><span lang="en" dir="ltr">Yes. Aubergine runs tmux with no prefix key and no status line, so you never type a tmux command: close the tab to leave, open the page to come back, scroll with the wheel, copy by selecting.</span></p></details>
-      <details><summary><span lang="en" dir="ltr">Does Aubergine change my tmux configuration?</span></summary><p><span lang="en" dir="ltr">No. It runs tmux on a socket of its own, <code>aubergine</code>, with a configuration file of its own. Your tmux server, its sessions and your <code>~/.tmux.conf</code> are left as they are.</span></p></details>
-      <details><summary><span lang="en" dir="ltr">How do I scroll and copy in Aubergine's terminals?</span></summary><p><span lang="en" dir="ltr">Click a terminal to give it the keyboard, then use the wheel to scroll back. Select text with the mouse: it is on your clipboard when you let go. Paste with <code>⌘V</code>, or <code>Ctrl+Shift+V</code> outside macOS.</span></p></details>
-      <details><summary><span lang="en" dir="ltr">Can I attach to an Aubergine terminal from my own terminal app?</span></summary><p><span lang="en" dir="ltr">Yes: <code>aubergine attach &lt;name&gt;</code>, or <strong>Open on desktop</strong> in the terminal's menu. It is the same terminal in both places; what you type in one shows in the other.</span></p></details>
-      <details><summary><span lang="en" dir="ltr">Can Aubergine replace tmux on a server I SSH into?</span></summary><p><span lang="en" dir="ltr">Not as such: its terminals are on the machine its server runs on. It can run on a server and be used from your browser through an SSH tunnel or a proxy, which has been run in containers only, never on a cloud machine.</span></p></details>
+      <details><summary>¿Puedo usar tmux sin aprender los atajos?</summary><p>Sí. Aubergine ejecuta tmux sin tecla de prefijo ni línea de estado, así que nunca escribes un comando de tmux: cierra la pestaña para salir, abre la página para volver, desplázate con la rueda, copia seleccionando.</p></details>
+      <details><summary>¿Cambia Aubergine mi configuración de tmux?</summary><p>No. Ejecuta tmux en un socket propio, <code>aubergine</code>, con un archivo de configuración propio. Tu servidor de tmux, sus sesiones y tu <code>~/.tmux.conf</code> se quedan como están.</p></details>
+      <details><summary>¿Cómo me desplazo y copio en las terminales de Aubergine?</summary><p>Haz clic en una terminal para darle el teclado y usa la rueda para desplazarte hacia atrás. Selecciona texto con el ratón: está en tu portapapeles al soltar. Pega con <code>⌘V</code>, o <code>Ctrl+Shift+V</code> fuera de macOS.</p></details>
+      <details><summary>¿Puedo conectarme a una terminal de Aubergine desde mi propia aplicación de terminal?</summary><p>Sí: <code>aubergine attach &lt;name&gt;</code>, o <strong>Open on desktop</strong> en el menú de la terminal. Es la misma terminal en los dos sitios; lo que escribes en uno se ve en el otro.</p></details>
+      <details><summary>¿Puede Aubergine sustituir a tmux en un servidor al que entro por SSH?</summary><p>No como tal: sus terminales están en la máquina donde se ejecuta su servidor. Puede ejecutarse en un servidor y usarse desde tu navegador a través de un túnel SSH o un proxy, algo que solo se ha ejecutado en contenedores, nunca en una máquina en la nube.</p></details>
     </div>
-    <p><span lang="en" dir="ltr">Related: <a href="../keep-process-running-after-closing-terminal/">Keep a process running</a> · <a href="../keep-terminals-after-restart/">Keep your terminals after a restart</a> · <a href="../too-many-terminal-tabs/">Too many terminals</a></span></p>
+    <p>Relacionado: <a href="../keep-process-running-after-closing-terminal/">Mantener un proceso en marcha</a> · <a href="../keep-terminals-after-restart/">Conserva tus terminales tras un reinicio</a> · <a href="../too-many-terminal-tabs/">Demasiadas terminales</a></p>
   </div>
 </div>
 
@@ -197,7 +197,7 @@
     <div class="close-do">
       <p>Necesitas macOS con tmux 3.2 o posterior y Node.js 22 o posterior. <code>brew install tmux node</code> instala ambos.</p>
       <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Copiado" aria-live="polite" hidden>Copiar</button></p>
-      <p class="actions"><a class="button" href="../install/">Instalar</a><a class="button button-quiet" href="../keep-process-running-after-closing-terminal/"><span lang="en" dir="ltr">Keep it running</span></a></p>
+      <p class="actions"><a class="button" href="../install/">Instalar</a><a class="button button-quiet" href="../keep-process-running-after-closing-terminal/">Que siga en marcha</a></p>
     </div>
   </div>
 </section>
