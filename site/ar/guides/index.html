@@ -20,8 +20,8 @@
 <link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/guides/">
 <link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/guides/">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
 <link rel="icon" href="../../icon.svg" type="image/svg+xml">
 <link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../../style.css">
@@ -45,7 +45,7 @@
 <a class="skip" href="#main">انتقل إلى محتوى الصفحة</a>
 <header class="top">
   <div class="wrap top-in">
-    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
     <nav class="nav" aria-label="الصفحات">
       <ul>
         <li><a href="../claude/">Claude Code</a></li>
@@ -77,9 +77,11 @@
   </div>
 </header>
 
-<div class="wrap translated">
-  <p class="note">تطبيق Aubergine نفسه باللغة الإنجليزية: أزراره وقوائمه وصوره كلها بالإنجليزية.</p>
-  <p class="note">ترجمت آلةٌ هذه الصفحة عن الإنجليزية. <a href="https://github.com/thirstyeggplant/aubergine/issues">أرسل تصحيحًا</a>.</p>
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>تطبيق Aubergine نفسه باللغة الإنجليزية: أزراره وقوائمه وصوره كلها بالإنجليزية.</p>
+    <p>ترجمت آلةٌ هذه الصفحة عن الإنجليزية. <a href="https://github.com/thirstyeggplant/aubergine/issues">أرسل تصحيحًا</a>.</p>
+  </div>
 </div>
 <main id="main" tabindex="-1">
 <script type="application/ld+json">
@@ -103,28 +105,44 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="أين أنت"><ol><li><a href="../">Aubergine</a></li><li>الأدلة</li></ol></nav>
-  <h1>الأدلة</h1>
-  <p class="lead">أدلة قصيرة وعملية. المرجع الكامل هو <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>.</p>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="أين أنت"><ol><li><a href="../">Aubergine</a></li><li>الأدلة</li></ol></nav>
+    <h1>الأدلة</h1>
+    <p class="lead">أدلة قصيرة وعملية. المرجع الكامل هو <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>.</p>
+  </div>
+</header>
+<div class="cards-band">
+  <div class="wrap page-body">
+    <ul class="cards">
+      <li><h2><a href="../install/">ثبّت Aubergine</a></h2><p>المتطلبات، والمثبِّت ذو السطر الواحد، وما يغيّره، وحلول للمشكلات الشائعة.</p></li>
+      <li><h2><a href="../windows/">التثبيت على Windows باستخدام WSL</a></h2><p>شغّل Aubergine داخل WSL 2 واستخدمه من متصفحك على Windows. شُغّلت خطوات Linux؛ ولم يُجرَّب شيء على Windows بعد.</p></li>
+      <li><h2><a href="../run-multiple-coding-agents/">شغّل عدة وكلاء برمجة في آن واحد</a></h2><p>اللوحة، وعدد المنتظرين، والطابور، ونسخ العمل، وسير العمل في جولة واحدة.</p></li>
+      <li><h2><a href="../claude/">Claude Code في Aubergine</a></h2><p>ما يفعله Aubergine من تلقاء نفسه لـ Claude Code، وأين يوجد كل شيء.</p></li>
+      <li><h2><a href="../chatgpt/">Codex و ChatGPT</a></h2><p>Codex في طرفية مثل أي برنامج، وما يستطيع التبليغ عنه، وما هو مبني لـ Claude Code وحده.</p></li>
+      <li><h2><a href="../working-copies/">نسخ العمل</a></h2><p>أعطِ كل وكيل نسخته المسحوبة وفرعه الخاصين، فلا يعدّل وكيلان الملفات نفسها أبدًا.</p></li>
+      <li><h2><a href="../queue-and-schedules/">الطابور وFor you والجداول الزمنية</a></h2><p>وزّع العمل مرة واحدة، واعرف كل ما ينتظرك، وشغّل المهام في أوقات محددة.</p></li>
+      <li><h2><a href="../security/">الأمان والخصوصية</a></h2><p>ما المحمي، وما غير المحمي.</p></li>
+      <li><h2><a href="../faq/">الأسئلة الشائعة</a></h2><p>إجابات قصيرة عن أسئلة شائعة.</p></li>
+    </ul>
+  </div>
 </div>
-<div class="wrap page-body">
-  <ul class="rows">
-    <li><h2><a class="row-link" href="../install/">ثبّت Aubergine</a></h2><p>المتطلبات، والمثبِّت ذو السطر الواحد، وما يغيّره، وحلول للمشكلات الشائعة.</p></li>
-    <li><h2><a class="row-link" href="../windows/">التثبيت على Windows باستخدام WSL</a></h2><p>شغّل Aubergine داخل WSL 2 واستخدمه من متصفحك على Windows. شُغّلت خطوات Linux؛ ولم يُجرَّب شيء على Windows بعد.</p></li>
-    <li><h2><a class="row-link" href="../run-multiple-coding-agents/">شغّل عدة وكلاء برمجة في آن واحد</a></h2><p>اللوحة، وعدد المنتظرين، والطابور، ونسخ العمل، وسير العمل في جولة واحدة.</p></li>
-    <li><h2><a class="row-link" href="../claude/">Claude Code في Aubergine</a></h2><p>ما يفعله Aubergine من تلقاء نفسه لـ Claude Code، وأين يوجد كل شيء.</p></li>
-    <li><h2><a class="row-link" href="../chatgpt/">Codex و ChatGPT</a></h2><p>Codex في طرفية مثل أي برنامج، وما يستطيع التبليغ عنه، وما هو مبني لـ Claude Code وحده.</p></li>
-    <li><h2><a class="row-link" href="../working-copies/">نسخ العمل</a></h2><p>أعطِ كل وكيل نسخته المسحوبة وفرعه الخاصين، فلا يعدّل وكيلان الملفات نفسها أبدًا.</p></li>
-    <li><h2><a class="row-link" href="../queue-and-schedules/">الطابور وFor you والجداول الزمنية</a></h2><p>وزّع العمل مرة واحدة، واعرف كل ما ينتظرك، وشغّل المهام في أوقات محددة.</p></li>
-    <li><h2><a class="row-link" href="../security/">الأمان والخصوصية</a></h2><p>ما المحمي، وما غير المحمي.</p></li>
-    <li><h2><a class="row-link" href="../faq/">الأسئلة الشائعة</a></h2><p>إجابات قصيرة عن أسئلة شائعة.</p></li>
-  </ul>
-</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">جاهز للعمل في خمس دقائق</h2>
+    <div class="close-do">
+      <p>تحتاج إلى macOS مع tmux 3.2 أو أحدث، ومعه Node.js 22 أو أحدث. الأمر <code>brew install tmux node</code> يثبّت الاثنين.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="تم النسخ" aria-live="polite" hidden>نسخ</button></p>
+      <p class="actions"><a class="button" href="../install/">التثبيت</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">اقرأ الشيفرة المصدرية</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">
   <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
     <nav aria-label="كل الصفحات">
       <ul class="foot-links">
         <li><a href="../">الرئيسية</a></li>
@@ -150,6 +168,7 @@ document.querySelectorAll('[data-copy]').forEach(function (button) {
   button.hidden = false;
   button.addEventListener('click', function () {
     var words = button.textContent;
+    if (!navigator.clipboard) return;
     navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
       button.textContent = button.getAttribute('data-copied');
       setTimeout(function () { button.textContent = words; }, 1600);
@@ -162,6 +181,12 @@ document.addEventListener('keydown', function (event) {
 });
 document.addEventListener('click', function (event) {
   document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
 });
 </script>
 </body>

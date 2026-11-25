@@ -2,7 +2,7 @@
 <!--
   Shows sitemap.xml to a person who opens it in a browser: one row per page, its English
   address first, when it last changed, and its other languages beside it. A crawler reads the
-  XML and never this. The colors and type are the site's tokens (site-src/style.css), written
+  XML and never this. The colors and type are the site's tokens (site-src/style.css, one theme), written
   here because a stylesheet of the page may not load for a transformed document. No script.
 -->
 <xsl:stylesheet version="1.0"
@@ -21,68 +21,66 @@
       <head>
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
-        <meta name="color-scheme" content="dark light"/>
+        <meta name="color-scheme" content="light"/>
         <meta name="robots" content="noindex"/>
         <title>Sitemap · Aubergine</title>
         <link rel="icon" href="/icon.svg" type="image/svg+xml"/>
         <style>
 @font-face { font-family: "Bricolage Grotesque"; font-style: normal; font-display: swap; font-weight: 200 800; src: url(/fonts/bricolage-grotesque-latin-wght-normal.woff2) format("woff2"); }
 :root {
-  color-scheme: dark;
-  --ground: #120f14; --raised: #1a161d; --line: #2c2531; --text: #f2ebf1; --quiet: #a89dab;
-  --aubergine: #c690c1; --deep: #5a2956;
-  --face-head: "Bricolage Grotesque", system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", sans-serif;
-  --face-text: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", "Helvetica Neue", Arial, sans-serif;
-  --face-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
-  --corner: 10px;
-}
-@media (prefers-color-scheme: light) {
-  :root { color-scheme: light; --ground: #faf6f2; --raised: #ffffff; --line: #e7ddd9; --text: #201a22; --quiet: #655a6b; --aubergine: #6b2f66; --deep: #ead9e8; }
+  color-scheme: light;
+  --cream: #F7F0E4; --lilac: #EEE5EC; --ink: #1F1023; --muted: #58475C; --purple: #5E2580; --lavender: #D6B8E8;
+  --font-head: "Bricolage Grotesque", system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", sans-serif;
+  --font-body: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --rule: 2px; --radius: 8px; --gutter: clamp(1rem, 0.4rem + 2.6vw, 3rem);
 }
 *, *::before, *::after { box-sizing: border-box; }
-body { margin: 0; background: var(--ground); color: var(--text); font: 400 1.0625rem/1.65 var(--face-text); -webkit-font-smoothing: antialiased; overflow-wrap: break-word; }
-a { color: var(--aubergine); text-underline-offset: 0.2em; text-decoration-thickness: 1px; transition: color 120ms; }
-a:hover { text-decoration-thickness: 2px; }
-:focus-visible { outline: 2px solid var(--aubergine); outline-offset: 3px; border-radius: 4px; }
-.wrap { max-width: 72rem; margin-inline: auto; padding-inline: 20px; }
-.top { border-block-end: 1px solid var(--line); }
-.top .wrap { display: flex; align-items: center; min-height: 64px; }
-.mark { display: inline-flex; align-items: center; gap: 10px; color: var(--text); text-decoration: none; font-family: var(--face-head); font-weight: 750; font-size: 1.328rem; letter-spacing: -0.02em; }
-.mark img { width: 28px; height: 28px; }
-h1 { font-family: var(--face-head); font-weight: 750; line-height: 1.12; letter-spacing: -0.02em; margin: 0; font-size: clamp(2.075rem, 6vw, 3.242rem); }
-.head { padding-block: 56px 32px; }
-.lead { margin: 20px 0 0; font-size: 1.328rem; line-height: 1.5; max-width: 34em; }
-.lead + p { margin: 12px 0 0; color: var(--quiet); max-width: 68ch; font-size: 0.94rem; }
-code { font-family: var(--face-mono); font-size: 0.88em; padding: 0.05em 0.35em; border: 1px solid var(--line); border-radius: 5px; background: var(--raised); }
-.list { list-style: none; margin: 0; padding: 0; border-block-start: 1px solid var(--line); }
-.list > li { display: grid; gap: 6px 32px; padding-block: 16px; border-block-end: 1px solid var(--line); }
+body { margin: 0; background: var(--cream); color: var(--ink); font: 400 1.0625rem/1.6 var(--font-body); -webkit-font-smoothing: antialiased; overflow-wrap: break-word; }
+a { color: inherit; text-decoration-thickness: 2px; text-underline-offset: 0.18em; text-decoration-color: var(--purple); }
+:focus-visible { outline: 3px solid var(--purple); outline-offset: 3px; border-radius: 4px; }
+.wrap { max-width: 84rem; margin-inline: auto; padding-inline: var(--gutter); }
+.top { border-block-end: var(--rule) solid var(--ink); }
+.top .wrap { display: flex; align-items: center; min-height: 4.25rem; }
+.mark { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; font-family: var(--font-head); font-weight: 800; font-size: 1.25rem; letter-spacing: -0.02em; }
+.mark img { width: 32px; height: 32px; }
+.head { padding-block: clamp(2.5rem, 1.5rem + 3vw, 5rem) 3rem; }
+.crumb { font: 700 0.8125rem/1.4 var(--font-mono); text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+h1 { font-family: var(--font-head); font-weight: 800; line-height: 0.94; letter-spacing: -0.045em; margin: 1.5rem 0 0; font-size: clamp(2.375rem, 0.9rem + 5vw, 5.5rem); }
+.lead { margin: 2rem 0 0; font-size: clamp(1.25rem, 1.05rem + 0.7vw, 1.625rem); line-height: 1.45; max-width: 44ch; }
+.lead + p { margin: 1rem 0 0; color: var(--muted); max-width: 68ch; font-size: 0.9375rem; }
+code { font-family: var(--font-mono); font-size: 0.88em; padding: 0.05em 0.35em; border-radius: 4px; background: color-mix(in srgb, var(--ink) 8%, transparent); }
+.list { list-style: none; margin: 0; padding: 0; border-block-start: var(--rule) solid var(--ink); }
+.list > li { display: grid; gap: 6px 32px; padding-block: 16px; border-block-end: 1px solid #CDBFC6; }
+.list > li:last-child { border-block-end: var(--rule) solid var(--ink); }
 .list .labels { display: none; }
-.address { font-family: var(--face-mono); font-size: 0.94rem; font-weight: 600; text-decoration: none; overflow-wrap: anywhere; }
-.address:hover { text-decoration: underline; }
-.when { color: var(--quiet); font-size: 0.94rem; font-variant-numeric: tabular-nums; }
+.address { font-family: var(--font-mono); font-size: 0.9375rem; font-weight: 700; text-decoration: none; overflow-wrap: anywhere; }
+.address:hover { text-decoration: underline; text-decoration-color: var(--purple); }
+.when { color: var(--muted); font-size: 0.9375rem; font-variant-numeric: tabular-nums; }
 .langs { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
-.langs a { display: inline-block; min-width: 2.6em; padding: 1px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--raised); color: var(--text); font-family: var(--face-mono); font-size: 0.8rem; line-height: 1.7; text-align: center; text-decoration: none; transition: border-color 120ms, color 120ms; }
-.langs a:hover { border-color: var(--aubergine); color: var(--aubergine); }
-.label { color: var(--quiet); font-size: 0.85rem; }
+.langs a { display: inline-block; min-width: 2.8em; padding: 1px 8px; border: var(--rule) solid var(--ink); border-radius: 6px; background: var(--cream); font-family: var(--font-mono); font-size: 0.8125rem; font-weight: 700; line-height: 1.7; text-align: center; text-decoration: none; }
+.langs a:hover { background: var(--lilac); }
+.label { color: var(--muted); font-size: 0.8125rem; }
 @media (min-width: 820px) {
   .list > li { grid-template-columns: minmax(14rem, 1fr) 8rem minmax(0, 1.7fr); align-items: baseline; }
-  .list .labels { display: grid; padding-block: 10px; }
-  .list .labels span { color: var(--quiet); font-size: 0.85rem; }
+  .list .labels { display: grid; padding-block: 10px; border-block-end: var(--rule) solid var(--ink); }
+  .list .labels span { font-family: var(--font-head); font-weight: 700; font-size: 1rem; }
   .list > li:not(.labels) .label { display: none; }
+  .list { border-block-start: 0; }
 }
 @media (max-width: 819px) {
   .when .label::after { content: " "; }
 }
-.foot { padding-block: 32px 64px; color: var(--quiet); font-size: 0.94rem; }
-@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+.foot { margin-block-start: 4rem; padding-block: 2rem 4rem; border-block-start: var(--rule) solid var(--ink); color: var(--muted); font-size: 0.9375rem; }
         </style>
       </head>
       <body>
         <header class="top">
-          <div class="wrap"><a class="mark" href="/"><img src="/icon.svg" alt="" width="28" height="28"/>Aubergine</a></div>
+          <div class="wrap"><a class="mark" href="/"><img src="/icon.svg" alt="" width="32" height="32"/>Aubergine</a></div>
         </header>
         <main class="wrap">
           <div class="head">
+            <p class="crumb">Aubergine / Sitemap</p>
             <h1>Sitemap</h1>
             <p class="lead">Every page of the site, each with its translations beside it.</p>
             <p>Search engines read this file as it is, in XML; this view of it is for people. <xsl:value-of select="count($pages)"/> pages in <xsl:value-of select="count($pages[1]/xhtml:link[@hreflang != 'x-default'])"/> languages, <xsl:value-of select="count(/sm:urlset/sm:url)"/> addresses.</p>

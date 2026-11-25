@@ -131,13 +131,33 @@
     "text": "tmux 3.2 或更高版本，Node.js 22 或更高版本",
     "from": "6fadbd03c20d"
   },
-  "home.hero.kicker": {
-    "text": "让终端如虎添翼 · 免费 · 开源 · 运行在你的电脑上",
-    "from": "a61d5f4f3b3a"
+  "home.hero.tag.lead": {
+    "text": "让终端如虎添翼",
+    "from": "eb13de4649f0"
   },
-  "home.hero.title": {
-    "text": "所有终端，并排摆开。看清哪个智能体<em>需要你</em>。",
-    "from": "7be0ec221ba9"
+  "home.hero.tag.free": {
+    "text": "免费",
+    "from": "f411a1fb6275"
+  },
+  "home.hero.tag.open": {
+    "text": "开源",
+    "from": "67a0d2e0dab4"
+  },
+  "home.hero.tag.local": {
+    "text": "运行在你的电脑上",
+    "from": "cd90f9395587"
+  },
+  "home.hero.title.a": {
+    "text": "所有终端，",
+    "from": "8dd2aa1cda63"
+  },
+  "home.hero.title.b": {
+    "text": "并排摆开。",
+    "from": "eb95eacfe17a"
+  },
+  "home.hero.title.c": {
+    "text": "自带你的<em>智能体</em>。",
+    "from": "4728f2abc24b"
   },
   "home.hero.lead": {
     "text": "Aubergine 把你所有的终端并排放在浏览器里的一张画布上。想开多少就开多少，用你已经在用的智能体和模型。它自己没有模型，也从不向你要密钥。",
@@ -155,9 +175,13 @@
     "text": "阅读源码",
     "from": "625b22ba31d0"
   },
-  "home.canvas.caption": {
-    "text": "这是示意图，不是截图：画布上的五个终端，以及在等你的那一个。",
-    "from": "413e282f8a9d"
+  "home.stage.caption": {
+    "text": "Aubergine 自带演示的真实截图：一张画布上的六个终端，以及在等你的那一个。",
+    "from": "21a1f62e34b1"
+  },
+  "home.stage.alt": {
+    "text": "整个应用：左侧是画布和终端列表，画布上有六个正在运行的终端；其中 Login bug · question 以等待的颜色描边，并显示 waiting for you。",
+    "from": "2288db7c750f"
   },
   "home.powers.title": {
     "text": "给你的终端装上超能力",

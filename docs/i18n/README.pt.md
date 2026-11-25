@@ -2,13 +2,12 @@
 
 <sub>Esta é uma tradução automática da parte inicial do README. O app em si está em inglês. O README completo, em inglês: <a href="../../README.md">README.md</a>.</sub>
 
-**Todos os seus terminais em um só canvas, no seu navegador.** Rode vários agentes de programação lado a lado e veja num relance qual está esperando por você, em que etapa cada um está e o que cada um escreveu para você.
+**Todos os seus terminais, lado a lado. Traga seus próprios agentes.** O Aubergine coloca todos os seus terminais em um só canvas, no seu navegador. Rode quantos quiser, com os agentes e modelos que você já usa, e veja num relance qual está esperando por você, em que etapa cada um está e o que cada um escreveu para você.
 
 - Roda no seu próprio computador, e em nenhum outro lugar.
 - Os terminais continuam rodando quando você fecha o navegador ou reinicia o Aubergine.
 - Funciona com shells comuns e com agentes.
-- Quantos terminais você quiser, lado a lado.
-- Traga seus próprios agentes e modelos: o Aubergine não tem modelo próprio, não guarda nenhuma chave e não tem conta.
+- O Aubergine não tem modelo próprio, não guarda nenhuma chave e não tem conta.
 
 <img src="../../site/screenshots/canvas.png" alt="O canvas do Aubergine: três canvases em uma coluna à esquerda, a lista de terminais com o que cada um está fazendo, e seis terminais ao vivo, quatro com cores próprias e um esperando uma resposta.">
 

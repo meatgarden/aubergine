@@ -20,8 +20,8 @@
 <link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/windows/">
 <link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/windows/">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
 <link rel="icon" href="../../icon.svg" type="image/svg+xml">
 <link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../../style.css">
@@ -45,7 +45,7 @@
 <a class="skip" href="#main">跳到正文</a>
 <header class="top">
   <div class="wrap top-in">
-    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
     <nav class="nav" aria-label="页面">
       <ul>
         <li><a href="../claude/">Claude Code</a></li>
@@ -77,9 +77,11 @@
   </div>
 </header>
 
-<div class="wrap translated">
-  <p class="note">Aubergine 本身是英文的：它的按钮、菜单和截图都是英文版。</p>
-  <p class="note">本页由机器从英文翻译而来。<a href="https://github.com/thirstyeggplant/aubergine/issues">提交修正</a>。</p>
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine 本身是英文的：它的按钮、菜单和截图都是英文版。</p>
+    <p>本页由机器从英文翻译而来。<a href="https://github.com/thirstyeggplant/aubergine/issues">提交修正</a>。</p>
+  </div>
 </div>
 <main id="main" tabindex="-1">
 <script type="application/ld+json">
@@ -130,20 +132,21 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="当前位置"><ol><li><a href="../">Aubergine</a></li><li>Windows 与 WSL</li></ol></nav>
-  <h1>在 Windows 上用 WSL 安装 Aubergine</h1>
-  <p class="lead">Aubergine 不能在 Windows 本身上运行。它在 WSL 2（Windows 提供的 Linux）里运行，你在 Windows 的浏览器中使用它。</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="当前位置"><ol><li><a href="../">Aubergine</a></li><li>Windows 与 WSL</li></ol></nav>
+    <h1>在 Windows 上用 WSL 安装 Aubergine</h1>
+    <p class="lead">Aubergine 不能在 Windows 本身上运行。它在 WSL 2（Windows 提供的 Linux）里运行，你在 Windows 的浏览器中使用它。</p>
+    <p class="note note-strong"><strong>试过什么。</strong>Linux 部分的步骤于 2026 年 11 月 25 日在容器中的 Ubuntu 24.04.5（x86_64）上运行，而不是在 WSL 中，使用的是 npm 上的 Aubergine 0.2.2：它编译了终端库、启动、让一个浏览器登录，并运行了一个终端和演示。用 nvm 安装 Node.js 那一步没有在那里运行，因为 Node.js 22 已经装好了。本页的内容还没有在 Windows 上运行过。如果你试了，请<a href="https://github.com/thirstyeggplant/aubergine/issues">告诉我们结果</a>。</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
-    <p class="note"><strong>试过什么。</strong>Linux 部分的步骤于 2026 年 11 月 25 日在容器中的 Ubuntu 24.04.5（x86_64）上运行，而不是在 WSL 中，使用的是 npm 上的 Aubergine 0.2.2：它编译了终端库、启动、让一个浏览器登录，并运行了一个终端和演示。用 nvm 安装 Node.js 那一步没有在那里运行，因为 Node.js 22 已经装好了。本页的内容还没有在 Windows 上运行过。如果你试了，请<a href="https://github.com/thirstyeggplant/aubergine/issues">告诉我们结果</a>。</p>
-
     <h2>你需要什么</h2>
     <p>Windows 11，或 Windows 10 版本 2004（内部版本 19041）或更新版本，在这些系统上用一条命令就能装好 WSL 2。详情见 Microsoft 的<a href="https://learn.microsoft.com/windows/wsl/install">安装 WSL 页面</a>。</p>
 
     <h2>安装并启动</h2>
-    <ol>
+    <ol class="seq">
       <li><p><strong>安装 WSL。</strong>以管理员身份打开 PowerShell，运行下面这条命令，完成后重启 Windows。它会安装带 Ubuntu 的 WSL 2。</p>
         <p class="cmd multi"><code>wsl --install</code><button type="button" class="copy" data-copy data-copied="已复制" aria-live="polite" hidden>复制</button></p>
         <p>重启后，从开始菜单打开 <strong>Ubuntu</strong>，为它设置用户名和密码。下面的命令都在那里，也就是在 Ubuntu 中输入。</p></li>
@@ -190,15 +193,24 @@
         </tbody>
       </table>
     </div>
-
-    <h2>下一步</h2>
-    <p>停止、更新和卸载与<a href="../install/">安装页面</a>上的一样，其他一切都在 <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a> 中。</p>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">下一步</h2>
+    <div class="close-do">
+      <p>停止、更新和卸载与<a href="../install/">安装页面</a>上的一样，其他一切都在 <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a> 中。</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="已复制" aria-live="polite" hidden>复制</button></p>
+      <p class="actions"><a class="button" href="../install/">安装</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">
   <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
     <nav aria-label="所有页面">
       <ul class="foot-links">
         <li><a href="../">首页</a></li>
@@ -224,6 +236,7 @@ document.querySelectorAll('[data-copy]').forEach(function (button) {
   button.hidden = false;
   button.addEventListener('click', function () {
     var words = button.textContent;
+    if (!navigator.clipboard) return;
     navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
       button.textContent = button.getAttribute('data-copied');
       setTimeout(function () { button.textContent = words; }, 1600);
@@ -236,6 +249,12 @@ document.addEventListener('keydown', function (event) {
 });
 document.addEventListener('click', function (event) {
   document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
 });
 </script>
 </body>

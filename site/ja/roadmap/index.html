@@ -20,8 +20,8 @@
 <link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/roadmap/">
 <link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/roadmap/">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
 <link rel="icon" href="../../icon.svg" type="image/svg+xml">
 <link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../../style.css">
@@ -45,7 +45,7 @@
 <a class="skip" href="#main">本文へ移動</a>
 <header class="top">
   <div class="wrap top-in">
-    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
     <nav class="nav" aria-label="ページ">
       <ul>
         <li><a href="../claude/">Claude Code</a></li>
@@ -77,9 +77,11 @@
   </div>
 </header>
 
-<div class="wrap translated">
-  <p class="note">Aubergine 本体は英語です。ボタン、メニュー、画像はすべて英語版のものです。</p>
-  <p class="note">このページは英語版から機械翻訳されています。<a href="https://github.com/thirstyeggplant/aubergine/issues">修正を送る</a>。</p>
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine 本体は英語です。ボタン、メニュー、画像はすべて英語版のものです。</p>
+    <p>このページは英語版から機械翻訳されています。<a href="https://github.com/thirstyeggplant/aubergine/issues">修正を送る</a>。</p>
+  </div>
 </div>
 <main id="main" tabindex="-1">
 <script type="application/ld+json">
@@ -103,76 +105,95 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="現在の位置"><ol><li><a href="../">Aubergine</a></li><li>ロードマップ</li></ol></nav>
-  <p class="tag">予定中、まだ作られていません</p>
-  <h1>ロードマップ</h1>
-  <p class="lead">ここにあるものは、今日どれも存在しません。私たちが向かいたい方向で、順番は変わるかもしれません。今作られているものは<a href="../guides/">ガイド</a>を参照してください。</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="現在の位置"><ol><li><a href="../">Aubergine</a></li><li>ロードマップ</li></ol></nav>
+    <p class="tag">予定中、まだ作られていません</p>
+    <h1>ロードマップ</h1>
+    <p class="lead">ここにあるものは、今日どれも存在しません。私たちが向かいたい方向で、順番は変わるかもしれません。今作られているものは<a href="../guides/">ガイド</a>を参照してください。</p>
+  </div>
+</header>
 <div class="wrap page-body roadmap">
-    <h2>チームとつながり</h2>
-    <p class="intro">人が一緒に働くこと、そしてすでに使っているツールからエージェントに届くこと。</p>
-    <ul class="planned">
+  <section aria-labelledby="rm-teams">
+    <h2 id="rm-teams">チームとつながり</h2>
+      <p class="intro">人が一緒に働くこと、そしてすでに使っているツールからエージェントに届くこと。</p>
+      <ul class="planned">
       <li><h3>マルチプレイヤー</h3><p>ほかの人やそのエージェントとキャンバスを共有します。誰がどこで作業しているかを見て、待っているエージェントをチームメイトに渡し、一緒に答えます。</p></li>
       <li><h3>チャットのインターフェース</h3><p>チームのチャットアプリからエージェントに頼み、その質問に答えます。ブラウザーと同じ ID と設定で。</p></li>
       <li><h3>チケットとプルリクエスト</h3><p>issue をキューのタスクにし、作業コピーからプルリクエストを開き、結果をチケットに報告します。</p></li>
       <li><h3>監視、Webhook、トリアージ</h3><p>何かが起きたら作業を始めます。失敗した CI ジョブ、アラート、監視している変更、ほかのサービスからの呼び出し。何をタスクにするかはルールが決めます。</p></li>
       <li><h3>共有スキルとマーケットプレイス</h3><p>エージェントのスキルを許可によって共有し、承認を経てチーム全体に広げ、Git から取り込み、公開カタログでレビュー済みの項目を見つけます。</p></li>
       <li><h3>人と部屋のための記憶</h3><p>エージェントが学んだことを、人ごと、共有の部屋ごとに、ほかと分けて保ちます。</p></li>
-    </ul>
-    <p class="also">ほかにも：モデル、共有、厳しさに関する管理者の設定 · セルフホストのチームサーバー · チーム向けのサインイン（SSO と MFA） · 人、トークン、エージェントごとの使用量の上限 · ターミナルを共有せずに共有できる読み取り専用のレポート · 「For you」の一覧のスマートフォン向け表示 · 社内ツールへのレビュー済みコネクター · ほかのチャットアプリ · 選んだ人に公開する小さな社内ウェブアプリ。</p>
-
-    <h2>クラウド</h2>
-    <p class="intro">ノートパソコンを起こしておかなくても動くエージェント。</p>
-    <ul class="planned">
+      </ul>
+      <p class="also">ほかにも：モデル、共有、厳しさに関する管理者の設定 · セルフホストのチームサーバー · チーム向けのサインイン（SSO と MFA） · 人、トークン、エージェントごとの使用量の上限 · ターミナルを共有せずに共有できる読み取り専用のレポート · 「For you」の一覧のスマートフォン向け表示 · 社内ツールへのレビュー済みコネクター · ほかのチャットアプリ · 選んだ人に公開する小さな社内ウェブアプリ。</p>
+  </section>
+  <section aria-labelledby="rm-cloud">
+    <h2 id="rm-cloud">クラウド</h2>
+      <p class="intro">ノートパソコンを起こしておかなくても動くエージェント。</p>
+      <ul class="planned">
       <li><h3>クラウドのサンドボックスで動くエージェント</h3><p>エージェントを隔離されたクラウドのサンドボックスで動かし、ローカルのものと同じキャンバスで見ます。サンドボックスはアイドル時に眠り、必要に応じて起き、実行の間もストレージを保ちます。</p></li>
       <li><h3>エージェントのプール</h3><p>タスクごとにターミナルを指定する代わりに、仕事を説明してエージェントのプールに引き受けさせます。</p></li>
       <li><h3>用意済みの環境</h3><p>依存関係、ツール、スキル、ファイル、変数を一度保存し、新しいターミナルやクラウドのエージェントをそこから始めます。</p></li>
       <li><h3>長い、複数段階の作業</h3><p>何時間も何日も段階的に動くタスク。各段階の後に確認があり、進み具合は再起動しても残ります。</p></li>
       <li><h3>1コマンドでクラウドにデプロイ</h3><p>チームで共有する Aubergine を、1つのコマンドであなた自身のクラウドアカウントに置きます。</p></li>
       <li><h3>目で見られる作業</h3><p>クラウドのエージェントが、作ったもののスクリーンショットや短い録画を、あなたの「For you」の一覧に返します。</p></li>
-    </ul>
-    <p class="also">ほかにも：ほかのマシンのエージェントのための HTTP 経由の MCP · テスト済みの Linux サポート · zsh 以外のシェル統合。</p>
-
-    <h2>制御</h2>
-    <p class="intro">エージェントがどこまでしてよいか、そして何をしたかの記録。</p>
-    <ul class="planned">
+      </ul>
+      <p class="also">ほかにも：ほかのマシンのエージェントのための HTTP 経由の MCP · テスト済みの Linux サポート · zsh 以外のシェル統合。</p>
+  </section>
+  <section aria-labelledby="rm-control">
+    <h2 id="rm-control">制御</h2>
+      <p class="intro">エージェントがどこまでしてよいか、そして何をしたかの記録。</p>
+      <ul class="planned">
       <li><h3>承認モード</h3><p>エージェントが単独でどこまでしてよいかを選びます。すべての操作を承認する、危険なものだけ承認する、または何も承認しない。</p></li>
       <li><h3>コマンドのポリシーとスクリーニング</h3><p>承認が必要なコマンドや常に拒否するコマンドのルール、そしてエージェントが読む前に外部の内容をスクリーニングする任意の機能。</p></li>
       <li><h3>リポジトリごとのリスクレベル</h3><p>大事なところでは厳しく、そうでないところでは緩く。</p></li>
       <li><h3>完全な監査証跡</h3><p>今日記録されているトークンの呼び出しを超えて、誰が、または何が何をしたかをプロジェクトごとに記録します。</p></li>
       <li><h3>エージェントの作業を元に戻す</h3><p>作業コピーをタスクの前まで戻す、またはそのブランチを一度に破棄します。</p></li>
       <li><h3>管理者の設定</h3><p>どのモデルを使ってよいか、共有をどう扱うかについてのチーム全体の設定。</p></li>
-    </ul>
-    <p class="also">ほかにも：ターミナル、タスク、スケジュールごとのモデルの選択。</p>
-
-    <h2>品質</h2>
-    <p class="intro">作業が完了と呼ばれる前に行われる確認。</p>
-    <ul class="planned">
+      </ul>
+      <p class="also">ほかにも：ターミナル、タスク、スケジュールごとのモデルの選択。</p>
+  </section>
+  <section aria-labelledby="rm-quality">
+    <h2 id="rm-quality">品質</h2>
+      <p class="intro">作業が完了と呼ばれる前に行われる確認。</p>
+      <ul class="planned">
       <li><h3>品質ゲート</h3><p>レビュー、テスト、セキュリティチェックが合格を報告するまで、実行は終われません。</p></li>
       <li><h3>プルリクエストのレビュー</h3><p>エージェントがプルリクエストをレビューし、あなたの「For you」の一覧に報告します。</p></li>
       <li><h3>ブラウザーを使ったテスト</h3><p>エージェントがブラウザーを操作して変更をテストし、結果を返します。</p></li>
       <li><h3>作る前に計画</h3><p>エージェントが計画を提案し、ファイルに触れる前にあなたの承認を待ちます。</p></li>
       <li><h3>タスクのレシピ</h3><p>テストの生成、レビュー、依存関係と秘密のスキャン、ドキュメントを最新に保つための、用意済みのワークフロー。</p></li>
       <li><h3>成果の指標</h3><p>タスクから完了までの時間、エージェントがあなたを待った頻度、誰が始めたかごとの使用量を、プロジェクトごとに。</p></li>
-    </ul>
-    <p class="also">ほかにも：障害の報告書。エージェントが調査し、ポストモーテムの下書きを作ります。</p>
-
-    <h2>あらゆる場所で</h2>
-    <p class="intro">Aubergine に届き、その上に作るための、より多くの方法。</p>
-    <ul class="planned">
+      </ul>
+      <p class="also">ほかにも：障害の報告書。エージェントが調査し、ポストモーテムの下書きを作ります。</p>
+  </section>
+  <section aria-labelledby="rm-everywhere">
+    <h2 id="rm-everywhere">あらゆる場所で</h2>
+      <p class="intro">Aubergine に届き、その上に作るための、より多くの方法。</p>
+      <ul class="planned">
       <li><h3>公開 SDK</h3><p>型付きクライアントをインストール可能なパッケージとして、その後 Python などほかの言語のクライアントも。</p></li>
       <li><h3>エディターの拡張機能</h3><p>VS Code などのエディターの中に、ターミナルと「For you」の一覧を表示します。エディターを離れる必要はありません。</p></li>
       <li><h3>デスクトップアプリ</h3><p>ブラウザータブの代わりに、メニューバーのアイコンを持つパッケージ化されたアプリ。</p></li>
       <li><h3>Windows のサポート</h3><p>Windows そのもので Aubergine を動かす。今は <a href="../windows/">Windows 向けのガイド</a>のとおり WSL 2 の中でだけ動き、Windows ではまだ誰も試していません。</p></li>
-    </ul>
-
-    <p class="note">予定中の作業は方向であって、約束ではありません。リリース済みのものは<a href="https://github.com/thirstyeggplant/aubergine">リポジトリ</a>で分かります。</p>
+      </ul>
+  </section>
+  <p class="note">予定中の作業は方向であって、約束ではありません。リリース済みのものは<a href="https://github.com/thirstyeggplant/aubergine">リポジトリ</a>で分かります。</p>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">5分で動かす</h2>
+    <div class="close-do">
+      <p>tmux 3.2 以降と Node.js 22 以降の入った macOS が必要です。<code>brew install tmux node</code> で両方が入ります。</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="コピーしました" aria-live="polite" hidden>コピー</button></p>
+      <p class="actions"><a class="button" href="../install/">インストール</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">ソースを読む</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">
   <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
     <nav aria-label="すべてのページ">
       <ul class="foot-links">
         <li><a href="../">ホーム</a></li>
@@ -198,6 +219,7 @@ document.querySelectorAll('[data-copy]').forEach(function (button) {
   button.hidden = false;
   button.addEventListener('click', function () {
     var words = button.textContent;
+    if (!navigator.clipboard) return;
     navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
       button.textContent = button.getAttribute('data-copied');
       setTimeout(function () { button.textContent = words; }, 1600);
@@ -210,6 +232,12 @@ document.addEventListener('keydown', function (event) {
 });
 document.addEventListener('click', function (event) {
   document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
 });
 </script>
 </body>

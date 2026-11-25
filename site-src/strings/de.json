@@ -131,13 +131,33 @@
     "text": "tmux 3.2 oder neuer, Node.js 22 oder neuer",
     "from": "6fadbd03c20d"
   },
-  "home.hero.kicker": {
-    "text": "Mehr Power für dein Terminal · Kostenlos · Open Source · Läuft auf deinem Rechner",
-    "from": "a61d5f4f3b3a"
+  "home.hero.tag.lead": {
+    "text": "Mehr Power für dein Terminal",
+    "from": "eb13de4649f0"
   },
-  "home.hero.title": {
-    "text": "Alle deine Terminals, Seite an Seite. Sieh, welcher Agent <em>dich braucht</em>.",
-    "from": "7be0ec221ba9"
+  "home.hero.tag.free": {
+    "text": "Kostenlos",
+    "from": "f411a1fb6275"
+  },
+  "home.hero.tag.open": {
+    "text": "Open Source",
+    "from": "67a0d2e0dab4"
+  },
+  "home.hero.tag.local": {
+    "text": "Läuft auf deinem Rechner",
+    "from": "cd90f9395587"
+  },
+  "home.hero.title.a": {
+    "text": "Alle deine Terminals,",
+    "from": "8dd2aa1cda63"
+  },
+  "home.hero.title.b": {
+    "text": "Seite an Seite.",
+    "from": "eb95eacfe17a"
+  },
+  "home.hero.title.c": {
+    "text": "Bring deine eigenen <em>Agenten</em> mit.",
+    "from": "4728f2abc24b"
   },
   "home.hero.lead": {
     "text": "Aubergine legt alle deine Terminals nebeneinander auf ein Canvas in deinem Browser. Starte so viele, wie du willst, mit den Agenten und Modellen, die du schon nutzt. Es hat kein eigenes Modell und fragt nie nach einem Schlüssel.",
@@ -155,9 +175,13 @@
     "text": "Quellcode lesen",
     "from": "625b22ba31d0"
   },
-  "home.canvas.caption": {
-    "text": "Eine Illustration, kein Screenshot: fünf Terminals auf einem Canvas und das eine, das auf dich wartet.",
-    "from": "413e282f8a9d"
+  "home.stage.caption": {
+    "text": "Ein echter Screenshot der Demo, die mit Aubergine kommt: sechs Terminals auf einem Canvas und das eine, das auf dich wartet.",
+    "from": "21a1f62e34b1"
+  },
+  "home.stage.alt": {
+    "text": "Die ganze App: links die Liste der Canvases und Terminals, daneben sechs laufende Terminals auf einem Canvas; eines davon, Login bug · question, ist in der Farbe des Wartens umrandet und zeigt waiting for you.",
+    "from": "2288db7c750f"
   },
   "home.powers.title": {
     "text": "Gib deinen Terminals Superkräfte",

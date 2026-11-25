@@ -20,8 +20,8 @@
 <link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/windows/">
 <link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/windows/">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
 <link rel="icon" href="../../icon.svg" type="image/svg+xml">
 <link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../../style.css">
@@ -45,7 +45,7 @@
 <a class="skip" href="#main">본문으로 건너뛰기</a>
 <header class="top">
   <div class="wrap top-in">
-    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
     <nav class="nav" aria-label="페이지">
       <ul>
         <li><a href="../claude/">Claude Code</a></li>
@@ -77,9 +77,11 @@
   </div>
 </header>
 
-<div class="wrap translated">
-  <p class="note">Aubergine 앱 자체는 영어로 되어 있습니다. 버튼, 메뉴, 그림은 모두 영어판 그대로입니다.</p>
-  <p class="note">이 페이지는 영어 원문을 기계 번역한 것입니다. <a href="https://github.com/thirstyeggplant/aubergine/issues">수정 제안 보내기</a>.</p>
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine 앱 자체는 영어로 되어 있습니다. 버튼, 메뉴, 그림은 모두 영어판 그대로입니다.</p>
+    <p>이 페이지는 영어 원문을 기계 번역한 것입니다. <a href="https://github.com/thirstyeggplant/aubergine/issues">수정 제안 보내기</a>.</p>
+  </div>
 </div>
 <main id="main" tabindex="-1">
 <script type="application/ld+json">
@@ -130,20 +132,21 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="현재 위치"><ol><li><a href="../">Aubergine</a></li><li>WSL로 Windows</li></ol></nav>
-  <h1>WSL로 Windows에 Aubergine 설치하기</h1>
-  <p class="lead">Aubergine은 Windows 자체에서는 실행되지 않습니다. Windows가 제공하는 Linux인 WSL 2 안에서 실행되고, Windows 브라우저에서 사용합니다.</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="현재 위치"><ol><li><a href="../">Aubergine</a></li><li>WSL로 Windows</li></ol></nav>
+    <h1>WSL로 Windows에 Aubergine 설치하기</h1>
+    <p class="lead">Aubergine은 Windows 자체에서는 실행되지 않습니다. Windows가 제공하는 Linux인 WSL 2 안에서 실행되고, Windows 브라우저에서 사용합니다.</p>
+    <p class="note note-strong"><strong>시도한 것.</strong> Linux 단계는 2026년 11월 25일에 WSL이 아닌 컨테이너 안의 Ubuntu 24.04.5(x86_64)에서, npm의 Aubergine 0.2.2로 실행했습니다. 터미널 라이브러리를 컴파일하고, 시작하고, 브라우저를 로그인시키고, 터미널과 데모를 실행했습니다. Node.js 22가 이미 설치되어 있어서 nvm으로 Node.js를 설치하는 단계는 거기서 실행하지 않았습니다. 이 페이지의 어떤 것도 아직 Windows에서 실행하지 않았습니다. 시도해 보셨다면 <a href="https://github.com/thirstyeggplant/aubergine/issues">어땠는지 알려 주세요</a>.</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
-    <p class="note"><strong>시도한 것.</strong> Linux 단계는 2026년 11월 25일에 WSL이 아닌 컨테이너 안의 Ubuntu 24.04.5(x86_64)에서, npm의 Aubergine 0.2.2로 실행했습니다. 터미널 라이브러리를 컴파일하고, 시작하고, 브라우저를 로그인시키고, 터미널과 데모를 실행했습니다. Node.js 22가 이미 설치되어 있어서 nvm으로 Node.js를 설치하는 단계는 거기서 실행하지 않았습니다. 이 페이지의 어떤 것도 아직 Windows에서 실행하지 않았습니다. 시도해 보셨다면 <a href="https://github.com/thirstyeggplant/aubergine/issues">어땠는지 알려 주세요</a>.</p>
-
     <h2>필요한 것</h2>
     <p>Windows 11, 또는 Windows 10 버전 2004(빌드 19041) 이상. 여기서는 명령 하나로 WSL 2를 설치할 수 있습니다. 자세한 내용은 Microsoft의 <a href="https://learn.microsoft.com/windows/wsl/install">WSL 설치 페이지</a>에 있습니다.</p>
 
     <h2>설치하고 시작하기</h2>
-    <ol>
+    <ol class="seq">
       <li><p><strong>WSL을 설치합니다.</strong> PowerShell을 관리자 권한으로 열고 이것을 실행한 뒤, 끝나면 Windows를 다시 시작합니다. Ubuntu가 포함된 WSL 2가 설치됩니다.</p>
         <p class="cmd multi"><code>wsl --install</code><button type="button" class="copy" data-copy data-copied="복사됨" aria-live="polite" hidden>복사</button></p>
         <p>다시 시작한 뒤 시작 메뉴에서 <strong>Ubuntu</strong>를 열고 사용자 이름과 비밀번호를 정합니다. 아래 명령은 모두 그곳, Ubuntu 안에서 입력합니다.</p></li>
@@ -190,15 +193,24 @@
         </tbody>
       </table>
     </div>
-
-    <h2>다음</h2>
-    <p>중지, 업데이트, 제거는 <a href="../install/">설치 페이지</a>와 같고, 나머지는 모두 <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>에 있습니다.</p>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">다음</h2>
+    <div class="close-do">
+      <p>중지, 업데이트, 제거는 <a href="../install/">설치 페이지</a>와 같고, 나머지는 모두 <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>에 있습니다.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="복사됨" aria-live="polite" hidden>복사</button></p>
+      <p class="actions"><a class="button" href="../install/">설치</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">
   <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
     <nav aria-label="전체 페이지">
       <ul class="foot-links">
         <li><a href="../">홈</a></li>
@@ -224,6 +236,7 @@ document.querySelectorAll('[data-copy]').forEach(function (button) {
   button.hidden = false;
   button.addEventListener('click', function () {
     var words = button.textContent;
+    if (!navigator.clipboard) return;
     navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
       button.textContent = button.getAttribute('data-copied');
       setTimeout(function () { button.textContent = words; }, 1600);
@@ -236,6 +249,12 @@ document.addEventListener('keydown', function (event) {
 });
 document.addEventListener('click', function (event) {
   document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
 });
 </script>
 </body>

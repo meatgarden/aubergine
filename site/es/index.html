@@ -20,8 +20,8 @@
 <link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/">
 <link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
 <link rel="icon" href="../icon.svg" type="image/svg+xml">
 <link rel="preload" href="../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../style.css">
@@ -45,7 +45,7 @@
 <a class="skip" href="#main">Ir a la página</a>
 <header class="top">
   <div class="wrap top-in">
-    <a class="mark" href="./"><img src="../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <a class="mark" href="./"><img src="../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
     <nav class="nav" aria-label="Páginas">
       <ul>
         <li><a href="claude/">Claude Code</a></li>
@@ -77,9 +77,11 @@
   </div>
 </header>
 
-<div class="wrap translated">
-  <p class="note">Aubergine en sí está en inglés: sus botones, menús e imágenes son los de la versión en inglés.</p>
-  <p class="note">Esta página la tradujo una máquina a partir del inglés. <a href="https://github.com/thirstyeggplant/aubergine/issues">Envía una corrección</a>.</p>
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine en sí está en inglés: sus botones, menús e imágenes son los de la versión en inglés.</p>
+    <p>Esta página la tradujo una máquina a partir del inglés. <a href="https://github.com/thirstyeggplant/aubergine/issues">Envía una corrección</a>.</p>
+  </div>
 </div>
 <main id="main" tabindex="-1">
 <script type="application/ld+json">
@@ -176,95 +178,95 @@
 </script>
 
 <section class="hero" aria-labelledby="hero-h">
-  <div class="wrap hero-in">
-    <div>
-      <p class="kicker">Potencia tu terminal · Gratis · Código abierto · Se ejecuta en tu ordenador</p>
-      <h1 id="hero-h">Todas tus terminales, una al lado de la otra. Mira qué agente <em>te necesita</em>.</h1>
-      <p class="lead">Aubergine pone todas tus terminales una al lado de la otra en un solo lienzo, en tu navegador. Ejecuta tantas como quieras, con los agentes y modelos que ya usas. No tiene modelo propio y nunca te pide una clave.</p>
-      <p class="cmd"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Copiado" aria-live="polite" hidden>Copiar</button></p>
-      <p class="after">Después, <code>aubergine start --open</code>. Para macOS, con tmux 3.2 o posterior y Node.js 22 o posterior.</p>
-      <p class="actions"><a class="button primary" href="install/">Instalar</a><a class="button" href="https://github.com/thirstyeggplant/aubergine">Leer el código</a></p>
-    </div>
-    <figure class="canvas">
-      <div class="canvas-field" dir="ltr" aria-hidden="true">
-        <div class="term term-1 waits"><div class="term-bar"><span class="term-name">claude · fix-login</span><span class="term-state">waiting for you</span></div>
-<pre><i>?</i> Two files use the old check.
-  Change both, or only /auth?
-<i>›</i> </pre></div>
-        <div class="term term-2 working"><div class="term-bar"><span class="term-name">codex · migrate-db</span><span class="term-state">working</span></div>
-<pre>› step 3 of 5
-<b>✓</b> schema read
-<b>✓</b> 41 tests pass
-› writing the migration…</pre></div>
-        <div class="term term-3"><div class="term-bar"><span class="term-name">zsh · tests</span><span class="term-state">running</span></div>
-<pre><b>$</b> pnpm test --watch
-<b>✓</b> 212 passed
-  watching for changes…</pre></div>
-        <div class="term term-4 done"><div class="term-bar"><span class="term-name">claude · release-notes</span><span class="term-state">finished</span></div>
-<pre><b>✓</b> notes written
-  handed in: 6 changes</pre></div>
-        <div class="term term-5"><div class="term-bar"><span class="term-name">zsh · api</span><span class="term-state">idle</span></div>
-<pre><b>$</b> git status
-  nothing to commit
-<b>$</b> </pre></div>
-      </div>
-      <figcaption>Una ilustración, no una captura: cinco terminales en un lienzo y la que te está esperando.</figcaption>
-    </figure>
-  </div>
-</section>
-
-<section class="section" id="powers" aria-labelledby="powers-h">
   <div class="wrap">
-    <h2 id="powers-h">Dale superpoderes a tus terminales</h2>
-    <p class="intro">Las terminales que ya usas, con lo que les faltaba: un sitio donde estar una al lado de la otra, una memoria y una forma de avisarte cuando te necesitan.</p>
-    <ul class="rows across">
-      <li><h3>Mejora tu productividad</h3><p>Varios agentes trabajan a la vez, cada uno en su propia terminal. Respondes al que espera y dejas que los demás sigan.</p></li>
-      <li><h3>Una mejor experiencia de desarrollo</h3><p>Cada terminal tiene un nombre, un color, una nota y su sitio en el lienzo. Cierra el navegador o reinicia Aubergine: siguen ahí.</p></li>
-      <li><h3>Nada a lo que migrar</h3><p>Tu shell, tus herramientas, tus agentes y tus modelos, tal como están. Aubergine pone el lienzo a su alrededor y no tiene modelo propio.</p></li>
+    <ul class="kicker">
+      <li>Potencia tu terminal</li>
+      <li>Gratis</li>
+      <li>Código abierto</li>
+      <li>Se ejecuta en tu ordenador</li>
     </ul>
+    <h1 id="hero-h"><span class="line">Todas tus terminales,</span> <span class="line">una al lado de la otra.</span> <span class="line">Trae tus propios <em>agentes</em>.</span></h1>
+    <div class="hero-under">
+      <p class="lead">Aubergine pone todas tus terminales una al lado de la otra en un solo lienzo, en tu navegador. Ejecuta tantas como quieras, con los agentes y modelos que ya usas. No tiene modelo propio y nunca te pide una clave.</p>
+      <div class="hero-do">
+        <p class="cmd"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Copiado" aria-live="polite" hidden>Copiar</button></p>
+        <p class="actions"><a class="button" href="install/">Instalar</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">Leer el código</a></p>
+        <p class="after">Después, <code>aubergine start --open</code>. Para macOS, con tmux 3.2 o posterior y Node.js 22 o posterior.</p>
+      </div>
+    </div>
   </div>
 </section>
 
-<section class="section" id="see" aria-labelledby="see-h">
+<section class="stage">
   <div class="wrap">
-    <h2 id="see-h">Cómo se ve</h2>
-    <p class="intro">Capturas reales de la demo que viene con Aubergine: agentes simulados, ninguno real.</p>
+    <figure class="frame frame-big">
+      <div class="frame-bar" dir="ltr" aria-hidden="true"><i></i><i></i><i></i><span>localhost · Aubergine</span></div>
+      <a href="../screenshots/canvas.png" class="frame-pic"><img src="../screenshots/canvas.png" width="3840" height="2400" alt="La aplicación entera: la lista de lienzos y terminales a la izquierda y seis terminales en vivo en un lienzo; una de ellas, Login bug · question, con el borde del color de la espera y el aviso waiting for you."></a>
+    </figure>
+    <p class="stage-caption">Una captura real de la demo que viene con Aubergine: seis terminales en un lienzo y la que te está esperando.</p>
+  </div>
+</section>
+
+<section class="band band-cream" id="powers" aria-labelledby="powers-h">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 id="powers-h">Dale superpoderes a tus terminales</h2>
+      <p class="intro">Las terminales que ya usas, con lo que les faltaba: un sitio donde estar una al lado de la otra, una memoria y una forma de avisarte cuando te necesitan.</p>
+    </div>
+    <ol class="powers">
+      <li><span class="num" aria-hidden="true">01</span><h3>Mejora tu productividad</h3><p>Varios agentes trabajan a la vez, cada uno en su propia terminal. Respondes al que espera y dejas que los demás sigan.</p></li>
+      <li><span class="num" aria-hidden="true">02</span><h3>Una mejor experiencia de desarrollo</h3><p>Cada terminal tiene un nombre, un color, una nota y su sitio en el lienzo. Cierra el navegador o reinicia Aubergine: siguen ahí.</p></li>
+      <li><span class="num" aria-hidden="true">03</span><h3>Nada a lo que migrar</h3><p>Tu shell, tus herramientas, tus agentes y tus modelos, tal como están. Aubergine pone el lienzo a su alrededor y no tiene modelo propio.</p></li>
+    </ol>
+  </div>
+</section>
+
+<section class="band band-lilac" id="see" aria-labelledby="see-h">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 id="see-h">Cómo se ve</h2>
+      <p class="intro">Capturas reales de la demo que viene con Aubergine: agentes simulados, ninguno real.</p>
+    </div>
     <div class="shows">
       <div class="show">
-        <div><h3>Todas las terminales en un solo lienzo</h3><p>Tantas como quieras, una al lado de la otra, cada una en vivo mientras está a la vista.</p></div>
-        <figure class="pic"><a href="../screenshots/list.png"><img src="../screenshots/list.png" width="1440" height="1008" loading="lazy" alt="El panel lateral con cinco terminales y su estado en palabras (working, waiting for you, finished, parked), junto a una parte del lienzo con una shell en vivo."></a><figcaption>La lista dice qué está haciendo cada terminal; a su lado, las propias terminales.</figcaption></figure>
+        <div class="show-words"><h3>Todas las terminales en un solo lienzo</h3><p>Tantas como quieras, una al lado de la otra, cada una en vivo mientras está a la vista.</p></div>
+        <figure class="frame"><a href="../screenshots/list.png" class="frame-pic"><img src="../screenshots/list.png" width="1440" height="1008" loading="lazy" alt="El panel lateral con cinco terminales y su estado en palabras (working, waiting for you, finished, parked), junto a una parte del lienzo con una shell en vivo."></a><figcaption>La lista dice qué está haciendo cada terminal; a su lado, las propias terminales.</figcaption></figure>
+      </div>
+      <div class="show show-flip">
+        <div class="show-words"><h3><span class="waits">La que espera destaca</span></h3><p>Cuando un agente te necesita, lo ves desde el otro lado del lienzo, y <code>W</code> te lleva hasta él.</p></div>
+        <figure class="frame"><a href="../screenshots/waiting.png" class="frame-pic"><img src="../screenshots/waiting.png" width="1496" height="600" loading="lazy" alt="Una terminal cuyo agente hace una pregunta, con el título waiting for you y el borde del color de la espera."></a><figcaption>Su borde toma el color de la espera y su título dice waiting for you (te está esperando).</figcaption></figure>
       </div>
       <div class="show">
-        <div><h3>La que espera destaca</h3><p>Cuando un agente te necesita, lo ves desde el otro lado del lienzo, y <code>W</code> te lleva hasta él.</p></div>
-        <figure class="pic"><a href="../screenshots/waiting.png"><img src="../screenshots/waiting.png" width="1496" height="600" loading="lazy" alt="Una terminal cuyo agente hace una pregunta, con el título waiting for you y el borde del color de la espera."></a><figcaption>Su borde toma el color de la espera y su título dice waiting for you (te está esperando).</figcaption></figure>
-      </div>
-      <div class="show">
-        <div><h3>Una terminal por sí sola</h3><p>Abre cualquier terminal en una pestaña del navegador propia: la misma terminal, no una copia.</p></div>
-        <figure class="pic"><a href="../screenshots/focus-part.png"><img src="../screenshots/focus-part.png" width="1344" height="1172" loading="lazy" alt="Una terminal sola en una pestaña del navegador: su nombre en la cabecera, sus detalles con el paso del flujo de trabajo, su carpeta y sus campos, y la terminal en vivo al lado."></a><figcaption>Sus detalles y su nota se abren a su lado cuando los pides, y se cierran de nuevo con sus botones.</figcaption></figure>
+        <div class="show-words"><h3>Una terminal por sí sola</h3><p>Abre cualquier terminal en una pestaña del navegador propia: la misma terminal, no una copia.</p></div>
+        <figure class="frame"><a href="../screenshots/focus-part.png" class="frame-pic"><img src="../screenshots/focus-part.png" width="1344" height="1172" loading="lazy" alt="Una terminal sola en una pestaña del navegador: su nombre en la cabecera, sus detalles con el paso del flujo de trabajo, su carpeta y sus campos, y la terminal en vivo al lado."></a><figcaption>Sus detalles y su nota se abren a su lado cuando los pides, y se cierran de nuevo con sus botones.</figcaption></figure>
       </div>
     </div>
   </div>
 </section>
 
-<section class="section" id="agents" aria-labelledby="agents-h">
+<section class="band band-dark" id="agents" aria-labelledby="agents-h">
   <div class="wrap">
-    <h2 id="agents-h">Trae tu propio agente</h2>
-    <p class="intro">Aubergine ejecuta terminales normales. No llama a ningún modelo, no guarda ninguna clave y no tiene cuentas: los agentes de línea de comandos que ya usas, con tu sesión iniciada, se ejecutan en sus terminales con el modelo que hayas elegido para ellos. Lo que Aubergine hace por sí mismo para un agente está hecho hoy para Claude Code; cualquier otro agente puede decir lo mismo con los comandos <code>aubergine</code>.</p>
-    <ul class="rows">
-      <li><h3><a class="row-link" href="claude/">Claude Code</a></h3><p>Inícialo desde el menú New terminal y dirá por sí mismo cuándo trabaja, cuándo te espera o cuándo termina; Aubergine puede reanudar sus conversaciones y mostrar cómo está configurado.</p></li>
-      <li><h3><a class="row-link" href="chatgpt/">Codex y ChatGPT</a></h3><p>Codex se ejecuta en una terminal como cualquier programa, e informa mediante los comandos <code>aubergine</code> una vez que sus instrucciones se lo indican. ChatGPT en un navegador no es un programa de terminal.</p></li>
-      <li><h3><a class="row-link" href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/for-agents.md">Cualquier otro agente de línea de comandos, o una shell sin más</a></h3><p>Todas las terminales tienen el comando <code>aubergine</code>, y <code>aubergine guide --snippet</code> imprime cinco líneas para las propias instrucciones de tu agente.</p></li>
+    <div class="section-head">
+      <h2 id="agents-h">Trae tu propio agente</h2>
+      <p class="intro">Aubergine ejecuta terminales normales. No llama a ningún modelo, no guarda ninguna clave y no tiene cuentas: los agentes de línea de comandos que ya usas, con tu sesión iniciada, se ejecutan en sus terminales con el modelo que hayas elegido para ellos. Lo que Aubergine hace por sí mismo para un agente está hecho hoy para Claude Code; cualquier otro agente puede decir lo mismo con los comandos <code>aubergine</code>.</p>
+    </div>
+    <ul class="agents">
+      <li><h3><a href="claude/">Claude Code</a></h3><p>Inícialo desde el menú New terminal y dirá por sí mismo cuándo trabaja, cuándo te espera o cuándo termina; Aubergine puede reanudar sus conversaciones y mostrar cómo está configurado.</p></li>
+      <li><h3><a href="chatgpt/">Codex y ChatGPT</a></h3><p>Codex se ejecuta en una terminal como cualquier programa, e informa mediante los comandos <code>aubergine</code> una vez que sus instrucciones se lo indican. ChatGPT en un navegador no es un programa de terminal.</p></li>
+      <li><h3><a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/for-agents.md">Cualquier otro agente de línea de comandos, o una shell sin más</a></h3><p>Todas las terminales tienen el comando <code>aubergine</code>, y <code>aubergine guide --snippet</code> imprime cinco líneas para las propias instrucciones de tu agente.</p></li>
     </ul>
   </div>
 </section>
 
-<section class="section" id="features" aria-labelledby="features-h">
+<section class="band band-cream" id="features" aria-labelledby="features-h">
   <div class="wrap">
-    <h2 id="features-h">Qué más ya está hecho</h2>
-    <p class="intro">Todo esto funciona hoy en tu ordenador.</p>
-    <ul class="rows">
+    <div class="section-head">
+      <h2 id="features-h">Qué más ya está hecho</h2>
+      <p class="intro">Todo esto funciona hoy en tu ordenador.</p>
+    </div>
+    <ul class="built">
       <li><h3>Un lienzo de terminales</h3><p>Desplaza, haz zoom y coloca terminales reales; un clic para escribir; aparca una y tráela de vuelta más tarde, o abre una sola en una pestaña del navegador con sus detalles y su nota al lado.</p></li>
-      <li><h3>Mira quién está esperando</h3><p>Ocupada, inactiva o esperándote, en cada terminal; y la lista «For you» y «next waiting» te llevan directamente a lo que necesita a una persona.</p></li>
+      <li><h3><span class="waits">Mira quién está esperando</span></h3><p>Ocupada, inactiva o esperándote, en cada terminal; y la lista «For you» y «next waiting» te llevan directamente a lo que necesita a una persona.</p></li>
       <li><h3>Cola y programaciones</h3><p>Escribe una tarea una vez y deja que la tome un agente libre, o prográmala para una hora del día en los días que elijas.</p></li>
       <li><h3>Copias de trabajo</h3><p>Dale a cada agente su propia copia de un repositorio en su propia rama, para que dos agentes nunca editen los mismos archivos.</p></li>
       <li><h3>Proyectos</h3><p>Un servidor, varias salas de control: cada proyecto tiene sus propios lienzos, cola, programaciones y reglas, y se puede guardar como archivo o como plantilla.</p></li>
@@ -277,35 +279,27 @@
   </div>
 </section>
 
-<section class="section" id="trust" aria-labelledby="trust-h">
+<section class="band band-lilac" id="trust" aria-labelledby="trust-h">
   <div class="wrap">
-    <h2 id="trust-h">Tus terminales siguen siendo tuyas</h2>
-    <ul class="rows">
+    <div class="section-head">
+      <h2 id="trust-h">Tus terminales siguen siendo tuyas</h2>
+      <p class="intro"><a class="onward" href="security/">Qué está protegido y qué no</a></p>
+    </div>
+    <ul class="pairs">
       <li><h3>Solo local</h3><p>El servidor escucha en 127.0.0.1 y comprueba el Host y el Origin de cada petición; el uso desde otro dispositivo está desactivado hasta que lo configures.</p></li>
       <li><h3>Las terminales sobreviven a la app</h3><p>Cada terminal es una sesión de tmux: cierra el navegador o reinicia Aubergine y tu trabajo sigue en marcha.</p></li>
       <li><h3>Sin modelo, sin clave</h3><p>Aubergine no elige ni llama a ningún modelo, y no guarda ninguna clave para uno; tus agentes traen los suyos.</p></li>
       <li><h3>Tú decides</h3><p>Los tokens tienen alcances, lo que escriben los agentes espera tu revisión y las aprobaciones las da una persona.</p></li>
     </ul>
-    <p class="more-link"><a href="security/">Qué está protegido y qué no</a></p>
   </div>
 </section>
 
-<section class="section" id="install" aria-labelledby="install-h">
+<section class="band band-cream" id="faq" aria-labelledby="faq-h">
   <div class="wrap">
-    <h2 id="install-h">En marcha en cinco minutos</h2>
-    <p class="intro">Necesitas macOS con tmux 3.2 o posterior y Node.js 22 o posterior. <code>brew install tmux node</code> instala ambos.</p>
-    <ol class="steps">
-      <li><h3>Instala</h3><p class="cmd"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Copiado" aria-live="polite" hidden>Copiar</button></p><p>O usa el <a href="install/">instalador</a>, que compila desde el código fuente con pnpm.</p></li>
-      <li><h3>Inícialo y abre tu navegador</h3><p class="cmd"><code>aubergine start --open</code><button type="button" class="copy" data-copy data-copied="Copiado" aria-live="polite" hidden>Copiar</button></p><p>Inicia el servidor y abre tu navegador con la sesión iniciada.</p></li>
-      <li><h3>Haz el recorrido</h3><p>Haz clic en <strong>Show me around</strong> (enséñame cómo funciona) en el lienzo vacío. Crea un lienzo Demo con agentes simulados y te guía en ocho pasos cortos; <code>aubergine demo --remove</code> lo quita.</p></li>
-    </ol>
-    <p class="note more-link">El instalador solo cambia <code>~/.aubergine</code> y un enlace llamado <code>aubergine</code>. Nunca usa sudo y nunca edita los archivos de inicio de tu shell.</p>
-  </div>
-</section>
-
-<section class="section" id="faq" aria-labelledby="faq-h">
-  <div class="wrap">
-    <h2 id="faq-h">Preguntas</h2>
+    <div class="section-head">
+      <h2 id="faq-h">Preguntas</h2>
+      <p class="intro"><a class="onward" href="faq/">Todas las preguntas</a></p>
+    </div>
     <div class="questions">
       <details><summary>¿Qué es Aubergine?</summary><p>Un lienzo local, en el navegador, de sesiones de terminal. Cada terminal es un nodo que puedes colocar y usar, así que puedes ejecutar varios agentes de programación a la vez y ver cuál te está esperando.</p></details>
       <details><summary>¿Envía Aubergine mis terminales o mi código a algún sitio?</summary><p>No. Todo se ejecuta en tu propio ordenador. El servidor escucha solo en 127.0.0.1 y comprueba el Host y el Origin de cada petición.</p></details>
@@ -313,20 +307,35 @@
       <details><summary>¿Y si inicio Claude Code yo mismo en una terminal?</summary><p>Funciona como cualquier programa: le escribes como siempre. Pero Aubergine solo sabe que hay un agente cuando lo inició él mismo (New terminal y luego Claude Code), porque añade unos pequeños hooks que informan de lo que hace el agente. Si lo inicias a mano, la terminal solo aparece ocupada ejecutando <code>claude</code>: no se marca como esperándote cuando pregunta algo, y cuando inicias un flujo de trabajo ahí, no se escribe nada para él. Dile tú mismo que ejecute <code>aubergine workflow status</code>, que sigue funcionando desde dentro, o inicia el agente desde el menú New terminal.</p></details>
       <details><summary>¿Aubergine es gratis?</summary><p>Sí. Es libre y de código abierto bajo la <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">licencia MIT</a>, y su código está en GitHub.</p></details>
     </div>
-    <p class="more-link"><a href="faq/">Todas las preguntas</a></p>
   </div>
 </section>
 
-<section class="section" id="planned" aria-labelledby="planned-h">
-  <div class="wrap">
+<section class="band band-lilac band-slim" id="planned" aria-labelledby="planned-h">
+  <div class="wrap planned-line">
     <h2 id="planned-h">Qué está previsto</h2>
-    <p class="note">El modo multijugador, los agentes en la nube, los modos de aprobación y más cosas están previstos y no están hechos. <a href="roadmap/">Mira la hoja de ruta</a>.</p>
+    <p>El modo multijugador, los agentes en la nube, los modos de aprobación y más cosas están previstos y no están hechos. <a href="roadmap/">Mira la hoja de ruta</a>.</p>
+  </div>
+</section>
+
+<section class="band band-purple" id="install" aria-labelledby="install-h">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 id="install-h">En marcha en cinco minutos</h2>
+      <p class="intro">Necesitas macOS con tmux 3.2 o posterior y Node.js 22 o posterior. <code>brew install tmux node</code> instala ambos.</p>
+    </div>
+    <ol class="steps">
+      <li><h3>Instala</h3><p class="cmd"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Copiado" aria-live="polite" hidden>Copiar</button></p><p>O usa el <a href="install/">instalador</a>, que compila desde el código fuente con pnpm.</p></li>
+      <li><h3>Inícialo y abre tu navegador</h3><p class="cmd"><code>aubergine start --open</code><button type="button" class="copy" data-copy data-copied="Copiado" aria-live="polite" hidden>Copiar</button></p><p>Inicia el servidor y abre tu navegador con la sesión iniciada.</p></li>
+      <li><h3>Haz el recorrido</h3><p>Haz clic en <strong>Show me around</strong> (enséñame cómo funciona) en el lienzo vacío. Crea un lienzo Demo con agentes simulados y te guía en ocho pasos cortos; <code>aubergine demo --remove</code> lo quita.</p></li>
+    </ol>
+    <p class="install-note">El instalador solo cambia <code>~/.aubergine</code> y un enlace llamado <code>aubergine</code>. Nunca usa sudo y nunca edita los archivos de inicio de tu shell.</p>
   </div>
 </section>
 
 </main>
 <footer class="foot">
   <div class="wrap foot-in">
+    <a class="mark" href="./"><img src="../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
     <nav aria-label="Todas las páginas">
       <ul class="foot-links">
         <li><a href="./" aria-current="page">Inicio</a></li>
@@ -352,6 +361,7 @@ document.querySelectorAll('[data-copy]').forEach(function (button) {
   button.hidden = false;
   button.addEventListener('click', function () {
     var words = button.textContent;
+    if (!navigator.clipboard) return;
     navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
       button.textContent = button.getAttribute('data-copied');
       setTimeout(function () { button.textContent = words; }, 1600);
@@ -364,6 +374,12 @@ document.addEventListener('keydown', function (event) {
 });
 document.addEventListener('click', function (event) {
   document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
 });
 </script>
 </body>

@@ -20,8 +20,8 @@
 <link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/install/">
 <link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/install/">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
 <link rel="icon" href="../../icon.svg" type="image/svg+xml">
 <link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../../style.css">
@@ -45,7 +45,7 @@
 <a class="skip" href="#main">Ir a la página</a>
 <header class="top">
   <div class="wrap top-in">
-    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
     <nav class="nav" aria-label="Páginas">
       <ul>
         <li><a href="../claude/">Claude Code</a></li>
@@ -77,9 +77,11 @@
   </div>
 </header>
 
-<div class="wrap translated">
-  <p class="note">Aubergine en sí está en inglés: sus botones, menús e imágenes son los de la versión en inglés.</p>
-  <p class="note">Esta página la tradujo una máquina a partir del inglés. <a href="https://github.com/thirstyeggplant/aubergine/issues">Envía una corrección</a>.</p>
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine en sí está en inglés: sus botones, menús e imágenes son los de la versión en inglés.</p>
+    <p>Esta página la tradujo una máquina a partir del inglés. <a href="https://github.com/thirstyeggplant/aubergine/issues">Envía una corrección</a>.</p>
+  </div>
 </div>
 <main id="main" tabindex="-1">
 <script type="application/ld+json">
@@ -143,11 +145,13 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="Dónde estás"><ol><li><a href="../">Aubergine</a></li><li>Instalar</li></ol></nav>
-  <h1>Cómo instalar Aubergine</h1>
-  <p class="lead">Un comando lo instala y otro lo inicia. Unos cinco minutos, recorrido incluido.</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Dónde estás"><ol><li><a href="../">Aubergine</a></li><li>Instalar</li></ol></nav>
+    <h1>Cómo instalar Aubergine</h1>
+    <p class="lead">Un comando lo instala y otro lo inicia. Unos cinco minutos, recorrido incluido.</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
     <h2>Requisitos</h2>
@@ -159,7 +163,7 @@
     <p class="cmd"><code>brew install tmux node</code><button type="button" class="copy" data-copy data-copied="Copiado" aria-live="polite" hidden>Copiar</button></p>
 
     <h2>Instala e inicia</h2>
-    <ol>
+    <ol class="seq">
       <li><p><strong>Instala Aubergine</strong> desde npm (solo necesita tmux y Node.js):</p>
         <p class="cmd"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Copiado" aria-live="polite" hidden>Copiar</button></p>
         <p>O con el instalador, que también necesita pnpm y compila desde el código fuente:</p>
@@ -168,7 +172,7 @@
         <p class="cmd"><code>aubergine start --open</code><button type="button" class="copy" data-copy data-copied="Copiado" aria-live="polite" hidden>Copiar</button></p></li>
       <li><p><strong>Haz el recorrido.</strong> Haz clic en <em>Show me around</em> en el centro del lienzo vacío. Crea un lienzo llamado «Demo» con unos cuantos agentes simulados y te guía en ocho pasos cortos. Nada de la demo es real, y <code>aubergine demo --remove</code> la quita.</p></li>
     </ol>
-    <p>¿Prefieres leer el script antes? Descárgalo, léelo y ejecuta <code>sh install.sh --dry-run</code> para ver qué haría sin cambiar nada.</p>
+    <p class="note">¿Prefieres leer el script antes? Descárgalo, léelo y ejecuta <code>sh install.sh --dry-run</code> para ver qué haría sin cambiar nada.</p>
 
     <h2>Qué cambia el instalador</h2>
     <p>Solo dos cosas: la carpeta de instalación (<code>~/.aubergine</code>, o <code>AUBERGINE_HOME</code>) y un enlace llamado <code>aubergine</code> en una carpeta de tu <code>PATH</code> en la que puedas escribir. Lo comprueba todo antes y no cambia nada si falta algo.</p>
@@ -196,15 +200,24 @@
       <li><strong>Desinstala</strong> con <code>aubergine uninstall</code>. Quita el enlace y, tras preguntar, la copia que hizo el instalador. Nunca borra tus datos y nunca cierra tus terminales.</li>
       <li><strong>Inícialo al arrancar la sesión</strong> con <code>aubergine service install</code>, y así solo tendrás que abrir el navegador.</li>
     </ul>
-
-    <h2>Siguiente</h2>
-    <p>Lee <a href="../run-multiple-coding-agents/">cómo ejecutar varios agentes de programación a la vez</a>, o las <a href="../guides/">guías</a>. La referencia completa está en el <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>.</p>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">Siguiente</h2>
+    <div class="close-do">
+      <p>Lee <a href="../run-multiple-coding-agents/">cómo ejecutar varios agentes de programación a la vez</a>, o las <a href="../guides/">guías</a>. La referencia completa está en el <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Copiado" aria-live="polite" hidden>Copiar</button></p>
+      <p class="actions"><a class="button" href="../guides/">Guías</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">
   <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
     <nav aria-label="Todas las páginas">
       <ul class="foot-links">
         <li><a href="../">Inicio</a></li>
@@ -230,6 +243,7 @@ document.querySelectorAll('[data-copy]').forEach(function (button) {
   button.hidden = false;
   button.addEventListener('click', function () {
     var words = button.textContent;
+    if (!navigator.clipboard) return;
     navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
       button.textContent = button.getAttribute('data-copied');
       setTimeout(function () { button.textContent = words; }, 1600);
@@ -242,6 +256,12 @@ document.addEventListener('keydown', function (event) {
 });
 document.addEventListener('click', function (event) {
   document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
 });
 </script>
 </body>

@@ -23,66 +23,55 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="{{attr:site.crumbs}}"><ol><li><a href="/">Aubergine</a></li><li>Claude Code</li></ol></nav>
-  <h1>{{claude.title}}</h1>
-  <p class="lead">{{claude.lead}}</p>
-</div>
-<div class="wrap page-body">
-  <div class="prose">
+<header class="page-head page-head-big">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="{{attr:site.crumbs}}"><ol><li><a href="/">Aubergine</a></li><li>Claude Code</li></ol></nav>
+    <h1>{{claude.title}}</h1>
+    <p class="lead">{{claude.lead}}</p>
     <p class="note">{{claude.yours}}</p>
-
-    <h2>{{claude.start.title}}</h2>
-    <p>{{claude.start.text}}</p>
-    <p>{{claude.start.command}}</p>
-    <p class="note">{{claude.start.where}}</p>
-
-    <h2>{{claude.state.title}}</h2>
-    <p>{{claude.state.text}}</p>
-    <p>{{claude.state.more}}</p>
-    <p class="note">{{claude.state.where}}</p>
-
-    <h2>{{claude.byhand.title}}</h2>
-    <p>{{claude.byhand.text}}</p>
-    <p class="cmd"><code>aubergine hooks print</code><button type="button" class="copy" data-copy data-copied="{{attr:site.copied}}" aria-live="polite" hidden>{{site.copy}}</button></p>
-
-    <h2>{{claude.describe.title}}</h2>
-    <p>{{claude.describe.text}}</p>
-    <p class="note">{{claude.describe.where}}</p>
-
-    <h2>{{claude.told.title}}</h2>
-    <p>{{claude.told.text}}</p>
-    <p>{{claude.told.more}}</p>
-    <p class="note">{{claude.told.where}}</p>
-
-    <h2>{{claude.resume.title}}</h2>
-    <p>{{claude.resume.text}}</p>
-    <p class="note">{{claude.resume.where}}</p>
-
-    <h2>{{claude.history.title}}</h2>
-    <p>{{claude.history.text}}</p>
-    <p>{{claude.history.form}}</p>
-    <p class="note">{{claude.history.where}}</p>
-
-    <h2>{{claude.setup.title}}</h2>
-    <p>{{claude.setup.text}}</p>
-    <p class="note">{{claude.setup.where}}</p>
-
-    <h2>{{claude.tools.title}}</h2>
-    <p>{{claude.tools.text}}</p>
-    <p class="note">{{claude.tools.where}}</p>
-
-    <h2>{{claude.move.title}}</h2>
-    <p>{{claude.move.text}}</p>
-    <p class="note">{{claude.move.where}}</p>
-
-    <h2>{{claude.copy.title}}</h2>
-    <p>{{claude.copy.text}}</p>
-
-    <h2>{{claude.tried.title}}</h2>
-    <p>{{claude.tried.text}}</p>
-
-    <p>{{claude.others}}</p>
-    <p class="note">{{claude.mark}}</p>
   </div>
-</div>
+</header>
+<section class="part" aria-label="{{attr:claude.title}}">
+  <div class="wrap">
+    <ol class="features">
+      <li><h2>{{claude.start.title}}</h2><div class="feature-words"><p>{{claude.start.text}}</p><p>{{claude.start.command}}</p><p class="where">{{claude.start.where}}</p></div></li>
+      <li class="with-pic flip">
+        <div class="feature-words"><h2>{{claude.state.title}}</h2><p>{{claude.state.text}}</p><p>{{claude.state.more}}</p><p class="where">{{claude.state.where}}</p></div>
+        <figure class="frame"><a href="/screenshots/waiting.png" class="frame-pic"><img src="/screenshots/waiting.png" width="1496" height="600" loading="lazy" alt="{{attr:home.see.waits.alt}}"></a><figcaption>{{home.see.waits.caption}}</figcaption></figure>
+      </li>
+      <li><h2>{{claude.byhand.title}}</h2><div class="feature-words"><p>{{claude.byhand.text}}</p><p class="cmd"><code>aubergine hooks print</code><button type="button" class="copy" data-copy data-copied="{{attr:site.copied}}" aria-live="polite" hidden>{{site.copy}}</button></p></div></li>
+      <li class="with-pic">
+        <div class="feature-words"><h2>{{claude.describe.title}}</h2><p>{{claude.describe.text}}</p><p class="where">{{claude.describe.where}}</p></div>
+        <figure class="frame"><a href="/screenshots/focus-part.png" class="frame-pic"><img src="/screenshots/focus-part.png" width="1344" height="1172" loading="lazy" alt="{{attr:home.see.focus.alt}}"></a><figcaption>{{home.see.focus.caption}}</figcaption></figure>
+      </li>
+      <li><h2>{{claude.told.title}}</h2><div class="feature-words"><p>{{claude.told.text}}</p><p>{{claude.told.more}}</p><p class="where">{{claude.told.where}}</p></div></li>
+      <li><h2>{{claude.resume.title}}</h2><div class="feature-words"><p>{{claude.resume.text}}</p><p class="where">{{claude.resume.where}}</p></div></li>
+      <li><h2>{{claude.history.title}}</h2><div class="feature-words"><p>{{claude.history.text}}</p><p>{{claude.history.form}}</p><p class="where">{{claude.history.where}}</p></div></li>
+      <li><h2>{{claude.setup.title}}</h2><div class="feature-words"><p>{{claude.setup.text}}</p><p class="where">{{claude.setup.where}}</p></div></li>
+      <li><h2>{{claude.tools.title}}</h2><div class="feature-words"><p>{{claude.tools.text}}</p><p class="where">{{claude.tools.where}}</p></div></li>
+      <li><h2>{{claude.move.title}}</h2><div class="feature-words"><p>{{claude.move.text}}</p><p class="where">{{claude.move.where}}</p></div></li>
+      <li><h2>{{claude.copy.title}}</h2><div class="feature-words"><p>{{claude.copy.text}}</p></div></li>
+    </ol>
+  </div>
+</section>
+<section class="band band-dark" aria-labelledby="tried-h">
+  <div class="wrap dark-split">
+    <h2 id="tried-h">{{claude.tried.title}}</h2>
+    <div class="prose">
+      <p>{{claude.tried.text}}</p>
+      <p>{{claude.others}}</p>
+      <p class="note">{{claude.mark}}</p>
+    </div>
+  </div>
+</section>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">{{home.install.title}}</h2>
+    <div class="close-do">
+      <p>{{home.install.intro}}</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="{{attr:site.copied}}" aria-live="polite" hidden>{{site.copy}}</button></p>
+      <p class="actions"><a class="button" href="/install/">{{home.hero.install}}</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">{{home.hero.source}}</a></p>
+    </div>
+  </div>
+</section>

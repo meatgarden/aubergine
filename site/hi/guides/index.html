@@ -20,8 +20,8 @@
 <link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/guides/">
 <link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/guides/">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
 <link rel="icon" href="../../icon.svg" type="image/svg+xml">
 <link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../../style.css">
@@ -45,7 +45,7 @@
 <a class="skip" href="#main">पेज पर जाएँ</a>
 <header class="top">
   <div class="wrap top-in">
-    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
     <nav class="nav" aria-label="पेज">
       <ul>
         <li><a href="../claude/">Claude Code</a></li>
@@ -77,9 +77,11 @@
   </div>
 </header>
 
-<div class="wrap translated">
-  <p class="note">Aubergine खुद अंग्रेज़ी में है: उसके बटन, मेन्यू और तस्वीरें अंग्रेज़ी वाली ही हैं।</p>
-  <p class="note">इस पेज का अंग्रेज़ी से अनुवाद मशीन ने किया है। <a href="https://github.com/thirstyeggplant/aubergine/issues">सुधार भेजें</a>।</p>
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine खुद अंग्रेज़ी में है: उसके बटन, मेन्यू और तस्वीरें अंग्रेज़ी वाली ही हैं।</p>
+    <p>इस पेज का अंग्रेज़ी से अनुवाद मशीन ने किया है। <a href="https://github.com/thirstyeggplant/aubergine/issues">सुधार भेजें</a>।</p>
+  </div>
 </div>
 <main id="main" tabindex="-1">
 <script type="application/ld+json">
@@ -103,28 +105,44 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="आप कहाँ हैं"><ol><li><a href="../">Aubergine</a></li><li>गाइड</li></ol></nav>
-  <h1>गाइड</h1>
-  <p class="lead">छोटी, काम की गाइड। पूरा संदर्भ <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a> है।</p>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="आप कहाँ हैं"><ol><li><a href="../">Aubergine</a></li><li>गाइड</li></ol></nav>
+    <h1>गाइड</h1>
+    <p class="lead">छोटी, काम की गाइड। पूरा संदर्भ <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a> है।</p>
+  </div>
+</header>
+<div class="cards-band">
+  <div class="wrap page-body">
+    <ul class="cards">
+      <li><h2><a href="../install/">Aubergine इंस्टॉल करें</a></h2><p>ज़रूरतें, एक लाइन वाला इंस्टॉलर, वह क्या बदलता है, और आम समस्याओं के हल।</p></li>
+      <li><h2><a href="../windows/">WSL के साथ Windows पर इंस्टॉल करें</a></h2><p>Aubergine को WSL 2 के अंदर चलाएँ और अपने Windows ब्राउज़र से इस्तेमाल करें। Linux वाले कदम चलाए गए हैं; Windows पर अभी कुछ नहीं आज़माया गया।</p></li>
+      <li><h2><a href="../run-multiple-coding-agents/">एक साथ कई कोडिंग एजेंट चलाएँ</a></h2><p>कैनवस, इंतज़ार की गिनती, क्यू, वर्किंग कॉपी और वर्कफ़्लो, एक ही टूर में।</p></li>
+      <li><h2><a href="../claude/">Aubergine में Claude Code</a></h2><p>Aubergine Claude Code के लिए खुद से क्या करता है, और हर चीज़ कहाँ है।</p></li>
+      <li><h2><a href="../chatgpt/">Codex और ChatGPT</a></h2><p>किसी भी प्रोग्राम की तरह टर्मिनल में Codex, यह क्या रिपोर्ट कर सकता है, और क्या सिर्फ़ Claude Code के लिए बना है।</p></li>
+      <li><h2><a href="../working-copies/">वर्किंग कॉपी</a></h2><p>हर एजेंट को उसका अपना चेकआउट और ब्रांच दें, ताकि दो एजेंट कभी एक ही फ़ाइलें न बदलें।</p></li>
+      <li><h2><a href="../queue-and-schedules/">क्यू, For you और शेड्यूल</a></h2><p>काम एक बार बाँटें, वह सब देखें जो आपका इंतज़ार कर रहा है, और टास्क तय समय पर चलाएँ।</p></li>
+      <li><h2><a href="../security/">सुरक्षा और निजता</a></h2><p>क्या सुरक्षित है, और क्या नहीं।</p></li>
+      <li><h2><a href="../faq/">सवाल-जवाब</a></h2><p>आम सवालों के छोटे जवाब।</p></li>
+    </ul>
+  </div>
 </div>
-<div class="wrap page-body">
-  <ul class="rows">
-    <li><h2><a class="row-link" href="../install/">Aubergine इंस्टॉल करें</a></h2><p>ज़रूरतें, एक लाइन वाला इंस्टॉलर, वह क्या बदलता है, और आम समस्याओं के हल।</p></li>
-    <li><h2><a class="row-link" href="../windows/">WSL के साथ Windows पर इंस्टॉल करें</a></h2><p>Aubergine को WSL 2 के अंदर चलाएँ और अपने Windows ब्राउज़र से इस्तेमाल करें। Linux वाले कदम चलाए गए हैं; Windows पर अभी कुछ नहीं आज़माया गया।</p></li>
-    <li><h2><a class="row-link" href="../run-multiple-coding-agents/">एक साथ कई कोडिंग एजेंट चलाएँ</a></h2><p>कैनवस, इंतज़ार की गिनती, क्यू, वर्किंग कॉपी और वर्कफ़्लो, एक ही टूर में।</p></li>
-    <li><h2><a class="row-link" href="../claude/">Aubergine में Claude Code</a></h2><p>Aubergine Claude Code के लिए खुद से क्या करता है, और हर चीज़ कहाँ है।</p></li>
-    <li><h2><a class="row-link" href="../chatgpt/">Codex और ChatGPT</a></h2><p>किसी भी प्रोग्राम की तरह टर्मिनल में Codex, यह क्या रिपोर्ट कर सकता है, और क्या सिर्फ़ Claude Code के लिए बना है।</p></li>
-    <li><h2><a class="row-link" href="../working-copies/">वर्किंग कॉपी</a></h2><p>हर एजेंट को उसका अपना चेकआउट और ब्रांच दें, ताकि दो एजेंट कभी एक ही फ़ाइलें न बदलें।</p></li>
-    <li><h2><a class="row-link" href="../queue-and-schedules/">क्यू, For you और शेड्यूल</a></h2><p>काम एक बार बाँटें, वह सब देखें जो आपका इंतज़ार कर रहा है, और टास्क तय समय पर चलाएँ।</p></li>
-    <li><h2><a class="row-link" href="../security/">सुरक्षा और निजता</a></h2><p>क्या सुरक्षित है, और क्या नहीं।</p></li>
-    <li><h2><a class="row-link" href="../faq/">सवाल-जवाब</a></h2><p>आम सवालों के छोटे जवाब।</p></li>
-  </ul>
-</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">पाँच मिनट में तैयार</h2>
+    <div class="close-do">
+      <p>आपको macOS चाहिए, tmux 3.2 या नए और Node.js 22 या नए के साथ। <code>brew install tmux node</code> दोनों ले आता है।</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="कॉपी हो गया" aria-live="polite" hidden>कॉपी करें</button></p>
+      <p class="actions"><a class="button" href="../install/">इंस्टॉल करें</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">सोर्स पढ़ें</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">
   <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
     <nav aria-label="सभी पेज">
       <ul class="foot-links">
         <li><a href="../">होम</a></li>
@@ -150,6 +168,7 @@ document.querySelectorAll('[data-copy]').forEach(function (button) {
   button.hidden = false;
   button.addEventListener('click', function () {
     var words = button.textContent;
+    if (!navigator.clipboard) return;
     navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
       button.textContent = button.getAttribute('data-copied');
       setTimeout(function () { button.textContent = words; }, 1600);
@@ -162,6 +181,12 @@ document.addEventListener('keydown', function (event) {
 });
 document.addEventListener('click', function (event) {
   document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
 });
 </script>
 </body>

@@ -2,13 +2,12 @@
 
 *Maschinelle Übersetzung des Anfangs der README. Die App selbst ist auf Englisch. Die vollständige README auf Englisch: [README.md](../../README.md).*
 
-**Alle deine Terminals auf einem Canvas in deinem Browser.** Lass mehrere Coding-Agenten nebeneinander laufen und sieh auf einen Blick, welcher auf dich wartet, bei welchem Schritt jeder ist und was jeder für dich geschrieben hat.
+**Alle deine Terminals, Seite an Seite. Bring deine eigenen Agenten mit.** Aubergine legt alle deine Terminals auf ein Canvas in deinem Browser. Starte so viele, wie du willst, mit den Agenten und Modellen, die du schon nutzt, und sieh auf einen Blick, welcher auf dich wartet, bei welchem Schritt jeder ist und was jeder für dich geschrieben hat.
 
 - Läuft auf deinem eigenen Rechner und nirgends sonst.
 - Terminals laufen weiter, wenn du den Browser schließt oder Aubergine neu startest.
 - Funktioniert mit einfachen Shells und mit Agenten.
-- So viele Terminals, wie du willst, nebeneinander.
-- Bring deine eigenen Agenten und Modelle mit: Aubergine hat kein eigenes Modell, hält keinen Schlüssel und hat kein Konto.
+- Aubergine hat kein eigenes Modell, hält keinen Schlüssel und hat kein Konto.
 
 <img src="../../site/screenshots/canvas.png" alt="Das Aubergine-Canvas: links drei Canvases in einer Spalte, die Liste der Terminals mit dem, was jedes gerade tut, und sechs laufende Terminals, vier davon in eigenen Farben, eines wartet auf eine Antwort.">
 

@@ -20,8 +20,8 @@
 <link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/roadmap/">
 <link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/roadmap/">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
 <link rel="icon" href="../icon.svg" type="image/svg+xml">
 <link rel="preload" href="../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../style.css">
@@ -45,7 +45,7 @@
 <a class="skip" href="#main">Skip to the page</a>
 <header class="top">
   <div class="wrap top-in">
-    <a class="mark" href="../"><img src="../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <a class="mark" href="../"><img src="../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
     <nav class="nav" aria-label="Pages">
       <ul>
         <li><a href="../claude/">Claude Code</a></li>
@@ -98,76 +98,95 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="Where you are"><ol><li><a href="../">Aubergine</a></li><li>Roadmap</li></ol></nav>
-  <p class="tag">Planned, not built yet</p>
-  <h1>Roadmap</h1>
-  <p class="lead">None of this exists today. It is where we want to go, and the order may change. For what is built now, see the <a href="../guides/">guides</a>.</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Where you are"><ol><li><a href="../">Aubergine</a></li><li>Roadmap</li></ol></nav>
+    <p class="tag">Planned, not built yet</p>
+    <h1>Roadmap</h1>
+    <p class="lead">None of this exists today. It is where we want to go, and the order may change. For what is built now, see the <a href="../guides/">guides</a>.</p>
+  </div>
+</header>
 <div class="wrap page-body roadmap">
-    <h2>Teams and connections</h2>
-    <p class="intro">People working together, and agents reached from the tools you already use.</p>
-    <ul class="planned">
+  <section aria-labelledby="rm-teams">
+    <h2 id="rm-teams">Teams and connections</h2>
+      <p class="intro">People working together, and agents reached from the tools you already use.</p>
+      <ul class="planned">
       <li><h3>Multiplayer</h3><p>Share a canvas with other people and their agents. See who is working where, hand a waiting agent to a teammate, and answer together.</p></li>
       <li><h3>Chat interface</h3><p>Ask agents and answer their questions from a team chat app, with the same identity and settings as in the browser.</p></li>
       <li><h3>Tickets and pull requests</h3><p>Turn an issue into a queued task, open a pull request from a working copy, and report the result back to the ticket.</p></li>
       <li><h3>Watches, webhooks and triage</h3><p>Start work when something happens: a failed CI job, an alert, a watched change or a call from another service. Rules decide what becomes a task.</p></li>
       <li><h3>Shared skills and a marketplace</h3><p>Share an agent's skills by grant, promote them team-wide with approval, import them from Git, and find reviewed items in a public catalog.</p></li>
       <li><h3>Memory for people and rooms</h3><p>Keep what an agent has learned for each person and each shared room, apart from the others.</p></li>
-    </ul>
-    <p class="also">Also: admin controls for models, sharing and strictness · a self-hosted team server · sign-in for teams (SSO and MFA) · usage limits per person, token or agent · read-only reports to share without sharing terminals · a phone view of the “For you” list · reviewed connectors to company tools · more chat apps · small internal web apps published to chosen people.</p>
-
-    <h2>Cloud</h2>
-    <p class="intro">Agents that do not need your laptop awake.</p>
-    <ul class="planned">
+      </ul>
+      <p class="also">Also: admin controls for models, sharing and strictness · a self-hosted team server · sign-in for teams (SSO and MFA) · usage limits per person, token or agent · read-only reports to share without sharing terminals · a phone view of the “For you” list · reviewed connectors to company tools · more chat apps · small internal web apps published to chosen people.</p>
+  </section>
+  <section aria-labelledby="rm-cloud">
+    <h2 id="rm-cloud">Cloud</h2>
+      <p class="intro">Agents that do not need your laptop awake.</p>
+      <ul class="planned">
       <li><h3>Sandboxed agents in the cloud</h3><p>Run an agent in an isolated cloud sandbox and watch it on the same canvas as your local ones. Sandboxes sleep when idle, wake on demand and keep storage between runs.</p></li>
       <li><h3>A pool of agents</h3><p>Describe the work and let a pool of agents pick it up, instead of naming a terminal for each task.</p></li>
       <li><h3>Ready-made environments</h3><p>Save dependencies, tools, skills, files and variables once, and start any new terminal or cloud agent from them.</p></li>
       <li><h3>Long, multi-phase work</h3><p>Tasks that run for hours or days in stages, with a check-in after each stage and progress that survives restarts.</p></li>
       <li><h3>One-command cloud deploy</h3><p>Put a team's shared Aubergine on your own cloud account with one command.</p></li>
       <li><h3>Work you can see</h3><p>A cloud agent hands back screenshots or a short recording of what it built, in your “For you” list.</p></li>
-    </ul>
-    <p class="also">Also: MCP over HTTP, for agents on other machines · tested Linux support · shell integration beyond zsh.</p>
-
-    <h2>Control</h2>
-    <p class="intro">How much an agent may do, and a record of what it did.</p>
-    <ul class="planned">
+      </ul>
+      <p class="also">Also: MCP over HTTP, for agents on other machines · tested Linux support · shell integration beyond zsh.</p>
+  </section>
+  <section aria-labelledby="rm-control">
+    <h2 id="rm-control">Control</h2>
+      <p class="intro">How much an agent may do, and a record of what it did.</p>
+      <ul class="planned">
       <li><h3>Approval modes</h3><p>Choose how much an agent may do alone: approve every action, approve the risky ones, or none.</p></li>
       <li><h3>Command policy and screening</h3><p>Rules for commands that need approval or are always refused, and optional screening of outside content before an agent reads it.</p></li>
       <li><h3>Risk levels per repository</h3><p>Stricter limits where it matters, looser where it does not.</p></li>
       <li><h3>A full audit trail</h3><p>A record of who or what did what, per project, beyond the token calls recorded today.</p></li>
       <li><h3>Undo an agent's work</h3><p>Roll a working copy back to before a task, or discard its branch in one step.</p></li>
       <li><h3>Admin controls</h3><p>Team-wide settings for which models may be used and how sharing works.</p></li>
-    </ul>
-    <p class="also">Also: model choice per terminal, task or schedule.</p>
-
-    <h2>Quality</h2>
-    <p class="intro">Checks that happen before work is called done.</p>
-    <ul class="planned">
+      </ul>
+      <p class="also">Also: model choice per terminal, task or schedule.</p>
+  </section>
+  <section aria-labelledby="rm-quality">
+    <h2 id="rm-quality">Quality</h2>
+      <p class="intro">Checks that happen before work is called done.</p>
+      <ul class="planned">
       <li><h3>Quality gates</h3><p>A run cannot finish until review, tests or a security check report a pass.</p></li>
       <li><h3>Pull request review</h3><p>An agent reviews a pull request and reports to your “For you” list.</p></li>
       <li><h3>Browser-driven testing</h3><p>An agent drives a browser to test a change and hands back the results.</p></li>
       <li><h3>Plan before build</h3><p>An agent proposes a plan and waits for your approval before touching files.</p></li>
       <li><h3>Task recipes</h3><p>Ready-made workflows for test generation, review, dependency and secret scans, and keeping docs current.</p></li>
       <li><h3>Outcome metrics</h3><p>Time from task to done, how often an agent waited on you, and usage by who started it, per project.</p></li>
-    </ul>
-    <p class="also">Also: incident write-ups, where an agent investigates and drafts a postmortem.</p>
-
-    <h2>Everywhere</h2>
-    <p class="intro">More ways to reach and build on Aubergine.</p>
-    <ul class="planned">
+      </ul>
+      <p class="also">Also: incident write-ups, where an agent investigates and drafts a postmortem.</p>
+  </section>
+  <section aria-labelledby="rm-everywhere">
+    <h2 id="rm-everywhere">Everywhere</h2>
+      <p class="intro">More ways to reach and build on Aubergine.</p>
+      <ul class="planned">
       <li><h3>Published SDK</h3><p>The typed client as an installable package, then clients for other languages such as Python.</p></li>
       <li><h3>Editor extension</h3><p>Show your terminals and “For you” list inside VS Code and similar editors, without leaving the editor.</p></li>
       <li><h3>Desktop app</h3><p>A packaged app with a menu-bar icon, instead of a browser tab.</p></li>
       <li><h3>Windows support</h3><p>Run Aubergine on Windows itself. Today it runs only inside WSL 2, as <a href="../windows/">the guide for Windows</a> describes, and nobody has tried that on Windows yet.</p></li>
-    </ul>
-
-    <p class="note">Planned work is a direction, not a promise. The <a href="https://github.com/thirstyeggplant/aubergine">repository</a> shows what is shipped.</p>
+      </ul>
+  </section>
+  <p class="note">Planned work is a direction, not a promise. The <a href="https://github.com/thirstyeggplant/aubergine">repository</a> shows what is shipped.</p>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">Up and running in five minutes</h2>
+    <div class="close-do">
+      <p>You need macOS with tmux 3.2 or newer and Node.js 22 or newer. <code>brew install tmux node</code> gets both.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Copied" aria-live="polite" hidden>Copy</button></p>
+      <p class="actions"><a class="button" href="../install/">Install</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">Read the source</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">
   <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
     <nav aria-label="Every page">
       <ul class="foot-links">
         <li><a href="../">Home</a></li>
@@ -193,6 +212,7 @@ document.querySelectorAll('[data-copy]').forEach(function (button) {
   button.hidden = false;
   button.addEventListener('click', function () {
     var words = button.textContent;
+    if (!navigator.clipboard) return;
     navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
       button.textContent = button.getAttribute('data-copied');
       setTimeout(function () { button.textContent = words; }, 1600);
@@ -205,6 +225,12 @@ document.addEventListener('keydown', function (event) {
 });
 document.addEventListener('click', function (event) {
   document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
 });
 </script>
 </body>

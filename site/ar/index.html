@@ -20,8 +20,8 @@
 <link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/">
 <link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
 <link rel="icon" href="../icon.svg" type="image/svg+xml">
 <link rel="preload" href="../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../style.css">
@@ -45,7 +45,7 @@
 <a class="skip" href="#main">انتقل إلى محتوى الصفحة</a>
 <header class="top">
   <div class="wrap top-in">
-    <a class="mark" href="./"><img src="../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <a class="mark" href="./"><img src="../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
     <nav class="nav" aria-label="الصفحات">
       <ul>
         <li><a href="claude/">Claude Code</a></li>
@@ -77,9 +77,11 @@
   </div>
 </header>
 
-<div class="wrap translated">
-  <p class="note">تطبيق Aubergine نفسه باللغة الإنجليزية: أزراره وقوائمه وصوره كلها بالإنجليزية.</p>
-  <p class="note">ترجمت آلةٌ هذه الصفحة عن الإنجليزية. <a href="https://github.com/thirstyeggplant/aubergine/issues">أرسل تصحيحًا</a>.</p>
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>تطبيق Aubergine نفسه باللغة الإنجليزية: أزراره وقوائمه وصوره كلها بالإنجليزية.</p>
+    <p>ترجمت آلةٌ هذه الصفحة عن الإنجليزية. <a href="https://github.com/thirstyeggplant/aubergine/issues">أرسل تصحيحًا</a>.</p>
+  </div>
 </div>
 <main id="main" tabindex="-1">
 <script type="application/ld+json">
@@ -176,95 +178,95 @@
 </script>
 
 <section class="hero" aria-labelledby="hero-h">
-  <div class="wrap hero-in">
-    <div>
-      <p class="kicker">ارتقِ بطرفيتك · مجاني · مفتوح المصدر · يعمل على حاسوبك</p>
-      <h1 id="hero-h">كل طرفياتك، جنبًا إلى جنب. واعرف أي وكيل <em>يحتاج إليك</em>.</h1>
-      <p class="lead">يضع Aubergine كل طرفياتك جنبًا إلى جنب على لوحة واحدة في متصفحك. شغّل منها ما شئت، بالوكلاء والنماذج التي تستخدمها أصلًا. ليس له نموذج خاص به، ولا يطلب منك مفتاحًا أبدًا.</p>
-      <p class="cmd"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="تم النسخ" aria-live="polite" hidden>نسخ</button></p>
-      <p class="after">ثم <code>aubergine start --open</code>. لنظام macOS، مع tmux 3.2 أو أحدث، ومعه Node.js 22 أو أحدث.</p>
-      <p class="actions"><a class="button primary" href="install/">التثبيت</a><a class="button" href="https://github.com/thirstyeggplant/aubergine">اقرأ الشيفرة المصدرية</a></p>
-    </div>
-    <figure class="canvas">
-      <div class="canvas-field" dir="ltr" aria-hidden="true">
-        <div class="term term-1 waits"><div class="term-bar"><span class="term-name">claude · fix-login</span><span class="term-state">waiting for you</span></div>
-<pre><i>?</i> Two files use the old check.
-  Change both, or only /auth?
-<i>›</i> </pre></div>
-        <div class="term term-2 working"><div class="term-bar"><span class="term-name">codex · migrate-db</span><span class="term-state">working</span></div>
-<pre>› step 3 of 5
-<b>✓</b> schema read
-<b>✓</b> 41 tests pass
-› writing the migration…</pre></div>
-        <div class="term term-3"><div class="term-bar"><span class="term-name">zsh · tests</span><span class="term-state">running</span></div>
-<pre><b>$</b> pnpm test --watch
-<b>✓</b> 212 passed
-  watching for changes…</pre></div>
-        <div class="term term-4 done"><div class="term-bar"><span class="term-name">claude · release-notes</span><span class="term-state">finished</span></div>
-<pre><b>✓</b> notes written
-  handed in: 6 changes</pre></div>
-        <div class="term term-5"><div class="term-bar"><span class="term-name">zsh · api</span><span class="term-state">idle</span></div>
-<pre><b>$</b> git status
-  nothing to commit
-<b>$</b> </pre></div>
-      </div>
-      <figcaption>رسم توضيحي لا لقطة حقيقية: خمس طرفيات على لوحة، والطرفية التي تنتظرك.</figcaption>
-    </figure>
-  </div>
-</section>
-
-<section class="section" id="powers" aria-labelledby="powers-h">
   <div class="wrap">
-    <h2 id="powers-h">امنح طرفياتك قوى خارقة</h2>
-    <p class="intro">الطرفيات التي تستخدمها أصلًا، مع ما كان ينقصها: مكان تقف فيه جنبًا إلى جنب، وذاكرة، وطريقة تخبرك بها متى تحتاج إليك.</p>
-    <ul class="rows across">
-      <li><h3>ارفع إنتاجيتك</h3><p>يعمل عدة وكلاء في وقت واحد، كلٌّ في طرفيته. تجيب الوكيل الذي ينتظرك وتترك الباقين يعملون.</p></li>
-      <li><h3>تجربة مطوّر أفضل</h3><p>لكل طرفية اسم ولون وملاحظة ومكانها على اللوحة. أغلق المتصفح أو أعد تشغيل Aubergine: كل ذلك باقٍ في مكانه.</p></li>
-      <li><h3>لا حاجة إلى التبديل</h3><p>صدفتك وأدواتك ووكلاؤك ونماذجك، كما هي. يضيف Aubergine اللوحة من حولها، وليس له نموذج خاص به.</p></li>
+    <ul class="kicker">
+      <li>ارتقِ بطرفيتك</li>
+      <li>مجاني</li>
+      <li>مفتوح المصدر</li>
+      <li>يعمل على حاسوبك</li>
     </ul>
+    <h1 id="hero-h"><span class="line">كل طرفياتك،</span> <span class="line">جنبًا إلى جنب.</span> <span class="line">أحضِر <em>وكلاءك</em> الخاصين.</span></h1>
+    <div class="hero-under">
+      <p class="lead">يضع Aubergine كل طرفياتك جنبًا إلى جنب على لوحة واحدة في متصفحك. شغّل منها ما شئت، بالوكلاء والنماذج التي تستخدمها أصلًا. ليس له نموذج خاص به، ولا يطلب منك مفتاحًا أبدًا.</p>
+      <div class="hero-do">
+        <p class="cmd"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="تم النسخ" aria-live="polite" hidden>نسخ</button></p>
+        <p class="actions"><a class="button" href="install/">التثبيت</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">اقرأ الشيفرة المصدرية</a></p>
+        <p class="after">ثم <code>aubergine start --open</code>. لنظام macOS، مع tmux 3.2 أو أحدث، ومعه Node.js 22 أو أحدث.</p>
+      </div>
+    </div>
   </div>
 </section>
 
-<section class="section" id="see" aria-labelledby="see-h">
+<section class="stage">
   <div class="wrap">
-    <h2 id="see-h">كيف يبدو</h2>
-    <p class="intro">لقطات حقيقية من العرض التجريبي المرفق مع Aubergine: وكلاء بدلاء، لا وكلاء حقيقيون.</p>
+    <figure class="frame frame-big">
+      <div class="frame-bar" dir="ltr" aria-hidden="true"><i></i><i></i><i></i><span>localhost · Aubergine</span></div>
+      <a href="../screenshots/canvas.png" class="frame-pic"><img src="../screenshots/canvas.png" width="3840" height="2400" alt="التطبيق كاملًا: قائمة اللوحات والطرفيات على اليسار، وست طرفيات حية على لوحة؛ إحداها، Login bug · question، محاطة بلون الانتظار وتعرض waiting for you."></a>
+    </figure>
+    <p class="stage-caption">لقطة حقيقية من العرض التجريبي المرفق مع Aubergine: ست طرفيات على لوحة واحدة، والطرفية التي تنتظرك.</p>
+  </div>
+</section>
+
+<section class="band band-cream" id="powers" aria-labelledby="powers-h">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 id="powers-h">امنح طرفياتك قوى خارقة</h2>
+      <p class="intro">الطرفيات التي تستخدمها أصلًا، مع ما كان ينقصها: مكان تقف فيه جنبًا إلى جنب، وذاكرة، وطريقة تخبرك بها متى تحتاج إليك.</p>
+    </div>
+    <ol class="powers">
+      <li><span class="num" aria-hidden="true">01</span><h3>ارفع إنتاجيتك</h3><p>يعمل عدة وكلاء في وقت واحد، كلٌّ في طرفيته. تجيب الوكيل الذي ينتظرك وتترك الباقين يعملون.</p></li>
+      <li><span class="num" aria-hidden="true">02</span><h3>تجربة مطوّر أفضل</h3><p>لكل طرفية اسم ولون وملاحظة ومكانها على اللوحة. أغلق المتصفح أو أعد تشغيل Aubergine: كل ذلك باقٍ في مكانه.</p></li>
+      <li><span class="num" aria-hidden="true">03</span><h3>لا حاجة إلى التبديل</h3><p>صدفتك وأدواتك ووكلاؤك ونماذجك، كما هي. يضيف Aubergine اللوحة من حولها، وليس له نموذج خاص به.</p></li>
+    </ol>
+  </div>
+</section>
+
+<section class="band band-lilac" id="see" aria-labelledby="see-h">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 id="see-h">كيف يبدو</h2>
+      <p class="intro">لقطات حقيقية من العرض التجريبي المرفق مع Aubergine: وكلاء بدلاء، لا وكلاء حقيقيون.</p>
+    </div>
     <div class="shows">
       <div class="show">
-        <div><h3>كل طرفية على لوحة واحدة</h3><p>ما شئت منها، جنبًا إلى جنب، وكل واحدة حيّة ما دامت ظاهرة.</p></div>
-        <figure class="pic"><a href="../screenshots/list.png"><img src="../screenshots/list.png" width="1440" height="1008" loading="lazy" alt="اللوحة الجانبية تعرض خمس طرفيات وحالة كل منها بالكلمات (working وwaiting for you وfinished وparked)، بجانب جزء من اللوحة فيه صدفة حيّة."></a><figcaption>تقول القائمة ما تفعله كل طرفية؛ وبجانبها الطرفيات نفسها.</figcaption></figure>
+        <div class="show-words"><h3>كل طرفية على لوحة واحدة</h3><p>ما شئت منها، جنبًا إلى جنب، وكل واحدة حيّة ما دامت ظاهرة.</p></div>
+        <figure class="frame"><a href="../screenshots/list.png" class="frame-pic"><img src="../screenshots/list.png" width="1440" height="1008" loading="lazy" alt="اللوحة الجانبية تعرض خمس طرفيات وحالة كل منها بالكلمات (working وwaiting for you وfinished وparked)، بجانب جزء من اللوحة فيه صدفة حيّة."></a><figcaption>تقول القائمة ما تفعله كل طرفية؛ وبجانبها الطرفيات نفسها.</figcaption></figure>
+      </div>
+      <div class="show show-flip">
+        <div class="show-words"><h3><span class="waits">الطرفية التي تنتظر تبرز للعيان</span></h3><p>حين يحتاج إليك وكيل، تراه من الطرف الآخر من اللوحة، والمفتاح <code>W</code> يأخذك إليه.</p></div>
+        <figure class="frame"><a href="../screenshots/waiting.png" class="frame-pic"><img src="../screenshots/waiting.png" width="1496" height="600" loading="lazy" alt="طرفية واحدة يطرح وكيلها سؤالًا، وعنوانها يقول waiting for you، وإطارها بلون الانتظار."></a><figcaption>يأخذ إطارها لون الانتظار، ويقول عنوانها waiting for you (بانتظارك).</figcaption></figure>
       </div>
       <div class="show">
-        <div><h3>الطرفية التي تنتظر تبرز للعيان</h3><p>حين يحتاج إليك وكيل، تراه من الطرف الآخر من اللوحة، والمفتاح <code>W</code> يأخذك إليه.</p></div>
-        <figure class="pic"><a href="../screenshots/waiting.png"><img src="../screenshots/waiting.png" width="1496" height="600" loading="lazy" alt="طرفية واحدة يطرح وكيلها سؤالًا، وعنوانها يقول waiting for you، وإطارها بلون الانتظار."></a><figcaption>يأخذ إطارها لون الانتظار، ويقول عنوانها waiting for you (بانتظارك).</figcaption></figure>
-      </div>
-      <div class="show">
-        <div><h3>طرفية واحدة وحدها</h3><p>افتح أي طرفية في علامة تبويب خاصة بها في المتصفح، هي الطرفية نفسها لا نسخة منها.</p></div>
-        <figure class="pic"><a href="../screenshots/focus-part.png"><img src="../screenshots/focus-part.png" width="1344" height="1172" loading="lazy" alt="طرفية واحدة وحدها في علامة تبويب في المتصفح: اسمها في الرأس، وتفاصيلها مع خطوة سير العمل ومجلدها وحقولها، والطرفية الحيّة بجانبها."></a><figcaption>تُفتح تفاصيلها وملاحظتها بجانبها حين تطلب ذلك، وتُغلق من جديد بأزرارها.</figcaption></figure>
+        <div class="show-words"><h3>طرفية واحدة وحدها</h3><p>افتح أي طرفية في علامة تبويب خاصة بها في المتصفح، هي الطرفية نفسها لا نسخة منها.</p></div>
+        <figure class="frame"><a href="../screenshots/focus-part.png" class="frame-pic"><img src="../screenshots/focus-part.png" width="1344" height="1172" loading="lazy" alt="طرفية واحدة وحدها في علامة تبويب في المتصفح: اسمها في الرأس، وتفاصيلها مع خطوة سير العمل ومجلدها وحقولها، والطرفية الحيّة بجانبها."></a><figcaption>تُفتح تفاصيلها وملاحظتها بجانبها حين تطلب ذلك، وتُغلق من جديد بأزرارها.</figcaption></figure>
       </div>
     </div>
   </div>
 </section>
 
-<section class="section" id="agents" aria-labelledby="agents-h">
+<section class="band band-dark" id="agents" aria-labelledby="agents-h">
   <div class="wrap">
-    <h2 id="agents-h">أحضِر وكيلك الخاص</h2>
-    <p class="intro">يشغّل Aubergine طرفيات عادية. لا يستدعي أي نموذج، ولا يحتفظ بأي مفتاح، وليس فيه حساب: وكلاء سطر الأوامر الذين تستخدمهم أصلًا، مسجَّلًا دخولك فيهم باسمك، يعملون في طرفياته بأي نموذج اخترته لهم. ما يفعله Aubergine من تلقاء نفسه لوكيلٍ مبنيّ اليوم لـ Claude Code؛ وأي وكيل آخر يستطيع أن يقول الأشياء نفسها عبر أوامر <code>aubergine</code>.</p>
-    <ul class="rows">
-      <li><h3><a class="row-link" href="claude/">Claude Code</a></h3><p>شغّله من قائمة New terminal فيقول من تلقاء نفسه متى يعمل، ومتى ينتظرك، ومتى ينتهي؛ ويستطيع Aubergine استئناف محادثاته وعرض طريقة إعداده.</p></li>
-      <li><h3><a class="row-link" href="chatgpt/">Codex و ChatGPT</a></h3><p>يعمل Codex في طرفية مثل أي برنامج، ويبلّغ عبر أوامر <code>aubergine</code> متى أخبرته تعليماته بذلك. أما ChatGPT في المتصفح فليس برنامج طرفية.</p></li>
-      <li><h3><a class="row-link" href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/for-agents.md">أي وكيل آخر لسطر الأوامر، أو صدفة عادية</a></h3><p>في كل طرفية الأمر <code>aubergine</code>، و<code>aubergine guide --snippet</code> يطبع خمسة أسطر تضعها في تعليمات وكيلك.</p></li>
+    <div class="section-head">
+      <h2 id="agents-h">أحضِر وكيلك الخاص</h2>
+      <p class="intro">يشغّل Aubergine طرفيات عادية. لا يستدعي أي نموذج، ولا يحتفظ بأي مفتاح، وليس فيه حساب: وكلاء سطر الأوامر الذين تستخدمهم أصلًا، مسجَّلًا دخولك فيهم باسمك، يعملون في طرفياته بأي نموذج اخترته لهم. ما يفعله Aubergine من تلقاء نفسه لوكيلٍ مبنيّ اليوم لـ Claude Code؛ وأي وكيل آخر يستطيع أن يقول الأشياء نفسها عبر أوامر <code>aubergine</code>.</p>
+    </div>
+    <ul class="agents">
+      <li><h3><a href="claude/">Claude Code</a></h3><p>شغّله من قائمة New terminal فيقول من تلقاء نفسه متى يعمل، ومتى ينتظرك، ومتى ينتهي؛ ويستطيع Aubergine استئناف محادثاته وعرض طريقة إعداده.</p></li>
+      <li><h3><a href="chatgpt/">Codex و ChatGPT</a></h3><p>يعمل Codex في طرفية مثل أي برنامج، ويبلّغ عبر أوامر <code>aubergine</code> متى أخبرته تعليماته بذلك. أما ChatGPT في المتصفح فليس برنامج طرفية.</p></li>
+      <li><h3><a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/for-agents.md">أي وكيل آخر لسطر الأوامر، أو صدفة عادية</a></h3><p>في كل طرفية الأمر <code>aubergine</code>، و<code>aubergine guide --snippet</code> يطبع خمسة أسطر تضعها في تعليمات وكيلك.</p></li>
     </ul>
   </div>
 </section>
 
-<section class="section" id="features" aria-labelledby="features-h">
+<section class="band band-cream" id="features" aria-labelledby="features-h">
   <div class="wrap">
-    <h2 id="features-h">ما الذي بُني أيضًا</h2>
-    <p class="intro">كل هذا يعمل على حاسوبك اليوم.</p>
-    <ul class="rows">
+    <div class="section-head">
+      <h2 id="features-h">ما الذي بُني أيضًا</h2>
+      <p class="intro">كل هذا يعمل على حاسوبك اليوم.</p>
+    </div>
+    <ul class="built">
       <li><h3>لوحة من الطرفيات</h3><p>حرّك اللوحة وكبّرها ورتّب طرفيات حقيقية، وانقر مرة واحدة لتكتب، واركن طرفية ثم أعدها لاحقًا، أو افتح واحدة وحدها في علامة تبويب في المتصفح مع تفاصيلها وملاحظتها بجانبها.</p></li>
-      <li><h3>اعرف من ينتظر</h3><p>مشغولة أو خاملة أو بانتظارك، على كل طرفية، وقائمة «For you» و«next waiting» تأخذانك مباشرة إلى ما يحتاج إلى إنسان.</p></li>
+      <li><h3><span class="waits">اعرف من ينتظر</span></h3><p>مشغولة أو خاملة أو بانتظارك، على كل طرفية، وقائمة «For you» و«next waiting» تأخذانك مباشرة إلى ما يحتاج إلى إنسان.</p></li>
       <li><h3>الطابور والجداول الزمنية</h3><p>اكتب مهمة مرة واحدة ودع وكيلًا متفرغًا يأخذها، أو جدولها في ساعة من اليوم في الأيام التي تختارها.</p></li>
       <li><h3>نسخ العمل</h3><p>أعطِ كل وكيل نسخته الخاصة من المستودع على فرعه الخاص، فلا يعدّل وكيلان الملفات نفسها أبدًا.</p></li>
       <li><h3>المشاريع</h3><p>خادم واحد وعدة غرف تحكم: لكل مشروع لوحاته وطابوره وجداوله الزمنية وقواعده، ويمكن حفظه ملفًا أو قالبًا.</p></li>
@@ -277,35 +279,27 @@
   </div>
 </section>
 
-<section class="section" id="trust" aria-labelledby="trust-h">
+<section class="band band-lilac" id="trust" aria-labelledby="trust-h">
   <div class="wrap">
-    <h2 id="trust-h">طرفياتك تبقى لك</h2>
-    <ul class="rows">
+    <div class="section-head">
+      <h2 id="trust-h">طرفياتك تبقى لك</h2>
+      <p class="intro"><a class="onward" href="security/">ما المحمي، وما غير المحمي</a></p>
+    </div>
+    <ul class="pairs">
       <li><h3>محلي فقط</h3><p>يستمع الخادم على 127.0.0.1 ويتحقق من Host وOrigin في كل طلب؛ والاستخدام من جهاز آخر يبقى معطّلًا حتى تعدّه بنفسك.</p></li>
       <li><h3>الطرفيات تبقى بعد التطبيق</h3><p>كل طرفية جلسة tmux: أغلق المتصفح أو أعد تشغيل Aubergine ويبقى عملك قائمًا.</p></li>
       <li><h3>لا نموذج ولا مفتاح</h3><p>لا يختار Aubergine نموذجًا ولا يستدعيه، ولا يحتفظ بمفتاح لأي نموذج؛ وكلاؤك يجلبون ما يخصهم.</p></li>
       <li><h3>القرار لك</h3><p>الرموز محدودة النطاق، وما يكتبه الوكلاء ينتظر مراجعتك، والموافقات يمنحها إنسان.</p></li>
     </ul>
-    <p class="more-link"><a href="security/">ما المحمي، وما غير المحمي</a></p>
   </div>
 </section>
 
-<section class="section" id="install" aria-labelledby="install-h">
+<section class="band band-cream" id="faq" aria-labelledby="faq-h">
   <div class="wrap">
-    <h2 id="install-h">جاهز للعمل في خمس دقائق</h2>
-    <p class="intro">تحتاج إلى macOS مع tmux 3.2 أو أحدث، ومعه Node.js 22 أو أحدث. الأمر <code>brew install tmux node</code> يثبّت الاثنين.</p>
-    <ol class="steps">
-      <li><h3>التثبيت</h3><p class="cmd"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="تم النسخ" aria-live="polite" hidden>نسخ</button></p><p>أو استخدم <a href="install/">المثبِّت</a>، الذي يبني من الشيفرة المصدرية باستخدام pnpm.</p></li>
-      <li><h3>شغّله وافتح متصفحك</h3><p class="cmd"><code>aubergine start --open</code><button type="button" class="copy" data-copy data-copied="تم النسخ" aria-live="polite" hidden>نسخ</button></p><p>يشغّل الخادم ويفتح متصفحك وأنت مسجَّل الدخول.</p></li>
-      <li><h3>خذ الجولة</h3><p>انقر <strong>Show me around</strong> (عرّفني بالمكان) على اللوحة الفارغة. يصنع لوحة Demo فيها وكلاء بدلاء ويمرّ بك عبر ثماني خطوات قصيرة؛ والأمر <code>aubergine demo --remove</code> يزيلها.</p></li>
-    </ol>
-    <p class="note more-link">لا يغيّر المثبِّت إلا <code>~/.aubergine</code> ورابطًا واحدًا اسمه <code>aubergine</code>. لا يستخدم sudo أبدًا ولا يعدّل ملفات بدء الصدفة لديك أبدًا.</p>
-  </div>
-</section>
-
-<section class="section" id="faq" aria-labelledby="faq-h">
-  <div class="wrap">
-    <h2 id="faq-h">أسئلة</h2>
+    <div class="section-head">
+      <h2 id="faq-h">أسئلة</h2>
+      <p class="intro"><a class="onward" href="faq/">كل الأسئلة</a></p>
+    </div>
     <div class="questions">
       <details><summary>ما Aubergine؟</summary><p>لوحة محلية في المتصفح لجلسات الطرفية. كل طرفية عقدة يمكنك ترتيبها واستخدامها، فتشغّل عدة وكلاء برمجة في آن واحد وتعرف أيهم ينتظرك.</p></details>
       <details><summary>هل يرسل Aubergine طرفياتي أو شيفرتي إلى أي مكان؟</summary><p>لا. كل شيء يعمل على حاسوبك أنت. يستمع الخادم على 127.0.0.1 فقط ويتحقق من Host وOrigin في كل طلب.</p></details>
@@ -313,20 +307,35 @@
       <details><summary>ماذا لو شغّلت Claude Code بنفسي في طرفية؟</summary><p>يعمل مثل أي برنامج: تكتب له كالمعتاد. لكن Aubergine لا يعرف بوجود وكيل إلا إذا شغّله هو بنفسه (New terminal، ثم Claude Code)، لأنه يضيف بضعة خطافات صغيرة تبلّغ بما يفعله الوكيل. إذا شُغّل يدويًا، تظهر الطرفية فقط مشغولة بتشغيل <code>claude</code>: لا تُعلَّم بأنها بانتظارك حين يسأل شيئًا، وإذا بدأت سير عمل فيها فلا يُكتب له شيء. اطلب منه بنفسك أن يشغّل <code>aubergine workflow status</code>، الذي يعمل من الداخل أيضًا، أو شغّل الوكيل من قائمة New terminal بدلًا من ذلك.</p></details>
       <details><summary>هل Aubergine مجاني؟</summary><p>نعم. إنه مجاني ومفتوح المصدر بموجب <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">رخصة MIT</a>، وشيفرته المصدرية على GitHub.</p></details>
     </div>
-    <p class="more-link"><a href="faq/">كل الأسئلة</a></p>
   </div>
 </section>
 
-<section class="section" id="planned" aria-labelledby="planned-h">
-  <div class="wrap">
+<section class="band band-lilac band-slim" id="planned" aria-labelledby="planned-h">
+  <div class="wrap planned-line">
     <h2 id="planned-h">ما المخطط له</h2>
-    <p class="note">العمل الجماعي، والوكلاء في السحابة، وأنماط الموافقة وغيرها مخطط لها ولم تُبنَ. <a href="roadmap/">اطّلع على خارطة الطريق</a>.</p>
+    <p>العمل الجماعي، والوكلاء في السحابة، وأنماط الموافقة وغيرها مخطط لها ولم تُبنَ. <a href="roadmap/">اطّلع على خارطة الطريق</a>.</p>
+  </div>
+</section>
+
+<section class="band band-purple" id="install" aria-labelledby="install-h">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 id="install-h">جاهز للعمل في خمس دقائق</h2>
+      <p class="intro">تحتاج إلى macOS مع tmux 3.2 أو أحدث، ومعه Node.js 22 أو أحدث. الأمر <code>brew install tmux node</code> يثبّت الاثنين.</p>
+    </div>
+    <ol class="steps">
+      <li><h3>التثبيت</h3><p class="cmd"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="تم النسخ" aria-live="polite" hidden>نسخ</button></p><p>أو استخدم <a href="install/">المثبِّت</a>، الذي يبني من الشيفرة المصدرية باستخدام pnpm.</p></li>
+      <li><h3>شغّله وافتح متصفحك</h3><p class="cmd"><code>aubergine start --open</code><button type="button" class="copy" data-copy data-copied="تم النسخ" aria-live="polite" hidden>نسخ</button></p><p>يشغّل الخادم ويفتح متصفحك وأنت مسجَّل الدخول.</p></li>
+      <li><h3>خذ الجولة</h3><p>انقر <strong>Show me around</strong> (عرّفني بالمكان) على اللوحة الفارغة. يصنع لوحة Demo فيها وكلاء بدلاء ويمرّ بك عبر ثماني خطوات قصيرة؛ والأمر <code>aubergine demo --remove</code> يزيلها.</p></li>
+    </ol>
+    <p class="install-note">لا يغيّر المثبِّت إلا <code>~/.aubergine</code> ورابطًا واحدًا اسمه <code>aubergine</code>. لا يستخدم sudo أبدًا ولا يعدّل ملفات بدء الصدفة لديك أبدًا.</p>
   </div>
 </section>
 
 </main>
 <footer class="foot">
   <div class="wrap foot-in">
+    <a class="mark" href="./"><img src="../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
     <nav aria-label="كل الصفحات">
       <ul class="foot-links">
         <li><a href="./" aria-current="page">الرئيسية</a></li>
@@ -352,6 +361,7 @@ document.querySelectorAll('[data-copy]').forEach(function (button) {
   button.hidden = false;
   button.addEventListener('click', function () {
     var words = button.textContent;
+    if (!navigator.clipboard) return;
     navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
       button.textContent = button.getAttribute('data-copied');
       setTimeout(function () { button.textContent = words; }, 1600);
@@ -364,6 +374,12 @@ document.addEventListener('keydown', function (event) {
 });
 document.addEventListener('click', function (event) {
   document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
 });
 </script>
 </body>

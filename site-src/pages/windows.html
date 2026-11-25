@@ -47,20 +47,21 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="{{attr:site.crumbs}}"><ol><li><a href="/">Aubergine</a></li><li>{{windows.crumb}}</li></ol></nav>
-  <h1>{{windows.title}}</h1>
-  <p class="lead">{{windows.lead}}</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="{{attr:site.crumbs}}"><ol><li><a href="/">Aubergine</a></li><li>{{windows.crumb}}</li></ol></nav>
+    <h1>{{windows.title}}</h1>
+    <p class="lead">{{windows.lead}}</p>
+    <p class="note note-strong">{{windows.tried}}</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
-    <p class="note">{{windows.tried}}</p>
-
     <h2>{{windows.req.title}}</h2>
     <p>{{windows.req.text}}</p>
 
     <h2>{{windows.steps.title}}</h2>
-    <ol>
+    <ol class="seq">
       <li><p>{{windows.steps.wsl}}</p>
         <p class="cmd multi"><code>wsl --install</code><button type="button" class="copy" data-copy data-copied="{{attr:site.copied}}" aria-live="polite" hidden>{{site.copy}}</button></p>
         <p>{{windows.steps.ubuntu}}</p></li>
@@ -107,8 +108,16 @@
         </tbody>
       </table>
     </div>
-
-    <h2>{{install.next.title}}</h2>
-    <p>{{windows.next.text}}</p>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">{{install.next.title}}</h2>
+    <div class="close-do">
+      <p>{{windows.next.text}}</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="{{attr:site.copied}}" aria-live="polite" hidden>{{site.copy}}</button></p>
+      <p class="actions"><a class="button" href="/install/">{{site.nav.install}}</a></p>
+    </div>
+  </div>
+</section>

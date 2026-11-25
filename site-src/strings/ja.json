@@ -131,13 +131,33 @@
     "text": "tmux 3.2 以降、Node.js 22 以降",
     "from": "6fadbd03c20d"
   },
-  "home.hero.kicker": {
-    "text": "ターミナルをパワーアップ · 無料 · オープンソース · あなたのコンピューターで動作",
-    "from": "a61d5f4f3b3a"
+  "home.hero.tag.lead": {
+    "text": "ターミナルをパワーアップ",
+    "from": "eb13de4649f0"
   },
-  "home.hero.title": {
-    "text": "すべてのターミナルを横に並べて。どのエージェントが<em>あなたを必要としている</em>か分かる。",
-    "from": "7be0ec221ba9"
+  "home.hero.tag.free": {
+    "text": "無料",
+    "from": "f411a1fb6275"
+  },
+  "home.hero.tag.open": {
+    "text": "オープンソース",
+    "from": "67a0d2e0dab4"
+  },
+  "home.hero.tag.local": {
+    "text": "あなたのコンピューターで動作",
+    "from": "cd90f9395587"
+  },
+  "home.hero.title.a": {
+    "text": "すべてのターミナルを、",
+    "from": "8dd2aa1cda63"
+  },
+  "home.hero.title.b": {
+    "text": "横に並べて。",
+    "from": "eb95eacfe17a"
+  },
+  "home.hero.title.c": {
+    "text": "<em>エージェント</em>は持ち込みで。",
+    "from": "4728f2abc24b"
   },
   "home.hero.lead": {
     "text": "Aubergine は、すべてのターミナルをブラウザーの1つのキャンバスに並べます。いつも使っているエージェントとモデルのまま、好きなだけ動かせます。Aubergine 自身はモデルを持たず、キーを求めることもありません。",
@@ -155,9 +175,13 @@
     "text": "ソースを読む",
     "from": "625b22ba31d0"
   },
-  "home.canvas.caption": {
-    "text": "画面のキャプチャではなくイラストです。キャンバス上の5つのターミナルと、あなたを待っている1つを描いています。",
-    "from": "413e282f8a9d"
+  "home.stage.caption": {
+    "text": "Aubergine に付属するデモの実際のキャプチャです。1 つのキャンバスに 6 つのターミナルがあり、そのうち 1 つがあなたを待っています。",
+    "from": "21a1f62e34b1"
+  },
+  "home.stage.alt": {
+    "text": "アプリ全体：左にキャンバスとターミナルの一覧、キャンバス上に動作中のターミナルが 6 つ。そのうち Login bug · question は待機の色で囲まれ、waiting for you と表示しています。",
+    "from": "2288db7c750f"
   },
   "home.powers.title": {
     "text": "ターミナルにスーパーパワーを",

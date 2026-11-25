@@ -20,8 +20,8 @@
 <link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/roadmap/">
 <link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/roadmap/">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
 <link rel="icon" href="../../icon.svg" type="image/svg+xml">
 <link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../../style.css">
@@ -45,7 +45,7 @@
 <a class="skip" href="#main">Aller au contenu</a>
 <header class="top">
   <div class="wrap top-in">
-    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
     <nav class="nav" aria-label="Pages">
       <ul>
         <li><a href="../claude/">Claude Code</a></li>
@@ -77,9 +77,11 @@
   </div>
 </header>
 
-<div class="wrap translated">
-  <p class="note">Aubergine elle-même est en anglais : ses boutons, ses menus et ses images sont ceux de la version anglaise.</p>
-  <p class="note">Cette page a été traduite de l’anglais par une machine. <a href="https://github.com/thirstyeggplant/aubergine/issues">Proposer une correction</a>.</p>
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine elle-même est en anglais : ses boutons, ses menus et ses images sont ceux de la version anglaise.</p>
+    <p>Cette page a été traduite de l’anglais par une machine. <a href="https://github.com/thirstyeggplant/aubergine/issues">Proposer une correction</a>.</p>
+  </div>
 </div>
 <main id="main" tabindex="-1">
 <script type="application/ld+json">
@@ -103,76 +105,95 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="Où vous êtes"><ol><li><a href="../">Aubergine</a></li><li>Feuille de route</li></ol></nav>
-  <p class="tag">Prévu, pas encore construit</p>
-  <h1>Feuille de route</h1>
-  <p class="lead">Rien de tout ceci n’existe aujourd’hui. C’est là où nous voulons aller, et l’ordre peut changer. Pour ce qui est construit maintenant, voir les <a href="../guides/">guides</a>.</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Où vous êtes"><ol><li><a href="../">Aubergine</a></li><li>Feuille de route</li></ol></nav>
+    <p class="tag">Prévu, pas encore construit</p>
+    <h1>Feuille de route</h1>
+    <p class="lead">Rien de tout ceci n’existe aujourd’hui. C’est là où nous voulons aller, et l’ordre peut changer. Pour ce qui est construit maintenant, voir les <a href="../guides/">guides</a>.</p>
+  </div>
+</header>
 <div class="wrap page-body roadmap">
-    <h2>Équipes et connexions</h2>
-    <p class="intro">Des personnes qui travaillent ensemble, et des agents joignables depuis les outils que vous utilisez déjà.</p>
-    <ul class="planned">
+  <section aria-labelledby="rm-teams">
+    <h2 id="rm-teams">Équipes et connexions</h2>
+      <p class="intro">Des personnes qui travaillent ensemble, et des agents joignables depuis les outils que vous utilisez déjà.</p>
+      <ul class="planned">
       <li><h3>Multijoueur</h3><p>Partagez un canevas avec d’autres personnes et leurs agents. Voyez qui travaille où, passez un agent en attente à un coéquipier, et répondez ensemble.</p></li>
       <li><h3>Interface de chat</h3><p>Sollicitez des agents et répondez à leurs questions depuis une application de chat d’équipe, avec la même identité et les mêmes réglages que dans le navigateur.</p></li>
       <li><h3>Tickets et pull requests</h3><p>Transformez une issue en tâche dans la file d’attente, ouvrez une pull request depuis une copie de travail, et reportez le résultat sur le ticket.</p></li>
       <li><h3>Surveillances, webhooks et tri</h3><p>Démarrez un travail quand quelque chose se produit : un job de CI en échec, une alerte, un changement surveillé ou un appel d’un autre service. Des règles décident de ce qui devient une tâche.</p></li>
       <li><h3>Skills partagés et une place de marché</h3><p>Partagez les skills d’un agent par autorisation, étendez-les à toute l’équipe avec approbation, importez-les depuis Git, et trouvez des éléments relus dans un catalogue public.</p></li>
       <li><h3>Une mémoire pour les personnes et les salles</h3><p>Gardez ce qu’un agent a appris pour chaque personne et chaque salle partagée, séparément des autres.</p></li>
-    </ul>
-    <p class="also">Aussi : des contrôles d’administration pour les modèles, le partage et le niveau d’exigence · un serveur d’équipe auto-hébergé · la connexion pour les équipes (SSO et MFA) · des limites d’usage par personne, jeton ou agent · des rapports en lecture seule à partager sans partager les terminaux · une vue téléphone de la liste « For you » · des connecteurs relus vers les outils de l’entreprise · d’autres applications de chat · de petites applications web internes publiées pour des personnes choisies.</p>
-
-    <h2>Cloud</h2>
-    <p class="intro">Des agents qui n’ont pas besoin que votre portable soit éveillé.</p>
-    <ul class="planned">
+      </ul>
+      <p class="also">Aussi : des contrôles d’administration pour les modèles, le partage et le niveau d’exigence · un serveur d’équipe auto-hébergé · la connexion pour les équipes (SSO et MFA) · des limites d’usage par personne, jeton ou agent · des rapports en lecture seule à partager sans partager les terminaux · une vue téléphone de la liste « For you » · des connecteurs relus vers les outils de l’entreprise · d’autres applications de chat · de petites applications web internes publiées pour des personnes choisies.</p>
+  </section>
+  <section aria-labelledby="rm-cloud">
+    <h2 id="rm-cloud">Cloud</h2>
+      <p class="intro">Des agents qui n’ont pas besoin que votre portable soit éveillé.</p>
+      <ul class="planned">
       <li><h3>Des agents en bac à sable dans le cloud</h3><p>Faites tourner un agent dans un bac à sable isolé dans le cloud et suivez-le sur le même canevas que vos agents locaux. Les bacs à sable se mettent en veille quand ils sont inactifs, se réveillent à la demande et gardent leur stockage d’une exécution à l’autre.</p></li>
       <li><h3>Un pool d’agents</h3><p>Décrivez le travail et laissez un pool d’agents s’en charger, au lieu de nommer un terminal pour chaque tâche.</p></li>
       <li><h3>Des environnements prêts à l’emploi</h3><p>Enregistrez une fois dépendances, outils, skills, fichiers et variables, et lancez à partir d’eux n’importe quel nouveau terminal ou agent cloud.</p></li>
       <li><h3>Des travaux longs, en plusieurs phases</h3><p>Des tâches qui tournent pendant des heures ou des jours par étapes, avec un point d’étape après chacune et une progression qui survit aux redémarrages.</p></li>
       <li><h3>Déploiement cloud en une commande</h3><p>Installez l’Aubergine partagée d’une équipe sur votre propre compte cloud en une commande.</p></li>
       <li><h3>Un travail que vous pouvez voir</h3><p>Un agent cloud renvoie des captures d’écran ou un court enregistrement de ce qu’il a construit, dans votre liste « For you ».</p></li>
-    </ul>
-    <p class="also">Aussi : MCP sur HTTP, pour des agents sur d’autres machines · une prise en charge de Linux testée · une intégration au shell au-delà de zsh.</p>
-
-    <h2>Contrôle</h2>
-    <p class="intro">Ce qu’un agent a le droit de faire, et une trace de ce qu’il a fait.</p>
-    <ul class="planned">
+      </ul>
+      <p class="also">Aussi : MCP sur HTTP, pour des agents sur d’autres machines · une prise en charge de Linux testée · une intégration au shell au-delà de zsh.</p>
+  </section>
+  <section aria-labelledby="rm-control">
+    <h2 id="rm-control">Contrôle</h2>
+      <p class="intro">Ce qu’un agent a le droit de faire, et une trace de ce qu’il a fait.</p>
+      <ul class="planned">
       <li><h3>Modes d’approbation</h3><p>Choisissez ce qu’un agent peut faire seul : approuver chaque action, approuver les actions risquées, ou aucune.</p></li>
       <li><h3>Politique des commandes et filtrage</h3><p>Des règles pour les commandes qui demandent une approbation ou sont toujours refusées, et un filtrage facultatif du contenu extérieur avant qu’un agent le lise.</p></li>
       <li><h3>Niveaux de risque par dépôt</h3><p>Des limites plus strictes là où ça compte, plus souples là où ça ne compte pas.</p></li>
       <li><h3>Une piste d’audit complète</h3><p>Une trace de qui ou quoi a fait quoi, par projet, au-delà des appels de jetons enregistrés aujourd’hui.</p></li>
       <li><h3>Annuler le travail d’un agent</h3><p>Ramener une copie de travail à son état d’avant une tâche, ou jeter sa branche en une étape.</p></li>
       <li><h3>Contrôles d’administration</h3><p>Des réglages pour toute l’équipe sur les modèles autorisés et le fonctionnement du partage.</p></li>
-    </ul>
-    <p class="also">Aussi : le choix du modèle par terminal, tâche ou planification.</p>
-
-    <h2>Qualité</h2>
-    <p class="intro">Des vérifications faites avant qu’un travail soit déclaré terminé.</p>
-    <ul class="planned">
+      </ul>
+      <p class="also">Aussi : le choix du modèle par terminal, tâche ou planification.</p>
+  </section>
+  <section aria-labelledby="rm-quality">
+    <h2 id="rm-quality">Qualité</h2>
+      <p class="intro">Des vérifications faites avant qu’un travail soit déclaré terminé.</p>
+      <ul class="planned">
       <li><h3>Contrôles de qualité</h3><p>Une exécution ne peut pas se terminer tant que la relecture, les tests ou un contrôle de sécurité n’ont pas signalé un succès.</p></li>
       <li><h3>Relecture des pull requests</h3><p>Un agent relit une pull request et fait son rapport dans votre liste « For you ».</p></li>
       <li><h3>Tests pilotés par navigateur</h3><p>Un agent pilote un navigateur pour tester une modification et renvoie les résultats.</p></li>
       <li><h3>Planifier avant de construire</h3><p>Un agent propose un plan et attend votre approbation avant de toucher aux fichiers.</p></li>
       <li><h3>Recettes de tâches</h3><p>Des workflows prêts à l’emploi pour générer des tests, relire, analyser les dépendances et les secrets, et tenir la documentation à jour.</p></li>
       <li><h3>Mesures des résultats</h3><p>Le temps entre la tâche et sa fin, la fréquence à laquelle un agent vous a attendu, et l’usage selon qui l’a lancé, par projet.</p></li>
-    </ul>
-    <p class="also">Aussi : des comptes rendus d’incident, où un agent enquête et rédige un postmortem.</p>
-
-    <h2>Partout</h2>
-    <p class="intro">Plus de façons d’accéder à Aubergine et de construire dessus.</p>
-    <ul class="planned">
+      </ul>
+      <p class="also">Aussi : des comptes rendus d’incident, où un agent enquête et rédige un postmortem.</p>
+  </section>
+  <section aria-labelledby="rm-everywhere">
+    <h2 id="rm-everywhere">Partout</h2>
+      <p class="intro">Plus de façons d’accéder à Aubergine et de construire dessus.</p>
+      <ul class="planned">
       <li><h3>SDK publié</h3><p>Le client typé sous forme de paquet installable, puis des clients pour d’autres langages comme Python.</p></li>
       <li><h3>Extension d’éditeur</h3><p>Affichez vos terminaux et votre liste « For you » dans VS Code et des éditeurs similaires, sans quitter l’éditeur.</p></li>
       <li><h3>Application de bureau</h3><p>Une application empaquetée avec une icône dans la barre des menus, au lieu d’un onglet du navigateur.</p></li>
       <li><h3>Prise en charge de Windows</h3><p>Faire tourner Aubergine sur Windows lui-même. Aujourd’hui, il ne tourne que dans WSL 2, comme le décrit <a href="../windows/">le guide pour Windows</a>, et personne ne l’a encore essayé sous Windows.</p></li>
-    </ul>
-
-    <p class="note">Le travail prévu est une direction, pas une promesse. Le <a href="https://github.com/thirstyeggplant/aubergine">dépôt</a> montre ce qui est livré.</p>
+      </ul>
+  </section>
+  <p class="note">Le travail prévu est une direction, pas une promesse. Le <a href="https://github.com/thirstyeggplant/aubergine">dépôt</a> montre ce qui est livré.</p>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">Opérationnel en cinq minutes</h2>
+    <div class="close-do">
+      <p>Il vous faut macOS avec tmux 3.2 ou plus récent et Node.js 22 ou plus récent. <code>brew install tmux node</code> installe les deux.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Copié" aria-live="polite" hidden>Copier</button></p>
+      <p class="actions"><a class="button" href="../install/">Installer</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">Lire le code source</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">
   <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
     <nav aria-label="Toutes les pages">
       <ul class="foot-links">
         <li><a href="../">Accueil</a></li>
@@ -198,6 +219,7 @@ document.querySelectorAll('[data-copy]').forEach(function (button) {
   button.hidden = false;
   button.addEventListener('click', function () {
     var words = button.textContent;
+    if (!navigator.clipboard) return;
     navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
       button.textContent = button.getAttribute('data-copied');
       setTimeout(function () { button.textContent = words; }, 1600);
@@ -210,6 +232,12 @@ document.addEventListener('keydown', function (event) {
 });
 document.addEventListener('click', function (event) {
   document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
 });
 </script>
 </body>

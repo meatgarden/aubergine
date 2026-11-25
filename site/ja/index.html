@@ -20,8 +20,8 @@
 <link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/">
 <link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
 <link rel="icon" href="../icon.svg" type="image/svg+xml">
 <link rel="preload" href="../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../style.css">
@@ -45,7 +45,7 @@
 <a class="skip" href="#main">本文へ移動</a>
 <header class="top">
   <div class="wrap top-in">
-    <a class="mark" href="./"><img src="../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <a class="mark" href="./"><img src="../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
     <nav class="nav" aria-label="ページ">
       <ul>
         <li><a href="claude/">Claude Code</a></li>
@@ -77,9 +77,11 @@
   </div>
 </header>
 
-<div class="wrap translated">
-  <p class="note">Aubergine 本体は英語です。ボタン、メニュー、画像はすべて英語版のものです。</p>
-  <p class="note">このページは英語版から機械翻訳されています。<a href="https://github.com/thirstyeggplant/aubergine/issues">修正を送る</a>。</p>
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine 本体は英語です。ボタン、メニュー、画像はすべて英語版のものです。</p>
+    <p>このページは英語版から機械翻訳されています。<a href="https://github.com/thirstyeggplant/aubergine/issues">修正を送る</a>。</p>
+  </div>
 </div>
 <main id="main" tabindex="-1">
 <script type="application/ld+json">
@@ -176,95 +178,95 @@
 </script>
 
 <section class="hero" aria-labelledby="hero-h">
-  <div class="wrap hero-in">
-    <div>
-      <p class="kicker">ターミナルをパワーアップ · 無料 · オープンソース · あなたのコンピューターで動作</p>
-      <h1 id="hero-h">すべてのターミナルを横に並べて。どのエージェントが<em>あなたを必要としている</em>か分かる。</h1>
-      <p class="lead">Aubergine は、すべてのターミナルをブラウザーの1つのキャンバスに並べます。いつも使っているエージェントとモデルのまま、好きなだけ動かせます。Aubergine 自身はモデルを持たず、キーを求めることもありません。</p>
-      <p class="cmd"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="コピーしました" aria-live="polite" hidden>コピー</button></p>
-      <p class="after">続けて <code>aubergine start --open</code>。macOS 用で、tmux 3.2 以降と Node.js 22 以降が必要です。</p>
-      <p class="actions"><a class="button primary" href="install/">インストール</a><a class="button" href="https://github.com/thirstyeggplant/aubergine">ソースを読む</a></p>
-    </div>
-    <figure class="canvas">
-      <div class="canvas-field" dir="ltr" aria-hidden="true">
-        <div class="term term-1 waits"><div class="term-bar"><span class="term-name">claude · fix-login</span><span class="term-state">waiting for you</span></div>
-<pre><i>?</i> Two files use the old check.
-  Change both, or only /auth?
-<i>›</i> </pre></div>
-        <div class="term term-2 working"><div class="term-bar"><span class="term-name">codex · migrate-db</span><span class="term-state">working</span></div>
-<pre>› step 3 of 5
-<b>✓</b> schema read
-<b>✓</b> 41 tests pass
-› writing the migration…</pre></div>
-        <div class="term term-3"><div class="term-bar"><span class="term-name">zsh · tests</span><span class="term-state">running</span></div>
-<pre><b>$</b> pnpm test --watch
-<b>✓</b> 212 passed
-  watching for changes…</pre></div>
-        <div class="term term-4 done"><div class="term-bar"><span class="term-name">claude · release-notes</span><span class="term-state">finished</span></div>
-<pre><b>✓</b> notes written
-  handed in: 6 changes</pre></div>
-        <div class="term term-5"><div class="term-bar"><span class="term-name">zsh · api</span><span class="term-state">idle</span></div>
-<pre><b>$</b> git status
-  nothing to commit
-<b>$</b> </pre></div>
-      </div>
-      <figcaption>画面のキャプチャではなくイラストです。キャンバス上の5つのターミナルと、あなたを待っている1つを描いています。</figcaption>
-    </figure>
-  </div>
-</section>
-
-<section class="section" id="powers" aria-labelledby="powers-h">
   <div class="wrap">
-    <h2 id="powers-h">ターミナルにスーパーパワーを</h2>
-    <p class="intro">いつも使っているターミナルに、足りなかったものを。横に並べて置ける場所、記憶、そしてあなたが必要なときに知らせる仕組みです。</p>
-    <ul class="rows across">
-      <li><h3>生産性を高める</h3><p>複数のエージェントが同時に、それぞれ自分のターミナルで働きます。待っているものにだけ答えて、残りは動かしたままに。</p></li>
-      <li><h3>より良い開発者体験</h3><p>どのターミナルにも名前、色、ノート、キャンバス上の位置があります。ブラウザーを閉じても Aubergine を再起動しても、そのまま残ります。</p></li>
-      <li><h3>乗り換えは不要</h3><p>シェルも、ツールも、エージェントも、モデルも、今のまま。Aubergine はその周りにキャンバスを加えるだけで、自分のモデルは持ちません。</p></li>
+    <ul class="kicker">
+      <li>ターミナルをパワーアップ</li>
+      <li>無料</li>
+      <li>オープンソース</li>
+      <li>あなたのコンピューターで動作</li>
     </ul>
+    <h1 id="hero-h"><span class="line">すべてのターミナルを、</span> <span class="line">横に並べて。</span> <span class="line"><em>エージェント</em>は持ち込みで。</span></h1>
+    <div class="hero-under">
+      <p class="lead">Aubergine は、すべてのターミナルをブラウザーの1つのキャンバスに並べます。いつも使っているエージェントとモデルのまま、好きなだけ動かせます。Aubergine 自身はモデルを持たず、キーを求めることもありません。</p>
+      <div class="hero-do">
+        <p class="cmd"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="コピーしました" aria-live="polite" hidden>コピー</button></p>
+        <p class="actions"><a class="button" href="install/">インストール</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">ソースを読む</a></p>
+        <p class="after">続けて <code>aubergine start --open</code>。macOS 用で、tmux 3.2 以降と Node.js 22 以降が必要です。</p>
+      </div>
+    </div>
   </div>
 </section>
 
-<section class="section" id="see" aria-labelledby="see-h">
+<section class="stage">
   <div class="wrap">
-    <h2 id="see-h">どんな見た目か</h2>
-    <p class="intro">Aubergine に付属するデモの実際のキャプチャです。本物のエージェントではなく、代役のエージェントが動いています。</p>
+    <figure class="frame frame-big">
+      <div class="frame-bar" dir="ltr" aria-hidden="true"><i></i><i></i><i></i><span>localhost · Aubergine</span></div>
+      <a href="../screenshots/canvas.png" class="frame-pic"><img src="../screenshots/canvas.png" width="3840" height="2400" alt="アプリ全体：左にキャンバスとターミナルの一覧、キャンバス上に動作中のターミナルが 6 つ。そのうち Login bug · question は待機の色で囲まれ、waiting for you と表示しています。"></a>
+    </figure>
+    <p class="stage-caption">Aubergine に付属するデモの実際のキャプチャです。1 つのキャンバスに 6 つのターミナルがあり、そのうち 1 つがあなたを待っています。</p>
+  </div>
+</section>
+
+<section class="band band-cream" id="powers" aria-labelledby="powers-h">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 id="powers-h">ターミナルにスーパーパワーを</h2>
+      <p class="intro">いつも使っているターミナルに、足りなかったものを。横に並べて置ける場所、記憶、そしてあなたが必要なときに知らせる仕組みです。</p>
+    </div>
+    <ol class="powers">
+      <li><span class="num" aria-hidden="true">01</span><h3>生産性を高める</h3><p>複数のエージェントが同時に、それぞれ自分のターミナルで働きます。待っているものにだけ答えて、残りは動かしたままに。</p></li>
+      <li><span class="num" aria-hidden="true">02</span><h3>より良い開発者体験</h3><p>どのターミナルにも名前、色、ノート、キャンバス上の位置があります。ブラウザーを閉じても Aubergine を再起動しても、そのまま残ります。</p></li>
+      <li><span class="num" aria-hidden="true">03</span><h3>乗り換えは不要</h3><p>シェルも、ツールも、エージェントも、モデルも、今のまま。Aubergine はその周りにキャンバスを加えるだけで、自分のモデルは持ちません。</p></li>
+    </ol>
+  </div>
+</section>
+
+<section class="band band-lilac" id="see" aria-labelledby="see-h">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 id="see-h">どんな見た目か</h2>
+      <p class="intro">Aubergine に付属するデモの実際のキャプチャです。本物のエージェントではなく、代役のエージェントが動いています。</p>
+    </div>
     <div class="shows">
       <div class="show">
-        <div><h3>すべてのターミナルを1つのキャンバスに</h3><p>好きなだけ並べられ、画面に見えている間はそれぞれがライブで動きます。</p></div>
-        <figure class="pic"><a href="../screenshots/list.png"><img src="../screenshots/list.png" width="1440" height="1008" loading="lazy" alt="5つのターミナルを状態の言葉（working、waiting for you、finished、parked）とともに並べたサイドパネルと、ライブのシェルが映るキャンバスの一部。"></a><figcaption>一覧が各ターミナルの状態を伝え、その横にターミナルそのものがあります。</figcaption></figure>
+        <div class="show-words"><h3>すべてのターミナルを1つのキャンバスに</h3><p>好きなだけ並べられ、画面に見えている間はそれぞれがライブで動きます。</p></div>
+        <figure class="frame"><a href="../screenshots/list.png" class="frame-pic"><img src="../screenshots/list.png" width="1440" height="1008" loading="lazy" alt="5つのターミナルを状態の言葉（working、waiting for you、finished、parked）とともに並べたサイドパネルと、ライブのシェルが映るキャンバスの一部。"></a><figcaption>一覧が各ターミナルの状態を伝え、その横にターミナルそのものがあります。</figcaption></figure>
+      </div>
+      <div class="show show-flip">
+        <div class="show-words"><h3><span class="waits">待っているターミナルが目立つ</span></h3><p>エージェントがあなたを必要とすると、キャンバスの離れた場所からでも分かり、<code>W</code> キーでそこへ移動できます。</p></div>
+        <figure class="frame"><a href="../screenshots/waiting.png" class="frame-pic"><img src="../screenshots/waiting.png" width="1496" height="600" loading="lazy" alt="エージェントが質問をしているターミナル。タイトルに waiting for you と表示され、枠線は待機中の色です。"></a><figcaption>枠線が待機中の色になり、タイトルに waiting for you と表示されます。</figcaption></figure>
       </div>
       <div class="show">
-        <div><h3>待っているターミナルが目立つ</h3><p>エージェントがあなたを必要とすると、キャンバスの離れた場所からでも分かり、<code>W</code> キーでそこへ移動できます。</p></div>
-        <figure class="pic"><a href="../screenshots/waiting.png"><img src="../screenshots/waiting.png" width="1496" height="600" loading="lazy" alt="エージェントが質問をしているターミナル。タイトルに waiting for you と表示され、枠線は待機中の色です。"></a><figcaption>枠線が待機中の色になり、タイトルに waiting for you と表示されます。</figcaption></figure>
-      </div>
-      <div class="show">
-        <div><h3>ターミナルを単独で開く</h3><p>どのターミナルも専用のブラウザータブで開けます。コピーではなく、同じターミナルです。</p></div>
-        <figure class="pic"><a href="../screenshots/focus-part.png"><img src="../screenshots/focus-part.png" width="1344" height="1172" loading="lazy" alt="ブラウザータブに1つだけ開いたターミナル。ヘッダーに名前、詳細にワークフローのステップ、フォルダー、フィールドがあり、その横にライブのターミナル。"></a><figcaption>詳細とノートは求めたときに横に開き、それぞれのボタンで閉じられます。</figcaption></figure>
+        <div class="show-words"><h3>ターミナルを単独で開く</h3><p>どのターミナルも専用のブラウザータブで開けます。コピーではなく、同じターミナルです。</p></div>
+        <figure class="frame"><a href="../screenshots/focus-part.png" class="frame-pic"><img src="../screenshots/focus-part.png" width="1344" height="1172" loading="lazy" alt="ブラウザータブに1つだけ開いたターミナル。ヘッダーに名前、詳細にワークフローのステップ、フォルダー、フィールドがあり、その横にライブのターミナル。"></a><figcaption>詳細とノートは求めたときに横に開き、それぞれのボタンで閉じられます。</figcaption></figure>
       </div>
     </div>
   </div>
 </section>
 
-<section class="section" id="agents" aria-labelledby="agents-h">
+<section class="band band-dark" id="agents" aria-labelledby="agents-h">
   <div class="wrap">
-    <h2 id="agents-h">エージェントは持ち込みで</h2>
-    <p class="intro">Aubergine は普通のターミナルを動かします。モデルを呼ばず、キーを持たず、アカウントもありません。すでに使っているコマンドラインのエージェントが、あなたとしてサインインしたまま、あなたが選んだモデルでターミナルの中で動きます。Aubergine がエージェントのために自ら行うことは、現在は Claude Code 向けに作られています。ほかのエージェントも <code>aubergine</code> コマンドを通じて同じことを伝えられます。</p>
-    <ul class="rows">
-      <li><h3><a class="row-link" href="claude/">Claude Code</a></h3><p>New terminal（新しいターミナル）メニューから起動すると、作業中・あなた待ち・完了を自ら伝えます。Aubergine はその会話を再開でき、どう設定されているかも表示できます。</p></li>
-      <li><h3><a class="row-link" href="chatgpt/">Codex と ChatGPT</a></h3><p>Codex はほかのプログラムと同じようにターミナルで動き、指示で伝えれば <code>aubergine</code> コマンドを通じて状況を報告します。ブラウザーの ChatGPT はターミナルのプログラムではありません。</p></li>
-      <li><h3><a class="row-link" href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/for-agents.md">ほかのコマンドラインエージェント、または普通のシェル</a></h3><p>どのターミナルにも <code>aubergine</code> コマンドがあり、<code>aubergine guide --snippet</code> はエージェント自身の指示に入れる5行を出力します。</p></li>
+    <div class="section-head">
+      <h2 id="agents-h">エージェントは持ち込みで</h2>
+      <p class="intro">Aubergine は普通のターミナルを動かします。モデルを呼ばず、キーを持たず、アカウントもありません。すでに使っているコマンドラインのエージェントが、あなたとしてサインインしたまま、あなたが選んだモデルでターミナルの中で動きます。Aubergine がエージェントのために自ら行うことは、現在は Claude Code 向けに作られています。ほかのエージェントも <code>aubergine</code> コマンドを通じて同じことを伝えられます。</p>
+    </div>
+    <ul class="agents">
+      <li><h3><a href="claude/">Claude Code</a></h3><p>New terminal（新しいターミナル）メニューから起動すると、作業中・あなた待ち・完了を自ら伝えます。Aubergine はその会話を再開でき、どう設定されているかも表示できます。</p></li>
+      <li><h3><a href="chatgpt/">Codex と ChatGPT</a></h3><p>Codex はほかのプログラムと同じようにターミナルで動き、指示で伝えれば <code>aubergine</code> コマンドを通じて状況を報告します。ブラウザーの ChatGPT はターミナルのプログラムではありません。</p></li>
+      <li><h3><a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/for-agents.md">ほかのコマンドラインエージェント、または普通のシェル</a></h3><p>どのターミナルにも <code>aubergine</code> コマンドがあり、<code>aubergine guide --snippet</code> はエージェント自身の指示に入れる5行を出力します。</p></li>
     </ul>
   </div>
 </section>
 
-<section class="section" id="features" aria-labelledby="features-h">
+<section class="band band-cream" id="features" aria-labelledby="features-h">
   <div class="wrap">
-    <h2 id="features-h">ほかにできること</h2>
-    <p class="intro">ここにあるものはすべて、今日あなたのコンピューターで動きます。</p>
-    <ul class="rows">
+    <div class="section-head">
+      <h2 id="features-h">ほかにできること</h2>
+      <p class="intro">ここにあるものはすべて、今日あなたのコンピューターで動きます。</p>
+    </div>
+    <ul class="built">
       <li><h3>ターミナルのキャンバス</h3><p>本物のターミナルをパン、ズーム、配置し、1回のクリックで入力できます。ターミナルをパークして後で戻したり、詳細とノートを横に添えてブラウザータブで単独で開いたりできます。</p></li>
-      <li><h3>誰が待っているか分かる</h3><p>すべてのターミナルに、処理中・アイドル・あなた待ちが表示されます。「For you」の一覧と「next waiting」で、人の手が必要なところへ直接移動できます。</p></li>
+      <li><h3><span class="waits">誰が待っているか分かる</span></h3><p>すべてのターミナルに、処理中・アイドル・あなた待ちが表示されます。「For you」の一覧と「next waiting」で、人の手が必要なところへ直接移動できます。</p></li>
       <li><h3>キューとスケジュール</h3><p>タスクを一度書けば、空いているエージェントが引き受けます。選んだ曜日の決まった時刻に実行するよう予定することもできます。</p></li>
       <li><h3>作業コピー</h3><p>エージェントごとに、専用のブランチ上にリポジトリのコピーを渡します。2つのエージェントが同じファイルを編集することはありません。</p></li>
       <li><h3>プロジェクト</h3><p>1つのサーバーに複数のコントロールルーム。プロジェクトごとにキャンバス、キュー、スケジュール、ルールを持ち、ファイルやテンプレートとして保存できます。</p></li>
@@ -277,35 +279,27 @@
   </div>
 </section>
 
-<section class="section" id="trust" aria-labelledby="trust-h">
+<section class="band band-lilac" id="trust" aria-labelledby="trust-h">
   <div class="wrap">
-    <h2 id="trust-h">ターミナルはあなたのもの</h2>
-    <ul class="rows">
+    <div class="section-head">
+      <h2 id="trust-h">ターミナルはあなたのもの</h2>
+      <p class="intro"><a class="onward" href="security/">守られているもの、守られていないもの</a></p>
+    </div>
+    <ul class="pairs">
       <li><h3>ローカルのみ</h3><p>サーバーは 127.0.0.1 で待ち受け、すべてのリクエストの Host と Origin を確認します。ほかのデバイスからの利用は、あなたが設定するまでオフです。</p></li>
       <li><h3>ターミナルはアプリより長生き</h3><p>どのターミナルも tmux セッションです。ブラウザーを閉じても Aubergine を再起動しても、作業は動き続けます。</p></li>
       <li><h3>モデルなし、キーなし</h3><p>Aubergine はモデルを選ばず、呼び出さず、そのためのキーも持ちません。モデルはエージェントが自分で持ち込みます。</p></li>
       <li><h3>決めるのはあなた</h3><p>トークンにはスコープがあり、エージェントが書いたものはあなたのレビューを待ち、承認は人が行います。</p></li>
     </ul>
-    <p class="more-link"><a href="security/">守られているもの、守られていないもの</a></p>
   </div>
 </section>
 
-<section class="section" id="install" aria-labelledby="install-h">
+<section class="band band-cream" id="faq" aria-labelledby="faq-h">
   <div class="wrap">
-    <h2 id="install-h">5分で動かす</h2>
-    <p class="intro">tmux 3.2 以降と Node.js 22 以降の入った macOS が必要です。<code>brew install tmux node</code> で両方が入ります。</p>
-    <ol class="steps">
-      <li><h3>インストール</h3><p class="cmd"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="コピーしました" aria-live="polite" hidden>コピー</button></p><p>または、ソースから pnpm でビルドする<a href="install/">インストーラー</a>を使います。</p></li>
-      <li><h3>起動してブラウザーを開く</h3><p class="cmd"><code>aubergine start --open</code><button type="button" class="copy" data-copy data-copied="コピーしました" aria-live="polite" hidden>コピー</button></p><p>サーバーを起動し、サインイン済みの状態でブラウザーを開きます。</p></li>
-      <li><h3>ツアーを試す</h3><p>空のキャンバスで <strong>Show me around</strong>（案内して）をクリックします。代役のエージェントが並ぶ Demo キャンバスが作られ、8つの短いステップで案内します。<code>aubergine demo --remove</code> で取り除けます。</p></li>
-    </ol>
-    <p class="note more-link">インストーラーが変更するのは <code>~/.aubergine</code> と、<code>aubergine</code> という名前のリンク1つだけです。sudo は使わず、シェルの起動ファイルも編集しません。</p>
-  </div>
-</section>
-
-<section class="section" id="faq" aria-labelledby="faq-h">
-  <div class="wrap">
-    <h2 id="faq-h">よくある質問</h2>
+    <div class="section-head">
+      <h2 id="faq-h">よくある質問</h2>
+      <p class="intro"><a class="onward" href="faq/">すべての質問</a></p>
+    </div>
     <div class="questions">
       <details><summary>Aubergine とは何ですか？</summary><p>ローカルで動く、ブラウザーベースのターミナルセッションのキャンバスです。各ターミナルは配置して使えるノードなので、複数のコーディングエージェントを同時に動かし、どれがあなたを待っているかを確認できます。</p></details>
       <details><summary>Aubergine はターミナルやコードをどこかに送りますか？</summary><p>いいえ。すべてあなた自身のコンピューターで動きます。サーバーは 127.0.0.1 でのみ待ち受け、すべてのリクエストの Host と Origin を確認します。</p></details>
@@ -313,20 +307,35 @@
       <details><summary>ターミナルで Claude Code を自分で起動したらどうなりますか？</summary><p>ほかのプログラムと同じように動き、いつもどおり入力できます。ただし Aubergine がエージェントの存在を知るのは、自分でエージェントを起動したとき（New terminal、続いて Claude Code）だけです。そのとき、エージェントの動きを報告する小さなフックをいくつか加えるからです。手で起動した場合、ターミナルは <code>claude</code> を実行して処理中だと表示されるだけです。何か尋ねてきても waiting for you にはならず、そこでワークフローを始めても何も入力されません。中から使える <code>aubergine workflow status</code> を実行するよう自分で伝えるか、代わりに New terminal メニューからエージェントを起動してください。</p></details>
       <details><summary>Aubergine は無料ですか？</summary><p>はい。<a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT ライセンス</a>のもとで無料のオープンソースで、ソースは GitHub にあります。</p></details>
     </div>
-    <p class="more-link"><a href="faq/">すべての質問</a></p>
   </div>
 </section>
 
-<section class="section" id="planned" aria-labelledby="planned-h">
-  <div class="wrap">
+<section class="band band-lilac band-slim" id="planned" aria-labelledby="planned-h">
+  <div class="wrap planned-line">
     <h2 id="planned-h">予定していること</h2>
-    <p class="note">マルチプレイヤー、クラウド上のエージェント、承認モードなどは予定中で、まだ作られていません。<a href="roadmap/">ロードマップを見る</a>。</p>
+    <p>マルチプレイヤー、クラウド上のエージェント、承認モードなどは予定中で、まだ作られていません。<a href="roadmap/">ロードマップを見る</a>。</p>
+  </div>
+</section>
+
+<section class="band band-purple" id="install" aria-labelledby="install-h">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 id="install-h">5分で動かす</h2>
+      <p class="intro">tmux 3.2 以降と Node.js 22 以降の入った macOS が必要です。<code>brew install tmux node</code> で両方が入ります。</p>
+    </div>
+    <ol class="steps">
+      <li><h3>インストール</h3><p class="cmd"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="コピーしました" aria-live="polite" hidden>コピー</button></p><p>または、ソースから pnpm でビルドする<a href="install/">インストーラー</a>を使います。</p></li>
+      <li><h3>起動してブラウザーを開く</h3><p class="cmd"><code>aubergine start --open</code><button type="button" class="copy" data-copy data-copied="コピーしました" aria-live="polite" hidden>コピー</button></p><p>サーバーを起動し、サインイン済みの状態でブラウザーを開きます。</p></li>
+      <li><h3>ツアーを試す</h3><p>空のキャンバスで <strong>Show me around</strong>（案内して）をクリックします。代役のエージェントが並ぶ Demo キャンバスが作られ、8つの短いステップで案内します。<code>aubergine demo --remove</code> で取り除けます。</p></li>
+    </ol>
+    <p class="install-note">インストーラーが変更するのは <code>~/.aubergine</code> と、<code>aubergine</code> という名前のリンク1つだけです。sudo は使わず、シェルの起動ファイルも編集しません。</p>
   </div>
 </section>
 
 </main>
 <footer class="foot">
   <div class="wrap foot-in">
+    <a class="mark" href="./"><img src="../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
     <nav aria-label="すべてのページ">
       <ul class="foot-links">
         <li><a href="./" aria-current="page">ホーム</a></li>
@@ -352,6 +361,7 @@ document.querySelectorAll('[data-copy]').forEach(function (button) {
   button.hidden = false;
   button.addEventListener('click', function () {
     var words = button.textContent;
+    if (!navigator.clipboard) return;
     navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
       button.textContent = button.getAttribute('data-copied');
       setTimeout(function () { button.textContent = words; }, 1600);
@@ -364,6 +374,12 @@ document.addEventListener('keydown', function (event) {
 });
 document.addEventListener('click', function (event) {
   document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
 });
 </script>
 </body>

@@ -20,8 +20,8 @@
 <link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/windows/">
 <link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/windows/">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
 <link rel="icon" href="../../icon.svg" type="image/svg+xml">
 <link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../../style.css">
@@ -45,7 +45,7 @@
 <a class="skip" href="#main">पेज पर जाएँ</a>
 <header class="top">
   <div class="wrap top-in">
-    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
     <nav class="nav" aria-label="पेज">
       <ul>
         <li><a href="../claude/">Claude Code</a></li>
@@ -77,9 +77,11 @@
   </div>
 </header>
 
-<div class="wrap translated">
-  <p class="note">Aubergine खुद अंग्रेज़ी में है: उसके बटन, मेन्यू और तस्वीरें अंग्रेज़ी वाली ही हैं।</p>
-  <p class="note">इस पेज का अंग्रेज़ी से अनुवाद मशीन ने किया है। <a href="https://github.com/thirstyeggplant/aubergine/issues">सुधार भेजें</a>।</p>
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine खुद अंग्रेज़ी में है: उसके बटन, मेन्यू और तस्वीरें अंग्रेज़ी वाली ही हैं।</p>
+    <p>इस पेज का अंग्रेज़ी से अनुवाद मशीन ने किया है। <a href="https://github.com/thirstyeggplant/aubergine/issues">सुधार भेजें</a>।</p>
+  </div>
 </div>
 <main id="main" tabindex="-1">
 <script type="application/ld+json">
@@ -130,20 +132,21 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="आप कहाँ हैं"><ol><li><a href="../">Aubergine</a></li><li>WSL के साथ Windows</li></ol></nav>
-  <h1>WSL के साथ Windows पर Aubergine इंस्टॉल करें</h1>
-  <p class="lead">Aubergine सीधे Windows पर नहीं चलता। यह WSL 2 के अंदर चलता है, जो Windows का दिया हुआ Linux है, और आप इसे अपने Windows ब्राउज़र से इस्तेमाल करते हैं।</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="आप कहाँ हैं"><ol><li><a href="../">Aubergine</a></li><li>WSL के साथ Windows</li></ol></nav>
+    <h1>WSL के साथ Windows पर Aubergine इंस्टॉल करें</h1>
+    <p class="lead">Aubergine सीधे Windows पर नहीं चलता। यह WSL 2 के अंदर चलता है, जो Windows का दिया हुआ Linux है, और आप इसे अपने Windows ब्राउज़र से इस्तेमाल करते हैं।</p>
+    <p class="note note-strong"><strong>क्या आज़माया गया।</strong> Linux वाले कदम 25 नवंबर 2026 को एक कंटेनर में Ubuntu 24.04.5 (x86_64) पर चलाए गए, WSL में नहीं, npm से Aubergine 0.2.2 के साथ: इसने अपनी टर्मिनल लाइब्रेरी कंपाइल की, शुरू हुआ, एक ब्राउज़र साइन इन किया, और एक टर्मिनल और डेमो चलाया। nvm से Node.js इंस्टॉल करना वहाँ नहीं चलाया गया, क्योंकि Node.js 22 पहले से इंस्टॉल था। इस पेज की कोई भी चीज़ अभी Windows पर नहीं चलाई गई है। अगर आप आज़माएँ, तो <a href="https://github.com/thirstyeggplant/aubergine/issues">हमें बताएँ कि कैसा रहा</a>।</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
-    <p class="note"><strong>क्या आज़माया गया।</strong> Linux वाले कदम 25 नवंबर 2026 को एक कंटेनर में Ubuntu 24.04.5 (x86_64) पर चलाए गए, WSL में नहीं, npm से Aubergine 0.2.2 के साथ: इसने अपनी टर्मिनल लाइब्रेरी कंपाइल की, शुरू हुआ, एक ब्राउज़र साइन इन किया, और एक टर्मिनल और डेमो चलाया। nvm से Node.js इंस्टॉल करना वहाँ नहीं चलाया गया, क्योंकि Node.js 22 पहले से इंस्टॉल था। इस पेज की कोई भी चीज़ अभी Windows पर नहीं चलाई गई है। अगर आप आज़माएँ, तो <a href="https://github.com/thirstyeggplant/aubergine/issues">हमें बताएँ कि कैसा रहा</a>।</p>
-
     <h2>आपको क्या चाहिए</h2>
     <p>Windows 11, या Windows 10 वर्शन 2004 (बिल्ड 19041) या नया, जहाँ WSL 2 एक कमांड से इंस्टॉल हो जाता है। ब्योरे Microsoft के <a href="https://learn.microsoft.com/windows/wsl/install">WSL इंस्टॉल करने वाले पेज</a> पर हैं।</p>
 
     <h2>इंस्टॉल करें और शुरू करें</h2>
-    <ol>
+    <ol class="seq">
       <li><p><strong>WSL इंस्टॉल करें।</strong> PowerShell को एडमिनिस्ट्रेटर के रूप में खोलें, यह चलाएँ, और पूरा होने पर Windows रीस्टार्ट करें। यह Ubuntu के साथ WSL 2 इंस्टॉल करता है।</p>
         <p class="cmd multi"><code>wsl --install</code><button type="button" class="copy" data-copy data-copied="कॉपी हो गया" aria-live="polite" hidden>कॉपी करें</button></p>
         <p>रीस्टार्ट के बाद, Start मेन्यू से <strong>Ubuntu</strong> खोलें और उसके लिए एक यूज़र नेम और पासवर्ड चुनें। नीचे की हर कमांड वहीं, Ubuntu में टाइप होती है।</p></li>
@@ -190,15 +193,24 @@
         </tbody>
       </table>
     </div>
-
-    <h2>आगे</h2>
-    <p>रोकना, अपडेट करना और अनइंस्टॉल करना <a href="../install/">इंस्टॉल पेज</a> जैसा ही है, और बाकी सब <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a> में है।</p>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">आगे</h2>
+    <div class="close-do">
+      <p>रोकना, अपडेट करना और अनइंस्टॉल करना <a href="../install/">इंस्टॉल पेज</a> जैसा ही है, और बाकी सब <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a> में है।</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="कॉपी हो गया" aria-live="polite" hidden>कॉपी करें</button></p>
+      <p class="actions"><a class="button" href="../install/">इंस्टॉल</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">
   <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
     <nav aria-label="सभी पेज">
       <ul class="foot-links">
         <li><a href="../">होम</a></li>
@@ -224,6 +236,7 @@ document.querySelectorAll('[data-copy]').forEach(function (button) {
   button.hidden = false;
   button.addEventListener('click', function () {
     var words = button.textContent;
+    if (!navigator.clipboard) return;
     navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
       button.textContent = button.getAttribute('data-copied');
       setTimeout(function () { button.textContent = words; }, 1600);
@@ -236,6 +249,12 @@ document.addEventListener('keydown', function (event) {
 });
 document.addEventListener('click', function (event) {
   document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
 });
 </script>
 </body>

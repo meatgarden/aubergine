@@ -20,8 +20,8 @@
 <link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/">
 <link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
 <link rel="icon" href="../icon.svg" type="image/svg+xml">
 <link rel="preload" href="../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../style.css">
@@ -45,7 +45,7 @@
 <a class="skip" href="#main">পেজে যান</a>
 <header class="top">
   <div class="wrap top-in">
-    <a class="mark" href="./"><img src="../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <a class="mark" href="./"><img src="../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
     <nav class="nav" aria-label="পেজ">
       <ul>
         <li><a href="claude/">Claude Code</a></li>
@@ -77,9 +77,11 @@
   </div>
 </header>
 
-<div class="wrap translated">
-  <p class="note">Aubergine নিজে ইংরেজিতে: এর বোতাম, মেনু আর ছবি সবই ইংরেজি।</p>
-  <p class="note">এই পেজটি ইংরেজি থেকে মেশিন দিয়ে অনুবাদ করা। <a href="https://github.com/thirstyeggplant/aubergine/issues">সংশোধন পাঠান</a>।</p>
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine নিজে ইংরেজিতে: এর বোতাম, মেনু আর ছবি সবই ইংরেজি।</p>
+    <p>এই পেজটি ইংরেজি থেকে মেশিন দিয়ে অনুবাদ করা। <a href="https://github.com/thirstyeggplant/aubergine/issues">সংশোধন পাঠান</a>।</p>
+  </div>
 </div>
 <main id="main" tabindex="-1">
 <script type="application/ld+json">
@@ -176,95 +178,95 @@
 </script>
 
 <section class="hero" aria-labelledby="hero-h">
-  <div class="wrap hero-in">
-    <div>
-      <p class="kicker">আপনার টার্মিনালকে সুপারচার্জ করুন · বিনামূল্যে · ওপেন সোর্স · আপনার কম্পিউটারে চলে</p>
-      <h1 id="hero-h">আপনার সব টার্মিনাল, পাশাপাশি। দেখুন কোন এজেন্টের <em>আপনাকে দরকার</em>।</h1>
-      <p class="lead">Aubergine আপনার সব টার্মিনাল ব্রাউজারে একটি ক্যানভাসে পাশাপাশি রাখে। যত খুশি চালান, যে এজেন্ট আর মডেল আপনি আগে থেকেই ব্যবহার করেন সেগুলো দিয়ে। এর নিজের কোনো মডেল নেই, আর এটি কখনো কোনো key চায় না।</p>
-      <p class="cmd"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="কপি হয়েছে" aria-live="polite" hidden>কপি করুন</button></p>
-      <p class="after">তারপর <code>aubergine start --open</code>। macOS-এর জন্য, tmux 3.2 বা নতুনতর আর Node.js 22 বা নতুনতর সহ।</p>
-      <p class="actions"><a class="button primary" href="install/">ইনস্টল করুন</a><a class="button" href="https://github.com/thirstyeggplant/aubergine">সোর্স পড়ুন</a></p>
-    </div>
-    <figure class="canvas">
-      <div class="canvas-field" dir="ltr" aria-hidden="true">
-        <div class="term term-1 waits"><div class="term-bar"><span class="term-name">claude · fix-login</span><span class="term-state">waiting for you</span></div>
-<pre><i>?</i> Two files use the old check.
-  Change both, or only /auth?
-<i>›</i> </pre></div>
-        <div class="term term-2 working"><div class="term-bar"><span class="term-name">codex · migrate-db</span><span class="term-state">working</span></div>
-<pre>› step 3 of 5
-<b>✓</b> schema read
-<b>✓</b> 41 tests pass
-› writing the migration…</pre></div>
-        <div class="term term-3"><div class="term-bar"><span class="term-name">zsh · tests</span><span class="term-state">running</span></div>
-<pre><b>$</b> pnpm test --watch
-<b>✓</b> 212 passed
-  watching for changes…</pre></div>
-        <div class="term term-4 done"><div class="term-bar"><span class="term-name">claude · release-notes</span><span class="term-state">finished</span></div>
-<pre><b>✓</b> notes written
-  handed in: 6 changes</pre></div>
-        <div class="term term-5"><div class="term-bar"><span class="term-name">zsh · api</span><span class="term-state">idle</span></div>
-<pre><b>$</b> git status
-  nothing to commit
-<b>$</b> </pre></div>
-      </div>
-      <figcaption>একটি আঁকা ছবি, ক্যাপচার নয়: ক্যানভাসে পাঁচটি টার্মিনাল, আর সেই একটি যেটি আপনার অপেক্ষায়।</figcaption>
-    </figure>
-  </div>
-</section>
-
-<section class="section" id="powers" aria-labelledby="powers-h">
   <div class="wrap">
-    <h2 id="powers-h">আপনার টার্মিনালগুলোকে দিন সুপারপাওয়ার</h2>
-    <p class="intro">যে টার্মিনালগুলো আপনি আগে থেকেই ব্যবহার করেন, সঙ্গে যা তাদের এতদিন ছিল না: পাশাপাশি থাকার একটি জায়গা, একটি স্মৃতি, আর আপনাকে দরকার হলে জানানোর একটি উপায়।</p>
-    <ul class="rows across">
-      <li><h3>আপনার প্রোডাক্টিভিটি বাড়ান</h3><p>একাধিক এজেন্ট একসঙ্গে কাজ করে, প্রত্যেকে নিজের টার্মিনালে। যে অপেক্ষা করছে তাকে উত্তর দিন, বাকিরা চলতে থাকুক।</p></li>
-      <li><h3>আরও ভালো ডেভেলপার এক্সপেরিয়েন্স</h3><p>প্রতিটি টার্মিনালের একটি নাম, একটি রং, একটি নোট আর ক্যানভাসে তার জায়গা আছে। ব্রাউজার বন্ধ করুন বা Aubergine রিস্টার্ট করুন: সব যেমন ছিল তেমনই থাকে।</p></li>
-      <li><h3>কিছুই বদলাতে হবে না</h3><p>আপনার শেল, আপনার টুল, আপনার এজেন্ট আর আপনার মডেল, যেমন আছে তেমনই। Aubergine এদের চারপাশে ক্যানভাস যোগ করে, আর এর নিজের কোনো মডেল নেই।</p></li>
+    <ul class="kicker">
+      <li>আপনার টার্মিনালকে সুপারচার্জ করুন</li>
+      <li>বিনামূল্যে</li>
+      <li>ওপেন সোর্স</li>
+      <li>আপনার কম্পিউটারে চলে</li>
     </ul>
+    <h1 id="hero-h"><span class="line">আপনার সব টার্মিনাল,</span> <span class="line">পাশাপাশি।</span> <span class="line">নিজের <em>এজেন্ট</em> নিজে আনুন।</span></h1>
+    <div class="hero-under">
+      <p class="lead">Aubergine আপনার সব টার্মিনাল ব্রাউজারে একটি ক্যানভাসে পাশাপাশি রাখে। যত খুশি চালান, যে এজেন্ট আর মডেল আপনি আগে থেকেই ব্যবহার করেন সেগুলো দিয়ে। এর নিজের কোনো মডেল নেই, আর এটি কখনো কোনো key চায় না।</p>
+      <div class="hero-do">
+        <p class="cmd"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="কপি হয়েছে" aria-live="polite" hidden>কপি করুন</button></p>
+        <p class="actions"><a class="button" href="install/">ইনস্টল করুন</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">সোর্স পড়ুন</a></p>
+        <p class="after">তারপর <code>aubergine start --open</code>। macOS-এর জন্য, tmux 3.2 বা নতুনতর আর Node.js 22 বা নতুনতর সহ।</p>
+      </div>
+    </div>
   </div>
 </section>
 
-<section class="section" id="see" aria-labelledby="see-h">
+<section class="stage">
   <div class="wrap">
-    <h2 id="see-h">দেখতে কেমন</h2>
-    <p class="intro">Aubergine-এর সঙ্গে আসা ডেমোর আসল ক্যাপচার: নকল এজেন্ট, আসল নয়।</p>
+    <figure class="frame frame-big">
+      <div class="frame-bar" dir="ltr" aria-hidden="true"><i></i><i></i><i></i><span>localhost · Aubergine</span></div>
+      <a href="../screenshots/canvas.png" class="frame-pic"><img src="../screenshots/canvas.png" width="3840" height="2400" alt="পুরো অ্যাপ: বাঁ দিকে ক্যানভাস ও টার্মিনালের তালিকা, আর একটি ক্যানভাসে ছয়টি চালু টার্মিনাল; তাদের একটি, Login bug · question, অপেক্ষার রঙে ঘেরা এবং তাতে লেখা waiting for you।"></a>
+    </figure>
+    <p class="stage-caption">Aubergine-এর সঙ্গে আসা ডেমোর আসল ক্যাপচার: একটি ক্যানভাসে ছয়টি টার্মিনাল, আর সেই একটি যেটি আপনার অপেক্ষায়।</p>
+  </div>
+</section>
+
+<section class="band band-cream" id="powers" aria-labelledby="powers-h">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 id="powers-h">আপনার টার্মিনালগুলোকে দিন সুপারপাওয়ার</h2>
+      <p class="intro">যে টার্মিনালগুলো আপনি আগে থেকেই ব্যবহার করেন, সঙ্গে যা তাদের এতদিন ছিল না: পাশাপাশি থাকার একটি জায়গা, একটি স্মৃতি, আর আপনাকে দরকার হলে জানানোর একটি উপায়।</p>
+    </div>
+    <ol class="powers">
+      <li><span class="num" aria-hidden="true">01</span><h3>আপনার প্রোডাক্টিভিটি বাড়ান</h3><p>একাধিক এজেন্ট একসঙ্গে কাজ করে, প্রত্যেকে নিজের টার্মিনালে। যে অপেক্ষা করছে তাকে উত্তর দিন, বাকিরা চলতে থাকুক।</p></li>
+      <li><span class="num" aria-hidden="true">02</span><h3>আরও ভালো ডেভেলপার এক্সপেরিয়েন্স</h3><p>প্রতিটি টার্মিনালের একটি নাম, একটি রং, একটি নোট আর ক্যানভাসে তার জায়গা আছে। ব্রাউজার বন্ধ করুন বা Aubergine রিস্টার্ট করুন: সব যেমন ছিল তেমনই থাকে।</p></li>
+      <li><span class="num" aria-hidden="true">03</span><h3>কিছুই বদলাতে হবে না</h3><p>আপনার শেল, আপনার টুল, আপনার এজেন্ট আর আপনার মডেল, যেমন আছে তেমনই। Aubergine এদের চারপাশে ক্যানভাস যোগ করে, আর এর নিজের কোনো মডেল নেই।</p></li>
+    </ol>
+  </div>
+</section>
+
+<section class="band band-lilac" id="see" aria-labelledby="see-h">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 id="see-h">দেখতে কেমন</h2>
+      <p class="intro">Aubergine-এর সঙ্গে আসা ডেমোর আসল ক্যাপচার: নকল এজেন্ট, আসল নয়।</p>
+    </div>
     <div class="shows">
       <div class="show">
-        <div><h3>প্রতিটি টার্মিনাল এক ক্যানভাসে</h3><p>যত খুশি, পাশাপাশি, আর প্রতিটি যতক্ষণ চোখে পড়ছে ততক্ষণ লাইভ।</p></div>
-        <figure class="pic"><a href="../screenshots/list.png"><img src="../screenshots/list.png" width="1440" height="1008" loading="lazy" alt="সাইড প্যানেলে পাঁচটি টার্মিনাল, প্রতিটির অবস্থা কথায় (working, waiting for you, finished, parked), পাশে ক্যানভাসের একটি অংশ যেখানে একটি লাইভ শেল।"></a><figcaption>তালিকা বলে প্রতিটি টার্মিনাল কী করছে; পাশে টার্মিনালগুলো নিজেরাই।</figcaption></figure>
+        <div class="show-words"><h3>প্রতিটি টার্মিনাল এক ক্যানভাসে</h3><p>যত খুশি, পাশাপাশি, আর প্রতিটি যতক্ষণ চোখে পড়ছে ততক্ষণ লাইভ।</p></div>
+        <figure class="frame"><a href="../screenshots/list.png" class="frame-pic"><img src="../screenshots/list.png" width="1440" height="1008" loading="lazy" alt="সাইড প্যানেলে পাঁচটি টার্মিনাল, প্রতিটির অবস্থা কথায় (working, waiting for you, finished, parked), পাশে ক্যানভাসের একটি অংশ যেখানে একটি লাইভ শেল।"></a><figcaption>তালিকা বলে প্রতিটি টার্মিনাল কী করছে; পাশে টার্মিনালগুলো নিজেরাই।</figcaption></figure>
+      </div>
+      <div class="show show-flip">
+        <div class="show-words"><h3><span class="waits">যেটি অপেক্ষা করছে, সেটি আলাদা করে চোখে পড়ে</span></h3><p>কোনো এজেন্টের আপনাকে দরকার হলে ক্যানভাসের অন্য প্রান্ত থেকেও তা দেখতে পান, আর <code>W</code> আপনাকে সেখানে নিয়ে যায়।</p></div>
+        <figure class="frame"><a href="../screenshots/waiting.png" class="frame-pic"><img src="../screenshots/waiting.png" width="1496" height="600" loading="lazy" alt="একটি টার্মিনাল যার এজেন্ট একটি প্রশ্ন করছে, শিরোনামে waiting for you, রেখা অপেক্ষার রঙে।"></a><figcaption>এর রেখা অপেক্ষার রঙ নেয়, আর এর শিরোনামে লেখা থাকে waiting for you।</figcaption></figure>
       </div>
       <div class="show">
-        <div><h3>যেটি অপেক্ষা করছে, সেটি আলাদা করে চোখে পড়ে</h3><p>কোনো এজেন্টের আপনাকে দরকার হলে ক্যানভাসের অন্য প্রান্ত থেকেও তা দেখতে পান, আর <code>W</code> আপনাকে সেখানে নিয়ে যায়।</p></div>
-        <figure class="pic"><a href="../screenshots/waiting.png"><img src="../screenshots/waiting.png" width="1496" height="600" loading="lazy" alt="একটি টার্মিনাল যার এজেন্ট একটি প্রশ্ন করছে, শিরোনামে waiting for you, রেখা অপেক্ষার রঙে।"></a><figcaption>এর রেখা অপেক্ষার রঙ নেয়, আর এর শিরোনামে লেখা থাকে waiting for you।</figcaption></figure>
-      </div>
-      <div class="show">
-        <div><h3>একটি টার্মিনাল আলাদাভাবে</h3><p>যেকোনো টার্মিনাল তার নিজের ব্রাউজার ট্যাবে খুলুন, একই টার্মিনাল, কপি নয়।</p></div>
-        <figure class="pic"><a href="../screenshots/focus-part.png"><img src="../screenshots/focus-part.png" width="1344" height="1172" loading="lazy" alt="একটি ব্রাউজার ট্যাবে একা একটি টার্মিনাল: উপরে তার নাম, তার বিবরণে ওয়ার্কফ্লোর ধাপ, ফোল্ডার আর ফিল্ড, আর পাশে লাইভ টার্মিনাল।"></a><figcaption>আপনি চাইলে এর বিবরণ আর নোট পাশে খোলে, আর নিজেদের বোতাম দিয়ে আবার বন্ধ হয়।</figcaption></figure>
+        <div class="show-words"><h3>একটি টার্মিনাল আলাদাভাবে</h3><p>যেকোনো টার্মিনাল তার নিজের ব্রাউজার ট্যাবে খুলুন, একই টার্মিনাল, কপি নয়।</p></div>
+        <figure class="frame"><a href="../screenshots/focus-part.png" class="frame-pic"><img src="../screenshots/focus-part.png" width="1344" height="1172" loading="lazy" alt="একটি ব্রাউজার ট্যাবে একা একটি টার্মিনাল: উপরে তার নাম, তার বিবরণে ওয়ার্কফ্লোর ধাপ, ফোল্ডার আর ফিল্ড, আর পাশে লাইভ টার্মিনাল।"></a><figcaption>আপনি চাইলে এর বিবরণ আর নোট পাশে খোলে, আর নিজেদের বোতাম দিয়ে আবার বন্ধ হয়।</figcaption></figure>
       </div>
     </div>
   </div>
 </section>
 
-<section class="section" id="agents" aria-labelledby="agents-h">
+<section class="band band-dark" id="agents" aria-labelledby="agents-h">
   <div class="wrap">
-    <h2 id="agents-h">নিজের এজেন্ট নিজে আনুন</h2>
-    <p class="intro">Aubergine সাধারণ টার্মিনাল চালায়। এটি কোনো মডেল কল করে না, কোনো key রাখে না, আর এর কোনো অ্যাকাউন্ট নেই: যে কমান্ড-লাইন এজেন্টগুলো আপনি আগে থেকেই ব্যবহার করেন, আপনার নামে সাইন ইন করা, সেগুলো এর টার্মিনালে চলে, তাদের জন্য আপনার বেছে নেওয়া মডেল দিয়েই। Aubergine নিজে থেকে কোনো এজেন্টের জন্য যা করে, তা আজ Claude Code-এর জন্য তৈরি; অন্য যেকোনো এজেন্ট একই কথা <code>aubergine</code> কমান্ড দিয়ে জানাতে পারে।</p>
-    <ul class="rows">
-      <li><h3><a class="row-link" href="claude/">Claude Code</a></h3><p>New terminal মেনু থেকে চালু করুন, আর এটি নিজেই জানায় কখন কাজ করছে, কখন আপনার অপেক্ষায় বা কখন শেষ করেছে; Aubergine এর কথোপকথন আবার শুরু করতে পারে আর দেখাতে পারে এটি কীভাবে সেট আপ করা।</p></li>
-      <li><h3><a class="row-link" href="chatgpt/">Codex আর ChatGPT</a></h3><p>Codex যেকোনো প্রোগ্রামের মতো টার্মিনালে চলে, আর এর নির্দেশনা বললে <code>aubergine</code> কমান্ড দিয়ে জানায়। ব্রাউজারের ChatGPT কোনো টার্মিনাল প্রোগ্রাম নয়।</p></li>
-      <li><h3><a class="row-link" href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/for-agents.md">অন্য যেকোনো কমান্ড-লাইন এজেন্ট, বা সাধারণ শেল</a></h3><p>প্রতিটি টার্মিনালে <code>aubergine</code> কমান্ড আছে, আর <code>aubergine guide --snippet</code> আপনার এজেন্টের নিজের নির্দেশনার জন্য পাঁচটি লাইন প্রিন্ট করে।</p></li>
+    <div class="section-head">
+      <h2 id="agents-h">নিজের এজেন্ট নিজে আনুন</h2>
+      <p class="intro">Aubergine সাধারণ টার্মিনাল চালায়। এটি কোনো মডেল কল করে না, কোনো key রাখে না, আর এর কোনো অ্যাকাউন্ট নেই: যে কমান্ড-লাইন এজেন্টগুলো আপনি আগে থেকেই ব্যবহার করেন, আপনার নামে সাইন ইন করা, সেগুলো এর টার্মিনালে চলে, তাদের জন্য আপনার বেছে নেওয়া মডেল দিয়েই। Aubergine নিজে থেকে কোনো এজেন্টের জন্য যা করে, তা আজ Claude Code-এর জন্য তৈরি; অন্য যেকোনো এজেন্ট একই কথা <code>aubergine</code> কমান্ড দিয়ে জানাতে পারে।</p>
+    </div>
+    <ul class="agents">
+      <li><h3><a href="claude/">Claude Code</a></h3><p>New terminal মেনু থেকে চালু করুন, আর এটি নিজেই জানায় কখন কাজ করছে, কখন আপনার অপেক্ষায় বা কখন শেষ করেছে; Aubergine এর কথোপকথন আবার শুরু করতে পারে আর দেখাতে পারে এটি কীভাবে সেট আপ করা।</p></li>
+      <li><h3><a href="chatgpt/">Codex আর ChatGPT</a></h3><p>Codex যেকোনো প্রোগ্রামের মতো টার্মিনালে চলে, আর এর নির্দেশনা বললে <code>aubergine</code> কমান্ড দিয়ে জানায়। ব্রাউজারের ChatGPT কোনো টার্মিনাল প্রোগ্রাম নয়।</p></li>
+      <li><h3><a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/for-agents.md">অন্য যেকোনো কমান্ড-লাইন এজেন্ট, বা সাধারণ শেল</a></h3><p>প্রতিটি টার্মিনালে <code>aubergine</code> কমান্ড আছে, আর <code>aubergine guide --snippet</code> আপনার এজেন্টের নিজের নির্দেশনার জন্য পাঁচটি লাইন প্রিন্ট করে।</p></li>
     </ul>
   </div>
 </section>
 
-<section class="section" id="features" aria-labelledby="features-h">
+<section class="band band-cream" id="features" aria-labelledby="features-h">
   <div class="wrap">
-    <h2 id="features-h">আর কী তৈরি আছে</h2>
-    <p class="intro">এর সবই আজ আপনার কম্পিউটারে চলে।</p>
-    <ul class="rows">
+    <div class="section-head">
+      <h2 id="features-h">আর কী তৈরি আছে</h2>
+      <p class="intro">এর সবই আজ আপনার কম্পিউটারে চলে।</p>
+    </div>
+    <ul class="built">
       <li><h3>টার্মিনালের একটি ক্যানভাস</h3><p>আসল টার্মিনাল সরান, জুম করুন আর সাজান, টাইপ করতে একবার ক্লিক করুন, একটিকে পার্ক করে পরে ফিরিয়ে আনুন, বা একটিকে তার বিবরণ আর নোট সহ আলাদা ব্রাউজার ট্যাবে খুলুন।</p></li>
-      <li><h3>দেখুন কে অপেক্ষা করছে</h3><p>প্রতিটি টার্মিনালে busy, idle বা waiting for you, আর “For you” তালিকা আর “next waiting” আপনাকে সরাসরি নিয়ে যায় যেখানে একজন মানুষের দরকার।</p></li>
+      <li><h3><span class="waits">দেখুন কে অপেক্ষা করছে</span></h3><p>প্রতিটি টার্মিনালে busy, idle বা waiting for you, আর “For you” তালিকা আর “next waiting” আপনাকে সরাসরি নিয়ে যায় যেখানে একজন মানুষের দরকার।</p></li>
       <li><h3>কিউ আর শিডিউল</h3><p>একটি টাস্ক একবার লিখুন আর একটি ফাঁকা এজেন্টকে তা নিতে দিন, বা আপনার বেছে নেওয়া দিনগুলোতে দিনের কোনো সময়ে শিডিউল করুন।</p></li>
       <li><h3>ওয়ার্কিং কপি</h3><p>প্রতিটি এজেন্টকে রিপোজিটরির নিজস্ব কপি দিন, নিজস্ব ব্রাঞ্চে, যাতে দুটি এজেন্ট কখনো একই ফাইল না বদলায়।</p></li>
       <li><h3>প্রজেক্ট</h3><p>একটি সার্ভার, কয়েকটি কন্ট্রোল রুম: প্রতিটি প্রজেক্টের নিজস্ব ক্যানভাস, কিউ, শিডিউল আর নিয়ম আছে, আর একে ফাইল বা টেমপ্লেট হিসেবে সেভ করা যায়।</p></li>
@@ -277,35 +279,27 @@
   </div>
 </section>
 
-<section class="section" id="trust" aria-labelledby="trust-h">
+<section class="band band-lilac" id="trust" aria-labelledby="trust-h">
   <div class="wrap">
-    <h2 id="trust-h">আপনার টার্মিনাল আপনারই থাকে</h2>
-    <ul class="rows">
+    <div class="section-head">
+      <h2 id="trust-h">আপনার টার্মিনাল আপনারই থাকে</h2>
+      <p class="intro"><a class="onward" href="security/">কী সুরক্ষিত, আর কী নয়</a></p>
+    </div>
+    <ul class="pairs">
       <li><h3>শুধু লোকাল</h3><p>সার্ভার 127.0.0.1-এ শোনে আর প্রতিটি অনুরোধের Host আর Origin যাচাই করে; অন্য ডিভাইস থেকে ব্যবহার বন্ধ থাকে যতক্ষণ না আপনি তা সেট আপ করেন।</p></li>
       <li><h3>টার্মিনাল অ্যাপের পরেও চলে</h3><p>প্রতিটি টার্মিনাল একটি tmux সেশন: ব্রাউজার বন্ধ করুন বা Aubergine রিস্টার্ট করুন, আপনার কাজ চলতেই থাকে।</p></li>
       <li><h3>মডেল নেই, key নেই</h3><p>Aubergine কোনো মডেল বাছে না বা কল করে না, আর তার জন্য কোনো key রাখে না; আপনার এজেন্টরা নিজেদেরটা আনে।</p></li>
       <li><h3>সিদ্ধান্ত আপনার</h3><p>টোকেন স্কোপ-যুক্ত, এজেন্টরা যা লেখে তা আপনার পর্যালোচনার অপেক্ষায় থাকে, আর অনুমোদন দেন একজন মানুষ।</p></li>
     </ul>
-    <p class="more-link"><a href="security/">কী সুরক্ষিত, আর কী নয়</a></p>
   </div>
 </section>
 
-<section class="section" id="install" aria-labelledby="install-h">
+<section class="band band-cream" id="faq" aria-labelledby="faq-h">
   <div class="wrap">
-    <h2 id="install-h">পাঁচ মিনিটে চালু</h2>
-    <p class="intro">আপনার লাগবে macOS, সঙ্গে tmux 3.2 বা নতুনতর আর Node.js 22 বা নতুনতর। <code>brew install tmux node</code> দুটোই এনে দেয়।</p>
-    <ol class="steps">
-      <li><h3>ইনস্টল করুন</h3><p class="cmd"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="কপি হয়েছে" aria-live="polite" hidden>কপি করুন</button></p><p>বা <a href="install/">ইনস্টলার</a> ব্যবহার করুন, যা pnpm দিয়ে সোর্স থেকে বিল্ড করে।</p></li>
-      <li><h3>চালু করুন আর ব্রাউজার খুলুন</h3><p class="cmd"><code>aubergine start --open</code><button type="button" class="copy" data-copy data-copied="কপি হয়েছে" aria-live="polite" hidden>কপি করুন</button></p><p>এটি সার্ভার চালু করে আর আপনার ব্রাউজার সাইন ইন করা অবস্থায় খোলে।</p></li>
-      <li><h3>ট্যুর নিন</h3><p>ফাঁকা ক্যানভাসে <strong>Show me around</strong>-এ ক্লিক করুন। এটি নকল এজেন্টের একটি Demo ক্যানভাস বানায় আর আটটি ছোট ধাপে আপনাকে ঘুরিয়ে দেখায়; <code>aubergine demo --remove</code> সেটি সরিয়ে দেয়।</p></li>
-    </ol>
-    <p class="note more-link">ইনস্টলার শুধু <code>~/.aubergine</code> আর <code>aubergine</code> নামের একটি লিংক বদলায়। এটি কখনো sudo ব্যবহার করে না, আর কখনো আপনার শেলের স্টার্টআপ ফাইল বদলায় না।</p>
-  </div>
-</section>
-
-<section class="section" id="faq" aria-labelledby="faq-h">
-  <div class="wrap">
-    <h2 id="faq-h">প্রশ্ন</h2>
+    <div class="section-head">
+      <h2 id="faq-h">প্রশ্ন</h2>
+      <p class="intro"><a class="onward" href="faq/">সব প্রশ্ন</a></p>
+    </div>
     <div class="questions">
       <details><summary>Aubergine কী?</summary><p>টার্মিনাল সেশনের একটি লোকাল, ব্রাউজারভিত্তিক ক্যানভাস। প্রতিটি টার্মিনাল একটি নোড যা আপনি সাজাতে ও ব্যবহার করতে পারেন, যাতে একসঙ্গে কয়েকটি কোডিং এজেন্ট চালাতে পারেন আর দেখতে পারেন কোনটি আপনার অপেক্ষায়।</p></details>
       <details><summary>Aubergine কি আমার টার্মিনাল বা কোড কোথাও পাঠায়?</summary><p>না। সবকিছু আপনার নিজের কম্পিউটারে চলে। সার্ভার শুধু 127.0.0.1-এ শোনে আর প্রতিটি অনুরোধের Host আর Origin যাচাই করে।</p></details>
@@ -313,20 +307,35 @@
       <details><summary>আমি যদি নিজে কোনো টার্মিনালে Claude Code চালু করি?</summary><p>এটি যেকোনো প্রোগ্রামের মতো কাজ করে: আপনি যথারীতি এতে টাইপ করেন। কিন্তু Aubergine তখনই জানে যে একটি এজেন্ট আছে, যখন এজেন্টটি সে নিজে চালু করেছে (New terminal, তারপর Claude Code), কারণ সে কয়েকটি ছোট হুক যোগ করে যেগুলো জানায় এজেন্ট কী করছে। হাতে চালু করলে টার্মিনালটি শুধু <code>claude</code> চালাতে busy দেখায়: কিছু জিজ্ঞেস করলে তাকে waiting for you দেখানো হয় না, আর সেখানে কোনো ওয়ার্কফ্লো শুরু করলে তার জন্য কিছু টাইপ হয় না। তাকে নিজে <code>aubergine workflow status</code> চালাতে বলুন, যা ভেতর থেকে এখনো কাজ করে, অথবা এজেন্টটি New terminal মেনু থেকে চালু করুন।</p></details>
       <details><summary>Aubergine কি বিনামূল্যে?</summary><p>হ্যাঁ। এটি <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT লাইসেন্সে</a> বিনামূল্যে ও ওপেন সোর্স, আর এর সোর্স GitHub-এ আছে।</p></details>
     </div>
-    <p class="more-link"><a href="faq/">সব প্রশ্ন</a></p>
   </div>
 </section>
 
-<section class="section" id="planned" aria-labelledby="planned-h">
-  <div class="wrap">
+<section class="band band-lilac band-slim" id="planned" aria-labelledby="planned-h">
+  <div class="wrap planned-line">
     <h2 id="planned-h">কী পরিকল্পনায় আছে</h2>
-    <p class="note">মাল্টিপ্লেয়ার, ক্লাউডে এজেন্ট, অনুমোদনের মোড এবং আরও অনেক কিছু পরিকল্পনায় আছে, তৈরি হয়নি। <a href="roadmap/">রোডম্যাপ দেখুন</a>।</p>
+    <p>মাল্টিপ্লেয়ার, ক্লাউডে এজেন্ট, অনুমোদনের মোড এবং আরও অনেক কিছু পরিকল্পনায় আছে, তৈরি হয়নি। <a href="roadmap/">রোডম্যাপ দেখুন</a>।</p>
+  </div>
+</section>
+
+<section class="band band-purple" id="install" aria-labelledby="install-h">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 id="install-h">পাঁচ মিনিটে চালু</h2>
+      <p class="intro">আপনার লাগবে macOS, সঙ্গে tmux 3.2 বা নতুনতর আর Node.js 22 বা নতুনতর। <code>brew install tmux node</code> দুটোই এনে দেয়।</p>
+    </div>
+    <ol class="steps">
+      <li><h3>ইনস্টল করুন</h3><p class="cmd"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="কপি হয়েছে" aria-live="polite" hidden>কপি করুন</button></p><p>বা <a href="install/">ইনস্টলার</a> ব্যবহার করুন, যা pnpm দিয়ে সোর্স থেকে বিল্ড করে।</p></li>
+      <li><h3>চালু করুন আর ব্রাউজার খুলুন</h3><p class="cmd"><code>aubergine start --open</code><button type="button" class="copy" data-copy data-copied="কপি হয়েছে" aria-live="polite" hidden>কপি করুন</button></p><p>এটি সার্ভার চালু করে আর আপনার ব্রাউজার সাইন ইন করা অবস্থায় খোলে।</p></li>
+      <li><h3>ট্যুর নিন</h3><p>ফাঁকা ক্যানভাসে <strong>Show me around</strong>-এ ক্লিক করুন। এটি নকল এজেন্টের একটি Demo ক্যানভাস বানায় আর আটটি ছোট ধাপে আপনাকে ঘুরিয়ে দেখায়; <code>aubergine demo --remove</code> সেটি সরিয়ে দেয়।</p></li>
+    </ol>
+    <p class="install-note">ইনস্টলার শুধু <code>~/.aubergine</code> আর <code>aubergine</code> নামের একটি লিংক বদলায়। এটি কখনো sudo ব্যবহার করে না, আর কখনো আপনার শেলের স্টার্টআপ ফাইল বদলায় না।</p>
   </div>
 </section>
 
 </main>
 <footer class="foot">
   <div class="wrap foot-in">
+    <a class="mark" href="./"><img src="../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
     <nav aria-label="সব পেজ">
       <ul class="foot-links">
         <li><a href="./" aria-current="page">হোম</a></li>
@@ -352,6 +361,7 @@ document.querySelectorAll('[data-copy]').forEach(function (button) {
   button.hidden = false;
   button.addEventListener('click', function () {
     var words = button.textContent;
+    if (!navigator.clipboard) return;
     navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
       button.textContent = button.getAttribute('data-copied');
       setTimeout(function () { button.textContent = words; }, 1600);
@@ -364,6 +374,12 @@ document.addEventListener('keydown', function (event) {
 });
 document.addEventListener('click', function (event) {
   document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
 });
 </script>
 </body>

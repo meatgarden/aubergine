@@ -60,11 +60,13 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="{{attr:site.crumbs}}"><ol><li><a href="/">Aubergine</a></li><li>{{install.crumb}}</li></ol></nav>
-  <h1>{{install.title}}</h1>
-  <p class="lead">{{install.lead}}</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="{{attr:site.crumbs}}"><ol><li><a href="/">Aubergine</a></li><li>{{install.crumb}}</li></ol></nav>
+    <h1>{{install.title}}</h1>
+    <p class="lead">{{install.lead}}</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
     <h2>{{install.req.title}}</h2>
@@ -76,7 +78,7 @@
     <p class="cmd"><code>brew install tmux node</code><button type="button" class="copy" data-copy data-copied="{{attr:site.copied}}" aria-live="polite" hidden>{{site.copy}}</button></p>
 
     <h2>{{install.steps.title}}</h2>
-    <ol>
+    <ol class="seq">
       <li><p>{{install.steps.npm}}</p>
         <p class="cmd"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="{{attr:site.copied}}" aria-live="polite" hidden>{{site.copy}}</button></p>
         <p>{{install.steps.script}}</p>
@@ -85,7 +87,7 @@
         <p class="cmd"><code>aubergine start --open</code><button type="button" class="copy" data-copy data-copied="{{attr:site.copied}}" aria-live="polite" hidden>{{site.copy}}</button></p></li>
       <li><p>{{install.steps.tour}}</p></li>
     </ol>
-    <p>{{install.steps.read}}</p>
+    <p class="note">{{install.steps.read}}</p>
 
     <h2>{{install.changes.title}}</h2>
     <p>{{install.changes.text}}</p>
@@ -113,8 +115,16 @@
       <li>{{install.later.uninstall}}</li>
       <li>{{install.later.login}}</li>
     </ul>
-
-    <h2>{{install.next.title}}</h2>
-    <p>{{install.next.text}}</p>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">{{install.next.title}}</h2>
+    <div class="close-do">
+      <p>{{install.next.text}}</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="{{attr:site.copied}}" aria-live="polite" hidden>{{site.copy}}</button></p>
+      <p class="actions"><a class="button" href="/guides/">{{site.nav.guides}}</a></p>
+    </div>
+  </div>
+</section>

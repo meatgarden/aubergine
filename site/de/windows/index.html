@@ -20,8 +20,8 @@
 <link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/windows/">
 <link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/windows/">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
 <link rel="icon" href="../../icon.svg" type="image/svg+xml">
 <link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../../style.css">
@@ -45,7 +45,7 @@
 <a class="skip" href="#main">Zum Inhalt springen</a>
 <header class="top">
   <div class="wrap top-in">
-    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
     <nav class="nav" aria-label="Seiten">
       <ul>
         <li><a href="../claude/">Claude Code</a></li>
@@ -77,9 +77,11 @@
   </div>
 </header>
 
-<div class="wrap translated">
-  <p class="note">Aubergine selbst ist auf Englisch: Die Buttons, Menüs und Bilder sind die englischen.</p>
-  <p class="note">Diese Seite wurde maschinell aus dem Englischen übersetzt. <a href="https://github.com/thirstyeggplant/aubergine/issues">Korrektur schicken</a>.</p>
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine selbst ist auf Englisch: Die Buttons, Menüs und Bilder sind die englischen.</p>
+    <p>Diese Seite wurde maschinell aus dem Englischen übersetzt. <a href="https://github.com/thirstyeggplant/aubergine/issues">Korrektur schicken</a>.</p>
+  </div>
 </div>
 <main id="main" tabindex="-1">
 <script type="application/ld+json">
@@ -130,20 +132,21 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="Wo du bist"><ol><li><a href="../">Aubergine</a></li><li>Windows mit WSL</li></ol></nav>
-  <h1>Aubergine unter Windows mit WSL installieren</h1>
-  <p class="lead">Aubergine läuft nicht auf Windows selbst. Es läuft in WSL 2, dem Linux, das Windows mitbringt, und du bedienst es in deinem Browser unter Windows.</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Wo du bist"><ol><li><a href="../">Aubergine</a></li><li>Windows mit WSL</li></ol></nav>
+    <h1>Aubergine unter Windows mit WSL installieren</h1>
+    <p class="lead">Aubergine läuft nicht auf Windows selbst. Es läuft in WSL 2, dem Linux, das Windows mitbringt, und du bedienst es in deinem Browser unter Windows.</p>
+    <p class="note note-strong"><strong>Was ausprobiert wurde.</strong> Die Linux-Schritte liefen am 25. November 2026 unter Ubuntu 24.04.5 (x86_64) in einem Container, nicht in WSL, mit Aubergine 0.2.2 von npm: Es hat seine Terminal-Bibliothek kompiliert, ist gestartet, hat einen Browser angemeldet und ein Terminal und die Demo laufen lassen. Node.js mit nvm zu installieren wurde dort nicht ausgeführt, weil Node.js 22 schon installiert war. Nichts auf dieser Seite wurde bisher unter Windows ausgeführt. Wenn du es ausprobierst, <a href="https://github.com/thirstyeggplant/aubergine/issues">erzähl uns, wie es lief</a>.</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
-    <p class="note"><strong>Was ausprobiert wurde.</strong> Die Linux-Schritte liefen am 25. November 2026 unter Ubuntu 24.04.5 (x86_64) in einem Container, nicht in WSL, mit Aubergine 0.2.2 von npm: Es hat seine Terminal-Bibliothek kompiliert, ist gestartet, hat einen Browser angemeldet und ein Terminal und die Demo laufen lassen. Node.js mit nvm zu installieren wurde dort nicht ausgeführt, weil Node.js 22 schon installiert war. Nichts auf dieser Seite wurde bisher unter Windows ausgeführt. Wenn du es ausprobierst, <a href="https://github.com/thirstyeggplant/aubergine/issues">erzähl uns, wie es lief</a>.</p>
-
     <h2>Was du brauchst</h2>
     <p>Windows 11 oder Windows 10 Version 2004 (Build 19041) oder neuer, wo sich WSL 2 mit einem Befehl installieren lässt. Microsofts <a href="https://learn.microsoft.com/windows/wsl/install">Seite zur Installation von WSL</a> hat die Einzelheiten.</p>
 
     <h2>Installieren und starten</h2>
-    <ol>
+    <ol class="seq">
       <li><p><strong>Installiere WSL.</strong> Öffne PowerShell als Administrator, führe das hier aus und starte Windows neu, wenn es fertig ist. Es installiert WSL 2 mit Ubuntu.</p>
         <p class="cmd multi"><code>wsl --install</code><button type="button" class="copy" data-copy data-copied="Kopiert" aria-live="polite" hidden>Kopieren</button></p>
         <p>Öffne nach dem Neustart <strong>Ubuntu</strong> aus dem Startmenü und wähle dort einen Benutzernamen und ein Passwort. Alle folgenden Befehle tippst du dort ein, in Ubuntu.</p></li>
@@ -190,15 +193,24 @@
         </tbody>
       </table>
     </div>
-
-    <h2>Weiter</h2>
-    <p>Anhalten, Aktualisieren und Deinstallieren gehen wie auf der <a href="../install/">Installationsseite</a>, und alles andere steht in der <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>.</p>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">Weiter</h2>
+    <div class="close-do">
+      <p>Anhalten, Aktualisieren und Deinstallieren gehen wie auf der <a href="../install/">Installationsseite</a>, und alles andere steht in der <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Kopiert" aria-live="polite" hidden>Kopieren</button></p>
+      <p class="actions"><a class="button" href="../install/">Installieren</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">
   <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
     <nav aria-label="Alle Seiten">
       <ul class="foot-links">
         <li><a href="../">Start</a></li>
@@ -224,6 +236,7 @@ document.querySelectorAll('[data-copy]').forEach(function (button) {
   button.hidden = false;
   button.addEventListener('click', function () {
     var words = button.textContent;
+    if (!navigator.clipboard) return;
     navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
       button.textContent = button.getAttribute('data-copied');
       setTimeout(function () { button.textContent = words; }, 1600);
@@ -236,6 +249,12 @@ document.addEventListener('keydown', function (event) {
 });
 document.addEventListener('click', function (event) {
   document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
 });
 </script>
 </body>

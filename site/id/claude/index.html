@@ -20,8 +20,8 @@
 <link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/claude/">
 <link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/claude/">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
 <link rel="icon" href="../../icon.svg" type="image/svg+xml">
 <link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../../style.css">
@@ -45,7 +45,7 @@
 <a class="skip" href="#main">Langsung ke isi halaman</a>
 <header class="top">
   <div class="wrap top-in">
-    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
     <nav class="nav" aria-label="Halaman">
       <ul>
         <li><a href="./" aria-current="page">Claude Code</a></li>
@@ -77,9 +77,11 @@
   </div>
 </header>
 
-<div class="wrap translated">
-  <p class="note">Aubergine sendiri berbahasa Inggris: tombol, menu, dan gambarnya adalah versi bahasa Inggris.</p>
-  <p class="note">Halaman ini diterjemahkan oleh mesin dari bahasa Inggris. <a href="https://github.com/thirstyeggplant/aubergine/issues">Kirim koreksi</a>.</p>
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine sendiri berbahasa Inggris: tombol, menu, dan gambarnya adalah versi bahasa Inggris.</p>
+    <p>Halaman ini diterjemahkan oleh mesin dari bahasa Inggris. <a href="https://github.com/thirstyeggplant/aubergine/issues">Kirim koreksi</a>.</p>
+  </div>
 </div>
 <main id="main" tabindex="-1">
 <script type="application/ld+json">
@@ -106,73 +108,63 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="Posisi Anda"><ol><li><a href="../">Aubergine</a></li><li>Claude Code</li></ol></nav>
-  <h1>Apa yang dilakukan Aubergine untuk Claude Code</h1>
-  <p class="lead">Claude Code berjalan di terminal Aubergine seperti program lain. Jika dijalankan dari Aubergine, ia juga memberi tahu kanvas apa yang sedang ia kerjakan, dan Aubergine bisa memberinya arahan, melanjutkannya, dan menunjukkan bagaimana ia disiapkan. Inilah semuanya, sesuai urutan Anda menjumpainya.</p>
-</div>
-<div class="wrap page-body">
-  <div class="prose">
+<header class="page-head page-head-big">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Posisi Anda"><ol><li><a href="../">Aubergine</a></li><li>Claude Code</li></ol></nav>
+    <h1>Apa yang dilakukan Aubergine untuk Claude Code</h1>
+    <p class="lead">Claude Code berjalan di terminal Aubergine seperti program lain. Jika dijalankan dari Aubergine, ia juga memberi tahu kanvas apa yang sedang ia kerjakan, dan Aubergine bisa memberinya arahan, melanjutkannya, dan menunjukkan bagaimana ia disiapkan. Inilah semuanya, sesuai urutan Anda menjumpainya.</p>
     <p class="note">Anda sendiri yang menginstal Claude Code dan masuk ke dalamnya. Aubergine tidak memanggil model dan tidak menyimpan kunci: ia menjalankan perintah <code>claude</code> yang sudah Anda punya.</p>
-
-    <h2>Jalankan dari menu</h2>
-    <p><strong>New terminal ▾ → Claude Code</strong>, atau <code>C</code> saat tidak ada terminal yang memegang keyboard, menjalankan <code>claude</code> di terminal baru dengan file pengaturan yang ditulis Aubergine di folder datanya sendiri. Konfigurasi Claude Code Anda sendiri tidak disentuh.</p>
-    <p>Perintah yang dijalankan adalah <code>agents.claudeCommand</code> di pengaturan, yaitu <code>claude</code> kecuali Anda mengubahnya; Aubergine menambahkan flag-nya sendiri di akhir.</p>
-    <p class="note">Lokasi: menu di samping New terminal, di bagian atas daftar terminal.</p>
-
-    <h2>Lihat saat ia bekerja, menunggu, dan selesai</h2>
-    <p>Hook di file pengaturan itu memberi tahu kanvas apa yang dikerjakan agen. Saat Anda mengirim prompt, prompt itu ditambahkan ke log catatan terminal dan terminal menampilkan <strong>working</strong>. Saat agen membutuhkan Anda, karena pertanyaan izin atau karena ia diam menunggu input, garisnya berganti ke warna menunggu dan judul serta barisnya bertuliskan <strong>waiting for you</strong>. Saat berhenti, ia menampilkan <strong>finished</strong>.</p>
-    <p><code>W</code> pindah ke terminal berikutnya yang menunggu, dan <strong>Notify</strong> menyalakan notifikasi desktop untuk terminal yang mulai menunggu. Prompt bisa berisi rahasia: <code>"agents": { "logPrompts": false }</code> di <code>config.json</code> menjauhkannya dari log catatan.</p>
-    <p class="note">Lokasi: judul terminal, barisnya di daftar, dan angka di samping For you di bagian atas.</p>
-
-    <h2>Claude Code yang Anda jalankan sendiri</h2>
-    <p>Diketik manual di terminal biasa, <code>claude</code> bekerja seperti program lain, tetapi Aubergine hanya melihat shell yang sibuk menjalankannya: tidak ada waiting for you, dan tidak ada yang diketikkan untuknya saat Anda memulai workflow di sana. Untuk mengubahnya, cetak hook-nya dan tambahkan sendiri ke pengaturan Claude Code Anda. Hook itu tidak melakukan apa-apa di luar terminal Aubergine.</p>
-    <p class="cmd"><code>aubergine hooks print</code><button type="button" class="copy" data-copy data-copied="Tersalin" aria-live="polite" hidden>Salin</button></p>
-
-    <h2>Ia menamai dirinya dan menyimpan ringkasan</h2>
-    <p>Agen yang dijalankan Aubergine diberi tahu saat mulai untuk menamai terminalnya sesuai pekerjaan dan menyimpan ringkasan, dengan <code>aubergine describe</code>, <code>aubergine link add</code> dan <code>aubergine field set</code>, dan diingatkan sekali saat berhenti tanpa nama sendiri atau tanpa ringkasan. Apa yang Anda tulis sendiri yang berlaku; apa yang dikatakan agen tentang hal yang sama menunggu di sebelahnya dengan <strong>Use this</strong>. Pengingat bisa dimatikan di <strong>Settings</strong>.</p>
-    <p class="note">Lokasi: detail terminal, dengan nama, ringkasan, field, dan link-nya.</p>
-
-    <h2>Workflow, tugas, rekap, dan pesan sampai kepadanya</h2>
-    <p>Aubergine mengetikkan empat kalimat tetap ke terminal, dan hanya ini: bahwa sebuah workflow dimulai, bahwa agen diminta menulis sesuatu, bahwa Anda meminta rekap, dan bahwa ada pesan yang menunggu. Masing-masing menyebut satu perintah untuk dijalankan agen. Kalimat hanya diketikkan di tempat yang terlihat ada agen memegang keyboard: agen yang dijalankan Aubergine, atau agen yang pengaturannya berisi hook dari <code>aubergine hooks print</code>.</p>
-    <p>Dengan cara yang sama, tugas dari antrean hanya diberikan ke terminal yang agennya seperti itu sedang di depan dan bebas, dan <strong>Claude Code on a workflow…</strong> membuka terminal baru yang agennya diberi tahu tentang run itu di prompt pertamanya.</p>
-    <p class="note">Lokasi: <strong>Run a workflow…</strong> di menu judul terminal, dan <strong>Runs</strong> di bagian atas halaman.</p>
-
-    <h2>Resume agent</h2>
-    <p>Aubergine mengingat di percakapan mana sebuah terminal agen berada. Saat shell-nya kembali ke prompt, karena Anda keluar dari agen atau komputer dimulai ulang, terminal menawarkan <strong>Resume agent</strong> (lanjutkan agen), yang menjalankan agen lagi di percakapan itu. Pada terminal yang sedang dalam sebuah run, ia juga memberi tahu agen tentang run itu lagi.</p>
-    <p class="note">Lokasi: bilah judul terminal.</p>
-
-    <h2>Percakapan lama</h2>
-    <p><strong>Past conversations…</strong> mendaftar percakapan agen sebelumnya di sebuah folder: baca salah satunya, buka di kanvas, atau buka salinan yang membiarkan aslinya tetap seperti semula. Ketik <code>@</code> dan beberapa kata di palet untuk mencarinya; <code>aubergine history</code> mendaftarnya di command line. Tidak ada yang dibaca disimpan, dan tidak ada token maupun agen yang bisa membaca percakapan lewat Aubergine.</p>
-    <p>Ia membaca file yang disimpan Claude Code. Formatnya bersifat internal bagi Claude Code dan berubah antarversi. Setelah agen diperbarui, nama dan transkrip mungkin lebih sedikit, dan catatan yang tidak bisa dibaca Aubergine dinyatakan begitu, tidak pernah ditampilkan sebagai kosong.</p>
-    <p class="note">Lokasi: palet (<code>⌘K</code>), dan “Past conversations in this folder…” di detail terminal.</p>
-
-    <h2>Bagaimana ia disiapkan</h2>
-    <p>Daftar apa saja yang menurut file konfigurasi agen telah diberikan kepadanya: server MCP, plugin, hook, skill, aturan izin, dan file pengaturan, masing-masing dengan asalnya, dan apa yang ditambahkan Aubergine. Hanya nama, tidak pernah nilai atau rahasia. Daftar ini menunjukkan bagaimana agen disiapkan, bukan apa yang sudah dimuat agen yang sedang berjalan, dan menyatakan dengan jelas apa yang tidak bisa ia ketahui, seperti konektor yang datang dari akun Anda.</p>
-    <p class="note">Lokasi: <strong>⚙ on</strong> di terminal, “What is switched on for this agent…” di palet, dan detail terminal.</p>
-
-    <h2>Alat Aubergine untuknya</h2>
-    <p><strong>Claude Code with Aubergine tools…</strong> pertama-tama menanyakan apa yang boleh dilakukan agen: <strong>None</strong> (tidak ada); <strong>Its own work only</strong> (hanya pekerjaannya sendiri), dengan kredensial terminal itu sendiri; atau <strong>More…</strong> (lainnya), lingkup yang Anda pilih, di mana sebuah token dibuat untuk satu terminal itu dan dicabut saat terminal diakhiri untuk selamanya. Alatnya adalah <code>aubergine mcp</code>, diberikan ke agen di baris peluncurannya; konfigurasi agen itu sendiri tidak ditulis.</p>
-    <p class="note">Lokasi: menu di samping New terminal.</p>
-
-    <h2>Pindahkan Claude Code yang sudah Anda buka</h2>
-    <p>Agen yang sedang berjalan tidak bisa dipindahkan, tetapi percakapannya bisa. <strong>Open elsewhere</strong> mendaftar tab Claude Code Anda, dengan <strong>Fork to canvas</strong> dan, untuk agen yang diam, <strong>Stop and resume here</strong>, yang bertanya kepada Anda dulu. Dari terminal, <code>aubergine move</code> melakukan hal yang sama, dan <code>aubergine here --claude</code> menjalankan Claude Code di kanvas yang melanjutkan percakapan terakhir folder itu.</p>
-    <p class="note">Lokasi: <strong>Open elsewhere</strong> di bilah di atas kanvas, atau <code>O</code>.</p>
-
-    <h2>Di salinan kerjanya sendiri</h2>
-    <p><code>aubergine here --copy --claude</code> menjalankan Claude Code di checkout repositori miliknya sendiri, di branch sendiri, sehingga dua agen tidak pernah mengedit file yang sama. Dialog untuk terminal Claude Code dengan alat punya pilihan yang sama.</p>
-
-    <h2>Apa yang sudah dicoba</h2>
-    <p>Demo yang disertakan dengan Aubergine memakai pengganti, yaitu skrip pendek yang menjalankan perintah dan hook yang sama seperti agen sungguhan, bukan Claude Code sungguhan. Dengan agen sungguhan, persetujuan, salinan kerja, tugas dari antrean, dan jadwal belum dicoba.</p>
-
-    <p>Agen lain bisa menyampaikan sebagian besar hal ini lewat perintah <code>aubergine</code>: lihat <a href="../chatgpt/">Codex dan ChatGPT</a>.</p>
-    <p class="note">Aubergine tidak berafiliasi dengan Anthropic. Claude dan Claude Code adalah merek dagang Anthropic.</p>
   </div>
-</div>
+</header>
+<section class="part" aria-label="Apa yang dilakukan Aubergine untuk Claude Code">
+  <div class="wrap">
+    <ol class="features">
+      <li><h2>Jalankan dari menu</h2><div class="feature-words"><p><strong>New terminal ▾ → Claude Code</strong>, atau <code>C</code> saat tidak ada terminal yang memegang keyboard, menjalankan <code>claude</code> di terminal baru dengan file pengaturan yang ditulis Aubergine di folder datanya sendiri. Konfigurasi Claude Code Anda sendiri tidak disentuh.</p><p>Perintah yang dijalankan adalah <code>agents.claudeCommand</code> di pengaturan, yaitu <code>claude</code> kecuali Anda mengubahnya; Aubergine menambahkan flag-nya sendiri di akhir.</p><p class="where">Lokasi: menu di samping New terminal, di bagian atas daftar terminal.</p></div></li>
+      <li class="with-pic flip">
+        <div class="feature-words"><h2>Lihat saat ia bekerja, menunggu, dan selesai</h2><p>Hook di file pengaturan itu memberi tahu kanvas apa yang dikerjakan agen. Saat Anda mengirim prompt, prompt itu ditambahkan ke log catatan terminal dan terminal menampilkan <strong>working</strong>. Saat agen membutuhkan Anda, karena pertanyaan izin atau karena ia diam menunggu input, garisnya berganti ke warna menunggu dan judul serta barisnya bertuliskan <strong>waiting for you</strong>. Saat berhenti, ia menampilkan <strong>finished</strong>.</p><p><code>W</code> pindah ke terminal berikutnya yang menunggu, dan <strong>Notify</strong> menyalakan notifikasi desktop untuk terminal yang mulai menunggu. Prompt bisa berisi rahasia: <code>"agents": { "logPrompts": false }</code> di <code>config.json</code> menjauhkannya dari log catatan.</p><p class="where">Lokasi: judul terminal, barisnya di daftar, dan angka di samping For you di bagian atas.</p></div>
+        <figure class="frame"><a href="../../screenshots/waiting.png" class="frame-pic"><img src="../../screenshots/waiting.png" width="1496" height="600" loading="lazy" alt="Satu terminal yang agennya mengajukan pertanyaan, judulnya bertuliskan waiting for you, garis tepinya berwarna menunggu."></a><figcaption>Garis tepinya berganti ke warna menunggu, dan judulnya bertuliskan waiting for you.</figcaption></figure>
+      </li>
+      <li><h2>Claude Code yang Anda jalankan sendiri</h2><div class="feature-words"><p>Diketik manual di terminal biasa, <code>claude</code> bekerja seperti program lain, tetapi Aubergine hanya melihat shell yang sibuk menjalankannya: tidak ada waiting for you, dan tidak ada yang diketikkan untuknya saat Anda memulai workflow di sana. Untuk mengubahnya, cetak hook-nya dan tambahkan sendiri ke pengaturan Claude Code Anda. Hook itu tidak melakukan apa-apa di luar terminal Aubergine.</p><p class="cmd"><code>aubergine hooks print</code><button type="button" class="copy" data-copy data-copied="Tersalin" aria-live="polite" hidden>Salin</button></p></div></li>
+      <li class="with-pic">
+        <div class="feature-words"><h2>Ia menamai dirinya dan menyimpan ringkasan</h2><p>Agen yang dijalankan Aubergine diberi tahu saat mulai untuk menamai terminalnya sesuai pekerjaan dan menyimpan ringkasan, dengan <code>aubergine describe</code>, <code>aubergine link add</code> dan <code>aubergine field set</code>, dan diingatkan sekali saat berhenti tanpa nama sendiri atau tanpa ringkasan. Apa yang Anda tulis sendiri yang berlaku; apa yang dikatakan agen tentang hal yang sama menunggu di sebelahnya dengan <strong>Use this</strong>. Pengingat bisa dimatikan di <strong>Settings</strong>.</p><p class="where">Lokasi: detail terminal, dengan nama, ringkasan, field, dan link-nya.</p></div>
+        <figure class="frame"><a href="../../screenshots/focus-part.png" class="frame-pic"><img src="../../screenshots/focus-part.png" width="1344" height="1172" loading="lazy" alt="Satu terminal sendirian di tab browser: namanya di bagian atas, detailnya dengan langkah workflow, folder dan field-nya, dan terminal yang hidup di sebelahnya."></a><figcaption>Detail dan catatannya terbuka di sebelahnya saat Anda minta, dan tertutup lagi dengan tombolnya masing-masing.</figcaption></figure>
+      </li>
+      <li><h2>Workflow, tugas, rekap, dan pesan sampai kepadanya</h2><div class="feature-words"><p>Aubergine mengetikkan empat kalimat tetap ke terminal, dan hanya ini: bahwa sebuah workflow dimulai, bahwa agen diminta menulis sesuatu, bahwa Anda meminta rekap, dan bahwa ada pesan yang menunggu. Masing-masing menyebut satu perintah untuk dijalankan agen. Kalimat hanya diketikkan di tempat yang terlihat ada agen memegang keyboard: agen yang dijalankan Aubergine, atau agen yang pengaturannya berisi hook dari <code>aubergine hooks print</code>.</p><p>Dengan cara yang sama, tugas dari antrean hanya diberikan ke terminal yang agennya seperti itu sedang di depan dan bebas, dan <strong>Claude Code on a workflow…</strong> membuka terminal baru yang agennya diberi tahu tentang run itu di prompt pertamanya.</p><p class="where">Lokasi: <strong>Run a workflow…</strong> di menu judul terminal, dan <strong>Runs</strong> di bagian atas halaman.</p></div></li>
+      <li><h2>Resume agent</h2><div class="feature-words"><p>Aubergine mengingat di percakapan mana sebuah terminal agen berada. Saat shell-nya kembali ke prompt, karena Anda keluar dari agen atau komputer dimulai ulang, terminal menawarkan <strong>Resume agent</strong> (lanjutkan agen), yang menjalankan agen lagi di percakapan itu. Pada terminal yang sedang dalam sebuah run, ia juga memberi tahu agen tentang run itu lagi.</p><p class="where">Lokasi: bilah judul terminal.</p></div></li>
+      <li><h2>Percakapan lama</h2><div class="feature-words"><p><strong>Past conversations…</strong> mendaftar percakapan agen sebelumnya di sebuah folder: baca salah satunya, buka di kanvas, atau buka salinan yang membiarkan aslinya tetap seperti semula. Ketik <code>@</code> dan beberapa kata di palet untuk mencarinya; <code>aubergine history</code> mendaftarnya di command line. Tidak ada yang dibaca disimpan, dan tidak ada token maupun agen yang bisa membaca percakapan lewat Aubergine.</p><p>Ia membaca file yang disimpan Claude Code. Formatnya bersifat internal bagi Claude Code dan berubah antarversi. Setelah agen diperbarui, nama dan transkrip mungkin lebih sedikit, dan catatan yang tidak bisa dibaca Aubergine dinyatakan begitu, tidak pernah ditampilkan sebagai kosong.</p><p class="where">Lokasi: palet (<code>⌘K</code>), dan “Past conversations in this folder…” di detail terminal.</p></div></li>
+      <li><h2>Bagaimana ia disiapkan</h2><div class="feature-words"><p>Daftar apa saja yang menurut file konfigurasi agen telah diberikan kepadanya: server MCP, plugin, hook, skill, aturan izin, dan file pengaturan, masing-masing dengan asalnya, dan apa yang ditambahkan Aubergine. Hanya nama, tidak pernah nilai atau rahasia. Daftar ini menunjukkan bagaimana agen disiapkan, bukan apa yang sudah dimuat agen yang sedang berjalan, dan menyatakan dengan jelas apa yang tidak bisa ia ketahui, seperti konektor yang datang dari akun Anda.</p><p class="where">Lokasi: <strong>⚙ on</strong> di terminal, “What is switched on for this agent…” di palet, dan detail terminal.</p></div></li>
+      <li><h2>Alat Aubergine untuknya</h2><div class="feature-words"><p><strong>Claude Code with Aubergine tools…</strong> pertama-tama menanyakan apa yang boleh dilakukan agen: <strong>None</strong> (tidak ada); <strong>Its own work only</strong> (hanya pekerjaannya sendiri), dengan kredensial terminal itu sendiri; atau <strong>More…</strong> (lainnya), lingkup yang Anda pilih, di mana sebuah token dibuat untuk satu terminal itu dan dicabut saat terminal diakhiri untuk selamanya. Alatnya adalah <code>aubergine mcp</code>, diberikan ke agen di baris peluncurannya; konfigurasi agen itu sendiri tidak ditulis.</p><p class="where">Lokasi: menu di samping New terminal.</p></div></li>
+      <li><h2>Pindahkan Claude Code yang sudah Anda buka</h2><div class="feature-words"><p>Agen yang sedang berjalan tidak bisa dipindahkan, tetapi percakapannya bisa. <strong>Open elsewhere</strong> mendaftar tab Claude Code Anda, dengan <strong>Fork to canvas</strong> dan, untuk agen yang diam, <strong>Stop and resume here</strong>, yang bertanya kepada Anda dulu. Dari terminal, <code>aubergine move</code> melakukan hal yang sama, dan <code>aubergine here --claude</code> menjalankan Claude Code di kanvas yang melanjutkan percakapan terakhir folder itu.</p><p class="where">Lokasi: <strong>Open elsewhere</strong> di bilah di atas kanvas, atau <code>O</code>.</p></div></li>
+      <li><h2>Di salinan kerjanya sendiri</h2><div class="feature-words"><p><code>aubergine here --copy --claude</code> menjalankan Claude Code di checkout repositori miliknya sendiri, di branch sendiri, sehingga dua agen tidak pernah mengedit file yang sama. Dialog untuk terminal Claude Code dengan alat punya pilihan yang sama.</p></div></li>
+    </ol>
+  </div>
+</section>
+<section class="band band-dark" aria-labelledby="tried-h">
+  <div class="wrap dark-split">
+    <h2 id="tried-h">Apa yang sudah dicoba</h2>
+    <div class="prose">
+      <p>Demo yang disertakan dengan Aubergine memakai pengganti, yaitu skrip pendek yang menjalankan perintah dan hook yang sama seperti agen sungguhan, bukan Claude Code sungguhan. Dengan agen sungguhan, persetujuan, salinan kerja, tugas dari antrean, dan jadwal belum dicoba.</p>
+      <p>Agen lain bisa menyampaikan sebagian besar hal ini lewat perintah <code>aubergine</code>: lihat <a href="../chatgpt/">Codex dan ChatGPT</a>.</p>
+      <p class="note">Aubergine tidak berafiliasi dengan Anthropic. Claude dan Claude Code adalah merek dagang Anthropic.</p>
+    </div>
+  </div>
+</section>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">Siap dipakai dalam lima menit</h2>
+    <div class="close-do">
+      <p>Anda memerlukan macOS dengan tmux 3.2 atau lebih baru dan Node.js 22 atau lebih baru. <code>brew install tmux node</code> memasang keduanya.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Tersalin" aria-live="polite" hidden>Salin</button></p>
+      <p class="actions"><a class="button" href="../install/">Instal</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">Baca kode sumbernya</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">
   <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
     <nav aria-label="Semua halaman">
       <ul class="foot-links">
         <li><a href="../">Beranda</a></li>
@@ -198,6 +190,7 @@ document.querySelectorAll('[data-copy]').forEach(function (button) {
   button.hidden = false;
   button.addEventListener('click', function () {
     var words = button.textContent;
+    if (!navigator.clipboard) return;
     navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
       button.textContent = button.getAttribute('data-copied');
       setTimeout(function () { button.textContent = words; }, 1600);
@@ -210,6 +203,12 @@ document.addEventListener('keydown', function (event) {
 });
 document.addEventListener('click', function (event) {
   document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
 });
 </script>
 </body>

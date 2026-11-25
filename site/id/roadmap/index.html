@@ -20,8 +20,8 @@
 <link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/roadmap/">
 <link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/roadmap/">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
 <link rel="icon" href="../../icon.svg" type="image/svg+xml">
 <link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../../style.css">
@@ -45,7 +45,7 @@
 <a class="skip" href="#main">Langsung ke isi halaman</a>
 <header class="top">
   <div class="wrap top-in">
-    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
     <nav class="nav" aria-label="Halaman">
       <ul>
         <li><a href="../claude/">Claude Code</a></li>
@@ -77,9 +77,11 @@
   </div>
 </header>
 
-<div class="wrap translated">
-  <p class="note">Aubergine sendiri berbahasa Inggris: tombol, menu, dan gambarnya adalah versi bahasa Inggris.</p>
-  <p class="note">Halaman ini diterjemahkan oleh mesin dari bahasa Inggris. <a href="https://github.com/thirstyeggplant/aubergine/issues">Kirim koreksi</a>.</p>
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine sendiri berbahasa Inggris: tombol, menu, dan gambarnya adalah versi bahasa Inggris.</p>
+    <p>Halaman ini diterjemahkan oleh mesin dari bahasa Inggris. <a href="https://github.com/thirstyeggplant/aubergine/issues">Kirim koreksi</a>.</p>
+  </div>
 </div>
 <main id="main" tabindex="-1">
 <script type="application/ld+json">
@@ -103,76 +105,95 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="Posisi Anda"><ol><li><a href="../">Aubergine</a></li><li>Peta jalan</li></ol></nav>
-  <p class="tag">Direncanakan, belum dibuat</p>
-  <h1>Peta jalan</h1>
-  <p class="lead">Belum ada satu pun dari ini yang ada hari ini. Ini arah yang ingin kami tuju, dan urutannya bisa berubah. Untuk apa yang sudah dibuat sekarang, lihat <a href="../guides/">panduan</a>.</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Posisi Anda"><ol><li><a href="../">Aubergine</a></li><li>Peta jalan</li></ol></nav>
+    <p class="tag">Direncanakan, belum dibuat</p>
+    <h1>Peta jalan</h1>
+    <p class="lead">Belum ada satu pun dari ini yang ada hari ini. Ini arah yang ingin kami tuju, dan urutannya bisa berubah. Untuk apa yang sudah dibuat sekarang, lihat <a href="../guides/">panduan</a>.</p>
+  </div>
+</header>
 <div class="wrap page-body roadmap">
-    <h2>Tim dan koneksi</h2>
-    <p class="intro">Orang-orang yang bekerja bersama, dan agen yang dijangkau dari alat yang sudah Anda pakai.</p>
-    <ul class="planned">
+  <section aria-labelledby="rm-teams">
+    <h2 id="rm-teams">Tim dan koneksi</h2>
+      <p class="intro">Orang-orang yang bekerja bersama, dan agen yang dijangkau dari alat yang sudah Anda pakai.</p>
+      <ul class="planned">
       <li><h3>Multiplayer</h3><p>Berbagi kanvas dengan orang lain dan agen mereka. Lihat siapa bekerja di mana, serahkan agen yang menunggu ke rekan tim, dan jawab bersama.</p></li>
       <li><h3>Antarmuka chat</h3><p>Minta sesuatu kepada agen dan jawab pertanyaannya dari aplikasi chat tim, dengan identitas dan pengaturan yang sama seperti di browser.</p></li>
       <li><h3>Tiket dan pull request</h3><p>Ubah issue menjadi tugas di antrean, buka pull request dari salinan kerja, dan laporkan hasilnya kembali ke tiket.</p></li>
       <li><h3>Pemantauan, webhook, dan triase</h3><p>Mulai pekerjaan saat sesuatu terjadi: job CI yang gagal, peringatan, perubahan yang dipantau, atau panggilan dari layanan lain. Aturan menentukan apa yang menjadi tugas.</p></li>
       <li><h3>Skill bersama dan marketplace</h3><p>Bagikan skill agen lewat pemberian akses, naikkan menjadi milik seluruh tim dengan persetujuan, impor dari Git, dan temukan item yang sudah ditinjau di katalog publik.</p></li>
       <li><h3>Memori untuk orang dan ruang</h3><p>Simpan apa yang dipelajari agen untuk setiap orang dan setiap ruang bersama, terpisah dari yang lain.</p></li>
-    </ul>
-    <p class="also">Juga: kontrol admin untuk model, berbagi, dan tingkat keketatan · server tim yang di-host sendiri · masuk untuk tim (SSO dan MFA) · batas pemakaian per orang, token, atau agen · laporan hanya-baca untuk dibagikan tanpa membagikan terminal · tampilan ponsel untuk daftar “For you” · konektor yang sudah ditinjau ke alat perusahaan · lebih banyak aplikasi chat · aplikasi web internal kecil yang diterbitkan untuk orang-orang tertentu.</p>
-
-    <h2>Cloud</h2>
-    <p class="intro">Agen yang tidak memerlukan laptop Anda tetap menyala.</p>
-    <ul class="planned">
+      </ul>
+      <p class="also">Juga: kontrol admin untuk model, berbagi, dan tingkat keketatan · server tim yang di-host sendiri · masuk untuk tim (SSO dan MFA) · batas pemakaian per orang, token, atau agen · laporan hanya-baca untuk dibagikan tanpa membagikan terminal · tampilan ponsel untuk daftar “For you” · konektor yang sudah ditinjau ke alat perusahaan · lebih banyak aplikasi chat · aplikasi web internal kecil yang diterbitkan untuk orang-orang tertentu.</p>
+  </section>
+  <section aria-labelledby="rm-cloud">
+    <h2 id="rm-cloud">Cloud</h2>
+      <p class="intro">Agen yang tidak memerlukan laptop Anda tetap menyala.</p>
+      <ul class="planned">
       <li><h3>Agen dalam sandbox di cloud</h3><p>Jalankan agen di sandbox cloud yang terisolasi dan pantau di kanvas yang sama dengan agen lokal Anda. Sandbox tidur saat diam, bangun saat diperlukan, dan menyimpan penyimpanan di antara run.</p></li>
       <li><h3>Kumpulan agen</h3><p>Jelaskan pekerjaannya dan biarkan kumpulan agen mengambilnya, alih-alih menyebut satu terminal untuk setiap tugas.</p></li>
       <li><h3>Lingkungan siap pakai</h3><p>Simpan dependensi, alat, skill, file, dan variabel sekali, lalu mulai terminal baru atau agen cloud apa pun dari situ.</p></li>
       <li><h3>Pekerjaan panjang dan bertahap</h3><p>Tugas yang berjalan berjam-jam atau berhari-hari dalam tahapan, dengan pengecekan setelah tiap tahap dan kemajuan yang bertahan meski dimulai ulang.</p></li>
       <li><h3>Deploy cloud dengan satu perintah</h3><p>Pasang Aubergine bersama milik tim di akun cloud Anda sendiri dengan satu perintah.</p></li>
       <li><h3>Pekerjaan yang bisa Anda lihat</h3><p>Agen cloud mengembalikan tangkapan layar atau rekaman singkat dari apa yang dibuatnya, di daftar “For you” Anda.</p></li>
-    </ul>
-    <p class="also">Juga: MCP lewat HTTP, untuk agen di mesin lain · dukungan Linux yang sudah diuji · integrasi shell selain zsh.</p>
-
-    <h2>Kendali</h2>
-    <p class="intro">Seberapa banyak yang boleh dilakukan agen, dan catatan tentang apa yang dilakukannya.</p>
-    <ul class="planned">
+      </ul>
+      <p class="also">Juga: MCP lewat HTTP, untuk agen di mesin lain · dukungan Linux yang sudah diuji · integrasi shell selain zsh.</p>
+  </section>
+  <section aria-labelledby="rm-control">
+    <h2 id="rm-control">Kendali</h2>
+      <p class="intro">Seberapa banyak yang boleh dilakukan agen, dan catatan tentang apa yang dilakukannya.</p>
+      <ul class="planned">
       <li><h3>Mode persetujuan</h3><p>Pilih seberapa banyak yang boleh dilakukan agen sendirian: setujui setiap tindakan, setujui yang berisiko saja, atau tidak sama sekali.</p></li>
       <li><h3>Kebijakan perintah dan penyaringan</h3><p>Aturan untuk perintah yang memerlukan persetujuan atau selalu ditolak, dan penyaringan opsional atas konten dari luar sebelum agen membacanya.</p></li>
       <li><h3>Tingkat risiko per repositori</h3><p>Batas lebih ketat di tempat yang penting, lebih longgar di tempat yang tidak.</p></li>
       <li><h3>Jejak audit lengkap</h3><p>Catatan siapa atau apa melakukan apa, per proyek, melampaui panggilan token yang dicatat hari ini.</p></li>
       <li><h3>Membatalkan pekerjaan agen</h3><p>Kembalikan salinan kerja ke keadaan sebelum sebuah tugas, atau buang branch-nya dalam satu langkah.</p></li>
       <li><h3>Kontrol admin</h3><p>Pengaturan seluruh tim tentang model mana yang boleh dipakai dan bagaimana berbagi bekerja.</p></li>
-    </ul>
-    <p class="also">Juga: pilihan model per terminal, tugas, atau jadwal.</p>
-
-    <h2>Kualitas</h2>
-    <p class="intro">Pemeriksaan yang terjadi sebelum pekerjaan dinyatakan selesai.</p>
-    <ul class="planned">
+      </ul>
+      <p class="also">Juga: pilihan model per terminal, tugas, atau jadwal.</p>
+  </section>
+  <section aria-labelledby="rm-quality">
+    <h2 id="rm-quality">Kualitas</h2>
+      <p class="intro">Pemeriksaan yang terjadi sebelum pekerjaan dinyatakan selesai.</p>
+      <ul class="planned">
       <li><h3>Gerbang kualitas</h3><p>Sebuah run tidak bisa selesai sampai review, tes, atau pemeriksaan keamanan melaporkan lulus.</p></li>
       <li><h3>Review pull request</h3><p>Agen me-review pull request dan melapor ke daftar “For you” Anda.</p></li>
       <li><h3>Pengujian lewat browser</h3><p>Agen mengendalikan browser untuk menguji perubahan dan mengembalikan hasilnya.</p></li>
       <li><h3>Rencana sebelum membangun</h3><p>Agen mengusulkan rencana dan menunggu persetujuan Anda sebelum menyentuh file.</p></li>
       <li><h3>Resep tugas</h3><p>Workflow siap pakai untuk membuat tes, review, pemindaian dependensi dan rahasia, dan menjaga dokumentasi tetap mutakhir.</p></li>
       <li><h3>Metrik hasil</h3><p>Waktu dari tugas sampai selesai, seberapa sering agen menunggu Anda, dan pemakaian menurut siapa yang memulainya, per proyek.</p></li>
-    </ul>
-    <p class="also">Juga: laporan insiden, di mana agen menyelidiki dan menyusun draf postmortem.</p>
-
-    <h2>Di mana saja</h2>
-    <p class="intro">Lebih banyak cara untuk menjangkau Aubergine dan membangun di atasnya.</p>
-    <ul class="planned">
+      </ul>
+      <p class="also">Juga: laporan insiden, di mana agen menyelidiki dan menyusun draf postmortem.</p>
+  </section>
+  <section aria-labelledby="rm-everywhere">
+    <h2 id="rm-everywhere">Di mana saja</h2>
+      <p class="intro">Lebih banyak cara untuk menjangkau Aubergine dan membangun di atasnya.</p>
+      <ul class="planned">
       <li><h3>SDK yang diterbitkan</h3><p>Klien bertipe sebagai paket yang bisa diinstal, lalu klien untuk bahasa lain seperti Python.</p></li>
       <li><h3>Ekstensi editor</h3><p>Tampilkan terminal dan daftar “For you” Anda di dalam VS Code dan editor serupa, tanpa meninggalkan editor.</p></li>
       <li><h3>Aplikasi desktop</h3><p>Aplikasi terpaket dengan ikon di bilah menu, sebagai ganti tab browser.</p></li>
       <li><h3>Dukungan Windows</h3><p>Menjalankan Aubergine di Windows sendiri. Saat ini ia hanya berjalan di dalam WSL 2, seperti yang dijelaskan <a href="../windows/">panduan untuk Windows</a>, dan belum ada yang mencobanya di Windows.</p></li>
-    </ul>
-
-    <p class="note">Pekerjaan yang direncanakan adalah arah, bukan janji. <a href="https://github.com/thirstyeggplant/aubergine">Repositori</a> menunjukkan apa yang sudah dirilis.</p>
+      </ul>
+  </section>
+  <p class="note">Pekerjaan yang direncanakan adalah arah, bukan janji. <a href="https://github.com/thirstyeggplant/aubergine">Repositori</a> menunjukkan apa yang sudah dirilis.</p>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">Siap dipakai dalam lima menit</h2>
+    <div class="close-do">
+      <p>Anda memerlukan macOS dengan tmux 3.2 atau lebih baru dan Node.js 22 atau lebih baru. <code>brew install tmux node</code> memasang keduanya.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Tersalin" aria-live="polite" hidden>Salin</button></p>
+      <p class="actions"><a class="button" href="../install/">Instal</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">Baca kode sumbernya</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">
   <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
     <nav aria-label="Semua halaman">
       <ul class="foot-links">
         <li><a href="../">Beranda</a></li>
@@ -198,6 +219,7 @@ document.querySelectorAll('[data-copy]').forEach(function (button) {
   button.hidden = false;
   button.addEventListener('click', function () {
     var words = button.textContent;
+    if (!navigator.clipboard) return;
     navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
       button.textContent = button.getAttribute('data-copied');
       setTimeout(function () { button.textContent = words; }, 1600);
@@ -210,6 +232,12 @@ document.addEventListener('keydown', function (event) {
 });
 document.addEventListener('click', function (event) {
   document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
 });
 </script>
 </body>

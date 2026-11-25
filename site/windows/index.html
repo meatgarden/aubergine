@@ -20,8 +20,8 @@
 <link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/windows/">
 <link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/windows/">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
 <link rel="icon" href="../icon.svg" type="image/svg+xml">
 <link rel="preload" href="../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../style.css">
@@ -45,7 +45,7 @@
 <a class="skip" href="#main">Skip to the page</a>
 <header class="top">
   <div class="wrap top-in">
-    <a class="mark" href="../"><img src="../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <a class="mark" href="../"><img src="../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
     <nav class="nav" aria-label="Pages">
       <ul>
         <li><a href="../claude/">Claude Code</a></li>
@@ -125,20 +125,21 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="Where you are"><ol><li><a href="../">Aubergine</a></li><li>Windows with WSL</li></ol></nav>
-  <h1>Install Aubergine on Windows with WSL</h1>
-  <p class="lead">Aubergine does not run on Windows itself. It runs inside WSL 2, the Linux that Windows provides, and you use it from your Windows browser.</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Where you are"><ol><li><a href="../">Aubergine</a></li><li>Windows with WSL</li></ol></nav>
+    <h1>Install Aubergine on Windows with WSL</h1>
+    <p class="lead">Aubergine does not run on Windows itself. It runs inside WSL 2, the Linux that Windows provides, and you use it from your Windows browser.</p>
+    <p class="note note-strong"><strong>What was tried.</strong> The Linux steps were run on 25 November 2026 on Ubuntu 24.04.5 (x86_64) in a container, not in WSL, with Aubergine 0.2.2 from npm: it compiled its terminal library, started, signed a browser in, ran a terminal and the demo. Installing Node.js with nvm was not run there, since Node.js 22 was already installed. Nothing on this page has been run on Windows yet. If you try it, please <a href="https://github.com/thirstyeggplant/aubergine/issues">tell us how it went</a>.</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
-    <p class="note"><strong>What was tried.</strong> The Linux steps were run on 25 November 2026 on Ubuntu 24.04.5 (x86_64) in a container, not in WSL, with Aubergine 0.2.2 from npm: it compiled its terminal library, started, signed a browser in, ran a terminal and the demo. Installing Node.js with nvm was not run there, since Node.js 22 was already installed. Nothing on this page has been run on Windows yet. If you try it, please <a href="https://github.com/thirstyeggplant/aubergine/issues">tell us how it went</a>.</p>
-
     <h2>What you need</h2>
     <p>Windows 11, or Windows 10 version 2004 (build 19041) or newer, where WSL 2 can be installed with one command. Microsoft's <a href="https://learn.microsoft.com/windows/wsl/install">page on installing WSL</a> has the details.</p>
 
     <h2>Install and start</h2>
-    <ol>
+    <ol class="seq">
       <li><p><strong>Install WSL.</strong> Open PowerShell as administrator, run this, and restart Windows when it is done. It installs WSL 2 with Ubuntu.</p>
         <p class="cmd multi"><code>wsl --install</code><button type="button" class="copy" data-copy data-copied="Copied" aria-live="polite" hidden>Copy</button></p>
         <p>After the restart, open <strong>Ubuntu</strong> from the Start menu and choose a user name and a password for it. Every command below is typed there, in Ubuntu.</p></li>
@@ -185,15 +186,24 @@
         </tbody>
       </table>
     </div>
-
-    <h2>Next</h2>
-    <p>Stopping, updating and uninstalling are as on the <a href="../install/">install page</a>, and everything else is in the <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>.</p>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">Next</h2>
+    <div class="close-do">
+      <p>Stopping, updating and uninstalling are as on the <a href="../install/">install page</a>, and everything else is in the <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Copied" aria-live="polite" hidden>Copy</button></p>
+      <p class="actions"><a class="button" href="../install/">Install</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">
   <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
     <nav aria-label="Every page">
       <ul class="foot-links">
         <li><a href="../">Home</a></li>
@@ -219,6 +229,7 @@ document.querySelectorAll('[data-copy]').forEach(function (button) {
   button.hidden = false;
   button.addEventListener('click', function () {
     var words = button.textContent;
+    if (!navigator.clipboard) return;
     navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
       button.textContent = button.getAttribute('data-copied');
       setTimeout(function () { button.textContent = words; }, 1600);
@@ -231,6 +242,12 @@ document.addEventListener('keydown', function (event) {
 });
 document.addEventListener('click', function (event) {
   document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
 });
 </script>
 </body>

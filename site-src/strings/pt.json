@@ -131,13 +131,33 @@
     "text": "tmux 3.2 ou mais recente, Node.js 22 ou mais recente",
     "from": "6fadbd03c20d"
   },
-  "home.hero.kicker": {
-    "text": "Turbine seu terminal · Grátis · Código aberto · Roda no seu computador",
-    "from": "a61d5f4f3b3a"
+  "home.hero.tag.lead": {
+    "text": "Turbine seu terminal",
+    "from": "eb13de4649f0"
   },
-  "home.hero.title": {
-    "text": "Todos os seus terminais, lado a lado. Veja qual agente <em>precisa de você</em>.",
-    "from": "7be0ec221ba9"
+  "home.hero.tag.free": {
+    "text": "Grátis",
+    "from": "f411a1fb6275"
+  },
+  "home.hero.tag.open": {
+    "text": "Código aberto",
+    "from": "67a0d2e0dab4"
+  },
+  "home.hero.tag.local": {
+    "text": "Roda no seu computador",
+    "from": "cd90f9395587"
+  },
+  "home.hero.title.a": {
+    "text": "Todos os seus terminais,",
+    "from": "8dd2aa1cda63"
+  },
+  "home.hero.title.b": {
+    "text": "lado a lado.",
+    "from": "eb95eacfe17a"
+  },
+  "home.hero.title.c": {
+    "text": "Traga seus próprios <em>agentes</em>.",
+    "from": "4728f2abc24b"
   },
   "home.hero.lead": {
     "text": "O Aubergine coloca todos os seus terminais lado a lado em um só canvas, no seu navegador. Rode quantos quiser, com os agentes e modelos que você já usa. Ele não tem modelo próprio e nunca pede uma chave.",
@@ -155,9 +175,13 @@
     "text": "Ler o código",
     "from": "625b22ba31d0"
   },
-  "home.canvas.caption": {
-    "text": "Uma ilustração, não uma captura: cinco terminais em um canvas, e o que está esperando por você.",
-    "from": "413e282f8a9d"
+  "home.stage.caption": {
+    "text": "Uma captura real da demo que vem com o Aubergine: seis terminais em um canvas, e o que está esperando por você.",
+    "from": "21a1f62e34b1"
+  },
+  "home.stage.alt": {
+    "text": "O app inteiro: a lista de canvases e terminais à esquerda e seis terminais ao vivo em um canvas; um deles, Login bug · question, com a borda na cor de espera e o aviso waiting for you.",
+    "from": "2288db7c750f"
   },
   "home.powers.title": {
     "text": "Dê superpoderes aos seus terminais",

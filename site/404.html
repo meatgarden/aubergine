@@ -8,8 +8,8 @@
 
 
 <meta name="robots" content="noindex">
-<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
 <link rel="icon" href="/icon.svg" type="image/svg+xml">
 <link rel="preload" href="/fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/style.css">
@@ -33,7 +33,7 @@
 <a class="skip" href="#main">Skip to the page</a>
 <header class="top">
   <div class="wrap top-in">
-    <a class="mark" href="/"><img src="/icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <a class="mark" href="/"><img src="/icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
     <nav class="nav" aria-label="Pages">
       <ul>
         <li><a href="/claude/">Claude Code</a></li>
@@ -60,22 +60,39 @@
   </div>
 </header>
 <main id="main" tabindex="-1">
-<div class="wrap page-head">
-  <h1>That page is not here</h1>
-  <p class="lead">The address may be mistyped or the page may have moved. These might help:</p>
+<header class="page-head">
+  <div class="wrap">
+    <p class="crumbs">404</p>
+    <h1>That page is not here</h1>
+    <p class="lead">The address may be mistyped or the page may have moved. These might help:</p>
+  </div>
+</header>
+<div class="cards-band">
+  <div class="wrap page-body">
+    <ul class="cards cards-two">
+      <li><h2><a href="/">The Aubergine home page</a></h2></li>
+      <li><h2><a href="/install/">Install Aubergine</a></h2></li>
+      <li><h2><a href="/guides/">Guides</a></h2></li>
+      <li><h2><a href="/faq/">Frequently asked questions</a></h2></li>
+    </ul>
+  </div>
 </div>
-<div class="wrap page-body">
-  <ul class="rows">
-    <li><h2><a class="row-link" href="/">The Aubergine home page</a></h2></li>
-    <li><h2><a class="row-link" href="/install/">Install Aubergine</a></h2></li>
-    <li><h2><a class="row-link" href="/guides/">Guides</a></h2></li>
-    <li><h2><a class="row-link" href="/faq/">Frequently asked questions</a></h2></li>
-  </ul>
-</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">Up and running in five minutes</h2>
+    <div class="close-do">
+      <p>You need macOS with tmux 3.2 or newer and Node.js 22 or newer. <code>brew install tmux node</code> gets both.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Copied" aria-live="polite" hidden>Copy</button></p>
+      <p class="actions"><a class="button" href="/install/">Install</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">Read the source</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">
   <div class="wrap foot-in">
+    <a class="mark" href="/"><img src="/icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
     <nav aria-label="Every page">
       <ul class="foot-links">
         <li><a href="/">Home</a></li>
@@ -101,6 +118,7 @@ document.querySelectorAll('[data-copy]').forEach(function (button) {
   button.hidden = false;
   button.addEventListener('click', function () {
     var words = button.textContent;
+    if (!navigator.clipboard) return;
     navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
       button.textContent = button.getAttribute('data-copied');
       setTimeout(function () { button.textContent = words; }, 1600);
@@ -113,6 +131,12 @@ document.addEventListener('keydown', function (event) {
 });
 document.addEventListener('click', function (event) {
   document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
 });
 </script>
 </body>

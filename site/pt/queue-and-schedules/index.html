@@ -20,8 +20,8 @@
 <link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/queue-and-schedules/">
 <link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/queue-and-schedules/">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
 <link rel="icon" href="../../icon.svg" type="image/svg+xml">
 <link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../../style.css">
@@ -45,7 +45,7 @@
 <a class="skip" href="#main">Pular para a página</a>
 <header class="top">
   <div class="wrap top-in">
-    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
     <nav class="nav" aria-label="Páginas">
       <ul>
         <li><a href="../claude/">Claude Code</a></li>
@@ -77,9 +77,11 @@
   </div>
 </header>
 
-<div class="wrap translated">
-  <p class="note">O Aubergine em si está em inglês: seus botões, menus e imagens são os da versão em inglês.</p>
-  <p class="note">Esta página foi traduzida do inglês por uma máquina. <a href="https://github.com/thirstyeggplant/aubergine/issues">Envie uma correção</a>.</p>
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>O Aubergine em si está em inglês: seus botões, menus e imagens são os da versão em inglês.</p>
+    <p>Esta página foi traduzida do inglês por uma máquina. <a href="https://github.com/thirstyeggplant/aubergine/issues">Envie uma correção</a>.</p>
+  </div>
 </div>
 <main id="main" tabindex="-1">
 <script type="application/ld+json">
@@ -128,11 +130,13 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="Onde você está"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">Guias</a></li><li>Fila e agendamentos</li></ol></nav>
-  <h1>A fila, “For you” e os agendamentos</h1>
-  <p class="lead">Duas listas que se alimentam: a fila guarda o trabalho para os agentes, e <em>For you</em> (para você) guarda tudo o que espera por uma pessoa. Os agendamentos adicionam tarefas à fila em horários definidos.</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Onde você está"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">Guias</a></li><li>Fila e agendamentos</li></ol></nav>
+    <h1>A fila, “For you” e os agendamentos</h1>
+    <p class="lead">Duas listas que se alimentam: a fila guarda o trabalho para os agentes, e <em>For you</em> (para você) guarda tudo o que espera por uma pessoa. Os agendamentos adicionam tarefas à fila em horários definidos.</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
     <h2>A fila</h2>
@@ -146,7 +150,7 @@
     </ul>
     <h2>For you</h2>
     <p>Terminais com uma pergunta, execuções para aprovar ou bloqueadas, rascunhos e instalações para ler, tarefas propostas para a fila, tarefas concluídas e com falha, listas que um agente entregou e cópias de trabalho cujo terminal não existe mais. O contador ao lado de For you, no topo, e “next waiting” são a mesma lista. A maior parte é reunida, não escrita: um item some quando a coisa em si está resolvida.</p>
-    <figure class="pic"><a href="../../screenshots/for-you.png"><img src="../../screenshots/for-you.png" width="990" height="570" loading="lazy" alt="A coluna Waiting for you da página Runs: uma caixa para adicionar um to-do, depois a pergunta de um agente simulado, um rascunho para ler e uma lista entregue."></a><figcaption>For you na página Runs: uma pergunta, um rascunho para ler e uma lista entregue, cada um com o que é.</figcaption></figure>
+    <figure class="frame"><a href="../../screenshots/for-you.png" class="frame-pic"><img src="../../screenshots/for-you.png" width="990" height="570" loading="lazy" alt="A coluna Waiting for you da página Runs: uma caixa para adicionar um to-do, depois a pergunta de um agente simulado, um rascunho para ler e uma lista entregue."></a><figcaption>For you na página Runs: uma pergunta, um rascunho para ler e uma lista entregue, cada um com o que é.</figcaption></figure>
     <p>Um agente que encontra um trabalho que não deveria fazer agora pode propor uma tarefa, e um que precisa de uma pessoa pode perguntar a você:</p>
     <pre><code>aubergine task add "Add a test for the retry" --details "it should fail without the fix"
 aubergine ask "the staging key expires this week: rotate it, or say who can"</code></pre>
@@ -170,9 +174,21 @@ aubergine schedule run "My morning list"</code></pre>
   </div>
 </div>
 
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">Funcionando em cinco minutos</h2>
+    <div class="close-do">
+      <p>Você precisa de macOS com tmux 3.2 ou mais recente e Node.js 22 ou mais recente. <code>brew install tmux node</code> instala os dois.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Copiado" aria-live="polite" hidden>Copiar</button></p>
+      <p class="actions"><a class="button" href="../install/">Instalar</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">Ler o código</a></p>
+    </div>
+  </div>
+</section>
+
 </main>
 <footer class="foot">
   <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
     <nav aria-label="Todas as páginas">
       <ul class="foot-links">
         <li><a href="../">Início</a></li>
@@ -198,6 +214,7 @@ document.querySelectorAll('[data-copy]').forEach(function (button) {
   button.hidden = false;
   button.addEventListener('click', function () {
     var words = button.textContent;
+    if (!navigator.clipboard) return;
     navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
       button.textContent = button.getAttribute('data-copied');
       setTimeout(function () { button.textContent = words; }, 1600);
@@ -210,6 +227,12 @@ document.addEventListener('keydown', function (event) {
 });
 document.addEventListener('click', function (event) {
   document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
 });
 </script>
 </body>

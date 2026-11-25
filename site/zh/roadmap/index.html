@@ -20,8 +20,8 @@
 <link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/roadmap/">
 <link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/roadmap/">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
 <link rel="icon" href="../../icon.svg" type="image/svg+xml">
 <link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../../style.css">
@@ -45,7 +45,7 @@
 <a class="skip" href="#main">跳到正文</a>
 <header class="top">
   <div class="wrap top-in">
-    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
     <nav class="nav" aria-label="页面">
       <ul>
         <li><a href="../claude/">Claude Code</a></li>
@@ -77,9 +77,11 @@
   </div>
 </header>
 
-<div class="wrap translated">
-  <p class="note">Aubergine 本身是英文的：它的按钮、菜单和截图都是英文版。</p>
-  <p class="note">本页由机器从英文翻译而来。<a href="https://github.com/thirstyeggplant/aubergine/issues">提交修正</a>。</p>
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine 本身是英文的：它的按钮、菜单和截图都是英文版。</p>
+    <p>本页由机器从英文翻译而来。<a href="https://github.com/thirstyeggplant/aubergine/issues">提交修正</a>。</p>
+  </div>
 </div>
 <main id="main" tabindex="-1">
 <script type="application/ld+json">
@@ -103,76 +105,95 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="当前位置"><ol><li><a href="../">Aubergine</a></li><li>路线图</li></ol></nav>
-  <p class="tag">计划中，尚未构建</p>
-  <h1>路线图</h1>
-  <p class="lead">这里的一切目前都还不存在。这是我们想去的方向，顺序可能会变。现在已经构建了什么，请看<a href="../guides/">指南</a>。</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="当前位置"><ol><li><a href="../">Aubergine</a></li><li>路线图</li></ol></nav>
+    <p class="tag">计划中，尚未构建</p>
+    <h1>路线图</h1>
+    <p class="lead">这里的一切目前都还不存在。这是我们想去的方向，顺序可能会变。现在已经构建了什么，请看<a href="../guides/">指南</a>。</p>
+  </div>
+</header>
 <div class="wrap page-body roadmap">
-    <h2>团队与连接</h2>
-    <p class="intro">人们一起工作，并从你已经在用的工具中调动智能体。</p>
-    <ul class="planned">
+  <section aria-labelledby="rm-teams">
+    <h2 id="rm-teams">团队与连接</h2>
+      <p class="intro">人们一起工作，并从你已经在用的工具中调动智能体。</p>
+      <ul class="planned">
       <li><h3>多人协作</h3><p>与其他人及其智能体共享画布。看到谁在哪里工作，把一个在等待的智能体交给队友，一起回答。</p></li>
       <li><h3>聊天界面</h3><p>在团队聊天应用中向智能体提出请求并回答它们的问题，使用与浏览器中相同的身份和设置。</p></li>
       <li><h3>工单与拉取请求</h3><p>把一个 issue 变成队列中的任务，从工作副本打开拉取请求，并把结果报告回工单。</p></li>
       <li><h3>监视、Webhook 与分诊</h3><p>事情发生时开始工作：CI 任务失败、告警、被监视的变更，或来自其他服务的调用。由规则决定什么变成任务。</p></li>
       <li><h3>共享技能与市场</h3><p>通过授权共享智能体的技能，经审批推广到整个团队，从 Git 导入，并在公开目录中找到审阅过的条目。</p></li>
       <li><h3>面向个人和房间的记忆</h3><p>为每个人和每个共享房间分别保存智能体学到的东西，彼此隔开。</p></li>
-    </ul>
-    <p class="also">此外：关于模型、共享和严格程度的管理员控制 · 自托管的团队服务器 · 团队登录（SSO 与 MFA） · 按人、令牌或智能体的用量限制 · 无需共享终端即可分享的只读报告 · “For you”列表的手机视图 · 经审阅的公司工具连接器 · 更多聊天应用 · 发布给指定人员的小型内部 Web 应用。</p>
-
-    <h2>云端</h2>
-    <p class="intro">不需要你的笔记本醒着的智能体。</p>
-    <ul class="planned">
+      </ul>
+      <p class="also">此外：关于模型、共享和严格程度的管理员控制 · 自托管的团队服务器 · 团队登录（SSO 与 MFA） · 按人、令牌或智能体的用量限制 · 无需共享终端即可分享的只读报告 · “For you”列表的手机视图 · 经审阅的公司工具连接器 · 更多聊天应用 · 发布给指定人员的小型内部 Web 应用。</p>
+  </section>
+  <section aria-labelledby="rm-cloud">
+    <h2 id="rm-cloud">云端</h2>
+      <p class="intro">不需要你的笔记本醒着的智能体。</p>
+      <ul class="planned">
       <li><h3>云端沙箱中的智能体</h3><p>在隔离的云端沙箱中运行智能体，并在与本地智能体相同的画布上查看它。沙箱空闲时休眠，按需唤醒，并在多次运行之间保留存储。</p></li>
       <li><h3>智能体池</h3><p>描述工作，让一个智能体池去认领，而不是为每个任务指定一个终端。</p></li>
       <li><h3>现成的环境</h3><p>把依赖、工具、技能、文件和变量保存一次，以后任何新终端或云端智能体都可以从中启动。</p></li>
       <li><h3>长时间、多阶段的工作</h3><p>分阶段运行数小时或数天的任务，每个阶段后都有一次确认，进度在重启后也能保留。</p></li>
       <li><h3>一条命令部署到云端</h3><p>用一条命令把团队共享的 Aubergine 部署到你自己的云账号上。</p></li>
       <li><h3>看得见的工作</h3><p>云端智能体把它所做东西的截图或简短录屏交回到你的“For you”列表。</p></li>
-    </ul>
-    <p class="also">此外：基于 HTTP 的 MCP，供其他机器上的智能体使用 · 经过测试的 Linux 支持 · zsh 之外的 shell 集成。</p>
-
-    <h2>控制</h2>
-    <p class="intro">智能体可以做多少，以及它做过什么的记录。</p>
-    <ul class="planned">
+      </ul>
+      <p class="also">此外：基于 HTTP 的 MCP，供其他机器上的智能体使用 · 经过测试的 Linux 支持 · zsh 之外的 shell 集成。</p>
+  </section>
+  <section aria-labelledby="rm-control">
+    <h2 id="rm-control">控制</h2>
+      <p class="intro">智能体可以做多少，以及它做过什么的记录。</p>
+      <ul class="planned">
       <li><h3>审批模式</h3><p>选择智能体可以独自做多少：每个操作都审批、只审批有风险的，或都不审批。</p></li>
       <li><h3>命令策略与筛查</h3><p>规定哪些命令需要审批、哪些始终拒绝，以及在智能体读取外部内容之前对其进行可选的筛查。</p></li>
       <li><h3>按仓库设定风险等级</h3><p>重要的地方限制更严，不重要的地方更宽松。</p></li>
       <li><h3>完整的审计记录</h3><p>按项目记录谁或什么做了什么，范围超出今天已记录的令牌调用。</p></li>
       <li><h3>撤销智能体的工作</h3><p>把工作副本回滚到某个任务之前，或一步丢弃它的分支。</p></li>
       <li><h3>管理员控制</h3><p>团队范围的设置：可以使用哪些模型，共享如何运作。</p></li>
-    </ul>
-    <p class="also">此外：按终端、任务或定时计划选择模型。</p>
-
-    <h2>质量</h2>
-    <p class="intro">在工作被称为完成之前进行的检查。</p>
-    <ul class="planned">
+      </ul>
+      <p class="also">此外：按终端、任务或定时计划选择模型。</p>
+  </section>
+  <section aria-labelledby="rm-quality">
+    <h2 id="rm-quality">质量</h2>
+      <p class="intro">在工作被称为完成之前进行的检查。</p>
+      <ul class="planned">
       <li><h3>质量关卡</h3><p>在审阅、测试或安全检查报告通过之前，运行无法结束。</p></li>
       <li><h3>拉取请求审阅</h3><p>智能体审阅一个拉取请求，并把结果报告到你的“For you”列表。</p></li>
       <li><h3>浏览器驱动的测试</h3><p>智能体操作浏览器来测试一项改动，并交回结果。</p></li>
       <li><h3>先规划，后构建</h3><p>智能体提出一个计划，在动文件之前等你批准。</p></li>
       <li><h3>任务配方</h3><p>现成的工作流，用于生成测试、审阅、依赖与机密扫描，以及保持文档更新。</p></li>
       <li><h3>成果指标</h3><p>按项目统计从任务到完成的时间、智能体等你的频率，以及按发起人划分的用量。</p></li>
-    </ul>
-    <p class="also">此外：事故报告，由智能体调查并起草事后复盘。</p>
-
-    <h2>无处不在</h2>
-    <p class="intro">更多访问 Aubergine 和在其上构建的方式。</p>
-    <ul class="planned">
+      </ul>
+      <p class="also">此外：事故报告，由智能体调查并起草事后复盘。</p>
+  </section>
+  <section aria-labelledby="rm-everywhere">
+    <h2 id="rm-everywhere">无处不在</h2>
+      <p class="intro">更多访问 Aubergine 和在其上构建的方式。</p>
+      <ul class="planned">
       <li><h3>正式发布的 SDK</h3><p>把有类型的客户端发布为可安装的包，然后提供 Python 等其他语言的客户端。</p></li>
       <li><h3>编辑器扩展</h3><p>在 VS Code 及类似编辑器中显示你的终端和“For you”列表，无需离开编辑器。</p></li>
       <li><h3>桌面应用</h3><p>一个带菜单栏图标的打包应用，取代浏览器标签页。</p></li>
       <li><h3>Windows 支持</h3><p>在 Windows 本身上运行 Aubergine。目前它只能在 WSL 2 里运行，正如<a href="../windows/">Windows 指南</a>所写，而且还没有人在 Windows 上试过。</p></li>
-    </ul>
-
-    <p class="note">计划中的工作是方向，不是承诺。已发布的内容以<a href="https://github.com/thirstyeggplant/aubergine">代码仓库</a>为准。</p>
+      </ul>
+  </section>
+  <p class="note">计划中的工作是方向，不是承诺。已发布的内容以<a href="https://github.com/thirstyeggplant/aubergine">代码仓库</a>为准。</p>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">五分钟上手</h2>
+    <div class="close-do">
+      <p>你需要 macOS，以及 tmux 3.2 或更高版本和 Node.js 22 或更高版本。<code>brew install tmux node</code> 可以一次装好两者。</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="已复制" aria-live="polite" hidden>复制</button></p>
+      <p class="actions"><a class="button" href="../install/">安装</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">阅读源码</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">
   <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
     <nav aria-label="所有页面">
       <ul class="foot-links">
         <li><a href="../">首页</a></li>
@@ -198,6 +219,7 @@ document.querySelectorAll('[data-copy]').forEach(function (button) {
   button.hidden = false;
   button.addEventListener('click', function () {
     var words = button.textContent;
+    if (!navigator.clipboard) return;
     navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
       button.textContent = button.getAttribute('data-copied');
       setTimeout(function () { button.textContent = words; }, 1600);
@@ -210,6 +232,12 @@ document.addEventListener('keydown', function (event) {
 });
 document.addEventListener('click', function (event) {
   document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
 });
 </script>
 </body>

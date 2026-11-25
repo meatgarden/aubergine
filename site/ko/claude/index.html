@@ -20,8 +20,8 @@
 <link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/claude/">
 <link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/claude/">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
 <link rel="icon" href="../../icon.svg" type="image/svg+xml">
 <link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../../style.css">
@@ -45,7 +45,7 @@
 <a class="skip" href="#main">본문으로 건너뛰기</a>
 <header class="top">
   <div class="wrap top-in">
-    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
     <nav class="nav" aria-label="페이지">
       <ul>
         <li><a href="./" aria-current="page">Claude Code</a></li>
@@ -77,9 +77,11 @@
   </div>
 </header>
 
-<div class="wrap translated">
-  <p class="note">Aubergine 앱 자체는 영어로 되어 있습니다. 버튼, 메뉴, 그림은 모두 영어판 그대로입니다.</p>
-  <p class="note">이 페이지는 영어 원문을 기계 번역한 것입니다. <a href="https://github.com/thirstyeggplant/aubergine/issues">수정 제안 보내기</a>.</p>
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine 앱 자체는 영어로 되어 있습니다. 버튼, 메뉴, 그림은 모두 영어판 그대로입니다.</p>
+    <p>이 페이지는 영어 원문을 기계 번역한 것입니다. <a href="https://github.com/thirstyeggplant/aubergine/issues">수정 제안 보내기</a>.</p>
+  </div>
 </div>
 <main id="main" tabindex="-1">
 <script type="application/ld+json">
@@ -106,73 +108,63 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="현재 위치"><ol><li><a href="../">Aubergine</a></li><li>Claude Code</li></ol></nav>
-  <h1>Aubergine이 Claude Code를 위해 하는 일</h1>
-  <p class="lead">Claude Code는 Aubergine 터미널에서 여느 프로그램처럼 실행됩니다. Aubergine에서 시작하면 자신이 무엇을 하고 있는지 캔버스에 알리고, Aubergine은 에이전트에게 안내를 전하고, 대화를 재개하고, 설정 상태를 보여 줄 수 있습니다. 여기 있는 것이 전부이며, 만나게 되는 순서대로 적었습니다.</p>
-</div>
-<div class="wrap page-body">
-  <div class="prose">
+<header class="page-head page-head-big">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="현재 위치"><ol><li><a href="../">Aubergine</a></li><li>Claude Code</li></ol></nav>
+    <h1>Aubergine이 Claude Code를 위해 하는 일</h1>
+    <p class="lead">Claude Code는 Aubergine 터미널에서 여느 프로그램처럼 실행됩니다. Aubergine에서 시작하면 자신이 무엇을 하고 있는지 캔버스에 알리고, Aubergine은 에이전트에게 안내를 전하고, 대화를 재개하고, 설정 상태를 보여 줄 수 있습니다. 여기 있는 것이 전부이며, 만나게 되는 순서대로 적었습니다.</p>
     <p class="note">Claude Code는 여러분이 직접 설치하고 로그인합니다. Aubergine은 모델을 호출하지 않고 키를 보관하지 않습니다. 이미 가지고 있는 <code>claude</code> 명령을 시작할 뿐입니다.</p>
-
-    <h2>메뉴에서 시작하기</h2>
-    <p><strong>New terminal ▾ → Claude Code</strong>, 또는 키보드를 가진 터미널이 없을 때 <code>C</code>를 누르면, Aubergine이 자체 데이터 폴더에 쓴 설정 파일과 함께 새 터미널에서 <code>claude</code>를 시작합니다. 여러분의 Claude Code 설정은 건드리지 않습니다.</p>
-    <p>시작되는 명령은 설정의 <code>agents.claudeCommand</code>이며, 바꾸지 않으면 <code>claude</code>입니다. Aubergine은 끝에 자체 플래그를 덧붙입니다.</p>
-    <p class="note">위치: 터미널 목록 맨 위, New terminal 옆의 메뉴.</p>
-
-    <h2>작업 중, 대기, 완료를 한눈에</h2>
-    <p>그 설정 파일의 훅이 에이전트가 하는 일을 캔버스에 알립니다. 프롬프트를 보내면 프롬프트가 터미널의 노트 로그에 추가되고 터미널에 <strong>working</strong>이 표시됩니다. 권한을 묻거나 입력을 기다리며 유휴 상태가 되어 에이전트가 여러분을 필요로 하면, 테두리 선이 대기 색으로 바뀌고 제목과 목록의 행에 <strong>waiting for you</strong>가 표시됩니다. 멈추면 <strong>finished</strong>가 표시됩니다.</p>
-    <p><code>W</code>는 다음으로 기다리는 터미널로 이동하고, <strong>Notify</strong>는 대기 상태가 된 터미널에 대한 데스크톱 알림을 켭니다. 프롬프트에는 비밀이 들어 있을 수 있습니다. <code>"agents": { "logPrompts": false }</code>를 <code>config.json</code>에 넣으면 노트 로그에 남지 않습니다.</p>
-    <p class="note">위치: 터미널 제목, 목록의 행, 그리고 맨 위 For you 옆의 숫자.</p>
-
-    <h2>직접 시작한 Claude Code</h2>
-    <p>일반 터미널에서 손으로 입력해 시작한 <code>claude</code>는 여느 프로그램처럼 동작하지만, Aubergine에는 그것을 실행 중인 바쁜 셸로만 보입니다. waiting for you 표시도 없고, 그곳에서 워크플로를 시작해도 아무것도 입력되지 않습니다. 이를 바꾸려면 훅을 출력해 여러분의 Claude Code 설정에 직접 추가하세요. Aubergine 터미널 밖에서는 아무 일도 하지 않습니다.</p>
-    <p class="cmd"><code>aubergine hooks print</code><button type="button" class="copy" data-copy data-copied="복사됨" aria-live="polite" hidden>복사</button></p>
-
-    <h2>스스로 이름을 짓고 요약을 유지합니다</h2>
-    <p>Aubergine이 시작한 에이전트는 시작할 때 <code>aubergine describe</code>, <code>aubergine link add</code>, <code>aubergine field set</code>으로 작업에 맞게 터미널 이름을 짓고 요약을 유지하라는 안내를 받으며, 멈출 때 자기 이름이나 요약이 없으면 한 번 다시 안내를 받습니다. 여러분이 직접 쓴 것이 우선이고, 같은 항목에 대해 에이전트가 한 말은 <strong>Use this</strong>와 함께 옆에서 기다립니다. 안내는 <strong>Settings</strong>에서 끌 수 있습니다.</p>
-    <p class="note">위치: 이름, 요약, 필드, 링크가 있는 터미널의 세부 정보.</p>
-
-    <h2>워크플로, 작업, 요약, 메시지가 전달됩니다</h2>
-    <p>Aubergine은 터미널에 고정된 문장 네 개만 입력합니다. 워크플로가 시작되었다는 것, 에이전트에게 무언가를 작성해 달라는 요청이 있었다는 것, 여러분이 요약을 요청했다는 것, 메시지가 기다리고 있다는 것입니다. 각 문장은 에이전트가 실행할 명령 하나를 알려 줍니다. 문장은 에이전트가 키보드를 쥐고 있는 것으로 보이는 곳에만 입력됩니다. Aubergine이 시작한 에이전트이거나, 설정에 <code>aubergine hooks print</code>의 훅이 들어 있는 에이전트입니다.</p>
-    <p>마찬가지로 대기열의 작업은 그런 에이전트가 앞에 있고 한가한 터미널로만 가며, <strong>Claude Code on a workflow…</strong>는 첫 프롬프트에서 실행에 대해 안내받는 에이전트가 있는 새 터미널을 시작합니다.</p>
-    <p class="note">위치: 터미널 제목의 메뉴에 있는 <strong>Run a workflow…</strong>, 그리고 페이지 맨 위의 <strong>Runs</strong>.</p>
-
-    <h2>Resume agent</h2>
-    <p>Aubergine은 에이전트 터미널이 어느 대화에 있었는지 기억합니다. 에이전트를 종료했거나 컴퓨터가 재시작되어 셸이 다시 프롬프트로 돌아오면, 터미널에 <strong>Resume agent</strong>(에이전트 재개)가 나타나고, 이를 누르면 그 대화에서 에이전트가 다시 시작됩니다. 실행 중인 워크플로에 속한 터미널이라면 그 실행에 대해서도 다시 알려 줍니다.</p>
-    <p class="note">위치: 터미널의 제목 표시줄.</p>
-
-    <h2>지난 대화</h2>
-    <p><strong>Past conversations…</strong>는 한 폴더에서 에이전트가 나눈 이전 대화를 나열합니다. 하나를 읽거나, 캔버스에 열거나, 원본을 그대로 두는 사본을 열 수 있습니다. 팔레트에 <code>@</code> 다음에 단어 몇 개를 입력하면 검색되고, <code>aubergine history</code>는 명령줄에 목록을 보여 줍니다. 읽은 내용은 보관하지 않으며, 어떤 토큰이나 에이전트도 Aubergine을 통해 대화를 읽을 수 없습니다.</p>
-    <p>Claude Code가 보관하는 파일을 읽습니다. 그 형식은 Claude Code 내부용이며 버전마다 바뀝니다. 에이전트를 업데이트한 뒤에는 이름과 대화 내용이 덜 보일 수 있으며, Aubergine이 읽을 수 없는 기록은 읽을 수 없다고 표시하고 결코 빈 것으로 보여 주지 않습니다.</p>
-    <p class="note">위치: 팔레트(<code>⌘K</code>), 그리고 터미널 세부 정보의 “Past conversations in this folder…”.</p>
-
-    <h2>설정 상태</h2>
-    <p>에이전트의 설정 파일에 따르면 에이전트에게 무엇이 주어졌는지의 목록입니다. MCP 서버, 플러그인, 훅, 스킬, 권한 규칙, 설정 파일과 각각의 출처, 그리고 Aubergine이 추가한 것. 이름만 보여 주며 값이나 비밀은 결코 보여 주지 않습니다. 에이전트가 어떻게 설정되어 있는지를 말할 뿐, 실행 중인 에이전트가 무엇을 불러왔는지는 말하지 않으며, 계정에 딸려 오는 커넥터처럼 알 수 없는 것은 알 수 없다고 분명히 말합니다.</p>
-    <p class="note">위치: 터미널의 <strong>⚙ on</strong>, 팔레트의 “What is switched on for this agent…”, 그리고 터미널의 세부 정보.</p>
-
-    <h2>에이전트를 위한 Aubergine 도구</h2>
-    <p><strong>Claude Code with Aubergine tools…</strong>는 먼저 에이전트가 무엇을 할 수 있는지 묻습니다. <strong>None</strong>(없음), 터미널 자체 자격 증명을 쓰는 <strong>Its own work only</strong>(자기 작업만), 또는 직접 고른 범위인 <strong>More…</strong>(더 보기)입니다. 마지막의 경우 그 터미널 하나만을 위한 토큰이 만들어지고, 터미널이 완전히 종료되면 폐기됩니다. 도구는 실행 줄로 에이전트에 전달되는 <code>aubergine mcp</code>이며, 에이전트 자체 설정은 쓰지 않습니다.</p>
-    <p class="note">위치: New terminal 옆의 메뉴.</p>
-
-    <h2>이미 열려 있는 Claude Code 가져오기</h2>
-    <p>실행 중인 에이전트는 옮길 수 없지만, 그 대화는 옮길 수 있습니다. <strong>Open elsewhere</strong>는 Claude Code 탭을 나열하며, <strong>Fork to canvas</strong>와 유휴 상태의 에이전트에 대해서는 먼저 확인을 받는 <strong>Stop and resume here</strong>를 제공합니다. 터미널에서는 <code>aubergine move</code>가 같은 일을 하고, <code>aubergine here --claude</code>는 그 폴더의 마지막 대화를 이어 가는 Claude Code를 캔버스에 시작합니다.</p>
-    <p class="note">위치: 캔버스 위 막대의 <strong>Open elsewhere</strong>, 또는 <code>O</code>.</p>
-
-    <h2>자체 작업 사본에서</h2>
-    <p><code>aubergine here --copy --claude</code>는 저장소의 자체 체크아웃에서 자체 브랜치로 Claude Code를 시작하므로, 두 에이전트가 같은 파일을 편집하는 일이 없습니다. 도구가 있는 Claude Code 터미널의 대화 상자에도 같은 선택지가 있습니다.</p>
-
-    <h2>시험해 본 것</h2>
-    <p>Aubergine에 포함된 데모는 실제 Claude Code가 아니라, 실제 에이전트와 같은 명령과 훅을 실행하는 짧은 스크립트인 대역을 사용합니다. 실제 에이전트로 승인, 작업 사본, 대기열의 작업, 일정은 아직 시험해 보지 않았습니다.</p>
-
-    <p>다른 에이전트도 <code>aubergine</code> 명령으로 이 대부분을 알릴 수 있습니다. <a href="../chatgpt/">Codex와 ChatGPT</a>를 참고하세요.</p>
-    <p class="note">Aubergine은 Anthropic과 제휴 관계가 없습니다. Claude와 Claude Code는 Anthropic의 상표입니다.</p>
   </div>
-</div>
+</header>
+<section class="part" aria-label="Aubergine이 Claude Code를 위해 하는 일">
+  <div class="wrap">
+    <ol class="features">
+      <li><h2>메뉴에서 시작하기</h2><div class="feature-words"><p><strong>New terminal ▾ → Claude Code</strong>, 또는 키보드를 가진 터미널이 없을 때 <code>C</code>를 누르면, Aubergine이 자체 데이터 폴더에 쓴 설정 파일과 함께 새 터미널에서 <code>claude</code>를 시작합니다. 여러분의 Claude Code 설정은 건드리지 않습니다.</p><p>시작되는 명령은 설정의 <code>agents.claudeCommand</code>이며, 바꾸지 않으면 <code>claude</code>입니다. Aubergine은 끝에 자체 플래그를 덧붙입니다.</p><p class="where">위치: 터미널 목록 맨 위, New terminal 옆의 메뉴.</p></div></li>
+      <li class="with-pic flip">
+        <div class="feature-words"><h2>작업 중, 대기, 완료를 한눈에</h2><p>그 설정 파일의 훅이 에이전트가 하는 일을 캔버스에 알립니다. 프롬프트를 보내면 프롬프트가 터미널의 노트 로그에 추가되고 터미널에 <strong>working</strong>이 표시됩니다. 권한을 묻거나 입력을 기다리며 유휴 상태가 되어 에이전트가 여러분을 필요로 하면, 테두리 선이 대기 색으로 바뀌고 제목과 목록의 행에 <strong>waiting for you</strong>가 표시됩니다. 멈추면 <strong>finished</strong>가 표시됩니다.</p><p><code>W</code>는 다음으로 기다리는 터미널로 이동하고, <strong>Notify</strong>는 대기 상태가 된 터미널에 대한 데스크톱 알림을 켭니다. 프롬프트에는 비밀이 들어 있을 수 있습니다. <code>"agents": { "logPrompts": false }</code>를 <code>config.json</code>에 넣으면 노트 로그에 남지 않습니다.</p><p class="where">위치: 터미널 제목, 목록의 행, 그리고 맨 위 For you 옆의 숫자.</p></div>
+        <figure class="frame"><a href="../../screenshots/waiting.png" class="frame-pic"><img src="../../screenshots/waiting.png" width="1496" height="600" loading="lazy" alt="에이전트가 질문을 하고 있는 터미널 하나. 제목에는 waiting for you라고 표시되고, 테두리 선은 대기 색입니다."></a><figcaption>테두리 선은 대기 색으로 바뀌고, 제목에는 waiting for you라고 표시됩니다.</figcaption></figure>
+      </li>
+      <li><h2>직접 시작한 Claude Code</h2><div class="feature-words"><p>일반 터미널에서 손으로 입력해 시작한 <code>claude</code>는 여느 프로그램처럼 동작하지만, Aubergine에는 그것을 실행 중인 바쁜 셸로만 보입니다. waiting for you 표시도 없고, 그곳에서 워크플로를 시작해도 아무것도 입력되지 않습니다. 이를 바꾸려면 훅을 출력해 여러분의 Claude Code 설정에 직접 추가하세요. Aubergine 터미널 밖에서는 아무 일도 하지 않습니다.</p><p class="cmd"><code>aubergine hooks print</code><button type="button" class="copy" data-copy data-copied="복사됨" aria-live="polite" hidden>복사</button></p></div></li>
+      <li class="with-pic">
+        <div class="feature-words"><h2>스스로 이름을 짓고 요약을 유지합니다</h2><p>Aubergine이 시작한 에이전트는 시작할 때 <code>aubergine describe</code>, <code>aubergine link add</code>, <code>aubergine field set</code>으로 작업에 맞게 터미널 이름을 짓고 요약을 유지하라는 안내를 받으며, 멈출 때 자기 이름이나 요약이 없으면 한 번 다시 안내를 받습니다. 여러분이 직접 쓴 것이 우선이고, 같은 항목에 대해 에이전트가 한 말은 <strong>Use this</strong>와 함께 옆에서 기다립니다. 안내는 <strong>Settings</strong>에서 끌 수 있습니다.</p><p class="where">위치: 이름, 요약, 필드, 링크가 있는 터미널의 세부 정보.</p></div>
+        <figure class="frame"><a href="../../screenshots/focus-part.png" class="frame-pic"><img src="../../screenshots/focus-part.png" width="1344" height="1172" loading="lazy" alt="브라우저 탭에 홀로 열린 터미널 하나. 머리글에 이름이 있고, 워크플로 단계, 폴더, 필드가 담긴 세부 정보와 실시간 터미널이 나란히 있습니다."></a><figcaption>요청하면 세부 정보와 노트가 옆에 열리고, 각자의 버튼으로 다시 닫힙니다.</figcaption></figure>
+      </li>
+      <li><h2>워크플로, 작업, 요약, 메시지가 전달됩니다</h2><div class="feature-words"><p>Aubergine은 터미널에 고정된 문장 네 개만 입력합니다. 워크플로가 시작되었다는 것, 에이전트에게 무언가를 작성해 달라는 요청이 있었다는 것, 여러분이 요약을 요청했다는 것, 메시지가 기다리고 있다는 것입니다. 각 문장은 에이전트가 실행할 명령 하나를 알려 줍니다. 문장은 에이전트가 키보드를 쥐고 있는 것으로 보이는 곳에만 입력됩니다. Aubergine이 시작한 에이전트이거나, 설정에 <code>aubergine hooks print</code>의 훅이 들어 있는 에이전트입니다.</p><p>마찬가지로 대기열의 작업은 그런 에이전트가 앞에 있고 한가한 터미널로만 가며, <strong>Claude Code on a workflow…</strong>는 첫 프롬프트에서 실행에 대해 안내받는 에이전트가 있는 새 터미널을 시작합니다.</p><p class="where">위치: 터미널 제목의 메뉴에 있는 <strong>Run a workflow…</strong>, 그리고 페이지 맨 위의 <strong>Runs</strong>.</p></div></li>
+      <li><h2>Resume agent</h2><div class="feature-words"><p>Aubergine은 에이전트 터미널이 어느 대화에 있었는지 기억합니다. 에이전트를 종료했거나 컴퓨터가 재시작되어 셸이 다시 프롬프트로 돌아오면, 터미널에 <strong>Resume agent</strong>(에이전트 재개)가 나타나고, 이를 누르면 그 대화에서 에이전트가 다시 시작됩니다. 실행 중인 워크플로에 속한 터미널이라면 그 실행에 대해서도 다시 알려 줍니다.</p><p class="where">위치: 터미널의 제목 표시줄.</p></div></li>
+      <li><h2>지난 대화</h2><div class="feature-words"><p><strong>Past conversations…</strong>는 한 폴더에서 에이전트가 나눈 이전 대화를 나열합니다. 하나를 읽거나, 캔버스에 열거나, 원본을 그대로 두는 사본을 열 수 있습니다. 팔레트에 <code>@</code> 다음에 단어 몇 개를 입력하면 검색되고, <code>aubergine history</code>는 명령줄에 목록을 보여 줍니다. 읽은 내용은 보관하지 않으며, 어떤 토큰이나 에이전트도 Aubergine을 통해 대화를 읽을 수 없습니다.</p><p>Claude Code가 보관하는 파일을 읽습니다. 그 형식은 Claude Code 내부용이며 버전마다 바뀝니다. 에이전트를 업데이트한 뒤에는 이름과 대화 내용이 덜 보일 수 있으며, Aubergine이 읽을 수 없는 기록은 읽을 수 없다고 표시하고 결코 빈 것으로 보여 주지 않습니다.</p><p class="where">위치: 팔레트(<code>⌘K</code>), 그리고 터미널 세부 정보의 “Past conversations in this folder…”.</p></div></li>
+      <li><h2>설정 상태</h2><div class="feature-words"><p>에이전트의 설정 파일에 따르면 에이전트에게 무엇이 주어졌는지의 목록입니다. MCP 서버, 플러그인, 훅, 스킬, 권한 규칙, 설정 파일과 각각의 출처, 그리고 Aubergine이 추가한 것. 이름만 보여 주며 값이나 비밀은 결코 보여 주지 않습니다. 에이전트가 어떻게 설정되어 있는지를 말할 뿐, 실행 중인 에이전트가 무엇을 불러왔는지는 말하지 않으며, 계정에 딸려 오는 커넥터처럼 알 수 없는 것은 알 수 없다고 분명히 말합니다.</p><p class="where">위치: 터미널의 <strong>⚙ on</strong>, 팔레트의 “What is switched on for this agent…”, 그리고 터미널의 세부 정보.</p></div></li>
+      <li><h2>에이전트를 위한 Aubergine 도구</h2><div class="feature-words"><p><strong>Claude Code with Aubergine tools…</strong>는 먼저 에이전트가 무엇을 할 수 있는지 묻습니다. <strong>None</strong>(없음), 터미널 자체 자격 증명을 쓰는 <strong>Its own work only</strong>(자기 작업만), 또는 직접 고른 범위인 <strong>More…</strong>(더 보기)입니다. 마지막의 경우 그 터미널 하나만을 위한 토큰이 만들어지고, 터미널이 완전히 종료되면 폐기됩니다. 도구는 실행 줄로 에이전트에 전달되는 <code>aubergine mcp</code>이며, 에이전트 자체 설정은 쓰지 않습니다.</p><p class="where">위치: New terminal 옆의 메뉴.</p></div></li>
+      <li><h2>이미 열려 있는 Claude Code 가져오기</h2><div class="feature-words"><p>실행 중인 에이전트는 옮길 수 없지만, 그 대화는 옮길 수 있습니다. <strong>Open elsewhere</strong>는 Claude Code 탭을 나열하며, <strong>Fork to canvas</strong>와 유휴 상태의 에이전트에 대해서는 먼저 확인을 받는 <strong>Stop and resume here</strong>를 제공합니다. 터미널에서는 <code>aubergine move</code>가 같은 일을 하고, <code>aubergine here --claude</code>는 그 폴더의 마지막 대화를 이어 가는 Claude Code를 캔버스에 시작합니다.</p><p class="where">위치: 캔버스 위 막대의 <strong>Open elsewhere</strong>, 또는 <code>O</code>.</p></div></li>
+      <li><h2>자체 작업 사본에서</h2><div class="feature-words"><p><code>aubergine here --copy --claude</code>는 저장소의 자체 체크아웃에서 자체 브랜치로 Claude Code를 시작하므로, 두 에이전트가 같은 파일을 편집하는 일이 없습니다. 도구가 있는 Claude Code 터미널의 대화 상자에도 같은 선택지가 있습니다.</p></div></li>
+    </ol>
+  </div>
+</section>
+<section class="band band-dark" aria-labelledby="tried-h">
+  <div class="wrap dark-split">
+    <h2 id="tried-h">시험해 본 것</h2>
+    <div class="prose">
+      <p>Aubergine에 포함된 데모는 실제 Claude Code가 아니라, 실제 에이전트와 같은 명령과 훅을 실행하는 짧은 스크립트인 대역을 사용합니다. 실제 에이전트로 승인, 작업 사본, 대기열의 작업, 일정은 아직 시험해 보지 않았습니다.</p>
+      <p>다른 에이전트도 <code>aubergine</code> 명령으로 이 대부분을 알릴 수 있습니다. <a href="../chatgpt/">Codex와 ChatGPT</a>를 참고하세요.</p>
+      <p class="note">Aubergine은 Anthropic과 제휴 관계가 없습니다. Claude와 Claude Code는 Anthropic의 상표입니다.</p>
+    </div>
+  </div>
+</section>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">5분이면 시작합니다</h2>
+    <div class="close-do">
+      <p>tmux 3.2 이상과 Node.js 22 이상이 설치된 macOS가 필요합니다. <code>brew install tmux node</code>로 둘 다 설치할 수 있습니다.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="복사됨" aria-live="polite" hidden>복사</button></p>
+      <p class="actions"><a class="button" href="../install/">설치</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">소스 보기</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">
   <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
     <nav aria-label="전체 페이지">
       <ul class="foot-links">
         <li><a href="../">홈</a></li>
@@ -198,6 +190,7 @@ document.querySelectorAll('[data-copy]').forEach(function (button) {
   button.hidden = false;
   button.addEventListener('click', function () {
     var words = button.textContent;
+    if (!navigator.clipboard) return;
     navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
       button.textContent = button.getAttribute('data-copied');
       setTimeout(function () { button.textContent = words; }, 1600);
@@ -210,6 +203,12 @@ document.addEventListener('keydown', function (event) {
 });
 document.addEventListener('click', function (event) {
   document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
 });
 </script>
 </body>

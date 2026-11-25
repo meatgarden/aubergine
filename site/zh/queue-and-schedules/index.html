@@ -20,8 +20,8 @@
 <link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/queue-and-schedules/">
 <link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/queue-and-schedules/">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
 <link rel="icon" href="../../icon.svg" type="image/svg+xml">
 <link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../../style.css">
@@ -45,7 +45,7 @@
 <a class="skip" href="#main">跳到正文</a>
 <header class="top">
   <div class="wrap top-in">
-    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
     <nav class="nav" aria-label="页面">
       <ul>
         <li><a href="../claude/">Claude Code</a></li>
@@ -77,9 +77,11 @@
   </div>
 </header>
 
-<div class="wrap translated">
-  <p class="note">Aubergine 本身是英文的：它的按钮、菜单和截图都是英文版。</p>
-  <p class="note">本页由机器从英文翻译而来。<a href="https://github.com/thirstyeggplant/aubergine/issues">提交修正</a>。</p>
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine 本身是英文的：它的按钮、菜单和截图都是英文版。</p>
+    <p>本页由机器从英文翻译而来。<a href="https://github.com/thirstyeggplant/aubergine/issues">提交修正</a>。</p>
+  </div>
 </div>
 <main id="main" tabindex="-1">
 <script type="application/ld+json">
@@ -128,11 +130,13 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="当前位置"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">指南</a></li><li>队列与定时计划</li></ol></nav>
-  <h1>队列、“For you”与定时计划</h1>
-  <p class="lead">两个相互衔接的列表：队列存放给智能体的工作，<em>For you</em> 存放所有在等人处理的事。定时计划在设定的时间把任务加入队列。</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="当前位置"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">指南</a></li><li>队列与定时计划</li></ol></nav>
+    <h1>队列、“For you”与定时计划</h1>
+    <p class="lead">两个相互衔接的列表：队列存放给智能体的工作，<em>For you</em> 存放所有在等人处理的事。定时计划在设定的时间把任务加入队列。</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
     <h2>队列</h2>
@@ -146,7 +150,7 @@
     </ul>
     <h2>For you</h2>
     <p>有问题的终端、待审批或受阻的运行、待读的草稿和待安装项、提议加入队列的任务、已完成和失败的任务、智能体交上来的清单，以及终端已不在的工作副本。顶部 For you 旁边的数字和“next waiting”是同一个列表。其中大部分是汇集来的，不是写进去的：事情本身处理完了，条目就会消失。</p>
-    <figure class="pic"><a href="../../screenshots/for-you.png"><img src="../../screenshots/for-you.png" width="990" height="570" loading="lazy" alt="Runs 页面的 Waiting for you 列：一个添加待办的输入框，然后是一个替身智能体的问题、一份待读的草稿和一份交上来的清单。"></a><figcaption>Runs 页面上的 For you：一个问题、一份待读的草稿和一份交上来的清单，每项都注明是什么。</figcaption></figure>
+    <figure class="frame"><a href="../../screenshots/for-you.png" class="frame-pic"><img src="../../screenshots/for-you.png" width="990" height="570" loading="lazy" alt="Runs 页面的 Waiting for you 列：一个添加待办的输入框，然后是一个替身智能体的问题、一份待读的草稿和一份交上来的清单。"></a><figcaption>Runs 页面上的 For you：一个问题、一份待读的草稿和一份交上来的清单，每项都注明是什么。</figcaption></figure>
     <p>发现现在不该做的工作的智能体可以提议一个任务，需要人的智能体可以向你提出请求：</p>
     <pre><code>aubergine task add "Add a test for the retry" --details "it should fail without the fix"
 aubergine ask "the staging key expires this week: rotate it, or say who can"</code></pre>
@@ -170,9 +174,21 @@ aubergine schedule run "My morning list"</code></pre>
   </div>
 </div>
 
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">五分钟上手</h2>
+    <div class="close-do">
+      <p>你需要 macOS，以及 tmux 3.2 或更高版本和 Node.js 22 或更高版本。<code>brew install tmux node</code> 可以一次装好两者。</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="已复制" aria-live="polite" hidden>复制</button></p>
+      <p class="actions"><a class="button" href="../install/">安装</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">阅读源码</a></p>
+    </div>
+  </div>
+</section>
+
 </main>
 <footer class="foot">
   <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
     <nav aria-label="所有页面">
       <ul class="foot-links">
         <li><a href="../">首页</a></li>
@@ -198,6 +214,7 @@ document.querySelectorAll('[data-copy]').forEach(function (button) {
   button.hidden = false;
   button.addEventListener('click', function () {
     var words = button.textContent;
+    if (!navigator.clipboard) return;
     navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
       button.textContent = button.getAttribute('data-copied');
       setTimeout(function () { button.textContent = words; }, 1600);
@@ -210,6 +227,12 @@ document.addEventListener('keydown', function (event) {
 });
 document.addEventListener('click', function (event) {
   document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
 });
 </script>
 </body>

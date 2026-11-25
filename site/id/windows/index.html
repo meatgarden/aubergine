@@ -20,8 +20,8 @@
 <link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/windows/">
 <link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/windows/">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
 <link rel="icon" href="../../icon.svg" type="image/svg+xml">
 <link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../../style.css">
@@ -45,7 +45,7 @@
 <a class="skip" href="#main">Langsung ke isi halaman</a>
 <header class="top">
   <div class="wrap top-in">
-    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
     <nav class="nav" aria-label="Halaman">
       <ul>
         <li><a href="../claude/">Claude Code</a></li>
@@ -77,9 +77,11 @@
   </div>
 </header>
 
-<div class="wrap translated">
-  <p class="note">Aubergine sendiri berbahasa Inggris: tombol, menu, dan gambarnya adalah versi bahasa Inggris.</p>
-  <p class="note">Halaman ini diterjemahkan oleh mesin dari bahasa Inggris. <a href="https://github.com/thirstyeggplant/aubergine/issues">Kirim koreksi</a>.</p>
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine sendiri berbahasa Inggris: tombol, menu, dan gambarnya adalah versi bahasa Inggris.</p>
+    <p>Halaman ini diterjemahkan oleh mesin dari bahasa Inggris. <a href="https://github.com/thirstyeggplant/aubergine/issues">Kirim koreksi</a>.</p>
+  </div>
 </div>
 <main id="main" tabindex="-1">
 <script type="application/ld+json">
@@ -130,20 +132,21 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="Posisi Anda"><ol><li><a href="../">Aubergine</a></li><li>Windows dengan WSL</li></ol></nav>
-  <h1>Instal Aubergine di Windows dengan WSL</h1>
-  <p class="lead">Aubergine tidak berjalan di Windows sendiri. Ia berjalan di dalam WSL 2, Linux yang disediakan Windows, dan Anda memakainya dari browser Windows Anda.</p>
-</div>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Posisi Anda"><ol><li><a href="../">Aubergine</a></li><li>Windows dengan WSL</li></ol></nav>
+    <h1>Instal Aubergine di Windows dengan WSL</h1>
+    <p class="lead">Aubergine tidak berjalan di Windows sendiri. Ia berjalan di dalam WSL 2, Linux yang disediakan Windows, dan Anda memakainya dari browser Windows Anda.</p>
+    <p class="note note-strong"><strong>Apa yang dicoba.</strong> Langkah Linux dijalankan pada 25 November 2026 di Ubuntu 24.04.5 (x86_64) di dalam kontainer, bukan di WSL, dengan Aubergine 0.2.2 dari npm: ia mengompilasi pustaka terminalnya, berjalan, memasukkan sebuah browser, serta menjalankan terminal dan demo. Instalasi Node.js dengan nvm tidak dijalankan di sana, karena Node.js 22 sudah terpasang. Belum ada isi halaman ini yang dijalankan di Windows. Jika Anda mencobanya, <a href="https://github.com/thirstyeggplant/aubergine/issues">ceritakan hasilnya</a>.</p>
+  </div>
+</header>
 <div class="wrap page-body">
   <div class="prose">
-    <p class="note"><strong>Apa yang dicoba.</strong> Langkah Linux dijalankan pada 25 November 2026 di Ubuntu 24.04.5 (x86_64) di dalam kontainer, bukan di WSL, dengan Aubergine 0.2.2 dari npm: ia mengompilasi pustaka terminalnya, berjalan, memasukkan sebuah browser, serta menjalankan terminal dan demo. Instalasi Node.js dengan nvm tidak dijalankan di sana, karena Node.js 22 sudah terpasang. Belum ada isi halaman ini yang dijalankan di Windows. Jika Anda mencobanya, <a href="https://github.com/thirstyeggplant/aubergine/issues">ceritakan hasilnya</a>.</p>
-
     <h2>Yang Anda butuhkan</h2>
     <p>Windows 11, atau Windows 10 versi 2004 (build 19041) atau lebih baru, tempat WSL 2 bisa dipasang dengan satu perintah. <a href="https://learn.microsoft.com/windows/wsl/install">Halaman Microsoft tentang memasang WSL</a> berisi rinciannya.</p>
 
     <h2>Instal dan jalankan</h2>
-    <ol>
+    <ol class="seq">
       <li><p><strong>Pasang WSL.</strong> Buka PowerShell sebagai administrator, jalankan ini, lalu mulai ulang Windows setelah selesai. Ini memasang WSL 2 dengan Ubuntu.</p>
         <p class="cmd multi"><code>wsl --install</code><button type="button" class="copy" data-copy data-copied="Tersalin" aria-live="polite" hidden>Salin</button></p>
         <p>Setelah dimulai ulang, buka <strong>Ubuntu</strong> dari menu Start dan pilih nama pengguna serta kata sandi untuknya. Semua perintah di bawah diketik di sana, di Ubuntu.</p></li>
@@ -190,15 +193,24 @@
         </tbody>
       </table>
     </div>
-
-    <h2>Selanjutnya</h2>
-    <p>Menghentikan, memperbarui, dan mencopot sama seperti di <a href="../install/">halaman instalasi</a>, dan selebihnya ada di <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>.</p>
   </div>
 </div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">Selanjutnya</h2>
+    <div class="close-do">
+      <p>Menghentikan, memperbarui, dan mencopot sama seperti di <a href="../install/">halaman instalasi</a>, dan selebihnya ada di <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Tersalin" aria-live="polite" hidden>Salin</button></p>
+      <p class="actions"><a class="button" href="../install/">Instalasi</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">
   <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
     <nav aria-label="Semua halaman">
       <ul class="foot-links">
         <li><a href="../">Beranda</a></li>
@@ -224,6 +236,7 @@ document.querySelectorAll('[data-copy]').forEach(function (button) {
   button.hidden = false;
   button.addEventListener('click', function () {
     var words = button.textContent;
+    if (!navigator.clipboard) return;
     navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
       button.textContent = button.getAttribute('data-copied');
       setTimeout(function () { button.textContent = words; }, 1600);
@@ -236,6 +249,12 @@ document.addEventListener('keydown', function (event) {
 });
 document.addEventListener('click', function (event) {
   document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
 });
 </script>
 </body>

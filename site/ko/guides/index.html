@@ -20,8 +20,8 @@
 <link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/guides/">
 <link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/guides/">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
 <link rel="icon" href="../../icon.svg" type="image/svg+xml">
 <link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../../style.css">
@@ -45,7 +45,7 @@
 <a class="skip" href="#main">본문으로 건너뛰기</a>
 <header class="top">
   <div class="wrap top-in">
-    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
     <nav class="nav" aria-label="페이지">
       <ul>
         <li><a href="../claude/">Claude Code</a></li>
@@ -77,9 +77,11 @@
   </div>
 </header>
 
-<div class="wrap translated">
-  <p class="note">Aubergine 앱 자체는 영어로 되어 있습니다. 버튼, 메뉴, 그림은 모두 영어판 그대로입니다.</p>
-  <p class="note">이 페이지는 영어 원문을 기계 번역한 것입니다. <a href="https://github.com/thirstyeggplant/aubergine/issues">수정 제안 보내기</a>.</p>
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine 앱 자체는 영어로 되어 있습니다. 버튼, 메뉴, 그림은 모두 영어판 그대로입니다.</p>
+    <p>이 페이지는 영어 원문을 기계 번역한 것입니다. <a href="https://github.com/thirstyeggplant/aubergine/issues">수정 제안 보내기</a>.</p>
+  </div>
 </div>
 <main id="main" tabindex="-1">
 <script type="application/ld+json">
@@ -103,28 +105,44 @@
   ]
 }
 </script>
-<div class="wrap page-head">
-  <nav class="crumbs" aria-label="현재 위치"><ol><li><a href="../">Aubergine</a></li><li>가이드</li></ol></nav>
-  <h1>가이드</h1>
-  <p class="lead">짧고 실용적인 가이드입니다. 전체 참조 문서는 <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>입니다.</p>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="현재 위치"><ol><li><a href="../">Aubergine</a></li><li>가이드</li></ol></nav>
+    <h1>가이드</h1>
+    <p class="lead">짧고 실용적인 가이드입니다. 전체 참조 문서는 <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>입니다.</p>
+  </div>
+</header>
+<div class="cards-band">
+  <div class="wrap page-body">
+    <ul class="cards">
+      <li><h2><a href="../install/">Aubergine 설치</a></h2><p>요구 사항, 한 줄 설치 프로그램, 그것이 바꾸는 것, 흔한 문제의 해결법.</p></li>
+      <li><h2><a href="../windows/">WSL로 Windows에 설치하기</a></h2><p>WSL 2 안에서 Aubergine을 실행하고 Windows 브라우저에서 사용합니다. Linux 단계는 실행해 봤고, Windows에서는 아직 아무것도 시도하지 않았습니다.</p></li>
+      <li><h2><a href="../run-multiple-coding-agents/">여러 코딩 에이전트를 한꺼번에 실행하기</a></h2><p>캔버스, 대기 수, 대기열, 작업 사본, 워크플로를 한 번에 둘러봅니다.</p></li>
+      <li><h2><a href="../claude/">Aubergine의 Claude Code</a></h2><p>Aubergine이 Claude Code를 위해 스스로 해 주는 일과, 각각이 어디에 있는지.</p></li>
+      <li><h2><a href="../chatgpt/">Codex와 ChatGPT</a></h2><p>여느 프로그램처럼 터미널에서 실행되는 Codex, 보고할 수 있는 것, 그리고 Claude Code 전용으로만 만들어진 것.</p></li>
+      <li><h2><a href="../working-copies/">작업 사본</a></h2><p>각 에이전트에게 자체 체크아웃과 브랜치를 주어 두 에이전트가 같은 파일을 편집하는 일이 없게 합니다.</p></li>
+      <li><h2><a href="../queue-and-schedules/">대기열, For you, 일정</a></h2><p>일을 한 번에 나눠 주고, 여러분을 기다리는 모든 것을 보고, 정해진 시각에 작업을 실행합니다.</p></li>
+      <li><h2><a href="../security/">보안과 개인정보</a></h2><p>무엇이 보호되고 무엇이 보호되지 않는지.</p></li>
+      <li><h2><a href="../faq/">FAQ</a></h2><p>자주 묻는 질문에 대한 짧은 답변.</p></li>
+    </ul>
+  </div>
 </div>
-<div class="wrap page-body">
-  <ul class="rows">
-    <li><h2><a class="row-link" href="../install/">Aubergine 설치</a></h2><p>요구 사항, 한 줄 설치 프로그램, 그것이 바꾸는 것, 흔한 문제의 해결법.</p></li>
-    <li><h2><a class="row-link" href="../windows/">WSL로 Windows에 설치하기</a></h2><p>WSL 2 안에서 Aubergine을 실행하고 Windows 브라우저에서 사용합니다. Linux 단계는 실행해 봤고, Windows에서는 아직 아무것도 시도하지 않았습니다.</p></li>
-    <li><h2><a class="row-link" href="../run-multiple-coding-agents/">여러 코딩 에이전트를 한꺼번에 실행하기</a></h2><p>캔버스, 대기 수, 대기열, 작업 사본, 워크플로를 한 번에 둘러봅니다.</p></li>
-    <li><h2><a class="row-link" href="../claude/">Aubergine의 Claude Code</a></h2><p>Aubergine이 Claude Code를 위해 스스로 해 주는 일과, 각각이 어디에 있는지.</p></li>
-    <li><h2><a class="row-link" href="../chatgpt/">Codex와 ChatGPT</a></h2><p>여느 프로그램처럼 터미널에서 실행되는 Codex, 보고할 수 있는 것, 그리고 Claude Code 전용으로만 만들어진 것.</p></li>
-    <li><h2><a class="row-link" href="../working-copies/">작업 사본</a></h2><p>각 에이전트에게 자체 체크아웃과 브랜치를 주어 두 에이전트가 같은 파일을 편집하는 일이 없게 합니다.</p></li>
-    <li><h2><a class="row-link" href="../queue-and-schedules/">대기열, For you, 일정</a></h2><p>일을 한 번에 나눠 주고, 여러분을 기다리는 모든 것을 보고, 정해진 시각에 작업을 실행합니다.</p></li>
-    <li><h2><a class="row-link" href="../security/">보안과 개인정보</a></h2><p>무엇이 보호되고 무엇이 보호되지 않는지.</p></li>
-    <li><h2><a class="row-link" href="../faq/">FAQ</a></h2><p>자주 묻는 질문에 대한 짧은 답변.</p></li>
-  </ul>
-</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">5분이면 시작합니다</h2>
+    <div class="close-do">
+      <p>tmux 3.2 이상과 Node.js 22 이상이 설치된 macOS가 필요합니다. <code>brew install tmux node</code>로 둘 다 설치할 수 있습니다.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="복사됨" aria-live="polite" hidden>복사</button></p>
+      <p class="actions"><a class="button" href="../install/">설치</a><a class="button button-quiet" href="https://github.com/thirstyeggplant/aubergine">소스 보기</a></p>
+    </div>
+  </div>
+</section>
 
 </main>
 <footer class="foot">
   <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
     <nav aria-label="전체 페이지">
       <ul class="foot-links">
         <li><a href="../">홈</a></li>
@@ -150,6 +168,7 @@ document.querySelectorAll('[data-copy]').forEach(function (button) {
   button.hidden = false;
   button.addEventListener('click', function () {
     var words = button.textContent;
+    if (!navigator.clipboard) return;
     navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
       button.textContent = button.getAttribute('data-copied');
       setTimeout(function () { button.textContent = words; }, 1600);
@@ -162,6 +181,12 @@ document.addEventListener('keydown', function (event) {
 });
 document.addEventListener('click', function (event) {
   document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
 });
 </script>
 </body>
