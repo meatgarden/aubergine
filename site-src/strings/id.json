@@ -1,0 +1,2210 @@
+{
+  "site.skip": {
+    "text": "Langsung ke isi halaman",
+    "from": "c1da0f1587b7"
+  },
+  "site.nav.label": {
+    "text": "Halaman",
+    "from": "9046da16aea9"
+  },
+  "site.nav.claude": {
+    "text": "Claude Code",
+    "from": "246ef8c1130d"
+  },
+  "site.nav.codex": {
+    "text": "Codex",
+    "from": "616efbe96852"
+  },
+  "site.nav.install": {
+    "text": "Instalasi",
+    "from": "569ca49f4aaf"
+  },
+  "site.nav.guides": {
+    "text": "Panduan",
+    "from": "572cd72feb9a"
+  },
+  "site.nav.security": {
+    "text": "Keamanan",
+    "from": "8f6fb4eb7f42"
+  },
+  "site.nav.faq": {
+    "text": "FAQ",
+    "from": "dbc468a14b60"
+  },
+  "site.menu": {
+    "text": "Menu",
+    "from": "99af6606ff9d"
+  },
+  "site.languages.label": {
+    "text": "Bahasa",
+    "from": "a4fe65264ef7"
+  },
+  "site.crumbs": {
+    "text": "Posisi Anda",
+    "from": "54cd982fb2dd"
+  },
+  "site.copy": {
+    "text": "Salin",
+    "from": "e21f935f11d7"
+  },
+  "site.copied": {
+    "text": "Tersalin",
+    "from": "8d525e5f158b"
+  },
+  "site.og.alt": {
+    "text": "Aubergine: kanvas berisi terminal, satu sedang sibuk dan satu menunggu Anda",
+    "from": "25b02deb2ff8"
+  },
+  "site.translated.app": {
+    "text": "Aubergine sendiri berbahasa Inggris: tombol, menu, dan gambarnya adalah versi bahasa Inggris.",
+    "from": "a81916766b4d"
+  },
+  "site.translated.machine": {
+    "text": "Halaman ini diterjemahkan oleh mesin dari bahasa Inggris. <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">Kirim koreksi</a>.",
+    "from": "e0f116b75aa8"
+  },
+  "site.foot.label": {
+    "text": "Semua halaman",
+    "from": "b879e5a49e14"
+  },
+  "site.foot.home": {
+    "text": "Beranda",
+    "from": "3a78695388b3"
+  },
+  "site.foot.claude": {
+    "text": "Claude Code",
+    "from": "246ef8c1130d"
+  },
+  "site.foot.codex": {
+    "text": "Codex dan ChatGPT",
+    "from": "38c13bed7dca"
+  },
+  "site.foot.install": {
+    "text": "Instalasi",
+    "from": "569ca49f4aaf"
+  },
+  "site.foot.guides": {
+    "text": "Panduan",
+    "from": "572cd72feb9a"
+  },
+  "site.foot.several": {
+    "text": "Menjalankan beberapa agen",
+    "from": "8b0dc326e0f4"
+  },
+  "site.foot.copies": {
+    "text": "Salinan kerja",
+    "from": "9660dc116131"
+  },
+  "site.foot.queue": {
+    "text": "Antrean dan jadwal",
+    "from": "403b3a701d15"
+  },
+  "site.foot.security": {
+    "text": "Keamanan",
+    "from": "8f6fb4eb7f42"
+  },
+  "site.foot.roadmap": {
+    "text": "Peta jalan",
+    "from": "92375f997ffe"
+  },
+  "site.foot.faq": {
+    "text": "FAQ",
+    "from": "dbc468a14b60"
+  },
+  "site.foot.license": {
+    "text": "Aubergine gratis dan open source di bawah <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE\">lisensi MIT</a>, dan berjalan di komputer Anda sendiri.",
+    "from": "21c2472673d7"
+  },
+  "home.meta.title": {
+    "text": "Aubergine: semua terminal Anda di satu kanvas, dengan agen yang sudah Anda pakai",
+    "from": "620bab21c0b6"
+  },
+  "home.meta.description": {
+    "text": "Aubergine menempatkan semua terminal Anda berdampingan di satu kanvas di browser. Jalankan sebanyak yang Anda mau, dengan agen dan model yang sudah Anda pakai, dan lihat mana yang membutuhkan Anda. Gratis, lokal, open source.",
+    "from": "71a14cde3a05"
+  },
+  "home.hero.kicker": {
+    "text": "Gratis · Open source · Berjalan di komputer Anda",
+    "from": "28742c2f94e7"
+  },
+  "home.hero.title": {
+    "text": "Semua terminal Anda, berjajar. Lihat agen mana yang <em>butuh Anda</em>.",
+    "from": "7be0ec221ba9"
+  },
+  "home.hero.lead": {
+    "text": "Aubergine menempatkan semua terminal Anda berdampingan di satu kanvas di browser. Jalankan sebanyak yang Anda mau, dengan agen dan model yang sudah Anda pakai. Aubergine tidak punya model sendiri dan tidak pernah meminta kunci.",
+    "from": "c8c8b75e9e20"
+  },
+  "home.hero.after": {
+    "text": "Lalu <code>aubergine start --open</code>. Untuk macOS, dengan tmux 3.2 atau lebih baru dan Node.js 22 atau lebih baru.",
+    "from": "bed0cbea0b2d"
+  },
+  "home.hero.install": {
+    "text": "Instal",
+    "from": "569ca49f4aaf"
+  },
+  "home.hero.source": {
+    "text": "Baca kode sumbernya",
+    "from": "625b22ba31d0"
+  },
+  "home.canvas.caption": {
+    "text": "Ilustrasi, bukan tangkapan layar: lima terminal di sebuah kanvas, dan satu yang menunggu Anda.",
+    "from": "413e282f8a9d"
+  },
+  "home.see.title": {
+    "text": "Seperti apa tampilannya",
+    "from": "9a5d81b4a5f3"
+  },
+  "home.see.intro": {
+    "text": "Tangkapan layar asli dari demo yang disertakan dengan Aubergine: agen pengganti, bukan agen sungguhan.",
+    "from": "61f7034f8117"
+  },
+  "home.see.canvas.claim": {
+    "text": "Semua terminal di satu kanvas",
+    "from": "51af5aa39147"
+  },
+  "home.see.canvas.text": {
+    "text": "Sebanyak yang Anda mau, berdampingan, masing-masing hidup selama terlihat.",
+    "from": "e5c7903b1535"
+  },
+  "home.see.canvas.caption": {
+    "text": "Daftar menunjukkan apa yang sedang dikerjakan tiap terminal; di sebelahnya, terminal itu sendiri.",
+    "from": "40d3143df913"
+  },
+  "home.see.canvas.alt": {
+    "text": "Panel samping yang mendaftar lima terminal beserta statusnya dalam kata-kata (working, waiting for you, finished, parked), di samping sebagian kanvas dengan shell yang hidup.",
+    "from": "2bb1af139cbc"
+  },
+  "home.see.waits.claim": {
+    "text": "Yang menunggu langsung terlihat",
+    "from": "7d5fd4d29cc6"
+  },
+  "home.see.waits.text": {
+    "text": "Saat sebuah agen membutuhkan Anda, Anda melihatnya dari seberang kanvas, dan W membawa Anda ke sana.",
+    "from": "5a95026b002e"
+  },
+  "home.see.waits.caption": {
+    "text": "Garis tepinya berganti ke warna menunggu, dan judulnya bertuliskan waiting for you.",
+    "from": "56be14801975"
+  },
+  "home.see.waits.alt": {
+    "text": "Satu terminal yang agennya mengajukan pertanyaan, judulnya bertuliskan waiting for you, garis tepinya berwarna menunggu.",
+    "from": "90d945c1648c"
+  },
+  "home.see.focus.claim": {
+    "text": "Satu terminal tersendiri",
+    "from": "0ddd4013565e"
+  },
+  "home.see.focus.text": {
+    "text": "Buka terminal mana pun di tab browser tersendiri: terminal yang sama, bukan salinan.",
+    "from": "ba54fa6c02df"
+  },
+  "home.see.focus.caption": {
+    "text": "Detail dan catatannya terbuka di sebelahnya saat Anda minta, dan tertutup lagi dengan tombolnya masing-masing.",
+    "from": "95b86a5cd8de"
+  },
+  "home.see.focus.alt": {
+    "text": "Satu terminal sendirian di tab browser: namanya di bagian atas, detailnya dengan langkah workflow, folder dan field-nya, dan terminal yang hidup di sebelahnya.",
+    "from": "3b3df705e912"
+  },
+  "home.agents.title": {
+    "text": "Bawa agen Anda sendiri",
+    "from": "053237049eea"
+  },
+  "home.agents.intro": {
+    "text": "Aubergine menjalankan terminal biasa. Aubergine tidak memanggil model, tidak menyimpan kunci, dan tidak punya akun: agen command-line yang sudah Anda pakai, masuk dengan akun Anda, berjalan di terminalnya dengan model apa pun yang Anda pilih. Hal-hal yang dilakukan Aubergine sendiri untuk sebuah agen saat ini dibuat untuk Claude Code; agen lain mana pun bisa menyampaikan hal yang sama lewat perintah <code>aubergine</code>.",
+    "from": "9e12708b9129"
+  },
+  "home.agents.claude": {
+    "text": "Jalankan dari menu New terminal, dan ia memberi tahu sendiri saat bekerja, menunggu Anda, atau selesai; Aubergine bisa melanjutkan percakapannya dan menunjukkan bagaimana ia disiapkan.",
+    "from": "493938fd27d5"
+  },
+  "home.agents.codex.name": {
+    "text": "Codex dan ChatGPT",
+    "from": "38c13bed7dca"
+  },
+  "home.agents.codex": {
+    "text": "Codex berjalan di terminal seperti program lain, dan melapor lewat perintah <code>aubergine</code> setelah instruksinya menyuruhnya begitu. ChatGPT di browser bukan program terminal.",
+    "from": "57da92f4d853"
+  },
+  "home.agents.other.name": {
+    "text": "Agen command-line lain, atau shell biasa",
+    "from": "ee656f2d4bf2"
+  },
+  "home.agents.other": {
+    "text": "Setiap terminal punya perintah <code>aubergine</code>, dan <code>aubergine guide --snippet</code> mencetak lima baris untuk instruksi agen Anda sendiri.",
+    "from": "bd4153cd9ede"
+  },
+  "home.built.title": {
+    "text": "Apa lagi yang sudah dibuat",
+    "from": "67ca3d0bd3e6"
+  },
+  "home.built.intro": {
+    "text": "Semua ini sudah berjalan di komputer Anda hari ini.",
+    "from": "e6025b6fd725"
+  },
+  "home.built.canvas.name": {
+    "text": "Kanvas berisi terminal",
+    "from": "efed05a9a763"
+  },
+  "home.built.canvas.text": {
+    "text": "Geser, zoom, dan atur terminal sungguhan, klik sekali untuk mengetik, simpan satu terminal (park) lalu kembalikan nanti, atau buka satu terminal tersendiri di tab browser dengan detail dan catatannya di sebelahnya.",
+    "from": "062fb655d54f"
+  },
+  "home.built.waiting.name": {
+    "text": "Lihat siapa yang menunggu",
+    "from": "a8dd066ebe3d"
+  },
+  "home.built.waiting.text": {
+    "text": "Sibuk, diam, atau menunggu Anda, di setiap terminal, dan daftar “For you” serta “next waiting” membawa Anda langsung ke yang membutuhkan orang.",
+    "from": "d2f2b06c77b4"
+  },
+  "home.built.queue.name": {
+    "text": "Antrean dan jadwal",
+    "from": "403b3a701d15"
+  },
+  "home.built.queue.text": {
+    "text": "Tulis tugas sekali dan biarkan agen yang sedang bebas mengambilnya, atau jadwalkan pada jam tertentu di hari-hari yang Anda pilih.",
+    "from": "ca6521d877a6"
+  },
+  "home.built.copies.name": {
+    "text": "Salinan kerja",
+    "from": "9660dc116131"
+  },
+  "home.built.copies.text": {
+    "text": "Beri setiap agen salinan repositori sendiri di branch sendiri, sehingga dua agen tidak pernah mengedit file yang sama.",
+    "from": "4230039c27f0"
+  },
+  "home.built.projects.name": {
+    "text": "Proyek",
+    "from": "04e2a9728af7"
+  },
+  "home.built.projects.text": {
+    "text": "Satu server, beberapa ruang kendali: setiap proyek punya kanvas, antrean, jadwal, dan aturan sendiri, dan bisa disimpan sebagai file atau template.",
+    "from": "e0961f503387"
+  },
+  "home.built.workflows.name": {
+    "text": "Workflow dan persetujuan",
+    "from": "cefa6bb93441"
+  },
+  "home.built.workflows.text": {
+    "text": "Beri agen langkah-langkah untuk diikuti, berhenti di langkah yang menunggu seseorang, dan pantau setiap run yang berjalan di satu papan.",
+    "from": "7b456d89fd1e"
+  },
+  "home.built.messages.name": {
+    "text": "Pesan antarterminal",
+    "from": "48b5af2c48ad"
+  },
+  "home.built.messages.text": {
+    "text": "Biarkan agen saling berbicara dengan pengirim yang bernama, batas, dan jeda, tertutup secara bawaan untuk setiap kanvas.",
+    "from": "785ee3f85615"
+  },
+  "home.built.api.name": {
+    "text": "API dan server MCP",
+    "from": "1a84834881e1"
+  },
+  "home.built.api.text": {
+    "text": "API HTTP lokal dengan token berlingkup, klien bertipe, dan server MCP yang hanya mendaftar alat yang boleh dipakai sebuah kredensial.",
+    "from": "f9999af55d29"
+  },
+  "home.built.cli.name": {
+    "text": "Command line",
+    "from": "f8709772ea07"
+  },
+  "home.built.cli.text": {
+    "text": "Perintah <code>aubergine</code> menjalankan terminal, mengantrekan tugas, mengatur jadwal, membaca papan, dan menyetujui run, dari terminal mana pun di mesin itu.",
+    "from": "7c132e9877d8"
+  },
+  "home.built.recaps.name": {
+    "text": "Rekap dan riwayat",
+    "from": "2ea7a47cfa76"
+  },
+  "home.built.recaps.text": {
+    "text": "Lihat apa yang berubah selama Anda pergi, cari output terminal, dan buka lagi percakapan lama dari palet.",
+    "from": "1a640de790ee"
+  },
+  "home.trust.title": {
+    "text": "Terminal Anda tetap milik Anda",
+    "from": "c6f11f794209"
+  },
+  "home.trust.local.name": {
+    "text": "Hanya lokal",
+    "from": "c905013aab29"
+  },
+  "home.trust.local.text": {
+    "text": "Server mendengarkan di 127.0.0.1 dan memeriksa Host dan Origin setiap permintaan; pemakaian dari perangkat lain tetap mati sampai Anda menyiapkannya.",
+    "from": "cd7a0d902e0f"
+  },
+  "home.trust.outlive.name": {
+    "text": "Terminal bertahan lebih lama dari aplikasinya",
+    "from": "2c75df8acfc1"
+  },
+  "home.trust.outlive.text": {
+    "text": "Setiap terminal adalah sesi tmux: tutup browser atau mulai ulang Aubergine, dan pekerjaan Anda tetap berjalan.",
+    "from": "f913c3351663"
+  },
+  "home.trust.nomodel.name": {
+    "text": "Tanpa model, tanpa kunci",
+    "from": "2f070717231f"
+  },
+  "home.trust.nomodel.text": {
+    "text": "Aubergine tidak memilih atau memanggil model, dan tidak menyimpan kunci untuk model; agen Anda membawa sendiri.",
+    "from": "fe25a0ed6b54"
+  },
+  "home.trust.decide.name": {
+    "text": "Anda yang memutuskan",
+    "from": "6a93d45962ec"
+  },
+  "home.trust.decide.text": {
+    "text": "Token punya lingkup, apa yang ditulis agen menunggu tinjauan Anda, dan persetujuan diberikan oleh orang.",
+    "from": "7e1645184727"
+  },
+  "home.trust.more": {
+    "text": "Apa yang dilindungi, dan apa yang tidak",
+    "from": "f0da10ecfe7d"
+  },
+  "home.install.title": {
+    "text": "Siap dipakai dalam lima menit",
+    "from": "ade3bbf9af01"
+  },
+  "home.install.intro": {
+    "text": "Anda memerlukan macOS dengan tmux 3.2 atau lebih baru dan Node.js 22 atau lebih baru. <code>brew install tmux node</code> memasang keduanya.",
+    "from": "fabf8314c9cb"
+  },
+  "home.install.s1.title": {
+    "text": "Instal",
+    "from": "569ca49f4aaf"
+  },
+  "home.install.s1.text": {
+    "text": "Atau pakai <a href=\"/install/\">installer</a>, yang membangun dari kode sumber dengan pnpm.",
+    "from": "506eece86d4a"
+  },
+  "home.install.s2.title": {
+    "text": "Jalankan dan buka browser",
+    "from": "09b350acdba9"
+  },
+  "home.install.s2.text": {
+    "text": "Perintah ini menjalankan server dan membuka browser Anda dalam keadaan sudah masuk.",
+    "from": "cc6fc15c6b0d"
+  },
+  "home.install.s3.title": {
+    "text": "Ikuti tur",
+    "from": "a83c4366d2df"
+  },
+  "home.install.s3.text": {
+    "text": "Klik <strong>Show me around</strong> (Tunjukkan sekeliling) di kanvas kosong. Ia membuat kanvas Demo berisi agen pengganti dan memandu Anda melalui delapan langkah singkat; <code>aubergine demo --remove</code> menghapusnya.",
+    "from": "b20f7c13bc30"
+  },
+  "home.install.note": {
+    "text": "Installer hanya mengubah <code>~/.aubergine</code> dan satu link bernama <code>aubergine</code>. Ia tidak pernah memakai sudo dan tidak pernah mengedit file startup shell Anda.",
+    "from": "1b03983d93c3"
+  },
+  "home.faq.title": {
+    "text": "Pertanyaan",
+    "from": "9a72221a2747"
+  },
+  "home.faq.what.q": {
+    "text": "Apa itu Aubergine?",
+    "from": "34bffd794522"
+  },
+  "home.faq.what.a": {
+    "text": "Kanvas lokal berbasis browser berisi sesi terminal. Setiap terminal adalah node yang bisa Anda atur dan pakai, sehingga Anda bisa menjalankan beberapa agen coding sekaligus dan melihat mana yang sedang menunggu Anda.",
+    "from": "e2699684c13a"
+  },
+  "home.faq.send.q": {
+    "text": "Apakah Aubergine mengirim terminal atau kode saya ke suatu tempat?",
+    "from": "8e3369fd3214"
+  },
+  "home.faq.send.a": {
+    "text": "Tidak. Semuanya berjalan di komputer Anda sendiri. Server hanya mendengarkan di 127.0.0.1 dan memeriksa Host dan Origin setiap permintaan.",
+    "from": "df08013e9725"
+  },
+  "home.faq.need.q": {
+    "text": "Apa yang saya perlukan untuk menjalankan Aubergine?",
+    "from": "efe26fb96381"
+  },
+  "home.faq.need.a": {
+    "text": "macOS dengan tmux 3.2 atau lebih baru dan Node.js 22 atau lebih baru; installer juga memerlukan pnpm. Linux seharusnya bisa, tetapi belum diuji.",
+    "from": "50e15eb9d5c0"
+  },
+  "home.faq.byhand.q": {
+    "text": "Bagaimana jika saya menjalankan Claude Code sendiri di terminal?",
+    "from": "e8281791e5fb"
+  },
+  "home.faq.byhand.a": {
+    "text": "Ia bekerja seperti program lain: Anda mengetik kepadanya seperti biasa. Tetapi Aubergine hanya tahu ada agen di sana jika Aubergine sendiri yang menjalankannya (New terminal, lalu Claude Code), karena ia menambahkan beberapa hook kecil yang melaporkan apa yang dikerjakan agen. Jika dijalankan manual, terminal hanya tampak sibuk menjalankan <code>claude</code>: ia tidak ditandai waiting for you saat bertanya, dan saat Anda memulai workflow di sana, tidak ada yang diketikkan untuknya. Suruh ia sendiri menjalankan <code>aubergine workflow status</code>, yang tetap berfungsi dari dalam, atau jalankan agen dari menu New terminal saja.",
+    "from": "23c877f7b9d5"
+  },
+  "home.faq.free.q": {
+    "text": "Apakah Aubergine gratis?",
+    "from": "ff46b785dd7f"
+  },
+  "home.faq.free.a": {
+    "text": "Ya. Aubergine gratis dan open source di bawah <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE\">lisensi MIT</a>, dan kode sumbernya ada di GitHub.",
+    "from": "30fae4a08af7"
+  },
+  "home.faq.more": {
+    "text": "Semua pertanyaan",
+    "from": "57bf5a60dd59"
+  },
+  "home.planned.title": {
+    "text": "Apa yang direncanakan",
+    "from": "e10eed0040ae"
+  },
+  "home.planned.line": {
+    "text": "Multiplayer, agen di cloud, mode persetujuan, dan lainnya direncanakan dan belum dibuat. <a href=\"/roadmap/\">Lihat peta jalan</a>.",
+    "from": "5c6d1db70932"
+  },
+  "claude.meta.title": {
+    "text": "Claude Code di Aubergine | Aubergine",
+    "from": "964ec2c2f3df"
+  },
+  "claude.meta.description": {
+    "text": "Apa yang dilakukan Aubergine sendiri untuk Claude Code: menjalankannya dari menu, melihat saat ia menunggu, melanjutkan percakapan, percakapan lama, bagaimana ia disiapkan, dan alat.",
+    "from": "53c5a33c5a7d"
+  },
+  "claude.title": {
+    "text": "Apa yang dilakukan Aubergine untuk Claude Code",
+    "from": "d05c8e0b3f82"
+  },
+  "claude.lead": {
+    "text": "Claude Code berjalan di terminal Aubergine seperti program lain. Jika dijalankan dari Aubergine, ia juga memberi tahu kanvas apa yang sedang ia kerjakan, dan Aubergine bisa memberinya arahan, melanjutkannya, dan menunjukkan bagaimana ia disiapkan. Inilah semuanya, sesuai urutan Anda menjumpainya.",
+    "from": "48626cf950ce"
+  },
+  "claude.yours": {
+    "text": "Anda sendiri yang menginstal Claude Code dan masuk ke dalamnya. Aubergine tidak memanggil model dan tidak menyimpan kunci: ia menjalankan perintah <code>claude</code> yang sudah Anda punya.",
+    "from": "49c81d042977"
+  },
+  "claude.start.title": {
+    "text": "Jalankan dari menu",
+    "from": "f2e4406e142f"
+  },
+  "claude.start.text": {
+    "text": "<strong>New terminal ▾ → Claude Code</strong>, atau <code>C</code> saat tidak ada terminal yang memegang keyboard, menjalankan <code>claude</code> di terminal baru dengan file pengaturan yang ditulis Aubergine di folder datanya sendiri. Konfigurasi Claude Code Anda sendiri tidak disentuh.",
+    "from": "58f4f8786edb"
+  },
+  "claude.start.command": {
+    "text": "Perintah yang dijalankan adalah <code>agents.claudeCommand</code> di pengaturan, yaitu <code>claude</code> kecuali Anda mengubahnya; Aubergine menambahkan flag-nya sendiri di akhir.",
+    "from": "cadf315d3f4f"
+  },
+  "claude.start.where": {
+    "text": "Lokasi: menu di samping New terminal, di bagian atas daftar terminal.",
+    "from": "8535ecc3618e"
+  },
+  "claude.state.title": {
+    "text": "Lihat saat ia bekerja, menunggu, dan selesai",
+    "from": "762bb49f53ad"
+  },
+  "claude.state.text": {
+    "text": "Hook di file pengaturan itu memberi tahu kanvas apa yang dikerjakan agen. Saat Anda mengirim prompt, prompt itu ditambahkan ke log catatan terminal dan terminal menampilkan <strong>working</strong>. Saat agen membutuhkan Anda, karena pertanyaan izin atau karena ia diam menunggu input, garisnya berganti ke warna menunggu dan judul serta barisnya bertuliskan <strong>waiting for you</strong>. Saat berhenti, ia menampilkan <strong>finished</strong>.",
+    "from": "64ec1f0a81c2"
+  },
+  "claude.state.more": {
+    "text": "<code>W</code> pindah ke terminal berikutnya yang menunggu, dan <strong>Notify</strong> menyalakan notifikasi desktop untuk terminal yang mulai menunggu. Prompt bisa berisi rahasia: <code>\"agents\": { \"logPrompts\": false }</code> di <code>config.json</code> menjauhkannya dari log catatan.",
+    "from": "8d17a75b0b6f"
+  },
+  "claude.state.where": {
+    "text": "Lokasi: judul terminal, barisnya di daftar, dan angka di samping For you di bagian atas.",
+    "from": "4069b9f958a3"
+  },
+  "claude.byhand.title": {
+    "text": "Claude Code yang Anda jalankan sendiri",
+    "from": "4e9410ab2c6a"
+  },
+  "claude.byhand.text": {
+    "text": "Diketik manual di terminal biasa, <code>claude</code> bekerja seperti program lain, tetapi Aubergine hanya melihat shell yang sibuk menjalankannya: tidak ada waiting for you, dan tidak ada yang diketikkan untuknya saat Anda memulai workflow di sana. Untuk mengubahnya, cetak hook-nya dan tambahkan sendiri ke pengaturan Claude Code Anda. Hook itu tidak melakukan apa-apa di luar terminal Aubergine.",
+    "from": "fa6fba9030be"
+  },
+  "claude.describe.title": {
+    "text": "Ia menamai dirinya dan menyimpan ringkasan",
+    "from": "d093aa41e5df"
+  },
+  "claude.describe.text": {
+    "text": "Agen yang dijalankan Aubergine diberi tahu saat mulai untuk menamai terminalnya sesuai pekerjaan dan menyimpan ringkasan, dengan <code>aubergine describe</code>, <code>aubergine link add</code> dan <code>aubergine field set</code>, dan diingatkan sekali saat berhenti tanpa nama sendiri atau tanpa ringkasan. Apa yang Anda tulis sendiri yang berlaku; apa yang dikatakan agen tentang hal yang sama menunggu di sebelahnya dengan <strong>Use this</strong>. Pengingat bisa dimatikan di <strong>Settings</strong>.",
+    "from": "b3ada1af2f57"
+  },
+  "claude.describe.where": {
+    "text": "Lokasi: detail terminal, dengan nama, ringkasan, field, dan link-nya.",
+    "from": "14d403dcf75f"
+  },
+  "claude.told.title": {
+    "text": "Workflow, tugas, rekap, dan pesan sampai kepadanya",
+    "from": "65f0d98fe0d0"
+  },
+  "claude.told.text": {
+    "text": "Aubergine mengetikkan empat kalimat tetap ke terminal, dan hanya ini: bahwa sebuah workflow dimulai, bahwa agen diminta menulis sesuatu, bahwa Anda meminta rekap, dan bahwa ada pesan yang menunggu. Masing-masing menyebut satu perintah untuk dijalankan agen. Kalimat hanya diketikkan di tempat yang terlihat ada agen memegang keyboard: agen yang dijalankan Aubergine, atau agen yang pengaturannya berisi hook dari <code>aubergine hooks print</code>.",
+    "from": "a965be64fc8b"
+  },
+  "claude.told.more": {
+    "text": "Dengan cara yang sama, tugas dari antrean hanya diberikan ke terminal yang agennya seperti itu sedang di depan dan bebas, dan <strong>Claude Code on a workflow…</strong> membuka terminal baru yang agennya diberi tahu tentang run itu di prompt pertamanya.",
+    "from": "4db5493b4c50"
+  },
+  "claude.told.where": {
+    "text": "Lokasi: <strong>Run a workflow…</strong> di menu judul terminal, dan <strong>Runs</strong> di bagian atas halaman.",
+    "from": "85ec8e15f827"
+  },
+  "claude.resume.title": {
+    "text": "Resume agent",
+    "from": "0bb60c450191"
+  },
+  "claude.resume.text": {
+    "text": "Aubergine mengingat di percakapan mana sebuah terminal agen berada. Saat shell-nya kembali ke prompt, karena Anda keluar dari agen atau komputer dimulai ulang, terminal menawarkan <strong>Resume agent</strong> (lanjutkan agen), yang menjalankan agen lagi di percakapan itu. Pada terminal yang sedang dalam sebuah run, ia juga memberi tahu agen tentang run itu lagi.",
+    "from": "bad9c16cacaa"
+  },
+  "claude.resume.where": {
+    "text": "Lokasi: bilah judul terminal.",
+    "from": "f9a5a6f578cf"
+  },
+  "claude.history.title": {
+    "text": "Percakapan lama",
+    "from": "93b87f3b2adf"
+  },
+  "claude.history.text": {
+    "text": "<strong>Past conversations…</strong> mendaftar percakapan agen sebelumnya di sebuah folder: baca salah satunya, buka di kanvas, atau buka salinan yang membiarkan aslinya tetap seperti semula. Ketik <code>@</code> dan beberapa kata di palet untuk mencarinya; <code>aubergine history</code> mendaftarnya di command line. Tidak ada yang dibaca disimpan, dan tidak ada token maupun agen yang bisa membaca percakapan lewat Aubergine.",
+    "from": "168514a264d1"
+  },
+  "claude.history.form": {
+    "text": "Ia membaca file yang disimpan Claude Code, yang formatnya menurut pembuatnya adalah urusan internal dan berubah antarversi. Setelah agen diperbarui, nama dan transkrip mungkin lebih sedikit, dan catatan yang tidak bisa dibaca Aubergine dinyatakan begitu, tidak pernah ditampilkan sebagai kosong.",
+    "from": "08dc0e9d555c"
+  },
+  "claude.history.where": {
+    "text": "Lokasi: palet (<code>⌘K</code>), dan “Past conversations in this folder…” di detail terminal.",
+    "from": "3477b0fbf75a"
+  },
+  "claude.setup.title": {
+    "text": "Bagaimana ia disiapkan",
+    "from": "af61266588a1"
+  },
+  "claude.setup.text": {
+    "text": "Daftar apa saja yang menurut file konfigurasi agen telah diberikan kepadanya: server MCP, plugin, hook, skill, aturan izin, dan file pengaturan, masing-masing dengan asalnya, dan apa yang ditambahkan Aubergine. Hanya nama, tidak pernah nilai atau rahasia. Daftar ini menunjukkan bagaimana agen disiapkan, bukan apa yang sudah dimuat agen yang sedang berjalan, dan menyatakan dengan jelas apa yang tidak bisa ia ketahui, seperti konektor yang datang dari akun Anda.",
+    "from": "c514bb19fdee"
+  },
+  "claude.setup.where": {
+    "text": "Lokasi: <strong>⚙ on</strong> di terminal, “What is switched on for this agent…” di palet, dan detail terminal.",
+    "from": "a8c53c214fcc"
+  },
+  "claude.tools.title": {
+    "text": "Alat Aubergine untuknya",
+    "from": "e66ee8e8e0bc"
+  },
+  "claude.tools.text": {
+    "text": "<strong>Claude Code with Aubergine tools…</strong> pertama-tama menanyakan apa yang boleh dilakukan agen: <strong>None</strong> (tidak ada); <strong>Its own work only</strong> (hanya pekerjaannya sendiri), dengan kredensial terminal itu sendiri; atau <strong>More…</strong> (lainnya), lingkup yang Anda pilih, di mana sebuah token dibuat untuk satu terminal itu dan dicabut saat terminal diakhiri untuk selamanya. Alatnya adalah <code>aubergine mcp</code>, diberikan ke agen di baris peluncurannya; konfigurasi agen itu sendiri tidak ditulis.",
+    "from": "6f42a9f284d0"
+  },
+  "claude.tools.where": {
+    "text": "Lokasi: menu di samping New terminal.",
+    "from": "33b77d6aeba6"
+  },
+  "claude.move.title": {
+    "text": "Pindahkan Claude Code yang sudah Anda buka",
+    "from": "71713eb1febd"
+  },
+  "claude.move.text": {
+    "text": "Agen yang sedang berjalan tidak bisa dipindahkan, tetapi percakapannya bisa. <strong>Open elsewhere</strong> mendaftar tab Claude Code Anda, dengan <strong>Fork to canvas</strong> dan, untuk agen yang diam, <strong>Stop and resume here</strong>, yang bertanya kepada Anda dulu. Dari terminal, <code>aubergine move</code> melakukan hal yang sama, dan <code>aubergine here --claude</code> menjalankan Claude Code di kanvas yang melanjutkan percakapan terakhir folder itu.",
+    "from": "2710d35e40f6"
+  },
+  "claude.move.where": {
+    "text": "Lokasi: <strong>Open elsewhere</strong> di bilah di atas kanvas, atau <code>O</code>.",
+    "from": "957b9c5d2c08"
+  },
+  "claude.copy.title": {
+    "text": "Di salinan kerjanya sendiri",
+    "from": "88b0fbc30823"
+  },
+  "claude.copy.text": {
+    "text": "<code>aubergine here --copy --claude</code> menjalankan Claude Code di checkout repositori miliknya sendiri, di branch sendiri, sehingga dua agen tidak pernah mengedit file yang sama. Dialog untuk terminal Claude Code dengan alat punya pilihan yang sama.",
+    "from": "d952aaa25439"
+  },
+  "claude.tried.title": {
+    "text": "Apa yang sudah dicoba",
+    "from": "dc4245eb9cbd"
+  },
+  "claude.tried.text": {
+    "text": "Demo yang disertakan dengan Aubergine memakai pengganti, yaitu skrip pendek yang menjalankan perintah dan hook yang sama seperti agen sungguhan, bukan Claude Code sungguhan. Dengan agen sungguhan, persetujuan, salinan kerja, tugas dari antrean, dan jadwal belum dicoba.",
+    "from": "d7b31de7e83d"
+  },
+  "claude.others": {
+    "text": "Agen lain bisa menyampaikan sebagian besar hal ini lewat perintah <code>aubergine</code>: lihat <a href=\"/chatgpt/\">Codex dan ChatGPT</a>.",
+    "from": "a37bd1ffdb77"
+  },
+  "claude.mark": {
+    "text": "Aubergine tidak berafiliasi dengan Anthropic. Claude dan Claude Code adalah merek dagang Anthropic.",
+    "from": "cdae060f0648"
+  },
+  "chatgpt.meta.title": {
+    "text": "Codex dan ChatGPT di Aubergine | Aubergine",
+    "from": "8dcd1dde8945"
+  },
+  "chatgpt.meta.description": {
+    "text": "Codex, agen coding command-line dari OpenAI, berjalan di terminal Aubergine seperti program lain. Apa yang berfungsi hari ini, apa yang bisa ia laporkan lewat perintah aubergine, dan apa yang hanya dibuat untuk Claude Code.",
+    "from": "6f8c78d52c06"
+  },
+  "chatgpt.crumb": {
+    "text": "Codex dan ChatGPT",
+    "from": "38c13bed7dca"
+  },
+  "chatgpt.title": {
+    "text": "Codex dan ChatGPT",
+    "from": "38c13bed7dca"
+  },
+  "chatgpt.lead": {
+    "text": "Codex adalah agen coding command-line dari OpenAI. Anda menginstalnya dan masuk ke dalamnya sendiri; di Aubergine ia berjalan di terminal seperti program lain.",
+    "from": "70f25216735c"
+  },
+  "chatgpt.untried.title": {
+    "text": "Belum dicoba",
+    "from": "b0889cc96cfa"
+  },
+  "chatgpt.untried.text": {
+    "text": "Belum ada yang menjalankan Codex sungguhan di Aubergine. Isi halaman ini adalah apa yang dilakukan Aubergine untuk program apa pun di terminal dan untuk perintah <code>aubergine</code>, yang sudah dibuat dan diuji; bagaimana Codex sendiri berperilaku di sana belum terlihat. Jika Anda mencobanya, <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">ceritakan hasilnya</a>.",
+    "from": "fbfa21211143"
+  },
+  "chatgpt.start.title": {
+    "text": "Menjalankannya",
+    "from": "4238a078a056"
+  },
+  "chatgpt.start.text": {
+    "text": "Buka terminal dengan <strong>New terminal</strong>, atau <code>N</code>, dan jalankan Codex di dalamnya seperti di terminal mana pun. Aubergine tidak memanggil model dan tidak menyimpan kunci: apa yang dibutuhkan Codex sudah Anda berikan saat masuk ke dalamnya.",
+    "from": "382ba4da4e80"
+  },
+  "chatgpt.works.title": {
+    "text": "Apa yang berfungsi hari ini",
+    "from": "e34f6b7e46b1"
+  },
+  "chatgpt.works.intro": {
+    "text": "Semua yang dilakukan Aubergine untuk terminal mana pun:",
+    "from": "12590cf44023"
+  },
+  "chatgpt.works.side.name": {
+    "text": "Berdampingan",
+    "from": "a3d7b387c34d"
+  },
+  "chatgpt.works.side.text": {
+    "text": "Terminal sebanyak yang Anda mau di satu kanvas, dan kanvas sebagai tab.",
+    "from": "dbf89836ed55"
+  },
+  "chatgpt.works.status.name": {
+    "text": "Status perintah",
+    "from": "fe494b43cb4b"
+  },
+  "chatgpt.works.status.text": {
+    "text": "Dengan zsh, judul terminal menunjukkan bahwa sebuah perintah sedang berjalan, dan perintah apa.",
+    "from": "4c2760707e62"
+  },
+  "chatgpt.works.keep.name": {
+    "text": "Warna, catatan, dan field",
+    "from": "6a46e4fad859"
+  },
+  "chatgpt.works.keep.text": {
+    "text": "Beri terminalnya warna, simpan catatan dengan ringkasan dan log, dan field seperti tiket atau pemilik.",
+    "from": "ee6d1af56cf5"
+  },
+  "chatgpt.works.park.name": {
+    "text": "Menyimpan terminal (parking)",
+    "from": "4a64d6c849df"
+  },
+  "chatgpt.works.park.text": {
+    "text": "× menyimpan terminal: ia meninggalkan kanvas dan tetap berjalan, dan <strong>Parked</strong> mengembalikannya.",
+    "from": "ddc50d8a2017"
+  },
+  "chatgpt.works.focus.name": {
+    "text": "Satu terminal tersendiri",
+    "from": "0ddd4013565e"
+  },
+  "chatgpt.works.focus.text": {
+    "text": "Buka terminal di tab browser tersendiri, dengan detail dan catatannya di sebelahnya.",
+    "from": "55d7e4f4f460"
+  },
+  "chatgpt.works.copy.name": {
+    "text": "Salinan kerja",
+    "from": "2e0960650715"
+  },
+  "chatgpt.works.copy.text": {
+    "text": "<strong>Shell in a folder or a working copy…</strong>, atau <code>aubergine new --copy</code>, menjalankan terminal di checkout-nya sendiri di branch sendiri, sehingga dua agen tidak pernah mengedit file yang sama.",
+    "from": "9abe578a4127"
+  },
+  "chatgpt.works.search.name": {
+    "text": "Pencarian output",
+    "from": "0f487fa9a292"
+  },
+  "chatgpt.works.search.text": {
+    "text": "<code>⌘K</code> mencari apa yang dicetak setiap terminal, dan membuka terminal yang sudah digulir kembali ke hasil yang cocok.",
+    "from": "60d93140539a"
+  },
+  "chatgpt.report.title": {
+    "text": "Apa yang bisa ia sampaikan lewat perintah",
+    "from": "0e02d0340875"
+  },
+  "chatgpt.report.intro": {
+    "text": "Setiap terminal Aubergine punya perintah <code>aubergine</code> dan kredensial khusus untuk terminal itu saja. Program apa pun di sana, termasuk Codex, bisa memakainya:",
+    "from": "60b4ba06f8a5"
+  },
+  "chatgpt.report.attention": {
+    "text": "Menandai terminal sebagai waiting for you, beserta apa yang dibutuhkannya; <code>aubergine attention working</code> dan <code>aubergine attention done</code> menyampaikan sisanya.",
+    "from": "ed9452d7523a"
+  },
+  "chatgpt.report.note": {
+    "text": "Menambahkan satu baris ke log catatan terminal.",
+    "from": "a99a9a2851ea"
+  },
+  "chatgpt.report.describe": {
+    "text": "Menamai terminal sesuai pekerjaan dan menyimpan ringkasannya; <code>aubergine link add</code> dan <code>aubergine field set</code> menambahkan link dan field pekerjaan itu. Apa yang Anda tulis sendiri yang berlaku.",
+    "from": "4a69c7925e1d"
+  },
+  "chatgpt.report.workflow": {
+    "text": "Membaca langkah workflow saat ini; <code>aubergine workflow done</code> melaporkannya selesai dan mencetak langkah berikutnya.",
+    "from": "bfa2482d9f38"
+  },
+  "chatgpt.report.task": {
+    "text": "Mengusulkan tugas untuk antrean, dan <code>aubergine ask</code> meminta Anda melakukan sesuatu yang hanya bisa dilakukan orang. Keduanya menunggu di daftar Anda.",
+    "from": "f6a6658159c8"
+  },
+  "chatgpt.tell.title": {
+    "text": "Cara memberitahunya",
+    "from": "808fc16a4b54"
+  },
+  "chatgpt.tell.text": {
+    "text": "Codex tidak tahu tentang Aubergine sampai diberi tahu. Perintah ini mencetak lima baris untuk ditempel ke instruksi yang dibaca agen Anda di awal setiap percakapan dalam sebuah proyek; dokumentasinya sendiri menjelaskan di mana baris itu ditaruh:",
+    "from": "ad7d9c3cdf01"
+  },
+  "chatgpt.tell.after": {
+    "text": "Baris-baris itu menyuruhnya menjalankan <code>aubergine guide</code> sekali saat berada di terminal Aubergine, dan panduan itu menjelaskan sisanya. Aubergine hanya mencetak baris-baris itu dan tidak pernah menulisnya ke file mana pun.",
+    "from": "24aa468975b7"
+  },
+  "chatgpt.tell.mcp": {
+    "text": "Jika agen Anda bisa menjalankan server MCP, <code>aubergine mcp</code> menawarkan hal yang sama sebagai alat; di dalam terminal Aubergine ia tidak memerlukan alamat maupun token untuk pekerjaan terminal itu sendiri.",
+    "from": "7e1e9649a26d"
+  },
+  "chatgpt.only.title": {
+    "text": "Hari ini hanya dibuat untuk Claude Code",
+    "from": "13e4ac762aab"
+  },
+  "chatgpt.only.intro": {
+    "text": "Hal-hal yang dilakukan Aubergine sendiri untuk sebuah agen dibuat untuk Claude Code. Untuk Codex, hari ini:",
+    "from": "dcf7194de658"
+  },
+  "chatgpt.only.menu": {
+    "text": "Ia tidak ada di menu New terminal: Anda menjalankannya sendiri di terminal.",
+    "from": "51fe40c6c0b7"
+  },
+  "chatgpt.only.seen": {
+    "text": "Aubergine tidak melihatnya sebagai agen: ia tidak ditandai menunggu atau selesai dengan sendirinya, hanya saat ia menjalankan <code>aubergine attention</code>.",
+    "from": "94d90e71f3eb"
+  },
+  "chatgpt.only.typed": {
+    "text": "Tidak ada yang diketikkan untuknya: workflow yang dimulai di terminalnya tidak mengetikkan apa pun dan menampilkan baris yang harus Anda berikan sendiri, dan rekap atau pesan tidak diberitahukan kepadanya.",
+    "from": "1b4e07823075"
+  },
+  "chatgpt.only.queue": {
+    "text": "Antrean tidak memberinya tugas: tugas hanya diberikan ke terminal yang terlihat punya agen dan sedang bebas.",
+    "from": "6a80a3e587a3"
+  },
+  "chatgpt.only.resume": {
+    "text": "Tidak ada Resume agent, tidak ada daftar percakapan lama, tidak ada daftar bagaimana ia disiapkan, dan tidak ada dialog untuk alat Aubergine.",
+    "from": "ce8c093c0018"
+  },
+  "chatgpt.only.move": {
+    "text": "<code>aubergine move</code> dan <code>aubergine here --claude</code> hanya memindahkan Claude Code.",
+    "from": "66352f237ada"
+  },
+  "chatgpt.only.remind": {
+    "text": "Ia tidak diingatkan untuk menamai terminalnya atau menyimpan ringkasan.",
+    "from": "0b61446686d8"
+  },
+  "chatgpt.only.more": {
+    "text": "Semuanya ada di halaman <a href=\"/claude/\">Claude Code</a>.",
+    "from": "0bd32ffbda24"
+  },
+  "chatgpt.browser.title": {
+    "text": "ChatGPT di browser",
+    "from": "586ec4475558"
+  },
+  "chatgpt.browser.text": {
+    "text": "ChatGPT di tab browser adalah halaman web, bukan program di terminal, jadi ia tidak berjalan di kanvas.",
+    "from": "580874279183"
+  },
+  "chatgpt.mark": {
+    "text": "Aubergine tidak berafiliasi dengan OpenAI. Codex dan ChatGPT adalah merek dagang OpenAI.",
+    "from": "a897a2ac5a2d"
+  },
+  "install.meta.title": {
+    "text": "Cara menginstal Aubergine di macOS | Aubergine",
+    "from": "a8bd952c734f"
+  },
+  "install.meta.description": {
+    "text": "Instal Aubergine dengan satu perintah, jalankan, dan ikuti tur lima menit. Persyaratan, apa yang diubah installer, dan solusi untuk masalah umum.",
+    "from": "abcd815ec344"
+  },
+  "install.crumb": {
+    "text": "Instalasi",
+    "from": "569ca49f4aaf"
+  },
+  "install.title": {
+    "text": "Cara menginstal Aubergine",
+    "from": "71f80d2b2ec8"
+  },
+  "install.lead": {
+    "text": "Satu perintah untuk menginstal, satu untuk menjalankan. Sekitar lima menit, termasuk tur.",
+    "from": "8924d3085c0c"
+  },
+  "install.req.title": {
+    "text": "Persyaratan",
+    "from": "e0cdd07f6a27"
+  },
+  "install.req.os": {
+    "text": "macOS. Linux seharusnya bekerja dengan cara yang sama, tetapi belum diuji.",
+    "from": "e896cb710692"
+  },
+  "install.req.tools": {
+    "text": "<a href=\"https://github.com/tmux/tmux\">tmux</a> 3.2 atau lebih baru dan Node.js 22 atau lebih baru. Installer juga memerlukan pnpm.",
+    "from": "588e2ab2ee94"
+  },
+  "install.req.brew": {
+    "text": "Dengan <a href=\"https://brew.sh\">Homebrew</a>, satu baris memasang keduanya (tambahkan <code>pnpm</code> untuk installer):",
+    "from": "9c116b9ec828"
+  },
+  "install.steps.title": {
+    "text": "Instal dan jalankan",
+    "from": "945ef89608d4"
+  },
+  "install.steps.npm": {
+    "text": "<strong>Instal Aubergine</strong> dari npm (hanya perlu tmux dan Node.js):",
+    "from": "eea62c4639cd"
+  },
+  "install.steps.script": {
+    "text": "Atau dengan installer, yang juga memerlukan pnpm dan membangun dari kode sumber:",
+    "from": "d6b9bd23fe72"
+  },
+  "install.steps.start": {
+    "text": "<strong>Jalankan dan buka browser Anda dalam keadaan sudah masuk.</strong>",
+    "from": "37654a734fd0"
+  },
+  "install.steps.tour": {
+    "text": "<strong>Ikuti tur.</strong> Klik <em>Show me around</em> di tengah kanvas kosong. Ia membuat kanvas bernama “Demo” dengan beberapa agen pengganti dan memandu Anda melalui delapan langkah singkat. Tidak ada yang sungguhan di demo, dan <code>aubergine demo --remove</code> menghapusnya.",
+    "from": "e7f179f7c61a"
+  },
+  "install.steps.read": {
+    "text": "Lebih suka membaca skripnya dulu? Unduh, baca, lalu jalankan <code>sh install.sh --dry-run</code> untuk melihat apa yang akan dilakukannya tanpa mengubah apa pun.",
+    "from": "6a20dd49876a"
+  },
+  "install.changes.title": {
+    "text": "Apa yang diubah installer",
+    "from": "0563a99f51ff"
+  },
+  "install.changes.text": {
+    "text": "Hanya dua hal: folder instalasi (<code>~/.aubergine</code>, atau <code>AUBERGINE_HOME</code>) dan satu link bernama <code>aubergine</code> di folder pada <code>PATH</code> Anda yang bisa Anda tulisi. Ia memeriksa semuanya terlebih dahulu dan tidak mengubah apa pun jika ada yang kurang.",
+    "from": "0a825e326d78"
+  },
+  "install.changes.not": {
+    "text": "<strong>Ia tidak</strong> memakai <code>sudo</code>, mengedit file startup shell Anda, menginstal Node.js, pnpm, atau tmux, atau menyentuh folder data Anda.",
+    "from": "2515db06f3ef"
+  },
+  "install.wrong.title": {
+    "text": "Jika ada yang salah",
+    "from": "1a766f8f96ef"
+  },
+  "install.wrong.doctor": {
+    "text": "Jalankan <code>aubergine doctor</code> dulu. Ia memeriksa penyebab yang biasa.",
+    "from": "41b2c2485b07"
+  },
+  "install.wrong.see": {
+    "text": "Yang Anda lihat",
+    "from": "fd4e554fab6a"
+  },
+  "install.wrong.do": {
+    "text": "Yang perlu dilakukan",
+    "from": "f47f1edc44ed"
+  },
+  "install.wrong.signin.see": {
+    "text": "“This browser is not signed in yet”",
+    "from": "9f5b94b25ed4"
+  },
+  "install.wrong.signin.do": {
+    "text": "Buka link masuk sekali di browser itu. <code>aubergine open --print</code> mencetaknya lagi.",
+    "from": "965c7c3ed508"
+  },
+  "install.wrong.tmux.see": {
+    "text": "Halaman yang menyatakan tmux tidak ada atau terlalu lama",
+    "from": "ef3468da7805"
+  },
+  "install.wrong.tmux.do": {
+    "text": "Instal atau perbarui tmux (<code>brew install tmux</code>), lalu mulai ulang server.",
+    "from": "9be03214def8"
+  },
+  "install.wrong.port.see": {
+    "text": "Server tidak mau berjalan karena port sudah dipakai",
+    "from": "aa6f2b6e17dc"
+  },
+  "install.wrong.port.do": {
+    "text": "Pakai port lain: <code>AUBERGINE_PORT=4700 aubergine start</code>.",
+    "from": "25b1179a84ca"
+  },
+  "install.wrong.path.do": {
+    "text": "Link tidak ada di <code>PATH</code> Anda. Installer mencetak satu baris yang perlu ditambahkan ke file startup shell Anda.",
+    "from": "c15d51fbb74f"
+  },
+  "install.wrong.badges.see": {
+    "text": "Terminal tidak menampilkan badge status",
+    "from": "00220a528dae"
+  },
+  "install.wrong.badges.do": {
+    "text": "Status memerlukan zsh, dan sesi yang dibuat sebelum pembaruan tetap memakai shell lamanya. Simpan (park) terminal itu dan mulai yang baru.",
+    "from": "a82cc898a1f3"
+  },
+  "install.later.title": {
+    "text": "Menghentikan, memperbarui, menghapus",
+    "from": "8c6be2046c96"
+  },
+  "install.later.stop": {
+    "text": "<strong>Hentikan</strong> server dengan Ctrl+C. Terminal Anda tetap berjalan; jalankan server lagi dan muat ulang halaman untuk mendapatkannya kembali.",
+    "from": "1ef7650944a8"
+  },
+  "install.later.update": {
+    "text": "<strong>Perbarui</strong>, jika Anda menginstal dengan npm, dengan <code>npm install -g @meatgarden/aubergine@latest</code>; jika memakai installer, dengan <code>aubergine update</code>. Lalu mulai ulang server.",
+    "from": "a07a85ca11ea"
+  },
+  "install.later.uninstall": {
+    "text": "<strong>Hapus</strong> dengan <code>aubergine uninstall</code>. Ia menghapus link dan, setelah bertanya, salinan yang dibuat installer. Ia tidak pernah menghapus data Anda dan tidak pernah mengakhiri terminal Anda.",
+    "from": "6d77ba78aea3"
+  },
+  "install.later.login": {
+    "text": "<strong>Jalankan saat login</strong> dengan <code>aubergine service install</code>, sehingga Anda cukup membuka browser.",
+    "from": "e90077683d1e"
+  },
+  "install.next.title": {
+    "text": "Selanjutnya",
+    "from": "1ff57a29d7c9"
+  },
+  "install.next.text": {
+    "text": "Baca <a href=\"/run-multiple-coding-agents/\">cara menjalankan beberapa agen coding sekaligus</a>, atau <a href=\"/guides/\">panduan</a>. Referensi lengkapnya ada di <a href=\"https://github.com/thirstyeggplant/aubergine#readme\">README</a>.",
+    "from": "e0f26d3bf925"
+  },
+  "install.ld.howto": {
+    "text": "Cara menginstal dan menjalankan Aubergine",
+    "from": "7a2473f8500b"
+  },
+  "install.ld.howtoAbout": {
+    "text": "Instal Aubergine di macOS dengan satu perintah, jalankan, dan ikuti tur.",
+    "from": "e0aeedb8e5ed"
+  },
+  "install.ld.s1": {
+    "text": "Instal persyaratannya",
+    "from": "058debbaf60f"
+  },
+  "install.ld.s2": {
+    "text": "Instal Aubergine",
+    "from": "733a8757545c"
+  },
+  "install.ld.s3": {
+    "text": "Jalankan dan buka browser",
+    "from": "8c7a8d4cca8c"
+  },
+  "install.ld.s4": {
+    "text": "Ikuti tur",
+    "from": "a83c4366d2df"
+  },
+  "install.ld.q1": {
+    "text": "Apa yang diubah installer Aubergine?",
+    "from": "3abbf9c3de69"
+  },
+  "install.ld.a1": {
+    "text": "Dua hal: folder instalasi (~/.aubergine, atau AUBERGINE_HOME) dan satu link bernama aubergine di PATH Anda. Ia tidak pernah memakai sudo, tidak pernah mengedit file startup shell Anda, dan tidak pernah menginstal Node.js, pnpm, atau tmux.",
+    "from": "fc93852fb9a6"
+  },
+  "install.ld.q2": {
+    "text": "Bagaimana cara memperbarui Aubergine?",
+    "from": "ac62d764ea7a"
+  },
+  "install.ld.a2": {
+    "text": "Jika diinstal dengan npm: jalankan npm install -g @meatgarden/aubergine@latest. Jika diinstal dengan installer: jalankan aubergine update, atau installer-nya lagi. Lalu mulai ulang server.",
+    "from": "96bfcbba99a6"
+  },
+  "install.ld.q3": {
+    "text": "Bagaimana cara menghapus Aubergine?",
+    "from": "5dbaf4c141c9"
+  },
+  "install.ld.a3": {
+    "text": "Jalankan aubergine uninstall. Ia menghapus link dan, setelah bertanya, salinan yang dibuat installer. Ia tidak pernah menghapus data Anda atau mengakhiri terminal Anda.",
+    "from": "829813dbf528"
+  },
+  "install.ld.q4": {
+    "text": "Apakah Aubergine berjalan di Linux atau Windows?",
+    "from": "e3df2a3fd915"
+  },
+  "install.ld.a4": {
+    "text": "Linux seharusnya bisa, tetapi belum diuji. Windows tidak didukung.",
+    "from": "b8b7b1d1037d"
+  },
+  "guides.meta.title": {
+    "text": "Panduan Aubergine | Aubergine",
+    "from": "0d501fb6af2e"
+  },
+  "guides.meta.description": {
+    "text": "Panduan menjalankan beberapa agen coding dengan Aubergine: gambaran umum, Claude Code dan Codex, salinan kerja, serta antrean dan jadwal.",
+    "from": "813ebf5cbbed"
+  },
+  "guides.crumb": {
+    "text": "Panduan",
+    "from": "572cd72feb9a"
+  },
+  "guides.title": {
+    "text": "Panduan",
+    "from": "572cd72feb9a"
+  },
+  "guides.lead": {
+    "text": "Panduan singkat dan praktis. Referensi lengkapnya adalah <a href=\"https://github.com/thirstyeggplant/aubergine#readme\">README</a>.",
+    "from": "4235a66ec40d"
+  },
+  "guides.install.name": {
+    "text": "Instal Aubergine",
+    "from": "733a8757545c"
+  },
+  "guides.install.text": {
+    "text": "Persyaratan, installer satu baris, apa yang diubahnya, dan solusi untuk masalah umum.",
+    "from": "0c229f404056"
+  },
+  "guides.several.name": {
+    "text": "Menjalankan beberapa agen coding sekaligus",
+    "from": "d9bedb06d9bf"
+  },
+  "guides.several.text": {
+    "text": "Kanvas, jumlah yang menunggu, antrean, salinan kerja, dan workflow dalam satu tur.",
+    "from": "432d38d0ca9c"
+  },
+  "guides.claude.name": {
+    "text": "Claude Code di Aubergine",
+    "from": "f05972fd315a"
+  },
+  "guides.claude.text": {
+    "text": "Apa yang dilakukan Aubergine sendiri untuk Claude Code, dan di mana letak masing-masing.",
+    "from": "f77c6acef73f"
+  },
+  "guides.codex.name": {
+    "text": "Codex dan ChatGPT",
+    "from": "38c13bed7dca"
+  },
+  "guides.codex.text": {
+    "text": "Codex di terminal seperti program lain, apa yang bisa ia laporkan, dan apa yang hanya dibuat untuk Claude Code.",
+    "from": "406a9eebc6ae"
+  },
+  "guides.copies.name": {
+    "text": "Salinan kerja",
+    "from": "9660dc116131"
+  },
+  "guides.copies.text": {
+    "text": "Beri setiap agen checkout dan branch sendiri agar dua agen tidak pernah mengedit file yang sama.",
+    "from": "58872d0caca2"
+  },
+  "guides.queue.name": {
+    "text": "Antrean, For you, dan jadwal",
+    "from": "61c48ccc941d"
+  },
+  "guides.queue.text": {
+    "text": "Bagikan pekerjaan sekali, lihat semua yang menunggu Anda, dan jalankan tugas pada waktu tertentu.",
+    "from": "28336b44a14a"
+  },
+  "guides.security.name": {
+    "text": "Keamanan dan privasi",
+    "from": "1418baab9c29"
+  },
+  "guides.security.text": {
+    "text": "Apa yang dilindungi, dan apa yang tidak.",
+    "from": "87046dc292ef"
+  },
+  "guides.faq.name": {
+    "text": "FAQ",
+    "from": "dbc468a14b60"
+  },
+  "guides.faq.text": {
+    "text": "Jawaban singkat untuk pertanyaan umum.",
+    "from": "ba6e629d77f3"
+  },
+  "several.meta.title": {
+    "text": "Cara menjalankan beberapa agen coding sekaligus | Aubergine",
+    "from": "edfa22b644ca"
+  },
+  "several.meta.description": {
+    "text": "Taruh setiap agen coding di terminalnya sendiri di satu kanvas, lihat mana yang menunggu Anda, bagikan pekerjaan dari antrean, dan pisahkan perubahan setiap agen.",
+    "from": "0886bd4868f2"
+  },
+  "several.crumb": {
+    "text": "Menjalankan beberapa agen",
+    "from": "8b0dc326e0f4"
+  },
+  "several.title": {
+    "text": "Cara menjalankan beberapa agen coding sekaligus",
+    "from": "fcc048eb4346"
+  },
+  "several.lead": {
+    "text": "Dua agen itu mudah. Lima agen itu kacau: mana yang macet, mana yang menunggu Anda, mana yang mengubah file itu? Aubergine dibuat untuk saat seperti itu. Ia berjalan di komputer Anda sendiri.",
+    "from": "66c0ad369837"
+  },
+  "several.canvas.title": {
+    "text": "1. Beri setiap agen satu terminal di satu kanvas",
+    "from": "4866382ee0cb"
+  },
+  "several.canvas.text": {
+    "text": "Klik <strong>New terminal</strong>, di bagian atas daftar terminal (atau tekan <code>N</code>), dan jalankan agen di dalamnya. Seret terminal lewat bilah judulnya, ubah ukurannya, dan kelompokkan dalam frame. Pekerjaan yang berkaitan ditaruh di satu kanvas; pekerjaan yang terpisah di kanvas (tab) terpisah atau di <em>proyek</em>, masing-masing dengan terminal, antrean, dan jadwalnya sendiri.",
+    "from": "1670aca324d5"
+  },
+  "several.canvas.tmux": {
+    "text": "Setiap terminal adalah shell sungguhan di sesi tmux. Tutup browser, atau hentikan Aubergine, dan agen Anda tetap berjalan.",
+    "from": "fcd6a03136f7"
+  },
+  "several.waits.title": {
+    "text": "2. Lihat agen mana yang membutuhkan Anda",
+    "from": "02af5cc81964"
+  },
+  "several.waits.text": {
+    "text": "Setiap terminal menunjukkan apakah ia sibuk, diam, atau menunggu Anda. Status itu berasal dari hook di shell Anda dan dari agen itu sendiri, bukan dari membaca layar. Angka di samping <strong>For you</strong> di bagian atas dan tombol <code>W</code> membawa Anda langsung ke terminal berikutnya yang menunggu.",
+    "from": "aa2e391970e3"
+  },
+  "several.waits.foryou": {
+    "text": "Satu daftar, <strong>For you</strong>, mengumpulkan semua yang menunggu seseorang: pertanyaan, run yang perlu disetujui, tugas selesai yang perlu dilihat, dan tugas gagal beserta alasannya.",
+    "from": "0791b2b7f30f"
+  },
+  "several.queue.title": {
+    "text": "3. Bagikan pekerjaan dari antrean",
+    "from": "876879f17f0c"
+  },
+  "several.queue.text": {
+    "text": "Tulis tugas sekali dan masukkan ke <a href=\"/queue-and-schedules/\">antrean</a>. Agen yang sedang bebas mengambilnya saat Anda menyuruhnya, dengan batas berapa yang berjalan sekaligus. Untuk pekerjaan yang berulang, atur jadwal. Agen bisa mengusulkan tugas dan bertanya kepada Anda, tetapi tidak ada yang dimulai sampai Anda menerimanya.",
+    "from": "65372959c515"
+  },
+  "several.apart.title": {
+    "text": "4. Pisahkan perubahan setiap agen",
+    "from": "819cc99b8d5c"
+  },
+  "several.apart.text": {
+    "text": "Dua agen di satu folder mengedit file yang sama. Jalankan masing-masing di <a href=\"/working-copies/\">salinan kerja</a> sendiri: checkout terpisah di branch sendiri, sehingga Anda bisa membaca pekerjaan setiap agen secara terpisah. Aubergine tidak pernah melakukan merge, push, atau rebase untuk Anda.",
+    "from": "5f5f23de12b5"
+  },
+  "several.steps.title": {
+    "text": "5. Beri agen langkah-langkah, dan putuskan di gerbangnya",
+    "from": "33923fa2da4c"
+  },
+  "several.steps.text": {
+    "text": "Workflow adalah daftar langkah berurutan yang diikuti agen, dengan strip yang menunjukkan posisinya. Sebuah langkah bisa menunggu Anda menyetujui atau mengembalikannya. Setiap run yang berjalan muncul di satu papan.",
+    "from": "f0912196c0fb"
+  },
+  "several.not.title": {
+    "text": "Apa yang tidak dilakukannya",
+    "from": "b3a53baf5dfd"
+  },
+  "several.not.model": {
+    "text": "Ia tidak memanggil model atau memilihkannya untuk Anda. Agennya milik Anda.",
+    "from": "0735098d7a82"
+  },
+  "several.not.asyou": {
+    "text": "Ia tidak mencegah agen melakukan sesuatu yang bisa Anda lakukan. Agen berjalan sebagai Anda. Lihat <a href=\"/security/\">keamanan</a> untuk apa yang dilindungi dan apa yang tidak.",
+    "from": "a24f01fbd135"
+  },
+  "several.not.one": {
+    "text": "Hari ini ia berjalan di satu komputer. Berbagi kanvas dengan orang lain dan menjalankan agen di cloud ada di <a href=\"/roadmap/\">peta jalan</a>, dan belum dibuat.",
+    "from": "ac3140a055a6"
+  },
+  "several.install": {
+    "text": "Instal Aubergine",
+    "from": "733a8757545c"
+  },
+  "several.ld.q1": {
+    "text": "Bagaimana cara menjalankan beberapa agen coding sekaligus?",
+    "from": "42c519b36444"
+  },
+  "several.ld.a1": {
+    "text": "Taruh setiap agen di terminalnya sendiri di kanvas Aubergine. Kanvas menunjukkan mana yang sibuk, diam, atau menunggu Anda, dan satu daftar bernama For you mengumpulkan setiap pertanyaan dan persetujuan.",
+    "from": "b878f9a6290f"
+  },
+  "several.ld.q2": {
+    "text": "Bagaimana agar dua agen tidak mengedit file yang sama?",
+    "from": "50c7b0247257"
+  },
+  "several.ld.a2": {
+    "text": "Jalankan setiap terminal di salinan kerjanya sendiri: checkout repositori miliknya sendiri di branch sendiri. Aubergine tidak pernah melakukan merge atau push untuk Anda.",
+    "from": "7da5b34834bf"
+  },
+  "several.ld.q3": {
+    "text": "Apakah ia bekerja dengan agen coding apa pun?",
+    "from": "a17347c2058b"
+  },
+  "several.ld.a3": {
+    "text": "Ya. Aubergine menjalankan terminal biasa, jadi agen command-line apa pun bisa berjalan di dalamnya. Hal-hal yang dilakukan Aubergine sendiri untuk sebuah agen dibuat untuk Claude Code; agen lain mana pun bisa melapor lewat perintah aubergine.",
+    "from": "60142c410708"
+  },
+  "copies.meta.title": {
+    "text": "Menjalankan dua agen coding di satu repositori dengan salinan kerja | Aubergine",
+    "from": "22fa024200af"
+  },
+  "copies.meta.description": {
+    "text": "Salinan kerja memberi setiap agen checkout dan branch repositori miliknya sendiri, sehingga dua agen tidak pernah mengedit file yang sama dan Anda bisa membaca pekerjaan masing-masing secara terpisah.",
+    "from": "a293deb1c990"
+  },
+  "copies.crumb": {
+    "text": "Salinan kerja",
+    "from": "9660dc116131"
+  },
+  "copies.title": {
+    "text": "Dua agen, satu repositori: salinan kerja",
+    "from": "acd55dc99e6b"
+  },
+  "copies.lead": {
+    "text": "Biasanya setiap terminal bekerja di folder Anda yang sebenarnya. Dua agen di satu repositori lalu mengedit file yang sama, dan Anda tidak bisa tahu perubahan mana milik siapa. Salinan kerja memberi setiap terminal checkout-nya sendiri, di branch sendiri.",
+    "from": "bca0754aab05"
+  },
+  "copies.start.title": {
+    "text": "Menjalankan terminal di salinan kerja",
+    "from": "288cfa5a3c70"
+  },
+  "copies.start.s1": {
+    "text": "Tekan <strong>▾</strong> di ujung <strong>New terminal</strong>, di bagian atas daftar terminal, lalu <strong>Shell in a folder or a working copy…</strong>.",
+    "from": "1b1addf2a211"
+  },
+  "copies.start.s2": {
+    "text": "Tentukan foldernya dan pilih <strong>In its own working copy</strong>. Pilihan ini hanya ditawarkan jika memungkinkan, dan menjelaskan alasannya jika tidak: bukan repositori Git, repositori bare, atau belum ada commit.",
+    "from": "8299d8f71e82"
+  },
+  "copies.start.cli": {
+    "text": "Dari terminal, hal yang sama:",
+    "from": "2e409315b41b"
+  },
+  "copies.get.title": {
+    "text": "Apa yang Anda dapat",
+    "from": "41a1acbef296"
+  },
+  "copies.get.text": {
+    "text": "Worktree Git di folder yang disimpan Aubergine di bawah folder datanya, tidak pernah di dalam repositori Anda, di branch baru bernama <code>aubergine/&lt;terminal name&gt;-&lt;six characters&gt;</code>. Ia dimulai dari commit tempat checkout Anda berada, dan terminal dimulai di subfolder yang sama dengan tempat Anda berada. Checkout Anda sendiri tidak pernah diubah: tidak file-nya, tidak apa yang sudah di-stage, tidak branch yang sedang Anda checkout.",
+    "from": "c06801122abd"
+  },
+  "copies.get.not": {
+    "text": "<strong>Tidak ikut terbawa:</strong> perubahan Anda yang belum di-commit (tidak ada yang di-stash atau di-commit untuk Anda), dan file yang diabaikan atau tidak dilacak Git, seperti dependensi yang sudah terpasang dan pengaturan lokal. Proyek yang perlu langkah instalasi perlu menjalankannya lagi di salinan kerja.",
+    "from": "131b661ca520"
+  },
+  "copies.read.title": {
+    "text": "Membaca apa yang diubah agen",
+    "from": "d455bd023725"
+  },
+  "copies.read.text": {
+    "text": "Terminal di salinan kerja menampilkan branch-nya dan jumlah file yang berbeda di bilah judulnya. Klik untuk melihat file yang diubah, ditambah, dan dihapus, dengan pekerjaan yang belum masuk commit mana pun ditandai, dan perbedaan hanya-baca untuk file mana pun yang Anda pilih.",
+    "from": "20954eec8106"
+  },
+  "copies.end.title": {
+    "text": "Saat terminal berakhir",
+    "from": "250be513dcc7"
+  },
+  "copies.end.text": {
+    "text": "Salinan kerja tidak pernah dihapus hanya karena terminalnya berakhir. Anda yang memilih:",
+    "from": "b2d17861d25a"
+  },
+  "copies.end.branch": {
+    "text": "<strong>Keep the branch, remove the folder</strong> (simpan branch, hapus folder), jika semuanya sudah di-commit.",
+    "from": "5d0203e6fc80"
+  },
+  "copies.end.keep": {
+    "text": "<strong>Keep everything.</strong> (Simpan semuanya.) Ia tetap ada di daftar, dengan keterangan bahwa terminalnya sudah tidak ada.",
+    "from": "a03d07a03a5a"
+  },
+  "copies.end.discard": {
+    "text": "<strong>Discard both</strong> (buang keduanya), yang bertanya untuk kedua kalinya jika salinan itu berisi pekerjaan yang tidak ada di tempat lain.",
+    "from": "6ae2c654ddf6"
+  },
+  "copies.end.never": {
+    "text": "Aubergine tidak pernah melakukan merge, push, atau rebase. Apa yang Anda lakukan dengan branch yang disimpan adalah urusan Anda.",
+    "from": "e9af3c7c1ccd"
+  },
+  "copies.git.title": {
+    "text": "Apa yang dijalankan Aubergine di repositori Anda",
+    "from": "3a32836a0505"
+  },
+  "copies.git.text": {
+    "text": "Aubergine memakai <code>git</code> di <code>PATH</code> Anda (2.31 atau lebih baru). Untuk setiap perintah Git yang dijalankannya, tidak ada hook yang berjalan, tidak ada yang meminta input, tidak ada yang menyentuh jaringan, dan submodule tidak diambil. Filter yang disebut di konfigurasi Git Anda sendiri, seperti penyimpanan file besar, tetap berjalan, seperti pada <code>git status</code> Anda sendiri.",
+    "from": "b36bf6176964"
+  },
+  "copies.sandbox.title": {
+    "text": "Ini bukan sandbox",
+    "from": "a4e45939dc38"
+  },
+  "copies.sandbox.text": {
+    "text": "Salinan kerja memisahkan pekerjaan. Ia tidak mengurung agen: agen berjalan sebagai Anda dan bisa membaca serta mengubah setiap file yang bisa Anda akses, termasuk checkout Anda sendiri. Jangan mengandalkannya untuk menahan agen yang berbuat salah. Lihat <a href=\"/security/\">keamanan</a>.",
+    "from": "12f777412114"
+  },
+  "copies.related": {
+    "text": "Terkait: <a href=\"/run-multiple-coding-agents/\">menjalankan beberapa agen coding sekaligus</a> · <a href=\"/queue-and-schedules/\">antrean dan jadwal</a> (tugas yang dimulai di terminal baru mendapat salinan kerjanya sendiri jika foldernya ada di repositori).",
+    "from": "489f01eef5df"
+  },
+  "copies.ld.howto": {
+    "text": "Cara menjalankan agen di salinan kerjanya sendiri",
+    "from": "6a1451788037"
+  },
+  "copies.ld.howtoAbout": {
+    "text": "Beri terminal checkout dan branch repositori miliknya sendiri.",
+    "from": "64a170729926"
+  },
+  "copies.ld.s1": {
+    "text": "Buka dialog terminal baru",
+    "from": "5bde830139dc"
+  },
+  "copies.ld.s1text": {
+    "text": "Tekan panah di ujung New terminal, di bagian atas daftar terminal, lalu Shell in a folder or a working copy.",
+    "from": "32bded457fe9"
+  },
+  "copies.ld.s2": {
+    "text": "Pilih In its own working copy",
+    "from": "63c9214f2664"
+  },
+  "copies.ld.s2text": {
+    "text": "Tentukan foldernya, yang harus berada di repositori Git dengan setidaknya satu commit, dan pilih In its own working copy.",
+    "from": "e0d93261f9f0"
+  },
+  "copies.ld.s3": {
+    "text": "Atau pakai command line",
+    "from": "0ee1f2056fa4"
+  },
+  "copies.ld.s4": {
+    "text": "Baca apa yang berubah",
+    "from": "bab32518bbd7"
+  },
+  "copies.ld.s4text": {
+    "text": "Klik branch di bilah judul terminal untuk melihat file yang diubah, ditambah, dan dihapus, serta perbedaan tiap file.",
+    "from": "357674609610"
+  },
+  "copies.ld.s5": {
+    "text": "Putuskan nasibnya",
+    "from": "b2b7c44a3193"
+  },
+  "copies.ld.s5text": {
+    "text": "Saat terminal berakhir, simpan branch dan hapus foldernya, simpan semuanya, atau buang keduanya.",
+    "from": "9fb24490ab62"
+  },
+  "copies.ld.q1": {
+    "text": "Apa itu salinan kerja di Aubergine?",
+    "from": "c29a3dde79ad"
+  },
+  "copies.ld.a1": {
+    "text": "Worktree Git: checkout kedua dari repositori yang sama, di branch barunya sendiri, disimpan di folder data Aubergine dan tidak pernah di dalam repositori Anda.",
+    "from": "ece33bda8bd9"
+  },
+  "copies.ld.q2": {
+    "text": "Apakah salinan kerja menyertakan perubahan saya yang belum di-commit?",
+    "from": "e87c77e35caf"
+  },
+  "copies.ld.a2": {
+    "text": "Tidak. Perubahan itu tidak ikut terbawa dan tidak disentuh. Commit dulu jika terminal baru harus memilikinya.",
+    "from": "fd51d7c79f2a"
+  },
+  "copies.ld.q3": {
+    "text": "Apakah Aubergine melakukan merge atau push branch salinan kerja?",
+    "from": "5ed71f558894"
+  },
+  "copies.ld.a3": {
+    "text": "Tidak. Aubergine tidak pernah melakukan merge, push, atau rebase, dan tidak pernah mengubah branch yang sedang Anda checkout.",
+    "from": "c35bdaa3b9fd"
+  },
+  "copies.ld.q4": {
+    "text": "Apakah salinan kerja itu sandbox?",
+    "from": "43526bb8ae8a"
+  },
+  "copies.ld.a4": {
+    "text": "Bukan. Ia memisahkan pekerjaan; ia tidak mengurung agen. Agen berjalan sebagai Anda dan tetap bisa membaca serta mengubah setiap file yang bisa Anda akses.",
+    "from": "8b760eb225ac"
+  },
+  "queue.meta.title": {
+    "text": "Antrean, daftar For you, dan jadwal | Aubergine",
+    "from": "aaf91b58a021"
+  },
+  "queue.meta.description": {
+    "text": "Tulis tugas sekali dan biarkan agen yang sedang bebas mengambilnya, lihat semua yang menunggu Anda di satu daftar, dan jalankan tugas pada waktu tertentu dengan jadwal.",
+    "from": "1eede965ade8"
+  },
+  "queue.crumb": {
+    "text": "Antrean dan jadwal",
+    "from": "403b3a701d15"
+  },
+  "queue.title": {
+    "text": "Antrean, “For you”, dan jadwal",
+    "from": "7f3e0c94e636"
+  },
+  "queue.lead": {
+    "text": "Dua daftar yang saling mengisi: antrean berisi pekerjaan untuk agen, dan <em>For you</em> berisi semua yang menunggu seseorang. Jadwal menambahkan tugas ke antrean pada waktu tertentu.",
+    "from": "b208af706f74"
+  },
+  "queue.queue.title": {
+    "text": "Antrean",
+    "from": "0d95744a342b"
+  },
+  "queue.queue.text": {
+    "text": "Buka <strong>Runs</strong> di bagian atas halaman (atau tekan <code>Q</code>) dan klik <strong>Add task</strong>. Sebuah tugas punya judul, apa yang harus dikerjakan, dan secara opsional folder, workflow, dan siapa yang boleh mengambilnya. Secara bawaan, terminal mana pun yang agennya sedang bebas boleh mengambilnya; Anda bisa menyebut satu terminal, atau meminta terminal agen baru dijalankan untuknya, di salinan kerjanya sendiri jika foldernya ada di repositori.",
+    "from": "989827036836"
+  },
+  "queue.queue.next": {
+    "text": "<strong>Start next</strong> memulai tugas pertama yang bisa diambil seseorang saat ini. Shell biasa tidak pernah diberi tugas.",
+    "from": "ae7829bbd4d8"
+  },
+  "queue.queue.limit": {
+    "text": "<strong>At most N at once</strong> (paling banyak N sekaligus), tiga kecuali Anda mengubahnya. <strong>Hold</strong> menghentikan mulainya tugas baru dan tidak menyentuh apa pun yang sedang berjalan.",
+    "from": "e2f51053f100"
+  },
+  "queue.queue.itself": {
+    "text": "<strong>Start by itself</strong> mati sampai Anda menyalakannya. Tidak ada yang memeriksa berdasarkan timer.",
+    "from": "c2a89a6c6733"
+  },
+  "queue.queue.order": {
+    "text": "Urutannya terserah Anda: seret tugas, atau pakai tombol panah.",
+    "from": "e3aa94f38bbc"
+  },
+  "queue.queue.follows": {
+    "text": "Tugas mengikuti run-nya: <em>needs you</em> saat run menunggu persetujuan, <em>done</em> saat selesai, <em>failed</em> dengan satu kalimat saat berhenti. Tidak ada yang dicoba ulang dengan sendirinya.",
+    "from": "a1dc88999acf"
+  },
+  "queue.pic.caption": {
+    "text": "For you di halaman Runs: sebuah pertanyaan, draf untuk dibaca, dan daftar yang diserahkan, masing-masing dengan keterangannya.",
+    "from": "b25234fa54ca"
+  },
+  "queue.pic.alt": {
+    "text": "Kolom Waiting for you di halaman Runs: kotak untuk menambah to-do, lalu pertanyaan dari agen pengganti, draf untuk dibaca, dan daftar yang diserahkan.",
+    "from": "9bc144e9c95e"
+  },
+  "queue.foryou.title": {
+    "text": "For you",
+    "from": "143134f93925"
+  },
+  "queue.foryou.text": {
+    "text": "Terminal dengan pertanyaan, run yang perlu disetujui atau terhambat, draf dan instalasi yang perlu dibaca, tugas yang diusulkan untuk antrean, tugas yang selesai dan gagal, daftar yang diserahkan agen, dan salinan kerja yang terminalnya sudah tidak ada. Angka di samping For you di bagian atas dan “next waiting” adalah daftar yang sama. Sebagian besar dikumpulkan, bukan ditulis: sebuah item hilang saat hal itu sendiri sudah selesai.",
+    "from": "f0987632af6e"
+  },
+  "queue.foryou.propose": {
+    "text": "Agen yang menemukan pekerjaan yang sebaiknya tidak ia kerjakan sekarang bisa mengusulkan tugas, dan agen yang membutuhkan orang bisa meminta kepada Anda:",
+    "from": "6cab942ae32c"
+  },
+  "queue.foryou.land": {
+    "text": "Keduanya masuk ke daftar Anda. Usulan tidak memulai apa pun sampai Anda menerimanya.",
+    "from": "b9045f914e0b"
+  },
+  "queue.schedules.title": {
+    "text": "Jadwal",
+    "from": "221ff19c904c"
+  },
+  "queue.schedules.text": {
+    "text": "Jadwal adalah jam dalam sehari, hari-hari dalam seminggu, sesuatu untuk dijalankan, dan tempat menjalankannya. Saat waktunya tiba, ia menambahkan satu tugas ke antrean, dan antrean yang memulainya. Di bawah <strong>Schedules</strong> di halaman Runs, atau <code>aubergine schedule</code>. Waktunya mengikuti jam komputer ini; tidak ada ekspresi dan tidak ada yang lebih sering dari sekali sehari.",
+    "from": "a43d6965e12f"
+  },
+  "queue.schedules.run": {
+    "text": "<code>aubergine schedule run</code> mencoba sebuah jadwal sekarang.",
+    "from": "433ccf3d7204"
+  },
+  "queue.plan.title": {
+    "text": "Saat tidak berjalan sesuai rencana",
+    "from": "0474d0b379f1"
+  },
+  "queue.plan.awake": {
+    "text": "Komputer harus menyala dan Aubergine berjalan. Waktu yang terlewat saat komputer tidur dijalankan <strong>sekali</strong> saat komputer kembali, ditandai terlambat, jika belum lewat enam jam. Jika tidak, ia ditandai <strong>missed</strong> (terlewat).",
+    "from": "da52cc0d963c"
+  },
+  "queue.plan.skipped": {
+    "text": "Selama tugas sebelumnya dari sebuah jadwal masih menunggu atau sedang dikerjakan, jadwal itu tidak menambah tugas lain, dan menyatakan bahwa ia dilewati.",
+    "from": "f076f68e0964"
+  },
+  "queue.plan.gone": {
+    "text": "Jika sesuatu yang disebutnya sudah tidak ada (terminal, langkah, kanvas), ia tidak berjalan, dan satu item di daftar Anda menyatakannya.",
+    "from": "bc76023361ed"
+  },
+  "queue.rules.title": {
+    "text": "Aturan",
+    "from": "4228aeb07c41"
+  },
+  "queue.rules.text": {
+    "text": "Di bawah <strong>Rules</strong>, Anda bisa menyatakan “saat sebuah tugas selesai, gagal, atau membutuhkan saya, atau sebuah jadwal berjalan atau terlewat, beri tahu saya atau jalankan langkah tersimpan”. Hanya Anda yang boleh menulis aturan: tidak ada program atau agen yang bisa menambah atau mengubahnya, dan sebuah aturan tidak bisa memicu dirinya sendiri.",
+    "from": "b4ec8a0da4e6"
+  },
+  "queue.rules.nothing": {
+    "text": "Aubergine tidak memanggil model dan tidak menyimpan kredensial untuk aplikasi apa pun. Tugas atau jadwal hanya memulai sebuah run; agen yang mengambilnya mengerjakan pekerjaan itu dengan alatnya sendiri.",
+    "from": "635fa52c391c"
+  },
+  "queue.related": {
+    "text": "Terkait: <a href=\"/working-copies/\">salinan kerja</a> · <a href=\"/run-multiple-coding-agents/\">menjalankan beberapa agen coding sekaligus</a>",
+    "from": "a1b112595d4a"
+  },
+  "queue.ld.headline": {
+    "text": "Antrean, daftar For you, dan jadwal",
+    "from": "e7aa7f29e008"
+  },
+  "queue.ld.q1": {
+    "text": "Apa itu antrean di Aubergine?",
+    "from": "f483ddf62dfe"
+  },
+  "queue.ld.a1": {
+    "text": "Pekerjaan untuk agen. Anda menulis tugas sekali, dengan judul, detail, dan secara opsional folder, workflow, dan siapa yang boleh mengambilnya. Agen yang sedang bebas mengambilnya saat Anda menyuruhnya.",
+    "from": "3d99add6ea00"
+  },
+  "queue.ld.q2": {
+    "text": "Apa itu daftar For you?",
+    "from": "10295c2a2707"
+  },
+  "queue.ld.a2": {
+    "text": "Semua yang menunggu seseorang di satu tempat: terminal dengan pertanyaan, run yang perlu disetujui, draf untuk dibaca, tugas yang selesai dan gagal, dan daftar yang diserahkan agen.",
+    "from": "4167a6eb1070"
+  },
+  "queue.ld.q3": {
+    "text": "Bisakah agen memulai pekerjaan sendiri?",
+    "from": "a9a38a49db05"
+  },
+  "queue.ld.a3": {
+    "text": "Agen bisa mengusulkan tugas atau meminta sesuatu kepada Anda, tetapi usulan tidak memulai apa pun sampai Anda menerimanya.",
+    "from": "75c93148284c"
+  },
+  "queue.ld.q4": {
+    "text": "Apa yang terjadi pada jadwal saat komputer saya tidur?",
+    "from": "09ef41a88ccf"
+  },
+  "queue.ld.a4": {
+    "text": "Tidak ada yang membangunkan komputer. Waktu yang terlewat saat komputer tidur dijalankan sekali saat komputer kembali, ditandai terlambat, jika kurang dari enam jam. Lebih dari itu, ia ditandai terlewat.",
+    "from": "28be43f4ec53"
+  },
+  "security.meta.title": {
+    "text": "Keamanan dan privasi | Aubergine",
+    "from": "ceea0328314d"
+  },
+  "security.meta.description": {
+    "text": "Aubergine hanya berjalan di komputer Anda, mendengarkan di 127.0.0.1, memeriksa setiap permintaan, memberi lingkup pada setiap token, dan menyatakan dengan jelas apa yang tidak dilindunginya.",
+    "from": "d44a642ead3b"
+  },
+  "security.crumb": {
+    "text": "Keamanan",
+    "from": "8f6fb4eb7f42"
+  },
+  "security.title": {
+    "text": "Keamanan dan privasi",
+    "from": "1418baab9c29"
+  },
+  "security.lead": {
+    "text": "Apa yang dilakukan Aubergine untuk melindungi terminal Anda, dan, sama pentingnya, apa yang tidak. Versi singkatnya: ia lokal, ia bertanya sebelum bertindak untuk agen, dan agen tetap berjalan sebagai Anda.",
+    "from": "1026aabf288c"
+  },
+  "security.local.title": {
+    "text": "Semuanya tetap di komputer Anda",
+    "from": "793ac3d2607e"
+  },
+  "security.local.bind": {
+    "text": "Server hanya terikat ke <code>127.0.0.1</code>. Setiap permintaan, dan setiap upgrade WebSocket, diperiksa <code>Host</code> dan <code>Origin</code>-nya, dan browser harus memegang cookie akses.",
+    "from": "6a7b211aac87"
+  },
+  "security.local.elsewhere": {
+    "text": "Memakai Aubergine dari perangkat lain mati sampai Anda menyiapkannya: sesuatu di komputer yang sama meneruskan HTTPS kepadanya dengan nama yang Anda tulis di pengaturan, dan setiap browser dipasangkan dengan kode sekali pakai dan bisa dicabut. Perangkat yang dipasangkan memiliki hak penuh sebagai pemilik. <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md\">Memakai Aubergine dari tempat lain</a> menjelaskan caranya.",
+    "from": "d67b1b7a16b7"
+  },
+  "security.local.network": {
+    "text": "Aubergine tidak memanggil model dan tidak memulai permintaan jaringan sendiri, dengan dua pengecualian: mengambil sumber library (alamat Git) saat <em>Anda</em> memintanya, dan menanyakan pull request dari branch sebuah terminal ke alat <code>gh</code> milik Anda sendiri, jika terpasang dan sudah masuk.",
+    "from": "09a9d3b11a3f"
+  },
+  "security.local.notify": {
+    "text": "Notifikasi desktop berasal dari halaman yang terbuka. Tidak ada yang meninggalkan komputer Anda.",
+    "from": "a061f94decff"
+  },
+  "security.callers.title": {
+    "text": "Tiga jenis pemanggil, masing-masing dinilai sendiri",
+    "from": "70f1b55254c0"
+  },
+  "security.callers.text": {
+    "text": "Setiap permintaan diperiksa terhadap apa yang boleh dilakukan pemanggil sebelum apa pun dicari, sehingga pemanggil tanpa hak tidak mendapat informasi apa pun dari jawabannya. Pemanggilnya adalah Anda (masuk di browser), sesi sebuah agen, dan token API.",
+    "from": "c126625e9b6c"
+  },
+  "security.callers.scopes": {
+    "text": "<strong>Token API punya lingkup.</strong> Rahasianya ditampilkan sekali dan tidak pernah disimpan; hanya hash-nya yang disimpan. Panggilan dengan token masuk ke log aktivitas: siapa, apa, dan bagaimana hasilnya, tidak pernah rahasianya dan tidak pernah apa yang dikirim.",
+    "from": "4c7141504f63"
+  },
+  "security.callers.never": {
+    "text": "<strong>Beberapa hal yang tidak akan pernah bisa dilakukan token mana pun:</strong> membuat atau mencabut token, membaca log aktivitas, mengubah pengaturan, dan apa pun yang berkaitan dengan terminal di luar Aubergine.",
+    "from": "72b0d531789b"
+  },
+  "security.callers.terminal": {
+    "text": "<strong>Akses terminal adalah dua lingkup terpisah</strong>, satu untuk membaca dan satu untuk mengetik, masing-masing dibatasi pada sesi yang Anda pilih. Anda bisa menandai terminal sebagai <em>people only</em> (hanya orang) untuk menutupnya dari setiap token.",
+    "from": "25a56b3d0365"
+  },
+  "security.callers.agent": {
+    "text": "<strong>Kredensial milik agen itu sendiri sempit.</strong> Ia bisa mengatur status perhatiannya sendiri, menambah catatannya sendiri, melaporkan statusnya sendiri, dan membaca run tempat ia berada. Ia tidak bisa menjangkau terminal, kanvas, atau token lain.",
+    "from": "e256c4165a46"
+  },
+  "security.alone.title": {
+    "text": "Apa yang tidak bisa dilakukan agen sendirian",
+    "from": "03326de9b26e"
+  },
+  "security.alone.draft": {
+    "text": "Apa yang ditulis agen atau program (workflow, langkah) tiba sebagai <strong>draf</strong> yang Anda tinjau. Hanya Anda yang bisa menerimanya.",
+    "from": "4170ed1f1019"
+  },
+  "security.alone.person": {
+    "text": "Langkah yang menunggu seseorang hanya bisa disetujui atau dikembalikan oleh orang. Aturan, jadwal, dan demo hanya milik Anda.",
+    "from": "d50827bd1466"
+  },
+  "security.alone.typed": {
+    "text": "Aubergine hanya mengetikkan beberapa kalimat tetap ke terminal agen, seperti “baca langkah berikutnya”. Tidak ada yang Anda simpan, dan tidak ada yang ditulis agen, yang diketikkan.",
+    "from": "fbf9087a8e44"
+  },
+  "security.alone.library": {
+    "text": "Menginstal dari library mengharuskan Anda menerima isi persis yang ditunjukkan kepada Anda.",
+    "from": "6d62284139e3"
+  },
+  "security.not.title": {
+    "text": "Apa yang tidak dilindunginya",
+    "from": "664cb80d250f"
+  },
+  "security.not.asyou": {
+    "text": "<strong>Agen berjalan sebagai Anda.</strong> Agen di terminal bisa melakukan apa pun yang bisa Anda lakukan di terminal itu, termasuk menjalankan perintah, membaca file, dan, jika ia mau, memakai sesi browser Anda sendiri.",
+    "from": "179663eb5387"
+  },
+  "security.not.approvals": {
+    "text": "<strong>Persetujuan bukan kunci.</strong> Agen yang berjalan sebagai Anda bisa memutuskan sebagai Anda. Keputusan itu dicatat, bukan dicegah.",
+    "from": "dc58a76bd541"
+  },
+  "security.not.copies": {
+    "text": "<strong>Salinan kerja bukan sandbox.</strong> Ia memisahkan pekerjaan dan tidak mengurung agen.",
+    "from": "de9877dffd91"
+  },
+  "security.not.review": {
+    "text": "<strong>Layar tinjauan adalah kendali untuk item library.</strong> Sebuah item adalah instruksi yang akan diikuti agen dengan segala yang boleh dilakukan agen itu. Jangan menginstal apa yang belum Anda baca.",
+    "from": "1972614790c0"
+  },
+  "security.not.guide": {
+    "text": "<strong>Panduan untuk agen adalah saran</strong>, bukan kunci.",
+    "from": "79f0576917ce"
+  },
+  "security.installer.title": {
+    "text": "Installer",
+    "from": "26ab59561d68"
+  },
+  "security.installer.text": {
+    "text": "Ia mengubah dua hal: foldernya sendiri dan satu link bernama <code>aubergine</code>. Tanpa <code>sudo</code>, tanpa mengedit file startup shell Anda, dan tidak pernah menyentuh folder data Anda. <code>aubergine uninstall</code> hanya menghapus apa yang dibuatnya.",
+    "from": "0dd991c78883"
+  },
+  "security.report.title": {
+    "text": "Laporkan masalah",
+    "from": "53de38dec81e"
+  },
+  "security.report.text": {
+    "text": "Buka issue di <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">GitHub</a>. Jangan cantumkan rahasia atau token di dalamnya.",
+    "from": "578a2c2c1f9c"
+  },
+  "security.related": {
+    "text": "Terkait: <a href=\"/working-copies/\">salinan kerja</a> · <a href=\"/faq/\">FAQ</a> · <a href=\"/roadmap/\">peta jalan</a> (mode persetujuan dan kebijakan perintah direncanakan, belum dibuat)",
+    "from": "f7672fdbd012"
+  },
+  "security.ld.q1": {
+    "text": "Apakah Aubergine mengirim terminal atau kode saya ke suatu tempat?",
+    "from": "8e3369fd3214"
+  },
+  "security.ld.a1": {
+    "text": "Tidak. Server hanya mendengarkan di 127.0.0.1, jadi ia hanya bisa dijangkau dari komputer Anda sampai Anda menyiapkan pemakaian dari perangkat lain. Aubergine tidak memanggil model dan tidak mengambil apa pun kecuali Anda sendiri menambahkan sumber library; jika alat gh Anda terpasang, ia menanyakan pull request dari branch sebuah terminal kepadanya.",
+    "from": "d6089c695fd7"
+  },
+  "security.ld.q2": {
+    "text": "Bisakah agen mengubah pengaturan Aubergine atau membuat token untuk dirinya sendiri?",
+    "from": "50baf59f3f49"
+  },
+  "security.ld.a2": {
+    "text": "Tidak. Membuat token, mengubah pengaturan, membaca log aktivitas, dan apa pun yang berkaitan dengan terminal di luar Aubergine tidak pernah diizinkan untuk token, apa pun lingkupnya.",
+    "from": "83dbce1b8ba8"
+  },
+  "security.ld.q3": {
+    "text": "Apakah persetujuan mencegah agen milik pemilik menyetujui dirinya sendiri?",
+    "from": "44ef09ccbdb5"
+  },
+  "security.ld.a3": {
+    "text": "Tidak. Agen yang berjalan sebagai Anda bisa bertindak sebagai Anda. Persetujuan dicatat, tidak ditegakkan terhadap agen Anda sendiri.",
+    "from": "218bd3880939"
+  },
+  "security.ld.q4": {
+    "text": "Apakah salinan kerja itu sandbox?",
+    "from": "8fba34c387fd"
+  },
+  "security.ld.a4": {
+    "text": "Bukan. Ia memisahkan pekerjaan tetapi tidak mengurung agen. Agen berjalan sebagai Anda.",
+    "from": "00ac8e54df7b"
+  },
+  "roadmap.meta.title": {
+    "text": "Peta jalan: apa yang direncanakan untuk Aubergine | Aubergine",
+    "from": "f82b67c7e4ed"
+  },
+  "roadmap.meta.description": {
+    "text": "Apa yang dilakukan Aubergine hari ini dan apa yang direncanakan dan belum dibuat: multiplayer, agen cloud dalam sandbox, mode persetujuan, gerbang kualitas, SDK, dan lainnya.",
+    "from": "eae564891939"
+  },
+  "roadmap.crumb": {
+    "text": "Peta jalan",
+    "from": "92375f997ffe"
+  },
+  "roadmap.tag": {
+    "text": "Direncanakan, belum dibuat",
+    "from": "8520b04b5a47"
+  },
+  "roadmap.title": {
+    "text": "Peta jalan",
+    "from": "92375f997ffe"
+  },
+  "roadmap.lead": {
+    "text": "Belum ada satu pun dari ini yang ada hari ini. Ini arah yang ingin kami tuju, dan urutannya bisa berubah. Untuk apa yang sudah dibuat sekarang, lihat <a href=\"/guides/\">panduan</a>.",
+    "from": "905a1a4e53eb"
+  },
+  "roadmap.note": {
+    "text": "Pekerjaan yang direncanakan adalah arah, bukan janji. <a href=\"https://github.com/thirstyeggplant/aubergine\">Repositori</a> menunjukkan apa yang sudah dirilis.",
+    "from": "2a77383dd929"
+  },
+  "roadmap.teams.title": {
+    "text": "Tim dan koneksi",
+    "from": "4e0046ce8160"
+  },
+  "roadmap.teams.sub": {
+    "text": "Orang-orang yang bekerja bersama, dan agen yang dijangkau dari alat yang sudah Anda pakai.",
+    "from": "b79bf222234e"
+  },
+  "roadmap.teams.multiplayer.name": {
+    "text": "Multiplayer",
+    "from": "563370a7b0ef"
+  },
+  "roadmap.teams.multiplayer.text": {
+    "text": "Berbagi kanvas dengan orang lain dan agen mereka. Lihat siapa bekerja di mana, serahkan agen yang menunggu ke rekan tim, dan jawab bersama.",
+    "from": "b11467b3847f"
+  },
+  "roadmap.teams.chat.name": {
+    "text": "Antarmuka chat",
+    "from": "2d4271591981"
+  },
+  "roadmap.teams.chat.text": {
+    "text": "Minta sesuatu kepada agen dan jawab pertanyaannya dari aplikasi chat tim, dengan identitas dan pengaturan yang sama seperti di browser.",
+    "from": "e030fc9eb4b5"
+  },
+  "roadmap.teams.tickets.name": {
+    "text": "Tiket dan pull request",
+    "from": "c18d1bcc516f"
+  },
+  "roadmap.teams.tickets.text": {
+    "text": "Ubah issue menjadi tugas di antrean, buka pull request dari salinan kerja, dan laporkan hasilnya kembali ke tiket.",
+    "from": "4641289cfa30"
+  },
+  "roadmap.teams.watches.name": {
+    "text": "Pemantauan, webhook, dan triase",
+    "from": "9c51f5013534"
+  },
+  "roadmap.teams.watches.text": {
+    "text": "Mulai pekerjaan saat sesuatu terjadi: job CI yang gagal, peringatan, perubahan yang dipantau, atau panggilan dari layanan lain. Aturan menentukan apa yang menjadi tugas.",
+    "from": "1c497d4b9a99"
+  },
+  "roadmap.teams.skills.name": {
+    "text": "Skill bersama dan marketplace",
+    "from": "31d4586cb1ae"
+  },
+  "roadmap.teams.skills.text": {
+    "text": "Bagikan skill agen lewat pemberian akses, naikkan menjadi milik seluruh tim dengan persetujuan, impor dari Git, dan temukan item yang sudah ditinjau di katalog publik.",
+    "from": "fd5d82778447"
+  },
+  "roadmap.teams.memory.name": {
+    "text": "Memori untuk orang dan ruang",
+    "from": "ad614cac170e"
+  },
+  "roadmap.teams.memory.text": {
+    "text": "Simpan apa yang dipelajari agen untuk setiap orang dan setiap ruang bersama, terpisah dari yang lain.",
+    "from": "416f752e7296"
+  },
+  "roadmap.teams.more": {
+    "text": "Juga: kontrol admin untuk model, berbagi, dan tingkat keketatan · server tim yang di-host sendiri · masuk untuk tim (SSO dan MFA) · batas pemakaian per orang, token, atau agen · laporan hanya-baca untuk dibagikan tanpa membagikan terminal · tampilan ponsel untuk daftar “For you” · konektor yang sudah ditinjau ke alat perusahaan · lebih banyak aplikasi chat · aplikasi web internal kecil yang diterbitkan untuk orang-orang tertentu.",
+    "from": "481fe85556f5"
+  },
+  "roadmap.cloud.title": {
+    "text": "Cloud",
+    "from": "b977b950c1ae"
+  },
+  "roadmap.cloud.sub": {
+    "text": "Agen yang tidak memerlukan laptop Anda tetap menyala.",
+    "from": "87fb76b1a7f8"
+  },
+  "roadmap.cloud.sandbox.name": {
+    "text": "Agen dalam sandbox di cloud",
+    "from": "afb143bae999"
+  },
+  "roadmap.cloud.sandbox.text": {
+    "text": "Jalankan agen di sandbox cloud yang terisolasi dan pantau di kanvas yang sama dengan agen lokal Anda. Sandbox tidur saat diam, bangun saat diperlukan, dan menyimpan penyimpanan di antara run.",
+    "from": "a53d1378b583"
+  },
+  "roadmap.cloud.pool.name": {
+    "text": "Kumpulan agen",
+    "from": "7d3bca9c3c41"
+  },
+  "roadmap.cloud.pool.text": {
+    "text": "Jelaskan pekerjaannya dan biarkan kumpulan agen mengambilnya, alih-alih menyebut satu terminal untuk setiap tugas.",
+    "from": "f9b895723ae8"
+  },
+  "roadmap.cloud.envs.name": {
+    "text": "Lingkungan siap pakai",
+    "from": "ed1697ee039b"
+  },
+  "roadmap.cloud.envs.text": {
+    "text": "Simpan dependensi, alat, skill, file, dan variabel sekali, lalu mulai terminal baru atau agen cloud apa pun dari situ.",
+    "from": "d97c932492be"
+  },
+  "roadmap.cloud.long.name": {
+    "text": "Pekerjaan panjang dan bertahap",
+    "from": "1207d0ac598f"
+  },
+  "roadmap.cloud.long.text": {
+    "text": "Tugas yang berjalan berjam-jam atau berhari-hari dalam tahapan, dengan pengecekan setelah tiap tahap dan kemajuan yang bertahan meski dimulai ulang.",
+    "from": "a1e631232a28"
+  },
+  "roadmap.cloud.deploy.name": {
+    "text": "Deploy cloud dengan satu perintah",
+    "from": "dabcec83058d"
+  },
+  "roadmap.cloud.deploy.text": {
+    "text": "Pasang Aubergine bersama milik tim di akun cloud Anda sendiri dengan satu perintah.",
+    "from": "6a0dc41e1a38"
+  },
+  "roadmap.cloud.see.name": {
+    "text": "Pekerjaan yang bisa Anda lihat",
+    "from": "dae8006cad9a"
+  },
+  "roadmap.cloud.see.text": {
+    "text": "Agen cloud mengembalikan tangkapan layar atau rekaman singkat dari apa yang dibuatnya, di daftar “For you” Anda.",
+    "from": "34843169f72f"
+  },
+  "roadmap.cloud.more": {
+    "text": "Juga: MCP lewat HTTP, untuk agen di mesin lain · dukungan Linux yang sudah diuji · integrasi shell selain zsh.",
+    "from": "ab24c1d11df2"
+  },
+  "roadmap.control.title": {
+    "text": "Kendali",
+    "from": "32d7e8208247"
+  },
+  "roadmap.control.sub": {
+    "text": "Seberapa banyak yang boleh dilakukan agen, dan catatan tentang apa yang dilakukannya.",
+    "from": "9b7292a38acb"
+  },
+  "roadmap.control.approval.name": {
+    "text": "Mode persetujuan",
+    "from": "7bd88c9e6d2d"
+  },
+  "roadmap.control.approval.text": {
+    "text": "Pilih seberapa banyak yang boleh dilakukan agen sendirian: setujui setiap tindakan, setujui yang berisiko saja, atau tidak sama sekali.",
+    "from": "b9608d55fca3"
+  },
+  "roadmap.control.policy.name": {
+    "text": "Kebijakan perintah dan penyaringan",
+    "from": "c3c9b7fc9194"
+  },
+  "roadmap.control.policy.text": {
+    "text": "Aturan untuk perintah yang memerlukan persetujuan atau selalu ditolak, dan penyaringan opsional atas konten dari luar sebelum agen membacanya.",
+    "from": "6697b64fab83"
+  },
+  "roadmap.control.risk.name": {
+    "text": "Tingkat risiko per repositori",
+    "from": "989a1686d169"
+  },
+  "roadmap.control.risk.text": {
+    "text": "Batas lebih ketat di tempat yang penting, lebih longgar di tempat yang tidak.",
+    "from": "10639df3756c"
+  },
+  "roadmap.control.audit.name": {
+    "text": "Jejak audit lengkap",
+    "from": "dfb67e3ffb15"
+  },
+  "roadmap.control.audit.text": {
+    "text": "Catatan siapa atau apa melakukan apa, per proyek, melampaui panggilan token yang dicatat hari ini.",
+    "from": "c97e6d6355c9"
+  },
+  "roadmap.control.undo.name": {
+    "text": "Membatalkan pekerjaan agen",
+    "from": "f031a385eb84"
+  },
+  "roadmap.control.undo.text": {
+    "text": "Kembalikan salinan kerja ke keadaan sebelum sebuah tugas, atau buang branch-nya dalam satu langkah.",
+    "from": "8a76ddeef3eb"
+  },
+  "roadmap.control.admin.name": {
+    "text": "Kontrol admin",
+    "from": "9636c9a17dce"
+  },
+  "roadmap.control.admin.text": {
+    "text": "Pengaturan seluruh tim tentang model mana yang boleh dipakai dan bagaimana berbagi bekerja.",
+    "from": "2e27927bdc87"
+  },
+  "roadmap.control.more": {
+    "text": "Juga: pilihan model per terminal, tugas, atau jadwal.",
+    "from": "f596795919fb"
+  },
+  "roadmap.quality.title": {
+    "text": "Kualitas",
+    "from": "1b2c08a8733d"
+  },
+  "roadmap.quality.sub": {
+    "text": "Pemeriksaan yang terjadi sebelum pekerjaan dinyatakan selesai.",
+    "from": "d384d12758ef"
+  },
+  "roadmap.quality.gates.name": {
+    "text": "Gerbang kualitas",
+    "from": "94515eddaac8"
+  },
+  "roadmap.quality.gates.text": {
+    "text": "Sebuah run tidak bisa selesai sampai review, tes, atau pemeriksaan keamanan melaporkan lulus.",
+    "from": "cb60bf40a980"
+  },
+  "roadmap.quality.review.name": {
+    "text": "Review pull request",
+    "from": "88740e3ab820"
+  },
+  "roadmap.quality.review.text": {
+    "text": "Agen me-review pull request dan melapor ke daftar “For you” Anda.",
+    "from": "f2cb7f3e314f"
+  },
+  "roadmap.quality.browser.name": {
+    "text": "Pengujian lewat browser",
+    "from": "7c8b76a0df2d"
+  },
+  "roadmap.quality.browser.text": {
+    "text": "Agen mengendalikan browser untuk menguji perubahan dan mengembalikan hasilnya.",
+    "from": "35d5c9f82525"
+  },
+  "roadmap.quality.plan.name": {
+    "text": "Rencana sebelum membangun",
+    "from": "c1b4e7cda45f"
+  },
+  "roadmap.quality.plan.text": {
+    "text": "Agen mengusulkan rencana dan menunggu persetujuan Anda sebelum menyentuh file.",
+    "from": "bfe188b91109"
+  },
+  "roadmap.quality.recipes.name": {
+    "text": "Resep tugas",
+    "from": "a907955cd430"
+  },
+  "roadmap.quality.recipes.text": {
+    "text": "Workflow siap pakai untuk membuat tes, review, pemindaian dependensi dan rahasia, dan menjaga dokumentasi tetap mutakhir.",
+    "from": "d2b3c5c8eb35"
+  },
+  "roadmap.quality.metrics.name": {
+    "text": "Metrik hasil",
+    "from": "0663013cf8b2"
+  },
+  "roadmap.quality.metrics.text": {
+    "text": "Waktu dari tugas sampai selesai, seberapa sering agen menunggu Anda, dan pemakaian menurut siapa yang memulainya, per proyek.",
+    "from": "cc91d3e1b4a9"
+  },
+  "roadmap.quality.more": {
+    "text": "Juga: laporan insiden, di mana agen menyelidiki dan menyusun draf postmortem.",
+    "from": "38f56a594979"
+  },
+  "roadmap.everywhere.title": {
+    "text": "Di mana saja",
+    "from": "dcc10bfd55ac"
+  },
+  "roadmap.everywhere.sub": {
+    "text": "Lebih banyak cara untuk menjangkau Aubergine dan membangun di atasnya.",
+    "from": "738934daa2cd"
+  },
+  "roadmap.everywhere.sdk.name": {
+    "text": "SDK yang diterbitkan",
+    "from": "02aa38383381"
+  },
+  "roadmap.everywhere.sdk.text": {
+    "text": "Klien bertipe sebagai paket yang bisa diinstal, lalu klien untuk bahasa lain seperti Python.",
+    "from": "a3e3521d038a"
+  },
+  "roadmap.everywhere.editor.name": {
+    "text": "Ekstensi editor",
+    "from": "92399ab4236f"
+  },
+  "roadmap.everywhere.editor.text": {
+    "text": "Tampilkan terminal dan daftar “For you” Anda di dalam VS Code dan editor serupa, tanpa meninggalkan editor.",
+    "from": "f8f4319dbbe7"
+  },
+  "roadmap.everywhere.desktop.name": {
+    "text": "Aplikasi desktop",
+    "from": "7102842054a4"
+  },
+  "roadmap.everywhere.desktop.text": {
+    "text": "Aplikasi terpaket dengan ikon di bilah menu, sebagai ganti tab browser.",
+    "from": "2a56e82d4a02"
+  },
+  "roadmap.everywhere.windows.name": {
+    "text": "Dukungan Windows",
+    "from": "e61744d0c993"
+  },
+  "roadmap.everywhere.windows.text": {
+    "text": "Menjalankan Aubergine di Windows. Hari ini hanya macOS yang didukung, dan Linux belum diuji.",
+    "from": "6eb34c4aada3"
+  },
+  "faq.meta.title": {
+    "text": "Pertanyaan yang sering diajukan | Aubergine",
+    "from": "0956334109a5"
+  },
+  "faq.meta.description": {
+    "text": "Jawaban tentang Aubergine: apa itu, apa yang dibutuhkannya, apakah ia privat, bagaimana ia bekerja dengan agen coding, dan apa yang direncanakan.",
+    "from": "b4a8a7a10267"
+  },
+  "faq.crumb": {
+    "text": "FAQ",
+    "from": "dbc468a14b60"
+  },
+  "faq.title": {
+    "text": "Pertanyaan yang sering diajukan",
+    "from": "e956a9404b46"
+  },
+  "faq.lead": {
+    "text": "Jawaban singkat. <a href=\"/guides/\">Panduan</a> membahas lebih dalam.",
+    "from": "cc5a52e1d739"
+  },
+  "faq.what.q": {
+    "text": "Apa itu Aubergine?",
+    "from": "34bffd794522"
+  },
+  "faq.what.a": {
+    "text": "Kanvas lokal berbasis browser berisi sesi terminal. Setiap terminal adalah node yang bisa Anda atur dan pakai, sehingga Anda bisa menjalankan beberapa agen coding sekaligus dan melihat mana yang sedang menunggu Anda.",
+    "from": "e2699684c13a"
+  },
+  "faq.free.q": {
+    "text": "Apakah Aubergine gratis dan open source?",
+    "from": "0084cd893989"
+  },
+  "faq.free.a": {
+    "text": "Ya. Aubergine gratis dan kode sumbernya ada di GitHub.",
+    "from": "7ac926cbb182"
+  },
+  "faq.need.q": {
+    "text": "Apa yang saya perlukan untuk menjalankan Aubergine?",
+    "from": "efe26fb96381"
+  },
+  "faq.need.a": {
+    "text": "macOS dengan tmux 3.2 atau lebih baru dan Node.js 22 atau lebih baru; installer juga memerlukan pnpm. Linux seharusnya bisa, tetapi belum diuji. Windows tidak didukung.",
+    "from": "d0ea17ebbaa3"
+  },
+  "faq.agents.q": {
+    "text": "Apakah ia bekerja dengan agen coding apa pun?",
+    "from": "a17347c2058b"
+  },
+  "faq.agents.a": {
+    "text": "Aubergine menjalankan terminal biasa, jadi agen command-line apa pun bisa berjalan di dalamnya. Hal-hal yang dilakukan Aubergine sendiri untuk sebuah agen, seperti melihat bahwa ia menunggu, dibuat untuk <a href=\"/claude/\">Claude Code</a>; agen lain mana pun, termasuk <a href=\"/chatgpt/\">Codex</a>, bisa melaporkan statusnya lewat perintah <code>aubergine</code> dan API lokal, dan bisa memakai server MCP yang hanya mendaftar apa yang diizinkan tokennya.",
+    "from": "f2ff9ce8d976"
+  },
+  "faq.send.q": {
+    "text": "Apakah Aubergine mengirim terminal atau kode saya ke suatu tempat?",
+    "from": "8e3369fd3214"
+  },
+  "faq.send.a": {
+    "text": "Tidak. Semuanya berjalan di komputer Anda sendiri. Server hanya mendengarkan di 127.0.0.1.",
+    "from": "3b02bfd4cab9"
+  },
+  "faq.model.q": {
+    "text": "Apakah Aubergine memanggil model AI?",
+    "from": "f7d8f06fe992"
+  },
+  "faq.model.a": {
+    "text": "Tidak. Agen Anda yang melakukannya. Aubergine hanya menjalankan terminal mereka dan memantaunya, dan tidak menyimpan kunci untuk model apa pun.",
+    "from": "b237bbedc740"
+  },
+  "faq.close.q": {
+    "text": "Apa yang terjadi pada terminal saya saat browser ditutup?",
+    "from": "b5dd88540c71"
+  },
+  "faq.close.a": {
+    "text": "Terminal tetap berjalan. Setiap sesi adalah sesi tmux yang bertahan lebih lama dari browser maupun server Aubergine.",
+    "from": "7871478dcac5"
+  },
+  "faq.waiting.q": {
+    "text": "Bagaimana saya tahu agen mana yang sedang menunggu saya?",
+    "from": "7430a38bad53"
+  },
+  "faq.waiting.a": {
+    "text": "Setiap terminal menunjukkan apakah ia sibuk, diam, atau menunggu. Angka di samping For you di bagian atas halaman dan daftar For you mengumpulkan semua yang membutuhkan Anda.",
+    "from": "35f55955a398"
+  },
+  "faq.apart.q": {
+    "text": "Bagaimana agar dua agen tidak mengedit file yang sama?",
+    "from": "50c7b0247257"
+  },
+  "faq.apart.a": {
+    "text": "Jalankan setiap terminal di salinan kerjanya sendiri: checkout miliknya sendiri di branch sendiri. Aubergine tidak pernah melakukan merge atau push untuk Anda.",
+    "from": "823333cbb2a8"
+  },
+  "faq.steps.q": {
+    "text": "Bisakah saya memberi agen daftar langkah untuk diikuti?",
+    "from": "76d449645ba9"
+  },
+  "faq.steps.a": {
+    "text": "Ya. Workflow adalah daftar langkah berurutan, dengan strip yang menunjukkan posisi agen. Sebuah langkah bisa menunggu Anda menyetujui atau mengembalikannya.",
+    "from": "9bc235f9572a"
+  },
+  "faq.talk.q": {
+    "text": "Bisakah agen saling berbicara?",
+    "from": "bb3d5c828a26"
+  },
+  "faq.talk.a": {
+    "text": "Ya, dengan batas. Pesan antarterminal punya pengirim yang bernama, jeda, dan blokir, dan tertutup secara bawaan untuk setiap kanvas.",
+    "from": "b84d014d23cc"
+  },
+  "faq.api.q": {
+    "text": "Apakah ada API?",
+    "from": "e5876c15cf79"
+  },
+  "faq.api.a": {
+    "text": "Ya. API HTTP lokal dengan token berlingkup, klien bertipe, dan server MCP yang hanya mendaftar alat yang boleh dipakai sebuah kredensial.",
+    "from": "70b05cca5923"
+  },
+  "faq.focus.q": {
+    "text": "Bisakah saya membuka satu terminal tersendiri?",
+    "from": "4e72afdbfe4a"
+  },
+  "faq.focus.a": {
+    "text": "Ya. <strong>Tab ↗</strong> di judul terminal membukanya di tab browser tersendiri: terminal yang sama, bukan salinan, dengan detail dan catatannya di sebelahnya saat Anda minta. Menutup tab tidak mengakhiri apa pun.",
+    "from": "0909e72f8382"
+  },
+  "faq.fields.q": {
+    "text": "Bisakah saya menyimpan tiket atau pemilik bersama sebuah terminal?",
+    "from": "92b518e794bd"
+  },
+  "faq.fields.a": {
+    "text": "Ya. Sebuah terminal punya field, pasangan label dan nilai, di detailnya. Agen di dalamnya bisa mengatur field-nya sendiri dengan <code>aubergine field set</code>; jika Anda mengatur label yang sama, milik Anda yang tetap.",
+    "from": "595a80f0d504"
+  },
+  "faq.cloud.q": {
+    "text": "Apakah Aubergine akan mendukung beberapa orang atau agen di cloud?",
+    "from": "3c1035134c8f"
+  },
+  "faq.cloud.a": {
+    "text": "Keduanya direncanakan dan belum ada yang dibuat. Lihat <a href=\"/roadmap/\">peta jalan</a>. Hari ini semuanya berjalan di satu komputer.",
+    "from": "02eb76c521d2"
+  },
+  "faq.installer.q": {
+    "text": "Apa yang diubah installer di komputer saya?",
+    "from": "e6f26b5fdca4"
+  },
+  "faq.installer.a": {
+    "text": "Dua hal: folder instalasi (~/.aubergine) dan satu link bernama aubergine. Ia tidak pernah memakai sudo, tidak pernah mengedit file startup shell Anda, dan tidak pernah menginstal Node.js, pnpm, atau tmux.",
+    "from": "00c4335ab841"
+  },
+  "404.meta.title": {
+    "text": "Halaman tidak ditemukan | Aubergine",
+    "from": "19d867c4b2d8"
+  },
+  "404.meta.description": {
+    "text": "Halaman ini tidak ada. Kembali ke panduan Aubergine.",
+    "from": "920927185e61"
+  },
+  "404.title": {
+    "text": "Halaman itu tidak ada di sini",
+    "from": "fecba20c2c31"
+  },
+  "404.lead": {
+    "text": "Alamatnya mungkin salah ketik atau halamannya mungkin sudah dipindahkan. Ini mungkin membantu:",
+    "from": "679fc5b22fd6"
+  },
+  "404.home": {
+    "text": "Beranda Aubergine",
+    "from": "c340078688b5"
+  },
+  "404.install": {
+    "text": "Instal Aubergine",
+    "from": "733a8757545c"
+  },
+  "404.guides": {
+    "text": "Panduan",
+    "from": "572cd72feb9a"
+  },
+  "404.faq": {
+    "text": "Pertanyaan yang sering diajukan",
+    "from": "e956a9404b46"
+  }
+}
