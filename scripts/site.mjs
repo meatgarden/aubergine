@@ -7,7 +7,9 @@
 //
 // How it is made and what a page may say are in docs/site.md. In short:
 //   site-src/layout.html        what every page shares; {{=content}} is the page
-//   site-src/pages/<page>.html  a page: a first line <!--page {json}--> and its markup
+//   site-src/pages/<page>.html  a page: a first line <!--page {json}--> and its markup;
+//                               {"updated": "YYYY-MM-DD"} is when its substance last changed (the sitemap's lastmod)
+//   site-src/sitemap.xsl        copied; shows sitemap.xml to a person in a browser
 //   site-src/strings/en.json    the words, one entry per key; English is the original
 //   site-src/strings/<l>.json   a translation: { key: { text, from: <fingerprint of the English> } }
 //   site-src/languages.json     the languages, English first
@@ -18,7 +20,7 @@
 // text, {{json:key}} as a JSON string of its text, {{=name}} is made here.
 // <!--if:translated-->…<!--/if:translated--> is kept on a translated page only,
 // <!--if:languages-->…<!--/if:languages--> only while there is more than one language.
-// Made for each page: lang, dir, page, canonical, url, robots, ogType, alternates, langmenu,
+// Made for each page: lang, dir, page, canonical, url, robots, ogType, alternates, langmenu, updated,
 // langname (the language's own name), langshort (its code in capitals), title, description.
 // Internal addresses are written from the site's root (/install/, /style.css);
 // each page gets them relative to itself, and in its own language's folder.
@@ -32,6 +34,19 @@ const ALLOWED_TAGS = new Set(['code', 'strong', 'em', 'br', 'a']);
 /** Files of site-src/ that are sources, not copied as they are. */
 const SOURCES = new Set(['layout.html', 'languages.json', 'llms.txt']);
 const SOURCE_FOLDERS = new Set(['pages', 'strings']);
+
+/** The stylesheet that shows the sitemap to a person who opens it; a crawler reads the XML as it is. */
+export const SITEMAP_STYLE = 'sitemap.xsl';
+
+/** Whether a page is in the sitemap: not the 404 page, nothing marked noindex or "sitemap": false. */
+const inSitemap = (page) => page.meta.sitemap !== false && !page.meta.noindex;
+
+/** A real calendar date written YYYY-MM-DD. */
+export function isDate(text) {
+  if (typeof text !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(text)) return false;
+  const date = new Date(`${text}T00:00:00Z`);
+  return !Number.isNaN(date.getTime()) && date.toISOString().slice(0, 10) === text;
+}
 
 /** The short mark of an English sentence a translation was made from. */
 export function fingerprint(text) {
@@ -212,6 +227,14 @@ export function buildSite(srcDir) {
   for (const key of [...named].sort()) if (!(key in en)) errors.push(`{{${key}}} has no string in en.json`);
   for (const key of Object.keys(en).sort()) if (!named.has(key)) errors.push(`en.json: ${key} is used by no template`);
 
+  // A page the sitemap lists says when its substance last changed: "updated", a date (YYYY-MM-DD).
+  for (const page of pages) {
+    const { updated } = page.meta;
+    if (updated === undefined) {
+      if (inSitemap(page)) errors.push(`pages/${page.id}.html: the first line must say "updated" (YYYY-MM-DD), the date its substance last changed`);
+    } else if (!isDate(updated)) errors.push(`pages/${page.id}.html: "updated" must be a date written YYYY-MM-DD, not ${JSON.stringify(updated)}`);
+  }
+
   const several = languages.length > 1;
   const urlOf = (language, page) => `${ORIGIN}/${language.folder ? `${language.folder}/` : ''}${pagePath(page)}`;
 
@@ -247,6 +270,7 @@ export function buildSite(srcDir) {
                 return `<li><a href="${href}" hreflang="${other.lang}" lang="${other.lang}" dir="${other.dir}"${current}>${other.name}</a></li>`;
               })
               .join(''),
+        updated: page.meta.updated ?? '',
         langname: language.name,
         // The language's short code in capitals, for the language button where its name has no room (a phone).
         langshort: language.code.toUpperCase(),
@@ -288,18 +312,19 @@ export function buildSite(srcDir) {
     }
   }
 
-  // The sitemap, with every language of every page.
-  const listed = pages.filter((page) => page.meta.sitemap !== false && !page.meta.noindex);
-  const sitemap = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">'];
-  for (const page of listed) {
+  // The sitemap, with every language of every page, and a stylesheet that shows it to a person.
+  const sitemap = ['<?xml version="1.0" encoding="UTF-8"?>', `<?xml-stylesheet type="text/xsl" href="/${SITEMAP_STYLE}"?>`, '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">'];
+  for (const page of pages.filter(inSitemap)) {
     for (const language of languages) {
       sitemap.push('  <url>', `    <loc>${urlOf(language, page)}</loc>`);
+      if (isDate(page.meta.updated)) sitemap.push(`    <lastmod>${page.meta.updated}</lastmod>`);
       for (const other of languages) sitemap.push(`    <xhtml:link rel="alternate" hreflang="${other.lang}" href="${urlOf(other, page)}"/>`);
-      sitemap.push(`    <xhtml:link rel="alternate" hreflang="x-default" href="${urlOf(languages[0], page)}"/>`, `    <priority>${page.id === 'home' ? '1.0' : '0.8'}</priority>`, '  </url>');
+      sitemap.push(`    <xhtml:link rel="alternate" hreflang="x-default" href="${urlOf(languages[0], page)}"/>`, '  </url>');
     }
   }
   sitemap.push('</urlset>', '');
   files.set('sitemap.xml', Buffer.from(sitemap.join('\n'), 'utf8'));
+  if (!source.copied.includes(SITEMAP_STYLE)) errors.push(`${SITEMAP_STYLE} is missing from site-src/: the sitemap names it`);
 
   // llms.txt, English only.
   if (source.llms !== null) {

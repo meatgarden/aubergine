@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/sitemap.xsl"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://thirstyeggplant.com/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/"/>
@@ -15,10 +17,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/"/>
-    <priority>1.0</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/es/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/"/>
@@ -32,10 +34,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/"/>
-    <priority>1.0</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/pt/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/"/>
@@ -49,10 +51,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/"/>
-    <priority>1.0</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/fr/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/"/>
@@ -66,10 +68,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/"/>
-    <priority>1.0</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/de/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/"/>
@@ -83,10 +85,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/"/>
-    <priority>1.0</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/ja/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/"/>
@@ -100,10 +102,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/"/>
-    <priority>1.0</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/zh/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/"/>
@@ -117,10 +119,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/"/>
-    <priority>1.0</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/ko/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/"/>
@@ -134,10 +136,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/"/>
-    <priority>1.0</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/id/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/"/>
@@ -151,10 +153,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/"/>
-    <priority>1.0</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/hi/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/"/>
@@ -168,10 +170,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/"/>
-    <priority>1.0</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/bn/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/"/>
@@ -185,10 +187,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/"/>
-    <priority>1.0</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/ar/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/"/>
@@ -202,10 +204,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/"/>
-    <priority>1.0</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/claude/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/claude/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/claude/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/claude/"/>
@@ -219,10 +221,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/claude/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/claude/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/claude/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/es/claude/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/claude/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/claude/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/claude/"/>
@@ -236,10 +238,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/claude/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/claude/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/claude/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/pt/claude/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/claude/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/claude/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/claude/"/>
@@ -253,10 +255,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/claude/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/claude/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/claude/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/fr/claude/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/claude/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/claude/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/claude/"/>
@@ -270,10 +272,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/claude/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/claude/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/claude/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/de/claude/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/claude/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/claude/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/claude/"/>
@@ -287,10 +289,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/claude/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/claude/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/claude/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/ja/claude/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/claude/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/claude/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/claude/"/>
@@ -304,10 +306,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/claude/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/claude/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/claude/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/zh/claude/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/claude/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/claude/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/claude/"/>
@@ -321,10 +323,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/claude/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/claude/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/claude/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/ko/claude/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/claude/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/claude/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/claude/"/>
@@ -338,10 +340,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/claude/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/claude/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/claude/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/id/claude/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/claude/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/claude/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/claude/"/>
@@ -355,10 +357,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/claude/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/claude/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/claude/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/hi/claude/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/claude/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/claude/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/claude/"/>
@@ -372,10 +374,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/claude/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/claude/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/claude/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/bn/claude/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/claude/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/claude/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/claude/"/>
@@ -389,10 +391,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/claude/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/claude/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/claude/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/ar/claude/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/claude/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/claude/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/claude/"/>
@@ -406,10 +408,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/claude/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/claude/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/claude/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/chatgpt/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/chatgpt/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/chatgpt/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/chatgpt/"/>
@@ -423,10 +425,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/chatgpt/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/chatgpt/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/chatgpt/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/es/chatgpt/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/chatgpt/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/chatgpt/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/chatgpt/"/>
@@ -440,10 +442,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/chatgpt/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/chatgpt/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/chatgpt/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/pt/chatgpt/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/chatgpt/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/chatgpt/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/chatgpt/"/>
@@ -457,10 +459,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/chatgpt/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/chatgpt/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/chatgpt/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/fr/chatgpt/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/chatgpt/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/chatgpt/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/chatgpt/"/>
@@ -474,10 +476,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/chatgpt/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/chatgpt/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/chatgpt/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/de/chatgpt/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/chatgpt/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/chatgpt/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/chatgpt/"/>
@@ -491,10 +493,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/chatgpt/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/chatgpt/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/chatgpt/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/ja/chatgpt/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/chatgpt/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/chatgpt/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/chatgpt/"/>
@@ -508,10 +510,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/chatgpt/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/chatgpt/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/chatgpt/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/zh/chatgpt/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/chatgpt/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/chatgpt/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/chatgpt/"/>
@@ -525,10 +527,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/chatgpt/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/chatgpt/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/chatgpt/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/ko/chatgpt/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/chatgpt/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/chatgpt/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/chatgpt/"/>
@@ -542,10 +544,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/chatgpt/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/chatgpt/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/chatgpt/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/id/chatgpt/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/chatgpt/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/chatgpt/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/chatgpt/"/>
@@ -559,10 +561,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/chatgpt/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/chatgpt/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/chatgpt/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/hi/chatgpt/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/chatgpt/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/chatgpt/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/chatgpt/"/>
@@ -576,10 +578,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/chatgpt/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/chatgpt/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/chatgpt/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/bn/chatgpt/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/chatgpt/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/chatgpt/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/chatgpt/"/>
@@ -593,10 +595,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/chatgpt/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/chatgpt/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/chatgpt/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/ar/chatgpt/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/chatgpt/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/chatgpt/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/chatgpt/"/>
@@ -610,10 +612,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/chatgpt/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/chatgpt/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/chatgpt/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/install/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/install/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/install/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/install/"/>
@@ -627,10 +629,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/install/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/install/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/install/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/es/install/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/install/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/install/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/install/"/>
@@ -644,10 +646,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/install/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/install/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/install/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/pt/install/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/install/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/install/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/install/"/>
@@ -661,10 +663,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/install/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/install/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/install/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/fr/install/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/install/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/install/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/install/"/>
@@ -678,10 +680,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/install/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/install/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/install/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/de/install/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/install/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/install/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/install/"/>
@@ -695,10 +697,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/install/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/install/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/install/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/ja/install/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/install/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/install/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/install/"/>
@@ -712,10 +714,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/install/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/install/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/install/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/zh/install/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/install/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/install/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/install/"/>
@@ -729,10 +731,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/install/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/install/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/install/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/ko/install/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/install/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/install/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/install/"/>
@@ -746,10 +748,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/install/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/install/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/install/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/id/install/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/install/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/install/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/install/"/>
@@ -763,10 +765,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/install/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/install/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/install/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/hi/install/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/install/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/install/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/install/"/>
@@ -780,10 +782,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/install/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/install/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/install/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/bn/install/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/install/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/install/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/install/"/>
@@ -797,10 +799,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/install/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/install/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/install/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/ar/install/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/install/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/install/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/install/"/>
@@ -814,10 +816,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/install/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/install/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/install/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/guides/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/guides/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/guides/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/guides/"/>
@@ -831,10 +833,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/guides/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/guides/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/guides/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/es/guides/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/guides/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/guides/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/guides/"/>
@@ -848,10 +850,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/guides/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/guides/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/guides/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/pt/guides/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/guides/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/guides/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/guides/"/>
@@ -865,10 +867,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/guides/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/guides/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/guides/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/fr/guides/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/guides/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/guides/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/guides/"/>
@@ -882,10 +884,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/guides/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/guides/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/guides/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/de/guides/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/guides/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/guides/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/guides/"/>
@@ -899,10 +901,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/guides/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/guides/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/guides/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/ja/guides/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/guides/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/guides/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/guides/"/>
@@ -916,10 +918,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/guides/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/guides/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/guides/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/zh/guides/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/guides/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/guides/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/guides/"/>
@@ -933,10 +935,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/guides/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/guides/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/guides/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/ko/guides/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/guides/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/guides/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/guides/"/>
@@ -950,10 +952,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/guides/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/guides/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/guides/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/id/guides/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/guides/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/guides/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/guides/"/>
@@ -967,10 +969,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/guides/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/guides/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/guides/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/hi/guides/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/guides/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/guides/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/guides/"/>
@@ -984,10 +986,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/guides/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/guides/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/guides/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/bn/guides/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/guides/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/guides/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/guides/"/>
@@ -1001,10 +1003,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/guides/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/guides/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/guides/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/ar/guides/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/guides/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/guides/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/guides/"/>
@@ -1018,10 +1020,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/guides/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/guides/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/guides/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/run-multiple-coding-agents/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/run-multiple-coding-agents/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/run-multiple-coding-agents/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/run-multiple-coding-agents/"/>
@@ -1035,10 +1037,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/run-multiple-coding-agents/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/run-multiple-coding-agents/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/run-multiple-coding-agents/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/es/run-multiple-coding-agents/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/run-multiple-coding-agents/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/run-multiple-coding-agents/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/run-multiple-coding-agents/"/>
@@ -1052,10 +1054,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/run-multiple-coding-agents/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/run-multiple-coding-agents/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/run-multiple-coding-agents/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/pt/run-multiple-coding-agents/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/run-multiple-coding-agents/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/run-multiple-coding-agents/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/run-multiple-coding-agents/"/>
@@ -1069,10 +1071,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/run-multiple-coding-agents/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/run-multiple-coding-agents/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/run-multiple-coding-agents/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/fr/run-multiple-coding-agents/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/run-multiple-coding-agents/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/run-multiple-coding-agents/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/run-multiple-coding-agents/"/>
@@ -1086,10 +1088,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/run-multiple-coding-agents/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/run-multiple-coding-agents/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/run-multiple-coding-agents/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/de/run-multiple-coding-agents/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/run-multiple-coding-agents/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/run-multiple-coding-agents/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/run-multiple-coding-agents/"/>
@@ -1103,10 +1105,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/run-multiple-coding-agents/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/run-multiple-coding-agents/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/run-multiple-coding-agents/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/ja/run-multiple-coding-agents/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/run-multiple-coding-agents/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/run-multiple-coding-agents/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/run-multiple-coding-agents/"/>
@@ -1120,10 +1122,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/run-multiple-coding-agents/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/run-multiple-coding-agents/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/run-multiple-coding-agents/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/zh/run-multiple-coding-agents/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/run-multiple-coding-agents/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/run-multiple-coding-agents/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/run-multiple-coding-agents/"/>
@@ -1137,10 +1139,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/run-multiple-coding-agents/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/run-multiple-coding-agents/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/run-multiple-coding-agents/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/ko/run-multiple-coding-agents/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/run-multiple-coding-agents/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/run-multiple-coding-agents/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/run-multiple-coding-agents/"/>
@@ -1154,10 +1156,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/run-multiple-coding-agents/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/run-multiple-coding-agents/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/run-multiple-coding-agents/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/id/run-multiple-coding-agents/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/run-multiple-coding-agents/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/run-multiple-coding-agents/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/run-multiple-coding-agents/"/>
@@ -1171,10 +1173,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/run-multiple-coding-agents/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/run-multiple-coding-agents/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/run-multiple-coding-agents/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/hi/run-multiple-coding-agents/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/run-multiple-coding-agents/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/run-multiple-coding-agents/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/run-multiple-coding-agents/"/>
@@ -1188,10 +1190,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/run-multiple-coding-agents/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/run-multiple-coding-agents/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/run-multiple-coding-agents/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/bn/run-multiple-coding-agents/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/run-multiple-coding-agents/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/run-multiple-coding-agents/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/run-multiple-coding-agents/"/>
@@ -1205,10 +1207,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/run-multiple-coding-agents/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/run-multiple-coding-agents/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/run-multiple-coding-agents/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/ar/run-multiple-coding-agents/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/run-multiple-coding-agents/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/run-multiple-coding-agents/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/run-multiple-coding-agents/"/>
@@ -1222,10 +1224,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/run-multiple-coding-agents/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/run-multiple-coding-agents/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/run-multiple-coding-agents/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/working-copies/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/working-copies/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/working-copies/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/working-copies/"/>
@@ -1239,10 +1241,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/working-copies/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/working-copies/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/working-copies/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/es/working-copies/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/working-copies/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/working-copies/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/working-copies/"/>
@@ -1256,10 +1258,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/working-copies/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/working-copies/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/working-copies/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/pt/working-copies/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/working-copies/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/working-copies/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/working-copies/"/>
@@ -1273,10 +1275,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/working-copies/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/working-copies/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/working-copies/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/fr/working-copies/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/working-copies/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/working-copies/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/working-copies/"/>
@@ -1290,10 +1292,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/working-copies/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/working-copies/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/working-copies/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/de/working-copies/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/working-copies/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/working-copies/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/working-copies/"/>
@@ -1307,10 +1309,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/working-copies/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/working-copies/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/working-copies/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/ja/working-copies/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/working-copies/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/working-copies/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/working-copies/"/>
@@ -1324,10 +1326,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/working-copies/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/working-copies/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/working-copies/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/zh/working-copies/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/working-copies/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/working-copies/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/working-copies/"/>
@@ -1341,10 +1343,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/working-copies/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/working-copies/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/working-copies/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/ko/working-copies/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/working-copies/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/working-copies/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/working-copies/"/>
@@ -1358,10 +1360,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/working-copies/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/working-copies/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/working-copies/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/id/working-copies/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/working-copies/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/working-copies/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/working-copies/"/>
@@ -1375,10 +1377,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/working-copies/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/working-copies/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/working-copies/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/hi/working-copies/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/working-copies/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/working-copies/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/working-copies/"/>
@@ -1392,10 +1394,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/working-copies/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/working-copies/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/working-copies/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/bn/working-copies/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/working-copies/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/working-copies/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/working-copies/"/>
@@ -1409,10 +1411,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/working-copies/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/working-copies/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/working-copies/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/ar/working-copies/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/working-copies/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/working-copies/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/working-copies/"/>
@@ -1426,10 +1428,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/working-copies/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/working-copies/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/working-copies/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/queue-and-schedules/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/queue-and-schedules/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/queue-and-schedules/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/queue-and-schedules/"/>
@@ -1443,10 +1445,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/queue-and-schedules/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/queue-and-schedules/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/queue-and-schedules/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/es/queue-and-schedules/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/queue-and-schedules/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/queue-and-schedules/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/queue-and-schedules/"/>
@@ -1460,10 +1462,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/queue-and-schedules/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/queue-and-schedules/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/queue-and-schedules/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/pt/queue-and-schedules/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/queue-and-schedules/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/queue-and-schedules/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/queue-and-schedules/"/>
@@ -1477,10 +1479,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/queue-and-schedules/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/queue-and-schedules/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/queue-and-schedules/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/fr/queue-and-schedules/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/queue-and-schedules/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/queue-and-schedules/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/queue-and-schedules/"/>
@@ -1494,10 +1496,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/queue-and-schedules/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/queue-and-schedules/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/queue-and-schedules/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/de/queue-and-schedules/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/queue-and-schedules/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/queue-and-schedules/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/queue-and-schedules/"/>
@@ -1511,10 +1513,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/queue-and-schedules/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/queue-and-schedules/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/queue-and-schedules/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/ja/queue-and-schedules/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/queue-and-schedules/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/queue-and-schedules/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/queue-and-schedules/"/>
@@ -1528,10 +1530,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/queue-and-schedules/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/queue-and-schedules/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/queue-and-schedules/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/zh/queue-and-schedules/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/queue-and-schedules/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/queue-and-schedules/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/queue-and-schedules/"/>
@@ -1545,10 +1547,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/queue-and-schedules/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/queue-and-schedules/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/queue-and-schedules/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/ko/queue-and-schedules/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/queue-and-schedules/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/queue-and-schedules/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/queue-and-schedules/"/>
@@ -1562,10 +1564,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/queue-and-schedules/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/queue-and-schedules/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/queue-and-schedules/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/id/queue-and-schedules/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/queue-and-schedules/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/queue-and-schedules/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/queue-and-schedules/"/>
@@ -1579,10 +1581,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/queue-and-schedules/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/queue-and-schedules/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/queue-and-schedules/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/hi/queue-and-schedules/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/queue-and-schedules/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/queue-and-schedules/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/queue-and-schedules/"/>
@@ -1596,10 +1598,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/queue-and-schedules/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/queue-and-schedules/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/queue-and-schedules/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/bn/queue-and-schedules/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/queue-and-schedules/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/queue-and-schedules/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/queue-and-schedules/"/>
@@ -1613,10 +1615,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/queue-and-schedules/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/queue-and-schedules/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/queue-and-schedules/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/ar/queue-and-schedules/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/queue-and-schedules/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/queue-and-schedules/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/queue-and-schedules/"/>
@@ -1630,10 +1632,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/queue-and-schedules/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/queue-and-schedules/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/queue-and-schedules/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/security/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/security/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/security/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/security/"/>
@@ -1647,10 +1649,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/security/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/security/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/security/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/es/security/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/security/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/security/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/security/"/>
@@ -1664,10 +1666,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/security/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/security/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/security/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/pt/security/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/security/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/security/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/security/"/>
@@ -1681,10 +1683,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/security/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/security/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/security/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/fr/security/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/security/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/security/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/security/"/>
@@ -1698,10 +1700,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/security/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/security/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/security/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/de/security/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/security/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/security/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/security/"/>
@@ -1715,10 +1717,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/security/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/security/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/security/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/ja/security/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/security/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/security/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/security/"/>
@@ -1732,10 +1734,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/security/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/security/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/security/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/zh/security/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/security/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/security/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/security/"/>
@@ -1749,10 +1751,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/security/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/security/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/security/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/ko/security/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/security/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/security/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/security/"/>
@@ -1766,10 +1768,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/security/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/security/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/security/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/id/security/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/security/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/security/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/security/"/>
@@ -1783,10 +1785,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/security/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/security/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/security/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/hi/security/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/security/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/security/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/security/"/>
@@ -1800,10 +1802,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/security/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/security/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/security/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/bn/security/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/security/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/security/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/security/"/>
@@ -1817,10 +1819,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/security/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/security/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/security/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/ar/security/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/security/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/security/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/security/"/>
@@ -1834,10 +1836,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/security/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/security/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/security/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/roadmap/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/roadmap/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/roadmap/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/roadmap/"/>
@@ -1851,10 +1853,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/roadmap/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/roadmap/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/roadmap/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/es/roadmap/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/roadmap/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/roadmap/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/roadmap/"/>
@@ -1868,10 +1870,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/roadmap/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/roadmap/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/roadmap/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/pt/roadmap/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/roadmap/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/roadmap/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/roadmap/"/>
@@ -1885,10 +1887,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/roadmap/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/roadmap/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/roadmap/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/fr/roadmap/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/roadmap/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/roadmap/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/roadmap/"/>
@@ -1902,10 +1904,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/roadmap/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/roadmap/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/roadmap/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/de/roadmap/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/roadmap/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/roadmap/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/roadmap/"/>
@@ -1919,10 +1921,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/roadmap/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/roadmap/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/roadmap/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/ja/roadmap/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/roadmap/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/roadmap/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/roadmap/"/>
@@ -1936,10 +1938,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/roadmap/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/roadmap/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/roadmap/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/zh/roadmap/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/roadmap/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/roadmap/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/roadmap/"/>
@@ -1953,10 +1955,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/roadmap/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/roadmap/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/roadmap/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/ko/roadmap/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/roadmap/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/roadmap/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/roadmap/"/>
@@ -1970,10 +1972,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/roadmap/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/roadmap/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/roadmap/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/id/roadmap/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/roadmap/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/roadmap/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/roadmap/"/>
@@ -1987,10 +1989,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/roadmap/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/roadmap/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/roadmap/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/hi/roadmap/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/roadmap/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/roadmap/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/roadmap/"/>
@@ -2004,10 +2006,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/roadmap/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/roadmap/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/roadmap/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/bn/roadmap/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/roadmap/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/roadmap/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/roadmap/"/>
@@ -2021,10 +2023,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/roadmap/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/roadmap/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/roadmap/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/ar/roadmap/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/roadmap/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/roadmap/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/roadmap/"/>
@@ -2038,10 +2040,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/roadmap/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/roadmap/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/roadmap/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/faq/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/faq/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/faq/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/faq/"/>
@@ -2055,10 +2057,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/faq/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/faq/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/faq/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/es/faq/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/faq/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/faq/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/faq/"/>
@@ -2072,10 +2074,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/faq/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/faq/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/faq/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/pt/faq/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/faq/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/faq/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/faq/"/>
@@ -2089,10 +2091,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/faq/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/faq/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/faq/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/fr/faq/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/faq/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/faq/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/faq/"/>
@@ -2106,10 +2108,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/faq/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/faq/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/faq/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/de/faq/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/faq/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/faq/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/faq/"/>
@@ -2123,10 +2125,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/faq/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/faq/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/faq/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/ja/faq/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/faq/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/faq/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/faq/"/>
@@ -2140,10 +2142,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/faq/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/faq/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/faq/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/zh/faq/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/faq/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/faq/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/faq/"/>
@@ -2157,10 +2159,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/faq/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/faq/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/faq/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/ko/faq/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/faq/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/faq/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/faq/"/>
@@ -2174,10 +2176,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/faq/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/faq/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/faq/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/id/faq/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/faq/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/faq/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/faq/"/>
@@ -2191,10 +2193,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/faq/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/faq/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/faq/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/hi/faq/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/faq/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/faq/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/faq/"/>
@@ -2208,10 +2210,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/faq/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/faq/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/faq/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/bn/faq/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/faq/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/faq/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/faq/"/>
@@ -2225,10 +2227,10 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/faq/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/faq/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/faq/"/>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/ar/faq/</loc>
+    <lastmod>2026-11-25</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/faq/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/faq/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/faq/"/>
@@ -2242,6 +2244,5 @@
     <xhtml:link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/faq/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/faq/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/faq/"/>
-    <priority>0.8</priority>
   </url>
 </urlset>
