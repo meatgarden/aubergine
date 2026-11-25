@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="id" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Keamanan dan privasi | Aubergine</title>
+<meta name="description" content="Aubergine hanya berjalan di komputer Anda, mendengarkan di 127.0.0.1, memeriksa setiap permintaan, memberi lingkup pada setiap token, dan menyatakan dengan jelas apa yang tidak dilindunginya.">
+<link rel="canonical" href="https://thirstyeggplant.com/id/security/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/security/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/security/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/security/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/security/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/security/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/security/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/security/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/security/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/security/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/security/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/security/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/security/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/security/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="Keamanan dan privasi | Aubergine">
+<meta property="og:description" content="Aubergine hanya berjalan di komputer Anda, mendengarkan di 127.0.0.1, memeriksa setiap permintaan, memberi lingkup pada setiap token, dan menyatakan dengan jelas apa yang tidak dilindunginya.">
+<meta property="og:url" content="https://thirstyeggplant.com/id/security/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine: kanvas berisi terminal, satu sedang sibuk dan satu menunggu Anda">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine: kanvas berisi terminal, satu sedang sibuk dan satu menunggu Anda">
+<meta name="twitter:title" content="Keamanan dan privasi | Aubergine">
+<meta name="twitter:description" content="Aubergine hanya berjalan di komputer Anda, mendengarkan di 127.0.0.1, memeriksa setiap permintaan, memberi lingkup pada setiap token, dan menyatakan dengan jelas apa yang tidak dilindunginya.">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">Langsung ke isi halaman</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="Halaman">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Instalasi</a></li>
+        <li><a href="../guides/">Panduan</a></li>
+        <li><a href="./" aria-current="page">Keamanan</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="Bahasa: Bahasa Indonesia"><span class="lang-long" aria-hidden="true">Bahasa Indonesia</span><span class="lang-short" aria-hidden="true">ID</span></summary>
+      <ul class="menu-list"><li><a href="../../security/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/security/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/security/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/security/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/security/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/security/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/security/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/security/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="./" hreflang="id" lang="id" dir="ltr" aria-current="true">Bahasa Indonesia</a></li><li><a href="../../hi/security/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/security/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/security/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>Menu</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Instalasi</a></li>
+        <li><a href="../guides/">Panduan</a></li>
+        <li><a href="./" aria-current="page">Keamanan</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="wrap translated">
+  <p class="note">Aubergine sendiri berbahasa Inggris: tombol, menu, dan gambarnya adalah versi bahasa Inggris.</p>
+  <p class="note">Halaman ini diterjemahkan oleh mesin dari bahasa Inggris. <a href="https://github.com/thirstyeggplant/aubergine/issues">Kirim koreksi</a>.</p>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/id/security/#article",
+      "headline": "Keamanan dan privasi",
+      "description": "Aubergine hanya berjalan di komputer Anda, mendengarkan di 127.0.0.1, memeriksa setiap permintaan, memberi lingkup pada setiap token, dan menyatakan dengan jelas apa yang tidak dilindunginya.",
+      "url": "https://thirstyeggplant.com/id/security/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/id/security/",
+      "datePublished": "2026-11-18",
+      "inLanguage": "id",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Keamanan", "item": "https://thirstyeggplant.com/id/security/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/id/security/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "Apakah Aubergine mengirim terminal atau kode saya ke suatu tempat?", "acceptedAnswer": { "@type": "Answer", "text": "Tidak. Server hanya mendengarkan di 127.0.0.1, jadi ia hanya bisa dijangkau dari komputer Anda sampai Anda menyiapkan pemakaian dari perangkat lain. Aubergine tidak memanggil model dan tidak mengambil apa pun kecuali Anda sendiri menambahkan sumber library; jika alat gh Anda terpasang, ia menanyakan pull request dari branch sebuah terminal kepadanya." } },
+        { "@type": "Question", "name": "Bisakah agen mengubah pengaturan Aubergine atau membuat token untuk dirinya sendiri?", "acceptedAnswer": { "@type": "Answer", "text": "Tidak. Membuat token, mengubah pengaturan, membaca log aktivitas, dan apa pun yang berkaitan dengan terminal di luar Aubergine tidak pernah diizinkan untuk token, apa pun lingkupnya." } },
+        { "@type": "Question", "name": "Apakah persetujuan mencegah agen milik pemilik menyetujui dirinya sendiri?", "acceptedAnswer": { "@type": "Answer", "text": "Tidak. Agen yang berjalan sebagai Anda bisa bertindak sebagai Anda. Persetujuan dicatat, tidak ditegakkan terhadap agen Anda sendiri." } },
+        { "@type": "Question", "name": "Apakah salinan kerja itu sandbox?", "acceptedAnswer": { "@type": "Answer", "text": "Bukan. Ia memisahkan pekerjaan tetapi tidak mengurung agen. Agen berjalan sebagai Anda." } }
+      ]
+    }
+  ]
+}
+</script>
+<div class="wrap page-head">
+  <nav class="crumbs" aria-label="Posisi Anda"><ol><li><a href="../">Aubergine</a></li><li>Keamanan</li></ol></nav>
+  <h1>Keamanan dan privasi</h1>
+  <p class="lead">Apa yang dilakukan Aubergine untuk melindungi terminal Anda, dan, sama pentingnya, apa yang tidak. Versi singkatnya: ia lokal, ia bertanya sebelum bertindak untuk agen, dan agen tetap berjalan sebagai Anda.</p>
+</div>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>Semuanya tetap di komputer Anda</h2>
+    <ul>
+      <li>Server hanya terikat ke <code>127.0.0.1</code>. Setiap permintaan, dan setiap upgrade WebSocket, diperiksa <code>Host</code> dan <code>Origin</code>-nya, dan browser harus memegang cookie akses.</li>
+      <li>Memakai Aubergine dari perangkat lain mati sampai Anda menyiapkannya: sesuatu di komputer yang sama meneruskan HTTPS kepadanya dengan nama yang Anda tulis di pengaturan, dan setiap browser dipasangkan dengan kode sekali pakai dan bisa dicabut. Perangkat yang dipasangkan bisa melakukan semua yang bisa dilakukan pemilik. <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md">Memakai Aubergine dari tempat lain</a> menjelaskan caranya.</li>
+      <li>Aubergine tidak memanggil model dan tidak memulai permintaan jaringan sendiri, dengan dua pengecualian: mengambil sumber library (alamat Git) saat <em>Anda</em> memintanya, dan menanyakan pull request dari branch sebuah terminal ke alat <code>gh</code> milik Anda sendiri, jika terpasang dan sudah masuk.</li>
+      <li>Notifikasi desktop berasal dari halaman yang terbuka. Tidak ada yang meninggalkan komputer Anda.</li>
+    </ul>
+    <h2>Tiga jenis pemanggil, masing-masing dinilai sendiri</h2>
+    <p>Setiap permintaan diperiksa terhadap apa yang boleh dilakukan pemanggil sebelum apa pun dicari, sehingga pemanggil tanpa hak tidak mendapat informasi apa pun dari jawabannya. Pemanggilnya adalah Anda (masuk di browser), sesi sebuah agen, dan token API.</p>
+    <ul>
+      <li><strong>Token API punya lingkup.</strong> Rahasianya ditampilkan sekali dan tidak pernah disimpan; hanya hash-nya yang disimpan. Panggilan dengan token masuk ke log aktivitas: siapa, apa, dan bagaimana hasilnya, tidak pernah rahasianya dan tidak pernah apa yang dikirim.</li>
+      <li><strong>Beberapa hal yang tidak akan pernah bisa dilakukan token mana pun:</strong> membuat atau mencabut token, membaca log aktivitas, mengubah pengaturan, dan apa pun yang berkaitan dengan terminal di luar Aubergine.</li>
+      <li><strong>Akses terminal adalah dua lingkup terpisah</strong>, satu untuk membaca dan satu untuk mengetik, masing-masing dibatasi pada sesi yang Anda pilih. Anda bisa menandai terminal sebagai <em>people only</em> (hanya orang) untuk menutupnya dari setiap token.</li>
+      <li><strong>Kredensial milik agen itu sendiri sempit.</strong> Ia bisa mengatur status perhatiannya sendiri, menambah catatannya sendiri, melaporkan statusnya sendiri, dan membaca run tempat ia berada. Ia tidak bisa menjangkau terminal, kanvas, atau token lain.</li>
+    </ul>
+    <h2>Apa yang tidak bisa dilakukan agen sendirian</h2>
+    <ul>
+      <li>Apa yang ditulis agen atau program (workflow, langkah) tiba sebagai <strong>draf</strong> yang Anda tinjau. Hanya Anda yang bisa menerimanya.</li>
+      <li>Langkah yang menunggu seseorang hanya bisa disetujui atau dikembalikan oleh orang. Aturan, jadwal, dan demo hanya milik Anda.</li>
+      <li>Aubergine hanya mengetikkan beberapa kalimat tetap ke terminal agen, seperti “baca langkah berikutnya”. Tidak ada yang Anda simpan, dan tidak ada yang ditulis agen, yang diketikkan.</li>
+      <li>Menginstal dari library mengharuskan Anda menerima isi persis yang ditunjukkan kepada Anda.</li>
+    </ul>
+    <h2>Apa yang tidak dilindunginya</h2>
+    <p class="note"><strong>Agen berjalan sebagai Anda.</strong> Agen di terminal bisa melakukan apa pun yang bisa Anda lakukan di terminal itu, termasuk menjalankan perintah, membaca file, dan, jika ia mau, memakai sesi browser Anda sendiri.</p>
+    <ul>
+      <li><strong>Persetujuan bukan kunci.</strong> Agen yang berjalan sebagai Anda bisa memutuskan sebagai Anda. Keputusan itu dicatat, bukan dicegah.</li>
+      <li><strong>Salinan kerja bukan sandbox.</strong> Ia memisahkan pekerjaan dan tidak mengurung agen.</li>
+      <li><strong>Layar tinjauan adalah kendali untuk item library.</strong> Sebuah item adalah instruksi yang akan diikuti agen dengan segala yang boleh dilakukan agen itu. Jangan menginstal apa yang belum Anda baca.</li>
+      <li><strong>Panduan untuk agen adalah saran</strong>, bukan kunci.</li>
+    </ul>
+    <h2>Installer</h2>
+    <p>Ia mengubah dua hal: foldernya sendiri dan satu link bernama <code>aubergine</code>. Tanpa <code>sudo</code>, tanpa mengedit file startup shell Anda, dan tidak pernah menyentuh folder data Anda. <code>aubergine uninstall</code> hanya menghapus apa yang dibuatnya.</p>
+    <h2>Laporkan masalah</h2>
+    <p>Buka issue di <a href="https://github.com/thirstyeggplant/aubergine/issues">GitHub</a>. Jangan cantumkan rahasia atau token di dalamnya.</p>
+    <p>Terkait: <a href="../working-copies/">salinan kerja</a> · <a href="../faq/">FAQ</a> · <a href="../roadmap/">peta jalan</a> (mode persetujuan dan kebijakan perintah direncanakan, belum dibuat)</p>
+  </div>
+</div>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <nav aria-label="Semua halaman">
+      <ul class="foot-links">
+        <li><a href="../">Beranda</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex dan ChatGPT</a></li>
+        <li><a href="../install/">Instalasi</a></li>
+        <li><a href="../guides/">Panduan</a></li>
+        <li><a href="../run-multiple-coding-agents/">Menjalankan beberapa agen</a></li>
+        <li><a href="../working-copies/">Salinan kerja</a></li>
+        <li><a href="../queue-and-schedules/">Antrean dan jadwal</a></li>
+        <li><a href="./" aria-current="page">Keamanan</a></li>
+        <li><a href="../roadmap/">Peta jalan</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine gratis dan open source di bawah <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">lisensi MIT</a>, dan berjalan di komputer Anda sendiri.</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+</script>
+</body>
+</html>

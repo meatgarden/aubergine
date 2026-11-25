@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>كيف تشغّل عدة وكلاء برمجة في آن واحد | Aubergine</title>
+<meta name="description" content="ضع كل وكيل برمجة في طرفيته الخاصة على لوحة واحدة، واعرف أيهم ينتظرك، ووزّع العمل من طابور، وأبقِ تغييرات كل وكيل منفصلة.">
+<link rel="canonical" href="https://thirstyeggplant.com/ar/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/run-multiple-coding-agents/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="كيف تشغّل عدة وكلاء برمجة في آن واحد | Aubergine">
+<meta property="og:description" content="ضع كل وكيل برمجة في طرفيته الخاصة على لوحة واحدة، واعرف أيهم ينتظرك، ووزّع العمل من طابور، وأبقِ تغييرات كل وكيل منفصلة.">
+<meta property="og:url" content="https://thirstyeggplant.com/ar/run-multiple-coding-agents/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine: لوحة من الطرفيات، إحداها مشغولة وأخرى بانتظارك">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine: لوحة من الطرفيات، إحداها مشغولة وأخرى بانتظارك">
+<meta name="twitter:title" content="كيف تشغّل عدة وكلاء برمجة في آن واحد | Aubergine">
+<meta name="twitter:description" content="ضع كل وكيل برمجة في طرفيته الخاصة على لوحة واحدة، واعرف أيهم ينتظرك، ووزّع العمل من طابور، وأبقِ تغييرات كل وكيل منفصلة.">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">انتقل إلى محتوى الصفحة</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="الصفحات">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">التثبيت</a></li>
+        <li><a href="../guides/">الأدلة</a></li>
+        <li><a href="../security/">الأمان</a></li>
+        <li><a href="../faq/">الأسئلة الشائعة</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="اللغة: العربية"><span class="lang-long" aria-hidden="true">العربية</span><span class="lang-short" aria-hidden="true">AR</span></summary>
+      <ul class="menu-list"><li><a href="../../run-multiple-coding-agents/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/run-multiple-coding-agents/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/run-multiple-coding-agents/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/run-multiple-coding-agents/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/run-multiple-coding-agents/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/run-multiple-coding-agents/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/run-multiple-coding-agents/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/run-multiple-coding-agents/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/run-multiple-coding-agents/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/run-multiple-coding-agents/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/run-multiple-coding-agents/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="./" hreflang="ar" lang="ar" dir="rtl" aria-current="true">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>القائمة</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">التثبيت</a></li>
+        <li><a href="../guides/">الأدلة</a></li>
+        <li><a href="../security/">الأمان</a></li>
+        <li><a href="../faq/">الأسئلة الشائعة</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="wrap translated">
+  <p class="note">تطبيق Aubergine نفسه باللغة الإنجليزية: أزراره وقوائمه وصوره كلها بالإنجليزية.</p>
+  <p class="note">ترجمت آلةٌ هذه الصفحة عن الإنجليزية. <a href="https://github.com/thirstyeggplant/aubergine/issues">أرسل تصحيحًا</a>.</p>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/ar/run-multiple-coding-agents/#article",
+      "headline": "كيف تشغّل عدة وكلاء برمجة في آن واحد",
+      "description": "ضع كل وكيل برمجة في طرفيته الخاصة على لوحة واحدة، واعرف أيهم ينتظرك، ووزّع العمل من طابور، وأبقِ تغييرات كل وكيل منفصلة.",
+      "url": "https://thirstyeggplant.com/ar/run-multiple-coding-agents/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/ar/run-multiple-coding-agents/",
+      "datePublished": "2026-11-18",
+      "inLanguage": "ar",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "الأدلة", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "تشغيل عدة وكلاء", "item": "https://thirstyeggplant.com/ar/run-multiple-coding-agents/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/ar/run-multiple-coding-agents/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "كيف أشغّل عدة وكلاء برمجة في آن واحد؟", "acceptedAnswer": { "@type": "Answer", "text": "ضع كل وكيل في طرفيته الخاصة على لوحة Aubergine. تُظهر اللوحة أيها مشغول أو خامل أو بانتظارك، وقائمة واحدة اسمها For you تجمع كل سؤال وكل موافقة." } },
+        { "@type": "Question", "name": "كيف أمنع وكيلين من تعديل الملفات نفسها؟", "acceptedAnswer": { "@type": "Answer", "text": "شغّل كل طرفية في نسخة عمل خاصة بها: نسختها المسحوبة الخاصة من المستودع على فرعها الخاص. لا يدمج Aubergine ولا يدفع نيابة عنك أبدًا." } },
+        { "@type": "Question", "name": "هل يعمل مع أي وكيل برمجة؟", "acceptedAnswer": { "@type": "Answer", "text": "نعم. يشغّل Aubergine طرفيات عادية، فيمكن لأي وكيل لسطر الأوامر أن يعمل في واحدة منها. ما يفعله Aubergine من تلقاء نفسه لوكيلٍ مبني لـ Claude Code؛ وأي وكيل آخر يستطيع التبليغ عبر أوامر aubergine." } }
+      ]
+    }
+  ]
+}
+</script>
+<div class="wrap page-head">
+  <nav class="crumbs" aria-label="أين أنت"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">الأدلة</a></li><li>تشغيل عدة وكلاء</li></ol></nav>
+  <h1>كيف تشغّل عدة وكلاء برمجة في آن واحد</h1>
+  <p class="lead">وكيلان أمرٌ سهل. خمسة فوضى: أيهم عالق، وأيهم ينتظرك، وأيهم غيّر ذلك الملف؟ بُني Aubergine لتلك اللحظة. وهو يعمل على حاسوبك أنت.</p>
+</div>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>1. أعطِ كل وكيل طرفية على لوحة واحدة</h2>
+    <p>انقر <strong>New terminal</strong>، أعلى قائمة الطرفيات (أو اضغط <code>N</code>)، وشغّل وكيلًا فيها. اسحب الطرفيات من أشرطة عناوينها، وغيّر أحجامها، واجمعها في إطارات. العمل المترابط يوضع على لوحة واحدة؛ والأعمال المنفصلة في لوحات منفصلة (علامات تبويب) أو في <em>مشاريع</em>، لكل منها طرفياته وطابوره وجداوله الزمنية.</p>
+    <p>كل طرفية صدفة حقيقية في جلسة tmux. أغلق المتصفح، أو أوقف Aubergine، ويبقى وكلاؤك يعملون.</p>
+    <h2>2. اعرف أي وكيل يحتاج إليك</h2>
+    <p>تُظهر كل طرفية إن كانت مشغولة أو خاملة أو بانتظارك. تأتي هذه الحالة من خطافات في صدفتك ومن الوكلاء أنفسهم، لا من قراءة الشاشة. والعدد بجانب <strong>For you</strong> في الأعلى والمفتاح <code>W</code> يأخذانك مباشرة إلى التالي الذي ينتظر.</p>
+    <p>قائمة واحدة، <strong>For you</strong> (لك)، تجمع كل ما ينتظر إنسانًا: الأسئلة، والتشغيلات التي تنتظر الموافقة، والمهام المنتهية التي يجب النظر فيها، والفاشلة مع السبب.</p>
+    <h2>3. وزّع العمل من طابور</h2>
+    <p>اكتب مهمة مرة واحدة وضعها في <a href="../queue-and-schedules/">الطابور</a>. يأخذها وكيل متفرغ حين تقول ذلك، مع حدّ لعدد ما يعمل في آن واحد. وللعمل المتكرر، اضبط جدولًا زمنيًا. يستطيع الوكلاء اقتراح مهام وطرح أسئلة عليك، لكن لا شيء يبدأ حتى توافق.</p>
+    <h2>4. أبقِ تغييرات كل وكيل منفصلة</h2>
+    <p>وكيلان في مجلد واحد يعدّلان الملفات نفسها. شغّل كلًّا منهما في <a href="../working-copies/">نسخة عمل</a> خاصة به: نسخة مسحوبة منفصلة على فرعها الخاص، فتقرأ عمل كل وكيل على حدة. لا يدمج Aubergine ولا يدفع ولا يعيد الأساس (rebase) نيابة عنك أبدًا.</p>
+    <h2>5. أعطِ الوكلاء خطوات، وقرّر عند البوابات</h2>
+    <p>سير العمل قائمة مرتبة من الخطوات يتبعها وكيل، مع شريط يُظهر أين هو. ويمكن لخطوة أن تنتظرك لتوافق أو تعيدها. وكل تشغيل جارٍ يظهر على لوحة واحدة.</p>
+    <h2>ما لا يفعله</h2>
+    <ul>
+      <li>لا يستدعي نموذجًا ولا يختار لك واحدًا. الوكلاء وكلاؤك.</li>
+      <li>لا يمنع وكيلًا من فعل شيء تستطيع أنت فعله. الوكلاء يعملون باسمك. انظر <a href="../security/">الأمان</a> لتعرف ما المحمي وما غير المحمي.</li>
+      <li>يعمل على حاسوب واحد اليوم. مشاركة لوحة مع أشخاص آخرين وتشغيل الوكلاء في السحابة موجودان على <a href="../roadmap/">خارطة الطريق</a>، ولم يُبنيا.</li>
+    </ul>
+    <p class="actions"><a class="button primary" href="../install/">ثبّت Aubergine</a></p>
+  </div>
+</div>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <nav aria-label="كل الصفحات">
+      <ul class="foot-links">
+        <li><a href="../">الرئيسية</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex و ChatGPT</a></li>
+        <li><a href="../install/">التثبيت</a></li>
+        <li><a href="../guides/">الأدلة</a></li>
+        <li><a href="./" aria-current="page">تشغيل عدة وكلاء</a></li>
+        <li><a href="../working-copies/">نسخ العمل</a></li>
+        <li><a href="../queue-and-schedules/">الطابور والجداول الزمنية</a></li>
+        <li><a href="../security/">الأمان</a></li>
+        <li><a href="../roadmap/">خارطة الطريق</a></li>
+        <li><a href="../faq/">الأسئلة الشائعة</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine مجاني ومفتوح المصدر بموجب <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">رخصة MIT</a>، ويعمل على حاسوبك أنت.</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+</script>
+</body>
+</html>

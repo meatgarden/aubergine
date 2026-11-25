@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="hi" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>क्यू, For you सूची और शेड्यूल | Aubergine</title>
+<meta name="description" content="एक टास्क एक बार लिखें और किसी खाली एजेंट को उसे लेने दें, जो कुछ आपका इंतज़ार कर रहा है उसे एक सूची में देखें, और शेड्यूल से टास्क तय समय पर चलाएँ।">
+<link rel="canonical" href="https://thirstyeggplant.com/hi/queue-and-schedules/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/queue-and-schedules/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/queue-and-schedules/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/queue-and-schedules/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/queue-and-schedules/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/queue-and-schedules/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/queue-and-schedules/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/queue-and-schedules/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/queue-and-schedules/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/queue-and-schedules/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/queue-and-schedules/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/queue-and-schedules/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/queue-and-schedules/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/queue-and-schedules/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="क्यू, For you सूची और शेड्यूल | Aubergine">
+<meta property="og:description" content="एक टास्क एक बार लिखें और किसी खाली एजेंट को उसे लेने दें, जो कुछ आपका इंतज़ार कर रहा है उसे एक सूची में देखें, और शेड्यूल से टास्क तय समय पर चलाएँ।">
+<meta property="og:url" content="https://thirstyeggplant.com/hi/queue-and-schedules/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine: टर्मिनलों का एक कैनवस, एक काम में लगा हुआ और एक आपका इंतज़ार करता हुआ">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine: टर्मिनलों का एक कैनवस, एक काम में लगा हुआ और एक आपका इंतज़ार करता हुआ">
+<meta name="twitter:title" content="क्यू, For you सूची और शेड्यूल | Aubergine">
+<meta name="twitter:description" content="एक टास्क एक बार लिखें और किसी खाली एजेंट को उसे लेने दें, जो कुछ आपका इंतज़ार कर रहा है उसे एक सूची में देखें, और शेड्यूल से टास्क तय समय पर चलाएँ।">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">पेज पर जाएँ</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="पेज">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">इंस्टॉल</a></li>
+        <li><a href="../guides/">गाइड</a></li>
+        <li><a href="../security/">सुरक्षा</a></li>
+        <li><a href="../faq/">सवाल-जवाब</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="भाषा: हिन्दी"><span class="lang-long" aria-hidden="true">हिन्दी</span><span class="lang-short" aria-hidden="true">HI</span></summary>
+      <ul class="menu-list"><li><a href="../../queue-and-schedules/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/queue-and-schedules/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/queue-and-schedules/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/queue-and-schedules/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/queue-and-schedules/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/queue-and-schedules/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/queue-and-schedules/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/queue-and-schedules/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/queue-and-schedules/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="./" hreflang="hi" lang="hi" dir="ltr" aria-current="true">हिन्दी</a></li><li><a href="../../bn/queue-and-schedules/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/queue-and-schedules/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>मेन्यू</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">इंस्टॉल</a></li>
+        <li><a href="../guides/">गाइड</a></li>
+        <li><a href="../security/">सुरक्षा</a></li>
+        <li><a href="../faq/">सवाल-जवाब</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="wrap translated">
+  <p class="note">Aubergine खुद अंग्रेज़ी में है: उसके बटन, मेन्यू और तस्वीरें अंग्रेज़ी वाली ही हैं।</p>
+  <p class="note">इस पेज का अंग्रेज़ी से अनुवाद मशीन ने किया है। <a href="https://github.com/thirstyeggplant/aubergine/issues">सुधार भेजें</a>।</p>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/hi/queue-and-schedules/#article",
+      "headline": "क्यू, For you सूची और शेड्यूल",
+      "description": "एक टास्क एक बार लिखें और किसी खाली एजेंट को उसे लेने दें, जो कुछ आपका इंतज़ार कर रहा है उसे एक सूची में देखें, और शेड्यूल से टास्क तय समय पर चलाएँ।",
+      "url": "https://thirstyeggplant.com/hi/queue-and-schedules/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/hi/queue-and-schedules/",
+      "datePublished": "2026-11-18",
+      "inLanguage": "hi",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "गाइड", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "क्यू और शेड्यूल", "item": "https://thirstyeggplant.com/hi/queue-and-schedules/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/hi/queue-and-schedules/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "Aubergine में क्यू क्या है?", "acceptedAnswer": { "@type": "Answer", "text": "एजेंटों के लिए काम। आप एक टास्क एक बार लिखते हैं, शीर्षक, ब्योरे और चाहें तो एक फ़ोल्डर, एक वर्कफ़्लो और कौन उसे ले सकता है, के साथ। जब आप कहें, कोई खाली एजेंट उसे लेता है।" } },
+        { "@type": "Question", "name": "For you सूची क्या है?", "acceptedAnswer": { "@type": "Answer", "text": "वह सब जो किसी इंसान का इंतज़ार कर रहा है, एक जगह: सवाल वाले टर्मिनल, मंज़ूरी के लिए रन, पढ़ने के लिए ड्राफ़्ट, पूरे और फ़ेल हुए टास्क, और एजेंटों की सौंपी हुई सूचियाँ।" } },
+        { "@type": "Question", "name": "क्या कोई एजेंट खुद से काम शुरू कर सकता है?", "acceptedAnswer": { "@type": "Answer", "text": "एजेंट एक टास्क प्रस्तावित कर सकता है या आपसे कुछ पूछ सकता है, पर जब तक आप स्वीकार न करें, प्रस्ताव कुछ शुरू नहीं करता।" } },
+        { "@type": "Question", "name": "जब मेरा कंप्यूटर स्लीप में हो तो शेड्यूल का क्या होता है?", "acceptedAnswer": { "@type": "Answer", "text": "कुछ भी कंप्यूटर को नहीं जगाता। जो समय उसके सोते हुए निकल गया, वह उसके लौटने पर एक बार चलता है, देर से चिह्नित, अगर वह छह घंटे से कम पुराना हो। उससे पुराना हो तो उसे missed चिह्नित किया जाता है।" } }
+      ]
+    }
+  ]
+}
+</script>
+<div class="wrap page-head">
+  <nav class="crumbs" aria-label="आप कहाँ हैं"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">गाइड</a></li><li>क्यू और शेड्यूल</li></ol></nav>
+  <h1>क्यू, “For you” और शेड्यूल</h1>
+  <p class="lead">दो सूचियाँ जो एक-दूसरे को भरती हैं: क्यू एजेंटों के लिए काम रखती है, और <em>For you</em> वह सब रखती है जो किसी इंसान का इंतज़ार कर रहा है। शेड्यूल तय समय पर क्यू में टास्क जोड़ते हैं।</p>
+</div>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>क्यू</h2>
+    <p>पेज के ऊपर <strong>Runs</strong> खोलें (या <code>Q</code> दबाएँ) और <strong>Add task</strong> पर क्लिक करें। टास्क में एक शीर्षक होता है, क्या करना है, और चाहें तो एक फ़ोल्डर, एक वर्कफ़्लो, और कौन उसे ले सकता है। डिफ़ॉल्ट रूप से कोई भी टर्मिनल जहाँ एजेंट खाली हो, उसे ले सकता है; आप एक टर्मिनल का नाम दे सकते हैं, या उसके लिए एक नया एजेंट टर्मिनल शुरू करवा सकते हैं, उसकी अपनी वर्किंग कॉपी में जहाँ फ़ोल्डर किसी रिपॉज़िटरी में हो।</p>
+    <ul>
+      <li><strong>Start next</strong> पहला ऐसा टास्क शुरू करता है जिसे अभी कोई ले सकता है। सादे शेल को कभी टास्क नहीं दिया जाता।</li>
+      <li><strong>At most N at once</strong> (एक साथ ज़्यादा से ज़्यादा N), जब तक आप न बदलें तब तक तीन। <strong>Hold</strong> नई शुरुआत रोकता है और चल रहे किसी काम को नहीं छूता।</li>
+      <li><strong>Start by itself</strong> तब तक बंद रहता है जब तक आप उसे चालू न करें। कुछ भी टाइमर पर नहीं जाँचा जाता।</li>
+      <li>क्रम आपका है: किसी टास्क को खींचें, या ऐरो कुंजियाँ इस्तेमाल करें।</li>
+      <li>टास्क अपने रन के साथ चलता है: जब तक रन मंज़ूरी का इंतज़ार करे तब तक <em>needs you</em>, पूरा होने पर <em>done</em>, रुकने पर एक वाक्य के साथ <em>failed</em>। कुछ भी अपने आप दोबारा नहीं आज़माया जाता।</li>
+    </ul>
+    <h2>For you</h2>
+    <p>सवाल वाले टर्मिनल, मंज़ूरी के लिए या अटके हुए रन, पढ़ने के लिए ड्राफ़्ट और इंस्टॉल, क्यू के लिए प्रस्तावित टास्क, पूरे और फ़ेल हुए टास्क, एजेंट की सौंपी हुई सूचियाँ, और ऐसी वर्किंग कॉपी जिनका टर्मिनल जा चुका है। ऊपर For you के बगल वाली गिनती और “next waiting” एक ही सूची हैं। इसमें से ज़्यादातर इकट्ठा किया जाता है, लिखा नहीं जाता: कोई आइटम तब हटता है जब वह चीज़ खुद पूरी हो जाती है।</p>
+    <figure class="pic"><a href="../../screenshots/for-you.png"><img src="../../screenshots/for-you.png" width="990" height="570" loading="lazy" alt="Runs पेज का Waiting for you कॉलम: to-do जोड़ने का एक बॉक्स, फिर एक नकली एजेंट का सवाल, पढ़ने के लिए एक ड्राफ़्ट और सौंपी गई एक सूची।"></a><figcaption>Runs पेज पर For you: एक सवाल, पढ़ने के लिए एक ड्राफ़्ट और सौंपी गई एक सूची, हर एक के साथ कि वह क्या है।</figcaption></figure>
+    <p>जो एजेंट ऐसा काम पाता है जो उसे अभी नहीं करना चाहिए, वह एक टास्क प्रस्तावित कर सकता है, और जिसे किसी इंसान की ज़रूरत है, वह आपसे पूछ सकता है:</p>
+    <pre><code>aubergine task add "Add a test for the retry" --details "it should fail without the fix"
+aubergine ask "the staging key expires this week: rotate it, or say who can"</code></pre>
+    <p>दोनों आपकी सूची में आते हैं। जब तक आप स्वीकार न करें, कोई प्रस्ताव कुछ शुरू नहीं करता।</p>
+    <h2>शेड्यूल</h2>
+    <p>शेड्यूल दिन का एक समय, हफ़्ते के दिन, चलाने के लिए कुछ, और उसे चलाने की कोई जगह है। जब उसका समय आता है तो वह क्यू में एक टास्क जोड़ता है, और क्यू उसे शुरू करती है। Runs पेज पर <strong>Schedules</strong> के नीचे, या <code>aubergine schedule</code>। समय इस कंप्यूटर की घड़ी का होता है; कोई एक्सप्रेशन नहीं, और दिन में एक बार से ज़्यादा कुछ नहीं।</p>
+    <pre><code>aubergine schedule add "My morning list" --at 08:30 --days weekdays \
+  --element "Morning list" --new Main
+aubergine schedule run "My morning list"</code></pre>
+    <p><code>aubergine schedule run</code> किसी शेड्यूल को अभी आज़माता है।</p>
+    <h3>जब चीज़ें योजना के मुताबिक न हों</h3>
+    <ul>
+      <li>कंप्यूटर जगा होना चाहिए और Aubergine चलता होना चाहिए। जो समय उसके सोते हुए निकल गया, वह उसके लौटने पर <strong>एक बार</strong> चलता है, देर से चिह्नित, अगर वह छह घंटे से कम पुराना हो। नहीं तो उसे <strong>missed</strong> (छूटा) चिह्नित किया जाता है।</li>
+      <li>जब तक किसी शेड्यूल का पिछला टास्क अभी इंतज़ार कर रहा हो या काम में हो, वह दूसरा नहीं जोड़ता, और बताता है कि उसे छोड़ दिया गया।</li>
+      <li>अगर उसमें नामित कोई चीज़ जा चुकी हो (टर्मिनल, स्टेप, कैनवस), तो वह नहीं चलता, और आपकी सूची में एक आइटम यह बताता है।</li>
+    </ul>
+    <h2>नियम</h2>
+    <p><strong>Rules</strong> के नीचे आप कह सकते हैं “जब कोई टास्क पूरा हो, फ़ेल हो या उसे मेरी ज़रूरत हो, या कोई शेड्यूल चला या छूट गया, तब मुझे सूचना दो या कोई सेव किया हुआ स्टेप चलाओ”। नियम लिखना सिर्फ़ आपका काम है: कोई प्रोग्राम या एजेंट कोई नियम जोड़ या बदल नहीं सकता, और कोई नियम खुद को चालू नहीं कर सकता।</p>
+    <p>Aubergine किसी मॉडल को कॉल नहीं करता और किसी ऐप का कोई क्रेडेंशियल नहीं रखता। टास्क या शेड्यूल सिर्फ़ एक रन शुरू करता है; जो एजेंट उसे लेता है, वह अपने टूल से काम करता है।</p>
+    <p>जुड़ा हुआ: <a href="../working-copies/">वर्किंग कॉपी</a> · <a href="../run-multiple-coding-agents/">एक साथ कई कोडिंग एजेंट चलाएँ</a></p>
+  </div>
+</div>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <nav aria-label="सभी पेज">
+      <ul class="foot-links">
+        <li><a href="../">होम</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex और ChatGPT</a></li>
+        <li><a href="../install/">इंस्टॉल</a></li>
+        <li><a href="../guides/">गाइड</a></li>
+        <li><a href="../run-multiple-coding-agents/">कई एजेंट चलाएँ</a></li>
+        <li><a href="../working-copies/">वर्किंग कॉपी</a></li>
+        <li><a href="./" aria-current="page">क्यू और शेड्यूल</a></li>
+        <li><a href="../security/">सुरक्षा</a></li>
+        <li><a href="../roadmap/">रोडमैप</a></li>
+        <li><a href="../faq/">सवाल-जवाब</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine मुफ़्त और ओपन सोर्स है, <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT लाइसेंस</a> के तहत, और आपके अपने कंप्यूटर पर चलता है।</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+</script>
+</body>
+</html>

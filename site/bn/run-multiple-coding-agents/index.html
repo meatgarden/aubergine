@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="bn" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>একসঙ্গে কয়েকটি কোডিং এজেন্ট কীভাবে চালাবেন | Aubergine</title>
+<meta name="description" content="প্রতিটি কোডিং এজেন্টকে একটি ক্যানভাসে তার নিজের টার্মিনালে রাখুন, দেখুন কোনটি আপনার অপেক্ষায়, কিউ থেকে কাজ ভাগ করে দিন, আর প্রতিটি এজেন্টের পরিবর্তন আলাদা রাখুন।">
+<link rel="canonical" href="https://thirstyeggplant.com/bn/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/run-multiple-coding-agents/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="একসঙ্গে কয়েকটি কোডিং এজেন্ট কীভাবে চালাবেন | Aubergine">
+<meta property="og:description" content="প্রতিটি কোডিং এজেন্টকে একটি ক্যানভাসে তার নিজের টার্মিনালে রাখুন, দেখুন কোনটি আপনার অপেক্ষায়, কিউ থেকে কাজ ভাগ করে দিন, আর প্রতিটি এজেন্টের পরিবর্তন আলাদা রাখুন।">
+<meta property="og:url" content="https://thirstyeggplant.com/bn/run-multiple-coding-agents/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine: টার্মিনালের একটি ক্যানভাস, একটি কাজে ব্যস্ত আর একটি আপনার অপেক্ষায়">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine: টার্মিনালের একটি ক্যানভাস, একটি কাজে ব্যস্ত আর একটি আপনার অপেক্ষায়">
+<meta name="twitter:title" content="একসঙ্গে কয়েকটি কোডিং এজেন্ট কীভাবে চালাবেন | Aubergine">
+<meta name="twitter:description" content="প্রতিটি কোডিং এজেন্টকে একটি ক্যানভাসে তার নিজের টার্মিনালে রাখুন, দেখুন কোনটি আপনার অপেক্ষায়, কিউ থেকে কাজ ভাগ করে দিন, আর প্রতিটি এজেন্টের পরিবর্তন আলাদা রাখুন।">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">পেজে যান</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="পেজ">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">ইনস্টল</a></li>
+        <li><a href="../guides/">গাইড</a></li>
+        <li><a href="../security/">নিরাপত্তা</a></li>
+        <li><a href="../faq/">প্রশ্নোত্তর</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="ভাষা: বাংলা"><span class="lang-long" aria-hidden="true">বাংলা</span><span class="lang-short" aria-hidden="true">BN</span></summary>
+      <ul class="menu-list"><li><a href="../../run-multiple-coding-agents/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/run-multiple-coding-agents/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/run-multiple-coding-agents/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/run-multiple-coding-agents/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/run-multiple-coding-agents/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/run-multiple-coding-agents/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/run-multiple-coding-agents/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/run-multiple-coding-agents/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/run-multiple-coding-agents/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/run-multiple-coding-agents/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="./" hreflang="bn" lang="bn" dir="ltr" aria-current="true">বাংলা</a></li><li><a href="../../ar/run-multiple-coding-agents/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>মেনু</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">ইনস্টল</a></li>
+        <li><a href="../guides/">গাইড</a></li>
+        <li><a href="../security/">নিরাপত্তা</a></li>
+        <li><a href="../faq/">প্রশ্নোত্তর</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="wrap translated">
+  <p class="note">Aubergine নিজে ইংরেজিতে: এর বোতাম, মেনু আর ছবি সবই ইংরেজি।</p>
+  <p class="note">এই পেজটি ইংরেজি থেকে মেশিন দিয়ে অনুবাদ করা। <a href="https://github.com/thirstyeggplant/aubergine/issues">সংশোধন পাঠান</a>।</p>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/bn/run-multiple-coding-agents/#article",
+      "headline": "একসঙ্গে কয়েকটি কোডিং এজেন্ট কীভাবে চালাবেন",
+      "description": "প্রতিটি কোডিং এজেন্টকে একটি ক্যানভাসে তার নিজের টার্মিনালে রাখুন, দেখুন কোনটি আপনার অপেক্ষায়, কিউ থেকে কাজ ভাগ করে দিন, আর প্রতিটি এজেন্টের পরিবর্তন আলাদা রাখুন।",
+      "url": "https://thirstyeggplant.com/bn/run-multiple-coding-agents/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/bn/run-multiple-coding-agents/",
+      "datePublished": "2026-11-18",
+      "inLanguage": "bn",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "গাইড", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "একাধিক এজেন্ট চালান", "item": "https://thirstyeggplant.com/bn/run-multiple-coding-agents/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/bn/run-multiple-coding-agents/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "একসঙ্গে কয়েকটি কোডিং এজেন্ট কীভাবে চালাব?", "acceptedAnswer": { "@type": "Answer", "text": "প্রতিটি এজেন্টকে একটি Aubergine ক্যানভাসে তার নিজের টার্মিনালে রাখুন। ক্যানভাস দেখায় কোনগুলো busy, idle বা আপনার অপেক্ষায়, আর For you নামের একটি তালিকা প্রতিটি প্রশ্ন আর অনুমোদন জড়ো করে।" } },
+        { "@type": "Question", "name": "দুটি এজেন্টকে একই ফাইল বদলানো থেকে কীভাবে আটকাব?", "acceptedAnswer": { "@type": "Answer", "text": "প্রতিটি টার্মিনাল তার নিজস্ব ওয়ার্কিং কপিতে চালু করুন: রিপোজিটরির নিজস্ব চেকআউট, নিজস্ব ব্রাঞ্চে। Aubergine আপনার হয়ে কখনো merge বা push করে না।" } },
+        { "@type": "Question", "name": "এটি কি যেকোনো কোডিং এজেন্টের সঙ্গে কাজ করে?", "acceptedAnswer": { "@type": "Answer", "text": "হ্যাঁ। Aubergine সাধারণ টার্মিনাল চালায়, তাই যেকোনো কমান্ড-লাইন এজেন্ট তাতে চলতে পারে। Aubergine নিজে থেকে কোনো এজেন্টের জন্য যা করে, তা Claude Code-এর জন্য তৈরি; অন্য যেকোনো এজেন্ট aubergine কমান্ড দিয়ে জানাতে পারে।" } }
+      ]
+    }
+  ]
+}
+</script>
+<div class="wrap page-head">
+  <nav class="crumbs" aria-label="আপনি কোথায় আছেন"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">গাইড</a></li><li>একাধিক এজেন্ট চালান</li></ol></nav>
+  <h1>একসঙ্গে কয়েকটি কোডিং এজেন্ট কীভাবে চালাবেন</h1>
+  <p class="lead">দুটি এজেন্ট সহজ। পাঁচটি হলে বিশৃঙ্খলা: কোনটি আটকে আছে, কোনটি আপনার অপেক্ষায়, কোনটি ওই ফাইল বদলেছে? Aubergine ঠিক সেই মুহূর্তের জন্য তৈরি। এটি আপনার নিজের কম্পিউটারে চলে।</p>
+</div>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>1. প্রতিটি এজেন্টকে এক ক্যানভাসে একটি টার্মিনাল দিন</h2>
+    <p>টার্মিনালের তালিকার একদম উপরে <strong>New terminal</strong>-এ ক্লিক করুন (বা <code>N</code> চাপুন), আর তাতে একটি এজেন্ট চালু করুন। টার্মিনালগুলো তাদের টাইটেল বার ধরে টেনে সরান, আকার বদলান, আর ফ্রেমে দলবদ্ধ করুন। সম্পর্কিত কাজ এক ক্যানভাসে যায়; আলাদা কাজ আলাদা ক্যানভাসে (ট্যাব) বা <em>প্রজেক্টে</em>, প্রতিটির নিজস্ব টার্মিনাল, কিউ আর শিডিউল সহ।</p>
+    <p>প্রতিটি টার্মিনাল একটি tmux সেশনে আসল শেল। ব্রাউজার বন্ধ করুন, বা Aubergine থামান, আপনার এজেন্টরা চলতেই থাকে।</p>
+    <h2>2. দেখুন কোন এজেন্টের আপনাকে দরকার</h2>
+    <p>প্রতিটি টার্মিনাল দেখায় সেটি busy, idle নাকি waiting for you। এই স্ট্যাটাস আসে আপনার শেলের হুক আর এজেন্টদের নিজেদের কাছ থেকে, স্ক্রিন পড়ে নয়। উপরে <strong>For you</strong>-এর পাশের সংখ্যা আর <code>W</code> কী আপনাকে সরাসরি পরের অপেক্ষমাণটিতে নিয়ে যায়।</p>
+    <p>একটি তালিকা, <strong>For you</strong> (আপনার জন্য), একজন মানুষের অপেক্ষায় থাকা সবকিছু জড়ো করে: প্রশ্ন, অনুমোদনের জন্য রান, দেখার জন্য শেষ হওয়া টাস্ক, আর কারণ সহ ব্যর্থ টাস্ক।</p>
+    <h2>3. কিউ থেকে কাজ ভাগ করে দিন</h2>
+    <p>একটি টাস্ক একবার লিখুন আর <a href="../queue-and-schedules/">কিউতে</a> রাখুন। আপনি বললে একটি ফাঁকা এজেন্ট সেটি নেয়, একসঙ্গে কতগুলো চলবে তার একটি সীমা সহ। বারবার হওয়া কাজের জন্য একটি শিডিউল সেট করুন। এজেন্টরা টাস্ক প্রস্তাব করতে আর আপনাকে প্রশ্ন করতে পারে, কিন্তু আপনি গ্রহণ না করা পর্যন্ত কিছুই শুরু হয় না।</p>
+    <h2>4. প্রতিটি এজেন্টের পরিবর্তন আলাদা রাখুন</h2>
+    <p>এক ফোল্ডারে দুটি এজেন্ট একই ফাইল বদলায়। প্রতিটিকে তার নিজস্ব <a href="../working-copies/">ওয়ার্কিং কপিতে</a> চালু করুন: নিজস্ব ব্রাঞ্চে একটি আলাদা চেকআউট, যাতে প্রতিটি এজেন্টের কাজ আলাদা করে পড়তে পারেন। Aubergine আপনার হয়ে কখনো merge, push বা rebase করে না।</p>
+    <h2>5. এজেন্টদের ধাপ দিন, আর গেটে সিদ্ধান্ত নিন</h2>
+    <p>ওয়ার্কফ্লো হলো ধাপের একটি ক্রমিক তালিকা যা একটি এজেন্ট অনুসরণ করে, সঙ্গে একটি স্ট্রিপ যা দেখায় সে কোথায় আছে। কোনো ধাপ আপনার অনুমোদন বা ফেরত পাঠানোর অপেক্ষা করতে পারে। প্রতিটি চলমান রান একটি বোর্ডে দেখা যায়।</p>
+    <h2>এটি যা করে না</h2>
+    <ul>
+      <li>এটি কোনো মডেল কল করে না বা আপনার হয়ে বাছে না। এজেন্টগুলো আপনার।</li>
+      <li>এটি কোনো এজেন্টকে এমন কিছু করা থেকে আটকায় না যা আপনি করতে পারেন। এজেন্টরা আপনার পরিচয়ে চলে। কী সুরক্ষিত আর কী নয়, তার জন্য <a href="../security/">নিরাপত্তা</a> দেখুন।</li>
+      <li>আজ এটি একটি কম্পিউটারে চলে। অন্যদের সঙ্গে ক্যানভাস শেয়ার করা আর ক্লাউডে এজেন্ট চালানো <a href="../roadmap/">রোডম্যাপে</a> আছে, তৈরি হয়নি।</li>
+    </ul>
+    <p class="actions"><a class="button primary" href="../install/">Aubergine ইনস্টল করুন</a></p>
+  </div>
+</div>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <nav aria-label="সব পেজ">
+      <ul class="foot-links">
+        <li><a href="../">হোম</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex আর ChatGPT</a></li>
+        <li><a href="../install/">ইনস্টল</a></li>
+        <li><a href="../guides/">গাইড</a></li>
+        <li><a href="./" aria-current="page">একাধিক এজেন্ট চালান</a></li>
+        <li><a href="../working-copies/">ওয়ার্কিং কপি</a></li>
+        <li><a href="../queue-and-schedules/">কিউ আর শিডিউল</a></li>
+        <li><a href="../security/">নিরাপত্তা</a></li>
+        <li><a href="../roadmap/">রোডম্যাপ</a></li>
+        <li><a href="../faq/">প্রশ্নোত্তর</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine বিনামূল্যে ও ওপেন সোর্স, <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT লাইসেন্সে</a>, আর চলে আপনার নিজের কম্পিউটারে।</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+</script>
+</body>
+</html>

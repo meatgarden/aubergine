@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="zh-Hans" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>如何同时运行多个编程智能体 | Aubergine</title>
+<meta name="description" content="把每个编程智能体放进一张画布上各自的终端，看清哪个在等你，从队列分派工作，并把每个智能体的改动分开。">
+<link rel="canonical" href="https://thirstyeggplant.com/zh/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/run-multiple-coding-agents/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/run-multiple-coding-agents/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="如何同时运行多个编程智能体 | Aubergine">
+<meta property="og:description" content="把每个编程智能体放进一张画布上各自的终端，看清哪个在等你，从队列分派工作，并把每个智能体的改动分开。">
+<meta property="og:url" content="https://thirstyeggplant.com/zh/run-multiple-coding-agents/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine：一张摆满终端的画布，一个正在忙，一个在等你">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine：一张摆满终端的画布，一个正在忙，一个在等你">
+<meta name="twitter:title" content="如何同时运行多个编程智能体 | Aubergine">
+<meta name="twitter:description" content="把每个编程智能体放进一张画布上各自的终端，看清哪个在等你，从队列分派工作，并把每个智能体的改动分开。">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="页面">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">安装</a></li>
+        <li><a href="../guides/">指南</a></li>
+        <li><a href="../security/">安全</a></li>
+        <li><a href="../faq/">常见问题</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="语言: 简体中文"><span class="lang-long" aria-hidden="true">简体中文</span><span class="lang-short" aria-hidden="true">ZH</span></summary>
+      <ul class="menu-list"><li><a href="../../run-multiple-coding-agents/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/run-multiple-coding-agents/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/run-multiple-coding-agents/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/run-multiple-coding-agents/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/run-multiple-coding-agents/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/run-multiple-coding-agents/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="./" hreflang="zh-Hans" lang="zh-Hans" dir="ltr" aria-current="true">简体中文</a></li><li><a href="../../ko/run-multiple-coding-agents/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/run-multiple-coding-agents/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/run-multiple-coding-agents/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/run-multiple-coding-agents/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/run-multiple-coding-agents/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>菜单</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">安装</a></li>
+        <li><a href="../guides/">指南</a></li>
+        <li><a href="../security/">安全</a></li>
+        <li><a href="../faq/">常见问题</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="wrap translated">
+  <p class="note">Aubergine 本身是英文的：它的按钮、菜单和截图都是英文版。</p>
+  <p class="note">本页由机器从英文翻译而来。<a href="https://github.com/thirstyeggplant/aubergine/issues">提交修正</a>。</p>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/zh/run-multiple-coding-agents/#article",
+      "headline": "如何同时运行多个编程智能体",
+      "description": "把每个编程智能体放进一张画布上各自的终端，看清哪个在等你，从队列分派工作，并把每个智能体的改动分开。",
+      "url": "https://thirstyeggplant.com/zh/run-multiple-coding-agents/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/zh/run-multiple-coding-agents/",
+      "datePublished": "2026-11-18",
+      "inLanguage": "zh-Hans",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "指南", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "运行多个智能体", "item": "https://thirstyeggplant.com/zh/run-multiple-coding-agents/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/zh/run-multiple-coding-agents/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "如何同时运行多个编程智能体？", "acceptedAnswer": { "@type": "Answer", "text": "把每个智能体放进 Aubergine 画布上各自的终端。画布会显示哪些在忙、空闲或在等你，一个名为 For you 的列表汇集所有问题和审批。" } },
+        { "@type": "Question", "name": "如何避免两个智能体编辑同一批文件？", "acceptedAnswer": { "@type": "Answer", "text": "让每个终端在自己的工作副本中启动：仓库的独立检出，位于自己的分支上。Aubergine 从不替你合并或推送。" } },
+        { "@type": "Question", "name": "它适用于任何编程智能体吗？", "acceptedAnswer": { "@type": "Answer", "text": "是的。Aubergine 运行的是普通终端，所以任何命令行智能体都能在其中运行。Aubergine 为智能体自动做的事是为 Claude Code 构建的；其他任何智能体都可以通过 aubergine 命令报告。" } }
+      ]
+    }
+  ]
+}
+</script>
+<div class="wrap page-head">
+  <nav class="crumbs" aria-label="当前位置"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">指南</a></li><li>运行多个智能体</li></ol></nav>
+  <h1>如何同时运行多个编程智能体</h1>
+  <p class="lead">两个智能体很简单。五个就是一团乱：哪个卡住了，哪个在等你，哪个改了那个文件？Aubergine 正是为这种时刻而做的。它运行在你自己的电脑上。</p>
+</div>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>1. 在一张画布上给每个智能体一个终端</h2>
+    <p>点击终端列表顶部的 <strong>New terminal</strong>（新建终端）或按 <code>N</code>，在其中启动一个智能体。拖动终端的标题栏来移动，调整大小，并用框把它们归组。相关的工作放在一张画布上；彼此独立的工作放在不同的画布（标签页）或<em>项目</em>中，每个项目都有自己的终端、队列和定时计划。</p>
+    <p>每个终端都是 tmux 会话中真正的 shell。关掉浏览器或停止 Aubergine，你的智能体仍会继续运行。</p>
+    <h2>2. 看清哪个智能体需要你</h2>
+    <p>每个终端都会显示它是忙碌、空闲还是在等你。这个状态来自你 shell 中的钩子和智能体本身，而不是读取屏幕内容。顶部 <strong>For you</strong> 旁边的数字和 <code>W</code> 键会直接带你去下一个在等待的终端。</p>
+    <p>一个列表 <strong>For you</strong> 汇集所有在等人处理的事：问题、待审批的运行、需要查看的已完成任务，以及带有原因的失败任务。</p>
+    <h2>3. 从队列分派工作</h2>
+    <p>任务写一次，放进<a href="../queue-and-schedules/">队列</a>。在你发话时，空闲的智能体会接手，并且同时运行的数量有上限。对于重复的工作，设置一个定时计划。智能体可以提议任务、向你提问，但在你接受之前什么都不会开始。</p>
+    <h2>4. 把每个智能体的改动分开</h2>
+    <p>在同一个文件夹里的两个智能体会编辑同一批文件。让每个智能体在自己的<a href="../working-copies/">工作副本</a>中启动：在自己分支上的独立检出，这样你就能分开阅读每个智能体的工作。Aubergine 从不替你合并、推送或变基。</p>
+    <h2>5. 给智能体步骤，在关卡处做决定</h2>
+    <p>工作流是智能体依次遵循的一系列步骤，并有一条进度条显示它走到了哪里。某个步骤可以等你批准或退回。所有正在进行的运行都显示在一块看板上。</p>
+    <h2>它不做什么</h2>
+    <ul>
+      <li>它不调用模型，也不替你选模型。智能体是你的。</li>
+      <li>它不会阻止智能体做你能做的事。智能体以你的身份运行。哪些受保护、哪些不受保护，见<a href="../security/">安全</a>。</li>
+      <li>目前它在一台电脑上运行。与他人共享画布、在云端运行智能体都在<a href="../roadmap/">路线图</a>上，尚未构建。</li>
+    </ul>
+    <p class="actions"><a class="button primary" href="../install/">安装 Aubergine</a></p>
+  </div>
+</div>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <nav aria-label="所有页面">
+      <ul class="foot-links">
+        <li><a href="../">首页</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex 与 ChatGPT</a></li>
+        <li><a href="../install/">安装</a></li>
+        <li><a href="../guides/">指南</a></li>
+        <li><a href="./" aria-current="page">运行多个智能体</a></li>
+        <li><a href="../working-copies/">工作副本</a></li>
+        <li><a href="../queue-and-schedules/">队列与定时计划</a></li>
+        <li><a href="../security/">安全</a></li>
+        <li><a href="../roadmap/">路线图</a></li>
+        <li><a href="../faq/">常见问题</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine 免费开源，采用 <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT 许可证</a>，运行在你自己的电脑上。</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+</script>
+</body>
+</html>

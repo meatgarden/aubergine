@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="zh-Hans" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>队列、For you 列表与定时计划 | Aubergine</title>
+<meta name="description" content="任务写一次，让空闲的智能体去接；在一个列表中看到所有在等你的事；用定时计划在设定的时间运行任务。">
+<link rel="canonical" href="https://thirstyeggplant.com/zh/queue-and-schedules/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/queue-and-schedules/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/queue-and-schedules/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/queue-and-schedules/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/queue-and-schedules/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/queue-and-schedules/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/queue-and-schedules/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/queue-and-schedules/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/queue-and-schedules/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/queue-and-schedules/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/queue-and-schedules/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/queue-and-schedules/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/queue-and-schedules/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/queue-and-schedules/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="队列、For you 列表与定时计划 | Aubergine">
+<meta property="og:description" content="任务写一次，让空闲的智能体去接；在一个列表中看到所有在等你的事；用定时计划在设定的时间运行任务。">
+<meta property="og:url" content="https://thirstyeggplant.com/zh/queue-and-schedules/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine：一张摆满终端的画布，一个正在忙，一个在等你">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine：一张摆满终端的画布，一个正在忙，一个在等你">
+<meta name="twitter:title" content="队列、For you 列表与定时计划 | Aubergine">
+<meta name="twitter:description" content="任务写一次，让空闲的智能体去接；在一个列表中看到所有在等你的事；用定时计划在设定的时间运行任务。">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="页面">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">安装</a></li>
+        <li><a href="../guides/">指南</a></li>
+        <li><a href="../security/">安全</a></li>
+        <li><a href="../faq/">常见问题</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="语言: 简体中文"><span class="lang-long" aria-hidden="true">简体中文</span><span class="lang-short" aria-hidden="true">ZH</span></summary>
+      <ul class="menu-list"><li><a href="../../queue-and-schedules/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/queue-and-schedules/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/queue-and-schedules/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/queue-and-schedules/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/queue-and-schedules/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/queue-and-schedules/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="./" hreflang="zh-Hans" lang="zh-Hans" dir="ltr" aria-current="true">简体中文</a></li><li><a href="../../ko/queue-and-schedules/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/queue-and-schedules/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/queue-and-schedules/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/queue-and-schedules/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/queue-and-schedules/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>菜单</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">安装</a></li>
+        <li><a href="../guides/">指南</a></li>
+        <li><a href="../security/">安全</a></li>
+        <li><a href="../faq/">常见问题</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="wrap translated">
+  <p class="note">Aubergine 本身是英文的：它的按钮、菜单和截图都是英文版。</p>
+  <p class="note">本页由机器从英文翻译而来。<a href="https://github.com/thirstyeggplant/aubergine/issues">提交修正</a>。</p>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/zh/queue-and-schedules/#article",
+      "headline": "队列、For you 列表与定时计划",
+      "description": "任务写一次，让空闲的智能体去接；在一个列表中看到所有在等你的事；用定时计划在设定的时间运行任务。",
+      "url": "https://thirstyeggplant.com/zh/queue-and-schedules/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/zh/queue-and-schedules/",
+      "datePublished": "2026-11-18",
+      "inLanguage": "zh-Hans",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "指南", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "队列与定时计划", "item": "https://thirstyeggplant.com/zh/queue-and-schedules/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/zh/queue-and-schedules/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "Aubergine 中的队列是什么？", "acceptedAnswer": { "@type": "Answer", "text": "给智能体的工作。你把任务写一次，包括标题、详情，以及可选的文件夹、工作流和谁可以接手。在你发话时，空闲的智能体会接手。" } },
+        { "@type": "Question", "name": "For you 列表是什么？", "acceptedAnswer": { "@type": "Answer", "text": "所有在等人处理的事集中在一处：有问题的终端、待审批的运行、待读的草稿、已完成和失败的任务，以及智能体交上来的清单。" } },
+        { "@type": "Question", "name": "智能体能自己开始工作吗？", "acceptedAnswer": { "@type": "Answer", "text": "智能体可以提议任务或向你提出请求，但提议在你接受之前不会启动任何东西。" } },
+        { "@type": "Question", "name": "电脑睡眠时，定时计划会怎样？", "acceptedAnswer": { "@type": "Answer", "text": "没有任何东西会唤醒电脑。睡眠期间错过的时间，如果不到六小时，会在恢复时运行一次并标为迟到。超过这个时间则标为已错过。" } }
+      ]
+    }
+  ]
+}
+</script>
+<div class="wrap page-head">
+  <nav class="crumbs" aria-label="当前位置"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">指南</a></li><li>队列与定时计划</li></ol></nav>
+  <h1>队列、“For you”与定时计划</h1>
+  <p class="lead">两个相互衔接的列表：队列存放给智能体的工作，<em>For you</em> 存放所有在等人处理的事。定时计划在设定的时间把任务加入队列。</p>
+</div>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>队列</h2>
+    <p>打开页面顶部的 <strong>Runs</strong>（或按 <code>Q</code>），点击 <strong>Add task</strong>（添加任务）。任务有标题、要做什么，以及可选的文件夹、工作流和谁可以接手。默认情况下，任何有空闲智能体的终端都可以接手；你也可以指定一个终端，或为它启动一个新的智能体终端，当文件夹位于仓库中时，这个终端会在自己的工作副本中运行。</p>
+    <ul>
+      <li><strong>Start next</strong> 会启动第一个现在有人能接手的任务。普通 shell 永远不会被分到任务。</li>
+      <li><strong>At most N at once</strong>（同时最多 N 个），除非你修改，否则为三个。<strong>Hold</strong> 会停止新的启动，不影响正在运行的任何东西。</li>
+      <li><strong>Start by itself</strong> 在你打开之前一直是关闭的。没有任何东西靠定时器检查。</li>
+      <li>顺序由你决定：拖动任务，或使用方向键。</li>
+      <li>任务跟随它的运行：运行等待审批时为 <em>needs you</em>，完成时为 <em>done</em>，停下时为 <em>failed</em> 并附一句原因。不会自动重试任何东西。</li>
+    </ul>
+    <h2>For you</h2>
+    <p>有问题的终端、待审批或受阻的运行、待读的草稿和待安装项、提议加入队列的任务、已完成和失败的任务、智能体交上来的清单，以及终端已不在的工作副本。顶部 For you 旁边的数字和“next waiting”是同一个列表。其中大部分是汇集来的，不是写进去的：事情本身处理完了，条目就会消失。</p>
+    <figure class="pic"><a href="../../screenshots/for-you.png"><img src="../../screenshots/for-you.png" width="990" height="570" loading="lazy" alt="Runs 页面的 Waiting for you 列：一个添加待办的输入框，然后是一个替身智能体的问题、一份待读的草稿和一份交上来的清单。"></a><figcaption>Runs 页面上的 For you：一个问题、一份待读的草稿和一份交上来的清单，每项都注明是什么。</figcaption></figure>
+    <p>发现现在不该做的工作的智能体可以提议一个任务，需要人的智能体可以向你提出请求：</p>
+    <pre><code>aubergine task add "Add a test for the retry" --details "it should fail without the fix"
+aubergine ask "the staging key expires this week: rotate it, or say who can"</code></pre>
+    <p>两者都会出现在你的列表上。提议在你接受之前不会启动任何东西。</p>
+    <h2>定时计划</h2>
+    <p>定时计划就是一天中的某个时间、一周中的某几天、要运行的东西和运行的地方。时间一到，它向队列添加一个任务，由队列启动。在 Runs 页面的 <strong>Schedules</strong> 下设置，或使用 <code>aubergine schedule</code>。时间以这台电脑的时钟为准；没有表达式，频率最多一天一次。</p>
+    <pre><code>aubergine schedule add "My morning list" --at 08:30 --days weekdays \
+  --element "Morning list" --new Main
+aubergine schedule run "My morning list"</code></pre>
+    <p><code>aubergine schedule run</code> 会立即试运行一个定时计划。</p>
+    <h3>事情没有按计划进行时</h3>
+    <ul>
+      <li>电脑必须醒着，并且 Aubergine 在运行。电脑睡眠期间错过的时间，如果不超过六小时，会在恢复时运行<strong>一次</strong>，并标为迟到。否则标为 <strong>missed</strong>（已错过）。</li>
+      <li>当定时计划的上一个任务仍在等待或正在执行时，它不会再添加新任务，并注明已跳过。</li>
+      <li>如果它指定的东西（终端、步骤、画布）已经不在，它不会运行，并在你的列表上用一个条目说明。</li>
+    </ul>
+    <h2>规则</h2>
+    <p>在 <strong>Rules</strong> 下，你可以设定“当任务完成、失败或需要我时，或者定时计划触发或被错过时，就通知我或运行一个已保存的步骤”。规则只能由你来写：任何程序和智能体都不能添加或修改规则，规则也不能触发自己。</p>
+    <p>Aubergine 不调用模型，也不持有任何应用的凭据。任务或定时计划只会启动一次运行；接手的智能体用它自己的工具完成工作。</p>
+    <p>相关：<a href="../working-copies/">工作副本</a> · <a href="../run-multiple-coding-agents/">同时运行多个编程智能体</a></p>
+  </div>
+</div>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <nav aria-label="所有页面">
+      <ul class="foot-links">
+        <li><a href="../">首页</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex 与 ChatGPT</a></li>
+        <li><a href="../install/">安装</a></li>
+        <li><a href="../guides/">指南</a></li>
+        <li><a href="../run-multiple-coding-agents/">运行多个智能体</a></li>
+        <li><a href="../working-copies/">工作副本</a></li>
+        <li><a href="./" aria-current="page">队列与定时计划</a></li>
+        <li><a href="../security/">安全</a></li>
+        <li><a href="../roadmap/">路线图</a></li>
+        <li><a href="../faq/">常见问题</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine 免费开源，采用 <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT 许可证</a>，运行在你自己的电脑上。</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+</script>
+</body>
+</html>

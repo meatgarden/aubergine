@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="ja" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aubergine の Codex と ChatGPT | Aubergine</title>
+<meta name="description" content="OpenAI のコマンドラインのコーディングエージェント Codex は、ほかのプログラムと同じように Aubergine のターミナルで動きます。今日できること、aubergine コマンドで報告できること、Claude Code 向けにだけ作られているもの。">
+<link rel="canonical" href="https://thirstyeggplant.com/ja/chatgpt/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/chatgpt/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/chatgpt/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/chatgpt/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/chatgpt/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/chatgpt/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/chatgpt/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/chatgpt/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/chatgpt/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/chatgpt/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/chatgpt/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/chatgpt/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/chatgpt/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/chatgpt/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="Aubergine の Codex と ChatGPT | Aubergine">
+<meta property="og:description" content="OpenAI のコマンドラインのコーディングエージェント Codex は、ほかのプログラムと同じように Aubergine のターミナルで動きます。今日できること、aubergine コマンドで報告できること、Claude Code 向けにだけ作られているもの。">
+<meta property="og:url" content="https://thirstyeggplant.com/ja/chatgpt/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine：ターミナルが並ぶキャンバス。1つは処理中、1つはあなたを待っています">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine：ターミナルが並ぶキャンバス。1つは処理中、1つはあなたを待っています">
+<meta name="twitter:title" content="Aubergine の Codex と ChatGPT | Aubergine">
+<meta name="twitter:description" content="OpenAI のコマンドラインのコーディングエージェント Codex は、ほかのプログラムと同じように Aubergine のターミナルで動きます。今日できること、aubergine コマンドで報告できること、Claude Code 向けにだけ作られているもの。">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">本文へ移動</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="ページ">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="./" aria-current="page">Codex</a></li>
+        <li><a href="../install/">インストール</a></li>
+        <li><a href="../guides/">ガイド</a></li>
+        <li><a href="../security/">セキュリティ</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="言語: 日本語"><span class="lang-long" aria-hidden="true">日本語</span><span class="lang-short" aria-hidden="true">JA</span></summary>
+      <ul class="menu-list"><li><a href="../../chatgpt/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/chatgpt/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/chatgpt/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/chatgpt/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/chatgpt/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="./" hreflang="ja" lang="ja" dir="ltr" aria-current="true">日本語</a></li><li><a href="../../zh/chatgpt/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/chatgpt/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/chatgpt/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/chatgpt/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/chatgpt/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/chatgpt/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>メニュー</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="./" aria-current="page">Codex</a></li>
+        <li><a href="../install/">インストール</a></li>
+        <li><a href="../guides/">ガイド</a></li>
+        <li><a href="../security/">セキュリティ</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="wrap translated">
+  <p class="note">Aubergine 本体は英語です。ボタン、メニュー、画像はすべて英語版のものです。</p>
+  <p class="note">このページは英語版から機械翻訳されています。<a href="https://github.com/thirstyeggplant/aubergine/issues">修正を送る</a>。</p>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/ja/chatgpt/#article",
+      "headline": "Codex と ChatGPT",
+      "description": "OpenAI のコマンドラインのコーディングエージェント Codex は、ほかのプログラムと同じように Aubergine のターミナルで動きます。今日できること、aubergine コマンドで報告できること、Claude Code 向けにだけ作られているもの。",
+      "url": "https://thirstyeggplant.com/ja/chatgpt/",
+      "inLanguage": "ja",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Codex と ChatGPT", "item": "https://thirstyeggplant.com/ja/chatgpt/" }
+      ]
+    }
+  ]
+}
+</script>
+<div class="wrap page-head">
+  <nav class="crumbs" aria-label="現在の位置"><ol><li><a href="../">Aubergine</a></li><li>Codex と ChatGPT</li></ol></nav>
+  <h1>Codex と ChatGPT</h1>
+  <p class="lead">Codex は OpenAI のコマンドラインのコーディングエージェントです。インストールとサインインはご自身で行います。Aubergine では、ほかのプログラムと同じようにターミナルで動きます。</p>
+</div>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>まだ試していません</h2>
+    <p>Aubergine で本物の Codex を動かした人はまだいません。このページに書いてあるのは、ターミナル内のあらゆるプログラムと <code>aubergine</code> コマンドのために Aubergine が行うことで、これは作られテストされています。Codex 自体がそこでどう振る舞うかは、まだ見ていません。試したら<a href="https://github.com/thirstyeggplant/aubergine/issues">結果を教えてください</a>。</p>
+
+    <h2>起動する</h2>
+    <p><strong>New terminal</strong>（新しいターミナル）または <code>N</code> でターミナルを開き、ほかのターミナルと同じように Codex を起動します。Aubergine はモデルを呼ばず、キーも持ちません。Codex に必要なものは、サインインしたときにあなたが渡しています。</p>
+
+    <h2>今日できること</h2>
+    <p>Aubergine があらゆるターミナルのために行うことすべて：</p>
+  </div>
+  <ul class="rows">
+    <li><h3>横に並べる</h3><p>1つのキャンバスに好きなだけターミナルを置き、キャンバスはタブで切り替えます。</p></li>
+    <li><h3>コマンドの状態</h3><p>zsh なら、ターミナルのタイトルにコマンドが実行中であることと、そのコマンドが表示されます。</p></li>
+    <li><h3>色、ノート、フィールド</h3><p>ターミナルに色を付け、要約とログのあるノートを残し、チケットや担当者のようなフィールドを持たせられます。</p></li>
+    <li><h3>パーク</h3><p>× でターミナルをパークします。キャンバスから外れても動き続け、<strong>Parked</strong> で戻せます。</p></li>
+    <li><h3>ターミナルを単独で開く</h3><p>ターミナルを専用のブラウザータブで開き、詳細とノートを横に添えられます。</p></li>
+    <li><h3>作業コピー</h3><p><strong>Shell in a folder or a working copy…</strong> または <code>aubergine new --copy</code> は、専用のチェックアウトの専用ブランチでターミナルを起動します。2つのエージェントが同じファイルを編集することはありません。</p></li>
+    <li><h3>出力の検索</h3><p><code>⌘K</code> はすべてのターミナルが出力したものを検索し、一致した箇所までスクロールした状態でターミナルを開きます。</p></li>
+  </ul>
+  <div class="prose">
+    <h2>コマンドで伝えられること</h2>
+    <p>Aubergine のどのターミナルにも <code>aubergine</code> コマンドと、そのターミナル専用の資格情報があります。そこで動くプログラムは、Codex も含め、それを使えます：</p>
+  </div>
+  <ul class="rows">
+    <li><h3><code>aubergine attention waiting "…"</code></h3><p>ターミナルを waiting for you（あなた待ち）にし、必要なことを添えます。残りは <code>aubergine attention working</code> と <code>aubergine attention done</code> で伝えます。</p></li>
+    <li><h3><code>aubergine note "…"</code></h3><p>ターミナルのノートのログに1行加えます。</p></li>
+    <li><h3><code>aubergine describe</code></h3><p>ターミナルに作業に合った名前を付け、要約を保ちます。<code>aubergine link add</code> と <code>aubergine field set</code> で作業のリンクとフィールドを加えます。あなたが自分で書いたものが優先されます。</p></li>
+    <li><h3><code>aubergine workflow status</code></h3><p>ワークフローの現在のステップを読みます。<code>aubergine workflow done</code> で完了を報告し、次のステップを出力します。</p></li>
+    <li><h3><code>aubergine task add</code></h3><p>キューにタスクを提案します。<code>aubergine ask</code> は人にしかできないことをあなたに頼みます。どちらもあなたの一覧で待ちます。</p></li>
+  </ul>
+  <div class="prose">
+    <h3>伝え方</h3>
+    <p>Codex は伝えられるまで Aubergine のことを知りません。これは、プロジェクトでの会話のたびに最初にエージェントが読む指示に貼り付ける5行を出力します。どこに置くかはエージェント自身のドキュメントに書かれています：</p>
+    <p class="cmd"><code>aubergine guide --snippet</code><button type="button" class="copy" data-copy data-copied="コピーしました" aria-live="polite" hidden>コピー</button></p>
+    <p>その行は、Aubergine のターミナルにいるときに一度 <code>aubergine guide</code> を実行するよう伝え、残りはガイドが説明します。Aubergine は行を出力するだけで、どのファイルにも書き込みません。</p>
+    <p>エージェントが MCP サーバーを起動できるなら、<code>aubergine mcp</code> が同じことをツールとして提供します。Aubergine のターミナル内では、そのターミナル自身の作業にアドレスもトークンも要りません。</p>
+
+    <h2>現在は Claude Code 向けにだけ作られているもの</h2>
+    <p>Aubergine がエージェントのために自ら行うことは、Claude Code 向けに作られています。Codex については、現在：</p>
+    <ul>
+      <li>New terminal メニューにはありません。ターミナルで自分で起動します。</li>
+      <li>Aubergine はそれをエージェントとして見ません。自動では waiting や finished にならず、<code>aubergine attention</code> を実行したときだけです。</li>
+      <li>何も入力されません。そのターミナルでワークフローを始めても何も入力されず、自分で伝えるための行が表示されます。振り返りやメッセージも知らされません。</li>
+      <li>キューはタスクを渡しません。タスクは、エージェントが見えていて空いているターミナルにだけ渡ります。</li>
+      <li>Resume agent も、過去の会話の一覧も、設定の一覧も、Aubergine のツールのダイアログもありません。</li>
+      <li><code>aubergine move</code> と <code>aubergine here --claude</code> が持ってくるのは Claude Code だけです。</li>
+      <li>ターミナルに名前を付けることや要約を保つことは促されません。</li>
+    </ul>
+    <p>すべては <a href="../claude/">Claude Code</a> のページにあります。</p>
+
+    <h2>ブラウザーの ChatGPT</h2>
+    <p>ブラウザータブの ChatGPT はウェブページで、ターミナルのプログラムではありません。そのためキャンバスでは動きません。</p>
+
+    <p class="note">Aubergine は OpenAI と提携していません。Codex および ChatGPT は OpenAI の商標です。</p>
+  </div>
+</div>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <nav aria-label="すべてのページ">
+      <ul class="foot-links">
+        <li><a href="../">ホーム</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="./" aria-current="page">Codex と ChatGPT</a></li>
+        <li><a href="../install/">インストール</a></li>
+        <li><a href="../guides/">ガイド</a></li>
+        <li><a href="../run-multiple-coding-agents/">複数のエージェントを動かす</a></li>
+        <li><a href="../working-copies/">作業コピー</a></li>
+        <li><a href="../queue-and-schedules/">キューとスケジュール</a></li>
+        <li><a href="../security/">セキュリティ</a></li>
+        <li><a href="../roadmap/">ロードマップ</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine は <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT ライセンス</a>のもとで公開された無料のオープンソースで、あなた自身のコンピューターで動きます。</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+</script>
+</body>
+</html>

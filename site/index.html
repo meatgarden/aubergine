@@ -7,6 +7,17 @@
 <meta name="description" content="Aubergine puts all your terminals side by side on one canvas in your browser. Run as many as you like, with the agents and models you already use, and see which one needs you. Free, local, open source.">
 <link rel="canonical" href="https://thirstyeggplant.com/">
 <link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/">
 <link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
 <meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
@@ -46,6 +57,11 @@
         <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
       </ul>
     </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="Language: English"><span class="lang-long" aria-hidden="true">English</span><span class="lang-short" aria-hidden="true">EN</span></summary>
+      <ul class="menu-list"><li><a href="./" hreflang="en" lang="en" dir="ltr" aria-current="true">English</a></li><li><a href="es/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="pt/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="fr/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="de/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="ja/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="zh/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="ko/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="id/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="hi/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="bn/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="ar/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
         <details class="menu pages">
       <summary>Menu</summary>
       <ul class="menu-list">
@@ -165,7 +181,7 @@
       <p class="actions"><a class="button primary" href="install/">Install</a><a class="button" href="https://github.com/thirstyeggplant/aubergine">Read the source</a></p>
     </div>
     <figure class="canvas">
-      <div class="canvas-field" aria-hidden="true">
+      <div class="canvas-field" dir="ltr" aria-hidden="true">
         <div class="term term-1 waits"><div class="term-bar"><span class="term-name">claude · fix-login</span><span class="term-state">waiting for you</span></div>
 <pre><i>?</i> Two files use the old check.
   Change both, or only /auth?
@@ -202,7 +218,7 @@
         <figure class="pic"><a href="screenshots/list.png"><img src="screenshots/list.png" width="1440" height="1008" loading="lazy" alt="The side panel listing five terminals with their state in words (working, waiting for you, finished, parked), beside part of the canvas with a live shell."></a><figcaption>The list says what each terminal is doing; beside it, the terminals themselves.</figcaption></figure>
       </div>
       <div class="show">
-        <div><h3>The one that waits stands out</h3><p>When an agent needs you, you see it from across the canvas, and W takes you there.</p></div>
+        <div><h3>The one that waits stands out</h3><p>When an agent needs you, you see it from across the canvas, and <code>W</code> takes you there.</p></div>
         <figure class="pic"><a href="screenshots/waiting.png"><img src="screenshots/waiting.png" width="1496" height="600" loading="lazy" alt="One terminal whose agent asks a question, its title saying waiting for you, its line in the color of waiting."></a><figcaption>Its line takes the color of waiting, and its title says waiting for you.</figcaption></figure>
       </div>
       <div class="show">

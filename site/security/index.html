@@ -7,6 +7,17 @@
 <meta name="description" content="Aubergine runs only on your computer, listens on 127.0.0.1, checks every request, scopes every token, and says plainly what it does not protect against.">
 <link rel="canonical" href="https://thirstyeggplant.com/security/">
 <link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/security/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/security/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/security/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/security/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/security/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/security/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/security/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/security/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/security/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/security/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/security/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/security/">
 <link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/security/">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
 <meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
@@ -46,6 +57,11 @@
         <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
       </ul>
     </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="Language: English"><span class="lang-long" aria-hidden="true">English</span><span class="lang-short" aria-hidden="true">EN</span></summary>
+      <ul class="menu-list"><li><a href="./" hreflang="en" lang="en" dir="ltr" aria-current="true">English</a></li><li><a href="../es/security/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../pt/security/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../fr/security/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../de/security/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../ja/security/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../zh/security/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../ko/security/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../id/security/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../hi/security/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../bn/security/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../ar/security/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
         <details class="menu pages">
       <summary>Menu</summary>
       <ul class="menu-list">
@@ -116,7 +132,7 @@
     <h2>Everything stays on your computer</h2>
     <ul>
       <li>The server binds to <code>127.0.0.1</code> only. Every request, and every WebSocket upgrade, has its <code>Host</code> and <code>Origin</code> checked, and the browser must hold an access cookie.</li>
-      <li>Using Aubergine from another device is off until you set it up: something on the same computer carries HTTPS to it under a name you write in the settings, and each browser is paired with a one-time code and can be revoked. A paired device is the whole owner. <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md">Using Aubergine from elsewhere</a> says how.</li>
+      <li>Using Aubergine from another device is off until you set it up: something on the same computer carries HTTPS to it under a name you write in the settings, and each browser is paired with a one-time code and can be revoked. A paired device can do everything the owner can. <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md">Using Aubergine from elsewhere</a> says how.</li>
       <li>Aubergine calls no model and starts no network request of its own, with two exceptions: fetching a library source (a Git address) when <em>you</em> ask for it, and asking your own <code>gh</code> tool, where it is installed and signed in, for the pull request of a terminal's branch.</li>
       <li>Desktop notifications come from the open page. Nothing leaves your computer.</li>
     </ul>

@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="zh-Hans" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aubergine 中的 Codex 与 ChatGPT | Aubergine</title>
+<meta name="description" content="Codex 是 OpenAI 的命令行编程智能体，像任何程序一样在 Aubergine 终端中运行。今天能用什么，它能通过 aubergine 命令报告什么，以及哪些只为 Claude Code 构建。">
+<link rel="canonical" href="https://thirstyeggplant.com/zh/chatgpt/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/chatgpt/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/chatgpt/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/chatgpt/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/chatgpt/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/chatgpt/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/chatgpt/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/chatgpt/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/chatgpt/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/chatgpt/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/chatgpt/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/chatgpt/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/chatgpt/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/chatgpt/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="Aubergine 中的 Codex 与 ChatGPT | Aubergine">
+<meta property="og:description" content="Codex 是 OpenAI 的命令行编程智能体，像任何程序一样在 Aubergine 终端中运行。今天能用什么，它能通过 aubergine 命令报告什么，以及哪些只为 Claude Code 构建。">
+<meta property="og:url" content="https://thirstyeggplant.com/zh/chatgpt/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine：一张摆满终端的画布，一个正在忙，一个在等你">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine：一张摆满终端的画布，一个正在忙，一个在等你">
+<meta name="twitter:title" content="Aubergine 中的 Codex 与 ChatGPT | Aubergine">
+<meta name="twitter:description" content="Codex 是 OpenAI 的命令行编程智能体，像任何程序一样在 Aubergine 终端中运行。今天能用什么，它能通过 aubergine 命令报告什么，以及哪些只为 Claude Code 构建。">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="页面">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="./" aria-current="page">Codex</a></li>
+        <li><a href="../install/">安装</a></li>
+        <li><a href="../guides/">指南</a></li>
+        <li><a href="../security/">安全</a></li>
+        <li><a href="../faq/">常见问题</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="语言: 简体中文"><span class="lang-long" aria-hidden="true">简体中文</span><span class="lang-short" aria-hidden="true">ZH</span></summary>
+      <ul class="menu-list"><li><a href="../../chatgpt/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/chatgpt/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/chatgpt/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/chatgpt/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/chatgpt/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/chatgpt/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="./" hreflang="zh-Hans" lang="zh-Hans" dir="ltr" aria-current="true">简体中文</a></li><li><a href="../../ko/chatgpt/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/chatgpt/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/chatgpt/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/chatgpt/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/chatgpt/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>菜单</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="./" aria-current="page">Codex</a></li>
+        <li><a href="../install/">安装</a></li>
+        <li><a href="../guides/">指南</a></li>
+        <li><a href="../security/">安全</a></li>
+        <li><a href="../faq/">常见问题</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="wrap translated">
+  <p class="note">Aubergine 本身是英文的：它的按钮、菜单和截图都是英文版。</p>
+  <p class="note">本页由机器从英文翻译而来。<a href="https://github.com/thirstyeggplant/aubergine/issues">提交修正</a>。</p>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/zh/chatgpt/#article",
+      "headline": "Codex 与 ChatGPT",
+      "description": "Codex 是 OpenAI 的命令行编程智能体，像任何程序一样在 Aubergine 终端中运行。今天能用什么，它能通过 aubergine 命令报告什么，以及哪些只为 Claude Code 构建。",
+      "url": "https://thirstyeggplant.com/zh/chatgpt/",
+      "inLanguage": "zh-Hans",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Codex 与 ChatGPT", "item": "https://thirstyeggplant.com/zh/chatgpt/" }
+      ]
+    }
+  ]
+}
+</script>
+<div class="wrap page-head">
+  <nav class="crumbs" aria-label="当前位置"><ol><li><a href="../">Aubergine</a></li><li>Codex 与 ChatGPT</li></ol></nav>
+  <h1>Codex 与 ChatGPT</h1>
+  <p class="lead">Codex 是 OpenAI 的命令行编程智能体。它由你自己安装和登录；在 Aubergine 中，它像其他任何程序一样在终端里运行。</p>
+</div>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>尚未试过</h2>
+    <p>还没有人在 Aubergine 中运行过真正的 Codex。本页所说的是 Aubergine 为终端中的任何程序以及为 <code>aubergine</code> 命令所做的事，这部分已构建并经过测试；Codex 本身在其中表现如何还没有人看到过。如果你试了，<a href="https://github.com/thirstyeggplant/aubergine/issues">告诉我们结果</a>。</p>
+
+    <h2>启动它</h2>
+    <p>用 <strong>New terminal</strong>（新建终端）或 <code>N</code> 打开一个终端，然后像在任何终端里一样启动 Codex。Aubergine 不调用模型，也不持有密钥：Codex 需要的东西，你在登录时已经给了它。</p>
+
+    <h2>今天能用的</h2>
+    <p>Aubergine 为任何终端所做的一切：</p>
+  </div>
+  <ul class="rows">
+    <li><h3>并排摆放</h3><p>一张画布上想放多少终端就放多少，画布以标签页的形式呈现。</p></li>
+    <li><h3>命令状态</h3><p>使用 zsh 时，终端标题会显示有命令正在运行，以及是哪条命令。</p></li>
+    <li><h3>颜色、笔记和字段</h3><p>给它的终端设一个颜色，保留一份带摘要和日志的笔记，以及工单或负责人之类的字段。</p></li>
+    <li><h3>停放</h3><p>× 会停放终端：它离开画布但继续运行，<strong>Parked</strong> 可以把它拿回来。</p></li>
+    <li><h3>单独打开一个终端</h3><p>在单独的浏览器标签页中打开终端，旁边是它的详情和笔记。</p></li>
+    <li><h3>工作副本</h3><p><strong>Shell in a folder or a working copy…</strong> 或 <code>aubergine new --copy</code> 会在独立检出、独立分支中启动终端，两个智能体永远不会编辑同一批文件。</p></li>
+    <li><h3>搜索输出</h3><p><code>⌘K</code> 搜索所有终端打印过的内容，并打开该终端，滚动到匹配处。</p></li>
+  </ul>
+  <div class="prose">
+    <h2>它能通过命令告诉你什么</h2>
+    <p>每个 Aubergine 终端都有 <code>aubergine</code> 命令和一个仅属于该终端的凭据。其中的任何程序，包括 Codex，都可以使用它们：</p>
+  </div>
+  <ul class="rows">
+    <li><h3><code>aubergine attention waiting "…"</code></h3><p>把终端标为 waiting for you（在等你），并附上它需要什么；<code>aubergine attention working</code> 和 <code>aubergine attention done</code> 表示其余状态。</p></li>
+    <li><h3><code>aubergine note "…"</code></h3><p>向终端的笔记日志添加一行。</p></li>
+    <li><h3><code>aubergine describe</code></h3><p>按工作内容给终端命名并保持摘要；<code>aubergine link add</code> 和 <code>aubergine field set</code> 添加这项工作的链接和字段。你自己写的内容优先。</p></li>
+    <li><h3><code>aubergine workflow status</code></h3><p>读取工作流的当前步骤；<code>aubergine workflow done</code> 报告完成并打印下一步。</p></li>
+    <li><h3><code>aubergine task add</code></h3><p>向队列提议一个任务，<code>aubergine ask</code> 请你做一件只有人能做的事。两者都会在你的列表上等待。</p></li>
+  </ul>
+  <div class="prose">
+    <h3>怎样告诉它</h3>
+    <p>在被告知之前，Codex 不知道 Aubergine 的存在。下面这条命令会打印五行，粘贴到你的智能体在项目中每次对话开始时读取的指令里；放在哪里，请看它自己的文档：</p>
+    <p class="cmd"><code>aubergine guide --snippet</code><button type="button" class="copy" data-copy data-copied="已复制" aria-live="polite" hidden>复制</button></p>
+    <p>这几行告诉它：在 Aubergine 终端中时运行一次 <code>aubergine guide</code>，其余的由指南说明。Aubergine 只打印这几行，从不把它们写进任何文件。</p>
+    <p>如果你的智能体能启动 MCP 服务器，<code>aubergine mcp</code> 会以工具的形式提供同样的功能；在 Aubergine 终端内，处理该终端自己的工作不需要地址，也不需要令牌。</p>
+
+    <h2>目前只为 Claude Code 构建的部分</h2>
+    <p>Aubergine 为智能体自动做的事是为 Claude Code 构建的。对于 Codex，目前：</p>
+    <ul>
+      <li>它不在 New terminal 菜单中：你需要自己在终端里启动它。</li>
+      <li>Aubergine 不会把它视为智能体：它不会自动被标为等待或已完成，只有在它运行 <code>aubergine attention</code> 时才会。</li>
+      <li>不会替它输入任何内容：在它的终端上启动的工作流不会输入任何东西，而是显示一行让你自己交给它；回顾或消息也不会通知它。</li>
+      <li>队列不会给它任务：任务只交给能看到智能体且它空闲的终端。</li>
+      <li>没有 Resume agent，没有过去对话的列表，没有配置清单，也没有 Aubergine 工具的对话框。</li>
+      <li><code>aubergine move</code> 和 <code>aubergine here --claude</code> 只能搬来 Claude Code。</li>
+      <li>它不会被提醒给终端命名或保持摘要。</li>
+    </ul>
+    <p>全部内容见 <a href="../claude/">Claude Code</a> 页面。</p>
+
+    <h2>浏览器中的 ChatGPT</h2>
+    <p>浏览器标签页中的 ChatGPT 是一个网页，不是终端里的程序，所以不能在画布上运行。</p>
+
+    <p class="note">Aubergine 与 OpenAI 没有关联。Codex 和 ChatGPT 是 OpenAI 的商标。</p>
+  </div>
+</div>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <nav aria-label="所有页面">
+      <ul class="foot-links">
+        <li><a href="../">首页</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="./" aria-current="page">Codex 与 ChatGPT</a></li>
+        <li><a href="../install/">安装</a></li>
+        <li><a href="../guides/">指南</a></li>
+        <li><a href="../run-multiple-coding-agents/">运行多个智能体</a></li>
+        <li><a href="../working-copies/">工作副本</a></li>
+        <li><a href="../queue-and-schedules/">队列与定时计划</a></li>
+        <li><a href="../security/">安全</a></li>
+        <li><a href="../roadmap/">路线图</a></li>
+        <li><a href="../faq/">常见问题</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine 免费开源，采用 <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT 许可证</a>，运行在你自己的电脑上。</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+</script>
+</body>
+</html>

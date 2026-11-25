@@ -1,3 +1,14 @@
 [
-  { "code": "en", "name": "English", "lang": "en", "dir": "ltr", "folder": "" }
+  { "code": "en", "name": "English", "lang": "en", "dir": "ltr", "folder": "" },
+  { "code": "es", "name": "Español", "lang": "es", "dir": "ltr", "folder": "es" },
+  { "code": "pt", "name": "Português", "lang": "pt-BR", "dir": "ltr", "folder": "pt" },
+  { "code": "fr", "name": "Français", "lang": "fr", "dir": "ltr", "folder": "fr" },
+  { "code": "de", "name": "Deutsch", "lang": "de", "dir": "ltr", "folder": "de" },
+  { "code": "ja", "name": "日本語", "lang": "ja", "dir": "ltr", "folder": "ja" },
+  { "code": "zh", "name": "简体中文", "lang": "zh-Hans", "dir": "ltr", "folder": "zh" },
+  { "code": "ko", "name": "한국어", "lang": "ko", "dir": "ltr", "folder": "ko" },
+  { "code": "id", "name": "Bahasa Indonesia", "lang": "id", "dir": "ltr", "folder": "id" },
+  { "code": "hi", "name": "हिन्दी", "lang": "hi", "dir": "ltr", "folder": "hi" },
+  { "code": "bn", "name": "বাংলা", "lang": "bn", "dir": "ltr", "folder": "bn" },
+  { "code": "ar", "name": "العربية", "lang": "ar", "dir": "rtl", "folder": "ar" }
 ]

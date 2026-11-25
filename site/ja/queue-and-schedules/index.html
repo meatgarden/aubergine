@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="ja" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>キュー、For you の一覧、スケジュール | Aubergine</title>
+<meta name="description" content="タスクを一度書けば空いているエージェントが引き受けます。あなたを待っているものを1つの一覧で確認し、スケジュールで決まった時刻にタスクを実行します。">
+<link rel="canonical" href="https://thirstyeggplant.com/ja/queue-and-schedules/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/queue-and-schedules/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/queue-and-schedules/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/queue-and-schedules/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/queue-and-schedules/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/queue-and-schedules/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/queue-and-schedules/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/queue-and-schedules/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/queue-and-schedules/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/queue-and-schedules/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/queue-and-schedules/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/queue-and-schedules/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/queue-and-schedules/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/queue-and-schedules/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="キュー、For you の一覧、スケジュール | Aubergine">
+<meta property="og:description" content="タスクを一度書けば空いているエージェントが引き受けます。あなたを待っているものを1つの一覧で確認し、スケジュールで決まった時刻にタスクを実行します。">
+<meta property="og:url" content="https://thirstyeggplant.com/ja/queue-and-schedules/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine：ターミナルが並ぶキャンバス。1つは処理中、1つはあなたを待っています">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine：ターミナルが並ぶキャンバス。1つは処理中、1つはあなたを待っています">
+<meta name="twitter:title" content="キュー、For you の一覧、スケジュール | Aubergine">
+<meta name="twitter:description" content="タスクを一度書けば空いているエージェントが引き受けます。あなたを待っているものを1つの一覧で確認し、スケジュールで決まった時刻にタスクを実行します。">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">本文へ移動</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="ページ">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">インストール</a></li>
+        <li><a href="../guides/">ガイド</a></li>
+        <li><a href="../security/">セキュリティ</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="言語: 日本語"><span class="lang-long" aria-hidden="true">日本語</span><span class="lang-short" aria-hidden="true">JA</span></summary>
+      <ul class="menu-list"><li><a href="../../queue-and-schedules/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/queue-and-schedules/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/queue-and-schedules/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/queue-and-schedules/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/queue-and-schedules/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="./" hreflang="ja" lang="ja" dir="ltr" aria-current="true">日本語</a></li><li><a href="../../zh/queue-and-schedules/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/queue-and-schedules/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/queue-and-schedules/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/queue-and-schedules/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/queue-and-schedules/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/queue-and-schedules/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>メニュー</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">インストール</a></li>
+        <li><a href="../guides/">ガイド</a></li>
+        <li><a href="../security/">セキュリティ</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="wrap translated">
+  <p class="note">Aubergine 本体は英語です。ボタン、メニュー、画像はすべて英語版のものです。</p>
+  <p class="note">このページは英語版から機械翻訳されています。<a href="https://github.com/thirstyeggplant/aubergine/issues">修正を送る</a>。</p>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/ja/queue-and-schedules/#article",
+      "headline": "キュー、For you の一覧、スケジュール",
+      "description": "タスクを一度書けば空いているエージェントが引き受けます。あなたを待っているものを1つの一覧で確認し、スケジュールで決まった時刻にタスクを実行します。",
+      "url": "https://thirstyeggplant.com/ja/queue-and-schedules/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/ja/queue-and-schedules/",
+      "datePublished": "2026-11-18",
+      "inLanguage": "ja",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "ガイド", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "キューとスケジュール", "item": "https://thirstyeggplant.com/ja/queue-and-schedules/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/ja/queue-and-schedules/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "Aubergine のキューとは何ですか？", "acceptedAnswer": { "@type": "Answer", "text": "エージェントのための仕事です。タイトル、詳細、そして任意でフォルダー、ワークフロー、誰が引き受けてよいかを添えて、タスクを一度書きます。あなたが指示すると空いているエージェントが引き受けます。" } },
+        { "@type": "Question", "name": "For you の一覧とは何ですか？", "acceptedAnswer": { "@type": "Answer", "text": "人を待つものすべてを1か所に集めたものです。質問のあるターミナル、承認する実行、読むべき下書き、完了したタスクと失敗したタスク、エージェントが提出した一覧。" } },
+        { "@type": "Question", "name": "エージェントが自分で仕事を始めることはできますか？", "acceptedAnswer": { "@type": "Answer", "text": "エージェントはタスクを提案したり何かを頼んだりできますが、提案はあなたが受け入れるまで何も始めません。" } },
+        { "@type": "Question", "name": "コンピューターがスリープ中のとき、スケジュールはどうなりますか？", "acceptedAnswer": { "@type": "Answer", "text": "コンピューターを起こすものはありません。スリープ中に過ぎた時刻は、6時間未満であれば復帰したときに遅れとして1回実行されます。それより古ければ missed と記録されます。" } }
+      ]
+    }
+  ]
+}
+</script>
+<div class="wrap page-head">
+  <nav class="crumbs" aria-label="現在の位置"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">ガイド</a></li><li>キューとスケジュール</li></ol></nav>
+  <h1>キュー、「For you」、スケジュール</h1>
+  <p class="lead">互いにつながる2つの一覧です。キューはエージェントの仕事を、<em>For you</em> は人を待つものすべてを持ちます。スケジュールは決まった時刻にキューへタスクを加えます。</p>
+</div>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>キュー</h2>
+    <p>ページ上部の <strong>Runs</strong> を開き（または <code>Q</code> を押し）、<strong>Add task</strong>（タスクを追加）をクリックします。タスクにはタイトル、すること、そして任意でフォルダー、ワークフロー、誰が引き受けてよいかがあります。初期状態では、エージェントが空いているどのターミナルでも引き受けられます。ターミナルを1つ指定することも、新しいエージェントのターミナルを起動させることもでき、フォルダーがリポジトリ内にあればそのターミナルは専用の作業コピーで動きます。</p>
+    <ul>
+      <li><strong>Start next</strong> は、今引き受け手のいる最初のタスクを始めます。普通のシェルにタスクが渡されることはありません。</li>
+      <li><strong>At most N at once</strong>（同時に最大 N 個）、変えなければ3です。<strong>Hold</strong> は新しい開始を止め、動いているものには触れません。</li>
+      <li><strong>Start by itself</strong> は、あなたがオンにするまでオフです。タイマーで確認するものはありません。</li>
+      <li>順番はあなたが決めます。タスクをドラッグするか、矢印キーを使います。</li>
+      <li>タスクは自分の実行に従います。実行が承認を待つ間は <em>needs you</em>、終わると <em>done</em>、止まると理由の文とともに <em>failed</em>。自動で再試行されることはありません。</li>
+    </ul>
+    <h2>For you</h2>
+    <p>質問のあるターミナル、承認待ちやブロックされた実行、読むべき下書きやインストール、キューに提案されたタスク、完了したタスクと失敗したタスク、エージェントが提出した一覧、ターミナルがなくなった作業コピー。上部の For you の横の数と「next waiting」は同じ一覧です。ほとんどは書かれたものではなく集められたもので、対象そのものが済むと項目は消えます。</p>
+    <figure class="pic"><a href="../../screenshots/for-you.png"><img src="../../screenshots/for-you.png" width="990" height="570" loading="lazy" alt="Runs ページの Waiting for you の列：To-do を追加する欄、続いて代役のエージェントの質問、読むべき下書き、提出された一覧。"></a><figcaption>Runs ページの For you：質問、読むべき下書き、提出された一覧が、それぞれ何かとともに並びます。</figcaption></figure>
+    <p>今やるべきではない仕事を見つけたエージェントはタスクを提案でき、人が必要なエージェントはあなたに頼めます：</p>
+    <pre><code>aubergine task add "Add a test for the retry" --details "it should fail without the fix"
+aubergine ask "the staging key expires this week: rotate it, or say who can"</code></pre>
+    <p>どちらもあなたの一覧に届きます。提案は、あなたが受け入れるまで何も始めません。</p>
+    <h2>スケジュール</h2>
+    <p>スケジュールは、時刻、曜日、実行するもの、実行する場所です。時刻になるとキューにタスクを1つ加え、キューがそれを始めます。Runs ページの <strong>Schedules</strong> の下、または <code>aubergine schedule</code> で扱います。時刻はこのコンピューターの時計によります。式はなく、1日1回より頻繁なものはありません。</p>
+    <pre><code>aubergine schedule add "My morning list" --at 08:30 --days weekdays \
+  --element "Morning list" --new Main
+aubergine schedule run "My morning list"</code></pre>
+    <p><code>aubergine schedule run</code> はスケジュールを今すぐ試します。</p>
+    <h3>予定どおりにいかないとき</h3>
+    <ul>
+      <li>コンピューターが起きていて、Aubergine が動いている必要があります。スリープ中に過ぎた時刻は、6時間以内であれば復帰したときに遅れとして<strong>1回</strong>だけ実行されます。それ以外は <strong>missed</strong>（逃した）と記録されます。</li>
+      <li>スケジュールの前のタスクがまだ待っているか作業中の間は、新しいタスクを加えず、スキップしたと表示します。</li>
+      <li>指定したもの（ターミナル、ステップ、キャンバス）がなくなっていれば実行せず、あなたの一覧に1つの項目でそう伝えます。</li>
+    </ul>
+    <h2>ルール</h2>
+    <p><strong>Rules</strong> では、「タスクが完了・失敗・自分待ちになったとき、またはスケジュールが発火・見逃されたとき、通知する、または保存済みのステップを実行する」と決められます。ルールを書けるのはあなただけです。プログラムもエージェントもルールを追加・変更できず、ルールが自分自身を発火させることもできません。</p>
+    <p>Aubergine はモデルを呼ばず、どのアプリの資格情報も持ちません。タスクやスケジュールは実行を始めるだけで、仕事は引き受けたエージェントが自分のツールで行います。</p>
+    <p>関連：<a href="../working-copies/">作業コピー</a> · <a href="../run-multiple-coding-agents/">複数のコーディングエージェントを同時に動かす</a></p>
+  </div>
+</div>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <nav aria-label="すべてのページ">
+      <ul class="foot-links">
+        <li><a href="../">ホーム</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex と ChatGPT</a></li>
+        <li><a href="../install/">インストール</a></li>
+        <li><a href="../guides/">ガイド</a></li>
+        <li><a href="../run-multiple-coding-agents/">複数のエージェントを動かす</a></li>
+        <li><a href="../working-copies/">作業コピー</a></li>
+        <li><a href="./" aria-current="page">キューとスケジュール</a></li>
+        <li><a href="../security/">セキュリティ</a></li>
+        <li><a href="../roadmap/">ロードマップ</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine は <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT ライセンス</a>のもとで公開された無料のオープンソースで、あなた自身のコンピューターで動きます。</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+</script>
+</body>
+</html>

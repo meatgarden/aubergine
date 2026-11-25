@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="es" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dos agentes de programación en un repositorio con copias de trabajo | Aubergine</title>
+<meta name="description" content="Una copia de trabajo le da a cada agente su propio checkout y su propia rama de un repositorio, para que dos agentes nunca editen los mismos archivos y puedas leer el trabajo de cada uno por separado.">
+<link rel="canonical" href="https://thirstyeggplant.com/es/working-copies/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/working-copies/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/working-copies/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/working-copies/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/working-copies/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/working-copies/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/working-copies/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/working-copies/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/working-copies/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/working-copies/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/working-copies/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/working-copies/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/working-copies/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/working-copies/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="Dos agentes de programación en un repositorio con copias de trabajo | Aubergine">
+<meta property="og:description" content="Una copia de trabajo le da a cada agente su propio checkout y su propia rama de un repositorio, para que dos agentes nunca editen los mismos archivos y puedas leer el trabajo de cada uno por separado.">
+<meta property="og:url" content="https://thirstyeggplant.com/es/working-copies/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine: un lienzo de terminales, una ocupada y otra esperándote">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine: un lienzo de terminales, una ocupada y otra esperándote">
+<meta name="twitter:title" content="Dos agentes de programación en un repositorio con copias de trabajo | Aubergine">
+<meta name="twitter:description" content="Una copia de trabajo le da a cada agente su propio checkout y su propia rama de un repositorio, para que dos agentes nunca editen los mismos archivos y puedas leer el trabajo de cada uno por separado.">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">Ir a la página</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="Páginas">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Instalar</a></li>
+        <li><a href="../guides/">Guías</a></li>
+        <li><a href="../security/">Seguridad</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="Idioma: Español"><span class="lang-long" aria-hidden="true">Español</span><span class="lang-short" aria-hidden="true">ES</span></summary>
+      <ul class="menu-list"><li><a href="../../working-copies/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="./" hreflang="es" lang="es" dir="ltr" aria-current="true">Español</a></li><li><a href="../../pt/working-copies/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/working-copies/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/working-copies/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/working-copies/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/working-copies/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/working-copies/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/working-copies/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/working-copies/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/working-copies/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/working-copies/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>Menú</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Instalar</a></li>
+        <li><a href="../guides/">Guías</a></li>
+        <li><a href="../security/">Seguridad</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="wrap translated">
+  <p class="note">Aubergine en sí está en inglés: sus botones, menús e imágenes son los de la versión en inglés.</p>
+  <p class="note">Esta página la tradujo una máquina a partir del inglés. <a href="https://github.com/thirstyeggplant/aubergine/issues">Envía una corrección</a>.</p>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/es/working-copies/#article",
+      "headline": "Dos agentes, un repositorio: copias de trabajo",
+      "description": "Una copia de trabajo le da a cada agente su propio checkout y su propia rama de un repositorio, para que dos agentes nunca editen los mismos archivos y puedas leer el trabajo de cada uno por separado.",
+      "url": "https://thirstyeggplant.com/es/working-copies/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/es/working-copies/",
+      "datePublished": "2026-11-18",
+      "inLanguage": "es",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Guías", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "Copias de trabajo", "item": "https://thirstyeggplant.com/es/working-copies/" }
+      ]
+    },
+    {
+      "@type": "HowTo",
+      "@id": "https://thirstyeggplant.com/es/working-copies/#howto",
+      "name": "Cómo ejecutar un agente en su propia copia de trabajo",
+      "description": "Dale a una terminal su propio checkout y su propia rama de un repositorio.",
+      "tool": [{ "@type": "HowToTool", "name": "Git 2.31" }],
+      "step": [
+        { "@type": "HowToStep", "position": 1, "name": "Abre el diálogo de nueva terminal", "text": "Pulsa la flecha al final de New terminal, arriba de la lista de terminales, y luego Shell in a folder or a working copy." },
+        { "@type": "HowToStep", "position": 2, "name": "Elige In its own working copy", "text": "Indica la carpeta, que debe estar en un repositorio Git con al menos un commit, y elige In its own working copy." },
+        { "@type": "HowToStep", "position": 3, "name": "O usa la línea de comandos", "text": "aubergine here --copy" },
+        { "@type": "HowToStep", "position": 4, "name": "Lee lo que cambió", "text": "Haz clic en la rama, en la barra de título de la terminal, para ver los archivos cambiados, añadidos y eliminados, y la diferencia de cada archivo." },
+        { "@type": "HowToStep", "position": 5, "name": "Decide qué pasa con ella", "text": "Cuando la terminal termina, conserva la rama y elimina la carpeta, consérvalo todo o descarta ambas." }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/es/working-copies/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "¿Qué es una copia de trabajo en Aubergine?", "acceptedAnswer": { "@type": "Answer", "text": "Un worktree de Git: un segundo checkout del mismo repositorio, en su propia rama nueva, guardado en la carpeta de datos de Aubergine y nunca dentro de tu repositorio." } },
+        { "@type": "Question", "name": "¿Incluye una copia de trabajo mis cambios sin commit?", "acceptedAnswer": { "@type": "Answer", "text": "No. No se trasladan ni se tocan. Haz commit antes si la nueva terminal debe tenerlos." } },
+        { "@type": "Question", "name": "¿Hace Aubergine merge o push de la rama de una copia de trabajo?", "acceptedAnswer": { "@type": "Answer", "text": "No. Aubergine nunca hace merge, push ni rebase, y nunca cambia la rama que tienes activa." } },
+        { "@type": "Question", "name": "¿Es una copia de trabajo un sandbox?", "acceptedAnswer": { "@type": "Answer", "text": "No. Mantiene el trabajo separado; no encierra a un agente. El agente se ejecuta como tú y aun así puede leer y cambiar cualquier archivo que puedas tú." } }
+      ]
+    }
+  ]
+}
+</script>
+<div class="wrap page-head">
+  <nav class="crumbs" aria-label="Dónde estás"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">Guías</a></li><li>Copias de trabajo</li></ol></nav>
+  <h1>Dos agentes, un repositorio: copias de trabajo</h1>
+  <p class="lead">Normalmente cada terminal trabaja en tu carpeta real. Entonces dos agentes en un mismo repositorio editan los mismos archivos, y no puedes saber qué cambio es de quién. Una copia de trabajo le da a cada terminal su propio checkout, en su propia rama.</p>
+</div>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>Inicia una terminal en una copia de trabajo</h2>
+    <ol>
+      <li>Pulsa <strong>▾</strong> al final de <strong>New terminal</strong>, arriba de la lista de terminales, y luego <strong>Shell in a folder or a working copy…</strong>.</li>
+      <li>Indica la carpeta y elige <strong>In its own working copy</strong> (en su propia copia de trabajo). La opción solo se ofrece donde es posible, y dice por qué donde no lo es: no es un repositorio Git, es un repositorio bare o aún no tiene ningún commit.</li>
+    </ol>
+    <p>Desde una terminal, lo mismo:</p>
+    <pre><code>aubergine here --copy
+aubergine new "api" --copy --in ~/code/my-project</code></pre>
+    <h2>Qué obtienes</h2>
+    <p>Un worktree de Git en una carpeta que Aubergine guarda dentro de su carpeta de datos, nunca dentro de tu repositorio, en una rama nueva llamada <code>aubergine/&lt;terminal name&gt;-&lt;six characters&gt;</code>. Parte del commit en el que está tu checkout, y la terminal empieza en la misma subcarpeta en la que estabas. Tu propio checkout nunca se cambia: ni sus archivos, ni lo que está en el staging, ni la rama que tienes activa.</p>
+    <p class="note"><strong>No se trasladan:</strong> tus cambios sin commit (no se hace stash ni commit de nada por ti), ni los archivos que Git ignora o no sigue, como las dependencias instaladas y los ajustes locales. Un proyecto que necesita un paso de instalación lo necesita de nuevo en la copia de trabajo.</p>
+    <h2>Lee lo que cambió un agente</h2>
+    <p>Una terminal en una copia de trabajo muestra en su barra de título su rama y el número de archivos que difieren. Haz clic ahí para ver los archivos cambiados, añadidos y eliminados, con el trabajo que no está en ningún commit marcado, y la diferencia, de solo lectura, de cualquier archivo que elijas.</p>
+    <h2>Cuando la terminal termina</h2>
+    <p>Una copia de trabajo nunca se elimina solo porque su terminal haya terminado. Tú eliges:</p>
+    <ul>
+      <li><strong>Keep the branch, remove the folder</strong> (conservar la rama, eliminar la carpeta), cuando todo está en commits.</li>
+      <li><strong>Keep everything.</strong> (Conservarlo todo). Se queda en la lista, indicando que su terminal ya no existe.</li>
+      <li><strong>Discard both</strong> (descartar ambas), que pregunta una segunda vez cuando la copia contiene trabajo que no existe en ningún otro sitio.</li>
+    </ul>
+    <pre><code>aubergine copies
+aubergine copies show api
+aubergine copies keep-branch api
+aubergine copies discard api</code></pre>
+    <p>Aubergine nunca hace merge, push ni rebase. Lo que hagas con una rama conservada es cosa tuya.</p>
+    <h2>Qué ejecuta Aubergine en tu repositorio</h2>
+    <p>Aubergine usa el <code>git</code> de tu <code>PATH</code> (2.31 o posterior). En cada comando de Git que inicia, no se ejecuta ningún hook, nada pide confirmación, nada sale a la red y no se descargan los submódulos. Los filtros que nombra tu propia configuración de Git, como el almacenamiento de archivos grandes, sí se ejecutan, igual que en tu propio <code>git status</code>.</p>
+    <h2>No es un sandbox</h2>
+    <p>Una copia de trabajo mantiene el trabajo separado. No encierra a un agente: el agente se ejecuta como tú y puede leer y cambiar cualquier archivo que puedas tú, incluido tu propio checkout. No confíes en ella para frenar a un agente que haga algo mal. Mira <a href="../security/">seguridad</a>.</p>
+    <p>Relacionado: <a href="../run-multiple-coding-agents/">ejecutar varios agentes de programación a la vez</a> · <a href="../queue-and-schedules/">la cola y las programaciones</a> (una tarea iniciada en una terminal nueva recibe una copia de trabajo propia cuando la carpeta está en un repositorio).</p>
+  </div>
+</div>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <nav aria-label="Todas las páginas">
+      <ul class="foot-links">
+        <li><a href="../">Inicio</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex y ChatGPT</a></li>
+        <li><a href="../install/">Instalar</a></li>
+        <li><a href="../guides/">Guías</a></li>
+        <li><a href="../run-multiple-coding-agents/">Varios agentes a la vez</a></li>
+        <li><a href="./" aria-current="page">Copias de trabajo</a></li>
+        <li><a href="../queue-and-schedules/">Cola y programaciones</a></li>
+        <li><a href="../security/">Seguridad</a></li>
+        <li><a href="../roadmap/">Hoja de ruta</a></li>
+        <li><a href="../faq/">Preguntas frecuentes</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine es libre y de código abierto bajo la <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">licencia MIT</a>, y se ejecuta en tu propio ordenador.</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+</script>
+</body>
+</html>

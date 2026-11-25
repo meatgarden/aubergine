@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="fr" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claude Code dans Aubergine | Aubergine</title>
+<meta name="description" content="Ce qu’Aubergine fait d’elle-même pour Claude Code : le lancer depuis le menu, voir quand il attend, reprendre une conversation, les anciennes conversations, sa configuration, et des outils.">
+<link rel="canonical" href="https://thirstyeggplant.com/fr/claude/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/claude/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/claude/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/claude/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/claude/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/claude/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/claude/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/claude/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/claude/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/claude/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/claude/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/claude/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/claude/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/claude/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="Claude Code dans Aubergine | Aubergine">
+<meta property="og:description" content="Ce qu’Aubergine fait d’elle-même pour Claude Code : le lancer depuis le menu, voir quand il attend, reprendre une conversation, les anciennes conversations, sa configuration, et des outils.">
+<meta property="og:url" content="https://thirstyeggplant.com/fr/claude/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine : un canevas de terminaux, l’un occupé et l’autre qui vous attend">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine : un canevas de terminaux, l’un occupé et l’autre qui vous attend">
+<meta name="twitter:title" content="Claude Code dans Aubergine | Aubergine">
+<meta name="twitter:description" content="Ce qu’Aubergine fait d’elle-même pour Claude Code : le lancer depuis le menu, voir quand il attend, reprendre une conversation, les anciennes conversations, sa configuration, et des outils.">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">Aller au contenu</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="Pages">
+      <ul>
+        <li><a href="./" aria-current="page">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Installer</a></li>
+        <li><a href="../guides/">Guides</a></li>
+        <li><a href="../security/">Sécurité</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="Langue: Français"><span class="lang-long" aria-hidden="true">Français</span><span class="lang-short" aria-hidden="true">FR</span></summary>
+      <ul class="menu-list"><li><a href="../../claude/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/claude/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/claude/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="./" hreflang="fr" lang="fr" dir="ltr" aria-current="true">Français</a></li><li><a href="../../de/claude/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/claude/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/claude/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/claude/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/claude/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/claude/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/claude/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/claude/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>Menu</summary>
+      <ul class="menu-list">
+        <li><a href="./" aria-current="page">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Installer</a></li>
+        <li><a href="../guides/">Guides</a></li>
+        <li><a href="../security/">Sécurité</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="wrap translated">
+  <p class="note">Aubergine elle-même est en anglais : ses boutons, ses menus et ses images sont ceux de la version anglaise.</p>
+  <p class="note">Cette page a été traduite de l’anglais par une machine. <a href="https://github.com/thirstyeggplant/aubergine/issues">Proposer une correction</a>.</p>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/fr/claude/#article",
+      "headline": "Ce qu’Aubergine fait pour Claude Code",
+      "description": "Ce qu’Aubergine fait d’elle-même pour Claude Code : le lancer depuis le menu, voir quand il attend, reprendre une conversation, les anciennes conversations, sa configuration, et des outils.",
+      "url": "https://thirstyeggplant.com/fr/claude/",
+      "inLanguage": "fr",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Claude Code", "item": "https://thirstyeggplant.com/fr/claude/" }
+      ]
+    }
+  ]
+}
+</script>
+<div class="wrap page-head">
+  <nav class="crumbs" aria-label="Où vous êtes"><ol><li><a href="../">Aubergine</a></li><li>Claude Code</li></ol></nav>
+  <h1>Ce qu’Aubergine fait pour Claude Code</h1>
+  <p class="lead">Claude Code tourne dans un terminal Aubergine comme n’importe quel programme. Lancé depuis Aubergine, il indique aussi au canevas ce qu’il fait, et Aubergine peut l’informer, le reprendre et montrer sa configuration. Voici tout, dans l’ordre où vous le rencontrez.</p>
+</div>
+<div class="wrap page-body">
+  <div class="prose">
+    <p class="note">Vous installez Claude Code et vous vous y connectez vous-même. Aubergine n’appelle aucun modèle et ne détient aucune clé : elle lance la commande <code>claude</code> que vous avez déjà.</p>
+
+    <h2>Le lancer depuis le menu</h2>
+    <p><strong>New terminal ▾ → Claude Code</strong>, ou <code>C</code> quand aucun terminal n’a le clavier, lance <code>claude</code> dans un nouveau terminal avec un fichier de réglages qu’Aubergine écrit dans son propre dossier de données. Votre propre configuration de Claude Code n’est pas touchée.</p>
+    <p>La commande lancée est <code>agents.claudeCommand</code> dans les réglages, <code>claude</code> sauf si vous la changez ; Aubergine ajoute ses propres options à la fin.</p>
+    <p class="note">Où : le menu à côté de New terminal, en haut de la liste des terminaux.</p>
+
+    <h2>Voir quand il travaille, attend et a fini</h2>
+    <p>Les hooks de ce fichier de réglages indiquent au canevas ce que fait l’agent. Quand vous envoyez un prompt, le prompt est ajouté au journal de la note du terminal et le terminal affiche <strong>working</strong>. Quand l’agent a besoin de vous, pour une question d’autorisation ou parce qu’il attend une saisie, son contour prend la couleur de l’attente et son titre et sa ligne indiquent <strong>waiting for you</strong>. Quand il s’arrête, il affiche <strong>finished</strong>.</p>
+    <p><code>W</code> mène au prochain terminal qui attend, et <strong>Notify</strong> active les notifications du bureau pour les terminaux qui se mettent à attendre. Les prompts peuvent contenir des secrets : <code>"agents": { "logPrompts": false }</code> dans <code>config.json</code> les tient hors du journal de la note.</p>
+    <p class="note">Où : le titre du terminal, sa ligne dans la liste, et le compteur à côté de For you en haut.</p>
+
+    <h2>Un Claude Code que vous avez lancé vous-même</h2>
+    <p>Tapé à la main dans un terminal ordinaire, <code>claude</code> fonctionne comme n’importe quel programme, mais Aubergine ne voit qu’un shell occupé à l’exécuter : pas de waiting for you, et rien n’est tapé pour lui quand vous y lancez un workflow. Pour changer cela, affichez les hooks et ajoutez-les à la main à vos propres réglages de Claude Code. Ils ne font rien en dehors d’un terminal Aubergine.</p>
+    <p class="cmd"><code>aubergine hooks print</code><button type="button" class="copy" data-copy data-copied="Copié" aria-live="polite" hidden>Copier</button></p>
+
+    <h2>Il se nomme et tient un résumé</h2>
+    <p>Un agent lancé par Aubergine reçoit pour consigne, à son démarrage, de nommer son terminal d’après le travail et de tenir un résumé, avec <code>aubergine describe</code>, <code>aubergine link add</code> et <code>aubergine field set</code>, et on le lui rappelle une fois quand il s’arrête sans nom à lui ou sans résumé. Ce que vous écrivez vous-même l’emporte ; ce que l’agent dit de la même chose attend à côté, avec <strong>Use this</strong> (utiliser ceci). Le rappel peut être désactivé dans <strong>Settings</strong>.</p>
+    <p class="note">Où : les détails du terminal, avec son nom, son résumé, ses champs et ses liens.</p>
+
+    <h2>Workflows, tâches, récapitulatifs et messages lui parviennent</h2>
+    <p>Aubergine tape quatre phrases fixes dans un terminal, et seulement celles-ci : qu’un workflow a été lancé, qu’on a demandé à l’agent d’écrire quelque chose, que vous avez demandé un récapitulatif, et qu’un message attend. Chacune nomme une commande que l’agent doit exécuter. Une phrase n’est tapée que là où l’on voit qu’un agent a le clavier : un agent lancé par Aubergine, ou un agent dont les réglages contiennent les hooks de <code>aubergine hooks print</code>.</p>
+    <p>De même, une tâche de la file d’attente ne va qu’à un terminal où un tel agent est au premier plan et libre, et <strong>Claude Code on a workflow…</strong> lance un nouveau terminal dont l’agent est informé de l’exécution dans son premier prompt.</p>
+    <p class="note">Où : <strong>Run a workflow…</strong> dans le menu du titre d’un terminal, et <strong>Runs</strong> en haut de la page.</p>
+
+    <h2>Resume agent</h2>
+    <p>Aubergine se souvient de la conversation dans laquelle se trouvait un terminal d’agent. Quand son shell revient à l’invite, parce que vous avez quitté l’agent ou que l’ordinateur a redémarré, le terminal propose <strong>Resume agent</strong> (reprendre l’agent), qui relance l’agent dans cette conversation. Sur un terminal engagé dans une exécution, il informe aussi de nouveau l’agent de cette exécution.</p>
+    <p class="note">Où : la barre de titre du terminal.</p>
+
+    <h2>Anciennes conversations</h2>
+    <p><strong>Past conversations…</strong> liste les conversations précédentes de l’agent dans un dossier : en lire une, l’ouvrir sur le canevas, ou ouvrir une copie qui laisse l’originale telle quelle. Tapez <code>@</code> et quelques mots dans la palette pour y chercher ; <code>aubergine history</code> les liste en ligne de commande. Rien de ce qui est lu n’est gardé, et aucun jeton ni aucun agent ne peut lire de conversations par Aubergine.</p>
+    <p>Elle lit les fichiers que garde Claude Code. Leur format est interne à Claude Code et change d’une version à l’autre. Après une mise à jour de l’agent, les noms et les transcriptions peuvent être plus maigres, et un enregistrement qu’Aubergine ne sait pas lire est signalé comme tel, jamais affiché comme vide.</p>
+    <p class="note">Où : la palette (<code>⌘K</code>), et « Past conversations in this folder… » dans les détails d’un terminal.</p>
+
+    <h2>Comment il est configuré</h2>
+    <p>Une liste de ce que les fichiers de configuration de l’agent disent qu’on lui a donné : serveurs MCP, plugins, hooks, skills, règles d’autorisation et fichiers de réglages, chacun avec sa provenance, et ce qu’Aubergine a ajouté. Uniquement des noms, jamais une valeur ni un secret. Elle dit comment l’agent est configuré, pas ce que l’agent en cours a chargé, et dit clairement ce qu’elle ne peut pas savoir, comme les connecteurs fournis avec votre compte.</p>
+    <p class="note">Où : <strong>⚙ on</strong> sur le terminal, « What is switched on for this agent… » dans la palette, et les détails du terminal.</p>
+
+    <h2>Les outils d’Aubergine pour lui</h2>
+    <p><strong>Claude Code with Aubergine tools…</strong> demande d’abord ce que l’agent peut faire : <strong>None</strong> (rien) ; <strong>Its own work only</strong> (son propre travail seulement), avec l’identifiant propre au terminal ; ou <strong>More…</strong>, des portées que vous choisissez, pour lesquelles un jeton est créé pour ce seul terminal et révoqué quand le terminal est fermé définitivement. Les outils sont <code>aubergine mcp</code>, passé à l’agent sur sa ligne de lancement ; sa propre configuration n’est pas écrite.</p>
+    <p class="note">Où : le menu à côté de New terminal.</p>
+
+    <h2>Ramener un Claude Code déjà ouvert</h2>
+    <p>Un agent en cours ne peut pas être déplacé, mais sa conversation, si. <strong>Open elsewhere</strong> liste vos onglets Claude Code, avec <strong>Fork to canvas</strong> et, pour un agent inactif, <strong>Stop and resume here</strong>, qui vous demande d’abord confirmation. Depuis un terminal, <code>aubergine move</code> fait la même chose, et <code>aubergine here --claude</code> lance Claude Code sur le canevas en poursuivant la dernière conversation de ce dossier.</p>
+    <p class="note">Où : <strong>Open elsewhere</strong> dans la barre au-dessus du canevas, ou <code>O</code>.</p>
+
+    <h2>Dans sa propre copie de travail</h2>
+    <p><code>aubergine here --copy --claude</code> lance Claude Code dans sa propre extraction du dépôt, sur sa propre branche, pour que deux agents ne modifient jamais les mêmes fichiers. La boîte de dialogue d’un terminal Claude Code avec outils offre le même choix.</p>
+
+    <h2>Ce qui a été essayé</h2>
+    <p>La démo fournie avec Aubergine utilise des agents factices, de courts scripts qui exécutent les mêmes commandes et hooks qu’un vrai agent, pas un vrai Claude Code. Avec un vrai agent, une approbation, une copie de travail, une tâche de la file d’attente et une planification n’ont pas encore été essayées.</p>
+
+    <p>Un autre agent peut dire l’essentiel de ceci avec les commandes <code>aubergine</code> : voir <a href="../chatgpt/">Codex et ChatGPT</a>.</p>
+    <p class="note">Aubergine n’est pas affiliée à Anthropic. Claude et Claude Code sont des marques d’Anthropic.</p>
+  </div>
+</div>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <nav aria-label="Toutes les pages">
+      <ul class="foot-links">
+        <li><a href="../">Accueil</a></li>
+        <li><a href="./" aria-current="page">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex et ChatGPT</a></li>
+        <li><a href="../install/">Installer</a></li>
+        <li><a href="../guides/">Guides</a></li>
+        <li><a href="../run-multiple-coding-agents/">Plusieurs agents à la fois</a></li>
+        <li><a href="../working-copies/">Copies de travail</a></li>
+        <li><a href="../queue-and-schedules/">File d’attente et planifications</a></li>
+        <li><a href="../security/">Sécurité</a></li>
+        <li><a href="../roadmap/">Feuille de route</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine est libre et gratuite, sous <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">licence MIT</a>, et tourne sur votre propre ordinateur.</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+</script>
+</body>
+</html>

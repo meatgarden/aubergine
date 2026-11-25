@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>أدلة Aubergine | Aubergine</title>
+<meta name="description" content="أدلة لتشغيل عدة وكلاء برمجة مع Aubergine: النظرة العامة، وClaude Code وCodex، ونسخ العمل، والطابور والجداول الزمنية.">
+<link rel="canonical" href="https://thirstyeggplant.com/ar/guides/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/guides/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/guides/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/guides/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/guides/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/guides/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/guides/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/guides/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/guides/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/guides/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/guides/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/guides/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/guides/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/guides/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="أدلة Aubergine | Aubergine">
+<meta property="og:description" content="أدلة لتشغيل عدة وكلاء برمجة مع Aubergine: النظرة العامة، وClaude Code وCodex، ونسخ العمل، والطابور والجداول الزمنية.">
+<meta property="og:url" content="https://thirstyeggplant.com/ar/guides/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine: لوحة من الطرفيات، إحداها مشغولة وأخرى بانتظارك">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine: لوحة من الطرفيات، إحداها مشغولة وأخرى بانتظارك">
+<meta name="twitter:title" content="أدلة Aubergine | Aubergine">
+<meta name="twitter:description" content="أدلة لتشغيل عدة وكلاء برمجة مع Aubergine: النظرة العامة، وClaude Code وCodex، ونسخ العمل، والطابور والجداول الزمنية.">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">انتقل إلى محتوى الصفحة</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="الصفحات">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">التثبيت</a></li>
+        <li><a href="./" aria-current="page">الأدلة</a></li>
+        <li><a href="../security/">الأمان</a></li>
+        <li><a href="../faq/">الأسئلة الشائعة</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="اللغة: العربية"><span class="lang-long" aria-hidden="true">العربية</span><span class="lang-short" aria-hidden="true">AR</span></summary>
+      <ul class="menu-list"><li><a href="../../guides/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/guides/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/guides/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/guides/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/guides/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/guides/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/guides/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/guides/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/guides/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/guides/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/guides/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="./" hreflang="ar" lang="ar" dir="rtl" aria-current="true">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>القائمة</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">التثبيت</a></li>
+        <li><a href="./" aria-current="page">الأدلة</a></li>
+        <li><a href="../security/">الأمان</a></li>
+        <li><a href="../faq/">الأسئلة الشائعة</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="wrap translated">
+  <p class="note">تطبيق Aubergine نفسه باللغة الإنجليزية: أزراره وقوائمه وصوره كلها بالإنجليزية.</p>
+  <p class="note">ترجمت آلةٌ هذه الصفحة عن الإنجليزية. <a href="https://github.com/thirstyeggplant/aubergine/issues">أرسل تصحيحًا</a>.</p>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "الأدلة", "item": "https://thirstyeggplant.com/ar/guides/" }
+      ]
+    }
+  ]
+}
+</script>
+<div class="wrap page-head">
+  <nav class="crumbs" aria-label="أين أنت"><ol><li><a href="../">Aubergine</a></li><li>الأدلة</li></ol></nav>
+  <h1>الأدلة</h1>
+  <p class="lead">أدلة قصيرة وعملية. المرجع الكامل هو <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>.</p>
+</div>
+<div class="wrap page-body">
+  <ul class="rows">
+    <li><h2><a class="row-link" href="../install/">ثبّت Aubergine</a></h2><p>المتطلبات، والمثبِّت ذو السطر الواحد، وما يغيّره، وحلول للمشكلات الشائعة.</p></li>
+    <li><h2><a class="row-link" href="../run-multiple-coding-agents/">شغّل عدة وكلاء برمجة في آن واحد</a></h2><p>اللوحة، وعدد المنتظرين، والطابور، ونسخ العمل، وسير العمل في جولة واحدة.</p></li>
+    <li><h2><a class="row-link" href="../claude/">Claude Code في Aubergine</a></h2><p>ما يفعله Aubergine من تلقاء نفسه لـ Claude Code، وأين يوجد كل شيء.</p></li>
+    <li><h2><a class="row-link" href="../chatgpt/">Codex و ChatGPT</a></h2><p>Codex في طرفية مثل أي برنامج، وما يستطيع التبليغ عنه، وما هو مبني لـ Claude Code وحده.</p></li>
+    <li><h2><a class="row-link" href="../working-copies/">نسخ العمل</a></h2><p>أعطِ كل وكيل نسخته المسحوبة وفرعه الخاصين، فلا يعدّل وكيلان الملفات نفسها أبدًا.</p></li>
+    <li><h2><a class="row-link" href="../queue-and-schedules/">الطابور وFor you والجداول الزمنية</a></h2><p>وزّع العمل مرة واحدة، واعرف كل ما ينتظرك، وشغّل المهام في أوقات محددة.</p></li>
+    <li><h2><a class="row-link" href="../security/">الأمان والخصوصية</a></h2><p>ما المحمي، وما غير المحمي.</p></li>
+    <li><h2><a class="row-link" href="../faq/">الأسئلة الشائعة</a></h2><p>إجابات قصيرة عن أسئلة شائعة.</p></li>
+  </ul>
+</div>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <nav aria-label="كل الصفحات">
+      <ul class="foot-links">
+        <li><a href="../">الرئيسية</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex و ChatGPT</a></li>
+        <li><a href="../install/">التثبيت</a></li>
+        <li><a href="./" aria-current="page">الأدلة</a></li>
+        <li><a href="../run-multiple-coding-agents/">تشغيل عدة وكلاء</a></li>
+        <li><a href="../working-copies/">نسخ العمل</a></li>
+        <li><a href="../queue-and-schedules/">الطابور والجداول الزمنية</a></li>
+        <li><a href="../security/">الأمان</a></li>
+        <li><a href="../roadmap/">خارطة الطريق</a></li>
+        <li><a href="../faq/">الأسئلة الشائعة</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine مجاني ومفتوح المصدر بموجب <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">رخصة MIT</a>، ويعمل على حاسوبك أنت.</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+</script>
+</body>
+</html>

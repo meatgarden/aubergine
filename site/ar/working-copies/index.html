@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>شغّل وكيلَي برمجة على مستودع واحد بنسخ العمل | Aubergine</title>
+<meta name="description" content="نسخة العمل تعطي كل وكيل نسخته المسحوبة وفرعه الخاصين من المستودع، فلا يعدّل وكيلان الملفات نفسها أبدًا وتقرأ عمل كل منهما على حدة.">
+<link rel="canonical" href="https://thirstyeggplant.com/ar/working-copies/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/working-copies/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/working-copies/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/working-copies/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/working-copies/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/working-copies/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/working-copies/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/working-copies/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/working-copies/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/working-copies/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/working-copies/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/working-copies/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/working-copies/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/working-copies/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="شغّل وكيلَي برمجة على مستودع واحد بنسخ العمل | Aubergine">
+<meta property="og:description" content="نسخة العمل تعطي كل وكيل نسخته المسحوبة وفرعه الخاصين من المستودع، فلا يعدّل وكيلان الملفات نفسها أبدًا وتقرأ عمل كل منهما على حدة.">
+<meta property="og:url" content="https://thirstyeggplant.com/ar/working-copies/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine: لوحة من الطرفيات، إحداها مشغولة وأخرى بانتظارك">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine: لوحة من الطرفيات، إحداها مشغولة وأخرى بانتظارك">
+<meta name="twitter:title" content="شغّل وكيلَي برمجة على مستودع واحد بنسخ العمل | Aubergine">
+<meta name="twitter:description" content="نسخة العمل تعطي كل وكيل نسخته المسحوبة وفرعه الخاصين من المستودع، فلا يعدّل وكيلان الملفات نفسها أبدًا وتقرأ عمل كل منهما على حدة.">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">انتقل إلى محتوى الصفحة</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="الصفحات">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">التثبيت</a></li>
+        <li><a href="../guides/">الأدلة</a></li>
+        <li><a href="../security/">الأمان</a></li>
+        <li><a href="../faq/">الأسئلة الشائعة</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="اللغة: العربية"><span class="lang-long" aria-hidden="true">العربية</span><span class="lang-short" aria-hidden="true">AR</span></summary>
+      <ul class="menu-list"><li><a href="../../working-copies/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/working-copies/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/working-copies/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/working-copies/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/working-copies/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/working-copies/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/working-copies/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/working-copies/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/working-copies/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/working-copies/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/working-copies/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="./" hreflang="ar" lang="ar" dir="rtl" aria-current="true">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>القائمة</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">التثبيت</a></li>
+        <li><a href="../guides/">الأدلة</a></li>
+        <li><a href="../security/">الأمان</a></li>
+        <li><a href="../faq/">الأسئلة الشائعة</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="wrap translated">
+  <p class="note">تطبيق Aubergine نفسه باللغة الإنجليزية: أزراره وقوائمه وصوره كلها بالإنجليزية.</p>
+  <p class="note">ترجمت آلةٌ هذه الصفحة عن الإنجليزية. <a href="https://github.com/thirstyeggplant/aubergine/issues">أرسل تصحيحًا</a>.</p>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/ar/working-copies/#article",
+      "headline": "وكيلان ومستودع واحد: نسخ العمل",
+      "description": "نسخة العمل تعطي كل وكيل نسخته المسحوبة وفرعه الخاصين من المستودع، فلا يعدّل وكيلان الملفات نفسها أبدًا وتقرأ عمل كل منهما على حدة.",
+      "url": "https://thirstyeggplant.com/ar/working-copies/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/ar/working-copies/",
+      "datePublished": "2026-11-18",
+      "inLanguage": "ar",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "الأدلة", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "نسخ العمل", "item": "https://thirstyeggplant.com/ar/working-copies/" }
+      ]
+    },
+    {
+      "@type": "HowTo",
+      "@id": "https://thirstyeggplant.com/ar/working-copies/#howto",
+      "name": "كيف تشغّل وكيلًا في نسخة عمل خاصة به",
+      "description": "أعطِ طرفية نسختها المسحوبة وفرعها الخاصين من مستودع.",
+      "tool": [{ "@type": "HowToTool", "name": "Git 2.31" }],
+      "step": [
+        { "@type": "HowToStep", "position": 1, "name": "افتح نافذة الطرفية الجديدة", "text": "اضغط السهم في آخر New terminal، أعلى قائمة الطرفيات، ثم Shell in a folder or a working copy." },
+        { "@type": "HowToStep", "position": 2, "name": "اختر In its own working copy", "text": "أدخل المجلد، الذي يجب أن يكون في مستودع Git فيه إيداع واحد على الأقل، واختر In its own working copy." },
+        { "@type": "HowToStep", "position": 3, "name": "أو استخدم سطر الأوامر", "text": "aubergine here --copy" },
+        { "@type": "HowToStep", "position": 4, "name": "اقرأ ما تغيّر", "text": "انقر الفرع على شريط عنوان الطرفية لترى الملفات المغيَّرة والمضافة والمحذوفة والفرق في كل ملف." },
+        { "@type": "HowToStep", "position": 5, "name": "قرّر ما يحدث لها", "text": "حين تنتهي الطرفية، أبقِ الفرع واحذف المجلد، أو أبقِ كل شيء، أو تخلّص من الاثنين." }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/ar/working-copies/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "ما نسخة العمل في Aubergine؟", "acceptedAnswer": { "@type": "Answer", "text": "شجرة عمل Git: نسخة مسحوبة ثانية من المستودع نفسه، على فرع جديد خاص بها، تُحفظ في مجلد بيانات Aubergine ولا تكون داخل مستودعك أبدًا." } },
+        { "@type": "Question", "name": "هل تتضمن نسخة العمل تغييراتي غير المودَعة؟", "acceptedAnswer": { "@type": "Answer", "text": "لا. لا تُنقل ولا تُمس. أودِعها أولًا إن كان يجب أن تكون في الطرفية الجديدة." } },
+        { "@type": "Question", "name": "هل يدمج Aubergine فرع نسخة العمل أو يدفعه؟", "acceptedAnswer": { "@type": "Answer", "text": "لا. لا يدمج Aubergine ولا يدفع ولا يعيد الأساس أبدًا، ولا يغيّر أبدًا الفرع الذي سحبته." } },
+        { "@type": "Question", "name": "هل نسخة العمل صندوق عزل؟", "acceptedAnswer": { "@type": "Answer", "text": "لا. تُبقي الأعمال منفصلة؛ لكنها لا تحبس الوكيل. الوكيل يعمل باسمك ولا يزال يستطيع قراءة وتغيير كل ملف تستطيعه." } }
+      ]
+    }
+  ]
+}
+</script>
+<div class="wrap page-head">
+  <nav class="crumbs" aria-label="أين أنت"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">الأدلة</a></li><li>نسخ العمل</li></ol></nav>
+  <h1>وكيلان ومستودع واحد: نسخ العمل</h1>
+  <p class="lead">تعمل كل طرفية عادةً في مجلدك الحقيقي. فيعدّل وكيلان في مستودع واحد الملفات نفسها، ولا تستطيع أن تميّز أي تغيير لمن. نسخة العمل تعطي كل طرفية نسختها المسحوبة الخاصة، على فرعها الخاص.</p>
+</div>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>شغّل طرفية في نسخة عمل</h2>
+    <ol>
+      <li>اضغط <strong>▾</strong> في آخر <strong>New terminal</strong>، أعلى قائمة الطرفيات، ثم <strong>Shell in a folder or a working copy…‎</strong>.</li>
+      <li>أدخل المجلد واختر <strong>In its own working copy</strong> (في نسخة عمل خاصة بها). لا يُعرض هذا الخيار إلا حيث يمكن، ويقول السبب حيث لا يمكن: ليس مستودع Git، أو مستودع مجرد (bare)، أو لا إيداع بعد.</li>
+    </ol>
+    <p>ومن طرفية، الشيء نفسه:</p>
+    <pre><code>aubergine here --copy
+aubergine new "api" --copy --in ~/code/my-project</code></pre>
+    <h2>ما تحصل عليه</h2>
+    <p>شجرة عمل Git (worktree) في مجلد يحتفظ به Aubergine تحت مجلد بياناته، لا داخل مستودعك أبدًا، على فرع جديد اسمه <code>aubergine/&lt;terminal name&gt;-&lt;six characters&gt;</code>. تبدأ من الإيداع الذي عليه نسختك المسحوبة، وتبدأ الطرفية في المجلد الفرعي نفسه الذي كنت فيه. نسختك المسحوبة لا تتغير أبدًا: لا ملفاتها، ولا ما هو مُجهَّز للإيداع، ولا الفرع الذي سحبته.</p>
+    <p class="note"><strong>ما لا يُنقل:</strong> تغييراتك غير المودَعة (لا يُخبَّأ ولا يُودَع شيء نيابة عنك)، والملفات التي يتجاهلها Git أو لا يتتبعها، مثل الاعتماديات المثبَّتة والإعدادات المحلية. والمشروع الذي يحتاج إلى خطوة تثبيت يحتاجها من جديد في نسخة العمل.</p>
+    <h2>اقرأ ما غيّره وكيل</h2>
+    <p>الطرفية التي في نسخة عمل تُظهر على شريط عنوانها فرعها وعدد الملفات المختلفة. انقره لترى الملفات المغيَّرة والمضافة والمحذوفة، مع تعليم العمل الذي ليس في أي إيداع، والفرق للقراءة فقط لأي ملف تختاره.</p>
+    <h2>حين تنتهي الطرفية</h2>
+    <p>لا تُزال نسخة العمل أبدًا لمجرد أن طرفيتها انتهت. أنت تختار:</p>
+    <ul>
+      <li><strong>Keep the branch, remove the folder</strong> (أبقِ الفرع واحذف المجلد)، حين يكون كل شيء مودَعًا.</li>
+      <li><strong>Keep everything.‎</strong> (أبقِ كل شيء) تبقى في القائمة، وتقول إن طرفيتها ذهبت.</li>
+      <li><strong>Discard both</strong> (تخلّص من الاثنين)، الذي يسأل مرة ثانية حين تحوي النسخة عملًا لا يوجد في أي مكان آخر.</li>
+    </ul>
+    <pre><code>aubergine copies
+aubergine copies show api
+aubergine copies keep-branch api
+aubergine copies discard api</code></pre>
+    <p>لا يدمج Aubergine ولا يدفع ولا يعيد الأساس أبدًا. ما تفعله بفرع أبقيته شأنك.</p>
+    <h2>ما يشغّله Aubergine في مستودعك</h2>
+    <p>يستخدم Aubergine الأمر <code>git</code> الموجود على <code>PATH</code> لديك (2.31 أو أحدث). في كل أمر Git يشغّله، لا يعمل أي خطاف، ولا يُطلب منك شيء، ولا يصل شيء إلى الشبكة، ولا تُجلب الوحدات الفرعية. أما المرشّحات المذكورة في إعدادات Git الخاصة بك، مثل تخزين الملفات الكبيرة، فتعمل، كما تعمل مع <code>git status</code> الخاص بك.</p>
+    <h2>ليست صندوق عزل</h2>
+    <p>نسخة العمل تُبقي الأعمال منفصلة. لكنها لا تحبس الوكيل: الوكيل يعمل باسمك ويستطيع قراءة وتغيير كل ملف تستطيعه، بما في ذلك نسختك المسحوبة. لا تعتمد عليها لكبح وكيل يفعل الشيء الخطأ. انظر <a href="../security/">الأمان</a>.</p>
+    <p>ذو صلة: <a href="../run-multiple-coding-agents/">شغّل عدة وكلاء برمجة في آن واحد</a> · <a href="../queue-and-schedules/">الطابور والجداول الزمنية</a> (المهمة التي تبدأ في طرفية جديدة تحصل على نسخة عمل خاصة بها حيث يكون المجلد في مستودع).</p>
+  </div>
+</div>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <nav aria-label="كل الصفحات">
+      <ul class="foot-links">
+        <li><a href="../">الرئيسية</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex و ChatGPT</a></li>
+        <li><a href="../install/">التثبيت</a></li>
+        <li><a href="../guides/">الأدلة</a></li>
+        <li><a href="../run-multiple-coding-agents/">تشغيل عدة وكلاء</a></li>
+        <li><a href="./" aria-current="page">نسخ العمل</a></li>
+        <li><a href="../queue-and-schedules/">الطابور والجداول الزمنية</a></li>
+        <li><a href="../security/">الأمان</a></li>
+        <li><a href="../roadmap/">خارطة الطريق</a></li>
+        <li><a href="../faq/">الأسئلة الشائعة</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine مجاني ومفتوح المصدر بموجب <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">رخصة MIT</a>، ويعمل على حاسوبك أنت.</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+</script>
+</body>
+</html>

@@ -59,7 +59,7 @@
     --quiet: #655a6b;
     --aubergine: #6b2f66;
     --deep: #ead9e8;
-    --amber: #a8650a;
+    --amber: #a3620a;
     --green: #2c7a3a;
   }
 }
@@ -113,18 +113,26 @@ p { margin: 0; }
 .nav a:hover, .nav a[aria-current="page"] { color: var(--text); }
 .nav a[aria-current="page"] { background: var(--raised); }
 .menu { position: relative; }
-.menu summary { list-style: none; cursor: pointer; padding: 6px 12px; border: 1px solid var(--line); border-radius: 8px; color: var(--text); font-size: 0.94rem; transition: background-color var(--quick); }
+.menu summary { list-style: none; cursor: pointer; white-space: nowrap; padding: 6px 12px; border: 1px solid var(--line); border-radius: 8px; color: var(--text); font-size: 0.94rem; transition: background-color var(--quick); }
 .menu summary::-webkit-details-marker { display: none; }
-.menu summary::after { content: ""; display: inline-block; margin-inline-start: 8px; width: 6px; height: 6px; border-inline-end: 1.5px solid currentColor; border-block-end: 1.5px solid currentColor; transform: translateY(-3px) rotate(45deg); }
+.menu summary::after { content: ""; display: inline-block; margin-inline-start: 8px; width: 6px; height: 6px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: translateY(-3px) rotate(45deg); }
+/* The chevron is drawn with physical borders, so that it points down in both directions. */
 .menu summary:hover, .menu[open] summary { background: var(--raised); }
 .menu-list { position: absolute; inset-inline-end: 0; inset-block-start: calc(100% + 6px); z-index: 3; min-width: 13rem; list-style: none; margin: 0; padding: 6px; background: var(--raised); border: 1px solid var(--line); border-radius: var(--corner); box-shadow: 0 16px 40px -16px rgb(0 0 0 / 0.5); }
 .menu-list a { display: block; padding: 8px 12px; border-radius: 6px; color: var(--text); text-decoration: none; }
 .menu-list a:hover { background: var(--line); }
 .menu-list a[aria-current] { color: var(--aubergine); }
 .pages { display: none; }
+/* The language button says the language's name; on a phone, its short code (the name stays its accessible name and is in the menu). */
+.lang-short { display: none; }
 @media (max-width: 900px) {
   .nav { display: none; }
   .pages { display: block; }
+}
+@media (max-width: 640px) {
+  .top-in { gap: 12px; }
+  .lang-long { display: none; }
+  .lang-short { display: inline; }
 }
 .translated { padding-block: 16px 0; display: grid; gap: 6px; }
 
@@ -316,3 +324,24 @@ main { display: block; padding-block-end: var(--section); }
 .roadmap > h2:first-child { margin-block-start: 16px; }
 .roadmap > .intro { margin-block-start: 8px; }
 .roadmap > .note { margin-block-start: 56px; }
+
+/* Scripts the heading face has no letters for fall to the system's sans at the same weight (the stack in --face-head);
+   they get looser leading and no negative letter-spacing, which would pull Arabic apart and crowd CJK and Indic letters. */
+:is(h1, h2, h3):is(:lang(ja), :lang(zh), :lang(ko), :lang(hi), :lang(bn), :lang(ar)) { letter-spacing: 0; }
+:is(h1, h2, h3):is(:lang(ja), :lang(zh), :lang(ko)) { line-height: 1.4; }
+:is(h1, h2, h3):is(:lang(hi), :lang(bn)) { line-height: 1.5; }
+:is(h1, h2, h3):lang(ar) { line-height: 1.45; }
+.hero h1:is(:lang(ja), :lang(zh), :lang(ko)) { line-height: 1.3; }
+.hero h1:is(:lang(hi), :lang(bn), :lang(ar)) { line-height: 1.3; }
+/* A "ch" is half a CJK letter: the measures of headings are given in letters there instead. */
+:is(h1, h2, h3):lang(ja) { word-break: auto-phrase; }
+.hero h1:is(:lang(ja), :lang(zh), :lang(ko)) { font-size: clamp(var(--step-3), 5vw, var(--step-5)); max-width: 9em; }
+.section > .wrap > h2:is(:lang(ja), :lang(zh), :lang(ko)) { max-width: 16em; }
+.page-head h1:is(:lang(ja), :lang(zh), :lang(ko)) { max-width: 14em; }
+.show h3:is(:lang(ja), :lang(zh), :lang(ko)) { max-width: 10em; }
+
+/* Korean breaks between words, not inside them. */
+:lang(ko) { word-break: keep-all; overflow-wrap: anywhere; }
+
+/* Commands and code read left to right on a right-to-left page. */
+pre, .cmd code { direction: ltr; unicode-bidi: isolate; }
