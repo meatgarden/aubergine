@@ -1,0 +1,104 @@
+<!--page {"updated":"2026-11-25","order":6.97,"key":"phone","llms":{"name":"Check on your agents from your phone","about":"reaching Aubergine from another device: HTTPS on the same computer, an address in the settings, devices paired with a code; run once on one Mac, not tried on a real phone"}}-->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "{{=url}}#article",
+      "headline": {{json:phone.title}},
+      "description": {{json:phone.meta.description}},
+      "url": "{{=url}}",
+      "mainEntityOfPage": "{{=url}}",
+      "datePublished": "2026-11-25",
+      "dateModified": "{{=updated}}",
+      "inLanguage": "{{=lang}}",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": {{json:guides.crumb}}, "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": {{json:phone.crumb}}, "item": "{{=url}}" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "{{=url}}#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": {{json:phone.q.check.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:phone.q.check.a}} } },
+        { "@type": "Question", "name": {{json:phone.q.pair.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:phone.q.pair.a}} } },
+        { "@type": "Question", "name": {{json:phone.q.lost.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:phone.q.lost.a}} } },
+        { "@type": "Question", "name": {{json:phone.q.internet.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:phone.q.internet.a}} } },
+        { "@type": "Question", "name": {{json:phone.q.asleep.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:phone.q.asleep.a}} } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="{{attr:site.crumbs}}"><ol><li><a href="/">Aubergine</a></li><li><a href="/guides/">{{guides.crumb}}</a></li><li>{{phone.crumb}}</li></ol></nav>
+    <h1>{{phone.title}}</h1>
+    <p class="lead">{{phone.lead}}</p>
+    <p class="note note-strong">{{phone.tried}}</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>{{phone.usual.title}}</h2>
+    <p>{{phone.usual.text}}</p>
+
+    <h2>{{phone.does.title}}</h2>
+    <p>{{phone.does.off}}</p>
+    <p>{{phone.does.address}}</p>
+    <p>{{phone.does.pair}}</p>
+    <p>{{phone.does.revoke}}</p>
+    <p>{{phone.does.owner}}</p>
+
+    <h2>{{phone.see.title}}</h2>
+    <p>{{phone.see.text}}</p>
+    <figure class="frame"><a href="/screenshots/for-you.png" class="frame-pic"><img src="/screenshots/for-you.png" width="990" height="570" loading="lazy" alt="{{attr:queue.pic.alt}}"></a><figcaption>{{queue.pic.caption}}</figcaption></figure>
+    <p>{{phone.see.steps}}</p>
+
+    <h2>{{phone.not.title}}</h2>
+    <ul>
+      <li>{{phone.not.push}}</li>
+      <li>{{phone.not.awake}}</li>
+      <li>{{phone.not.public}}</li>
+      <li>{{phone.not.layout}}</li>
+    </ul>
+
+    <h2>{{home.faq.title}}</h2>
+    <div class="questions">
+      <details><summary>{{phone.q.check.q}}</summary><p>{{phone.q.check.a}}</p></details>
+      <details><summary>{{phone.q.pair.q}}</summary><p>{{phone.q.pair.a}}</p></details>
+      <details><summary>{{phone.q.lost.q}}</summary><p>{{phone.q.lost.a}}</p></details>
+      <details><summary>{{phone.q.internet.q}}</summary><p>{{phone.q.internet.a}}</p></details>
+      <details><summary>{{phone.q.asleep.q}}</summary><p>{{phone.q.asleep.a}}</p></details>
+    </div>
+    <p>{{phone.related}}</p>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">{{home.install.title}}</h2>
+    <div class="close-do">
+      <p>{{home.install.intro}}</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="{{attr:site.copied}}" aria-live="polite" hidden>{{site.copy}}</button></p>
+      <p class="actions"><a class="button" href="/install/">{{home.hero.install}}</a><a class="button button-quiet" href="/security/">{{guides.security.name}}</a></p>
+    </div>
+  </div>
+</section>

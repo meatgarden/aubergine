@@ -1,0 +1,117 @@
+<!--page {"updated":"2026-11-25","order":6.95,"key":"tmux","llms":{"name":"tmux without learning tmux","about":"Aubergine runs tmux on its own socket with its own configuration: no prefix key, the wheel, copy and paste as in any terminal; your own tmux untouched; tmux 3.2 or newer needed"}}-->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "{{=url}}#article",
+      "headline": {{json:tmux.title}},
+      "description": {{json:tmux.meta.description}},
+      "url": "{{=url}}",
+      "mainEntityOfPage": "{{=url}}",
+      "datePublished": "2026-11-25",
+      "dateModified": "{{=updated}}",
+      "inLanguage": "{{=lang}}",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": {{json:guides.crumb}}, "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": {{json:tmux.crumb}}, "item": "{{=url}}" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "{{=url}}#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": {{json:tmux.q.shortcuts.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:tmux.q.shortcuts.a}} } },
+        { "@type": "Question", "name": {{json:tmux.q.config.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:tmux.q.config.a}} } },
+        { "@type": "Question", "name": {{json:tmux.q.copy.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:tmux.q.copy.a}} } },
+        { "@type": "Question", "name": {{json:tmux.q.attach.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:tmux.q.attach.a}} } },
+        { "@type": "Question", "name": {{json:tmux.q.ssh.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:tmux.q.ssh.a}} } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="{{attr:site.crumbs}}"><ol><li><a href="/">Aubergine</a></li><li><a href="/guides/">{{guides.crumb}}</a></li><li>{{tmux.crumb}}</li></ol></nav>
+    <h1>{{tmux.title}}</h1>
+    <p class="lead">{{tmux.lead}}</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <p>{{tmux.who}}</p>
+
+    <h2>{{tmux.usual.title}}</h2>
+    <p>{{tmux.usual.text}}</p>
+    <div class="table">
+      <table class="table-stack">
+        <thead><tr><th>{{tmux.table.thing}}</th><th>{{tmux.table.tmux}}</th><th>{{tmux.table.here}}</th></tr></thead>
+        <tbody>
+          <tr><td>{{tmux.row.leave}}</td><td data-label="{{attr:tmux.table.tmuxShort}}">{{tmux.cell.leave.tmux}}</td><td data-label="{{attr:tmux.table.hereShort}}">{{tmux.cell.leave.here}}</td></tr>
+          <tr><td>{{tmux.row.back}}</td><td data-label="{{attr:tmux.table.tmuxShort}}">{{tmux.cell.back.tmux}}</td><td data-label="{{attr:tmux.table.hereShort}}">{{tmux.cell.back.here}}</td></tr>
+          <tr><td>{{tmux.row.scroll}}</td><td data-label="{{attr:tmux.table.tmuxShort}}">{{tmux.cell.scroll.tmux}}</td><td data-label="{{attr:tmux.table.hereShort}}">{{tmux.cell.scroll.here}}</td></tr>
+          <tr><td>{{tmux.row.copy}}</td><td data-label="{{attr:tmux.table.tmuxShort}}">{{tmux.cell.copy.tmux}}</td><td data-label="{{attr:tmux.table.hereShort}}">{{tmux.cell.copy.here}}</td></tr>
+          <tr><td>{{tmux.row.paste}}</td><td data-label="{{attr:tmux.table.tmuxShort}}">{{tmux.cell.paste.tmux}}</td><td data-label="{{attr:tmux.table.hereShort}}">{{tmux.cell.paste.here}}</td></tr>
+          <tr><td>{{tmux.row.several}}</td><td data-label="{{attr:tmux.table.tmuxShort}}">{{tmux.cell.several.tmux}}</td><td data-label="{{attr:tmux.table.hereShort}}">{{tmux.cell.several.here}}</td></tr>
+          <tr><td>{{tmux.row.name}}</td><td data-label="{{attr:tmux.table.tmuxShort}}">{{tmux.cell.name.tmux}}</td><td data-label="{{attr:tmux.table.hereShort}}">{{tmux.cell.name.here}}</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>{{tmux.does.title}}</h2>
+    <p>{{tmux.does.own}}</p>
+    <p>{{tmux.does.scroll}}</p>
+    <p>{{tmux.does.copy}}</p>
+    <p>{{tmux.does.size}}</p>
+    <p>{{tmux.does.still}}</p>
+
+    <h2>{{tmux.need.title}}</h2>
+    <p>{{tmux.need.text}}</p>
+
+    <h2>{{tmux.not.title}}</h2>
+    <ul>
+      <li>{{tmux.not.ssh}}</li>
+      <li>{{tmux.not.yours}}</li>
+      <li>{{tmux.not.keys}}</li>
+      <li>{{tmux.not.windows}}</li>
+    </ul>
+
+    <h2>{{home.faq.title}}</h2>
+    <div class="questions">
+      <details><summary>{{tmux.q.shortcuts.q}}</summary><p>{{tmux.q.shortcuts.a}}</p></details>
+      <details><summary>{{tmux.q.config.q}}</summary><p>{{tmux.q.config.a}}</p></details>
+      <details><summary>{{tmux.q.copy.q}}</summary><p>{{tmux.q.copy.a}}</p></details>
+      <details><summary>{{tmux.q.attach.q}}</summary><p>{{tmux.q.attach.a}}</p></details>
+      <details><summary>{{tmux.q.ssh.q}}</summary><p>{{tmux.q.ssh.a}}</p></details>
+    </div>
+    <p>{{tmux.related}}</p>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">{{home.install.title}}</h2>
+    <div class="close-do">
+      <p>{{home.install.intro}}</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="{{attr:site.copied}}" aria-live="polite" hidden>{{site.copy}}</button></p>
+      <p class="actions"><a class="button" href="/install/">{{home.hero.install}}</a><a class="button button-quiet" href="/keep-process-running-after-closing-terminal/">{{alive.crumb}}</a></p>
+    </div>
+  </div>
+</section>

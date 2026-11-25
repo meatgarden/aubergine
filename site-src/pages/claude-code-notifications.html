@@ -1,0 +1,110 @@
+<!--page {"updated":"2026-11-25","order":6.7,"key":"notify","llms":{"name":"Know when Claude Code is done or waiting for you","about":"working, waiting for you and finished from hooks Aubergine generates, the For you count, the next waiting key, notifications from the open page; no sound, nothing while no page is open"}}-->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "{{=url}}#article",
+      "headline": {{json:notify.title}},
+      "description": {{json:notify.meta.description}},
+      "url": "{{=url}}",
+      "mainEntityOfPage": "{{=url}}",
+      "datePublished": "2026-11-25",
+      "dateModified": "{{=updated}}",
+      "inLanguage": "{{=lang}}",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": {{json:guides.crumb}}, "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": {{json:notify.crumb}}, "item": "{{=url}}" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "{{=url}}#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": {{json:notify.q.done.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:notify.q.done.a}} } },
+        { "@type": "Question", "name": {{json:notify.q.sound.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:notify.q.sound.a}} } },
+        { "@type": "Question", "name": {{json:notify.q.several.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:notify.q.several.a}} } },
+        { "@type": "Question", "name": {{json:notify.q.closed.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:notify.q.closed.a}} } },
+        { "@type": "Question", "name": {{json:notify.q.other.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:notify.q.other.a}} } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="{{attr:site.crumbs}}"><ol><li><a href="/">Aubergine</a></li><li><a href="/guides/">{{guides.crumb}}</a></li><li>{{notify.crumb}}</li></ol></nav>
+    <h1>{{notify.title}}</h1>
+    <p class="lead">{{notify.lead}}</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>{{notify.usual.title}}</h2>
+    <p>{{notify.usual.text}}</p>
+
+    <h2>{{notify.does.title}}</h2>
+    <p>{{notify.does.start}}</p>
+    <ul>
+      <li>{{notify.does.working}}</li>
+      <li>{{notify.does.waiting}}</li>
+      <li>{{notify.does.finished}}</li>
+    </ul>
+    <figure class="frame"><a href="/screenshots/waiting.png" class="frame-pic"><img src="/screenshots/waiting.png" width="1496" height="600" loading="lazy" alt="{{attr:home.see.waits.alt}}"></a><figcaption>{{home.see.waits.caption}}</figcaption></figure>
+    <p>{{notify.does.count}}</p>
+    <p>{{notify.does.next}}</p>
+    <p>{{notify.does.desktop}}</p>
+    <p>{{notify.does.rules}}</p>
+    <figure class="frame"><a href="/screenshots/for-you.png" class="frame-pic"><img src="/screenshots/for-you.png" width="990" height="570" loading="lazy" alt="{{attr:queue.pic.alt}}"></a><figcaption>{{notify.pic.caption}}</figcaption></figure>
+
+    <h2>{{notify.other.title}}</h2>
+    <p>{{notify.other.text}}</p>
+    <p>{{notify.other.typed}}</p>
+
+    <h2>{{notify.not.title}}</h2>
+    <ul>
+      <li>{{notify.not.sound}}</li>
+      <li>{{notify.not.closed}}</li>
+      <li>{{notify.not.phone}}</li>
+      <li>{{notify.not.tried}}</li>
+    </ul>
+
+    <h2>{{home.faq.title}}</h2>
+    <div class="questions">
+      <details><summary>{{notify.q.done.q}}</summary><p>{{notify.q.done.a}}</p></details>
+      <details><summary>{{notify.q.sound.q}}</summary><p>{{notify.q.sound.a}}</p></details>
+      <details><summary>{{notify.q.several.q}}</summary><p>{{notify.q.several.a}}</p></details>
+      <details><summary>{{notify.q.closed.q}}</summary><p>{{notify.q.closed.a}}</p></details>
+      <details><summary>{{notify.q.other.q}}</summary><p>{{notify.q.other.a}}</p></details>
+    </div>
+    <p>{{notify.related}}</p>
+    <p class="note">{{claude.mark}}</p>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">{{home.install.title}}</h2>
+    <div class="close-do">
+      <p>{{home.install.intro}}</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="{{attr:site.copied}}" aria-live="polite" hidden>{{site.copy}}</button></p>
+      <p class="actions"><a class="button" href="/install/">{{home.hero.install}}</a><a class="button button-quiet" href="/claude/">{{guides.claude.name}}</a></p>
+    </div>
+  </div>
+</section>
