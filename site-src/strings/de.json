@@ -120,8 +120,8 @@
     "from": "620bab21c0b6"
   },
   "home.meta.description": {
-    "text": "Aubergine legt alle deine Terminals nebeneinander auf ein Canvas in deinem Browser. Starte so viele, wie du willst, mit den Agenten und Modellen, die du schon nutzt, und sieh, welcher dich braucht. Kostenlos, lokal, Open Source.",
-    "from": "71a14cde3a05"
+    "text": "Mehr Power für dein Terminal: Aubergine legt alle deine Terminals nebeneinander auf ein Canvas in deinem Browser. Starte so viele, wie du willst, mit den Agenten und Modellen, die du schon nutzt, und sieh, welcher dich braucht. Kostenlos, lokal, Open Source.",
+    "from": "10a391e12690"
   },
   "home.ld.category": {
     "text": "Terminal-Multiplexer und Arbeitsplatz für Agenten",
@@ -132,8 +132,8 @@
     "from": "6fadbd03c20d"
   },
   "home.hero.kicker": {
-    "text": "Kostenlos · Open Source · Läuft auf deinem Rechner",
-    "from": "28742c2f94e7"
+    "text": "Mehr Power für dein Terminal · Kostenlos · Open Source · Läuft auf deinem Rechner",
+    "from": "a61d5f4f3b3a"
   },
   "home.hero.title": {
     "text": "Alle deine Terminals, Seite an Seite. Sieh, welcher Agent <em>dich braucht</em>.",
@@ -158,6 +158,38 @@
   "home.canvas.caption": {
     "text": "Eine Illustration, kein Screenshot: fünf Terminals auf einem Canvas und das eine, das auf dich wartet.",
     "from": "413e282f8a9d"
+  },
+  "home.powers.title": {
+    "text": "Gib deinen Terminals Superkräfte",
+    "from": "588a8ab51054"
+  },
+  "home.powers.lead": {
+    "text": "Die Terminals, die du schon nutzt, mit dem, was ihnen gefehlt hat: einem Ort, an dem sie nebeneinanderstehen, einem Gedächtnis und einem Weg, dir zu sagen, wann sie dich brauchen.",
+    "from": "5431ad2f0a64"
+  },
+  "home.powers.fast.name": {
+    "text": "Steigere deine Produktivität",
+    "from": "eac23b7b23fd"
+  },
+  "home.powers.fast.text": {
+    "text": "Mehrere Agenten arbeiten gleichzeitig, jeder in seinem eigenen Terminal. Du antwortest dem, der wartet, und lässt die anderen weiterlaufen.",
+    "from": "6e0a0a36e2e9"
+  },
+  "home.powers.dx.name": {
+    "text": "Eine bessere Developer Experience",
+    "from": "5c707d9f81af"
+  },
+  "home.powers.dx.text": {
+    "text": "Jedes Terminal hat einen Namen, eine Farbe, eine Notiz und seinen Platz auf dem Canvas. Schließ den Browser oder starte Aubergine neu: Alles ist noch da.",
+    "from": "3c91e1e0d942"
+  },
+  "home.powers.own.name": {
+    "text": "Kein Umstieg nötig",
+    "from": "888a5a188e5e"
+  },
+  "home.powers.own.text": {
+    "text": "Deine Shell, deine Tools, deine Agenten und deine Modelle, so wie sie sind. Aubergine legt das Canvas um sie herum und hat kein eigenes Modell.",
+    "from": "081fb5676d49"
   },
   "home.see.title": {
     "text": "So sieht es aus",

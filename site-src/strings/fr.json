@@ -120,8 +120,8 @@
     "from": "620bab21c0b6"
   },
   "home.meta.description": {
-    "text": "Aubergine place tous vos terminaux côte à côte sur un seul canevas, dans votre navigateur. Lancez-en autant que vous voulez, avec les agents et les modèles que vous utilisez déjà, et voyez lequel a besoin de vous. Gratuite, locale, open source.",
-    "from": "71a14cde3a05"
+    "text": "Boostez votre terminal : Aubergine place tous vos terminaux côte à côte sur un seul canevas, dans votre navigateur. Lancez-en autant que vous voulez, avec les agents et les modèles que vous utilisez déjà, et voyez lequel a besoin de vous. Gratuite, locale, open source.",
+    "from": "10a391e12690"
   },
   "home.ld.category": {
     "text": "Multiplexeur de terminaux et espace de travail pour agents",
@@ -132,8 +132,8 @@
     "from": "6fadbd03c20d"
   },
   "home.hero.kicker": {
-    "text": "Gratuite · Open source · Tourne sur votre ordinateur",
-    "from": "28742c2f94e7"
+    "text": "Boostez votre terminal · Gratuite · Open source · Tourne sur votre ordinateur",
+    "from": "a61d5f4f3b3a"
   },
   "home.hero.title": {
     "text": "Tous vos terminaux, côte à côte. Voyez quel agent <em>a besoin de vous</em>.",
@@ -158,6 +158,38 @@
   "home.canvas.caption": {
     "text": "Une illustration, pas une capture : cinq terminaux sur un canevas, et celui qui vous attend.",
     "from": "413e282f8a9d"
+  },
+  "home.powers.title": {
+    "text": "Donnez des super-pouvoirs à vos terminaux",
+    "from": "588a8ab51054"
+  },
+  "home.powers.lead": {
+    "text": "Les terminaux que vous utilisez déjà, avec ce qui leur manquait : une place pour se tenir côte à côte, une mémoire, et un moyen de vous prévenir quand ils ont besoin de vous.",
+    "from": "5431ad2f0a64"
+  },
+  "home.powers.fast.name": {
+    "text": "Gagnez en productivité",
+    "from": "eac23b7b23fd"
+  },
+  "home.powers.fast.text": {
+    "text": "Plusieurs agents travaillent en même temps, chacun dans son propre terminal. Vous répondez à celui qui attend et laissez les autres tourner.",
+    "from": "6e0a0a36e2e9"
+  },
+  "home.powers.dx.name": {
+    "text": "Une meilleure expérience développeur",
+    "from": "5c707d9f81af"
+  },
+  "home.powers.dx.text": {
+    "text": "Chaque terminal a un nom, une couleur, une note et sa place sur le canevas. Fermez le navigateur ou redémarrez Aubergine : ils sont toujours là.",
+    "from": "3c91e1e0d942"
+  },
+  "home.powers.own.name": {
+    "text": "Rien à changer",
+    "from": "888a5a188e5e"
+  },
+  "home.powers.own.text": {
+    "text": "Votre shell, vos outils, vos agents et vos modèles, tels qu’ils sont. Aubergine ajoute le canevas autour d’eux et n’a pas de modèle à elle.",
+    "from": "081fb5676d49"
   },
   "home.see.title": {
     "text": "À quoi ça ressemble",

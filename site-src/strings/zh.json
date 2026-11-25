@@ -120,8 +120,8 @@
     "from": "620bab21c0b6"
   },
   "home.meta.description": {
-    "text": "Aubergine 把你所有的终端并排放在浏览器里的一张画布上。想开多少就开多少，用你已经在用的智能体和模型，并看清哪一个需要你。免费、本地、开源。",
-    "from": "71a14cde3a05"
+    "text": "让终端如虎添翼：Aubergine 把你所有的终端并排放在浏览器里的一张画布上。想开多少就开多少，用你已经在用的智能体和模型，并看清哪一个需要你。免费、本地、开源。",
+    "from": "10a391e12690"
   },
   "home.ld.category": {
     "text": "终端复用器与智能体工作区",
@@ -132,8 +132,8 @@
     "from": "6fadbd03c20d"
   },
   "home.hero.kicker": {
-    "text": "免费 · 开源 · 运行在你的电脑上",
-    "from": "28742c2f94e7"
+    "text": "让终端如虎添翼 · 免费 · 开源 · 运行在你的电脑上",
+    "from": "a61d5f4f3b3a"
   },
   "home.hero.title": {
     "text": "所有终端，并排摆开。看清哪个智能体<em>需要你</em>。",
@@ -158,6 +158,38 @@
   "home.canvas.caption": {
     "text": "这是示意图，不是截图：画布上的五个终端，以及在等你的那一个。",
     "from": "413e282f8a9d"
+  },
+  "home.powers.title": {
+    "text": "给你的终端装上超能力",
+    "from": "588a8ab51054"
+  },
+  "home.powers.lead": {
+    "text": "还是你已经在用的终端，补上它们一直缺的东西：一个可以并排摆开的地方、一份记忆，以及在需要你时通知你的办法。",
+    "from": "5431ad2f0a64"
+  },
+  "home.powers.fast.name": {
+    "text": "提升你的效率",
+    "from": "eac23b7b23fd"
+  },
+  "home.powers.fast.text": {
+    "text": "多个智能体同时工作，各自在自己的终端里。你只回应正在等你的那个，其余的继续运行。",
+    "from": "6e0a0a36e2e9"
+  },
+  "home.powers.dx.name": {
+    "text": "更好的开发体验",
+    "from": "5c707d9f81af"
+  },
+  "home.powers.dx.text": {
+    "text": "每个终端都有名字、颜色、笔记和它在画布上的位置。关掉浏览器或重启 Aubergine，它们都还在。",
+    "from": "3c91e1e0d942"
+  },
+  "home.powers.own.name": {
+    "text": "无需迁移",
+    "from": "888a5a188e5e"
+  },
+  "home.powers.own.text": {
+    "text": "你的 shell、你的工具、你的智能体和模型，一切照旧。Aubergine 只是在它们周围加上画布，自己没有模型。",
+    "from": "081fb5676d49"
   },
   "home.see.title": {
     "text": "它是什么样子",

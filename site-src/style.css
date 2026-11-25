@@ -160,6 +160,8 @@ main { display: block; padding-block-end: var(--section); }
 .crumbs ol { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; margin: 0; padding: 0; }
 .crumbs li + li::before { content: "/"; margin-inline-end: 6px; }
 .kicker { font-size: var(--step--1); color: var(--quiet); letter-spacing: 0.02em; }
+/* The kicker breaks only after a dot: its phrases are held together by no-break spaces, and CJK letters by keep-all. */
+.kicker { word-break: keep-all; }
 
 /* The note: a quiet line with a rule at its start edge. */
 .note { color: var(--quiet); font-size: 0.94rem; border-inline-start: 2px solid var(--line); padding-inline-start: 14px; max-width: var(--measure); }
@@ -269,6 +271,12 @@ main { display: block; padding-block-end: var(--section); }
 .rows a.row-link:hover { text-decoration: underline; }
 @media (min-width: 760px) {
   .rows > li { grid-template-columns: 17rem minmax(0, 1fr); }
+}
+/* Three rows across, from 800px up; one under another below that. */
+.rows.across { display: grid; column-gap: 32px; }
+@media (min-width: 800px) {
+  .rows.across { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .rows.across > li { grid-template-columns: minmax(0, 1fr); align-content: start; }
 }
 
 /* Steps of an install. */
