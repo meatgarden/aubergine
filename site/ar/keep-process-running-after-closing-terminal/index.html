@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>أبقِ عملية تعمل بعد إغلاق الطرفية | Aubergine</title>
+<meta name="description" content="إغلاق نافذة الطرفية يُنهي ما يعمل فيها. الحلول المعتادة هي nohup وdisown وscreen وtmux؛ ويشغّل Aubergine كل طرفية في tmux نيابةً عنك، فلا يُنهي إغلاق المتصفح شيئًا.">
+<link rel="canonical" href="https://thirstyeggplant.com/ar/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/keep-process-running-after-closing-terminal/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="أبقِ عملية تعمل بعد إغلاق الطرفية | Aubergine">
+<meta property="og:description" content="إغلاق نافذة الطرفية يُنهي ما يعمل فيها. الحلول المعتادة هي nohup وdisown وscreen وtmux؛ ويشغّل Aubergine كل طرفية في tmux نيابةً عنك، فلا يُنهي إغلاق المتصفح شيئًا.">
+<meta property="og:url" content="https://thirstyeggplant.com/ar/keep-process-running-after-closing-terminal/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine: لوحة من الطرفيات، إحداها مشغولة وأخرى بانتظارك">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine: لوحة من الطرفيات، إحداها مشغولة وأخرى بانتظارك">
+<meta name="twitter:title" content="أبقِ عملية تعمل بعد إغلاق الطرفية | Aubergine">
+<meta name="twitter:description" content="إغلاق نافذة الطرفية يُنهي ما يعمل فيها. الحلول المعتادة هي nohup وdisown وscreen وtmux؛ ويشغّل Aubergine كل طرفية في tmux نيابةً عنك، فلا يُنهي إغلاق المتصفح شيئًا.">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">انتقل إلى محتوى الصفحة</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="الصفحات">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">التثبيت</a></li>
+        <li><a href="../guides/">الأدلة</a></li>
+        <li><a href="../security/">الأمان</a></li>
+        <li><a href="../faq/">الأسئلة الشائعة</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="اللغة: العربية"><span class="lang-long" aria-hidden="true">العربية</span><span class="lang-short" aria-hidden="true">AR</span></summary>
+      <ul class="menu-list"><li><a href="../../keep-process-running-after-closing-terminal/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/keep-process-running-after-closing-terminal/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/keep-process-running-after-closing-terminal/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/keep-process-running-after-closing-terminal/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/keep-process-running-after-closing-terminal/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/keep-process-running-after-closing-terminal/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/keep-process-running-after-closing-terminal/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/keep-process-running-after-closing-terminal/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/keep-process-running-after-closing-terminal/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/keep-process-running-after-closing-terminal/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/keep-process-running-after-closing-terminal/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="./" hreflang="ar" lang="ar" dir="rtl" aria-current="true">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>القائمة</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">التثبيت</a></li>
+        <li><a href="../guides/">الأدلة</a></li>
+        <li><a href="../security/">الأمان</a></li>
+        <li><a href="../faq/">الأسئلة الشائعة</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>تطبيق Aubergine نفسه باللغة الإنجليزية: أزراره وقوائمه وصوره كلها بالإنجليزية.</p>
+    <p>ترجمت آلةٌ هذه الصفحة عن الإنجليزية. <a href="https://github.com/thirstyeggplant/aubergine/issues">أرسل تصحيحًا</a>.</p>
+  </div>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/ar/keep-process-running-after-closing-terminal/#article",
+      "headline": "أبقِ عملية تعمل بعد إغلاق الطرفية",
+      "description": "إغلاق نافذة الطرفية يُنهي ما يعمل فيها. الحلول المعتادة هي nohup وdisown وscreen وtmux؛ ويشغّل Aubergine كل طرفية في tmux نيابةً عنك، فلا يُنهي إغلاق المتصفح شيئًا.",
+      "url": "https://thirstyeggplant.com/ar/keep-process-running-after-closing-terminal/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/ar/keep-process-running-after-closing-terminal/",
+      "datePublished": "2026-11-25",
+      "dateModified": "2026-11-25",
+      "inLanguage": "ar",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "الأدلة", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "أبقِها تعمل", "item": "https://thirstyeggplant.com/ar/keep-process-running-after-closing-terminal/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/ar/keep-process-running-after-closing-terminal/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "هل يوقف إغلاق المتصفح طرفيتي؟", "acceptedAnswer": { "@type": "Answer", "text": "لا. كل طرفية صدفة في tmux، الذي يعمل منفصلًا عن المتصفح. أغلق التبويب أو النافذة أو المتصفح، ثم افتح الصفحة من جديد، فتجد كل طرفية كما هي الآن، لا تزال تعمل، ومعها ما طبعته في أثناء ذلك." } },
+        { "@type": "Question", "name": "كيف أُبقي عملية تعمل بعد انقطاع SSH؟", "acceptedAnswer": { "@type": "Answer", "text": "على الجهاز البعيد، شغّلها داخل tmux أو screen، أو باستخدام nohup. يحفظ Aubergine الطرفيات على الحاسوب الذي يعمل عليه. ويمكن أن يعمل على جهاز بعيد أيضًا، ويُستخدم عبر نفق SSH أو خادم وسيط، لكن ذلك شُغّل داخل حاويات فقط، ولم يُشغَّل قط على جهاز سحابي." } },
+        { "@type": "Question", "name": "هل أستخدم nohup أم tmux؟", "acceptedAnswer": { "@type": "Answer", "text": "يناسب nohup أمرًا واحدًا يمكن أن تذهب مخرجاته إلى ملف. ويناسب tmux صدفةً تريد أن تعود إليها وتكتب فيها. ويعطي Aubergine كل طرفية الثاني، في صفحة متصفح، دون مفاتيح tmux." } },
+        { "@type": "Question", "name": "هل يمكنني رؤية المخرجات بعد إغلاق الطرفية؟", "acceptedAnswer": { "@type": "Answer", "text": "نعم، ما دامت الصدفة تعمل: يحتفظ tmux بآخر 50,000 سطر من كل طرفية، وتعرضها الصفحة حين تعود. ولا يسجّل Aubergine شيئًا بنفسه، فبعد إعادة تشغيل الحاسوب تضيع تلك المخرجات." } },
+        { "@type": "Question", "name": "هل تبقى تعمل بعد إعادة التشغيل؟", "acceptedAnswer": { "@type": "Answer", "text": "لا. إعادة تشغيل الحاسوب تُنهي كل برنامج. ويعيد Aubergine كل طرفية صدفةً جديدة في آخر مجلد لها، بمكانها واسمها وملاحظتها، ولا يشغّل شيئًا من جديد." } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="أين أنت"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">الأدلة</a></li><li>أبقِها تعمل</li></ol></nav>
+    <h1>أبقِ عملية تعمل بعد إغلاق الطرفية</h1>
+    <p class="lead">بدأت بناءً أو خادمًا أو وكيل برمجة، وإغلاق النافذة سيُنهيه. في Aubergine لا يُنهي إغلاق النافذة شيئًا: كل طرفية تعمل منفصلة عن المتصفح، وما طبعته تجده حين تعود.</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>ما يفعله الناس عادةً</h2>
+    <p>إغلاق نافذة الطرفية يُنهي الصدفة التي فيها، ومعها ما بدأته تلك الصدفة. والطرق المعتادة لتفادي ذلك:</p>
+    <ul>
+      <li><code>nohup</code> يشغّل أمرًا يتجاهل إشارة قطع الاتصال التي تُرسل حين تُغلق الطرفية. وتذهب مخرجاته إلى ملف (<code>nohup.out</code> ما لم ترسلها إلى مكان آخر).</li>
+      <li><code>disown</code>، في bash وzsh، يُفلت مهمة بدأتها من قبل، فلا تمرّر الصدفة إليها إشارة قطع الاتصال. ولا يمكنك الرجوع إليها في طرفية بعد ذلك.</li>
+      <li><code>screen</code> و<code>tmux</code> يشغّلان الصدفة داخل خادم خاص بهما. تنفصل عنها، وتغلق النافذة، ثم تتصل بها لاحقًا فتجد الصدفة نفسها بمخرجاتها. إنهما الحل الموثوق، وتتعلّم مفاتيحهما وأوامرهما لتستخدمهما.</li>
+    </ul>
+    <p>بُني Aubergine على آخر هذه الطرق. يشغّل tmux نيابةً عنك، فتحصل على حلّه دون مفاتيحه.</p>
+
+    <h2>ما يفعله Aubergine</h2>
+    <p>كل طرفية في Aubergine صدفة في جلسة tmux خاصة بها، على مقبس tmux تابع لـ Aubergine. ويعمل tmux منفصلًا عن المتصفح وعن خادم Aubergine، ولذلك:</p>
+    <ul>
+      <li><strong>إغلاق التبويب أو النافذة أو المتصفح كله لا يُنهي شيئًا.</strong> افتح الصفحة من جديد (<code>aubergine open</code> يفتحها مع تسجيل الدخول) فتُرسم كل طرفية من tmux كما هي الآن، وما طبعته في أثناء ذلك في سجل تمريرها.</li>
+      <li><strong>وإيقاف Aubergine لا يُنهي شيئًا أيضًا.</strong> الضغط على Ctrl+C حيث يعمل <code>aubergine start</code>، أو تعطّل الخادم، أو التحديث، يوقف الخادم ولا شيء غيره. شغّله من جديد وأعد تحميل الصفحة.</li>
+      <li><strong>إغلاق طرفية على اللوحة يركنها.</strong> علامة × في عنوانها تُخرجها من اللوحة وتبقى صدفتها تعمل. ويعرض <strong>Parked</strong> (المركونة) في الشريط فوق اللوحة الطرفيات المركونة، ويعيد <strong>Restore</strong> (استعادة) إحداها.</li>
+      <li><strong>إنهاء صدفة نهائيًا يسأل أولًا.</strong> لا يُنهي <strong>End</strong> (إنهاء) في قائمة المركونة طرفيةً إلا بعد أن توافق.</li>
+      <li><strong>والعروض الأخرى لها لا تُنهي شيئًا.</strong> الزر <strong>Tab ↗</strong>‎ في عنوان الطرفية يفتحها وحدها في علامة تبويب في المتصفح، ويعرضها <code>aubergine attach &lt;name&gt;</code> في نافذة من تطبيق الطرفية لديك. كلٌّ منهما الطرفية نفسها لا نسخة منها؛ وإغلاق ذلك التبويب أو تلك النافذة يتركها تعمل.</li>
+    </ul>
+    <p>ما دامت الصدفة تعمل، يحتفظ tmux بآخر 50,000 سطر طبعتها. وتمرّر عجلة الفأرة إلى الخلف فيها في الطرفية التي معها لوحة المفاتيح، وتبحث فيها لوحة الأوامر (<code>⌘K</code>).</p>
+    <figure class="frame"><a href="../../screenshots/list.png" class="frame-pic"><img src="../../screenshots/list.png" width="1440" height="1008" loading="lazy" alt="اللوحة الجانبية تعرض خمس طرفيات وحالة كل منها بالكلمات (working وwaiting for you وfinished وparked)، بجانب جزء من اللوحة فيه صدفة حيّة."></a><figcaption>تقول القائمة ما تفعله كل طرفية. والمركونة في أسفلها خارج اللوحة، وصدفتها لا تزال تعمل.</figcaption></figure>
+
+    <h2>ما لا يفعله</h2>
+    <ul>
+      <li><strong>لا يصمد أمام إعادة تشغيل الحاسوب.</strong> إعادة التشغيل، أو تعطّل الحاسوب، أو تحديث يعيد تشغيله، يُنهي كل صدفة وما يعمل فيها. ويعيد Aubergine كل ما حولها، كل طرفية صدفةً جديدة في آخر مجلد لها، ولا يشغّل شيئًا من جديد من تلقاء نفسه. راجع <a href="../keep-terminals-after-restart/">احتفظ بطرفياتك بعد إعادة التشغيل</a>.</li>
+      <li><strong>لا يُبقي الحاسوب مستيقظًا.</strong> الحاسوب المحمول الذي ينام يوقف برامجه مؤقتًا، وهذه منها؛ وتتابع حين يستيقظ.</li>
+      <li><strong>ليس مدير خدمات.</strong> المهمة التي يجب أن تعود وحدها بعد إعادة التشغيل مكانها خدمات نظامك.</li>
+      <li><strong>لا يستطيع أن يتولّى برنامجًا يعمل في مكان آخر.</strong> لا توجد أداة تستطيع نقل برنامج يعمل إلى طرفية أخرى. يعطي <code>aubergine here</code> في تبويب من تطبيق الطرفية لديك ذلك المجلدَ طرفيةً على اللوحة؛ والبرنامج الذي يعمل في التبويب يبقى هناك، ويجب تشغيله من جديد داخل الطرفية الجديدة.</li>
+    </ul>
+
+    <h2>على جهاز آخر، عبر SSH</h2>
+    <p>يعمل Aubergine على حاسوبك أنت: يستمع خادمه على <code>127.0.0.1</code>، وطرفياته أصداف على ذلك الحاسوب. فإن كان ما تريد إبقاءه عمليةً على خادم بعيد تصل إليه عبر SSH، فإن <code>tmux</code> أو <code>screen</code> على ذلك الخادم لا يزال هو الحل.</p>
+    <p>يمكن أن يعمل Aubergine نفسه على جهاز آخر وأن يُستخدم من متصفحك، عبر نفق SSH، أو شبكة خاصة، أو اسم وخادم وسيط: الخطوات في <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md">Using Aubergine from elsewhere</a>. وعبر نفق SSH، يوقف إغلاقُ نافذة SSH التي يعمل فيها <code>aubergine start</code> الخادمَ، وتبقى الطرفيات تعمل. وشُغّل على Linux داخل حاويات فقط، ولم يُشغَّل قط على جهاز سحابي.</p>
+
+    <h2>أسئلة</h2>
+    <div class="questions">
+      <details><summary>هل يوقف إغلاق المتصفح طرفيتي؟</summary><p>لا. كل طرفية صدفة في tmux، الذي يعمل منفصلًا عن المتصفح. أغلق التبويب أو النافذة أو المتصفح، ثم افتح الصفحة من جديد، فتجد كل طرفية كما هي الآن، لا تزال تعمل، ومعها ما طبعته في أثناء ذلك.</p></details>
+      <details><summary>كيف أُبقي عملية تعمل بعد انقطاع SSH؟</summary><p>على الجهاز البعيد، شغّلها داخل <code>tmux</code> أو <code>screen</code>، أو باستخدام <code>nohup</code>. يحفظ Aubergine الطرفيات على الحاسوب الذي يعمل عليه. ويمكن أن يعمل على جهاز بعيد أيضًا، ويُستخدم عبر نفق SSH أو خادم وسيط، لكن ذلك شُغّل داخل حاويات فقط، ولم يُشغَّل قط على جهاز سحابي.</p></details>
+      <details><summary>هل أستخدم nohup أم tmux؟</summary><p>يناسب <code>nohup</code> أمرًا واحدًا يمكن أن تذهب مخرجاته إلى ملف. ويناسب <code>tmux</code> صدفةً تريد أن تعود إليها وتكتب فيها. ويعطي Aubergine كل طرفية الثاني، في صفحة متصفح، دون مفاتيح tmux.</p></details>
+      <details><summary>هل يمكنني رؤية المخرجات بعد إغلاق الطرفية؟</summary><p>نعم، ما دامت الصدفة تعمل: يحتفظ tmux بآخر 50,000 سطر من كل طرفية، وتعرضها الصفحة حين تعود. ولا يسجّل Aubergine شيئًا بنفسه، فبعد إعادة تشغيل الحاسوب تضيع تلك المخرجات.</p></details>
+      <details><summary>هل تبقى تعمل بعد إعادة التشغيل؟</summary><p>لا. إعادة تشغيل الحاسوب تُنهي كل برنامج. ويعيد Aubergine كل طرفية صدفةً جديدة في آخر مجلد لها، بمكانها واسمها وملاحظتها، ولا يشغّل شيئًا من جديد.</p></details>
+    </div>
+    <p>ذو صلة: <a href="../keep-terminals-after-restart/">احتفظ بطرفياتك بعد إعادة التشغيل</a> · <a href="../tmux-without-learning-tmux/">tmux دون أن تتعلّم tmux</a> · <a href="../claude-code-notifications/">اعرف متى ينتظرك Claude Code</a></p>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">جاهز للعمل في خمس دقائق</h2>
+    <div class="close-do">
+      <p>تحتاج إلى macOS مع tmux 3.2 أو أحدث، ومعه Node.js 22 أو أحدث. الأمر <code>brew install tmux node</code> يثبّت الاثنين.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="تم النسخ" aria-live="polite" hidden>نسخ</button></p>
+      <p class="actions"><a class="button" href="../install/">التثبيت</a><a class="button button-quiet" href="../tmux-without-learning-tmux/">tmux دون أن تتعلّم tmux</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav aria-label="كل الصفحات">
+      <ul class="foot-links">
+        <li><a href="../">الرئيسية</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex و ChatGPT</a></li>
+        <li><a href="../install/">التثبيت</a></li>
+        <li><a href="../guides/">الأدلة</a></li>
+        <li><a href="../run-multiple-coding-agents/">تشغيل عدة وكلاء</a></li>
+        <li><a href="../working-copies/">نسخ العمل</a></li>
+        <li><a href="../queue-and-schedules/">الطابور والجداول الزمنية</a></li>
+        <li><a href="../security/">الأمان</a></li>
+        <li><a href="../roadmap/">خارطة الطريق</a></li>
+        <li><a href="../faq/">الأسئلة الشائعة</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine مجاني ومفتوح المصدر بموجب <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">رخصة MIT</a>، ويعمل على حاسوبك أنت.</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    if (!navigator.clipboard) return;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
+});
+</script>
+</body>
+</html>

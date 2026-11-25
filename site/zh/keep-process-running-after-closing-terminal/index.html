@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="zh-Hans" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>关闭终端后让进程继续运行 | Aubergine</title>
+<meta name="description" content="关闭终端窗口会结束其中运行的东西。常见的办法是 nohup、disown、screen 和 tmux；Aubergine 替你把每个终端都放在 tmux 里运行，所以关掉浏览器不会结束任何东西。">
+<link rel="canonical" href="https://thirstyeggplant.com/zh/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/keep-process-running-after-closing-terminal/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="关闭终端后让进程继续运行 | Aubergine">
+<meta property="og:description" content="关闭终端窗口会结束其中运行的东西。常见的办法是 nohup、disown、screen 和 tmux；Aubergine 替你把每个终端都放在 tmux 里运行，所以关掉浏览器不会结束任何东西。">
+<meta property="og:url" content="https://thirstyeggplant.com/zh/keep-process-running-after-closing-terminal/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine：一张摆满终端的画布，一个正在忙，一个在等你">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine：一张摆满终端的画布，一个正在忙，一个在等你">
+<meta name="twitter:title" content="关闭终端后让进程继续运行 | Aubergine">
+<meta name="twitter:description" content="关闭终端窗口会结束其中运行的东西。常见的办法是 nohup、disown、screen 和 tmux；Aubergine 替你把每个终端都放在 tmux 里运行，所以关掉浏览器不会结束任何东西。">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="页面">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">安装</a></li>
+        <li><a href="../guides/">指南</a></li>
+        <li><a href="../security/">安全</a></li>
+        <li><a href="../faq/">常见问题</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="语言: 简体中文"><span class="lang-long" aria-hidden="true">简体中文</span><span class="lang-short" aria-hidden="true">ZH</span></summary>
+      <ul class="menu-list"><li><a href="../../keep-process-running-after-closing-terminal/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/keep-process-running-after-closing-terminal/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/keep-process-running-after-closing-terminal/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/keep-process-running-after-closing-terminal/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/keep-process-running-after-closing-terminal/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/keep-process-running-after-closing-terminal/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="./" hreflang="zh-Hans" lang="zh-Hans" dir="ltr" aria-current="true">简体中文</a></li><li><a href="../../ko/keep-process-running-after-closing-terminal/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/keep-process-running-after-closing-terminal/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/keep-process-running-after-closing-terminal/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/keep-process-running-after-closing-terminal/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/keep-process-running-after-closing-terminal/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>菜单</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">安装</a></li>
+        <li><a href="../guides/">指南</a></li>
+        <li><a href="../security/">安全</a></li>
+        <li><a href="../faq/">常见问题</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine 本身是英文的：它的按钮、菜单和截图都是英文版。</p>
+    <p>本页由机器从英文翻译而来。<a href="https://github.com/thirstyeggplant/aubergine/issues">提交修正</a>。</p>
+  </div>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/zh/keep-process-running-after-closing-terminal/#article",
+      "headline": "关闭终端后让进程继续运行",
+      "description": "关闭终端窗口会结束其中运行的东西。常见的办法是 nohup、disown、screen 和 tmux；Aubergine 替你把每个终端都放在 tmux 里运行，所以关掉浏览器不会结束任何东西。",
+      "url": "https://thirstyeggplant.com/zh/keep-process-running-after-closing-terminal/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/zh/keep-process-running-after-closing-terminal/",
+      "datePublished": "2026-11-25",
+      "dateModified": "2026-11-25",
+      "inLanguage": "zh-Hans",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "指南", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "保持运行", "item": "https://thirstyeggplant.com/zh/keep-process-running-after-closing-terminal/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/zh/keep-process-running-after-closing-terminal/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "关闭浏览器会停止我的终端吗？", "acceptedAnswer": { "@type": "Answer", "text": "不会。每个终端都是 tmux 中的一个 shell，独立于浏览器运行。关掉标签页、窗口或浏览器，再重新打开页面，每个终端都是当前的样子，仍在运行，期间输出的内容也都在。" } },
+        { "@type": "Question", "name": "SSH 断开后如何让进程继续运行？", "acceptedAnswer": { "@type": "Answer", "text": "在远程机器上，把它放在 tmux 或 screen 里启动，或者用 nohup。Aubergine 只保留它所运行的那台电脑上的终端。它也可以运行在远程机器上，通过 SSH 隧道或代理来用，但这只在容器中运行过，从未在云服务器上运行。" } },
+        { "@type": "Question", "name": "该用 nohup 还是 tmux？", "acceptedAnswer": { "@type": "Answer", "text": "nohup 适合输出可以写进文件的单条命令。tmux 适合你想回去继续输入的 shell。Aubergine 给每个终端的都是后者，放在浏览器页面里，不用 tmux 的按键。" } },
+        { "@type": "Question", "name": "关闭终端后还能看到输出吗？", "acceptedAnswer": { "@type": "Answer", "text": "能，只要 shell 还在运行：tmux 为每个终端保留最后 50,000 行，你回来时页面会显示它们。Aubergine 自己不记录任何东西，所以电脑重启后那些输出就没了。" } },
+        { "@type": "Question", "name": "重启之后它还会继续运行吗？", "acceptedAnswer": { "@type": "Answer", "text": "不会。电脑重启会结束所有程序。Aubergine 会把每个终端带回来，成为位于最后所在文件夹的新 shell，保留位置、名称和笔记，但不会重新运行任何东西。" } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="当前位置"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">指南</a></li><li>保持运行</li></ol></nav>
+    <h1>关闭终端后让进程继续运行</h1>
+    <p class="lead">你启动了一次构建、一个服务器或一个编程智能体，而关掉窗口就会结束它。在 Aubergine 里，关掉窗口不会结束任何东西：每个终端都独立于浏览器运行，你回来时它输出过的内容都还在。</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>通常的做法</h2>
+    <p>关闭终端窗口会结束其中的 shell，以及这个 shell 启动的东西。绕开这一点的标准办法有：</p>
+    <ul>
+      <li><code>nohup</code> 启动的命令会忽略终端关闭时发出的挂断信号。它的输出会写进一个文件（除非你指定别处，否则是 <code>nohup.out</code>）。</li>
+      <li><code>disown</code>（bash 和 zsh 中）会放开一个已经启动的作业，这样 shell 就不会把挂断信号传给它。之后你就无法在终端里回到它了。</li>
+      <li><code>screen</code> 和 <code>tmux</code> 在它们自己的服务器里运行 shell。你可以分离、关掉窗口，之后再重新连接到同一个 shell，输出也都在。它们是可靠的答案，但要用它们就得学它们的按键和命令。</li>
+    </ul>
+    <p>Aubergine 就建立在最后这一种之上。它替你运行 tmux，所以你不用学按键就能得到它的答案。</p>
+
+    <h2>Aubergine 做什么</h2>
+    <p>Aubergine 中的每个终端都是一个 shell，位于它自己的 tmux 会话中，在 Aubergine 专用的 tmux 套接字上。tmux 独立于浏览器和 Aubergine 的服务器运行，所以：</p>
+    <ul>
+      <li><strong>关掉标签页、窗口或整个浏览器，什么都不会结束。</strong>重新打开页面（<code>aubergine open</code> 会以登录状态打开），每个终端都会按 tmux 中的当前状态绘制，期间输出的内容都在它的回滚记录里。</li>
+      <li><strong>停止 Aubergine 也不会结束任何东西。</strong>在运行 <code>aubergine start</code> 的地方按 Ctrl+C、服务器崩溃或更新，停止的都只是服务器。再启动它并重新加载页面即可。</li>
+      <li><strong>在画布上关闭终端会把它停放起来。</strong>标题里的 × 把它从画布上拿走，它的 shell 继续运行。画布上方工具栏中的 <strong>Parked</strong>（已停放）列出停放的终端，<strong>Restore</strong>（恢复）可以把一个拿回来。</li>
+      <li><strong>彻底结束一个 shell 之前会先问你。</strong>停放列表中的 <strong>End</strong>（结束）只有在你确认之后才会结束终端。</li>
+      <li><strong>关掉它的其他视图也不会结束任何东西。</strong>终端标题中的 <strong>Tab ↗</strong> 会在一个浏览器标签页中单独打开它，<code>aubergine attach &lt;name&gt;</code> 会在你的终端应用窗口中显示它。它们都是同一个终端，不是副本；关掉那个标签页或窗口，它照样运行。</li>
+    </ul>
+    <p>shell 运行期间，tmux 会保留它最后输出的 50,000 行。在占着键盘的终端里，滚轮可以往回翻看这些内容，命令面板（<code>⌘K</code>）可以搜索它们。</p>
+    <figure class="frame"><a href="../../screenshots/list.png" class="frame-pic"><img src="../../screenshots/list.png" width="1440" height="1008" loading="lazy" alt="侧边栏列出五个终端，并用文字写出各自的状态（working、waiting for you、finished、parked），旁边是画布的一部分，其中有一个实时的 shell。"></a><figcaption>列表写明每个终端在做什么。底部那个停放的终端不在画布上，它的 shell 仍在运行。</figcaption></figure>
+
+    <h2>它不做什么</h2>
+    <ul>
+      <li><strong>它撑不过电脑重启。</strong>重启、电脑崩溃或需要重启的更新，会结束所有 shell 以及其中运行的东西。Aubergine 会把它们周围的一切带回来，每个终端都成为位于最后所在文件夹的新 shell，但不会自行重新启动任何东西。参见<a href="../keep-terminals-after-restart/">重启之后保留你的终端</a>。</li>
+      <li><strong>它不会让电脑保持唤醒。</strong>笔记本睡眠时，程序会暂停，这里的终端也不例外；醒来后它们会继续。</li>
+      <li><strong>它不是服务管理器。</strong>必须在重启后自己恢复的任务，应当交给你系统的服务。</li>
+      <li><strong>它无法接管已经在别处运行的程序。</strong>没有任何工具能把正在运行的程序搬进另一个终端。在终端应用的标签页里运行 <code>aubergine here</code>，会在画布上为那个文件夹创建一个终端；标签页里正在运行的程序留在原处，需要在新终端中重新启动。</li>
+    </ul>
+
+    <h2>通过 SSH 在另一台机器上</h2>
+    <p>Aubergine 运行在你自己的电脑上：它的服务器监听 <code>127.0.0.1</code>，它的终端是那台电脑上的 shell。如果你想保住的是一台通过 SSH 连接的远程服务器上的进程，答案仍然是在那台服务器上用 <code>tmux</code> 或 <code>screen</code>。</p>
+    <p>Aubergine 本身也可以运行在另一台机器上，并通过 SSH 隧道、私有网络，或一个域名加代理从你的浏览器使用：步骤见 <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md">Using Aubergine from elsewhere</a>。使用 SSH 隧道时，关掉运行 <code>aubergine start</code> 的 SSH 窗口会停止服务器，而终端会继续运行。Linux 只在容器中运行过，从未在云服务器上运行。</p>
+
+    <h2>常见问题</h2>
+    <div class="questions">
+      <details><summary>关闭浏览器会停止我的终端吗？</summary><p>不会。每个终端都是 tmux 中的一个 shell，独立于浏览器运行。关掉标签页、窗口或浏览器，再重新打开页面，每个终端都是当前的样子，仍在运行，期间输出的内容也都在。</p></details>
+      <details><summary>SSH 断开后如何让进程继续运行？</summary><p>在远程机器上，把它放在 <code>tmux</code> 或 <code>screen</code> 里启动，或者用 <code>nohup</code>。Aubergine 只保留它所运行的那台电脑上的终端。它也可以运行在远程机器上，通过 SSH 隧道或代理来用，但这只在容器中运行过，从未在云服务器上运行。</p></details>
+      <details><summary>该用 nohup 还是 tmux？</summary><p><code>nohup</code> 适合输出可以写进文件的单条命令。<code>tmux</code> 适合你想回去继续输入的 shell。Aubergine 给每个终端的都是后者，放在浏览器页面里，不用 tmux 的按键。</p></details>
+      <details><summary>关闭终端后还能看到输出吗？</summary><p>能，只要 shell 还在运行：tmux 为每个终端保留最后 50,000 行，你回来时页面会显示它们。Aubergine 自己不记录任何东西，所以电脑重启后那些输出就没了。</p></details>
+      <details><summary>重启之后它还会继续运行吗？</summary><p>不会。电脑重启会结束所有程序。Aubergine 会把每个终端带回来，成为位于最后所在文件夹的新 shell，保留位置、名称和笔记，但不会重新运行任何东西。</p></details>
+    </div>
+    <p>相关：<a href="../keep-terminals-after-restart/">重启之后保留你的终端</a> · <a href="../tmux-without-learning-tmux/">不学 tmux 也能用 tmux</a> · <a href="../claude-code-notifications/">知道 Claude Code 何时在等待</a></p>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">五分钟上手</h2>
+    <div class="close-do">
+      <p>你需要 macOS，以及 tmux 3.2 或更高版本和 Node.js 22 或更高版本。<code>brew install tmux node</code> 可以一次装好两者。</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="已复制" aria-live="polite" hidden>复制</button></p>
+      <p class="actions"><a class="button" href="../install/">安装</a><a class="button button-quiet" href="../tmux-without-learning-tmux/">不学 tmux 也能用 tmux</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav aria-label="所有页面">
+      <ul class="foot-links">
+        <li><a href="../">首页</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex 与 ChatGPT</a></li>
+        <li><a href="../install/">安装</a></li>
+        <li><a href="../guides/">指南</a></li>
+        <li><a href="../run-multiple-coding-agents/">运行多个智能体</a></li>
+        <li><a href="../working-copies/">工作副本</a></li>
+        <li><a href="../queue-and-schedules/">队列与定时计划</a></li>
+        <li><a href="../security/">安全</a></li>
+        <li><a href="../roadmap/">路线图</a></li>
+        <li><a href="../faq/">常见问题</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine 免费开源，采用 <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT 许可证</a>，运行在你自己的电脑上。</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    if (!navigator.clipboard) return;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
+});
+</script>
+</body>
+</html>

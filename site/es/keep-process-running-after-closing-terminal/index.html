@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="es" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mantén un proceso en marcha después de cerrar la terminal | Aubergine</title>
+<meta name="description" content="Cerrar una ventana de terminal termina lo que se ejecuta en ella. Las respuestas habituales son nohup, disown, screen y tmux; Aubergine ejecuta cada terminal en tmux por ti, así que cerrar el navegador no termina nada.">
+<link rel="canonical" href="https://thirstyeggplant.com/es/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/keep-process-running-after-closing-terminal/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="Mantén un proceso en marcha después de cerrar la terminal | Aubergine">
+<meta property="og:description" content="Cerrar una ventana de terminal termina lo que se ejecuta en ella. Las respuestas habituales son nohup, disown, screen y tmux; Aubergine ejecuta cada terminal en tmux por ti, así que cerrar el navegador no termina nada.">
+<meta property="og:url" content="https://thirstyeggplant.com/es/keep-process-running-after-closing-terminal/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine: un lienzo de terminales, una ocupada y otra esperándote">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine: un lienzo de terminales, una ocupada y otra esperándote">
+<meta name="twitter:title" content="Mantén un proceso en marcha después de cerrar la terminal | Aubergine">
+<meta name="twitter:description" content="Cerrar una ventana de terminal termina lo que se ejecuta en ella. Las respuestas habituales son nohup, disown, screen y tmux; Aubergine ejecuta cada terminal en tmux por ti, así que cerrar el navegador no termina nada.">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">Ir a la página</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="Páginas">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Instalar</a></li>
+        <li><a href="../guides/">Guías</a></li>
+        <li><a href="../security/">Seguridad</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="Idioma: Español"><span class="lang-long" aria-hidden="true">Español</span><span class="lang-short" aria-hidden="true">ES</span></summary>
+      <ul class="menu-list"><li><a href="../../keep-process-running-after-closing-terminal/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="./" hreflang="es" lang="es" dir="ltr" aria-current="true">Español</a></li><li><a href="../../pt/keep-process-running-after-closing-terminal/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/keep-process-running-after-closing-terminal/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/keep-process-running-after-closing-terminal/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/keep-process-running-after-closing-terminal/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/keep-process-running-after-closing-terminal/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/keep-process-running-after-closing-terminal/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/keep-process-running-after-closing-terminal/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/keep-process-running-after-closing-terminal/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/keep-process-running-after-closing-terminal/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/keep-process-running-after-closing-terminal/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>Menú</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Instalar</a></li>
+        <li><a href="../guides/">Guías</a></li>
+        <li><a href="../security/">Seguridad</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine en sí está en inglés: sus botones, menús e imágenes son los de la versión en inglés.</p>
+    <p>Esta página la tradujo una máquina a partir del inglés. <a href="https://github.com/thirstyeggplant/aubergine/issues">Envía una corrección</a>.</p>
+  </div>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/es/keep-process-running-after-closing-terminal/#article",
+      "headline": "Mantén un proceso en marcha después de cerrar la terminal",
+      "description": "Cerrar una ventana de terminal termina lo que se ejecuta en ella. Las respuestas habituales son nohup, disown, screen y tmux; Aubergine ejecuta cada terminal en tmux por ti, así que cerrar el navegador no termina nada.",
+      "url": "https://thirstyeggplant.com/es/keep-process-running-after-closing-terminal/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/es/keep-process-running-after-closing-terminal/",
+      "datePublished": "2026-11-25",
+      "dateModified": "2026-11-25",
+      "inLanguage": "es",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Guías", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "Que siga en marcha", "item": "https://thirstyeggplant.com/es/keep-process-running-after-closing-terminal/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/es/keep-process-running-after-closing-terminal/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "¿Cerrar el navegador detiene mi terminal?", "acceptedAnswer": { "@type": "Answer", "text": "No. Cada terminal es un shell en tmux, que funciona aparte del navegador. Cierra la pestaña, la ventana o el navegador, vuelve a abrir la página, y cada terminal está como está ahora, todavía en marcha, con lo que imprimió entretanto." } },
+        { "@type": "Question", "name": "¿Cómo mantengo un proceso en marcha después de que se corte SSH?", "acceptedAnswer": { "@type": "Answer", "text": "En la máquina remota, inícialo dentro de tmux o screen, o con nohup. Aubergine conserva terminales en el ordenador en el que se ejecuta. También puede ejecutarse en una máquina remota, usado a través de un túnel SSH o un proxy, pero eso solo se ha ejecutado en contenedores, nunca en una máquina en la nube." } },
+        { "@type": "Question", "name": "¿Uso nohup o tmux?", "acceptedAnswer": { "@type": "Answer", "text": "nohup sirve para un comando cuya salida puede ir a un archivo. tmux sirve para un shell al que quieres volver y en el que quieres escribir. Aubergine da lo segundo a cada terminal, en una página del navegador, sin las teclas de tmux." } },
+        { "@type": "Question", "name": "¿Puedo ver la salida después de cerrar la terminal?", "acceptedAnswer": { "@type": "Answer", "text": "Sí, mientras el shell está en marcha: tmux guarda las últimas 50.000 líneas de cada terminal, y la página las muestra cuando vuelves. Aubergine no graba nada por su cuenta, así que tras un reinicio del ordenador esa salida se pierde." } },
+        { "@type": "Question", "name": "¿Seguirá en marcha después de reiniciar?", "acceptedAnswer": { "@type": "Answer", "text": "No. Un reinicio del ordenador termina todos los programas. Aubergine devuelve cada terminal como un shell nuevo en su última carpeta, con su sitio, su nombre y su nota, y no vuelve a ejecutar nada." } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Dónde estás"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">Guías</a></li><li>Que siga en marcha</li></ol></nav>
+    <h1>Mantén un proceso en marcha después de cerrar la terminal</h1>
+    <p class="lead">Iniciaste una compilación, un servidor o un agente de programación, y cerrar la ventana lo terminaría. En Aubergine cerrar la ventana no termina nada: cada terminal funciona aparte del navegador, y lo que imprimió está ahí cuando vuelves.</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>Lo que se suele hacer</h2>
+    <p>Cerrar una ventana de terminal termina el shell que hay en ella, y con él lo que ese shell inició. Las formas habituales de evitarlo:</p>
+    <ul>
+      <li><code>nohup</code> inicia un comando que ignora la señal de colgado (hang-up) que se envía al cerrar la terminal. Su salida va a un archivo (<code>nohup.out</code> salvo que la mandes a otro sitio).</li>
+      <li><code>disown</code>, en bash y zsh, suelta un trabajo que ya iniciaste, para que el shell no le pase la señal de colgado. Después no puedes volver a él desde una terminal.</li>
+      <li><code>screen</code> y <code>tmux</code> ejecutan el shell dentro de un servidor propio. Te desconectas (detach), cierras la ventana y más tarde te vuelves a conectar (attach) al mismo shell con su salida. Son la respuesta fiable, y para usarlos aprendes sus teclas y sus comandos.</li>
+    </ul>
+    <p>Aubergine está construido sobre la última de estas. Ejecuta tmux por ti, así que obtienes su respuesta sin sus teclas.</p>
+
+    <h2>Lo que hace Aubergine</h2>
+    <p>Cada terminal de Aubergine es un shell en una sesión de tmux propia, en un socket de tmux de Aubergine. tmux funciona aparte del navegador y del servidor de Aubergine, así que:</p>
+    <ul>
+      <li><strong>Cerrar la pestaña, la ventana o el navegador entero no termina nada.</strong> Vuelve a abrir la página (<code>aubergine open</code> la abre con la sesión iniciada) y cada terminal se dibuja desde tmux tal como está ahora, con lo que imprimió entretanto en su historial de desplazamiento.</li>
+      <li><strong>Detener Aubergine tampoco termina nada.</strong> Ctrl+C donde se ejecuta <code>aubergine start</code>, un fallo del servidor o una actualización detienen el servidor y nada más. Vuelve a iniciarlo y recarga la página.</li>
+      <li><strong>Cerrar una terminal en el lienzo la aparca.</strong> La × de su título la saca del lienzo y su shell sigue en marcha. <strong>Parked</strong> (aparcadas), en la barra sobre el lienzo, lista las terminales aparcadas, y <strong>Restore</strong> (restaurar) devuelve una.</li>
+      <li><strong>Terminar un shell para siempre pregunta antes.</strong> <strong>End</strong> (terminar), en la lista de aparcadas, termina una terminal solo después de que digas que sí.</li>
+      <li><strong>Otras vistas de ella no terminan nada.</strong> <strong>Tab ↗</strong> en el título de una terminal la abre sola en una pestaña del navegador, y <code>aubergine attach &lt;name&gt;</code> la muestra en una ventana de tu aplicación de terminal. Cada una es la misma terminal, no una copia; cerrar esa pestaña o ventana la deja en marcha.</li>
+    </ul>
+    <p>Mientras un shell está en marcha, tmux guarda las últimas 50.000 líneas que imprimió. La rueda del ratón las recorre hacia atrás en la terminal que tiene el teclado, y la paleta (<code>⌘K</code>) busca en ellas.</p>
+    <figure class="frame"><a href="../../screenshots/list.png" class="frame-pic"><img src="../../screenshots/list.png" width="1440" height="1008" loading="lazy" alt="El panel lateral con cinco terminales y su estado en palabras (working, waiting for you, finished, parked), junto a una parte del lienzo con una shell en vivo."></a><figcaption>La lista dice qué hace cada terminal. La aparcada, al pie, está fuera del lienzo, y su shell sigue en marcha.</figcaption></figure>
+
+    <h2>Lo que no hace</h2>
+    <ul>
+      <li><strong>No sobrevive a un reinicio del ordenador.</strong> Un reinicio, un fallo del ordenador o una actualización que lo reinicia termina cada shell y lo que se ejecuta en él. Aubergine devuelve todo lo que los rodeaba, cada terminal como un shell nuevo en su última carpeta, y no vuelve a iniciar nada por sí solo. Consulta <a href="../keep-terminals-after-restart/">Conserva tus terminales tras un reinicio</a>.</li>
+      <li><strong>No mantiene despierto el ordenador.</strong> Un portátil en reposo pausa sus programas, también estos; siguen cuando despierta.</li>
+      <li><strong>No es un gestor de servicios.</strong> Una tarea que debe volver sola tras un reinicio va en los servicios de tu sistema.</li>
+      <li><strong>No puede hacerse cargo de un programa que ya se ejecuta en otro sitio.</strong> Ninguna herramienta puede mover un programa en marcha a otra terminal. <code>aubergine here</code> en una pestaña de tu aplicación de terminal le da a esa carpeta una terminal en el lienzo; un programa que se ejecuta en la pestaña se queda ahí, y hay que volver a iniciarlo dentro de la terminal nueva.</li>
+    </ul>
+
+    <h2>En otra máquina, por SSH</h2>
+    <p>Aubergine se ejecuta en tu propio ordenador: su servidor escucha en <code>127.0.0.1</code>, y sus terminales son shells de ese ordenador. Si lo que quieres conservar es un proceso en un servidor remoto al que llegas por SSH, <code>tmux</code> o <code>screen</code> en ese servidor siguen siendo la respuesta.</p>
+    <p>Aubergine mismo puede ejecutarse en otra máquina y usarse desde tu navegador, a través de un túnel SSH, una red privada, o un nombre y un proxy: <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md">Usar Aubergine desde otro sitio</a> tiene los pasos. Con un túnel SSH, cerrar la ventana de SSH donde se ejecuta <code>aubergine start</code> detiene el servidor, y las terminales siguen en marcha. En Linux solo se ha ejecutado en contenedores, y nunca en una máquina en la nube.</p>
+
+    <h2>Preguntas</h2>
+    <div class="questions">
+      <details><summary>¿Cerrar el navegador detiene mi terminal?</summary><p>No. Cada terminal es un shell en tmux, que funciona aparte del navegador. Cierra la pestaña, la ventana o el navegador, vuelve a abrir la página, y cada terminal está como está ahora, todavía en marcha, con lo que imprimió entretanto.</p></details>
+      <details><summary>¿Cómo mantengo un proceso en marcha después de que se corte SSH?</summary><p>En la máquina remota, inícialo dentro de <code>tmux</code> o <code>screen</code>, o con <code>nohup</code>. Aubergine conserva terminales en el ordenador en el que se ejecuta. También puede ejecutarse en una máquina remota, usado a través de un túnel SSH o un proxy, pero eso solo se ha ejecutado en contenedores, nunca en una máquina en la nube.</p></details>
+      <details><summary>¿Uso nohup o tmux?</summary><p><code>nohup</code> sirve para un comando cuya salida puede ir a un archivo. <code>tmux</code> sirve para un shell al que quieres volver y en el que quieres escribir. Aubergine da lo segundo a cada terminal, en una página del navegador, sin las teclas de tmux.</p></details>
+      <details><summary>¿Puedo ver la salida después de cerrar la terminal?</summary><p>Sí, mientras el shell está en marcha: tmux guarda las últimas 50.000 líneas de cada terminal, y la página las muestra cuando vuelves. Aubergine no graba nada por su cuenta, así que tras un reinicio del ordenador esa salida se pierde.</p></details>
+      <details><summary>¿Seguirá en marcha después de reiniciar?</summary><p>No. Un reinicio del ordenador termina todos los programas. Aubergine devuelve cada terminal como un shell nuevo en su última carpeta, con su sitio, su nombre y su nota, y no vuelve a ejecutar nada.</p></details>
+    </div>
+    <p>Relacionado: <a href="../keep-terminals-after-restart/">Conserva tus terminales tras un reinicio</a> · <a href="../tmux-without-learning-tmux/">tmux sin aprender tmux</a> · <a href="../claude-code-notifications/">Saber cuándo Claude Code te espera</a></p>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">En marcha en cinco minutos</h2>
+    <div class="close-do">
+      <p>Necesitas macOS con tmux 3.2 o posterior y Node.js 22 o posterior. <code>brew install tmux node</code> instala ambos.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Copiado" aria-live="polite" hidden>Copiar</button></p>
+      <p class="actions"><a class="button" href="../install/">Instalar</a><a class="button button-quiet" href="../tmux-without-learning-tmux/">tmux sin aprender tmux</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav aria-label="Todas las páginas">
+      <ul class="foot-links">
+        <li><a href="../">Inicio</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex y ChatGPT</a></li>
+        <li><a href="../install/">Instalar</a></li>
+        <li><a href="../guides/">Guías</a></li>
+        <li><a href="../run-multiple-coding-agents/">Varios agentes a la vez</a></li>
+        <li><a href="../working-copies/">Copias de trabajo</a></li>
+        <li><a href="../queue-and-schedules/">Cola y programaciones</a></li>
+        <li><a href="../security/">Seguridad</a></li>
+        <li><a href="../roadmap/">Hoja de ruta</a></li>
+        <li><a href="../faq/">Preguntas frecuentes</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine es libre y de código abierto bajo la <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">licencia MIT</a>, y se ejecuta en tu propio ordenador.</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    if (!navigator.clipboard) return;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
+});
+</script>
+</body>
+</html>

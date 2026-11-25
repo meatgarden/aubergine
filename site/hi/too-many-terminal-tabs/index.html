@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="hi" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>बहुत सारे टैब हों तो सही टर्मिनल ढूँढें | Aubergine</title>
+<meta name="description" content="बहुत सारे टर्मिनल टैब, सबका नाम zsh? Aubergine हर टर्मिनल को एक कैनवस पर और एक सूची में रखता है, उसकी स्थिति शब्दों में, फ़िल्टर, टैग, टर्मिनल आउटपुट में खोज, और एक टर्मिनल अकेले ब्राउज़र टैब में।">
+<link rel="canonical" href="https://thirstyeggplant.com/hi/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/too-many-terminal-tabs/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="बहुत सारे टैब हों तो सही टर्मिनल ढूँढें | Aubergine">
+<meta property="og:description" content="बहुत सारे टर्मिनल टैब, सबका नाम zsh? Aubergine हर टर्मिनल को एक कैनवस पर और एक सूची में रखता है, उसकी स्थिति शब्दों में, फ़िल्टर, टैग, टर्मिनल आउटपुट में खोज, और एक टर्मिनल अकेले ब्राउज़र टैब में।">
+<meta property="og:url" content="https://thirstyeggplant.com/hi/too-many-terminal-tabs/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine: टर्मिनलों का एक कैनवस, एक काम में लगा हुआ और एक आपका इंतज़ार करता हुआ">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine: टर्मिनलों का एक कैनवस, एक काम में लगा हुआ और एक आपका इंतज़ार करता हुआ">
+<meta name="twitter:title" content="बहुत सारे टैब हों तो सही टर्मिनल ढूँढें | Aubergine">
+<meta name="twitter:description" content="बहुत सारे टर्मिनल टैब, सबका नाम zsh? Aubergine हर टर्मिनल को एक कैनवस पर और एक सूची में रखता है, उसकी स्थिति शब्दों में, फ़िल्टर, टैग, टर्मिनल आउटपुट में खोज, और एक टर्मिनल अकेले ब्राउज़र टैब में।">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">पेज पर जाएँ</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="पेज">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">इंस्टॉल</a></li>
+        <li><a href="../guides/">गाइड</a></li>
+        <li><a href="../security/">सुरक्षा</a></li>
+        <li><a href="../faq/">सवाल-जवाब</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="भाषा: हिन्दी"><span class="lang-long" aria-hidden="true">हिन्दी</span><span class="lang-short" aria-hidden="true">HI</span></summary>
+      <ul class="menu-list"><li><a href="../../too-many-terminal-tabs/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/too-many-terminal-tabs/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/too-many-terminal-tabs/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/too-many-terminal-tabs/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/too-many-terminal-tabs/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/too-many-terminal-tabs/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/too-many-terminal-tabs/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/too-many-terminal-tabs/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/too-many-terminal-tabs/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="./" hreflang="hi" lang="hi" dir="ltr" aria-current="true">हिन्दी</a></li><li><a href="../../bn/too-many-terminal-tabs/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/too-many-terminal-tabs/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>मेन्यू</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">इंस्टॉल</a></li>
+        <li><a href="../guides/">गाइड</a></li>
+        <li><a href="../security/">सुरक्षा</a></li>
+        <li><a href="../faq/">सवाल-जवाब</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine खुद अंग्रेज़ी में है: उसके बटन, मेन्यू और तस्वीरें अंग्रेज़ी वाली ही हैं।</p>
+    <p>इस पेज का अंग्रेज़ी से अनुवाद मशीन ने किया है। <a href="https://github.com/thirstyeggplant/aubergine/issues">सुधार भेजें</a>।</p>
+  </div>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/hi/too-many-terminal-tabs/#article",
+      "headline": "बहुत सारे टर्मिनल हों तो सही टर्मिनल ढूँढें",
+      "description": "बहुत सारे टर्मिनल टैब, सबका नाम zsh? Aubergine हर टर्मिनल को एक कैनवस पर और एक सूची में रखता है, उसकी स्थिति शब्दों में, फ़िल्टर, टैग, टर्मिनल आउटपुट में खोज, और एक टर्मिनल अकेले ब्राउज़र टैब में।",
+      "url": "https://thirstyeggplant.com/hi/too-many-terminal-tabs/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/hi/too-many-terminal-tabs/",
+      "datePublished": "2026-11-25",
+      "dateModified": "2026-11-25",
+      "inLanguage": "hi",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "गाइड", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "बहुत सारे टर्मिनल", "item": "https://thirstyeggplant.com/hi/too-many-terminal-tabs/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/hi/too-many-terminal-tabs/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "बहुत सारी टर्मिनल विंडो को कैसे व्यवस्थित करूँ?", "acceptedAnswer": { "@type": "Answer", "text": "Aubergine में: हर काम के लिए एक कैनवस, नाम और रंगों के साथ अगल-बगल टर्मिनल, साथ के टर्मिनलों के चारों ओर फ़्रेम, और सबकी एक सूची जिसमें हर एक क्या कर रहा है।" } },
+        { "@type": "Question", "name": "कैसे पता करूँ कि कौन-सा टर्मिनल कोई कमांड चला रहा है?", "acceptedAnswer": { "@type": "Answer", "text": "सूची के ऊपर का फ़ील्ड टर्मिनल के नाम, फ़ोल्डर, कमांड, नोट और टैग से मिलान करता है, और पैलेट (⌘K) यही हर कैनवस पर करता है। टर्मिनल का टाइटल दिखाता है कि वह क्या चला रहा है।" } },
+        { "@type": "Question", "name": "क्या मैं अपने सभी टर्मिनलों के आउटपुट में खोज सकता हूँ?", "acceptedAnswer": { "@type": "Answer", "text": "हाँ, जो अब भी चल रहे हैं उनमें: पैलेट का Terminal output हिस्सा खोजते समय हर टर्मिनल की हिस्ट्री पढ़ता है, पार्क किए हुए भी, उतना पीछे तक जितना tmux रखता है (50,000 पंक्तियाँ)। कुछ भी इंडेक्स या रिकॉर्ड नहीं होता।" } },
+        { "@type": "Question", "name": "Aubergine कितने टर्मिनल सँभाल सकता है?", "acceptedAnswer": { "@type": "Answer", "text": "कोई तय सीमा नहीं है। सूची को 1,000 टर्मिनलों के साथ जाँचा गया है और 90 टर्मिनलों वाले तीन कैनवस हाथ से देखे गए हैं; हर टर्मिनल फिर भी एक शेल है, इसलिए यह इस पर निर्भर है कि आपका कंप्यूटर कितना चला सकता है।" } },
+        { "@type": "Question", "name": "क्या मैं अपने टर्मिनलों को नाम और रंग दे सकता हूँ?", "acceptedAnswer": { "@type": "Answer", "text": "हाँ। नाम बदलने के लिए टर्मिनल के टाइटल पर डबल-क्लिक करें, और तेरह रंगों में से एक या अपना रंग चुनने के लिए उसके टाइटल का बिंदु इस्तेमाल करें। कैनवस के भी नाम और रंग होते हैं।" } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="आप कहाँ हैं"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">गाइड</a></li><li>बहुत सारे टर्मिनल</li></ol></nav>
+    <h1>बहुत सारे टर्मिनल हों तो सही टर्मिनल ढूँढें</h1>
+    <p class="lead">बीस टैब, ज़्यादातर का नाम zsh, उनमें से तीन में एजेंट चल रहा है, उनमें से एक आपका इंतज़ार कर रहा है। Aubergine हर टर्मिनल को एक कैनवस पर और एक ऐसी सूची में रखता है जो बताती है कि हर एक क्या कर रहा है, ताकि आप टर्मिनल को इससे ढूँढें कि वह क्या है, इससे नहीं कि आपने उसे कहाँ छोड़ा था।</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>लोग आम तौर पर क्या करते हैं</h2>
+    <p>टैब या विंडो को नाम दें (ज़्यादातर टर्मिनल ऐप इसकी अनुमति देते हैं), विंडो को पेन में बाँटें, नाम वाले tmux सेशन और विंडो इस्तेमाल करें, या किसी टाइलिंग विंडो मैनेजर से उन्हें जमवाएँ। इनसे टर्मिनल जमाने में मदद मिलती है; जिसे आपकी ज़रूरत है उसे ढूँढने के लिए फिर भी देखना पड़ता है।</p>
+
+    <h2>Aubergine क्या करता है</h2>
+    <p><strong>एक कैनवस।</strong> टर्मिनल अगल-बगल, हर एक लाइव। किसी को उसके टाइटल से खींचें, उसके किनारों से आकार बदलें, नाम बदलने के लिए टाइटल पर डबल-क्लिक करें। टाइटल का बिंदु उसे एक रंग देता है; एक फ़्रेम (<strong>New terminal ▾ → Frame</strong>, या <code>G</code>) टर्मिनलों को एक लेबल के नीचे समूह में रखता है और उन्हें साथ में खिसकाता है।</p>
+    <p><strong>कैनवस और प्रोजेक्ट।</strong> कई कैनवस, टैब के रूप में, एक सूची के रूप में या बाईं ओर एक कॉलम में दिखते हैं, हर एक का अपना पता। एक प्रोजेक्ट के अपने कैनवस, टर्मिनल, क्यू और इंतज़ार की सूची होती है; ऊपर बाईं ओर का स्विचर प्रोजेक्टों के बीच ले जाता है।</p>
+    <p><strong>हर टर्मिनल की एक सूची।</strong> साइड पैनल का <strong>Terminals</strong> हर एक को उसकी स्थिति शब्दों में दिखाता है (<strong>working</strong>, <strong>waiting for you</strong>, <strong>finished</strong>, कोई फ़ेल हुई कमांड), उसके रन का स्टेप और वह आख़िरी बार कब सक्रिय था, इस कैनवस के लिए या सभी कैनवस के लिए। उसके ऊपर का फ़ील्ड टर्मिनल को नाम, फ़ोल्डर, कमांड, नोट या टैग से ढूँढता है।</p>
+    <p><strong>Filter</strong> में फ़िल्टर हैं (मेरा इंतज़ार, busy, बिना पढ़े, एजेंट वाले, पार्क किए, टैग) और यह कि सूची कैसे सजी है: कैनवस के हिसाब से, या एक सपाट सूची कैनवस के क्रम में, आख़िरी अपडेट से, आख़िरी बार टाइप करने से, या नाम से।</p>
+    <figure class="frame"><a href="../../screenshots/list.png" class="frame-pic"><img src="../../screenshots/list.png" width="1440" height="1008" loading="lazy" alt="साइड पैनल जिसमें पाँच टर्मिनल अपनी स्थिति के शब्दों के साथ हैं (working, waiting for you, finished, parked), और बगल में कैनवस का एक हिस्सा जिसमें एक लाइव शेल है।"></a><figcaption>सूची बताती है कि हर टर्मिनल क्या कर रहा है; उसके बगल में खुद टर्मिनल हैं।</figcaption></figure>
+    <p>कैनवस के ऊपर <strong>Go to…</strong>, या <code>⌘K</code>, पैलेट है: किसी नाम, फ़ोल्डर, कमांड या नोट का हिस्सा टाइप करें। उसका <strong>Terminal output</strong> हिस्सा टर्मिनलों के छापे हुए में खोजता है (हर एक की आख़िरी 50,000 पंक्तियाँ जो tmux रखता है), और कोई नतीजा उस टर्मिनल को वहीं तक पीछे स्क्रॉल करके खोलता है।</p>
+    <p><strong>मैप</strong>, जिसका बटन <strong>Go to…</strong> के बगल में है, पूरे कैनवस को छोटे रूप में दिखाता है और उसे खिसकाता है। <strong>Fit</strong> (<code>F</code>) सब कुछ एक साथ दिखाता है।</p>
+    <p><strong>टर्मिनल किस लिए है।</strong> हर एक के बगल में एक नोट है (एक सारांश और एक लॉग), और उसकी जानकारी में टैग, लिंक, और <code>Ticket: DEMO-12</code> जैसे फ़ील्ड। एजेंट <code>aubergine</code> कमांड से अपने टर्मिनल का नाम, सारांश और फ़ील्ड लिख सकता है।</p>
+    <p><strong>एक टर्मिनल अकेले।</strong> उसके टाइटल में <strong>Tab ↗</strong> उसे उसके अपने ब्राउज़र टैब में खोलता है, <code>/t/&lt;terminal&gt;</code> पर, उसकी जानकारी और नोट एक बटन दूर।</p>
+    <p><code>Tab</code> और <code>Shift+Tab</code> टर्मिनलों में उसी क्रम में चलते हैं जिसमें सूची उन्हें दिखाती है, और <code>W</code> अगले उस पर ले जाता है जो आपका इंतज़ार कर रहा है।</p>
+
+    <h2>यह क्या नहीं करता</h2>
+    <ul>
+      <li><strong>यह आपके लिए चीज़ें नहीं सजाता।</strong> टर्मिनल वहीं रहता है जहाँ आप उसे रखते हैं (नया टर्मिनल व्यू के बीच के पास खाली जगह में जाता है), और वही नाम रखता है जो आपने या उसके एजेंट ने दिया।</li>
+      <li><strong>यह किसी संख्या का वादा नहीं करता।</strong> सिर्फ़ वही कैनवस लाइव टर्मिनल रखता है जिसे आप देख रहे हैं: बहुत दूर ज़ूम करने पर टर्मिनल अपनी स्क्रीन की तस्वीर दिखाता है, और स्क्रीन से बाहर होने पर पेज पर उसका कोई बोझ नहीं। हर टर्मिनल फिर भी आपके कंप्यूटर पर एक शेल है। सूची को एक यूनिट टेस्ट में 1,000 टर्मिनलों के साथ जाँचा गया है (सूची बनाना, फ़िल्टर करना और सिर्फ़ एक स्क्रीन भर बनाना), और एक स्क्रिप्ट हाथ से परखने के लिए तीन कैनवस को 90 टर्मिनलों से भरती है। इनमें से कोई भी आपके कंप्यूटर के बारे में वादा नहीं है।</li>
+      <li><strong>आपके टर्मिनल ऐप के टैब नहीं दिखाए जाते।</strong> <strong>Open elsewhere</strong> (<code>O</code>) वहाँ खुले टर्मिनलों की सूची दिखाता है और उन्हें एक-एक करके ले आता है, उसी फ़ोल्डर में एक नए टर्मिनल के रूप में। टैब में चल रहा प्रोग्राम उसी टैब में रहता है।</li>
+    </ul>
+
+    <h2>सवाल</h2>
+    <div class="questions">
+      <details><summary>बहुत सारी टर्मिनल विंडो को कैसे व्यवस्थित करूँ?</summary><p>Aubergine में: हर काम के लिए एक कैनवस, नाम और रंगों के साथ अगल-बगल टर्मिनल, साथ के टर्मिनलों के चारों ओर फ़्रेम, और सबकी एक सूची जिसमें हर एक क्या कर रहा है।</p></details>
+      <details><summary>कैसे पता करूँ कि कौन-सा टर्मिनल कोई कमांड चला रहा है?</summary><p>सूची के ऊपर का फ़ील्ड टर्मिनल के नाम, फ़ोल्डर, कमांड, नोट और टैग से मिलान करता है, और पैलेट (<code>⌘K</code>) यही हर कैनवस पर करता है। टर्मिनल का टाइटल दिखाता है कि वह क्या चला रहा है।</p></details>
+      <details><summary>क्या मैं अपने सभी टर्मिनलों के आउटपुट में खोज सकता हूँ?</summary><p>हाँ, जो अब भी चल रहे हैं उनमें: पैलेट का <strong>Terminal output</strong> हिस्सा खोजते समय हर टर्मिनल की हिस्ट्री पढ़ता है, पार्क किए हुए भी, उतना पीछे तक जितना tmux रखता है (50,000 पंक्तियाँ)। कुछ भी इंडेक्स या रिकॉर्ड नहीं होता।</p></details>
+      <details><summary>Aubergine कितने टर्मिनल सँभाल सकता है?</summary><p>कोई तय सीमा नहीं है। सूची को 1,000 टर्मिनलों के साथ जाँचा गया है और 90 टर्मिनलों वाले तीन कैनवस हाथ से देखे गए हैं; हर टर्मिनल फिर भी एक शेल है, इसलिए यह इस पर निर्भर है कि आपका कंप्यूटर कितना चला सकता है।</p></details>
+      <details><summary>क्या मैं अपने टर्मिनलों को नाम और रंग दे सकता हूँ?</summary><p>हाँ। नाम बदलने के लिए टर्मिनल के टाइटल पर डबल-क्लिक करें, और तेरह रंगों में से एक या अपना रंग चुनने के लिए उसके टाइटल का बिंदु इस्तेमाल करें। कैनवस के भी नाम और रंग होते हैं।</p></details>
+    </div>
+    <p>संबंधित: <a href="../claude-code-notifications/">जानें कब Claude Code इंतज़ार कर रहा है</a> · <a href="../keep-process-running-after-closing-terminal/">प्रोसेस चलता रहे</a> · <a href="../run-multiple-coding-agents/">एक साथ कई कोडिंग एजेंट चलाएँ</a></p>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">पाँच मिनट में तैयार</h2>
+    <div class="close-do">
+      <p>आपको macOS चाहिए, tmux 3.2 या नए और Node.js 22 या नए के साथ। <code>brew install tmux node</code> दोनों ले आता है।</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="कॉपी हो गया" aria-live="polite" hidden>कॉपी करें</button></p>
+      <p class="actions"><a class="button" href="../install/">इंस्टॉल करें</a><a class="button button-quiet" href="../run-multiple-coding-agents/">कई एजेंट चलाएँ</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav aria-label="सभी पेज">
+      <ul class="foot-links">
+        <li><a href="../">होम</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex और ChatGPT</a></li>
+        <li><a href="../install/">इंस्टॉल</a></li>
+        <li><a href="../guides/">गाइड</a></li>
+        <li><a href="../run-multiple-coding-agents/">कई एजेंट चलाएँ</a></li>
+        <li><a href="../working-copies/">वर्किंग कॉपी</a></li>
+        <li><a href="../queue-and-schedules/">क्यू और शेड्यूल</a></li>
+        <li><a href="../security/">सुरक्षा</a></li>
+        <li><a href="../roadmap/">रोडमैप</a></li>
+        <li><a href="../faq/">सवाल-जवाब</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine मुफ़्त और ओपन सोर्स है, <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT लाइसेंस</a> के तहत, और आपके अपने कंप्यूटर पर चलता है।</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    if (!navigator.clipboard) return;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
+});
+</script>
+</body>
+</html>

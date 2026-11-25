@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="bn" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>টার্মিনাল বন্ধ করার পরেও প্রসেস চালু রাখুন | Aubergine</title>
+<meta name="description" content="টার্মিনাল উইন্ডো বন্ধ করলে তাতে যা চলে তা শেষ হয়ে যায়। প্রচলিত উপায় হলো nohup, disown, screen আর tmux; Aubergine প্রতিটি টার্মিনাল আপনার হয়ে tmux-এ চালায়, তাই ব্রাউজার বন্ধ করলে কিছুই শেষ হয় না।">
+<link rel="canonical" href="https://thirstyeggplant.com/bn/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/keep-process-running-after-closing-terminal/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="টার্মিনাল বন্ধ করার পরেও প্রসেস চালু রাখুন | Aubergine">
+<meta property="og:description" content="টার্মিনাল উইন্ডো বন্ধ করলে তাতে যা চলে তা শেষ হয়ে যায়। প্রচলিত উপায় হলো nohup, disown, screen আর tmux; Aubergine প্রতিটি টার্মিনাল আপনার হয়ে tmux-এ চালায়, তাই ব্রাউজার বন্ধ করলে কিছুই শেষ হয় না।">
+<meta property="og:url" content="https://thirstyeggplant.com/bn/keep-process-running-after-closing-terminal/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine: টার্মিনালের একটি ক্যানভাস, একটি কাজে ব্যস্ত আর একটি আপনার অপেক্ষায়">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine: টার্মিনালের একটি ক্যানভাস, একটি কাজে ব্যস্ত আর একটি আপনার অপেক্ষায়">
+<meta name="twitter:title" content="টার্মিনাল বন্ধ করার পরেও প্রসেস চালু রাখুন | Aubergine">
+<meta name="twitter:description" content="টার্মিনাল উইন্ডো বন্ধ করলে তাতে যা চলে তা শেষ হয়ে যায়। প্রচলিত উপায় হলো nohup, disown, screen আর tmux; Aubergine প্রতিটি টার্মিনাল আপনার হয়ে tmux-এ চালায়, তাই ব্রাউজার বন্ধ করলে কিছুই শেষ হয় না।">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">পেজে যান</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="পেজ">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">ইনস্টল</a></li>
+        <li><a href="../guides/">গাইড</a></li>
+        <li><a href="../security/">নিরাপত্তা</a></li>
+        <li><a href="../faq/">প্রশ্নোত্তর</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="ভাষা: বাংলা"><span class="lang-long" aria-hidden="true">বাংলা</span><span class="lang-short" aria-hidden="true">BN</span></summary>
+      <ul class="menu-list"><li><a href="../../keep-process-running-after-closing-terminal/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/keep-process-running-after-closing-terminal/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/keep-process-running-after-closing-terminal/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/keep-process-running-after-closing-terminal/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/keep-process-running-after-closing-terminal/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/keep-process-running-after-closing-terminal/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/keep-process-running-after-closing-terminal/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/keep-process-running-after-closing-terminal/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/keep-process-running-after-closing-terminal/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/keep-process-running-after-closing-terminal/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="./" hreflang="bn" lang="bn" dir="ltr" aria-current="true">বাংলা</a></li><li><a href="../../ar/keep-process-running-after-closing-terminal/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>মেনু</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">ইনস্টল</a></li>
+        <li><a href="../guides/">গাইড</a></li>
+        <li><a href="../security/">নিরাপত্তা</a></li>
+        <li><a href="../faq/">প্রশ্নোত্তর</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine নিজে ইংরেজিতে: এর বোতাম, মেনু আর ছবি সবই ইংরেজি।</p>
+    <p>এই পেজটি ইংরেজি থেকে মেশিন দিয়ে অনুবাদ করা। <a href="https://github.com/thirstyeggplant/aubergine/issues">সংশোধন পাঠান</a>।</p>
+  </div>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/bn/keep-process-running-after-closing-terminal/#article",
+      "headline": "টার্মিনাল বন্ধ করার পরেও প্রসেস চালু রাখুন",
+      "description": "টার্মিনাল উইন্ডো বন্ধ করলে তাতে যা চলে তা শেষ হয়ে যায়। প্রচলিত উপায় হলো nohup, disown, screen আর tmux; Aubergine প্রতিটি টার্মিনাল আপনার হয়ে tmux-এ চালায়, তাই ব্রাউজার বন্ধ করলে কিছুই শেষ হয় না।",
+      "url": "https://thirstyeggplant.com/bn/keep-process-running-after-closing-terminal/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/bn/keep-process-running-after-closing-terminal/",
+      "datePublished": "2026-11-25",
+      "dateModified": "2026-11-25",
+      "inLanguage": "bn",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "গাইড", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "চালু রাখুন", "item": "https://thirstyeggplant.com/bn/keep-process-running-after-closing-terminal/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/bn/keep-process-running-after-closing-terminal/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "ব্রাউজার বন্ধ করলে কি আমার টার্মিনাল থেমে যায়?", "acceptedAnswer": { "@type": "Answer", "text": "না। প্রতিটি টার্মিনাল tmux-এ একটি শেল, যা ব্রাউজার থেকে আলাদা চলে। ট্যাব, উইন্ডো বা ব্রাউজার বন্ধ করুন, পেজটি আবার খুলুন, আর প্রতিটি টার্মিনাল এখন যেমন আছে তেমনই, এখনো চলছে, এর মধ্যে যা ছাপা হয়েছে তা সহ।" } },
+        { "@type": "Question", "name": "SSH বিচ্ছিন্ন হওয়ার পরে প্রসেস কীভাবে চালু রাখব?", "acceptedAnswer": { "@type": "Answer", "text": "রিমোট মেশিনে এটি tmux বা screen-এর ভেতরে, বা nohup দিয়ে চালু করুন। Aubergine যে কম্পিউটারে চলে সেখানেই টার্মিনাল রাখে। এটি রিমোট মেশিনেও চলতে পারে, SSH টানেল বা প্রক্সি দিয়ে ব্যবহার করে, কিন্তু তা কেবল কন্টেইনারে চালানো হয়েছে, কোনো ক্লাউড মেশিনে কখনো নয়।" } },
+        { "@type": "Question", "name": "nohup ব্যবহার করব নাকি tmux?", "acceptedAnswer": { "@type": "Answer", "text": "nohup এমন একটি কমান্ডের জন্য ভালো যার আউটপুট ফাইলে যেতে পারে। tmux এমন শেলের জন্য ভালো যেখানে আপনি ফিরে এসে টাইপ করতে চান। Aubergine প্রতিটি টার্মিনালকে দ্বিতীয়টি দেয়, ব্রাউজারের একটি পেজে, tmux-এর key ছাড়াই।" } },
+        { "@type": "Question", "name": "টার্মিনাল বন্ধ করার পরে কি আউটপুট দেখতে পারব?", "acceptedAnswer": { "@type": "Answer", "text": "হ্যাঁ, শেল চলা পর্যন্ত: tmux প্রতিটি টার্মিনালের শেষ 50,000 লাইন রাখে, আর আপনি ফিরলে পেজ সেগুলো দেখায়। Aubergine নিজে কিছুই রেকর্ড করে না, তাই কম্পিউটার রিস্টার্টের পরে সেই আউটপুট হারিয়ে যায়।" } },
+        { "@type": "Question", "name": "রিবুটের পরেও কি এটি চলতে থাকবে?", "acceptedAnswer": { "@type": "Answer", "text": "না। কম্পিউটার রিস্টার্ট প্রতিটি প্রোগ্রাম শেষ করে। Aubergine প্রতিটি টার্মিনালকে তার শেষ ফোল্ডারে একটি নতুন শেল হিসেবে ফিরিয়ে আনে, তার জায়গা, নাম আর নোট সহ, আর কিছুই আবার চালায় না।" } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="আপনি কোথায় আছেন"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">গাইড</a></li><li>চালু রাখুন</li></ol></nav>
+    <h1>টার্মিনাল বন্ধ করার পরেও প্রসেস চালু রাখুন</h1>
+    <p class="lead">আপনি একটি বিল্ড, সার্ভার বা কোডিং এজেন্ট চালু করেছেন, আর উইন্ডো বন্ধ করলে সেটি শেষ হয়ে যাবে। Aubergine-এ উইন্ডো বন্ধ করলে কিছুই শেষ হয় না: প্রতিটি টার্মিনাল ব্রাউজার থেকে আলাদা চলে, আর এটি যা ছেপেছে তা আপনি ফিরলে সেখানেই থাকে।</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>সাধারণত লোকে কী করে</h2>
+    <p>টার্মিনাল উইন্ডো বন্ধ করলে তার ভেতরের শেল শেষ হয়, আর তার সঙ্গে সেই শেল যা চালু করেছিল তাও। এড়ানোর প্রচলিত উপায়:</p>
+    <ul>
+      <li><code>nohup</code> এমন একটি কমান্ড চালু করে যা টার্মিনাল বন্ধ হলে পাঠানো হ্যাং-আপ উপেক্ষা করে। এর আউটপুট একটি ফাইলে যায় (<code>nohup.out</code>, যদি না আপনি অন্য কোথাও পাঠান)।</li>
+      <li><code>disown</code>, bash আর zsh-এ, আগে থেকে চালু করা একটি জবকে ছেড়ে দেয়, যাতে শেল হ্যাং-আপ তার কাছে না পাঠায়। এরপর কোনো টার্মিনালে আর তার কাছে ফেরা যায় না।</li>
+      <li><code>screen</code> আর <code>tmux</code> শেলটিকে তাদের নিজস্ব একটি সার্ভারের ভেতরে চালায়। আপনি detach করেন, উইন্ডো বন্ধ করেন, আর পরে আউটপুট সহ সেই একই শেলে আবার attach করেন। এগুলোই নির্ভরযোগ্য উপায়, আর ব্যবহার করতে এদের key আর কমান্ড শিখতে হয়।</li>
+    </ul>
+    <p>Aubergine এদের শেষটির ওপর তৈরি। এটি আপনার হয়ে tmux চালায়, তাই আপনি তার সুবিধা পান তার key ছাড়াই।</p>
+
+    <h2>Aubergine কী করে</h2>
+    <p>Aubergine-এর প্রতিটি টার্মিনাল তার নিজস্ব tmux সেশনে একটি শেল, Aubergine-এর নিজের tmux সকেটে। tmux ব্রাউজার আর Aubergine-এর সার্ভার থেকে আলাদা চলে, তাই:</p>
+    <ul>
+      <li><strong>ট্যাব, উইন্ডো বা পুরো ব্রাউজার বন্ধ করলে কিছুই শেষ হয় না।</strong> পেজটি আবার খুলুন (<code>aubergine open</code> সাইন ইন করা অবস্থায় খোলে) আর প্রতিটি টার্মিনাল tmux থেকে এখন যেমন আছে তেমন আঁকা হয়, এর মধ্যে যা ছাপা হয়েছে তা তার স্ক্রলব্যাকে থাকে।</li>
+      <li><strong>Aubergine থামালেও কিছুই শেষ হয় না।</strong> যেখানে <code>aubergine start</code> চলছে সেখানে Ctrl+C, সার্ভারের ক্র্যাশ বা একটি আপডেট কেবল সার্ভার থামায়, আর কিছু নয়। আবার চালু করে পেজটি রিলোড করুন।</li>
+      <li><strong>ক্যানভাসে টার্মিনাল বন্ধ করলে সেটি পার্ক হয়।</strong> তার শিরোনামের × তাকে ক্যানভাস থেকে সরায় আর তার শেল চলতে থাকে। ক্যানভাসের উপরের বারে <strong>Parked</strong> (পার্ক করা) পার্ক করা টার্মিনালের তালিকা দেখায়, আর <strong>Restore</strong> (ফিরিয়ে আনুন) একটিকে ফিরিয়ে আনে।</li>
+      <li><strong>শেল চিরতরে শেষ করার আগে জিজ্ঞেস করা হয়।</strong> পার্ক করা তালিকায় <strong>End</strong> (শেষ করুন) টার্মিনাল শেষ করে কেবল আপনি হ্যাঁ বললে।</li>
+      <li><strong>এর অন্য ভিউগুলোও কিছু শেষ করে না।</strong> টার্মিনালের শিরোনামে <strong>Tab ↗</strong> একে একা একটি ব্রাউজার ট্যাবে খোলে, আর <code>aubergine attach &lt;name&gt;</code> একে আপনার টার্মিনাল অ্যাপের একটি উইন্ডোতে দেখায়। প্রতিবার একই টার্মিনাল, কপি নয়; সেই ট্যাব বা উইন্ডো বন্ধ করলেও এটি চলতে থাকে।</li>
+    </ul>
+    <p>শেল চলার সময় tmux তার ছাপা শেষ 50,000 লাইন রাখে। যে টার্মিনালের কাছে কিবোর্ড আছে, সেখানে হুইল সেগুলোর মধ্যে পেছনে স্ক্রল করে, আর প্যালেট (<code>⌘K</code>) সেগুলোতে খোঁজে।</p>
+    <figure class="frame"><a href="../../screenshots/list.png" class="frame-pic"><img src="../../screenshots/list.png" width="1440" height="1008" loading="lazy" alt="সাইড প্যানেলে পাঁচটি টার্মিনাল, প্রতিটির অবস্থা কথায় (working, waiting for you, finished, parked), পাশে ক্যানভাসের একটি অংশ যেখানে একটি লাইভ শেল।"></a><figcaption>তালিকা বলে প্রতিটি টার্মিনাল কী করছে। নিচের পার্ক করা টার্মিনালটি ক্যানভাসে নেই, আর তার শেল এখনো চলছে।</figcaption></figure>
+
+    <h2>এটি কী করে না</h2>
+    <ul>
+      <li><strong>কম্পিউটার রিস্টার্টের পরে এটি টেকে না।</strong> রিস্টার্ট, কম্পিউটারের ক্র্যাশ, বা এমন আপডেট যা রিস্টার্ট করে, প্রতিটি শেল আর তার ভেতরে যা চলে সব শেষ করে দেয়। Aubergine তাদের চারপাশের সব কিছু ফিরিয়ে আনে, প্রতিটি টার্মিনাল তার শেষ ফোল্ডারে একটি নতুন শেল হিসেবে, আর নিজে থেকে কিছুই আবার চালু করে না। দেখুন <a href="../keep-terminals-after-restart/">রিস্টার্টের পরেও টার্মিনাল রেখে দিন</a>।</li>
+      <li><strong>এটি কম্পিউটারকে জাগিয়ে রাখে না।</strong> স্লিপে যাওয়া ল্যাপটপ তার প্রোগ্রাম থামিয়ে দেয়, এগুলোকেও; জাগলে আবার চলে।</li>
+      <li><strong>এটি সার্ভিস ম্যানেজার নয়।</strong> যে জব রিস্টার্টের পরে নিজে থেকে ফিরে আসতে হবে, তা আপনার সিস্টেমের সার্ভিসে রাখা উচিত।</li>
+      <li><strong>অন্য কোথাও আগে থেকে চলা প্রোগ্রাম এটি নিজের হাতে নিতে পারে না।</strong> কোনো টুলই চলমান প্রোগ্রামকে অন্য টার্মিনালে সরাতে পারে না। আপনার টার্মিনাল অ্যাপের একটি ট্যাবে <code>aubergine here</code> সেই ফোল্ডারকে ক্যানভাসে একটি টার্মিনাল দেয়; ট্যাবে চলা প্রোগ্রাম সেখানেই থাকে, আর নতুন টার্মিনালের ভেতরে তাকে আবার চালু করতে হয়।</li>
+    </ul>
+
+    <h2>অন্য মেশিনে, SSH দিয়ে</h2>
+    <p>Aubergine আপনার নিজের কম্পিউটারে চলে: এর সার্ভার <code>127.0.0.1</code>-এ শোনে, আর এর টার্মিনালগুলো সেই কম্পিউটারেরই শেল। আপনি যা চালু রাখতে চান তা যদি SSH দিয়ে পৌঁছানো কোনো রিমোট সার্ভারের প্রসেস হয়, তবে সেই সার্ভারে <code>tmux</code> বা <code>screen</code>-ই উপায়।</p>
+    <p>Aubergine নিজে অন্য মেশিনে চলতে পারে আর আপনার ব্রাউজার থেকে ব্যবহার করা যায়, SSH টানেল, প্রাইভেট নেটওয়ার্ক, বা একটি নাম আর প্রক্সির মাধ্যমে: ধাপগুলো আছে <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md">Using Aubergine from elsewhere</a>-এ। SSH টানেলে, যে SSH উইন্ডোতে <code>aubergine start</code> চলছে তা বন্ধ করলে সার্ভার থামে, আর টার্মিনালগুলো চলতে থাকে। Linux কেবল কন্টেইনারে চালানো হয়েছে, কোনো ক্লাউড মেশিনে কখনো নয়।</p>
+
+    <h2>প্রশ্ন</h2>
+    <div class="questions">
+      <details><summary>ব্রাউজার বন্ধ করলে কি আমার টার্মিনাল থেমে যায়?</summary><p>না। প্রতিটি টার্মিনাল tmux-এ একটি শেল, যা ব্রাউজার থেকে আলাদা চলে। ট্যাব, উইন্ডো বা ব্রাউজার বন্ধ করুন, পেজটি আবার খুলুন, আর প্রতিটি টার্মিনাল এখন যেমন আছে তেমনই, এখনো চলছে, এর মধ্যে যা ছাপা হয়েছে তা সহ।</p></details>
+      <details><summary>SSH বিচ্ছিন্ন হওয়ার পরে প্রসেস কীভাবে চালু রাখব?</summary><p>রিমোট মেশিনে এটি <code>tmux</code> বা <code>screen</code>-এর ভেতরে, বা <code>nohup</code> দিয়ে চালু করুন। Aubergine যে কম্পিউটারে চলে সেখানেই টার্মিনাল রাখে। এটি রিমোট মেশিনেও চলতে পারে, SSH টানেল বা প্রক্সি দিয়ে ব্যবহার করে, কিন্তু তা কেবল কন্টেইনারে চালানো হয়েছে, কোনো ক্লাউড মেশিনে কখনো নয়।</p></details>
+      <details><summary>nohup ব্যবহার করব নাকি tmux?</summary><p><code>nohup</code> এমন একটি কমান্ডের জন্য ভালো যার আউটপুট ফাইলে যেতে পারে। <code>tmux</code> এমন শেলের জন্য ভালো যেখানে আপনি ফিরে এসে টাইপ করতে চান। Aubergine প্রতিটি টার্মিনালকে দ্বিতীয়টি দেয়, ব্রাউজারের একটি পেজে, tmux-এর key ছাড়াই।</p></details>
+      <details><summary>টার্মিনাল বন্ধ করার পরে কি আউটপুট দেখতে পারব?</summary><p>হ্যাঁ, শেল চলা পর্যন্ত: tmux প্রতিটি টার্মিনালের শেষ 50,000 লাইন রাখে, আর আপনি ফিরলে পেজ সেগুলো দেখায়। Aubergine নিজে কিছুই রেকর্ড করে না, তাই কম্পিউটার রিস্টার্টের পরে সেই আউটপুট হারিয়ে যায়।</p></details>
+      <details><summary>রিবুটের পরেও কি এটি চলতে থাকবে?</summary><p>না। কম্পিউটার রিস্টার্ট প্রতিটি প্রোগ্রাম শেষ করে। Aubergine প্রতিটি টার্মিনালকে তার শেষ ফোল্ডারে একটি নতুন শেল হিসেবে ফিরিয়ে আনে, তার জায়গা, নাম আর নোট সহ, আর কিছুই আবার চালায় না।</p></details>
+    </div>
+    <p>সম্পর্কিত: <a href="../keep-terminals-after-restart/">রিস্টার্টের পরেও টার্মিনাল রেখে দিন</a> · <a href="../tmux-without-learning-tmux/">tmux না শিখেই tmux</a> · <a href="../claude-code-notifications/">জানুন কখন Claude Code অপেক্ষা করছে</a></p>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">পাঁচ মিনিটে চালু</h2>
+    <div class="close-do">
+      <p>আপনার লাগবে macOS, সঙ্গে tmux 3.2 বা নতুনতর আর Node.js 22 বা নতুনতর। <code>brew install tmux node</code> দুটোই এনে দেয়।</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="কপি হয়েছে" aria-live="polite" hidden>কপি করুন</button></p>
+      <p class="actions"><a class="button" href="../install/">ইনস্টল করুন</a><a class="button button-quiet" href="../tmux-without-learning-tmux/">tmux না শিখেই tmux</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav aria-label="সব পেজ">
+      <ul class="foot-links">
+        <li><a href="../">হোম</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex আর ChatGPT</a></li>
+        <li><a href="../install/">ইনস্টল</a></li>
+        <li><a href="../guides/">গাইড</a></li>
+        <li><a href="../run-multiple-coding-agents/">একাধিক এজেন্ট চালান</a></li>
+        <li><a href="../working-copies/">ওয়ার্কিং কপি</a></li>
+        <li><a href="../queue-and-schedules/">কিউ আর শিডিউল</a></li>
+        <li><a href="../security/">নিরাপত্তা</a></li>
+        <li><a href="../roadmap/">রোডম্যাপ</a></li>
+        <li><a href="../faq/">প্রশ্নোত্তর</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine বিনামূল্যে ও ওপেন সোর্স, <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT লাইসেন্সে</a>, আর চলে আপনার নিজের কম্পিউটারে।</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    if (!navigator.clipboard) return;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
+});
+</script>
+</body>
+</html>

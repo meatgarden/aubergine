@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="pt-BR" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>tmux sem aprender tmux | Aubergine</title>
+<meta name="description" content="Shells que sobrevivem à janela, sem tecla de prefixo nem .tmux.conf. O Aubergine roda o tmux para você no próprio socket, com a roda do mouse, copiar e colar e o redimensionamento funcionando como em qualquer terminal.">
+<link rel="canonical" href="https://thirstyeggplant.com/pt/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/tmux-without-learning-tmux/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="tmux sem aprender tmux | Aubergine">
+<meta property="og:description" content="Shells que sobrevivem à janela, sem tecla de prefixo nem .tmux.conf. O Aubergine roda o tmux para você no próprio socket, com a roda do mouse, copiar e colar e o redimensionamento funcionando como em qualquer terminal.">
+<meta property="og:url" content="https://thirstyeggplant.com/pt/tmux-without-learning-tmux/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine: um canvas de terminais, um ocupado e outro esperando por você">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine: um canvas de terminais, um ocupado e outro esperando por você">
+<meta name="twitter:title" content="tmux sem aprender tmux | Aubergine">
+<meta name="twitter:description" content="Shells que sobrevivem à janela, sem tecla de prefixo nem .tmux.conf. O Aubergine roda o tmux para você no próprio socket, com a roda do mouse, copiar e colar e o redimensionamento funcionando como em qualquer terminal.">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">Pular para a página</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="Páginas">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Instalar</a></li>
+        <li><a href="../guides/">Guias</a></li>
+        <li><a href="../security/">Segurança</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="Idioma: Português"><span class="lang-long" aria-hidden="true">Português</span><span class="lang-short" aria-hidden="true">PT</span></summary>
+      <ul class="menu-list"><li><a href="../../tmux-without-learning-tmux/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/tmux-without-learning-tmux/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="./" hreflang="pt-BR" lang="pt-BR" dir="ltr" aria-current="true">Português</a></li><li><a href="../../fr/tmux-without-learning-tmux/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/tmux-without-learning-tmux/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/tmux-without-learning-tmux/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/tmux-without-learning-tmux/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/tmux-without-learning-tmux/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/tmux-without-learning-tmux/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/tmux-without-learning-tmux/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/tmux-without-learning-tmux/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/tmux-without-learning-tmux/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>Menu</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Instalar</a></li>
+        <li><a href="../guides/">Guias</a></li>
+        <li><a href="../security/">Segurança</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>O Aubergine em si está em inglês: seus botões, menus e imagens são os da versão em inglês.</p>
+    <p>Esta página foi traduzida do inglês por uma máquina. <a href="https://github.com/thirstyeggplant/aubergine/issues">Envie uma correção</a>.</p>
+  </div>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/pt/tmux-without-learning-tmux/#article",
+      "headline": "tmux sem aprender tmux",
+      "description": "Shells que sobrevivem à janela, sem tecla de prefixo nem .tmux.conf. O Aubergine roda o tmux para você no próprio socket, com a roda do mouse, copiar e colar e o redimensionamento funcionando como em qualquer terminal.",
+      "url": "https://thirstyeggplant.com/pt/tmux-without-learning-tmux/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/pt/tmux-without-learning-tmux/",
+      "datePublished": "2026-11-25",
+      "dateModified": "2026-11-25",
+      "inLanguage": "pt-BR",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Guias", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "tmux sem tmux", "item": "https://thirstyeggplant.com/pt/tmux-without-learning-tmux/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/pt/tmux-without-learning-tmux/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "Posso usar tmux sem aprender os atalhos?", "acceptedAnswer": { "@type": "Answer", "text": "Sim. O Aubergine roda o tmux sem tecla de prefixo e sem linha de status, então você nunca digita um comando do tmux: feche a aba para sair, abra a página para voltar, role com a roda do mouse, copie selecionando." } },
+        { "@type": "Question", "name": "O Aubergine muda a minha configuração do tmux?", "acceptedAnswer": { "@type": "Answer", "text": "Não. Ele roda o tmux em um socket próprio, aubergine, com um arquivo de configuração próprio. O seu servidor do tmux, as sessões dele e o seu ~/.tmux.conf ficam como estão." } },
+        { "@type": "Question", "name": "Como rolo e copio nos terminais do Aubergine?", "acceptedAnswer": { "@type": "Answer", "text": "Clique em um terminal para dar o teclado a ele e use a roda do mouse para rolar para trás. Selecione texto com o mouse: ele está na sua área de transferência quando você solta. Cole com ⌘V, ou Ctrl+Shift+V fora do macOS." } },
+        { "@type": "Question", "name": "Posso me conectar a um terminal do Aubergine pelo meu próprio app de terminal?", "acceptedAnswer": { "@type": "Answer", "text": "Sim: aubergine attach \u003cname\u003e, ou Open on desktop no menu do terminal. É o mesmo terminal nos dois lugares; o que você digita em um aparece no outro." } },
+        { "@type": "Question", "name": "O Aubergine pode substituir o tmux em um servidor que acesso por SSH?", "acceptedAnswer": { "@type": "Answer", "text": "Não exatamente: os terminais dele ficam na máquina em que o servidor dele roda. Ele pode rodar em um servidor e ser usado pelo seu navegador por um túnel SSH ou um proxy, o que só foi executado em contêineres, nunca em uma máquina na nuvem." } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Onde você está"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">Guias</a></li><li>tmux sem tmux</li></ol></nav>
+    <h1>tmux sem aprender tmux</h1>
+    <p class="lead">O tmux mantém seus shells rodando quando a janela fecha. Ele também pede que você aprenda uma tecla de prefixo, o modo de cópia e um arquivo de configuração. O Aubergine roda o tmux para você, e você usa cada terminal em uma página do navegador como usaria qualquer terminal.</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>Para quem é</h2>
+    <p>Para quem quer o que o tmux oferece, shells que sobrevivem à janela, sem as teclas e a configuração dele. Se você já vive no tmux, continue com ele: o Aubergine não mexe no seu tmux.</p>
+
+    <h2>O que as pessoas costumam fazer</h2>
+    <p>Aprender tmux: uma tecla de prefixo (<code>Ctrl+B</code>, a menos que você a mude) antes de cada comando, <code>tmux attach</code> para voltar, e linhas no <code>~/.tmux.conf</code> para o mouse e a área de transferência. Ou o <code>screen</code>, uma ferramenta mais antiga do mesmo tipo. Veja o que cada coisa do dia a dia é no tmux, por padrão, e no Aubergine:</p>
+    <div class="table">
+      <table class="table-stack">
+        <thead><tr><th>Para</th><th>No tmux</th><th>No Aubergine</th></tr></thead>
+        <tbody>
+          <tr><td>Deixar um shell rodando</td><td data-label="tmux"><code>Ctrl+B</code> e depois <code>d</code> para desconectar</td><td data-label="Aubergine">Fechar a aba</td></tr>
+          <tr><td>Voltar a ele</td><td data-label="tmux"><code>tmux attach</code></td><td data-label="Aubergine">Abrir a página</td></tr>
+          <tr><td>Rolar para trás</td><td data-label="tmux">Modo de cópia, <code>Ctrl+B</code> e depois <code>[</code></td><td data-label="Aubergine">A roda do mouse</td></tr>
+          <tr><td>Copiar</td><td data-label="tmux">Selecionar no modo de cópia</td><td data-label="Aubergine">Selecionar com o mouse</td></tr>
+          <tr><td>Colar</td><td data-label="tmux"><code>Ctrl+B</code> e depois <code>]</code></td><td data-label="Aubergine"><code>⌘V</code>, ou <code>Ctrl+Shift+V</code></td></tr>
+          <tr><td>Ver vários shells</td><td data-label="tmux">Janelas e painéis</td><td data-label="Aubergine">Terminais lado a lado em um canvas</td></tr>
+          <tr><td>Dar nome a um</td><td data-label="tmux"><code>Ctrl+B</code> e depois <code>,</code></td><td data-label="Aubergine">Duplo clique no título</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>O que o Aubergine faz</h2>
+    <p><strong>Socket próprio e configuração própria.</strong> O Aubergine inicia o tmux em um socket próprio, chamado <code>aubergine</code>, com um arquivo de configuração próprio em vez do seu: sem linha de status, sem tecla de prefixo, com o mouse ligado e 50.000 linhas de histórico. Cada terminal é uma sessão do tmux com um shell, o seu shell de login. O seu próprio tmux, as sessões dele e o seu <code>~/.tmux.conf</code> não são tocados.</p>
+    <p><strong>A roda do mouse rola para trás</strong> o terminal que está com o teclado; em qualquer outro ponto do canvas ela dá zoom.</p>
+    <p><strong>Selecione com o mouse e está copiado</strong> para a sua área de transferência quando você solta: o tmux passa o que foi selecionado para a página com OSC 52, a sequência de escape que os terminais usam para a área de transferência, e a página o coloca lá. Cole com <code>⌘V</code> (<code>Ctrl+Shift+V</code> fora do macOS). Uma colagem de várias linhas vai delimitada (bracketed paste), para que um shell não a execute linha por linha.</p>
+    <p><strong>Redimensione arrastando</strong> as bordas de um terminal no canvas, e o shell recebe o novo tamanho. Um terminal aberto em dois lugares ao mesmo tempo tem um só tamanho, o da visão em que você digitou por último.</p>
+    <p><strong>Por baixo, continua sendo tmux.</strong> <code>aubergine attach &lt;name&gt;</code> mostra um terminal em uma janela do seu app de terminal, e <strong>Open on desktop</strong> (abrir na área de trabalho), no menu de um terminal, faz isso por você (no macOS no Terminal ou no iTerm; no Linux com uma linha de comando que você define). Com o servidor parado, <code>tmux -L aubergine ls</code> e <code>tmux -L aubergine attach -t &lt;id&gt;</code> ainda alcançam cada shell.</p>
+
+    <h2>Do que você precisa</h2>
+    <p>tmux 3.2 ou mais novo, instalado por você: <code>brew install tmux</code> no macOS, o pacote do seu sistema no Linux. O Aubergine não o instala, e mostra uma página dizendo isso quando ele falta ou é mais antigo. Com zsh, o título de um terminal mostra o comando que está rodando e como o último terminou; outros shells rodam sem isso.</p>
+
+    <h2>O que ele não é</h2>
+    <ul>
+      <li><strong>Não é tmux em um servidor remoto.</strong> O tmux do Aubergine roda no computador em que o servidor dele roda. Para um shell em uma máquina que você acessa por SSH, o tmux nessa máquina continua sendo a ferramenta. O próprio Aubergine pode rodar em outra máquina (<a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md">Usar o Aubergine de outro lugar</a>); isso só foi executado em contêineres.</li>
+      <li><strong>As suas próprias sessões do tmux não aparecem.</strong> O canvas contém só os terminais do Aubergine. <code>aubergine scan</code> lista os shells interativos abertos neste computador fora do Aubergine, e <code>aubergine import</code> ou <code>aubergine here</code> dá a um deles um terminal novo no canvas na mesma pasta; um programa rodando no antigo fica lá. As linhas que <code>aubergine shell-hook print</code> oferece para o seu <code>.zshrc</code> não fazem nada dentro do tmux.</li>
+      <li><strong>Sem teclas do tmux e sem painéis.</strong> Não há tecla de prefixo, e os seus próprios atalhos do tmux não valem. Enquanto um terminal está com o teclado, cada tecla vai para o programa dentro dele, exceto algumas combinações escolhidas para que nenhum shell, editor ou tmux precise delas.</li>
+      <li><strong>Não no próprio Windows.</strong> Ele precisa do tmux e de um shell Unix; no Windows ele roda dentro do WSL 2. Veja <a href="../windows/">Windows com WSL</a>.</li>
+    </ul>
+
+    <h2>Perguntas</h2>
+    <div class="questions">
+      <details><summary>Posso usar tmux sem aprender os atalhos?</summary><p>Sim. O Aubergine roda o tmux sem tecla de prefixo e sem linha de status, então você nunca digita um comando do tmux: feche a aba para sair, abra a página para voltar, role com a roda do mouse, copie selecionando.</p></details>
+      <details><summary>O Aubergine muda a minha configuração do tmux?</summary><p>Não. Ele roda o tmux em um socket próprio, <code>aubergine</code>, com um arquivo de configuração próprio. O seu servidor do tmux, as sessões dele e o seu <code>~/.tmux.conf</code> ficam como estão.</p></details>
+      <details><summary>Como rolo e copio nos terminais do Aubergine?</summary><p>Clique em um terminal para dar o teclado a ele e use a roda do mouse para rolar para trás. Selecione texto com o mouse: ele está na sua área de transferência quando você solta. Cole com <code>⌘V</code>, ou <code>Ctrl+Shift+V</code> fora do macOS.</p></details>
+      <details><summary>Posso me conectar a um terminal do Aubergine pelo meu próprio app de terminal?</summary><p>Sim: <code>aubergine attach &lt;name&gt;</code>, ou <strong>Open on desktop</strong> no menu do terminal. É o mesmo terminal nos dois lugares; o que você digita em um aparece no outro.</p></details>
+      <details><summary>O Aubergine pode substituir o tmux em um servidor que acesso por SSH?</summary><p>Não exatamente: os terminais dele ficam na máquina em que o servidor dele roda. Ele pode rodar em um servidor e ser usado pelo seu navegador por um túnel SSH ou um proxy, o que só foi executado em contêineres, nunca em uma máquina na nuvem.</p></details>
+    </div>
+    <p>Relacionado: <a href="../keep-process-running-after-closing-terminal/">Mantenha um processo rodando</a> · <a href="../keep-terminals-after-restart/">Mantenha seus terminais depois de reiniciar</a> · <a href="../too-many-terminal-tabs/">Terminais demais</a></p>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">Funcionando em cinco minutos</h2>
+    <div class="close-do">
+      <p>Você precisa de macOS com tmux 3.2 ou mais recente e Node.js 22 ou mais recente. <code>brew install tmux node</code> instala os dois.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Copiado" aria-live="polite" hidden>Copiar</button></p>
+      <p class="actions"><a class="button" href="../install/">Instalar</a><a class="button button-quiet" href="../keep-process-running-after-closing-terminal/">Mantenha rodando</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav aria-label="Todas as páginas">
+      <ul class="foot-links">
+        <li><a href="../">Início</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex e ChatGPT</a></li>
+        <li><a href="../install/">Instalar</a></li>
+        <li><a href="../guides/">Guias</a></li>
+        <li><a href="../run-multiple-coding-agents/">Vários agentes ao mesmo tempo</a></li>
+        <li><a href="../working-copies/">Cópias de trabalho</a></li>
+        <li><a href="../queue-and-schedules/">Fila e agendamentos</a></li>
+        <li><a href="../security/">Segurança</a></li>
+        <li><a href="../roadmap/">Roadmap</a></li>
+        <li><a href="../faq/">Perguntas frequentes</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">O Aubergine é livre e de código aberto sob a <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">licença MIT</a>, e roda no seu próprio computador.</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    if (!navigator.clipboard) return;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
+});
+</script>
+</body>
+</html>

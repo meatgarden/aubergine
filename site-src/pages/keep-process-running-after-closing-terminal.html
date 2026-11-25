@@ -1,0 +1,113 @@
+<!--page {"updated":"2026-11-25","order":6.6,"key":"alive","llms":{"name":"Keep a process running after you close the terminal","about":"nohup, disown, screen and tmux, and what Aubergine does: every terminal is a shell in tmux, so closing the browser or stopping Aubergine ends nothing; a restart of the computer does"}}-->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "{{=url}}#article",
+      "headline": {{json:alive.title}},
+      "description": {{json:alive.meta.description}},
+      "url": "{{=url}}",
+      "mainEntityOfPage": "{{=url}}",
+      "datePublished": "2026-11-25",
+      "dateModified": "{{=updated}}",
+      "inLanguage": "{{=lang}}",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": {{json:guides.crumb}}, "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": {{json:alive.crumb}}, "item": "{{=url}}" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "{{=url}}#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": {{json:alive.q.close.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:alive.q.close.a}} } },
+        { "@type": "Question", "name": {{json:alive.q.ssh.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:alive.q.ssh.a}} } },
+        { "@type": "Question", "name": {{json:alive.q.nohup.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:alive.q.nohup.a}} } },
+        { "@type": "Question", "name": {{json:alive.q.output.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:alive.q.output.a}} } },
+        { "@type": "Question", "name": {{json:alive.q.reboot.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:alive.q.reboot.a}} } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="{{attr:site.crumbs}}"><ol><li><a href="/">Aubergine</a></li><li><a href="/guides/">{{guides.crumb}}</a></li><li>{{alive.crumb}}</li></ol></nav>
+    <h1>{{alive.title}}</h1>
+    <p class="lead">{{alive.lead}}</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>{{alive.usual.title}}</h2>
+    <p>{{alive.usual.text}}</p>
+    <ul>
+      <li>{{alive.usual.nohup}}</li>
+      <li>{{alive.usual.disown}}</li>
+      <li>{{alive.usual.mux}}</li>
+    </ul>
+    <p>{{alive.usual.after}}</p>
+
+    <h2>{{alive.does.title}}</h2>
+    <p>{{alive.does.text}}</p>
+    <ul>
+      <li>{{alive.does.browser}}</li>
+      <li>{{alive.does.server}}</li>
+      <li>{{alive.does.park}}</li>
+      <li>{{alive.does.end}}</li>
+      <li>{{alive.does.views}}</li>
+    </ul>
+    <p>{{alive.does.scroll}}</p>
+    <figure class="frame"><a href="/screenshots/list.png" class="frame-pic"><img src="/screenshots/list.png" width="1440" height="1008" loading="lazy" alt="{{attr:home.see.canvas.alt}}"></a><figcaption>{{alive.pic.caption}}</figcaption></figure>
+
+    <h2>{{alive.not.title}}</h2>
+    <ul>
+      <li>{{alive.not.reboot}}</li>
+      <li>{{alive.not.sleep}}</li>
+      <li>{{alive.not.service}}</li>
+      <li>{{alive.not.adopt}}</li>
+    </ul>
+
+    <h2>{{alive.ssh.title}}</h2>
+    <p>{{alive.ssh.text}}</p>
+    <p>{{alive.ssh.remote}}</p>
+
+    <h2>{{home.faq.title}}</h2>
+    <div class="questions">
+      <details><summary>{{alive.q.close.q}}</summary><p>{{alive.q.close.a}}</p></details>
+      <details><summary>{{alive.q.ssh.q}}</summary><p>{{alive.q.ssh.a}}</p></details>
+      <details><summary>{{alive.q.nohup.q}}</summary><p>{{alive.q.nohup.a}}</p></details>
+      <details><summary>{{alive.q.output.q}}</summary><p>{{alive.q.output.a}}</p></details>
+      <details><summary>{{alive.q.reboot.q}}</summary><p>{{alive.q.reboot.a}}</p></details>
+    </div>
+    <p>{{alive.related}}</p>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">{{home.install.title}}</h2>
+    <div class="close-do">
+      <p>{{home.install.intro}}</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="{{attr:site.copied}}" aria-live="polite" hidden>{{site.copy}}</button></p>
+      <p class="actions"><a class="button" href="/install/">{{home.hero.install}}</a><a class="button button-quiet" href="/tmux-without-learning-tmux/">{{guides.tmux.name}}</a></p>
+    </div>
+  </div>
+</section>

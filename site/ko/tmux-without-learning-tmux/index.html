@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="ko" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>tmux를 배우지 않고 쓰는 tmux | Aubergine</title>
+<meta name="description" content="프리픽스 키도 .tmux.conf도 없이 창보다 오래 사는 셸. Aubergine은 자체 소켓에서 tmux를 대신 실행하며, 휠, 복사와 붙여넣기, 크기 조절은 여느 터미널처럼 동작합니다.">
+<link rel="canonical" href="https://thirstyeggplant.com/ko/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/tmux-without-learning-tmux/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="tmux를 배우지 않고 쓰는 tmux | Aubergine">
+<meta property="og:description" content="프리픽스 키도 .tmux.conf도 없이 창보다 오래 사는 셸. Aubergine은 자체 소켓에서 tmux를 대신 실행하며, 휠, 복사와 붙여넣기, 크기 조절은 여느 터미널처럼 동작합니다.">
+<meta property="og:url" content="https://thirstyeggplant.com/ko/tmux-without-learning-tmux/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine: 터미널이 놓인 캔버스. 하나는 작업 중이고 하나는 사용자를 기다리고 있습니다">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine: 터미널이 놓인 캔버스. 하나는 작업 중이고 하나는 사용자를 기다리고 있습니다">
+<meta name="twitter:title" content="tmux를 배우지 않고 쓰는 tmux | Aubergine">
+<meta name="twitter:description" content="프리픽스 키도 .tmux.conf도 없이 창보다 오래 사는 셸. Aubergine은 자체 소켓에서 tmux를 대신 실행하며, 휠, 복사와 붙여넣기, 크기 조절은 여느 터미널처럼 동작합니다.">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="페이지">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">설치</a></li>
+        <li><a href="../guides/">가이드</a></li>
+        <li><a href="../security/">보안</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="언어: 한국어"><span class="lang-long" aria-hidden="true">한국어</span><span class="lang-short" aria-hidden="true">KO</span></summary>
+      <ul class="menu-list"><li><a href="../../tmux-without-learning-tmux/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/tmux-without-learning-tmux/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/tmux-without-learning-tmux/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/tmux-without-learning-tmux/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/tmux-without-learning-tmux/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/tmux-without-learning-tmux/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/tmux-without-learning-tmux/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="./" hreflang="ko" lang="ko" dir="ltr" aria-current="true">한국어</a></li><li><a href="../../id/tmux-without-learning-tmux/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/tmux-without-learning-tmux/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/tmux-without-learning-tmux/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/tmux-without-learning-tmux/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>메뉴</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">설치</a></li>
+        <li><a href="../guides/">가이드</a></li>
+        <li><a href="../security/">보안</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine 앱 자체는 영어로 되어 있습니다. 버튼, 메뉴, 그림은 모두 영어판 그대로입니다.</p>
+    <p>이 페이지는 영어 원문을 기계 번역한 것입니다. <a href="https://github.com/thirstyeggplant/aubergine/issues">수정 제안 보내기</a>.</p>
+  </div>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/ko/tmux-without-learning-tmux/#article",
+      "headline": "tmux를 배우지 않고 쓰는 tmux",
+      "description": "프리픽스 키도 .tmux.conf도 없이 창보다 오래 사는 셸. Aubergine은 자체 소켓에서 tmux를 대신 실행하며, 휠, 복사와 붙여넣기, 크기 조절은 여느 터미널처럼 동작합니다.",
+      "url": "https://thirstyeggplant.com/ko/tmux-without-learning-tmux/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/ko/tmux-without-learning-tmux/",
+      "datePublished": "2026-11-25",
+      "dateModified": "2026-11-25",
+      "inLanguage": "ko",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "가이드", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "tmux 없이 tmux", "item": "https://thirstyeggplant.com/ko/tmux-without-learning-tmux/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/ko/tmux-without-learning-tmux/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "단축키를 배우지 않고 tmux를 쓸 수 있나요?", "acceptedAnswer": { "@type": "Answer", "text": "네. Aubergine은 프리픽스 키도 상태 줄도 없이 tmux를 실행하므로 tmux 명령을 입력할 일이 없습니다. 떠날 때는 탭을 닫고, 돌아올 때는 페이지를 열고, 휠로 스크롤하고, 선택해서 복사합니다." } },
+        { "@type": "Question", "name": "Aubergine이 제 tmux 설정을 바꾸나요?", "acceptedAnswer": { "@type": "Answer", "text": "아니요. aubergine이라는 자체 소켓에서 자체 설정 파일로 tmux를 실행합니다. 여러분의 tmux 서버, 그 세션, 그리고 ~/.tmux.conf는 그대로 둡니다." } },
+        { "@type": "Question", "name": "Aubergine의 터미널에서 스크롤과 복사는 어떻게 하나요?", "acceptedAnswer": { "@type": "Answer", "text": "터미널을 클릭해 키보드를 준 다음, 휠로 거슬러 스크롤하세요. 마우스로 텍스트를 선택하면 버튼을 놓을 때 클립보드에 들어갑니다. 붙여넣기는 ⌘V, macOS 밖에서는 Ctrl+Shift+V입니다." } },
+        { "@type": "Question", "name": "제 터미널 앱에서 Aubergine 터미널에 연결할 수 있나요?", "acceptedAnswer": { "@type": "Answer", "text": "네. aubergine attach \u003cname\u003e, 또는 터미널 메뉴의 Open on desktop. 두 곳 모두 같은 터미널이므로, 한쪽에서 입력한 것이 다른 쪽에도 보입니다." } },
+        { "@type": "Question", "name": "SSH로 접속하는 서버에서 Aubergine이 tmux를 대신할 수 있나요?", "acceptedAnswer": { "@type": "Answer", "text": "그대로는 아닙니다. 터미널은 서버가 실행되는 컴퓨터에 있습니다. 서버에서 실행해 SSH 터널이나 프록시로 브라우저에서 쓸 수는 있지만, 컨테이너 안에서만 실행해 봤고 클라우드 머신에서는 실행해 본 적이 없습니다." } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="현재 위치"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">가이드</a></li><li>tmux 없이 tmux</li></ol></nav>
+    <h1>tmux를 배우지 않고 쓰는 tmux</h1>
+    <p class="lead">tmux는 창이 닫혀도 셸을 계속 실행해 줍니다. 대신 프리픽스 키, 복사 모드, 설정 파일을 익혀야 합니다. Aubergine은 tmux를 대신 실행하고, 여러분은 각 터미널을 브라우저 페이지에서 여느 터미널처럼 씁니다.</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>누구를 위한 것인가</h2>
+    <p>tmux가 주는 것, 즉 창보다 오래 사는 셸을 원하지만 그 키와 설정은 원하지 않는 사람을 위한 것입니다. 이미 tmux를 늘 쓰고 있다면 그대로 쓰세요. Aubergine은 여러분의 tmux를 건드리지 않습니다.</p>
+
+    <h2>흔히 쓰는 방법</h2>
+    <p>tmux를 배웁니다. 명령마다 앞에 누르는 프리픽스 키(바꾸지 않았다면 <code>Ctrl+B</code>), 돌아올 때 쓰는 <code>tmux attach</code>, 마우스와 클립보드를 위한 <code>~/.tmux.conf</code>의 몇 줄. 또는 같은 종류의 더 오래된 도구인 <code>screen</code>을 씁니다. 일상적인 일이 기본 tmux와 Aubergine에서 각각 어떻게 되는지는 다음과 같습니다.</p>
+    <div class="table">
+      <table class="table-stack">
+        <thead><tr><th>할 일</th><th>tmux에서</th><th>Aubergine에서</th></tr></thead>
+        <tbody>
+          <tr><td>셸을 실행한 채로 두기</td><td data-label="tmux"><code>Ctrl+B</code> 다음 <code>d</code>로 분리</td><td data-label="Aubergine">탭 닫기</td></tr>
+          <tr><td>다시 돌아오기</td><td data-label="tmux"><code>tmux attach</code></td><td data-label="Aubergine">페이지 열기</td></tr>
+          <tr><td>거슬러 스크롤하기</td><td data-label="tmux">복사 모드, <code>Ctrl+B</code> 다음 <code>[</code></td><td data-label="Aubergine">휠</td></tr>
+          <tr><td>복사</td><td data-label="tmux">복사 모드에서 선택</td><td data-label="Aubergine">마우스로 선택</td></tr>
+          <tr><td>붙여넣기</td><td data-label="tmux"><code>Ctrl+B</code> 다음 <code>]</code></td><td data-label="Aubergine"><code>⌘V</code> 또는 <code>Ctrl+Shift+V</code></td></tr>
+          <tr><td>셸 여러 개 보기</td><td data-label="tmux">창과 패널</td><td data-label="Aubergine">캔버스 위에 나란히 놓인 터미널</td></tr>
+          <tr><td>이름 붙이기</td><td data-label="tmux"><code>Ctrl+B</code> 다음 <code>,</code></td><td data-label="Aubergine">제목 더블클릭</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Aubergine이 하는 일</h2>
+    <p><strong>자체 소켓과 자체 설정.</strong> Aubergine은 <code>aubergine</code>이라는 자체 소켓에서, 여러분의 설정 대신 자체 설정 파일로 tmux를 시작합니다. 상태 줄도 프리픽스 키도 없고, 마우스는 켜져 있고, 기록은 50,000줄입니다. 각 터미널은 셸 하나, 즉 여러분의 로그인 셸이 든 tmux 세션 하나입니다. 여러분의 tmux, 그 세션, 그리고 <code>~/.tmux.conf</code>는 건드리지 않습니다.</p>
+    <p>키보드를 가진 터미널에서는 <strong>휠로 거슬러 스크롤합니다</strong>. 캔버스의 다른 곳에서는 휠이 확대와 축소를 합니다.</p>
+    <p><strong>마우스로 선택하면 복사됩니다.</strong> 버튼을 놓을 때 클립보드에 들어갑니다. tmux가 선택된 내용을 터미널이 클립보드에 쓰는 이스케이프 시퀀스인 OSC 52로 페이지에 넘기고, 페이지가 클립보드에 넣습니다. 붙여넣기는 <code>⌘V</code>(macOS 밖에서는 <code>Ctrl+Shift+V</code>)입니다. 여러 줄을 붙여넣으면 괄호 붙여넣기(bracketed paste)로 감싸므로, 셸이 한 줄씩 실행하지 않습니다.</p>
+    <p>캔버스에서 터미널 가장자리를 <strong>끌어 크기를 바꾸면</strong> 셸이 새 크기를 받습니다. 두 곳에 동시에 열린 터미널은 크기가 하나이며, 마지막으로 입력한 화면이 그 크기를 정합니다.</p>
+    <p><strong>밑바탕은 여전히 tmux입니다.</strong> <code>aubergine attach &lt;name&gt;</code>은 터미널 앱의 창에 터미널을 보여 주고, 터미널 메뉴의 <strong>Open on desktop</strong>(데스크톱에서 열기)이 그 일을 대신해 줍니다(macOS에서는 Terminal이나 iTerm, Linux에서는 여러분이 지정한 명령줄). 서버가 멈춘 상태에서도 <code>tmux -L aubergine ls</code>와 <code>tmux -L aubergine attach -t &lt;id&gt;</code>로 모든 셸에 닿을 수 있습니다.</p>
+
+    <h2>필요한 것</h2>
+    <p>여러분이 설치한 tmux 3.2 이상. macOS에서는 <code>brew install tmux</code>, Linux에서는 시스템의 패키지. Aubergine은 tmux를 설치하지 않으며, 없거나 버전이 낮으면 그렇다고 알리는 페이지를 보여 줍니다. zsh에서는 터미널 제목에 실행 중인 명령과 마지막 명령이 어떻게 끝났는지가 표시되고, 다른 셸은 그것 없이 실행됩니다.</p>
+
+    <h2>이것이 아닌 것</h2>
+    <ul>
+      <li><strong>원격 서버의 tmux가 아닙니다.</strong> Aubergine의 tmux는 서버가 실행되는 컴퓨터에서 실행됩니다. SSH로 접속하는 컴퓨터의 셸이라면, 그 컴퓨터의 tmux가 여전히 맞는 도구입니다. Aubergine 자체는 다른 컴퓨터에서 실행할 수 있지만(<a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md">다른 곳에서 Aubergine 사용하기</a>), 컨테이너 안에서만 실행해 봤습니다.</li>
+      <li><strong>여러분의 tmux 세션은 보여 주지 않습니다.</strong> 캔버스에는 Aubergine의 터미널만 있습니다. <code>aubergine scan</code>은 이 컴퓨터에서 Aubergine 밖에 열려 있는 대화형 셸을 나열하고, <code>aubergine import</code>나 <code>aubergine here</code>는 그중 하나에 대해 같은 폴더의 새 터미널을 캔버스에 만듭니다. 예전 셸에서 실행 중인 프로그램은 그곳에 남습니다. <code>aubergine shell-hook print</code>가 <code>.zshrc</code>에 넣으라고 제시하는 줄은 tmux 안에서는 아무 일도 하지 않습니다.</li>
+      <li><strong>tmux 키도 패널도 없습니다.</strong> 프리픽스 키가 없고, 여러분의 tmux 키 바인딩도 적용되지 않습니다. 터미널이 키보드를 가진 동안에는 모든 키가 그 안의 프로그램으로 갑니다. 단, 어떤 셸, 편집기, tmux도 쓰지 않도록 골라 둔 몇몇 조합 키는 예외입니다.</li>
+      <li><strong>Windows 자체에서는 실행되지 않습니다.</strong> tmux와 Unix 셸이 필요하므로, Windows에서는 WSL 2 안에서 실행됩니다. <a href="../windows/">WSL을 쓰는 Windows</a>를 보세요.</li>
+    </ul>
+
+    <h2>질문</h2>
+    <div class="questions">
+      <details><summary>단축키를 배우지 않고 tmux를 쓸 수 있나요?</summary><p>네. Aubergine은 프리픽스 키도 상태 줄도 없이 tmux를 실행하므로 tmux 명령을 입력할 일이 없습니다. 떠날 때는 탭을 닫고, 돌아올 때는 페이지를 열고, 휠로 스크롤하고, 선택해서 복사합니다.</p></details>
+      <details><summary>Aubergine이 제 tmux 설정을 바꾸나요?</summary><p>아니요. <code>aubergine</code>이라는 자체 소켓에서 자체 설정 파일로 tmux를 실행합니다. 여러분의 tmux 서버, 그 세션, 그리고 <code>~/.tmux.conf</code>는 그대로 둡니다.</p></details>
+      <details><summary>Aubergine의 터미널에서 스크롤과 복사는 어떻게 하나요?</summary><p>터미널을 클릭해 키보드를 준 다음, 휠로 거슬러 스크롤하세요. 마우스로 텍스트를 선택하면 버튼을 놓을 때 클립보드에 들어갑니다. 붙여넣기는 <code>⌘V</code>, macOS 밖에서는 <code>Ctrl+Shift+V</code>입니다.</p></details>
+      <details><summary>제 터미널 앱에서 Aubergine 터미널에 연결할 수 있나요?</summary><p>네. <code>aubergine attach &lt;name&gt;</code>, 또는 터미널 메뉴의 <strong>Open on desktop</strong>. 두 곳 모두 같은 터미널이므로, 한쪽에서 입력한 것이 다른 쪽에도 보입니다.</p></details>
+      <details><summary>SSH로 접속하는 서버에서 Aubergine이 tmux를 대신할 수 있나요?</summary><p>그대로는 아닙니다. 터미널은 서버가 실행되는 컴퓨터에 있습니다. 서버에서 실행해 SSH 터널이나 프록시로 브라우저에서 쓸 수는 있지만, 컨테이너 안에서만 실행해 봤고 클라우드 머신에서는 실행해 본 적이 없습니다.</p></details>
+    </div>
+    <p>관련: <a href="../keep-process-running-after-closing-terminal/">프로세스 계속 실행하기</a> · <a href="../keep-terminals-after-restart/">재시작 후에도 터미널 유지하기</a> · <a href="../too-many-terminal-tabs/">터미널이 너무 많을 때</a></p>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">5분이면 시작합니다</h2>
+    <div class="close-do">
+      <p>tmux 3.2 이상과 Node.js 22 이상이 설치된 macOS가 필요합니다. <code>brew install tmux node</code>로 둘 다 설치할 수 있습니다.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="복사됨" aria-live="polite" hidden>복사</button></p>
+      <p class="actions"><a class="button" href="../install/">설치</a><a class="button button-quiet" href="../keep-process-running-after-closing-terminal/">계속 실행하기</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav aria-label="전체 페이지">
+      <ul class="foot-links">
+        <li><a href="../">홈</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex와 ChatGPT</a></li>
+        <li><a href="../install/">설치</a></li>
+        <li><a href="../guides/">가이드</a></li>
+        <li><a href="../run-multiple-coding-agents/">여러 에이전트 실행하기</a></li>
+        <li><a href="../working-copies/">작업 사본</a></li>
+        <li><a href="../queue-and-schedules/">대기열과 일정</a></li>
+        <li><a href="../security/">보안</a></li>
+        <li><a href="../roadmap/">로드맵</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine은 <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT 라이선스</a>로 공개된 무료 오픈 소스이며, 여러분의 컴퓨터에서 실행됩니다.</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    if (!navigator.clipboard) return;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
+});
+</script>
+</body>
+</html>

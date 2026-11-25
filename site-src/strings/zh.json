@@ -404,8 +404,8 @@
     "from": "2c75df8acfc1"
   },
   "home.trust.outlive.text": {
-    "text": "每个终端都是一个 tmux 会话：关掉浏览器或重启 Aubergine，你的工作照常运行。",
-    "from": "f913c3351663"
+    "text": "每个终端都是一个 tmux 会话：<a href=\"/keep-terminals-after-restart/\">关掉浏览器或重启 Aubergine，你的工作照常运行</a>。",
+    "from": "94905c3b891e"
   },
   "home.trust.nomodel.name": {
     "text": "没有模型，没有密钥",
@@ -1319,6 +1319,62 @@
     "text": "给每个智能体独立的检出和分支，两个智能体永远不会编辑同一批文件。",
     "from": "58872d0caca2"
   },
+  "guides.keep.name": {
+    "text": "重启之后保留你的终端",
+    "from": "6cfa04f7c3ab"
+  },
+  "guides.keep.text": {
+    "text": "关闭浏览器、重启 Aubergine 和重启电脑各自会保留什么，以及如何从上次停下的地方继续。",
+    "from": "396ced3608bc"
+  },
+  "guides.alive.name": {
+    "text": "关闭终端后让进程继续运行",
+    "from": "0a69e88f3c29"
+  },
+  "guides.alive.text": {
+    "text": "关掉标签页、窗口或浏览器，什么都不会结束：不用学 tmux，也能得到 tmux 给你的东西。",
+    "from": "fc7a604b47b9"
+  },
+  "guides.notify.name": {
+    "text": "知道 Claude Code 何时完成或在等待",
+    "from": "3cd5aea79b1d"
+  },
+  "guides.notify.text": {
+    "text": "每个终端上的 working、waiting for you 和 finished，For you 计数，跳到下一个等待终端的按键，以及打开的页面发出的通知。",
+    "from": "6cbbad6859df"
+  },
+  "guides.resume.name": {
+    "text": "恢复 Claude Code 对话",
+    "from": "92e5ad9c0015"
+  },
+  "guides.resume.text": {
+    "text": "在它运行过的终端上用 Resume agent，按文件夹查看过去的对话，以及告诉你它进行到哪里的东西。",
+    "from": "0058e15394a7"
+  },
+  "guides.many.name": {
+    "text": "终端太多时找到要找的那个",
+    "from": "9d8e670c6407"
+  },
+  "guides.many.text": {
+    "text": "一张画布，一个用文字写出每个终端状态的列表，筛选、标签，以及搜索终端输出过的内容。",
+    "from": "789065caea35"
+  },
+  "guides.tmux.name": {
+    "text": "不学 tmux 也能用 tmux",
+    "from": "c661725dc167"
+  },
+  "guides.tmux.text": {
+    "text": "关掉窗口后依然存在的 shell，没有前缀键，不用配置，也不碰你自己的 tmux。",
+    "from": "6875107241dd"
+  },
+  "guides.phone.name": {
+    "text": "用手机查看你的智能体",
+    "from": "c92463ac8872"
+  },
+  "guides.phone.text": {
+    "text": "从另一台设备访问 Aubergine，每台设备用一个代码配对。只在一台 Mac 上运行过一次；没有在真正的手机上试过。",
+    "from": "fbe08c88ab0c"
+  },
   "guides.queue.name": {
     "text": "队列、For you 与定时计划",
     "from": "61c48ccc941d"
@@ -1630,6 +1686,1198 @@
   "copies.ld.a4": {
     "text": "不是。它把工作分开，但不会把智能体关在里面。智能体以你的身份运行，仍然可以读取和修改你能读写的每个文件。",
     "from": "8b760eb225ac"
+  },
+  "keep.table.browserShort": {
+    "text": "浏览器关闭",
+    "from": "6a63c6750f2a"
+  },
+  "keep.table.serverShort": {
+    "text": "Aubergine 重启",
+    "from": "88d2ef622400"
+  },
+  "keep.table.computerShort": {
+    "text": "电脑重启",
+    "from": "515aa3442054"
+  },
+  "keep.meta.title": {
+    "text": "崩溃、重启或更新之后保留你的终端 | Aubergine",
+    "from": "d0521ba83d02"
+  },
+  "keep.meta.description": {
+    "text": "浏览器关闭、Aubergine 重启，以及电脑崩溃、重启或在夜里自动更新时，你的终端和编程智能体会怎样，以及如何从上次停下的地方继续。",
+    "from": "4f824d2bcf4e"
+  },
+  "keep.crumb": {
+    "text": "重启之后",
+    "from": "b287f32fbfcc"
+  },
+  "keep.title": {
+    "text": "电脑重启后，终端依然在",
+    "from": "be3fd58999ae"
+  },
+  "keep.lead": {
+    "text": "关掉浏览器或重启 Aubergine 不会丢失任何东西：每个终端都继续运行。电脑重启会结束正在运行的东西，而 Aubergine 会把它周围的一切带回来，让你从上次停下的地方继续，而不是从头开始。",
+    "from": "a30f93263e44"
+  },
+  "keep.table.title": {
+    "text": "当……时会发生什么",
+    "from": "2e3d1d162e51"
+  },
+  "keep.table.intro": {
+    "text": "每个终端都是 tmux 会话中的一个 shell，独立于浏览器和 Aubergine 的服务器运行。它的内容分在两处：正在运行的 shell，只由 tmux 保存；以及关于这个终端的一切说明，Aubergine 每次变动都会写进其数据文件夹里的一个文件。",
+    "from": "ee20243273bd"
+  },
+  "keep.table.thing": {
+    "text": "内容",
+    "from": "f8cf83a76a98"
+  },
+  "keep.table.browser": {
+    "text": "浏览器关闭、崩溃或更新，或你关掉标签页",
+    "from": "0a7d90fd549e"
+  },
+  "keep.table.server": {
+    "text": "Aubergine 停止、重启或被更新",
+    "from": "1c6408e3eb21"
+  },
+  "keep.table.computer": {
+    "text": "电脑崩溃、重启或安装更新",
+    "from": "321c23263fa9"
+  },
+  "keep.row.running": {
+    "text": "正在运行的程序和智能体",
+    "from": "aa6584073938"
+  },
+  "keep.row.scrollback": {
+    "text": "终端显示过的内容（回滚记录）",
+    "from": "ae850a03d2bb"
+  },
+  "keep.row.place": {
+    "text": "它在画布上的位置、名称、颜色、标签、字段和链接",
+    "from": "d8942ea955fb"
+  },
+  "keep.row.note": {
+    "text": "它的笔记：摘要和日志",
+    "from": "bd09d21420fd"
+  },
+  "keep.row.folder": {
+    "text": "它所在的文件夹",
+    "from": "93d6eac7960d"
+  },
+  "keep.row.agent": {
+    "text": "智能体的对话",
+    "from": "edc534789af1"
+  },
+  "keep.row.copies": {
+    "text": "工作副本及其分支",
+    "from": "5d15d9f5fde9"
+  },
+  "keep.row.queue": {
+    "text": "队列、运行和计划",
+    "from": "862df801acb6"
+  },
+  "keep.cell.runs": {
+    "text": "继续运行",
+    "from": "8b35a116c9a8"
+  },
+  "keep.cell.ends": {
+    "text": "结束",
+    "from": "361e48d0308f"
+  },
+  "keep.cell.there": {
+    "text": "仍在",
+    "from": "007cce612ae7"
+  },
+  "keep.cell.gone": {
+    "text": "丢失",
+    "from": "283bb9deef02"
+  },
+  "keep.cell.fresh": {
+    "text": "同一文件夹中的新 shell",
+    "from": "0897ff42a469"
+  },
+  "keep.cell.goes": {
+    "text": "继续",
+    "from": "d17f7dd93885"
+  },
+  "keep.cell.resume": {
+    "text": "用 <strong>Resume agent</strong> 接着进行（Claude Code）",
+    "from": "b65d3c8c86df"
+  },
+  "keep.cell.late": {
+    "text": "仍在；错过的时间会迟到运行",
+    "from": "0c5a51a9cc07"
+  },
+  "keep.table.parked": {
+    "text": "停放的终端也同样保留，同样会得到一个新 shell。shell 在此之前就已结束的终端保持结束状态，并提供 <strong>Restart here</strong>（在此重启）。",
+    "from": "6ccfc616c13e"
+  },
+  "keep.table.update": {
+    "text": "更新之后，已经打开的终端会保留它的 shell 启动时所带的东西（它的 <code>PATH</code> 和 Aubergine 的 shell 集成），直到那个 shell 重新启动。如果 Aubergine 在登录时启动，更新之后请再运行一次 <code>aubergine service install</code>，而不是手动重启服务器。",
+    "from": "fb1239269602"
+  },
+  "keep.back.title": {
+    "text": "重启之后：回到工作",
+    "from": "8a4d5f07f8a6"
+  },
+  "keep.back.start": {
+    "text": "<strong>启动 Aubergine。</strong>如果它在登录时启动（<code>aubergine service install</code>，仅限 macOS），你一登录它就在运行，停止后 launchd 也会再把它启动。否则就启动它并打开页面：",
+    "from": "caf3ca498329"
+  },
+  "keep.back.canvas": {
+    "text": "<strong>画布和你离开时一样。</strong>每个终端都在原位，带着名称、颜色、标签、字段、链接和笔记，现在是一个新 shell，位于 Aubergine 最后看到它所在的文件夹（如果那个文件夹已不存在，则在你的默认文件夹）。不会重新输入或运行任何东西。",
+    "from": "9354ae2c51e0"
+  },
+  "keep.back.resume": {
+    "text": "<strong>恢复你的智能体。</strong>在运行过 Claude Code 且 Aubergine 知道其对话（它是从 Aubergine 启动的）的终端上，标题栏会提供 <strong>Resume agent</strong>（恢复智能体）：在那个对话中再次启动 Claude Code。在处于某个工作流运行中的终端上，它还会再次把这次运行告诉智能体，让它从运行所在的步骤继续。",
+    "from": "dadde3e3c41f"
+  },
+  "keep.back.read": {
+    "text": "<strong>看看每个终端进行到哪里。</strong>终端标题里的 <strong>Details</strong>（详情）会显示关于它的已知信息（运行的步骤和最后一份报告、文件夹、标签）、它的摘要、字段和链接，以及 <strong>Log</strong> 下的日志。在列表里把指针移到终端名称上，会显示它的回顾。",
+    "from": "93f57bf9eb94"
+  },
+  "keep.back.history": {
+    "text": "<strong>找回不在画布上的对话。</strong>命令面板（<code>⌘K</code>）中的 <strong>Past conversations…</strong>（过去的对话），或终端详情中的“Past conversations in this folder…”，会列出某个文件夹里 Claude Code 以前的对话，并能在画布上打开其中一个。",
+    "from": "237fdc4c37c5"
+  },
+  "keep.back.other": {
+    "text": "其他智能体没有 <strong>Resume agent</strong>，因为 Aubergine 不知道它的对话：请在同一个终端里用那个智能体自己的恢复方式重新启动它，并读一读笔记，告诉它进行到哪里了。",
+    "from": "793f54a1a40a"
+  },
+  "keep.pic.caption": {
+    "text": "终端的详情：运行的步骤和最后一份报告、文件夹、标签和字段。这些在电脑重启后都会保留；旁边的实时终端不会。",
+    "from": "d9f6211ba821"
+  },
+  "keep.lost.title": {
+    "text": "会丢失什么，以及怎么办",
+    "from": "14285bfff601"
+  },
+  "keep.lost.running": {
+    "text": "<strong>正在运行的东西会结束。</strong>构建、测试、服务器或正在工作的智能体会随电脑一起停止，Aubergine 不会自行重新启动其中任何一个。请自己重新启动它们；必须撑过重启的任务，应当交给专门为此设计的东西，比如系统的服务。",
+    "from": "e46f81e690a3"
+  },
+  "keep.lost.work": {
+    "text": "<strong>Aubergine 跟踪的工作会等着你。</strong>工作流的运行会保留它的步骤和每一份提交的报告。队列中的任务保持原位；服务器停止那一刻正在启动的任务会被标为失败，并附一句说明，不会自动重试任何东西。服务器停止期间错过的计划时间，如果不超过六小时（<code>schedules.lateWithinHours</code>），会迟到运行一次，否则标为已错过。",
+    "from": "3030fe221d28"
+  },
+  "keep.lost.scrollback": {
+    "text": "<strong>回滚记录会丢失。</strong>shell 运行期间，tmux 会保留它最后输出的 50,000 行，命令面板的搜索会读取这些内容。Aubergine 不记录终端的输出，所以电脑重启后没有东西可以找回，搜索只能找到此后输出的内容。",
+    "from": "aaed4fac1b79"
+  },
+  "keep.lost.away": {
+    "text": "<strong>“你不在时”会重新开始。</strong>它保存在服务器的内存里，而不是文件里，所以服务器启动后它只知道此后发生的变化，并会这样说明。",
+    "from": "6731aefcf508"
+  },
+  "keep.habit.title": {
+    "text": "让重启代价很小的习惯",
+    "from": "bd4d96a2eb2b"
+  },
+  "keep.habit.text": {
+    "text": "能留下来的是笔记，所以让智能体边做边写进去：一个决定、一个结果、停在了哪里。从 Aubergine 启动的 Claude Code 会自动把你发送的每条提示加入日志，并在开始时被要求给终端命名、维护摘要。任何智能体都可以用下面这些命令做到同样的事，<code>aubergine guide</code> 会向它说明：",
+    "from": "f0806ca11e08"
+  },
+  "keep.habit.recap": {
+    "text": "一天结束前，在终端详情里点 <strong>Ask its agent for a recap</strong>（请它的智能体写回顾）：智能体用 <code>aubergine recap --write</code> 写下现状，这份回顾会和终端一起保存。",
+    "from": "1b909d393ab1"
+  },
+  "keep.sleep.title": {
+    "text": "合上笔记本、睡眠和浏览器",
+    "from": "393a7e53106a"
+  },
+  "keep.sleep.sleep": {
+    "text": "<strong>睡眠不是重启。</strong>合上笔记本的盖子通常会让它睡眠：程序暂停，醒来后继续，表格最后一列的情况都不会发生。Aubergine 既不让电脑保持唤醒，也不唤醒它，所以睡眠期间到点的计划会迟到运行或被错过，同上。",
+    "from": "f90d61fc3eae"
+  },
+  "keep.sleep.browser": {
+    "text": "<strong>关闭浏览器、标签页或其窗口</strong>，或浏览器更新后重启，都不会结束任何东西。重新打开页面（<code>aubergine open</code> 会以登录状态打开），每个终端都会按 tmux 中的当前状态绘制。一直开着的页面会在服务器恢复后自动重新连接。",
+    "from": "40f09b6f29cb"
+  },
+  "keep.sleep.server": {
+    "text": "<strong>关闭运行 <code>aubergine start</code> 的窗口</strong>，或在其中按 Ctrl+C，只会停止服务器：也就是表格中间那一列。",
+    "from": "1cd0a9349c3d"
+  },
+  "keep.sleep.wsl": {
+    "text": "<strong>在使用 WSL 的 Windows 上</strong>，WSL 停止（因为 Windows 重启或执行 <code>wsl --shutdown</code> 之后）对 Aubergine 来说就是电脑重启。参见 <a href=\"/windows/\">使用 WSL 的 Windows</a>。",
+    "from": "0c01d734b5c3"
+  },
+  "keep.q.restore.q": {
+    "text": "Aubergine 能在重启后恢复我的终端吗？",
+    "from": "a2d8fea94c00"
+  },
+  "keep.q.restore.a": {
+    "text": "能，除了其中正在运行的东西。每个终端都会回到画布上的原位，带着名称、颜色、笔记、标签、字段和链接，成为位于最后所在文件夹的新 shell。其中运行过的程序不会重新启动；对 Claude Code，<strong>Resume agent</strong> 可以接着之前的对话。",
+    "from": "8be8d8045b34"
+  },
+  "keep.q.output.q": {
+    "text": "Aubergine 会保留我的终端输出和历史吗？",
+    "from": "7463118541ed"
+  },
+  "keep.q.output.a": {
+    "text": "输出只在 shell 运行期间保留：tmux 为每个终端保留 50,000 行回滚记录，关掉浏览器或重启 Aubergine 都不会丢失。电脑重启后就没了，因为 Aubergine 不记录终端输出。你输入过的命令历史（按上箭头会出现的那些）是你的 shell 自己的文件，像往常一样由 shell 保存。",
+    "from": "a88ba263b084"
+  },
+  "keep.q.claude.q": {
+    "text": "我的 Claude Code 对话能撑过重启吗？",
+    "from": "c87cda5e8a7e"
+  },
+  "keep.q.claude.a": {
+    "text": "对话可以：Claude Code 把它保存在自己的文件中，Aubergine 记得每个终端处于哪个对话。重启之后，终端标题栏上的 <strong>Resume agent</strong> 会在那个对话中再次启动 Claude Code。智能体那一刻正在做的事已经停止，在你要求之前不会重做。",
+    "from": "0d163dc56b89"
+  },
+  "keep.q.macos.q": {
+    "text": "macOS 夜里自动更新时还管用吗？",
+    "from": "dd58c7a1e65c"
+  },
+  "keep.q.macos.a": {
+    "text": "会重启电脑的更新就是一次普通的重启：正在运行的程序结束，其他一切都保留。开启登录时启动（<code>aubergine service install</code>）后，你一登录服务器就会再次运行，画布在等着你。在最后所在文件夹中打开新 shell 这一点，是在重启 Aubergine 的容器时看到的；真实的 macOS 夜间更新尚未试过。",
+    "from": "06c25c70de97"
+  },
+  "keep.q.tmux.q": {
+    "text": "我需要懂 tmux 吗？",
+    "from": "3d7564a5b7f9"
+  },
+  "keep.q.tmux.a": {
+    "text": "不需要。只要装好它（3.2 或更新版本），Aubergine 会在自己的套接字上用自己的设置运行它，没有状态栏，也没有前缀键，所以你永远不用输入 tmux 命令。如果你自己也在用 tmux，它不会被动到。",
+    "from": "d33e0b313f18"
+  },
+  "keep.related": {
+    "text": "相关：<a href=\"/claude/\">Aubergine 中的 Claude Code</a> · <a href=\"/queue-and-schedules/\">队列和计划</a> · <a href=\"/working-copies/\">工作副本</a>",
+    "from": "730944daab4e"
+  },
+  "alive.meta.title": {
+    "text": "关闭终端后让进程继续运行 | Aubergine",
+    "from": "b6893102f4dc"
+  },
+  "alive.meta.description": {
+    "text": "关闭终端窗口会结束其中运行的东西。常见的办法是 nohup、disown、screen 和 tmux；Aubergine 替你把每个终端都放在 tmux 里运行，所以关掉浏览器不会结束任何东西。",
+    "from": "91fc698775ac"
+  },
+  "alive.crumb": {
+    "text": "保持运行",
+    "from": "18b04919677d"
+  },
+  "alive.title": {
+    "text": "关闭终端后让进程继续运行",
+    "from": "0a69e88f3c29"
+  },
+  "alive.lead": {
+    "text": "你启动了一次构建、一个服务器或一个编程智能体，而关掉窗口就会结束它。在 Aubergine 里，关掉窗口不会结束任何东西：每个终端都独立于浏览器运行，你回来时它输出过的内容都还在。",
+    "from": "08c79722641c"
+  },
+  "alive.usual.title": {
+    "text": "通常的做法",
+    "from": "30e09240a39b"
+  },
+  "alive.usual.text": {
+    "text": "关闭终端窗口会结束其中的 shell，以及这个 shell 启动的东西。绕开这一点的标准办法有：",
+    "from": "4915c1c5f12a"
+  },
+  "alive.usual.nohup": {
+    "text": "<code>nohup</code> 启动的命令会忽略终端关闭时发出的挂断信号。它的输出会写进一个文件（除非你指定别处，否则是 <code>nohup.out</code>）。",
+    "from": "07104e43d084"
+  },
+  "alive.usual.disown": {
+    "text": "<code>disown</code>（bash 和 zsh 中）会放开一个已经启动的作业，这样 shell 就不会把挂断信号传给它。之后你就无法在终端里回到它了。",
+    "from": "cff93689c505"
+  },
+  "alive.usual.mux": {
+    "text": "<code>screen</code> 和 <code>tmux</code> 在它们自己的服务器里运行 shell。你可以分离、关掉窗口，之后再重新连接到同一个 shell，输出也都在。它们是可靠的答案，但要用它们就得学它们的按键和命令。",
+    "from": "8033fa82aabc"
+  },
+  "alive.usual.after": {
+    "text": "Aubergine 就建立在最后这一种之上。它替你运行 tmux，所以你不用学按键就能得到它的答案。",
+    "from": "c5965cfc20f2"
+  },
+  "alive.does.title": {
+    "text": "Aubergine 做什么",
+    "from": "acf3f5da99c1"
+  },
+  "alive.does.text": {
+    "text": "Aubergine 中的每个终端都是一个 shell，位于它自己的 tmux 会话中，在 Aubergine 专用的 tmux 套接字上。tmux 独立于浏览器和 Aubergine 的服务器运行，所以：",
+    "from": "98b70e7d0d29"
+  },
+  "alive.does.browser": {
+    "text": "<strong>关掉标签页、窗口或整个浏览器，什么都不会结束。</strong>重新打开页面（<code>aubergine open</code> 会以登录状态打开），每个终端都会按 tmux 中的当前状态绘制，期间输出的内容都在它的回滚记录里。",
+    "from": "41a2df93d059"
+  },
+  "alive.does.server": {
+    "text": "<strong>停止 Aubergine 也不会结束任何东西。</strong>在运行 <code>aubergine start</code> 的地方按 Ctrl+C、服务器崩溃或更新，停止的都只是服务器。再启动它并重新加载页面即可。",
+    "from": "b9ce1197f495"
+  },
+  "alive.does.park": {
+    "text": "<strong>在画布上关闭终端会把它停放起来。</strong>标题里的 × 把它从画布上拿走，它的 shell 继续运行。画布上方工具栏中的 <strong>Parked</strong>（已停放）列出停放的终端，<strong>Restore</strong>（恢复）可以把一个拿回来。",
+    "from": "d74085e1bab8"
+  },
+  "alive.does.end": {
+    "text": "<strong>彻底结束一个 shell 之前会先问你。</strong>停放列表中的 <strong>End</strong>（结束）只有在你确认之后才会结束终端。",
+    "from": "297bbff16a9b"
+  },
+  "alive.does.views": {
+    "text": "<strong>关掉它的其他视图也不会结束任何东西。</strong>终端标题中的 <strong>Tab ↗</strong> 会在一个浏览器标签页中单独打开它，<code>aubergine attach &lt;name&gt;</code> 会在你的终端应用窗口中显示它。它们都是同一个终端，不是副本；关掉那个标签页或窗口，它照样运行。",
+    "from": "620a7de6d140"
+  },
+  "alive.does.scroll": {
+    "text": "shell 运行期间，tmux 会保留它最后输出的 50,000 行。在占着键盘的终端里，滚轮可以往回翻看这些内容，命令面板（<code>⌘K</code>）可以搜索它们。",
+    "from": "6bfb58743356"
+  },
+  "alive.pic.caption": {
+    "text": "列表写明每个终端在做什么。底部那个停放的终端不在画布上，它的 shell 仍在运行。",
+    "from": "4bafddfa442e"
+  },
+  "alive.not.title": {
+    "text": "它不做什么",
+    "from": "b3a53baf5dfd"
+  },
+  "alive.not.reboot": {
+    "text": "<strong>它撑不过电脑重启。</strong>重启、电脑崩溃或需要重启的更新，会结束所有 shell 以及其中运行的东西。Aubergine 会把它们周围的一切带回来，每个终端都成为位于最后所在文件夹的新 shell，但不会自行重新启动任何东西。参见<a href=\"/keep-terminals-after-restart/\">重启之后保留你的终端</a>。",
+    "from": "7abee1496908"
+  },
+  "alive.not.sleep": {
+    "text": "<strong>它不会让电脑保持唤醒。</strong>笔记本睡眠时，程序会暂停，这里的终端也不例外；醒来后它们会继续。",
+    "from": "866d9035e322"
+  },
+  "alive.not.service": {
+    "text": "<strong>它不是服务管理器。</strong>必须在重启后自己恢复的任务，应当交给你系统的服务。",
+    "from": "6d5fa1f2b3ca"
+  },
+  "alive.not.adopt": {
+    "text": "<strong>它无法接管已经在别处运行的程序。</strong>没有任何工具能把正在运行的程序搬进另一个终端。在终端应用的标签页里运行 <code>aubergine here</code>，会在画布上为那个文件夹创建一个终端；标签页里正在运行的程序留在原处，需要在新终端中重新启动。",
+    "from": "b16b06abf9b4"
+  },
+  "alive.ssh.title": {
+    "text": "通过 SSH 在另一台机器上",
+    "from": "e88f17341af2"
+  },
+  "alive.ssh.text": {
+    "text": "Aubergine 运行在你自己的电脑上：它的服务器监听 <code>127.0.0.1</code>，它的终端是那台电脑上的 shell。如果你想保住的是一台通过 SSH 连接的远程服务器上的进程，答案仍然是在那台服务器上用 <code>tmux</code> 或 <code>screen</code>。",
+    "from": "dffecd1ee615"
+  },
+  "alive.ssh.remote": {
+    "text": "Aubergine 本身也可以运行在另一台机器上，并通过 SSH 隧道、私有网络，或一个域名加代理从你的浏览器使用：步骤见 <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md\">Using Aubergine from elsewhere</a>。使用 SSH 隧道时，关掉运行 <code>aubergine start</code> 的 SSH 窗口会停止服务器，而终端会继续运行。Linux 只在容器中运行过，从未在云服务器上运行。",
+    "from": "6471fa20654e"
+  },
+  "alive.q.close.q": {
+    "text": "关闭浏览器会停止我的终端吗？",
+    "from": "6ddd7e6edce7"
+  },
+  "alive.q.close.a": {
+    "text": "不会。每个终端都是 tmux 中的一个 shell，独立于浏览器运行。关掉标签页、窗口或浏览器，再重新打开页面，每个终端都是当前的样子，仍在运行，期间输出的内容也都在。",
+    "from": "598cd7c22733"
+  },
+  "alive.q.ssh.q": {
+    "text": "SSH 断开后如何让进程继续运行？",
+    "from": "960447871eb8"
+  },
+  "alive.q.ssh.a": {
+    "text": "在远程机器上，把它放在 <code>tmux</code> 或 <code>screen</code> 里启动，或者用 <code>nohup</code>。Aubergine 只保留它所运行的那台电脑上的终端。它也可以运行在远程机器上，通过 SSH 隧道或代理来用，但这只在容器中运行过，从未在云服务器上运行。",
+    "from": "0d887b52c097"
+  },
+  "alive.q.nohup.q": {
+    "text": "该用 nohup 还是 tmux？",
+    "from": "2d8a44cabbd2"
+  },
+  "alive.q.nohup.a": {
+    "text": "<code>nohup</code> 适合输出可以写进文件的单条命令。<code>tmux</code> 适合你想回去继续输入的 shell。Aubergine 给每个终端的都是后者，放在浏览器页面里，不用 tmux 的按键。",
+    "from": "bdd99e8d4444"
+  },
+  "alive.q.output.q": {
+    "text": "关闭终端后还能看到输出吗？",
+    "from": "d50697ee7ca6"
+  },
+  "alive.q.output.a": {
+    "text": "能，只要 shell 还在运行：tmux 为每个终端保留最后 50,000 行，你回来时页面会显示它们。Aubergine 自己不记录任何东西，所以电脑重启后那些输出就没了。",
+    "from": "4e7c9512f7a4"
+  },
+  "alive.q.reboot.q": {
+    "text": "重启之后它还会继续运行吗？",
+    "from": "a133b0a14fb2"
+  },
+  "alive.q.reboot.a": {
+    "text": "不会。电脑重启会结束所有程序。Aubergine 会把每个终端带回来，成为位于最后所在文件夹的新 shell，保留位置、名称和笔记，但不会重新运行任何东西。",
+    "from": "a486f307279a"
+  },
+  "alive.related": {
+    "text": "相关：<a href=\"/keep-terminals-after-restart/\">重启之后保留你的终端</a> · <a href=\"/tmux-without-learning-tmux/\">不学 tmux 也能用 tmux</a> · <a href=\"/claude-code-notifications/\">知道 Claude Code 何时在等待</a>",
+    "from": "4a361e122188"
+  },
+  "notify.meta.title": {
+    "text": "知道 Claude Code 何时完成或在等你 | Aubergine",
+    "from": "6298f70cc7f8"
+  },
+  "notify.meta.description": {
+    "text": "一眼看出哪个 Claude Code 终端在工作、在等你或已完成：Aubergine 生成的钩子、For you 计数、跳到下一个等待终端的按键，以及打开的页面发出的通知。",
+    "from": "ec167ae38aa3"
+  },
+  "notify.crumb": {
+    "text": "完成还是在等待",
+    "from": "9cd75bf0227a"
+  },
+  "notify.title": {
+    "text": "知道 Claude Code 何时完成或在等你",
+    "from": "d69b035c67c4"
+  },
+  "notify.lead": {
+    "text": "你给 Claude Code 布置了一个任务，转头去忙别的，二十分钟后回来，才发现它从第二分钟起就在等你说一声“是”。Aubergine 在一个页面上显示哪个终端在工作、哪个在等你、哪个已经完成。",
+    "from": "33187b7b48cc"
+  },
+  "notify.usual.title": {
+    "text": "通常的做法",
+    "from": "30e09240a39b"
+  },
+  "notify.usual.text": {
+    "text": "Claude Code 会在某些时刻运行钩子，也就是你自己的命令，比如它停下时（<code>Stop</code>）或发送通知时（<code>Notification</code>）。通常的答案是在你的 Claude Code 设置里写一个播放声音或显示桌面通知的钩子。这样可行，只是脚本要你自己写、自己维护。",
+    "from": "68ee553e9f31"
+  },
+  "notify.does.title": {
+    "text": "Aubergine 做什么",
+    "from": "acf3f5da99c1"
+  },
+  "notify.does.start": {
+    "text": "<strong>从 Aubergine 启动 Claude Code</strong>：终端列表顶部的 <strong>New terminal ▾ → Claude Code</strong>，或按 <code>C</code>。Aubergine 会用它在自己数据文件夹中生成、并在命令行中指定的一个设置文件来启动 <code>claude</code>。你自己的 Claude Code 配置不会被改动。那个文件里的钩子会告诉页面智能体在做什么：",
+    "from": "3369bd01dcea"
+  },
+  "notify.does.working": {
+    "text": "你发送提示词时，终端显示 <strong>working</strong>（工作中），提示词会加入它的笔记日志；",
+    "from": "155df7c224c8"
+  },
+  "notify.does.waiting": {
+    "text": "智能体需要你时（权限询问，或空闲等待输入），它的边框变成等待的颜色，标题和列表中的行显示 <strong>waiting for you</strong>（在等你）；",
+    "from": "de3a60706385"
+  },
+  "notify.does.finished": {
+    "text": "它停下时，终端显示 <strong>finished</strong>（已完成）。",
+    "from": "4fa6541012c0"
+  },
+  "notify.does.count": {
+    "text": "页面右上角 <strong>For you 旁边的数字</strong>是所有项目中在等你的一切：有问题的终端，以及待审批的运行、待阅读的草稿和被提议的任务。点它会打开 <strong>Runs</strong>，其中的 <strong>Waiting for you</strong> 列就是这份清单。画布的标签页会显示其中有多少个终端在等待。",
+    "from": "7a2b8019e903"
+  },
+  "notify.does.next": {
+    "text": "<strong>下一个在等待的。</strong>没有终端占用键盘时，<code>W</code> 会跳到下一个在等你的终端；在 macOS 上，<code>⌃⌘J</code> 在终端里也能做到。在其他系统上，它在命令面板中。",
+    "from": "19a40372e53f"
+  },
+  "notify.does.desktop": {
+    "text": "<strong>打开的页面发出的通知。</strong><strong>Settings → Notifications</strong> 中有 <strong>Notify me on the desktop when a terminal starts waiting</strong>（终端开始等待时在桌面上通知我）。打开后，当终端开始等待或其智能体完成时，只要你没在看那个终端，页面就会显示一条浏览器通知。浏览器只会请求一次你的许可。",
+    "from": "a6b031774f7c"
+  },
+  "notify.does.rules": {
+    "text": "<strong>规则。</strong>在 <strong>Runs</strong> 的 <strong>Rules</strong> 标签页上，可以设一条规则，在任务完成、任务失败、任务需要你、有事要问你，或定时计划触发或无法运行时 <strong>Notify me</strong>（通知我）：由打开的页面发出通知，用一句话说明发生了什么。",
+    "from": "8902ebd28ab4"
+  },
+  "notify.pic.caption": {
+    "text": "For you 旁边的等待清单：先是一个替身智能体的问题，然后是一个要阅读的步骤和一份提交上来的清单。",
+    "from": "ec342d97a2eb"
+  },
+  "notify.other.title": {
+    "text": "其他智能体，以及你自己输入的 claude",
+    "from": "7ee8ea823560"
+  },
+  "notify.other.text": {
+    "text": "Aubergine 不会读终端输出去猜测。任何其他智能体或程序，都可以在自己的终端里用 <code>aubergine attention waiting \"what it needs\"</code>、<code>aubergine attention working</code> 和 <code>aubergine attention done</code> 自己说出同样的状态。<code>aubergine guide --snippet</code> 会打印五行内容，放进你的智能体在对话开始时读取的文件；这几行让它运行 <code>aubergine guide</code>，由后者说明这些命令。",
+    "from": "f65f5b133ea7"
+  },
+  "notify.other.typed": {
+    "text": "在普通终端里输入 <code>claude</code> 启动的 Claude Code，在 Aubergine 看来只是一个忙着运行程序的 shell：不会显示 <strong>waiting for you</strong>。请改为从菜单启动，或者把 <code>aubergine hooks print</code> 打印出的钩子手动加到你自己的设置中；它们在 Aubergine 终端之外不起任何作用。",
+    "from": "66303f76feaf"
+  },
+  "notify.not.title": {
+    "text": "它不做什么",
+    "from": "b3a53baf5dfd"
+  },
+  "notify.not.sound": {
+    "text": "<strong>没有自己的声音。</strong>Aubergine 不播放任何声音。只有你的浏览器或系统为通知设置了声音时，通知才会响。",
+    "from": "2d61c4c47cc8"
+  },
+  "notify.not.closed": {
+    "text": "<strong>没有打开的页面时什么都没有。</strong>通知来自你浏览器中打开的 Aubergine 页面；服务器自己不会发送任何通知。所有页面都关掉时，终端仍然显示 <strong>waiting for you</strong>，你打开页面时计数就在那里。",
+    "from": "4b12da4bf501"
+  },
+  "notify.not.phone": {
+    "text": "<strong>不会推送到手机。</strong>没有应用，也没有推送服务。可以把手机的浏览器配对来打开同一个页面；见<a href=\"/check-agents-from-your-phone/\">用手机查看你的智能体</a>，不过还没有在真正的手机上试过。",
+    "from": "b5b776d76082"
+  },
+  "notify.not.tried": {
+    "text": "<strong>检查过什么。</strong>浏览器测试是拿浏览器自带通知的替身来检查通知的。真正的通知长什么样，甚至会不会显示，取决于你的浏览器以及系统中对它的设置。",
+    "from": "3df89b5e7759"
+  },
+  "notify.q.done.q": {
+    "text": "Claude Code 完成时如何收到通知？",
+    "from": "61d334cfbe8e"
+  },
+  "notify.q.done.a": {
+    "text": "从 Aubergine 启动 Claude Code，然后在 <strong>Settings → Notifications</strong> 中打开 <strong>Notify me on the desktop when a terminal starts waiting</strong>。之后，当终端开始等你或其智能体完成时，打开的页面会显示一条浏览器通知。没有通知时，终端也会显示 <strong>finished</strong>。",
+    "from": "2e338730d3a7"
+  },
+  "notify.q.sound.q": {
+    "text": "Claude Code 需要输入时能播放声音吗？",
+    "from": "06e5fcebba16"
+  },
+  "notify.q.sound.a": {
+    "text": "Aubergine 不播放声音。如果你的浏览器或系统让通知发声，通知就会响。在你的 Claude Code 设置里写一个你自己的钩子可以播放声音；Aubergine 从不写入那些设置。",
+    "from": "9bfa64c7c661"
+  },
+  "notify.q.several.q": {
+    "text": "同时运行多个时，如何看出哪个 Claude Code 会话在等待？",
+    "from": "1574988945ec"
+  },
+  "notify.q.several.a": {
+    "text": "在 Aubergine 中，等待中的终端的边框和状态是等待的颜色，它在列表中的行显示 <strong>waiting for you</strong>，<strong>For you</strong> 旁边的数字说明有多少事在等待。<code>W</code> 跳到下一个。",
+    "from": "5afc5b2282ae"
+  },
+  "notify.q.closed.q": {
+    "text": "浏览器关闭时会收到通知吗？",
+    "from": "14556b0165d5"
+  },
+  "notify.q.closed.a": {
+    "text": "不会。通知来自打开的 Aubergine 页面。状态会被保存，所以你重新打开页面时，在等待的终端会被标出来。",
+    "from": "0c60b9069220"
+  },
+  "notify.q.other.q": {
+    "text": "它支持 Claude Code 以外的智能体吗？",
+    "from": "c3bc48693c0a"
+  },
+  "notify.q.other.a": {
+    "text": "不会自动支持：钩子是为 Claude Code 构建的。任何其他智能体，只要它自己的指令要求，都可以用 <code>aubergine attention waiting</code>、<code>working</code> 和 <code>done</code> 报告同样的状态；<code>aubergine guide --snippet</code> 会打印用于这些指令的几行。",
+    "from": "d74216df16d6"
+  },
+  "notify.related": {
+    "text": "相关：<a href=\"/claude/\">Aubergine 中的 Claude Code</a> · <a href=\"/resume-claude-code-session/\">恢复 Claude Code 对话</a> · <a href=\"/too-many-terminal-tabs/\">终端太多时</a>",
+    "from": "60204a04f28a"
+  },
+  "resume.meta.title": {
+    "text": "重启后恢复 Claude Code 对话 | Aubergine",
+    "from": "25d7c94055ab"
+  },
+  "resume.meta.description": {
+    "text": "只要你在正确的文件夹里，claude --continue 和 --resume 就能找回对话。Aubergine 记得每个终端处于哪个对话，提供 Resume agent，并按文件夹列出过去的对话。",
+    "from": "9c3fb52f17de"
+  },
+  "resume.crumb": {
+    "text": "恢复对话",
+    "from": "d0b8459148c0"
+  },
+  "resume.title": {
+    "text": "重启后恢复 Claude Code 对话",
+    "from": "087ff07774c9"
+  },
+  "resume.lead": {
+    "text": "电脑重启了，或者你关掉了终端，Claude Code 的对话看起来没了。其实 Claude Code 保存着它。Aubergine 记得每个终端处于哪个对话，一个按钮就能把它找回来。",
+    "from": "f122ebc08ba6"
+  },
+  "resume.usual.title": {
+    "text": "通常的做法",
+    "from": "30e09240a39b"
+  },
+  "resume.usual.text": {
+    "text": "在终端中，进入对话所在的文件夹：<code>claude --continue</code> 接着那里最近的一次对话，<code>claude --resume</code> 让你从列表里选一个，或者接受一个对话 ID。麻烦在于文件夹和选择：一个文件夹里有好几个智能体时，最近的那次不一定是你想要的。",
+    "from": "0c7e58df6940"
+  },
+  "resume.does.title": {
+    "text": "Aubergine 做什么",
+    "from": "acf3f5da99c1"
+  },
+  "resume.does.remember": {
+    "text": "<strong>终端记得自己的对话。</strong>从 Aubergine 启动 Claude Code 时（<strong>New terminal ▾ → Claude Code</strong>，或按 <code>C</code>），它的钩子会告诉 Aubergine 它处于哪个对话，Aubergine 会把这个 ID 和终端一起保存。",
+    "from": "25fb3e43a297"
+  },
+  "resume.does.button": {
+    "text": "一旦终端的 shell 回到提示符，标题栏就会提供 <strong>Resume agent</strong>（恢复智能体）：可能是你退出了智能体，也可能是电脑重启后终端作为位于最后所在文件夹的新 shell 回来了。它会带上 <code>--resume</code> 和那个 ID 再次启动 Claude Code，使用你设置中的启动命令（<code>agents.claudeCommand</code>，默认是 <code>claude</code>）。",
+    "from": "059cfe143e66"
+  },
+  "resume.does.run": {
+    "text": "<strong>在工作流的运行中</strong>，<strong>Resume agent</strong> 还会再次把这次运行告诉智能体，让它从运行所在的步骤继续。",
+    "from": "03de06981f61"
+  },
+  "resume.does.past": {
+    "text": "<strong>Past conversations…</strong>（过去的对话，在命令面板 <code>⌘K</code> 中），或终端详情中的“Past conversations in this folder…”，会列出某个文件夹里 Claude Code 以前的对话：名称或你说的第一句话、最后活跃的时间、你说了几次话，以及画布上现在是否有终端正处于这个对话。<strong>Read</strong> 以只读方式显示它。<strong>Open on the canvas</strong> 在那个文件夹中启动一个新终端并恢复这个对话，<strong>Open a copy</strong> 则开出它的一个分支，原件保持不变。如果已有终端处于这个对话，会先问你。",
+    "from": "05c3b631a2d7"
+  },
+  "resume.does.search": {
+    "text": "<strong>搜索。</strong>在命令面板中输入 <code>@</code> 和一些词，可以搜索你画布上各终端所在文件夹里的过去对话。它在你要求时、在限定范围内读取记录，被截断时会说明。在命令行中，<code>aubergine history</code> 列出它们，<code>aubergine history open &lt;id&gt;</code> 打开其中一个。",
+    "from": "f1e8e8bbabc6"
+  },
+  "resume.does.stood": {
+    "text": "<strong>它进行到哪里。</strong>终端的笔记保存着它的摘要和日志，你发送的每条提示词都会加入日志。详情中的 <strong>Ask its agent for a recap</strong>（请它的智能体写回顾）会让智能体用 <code>aubergine recap --write</code> 写下现状，并和终端一起保存。离开超过 30 分钟后回来，<strong>While you were away</strong>（你不在时）会列出这期间发生的变化。",
+    "from": "449c1f6289f7"
+  },
+  "resume.pic.caption": {
+    "text": "终端的详情：它所在运行的步骤和最后一份报告、它的文件夹和字段。这些和终端一起保存，等着恢复它的智能体时使用。",
+    "from": "5c63f8e4cb58"
+  },
+  "resume.outside.title": {
+    "text": "Aubergine 之外的终端里的对话",
+    "from": "43ceaae0c27a"
+  },
+  "resume.outside.text": {
+    "text": "在终端应用的标签页里退出智能体，然后在同一个文件夹中运行 <code>aubergine here --claude</code>：画布上的一个新终端会用 <code>--continue</code> 启动 Claude Code，这次会显示它的状态。<code>aubergine move</code> 会列出你的 Claude Code 标签页，并在画布上为每个对话启动一个副本；加上 <code>--stop</code>，它会在你确认后先请空闲的智能体退出。",
+    "from": "7682f25de863"
+  },
+  "resume.not.title": {
+    "text": "它不做什么",
+    "from": "b3a53baf5dfd"
+  },
+  "resume.not.format": {
+    "text": "<strong>它读取的是 Claude Code 自己的记录，格式不属于 Aubergine。</strong>Claude Code 称这些文件的格式为内部格式，并且会随版本变化。恢复时用的是 Claude Code 自己的 <code>--resume</code> 加上 ID；名称、次数和对话记录是 Aubergine 对这些文件的解读，Claude Code 更新后可能缺失或变得不完整。读不了的记录会明确说读不了，不会显示成空对话。",
+    "from": "a2210e214a34"
+  },
+  "resume.not.store": {
+    "text": "<strong>不复制，也不保留任何东西。</strong>列表、对话记录或搜索都是在你要求时读取，关闭时丢弃。Aubergine 从不修改、重命名或删除对话，任何智能体或令牌都无法通过它读取对话。",
+    "from": "9224f8f7033a"
+  },
+  "resume.not.work": {
+    "text": "<strong>进行中的工作不会重做。</strong>智能体停下时正在做的事，在你要求之前不会重新开始。",
+    "from": "a0dfad245abc"
+  },
+  "resume.not.other": {
+    "text": "<strong>其他智能体没有 Resume agent。</strong>Aubergine 不知道其他智能体的对话，也不会列出它们过去的对话。请在同一个终端里用那个智能体自己的恢复方式重新启动它，并读一读笔记，告诉它进行到哪里了。",
+    "from": "032fed640b8d"
+  },
+  "resume.not.typed": {
+    "text": "<strong>你自己输入的 <code>claude</code> 不会被记住</strong>，除非你把 <code>aubergine hooks print</code> 打印出的钩子加到了你自己的 Claude Code 设置中。",
+    "from": "7cabc8e39014"
+  },
+  "resume.not.tried": {
+    "text": "<strong>检查过什么。</strong>对话记录的读取是拿虚构的记录测试的。没有对照 Claude Code 的每个版本检查过。",
+    "from": "636831c9e7f8"
+  },
+  "resume.q.closed.q": {
+    "text": "关闭终端后如何恢复 Claude Code 会话？",
+    "from": "6af39953e8a8"
+  },
+  "resume.q.closed.a": {
+    "text": "在同一个文件夹中，<code>claude --continue</code> 接着最近的一次对话，<code>claude --resume</code> 让你来选。在 Aubergine 中，关掉浏览器不会结束任何东西；你退出了智能体的终端会在标题栏提供 <strong>Resume agent</strong>。",
+    "from": "1ed7fbcc4b38"
+  },
+  "resume.q.reboot.q": {
+    "text": "重启后如何恢复 Claude Code 对话？",
+    "from": "31f50552b3a5"
+  },
+  "resume.q.reboot.a": {
+    "text": "重启后，每个 Aubergine 终端都会作为位于最后所在文件夹的新 shell 回来。如果 Claude Code 是从 Aubergine 启动的，标题栏中的 <strong>Resume agent</strong> 会在那个终端原来的对话中再次启动它。",
+    "from": "a7935b5285f1"
+  },
+  "resume.q.find.q": {
+    "text": "如何找到以前的 Claude Code 对话？",
+    "from": "230753fac68b"
+  },
+  "resume.q.find.a": {
+    "text": "命令面板中的 <strong>Past conversations…</strong> 按文件夹列出它们，并提供只读的对话记录；在命令面板中输入 <code>@</code> 和一些词可以搜索它们。只会列出 Claude Code 仍然保存着的内容。",
+    "from": "cf90c4bc8021"
+  },
+  "resume.q.diff.q": {
+    "text": "claude --continue 和 claude --resume 有什么区别？",
+    "from": "4f56d2ee9cff"
+  },
+  "resume.q.diff.a": {
+    "text": "<code>--continue</code> 接着文件夹中最近的一次对话；<code>--resume</code> 接受你选的那个，或一个 ID。<strong>Resume agent</strong> 用的是 <code>--resume</code> 加终端记住的 ID，所以不取决于哪个对话最近。",
+    "from": "5c3f2b16669e"
+  },
+  "resume.q.two.q": {
+    "text": "两个终端能接着同一个 Claude Code 对话吗？",
+    "from": "825906c9167b"
+  },
+  "resume.q.two.a": {
+    "text": "Aubergine 不会不问就把一个对话打开两次：一个对话里有两个智能体，会丢失彼此的消息。你可以选择已经处于这个对话的终端，或者开一个副本，让对话分支。",
+    "from": "b8424d8787fc"
+  },
+  "resume.related": {
+    "text": "相关：<a href=\"/keep-terminals-after-restart/\">重启之后保留你的终端</a> · <a href=\"/claude-code-notifications/\">知道 Claude Code 何时在等待</a> · <a href=\"/claude/\">Aubergine 中的 Claude Code</a>",
+    "from": "82d3fe458522"
+  },
+  "many.meta.title": {
+    "text": "标签页太多时找到要找的终端 | Aubergine",
+    "from": "710b13634a0f"
+  },
+  "many.meta.description": {
+    "text": "终端标签页太多，个个都叫 zsh？Aubergine 把每个终端放到画布上和同一个列表里，用文字写出状态，提供筛选、标签、终端输出搜索，还能在浏览器标签页中单独打开一个终端。",
+    "from": "0d77fee497f4"
+  },
+  "many.crumb": {
+    "text": "终端太多",
+    "from": "1d2e7e29f20b"
+  },
+  "many.title": {
+    "text": "终端太多时找到要找的那个",
+    "from": "9d8e670c6407"
+  },
+  "many.lead": {
+    "text": "二十个标签页，大多叫 zsh，其中三个在运行智能体，其中一个在等你。Aubergine 把每个终端放到画布上，并放进一个写明各自在做什么的列表，让你按终端是什么来找它，而不是按你把它放在了哪里。",
+    "from": "1d5167ffd4b4"
+  },
+  "many.usual.title": {
+    "text": "通常的做法",
+    "from": "30e09240a39b"
+  },
+  "many.usual.text": {
+    "text": "给标签页或窗口命名（大多数终端应用都可以），把窗口拆成窗格，使用命名的 tmux 会话和窗口，或者让平铺式窗口管理器来摆放。这些能帮你摆放终端；但要找出需要你的那个，还是得一个个去看。",
+    "from": "ad6ff5b0d6e6"
+  },
+  "many.does.title": {
+    "text": "Aubergine 做什么",
+    "from": "acf3f5da99c1"
+  },
+  "many.does.canvas": {
+    "text": "<strong>一张画布。</strong>终端并排摆开，每个都是实时的。拖动标题移动，拖动边缘调整大小，双击标题重命名。标题里的圆点可以给它上色；框（<strong>New terminal ▾ → Frame</strong>，或按 <code>G</code>）把终端归到一个标签下，并让它们一起移动。",
+    "from": "adf948fb2094"
+  },
+  "many.does.canvases": {
+    "text": "<strong>画布和项目。</strong>可以有多张画布，显示为标签页、一个列表或左侧的一列，每张都有自己的地址。项目拥有自己的画布、终端、队列和等待清单；左上角的切换器用于在项目之间切换。",
+    "from": "3e3ff8bc43f4"
+  },
+  "many.does.list": {
+    "text": "<strong>所有终端的一个列表。</strong>侧边栏的 <strong>Terminals</strong> 列出每个终端，用文字写出状态（<strong>working</strong>、<strong>waiting for you</strong>、<strong>finished</strong>、失败的命令），以及它所在运行的步骤和最后活跃的时间，范围可以是这张画布或所有画布。顶部的输入框可以按名称、文件夹、命令、笔记或标签查找终端。",
+    "from": "f7361c6e0119"
+  },
+  "many.does.filter": {
+    "text": "<strong>Filter</strong>（筛选）里有各种筛选条件（waiting for me、busy、unread、has an agent、parked、tags），以及列表的排列方式：按画布分组，或者一个平铺的列表，按画布顺序、最近更新、最近输入或名称排序。",
+    "from": "6e69fcb25a25"
+  },
+  "many.does.goto": {
+    "text": "画布上方的 <strong>Go to…</strong> 或 <code>⌘K</code> 就是命令面板：输入名称、文件夹、命令或笔记的一部分。它的 <strong>Terminal output</strong> 部分会搜索终端输出过的内容（tmux 为每个终端保留的最后 50,000 行），选中一个结果会打开那个终端并回滚到那里。",
+    "from": "cc786240ec50"
+  },
+  "many.does.map": {
+    "text": "<strong>小地图</strong>（按钮在 <strong>Go to…</strong> 旁边）以缩小的方式显示整张画布，并可以拖动它。<strong>Fit</strong>（<code>F</code>）一次显示全部。",
+    "from": "fc5776ecfbcb"
+  },
+  "many.does.about": {
+    "text": "<strong>终端是做什么用的。</strong>每个终端旁边都有一份笔记（摘要和日志），详情中有标签、链接，以及像 <code>Ticket: DEMO-12</code> 这样的字段。智能体可以用 <code>aubergine</code> 命令写下自己终端的名称、摘要和字段。",
+    "from": "1d11da3800ef"
+  },
+  "many.does.alone": {
+    "text": "<strong>单独一个终端。</strong>标题里的 <strong>Tab ↗</strong> 会在它专属的浏览器标签页中打开它，地址是 <code>/t/&lt;terminal&gt;</code>，详情和笔记一点即开。",
+    "from": "43aca22cfd80"
+  },
+  "many.does.keys": {
+    "text": "<code>Tab</code> 和 <code>Shift+Tab</code> 按列表显示的顺序逐个走过终端，<code>W</code> 跳到下一个在等你的终端。",
+    "from": "31d2188a40a6"
+  },
+  "many.not.title": {
+    "text": "它不做什么",
+    "from": "b3a53baf5dfd"
+  },
+  "many.not.arrange": {
+    "text": "<strong>它不会替你排列。</strong>终端待在你放的地方（新终端会放进视图中部附近的空位），并保留你或它的智能体给它起的名字。",
+    "from": "f9831e413ca7"
+  },
+  "many.not.number": {
+    "text": "<strong>它不承诺数量。</strong>只有你正在看的画布会保持实时终端：缩得很小时终端显示的是屏幕的图片，在屏幕外时对页面没有任何开销。每个终端仍然是你电脑上的一个 shell。列表在单元测试中用 1,000 个终端测试过（列出、筛选，只绘制一屏的内容），还有一个脚本会在三张画布上放 90 个终端，供人工判断。两者都不是对你电脑的承诺。",
+    "from": "0b99155f7203"
+  },
+  "many.not.others": {
+    "text": "<strong>不显示你终端应用的标签页。</strong><strong>Open elsewhere</strong>（<code>O</code>）会列出在那里打开的终端，并一次一个地把它们搬过来，成为同一文件夹中的新终端。标签页里正在运行的程序留在那个标签页里。",
+    "from": "342f90ca0c87"
+  },
+  "many.q.organize.q": {
+    "text": "如何整理大量终端窗口？",
+    "from": "ff12c1f905b9"
+  },
+  "many.q.organize.a": {
+    "text": "在 Aubergine 中：每项工作一张画布，终端带着名称和颜色并排摆放，相关的用框框起来，再用一个列表看全部终端，以及每个在做什么。",
+    "from": "b8784c8ec007"
+  },
+  "many.q.which.q": {
+    "text": "如何找出哪个终端在运行某条命令？",
+    "from": "17eb8a719d39"
+  },
+  "many.q.which.a": {
+    "text": "列表上方的输入框会匹配终端的名称、文件夹、命令、笔记和标签，命令面板（<code>⌘K</code>）在所有画布上做同样的事。终端的标题会显示它在运行什么。",
+    "from": "da1e57276527"
+  },
+  "many.q.search.q": {
+    "text": "能搜索所有终端的输出吗？",
+    "from": "a58d20e4b8f9"
+  },
+  "many.q.search.a": {
+    "text": "能，限于仍在运行的终端：命令面板的 <strong>Terminal output</strong> 部分会在你搜索时读取每个终端的历史，包括停放的终端，最远到 tmux 保留的范围（50,000 行）。不建立索引，也不做记录。",
+    "from": "886e87fdb066"
+  },
+  "many.q.count.q": {
+    "text": "Aubergine 能处理多少个终端？",
+    "from": "316b2352e931"
+  },
+  "many.q.count.a": {
+    "text": "没有固定的上限。列表用 1,000 个终端测试过，也人工看过三张各有 90 个终端的画布；每个终端仍然是一个 shell，所以取决于你的电脑能跑多少。",
+    "from": "ee69bd158d20"
+  },
+  "many.q.name.q": {
+    "text": "能给终端命名和上色吗？",
+    "from": "8288c9dbf63e"
+  },
+  "many.q.name.a": {
+    "text": "能。双击终端的标题来重命名，用标题里的圆点从十三种颜色中选一种，或用你自己的颜色。画布也有名称和颜色。",
+    "from": "42ae6580f04b"
+  },
+  "many.related": {
+    "text": "相关：<a href=\"/claude-code-notifications/\">知道 Claude Code 何时在等待</a> · <a href=\"/keep-process-running-after-closing-terminal/\">让进程继续运行</a> · <a href=\"/run-multiple-coding-agents/\">运行多个编程智能体</a>",
+    "from": "da55f7278a1a"
+  },
+  "tmux.meta.title": {
+    "text": "不学 tmux 也能用 tmux | Aubergine",
+    "from": "a731849612b9"
+  },
+  "tmux.meta.description": {
+    "text": "关掉窗口后依然存在的 shell，不需要前缀键，也不需要 .tmux.conf。Aubergine 在自己的套接字上替你运行 tmux，滚轮、复制粘贴和调整大小都和任何终端一样。",
+    "from": "d876f30b4bcb"
+  },
+  "tmux.crumb": {
+    "text": "不用 tmux 的 tmux",
+    "from": "089511f9df35"
+  },
+  "tmux.title": {
+    "text": "不学 tmux 也能用 tmux",
+    "from": "c661725dc167"
+  },
+  "tmux.lead": {
+    "text": "tmux 能在窗口关闭后让你的 shell 继续运行。代价是要学前缀键、复制模式和配置文件。Aubergine 替你运行 tmux，你在浏览器页面里像用任何终端一样使用每个终端。",
+    "from": "c92cbb7d944a"
+  },
+  "tmux.who.title": {
+    "text": "适合谁",
+    "from": "bcdecc549d07"
+  },
+  "tmux.who": {
+    "text": "适合想要 tmux 带来的东西——关掉窗口后依然存在的 shell——却不想学它的按键和配置的人。如果你已经离不开 tmux，就继续用：Aubergine 不会碰你的 tmux。",
+    "from": "67d7b78bd967"
+  },
+  "tmux.usual.title": {
+    "text": "通常的做法",
+    "from": "30e09240a39b"
+  },
+  "tmux.usual.text": {
+    "text": "学 tmux：每条命令前按前缀键（除非你改过，否则是 <code>Ctrl+B</code>），用 <code>tmux attach</code> 回去，再在 <code>~/.tmux.conf</code> 里写几行来支持鼠标和剪贴板。或者用 <code>screen</code>，一个同类的更老的工具。下面是各种日常操作在默认的 tmux 中和在 Aubergine 中的做法：",
+    "from": "94c03879479b"
+  },
+  "tmux.table.thing": {
+    "text": "要做的事",
+    "from": "f4b06ef6d3c8"
+  },
+  "tmux.table.tmux": {
+    "text": "在 tmux 中",
+    "from": "a1ab6023b141"
+  },
+  "tmux.table.here": {
+    "text": "在 Aubergine 中",
+    "from": "c6dcdd25687b"
+  },
+  "tmux.table.tmuxShort": {
+    "text": "tmux",
+    "from": "adb519257aeb"
+  },
+  "tmux.table.hereShort": {
+    "text": "Aubergine",
+    "from": "b72370707186"
+  },
+  "tmux.row.leave": {
+    "text": "让 shell 继续运行并离开",
+    "from": "ba2cbd204ae7"
+  },
+  "tmux.row.back": {
+    "text": "回到它",
+    "from": "9a861e7d13a6"
+  },
+  "tmux.row.scroll": {
+    "text": "往回滚动",
+    "from": "fb2c3707ff8c"
+  },
+  "tmux.row.copy": {
+    "text": "复制",
+    "from": "e21f935f11d7"
+  },
+  "tmux.row.paste": {
+    "text": "粘贴",
+    "from": "f3380f7b44bd"
+  },
+  "tmux.row.several": {
+    "text": "同时看多个 shell",
+    "from": "37cb2e73ff45"
+  },
+  "tmux.row.name": {
+    "text": "给它命名",
+    "from": "6f2f4dd0bb35"
+  },
+  "tmux.cell.leave.tmux": {
+    "text": "<code>Ctrl+B</code> 然后 <code>d</code> 分离",
+    "from": "0aabfdad59cc"
+  },
+  "tmux.cell.leave.here": {
+    "text": "关掉标签页",
+    "from": "820a72b24e4e"
+  },
+  "tmux.cell.back.tmux": {
+    "text": "<code>tmux attach</code>",
+    "from": "6c4afca4cfa5"
+  },
+  "tmux.cell.back.here": {
+    "text": "打开页面",
+    "from": "911fa06e14a1"
+  },
+  "tmux.cell.scroll.tmux": {
+    "text": "复制模式，<code>Ctrl+B</code> 然后 <code>[</code>",
+    "from": "15276f527f80"
+  },
+  "tmux.cell.scroll.here": {
+    "text": "滚轮",
+    "from": "65317915ff3a"
+  },
+  "tmux.cell.copy.tmux": {
+    "text": "在复制模式中选择",
+    "from": "55ae66ca2a46"
+  },
+  "tmux.cell.copy.here": {
+    "text": "用鼠标选择",
+    "from": "13b782465243"
+  },
+  "tmux.cell.paste.tmux": {
+    "text": "<code>Ctrl+B</code> 然后 <code>]</code>",
+    "from": "927f106565e1"
+  },
+  "tmux.cell.paste.here": {
+    "text": "<code>⌘V</code> 或 <code>Ctrl+Shift+V</code>",
+    "from": "79285d2dbfdd"
+  },
+  "tmux.cell.several.tmux": {
+    "text": "窗口和窗格",
+    "from": "f2a69ea1d42f"
+  },
+  "tmux.cell.several.here": {
+    "text": "在画布上并排摆放终端",
+    "from": "dc6bdd73da8a"
+  },
+  "tmux.cell.name.tmux": {
+    "text": "<code>Ctrl+B</code> 然后 <code>,</code>",
+    "from": "fe31dbab067c"
+  },
+  "tmux.cell.name.here": {
+    "text": "双击它的标题",
+    "from": "52bfa2dda0c6"
+  },
+  "tmux.does.title": {
+    "text": "Aubergine 做什么",
+    "from": "acf3f5da99c1"
+  },
+  "tmux.does.own": {
+    "text": "<strong>自己的套接字和自己的配置。</strong>Aubergine 在它自己的、名为 <code>aubergine</code> 的套接字上启动 tmux，用的是它自己的配置文件而不是你的：没有状态栏，没有前缀键，开启鼠标，50,000 行历史。每个终端是一个 tmux 会话，里面是一个 shell，也就是你的登录 shell。你自己的 tmux、它的会话和你的 <code>~/.tmux.conf</code> 都不会被改动。",
+    "from": "82419f3b337f"
+  },
+  "tmux.does.scroll": {
+    "text": "在占着键盘的终端里，<strong>滚轮会往回滚动</strong>；在画布的其他地方，滚轮用于缩放。",
+    "from": "c1901de45a17"
+  },
+  "tmux.does.copy": {
+    "text": "<strong>用鼠标选中，松开时就复制</strong>到你的剪贴板：tmux 用 OSC 52（终端用于剪贴板的转义序列）把选中的内容交给页面，由页面放进剪贴板。用 <code>⌘V</code> 粘贴（macOS 之外用 <code>Ctrl+Shift+V</code>）。多行粘贴会加上括号粘贴标记，所以 shell 不会逐行执行它。",
+    "from": "b5991d05ed04"
+  },
+  "tmux.does.size": {
+    "text": "<strong>拖动来调整大小：</strong>在画布上拖动终端的边缘，shell 就会得到新的尺寸。同时在两处打开的终端只有一个尺寸，由你最后输入的那个视图决定。",
+    "from": "15e6a34e7ef7"
+  },
+  "tmux.does.still": {
+    "text": "<strong>底层仍然是 tmux。</strong><code>aubergine attach &lt;name&gt;</code> 会在你的终端应用窗口中显示一个终端，终端菜单中的 <strong>Open on desktop</strong>（在桌面上打开）会替你做这件事（macOS 上用 Terminal 或 iTerm；Linux 上用你设置的命令行）。服务器停止时，<code>tmux -L aubergine ls</code> 和 <code>tmux -L aubergine attach -t &lt;id&gt;</code> 依然能连到每个 shell。",
+    "from": "189355cb23f9"
+  },
+  "tmux.need.title": {
+    "text": "你需要什么",
+    "from": "e17c85cc990b"
+  },
+  "tmux.need.text": {
+    "text": "tmux 3.2 或更高版本，由你自己安装：macOS 上用 <code>brew install tmux</code>，Linux 上用系统的软件包。Aubergine 不会安装它，缺少或版本太旧时会显示一个页面说明。使用 zsh 时，终端标题会显示正在运行的命令以及上一条命令的结束情况；其他 shell 也能运行，只是没有这些。",
+    "from": "1ed9bf484beb"
+  },
+  "tmux.not.title": {
+    "text": "它不是什么",
+    "from": "9516c425aeb2"
+  },
+  "tmux.not.ssh": {
+    "text": "<strong>不是远程服务器上的 tmux。</strong>Aubergine 的 tmux 运行在它的服务器所在的电脑上。对于你通过 SSH 连接的机器上的 shell，那台机器上的 tmux 仍然是该用的工具。Aubergine 本身可以运行在另一台机器上（<a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md\">Using Aubergine from elsewhere</a>）；这只在容器中运行过。",
+    "from": "97db800d695c"
+  },
+  "tmux.not.yours": {
+    "text": "<strong>不显示你自己的 tmux 会话。</strong>画布上只有 Aubergine 的终端。<code>aubergine scan</code> 列出这台电脑上 Aubergine 之外打开的交互式 shell，<code>aubergine import</code> 或 <code>aubergine here</code> 会在画布上为其中一个创建同一文件夹中的新终端；旧终端里正在运行的程序留在原处。<code>aubergine shell-hook print</code> 为你的 <code>.zshrc</code> 提供的那几行在 tmux 里不起作用。",
+    "from": "b5696d4f2c3b"
+  },
+  "tmux.not.keys": {
+    "text": "<strong>没有 tmux 按键，也没有窗格。</strong>没有前缀键，你自己的 tmux 键绑定也不适用。终端占着键盘时，每个按键都交给其中的程序，只有少数几个组合键例外，它们是特意挑选的，任何 shell、编辑器或 tmux 都用不到。",
+    "from": "22984bbf9c68"
+  },
+  "tmux.not.windows": {
+    "text": "<strong>不能直接在 Windows 上运行。</strong>它需要 tmux 和 Unix shell；在 Windows 上它运行在 WSL 2 里。参见<a href=\"/windows/\">使用 WSL 的 Windows</a>。",
+    "from": "b6d2899a3b38"
+  },
+  "tmux.q.shortcuts.q": {
+    "text": "不学快捷键能用 tmux 吗？",
+    "from": "b9c488ac4210"
+  },
+  "tmux.q.shortcuts.a": {
+    "text": "能。Aubergine 运行的 tmux 没有前缀键，也没有状态栏，所以你永远不用输入 tmux 命令：关掉标签页就是离开，打开页面就是回来，用滚轮滚动，选中即复制。",
+    "from": "3a236c2882a1"
+  },
+  "tmux.q.config.q": {
+    "text": "Aubergine 会修改我的 tmux 配置吗？",
+    "from": "72dfacba61b2"
+  },
+  "tmux.q.config.a": {
+    "text": "不会。它在自己的套接字 <code>aubergine</code> 上用自己的配置文件运行 tmux。你的 tmux 服务器、它的会话和你的 <code>~/.tmux.conf</code> 都保持原样。",
+    "from": "7a93ca8432a8"
+  },
+  "tmux.q.copy.q": {
+    "text": "如何在 Aubergine 的终端里滚动和复制？",
+    "from": "1f32bd561f38"
+  },
+  "tmux.q.copy.a": {
+    "text": "点击终端把键盘交给它，然后用滚轮往回滚动。用鼠标选中文字：松开时它就在你的剪贴板里了。用 <code>⌘V</code> 粘贴，macOS 之外用 <code>Ctrl+Shift+V</code>。",
+    "from": "a7f3123832de"
+  },
+  "tmux.q.attach.q": {
+    "text": "能从我自己的终端应用连接到 Aubergine 的终端吗？",
+    "from": "f9fcae450958"
+  },
+  "tmux.q.attach.a": {
+    "text": "能：<code>aubergine attach &lt;name&gt;</code>，或终端菜单中的 <strong>Open on desktop</strong>。两处是同一个终端；在一处输入的内容会显示在另一处。",
+    "from": "7efa052d1074"
+  },
+  "tmux.q.ssh.q": {
+    "text": "Aubergine 能取代我 SSH 登录的服务器上的 tmux 吗？",
+    "from": "6795b9483c23"
+  },
+  "tmux.q.ssh.a": {
+    "text": "不能直接取代：它的终端在它的服务器所在的机器上。它可以运行在服务器上，再通过 SSH 隧道或代理从你的浏览器使用，但这只在容器中运行过，从未在云服务器上运行。",
+    "from": "502062297ccb"
+  },
+  "tmux.related": {
+    "text": "相关：<a href=\"/keep-process-running-after-closing-terminal/\">让进程继续运行</a> · <a href=\"/keep-terminals-after-restart/\">重启之后保留你的终端</a> · <a href=\"/too-many-terminal-tabs/\">终端太多时</a>",
+    "from": "d827d8a7918e"
+  },
+  "phone.meta.title": {
+    "text": "用手机查看你的编程智能体 | Aubergine",
+    "from": "5e05181dcbf3"
+  },
+  "phone.meta.description": {
+    "text": "用手机浏览器访问 Aubergine：同一台电脑上的 HTTPS、写在设置里的地址、用一次性代码或二维码配对每台设备，并可随时吊销。只在一台 Mac 上运行过一次；没有在手机上试过。",
+    "from": "4f87f330c4d4"
+  },
+  "phone.crumb": {
+    "text": "用手机",
+    "from": "624fe9a9d5bf"
+  },
+  "phone.title": {
+    "text": "用手机查看你的智能体",
+    "from": "c92463ac8872"
+  },
+  "phone.lead": {
+    "text": "你让三个智能体干着活就出门了。其中有没有哪个在等你说一声“是”？设置好之后，就可以在手机浏览器里打开 Aubergine：同样的页面、同样的终端，每台设备用一次性代码配对。",
+    "from": "5ff340d9bfd5"
+  },
+  "phone.tried": {
+    "text": "<strong>试过什么，没试过什么。</strong>从另一台设备使用在 2026 年 11 月 22 日运行过一次：在一台 Mac 上使用 <code>docker/</code> 中的容器配置，前面是 <code>https://aubergine.localhost</code> 下的 Caddy，用同一台 Mac 上的 Chromium，它用代码完成了配对，在终端里输入了内容，并在其设备被吊销时被登出。<strong>没试过：</strong>真正的手机、用手机扫描二维码、带公开证书的真实域名、私有网络、云服务器、两台独立的机器。页面没有针对手机的宽度排版。其余内容来自代码及其测试。请把这当作可以一试的东西，而不是承诺。",
+    "from": "335a569f7582"
+  },
+  "phone.usual.title": {
+    "text": "通常的做法",
+    "from": "30e09240a39b"
+  },
+  "phone.usual.text": {
+    "text": "在手机上用 SSH 应用登录电脑，再 <code>tmux attach</code> 到某个智能体运行的会话。或者用隧道，或者用私有网络让手机能连到电脑。两种都可行；但这样查看几个智能体，就得在小键盘上轮流连接每一个。",
+    "from": "db5b6a60eb84"
+  },
+  "phone.does.title": {
+    "text": "Aubergine 做什么",
+    "from": "acf3f5da99c1"
+  },
+  "phone.does.off": {
+    "text": "<strong>默认关闭，并且始终只绑定在这台电脑上。</strong>服务器只监听 <code>127.0.0.1</code>，这一点不会改变。由同一台电脑上的某个程序以一个域名为它提供 HTTPS，比如私有网络自带的 HTTPS 服务，或者 Caddy 这样的 Web 服务器。Aubergine 自己从不处理 HTTPS。",
+    "from": "69ebb44f3dfc"
+  },
+  "phone.does.address": {
+    "text": "<strong>地址由你写在设置里。</strong>它写在 <code>access.addresses</code> 下，位于 <code>config.json</code> 中，在服务器启动时读取；任何页面或程序都不能修改它。<code>aubergine doctor</code> 会列出这些地址，以及其中任何一个有什么问题。",
+    "from": "4d586d2378b3"
+  },
+  "phone.does.pair": {
+    "text": "<strong>每台设备用一次性代码配对。</strong>在电脑上运行 <code>aubergine device add --name \"Phone\"</code>，或在已登录的浏览器中使用 <strong>Settings → Devices → Add a device</strong>，会显示一个代码，并为每个地址显示一个二维码，内容是带着代码的链接。扫描它、打开链接，或在手机的登录页面输入代码。代码只能用一次，有效期三分钟。",
+    "from": "e461217bf7e4"
+  },
+  "phone.does.revoke": {
+    "text": "<strong>设备可以被吊销。</strong><code>aubergine device revoke \"Phone\"</code>，或 <strong>Settings → Devices</strong> 下的 <strong>Revoke…</strong>（吊销），会立即将其登出，并关闭它打开的一切。90 天未使用的设备会停止工作。",
+    "from": "3fecb39df4a9"
+  },
+  "phone.does.owner": {
+    "text": "<strong>已配对的设备就是完整的所有者。</strong>你在电脑前能做的一切它都能做：每个终端都能用，也就是以你的身份在那台电脑上使用 shell。只配对你愿意把键盘交给它的浏览器。作用于电脑自身桌面的功能，即 <strong>Open on desktop</strong>，在那里的页面上不会出现，请求也会被拒绝。",
+    "from": "77b677da358b"
+  },
+  "phone.see.title": {
+    "text": "你会看到什么",
+    "from": "7ad31245b77f"
+  },
+  "phone.see.text": {
+    "text": "和在电脑前一样的页面：画布和其中的终端、<strong>For you</strong> 旁边的数字和等待清单，以及在 <code>/t/&lt;terminal&gt;</code> 单独打开的终端，带着它的详情和笔记。它没有针对手机排版；用起来和在窄窗口中一样。",
+    "from": "e8260cebb287"
+  },
+  "phone.see.steps": {
+    "text": "三种设置方式（SSH 隧道、私有网络、你自己的域名加代理）、配对，以及出问题时怎么办，都在 <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md\">Using Aubergine from elsewhere</a> 中。SSH 隧道完全不需要设置，但在手机上用起来不方便。",
+    "from": "cdc64dbda345"
+  },
+  "phone.not.title": {
+    "text": "它不做什么",
+    "from": "b3a53baf5dfd"
+  },
+  "phone.not.push": {
+    "text": "<strong>没有应用，也没有推送。</strong>它是手机浏览器里的一个页面，打开期间保持最新。页面关掉的手机不会收到任何东西。",
+    "from": "6f40d9a4fbaf"
+  },
+  "phone.not.awake": {
+    "text": "<strong>睡眠中的笔记本不会响应。</strong>服务器在笔记本上时，手机只能在笔记本醒着时连到它。另一个选择是一台一直开着的机器。",
+    "from": "216b7430b645"
+  },
+  "phone.not.public": {
+    "text": "<strong>不为任何人都能打开的地址提供保护。</strong>没有代码谁也进不来，代码也很难猜中，但陌生人猜的可是一个 shell。请在它前面放一个私有网络或你所在组织自己的登录，并且永远不要使用把机器公开到整个互联网的私有网络模式。",
+    "from": "c027919da51a"
+  },
+  "phone.not.layout": {
+    "text": "<strong>没有手机版排版。</strong>页面用起来和在窄窗口中一样。这样可以阅读终端、回答问题；排列画布则适合在更大的屏幕上做。",
+    "from": "715e130ed7cc"
+  },
+  "phone.q.check.q": {
+    "text": "能用手机查看我的编程智能体吗？",
+    "from": "b6ed7ed61e98"
+  },
+  "phone.q.check.a": {
+    "text": "一旦能通过 HTTPS 访问 Aubergine，并且手机浏览器已配对，手机就会显示同样的页面：哪个终端在等待、等待清单，以及每个终端。这在同一台 Mac 上的浏览器中运行过，还没有在真正的手机上运行。",
+    "from": "25e4fa5804eb"
+  },
+  "phone.q.pair.q": {
+    "text": "如何把手机和 Aubergine 配对？",
+    "from": "2d255e8c0d6d"
+  },
+  "phone.q.pair.a": {
+    "text": "在电脑上运行 <code>aubergine device add --name \"Phone\"</code>，或使用 <strong>Settings → Devices → Add a device</strong>。在三分钟内扫描二维码、打开链接，或在手机的登录页面输入代码。",
+    "from": "238eafc4e16e"
+  },
+  "phone.q.lost.q": {
+    "text": "手机丢了怎么办？",
+    "from": "4cfecc2cfc43"
+  },
+  "phone.q.lost.a": {
+    "text": "在电脑上吊销它：<code>aubergine device revoke \"Phone\"</code>，或 <strong>Settings → Devices</strong> 下的 <strong>Revoke…</strong>。它会被立即登出，它打开的一切都会被关闭。",
+    "from": "f3431f64e453"
+  },
+  "phone.q.internet.q": {
+    "text": "把 Aubergine 放到互联网上安全吗？",
+    "from": "b626ae8c3d99"
+  },
+  "phone.q.internet.a": {
+    "text": "任何人都能打开的地址，会把登录页摆在所有人面前，而已配对的设备拥有你电脑上的 shell。最好用私有网络，或在地址前面放你所在组织自己的登录。",
+    "from": "a99827304604"
+  },
+  "phone.q.asleep.q": {
+    "text": "笔记本睡眠时还能用吗？",
+    "from": "40db9086b18b"
+  },
+  "phone.q.asleep.a": {
+    "text": "不能。睡眠中的笔记本不会响应任何请求，它的终端会暂停到醒来为止。要随时连到智能体，服务器必须运行在一台一直醒着的机器上。",
+    "from": "57372d76c37c"
+  },
+  "phone.related": {
+    "text": "相关：<a href=\"/claude-code-notifications/\">知道 Claude Code 何时在等待</a> · <a href=\"/keep-process-running-after-closing-terminal/\">让进程继续运行</a> · <a href=\"/security/\">安全与隐私</a>",
+    "from": "2c9ecf2e9214"
   },
   "queue.meta.title": {
     "text": "队列、For you 列表与定时计划 | Aubergine",

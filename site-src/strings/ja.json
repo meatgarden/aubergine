@@ -404,8 +404,8 @@
     "from": "2c75df8acfc1"
   },
   "home.trust.outlive.text": {
-    "text": "どのターミナルも tmux セッションです。ブラウザーを閉じても Aubergine を再起動しても、作業は動き続けます。",
-    "from": "f913c3351663"
+    "text": "どのターミナルも tmux セッションです。<a href=\"/keep-terminals-after-restart/\">ブラウザーを閉じても Aubergine を再起動しても、作業は動き続けます</a>。",
+    "from": "94905c3b891e"
   },
   "home.trust.nomodel.name": {
     "text": "モデルなし、キーなし",
@@ -1319,6 +1319,62 @@
     "text": "エージェントごとに専用のチェックアウトとブランチを渡し、2つのエージェントが同じファイルを編集しないようにします。",
     "from": "58872d0caca2"
   },
+  "guides.keep.name": {
+    "text": "再起動のあともターミナルを残す",
+    "from": "6cfa04f7c3ab"
+  },
+  "guides.keep.text": {
+    "text": "ブラウザーを閉じたとき、Aubergine を再起動したとき、コンピューターを再起動したときにそれぞれ何が残るか、そして続きから再開する方法。",
+    "from": "396ced3608bc"
+  },
+  "guides.alive.name": {
+    "text": "ターミナルを閉じてもプロセスを動かし続ける",
+    "from": "0a69e88f3c29"
+  },
+  "guides.alive.text": {
+    "text": "タブ、ウィンドウ、ブラウザーを閉じても何も終わりません。tmux が与えてくれるものを、tmux を覚えずに。",
+    "from": "fc7a604b47b9"
+  },
+  "guides.notify.name": {
+    "text": "Claude Code の完了や待機を知る",
+    "from": "3cd5aea79b1d"
+  },
+  "guides.notify.text": {
+    "text": "すべてのターミナルの working、waiting for you、finished の表示、For you の数、次に待っているターミナルへ移るキー、開いているページからの通知。",
+    "from": "6cbbad6859df"
+  },
+  "guides.resume.name": {
+    "text": "Claude Code の会話を再開する",
+    "from": "92e5ad9c0015"
+  },
+  "guides.resume.text": {
+    "text": "動いていたターミナルでの Resume agent、フォルダーごとの過去の会話、そしてどこまで進んでいたかを教えてくれるもの。",
+    "from": "0058e15394a7"
+  },
+  "guides.many.name": {
+    "text": "ターミナルが多すぎるときに目当てのものを見つける",
+    "from": "9d8e670c6407"
+  },
+  "guides.many.text": {
+    "text": "キャンバス、状態を言葉で示すすべてのターミナルの一覧、フィルター、タグ、ターミナルの出力の検索。",
+    "from": "789065caea35"
+  },
+  "guides.tmux.name": {
+    "text": "tmux を覚えずに tmux を使う",
+    "from": "c661725dc167"
+  },
+  "guides.tmux.text": {
+    "text": "ウィンドウを閉じても残るシェル。プレフィックスキーも設定もいらず、あなた自身の tmux には触れません。",
+    "from": "6875107241dd"
+  },
+  "guides.phone.name": {
+    "text": "スマートフォンからエージェントを確認する",
+    "from": "c92463ac8872"
+  },
+  "guides.phone.text": {
+    "text": "ほかのデバイスから Aubergine を使います。デバイスごとにコードでペアリングします。1台の Mac で一度実行しただけで、実際のスマートフォンでは試していません。",
+    "from": "fbe08c88ab0c"
+  },
   "guides.queue.name": {
     "text": "キュー、For you、スケジュール",
     "from": "61c48ccc941d"
@@ -1630,6 +1686,1198 @@
   "copies.ld.a4": {
     "text": "いいえ。作業を分けておくもので、エージェントを閉じ込めるものではありません。エージェントはあなたとして動き、あなたが読み書きできるすべてのファイルを読み書きできます。",
     "from": "8b760eb225ac"
+  },
+  "keep.table.browserShort": {
+    "text": "ブラウザーを閉じた",
+    "from": "6a63c6750f2a"
+  },
+  "keep.table.serverShort": {
+    "text": "Aubergine を再起動した",
+    "from": "88d2ef622400"
+  },
+  "keep.table.computerShort": {
+    "text": "コンピューターを再起動した",
+    "from": "515aa3442054"
+  },
+  "keep.meta.title": {
+    "text": "クラッシュ、再起動、アップデートのあともターミナルを残す | Aubergine",
+    "from": "d0521ba83d02"
+  },
+  "keep.meta.description": {
+    "text": "ブラウザーが閉じたとき、Aubergine が再起動したとき、コンピューターがクラッシュ・再起動・夜間アップデートしたときに、ターミナルとコーディングエージェントがどうなるか。そして続きから再開する方法。",
+    "from": "4f824d2bcf4e"
+  },
+  "keep.crumb": {
+    "text": "再起動のあと",
+    "from": "b287f32fbfcc"
+  },
+  "keep.title": {
+    "text": "コンピューターが再起動してもターミナルは残る",
+    "from": "be3fd58999ae"
+  },
+  "keep.lead": {
+    "text": "ブラウザーを閉じても Aubergine を再起動しても、何も失われません。どのターミナルも動き続けます。コンピューターの再起動は動いていたものを終わらせますが、Aubergine はその周りのすべてを戻すので、最初からではなく続きから再開できます。",
+    "from": "a30f93263e44"
+  },
+  "keep.table.title": {
+    "text": "こんなとき何が起きるか",
+    "from": "2e3d1d162e51"
+  },
+  "keep.table.intro": {
+    "text": "どのターミナルも tmux セッション内のシェルで、ブラウザーとも Aubergine のサーバーとも別に動いています。中身は2か所にあります。動いているシェルは tmux だけが保持し、ターミナルについて言われていることはすべて、Aubergine が変更のたびにデータフォルダーのファイルに書き込みます。",
+    "from": "ee20243273bd"
+  },
+  "keep.table.thing": {
+    "text": "対象",
+    "from": "f8cf83a76a98"
+  },
+  "keep.table.browser": {
+    "text": "ブラウザーが閉じる、クラッシュする、アップデートされる、またはタブを閉じる",
+    "from": "0a7d90fd549e"
+  },
+  "keep.table.server": {
+    "text": "Aubergine が止まる、再起動する、アップデートされる",
+    "from": "1c6408e3eb21"
+  },
+  "keep.table.computer": {
+    "text": "コンピューターがクラッシュする、再起動する、アップデートをインストールする",
+    "from": "321c23263fa9"
+  },
+  "keep.row.running": {
+    "text": "動いているプログラムとエージェント",
+    "from": "aa6584073938"
+  },
+  "keep.row.scrollback": {
+    "text": "ターミナルに表示されていたもの（スクロールバック）",
+    "from": "ae850a03d2bb"
+  },
+  "keep.row.place": {
+    "text": "キャンバス上の位置、名前、色、タグ、フィールド、リンク",
+    "from": "d8942ea955fb"
+  },
+  "keep.row.note": {
+    "text": "ノート：要約とログ",
+    "from": "bd09d21420fd"
+  },
+  "keep.row.folder": {
+    "text": "いたフォルダー",
+    "from": "93d6eac7960d"
+  },
+  "keep.row.agent": {
+    "text": "エージェントの会話",
+    "from": "edc534789af1"
+  },
+  "keep.row.copies": {
+    "text": "作業コピーとそのブランチ",
+    "from": "5d15d9f5fde9"
+  },
+  "keep.row.queue": {
+    "text": "キュー、実行、スケジュール",
+    "from": "862df801acb6"
+  },
+  "keep.cell.runs": {
+    "text": "動き続ける",
+    "from": "8b35a116c9a8"
+  },
+  "keep.cell.ends": {
+    "text": "終わる",
+    "from": "361e48d0308f"
+  },
+  "keep.cell.there": {
+    "text": "残る",
+    "from": "007cce612ae7"
+  },
+  "keep.cell.gone": {
+    "text": "消える",
+    "from": "283bb9deef02"
+  },
+  "keep.cell.fresh": {
+    "text": "同じフォルダーで新しいシェル",
+    "from": "0897ff42a469"
+  },
+  "keep.cell.goes": {
+    "text": "続く",
+    "from": "d17f7dd93885"
+  },
+  "keep.cell.resume": {
+    "text": "<strong>Resume agent</strong> で続けられる（Claude Code）",
+    "from": "b65d3c8c86df"
+  },
+  "keep.cell.late": {
+    "text": "残る。過ぎた時刻は遅れて実行",
+    "from": "0c5a51a9cc07"
+  },
+  "keep.table.parked": {
+    "text": "パークしたターミナルも同じように残り、やはり新しいシェルになります。シェルがすでに終わっていたターミナルは終わったままで、<strong>Restart here</strong>（ここで再起動）が出ます。",
+    "from": "6ccfc616c13e"
+  },
+  "keep.table.update": {
+    "text": "アップデートのあと、すでに開いていたターミナルは、シェルが起動したときのもの（<code>PATH</code> と Aubergine のシェル連携）を、そのシェルを起動し直すまで使い続けます。Aubergine をログイン時に起動しているなら、アップデートのあとはサーバーを手で再起動する代わりに <code>aubergine service install</code> をもう一度実行します。",
+    "from": "fb1239269602"
+  },
+  "keep.back.title": {
+    "text": "再起動のあと：作業に戻る",
+    "from": "8a4d5f07f8a6"
+  },
+  "keep.back.start": {
+    "text": "<strong>Aubergine を起動します。</strong>ログイン時に起動する設定（<code>aubergine service install</code>、macOS のみ）なら、ログインした時点で動いていて、止まれば launchd がまた起動します。そうでなければ、起動してページを開きます。",
+    "from": "caf3ca498329"
+  },
+  "keep.back.canvas": {
+    "text": "<strong>キャンバスは離れたときのままです。</strong>どのターミナルも名前、色、タグ、フィールド、リンク、ノートとともに元の位置にあり、Aubergine が最後に見たフォルダーで（そのフォルダーがもうなければ既定のフォルダーで）新しいシェルになっています。何も入力し直されず、実行し直されません。",
+    "from": "9354ae2c51e0"
+  },
+  "keep.back.resume": {
+    "text": "<strong>エージェントを再開します。</strong>Claude Code が動いていて Aubergine がその会話を知っている（Aubergine から起動した）ターミナルでは、タイトルバーに <strong>Resume agent</strong>（エージェントを再開）が出ます。その会話で Claude Code を再び起動します。ワークフローの実行の途中にあるターミナルでは、その実行についてもう一度エージェントに伝えるので、実行が止まっているステップから続けます。",
+    "from": "dadde3e3c41f"
+  },
+  "keep.back.read": {
+    "text": "<strong>それぞれがどこまで進んでいたかを見ます。</strong>ターミナルのタイトルにある <strong>Details</strong>（詳細）は、分かっていること（実行のステップと最後の報告、フォルダー、タグ）、要約、フィールドとリンク、そして <strong>Log</strong> の下にログを表示します。一覧でターミナルの名前にポインターを合わせると振り返りが出ます。",
+    "from": "93f57bf9eb94"
+  },
+  "keep.back.history": {
+    "text": "<strong>キャンバスにない会話を探します。</strong>パレット（<code>⌘K</code>）の <strong>Past conversations…</strong>（過去の会話）、またはターミナルの詳細にある「Past conversations in this folder…」で、フォルダー内の Claude Code の過去の会話を一覧し、キャンバスに開けます。",
+    "from": "237fdc4c37c5"
+  },
+  "keep.back.other": {
+    "text": "ほかのエージェントには <strong>Resume agent</strong> はありません。Aubergine がその会話を知らないためです。同じターミナルで、そのエージェント自身の再開の方法で起動し直し、ノートを読んでどこまで進んでいたかを伝えてください。",
+    "from": "793f54a1a40a"
+  },
+  "keep.pic.caption": {
+    "text": "ターミナルの詳細：実行のステップと最後の報告、フォルダー、タグ、フィールド。これらはすべてコンピューターの再起動のあとも残ります。横のライブのターミナルは残りません。",
+    "from": "d9f6211ba821"
+  },
+  "keep.lost.title": {
+    "text": "失われるもの、そしてどうするか",
+    "from": "14285bfff601"
+  },
+  "keep.lost.running": {
+    "text": "<strong>動いていたものは終わります。</strong>ビルド、テスト、サーバー、作業途中のエージェントはコンピューターとともに止まり、Aubergine はどれも自分では起動し直しません。自分で起動し直してください。再起動を越えて続けるべき処理は、システムのサービスのような、そのために作られた仕組みに任せます。",
+    "from": "e46f81e690a3"
+  },
+  "keep.lost.work": {
+    "text": "<strong>Aubergine が追っている作業はあなたを待ちます。</strong>ワークフローの実行は、ステップと提出された報告をすべて保ちます。キューのタスクは順番を保ちます。サーバーが止まった瞬間に開始中だったタスクは、理由の一文とともに失敗と記録され、自動で再試行されるものはありません。サーバーが止まっている間に過ぎたスケジュールの時刻は、6時間以内なら遅れて1回だけ実行され（<code>schedules.lateWithinHours</code>）、それ以外は逃したと記録されます。",
+    "from": "3030fe221d28"
+  },
+  "keep.lost.scrollback": {
+    "text": "<strong>スクロールバックは消えます。</strong>シェルが動いている間、tmux は出力された最後の50,000行を保持し、パレットの検索はそれを読みます。Aubergine はターミナルの出力を記録しないので、コンピューターの再起動のあとに戻せるものはなく、検索で見つかるのはそれ以降の出力だけです。",
+    "from": "aaed4fac1b79"
+  },
+  "keep.lost.away": {
+    "text": "<strong>「離れている間」は最初からになります。</strong>ファイルではなくサーバーのメモリーにあるので、サーバーの起動後はそれ以降の変化しか知らず、そのことを伝えます。",
+    "from": "6731aefcf508"
+  },
+  "keep.habit.title": {
+    "text": "再起動を怖くなくする習慣",
+    "from": "bd4d96a2eb2b"
+  },
+  "keep.habit.text": {
+    "text": "残るのはノートです。だからエージェントには作業しながらノートに書かせましょう。決めたこと、結果、どこで止めたか。Aubergine から起動した Claude Code では、送ったプロンプトがひとつずつ自動でログに加わり、始めにターミナルに名前を付けて要約を保つよう伝えられます。どのエージェントも次のコマンドで同じことができ、<code>aubergine guide</code> がその使い方を説明します。",
+    "from": "f0806ca11e08"
+  },
+  "keep.habit.recap": {
+    "text": "その日の作業を終える前に、ターミナルの詳細で <strong>Ask its agent for a recap</strong>（エージェントに振り返りを頼む）を押します。エージェントは <code>aubergine recap --write</code> で現状を書き、その振り返りはターミナルとともに保存されます。",
+    "from": "1b909d393ab1"
+  },
+  "keep.sleep.title": {
+    "text": "ノートパソコンを閉じる、スリープ、ブラウザー",
+    "from": "393a7e53106a"
+  },
+  "keep.sleep.sleep": {
+    "text": "<strong>スリープは再起動ではありません。</strong>ノートパソコンのふたを閉じると、たいていスリープします。プログラムは一時停止し、起きると続きから動き、表の最後の列のことは何も起きません。Aubergine はコンピューターを起こしたままにもせず、起こしもしないので、スリープ中に時刻が過ぎたスケジュールは、上のとおり遅れて実行されるか、逃したことになります。",
+    "from": "f90d61fc3eae"
+  },
+  "keep.sleep.browser": {
+    "text": "<strong>ブラウザー、タブ、そのウィンドウを閉じても</strong>、ブラウザーのアップデートで再起動しても、何も終わりません。ページを開き直せば（<code>aubergine open</code> でサインインした状態で開きます）、各ターミナルが tmux から今の状態で描かれます。開いたままのページは、サーバーが戻ると自動で再接続します。",
+    "from": "40f09b6f29cb"
+  },
+  "keep.sleep.server": {
+    "text": "<strong><code>aubergine start</code> が動いているウィンドウを閉じる</strong>か、そこで Ctrl+C を押すと、止まるのはサーバーだけです。表の真ん中の列にあたります。",
+    "from": "1cd0a9349c3d"
+  },
+  "keep.sleep.wsl": {
+    "text": "<strong>WSL を使う Windows では</strong>、Windows の再起動や <code>wsl --shutdown</code> で WSL が止まることが、Aubergine にとってのコンピューターの再起動です。<a href=\"/windows/\">WSL を使う Windows</a> を参照してください。",
+    "from": "0c01d734b5c3"
+  },
+  "keep.q.restore.q": {
+    "text": "Aubergine は再起動のあとにターミナルを復元できますか？",
+    "from": "a2d8fea94c00"
+  },
+  "keep.q.restore.a": {
+    "text": "はい、中で動いていたもの以外はすべて。各ターミナルは名前、色、ノート、タグ、フィールド、リンクとともにキャンバスの元の位置に戻り、最後のフォルダーで新しいシェルになります。中で動いていたプログラムは起動し直されません。Claude Code なら <strong>Resume agent</strong> で会話を続けられます。",
+    "from": "8be8d8045b34"
+  },
+  "keep.q.output.q": {
+    "text": "Aubergine はターミナルの出力と履歴を残しますか？",
+    "from": "7463118541ed"
+  },
+  "keep.q.output.a": {
+    "text": "出力は、シェルが動いている間だけです。tmux は各ターミナルのスクロールバックを50,000行保持し、ブラウザーを閉じても Aubergine を再起動しても少しも失われません。コンピューターを再起動すると消えます。Aubergine はターミナルの出力を記録しないからです。入力したコマンドの履歴（上矢印で戻ってくるもの）はシェル自身のファイルで、いつもどおりシェルが保存します。",
+    "from": "a88ba263b084"
+  },
+  "keep.q.claude.q": {
+    "text": "Claude Code の会話は再起動のあとも残りますか？",
+    "from": "c87cda5e8a7e"
+  },
+  "keep.q.claude.a": {
+    "text": "会話は残ります。Claude Code が自分のファイルに保存し、Aubergine は各ターミナルがどの会話にいたかを覚えています。再起動のあと、ターミナルのタイトルバーの <strong>Resume agent</strong> がその会話で Claude Code を再び起動します。その瞬間にエージェントがしていたことは止まっていて、あなたが頼むまでやり直されません。",
+    "from": "0d163dc56b89"
+  },
+  "keep.q.macos.q": {
+    "text": "macOS が夜中に自動でアップデートしても大丈夫ですか？",
+    "from": "dd58c7a1e65c"
+  },
+  "keep.q.macos.a": {
+    "text": "コンピューターを再起動するアップデートは、ほかの再起動と同じです。動いていたプログラムは終わり、それ以外はすべて残ります。ログイン時に起動する設定（<code>aubergine service install</code>）なら、ログインした時点でサーバーがまた動いていて、キャンバスが待っています。最後のフォルダーでの新しいシェルは、Aubergine のコンテナーを再起動したときに確認しました。実際の macOS の夜間アップデートは試していません。",
+    "from": "06c25c70de97"
+  },
+  "keep.q.tmux.q": {
+    "text": "tmux の知識は必要ですか？",
+    "from": "3d7564a5b7f9"
+  },
+  "keep.q.tmux.a": {
+    "text": "いいえ。インストールされている必要はあります（3.2 以降）が、Aubergine は専用のソケットと専用の設定で動かし、ステータスバーもプレフィックスキーもないので、tmux のコマンドを入力することはありません。あなた自身の tmux を使っていても、それには触れません。",
+    "from": "d33e0b313f18"
+  },
+  "keep.related": {
+    "text": "関連：<a href=\"/claude/\">Aubergine での Claude Code</a> · <a href=\"/queue-and-schedules/\">キューとスケジュール</a> · <a href=\"/working-copies/\">作業コピー</a>",
+    "from": "730944daab4e"
+  },
+  "alive.meta.title": {
+    "text": "ターミナルを閉じてもプロセスを動かし続ける | Aubergine",
+    "from": "b6893102f4dc"
+  },
+  "alive.meta.description": {
+    "text": "ターミナルのウィンドウを閉じると、その中で動いているものは終わります。よくある答えは nohup、disown、screen、tmux です。Aubergine はすべてのターミナルを tmux で動かすので、ブラウザーを閉じても何も終わりません。",
+    "from": "91fc698775ac"
+  },
+  "alive.crumb": {
+    "text": "動かし続ける",
+    "from": "18b04919677d"
+  },
+  "alive.title": {
+    "text": "ターミナルを閉じてもプロセスを動かし続ける",
+    "from": "0a69e88f3c29"
+  },
+  "alive.lead": {
+    "text": "ビルドやサーバー、コーディングエージェントを起動したのに、ウィンドウを閉じると終わってしまう。Aubergine ではウィンドウを閉じても何も終わりません。どのターミナルもブラウザーとは別に動き、出力したものは戻ってきたときにそこにあります。",
+    "from": "08c79722641c"
+  },
+  "alive.usual.title": {
+    "text": "よくあるやり方",
+    "from": "30e09240a39b"
+  },
+  "alive.usual.text": {
+    "text": "ターミナルのウィンドウを閉じると、その中のシェルが終わり、そのシェルが起動したものも一緒に終わります。これを避ける定番の方法は次のとおりです。",
+    "from": "4915c1c5f12a"
+  },
+  "alive.usual.nohup": {
+    "text": "<code>nohup</code> は、ターミナルが閉じるときに送られるハングアップを無視するコマンドを起動します。出力はファイルに書かれます（別の場所に送らなければ <code>nohup.out</code>）。",
+    "from": "07104e43d084"
+  },
+  "alive.usual.disown": {
+    "text": "<code>disown</code> は bash と zsh で、すでに起動したジョブを手放し、シェルがハングアップをそのジョブに伝えないようにします。そのあとターミナルでそのジョブに戻ることはできません。",
+    "from": "cff93689c505"
+  },
+  "alive.usual.mux": {
+    "text": "<code>screen</code> と <code>tmux</code> は、シェルを自前のサーバーの中で動かします。デタッチしてウィンドウを閉じ、あとで同じシェルに出力ごとアタッチし直せます。確実な答えですが、使うにはキーとコマンドを覚える必要があります。",
+    "from": "8033fa82aabc"
+  },
+  "alive.usual.after": {
+    "text": "Aubergine は最後の方法の上に作られています。tmux をあなたの代わりに動かすので、キーを覚えずに tmux の答えが手に入ります。",
+    "from": "c5965cfc20f2"
+  },
+  "alive.does.title": {
+    "text": "Aubergine がすること",
+    "from": "acf3f5da99c1"
+  },
+  "alive.does.text": {
+    "text": "Aubergine のどのターミナルも、Aubergine 専用の tmux ソケット上で、ターミナルごとの tmux セッションの中で動くシェルです。tmux はブラウザーとも Aubergine のサーバーとも別に動くので、次のようになります。",
+    "from": "98b70e7d0d29"
+  },
+  "alive.does.browser": {
+    "text": "<strong>タブ、ウィンドウ、ブラウザー全体を閉じても何も終わりません。</strong>ページを開き直せば（<code>aubergine open</code> でサインインした状態で開きます）、各ターミナルが tmux から今の状態で描かれ、その間に出力されたものはスクロールバックにあります。",
+    "from": "41a2df93d059"
+  },
+  "alive.does.server": {
+    "text": "<strong>Aubergine を止めても何も終わりません。</strong><code>aubergine start</code> が動いている場所での Ctrl+C、サーバーのクラッシュ、アップデートで止まるのはサーバーだけです。もう一度起動してページを再読み込みしてください。",
+    "from": "b9ce1197f495"
+  },
+  "alive.does.park": {
+    "text": "<strong>キャンバス上でターミナルを閉じるとパークされます。</strong>タイトルの × でキャンバスから外れ、シェルは動き続けます。キャンバス上のバーにある <strong>Parked</strong>（パーク中）がパークしたターミナルを一覧し、<strong>Restore</strong>（戻す）で戻せます。",
+    "from": "d74085e1bab8"
+  },
+  "alive.does.end": {
+    "text": "<strong>シェルを完全に終わらせる前には確認があります。</strong>パークの一覧にある <strong>End</strong>（終了）は、あなたが「はい」と答えたときだけターミナルを終わらせます。",
+    "from": "297bbff16a9b"
+  },
+  "alive.does.views": {
+    "text": "<strong>別の表示を閉じても何も終わりません。</strong>ターミナルのタイトルにある <strong>Tab ↗</strong> はそのターミナルだけをブラウザーのタブで開き、<code>aubergine attach &lt;name&gt;</code> はターミナルアプリのウィンドウに表示します。どれも同じターミナルで、コピーではありません。そのタブやウィンドウを閉じても動き続けます。",
+    "from": "620a7de6d140"
+  },
+  "alive.does.scroll": {
+    "text": "シェルが動いている間、tmux は出力された最後の50,000行を保持します。キーボードを持っているターミナルではホイールでさかのぼれ、パレット（<code>⌘K</code>）で検索できます。",
+    "from": "6bfb58743356"
+  },
+  "alive.pic.caption": {
+    "text": "一覧は各ターミナルが何をしているかを示します。下のパークされたターミナルはキャンバスの外にあり、シェルはまだ動いています。",
+    "from": "4bafddfa442e"
+  },
+  "alive.not.title": {
+    "text": "しないこと",
+    "from": "b3a53baf5dfd"
+  },
+  "alive.not.reboot": {
+    "text": "<strong>コンピューターの再起動は越えられません。</strong>再起動、コンピューターのクラッシュ、再起動を伴うアップデートは、すべてのシェルとその中で動いているものを終わらせます。Aubergine はその周りのすべてを戻し、各ターミナルを最後のフォルダーで新しいシェルにしますが、自分では何も起動し直しません。<a href=\"/keep-terminals-after-restart/\">再起動のあともターミナルを残す</a>を参照してください。",
+    "from": "7abee1496908"
+  },
+  "alive.not.sleep": {
+    "text": "<strong>コンピューターを起こしたままにはしません。</strong>ノートパソコンがスリープすると、ここで動いているものも含めてプログラムは一時停止し、起きると続きから動きます。",
+    "from": "866d9035e322"
+  },
+  "alive.not.service": {
+    "text": "<strong>サービスマネージャーではありません。</strong>再起動のあと自動で戻ってくるべき処理は、システムのサービスに任せてください。",
+    "from": "6d5fa1f2b3ca"
+  },
+  "alive.not.adopt": {
+    "text": "<strong>ほかの場所ですでに動いているプログラムを引き取ることはできません。</strong>動いているプログラムを別のターミナルに移せるツールはありません。ターミナルアプリのタブで <code>aubergine here</code> を実行すると、そのフォルダーのターミナルがキャンバスにできます。タブで動いているプログラムはそこに残り、新しいターミナルの中で起動し直す必要があります。",
+    "from": "b16b06abf9b4"
+  },
+  "alive.ssh.title": {
+    "text": "SSH で別のマシンにいるとき",
+    "from": "e88f17341af2"
+  },
+  "alive.ssh.text": {
+    "text": "Aubergine はあなた自身のコンピューターで動きます。サーバーは <code>127.0.0.1</code> で待ち受け、ターミナルはそのコンピューター上のシェルです。残したいのが SSH で接続するリモートサーバー上のプロセスなら、そのサーバーでの <code>tmux</code> や <code>screen</code> が今も答えです。",
+    "from": "dffecd1ee615"
+  },
+  "alive.ssh.remote": {
+    "text": "Aubergine 自体を別のマシンで動かし、SSH トンネル、プライベートネットワーク、または名前とプロキシを通じてブラウザーから使うこともできます。手順は <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md\">Using Aubergine from elsewhere</a> にあります。SSH トンネルの場合、<code>aubergine start</code> を動かしている SSH のウィンドウを閉じるとサーバーは止まりますが、ターミナルは動き続けます。Linux はコンテナーの中でしか動かしておらず、クラウドのマシンでは一度も動かしていません。",
+    "from": "6471fa20654e"
+  },
+  "alive.q.close.q": {
+    "text": "ブラウザーを閉じるとターミナルは止まりますか？",
+    "from": "6ddd7e6edce7"
+  },
+  "alive.q.close.a": {
+    "text": "いいえ。どのターミナルも tmux 内のシェルで、ブラウザーとは別に動いています。タブ、ウィンドウ、ブラウザーを閉じてからページを開き直すと、各ターミナルは今の状態で、動き続けたまま、その間の出力とともにあります。",
+    "from": "598cd7c22733"
+  },
+  "alive.q.ssh.q": {
+    "text": "SSH が切れたあともプロセスを動かし続けるには？",
+    "from": "960447871eb8"
+  },
+  "alive.q.ssh.a": {
+    "text": "リモートのマシンで、<code>tmux</code> か <code>screen</code> の中で、または <code>nohup</code> で起動します。Aubergine がターミナルを保つのは、自分が動いているコンピューター上です。リモートのマシンで動かして SSH トンネルやプロキシ経由で使うこともできますが、それはコンテナーの中でしか動かしておらず、クラウドのマシンでは動かしていません。",
+    "from": "0d887b52c097"
+  },
+  "alive.q.nohup.q": {
+    "text": "nohup と tmux のどちらを使うべきですか？",
+    "from": "2d8a44cabbd2"
+  },
+  "alive.q.nohup.a": {
+    "text": "<code>nohup</code> は、出力をファイルに書いてよい1つのコマンドに向いています。<code>tmux</code> は、あとで戻って入力したいシェルに向いています。Aubergine はすべてのターミナルに後者を、ブラウザーのページで、tmux のキーなしで与えます。",
+    "from": "bdd99e8d4444"
+  },
+  "alive.q.output.q": {
+    "text": "ターミナルを閉じたあとに出力を見られますか？",
+    "from": "d50697ee7ca6"
+  },
+  "alive.q.output.a": {
+    "text": "はい、シェルが動いている間は。tmux は各ターミナルの最後の50,000行を保持し、戻ってきたときにページに表示されます。Aubergine 自身は何も記録しないので、コンピューターを再起動するとその出力は消えます。",
+    "from": "4e7c9512f7a4"
+  },
+  "alive.q.reboot.q": {
+    "text": "再起動のあとも動き続けますか？",
+    "from": "a133b0a14fb2"
+  },
+  "alive.q.reboot.a": {
+    "text": "いいえ。コンピューターの再起動はすべてのプログラムを終わらせます。Aubergine は各ターミナルを、位置、名前、ノートとともに、最後のフォルダーで新しいシェルとして戻し、何も実行し直しません。",
+    "from": "a486f307279a"
+  },
+  "alive.related": {
+    "text": "関連：<a href=\"/keep-terminals-after-restart/\">再起動のあともターミナルを残す</a> · <a href=\"/tmux-without-learning-tmux/\">tmux を覚えずに tmux を使う</a> · <a href=\"/claude-code-notifications/\">Claude Code の待機を知る</a>",
+    "from": "4a361e122188"
+  },
+  "notify.meta.title": {
+    "text": "Claude Code の完了やあなた待ちを知る | Aubergine",
+    "from": "6298f70cc7f8"
+  },
+  "notify.meta.description": {
+    "text": "どの Claude Code のターミナルが作業中か、あなた待ちか、完了したかがひと目で分かります。Aubergine が生成するフック、For you の数、次に待っているターミナルへ移るキー、開いているページからの通知。",
+    "from": "ec167ae38aa3"
+  },
+  "notify.crumb": {
+    "text": "完了か待機か",
+    "from": "9cd75bf0227a"
+  },
+  "notify.title": {
+    "text": "Claude Code の完了やあなた待ちを知る",
+    "from": "d69b035c67c4"
+  },
+  "notify.lead": {
+    "text": "Claude Code に仕事を任せてほかのことをし、20分後に戻ってみると、2分目からずっと「はい」を待っていた。Aubergine は、どのターミナルが作業中で、どれがあなた待ちで、どれが完了したかを1つのページに表示します。",
+    "from": "33187b7b48cc"
+  },
+  "notify.usual.title": {
+    "text": "よくあるやり方",
+    "from": "30e09240a39b"
+  },
+  "notify.usual.text": {
+    "text": "Claude Code は、止まったとき（<code>Stop</code>）や通知を送るとき（<code>Notification</code>）などの時点で、フック、つまりあなた自身のコマンドを実行します。よくある答えは、Claude Code の設定に音を鳴らしたりデスクトップ通知を出したりするフックを書くことです。それで動きますが、スクリプトを書いて保守するのはあなたです。",
+    "from": "68ee553e9f31"
+  },
+  "notify.does.title": {
+    "text": "Aubergine がすること",
+    "from": "acf3f5da99c1"
+  },
+  "notify.does.start": {
+    "text": "<strong>Claude Code を Aubergine から起動します</strong>：ターミナル一覧の上にある <strong>New terminal ▾ → Claude Code</strong>、または <code>C</code>。Aubergine は、自分のデータフォルダーに生成してコマンドラインで指定する設定ファイルを使って <code>claude</code> を起動します。あなた自身の Claude Code の設定には触れません。そのファイルのフックが、エージェントの動きをページに伝えます。",
+    "from": "3369bd01dcea"
+  },
+  "notify.does.working": {
+    "text": "プロンプトを送ると、ターミナルは <strong>working</strong>（作業中）と表示し、プロンプトはノートのログに加わります。",
+    "from": "155df7c224c8"
+  },
+  "notify.does.waiting": {
+    "text": "エージェントがあなたを必要とすると（権限の確認、または入力を待ってアイドルになったとき）、枠線が待機中の色になり、タイトルと一覧の行に <strong>waiting for you</strong>（あなた待ち）と出ます。",
+    "from": "de3a60706385"
+  },
+  "notify.does.finished": {
+    "text": "止まると、ターミナルは <strong>finished</strong>（完了）と表示します。",
+    "from": "4fa6541012c0"
+  },
+  "notify.does.count": {
+    "text": "ページの右上にある <strong>For you の横の数</strong>は、すべてのプロジェクトにわたってあなたを待っているものすべてです。質問のあるターミナル、承認する実行、読む下書き、提案されたタスク。押すと <strong>Runs</strong> が開き、その <strong>Waiting for you</strong> 列がその一覧です。キャンバスのタブには、そのターミナルのうちいくつが待っているかが出ます。",
+    "from": "7a2b8019e903"
+  },
+  "notify.does.next": {
+    "text": "<strong>次に待っているもの。</strong>どのターミナルもキーボードを持っていないとき、<code>W</code> で次にあなたを待っているターミナルへ移ります。macOS では <code>⌃⌘J</code> でターミナルの中からも移れます。それ以外の環境ではパレットにあります。",
+    "from": "19a40372e53f"
+  },
+  "notify.does.desktop": {
+    "text": "<strong>開いているページからの通知。</strong><strong>Settings → Notifications</strong> に <strong>Notify me on the desktop when a terminal starts waiting</strong>（ターミナルが待ち始めたらデスクトップに通知する）があります。オンにすると、ターミナルが待ち始めたときやエージェントが完了したときに、そのターミナルを見ていなければ、ページがブラウザーの通知を出します。ブラウザーは一度だけ許可を求めます。",
+    "from": "a6b031774f7c"
+  },
+  "notify.does.rules": {
+    "text": "<strong>ルール。</strong><strong>Runs</strong> の <strong>Rules</strong> タブで、タスクが完了した、失敗した、あなたを必要としている、何かを尋ねられた、スケジュールが発火した、または実行できなかったときに <strong>Notify me</strong>（通知する）ルールを作れます。開いているページからの通知で、何が起きたかを一文で伝えます。",
+    "from": "8902ebd28ab4"
+  },
+  "notify.pic.caption": {
+    "text": "For you の横にある、待っているものの一覧：まず代役のエージェントの質問、次に読むステップと提出されたリスト。",
+    "from": "ec342d97a2eb"
+  },
+  "notify.other.title": {
+    "text": "ほかのエージェントと、自分で入力した claude",
+    "from": "7ee8ea823560"
+  },
+  "notify.other.text": {
+    "text": "Aubergine はターミナルの出力を読んで推測しません。ほかのエージェントやプログラムは、自分のターミナルで <code>aubergine attention waiting \"what it needs\"</code>、<code>aubergine attention working</code>、<code>aubergine attention done</code> を実行して、同じことを自分で伝えます。<code>aubergine guide --snippet</code> は、エージェントが会話の始めに読むファイル用の5行を出力します。その5行がエージェントに <code>aubergine guide</code> を実行するよう伝え、これらのコマンドはそこで説明されます。",
+    "from": "f65f5b133ea7"
+  },
+  "notify.other.typed": {
+    "text": "普通のターミナルで <code>claude</code> と入力して起動した Claude Code は、Aubergine にとってはプログラムを実行中のシェルにすぎず、<strong>waiting for you</strong> にはなりません。代わりにメニューから起動するか、<code>aubergine hooks print</code> が出力するフックを自分の設定に手で加えてください。フックは Aubergine のターミナルの外では何もしません。",
+    "from": "66303f76feaf"
+  },
+  "notify.not.title": {
+    "text": "しないこと",
+    "from": "b3a53baf5dfd"
+  },
+  "notify.not.sound": {
+    "text": "<strong>独自の音はありません。</strong>Aubergine は音を鳴らしません。通知で音が鳴るのは、ブラウザーやシステムが通知で音を鳴らす設定のときだけです。",
+    "from": "2d61c4c47cc8"
+  },
+  "notify.not.closed": {
+    "text": "<strong>ページが開いていなければ何も届きません。</strong>通知はブラウザーで開いている Aubergine のページから出ます。サーバーが自分で送ることはありません。すべてのページを閉じていても、ターミナルは <strong>waiting for you</strong> と表示したままで、ページを開けば数がそこにあります。",
+    "from": "4b12da4bf501"
+  },
+  "notify.not.phone": {
+    "text": "<strong>スマートフォンへのプッシュはありません。</strong>アプリもプッシュサービスもありません。スマートフォンのブラウザーをペアリングして同じページを開くことはできます。<a href=\"/check-agents-from-your-phone/\">スマートフォンからエージェントを確認する</a>を参照してください。ただし実際のスマートフォンでは試していません。",
+    "from": "b5b776d76082"
+  },
+  "notify.not.tried": {
+    "text": "<strong>確認したこと。</strong>ブラウザーのテストは、ブラウザー自身の通知の代役に対して通知を確認しています。本物の通知がどう見えるか、そもそも表示されるかは、ブラウザーとシステムの通知の設定次第です。",
+    "from": "3df89b5e7759"
+  },
+  "notify.q.done.q": {
+    "text": "Claude Code が終わったときに通知を受け取るには？",
+    "from": "61d334cfbe8e"
+  },
+  "notify.q.done.a": {
+    "text": "Claude Code を Aubergine から起動し、<strong>Settings → Notifications</strong> で <strong>Notify me on the desktop when a terminal starts waiting</strong> をオンにします。すると開いているページが、ターミナルがあなたを待ち始めたときやエージェントが完了したときにブラウザーの通知を出します。通知がなくても、ターミナルは <strong>finished</strong> と表示します。",
+    "from": "2e338730d3a7"
+  },
+  "notify.q.sound.q": {
+    "text": "Claude Code が入力を必要とするときに音を鳴らせますか？",
+    "from": "06e5fcebba16"
+  },
+  "notify.q.sound.a": {
+    "text": "Aubergine は音を鳴らしません。ブラウザーやシステムが鳴らす設定なら、通知で音が鳴ります。Claude Code の設定に自分のフックを書けば音を鳴らせます。Aubergine がその設定に書き込むことはありません。",
+    "from": "9bfa64c7c661"
+  },
+  "notify.q.several.q": {
+    "text": "複数動かしているとき、どの Claude Code のセッションが待っているかを見るには？",
+    "from": "1574988945ec"
+  },
+  "notify.q.several.a": {
+    "text": "Aubergine では、待っているターミナルの枠線と状態が待機中の色になり、一覧の行に <strong>waiting for you</strong> と出て、<strong>For you</strong> の横の数が待っているものの数を示します。<code>W</code> で次のものへ移ります。",
+    "from": "5afc5b2282ae"
+  },
+  "notify.q.closed.q": {
+    "text": "ブラウザーを閉じていても通知されますか？",
+    "from": "14556b0165d5"
+  },
+  "notify.q.closed.a": {
+    "text": "いいえ。通知は開いている Aubergine のページから出ます。状態は保存されるので、ページを開き直すと待っているターミナルに印が付いています。",
+    "from": "0c60b9069220"
+  },
+  "notify.q.other.q": {
+    "text": "Claude Code 以外のエージェントでも動きますか？",
+    "from": "c3bc48693c0a"
+  },
+  "notify.q.other.a": {
+    "text": "自動ではありません。フックは Claude Code 向けに作られています。ほかのエージェントも、自分の指示でそうするよう書かれていれば、<code>aubergine attention waiting</code>、<code>working</code>、<code>done</code> で同じことを伝えられます。<code>aubergine guide --snippet</code> がその指示用の行を出力します。",
+    "from": "d74216df16d6"
+  },
+  "notify.related": {
+    "text": "関連：<a href=\"/claude/\">Aubergine の Claude Code</a> · <a href=\"/resume-claude-code-session/\">Claude Code の会話を再開する</a> · <a href=\"/too-many-terminal-tabs/\">ターミナルが多すぎるとき</a>",
+    "from": "60204a04f28a"
+  },
+  "resume.meta.title": {
+    "text": "再起動のあとに Claude Code の会話を再開する | Aubergine",
+    "from": "25d7c94055ab"
+  },
+  "resume.meta.description": {
+    "text": "claude --continue と --resume は、正しいフォルダーにいれば会話を戻せます。Aubergine は各ターミナルがどの会話にいたかを覚えていて、Resume agent を出し、過去の会話をフォルダーごとに一覧します。",
+    "from": "9c3fb52f17de"
+  },
+  "resume.crumb": {
+    "text": "会話を再開する",
+    "from": "d0b8459148c0"
+  },
+  "resume.title": {
+    "text": "再起動のあとに Claude Code の会話を再開する",
+    "from": "087ff07774c9"
+  },
+  "resume.lead": {
+    "text": "コンピューターが再起動した、あるいはターミナルを閉じてしまい、Claude Code の会話が消えたように見える。Claude Code は会話を保存しています。Aubergine は各ターミナルがどの会話にいたかを覚えていて、ボタン1つで戻します。",
+    "from": "f122ebc08ba6"
+  },
+  "resume.usual.title": {
+    "text": "よくあるやり方",
+    "from": "30e09240a39b"
+  },
+  "resume.usual.text": {
+    "text": "ターミナルで、会話をしていたフォルダーにいる状態で：<code>claude --continue</code> はそこで最も新しい会話を続け、<code>claude --resume</code> は一覧から選ばせるか、会話の ID を受け取ります。難しいのはフォルダーと選択です。1つのフォルダーに複数のエージェントがいると、最も新しい会話が目当てのものとは限りません。",
+    "from": "0c7e58df6940"
+  },
+  "resume.does.title": {
+    "text": "Aubergine がすること",
+    "from": "acf3f5da99c1"
+  },
+  "resume.does.remember": {
+    "text": "<strong>ターミナルは自分の会話を覚えています。</strong>Claude Code を Aubergine から起動すると（<strong>New terminal ▾ → Claude Code</strong>、または <code>C</code>）、フックがどの会話にいるかを Aubergine に伝え、Aubergine はその ID をターミナルとともに保存します。",
+    "from": "25fb3e43a297"
+  },
+  "resume.does.button": {
+    "text": "シェルがプロンプトに戻ると、ターミナルのタイトルバーに <strong>Resume agent</strong>（エージェントを再開）が出ます。エージェントを終了したときや、コンピューターが再起動してターミナルが最後のフォルダーで新しいシェルとして戻ったときです。<code>--resume</code> とその ID を付けて Claude Code を再び起動し、起動コマンドには設定のもの（<code>agents.claudeCommand</code>、既定は <code>claude</code>）を使います。",
+    "from": "059cfe143e66"
+  },
+  "resume.does.run": {
+    "text": "<strong>ワークフローの実行の途中なら</strong>、<strong>Resume agent</strong> はその実行についてもう一度エージェントに伝えるので、実行が止まっているステップから続けます。",
+    "from": "03de06981f61"
+  },
+  "resume.does.past": {
+    "text": "<strong>Past conversations…</strong>（過去の会話、パレット <code>⌘K</code> から）、またはターミナルの詳細にある「Past conversations in this folder…」は、フォルダー内の Claude Code の過去の会話を一覧します。名前か最初に言ったこと、最後に動いた時刻、何回やり取りしたか、今キャンバス上のターミナルがその会話にいるかどうか。<strong>Read</strong> は読み取り専用で表示します。<strong>Open on the canvas</strong> はそのフォルダーで新しいターミナルを起動してその会話を再開し、<strong>Open a copy</strong> は会話を分岐させ、元はそのまま残します。すでにその会話にいるターミナルがあれば、先に確認されます。",
+    "from": "05c3b631a2d7"
+  },
+  "resume.does.search": {
+    "text": "<strong>検索。</strong>パレットで <code>@</code> といくつかの語を入力すると、キャンバス上のターミナルのフォルダーにある過去の会話を検索できます。求められたときに上限の範囲で記録を読み、途中で打ち切ったときはそう伝えます。コマンドラインでは、<code>aubergine history</code> が一覧し、<code>aubergine history open &lt;id&gt;</code> が1つを開きます。",
+    "from": "f1e8e8bbabc6"
+  },
+  "resume.does.stood": {
+    "text": "<strong>どこまで進んでいたか。</strong>ターミナルのノートは要約とログを保ち、送ったプロンプトはひとつずつログに加わります。詳細にある <strong>Ask its agent for a recap</strong>（エージェントに振り返りを頼む）を押すと、エージェントが <code>aubergine recap --write</code> で現状を書き、ターミナルとともに保存されます。30分以上たって戻ると、<strong>While you were away</strong>（離れている間）がその間に変わったことを一覧します。",
+    "from": "449c1f6289f7"
+  },
+  "resume.pic.caption": {
+    "text": "ターミナルの詳細：実行のステップと最後の報告、フォルダー、フィールド。これらはターミナルとともに保存され、エージェントを再開するときに備えています。",
+    "from": "5c63f8e4cb58"
+  },
+  "resume.outside.title": {
+    "text": "Aubergine の外のターミナルにある会話",
+    "from": "43ceaae0c27a"
+  },
+  "resume.outside.text": {
+    "text": "ターミナルアプリのタブでエージェントを終了し、同じフォルダーで <code>aubergine here --claude</code> を実行します。キャンバス上の新しいターミナルが <code>--continue</code> で Claude Code を起動し、今度は状態が表示されます。<code>aubergine move</code> はあなたの Claude Code のタブを一覧し、それぞれの会話のコピーをキャンバスで起動します。<code>--stop</code> を付けると、あなたが確認したあと、アイドルのエージェントに先に終了するよう求めます。",
+    "from": "7682f25de863"
+  },
+  "resume.not.title": {
+    "text": "しないこと",
+    "from": "b3a53baf5dfd"
+  },
+  "resume.not.format": {
+    "text": "<strong>Claude Code 自身の記録を、Aubergine のものではない形式のまま読みます。</strong>Claude Code はそのファイルの形式を内部のものとしていて、バージョンによって変わります。再開には Claude Code 自身の <code>--resume</code> を ID とともに使います。名前、回数、記録は Aubergine がファイルを読んだもので、Claude Code を更新したあとは欠けたり薄くなったりすることがあります。読めない記録は読めないと表示され、空の会話として見せることはありません。",
+    "from": "a2210e214a34"
+  },
+  "resume.not.store": {
+    "text": "<strong>何もコピーも保存もしません。</strong>一覧、記録、検索は、求められたときに読み、閉じると捨てます。Aubergine が会話を変更、名前変更、削除することはなく、エージェントもトークンも Aubergine を通じて会話を読むことはできません。",
+    "from": "9224f8f7033a"
+  },
+  "resume.not.work": {
+    "text": "<strong>途中の作業はやり直されません。</strong>止まったときにエージェントがしていたことは、あなたが頼むまで再開されません。",
+    "from": "a0dfad245abc"
+  },
+  "resume.not.other": {
+    "text": "<strong>ほかのエージェントには Resume agent はありません。</strong>Aubergine はほかのエージェントの会話を知らず、その過去の会話も一覧しません。同じターミナルで、そのエージェント自身の再開の方法で起動し直し、ノートを読んでどこまで進んでいたかを伝えてください。",
+    "from": "032fed640b8d"
+  },
+  "resume.not.typed": {
+    "text": "<strong>自分で入力した <code>claude</code> は覚えられません</strong>。ただし、<code>aubergine hooks print</code> が出力するフックを自分の Claude Code の設定に加えていれば別です。",
+    "from": "7cabc8e39014"
+  },
+  "resume.not.tried": {
+    "text": "<strong>確認したこと。</strong>会話の記録の読み取りは、作り物の記録に対してテストしています。Claude Code のすべてのバージョンに対しては確認していません。",
+    "from": "636831c9e7f8"
+  },
+  "resume.q.closed.q": {
+    "text": "ターミナルを閉じたあとに Claude Code のセッションを再開するには？",
+    "from": "6af39953e8a8"
+  },
+  "resume.q.closed.a": {
+    "text": "同じフォルダーで、<code>claude --continue</code> は最も新しい会話を、<code>claude --resume</code> は選んだ会話を開きます。Aubergine ではブラウザーを閉じても何も終わらず、エージェントを終了したターミナルはタイトルバーに <strong>Resume agent</strong> を出します。",
+    "from": "1ed7fbcc4b38"
+  },
+  "resume.q.reboot.q": {
+    "text": "再起動のあとに Claude Code の会話を再開するには？",
+    "from": "31f50552b3a5"
+  },
+  "resume.q.reboot.a": {
+    "text": "再起動のあと、Aubergine の各ターミナルは最後のフォルダーで新しいシェルとして戻ります。Claude Code を Aubergine から起動していたなら、タイトルバーの <strong>Resume agent</strong> が、そのターミナルがいた会話で再び起動します。",
+    "from": "a7935b5285f1"
+  },
+  "resume.q.find.q": {
+    "text": "古い Claude Code の会話を見つけるには？",
+    "from": "230753fac68b"
+  },
+  "resume.q.find.a": {
+    "text": "パレットの <strong>Past conversations…</strong> がフォルダーごとに一覧し、読み取り専用の記録も見られます。パレットで <code>@</code> といくつかの語を入力すると検索できます。一覧に出るのは Claude Code がまだ保存しているものだけです。",
+    "from": "cf90c4bc8021"
+  },
+  "resume.q.diff.q": {
+    "text": "claude --continue と claude --resume の違いは何ですか？",
+    "from": "4f56d2ee9cff"
+  },
+  "resume.q.diff.a": {
+    "text": "<code>--continue</code> はフォルダー内で最も新しい会話を続け、<code>--resume</code> は選んだ会話か ID を受け取ります。<strong>Resume agent</strong> はターミナルが覚えている ID で <code>--resume</code> を使うので、どの会話が最も新しいかには左右されません。",
+    "from": "5c3f2b16669e"
+  },
+  "resume.q.two.q": {
+    "text": "2つのターミナルで同じ Claude Code の会話を続けられますか？",
+    "from": "825906c9167b"
+  },
+  "resume.q.two.a": {
+    "text": "Aubergine は確認せずに1つの会話を2回開くことはしません。1つの会話に2つのエージェントがいると、互いのメッセージが失われるからです。すでにその会話にいるターミナルか、会話を分岐させるコピーかを選べます。",
+    "from": "b8424d8787fc"
+  },
+  "resume.related": {
+    "text": "関連：<a href=\"/keep-terminals-after-restart/\">再起動のあともターミナルを残す</a> · <a href=\"/claude-code-notifications/\">Claude Code の待機を知る</a> · <a href=\"/claude/\">Aubergine の Claude Code</a>",
+    "from": "82d3fe458522"
+  },
+  "many.meta.title": {
+    "text": "タブが多すぎるときに目当てのターミナルを見つける | Aubergine",
+    "from": "710b13634a0f"
+  },
+  "many.meta.description": {
+    "text": "ターミナルのタブが多すぎて、どれも zsh という名前？ Aubergine はすべてのターミナルをキャンバスと1つの一覧に置き、状態を言葉で示し、フィルター、タグ、ターミナルの出力の検索、ブラウザーのタブで単独で開くターミナルを用意します。",
+    "from": "0d77fee497f4"
+  },
+  "many.crumb": {
+    "text": "ターミナルが多すぎる",
+    "from": "1d2e7e29f20b"
+  },
+  "many.title": {
+    "text": "ターミナルが多すぎるときに目当てのものを見つける",
+    "from": "9d8e670c6407"
+  },
+  "many.lead": {
+    "text": "タブが20個、ほとんどが zsh という名前で、3つでエージェントが動いていて、そのうち1つがあなたを待っている。Aubergine はすべてのターミナルをキャンバスと、それぞれが何をしているかを示す1つの一覧に置くので、どこに置いたかではなく、何であるかでターミナルを見つけられます。",
+    "from": "1d5167ffd4b4"
+  },
+  "many.usual.title": {
+    "text": "よくあるやり方",
+    "from": "30e09240a39b"
+  },
+  "many.usual.text": {
+    "text": "タブやウィンドウに名前を付ける（たいていのターミナルアプリでできます）、ウィンドウをペインに分割する、名前付きの tmux のセッションとウィンドウを使う、タイル型ウィンドウマネージャーに配置させる。これらはターミナルを置くのには役立ちますが、あなたを必要としているものを見つけるには、やはり見て回ることになります。",
+    "from": "ad6ff5b0d6e6"
+  },
+  "many.does.title": {
+    "text": "Aubergine がすること",
+    "from": "acf3f5da99c1"
+  },
+  "many.does.canvas": {
+    "text": "<strong>キャンバス。</strong>ターミナルが横に並び、どれもライブです。タイトルでドラッグし、端でサイズを変え、タイトルをダブルクリックして名前を変えます。タイトルの点で色を付けられます。フレーム（<strong>New terminal ▾ → Frame</strong>、または <code>G</code>）はターミナルをラベルの下にまとめ、一緒に動かします。",
+    "from": "adf948fb2094"
+  },
+  "many.does.canvases": {
+    "text": "<strong>キャンバスとプロジェクト。</strong>複数のキャンバスを、タブ、1つのリスト、または左の列として表示でき、それぞれに自分のアドレスがあります。プロジェクトは自分のキャンバス、ターミナル、キュー、待っているものの一覧を持ち、左上の切り替えでプロジェクト間を移ります。",
+    "from": "3e3ff8bc43f4"
+  },
+  "many.does.list": {
+    "text": "<strong>すべてのターミナルの1つの一覧。</strong>サイドパネルの <strong>Terminals</strong> は、各ターミナルを状態の言葉（<strong>working</strong>、<strong>waiting for you</strong>、<strong>finished</strong>、失敗したコマンド）、実行のステップ、最後に動いた時刻とともに、このキャンバスかすべてのキャンバスについて一覧します。上の入力欄で、名前、フォルダー、コマンド、ノート、タグからターミナルを探せます。",
+    "from": "f7361c6e0119"
+  },
+  "many.does.filter": {
+    "text": "<strong>Filter</strong>（フィルター）には、フィルター（waiting for me、busy、unread、has an agent、parked、tags）と一覧の並べ方があります。キャンバスごと、またはキャンバス順、最終更新順、最終入力順、名前順の1つの平らな一覧です。",
+    "from": "6e69fcb25a25"
+  },
+  "many.does.goto": {
+    "text": "キャンバス上の <strong>Go to…</strong>、または <code>⌘K</code> がパレットです。名前、フォルダー、コマンド、ノートの一部を入力します。その <strong>Terminal output</strong> の欄はターミナルが出力したもの（tmux が各ターミナルについて保持する最後の50,000行）を検索し、結果を選ぶとそのターミナルがその箇所までさかのぼって開きます。",
+    "from": "cc786240ec50"
+  },
+  "many.does.map": {
+    "text": "<strong>マップ</strong>（ボタンは <strong>Go to…</strong> の横）は、キャンバス全体を小さく表示し、それを動かせます。<strong>Fit</strong>（<code>F</code>）ですべてを一度に表示します。",
+    "from": "fc5776ecfbcb"
+  },
+  "many.does.about": {
+    "text": "<strong>ターミナルが何のためにあるか。</strong>各ターミナルの横にはノート（要約とログ）があり、詳細にはタグ、リンク、<code>Ticket: DEMO-12</code> のようなフィールドがあります。エージェントは <code>aubergine</code> コマンドで、自分のターミナルの名前、要約、フィールドを書けます。",
+    "from": "1d11da3800ef"
+  },
+  "many.does.alone": {
+    "text": "<strong>ターミナルを単独で。</strong>タイトルの <strong>Tab ↗</strong> で、<code>/t/&lt;terminal&gt;</code> にあるそれ専用のブラウザーのタブで開きます。詳細とノートはボタン1つで出せます。",
+    "from": "43aca22cfd80"
+  },
+  "many.does.keys": {
+    "text": "<code>Tab</code> と <code>Shift+Tab</code> は一覧に表示された順にターミナルをたどり、<code>W</code> は次にあなたを待っているものへ移ります。",
+    "from": "31d2188a40a6"
+  },
+  "many.not.title": {
+    "text": "しないこと",
+    "from": "b3a53baf5dfd"
+  },
+  "many.not.arrange": {
+    "text": "<strong>自動で並べることはしません。</strong>ターミナルはあなたが置いた場所にあり（新しいものは表示の中央近くの空いた場所に入ります）、あなたかそのエージェントが付けた名前を保ちます。",
+    "from": "f9831e413ca7"
+  },
+  "many.not.number": {
+    "text": "<strong>数は約束しません。</strong>ライブのターミナルを保つのは見ているキャンバスだけです。大きくズームアウトするとターミナルは画面の画像を表示し、画面外ではページに負担をかけません。それでも各ターミナルはあなたのコンピューター上のシェルです。一覧は単体テストで1,000個のターミナルでテストしており（一覧、フィルター、1画面分だけの描画）、手で判断するために3つのキャンバスに90個のターミナルを入れるスクリプトがあります。どちらもあなたのコンピューターについての約束ではありません。",
+    "from": "0b99155f7203"
+  },
+  "many.not.others": {
+    "text": "<strong>ターミナルアプリのタブは表示されません。</strong><strong>Open elsewhere</strong>（<code>O</code>）はそこで開いているターミナルを一覧し、1つずつ、同じフォルダーの新しいターミナルとして持ってきます。タブで動いているプログラムはそのタブに残ります。",
+    "from": "342f90ca0c87"
+  },
+  "many.q.organize.q": {
+    "text": "たくさんのターミナルウィンドウを整理するには？",
+    "from": "ff12c1f905b9"
+  },
+  "many.q.organize.a": {
+    "text": "Aubergine では、作業ごとに1つのキャンバスを使い、ターミナルを名前と色を付けて横に並べ、関係するものをフレームで囲み、それぞれが何をしているかを示す1つの一覧ですべてを見渡します。",
+    "from": "b8784c8ec007"
+  },
+  "many.q.which.q": {
+    "text": "どのターミナルがあるコマンドを実行しているかを見つけるには？",
+    "from": "17eb8a719d39"
+  },
+  "many.q.which.a": {
+    "text": "一覧の上の入力欄は、ターミナルの名前、フォルダー、コマンド、ノート、タグに一致させます。パレット（<code>⌘K</code>）はすべてのキャンバスで同じことをします。ターミナルのタイトルには実行中のものが表示されます。",
+    "from": "da1e57276527"
+  },
+  "many.q.search.q": {
+    "text": "すべてのターミナルの出力を検索できますか？",
+    "from": "a58d20e4b8f9"
+  },
+  "many.q.search.a": {
+    "text": "はい、まだ動いているものなら。パレットの <strong>Terminal output</strong> の欄は、検索したときに各ターミナルの履歴を、パークしたものも含めて、tmux が保持する範囲（50,000行）まで読みます。インデックスも記録も作りません。",
+    "from": "886e87fdb066"
+  },
+  "many.q.count.q": {
+    "text": "Aubergine はいくつのターミナルを扱えますか？",
+    "from": "316b2352e931"
+  },
+  "many.q.count.a": {
+    "text": "決まった上限はありません。一覧は1,000個のターミナルでテストしており、90個ずつの3つのキャンバスを手で確認しました。各ターミナルはあくまでシェルなので、あなたのコンピューターが動かせる量で決まります。",
+    "from": "ee69bd158d20"
+  },
+  "many.q.name.q": {
+    "text": "ターミナルに名前と色を付けられますか？",
+    "from": "8288c9dbf63e"
+  },
+  "many.q.name.a": {
+    "text": "はい。ターミナルのタイトルをダブルクリックして名前を変え、タイトルの点で13色のうち1つか自分の色を選びます。キャンバスにも名前と色があります。",
+    "from": "42ae6580f04b"
+  },
+  "many.related": {
+    "text": "関連：<a href=\"/claude-code-notifications/\">Claude Code の待機を知る</a> · <a href=\"/keep-process-running-after-closing-terminal/\">プロセスを動かし続ける</a> · <a href=\"/run-multiple-coding-agents/\">複数のコーディングエージェントを動かす</a>",
+    "from": "da55f7278a1a"
+  },
+  "tmux.meta.title": {
+    "text": "tmux を覚えずに tmux を使う | Aubergine",
+    "from": "a731849612b9"
+  },
+  "tmux.meta.description": {
+    "text": "ウィンドウを閉じても残るシェルを、プレフィックスキーも .tmux.conf もなしに。Aubergine は専用のソケットで tmux を動かし、ホイール、コピーとペースト、サイズ変更はどのターミナルとも同じように使えます。",
+    "from": "d876f30b4bcb"
+  },
+  "tmux.crumb": {
+    "text": "tmux なしの tmux",
+    "from": "089511f9df35"
+  },
+  "tmux.title": {
+    "text": "tmux を覚えずに tmux を使う",
+    "from": "c661725dc167"
+  },
+  "tmux.lead": {
+    "text": "tmux は、ウィンドウを閉じてもシェルを動かし続けます。その代わり、プレフィックスキー、コピーモード、設定ファイルを覚える必要があります。Aubergine が tmux を動かすので、あなたは各ターミナルをブラウザーのページで、ふつうのターミナルと同じように使えます。",
+    "from": "c92cbb7d944a"
+  },
+  "tmux.who.title": {
+    "text": "誰のためか",
+    "from": "bcdecc549d07"
+  },
+  "tmux.who": {
+    "text": "tmux が与えてくれるもの、つまりウィンドウを閉じても残るシェルが欲しいけれど、キーや設定は覚えたくない人のためのものです。すでに tmux を使いこなしているなら、そのまま使ってください。Aubergine はあなたの tmux には触れません。",
+    "from": "67d7b78bd967"
+  },
+  "tmux.usual.title": {
+    "text": "よくあるやり方",
+    "from": "30e09240a39b"
+  },
+  "tmux.usual.text": {
+    "text": "tmux を覚える：各コマンドの前にプレフィックスキー（変えなければ <code>Ctrl+B</code>）、戻るには <code>tmux attach</code>、マウスとクリップボードのために <code>~/.tmux.conf</code> に数行。あるいは同じ種類の古いツールの <code>screen</code>。日常の操作が、既定の tmux と Aubergine でそれぞれどうなるかは次のとおりです。",
+    "from": "94c03879479b"
+  },
+  "tmux.table.thing": {
+    "text": "すること",
+    "from": "f4b06ef6d3c8"
+  },
+  "tmux.table.tmux": {
+    "text": "tmux では",
+    "from": "a1ab6023b141"
+  },
+  "tmux.table.here": {
+    "text": "Aubergine では",
+    "from": "c6dcdd25687b"
+  },
+  "tmux.table.tmuxShort": {
+    "text": "tmux",
+    "from": "adb519257aeb"
+  },
+  "tmux.table.hereShort": {
+    "text": "Aubergine",
+    "from": "b72370707186"
+  },
+  "tmux.row.leave": {
+    "text": "シェルを動かしたまま離れる",
+    "from": "ba2cbd204ae7"
+  },
+  "tmux.row.back": {
+    "text": "そこに戻る",
+    "from": "9a861e7d13a6"
+  },
+  "tmux.row.scroll": {
+    "text": "さかのぼる",
+    "from": "fb2c3707ff8c"
+  },
+  "tmux.row.copy": {
+    "text": "コピー",
+    "from": "e21f935f11d7"
+  },
+  "tmux.row.paste": {
+    "text": "ペースト",
+    "from": "f3380f7b44bd"
+  },
+  "tmux.row.several": {
+    "text": "複数のシェルを見る",
+    "from": "37cb2e73ff45"
+  },
+  "tmux.row.name": {
+    "text": "名前を付ける",
+    "from": "6f2f4dd0bb35"
+  },
+  "tmux.cell.leave.tmux": {
+    "text": "<code>Ctrl+B</code> のあと <code>d</code> でデタッチ",
+    "from": "0aabfdad59cc"
+  },
+  "tmux.cell.leave.here": {
+    "text": "タブを閉じる",
+    "from": "820a72b24e4e"
+  },
+  "tmux.cell.back.tmux": {
+    "text": "<code>tmux attach</code>",
+    "from": "6c4afca4cfa5"
+  },
+  "tmux.cell.back.here": {
+    "text": "ページを開く",
+    "from": "911fa06e14a1"
+  },
+  "tmux.cell.scroll.tmux": {
+    "text": "コピーモード、<code>Ctrl+B</code> のあと <code>[</code>",
+    "from": "15276f527f80"
+  },
+  "tmux.cell.scroll.here": {
+    "text": "ホイール",
+    "from": "65317915ff3a"
+  },
+  "tmux.cell.copy.tmux": {
+    "text": "コピーモードで選択",
+    "from": "55ae66ca2a46"
+  },
+  "tmux.cell.copy.here": {
+    "text": "マウスで選択",
+    "from": "13b782465243"
+  },
+  "tmux.cell.paste.tmux": {
+    "text": "<code>Ctrl+B</code> のあと <code>]</code>",
+    "from": "927f106565e1"
+  },
+  "tmux.cell.paste.here": {
+    "text": "<code>⌘V</code> または <code>Ctrl+Shift+V</code>",
+    "from": "79285d2dbfdd"
+  },
+  "tmux.cell.several.tmux": {
+    "text": "ウィンドウとペイン",
+    "from": "f2a69ea1d42f"
+  },
+  "tmux.cell.several.here": {
+    "text": "キャンバスにターミナルを並べる",
+    "from": "dc6bdd73da8a"
+  },
+  "tmux.cell.name.tmux": {
+    "text": "<code>Ctrl+B</code> のあと <code>,</code>",
+    "from": "fe31dbab067c"
+  },
+  "tmux.cell.name.here": {
+    "text": "タイトルをダブルクリック",
+    "from": "52bfa2dda0c6"
+  },
+  "tmux.does.title": {
+    "text": "Aubergine がすること",
+    "from": "acf3f5da99c1"
+  },
+  "tmux.does.own": {
+    "text": "<strong>専用のソケットと専用の設定。</strong>Aubergine は <code>aubergine</code> という名前の専用のソケットで、あなたのものではなく専用の設定ファイルを使って tmux を起動します。ステータスラインなし、プレフィックスキーなし、マウスはオン、履歴は50,000行。各ターミナルは1つのシェル（あなたのログインシェル）を持つ1つの tmux セッションです。あなた自身の tmux、そのセッション、<code>~/.tmux.conf</code> には触れません。",
+    "from": "82419f3b337f"
+  },
+  "tmux.does.scroll": {
+    "text": "キーボードを持っているターミナルは<strong>ホイールでさかのぼれます</strong>。キャンバスのそれ以外の場所では、ホイールでズームします。",
+    "from": "c1901de45a17"
+  },
+  "tmux.does.copy": {
+    "text": "<strong>マウスで選択して離すと</strong>クリップボードにコピーされます。tmux が選択されたものを OSC 52（ターミナルがクリップボードに使うエスケープシーケンス）でページに渡し、ページがクリップボードに入れます。ペーストは <code>⌘V</code>（macOS 以外では <code>Ctrl+Shift+V</code>）。複数行のペーストはブラケットで囲まれるので、シェルが1行ずつ実行することはありません。",
+    "from": "b5991d05ed04"
+  },
+  "tmux.does.size": {
+    "text": "<strong>ドラッグでサイズを変えます。</strong>キャンバス上でターミナルの端をドラッグすると、シェルに新しいサイズが伝わります。2か所で同時に開いているターミナルのサイズは1つで、最後に入力した表示のサイズになります。",
+    "from": "15e6a34e7ef7"
+  },
+  "tmux.does.still": {
+    "text": "<strong>中身は今も tmux です。</strong><code>aubergine attach &lt;name&gt;</code> はターミナルをターミナルアプリのウィンドウに表示し、ターミナルのメニューにある <strong>Open on desktop</strong>（デスクトップで開く）がそれを代わりに行います（macOS では Terminal か iTerm で、Linux では設定したコマンドラインで）。サーバーが止まっていても、<code>tmux -L aubergine ls</code> と <code>tmux -L aubergine attach -t &lt;id&gt;</code> ですべてのシェルに届きます。",
+    "from": "189355cb23f9"
+  },
+  "tmux.need.title": {
+    "text": "必要なもの",
+    "from": "e17c85cc990b"
+  },
+  "tmux.need.text": {
+    "text": "tmux 3.2 以降を、ご自身でインストールしてください。macOS では <code>brew install tmux</code>、Linux ではシステムのパッケージです。Aubergine はインストールせず、見つからないときや古いときはそう伝えるページを表示します。zsh では、ターミナルのタイトルに実行中のコマンドと最後のコマンドの終わり方が出ます。ほかのシェルではそれなしで動きます。",
+    "from": "1ed9bf484beb"
+  },
+  "tmux.not.title": {
+    "text": "これではないもの",
+    "from": "9516c425aeb2"
+  },
+  "tmux.not.ssh": {
+    "text": "<strong>リモートサーバー上の tmux ではありません。</strong>Aubergine の tmux は、サーバーが動いているコンピューター上で動きます。SSH で接続するマシン上のシェルには、今もそのマシンの tmux が道具です。Aubergine 自体を別のマシンで動かすこともできますが（<a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md\">Using Aubergine from elsewhere</a>）、コンテナーの中でしか動かしていません。",
+    "from": "97db800d695c"
+  },
+  "tmux.not.yours": {
+    "text": "<strong>あなた自身の tmux のセッションは表示されません。</strong>キャンバスにあるのは Aubergine のターミナルだけです。<code>aubergine scan</code> はこのコンピューターで Aubergine の外に開いている対話シェルを一覧し、<code>aubergine import</code> や <code>aubergine here</code> はそのうち1つに、同じフォルダーでキャンバス上の新しいターミナルを与えます。古いほうで動いているプログラムはそこに残ります。<code>aubergine shell-hook print</code> が <code>.zshrc</code> 用に出す行は、tmux の中では何もしません。",
+    "from": "b5696d4f2c3b"
+  },
+  "tmux.not.keys": {
+    "text": "<strong>tmux のキーもペインもありません。</strong>プレフィックスキーはなく、あなた自身の tmux のキー割り当ては効きません。ターミナルがキーボードを持っている間、すべてのキーはその中のプログラムに届きます。例外は、どのシェルもエディターも tmux も必要としないように選んだいくつかの組み合わせだけです。",
+    "from": "22984bbf9c68"
+  },
+  "tmux.not.windows": {
+    "text": "<strong>Windows そのものでは動きません。</strong>tmux と Unix のシェルが必要で、Windows では WSL 2 の中で動きます。<a href=\"/windows/\">WSL を使う Windows</a> を参照してください。",
+    "from": "b6d2899a3b38"
+  },
+  "tmux.q.shortcuts.q": {
+    "text": "ショートカットを覚えずに tmux を使えますか？",
+    "from": "b9c488ac4210"
+  },
+  "tmux.q.shortcuts.a": {
+    "text": "はい。Aubergine はプレフィックスキーもステータスラインもなしで tmux を動かすので、tmux のコマンドを入力することはありません。離れるにはタブを閉じ、戻るにはページを開き、ホイールでスクロールし、選択してコピーします。",
+    "from": "3a236c2882a1"
+  },
+  "tmux.q.config.q": {
+    "text": "Aubergine は私の tmux の設定を変えますか？",
+    "from": "72dfacba61b2"
+  },
+  "tmux.q.config.a": {
+    "text": "いいえ。専用のソケット <code>aubergine</code> で、専用の設定ファイルを使って tmux を動かします。あなたの tmux サーバー、そのセッション、<code>~/.tmux.conf</code> はそのままです。",
+    "from": "7a93ca8432a8"
+  },
+  "tmux.q.copy.q": {
+    "text": "Aubergine のターミナルでスクロールやコピーをするには？",
+    "from": "1f32bd561f38"
+  },
+  "tmux.q.copy.a": {
+    "text": "ターミナルをクリックしてキーボードを渡し、ホイールでさかのぼります。マウスでテキストを選択すると、離した時点でクリップボードに入ります。ペーストは <code>⌘V</code>、macOS 以外では <code>Ctrl+Shift+V</code> です。",
+    "from": "a7f3123832de"
+  },
+  "tmux.q.attach.q": {
+    "text": "自分のターミナルアプリから Aubergine のターミナルにアタッチできますか？",
+    "from": "f9fcae450958"
+  },
+  "tmux.q.attach.a": {
+    "text": "はい。<code>aubergine attach &lt;name&gt;</code>、またはターミナルのメニューの <strong>Open on desktop</strong> です。どちらでも同じターミナルで、一方で入力したものはもう一方にも表示されます。",
+    "from": "7efa052d1074"
+  },
+  "tmux.q.ssh.q": {
+    "text": "SSH で入るサーバーの tmux の代わりに Aubergine を使えますか？",
+    "from": "6795b9483c23"
+  },
+  "tmux.q.ssh.a": {
+    "text": "そのままの形では使えません。ターミナルはサーバーが動いているマシン上にあります。サーバーで動かして SSH トンネルやプロキシ経由でブラウザーから使うことはできますが、それはコンテナーの中でしか動かしておらず、クラウドのマシンでは動かしていません。",
+    "from": "502062297ccb"
+  },
+  "tmux.related": {
+    "text": "関連：<a href=\"/keep-process-running-after-closing-terminal/\">プロセスを動かし続ける</a> · <a href=\"/keep-terminals-after-restart/\">再起動のあともターミナルを残す</a> · <a href=\"/too-many-terminal-tabs/\">ターミナルが多すぎるとき</a>",
+    "from": "d827d8a7918e"
+  },
+  "phone.meta.title": {
+    "text": "スマートフォンからコーディングエージェントを確認する | Aubergine",
+    "from": "5e05181dcbf3"
+  },
+  "phone.meta.description": {
+    "text": "スマートフォンのブラウザーから Aubergine を使います。同じコンピューター上の HTTPS、設定に書くアドレス、使い捨てのコードか QR コードでデバイスごとにペアリングし、いつでも失効できます。1台の Mac で一度実行しただけで、スマートフォンでは試していません。",
+    "from": "4f87f330c4d4"
+  },
+  "phone.crumb": {
+    "text": "スマートフォンから",
+    "from": "624fe9a9d5bf"
+  },
+  "phone.title": {
+    "text": "スマートフォンからエージェントを確認する",
+    "from": "c92463ac8872"
+  },
+  "phone.lead": {
+    "text": "3つのエージェントに作業を任せて出かけた。どれかが「はい」を待っていないだろうか。設定すれば、Aubergine をスマートフォンのブラウザーで開けます。同じページ、同じターミナルで、デバイスごとに使い捨てのコードでペアリングします。",
+    "from": "5ff340d9bfd5"
+  },
+  "phone.tried": {
+    "text": "<strong>試したこと、試していないこと。</strong>ほかのデバイスからの利用は、2026年11月22日に一度実行しました。1台の Mac で <code>docker/</code> のコンテナー構成を使い、前段に <code>https://aubergine.localhost</code> の Caddy、同じ Mac の Chromium で、コードでペアリングし、ターミナルに入力し、デバイスを失効させるとサインアウトされました。<strong>試していないこと：</strong>実際のスマートフォン、それでの QR コードの読み取り、公開証明書付きの実際の名前、プライベートネットワーク、クラウドのマシン、別々の2台のマシン。ページはスマートフォンの幅向けにレイアウトされていません。それ以外はコードとそのテストによるものです。約束ではなく、試してみるものと考えてください。",
+    "from": "335a569f7582"
+  },
+  "phone.usual.title": {
+    "text": "よくあるやり方",
+    "from": "30e09240a39b"
+  },
+  "phone.usual.text": {
+    "text": "スマートフォンの SSH アプリでコンピューターに入り、エージェントが動いているセッションに <code>tmux attach</code> する。あるいは、トンネルやプライベートネットワークでコンピューターにスマートフォンから届くようにする。どちらも使えますが、その方法で複数のエージェントを確認するには、小さなキーボードで順番にアタッチすることになります。",
+    "from": "db5b6a60eb84"
+  },
+  "phone.does.title": {
+    "text": "Aubergine がすること",
+    "from": "acf3f5da99c1"
+  },
+  "phone.does.off": {
+    "text": "<strong>既定ではオフで、このコンピューターに結び付いたままです。</strong>サーバーは <code>127.0.0.1</code> だけで待ち受け、それは変わりません。同じコンピューター上の何か、たとえばプライベートネットワーク自身の HTTPS 配信や Caddy のようなウェブサーバーが、名前を付けて HTTPS を中継します。Aubergine 自身が HTTPS を話すことはありません。",
+    "from": "69ebb44f3dfc"
+  },
+  "phone.does.address": {
+    "text": "<strong>アドレスは設定にあなたが書きます。</strong><code>access.addresses</code> として <code>config.json</code> に書き、サーバーの起動時に読まれます。どのページもプログラムもそれを変えられません。<code>aubergine doctor</code> はアドレスと、そのどれかに問題があればその内容を一覧します。",
+    "from": "4d586d2378b3"
+  },
+  "phone.does.pair": {
+    "text": "<strong>デバイスごとに使い捨てのコードでペアリングします。</strong>コンピューターで <code>aubergine device add --name \"Phone\"</code>、またはサインイン済みのブラウザーで <strong>Settings → Devices → Add a device</strong> を使うと、コードと、アドレスごとにコード入りのリンクの QR コードが表示されます。それを読み取るか、リンクを開くか、スマートフォンのサインインページにコードを入力します。コードは1回、3分間だけ使えます。",
+    "from": "e461217bf7e4"
+  },
+  "phone.does.revoke": {
+    "text": "<strong>デバイスは失効させられます。</strong><code>aubergine device revoke \"Phone\"</code>、または <strong>Settings → Devices</strong> の <strong>Revoke…</strong>（失効）で、すぐにサインアウトさせ、開いているものを閉じます。90日間使われなかったデバイスは使えなくなります。",
+    "from": "3fecb39df4a9"
+  },
+  "phone.does.owner": {
+    "text": "<strong>ペアリングしたデバイスはオーナーそのものです。</strong>コンピューターの前でできることをすべてできます。すべてのターミナル、つまりあなたとしてそのコンピューター上のシェルを使えます。自分のキーボードを渡してもよいブラウザーだけをペアリングしてください。コンピューター自身のデスクトップに作用するもの、<strong>Open on desktop</strong> は、そのデバイスのページには出ず、求めても拒否されます。",
+    "from": "77b677da358b"
+  },
+  "phone.see.title": {
+    "text": "見えるもの",
+    "from": "7ad31245b77f"
+  },
+  "phone.see.text": {
+    "text": "コンピューターの前と同じページです。キャンバスとそのターミナル、<strong>For you</strong> の横の数と待っているものの一覧、そして詳細とノートの付いた <code>/t/&lt;terminal&gt;</code> の単独のターミナル。スマートフォン向けのレイアウトではなく、狭いウィンドウでと同じように動きます。",
+    "from": "e8260cebb287"
+  },
+  "phone.see.steps": {
+    "text": "設定する3つの方法（SSH トンネル、プライベートネットワーク、自分の名前とプロキシ）、ペアリング、うまくいかないときの対処は <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md\">Using Aubergine from elsewhere</a> にあります。SSH トンネルは設定がまったく要りませんが、スマートフォンでは扱いにくいです。",
+    "from": "cdc64dbda345"
+  },
+  "phone.not.title": {
+    "text": "しないこと",
+    "from": "b3a53baf5dfd"
+  },
+  "phone.not.push": {
+    "text": "<strong>アプリもプッシュもありません。</strong>スマートフォンのブラウザーのページで、開いている間は最新です。ページを閉じたスマートフォンには何も送られません。",
+    "from": "6f40d9a4fbaf"
+  },
+  "phone.not.awake": {
+    "text": "<strong>スリープ中のノートパソコンは応答しません。</strong>サーバーがノートパソコンにあると、スマートフォンから届くのはノートパソコンが起きている間だけです。つけたままのマシンがもう1つの選択肢です。",
+    "from": "216b7430b645"
+  },
+  "phone.not.public": {
+    "text": "<strong>誰でも開けるアドレスを守ることはしません。</strong>コードがなければ誰も入れず、コードは推測しにくいものですが、見知らぬ人がシェルを狙って推測することになります。前段にプライベートネットワークか、組織自身のサインインを置き、マシンをインターネット全体に公開するプライベートネットワークのモードは決して使わないでください。",
+    "from": "c027919da51a"
+  },
+  "phone.not.layout": {
+    "text": "<strong>スマートフォン向けのレイアウトはありません。</strong>ページは狭いウィンドウでと同じように動きます。ターミナルを読んだり質問に答えたりはそれでできますが、キャンバスを並べ替えるのは大きな画面向けです。",
+    "from": "715e130ed7cc"
+  },
+  "phone.q.check.q": {
+    "text": "スマートフォンからコーディングエージェントを確認できますか？",
+    "from": "b6ed7ed61e98"
+  },
+  "phone.q.check.a": {
+    "text": "Aubergine に HTTPS で届き、スマートフォンのブラウザーをペアリングすれば、スマートフォンにも同じページが表示されます。どのターミナルが待っているか、待っているものの一覧、各ターミナル。同じ Mac のブラウザーで動かしましたが、実際のスマートフォンではまだです。",
+    "from": "25e4fa5804eb"
+  },
+  "phone.q.pair.q": {
+    "text": "スマートフォンを Aubergine とペアリングするには？",
+    "from": "2d255e8c0d6d"
+  },
+  "phone.q.pair.a": {
+    "text": "コンピューターで <code>aubergine device add --name \"Phone\"</code> を実行するか、<strong>Settings → Devices → Add a device</strong> を使います。3分以内に、QR コードを読み取るか、リンクを開くか、スマートフォンのサインインページにコードを入力します。",
+    "from": "238eafc4e16e"
+  },
+  "phone.q.lost.q": {
+    "text": "スマートフォンをなくしたら？",
+    "from": "4cfecc2cfc43"
+  },
+  "phone.q.lost.a": {
+    "text": "コンピューターで失効させます。<code>aubergine device revoke \"Phone\"</code>、または <strong>Settings → Devices</strong> の <strong>Revoke…</strong> です。すぐにサインアウトされ、開いていたものは閉じられます。",
+    "from": "f3431f64e453"
+  },
+  "phone.q.internet.q": {
+    "text": "Aubergine をインターネットに置いても安全ですか？",
+    "from": "b626ae8c3d99"
+  },
+  "phone.q.internet.a": {
+    "text": "誰でも開けるアドレスでは、サインインがすべての人の前に置かれ、ペアリングしたデバイスはあなたのコンピューター上のシェルを持ちます。プライベートネットワークか、アドレスの前段に組織自身のサインインを置くことをおすすめします。",
+    "from": "a99827304604"
+  },
+  "phone.q.asleep.q": {
+    "text": "ノートパソコンがスリープしていても使えますか？",
+    "from": "40db9086b18b"
+  },
+  "phone.q.asleep.a": {
+    "text": "いいえ。スリープ中のノートパソコンは何にも応答せず、ターミナルは起きるまで一時停止します。いつでもエージェントに届くようにするには、起きたままのマシンでサーバーを動かす必要があります。",
+    "from": "57372d76c37c"
+  },
+  "phone.related": {
+    "text": "関連：<a href=\"/claude-code-notifications/\">Claude Code の待機を知る</a> · <a href=\"/keep-process-running-after-closing-terminal/\">プロセスを動かし続ける</a> · <a href=\"/security/\">セキュリティとプライバシー</a>",
+    "from": "2c9ecf2e9214"
   },
   "queue.meta.title": {
     "text": "キュー、For you の一覧、スケジュール | Aubergine",

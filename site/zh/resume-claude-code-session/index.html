@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="zh-Hans" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>重启后恢复 Claude Code 对话 | Aubergine</title>
+<meta name="description" content="只要你在正确的文件夹里，claude --continue 和 --resume 就能找回对话。Aubergine 记得每个终端处于哪个对话，提供 Resume agent，并按文件夹列出过去的对话。">
+<link rel="canonical" href="https://thirstyeggplant.com/zh/resume-claude-code-session/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/resume-claude-code-session/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/resume-claude-code-session/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/resume-claude-code-session/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/resume-claude-code-session/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/resume-claude-code-session/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/resume-claude-code-session/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/resume-claude-code-session/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/resume-claude-code-session/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/resume-claude-code-session/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/resume-claude-code-session/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/resume-claude-code-session/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/resume-claude-code-session/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/resume-claude-code-session/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="重启后恢复 Claude Code 对话 | Aubergine">
+<meta property="og:description" content="只要你在正确的文件夹里，claude --continue 和 --resume 就能找回对话。Aubergine 记得每个终端处于哪个对话，提供 Resume agent，并按文件夹列出过去的对话。">
+<meta property="og:url" content="https://thirstyeggplant.com/zh/resume-claude-code-session/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine：一张摆满终端的画布，一个正在忙，一个在等你">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine：一张摆满终端的画布，一个正在忙，一个在等你">
+<meta name="twitter:title" content="重启后恢复 Claude Code 对话 | Aubergine">
+<meta name="twitter:description" content="只要你在正确的文件夹里，claude --continue 和 --resume 就能找回对话。Aubergine 记得每个终端处于哪个对话，提供 Resume agent，并按文件夹列出过去的对话。">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="页面">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">安装</a></li>
+        <li><a href="../guides/">指南</a></li>
+        <li><a href="../security/">安全</a></li>
+        <li><a href="../faq/">常见问题</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="语言: 简体中文"><span class="lang-long" aria-hidden="true">简体中文</span><span class="lang-short" aria-hidden="true">ZH</span></summary>
+      <ul class="menu-list"><li><a href="../../resume-claude-code-session/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/resume-claude-code-session/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/resume-claude-code-session/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/resume-claude-code-session/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/resume-claude-code-session/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/resume-claude-code-session/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="./" hreflang="zh-Hans" lang="zh-Hans" dir="ltr" aria-current="true">简体中文</a></li><li><a href="../../ko/resume-claude-code-session/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/resume-claude-code-session/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/resume-claude-code-session/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/resume-claude-code-session/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/resume-claude-code-session/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>菜单</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">安装</a></li>
+        <li><a href="../guides/">指南</a></li>
+        <li><a href="../security/">安全</a></li>
+        <li><a href="../faq/">常见问题</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine 本身是英文的：它的按钮、菜单和截图都是英文版。</p>
+    <p>本页由机器从英文翻译而来。<a href="https://github.com/thirstyeggplant/aubergine/issues">提交修正</a>。</p>
+  </div>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/zh/resume-claude-code-session/#article",
+      "headline": "重启后恢复 Claude Code 对话",
+      "description": "只要你在正确的文件夹里，claude --continue 和 --resume 就能找回对话。Aubergine 记得每个终端处于哪个对话，提供 Resume agent，并按文件夹列出过去的对话。",
+      "url": "https://thirstyeggplant.com/zh/resume-claude-code-session/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/zh/resume-claude-code-session/",
+      "datePublished": "2026-11-25",
+      "dateModified": "2026-11-25",
+      "inLanguage": "zh-Hans",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "指南", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "恢复对话", "item": "https://thirstyeggplant.com/zh/resume-claude-code-session/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/zh/resume-claude-code-session/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "关闭终端后如何恢复 Claude Code 会话？", "acceptedAnswer": { "@type": "Answer", "text": "在同一个文件夹中，claude --continue 接着最近的一次对话，claude --resume 让你来选。在 Aubergine 中，关掉浏览器不会结束任何东西；你退出了智能体的终端会在标题栏提供 Resume agent。" } },
+        { "@type": "Question", "name": "重启后如何恢复 Claude Code 对话？", "acceptedAnswer": { "@type": "Answer", "text": "重启后，每个 Aubergine 终端都会作为位于最后所在文件夹的新 shell 回来。如果 Claude Code 是从 Aubergine 启动的，标题栏中的 Resume agent 会在那个终端原来的对话中再次启动它。" } },
+        { "@type": "Question", "name": "如何找到以前的 Claude Code 对话？", "acceptedAnswer": { "@type": "Answer", "text": "命令面板中的 Past conversations… 按文件夹列出它们，并提供只读的对话记录；在命令面板中输入 @ 和一些词可以搜索它们。只会列出 Claude Code 仍然保存着的内容。" } },
+        { "@type": "Question", "name": "claude --continue 和 claude --resume 有什么区别？", "acceptedAnswer": { "@type": "Answer", "text": "--continue 接着文件夹中最近的一次对话；--resume 接受你选的那个，或一个 ID。Resume agent 用的是 --resume 加终端记住的 ID，所以不取决于哪个对话最近。" } },
+        { "@type": "Question", "name": "两个终端能接着同一个 Claude Code 对话吗？", "acceptedAnswer": { "@type": "Answer", "text": "Aubergine 不会不问就把一个对话打开两次：一个对话里有两个智能体，会丢失彼此的消息。你可以选择已经处于这个对话的终端，或者开一个副本，让对话分支。" } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="当前位置"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">指南</a></li><li>恢复对话</li></ol></nav>
+    <h1>重启后恢复 Claude Code 对话</h1>
+    <p class="lead">电脑重启了，或者你关掉了终端，Claude Code 的对话看起来没了。其实 Claude Code 保存着它。Aubergine 记得每个终端处于哪个对话，一个按钮就能把它找回来。</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>通常的做法</h2>
+    <p>在终端中，进入对话所在的文件夹：<code>claude --continue</code> 接着那里最近的一次对话，<code>claude --resume</code> 让你从列表里选一个，或者接受一个对话 ID。麻烦在于文件夹和选择：一个文件夹里有好几个智能体时，最近的那次不一定是你想要的。</p>
+
+    <h2>Aubergine 做什么</h2>
+    <p><strong>终端记得自己的对话。</strong>从 Aubergine 启动 Claude Code 时（<strong>New terminal ▾ → Claude Code</strong>，或按 <code>C</code>），它的钩子会告诉 Aubergine 它处于哪个对话，Aubergine 会把这个 ID 和终端一起保存。</p>
+    <p>一旦终端的 shell 回到提示符，标题栏就会提供 <strong>Resume agent</strong>（恢复智能体）：可能是你退出了智能体，也可能是电脑重启后终端作为位于最后所在文件夹的新 shell 回来了。它会带上 <code>--resume</code> 和那个 ID 再次启动 Claude Code，使用你设置中的启动命令（<code>agents.claudeCommand</code>，默认是 <code>claude</code>）。</p>
+    <p><strong>在工作流的运行中</strong>，<strong>Resume agent</strong> 还会再次把这次运行告诉智能体，让它从运行所在的步骤继续。</p>
+    <p><strong>Past conversations…</strong>（过去的对话，在命令面板 <code>⌘K</code> 中），或终端详情中的“Past conversations in this folder…”，会列出某个文件夹里 Claude Code 以前的对话：名称或你说的第一句话、最后活跃的时间、你说了几次话，以及画布上现在是否有终端正处于这个对话。<strong>Read</strong> 以只读方式显示它。<strong>Open on the canvas</strong> 在那个文件夹中启动一个新终端并恢复这个对话，<strong>Open a copy</strong> 则开出它的一个分支，原件保持不变。如果已有终端处于这个对话，会先问你。</p>
+    <p><strong>搜索。</strong>在命令面板中输入 <code>@</code> 和一些词，可以搜索你画布上各终端所在文件夹里的过去对话。它在你要求时、在限定范围内读取记录，被截断时会说明。在命令行中，<code>aubergine history</code> 列出它们，<code>aubergine history open &lt;id&gt;</code> 打开其中一个。</p>
+    <p><strong>它进行到哪里。</strong>终端的笔记保存着它的摘要和日志，你发送的每条提示词都会加入日志。详情中的 <strong>Ask its agent for a recap</strong>（请它的智能体写回顾）会让智能体用 <code>aubergine recap --write</code> 写下现状，并和终端一起保存。离开超过 30 分钟后回来，<strong>While you were away</strong>（你不在时）会列出这期间发生的变化。</p>
+    <figure class="frame"><a href="../../screenshots/focus-part.png" class="frame-pic"><img src="../../screenshots/focus-part.png" width="1344" height="1172" loading="lazy" alt="浏览器标签页中单独的一个终端：顶部是名称，详情里有工作流步骤、文件夹和字段，旁边是实时终端。"></a><figcaption>终端的详情：它所在运行的步骤和最后一份报告、它的文件夹和字段。这些和终端一起保存，等着恢复它的智能体时使用。</figcaption></figure>
+
+    <h2>Aubergine 之外的终端里的对话</h2>
+    <p>在终端应用的标签页里退出智能体，然后在同一个文件夹中运行 <code>aubergine here --claude</code>：画布上的一个新终端会用 <code>--continue</code> 启动 Claude Code，这次会显示它的状态。<code>aubergine move</code> 会列出你的 Claude Code 标签页，并在画布上为每个对话启动一个副本；加上 <code>--stop</code>，它会在你确认后先请空闲的智能体退出。</p>
+
+    <h2>它不做什么</h2>
+    <ul>
+      <li><strong>它读取的是 Claude Code 自己的记录，格式不属于 Aubergine。</strong>Claude Code 称这些文件的格式为内部格式，并且会随版本变化。恢复时用的是 Claude Code 自己的 <code>--resume</code> 加上 ID；名称、次数和对话记录是 Aubergine 对这些文件的解读，Claude Code 更新后可能缺失或变得不完整。读不了的记录会明确说读不了，不会显示成空对话。</li>
+      <li><strong>不复制，也不保留任何东西。</strong>列表、对话记录或搜索都是在你要求时读取，关闭时丢弃。Aubergine 从不修改、重命名或删除对话，任何智能体或令牌都无法通过它读取对话。</li>
+      <li><strong>进行中的工作不会重做。</strong>智能体停下时正在做的事，在你要求之前不会重新开始。</li>
+      <li><strong>其他智能体没有 Resume agent。</strong>Aubergine 不知道其他智能体的对话，也不会列出它们过去的对话。请在同一个终端里用那个智能体自己的恢复方式重新启动它，并读一读笔记，告诉它进行到哪里了。</li>
+      <li><strong>你自己输入的 <code>claude</code> 不会被记住</strong>，除非你把 <code>aubergine hooks print</code> 打印出的钩子加到了你自己的 Claude Code 设置中。</li>
+      <li><strong>检查过什么。</strong>对话记录的读取是拿虚构的记录测试的。没有对照 Claude Code 的每个版本检查过。</li>
+    </ul>
+
+    <h2>常见问题</h2>
+    <div class="questions">
+      <details><summary>关闭终端后如何恢复 Claude Code 会话？</summary><p>在同一个文件夹中，<code>claude --continue</code> 接着最近的一次对话，<code>claude --resume</code> 让你来选。在 Aubergine 中，关掉浏览器不会结束任何东西；你退出了智能体的终端会在标题栏提供 <strong>Resume agent</strong>。</p></details>
+      <details><summary>重启后如何恢复 Claude Code 对话？</summary><p>重启后，每个 Aubergine 终端都会作为位于最后所在文件夹的新 shell 回来。如果 Claude Code 是从 Aubergine 启动的，标题栏中的 <strong>Resume agent</strong> 会在那个终端原来的对话中再次启动它。</p></details>
+      <details><summary>如何找到以前的 Claude Code 对话？</summary><p>命令面板中的 <strong>Past conversations…</strong> 按文件夹列出它们，并提供只读的对话记录；在命令面板中输入 <code>@</code> 和一些词可以搜索它们。只会列出 Claude Code 仍然保存着的内容。</p></details>
+      <details><summary>claude --continue 和 claude --resume 有什么区别？</summary><p><code>--continue</code> 接着文件夹中最近的一次对话；<code>--resume</code> 接受你选的那个，或一个 ID。<strong>Resume agent</strong> 用的是 <code>--resume</code> 加终端记住的 ID，所以不取决于哪个对话最近。</p></details>
+      <details><summary>两个终端能接着同一个 Claude Code 对话吗？</summary><p>Aubergine 不会不问就把一个对话打开两次：一个对话里有两个智能体，会丢失彼此的消息。你可以选择已经处于这个对话的终端，或者开一个副本，让对话分支。</p></details>
+    </div>
+    <p>相关：<a href="../keep-terminals-after-restart/">重启之后保留你的终端</a> · <a href="../claude-code-notifications/">知道 Claude Code 何时在等待</a> · <a href="../claude/">Aubergine 中的 Claude Code</a></p>
+    <p class="note">Aubergine 与 Anthropic 没有关联。Claude 和 Claude Code 是 Anthropic 的商标。</p>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">五分钟上手</h2>
+    <div class="close-do">
+      <p>你需要 macOS，以及 tmux 3.2 或更高版本和 Node.js 22 或更高版本。<code>brew install tmux node</code> 可以一次装好两者。</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="已复制" aria-live="polite" hidden>复制</button></p>
+      <p class="actions"><a class="button" href="../install/">安装</a><a class="button button-quiet" href="../claude/">Aubergine 中的 Claude Code</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav aria-label="所有页面">
+      <ul class="foot-links">
+        <li><a href="../">首页</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex 与 ChatGPT</a></li>
+        <li><a href="../install/">安装</a></li>
+        <li><a href="../guides/">指南</a></li>
+        <li><a href="../run-multiple-coding-agents/">运行多个智能体</a></li>
+        <li><a href="../working-copies/">工作副本</a></li>
+        <li><a href="../queue-and-schedules/">队列与定时计划</a></li>
+        <li><a href="../security/">安全</a></li>
+        <li><a href="../roadmap/">路线图</a></li>
+        <li><a href="../faq/">常见问题</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine 免费开源，采用 <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT 许可证</a>，运行在你自己的电脑上。</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    if (!navigator.clipboard) return;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
+});
+</script>
+</body>
+</html>

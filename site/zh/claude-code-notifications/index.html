@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="zh-Hans" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>知道 Claude Code 何时完成或在等你 | Aubergine</title>
+<meta name="description" content="一眼看出哪个 Claude Code 终端在工作、在等你或已完成：Aubergine 生成的钩子、For you 计数、跳到下一个等待终端的按键，以及打开的页面发出的通知。">
+<link rel="canonical" href="https://thirstyeggplant.com/zh/claude-code-notifications/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/claude-code-notifications/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/claude-code-notifications/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/claude-code-notifications/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/claude-code-notifications/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/claude-code-notifications/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/claude-code-notifications/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/claude-code-notifications/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/claude-code-notifications/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/claude-code-notifications/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/claude-code-notifications/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/claude-code-notifications/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/claude-code-notifications/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/claude-code-notifications/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="知道 Claude Code 何时完成或在等你 | Aubergine">
+<meta property="og:description" content="一眼看出哪个 Claude Code 终端在工作、在等你或已完成：Aubergine 生成的钩子、For you 计数、跳到下一个等待终端的按键，以及打开的页面发出的通知。">
+<meta property="og:url" content="https://thirstyeggplant.com/zh/claude-code-notifications/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine：一张摆满终端的画布，一个正在忙，一个在等你">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine：一张摆满终端的画布，一个正在忙，一个在等你">
+<meta name="twitter:title" content="知道 Claude Code 何时完成或在等你 | Aubergine">
+<meta name="twitter:description" content="一眼看出哪个 Claude Code 终端在工作、在等你或已完成：Aubergine 生成的钩子、For you 计数、跳到下一个等待终端的按键，以及打开的页面发出的通知。">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="页面">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">安装</a></li>
+        <li><a href="../guides/">指南</a></li>
+        <li><a href="../security/">安全</a></li>
+        <li><a href="../faq/">常见问题</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="语言: 简体中文"><span class="lang-long" aria-hidden="true">简体中文</span><span class="lang-short" aria-hidden="true">ZH</span></summary>
+      <ul class="menu-list"><li><a href="../../claude-code-notifications/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/claude-code-notifications/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/claude-code-notifications/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/claude-code-notifications/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/claude-code-notifications/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/claude-code-notifications/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="./" hreflang="zh-Hans" lang="zh-Hans" dir="ltr" aria-current="true">简体中文</a></li><li><a href="../../ko/claude-code-notifications/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/claude-code-notifications/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/claude-code-notifications/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/claude-code-notifications/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/claude-code-notifications/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>菜单</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">安装</a></li>
+        <li><a href="../guides/">指南</a></li>
+        <li><a href="../security/">安全</a></li>
+        <li><a href="../faq/">常见问题</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine 本身是英文的：它的按钮、菜单和截图都是英文版。</p>
+    <p>本页由机器从英文翻译而来。<a href="https://github.com/thirstyeggplant/aubergine/issues">提交修正</a>。</p>
+  </div>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/zh/claude-code-notifications/#article",
+      "headline": "知道 Claude Code 何时完成或在等你",
+      "description": "一眼看出哪个 Claude Code 终端在工作、在等你或已完成：Aubergine 生成的钩子、For you 计数、跳到下一个等待终端的按键，以及打开的页面发出的通知。",
+      "url": "https://thirstyeggplant.com/zh/claude-code-notifications/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/zh/claude-code-notifications/",
+      "datePublished": "2026-11-25",
+      "dateModified": "2026-11-25",
+      "inLanguage": "zh-Hans",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "指南", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "完成还是在等待", "item": "https://thirstyeggplant.com/zh/claude-code-notifications/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/zh/claude-code-notifications/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "Claude Code 完成时如何收到通知？", "acceptedAnswer": { "@type": "Answer", "text": "从 Aubergine 启动 Claude Code，然后在 Settings → Notifications 中打开 Notify me on the desktop when a terminal starts waiting。之后，当终端开始等你或其智能体完成时，打开的页面会显示一条浏览器通知。没有通知时，终端也会显示 finished。" } },
+        { "@type": "Question", "name": "Claude Code 需要输入时能播放声音吗？", "acceptedAnswer": { "@type": "Answer", "text": "Aubergine 不播放声音。如果你的浏览器或系统让通知发声，通知就会响。在你的 Claude Code 设置里写一个你自己的钩子可以播放声音；Aubergine 从不写入那些设置。" } },
+        { "@type": "Question", "name": "同时运行多个时，如何看出哪个 Claude Code 会话在等待？", "acceptedAnswer": { "@type": "Answer", "text": "在 Aubergine 中，等待中的终端的边框和状态是等待的颜色，它在列表中的行显示 waiting for you，For you 旁边的数字说明有多少事在等待。W 跳到下一个。" } },
+        { "@type": "Question", "name": "浏览器关闭时会收到通知吗？", "acceptedAnswer": { "@type": "Answer", "text": "不会。通知来自打开的 Aubergine 页面。状态会被保存，所以你重新打开页面时，在等待的终端会被标出来。" } },
+        { "@type": "Question", "name": "它支持 Claude Code 以外的智能体吗？", "acceptedAnswer": { "@type": "Answer", "text": "不会自动支持：钩子是为 Claude Code 构建的。任何其他智能体，只要它自己的指令要求，都可以用 aubergine attention waiting、working 和 done 报告同样的状态；aubergine guide --snippet 会打印用于这些指令的几行。" } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="当前位置"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">指南</a></li><li>完成还是在等待</li></ol></nav>
+    <h1>知道 Claude Code 何时完成或在等你</h1>
+    <p class="lead">你给 Claude Code 布置了一个任务，转头去忙别的，二十分钟后回来，才发现它从第二分钟起就在等你说一声“是”。Aubergine 在一个页面上显示哪个终端在工作、哪个在等你、哪个已经完成。</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>通常的做法</h2>
+    <p>Claude Code 会在某些时刻运行钩子，也就是你自己的命令，比如它停下时（<code>Stop</code>）或发送通知时（<code>Notification</code>）。通常的答案是在你的 Claude Code 设置里写一个播放声音或显示桌面通知的钩子。这样可行，只是脚本要你自己写、自己维护。</p>
+
+    <h2>Aubergine 做什么</h2>
+    <p><strong>从 Aubergine 启动 Claude Code</strong>：终端列表顶部的 <strong>New terminal ▾ → Claude Code</strong>，或按 <code>C</code>。Aubergine 会用它在自己数据文件夹中生成、并在命令行中指定的一个设置文件来启动 <code>claude</code>。你自己的 Claude Code 配置不会被改动。那个文件里的钩子会告诉页面智能体在做什么：</p>
+    <ul>
+      <li>你发送提示词时，终端显示 <strong>working</strong>（工作中），提示词会加入它的笔记日志；</li>
+      <li>智能体需要你时（权限询问，或空闲等待输入），它的边框变成等待的颜色，标题和列表中的行显示 <strong>waiting for you</strong>（在等你）；</li>
+      <li>它停下时，终端显示 <strong>finished</strong>（已完成）。</li>
+    </ul>
+    <figure class="frame"><a href="../../screenshots/waiting.png" class="frame-pic"><img src="../../screenshots/waiting.png" width="1496" height="600" loading="lazy" alt="一个终端，其中的智能体在提问，标题显示 waiting for you，边框是等待的颜色。"></a><figcaption>它的边框变成等待的颜色，标题显示 waiting for you。</figcaption></figure>
+    <p>页面右上角 <strong>For you 旁边的数字</strong>是所有项目中在等你的一切：有问题的终端，以及待审批的运行、待阅读的草稿和被提议的任务。点它会打开 <strong>Runs</strong>，其中的 <strong>Waiting for you</strong> 列就是这份清单。画布的标签页会显示其中有多少个终端在等待。</p>
+    <p><strong>下一个在等待的。</strong>没有终端占用键盘时，<code>W</code> 会跳到下一个在等你的终端；在 macOS 上，<code>⌃⌘J</code> 在终端里也能做到。在其他系统上，它在命令面板中。</p>
+    <p><strong>打开的页面发出的通知。</strong><strong>Settings → Notifications</strong> 中有 <strong>Notify me on the desktop when a terminal starts waiting</strong>（终端开始等待时在桌面上通知我）。打开后，当终端开始等待或其智能体完成时，只要你没在看那个终端，页面就会显示一条浏览器通知。浏览器只会请求一次你的许可。</p>
+    <p><strong>规则。</strong>在 <strong>Runs</strong> 的 <strong>Rules</strong> 标签页上，可以设一条规则，在任务完成、任务失败、任务需要你、有事要问你，或定时计划触发或无法运行时 <strong>Notify me</strong>（通知我）：由打开的页面发出通知，用一句话说明发生了什么。</p>
+    <figure class="frame"><a href="../../screenshots/for-you.png" class="frame-pic"><img src="../../screenshots/for-you.png" width="990" height="570" loading="lazy" alt="Runs 页面的 Waiting for you 列：一个添加待办的输入框，然后是一个替身智能体的问题、一份待读的草稿和一份交上来的清单。"></a><figcaption>For you 旁边的等待清单：先是一个替身智能体的问题，然后是一个要阅读的步骤和一份提交上来的清单。</figcaption></figure>
+
+    <h2>其他智能体，以及你自己输入的 claude</h2>
+    <p>Aubergine 不会读终端输出去猜测。任何其他智能体或程序，都可以在自己的终端里用 <code>aubergine attention waiting "what it needs"</code>、<code>aubergine attention working</code> 和 <code>aubergine attention done</code> 自己说出同样的状态。<code>aubergine guide --snippet</code> 会打印五行内容，放进你的智能体在对话开始时读取的文件；这几行让它运行 <code>aubergine guide</code>，由后者说明这些命令。</p>
+    <p>在普通终端里输入 <code>claude</code> 启动的 Claude Code，在 Aubergine 看来只是一个忙着运行程序的 shell：不会显示 <strong>waiting for you</strong>。请改为从菜单启动，或者把 <code>aubergine hooks print</code> 打印出的钩子手动加到你自己的设置中；它们在 Aubergine 终端之外不起任何作用。</p>
+
+    <h2>它不做什么</h2>
+    <ul>
+      <li><strong>没有自己的声音。</strong>Aubergine 不播放任何声音。只有你的浏览器或系统为通知设置了声音时，通知才会响。</li>
+      <li><strong>没有打开的页面时什么都没有。</strong>通知来自你浏览器中打开的 Aubergine 页面；服务器自己不会发送任何通知。所有页面都关掉时，终端仍然显示 <strong>waiting for you</strong>，你打开页面时计数就在那里。</li>
+      <li><strong>不会推送到手机。</strong>没有应用，也没有推送服务。可以把手机的浏览器配对来打开同一个页面；见<a href="../check-agents-from-your-phone/">用手机查看你的智能体</a>，不过还没有在真正的手机上试过。</li>
+      <li><strong>检查过什么。</strong>浏览器测试是拿浏览器自带通知的替身来检查通知的。真正的通知长什么样，甚至会不会显示，取决于你的浏览器以及系统中对它的设置。</li>
+    </ul>
+
+    <h2>常见问题</h2>
+    <div class="questions">
+      <details><summary>Claude Code 完成时如何收到通知？</summary><p>从 Aubergine 启动 Claude Code，然后在 <strong>Settings → Notifications</strong> 中打开 <strong>Notify me on the desktop when a terminal starts waiting</strong>。之后，当终端开始等你或其智能体完成时，打开的页面会显示一条浏览器通知。没有通知时，终端也会显示 <strong>finished</strong>。</p></details>
+      <details><summary>Claude Code 需要输入时能播放声音吗？</summary><p>Aubergine 不播放声音。如果你的浏览器或系统让通知发声，通知就会响。在你的 Claude Code 设置里写一个你自己的钩子可以播放声音；Aubergine 从不写入那些设置。</p></details>
+      <details><summary>同时运行多个时，如何看出哪个 Claude Code 会话在等待？</summary><p>在 Aubergine 中，等待中的终端的边框和状态是等待的颜色，它在列表中的行显示 <strong>waiting for you</strong>，<strong>For you</strong> 旁边的数字说明有多少事在等待。<code>W</code> 跳到下一个。</p></details>
+      <details><summary>浏览器关闭时会收到通知吗？</summary><p>不会。通知来自打开的 Aubergine 页面。状态会被保存，所以你重新打开页面时，在等待的终端会被标出来。</p></details>
+      <details><summary>它支持 Claude Code 以外的智能体吗？</summary><p>不会自动支持：钩子是为 Claude Code 构建的。任何其他智能体，只要它自己的指令要求，都可以用 <code>aubergine attention waiting</code>、<code>working</code> 和 <code>done</code> 报告同样的状态；<code>aubergine guide --snippet</code> 会打印用于这些指令的几行。</p></details>
+    </div>
+    <p>相关：<a href="../claude/">Aubergine 中的 Claude Code</a> · <a href="../resume-claude-code-session/">恢复 Claude Code 对话</a> · <a href="../too-many-terminal-tabs/">终端太多时</a></p>
+    <p class="note">Aubergine 与 Anthropic 没有关联。Claude 和 Claude Code 是 Anthropic 的商标。</p>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">五分钟上手</h2>
+    <div class="close-do">
+      <p>你需要 macOS，以及 tmux 3.2 或更高版本和 Node.js 22 或更高版本。<code>brew install tmux node</code> 可以一次装好两者。</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="已复制" aria-live="polite" hidden>复制</button></p>
+      <p class="actions"><a class="button" href="../install/">安装</a><a class="button button-quiet" href="../claude/">Aubergine 中的 Claude Code</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav aria-label="所有页面">
+      <ul class="foot-links">
+        <li><a href="../">首页</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex 与 ChatGPT</a></li>
+        <li><a href="../install/">安装</a></li>
+        <li><a href="../guides/">指南</a></li>
+        <li><a href="../run-multiple-coding-agents/">运行多个智能体</a></li>
+        <li><a href="../working-copies/">工作副本</a></li>
+        <li><a href="../queue-and-schedules/">队列与定时计划</a></li>
+        <li><a href="../security/">安全</a></li>
+        <li><a href="../roadmap/">路线图</a></li>
+        <li><a href="../faq/">常见问题</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine 免费开源，采用 <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT 许可证</a>，运行在你自己的电脑上。</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    if (!navigator.clipboard) return;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
+});
+</script>
+</body>
+</html>

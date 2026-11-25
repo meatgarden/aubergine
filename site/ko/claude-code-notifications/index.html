@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="ko" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claude Code가 끝났는지, 여러분을 기다리는지 알기 | Aubergine</title>
+<meta name="description" content="어느 Claude Code 터미널이 작업 중인지, 여러분을 기다리는지, 끝났는지 한눈에 봅니다. Aubergine이 만드는 훅, For you 숫자, 다음 대기 터미널로 가는 키, 열린 페이지의 알림.">
+<link rel="canonical" href="https://thirstyeggplant.com/ko/claude-code-notifications/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/claude-code-notifications/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/claude-code-notifications/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/claude-code-notifications/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/claude-code-notifications/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/claude-code-notifications/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/claude-code-notifications/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/claude-code-notifications/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/claude-code-notifications/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/claude-code-notifications/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/claude-code-notifications/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/claude-code-notifications/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/claude-code-notifications/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/claude-code-notifications/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="Claude Code가 끝났는지, 여러분을 기다리는지 알기 | Aubergine">
+<meta property="og:description" content="어느 Claude Code 터미널이 작업 중인지, 여러분을 기다리는지, 끝났는지 한눈에 봅니다. Aubergine이 만드는 훅, For you 숫자, 다음 대기 터미널로 가는 키, 열린 페이지의 알림.">
+<meta property="og:url" content="https://thirstyeggplant.com/ko/claude-code-notifications/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine: 터미널이 놓인 캔버스. 하나는 작업 중이고 하나는 사용자를 기다리고 있습니다">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine: 터미널이 놓인 캔버스. 하나는 작업 중이고 하나는 사용자를 기다리고 있습니다">
+<meta name="twitter:title" content="Claude Code가 끝났는지, 여러분을 기다리는지 알기 | Aubergine">
+<meta name="twitter:description" content="어느 Claude Code 터미널이 작업 중인지, 여러분을 기다리는지, 끝났는지 한눈에 봅니다. Aubergine이 만드는 훅, For you 숫자, 다음 대기 터미널로 가는 키, 열린 페이지의 알림.">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="페이지">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">설치</a></li>
+        <li><a href="../guides/">가이드</a></li>
+        <li><a href="../security/">보안</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="언어: 한국어"><span class="lang-long" aria-hidden="true">한국어</span><span class="lang-short" aria-hidden="true">KO</span></summary>
+      <ul class="menu-list"><li><a href="../../claude-code-notifications/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/claude-code-notifications/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/claude-code-notifications/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/claude-code-notifications/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/claude-code-notifications/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/claude-code-notifications/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/claude-code-notifications/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="./" hreflang="ko" lang="ko" dir="ltr" aria-current="true">한국어</a></li><li><a href="../../id/claude-code-notifications/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/claude-code-notifications/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/claude-code-notifications/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/claude-code-notifications/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>메뉴</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">설치</a></li>
+        <li><a href="../guides/">가이드</a></li>
+        <li><a href="../security/">보안</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine 앱 자체는 영어로 되어 있습니다. 버튼, 메뉴, 그림은 모두 영어판 그대로입니다.</p>
+    <p>이 페이지는 영어 원문을 기계 번역한 것입니다. <a href="https://github.com/thirstyeggplant/aubergine/issues">수정 제안 보내기</a>.</p>
+  </div>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/ko/claude-code-notifications/#article",
+      "headline": "Claude Code가 끝났는지, 여러분을 기다리는지 알기",
+      "description": "어느 Claude Code 터미널이 작업 중인지, 여러분을 기다리는지, 끝났는지 한눈에 봅니다. Aubergine이 만드는 훅, For you 숫자, 다음 대기 터미널로 가는 키, 열린 페이지의 알림.",
+      "url": "https://thirstyeggplant.com/ko/claude-code-notifications/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/ko/claude-code-notifications/",
+      "datePublished": "2026-11-25",
+      "dateModified": "2026-11-25",
+      "inLanguage": "ko",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "가이드", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "완료 또는 대기", "item": "https://thirstyeggplant.com/ko/claude-code-notifications/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/ko/claude-code-notifications/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "Claude Code가 끝나면 알림을 받으려면 어떻게 하나요?", "acceptedAnswer": { "@type": "Answer", "text": "Aubergine에서 Claude Code를 시작한 뒤 Settings → Notifications에서 Notify me on the desktop when a terminal starts waiting을 켜세요. 그러면 터미널이 여러분을 기다리기 시작하거나 에이전트가 끝났을 때 열린 페이지가 브라우저 알림을 띄웁니다. 알림이 없어도 터미널에는 finished가 표시됩니다." } },
+        { "@type": "Question", "name": "Claude Code가 입력을 필요로 할 때 소리를 낼 수 있나요?", "acceptedAnswer": { "@type": "Answer", "text": "Aubergine은 소리를 내지 않습니다. 브라우저나 시스템이 소리를 내도록 되어 있으면 알림에 소리가 납니다. Claude Code 설정에 여러분이 직접 넣은 훅은 소리를 낼 수 있습니다. Aubergine은 그 설정에 절대 쓰지 않습니다." } },
+        { "@type": "Question", "name": "Claude Code 세션을 여러 개 실행할 때 어느 것이 기다리는지 어떻게 보나요?", "acceptedAnswer": { "@type": "Answer", "text": "Aubergine에서는 기다리는 터미널의 테두리 선과 상태가 대기 색으로 표시되고, 목록의 행에 waiting for you가 나오며, For you 옆의 숫자가 기다리는 것의 수를 알려 줍니다. W는 다음 것으로 이동합니다." } },
+        { "@type": "Question", "name": "브라우저가 닫혀 있어도 알림을 받나요?", "acceptedAnswer": { "@type": "Answer", "text": "아니요. 알림은 열린 Aubergine 페이지에서 옵니다. 상태는 유지되므로, 페이지를 다시 열면 기다리는 터미널이 표시되어 있습니다." } },
+        { "@type": "Question", "name": "Claude Code 말고 다른 에이전트에서도 동작하나요?", "acceptedAnswer": { "@type": "Answer", "text": "저절로는 아닙니다. 훅은 Claude Code에 맞춰 만들어졌습니다. 다른 에이전트도 자신의 지침에서 그렇게 하라고 하면 aubergine attention waiting, working, done으로 같은 것을 보고할 수 있습니다. aubergine guide --snippet이 그 지침에 넣을 줄을 출력합니다." } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="현재 위치"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">가이드</a></li><li>완료 또는 대기</li></ol></nav>
+    <h1>Claude Code가 끝났는지, 여러분을 기다리는지 알기</h1>
+    <p class="lead">Claude Code에 작업을 맡기고 다른 일을 하다가 20분 뒤에 돌아와 보니, 2분째부터 승인을 기다리고 있었습니다. Aubergine은 어느 터미널이 작업 중이고, 어느 것이 여러분을 기다리고, 어느 것이 끝났는지 한 페이지에서 보여 줍니다.</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>흔히 쓰는 방법</h2>
+    <p>Claude Code는 멈출 때(<code>Stop</code>)나 알림을 보낼 때(<code>Notification</code>) 같은 순간에 훅, 즉 여러분이 정한 명령을 실행합니다. 흔한 해결책은 Claude Code 설정에 소리를 내거나 데스크톱 알림을 띄우는 훅을 넣는 것입니다. 잘 동작하며, 스크립트는 여러분이 직접 쓰고 관리합니다.</p>
+
+    <h2>Aubergine이 하는 일</h2>
+    <p><strong>Aubergine에서 Claude Code를 시작하세요</strong>. 터미널 목록 맨 위의 <strong>New terminal ▾ → Claude Code</strong>를 누르거나 <code>C</code>를 누릅니다. Aubergine은 자체 데이터 폴더에 만든 설정 파일을 명령줄에 지정해 <code>claude</code>를 시작합니다. 여러분의 Claude Code 설정은 건드리지 않습니다. 그 파일의 훅이 에이전트가 하는 일을 페이지에 알립니다.</p>
+    <ul>
+      <li>프롬프트를 보내면 터미널에 <strong>working</strong>이 표시되고, 프롬프트가 노트의 로그에 추가됩니다.</li>
+      <li>에이전트가 여러분을 필요로 하면(권한 질문, 또는 입력을 기다리며 유휴 상태일 때) 테두리 선이 대기 색으로 바뀌고, 제목과 목록의 행에 <strong>waiting for you</strong>가 표시됩니다.</li>
+      <li>멈추면 터미널에 <strong>finished</strong>가 표시됩니다.</li>
+    </ul>
+    <figure class="frame"><a href="../../screenshots/waiting.png" class="frame-pic"><img src="../../screenshots/waiting.png" width="1496" height="600" loading="lazy" alt="에이전트가 질문을 하고 있는 터미널 하나. 제목에는 waiting for you라고 표시되고, 테두리 선은 대기 색입니다."></a><figcaption>테두리 선은 대기 색으로 바뀌고, 제목에는 waiting for you라고 표시됩니다.</figcaption></figure>
+    <p>페이지 오른쪽 위의 <strong>For you 옆의 숫자</strong>는 모든 프로젝트에 걸쳐 여러분을 기다리는 모든 것입니다. 질문이 있는 터미널, 승인할 실행, 읽을 초안, 제안된 작업. 누르면 <strong>Runs</strong>가 열리고, 그 <strong>Waiting for you</strong> 열이 바로 그 목록입니다. 캔버스 탭에는 그 캔버스에서 기다리는 터미널 수가 표시됩니다.</p>
+    <p><strong>다음으로 기다리는 터미널.</strong> 키보드를 가진 터미널이 없을 때 <code>W</code>는 여러분을 기다리는 다음 터미널로 이동합니다. macOS에서는 <code>⌃⌘J</code>가 터미널 안에서도 같은 일을 합니다. 다른 환경에서는 팔레트에 있습니다.</p>
+    <p><strong>열린 페이지의 알림.</strong> <strong>Settings → Notifications</strong>에 <strong>Notify me on the desktop when a terminal starts waiting</strong>(터미널이 기다리기 시작하면 데스크톱으로 알림)이 있습니다. 켜 두면 터미널이 기다리기 시작하거나 에이전트가 끝났을 때, 여러분이 그 터미널을 보고 있지 않다면 페이지가 브라우저 알림을 띄웁니다. 브라우저는 한 번 권한을 묻습니다.</p>
+    <p><strong>규칙.</strong> <strong>Runs</strong>의 <strong>Rules</strong> 탭에서, 작업이 끝났을 때, 작업이 실패했을 때, 작업에 여러분이 필요할 때, 여러분에게 무언가를 요청할 때, 일정이 실행되었거나 실행되지 못했을 때 <strong>Notify me</strong>(알림) 규칙을 만들 수 있습니다. 무슨 일이 있었는지 한 문장으로 알려 주는, 열린 페이지의 알림입니다.</p>
+    <figure class="frame"><a href="../../screenshots/for-you.png" class="frame-pic"><img src="../../screenshots/for-you.png" width="990" height="570" loading="lazy" alt="Runs 페이지의 Waiting for you 열: 할 일을 추가하는 상자, 그 아래 대역 에이전트의 질문, 읽을 초안, 제출된 목록."></a><figcaption>For you 옆의 대기 목록: 맨 위에 대역 에이전트의 질문, 그다음 읽을 단계와 제출된 목록.</figcaption></figure>
+
+    <h2>다른 에이전트, 그리고 직접 입력한 claude</h2>
+    <p>Aubergine은 터미널 출력을 읽어 추측하지 않습니다. 다른 에이전트나 어떤 프로그램이든 자기 터미널에서 <code>aubergine attention waiting "what it needs"</code>, <code>aubergine attention working</code>, <code>aubergine attention done</code>으로 같은 것을 스스로 알립니다. <code>aubergine guide --snippet</code>은 에이전트가 대화를 시작할 때 읽는 파일에 넣을 다섯 줄을 출력합니다. 그 줄은 이 명령들을 설명하는 <code>aubergine guide</code>를 실행하라고 에이전트에게 알려 줍니다.</p>
+    <p>일반 터미널에서 <code>claude</code>를 입력해 시작한 Claude Code는 Aubergine에게 프로그램을 실행 중인 바쁜 셸일 뿐이라 <strong>waiting for you</strong>가 표시되지 않습니다. 대신 메뉴에서 시작하거나, <code>aubergine hooks print</code>가 출력하는 훅을 여러분의 설정에 직접 추가하세요. 그 훅은 Aubergine 터미널 밖에서는 아무 일도 하지 않습니다.</p>
+
+    <h2>하지 않는 일</h2>
+    <ul>
+      <li><strong>자체 소리가 없습니다.</strong> Aubergine은 소리를 내지 않습니다. 알림은 브라우저나 시스템이 알림에 소리를 내도록 되어 있을 때만 소리가 납니다.</li>
+      <li><strong>열린 페이지가 없으면 아무것도 오지 않습니다.</strong> 알림은 브라우저에 열려 있는 Aubergine 페이지에서 옵니다. 서버가 스스로 보내는 알림은 없습니다. 페이지를 모두 닫아도 터미널에는 여전히 <strong>waiting for you</strong>가 표시되고, 페이지를 열면 숫자가 그대로 있습니다.</li>
+      <li><strong>휴대폰 푸시는 없습니다.</strong> 앱도 푸시 서비스도 없습니다. 휴대폰 브라우저를 페어링해 같은 페이지를 열 수는 있습니다. <a href="../check-agents-from-your-phone/">휴대폰에서 에이전트 확인하기</a>를 보세요. 실제 휴대폰에서는 시도하지 않았습니다.</li>
+      <li><strong>확인한 것.</strong> 브라우저 테스트는 브라우저 자체 알림의 대역을 상대로 알림을 확인합니다. 실제 알림이 어떻게 보이는지, 그리고 아예 보이는지는 브라우저와 시스템의 알림 설정에 달려 있습니다.</li>
+    </ul>
+
+    <h2>질문</h2>
+    <div class="questions">
+      <details><summary>Claude Code가 끝나면 알림을 받으려면 어떻게 하나요?</summary><p>Aubergine에서 Claude Code를 시작한 뒤 <strong>Settings → Notifications</strong>에서 <strong>Notify me on the desktop when a terminal starts waiting</strong>을 켜세요. 그러면 터미널이 여러분을 기다리기 시작하거나 에이전트가 끝났을 때 열린 페이지가 브라우저 알림을 띄웁니다. 알림이 없어도 터미널에는 <strong>finished</strong>가 표시됩니다.</p></details>
+      <details><summary>Claude Code가 입력을 필요로 할 때 소리를 낼 수 있나요?</summary><p>Aubergine은 소리를 내지 않습니다. 브라우저나 시스템이 소리를 내도록 되어 있으면 알림에 소리가 납니다. Claude Code 설정에 여러분이 직접 넣은 훅은 소리를 낼 수 있습니다. Aubergine은 그 설정에 절대 쓰지 않습니다.</p></details>
+      <details><summary>Claude Code 세션을 여러 개 실행할 때 어느 것이 기다리는지 어떻게 보나요?</summary><p>Aubergine에서는 기다리는 터미널의 테두리 선과 상태가 대기 색으로 표시되고, 목록의 행에 <strong>waiting for you</strong>가 나오며, <strong>For you</strong> 옆의 숫자가 기다리는 것의 수를 알려 줍니다. <code>W</code>는 다음 것으로 이동합니다.</p></details>
+      <details><summary>브라우저가 닫혀 있어도 알림을 받나요?</summary><p>아니요. 알림은 열린 Aubergine 페이지에서 옵니다. 상태는 유지되므로, 페이지를 다시 열면 기다리는 터미널이 표시되어 있습니다.</p></details>
+      <details><summary>Claude Code 말고 다른 에이전트에서도 동작하나요?</summary><p>저절로는 아닙니다. 훅은 Claude Code에 맞춰 만들어졌습니다. 다른 에이전트도 자신의 지침에서 그렇게 하라고 하면 <code>aubergine attention waiting</code>, <code>working</code>, <code>done</code>으로 같은 것을 보고할 수 있습니다. <code>aubergine guide --snippet</code>이 그 지침에 넣을 줄을 출력합니다.</p></details>
+    </div>
+    <p>관련: <a href="../claude/">Aubergine의 Claude Code</a> · <a href="../resume-claude-code-session/">Claude Code 대화 재개하기</a> · <a href="../too-many-terminal-tabs/">터미널이 너무 많을 때</a></p>
+    <p class="note">Aubergine은 Anthropic과 제휴 관계가 없습니다. Claude와 Claude Code는 Anthropic의 상표입니다.</p>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">5분이면 시작합니다</h2>
+    <div class="close-do">
+      <p>tmux 3.2 이상과 Node.js 22 이상이 설치된 macOS가 필요합니다. <code>brew install tmux node</code>로 둘 다 설치할 수 있습니다.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="복사됨" aria-live="polite" hidden>복사</button></p>
+      <p class="actions"><a class="button" href="../install/">설치</a><a class="button button-quiet" href="../claude/">Aubergine의 Claude Code</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav aria-label="전체 페이지">
+      <ul class="foot-links">
+        <li><a href="../">홈</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex와 ChatGPT</a></li>
+        <li><a href="../install/">설치</a></li>
+        <li><a href="../guides/">가이드</a></li>
+        <li><a href="../run-multiple-coding-agents/">여러 에이전트 실행하기</a></li>
+        <li><a href="../working-copies/">작업 사본</a></li>
+        <li><a href="../queue-and-schedules/">대기열과 일정</a></li>
+        <li><a href="../security/">보안</a></li>
+        <li><a href="../roadmap/">로드맵</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine은 <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT 라이선스</a>로 공개된 무료 오픈 소스이며, 여러분의 컴퓨터에서 실행됩니다.</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    if (!navigator.clipboard) return;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
+});
+</script>
+</body>
+</html>

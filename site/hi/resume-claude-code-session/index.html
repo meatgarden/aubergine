@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="hi" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>रीस्टार्ट के बाद Claude Code की बातचीत फिर शुरू करें | Aubergine</title>
+<meta name="description" content="claude --continue और --resume बातचीत वापस लाते हैं, अगर आप सही फ़ोल्डर में हों। Aubergine याद रखता है कि हर टर्मिनल किस बातचीत में था, Resume agent देता है, और फ़ोल्डर के हिसाब से पुरानी बातचीत की सूची दिखाता है।">
+<link rel="canonical" href="https://thirstyeggplant.com/hi/resume-claude-code-session/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/resume-claude-code-session/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/resume-claude-code-session/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/resume-claude-code-session/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/resume-claude-code-session/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/resume-claude-code-session/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/resume-claude-code-session/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/resume-claude-code-session/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/resume-claude-code-session/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/resume-claude-code-session/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/resume-claude-code-session/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/resume-claude-code-session/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/resume-claude-code-session/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/resume-claude-code-session/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="रीस्टार्ट के बाद Claude Code की बातचीत फिर शुरू करें | Aubergine">
+<meta property="og:description" content="claude --continue और --resume बातचीत वापस लाते हैं, अगर आप सही फ़ोल्डर में हों। Aubergine याद रखता है कि हर टर्मिनल किस बातचीत में था, Resume agent देता है, और फ़ोल्डर के हिसाब से पुरानी बातचीत की सूची दिखाता है।">
+<meta property="og:url" content="https://thirstyeggplant.com/hi/resume-claude-code-session/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine: टर्मिनलों का एक कैनवस, एक काम में लगा हुआ और एक आपका इंतज़ार करता हुआ">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine: टर्मिनलों का एक कैनवस, एक काम में लगा हुआ और एक आपका इंतज़ार करता हुआ">
+<meta name="twitter:title" content="रीस्टार्ट के बाद Claude Code की बातचीत फिर शुरू करें | Aubergine">
+<meta name="twitter:description" content="claude --continue और --resume बातचीत वापस लाते हैं, अगर आप सही फ़ोल्डर में हों। Aubergine याद रखता है कि हर टर्मिनल किस बातचीत में था, Resume agent देता है, और फ़ोल्डर के हिसाब से पुरानी बातचीत की सूची दिखाता है।">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">पेज पर जाएँ</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="पेज">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">इंस्टॉल</a></li>
+        <li><a href="../guides/">गाइड</a></li>
+        <li><a href="../security/">सुरक्षा</a></li>
+        <li><a href="../faq/">सवाल-जवाब</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="भाषा: हिन्दी"><span class="lang-long" aria-hidden="true">हिन्दी</span><span class="lang-short" aria-hidden="true">HI</span></summary>
+      <ul class="menu-list"><li><a href="../../resume-claude-code-session/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/resume-claude-code-session/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/resume-claude-code-session/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/resume-claude-code-session/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/resume-claude-code-session/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/resume-claude-code-session/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/resume-claude-code-session/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/resume-claude-code-session/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/resume-claude-code-session/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="./" hreflang="hi" lang="hi" dir="ltr" aria-current="true">हिन्दी</a></li><li><a href="../../bn/resume-claude-code-session/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/resume-claude-code-session/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>मेन्यू</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">इंस्टॉल</a></li>
+        <li><a href="../guides/">गाइड</a></li>
+        <li><a href="../security/">सुरक्षा</a></li>
+        <li><a href="../faq/">सवाल-जवाब</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine खुद अंग्रेज़ी में है: उसके बटन, मेन्यू और तस्वीरें अंग्रेज़ी वाली ही हैं।</p>
+    <p>इस पेज का अंग्रेज़ी से अनुवाद मशीन ने किया है। <a href="https://github.com/thirstyeggplant/aubergine/issues">सुधार भेजें</a>।</p>
+  </div>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/hi/resume-claude-code-session/#article",
+      "headline": "रीस्टार्ट के बाद Claude Code की बातचीत फिर शुरू करें",
+      "description": "claude --continue और --resume बातचीत वापस लाते हैं, अगर आप सही फ़ोल्डर में हों। Aubergine याद रखता है कि हर टर्मिनल किस बातचीत में था, Resume agent देता है, और फ़ोल्डर के हिसाब से पुरानी बातचीत की सूची दिखाता है।",
+      "url": "https://thirstyeggplant.com/hi/resume-claude-code-session/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/hi/resume-claude-code-session/",
+      "datePublished": "2026-11-25",
+      "dateModified": "2026-11-25",
+      "inLanguage": "hi",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "गाइड", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "बातचीत फिर शुरू करें", "item": "https://thirstyeggplant.com/hi/resume-claude-code-session/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/hi/resume-claude-code-session/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "टर्मिनल बंद करने के बाद Claude Code सेशन फिर कैसे शुरू करूँ?", "acceptedAnswer": { "@type": "Answer", "text": "उसी फ़ोल्डर में, claude --continue सबसे हाल की बातचीत लेता है और claude --resume आपको चुनने देता है। Aubergine में ब्राउज़र बंद करने से कुछ खत्म नहीं होता, और जिस टर्मिनल के एजेंट से आप बाहर निकले, वह अपनी टाइटल बार में Resume agent देता है।" } },
+        { "@type": "Question", "name": "रीबूट के बाद Claude Code की बातचीत फिर कैसे शुरू करूँ?", "acceptedAnswer": { "@type": "Answer", "text": "रीस्टार्ट के बाद हर Aubergine टर्मिनल अपने आख़िरी फ़ोल्डर में एक नए शेल के रूप में लौटता है। जहाँ Claude Code को Aubergine से शुरू किया गया था, वहाँ टाइटल बार में Resume agent उसे उसी बातचीत में फिर शुरू करता है जिसमें वह टर्मिनल था।" } },
+        { "@type": "Question", "name": "Claude Code की कोई पुरानी बातचीत कैसे ढूँढूँ?", "acceptedAnswer": { "@type": "Answer", "text": "पैलेट में Past conversations… किसी फ़ोल्डर के लिए उनकी सूची दिखाता है, सिर्फ़ पढ़ने वाली ट्रांसक्रिप्ट के साथ; पैलेट में @ और कुछ शब्द उनमें खोजते हैं। सिर्फ़ वही दिखता है जो Claude Code अब भी रखता है।" } },
+        { "@type": "Question", "name": "claude --continue और claude --resume में क्या फ़र्क है?", "acceptedAnswer": { "@type": "Answer", "text": "--continue फ़ोल्डर की सबसे हाल की बातचीत आगे बढ़ाता है; --resume वह लेता है जो आप चुनें, या कोई ID। Resume agent टर्मिनल के याद रखे ID के साथ --resume इस्तेमाल करता है, इसलिए यह इस पर निर्भर नहीं करता कि सबसे हाल की बातचीत कौन-सी थी।" } },
+        { "@type": "Question", "name": "क्या दो टर्मिनल एक ही Claude Code बातचीत आगे बढ़ा सकते हैं?", "acceptedAnswer": { "@type": "Answer", "text": "Aubergine पूछे बिना एक बातचीत दो बार नहीं खोलता: एक बातचीत में दो एजेंट एक-दूसरे के संदेश खो देते हैं। आपको वह टर्मिनल दिया जाता है जो पहले से उस पर है, या एक कॉपी, जो बातचीत की शाखा बनाती है।" } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="आप कहाँ हैं"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">गाइड</a></li><li>बातचीत फिर शुरू करें</li></ol></nav>
+    <h1>रीस्टार्ट के बाद Claude Code की बातचीत फिर शुरू करें</h1>
+    <p class="lead">कंप्यूटर रीस्टार्ट हुआ, या आपने टर्मिनल बंद कर दिया, और Claude Code की बातचीत गायब लगती है। Claude Code उसे रखता है। Aubergine याद रखता है कि हर टर्मिनल किस बातचीत में था और एक बटन से उसे वापस लाता है।</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>लोग आम तौर पर क्या करते हैं</h2>
+    <p>किसी टर्मिनल में, उसी फ़ोल्डर में जिसमें बातचीत थी: <code>claude --continue</code> वहाँ की सबसे हाल की बातचीत आगे बढ़ाता है, और <code>claude --resume</code> आपको सूची से एक चुनने देता है, या बातचीत का ID लेता है। मुश्किल फ़ोल्डर और चुनाव की है: एक फ़ोल्डर में कई एजेंट हों, तो सबसे हाल की बातचीत हमेशा वही नहीं होती जो आप चाहते थे।</p>
+
+    <h2>Aubergine क्या करता है</h2>
+    <p><strong>टर्मिनल अपनी बातचीत याद रखता है।</strong> जब Claude Code को Aubergine से शुरू किया गया हो (<strong>New terminal ▾ → Claude Code</strong>, या <code>C</code>), उसके हुक Aubergine को बताते हैं कि वह किस बातचीत में है, और Aubergine वह ID टर्मिनल के साथ रखता है।</p>
+    <p><strong>Resume agent</strong> (एजेंट फिर शुरू करें) टर्मिनल की टाइटल बार में तब दिखता है जब उसका शेल फिर प्रॉम्प्ट पर हो: आप एजेंट से बाहर निकले, या कंप्यूटर रीस्टार्ट हुआ और टर्मिनल अपने आख़िरी फ़ोल्डर में नए शेल के रूप में लौटा। यह Claude Code को <code>--resume</code> और उस ID के साथ फिर शुरू करता है, आपकी सेटिंग्स की लॉन्च कमांड से (<code>agents.claudeCommand</code>, डिफ़ॉल्ट <code>claude</code>)।</p>
+    <p><strong>किसी वर्कफ़्लो के रन पर</strong>, <strong>Resume agent</strong> एजेंट को रन के बारे में फिर से बताता भी है, ताकि वह उसी स्टेप से आगे बढ़े जिस पर रन है।</p>
+    <p><strong>Past conversations…</strong> (पिछली बातचीत), पैलेट (<code>⌘K</code>) में, या टर्मिनल की जानकारी में “Past conversations in this folder…”, किसी फ़ोल्डर में Claude Code की पिछली बातचीत की सूची दिखाता है: नाम या आपकी कही पहली बात, वह आख़िरी बार कब सक्रिय थी, आपने कितनी बार बात की, और क्या अभी किसी कैनवस का कोई टर्मिनल उस पर है। <strong>Read</strong> उसे सिर्फ़ पढ़ने के लिए दिखाता है। <strong>Open on the canvas</strong> उस फ़ोल्डर में एक नया टर्मिनल शुरू करता है जिसमें वह बातचीत फिर शुरू होती है, और <strong>Open a copy</strong> उसकी एक शाखा शुरू करता है और असली को वैसा ही छोड़ देता है। अगर कोई टर्मिनल पहले से उस बातचीत पर है, तो पहले आपसे पूछा जाता है।</p>
+    <p><strong>खोज।</strong> आपके कैनवस के टर्मिनलों के फ़ोल्डरों में पुरानी बातचीत खोजने के लिए पैलेट में <code>@</code> और कुछ शब्द टाइप करें। यह आपके माँगने पर, सीमाओं के भीतर, रिकॉर्ड पढ़ता है, और बताता है कि खोज कब बीच में रोकी गई। कमांड लाइन पर <code>aubergine history</code> उनकी सूची दिखाता है और <code>aubergine history open &lt;id&gt;</code> किसी एक को खोलता है।</p>
+    <p><strong>काम कहाँ था।</strong> टर्मिनल का नोट उसका सारांश और एक लॉग रखता है, और आपका भेजा हर प्रॉम्प्ट लॉग में जुड़ता है। उसकी जानकारी में <strong>Ask its agent for a recap</strong> (उसके एजेंट से रीकैप माँगें) से एजेंट <code>aubergine recap --write</code> के ज़रिए लिखता है कि वह कहाँ है, और यह टर्मिनल के साथ रहता है। 30 मिनट से ज़्यादा बाद लौटने पर <strong>While you were away</strong> (जब आप दूर थे) दिखाता है कि इस बीच क्या बदला।</p>
+    <figure class="frame"><a href="../../screenshots/focus-part.png" class="frame-pic"><img src="../../screenshots/focus-part.png" width="1344" height="1172" loading="lazy" alt="एक ब्राउज़र टैब में अकेला एक टर्मिनल: ऊपर उसका नाम, उसकी जानकारी जिसमें उसका वर्कफ़्लो स्टेप, फ़ोल्डर और फ़ील्ड हैं, और उनके बगल में लाइव टर्मिनल।"></a><figcaption>एक टर्मिनल की जानकारी: उसके रन का स्टेप और आख़िरी रिपोर्ट, उसका फ़ोल्डर और उसके फ़ील्ड। ये टर्मिनल के साथ रहते हैं, उसके एजेंट के फिर शुरू होने के लिए तैयार।</figcaption></figure>
+
+    <h2>Aubergine के बाहर किसी टर्मिनल की बातचीत</h2>
+    <p>अपने टर्मिनल ऐप के किसी टैब में, एजेंट से बाहर निकलें, फिर उसी फ़ोल्डर में <code>aubergine here --claude</code> चलाएँ: कैनवस पर एक नया टर्मिनल Claude Code को <code>--continue</code> के साथ शुरू करता है, अब उसकी स्थिति दिखती है। <code>aubergine move</code> आपके Claude Code टैब की सूची दिखाता है और हर बातचीत की एक कॉपी कैनवस पर शुरू करता है; <code>--stop</code> के साथ वह आपकी पुष्टि के बाद idle एजेंट से पहले बाहर निकलने को कहता है।</p>
+
+    <h2>यह क्या नहीं करता</h2>
+    <ul>
+      <li><strong>यह Claude Code के अपने रिकॉर्ड पढ़ता है, ऐसे फ़ॉर्मैट में जो Aubergine का नहीं है।</strong> Claude Code उन फ़ाइलों के फ़ॉर्मैट को आंतरिक कहता है, और वह वर्ज़न के बीच बदलता है। फिर शुरू करना Claude Code के अपने <code>--resume</code> को ID के साथ इस्तेमाल करता है; नाम, गिनती और ट्रांसक्रिप्ट Aubergine का फ़ाइलों को पढ़ना है, और Claude Code के अपडेट के बाद ग़ायब या कम हो सकते हैं। जो रिकॉर्ड वह नहीं पढ़ पाता, उसके बारे में यही कहा जाता है, उसे खाली बातचीत के रूप में नहीं दिखाया जाता।</li>
+      <li><strong>कुछ भी कॉपी या रखा नहीं जाता।</strong> सूची, ट्रांसक्रिप्ट या खोज आपके माँगने पर पढ़ी जाती है और बंद करने पर छोड़ दी जाती है। Aubergine किसी बातचीत को कभी बदलता, नाम बदलता या मिटाता नहीं, और कोई एजेंट या टोकन इसके ज़रिए बातचीत नहीं पढ़ सकता।</li>
+      <li><strong>अधूरा काम दोबारा नहीं किया जाता।</strong> एजेंट रुकते समय जो कर रहा था, वह तब तक फिर शुरू नहीं होता जब तक आप उससे न कहें।</li>
+      <li><strong>दूसरे एजेंट के लिए Resume agent नहीं।</strong> Aubergine दूसरे एजेंट की बातचीत नहीं जानता, और उसकी पुरानी बातचीत की सूची नहीं दिखाता। उसे उसी टर्मिनल में उस एजेंट के अपने फिर-शुरू करने के तरीके से चलाएँ, और नोट पढ़कर उसे बताएँ कि वह कहाँ था।</li>
+      <li><strong>खुद टाइप किया <code>claude</code> याद नहीं रखा जाता</strong>, जब तक आपने <code>aubergine hooks print</code> के प्रिंट किए हुक अपनी Claude Code सेटिंग्स में न जोड़े हों।</li>
+      <li><strong>क्या जाँचा गया।</strong> बातचीत के रिकॉर्ड पढ़ने की जाँच बनावटी रिकॉर्ड पर की गई है। Claude Code के हर वर्ज़न पर इसकी जाँच नहीं हुई है।</li>
+    </ul>
+
+    <h2>सवाल</h2>
+    <div class="questions">
+      <details><summary>टर्मिनल बंद करने के बाद Claude Code सेशन फिर कैसे शुरू करूँ?</summary><p>उसी फ़ोल्डर में, <code>claude --continue</code> सबसे हाल की बातचीत लेता है और <code>claude --resume</code> आपको चुनने देता है। Aubergine में ब्राउज़र बंद करने से कुछ खत्म नहीं होता, और जिस टर्मिनल के एजेंट से आप बाहर निकले, वह अपनी टाइटल बार में <strong>Resume agent</strong> देता है।</p></details>
+      <details><summary>रीबूट के बाद Claude Code की बातचीत फिर कैसे शुरू करूँ?</summary><p>रीस्टार्ट के बाद हर Aubergine टर्मिनल अपने आख़िरी फ़ोल्डर में एक नए शेल के रूप में लौटता है। जहाँ Claude Code को Aubergine से शुरू किया गया था, वहाँ टाइटल बार में <strong>Resume agent</strong> उसे उसी बातचीत में फिर शुरू करता है जिसमें वह टर्मिनल था।</p></details>
+      <details><summary>Claude Code की कोई पुरानी बातचीत कैसे ढूँढूँ?</summary><p>पैलेट में <strong>Past conversations…</strong> किसी फ़ोल्डर के लिए उनकी सूची दिखाता है, सिर्फ़ पढ़ने वाली ट्रांसक्रिप्ट के साथ; पैलेट में <code>@</code> और कुछ शब्द उनमें खोजते हैं। सिर्फ़ वही दिखता है जो Claude Code अब भी रखता है।</p></details>
+      <details><summary>claude --continue और claude --resume में क्या फ़र्क है?</summary><p><code>--continue</code> फ़ोल्डर की सबसे हाल की बातचीत आगे बढ़ाता है; <code>--resume</code> वह लेता है जो आप चुनें, या कोई ID। <strong>Resume agent</strong> टर्मिनल के याद रखे ID के साथ <code>--resume</code> इस्तेमाल करता है, इसलिए यह इस पर निर्भर नहीं करता कि सबसे हाल की बातचीत कौन-सी थी।</p></details>
+      <details><summary>क्या दो टर्मिनल एक ही Claude Code बातचीत आगे बढ़ा सकते हैं?</summary><p>Aubergine पूछे बिना एक बातचीत दो बार नहीं खोलता: एक बातचीत में दो एजेंट एक-दूसरे के संदेश खो देते हैं। आपको वह टर्मिनल दिया जाता है जो पहले से उस पर है, या एक कॉपी, जो बातचीत की शाखा बनाती है।</p></details>
+    </div>
+    <p>संबंधित: <a href="../keep-terminals-after-restart/">रीस्टार्ट के बाद भी टर्मिनल बनाए रखें</a> · <a href="../claude-code-notifications/">जानें कब Claude Code इंतज़ार कर रहा है</a> · <a href="../claude/">Aubergine में Claude Code</a></p>
+    <p class="note">Aubergine का Anthropic से कोई संबंध नहीं है। Claude और Claude Code, Anthropic के ट्रेडमार्क हैं।</p>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">पाँच मिनट में तैयार</h2>
+    <div class="close-do">
+      <p>आपको macOS चाहिए, tmux 3.2 या नए और Node.js 22 या नए के साथ। <code>brew install tmux node</code> दोनों ले आता है।</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="कॉपी हो गया" aria-live="polite" hidden>कॉपी करें</button></p>
+      <p class="actions"><a class="button" href="../install/">इंस्टॉल करें</a><a class="button button-quiet" href="../claude/">Aubergine में Claude Code</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav aria-label="सभी पेज">
+      <ul class="foot-links">
+        <li><a href="../">होम</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex और ChatGPT</a></li>
+        <li><a href="../install/">इंस्टॉल</a></li>
+        <li><a href="../guides/">गाइड</a></li>
+        <li><a href="../run-multiple-coding-agents/">कई एजेंट चलाएँ</a></li>
+        <li><a href="../working-copies/">वर्किंग कॉपी</a></li>
+        <li><a href="../queue-and-schedules/">क्यू और शेड्यूल</a></li>
+        <li><a href="../security/">सुरक्षा</a></li>
+        <li><a href="../roadmap/">रोडमैप</a></li>
+        <li><a href="../faq/">सवाल-जवाब</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine मुफ़्त और ओपन सोर्स है, <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT लाइसेंस</a> के तहत, और आपके अपने कंप्यूटर पर चलता है।</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    if (!navigator.clipboard) return;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
+});
+</script>
+</body>
+</html>

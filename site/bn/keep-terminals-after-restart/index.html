@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="bn" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ক্র্যাশ, রিস্টার্ট বা আপডেটের পরেও টার্মিনাল রেখে দিন | Aubergine</title>
+<meta name="description" content="ব্রাউজার বন্ধ হলে, Aubergine রিস্টার্ট হলে, আর কম্পিউটার ক্র্যাশ করলে, রিস্টার্ট হলে বা রাতে নিজে আপডেট হলে আপনার টার্মিনাল আর কোডিং এজেন্টদের কী হয়, আর যেখানে ছিলেন সেখান থেকে কীভাবে আবার শুরু করবেন।">
+<link rel="canonical" href="https://thirstyeggplant.com/bn/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/keep-terminals-after-restart/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="ক্র্যাশ, রিস্টার্ট বা আপডেটের পরেও টার্মিনাল রেখে দিন | Aubergine">
+<meta property="og:description" content="ব্রাউজার বন্ধ হলে, Aubergine রিস্টার্ট হলে, আর কম্পিউটার ক্র্যাশ করলে, রিস্টার্ট হলে বা রাতে নিজে আপডেট হলে আপনার টার্মিনাল আর কোডিং এজেন্টদের কী হয়, আর যেখানে ছিলেন সেখান থেকে কীভাবে আবার শুরু করবেন।">
+<meta property="og:url" content="https://thirstyeggplant.com/bn/keep-terminals-after-restart/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine: টার্মিনালের একটি ক্যানভাস, একটি কাজে ব্যস্ত আর একটি আপনার অপেক্ষায়">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine: টার্মিনালের একটি ক্যানভাস, একটি কাজে ব্যস্ত আর একটি আপনার অপেক্ষায়">
+<meta name="twitter:title" content="ক্র্যাশ, রিস্টার্ট বা আপডেটের পরেও টার্মিনাল রেখে দিন | Aubergine">
+<meta name="twitter:description" content="ব্রাউজার বন্ধ হলে, Aubergine রিস্টার্ট হলে, আর কম্পিউটার ক্র্যাশ করলে, রিস্টার্ট হলে বা রাতে নিজে আপডেট হলে আপনার টার্মিনাল আর কোডিং এজেন্টদের কী হয়, আর যেখানে ছিলেন সেখান থেকে কীভাবে আবার শুরু করবেন।">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">পেজে যান</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="পেজ">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">ইনস্টল</a></li>
+        <li><a href="../guides/">গাইড</a></li>
+        <li><a href="../security/">নিরাপত্তা</a></li>
+        <li><a href="../faq/">প্রশ্নোত্তর</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="ভাষা: বাংলা"><span class="lang-long" aria-hidden="true">বাংলা</span><span class="lang-short" aria-hidden="true">BN</span></summary>
+      <ul class="menu-list"><li><a href="../../keep-terminals-after-restart/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/keep-terminals-after-restart/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/keep-terminals-after-restart/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/keep-terminals-after-restart/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/keep-terminals-after-restart/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/keep-terminals-after-restart/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/keep-terminals-after-restart/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/keep-terminals-after-restart/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/keep-terminals-after-restart/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/keep-terminals-after-restart/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="./" hreflang="bn" lang="bn" dir="ltr" aria-current="true">বাংলা</a></li><li><a href="../../ar/keep-terminals-after-restart/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>মেনু</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">ইনস্টল</a></li>
+        <li><a href="../guides/">গাইড</a></li>
+        <li><a href="../security/">নিরাপত্তা</a></li>
+        <li><a href="../faq/">প্রশ্নোত্তর</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine নিজে ইংরেজিতে: এর বোতাম, মেনু আর ছবি সবই ইংরেজি।</p>
+    <p>এই পেজটি ইংরেজি থেকে মেশিন দিয়ে অনুবাদ করা। <a href="https://github.com/thirstyeggplant/aubergine/issues">সংশোধন পাঠান</a>।</p>
+  </div>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/bn/keep-terminals-after-restart/#article",
+      "headline": "কম্পিউটার রিস্টার্ট হলেও আপনার টার্মিনাল থাকে",
+      "description": "ব্রাউজার বন্ধ হলে, Aubergine রিস্টার্ট হলে, আর কম্পিউটার ক্র্যাশ করলে, রিস্টার্ট হলে বা রাতে নিজে আপডেট হলে আপনার টার্মিনাল আর কোডিং এজেন্টদের কী হয়, আর যেখানে ছিলেন সেখান থেকে কীভাবে আবার শুরু করবেন।",
+      "url": "https://thirstyeggplant.com/bn/keep-terminals-after-restart/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/bn/keep-terminals-after-restart/",
+      "datePublished": "2026-11-25",
+      "dateModified": "2026-11-25",
+      "inLanguage": "bn",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "গাইড", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "রিস্টার্টের পরে", "item": "https://thirstyeggplant.com/bn/keep-terminals-after-restart/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/bn/keep-terminals-after-restart/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "Aubergine কি রিবুটের পরে আমার টার্মিনালগুলো ফিরিয়ে আনতে পারে?", "acceptedAnswer": { "@type": "Answer", "text": "হ্যাঁ, এগুলোর ভেতরে যা চলছিল তা ছাড়া সব কিছু। প্রতিটি টার্মিনাল তার নাম, রং, নোট, ট্যাগ, ফিল্ড আর লিংক নিয়ে ক্যানভাসে নিজের জায়গায় ফেরে, শেষ ফোল্ডারে একটি নতুন শেল হিসেবে। এতে যে প্রোগ্রামগুলো চলছিল সেগুলো আবার চালু হয় না; Claude Code-এর জন্য Resume agent কথোপকথন চালিয়ে নেয়।" } },
+        { "@type": "Question", "name": "Aubergine কি আমার টার্মিনালের আউটপুট আর হিস্ট্রি রাখে?", "acceptedAnswer": { "@type": "Answer", "text": "আউটপুট, কেবল শেল চলার সময়: tmux প্রতিটি টার্মিনালের 50,000 লাইনের স্ক্রলব্যাক রাখে, আর ব্রাউজার বন্ধ করলে বা Aubergine রিস্টার্ট করলে তার কিছুই হারায় না। কম্পিউটার রিস্টার্টের পরে তা হারিয়ে যায়, কারণ Aubergine টার্মিনালের কোনো আউটপুট রেকর্ড করে না। আপনার টাইপ করা কমান্ডের হিস্ট্রি, যা ওপরের তীর ফিরিয়ে আনে, আপনার শেলের নিজস্ব ফাইল, যা আপনার শেল বরাবরের মতোই রাখে।" } },
+        { "@type": "Question", "name": "আমার Claude Code কথোপকথন কি রিস্টার্টের পরেও থাকবে?", "acceptedAnswer": { "@type": "Answer", "text": "কথোপকথন, হ্যাঁ: Claude Code এটি নিজের ফাইলে রাখে, আর Aubergine মনে রাখে প্রতিটি টার্মিনাল কোন কথোপকথনে ছিল। রিস্টার্টের পরে, টার্মিনালের টাইটেল বারে Resume agent Claude Code-কে সেই কথোপকথনেই আবার চালু করে। সেই মুহূর্তে এজেন্ট যা করছিল তা থেমে গেছে, আর আপনি না বলা পর্যন্ত আবার করা হয় না।" } },
+        { "@type": "Question", "name": "macOS রাতে নিজে আপডেট হলে কি এটি কাজ করে?", "acceptedAnswer": { "@type": "Answer", "text": "যে আপডেট কম্পিউটার রিস্টার্ট করে, তা অন্য যেকোনো রিস্টার্টের মতোই: চলমান প্রোগ্রাম শেষ হয় আর বাকি সব থাকে। লগইনে শুরু (aubergine service install) থাকলে, লগইন করার সঙ্গে সঙ্গে সার্ভার আবার চলে, আর ক্যানভাস অপেক্ষা করে। শেষ ফোল্ডারে নতুন শেল দেখা গেছে Aubergine-এর একটি কন্টেইনার রিস্টার্ট করার সময়; macOS-এর আসল রাতের আপডেট চেষ্টা করা হয়নি।" } },
+        { "@type": "Question", "name": "আমাকে কি tmux জানতে হবে?", "acceptedAnswer": { "@type": "Answer", "text": "না। এটি ইনস্টল থাকতে হবে (3.2 বা নতুন), আর Aubergine এটি নিজের সকেটে নিজের সেটিংসে চালায়, কোনো স্ট্যাটাস বার আর প্রিফিক্স কী ছাড়া, তাই আপনাকে কখনো tmux কমান্ড টাইপ করতে হয় না। আপনার নিজের tmux, যদি ব্যবহার করেন, ছোঁয়া হয় না।" } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="আপনি কোথায় আছেন"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">গাইড</a></li><li>রিস্টার্টের পরে</li></ol></nav>
+    <h1>কম্পিউটার রিস্টার্ট হলেও আপনার টার্মিনাল থাকে</h1>
+    <p class="lead">ব্রাউজার বন্ধ করলে বা Aubergine রিস্টার্ট করলে কিছুই হারায় না: প্রতিটি টার্মিনাল চলতে থাকে। কম্পিউটার রিস্টার্ট হলে যা চলছিল তা শেষ হয়, আর Aubergine তার চারপাশের সব কিছু ফিরিয়ে আনে, যাতে আপনি শুরু থেকে নয়, যেখানে ছিলেন সেখান থেকেই এগোন।</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>যখন… তখন কী হয়</h2>
+    <p>প্রতিটি টার্মিনাল একটি tmux সেশনে একটি শেল, যা ব্রাউজার আর Aubergine-এর সার্ভার থেকে আলাদা চলে। এর যা আছে তা দুই জায়গায়: চলমান শেল, যা কেবল tmux রাখে, আর টার্মিনাল নিয়ে বলা সব কিছু, যা Aubergine প্রতিটি পরিবর্তনে তার ডেটা ফোল্ডারের একটি ফাইলে লেখে।</p>
+    <div class="table">
+      <table class="table-stack">
+        <thead><tr><th>কী</th><th>ব্রাউজার বন্ধ হয়, ক্র্যাশ করে বা আপডেট হয়, বা আপনি ট্যাব বন্ধ করেন</th><th>Aubergine থামে, রিস্টার্ট হয় বা আপডেট হয়</th><th>কম্পিউটার ক্র্যাশ করে, রিস্টার্ট হয় বা আপডেট ইনস্টল করে</th></tr></thead>
+        <tbody>
+          <tr><td>চলমান প্রোগ্রাম আর এজেন্ট</td><td data-label="ব্রাউজার বন্ধ">চলতে থাকে</td><td data-label="Aubergine রিস্টার্ট">চলতে থাকে</td><td data-label="কম্পিউটার রিস্টার্ট">শেষ হয়</td></tr>
+          <tr><td>টার্মিনাল যা দেখাচ্ছিল (তার স্ক্রলব্যাক)</td><td data-label="ব্রাউজার বন্ধ">থেকে যায়</td><td data-label="Aubergine রিস্টার্ট">থেকে যায়</td><td data-label="কম্পিউটার রিস্টার্ট">হারিয়ে যায়</td></tr>
+          <tr><td>ক্যানভাসে তার জায়গা, নাম, রং, ট্যাগ, ফিল্ড আর লিংক</td><td data-label="ব্রাউজার বন্ধ">থেকে যায়</td><td data-label="Aubergine রিস্টার্ট">থেকে যায়</td><td data-label="কম্পিউটার রিস্টার্ট">থেকে যায়</td></tr>
+          <tr><td>তার নোট: সারাংশ আর লগ</td><td data-label="ব্রাউজার বন্ধ">থেকে যায়</td><td data-label="Aubergine রিস্টার্ট">থেকে যায়</td><td data-label="কম্পিউটার রিস্টার্ট">থেকে যায়</td></tr>
+          <tr><td>যে ফোল্ডারে সে ছিল</td><td data-label="ব্রাউজার বন্ধ">থেকে যায়</td><td data-label="Aubergine রিস্টার্ট">থেকে যায়</td><td data-label="কম্পিউটার রিস্টার্ট">একই ফোল্ডারে নতুন শেল</td></tr>
+          <tr><td>একটি এজেন্টের কথোপকথন</td><td data-label="ব্রাউজার বন্ধ">চলতে থাকে</td><td data-label="Aubergine রিস্টার্ট">চলতে থাকে</td><td data-label="কম্পিউটার রিস্টার্ট"><strong>Resume agent</strong> এটি চালিয়ে নেয় (Claude Code)</td></tr>
+          <tr><td>ওয়ার্কিং কপি আর তাদের ব্রাঞ্চ</td><td data-label="ব্রাউজার বন্ধ">থেকে যায়</td><td data-label="Aubergine রিস্টার্ট">থেকে যায়</td><td data-label="কম্পিউটার রিস্টার্ট">থেকে যায়</td></tr>
+          <tr><td>কিউ, রান আর শিডিউল</td><td data-label="ব্রাউজার বন্ধ">থেকে যায়</td><td data-label="Aubergine রিস্টার্ট">থেকে যায়; পেরিয়ে যাওয়া সময় দেরিতে চলে</td><td data-label="কম্পিউটার রিস্টার্ট">থেকে যায়; পেরিয়ে যাওয়া সময় দেরিতে চলে</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">পার্ক করা টার্মিনালও একইভাবে থাকে আর সেও নতুন শেল পায়। যে টার্মিনালের শেল আগেই শেষ হয়ে গিয়েছিল, সেটি শেষই থাকে, <strong>Restart here</strong> (এখানে রিস্টার্ট) সহ।</p>
+    <p>আপডেটের পরে, আগে থেকেই খোলা টার্মিনাল তার শেল যা নিয়ে শুরু হয়েছিল তা রাখে (তার <code>PATH</code> আর Aubergine-এর শেল ইন্টিগ্রেশন), যতক্ষণ না সেই শেল আবার শুরু হয়। Aubergine লগইনে শুরু হলে, আপডেটের পরে হাতে সার্ভার রিস্টার্ট না করে আবার <code>aubergine service install</code> চালান।</p>
+
+    <h2>রিস্টার্টের পরে: আবার কাজে</h2>
+    <ol class="seq">
+      <li><p><strong>Aubergine চালু করুন।</strong> এটি লগইনে শুরু হলে (<code>aubergine service install</code>, কেবল macOS), লগইন করার সঙ্গে সঙ্গেই এটি চলছে, আর থেমে গেলে launchd আবার চালু করে। নইলে চালু করে পেজটি খুলুন:</p>
+        <p class="cmd"><code>aubergine start --open</code><button type="button" class="copy" data-copy data-copied="কপি হয়েছে" aria-live="polite" hidden>কপি করুন</button></p></li>
+      <li><p><strong>ক্যানভাস যেমন রেখে গিয়েছিলেন তেমনই।</strong> প্রতিটি টার্মিনাল তার নাম, রং, ট্যাগ, ফিল্ড, লিংক আর নোট নিয়ে নিজের জায়গায়, এখন Aubergine শেষ যে ফোল্ডারে তাকে দেখেছিল সেখানে একটি নতুন শেল, বা সেই ফোল্ডার না থাকলে আপনার ডিফল্ট ফোল্ডারে। কিছুই আবার টাইপ বা চালানো হয় না।</p></li>
+      <li><p><strong>আপনার এজেন্টদের আবার শুরু করুন।</strong> যেখানে Claude Code চলছিল আর Aubergine তার কথোপকথন জানে (এটি Aubergine থেকে শুরু হয়েছিল), সেখানে টার্মিনালের টাইটেল বারে <strong>Resume agent</strong> (এজেন্ট আবার শুরু) দেখা যায়: এটি Claude Code-কে সেই কথোপকথনেই আবার চালু করে। কোনো ওয়ার্কফ্লোর রানে থাকা টার্মিনালে এটি এজেন্টকে রানের কথাও আবার জানায়, যাতে রান যে ধাপে আছে সেখান থেকেই সে এগোয়।</p></li>
+      <li><p><strong>দেখুন প্রত্যেকে কোথায় ছিল।</strong> টার্মিনালের টাইটেলে <strong>Details</strong> (বিবরণ) তার সম্পর্কে যা জানা আছে দেখায় (একটি রানের ধাপ আর তার শেষ রিপোর্ট, ফোল্ডার, ট্যাগ), তার সারাংশ, তার ফিল্ড আর লিংক, আর <strong>Log</strong>-এর নিচে তার লগ। তালিকায় কোনো টার্মিনালের নামে পয়েন্টার রাখলে তার রিক্যাপ দেখা যায়।</p></li>
+      <li><p><strong>ক্যানভাসে নেই এমন কথোপকথন খুঁজুন।</strong> প্যালেটে (<code>⌘K</code>) <strong>Past conversations…</strong> (আগের কথোপকথন), বা টার্মিনালের বিবরণে “Past conversations in this folder…”, একটি ফোল্ডারে Claude Code-এর আগের কথোপকথনগুলোর তালিকা দেয় আর একটিকে ক্যানভাসে খোলে।</p></li>
+    </ol>
+    <p>অন্য কোনো এজেন্টের <strong>Resume agent</strong> নেই, কারণ Aubergine তার কথোপকথন জানে না: সেই এজেন্টের নিজস্ব আবার-শুরুর উপায়ে একই টার্মিনালে তাকে আবার চালু করুন, আর নোট পড়ে তাকে জানান সে কোথায় ছিল।</p>
+    <figure class="frame"><a href="../../screenshots/focus-part.png" class="frame-pic"><img src="../../screenshots/focus-part.png" width="1344" height="1172" loading="lazy" alt="একটি ব্রাউজার ট্যাবে একা একটি টার্মিনাল: উপরে তার নাম, তার বিবরণে ওয়ার্কফ্লোর ধাপ, ফোল্ডার আর ফিল্ড, আর পাশে লাইভ টার্মিনাল।"></a><figcaption>একটি টার্মিনালের বিবরণ: একটি রানের ধাপ আর শেষ রিপোর্ট, ফোল্ডার, ট্যাগ আর ফিল্ড। এর সবই কম্পিউটার রিস্টার্টের পরেও থাকে; পাশের লাইভ টার্মিনালটি থাকে না।</figcaption></figure>
+
+    <h2>কী হারায়, আর কী করবেন</h2>
+    <ul>
+      <li><strong>যা চলছিল তা শেষ হয়।</strong> একটি বিল্ড, টেস্ট, সার্ভার বা কাজের মাঝখানে থাকা এজেন্ট কম্পিউটারের সঙ্গেই থেমে যায়, আর Aubergine এদের কোনোটিকেই নিজে আবার চালু করে না। নিজে আবার চালু করুন; যে কাজ রিস্টার্ট পেরিয়েও চলতে হবে, তা সেই কাজের জন্য তৈরি কিছুতে রাখা উচিত, যেমন আপনার সিস্টেমের একটি সার্ভিস।</li>
+      <li><strong>Aubergine যে কাজের হিসাব রাখে, তা আপনার অপেক্ষায় থাকে।</strong> একটি ওয়ার্কফ্লোর রান তার ধাপ আর জমা দেওয়া প্রতিটি রিপোর্ট রাখে। কিউর টাস্কগুলো নিজের জায়গা রাখে; সার্ভার থামার মুহূর্তে যে টাস্ক শুরু হচ্ছিল, সেটি একটি বাক্যসহ ব্যর্থ চিহ্নিত হয়, আর কিছুই নিজে আবার চেষ্টা করা হয় না। সার্ভার থেমে থাকার সময় পেরিয়ে যাওয়া শিডিউলের সময়, ছয় ঘণ্টার কম পুরোনো হলে (<code>schedules.lateWithinHours</code>), একবার দেরিতে চলে, নইলে ছুটে গেছে চিহ্নিত হয়।</li>
+      <li><strong>স্ক্রলব্যাক হারিয়ে যায়।</strong> শেল চলার সময় tmux তার ছাপা শেষ 50,000 লাইন রাখে, আর প্যালেটের সার্চ সেগুলো পড়ে। Aubergine টার্মিনাল যা ছাপে তা রেকর্ড করে না, তাই কম্পিউটার রিস্টার্টের পরে ফিরিয়ে আনার কিছু থাকে না, আর সার্চ কেবল তার পরে যা ছাপা হয়েছে তা-ই খুঁজে পায়।</li>
+      <li><strong>“আপনি না থাকার সময়” আবার শুরু হয়।</strong> এটি থাকে সার্ভারের মেমোরিতে, কোনো ফাইলে নয়, তাই সার্ভার চালু হওয়ার পরে এটি কেবল তার পরের পরিবর্তনগুলো জানে, আর সে কথা বলে।</li>
+    </ul>
+
+    <h2>যে অভ্যাস রিস্টার্টকে সস্তা করে</h2>
+    <p>নোটই টিকে থাকে, তাই এজেন্টদের দিয়ে কাজ করতে করতে তাতে লেখান: একটি সিদ্ধান্ত, একটি ফল, কোথায় থেমেছে। Aubergine থেকে চালু হওয়া Claude Code-এ আপনার পাঠানো প্রতিটি প্রম্পট নিজে থেকেই লগে যোগ হয়, আর শুরুতে তাকে টার্মিনালের নাম দিতে ও সারাংশ রাখতে বলা হয়। যেকোনো এজেন্ট এই কমান্ডগুলো দিয়ে একই কাজ করতে পারে, যা <code>aubergine guide</code> তাকে বুঝিয়ে দেয়:</p>
+    <pre><code>aubergine note "Tests pass on the branch. The migration is not written yet."
+aubergine describe --summary "Fixing the double redirect at sign-in"</code></pre>
+    <p>দিনের কাজ শেষ করার আগে, টার্মিনালের বিবরণে <strong>Ask its agent for a recap</strong> (এর এজেন্টের কাছে রিক্যাপ চান) চাপুন: এজেন্ট <code>aubergine recap --write</code> দিয়ে লেখে সে কোথায় আছে, আর রিক্যাপটি টার্মিনালের সঙ্গে থাকে।</p>
+
+    <h2>ল্যাপটপ বন্ধ করা, স্লিপ আর ব্রাউজার</h2>
+    <ul>
+      <li><strong>স্লিপ রিস্টার্ট নয়।</strong> ল্যাপটপের ঢাকনা বন্ধ করলে সাধারণত সেটি স্লিপে যায়: প্রোগ্রাম থামে আর জাগলে আবার চলে, আর টেবিলের শেষ কলামের কিছুই ঘটে না। Aubergine কম্পিউটারকে জাগিয়েও রাখে না, জাগায়ও না, তাই স্লিপের সময় যে শিডিউলের সময় পেরিয়ে গেছে তা ওপরের মতো দেরিতে চলে, বা ছুটে যায়।</li>
+      <li><strong>ব্রাউজার, একটি ট্যাব বা তার উইন্ডো বন্ধ করা</strong>, বা ব্রাউজারের এমন আপডেট যা সেটিকে রিস্টার্ট করে, কিছুই শেষ করে না। পেজটি আবার খুলুন (<code>aubergine open</code> সাইন ইন করা অবস্থায় খোলে) আর প্রতিটি টার্মিনাল tmux থেকে এখন যেমন আছে তেমন আঁকা হয়। খোলা রেখে যাওয়া পেজ সার্ভার ফিরলে নিজেই আবার যুক্ত হয়।</li>
+      <li><strong>যে উইন্ডোতে <code>aubergine start</code> চলছে তা বন্ধ করা</strong>, বা সেখানে Ctrl+C চাপা, কেবল সার্ভার থামায়, আর কিছু নয়: টেবিলের মাঝের কলাম।</li>
+      <li><strong>WSL সহ Windows-এ</strong>, WSL থামা, Windows রিস্টার্ট হলে বা <code>wsl --shutdown</code>-এর পরে, Aubergine-এর কাছে কম্পিউটার রিস্টার্টের সমান। দেখুন <a href="../windows/">WSL সহ Windows</a>।</li>
+    </ul>
+
+    <h2>প্রশ্ন</h2>
+    <div class="questions">
+      <details><summary>Aubergine কি রিবুটের পরে আমার টার্মিনালগুলো ফিরিয়ে আনতে পারে?</summary><p>হ্যাঁ, এগুলোর ভেতরে যা চলছিল তা ছাড়া সব কিছু। প্রতিটি টার্মিনাল তার নাম, রং, নোট, ট্যাগ, ফিল্ড আর লিংক নিয়ে ক্যানভাসে নিজের জায়গায় ফেরে, শেষ ফোল্ডারে একটি নতুন শেল হিসেবে। এতে যে প্রোগ্রামগুলো চলছিল সেগুলো আবার চালু হয় না; Claude Code-এর জন্য <strong>Resume agent</strong> কথোপকথন চালিয়ে নেয়।</p></details>
+      <details><summary>Aubergine কি আমার টার্মিনালের আউটপুট আর হিস্ট্রি রাখে?</summary><p>আউটপুট, কেবল শেল চলার সময়: tmux প্রতিটি টার্মিনালের 50,000 লাইনের স্ক্রলব্যাক রাখে, আর ব্রাউজার বন্ধ করলে বা Aubergine রিস্টার্ট করলে তার কিছুই হারায় না। কম্পিউটার রিস্টার্টের পরে তা হারিয়ে যায়, কারণ Aubergine টার্মিনালের কোনো আউটপুট রেকর্ড করে না। আপনার টাইপ করা কমান্ডের হিস্ট্রি, যা ওপরের তীর ফিরিয়ে আনে, আপনার শেলের নিজস্ব ফাইল, যা আপনার শেল বরাবরের মতোই রাখে।</p></details>
+      <details><summary>আমার Claude Code কথোপকথন কি রিস্টার্টের পরেও থাকবে?</summary><p>কথোপকথন, হ্যাঁ: Claude Code এটি নিজের ফাইলে রাখে, আর Aubergine মনে রাখে প্রতিটি টার্মিনাল কোন কথোপকথনে ছিল। রিস্টার্টের পরে, টার্মিনালের টাইটেল বারে <strong>Resume agent</strong> Claude Code-কে সেই কথোপকথনেই আবার চালু করে। সেই মুহূর্তে এজেন্ট যা করছিল তা থেমে গেছে, আর আপনি না বলা পর্যন্ত আবার করা হয় না।</p></details>
+      <details><summary>macOS রাতে নিজে আপডেট হলে কি এটি কাজ করে?</summary><p>যে আপডেট কম্পিউটার রিস্টার্ট করে, তা অন্য যেকোনো রিস্টার্টের মতোই: চলমান প্রোগ্রাম শেষ হয় আর বাকি সব থাকে। লগইনে শুরু (<code>aubergine service install</code>) থাকলে, লগইন করার সঙ্গে সঙ্গে সার্ভার আবার চলে, আর ক্যানভাস অপেক্ষা করে। শেষ ফোল্ডারে নতুন শেল দেখা গেছে Aubergine-এর একটি কন্টেইনার রিস্টার্ট করার সময়; macOS-এর আসল রাতের আপডেট চেষ্টা করা হয়নি।</p></details>
+      <details><summary>আমাকে কি tmux জানতে হবে?</summary><p>না। এটি ইনস্টল থাকতে হবে (3.2 বা নতুন), আর Aubergine এটি নিজের সকেটে নিজের সেটিংসে চালায়, কোনো স্ট্যাটাস বার আর প্রিফিক্স কী ছাড়া, তাই আপনাকে কখনো tmux কমান্ড টাইপ করতে হয় না। আপনার নিজের tmux, যদি ব্যবহার করেন, ছোঁয়া হয় না।</p></details>
+    </div>
+    <p>সম্পর্কিত: <a href="../claude/">Aubergine-এ Claude Code</a> · <a href="../queue-and-schedules/">কিউ আর শিডিউল</a> · <a href="../working-copies/">ওয়ার্কিং কপি</a></p>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">পাঁচ মিনিটে চালু</h2>
+    <div class="close-do">
+      <p>আপনার লাগবে macOS, সঙ্গে tmux 3.2 বা নতুনতর আর Node.js 22 বা নতুনতর। <code>brew install tmux node</code> দুটোই এনে দেয়।</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="কপি হয়েছে" aria-live="polite" hidden>কপি করুন</button></p>
+      <p class="actions"><a class="button" href="../install/">ইনস্টল করুন</a><a class="button button-quiet" href="../run-multiple-coding-agents/">একাধিক এজেন্ট চালান</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav aria-label="সব পেজ">
+      <ul class="foot-links">
+        <li><a href="../">হোম</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex আর ChatGPT</a></li>
+        <li><a href="../install/">ইনস্টল</a></li>
+        <li><a href="../guides/">গাইড</a></li>
+        <li><a href="../run-multiple-coding-agents/">একাধিক এজেন্ট চালান</a></li>
+        <li><a href="../working-copies/">ওয়ার্কিং কপি</a></li>
+        <li><a href="../queue-and-schedules/">কিউ আর শিডিউল</a></li>
+        <li><a href="../security/">নিরাপত্তা</a></li>
+        <li><a href="../roadmap/">রোডম্যাপ</a></li>
+        <li><a href="../faq/">প্রশ্নোত্তর</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine বিনামূল্যে ও ওপেন সোর্স, <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT লাইসেন্সে</a>, আর চলে আপনার নিজের কম্পিউটারে।</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    if (!navigator.clipboard) return;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
+});
+</script>
+</body>
+</html>

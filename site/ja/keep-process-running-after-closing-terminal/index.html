@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="ja" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ターミナルを閉じてもプロセスを動かし続ける | Aubergine</title>
+<meta name="description" content="ターミナルのウィンドウを閉じると、その中で動いているものは終わります。よくある答えは nohup、disown、screen、tmux です。Aubergine はすべてのターミナルを tmux で動かすので、ブラウザーを閉じても何も終わりません。">
+<link rel="canonical" href="https://thirstyeggplant.com/ja/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/keep-process-running-after-closing-terminal/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="ターミナルを閉じてもプロセスを動かし続ける | Aubergine">
+<meta property="og:description" content="ターミナルのウィンドウを閉じると、その中で動いているものは終わります。よくある答えは nohup、disown、screen、tmux です。Aubergine はすべてのターミナルを tmux で動かすので、ブラウザーを閉じても何も終わりません。">
+<meta property="og:url" content="https://thirstyeggplant.com/ja/keep-process-running-after-closing-terminal/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine：ターミナルが並ぶキャンバス。1つは処理中、1つはあなたを待っています">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine：ターミナルが並ぶキャンバス。1つは処理中、1つはあなたを待っています">
+<meta name="twitter:title" content="ターミナルを閉じてもプロセスを動かし続ける | Aubergine">
+<meta name="twitter:description" content="ターミナルのウィンドウを閉じると、その中で動いているものは終わります。よくある答えは nohup、disown、screen、tmux です。Aubergine はすべてのターミナルを tmux で動かすので、ブラウザーを閉じても何も終わりません。">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">本文へ移動</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="ページ">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">インストール</a></li>
+        <li><a href="../guides/">ガイド</a></li>
+        <li><a href="../security/">セキュリティ</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="言語: 日本語"><span class="lang-long" aria-hidden="true">日本語</span><span class="lang-short" aria-hidden="true">JA</span></summary>
+      <ul class="menu-list"><li><a href="../../keep-process-running-after-closing-terminal/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/keep-process-running-after-closing-terminal/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/keep-process-running-after-closing-terminal/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/keep-process-running-after-closing-terminal/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/keep-process-running-after-closing-terminal/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="./" hreflang="ja" lang="ja" dir="ltr" aria-current="true">日本語</a></li><li><a href="../../zh/keep-process-running-after-closing-terminal/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/keep-process-running-after-closing-terminal/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/keep-process-running-after-closing-terminal/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/keep-process-running-after-closing-terminal/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/keep-process-running-after-closing-terminal/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/keep-process-running-after-closing-terminal/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>メニュー</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">インストール</a></li>
+        <li><a href="../guides/">ガイド</a></li>
+        <li><a href="../security/">セキュリティ</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine 本体は英語です。ボタン、メニュー、画像はすべて英語版のものです。</p>
+    <p>このページは英語版から機械翻訳されています。<a href="https://github.com/thirstyeggplant/aubergine/issues">修正を送る</a>。</p>
+  </div>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/ja/keep-process-running-after-closing-terminal/#article",
+      "headline": "ターミナルを閉じてもプロセスを動かし続ける",
+      "description": "ターミナルのウィンドウを閉じると、その中で動いているものは終わります。よくある答えは nohup、disown、screen、tmux です。Aubergine はすべてのターミナルを tmux で動かすので、ブラウザーを閉じても何も終わりません。",
+      "url": "https://thirstyeggplant.com/ja/keep-process-running-after-closing-terminal/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/ja/keep-process-running-after-closing-terminal/",
+      "datePublished": "2026-11-25",
+      "dateModified": "2026-11-25",
+      "inLanguage": "ja",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "ガイド", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "動かし続ける", "item": "https://thirstyeggplant.com/ja/keep-process-running-after-closing-terminal/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/ja/keep-process-running-after-closing-terminal/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "ブラウザーを閉じるとターミナルは止まりますか？", "acceptedAnswer": { "@type": "Answer", "text": "いいえ。どのターミナルも tmux 内のシェルで、ブラウザーとは別に動いています。タブ、ウィンドウ、ブラウザーを閉じてからページを開き直すと、各ターミナルは今の状態で、動き続けたまま、その間の出力とともにあります。" } },
+        { "@type": "Question", "name": "SSH が切れたあともプロセスを動かし続けるには？", "acceptedAnswer": { "@type": "Answer", "text": "リモートのマシンで、tmux か screen の中で、または nohup で起動します。Aubergine がターミナルを保つのは、自分が動いているコンピューター上です。リモートのマシンで動かして SSH トンネルやプロキシ経由で使うこともできますが、それはコンテナーの中でしか動かしておらず、クラウドのマシンでは動かしていません。" } },
+        { "@type": "Question", "name": "nohup と tmux のどちらを使うべきですか？", "acceptedAnswer": { "@type": "Answer", "text": "nohup は、出力をファイルに書いてよい1つのコマンドに向いています。tmux は、あとで戻って入力したいシェルに向いています。Aubergine はすべてのターミナルに後者を、ブラウザーのページで、tmux のキーなしで与えます。" } },
+        { "@type": "Question", "name": "ターミナルを閉じたあとに出力を見られますか？", "acceptedAnswer": { "@type": "Answer", "text": "はい、シェルが動いている間は。tmux は各ターミナルの最後の50,000行を保持し、戻ってきたときにページに表示されます。Aubergine 自身は何も記録しないので、コンピューターを再起動するとその出力は消えます。" } },
+        { "@type": "Question", "name": "再起動のあとも動き続けますか？", "acceptedAnswer": { "@type": "Answer", "text": "いいえ。コンピューターの再起動はすべてのプログラムを終わらせます。Aubergine は各ターミナルを、位置、名前、ノートとともに、最後のフォルダーで新しいシェルとして戻し、何も実行し直しません。" } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="現在の位置"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">ガイド</a></li><li>動かし続ける</li></ol></nav>
+    <h1>ターミナルを閉じてもプロセスを動かし続ける</h1>
+    <p class="lead">ビルドやサーバー、コーディングエージェントを起動したのに、ウィンドウを閉じると終わってしまう。Aubergine ではウィンドウを閉じても何も終わりません。どのターミナルもブラウザーとは別に動き、出力したものは戻ってきたときにそこにあります。</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>よくあるやり方</h2>
+    <p>ターミナルのウィンドウを閉じると、その中のシェルが終わり、そのシェルが起動したものも一緒に終わります。これを避ける定番の方法は次のとおりです。</p>
+    <ul>
+      <li><code>nohup</code> は、ターミナルが閉じるときに送られるハングアップを無視するコマンドを起動します。出力はファイルに書かれます（別の場所に送らなければ <code>nohup.out</code>）。</li>
+      <li><code>disown</code> は bash と zsh で、すでに起動したジョブを手放し、シェルがハングアップをそのジョブに伝えないようにします。そのあとターミナルでそのジョブに戻ることはできません。</li>
+      <li><code>screen</code> と <code>tmux</code> は、シェルを自前のサーバーの中で動かします。デタッチしてウィンドウを閉じ、あとで同じシェルに出力ごとアタッチし直せます。確実な答えですが、使うにはキーとコマンドを覚える必要があります。</li>
+    </ul>
+    <p>Aubergine は最後の方法の上に作られています。tmux をあなたの代わりに動かすので、キーを覚えずに tmux の答えが手に入ります。</p>
+
+    <h2>Aubergine がすること</h2>
+    <p>Aubergine のどのターミナルも、Aubergine 専用の tmux ソケット上で、ターミナルごとの tmux セッションの中で動くシェルです。tmux はブラウザーとも Aubergine のサーバーとも別に動くので、次のようになります。</p>
+    <ul>
+      <li><strong>タブ、ウィンドウ、ブラウザー全体を閉じても何も終わりません。</strong>ページを開き直せば（<code>aubergine open</code> でサインインした状態で開きます）、各ターミナルが tmux から今の状態で描かれ、その間に出力されたものはスクロールバックにあります。</li>
+      <li><strong>Aubergine を止めても何も終わりません。</strong><code>aubergine start</code> が動いている場所での Ctrl+C、サーバーのクラッシュ、アップデートで止まるのはサーバーだけです。もう一度起動してページを再読み込みしてください。</li>
+      <li><strong>キャンバス上でターミナルを閉じるとパークされます。</strong>タイトルの × でキャンバスから外れ、シェルは動き続けます。キャンバス上のバーにある <strong>Parked</strong>（パーク中）がパークしたターミナルを一覧し、<strong>Restore</strong>（戻す）で戻せます。</li>
+      <li><strong>シェルを完全に終わらせる前には確認があります。</strong>パークの一覧にある <strong>End</strong>（終了）は、あなたが「はい」と答えたときだけターミナルを終わらせます。</li>
+      <li><strong>別の表示を閉じても何も終わりません。</strong>ターミナルのタイトルにある <strong>Tab ↗</strong> はそのターミナルだけをブラウザーのタブで開き、<code>aubergine attach &lt;name&gt;</code> はターミナルアプリのウィンドウに表示します。どれも同じターミナルで、コピーではありません。そのタブやウィンドウを閉じても動き続けます。</li>
+    </ul>
+    <p>シェルが動いている間、tmux は出力された最後の50,000行を保持します。キーボードを持っているターミナルではホイールでさかのぼれ、パレット（<code>⌘K</code>）で検索できます。</p>
+    <figure class="frame"><a href="../../screenshots/list.png" class="frame-pic"><img src="../../screenshots/list.png" width="1440" height="1008" loading="lazy" alt="5つのターミナルを状態の言葉（working、waiting for you、finished、parked）とともに並べたサイドパネルと、ライブのシェルが映るキャンバスの一部。"></a><figcaption>一覧は各ターミナルが何をしているかを示します。下のパークされたターミナルはキャンバスの外にあり、シェルはまだ動いています。</figcaption></figure>
+
+    <h2>しないこと</h2>
+    <ul>
+      <li><strong>コンピューターの再起動は越えられません。</strong>再起動、コンピューターのクラッシュ、再起動を伴うアップデートは、すべてのシェルとその中で動いているものを終わらせます。Aubergine はその周りのすべてを戻し、各ターミナルを最後のフォルダーで新しいシェルにしますが、自分では何も起動し直しません。<a href="../keep-terminals-after-restart/">再起動のあともターミナルを残す</a>を参照してください。</li>
+      <li><strong>コンピューターを起こしたままにはしません。</strong>ノートパソコンがスリープすると、ここで動いているものも含めてプログラムは一時停止し、起きると続きから動きます。</li>
+      <li><strong>サービスマネージャーではありません。</strong>再起動のあと自動で戻ってくるべき処理は、システムのサービスに任せてください。</li>
+      <li><strong>ほかの場所ですでに動いているプログラムを引き取ることはできません。</strong>動いているプログラムを別のターミナルに移せるツールはありません。ターミナルアプリのタブで <code>aubergine here</code> を実行すると、そのフォルダーのターミナルがキャンバスにできます。タブで動いているプログラムはそこに残り、新しいターミナルの中で起動し直す必要があります。</li>
+    </ul>
+
+    <h2>SSH で別のマシンにいるとき</h2>
+    <p>Aubergine はあなた自身のコンピューターで動きます。サーバーは <code>127.0.0.1</code> で待ち受け、ターミナルはそのコンピューター上のシェルです。残したいのが SSH で接続するリモートサーバー上のプロセスなら、そのサーバーでの <code>tmux</code> や <code>screen</code> が今も答えです。</p>
+    <p>Aubergine 自体を別のマシンで動かし、SSH トンネル、プライベートネットワーク、または名前とプロキシを通じてブラウザーから使うこともできます。手順は <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md">Using Aubergine from elsewhere</a> にあります。SSH トンネルの場合、<code>aubergine start</code> を動かしている SSH のウィンドウを閉じるとサーバーは止まりますが、ターミナルは動き続けます。Linux はコンテナーの中でしか動かしておらず、クラウドのマシンでは一度も動かしていません。</p>
+
+    <h2>よくある質問</h2>
+    <div class="questions">
+      <details><summary>ブラウザーを閉じるとターミナルは止まりますか？</summary><p>いいえ。どのターミナルも tmux 内のシェルで、ブラウザーとは別に動いています。タブ、ウィンドウ、ブラウザーを閉じてからページを開き直すと、各ターミナルは今の状態で、動き続けたまま、その間の出力とともにあります。</p></details>
+      <details><summary>SSH が切れたあともプロセスを動かし続けるには？</summary><p>リモートのマシンで、<code>tmux</code> か <code>screen</code> の中で、または <code>nohup</code> で起動します。Aubergine がターミナルを保つのは、自分が動いているコンピューター上です。リモートのマシンで動かして SSH トンネルやプロキシ経由で使うこともできますが、それはコンテナーの中でしか動かしておらず、クラウドのマシンでは動かしていません。</p></details>
+      <details><summary>nohup と tmux のどちらを使うべきですか？</summary><p><code>nohup</code> は、出力をファイルに書いてよい1つのコマンドに向いています。<code>tmux</code> は、あとで戻って入力したいシェルに向いています。Aubergine はすべてのターミナルに後者を、ブラウザーのページで、tmux のキーなしで与えます。</p></details>
+      <details><summary>ターミナルを閉じたあとに出力を見られますか？</summary><p>はい、シェルが動いている間は。tmux は各ターミナルの最後の50,000行を保持し、戻ってきたときにページに表示されます。Aubergine 自身は何も記録しないので、コンピューターを再起動するとその出力は消えます。</p></details>
+      <details><summary>再起動のあとも動き続けますか？</summary><p>いいえ。コンピューターの再起動はすべてのプログラムを終わらせます。Aubergine は各ターミナルを、位置、名前、ノートとともに、最後のフォルダーで新しいシェルとして戻し、何も実行し直しません。</p></details>
+    </div>
+    <p>関連：<a href="../keep-terminals-after-restart/">再起動のあともターミナルを残す</a> · <a href="../tmux-without-learning-tmux/">tmux を覚えずに tmux を使う</a> · <a href="../claude-code-notifications/">Claude Code の待機を知る</a></p>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">5分で動かす</h2>
+    <div class="close-do">
+      <p>tmux 3.2 以降と Node.js 22 以降の入った macOS が必要です。<code>brew install tmux node</code> で両方が入ります。</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="コピーしました" aria-live="polite" hidden>コピー</button></p>
+      <p class="actions"><a class="button" href="../install/">インストール</a><a class="button button-quiet" href="../tmux-without-learning-tmux/">tmux を覚えずに tmux を使う</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav aria-label="すべてのページ">
+      <ul class="foot-links">
+        <li><a href="../">ホーム</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex と ChatGPT</a></li>
+        <li><a href="../install/">インストール</a></li>
+        <li><a href="../guides/">ガイド</a></li>
+        <li><a href="../run-multiple-coding-agents/">複数のエージェントを動かす</a></li>
+        <li><a href="../working-copies/">作業コピー</a></li>
+        <li><a href="../queue-and-schedules/">キューとスケジュール</a></li>
+        <li><a href="../security/">セキュリティ</a></li>
+        <li><a href="../roadmap/">ロードマップ</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine は <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT ライセンス</a>のもとで公開された無料のオープンソースで、あなた自身のコンピューターで動きます。</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    if (!navigator.clipboard) return;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
+});
+</script>
+</body>
+</html>

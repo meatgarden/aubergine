@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="id" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tahu kapan Claude Code selesai atau menunggu Anda | Aubergine</title>
+<meta name="description" content="Lihat sekilas terminal Claude Code mana yang sedang bekerja, menunggu Anda, atau selesai: hook yang dibuat Aubergine, angka For you, tombol ke terminal berikutnya yang menunggu, dan notifikasi dari halaman yang terbuka.">
+<link rel="canonical" href="https://thirstyeggplant.com/id/claude-code-notifications/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/claude-code-notifications/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/claude-code-notifications/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/claude-code-notifications/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/claude-code-notifications/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/claude-code-notifications/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/claude-code-notifications/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/claude-code-notifications/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/claude-code-notifications/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/claude-code-notifications/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/claude-code-notifications/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/claude-code-notifications/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/claude-code-notifications/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/claude-code-notifications/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="Tahu kapan Claude Code selesai atau menunggu Anda | Aubergine">
+<meta property="og:description" content="Lihat sekilas terminal Claude Code mana yang sedang bekerja, menunggu Anda, atau selesai: hook yang dibuat Aubergine, angka For you, tombol ke terminal berikutnya yang menunggu, dan notifikasi dari halaman yang terbuka.">
+<meta property="og:url" content="https://thirstyeggplant.com/id/claude-code-notifications/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine: kanvas berisi terminal, satu sedang sibuk dan satu menunggu Anda">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine: kanvas berisi terminal, satu sedang sibuk dan satu menunggu Anda">
+<meta name="twitter:title" content="Tahu kapan Claude Code selesai atau menunggu Anda | Aubergine">
+<meta name="twitter:description" content="Lihat sekilas terminal Claude Code mana yang sedang bekerja, menunggu Anda, atau selesai: hook yang dibuat Aubergine, angka For you, tombol ke terminal berikutnya yang menunggu, dan notifikasi dari halaman yang terbuka.">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">Langsung ke isi halaman</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="Halaman">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Instalasi</a></li>
+        <li><a href="../guides/">Panduan</a></li>
+        <li><a href="../security/">Keamanan</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="Bahasa: Bahasa Indonesia"><span class="lang-long" aria-hidden="true">Bahasa Indonesia</span><span class="lang-short" aria-hidden="true">ID</span></summary>
+      <ul class="menu-list"><li><a href="../../claude-code-notifications/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/claude-code-notifications/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/claude-code-notifications/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/claude-code-notifications/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/claude-code-notifications/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/claude-code-notifications/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/claude-code-notifications/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/claude-code-notifications/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="./" hreflang="id" lang="id" dir="ltr" aria-current="true">Bahasa Indonesia</a></li><li><a href="../../hi/claude-code-notifications/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/claude-code-notifications/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/claude-code-notifications/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>Menu</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Instalasi</a></li>
+        <li><a href="../guides/">Panduan</a></li>
+        <li><a href="../security/">Keamanan</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine sendiri berbahasa Inggris: tombol, menu, dan gambarnya adalah versi bahasa Inggris.</p>
+    <p>Halaman ini diterjemahkan oleh mesin dari bahasa Inggris. <a href="https://github.com/thirstyeggplant/aubergine/issues">Kirim koreksi</a>.</p>
+  </div>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/id/claude-code-notifications/#article",
+      "headline": "Tahu kapan Claude Code selesai atau menunggu Anda",
+      "description": "Lihat sekilas terminal Claude Code mana yang sedang bekerja, menunggu Anda, atau selesai: hook yang dibuat Aubergine, angka For you, tombol ke terminal berikutnya yang menunggu, dan notifikasi dari halaman yang terbuka.",
+      "url": "https://thirstyeggplant.com/id/claude-code-notifications/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/id/claude-code-notifications/",
+      "datePublished": "2026-11-25",
+      "dateModified": "2026-11-25",
+      "inLanguage": "id",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Panduan", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "Selesai atau menunggu", "item": "https://thirstyeggplant.com/id/claude-code-notifications/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/id/claude-code-notifications/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "Bagaimana mendapat notifikasi saat Claude Code selesai?", "acceptedAnswer": { "@type": "Answer", "text": "Jalankan Claude Code dari Aubergine, lalu nyalakan Notify me on the desktop when a terminal starts waiting di Settings → Notifications. Halaman yang terbuka lalu menampilkan notifikasi browser saat sebuah terminal mulai menunggu Anda atau agennya selesai. Tanpa notifikasi pun, terminal bertuliskan finished." } },
+        { "@type": "Question", "name": "Bisakah Claude Code memutar suara saat membutuhkan input?", "acceptedAnswer": { "@type": "Answer", "text": "Aubergine tidak memutar suara. Notifikasi bersuara jika browser atau sistem Anda membuatnya bersuara. Hook buatan Anda sendiri di pengaturan Claude Code bisa memutar suara; Aubergine tidak pernah menulis ke pengaturan itu." } },
+        { "@type": "Question", "name": "Bagaimana melihat sesi Claude Code mana yang menunggu saat saya menjalankan beberapa?", "acceptedAnswer": { "@type": "Answer", "text": "Di Aubergine garis dan status terminal yang menunggu berwarna menunggu, barisnya di daftar bertuliskan waiting for you, dan angka di samping For you menunjukkan berapa banyak yang menunggu. W pindah ke yang berikutnya." } },
+        { "@type": "Question", "name": "Apakah saya mendapat notifikasi saat browser ditutup?", "acceptedAnswer": { "@type": "Answer", "text": "Tidak. Notifikasi datang dari halaman Aubergine yang terbuka. Statusnya disimpan, jadi terminal yang menunggu sudah ditandai saat Anda membuka halaman lagi." } },
+        { "@type": "Question", "name": "Apakah ini berfungsi dengan agen selain Claude Code?", "acceptedAnswer": { "@type": "Answer", "text": "Tidak dengan sendirinya: hook-nya dibuat untuk Claude Code. Agen lain mana pun bisa melaporkan hal yang sama dengan aubergine attention waiting, working dan done saat instruksinya sendiri menyuruhnya begitu; aubergine guide --snippet mencetak baris untuk instruksi itu." } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Posisi Anda"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">Panduan</a></li><li>Selesai atau menunggu</li></ol></nav>
+    <h1>Tahu kapan Claude Code selesai atau menunggu Anda</h1>
+    <p class="lead">Anda memberi Claude Code sebuah tugas, beralih ke hal lain, dan kembali dua puluh menit kemudian hanya untuk mendapati ia sudah menunggu jawaban ya sejak menit kedua. Aubergine menunjukkan terminal mana yang sedang bekerja, mana yang menunggu Anda, dan mana yang sudah selesai, di satu halaman.</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>Yang biasanya dilakukan orang</h2>
+    <p>Claude Code menjalankan hook, yaitu perintah buatan Anda sendiri, pada momen seperti saat ia berhenti (<code>Stop</code>) atau mengirim notifikasi (<code>Notification</code>). Jawaban yang biasa adalah hook di pengaturan Claude Code Anda yang memutar suara atau menampilkan notifikasi desktop. Itu berfungsi, dan skripnya Anda tulis dan rawat sendiri.</p>
+
+    <h2>Apa yang dilakukan Aubergine</h2>
+    <p><strong>Jalankan Claude Code dari Aubergine</strong>: <strong>New terminal ▾ → Claude Code</strong> di bagian atas daftar terminal, atau <code>C</code>. Aubergine menjalankan <code>claude</code> dengan file pengaturan yang dibuatnya di folder datanya sendiri dan disebut di command line. Konfigurasi Claude Code Anda sendiri tidak disentuh. Hook di file itu memberi tahu halaman apa yang dikerjakan agen:</p>
+    <ul>
+      <li>saat Anda mengirim prompt, terminal menampilkan <strong>working</strong>, dan prompt itu ditambahkan ke log catatannya;</li>
+      <li>saat agen membutuhkan Anda (pertanyaan izin, atau ia diam menunggu input), garisnya berganti ke warna menunggu, dan judul serta barisnya di daftar bertuliskan <strong>waiting for you</strong>;</li>
+      <li>saat berhenti, terminal menampilkan <strong>finished</strong>.</li>
+    </ul>
+    <figure class="frame"><a href="../../screenshots/waiting.png" class="frame-pic"><img src="../../screenshots/waiting.png" width="1496" height="600" loading="lazy" alt="Satu terminal yang agennya mengajukan pertanyaan, judulnya bertuliskan waiting for you, garis tepinya berwarna menunggu."></a><figcaption>Garis tepinya berganti ke warna menunggu, dan judulnya bertuliskan waiting for you.</figcaption></figure>
+    <p><strong>Angka di samping For you</strong>, di kanan atas halaman, adalah semua yang menunggu Anda, di semua proyek: terminal yang punya pertanyaan, serta run yang perlu disetujui, draf untuk dibaca, dan tugas yang diusulkan. Menekannya membuka <strong>Runs</strong>, yang kolom <strong>Waiting for you</strong>-nya adalah daftar itu. Tab sebuah kanvas menunjukkan berapa terminalnya yang menunggu.</p>
+    <p><strong>Terminal berikutnya yang menunggu.</strong> <code>W</code> pindah ke terminal berikutnya yang menunggu Anda saat tidak ada terminal yang memegang keyboard; di macOS <code>⌃⌘J</code> melakukannya juga dari dalam terminal. Di tempat lain, ini ada di palet.</p>
+    <p><strong>Notifikasi dari halaman yang terbuka.</strong> <strong>Settings → Notifications</strong> berisi <strong>Notify me on the desktop when a terminal starts waiting</strong> (beri tahu saya di desktop saat terminal mulai menunggu). Jika dinyalakan, halaman menampilkan notifikasi browser Anda saat sebuah terminal mulai menunggu atau agennya selesai, kecuali Anda sedang melihat terminal itu. Browser meminta izin Anda sekali.</p>
+    <p><strong>Aturan.</strong> Di tab <strong>Rules</strong> pada <strong>Runs</strong>, sebuah aturan bisa <strong>Notify me</strong> (memberi tahu Anda) saat tugas selesai, tugas gagal, tugas membutuhkan Anda, ada yang diminta dari Anda, atau jadwal berjalan atau tidak bisa berjalan: notifikasi dari halaman yang terbuka, dengan satu kalimat tentang apa yang terjadi.</p>
+    <figure class="frame"><a href="../../screenshots/for-you.png" class="frame-pic"><img src="../../screenshots/for-you.png" width="990" height="570" loading="lazy" alt="Kolom Waiting for you di halaman Runs: kotak untuk menambah to-do, lalu pertanyaan dari agen pengganti, draf untuk dibaca, dan daftar yang diserahkan."></a><figcaption>Daftar yang menunggu, di samping For you: pertanyaan agen pengganti lebih dulu, lalu langkah untuk dibaca dan daftar yang diserahkan.</figcaption></figure>
+
+    <h2>Agen lain, dan claude yang Anda ketik sendiri</h2>
+    <p>Aubergine tidak membaca output terminal untuk menebak. Agen lain mana pun, atau program apa pun, menyampaikan hal yang sama sendiri dengan <code>aubergine attention waiting "what it needs"</code>, <code>aubergine attention working</code> dan <code>aubergine attention done</code> di terminalnya. <code>aubergine guide --snippet</code> mencetak lima baris untuk file yang dibaca agen Anda di awal percakapan; baris itu menyuruhnya menjalankan <code>aubergine guide</code>, yang menjelaskan perintah-perintah ini.</p>
+    <p>Claude Code yang Anda jalankan dengan mengetik <code>claude</code> di terminal biasa, bagi Aubergine, adalah shell yang sibuk menjalankan sebuah program: tidak ada <strong>waiting for you</strong>. Jalankan dari menu saja, atau tambahkan sendiri hook yang dicetak <code>aubergine hooks print</code> ke pengaturan Anda; hook itu tidak melakukan apa-apa di luar terminal Aubergine.</p>
+
+    <h2>Apa yang tidak dilakukannya</h2>
+    <ul>
+      <li><strong>Tidak ada suara sendiri.</strong> Aubergine tidak memutar suara apa pun. Notifikasi bersuara hanya jika browser atau sistem Anda membuat notifikasi bersuara.</li>
+      <li><strong>Tidak ada apa-apa saat tidak ada halaman yang terbuka.</strong> Notifikasi datang dari halaman Aubergine yang terbuka di browser Anda; server tidak mengirim apa pun sendiri. Saat semua halaman tertutup, terminal tetap bertuliskan <strong>waiting for you</strong>, dan angkanya ada saat Anda membuka halaman.</li>
+      <li><strong>Tidak ada push ke ponsel.</strong> Tidak ada aplikasi dan tidak ada layanan push. Browser ponsel bisa dipasangkan untuk membuka halaman yang sama; lihat <a href="../check-agents-from-your-phone/">Memantau agen dari ponsel Anda</a>, yang belum dicoba di ponsel sungguhan.</li>
+      <li><strong>Apa yang diperiksa.</strong> Uji browser memeriksa notifikasi terhadap pengganti notifikasi milik browser. Seperti apa notifikasi sungguhan, dan apakah ia ditampilkan sama sekali, bergantung pada browser Anda dan pengaturan sistem Anda untuknya.</li>
+    </ul>
+
+    <h2>Pertanyaan</h2>
+    <div class="questions">
+      <details><summary>Bagaimana mendapat notifikasi saat Claude Code selesai?</summary><p>Jalankan Claude Code dari Aubergine, lalu nyalakan <strong>Notify me on the desktop when a terminal starts waiting</strong> di <strong>Settings → Notifications</strong>. Halaman yang terbuka lalu menampilkan notifikasi browser saat sebuah terminal mulai menunggu Anda atau agennya selesai. Tanpa notifikasi pun, terminal bertuliskan <strong>finished</strong>.</p></details>
+      <details><summary>Bisakah Claude Code memutar suara saat membutuhkan input?</summary><p>Aubergine tidak memutar suara. Notifikasi bersuara jika browser atau sistem Anda membuatnya bersuara. Hook buatan Anda sendiri di pengaturan Claude Code bisa memutar suara; Aubergine tidak pernah menulis ke pengaturan itu.</p></details>
+      <details><summary>Bagaimana melihat sesi Claude Code mana yang menunggu saat saya menjalankan beberapa?</summary><p>Di Aubergine garis dan status terminal yang menunggu berwarna menunggu, barisnya di daftar bertuliskan <strong>waiting for you</strong>, dan angka di samping <strong>For you</strong> menunjukkan berapa banyak yang menunggu. <code>W</code> pindah ke yang berikutnya.</p></details>
+      <details><summary>Apakah saya mendapat notifikasi saat browser ditutup?</summary><p>Tidak. Notifikasi datang dari halaman Aubergine yang terbuka. Statusnya disimpan, jadi terminal yang menunggu sudah ditandai saat Anda membuka halaman lagi.</p></details>
+      <details><summary>Apakah ini berfungsi dengan agen selain Claude Code?</summary><p>Tidak dengan sendirinya: hook-nya dibuat untuk Claude Code. Agen lain mana pun bisa melaporkan hal yang sama dengan <code>aubergine attention waiting</code>, <code>working</code> dan <code>done</code> saat instruksinya sendiri menyuruhnya begitu; <code>aubergine guide --snippet</code> mencetak baris untuk instruksi itu.</p></details>
+    </div>
+    <p>Terkait: <a href="../claude/">Claude Code di Aubergine</a> · <a href="../resume-claude-code-session/">Melanjutkan percakapan Claude Code</a> · <a href="../too-many-terminal-tabs/">Terminal terlalu banyak</a></p>
+    <p class="note">Aubergine tidak berafiliasi dengan Anthropic. Claude dan Claude Code adalah merek dagang Anthropic.</p>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">Siap dipakai dalam lima menit</h2>
+    <div class="close-do">
+      <p>Anda memerlukan macOS dengan tmux 3.2 atau lebih baru dan Node.js 22 atau lebih baru. <code>brew install tmux node</code> memasang keduanya.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Tersalin" aria-live="polite" hidden>Salin</button></p>
+      <p class="actions"><a class="button" href="../install/">Instal</a><a class="button button-quiet" href="../claude/">Claude Code di Aubergine</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav aria-label="Semua halaman">
+      <ul class="foot-links">
+        <li><a href="../">Beranda</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex dan ChatGPT</a></li>
+        <li><a href="../install/">Instalasi</a></li>
+        <li><a href="../guides/">Panduan</a></li>
+        <li><a href="../run-multiple-coding-agents/">Menjalankan beberapa agen</a></li>
+        <li><a href="../working-copies/">Salinan kerja</a></li>
+        <li><a href="../queue-and-schedules/">Antrean dan jadwal</a></li>
+        <li><a href="../security/">Keamanan</a></li>
+        <li><a href="../roadmap/">Peta jalan</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine gratis dan open source di bawah <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">lisensi MIT</a>, dan berjalan di komputer Anda sendiri.</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    if (!navigator.clipboard) return;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
+});
+</script>
+</body>
+</html>

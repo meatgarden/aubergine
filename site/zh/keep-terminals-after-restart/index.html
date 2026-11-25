@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="zh-Hans" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>崩溃、重启或更新之后保留你的终端 | Aubergine</title>
+<meta name="description" content="浏览器关闭、Aubergine 重启，以及电脑崩溃、重启或在夜里自动更新时，你的终端和编程智能体会怎样，以及如何从上次停下的地方继续。">
+<link rel="canonical" href="https://thirstyeggplant.com/zh/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/keep-terminals-after-restart/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="崩溃、重启或更新之后保留你的终端 | Aubergine">
+<meta property="og:description" content="浏览器关闭、Aubergine 重启，以及电脑崩溃、重启或在夜里自动更新时，你的终端和编程智能体会怎样，以及如何从上次停下的地方继续。">
+<meta property="og:url" content="https://thirstyeggplant.com/zh/keep-terminals-after-restart/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine：一张摆满终端的画布，一个正在忙，一个在等你">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine：一张摆满终端的画布，一个正在忙，一个在等你">
+<meta name="twitter:title" content="崩溃、重启或更新之后保留你的终端 | Aubergine">
+<meta name="twitter:description" content="浏览器关闭、Aubergine 重启，以及电脑崩溃、重启或在夜里自动更新时，你的终端和编程智能体会怎样，以及如何从上次停下的地方继续。">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="页面">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">安装</a></li>
+        <li><a href="../guides/">指南</a></li>
+        <li><a href="../security/">安全</a></li>
+        <li><a href="../faq/">常见问题</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="语言: 简体中文"><span class="lang-long" aria-hidden="true">简体中文</span><span class="lang-short" aria-hidden="true">ZH</span></summary>
+      <ul class="menu-list"><li><a href="../../keep-terminals-after-restart/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/keep-terminals-after-restart/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/keep-terminals-after-restart/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/keep-terminals-after-restart/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/keep-terminals-after-restart/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/keep-terminals-after-restart/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="./" hreflang="zh-Hans" lang="zh-Hans" dir="ltr" aria-current="true">简体中文</a></li><li><a href="../../ko/keep-terminals-after-restart/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/keep-terminals-after-restart/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/keep-terminals-after-restart/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/keep-terminals-after-restart/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/keep-terminals-after-restart/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>菜单</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">安装</a></li>
+        <li><a href="../guides/">指南</a></li>
+        <li><a href="../security/">安全</a></li>
+        <li><a href="../faq/">常见问题</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine 本身是英文的：它的按钮、菜单和截图都是英文版。</p>
+    <p>本页由机器从英文翻译而来。<a href="https://github.com/thirstyeggplant/aubergine/issues">提交修正</a>。</p>
+  </div>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/zh/keep-terminals-after-restart/#article",
+      "headline": "电脑重启后，终端依然在",
+      "description": "浏览器关闭、Aubergine 重启，以及电脑崩溃、重启或在夜里自动更新时，你的终端和编程智能体会怎样，以及如何从上次停下的地方继续。",
+      "url": "https://thirstyeggplant.com/zh/keep-terminals-after-restart/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/zh/keep-terminals-after-restart/",
+      "datePublished": "2026-11-25",
+      "dateModified": "2026-11-25",
+      "inLanguage": "zh-Hans",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "指南", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "重启之后", "item": "https://thirstyeggplant.com/zh/keep-terminals-after-restart/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/zh/keep-terminals-after-restart/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "Aubergine 能在重启后恢复我的终端吗？", "acceptedAnswer": { "@type": "Answer", "text": "能，除了其中正在运行的东西。每个终端都会回到画布上的原位，带着名称、颜色、笔记、标签、字段和链接，成为位于最后所在文件夹的新 shell。其中运行过的程序不会重新启动；对 Claude Code，Resume agent 可以接着之前的对话。" } },
+        { "@type": "Question", "name": "Aubergine 会保留我的终端输出和历史吗？", "acceptedAnswer": { "@type": "Answer", "text": "输出只在 shell 运行期间保留：tmux 为每个终端保留 50,000 行回滚记录，关掉浏览器或重启 Aubergine 都不会丢失。电脑重启后就没了，因为 Aubergine 不记录终端输出。你输入过的命令历史（按上箭头会出现的那些）是你的 shell 自己的文件，像往常一样由 shell 保存。" } },
+        { "@type": "Question", "name": "我的 Claude Code 对话能撑过重启吗？", "acceptedAnswer": { "@type": "Answer", "text": "对话可以：Claude Code 把它保存在自己的文件中，Aubergine 记得每个终端处于哪个对话。重启之后，终端标题栏上的 Resume agent 会在那个对话中再次启动 Claude Code。智能体那一刻正在做的事已经停止，在你要求之前不会重做。" } },
+        { "@type": "Question", "name": "macOS 夜里自动更新时还管用吗？", "acceptedAnswer": { "@type": "Answer", "text": "会重启电脑的更新就是一次普通的重启：正在运行的程序结束，其他一切都保留。开启登录时启动（aubergine service install）后，你一登录服务器就会再次运行，画布在等着你。在最后所在文件夹中打开新 shell 这一点，是在重启 Aubergine 的容器时看到的；真实的 macOS 夜间更新尚未试过。" } },
+        { "@type": "Question", "name": "我需要懂 tmux 吗？", "acceptedAnswer": { "@type": "Answer", "text": "不需要。只要装好它（3.2 或更新版本），Aubergine 会在自己的套接字上用自己的设置运行它，没有状态栏，也没有前缀键，所以你永远不用输入 tmux 命令。如果你自己也在用 tmux，它不会被动到。" } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="当前位置"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">指南</a></li><li>重启之后</li></ol></nav>
+    <h1>电脑重启后，终端依然在</h1>
+    <p class="lead">关掉浏览器或重启 Aubergine 不会丢失任何东西：每个终端都继续运行。电脑重启会结束正在运行的东西，而 Aubergine 会把它周围的一切带回来，让你从上次停下的地方继续，而不是从头开始。</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>当……时会发生什么</h2>
+    <p>每个终端都是 tmux 会话中的一个 shell，独立于浏览器和 Aubergine 的服务器运行。它的内容分在两处：正在运行的 shell，只由 tmux 保存；以及关于这个终端的一切说明，Aubergine 每次变动都会写进其数据文件夹里的一个文件。</p>
+    <div class="table">
+      <table class="table-stack">
+        <thead><tr><th>内容</th><th>浏览器关闭、崩溃或更新，或你关掉标签页</th><th>Aubergine 停止、重启或被更新</th><th>电脑崩溃、重启或安装更新</th></tr></thead>
+        <tbody>
+          <tr><td>正在运行的程序和智能体</td><td data-label="浏览器关闭">继续运行</td><td data-label="Aubergine 重启">继续运行</td><td data-label="电脑重启">结束</td></tr>
+          <tr><td>终端显示过的内容（回滚记录）</td><td data-label="浏览器关闭">仍在</td><td data-label="Aubergine 重启">仍在</td><td data-label="电脑重启">丢失</td></tr>
+          <tr><td>它在画布上的位置、名称、颜色、标签、字段和链接</td><td data-label="浏览器关闭">仍在</td><td data-label="Aubergine 重启">仍在</td><td data-label="电脑重启">仍在</td></tr>
+          <tr><td>它的笔记：摘要和日志</td><td data-label="浏览器关闭">仍在</td><td data-label="Aubergine 重启">仍在</td><td data-label="电脑重启">仍在</td></tr>
+          <tr><td>它所在的文件夹</td><td data-label="浏览器关闭">仍在</td><td data-label="Aubergine 重启">仍在</td><td data-label="电脑重启">同一文件夹中的新 shell</td></tr>
+          <tr><td>智能体的对话</td><td data-label="浏览器关闭">继续</td><td data-label="Aubergine 重启">继续</td><td data-label="电脑重启">用 <strong>Resume agent</strong> 接着进行（Claude Code）</td></tr>
+          <tr><td>工作副本及其分支</td><td data-label="浏览器关闭">仍在</td><td data-label="Aubergine 重启">仍在</td><td data-label="电脑重启">仍在</td></tr>
+          <tr><td>队列、运行和计划</td><td data-label="浏览器关闭">仍在</td><td data-label="Aubergine 重启">仍在；错过的时间会迟到运行</td><td data-label="电脑重启">仍在；错过的时间会迟到运行</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">停放的终端也同样保留，同样会得到一个新 shell。shell 在此之前就已结束的终端保持结束状态，并提供 <strong>Restart here</strong>（在此重启）。</p>
+    <p>更新之后，已经打开的终端会保留它的 shell 启动时所带的东西（它的 <code>PATH</code> 和 Aubergine 的 shell 集成），直到那个 shell 重新启动。如果 Aubergine 在登录时启动，更新之后请再运行一次 <code>aubergine service install</code>，而不是手动重启服务器。</p>
+
+    <h2>重启之后：回到工作</h2>
+    <ol class="seq">
+      <li><p><strong>启动 Aubergine。</strong>如果它在登录时启动（<code>aubergine service install</code>，仅限 macOS），你一登录它就在运行，停止后 launchd 也会再把它启动。否则就启动它并打开页面：</p>
+        <p class="cmd"><code>aubergine start --open</code><button type="button" class="copy" data-copy data-copied="已复制" aria-live="polite" hidden>复制</button></p></li>
+      <li><p><strong>画布和你离开时一样。</strong>每个终端都在原位，带着名称、颜色、标签、字段、链接和笔记，现在是一个新 shell，位于 Aubergine 最后看到它所在的文件夹（如果那个文件夹已不存在，则在你的默认文件夹）。不会重新输入或运行任何东西。</p></li>
+      <li><p><strong>恢复你的智能体。</strong>在运行过 Claude Code 且 Aubergine 知道其对话（它是从 Aubergine 启动的）的终端上，标题栏会提供 <strong>Resume agent</strong>（恢复智能体）：在那个对话中再次启动 Claude Code。在处于某个工作流运行中的终端上，它还会再次把这次运行告诉智能体，让它从运行所在的步骤继续。</p></li>
+      <li><p><strong>看看每个终端进行到哪里。</strong>终端标题里的 <strong>Details</strong>（详情）会显示关于它的已知信息（运行的步骤和最后一份报告、文件夹、标签）、它的摘要、字段和链接，以及 <strong>Log</strong> 下的日志。在列表里把指针移到终端名称上，会显示它的回顾。</p></li>
+      <li><p><strong>找回不在画布上的对话。</strong>命令面板（<code>⌘K</code>）中的 <strong>Past conversations…</strong>（过去的对话），或终端详情中的“Past conversations in this folder…”，会列出某个文件夹里 Claude Code 以前的对话，并能在画布上打开其中一个。</p></li>
+    </ol>
+    <p>其他智能体没有 <strong>Resume agent</strong>，因为 Aubergine 不知道它的对话：请在同一个终端里用那个智能体自己的恢复方式重新启动它，并读一读笔记，告诉它进行到哪里了。</p>
+    <figure class="frame"><a href="../../screenshots/focus-part.png" class="frame-pic"><img src="../../screenshots/focus-part.png" width="1344" height="1172" loading="lazy" alt="浏览器标签页中单独的一个终端：顶部是名称，详情里有工作流步骤、文件夹和字段，旁边是实时终端。"></a><figcaption>终端的详情：运行的步骤和最后一份报告、文件夹、标签和字段。这些在电脑重启后都会保留；旁边的实时终端不会。</figcaption></figure>
+
+    <h2>会丢失什么，以及怎么办</h2>
+    <ul>
+      <li><strong>正在运行的东西会结束。</strong>构建、测试、服务器或正在工作的智能体会随电脑一起停止，Aubergine 不会自行重新启动其中任何一个。请自己重新启动它们；必须撑过重启的任务，应当交给专门为此设计的东西，比如系统的服务。</li>
+      <li><strong>Aubergine 跟踪的工作会等着你。</strong>工作流的运行会保留它的步骤和每一份提交的报告。队列中的任务保持原位；服务器停止那一刻正在启动的任务会被标为失败，并附一句说明，不会自动重试任何东西。服务器停止期间错过的计划时间，如果不超过六小时（<code>schedules.lateWithinHours</code>），会迟到运行一次，否则标为已错过。</li>
+      <li><strong>回滚记录会丢失。</strong>shell 运行期间，tmux 会保留它最后输出的 50,000 行，命令面板的搜索会读取这些内容。Aubergine 不记录终端的输出，所以电脑重启后没有东西可以找回，搜索只能找到此后输出的内容。</li>
+      <li><strong>“你不在时”会重新开始。</strong>它保存在服务器的内存里，而不是文件里，所以服务器启动后它只知道此后发生的变化，并会这样说明。</li>
+    </ul>
+
+    <h2>让重启代价很小的习惯</h2>
+    <p>能留下来的是笔记，所以让智能体边做边写进去：一个决定、一个结果、停在了哪里。从 Aubergine 启动的 Claude Code 会自动把你发送的每条提示加入日志，并在开始时被要求给终端命名、维护摘要。任何智能体都可以用下面这些命令做到同样的事，<code>aubergine guide</code> 会向它说明：</p>
+    <pre><code>aubergine note "Tests pass on the branch. The migration is not written yet."
+aubergine describe --summary "Fixing the double redirect at sign-in"</code></pre>
+    <p>一天结束前，在终端详情里点 <strong>Ask its agent for a recap</strong>（请它的智能体写回顾）：智能体用 <code>aubergine recap --write</code> 写下现状，这份回顾会和终端一起保存。</p>
+
+    <h2>合上笔记本、睡眠和浏览器</h2>
+    <ul>
+      <li><strong>睡眠不是重启。</strong>合上笔记本的盖子通常会让它睡眠：程序暂停，醒来后继续，表格最后一列的情况都不会发生。Aubergine 既不让电脑保持唤醒，也不唤醒它，所以睡眠期间到点的计划会迟到运行或被错过，同上。</li>
+      <li><strong>关闭浏览器、标签页或其窗口</strong>，或浏览器更新后重启，都不会结束任何东西。重新打开页面（<code>aubergine open</code> 会以登录状态打开），每个终端都会按 tmux 中的当前状态绘制。一直开着的页面会在服务器恢复后自动重新连接。</li>
+      <li><strong>关闭运行 <code>aubergine start</code> 的窗口</strong>，或在其中按 Ctrl+C，只会停止服务器：也就是表格中间那一列。</li>
+      <li><strong>在使用 WSL 的 Windows 上</strong>，WSL 停止（因为 Windows 重启或执行 <code>wsl --shutdown</code> 之后）对 Aubergine 来说就是电脑重启。参见 <a href="../windows/">使用 WSL 的 Windows</a>。</li>
+    </ul>
+
+    <h2>常见问题</h2>
+    <div class="questions">
+      <details><summary>Aubergine 能在重启后恢复我的终端吗？</summary><p>能，除了其中正在运行的东西。每个终端都会回到画布上的原位，带着名称、颜色、笔记、标签、字段和链接，成为位于最后所在文件夹的新 shell。其中运行过的程序不会重新启动；对 Claude Code，<strong>Resume agent</strong> 可以接着之前的对话。</p></details>
+      <details><summary>Aubergine 会保留我的终端输出和历史吗？</summary><p>输出只在 shell 运行期间保留：tmux 为每个终端保留 50,000 行回滚记录，关掉浏览器或重启 Aubergine 都不会丢失。电脑重启后就没了，因为 Aubergine 不记录终端输出。你输入过的命令历史（按上箭头会出现的那些）是你的 shell 自己的文件，像往常一样由 shell 保存。</p></details>
+      <details><summary>我的 Claude Code 对话能撑过重启吗？</summary><p>对话可以：Claude Code 把它保存在自己的文件中，Aubergine 记得每个终端处于哪个对话。重启之后，终端标题栏上的 <strong>Resume agent</strong> 会在那个对话中再次启动 Claude Code。智能体那一刻正在做的事已经停止，在你要求之前不会重做。</p></details>
+      <details><summary>macOS 夜里自动更新时还管用吗？</summary><p>会重启电脑的更新就是一次普通的重启：正在运行的程序结束，其他一切都保留。开启登录时启动（<code>aubergine service install</code>）后，你一登录服务器就会再次运行，画布在等着你。在最后所在文件夹中打开新 shell 这一点，是在重启 Aubergine 的容器时看到的；真实的 macOS 夜间更新尚未试过。</p></details>
+      <details><summary>我需要懂 tmux 吗？</summary><p>不需要。只要装好它（3.2 或更新版本），Aubergine 会在自己的套接字上用自己的设置运行它，没有状态栏，也没有前缀键，所以你永远不用输入 tmux 命令。如果你自己也在用 tmux，它不会被动到。</p></details>
+    </div>
+    <p>相关：<a href="../claude/">Aubergine 中的 Claude Code</a> · <a href="../queue-and-schedules/">队列和计划</a> · <a href="../working-copies/">工作副本</a></p>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">五分钟上手</h2>
+    <div class="close-do">
+      <p>你需要 macOS，以及 tmux 3.2 或更高版本和 Node.js 22 或更高版本。<code>brew install tmux node</code> 可以一次装好两者。</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="已复制" aria-live="polite" hidden>复制</button></p>
+      <p class="actions"><a class="button" href="../install/">安装</a><a class="button button-quiet" href="../run-multiple-coding-agents/">运行多个智能体</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav aria-label="所有页面">
+      <ul class="foot-links">
+        <li><a href="../">首页</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex 与 ChatGPT</a></li>
+        <li><a href="../install/">安装</a></li>
+        <li><a href="../guides/">指南</a></li>
+        <li><a href="../run-multiple-coding-agents/">运行多个智能体</a></li>
+        <li><a href="../working-copies/">工作副本</a></li>
+        <li><a href="../queue-and-schedules/">队列与定时计划</a></li>
+        <li><a href="../security/">安全</a></li>
+        <li><a href="../roadmap/">路线图</a></li>
+        <li><a href="../faq/">常见问题</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine 免费开源，采用 <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT 许可证</a>，运行在你自己的电脑上。</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    if (!navigator.clipboard) return;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
+});
+</script>
+</body>
+</html>

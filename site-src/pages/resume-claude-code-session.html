@@ -1,0 +1,106 @@
+<!--page {"updated":"2026-11-25","order":6.8,"key":"resume","llms":{"name":"Resume a Claude Code conversation after a restart","about":"claude --continue and --resume, Resume agent on the terminal a conversation ran in, past conversations in a folder, and what is read from Claude Code's own records"}}-->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "{{=url}}#article",
+      "headline": {{json:resume.title}},
+      "description": {{json:resume.meta.description}},
+      "url": "{{=url}}",
+      "mainEntityOfPage": "{{=url}}",
+      "datePublished": "2026-11-25",
+      "dateModified": "{{=updated}}",
+      "inLanguage": "{{=lang}}",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": {{json:guides.crumb}}, "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": {{json:resume.crumb}}, "item": "{{=url}}" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "{{=url}}#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": {{json:resume.q.closed.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:resume.q.closed.a}} } },
+        { "@type": "Question", "name": {{json:resume.q.reboot.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:resume.q.reboot.a}} } },
+        { "@type": "Question", "name": {{json:resume.q.find.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:resume.q.find.a}} } },
+        { "@type": "Question", "name": {{json:resume.q.diff.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:resume.q.diff.a}} } },
+        { "@type": "Question", "name": {{json:resume.q.two.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:resume.q.two.a}} } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="{{attr:site.crumbs}}"><ol><li><a href="/">Aubergine</a></li><li><a href="/guides/">{{guides.crumb}}</a></li><li>{{resume.crumb}}</li></ol></nav>
+    <h1>{{resume.title}}</h1>
+    <p class="lead">{{resume.lead}}</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>{{resume.usual.title}}</h2>
+    <p>{{resume.usual.text}}</p>
+
+    <h2>{{resume.does.title}}</h2>
+    <p>{{resume.does.remember}}</p>
+    <p>{{resume.does.button}}</p>
+    <p>{{resume.does.run}}</p>
+    <p>{{resume.does.past}}</p>
+    <p>{{resume.does.search}}</p>
+    <p>{{resume.does.stood}}</p>
+    <figure class="frame"><a href="/screenshots/focus-part.png" class="frame-pic"><img src="/screenshots/focus-part.png" width="1344" height="1172" loading="lazy" alt="{{attr:home.see.focus.alt}}"></a><figcaption>{{resume.pic.caption}}</figcaption></figure>
+
+    <h2>{{resume.outside.title}}</h2>
+    <p>{{resume.outside.text}}</p>
+
+    <h2>{{resume.not.title}}</h2>
+    <ul>
+      <li>{{resume.not.format}}</li>
+      <li>{{resume.not.store}}</li>
+      <li>{{resume.not.work}}</li>
+      <li>{{resume.not.other}}</li>
+      <li>{{resume.not.typed}}</li>
+      <li>{{resume.not.tried}}</li>
+    </ul>
+
+    <h2>{{home.faq.title}}</h2>
+    <div class="questions">
+      <details><summary>{{resume.q.closed.q}}</summary><p>{{resume.q.closed.a}}</p></details>
+      <details><summary>{{resume.q.reboot.q}}</summary><p>{{resume.q.reboot.a}}</p></details>
+      <details><summary>{{resume.q.find.q}}</summary><p>{{resume.q.find.a}}</p></details>
+      <details><summary>{{resume.q.diff.q}}</summary><p>{{resume.q.diff.a}}</p></details>
+      <details><summary>{{resume.q.two.q}}</summary><p>{{resume.q.two.a}}</p></details>
+    </div>
+    <p>{{resume.related}}</p>
+    <p class="note">{{claude.mark}}</p>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">{{home.install.title}}</h2>
+    <div class="close-do">
+      <p>{{home.install.intro}}</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="{{attr:site.copied}}" aria-live="polite" hidden>{{site.copy}}</button></p>
+      <p class="actions"><a class="button" href="/install/">{{home.hero.install}}</a><a class="button button-quiet" href="/claude/">{{guides.claude.name}}</a></p>
+    </div>
+  </div>
+</section>

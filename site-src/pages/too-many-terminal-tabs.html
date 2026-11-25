@@ -1,0 +1,102 @@
+<!--page {"updated":"2026-11-25","order":6.9,"key":"many","llms":{"name":"Find the right terminal when you have too many","about":"the canvas, canvases and projects, one list of every terminal with its state in words, filters, tags, search of terminal output, and what was measured"}}-->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "{{=url}}#article",
+      "headline": {{json:many.title}},
+      "description": {{json:many.meta.description}},
+      "url": "{{=url}}",
+      "mainEntityOfPage": "{{=url}}",
+      "datePublished": "2026-11-25",
+      "dateModified": "{{=updated}}",
+      "inLanguage": "{{=lang}}",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": {{json:guides.crumb}}, "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": {{json:many.crumb}}, "item": "{{=url}}" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "{{=url}}#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": {{json:many.q.organize.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:many.q.organize.a}} } },
+        { "@type": "Question", "name": {{json:many.q.which.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:many.q.which.a}} } },
+        { "@type": "Question", "name": {{json:many.q.search.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:many.q.search.a}} } },
+        { "@type": "Question", "name": {{json:many.q.count.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:many.q.count.a}} } },
+        { "@type": "Question", "name": {{json:many.q.name.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:many.q.name.a}} } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="{{attr:site.crumbs}}"><ol><li><a href="/">Aubergine</a></li><li><a href="/guides/">{{guides.crumb}}</a></li><li>{{many.crumb}}</li></ol></nav>
+    <h1>{{many.title}}</h1>
+    <p class="lead">{{many.lead}}</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>{{many.usual.title}}</h2>
+    <p>{{many.usual.text}}</p>
+
+    <h2>{{many.does.title}}</h2>
+    <p>{{many.does.canvas}}</p>
+    <p>{{many.does.canvases}}</p>
+    <p>{{many.does.list}}</p>
+    <p>{{many.does.filter}}</p>
+    <figure class="frame"><a href="/screenshots/list.png" class="frame-pic"><img src="/screenshots/list.png" width="1440" height="1008" loading="lazy" alt="{{attr:home.see.canvas.alt}}"></a><figcaption>{{home.see.canvas.caption}}</figcaption></figure>
+    <p>{{many.does.goto}}</p>
+    <p>{{many.does.map}}</p>
+    <p>{{many.does.about}}</p>
+    <p>{{many.does.alone}}</p>
+    <p>{{many.does.keys}}</p>
+
+    <h2>{{many.not.title}}</h2>
+    <ul>
+      <li>{{many.not.arrange}}</li>
+      <li>{{many.not.number}}</li>
+      <li>{{many.not.others}}</li>
+    </ul>
+
+    <h2>{{home.faq.title}}</h2>
+    <div class="questions">
+      <details><summary>{{many.q.organize.q}}</summary><p>{{many.q.organize.a}}</p></details>
+      <details><summary>{{many.q.which.q}}</summary><p>{{many.q.which.a}}</p></details>
+      <details><summary>{{many.q.search.q}}</summary><p>{{many.q.search.a}}</p></details>
+      <details><summary>{{many.q.count.q}}</summary><p>{{many.q.count.a}}</p></details>
+      <details><summary>{{many.q.name.q}}</summary><p>{{many.q.name.a}}</p></details>
+    </div>
+    <p>{{many.related}}</p>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">{{home.install.title}}</h2>
+    <div class="close-do">
+      <p>{{home.install.intro}}</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="{{attr:site.copied}}" aria-live="polite" hidden>{{site.copy}}</button></p>
+      <p class="actions"><a class="button" href="/install/">{{home.hero.install}}</a><a class="button button-quiet" href="/run-multiple-coding-agents/">{{several.crumb}}</a></p>
+    </div>
+  </div>
+</section>

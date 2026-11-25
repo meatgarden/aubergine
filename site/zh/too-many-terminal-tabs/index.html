@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="zh-Hans" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>标签页太多时找到要找的终端 | Aubergine</title>
+<meta name="description" content="终端标签页太多，个个都叫 zsh？Aubergine 把每个终端放到画布上和同一个列表里，用文字写出状态，提供筛选、标签、终端输出搜索，还能在浏览器标签页中单独打开一个终端。">
+<link rel="canonical" href="https://thirstyeggplant.com/zh/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/too-many-terminal-tabs/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="标签页太多时找到要找的终端 | Aubergine">
+<meta property="og:description" content="终端标签页太多，个个都叫 zsh？Aubergine 把每个终端放到画布上和同一个列表里，用文字写出状态，提供筛选、标签、终端输出搜索，还能在浏览器标签页中单独打开一个终端。">
+<meta property="og:url" content="https://thirstyeggplant.com/zh/too-many-terminal-tabs/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine：一张摆满终端的画布，一个正在忙，一个在等你">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine：一张摆满终端的画布，一个正在忙，一个在等你">
+<meta name="twitter:title" content="标签页太多时找到要找的终端 | Aubergine">
+<meta name="twitter:description" content="终端标签页太多，个个都叫 zsh？Aubergine 把每个终端放到画布上和同一个列表里，用文字写出状态，提供筛选、标签、终端输出搜索，还能在浏览器标签页中单独打开一个终端。">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="页面">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">安装</a></li>
+        <li><a href="../guides/">指南</a></li>
+        <li><a href="../security/">安全</a></li>
+        <li><a href="../faq/">常见问题</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="语言: 简体中文"><span class="lang-long" aria-hidden="true">简体中文</span><span class="lang-short" aria-hidden="true">ZH</span></summary>
+      <ul class="menu-list"><li><a href="../../too-many-terminal-tabs/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/too-many-terminal-tabs/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/too-many-terminal-tabs/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/too-many-terminal-tabs/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/too-many-terminal-tabs/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/too-many-terminal-tabs/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="./" hreflang="zh-Hans" lang="zh-Hans" dir="ltr" aria-current="true">简体中文</a></li><li><a href="../../ko/too-many-terminal-tabs/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/too-many-terminal-tabs/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/too-many-terminal-tabs/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/too-many-terminal-tabs/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/too-many-terminal-tabs/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>菜单</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">安装</a></li>
+        <li><a href="../guides/">指南</a></li>
+        <li><a href="../security/">安全</a></li>
+        <li><a href="../faq/">常见问题</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine 本身是英文的：它的按钮、菜单和截图都是英文版。</p>
+    <p>本页由机器从英文翻译而来。<a href="https://github.com/thirstyeggplant/aubergine/issues">提交修正</a>。</p>
+  </div>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/zh/too-many-terminal-tabs/#article",
+      "headline": "终端太多时找到要找的那个",
+      "description": "终端标签页太多，个个都叫 zsh？Aubergine 把每个终端放到画布上和同一个列表里，用文字写出状态，提供筛选、标签、终端输出搜索，还能在浏览器标签页中单独打开一个终端。",
+      "url": "https://thirstyeggplant.com/zh/too-many-terminal-tabs/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/zh/too-many-terminal-tabs/",
+      "datePublished": "2026-11-25",
+      "dateModified": "2026-11-25",
+      "inLanguage": "zh-Hans",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "指南", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "终端太多", "item": "https://thirstyeggplant.com/zh/too-many-terminal-tabs/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/zh/too-many-terminal-tabs/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "如何整理大量终端窗口？", "acceptedAnswer": { "@type": "Answer", "text": "在 Aubergine 中：每项工作一张画布，终端带着名称和颜色并排摆放，相关的用框框起来，再用一个列表看全部终端，以及每个在做什么。" } },
+        { "@type": "Question", "name": "如何找出哪个终端在运行某条命令？", "acceptedAnswer": { "@type": "Answer", "text": "列表上方的输入框会匹配终端的名称、文件夹、命令、笔记和标签，命令面板（⌘K）在所有画布上做同样的事。终端的标题会显示它在运行什么。" } },
+        { "@type": "Question", "name": "能搜索所有终端的输出吗？", "acceptedAnswer": { "@type": "Answer", "text": "能，限于仍在运行的终端：命令面板的 Terminal output 部分会在你搜索时读取每个终端的历史，包括停放的终端，最远到 tmux 保留的范围（50,000 行）。不建立索引，也不做记录。" } },
+        { "@type": "Question", "name": "Aubergine 能处理多少个终端？", "acceptedAnswer": { "@type": "Answer", "text": "没有固定的上限。列表用 1,000 个终端测试过，也人工看过三张各有 90 个终端的画布；每个终端仍然是一个 shell，所以取决于你的电脑能跑多少。" } },
+        { "@type": "Question", "name": "能给终端命名和上色吗？", "acceptedAnswer": { "@type": "Answer", "text": "能。双击终端的标题来重命名，用标题里的圆点从十三种颜色中选一种，或用你自己的颜色。画布也有名称和颜色。" } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="当前位置"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">指南</a></li><li>终端太多</li></ol></nav>
+    <h1>终端太多时找到要找的那个</h1>
+    <p class="lead">二十个标签页，大多叫 zsh，其中三个在运行智能体，其中一个在等你。Aubergine 把每个终端放到画布上，并放进一个写明各自在做什么的列表，让你按终端是什么来找它，而不是按你把它放在了哪里。</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>通常的做法</h2>
+    <p>给标签页或窗口命名（大多数终端应用都可以），把窗口拆成窗格，使用命名的 tmux 会话和窗口，或者让平铺式窗口管理器来摆放。这些能帮你摆放终端；但要找出需要你的那个，还是得一个个去看。</p>
+
+    <h2>Aubergine 做什么</h2>
+    <p><strong>一张画布。</strong>终端并排摆开，每个都是实时的。拖动标题移动，拖动边缘调整大小，双击标题重命名。标题里的圆点可以给它上色；框（<strong>New terminal ▾ → Frame</strong>，或按 <code>G</code>）把终端归到一个标签下，并让它们一起移动。</p>
+    <p><strong>画布和项目。</strong>可以有多张画布，显示为标签页、一个列表或左侧的一列，每张都有自己的地址。项目拥有自己的画布、终端、队列和等待清单；左上角的切换器用于在项目之间切换。</p>
+    <p><strong>所有终端的一个列表。</strong>侧边栏的 <strong>Terminals</strong> 列出每个终端，用文字写出状态（<strong>working</strong>、<strong>waiting for you</strong>、<strong>finished</strong>、失败的命令），以及它所在运行的步骤和最后活跃的时间，范围可以是这张画布或所有画布。顶部的输入框可以按名称、文件夹、命令、笔记或标签查找终端。</p>
+    <p><strong>Filter</strong>（筛选）里有各种筛选条件（waiting for me、busy、unread、has an agent、parked、tags），以及列表的排列方式：按画布分组，或者一个平铺的列表，按画布顺序、最近更新、最近输入或名称排序。</p>
+    <figure class="frame"><a href="../../screenshots/list.png" class="frame-pic"><img src="../../screenshots/list.png" width="1440" height="1008" loading="lazy" alt="侧边栏列出五个终端，并用文字写出各自的状态（working、waiting for you、finished、parked），旁边是画布的一部分，其中有一个实时的 shell。"></a><figcaption>列表说明每个终端在做什么；旁边就是终端本身。</figcaption></figure>
+    <p>画布上方的 <strong>Go to…</strong> 或 <code>⌘K</code> 就是命令面板：输入名称、文件夹、命令或笔记的一部分。它的 <strong>Terminal output</strong> 部分会搜索终端输出过的内容（tmux 为每个终端保留的最后 50,000 行），选中一个结果会打开那个终端并回滚到那里。</p>
+    <p><strong>小地图</strong>（按钮在 <strong>Go to…</strong> 旁边）以缩小的方式显示整张画布，并可以拖动它。<strong>Fit</strong>（<code>F</code>）一次显示全部。</p>
+    <p><strong>终端是做什么用的。</strong>每个终端旁边都有一份笔记（摘要和日志），详情中有标签、链接，以及像 <code>Ticket: DEMO-12</code> 这样的字段。智能体可以用 <code>aubergine</code> 命令写下自己终端的名称、摘要和字段。</p>
+    <p><strong>单独一个终端。</strong>标题里的 <strong>Tab ↗</strong> 会在它专属的浏览器标签页中打开它，地址是 <code>/t/&lt;terminal&gt;</code>，详情和笔记一点即开。</p>
+    <p><code>Tab</code> 和 <code>Shift+Tab</code> 按列表显示的顺序逐个走过终端，<code>W</code> 跳到下一个在等你的终端。</p>
+
+    <h2>它不做什么</h2>
+    <ul>
+      <li><strong>它不会替你排列。</strong>终端待在你放的地方（新终端会放进视图中部附近的空位），并保留你或它的智能体给它起的名字。</li>
+      <li><strong>它不承诺数量。</strong>只有你正在看的画布会保持实时终端：缩得很小时终端显示的是屏幕的图片，在屏幕外时对页面没有任何开销。每个终端仍然是你电脑上的一个 shell。列表在单元测试中用 1,000 个终端测试过（列出、筛选，只绘制一屏的内容），还有一个脚本会在三张画布上放 90 个终端，供人工判断。两者都不是对你电脑的承诺。</li>
+      <li><strong>不显示你终端应用的标签页。</strong><strong>Open elsewhere</strong>（<code>O</code>）会列出在那里打开的终端，并一次一个地把它们搬过来，成为同一文件夹中的新终端。标签页里正在运行的程序留在那个标签页里。</li>
+    </ul>
+
+    <h2>常见问题</h2>
+    <div class="questions">
+      <details><summary>如何整理大量终端窗口？</summary><p>在 Aubergine 中：每项工作一张画布，终端带着名称和颜色并排摆放，相关的用框框起来，再用一个列表看全部终端，以及每个在做什么。</p></details>
+      <details><summary>如何找出哪个终端在运行某条命令？</summary><p>列表上方的输入框会匹配终端的名称、文件夹、命令、笔记和标签，命令面板（<code>⌘K</code>）在所有画布上做同样的事。终端的标题会显示它在运行什么。</p></details>
+      <details><summary>能搜索所有终端的输出吗？</summary><p>能，限于仍在运行的终端：命令面板的 <strong>Terminal output</strong> 部分会在你搜索时读取每个终端的历史，包括停放的终端，最远到 tmux 保留的范围（50,000 行）。不建立索引，也不做记录。</p></details>
+      <details><summary>Aubergine 能处理多少个终端？</summary><p>没有固定的上限。列表用 1,000 个终端测试过，也人工看过三张各有 90 个终端的画布；每个终端仍然是一个 shell，所以取决于你的电脑能跑多少。</p></details>
+      <details><summary>能给终端命名和上色吗？</summary><p>能。双击终端的标题来重命名，用标题里的圆点从十三种颜色中选一种，或用你自己的颜色。画布也有名称和颜色。</p></details>
+    </div>
+    <p>相关：<a href="../claude-code-notifications/">知道 Claude Code 何时在等待</a> · <a href="../keep-process-running-after-closing-terminal/">让进程继续运行</a> · <a href="../run-multiple-coding-agents/">运行多个编程智能体</a></p>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">五分钟上手</h2>
+    <div class="close-do">
+      <p>你需要 macOS，以及 tmux 3.2 或更高版本和 Node.js 22 或更高版本。<code>brew install tmux node</code> 可以一次装好两者。</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="已复制" aria-live="polite" hidden>复制</button></p>
+      <p class="actions"><a class="button" href="../install/">安装</a><a class="button button-quiet" href="../run-multiple-coding-agents/">运行多个智能体</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav aria-label="所有页面">
+      <ul class="foot-links">
+        <li><a href="../">首页</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex 与 ChatGPT</a></li>
+        <li><a href="../install/">安装</a></li>
+        <li><a href="../guides/">指南</a></li>
+        <li><a href="../run-multiple-coding-agents/">运行多个智能体</a></li>
+        <li><a href="../working-copies/">工作副本</a></li>
+        <li><a href="../queue-and-schedules/">队列与定时计划</a></li>
+        <li><a href="../security/">安全</a></li>
+        <li><a href="../roadmap/">路线图</a></li>
+        <li><a href="../faq/">常见问题</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine 免费开源，采用 <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT 许可证</a>，运行在你自己的电脑上。</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    if (!navigator.clipboard) return;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
+});
+</script>
+</body>
+</html>

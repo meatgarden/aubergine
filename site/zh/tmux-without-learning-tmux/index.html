@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="zh-Hans" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>不学 tmux 也能用 tmux | Aubergine</title>
+<meta name="description" content="关掉窗口后依然存在的 shell，不需要前缀键，也不需要 .tmux.conf。Aubergine 在自己的套接字上替你运行 tmux，滚轮、复制粘贴和调整大小都和任何终端一样。">
+<link rel="canonical" href="https://thirstyeggplant.com/zh/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/tmux-without-learning-tmux/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="不学 tmux 也能用 tmux | Aubergine">
+<meta property="og:description" content="关掉窗口后依然存在的 shell，不需要前缀键，也不需要 .tmux.conf。Aubergine 在自己的套接字上替你运行 tmux，滚轮、复制粘贴和调整大小都和任何终端一样。">
+<meta property="og:url" content="https://thirstyeggplant.com/zh/tmux-without-learning-tmux/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine：一张摆满终端的画布，一个正在忙，一个在等你">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine：一张摆满终端的画布，一个正在忙，一个在等你">
+<meta name="twitter:title" content="不学 tmux 也能用 tmux | Aubergine">
+<meta name="twitter:description" content="关掉窗口后依然存在的 shell，不需要前缀键，也不需要 .tmux.conf。Aubergine 在自己的套接字上替你运行 tmux，滚轮、复制粘贴和调整大小都和任何终端一样。">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="页面">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">安装</a></li>
+        <li><a href="../guides/">指南</a></li>
+        <li><a href="../security/">安全</a></li>
+        <li><a href="../faq/">常见问题</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="语言: 简体中文"><span class="lang-long" aria-hidden="true">简体中文</span><span class="lang-short" aria-hidden="true">ZH</span></summary>
+      <ul class="menu-list"><li><a href="../../tmux-without-learning-tmux/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/tmux-without-learning-tmux/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/tmux-without-learning-tmux/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/tmux-without-learning-tmux/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/tmux-without-learning-tmux/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/tmux-without-learning-tmux/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="./" hreflang="zh-Hans" lang="zh-Hans" dir="ltr" aria-current="true">简体中文</a></li><li><a href="../../ko/tmux-without-learning-tmux/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/tmux-without-learning-tmux/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/tmux-without-learning-tmux/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/tmux-without-learning-tmux/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/tmux-without-learning-tmux/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>菜单</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">安装</a></li>
+        <li><a href="../guides/">指南</a></li>
+        <li><a href="../security/">安全</a></li>
+        <li><a href="../faq/">常见问题</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine 本身是英文的：它的按钮、菜单和截图都是英文版。</p>
+    <p>本页由机器从英文翻译而来。<a href="https://github.com/thirstyeggplant/aubergine/issues">提交修正</a>。</p>
+  </div>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/zh/tmux-without-learning-tmux/#article",
+      "headline": "不学 tmux 也能用 tmux",
+      "description": "关掉窗口后依然存在的 shell，不需要前缀键，也不需要 .tmux.conf。Aubergine 在自己的套接字上替你运行 tmux，滚轮、复制粘贴和调整大小都和任何终端一样。",
+      "url": "https://thirstyeggplant.com/zh/tmux-without-learning-tmux/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/zh/tmux-without-learning-tmux/",
+      "datePublished": "2026-11-25",
+      "dateModified": "2026-11-25",
+      "inLanguage": "zh-Hans",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "指南", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "不用 tmux 的 tmux", "item": "https://thirstyeggplant.com/zh/tmux-without-learning-tmux/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/zh/tmux-without-learning-tmux/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "不学快捷键能用 tmux 吗？", "acceptedAnswer": { "@type": "Answer", "text": "能。Aubergine 运行的 tmux 没有前缀键，也没有状态栏，所以你永远不用输入 tmux 命令：关掉标签页就是离开，打开页面就是回来，用滚轮滚动，选中即复制。" } },
+        { "@type": "Question", "name": "Aubergine 会修改我的 tmux 配置吗？", "acceptedAnswer": { "@type": "Answer", "text": "不会。它在自己的套接字 aubergine 上用自己的配置文件运行 tmux。你的 tmux 服务器、它的会话和你的 ~/.tmux.conf 都保持原样。" } },
+        { "@type": "Question", "name": "如何在 Aubergine 的终端里滚动和复制？", "acceptedAnswer": { "@type": "Answer", "text": "点击终端把键盘交给它，然后用滚轮往回滚动。用鼠标选中文字：松开时它就在你的剪贴板里了。用 ⌘V 粘贴，macOS 之外用 Ctrl+Shift+V。" } },
+        { "@type": "Question", "name": "能从我自己的终端应用连接到 Aubergine 的终端吗？", "acceptedAnswer": { "@type": "Answer", "text": "能：aubergine attach \u003cname\u003e，或终端菜单中的 Open on desktop。两处是同一个终端；在一处输入的内容会显示在另一处。" } },
+        { "@type": "Question", "name": "Aubergine 能取代我 SSH 登录的服务器上的 tmux 吗？", "acceptedAnswer": { "@type": "Answer", "text": "不能直接取代：它的终端在它的服务器所在的机器上。它可以运行在服务器上，再通过 SSH 隧道或代理从你的浏览器使用，但这只在容器中运行过，从未在云服务器上运行。" } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="当前位置"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">指南</a></li><li>不用 tmux 的 tmux</li></ol></nav>
+    <h1>不学 tmux 也能用 tmux</h1>
+    <p class="lead">tmux 能在窗口关闭后让你的 shell 继续运行。代价是要学前缀键、复制模式和配置文件。Aubergine 替你运行 tmux，你在浏览器页面里像用任何终端一样使用每个终端。</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>适合谁</h2>
+    <p>适合想要 tmux 带来的东西——关掉窗口后依然存在的 shell——却不想学它的按键和配置的人。如果你已经离不开 tmux，就继续用：Aubergine 不会碰你的 tmux。</p>
+
+    <h2>通常的做法</h2>
+    <p>学 tmux：每条命令前按前缀键（除非你改过，否则是 <code>Ctrl+B</code>），用 <code>tmux attach</code> 回去，再在 <code>~/.tmux.conf</code> 里写几行来支持鼠标和剪贴板。或者用 <code>screen</code>，一个同类的更老的工具。下面是各种日常操作在默认的 tmux 中和在 Aubergine 中的做法：</p>
+    <div class="table">
+      <table class="table-stack">
+        <thead><tr><th>要做的事</th><th>在 tmux 中</th><th>在 Aubergine 中</th></tr></thead>
+        <tbody>
+          <tr><td>让 shell 继续运行并离开</td><td data-label="tmux"><code>Ctrl+B</code> 然后 <code>d</code> 分离</td><td data-label="Aubergine">关掉标签页</td></tr>
+          <tr><td>回到它</td><td data-label="tmux"><code>tmux attach</code></td><td data-label="Aubergine">打开页面</td></tr>
+          <tr><td>往回滚动</td><td data-label="tmux">复制模式，<code>Ctrl+B</code> 然后 <code>[</code></td><td data-label="Aubergine">滚轮</td></tr>
+          <tr><td>复制</td><td data-label="tmux">在复制模式中选择</td><td data-label="Aubergine">用鼠标选择</td></tr>
+          <tr><td>粘贴</td><td data-label="tmux"><code>Ctrl+B</code> 然后 <code>]</code></td><td data-label="Aubergine"><code>⌘V</code> 或 <code>Ctrl+Shift+V</code></td></tr>
+          <tr><td>同时看多个 shell</td><td data-label="tmux">窗口和窗格</td><td data-label="Aubergine">在画布上并排摆放终端</td></tr>
+          <tr><td>给它命名</td><td data-label="tmux"><code>Ctrl+B</code> 然后 <code>,</code></td><td data-label="Aubergine">双击它的标题</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Aubergine 做什么</h2>
+    <p><strong>自己的套接字和自己的配置。</strong>Aubergine 在它自己的、名为 <code>aubergine</code> 的套接字上启动 tmux，用的是它自己的配置文件而不是你的：没有状态栏，没有前缀键，开启鼠标，50,000 行历史。每个终端是一个 tmux 会话，里面是一个 shell，也就是你的登录 shell。你自己的 tmux、它的会话和你的 <code>~/.tmux.conf</code> 都不会被改动。</p>
+    <p>在占着键盘的终端里，<strong>滚轮会往回滚动</strong>；在画布的其他地方，滚轮用于缩放。</p>
+    <p><strong>用鼠标选中，松开时就复制</strong>到你的剪贴板：tmux 用 OSC 52（终端用于剪贴板的转义序列）把选中的内容交给页面，由页面放进剪贴板。用 <code>⌘V</code> 粘贴（macOS 之外用 <code>Ctrl+Shift+V</code>）。多行粘贴会加上括号粘贴标记，所以 shell 不会逐行执行它。</p>
+    <p><strong>拖动来调整大小：</strong>在画布上拖动终端的边缘，shell 就会得到新的尺寸。同时在两处打开的终端只有一个尺寸，由你最后输入的那个视图决定。</p>
+    <p><strong>底层仍然是 tmux。</strong><code>aubergine attach &lt;name&gt;</code> 会在你的终端应用窗口中显示一个终端，终端菜单中的 <strong>Open on desktop</strong>（在桌面上打开）会替你做这件事（macOS 上用 Terminal 或 iTerm；Linux 上用你设置的命令行）。服务器停止时，<code>tmux -L aubergine ls</code> 和 <code>tmux -L aubergine attach -t &lt;id&gt;</code> 依然能连到每个 shell。</p>
+
+    <h2>你需要什么</h2>
+    <p>tmux 3.2 或更高版本，由你自己安装：macOS 上用 <code>brew install tmux</code>，Linux 上用系统的软件包。Aubergine 不会安装它，缺少或版本太旧时会显示一个页面说明。使用 zsh 时，终端标题会显示正在运行的命令以及上一条命令的结束情况；其他 shell 也能运行，只是没有这些。</p>
+
+    <h2>它不是什么</h2>
+    <ul>
+      <li><strong>不是远程服务器上的 tmux。</strong>Aubergine 的 tmux 运行在它的服务器所在的电脑上。对于你通过 SSH 连接的机器上的 shell，那台机器上的 tmux 仍然是该用的工具。Aubergine 本身可以运行在另一台机器上（<a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md">Using Aubergine from elsewhere</a>）；这只在容器中运行过。</li>
+      <li><strong>不显示你自己的 tmux 会话。</strong>画布上只有 Aubergine 的终端。<code>aubergine scan</code> 列出这台电脑上 Aubergine 之外打开的交互式 shell，<code>aubergine import</code> 或 <code>aubergine here</code> 会在画布上为其中一个创建同一文件夹中的新终端；旧终端里正在运行的程序留在原处。<code>aubergine shell-hook print</code> 为你的 <code>.zshrc</code> 提供的那几行在 tmux 里不起作用。</li>
+      <li><strong>没有 tmux 按键，也没有窗格。</strong>没有前缀键，你自己的 tmux 键绑定也不适用。终端占着键盘时，每个按键都交给其中的程序，只有少数几个组合键例外，它们是特意挑选的，任何 shell、编辑器或 tmux 都用不到。</li>
+      <li><strong>不能直接在 Windows 上运行。</strong>它需要 tmux 和 Unix shell；在 Windows 上它运行在 WSL 2 里。参见<a href="../windows/">使用 WSL 的 Windows</a>。</li>
+    </ul>
+
+    <h2>常见问题</h2>
+    <div class="questions">
+      <details><summary>不学快捷键能用 tmux 吗？</summary><p>能。Aubergine 运行的 tmux 没有前缀键，也没有状态栏，所以你永远不用输入 tmux 命令：关掉标签页就是离开，打开页面就是回来，用滚轮滚动，选中即复制。</p></details>
+      <details><summary>Aubergine 会修改我的 tmux 配置吗？</summary><p>不会。它在自己的套接字 <code>aubergine</code> 上用自己的配置文件运行 tmux。你的 tmux 服务器、它的会话和你的 <code>~/.tmux.conf</code> 都保持原样。</p></details>
+      <details><summary>如何在 Aubergine 的终端里滚动和复制？</summary><p>点击终端把键盘交给它，然后用滚轮往回滚动。用鼠标选中文字：松开时它就在你的剪贴板里了。用 <code>⌘V</code> 粘贴，macOS 之外用 <code>Ctrl+Shift+V</code>。</p></details>
+      <details><summary>能从我自己的终端应用连接到 Aubergine 的终端吗？</summary><p>能：<code>aubergine attach &lt;name&gt;</code>，或终端菜单中的 <strong>Open on desktop</strong>。两处是同一个终端；在一处输入的内容会显示在另一处。</p></details>
+      <details><summary>Aubergine 能取代我 SSH 登录的服务器上的 tmux 吗？</summary><p>不能直接取代：它的终端在它的服务器所在的机器上。它可以运行在服务器上，再通过 SSH 隧道或代理从你的浏览器使用，但这只在容器中运行过，从未在云服务器上运行。</p></details>
+    </div>
+    <p>相关：<a href="../keep-process-running-after-closing-terminal/">让进程继续运行</a> · <a href="../keep-terminals-after-restart/">重启之后保留你的终端</a> · <a href="../too-many-terminal-tabs/">终端太多时</a></p>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">五分钟上手</h2>
+    <div class="close-do">
+      <p>你需要 macOS，以及 tmux 3.2 或更高版本和 Node.js 22 或更高版本。<code>brew install tmux node</code> 可以一次装好两者。</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="已复制" aria-live="polite" hidden>复制</button></p>
+      <p class="actions"><a class="button" href="../install/">安装</a><a class="button button-quiet" href="../keep-process-running-after-closing-terminal/">保持运行</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav aria-label="所有页面">
+      <ul class="foot-links">
+        <li><a href="../">首页</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex 与 ChatGPT</a></li>
+        <li><a href="../install/">安装</a></li>
+        <li><a href="../guides/">指南</a></li>
+        <li><a href="../run-multiple-coding-agents/">运行多个智能体</a></li>
+        <li><a href="../working-copies/">工作副本</a></li>
+        <li><a href="../queue-and-schedules/">队列与定时计划</a></li>
+        <li><a href="../security/">安全</a></li>
+        <li><a href="../roadmap/">路线图</a></li>
+        <li><a href="../faq/">常见问题</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine 免费开源，采用 <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT 许可证</a>，运行在你自己的电脑上。</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    if (!navigator.clipboard) return;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
+});
+</script>
+</body>
+</html>

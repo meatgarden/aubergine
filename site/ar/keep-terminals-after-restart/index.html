@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>احتفظ بطرفياتك بعد تعطل أو إعادة تشغيل أو تحديث | Aubergine</title>
+<meta name="description" content="ما يحدث لطرفياتك ووكلاء البرمجة عندما يُغلق المتصفح، وعندما يُعاد تشغيل Aubergine، وعندما يتعطل الحاسوب أو يُعاد تشغيله أو يُحدَّث ليلًا، وكيف تستأنف من حيث توقفت.">
+<link rel="canonical" href="https://thirstyeggplant.com/ar/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/keep-terminals-after-restart/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="احتفظ بطرفياتك بعد تعطل أو إعادة تشغيل أو تحديث | Aubergine">
+<meta property="og:description" content="ما يحدث لطرفياتك ووكلاء البرمجة عندما يُغلق المتصفح، وعندما يُعاد تشغيل Aubergine، وعندما يتعطل الحاسوب أو يُعاد تشغيله أو يُحدَّث ليلًا، وكيف تستأنف من حيث توقفت.">
+<meta property="og:url" content="https://thirstyeggplant.com/ar/keep-terminals-after-restart/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine: لوحة من الطرفيات، إحداها مشغولة وأخرى بانتظارك">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine: لوحة من الطرفيات، إحداها مشغولة وأخرى بانتظارك">
+<meta name="twitter:title" content="احتفظ بطرفياتك بعد تعطل أو إعادة تشغيل أو تحديث | Aubergine">
+<meta name="twitter:description" content="ما يحدث لطرفياتك ووكلاء البرمجة عندما يُغلق المتصفح، وعندما يُعاد تشغيل Aubergine، وعندما يتعطل الحاسوب أو يُعاد تشغيله أو يُحدَّث ليلًا، وكيف تستأنف من حيث توقفت.">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">انتقل إلى محتوى الصفحة</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="الصفحات">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">التثبيت</a></li>
+        <li><a href="../guides/">الأدلة</a></li>
+        <li><a href="../security/">الأمان</a></li>
+        <li><a href="../faq/">الأسئلة الشائعة</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="اللغة: العربية"><span class="lang-long" aria-hidden="true">العربية</span><span class="lang-short" aria-hidden="true">AR</span></summary>
+      <ul class="menu-list"><li><a href="../../keep-terminals-after-restart/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/keep-terminals-after-restart/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/keep-terminals-after-restart/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/keep-terminals-after-restart/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/keep-terminals-after-restart/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/keep-terminals-after-restart/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/keep-terminals-after-restart/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/keep-terminals-after-restart/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/keep-terminals-after-restart/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/keep-terminals-after-restart/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/keep-terminals-after-restart/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="./" hreflang="ar" lang="ar" dir="rtl" aria-current="true">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>القائمة</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">التثبيت</a></li>
+        <li><a href="../guides/">الأدلة</a></li>
+        <li><a href="../security/">الأمان</a></li>
+        <li><a href="../faq/">الأسئلة الشائعة</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>تطبيق Aubergine نفسه باللغة الإنجليزية: أزراره وقوائمه وصوره كلها بالإنجليزية.</p>
+    <p>ترجمت آلةٌ هذه الصفحة عن الإنجليزية. <a href="https://github.com/thirstyeggplant/aubergine/issues">أرسل تصحيحًا</a>.</p>
+  </div>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/ar/keep-terminals-after-restart/#article",
+      "headline": "تبقى طرفياتك حين يُعاد تشغيل حاسوبك",
+      "description": "ما يحدث لطرفياتك ووكلاء البرمجة عندما يُغلق المتصفح، وعندما يُعاد تشغيل Aubergine، وعندما يتعطل الحاسوب أو يُعاد تشغيله أو يُحدَّث ليلًا، وكيف تستأنف من حيث توقفت.",
+      "url": "https://thirstyeggplant.com/ar/keep-terminals-after-restart/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/ar/keep-terminals-after-restart/",
+      "datePublished": "2026-11-25",
+      "dateModified": "2026-11-25",
+      "inLanguage": "ar",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "الأدلة", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "بعد إعادة التشغيل", "item": "https://thirstyeggplant.com/ar/keep-terminals-after-restart/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/ar/keep-terminals-after-restart/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "هل يستطيع Aubergine استعادة طرفياتي بعد إعادة التشغيل؟", "acceptedAnswer": { "@type": "Answer", "text": "نعم، كل شيء إلا ما كان يعمل فيها. تعود كل طرفية إلى مكانها على اللوحة باسمها ولونها وملاحظتها ووسومها وحقولها وروابطها، صدفةً جديدة في آخر مجلد لها. ولا تُشغَّل البرامج التي كانت تعمل فيها من جديد؛ ومع Claude Code يتابع Resume agent المحادثة." } },
+        { "@type": "Question", "name": "هل يحتفظ Aubergine بمخرجات طرفيتي وسجلها؟", "acceptedAnswer": { "@type": "Answer", "text": "المخرجات، ما دامت الصدفة تعمل فقط: يحتفظ tmux بـ 50,000 سطر من سجل تمرير كل طرفية، وإغلاق المتصفح أو إعادة تشغيل Aubergine لا يُضيّع منه شيئًا. وبعد إعادة تشغيل الحاسوب يضيع، لأن Aubergine لا يسجّل مخرجات الطرفيات. أما سجل الأوامر التي كتبتها، الذي يعيده السهم العلوي، فهو ملف صدفتك نفسها، وتحفظه صدفتك كعادتها." } },
+        { "@type": "Question", "name": "هل تبقى محادثتي في Claude Code بعد إعادة التشغيل؟", "acceptedAnswer": { "@type": "Answer", "text": "المحادثة، نعم: يحفظها Claude Code في ملفاته، ويتذكر Aubergine المحادثة التي كانت فيها كل طرفية. وبعد إعادة التشغيل، يشغّل Resume agent في شريط عنوان الطرفية Claude Code من جديد في تلك المحادثة. أما ما كان الوكيل يفعله في تلك اللحظة فقد توقف، ولا يُعاد حتى تطلب." } },
+        { "@type": "Question", "name": "هل يعمل حين يحدّث macOS نفسه ليلًا؟", "acceptedAnswer": { "@type": "Answer", "text": "التحديث الذي يعيد تشغيل الحاسوب إعادة تشغيل كغيرها: تنتهي البرامج العاملة ويبقى كل ما سواها. ومع البدء عند تسجيل الدخول (aubergine service install) يعود الخادم إلى العمل بمجرد أن تسجّل الدخول، وتكون اللوحة بانتظارك. شوهدت الأصداف الجديدة في آخر مجلداتها عند إعادة تشغيل حاوية لـ Aubergine؛ ولم يُجرَّب تحديث ليلي حقيقي لـ macOS." } },
+        { "@type": "Question", "name": "هل أحتاج إلى معرفة tmux؟", "acceptedAnswer": { "@type": "Answer", "text": "لا. يجب أن يكون مثبّتًا (3.2 أو أحدث)، ويشغّله Aubergine على مقبس خاص به بإعداداته الخاصة، بلا شريط حالة ولا مفتاح بادئة، فلا تكتب أي أمر لـ tmux. وtmux الخاص بك، إن كنت تستخدمه، لا يُمَس." } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="أين أنت"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">الأدلة</a></li><li>بعد إعادة التشغيل</li></ol></nav>
+    <h1>تبقى طرفياتك حين يُعاد تشغيل حاسوبك</h1>
+    <p class="lead">إغلاق المتصفح أو إعادة تشغيل Aubergine لا يُضيّع شيئًا: كل طرفية تبقى تعمل. أما إعادة تشغيل الحاسوب فتُنهي ما كان يعمل، ويعيد Aubergine كل ما حوله، فتستأنف من حيث توقفت بدل أن تبدأ من الصفر.</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>ماذا يحدث حين…</h2>
+    <p>كل طرفية صدفة في جلسة tmux، تعمل منفصلة عن المتصفح وعن خادم Aubergine. وما تحمله في مكانين: الصدفة العاملة، ولا يحفظها إلا tmux، وكل ما يُقال عن الطرفية، ويكتبه Aubergine في ملف داخل مجلد بياناته عند كل تغيير.</p>
+    <div class="table">
+      <table class="table-stack">
+        <thead><tr><th>ماذا</th><th>يُغلق المتصفح أو يتعطل أو يُحدَّث، أو تُغلق التبويب</th><th>يتوقف Aubergine أو يُعاد تشغيله أو يُحدَّث</th><th>يتعطل الحاسوب أو يُعاد تشغيله أو يثبّت تحديثًا</th></tr></thead>
+        <tbody>
+          <tr><td>البرامج والوكلاء العاملة</td><td data-label="أُغلق المتصفح">تبقى تعمل</td><td data-label="أُعيد تشغيل Aubergine">تبقى تعمل</td><td data-label="أُعيد تشغيل الحاسوب">تنتهي</td></tr>
+          <tr><td>ما كانت الطرفية تعرضه (سجل التمرير)</td><td data-label="أُغلق المتصفح">باقٍ</td><td data-label="أُعيد تشغيل Aubergine">باقٍ</td><td data-label="أُعيد تشغيل الحاسوب">يضيع</td></tr>
+          <tr><td>مكانها على اللوحة، واسمها، ولونها، ووسومها، وحقولها، وروابطها</td><td data-label="أُغلق المتصفح">باقٍ</td><td data-label="أُعيد تشغيل Aubergine">باقٍ</td><td data-label="أُعيد تشغيل الحاسوب">باقٍ</td></tr>
+          <tr><td>ملاحظتها: الملخص والسجل</td><td data-label="أُغلق المتصفح">باقٍ</td><td data-label="أُعيد تشغيل Aubergine">باقٍ</td><td data-label="أُعيد تشغيل الحاسوب">باقٍ</td></tr>
+          <tr><td>المجلد الذي كانت فيه</td><td data-label="أُغلق المتصفح">باقٍ</td><td data-label="أُعيد تشغيل Aubergine">باقٍ</td><td data-label="أُعيد تشغيل الحاسوب">صدفة جديدة في المجلد نفسه</td></tr>
+          <tr><td>محادثة الوكيل</td><td data-label="أُغلق المتصفح">تستمر</td><td data-label="أُعيد تشغيل Aubergine">تستمر</td><td data-label="أُعيد تشغيل الحاسوب">يتابعها <strong>Resume agent</strong> (Claude Code)</td></tr>
+          <tr><td>نسخ العمل وفروعها</td><td data-label="أُغلق المتصفح">باقٍ</td><td data-label="أُعيد تشغيل Aubergine">باقٍ</td><td data-label="أُعيد تشغيل الحاسوب">باقٍ</td></tr>
+          <tr><td>قائمة الانتظار والتشغيلات والجداول</td><td data-label="أُغلق المتصفح">باقٍ</td><td data-label="أُعيد تشغيل Aubergine">باقٍ؛ والوقت الذي فات يُشغَّل متأخرًا</td><td data-label="أُعيد تشغيل الحاسوب">باقٍ؛ والوقت الذي فات يُشغَّل متأخرًا</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">الطرفية المركونة تُحفظ بالطريقة نفسها وتحصل على صدفة جديدة أيضًا. والطرفية التي انتهت صدفتها من قبل تبقى منتهية، ومعها <strong>Restart here</strong>.</p>
+    <p>بعد التحديث، تحتفظ الطرفية التي كانت مفتوحة بما بدأت به صدفتها (<code>PATH</code> الخاص بها وتكامل Aubergine مع الصدفة) حتى تُبدأ تلك الصدفة من جديد. وإن كان Aubergine يبدأ عند تسجيل الدخول، فشغّل <code>aubergine service install</code> مرة أخرى بعد التحديث بدل إعادة تشغيل الخادم يدويًا.</p>
+
+    <h2>بعد إعادة التشغيل: إلى العمل</h2>
+    <ol class="seq">
+      <li><p><strong>شغّل Aubergine.</strong> إن كان يبدأ عند تسجيل الدخول (<code>aubergine service install</code>، على macOS فقط)، فهو يعمل بمجرد أن تسجّل الدخول، ويعيد launchd تشغيله إن توقف. وإلا فشغّله وافتح الصفحة:</p>
+        <p class="cmd"><code>aubergine start --open</code><button type="button" class="copy" data-copy data-copied="تم النسخ" aria-live="polite" hidden>نسخ</button></p></li>
+      <li><p><strong>اللوحة كما تركتها.</strong> كل طرفية في مكانها باسمها ولونها ووسومها وحقولها وروابطها وملاحظتها، وهي الآن صدفة جديدة في آخر مجلد رآها Aubergine فيه، أو في مجلدك الافتراضي إن لم يعد ذلك المجلد موجودًا. لا يُكتب شيء ولا يُشغَّل من جديد.</p></li>
+      <li><p><strong>استأنف وكلاءك.</strong> حيث كان Claude Code يعمل ويعرف Aubergine محادثته (شُغّل من Aubergine)، يعرض شريط عنوان الطرفية <strong>Resume agent</strong>: يشغّل Claude Code من جديد في تلك المحادثة. وفي طرفية مرتبطة بتشغيل لسير عمل، يخبر الوكيل بالتشغيل من جديد أيضًا، فيتابع من الخطوة التي بلغها التشغيل.</p></li>
+      <li><p><strong>اعرف أين توقفت كل طرفية.</strong> يعرض <strong>Details</strong> في عنوان الطرفية ما هو معروف عنها (خطوة التشغيل وآخر تقرير له، والمجلد، والوسوم)، وملخصها، وحقولها وروابطها، وسجلها تحت <strong>Log</strong>. وتمرير المؤشر على اسم طرفية في القائمة يعرض ملخص حالتها.</p></li>
+      <li><p><strong>اعثر على محادثة ليست على اللوحة.</strong> يسرد <strong>Past conversations…</strong> في لوحة الأوامر (<code>⌘K</code>)، أو «Past conversations in this folder…‎» في تفاصيل الطرفية، محادثات Claude Code السابقة في مجلد، ويفتح إحداها على اللوحة.</p></li>
+    </ol>
+    <p>أي وكيل آخر ليس له <strong>Resume agent</strong>، لأن Aubergine لا يعرف محادثته: شغّله من جديد في الطرفية نفسها بطريقة الاستئناف الخاصة بذلك الوكيل، واقرأ الملاحظة لتخبره أين توقف.</p>
+    <figure class="frame"><a href="../../screenshots/focus-part.png" class="frame-pic"><img src="../../screenshots/focus-part.png" width="1344" height="1172" loading="lazy" alt="طرفية واحدة وحدها في علامة تبويب في المتصفح: اسمها في الرأس، وتفاصيلها مع خطوة سير العمل ومجلدها وحقولها، والطرفية الحيّة بجانبها."></a><figcaption>تفاصيل طرفية: خطوة التشغيل وآخر تقرير له، والمجلد، والوسوم، والحقول. كل ذلك يبقى بعد إعادة تشغيل الحاسوب؛ أما الطرفية الحية بجانبها فلا.</figcaption></figure>
+
+    <h2>ما الذي يضيع، وما العمل</h2>
+    <ul>
+      <li><strong>ما كان يعمل ينتهي.</strong> البناء أو الاختبارات أو الخادم أو الوكيل في منتصف عمله يتوقف مع الحاسوب، ولا يعيد Aubergine تشغيل أي منها من تلقاء نفسه. أعد تشغيلها بنفسك؛ والمهمة التي يجب أن تتجاوز إعادة التشغيل مكانها شيء صُنع لذلك، مثل خدمة في نظامك.</li>
+      <li><strong>العمل الذي يتتبعه Aubergine ينتظرك.</strong> يحتفظ تشغيل سير العمل بخطوته وبكل تقرير سُلّم. وتحتفظ مهام قائمة الانتظار بمكانها؛ والمهمة التي كانت تبدأ لحظة توقف الخادم تُعلَّم بأنها فشلت، مع جملة، ولا يُعاد تجريب شيء من تلقاء نفسه. ووقت الجدول الذي فات والخادم متوقف يُشغَّل مرة واحدة، متأخرًا، إن لم يمضِ عليه ست ساعات (<code>schedules.lateWithinHours</code>)، وإلا يُعلَّم بأنه فائت.</li>
+      <li><strong>سجل التمرير يضيع.</strong> ما دامت الصدفة تعمل، يحتفظ tmux بآخر 50,000 سطر طبعتها، ويقرؤها البحث في لوحة الأوامر. ولا يسجّل Aubergine ما تطبعه الطرفية، فلا يبقى بعد إعادة تشغيل الحاسوب ما يُستعاد، ولا يجد البحث إلا ما طُبع بعد ذلك.</li>
+      <li><strong>«في غيابك» يبدأ من جديد.</strong> يُحفظ في ذاكرة الخادم لا في ملف، فلا يعرف بعد بدء الخادم إلا ما تغيّر منذ ذلك الحين، ويقول ذلك.</li>
+    </ul>
+
+    <h2>العادة التي تجعل إعادة التشغيل رخيصة</h2>
+    <p>الملاحظة هي ما يبقى، فاجعل الوكلاء يكتبون فيها أولًا بأول: قرارًا، أو نتيجة، أو أين توقفوا. وفي Claude Code الذي شُغّل من Aubergine تُضاف كل رسالة ترسلها إلى السجل تلقائيًا، ويُطلب منه في البداية أن يسمّي طرفيته ويحافظ على ملخصها. وأي وكيل يستطيع فعل الشيء نفسه بهذه الأوامر، التي يشرحها له <code>aubergine guide</code>:</p>
+    <pre><code>aubergine note "Tests pass on the branch. The migration is not written yet."
+aubergine describe --summary "Fixing the double redirect at sign-in"</code></pre>
+    <p>قبل أن تنهي يومك، اضغط <strong>Ask its agent for a recap</strong> في تفاصيل الطرفية: يكتب الوكيل أين وصل بالأمر <code>aubergine recap --write</code>، ويُحفظ الملخص مع الطرفية.</p>
+
+    <h2>إغلاق الحاسوب المحمول، والسكون، والمتصفح</h2>
+    <ul>
+      <li><strong>السكون ليس إعادة تشغيل.</strong> إغلاق غطاء الحاسوب المحمول يضعه عادةً في السكون: تتوقف البرامج مؤقتًا وتتابع حين يستيقظ، ولا يحدث شيء مما في العمود الأخير من الجدول. ولا يُبقي Aubergine الحاسوب مستيقظًا ولا يوقظه، فالجدول الذي فات وقته أثناء السكون يُشغَّل متأخرًا، أو يفوت، كما سبق.</li>
+      <li><strong>إغلاق المتصفح أو تبويب أو نافذته</strong>، أو تحديث للمتصفح يعيد تشغيله، لا ينهي شيئًا. افتح الصفحة من جديد (<code>aubergine open</code> يفتحها مع تسجيل الدخول) فتُرسم كل طرفية من tmux كما هي الآن. والصفحة التي تُركت مفتوحة تعيد الاتصال وحدها حين يعود الخادم.</li>
+      <li><strong>إغلاق النافذة التي يعمل فيها <code>aubergine start</code></strong>، أو الضغط على Ctrl+C فيها، يوقف الخادم ولا شيء غيره: العمود الأوسط من الجدول.</li>
+      <li><strong>على Windows مع WSL</strong>، توقف WSL، لأن Windows أُعيد تشغيله أو بعد <code>wsl --shutdown</code>، هو إعادة تشغيل للحاسوب بالنسبة إلى Aubergine. راجع <a href="../windows/">Windows مع WSL</a>.</li>
+    </ul>
+
+    <h2>أسئلة</h2>
+    <div class="questions">
+      <details><summary>هل يستطيع Aubergine استعادة طرفياتي بعد إعادة التشغيل؟</summary><p>نعم، كل شيء إلا ما كان يعمل فيها. تعود كل طرفية إلى مكانها على اللوحة باسمها ولونها وملاحظتها ووسومها وحقولها وروابطها، صدفةً جديدة في آخر مجلد لها. ولا تُشغَّل البرامج التي كانت تعمل فيها من جديد؛ ومع Claude Code يتابع <strong>Resume agent</strong> المحادثة.</p></details>
+      <details><summary>هل يحتفظ Aubergine بمخرجات طرفيتي وسجلها؟</summary><p>المخرجات، ما دامت الصدفة تعمل فقط: يحتفظ tmux بـ 50,000 سطر من سجل تمرير كل طرفية، وإغلاق المتصفح أو إعادة تشغيل Aubergine لا يُضيّع منه شيئًا. وبعد إعادة تشغيل الحاسوب يضيع، لأن Aubergine لا يسجّل مخرجات الطرفيات. أما سجل الأوامر التي كتبتها، الذي يعيده السهم العلوي، فهو ملف صدفتك نفسها، وتحفظه صدفتك كعادتها.</p></details>
+      <details><summary>هل تبقى محادثتي في Claude Code بعد إعادة التشغيل؟</summary><p>المحادثة، نعم: يحفظها Claude Code في ملفاته، ويتذكر Aubergine المحادثة التي كانت فيها كل طرفية. وبعد إعادة التشغيل، يشغّل <strong>Resume agent</strong> في شريط عنوان الطرفية Claude Code من جديد في تلك المحادثة. أما ما كان الوكيل يفعله في تلك اللحظة فقد توقف، ولا يُعاد حتى تطلب.</p></details>
+      <details><summary>هل يعمل حين يحدّث macOS نفسه ليلًا؟</summary><p>التحديث الذي يعيد تشغيل الحاسوب إعادة تشغيل كغيرها: تنتهي البرامج العاملة ويبقى كل ما سواها. ومع البدء عند تسجيل الدخول (<code>aubergine service install</code>) يعود الخادم إلى العمل بمجرد أن تسجّل الدخول، وتكون اللوحة بانتظارك. شوهدت الأصداف الجديدة في آخر مجلداتها عند إعادة تشغيل حاوية لـ Aubergine؛ ولم يُجرَّب تحديث ليلي حقيقي لـ macOS.</p></details>
+      <details><summary>هل أحتاج إلى معرفة tmux؟</summary><p>لا. يجب أن يكون مثبّتًا (3.2 أو أحدث)، ويشغّله Aubergine على مقبس خاص به بإعداداته الخاصة، بلا شريط حالة ولا مفتاح بادئة، فلا تكتب أي أمر لـ tmux. وtmux الخاص بك، إن كنت تستخدمه، لا يُمَس.</p></details>
+    </div>
+    <p>ذو صلة: <a href="../claude/">Claude Code في Aubergine</a> · <a href="../queue-and-schedules/">قائمة الانتظار والجداول</a> · <a href="../working-copies/">نسخ العمل</a></p>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">جاهز للعمل في خمس دقائق</h2>
+    <div class="close-do">
+      <p>تحتاج إلى macOS مع tmux 3.2 أو أحدث، ومعه Node.js 22 أو أحدث. الأمر <code>brew install tmux node</code> يثبّت الاثنين.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="تم النسخ" aria-live="polite" hidden>نسخ</button></p>
+      <p class="actions"><a class="button" href="../install/">التثبيت</a><a class="button button-quiet" href="../run-multiple-coding-agents/">تشغيل عدة وكلاء</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav aria-label="كل الصفحات">
+      <ul class="foot-links">
+        <li><a href="../">الرئيسية</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex و ChatGPT</a></li>
+        <li><a href="../install/">التثبيت</a></li>
+        <li><a href="../guides/">الأدلة</a></li>
+        <li><a href="../run-multiple-coding-agents/">تشغيل عدة وكلاء</a></li>
+        <li><a href="../working-copies/">نسخ العمل</a></li>
+        <li><a href="../queue-and-schedules/">الطابور والجداول الزمنية</a></li>
+        <li><a href="../security/">الأمان</a></li>
+        <li><a href="../roadmap/">خارطة الطريق</a></li>
+        <li><a href="../faq/">الأسئلة الشائعة</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine مجاني ومفتوح المصدر بموجب <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">رخصة MIT</a>، ويعمل على حاسوبك أنت.</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    if (!navigator.clipboard) return;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
+});
+</script>
+</body>
+</html>

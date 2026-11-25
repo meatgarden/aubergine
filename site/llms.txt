@@ -17,6 +17,13 @@
 - [Install on Windows with WSL](https://thirstyeggplant.com/windows/): Aubergine inside WSL 2, used from a Windows browser; the Linux steps were run in a container, nothing on Windows yet
 - [Run several coding agents at once](https://thirstyeggplant.com/run-multiple-coding-agents/)
 - [Working copies](https://thirstyeggplant.com/working-copies/): an agent per checkout and branch
+- [Keep your terminals after a restart](https://thirstyeggplant.com/keep-terminals-after-restart/): what closing the browser, restarting Aubergine and restarting the computer each keep, what is lost, and how to pick up where you were
+- [Keep a process running after you close the terminal](https://thirstyeggplant.com/keep-process-running-after-closing-terminal/): nohup, disown, screen and tmux, and what Aubergine does: every terminal is a shell in tmux, so closing the browser or stopping Aubergine ends nothing; a restart of the computer does
+- [Know when Claude Code is done or waiting for you](https://thirstyeggplant.com/claude-code-notifications/): working, waiting for you and finished from hooks Aubergine generates, the For you count, the next waiting key, notifications from the open page; no sound, nothing while no page is open
+- [Resume a Claude Code conversation after a restart](https://thirstyeggplant.com/resume-claude-code-session/): claude --continue and --resume, Resume agent on the terminal a conversation ran in, past conversations in a folder, and what is read from Claude Code's own records
+- [Find the right terminal when you have too many](https://thirstyeggplant.com/too-many-terminal-tabs/): the canvas, canvases and projects, one list of every terminal with its state in words, filters, tags, search of terminal output, and what was measured
+- [tmux without learning tmux](https://thirstyeggplant.com/tmux-without-learning-tmux/): Aubergine runs tmux on its own socket with its own configuration: no prefix key, the wheel, copy and paste as in any terminal; your own tmux untouched; tmux 3.2 or newer needed
+- [Check on your agents from your phone](https://thirstyeggplant.com/check-agents-from-your-phone/): reaching Aubergine from another device: HTTPS on the same computer, an address in the settings, devices paired with a code; run once on one Mac, not tried on a real phone
 - [The queue, For you and schedules](https://thirstyeggplant.com/queue-and-schedules/)
 - [Security and privacy](https://thirstyeggplant.com/security/): what is and is not protected
 - [Roadmap](https://thirstyeggplant.com/roadmap/): planned, not built

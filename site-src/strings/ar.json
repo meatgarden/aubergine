@@ -404,8 +404,8 @@
     "from": "2c75df8acfc1"
   },
   "home.trust.outlive.text": {
-    "text": "كل طرفية جلسة tmux: أغلق المتصفح أو أعد تشغيل Aubergine ويبقى عملك قائمًا.",
-    "from": "f913c3351663"
+    "text": "كل طرفية جلسة tmux: <a href=\"/keep-terminals-after-restart/\">أغلق المتصفح أو أعد تشغيل Aubergine ويبقى عملك قائمًا</a>.",
+    "from": "94905c3b891e"
   },
   "home.trust.nomodel.name": {
     "text": "لا نموذج ولا مفتاح",
@@ -1319,6 +1319,62 @@
     "text": "أعطِ كل وكيل نسخته المسحوبة وفرعه الخاصين، فلا يعدّل وكيلان الملفات نفسها أبدًا.",
     "from": "58872d0caca2"
   },
+  "guides.keep.name": {
+    "text": "احتفظ بطرفياتك بعد إعادة التشغيل",
+    "from": "6cfa04f7c3ab"
+  },
+  "guides.keep.text": {
+    "text": "ما يحفظه إغلاق المتصفح، وإعادة تشغيل Aubergine، وإعادة تشغيل الحاسوب، وكيف تستأنف من حيث توقفت.",
+    "from": "396ced3608bc"
+  },
+  "guides.alive.name": {
+    "text": "أبقِ عملية تعمل بعد إغلاق الطرفية",
+    "from": "0a69e88f3c29"
+  },
+  "guides.alive.text": {
+    "text": "أغلق التبويب أو النافذة أو المتصفح ولا ينتهي شيء: ما يقدّمه tmux، دون أن تتعلّم tmux.",
+    "from": "fc7a604b47b9"
+  },
+  "guides.notify.name": {
+    "text": "اعرف متى ينتهي Claude Code أو ينتظرك",
+    "from": "3cd5aea79b1d"
+  },
+  "guides.notify.text": {
+    "text": "يعمل، وبانتظارك، وانتهى على كل طرفية، وعدد For you، ومفتاح للطرفية التالية التي تنتظر، والإشعارات في الصفحة المفتوحة.",
+    "from": "6cbbad6859df"
+  },
+  "guides.resume.name": {
+    "text": "استأنف محادثة Claude Code",
+    "from": "92e5ad9c0015"
+  },
+  "guides.resume.text": {
+    "text": "Resume agent على الطرفية التي عمل فيها، والمحادثات السابقة في مجلد، وما يخبرك أين توقف.",
+    "from": "0058e15394a7"
+  },
+  "guides.many.name": {
+    "text": "اعثر على الطرفية الصحيحة حين تكثر طرفياتك",
+    "from": "9d8e670c6407"
+  },
+  "guides.many.text": {
+    "text": "لوحة، وقائمة واحدة بكل طرفية وحالتها بالكلمات، ومرشّحات، ووسوم، وبحث فيما طبعته الطرفيات.",
+    "from": "789065caea35"
+  },
+  "guides.tmux.name": {
+    "text": "tmux دون أن تتعلّم tmux",
+    "from": "c661725dc167"
+  },
+  "guides.tmux.text": {
+    "text": "أصداف تبقى بعد إغلاق النافذة، بلا مفتاح بادئة ولا إعدادات، ودون المساس بـ tmux الخاص بك.",
+    "from": "6875107241dd"
+  },
+  "guides.phone.name": {
+    "text": "اطّلع على وكلائك من هاتفك",
+    "from": "c92463ac8872"
+  },
+  "guides.phone.text": {
+    "text": "الوصول إلى Aubergine من جهاز آخر، وكل جهاز يُقرَن برمز. شُغّل مرة واحدة على جهاز Mac واحد؛ ولم يُجرَّب على هاتف حقيقي.",
+    "from": "fbe08c88ab0c"
+  },
   "guides.queue.name": {
     "text": "الطابور وFor you والجداول الزمنية",
     "from": "61c48ccc941d"
@@ -1630,6 +1686,1198 @@
   "copies.ld.a4": {
     "text": "لا. تُبقي الأعمال منفصلة؛ لكنها لا تحبس الوكيل. الوكيل يعمل باسمك ولا يزال يستطيع قراءة وتغيير كل ملف تستطيعه.",
     "from": "8b760eb225ac"
+  },
+  "keep.table.browserShort": {
+    "text": "أُغلق المتصفح",
+    "from": "6a63c6750f2a"
+  },
+  "keep.table.serverShort": {
+    "text": "أُعيد تشغيل Aubergine",
+    "from": "88d2ef622400"
+  },
+  "keep.table.computerShort": {
+    "text": "أُعيد تشغيل الحاسوب",
+    "from": "515aa3442054"
+  },
+  "keep.meta.title": {
+    "text": "احتفظ بطرفياتك بعد تعطل أو إعادة تشغيل أو تحديث | Aubergine",
+    "from": "d0521ba83d02"
+  },
+  "keep.meta.description": {
+    "text": "ما يحدث لطرفياتك ووكلاء البرمجة عندما يُغلق المتصفح، وعندما يُعاد تشغيل Aubergine، وعندما يتعطل الحاسوب أو يُعاد تشغيله أو يُحدَّث ليلًا، وكيف تستأنف من حيث توقفت.",
+    "from": "4f824d2bcf4e"
+  },
+  "keep.crumb": {
+    "text": "بعد إعادة التشغيل",
+    "from": "b287f32fbfcc"
+  },
+  "keep.title": {
+    "text": "تبقى طرفياتك حين يُعاد تشغيل حاسوبك",
+    "from": "be3fd58999ae"
+  },
+  "keep.lead": {
+    "text": "إغلاق المتصفح أو إعادة تشغيل Aubergine لا يُضيّع شيئًا: كل طرفية تبقى تعمل. أما إعادة تشغيل الحاسوب فتُنهي ما كان يعمل، ويعيد Aubergine كل ما حوله، فتستأنف من حيث توقفت بدل أن تبدأ من الصفر.",
+    "from": "a30f93263e44"
+  },
+  "keep.table.title": {
+    "text": "ماذا يحدث حين…",
+    "from": "2e3d1d162e51"
+  },
+  "keep.table.intro": {
+    "text": "كل طرفية صدفة في جلسة tmux، تعمل منفصلة عن المتصفح وعن خادم Aubergine. وما تحمله في مكانين: الصدفة العاملة، ولا يحفظها إلا tmux، وكل ما يُقال عن الطرفية، ويكتبه Aubergine في ملف داخل مجلد بياناته عند كل تغيير.",
+    "from": "ee20243273bd"
+  },
+  "keep.table.thing": {
+    "text": "ماذا",
+    "from": "f8cf83a76a98"
+  },
+  "keep.table.browser": {
+    "text": "يُغلق المتصفح أو يتعطل أو يُحدَّث، أو تُغلق التبويب",
+    "from": "0a7d90fd549e"
+  },
+  "keep.table.server": {
+    "text": "يتوقف Aubergine أو يُعاد تشغيله أو يُحدَّث",
+    "from": "1c6408e3eb21"
+  },
+  "keep.table.computer": {
+    "text": "يتعطل الحاسوب أو يُعاد تشغيله أو يثبّت تحديثًا",
+    "from": "321c23263fa9"
+  },
+  "keep.row.running": {
+    "text": "البرامج والوكلاء العاملة",
+    "from": "aa6584073938"
+  },
+  "keep.row.scrollback": {
+    "text": "ما كانت الطرفية تعرضه (سجل التمرير)",
+    "from": "ae850a03d2bb"
+  },
+  "keep.row.place": {
+    "text": "مكانها على اللوحة، واسمها، ولونها، ووسومها، وحقولها، وروابطها",
+    "from": "d8942ea955fb"
+  },
+  "keep.row.note": {
+    "text": "ملاحظتها: الملخص والسجل",
+    "from": "bd09d21420fd"
+  },
+  "keep.row.folder": {
+    "text": "المجلد الذي كانت فيه",
+    "from": "93d6eac7960d"
+  },
+  "keep.row.agent": {
+    "text": "محادثة الوكيل",
+    "from": "edc534789af1"
+  },
+  "keep.row.copies": {
+    "text": "نسخ العمل وفروعها",
+    "from": "5d15d9f5fde9"
+  },
+  "keep.row.queue": {
+    "text": "قائمة الانتظار والتشغيلات والجداول",
+    "from": "862df801acb6"
+  },
+  "keep.cell.runs": {
+    "text": "تبقى تعمل",
+    "from": "8b35a116c9a8"
+  },
+  "keep.cell.ends": {
+    "text": "تنتهي",
+    "from": "361e48d0308f"
+  },
+  "keep.cell.there": {
+    "text": "باقٍ",
+    "from": "007cce612ae7"
+  },
+  "keep.cell.gone": {
+    "text": "يضيع",
+    "from": "283bb9deef02"
+  },
+  "keep.cell.fresh": {
+    "text": "صدفة جديدة في المجلد نفسه",
+    "from": "0897ff42a469"
+  },
+  "keep.cell.goes": {
+    "text": "تستمر",
+    "from": "d17f7dd93885"
+  },
+  "keep.cell.resume": {
+    "text": "يتابعها <strong>Resume agent</strong> (Claude Code)",
+    "from": "b65d3c8c86df"
+  },
+  "keep.cell.late": {
+    "text": "باقٍ؛ والوقت الذي فات يُشغَّل متأخرًا",
+    "from": "0c5a51a9cc07"
+  },
+  "keep.table.parked": {
+    "text": "الطرفية المركونة تُحفظ بالطريقة نفسها وتحصل على صدفة جديدة أيضًا. والطرفية التي انتهت صدفتها من قبل تبقى منتهية، ومعها <strong>Restart here</strong>.",
+    "from": "6ccfc616c13e"
+  },
+  "keep.table.update": {
+    "text": "بعد التحديث، تحتفظ الطرفية التي كانت مفتوحة بما بدأت به صدفتها (<code>PATH</code> الخاص بها وتكامل Aubergine مع الصدفة) حتى تُبدأ تلك الصدفة من جديد. وإن كان Aubergine يبدأ عند تسجيل الدخول، فشغّل <code>aubergine service install</code> مرة أخرى بعد التحديث بدل إعادة تشغيل الخادم يدويًا.",
+    "from": "fb1239269602"
+  },
+  "keep.back.title": {
+    "text": "بعد إعادة التشغيل: إلى العمل",
+    "from": "8a4d5f07f8a6"
+  },
+  "keep.back.start": {
+    "text": "<strong>شغّل Aubergine.</strong> إن كان يبدأ عند تسجيل الدخول (<code>aubergine service install</code>، على macOS فقط)، فهو يعمل بمجرد أن تسجّل الدخول، ويعيد launchd تشغيله إن توقف. وإلا فشغّله وافتح الصفحة:",
+    "from": "caf3ca498329"
+  },
+  "keep.back.canvas": {
+    "text": "<strong>اللوحة كما تركتها.</strong> كل طرفية في مكانها باسمها ولونها ووسومها وحقولها وروابطها وملاحظتها، وهي الآن صدفة جديدة في آخر مجلد رآها Aubergine فيه، أو في مجلدك الافتراضي إن لم يعد ذلك المجلد موجودًا. لا يُكتب شيء ولا يُشغَّل من جديد.",
+    "from": "9354ae2c51e0"
+  },
+  "keep.back.resume": {
+    "text": "<strong>استأنف وكلاءك.</strong> حيث كان Claude Code يعمل ويعرف Aubergine محادثته (شُغّل من Aubergine)، يعرض شريط عنوان الطرفية <strong>Resume agent</strong>: يشغّل Claude Code من جديد في تلك المحادثة. وفي طرفية مرتبطة بتشغيل لسير عمل، يخبر الوكيل بالتشغيل من جديد أيضًا، فيتابع من الخطوة التي بلغها التشغيل.",
+    "from": "dadde3e3c41f"
+  },
+  "keep.back.read": {
+    "text": "<strong>اعرف أين توقفت كل طرفية.</strong> يعرض <strong>Details</strong> في عنوان الطرفية ما هو معروف عنها (خطوة التشغيل وآخر تقرير له، والمجلد، والوسوم)، وملخصها، وحقولها وروابطها، وسجلها تحت <strong>Log</strong>. وتمرير المؤشر على اسم طرفية في القائمة يعرض ملخص حالتها.",
+    "from": "93f57bf9eb94"
+  },
+  "keep.back.history": {
+    "text": "<strong>اعثر على محادثة ليست على اللوحة.</strong> يسرد <strong>Past conversations…</strong> في لوحة الأوامر (<code>⌘K</code>)، أو «Past conversations in this folder…‎» في تفاصيل الطرفية، محادثات Claude Code السابقة في مجلد، ويفتح إحداها على اللوحة.",
+    "from": "237fdc4c37c5"
+  },
+  "keep.back.other": {
+    "text": "أي وكيل آخر ليس له <strong>Resume agent</strong>، لأن Aubergine لا يعرف محادثته: شغّله من جديد في الطرفية نفسها بطريقة الاستئناف الخاصة بذلك الوكيل، واقرأ الملاحظة لتخبره أين توقف.",
+    "from": "793f54a1a40a"
+  },
+  "keep.pic.caption": {
+    "text": "تفاصيل طرفية: خطوة التشغيل وآخر تقرير له، والمجلد، والوسوم، والحقول. كل ذلك يبقى بعد إعادة تشغيل الحاسوب؛ أما الطرفية الحية بجانبها فلا.",
+    "from": "d9f6211ba821"
+  },
+  "keep.lost.title": {
+    "text": "ما الذي يضيع، وما العمل",
+    "from": "14285bfff601"
+  },
+  "keep.lost.running": {
+    "text": "<strong>ما كان يعمل ينتهي.</strong> البناء أو الاختبارات أو الخادم أو الوكيل في منتصف عمله يتوقف مع الحاسوب، ولا يعيد Aubergine تشغيل أي منها من تلقاء نفسه. أعد تشغيلها بنفسك؛ والمهمة التي يجب أن تتجاوز إعادة التشغيل مكانها شيء صُنع لذلك، مثل خدمة في نظامك.",
+    "from": "e46f81e690a3"
+  },
+  "keep.lost.work": {
+    "text": "<strong>العمل الذي يتتبعه Aubergine ينتظرك.</strong> يحتفظ تشغيل سير العمل بخطوته وبكل تقرير سُلّم. وتحتفظ مهام قائمة الانتظار بمكانها؛ والمهمة التي كانت تبدأ لحظة توقف الخادم تُعلَّم بأنها فشلت، مع جملة، ولا يُعاد تجريب شيء من تلقاء نفسه. ووقت الجدول الذي فات والخادم متوقف يُشغَّل مرة واحدة، متأخرًا، إن لم يمضِ عليه ست ساعات (<code>schedules.lateWithinHours</code>)، وإلا يُعلَّم بأنه فائت.",
+    "from": "3030fe221d28"
+  },
+  "keep.lost.scrollback": {
+    "text": "<strong>سجل التمرير يضيع.</strong> ما دامت الصدفة تعمل، يحتفظ tmux بآخر 50,000 سطر طبعتها، ويقرؤها البحث في لوحة الأوامر. ولا يسجّل Aubergine ما تطبعه الطرفية، فلا يبقى بعد إعادة تشغيل الحاسوب ما يُستعاد، ولا يجد البحث إلا ما طُبع بعد ذلك.",
+    "from": "aaed4fac1b79"
+  },
+  "keep.lost.away": {
+    "text": "<strong>«في غيابك» يبدأ من جديد.</strong> يُحفظ في ذاكرة الخادم لا في ملف، فلا يعرف بعد بدء الخادم إلا ما تغيّر منذ ذلك الحين، ويقول ذلك.",
+    "from": "6731aefcf508"
+  },
+  "keep.habit.title": {
+    "text": "العادة التي تجعل إعادة التشغيل رخيصة",
+    "from": "bd4d96a2eb2b"
+  },
+  "keep.habit.text": {
+    "text": "الملاحظة هي ما يبقى، فاجعل الوكلاء يكتبون فيها أولًا بأول: قرارًا، أو نتيجة، أو أين توقفوا. وفي Claude Code الذي شُغّل من Aubergine تُضاف كل رسالة ترسلها إلى السجل تلقائيًا، ويُطلب منه في البداية أن يسمّي طرفيته ويحافظ على ملخصها. وأي وكيل يستطيع فعل الشيء نفسه بهذه الأوامر، التي يشرحها له <code>aubergine guide</code>:",
+    "from": "f0806ca11e08"
+  },
+  "keep.habit.recap": {
+    "text": "قبل أن تنهي يومك، اضغط <strong>Ask its agent for a recap</strong> في تفاصيل الطرفية: يكتب الوكيل أين وصل بالأمر <code>aubergine recap --write</code>، ويُحفظ الملخص مع الطرفية.",
+    "from": "1b909d393ab1"
+  },
+  "keep.sleep.title": {
+    "text": "إغلاق الحاسوب المحمول، والسكون، والمتصفح",
+    "from": "393a7e53106a"
+  },
+  "keep.sleep.sleep": {
+    "text": "<strong>السكون ليس إعادة تشغيل.</strong> إغلاق غطاء الحاسوب المحمول يضعه عادةً في السكون: تتوقف البرامج مؤقتًا وتتابع حين يستيقظ، ولا يحدث شيء مما في العمود الأخير من الجدول. ولا يُبقي Aubergine الحاسوب مستيقظًا ولا يوقظه، فالجدول الذي فات وقته أثناء السكون يُشغَّل متأخرًا، أو يفوت، كما سبق.",
+    "from": "f90d61fc3eae"
+  },
+  "keep.sleep.browser": {
+    "text": "<strong>إغلاق المتصفح أو تبويب أو نافذته</strong>، أو تحديث للمتصفح يعيد تشغيله، لا ينهي شيئًا. افتح الصفحة من جديد (<code>aubergine open</code> يفتحها مع تسجيل الدخول) فتُرسم كل طرفية من tmux كما هي الآن. والصفحة التي تُركت مفتوحة تعيد الاتصال وحدها حين يعود الخادم.",
+    "from": "40f09b6f29cb"
+  },
+  "keep.sleep.server": {
+    "text": "<strong>إغلاق النافذة التي يعمل فيها <code>aubergine start</code></strong>، أو الضغط على Ctrl+C فيها، يوقف الخادم ولا شيء غيره: العمود الأوسط من الجدول.",
+    "from": "1cd0a9349c3d"
+  },
+  "keep.sleep.wsl": {
+    "text": "<strong>على Windows مع WSL</strong>، توقف WSL، لأن Windows أُعيد تشغيله أو بعد <code>wsl --shutdown</code>، هو إعادة تشغيل للحاسوب بالنسبة إلى Aubergine. راجع <a href=\"/windows/\">Windows مع WSL</a>.",
+    "from": "0c01d734b5c3"
+  },
+  "keep.q.restore.q": {
+    "text": "هل يستطيع Aubergine استعادة طرفياتي بعد إعادة التشغيل؟",
+    "from": "a2d8fea94c00"
+  },
+  "keep.q.restore.a": {
+    "text": "نعم، كل شيء إلا ما كان يعمل فيها. تعود كل طرفية إلى مكانها على اللوحة باسمها ولونها وملاحظتها ووسومها وحقولها وروابطها، صدفةً جديدة في آخر مجلد لها. ولا تُشغَّل البرامج التي كانت تعمل فيها من جديد؛ ومع Claude Code يتابع <strong>Resume agent</strong> المحادثة.",
+    "from": "8be8d8045b34"
+  },
+  "keep.q.output.q": {
+    "text": "هل يحتفظ Aubergine بمخرجات طرفيتي وسجلها؟",
+    "from": "7463118541ed"
+  },
+  "keep.q.output.a": {
+    "text": "المخرجات، ما دامت الصدفة تعمل فقط: يحتفظ tmux بـ 50,000 سطر من سجل تمرير كل طرفية، وإغلاق المتصفح أو إعادة تشغيل Aubergine لا يُضيّع منه شيئًا. وبعد إعادة تشغيل الحاسوب يضيع، لأن Aubergine لا يسجّل مخرجات الطرفيات. أما سجل الأوامر التي كتبتها، الذي يعيده السهم العلوي، فهو ملف صدفتك نفسها، وتحفظه صدفتك كعادتها.",
+    "from": "a88ba263b084"
+  },
+  "keep.q.claude.q": {
+    "text": "هل تبقى محادثتي في Claude Code بعد إعادة التشغيل؟",
+    "from": "c87cda5e8a7e"
+  },
+  "keep.q.claude.a": {
+    "text": "المحادثة، نعم: يحفظها Claude Code في ملفاته، ويتذكر Aubergine المحادثة التي كانت فيها كل طرفية. وبعد إعادة التشغيل، يشغّل <strong>Resume agent</strong> في شريط عنوان الطرفية Claude Code من جديد في تلك المحادثة. أما ما كان الوكيل يفعله في تلك اللحظة فقد توقف، ولا يُعاد حتى تطلب.",
+    "from": "0d163dc56b89"
+  },
+  "keep.q.macos.q": {
+    "text": "هل يعمل حين يحدّث macOS نفسه ليلًا؟",
+    "from": "dd58c7a1e65c"
+  },
+  "keep.q.macos.a": {
+    "text": "التحديث الذي يعيد تشغيل الحاسوب إعادة تشغيل كغيرها: تنتهي البرامج العاملة ويبقى كل ما سواها. ومع البدء عند تسجيل الدخول (<code>aubergine service install</code>) يعود الخادم إلى العمل بمجرد أن تسجّل الدخول، وتكون اللوحة بانتظارك. شوهدت الأصداف الجديدة في آخر مجلداتها عند إعادة تشغيل حاوية لـ Aubergine؛ ولم يُجرَّب تحديث ليلي حقيقي لـ macOS.",
+    "from": "06c25c70de97"
+  },
+  "keep.q.tmux.q": {
+    "text": "هل أحتاج إلى معرفة tmux؟",
+    "from": "3d7564a5b7f9"
+  },
+  "keep.q.tmux.a": {
+    "text": "لا. يجب أن يكون مثبّتًا (3.2 أو أحدث)، ويشغّله Aubergine على مقبس خاص به بإعداداته الخاصة، بلا شريط حالة ولا مفتاح بادئة، فلا تكتب أي أمر لـ tmux. وtmux الخاص بك، إن كنت تستخدمه، لا يُمَس.",
+    "from": "d33e0b313f18"
+  },
+  "keep.related": {
+    "text": "ذو صلة: <a href=\"/claude/\">Claude Code في Aubergine</a> · <a href=\"/queue-and-schedules/\">قائمة الانتظار والجداول</a> · <a href=\"/working-copies/\">نسخ العمل</a>",
+    "from": "730944daab4e"
+  },
+  "alive.meta.title": {
+    "text": "أبقِ عملية تعمل بعد إغلاق الطرفية | Aubergine",
+    "from": "b6893102f4dc"
+  },
+  "alive.meta.description": {
+    "text": "إغلاق نافذة الطرفية يُنهي ما يعمل فيها. الحلول المعتادة هي nohup وdisown وscreen وtmux؛ ويشغّل Aubergine كل طرفية في tmux نيابةً عنك، فلا يُنهي إغلاق المتصفح شيئًا.",
+    "from": "91fc698775ac"
+  },
+  "alive.crumb": {
+    "text": "أبقِها تعمل",
+    "from": "18b04919677d"
+  },
+  "alive.title": {
+    "text": "أبقِ عملية تعمل بعد إغلاق الطرفية",
+    "from": "0a69e88f3c29"
+  },
+  "alive.lead": {
+    "text": "بدأت بناءً أو خادمًا أو وكيل برمجة، وإغلاق النافذة سيُنهيه. في Aubergine لا يُنهي إغلاق النافذة شيئًا: كل طرفية تعمل منفصلة عن المتصفح، وما طبعته تجده حين تعود.",
+    "from": "08c79722641c"
+  },
+  "alive.usual.title": {
+    "text": "ما يفعله الناس عادةً",
+    "from": "30e09240a39b"
+  },
+  "alive.usual.text": {
+    "text": "إغلاق نافذة الطرفية يُنهي الصدفة التي فيها، ومعها ما بدأته تلك الصدفة. والطرق المعتادة لتفادي ذلك:",
+    "from": "4915c1c5f12a"
+  },
+  "alive.usual.nohup": {
+    "text": "<code>nohup</code> يشغّل أمرًا يتجاهل إشارة قطع الاتصال التي تُرسل حين تُغلق الطرفية. وتذهب مخرجاته إلى ملف (<code>nohup.out</code> ما لم ترسلها إلى مكان آخر).",
+    "from": "07104e43d084"
+  },
+  "alive.usual.disown": {
+    "text": "<code>disown</code>، في bash وzsh، يُفلت مهمة بدأتها من قبل، فلا تمرّر الصدفة إليها إشارة قطع الاتصال. ولا يمكنك الرجوع إليها في طرفية بعد ذلك.",
+    "from": "cff93689c505"
+  },
+  "alive.usual.mux": {
+    "text": "<code>screen</code> و<code>tmux</code> يشغّلان الصدفة داخل خادم خاص بهما. تنفصل عنها، وتغلق النافذة، ثم تتصل بها لاحقًا فتجد الصدفة نفسها بمخرجاتها. إنهما الحل الموثوق، وتتعلّم مفاتيحهما وأوامرهما لتستخدمهما.",
+    "from": "8033fa82aabc"
+  },
+  "alive.usual.after": {
+    "text": "بُني Aubergine على آخر هذه الطرق. يشغّل tmux نيابةً عنك، فتحصل على حلّه دون مفاتيحه.",
+    "from": "c5965cfc20f2"
+  },
+  "alive.does.title": {
+    "text": "ما يفعله Aubergine",
+    "from": "acf3f5da99c1"
+  },
+  "alive.does.text": {
+    "text": "كل طرفية في Aubergine صدفة في جلسة tmux خاصة بها، على مقبس tmux تابع لـ Aubergine. ويعمل tmux منفصلًا عن المتصفح وعن خادم Aubergine، ولذلك:",
+    "from": "98b70e7d0d29"
+  },
+  "alive.does.browser": {
+    "text": "<strong>إغلاق التبويب أو النافذة أو المتصفح كله لا يُنهي شيئًا.</strong> افتح الصفحة من جديد (<code>aubergine open</code> يفتحها مع تسجيل الدخول) فتُرسم كل طرفية من tmux كما هي الآن، وما طبعته في أثناء ذلك في سجل تمريرها.",
+    "from": "41a2df93d059"
+  },
+  "alive.does.server": {
+    "text": "<strong>وإيقاف Aubergine لا يُنهي شيئًا أيضًا.</strong> الضغط على Ctrl+C حيث يعمل <code>aubergine start</code>، أو تعطّل الخادم، أو التحديث، يوقف الخادم ولا شيء غيره. شغّله من جديد وأعد تحميل الصفحة.",
+    "from": "b9ce1197f495"
+  },
+  "alive.does.park": {
+    "text": "<strong>إغلاق طرفية على اللوحة يركنها.</strong> علامة × في عنوانها تُخرجها من اللوحة وتبقى صدفتها تعمل. ويعرض <strong>Parked</strong> (المركونة) في الشريط فوق اللوحة الطرفيات المركونة، ويعيد <strong>Restore</strong> (استعادة) إحداها.",
+    "from": "d74085e1bab8"
+  },
+  "alive.does.end": {
+    "text": "<strong>إنهاء صدفة نهائيًا يسأل أولًا.</strong> لا يُنهي <strong>End</strong> (إنهاء) في قائمة المركونة طرفيةً إلا بعد أن توافق.",
+    "from": "297bbff16a9b"
+  },
+  "alive.does.views": {
+    "text": "<strong>والعروض الأخرى لها لا تُنهي شيئًا.</strong> الزر <strong>Tab ↗</strong>‎ في عنوان الطرفية يفتحها وحدها في علامة تبويب في المتصفح، ويعرضها <code>aubergine attach &lt;name&gt;</code> في نافذة من تطبيق الطرفية لديك. كلٌّ منهما الطرفية نفسها لا نسخة منها؛ وإغلاق ذلك التبويب أو تلك النافذة يتركها تعمل.",
+    "from": "620a7de6d140"
+  },
+  "alive.does.scroll": {
+    "text": "ما دامت الصدفة تعمل، يحتفظ tmux بآخر 50,000 سطر طبعتها. وتمرّر عجلة الفأرة إلى الخلف فيها في الطرفية التي معها لوحة المفاتيح، وتبحث فيها لوحة الأوامر (<code>⌘K</code>).",
+    "from": "6bfb58743356"
+  },
+  "alive.pic.caption": {
+    "text": "تقول القائمة ما تفعله كل طرفية. والمركونة في أسفلها خارج اللوحة، وصدفتها لا تزال تعمل.",
+    "from": "4bafddfa442e"
+  },
+  "alive.not.title": {
+    "text": "ما لا يفعله",
+    "from": "b3a53baf5dfd"
+  },
+  "alive.not.reboot": {
+    "text": "<strong>لا يصمد أمام إعادة تشغيل الحاسوب.</strong> إعادة التشغيل، أو تعطّل الحاسوب، أو تحديث يعيد تشغيله، يُنهي كل صدفة وما يعمل فيها. ويعيد Aubergine كل ما حولها، كل طرفية صدفةً جديدة في آخر مجلد لها، ولا يشغّل شيئًا من جديد من تلقاء نفسه. راجع <a href=\"/keep-terminals-after-restart/\">احتفظ بطرفياتك بعد إعادة التشغيل</a>.",
+    "from": "7abee1496908"
+  },
+  "alive.not.sleep": {
+    "text": "<strong>لا يُبقي الحاسوب مستيقظًا.</strong> الحاسوب المحمول الذي ينام يوقف برامجه مؤقتًا، وهذه منها؛ وتتابع حين يستيقظ.",
+    "from": "866d9035e322"
+  },
+  "alive.not.service": {
+    "text": "<strong>ليس مدير خدمات.</strong> المهمة التي يجب أن تعود وحدها بعد إعادة التشغيل مكانها خدمات نظامك.",
+    "from": "6d5fa1f2b3ca"
+  },
+  "alive.not.adopt": {
+    "text": "<strong>لا يستطيع أن يتولّى برنامجًا يعمل في مكان آخر.</strong> لا توجد أداة تستطيع نقل برنامج يعمل إلى طرفية أخرى. يعطي <code>aubergine here</code> في تبويب من تطبيق الطرفية لديك ذلك المجلدَ طرفيةً على اللوحة؛ والبرنامج الذي يعمل في التبويب يبقى هناك، ويجب تشغيله من جديد داخل الطرفية الجديدة.",
+    "from": "b16b06abf9b4"
+  },
+  "alive.ssh.title": {
+    "text": "على جهاز آخر، عبر SSH",
+    "from": "e88f17341af2"
+  },
+  "alive.ssh.text": {
+    "text": "يعمل Aubergine على حاسوبك أنت: يستمع خادمه على <code>127.0.0.1</code>، وطرفياته أصداف على ذلك الحاسوب. فإن كان ما تريد إبقاءه عمليةً على خادم بعيد تصل إليه عبر SSH، فإن <code>tmux</code> أو <code>screen</code> على ذلك الخادم لا يزال هو الحل.",
+    "from": "dffecd1ee615"
+  },
+  "alive.ssh.remote": {
+    "text": "يمكن أن يعمل Aubergine نفسه على جهاز آخر وأن يُستخدم من متصفحك، عبر نفق SSH، أو شبكة خاصة، أو اسم وخادم وسيط: الخطوات في <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md\">Using Aubergine from elsewhere</a>. وعبر نفق SSH، يوقف إغلاقُ نافذة SSH التي يعمل فيها <code>aubergine start</code> الخادمَ، وتبقى الطرفيات تعمل. وشُغّل على Linux داخل حاويات فقط، ولم يُشغَّل قط على جهاز سحابي.",
+    "from": "6471fa20654e"
+  },
+  "alive.q.close.q": {
+    "text": "هل يوقف إغلاق المتصفح طرفيتي؟",
+    "from": "6ddd7e6edce7"
+  },
+  "alive.q.close.a": {
+    "text": "لا. كل طرفية صدفة في tmux، الذي يعمل منفصلًا عن المتصفح. أغلق التبويب أو النافذة أو المتصفح، ثم افتح الصفحة من جديد، فتجد كل طرفية كما هي الآن، لا تزال تعمل، ومعها ما طبعته في أثناء ذلك.",
+    "from": "598cd7c22733"
+  },
+  "alive.q.ssh.q": {
+    "text": "كيف أُبقي عملية تعمل بعد انقطاع SSH؟",
+    "from": "960447871eb8"
+  },
+  "alive.q.ssh.a": {
+    "text": "على الجهاز البعيد، شغّلها داخل <code>tmux</code> أو <code>screen</code>، أو باستخدام <code>nohup</code>. يحفظ Aubergine الطرفيات على الحاسوب الذي يعمل عليه. ويمكن أن يعمل على جهاز بعيد أيضًا، ويُستخدم عبر نفق SSH أو خادم وسيط، لكن ذلك شُغّل داخل حاويات فقط، ولم يُشغَّل قط على جهاز سحابي.",
+    "from": "0d887b52c097"
+  },
+  "alive.q.nohup.q": {
+    "text": "هل أستخدم nohup أم tmux؟",
+    "from": "2d8a44cabbd2"
+  },
+  "alive.q.nohup.a": {
+    "text": "يناسب <code>nohup</code> أمرًا واحدًا يمكن أن تذهب مخرجاته إلى ملف. ويناسب <code>tmux</code> صدفةً تريد أن تعود إليها وتكتب فيها. ويعطي Aubergine كل طرفية الثاني، في صفحة متصفح، دون مفاتيح tmux.",
+    "from": "bdd99e8d4444"
+  },
+  "alive.q.output.q": {
+    "text": "هل يمكنني رؤية المخرجات بعد إغلاق الطرفية؟",
+    "from": "d50697ee7ca6"
+  },
+  "alive.q.output.a": {
+    "text": "نعم، ما دامت الصدفة تعمل: يحتفظ tmux بآخر 50,000 سطر من كل طرفية، وتعرضها الصفحة حين تعود. ولا يسجّل Aubergine شيئًا بنفسه، فبعد إعادة تشغيل الحاسوب تضيع تلك المخرجات.",
+    "from": "4e7c9512f7a4"
+  },
+  "alive.q.reboot.q": {
+    "text": "هل تبقى تعمل بعد إعادة التشغيل؟",
+    "from": "a133b0a14fb2"
+  },
+  "alive.q.reboot.a": {
+    "text": "لا. إعادة تشغيل الحاسوب تُنهي كل برنامج. ويعيد Aubergine كل طرفية صدفةً جديدة في آخر مجلد لها، بمكانها واسمها وملاحظتها، ولا يشغّل شيئًا من جديد.",
+    "from": "a486f307279a"
+  },
+  "alive.related": {
+    "text": "ذو صلة: <a href=\"/keep-terminals-after-restart/\">احتفظ بطرفياتك بعد إعادة التشغيل</a> · <a href=\"/tmux-without-learning-tmux/\">tmux دون أن تتعلّم tmux</a> · <a href=\"/claude-code-notifications/\">اعرف متى ينتظرك Claude Code</a>",
+    "from": "4a361e122188"
+  },
+  "notify.meta.title": {
+    "text": "اعرف متى ينتهي Claude Code أو ينتظرك | Aubergine",
+    "from": "6298f70cc7f8"
+  },
+  "notify.meta.description": {
+    "text": "اعرف بنظرة أيّ طرفية Claude Code تعمل، وأيّها بانتظارك، وأيّها انتهت: خطافات يولّدها Aubergine، وعدد For you، ومفتاح إلى الطرفية التالية التي تنتظر، وإشعارات من الصفحة المفتوحة.",
+    "from": "ec167ae38aa3"
+  },
+  "notify.crumb": {
+    "text": "انتهى أو ينتظر",
+    "from": "9cd75bf0227a"
+  },
+  "notify.title": {
+    "text": "اعرف متى ينتهي Claude Code أو ينتظرك",
+    "from": "d69b035c67c4"
+  },
+  "notify.lead": {
+    "text": "تعطي Claude Code مهمة، وتنصرف إلى شيء آخر، ثم تعود بعد عشرين دقيقة فتجده ينتظر موافقتك منذ الدقيقة الثانية. يُظهر Aubergine في صفحة واحدة أيّ طرفية تعمل، وأيّها بانتظارك، وأيّها انتهت.",
+    "from": "33187b7b48cc"
+  },
+  "notify.usual.title": {
+    "text": "ما يفعله الناس عادةً",
+    "from": "30e09240a39b"
+  },
+  "notify.usual.text": {
+    "text": "يشغّل Claude Code خطافات، وهي أوامر من عندك، في لحظات مثل توقفه (<code>Stop</code>) أو إرساله إشعارًا (<code>Notification</code>). والحل المعتاد خطاف في إعدادات Claude Code الخاصة بك يُصدر صوتًا أو يُظهر إشعارًا على سطح المكتب. وهذا يعمل، والنصوص البرمجية عليك أنت كتابتها وصيانتها.",
+    "from": "68ee553e9f31"
+  },
+  "notify.does.title": {
+    "text": "ما يفعله Aubergine",
+    "from": "acf3f5da99c1"
+  },
+  "notify.does.start": {
+    "text": "<strong>شغّل Claude Code من Aubergine</strong>: <strong>New terminal ▾ → Claude Code</strong> أعلى قائمة الطرفيات، أو <code>C</code>. يشغّل Aubergine الأمر <code>claude</code> مع ملف إعدادات يولّده في مجلد بياناته الخاص ويسمّيه في سطر الأوامر. إعدادات Claude Code الخاصة بك لا تُمس. والخطافات في ذلك الملف تخبر الصفحة بما يفعله الوكيل:",
+    "from": "3369bd01dcea"
+  },
+  "notify.does.working": {
+    "text": "حين ترسل موجّهًا، تُظهر الطرفية <strong>working</strong> (يعمل)، ويُضاف الموجّه إلى سجل ملاحظتها؛",
+    "from": "155df7c224c8"
+  },
+  "notify.does.waiting": {
+    "text": "حين يحتاج إليك الوكيل (سؤال عن إذن، أو لأنه خامل ينتظر مدخلات)، يأخذ حدّها لون الانتظار، ويقول عنوانها وصفّها في القائمة <strong>waiting for you</strong> (بانتظارك)؛",
+    "from": "de3a60706385"
+  },
+  "notify.does.finished": {
+    "text": "حين يتوقف، تُظهر الطرفية <strong>finished</strong> (انتهى).",
+    "from": "4fa6541012c0"
+  },
+  "notify.does.count": {
+    "text": "<strong>العدد بجانب For you</strong>، أعلى يمين الصفحة، هو كل ما ينتظرك، في كل المشاريع: طرفيات فيها سؤال، وتشغيلات تنتظر موافقتك، ومسودات للقراءة، ومهام مقترحة. الضغط عليه يفتح <strong>Runs</strong>، وعمود <strong>Waiting for you</strong> فيها هو تلك القائمة. وتُظهر علامة تبويب اللوحة كم طرفية فيها تنتظر.",
+    "from": "7a2b8019e903"
+  },
+  "notify.does.next": {
+    "text": "<strong>التالية التي تنتظر.</strong> ينتقل <code>W</code> إلى الطرفية التالية التي بانتظارك حين لا تكون لوحة المفاتيح مع أي طرفية؛ وعلى macOS يفعل <code>⌃⌘J</code> ذلك من داخل طرفية أيضًا. وفي غيره تجده في لوحة الأوامر.",
+    "from": "19a40372e53f"
+  },
+  "notify.does.desktop": {
+    "text": "<strong>إشعارات من الصفحة المفتوحة.</strong> في <strong>Settings → Notifications</strong> الخيار <strong>Notify me on the desktop when a terminal starts waiting</strong> (أشعرني على سطح المكتب حين تبدأ طرفية الانتظار). وإذا شُغّل، تُظهر الصفحة إشعارًا من متصفحك حين تبدأ طرفية الانتظار أو ينتهي وكيلها، إلا إن كنت تنظر إلى تلك الطرفية. ويطلب المتصفح إذنك مرة واحدة.",
+    "from": "a6b031774f7c"
+  },
+  "notify.does.rules": {
+    "text": "<strong>القواعد.</strong> في تبويب <strong>Rules</strong> من <strong>Runs</strong>، تستطيع قاعدة أن تُطلق <strong>Notify me</strong> (أشعرني) حين تنتهي مهمة، أو تفشل مهمة، أو تحتاج مهمة إليك، أو يُطلب منك شيء، أو ينطلق جدول أو يتعذّر تشغيله: إشعار من الصفحة المفتوحة، مع جملة عمّا حدث.",
+    "from": "8902ebd28ab4"
+  },
+  "notify.pic.caption": {
+    "text": "قائمة ما ينتظر، بجانب For you: سؤال وكيل بديل أولًا، ثم خطوة للقراءة وقائمة سُلّمت.",
+    "from": "ec342d97a2eb"
+  },
+  "notify.other.title": {
+    "text": "الوكلاء الآخرون، وclaude كتبته بنفسك",
+    "from": "7ee8ea823560"
+  },
+  "notify.other.text": {
+    "text": "لا يقرأ Aubergine مخرجات الطرفية ليخمّن. أي وكيل آخر، أو أي برنامج، يقول الشيء نفسه بنفسه بالأوامر <code>aubergine attention waiting \"what it needs\"</code> و<code>aubergine attention working</code> و<code>aubergine attention done</code> في طرفيته. ويطبع <code>aubergine guide --snippet</code> خمسة أسطر للملف الذي يقرؤه وكيلك في بداية المحادثة؛ وهي تطلب منه أن يشغّل <code>aubergine guide</code>، الذي يشرح هذه الأوامر.",
+    "from": "f65f5b133ea7"
+  },
+  "notify.other.typed": {
+    "text": "Claude Code الذي شغّلته بكتابة <code>claude</code> في طرفية عادية هو، بالنسبة إلى Aubergine، صدفة مشغولة ببرنامج: لا <strong>waiting for you</strong>. شغّله من القائمة بدلًا من ذلك، أو أضف يدويًا إلى إعداداتك الخطافات التي يطبعها <code>aubergine hooks print</code>؛ ولا تفعل شيئًا خارج طرفية Aubergine.",
+    "from": "66303f76feaf"
+  },
+  "notify.not.title": {
+    "text": "ما لا يفعله",
+    "from": "b3a53baf5dfd"
+  },
+  "notify.not.sound": {
+    "text": "<strong>لا صوت خاصًا به.</strong> لا يُصدر Aubergine أي صوت. ولا يُصدر الإشعار صوتًا إلا إن كان متصفحك أو نظامك يفعل ذلك للإشعارات.",
+    "from": "2d61c4c47cc8"
+  },
+  "notify.not.closed": {
+    "text": "<strong>لا شيء ما دامت لا توجد صفحة مفتوحة.</strong> تأتي الإشعارات من صفحة Aubergine مفتوحة في متصفحك؛ ولا يرسل الخادم أيًّا منها بنفسه. وإذا أُغلقت كل الصفحات، تظل الطرفية تقول <strong>waiting for you</strong>، ويكون العدد موجودًا حين تفتح الصفحة.",
+    "from": "4b12da4bf501"
+  },
+  "notify.not.phone": {
+    "text": "<strong>لا إشعارات فورية إلى الهاتف.</strong> لا يوجد تطبيق ولا خدمة إشعارات فورية. يمكن إقران متصفح الهاتف ليفتح الصفحة نفسها؛ راجع <a href=\"/check-agents-from-your-phone/\">اطّلع على وكلائك من هاتفك</a>، ولم يُجرَّب ذلك على هاتف حقيقي.",
+    "from": "b5b776d76082"
+  },
+  "notify.not.tried": {
+    "text": "<strong>ما الذي تُحقّق منه.</strong> تتحقق اختبارات المتصفح من الإشعارات مقابل بديل عن إشعارات المتصفح نفسه. أما شكل الإشعار الحقيقي، وهل يظهر أصلًا، فأمرهما لمتصفحك ولإعدادات نظامك الخاصة به.",
+    "from": "3df89b5e7759"
+  },
+  "notify.q.done.q": {
+    "text": "كيف أتلقى إشعارًا حين ينتهي Claude Code؟",
+    "from": "61d334cfbe8e"
+  },
+  "notify.q.done.a": {
+    "text": "شغّل Claude Code من Aubergine، ثم فعّل <strong>Notify me on the desktop when a terminal starts waiting</strong> تحت <strong>Settings → Notifications</strong>. عندها تُظهر الصفحة المفتوحة إشعارًا من المتصفح حين تبدأ طرفية انتظارك أو ينتهي وكيلها. ودون إشعار، تقول الطرفية <strong>finished</strong>.",
+    "from": "2e338730d3a7"
+  },
+  "notify.q.sound.q": {
+    "text": "هل يمكن أن يُصدر Claude Code صوتًا حين يحتاج إلى مدخلات؟",
+    "from": "06e5fcebba16"
+  },
+  "notify.q.sound.a": {
+    "text": "لا يُصدر Aubergine أي صوت. ويُصدر الإشعار صوتًا إن جعله متصفحك أو نظامك يفعل ذلك. ويستطيع خطاف من عندك في إعدادات Claude Code الخاصة بك أن يُصدر صوتًا؛ ولا يكتب Aubergine في تلك الإعدادات أبدًا.",
+    "from": "9bfa64c7c661"
+  },
+  "notify.q.several.q": {
+    "text": "كيف أعرف أيّ جلسة Claude Code تنتظر حين أشغّل عدة جلسات؟",
+    "from": "1574988945ec"
+  },
+  "notify.q.several.a": {
+    "text": "في Aubergine يكون حدّ الطرفية المنتظرة وحالتها بلون الانتظار، ويقول صفّها في القائمة <strong>waiting for you</strong>، ويقول العدد بجانب <strong>For you</strong> كم شيئًا ينتظر. وينتقل <code>W</code> إلى التالية.",
+    "from": "5afc5b2282ae"
+  },
+  "notify.q.closed.q": {
+    "text": "هل أتلقى إشعارًا والمتصفح مغلق؟",
+    "from": "14556b0165d5"
+  },
+  "notify.q.closed.a": {
+    "text": "لا. تأتي الإشعارات من صفحة Aubergine مفتوحة. والحالة محفوظة، فتكون الطرفيات المنتظرة معلَّمة حين تفتح الصفحة من جديد.",
+    "from": "0c60b9069220"
+  },
+  "notify.q.other.q": {
+    "text": "هل يعمل مع وكلاء غير Claude Code؟",
+    "from": "c3bc48693c0a"
+  },
+  "notify.q.other.a": {
+    "text": "ليس من تلقاء نفسه: الخطافات مبنية لـ Claude Code. ويستطيع أي وكيل آخر أن يبلّغ بالشيء نفسه بالأوامر <code>aubergine attention waiting</code> و<code>working</code> و<code>done</code> حين تطلب منه تعليماته ذلك؛ ويطبع <code>aubergine guide --snippet</code> الأسطر اللازمة لتلك التعليمات.",
+    "from": "d74216df16d6"
+  },
+  "notify.related": {
+    "text": "ذو صلة: <a href=\"/claude/\">Claude Code في Aubergine</a> · <a href=\"/resume-claude-code-session/\">استأنف محادثة Claude Code</a> · <a href=\"/too-many-terminal-tabs/\">طرفيات كثيرة جدًا</a>",
+    "from": "60204a04f28a"
+  },
+  "resume.meta.title": {
+    "text": "استأنف محادثة Claude Code بعد إعادة التشغيل | Aubergine",
+    "from": "25d7c94055ab"
+  },
+  "resume.meta.description": {
+    "text": "يعيد claude --continue وclaude --resume المحادثة إن كنت في المجلد الصحيح. ويتذكر Aubergine المحادثة التي كانت فيها كل طرفية، ويعرض Resume agent، ويسرد المحادثات السابقة حسب المجلد.",
+    "from": "9c3fb52f17de"
+  },
+  "resume.crumb": {
+    "text": "استئناف محادثة",
+    "from": "d0b8459148c0"
+  },
+  "resume.title": {
+    "text": "استأنف محادثة Claude Code بعد إعادة التشغيل",
+    "from": "087ff07774c9"
+  },
+  "resume.lead": {
+    "text": "أُعيد تشغيل الحاسوب، أو أغلقت الطرفية، فبدت محادثة Claude Code ضائعة. لكن Claude Code يحتفظ بها. ويتذكر Aubergine المحادثة التي كانت فيها كل طرفية ويعيدها بزر واحد.",
+    "from": "f122ebc08ba6"
+  },
+  "resume.usual.title": {
+    "text": "ما يفعله الناس عادةً",
+    "from": "30e09240a39b"
+  },
+  "resume.usual.text": {
+    "text": "في طرفية، داخل المجلد الذي كانت فيه المحادثة: يتابع <code>claude --continue</code> أحدث محادثة هناك، ويتيح لك <code>claude --resume</code> اختيار واحدة من قائمة، أو يأخذ معرّف محادثة. والعقبة هي المجلد والاختيار: مع عدة وكلاء في مجلد واحد، ليست الأحدث دائمًا هي التي قصدتها.",
+    "from": "0c7e58df6940"
+  },
+  "resume.does.title": {
+    "text": "ما يفعله Aubergine",
+    "from": "acf3f5da99c1"
+  },
+  "resume.does.remember": {
+    "text": "<strong>الطرفية تتذكر محادثتها.</strong> حين يُشغَّل Claude Code من Aubergine (<strong>New terminal ▾ → Claude Code</strong>، أو <code>C</code>)، تخبر خطافاتُه Aubergine بالمحادثة التي هو فيها، ويحفظ Aubergine ذلك المعرّف مع الطرفية.",
+    "from": "25fb3e43a297"
+  },
+  "resume.does.button": {
+    "text": "يُعرض <strong>Resume agent</strong> (استئناف الوكيل) في شريط عنوان الطرفية بمجرد أن تعود صدفتها إلى المحث: خرجت من الوكيل، أو أُعيد تشغيل الحاسوب فعادت الطرفية صدفةً جديدة في آخر مجلد لها. ويشغّل Claude Code من جديد مع <code>--resume</code> وذلك المعرّف، بأمر التشغيل الذي في إعداداتك (<code>agents.claudeCommand</code>، وهو <code>claude</code> افتراضيًا).",
+    "from": "059cfe143e66"
+  },
+  "resume.does.run": {
+    "text": "<strong>في تشغيل لسير عمل</strong>، يخبر <strong>Resume agent</strong> الوكيلَ بالتشغيل من جديد أيضًا، فيتابع من الخطوة التي بلغها التشغيل.",
+    "from": "03de06981f61"
+  },
+  "resume.does.past": {
+    "text": "يسرد <strong>Past conversations…</strong>‎ في لوحة الأوامر (<code>⌘K</code>)، أو «Past conversations in this folder…‎» في تفاصيل الطرفية، محادثات Claude Code السابقة في مجلد: الاسم أو أول ما قلته، ومتى كانت آخر مرة نشطت فيها، وكم مرة تحدثت، وهل توجد الآن طرفية على لوحة تعمل فيها. يعرضها <strong>Read</strong> (قراءة) للقراءة فقط. ويشغّل <strong>Open on the canvas</strong> (افتح على اللوحة) طرفية جديدة في ذلك المجلد مستأنفة فيها، ويبدأ <strong>Open a copy</strong> (افتح نسخة) فرعًا منها ويترك الأصل كما هو. وإن كانت طرفية في تلك المحادثة من قبل، تُسأل أولًا.",
+    "from": "05c3b631a2d7"
+  },
+  "resume.does.search": {
+    "text": "<strong>البحث.</strong> اكتب <code>@</code> وبعض الكلمات في لوحة الأوامر للبحث في المحادثات السابقة في مجلدات الطرفيات التي على لوحاتك. يقرأ السجلات حين تطلب، ضمن حدود، ويقول متى اقتُطع البحث. وفي سطر الأوامر، يسردها <code>aubergine history</code> ويفتح <code>aubergine history open &lt;id&gt;</code> إحداها.",
+    "from": "f1e8e8bbabc6"
+  },
+  "resume.does.stood": {
+    "text": "<strong>أين توقف.</strong> تحفظ ملاحظة الطرفية ملخصها وسجلًا، ويُضاف كل موجّه ترسله إلى السجل. ويجعل <strong>Ask its agent for a recap</strong> (اطلب من وكيلها ملخص الحالة) في تفاصيلها الوكيلَ يكتب أين وصل بالأمر <code>aubergine recap --write</code>، ويُحفظ ذلك مع الطرفية. وحين تعود بعد أكثر من 30 دقيقة، يسرد <strong>While you were away</strong> (في غيابك) ما تغيّر في أثناء ذلك.",
+    "from": "449c1f6289f7"
+  },
+  "resume.pic.caption": {
+    "text": "تفاصيل طرفية: خطوة تشغيلها وآخر تقرير، ومجلدها وحقولها. تُحفظ مع الطرفية، جاهزة لحين يُستأنف وكيلها.",
+    "from": "5c63f8e4cb58"
+  },
+  "resume.outside.title": {
+    "text": "محادثة في طرفية خارج Aubergine",
+    "from": "43ceaae0c27a"
+  },
+  "resume.outside.text": {
+    "text": "في تبويب من تطبيق الطرفية لديك، اخرج من الوكيل، ثم شغّل <code>aubergine here --claude</code> في المجلد نفسه: تشغّل طرفية جديدة على اللوحة Claude Code مع <code>--continue</code>، وحالته الآن ظاهرة. ويسرد <code>aubergine move</code> تبويبات Claude Code لديك ويبدأ نسخة من كل محادثة على اللوحة؛ ومع <code>--stop</code> يطلب من الوكيل الخامل أن يخرج أولًا، بعد أن تؤكد.",
+    "from": "7682f25de863"
+  },
+  "resume.not.title": {
+    "text": "ما لا يفعله",
+    "from": "b3a53baf5dfd"
+  },
+  "resume.not.format": {
+    "text": "<strong>يقرأ سجلات Claude Code نفسها، بشكل ليس من وضع Aubergine.</strong> يصف Claude Code شكل تلك الملفات بأنه داخلي، وهو يتغيّر بين الإصدارات. يستخدم الاستئناف <code>--resume</code> الخاص بـ Claude Code مع المعرّف؛ أما الأسماء والأعداد والنصوص فهي قراءة Aubergine للملفات، وقد تغيب أو تقلّ بعد تحديث Claude Code. والسجل الذي لا يستطيع قراءته يُقال عنه ذلك، ولا يُعرض محادثةً فارغة.",
+    "from": "a2210e214a34"
+  },
+  "resume.not.store": {
+    "text": "<strong>لا يُنسخ شيء ولا يُحفظ.</strong> القائمة أو النص أو البحث يُقرأ حين تطلب ويُترك حين تغلقه. ولا يغيّر Aubergine أي محادثة ولا يعيد تسميتها ولا يحذفها، ولا يستطيع أي وكيل أو رمز قراءة المحادثات عبره.",
+    "from": "9224f8f7033a"
+  },
+  "resume.not.work": {
+    "text": "<strong>العمل الجاري لا يُعاد.</strong> ما كان الوكيل يفعله حين توقف لا يُبدأ من جديد حتى تطلبه منه.",
+    "from": "a0dfad245abc"
+  },
+  "resume.not.other": {
+    "text": "<strong>لا Resume agent لوكيل آخر.</strong> لا يعرف Aubergine محادثة وكيل آخر، ولا يسرد له محادثات سابقة. شغّله من جديد في الطرفية نفسها بطريقة الاستئناف الخاصة بذلك الوكيل، واقرأ الملاحظة لتخبره أين توقف.",
+    "from": "032fed640b8d"
+  },
+  "resume.not.typed": {
+    "text": "<strong>الأمر <code>claude</code> الذي كتبته بنفسك لا يُتذكَّر</strong>، إلا إن أضفت إلى إعدادات Claude Code الخاصة بك الخطافات التي يطبعها <code>aubergine hooks print</code>.",
+    "from": "7cabc8e39014"
+  },
+  "resume.not.tried": {
+    "text": "<strong>ما الذي تُحقّق منه.</strong> قراءة سجلات المحادثات مختبرة على سجلات مصطنعة. ولم يُتحقَّق منها مع كل إصدار من Claude Code.",
+    "from": "636831c9e7f8"
+  },
+  "resume.q.closed.q": {
+    "text": "كيف أستأنف جلسة Claude Code بعد إغلاق الطرفية؟",
+    "from": "6af39953e8a8"
+  },
+  "resume.q.closed.a": {
+    "text": "في المجلد نفسه، يأخذ <code>claude --continue</code> أحدث محادثة ويتيح لك <code>claude --resume</code> الاختيار. وفي Aubergine، لا يُنهي إغلاق المتصفح شيئًا، والطرفية التي خرجت من وكيلها تعرض <strong>Resume agent</strong> في شريط عنوانها.",
+    "from": "1ed7fbcc4b38"
+  },
+  "resume.q.reboot.q": {
+    "text": "كيف أستأنف محادثة Claude Code بعد إعادة التشغيل؟",
+    "from": "31f50552b3a5"
+  },
+  "resume.q.reboot.a": {
+    "text": "بعد إعادة التشغيل تعود كل طرفية في Aubergine صدفةً جديدة في آخر مجلد لها. وحيث شُغّل Claude Code من Aubergine، يشغّله <strong>Resume agent</strong> في شريط العنوان من جديد في المحادثة التي كانت فيها تلك الطرفية.",
+    "from": "a7935b5285f1"
+  },
+  "resume.q.find.q": {
+    "text": "كيف أعثر على محادثة قديمة في Claude Code؟",
+    "from": "230753fac68b"
+  },
+  "resume.q.find.a": {
+    "text": "يسردها <strong>Past conversations…</strong>‎ في لوحة الأوامر لمجلد ما، مع نص للقراءة فقط؛ وكتابة <code>@</code> وبعض الكلمات في لوحة الأوامر تبحث فيها. ولا يُسرد إلا ما لا يزال Claude Code يحتفظ به.",
+    "from": "cf90c4bc8021"
+  },
+  "resume.q.diff.q": {
+    "text": "ما الفرق بين claude --continue وclaude --resume؟",
+    "from": "4f56d2ee9cff"
+  },
+  "resume.q.diff.a": {
+    "text": "يتابع <code>--continue</code> أحدث محادثة في المجلد؛ ويأخذ <code>--resume</code> التي تختارها، أو معرّفًا. ويستخدم <strong>Resume agent</strong> الخيار <code>--resume</code> مع المعرّف الذي تذكّرته الطرفية، فلا يعتمد على أيّ المحادثات كانت الأحدث.",
+    "from": "5c3f2b16669e"
+  },
+  "resume.q.two.q": {
+    "text": "هل يمكن لطرفيتين متابعة محادثة Claude Code نفسها؟",
+    "from": "825906c9167b"
+  },
+  "resume.q.two.a": {
+    "text": "لا يفتح Aubergine محادثة مرتين دون أن يسأل: وكيلان في محادثة واحدة يضيّع كلٌّ منهما رسائل الآخر. ويُعرض عليك الطرفية التي فيها المحادثة من قبل، أو نسخة، تتفرع بها المحادثة.",
+    "from": "b8424d8787fc"
+  },
+  "resume.related": {
+    "text": "ذو صلة: <a href=\"/keep-terminals-after-restart/\">احتفظ بطرفياتك بعد إعادة التشغيل</a> · <a href=\"/claude-code-notifications/\">اعرف متى ينتظرك Claude Code</a> · <a href=\"/claude/\">Claude Code في Aubergine</a>",
+    "from": "82d3fe458522"
+  },
+  "many.meta.title": {
+    "text": "اعثر على الطرفية الصحيحة حين تكثر تبويباتك | Aubergine",
+    "from": "710b13634a0f"
+  },
+  "many.meta.description": {
+    "text": "تبويبات طرفية كثيرة جدًا، كلها باسم zsh؟ يضع Aubergine كل طرفية على لوحة وفي قائمة واحدة مع حالتها بالكلمات، ومرشّحات، ووسوم، وبحث في مخرجات الطرفيات، وطرفية وحدها في علامة تبويب في المتصفح.",
+    "from": "0d77fee497f4"
+  },
+  "many.crumb": {
+    "text": "طرفيات كثيرة جدًا",
+    "from": "1d2e7e29f20b"
+  },
+  "many.title": {
+    "text": "اعثر على الطرفية الصحيحة حين تكثر طرفياتك",
+    "from": "9d8e670c6407"
+  },
+  "many.lead": {
+    "text": "عشرون تبويبًا، معظمها باسم zsh، ثلاثة منها تشغّل وكيلًا، وواحد من هذه الثلاثة ينتظرك. يضع Aubergine كل طرفية على لوحة وفي قائمة واحدة تقول ما تفعله كل منها، فتجد الطرفية بما هي عليه، لا بالمكان الذي تركتها فيه.",
+    "from": "1d5167ffd4b4"
+  },
+  "many.usual.title": {
+    "text": "ما يفعله الناس عادةً",
+    "from": "30e09240a39b"
+  },
+  "many.usual.text": {
+    "text": "يسمّون التبويبات أو النوافذ (معظم تطبيقات الطرفية تتيح ذلك)، ويقسمون النوافذ إلى أجزاء، ويستخدمون جلسات tmux ونوافذه المسمّاة، أو يتركون مدير نوافذ مُبلِّط يرتّبها. هذه تساعدك على ترتيب الطرفيات؛ أما العثور على التي تحتاج إليك فلا يزال يعني البحث بعينيك.",
+    "from": "ad6ff5b0d6e6"
+  },
+  "many.does.title": {
+    "text": "ما يفعله Aubergine",
+    "from": "acf3f5da99c1"
+  },
+  "many.does.canvas": {
+    "text": "<strong>لوحة.</strong> طرفيات جنبًا إلى جنب، كل منها حيّة. اسحب إحداها من عنوانها، وغيّر حجمها من حوافها، وانقر عنوانها نقرًا مزدوجًا لإعادة تسميتها. والنقطة في العنوان تعطيها لونًا؛ والإطار (<strong>New terminal ▾ → Frame</strong>، أو <code>G</code>) يجمع طرفيات تحت تسمية وينقلها معًا.",
+    "from": "adf948fb2094"
+  },
+  "many.does.canvases": {
+    "text": "<strong>اللوحات والمشاريع.</strong> عدة لوحات، تُعرض علامات تبويب، أو قائمة واحدة، أو عمودًا على اليسار، ولكل منها عنوانها. والمشروع يحوي لوحاته وطرفياته وطابوره وقائمة ما ينتظر الخاصة به؛ ويتنقّل المبدِّل أعلى اليسار بين المشاريع.",
+    "from": "3e3ff8bc43f4"
+  },
+  "many.does.list": {
+    "text": "<strong>قائمة واحدة بكل طرفية.</strong> يسرد <strong>Terminals</strong> (الطرفيات) في اللوحة الجانبية كل طرفية مع حالتها بالكلمات (<strong>working</strong>، <strong>waiting for you</strong>، <strong>finished</strong>، أمر فشل)، وخطوة تشغيلها، ومتى نشطت آخر مرة، لهذه اللوحة أو لكل اللوحات. والحقل في أعلاها يجد طرفية بالاسم أو المجلد أو الأمر أو الملاحظة أو الوسوم.",
+    "from": "f7361c6e0119"
+  },
+  "many.does.filter": {
+    "text": "يحوي <strong>Filter</strong> (التصفية) المرشّحات (بانتظاري، مشغولة، غير مقروءة، فيها وكيل، مركونة، وسوم) وطريقة ترتيب القائمة: حسب اللوحة، أو قائمة واحدة مسطّحة بترتيب اللوحات، أو حسب آخر تحديث، أو آخر كتابة، أو الاسم.",
+    "from": "6e69fcb25a25"
+  },
+  "many.does.goto": {
+    "text": "<strong>Go to…</strong>‎ فوق اللوحة، أو <code>⌘K</code>، هو لوحة الأوامر: اكتب جزءًا من اسم أو مجلد أو أمر أو ملاحظة. وقسمها <strong>Terminal output</strong> (مخرجات الطرفيات) يبحث فيما طبعته الطرفيات (آخر 50,000 سطر يحتفظ بها tmux لكل منها)، والنتيجة تفتح تلك الطرفية مُمرَّرة إليها.",
+    "from": "cc786240ec50"
+  },
+  "many.does.map": {
+    "text": "<strong>الخريطة</strong>، وزرّها بجانب <strong>Go to…</strong>‎، تعرض اللوحة كلها صغيرة وتحرّكها. ويعرض <strong>Fit</strong> (<code>F</code>) كل شيء دفعة واحدة.",
+    "from": "fc5776ecfbcb"
+  },
+  "many.does.about": {
+    "text": "<strong>ما الغرض من الطرفية.</strong> لكل طرفية ملاحظة بجانبها (ملخص وسجل)، وفي تفاصيلها وسوم وروابط وحقول مثل <code>Ticket: DEMO-12</code>. ويستطيع الوكيل أن يكتب اسم طرفيته وملخصها وحقولها بأوامر <code>aubergine</code>.",
+    "from": "1d11da3800ef"
+  },
+  "many.does.alone": {
+    "text": "<strong>طرفية وحدها.</strong> يفتحها <strong>Tab ↗</strong>‎ في عنوانها في علامة تبويب خاصة بها في المتصفح، على <code>/t/&lt;terminal&gt;</code>، وتفاصيلها وملاحظتها على بُعد زر.",
+    "from": "43aca22cfd80"
+  },
+  "many.does.keys": {
+    "text": "ينتقل <code>Tab</code> و<code>Shift+Tab</code> بين الطرفيات بالترتيب الذي تعرضه القائمة، وينتقل <code>W</code> إلى التالية التي تنتظرك.",
+    "from": "31d2188a40a6"
+  },
+  "many.not.title": {
+    "text": "ما لا يفعله",
+    "from": "b3a53baf5dfd"
+  },
+  "many.not.arrange": {
+    "text": "<strong>لا يرتّب الأشياء نيابةً عنك.</strong> تقف الطرفية حيث تضعها (الجديدة تذهب إلى مساحة فارغة قرب وسط العرض)، وتحتفظ بالاسم الذي أعطيتها إياه أنت أو وكيلها.",
+    "from": "f9831e413ca7"
+  },
+  "many.not.number": {
+    "text": "<strong>لا يَعِد بعدد.</strong> اللوحة التي تنظر إليها وحدها تُبقي طرفيات حيّة: عند التصغير الشديد تعرض الطرفية صورة لشاشتها، وخارج الشاشة لا تكلّف الصفحة شيئًا. وتبقى كل طرفية صدفةً على حاسوبك. القائمة مختبرة بـ 1,000 طرفية في اختبار وحدة (السرد والتصفية ورسم ما يملأ شاشة فقط)، ونصٌّ برمجي يملأ ثلاث لوحات بـ 90 طرفية للحكم يدويًا. ولا أيٌّ منهما وعدٌ بشأن حاسوبك.",
+    "from": "0b99155f7203"
+  },
+  "many.not.others": {
+    "text": "<strong>تبويبات تطبيق الطرفية لديك لا تُعرض.</strong> يسرد <strong>Open elsewhere</strong> (<code>O</code>) الطرفيات المفتوحة هناك وينقلها واحدة تلو الأخرى، طرفيةً جديدة في المجلد نفسه. والبرنامج الذي يعمل في تبويب يبقى في ذلك التبويب.",
+    "from": "342f90ca0c87"
+  },
+  "many.q.organize.q": {
+    "text": "كيف أنظّم نوافذ طرفية كثيرة؟",
+    "from": "ff12c1f905b9"
+  },
+  "many.q.organize.a": {
+    "text": "في Aubergine: لوحة لكل عمل، وطرفيات جنبًا إلى جنب بأسماء وألوان، وإطارات حول ما يتصل بعضه ببعض، وقائمة واحدة بها جميعًا مع ما تفعله كل منها.",
+    "from": "b8784c8ec007"
+  },
+  "many.q.which.q": {
+    "text": "كيف أعرف أيّ طرفية تشغّل أمرًا ما؟",
+    "from": "17eb8a719d39"
+  },
+  "many.q.which.a": {
+    "text": "الحقل فوق القائمة يطابق اسم الطرفية ومجلدها وأمرها وملاحظتها ووسومها، ولوحة الأوامر (<code>⌘K</code>) تفعل الشيء نفسه على كل اللوحات. ويُظهر عنوان الطرفية ما تشغّله.",
+    "from": "da1e57276527"
+  },
+  "many.q.search.q": {
+    "text": "هل يمكنني البحث في مخرجات كل طرفياتي؟",
+    "from": "a58d20e4b8f9"
+  },
+  "many.q.search.a": {
+    "text": "نعم، في ما لا يزال منها يعمل: يقرأ قسم <strong>Terminal output</strong> في لوحة الأوامر سجل كل طرفية حين تبحث، بما فيها المركونة، إلى أبعد ما يحتفظ به tmux (50,000 سطر). لا يُفهرَس شيء ولا يُسجَّل.",
+    "from": "886e87fdb066"
+  },
+  "many.q.count.q": {
+    "text": "كم طرفية يستطيع Aubergine التعامل معها؟",
+    "from": "316b2352e931"
+  },
+  "many.q.count.a": {
+    "text": "لا يوجد حدّ محدد. القائمة مختبرة بـ 1,000 طرفية، ونُظر يدويًا في ثلاث لوحات فيها 90 طرفية؛ وكل طرفية تبقى صدفة، فالفيصل ما يستطيع حاسوبك تشغيله.",
+    "from": "ee69bd158d20"
+  },
+  "many.q.name.q": {
+    "text": "هل يمكنني تسمية طرفياتي وتلوينها؟",
+    "from": "8288c9dbf63e"
+  },
+  "many.q.name.a": {
+    "text": "نعم. انقر عنوان الطرفية نقرًا مزدوجًا لإعادة تسميتها، واستخدم النقطة في عنوانها لاختيار واحد من ثلاثة عشر لونًا أو لونك الخاص. وللوحات أسماء وألوان أيضًا.",
+    "from": "42ae6580f04b"
+  },
+  "many.related": {
+    "text": "ذو صلة: <a href=\"/claude-code-notifications/\">اعرف متى ينتظرك Claude Code</a> · <a href=\"/keep-process-running-after-closing-terminal/\">أبقِ عملية تعمل</a> · <a href=\"/run-multiple-coding-agents/\">شغّل عدة وكلاء برمجة</a>",
+    "from": "da55f7278a1a"
+  },
+  "tmux.meta.title": {
+    "text": "tmux دون أن تتعلّم tmux | Aubergine",
+    "from": "a731849612b9"
+  },
+  "tmux.meta.description": {
+    "text": "أصداف تبقى بعد إغلاق النافذة، بلا مفتاح بادئة ولا ملف ‎.tmux.conf. يتولّى Aubergine تشغيل tmux نيابةً عنك على مقبسه الخاص، مع عجلة الفأرة والنسخ واللصق وتغيير الحجم كما في أي طرفية.",
+    "from": "d876f30b4bcb"
+  },
+  "tmux.crumb": {
+    "text": "tmux دون tmux",
+    "from": "089511f9df35"
+  },
+  "tmux.title": {
+    "text": "tmux دون أن تتعلّم tmux",
+    "from": "c661725dc167"
+  },
+  "tmux.lead": {
+    "text": "يُبقي tmux أصدافك تعمل حين تُغلق النافذة. لكنه يطلب منك أيضًا أن تتعلّم مفتاح بادئة، ووضع النسخ، وملف إعدادات. يتولّى Aubergine تشغيل tmux نيابةً عنك، وتستخدم كل طرفية في صفحة متصفح كما تستخدم أي طرفية.",
+    "from": "c92cbb7d944a"
+  },
+  "tmux.who.title": {
+    "text": "لمن هذا",
+    "from": "bcdecc549d07"
+  },
+  "tmux.who": {
+    "text": "لمن يريد ما يقدّمه tmux، أي أصدافًا تبقى بعد إغلاق النافذة، دون مفاتيحه وإعداداته. وإن كنت تعيش في tmux أصلًا، فاحتفظ به: Aubergine لا يمسّ tmux الخاص بك.",
+    "from": "67d7b78bd967"
+  },
+  "tmux.usual.title": {
+    "text": "ما يفعله الناس عادةً",
+    "from": "30e09240a39b"
+  },
+  "tmux.usual.text": {
+    "text": "يتعلّمون tmux: مفتاح بادئة (<code>Ctrl+B</code> ما لم تغيّره) قبل كل أمر، و<code>tmux attach</code> للعودة، وأسطرًا في <code>~/.tmux.conf</code> للفأرة والحافظة. أو <code>screen</code>، وهو أداة أقدم من النوع نفسه. وهذه الأعمال اليومية كما هي في tmux افتراضيًا وفي Aubergine:",
+    "from": "94c03879479b"
+  },
+  "tmux.table.thing": {
+    "text": "لكي",
+    "from": "f4b06ef6d3c8"
+  },
+  "tmux.table.tmux": {
+    "text": "في tmux",
+    "from": "a1ab6023b141"
+  },
+  "tmux.table.here": {
+    "text": "في Aubergine",
+    "from": "c6dcdd25687b"
+  },
+  "tmux.table.tmuxShort": {
+    "text": "tmux",
+    "from": "adb519257aeb"
+  },
+  "tmux.table.hereShort": {
+    "text": "Aubergine",
+    "from": "b72370707186"
+  },
+  "tmux.row.leave": {
+    "text": "تترك صدفة تعمل",
+    "from": "ba2cbd204ae7"
+  },
+  "tmux.row.back": {
+    "text": "تعود إليها",
+    "from": "9a861e7d13a6"
+  },
+  "tmux.row.scroll": {
+    "text": "تمرّر إلى الخلف",
+    "from": "fb2c3707ff8c"
+  },
+  "tmux.row.copy": {
+    "text": "تنسخ",
+    "from": "e21f935f11d7"
+  },
+  "tmux.row.paste": {
+    "text": "تلصق",
+    "from": "f3380f7b44bd"
+  },
+  "tmux.row.several": {
+    "text": "ترى عدة أصداف",
+    "from": "37cb2e73ff45"
+  },
+  "tmux.row.name": {
+    "text": "تسمّي إحداها",
+    "from": "6f2f4dd0bb35"
+  },
+  "tmux.cell.leave.tmux": {
+    "text": "<code>Ctrl+B</code> ثم <code>d</code> للانفصال",
+    "from": "0aabfdad59cc"
+  },
+  "tmux.cell.leave.here": {
+    "text": "أغلق التبويب",
+    "from": "820a72b24e4e"
+  },
+  "tmux.cell.back.tmux": {
+    "text": "<code>tmux attach</code>",
+    "from": "6c4afca4cfa5"
+  },
+  "tmux.cell.back.here": {
+    "text": "افتح الصفحة",
+    "from": "911fa06e14a1"
+  },
+  "tmux.cell.scroll.tmux": {
+    "text": "وضع النسخ، <code>Ctrl+B</code> ثم <code>[</code>",
+    "from": "15276f527f80"
+  },
+  "tmux.cell.scroll.here": {
+    "text": "عجلة الفأرة",
+    "from": "65317915ff3a"
+  },
+  "tmux.cell.copy.tmux": {
+    "text": "حدّد في وضع النسخ",
+    "from": "55ae66ca2a46"
+  },
+  "tmux.cell.copy.here": {
+    "text": "حدّد بالفأرة",
+    "from": "13b782465243"
+  },
+  "tmux.cell.paste.tmux": {
+    "text": "<code>Ctrl+B</code> ثم <code>]</code>",
+    "from": "927f106565e1"
+  },
+  "tmux.cell.paste.here": {
+    "text": "<code>⌘V</code>، أو <code>Ctrl+Shift+V</code>",
+    "from": "79285d2dbfdd"
+  },
+  "tmux.cell.several.tmux": {
+    "text": "النوافذ والأجزاء",
+    "from": "f2a69ea1d42f"
+  },
+  "tmux.cell.several.here": {
+    "text": "طرفيات جنبًا إلى جنب على لوحة",
+    "from": "dc6bdd73da8a"
+  },
+  "tmux.cell.name.tmux": {
+    "text": "<code>Ctrl+B</code> ثم <code>,</code>",
+    "from": "fe31dbab067c"
+  },
+  "tmux.cell.name.here": {
+    "text": "انقر عنوانها نقرًا مزدوجًا",
+    "from": "52bfa2dda0c6"
+  },
+  "tmux.does.title": {
+    "text": "ما يفعله Aubergine",
+    "from": "acf3f5da99c1"
+  },
+  "tmux.does.own": {
+    "text": "<strong>مقبسه الخاص وإعداداته الخاصة.</strong> يتولّى Aubergine تشغيل tmux على مقبس خاص به، اسمه <code>aubergine</code>، مع ملف إعدادات خاص به بدلًا من ملفك: لا سطر حالة، ولا مفتاح بادئة، والفأرة مفعّلة، و50,000 سطر من السجل. كل طرفية جلسة tmux واحدة فيها صدفة واحدة، هي صدفة تسجيل الدخول لديك. ولا يُمس tmux الخاص بك ولا جلساته ولا <code>~/.tmux.conf</code> لديك.",
+    "from": "82419f3b337f"
+  },
+  "tmux.does.scroll": {
+    "text": "<strong>عجلة الفأرة تمرّر إلى الخلف</strong> في الطرفية التي معها لوحة المفاتيح؛ وفي أي مكان آخر على اللوحة تكبّر وتصغّر.",
+    "from": "c1901de45a17"
+  },
+  "tmux.does.copy": {
+    "text": "<strong>حدّد بالفأرة فيُنسخ</strong> إلى حافظتك حين تُفلت الزر: يسلّم tmux ما حُدّد إلى الصفحة عبر OSC 52، وهو تسلسل الهروب الذي تستخدمه الطرفيات للحافظة، وتضعه الصفحة هناك. والصق بـ <code>⌘V</code> (<code>Ctrl+Shift+V</code> خارج macOS). ولصق عدة أسطر يُحاط بعلامتي بداية ونهاية، فلا تشغّله الصدفة سطرًا سطرًا.",
+    "from": "b5991d05ed04"
+  },
+  "tmux.does.size": {
+    "text": "<strong>غيّر الحجم بالسحب</strong> من حواف الطرفية على اللوحة، فتحصل الصدفة على حجمها الجديد. والطرفية المفتوحة في مكانين في وقت واحد لها حجم واحد، يحدده العرض الذي كتبت فيه آخر مرة.",
+    "from": "15e6a34e7ef7"
+  },
+  "tmux.does.still": {
+    "text": "<strong>لا يزال tmux تحته.</strong> يعرض <code>aubergine attach &lt;name&gt;</code> طرفية في نافذة من تطبيق الطرفية لديك، ويفعل <strong>Open on desktop</strong> (افتح على سطح المكتب) في قائمة الطرفية ذلك نيابةً عنك (على macOS في Terminal أو iTerm؛ وعلى Linux بسطر أوامر تضبطه أنت). ومع إيقاف الخادم، لا يزال <code>tmux -L aubergine ls</code> و<code>tmux -L aubergine attach -t &lt;id&gt;</code> يصلان إلى كل صدفة.",
+    "from": "189355cb23f9"
+  },
+  "tmux.need.title": {
+    "text": "ما تحتاج إليه",
+    "from": "e17c85cc990b"
+  },
+  "tmux.need.text": {
+    "text": "tmux 3.2 أو أحدث، تثبّته أنت: <code>brew install tmux</code> على macOS، وحزمة نظامك على Linux. لا يثبّته Aubergine، ويعرض صفحة تقول ذلك حين يكون مفقودًا أو أقدم. ومع zsh يُظهر عنوان الطرفية الأمر الجاري وكيف انتهى الأمر الأخير؛ والأصداف الأخرى تعمل دون ذلك.",
+    "from": "1ed9bf484beb"
+  },
+  "tmux.not.title": {
+    "text": "ما ليس هو",
+    "from": "9516c425aeb2"
+  },
+  "tmux.not.ssh": {
+    "text": "<strong>ليس tmux على خادم بعيد.</strong> يعمل tmux الخاص بـ Aubergine على الحاسوب الذي يعمل عليه خادمه. ولصدفة على جهاز تصل إليه عبر SSH، يبقى tmux على ذلك الجهاز هو الأداة. ويمكن أن يعمل Aubergine نفسه على جهاز آخر (<a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md\">Using Aubergine from elsewhere</a>)؛ وقد شُغّل ذلك داخل حاويات فقط.",
+    "from": "97db800d695c"
+  },
+  "tmux.not.yours": {
+    "text": "<strong>جلسات tmux الخاصة بك لا تُعرض.</strong> لا تحوي اللوحة إلا طرفيات Aubergine. يسرد <code>aubergine scan</code> الأصداف التفاعلية المفتوحة على هذا الحاسوب خارج Aubergine، ويعطي <code>aubergine import</code> أو <code>aubergine here</code> إحداها طرفيةً جديدة على اللوحة في المجلد نفسه؛ والبرنامج الذي يعمل في القديمة يبقى هناك. والأسطر التي يقترحها <code>aubergine shell-hook print</code> لملف <code>.zshrc</code> لديك لا تفعل شيئًا داخل tmux.",
+    "from": "b5696d4f2c3b"
+  },
+  "tmux.not.keys": {
+    "text": "<strong>لا مفاتيح tmux ولا أجزاء.</strong> لا يوجد مفتاح بادئة، ولا تنطبق اختصارات tmux الخاصة بك. وما دامت لوحة المفاتيح مع طرفية، يذهب كل مفتاح إلى البرنامج الذي فيها، إلا بضعة اختصارات مركّبة اختيرت بحيث لا تحتاج إليها أي صدفة ولا أي محرّر ولا tmux.",
+    "from": "22984bbf9c68"
+  },
+  "tmux.not.windows": {
+    "text": "<strong>ليس على Windows نفسه.</strong> يحتاج إلى tmux وصدفة Unix؛ وعلى Windows يعمل داخل WSL 2. راجع <a href=\"/windows/\">Windows مع WSL</a>.",
+    "from": "b6d2899a3b38"
+  },
+  "tmux.q.shortcuts.q": {
+    "text": "هل يمكنني استخدام tmux دون تعلّم الاختصارات؟",
+    "from": "b9c488ac4210"
+  },
+  "tmux.q.shortcuts.a": {
+    "text": "نعم. يتولّى Aubergine تشغيل tmux بلا مفتاح بادئة ولا سطر حالة، فلا تكتب أي أمر لـ tmux: أغلق التبويب لتغادر، وافتح الصفحة لتعود، ومرّر بعجلة الفأرة، وانسخ بالتحديد.",
+    "from": "3a236c2882a1"
+  },
+  "tmux.q.config.q": {
+    "text": "هل يغيّر Aubergine إعدادات tmux لديّ؟",
+    "from": "72dfacba61b2"
+  },
+  "tmux.q.config.a": {
+    "text": "لا. يشغّل tmux على مقبس خاص به، <code>aubergine</code>، مع ملف إعدادات خاص به. ويبقى خادم tmux لديك وجلساته و<code>~/.tmux.conf</code> لديك كما هي.",
+    "from": "7a93ca8432a8"
+  },
+  "tmux.q.copy.q": {
+    "text": "كيف أمرّر وأنسخ في طرفيات Aubergine؟",
+    "from": "1f32bd561f38"
+  },
+  "tmux.q.copy.a": {
+    "text": "انقر طرفية لتعطيها لوحة المفاتيح، ثم استخدم عجلة الفأرة للتمرير إلى الخلف. حدّد النص بالفأرة: يصبح في حافظتك حين تُفلت الزر. والصق بـ <code>⌘V</code>، أو <code>Ctrl+Shift+V</code> خارج macOS.",
+    "from": "a7f3123832de"
+  },
+  "tmux.q.attach.q": {
+    "text": "هل يمكنني الاتصال بطرفية Aubergine من تطبيق الطرفية لديّ؟",
+    "from": "f9fcae450958"
+  },
+  "tmux.q.attach.a": {
+    "text": "نعم: <code>aubergine attach &lt;name&gt;</code>، أو <strong>Open on desktop</strong> في قائمة الطرفية. إنها الطرفية نفسها في المكانين؛ وما تكتبه في أحدهما يظهر في الآخر.",
+    "from": "7efa052d1074"
+  },
+  "tmux.q.ssh.q": {
+    "text": "هل يستطيع Aubergine أن يحلّ محلّ tmux على خادم أدخل إليه عبر SSH؟",
+    "from": "6795b9483c23"
+  },
+  "tmux.q.ssh.a": {
+    "text": "ليس بهذه الصورة: طرفياته على الجهاز الذي يعمل عليه خادمه. ويمكن أن يعمل على خادم ويُستخدم من متصفحك عبر نفق SSH أو خادم وسيط، وقد شُغّل ذلك داخل حاويات فقط، ولم يُشغَّل قط على جهاز سحابي.",
+    "from": "502062297ccb"
+  },
+  "tmux.related": {
+    "text": "ذو صلة: <a href=\"/keep-process-running-after-closing-terminal/\">أبقِ عملية تعمل</a> · <a href=\"/keep-terminals-after-restart/\">احتفظ بطرفياتك بعد إعادة التشغيل</a> · <a href=\"/too-many-terminal-tabs/\">طرفيات كثيرة جدًا</a>",
+    "from": "d827d8a7918e"
+  },
+  "phone.meta.title": {
+    "text": "اطّلع على وكلاء البرمجة من هاتفك | Aubergine",
+    "from": "5e05181dcbf3"
+  },
+  "phone.meta.description": {
+    "text": "الوصول إلى Aubergine من متصفح الهاتف: HTTPS على الحاسوب نفسه، وعنوان في الإعدادات، وكل جهاز يُقرَن برمز لمرة واحدة أو برمز QR، ويُلغى متى شئت. شُغّل مرة واحدة على جهاز Mac واحد؛ ولم يُجرَّب على هاتف.",
+    "from": "4f87f330c4d4"
+  },
+  "phone.crumb": {
+    "text": "من هاتفك",
+    "from": "624fe9a9d5bf"
+  },
+  "phone.title": {
+    "text": "اطّلع على وكلائك من هاتفك",
+    "from": "c92463ac8872"
+  },
+  "phone.lead": {
+    "text": "تركت ثلاثة وكلاء يعملون وخرجت. هل ينتظر أحدهم موافقتك؟ بعد أن تُعدّه، يمكن فتح Aubergine في متصفح الهاتف: الصفحة نفسها والطرفيات نفسها، وكل جهاز يُقرَن برمز لمرة واحدة.",
+    "from": "5ff340d9bfd5"
+  },
+  "phone.tried": {
+    "text": "<strong>ما الذي جُرّب، وما الذي لم يُجرَّب.</strong> جُرّب الاستخدام من جهاز آخر مرةً واحدة، في 22 نوفمبر 2026: إعداد الحاوية في <code>docker/</code> على جهاز Mac واحد، وأمامه Caddy تحت <code>https://aubergine.localhost</code>، وChromium على جهاز Mac نفسه، اقترن برمز، وكتب في الطرفيات، وسُجّل خروجه حين أُلغي جهازه. <strong>لم يُجرَّب:</strong> هاتف حقيقي، ومسح رمز QR بهاتف، واسم حقيقي بشهادة عامة، وشبكة خاصة، وجهاز سحابي، وجهازان منفصلان. والصفحة غير مصمّمة لعرض الهاتف. والباقي مأخوذ من الشيفرة واختباراتها. فخذ هذا على أنه شيء للتجربة، لا شيء موعود.",
+    "from": "335a569f7582"
+  },
+  "phone.usual.title": {
+    "text": "ما يفعله الناس عادةً",
+    "from": "30e09240a39b"
+  },
+  "phone.usual.text": {
+    "text": "تطبيق SSH على الهاتف، يدخلون به إلى الحاسوب، ثم <code>tmux attach</code> إلى الجلسة التي يعمل فيها وكيل. أو نفق، أو شبكة خاصة تجعل الحاسوب في متناول الهاتف. كلاهما يعمل؛ لكن الاطلاع على عدة وكلاء بهذه الطريقة يعني الاتصال بكل منهم بدوره على لوحة مفاتيح صغيرة.",
+    "from": "db5b6a60eb84"
+  },
+  "phone.does.title": {
+    "text": "ما يفعله Aubergine",
+    "from": "acf3f5da99c1"
+  },
+  "phone.does.off": {
+    "text": "<strong>معطّل افتراضيًا، ويبقى مربوطًا بهذا الحاسوب.</strong> يستمع الخادم على <code>127.0.0.1</code> فقط، ولا يتغيّر ذلك. وشيء على الحاسوب نفسه يوصل إليه HTTPS تحت اسم، مثل خدمة HTTPS الخاصة بشبكة خاصة أو خادم ويب مثل Caddy. ولا يتعامل Aubergine بـ HTTPS بنفسه أبدًا.",
+    "from": "69ebb44f3dfc"
+  },
+  "phone.does.address": {
+    "text": "<strong>تكتب العنوان في الإعدادات.</strong> يوضع تحت <code>access.addresses</code> في <code>config.json</code>، ويُقرأ حين يبدأ الخادم؛ ولا تستطيع أي صفحة ولا أي برنامج تغييره. ويسرد <code>aubergine doctor</code> العناوين وما الخطأ في أيٍّ منها.",
+    "from": "4d586d2378b3"
+  },
+  "phone.does.pair": {
+    "text": "<strong>كل جهاز يُقرَن برمز لمرة واحدة.</strong> يُظهر <code>aubergine device add --name \"Phone\"</code> على الحاسوب، أو <strong>Settings → Devices → Add a device</strong> في متصفح مسجَّل الدخول، رمزًا، ولكل عنوان رمز QR لرابط فيه الرمز. امسحه، أو افتح الرابط، أو اكتب الرمز في صفحة تسجيل الدخول على الهاتف. والرمز يعمل مرة واحدة، لثلاث دقائق.",
+    "from": "e461217bf7e4"
+  },
+  "phone.does.revoke": {
+    "text": "<strong>يمكن إلغاء الجهاز.</strong> يسجّل <code>aubergine device revoke \"Phone\"</code>، أو <strong>Revoke…</strong>‎ (إلغاء) تحت <strong>Settings → Devices</strong>، خروجه فورًا ويغلق ما فتحه. والجهاز الذي لا يُستخدم 90 يومًا يتوقف عن العمل.",
+    "from": "3fecb39df4a9"
+  },
+  "phone.does.owner": {
+    "text": "<strong>الجهاز المقترن هو المالك بكامله.</strong> يستطيع أن يفعل كل ما تستطيعه على الحاسوب: كل طرفية، أي صدفة على ذلك الحاسوب باسمك. لا تقرن إلا متصفحات تسلّمها لوحة مفاتيحك. وما يعمل على سطح مكتب الحاسوب نفسه، <strong>Open on desktop</strong>، يُستبعد من الصفحة هناك ويُرفض.",
+    "from": "77b677da358b"
+  },
+  "phone.see.title": {
+    "text": "ما الذي ستراه",
+    "from": "7ad31245b77f"
+  },
+  "phone.see.text": {
+    "text": "الصفحة نفسها التي على الحاسوب: اللوحة وطرفياتها، والعدد بجانب <strong>For you</strong> وقائمة ما ينتظر، وطرفية وحدها على <code>/t/&lt;terminal&gt;</code> مع تفاصيلها وملاحظتها. وهي غير مصمّمة للهاتف؛ وتعمل كما تعمل في نافذة ضيقة.",
+    "from": "e8260cebb287"
+  },
+  "phone.see.steps": {
+    "text": "الطرق الثلاث لإعداده (نفق SSH، وشبكة خاصة، واسم خاص بك وخادم وسيط)، والإقران، وما تفعله حين لا يعمل، كلها في <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md\">Using Aubergine from elsewhere</a>. ونفق SSH لا يحتاج إلى أي إعدادات، لكنه غير مريح على الهاتف.",
+    "from": "cdc64dbda345"
+  },
+  "phone.not.title": {
+    "text": "ما لا يفعله",
+    "from": "b3a53baf5dfd"
+  },
+  "phone.not.push": {
+    "text": "<strong>لا تطبيق ولا إشعارات فورية.</strong> إنه صفحة في متصفح الهاتف، محدَّثة ما دامت مفتوحة. ولا يُرسل شيء إلى هاتف صفحته مغلقة.",
+    "from": "6f40d9a4fbaf"
+  },
+  "phone.not.awake": {
+    "text": "<strong>لا إجابة من حاسوب محمول نائم.</strong> إن كان الخادم على حاسوب محمول، فلا يصل إليه الهاتف إلا ما دام مستيقظًا. والخيار الآخر جهاز يبقى يعمل.",
+    "from": "216b7430b645"
+  },
+  "phone.not.public": {
+    "text": "<strong>لا حماية لعنوان يستطيع أي أحد فتحه.</strong> دون رمز لا يدخل أحد، والرموز صعبة التخمين، لكن الغرباء سيحاولون تخمين الوصول إلى صدفة. ضع أمامه شبكة خاصة، أو تسجيل الدخول الخاص بمؤسستك، ولا تستخدم أبدًا وضعًا في شبكة خاصة ينشر جهازًا على الإنترنت كله.",
+    "from": "c027919da51a"
+  },
+  "phone.not.layout": {
+    "text": "<strong>لا تصميم للهاتف.</strong> تعمل الصفحة كما في نافذة ضيقة. قراءة طرفية والإجابة عن سؤال تعملان بهذه الطريقة؛ أما ترتيب لوحة فلشاشة أكبر.",
+    "from": "715e130ed7cc"
+  },
+  "phone.q.check.q": {
+    "text": "هل يمكنني الاطلاع على وكلاء البرمجة من هاتفي؟",
+    "from": "b6ed7ed61e98"
+  },
+  "phone.q.check.a": {
+    "text": "بمجرد أن يصبح Aubergine في المتناول عبر HTTPS ويُقرَن متصفح الهاتف، يعرض الهاتف الصفحة نفسها: أيّ طرفية تنتظر، وقائمة ما ينتظر، وكل طرفية. وقد شُغّل ذلك مع متصفح على جهاز Mac نفسه، ولم يُشغَّل بعد على هاتف حقيقي.",
+    "from": "25e4fa5804eb"
+  },
+  "phone.q.pair.q": {
+    "text": "كيف أقرن هاتفي بـ Aubergine؟",
+    "from": "2d255e8c0d6d"
+  },
+  "phone.q.pair.a": {
+    "text": "شغّل <code>aubergine device add --name \"Phone\"</code> على الحاسوب، أو استخدم <strong>Settings → Devices → Add a device</strong>. امسح رمز QR، أو افتح الرابط، أو اكتب الرمز في صفحة تسجيل الدخول على الهاتف خلال ثلاث دقائق.",
+    "from": "238eafc4e16e"
+  },
+  "phone.q.lost.q": {
+    "text": "ماذا لو فقدت هاتفي؟",
+    "from": "4cfecc2cfc43"
+  },
+  "phone.q.lost.a": {
+    "text": "ألغِه من الحاسوب: <code>aubergine device revoke \"Phone\"</code>، أو <strong>Revoke…</strong>‎ تحت <strong>Settings → Devices</strong>. يُسجَّل خروجه فورًا، ويُغلق ما كان قد فتحه.",
+    "from": "f3431f64e453"
+  },
+  "phone.q.internet.q": {
+    "text": "هل من الآمن وضع Aubergine على الإنترنت؟",
+    "from": "b626ae8c3d99"
+  },
+  "phone.q.internet.a": {
+    "text": "العنوان الذي يستطيع أي أحد فتحه يضع تسجيل الدخول أمام الجميع، والجهاز المقترن له صدفة على حاسوبك. فضّل شبكة خاصة، أو تسجيل الدخول الخاص بمؤسستك أمام العنوان.",
+    "from": "a99827304604"
+  },
+  "phone.q.asleep.q": {
+    "text": "هل يعمل وحاسوبي المحمول نائم؟",
+    "from": "40db9086b18b"
+  },
+  "phone.q.asleep.a": {
+    "text": "لا. الحاسوب المحمول النائم لا يجيب بشيء، وتتوقف طرفياته مؤقتًا حتى يستيقظ. لتصل إلى الوكلاء في أي ساعة، يجب أن يعمل الخادم على جهاز يبقى مستيقظًا.",
+    "from": "57372d76c37c"
+  },
+  "phone.related": {
+    "text": "ذو صلة: <a href=\"/claude-code-notifications/\">اعرف متى ينتظرك Claude Code</a> · <a href=\"/keep-process-running-after-closing-terminal/\">أبقِ عملية تعمل</a> · <a href=\"/security/\">الأمان والخصوصية</a>",
+    "from": "2c9ecf2e9214"
   },
   "queue.meta.title": {
     "text": "الطابور وقائمة For you والجداول الزمنية | Aubergine",

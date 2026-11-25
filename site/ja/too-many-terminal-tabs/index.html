@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="ja" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>タブが多すぎるときに目当てのターミナルを見つける | Aubergine</title>
+<meta name="description" content="ターミナルのタブが多すぎて、どれも zsh という名前？ Aubergine はすべてのターミナルをキャンバスと1つの一覧に置き、状態を言葉で示し、フィルター、タグ、ターミナルの出力の検索、ブラウザーのタブで単独で開くターミナルを用意します。">
+<link rel="canonical" href="https://thirstyeggplant.com/ja/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/too-many-terminal-tabs/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="タブが多すぎるときに目当てのターミナルを見つける | Aubergine">
+<meta property="og:description" content="ターミナルのタブが多すぎて、どれも zsh という名前？ Aubergine はすべてのターミナルをキャンバスと1つの一覧に置き、状態を言葉で示し、フィルター、タグ、ターミナルの出力の検索、ブラウザーのタブで単独で開くターミナルを用意します。">
+<meta property="og:url" content="https://thirstyeggplant.com/ja/too-many-terminal-tabs/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine：ターミナルが並ぶキャンバス。1つは処理中、1つはあなたを待っています">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine：ターミナルが並ぶキャンバス。1つは処理中、1つはあなたを待っています">
+<meta name="twitter:title" content="タブが多すぎるときに目当てのターミナルを見つける | Aubergine">
+<meta name="twitter:description" content="ターミナルのタブが多すぎて、どれも zsh という名前？ Aubergine はすべてのターミナルをキャンバスと1つの一覧に置き、状態を言葉で示し、フィルター、タグ、ターミナルの出力の検索、ブラウザーのタブで単独で開くターミナルを用意します。">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">本文へ移動</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="ページ">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">インストール</a></li>
+        <li><a href="../guides/">ガイド</a></li>
+        <li><a href="../security/">セキュリティ</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="言語: 日本語"><span class="lang-long" aria-hidden="true">日本語</span><span class="lang-short" aria-hidden="true">JA</span></summary>
+      <ul class="menu-list"><li><a href="../../too-many-terminal-tabs/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/too-many-terminal-tabs/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/too-many-terminal-tabs/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/too-many-terminal-tabs/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/too-many-terminal-tabs/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="./" hreflang="ja" lang="ja" dir="ltr" aria-current="true">日本語</a></li><li><a href="../../zh/too-many-terminal-tabs/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/too-many-terminal-tabs/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/too-many-terminal-tabs/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/too-many-terminal-tabs/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/too-many-terminal-tabs/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/too-many-terminal-tabs/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>メニュー</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">インストール</a></li>
+        <li><a href="../guides/">ガイド</a></li>
+        <li><a href="../security/">セキュリティ</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine 本体は英語です。ボタン、メニュー、画像はすべて英語版のものです。</p>
+    <p>このページは英語版から機械翻訳されています。<a href="https://github.com/thirstyeggplant/aubergine/issues">修正を送る</a>。</p>
+  </div>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/ja/too-many-terminal-tabs/#article",
+      "headline": "ターミナルが多すぎるときに目当てのものを見つける",
+      "description": "ターミナルのタブが多すぎて、どれも zsh という名前？ Aubergine はすべてのターミナルをキャンバスと1つの一覧に置き、状態を言葉で示し、フィルター、タグ、ターミナルの出力の検索、ブラウザーのタブで単独で開くターミナルを用意します。",
+      "url": "https://thirstyeggplant.com/ja/too-many-terminal-tabs/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/ja/too-many-terminal-tabs/",
+      "datePublished": "2026-11-25",
+      "dateModified": "2026-11-25",
+      "inLanguage": "ja",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "ガイド", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "ターミナルが多すぎる", "item": "https://thirstyeggplant.com/ja/too-many-terminal-tabs/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/ja/too-many-terminal-tabs/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "たくさんのターミナルウィンドウを整理するには？", "acceptedAnswer": { "@type": "Answer", "text": "Aubergine では、作業ごとに1つのキャンバスを使い、ターミナルを名前と色を付けて横に並べ、関係するものをフレームで囲み、それぞれが何をしているかを示す1つの一覧ですべてを見渡します。" } },
+        { "@type": "Question", "name": "どのターミナルがあるコマンドを実行しているかを見つけるには？", "acceptedAnswer": { "@type": "Answer", "text": "一覧の上の入力欄は、ターミナルの名前、フォルダー、コマンド、ノート、タグに一致させます。パレット（⌘K）はすべてのキャンバスで同じことをします。ターミナルのタイトルには実行中のものが表示されます。" } },
+        { "@type": "Question", "name": "すべてのターミナルの出力を検索できますか？", "acceptedAnswer": { "@type": "Answer", "text": "はい、まだ動いているものなら。パレットの Terminal output の欄は、検索したときに各ターミナルの履歴を、パークしたものも含めて、tmux が保持する範囲（50,000行）まで読みます。インデックスも記録も作りません。" } },
+        { "@type": "Question", "name": "Aubergine はいくつのターミナルを扱えますか？", "acceptedAnswer": { "@type": "Answer", "text": "決まった上限はありません。一覧は1,000個のターミナルでテストしており、90個ずつの3つのキャンバスを手で確認しました。各ターミナルはあくまでシェルなので、あなたのコンピューターが動かせる量で決まります。" } },
+        { "@type": "Question", "name": "ターミナルに名前と色を付けられますか？", "acceptedAnswer": { "@type": "Answer", "text": "はい。ターミナルのタイトルをダブルクリックして名前を変え、タイトルの点で13色のうち1つか自分の色を選びます。キャンバスにも名前と色があります。" } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="現在の位置"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">ガイド</a></li><li>ターミナルが多すぎる</li></ol></nav>
+    <h1>ターミナルが多すぎるときに目当てのものを見つける</h1>
+    <p class="lead">タブが20個、ほとんどが zsh という名前で、3つでエージェントが動いていて、そのうち1つがあなたを待っている。Aubergine はすべてのターミナルをキャンバスと、それぞれが何をしているかを示す1つの一覧に置くので、どこに置いたかではなく、何であるかでターミナルを見つけられます。</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>よくあるやり方</h2>
+    <p>タブやウィンドウに名前を付ける（たいていのターミナルアプリでできます）、ウィンドウをペインに分割する、名前付きの tmux のセッションとウィンドウを使う、タイル型ウィンドウマネージャーに配置させる。これらはターミナルを置くのには役立ちますが、あなたを必要としているものを見つけるには、やはり見て回ることになります。</p>
+
+    <h2>Aubergine がすること</h2>
+    <p><strong>キャンバス。</strong>ターミナルが横に並び、どれもライブです。タイトルでドラッグし、端でサイズを変え、タイトルをダブルクリックして名前を変えます。タイトルの点で色を付けられます。フレーム（<strong>New terminal ▾ → Frame</strong>、または <code>G</code>）はターミナルをラベルの下にまとめ、一緒に動かします。</p>
+    <p><strong>キャンバスとプロジェクト。</strong>複数のキャンバスを、タブ、1つのリスト、または左の列として表示でき、それぞれに自分のアドレスがあります。プロジェクトは自分のキャンバス、ターミナル、キュー、待っているものの一覧を持ち、左上の切り替えでプロジェクト間を移ります。</p>
+    <p><strong>すべてのターミナルの1つの一覧。</strong>サイドパネルの <strong>Terminals</strong> は、各ターミナルを状態の言葉（<strong>working</strong>、<strong>waiting for you</strong>、<strong>finished</strong>、失敗したコマンド）、実行のステップ、最後に動いた時刻とともに、このキャンバスかすべてのキャンバスについて一覧します。上の入力欄で、名前、フォルダー、コマンド、ノート、タグからターミナルを探せます。</p>
+    <p><strong>Filter</strong>（フィルター）には、フィルター（waiting for me、busy、unread、has an agent、parked、tags）と一覧の並べ方があります。キャンバスごと、またはキャンバス順、最終更新順、最終入力順、名前順の1つの平らな一覧です。</p>
+    <figure class="frame"><a href="../../screenshots/list.png" class="frame-pic"><img src="../../screenshots/list.png" width="1440" height="1008" loading="lazy" alt="5つのターミナルを状態の言葉（working、waiting for you、finished、parked）とともに並べたサイドパネルと、ライブのシェルが映るキャンバスの一部。"></a><figcaption>一覧が各ターミナルの状態を伝え、その横にターミナルそのものがあります。</figcaption></figure>
+    <p>キャンバス上の <strong>Go to…</strong>、または <code>⌘K</code> がパレットです。名前、フォルダー、コマンド、ノートの一部を入力します。その <strong>Terminal output</strong> の欄はターミナルが出力したもの（tmux が各ターミナルについて保持する最後の50,000行）を検索し、結果を選ぶとそのターミナルがその箇所までさかのぼって開きます。</p>
+    <p><strong>マップ</strong>（ボタンは <strong>Go to…</strong> の横）は、キャンバス全体を小さく表示し、それを動かせます。<strong>Fit</strong>（<code>F</code>）ですべてを一度に表示します。</p>
+    <p><strong>ターミナルが何のためにあるか。</strong>各ターミナルの横にはノート（要約とログ）があり、詳細にはタグ、リンク、<code>Ticket: DEMO-12</code> のようなフィールドがあります。エージェントは <code>aubergine</code> コマンドで、自分のターミナルの名前、要約、フィールドを書けます。</p>
+    <p><strong>ターミナルを単独で。</strong>タイトルの <strong>Tab ↗</strong> で、<code>/t/&lt;terminal&gt;</code> にあるそれ専用のブラウザーのタブで開きます。詳細とノートはボタン1つで出せます。</p>
+    <p><code>Tab</code> と <code>Shift+Tab</code> は一覧に表示された順にターミナルをたどり、<code>W</code> は次にあなたを待っているものへ移ります。</p>
+
+    <h2>しないこと</h2>
+    <ul>
+      <li><strong>自動で並べることはしません。</strong>ターミナルはあなたが置いた場所にあり（新しいものは表示の中央近くの空いた場所に入ります）、あなたかそのエージェントが付けた名前を保ちます。</li>
+      <li><strong>数は約束しません。</strong>ライブのターミナルを保つのは見ているキャンバスだけです。大きくズームアウトするとターミナルは画面の画像を表示し、画面外ではページに負担をかけません。それでも各ターミナルはあなたのコンピューター上のシェルです。一覧は単体テストで1,000個のターミナルでテストしており（一覧、フィルター、1画面分だけの描画）、手で判断するために3つのキャンバスに90個のターミナルを入れるスクリプトがあります。どちらもあなたのコンピューターについての約束ではありません。</li>
+      <li><strong>ターミナルアプリのタブは表示されません。</strong><strong>Open elsewhere</strong>（<code>O</code>）はそこで開いているターミナルを一覧し、1つずつ、同じフォルダーの新しいターミナルとして持ってきます。タブで動いているプログラムはそのタブに残ります。</li>
+    </ul>
+
+    <h2>よくある質問</h2>
+    <div class="questions">
+      <details><summary>たくさんのターミナルウィンドウを整理するには？</summary><p>Aubergine では、作業ごとに1つのキャンバスを使い、ターミナルを名前と色を付けて横に並べ、関係するものをフレームで囲み、それぞれが何をしているかを示す1つの一覧ですべてを見渡します。</p></details>
+      <details><summary>どのターミナルがあるコマンドを実行しているかを見つけるには？</summary><p>一覧の上の入力欄は、ターミナルの名前、フォルダー、コマンド、ノート、タグに一致させます。パレット（<code>⌘K</code>）はすべてのキャンバスで同じことをします。ターミナルのタイトルには実行中のものが表示されます。</p></details>
+      <details><summary>すべてのターミナルの出力を検索できますか？</summary><p>はい、まだ動いているものなら。パレットの <strong>Terminal output</strong> の欄は、検索したときに各ターミナルの履歴を、パークしたものも含めて、tmux が保持する範囲（50,000行）まで読みます。インデックスも記録も作りません。</p></details>
+      <details><summary>Aubergine はいくつのターミナルを扱えますか？</summary><p>決まった上限はありません。一覧は1,000個のターミナルでテストしており、90個ずつの3つのキャンバスを手で確認しました。各ターミナルはあくまでシェルなので、あなたのコンピューターが動かせる量で決まります。</p></details>
+      <details><summary>ターミナルに名前と色を付けられますか？</summary><p>はい。ターミナルのタイトルをダブルクリックして名前を変え、タイトルの点で13色のうち1つか自分の色を選びます。キャンバスにも名前と色があります。</p></details>
+    </div>
+    <p>関連：<a href="../claude-code-notifications/">Claude Code の待機を知る</a> · <a href="../keep-process-running-after-closing-terminal/">プロセスを動かし続ける</a> · <a href="../run-multiple-coding-agents/">複数のコーディングエージェントを動かす</a></p>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">5分で動かす</h2>
+    <div class="close-do">
+      <p>tmux 3.2 以降と Node.js 22 以降の入った macOS が必要です。<code>brew install tmux node</code> で両方が入ります。</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="コピーしました" aria-live="polite" hidden>コピー</button></p>
+      <p class="actions"><a class="button" href="../install/">インストール</a><a class="button button-quiet" href="../run-multiple-coding-agents/">複数のエージェントを動かす</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav aria-label="すべてのページ">
+      <ul class="foot-links">
+        <li><a href="../">ホーム</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex と ChatGPT</a></li>
+        <li><a href="../install/">インストール</a></li>
+        <li><a href="../guides/">ガイド</a></li>
+        <li><a href="../run-multiple-coding-agents/">複数のエージェントを動かす</a></li>
+        <li><a href="../working-copies/">作業コピー</a></li>
+        <li><a href="../queue-and-schedules/">キューとスケジュール</a></li>
+        <li><a href="../security/">セキュリティ</a></li>
+        <li><a href="../roadmap/">ロードマップ</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine は <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT ライセンス</a>のもとで公開された無料のオープンソースで、あなた自身のコンピューターで動きます。</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    if (!navigator.clipboard) return;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
+});
+</script>
+</body>
+</html>

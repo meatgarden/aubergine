@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="ja" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>クラッシュ、再起動、アップデートのあともターミナルを残す | Aubergine</title>
+<meta name="description" content="ブラウザーが閉じたとき、Aubergine が再起動したとき、コンピューターがクラッシュ・再起動・夜間アップデートしたときに、ターミナルとコーディングエージェントがどうなるか。そして続きから再開する方法。">
+<link rel="canonical" href="https://thirstyeggplant.com/ja/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/keep-terminals-after-restart/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="クラッシュ、再起動、アップデートのあともターミナルを残す | Aubergine">
+<meta property="og:description" content="ブラウザーが閉じたとき、Aubergine が再起動したとき、コンピューターがクラッシュ・再起動・夜間アップデートしたときに、ターミナルとコーディングエージェントがどうなるか。そして続きから再開する方法。">
+<meta property="og:url" content="https://thirstyeggplant.com/ja/keep-terminals-after-restart/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine：ターミナルが並ぶキャンバス。1つは処理中、1つはあなたを待っています">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine：ターミナルが並ぶキャンバス。1つは処理中、1つはあなたを待っています">
+<meta name="twitter:title" content="クラッシュ、再起動、アップデートのあともターミナルを残す | Aubergine">
+<meta name="twitter:description" content="ブラウザーが閉じたとき、Aubergine が再起動したとき、コンピューターがクラッシュ・再起動・夜間アップデートしたときに、ターミナルとコーディングエージェントがどうなるか。そして続きから再開する方法。">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">本文へ移動</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="ページ">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">インストール</a></li>
+        <li><a href="../guides/">ガイド</a></li>
+        <li><a href="../security/">セキュリティ</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="言語: 日本語"><span class="lang-long" aria-hidden="true">日本語</span><span class="lang-short" aria-hidden="true">JA</span></summary>
+      <ul class="menu-list"><li><a href="../../keep-terminals-after-restart/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/keep-terminals-after-restart/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/keep-terminals-after-restart/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/keep-terminals-after-restart/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/keep-terminals-after-restart/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="./" hreflang="ja" lang="ja" dir="ltr" aria-current="true">日本語</a></li><li><a href="../../zh/keep-terminals-after-restart/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/keep-terminals-after-restart/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/keep-terminals-after-restart/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/keep-terminals-after-restart/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/keep-terminals-after-restart/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/keep-terminals-after-restart/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>メニュー</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">インストール</a></li>
+        <li><a href="../guides/">ガイド</a></li>
+        <li><a href="../security/">セキュリティ</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine 本体は英語です。ボタン、メニュー、画像はすべて英語版のものです。</p>
+    <p>このページは英語版から機械翻訳されています。<a href="https://github.com/thirstyeggplant/aubergine/issues">修正を送る</a>。</p>
+  </div>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/ja/keep-terminals-after-restart/#article",
+      "headline": "コンピューターが再起動してもターミナルは残る",
+      "description": "ブラウザーが閉じたとき、Aubergine が再起動したとき、コンピューターがクラッシュ・再起動・夜間アップデートしたときに、ターミナルとコーディングエージェントがどうなるか。そして続きから再開する方法。",
+      "url": "https://thirstyeggplant.com/ja/keep-terminals-after-restart/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/ja/keep-terminals-after-restart/",
+      "datePublished": "2026-11-25",
+      "dateModified": "2026-11-25",
+      "inLanguage": "ja",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "ガイド", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "再起動のあと", "item": "https://thirstyeggplant.com/ja/keep-terminals-after-restart/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/ja/keep-terminals-after-restart/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "Aubergine は再起動のあとにターミナルを復元できますか？", "acceptedAnswer": { "@type": "Answer", "text": "はい、中で動いていたもの以外はすべて。各ターミナルは名前、色、ノート、タグ、フィールド、リンクとともにキャンバスの元の位置に戻り、最後のフォルダーで新しいシェルになります。中で動いていたプログラムは起動し直されません。Claude Code なら Resume agent で会話を続けられます。" } },
+        { "@type": "Question", "name": "Aubergine はターミナルの出力と履歴を残しますか？", "acceptedAnswer": { "@type": "Answer", "text": "出力は、シェルが動いている間だけです。tmux は各ターミナルのスクロールバックを50,000行保持し、ブラウザーを閉じても Aubergine を再起動しても少しも失われません。コンピューターを再起動すると消えます。Aubergine はターミナルの出力を記録しないからです。入力したコマンドの履歴（上矢印で戻ってくるもの）はシェル自身のファイルで、いつもどおりシェルが保存します。" } },
+        { "@type": "Question", "name": "Claude Code の会話は再起動のあとも残りますか？", "acceptedAnswer": { "@type": "Answer", "text": "会話は残ります。Claude Code が自分のファイルに保存し、Aubergine は各ターミナルがどの会話にいたかを覚えています。再起動のあと、ターミナルのタイトルバーの Resume agent がその会話で Claude Code を再び起動します。その瞬間にエージェントがしていたことは止まっていて、あなたが頼むまでやり直されません。" } },
+        { "@type": "Question", "name": "macOS が夜中に自動でアップデートしても大丈夫ですか？", "acceptedAnswer": { "@type": "Answer", "text": "コンピューターを再起動するアップデートは、ほかの再起動と同じです。動いていたプログラムは終わり、それ以外はすべて残ります。ログイン時に起動する設定（aubergine service install）なら、ログインした時点でサーバーがまた動いていて、キャンバスが待っています。最後のフォルダーでの新しいシェルは、Aubergine のコンテナーを再起動したときに確認しました。実際の macOS の夜間アップデートは試していません。" } },
+        { "@type": "Question", "name": "tmux の知識は必要ですか？", "acceptedAnswer": { "@type": "Answer", "text": "いいえ。インストールされている必要はあります（3.2 以降）が、Aubergine は専用のソケットと専用の設定で動かし、ステータスバーもプレフィックスキーもないので、tmux のコマンドを入力することはありません。あなた自身の tmux を使っていても、それには触れません。" } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="現在の位置"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">ガイド</a></li><li>再起動のあと</li></ol></nav>
+    <h1>コンピューターが再起動してもターミナルは残る</h1>
+    <p class="lead">ブラウザーを閉じても Aubergine を再起動しても、何も失われません。どのターミナルも動き続けます。コンピューターの再起動は動いていたものを終わらせますが、Aubergine はその周りのすべてを戻すので、最初からではなく続きから再開できます。</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>こんなとき何が起きるか</h2>
+    <p>どのターミナルも tmux セッション内のシェルで、ブラウザーとも Aubergine のサーバーとも別に動いています。中身は2か所にあります。動いているシェルは tmux だけが保持し、ターミナルについて言われていることはすべて、Aubergine が変更のたびにデータフォルダーのファイルに書き込みます。</p>
+    <div class="table">
+      <table class="table-stack">
+        <thead><tr><th>対象</th><th>ブラウザーが閉じる、クラッシュする、アップデートされる、またはタブを閉じる</th><th>Aubergine が止まる、再起動する、アップデートされる</th><th>コンピューターがクラッシュする、再起動する、アップデートをインストールする</th></tr></thead>
+        <tbody>
+          <tr><td>動いているプログラムとエージェント</td><td data-label="ブラウザーを閉じた">動き続ける</td><td data-label="Aubergine を再起動した">動き続ける</td><td data-label="コンピューターを再起動した">終わる</td></tr>
+          <tr><td>ターミナルに表示されていたもの（スクロールバック）</td><td data-label="ブラウザーを閉じた">残る</td><td data-label="Aubergine を再起動した">残る</td><td data-label="コンピューターを再起動した">消える</td></tr>
+          <tr><td>キャンバス上の位置、名前、色、タグ、フィールド、リンク</td><td data-label="ブラウザーを閉じた">残る</td><td data-label="Aubergine を再起動した">残る</td><td data-label="コンピューターを再起動した">残る</td></tr>
+          <tr><td>ノート：要約とログ</td><td data-label="ブラウザーを閉じた">残る</td><td data-label="Aubergine を再起動した">残る</td><td data-label="コンピューターを再起動した">残る</td></tr>
+          <tr><td>いたフォルダー</td><td data-label="ブラウザーを閉じた">残る</td><td data-label="Aubergine を再起動した">残る</td><td data-label="コンピューターを再起動した">同じフォルダーで新しいシェル</td></tr>
+          <tr><td>エージェントの会話</td><td data-label="ブラウザーを閉じた">続く</td><td data-label="Aubergine を再起動した">続く</td><td data-label="コンピューターを再起動した"><strong>Resume agent</strong> で続けられる（Claude Code）</td></tr>
+          <tr><td>作業コピーとそのブランチ</td><td data-label="ブラウザーを閉じた">残る</td><td data-label="Aubergine を再起動した">残る</td><td data-label="コンピューターを再起動した">残る</td></tr>
+          <tr><td>キュー、実行、スケジュール</td><td data-label="ブラウザーを閉じた">残る</td><td data-label="Aubergine を再起動した">残る。過ぎた時刻は遅れて実行</td><td data-label="コンピューターを再起動した">残る。過ぎた時刻は遅れて実行</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">パークしたターミナルも同じように残り、やはり新しいシェルになります。シェルがすでに終わっていたターミナルは終わったままで、<strong>Restart here</strong>（ここで再起動）が出ます。</p>
+    <p>アップデートのあと、すでに開いていたターミナルは、シェルが起動したときのもの（<code>PATH</code> と Aubergine のシェル連携）を、そのシェルを起動し直すまで使い続けます。Aubergine をログイン時に起動しているなら、アップデートのあとはサーバーを手で再起動する代わりに <code>aubergine service install</code> をもう一度実行します。</p>
+
+    <h2>再起動のあと：作業に戻る</h2>
+    <ol class="seq">
+      <li><p><strong>Aubergine を起動します。</strong>ログイン時に起動する設定（<code>aubergine service install</code>、macOS のみ）なら、ログインした時点で動いていて、止まれば launchd がまた起動します。そうでなければ、起動してページを開きます。</p>
+        <p class="cmd"><code>aubergine start --open</code><button type="button" class="copy" data-copy data-copied="コピーしました" aria-live="polite" hidden>コピー</button></p></li>
+      <li><p><strong>キャンバスは離れたときのままです。</strong>どのターミナルも名前、色、タグ、フィールド、リンク、ノートとともに元の位置にあり、Aubergine が最後に見たフォルダーで（そのフォルダーがもうなければ既定のフォルダーで）新しいシェルになっています。何も入力し直されず、実行し直されません。</p></li>
+      <li><p><strong>エージェントを再開します。</strong>Claude Code が動いていて Aubergine がその会話を知っている（Aubergine から起動した）ターミナルでは、タイトルバーに <strong>Resume agent</strong>（エージェントを再開）が出ます。その会話で Claude Code を再び起動します。ワークフローの実行の途中にあるターミナルでは、その実行についてもう一度エージェントに伝えるので、実行が止まっているステップから続けます。</p></li>
+      <li><p><strong>それぞれがどこまで進んでいたかを見ます。</strong>ターミナルのタイトルにある <strong>Details</strong>（詳細）は、分かっていること（実行のステップと最後の報告、フォルダー、タグ）、要約、フィールドとリンク、そして <strong>Log</strong> の下にログを表示します。一覧でターミナルの名前にポインターを合わせると振り返りが出ます。</p></li>
+      <li><p><strong>キャンバスにない会話を探します。</strong>パレット（<code>⌘K</code>）の <strong>Past conversations…</strong>（過去の会話）、またはターミナルの詳細にある「Past conversations in this folder…」で、フォルダー内の Claude Code の過去の会話を一覧し、キャンバスに開けます。</p></li>
+    </ol>
+    <p>ほかのエージェントには <strong>Resume agent</strong> はありません。Aubergine がその会話を知らないためです。同じターミナルで、そのエージェント自身の再開の方法で起動し直し、ノートを読んでどこまで進んでいたかを伝えてください。</p>
+    <figure class="frame"><a href="../../screenshots/focus-part.png" class="frame-pic"><img src="../../screenshots/focus-part.png" width="1344" height="1172" loading="lazy" alt="ブラウザータブに1つだけ開いたターミナル。ヘッダーに名前、詳細にワークフローのステップ、フォルダー、フィールドがあり、その横にライブのターミナル。"></a><figcaption>ターミナルの詳細：実行のステップと最後の報告、フォルダー、タグ、フィールド。これらはすべてコンピューターの再起動のあとも残ります。横のライブのターミナルは残りません。</figcaption></figure>
+
+    <h2>失われるもの、そしてどうするか</h2>
+    <ul>
+      <li><strong>動いていたものは終わります。</strong>ビルド、テスト、サーバー、作業途中のエージェントはコンピューターとともに止まり、Aubergine はどれも自分では起動し直しません。自分で起動し直してください。再起動を越えて続けるべき処理は、システムのサービスのような、そのために作られた仕組みに任せます。</li>
+      <li><strong>Aubergine が追っている作業はあなたを待ちます。</strong>ワークフローの実行は、ステップと提出された報告をすべて保ちます。キューのタスクは順番を保ちます。サーバーが止まった瞬間に開始中だったタスクは、理由の一文とともに失敗と記録され、自動で再試行されるものはありません。サーバーが止まっている間に過ぎたスケジュールの時刻は、6時間以内なら遅れて1回だけ実行され（<code>schedules.lateWithinHours</code>）、それ以外は逃したと記録されます。</li>
+      <li><strong>スクロールバックは消えます。</strong>シェルが動いている間、tmux は出力された最後の50,000行を保持し、パレットの検索はそれを読みます。Aubergine はターミナルの出力を記録しないので、コンピューターの再起動のあとに戻せるものはなく、検索で見つかるのはそれ以降の出力だけです。</li>
+      <li><strong>「離れている間」は最初からになります。</strong>ファイルではなくサーバーのメモリーにあるので、サーバーの起動後はそれ以降の変化しか知らず、そのことを伝えます。</li>
+    </ul>
+
+    <h2>再起動を怖くなくする習慣</h2>
+    <p>残るのはノートです。だからエージェントには作業しながらノートに書かせましょう。決めたこと、結果、どこで止めたか。Aubergine から起動した Claude Code では、送ったプロンプトがひとつずつ自動でログに加わり、始めにターミナルに名前を付けて要約を保つよう伝えられます。どのエージェントも次のコマンドで同じことができ、<code>aubergine guide</code> がその使い方を説明します。</p>
+    <pre><code>aubergine note "Tests pass on the branch. The migration is not written yet."
+aubergine describe --summary "Fixing the double redirect at sign-in"</code></pre>
+    <p>その日の作業を終える前に、ターミナルの詳細で <strong>Ask its agent for a recap</strong>（エージェントに振り返りを頼む）を押します。エージェントは <code>aubergine recap --write</code> で現状を書き、その振り返りはターミナルとともに保存されます。</p>
+
+    <h2>ノートパソコンを閉じる、スリープ、ブラウザー</h2>
+    <ul>
+      <li><strong>スリープは再起動ではありません。</strong>ノートパソコンのふたを閉じると、たいていスリープします。プログラムは一時停止し、起きると続きから動き、表の最後の列のことは何も起きません。Aubergine はコンピューターを起こしたままにもせず、起こしもしないので、スリープ中に時刻が過ぎたスケジュールは、上のとおり遅れて実行されるか、逃したことになります。</li>
+      <li><strong>ブラウザー、タブ、そのウィンドウを閉じても</strong>、ブラウザーのアップデートで再起動しても、何も終わりません。ページを開き直せば（<code>aubergine open</code> でサインインした状態で開きます）、各ターミナルが tmux から今の状態で描かれます。開いたままのページは、サーバーが戻ると自動で再接続します。</li>
+      <li><strong><code>aubergine start</code> が動いているウィンドウを閉じる</strong>か、そこで Ctrl+C を押すと、止まるのはサーバーだけです。表の真ん中の列にあたります。</li>
+      <li><strong>WSL を使う Windows では</strong>、Windows の再起動や <code>wsl --shutdown</code> で WSL が止まることが、Aubergine にとってのコンピューターの再起動です。<a href="../windows/">WSL を使う Windows</a> を参照してください。</li>
+    </ul>
+
+    <h2>よくある質問</h2>
+    <div class="questions">
+      <details><summary>Aubergine は再起動のあとにターミナルを復元できますか？</summary><p>はい、中で動いていたもの以外はすべて。各ターミナルは名前、色、ノート、タグ、フィールド、リンクとともにキャンバスの元の位置に戻り、最後のフォルダーで新しいシェルになります。中で動いていたプログラムは起動し直されません。Claude Code なら <strong>Resume agent</strong> で会話を続けられます。</p></details>
+      <details><summary>Aubergine はターミナルの出力と履歴を残しますか？</summary><p>出力は、シェルが動いている間だけです。tmux は各ターミナルのスクロールバックを50,000行保持し、ブラウザーを閉じても Aubergine を再起動しても少しも失われません。コンピューターを再起動すると消えます。Aubergine はターミナルの出力を記録しないからです。入力したコマンドの履歴（上矢印で戻ってくるもの）はシェル自身のファイルで、いつもどおりシェルが保存します。</p></details>
+      <details><summary>Claude Code の会話は再起動のあとも残りますか？</summary><p>会話は残ります。Claude Code が自分のファイルに保存し、Aubergine は各ターミナルがどの会話にいたかを覚えています。再起動のあと、ターミナルのタイトルバーの <strong>Resume agent</strong> がその会話で Claude Code を再び起動します。その瞬間にエージェントがしていたことは止まっていて、あなたが頼むまでやり直されません。</p></details>
+      <details><summary>macOS が夜中に自動でアップデートしても大丈夫ですか？</summary><p>コンピューターを再起動するアップデートは、ほかの再起動と同じです。動いていたプログラムは終わり、それ以外はすべて残ります。ログイン時に起動する設定（<code>aubergine service install</code>）なら、ログインした時点でサーバーがまた動いていて、キャンバスが待っています。最後のフォルダーでの新しいシェルは、Aubergine のコンテナーを再起動したときに確認しました。実際の macOS の夜間アップデートは試していません。</p></details>
+      <details><summary>tmux の知識は必要ですか？</summary><p>いいえ。インストールされている必要はあります（3.2 以降）が、Aubergine は専用のソケットと専用の設定で動かし、ステータスバーもプレフィックスキーもないので、tmux のコマンドを入力することはありません。あなた自身の tmux を使っていても、それには触れません。</p></details>
+    </div>
+    <p>関連：<a href="../claude/">Aubergine での Claude Code</a> · <a href="../queue-and-schedules/">キューとスケジュール</a> · <a href="../working-copies/">作業コピー</a></p>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">5分で動かす</h2>
+    <div class="close-do">
+      <p>tmux 3.2 以降と Node.js 22 以降の入った macOS が必要です。<code>brew install tmux node</code> で両方が入ります。</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="コピーしました" aria-live="polite" hidden>コピー</button></p>
+      <p class="actions"><a class="button" href="../install/">インストール</a><a class="button button-quiet" href="../run-multiple-coding-agents/">複数のエージェントを動かす</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav aria-label="すべてのページ">
+      <ul class="foot-links">
+        <li><a href="../">ホーム</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex と ChatGPT</a></li>
+        <li><a href="../install/">インストール</a></li>
+        <li><a href="../guides/">ガイド</a></li>
+        <li><a href="../run-multiple-coding-agents/">複数のエージェントを動かす</a></li>
+        <li><a href="../working-copies/">作業コピー</a></li>
+        <li><a href="../queue-and-schedules/">キューとスケジュール</a></li>
+        <li><a href="../security/">セキュリティ</a></li>
+        <li><a href="../roadmap/">ロードマップ</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine は <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT ライセンス</a>のもとで公開された無料のオープンソースで、あなた自身のコンピューターで動きます。</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    if (!navigator.clipboard) return;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
+});
+</script>
+</body>
+</html>

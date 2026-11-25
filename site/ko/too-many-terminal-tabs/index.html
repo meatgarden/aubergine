@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="ko" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>탭이 너무 많을 때 원하는 터미널 찾기 | Aubergine</title>
+<meta name="description" content="터미널 탭이 너무 많고 이름이 전부 zsh인가요? Aubergine은 모든 터미널을 캔버스와 목록 하나에 올리고, 상태를 글로 보여 주며, 필터, 태그, 터미널 출력 검색, 그리고 브라우저 탭에 터미널 하나만 여는 기능을 제공합니다.">
+<link rel="canonical" href="https://thirstyeggplant.com/ko/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/too-many-terminal-tabs/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="탭이 너무 많을 때 원하는 터미널 찾기 | Aubergine">
+<meta property="og:description" content="터미널 탭이 너무 많고 이름이 전부 zsh인가요? Aubergine은 모든 터미널을 캔버스와 목록 하나에 올리고, 상태를 글로 보여 주며, 필터, 태그, 터미널 출력 검색, 그리고 브라우저 탭에 터미널 하나만 여는 기능을 제공합니다.">
+<meta property="og:url" content="https://thirstyeggplant.com/ko/too-many-terminal-tabs/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine: 터미널이 놓인 캔버스. 하나는 작업 중이고 하나는 사용자를 기다리고 있습니다">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine: 터미널이 놓인 캔버스. 하나는 작업 중이고 하나는 사용자를 기다리고 있습니다">
+<meta name="twitter:title" content="탭이 너무 많을 때 원하는 터미널 찾기 | Aubergine">
+<meta name="twitter:description" content="터미널 탭이 너무 많고 이름이 전부 zsh인가요? Aubergine은 모든 터미널을 캔버스와 목록 하나에 올리고, 상태를 글로 보여 주며, 필터, 태그, 터미널 출력 검색, 그리고 브라우저 탭에 터미널 하나만 여는 기능을 제공합니다.">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="페이지">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">설치</a></li>
+        <li><a href="../guides/">가이드</a></li>
+        <li><a href="../security/">보안</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="언어: 한국어"><span class="lang-long" aria-hidden="true">한국어</span><span class="lang-short" aria-hidden="true">KO</span></summary>
+      <ul class="menu-list"><li><a href="../../too-many-terminal-tabs/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/too-many-terminal-tabs/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/too-many-terminal-tabs/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/too-many-terminal-tabs/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/too-many-terminal-tabs/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/too-many-terminal-tabs/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/too-many-terminal-tabs/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="./" hreflang="ko" lang="ko" dir="ltr" aria-current="true">한국어</a></li><li><a href="../../id/too-many-terminal-tabs/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/too-many-terminal-tabs/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/too-many-terminal-tabs/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/too-many-terminal-tabs/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>메뉴</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">설치</a></li>
+        <li><a href="../guides/">가이드</a></li>
+        <li><a href="../security/">보안</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine 앱 자체는 영어로 되어 있습니다. 버튼, 메뉴, 그림은 모두 영어판 그대로입니다.</p>
+    <p>이 페이지는 영어 원문을 기계 번역한 것입니다. <a href="https://github.com/thirstyeggplant/aubergine/issues">수정 제안 보내기</a>.</p>
+  </div>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/ko/too-many-terminal-tabs/#article",
+      "headline": "터미널이 너무 많을 때 원하는 터미널 찾기",
+      "description": "터미널 탭이 너무 많고 이름이 전부 zsh인가요? Aubergine은 모든 터미널을 캔버스와 목록 하나에 올리고, 상태를 글로 보여 주며, 필터, 태그, 터미널 출력 검색, 그리고 브라우저 탭에 터미널 하나만 여는 기능을 제공합니다.",
+      "url": "https://thirstyeggplant.com/ko/too-many-terminal-tabs/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/ko/too-many-terminal-tabs/",
+      "datePublished": "2026-11-25",
+      "dateModified": "2026-11-25",
+      "inLanguage": "ko",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "가이드", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "너무 많은 터미널", "item": "https://thirstyeggplant.com/ko/too-many-terminal-tabs/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/ko/too-many-terminal-tabs/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "터미널 창이 많을 때 어떻게 정리하나요?", "acceptedAnswer": { "@type": "Answer", "text": "Aubergine에서는 작업 하나에 캔버스 하나, 이름과 색이 붙은 터미널을 나란히, 함께 묶이는 것들은 프레임으로 감싸고, 전부를 각자 하는 일과 함께 목록 하나로 봅니다." } },
+        { "@type": "Question", "name": "어느 터미널이 명령을 실행 중인지 어떻게 찾나요?", "acceptedAnswer": { "@type": "Answer", "text": "목록 위의 입력란은 터미널의 이름, 폴더, 명령, 노트, 태그와 맞춰 보고, 팔레트(⌘K)는 모든 캔버스에 걸쳐 같은 일을 합니다. 터미널 제목에는 실행 중인 것이 표시됩니다." } },
+        { "@type": "Question", "name": "모든 터미널의 출력을 검색할 수 있나요?", "acceptedAnswer": { "@type": "Answer", "text": "네, 아직 실행 중인 터미널이라면 됩니다. 팔레트의 Terminal output 부분은 검색할 때 각 터미널의 기록을, 치워 둔 터미널까지 포함해 tmux가 보관하는 만큼(50,000줄) 읽습니다. 아무것도 색인하거나 기록하지 않습니다." } },
+        { "@type": "Question", "name": "Aubergine은 터미널을 몇 개까지 다룰 수 있나요?", "acceptedAnswer": { "@type": "Answer", "text": "정해진 한도는 없습니다. 목록은 터미널 1,000개로 테스트했고, 90개씩 놓인 캔버스 세 개를 직접 살펴봤습니다. 각 터미널은 여전히 셸이므로, 여러분의 컴퓨터가 감당할 수 있는 만큼이 한도입니다." } },
+        { "@type": "Question", "name": "터미널에 이름과 색을 붙일 수 있나요?", "acceptedAnswer": { "@type": "Answer", "text": "네. 터미널 제목을 더블클릭해 이름을 바꾸고, 제목의 점으로 열세 가지 색 중 하나나 원하는 색을 고르세요. 캔버스에도 이름과 색이 있습니다." } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="현재 위치"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">가이드</a></li><li>너무 많은 터미널</li></ol></nav>
+    <h1>터미널이 너무 많을 때 원하는 터미널 찾기</h1>
+    <p class="lead">탭이 스무 개, 대부분 이름은 zsh, 그중 셋에서 에이전트가 실행 중이고, 그중 하나가 여러분을 기다립니다. Aubergine은 모든 터미널을 캔버스에, 그리고 각자 무엇을 하는지 알려 주는 목록 하나에 올리므로, 어디에 두었는지가 아니라 무엇인지로 터미널을 찾습니다.</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>흔히 쓰는 방법</h2>
+    <p>탭이나 창에 이름을 붙이거나(대부분의 터미널 앱에서 됩니다), 창을 패널로 나누거나, 이름 붙인 tmux 세션과 창을 쓰거나, 타일링 창 관리자에게 배치를 맡깁니다. 이런 방법은 터미널을 배치하는 데 도움이 되지만, 여러분을 필요로 하는 터미널을 찾으려면 여전히 하나하나 봐야 합니다.</p>
+
+    <h2>Aubergine이 하는 일</h2>
+    <p><strong>캔버스.</strong> 터미널이 나란히 놓이고, 모두 실시간입니다. 제목을 잡아 끌어 옮기고, 가장자리로 크기를 바꾸고, 제목을 더블클릭해 이름을 바꿉니다. 제목의 점으로 색을 정하고, 프레임(<strong>New terminal ▾ → Frame</strong>, 또는 <code>G</code>)은 터미널들을 레이블 아래 묶어 함께 옮깁니다.</p>
+    <p><strong>캔버스와 프로젝트.</strong> 캔버스 여러 개를 탭, 목록 하나, 또는 왼쪽의 열로 보여 주며, 캔버스마다 자체 주소가 있습니다. 프로젝트는 자체 캔버스, 터미널, 대기열, 대기 목록을 가지며, 왼쪽 위의 전환기로 프로젝트를 오갑니다.</p>
+    <p><strong>모든 터미널의 목록 하나.</strong> 사이드 패널의 <strong>Terminals</strong>는 각 터미널을 상태를 나타내는 글(<strong>working</strong>, <strong>waiting for you</strong>, <strong>finished</strong>, 실패한 명령), 실행의 단계, 마지막 활동 시각과 함께 이 캔버스 또는 모든 캔버스에 대해 나열합니다. 맨 위의 입력란은 이름, 폴더, 명령, 노트, 태그로 터미널을 찾습니다.</p>
+    <p><strong>Filter</strong>(필터)에는 필터(나를 기다리는 것, 작업 중, 읽지 않음, 에이전트 있음, 치워 둠, 태그)와 목록 배치 방식이 있습니다. 캔버스별, 또는 캔버스 순서, 마지막 업데이트 순, 마지막 입력 순, 이름 순의 평평한 목록 하나.</p>
+    <figure class="frame"><a href="../../screenshots/list.png" class="frame-pic"><img src="../../screenshots/list.png" width="1440" height="1008" loading="lazy" alt="다섯 개의 터미널과 그 상태(working, waiting for you, finished, parked)를 글로 보여 주는 사이드 패널과, 실시간 셸이 있는 캔버스의 일부."></a><figcaption>목록은 각 터미널이 무엇을 하고 있는지 알려 주고, 그 옆에는 터미널 자체가 있습니다.</figcaption></figure>
+    <p>캔버스 위의 <strong>Go to…</strong>(이동) 또는 <code>⌘K</code>는 팔레트입니다. 이름, 폴더, 명령, 노트의 일부를 입력하세요. <strong>Terminal output</strong>(터미널 출력) 부분은 터미널이 출력한 내용(tmux가 터미널마다 보관하는 마지막 50,000줄)을 검색하며, 결과를 누르면 그 터미널이 해당 위치까지 거슬러 올라간 상태로 열립니다.</p>
+    <p><strong>지도</strong>는 <strong>Go to…</strong> 옆에 버튼이 있으며, 캔버스 전체를 작게 보여 주고 이동시킵니다. <strong>Fit</strong>(<code>F</code>)은 모든 것을 한 번에 보여 줍니다.</p>
+    <p><strong>터미널이 무엇을 위한 것인지.</strong> 각 터미널 옆에는 노트(요약과 로그)가 있고, 세부 정보에는 태그, 링크, 그리고 <code>Ticket: DEMO-12</code> 같은 필드가 있습니다. 에이전트는 <code>aubergine</code> 명령으로 자기 터미널의 이름, 요약, 필드를 쓸 수 있습니다.</p>
+    <p><strong>터미널 하나만 따로.</strong> 제목의 <strong>Tab ↗</strong>은 그 터미널을 자체 브라우저 탭에서 <code>/t/&lt;terminal&gt;</code> 주소로 열며, 세부 정보와 노트는 버튼 하나로 볼 수 있습니다.</p>
+    <p><code>Tab</code>과 <code>Shift+Tab</code>은 목록에 보이는 순서대로 터미널을 오가고, <code>W</code>는 여러분을 기다리는 다음 터미널로 이동합니다.</p>
+
+    <h2>하지 않는 일</h2>
+    <ul>
+      <li><strong>대신 정리해 주지 않습니다.</strong> 터미널은 여러분이 놓은 자리에 있고(새 터미널은 화면 가운데 근처의 빈 곳에 놓입니다), 여러분이나 그 에이전트가 붙인 이름을 유지합니다.</li>
+      <li><strong>개수를 약속하지 않습니다.</strong> 실시간 터미널을 유지하는 것은 보고 있는 캔버스뿐입니다. 아주 멀리 축소하면 터미널은 화면의 그림을 보여 주고, 화면 밖에 있으면 페이지에 아무 부담도 주지 않습니다. 그래도 각 터미널은 여러분 컴퓨터의 셸입니다. 목록은 단위 테스트에서 터미널 1,000개로 테스트하며(나열, 필터링, 한 화면 분량만 그리기), 스크립트 하나가 캔버스 세 개를 터미널 90개로 채워 직접 판단해 볼 수 있게 합니다. 어느 쪽도 여러분의 컴퓨터에 대한 약속은 아닙니다.</li>
+      <li><strong>터미널 앱의 탭은 보여 주지 않습니다.</strong> <strong>Open elsewhere</strong>(<code>O</code>)는 그곳에 열린 터미널을 나열하고, 하나씩 같은 폴더의 새 터미널로 가져옵니다. 탭에서 실행 중인 프로그램은 그 탭에 남습니다.</li>
+    </ul>
+
+    <h2>질문</h2>
+    <div class="questions">
+      <details><summary>터미널 창이 많을 때 어떻게 정리하나요?</summary><p>Aubergine에서는 작업 하나에 캔버스 하나, 이름과 색이 붙은 터미널을 나란히, 함께 묶이는 것들은 프레임으로 감싸고, 전부를 각자 하는 일과 함께 목록 하나로 봅니다.</p></details>
+      <details><summary>어느 터미널이 명령을 실행 중인지 어떻게 찾나요?</summary><p>목록 위의 입력란은 터미널의 이름, 폴더, 명령, 노트, 태그와 맞춰 보고, 팔레트(<code>⌘K</code>)는 모든 캔버스에 걸쳐 같은 일을 합니다. 터미널 제목에는 실행 중인 것이 표시됩니다.</p></details>
+      <details><summary>모든 터미널의 출력을 검색할 수 있나요?</summary><p>네, 아직 실행 중인 터미널이라면 됩니다. 팔레트의 <strong>Terminal output</strong> 부분은 검색할 때 각 터미널의 기록을, 치워 둔 터미널까지 포함해 tmux가 보관하는 만큼(50,000줄) 읽습니다. 아무것도 색인하거나 기록하지 않습니다.</p></details>
+      <details><summary>Aubergine은 터미널을 몇 개까지 다룰 수 있나요?</summary><p>정해진 한도는 없습니다. 목록은 터미널 1,000개로 테스트했고, 90개씩 놓인 캔버스 세 개를 직접 살펴봤습니다. 각 터미널은 여전히 셸이므로, 여러분의 컴퓨터가 감당할 수 있는 만큼이 한도입니다.</p></details>
+      <details><summary>터미널에 이름과 색을 붙일 수 있나요?</summary><p>네. 터미널 제목을 더블클릭해 이름을 바꾸고, 제목의 점으로 열세 가지 색 중 하나나 원하는 색을 고르세요. 캔버스에도 이름과 색이 있습니다.</p></details>
+    </div>
+    <p>관련: <a href="../claude-code-notifications/">Claude Code가 기다리는지 알기</a> · <a href="../keep-process-running-after-closing-terminal/">프로세스 계속 실행하기</a> · <a href="../run-multiple-coding-agents/">여러 코딩 에이전트 실행하기</a></p>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">5분이면 시작합니다</h2>
+    <div class="close-do">
+      <p>tmux 3.2 이상과 Node.js 22 이상이 설치된 macOS가 필요합니다. <code>brew install tmux node</code>로 둘 다 설치할 수 있습니다.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="복사됨" aria-live="polite" hidden>복사</button></p>
+      <p class="actions"><a class="button" href="../install/">설치</a><a class="button button-quiet" href="../run-multiple-coding-agents/">여러 에이전트 실행하기</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav aria-label="전체 페이지">
+      <ul class="foot-links">
+        <li><a href="../">홈</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex와 ChatGPT</a></li>
+        <li><a href="../install/">설치</a></li>
+        <li><a href="../guides/">가이드</a></li>
+        <li><a href="../run-multiple-coding-agents/">여러 에이전트 실행하기</a></li>
+        <li><a href="../working-copies/">작업 사본</a></li>
+        <li><a href="../queue-and-schedules/">대기열과 일정</a></li>
+        <li><a href="../security/">보안</a></li>
+        <li><a href="../roadmap/">로드맵</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine은 <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT 라이선스</a>로 공개된 무료 오픈 소스이며, 여러분의 컴퓨터에서 실행됩니다.</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    if (!navigator.clipboard) return;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
+});
+</script>
+</body>
+</html>

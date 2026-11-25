@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="es" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Saber cuándo Claude Code termina o te espera | Aubergine</title>
+<meta name="description" content="Mira de un vistazo qué terminal de Claude Code está trabajando, esperándote o ha terminado: hooks que genera Aubergine, el contador de For you, una tecla para ir a la siguiente terminal que espera y notificaciones desde la página abierta.">
+<link rel="canonical" href="https://thirstyeggplant.com/es/claude-code-notifications/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/claude-code-notifications/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/claude-code-notifications/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/claude-code-notifications/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/claude-code-notifications/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/claude-code-notifications/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/claude-code-notifications/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/claude-code-notifications/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/claude-code-notifications/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/claude-code-notifications/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/claude-code-notifications/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/claude-code-notifications/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/claude-code-notifications/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/claude-code-notifications/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="Saber cuándo Claude Code termina o te espera | Aubergine">
+<meta property="og:description" content="Mira de un vistazo qué terminal de Claude Code está trabajando, esperándote o ha terminado: hooks que genera Aubergine, el contador de For you, una tecla para ir a la siguiente terminal que espera y notificaciones desde la página abierta.">
+<meta property="og:url" content="https://thirstyeggplant.com/es/claude-code-notifications/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine: un lienzo de terminales, una ocupada y otra esperándote">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine: un lienzo de terminales, una ocupada y otra esperándote">
+<meta name="twitter:title" content="Saber cuándo Claude Code termina o te espera | Aubergine">
+<meta name="twitter:description" content="Mira de un vistazo qué terminal de Claude Code está trabajando, esperándote o ha terminado: hooks que genera Aubergine, el contador de For you, una tecla para ir a la siguiente terminal que espera y notificaciones desde la página abierta.">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">Ir a la página</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="Páginas">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Instalar</a></li>
+        <li><a href="../guides/">Guías</a></li>
+        <li><a href="../security/">Seguridad</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="Idioma: Español"><span class="lang-long" aria-hidden="true">Español</span><span class="lang-short" aria-hidden="true">ES</span></summary>
+      <ul class="menu-list"><li><a href="../../claude-code-notifications/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="./" hreflang="es" lang="es" dir="ltr" aria-current="true">Español</a></li><li><a href="../../pt/claude-code-notifications/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/claude-code-notifications/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/claude-code-notifications/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/claude-code-notifications/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/claude-code-notifications/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/claude-code-notifications/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/claude-code-notifications/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/claude-code-notifications/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/claude-code-notifications/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/claude-code-notifications/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>Menú</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Instalar</a></li>
+        <li><a href="../guides/">Guías</a></li>
+        <li><a href="../security/">Seguridad</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine en sí está en inglés: sus botones, menús e imágenes son los de la versión en inglés.</p>
+    <p>Esta página la tradujo una máquina a partir del inglés. <a href="https://github.com/thirstyeggplant/aubergine/issues">Envía una corrección</a>.</p>
+  </div>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/es/claude-code-notifications/#article",
+      "headline": "Saber cuándo Claude Code termina o te espera",
+      "description": "Mira de un vistazo qué terminal de Claude Code está trabajando, esperándote o ha terminado: hooks que genera Aubergine, el contador de For you, una tecla para ir a la siguiente terminal que espera y notificaciones desde la página abierta.",
+      "url": "https://thirstyeggplant.com/es/claude-code-notifications/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/es/claude-code-notifications/",
+      "datePublished": "2026-11-25",
+      "dateModified": "2026-11-25",
+      "inLanguage": "es",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Guías", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "Terminado o esperando", "item": "https://thirstyeggplant.com/es/claude-code-notifications/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/es/claude-code-notifications/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "¿Cómo recibo una notificación cuando Claude Code termina?", "acceptedAnswer": { "@type": "Answer", "text": "Inicia Claude Code desde Aubergine y activa Notify me on the desktop when a terminal starts waiting en Settings → Notifications. La página abierta mostrará entonces una notificación del navegador cuando una terminal empiece a esperarte o su agente haya terminado. Sin notificación, la terminal dice finished." } },
+        { "@type": "Question", "name": "¿Puede Claude Code reproducir un sonido cuando necesita una entrada?", "acceptedAnswer": { "@type": "Answer", "text": "Aubergine no reproduce ningún sonido. Una notificación suena si tu navegador o tu sistema la hacen sonar. Un hook tuyo en tus ajustes de Claude Code puede reproducir uno; Aubergine nunca escribe en esos ajustes." } },
+        { "@type": "Question", "name": "¿Cómo veo qué sesión de Claude Code está esperando cuando ejecuto varias?", "acceptedAnswer": { "@type": "Answer", "text": "En Aubergine el borde de la terminal que espera y su estado están en el color de la espera, su fila en la lista dice waiting for you, y el contador junto a For you dice cuántas cosas esperan. W va a la siguiente." } },
+        { "@type": "Question", "name": "¿Recibo avisos cuando el navegador está cerrado?", "acceptedAnswer": { "@type": "Answer", "text": "No. Las notificaciones vienen de una página de Aubergine abierta. El estado se conserva, así que las terminales que esperan aparecen marcadas cuando vuelves a abrir la página." } },
+        { "@type": "Question", "name": "¿Funciona con agentes que no sean Claude Code?", "acceptedAnswer": { "@type": "Answer", "text": "No por sí solo: los hooks están hechos para Claude Code. Cualquier otro agente puede informar de lo mismo con aubergine attention waiting, working y done cuando sus propias instrucciones se lo digan; aubergine guide --snippet imprime las líneas para esas instrucciones." } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Dónde estás"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">Guías</a></li><li>Terminado o esperando</li></ol></nav>
+    <h1>Saber cuándo Claude Code termina o te espera</h1>
+    <p class="lead">Le das una tarea a Claude Code, te pones con otra cosa y vuelves veinte minutos después para descubrir que lleva esperando un sí desde el minuto dos. Aubergine muestra en una sola página qué terminal está trabajando, cuál te espera y cuál ha terminado.</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>Lo que se suele hacer</h2>
+    <p>Claude Code ejecuta hooks, comandos tuyos, en momentos como cuando se detiene (<code>Stop</code>) o envía una notificación (<code>Notification</code>). La respuesta habitual es un hook en tus ajustes de Claude Code que reproduce un sonido o muestra una notificación de escritorio. Funciona, y los scripts los escribes y los mantienes tú.</p>
+
+    <h2>Lo que hace Aubergine</h2>
+    <p><strong>Inicia Claude Code desde Aubergine</strong>: <strong>New terminal ▾ → Claude Code</strong> arriba de la lista de terminales, o <code>C</code>. Aubergine inicia <code>claude</code> con un archivo de ajustes que genera en su propia carpeta de datos y que indica en la línea de comandos. Tu propia configuración de Claude Code no se toca. Los hooks de ese archivo le dicen a la página qué está haciendo el agente:</p>
+    <ul>
+      <li>cuando envías un prompt, la terminal muestra <strong>working</strong> (trabajando), y el prompt se añade al registro de su nota;</li>
+      <li>cuando el agente te necesita (una pregunta de permisos, o está inactivo esperando una entrada), su borde toma el color de la espera, y su título y su fila en la lista dicen <strong>waiting for you</strong> (te está esperando);</li>
+      <li>cuando se detiene, la terminal muestra <strong>finished</strong> (terminado).</li>
+    </ul>
+    <figure class="frame"><a href="../../screenshots/waiting.png" class="frame-pic"><img src="../../screenshots/waiting.png" width="1496" height="600" loading="lazy" alt="Una terminal cuyo agente hace una pregunta, con el título waiting for you y el borde del color de la espera."></a><figcaption>Su borde toma el color de la espera y su título dice waiting for you (te está esperando).</figcaption></figure>
+    <p><strong>El contador junto a For you</strong>, arriba a la derecha de la página, es todo lo que te espera, en todos los proyectos: terminales con una pregunta, y ejecuciones por aprobar, borradores por leer y tareas propuestas. Al pulsarlo se abre <strong>Runs</strong> (ejecuciones), cuya columna <strong>Waiting for you</strong> es esa lista. La pestaña de un lienzo muestra cuántas de sus terminales esperan.</p>
+    <p><strong>La siguiente que espera.</strong> <code>W</code> va a la siguiente terminal que te espera mientras ninguna terminal tiene el teclado; en macOS <code>⌃⌘J</code> lo hace también desde dentro de una terminal. En los demás casos está en la paleta.</p>
+    <p><strong>Notificaciones desde la página abierta.</strong> <strong>Settings → Notifications</strong> tiene <strong>Notify me on the desktop when a terminal starts waiting</strong> (avisarme en el escritorio cuando una terminal empiece a esperar). Si lo activas, la página muestra una notificación de tu navegador cuando una terminal empieza a esperar o su agente ha terminado, salvo que estés mirando esa terminal. El navegador te pide permiso una vez.</p>
+    <p><strong>Reglas.</strong> En la pestaña <strong>Rules</strong> (reglas) de <strong>Runs</strong>, una regla puede <strong>Notify me</strong> (avisarme) cuando una tarea está hecha, una tarea falló, una tarea te necesita, se te pide algo, o una programación se disparó o no pudo ejecutarse: una notificación desde la página abierta, con una frase de lo que pasó.</p>
+    <figure class="frame"><a href="../../screenshots/for-you.png" class="frame-pic"><img src="../../screenshots/for-you.png" width="990" height="570" loading="lazy" alt="La columna Waiting for you de la página Runs: un cuadro para añadir un pendiente, y después la pregunta de un agente simulado, un borrador que leer y una lista entregada."></a><figcaption>La lista de lo que espera, junto a For you: primero la pregunta de un agente de prueba, luego un paso por leer y una lista entregada.</figcaption></figure>
+
+    <h2>Otros agentes, y un claude que escribiste tú</h2>
+    <p>Aubergine no lee la salida de una terminal para adivinar. Cualquier otro agente, o cualquier programa, dice lo mismo por sí solo con <code>aubergine attention waiting "what it needs"</code>, <code>aubergine attention working</code> y <code>aubergine attention done</code> en su terminal. <code>aubergine guide --snippet</code> imprime cinco líneas para el archivo que tu agente lee al empezar una conversación; le dicen que ejecute <code>aubergine guide</code>, que explica estos comandos.</p>
+    <p>Un Claude Code que iniciaste escribiendo <code>claude</code> en una terminal normal es, para Aubergine, un shell ocupado con un programa: no hay <strong>waiting for you</strong>. Inícialo desde el menú, o añade a mano a tus propios ajustes los hooks que imprime <code>aubergine hooks print</code>; fuera de una terminal de Aubergine no hacen nada.</p>
+
+    <h2>Lo que no hace</h2>
+    <ul>
+      <li><strong>Ningún sonido propio.</strong> Aubergine no reproduce ninguno. Una notificación suena solo si tu navegador o tu sistema lo hacen con las notificaciones.</li>
+      <li><strong>Nada mientras no haya una página abierta.</strong> Las notificaciones vienen de una página de Aubergine abierta en tu navegador; el servidor no envía ninguna por sí solo. Con todas las páginas cerradas, la terminal sigue diciendo <strong>waiting for you</strong>, y el contador está ahí cuando abres la página.</li>
+      <li><strong>Nada de notificaciones push a un teléfono.</strong> No hay aplicación ni servicio push. El navegador de un teléfono se puede emparejar para abrir la misma página; consulta <a href="../check-agents-from-your-phone/">Revisa tus agentes desde el teléfono</a>, que no se ha probado en un teléfono real.</li>
+      <li><strong>Lo que se comprobó.</strong> Las pruebas del navegador comprueban las notificaciones contra un sustituto de las del propio navegador. Cómo se ve una real, y si se muestra siquiera, depende de tu navegador y de los ajustes de tu sistema para él.</li>
+    </ul>
+
+    <h2>Preguntas</h2>
+    <div class="questions">
+      <details><summary>¿Cómo recibo una notificación cuando Claude Code termina?</summary><p>Inicia Claude Code desde Aubergine y activa <strong>Notify me on the desktop when a terminal starts waiting</strong> en <strong>Settings → Notifications</strong>. La página abierta mostrará entonces una notificación del navegador cuando una terminal empiece a esperarte o su agente haya terminado. Sin notificación, la terminal dice <strong>finished</strong>.</p></details>
+      <details><summary>¿Puede Claude Code reproducir un sonido cuando necesita una entrada?</summary><p>Aubergine no reproduce ningún sonido. Una notificación suena si tu navegador o tu sistema la hacen sonar. Un hook tuyo en tus ajustes de Claude Code puede reproducir uno; Aubergine nunca escribe en esos ajustes.</p></details>
+      <details><summary>¿Cómo veo qué sesión de Claude Code está esperando cuando ejecuto varias?</summary><p>En Aubergine el borde de la terminal que espera y su estado están en el color de la espera, su fila en la lista dice <strong>waiting for you</strong>, y el contador junto a <strong>For you</strong> dice cuántas cosas esperan. <code>W</code> va a la siguiente.</p></details>
+      <details><summary>¿Recibo avisos cuando el navegador está cerrado?</summary><p>No. Las notificaciones vienen de una página de Aubergine abierta. El estado se conserva, así que las terminales que esperan aparecen marcadas cuando vuelves a abrir la página.</p></details>
+      <details><summary>¿Funciona con agentes que no sean Claude Code?</summary><p>No por sí solo: los hooks están hechos para Claude Code. Cualquier otro agente puede informar de lo mismo con <code>aubergine attention waiting</code>, <code>working</code> y <code>done</code> cuando sus propias instrucciones se lo digan; <code>aubergine guide --snippet</code> imprime las líneas para esas instrucciones.</p></details>
+    </div>
+    <p>Relacionado: <a href="../claude/">Claude Code en Aubergine</a> · <a href="../resume-claude-code-session/">Reanudar una conversación de Claude Code</a> · <a href="../too-many-terminal-tabs/">Demasiadas terminales</a></p>
+    <p class="note">Aubergine no está afiliado a Anthropic. Claude y Claude Code son marcas registradas de Anthropic.</p>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">En marcha en cinco minutos</h2>
+    <div class="close-do">
+      <p>Necesitas macOS con tmux 3.2 o posterior y Node.js 22 o posterior. <code>brew install tmux node</code> instala ambos.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Copiado" aria-live="polite" hidden>Copiar</button></p>
+      <p class="actions"><a class="button" href="../install/">Instalar</a><a class="button button-quiet" href="../claude/">Claude Code en Aubergine</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav aria-label="Todas las páginas">
+      <ul class="foot-links">
+        <li><a href="../">Inicio</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex y ChatGPT</a></li>
+        <li><a href="../install/">Instalar</a></li>
+        <li><a href="../guides/">Guías</a></li>
+        <li><a href="../run-multiple-coding-agents/">Varios agentes a la vez</a></li>
+        <li><a href="../working-copies/">Copias de trabajo</a></li>
+        <li><a href="../queue-and-schedules/">Cola y programaciones</a></li>
+        <li><a href="../security/">Seguridad</a></li>
+        <li><a href="../roadmap/">Hoja de ruta</a></li>
+        <li><a href="../faq/">Preguntas frecuentes</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine es libre y de código abierto bajo la <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">licencia MIT</a>, y se ejecuta en tu propio ordenador.</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    if (!navigator.clipboard) return;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
+});
+</script>
+</body>
+</html>

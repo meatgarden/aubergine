@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="fr" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trouver le bon terminal quand vous avez trop d’onglets | Aubergine</title>
+<meta name="description" content="Trop d’onglets de terminal, tous nommés zsh ? Aubergine met chaque terminal sur un canevas et dans une seule liste avec son état en toutes lettres, des filtres, des étiquettes, la recherche dans la sortie des terminaux et un terminal seul dans un onglet du navigateur.">
+<link rel="canonical" href="https://thirstyeggplant.com/fr/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/too-many-terminal-tabs/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/too-many-terminal-tabs/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="Trouver le bon terminal quand vous avez trop d’onglets | Aubergine">
+<meta property="og:description" content="Trop d’onglets de terminal, tous nommés zsh ? Aubergine met chaque terminal sur un canevas et dans une seule liste avec son état en toutes lettres, des filtres, des étiquettes, la recherche dans la sortie des terminaux et un terminal seul dans un onglet du navigateur.">
+<meta property="og:url" content="https://thirstyeggplant.com/fr/too-many-terminal-tabs/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine : un canevas de terminaux, l’un occupé et l’autre qui vous attend">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine : un canevas de terminaux, l’un occupé et l’autre qui vous attend">
+<meta name="twitter:title" content="Trouver le bon terminal quand vous avez trop d’onglets | Aubergine">
+<meta name="twitter:description" content="Trop d’onglets de terminal, tous nommés zsh ? Aubergine met chaque terminal sur un canevas et dans une seule liste avec son état en toutes lettres, des filtres, des étiquettes, la recherche dans la sortie des terminaux et un terminal seul dans un onglet du navigateur.">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">Aller au contenu</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="Pages">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Installer</a></li>
+        <li><a href="../guides/">Guides</a></li>
+        <li><a href="../security/">Sécurité</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="Langue: Français"><span class="lang-long" aria-hidden="true">Français</span><span class="lang-short" aria-hidden="true">FR</span></summary>
+      <ul class="menu-list"><li><a href="../../too-many-terminal-tabs/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/too-many-terminal-tabs/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/too-many-terminal-tabs/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="./" hreflang="fr" lang="fr" dir="ltr" aria-current="true">Français</a></li><li><a href="../../de/too-many-terminal-tabs/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/too-many-terminal-tabs/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/too-many-terminal-tabs/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/too-many-terminal-tabs/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/too-many-terminal-tabs/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/too-many-terminal-tabs/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/too-many-terminal-tabs/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/too-many-terminal-tabs/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>Menu</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Installer</a></li>
+        <li><a href="../guides/">Guides</a></li>
+        <li><a href="../security/">Sécurité</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine elle-même est en anglais : ses boutons, ses menus et ses images sont ceux de la version anglaise.</p>
+    <p>Cette page a été traduite de l’anglais par une machine. <a href="https://github.com/thirstyeggplant/aubergine/issues">Proposer une correction</a>.</p>
+  </div>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/fr/too-many-terminal-tabs/#article",
+      "headline": "Trouver le bon terminal quand vous en avez trop",
+      "description": "Trop d’onglets de terminal, tous nommés zsh ? Aubergine met chaque terminal sur un canevas et dans une seule liste avec son état en toutes lettres, des filtres, des étiquettes, la recherche dans la sortie des terminaux et un terminal seul dans un onglet du navigateur.",
+      "url": "https://thirstyeggplant.com/fr/too-many-terminal-tabs/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/fr/too-many-terminal-tabs/",
+      "datePublished": "2026-11-25",
+      "dateModified": "2026-11-25",
+      "inLanguage": "fr",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Guides", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "Trop de terminaux", "item": "https://thirstyeggplant.com/fr/too-many-terminal-tabs/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/fr/too-many-terminal-tabs/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "Comment organiser beaucoup de fenêtres de terminal ?", "acceptedAnswer": { "@type": "Answer", "text": "Dans Aubergine : un canevas par chantier, des terminaux côte à côte avec des noms et des couleurs, des cadres autour de ceux qui vont ensemble, et une seule liste de tous, avec ce que fait chacun." } },
+        { "@type": "Question", "name": "Comment trouver quel terminal exécute une commande ?", "acceptedAnswer": { "@type": "Answer", "text": "Le champ au-dessus de la liste cherche dans le nom, le dossier, la commande, la note et les étiquettes d’un terminal, et la palette (⌘K) fait de même sur tous les canevas. Le titre d’un terminal montre ce qu’il exécute." } },
+        { "@type": "Question", "name": "Puis-je chercher dans la sortie de tous mes terminaux ?", "acceptedAnswer": { "@type": "Answer", "text": "Oui, de ceux qui tournent encore : la section Terminal output de la palette lit l’historique de chaque terminal quand vous cherchez, ceux mis de côté compris, aussi loin que tmux le garde (50 000 lignes). Rien n’est indexé ni enregistré." } },
+        { "@type": "Question", "name": "Combien de terminaux Aubergine peut-il gérer ?", "acceptedAnswer": { "@type": "Answer", "text": "Il n’y a pas de limite fixe. La liste est testée avec 1 000 terminaux, et trois canevas de 90 ont été regardés à l’œil ; chaque terminal reste un shell, c’est donc ce que votre ordinateur peut faire tourner qui décide." } },
+        { "@type": "Question", "name": "Puis-je nommer et colorer mes terminaux ?", "acceptedAnswer": { "@type": "Answer", "text": "Oui. Double-cliquez sur le titre d’un terminal pour le renommer, et utilisez la pastille de son titre pour l’une des treize couleurs ou la vôtre. Les canevas ont aussi des noms et des couleurs." } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Où vous êtes"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">Guides</a></li><li>Trop de terminaux</li></ol></nav>
+    <h1>Trouver le bon terminal quand vous en avez trop</h1>
+    <p class="lead">Vingt onglets, la plupart nommés zsh, trois avec un agent, dont un qui vous attend. Aubergine met chaque terminal sur un canevas et dans une seule liste qui dit ce que fait chacun : vous trouvez un terminal à ce qu’il est, pas à l’endroit où vous l’avez laissé.</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>Ce que l’on fait d’habitude</h2>
+    <p>Nommer les onglets ou les fenêtres (la plupart des applications de terminal le permettent), diviser les fenêtres en volets, utiliser des sessions et des fenêtres tmux nommées, ou laisser un gestionnaire de fenêtres en mosaïque les placer. Cela aide à placer les terminaux ; trouver celui qui a besoin de vous oblige toujours à chercher des yeux.</p>
+
+    <h2>Ce que fait Aubergine</h2>
+    <p><strong>Un canevas.</strong> Des terminaux côte à côte, chacun en direct. Faites-en glisser un par son titre, redimensionnez-le par ses bords, double-cliquez sur le titre pour le renommer. La pastille d’un titre lui donne une couleur ; un cadre (<strong>New terminal ▾ → Frame</strong>, ou <code>G</code>) regroupe des terminaux sous un libellé et les déplace ensemble.</p>
+    <p><strong>Canevas et projets.</strong> Plusieurs canevas, affichés en onglets, en liste ou en colonne à gauche, chacun avec sa propre adresse. Un projet a ses propres canevas, terminaux, file d’attente et liste de ce qui attend ; le sélecteur en haut à gauche passe d’un projet à l’autre.</p>
+    <p><strong>Une seule liste de tous les terminaux.</strong> La section <strong>Terminals</strong> du panneau latéral liste chacun avec son état en toutes lettres (<strong>working</strong>, <strong>waiting for you</strong>, <strong>finished</strong>, une commande qui a échoué), l’étape de son exécution et sa dernière activité, pour ce canevas ou pour tous. Le champ en haut trouve un terminal par son nom, son dossier, sa commande, sa note ou ses étiquettes.</p>
+    <p><strong>Filter</strong> (filtrer) contient les filtres (en attente de moi, occupé, non lu, avec un agent, mis de côté, étiquettes) et la disposition de la liste : par canevas, ou une liste à plat dans l’ordre des canevas, par dernière mise à jour, par dernière saisie ou par nom.</p>
+    <figure class="frame"><a href="../../screenshots/list.png" class="frame-pic"><img src="../../screenshots/list.png" width="1440" height="1008" loading="lazy" alt="Le panneau latéral avec cinq terminaux et leur état en toutes lettres (working, waiting for you, finished, parked), à côté d’une partie du canevas avec un shell en direct."></a><figcaption>La liste dit ce que fait chaque terminal ; à côté, les terminaux eux-mêmes.</figcaption></figure>
+    <p><strong>Go to…</strong> (aller à) au-dessus du canevas, ou <code>⌘K</code>, c’est la palette : tapez une partie d’un nom, d’un dossier, d’une commande ou d’une note. Sa section <strong>Terminal output</strong> (sortie des terminaux) cherche dans ce que les terminaux ont affiché (les 50 000 dernières lignes que tmux garde pour chacun), et un résultat ouvre le terminal, remonté jusqu’à lui.</p>
+    <p><strong>La carte</strong>, dont le bouton est à côté de <strong>Go to…</strong>, montre tout le canevas en petit et le fait défiler. <strong>Fit</strong> (ajuster, <code>F</code>) montre tout d’un coup.</p>
+    <p><strong>À quoi sert un terminal.</strong> Chacun a une note à côté de lui (un résumé et un journal), et dans ses détails des étiquettes, des liens et des champs comme <code>Ticket: DEMO-12</code>. Un agent peut écrire le nom, le résumé et les champs de son propre terminal avec les commandes <code>aubergine</code>.</p>
+    <p><strong>Un terminal seul.</strong> <strong>Tab ↗</strong> dans son titre l’ouvre dans un onglet du navigateur à lui seul, à <code>/t/&lt;terminal&gt;</code>, avec ses détails et sa note à un bouton de là.</p>
+    <p><code>Tab</code> et <code>Shift+Tab</code> parcourent les terminaux dans l’ordre de la liste, et <code>W</code> va au prochain qui vous attend.</p>
+
+    <h2>Ce qu’il ne fait pas</h2>
+    <ul>
+      <li><strong>Il ne range rien à votre place.</strong> Un terminal reste là où vous l’avez mis (un nouveau va dans un espace libre près du centre de la vue), et garde le nom que vous ou son agent lui avez donné.</li>
+      <li><strong>Il ne promet aucun nombre.</strong> Seul le canevas que vous regardez garde des terminaux en direct : très dézoomé, un terminal montre une image de son écran, et hors de l’écran il ne coûte rien à la page. Chaque terminal reste un shell sur votre ordinateur. La liste est testée avec 1 000 terminaux dans un test unitaire (lister, filtrer et ne dessiner qu’un écran), et un script remplit trois canevas avec 90 terminaux pour juger à l’œil. Ni l’un ni l’autre n’est une promesse pour votre ordinateur.</li>
+      <li><strong>Les onglets de votre application de terminal ne sont pas affichés.</strong> <strong>Open elsewhere</strong> (ouverts ailleurs, <code>O</code>) liste les terminaux ouverts là-bas et les ramène un par un, sous la forme d’un nouveau terminal dans le même dossier. Un programme qui tourne dans un onglet reste dans cet onglet.</li>
+    </ul>
+
+    <h2>Questions</h2>
+    <div class="questions">
+      <details><summary>Comment organiser beaucoup de fenêtres de terminal ?</summary><p>Dans Aubergine : un canevas par chantier, des terminaux côte à côte avec des noms et des couleurs, des cadres autour de ceux qui vont ensemble, et une seule liste de tous, avec ce que fait chacun.</p></details>
+      <details><summary>Comment trouver quel terminal exécute une commande ?</summary><p>Le champ au-dessus de la liste cherche dans le nom, le dossier, la commande, la note et les étiquettes d’un terminal, et la palette (<code>⌘K</code>) fait de même sur tous les canevas. Le titre d’un terminal montre ce qu’il exécute.</p></details>
+      <details><summary>Puis-je chercher dans la sortie de tous mes terminaux ?</summary><p>Oui, de ceux qui tournent encore : la section <strong>Terminal output</strong> de la palette lit l’historique de chaque terminal quand vous cherchez, ceux mis de côté compris, aussi loin que tmux le garde (50 000 lignes). Rien n’est indexé ni enregistré.</p></details>
+      <details><summary>Combien de terminaux Aubergine peut-il gérer ?</summary><p>Il n’y a pas de limite fixe. La liste est testée avec 1 000 terminaux, et trois canevas de 90 ont été regardés à l’œil ; chaque terminal reste un shell, c’est donc ce que votre ordinateur peut faire tourner qui décide.</p></details>
+      <details><summary>Puis-je nommer et colorer mes terminaux ?</summary><p>Oui. Double-cliquez sur le titre d’un terminal pour le renommer, et utilisez la pastille de son titre pour l’une des treize couleurs ou la vôtre. Les canevas ont aussi des noms et des couleurs.</p></details>
+    </div>
+    <p>À lire aussi : <a href="../claude-code-notifications/">Savoir quand Claude Code attend</a> · <a href="../keep-process-running-after-closing-terminal/">Garder un processus en marche</a> · <a href="../run-multiple-coding-agents/">Faire tourner plusieurs agents de code</a></p>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">Opérationnel en cinq minutes</h2>
+    <div class="close-do">
+      <p>Il vous faut macOS avec tmux 3.2 ou plus récent et Node.js 22 ou plus récent. <code>brew install tmux node</code> installe les deux.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Copié" aria-live="polite" hidden>Copier</button></p>
+      <p class="actions"><a class="button" href="../install/">Installer</a><a class="button button-quiet" href="../run-multiple-coding-agents/">Plusieurs agents à la fois</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav aria-label="Toutes les pages">
+      <ul class="foot-links">
+        <li><a href="../">Accueil</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex et ChatGPT</a></li>
+        <li><a href="../install/">Installer</a></li>
+        <li><a href="../guides/">Guides</a></li>
+        <li><a href="../run-multiple-coding-agents/">Plusieurs agents à la fois</a></li>
+        <li><a href="../working-copies/">Copies de travail</a></li>
+        <li><a href="../queue-and-schedules/">File d’attente et planifications</a></li>
+        <li><a href="../security/">Sécurité</a></li>
+        <li><a href="../roadmap/">Feuille de route</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine est libre et gratuite, sous <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">licence MIT</a>, et tourne sur votre propre ordinateur.</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    if (!navigator.clipboard) return;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
+});
+</script>
+</body>
+</html>

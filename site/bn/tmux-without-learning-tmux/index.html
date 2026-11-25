@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="bn" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>tmux না শিখেই tmux | Aubergine</title>
+<meta name="description" content="উইন্ডো বন্ধের পরেও চলা শেল, কোনো প্রিফিক্স key বা .tmux.conf ছাড়া। Aubergine আপনার হয়ে tmux তার নিজস্ব সকেটে চালায়, আর হুইল, কপি-পেস্ট আর আকার বদল যেকোনো টার্মিনালের মতোই কাজ করে।">
+<link rel="canonical" href="https://thirstyeggplant.com/bn/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/tmux-without-learning-tmux/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="tmux না শিখেই tmux | Aubergine">
+<meta property="og:description" content="উইন্ডো বন্ধের পরেও চলা শেল, কোনো প্রিফিক্স key বা .tmux.conf ছাড়া। Aubergine আপনার হয়ে tmux তার নিজস্ব সকেটে চালায়, আর হুইল, কপি-পেস্ট আর আকার বদল যেকোনো টার্মিনালের মতোই কাজ করে।">
+<meta property="og:url" content="https://thirstyeggplant.com/bn/tmux-without-learning-tmux/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine: টার্মিনালের একটি ক্যানভাস, একটি কাজে ব্যস্ত আর একটি আপনার অপেক্ষায়">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine: টার্মিনালের একটি ক্যানভাস, একটি কাজে ব্যস্ত আর একটি আপনার অপেক্ষায়">
+<meta name="twitter:title" content="tmux না শিখেই tmux | Aubergine">
+<meta name="twitter:description" content="উইন্ডো বন্ধের পরেও চলা শেল, কোনো প্রিফিক্স key বা .tmux.conf ছাড়া। Aubergine আপনার হয়ে tmux তার নিজস্ব সকেটে চালায়, আর হুইল, কপি-পেস্ট আর আকার বদল যেকোনো টার্মিনালের মতোই কাজ করে।">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">পেজে যান</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="পেজ">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">ইনস্টল</a></li>
+        <li><a href="../guides/">গাইড</a></li>
+        <li><a href="../security/">নিরাপত্তা</a></li>
+        <li><a href="../faq/">প্রশ্নোত্তর</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="ভাষা: বাংলা"><span class="lang-long" aria-hidden="true">বাংলা</span><span class="lang-short" aria-hidden="true">BN</span></summary>
+      <ul class="menu-list"><li><a href="../../tmux-without-learning-tmux/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/tmux-without-learning-tmux/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/tmux-without-learning-tmux/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/tmux-without-learning-tmux/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/tmux-without-learning-tmux/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/tmux-without-learning-tmux/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/tmux-without-learning-tmux/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/tmux-without-learning-tmux/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/tmux-without-learning-tmux/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/tmux-without-learning-tmux/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="./" hreflang="bn" lang="bn" dir="ltr" aria-current="true">বাংলা</a></li><li><a href="../../ar/tmux-without-learning-tmux/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>মেনু</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">ইনস্টল</a></li>
+        <li><a href="../guides/">গাইড</a></li>
+        <li><a href="../security/">নিরাপত্তা</a></li>
+        <li><a href="../faq/">প্রশ্নোত্তর</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine নিজে ইংরেজিতে: এর বোতাম, মেনু আর ছবি সবই ইংরেজি।</p>
+    <p>এই পেজটি ইংরেজি থেকে মেশিন দিয়ে অনুবাদ করা। <a href="https://github.com/thirstyeggplant/aubergine/issues">সংশোধন পাঠান</a>।</p>
+  </div>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/bn/tmux-without-learning-tmux/#article",
+      "headline": "tmux না শিখেই tmux",
+      "description": "উইন্ডো বন্ধের পরেও চলা শেল, কোনো প্রিফিক্স key বা .tmux.conf ছাড়া। Aubergine আপনার হয়ে tmux তার নিজস্ব সকেটে চালায়, আর হুইল, কপি-পেস্ট আর আকার বদল যেকোনো টার্মিনালের মতোই কাজ করে।",
+      "url": "https://thirstyeggplant.com/bn/tmux-without-learning-tmux/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/bn/tmux-without-learning-tmux/",
+      "datePublished": "2026-11-25",
+      "dateModified": "2026-11-25",
+      "inLanguage": "bn",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "গাইড", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "tmux ছাড়া tmux", "item": "https://thirstyeggplant.com/bn/tmux-without-learning-tmux/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/bn/tmux-without-learning-tmux/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "শর্টকাট না শিখে কি tmux ব্যবহার করা যায়?", "acceptedAnswer": { "@type": "Answer", "text": "হ্যাঁ। Aubergine tmux চালায় কোনো প্রিফিক্স key আর স্ট্যাটাস লাইন ছাড়া, তাই আপনাকে কখনো tmux কমান্ড টাইপ করতে হয় না: ছেড়ে যেতে ট্যাব বন্ধ করুন, ফিরতে পেজ খুলুন, হুইল দিয়ে স্ক্রল করুন, বাছাই করে কপি করুন।" } },
+        { "@type": "Question", "name": "Aubergine কি আমার tmux কনফিগারেশন বদলায়?", "acceptedAnswer": { "@type": "Answer", "text": "না। এটি tmux চালায় নিজস্ব সকেট aubergine-এ, নিজস্ব কনফিগারেশন ফাইল দিয়ে। আপনার tmux সার্ভার, তার সেশন আর আপনার ~/.tmux.conf যেমন আছে তেমনই থাকে।" } },
+        { "@type": "Question", "name": "Aubergine-এর টার্মিনালে কীভাবে স্ক্রল আর কপি করব?", "acceptedAnswer": { "@type": "Answer", "text": "টার্মিনালকে কিবোর্ড দিতে তাতে ক্লিক করুন, তারপর পেছনে স্ক্রল করতে হুইল ব্যবহার করুন। মাউস দিয়ে টেক্সট বাছাই করুন: ছেড়ে দিলেই তা আপনার ক্লিপবোর্ডে। ⌘V দিয়ে পেস্ট করুন, বা macOS-এর বাইরে Ctrl+Shift+V।" } },
+        { "@type": "Question", "name": "আমার নিজের টার্মিনাল অ্যাপ থেকে কি Aubergine টার্মিনালে attach করতে পারি?", "acceptedAnswer": { "@type": "Answer", "text": "হ্যাঁ: aubergine attach \u003cname\u003e, বা টার্মিনালের মেনুতে Open on desktop। দুই জায়গাতেই একই টার্মিনাল; একটিতে যা টাইপ করেন তা অন্যটিতে দেখা যায়।" } },
+        { "@type": "Question", "name": "যে সার্ভারে আমি SSH করি, সেখানে কি Aubergine tmux-এর জায়গা নিতে পারে?", "acceptedAnswer": { "@type": "Answer", "text": "সরাসরি নয়: এর টার্মিনালগুলো থাকে সেই মেশিনে যেখানে এর সার্ভার চলে। এটি একটি সার্ভারে চলতে পারে আর SSH টানেল বা প্রক্সি দিয়ে আপনার ব্রাউজার থেকে ব্যবহার করা যায়, যা কেবল কন্টেইনারে চালানো হয়েছে, কোনো ক্লাউড মেশিনে কখনো নয়।" } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="আপনি কোথায় আছেন"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">গাইড</a></li><li>tmux ছাড়া tmux</li></ol></nav>
+    <h1>tmux না শিখেই tmux</h1>
+    <p class="lead">tmux উইন্ডো বন্ধ হলেও আপনার শেল চালু রাখে। সেই সঙ্গে এটি আপনাকে একটি প্রিফিক্স key, কপি মোড আর একটি কনফিগারেশন ফাইল শিখতে বলে। Aubergine আপনার হয়ে tmux চালায়, আর আপনি প্রতিটি টার্মিনাল ব্রাউজারের একটি পেজে যেকোনো টার্মিনালের মতোই ব্যবহার করেন।</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>এটি কাদের জন্য</h2>
+    <p>যাঁরা tmux যা দেয়, মানে উইন্ডো বন্ধের পরেও চলা শেল, তা চান তার key আর কনফিগারেশন ছাড়াই। আপনি যদি আগে থেকেই tmux-এ অভ্যস্ত হন, সেটিই রাখুন: Aubergine আপনার tmux-এ হাত দেয় না।</p>
+
+    <h2>সাধারণত লোকে কী করে</h2>
+    <p>tmux শেখা: প্রতিটি কমান্ডের আগে একটি প্রিফিক্স key (<code>Ctrl+B</code>, যদি না আপনি বদলান), ফিরে আসতে <code>tmux attach</code>, আর মাউস ও ক্লিপবোর্ডের জন্য <code>~/.tmux.conf</code>-এ কয়েকটি লাইন। বা <code>screen</code>, একই ধরনের একটি পুরোনো টুল। রোজকার প্রতিটি কাজ ডিফল্ট tmux-এ আর Aubergine-এ কেমন:</p>
+    <div class="table">
+      <table class="table-stack">
+        <thead><tr><th>কাজ</th><th>tmux-এ</th><th>Aubergine-এ</th></tr></thead>
+        <tbody>
+          <tr><td>শেল চালু রেখে যাওয়া</td><td data-label="tmux">detach করতে <code>Ctrl+B</code> তারপর <code>d</code></td><td data-label="Aubergine">ট্যাব বন্ধ করুন</td></tr>
+          <tr><td>তাতে ফিরে আসা</td><td data-label="tmux"><code>tmux attach</code></td><td data-label="Aubergine">পেজটি খুলুন</td></tr>
+          <tr><td>পেছনে স্ক্রল</td><td data-label="tmux">কপি মোড, <code>Ctrl+B</code> তারপর <code>[</code></td><td data-label="Aubergine">হুইল</td></tr>
+          <tr><td>কপি</td><td data-label="tmux">কপি মোডে বাছাই</td><td data-label="Aubergine">মাউস দিয়ে বাছাই</td></tr>
+          <tr><td>পেস্ট</td><td data-label="tmux"><code>Ctrl+B</code> তারপর <code>]</code></td><td data-label="Aubergine"><code>⌘V</code>, বা <code>Ctrl+Shift+V</code></td></tr>
+          <tr><td>কয়েকটি শেল দেখা</td><td data-label="tmux">উইন্ডো আর প্যান</td><td data-label="Aubergine">ক্যানভাসে পাশাপাশি টার্মিনাল</td></tr>
+          <tr><td>নাম দেওয়া</td><td data-label="tmux"><code>Ctrl+B</code> তারপর <code>,</code></td><td data-label="Aubergine">শিরোনামে ডাবল-ক্লিক</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Aubergine কী করে</h2>
+    <p><strong>নিজস্ব সকেট আর নিজস্ব কনফিগারেশন।</strong> Aubergine tmux চালু করে নিজস্ব একটি সকেটে, যার নাম <code>aubergine</code>, আপনার কনফিগারেশন ফাইলের বদলে নিজের একটি ফাইল দিয়ে: কোনো স্ট্যাটাস লাইন নেই, কোনো প্রিফিক্স key নেই, মাউস চালু, 50,000 লাইনের হিস্ট্রি। প্রতিটি টার্মিনাল একটি শেল সহ একটি tmux সেশন, আপনার লগইন শেল। আপনার নিজের tmux, তার সেশন আর আপনার <code>~/.tmux.conf</code>-এ হাত দেওয়া হয় না।</p>
+    <p><strong>হুইল পেছনে স্ক্রল করে</strong>, যে টার্মিনালের কাছে কিবোর্ড আছে তাতে; ক্যানভাসের অন্য যেকোনো জায়গায় এটি জুম করে।</p>
+    <p><strong>মাউস দিয়ে বাছাই করুন, ছেড়ে দিলেই তা কপি হয়</strong> আপনার ক্লিপবোর্ডে: tmux বাছাই করা অংশ OSC 52 দিয়ে পেজকে দেয়, যে escape sequence টার্মিনালগুলো ক্লিপবোর্ডের জন্য ব্যবহার করে, আর পেজ তা সেখানে রাখে। <code>⌘V</code> দিয়ে পেস্ট করুন (macOS-এর বাইরে <code>Ctrl+Shift+V</code>)। কয়েক লাইনের পেস্ট bracketed হয়, যাতে শেল তা লাইন ধরে ধরে না চালায়।</p>
+    <p><strong>টেনে আকার বদলান</strong>: ক্যানভাসে টার্মিনালের কিনারা টানুন, আর শেল তার নতুন আকার পায়। একই সময়ে দুই জায়গায় খোলা টার্মিনালের একটাই আকার, যা ঠিক হয় যে ভিউতে আপনি শেষবার টাইপ করেছেন তা দিয়ে।</p>
+    <p><strong>ভেতরে এখনো tmux-ই আছে।</strong> <code>aubergine attach &lt;name&gt;</code> একটি টার্মিনালকে আপনার টার্মিনাল অ্যাপের একটি উইন্ডোতে দেখায়, আর টার্মিনালের মেনুতে <strong>Open on desktop</strong> (ডেস্কটপে খুলুন) আপনার হয়ে তা করে (macOS-এ Terminal বা iTerm-এ; Linux-এ আপনার ঠিক করা কমান্ড লাইন দিয়ে)। সার্ভার থেমে থাকলেও <code>tmux -L aubergine ls</code> আর <code>tmux -L aubergine attach -t &lt;id&gt;</code> প্রতিটি শেলে পৌঁছায়।</p>
+
+    <h2>যা লাগবে</h2>
+    <p>tmux 3.2 বা নতুন, আপনার ইনস্টল করা: macOS-এ <code>brew install tmux</code>, Linux-এ আপনার সিস্টেমের প্যাকেজ। Aubergine এটি ইনস্টল করে না, আর এটি না থাকলে বা পুরোনো হলে সে কথা জানিয়ে একটি পেজ দেখায়। zsh-এ টার্মিনালের শিরোনাম চলমান কমান্ড আর আগেরটি কীভাবে শেষ হয়েছে তা দেখায়; অন্য শেল এটি ছাড়াই চলে।</p>
+
+    <h2>এটি কী নয়</h2>
+    <ul>
+      <li><strong>রিমোট সার্ভারে tmux নয়।</strong> Aubergine-এর tmux চলে সেই কম্পিউটারে যেখানে এর সার্ভার চলে। SSH দিয়ে পৌঁছানো মেশিনের শেলের জন্য সেই মেশিনের tmux-ই টুল। Aubergine নিজে অন্য মেশিনে চলতে পারে (<a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md">Using Aubergine from elsewhere</a>); তা কেবল কন্টেইনারে চালানো হয়েছে।</li>
+      <li><strong>আপনার নিজের tmux সেশন দেখানো হয় না।</strong> ক্যানভাসে কেবল Aubergine-এর টার্মিনাল থাকে। <code>aubergine scan</code> এই কম্পিউটারে Aubergine-এর বাইরে খোলা ইন্টারঅ্যাক্টিভ শেলগুলোর তালিকা দেয়, আর <code>aubergine import</code> বা <code>aubergine here</code> তার একটিকে একই ফোল্ডারে ক্যানভাসে নতুন টার্মিনাল দেয়; পুরোনোটিতে চলা প্রোগ্রাম সেখানেই থাকে। <code>aubergine shell-hook print</code> আপনার <code>.zshrc</code>-এর জন্য যে লাইনগুলো দেয়, সেগুলো tmux-এর ভেতরে কিছুই করে না।</li>
+      <li><strong>tmux-এর key নেই, প্যানও নেই।</strong> কোনো প্রিফিক্স key নেই, আর আপনার নিজের tmux বাইন্ডিং খাটে না। কোনো টার্মিনালের কাছে কিবোর্ড থাকলে প্রতিটি key তার ভেতরের প্রোগ্রামে যায়, কেবল কয়েকটি chord ছাড়া, যেগুলো এমনভাবে বাছা যে কোনো শেল, এডিটর বা tmux-এর সেগুলো লাগে না।</li>
+      <li><strong>সরাসরি Windows-এ নয়।</strong> এর tmux আর একটি Unix শেল লাগে; Windows-এ এটি WSL 2-এর ভেতরে চলে। দেখুন <a href="../windows/">WSL সহ Windows</a>।</li>
+    </ul>
+
+    <h2>প্রশ্ন</h2>
+    <div class="questions">
+      <details><summary>শর্টকাট না শিখে কি tmux ব্যবহার করা যায়?</summary><p>হ্যাঁ। Aubergine tmux চালায় কোনো প্রিফিক্স key আর স্ট্যাটাস লাইন ছাড়া, তাই আপনাকে কখনো tmux কমান্ড টাইপ করতে হয় না: ছেড়ে যেতে ট্যাব বন্ধ করুন, ফিরতে পেজ খুলুন, হুইল দিয়ে স্ক্রল করুন, বাছাই করে কপি করুন।</p></details>
+      <details><summary>Aubergine কি আমার tmux কনফিগারেশন বদলায়?</summary><p>না। এটি tmux চালায় নিজস্ব সকেট <code>aubergine</code>-এ, নিজস্ব কনফিগারেশন ফাইল দিয়ে। আপনার tmux সার্ভার, তার সেশন আর আপনার <code>~/.tmux.conf</code> যেমন আছে তেমনই থাকে।</p></details>
+      <details><summary>Aubergine-এর টার্মিনালে কীভাবে স্ক্রল আর কপি করব?</summary><p>টার্মিনালকে কিবোর্ড দিতে তাতে ক্লিক করুন, তারপর পেছনে স্ক্রল করতে হুইল ব্যবহার করুন। মাউস দিয়ে টেক্সট বাছাই করুন: ছেড়ে দিলেই তা আপনার ক্লিপবোর্ডে। <code>⌘V</code> দিয়ে পেস্ট করুন, বা macOS-এর বাইরে <code>Ctrl+Shift+V</code>।</p></details>
+      <details><summary>আমার নিজের টার্মিনাল অ্যাপ থেকে কি Aubergine টার্মিনালে attach করতে পারি?</summary><p>হ্যাঁ: <code>aubergine attach &lt;name&gt;</code>, বা টার্মিনালের মেনুতে <strong>Open on desktop</strong>। দুই জায়গাতেই একই টার্মিনাল; একটিতে যা টাইপ করেন তা অন্যটিতে দেখা যায়।</p></details>
+      <details><summary>যে সার্ভারে আমি SSH করি, সেখানে কি Aubergine tmux-এর জায়গা নিতে পারে?</summary><p>সরাসরি নয়: এর টার্মিনালগুলো থাকে সেই মেশিনে যেখানে এর সার্ভার চলে। এটি একটি সার্ভারে চলতে পারে আর SSH টানেল বা প্রক্সি দিয়ে আপনার ব্রাউজার থেকে ব্যবহার করা যায়, যা কেবল কন্টেইনারে চালানো হয়েছে, কোনো ক্লাউড মেশিনে কখনো নয়।</p></details>
+    </div>
+    <p>সম্পর্কিত: <a href="../keep-process-running-after-closing-terminal/">প্রসেস চালু রাখুন</a> · <a href="../keep-terminals-after-restart/">রিস্টার্টের পরেও টার্মিনাল রেখে দিন</a> · <a href="../too-many-terminal-tabs/">অনেক বেশি টার্মিনাল</a></p>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">পাঁচ মিনিটে চালু</h2>
+    <div class="close-do">
+      <p>আপনার লাগবে macOS, সঙ্গে tmux 3.2 বা নতুনতর আর Node.js 22 বা নতুনতর। <code>brew install tmux node</code> দুটোই এনে দেয়।</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="কপি হয়েছে" aria-live="polite" hidden>কপি করুন</button></p>
+      <p class="actions"><a class="button" href="../install/">ইনস্টল করুন</a><a class="button button-quiet" href="../keep-process-running-after-closing-terminal/">চালু রাখুন</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav aria-label="সব পেজ">
+      <ul class="foot-links">
+        <li><a href="../">হোম</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex আর ChatGPT</a></li>
+        <li><a href="../install/">ইনস্টল</a></li>
+        <li><a href="../guides/">গাইড</a></li>
+        <li><a href="../run-multiple-coding-agents/">একাধিক এজেন্ট চালান</a></li>
+        <li><a href="../working-copies/">ওয়ার্কিং কপি</a></li>
+        <li><a href="../queue-and-schedules/">কিউ আর শিডিউল</a></li>
+        <li><a href="../security/">নিরাপত্তা</a></li>
+        <li><a href="../roadmap/">রোডম্যাপ</a></li>
+        <li><a href="../faq/">প্রশ্নোত্তর</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine বিনামূল্যে ও ওপেন সোর্স, <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT লাইসেন্সে</a>, আর চলে আপনার নিজের কম্পিউটারে।</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    if (!navigator.clipboard) return;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
+});
+</script>
+</body>
+</html>

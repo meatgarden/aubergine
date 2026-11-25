@@ -1,0 +1,134 @@
+<!--page {"updated": "2026-11-25", "order": 6.5, "key": "keep", "llms": {"name": "Keep your terminals after a restart", "about": "what closing the browser, restarting Aubergine and restarting the computer each keep, what is lost, and how to pick up where you were"}}-->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "{{=url}}#article",
+      "headline": {{json:keep.title}},
+      "description": {{json:keep.meta.description}},
+      "url": "{{=url}}",
+      "mainEntityOfPage": "{{=url}}",
+      "datePublished": "2026-11-25",
+      "dateModified": "{{=updated}}",
+      "inLanguage": "{{=lang}}",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": {{json:guides.crumb}}, "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": {{json:keep.crumb}}, "item": "{{=url}}" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "{{=url}}#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": {{json:keep.q.restore.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:keep.q.restore.a}} } },
+        { "@type": "Question", "name": {{json:keep.q.output.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:keep.q.output.a}} } },
+        { "@type": "Question", "name": {{json:keep.q.claude.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:keep.q.claude.a}} } },
+        { "@type": "Question", "name": {{json:keep.q.macos.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:keep.q.macos.a}} } },
+        { "@type": "Question", "name": {{json:keep.q.tmux.q}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:keep.q.tmux.a}} } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="{{attr:site.crumbs}}"><ol><li><a href="/">Aubergine</a></li><li><a href="/guides/">{{guides.crumb}}</a></li><li>{{keep.crumb}}</li></ol></nav>
+    <h1>{{keep.title}}</h1>
+    <p class="lead">{{keep.lead}}</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>{{keep.table.title}}</h2>
+    <p>{{keep.table.intro}}</p>
+    <div class="table">
+      <table class="table-stack">
+        <thead><tr><th>{{keep.table.thing}}</th><th>{{keep.table.browser}}</th><th>{{keep.table.server}}</th><th>{{keep.table.computer}}</th></tr></thead>
+        <tbody>
+          <tr><td>{{keep.row.running}}</td><td data-label="{{attr:keep.table.browserShort}}">{{keep.cell.runs}}</td><td data-label="{{attr:keep.table.serverShort}}">{{keep.cell.runs}}</td><td data-label="{{attr:keep.table.computerShort}}">{{keep.cell.ends}}</td></tr>
+          <tr><td>{{keep.row.scrollback}}</td><td data-label="{{attr:keep.table.browserShort}}">{{keep.cell.there}}</td><td data-label="{{attr:keep.table.serverShort}}">{{keep.cell.there}}</td><td data-label="{{attr:keep.table.computerShort}}">{{keep.cell.gone}}</td></tr>
+          <tr><td>{{keep.row.place}}</td><td data-label="{{attr:keep.table.browserShort}}">{{keep.cell.there}}</td><td data-label="{{attr:keep.table.serverShort}}">{{keep.cell.there}}</td><td data-label="{{attr:keep.table.computerShort}}">{{keep.cell.there}}</td></tr>
+          <tr><td>{{keep.row.note}}</td><td data-label="{{attr:keep.table.browserShort}}">{{keep.cell.there}}</td><td data-label="{{attr:keep.table.serverShort}}">{{keep.cell.there}}</td><td data-label="{{attr:keep.table.computerShort}}">{{keep.cell.there}}</td></tr>
+          <tr><td>{{keep.row.folder}}</td><td data-label="{{attr:keep.table.browserShort}}">{{keep.cell.there}}</td><td data-label="{{attr:keep.table.serverShort}}">{{keep.cell.there}}</td><td data-label="{{attr:keep.table.computerShort}}">{{keep.cell.fresh}}</td></tr>
+          <tr><td>{{keep.row.agent}}</td><td data-label="{{attr:keep.table.browserShort}}">{{keep.cell.goes}}</td><td data-label="{{attr:keep.table.serverShort}}">{{keep.cell.goes}}</td><td data-label="{{attr:keep.table.computerShort}}">{{keep.cell.resume}}</td></tr>
+          <tr><td>{{keep.row.copies}}</td><td data-label="{{attr:keep.table.browserShort}}">{{keep.cell.there}}</td><td data-label="{{attr:keep.table.serverShort}}">{{keep.cell.there}}</td><td data-label="{{attr:keep.table.computerShort}}">{{keep.cell.there}}</td></tr>
+          <tr><td>{{keep.row.queue}}</td><td data-label="{{attr:keep.table.browserShort}}">{{keep.cell.there}}</td><td data-label="{{attr:keep.table.serverShort}}">{{keep.cell.late}}</td><td data-label="{{attr:keep.table.computerShort}}">{{keep.cell.late}}</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">{{keep.table.parked}}</p>
+    <p>{{keep.table.update}}</p>
+
+    <h2>{{keep.back.title}}</h2>
+    <ol class="seq">
+      <li><p>{{keep.back.start}}</p>
+        <p class="cmd"><code>aubergine start --open</code><button type="button" class="copy" data-copy data-copied="{{attr:site.copied}}" aria-live="polite" hidden>{{site.copy}}</button></p></li>
+      <li><p>{{keep.back.canvas}}</p></li>
+      <li><p>{{keep.back.resume}}</p></li>
+      <li><p>{{keep.back.read}}</p></li>
+      <li><p>{{keep.back.history}}</p></li>
+    </ol>
+    <p>{{keep.back.other}}</p>
+    <figure class="frame"><a href="/screenshots/focus-part.png" class="frame-pic"><img src="/screenshots/focus-part.png" width="1344" height="1172" loading="lazy" alt="{{attr:home.see.focus.alt}}"></a><figcaption>{{keep.pic.caption}}</figcaption></figure>
+
+    <h2>{{keep.lost.title}}</h2>
+    <ul>
+      <li>{{keep.lost.running}}</li>
+      <li>{{keep.lost.work}}</li>
+      <li>{{keep.lost.scrollback}}</li>
+      <li>{{keep.lost.away}}</li>
+    </ul>
+
+    <h2>{{keep.habit.title}}</h2>
+    <p>{{keep.habit.text}}</p>
+    <pre><code>aubergine note "Tests pass on the branch. The migration is not written yet."
+aubergine describe --summary "Fixing the double redirect at sign-in"</code></pre>
+    <p>{{keep.habit.recap}}</p>
+
+    <h2>{{keep.sleep.title}}</h2>
+    <ul>
+      <li>{{keep.sleep.sleep}}</li>
+      <li>{{keep.sleep.browser}}</li>
+      <li>{{keep.sleep.server}}</li>
+      <li>{{keep.sleep.wsl}}</li>
+    </ul>
+
+    <h2>{{home.faq.title}}</h2>
+    <div class="questions">
+      <details><summary>{{keep.q.restore.q}}</summary><p>{{keep.q.restore.a}}</p></details>
+      <details><summary>{{keep.q.output.q}}</summary><p>{{keep.q.output.a}}</p></details>
+      <details><summary>{{keep.q.claude.q}}</summary><p>{{keep.q.claude.a}}</p></details>
+      <details><summary>{{keep.q.macos.q}}</summary><p>{{keep.q.macos.a}}</p></details>
+      <details><summary>{{keep.q.tmux.q}}</summary><p>{{keep.q.tmux.a}}</p></details>
+    </div>
+    <p>{{keep.related}}</p>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">{{home.install.title}}</h2>
+    <div class="close-do">
+      <p>{{home.install.intro}}</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="{{attr:site.copied}}" aria-live="polite" hidden>{{site.copy}}</button></p>
+      <p class="actions"><a class="button" href="/install/">{{home.hero.install}}</a><a class="button button-quiet" href="/run-multiple-coding-agents/">{{several.crumb}}</a></p>
+    </div>
+  </div>
+</section>

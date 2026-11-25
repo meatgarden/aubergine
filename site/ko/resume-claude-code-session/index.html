@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="ko" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>재시작 후 Claude Code 대화 재개하기 | Aubergine</title>
+<meta name="description" content="claude --continue와 --resume은 올바른 폴더에 있으면 대화를 되살립니다. Aubergine은 각 터미널이 어느 대화에 있었는지 기억하고, Resume agent를 제공하며, 지난 대화를 폴더별로 나열합니다.">
+<link rel="canonical" href="https://thirstyeggplant.com/ko/resume-claude-code-session/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/resume-claude-code-session/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/resume-claude-code-session/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/resume-claude-code-session/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/resume-claude-code-session/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/resume-claude-code-session/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/resume-claude-code-session/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/resume-claude-code-session/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/resume-claude-code-session/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/resume-claude-code-session/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/resume-claude-code-session/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/resume-claude-code-session/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/resume-claude-code-session/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/resume-claude-code-session/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="재시작 후 Claude Code 대화 재개하기 | Aubergine">
+<meta property="og:description" content="claude --continue와 --resume은 올바른 폴더에 있으면 대화를 되살립니다. Aubergine은 각 터미널이 어느 대화에 있었는지 기억하고, Resume agent를 제공하며, 지난 대화를 폴더별로 나열합니다.">
+<meta property="og:url" content="https://thirstyeggplant.com/ko/resume-claude-code-session/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine: 터미널이 놓인 캔버스. 하나는 작업 중이고 하나는 사용자를 기다리고 있습니다">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine: 터미널이 놓인 캔버스. 하나는 작업 중이고 하나는 사용자를 기다리고 있습니다">
+<meta name="twitter:title" content="재시작 후 Claude Code 대화 재개하기 | Aubergine">
+<meta name="twitter:description" content="claude --continue와 --resume은 올바른 폴더에 있으면 대화를 되살립니다. Aubergine은 각 터미널이 어느 대화에 있었는지 기억하고, Resume agent를 제공하며, 지난 대화를 폴더별로 나열합니다.">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="페이지">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">설치</a></li>
+        <li><a href="../guides/">가이드</a></li>
+        <li><a href="../security/">보안</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="언어: 한국어"><span class="lang-long" aria-hidden="true">한국어</span><span class="lang-short" aria-hidden="true">KO</span></summary>
+      <ul class="menu-list"><li><a href="../../resume-claude-code-session/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/resume-claude-code-session/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/resume-claude-code-session/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/resume-claude-code-session/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/resume-claude-code-session/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/resume-claude-code-session/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/resume-claude-code-session/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="./" hreflang="ko" lang="ko" dir="ltr" aria-current="true">한국어</a></li><li><a href="../../id/resume-claude-code-session/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/resume-claude-code-session/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/resume-claude-code-session/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/resume-claude-code-session/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>메뉴</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">설치</a></li>
+        <li><a href="../guides/">가이드</a></li>
+        <li><a href="../security/">보안</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine 앱 자체는 영어로 되어 있습니다. 버튼, 메뉴, 그림은 모두 영어판 그대로입니다.</p>
+    <p>이 페이지는 영어 원문을 기계 번역한 것입니다. <a href="https://github.com/thirstyeggplant/aubergine/issues">수정 제안 보내기</a>.</p>
+  </div>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/ko/resume-claude-code-session/#article",
+      "headline": "재시작 후 Claude Code 대화 재개하기",
+      "description": "claude --continue와 --resume은 올바른 폴더에 있으면 대화를 되살립니다. Aubergine은 각 터미널이 어느 대화에 있었는지 기억하고, Resume agent를 제공하며, 지난 대화를 폴더별로 나열합니다.",
+      "url": "https://thirstyeggplant.com/ko/resume-claude-code-session/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/ko/resume-claude-code-session/",
+      "datePublished": "2026-11-25",
+      "dateModified": "2026-11-25",
+      "inLanguage": "ko",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "가이드", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "대화 재개", "item": "https://thirstyeggplant.com/ko/resume-claude-code-session/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/ko/resume-claude-code-session/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "터미널을 닫은 뒤 Claude Code 세션을 재개하려면 어떻게 하나요?", "acceptedAnswer": { "@type": "Answer", "text": "같은 폴더에서 claude --continue는 가장 최근 대화를 이어 가고, claude --resume은 고르게 해 줍니다. Aubergine에서는 브라우저를 닫아도 아무것도 끝나지 않으며, 에이전트를 종료한 터미널은 제목 표시줄에 Resume agent를 보여 줍니다." } },
+        { "@type": "Question", "name": "재부팅 후 Claude Code 대화를 재개하려면 어떻게 하나요?", "acceptedAnswer": { "@type": "Answer", "text": "재시작 후 Aubergine의 각 터미널은 마지막 폴더의 새 셸로 돌아옵니다. Claude Code를 Aubergine에서 시작했다면, 제목 표시줄의 Resume agent가 그 터미널이 있던 대화에서 Claude Code를 다시 시작합니다." } },
+        { "@type": "Question", "name": "예전 Claude Code 대화를 어떻게 찾나요?", "acceptedAnswer": { "@type": "Answer", "text": "팔레트의 Past conversations…가 한 폴더의 대화를 읽기 전용 대화 내용과 함께 나열하고, 팔레트에 @와 단어 몇 개를 입력하면 검색됩니다. Claude Code가 아직 보관하고 있는 것만 나열됩니다." } },
+        { "@type": "Question", "name": "claude --continue와 claude --resume은 무엇이 다른가요?", "acceptedAnswer": { "@type": "Answer", "text": "--continue는 그 폴더의 가장 최근 대화를 이어 가고, --resume은 여러분이 고른 대화나 ID를 받습니다. Resume agent는 터미널이 기억한 ID로 --resume을 쓰므로, 어느 대화가 가장 최근이었는지와 상관없습니다." } },
+        { "@type": "Question", "name": "두 터미널이 같은 Claude Code 대화를 이어 갈 수 있나요?", "acceptedAnswer": { "@type": "Answer", "text": "Aubergine은 묻지 않고 한 대화를 두 번 열지 않습니다. 한 대화에 에이전트가 둘이면 서로의 메시지를 잃습니다. 이미 그 대화에 있는 터미널, 또는 대화를 갈래로 나누는 사본을 선택지로 제시합니다." } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="현재 위치"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">가이드</a></li><li>대화 재개</li></ol></nav>
+    <h1>재시작 후 Claude Code 대화 재개하기</h1>
+    <p class="lead">컴퓨터가 재시작되었거나 터미널을 닫아서 Claude Code의 대화가 사라진 것처럼 보입니다. 대화는 Claude Code가 가지고 있습니다. Aubergine은 각 터미널이 어느 대화에 있었는지 기억하고, 버튼 하나로 되돌려 줍니다.</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>흔히 쓰는 방법</h2>
+    <p>대화가 있던 폴더의 터미널에서 <code>claude --continue</code>는 그곳의 가장 최근 대화를 이어 가고, <code>claude --resume</code>은 목록에서 하나를 고르게 하거나 대화 ID를 받습니다. 문제는 폴더와 선택입니다. 한 폴더에 에이전트가 여러 개 있으면 가장 최근 대화가 늘 원하던 대화는 아닙니다.</p>
+
+    <h2>Aubergine이 하는 일</h2>
+    <p><strong>터미널이 자신의 대화를 기억합니다.</strong> Claude Code를 Aubergine에서 시작했다면(<strong>New terminal ▾ → Claude Code</strong>, 또는 <code>C</code>) 그 훅이 어느 대화에 있는지 Aubergine에 알리고, Aubergine은 그 ID를 터미널과 함께 보관합니다.</p>
+    <p>셸이 프롬프트로 돌아오면 터미널 제목 표시줄에 <strong>Resume agent</strong>(에이전트 재개)가 나타납니다. 에이전트를 종료했거나, 컴퓨터가 재시작되어 터미널이 마지막 폴더의 새 셸로 돌아온 경우입니다. <code>--resume</code>과 그 ID를 붙여, 설정의 실행 명령(<code>agents.claudeCommand</code>, 기본값 <code>claude</code>)으로 Claude Code를 다시 시작합니다.</p>
+    <p><strong>워크플로 실행에 속한 터미널이라면</strong> <strong>Resume agent</strong>가 그 실행에 대해서도 다시 알려 주므로, 에이전트는 실행이 멈춰 있는 단계부터 이어 갑니다.</p>
+    <p><strong>Past conversations…</strong>(지난 대화)는 팔레트(<code>⌘K</code>)에, “Past conversations in this folder…”는 터미널 세부 정보에 있으며, 한 폴더의 이전 Claude Code 대화를 나열합니다. 이름이나 처음 한 말, 마지막으로 활동한 때, 몇 번 주고받았는지, 지금 캔버스의 터미널이 그 대화에 있는지. <strong>Read</strong>는 읽기 전용으로 보여 줍니다. <strong>Open on the canvas</strong>는 그 폴더에서 그 대화를 재개한 새 터미널을 시작하고, <strong>Open a copy</strong>는 대화의 갈래를 시작하며 원본은 그대로 둡니다. 이미 그 대화에 있는 터미널이 있으면 먼저 묻습니다.</p>
+    <p><strong>검색.</strong> 팔레트에 <code>@</code> 다음에 단어 몇 개를 입력하면 캔버스에 있는 터미널들의 폴더에서 지난 대화를 검색합니다. 요청할 때 한도 안에서 기록을 읽고, 중간에 잘렸으면 그렇다고 알려 줍니다. 명령줄에서는 <code>aubergine history</code>가 목록을 보여 주고 <code>aubergine history open &lt;id&gt;</code>가 하나를 엽니다.</p>
+    <p><strong>어디까지 했는지.</strong> 터미널의 노트에는 요약과 로그가 있고, 여러분이 보내는 프롬프트는 하나하나 로그에 추가됩니다. 세부 정보의 <strong>Ask its agent for a recap</strong>(에이전트에게 요약 요청)을 누르면 에이전트가 <code>aubergine recap --write</code>로 지금 상황을 쓰고, 그 요약은 터미널과 함께 남습니다. 30분 넘게 자리를 비웠다가 돌아오면 <strong>While you were away</strong>(자리를 비운 동안)가 그사이 바뀐 것을 나열합니다.</p>
+    <figure class="frame"><a href="../../screenshots/focus-part.png" class="frame-pic"><img src="../../screenshots/focus-part.png" width="1344" height="1172" loading="lazy" alt="브라우저 탭에 홀로 열린 터미널 하나. 머리글에 이름이 있고, 워크플로 단계, 폴더, 필드가 담긴 세부 정보와 실시간 터미널이 나란히 있습니다."></a><figcaption>터미널의 세부 정보: 실행의 단계와 마지막 보고, 폴더, 필드. 이것들은 터미널과 함께 남아, 에이전트를 재개할 때를 기다립니다.</figcaption></figure>
+
+    <h2>Aubergine 밖의 터미널에 있는 대화</h2>
+    <p>터미널 앱의 탭에서 에이전트를 종료한 다음, 같은 폴더에서 <code>aubergine here --claude</code>를 실행하세요. 캔버스의 새 터미널이 <code>--continue</code>로 Claude Code를 시작하고, 이제 상태가 표시됩니다. <code>aubergine move</code>는 Claude Code 탭을 나열하고 각 대화의 사본을 캔버스에 시작합니다. <code>--stop</code>을 붙이면 여러분이 확인한 뒤 유휴 상태의 에이전트에게 먼저 종료를 요청합니다.</p>
+
+    <h2>하지 않는 일</h2>
+    <ul>
+      <li><strong>Claude Code 자체의 기록을 읽으며, 그 형식은 Aubergine의 것이 아닙니다.</strong> Claude Code는 그 파일 형식을 내부용이라고 하며, 버전마다 바뀝니다. 재개는 Claude Code 자체의 <code>--resume</code>에 ID를 넘겨 합니다. 이름, 횟수, 대화 내용은 Aubergine이 파일을 읽은 결과이므로, Claude Code를 업데이트한 뒤에는 빠지거나 줄어들 수 있습니다. 읽을 수 없는 기록은 빈 대화로 보여 주지 않고 읽을 수 없다고 알립니다.</li>
+      <li><strong>아무것도 복사하거나 보관하지 않습니다.</strong> 목록, 대화 내용, 검색은 요청할 때 읽고 닫으면 버립니다. Aubergine은 대화를 바꾸거나, 이름을 바꾸거나, 지우지 않으며, 어떤 에이전트나 토큰도 Aubergine을 통해 대화를 읽을 수 없습니다.</li>
+      <li><strong>하던 작업을 다시 하지 않습니다.</strong> 에이전트가 멈출 때 하던 일은 여러분이 요청할 때까지 다시 시작되지 않습니다.</li>
+      <li><strong>다른 에이전트에는 Resume agent가 없습니다.</strong> Aubergine은 다른 에이전트의 대화를 모르고, 지난 대화도 나열하지 않습니다. 같은 터미널에서 그 에이전트 자체의 재개 방법으로 다시 시작하고, 노트를 읽어 어디까지 했는지 알려 주세요.</li>
+      <li><strong>직접 입력해 시작한 <code>claude</code>는 기억되지 않습니다</strong>. 단, <code>aubergine hooks print</code>가 출력하는 훅을 여러분의 Claude Code 설정에 추가했다면 기억됩니다.</li>
+      <li><strong>확인한 것.</strong> 대화 기록 읽기는 지어낸 기록으로 테스트합니다. 모든 버전의 Claude Code로 확인하지는 않았습니다.</li>
+    </ul>
+
+    <h2>질문</h2>
+    <div class="questions">
+      <details><summary>터미널을 닫은 뒤 Claude Code 세션을 재개하려면 어떻게 하나요?</summary><p>같은 폴더에서 <code>claude --continue</code>는 가장 최근 대화를 이어 가고, <code>claude --resume</code>은 고르게 해 줍니다. Aubergine에서는 브라우저를 닫아도 아무것도 끝나지 않으며, 에이전트를 종료한 터미널은 제목 표시줄에 <strong>Resume agent</strong>를 보여 줍니다.</p></details>
+      <details><summary>재부팅 후 Claude Code 대화를 재개하려면 어떻게 하나요?</summary><p>재시작 후 Aubergine의 각 터미널은 마지막 폴더의 새 셸로 돌아옵니다. Claude Code를 Aubergine에서 시작했다면, 제목 표시줄의 <strong>Resume agent</strong>가 그 터미널이 있던 대화에서 Claude Code를 다시 시작합니다.</p></details>
+      <details><summary>예전 Claude Code 대화를 어떻게 찾나요?</summary><p>팔레트의 <strong>Past conversations…</strong>가 한 폴더의 대화를 읽기 전용 대화 내용과 함께 나열하고, 팔레트에 <code>@</code>와 단어 몇 개를 입력하면 검색됩니다. Claude Code가 아직 보관하고 있는 것만 나열됩니다.</p></details>
+      <details><summary>claude --continue와 claude --resume은 무엇이 다른가요?</summary><p><code>--continue</code>는 그 폴더의 가장 최근 대화를 이어 가고, <code>--resume</code>은 여러분이 고른 대화나 ID를 받습니다. <strong>Resume agent</strong>는 터미널이 기억한 ID로 <code>--resume</code>을 쓰므로, 어느 대화가 가장 최근이었는지와 상관없습니다.</p></details>
+      <details><summary>두 터미널이 같은 Claude Code 대화를 이어 갈 수 있나요?</summary><p>Aubergine은 묻지 않고 한 대화를 두 번 열지 않습니다. 한 대화에 에이전트가 둘이면 서로의 메시지를 잃습니다. 이미 그 대화에 있는 터미널, 또는 대화를 갈래로 나누는 사본을 선택지로 제시합니다.</p></details>
+    </div>
+    <p>관련: <a href="../keep-terminals-after-restart/">재시작 후에도 터미널 유지하기</a> · <a href="../claude-code-notifications/">Claude Code가 기다리는지 알기</a> · <a href="../claude/">Aubergine의 Claude Code</a></p>
+    <p class="note">Aubergine은 Anthropic과 제휴 관계가 없습니다. Claude와 Claude Code는 Anthropic의 상표입니다.</p>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">5분이면 시작합니다</h2>
+    <div class="close-do">
+      <p>tmux 3.2 이상과 Node.js 22 이상이 설치된 macOS가 필요합니다. <code>brew install tmux node</code>로 둘 다 설치할 수 있습니다.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="복사됨" aria-live="polite" hidden>복사</button></p>
+      <p class="actions"><a class="button" href="../install/">설치</a><a class="button button-quiet" href="../claude/">Aubergine의 Claude Code</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav aria-label="전체 페이지">
+      <ul class="foot-links">
+        <li><a href="../">홈</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex와 ChatGPT</a></li>
+        <li><a href="../install/">설치</a></li>
+        <li><a href="../guides/">가이드</a></li>
+        <li><a href="../run-multiple-coding-agents/">여러 에이전트 실행하기</a></li>
+        <li><a href="../working-copies/">작업 사본</a></li>
+        <li><a href="../queue-and-schedules/">대기열과 일정</a></li>
+        <li><a href="../security/">보안</a></li>
+        <li><a href="../roadmap/">로드맵</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine은 <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT 라이선스</a>로 공개된 무료 오픈 소스이며, 여러분의 컴퓨터에서 실행됩니다.</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    if (!navigator.clipboard) return;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
+});
+</script>
+</body>
+</html>

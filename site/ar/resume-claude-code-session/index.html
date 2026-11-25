@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>استأنف محادثة Claude Code بعد إعادة التشغيل | Aubergine</title>
+<meta name="description" content="يعيد claude --continue وclaude --resume المحادثة إن كنت في المجلد الصحيح. ويتذكر Aubergine المحادثة التي كانت فيها كل طرفية، ويعرض Resume agent، ويسرد المحادثات السابقة حسب المجلد.">
+<link rel="canonical" href="https://thirstyeggplant.com/ar/resume-claude-code-session/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/resume-claude-code-session/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/resume-claude-code-session/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/resume-claude-code-session/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/resume-claude-code-session/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/resume-claude-code-session/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/resume-claude-code-session/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/resume-claude-code-session/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/resume-claude-code-session/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/resume-claude-code-session/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/resume-claude-code-session/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/resume-claude-code-session/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/resume-claude-code-session/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/resume-claude-code-session/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="استأنف محادثة Claude Code بعد إعادة التشغيل | Aubergine">
+<meta property="og:description" content="يعيد claude --continue وclaude --resume المحادثة إن كنت في المجلد الصحيح. ويتذكر Aubergine المحادثة التي كانت فيها كل طرفية، ويعرض Resume agent، ويسرد المحادثات السابقة حسب المجلد.">
+<meta property="og:url" content="https://thirstyeggplant.com/ar/resume-claude-code-session/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine: لوحة من الطرفيات، إحداها مشغولة وأخرى بانتظارك">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine: لوحة من الطرفيات، إحداها مشغولة وأخرى بانتظارك">
+<meta name="twitter:title" content="استأنف محادثة Claude Code بعد إعادة التشغيل | Aubergine">
+<meta name="twitter:description" content="يعيد claude --continue وclaude --resume المحادثة إن كنت في المجلد الصحيح. ويتذكر Aubergine المحادثة التي كانت فيها كل طرفية، ويعرض Resume agent، ويسرد المحادثات السابقة حسب المجلد.">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">انتقل إلى محتوى الصفحة</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="الصفحات">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">التثبيت</a></li>
+        <li><a href="../guides/">الأدلة</a></li>
+        <li><a href="../security/">الأمان</a></li>
+        <li><a href="../faq/">الأسئلة الشائعة</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="اللغة: العربية"><span class="lang-long" aria-hidden="true">العربية</span><span class="lang-short" aria-hidden="true">AR</span></summary>
+      <ul class="menu-list"><li><a href="../../resume-claude-code-session/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/resume-claude-code-session/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/resume-claude-code-session/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/resume-claude-code-session/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/resume-claude-code-session/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/resume-claude-code-session/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/resume-claude-code-session/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/resume-claude-code-session/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/resume-claude-code-session/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/resume-claude-code-session/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/resume-claude-code-session/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="./" hreflang="ar" lang="ar" dir="rtl" aria-current="true">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>القائمة</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">التثبيت</a></li>
+        <li><a href="../guides/">الأدلة</a></li>
+        <li><a href="../security/">الأمان</a></li>
+        <li><a href="../faq/">الأسئلة الشائعة</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>تطبيق Aubergine نفسه باللغة الإنجليزية: أزراره وقوائمه وصوره كلها بالإنجليزية.</p>
+    <p>ترجمت آلةٌ هذه الصفحة عن الإنجليزية. <a href="https://github.com/thirstyeggplant/aubergine/issues">أرسل تصحيحًا</a>.</p>
+  </div>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/ar/resume-claude-code-session/#article",
+      "headline": "استأنف محادثة Claude Code بعد إعادة التشغيل",
+      "description": "يعيد claude --continue وclaude --resume المحادثة إن كنت في المجلد الصحيح. ويتذكر Aubergine المحادثة التي كانت فيها كل طرفية، ويعرض Resume agent، ويسرد المحادثات السابقة حسب المجلد.",
+      "url": "https://thirstyeggplant.com/ar/resume-claude-code-session/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/ar/resume-claude-code-session/",
+      "datePublished": "2026-11-25",
+      "dateModified": "2026-11-25",
+      "inLanguage": "ar",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "الأدلة", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "استئناف محادثة", "item": "https://thirstyeggplant.com/ar/resume-claude-code-session/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/ar/resume-claude-code-session/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "كيف أستأنف جلسة Claude Code بعد إغلاق الطرفية؟", "acceptedAnswer": { "@type": "Answer", "text": "في المجلد نفسه، يأخذ claude --continue أحدث محادثة ويتيح لك claude --resume الاختيار. وفي Aubergine، لا يُنهي إغلاق المتصفح شيئًا، والطرفية التي خرجت من وكيلها تعرض Resume agent في شريط عنوانها." } },
+        { "@type": "Question", "name": "كيف أستأنف محادثة Claude Code بعد إعادة التشغيل؟", "acceptedAnswer": { "@type": "Answer", "text": "بعد إعادة التشغيل تعود كل طرفية في Aubergine صدفةً جديدة في آخر مجلد لها. وحيث شُغّل Claude Code من Aubergine، يشغّله Resume agent في شريط العنوان من جديد في المحادثة التي كانت فيها تلك الطرفية." } },
+        { "@type": "Question", "name": "كيف أعثر على محادثة قديمة في Claude Code؟", "acceptedAnswer": { "@type": "Answer", "text": "يسردها Past conversations…‎ في لوحة الأوامر لمجلد ما، مع نص للقراءة فقط؛ وكتابة @ وبعض الكلمات في لوحة الأوامر تبحث فيها. ولا يُسرد إلا ما لا يزال Claude Code يحتفظ به." } },
+        { "@type": "Question", "name": "ما الفرق بين claude --continue وclaude --resume؟", "acceptedAnswer": { "@type": "Answer", "text": "يتابع --continue أحدث محادثة في المجلد؛ ويأخذ --resume التي تختارها، أو معرّفًا. ويستخدم Resume agent الخيار --resume مع المعرّف الذي تذكّرته الطرفية، فلا يعتمد على أيّ المحادثات كانت الأحدث." } },
+        { "@type": "Question", "name": "هل يمكن لطرفيتين متابعة محادثة Claude Code نفسها؟", "acceptedAnswer": { "@type": "Answer", "text": "لا يفتح Aubergine محادثة مرتين دون أن يسأل: وكيلان في محادثة واحدة يضيّع كلٌّ منهما رسائل الآخر. ويُعرض عليك الطرفية التي فيها المحادثة من قبل، أو نسخة، تتفرع بها المحادثة." } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="أين أنت"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">الأدلة</a></li><li>استئناف محادثة</li></ol></nav>
+    <h1>استأنف محادثة Claude Code بعد إعادة التشغيل</h1>
+    <p class="lead">أُعيد تشغيل الحاسوب، أو أغلقت الطرفية، فبدت محادثة Claude Code ضائعة. لكن Claude Code يحتفظ بها. ويتذكر Aubergine المحادثة التي كانت فيها كل طرفية ويعيدها بزر واحد.</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>ما يفعله الناس عادةً</h2>
+    <p>في طرفية، داخل المجلد الذي كانت فيه المحادثة: يتابع <code>claude --continue</code> أحدث محادثة هناك، ويتيح لك <code>claude --resume</code> اختيار واحدة من قائمة، أو يأخذ معرّف محادثة. والعقبة هي المجلد والاختيار: مع عدة وكلاء في مجلد واحد، ليست الأحدث دائمًا هي التي قصدتها.</p>
+
+    <h2>ما يفعله Aubergine</h2>
+    <p><strong>الطرفية تتذكر محادثتها.</strong> حين يُشغَّل Claude Code من Aubergine (<strong>New terminal ▾ → Claude Code</strong>، أو <code>C</code>)، تخبر خطافاتُه Aubergine بالمحادثة التي هو فيها، ويحفظ Aubergine ذلك المعرّف مع الطرفية.</p>
+    <p>يُعرض <strong>Resume agent</strong> (استئناف الوكيل) في شريط عنوان الطرفية بمجرد أن تعود صدفتها إلى المحث: خرجت من الوكيل، أو أُعيد تشغيل الحاسوب فعادت الطرفية صدفةً جديدة في آخر مجلد لها. ويشغّل Claude Code من جديد مع <code>--resume</code> وذلك المعرّف، بأمر التشغيل الذي في إعداداتك (<code>agents.claudeCommand</code>، وهو <code>claude</code> افتراضيًا).</p>
+    <p><strong>في تشغيل لسير عمل</strong>، يخبر <strong>Resume agent</strong> الوكيلَ بالتشغيل من جديد أيضًا، فيتابع من الخطوة التي بلغها التشغيل.</p>
+    <p>يسرد <strong>Past conversations…</strong>‎ في لوحة الأوامر (<code>⌘K</code>)، أو «Past conversations in this folder…‎» في تفاصيل الطرفية، محادثات Claude Code السابقة في مجلد: الاسم أو أول ما قلته، ومتى كانت آخر مرة نشطت فيها، وكم مرة تحدثت، وهل توجد الآن طرفية على لوحة تعمل فيها. يعرضها <strong>Read</strong> (قراءة) للقراءة فقط. ويشغّل <strong>Open on the canvas</strong> (افتح على اللوحة) طرفية جديدة في ذلك المجلد مستأنفة فيها، ويبدأ <strong>Open a copy</strong> (افتح نسخة) فرعًا منها ويترك الأصل كما هو. وإن كانت طرفية في تلك المحادثة من قبل، تُسأل أولًا.</p>
+    <p><strong>البحث.</strong> اكتب <code>@</code> وبعض الكلمات في لوحة الأوامر للبحث في المحادثات السابقة في مجلدات الطرفيات التي على لوحاتك. يقرأ السجلات حين تطلب، ضمن حدود، ويقول متى اقتُطع البحث. وفي سطر الأوامر، يسردها <code>aubergine history</code> ويفتح <code>aubergine history open &lt;id&gt;</code> إحداها.</p>
+    <p><strong>أين توقف.</strong> تحفظ ملاحظة الطرفية ملخصها وسجلًا، ويُضاف كل موجّه ترسله إلى السجل. ويجعل <strong>Ask its agent for a recap</strong> (اطلب من وكيلها ملخص الحالة) في تفاصيلها الوكيلَ يكتب أين وصل بالأمر <code>aubergine recap --write</code>، ويُحفظ ذلك مع الطرفية. وحين تعود بعد أكثر من 30 دقيقة، يسرد <strong>While you were away</strong> (في غيابك) ما تغيّر في أثناء ذلك.</p>
+    <figure class="frame"><a href="../../screenshots/focus-part.png" class="frame-pic"><img src="../../screenshots/focus-part.png" width="1344" height="1172" loading="lazy" alt="طرفية واحدة وحدها في علامة تبويب في المتصفح: اسمها في الرأس، وتفاصيلها مع خطوة سير العمل ومجلدها وحقولها، والطرفية الحيّة بجانبها."></a><figcaption>تفاصيل طرفية: خطوة تشغيلها وآخر تقرير، ومجلدها وحقولها. تُحفظ مع الطرفية، جاهزة لحين يُستأنف وكيلها.</figcaption></figure>
+
+    <h2>محادثة في طرفية خارج Aubergine</h2>
+    <p>في تبويب من تطبيق الطرفية لديك، اخرج من الوكيل، ثم شغّل <code>aubergine here --claude</code> في المجلد نفسه: تشغّل طرفية جديدة على اللوحة Claude Code مع <code>--continue</code>، وحالته الآن ظاهرة. ويسرد <code>aubergine move</code> تبويبات Claude Code لديك ويبدأ نسخة من كل محادثة على اللوحة؛ ومع <code>--stop</code> يطلب من الوكيل الخامل أن يخرج أولًا، بعد أن تؤكد.</p>
+
+    <h2>ما لا يفعله</h2>
+    <ul>
+      <li><strong>يقرأ سجلات Claude Code نفسها، بشكل ليس من وضع Aubergine.</strong> يصف Claude Code شكل تلك الملفات بأنه داخلي، وهو يتغيّر بين الإصدارات. يستخدم الاستئناف <code>--resume</code> الخاص بـ Claude Code مع المعرّف؛ أما الأسماء والأعداد والنصوص فهي قراءة Aubergine للملفات، وقد تغيب أو تقلّ بعد تحديث Claude Code. والسجل الذي لا يستطيع قراءته يُقال عنه ذلك، ولا يُعرض محادثةً فارغة.</li>
+      <li><strong>لا يُنسخ شيء ولا يُحفظ.</strong> القائمة أو النص أو البحث يُقرأ حين تطلب ويُترك حين تغلقه. ولا يغيّر Aubergine أي محادثة ولا يعيد تسميتها ولا يحذفها، ولا يستطيع أي وكيل أو رمز قراءة المحادثات عبره.</li>
+      <li><strong>العمل الجاري لا يُعاد.</strong> ما كان الوكيل يفعله حين توقف لا يُبدأ من جديد حتى تطلبه منه.</li>
+      <li><strong>لا Resume agent لوكيل آخر.</strong> لا يعرف Aubergine محادثة وكيل آخر، ولا يسرد له محادثات سابقة. شغّله من جديد في الطرفية نفسها بطريقة الاستئناف الخاصة بذلك الوكيل، واقرأ الملاحظة لتخبره أين توقف.</li>
+      <li><strong>الأمر <code>claude</code> الذي كتبته بنفسك لا يُتذكَّر</strong>، إلا إن أضفت إلى إعدادات Claude Code الخاصة بك الخطافات التي يطبعها <code>aubergine hooks print</code>.</li>
+      <li><strong>ما الذي تُحقّق منه.</strong> قراءة سجلات المحادثات مختبرة على سجلات مصطنعة. ولم يُتحقَّق منها مع كل إصدار من Claude Code.</li>
+    </ul>
+
+    <h2>أسئلة</h2>
+    <div class="questions">
+      <details><summary>كيف أستأنف جلسة Claude Code بعد إغلاق الطرفية؟</summary><p>في المجلد نفسه، يأخذ <code>claude --continue</code> أحدث محادثة ويتيح لك <code>claude --resume</code> الاختيار. وفي Aubergine، لا يُنهي إغلاق المتصفح شيئًا، والطرفية التي خرجت من وكيلها تعرض <strong>Resume agent</strong> في شريط عنوانها.</p></details>
+      <details><summary>كيف أستأنف محادثة Claude Code بعد إعادة التشغيل؟</summary><p>بعد إعادة التشغيل تعود كل طرفية في Aubergine صدفةً جديدة في آخر مجلد لها. وحيث شُغّل Claude Code من Aubergine، يشغّله <strong>Resume agent</strong> في شريط العنوان من جديد في المحادثة التي كانت فيها تلك الطرفية.</p></details>
+      <details><summary>كيف أعثر على محادثة قديمة في Claude Code؟</summary><p>يسردها <strong>Past conversations…</strong>‎ في لوحة الأوامر لمجلد ما، مع نص للقراءة فقط؛ وكتابة <code>@</code> وبعض الكلمات في لوحة الأوامر تبحث فيها. ولا يُسرد إلا ما لا يزال Claude Code يحتفظ به.</p></details>
+      <details><summary>ما الفرق بين claude --continue وclaude --resume؟</summary><p>يتابع <code>--continue</code> أحدث محادثة في المجلد؛ ويأخذ <code>--resume</code> التي تختارها، أو معرّفًا. ويستخدم <strong>Resume agent</strong> الخيار <code>--resume</code> مع المعرّف الذي تذكّرته الطرفية، فلا يعتمد على أيّ المحادثات كانت الأحدث.</p></details>
+      <details><summary>هل يمكن لطرفيتين متابعة محادثة Claude Code نفسها؟</summary><p>لا يفتح Aubergine محادثة مرتين دون أن يسأل: وكيلان في محادثة واحدة يضيّع كلٌّ منهما رسائل الآخر. ويُعرض عليك الطرفية التي فيها المحادثة من قبل، أو نسخة، تتفرع بها المحادثة.</p></details>
+    </div>
+    <p>ذو صلة: <a href="../keep-terminals-after-restart/">احتفظ بطرفياتك بعد إعادة التشغيل</a> · <a href="../claude-code-notifications/">اعرف متى ينتظرك Claude Code</a> · <a href="../claude/">Claude Code في Aubergine</a></p>
+    <p class="note">Aubergine غير تابع لـ Anthropic. Claude وClaude Code علامتان تجاريتان لـ Anthropic.</p>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">جاهز للعمل في خمس دقائق</h2>
+    <div class="close-do">
+      <p>تحتاج إلى macOS مع tmux 3.2 أو أحدث، ومعه Node.js 22 أو أحدث. الأمر <code>brew install tmux node</code> يثبّت الاثنين.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="تم النسخ" aria-live="polite" hidden>نسخ</button></p>
+      <p class="actions"><a class="button" href="../install/">التثبيت</a><a class="button button-quiet" href="../claude/">Claude Code في Aubergine</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav aria-label="كل الصفحات">
+      <ul class="foot-links">
+        <li><a href="../">الرئيسية</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex و ChatGPT</a></li>
+        <li><a href="../install/">التثبيت</a></li>
+        <li><a href="../guides/">الأدلة</a></li>
+        <li><a href="../run-multiple-coding-agents/">تشغيل عدة وكلاء</a></li>
+        <li><a href="../working-copies/">نسخ العمل</a></li>
+        <li><a href="../queue-and-schedules/">الطابور والجداول الزمنية</a></li>
+        <li><a href="../security/">الأمان</a></li>
+        <li><a href="../roadmap/">خارطة الطريق</a></li>
+        <li><a href="../faq/">الأسئلة الشائعة</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine مجاني ومفتوح المصدر بموجب <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">رخصة MIT</a>، ويعمل على حاسوبك أنت.</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    if (!navigator.clipboard) return;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
+});
+</script>
+</body>
+</html>

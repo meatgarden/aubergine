@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="id" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Menjaga proses tetap berjalan setelah terminal ditutup | Aubergine</title>
+<meta name="description" content="Menutup jendela terminal mengakhiri apa yang berjalan di dalamnya. Jawaban yang biasa adalah nohup, disown, screen, dan tmux; Aubergine menjalankan setiap terminal di tmux untuk Anda, jadi menutup browser tidak mengakhiri apa pun.">
+<link rel="canonical" href="https://thirstyeggplant.com/id/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/keep-process-running-after-closing-terminal/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/keep-process-running-after-closing-terminal/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="Menjaga proses tetap berjalan setelah terminal ditutup | Aubergine">
+<meta property="og:description" content="Menutup jendela terminal mengakhiri apa yang berjalan di dalamnya. Jawaban yang biasa adalah nohup, disown, screen, dan tmux; Aubergine menjalankan setiap terminal di tmux untuk Anda, jadi menutup browser tidak mengakhiri apa pun.">
+<meta property="og:url" content="https://thirstyeggplant.com/id/keep-process-running-after-closing-terminal/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine: kanvas berisi terminal, satu sedang sibuk dan satu menunggu Anda">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine: kanvas berisi terminal, satu sedang sibuk dan satu menunggu Anda">
+<meta name="twitter:title" content="Menjaga proses tetap berjalan setelah terminal ditutup | Aubergine">
+<meta name="twitter:description" content="Menutup jendela terminal mengakhiri apa yang berjalan di dalamnya. Jawaban yang biasa adalah nohup, disown, screen, dan tmux; Aubergine menjalankan setiap terminal di tmux untuk Anda, jadi menutup browser tidak mengakhiri apa pun.">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">Langsung ke isi halaman</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="Halaman">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Instalasi</a></li>
+        <li><a href="../guides/">Panduan</a></li>
+        <li><a href="../security/">Keamanan</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="Bahasa: Bahasa Indonesia"><span class="lang-long" aria-hidden="true">Bahasa Indonesia</span><span class="lang-short" aria-hidden="true">ID</span></summary>
+      <ul class="menu-list"><li><a href="../../keep-process-running-after-closing-terminal/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/keep-process-running-after-closing-terminal/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/keep-process-running-after-closing-terminal/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/keep-process-running-after-closing-terminal/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/keep-process-running-after-closing-terminal/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/keep-process-running-after-closing-terminal/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/keep-process-running-after-closing-terminal/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/keep-process-running-after-closing-terminal/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="./" hreflang="id" lang="id" dir="ltr" aria-current="true">Bahasa Indonesia</a></li><li><a href="../../hi/keep-process-running-after-closing-terminal/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/keep-process-running-after-closing-terminal/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/keep-process-running-after-closing-terminal/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>Menu</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Instalasi</a></li>
+        <li><a href="../guides/">Panduan</a></li>
+        <li><a href="../security/">Keamanan</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine sendiri berbahasa Inggris: tombol, menu, dan gambarnya adalah versi bahasa Inggris.</p>
+    <p>Halaman ini diterjemahkan oleh mesin dari bahasa Inggris. <a href="https://github.com/thirstyeggplant/aubergine/issues">Kirim koreksi</a>.</p>
+  </div>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/id/keep-process-running-after-closing-terminal/#article",
+      "headline": "Menjaga proses tetap berjalan setelah terminal ditutup",
+      "description": "Menutup jendela terminal mengakhiri apa yang berjalan di dalamnya. Jawaban yang biasa adalah nohup, disown, screen, dan tmux; Aubergine menjalankan setiap terminal di tmux untuk Anda, jadi menutup browser tidak mengakhiri apa pun.",
+      "url": "https://thirstyeggplant.com/id/keep-process-running-after-closing-terminal/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/id/keep-process-running-after-closing-terminal/",
+      "datePublished": "2026-11-25",
+      "dateModified": "2026-11-25",
+      "inLanguage": "id",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Panduan", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "Tetap berjalan", "item": "https://thirstyeggplant.com/id/keep-process-running-after-closing-terminal/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/id/keep-process-running-after-closing-terminal/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "Apakah menutup browser menghentikan terminal saya?", "acceptedAnswer": { "@type": "Answer", "text": "Tidak. Setiap terminal adalah shell di tmux, yang berjalan terpisah dari browser. Tutup tab, jendela, atau browser, buka lagi halamannya, dan setiap terminal seperti keadaannya sekarang, masih berjalan, dengan apa yang dicetaknya selama itu." } },
+        { "@type": "Question", "name": "Bagaimana menjaga proses tetap berjalan setelah SSH terputus?", "acceptedAnswer": { "@type": "Answer", "text": "Di mesin jarak jauh, mulai proses itu di dalam tmux atau screen, atau dengan nohup. Aubergine menjaga terminal di komputer tempat ia berjalan. Ia juga bisa berjalan di mesin jarak jauh, dipakai lewat tunnel SSH atau proxy, tetapi itu baru dijalankan di dalam kontainer, belum pernah di mesin cloud." } },
+        { "@type": "Question", "name": "Sebaiknya saya pakai nohup atau tmux?", "acceptedAnswer": { "@type": "Answer", "text": "nohup cocok untuk satu perintah yang output-nya boleh masuk ke file. tmux cocok untuk shell yang ingin Anda datangi lagi dan ketik di dalamnya. Aubergine memberi setiap terminal yang kedua, di halaman browser, tanpa tombol-tombol tmux." } },
+        { "@type": "Question", "name": "Bisakah saya melihat output setelah terminal ditutup?", "acceptedAnswer": { "@type": "Answer", "text": "Ya, selama shell berjalan: tmux menyimpan 50.000 baris terakhir setiap terminal, dan halaman menampilkannya saat Anda kembali. Aubergine sendiri tidak merekam apa pun, jadi setelah komputer dimulai ulang output itu hilang." } },
+        { "@type": "Question", "name": "Apakah ia tetap berjalan setelah reboot?", "acceptedAnswer": { "@type": "Answer", "text": "Tidak. Memulai ulang komputer mengakhiri setiap program. Aubergine mengembalikan setiap terminal sebagai shell baru di folder terakhirnya, dengan tempat, nama, dan catatannya, dan tidak menjalankan apa pun lagi." } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Posisi Anda"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">Panduan</a></li><li>Tetap berjalan</li></ol></nav>
+    <h1>Menjaga proses tetap berjalan setelah terminal ditutup</h1>
+    <p class="lead">Anda memulai build, server, atau agen coding, dan menutup jendelanya akan mengakhirinya. Di Aubergine menutup jendela tidak mengakhiri apa pun: setiap terminal berjalan terpisah dari browser, dan apa yang dicetaknya masih ada saat Anda kembali.</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>Yang biasanya dilakukan orang</h2>
+    <p>Menutup jendela terminal mengakhiri shell di dalamnya, dan bersama itu apa yang dimulai shell tersebut. Cara standar untuk menghindarinya:</p>
+    <ul>
+      <li><code>nohup</code> memulai perintah yang mengabaikan sinyal hang-up yang dikirim saat terminal ditutup. Output-nya masuk ke sebuah file (<code>nohup.out</code> kecuali Anda mengirimnya ke tempat lain).</li>
+      <li><code>disown</code>, di bash dan zsh, melepas job yang sudah Anda mulai, sehingga shell tidak meneruskan hang-up kepadanya. Setelah itu Anda tidak bisa kembali ke job itu di terminal.</li>
+      <li><code>screen</code> dan <code>tmux</code> menjalankan shell di dalam server milik mereka sendiri. Anda melepas (detach), menutup jendela, lalu menyambung lagi (attach) nanti ke shell yang sama beserta output-nya. Keduanya jawaban yang bisa diandalkan, dan untuk memakainya Anda harus mempelajari tombol dan perintahnya.</li>
+    </ul>
+    <p>Aubergine dibangun di atas yang terakhir. Ia menjalankan tmux untuk Anda, jadi Anda mendapat jawabannya tanpa perlu tombol-tombolnya.</p>
+
+    <h2>Apa yang dilakukan Aubergine</h2>
+    <p>Setiap terminal di Aubergine adalah shell di sesi tmux-nya sendiri, di socket tmux milik Aubergine. tmux berjalan terpisah dari browser dan dari server Aubergine, sehingga:</p>
+    <ul>
+      <li><strong>Menutup tab, jendela, atau seluruh browser tidak mengakhiri apa pun.</strong> Buka lagi halamannya (<code>aubergine open</code> membukanya dalam keadaan masuk) dan setiap terminal digambar dari tmux seperti keadaannya sekarang, dengan apa yang dicetaknya selama itu ada di scrollback-nya.</li>
+      <li><strong>Menghentikan Aubergine juga tidak mengakhiri apa pun.</strong> Ctrl+C di tempat <code>aubergine start</code> berjalan, server yang crash, atau pembaruan menghentikan server dan tidak ada yang lain. Mulai lagi dan muat ulang halamannya.</li>
+      <li><strong>Menutup terminal di kanvas berarti menyimpannya.</strong> Tanda × di judulnya mengeluarkannya dari kanvas dan shell-nya tetap berjalan. <strong>Parked</strong> (disimpan) di bilah di atas kanvas mendaftar terminal yang disimpan, dan <strong>Restore</strong> (pulihkan) mengembalikan salah satunya.</li>
+      <li><strong>Mengakhiri shell untuk selamanya selalu bertanya dulu.</strong> <strong>End</strong> (akhiri) di daftar terminal yang disimpan mengakhiri terminal hanya setelah Anda menjawab ya.</li>
+      <li><strong>Tampilan lain dari terminal juga tidak mengakhiri apa pun.</strong> <strong>Tab ↗</strong> di judul terminal membukanya sendirian di tab browser, dan <code>aubergine attach &lt;name&gt;</code> menampilkannya di jendela aplikasi terminal Anda. Masing-masing adalah terminal yang sama, bukan salinan; menutup tab atau jendela itu membiarkannya tetap berjalan.</li>
+    </ul>
+    <p>Selama shell berjalan, tmux menyimpan 50.000 baris terakhir yang dicetaknya. Roda mouse menggulir kembali baris-baris itu di terminal yang memegang keyboard, dan palet (<code>⌘K</code>) mencarinya.</p>
+    <figure class="frame"><a href="../../screenshots/list.png" class="frame-pic"><img src="../../screenshots/list.png" width="1440" height="1008" loading="lazy" alt="Panel samping yang mendaftar lima terminal beserta statusnya dalam kata-kata (working, waiting for you, finished, parked), di samping sebagian kanvas dengan shell yang hidup."></a><figcaption>Daftar ini menunjukkan apa yang sedang dikerjakan setiap terminal. Yang disimpan di bagian bawah tidak ada di kanvas, dan shell-nya masih berjalan.</figcaption></figure>
+
+    <h2>Apa yang tidak dilakukannya</h2>
+    <ul>
+      <li><strong>Ia tidak bertahan saat komputer dimulai ulang.</strong> Mulai ulang, komputer yang crash, atau pembaruan yang memulai ulang komputer mengakhiri setiap shell dan apa yang berjalan di dalamnya. Aubergine mengembalikan semua yang ada di sekitarnya, setiap terminal sebagai shell baru di folder terakhirnya, dan tidak memulai apa pun lagi dengan sendirinya. Lihat <a href="../keep-terminals-after-restart/">Menjaga terminal setelah komputer dimulai ulang</a>.</li>
+      <li><strong>Ia tidak menjaga komputer tetap terjaga.</strong> Laptop yang tidur menjeda program-programnya, termasuk yang ini; semuanya berlanjut saat laptop bangun.</li>
+      <li><strong>Ia bukan pengelola layanan.</strong> Pekerjaan yang harus kembali sendiri setelah mulai ulang sebaiknya ada di layanan sistem Anda.</li>
+      <li><strong>Ia tidak bisa mengambil alih program yang sudah berjalan di tempat lain.</strong> Tidak ada alat yang bisa memindahkan program yang sedang berjalan ke terminal lain. <code>aubergine here</code> di tab aplikasi terminal Anda memberi folder itu sebuah terminal di kanvas; program yang berjalan di tab itu tetap di sana, dan harus dimulai lagi di dalam terminal baru.</li>
+    </ul>
+
+    <h2>Di mesin lain, lewat SSH</h2>
+    <p>Aubergine berjalan di komputer Anda sendiri: servernya mendengarkan di <code>127.0.0.1</code>, dan terminalnya adalah shell di komputer itu. Jika yang ingin Anda pertahankan adalah proses di server jarak jauh yang Anda jangkau lewat SSH, <code>tmux</code> atau <code>screen</code> di server itu tetap jawabannya.</p>
+    <p>Aubergine sendiri bisa berjalan di mesin lain dan dipakai dari browser Anda, lewat tunnel SSH, jaringan privat, atau sebuah nama dan proxy: langkah-langkahnya ada di <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md">Memakai Aubergine dari tempat lain</a>. Lewat tunnel SSH, menutup jendela SSH yang menjalankan <code>aubergine start</code> menghentikan server, dan terminalnya tetap berjalan. Linux baru dijalankan di dalam kontainer, dan belum pernah di mesin cloud.</p>
+
+    <h2>Pertanyaan</h2>
+    <div class="questions">
+      <details><summary>Apakah menutup browser menghentikan terminal saya?</summary><p>Tidak. Setiap terminal adalah shell di tmux, yang berjalan terpisah dari browser. Tutup tab, jendela, atau browser, buka lagi halamannya, dan setiap terminal seperti keadaannya sekarang, masih berjalan, dengan apa yang dicetaknya selama itu.</p></details>
+      <details><summary>Bagaimana menjaga proses tetap berjalan setelah SSH terputus?</summary><p>Di mesin jarak jauh, mulai proses itu di dalam <code>tmux</code> atau <code>screen</code>, atau dengan <code>nohup</code>. Aubergine menjaga terminal di komputer tempat ia berjalan. Ia juga bisa berjalan di mesin jarak jauh, dipakai lewat tunnel SSH atau proxy, tetapi itu baru dijalankan di dalam kontainer, belum pernah di mesin cloud.</p></details>
+      <details><summary>Sebaiknya saya pakai nohup atau tmux?</summary><p><code>nohup</code> cocok untuk satu perintah yang output-nya boleh masuk ke file. <code>tmux</code> cocok untuk shell yang ingin Anda datangi lagi dan ketik di dalamnya. Aubergine memberi setiap terminal yang kedua, di halaman browser, tanpa tombol-tombol tmux.</p></details>
+      <details><summary>Bisakah saya melihat output setelah terminal ditutup?</summary><p>Ya, selama shell berjalan: tmux menyimpan 50.000 baris terakhir setiap terminal, dan halaman menampilkannya saat Anda kembali. Aubergine sendiri tidak merekam apa pun, jadi setelah komputer dimulai ulang output itu hilang.</p></details>
+      <details><summary>Apakah ia tetap berjalan setelah reboot?</summary><p>Tidak. Memulai ulang komputer mengakhiri setiap program. Aubergine mengembalikan setiap terminal sebagai shell baru di folder terakhirnya, dengan tempat, nama, dan catatannya, dan tidak menjalankan apa pun lagi.</p></details>
+    </div>
+    <p>Terkait: <a href="../keep-terminals-after-restart/">Menjaga terminal setelah komputer dimulai ulang</a> · <a href="../tmux-without-learning-tmux/">tmux tanpa belajar tmux</a> · <a href="../claude-code-notifications/">Tahu kapan Claude Code menunggu</a></p>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">Siap dipakai dalam lima menit</h2>
+    <div class="close-do">
+      <p>Anda memerlukan macOS dengan tmux 3.2 atau lebih baru dan Node.js 22 atau lebih baru. <code>brew install tmux node</code> memasang keduanya.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Tersalin" aria-live="polite" hidden>Salin</button></p>
+      <p class="actions"><a class="button" href="../install/">Instal</a><a class="button button-quiet" href="../tmux-without-learning-tmux/">tmux tanpa belajar tmux</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav aria-label="Semua halaman">
+      <ul class="foot-links">
+        <li><a href="../">Beranda</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex dan ChatGPT</a></li>
+        <li><a href="../install/">Instalasi</a></li>
+        <li><a href="../guides/">Panduan</a></li>
+        <li><a href="../run-multiple-coding-agents/">Menjalankan beberapa agen</a></li>
+        <li><a href="../working-copies/">Salinan kerja</a></li>
+        <li><a href="../queue-and-schedules/">Antrean dan jadwal</a></li>
+        <li><a href="../security/">Keamanan</a></li>
+        <li><a href="../roadmap/">Peta jalan</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine gratis dan open source di bawah <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">lisensi MIT</a>, dan berjalan di komputer Anda sendiri.</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    if (!navigator.clipboard) return;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
+});
+</script>
+</body>
+</html>

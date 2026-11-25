@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="id" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>tmux tanpa belajar tmux | Aubergine</title>
+<meta name="description" content="Shell yang bertahan lebih lama dari jendelanya, tanpa tombol prefiks atau .tmux.conf. Aubergine menjalankan tmux untuk Anda di socket-nya sendiri, dengan roda mouse, salin dan tempel, serta pengubahan ukuran yang berfungsi seperti di terminal mana pun.">
+<link rel="canonical" href="https://thirstyeggplant.com/id/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/tmux-without-learning-tmux/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/tmux-without-learning-tmux/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="tmux tanpa belajar tmux | Aubergine">
+<meta property="og:description" content="Shell yang bertahan lebih lama dari jendelanya, tanpa tombol prefiks atau .tmux.conf. Aubergine menjalankan tmux untuk Anda di socket-nya sendiri, dengan roda mouse, salin dan tempel, serta pengubahan ukuran yang berfungsi seperti di terminal mana pun.">
+<meta property="og:url" content="https://thirstyeggplant.com/id/tmux-without-learning-tmux/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine: kanvas berisi terminal, satu sedang sibuk dan satu menunggu Anda">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine: kanvas berisi terminal, satu sedang sibuk dan satu menunggu Anda">
+<meta name="twitter:title" content="tmux tanpa belajar tmux | Aubergine">
+<meta name="twitter:description" content="Shell yang bertahan lebih lama dari jendelanya, tanpa tombol prefiks atau .tmux.conf. Aubergine menjalankan tmux untuk Anda di socket-nya sendiri, dengan roda mouse, salin dan tempel, serta pengubahan ukuran yang berfungsi seperti di terminal mana pun.">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">Langsung ke isi halaman</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="Halaman">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Instalasi</a></li>
+        <li><a href="../guides/">Panduan</a></li>
+        <li><a href="../security/">Keamanan</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="Bahasa: Bahasa Indonesia"><span class="lang-long" aria-hidden="true">Bahasa Indonesia</span><span class="lang-short" aria-hidden="true">ID</span></summary>
+      <ul class="menu-list"><li><a href="../../tmux-without-learning-tmux/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/tmux-without-learning-tmux/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/tmux-without-learning-tmux/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/tmux-without-learning-tmux/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/tmux-without-learning-tmux/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/tmux-without-learning-tmux/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/tmux-without-learning-tmux/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/tmux-without-learning-tmux/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="./" hreflang="id" lang="id" dir="ltr" aria-current="true">Bahasa Indonesia</a></li><li><a href="../../hi/tmux-without-learning-tmux/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/tmux-without-learning-tmux/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/tmux-without-learning-tmux/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>Menu</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Instalasi</a></li>
+        <li><a href="../guides/">Panduan</a></li>
+        <li><a href="../security/">Keamanan</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine sendiri berbahasa Inggris: tombol, menu, dan gambarnya adalah versi bahasa Inggris.</p>
+    <p>Halaman ini diterjemahkan oleh mesin dari bahasa Inggris. <a href="https://github.com/thirstyeggplant/aubergine/issues">Kirim koreksi</a>.</p>
+  </div>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/id/tmux-without-learning-tmux/#article",
+      "headline": "tmux tanpa belajar tmux",
+      "description": "Shell yang bertahan lebih lama dari jendelanya, tanpa tombol prefiks atau .tmux.conf. Aubergine menjalankan tmux untuk Anda di socket-nya sendiri, dengan roda mouse, salin dan tempel, serta pengubahan ukuran yang berfungsi seperti di terminal mana pun.",
+      "url": "https://thirstyeggplant.com/id/tmux-without-learning-tmux/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/id/tmux-without-learning-tmux/",
+      "datePublished": "2026-11-25",
+      "dateModified": "2026-11-25",
+      "inLanguage": "id",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Panduan", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "tmux tanpa tmux", "item": "https://thirstyeggplant.com/id/tmux-without-learning-tmux/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/id/tmux-without-learning-tmux/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "Bisakah saya memakai tmux tanpa mempelajari pintasannya?", "acceptedAnswer": { "@type": "Answer", "text": "Ya. Aubergine menjalankan tmux tanpa tombol prefiks dan tanpa baris status, jadi Anda tidak pernah mengetik perintah tmux: tutup tab untuk pergi, buka halaman untuk kembali, gulir dengan roda mouse, salin dengan memilih." } },
+        { "@type": "Question", "name": "Apakah Aubergine mengubah konfigurasi tmux saya?", "acceptedAnswer": { "@type": "Answer", "text": "Tidak. Ia menjalankan tmux di socket miliknya sendiri, aubergine, dengan file konfigurasi miliknya sendiri. Server tmux Anda, sesi-sesinya, dan ~/.tmux.conf Anda dibiarkan seperti semula." } },
+        { "@type": "Question", "name": "Bagaimana menggulir dan menyalin di terminal Aubergine?", "acceptedAnswer": { "@type": "Answer", "text": "Klik terminal untuk memberinya keyboard, lalu pakai roda mouse untuk menggulir ke belakang. Pilih teks dengan mouse: teks itu ada di clipboard Anda saat tombol dilepas. Tempel dengan ⌘V, atau Ctrl+Shift+V di luar macOS." } },
+        { "@type": "Question", "name": "Bisakah saya menyambung ke terminal Aubergine dari aplikasi terminal saya sendiri?", "acceptedAnswer": { "@type": "Answer", "text": "Ya: aubergine attach \u003cname\u003e, atau Open on desktop di menu terminal. Di kedua tempat itu terminalnya sama; apa yang Anda ketik di satu tempat terlihat di tempat lain." } },
+        { "@type": "Question", "name": "Bisakah Aubergine menggantikan tmux di server yang saya masuki lewat SSH?", "acceptedAnswer": { "@type": "Answer", "text": "Tidak begitu saja: terminalnya ada di mesin tempat servernya berjalan. Ia bisa berjalan di server dan dipakai dari browser Anda lewat tunnel SSH atau proxy, yang baru dijalankan di dalam kontainer, belum pernah di mesin cloud." } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Posisi Anda"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">Panduan</a></li><li>tmux tanpa tmux</li></ol></nav>
+    <h1>tmux tanpa belajar tmux</h1>
+    <p class="lead">tmux menjaga shell Anda tetap berjalan saat jendela ditutup. tmux juga meminta Anda mempelajari tombol prefiks, mode salin, dan file konfigurasi. Aubergine menjalankan tmux untuk Anda, dan Anda memakai setiap terminal di halaman browser seperti terminal lainnya.</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>Untuk siapa</h2>
+    <p>Untuk orang yang menginginkan apa yang diberikan tmux, yaitu shell yang bertahan lebih lama dari jendelanya, tanpa tombol dan konfigurasinya. Jika Anda sudah memakai tmux sehari-hari, tetap pakai: Aubergine tidak mengusik tmux Anda.</p>
+
+    <h2>Yang biasanya dilakukan orang</h2>
+    <p>Belajar tmux: tombol prefiks (<code>Ctrl+B</code> kecuali Anda mengubahnya) sebelum setiap perintah, <code>tmux attach</code> untuk kembali, dan beberapa baris di <code>~/.tmux.conf</code> untuk mouse dan clipboard. Atau <code>screen</code>, alat sejenis yang lebih tua. Inilah setiap hal sehari-hari di tmux bawaan dan di Aubergine:</p>
+    <div class="table">
+      <table class="table-stack">
+        <thead><tr><th>Untuk</th><th>Di tmux</th><th>Di Aubergine</th></tr></thead>
+        <tbody>
+          <tr><td>Membiarkan shell berjalan</td><td data-label="tmux"><code>Ctrl+B</code> lalu <code>d</code> untuk detach</td><td data-label="Aubergine">Tutup tab</td></tr>
+          <tr><td>Kembali ke sana</td><td data-label="tmux"><code>tmux attach</code></td><td data-label="Aubergine">Buka halamannya</td></tr>
+          <tr><td>Menggulir ke belakang</td><td data-label="tmux">Mode salin, <code>Ctrl+B</code> lalu <code>[</code></td><td data-label="Aubergine">Roda mouse</td></tr>
+          <tr><td>Menyalin</td><td data-label="tmux">Pilih di mode salin</td><td data-label="Aubergine">Pilih dengan mouse</td></tr>
+          <tr><td>Menempel</td><td data-label="tmux"><code>Ctrl+B</code> lalu <code>]</code></td><td data-label="Aubergine"><code>⌘V</code>, atau <code>Ctrl+Shift+V</code></td></tr>
+          <tr><td>Melihat beberapa shell</td><td data-label="tmux">Jendela dan panel</td><td data-label="Aubergine">Terminal berdampingan di kanvas</td></tr>
+          <tr><td>Memberi nama</td><td data-label="tmux"><code>Ctrl+B</code> lalu <code>,</code></td><td data-label="Aubergine">Klik dua kali judulnya</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Apa yang dilakukan Aubergine</h2>
+    <p><strong>Socket sendiri dan konfigurasi sendiri.</strong> Aubergine memulai tmux di socket miliknya sendiri, bernama <code>aubergine</code>, dengan file konfigurasi miliknya sendiri alih-alih milik Anda: tanpa baris status, tanpa tombol prefiks, mouse menyala, riwayat 50.000 baris. Setiap terminal adalah satu sesi tmux dengan satu shell, yaitu login shell Anda. tmux Anda sendiri, sesi-sesinya, dan <code>~/.tmux.conf</code> Anda tidak disentuh.</p>
+    <p><strong>Roda mouse menggulir ke belakang</strong> di terminal yang memegang keyboard; di tempat lain di kanvas, roda mouse memperbesar dan memperkecil.</p>
+    <p><strong>Pilih dengan mouse dan teks itu tersalin</strong> ke clipboard Anda saat tombol dilepas: tmux menyerahkan apa yang dipilih ke halaman dengan OSC 52, escape sequence yang dipakai terminal untuk clipboard, dan halaman menaruhnya di sana. Tempel dengan <code>⌘V</code> (<code>Ctrl+Shift+V</code> di luar macOS). Tempelan beberapa baris diberi bracket, sehingga shell tidak menjalankannya baris demi baris.</p>
+    <p><strong>Ubah ukuran dengan menyeret</strong> tepi terminal di kanvas, dan shell mendapat ukuran barunya. Terminal yang terbuka di dua tempat sekaligus punya satu ukuran, yang ditentukan oleh tampilan tempat Anda terakhir mengetik.</p>
+    <p><strong>Di bawahnya tetap tmux.</strong> <code>aubergine attach &lt;name&gt;</code> menampilkan terminal di jendela aplikasi terminal Anda, dan <strong>Open on desktop</strong> (buka di desktop) di menu terminal melakukannya untuk Anda (di macOS di Terminal atau iTerm; di Linux dengan command line yang Anda atur). Saat server berhenti, <code>tmux -L aubergine ls</code> dan <code>tmux -L aubergine attach -t &lt;id&gt;</code> tetap menjangkau setiap shell.</p>
+
+    <h2>Yang Anda butuhkan</h2>
+    <p>tmux 3.2 atau lebih baru, dipasang oleh Anda sendiri: <code>brew install tmux</code> di macOS, paket sistem Anda di Linux. Aubergine tidak memasangnya, dan menampilkan halaman yang mengatakannya jika tmux tidak ada atau terlalu lama. Judul terminal menunjukkan perintah yang berjalan dan bagaimana perintah terakhir berakhir dengan zsh; shell lain berjalan tanpa itu.</p>
+
+    <h2>Apa yang bukan dirinya</h2>
+    <ul>
+      <li><strong>Bukan tmux di server jarak jauh.</strong> tmux milik Aubergine berjalan di komputer tempat servernya berjalan. Untuk shell di mesin yang Anda jangkau lewat SSH, tmux di mesin itu tetap alatnya. Aubergine sendiri bisa berjalan di mesin lain (<a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md">Memakai Aubergine dari tempat lain</a>); itu baru dijalankan di dalam kontainer.</li>
+      <li><strong>Sesi tmux Anda sendiri tidak ditampilkan.</strong> Kanvas hanya berisi terminal Aubergine. <code>aubergine scan</code> mendaftar shell interaktif yang terbuka di komputer ini di luar Aubergine, dan <code>aubergine import</code> atau <code>aubergine here</code> memberi salah satunya terminal baru di kanvas di folder yang sama; program yang berjalan di yang lama tetap di sana. Baris yang ditawarkan <code>aubergine shell-hook print</code> untuk <code>.zshrc</code> Anda tidak melakukan apa-apa di dalam tmux.</li>
+      <li><strong>Tanpa tombol tmux dan tanpa panel.</strong> Tidak ada tombol prefiks, dan binding tmux Anda sendiri tidak berlaku. Selama terminal memegang keyboard, setiap tombol masuk ke program di dalamnya, kecuali beberapa kombinasi yang dipilih agar tidak dibutuhkan shell, editor, atau tmux mana pun.</li>
+      <li><strong>Tidak di Windows sendiri.</strong> Ia membutuhkan tmux dan shell Unix; di Windows ia berjalan di dalam WSL 2. Lihat <a href="../windows/">Windows dengan WSL</a>.</li>
+    </ul>
+
+    <h2>Pertanyaan</h2>
+    <div class="questions">
+      <details><summary>Bisakah saya memakai tmux tanpa mempelajari pintasannya?</summary><p>Ya. Aubergine menjalankan tmux tanpa tombol prefiks dan tanpa baris status, jadi Anda tidak pernah mengetik perintah tmux: tutup tab untuk pergi, buka halaman untuk kembali, gulir dengan roda mouse, salin dengan memilih.</p></details>
+      <details><summary>Apakah Aubergine mengubah konfigurasi tmux saya?</summary><p>Tidak. Ia menjalankan tmux di socket miliknya sendiri, <code>aubergine</code>, dengan file konfigurasi miliknya sendiri. Server tmux Anda, sesi-sesinya, dan <code>~/.tmux.conf</code> Anda dibiarkan seperti semula.</p></details>
+      <details><summary>Bagaimana menggulir dan menyalin di terminal Aubergine?</summary><p>Klik terminal untuk memberinya keyboard, lalu pakai roda mouse untuk menggulir ke belakang. Pilih teks dengan mouse: teks itu ada di clipboard Anda saat tombol dilepas. Tempel dengan <code>⌘V</code>, atau <code>Ctrl+Shift+V</code> di luar macOS.</p></details>
+      <details><summary>Bisakah saya menyambung ke terminal Aubergine dari aplikasi terminal saya sendiri?</summary><p>Ya: <code>aubergine attach &lt;name&gt;</code>, atau <strong>Open on desktop</strong> di menu terminal. Di kedua tempat itu terminalnya sama; apa yang Anda ketik di satu tempat terlihat di tempat lain.</p></details>
+      <details><summary>Bisakah Aubergine menggantikan tmux di server yang saya masuki lewat SSH?</summary><p>Tidak begitu saja: terminalnya ada di mesin tempat servernya berjalan. Ia bisa berjalan di server dan dipakai dari browser Anda lewat tunnel SSH atau proxy, yang baru dijalankan di dalam kontainer, belum pernah di mesin cloud.</p></details>
+    </div>
+    <p>Terkait: <a href="../keep-process-running-after-closing-terminal/">Menjaga proses tetap berjalan</a> · <a href="../keep-terminals-after-restart/">Menjaga terminal setelah komputer dimulai ulang</a> · <a href="../too-many-terminal-tabs/">Terminal terlalu banyak</a></p>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">Siap dipakai dalam lima menit</h2>
+    <div class="close-do">
+      <p>Anda memerlukan macOS dengan tmux 3.2 atau lebih baru dan Node.js 22 atau lebih baru. <code>brew install tmux node</code> memasang keduanya.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Tersalin" aria-live="polite" hidden>Salin</button></p>
+      <p class="actions"><a class="button" href="../install/">Instal</a><a class="button button-quiet" href="../keep-process-running-after-closing-terminal/">Tetap berjalan</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav aria-label="Semua halaman">
+      <ul class="foot-links">
+        <li><a href="../">Beranda</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex dan ChatGPT</a></li>
+        <li><a href="../install/">Instalasi</a></li>
+        <li><a href="../guides/">Panduan</a></li>
+        <li><a href="../run-multiple-coding-agents/">Menjalankan beberapa agen</a></li>
+        <li><a href="../working-copies/">Salinan kerja</a></li>
+        <li><a href="../queue-and-schedules/">Antrean dan jadwal</a></li>
+        <li><a href="../security/">Keamanan</a></li>
+        <li><a href="../roadmap/">Peta jalan</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine gratis dan open source di bawah <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">lisensi MIT</a>, dan berjalan di komputer Anda sendiri.</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    if (!navigator.clipboard) return;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
+});
+</script>
+</body>
+</html>

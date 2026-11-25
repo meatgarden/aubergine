@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="de" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Eine Claude-Code-Unterhaltung nach einem Neustart fortsetzen | Aubergine</title>
+<meta name="description" content="claude --continue und --resume holen eine Unterhaltung zurück, wenn du im richtigen Ordner bist. Aubergine merkt sich, in welcher Unterhaltung jedes Terminal war, bietet Resume agent an und listet frühere Unterhaltungen nach Ordner.">
+<link rel="canonical" href="https://thirstyeggplant.com/de/resume-claude-code-session/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/resume-claude-code-session/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/resume-claude-code-session/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/resume-claude-code-session/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/resume-claude-code-session/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/resume-claude-code-session/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/resume-claude-code-session/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/resume-claude-code-session/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/resume-claude-code-session/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/resume-claude-code-session/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/resume-claude-code-session/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/resume-claude-code-session/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/resume-claude-code-session/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/resume-claude-code-session/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="Eine Claude-Code-Unterhaltung nach einem Neustart fortsetzen | Aubergine">
+<meta property="og:description" content="claude --continue und --resume holen eine Unterhaltung zurück, wenn du im richtigen Ordner bist. Aubergine merkt sich, in welcher Unterhaltung jedes Terminal war, bietet Resume agent an und listet frühere Unterhaltungen nach Ordner.">
+<meta property="og:url" content="https://thirstyeggplant.com/de/resume-claude-code-session/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine: ein Canvas voller Terminals, eines beschäftigt und eines, das auf dich wartet">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine: ein Canvas voller Terminals, eines beschäftigt und eines, das auf dich wartet">
+<meta name="twitter:title" content="Eine Claude-Code-Unterhaltung nach einem Neustart fortsetzen | Aubergine">
+<meta name="twitter:description" content="claude --continue und --resume holen eine Unterhaltung zurück, wenn du im richtigen Ordner bist. Aubergine merkt sich, in welcher Unterhaltung jedes Terminal war, bietet Resume agent an und listet frühere Unterhaltungen nach Ordner.">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="Seiten">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Installieren</a></li>
+        <li><a href="../guides/">Anleitungen</a></li>
+        <li><a href="../security/">Sicherheit</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="Sprache: Deutsch"><span class="lang-long" aria-hidden="true">Deutsch</span><span class="lang-short" aria-hidden="true">DE</span></summary>
+      <ul class="menu-list"><li><a href="../../resume-claude-code-session/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/resume-claude-code-session/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/resume-claude-code-session/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/resume-claude-code-session/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="./" hreflang="de" lang="de" dir="ltr" aria-current="true">Deutsch</a></li><li><a href="../../ja/resume-claude-code-session/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/resume-claude-code-session/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/resume-claude-code-session/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/resume-claude-code-session/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/resume-claude-code-session/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/resume-claude-code-session/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/resume-claude-code-session/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>Menü</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Installieren</a></li>
+        <li><a href="../guides/">Anleitungen</a></li>
+        <li><a href="../security/">Sicherheit</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine selbst ist auf Englisch: Die Buttons, Menüs und Bilder sind die englischen.</p>
+    <p>Diese Seite wurde maschinell aus dem Englischen übersetzt. <a href="https://github.com/thirstyeggplant/aubergine/issues">Korrektur schicken</a>.</p>
+  </div>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/de/resume-claude-code-session/#article",
+      "headline": "Eine Claude-Code-Unterhaltung nach einem Neustart fortsetzen",
+      "description": "claude --continue und --resume holen eine Unterhaltung zurück, wenn du im richtigen Ordner bist. Aubergine merkt sich, in welcher Unterhaltung jedes Terminal war, bietet Resume agent an und listet frühere Unterhaltungen nach Ordner.",
+      "url": "https://thirstyeggplant.com/de/resume-claude-code-session/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/de/resume-claude-code-session/",
+      "datePublished": "2026-11-25",
+      "dateModified": "2026-11-25",
+      "inLanguage": "de",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Anleitungen", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "Unterhaltung fortsetzen", "item": "https://thirstyeggplant.com/de/resume-claude-code-session/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/de/resume-claude-code-session/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "Wie setze ich eine Claude-Code-Session fort, nachdem ich das Terminal geschlossen habe?", "acceptedAnswer": { "@type": "Answer", "text": "Im selben Ordner nimmt claude --continue die neueste Unterhaltung, und claude --resume lässt dich wählen. In Aubergine beendet das Schließen des Browsers nichts, und ein Terminal, dessen Agenten du beendet hast, bietet in seiner Titelleiste Resume agent an." } },
+        { "@type": "Question", "name": "Wie setze ich eine Claude-Code-Unterhaltung nach einem Neustart fort?", "acceptedAnswer": { "@type": "Answer", "text": "Nach einem Neustart kommt jedes Aubergine-Terminal als frische Shell in seinem letzten Ordner zurück. Wo Claude Code aus Aubergine gestartet wurde, startet Resume agent in der Titelleiste es wieder in der Unterhaltung, in der dieses Terminal war." } },
+        { "@type": "Question", "name": "Wie finde ich eine alte Claude-Code-Unterhaltung?", "acceptedAnswer": { "@type": "Answer", "text": "Past conversations… in der Palette listet sie für einen Ordner, mit einem Verlauf nur zum Lesen; @ und ein paar Wörter in der Palette durchsuchen sie. Gelistet wird nur, was Claude Code noch aufbewahrt." } },
+        { "@type": "Question", "name": "Was ist der Unterschied zwischen claude --continue und claude --resume?", "acceptedAnswer": { "@type": "Answer", "text": "--continue setzt die neueste Unterhaltung im Ordner fort; --resume nimmt die, die du wählst, oder eine ID. Resume agent nutzt --resume mit der ID, die sich das Terminal gemerkt hat, und hängt also nicht davon ab, welche Unterhaltung die neueste war." } },
+        { "@type": "Question", "name": "Können zwei Terminals dieselbe Claude-Code-Unterhaltung fortsetzen?", "acceptedAnswer": { "@type": "Answer", "text": "Aubergine öffnet eine nicht ohne Nachfrage zweimal: Zwei Agenten in einer Unterhaltung verlieren die Nachrichten des anderen. Dir wird das Terminal angeboten, das schon daran ist, oder eine Kopie, die die Unterhaltung verzweigt." } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Wo du bist"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">Anleitungen</a></li><li>Unterhaltung fortsetzen</li></ol></nav>
+    <h1>Eine Claude-Code-Unterhaltung nach einem Neustart fortsetzen</h1>
+    <p class="lead">Der Rechner ist neu gestartet, oder du hast das Terminal geschlossen, und die Unterhaltung mit Claude Code scheint weg. Claude Code behält sie. Aubergine merkt sich, in welcher Unterhaltung jedes Terminal war, und holt sie mit einem Knopf zurück.</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>Was man üblicherweise tut</h2>
+    <p>In einem Terminal, im Ordner, in dem die Unterhaltung war: <code>claude --continue</code> setzt die neueste Unterhaltung dort fort, und <code>claude --resume</code> lässt dich eine aus einer Liste wählen oder nimmt die ID einer Unterhaltung. Der Haken sind der Ordner und die Wahl: Mit mehreren Agenten in einem Ordner ist die neueste nicht immer die, die du meintest.</p>
+
+    <h2>Was Aubergine tut</h2>
+    <p><strong>Ein Terminal merkt sich seine Unterhaltung.</strong> Wenn Claude Code aus Aubergine gestartet wurde (<strong>New terminal ▾ → Claude Code</strong>, oder <code>C</code>), sagen seine Hooks Aubergine, in welcher Unterhaltung es ist, und Aubergine behält diese ID beim Terminal.</p>
+    <p><strong>Resume agent</strong> (Agent fortsetzen) erscheint in der Titelleiste des Terminals, sobald seine Shell wieder am Prompt ist: Du hast den Agenten beendet, oder der Rechner ist neu gestartet und das Terminal kam als frische Shell in seinem letzten Ordner zurück. Es startet Claude Code wieder mit <code>--resume</code> und dieser ID, mit dem Startbefehl aus deinen Einstellungen (<code>agents.claudeCommand</code>, standardmäßig <code>claude</code>).</p>
+    <p><strong>Bei einem Lauf eines Workflows</strong> erzählt <strong>Resume agent</strong> dem Agenten auch noch einmal vom Lauf, damit er bei dem Schritt weitermacht, an dem der Lauf steht.</p>
+    <p><strong>Past conversations…</strong> (frühere Unterhaltungen) in der Palette (<code>⌘K</code>) oder „Past conversations in this folder…“ in den Details eines Terminals listet die früheren Unterhaltungen von Claude Code in einem Ordner: den Namen oder das Erste, was du gesagt hast, wann sie zuletzt aktiv war, wie oft du etwas gesagt hast und ob gerade ein Terminal auf einem Canvas an ihr ist. <strong>Read</strong> (lesen) zeigt sie, nur zum Lesen. <strong>Open on the canvas</strong> (auf dem Canvas öffnen) startet ein neues Terminal in diesem Ordner, das sie fortsetzt, und <strong>Open a copy</strong> (eine Kopie öffnen) startet einen Zweig davon und lässt das Original, wie es ist. Ist schon ein Terminal an dieser Unterhaltung, wirst du vorher gefragt.</p>
+    <p><strong>Suche.</strong> Tipp <code>@</code> und ein paar Wörter in die Palette, um frühere Unterhaltungen in den Ordnern der Terminals auf deinen Canvases zu durchsuchen. Sie liest die Aufzeichnungen, wenn du fragst, in Grenzen, und sagt, wenn sie abgebrochen wurde. Auf der Befehlszeile listet <code>aubergine history</code> sie, und <code>aubergine history open &lt;id&gt;</code> öffnet eine.</p>
+    <p><strong>Wo sie stand.</strong> Die Notiz des Terminals hält seine Zusammenfassung und ein Log, und jeder Prompt, den du schickst, kommt ins Log. <strong>Ask its agent for a recap</strong> (den Agenten um eine Zusammenfassung bitten) in seinen Details lässt den Agenten mit <code>aubergine recap --write</code> aufschreiben, wo er steht, und das bleibt beim Terminal. Kommst du nach mehr als 30 Minuten zurück, listet <strong>While you were away</strong> (während du weg warst), was sich inzwischen geändert hat.</p>
+    <figure class="frame"><a href="../../screenshots/focus-part.png" class="frame-pic"><img src="../../screenshots/focus-part.png" width="1344" height="1172" loading="lazy" alt="Ein Terminal allein in einem Browser-Tab: sein Name im Kopf, seine Details mit dem Workflow-Schritt, dem Ordner und den Feldern, und das laufende Terminal daneben."></a><figcaption>Die Details eines Terminals: der Schritt seines Laufs und sein letzter Bericht, sein Ordner und seine Felder. Sie bleiben beim Terminal, bereit für den Moment, in dem sein Agent fortgesetzt wird.</figcaption></figure>
+
+    <h2>Eine Unterhaltung in einem Terminal außerhalb von Aubergine</h2>
+    <p>Beende in einem Tab deiner Terminal-App den Agenten und führ dann im selben Ordner <code>aubergine here --claude</code> aus: Ein neues Terminal auf dem Canvas startet Claude Code mit <code>--continue</code>, jetzt mit sichtbarem Zustand. <code>aubergine move</code> listet deine Claude-Code-Tabs und startet eine Kopie jeder Unterhaltung auf dem Canvas; mit <code>--stop</code> bittet es einen untätigen Agenten zuerst, sich zu beenden, nachdem du bestätigt hast.</p>
+
+    <h2>Was es nicht tut</h2>
+    <ul>
+      <li><strong>Es liest die eigenen Aufzeichnungen von Claude Code, in einem Format, das nicht das von Aubergine ist.</strong> Claude Code nennt das Format dieser Dateien intern, und es ändert sich zwischen Versionen. Das Fortsetzen nutzt das eigene <code>--resume</code> von Claude Code mit der ID; Namen, Zählungen und Verläufe sind Aubergines Lesart der Dateien und können nach einem Update von Claude Code fehlen oder dünner sein. Eine Aufzeichnung, die es nicht lesen kann, wird als solche benannt, nicht als leere Unterhaltung gezeigt.</li>
+      <li><strong>Nichts wird kopiert oder behalten.</strong> Eine Liste, ein Verlauf oder eine Suche wird gelesen, wenn du fragst, und verworfen, wenn du sie schließt. Aubergine ändert, benennt oder löscht nie eine Unterhaltung, und kein Agent und kein Token kann über Aubergine Unterhaltungen lesen.</li>
+      <li><strong>Die laufende Arbeit wird nicht wiederholt.</strong> Was der Agent tat, als er anhielt, wird erst wieder begonnen, wenn du ihn darum bittest.</li>
+      <li><strong>Kein Resume agent für einen anderen Agenten.</strong> Aubergine kennt die Unterhaltung eines anderen Agenten nicht und listet für ihn keine früheren Unterhaltungen. Starte ihn im selben Terminal mit der eigenen Fortsetzen-Funktion dieses Agenten wieder und lies die Notiz, um ihm zu sagen, wo er stand.</li>
+      <li><strong>Ein <code>claude</code>, das du selbst getippt hast, wird nicht gemerkt</strong>, außer du hast die Hooks, die <code>aubergine hooks print</code> ausgibt, in deine eigenen Claude-Code-Einstellungen eingetragen.</li>
+      <li><strong>Was geprüft wurde.</strong> Das Lesen der Aufzeichnungen von Unterhaltungen wird an erfundenen Aufzeichnungen getestet. Es wurde nicht mit jeder Version von Claude Code geprüft.</li>
+    </ul>
+
+    <h2>Fragen</h2>
+    <div class="questions">
+      <details><summary>Wie setze ich eine Claude-Code-Session fort, nachdem ich das Terminal geschlossen habe?</summary><p>Im selben Ordner nimmt <code>claude --continue</code> die neueste Unterhaltung, und <code>claude --resume</code> lässt dich wählen. In Aubergine beendet das Schließen des Browsers nichts, und ein Terminal, dessen Agenten du beendet hast, bietet in seiner Titelleiste <strong>Resume agent</strong> an.</p></details>
+      <details><summary>Wie setze ich eine Claude-Code-Unterhaltung nach einem Neustart fort?</summary><p>Nach einem Neustart kommt jedes Aubergine-Terminal als frische Shell in seinem letzten Ordner zurück. Wo Claude Code aus Aubergine gestartet wurde, startet <strong>Resume agent</strong> in der Titelleiste es wieder in der Unterhaltung, in der dieses Terminal war.</p></details>
+      <details><summary>Wie finde ich eine alte Claude-Code-Unterhaltung?</summary><p><strong>Past conversations…</strong> in der Palette listet sie für einen Ordner, mit einem Verlauf nur zum Lesen; <code>@</code> und ein paar Wörter in der Palette durchsuchen sie. Gelistet wird nur, was Claude Code noch aufbewahrt.</p></details>
+      <details><summary>Was ist der Unterschied zwischen claude --continue und claude --resume?</summary><p><code>--continue</code> setzt die neueste Unterhaltung im Ordner fort; <code>--resume</code> nimmt die, die du wählst, oder eine ID. <strong>Resume agent</strong> nutzt <code>--resume</code> mit der ID, die sich das Terminal gemerkt hat, und hängt also nicht davon ab, welche Unterhaltung die neueste war.</p></details>
+      <details><summary>Können zwei Terminals dieselbe Claude-Code-Unterhaltung fortsetzen?</summary><p>Aubergine öffnet eine nicht ohne Nachfrage zweimal: Zwei Agenten in einer Unterhaltung verlieren die Nachrichten des anderen. Dir wird das Terminal angeboten, das schon daran ist, oder eine Kopie, die die Unterhaltung verzweigt.</p></details>
+    </div>
+    <p>Siehe auch: <a href="../keep-terminals-after-restart/">Terminals nach einem Neustart behalten</a> · <a href="../claude-code-notifications/">Wissen, wann Claude Code wartet</a> · <a href="../claude/">Claude Code in Aubergine</a></p>
+    <p class="note">Aubergine ist nicht mit Anthropic verbunden. Claude und Claude Code sind Marken von Anthropic.</p>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">In fünf Minuten startklar</h2>
+    <div class="close-do">
+      <p>Du brauchst macOS mit tmux 3.2 oder neuer und Node.js 22 oder neuer. <code>brew install tmux node</code> holt beides.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Kopiert" aria-live="polite" hidden>Kopieren</button></p>
+      <p class="actions"><a class="button" href="../install/">Installieren</a><a class="button button-quiet" href="../claude/">Claude Code in Aubergine</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav aria-label="Alle Seiten">
+      <ul class="foot-links">
+        <li><a href="../">Start</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex und ChatGPT</a></li>
+        <li><a href="../install/">Installieren</a></li>
+        <li><a href="../guides/">Anleitungen</a></li>
+        <li><a href="../run-multiple-coding-agents/">Mehrere Agenten gleichzeitig</a></li>
+        <li><a href="../working-copies/">Arbeitskopien</a></li>
+        <li><a href="../queue-and-schedules/">Warteschlange und Zeitpläne</a></li>
+        <li><a href="../security/">Sicherheit</a></li>
+        <li><a href="../roadmap/">Roadmap</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine ist kostenlos und Open Source unter der <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT-Lizenz</a> und läuft auf deinem eigenen Rechner.</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    if (!navigator.clipboard) return;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
+});
+</script>
+</body>
+</html>

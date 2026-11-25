@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="es" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Conserva tus terminales tras un fallo, un reinicio o una actualización | Aubergine</title>
+<meta name="description" content="Qué les pasa a tus terminales y agentes de código cuando se cierra el navegador, cuando Aubergine se reinicia y cuando el ordenador falla, se reinicia o se actualiza de noche, y cómo retomar donde lo dejaste.">
+<link rel="canonical" href="https://thirstyeggplant.com/es/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/keep-terminals-after-restart/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/keep-terminals-after-restart/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F0E4">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="Conserva tus terminales tras un fallo, un reinicio o una actualización | Aubergine">
+<meta property="og:description" content="Qué les pasa a tus terminales y agentes de código cuando se cierra el navegador, cuando Aubergine se reinicia y cuando el ordenador falla, se reinicia o se actualiza de noche, y cómo retomar donde lo dejaste.">
+<meta property="og:url" content="https://thirstyeggplant.com/es/keep-terminals-after-restart/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine: un lienzo de terminales, una ocupada y otra esperándote">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine: un lienzo de terminales, una ocupada y otra esperándote">
+<meta name="twitter:title" content="Conserva tus terminales tras un fallo, un reinicio o una actualización | Aubergine">
+<meta name="twitter:description" content="Qué les pasa a tus terminales y agentes de código cuando se cierra el navegador, cuando Aubergine se reinicia y cuando el ordenador falla, se reinicia o se actualiza de noche, y cómo retomar donde lo dejaste.">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">Ir a la página</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="32" height="32"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="Páginas">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Instalar</a></li>
+        <li><a href="../guides/">Guías</a></li>
+        <li><a href="../security/">Seguridad</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="Idioma: Español"><span class="lang-long" aria-hidden="true">Español</span><span class="lang-short" aria-hidden="true">ES</span></summary>
+      <ul class="menu-list"><li><a href="../../keep-terminals-after-restart/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="./" hreflang="es" lang="es" dir="ltr" aria-current="true">Español</a></li><li><a href="../../pt/keep-terminals-after-restart/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/keep-terminals-after-restart/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/keep-terminals-after-restart/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/keep-terminals-after-restart/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/keep-terminals-after-restart/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/keep-terminals-after-restart/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/keep-terminals-after-restart/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/keep-terminals-after-restart/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/keep-terminals-after-restart/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/keep-terminals-after-restart/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>Menú</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Instalar</a></li>
+        <li><a href="../guides/">Guías</a></li>
+        <li><a href="../security/">Seguridad</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="translated">
+  <div class="wrap translated-in">
+    <p>Aubergine en sí está en inglés: sus botones, menús e imágenes son los de la versión en inglés.</p>
+    <p>Esta página la tradujo una máquina a partir del inglés. <a href="https://github.com/thirstyeggplant/aubergine/issues">Envía una corrección</a>.</p>
+  </div>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/es/keep-terminals-after-restart/#article",
+      "headline": "Conserva tus terminales cuando tu ordenador se reinicia",
+      "description": "Qué les pasa a tus terminales y agentes de código cuando se cierra el navegador, cuando Aubergine se reinicia y cuando el ordenador falla, se reinicia o se actualiza de noche, y cómo retomar donde lo dejaste.",
+      "url": "https://thirstyeggplant.com/es/keep-terminals-after-restart/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/es/keep-terminals-after-restart/",
+      "datePublished": "2026-11-25",
+      "dateModified": "2026-11-25",
+      "inLanguage": "es",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Guías", "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "Tras un reinicio", "item": "https://thirstyeggplant.com/es/keep-terminals-after-restart/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thirstyeggplant.com/es/keep-terminals-after-restart/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "¿Puede Aubergine restaurar mis terminales tras un reinicio?", "acceptedAnswer": { "@type": "Answer", "text": "Sí, todo salvo lo que se estaba ejecutando en ellas. Cada terminal vuelve a su sitio en el lienzo con su nombre, color, nota, etiquetas, campos y enlaces, como un shell nuevo en su última carpeta. Los programas que se ejecutaban en ella no se vuelven a iniciar; para Claude Code, Resume agent continúa la conversación." } },
+        { "@type": "Question", "name": "¿Guarda Aubergine la salida y el historial de mi terminal?", "acceptedAnswer": { "@type": "Answer", "text": "La salida, solo mientras el shell está en marcha: tmux guarda 50.000 líneas del historial de desplazamiento de cada terminal, y cerrar el navegador o reiniciar Aubergine no pierde nada de él. Tras un reinicio del ordenador se pierde, porque Aubergine no graba la salida de las terminales. El historial de los comandos que escribiste, el que trae la flecha hacia arriba, es el archivo propio de tu shell, y tu shell lo guarda como siempre." } },
+        { "@type": "Question", "name": "¿Sobrevive mi conversación de Claude Code a un reinicio?", "acceptedAnswer": { "@type": "Answer", "text": "La conversación, sí: Claude Code la guarda en sus propios archivos, y Aubergine recuerda en cuál estaba cada terminal. Tras el reinicio, Resume agent en la barra de título de la terminal vuelve a iniciar Claude Code en esa conversación. Lo que el agente hacía en ese momento se detuvo, y no se vuelve a hacer hasta que lo pidas." } },
+        { "@type": "Question", "name": "¿Funciona cuando macOS se actualiza solo por la noche?", "acceptedAnswer": { "@type": "Answer", "text": "Una actualización que reinicia el ordenador es un reinicio como cualquier otro: los programas en marcha terminan y todo lo demás se conserva. Con el arranque al iniciar sesión (aubergine service install), el servidor vuelve a estar en marcha en cuanto inicias sesión, y el lienzo te espera. Los shells nuevos en sus últimas carpetas se vieron al reiniciar un contenedor de Aubergine; una actualización nocturna real de macOS no se ha probado." } },
+        { "@type": "Question", "name": "¿Necesito saber tmux?", "acceptedAnswer": { "@type": "Answer", "text": "No. Tiene que estar instalado (3.2 o más reciente), y Aubergine lo ejecuta en un socket propio con su propia configuración, sin barra de estado ni tecla de prefijo, así que nunca escribes un comando de tmux. Tu propio tmux, si usas uno, no se toca." } }
+      ]
+    }
+  ]
+}
+</script>
+<header class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Dónde estás"><ol><li><a href="../">Aubergine</a></li><li><a href="../guides/">Guías</a></li><li>Tras un reinicio</li></ol></nav>
+    <h1>Conserva tus terminales cuando tu ordenador se reinicia</h1>
+    <p class="lead">Cerrar el navegador o reiniciar Aubergine no pierde nada: cada terminal sigue en marcha. Un reinicio del ordenador termina lo que estaba en marcha, y Aubergine devuelve todo lo que lo rodeaba, para que retomes donde lo dejaste en lugar de empezar de cero.</p>
+  </div>
+</header>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>Qué pasa cuando…</h2>
+    <p>Cada terminal es un shell en una sesión de tmux, que funciona aparte del navegador y del servidor de Aubergine. Lo que contiene está en dos sitios: el shell en marcha, que solo guarda tmux, y todo lo que se dice de la terminal, que Aubergine escribe en un archivo de su carpeta de datos en cada cambio.</p>
+    <div class="table">
+      <table class="table-stack">
+        <thead><tr><th>Qué</th><th>El navegador se cierra, falla o se actualiza, o cierras la pestaña</th><th>Aubergine se detiene, se reinicia o se actualiza</th><th>El ordenador falla, se reinicia o instala una actualización</th></tr></thead>
+        <tbody>
+          <tr><td>Programas y agentes en marcha</td><td data-label="Navegador cerrado">siguen en marcha</td><td data-label="Aubergine reiniciado">siguen en marcha</td><td data-label="Ordenador reiniciado">terminan</td></tr>
+          <tr><td>Lo que mostraba la terminal (su historial de desplazamiento)</td><td data-label="Navegador cerrado">sin cambios</td><td data-label="Aubergine reiniciado">sin cambios</td><td data-label="Ordenador reiniciado">se pierde</td></tr>
+          <tr><td>Su sitio en el lienzo, nombre, color, etiquetas, campos y enlaces</td><td data-label="Navegador cerrado">sin cambios</td><td data-label="Aubergine reiniciado">sin cambios</td><td data-label="Ordenador reiniciado">sin cambios</td></tr>
+          <tr><td>Su nota: el resumen y el registro</td><td data-label="Navegador cerrado">sin cambios</td><td data-label="Aubergine reiniciado">sin cambios</td><td data-label="Ordenador reiniciado">sin cambios</td></tr>
+          <tr><td>La carpeta en la que estaba</td><td data-label="Navegador cerrado">sin cambios</td><td data-label="Aubergine reiniciado">sin cambios</td><td data-label="Ordenador reiniciado">un shell nuevo en la misma carpeta</td></tr>
+          <tr><td>La conversación de un agente</td><td data-label="Navegador cerrado">continúa</td><td data-label="Aubergine reiniciado">continúa</td><td data-label="Ordenador reiniciado"><strong>Resume agent</strong> la continúa (Claude Code)</td></tr>
+          <tr><td>Las copias de trabajo y sus ramas</td><td data-label="Navegador cerrado">sin cambios</td><td data-label="Aubergine reiniciado">sin cambios</td><td data-label="Ordenador reiniciado">sin cambios</td></tr>
+          <tr><td>La cola, las ejecuciones y las programaciones</td><td data-label="Navegador cerrado">sin cambios</td><td data-label="Aubergine reiniciado">sin cambios; una hora que pasó se ejecuta tarde</td><td data-label="Ordenador reiniciado">sin cambios; una hora que pasó se ejecuta tarde</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Una terminal aparcada se conserva igual y también recibe un shell nuevo. Una terminal cuyo shell ya había terminado sigue terminada, con <strong>Restart here</strong> (reiniciar aquí).</p>
+    <p>Tras una actualización, una terminal que ya estaba abierta conserva aquello con lo que arrancó su shell (su <code>PATH</code> y la integración de shell de Aubergine) hasta que ese shell se vuelva a iniciar. Si Aubergine arranca al iniciar sesión, ejecuta <code>aubergine service install</code> otra vez tras una actualización en lugar de reiniciar el servidor a mano.</p>
+
+    <h2>Tras un reinicio: de vuelta al trabajo</h2>
+    <ol class="seq">
+      <li><p><strong>Inicia Aubergine.</strong> Si arranca al iniciar sesión (<code>aubergine service install</code>, solo en macOS), ya está en marcha cuando has iniciado sesión, y launchd lo vuelve a iniciar si se detiene. Si no, inícialo y abre la página:</p>
+        <p class="cmd"><code>aubergine start --open</code><button type="button" class="copy" data-copy data-copied="Copiado" aria-live="polite" hidden>Copiar</button></p></li>
+      <li><p><strong>El lienzo está como lo dejaste.</strong> Cada terminal está en su sitio con su nombre, color, etiquetas, campos, enlaces y nota, ahora con un shell nuevo en la última carpeta en la que Aubergine la vio, o en tu carpeta predeterminada si esa ya no existe. No se escribe ni se ejecuta nada de nuevo.</p></li>
+      <li><p><strong>Reanuda tus agentes.</strong> Donde se ejecutaba Claude Code y Aubergine conoce su conversación (se inició desde Aubergine), la barra de título de la terminal ofrece <strong>Resume agent</strong> (reanudar el agente): vuelve a iniciar Claude Code en esa conversación. En una terminal que está en una ejecución de un flujo de trabajo, también le vuelve a hablar al agente de la ejecución, para que siga desde el paso en que está.</p></li>
+      <li><p><strong>Mira dónde estaba cada una.</strong> <strong>Details</strong> (detalles) en el título de una terminal muestra lo que se sabe de ella (el paso de una ejecución y su último informe, la carpeta, las etiquetas), su resumen, sus campos y enlaces, y su registro en <strong>Log</strong>. Al pasar el puntero por el nombre de una terminal en la lista se ve su recapitulación.</p></li>
+      <li><p><strong>Encuentra una conversación que no está en el lienzo.</strong> <strong>Past conversations…</strong> (conversaciones pasadas) en la paleta (<code>⌘K</code>), o «Past conversations in this folder…» en los detalles de una terminal, lista las conversaciones anteriores de Claude Code en una carpeta y abre una en el lienzo.</p></li>
+    </ol>
+    <p>Cualquier otro agente no tiene <strong>Resume agent</strong>, porque Aubergine no conoce su conversación: vuelve a iniciarlo en la misma terminal con la forma de reanudar de ese agente, y lee la nota para decirle dónde se quedó.</p>
+    <figure class="frame"><a href="../../screenshots/focus-part.png" class="frame-pic"><img src="../../screenshots/focus-part.png" width="1344" height="1172" loading="lazy" alt="Una terminal sola en una pestaña del navegador: su nombre en la cabecera, sus detalles con el paso del flujo de trabajo, su carpeta y sus campos, y la terminal en vivo al lado."></a><figcaption>Los detalles de una terminal: el paso de una ejecución y su último informe, la carpeta, las etiquetas y los campos. Todo se conserva tras un reinicio del ordenador; la terminal en vivo a su lado, no.</figcaption></figure>
+
+    <h2>Qué se pierde, y qué hacer</h2>
+    <ul>
+      <li><strong>Lo que estaba en marcha termina.</strong> Una compilación, unas pruebas, un servidor o un agente a mitad de su trabajo se detiene con el ordenador, y Aubergine no vuelve a iniciar ninguno por sí solo. Vuelve a iniciarlos tú; una tarea que debe sobrevivir a un reinicio va en algo hecho para eso, como un servicio de tu sistema.</li>
+      <li><strong>El trabajo del que Aubergine lleva la cuenta te espera.</strong> Una ejecución de un flujo de trabajo conserva su paso y cada informe entregado. Las tareas de la cola conservan su sitio; una que se estaba iniciando en el momento en que el servidor se detuvo se marca como fallida, con una frase, y nada se reintenta por sí solo. Una hora de una programación que pasó mientras el servidor estaba detenido se ejecuta una vez, tarde, si tiene menos de seis horas (<code>schedules.lateWithinHours</code>), y si no se marca como perdida.</li>
+      <li><strong>El historial de desplazamiento se pierde.</strong> Mientras un shell está en marcha, tmux guarda las últimas 50.000 líneas que imprimió, y la búsqueda de la paleta las lee. Aubergine no graba lo que imprime una terminal, así que tras un reinicio del ordenador no hay nada que recuperar, y la búsqueda solo encuentra lo impreso desde entonces.</li>
+      <li><strong>«Mientras no estabas» empieza de nuevo.</strong> Se guarda en la memoria del servidor, no en un archivo, así que tras arrancar el servidor solo sabe lo que cambió desde entonces, y lo dice.</li>
+    </ul>
+
+    <h2>El hábito que abarata un reinicio</h2>
+    <p>La nota es lo que sobrevive, así que haz que los agentes escriban en ella sobre la marcha: una decisión, un resultado, dónde se quedaron. Un Claude Code iniciado desde Aubergine añade al registro por sí solo cada instrucción que envías, y al empezar se le pide que nombre su terminal y mantenga su resumen. Cualquier agente puede hacer lo mismo con estos comandos, que <code>aubergine guide</code> le explica:</p>
+    <pre><code>aubergine note "Tests pass on the branch. The migration is not written yet."
+aubergine describe --summary "Fixing the double redirect at sign-in"</code></pre>
+    <p>Antes de terminar el día, pulsa <strong>Ask its agent for a recap</strong> (pedir una recapitulación a su agente) en los detalles de una terminal: el agente escribe dónde está con <code>aubergine recap --write</code>, y la recapitulación se guarda con la terminal.</p>
+
+    <h2>Cerrar el portátil, el reposo y el navegador</h2>
+    <ul>
+      <li><strong>El reposo no es un reinicio.</strong> Cerrar la tapa de un portátil suele ponerlo en reposo: los programas se pausan y siguen cuando despierta, y no pasa nada de la última columna de la tabla. Aubergine ni mantiene despierto el ordenador ni lo despierta, así que una programación cuya hora pasó durante el reposo se ejecuta tarde, o se pierde, como arriba.</li>
+      <li><strong>Cerrar el navegador, una pestaña o su ventana</strong>, o una actualización del navegador que lo reinicia, no termina nada. Vuelve a abrir la página (<code>aubergine open</code> la abre con la sesión iniciada) y cada terminal se dibuja desde tmux tal como está ahora. Una página que dejaste abierta se reconecta sola cuando vuelve el servidor.</li>
+      <li><strong>Cerrar la ventana donde se ejecuta <code>aubergine start</code></strong>, o pulsar Ctrl+C en ella, detiene el servidor y nada más: la columna del medio de la tabla.</li>
+      <li><strong>En Windows con WSL</strong>, que WSL se detenga, porque Windows se reinicia o tras <code>wsl --shutdown</code>, es un reinicio del ordenador para Aubergine. Consulta <a href="../windows/">Windows con WSL</a>.</li>
+    </ul>
+
+    <h2>Preguntas</h2>
+    <div class="questions">
+      <details><summary>¿Puede Aubergine restaurar mis terminales tras un reinicio?</summary><p>Sí, todo salvo lo que se estaba ejecutando en ellas. Cada terminal vuelve a su sitio en el lienzo con su nombre, color, nota, etiquetas, campos y enlaces, como un shell nuevo en su última carpeta. Los programas que se ejecutaban en ella no se vuelven a iniciar; para Claude Code, <strong>Resume agent</strong> continúa la conversación.</p></details>
+      <details><summary>¿Guarda Aubergine la salida y el historial de mi terminal?</summary><p>La salida, solo mientras el shell está en marcha: tmux guarda 50.000 líneas del historial de desplazamiento de cada terminal, y cerrar el navegador o reiniciar Aubergine no pierde nada de él. Tras un reinicio del ordenador se pierde, porque Aubergine no graba la salida de las terminales. El historial de los comandos que escribiste, el que trae la flecha hacia arriba, es el archivo propio de tu shell, y tu shell lo guarda como siempre.</p></details>
+      <details><summary>¿Sobrevive mi conversación de Claude Code a un reinicio?</summary><p>La conversación, sí: Claude Code la guarda en sus propios archivos, y Aubergine recuerda en cuál estaba cada terminal. Tras el reinicio, <strong>Resume agent</strong> en la barra de título de la terminal vuelve a iniciar Claude Code en esa conversación. Lo que el agente hacía en ese momento se detuvo, y no se vuelve a hacer hasta que lo pidas.</p></details>
+      <details><summary>¿Funciona cuando macOS se actualiza solo por la noche?</summary><p>Una actualización que reinicia el ordenador es un reinicio como cualquier otro: los programas en marcha terminan y todo lo demás se conserva. Con el arranque al iniciar sesión (<code>aubergine service install</code>), el servidor vuelve a estar en marcha en cuanto inicias sesión, y el lienzo te espera. Los shells nuevos en sus últimas carpetas se vieron al reiniciar un contenedor de Aubergine; una actualización nocturna real de macOS no se ha probado.</p></details>
+      <details><summary>¿Necesito saber tmux?</summary><p>No. Tiene que estar instalado (3.2 o más reciente), y Aubergine lo ejecuta en un socket propio con su propia configuración, sin barra de estado ni tecla de prefijo, así que nunca escribes un comando de tmux. Tu propio tmux, si usas uno, no se toca.</p></details>
+    </div>
+    <p>Relacionado: <a href="../claude/">Claude Code en Aubergine</a> · <a href="../queue-and-schedules/">la cola y las programaciones</a> · <a href="../working-copies/">copias de trabajo</a></p>
+  </div>
+</div>
+
+<section class="close" aria-labelledby="close-h">
+  <div class="wrap close-in">
+    <h2 id="close-h">En marcha en cinco minutos</h2>
+    <div class="close-do">
+      <p>Necesitas macOS con tmux 3.2 o posterior y Node.js 22 o posterior. <code>brew install tmux node</code> instala ambos.</p>
+      <p class="cmd cmd-big"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Copiado" aria-live="polite" hidden>Copiar</button></p>
+      <p class="actions"><a class="button" href="../install/">Instalar</a><a class="button button-quiet" href="../run-multiple-coding-agents/">Varios agentes a la vez</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav aria-label="Todas las páginas">
+      <ul class="foot-links">
+        <li><a href="../">Inicio</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex y ChatGPT</a></li>
+        <li><a href="../install/">Instalar</a></li>
+        <li><a href="../guides/">Guías</a></li>
+        <li><a href="../run-multiple-coding-agents/">Varios agentes a la vez</a></li>
+        <li><a href="../working-copies/">Copias de trabajo</a></li>
+        <li><a href="../queue-and-schedules/">Cola y programaciones</a></li>
+        <li><a href="../security/">Seguridad</a></li>
+        <li><a href="../roadmap/">Hoja de ruta</a></li>
+        <li><a href="../faq/">Preguntas frecuentes</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine es libre y de código abierto bajo la <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">licencia MIT</a>, y se ejecuta en tu propio ordenador.</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    if (!navigator.clipboard) return;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+document.querySelectorAll('details.menu').forEach(function (menu) {
+  menu.addEventListener('toggle', function () {
+    if (!menu.open) return;
+    document.querySelectorAll('details.menu[open]').forEach(function (other) { if (other !== menu) other.open = false; });
+  });
+});
+</script>
+</body>
+</html>
