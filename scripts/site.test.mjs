@@ -6,7 +6,7 @@ import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'nod
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { after, describe, test } from 'node:test';
-import { buildSite, codesOf, compareSite, fingerprint, markupProblem, writeSite } from './site.mjs';
+import { anchorsOf, buildSite, checkReadmes, codesOf, compareSite, fingerprint, headingAnchor, markupProblem, writeSite } from './site.mjs';
 
 const made = [];
 after(() => {
@@ -21,7 +21,7 @@ const LAYOUT = `<!doctype html>
 <link rel="stylesheet" href="/style.css"></head>
 <body>
 <nav><a href="/">{{nav.home}}</a> <a href="/about/">{{nav.about}}</a></nav>
-<!--if:languages--><details class="menu languages"><summary>{{=langname}}</summary><ul>{{=langmenu}}</ul></details><!--/if:languages-->
+<!--if:languages--><details class="menu languages"><summary aria-label="{{=langname}}"><span class="long">{{=langname}}</span><span class="short">{{=langshort}}</span></summary><ul>{{=langmenu}}</ul></details><!--/if:languages-->
 <!--if:translated--><p class="note" id="note-app">{{note.app}}</p><p class="note" id="note-machine">{{note.machine}}</p><!--/if:translated-->
 <main>{{=content}}</main>
 </body>
@@ -177,6 +177,12 @@ describe('a site with English and a pretend right-to-left language', () => {
     assert.ok(![...alone.files.keys()].some((file) => file.startsWith('xx/')));
   });
 
+  test('the language button carries the language’s own name and its short code in capitals', () => {
+    const result = buildSite(makeSite({ xx: fresh() }));
+    assert.match(page(result, 'about/index.html'), /<summary aria-label="English"><span class="long">English<\/span><span class="short">EN<\/span><\/summary>/);
+    assert.match(page(result, 'xx/about/index.html'), /<summary aria-label="Pretend"><span class="long">Pretend<\/span><span class="short">XX<\/span><\/summary>/);
+  });
+
   test('links inside a translated page stay in its language, relative to the page', () => {
     const result = buildSite(makeSite({ xx: fresh() }));
     const home = page(result, 'xx/index.html');
@@ -214,5 +220,45 @@ describe('the checks', () => {
     writeFileSync(path.join(out, 'index.html'), 'changed by hand');
     assert.deepEqual(compareSite(first.files, out), ['differs: index.html']);
     assert.equal(readFileSync(path.join(out, 'style.css'), 'utf8'), 'body{}\n');
+  });
+});
+
+describe('the README and its translations', () => {
+  /** A checkout in a temporary folder with a README, one translation and a picture. */
+  function makeCheckout({ english, translation }) {
+    const root = mkdtempSync(path.join(tmpdir(), 'site-readme-'));
+    made.push(root);
+    mkdirSync(path.join(root, 'docs', 'i18n'), { recursive: true });
+    mkdirSync(path.join(root, 'pics'));
+    writeFileSync(path.join(root, 'pics', 'a.png'), 'png');
+    writeFileSync(path.join(root, 'README.md'), english);
+    if (translation !== undefined) writeFileSync(path.join(root, 'docs', 'i18n', 'README.xx.md'), translation);
+    return root;
+  }
+  const languages = [
+    { code: 'en', name: 'English', lang: 'en', dir: 'ltr', folder: '' },
+    { code: 'xx', name: 'Pretend', lang: 'xx', dir: 'rtl', folder: 'xx' },
+  ];
+  const ENGLISH = '# Thing\n\nEnglish · [Pretend](docs/i18n/README.xx.md)\n\n## What it looks like\n\n## Questions about the `thing` command\n\n## Quick start\n\n## Quick start\n';
+
+  test('headings get the anchors GitHub gives them, repeats numbered, and explicit ids count', () => {
+    const anchors = anchorsOf(ENGLISH + '\n<a id="here"></a>\n```\n# not a heading\n```\n');
+    for (const anchor of ['thing', 'what-it-looks-like', 'questions-about-the-thing-command', 'quick-start', 'quick-start-1', 'here']) assert.ok(anchors.has(anchor), anchor);
+    assert.ok(!anchors.has('not-a-heading'));
+    assert.equal(headingAnchor('Cómo se ve'), 'cómo-se-ve');
+  });
+
+  test('a good translation passes', () => {
+    const root = makeCheckout({ english: ENGLISH, translation: '# Thing\n\n<img src="../../pics/a.png">\n[a](../../pics/a.png) [b](../../README.md#quick-start-1) [c](#what-it-looks-like)\n\n<a id="what-it-looks-like"></a>\n\n## Wie es aussieht\n' });
+    assert.deepEqual(checkReadmes(root, languages), []);
+  });
+
+  test('a missing translation, a picture or anchor that leads nowhere, and an English README without the link are errors', () => {
+    assert.match(checkReadmes(makeCheckout({ english: ENGLISH }), languages).join('\n'), /README\.xx\.md does not exist/);
+    const errors = checkReadmes(makeCheckout({ english: '# Thing\n', translation: '<img src="../../pics/b.png">\n[x](../../README.md#nowhere) [y](#gone)\n' }), languages).join('\n');
+    assert.match(errors, /pics\/b\.png leads nowhere/);
+    assert.match(errors, /README\.md#nowhere names no heading or id there/);
+    assert.match(errors, /#gone names no heading or id there/);
+    assert.match(errors, /README\.md does not link to docs\/i18n\/README\.xx\.md/);
   });
 });

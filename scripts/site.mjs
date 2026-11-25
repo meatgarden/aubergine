@@ -3,6 +3,7 @@
 //
 //   node scripts/site.mjs            write site/
 //   node scripts/site.mjs --check    fail when site/ is not what site-src/ gives
+// Both also check the README's translations in docs/i18n/ (checkReadmes).
 //
 // How it is made and what a page may say are in docs/site.md. In short:
 //   site-src/layout.html        what every page shares; {{=content}} is the page
@@ -17,6 +18,8 @@
 // text, {{json:key}} as a JSON string of its text, {{=name}} is made here.
 // <!--if:translated-->…<!--/if:translated--> is kept on a translated page only,
 // <!--if:languages-->…<!--/if:languages--> only while there is more than one language.
+// Made for each page: lang, dir, page, canonical, url, robots, ogType, alternates, langmenu,
+// langname (the language's own name), langshort (its code in capitals), title, description.
 // Internal addresses are written from the site's root (/install/, /style.css);
 // each page gets them relative to itself, and in its own language's folder.
 import { createHash } from 'node:crypto';
@@ -245,6 +248,8 @@ export function buildSite(srcDir) {
               })
               .join(''),
         langname: language.name,
+        // The language's short code in capitals, for the language button where its name has no room (a phone).
+        langshort: language.code.toUpperCase(),
         title: escapeAttr(plainText(words[`${keyOf(page)}.meta.title`]?.text ?? '')),
         description: escapeAttr(plainText(words[`${keyOf(page)}.meta.description`]?.text ?? '')),
       };
@@ -355,6 +360,69 @@ export function checkLinks(files) {
   return errors;
 }
 
+/** The anchor GitHub gives a Markdown heading (before a number is added for a repeated one). */
+export function headingAnchor(heading) {
+  return heading
+    .trim()
+    .toLowerCase()
+    .replace(/<[^>]+>/g, '')
+    .replace(/[^\p{L}\p{M}\p{N}\s_-]/gu, '')
+    .replace(/\s/g, '-');
+}
+
+/** Every anchor of a Markdown file: its headings as GitHub makes them, and each explicit id. */
+export function anchorsOf(markdown) {
+  const anchors = new Set();
+  const seen = new Map();
+  const text = markdown.replace(/^```[\s\S]*?^```/gm, '');
+  for (const match of text.matchAll(/^#{1,6}\s+(.+?)\s*#*\s*$/gm)) {
+    const base = headingAnchor(match[1]);
+    const count = seen.get(base) ?? 0;
+    seen.set(base, count + 1);
+    anchors.add(count === 0 ? base : `${base}-${count}`);
+  }
+  for (const match of text.matchAll(/\s(?:id|name)="([^"]+)"/g)) anchors.add(match[1]);
+  return anchors;
+}
+
+/**
+ * The README's translations (docs/i18n/README.<code>.md): one for every language but English, each
+ * relative link and picture leading to a file of the checkout, each #fragment to a heading or id of the
+ * file it names; and the English README linking to each of them.
+ */
+export function checkReadmes(root, languages) {
+  const errors = [];
+  const english = path.join(root, 'README.md');
+  const englishText = existsSync(english) ? readFileSync(english, 'utf8') : '';
+  const anchorCache = new Map();
+  const anchorsOfFile = (file) => {
+    if (!anchorCache.has(file)) anchorCache.set(file, anchorsOf(readFileSync(file, 'utf8')));
+    return anchorCache.get(file);
+  };
+  for (const language of languages.slice(1)) {
+    const name = `docs/i18n/README.${language.code}.md`;
+    const file = path.join(root, name);
+    if (!existsSync(file)) {
+      errors.push(`${name} does not exist`);
+      continue;
+    }
+    if (!englishText.includes(`(${name})`)) errors.push(`README.md does not link to ${name} under its title`);
+    const text = readFileSync(file, 'utf8').replace(/^```[\s\S]*?^```/gm, '').replace(/`[^`\n]*`/g, '');
+    const addresses = [...text.matchAll(/\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g), ...text.matchAll(/\s(?:src|href)="([^"]+)"/g)].map((match) => match[1]);
+    for (const address of addresses) {
+      if (/^(https?:|mailto:)/.test(address)) continue;
+      const [bare, fragment] = address.split('#');
+      const target = bare === '' ? file : path.resolve(path.dirname(file), decodeURI(bare));
+      if (!target.startsWith(root + path.sep) || !existsSync(target)) {
+        errors.push(`${name}: ${address} leads nowhere`);
+        continue;
+      }
+      if (fragment !== undefined && target.endsWith('.md') && !anchorsOfFile(target).has(decodeURIComponent(fragment))) errors.push(`${name}: ${address} names no heading or id there`);
+    }
+  }
+  return errors;
+}
+
 /** Which files of a folder differ from the built ones: changed, missing and extra. */
 export function compareSite(files, outDir) {
   const differ = [];
@@ -400,6 +468,7 @@ function main() {
   const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
   const check = process.argv.includes('--check');
   const result = buildSite(path.join(root, 'site-src'));
+  result.errors.push(...checkReadmes(root, readSource(path.join(root, 'site-src')).languages));
   if (result.errors.length > 0) {
     console.error(`The site cannot be built:\n${result.errors.map((error) => `  ${error}`).join('\n')}`);
     process.exit(1);
