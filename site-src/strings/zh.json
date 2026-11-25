@@ -464,8 +464,8 @@
     "from": "efe26fb96381"
   },
   "home.faq.need.a": {
-    "text": "macOS，以及 tmux 3.2 或更高版本和 Node.js 22 或更高版本；安装脚本还需要 pnpm。Linux 应该也能用，但还没有测试过。",
-    "from": "50e15eb9d5c0"
+    "text": "装有 tmux 3.2 或更新版本以及 Node.js 22 或更新版本的 macOS；安装脚本还需要 pnpm。在 Linux 上只在容器里运行过。在 Windows 上只能在 WSL 2 里运行，而这还没有试过：见<a href=\"/windows/\">Windows 指南</a>。",
+    "from": "95fd7d6edbbc"
   },
   "home.faq.byhand.q": {
     "text": "如果我自己在终端里启动 Claude Code 会怎样？",
@@ -892,8 +892,8 @@
     "from": "e0cdd07f6a27"
   },
   "install.req.os": {
-    "text": "macOS。Linux 应该也能以同样方式运行，但还没有测试过。",
-    "from": "e896cb710692"
+    "text": "macOS。在 Linux 上只在容器里运行过：在 Ubuntu 24.04 上运行了 npm 包，在 Debian 上运行了容器镜像。不支持 Windows 本身；Aubergine 可以在 WSL 2 里运行，但这还没有试过：见<a href=\"/windows/\">在 Windows 上用 WSL 安装</a>。",
+    "from": "4ec6a50d42d5"
   },
   "install.req.tools": {
     "text": "<a href=\"https://github.com/tmux/tmux\">tmux</a> 3.2 或更高版本，以及 Node.js 22 或更高版本。安装脚本还需要 pnpm。",
@@ -1072,8 +1072,160 @@
     "from": "e3df2a3fd915"
   },
   "install.ld.a4": {
-    "text": "Linux 应该可以，但还没有测试过。不支持 Windows。",
-    "from": "b8b7b1d1037d"
+    "text": "在 Linux 上只在容器里运行过（Ubuntu 24.04 和 Debian），还没有在 Linux 桌面上运行过。不支持 Windows 本身；Aubergine 可以在 WSL 2（Windows 提供的 Linux）里运行，但这还没有试过。",
+    "from": "c293e731fea8"
+  },
+  "windows.meta.title": {
+    "text": "在 Windows 上用 WSL 安装 Aubergine | Aubergine",
+    "from": "82c0a75bef8c"
+  },
+  "windows.meta.description": {
+    "text": "Aubergine 不能在 Windows 本身上运行，但可以在 WSL 2 里运行，并在 Windows 的浏览器中使用。步骤、试过什么和没试过什么，以及问题的解决办法。",
+    "from": "eef730b3d958"
+  },
+  "windows.crumb": {
+    "text": "Windows 与 WSL",
+    "from": "26529d6498df"
+  },
+  "windows.title": {
+    "text": "在 Windows 上用 WSL 安装 Aubergine",
+    "from": "c966f630ebab"
+  },
+  "windows.lead": {
+    "text": "Aubergine 不能在 Windows 本身上运行。它在 WSL 2（Windows 提供的 Linux）里运行，你在 Windows 的浏览器中使用它。",
+    "from": "81a98c345b2a"
+  },
+  "windows.tried": {
+    "text": "<strong>试过什么。</strong>Linux 部分的步骤于 2026 年 11 月 25 日在容器中的 Ubuntu 24.04.5（x86_64）上运行，而不是在 WSL 中，使用的是 npm 上的 Aubergine 0.2.2：它编译了终端库、启动、让一个浏览器登录，并运行了一个终端和演示。用 nvm 安装 Node.js 那一步没有在那里运行，因为 Node.js 22 已经装好了。本页的内容还没有在 Windows 上运行过。如果你试了，请<a href=\"https://github.com/thirstyeggplant/aubergine/issues\">告诉我们结果</a>。",
+    "from": "75b38b261d19"
+  },
+  "windows.req.title": {
+    "text": "你需要什么",
+    "from": "e17c85cc990b"
+  },
+  "windows.req.text": {
+    "text": "Windows 11，或 Windows 10 版本 2004（内部版本 19041）或更新版本，在这些系统上用一条命令就能装好 WSL 2。详情见 Microsoft 的<a href=\"https://learn.microsoft.com/windows/wsl/install\">安装 WSL 页面</a>。",
+    "from": "43ee5c74e4e3"
+  },
+  "windows.steps.title": {
+    "text": "安装并启动",
+    "from": "945ef89608d4"
+  },
+  "windows.steps.wsl": {
+    "text": "<strong>安装 WSL。</strong>以管理员身份打开 PowerShell，运行下面这条命令，完成后重启 Windows。它会安装带 Ubuntu 的 WSL 2。",
+    "from": "0f31c56ce2e5"
+  },
+  "windows.steps.ubuntu": {
+    "text": "重启后，从开始菜单打开 <strong>Ubuntu</strong>，为它设置用户名和密码。下面的命令都在那里，也就是在 Ubuntu 中输入。",
+    "from": "4d3436ccad7d"
+  },
+  "windows.steps.apt": {
+    "text": "<strong>安装 Aubergine 需要的东西</strong>：tmux、zsh 和 Git，以及编译其终端库的工具，因为这个库没有为 Linux 准备现成的版本。",
+    "from": "f8e116fdd0eb"
+  },
+  "windows.steps.node": {
+    "text": "<strong>安装 Node.js 22。</strong>Ubuntu 自带的软件包是 18 版，太旧了。一个常见的办法是 <a href=\"https://github.com/nvm-sh/nvm\">nvm</a>：先安装它，再打开一个新的 Ubuntu 窗口，然后安装 Node.js 22。",
+    "from": "8e6d6af1ee88"
+  },
+  "windows.steps.nodeCheck": {
+    "text": "现在 <code>node -v</code> 应该显示 v22 或更新版本。",
+    "from": "872ffc8f2dfd"
+  },
+  "windows.steps.npm": {
+    "text": "从 npm <strong>安装 Aubergine</strong>。它在安装时编译自己的终端库；试的时候整个安装用了 13 秒。",
+    "from": "d0686af8f780"
+  },
+  "windows.steps.start": {
+    "text": "<strong>启动它</strong>，并让那个窗口保持打开：",
+    "from": "0fc463357411"
+  },
+  "windows.steps.open": {
+    "text": "<strong>让浏览器登录。</strong>在第二个 Ubuntu 窗口中显示登录地址，然后在 Windows 的浏览器中打开它。它会让那个浏览器登录，所以要像对待密码一样对待它。",
+    "from": "4eedb1a24642"
+  },
+  "windows.steps.after": {
+    "text": "之后，在那个浏览器中直接打开 <code>http://127.0.0.1:4600</code> 就行。在空画布上，<em>Show me around</em> 会开始导览。",
+    "from": "6d1885774f0b"
+  },
+  "windows.good.title": {
+    "text": "值得知道",
+    "from": "aab7685123cf"
+  },
+  "windows.good.files": {
+    "text": "<strong>把项目放在 Ubuntu 里</strong>，放在它的主文件夹中，而不是 <code>/mnt/c</code> 下面；那里的 Windows 文件要经过一座更慢的桥才能访问。",
+    "from": "3e2e6716da83"
+  },
+  "windows.good.agents": {
+    "text": "<strong>把智能体装在 Ubuntu 里</strong>，无论是 Claude Code、Codex 还是别的，和在任何 Linux 上一样。装在 Windows 中的智能体不在 Aubergine 的终端里。",
+    "from": "f32d6f1d347e"
+  },
+  "windows.good.running": {
+    "text": "<strong>终端在 WSL 运行期间一直存在。</strong>关闭浏览器不会结束任何东西，在 <code>aubergine start</code> 的窗口按 Ctrl+C 只会停止服务器。当 WSL 停止时（Windows 重启或执行 <code>wsl --shutdown</code> 之后），终端会结束，下一次 <code>aubergine start</code> 会在它们最后所在的文件夹中打开新的 shell，就像 Mac 重启之后一样。",
+    "from": "5a110c9f034d"
+  },
+  "windows.good.shell": {
+    "text": "<strong>bash 还是 zsh。</strong>Ubuntu 的 shell 是 bash，终端在其中可以正常使用。终端上的命令状态（忙碌、失败命令的退出码）只来自 zsh：试的时候，一个 zsh 终端在命令失败后显示了 <code>exit 3</code>。要有这些，请在 Ubuntu 中把 zsh 设为你的 shell。",
+    "from": "98e4ede36c4f"
+  },
+  "windows.good.missing": {
+    "text": "<strong>没有的东西</strong>：登录时启动只适用于 macOS（<code>aubergine service install</code> 会这样说明），<em>Open on desktop</em> 也没有针对 Windows 终端应用的设置。试的时候 <code>aubergine open</code> 找不到可以打开的浏览器；<code>aubergine open --print</code> 总是可用。",
+    "from": "19d811a81126"
+  },
+  "windows.good.keys": {
+    "text": "Windows 上的<strong>快捷键</strong>是根据浏览器的文档选的，没有实测过：见 <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/keys.md\">docs/keys.md</a>。命令面板总是可用。",
+    "from": "beb021d09a79"
+  },
+  "windows.wrong.doctor": {
+    "text": "先在 Ubuntu 中运行 <code>aubergine doctor</code>。它会检查 Node.js、tmux、Git 和服务器。",
+    "from": "99c6773e6fc4"
+  },
+  "windows.wrong.compile.see": {
+    "text": "安装 Aubergine 时在编译 <code>node-pty</code> 处失败",
+    "from": "2f7790e9150b"
+  },
+  "windows.wrong.compile.do": {
+    "text": "缺少构建工具。运行第 2 步中的 <code>apt</code> 命令，然后重新安装 Aubergine。",
+    "from": "6ce6d003e421"
+  },
+  "windows.wrong.tmux.do": {
+    "text": "Ubuntu 24.04 的 tmux 是 3.4，足够新：运行 <code>sudo apt install -y tmux</code>，然后重新启动服务器。",
+    "from": "f726aafbf8b6"
+  },
+  "windows.wrong.node.see": {
+    "text": "<code>node -v</code> 显示的版本低于 v22",
+    "from": "6d3b5a77d630"
+  },
+  "windows.wrong.node.do": {
+    "text": "按第 2 步安装 Node.js 22，打开一个新的 Ubuntu 窗口，然后重新安装 Aubergine。",
+    "from": "0f197e36ca93"
+  },
+  "windows.wrong.address.see": {
+    "text": "地址在 Windows 的浏览器中打不开",
+    "from": "5517022ccb2e"
+  },
+  "windows.wrong.address.do": {
+    "text": "检查 <code>aubergine start</code> 是否仍在 Ubuntu 中运行。然后看 Microsoft 的<a href=\"https://learn.microsoft.com/windows/wsl/networking\">WSL 网络页面</a>；这一点还没有用 Aubergine 试过。",
+    "from": "f58f31689a94"
+  },
+  "windows.next.text": {
+    "text": "停止、更新和卸载与<a href=\"/install/\">安装页面</a>上的一样，其他一切都在 <a href=\"https://github.com/thirstyeggplant/aubergine#readme\">README</a> 中。",
+    "from": "e99167a76e7b"
+  },
+  "windows.ld.s1": {
+    "text": "安装 WSL",
+    "from": "013b9cd3a82f"
+  },
+  "windows.ld.s2": {
+    "text": "安装 tmux、构建工具和 Node.js 22",
+    "from": "24bc20fedab8"
+  },
+  "windows.ld.s3": {
+    "text": "安装 Aubergine",
+    "from": "733a8757545c"
+  },
+  "windows.ld.s4": {
+    "text": "启动它并让浏览器登录",
+    "from": "6ee5544f775e"
   },
   "guides.meta.title": {
     "text": "Aubergine 指南 | Aubergine",
@@ -1102,6 +1254,14 @@
   "guides.install.text": {
     "text": "系统要求、一行安装脚本、它会改动什么，以及常见问题的解决方法。",
     "from": "0c229f404056"
+  },
+  "guides.windows.name": {
+    "text": "在 Windows 上用 WSL 安装",
+    "from": "336ff91588a7"
+  },
+  "guides.windows.text": {
+    "text": "在 WSL 2 里运行 Aubergine，并在 Windows 的浏览器中使用。Linux 部分的步骤已运行过；在 Windows 上还什么都没试过。",
+    "from": "582c5ec5ff77"
   },
   "guides.several.name": {
     "text": "同时运行多个编程智能体",
@@ -2064,8 +2224,8 @@
     "from": "e61744d0c993"
   },
   "roadmap.everywhere.windows.text": {
-    "text": "在 Windows 上运行 Aubergine。目前只支持 macOS，Linux 尚未测试。",
-    "from": "6eb34c4aada3"
+    "text": "在 Windows 本身上运行 Aubergine。目前它只能在 WSL 2 里运行，正如<a href=\"/windows/\">Windows 指南</a>所写，而且还没有人在 Windows 上试过。",
+    "from": "25c43f0bde14"
   },
   "faq.meta.title": {
     "text": "常见问题 | Aubergine",
@@ -2108,8 +2268,8 @@
     "from": "efe26fb96381"
   },
   "faq.need.a": {
-    "text": "macOS，以及 tmux 3.2 或更高版本和 Node.js 22 或更高版本；安装脚本还需要 pnpm。Linux 应该也能用，但还没有测试过。不支持 Windows。",
-    "from": "d0ea17ebbaa3"
+    "text": "装有 tmux 3.2 或更新版本以及 Node.js 22 或更新版本的 macOS；安装脚本还需要 pnpm。在 Linux 上只在容器里运行过。在 Windows 上只能在 WSL 2 里运行，而这还没有试过：见<a href=\"/windows/\">Windows 指南</a>。",
+    "from": "95fd7d6edbbc"
   },
   "faq.agents.q": {
     "text": "它适用于任何编程智能体吗？",

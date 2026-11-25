@@ -1,12 +1,14 @@
 // Tests of the site's generator, on a made-up site in a temporary folder: English and a
-// pretend right-to-left language. Nothing here reads or writes the real site/.
+// pretend right-to-left language; and of the sitemap the real site-src/ gives, built in memory.
+// Nothing here reads or writes the real site/.
 //   node --test scripts/site.test.mjs
 import assert from 'node:assert/strict';
 import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { after, describe, test } from 'node:test';
-import { anchorsOf, buildSite, checkReadmes, codesOf, compareSite, fingerprint, headingAnchor, markupProblem, writeSite } from './site.mjs';
+import { fileURLToPath } from 'node:url';
+import { ORIGIN, SITEMAP_STYLE, anchorsOf, buildSite, checkReadmes, codesOf, compareSite, fingerprint, headingAnchor, isDate, markupProblem, writeSite } from './site.mjs';
 
 const made = [];
 after(() => {
@@ -51,9 +53,10 @@ function makeSite({ en = EN, xx, languages, pages } = {}) {
   mkdirSync(path.join(dir, 'strings'));
   writeFileSync(path.join(dir, 'layout.html'), LAYOUT);
   writeFileSync(path.join(dir, 'style.css'), 'body{}\n');
+  writeFileSync(path.join(dir, 'sitemap.xsl'), '<?xml version="1.0"?>\n');
   const allPages = pages ?? {
-    'home.html': '<!--page {"path": "", "order": 0}-->\n<h1>{{home.hello}}</h1><p>{{home.install}}</p><p>{{home.later}}</p>\n',
-    'about.html': '<!--page {"order": 1}-->\n<h1>{{about.text}}</h1><a href="/">x</a>\n',
+    'home.html': '<!--page {"path": "", "order": 0, "updated": "2026-11-20"}-->\n<h1>{{home.hello}}</h1><p>{{home.install}}</p><p>{{home.later}}</p>\n',
+    'about.html': '<!--page {"order": 1, "updated": "2026-11-25"}-->\n<h1>{{about.text}}</h1><a href="/">x</a>\n',
   };
   for (const [name, text] of Object.entries(allPages)) writeFileSync(path.join(dir, 'pages', name), text);
   writeFileSync(path.join(dir, 'strings', 'en.json'), JSON.stringify(en));
@@ -194,13 +197,13 @@ describe('a site with English and a pretend right-to-left language', () => {
 
 describe('the checks', () => {
   test('a {{key}} with no string is an error, and so is an English key no template uses', () => {
-    const result = buildSite(makeSite({ en: { ...EN, 'about.unused': 'Nobody says this.' }, pages: { 'home.html': '<!--page {"path": "", "order": 0}-->\n<h1>{{home.hello}}</h1>{{home.install}}{{home.later}}{{home.nothing}}\n', 'about.html': '<!--page {"order": 1}-->\n{{about.text}}\n' } }));
+    const result = buildSite(makeSite({ en: { ...EN, 'about.unused': 'Nobody says this.' }, pages: { 'home.html': '<!--page {"path": "", "order": 0, "updated": "2026-11-25"}-->\n<h1>{{home.hello}}</h1>{{home.install}}{{home.later}}{{home.nothing}}\n', 'about.html': '<!--page {"order": 1, "updated": "2026-11-25"}-->\n{{about.text}}\n' } }));
     assert.ok(result.errors.some((error) => /\{\{home\.nothing\}\} has no string/.test(error)), result.errors.join('\n'));
     assert.ok(result.errors.some((error) => /about\.unused is used by no template/.test(error)), result.errors.join('\n'));
   });
 
   test('an internal link or picture that leads nowhere is an error', () => {
-    const result = buildSite(makeSite({ pages: { 'home.html': '<!--page {"path": "", "order": 0}-->\n{{home.hello}}{{home.install}}{{home.later}}<a href="/nowhere/">x</a><img src="/missing.png" alt="">\n', 'about.html': '<!--page {"order": 1}-->\n{{about.text}}\n' } }));
+    const result = buildSite(makeSite({ pages: { 'home.html': '<!--page {"path": "", "order": 0, "updated": "2026-11-25"}-->\n{{home.hello}}{{home.install}}{{home.later}}<a href="/nowhere/">x</a><img src="/missing.png" alt="">\n', 'about.html': '<!--page {"order": 1, "updated": "2026-11-25"}-->\n{{about.text}}\n' } }));
     assert.ok(result.errors.some((error) => /href="nowhere\/" leads nowhere/.test(error)), result.errors.join('\n'));
     assert.ok(result.errors.some((error) => /src="missing\.png" leads nowhere/.test(error)), result.errors.join('\n'));
   });
@@ -260,5 +263,131 @@ describe('the README and its translations', () => {
     assert.match(errors, /README\.md#nowhere names no heading or id there/);
     assert.match(errors, /#gone names no heading or id there/);
     assert.match(errors, /README\.md does not link to docs\/i18n\/README\.xx\.md/);
+  });
+});
+
+/** The <url> entries of a sitemap: each one's address, last change and alternates (hreflang → address). */
+function readSitemap(xml) {
+  return [...xml.matchAll(/<url>([\s\S]*?)<\/url>/g)].map(([, inner]) => ({
+    loc: /<loc>([^<]*)<\/loc>/.exec(inner)?.[1],
+    lastmod: /<lastmod>([^<]*)<\/lastmod>/.exec(inner)?.[1],
+    alternates: [...inner.matchAll(/<xhtml:link rel="alternate" hreflang="([^"]+)" href="([^"]+)"\/>/g)].map(([, lang, href]) => [lang, href]),
+  }));
+}
+
+/** A page's own canonical address and alternates, from its head. */
+function headOf(html) {
+  return {
+    canonical: /<link rel="canonical" href="([^"]+)">/.exec(html)?.[1],
+    alternates: [...html.matchAll(/<link rel="alternate" hreflang="([^"]+)" href="([^"]+)">/g)].map(([, lang, href]) => [lang, href]),
+  };
+}
+
+/** Whether a text is XML whose elements open and close in order (enough for a file we write ourselves). */
+function wellFormed(xml) {
+  const body = xml.replace(/^<\?xml [^?]*\?>\s*/, '').replace(/<\?xml-stylesheet [^?]*\?>\s*/, '');
+  if (/<\?/.test(body) || /&(?!(amp|lt|gt|quot|apos);)/.test(body)) return false;
+  const open = [];
+  for (const [, closing, name, selfClosing] of body.matchAll(/<(\/?)([A-Za-z][\w:.-]*)(?:\s[^<>]*?)?(\/?)>/g)) {
+    if (selfClosing) continue;
+    if (!closing) open.push(name);
+    else if (open.pop() !== name) return false;
+  }
+  return open.length === 0 && body.trim().startsWith('<urlset');
+}
+
+describe('the sitemap', () => {
+  test('"updated" is a real date, and a page in the sitemap must say it; a translation takes the same date', () => {
+    assert.ok(isDate('2026-11-25'));
+    for (const wrong of ['2026-11-31', '2026-2-01', '25.11.2026', '', 20261125, null]) assert.ok(!isDate(wrong), String(wrong));
+    const without = buildSite(makeSite({ xx: fresh(), pages: { 'home.html': '<!--page {"path": "", "order": 0}-->\n<h1>{{home.hello}}</h1>{{home.install}}{{home.later}}\n', 'about.html': '<!--page {"order": 1, "updated": "yesterday"}-->\n{{about.text}}\n' } }));
+    assert.ok(without.errors.some((error) => /home\.html: the first line must say "updated"/.test(error)), without.errors.join('\n'));
+    assert.ok(without.errors.some((error) => /about\.html: "updated" must be a date/.test(error)), without.errors.join('\n'));
+    const entries = readSitemap(page(buildSite(makeSite({ xx: fresh() })), 'sitemap.xml'));
+    assert.deepEqual(entries.map((entry) => [entry.loc, entry.lastmod]), [
+      [`${ORIGIN}/`, '2026-11-20'],
+      [`${ORIGIN}/xx/`, '2026-11-20'],
+      [`${ORIGIN}/about/`, '2026-11-25'],
+      [`${ORIGIN}/xx/about/`, '2026-11-25'],
+    ]);
+  });
+
+  test('a page marked noindex or "sitemap": false is not listed, and needs no date', () => {
+    const result = buildSite(makeSite({ xx: fresh(), pages: { 'home.html': '<!--page {"path": "", "order": 0, "updated": "2026-11-25"}-->\n<h1>{{home.hello}}</h1>{{home.install}}{{home.later}}\n', 'about.html': '<!--page {"order": 1, "noindex": true}-->\n{{about.text}}\n' } }));
+    assert.deepEqual(result.errors, []);
+    assert.deepEqual(readSitemap(page(result, 'sitemap.xml')).map((entry) => entry.loc), [`${ORIGIN}/`, `${ORIGIN}/xx/`]);
+  });
+
+  test('it names its stylesheet, which must be among the sources', () => {
+    const dir = makeSite({ xx: fresh() });
+    const result = buildSite(dir);
+    assert.match(page(result, 'sitemap.xml'), new RegExp(`^<\\?xml version="1\\.0" encoding="UTF-8"\\?>\\n<\\?xml-stylesheet type="text/xsl" href="/${SITEMAP_STYLE}"\\?>\\n<urlset `));
+    assert.ok(result.files.has(SITEMAP_STYLE));
+    rmSync(path.join(dir, SITEMAP_STYLE));
+    assert.ok(buildSite(dir).errors.some((error) => error.includes(`${SITEMAP_STYLE} is missing`)));
+  });
+
+  describe('of the real site, built in memory from site-src/', () => {
+    const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+    const result = buildSite(path.join(root, 'site-src'));
+    const languages = JSON.parse(readFileSync(path.join(root, 'site-src', 'languages.json'), 'utf8'));
+    const xml = page(result, 'sitemap.xml');
+    const entries = readSitemap(xml);
+    const fileOfAddress = (address) => `${address.slice(ORIGIN.length + 1)}index.html`;
+    // Every page a search engine may index: an HTML page of the site without noindex.
+    const indexable = [...result.files.keys()].filter((file) => file.endsWith('.html') && !/<meta name="robots" content="noindex/.test(page(result, file)));
+
+    test('builds without errors', () => assert.deepEqual(result.errors, []));
+
+    test('is well-formed XML, a standard sitemap with the xhtml namespace', () => {
+      assert.ok(wellFormed(xml));
+      assert.match(xml, /<urlset xmlns="http:\/\/www\.sitemaps\.org\/schemas\/sitemap\/0\.9" xmlns:xhtml="http:\/\/www\.w3\.org\/1999\/xhtml">/);
+      assert.doesNotMatch(xml, /<priority>|<changefreq>/);
+    });
+
+    test('lists every indexable page of every language once, at an absolute address of the site that ends in a slash', () => {
+      const locs = entries.map((entry) => entry.loc);
+      assert.equal(new Set(locs).size, locs.length, 'an address is listed twice');
+      for (const loc of locs) {
+        assert.ok(loc.startsWith(`${ORIGIN}/`) && loc.endsWith('/'), loc);
+        assert.ok(result.files.has(fileOfAddress(loc)), `${loc} is not a page of the site`);
+      }
+      assert.deepEqual([...locs].map(fileOfAddress).sort(), [...indexable].sort());
+      assert.ok(!locs.some((loc) => loc.includes('404')));
+      assert.equal(locs.length % languages.length, 0);
+    });
+
+    test('each address has a date and every language as an alternate, itself and x-default included, the same set for each language of a page', () => {
+      const groups = new Map();
+      for (const entry of entries) {
+        assert.ok(isDate(entry.lastmod), `${entry.loc} has no lastmod`);
+        assert.deepEqual(entry.alternates.map(([lang]) => lang), [...languages.map((language) => language.lang), 'x-default'], entry.loc);
+        assert.ok(entry.alternates.some(([, href]) => href === entry.loc), `${entry.loc} is not among its own alternates`);
+        const english = Object.fromEntries(entry.alternates)['x-default'];
+        assert.equal(english, Object.fromEntries(entry.alternates).en);
+        groups.set(english, [...(groups.get(english) ?? []), entry]);
+      }
+      for (const [english, group] of groups) {
+        assert.equal(group.length, languages.length, english);
+        for (const entry of group) {
+          assert.deepEqual(entry.alternates, group[0].alternates, `${entry.loc} and ${group[0].loc} name different alternates`);
+          assert.equal(entry.lastmod, group[0].lastmod, `${entry.loc} has another date than ${group[0].loc}`);
+        }
+        assert.deepEqual(group.map((entry) => entry.loc).sort(), group[0].alternates.filter(([lang]) => lang !== 'x-default').map(([, href]) => href).sort());
+      }
+    });
+
+    test('agrees with each page’s head: its canonical address is its loc, and its alternates are the same', () => {
+      for (const entry of entries) {
+        const head = headOf(page(result, fileOfAddress(entry.loc)));
+        assert.equal(head.canonical, entry.loc);
+        assert.deepEqual(head.alternates, entry.alternates, entry.loc);
+      }
+    });
+
+    test('robots.txt names it, and llms.txt lists every page that asks to be listed', () => {
+      assert.match(page(result, 'robots.txt'), new RegExp(`^Sitemap: ${ORIGIN}/sitemap\\.xml$`, 'm'));
+      assert.match(page(result, 'llms.txt'), new RegExp(`\\(${ORIGIN}/windows/\\)`));
+    });
   });
 });

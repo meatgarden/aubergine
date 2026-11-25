@@ -464,8 +464,8 @@
     "from": "efe26fb96381"
   },
   "home.faq.need.a": {
-    "text": "tmux 3.2 이상과 Node.js 22 이상이 설치된 macOS입니다. 설치 프로그램에는 pnpm도 필요합니다. Linux에서도 동작할 것으로 보이지만 아직 테스트하지 않았습니다.",
-    "from": "50e15eb9d5c0"
+    "text": "tmux 3.2 이상과 Node.js 22 이상이 설치된 macOS입니다. 설치 프로그램에는 pnpm도 필요합니다. Linux에서는 컨테이너 안에서만 실행해 봤습니다. Windows에서는 WSL 2 안에서만 실행되며, 이것도 아직 시도해 보지 않았습니다. <a href=\"/windows/\">Windows 가이드</a>를 보세요.",
+    "from": "95fd7d6edbbc"
   },
   "home.faq.byhand.q": {
     "text": "터미널에서 Claude Code를 직접 시작하면 어떻게 되나요?",
@@ -892,8 +892,8 @@
     "from": "e0cdd07f6a27"
   },
   "install.req.os": {
-    "text": "macOS. Linux에서도 같은 방식으로 동작할 것으로 보이지만 아직 테스트하지 않았습니다.",
-    "from": "e896cb710692"
+    "text": "macOS. Linux에서는 컨테이너 안에서만 실행해 봤습니다. Ubuntu 24.04에서 npm 패키지를, Debian에서 컨테이너 이미지를 실행했습니다. Windows 자체는 지원하지 않습니다. Aubergine은 WSL 2 안에서 실행할 수 있지만 아직 시도해 보지 않았습니다. <a href=\"/windows/\">WSL로 Windows에 설치하기</a>를 보세요.",
+    "from": "4ec6a50d42d5"
   },
   "install.req.tools": {
     "text": "<a href=\"https://github.com/tmux/tmux\">tmux</a> 3.2 이상과 Node.js 22 이상. 설치 프로그램에는 pnpm도 필요합니다.",
@@ -1072,8 +1072,160 @@
     "from": "e3df2a3fd915"
   },
   "install.ld.a4": {
-    "text": "Linux에서는 동작할 것으로 보이지만 아직 테스트하지 않았습니다. Windows는 지원하지 않습니다.",
-    "from": "b8b7b1d1037d"
+    "text": "Linux에서는 컨테이너 안에서만 실행해 봤습니다(Ubuntu 24.04와 Debian). Linux 데스크톱에서는 아직입니다. Windows 자체는 지원하지 않습니다. Aubergine은 Windows가 제공하는 Linux인 WSL 2 안에서 실행할 수 있지만 아직 시도해 보지 않았습니다.",
+    "from": "c293e731fea8"
+  },
+  "windows.meta.title": {
+    "text": "WSL로 Windows에 Aubergine 설치하기 | Aubergine",
+    "from": "82c0a75bef8c"
+  },
+  "windows.meta.description": {
+    "text": "Aubergine은 Windows 자체에서는 실행되지 않지만, WSL 2 안에서 실행하고 Windows 브라우저에서 사용할 수 있습니다. 단계, 시도한 것과 시도하지 않은 것, 문제 해결.",
+    "from": "eef730b3d958"
+  },
+  "windows.crumb": {
+    "text": "WSL로 Windows",
+    "from": "26529d6498df"
+  },
+  "windows.title": {
+    "text": "WSL로 Windows에 Aubergine 설치하기",
+    "from": "c966f630ebab"
+  },
+  "windows.lead": {
+    "text": "Aubergine은 Windows 자체에서는 실행되지 않습니다. Windows가 제공하는 Linux인 WSL 2 안에서 실행되고, Windows 브라우저에서 사용합니다.",
+    "from": "81a98c345b2a"
+  },
+  "windows.tried": {
+    "text": "<strong>시도한 것.</strong> Linux 단계는 2026년 11월 25일에 WSL이 아닌 컨테이너 안의 Ubuntu 24.04.5(x86_64)에서, npm의 Aubergine 0.2.2로 실행했습니다. 터미널 라이브러리를 컴파일하고, 시작하고, 브라우저를 로그인시키고, 터미널과 데모를 실행했습니다. Node.js 22가 이미 설치되어 있어서 nvm으로 Node.js를 설치하는 단계는 거기서 실행하지 않았습니다. 이 페이지의 어떤 것도 아직 Windows에서 실행하지 않았습니다. 시도해 보셨다면 <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">어땠는지 알려 주세요</a>.",
+    "from": "75b38b261d19"
+  },
+  "windows.req.title": {
+    "text": "필요한 것",
+    "from": "e17c85cc990b"
+  },
+  "windows.req.text": {
+    "text": "Windows 11, 또는 Windows 10 버전 2004(빌드 19041) 이상. 여기서는 명령 하나로 WSL 2를 설치할 수 있습니다. 자세한 내용은 Microsoft의 <a href=\"https://learn.microsoft.com/windows/wsl/install\">WSL 설치 페이지</a>에 있습니다.",
+    "from": "43ee5c74e4e3"
+  },
+  "windows.steps.title": {
+    "text": "설치하고 시작하기",
+    "from": "945ef89608d4"
+  },
+  "windows.steps.wsl": {
+    "text": "<strong>WSL을 설치합니다.</strong> PowerShell을 관리자 권한으로 열고 이것을 실행한 뒤, 끝나면 Windows를 다시 시작합니다. Ubuntu가 포함된 WSL 2가 설치됩니다.",
+    "from": "0f31c56ce2e5"
+  },
+  "windows.steps.ubuntu": {
+    "text": "다시 시작한 뒤 시작 메뉴에서 <strong>Ubuntu</strong>를 열고 사용자 이름과 비밀번호를 정합니다. 아래 명령은 모두 그곳, Ubuntu 안에서 입력합니다.",
+    "from": "4d3436ccad7d"
+  },
+  "windows.steps.apt": {
+    "text": "<strong>Aubergine에 필요한 것을 설치합니다</strong>: tmux, zsh, Git, 그리고 터미널 라이브러리를 컴파일하는 도구입니다. 이 라이브러리는 Linux용으로 미리 만들어진 것이 없습니다.",
+    "from": "f8e116fdd0eb"
+  },
+  "windows.steps.node": {
+    "text": "<strong>Node.js 22를 설치합니다.</strong> Ubuntu 자체 패키지는 버전 18로, 너무 오래되었습니다. 잘 알려진 방법 하나는 <a href=\"https://github.com/nvm-sh/nvm\">nvm</a>입니다. nvm을 설치하고, 새 Ubuntu 창을 연 다음 Node.js 22를 설치합니다.",
+    "from": "8e6d6af1ee88"
+  },
+  "windows.steps.nodeCheck": {
+    "text": "이제 <code>node -v</code>가 v22 이상을 보여 줘야 합니다.",
+    "from": "872ffc8f2dfd"
+  },
+  "windows.steps.npm": {
+    "text": "npm에서 <strong>Aubergine을 설치합니다</strong>. 설치하면서 터미널 라이브러리를 컴파일합니다. 시도했을 때 설치 전체에 13초가 걸렸습니다.",
+    "from": "d0686af8f780"
+  },
+  "windows.steps.start": {
+    "text": "<strong>시작하고</strong>, 그 창은 열어 둡니다.",
+    "from": "0fc463357411"
+  },
+  "windows.steps.open": {
+    "text": "<strong>브라우저를 로그인시킵니다.</strong> 두 번째 Ubuntu 창에서 로그인 주소를 출력한 뒤 Windows 브라우저에서 엽니다. 그 브라우저가 로그인되므로 비밀번호처럼 다루세요.",
+    "from": "4eedb1a24642"
+  },
+  "windows.steps.after": {
+    "text": "그다음부터는 그 브라우저에서 <code>http://127.0.0.1:4600</code>만으로 열립니다. 빈 캔버스에서는 <em>Show me around</em>로 둘러보기가 시작됩니다.",
+    "from": "6d1885774f0b"
+  },
+  "windows.good.title": {
+    "text": "알아 두면 좋은 것",
+    "from": "aab7685123cf"
+  },
+  "windows.good.files": {
+    "text": "<strong>프로젝트는 Ubuntu 안에 두세요</strong>. Ubuntu의 홈 폴더에 두고 <code>/mnt/c</code> 아래에는 두지 마세요. 그곳의 Windows 파일은 더 느린 다리를 거쳐 접근합니다.",
+    "from": "3e2e6716da83"
+  },
+  "windows.good.agents": {
+    "text": "<strong>에이전트는 Ubuntu 안에 설치하세요</strong>. Claude Code든 Codex든 다른 것이든, 다른 Linux에서와 같습니다. Windows에 설치한 에이전트는 Aubergine의 터미널에 없습니다.",
+    "from": "f32d6f1d347e"
+  },
+  "windows.good.running": {
+    "text": "<strong>터미널은 WSL이 실행되는 동안 살아 있습니다.</strong> 브라우저를 닫아도 아무것도 끝나지 않고, <code>aubergine start</code> 창에서 Ctrl+C를 누르면 서버만 멈춥니다. Windows가 다시 시작되거나 <code>wsl --shutdown</code>을 실행해 WSL이 멈추면 터미널이 끝나고, 다음 <code>aubergine start</code>가 마지막 폴더에서 새 셸을 엽니다. Mac을 다시 시작한 뒤와 같습니다.",
+    "from": "5a110c9f034d"
+  },
+  "windows.good.shell": {
+    "text": "<strong>bash와 zsh.</strong> Ubuntu의 셸은 bash이고, 터미널은 그 안에서 잘 작동합니다. 터미널의 명령 상태(실행 중, 실패한 명령의 종료 코드)는 zsh에서만 나옵니다. 시도했을 때 zsh 터미널은 실패한 명령 뒤에 <code>exit 3</code>을 보여 줬습니다. 이를 쓰려면 Ubuntu에서 zsh를 셸로 정하세요.",
+    "from": "98e4ede36c4f"
+  },
+  "windows.good.missing": {
+    "text": "<strong>없는 것</strong>: 로그인 시 시작은 macOS에서만 작동하고(<code>aubergine service install</code>이 그렇게 알려 줍니다), <em>Open on desktop</em>에는 Windows 터미널 앱을 위한 설정이 없습니다. 시도했을 때 <code>aubergine open</code>은 열 브라우저를 찾지 못했습니다. <code>aubergine open --print</code>는 언제나 작동합니다.",
+    "from": "19d811a81126"
+  },
+  "windows.good.keys": {
+    "text": "Windows의 <strong>단축키</strong>는 브라우저 문서를 보고 고른 것이며 측정하지 않았습니다. <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/keys.md\">docs/keys.md</a>를 보세요. 팔레트는 언제나 작동합니다.",
+    "from": "beb021d09a79"
+  },
+  "windows.wrong.doctor": {
+    "text": "먼저 Ubuntu에서 <code>aubergine doctor</code>를 실행하세요. Node.js, tmux, Git과 서버를 확인합니다.",
+    "from": "99c6773e6fc4"
+  },
+  "windows.wrong.compile.see": {
+    "text": "Aubergine 설치가 <code>node-pty</code>를 컴파일하다 실패함",
+    "from": "2f7790e9150b"
+  },
+  "windows.wrong.compile.do": {
+    "text": "빌드 도구가 없습니다. 2단계의 <code>apt</code> 줄을 실행한 뒤 Aubergine을 다시 설치하세요.",
+    "from": "6ce6d003e421"
+  },
+  "windows.wrong.tmux.do": {
+    "text": "Ubuntu 24.04의 tmux는 3.4로 충분히 새롭습니다. <code>sudo apt install -y tmux</code>를 실행하고 서버를 다시 시작하세요.",
+    "from": "f726aafbf8b6"
+  },
+  "windows.wrong.node.see": {
+    "text": "<code>node -v</code>가 v22보다 오래된 버전을 보여 줌",
+    "from": "6d3b5a77d630"
+  },
+  "windows.wrong.node.do": {
+    "text": "2단계처럼 Node.js 22를 설치하고, 새 Ubuntu 창을 연 뒤 Aubergine을 다시 설치하세요.",
+    "from": "0f197e36ca93"
+  },
+  "windows.wrong.address.see": {
+    "text": "Windows 브라우저에서 주소가 열리지 않음",
+    "from": "5517022ccb2e"
+  },
+  "windows.wrong.address.do": {
+    "text": "Ubuntu에서 <code>aubergine start</code>가 아직 실행 중인지 확인하세요. 그다음 Microsoft의 <a href=\"https://learn.microsoft.com/windows/wsl/networking\">WSL 네트워킹 페이지</a>를 보세요. 이것은 Aubergine으로 시도해 보지 않았습니다.",
+    "from": "f58f31689a94"
+  },
+  "windows.next.text": {
+    "text": "중지, 업데이트, 제거는 <a href=\"/install/\">설치 페이지</a>와 같고, 나머지는 모두 <a href=\"https://github.com/thirstyeggplant/aubergine#readme\">README</a>에 있습니다.",
+    "from": "e99167a76e7b"
+  },
+  "windows.ld.s1": {
+    "text": "WSL 설치",
+    "from": "013b9cd3a82f"
+  },
+  "windows.ld.s2": {
+    "text": "tmux, 빌드 도구, Node.js 22 설치",
+    "from": "24bc20fedab8"
+  },
+  "windows.ld.s3": {
+    "text": "Aubergine 설치",
+    "from": "733a8757545c"
+  },
+  "windows.ld.s4": {
+    "text": "시작하고 브라우저 로그인",
+    "from": "6ee5544f775e"
   },
   "guides.meta.title": {
     "text": "Aubergine 가이드 | Aubergine",
@@ -1102,6 +1254,14 @@
   "guides.install.text": {
     "text": "요구 사항, 한 줄 설치 프로그램, 그것이 바꾸는 것, 흔한 문제의 해결법.",
     "from": "0c229f404056"
+  },
+  "guides.windows.name": {
+    "text": "WSL로 Windows에 설치하기",
+    "from": "336ff91588a7"
+  },
+  "guides.windows.text": {
+    "text": "WSL 2 안에서 Aubergine을 실행하고 Windows 브라우저에서 사용합니다. Linux 단계는 실행해 봤고, Windows에서는 아직 아무것도 시도하지 않았습니다.",
+    "from": "582c5ec5ff77"
   },
   "guides.several.name": {
     "text": "여러 코딩 에이전트를 한꺼번에 실행하기",
@@ -2064,8 +2224,8 @@
     "from": "e61744d0c993"
   },
   "roadmap.everywhere.windows.text": {
-    "text": "Windows에서 Aubergine을 실행합니다. 현재는 macOS만 지원하며, Linux는 테스트되지 않았습니다.",
-    "from": "6eb34c4aada3"
+    "text": "Windows 자체에서 Aubergine을 실행합니다. 지금은 <a href=\"/windows/\">Windows 가이드</a>에 적힌 대로 WSL 2 안에서만 실행되며, Windows에서 이를 시도해 본 사람은 아직 없습니다.",
+    "from": "25c43f0bde14"
   },
   "faq.meta.title": {
     "text": "자주 묻는 질문 | Aubergine",
@@ -2108,8 +2268,8 @@
     "from": "efe26fb96381"
   },
   "faq.need.a": {
-    "text": "tmux 3.2 이상과 Node.js 22 이상이 설치된 macOS입니다. 설치 프로그램에는 pnpm도 필요합니다. Linux에서도 동작할 것으로 보이지만 아직 테스트하지 않았습니다. Windows는 지원하지 않습니다.",
-    "from": "d0ea17ebbaa3"
+    "text": "tmux 3.2 이상과 Node.js 22 이상이 설치된 macOS입니다. 설치 프로그램에는 pnpm도 필요합니다. Linux에서는 컨테이너 안에서만 실행해 봤습니다. Windows에서는 WSL 2 안에서만 실행되며, 이것도 아직 시도해 보지 않았습니다. <a href=\"/windows/\">Windows 가이드</a>를 보세요.",
+    "from": "95fd7d6edbbc"
   },
   "faq.agents.q": {
     "text": "어떤 코딩 에이전트와도 동작하나요?",

@@ -152,7 +152,7 @@ The rest of this page is the reference: every section below stands on its own.
 
 ## Quick start
 
-You need macOS with [tmux](https://github.com/tmux/tmux) 3.2 or newer, Node.js 22 or newer, and pnpm. Linux should work the same way but has not been tested yet. With [Homebrew](https://brew.sh) on macOS, `brew install tmux node pnpm` gets all three.
+You need macOS with [tmux](https://github.com/tmux/tmux) 3.2 or newer, Node.js 22 or newer, and pnpm. On Linux it has been run in containers only (see [Install with npm](#install-with-npm)); on Windows it runs only inside WSL 2, which has not been tried (see [On Windows](#on-windows)). With [Homebrew](https://brew.sh) on macOS, `brew install tmux node pnpm` gets all three.
 
 **The Node.js version.** 22 is the lowest that works; anything newer is fine, and nothing older is. `node -v` says which one a terminal has. If you use [nvm](https://github.com/nvm-sh/nvm), that is the version nvm has chosen for that terminal, which may be older than the newest you have installed:
 
@@ -217,7 +217,11 @@ npm install -g @meatgarden/aubergine
 aubergine start --open
 ```
 
-Node.js 22 or newer is needed. `aubergine update` and `aubergine uninstall` say the npm command to run (`npm install -g @meatgarden/aubergine@latest`, `npm uninstall -g @meatgarden/aubergine`); `uninstall` still removes start at login, and nothing of your data or terminals. Some versions of npm do not run a package's install scripts unless you allow them; Aubergine does not need its own. On macOS the terminal library (node-pty) comes ready-made. On Linux it has nothing ready-made and is compiled when it is installed, which needs its install script allowed, and Python 3, make and a C++ compiler. Linux has been run only in that container image, built from a checkout, in [`docker/`](docker), where node-pty was compiled this way: see [In a container](docs/remote.md#in-a-container).
+Node.js 22 or newer is needed. `aubergine update` and `aubergine uninstall` say the npm command to run (`npm install -g @meatgarden/aubergine@latest`, `npm uninstall -g @meatgarden/aubergine`); `uninstall` still removes start at login, and nothing of your data or terminals. Some versions of npm do not run a package's install scripts unless you allow them; Aubergine does not need its own. On macOS the terminal library (node-pty) comes ready-made. On Linux it has nothing ready-made and is compiled when it is installed, which needs its install script allowed, and Python 3, make and a C++ compiler. Linux has been run twice, both times in a container: the image built from a checkout in [`docker/`](docker) (see [In a container](docs/remote.md#in-a-container)), and on 2026-11-25 the published package 0.2.2, installed with `npm install -g @meatgarden/aubergine` on Ubuntu 24.04 (x86_64), where node-pty compiled in about 13 seconds with `build-essential` and `python3` from apt, and the server, a terminal and the demo worked.
+
+### On Windows
+
+Aubergine does not run on Windows itself: it needs tmux and a Unix shell. It can run inside WSL 2, the Linux that Windows provides, with the page opened in a browser on Windows. The steps are on the site: [Install Aubergine on Windows with WSL](https://thirstyeggplant.com/windows/). Its Linux steps were run on Ubuntu 24.04 in a container, not in WSL; nothing has been run on Windows yet. Start at login is macOS only, and **Open on desktop** has no setting for a Windows terminal app.
 
 **Updating** an npm install is npm's, then restart the server; the steps are under [Stopping, restarting and updating](#stopping-restarting-and-updating).
 

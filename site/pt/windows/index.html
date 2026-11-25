@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="pt-BR" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Instalar o Aubergine no Windows com WSL | Aubergine</title>
+<meta name="description" content="O Aubergine não roda no próprio Windows, mas pode rodar dentro do WSL 2 e ser usado por um navegador do Windows. Os passos, o que foi testado e o que não foi, e soluções.">
+<link rel="canonical" href="https://thirstyeggplant.com/pt/windows/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/windows/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/windows/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/windows/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/windows/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/windows/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/windows/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/windows/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/windows/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/windows/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/windows/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/windows/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/windows/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/windows/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="Instalar o Aubergine no Windows com WSL | Aubergine">
+<meta property="og:description" content="O Aubergine não roda no próprio Windows, mas pode rodar dentro do WSL 2 e ser usado por um navegador do Windows. Os passos, o que foi testado e o que não foi, e soluções.">
+<meta property="og:url" content="https://thirstyeggplant.com/pt/windows/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine: um canvas de terminais, um ocupado e outro esperando por você">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine: um canvas de terminais, um ocupado e outro esperando por você">
+<meta name="twitter:title" content="Instalar o Aubergine no Windows com WSL | Aubergine">
+<meta name="twitter:description" content="O Aubergine não roda no próprio Windows, mas pode rodar dentro do WSL 2 e ser usado por um navegador do Windows. Os passos, o que foi testado e o que não foi, e soluções.">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">Pular para a página</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="Páginas">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Instalar</a></li>
+        <li><a href="../guides/">Guias</a></li>
+        <li><a href="../security/">Segurança</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="Idioma: Português"><span class="lang-long" aria-hidden="true">Português</span><span class="lang-short" aria-hidden="true">PT</span></summary>
+      <ul class="menu-list"><li><a href="../../windows/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/windows/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="./" hreflang="pt-BR" lang="pt-BR" dir="ltr" aria-current="true">Português</a></li><li><a href="../../fr/windows/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/windows/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/windows/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/windows/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="../../ko/windows/" hreflang="ko" lang="ko" dir="ltr">한국어</a></li><li><a href="../../id/windows/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/windows/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/windows/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/windows/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>Menu</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Instalar</a></li>
+        <li><a href="../guides/">Guias</a></li>
+        <li><a href="../security/">Segurança</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="wrap translated">
+  <p class="note">O Aubergine em si está em inglês: seus botões, menus e imagens são os da versão em inglês.</p>
+  <p class="note">Esta página foi traduzida do inglês por uma máquina. <a href="https://github.com/thirstyeggplant/aubergine/issues">Envie uma correção</a>.</p>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/pt/windows/#article",
+      "headline": "Instalar o Aubergine no Windows com WSL",
+      "description": "O Aubergine não roda no próprio Windows, mas pode rodar dentro do WSL 2 e ser usado por um navegador do Windows. Os passos, o que foi testado e o que não foi, e soluções.",
+      "url": "https://thirstyeggplant.com/pt/windows/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/pt/windows/",
+      "datePublished": "2026-11-25",
+      "dateModified": "2026-11-25",
+      "inLanguage": "pt-BR",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Windows com WSL", "item": "https://thirstyeggplant.com/pt/windows/" }
+      ]
+    },
+    {
+      "@type": "HowTo",
+      "@id": "https://thirstyeggplant.com/pt/windows/#howto",
+      "name": "Instalar o Aubergine no Windows com WSL",
+      "description": "O Aubergine não roda no próprio Windows, mas pode rodar dentro do WSL 2 e ser usado por um navegador do Windows. Os passos, o que foi testado e o que não foi, e soluções.",
+      "step": [
+        { "@type": "HowToStep", "position": 1, "name": "Instalar o WSL", "text": "wsl --install" },
+        { "@type": "HowToStep", "position": 2, "name": "Instalar o tmux, as ferramentas de compilação e o Node.js 22", "text": "sudo apt install -y tmux zsh git build-essential python3" },
+        { "@type": "HowToStep", "position": 3, "name": "Instalar o Aubergine", "text": "npm install -g @meatgarden/aubergine" },
+        { "@type": "HowToStep", "position": 4, "name": "Iniciar e fazer login no navegador", "text": "aubergine start" }
+      ]
+    }
+  ]
+}
+</script>
+<div class="wrap page-head">
+  <nav class="crumbs" aria-label="Onde você está"><ol><li><a href="../">Aubergine</a></li><li>Windows com WSL</li></ol></nav>
+  <h1>Instalar o Aubergine no Windows com WSL</h1>
+  <p class="lead">O Aubergine não roda no próprio Windows. Ele roda dentro do WSL 2, o Linux que o Windows oferece, e você o usa pelo navegador do Windows.</p>
+</div>
+<div class="wrap page-body">
+  <div class="prose">
+    <p class="note"><strong>O que foi testado.</strong> Os passos de Linux foram executados em 25 de novembro de 2026 no Ubuntu 24.04.5 (x86_64) em um contêiner, não no WSL, com o Aubergine 0.2.2 do npm: ele compilou sua biblioteca de terminal, iniciou, fez login em um navegador e rodou um terminal e a demo. A instalação do Node.js com nvm não foi executada lá, pois o Node.js 22 já estava instalado. Nada nesta página foi executado no Windows ainda. Se você testar, <a href="https://github.com/thirstyeggplant/aubergine/issues">conte para a gente como foi</a>.</p>
+
+    <h2>Do que você precisa</h2>
+    <p>Windows 11, ou Windows 10 versão 2004 (build 19041) ou mais recente, em que o WSL 2 se instala com um único comando. A <a href="https://learn.microsoft.com/windows/wsl/install">página da Microsoft sobre como instalar o WSL</a> tem os detalhes.</p>
+
+    <h2>Instalar e iniciar</h2>
+    <ol>
+      <li><p><strong>Instale o WSL.</strong> Abra o PowerShell como administrador, rode isto e reinicie o Windows quando terminar. Ele instala o WSL 2 com Ubuntu.</p>
+        <p class="cmd multi"><code>wsl --install</code><button type="button" class="copy" data-copy data-copied="Copiado" aria-live="polite" hidden>Copiar</button></p>
+        <p>Depois de reiniciar, abra o <strong>Ubuntu</strong> pelo menu Iniciar e escolha um nome de usuário e uma senha para ele. Todos os comandos abaixo são digitados lá, no Ubuntu.</p></li>
+      <li><p><strong>Instale o que o Aubergine precisa</strong>: tmux, zsh e Git, e as ferramentas que compilam sua biblioteca de terminal, que não tem nada pronto para Linux.</p>
+        <div class="cmds">
+          <p class="cmd"><code>sudo apt update</code><button type="button" class="copy" data-copy data-copied="Copiado" aria-live="polite" hidden>Copiar</button></p>
+          <p class="cmd"><code>sudo apt install -y tmux zsh git build-essential python3</code><button type="button" class="copy" data-copy data-copied="Copiado" aria-live="polite" hidden>Copiar</button></p>
+        </div>
+        <p><strong>Instale o Node.js 22.</strong> O pacote do próprio Ubuntu é a versão 18, antiga demais. Um jeito bem conhecido é o <a href="https://github.com/nvm-sh/nvm">nvm</a>: instale-o, abra uma nova janela do Ubuntu e então instale o Node.js 22.</p>
+        <div class="cmds">
+          <p class="cmd"><code>curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash</code><button type="button" class="copy" data-copy data-copied="Copiado" aria-live="polite" hidden>Copiar</button></p>
+          <p class="cmd"><code>nvm install 22</code><button type="button" class="copy" data-copy data-copied="Copiado" aria-live="polite" hidden>Copiar</button></p>
+        </div>
+        <p><code>node -v</code> agora deve mostrar v22 ou mais recente.</p></li>
+      <li><p><strong>Instale o Aubergine</strong> pelo npm. Ele compila sua biblioteca de terminal durante a instalação; no teste, a instalação inteira levou 13 segundos.</p>
+        <p class="cmd"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="Copiado" aria-live="polite" hidden>Copiar</button></p></li>
+      <li><p><strong>Inicie-o</strong> e deixe essa janela aberta:</p>
+        <p class="cmd"><code>aubergine start</code><button type="button" class="copy" data-copy data-copied="Copiado" aria-live="polite" hidden>Copiar</button></p>
+        <p><strong>Faça login no navegador.</strong> Em uma segunda janela do Ubuntu, mostre o endereço de login e abra-o no seu navegador do Windows. Ele faz login nesse navegador, então trate-o como uma senha.</p>
+        <p class="cmd"><code>aubergine open --print</code><button type="button" class="copy" data-copy data-copied="Copiado" aria-live="polite" hidden>Copiar</button></p>
+        <p>Depois disso, <code>http://127.0.0.1:4600</code> funciona sozinho nesse navegador. Em um canvas vazio, <em>Show me around</em> inicia o tour.</p></li>
+    </ol>
+
+    <h2>Bom saber</h2>
+    <ul>
+      <li><strong>Mantenha seus projetos no Ubuntu</strong>, na pasta pessoal dele, não em <code>/mnt/c</code>, onde os arquivos do Windows são acessados por uma ponte mais lenta.</li>
+      <li><strong>Instale seus agentes dentro do Ubuntu</strong>, Claude Code, Codex ou qualquer outro, como em qualquer Linux. Um agente instalado no Windows não está nos terminais do Aubergine.</li>
+      <li><strong>Os terminais vivem enquanto o WSL estiver rodando.</strong> Fechar o navegador não encerra nada, e Ctrl+C na janela do <code>aubergine start</code> para só o servidor. Quando o WSL para, porque o Windows reinicia ou depois de <code>wsl --shutdown</code>, os terminais terminam, e o próximo <code>aubergine start</code> abre shells novos nas últimas pastas deles, como depois de reiniciar um Mac.</li>
+      <li><strong>bash ou zsh.</strong> O shell do Ubuntu é o bash, e os terminais funcionam nele. O status dos comandos em um terminal (ocupado, o código de saída de um comando que falhou) vem só do zsh: no teste, um terminal com zsh mostrou <code>exit 3</code> depois de um comando que falhou. Faça do zsh o seu shell no Ubuntu para ter isso.</li>
+      <li><strong>O que não existe lá</strong>: iniciar no login funciona só no macOS (<code>aubergine service install</code> avisa), e <em>Open on desktop</em> não tem configuração para um app de terminal do Windows. O <code>aubergine open</code> não encontrou um navegador para abrir no teste; <code>aubergine open --print</code> sempre funciona.</li>
+      <li><strong>Os atalhos</strong> no Windows foram escolhidos pelo que os navegadores documentam e não foram medidos: veja <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/keys.md">docs/keys.md</a>. A paleta sempre funciona.</li>
+    </ul>
+
+    <h2>Se algo der errado</h2>
+    <p>Rode primeiro <code>aubergine doctor</code> no Ubuntu. Ele verifica Node.js, tmux, Git e o servidor.</p>
+    <div class="table">
+      <table>
+        <thead><tr><th>O que você vê</th><th>O que fazer</th></tr></thead>
+        <tbody>
+          <tr><td>A instalação do Aubergine falha ao compilar o <code>node-pty</code></td><td>Faltam as ferramentas de compilação. Rode as linhas de <code>apt</code> do passo 2 e instale o Aubergine de novo.</td></tr>
+          <tr><td>Uma página dizendo que o tmux está faltando ou é antigo demais</td><td>O tmux do Ubuntu 24.04 é a versão 3.4, recente o bastante: <code>sudo apt install -y tmux</code> e inicie o servidor de novo.</td></tr>
+          <tr><td><code>node -v</code> mostra uma versão anterior à v22</td><td>Instale o Node.js 22 como no passo 2, abra uma nova janela do Ubuntu e instale o Aubergine de novo.</td></tr>
+          <tr><td>O endereço não abre no navegador do Windows</td><td>Verifique se o <code>aubergine start</code> ainda está rodando no Ubuntu. Depois veja a <a href="https://learn.microsoft.com/windows/wsl/networking">página da Microsoft sobre rede no WSL</a>; isso não foi testado com o Aubergine.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Próximos passos</h2>
+    <p>Parar, atualizar e desinstalar funcionam como na <a href="../install/">página de instalação</a>, e todo o resto está no <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>.</p>
+  </div>
+</div>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <nav aria-label="Todas as páginas">
+      <ul class="foot-links">
+        <li><a href="../">Início</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex e ChatGPT</a></li>
+        <li><a href="../install/">Instalar</a></li>
+        <li><a href="../guides/">Guias</a></li>
+        <li><a href="../run-multiple-coding-agents/">Vários agentes ao mesmo tempo</a></li>
+        <li><a href="../working-copies/">Cópias de trabalho</a></li>
+        <li><a href="../queue-and-schedules/">Fila e agendamentos</a></li>
+        <li><a href="../security/">Segurança</a></li>
+        <li><a href="../roadmap/">Roadmap</a></li>
+        <li><a href="../faq/">Perguntas frequentes</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">O Aubergine é livre e de código aberto sob a <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">licença MIT</a>, e roda no seu próprio computador.</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+</script>
+</body>
+</html>

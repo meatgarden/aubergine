@@ -137,7 +137,7 @@
         { "@type": "Question", "name": "Aubergine 설치 프로그램은 무엇을 바꾸나요?", "acceptedAnswer": { "@type": "Answer", "text": "두 가지입니다. 설치 폴더(~/.aubergine 또는 AUBERGINE_HOME)와 PATH에 놓이는 aubergine이라는 링크 하나. sudo를 쓰지 않고, 셸 시작 파일을 편집하지 않으며, Node.js, pnpm, tmux를 설치하지 않습니다." } },
         { "@type": "Question", "name": "Aubergine은 어떻게 업데이트하나요?", "acceptedAnswer": { "@type": "Answer", "text": "npm으로 설치했다면 npm install -g @meatgarden/aubergine@latest를 실행하세요. 설치 프로그램으로 설치했다면 aubergine update를 실행하거나 설치 프로그램을 다시 실행하세요. 그다음 서버를 다시 시작합니다." } },
         { "@type": "Question", "name": "Aubergine은 어떻게 제거하나요?", "acceptedAnswer": { "@type": "Answer", "text": "aubergine uninstall을 실행하세요. 링크를 지우고, 확인을 받은 뒤 설치 프로그램이 만든 사본을 지웁니다. 데이터를 지우거나 터미널을 끝내는 일은 결코 없습니다." } },
-        { "@type": "Question", "name": "Aubergine은 Linux나 Windows에서 동작하나요?", "acceptedAnswer": { "@type": "Answer", "text": "Linux에서는 동작할 것으로 보이지만 아직 테스트하지 않았습니다. Windows는 지원하지 않습니다." } }
+        { "@type": "Question", "name": "Aubergine은 Linux나 Windows에서 동작하나요?", "acceptedAnswer": { "@type": "Answer", "text": "Linux에서는 컨테이너 안에서만 실행해 봤습니다(Ubuntu 24.04와 Debian). Linux 데스크톱에서는 아직입니다. Windows 자체는 지원하지 않습니다. Aubergine은 Windows가 제공하는 Linux인 WSL 2 안에서 실행할 수 있지만 아직 시도해 보지 않았습니다." } }
       ]
     }
   ]
@@ -152,7 +152,7 @@
   <div class="prose">
     <h2>요구 사항</h2>
     <ul>
-      <li>macOS. Linux에서도 같은 방식으로 동작할 것으로 보이지만 아직 테스트하지 않았습니다.</li>
+      <li>macOS. Linux에서는 컨테이너 안에서만 실행해 봤습니다. Ubuntu 24.04에서 npm 패키지를, Debian에서 컨테이너 이미지를 실행했습니다. Windows 자체는 지원하지 않습니다. Aubergine은 WSL 2 안에서 실행할 수 있지만 아직 시도해 보지 않았습니다. <a href="../windows/">WSL로 Windows에 설치하기</a>를 보세요.</li>
       <li><a href="https://github.com/tmux/tmux">tmux</a> 3.2 이상과 Node.js 22 이상. 설치 프로그램에는 pnpm도 필요합니다.</li>
     </ul>
     <p><a href="https://brew.sh">Homebrew</a>가 있으면 한 줄로 둘 다 설치합니다(설치 프로그램을 쓰려면 <code>pnpm</code>을 추가하세요).</p>

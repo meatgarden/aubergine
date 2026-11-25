@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="ko" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WSL로 Windows에 Aubergine 설치하기 | Aubergine</title>
+<meta name="description" content="Aubergine은 Windows 자체에서는 실행되지 않지만, WSL 2 안에서 실행하고 Windows 브라우저에서 사용할 수 있습니다. 단계, 시도한 것과 시도하지 않은 것, 문제 해결.">
+<link rel="canonical" href="https://thirstyeggplant.com/ko/windows/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/windows/">
+<link rel="alternate" hreflang="es" href="https://thirstyeggplant.com/es/windows/">
+<link rel="alternate" hreflang="pt-BR" href="https://thirstyeggplant.com/pt/windows/">
+<link rel="alternate" hreflang="fr" href="https://thirstyeggplant.com/fr/windows/">
+<link rel="alternate" hreflang="de" href="https://thirstyeggplant.com/de/windows/">
+<link rel="alternate" hreflang="ja" href="https://thirstyeggplant.com/ja/windows/">
+<link rel="alternate" hreflang="zh-Hans" href="https://thirstyeggplant.com/zh/windows/">
+<link rel="alternate" hreflang="ko" href="https://thirstyeggplant.com/ko/windows/">
+<link rel="alternate" hreflang="id" href="https://thirstyeggplant.com/id/windows/">
+<link rel="alternate" hreflang="hi" href="https://thirstyeggplant.com/hi/windows/">
+<link rel="alternate" hreflang="bn" href="https://thirstyeggplant.com/bn/windows/">
+<link rel="alternate" hreflang="ar" href="https://thirstyeggplant.com/ar/windows/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/windows/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../style.css">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="WSL로 Windows에 Aubergine 설치하기 | Aubergine">
+<meta property="og:description" content="Aubergine은 Windows 자체에서는 실행되지 않지만, WSL 2 안에서 실행하고 Windows 브라우저에서 사용할 수 있습니다. 단계, 시도한 것과 시도하지 않은 것, 문제 해결.">
+<meta property="og:url" content="https://thirstyeggplant.com/ko/windows/">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aubergine: 터미널이 놓인 캔버스. 하나는 작업 중이고 하나는 사용자를 기다리고 있습니다">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="Aubergine: 터미널이 놓인 캔버스. 하나는 작업 중이고 하나는 사용자를 기다리고 있습니다">
+<meta name="twitter:title" content="WSL로 Windows에 Aubergine 설치하기 | Aubergine">
+<meta name="twitter:description" content="Aubergine은 Windows 자체에서는 실행되지 않지만, WSL 2 안에서 실행하고 Windows 브라우저에서 사용할 수 있습니다. 단계, 시도한 것과 시도하지 않은 것, 문제 해결.">
+<link rel="alternate" type="text/plain" href="../../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="페이지">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">설치</a></li>
+        <li><a href="../guides/">가이드</a></li>
+        <li><a href="../security/">보안</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    
+    <details class="menu languages">
+      <summary aria-label="언어: 한국어"><span class="lang-long" aria-hidden="true">한국어</span><span class="lang-short" aria-hidden="true">KO</span></summary>
+      <ul class="menu-list"><li><a href="../../windows/" hreflang="en" lang="en" dir="ltr">English</a></li><li><a href="../../es/windows/" hreflang="es" lang="es" dir="ltr">Español</a></li><li><a href="../../pt/windows/" hreflang="pt-BR" lang="pt-BR" dir="ltr">Português</a></li><li><a href="../../fr/windows/" hreflang="fr" lang="fr" dir="ltr">Français</a></li><li><a href="../../de/windows/" hreflang="de" lang="de" dir="ltr">Deutsch</a></li><li><a href="../../ja/windows/" hreflang="ja" lang="ja" dir="ltr">日本語</a></li><li><a href="../../zh/windows/" hreflang="zh-Hans" lang="zh-Hans" dir="ltr">简体中文</a></li><li><a href="./" hreflang="ko" lang="ko" dir="ltr" aria-current="true">한국어</a></li><li><a href="../../id/windows/" hreflang="id" lang="id" dir="ltr">Bahasa Indonesia</a></li><li><a href="../../hi/windows/" hreflang="hi" lang="hi" dir="ltr">हिन्दी</a></li><li><a href="../../bn/windows/" hreflang="bn" lang="bn" dir="ltr">বাংলা</a></li><li><a href="../../ar/windows/" hreflang="ar" lang="ar" dir="rtl">العربية</a></li></ul>
+    </details>
+        <details class="menu pages">
+      <summary>메뉴</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">설치</a></li>
+        <li><a href="../guides/">가이드</a></li>
+        <li><a href="../security/">보안</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+
+<div class="wrap translated">
+  <p class="note">Aubergine 앱 자체는 영어로 되어 있습니다. 버튼, 메뉴, 그림은 모두 영어판 그대로입니다.</p>
+  <p class="note">이 페이지는 영어 원문을 기계 번역한 것입니다. <a href="https://github.com/thirstyeggplant/aubergine/issues">수정 제안 보내기</a>.</p>
+</div>
+<main id="main" tabindex="-1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://thirstyeggplant.com/ko/windows/#article",
+      "headline": "WSL로 Windows에 Aubergine 설치하기",
+      "description": "Aubergine은 Windows 자체에서는 실행되지 않지만, WSL 2 안에서 실행하고 Windows 브라우저에서 사용할 수 있습니다. 단계, 시도한 것과 시도하지 않은 것, 문제 해결.",
+      "url": "https://thirstyeggplant.com/ko/windows/",
+      "mainEntityOfPage": "https://thirstyeggplant.com/ko/windows/",
+      "datePublished": "2026-11-25",
+      "dateModified": "2026-11-25",
+      "inLanguage": "ko",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "WSL로 Windows", "item": "https://thirstyeggplant.com/ko/windows/" }
+      ]
+    },
+    {
+      "@type": "HowTo",
+      "@id": "https://thirstyeggplant.com/ko/windows/#howto",
+      "name": "WSL로 Windows에 Aubergine 설치하기",
+      "description": "Aubergine은 Windows 자체에서는 실행되지 않지만, WSL 2 안에서 실행하고 Windows 브라우저에서 사용할 수 있습니다. 단계, 시도한 것과 시도하지 않은 것, 문제 해결.",
+      "step": [
+        { "@type": "HowToStep", "position": 1, "name": "WSL 설치", "text": "wsl --install" },
+        { "@type": "HowToStep", "position": 2, "name": "tmux, 빌드 도구, Node.js 22 설치", "text": "sudo apt install -y tmux zsh git build-essential python3" },
+        { "@type": "HowToStep", "position": 3, "name": "Aubergine 설치", "text": "npm install -g @meatgarden/aubergine" },
+        { "@type": "HowToStep", "position": 4, "name": "시작하고 브라우저 로그인", "text": "aubergine start" }
+      ]
+    }
+  ]
+}
+</script>
+<div class="wrap page-head">
+  <nav class="crumbs" aria-label="현재 위치"><ol><li><a href="../">Aubergine</a></li><li>WSL로 Windows</li></ol></nav>
+  <h1>WSL로 Windows에 Aubergine 설치하기</h1>
+  <p class="lead">Aubergine은 Windows 자체에서는 실행되지 않습니다. Windows가 제공하는 Linux인 WSL 2 안에서 실행되고, Windows 브라우저에서 사용합니다.</p>
+</div>
+<div class="wrap page-body">
+  <div class="prose">
+    <p class="note"><strong>시도한 것.</strong> Linux 단계는 2026년 11월 25일에 WSL이 아닌 컨테이너 안의 Ubuntu 24.04.5(x86_64)에서, npm의 Aubergine 0.2.2로 실행했습니다. 터미널 라이브러리를 컴파일하고, 시작하고, 브라우저를 로그인시키고, 터미널과 데모를 실행했습니다. Node.js 22가 이미 설치되어 있어서 nvm으로 Node.js를 설치하는 단계는 거기서 실행하지 않았습니다. 이 페이지의 어떤 것도 아직 Windows에서 실행하지 않았습니다. 시도해 보셨다면 <a href="https://github.com/thirstyeggplant/aubergine/issues">어땠는지 알려 주세요</a>.</p>
+
+    <h2>필요한 것</h2>
+    <p>Windows 11, 또는 Windows 10 버전 2004(빌드 19041) 이상. 여기서는 명령 하나로 WSL 2를 설치할 수 있습니다. 자세한 내용은 Microsoft의 <a href="https://learn.microsoft.com/windows/wsl/install">WSL 설치 페이지</a>에 있습니다.</p>
+
+    <h2>설치하고 시작하기</h2>
+    <ol>
+      <li><p><strong>WSL을 설치합니다.</strong> PowerShell을 관리자 권한으로 열고 이것을 실행한 뒤, 끝나면 Windows를 다시 시작합니다. Ubuntu가 포함된 WSL 2가 설치됩니다.</p>
+        <p class="cmd multi"><code>wsl --install</code><button type="button" class="copy" data-copy data-copied="복사됨" aria-live="polite" hidden>복사</button></p>
+        <p>다시 시작한 뒤 시작 메뉴에서 <strong>Ubuntu</strong>를 열고 사용자 이름과 비밀번호를 정합니다. 아래 명령은 모두 그곳, Ubuntu 안에서 입력합니다.</p></li>
+      <li><p><strong>Aubergine에 필요한 것을 설치합니다</strong>: tmux, zsh, Git, 그리고 터미널 라이브러리를 컴파일하는 도구입니다. 이 라이브러리는 Linux용으로 미리 만들어진 것이 없습니다.</p>
+        <div class="cmds">
+          <p class="cmd"><code>sudo apt update</code><button type="button" class="copy" data-copy data-copied="복사됨" aria-live="polite" hidden>복사</button></p>
+          <p class="cmd"><code>sudo apt install -y tmux zsh git build-essential python3</code><button type="button" class="copy" data-copy data-copied="복사됨" aria-live="polite" hidden>복사</button></p>
+        </div>
+        <p><strong>Node.js 22를 설치합니다.</strong> Ubuntu 자체 패키지는 버전 18로, 너무 오래되었습니다. 잘 알려진 방법 하나는 <a href="https://github.com/nvm-sh/nvm">nvm</a>입니다. nvm을 설치하고, 새 Ubuntu 창을 연 다음 Node.js 22를 설치합니다.</p>
+        <div class="cmds">
+          <p class="cmd"><code>curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash</code><button type="button" class="copy" data-copy data-copied="복사됨" aria-live="polite" hidden>복사</button></p>
+          <p class="cmd"><code>nvm install 22</code><button type="button" class="copy" data-copy data-copied="복사됨" aria-live="polite" hidden>복사</button></p>
+        </div>
+        <p>이제 <code>node -v</code>가 v22 이상을 보여 줘야 합니다.</p></li>
+      <li><p>npm에서 <strong>Aubergine을 설치합니다</strong>. 설치하면서 터미널 라이브러리를 컴파일합니다. 시도했을 때 설치 전체에 13초가 걸렸습니다.</p>
+        <p class="cmd"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="복사됨" aria-live="polite" hidden>복사</button></p></li>
+      <li><p><strong>시작하고</strong>, 그 창은 열어 둡니다.</p>
+        <p class="cmd"><code>aubergine start</code><button type="button" class="copy" data-copy data-copied="복사됨" aria-live="polite" hidden>복사</button></p>
+        <p><strong>브라우저를 로그인시킵니다.</strong> 두 번째 Ubuntu 창에서 로그인 주소를 출력한 뒤 Windows 브라우저에서 엽니다. 그 브라우저가 로그인되므로 비밀번호처럼 다루세요.</p>
+        <p class="cmd"><code>aubergine open --print</code><button type="button" class="copy" data-copy data-copied="복사됨" aria-live="polite" hidden>복사</button></p>
+        <p>그다음부터는 그 브라우저에서 <code>http://127.0.0.1:4600</code>만으로 열립니다. 빈 캔버스에서는 <em>Show me around</em>로 둘러보기가 시작됩니다.</p></li>
+    </ol>
+
+    <h2>알아 두면 좋은 것</h2>
+    <ul>
+      <li><strong>프로젝트는 Ubuntu 안에 두세요</strong>. Ubuntu의 홈 폴더에 두고 <code>/mnt/c</code> 아래에는 두지 마세요. 그곳의 Windows 파일은 더 느린 다리를 거쳐 접근합니다.</li>
+      <li><strong>에이전트는 Ubuntu 안에 설치하세요</strong>. Claude Code든 Codex든 다른 것이든, 다른 Linux에서와 같습니다. Windows에 설치한 에이전트는 Aubergine의 터미널에 없습니다.</li>
+      <li><strong>터미널은 WSL이 실행되는 동안 살아 있습니다.</strong> 브라우저를 닫아도 아무것도 끝나지 않고, <code>aubergine start</code> 창에서 Ctrl+C를 누르면 서버만 멈춥니다. Windows가 다시 시작되거나 <code>wsl --shutdown</code>을 실행해 WSL이 멈추면 터미널이 끝나고, 다음 <code>aubergine start</code>가 마지막 폴더에서 새 셸을 엽니다. Mac을 다시 시작한 뒤와 같습니다.</li>
+      <li><strong>bash와 zsh.</strong> Ubuntu의 셸은 bash이고, 터미널은 그 안에서 잘 작동합니다. 터미널의 명령 상태(실행 중, 실패한 명령의 종료 코드)는 zsh에서만 나옵니다. 시도했을 때 zsh 터미널은 실패한 명령 뒤에 <code>exit 3</code>을 보여 줬습니다. 이를 쓰려면 Ubuntu에서 zsh를 셸로 정하세요.</li>
+      <li><strong>없는 것</strong>: 로그인 시 시작은 macOS에서만 작동하고(<code>aubergine service install</code>이 그렇게 알려 줍니다), <em>Open on desktop</em>에는 Windows 터미널 앱을 위한 설정이 없습니다. 시도했을 때 <code>aubergine open</code>은 열 브라우저를 찾지 못했습니다. <code>aubergine open --print</code>는 언제나 작동합니다.</li>
+      <li>Windows의 <strong>단축키</strong>는 브라우저 문서를 보고 고른 것이며 측정하지 않았습니다. <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/keys.md">docs/keys.md</a>를 보세요. 팔레트는 언제나 작동합니다.</li>
+    </ul>
+
+    <h2>문제가 생기면</h2>
+    <p>먼저 Ubuntu에서 <code>aubergine doctor</code>를 실행하세요. Node.js, tmux, Git과 서버를 확인합니다.</p>
+    <div class="table">
+      <table>
+        <thead><tr><th>보이는 것</th><th>해야 할 일</th></tr></thead>
+        <tbody>
+          <tr><td>Aubergine 설치가 <code>node-pty</code>를 컴파일하다 실패함</td><td>빌드 도구가 없습니다. 2단계의 <code>apt</code> 줄을 실행한 뒤 Aubergine을 다시 설치하세요.</td></tr>
+          <tr><td>tmux가 없거나 너무 오래되었다는 페이지</td><td>Ubuntu 24.04의 tmux는 3.4로 충분히 새롭습니다. <code>sudo apt install -y tmux</code>를 실행하고 서버를 다시 시작하세요.</td></tr>
+          <tr><td><code>node -v</code>가 v22보다 오래된 버전을 보여 줌</td><td>2단계처럼 Node.js 22를 설치하고, 새 Ubuntu 창을 연 뒤 Aubergine을 다시 설치하세요.</td></tr>
+          <tr><td>Windows 브라우저에서 주소가 열리지 않음</td><td>Ubuntu에서 <code>aubergine start</code>가 아직 실행 중인지 확인하세요. 그다음 Microsoft의 <a href="https://learn.microsoft.com/windows/wsl/networking">WSL 네트워킹 페이지</a>를 보세요. 이것은 Aubergine으로 시도해 보지 않았습니다.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>다음</h2>
+    <p>중지, 업데이트, 제거는 <a href="../install/">설치 페이지</a>와 같고, 나머지는 모두 <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>에 있습니다.</p>
+  </div>
+</div>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <nav aria-label="전체 페이지">
+      <ul class="foot-links">
+        <li><a href="../">홈</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex와 ChatGPT</a></li>
+        <li><a href="../install/">설치</a></li>
+        <li><a href="../guides/">가이드</a></li>
+        <li><a href="../run-multiple-coding-agents/">여러 에이전트 실행하기</a></li>
+        <li><a href="../working-copies/">작업 사본</a></li>
+        <li><a href="../queue-and-schedules/">대기열과 일정</a></li>
+        <li><a href="../security/">보안</a></li>
+        <li><a href="../roadmap/">로드맵</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine은 <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT 라이선스</a>로 공개된 무료 오픈 소스이며, 여러분의 컴퓨터에서 실행됩니다.</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+</script>
+</body>
+</html>

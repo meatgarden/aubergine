@@ -137,7 +137,7 @@
         { "@type": "Question", "name": "ماذا يغيّر مثبِّت Aubergine؟", "acceptedAnswer": { "@type": "Answer", "text": "شيئين: مجلد التثبيت (~/.aubergine، أو AUBERGINE_HOME) ورابطًا واحدًا اسمه aubergine على PATH لديك. لا يستخدم sudo أبدًا، ولا يعدّل ملفات بدء الصدفة لديك أبدًا، ولا يثبّت Node.js أو pnpm أو tmux أبدًا." } },
         { "@type": "Question", "name": "كيف أحدّث Aubergine؟", "acceptedAnswer": { "@type": "Answer", "text": "إن ثبّتّه بـ npm: شغّل npm install -g @meatgarden/aubergine@latest. وإن ثبّتّه بالمثبِّت: شغّل aubergine update، أو المثبِّت من جديد. ثم أعد تشغيل الخادم." } },
         { "@type": "Question", "name": "كيف ألغي تثبيت Aubergine؟", "acceptedAnswer": { "@type": "Answer", "text": "شغّل aubergine uninstall. يزيل الرابط، وبعد أن يسألك، النسخة التي صنعها المثبِّت. لا يزيل بياناتك أبدًا ولا يُنهي طرفياتك." } },
-        { "@type": "Question", "name": "هل يعمل Aubergine على Linux أو Windows؟", "acceptedAnswer": { "@type": "Answer", "text": "يُفترض أن يعمل على Linux لكنه لم يُختبر بعد. أما Windows فغير مدعوم." } }
+        { "@type": "Question", "name": "هل يعمل Aubergine على Linux أو Windows؟", "acceptedAnswer": { "@type": "Answer", "text": "على Linux شُغّل داخل حاويات فقط (Ubuntu 24.04 وDebian)، ولم يُشغَّل بعد على سطح مكتب Linux. Windows نفسه غير مدعوم؛ يمكن أن يعمل Aubergine داخل WSL 2، وهو نظام Linux الذي يوفّره Windows، ولم يُجرَّب ذلك بعد." } }
       ]
     }
   ]
@@ -152,7 +152,7 @@
   <div class="prose">
     <h2>المتطلبات</h2>
     <ul>
-      <li>macOS. يُفترض أن يعمل Linux بالطريقة نفسها لكنه لم يُختبر بعد.</li>
+      <li>macOS. على Linux شُغّل داخل حاويات فقط: حزمة npm على Ubuntu 24.04 وصورة الحاوية على Debian. Windows نفسه غير مدعوم؛ يمكن أن يعمل Aubergine داخل WSL 2، ولم يُجرَّب ذلك بعد: راجع <a href="../windows/">التثبيت على Windows باستخدام WSL</a>.</li>
       <li><a href="https://github.com/tmux/tmux">tmux</a> 3.2 أو أحدث، ومعه Node.js 22 أو أحدث. ويحتاج المثبِّت أيضًا إلى pnpm.</li>
     </ul>
     <p>مع <a href="https://brew.sh">Homebrew</a>، سطر واحد يثبّت الاثنين (أضف <code>pnpm</code> من أجل المثبِّت):</p>

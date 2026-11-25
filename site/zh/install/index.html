@@ -137,7 +137,7 @@
         { "@type": "Question", "name": "Aubergine 安装脚本会改动什么？", "acceptedAnswer": { "@type": "Answer", "text": "两样：安装文件夹（~/.aubergine，或 AUBERGINE_HOME），以及 PATH 中一个名为 aubergine 的链接。它从不使用 sudo，从不编辑你的 shell 启动文件，也从不安装 Node.js、pnpm 或 tmux。" } },
         { "@type": "Question", "name": "如何更新 Aubergine？", "acceptedAnswer": { "@type": "Answer", "text": "用 npm 安装的：运行 npm install -g @meatgarden/aubergine@latest。用安装脚本安装的：运行 aubergine update，或再次运行安装脚本。然后重启服务器。" } },
         { "@type": "Question", "name": "如何卸载 Aubergine？", "acceptedAnswer": { "@type": "Answer", "text": "运行 aubergine uninstall。它会移除链接，并在询问后移除安装脚本创建的副本。它从不删除你的数据，也从不结束你的终端。" } },
-        { "@type": "Question", "name": "Aubergine 能在 Linux 或 Windows 上运行吗？", "acceptedAnswer": { "@type": "Answer", "text": "Linux 应该可以，但还没有测试过。不支持 Windows。" } }
+        { "@type": "Question", "name": "Aubergine 能在 Linux 或 Windows 上运行吗？", "acceptedAnswer": { "@type": "Answer", "text": "在 Linux 上只在容器里运行过（Ubuntu 24.04 和 Debian），还没有在 Linux 桌面上运行过。不支持 Windows 本身；Aubergine 可以在 WSL 2（Windows 提供的 Linux）里运行，但这还没有试过。" } }
       ]
     }
   ]
@@ -152,7 +152,7 @@
   <div class="prose">
     <h2>系统要求</h2>
     <ul>
-      <li>macOS。Linux 应该也能以同样方式运行，但还没有测试过。</li>
+      <li>macOS。在 Linux 上只在容器里运行过：在 Ubuntu 24.04 上运行了 npm 包，在 Debian 上运行了容器镜像。不支持 Windows 本身；Aubergine 可以在 WSL 2 里运行，但这还没有试过：见<a href="../windows/">在 Windows 上用 WSL 安装</a>。</li>
       <li><a href="https://github.com/tmux/tmux">tmux</a> 3.2 或更高版本，以及 Node.js 22 或更高版本。安装脚本还需要 pnpm。</li>
     </ul>
     <p>用 <a href="https://brew.sh">Homebrew</a>，一行就能装好两者（使用安装脚本的话再加上 <code>pnpm</code>）：</p>

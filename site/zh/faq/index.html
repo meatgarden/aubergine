@@ -106,7 +106,7 @@
       "mainEntity": [
         { "@type": "Question", "name": "Aubergine 是什么？", "acceptedAnswer": { "@type": "Answer", "text": "一个在本地运行、基于浏览器的终端会话画布。每个终端都是一个可以排列和使用的节点，所以你可以同时运行多个编程智能体，并看清哪一个在等你。" } },
         { "@type": "Question", "name": "Aubergine 免费开源吗？", "acceptedAnswer": { "@type": "Answer", "text": "是的。它是免费的，源码在 GitHub 上。" } },
-        { "@type": "Question", "name": "运行 Aubergine 需要什么？", "acceptedAnswer": { "@type": "Answer", "text": "macOS，以及 tmux 3.2 或更高版本和 Node.js 22 或更高版本；安装脚本还需要 pnpm。Linux 应该也能用，但还没有测试过。不支持 Windows。" } },
+        { "@type": "Question", "name": "运行 Aubergine 需要什么？", "acceptedAnswer": { "@type": "Answer", "text": "装有 tmux 3.2 或更新版本以及 Node.js 22 或更新版本的 macOS；安装脚本还需要 pnpm。在 Linux 上只在容器里运行过。在 Windows 上只能在 WSL 2 里运行，而这还没有试过：见Windows 指南。" } },
         { "@type": "Question", "name": "它适用于任何编程智能体吗？", "acceptedAnswer": { "@type": "Answer", "text": "Aubergine 运行的是普通终端，所以任何命令行智能体都能在其中运行。Aubergine 为智能体自动做的事，比如看到它在等待，是为 Claude Code 构建的；其他任何智能体，包括 Codex，都可以通过 aubergine 命令和本地 API 报告自己的状态，还可以使用一个只列出其令牌所允许内容的 MCP 服务器。" } },
         { "@type": "Question", "name": "Aubergine 会把我的终端或代码发送到别处吗？", "acceptedAnswer": { "@type": "Answer", "text": "不会。一切都在你自己的电脑上运行。服务器只监听 127.0.0.1。" } },
         { "@type": "Question", "name": "Aubergine 会调用 AI 模型吗？", "acceptedAnswer": { "@type": "Answer", "text": "不会。调用模型的是你的智能体。Aubergine 只运行它们的终端并跟踪它们，不持有任何模型的密钥。" } },
@@ -134,7 +134,7 @@
   <div class="questions">
     <details><summary>Aubergine 是什么？</summary><p>一个在本地运行、基于浏览器的终端会话画布。每个终端都是一个可以排列和使用的节点，所以你可以同时运行多个编程智能体，并看清哪一个在等你。</p></details>
     <details><summary>Aubergine 免费开源吗？</summary><p>是的。它是免费的，源码在 GitHub 上。</p></details>
-    <details><summary>运行 Aubergine 需要什么？</summary><p>macOS，以及 tmux 3.2 或更高版本和 Node.js 22 或更高版本；安装脚本还需要 pnpm。Linux 应该也能用，但还没有测试过。不支持 Windows。</p></details>
+    <details><summary>运行 Aubergine 需要什么？</summary><p>装有 tmux 3.2 或更新版本以及 Node.js 22 或更新版本的 macOS；安装脚本还需要 pnpm。在 Linux 上只在容器里运行过。在 Windows 上只能在 WSL 2 里运行，而这还没有试过：见<a href="../windows/">Windows 指南</a>。</p></details>
     <details><summary>它适用于任何编程智能体吗？</summary><p>Aubergine 运行的是普通终端，所以任何命令行智能体都能在其中运行。Aubergine 为智能体自动做的事，比如看到它在等待，是为 <a href="../claude/">Claude Code</a> 构建的；其他任何智能体，包括 <a href="../chatgpt/">Codex</a>，都可以通过 <code>aubergine</code> 命令和本地 API 报告自己的状态，还可以使用一个只列出其令牌所允许内容的 MCP 服务器。</p></details>
     <details><summary>Aubergine 会把我的终端或代码发送到别处吗？</summary><p>不会。一切都在你自己的电脑上运行。服务器只监听 127.0.0.1。</p></details>
     <details><summary>Aubergine 会调用 AI 模型吗？</summary><p>不会。调用模型的是你的智能体。Aubergine 只运行它们的终端并跟踪它们，不持有任何模型的密钥。</p></details>

@@ -137,7 +137,7 @@
         { "@type": "Question", "name": "Apa yang diubah installer Aubergine?", "acceptedAnswer": { "@type": "Answer", "text": "Dua hal: folder instalasi (~/.aubergine, atau AUBERGINE_HOME) dan satu link bernama aubergine di PATH Anda. Ia tidak pernah memakai sudo, tidak pernah mengedit file startup shell Anda, dan tidak pernah menginstal Node.js, pnpm, atau tmux." } },
         { "@type": "Question", "name": "Bagaimana cara memperbarui Aubergine?", "acceptedAnswer": { "@type": "Answer", "text": "Jika diinstal dengan npm: jalankan npm install -g @meatgarden/aubergine@latest. Jika diinstal dengan installer: jalankan aubergine update, atau installer-nya lagi. Lalu mulai ulang server." } },
         { "@type": "Question", "name": "Bagaimana cara menghapus Aubergine?", "acceptedAnswer": { "@type": "Answer", "text": "Jalankan aubergine uninstall. Ia menghapus link dan, setelah bertanya, salinan yang dibuat installer. Ia tidak pernah menghapus data Anda atau mengakhiri terminal Anda." } },
-        { "@type": "Question", "name": "Apakah Aubergine berjalan di Linux atau Windows?", "acceptedAnswer": { "@type": "Answer", "text": "Linux seharusnya bisa, tetapi belum diuji. Windows tidak didukung." } }
+        { "@type": "Question", "name": "Apakah Aubergine berjalan di Linux atau Windows?", "acceptedAnswer": { "@type": "Answer", "text": "Di Linux baru dijalankan di dalam kontainer (Ubuntu 24.04 dan Debian), belum di desktop Linux. Windows sendiri tidak didukung; Aubergine bisa berjalan di dalam WSL 2, Linux yang disediakan Windows, tetapi itu belum dicoba." } }
       ]
     }
   ]
@@ -152,7 +152,7 @@
   <div class="prose">
     <h2>Persyaratan</h2>
     <ul>
-      <li>macOS. Linux seharusnya bekerja dengan cara yang sama, tetapi belum diuji.</li>
+      <li>macOS. Di Linux baru dijalankan di dalam kontainer: paket npm di Ubuntu 24.04 dan image kontainer di Debian. Windows sendiri tidak didukung; Aubergine bisa berjalan di dalam WSL 2, tetapi itu belum dicoba: lihat <a href="../windows/">Instal di Windows dengan WSL</a>.</li>
       <li><a href="https://github.com/tmux/tmux">tmux</a> 3.2 atau lebih baru dan Node.js 22 atau lebih baru. Installer juga memerlukan pnpm.</li>
     </ul>
     <p>Dengan <a href="https://brew.sh">Homebrew</a>, satu baris memasang keduanya (tambahkan <code>pnpm</code> untuk installer):</p>

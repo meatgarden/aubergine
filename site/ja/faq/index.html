@@ -106,7 +106,7 @@
       "mainEntity": [
         { "@type": "Question", "name": "Aubergine とは何ですか？", "acceptedAnswer": { "@type": "Answer", "text": "ローカルで動く、ブラウザーベースのターミナルセッションのキャンバスです。各ターミナルは配置して使えるノードなので、複数のコーディングエージェントを同時に動かし、どれがあなたを待っているかを確認できます。" } },
         { "@type": "Question", "name": "Aubergine は無料でオープンソースですか？", "acceptedAnswer": { "@type": "Answer", "text": "はい。無料で、ソースは GitHub にあります。" } },
-        { "@type": "Question", "name": "Aubergine を動かすには何が必要ですか？", "acceptedAnswer": { "@type": "Answer", "text": "tmux 3.2 以降と Node.js 22 以降の入った macOS です。インストーラーには pnpm も必要です。Linux でも動くはずですが、まだテストしていません。Windows はサポートしていません。" } },
+        { "@type": "Question", "name": "Aubergine を動かすには何が必要ですか？", "acceptedAnswer": { "@type": "Answer", "text": "tmux 3.2 以降と Node.js 22 以降を入れた macOS。インストーラーには pnpm も必要です。Linux ではコンテナの中でだけ動かしました。Windows では WSL 2 の中でだけ動き、それもまだ試していません。Windows 向けのガイドを見てください。" } },
         { "@type": "Question", "name": "どのコーディングエージェントでも使えますか？", "acceptedAnswer": { "@type": "Answer", "text": "Aubergine は普通のターミナルを動かすので、どのコマンドラインエージェントも動かせます。待っていることの把握など、Aubergine がエージェントのために自ら行うことは Claude Code 向けに作られています。Codex を含むほかのエージェントは、aubergine コマンドとローカル API で状態を報告でき、トークンが許すものだけを一覧する MCP サーバーも使えます。" } },
         { "@type": "Question", "name": "Aubergine はターミナルやコードをどこかに送りますか？", "acceptedAnswer": { "@type": "Answer", "text": "いいえ。すべてあなた自身のコンピューターで動きます。サーバーは 127.0.0.1 でのみ待ち受けます。" } },
         { "@type": "Question", "name": "Aubergine は AI モデルを呼び出しますか？", "acceptedAnswer": { "@type": "Answer", "text": "いいえ。呼び出すのはあなたのエージェントです。Aubergine はそのターミナルを動かして状況を追うだけで、どのモデルのキーも持ちません。" } },
@@ -134,7 +134,7 @@
   <div class="questions">
     <details><summary>Aubergine とは何ですか？</summary><p>ローカルで動く、ブラウザーベースのターミナルセッションのキャンバスです。各ターミナルは配置して使えるノードなので、複数のコーディングエージェントを同時に動かし、どれがあなたを待っているかを確認できます。</p></details>
     <details><summary>Aubergine は無料でオープンソースですか？</summary><p>はい。無料で、ソースは GitHub にあります。</p></details>
-    <details><summary>Aubergine を動かすには何が必要ですか？</summary><p>tmux 3.2 以降と Node.js 22 以降の入った macOS です。インストーラーには pnpm も必要です。Linux でも動くはずですが、まだテストしていません。Windows はサポートしていません。</p></details>
+    <details><summary>Aubergine を動かすには何が必要ですか？</summary><p>tmux 3.2 以降と Node.js 22 以降を入れた macOS。インストーラーには pnpm も必要です。Linux ではコンテナの中でだけ動かしました。Windows では WSL 2 の中でだけ動き、それもまだ試していません。<a href="../windows/">Windows 向けのガイド</a>を見てください。</p></details>
     <details><summary>どのコーディングエージェントでも使えますか？</summary><p>Aubergine は普通のターミナルを動かすので、どのコマンドラインエージェントも動かせます。待っていることの把握など、Aubergine がエージェントのために自ら行うことは <a href="../claude/">Claude Code</a> 向けに作られています。<a href="../chatgpt/">Codex</a> を含むほかのエージェントは、<code>aubergine</code> コマンドとローカル API で状態を報告でき、トークンが許すものだけを一覧する MCP サーバーも使えます。</p></details>
     <details><summary>Aubergine はターミナルやコードをどこかに送りますか？</summary><p>いいえ。すべてあなた自身のコンピューターで動きます。サーバーは 127.0.0.1 でのみ待ち受けます。</p></details>
     <details><summary>Aubergine は AI モデルを呼び出しますか？</summary><p>いいえ。呼び出すのはあなたのエージェントです。Aubergine はそのターミナルを動かして状況を追うだけで、どのモデルのキーも持ちません。</p></details>

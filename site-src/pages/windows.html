@@ -1,0 +1,114 @@
+<!--page {"order": 3.5, "updated": "2026-11-25", "llms": {"name": "Install on Windows with WSL", "about": "Aubergine inside WSL 2, used from a Windows browser; the Linux steps were run in a container, nothing on Windows yet"}}-->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "{{=url}}#article",
+      "headline": {{json:windows.title}},
+      "description": {{json:windows.meta.description}},
+      "url": "{{=url}}",
+      "mainEntityOfPage": "{{=url}}",
+      "datePublished": "2026-11-25",
+      "dateModified": "{{=updated}}",
+      "inLanguage": "{{=lang}}",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": {{json:windows.crumb}}, "item": "{{=url}}" }
+      ]
+    },
+    {
+      "@type": "HowTo",
+      "@id": "{{=url}}#howto",
+      "name": {{json:windows.title}},
+      "description": {{json:windows.meta.description}},
+      "step": [
+        { "@type": "HowToStep", "position": 1, "name": {{json:windows.ld.s1}}, "text": "wsl --install" },
+        { "@type": "HowToStep", "position": 2, "name": {{json:windows.ld.s2}}, "text": "sudo apt install -y tmux zsh git build-essential python3" },
+        { "@type": "HowToStep", "position": 3, "name": {{json:windows.ld.s3}}, "text": "npm install -g @meatgarden/aubergine" },
+        { "@type": "HowToStep", "position": 4, "name": {{json:windows.ld.s4}}, "text": "aubergine start" }
+      ]
+    }
+  ]
+}
+</script>
+<div class="wrap page-head">
+  <nav class="crumbs" aria-label="{{attr:site.crumbs}}"><ol><li><a href="/">Aubergine</a></li><li>{{windows.crumb}}</li></ol></nav>
+  <h1>{{windows.title}}</h1>
+  <p class="lead">{{windows.lead}}</p>
+</div>
+<div class="wrap page-body">
+  <div class="prose">
+    <p class="note">{{windows.tried}}</p>
+
+    <h2>{{windows.req.title}}</h2>
+    <p>{{windows.req.text}}</p>
+
+    <h2>{{windows.steps.title}}</h2>
+    <ol>
+      <li><p>{{windows.steps.wsl}}</p>
+        <p class="cmd multi"><code>wsl --install</code><button type="button" class="copy" data-copy data-copied="{{attr:site.copied}}" aria-live="polite" hidden>{{site.copy}}</button></p>
+        <p>{{windows.steps.ubuntu}}</p></li>
+      <li><p>{{windows.steps.apt}}</p>
+        <div class="cmds">
+          <p class="cmd"><code>sudo apt update</code><button type="button" class="copy" data-copy data-copied="{{attr:site.copied}}" aria-live="polite" hidden>{{site.copy}}</button></p>
+          <p class="cmd"><code>sudo apt install -y tmux zsh git build-essential python3</code><button type="button" class="copy" data-copy data-copied="{{attr:site.copied}}" aria-live="polite" hidden>{{site.copy}}</button></p>
+        </div>
+        <p>{{windows.steps.node}}</p>
+        <div class="cmds">
+          <p class="cmd"><code>curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash</code><button type="button" class="copy" data-copy data-copied="{{attr:site.copied}}" aria-live="polite" hidden>{{site.copy}}</button></p>
+          <p class="cmd"><code>nvm install 22</code><button type="button" class="copy" data-copy data-copied="{{attr:site.copied}}" aria-live="polite" hidden>{{site.copy}}</button></p>
+        </div>
+        <p>{{windows.steps.nodeCheck}}</p></li>
+      <li><p>{{windows.steps.npm}}</p>
+        <p class="cmd"><code>npm install -g @meatgarden/aubergine</code><button type="button" class="copy" data-copy data-copied="{{attr:site.copied}}" aria-live="polite" hidden>{{site.copy}}</button></p></li>
+      <li><p>{{windows.steps.start}}</p>
+        <p class="cmd"><code>aubergine start</code><button type="button" class="copy" data-copy data-copied="{{attr:site.copied}}" aria-live="polite" hidden>{{site.copy}}</button></p>
+        <p>{{windows.steps.open}}</p>
+        <p class="cmd"><code>aubergine open --print</code><button type="button" class="copy" data-copy data-copied="{{attr:site.copied}}" aria-live="polite" hidden>{{site.copy}}</button></p>
+        <p>{{windows.steps.after}}</p></li>
+    </ol>
+
+    <h2>{{windows.good.title}}</h2>
+    <ul>
+      <li>{{windows.good.files}}</li>
+      <li>{{windows.good.agents}}</li>
+      <li>{{windows.good.running}}</li>
+      <li>{{windows.good.shell}}</li>
+      <li>{{windows.good.missing}}</li>
+      <li>{{windows.good.keys}}</li>
+    </ul>
+
+    <h2>{{install.wrong.title}}</h2>
+    <p>{{windows.wrong.doctor}}</p>
+    <div class="table">
+      <table>
+        <thead><tr><th>{{install.wrong.see}}</th><th>{{install.wrong.do}}</th></tr></thead>
+        <tbody>
+          <tr><td>{{windows.wrong.compile.see}}</td><td>{{windows.wrong.compile.do}}</td></tr>
+          <tr><td>{{install.wrong.tmux.see}}</td><td>{{windows.wrong.tmux.do}}</td></tr>
+          <tr><td>{{windows.wrong.node.see}}</td><td>{{windows.wrong.node.do}}</td></tr>
+          <tr><td>{{windows.wrong.address.see}}</td><td>{{windows.wrong.address.do}}</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>{{install.next.title}}</h2>
+    <p>{{windows.next.text}}</p>
+  </div>
+</div>
