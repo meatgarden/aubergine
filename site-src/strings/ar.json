@@ -1,0 +1,2210 @@
+{
+  "site.skip": {
+    "text": "انتقل إلى محتوى الصفحة",
+    "from": "c1da0f1587b7"
+  },
+  "site.nav.label": {
+    "text": "الصفحات",
+    "from": "9046da16aea9"
+  },
+  "site.nav.claude": {
+    "text": "Claude Code",
+    "from": "246ef8c1130d"
+  },
+  "site.nav.codex": {
+    "text": "Codex",
+    "from": "616efbe96852"
+  },
+  "site.nav.install": {
+    "text": "التثبيت",
+    "from": "569ca49f4aaf"
+  },
+  "site.nav.guides": {
+    "text": "الأدلة",
+    "from": "572cd72feb9a"
+  },
+  "site.nav.security": {
+    "text": "الأمان",
+    "from": "8f6fb4eb7f42"
+  },
+  "site.nav.faq": {
+    "text": "الأسئلة الشائعة",
+    "from": "dbc468a14b60"
+  },
+  "site.menu": {
+    "text": "القائمة",
+    "from": "99af6606ff9d"
+  },
+  "site.languages.label": {
+    "text": "اللغة",
+    "from": "a4fe65264ef7"
+  },
+  "site.crumbs": {
+    "text": "أين أنت",
+    "from": "54cd982fb2dd"
+  },
+  "site.copy": {
+    "text": "نسخ",
+    "from": "e21f935f11d7"
+  },
+  "site.copied": {
+    "text": "تم النسخ",
+    "from": "8d525e5f158b"
+  },
+  "site.og.alt": {
+    "text": "Aubergine: لوحة من الطرفيات، إحداها مشغولة وأخرى بانتظارك",
+    "from": "25b02deb2ff8"
+  },
+  "site.translated.app": {
+    "text": "تطبيق Aubergine نفسه باللغة الإنجليزية: أزراره وقوائمه وصوره كلها بالإنجليزية.",
+    "from": "a81916766b4d"
+  },
+  "site.translated.machine": {
+    "text": "ترجمت آلةٌ هذه الصفحة عن الإنجليزية. <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">أرسل تصحيحًا</a>.",
+    "from": "e0f116b75aa8"
+  },
+  "site.foot.label": {
+    "text": "كل الصفحات",
+    "from": "b879e5a49e14"
+  },
+  "site.foot.home": {
+    "text": "الرئيسية",
+    "from": "3a78695388b3"
+  },
+  "site.foot.claude": {
+    "text": "Claude Code",
+    "from": "246ef8c1130d"
+  },
+  "site.foot.codex": {
+    "text": "Codex و ChatGPT",
+    "from": "38c13bed7dca"
+  },
+  "site.foot.install": {
+    "text": "التثبيت",
+    "from": "569ca49f4aaf"
+  },
+  "site.foot.guides": {
+    "text": "الأدلة",
+    "from": "572cd72feb9a"
+  },
+  "site.foot.several": {
+    "text": "تشغيل عدة وكلاء",
+    "from": "8b0dc326e0f4"
+  },
+  "site.foot.copies": {
+    "text": "نسخ العمل",
+    "from": "9660dc116131"
+  },
+  "site.foot.queue": {
+    "text": "الطابور والجداول الزمنية",
+    "from": "403b3a701d15"
+  },
+  "site.foot.security": {
+    "text": "الأمان",
+    "from": "8f6fb4eb7f42"
+  },
+  "site.foot.roadmap": {
+    "text": "خارطة الطريق",
+    "from": "92375f997ffe"
+  },
+  "site.foot.faq": {
+    "text": "الأسئلة الشائعة",
+    "from": "dbc468a14b60"
+  },
+  "site.foot.license": {
+    "text": "Aubergine مجاني ومفتوح المصدر بموجب <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE\">رخصة MIT</a>، ويعمل على حاسوبك أنت.",
+    "from": "21c2472673d7"
+  },
+  "home.meta.title": {
+    "text": "Aubergine: كل طرفياتك على لوحة واحدة، مع الوكلاء الذين تستخدمهم أصلًا",
+    "from": "620bab21c0b6"
+  },
+  "home.meta.description": {
+    "text": "يضع Aubergine كل طرفياتك جنبًا إلى جنب على لوحة واحدة في متصفحك. شغّل منها ما شئت، بالوكلاء والنماذج التي تستخدمها أصلًا، واعرف أيها يحتاج إليك. مجاني ومحلي ومفتوح المصدر.",
+    "from": "71a14cde3a05"
+  },
+  "home.hero.kicker": {
+    "text": "مجاني · مفتوح المصدر · يعمل على حاسوبك",
+    "from": "28742c2f94e7"
+  },
+  "home.hero.title": {
+    "text": "كل طرفياتك، جنبًا إلى جنب. واعرف أي وكيل <em>يحتاج إليك</em>.",
+    "from": "7be0ec221ba9"
+  },
+  "home.hero.lead": {
+    "text": "يضع Aubergine كل طرفياتك جنبًا إلى جنب على لوحة واحدة في متصفحك. شغّل منها ما شئت، بالوكلاء والنماذج التي تستخدمها أصلًا. ليس له نموذج خاص به، ولا يطلب منك مفتاحًا أبدًا.",
+    "from": "c8c8b75e9e20"
+  },
+  "home.hero.after": {
+    "text": "ثم <code>aubergine start --open</code>. لنظام macOS، مع tmux 3.2 أو أحدث، ومعه Node.js 22 أو أحدث.",
+    "from": "bed0cbea0b2d"
+  },
+  "home.hero.install": {
+    "text": "التثبيت",
+    "from": "569ca49f4aaf"
+  },
+  "home.hero.source": {
+    "text": "اقرأ الشيفرة المصدرية",
+    "from": "625b22ba31d0"
+  },
+  "home.canvas.caption": {
+    "text": "رسم توضيحي لا لقطة حقيقية: خمس طرفيات على لوحة، والطرفية التي تنتظرك.",
+    "from": "413e282f8a9d"
+  },
+  "home.see.title": {
+    "text": "كيف يبدو",
+    "from": "9a5d81b4a5f3"
+  },
+  "home.see.intro": {
+    "text": "لقطات حقيقية من العرض التجريبي المرفق مع Aubergine: وكلاء بدلاء، لا وكلاء حقيقيون.",
+    "from": "61f7034f8117"
+  },
+  "home.see.canvas.claim": {
+    "text": "كل طرفية على لوحة واحدة",
+    "from": "51af5aa39147"
+  },
+  "home.see.canvas.text": {
+    "text": "ما شئت منها، جنبًا إلى جنب، وكل واحدة حيّة ما دامت ظاهرة.",
+    "from": "e5c7903b1535"
+  },
+  "home.see.canvas.caption": {
+    "text": "تقول القائمة ما تفعله كل طرفية؛ وبجانبها الطرفيات نفسها.",
+    "from": "40d3143df913"
+  },
+  "home.see.canvas.alt": {
+    "text": "اللوحة الجانبية تعرض خمس طرفيات وحالة كل منها بالكلمات (working وwaiting for you وfinished وparked)، بجانب جزء من اللوحة فيه صدفة حيّة.",
+    "from": "2bb1af139cbc"
+  },
+  "home.see.waits.claim": {
+    "text": "الطرفية التي تنتظر تبرز للعيان",
+    "from": "7d5fd4d29cc6"
+  },
+  "home.see.waits.text": {
+    "text": "حين يحتاج إليك وكيل، تراه من الطرف الآخر من اللوحة، والمفتاح W يأخذك إليه.",
+    "from": "5a95026b002e"
+  },
+  "home.see.waits.caption": {
+    "text": "يأخذ إطارها لون الانتظار، ويقول عنوانها waiting for you (بانتظارك).",
+    "from": "56be14801975"
+  },
+  "home.see.waits.alt": {
+    "text": "طرفية واحدة يطرح وكيلها سؤالًا، وعنوانها يقول waiting for you، وإطارها بلون الانتظار.",
+    "from": "90d945c1648c"
+  },
+  "home.see.focus.claim": {
+    "text": "طرفية واحدة وحدها",
+    "from": "0ddd4013565e"
+  },
+  "home.see.focus.text": {
+    "text": "افتح أي طرفية في علامة تبويب خاصة بها في المتصفح، هي الطرفية نفسها لا نسخة منها.",
+    "from": "ba54fa6c02df"
+  },
+  "home.see.focus.caption": {
+    "text": "تُفتح تفاصيلها وملاحظتها بجانبها حين تطلب ذلك، وتُغلق من جديد بأزرارها.",
+    "from": "95b86a5cd8de"
+  },
+  "home.see.focus.alt": {
+    "text": "طرفية واحدة وحدها في علامة تبويب في المتصفح: اسمها في الرأس، وتفاصيلها مع خطوة سير العمل ومجلدها وحقولها، والطرفية الحيّة بجانبها.",
+    "from": "3b3df705e912"
+  },
+  "home.agents.title": {
+    "text": "أحضِر وكيلك الخاص",
+    "from": "053237049eea"
+  },
+  "home.agents.intro": {
+    "text": "يشغّل Aubergine طرفيات عادية. لا يستدعي أي نموذج، ولا يحتفظ بأي مفتاح، وليس فيه حساب: وكلاء سطر الأوامر الذين تستخدمهم أصلًا، مسجَّلًا دخولك فيهم باسمك، يعملون في طرفياته بأي نموذج اخترته لهم. ما يفعله Aubergine من تلقاء نفسه لوكيلٍ مبنيّ اليوم لـ Claude Code؛ وأي وكيل آخر يستطيع أن يقول الأشياء نفسها عبر أوامر <code>aubergine</code>.",
+    "from": "9e12708b9129"
+  },
+  "home.agents.claude": {
+    "text": "شغّله من قائمة New terminal فيقول من تلقاء نفسه متى يعمل، ومتى ينتظرك، ومتى ينتهي؛ ويستطيع Aubergine استئناف محادثاته وعرض طريقة إعداده.",
+    "from": "493938fd27d5"
+  },
+  "home.agents.codex.name": {
+    "text": "Codex و ChatGPT",
+    "from": "38c13bed7dca"
+  },
+  "home.agents.codex": {
+    "text": "يعمل Codex في طرفية مثل أي برنامج، ويبلّغ عبر أوامر <code>aubergine</code> متى أخبرته تعليماته بذلك. أما ChatGPT في المتصفح فليس برنامج طرفية.",
+    "from": "57da92f4d853"
+  },
+  "home.agents.other.name": {
+    "text": "أي وكيل آخر لسطر الأوامر، أو صدفة عادية",
+    "from": "ee656f2d4bf2"
+  },
+  "home.agents.other": {
+    "text": "في كل طرفية الأمر <code>aubergine</code>، و<code>aubergine guide --snippet</code> يطبع خمسة أسطر تضعها في تعليمات وكيلك.",
+    "from": "bd4153cd9ede"
+  },
+  "home.built.title": {
+    "text": "ما الذي بُني أيضًا",
+    "from": "67ca3d0bd3e6"
+  },
+  "home.built.intro": {
+    "text": "كل هذا يعمل على حاسوبك اليوم.",
+    "from": "e6025b6fd725"
+  },
+  "home.built.canvas.name": {
+    "text": "لوحة من الطرفيات",
+    "from": "efed05a9a763"
+  },
+  "home.built.canvas.text": {
+    "text": "حرّك اللوحة وكبّرها ورتّب طرفيات حقيقية، وانقر مرة واحدة لتكتب، واركن طرفية ثم أعدها لاحقًا، أو افتح واحدة وحدها في علامة تبويب في المتصفح مع تفاصيلها وملاحظتها بجانبها.",
+    "from": "062fb655d54f"
+  },
+  "home.built.waiting.name": {
+    "text": "اعرف من ينتظر",
+    "from": "a8dd066ebe3d"
+  },
+  "home.built.waiting.text": {
+    "text": "مشغولة أو خاملة أو بانتظارك، على كل طرفية، وقائمة «For you» و«next waiting» تأخذانك مباشرة إلى ما يحتاج إلى إنسان.",
+    "from": "d2f2b06c77b4"
+  },
+  "home.built.queue.name": {
+    "text": "الطابور والجداول الزمنية",
+    "from": "403b3a701d15"
+  },
+  "home.built.queue.text": {
+    "text": "اكتب مهمة مرة واحدة ودع وكيلًا متفرغًا يأخذها، أو جدولها في ساعة من اليوم في الأيام التي تختارها.",
+    "from": "ca6521d877a6"
+  },
+  "home.built.copies.name": {
+    "text": "نسخ العمل",
+    "from": "9660dc116131"
+  },
+  "home.built.copies.text": {
+    "text": "أعطِ كل وكيل نسخته الخاصة من المستودع على فرعه الخاص، فلا يعدّل وكيلان الملفات نفسها أبدًا.",
+    "from": "4230039c27f0"
+  },
+  "home.built.projects.name": {
+    "text": "المشاريع",
+    "from": "04e2a9728af7"
+  },
+  "home.built.projects.text": {
+    "text": "خادم واحد وعدة غرف تحكم: لكل مشروع لوحاته وطابوره وجداوله الزمنية وقواعده، ويمكن حفظه ملفًا أو قالبًا.",
+    "from": "e0961f503387"
+  },
+  "home.built.workflows.name": {
+    "text": "سير العمل والموافقات",
+    "from": "cefa6bb93441"
+  },
+  "home.built.workflows.text": {
+    "text": "أعطِ وكيلًا خطوات يتبعها، وتوقّف عند خطوة تنتظر إنسانًا، وتابع كل تشغيل جارٍ على لوحة واحدة.",
+    "from": "7b456d89fd1e"
+  },
+  "home.built.messages.name": {
+    "text": "رسائل بين الطرفيات",
+    "from": "48b5af2c48ad"
+  },
+  "home.built.messages.text": {
+    "text": "دع الوكلاء يتحدثون بعضهم إلى بعض بمرسِلين مسمَّين وحدود وتوقفات، والرسائل مغلقة افتراضيًا في كل لوحة.",
+    "from": "785ee3f85615"
+  },
+  "home.built.api.name": {
+    "text": "واجهة API وخادم MCP",
+    "from": "1a84834881e1"
+  },
+  "home.built.api.text": {
+    "text": "واجهة HTTP API محلية برموز محدودة النطاق، وعميل محدد الأنواع، وخادم MCP لا يعرض إلا الأدوات التي تسمح بها بيانات الاعتماد.",
+    "from": "f9999af55d29"
+  },
+  "home.built.cli.name": {
+    "text": "سطر أوامر",
+    "from": "f8709772ea07"
+  },
+  "home.built.cli.text": {
+    "text": "الأمر <code>aubergine</code> يشغّل الطرفيات، ويضيف المهام إلى الطابور، ويضبط الجداول الزمنية، ويقرأ اللوحة، ويوافق على التشغيلات، من أي طرفية على الجهاز.",
+    "from": "7c132e9877d8"
+  },
+  "home.built.recaps.name": {
+    "text": "الملخصات والسجل",
+    "from": "2ea7a47cfa76"
+  },
+  "home.built.recaps.text": {
+    "text": "اعرف ما تغيّر في غيابك، وابحث في مخرجات الطرفيات، وأعد فتح محادثات سابقة من لوحة الأوامر.",
+    "from": "1a640de790ee"
+  },
+  "home.trust.title": {
+    "text": "طرفياتك تبقى لك",
+    "from": "c6f11f794209"
+  },
+  "home.trust.local.name": {
+    "text": "محلي فقط",
+    "from": "c905013aab29"
+  },
+  "home.trust.local.text": {
+    "text": "يستمع الخادم على 127.0.0.1 ويتحقق من Host وOrigin في كل طلب؛ والاستخدام من جهاز آخر يبقى معطّلًا حتى تعدّه بنفسك.",
+    "from": "cd7a0d902e0f"
+  },
+  "home.trust.outlive.name": {
+    "text": "الطرفيات تبقى بعد التطبيق",
+    "from": "2c75df8acfc1"
+  },
+  "home.trust.outlive.text": {
+    "text": "كل طرفية جلسة tmux: أغلق المتصفح أو أعد تشغيل Aubergine ويبقى عملك قائمًا.",
+    "from": "f913c3351663"
+  },
+  "home.trust.nomodel.name": {
+    "text": "لا نموذج ولا مفتاح",
+    "from": "2f070717231f"
+  },
+  "home.trust.nomodel.text": {
+    "text": "لا يختار Aubergine نموذجًا ولا يستدعيه، ولا يحتفظ بمفتاح لأي نموذج؛ وكلاؤك يجلبون ما يخصهم.",
+    "from": "fe25a0ed6b54"
+  },
+  "home.trust.decide.name": {
+    "text": "القرار لك",
+    "from": "6a93d45962ec"
+  },
+  "home.trust.decide.text": {
+    "text": "الرموز محدودة النطاق، وما يكتبه الوكلاء ينتظر مراجعتك، والموافقات يمنحها إنسان.",
+    "from": "7e1645184727"
+  },
+  "home.trust.more": {
+    "text": "ما المحمي، وما غير المحمي",
+    "from": "f0da10ecfe7d"
+  },
+  "home.install.title": {
+    "text": "جاهز للعمل في خمس دقائق",
+    "from": "ade3bbf9af01"
+  },
+  "home.install.intro": {
+    "text": "تحتاج إلى macOS مع tmux 3.2 أو أحدث، ومعه Node.js 22 أو أحدث. الأمر <code>brew install tmux node</code> يثبّت الاثنين.",
+    "from": "fabf8314c9cb"
+  },
+  "home.install.s1.title": {
+    "text": "التثبيت",
+    "from": "569ca49f4aaf"
+  },
+  "home.install.s1.text": {
+    "text": "أو استخدم <a href=\"/install/\">المثبِّت</a>، الذي يبني من الشيفرة المصدرية باستخدام pnpm.",
+    "from": "506eece86d4a"
+  },
+  "home.install.s2.title": {
+    "text": "شغّله وافتح متصفحك",
+    "from": "09b350acdba9"
+  },
+  "home.install.s2.text": {
+    "text": "يشغّل الخادم ويفتح متصفحك وأنت مسجَّل الدخول.",
+    "from": "cc6fc15c6b0d"
+  },
+  "home.install.s3.title": {
+    "text": "خذ الجولة",
+    "from": "a83c4366d2df"
+  },
+  "home.install.s3.text": {
+    "text": "انقر <strong>Show me around</strong> (عرّفني بالمكان) على اللوحة الفارغة. يصنع لوحة Demo فيها وكلاء بدلاء ويمرّ بك عبر ثماني خطوات قصيرة؛ والأمر <code>aubergine demo --remove</code> يزيلها.",
+    "from": "b20f7c13bc30"
+  },
+  "home.install.note": {
+    "text": "لا يغيّر المثبِّت إلا <code>~/.aubergine</code> ورابطًا واحدًا اسمه <code>aubergine</code>. لا يستخدم sudo أبدًا ولا يعدّل ملفات بدء الصدفة لديك أبدًا.",
+    "from": "1b03983d93c3"
+  },
+  "home.faq.title": {
+    "text": "أسئلة",
+    "from": "9a72221a2747"
+  },
+  "home.faq.what.q": {
+    "text": "ما Aubergine؟",
+    "from": "34bffd794522"
+  },
+  "home.faq.what.a": {
+    "text": "لوحة محلية في المتصفح لجلسات الطرفية. كل طرفية عقدة يمكنك ترتيبها واستخدامها، فتشغّل عدة وكلاء برمجة في آن واحد وتعرف أيهم ينتظرك.",
+    "from": "e2699684c13a"
+  },
+  "home.faq.send.q": {
+    "text": "هل يرسل Aubergine طرفياتي أو شيفرتي إلى أي مكان؟",
+    "from": "8e3369fd3214"
+  },
+  "home.faq.send.a": {
+    "text": "لا. كل شيء يعمل على حاسوبك أنت. يستمع الخادم على 127.0.0.1 فقط ويتحقق من Host وOrigin في كل طلب.",
+    "from": "df08013e9725"
+  },
+  "home.faq.need.q": {
+    "text": "ماذا أحتاج لتشغيل Aubergine؟",
+    "from": "efe26fb96381"
+  },
+  "home.faq.need.a": {
+    "text": "macOS مع tmux 3.2 أو أحدث، ومعه Node.js 22 أو أحدث؛ ويحتاج المثبِّت أيضًا إلى pnpm. يُفترض أن يعمل على Linux لكنه لم يُختبر عليه بعد.",
+    "from": "50e15eb9d5c0"
+  },
+  "home.faq.byhand.q": {
+    "text": "ماذا لو شغّلت Claude Code بنفسي في طرفية؟",
+    "from": "e8281791e5fb"
+  },
+  "home.faq.byhand.a": {
+    "text": "يعمل مثل أي برنامج: تكتب له كالمعتاد. لكن Aubergine لا يعرف بوجود وكيل إلا إذا شغّله هو بنفسه (New terminal، ثم Claude Code)، لأنه يضيف بضعة خطافات صغيرة تبلّغ بما يفعله الوكيل. إذا شُغّل يدويًا، تظهر الطرفية فقط مشغولة بتشغيل <code>claude</code>: لا تُعلَّم بأنها بانتظارك حين يسأل شيئًا، وإذا بدأت سير عمل فيها فلا يُكتب له شيء. اطلب منه بنفسك أن يشغّل <code>aubergine workflow status</code>، الذي يعمل من الداخل أيضًا، أو شغّل الوكيل من قائمة New terminal بدلًا من ذلك.",
+    "from": "23c877f7b9d5"
+  },
+  "home.faq.free.q": {
+    "text": "هل Aubergine مجاني؟",
+    "from": "ff46b785dd7f"
+  },
+  "home.faq.free.a": {
+    "text": "نعم. إنه مجاني ومفتوح المصدر بموجب <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE\">رخصة MIT</a>، وشيفرته المصدرية على GitHub.",
+    "from": "30fae4a08af7"
+  },
+  "home.faq.more": {
+    "text": "كل الأسئلة",
+    "from": "57bf5a60dd59"
+  },
+  "home.planned.title": {
+    "text": "ما المخطط له",
+    "from": "e10eed0040ae"
+  },
+  "home.planned.line": {
+    "text": "العمل الجماعي، والوكلاء في السحابة، وأنماط الموافقة وغيرها مخطط لها ولم تُبنَ. <a href=\"/roadmap/\">اطّلع على خارطة الطريق</a>.",
+    "from": "5c6d1db70932"
+  },
+  "claude.meta.title": {
+    "text": "Claude Code في Aubergine | Aubergine",
+    "from": "964ec2c2f3df"
+  },
+  "claude.meta.description": {
+    "text": "ما يفعله Aubergine من تلقاء نفسه لـ Claude Code: تشغيله من القائمة، ومعرفة متى ينتظر، واستئناف محادثة، والمحادثات السابقة، وطريقة إعداده، والأدوات.",
+    "from": "53c5a33c5a7d"
+  },
+  "claude.title": {
+    "text": "ما يفعله Aubergine لـ Claude Code",
+    "from": "d05c8e0b3f82"
+  },
+  "claude.lead": {
+    "text": "يعمل Claude Code في طرفية Aubergine مثل أي برنامج. وإذا شُغّل من Aubergine، يخبر اللوحة أيضًا بما يفعله، ويستطيع Aubergine أن يطلعه على المطلوب، وأن يستأنفه، وأن يعرض طريقة إعداده. هذا كل شيء، بالترتيب الذي تلقاه به.",
+    "from": "48626cf950ce"
+  },
+  "claude.yours": {
+    "text": "تثبّت Claude Code وتسجّل الدخول إليه بنفسك. لا يستدعي Aubergine أي نموذج ولا يحتفظ بأي مفتاح: إنه يشغّل الأمر <code>claude</code> الموجود لديك أصلًا.",
+    "from": "49c81d042977"
+  },
+  "claude.start.title": {
+    "text": "شغّله من القائمة",
+    "from": "f2e4406e142f"
+  },
+  "claude.start.text": {
+    "text": "<strong>New terminal ▾ → Claude Code</strong>، أو <code>C</code> حين لا تكون لوحة المفاتيح مع أي طرفية، يشغّل <code>claude</code> في طرفية جديدة مع ملف إعدادات يكتبه Aubergine في مجلد بياناته الخاص. إعدادات Claude Code الخاصة بك لا تُمس.",
+    "from": "58f4f8786edb"
+  },
+  "claude.start.command": {
+    "text": "الأمر الذي يشغّله هو <code>agents.claudeCommand</code> في الإعدادات، وهو <code>claude</code> ما لم تغيّره؛ ويضيف Aubergine خياراته الخاصة في آخره.",
+    "from": "cadf315d3f4f"
+  },
+  "claude.start.where": {
+    "text": "أين: القائمة بجانب New terminal، أعلى قائمة الطرفيات.",
+    "from": "8535ecc3618e"
+  },
+  "claude.state.title": {
+    "text": "اعرف متى يعمل وينتظر وينتهي",
+    "from": "762bb49f53ad"
+  },
+  "claude.state.text": {
+    "text": "الخطافات في ملف الإعدادات ذاك تخبر اللوحة بما يفعله الوكيل. حين ترسل موجّهًا، يُضاف الموجّه إلى سجل ملاحظات الطرفية وتُظهر الطرفية <strong>working</strong> (يعمل). وحين يحتاج إليك الوكيل، بسؤال عن إذن أو لأنه خامل ينتظر مدخلات، يتحوّل إطاره إلى لون الانتظار ويقول عنوانه وصفّه <strong>waiting for you</strong> (بانتظارك). وحين يتوقف، يُظهر <strong>finished</strong> (انتهى).",
+    "from": "64ec1f0a81c2"
+  },
+  "claude.state.more": {
+    "text": "المفتاح <code>W</code> ينتقل إلى الطرفية التالية التي تنتظر، و<strong>Notify</strong> يشغّل إشعارات سطح المكتب للطرفيات التي تبدأ الانتظار. قد تحوي الموجّهات أسرارًا: <code>\"agents\": { \"logPrompts\": false }</code> في <code>config.json</code> يُبقيها خارج سجل الملاحظات.",
+    "from": "8d17a75b0b6f"
+  },
+  "claude.state.where": {
+    "text": "أين: عنوان الطرفية، وصفّها في القائمة، والعدد بجانب For you في الأعلى.",
+    "from": "4069b9f958a3"
+  },
+  "claude.byhand.title": {
+    "text": "Claude Code شغّلته بنفسك",
+    "from": "4e9410ab2c6a"
+  },
+  "claude.byhand.text": {
+    "text": "إذا كُتب <code>claude</code> يدويًا في طرفية عادية فإنه يعمل مثل أي برنامج، لكن Aubergine لا يرى إلا صدفة مشغولة بتشغيله: لا waiting for you، ولا يُكتب له شيء حين تبدأ سير عمل فيها. لتغيير ذلك، اطبع الخطافات وأضفها يدويًا إلى إعدادات Claude Code الخاصة بك. لا تفعل شيئًا خارج طرفية Aubergine.",
+    "from": "fa6fba9030be"
+  },
+  "claude.describe.title": {
+    "text": "يسمّي نفسه ويحتفظ بملخص",
+    "from": "d093aa41e5df"
+  },
+  "claude.describe.text": {
+    "text": "الوكيل الذي يشغّله Aubergine يُطلب منه عند بدئه أن يسمّي طرفيته باسم العمل وأن يحتفظ بملخص، باستخدام <code>aubergine describe</code> و<code>aubergine link add</code> و<code>aubergine field set</code>، ويُذكَّر مرة واحدة حين يتوقف بلا اسم من عنده أو بلا ملخص. ما تكتبه أنت يغلب؛ وما يقوله الوكيل عن الشيء نفسه ينتظر بجانبه مع <strong>Use this</strong> (استخدم هذا). ويمكن إيقاف التذكير في <strong>Settings</strong>.",
+    "from": "b3ada1af2f57"
+  },
+  "claude.describe.where": {
+    "text": "أين: تفاصيل الطرفية، مع اسمها وملخصها وحقولها وروابطها.",
+    "from": "14d403dcf75f"
+  },
+  "claude.told.title": {
+    "text": "سير العمل والمهام والملخصات والرسائل تصل إليه",
+    "from": "65f0d98fe0d0"
+  },
+  "claude.told.text": {
+    "text": "يكتب Aubergine أربع جمل ثابتة في الطرفية، وهذه فقط: أن سير عمل قد بدأ، وأن الوكيل طُلب منه كتابة شيء، وأنك طلبت ملخصًا، وأن رسالة تنتظر. كل جملة تسمّي أمرًا واحدًا يشغّله الوكيل. ولا تُكتب جملة إلا حيث يُرى أن لوحة المفاتيح مع وكيل: وكيل شغّله Aubergine، أو وكيل في إعداداته الخطافات الناتجة عن <code>aubergine hooks print</code>.",
+    "from": "a965be64fc8b"
+  },
+  "claude.told.more": {
+    "text": "وبالطريقة نفسها، لا تذهب مهمة من الطابور إلا إلى طرفية فيها وكيل كهذا في الواجهة ومتفرغ، و<strong>Claude Code on a workflow…‎</strong> يشغّل طرفية جديدة يُخبَر وكيلها بالتشغيل في أول موجّه له.",
+    "from": "4db5493b4c50"
+  },
+  "claude.told.where": {
+    "text": "أين: <strong>Run a workflow…‎</strong> في قائمة عنوان الطرفية، و<strong>Runs</strong> في أعلى الصفحة.",
+    "from": "85ec8e15f827"
+  },
+  "claude.resume.title": {
+    "text": "Resume agent (استئناف الوكيل)",
+    "from": "0bb60c450191"
+  },
+  "claude.resume.text": {
+    "text": "يتذكر Aubergine المحادثة التي كانت فيها طرفية الوكيل. حين تعود صدفتها إلى المحث، لأنك خرجت من الوكيل أو أُعيد تشغيل الحاسوب، تعرض الطرفية <strong>Resume agent</strong>، الذي يشغّل الوكيل من جديد في تلك المحادثة. وفي طرفية مرتبطة بتشغيل، يخبر الوكيل بالتشغيل من جديد أيضًا.",
+    "from": "bad9c16cacaa"
+  },
+  "claude.resume.where": {
+    "text": "أين: شريط عنوان الطرفية.",
+    "from": "f9a5a6f578cf"
+  },
+  "claude.history.title": {
+    "text": "المحادثات السابقة",
+    "from": "93b87f3b2adf"
+  },
+  "claude.history.text": {
+    "text": "<strong>Past conversations…‎</strong> يعرض المحادثات السابقة للوكيل في مجلد: اقرأ واحدة، أو افتحها على اللوحة، أو افتح نسخة تترك الأصل كما هو. اكتب <code>@</code> وبعض الكلمات في لوحة الأوامر للبحث فيها؛ والأمر <code>aubergine history</code> يعرضها في سطر الأوامر. لا يُحتفظ بشيء مما يُقرأ، ولا يستطيع أي رمز ولا أي وكيل قراءة المحادثات عبر Aubergine.",
+    "from": "168514a264d1"
+  },
+  "claude.history.form": {
+    "text": "يقرأ الملفات التي يحتفظ بها Claude Code، والتي يقول صانعه إن شكلها خاص به ويتغيّر بين الإصدارات. بعد تحديث الوكيل قد تقلّ الأسماء والنصوص، والسجل الذي لا يستطيع Aubergine قراءته يُقال عنه ذلك، ولا يُعرض فارغًا أبدًا.",
+    "from": "08dc0e9d555c"
+  },
+  "claude.history.where": {
+    "text": "أين: لوحة الأوامر (<code>⌘K</code>)، و«Past conversations in this folder…‎» في تفاصيل الطرفية.",
+    "from": "3477b0fbf75a"
+  },
+  "claude.setup.title": {
+    "text": "طريقة إعداده",
+    "from": "af61266588a1"
+  },
+  "claude.setup.text": {
+    "text": "قائمة بما تقول ملفات إعدادات الوكيل إنه أُعطيه: خوادم MCP، والإضافات، والخطافات، والمهارات، وقواعد الأذونات، وملفات الإعدادات، كلٌّ مع مصدره، وما أضافه Aubergine. أسماء فقط، لا قيمة ولا سرّ أبدًا. تقول كيف أُعدّ الوكيل، لا ما حمّله الوكيل الجاري، وتقول صراحة ما لا يمكنها معرفته، مثل الموصلات التي تأتي مع حسابك.",
+    "from": "c514bb19fdee"
+  },
+  "claude.setup.where": {
+    "text": "أين: <strong>‎⚙ on</strong> على الطرفية، و«What is switched on for this agent…‎» في لوحة الأوامر، وتفاصيل الطرفية.",
+    "from": "a8c53c214fcc"
+  },
+  "claude.tools.title": {
+    "text": "أدوات Aubergine له",
+    "from": "e66ee8e8e0bc"
+  },
+  "claude.tools.text": {
+    "text": "<strong>Claude Code with Aubergine tools…‎</strong> يسأل أولًا عمّا يجوز للوكيل فعله: <strong>None</strong> (لا شيء)؛ أو <strong>Its own work only</strong> (عمله فقط)، ببيانات اعتماد الطرفية نفسها؛ أو <strong>More…‎</strong> (المزيد)، نطاقات تختارها، يُصنع لها رمز لتلك الطرفية وحدها ويُلغى حين تُنهى الطرفية نهائيًا. الأدوات هي <code>aubergine mcp</code>، تُمرَّر إلى الوكيل في سطر تشغيله؛ ولا تُكتب إعداداته الخاصة.",
+    "from": "6f42a9f284d0"
+  },
+  "claude.tools.where": {
+    "text": "أين: القائمة بجانب New terminal.",
+    "from": "33b77d6aeba6"
+  },
+  "claude.move.title": {
+    "text": "انقل Claude Code مفتوحًا لديك أصلًا",
+    "from": "71713eb1febd"
+  },
+  "claude.move.text": {
+    "text": "لا يمكن نقل وكيل يعمل، لكن يمكن نقل محادثته. <strong>Open elsewhere</strong> يعرض علامات تبويب Claude Code لديك، مع <strong>Fork to canvas</strong> و، لوكيل خامل، <strong>Stop and resume here</strong>، الذي يسألك أولًا. ومن طرفية، يفعل <code>aubergine move</code> الشيء نفسه، و<code>aubergine here --claude</code> يشغّل Claude Code على اللوحة مكمّلًا آخر محادثة في ذلك المجلد.",
+    "from": "2710d35e40f6"
+  },
+  "claude.move.where": {
+    "text": "أين: <strong>Open elsewhere</strong> في الشريط فوق اللوحة، أو <code>O</code>.",
+    "from": "957b9c5d2c08"
+  },
+  "claude.copy.title": {
+    "text": "في نسخة عمل خاصة به",
+    "from": "88b0fbc30823"
+  },
+  "claude.copy.text": {
+    "text": "الأمر <code>aubergine here --copy --claude</code> يشغّل Claude Code في نسخته المسحوبة الخاصة من المستودع، على فرعه الخاص، فلا يعدّل وكيلان الملفات نفسها أبدًا. ونافذة طرفية Claude Code مع الأدوات فيها الخيار نفسه.",
+    "from": "d952aaa25439"
+  },
+  "claude.tried.title": {
+    "text": "ما الذي جُرّب",
+    "from": "dc4245eb9cbd"
+  },
+  "claude.tried.text": {
+    "text": "العرض التجريبي المرفق مع Aubergine يستخدم بدلاء، نصوصًا برمجية قصيرة تشغّل الأوامر والخطافات نفسها التي يشغّلها وكيل حقيقي، لا Claude Code حقيقيًا. ومع وكيل حقيقي، لم تُجرَّب بعدُ الموافقة، ونسخة العمل، والمهمة من الطابور، والجدول الزمني.",
+    "from": "d7b31de7e83d"
+  },
+  "claude.others": {
+    "text": "يستطيع وكيل آخر أن يقول معظم هذا عبر أوامر <code>aubergine</code>: انظر <a href=\"/chatgpt/\">Codex و ChatGPT</a>.",
+    "from": "a37bd1ffdb77"
+  },
+  "claude.mark": {
+    "text": "Aubergine غير تابع لـ Anthropic. Claude وClaude Code علامتان تجاريتان لـ Anthropic.",
+    "from": "cdae060f0648"
+  },
+  "chatgpt.meta.title": {
+    "text": "Codex و ChatGPT في Aubergine | Aubergine",
+    "from": "8dcd1dde8945"
+  },
+  "chatgpt.meta.description": {
+    "text": "Codex، وكيل البرمجة لسطر الأوامر من OpenAI، يعمل في طرفية Aubergine مثل أي برنامج. ما يعمل اليوم، وما يستطيع التبليغ عنه عبر أوامر aubergine، وما هو مبني لـ Claude Code وحده.",
+    "from": "6f8c78d52c06"
+  },
+  "chatgpt.crumb": {
+    "text": "Codex و ChatGPT",
+    "from": "38c13bed7dca"
+  },
+  "chatgpt.title": {
+    "text": "Codex و ChatGPT",
+    "from": "38c13bed7dca"
+  },
+  "chatgpt.lead": {
+    "text": "Codex هو وكيل البرمجة لسطر الأوامر من OpenAI. تثبّته وتسجّل الدخول إليه بنفسك؛ وفي Aubergine يعمل في طرفية مثل أي برنامج آخر.",
+    "from": "70f25216735c"
+  },
+  "chatgpt.untried.title": {
+    "text": "لم يُجرَّب بعد",
+    "from": "b0889cc96cfa"
+  },
+  "chatgpt.untried.text": {
+    "text": "لم يشغّل أحد Codex حقيقيًا في Aubergine بعد. ما تقوله هذه الصفحة هو ما يفعله Aubergine لأي برنامج في طرفية ولأوامر <code>aubergine</code>، وهذا مبني ومختبَر؛ أما سلوك Codex نفسه هناك فلم يُشاهَد. إذا جرّبته، <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">أخبرنا كيف جرى الأمر</a>.",
+    "from": "fbfa21211143"
+  },
+  "chatgpt.start.title": {
+    "text": "شغّله",
+    "from": "4238a078a056"
+  },
+  "chatgpt.start.text": {
+    "text": "افتح طرفية بـ <strong>New terminal</strong>، أو <code>N</code>، وشغّل Codex فيها كما تفعل في أي طرفية. لا يستدعي Aubergine أي نموذج ولا يحتفظ بأي مفتاح: ما يحتاجه Codex أعطيته إياه حين سجّلت الدخول إليه.",
+    "from": "382ba4da4e80"
+  },
+  "chatgpt.works.title": {
+    "text": "ما يعمل اليوم",
+    "from": "e34f6b7e46b1"
+  },
+  "chatgpt.works.intro": {
+    "text": "كل ما يفعله Aubergine لأي طرفية:",
+    "from": "12590cf44023"
+  },
+  "chatgpt.works.side.name": {
+    "text": "جنبًا إلى جنب",
+    "from": "a3d7b387c34d"
+  },
+  "chatgpt.works.side.text": {
+    "text": "ما شئت من الطرفيات على لوحة واحدة، واللوحات علامات تبويب.",
+    "from": "dbf89836ed55"
+  },
+  "chatgpt.works.status.name": {
+    "text": "حالة الأوامر",
+    "from": "fe494b43cb4b"
+  },
+  "chatgpt.works.status.text": {
+    "text": "مع zsh، يُظهر عنوان الطرفية أن أمرًا يعمل، وأيّ أمر هو.",
+    "from": "4c2760707e62"
+  },
+  "chatgpt.works.keep.name": {
+    "text": "الألوان والملاحظات والحقول",
+    "from": "6a46e4fad859"
+  },
+  "chatgpt.works.keep.text": {
+    "text": "أعطِ طرفيته لونًا، واحتفظ بملاحظة فيها ملخص وسجل، وبحقول مثل تذكرة أو مسؤول.",
+    "from": "ee6d1af56cf5"
+  },
+  "chatgpt.works.park.name": {
+    "text": "الركن",
+    "from": "4a64d6c849df"
+  },
+  "chatgpt.works.park.text": {
+    "text": "العلامة × تركن الطرفية: تغادر اللوحة وتبقى تعمل، و<strong>Parked</strong> يعيدها.",
+    "from": "ddc50d8a2017"
+  },
+  "chatgpt.works.focus.name": {
+    "text": "طرفية واحدة وحدها",
+    "from": "0ddd4013565e"
+  },
+  "chatgpt.works.focus.text": {
+    "text": "افتح الطرفية في علامة تبويب خاصة بها في المتصفح، مع تفاصيلها وملاحظتها بجانبها.",
+    "from": "55d7e4f4f460"
+  },
+  "chatgpt.works.copy.name": {
+    "text": "نسخة عمل",
+    "from": "2e0960650715"
+  },
+  "chatgpt.works.copy.text": {
+    "text": "<strong>Shell in a folder or a working copy…‎</strong>، أو <code>aubergine new --copy</code>، يشغّل الطرفية في نسختها المسحوبة الخاصة على فرعها الخاص، فلا يعدّل وكيلان الملفات نفسها أبدًا.",
+    "from": "9abe578a4127"
+  },
+  "chatgpt.works.search.name": {
+    "text": "البحث في المخرجات",
+    "from": "0f487fa9a292"
+  },
+  "chatgpt.works.search.text": {
+    "text": "<code>⌘K</code> يبحث فيما طبعته كل طرفية، ويفتح الطرفية مرجوعًا بها إلى موضع التطابق.",
+    "from": "60d93140539a"
+  },
+  "chatgpt.report.title": {
+    "text": "ما يستطيع قوله عبر الأوامر",
+    "from": "0e02d0340875"
+  },
+  "chatgpt.report.intro": {
+    "text": "في كل طرفية Aubergine الأمر <code>aubergine</code> وبيانات اعتماد لتلك الطرفية وحدها. أي برنامج هناك، ومنه Codex، يستطيع استخدامهما:",
+    "from": "60b4ba06f8a5"
+  },
+  "chatgpt.report.attention": {
+    "text": "يعلّم الطرفية بأنها بانتظارك، مع ما تحتاجه؛ و<code>aubergine attention working</code> و<code>aubergine attention done</code> يقولان الباقي.",
+    "from": "ed9452d7523a"
+  },
+  "chatgpt.report.note": {
+    "text": "يضيف سطرًا إلى سجل ملاحظات الطرفية.",
+    "from": "a99a9a2851ea"
+  },
+  "chatgpt.report.describe": {
+    "text": "يسمّي الطرفية باسم العمل ويحتفظ بملخصها؛ و<code>aubergine link add</code> و<code>aubergine field set</code> يضيفان روابط العمل وحقوله. ما كتبته أنت يغلب.",
+    "from": "4a69c7925e1d"
+  },
+  "chatgpt.report.workflow": {
+    "text": "يقرأ الخطوة الحالية من سير العمل؛ و<code>aubergine workflow done</code> يبلّغ بإتمامها ويطبع التالية.",
+    "from": "bfa2482d9f38"
+  },
+  "chatgpt.report.task": {
+    "text": "يقترح مهمة للطابور، و<code>aubergine ask</code> يطلب منك شيئًا لا يستطيعه إلا إنسان. كلاهما ينتظر في قائمتك.",
+    "from": "f6a6658159c8"
+  },
+  "chatgpt.tell.title": {
+    "text": "كيف تخبره",
+    "from": "808fc16a4b54"
+  },
+  "chatgpt.tell.text": {
+    "text": "لا يعرف Codex شيئًا عن Aubergine حتى يُخبَر. هذا يطبع خمسة أسطر تلصقها في التعليمات التي يقرؤها وكيلك في بداية كل محادثة في المشروع؛ ووثائقه هو تقول أين توضع:",
+    "from": "ad7d9c3cdf01"
+  },
+  "chatgpt.tell.after": {
+    "text": "تطلب منه الأسطر أن يشغّل <code>aubergine guide</code> مرة واحدة حين يكون في طرفية Aubergine، والدليل يقول الباقي. يطبع Aubergine الأسطر ولا يكتبها في أي ملف أبدًا.",
+    "from": "24aa468975b7"
+  },
+  "chatgpt.tell.mcp": {
+    "text": "إذا كان وكيلك يستطيع تشغيل خادم MCP، فإن <code>aubergine mcp</code> يقدّم الشيء نفسه أدواتٍ؛ وداخل طرفية Aubergine لا يحتاج إلى عنوان ولا إلى رمز لعمل الطرفية نفسها.",
+    "from": "7e1e9649a26d"
+  },
+  "chatgpt.only.title": {
+    "text": "مبني لـ Claude Code وحده اليوم",
+    "from": "13e4ac762aab"
+  },
+  "chatgpt.only.intro": {
+    "text": "ما يفعله Aubergine من تلقاء نفسه لوكيلٍ مبني لـ Claude Code. أما لـ Codex، فاليوم:",
+    "from": "dcf7194de658"
+  },
+  "chatgpt.only.menu": {
+    "text": "ليس في قائمة New terminal: تشغّله في طرفية بنفسك.",
+    "from": "51fe40c6c0b7"
+  },
+  "chatgpt.only.seen": {
+    "text": "لا يراه Aubergine وكيلًا: لا يُعلَّم بأنه ينتظر أو انتهى من تلقاء نفسه، بل فقط حين يشغّل <code>aubergine attention</code>.",
+    "from": "94d90e71f3eb"
+  },
+  "chatgpt.only.typed": {
+    "text": "لا يُكتب له شيء: سير العمل الذي يبدأ في طرفيته لا يكتب شيئًا ويعرض السطر لتعطيه إياه بنفسك، ولا يُعلَن له عن ملخص أو رسالة.",
+    "from": "1b4e07823075"
+  },
+  "chatgpt.only.queue": {
+    "text": "لا يعطيه الطابور أي مهمة: المهمة لا تذهب إلا إلى طرفية يُرى فيها وكيل متفرغ.",
+    "from": "6a80a3e587a3"
+  },
+  "chatgpt.only.resume": {
+    "text": "لا يوجد Resume agent، ولا قائمة بالمحادثات السابقة، ولا قائمة بطريقة إعداده، ولا نافذة لأدوات Aubergine.",
+    "from": "ce8c093c0018"
+  },
+  "chatgpt.only.move": {
+    "text": "الأمران <code>aubergine move</code> و<code>aubergine here --claude</code> ينقلان Claude Code فقط.",
+    "from": "66352f237ada"
+  },
+  "chatgpt.only.remind": {
+    "text": "لا يُذكَّر بأن يسمّي طرفيته أو يحتفظ بملخص.",
+    "from": "0b61446686d8"
+  },
+  "chatgpt.only.more": {
+    "text": "كل ذلك في صفحة <a href=\"/claude/\">Claude Code</a>.",
+    "from": "0bd32ffbda24"
+  },
+  "chatgpt.browser.title": {
+    "text": "ChatGPT في المتصفح",
+    "from": "586ec4475558"
+  },
+  "chatgpt.browser.text": {
+    "text": "ChatGPT في علامة تبويب في المتصفح صفحة ويب، لا برنامج في طرفية، فلا يعمل على اللوحة.",
+    "from": "580874279183"
+  },
+  "chatgpt.mark": {
+    "text": "Aubergine غير تابع لـ OpenAI. Codex وChatGPT علامتان تجاريتان لـ OpenAI.",
+    "from": "a897a2ac5a2d"
+  },
+  "install.meta.title": {
+    "text": "كيف تثبّت Aubergine على macOS | Aubergine",
+    "from": "a8bd952c734f"
+  },
+  "install.meta.description": {
+    "text": "ثبّت Aubergine بأمر واحد، وشغّله، وخذ الجولة ذات الدقائق الخمس. المتطلبات، وما يغيّره المثبِّت، وحلول للمشكلات الشائعة.",
+    "from": "abcd815ec344"
+  },
+  "install.crumb": {
+    "text": "التثبيت",
+    "from": "569ca49f4aaf"
+  },
+  "install.title": {
+    "text": "كيف تثبّت Aubergine",
+    "from": "71f80d2b2ec8"
+  },
+  "install.lead": {
+    "text": "أمر واحد يثبّته، وأمر واحد يشغّله. نحو خمس دقائق، مع الجولة.",
+    "from": "8924d3085c0c"
+  },
+  "install.req.title": {
+    "text": "المتطلبات",
+    "from": "e0cdd07f6a27"
+  },
+  "install.req.os": {
+    "text": "macOS. يُفترض أن يعمل Linux بالطريقة نفسها لكنه لم يُختبر بعد.",
+    "from": "e896cb710692"
+  },
+  "install.req.tools": {
+    "text": "<a href=\"https://github.com/tmux/tmux\">tmux</a> 3.2 أو أحدث، ومعه Node.js 22 أو أحدث. ويحتاج المثبِّت أيضًا إلى pnpm.",
+    "from": "588e2ab2ee94"
+  },
+  "install.req.brew": {
+    "text": "مع <a href=\"https://brew.sh\">Homebrew</a>، سطر واحد يثبّت الاثنين (أضف <code>pnpm</code> من أجل المثبِّت):",
+    "from": "9c116b9ec828"
+  },
+  "install.steps.title": {
+    "text": "التثبيت والتشغيل",
+    "from": "945ef89608d4"
+  },
+  "install.steps.npm": {
+    "text": "<strong>ثبّت Aubergine</strong> من npm (يحتاج إلى tmux وNode.js فقط):",
+    "from": "eea62c4639cd"
+  },
+  "install.steps.script": {
+    "text": "أو بالمثبِّت، الذي يحتاج أيضًا إلى pnpm ويبني من الشيفرة المصدرية:",
+    "from": "d6b9bd23fe72"
+  },
+  "install.steps.start": {
+    "text": "<strong>شغّله وافتح متصفحك، وأنت مسجَّل الدخول.</strong>",
+    "from": "37654a734fd0"
+  },
+  "install.steps.tour": {
+    "text": "<strong>خذ الجولة.</strong> انقر <em>Show me around</em> في وسط اللوحة الفارغة. يصنع لوحة اسمها «Demo» فيها بضعة وكلاء بدلاء ويمرّ بك عبر ثماني خطوات قصيرة. لا شيء في العرض التجريبي حقيقي، والأمر <code>aubergine demo --remove</code> يزيله.",
+    "from": "e7f179f7c61a"
+  },
+  "install.steps.read": {
+    "text": "تفضّل قراءة النص البرمجي أولًا؟ نزّله، واقرأه، وشغّل <code>sh install.sh --dry-run</code> لترى ما سيفعله دون تغيير أي شيء.",
+    "from": "6a20dd49876a"
+  },
+  "install.changes.title": {
+    "text": "ما يغيّره المثبِّت",
+    "from": "0563a99f51ff"
+  },
+  "install.changes.text": {
+    "text": "شيئان فقط: مجلد التثبيت (<code>~/.aubergine</code>، أو <code>AUBERGINE_HOME</code>) ورابط واحد اسمه <code>aubergine</code> في مجلد على <code>PATH</code> لديك تستطيع الكتابة فيه. يتحقق من كل شيء أولًا ولا يغيّر شيئًا إذا نقص شيء.",
+    "from": "0a825e326d78"
+  },
+  "install.changes.not": {
+    "text": "<strong>لا</strong> يستخدم <code>sudo</code>، ولا يعدّل ملفات بدء الصدفة لديك، ولا يثبّت Node.js أو pnpm أو tmux، ولا يمس مجلد بياناتك.",
+    "from": "2515db06f3ef"
+  },
+  "install.wrong.title": {
+    "text": "إذا حدث خطأ",
+    "from": "1a766f8f96ef"
+  },
+  "install.wrong.doctor": {
+    "text": "شغّل <code>aubergine doctor</code> أولًا. يتحقق من الأسباب المعتادة.",
+    "from": "41b2c2485b07"
+  },
+  "install.wrong.see": {
+    "text": "ما تراه",
+    "from": "fd4e554fab6a"
+  },
+  "install.wrong.do": {
+    "text": "ما تفعله",
+    "from": "f47f1edc44ed"
+  },
+  "install.wrong.signin.see": {
+    "text": "«This browser is not signed in yet» (هذا المتصفح لم يسجّل الدخول بعد)",
+    "from": "9f5b94b25ed4"
+  },
+  "install.wrong.signin.do": {
+    "text": "افتح رابط تسجيل الدخول مرة واحدة في ذلك المتصفح. الأمر <code>aubergine open --print</code> يطبعه من جديد.",
+    "from": "965c7c3ed508"
+  },
+  "install.wrong.tmux.see": {
+    "text": "صفحة تقول إن tmux غير موجود أو قديم جدًا",
+    "from": "ef3468da7805"
+  },
+  "install.wrong.tmux.do": {
+    "text": "ثبّت tmux أو حدّثه (<code>brew install tmux</code>)، ثم أعد تشغيل الخادم.",
+    "from": "9be03214def8"
+  },
+  "install.wrong.port.see": {
+    "text": "الخادم لا يبدأ لأن المنفذ مشغول",
+    "from": "aa6f2b6e17dc"
+  },
+  "install.wrong.port.do": {
+    "text": "استخدم منفذًا آخر: <code>AUBERGINE_PORT=4700 aubergine start</code>.",
+    "from": "25b1179a84ca"
+  },
+  "install.wrong.path.do": {
+    "text": "الرابط ليس على <code>PATH</code> لديك. يطبع المثبِّت السطر الواحد الذي تضيفه إلى ملف بدء الصدفة.",
+    "from": "c15d51fbb74f"
+  },
+  "install.wrong.badges.see": {
+    "text": "طرفية لا تُظهر شارات الحالة",
+    "from": "00220a528dae"
+  },
+  "install.wrong.badges.do": {
+    "text": "تحتاج الحالة إلى zsh، والجلسة التي أُنشئت قبل تحديثٍ تبقى بصدفتها القديمة. اركنها وابدأ واحدة جديدة.",
+    "from": "a82cc898a1f3"
+  },
+  "install.later.title": {
+    "text": "الإيقاف والتحديث وإلغاء التثبيت",
+    "from": "8c6be2046c96"
+  },
+  "install.later.stop": {
+    "text": "<strong>أوقف</strong> الخادم بـ Ctrl+C. تبقى طرفياتك تعمل؛ شغّل الخادم من جديد وأعد تحميل الصفحة لتستعيدها.",
+    "from": "1ef7650944a8"
+  },
+  "install.later.update": {
+    "text": "<strong>حدّث</strong>، إن ثبّتّ بـ npm، بالأمر <code>npm install -g @meatgarden/aubergine@latest</code>؛ وإن استخدمت المثبِّت، بالأمر <code>aubergine update</code>. ثم أعد تشغيل الخادم.",
+    "from": "a07a85ca11ea"
+  },
+  "install.later.uninstall": {
+    "text": "<strong>ألغِ التثبيت</strong> بالأمر <code>aubergine uninstall</code>. يزيل الرابط، وبعد أن يسألك، النسخة التي صنعها المثبِّت. لا يزيل بياناتك أبدًا ولا يُنهي طرفياتك أبدًا.",
+    "from": "6d77ba78aea3"
+  },
+  "install.later.login": {
+    "text": "<strong>شغّله عند تسجيل الدخول</strong> بالأمر <code>aubergine service install</code>، فلا يبقى عليك إلا فتح المتصفح.",
+    "from": "e90077683d1e"
+  },
+  "install.next.title": {
+    "text": "التالي",
+    "from": "1ff57a29d7c9"
+  },
+  "install.next.text": {
+    "text": "اقرأ <a href=\"/run-multiple-coding-agents/\">كيف تشغّل عدة وكلاء برمجة في آن واحد</a>، أو <a href=\"/guides/\">الأدلة</a>. المرجع الكامل في <a href=\"https://github.com/thirstyeggplant/aubergine#readme\">README</a>.",
+    "from": "e0f26d3bf925"
+  },
+  "install.ld.howto": {
+    "text": "كيف تثبّت Aubergine وتشغّله",
+    "from": "7a2473f8500b"
+  },
+  "install.ld.howtoAbout": {
+    "text": "ثبّت Aubergine على macOS بأمر واحد، وشغّله، وخذ الجولة.",
+    "from": "e0aeedb8e5ed"
+  },
+  "install.ld.s1": {
+    "text": "ثبّت المتطلبات",
+    "from": "058debbaf60f"
+  },
+  "install.ld.s2": {
+    "text": "ثبّت Aubergine",
+    "from": "733a8757545c"
+  },
+  "install.ld.s3": {
+    "text": "شغّله وافتح المتصفح",
+    "from": "8c7a8d4cca8c"
+  },
+  "install.ld.s4": {
+    "text": "خذ الجولة",
+    "from": "a83c4366d2df"
+  },
+  "install.ld.q1": {
+    "text": "ماذا يغيّر مثبِّت Aubergine؟",
+    "from": "3abbf9c3de69"
+  },
+  "install.ld.a1": {
+    "text": "شيئين: مجلد التثبيت (~/.aubergine، أو AUBERGINE_HOME) ورابطًا واحدًا اسمه aubergine على PATH لديك. لا يستخدم sudo أبدًا، ولا يعدّل ملفات بدء الصدفة لديك أبدًا، ولا يثبّت Node.js أو pnpm أو tmux أبدًا.",
+    "from": "fc93852fb9a6"
+  },
+  "install.ld.q2": {
+    "text": "كيف أحدّث Aubergine؟",
+    "from": "ac62d764ea7a"
+  },
+  "install.ld.a2": {
+    "text": "إن ثبّتّه بـ npm: شغّل npm install -g @meatgarden/aubergine@latest. وإن ثبّتّه بالمثبِّت: شغّل aubergine update، أو المثبِّت من جديد. ثم أعد تشغيل الخادم.",
+    "from": "96bfcbba99a6"
+  },
+  "install.ld.q3": {
+    "text": "كيف ألغي تثبيت Aubergine؟",
+    "from": "5dbaf4c141c9"
+  },
+  "install.ld.a3": {
+    "text": "شغّل aubergine uninstall. يزيل الرابط، وبعد أن يسألك، النسخة التي صنعها المثبِّت. لا يزيل بياناتك أبدًا ولا يُنهي طرفياتك.",
+    "from": "829813dbf528"
+  },
+  "install.ld.q4": {
+    "text": "هل يعمل Aubergine على Linux أو Windows؟",
+    "from": "e3df2a3fd915"
+  },
+  "install.ld.a4": {
+    "text": "يُفترض أن يعمل على Linux لكنه لم يُختبر بعد. أما Windows فغير مدعوم.",
+    "from": "b8b7b1d1037d"
+  },
+  "guides.meta.title": {
+    "text": "أدلة Aubergine | Aubergine",
+    "from": "0d501fb6af2e"
+  },
+  "guides.meta.description": {
+    "text": "أدلة لتشغيل عدة وكلاء برمجة مع Aubergine: النظرة العامة، وClaude Code وCodex، ونسخ العمل، والطابور والجداول الزمنية.",
+    "from": "813ebf5cbbed"
+  },
+  "guides.crumb": {
+    "text": "الأدلة",
+    "from": "572cd72feb9a"
+  },
+  "guides.title": {
+    "text": "الأدلة",
+    "from": "572cd72feb9a"
+  },
+  "guides.lead": {
+    "text": "أدلة قصيرة وعملية. المرجع الكامل هو <a href=\"https://github.com/thirstyeggplant/aubergine#readme\">README</a>.",
+    "from": "4235a66ec40d"
+  },
+  "guides.install.name": {
+    "text": "ثبّت Aubergine",
+    "from": "733a8757545c"
+  },
+  "guides.install.text": {
+    "text": "المتطلبات، والمثبِّت ذو السطر الواحد، وما يغيّره، وحلول للمشكلات الشائعة.",
+    "from": "0c229f404056"
+  },
+  "guides.several.name": {
+    "text": "شغّل عدة وكلاء برمجة في آن واحد",
+    "from": "d9bedb06d9bf"
+  },
+  "guides.several.text": {
+    "text": "اللوحة، وعدد المنتظرين، والطابور، ونسخ العمل، وسير العمل في جولة واحدة.",
+    "from": "432d38d0ca9c"
+  },
+  "guides.claude.name": {
+    "text": "Claude Code في Aubergine",
+    "from": "f05972fd315a"
+  },
+  "guides.claude.text": {
+    "text": "ما يفعله Aubergine من تلقاء نفسه لـ Claude Code، وأين يوجد كل شيء.",
+    "from": "f77c6acef73f"
+  },
+  "guides.codex.name": {
+    "text": "Codex و ChatGPT",
+    "from": "38c13bed7dca"
+  },
+  "guides.codex.text": {
+    "text": "Codex في طرفية مثل أي برنامج، وما يستطيع التبليغ عنه، وما هو مبني لـ Claude Code وحده.",
+    "from": "406a9eebc6ae"
+  },
+  "guides.copies.name": {
+    "text": "نسخ العمل",
+    "from": "9660dc116131"
+  },
+  "guides.copies.text": {
+    "text": "أعطِ كل وكيل نسخته المسحوبة وفرعه الخاصين، فلا يعدّل وكيلان الملفات نفسها أبدًا.",
+    "from": "58872d0caca2"
+  },
+  "guides.queue.name": {
+    "text": "الطابور وFor you والجداول الزمنية",
+    "from": "61c48ccc941d"
+  },
+  "guides.queue.text": {
+    "text": "وزّع العمل مرة واحدة، واعرف كل ما ينتظرك، وشغّل المهام في أوقات محددة.",
+    "from": "28336b44a14a"
+  },
+  "guides.security.name": {
+    "text": "الأمان والخصوصية",
+    "from": "1418baab9c29"
+  },
+  "guides.security.text": {
+    "text": "ما المحمي، وما غير المحمي.",
+    "from": "87046dc292ef"
+  },
+  "guides.faq.name": {
+    "text": "الأسئلة الشائعة",
+    "from": "dbc468a14b60"
+  },
+  "guides.faq.text": {
+    "text": "إجابات قصيرة عن أسئلة شائعة.",
+    "from": "ba6e629d77f3"
+  },
+  "several.meta.title": {
+    "text": "كيف تشغّل عدة وكلاء برمجة في آن واحد | Aubergine",
+    "from": "edfa22b644ca"
+  },
+  "several.meta.description": {
+    "text": "ضع كل وكيل برمجة في طرفيته الخاصة على لوحة واحدة، واعرف أيهم ينتظرك، ووزّع العمل من طابور، وأبقِ تغييرات كل وكيل منفصلة.",
+    "from": "0886bd4868f2"
+  },
+  "several.crumb": {
+    "text": "تشغيل عدة وكلاء",
+    "from": "8b0dc326e0f4"
+  },
+  "several.title": {
+    "text": "كيف تشغّل عدة وكلاء برمجة في آن واحد",
+    "from": "fcc048eb4346"
+  },
+  "several.lead": {
+    "text": "وكيلان أمرٌ سهل. خمسة فوضى: أيهم عالق، وأيهم ينتظرك، وأيهم غيّر ذلك الملف؟ بُني Aubergine لتلك اللحظة. وهو يعمل على حاسوبك أنت.",
+    "from": "66c0ad369837"
+  },
+  "several.canvas.title": {
+    "text": "1. أعطِ كل وكيل طرفية على لوحة واحدة",
+    "from": "4866382ee0cb"
+  },
+  "several.canvas.text": {
+    "text": "انقر <strong>New terminal</strong>، أعلى قائمة الطرفيات (أو اضغط <code>N</code>)، وشغّل وكيلًا فيها. اسحب الطرفيات من أشرطة عناوينها، وغيّر أحجامها، واجمعها في إطارات. العمل المترابط يوضع على لوحة واحدة؛ والأعمال المنفصلة في لوحات منفصلة (علامات تبويب) أو في <em>مشاريع</em>، لكل منها طرفياته وطابوره وجداوله الزمنية.",
+    "from": "1670aca324d5"
+  },
+  "several.canvas.tmux": {
+    "text": "كل طرفية صدفة حقيقية في جلسة tmux. أغلق المتصفح، أو أوقف Aubergine، ويبقى وكلاؤك يعملون.",
+    "from": "fcd6a03136f7"
+  },
+  "several.waits.title": {
+    "text": "2. اعرف أي وكيل يحتاج إليك",
+    "from": "02af5cc81964"
+  },
+  "several.waits.text": {
+    "text": "تُظهر كل طرفية إن كانت مشغولة أو خاملة أو بانتظارك. تأتي هذه الحالة من خطافات في صدفتك ومن الوكلاء أنفسهم، لا من قراءة الشاشة. والعدد بجانب <strong>For you</strong> في الأعلى والمفتاح <code>W</code> يأخذانك مباشرة إلى التالي الذي ينتظر.",
+    "from": "aa2e391970e3"
+  },
+  "several.waits.foryou": {
+    "text": "قائمة واحدة، <strong>For you</strong> (لك)، تجمع كل ما ينتظر إنسانًا: الأسئلة، والتشغيلات التي تنتظر الموافقة، والمهام المنتهية التي يجب النظر فيها، والفاشلة مع السبب.",
+    "from": "0791b2b7f30f"
+  },
+  "several.queue.title": {
+    "text": "3. وزّع العمل من طابور",
+    "from": "876879f17f0c"
+  },
+  "several.queue.text": {
+    "text": "اكتب مهمة مرة واحدة وضعها في <a href=\"/queue-and-schedules/\">الطابور</a>. يأخذها وكيل متفرغ حين تقول ذلك، مع حدّ لعدد ما يعمل في آن واحد. وللعمل المتكرر، اضبط جدولًا زمنيًا. يستطيع الوكلاء اقتراح مهام وطرح أسئلة عليك، لكن لا شيء يبدأ حتى توافق.",
+    "from": "65372959c515"
+  },
+  "several.apart.title": {
+    "text": "4. أبقِ تغييرات كل وكيل منفصلة",
+    "from": "819cc99b8d5c"
+  },
+  "several.apart.text": {
+    "text": "وكيلان في مجلد واحد يعدّلان الملفات نفسها. شغّل كلًّا منهما في <a href=\"/working-copies/\">نسخة عمل</a> خاصة به: نسخة مسحوبة منفصلة على فرعها الخاص، فتقرأ عمل كل وكيل على حدة. لا يدمج Aubergine ولا يدفع ولا يعيد الأساس (rebase) نيابة عنك أبدًا.",
+    "from": "5f5f23de12b5"
+  },
+  "several.steps.title": {
+    "text": "5. أعطِ الوكلاء خطوات، وقرّر عند البوابات",
+    "from": "33923fa2da4c"
+  },
+  "several.steps.text": {
+    "text": "سير العمل قائمة مرتبة من الخطوات يتبعها وكيل، مع شريط يُظهر أين هو. ويمكن لخطوة أن تنتظرك لتوافق أو تعيدها. وكل تشغيل جارٍ يظهر على لوحة واحدة.",
+    "from": "f0912196c0fb"
+  },
+  "several.not.title": {
+    "text": "ما لا يفعله",
+    "from": "b3a53baf5dfd"
+  },
+  "several.not.model": {
+    "text": "لا يستدعي نموذجًا ولا يختار لك واحدًا. الوكلاء وكلاؤك.",
+    "from": "0735098d7a82"
+  },
+  "several.not.asyou": {
+    "text": "لا يمنع وكيلًا من فعل شيء تستطيع أنت فعله. الوكلاء يعملون باسمك. انظر <a href=\"/security/\">الأمان</a> لتعرف ما المحمي وما غير المحمي.",
+    "from": "a24f01fbd135"
+  },
+  "several.not.one": {
+    "text": "يعمل على حاسوب واحد اليوم. مشاركة لوحة مع أشخاص آخرين وتشغيل الوكلاء في السحابة موجودان على <a href=\"/roadmap/\">خارطة الطريق</a>، ولم يُبنيا.",
+    "from": "ac3140a055a6"
+  },
+  "several.install": {
+    "text": "ثبّت Aubergine",
+    "from": "733a8757545c"
+  },
+  "several.ld.q1": {
+    "text": "كيف أشغّل عدة وكلاء برمجة في آن واحد؟",
+    "from": "42c519b36444"
+  },
+  "several.ld.a1": {
+    "text": "ضع كل وكيل في طرفيته الخاصة على لوحة Aubergine. تُظهر اللوحة أيها مشغول أو خامل أو بانتظارك، وقائمة واحدة اسمها For you تجمع كل سؤال وكل موافقة.",
+    "from": "b878f9a6290f"
+  },
+  "several.ld.q2": {
+    "text": "كيف أمنع وكيلين من تعديل الملفات نفسها؟",
+    "from": "50c7b0247257"
+  },
+  "several.ld.a2": {
+    "text": "شغّل كل طرفية في نسخة عمل خاصة بها: نسختها المسحوبة الخاصة من المستودع على فرعها الخاص. لا يدمج Aubergine ولا يدفع نيابة عنك أبدًا.",
+    "from": "7da5b34834bf"
+  },
+  "several.ld.q3": {
+    "text": "هل يعمل مع أي وكيل برمجة؟",
+    "from": "a17347c2058b"
+  },
+  "several.ld.a3": {
+    "text": "نعم. يشغّل Aubergine طرفيات عادية، فيمكن لأي وكيل لسطر الأوامر أن يعمل في واحدة منها. ما يفعله Aubergine من تلقاء نفسه لوكيلٍ مبني لـ Claude Code؛ وأي وكيل آخر يستطيع التبليغ عبر أوامر aubergine.",
+    "from": "60142c410708"
+  },
+  "copies.meta.title": {
+    "text": "شغّل وكيلَي برمجة على مستودع واحد بنسخ العمل | Aubergine",
+    "from": "22fa024200af"
+  },
+  "copies.meta.description": {
+    "text": "نسخة العمل تعطي كل وكيل نسخته المسحوبة وفرعه الخاصين من المستودع، فلا يعدّل وكيلان الملفات نفسها أبدًا وتقرأ عمل كل منهما على حدة.",
+    "from": "a293deb1c990"
+  },
+  "copies.crumb": {
+    "text": "نسخ العمل",
+    "from": "9660dc116131"
+  },
+  "copies.title": {
+    "text": "وكيلان ومستودع واحد: نسخ العمل",
+    "from": "acd55dc99e6b"
+  },
+  "copies.lead": {
+    "text": "تعمل كل طرفية عادةً في مجلدك الحقيقي. فيعدّل وكيلان في مستودع واحد الملفات نفسها، ولا تستطيع أن تميّز أي تغيير لمن. نسخة العمل تعطي كل طرفية نسختها المسحوبة الخاصة، على فرعها الخاص.",
+    "from": "bca0754aab05"
+  },
+  "copies.start.title": {
+    "text": "شغّل طرفية في نسخة عمل",
+    "from": "288cfa5a3c70"
+  },
+  "copies.start.s1": {
+    "text": "اضغط <strong>▾</strong> في آخر <strong>New terminal</strong>، أعلى قائمة الطرفيات، ثم <strong>Shell in a folder or a working copy…‎</strong>.",
+    "from": "1b1addf2a211"
+  },
+  "copies.start.s2": {
+    "text": "أدخل المجلد واختر <strong>In its own working copy</strong> (في نسخة عمل خاصة بها). لا يُعرض هذا الخيار إلا حيث يمكن، ويقول السبب حيث لا يمكن: ليس مستودع Git، أو مستودع مجرد (bare)، أو لا إيداع بعد.",
+    "from": "8299d8f71e82"
+  },
+  "copies.start.cli": {
+    "text": "ومن طرفية، الشيء نفسه:",
+    "from": "2e409315b41b"
+  },
+  "copies.get.title": {
+    "text": "ما تحصل عليه",
+    "from": "41a1acbef296"
+  },
+  "copies.get.text": {
+    "text": "شجرة عمل Git (worktree) في مجلد يحتفظ به Aubergine تحت مجلد بياناته، لا داخل مستودعك أبدًا، على فرع جديد اسمه <code>aubergine/&lt;terminal name&gt;-&lt;six characters&gt;</code>. تبدأ من الإيداع الذي عليه نسختك المسحوبة، وتبدأ الطرفية في المجلد الفرعي نفسه الذي كنت فيه. نسختك المسحوبة لا تتغير أبدًا: لا ملفاتها، ولا ما هو مُجهَّز للإيداع، ولا الفرع الذي سحبته.",
+    "from": "c06801122abd"
+  },
+  "copies.get.not": {
+    "text": "<strong>ما لا يُنقل:</strong> تغييراتك غير المودَعة (لا يُخبَّأ ولا يُودَع شيء نيابة عنك)، والملفات التي يتجاهلها Git أو لا يتتبعها، مثل الاعتماديات المثبَّتة والإعدادات المحلية. والمشروع الذي يحتاج إلى خطوة تثبيت يحتاجها من جديد في نسخة العمل.",
+    "from": "131b661ca520"
+  },
+  "copies.read.title": {
+    "text": "اقرأ ما غيّره وكيل",
+    "from": "d455bd023725"
+  },
+  "copies.read.text": {
+    "text": "الطرفية التي في نسخة عمل تُظهر على شريط عنوانها فرعها وعدد الملفات المختلفة. انقره لترى الملفات المغيَّرة والمضافة والمحذوفة، مع تعليم العمل الذي ليس في أي إيداع، والفرق للقراءة فقط لأي ملف تختاره.",
+    "from": "20954eec8106"
+  },
+  "copies.end.title": {
+    "text": "حين تنتهي الطرفية",
+    "from": "250be513dcc7"
+  },
+  "copies.end.text": {
+    "text": "لا تُزال نسخة العمل أبدًا لمجرد أن طرفيتها انتهت. أنت تختار:",
+    "from": "b2d17861d25a"
+  },
+  "copies.end.branch": {
+    "text": "<strong>Keep the branch, remove the folder</strong> (أبقِ الفرع واحذف المجلد)، حين يكون كل شيء مودَعًا.",
+    "from": "5d0203e6fc80"
+  },
+  "copies.end.keep": {
+    "text": "<strong>Keep everything.‎</strong> (أبقِ كل شيء) تبقى في القائمة، وتقول إن طرفيتها ذهبت.",
+    "from": "a03d07a03a5a"
+  },
+  "copies.end.discard": {
+    "text": "<strong>Discard both</strong> (تخلّص من الاثنين)، الذي يسأل مرة ثانية حين تحوي النسخة عملًا لا يوجد في أي مكان آخر.",
+    "from": "6ae2c654ddf6"
+  },
+  "copies.end.never": {
+    "text": "لا يدمج Aubergine ولا يدفع ولا يعيد الأساس أبدًا. ما تفعله بفرع أبقيته شأنك.",
+    "from": "e9af3c7c1ccd"
+  },
+  "copies.git.title": {
+    "text": "ما يشغّله Aubergine في مستودعك",
+    "from": "3a32836a0505"
+  },
+  "copies.git.text": {
+    "text": "يستخدم Aubergine الأمر <code>git</code> الموجود على <code>PATH</code> لديك (2.31 أو أحدث). في كل أمر Git يشغّله، لا يعمل أي خطاف، ولا يُطلب منك شيء، ولا يصل شيء إلى الشبكة، ولا تُجلب الوحدات الفرعية. أما المرشّحات المذكورة في إعدادات Git الخاصة بك، مثل تخزين الملفات الكبيرة، فتعمل، كما تعمل مع <code>git status</code> الخاص بك.",
+    "from": "b36bf6176964"
+  },
+  "copies.sandbox.title": {
+    "text": "ليست صندوق عزل",
+    "from": "a4e45939dc38"
+  },
+  "copies.sandbox.text": {
+    "text": "نسخة العمل تُبقي الأعمال منفصلة. لكنها لا تحبس الوكيل: الوكيل يعمل باسمك ويستطيع قراءة وتغيير كل ملف تستطيعه، بما في ذلك نسختك المسحوبة. لا تعتمد عليها لكبح وكيل يفعل الشيء الخطأ. انظر <a href=\"/security/\">الأمان</a>.",
+    "from": "12f777412114"
+  },
+  "copies.related": {
+    "text": "ذو صلة: <a href=\"/run-multiple-coding-agents/\">شغّل عدة وكلاء برمجة في آن واحد</a> · <a href=\"/queue-and-schedules/\">الطابور والجداول الزمنية</a> (المهمة التي تبدأ في طرفية جديدة تحصل على نسخة عمل خاصة بها حيث يكون المجلد في مستودع).",
+    "from": "489f01eef5df"
+  },
+  "copies.ld.howto": {
+    "text": "كيف تشغّل وكيلًا في نسخة عمل خاصة به",
+    "from": "6a1451788037"
+  },
+  "copies.ld.howtoAbout": {
+    "text": "أعطِ طرفية نسختها المسحوبة وفرعها الخاصين من مستودع.",
+    "from": "64a170729926"
+  },
+  "copies.ld.s1": {
+    "text": "افتح نافذة الطرفية الجديدة",
+    "from": "5bde830139dc"
+  },
+  "copies.ld.s1text": {
+    "text": "اضغط السهم في آخر New terminal، أعلى قائمة الطرفيات، ثم Shell in a folder or a working copy.",
+    "from": "32bded457fe9"
+  },
+  "copies.ld.s2": {
+    "text": "اختر In its own working copy",
+    "from": "63c9214f2664"
+  },
+  "copies.ld.s2text": {
+    "text": "أدخل المجلد، الذي يجب أن يكون في مستودع Git فيه إيداع واحد على الأقل، واختر In its own working copy.",
+    "from": "e0d93261f9f0"
+  },
+  "copies.ld.s3": {
+    "text": "أو استخدم سطر الأوامر",
+    "from": "0ee1f2056fa4"
+  },
+  "copies.ld.s4": {
+    "text": "اقرأ ما تغيّر",
+    "from": "bab32518bbd7"
+  },
+  "copies.ld.s4text": {
+    "text": "انقر الفرع على شريط عنوان الطرفية لترى الملفات المغيَّرة والمضافة والمحذوفة والفرق في كل ملف.",
+    "from": "357674609610"
+  },
+  "copies.ld.s5": {
+    "text": "قرّر ما يحدث لها",
+    "from": "b2b7c44a3193"
+  },
+  "copies.ld.s5text": {
+    "text": "حين تنتهي الطرفية، أبقِ الفرع واحذف المجلد، أو أبقِ كل شيء، أو تخلّص من الاثنين.",
+    "from": "9fb24490ab62"
+  },
+  "copies.ld.q1": {
+    "text": "ما نسخة العمل في Aubergine؟",
+    "from": "c29a3dde79ad"
+  },
+  "copies.ld.a1": {
+    "text": "شجرة عمل Git: نسخة مسحوبة ثانية من المستودع نفسه، على فرع جديد خاص بها، تُحفظ في مجلد بيانات Aubergine ولا تكون داخل مستودعك أبدًا.",
+    "from": "ece33bda8bd9"
+  },
+  "copies.ld.q2": {
+    "text": "هل تتضمن نسخة العمل تغييراتي غير المودَعة؟",
+    "from": "e87c77e35caf"
+  },
+  "copies.ld.a2": {
+    "text": "لا. لا تُنقل ولا تُمس. أودِعها أولًا إن كان يجب أن تكون في الطرفية الجديدة.",
+    "from": "fd51d7c79f2a"
+  },
+  "copies.ld.q3": {
+    "text": "هل يدمج Aubergine فرع نسخة العمل أو يدفعه؟",
+    "from": "5ed71f558894"
+  },
+  "copies.ld.a3": {
+    "text": "لا. لا يدمج Aubergine ولا يدفع ولا يعيد الأساس أبدًا، ولا يغيّر أبدًا الفرع الذي سحبته.",
+    "from": "c35bdaa3b9fd"
+  },
+  "copies.ld.q4": {
+    "text": "هل نسخة العمل صندوق عزل؟",
+    "from": "43526bb8ae8a"
+  },
+  "copies.ld.a4": {
+    "text": "لا. تُبقي الأعمال منفصلة؛ لكنها لا تحبس الوكيل. الوكيل يعمل باسمك ولا يزال يستطيع قراءة وتغيير كل ملف تستطيعه.",
+    "from": "8b760eb225ac"
+  },
+  "queue.meta.title": {
+    "text": "الطابور وقائمة For you والجداول الزمنية | Aubergine",
+    "from": "aaf91b58a021"
+  },
+  "queue.meta.description": {
+    "text": "اكتب مهمة مرة واحدة ودع وكيلًا متفرغًا يأخذها، واعرف كل ما ينتظرك في قائمة واحدة، وشغّل المهام في أوقات محددة بالجداول الزمنية.",
+    "from": "1eede965ade8"
+  },
+  "queue.crumb": {
+    "text": "الطابور والجداول الزمنية",
+    "from": "403b3a701d15"
+  },
+  "queue.title": {
+    "text": "الطابور و«For you» والجداول الزمنية",
+    "from": "7f3e0c94e636"
+  },
+  "queue.lead": {
+    "text": "قائمتان تغذّي إحداهما الأخرى: الطابور يحمل عملًا للوكلاء، و<em>For you</em> يحمل كل ما ينتظر إنسانًا. والجداول الزمنية تضيف مهام إلى الطابور في أوقات محددة.",
+    "from": "b208af706f74"
+  },
+  "queue.queue.title": {
+    "text": "الطابور",
+    "from": "0d95744a342b"
+  },
+  "queue.queue.text": {
+    "text": "افتح <strong>Runs</strong> في أعلى الصفحة (أو اضغط <code>Q</code>) وانقر <strong>Add task</strong> (أضف مهمة). للمهمة عنوان، وما يجب فعله، واختياريًا مجلد، وسير عمل، ومن يجوز له أخذها. افتراضيًا يجوز لأي طرفية فيها وكيل متفرغ أن تأخذها؛ ويمكنك تسمية طرفية واحدة، أو جعل طرفية وكيل جديدة تبدأ لها، في نسخة عمل خاصة بها حيث يكون المجلد في مستودع.",
+    "from": "989827036836"
+  },
+  "queue.queue.next": {
+    "text": "<strong>Start next</strong> يبدأ أول مهمة يستطيع أحد أخذها الآن. لا تُعطى صدفة عادية مهمة أبدًا.",
+    "from": "ae7829bbd4d8"
+  },
+  "queue.queue.limit": {
+    "text": "<strong>At most N at once</strong> (على الأكثر N في آن واحد)، ثلاث ما لم تغيّرها. <strong>Hold</strong> يوقف البدايات الجديدة ولا يمس شيئًا يعمل.",
+    "from": "e2f51053f100"
+  },
+  "queue.queue.itself": {
+    "text": "<strong>Start by itself</strong> معطّل حتى تشغّله. لا شيء يتحقق على مؤقت.",
+    "from": "c2a89a6c6733"
+  },
+  "queue.queue.order": {
+    "text": "الترتيب لك: اسحب مهمة، أو استخدم مفاتيح الأسهم.",
+    "from": "e3aa94f38bbc"
+  },
+  "queue.queue.follows": {
+    "text": "المهمة تتبع تشغيلها: <em>needs you</em> ما دام تشغيل ينتظر الموافقة، و<em>done</em> حين ينتهي، و<em>failed</em> مع جملة حين يتوقف. لا يُعاد تجربة شيء من تلقاء نفسه.",
+    "from": "a1dc88999acf"
+  },
+  "queue.pic.caption": {
+    "text": "For you في صفحة Runs: سؤال، ومسودة للقراءة، وقائمة سُلّمت، كلٌّ مع ما هو.",
+    "from": "b25234fa54ca"
+  },
+  "queue.pic.alt": {
+    "text": "عمود Waiting for you في صفحة Runs: مربع لإضافة مهمة شخصية، ثم سؤال من وكيل بديل، ومسودة للقراءة، وقائمة سُلّمت.",
+    "from": "9bc144e9c95e"
+  },
+  "queue.foryou.title": {
+    "text": "For you",
+    "from": "143134f93925"
+  },
+  "queue.foryou.text": {
+    "text": "طرفيات لديها سؤال، وتشغيلات تنتظر الموافقة أو متوقفة، ومسودات وعمليات تثبيت للقراءة، ومهام مقترحة للطابور، ومهام منتهية وفاشلة، وقوائم سلّمها وكيل، ونسخ عمل ذهبت طرفيتها. العدد بجانب For you في الأعلى و«next waiting» هما القائمة نفسها. معظمها يُجمع ولا يُكتب: يزول العنصر حين يتم الشيء نفسه.",
+    "from": "f0987632af6e"
+  },
+  "queue.foryou.propose": {
+    "text": "الوكيل الذي يجد عملًا لا ينبغي أن يفعله الآن يستطيع اقتراح مهمة، والذي يحتاج إلى إنسان يستطيع أن يسألك:",
+    "from": "6cab942ae32c"
+  },
+  "queue.foryou.land": {
+    "text": "كلاهما يصل إلى قائمتك. والاقتراح لا يبدأ شيئًا حتى توافق عليه.",
+    "from": "b9045f914e0b"
+  },
+  "queue.schedules.title": {
+    "text": "الجداول الزمنية",
+    "from": "221ff19c904c"
+  },
+  "queue.schedules.text": {
+    "text": "الجدول الزمني ساعة من اليوم، وأيام من الأسبوع، وشيء يُشغَّل، ومكان يُشغَّل فيه. حين يحين وقته يضيف مهمة واحدة إلى الطابور، والطابور يبدؤها. تحت <strong>Schedules</strong> في صفحة Runs، أو <code>aubergine schedule</code>. الوقت بحسب ساعة هذا الحاسوب؛ لا تعابير، ولا شيء أكثر من مرة في اليوم.",
+    "from": "a43d6965e12f"
+  },
+  "queue.schedules.run": {
+    "text": "الأمر <code>aubergine schedule run</code> يجرّب جدولًا زمنيًا الآن.",
+    "from": "433ccf3d7204"
+  },
+  "queue.plan.title": {
+    "text": "حين لا تجري الأمور كما خُطّط لها",
+    "from": "0474d0b379f1"
+  },
+  "queue.plan.awake": {
+    "text": "يجب أن يكون الحاسوب مستيقظًا وAubergine يعمل. الوقت الذي مرّ وهو نائم يُشغَّل <strong>مرة واحدة</strong> حين يعود، معلَّمًا بأنه متأخر، إن لم يمضِ عليه ست ساعات. وإلا فيُعلَّم <strong>missed</strong> (فائت).",
+    "from": "da52cc0d963c"
+  },
+  "queue.plan.skipped": {
+    "text": "ما دامت المهمة السابقة لجدول زمني تنتظر أو تعمل، لا يضيف أخرى، ويقول إنه تخطاها.",
+    "from": "f076f68e0964"
+  },
+  "queue.plan.gone": {
+    "text": "إذا ذهب شيء يسمّيه (الطرفية، أو الخطوة، أو اللوحة)، فلا يعمل، وعنصر واحد في قائمتك يقول ذلك.",
+    "from": "bc76023361ed"
+  },
+  "queue.rules.title": {
+    "text": "القواعد",
+    "from": "4228aeb07c41"
+  },
+  "queue.rules.text": {
+    "text": "تحت <strong>Rules</strong>، تستطيع أن تقول «حين تنتهي مهمة، أو تفشل، أو تحتاج إليّ، أو حين ينطلق جدول زمني أو يفوت، فأشعِرني أو شغّل خطوة محفوظة». كتابة القواعد لك وحدك: لا برنامج ولا وكيل يستطيع إضافة قاعدة أو تغييرها، ولا تستطيع قاعدة أن تطلق نفسها.",
+    "from": "b4ec8a0da4e6"
+  },
+  "queue.rules.nothing": {
+    "text": "لا يستدعي Aubergine أي نموذج ولا يحتفظ ببيانات اعتماد لأي تطبيق. المهمة أو الجدول الزمني لا يفعل إلا أن يبدأ تشغيلًا؛ والوكيل الذي يأخذه يؤدي العمل بأدواته الخاصة.",
+    "from": "635fa52c391c"
+  },
+  "queue.related": {
+    "text": "ذو صلة: <a href=\"/working-copies/\">نسخ العمل</a> · <a href=\"/run-multiple-coding-agents/\">شغّل عدة وكلاء برمجة في آن واحد</a>",
+    "from": "a1b112595d4a"
+  },
+  "queue.ld.headline": {
+    "text": "الطابور وقائمة For you والجداول الزمنية",
+    "from": "e7aa7f29e008"
+  },
+  "queue.ld.q1": {
+    "text": "ما الطابور في Aubergine؟",
+    "from": "f483ddf62dfe"
+  },
+  "queue.ld.a1": {
+    "text": "عمل للوكلاء. تكتب مهمة مرة واحدة، بعنوان وتفاصيل، واختياريًا مجلد وسير عمل ومن يجوز له أخذها. يأخذها وكيل متفرغ حين تقول ذلك.",
+    "from": "3d99add6ea00"
+  },
+  "queue.ld.q2": {
+    "text": "ما قائمة For you؟",
+    "from": "10295c2a2707"
+  },
+  "queue.ld.a2": {
+    "text": "كل ما ينتظر إنسانًا في مكان واحد: طرفيات لديها سؤال، وتشغيلات تنتظر الموافقة، ومسودات للقراءة، ومهام منتهية وفاشلة، وقوائم سلّمها الوكلاء.",
+    "from": "4167a6eb1070"
+  },
+  "queue.ld.q3": {
+    "text": "هل يستطيع وكيل أن يبدأ العمل من تلقاء نفسه؟",
+    "from": "a9a38a49db05"
+  },
+  "queue.ld.a3": {
+    "text": "يستطيع الوكيل أن يقترح مهمة أو يسألك شيئًا، لكن الاقتراح لا يبدأ شيئًا حتى توافق عليه.",
+    "from": "75c93148284c"
+  },
+  "queue.ld.q4": {
+    "text": "ماذا يحدث للجدول الزمني حين يكون حاسوبي نائمًا؟",
+    "from": "09ef41a88ccf"
+  },
+  "queue.ld.a4": {
+    "text": "لا شيء يوقظ الحاسوب. الوقت الذي مرّ وهو نائم يُشغَّل مرة واحدة حين يعود، معلَّمًا بأنه متأخر، إن كان قد مضى عليه أقل من ست ساعات. وإن كان أقدم من ذلك فيُعلَّم بأنه فائت.",
+    "from": "28be43f4ec53"
+  },
+  "security.meta.title": {
+    "text": "الأمان والخصوصية | Aubergine",
+    "from": "ceea0328314d"
+  },
+  "security.meta.description": {
+    "text": "يعمل Aubergine على حاسوبك فقط، ويستمع على 127.0.0.1، ويتحقق من كل طلب، ويحدّد نطاق كل رمز، ويقول صراحة ما لا يحمي منه.",
+    "from": "d44a642ead3b"
+  },
+  "security.crumb": {
+    "text": "الأمان",
+    "from": "8f6fb4eb7f42"
+  },
+  "security.title": {
+    "text": "الأمان والخصوصية",
+    "from": "1418baab9c29"
+  },
+  "security.lead": {
+    "text": "ما يفعله Aubergine لحماية طرفياتك، وبالأهمية نفسها، ما لا يفعله. باختصار: إنه محلي، ويسأل قبل أن يتصرف لوكيل، والوكلاء لا يزالون يعملون باسمك.",
+    "from": "1026aabf288c"
+  },
+  "security.local.title": {
+    "text": "كل شيء يبقى على حاسوبك",
+    "from": "793ac3d2607e"
+  },
+  "security.local.bind": {
+    "text": "يرتبط الخادم بـ <code>127.0.0.1</code> فقط. كل طلب، وكل ترقية WebSocket، يُتحقَّق من <code>Host</code> و<code>Origin</code> فيه، ويجب أن يحمل المتصفح ملف تعريف ارتباط للوصول.",
+    "from": "6a7b211aac87"
+  },
+  "security.local.elsewhere": {
+    "text": "استخدام Aubergine من جهاز آخر معطّل حتى تعدّه: شيء على الحاسوب نفسه يوصل إليه HTTPS تحت اسم تكتبه في الإعدادات، وكل متصفح يُقرَن برمز لمرة واحدة ويمكن إلغاؤه. والجهاز المقترن هو المالك بكامل صلاحياته. <a href=\"https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md\">Using Aubergine from elsewhere</a> يقول كيف.",
+    "from": "d67b1b7a16b7"
+  },
+  "security.local.network": {
+    "text": "لا يستدعي Aubergine أي نموذج ولا يبدأ أي طلب شبكة من تلقاء نفسه، مع استثناءين: جلب مصدر مكتبة (عنوان Git) حين تطلب <em>أنت</em> ذلك، وسؤال أداة <code>gh</code> الخاصة بك، حيث تكون مثبتة ومسجَّلًا الدخول فيها، عن طلب السحب لفرع طرفية.",
+    "from": "09a9d3b11a3f"
+  },
+  "security.local.notify": {
+    "text": "إشعارات سطح المكتب تأتي من الصفحة المفتوحة. لا شيء يغادر حاسوبك.",
+    "from": "a061f94decff"
+  },
+  "security.callers.title": {
+    "text": "ثلاثة أنواع من المستدعين، ويُحكم على كلٍّ منها على حدة",
+    "from": "70f1b55254c0"
+  },
+  "security.callers.text": {
+    "text": "يُتحقَّق من كل طلب مقابل ما يجوز للمستدعي فعله قبل البحث عن أي شيء، فلا يعرف المستدعي الذي ليس له الحق شيئًا من الجواب. المستدعون هم: أنت (مسجَّل الدخول في المتصفح)، وجلسة وكيل، ورمز API.",
+    "from": "c126625e9b6c"
+  },
+  "security.callers.scopes": {
+    "text": "<strong>لرموز API نطاقات.</strong> يُعرض السرّ مرة واحدة ولا يُخزَّن أبدًا؛ لا يُحتفظ إلا بتجزئته. والاستدعاءات التي تتم برمز تُسجَّل في سجل النشاط: من، وماذا، وكيف انتهى، لا السرّ أبدًا ولا ما أُرسل أبدًا.",
+    "from": "4c7141504f63"
+  },
+  "security.callers.never": {
+    "text": "<strong>أشياء لا يستطيع أي رمز فعلها أبدًا:</strong> إنشاء الرموز أو إلغاؤها، وقراءة سجل النشاط، وتغيير الإعدادات، وأي شيء يخص طرفيات خارج Aubergine.",
+    "from": "72b0d531789b"
+  },
+  "security.callers.terminal": {
+    "text": "<strong>الوصول إلى الطرفية نطاقان منفصلان</strong>، واحد للقراءة وواحد للكتابة، كلٌّ منهما مقصور على الجلسات التي تختارها. ويمكنك تعليم طرفية بأنها <em>people only</em> (للأشخاص فقط) لإغلاقها أمام كل رمز.",
+    "from": "25a56b3d0365"
+  },
+  "security.callers.agent": {
+    "text": "<strong>بيانات اعتماد الوكيل الخاصة ضيقة.</strong> يستطيع ضبط حالة الانتباه الخاصة به، والإضافة إلى ملاحظاته، والتبليغ عن حالته، وقراءة التشغيل الذي هو فيه. ولا يستطيع الوصول إلى طرفيات أو لوحات أو رموز أخرى.",
+    "from": "e256c4165a46"
+  },
+  "security.alone.title": {
+    "text": "ما لا يستطيع وكيل فعله وحده",
+    "from": "03326de9b26e"
+  },
+  "security.alone.draft": {
+    "text": "ما يكتبه وكيل أو برنامج (سير عمل، أو خطوة) يصل بوصفه <strong>مسودة</strong> تراجعها. والقبول لك وحدك.",
+    "from": "4170ed1f1019"
+  },
+  "security.alone.person": {
+    "text": "الخطوة التي تنتظر إنسانًا لا يوافق عليها أو يعيدها إلا إنسان. والقواعد والجداول الزمنية والعرض التجريبي لك وحدك.",
+    "from": "d50827bd1466"
+  },
+  "security.alone.typed": {
+    "text": "لا يكتب Aubergine في طرفية الوكيل إلا بضع جمل ثابتة، مثل «اقرأ خطوتك التالية». لا شيء مما خزّنته، ولا شيء مما كتبه وكيل، يُكتب.",
+    "from": "fbf9087a8e44"
+  },
+  "security.alone.library": {
+    "text": "التثبيت من مكتبة يحتاج إلى أن تقبل المحتوى نفسه الذي عُرض عليك بالضبط.",
+    "from": "6d62284139e3"
+  },
+  "security.not.title": {
+    "text": "ما لا يحمي منه هذا",
+    "from": "664cb80d250f"
+  },
+  "security.not.asyou": {
+    "text": "<strong>الوكلاء يعملون باسمك.</strong> الوكيل في طرفية يستطيع فعل أي شيء تستطيع أنت فعله في تلك الطرفية، بما في ذلك تشغيل الأوامر، وقراءة الملفات، واستخدام جلسة متصفحك الخاصة إن اختار ذلك.",
+    "from": "179663eb5387"
+  },
+  "security.not.approvals": {
+    "text": "<strong>الموافقات ليست قفلًا.</strong> الوكيل الذي يعمل باسمك يستطيع أن يقرر باسمك. يُسجَّل القرار، ولا يُمنع.",
+    "from": "dc58a76bd541"
+  },
+  "security.not.copies": {
+    "text": "<strong>نسخ العمل ليست صندوق عزل.</strong> تُبقي الأعمال منفصلة ولا تحبس الوكيل.",
+    "from": "de9877dffd91"
+  },
+  "security.not.review": {
+    "text": "<strong>شاشة المراجعة هي أداة التحكم في عناصر المكتبة.</strong> العنصر تعليمات سيتبعها وكيل بكل ما يجوز لذلك الوكيل فعله. لا تثبّت ما لم تقرأه.",
+    "from": "1972614790c0"
+  },
+  "security.not.guide": {
+    "text": "<strong>دليل الوكلاء نصيحة</strong>، لا قفل.",
+    "from": "79f0576917ce"
+  },
+  "security.installer.title": {
+    "text": "المثبِّت",
+    "from": "26ab59561d68"
+  },
+  "security.installer.text": {
+    "text": "يغيّر شيئين: مجلده الخاص ورابطًا واحدًا اسمه <code>aubergine</code>. لا <code>sudo</code>، ولا تعديلات على ملفات بدء الصدفة لديك، ولا يمس مجلد بياناتك أبدًا. والأمر <code>aubergine uninstall</code> لا يزيل إلا ما صنعه.",
+    "from": "0dd991c78883"
+  },
+  "security.report.title": {
+    "text": "أبلغ عن مشكلة",
+    "from": "53de38dec81e"
+  },
+  "security.report.text": {
+    "text": "افتح بلاغًا على <a href=\"https://github.com/thirstyeggplant/aubergine/issues\">GitHub</a>. لا تضع فيه أسرارًا أو رموزًا.",
+    "from": "578a2c2c1f9c"
+  },
+  "security.related": {
+    "text": "ذو صلة: <a href=\"/working-copies/\">نسخ العمل</a> · <a href=\"/faq/\">الأسئلة الشائعة</a> · <a href=\"/roadmap/\">خارطة الطريق</a> (أنماط الموافقة وسياسة الأوامر مخطط لها، ولم تُبنَ)",
+    "from": "f7672fdbd012"
+  },
+  "security.ld.q1": {
+    "text": "هل يرسل Aubergine طرفياتي أو شيفرتي إلى أي مكان؟",
+    "from": "8e3369fd3214"
+  },
+  "security.ld.a1": {
+    "text": "لا. يستمع الخادم على 127.0.0.1 فقط، فيمكن الوصول إليه من حاسوبك ولا مكان غيره حتى تعدّ الاستخدام من جهاز آخر. لا يستدعي Aubergine أي نموذج ولا يجلب شيئًا ما لم تضف مصدر مكتبة بنفسك؛ وحيث تكون أداة gh الخاصة بك مثبتة، يسألها عن طلب السحب لفرع طرفية.",
+    "from": "d6089c695fd7"
+  },
+  "security.ld.q2": {
+    "text": "هل يستطيع وكيل تغيير إعدادات Aubergine أو صنع رمز لنفسه؟",
+    "from": "50baf59f3f49"
+  },
+  "security.ld.a2": {
+    "text": "لا. إنشاء الرموز، وتغيير الإعدادات، وقراءة سجل النشاط، وأي شيء يخص طرفيات خارج Aubergine، كلها غير مسموحة لأي رمز أبدًا، مهما كانت نطاقاته.",
+    "from": "83dbce1b8ba8"
+  },
+  "security.ld.q3": {
+    "text": "هل تمنع الموافقة وكيل المالك نفسه من الموافقة لنفسه؟",
+    "from": "44ef09ccbdb5"
+  },
+  "security.ld.a3": {
+    "text": "لا. الوكيل الذي يعمل باسمك يستطيع التصرف باسمك. الموافقات تُسجَّل، ولا تُفرض على وكيلك الخاص.",
+    "from": "218bd3880939"
+  },
+  "security.ld.q4": {
+    "text": "هل نسخ العمل صندوق عزل؟",
+    "from": "8fba34c387fd"
+  },
+  "security.ld.a4": {
+    "text": "لا. تُبقي الأعمال منفصلة لكنها لا تحبس الوكيل. الوكلاء يعملون باسمك.",
+    "from": "00ac8e54df7b"
+  },
+  "roadmap.meta.title": {
+    "text": "خارطة الطريق: ما المخطط له في Aubergine | Aubergine",
+    "from": "f82b67c7e4ed"
+  },
+  "roadmap.meta.description": {
+    "text": "ما يفعله Aubergine اليوم وما هو مخطط له ولم يُبنَ بعد: العمل الجماعي، ووكلاء سحابيون معزولون، وأنماط الموافقة، وبوابات الجودة، وSDK، وغير ذلك.",
+    "from": "eae564891939"
+  },
+  "roadmap.crumb": {
+    "text": "خارطة الطريق",
+    "from": "92375f997ffe"
+  },
+  "roadmap.tag": {
+    "text": "مخطط له، لم يُبنَ بعد",
+    "from": "8520b04b5a47"
+  },
+  "roadmap.title": {
+    "text": "خارطة الطريق",
+    "from": "92375f997ffe"
+  },
+  "roadmap.lead": {
+    "text": "لا شيء من هذا موجود اليوم. إنه الوجهة التي نريد بلوغها، وقد يتغير الترتيب. لما هو مبني الآن، انظر <a href=\"/guides/\">الأدلة</a>.",
+    "from": "905a1a4e53eb"
+  },
+  "roadmap.note": {
+    "text": "العمل المخطط له اتجاه، لا وعد. <a href=\"https://github.com/thirstyeggplant/aubergine\">المستودع</a> يُظهر ما صدر.",
+    "from": "2a77383dd929"
+  },
+  "roadmap.teams.title": {
+    "text": "الفرق والاتصالات",
+    "from": "4e0046ce8160"
+  },
+  "roadmap.teams.sub": {
+    "text": "أشخاص يعملون معًا، ووكلاء يُوصَل إليهم من الأدوات التي تستخدمها أصلًا.",
+    "from": "b79bf222234e"
+  },
+  "roadmap.teams.multiplayer.name": {
+    "text": "العمل الجماعي",
+    "from": "563370a7b0ef"
+  },
+  "roadmap.teams.multiplayer.text": {
+    "text": "شارك لوحة مع أشخاص آخرين ووكلائهم. اعرف من يعمل وأين، وسلّم وكيلًا منتظرًا لزميل، وأجيبوا معًا.",
+    "from": "b11467b3847f"
+  },
+  "roadmap.teams.chat.name": {
+    "text": "واجهة محادثة",
+    "from": "2d4271591981"
+  },
+  "roadmap.teams.chat.text": {
+    "text": "اسأل الوكلاء وأجب عن أسئلتهم من تطبيق محادثة للفريق، بالهوية والإعدادات نفسها التي في المتصفح.",
+    "from": "e030fc9eb4b5"
+  },
+  "roadmap.teams.tickets.name": {
+    "text": "التذاكر وطلبات السحب",
+    "from": "c18d1bcc516f"
+  },
+  "roadmap.teams.tickets.text": {
+    "text": "حوّل بلاغًا إلى مهمة في الطابور، وافتح طلب سحب من نسخة عمل، وأبلغ التذكرة بالنتيجة.",
+    "from": "4641289cfa30"
+  },
+  "roadmap.teams.watches.name": {
+    "text": "المراقبات وخطافات الويب والفرز",
+    "from": "9c51f5013534"
+  },
+  "roadmap.teams.watches.text": {
+    "text": "ابدأ العمل حين يحدث شيء: مهمة CI فاشلة، أو تنبيه، أو تغيير مراقَب، أو استدعاء من خدمة أخرى. والقواعد تقرر ما يصبح مهمة.",
+    "from": "1c497d4b9a99"
+  },
+  "roadmap.teams.skills.name": {
+    "text": "مهارات مشتركة وسوق",
+    "from": "31d4586cb1ae"
+  },
+  "roadmap.teams.skills.text": {
+    "text": "شارك مهارات وكيل بمنح الإذن، وعمّمها على الفريق بموافقة، واستوردها من Git، واعثر على عناصر مراجَعة في فهرس عام.",
+    "from": "fd5d82778447"
+  },
+  "roadmap.teams.memory.name": {
+    "text": "ذاكرة للأشخاص والغرف",
+    "from": "ad614cac170e"
+  },
+  "roadmap.teams.memory.text": {
+    "text": "احتفظ بما تعلّمه وكيل لكل شخص ولكل غرفة مشتركة، منفصلًا عن الآخرين.",
+    "from": "416f752e7296"
+  },
+  "roadmap.teams.more": {
+    "text": "وأيضًا: أدوات تحكم إدارية للنماذج والمشاركة ودرجة الصرامة · خادم فريق مستضاف ذاتيًا · تسجيل دخول للفرق (SSO وMFA) · حدود استخدام لكل شخص أو رمز أو وكيل · تقارير للقراءة فقط تُشارَك دون مشاركة الطرفيات · عرض لقائمة «For you» على الهاتف · موصلات مراجَعة لأدوات الشركة · مزيد من تطبيقات المحادثة · تطبيقات ويب داخلية صغيرة تُنشر لأشخاص مختارين.",
+    "from": "481fe85556f5"
+  },
+  "roadmap.cloud.title": {
+    "text": "السحابة",
+    "from": "b977b950c1ae"
+  },
+  "roadmap.cloud.sub": {
+    "text": "وكلاء لا يحتاجون إلى أن يبقى حاسوبك المحمول مستيقظًا.",
+    "from": "87fb76b1a7f8"
+  },
+  "roadmap.cloud.sandbox.name": {
+    "text": "وكلاء معزولون في السحابة",
+    "from": "afb143bae999"
+  },
+  "roadmap.cloud.sandbox.text": {
+    "text": "شغّل وكيلًا في صندوق عزل سحابي منفصل وتابعه على اللوحة نفسها مع وكلائك المحليين. تنام صناديق العزل حين تخمل، وتستيقظ عند الطلب، وتحتفظ بالتخزين بين التشغيلات.",
+    "from": "a53d1378b583"
+  },
+  "roadmap.cloud.pool.name": {
+    "text": "مجموعة من الوكلاء",
+    "from": "7d3bca9c3c41"
+  },
+  "roadmap.cloud.pool.text": {
+    "text": "صِف العمل ودع مجموعة من الوكلاء تتولاه، بدلًا من تسمية طرفية لكل مهمة.",
+    "from": "f9b895723ae8"
+  },
+  "roadmap.cloud.envs.name": {
+    "text": "بيئات جاهزة",
+    "from": "ed1697ee039b"
+  },
+  "roadmap.cloud.envs.text": {
+    "text": "احفظ الاعتماديات والأدوات والمهارات والملفات والمتغيرات مرة واحدة، وابدأ منها أي طرفية جديدة أو وكيل سحابي.",
+    "from": "d97c932492be"
+  },
+  "roadmap.cloud.long.name": {
+    "text": "عمل طويل متعدد المراحل",
+    "from": "1207d0ac598f"
+  },
+  "roadmap.cloud.long.text": {
+    "text": "مهام تعمل لساعات أو أيام على مراحل، مع مراجعة بعد كل مرحلة وتقدّم يصمد بعد إعادة التشغيل.",
+    "from": "a1e631232a28"
+  },
+  "roadmap.cloud.deploy.name": {
+    "text": "نشر سحابي بأمر واحد",
+    "from": "dabcec83058d"
+  },
+  "roadmap.cloud.deploy.text": {
+    "text": "ضع نسخة Aubergine المشتركة لفريقك على حسابك السحابي الخاص بأمر واحد.",
+    "from": "6a0dc41e1a38"
+  },
+  "roadmap.cloud.see.name": {
+    "text": "عمل تستطيع رؤيته",
+    "from": "dae8006cad9a"
+  },
+  "roadmap.cloud.see.text": {
+    "text": "وكيل سحابي يعيد لقطات شاشة أو تسجيلًا قصيرًا لما بناه، في قائمة «For you» لديك.",
+    "from": "34843169f72f"
+  },
+  "roadmap.cloud.more": {
+    "text": "وأيضًا: MCP عبر HTTP، للوكلاء على أجهزة أخرى · دعم مختبَر لـ Linux · تكامل مع صدفات غير zsh.",
+    "from": "ab24c1d11df2"
+  },
+  "roadmap.control.title": {
+    "text": "التحكم",
+    "from": "32d7e8208247"
+  },
+  "roadmap.control.sub": {
+    "text": "كم يجوز لوكيل أن يفعل، وسجل بما فعل.",
+    "from": "9b7292a38acb"
+  },
+  "roadmap.control.approval.name": {
+    "text": "أنماط الموافقة",
+    "from": "7bd88c9e6d2d"
+  },
+  "roadmap.control.approval.text": {
+    "text": "اختر كم يجوز لوكيل أن يفعل وحده: الموافقة على كل إجراء، أو على الخطرة منها، أو لا شيء.",
+    "from": "b9608d55fca3"
+  },
+  "roadmap.control.policy.name": {
+    "text": "سياسة الأوامر والفحص",
+    "from": "c3c9b7fc9194"
+  },
+  "roadmap.control.policy.text": {
+    "text": "قواعد للأوامر التي تحتاج إلى موافقة أو تُرفض دائمًا، وفحص اختياري للمحتوى الخارجي قبل أن يقرأه وكيل.",
+    "from": "6697b64fab83"
+  },
+  "roadmap.control.risk.name": {
+    "text": "مستويات خطر لكل مستودع",
+    "from": "989a1686d169"
+  },
+  "roadmap.control.risk.text": {
+    "text": "حدود أشد حيث يهم الأمر، وأخف حيث لا يهم.",
+    "from": "10639df3756c"
+  },
+  "roadmap.control.audit.name": {
+    "text": "سجل تدقيق كامل",
+    "from": "dfb67e3ffb15"
+  },
+  "roadmap.control.audit.text": {
+    "text": "سجل بمن أو ما فعل ماذا، لكل مشروع، أبعد من استدعاءات الرموز المسجلة اليوم.",
+    "from": "c97e6d6355c9"
+  },
+  "roadmap.control.undo.name": {
+    "text": "التراجع عن عمل وكيل",
+    "from": "f031a385eb84"
+  },
+  "roadmap.control.undo.text": {
+    "text": "أرجِع نسخة عمل إلى ما قبل مهمة، أو تخلّص من فرعها بخطوة واحدة.",
+    "from": "8a76ddeef3eb"
+  },
+  "roadmap.control.admin.name": {
+    "text": "أدوات تحكم إدارية",
+    "from": "9636c9a17dce"
+  },
+  "roadmap.control.admin.text": {
+    "text": "إعدادات على مستوى الفريق لأي النماذج يجوز استخدامها وكيف تعمل المشاركة.",
+    "from": "2e27927bdc87"
+  },
+  "roadmap.control.more": {
+    "text": "وأيضًا: اختيار النموذج لكل طرفية أو مهمة أو جدول زمني.",
+    "from": "f596795919fb"
+  },
+  "roadmap.quality.title": {
+    "text": "الجودة",
+    "from": "1b2c08a8733d"
+  },
+  "roadmap.quality.sub": {
+    "text": "فحوص تجري قبل أن يُعدّ العمل منجزًا.",
+    "from": "d384d12758ef"
+  },
+  "roadmap.quality.gates.name": {
+    "text": "بوابات الجودة",
+    "from": "94515eddaac8"
+  },
+  "roadmap.quality.gates.text": {
+    "text": "لا ينتهي التشغيل حتى تبلّغ المراجعة أو الاختبارات أو فحص أمني بالنجاح.",
+    "from": "cb60bf40a980"
+  },
+  "roadmap.quality.review.name": {
+    "text": "مراجعة طلبات السحب",
+    "from": "88740e3ab820"
+  },
+  "roadmap.quality.review.text": {
+    "text": "وكيل يراجع طلب سحب ويبلّغ قائمة «For you» لديك.",
+    "from": "f2cb7f3e314f"
+  },
+  "roadmap.quality.browser.name": {
+    "text": "اختبار يقوده المتصفح",
+    "from": "7c8b76a0df2d"
+  },
+  "roadmap.quality.browser.text": {
+    "text": "وكيل يقود متصفحًا لاختبار تغيير ويعيد النتائج.",
+    "from": "35d5c9f82525"
+  },
+  "roadmap.quality.plan.name": {
+    "text": "الخطة قبل البناء",
+    "from": "c1b4e7cda45f"
+  },
+  "roadmap.quality.plan.text": {
+    "text": "وكيل يقترح خطة وينتظر موافقتك قبل أن يمس الملفات.",
+    "from": "bfe188b91109"
+  },
+  "roadmap.quality.recipes.name": {
+    "text": "وصفات المهام",
+    "from": "a907955cd430"
+  },
+  "roadmap.quality.recipes.text": {
+    "text": "سير عمل جاهز لتوليد الاختبارات، والمراجعة، وفحص الاعتماديات والأسرار، وإبقاء الوثائق محدّثة.",
+    "from": "d2b3c5c8eb35"
+  },
+  "roadmap.quality.metrics.name": {
+    "text": "مقاييس النتائج",
+    "from": "0663013cf8b2"
+  },
+  "roadmap.quality.metrics.text": {
+    "text": "الوقت من المهمة إلى الإنجاز، وكم مرة انتظرك وكيل، والاستخدام بحسب من بدأه، لكل مشروع.",
+    "from": "cc91d3e1b4a9"
+  },
+  "roadmap.quality.more": {
+    "text": "وأيضًا: تقارير الحوادث، حيث يحقق وكيل ويكتب مسودة تحليل لما بعد الحادثة.",
+    "from": "38f56a594979"
+  },
+  "roadmap.everywhere.title": {
+    "text": "في كل مكان",
+    "from": "dcc10bfd55ac"
+  },
+  "roadmap.everywhere.sub": {
+    "text": "طرق أكثر للوصول إلى Aubergine والبناء عليه.",
+    "from": "738934daa2cd"
+  },
+  "roadmap.everywhere.sdk.name": {
+    "text": "SDK منشورة",
+    "from": "02aa38383381"
+  },
+  "roadmap.everywhere.sdk.text": {
+    "text": "العميل محدد الأنواع حزمةً قابلة للتثبيت، ثم عملاء للغات أخرى مثل Python.",
+    "from": "a3e3521d038a"
+  },
+  "roadmap.everywhere.editor.name": {
+    "text": "إضافة للمحرر",
+    "from": "92399ab4236f"
+  },
+  "roadmap.everywhere.editor.text": {
+    "text": "اعرض طرفياتك وقائمة «For you» داخل VS Code والمحررات المشابهة، دون مغادرة المحرر.",
+    "from": "f8f4319dbbe7"
+  },
+  "roadmap.everywhere.desktop.name": {
+    "text": "تطبيق لسطح المكتب",
+    "from": "7102842054a4"
+  },
+  "roadmap.everywhere.desktop.text": {
+    "text": "تطبيق مُحزَّم بأيقونة في شريط القوائم، بدلًا من علامة تبويب في المتصفح.",
+    "from": "2a56e82d4a02"
+  },
+  "roadmap.everywhere.windows.name": {
+    "text": "دعم Windows",
+    "from": "e61744d0c993"
+  },
+  "roadmap.everywhere.windows.text": {
+    "text": "شغّل Aubergine على Windows. اليوم لا يُدعم إلا macOS، وLinux غير مختبَر.",
+    "from": "6eb34c4aada3"
+  },
+  "faq.meta.title": {
+    "text": "الأسئلة الشائعة | Aubergine",
+    "from": "0956334109a5"
+  },
+  "faq.meta.description": {
+    "text": "إجابات عن Aubergine: ما هو، وما يحتاجه، وهل هو خاص، وكيف يعمل مع وكلاء البرمجة، وما المخطط له.",
+    "from": "b4a8a7a10267"
+  },
+  "faq.crumb": {
+    "text": "الأسئلة الشائعة",
+    "from": "dbc468a14b60"
+  },
+  "faq.title": {
+    "text": "الأسئلة الشائعة",
+    "from": "e956a9404b46"
+  },
+  "faq.lead": {
+    "text": "إجابات قصيرة. <a href=\"/guides/\">الأدلة</a> تتعمق أكثر.",
+    "from": "cc5a52e1d739"
+  },
+  "faq.what.q": {
+    "text": "ما Aubergine؟",
+    "from": "34bffd794522"
+  },
+  "faq.what.a": {
+    "text": "لوحة محلية في المتصفح لجلسات الطرفية. كل طرفية عقدة يمكنك ترتيبها واستخدامها، فتشغّل عدة وكلاء برمجة في آن واحد وتعرف أيهم ينتظرك.",
+    "from": "e2699684c13a"
+  },
+  "faq.free.q": {
+    "text": "هل Aubergine مجاني ومفتوح المصدر؟",
+    "from": "0084cd893989"
+  },
+  "faq.free.a": {
+    "text": "نعم. إنه مجاني وشيفرته المصدرية على GitHub.",
+    "from": "7ac926cbb182"
+  },
+  "faq.need.q": {
+    "text": "ماذا أحتاج لتشغيل Aubergine؟",
+    "from": "efe26fb96381"
+  },
+  "faq.need.a": {
+    "text": "macOS مع tmux 3.2 أو أحدث، ومعه Node.js 22 أو أحدث؛ ويحتاج المثبِّت أيضًا إلى pnpm. يُفترض أن يعمل على Linux لكنه لم يُختبر عليه بعد. أما Windows فغير مدعوم.",
+    "from": "d0ea17ebbaa3"
+  },
+  "faq.agents.q": {
+    "text": "هل يعمل مع أي وكيل برمجة؟",
+    "from": "a17347c2058b"
+  },
+  "faq.agents.a": {
+    "text": "يشغّل Aubergine طرفيات عادية، فيمكن لأي وكيل لسطر الأوامر أن يعمل في واحدة منها. ما يفعله Aubergine من تلقاء نفسه لوكيلٍ، مثل معرفة أنه ينتظر، مبني لـ <a href=\"/claude/\">Claude Code</a>؛ وأي وكيل آخر، ومنه <a href=\"/chatgpt/\">Codex</a>، يستطيع التبليغ عن حالته عبر أوامر <code>aubergine</code> وواجهة API محلية، ويستطيع استخدام خادم MCP لا يعرض إلا ما يسمح به رمزه.",
+    "from": "f2ff9ce8d976"
+  },
+  "faq.send.q": {
+    "text": "هل يرسل Aubergine طرفياتي أو شيفرتي إلى أي مكان؟",
+    "from": "8e3369fd3214"
+  },
+  "faq.send.a": {
+    "text": "لا. كل شيء يعمل على حاسوبك أنت. يستمع الخادم على 127.0.0.1 فقط.",
+    "from": "3b02bfd4cab9"
+  },
+  "faq.model.q": {
+    "text": "هل يستدعي Aubergine نموذج ذكاء اصطناعي؟",
+    "from": "f7d8f06fe992"
+  },
+  "faq.model.a": {
+    "text": "لا. وكلاؤك يفعلون ذلك. لا يفعل Aubergine إلا تشغيل طرفياتهم ومتابعتها، ولا يحتفظ بمفتاح لأي نموذج.",
+    "from": "b237bbedc740"
+  },
+  "faq.close.q": {
+    "text": "ماذا يحدث لطرفياتي حين أغلق المتصفح؟",
+    "from": "b5dd88540c71"
+  },
+  "faq.close.a": {
+    "text": "تبقى تعمل. كل جلسة هي جلسة tmux تبقى بعد إغلاق المتصفح وخادم Aubergine كليهما.",
+    "from": "7871478dcac5"
+  },
+  "faq.waiting.q": {
+    "text": "كيف أعرف أي وكيل ينتظرني؟",
+    "from": "7430a38bad53"
+  },
+  "faq.waiting.a": {
+    "text": "تُظهر كل طرفية إن كانت مشغولة أو خاملة أو تنتظر. والعدد بجانب For you في أعلى الصفحة وقائمة For you يجمعان كل ما يحتاج إليك.",
+    "from": "35f55955a398"
+  },
+  "faq.apart.q": {
+    "text": "كيف أمنع وكيلين من تعديل الملفات نفسها؟",
+    "from": "50c7b0247257"
+  },
+  "faq.apart.a": {
+    "text": "شغّل كل طرفية في نسخة عمل خاصة بها: نسختها المسحوبة الخاصة على فرعها الخاص. لا يدمج Aubergine ولا يدفع نيابة عنك أبدًا.",
+    "from": "823333cbb2a8"
+  },
+  "faq.steps.q": {
+    "text": "هل أستطيع أن أعطي وكيلًا قائمة خطوات يتبعها؟",
+    "from": "76d449645ba9"
+  },
+  "faq.steps.a": {
+    "text": "نعم. سير العمل قائمة مرتبة من الخطوات، مع شريط يُظهر أين الوكيل. ويمكن لخطوة أن تنتظرك لتوافق أو تعيدها.",
+    "from": "9bc235f9572a"
+  },
+  "faq.talk.q": {
+    "text": "هل يستطيع الوكلاء التحدث بعضهم إلى بعض؟",
+    "from": "bb3d5c828a26"
+  },
+  "faq.talk.a": {
+    "text": "نعم، ضمن حدود. للرسائل بين الطرفيات مرسِلون مسمَّون وتوقفات وحظر، وهي مغلقة افتراضيًا في كل لوحة.",
+    "from": "b84d014d23cc"
+  },
+  "faq.api.q": {
+    "text": "هل توجد واجهة API؟",
+    "from": "e5876c15cf79"
+  },
+  "faq.api.a": {
+    "text": "نعم. واجهة HTTP API محلية برموز محدودة النطاق، وعميل محدد الأنواع، وخادم MCP لا يعرض إلا الأدوات التي تسمح بها بيانات الاعتماد.",
+    "from": "70b05cca5923"
+  },
+  "faq.focus.q": {
+    "text": "هل أستطيع فتح طرفية واحدة وحدها؟",
+    "from": "4e72afdbfe4a"
+  },
+  "faq.focus.a": {
+    "text": "نعم. <strong>Tab ↗‎</strong> في عنوان الطرفية يفتحها في علامة تبويب خاصة بها في المتصفح، هي الطرفية نفسها لا نسخة منها، مع تفاصيلها وملاحظتها بجانبها حين تطلب ذلك. وإغلاق علامة التبويب لا يُنهي شيئًا.",
+    "from": "0909e72f8382"
+  },
+  "faq.fields.q": {
+    "text": "هل أستطيع أن أحفظ تذكرة أو مسؤولًا مع طرفية؟",
+    "from": "92b518e794bd"
+  },
+  "faq.fields.a": {
+    "text": "نعم. للطرفية حقول، أزواج من تسمية وقيمة، في تفاصيلها. ويستطيع الوكيل الذي فيها ضبط حقوله بـ <code>aubergine field set</code>؛ وحيث تضبط أنت التسمية نفسها، تبقى قيمتك.",
+    "from": "595a80f0d504"
+  },
+  "faq.cloud.q": {
+    "text": "هل سيدعم Aubergine عدة أشخاص أو وكلاء في السحابة؟",
+    "from": "3c1035134c8f"
+  },
+  "faq.cloud.a": {
+    "text": "كلاهما مخطط له ولم يُبنَ أيٌّ منهما. انظر <a href=\"/roadmap/\">خارطة الطريق</a>. اليوم كل شيء يعمل على حاسوب واحد.",
+    "from": "02eb76c521d2"
+  },
+  "faq.installer.q": {
+    "text": "ماذا يغيّر المثبِّت على حاسوبي؟",
+    "from": "e6f26b5fdca4"
+  },
+  "faq.installer.a": {
+    "text": "شيئين: مجلد التثبيت (~/.aubergine) ورابطًا واحدًا اسمه aubergine. لا يستخدم sudo أبدًا، ولا يعدّل ملفات بدء الصدفة لديك أبدًا، ولا يثبّت Node.js أو pnpm أو tmux أبدًا.",
+    "from": "00c4335ab841"
+  },
+  "404.meta.title": {
+    "text": "الصفحة غير موجودة | Aubergine",
+    "from": "19d867c4b2d8"
+  },
+  "404.meta.description": {
+    "text": "هذه الصفحة غير موجودة. عُد إلى أدلة Aubergine.",
+    "from": "920927185e61"
+  },
+  "404.title": {
+    "text": "تلك الصفحة ليست هنا",
+    "from": "fecba20c2c31"
+  },
+  "404.lead": {
+    "text": "ربما كُتب العنوان خطأً أو نُقلت الصفحة. قد يساعدك هذا:",
+    "from": "679fc5b22fd6"
+  },
+  "404.home": {
+    "text": "الصفحة الرئيسية لـ Aubergine",
+    "from": "c340078688b5"
+  },
+  "404.install": {
+    "text": "ثبّت Aubergine",
+    "from": "733a8757545c"
+  },
+  "404.guides": {
+    "text": "الأدلة",
+    "from": "572cd72feb9a"
+  },
+  "404.faq": {
+    "text": "الأسئلة الشائعة",
+    "from": "e956a9404b46"
+  }
+}
