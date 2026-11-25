@@ -637,3 +637,5 @@ h1, h2, h3 { hyphens: manual; }
   .page-body > .prose > h2 + .seq > li:first-child, .page-body > .prose > h2 + ul, .page-body > .prose > h2 + .table { padding-block-start: var(--s-4); }
   .page-body > .prose > h2 + p { padding-block-start: var(--s-4); }
 }
+/* In a right-to-left page the language menu reads from the right, whatever each name's own direction. */
+[dir="rtl"] .languages .menu-list a[dir="ltr"] { flex-direction: row-reverse; }
