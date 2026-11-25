@@ -1,0 +1,100 @@
+<!--page {"order": 6, "key": "copies", "llms": {"name": "Working copies", "about": "an agent per checkout and branch"}}-->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "{{=url}}#article",
+      "headline": {{json:copies.title}},
+      "description": {{json:copies.meta.description}},
+      "url": "{{=url}}",
+      "mainEntityOfPage": "{{=url}}",
+      "datePublished": "2026-11-18",
+      "inLanguage": "{{=lang}}",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": {{json:guides.crumb}}, "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": {{json:copies.crumb}}, "item": "{{=url}}" }
+      ]
+    },
+    {
+      "@type": "HowTo",
+      "@id": "{{=url}}#howto",
+      "name": {{json:copies.ld.howto}},
+      "description": {{json:copies.ld.howtoAbout}},
+      "tool": [{ "@type": "HowToTool", "name": "Git 2.31" }],
+      "step": [
+        { "@type": "HowToStep", "position": 1, "name": {{json:copies.ld.s1}}, "text": {{json:copies.ld.s1text}} },
+        { "@type": "HowToStep", "position": 2, "name": {{json:copies.ld.s2}}, "text": {{json:copies.ld.s2text}} },
+        { "@type": "HowToStep", "position": 3, "name": {{json:copies.ld.s3}}, "text": "aubergine here --copy" },
+        { "@type": "HowToStep", "position": 4, "name": {{json:copies.ld.s4}}, "text": {{json:copies.ld.s4text}} },
+        { "@type": "HowToStep", "position": 5, "name": {{json:copies.ld.s5}}, "text": {{json:copies.ld.s5text}} }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "{{=url}}#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": {{json:copies.ld.q1}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:copies.ld.a1}} } },
+        { "@type": "Question", "name": {{json:copies.ld.q2}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:copies.ld.a2}} } },
+        { "@type": "Question", "name": {{json:copies.ld.q3}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:copies.ld.a3}} } },
+        { "@type": "Question", "name": {{json:copies.ld.q4}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:copies.ld.a4}} } }
+      ]
+    }
+  ]
+}
+</script>
+<div class="wrap page-head">
+  <nav class="crumbs" aria-label="{{attr:site.crumbs}}"><ol><li><a href="/">Aubergine</a></li><li><a href="/guides/">{{guides.crumb}}</a></li><li>{{copies.crumb}}</li></ol></nav>
+  <h1>{{copies.title}}</h1>
+  <p class="lead">{{copies.lead}}</p>
+</div>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>{{copies.start.title}}</h2>
+    <ol>
+      <li>{{copies.start.s1}}</li>
+      <li>{{copies.start.s2}}</li>
+    </ol>
+    <p>{{copies.start.cli}}</p>
+    <pre><code>aubergine here --copy
+aubergine new "api" --copy --in ~/code/my-project</code></pre>
+    <h2>{{copies.get.title}}</h2>
+    <p>{{copies.get.text}}</p>
+    <p class="note">{{copies.get.not}}</p>
+    <h2>{{copies.read.title}}</h2>
+    <p>{{copies.read.text}}</p>
+    <h2>{{copies.end.title}}</h2>
+    <p>{{copies.end.text}}</p>
+    <ul>
+      <li>{{copies.end.branch}}</li>
+      <li>{{copies.end.keep}}</li>
+      <li>{{copies.end.discard}}</li>
+    </ul>
+    <pre><code>aubergine copies
+aubergine copies show api
+aubergine copies keep-branch api
+aubergine copies discard api</code></pre>
+    <p>{{copies.end.never}}</p>
+    <h2>{{copies.git.title}}</h2>
+    <p>{{copies.git.text}}</p>
+    <h2>{{copies.sandbox.title}}</h2>
+    <p>{{copies.sandbox.text}}</p>
+    <p>{{copies.related}}</p>
+  </div>
+</div>

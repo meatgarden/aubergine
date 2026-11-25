@@ -1,14 +1,19 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Security and privacy | Aubergine</title>
 <meta name="description" content="Aubergine runs only on your computer, listens on 127.0.0.1, checks every request, scopes every token, and says plainly what it does not protect against.">
 <link rel="canonical" href="https://thirstyeggplant.com/security/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/security/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/security/">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="theme-color" content="#14151a">
+<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
 <link rel="icon" href="../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../style.css">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Aubergine">
 <meta property="og:title" content="Security and privacy | Aubergine">
@@ -23,7 +28,39 @@
 <meta name="twitter:image:alt" content="Aubergine: a canvas of terminals, one busy and one waiting for you">
 <meta name="twitter:title" content="Security and privacy | Aubergine">
 <meta name="twitter:description" content="Aubergine runs only on your computer, listens on 127.0.0.1, checks every request, scopes every token, and says plainly what it does not protect against.">
-<link rel="stylesheet" href="../style.css">
+<link rel="alternate" type="text/plain" href="../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">Skip to the page</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="Pages">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Install</a></li>
+        <li><a href="../guides/">Guides</a></li>
+        <li><a href="./" aria-current="page">Security</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+        <details class="menu pages">
+      <summary>Menu</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Install</a></li>
+        <li><a href="../guides/">Guides</a></li>
+        <li><a href="./" aria-current="page">Security</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+<main id="main" tabindex="-1">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -43,95 +80,44 @@
       "url": "https://thirstyeggplant.com/security/",
       "mainEntityOfPage": "https://thirstyeggplant.com/security/",
       "datePublished": "2026-11-18",
-      "dateModified": "2026-11-18",
       "inLanguage": "en",
-      "author": {
-        "@id": "https://github.com/thirstyeggplant#organization"
-      },
-      "publisher": {
-        "@id": "https://github.com/thirstyeggplant#organization"
-      },
-      "isPartOf": {
-        "@id": "https://thirstyeggplant.com/#website"
-      },
-      "about": {
-        "@id": "https://thirstyeggplant.com/#software"
-      }
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
     },
     {
       "@type": "BreadcrumbList",
       "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "name": "Aubergine",
-          "item": "https://thirstyeggplant.com/"
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "name": "Security",
-          "item": "https://thirstyeggplant.com/security/"
-        }
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Security", "item": "https://thirstyeggplant.com/security/" }
       ]
     },
     {
       "@type": "FAQPage",
       "@id": "https://thirstyeggplant.com/security/#faq",
       "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "Does Aubergine send my terminals or code anywhere?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "No. The server listens on 127.0.0.1 only, so it is reachable from your computer and nowhere else. Aubergine calls no model and fetches nothing unless you add a library source yourself."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Can an agent change Aubergine's settings or make itself a token?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "No. Creating tokens, changing settings, reading the activity log and anything about terminals outside Aubergine are never allowed to a token, whatever scopes it has."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Does an approval stop the owner's own agent from approving itself?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "No. An agent that runs as you can act as you. Approvals are recorded, not enforced against your own agent."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Are working copies a sandbox?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "No. They keep work apart but do not keep an agent in. Agents run as you."
-          }
-        }
+        { "@type": "Question", "name": "Does Aubergine send my terminals or code anywhere?", "acceptedAnswer": { "@type": "Answer", "text": "No. The server listens on 127.0.0.1 only, so it is reachable from your computer and nowhere else until you set up use from another device. Aubergine calls no model and fetches nothing unless you add a library source yourself; where your own gh tool is installed, it asks it for the pull request of a terminal's branch." } },
+        { "@type": "Question", "name": "Can an agent change Aubergine's settings or make itself a token?", "acceptedAnswer": { "@type": "Answer", "text": "No. Creating tokens, changing settings, reading the activity log and anything about terminals outside Aubergine are never allowed to a token, whatever scopes it has." } },
+        { "@type": "Question", "name": "Does an approval stop the owner's own agent from approving itself?", "acceptedAnswer": { "@type": "Answer", "text": "No. An agent that runs as you can act as you. Approvals are recorded, not enforced against your own agent." } },
+        { "@type": "Question", "name": "Are working copies a sandbox?", "acceptedAnswer": { "@type": "Answer", "text": "No. They keep work apart but do not keep an agent in. Agents run as you." } }
       ]
     }
   ]
 }
 </script>
-</head>
-<body>
-<div class="glow" aria-hidden="true"></div>
-<div class="wrap">
-  <header class="top">
-    <a class="brand" href="../"><img src="../icon.svg" alt="" width="30" height="30">Aubergine</a>
-    <nav aria-label="Main"><a href="../install/">Install</a><a href="../guides/">Guides</a><a href="../security/">Security</a><a href="../roadmap/">Roadmap</a><a href="../faq/">FAQ</a><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></nav>
-  </header>
-  <main class="prose">
-    <p class="crumbs"><a href="../">Aubergine</a> / <span aria-current="page">Security</span></p>
-    <h1>Security and privacy</h1>
-    <p class="lead">What Aubergine does to protect your terminals, and, just as important, what it does not. The short version: it is local, it asks before it acts for an agent, and agents still run as you.</p>
+<div class="wrap page-head">
+  <nav class="crumbs" aria-label="Where you are"><ol><li><a href="../">Aubergine</a></li><li>Security</li></ol></nav>
+  <h1>Security and privacy</h1>
+  <p class="lead">What Aubergine does to protect your terminals, and, just as important, what it does not. The short version: it is local, it asks before it acts for an agent, and agents still run as you.</p>
+</div>
+<div class="wrap page-body">
+  <div class="prose">
     <h2>Everything stays on your computer</h2>
     <ul>
       <li>The server binds to <code>127.0.0.1</code> only. Every request, and every WebSocket upgrade, has its <code>Host</code> and <code>Origin</code> checked, and the browser must hold an access cookie.</li>
-      <li>Aubergine calls no model and starts no network request of its own. The one exception is fetching a library source (a Git address) when <em>you</em> ask for it.</li>
+      <li>Using Aubergine from another device is off until you set it up: something on the same computer carries HTTPS to it under a name you write in the settings, and each browser is paired with a one-time code and can be revoked. A paired device is the whole owner. <a href="https://github.com/thirstyeggplant/aubergine/blob/main/docs/remote.md">Using Aubergine from elsewhere</a> says how.</li>
+      <li>Aubergine calls no model and starts no network request of its own, with two exceptions: fetching a library source (a Git address) when <em>you</em> ask for it, and asking your own <code>gh</code> tool, where it is installed and signed in, for the pull request of a terminal's branch.</li>
       <li>Desktop notifications come from the open page. Nothing leaves your computer.</li>
     </ul>
     <h2>Three kinds of caller, each judged on its own</h2>
@@ -150,25 +136,62 @@
       <li>Installing from a library needs you to accept the exact content you were shown.</li>
     </ul>
     <h2>What this does not protect against</h2>
-    <div class="callout">
-      <p><strong>Agents run as you.</strong> An agent in a terminal can do anything you can do in that terminal, including running commands, reading files and, if it chooses, using your own browser session.</p>
-      <ul>
-        <li><strong>Approvals are not a lock.</strong> An agent that runs as you can decide as you. The decision is recorded, not prevented.</li>
-        <li><strong>Working copies are not a sandbox.</strong> They keep work apart and do not keep an agent in.</li>
-        <li><strong>The review screen is the control for library items.</strong> An item is instructions an agent will follow with everything that agent may do. Do not install what you have not read.</li>
-        <li><strong>The guide for agents is advice</strong>, not a lock.</li>
-      </ul>
-    </div>
+    <p class="note"><strong>Agents run as you.</strong> An agent in a terminal can do anything you can do in that terminal, including running commands, reading files and, if it chooses, using your own browser session.</p>
+    <ul>
+      <li><strong>Approvals are not a lock.</strong> An agent that runs as you can decide as you. The decision is recorded, not prevented.</li>
+      <li><strong>Working copies are not a sandbox.</strong> They keep work apart and do not keep an agent in.</li>
+      <li><strong>The review screen is the control for library items.</strong> An item is instructions an agent will follow with everything that agent may do. Do not install what you have not read.</li>
+      <li><strong>The guide for agents is advice</strong>, not a lock.</li>
+    </ul>
     <h2>The installer</h2>
     <p>It changes two things: its own folder and one link named <code>aubergine</code>. No <code>sudo</code>, no edits to your shell startup files, and it never touches your data folder. <code>aubergine uninstall</code> removes only what it made.</p>
     <h2>Report a problem</h2>
     <p>Open an issue on <a href="https://github.com/thirstyeggplant/aubergine/issues">GitHub</a>. Do not put secrets or tokens in it.</p>
     <p>Related: <a href="../working-copies/">working copies</a> · <a href="../faq/">FAQ</a> · <a href="../roadmap/">roadmap</a> (approval modes and command policy are planned, not built)</p>
-  </main>
-  <footer>
-    <span>Aubergine is open source. <a href="https://github.com/thirstyeggplant/aubergine">GitHub</a> · <a href="../llms.txt">llms.txt</a></span>
-    <span class="flinks"><a href="../install/">Install</a> · <a href="../guides/">Guides</a> · <a href="../run-multiple-coding-agents/">Run several agents</a> · <a href="../working-copies/">Working copies</a> · <a href="../queue-and-schedules/">Queue and schedules</a> · <a href="../security/">Security</a> · <a href="../roadmap/">Roadmap</a> · <a href="../faq/">FAQ</a></span>
-  </footer>
+  </div>
 </div>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <nav aria-label="Every page">
+      <ul class="foot-links">
+        <li><a href="../">Home</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex and ChatGPT</a></li>
+        <li><a href="../install/">Install</a></li>
+        <li><a href="../guides/">Guides</a></li>
+        <li><a href="../run-multiple-coding-agents/">Run several agents</a></li>
+        <li><a href="../working-copies/">Working copies</a></li>
+        <li><a href="../queue-and-schedules/">Queue and schedules</a></li>
+        <li><a href="./" aria-current="page">Security</a></li>
+        <li><a href="../roadmap/">Roadmap</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine is free and open source under the <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT license</a>, and runs on your own computer.</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+</script>
 </body>
 </html>

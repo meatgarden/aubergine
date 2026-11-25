@@ -1,0 +1,88 @@
+<!--page {"order": 7, "key": "queue", "llms": {"name": "The queue, For you and schedules", "about": null}}-->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "{{=url}}#article",
+      "headline": {{json:queue.ld.headline}},
+      "description": {{json:queue.meta.description}},
+      "url": "{{=url}}",
+      "mainEntityOfPage": "{{=url}}",
+      "datePublished": "2026-11-18",
+      "inLanguage": "{{=lang}}",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": {{json:guides.crumb}}, "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": {{json:queue.crumb}}, "item": "{{=url}}" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "{{=url}}#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": {{json:queue.ld.q1}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:queue.ld.a1}} } },
+        { "@type": "Question", "name": {{json:queue.ld.q2}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:queue.ld.a2}} } },
+        { "@type": "Question", "name": {{json:queue.ld.q3}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:queue.ld.a3}} } },
+        { "@type": "Question", "name": {{json:queue.ld.q4}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:queue.ld.a4}} } }
+      ]
+    }
+  ]
+}
+</script>
+<div class="wrap page-head">
+  <nav class="crumbs" aria-label="{{attr:site.crumbs}}"><ol><li><a href="/">Aubergine</a></li><li><a href="/guides/">{{guides.crumb}}</a></li><li>{{queue.crumb}}</li></ol></nav>
+  <h1>{{queue.title}}</h1>
+  <p class="lead">{{queue.lead}}</p>
+</div>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>{{queue.queue.title}}</h2>
+    <p>{{queue.queue.text}}</p>
+    <ul>
+      <li>{{queue.queue.next}}</li>
+      <li>{{queue.queue.limit}}</li>
+      <li>{{queue.queue.itself}}</li>
+      <li>{{queue.queue.order}}</li>
+      <li>{{queue.queue.follows}}</li>
+    </ul>
+    <h2>{{queue.foryou.title}}</h2>
+    <p>{{queue.foryou.text}}</p>
+    <figure class="pic"><a href="/screenshots/for-you.png"><img src="/screenshots/for-you.png" width="990" height="570" loading="lazy" alt="{{attr:queue.pic.alt}}"></a><figcaption>{{queue.pic.caption}}</figcaption></figure>
+    <p>{{queue.foryou.propose}}</p>
+    <pre><code>aubergine task add "Add a test for the retry" --details "it should fail without the fix"
+aubergine ask "the staging key expires this week: rotate it, or say who can"</code></pre>
+    <p>{{queue.foryou.land}}</p>
+    <h2>{{queue.schedules.title}}</h2>
+    <p>{{queue.schedules.text}}</p>
+    <pre><code>aubergine schedule add "My morning list" --at 08:30 --days weekdays \
+  --element "Morning list" --new Main
+aubergine schedule run "My morning list"</code></pre>
+    <p>{{queue.schedules.run}}</p>
+    <h3>{{queue.plan.title}}</h3>
+    <ul>
+      <li>{{queue.plan.awake}}</li>
+      <li>{{queue.plan.skipped}}</li>
+      <li>{{queue.plan.gone}}</li>
+    </ul>
+    <h2>{{queue.rules.title}}</h2>
+    <p>{{queue.rules.text}}</p>
+    <p>{{queue.rules.nothing}}</p>
+    <p>{{queue.related}}</p>
+  </div>
+</div>

@@ -1,18 +1,23 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Aubergine guides | Aubergine</title>
-<meta name="description" content="Guides to running several coding agents with Aubergine: the overview, working copies, and the queue and schedules.">
+<meta name="description" content="Guides to running several coding agents with Aubergine: the overview, Claude Code and Codex, working copies, and the queue and schedules.">
 <link rel="canonical" href="https://thirstyeggplant.com/guides/">
+<link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/guides/">
+<link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/guides/">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="theme-color" content="#14151a">
+<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
 <link rel="icon" href="../icon.svg" type="image/svg+xml">
+<link rel="preload" href="../fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../style.css">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Aubergine">
 <meta property="og:title" content="Aubergine guides | Aubergine">
-<meta property="og:description" content="Guides to running several coding agents with Aubergine: the overview, working copies, and the queue and schedules.">
+<meta property="og:description" content="Guides to running several coding agents with Aubergine: the overview, Claude Code and Codex, working copies, and the queue and schedules.">
 <meta property="og:url" content="https://thirstyeggplant.com/guides/">
 <meta property="og:image" content="https://thirstyeggplant.com/og.png">
 <meta property="og:image:width" content="1200">
@@ -22,8 +27,40 @@
 <meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
 <meta name="twitter:image:alt" content="Aubergine: a canvas of terminals, one busy and one waiting for you">
 <meta name="twitter:title" content="Aubergine guides | Aubergine">
-<meta name="twitter:description" content="Guides to running several coding agents with Aubergine: the overview, working copies, and the queue and schedules.">
-<link rel="stylesheet" href="../style.css">
+<meta name="twitter:description" content="Guides to running several coding agents with Aubergine: the overview, Claude Code and Codex, working copies, and the queue and schedules.">
+<link rel="alternate" type="text/plain" href="../llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">Skip to the page</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="../"><img src="../icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="Pages">
+      <ul>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Install</a></li>
+        <li><a href="./" aria-current="page">Guides</a></li>
+        <li><a href="../security/">Security</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+        <details class="menu pages">
+      <summary>Menu</summary>
+      <ul class="menu-list">
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex</a></li>
+        <li><a href="../install/">Install</a></li>
+        <li><a href="./" aria-current="page">Guides</a></li>
+        <li><a href="../security/">Security</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+<main id="main" tabindex="-1">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -38,48 +75,72 @@
     {
       "@type": "BreadcrumbList",
       "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "name": "Aubergine",
-          "item": "https://thirstyeggplant.com/"
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "name": "Guides",
-          "item": "https://thirstyeggplant.com/guides/"
-        }
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Guides", "item": "https://thirstyeggplant.com/guides/" }
       ]
     }
   ]
 }
 </script>
-</head>
-<body>
-<div class="glow" aria-hidden="true"></div>
-<div class="wrap">
-  <header class="top">
-    <a class="brand" href="../"><img src="../icon.svg" alt="" width="30" height="30">Aubergine</a>
-    <nav aria-label="Main"><a href="../install/">Install</a><a href="../guides/">Guides</a><a href="../security/">Security</a><a href="../roadmap/">Roadmap</a><a href="../faq/">FAQ</a><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></nav>
-  </header>
-  <main class="prose">
-    <p class="crumbs"><a href="../">Aubergine</a> / <span aria-current="page">Guides</span></p>
-    <h1>Guides</h1>
-    <p class="lead">Short, practical guides. The full reference is the <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>.</p>
-    <div class="grid">
-      <article class="card"><h3><a href="../install/">Install Aubergine</a></h3><p>Requirements, the one-line installer, what it changes, and fixes for common problems.</p></article>
-      <article class="card"><h3><a href="../run-multiple-coding-agents/">Run several coding agents at once</a></h3><p>The canvas, the waiting count, the queue, working copies and workflows in one tour.</p></article>
-      <article class="card"><h3><a href="../working-copies/">Working copies</a></h3><p>Give each agent its own checkout and branch so two agents never edit the same files.</p></article>
-      <article class="card"><h3><a href="../queue-and-schedules/">The queue, For you and schedules</a></h3><p>Hand out work once, see everything that waits on you, and run tasks at set times.</p></article>
-      <article class="card"><h3><a href="../security/">Security and privacy</a></h3><p>What is protected, and what is not.</p></article>
-      <article class="card"><h3><a href="../faq/">FAQ</a></h3><p>Short answers to common questions.</p></article>
-    </div>
-  </main>
-  <footer>
-    <span>Aubergine is open source. <a href="https://github.com/thirstyeggplant/aubergine">GitHub</a> · <a href="../llms.txt">llms.txt</a></span>
-    <span class="flinks"><a href="../install/">Install</a> · <a href="../guides/">Guides</a> · <a href="../run-multiple-coding-agents/">Run several agents</a> · <a href="../working-copies/">Working copies</a> · <a href="../queue-and-schedules/">Queue and schedules</a> · <a href="../security/">Security</a> · <a href="../roadmap/">Roadmap</a> · <a href="../faq/">FAQ</a></span>
-  </footer>
+<div class="wrap page-head">
+  <nav class="crumbs" aria-label="Where you are"><ol><li><a href="../">Aubergine</a></li><li>Guides</li></ol></nav>
+  <h1>Guides</h1>
+  <p class="lead">Short, practical guides. The full reference is the <a href="https://github.com/thirstyeggplant/aubergine#readme">README</a>.</p>
 </div>
+<div class="wrap page-body">
+  <ul class="rows">
+    <li><h2><a class="row-link" href="../install/">Install Aubergine</a></h2><p>Requirements, the one-line installer, what it changes, and fixes for common problems.</p></li>
+    <li><h2><a class="row-link" href="../run-multiple-coding-agents/">Run several coding agents at once</a></h2><p>The canvas, the waiting count, the queue, working copies and workflows in one tour.</p></li>
+    <li><h2><a class="row-link" href="../claude/">Claude Code in Aubergine</a></h2><p>What Aubergine does by itself for Claude Code, and where each thing is.</p></li>
+    <li><h2><a class="row-link" href="../chatgpt/">Codex and ChatGPT</a></h2><p>Codex in a terminal like any program, what it can report, and what is built only for Claude Code.</p></li>
+    <li><h2><a class="row-link" href="../working-copies/">Working copies</a></h2><p>Give each agent its own checkout and branch so two agents never edit the same files.</p></li>
+    <li><h2><a class="row-link" href="../queue-and-schedules/">The queue, For you and schedules</a></h2><p>Hand out work once, see everything that waits on you, and run tasks at set times.</p></li>
+    <li><h2><a class="row-link" href="../security/">Security and privacy</a></h2><p>What is protected, and what is not.</p></li>
+    <li><h2><a class="row-link" href="../faq/">FAQ</a></h2><p>Short answers to common questions.</p></li>
+  </ul>
+</div>
+
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <nav aria-label="Every page">
+      <ul class="foot-links">
+        <li><a href="../">Home</a></li>
+        <li><a href="../claude/">Claude Code</a></li>
+        <li><a href="../chatgpt/">Codex and ChatGPT</a></li>
+        <li><a href="../install/">Install</a></li>
+        <li><a href="./" aria-current="page">Guides</a></li>
+        <li><a href="../run-multiple-coding-agents/">Run several agents</a></li>
+        <li><a href="../working-copies/">Working copies</a></li>
+        <li><a href="../queue-and-schedules/">Queue and schedules</a></li>
+        <li><a href="../security/">Security</a></li>
+        <li><a href="../roadmap/">Roadmap</a></li>
+        <li><a href="../faq/">FAQ</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="../llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">Aubergine is free and open source under the <a href="https://github.com/thirstyeggplant/aubergine/blob/main/LICENSE">MIT license</a>, and runs on your own computer.</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+</script>
 </body>
 </html>

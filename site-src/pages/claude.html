@@ -1,0 +1,88 @@
+<!--page {"order": 1, "llms": {"name": "Claude Code in Aubergine", "about": "what Aubergine does by itself for Claude Code, and where each thing is"}}-->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "TechArticle",
+      "@id": "{{=url}}#article",
+      "headline": {{json:claude.title}},
+      "description": {{json:claude.meta.description}},
+      "url": "{{=url}}",
+      "inLanguage": "{{=lang}}",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Claude Code", "item": "{{=url}}" }
+      ]
+    }
+  ]
+}
+</script>
+<div class="wrap page-head">
+  <nav class="crumbs" aria-label="{{attr:site.crumbs}}"><ol><li><a href="/">Aubergine</a></li><li>Claude Code</li></ol></nav>
+  <h1>{{claude.title}}</h1>
+  <p class="lead">{{claude.lead}}</p>
+</div>
+<div class="wrap page-body">
+  <div class="prose">
+    <p class="note">{{claude.yours}}</p>
+
+    <h2>{{claude.start.title}}</h2>
+    <p>{{claude.start.text}}</p>
+    <p>{{claude.start.command}}</p>
+    <p class="note">{{claude.start.where}}</p>
+
+    <h2>{{claude.state.title}}</h2>
+    <p>{{claude.state.text}}</p>
+    <p>{{claude.state.more}}</p>
+    <p class="note">{{claude.state.where}}</p>
+
+    <h2>{{claude.byhand.title}}</h2>
+    <p>{{claude.byhand.text}}</p>
+    <p class="cmd"><code>aubergine hooks print</code><button type="button" class="copy" data-copy data-copied="{{attr:site.copied}}" aria-live="polite" hidden>{{site.copy}}</button></p>
+
+    <h2>{{claude.describe.title}}</h2>
+    <p>{{claude.describe.text}}</p>
+    <p class="note">{{claude.describe.where}}</p>
+
+    <h2>{{claude.told.title}}</h2>
+    <p>{{claude.told.text}}</p>
+    <p>{{claude.told.more}}</p>
+    <p class="note">{{claude.told.where}}</p>
+
+    <h2>{{claude.resume.title}}</h2>
+    <p>{{claude.resume.text}}</p>
+    <p class="note">{{claude.resume.where}}</p>
+
+    <h2>{{claude.history.title}}</h2>
+    <p>{{claude.history.text}}</p>
+    <p>{{claude.history.form}}</p>
+    <p class="note">{{claude.history.where}}</p>
+
+    <h2>{{claude.setup.title}}</h2>
+    <p>{{claude.setup.text}}</p>
+    <p class="note">{{claude.setup.where}}</p>
+
+    <h2>{{claude.tools.title}}</h2>
+    <p>{{claude.tools.text}}</p>
+    <p class="note">{{claude.tools.where}}</p>
+
+    <h2>{{claude.move.title}}</h2>
+    <p>{{claude.move.text}}</p>
+    <p class="note">{{claude.move.where}}</p>
+
+    <h2>{{claude.copy.title}}</h2>
+    <p>{{claude.copy.text}}</p>
+
+    <h2>{{claude.tried.title}}</h2>
+    <p>{{claude.tried.text}}</p>
+
+    <p>{{claude.others}}</p>
+    <p class="note">{{claude.mark}}</p>
+  </div>
+</div>

@@ -1,0 +1,74 @@
+<!--page {"order": 5, "key": "several", "llms": {"name": "Run several coding agents at once", "about": null}}-->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "{{=url}}#article",
+      "headline": {{json:several.title}},
+      "description": {{json:several.meta.description}},
+      "url": "{{=url}}",
+      "mainEntityOfPage": "{{=url}}",
+      "datePublished": "2026-11-18",
+      "inLanguage": "{{=lang}}",
+      "author": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "publisher": { "@id": "https://github.com/thirstyeggplant#organization" },
+      "isPartOf": { "@id": "https://thirstyeggplant.com/#website" },
+      "about": { "@id": "https://thirstyeggplant.com/#software" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": {{json:guides.crumb}}, "item": "https://thirstyeggplant.com/guides/" },
+        { "@type": "ListItem", "position": 3, "name": {{json:several.crumb}}, "item": "{{=url}}" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "{{=url}}#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": {{json:several.ld.q1}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:several.ld.a1}} } },
+        { "@type": "Question", "name": {{json:several.ld.q2}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:several.ld.a2}} } },
+        { "@type": "Question", "name": {{json:several.ld.q3}}, "acceptedAnswer": { "@type": "Answer", "text": {{json:several.ld.a3}} } }
+      ]
+    }
+  ]
+}
+</script>
+<div class="wrap page-head">
+  <nav class="crumbs" aria-label="{{attr:site.crumbs}}"><ol><li><a href="/">Aubergine</a></li><li><a href="/guides/">{{guides.crumb}}</a></li><li>{{several.crumb}}</li></ol></nav>
+  <h1>{{several.title}}</h1>
+  <p class="lead">{{several.lead}}</p>
+</div>
+<div class="wrap page-body">
+  <div class="prose">
+    <h2>{{several.canvas.title}}</h2>
+    <p>{{several.canvas.text}}</p>
+    <p>{{several.canvas.tmux}}</p>
+    <h2>{{several.waits.title}}</h2>
+    <p>{{several.waits.text}}</p>
+    <p>{{several.waits.foryou}}</p>
+    <h2>{{several.queue.title}}</h2>
+    <p>{{several.queue.text}}</p>
+    <h2>{{several.apart.title}}</h2>
+    <p>{{several.apart.text}}</p>
+    <h2>{{several.steps.title}}</h2>
+    <p>{{several.steps.text}}</p>
+    <h2>{{several.not.title}}</h2>
+    <ul>
+      <li>{{several.not.model}}</li>
+      <li>{{several.not.asyou}}</li>
+      <li>{{several.not.one}}</li>
+    </ul>
+    <p class="actions"><a class="button primary" href="/install/">{{several.install}}</a></p>
+  </div>
+</div>

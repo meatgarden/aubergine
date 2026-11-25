@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="{{=lang}}" dir="{{=dir}}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{=title}}</title>
+<meta name="description" content="{{=description}}">
+{{=canonical}}
+{{=alternates}}
+<meta name="robots" content="{{=robots}}">
+<meta name="theme-color" content="#120f14" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#faf6f2" media="(prefers-color-scheme: light)">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="preload" href="/fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/style.css">
+<meta property="og:type" content="{{=ogType}}">
+<meta property="og:site_name" content="Aubergine">
+<meta property="og:title" content="{{=title}}">
+<meta property="og:description" content="{{=description}}">
+<meta property="og:url" content="{{=url}}">
+<meta property="og:image" content="https://thirstyeggplant.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="{{attr:site.og.alt}}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://thirstyeggplant.com/og.png">
+<meta name="twitter:image:alt" content="{{attr:site.og.alt}}">
+<meta name="twitter:title" content="{{=title}}">
+<meta name="twitter:description" content="{{=description}}">
+<link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt">
+</head>
+<body>
+<a class="skip" href="#main">{{site.skip}}</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="/"><img src="/icon.svg" alt="" width="28" height="28"><span>Aubergine</span></a>
+    <nav class="nav" aria-label="{{attr:site.nav.label}}">
+      <ul>
+        <li><a href="/claude/">{{site.nav.claude}}</a></li>
+        <li><a href="/chatgpt/">{{site.nav.codex}}</a></li>
+        <li><a href="/install/">{{site.nav.install}}</a></li>
+        <li><a href="/guides/">{{site.nav.guides}}</a></li>
+        <li><a href="/security/">{{site.nav.security}}</a></li>
+        <li><a href="/faq/">{{site.nav.faq}}</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </nav>
+    <!--if:languages-->
+    <details class="menu languages">
+      <summary aria-label="{{attr:site.languages.label}}"><span aria-hidden="true">{{=langname}}</span></summary>
+      <ul class="menu-list">{{=langmenu}}</ul>
+    </details>
+    <!--/if:languages-->
+    <details class="menu pages">
+      <summary>{{site.menu}}</summary>
+      <ul class="menu-list">
+        <li><a href="/claude/">{{site.nav.claude}}</a></li>
+        <li><a href="/chatgpt/">{{site.nav.codex}}</a></li>
+        <li><a href="/install/">{{site.nav.install}}</a></li>
+        <li><a href="/guides/">{{site.nav.guides}}</a></li>
+        <li><a href="/security/">{{site.nav.security}}</a></li>
+        <li><a href="/faq/">{{site.nav.faq}}</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+      </ul>
+    </details>
+  </div>
+</header>
+<!--if:translated-->
+<div class="wrap translated">
+  <p class="note">{{site.translated.app}}</p>
+  <p class="note">{{site.translated.machine}}</p>
+</div>
+<!--/if:translated-->
+<main id="main" tabindex="-1">
+{{=content}}
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <nav aria-label="{{attr:site.foot.label}}">
+      <ul class="foot-links">
+        <li><a href="/">{{site.foot.home}}</a></li>
+        <li><a href="/claude/">{{site.foot.claude}}</a></li>
+        <li><a href="/chatgpt/">{{site.foot.codex}}</a></li>
+        <li><a href="/install/">{{site.foot.install}}</a></li>
+        <li><a href="/guides/">{{site.foot.guides}}</a></li>
+        <li><a href="/run-multiple-coding-agents/">{{site.foot.several}}</a></li>
+        <li><a href="/working-copies/">{{site.foot.copies}}</a></li>
+        <li><a href="/queue-and-schedules/">{{site.foot.queue}}</a></li>
+        <li><a href="/security/">{{site.foot.security}}</a></li>
+        <li><a href="/roadmap/">{{site.foot.roadmap}}</a></li>
+        <li><a href="/faq/">{{site.foot.faq}}</a></li>
+        <li><a href="https://github.com/thirstyeggplant/aubergine">GitHub</a></li>
+        <li><a href="/llms.txt">llms.txt</a></li>
+      </ul>
+    </nav>
+    <p class="foot-line">{{site.foot.license}}</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (button) {
+  button.hidden = false;
+  button.addEventListener('click', function () {
+    var words = button.textContent;
+    navigator.clipboard.writeText(button.parentNode.querySelector('code').textContent).then(function () {
+      button.textContent = button.getAttribute('data-copied');
+      setTimeout(function () { button.textContent = words; }, 1600);
+    });
+  });
+});
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { menu.open = false; menu.querySelector('summary').focus(); });
+});
+document.addEventListener('click', function (event) {
+  document.querySelectorAll('details.menu[open]').forEach(function (menu) { if (!menu.contains(event.target)) menu.open = false; });
+});
+</script>
+</body>
+</html>

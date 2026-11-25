@@ -11,13 +11,15 @@
 
 ## Pages
 
+- [Claude Code in Aubergine](https://thirstyeggplant.com/claude/): what Aubergine does by itself for Claude Code, and where each thing is
+- [Codex and ChatGPT in Aubergine](https://thirstyeggplant.com/chatgpt/): Codex runs in a terminal like any program; what it can report, and what is built only for Claude Code
 - [Install](https://thirstyeggplant.com/install/): requirements, the installer, fixes
 - [Run several coding agents at once](https://thirstyeggplant.com/run-multiple-coding-agents/)
 - [Working copies](https://thirstyeggplant.com/working-copies/): an agent per checkout and branch
 - [The queue, For you and schedules](https://thirstyeggplant.com/queue-and-schedules/)
 - [Security and privacy](https://thirstyeggplant.com/security/): what is and is not protected
-- [FAQ](https://thirstyeggplant.com/faq/)
 - [Roadmap](https://thirstyeggplant.com/roadmap/): planned, not built
+- [FAQ](https://thirstyeggplant.com/faq/)
 
 ## For agents and programs
 

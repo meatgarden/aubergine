@@ -1,48 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://thirstyeggplant.com/</loc>
-    <lastmod>2026-11-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/"/>
     <priority>1.0</priority>
   </url>
   <url>
+    <loc>https://thirstyeggplant.com/claude/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/claude/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/claude/"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://thirstyeggplant.com/chatgpt/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/chatgpt/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/chatgpt/"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://thirstyeggplant.com/install/</loc>
-    <lastmod>2026-11-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/install/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/install/"/>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/guides/</loc>
-    <lastmod>2026-11-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/guides/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/guides/"/>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/run-multiple-coding-agents/</loc>
-    <lastmod>2026-11-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/run-multiple-coding-agents/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/run-multiple-coding-agents/"/>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/working-copies/</loc>
-    <lastmod>2026-11-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/working-copies/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/working-copies/"/>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/queue-and-schedules/</loc>
-    <lastmod>2026-11-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/queue-and-schedules/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/queue-and-schedules/"/>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/security/</loc>
-    <lastmod>2026-11-18</lastmod>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://thirstyeggplant.com/faq/</loc>
-    <lastmod>2026-11-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/security/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/security/"/>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thirstyeggplant.com/roadmap/</loc>
-    <lastmod>2026-11-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/roadmap/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/roadmap/"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://thirstyeggplant.com/faq/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thirstyeggplant.com/faq/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thirstyeggplant.com/faq/"/>
     <priority>0.8</priority>
   </url>
 </urlset>

@@ -1,0 +1,88 @@
+<!--page {"order": 9, "llms": {"name": "Roadmap", "about": "planned, not built"}}-->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/thirstyeggplant#organization",
+      "name": "thirstyeggplant",
+      "url": "https://github.com/thirstyeggplant",
+      "logo": "https://thirstyeggplant.com/icon.svg"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Aubergine", "item": "https://thirstyeggplant.com/" },
+        { "@type": "ListItem", "position": 2, "name": {{json:roadmap.crumb}}, "item": "{{=url}}" }
+      ]
+    }
+  ]
+}
+</script>
+<div class="wrap page-head">
+  <nav class="crumbs" aria-label="{{attr:site.crumbs}}"><ol><li><a href="/">Aubergine</a></li><li>{{roadmap.crumb}}</li></ol></nav>
+  <p class="tag">{{roadmap.tag}}</p>
+  <h1>{{roadmap.title}}</h1>
+  <p class="lead">{{roadmap.lead}}</p>
+</div>
+<div class="wrap page-body roadmap">
+    <h2>{{roadmap.teams.title}}</h2>
+    <p class="intro">{{roadmap.teams.sub}}</p>
+    <ul class="planned">
+      <li><h3>{{roadmap.teams.multiplayer.name}}</h3><p>{{roadmap.teams.multiplayer.text}}</p></li>
+      <li><h3>{{roadmap.teams.chat.name}}</h3><p>{{roadmap.teams.chat.text}}</p></li>
+      <li><h3>{{roadmap.teams.tickets.name}}</h3><p>{{roadmap.teams.tickets.text}}</p></li>
+      <li><h3>{{roadmap.teams.watches.name}}</h3><p>{{roadmap.teams.watches.text}}</p></li>
+      <li><h3>{{roadmap.teams.skills.name}}</h3><p>{{roadmap.teams.skills.text}}</p></li>
+      <li><h3>{{roadmap.teams.memory.name}}</h3><p>{{roadmap.teams.memory.text}}</p></li>
+    </ul>
+    <p class="also">{{roadmap.teams.more}}</p>
+
+    <h2>{{roadmap.cloud.title}}</h2>
+    <p class="intro">{{roadmap.cloud.sub}}</p>
+    <ul class="planned">
+      <li><h3>{{roadmap.cloud.sandbox.name}}</h3><p>{{roadmap.cloud.sandbox.text}}</p></li>
+      <li><h3>{{roadmap.cloud.pool.name}}</h3><p>{{roadmap.cloud.pool.text}}</p></li>
+      <li><h3>{{roadmap.cloud.envs.name}}</h3><p>{{roadmap.cloud.envs.text}}</p></li>
+      <li><h3>{{roadmap.cloud.long.name}}</h3><p>{{roadmap.cloud.long.text}}</p></li>
+      <li><h3>{{roadmap.cloud.deploy.name}}</h3><p>{{roadmap.cloud.deploy.text}}</p></li>
+      <li><h3>{{roadmap.cloud.see.name}}</h3><p>{{roadmap.cloud.see.text}}</p></li>
+    </ul>
+    <p class="also">{{roadmap.cloud.more}}</p>
+
+    <h2>{{roadmap.control.title}}</h2>
+    <p class="intro">{{roadmap.control.sub}}</p>
+    <ul class="planned">
+      <li><h3>{{roadmap.control.approval.name}}</h3><p>{{roadmap.control.approval.text}}</p></li>
+      <li><h3>{{roadmap.control.policy.name}}</h3><p>{{roadmap.control.policy.text}}</p></li>
+      <li><h3>{{roadmap.control.risk.name}}</h3><p>{{roadmap.control.risk.text}}</p></li>
+      <li><h3>{{roadmap.control.audit.name}}</h3><p>{{roadmap.control.audit.text}}</p></li>
+      <li><h3>{{roadmap.control.undo.name}}</h3><p>{{roadmap.control.undo.text}}</p></li>
+      <li><h3>{{roadmap.control.admin.name}}</h3><p>{{roadmap.control.admin.text}}</p></li>
+    </ul>
+    <p class="also">{{roadmap.control.more}}</p>
+
+    <h2>{{roadmap.quality.title}}</h2>
+    <p class="intro">{{roadmap.quality.sub}}</p>
+    <ul class="planned">
+      <li><h3>{{roadmap.quality.gates.name}}</h3><p>{{roadmap.quality.gates.text}}</p></li>
+      <li><h3>{{roadmap.quality.review.name}}</h3><p>{{roadmap.quality.review.text}}</p></li>
+      <li><h3>{{roadmap.quality.browser.name}}</h3><p>{{roadmap.quality.browser.text}}</p></li>
+      <li><h3>{{roadmap.quality.plan.name}}</h3><p>{{roadmap.quality.plan.text}}</p></li>
+      <li><h3>{{roadmap.quality.recipes.name}}</h3><p>{{roadmap.quality.recipes.text}}</p></li>
+      <li><h3>{{roadmap.quality.metrics.name}}</h3><p>{{roadmap.quality.metrics.text}}</p></li>
+    </ul>
+    <p class="also">{{roadmap.quality.more}}</p>
+
+    <h2>{{roadmap.everywhere.title}}</h2>
+    <p class="intro">{{roadmap.everywhere.sub}}</p>
+    <ul class="planned">
+      <li><h3>{{roadmap.everywhere.sdk.name}}</h3><p>{{roadmap.everywhere.sdk.text}}</p></li>
+      <li><h3>{{roadmap.everywhere.editor.name}}</h3><p>{{roadmap.everywhere.editor.text}}</p></li>
+      <li><h3>{{roadmap.everywhere.desktop.name}}</h3><p>{{roadmap.everywhere.desktop.text}}</p></li>
+      <li><h3>{{roadmap.everywhere.windows.name}}</h3><p>{{roadmap.everywhere.windows.text}}</p></li>
+    </ul>
+
+    <p class="note">{{roadmap.note}}</p>
+</div>
